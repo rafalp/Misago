@@ -1,8 +1,6 @@
 from django.template import RequestContext
 
 def home(request):
-    #if request.user.is_authenticated():
-    #    request.user.email_user('LOL Testowy e-mail z Django!', 'who', 'cares')
     return request.theme.render_to_response('index.html',
                                             {'page_title': 'Hello World!'},
                                             context_instance=RequestContext(request));

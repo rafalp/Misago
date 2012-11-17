@@ -65,7 +65,7 @@ def signin(request):
                 request.messages.set_flash(Message(request, 'security/signed_in', extra={'user': user}), 'success', 'security')
                 return redirect(success_redirect)
             except AuthException as e:
-                message = Message(request, e.type, extra={'user':e.user})
+                message = Message(request, e.type, extra={'user':e.user, 'ban':e.ban})
                 message.type = 'error'
                 # If not in Admin, register failed attempt
                 if not request.firewall.admin and e.type == auth.CREDENTIALS:

@@ -13,6 +13,8 @@ BAN_IP = 3
 class Ban(models.Model):
     type = models.PositiveIntegerField(default=BAN_NAME_EMAIL)
     ban = models.CharField(max_length=255)
+    reason_user = models.TextField(null=True,blank=True)
+    reason_admin = models.TextField(null=True,blank=True)
     expires = models.DateTimeField(null=True,blank=True,db_index=True)
 
     
@@ -43,23 +45,26 @@ def check_ban(ip=False, username=False, email=False):
 
 
 class BanCache(object):
-    banned = False
-    type = None
-    expires = None
-    version = 0
+    def __init__(self):
+        self.banned = False
+        self.type = None
+        self.expires = None
+        self.reason = None
+        self.version = 0
+        
     def check_for_updates(self, request):
         if (self.version < request.monitor['bans_version']
             or (self.expires != None and self.expires < timezone.now())):
             self.version = request.monitor['bans_version']
-            ban = check_ban(
-                            ip=request.session.get_ip(request),
-                            )
+            ban = check_ban(ip=request.session.get_ip(request))
             if ban:
                 self.banned = True
+                self.reason = ban.reason_user
                 self.expires = ban.expires
                 self.type = ban.type
             else:
                 self.banned = False
+                self.reason = None
                 self.expires = None
                 self.type = None
             return True

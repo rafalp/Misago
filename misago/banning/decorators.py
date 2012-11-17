@@ -4,7 +4,7 @@ def block_banned(f):
     def decorator(*args, **kwargs):
         request = args[0]
         try:
-            if request.user.is_banned() or request.ban.is_banned():
+            if request.ban.is_banned():
                 return error_banned(request);
             return f(*args, **kwargs)
         except AttributeError:

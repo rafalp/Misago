@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
+from misago.banning.models import check_ban
 from misago.banning.decorators import block_banned
 from misago.banning.views import error_banned
 from misago.forms.layouts import FormLayout
@@ -89,8 +90,9 @@ def send_activation(request):
         form = UserSendSpecialMailForm(request.POST, request=request)
         if form.is_valid():
             user = form.found_user
-            if user.is_banned():
-                return error_banned(request, user)
+            user_ban = check_ban(username=user.username, email=user.email)
+            if user_ban:
+                return error_banned(request, user, user_ban)
             if user.activation == User.ACTIVATION_NONE:
                 return error403(request, Message(request, 'auth/activation_not_required', extra={'user': user}))
             if user.activation == User.ACTIVATION_ADMIN:
@@ -123,8 +125,9 @@ def activate(request, username="", user="0", token=""):
         user = User.objects.get(pk=user)
         current_activation = user.activation
         # Run checks
-        if user.is_banned():
-            return error_banned(request, user)
+        user_ban = check_ban(username=user.username, email=user.email)
+        if user_ban:
+            return error_banned(request, user, user_ban)
         if user.activation == User.ACTIVATION_NONE:
             return error403(request, Message(request, 'auth/activation_not_required', extra={'user': user}))
         if user.activation == User.ACTIVATION_ADMIN:
@@ -152,8 +155,9 @@ def forgot_password(request):
         form = UserSendSpecialMailForm(request.POST, request=request)
         if form.is_valid():
             user = form.found_user
-            if user.is_banned():
-                return error_banned(request, user)
+            user_ban = check_ban(username=user.username, email=user.email)
+            if user_ban:
+                return error_banned(request, user, user_ban)
             elif user.activation != User.ACTIVATION_NONE:
                 return error403(request, Message(request, 'auth/activation_required', {'user': user}))
             user.token = get_random_string(12)
@@ -184,8 +188,9 @@ def reset_password(request, username="", user="0", token=""):
     user = int(user)
     try:
         user = User.objects.get(pk=user)
-        if user.is_banned():
-            return error_banned(request, user)
+        user_ban = check_ban(username=user.username, email=user.email)
+        if user_ban:
+            return error_banned(request, user, user_ban)
         if user.activation != User.ACTIVATION_NONE:
             return error403(request, Message(request, 'auth/activation_required', {'user': user}))
         if not token or not user.token or user.token != token:

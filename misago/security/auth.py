@@ -13,7 +13,7 @@ Exception constants
 CREDENTIALS = 'security/bad_credentials'
 ACTIVATION_USER = 'users/activation_user'
 ACTIVATION_ADMIN = 'users/activation_admin'
-BANNED = 'banning/banned_user'
+BANNED = 'banned'
 NOT_ADMIN = 'security/not_admin'
 
 
@@ -21,10 +21,10 @@ class AuthException(Exception):
     """
     Auth Exception is thrown when auth_* method finds problem with allowing user to sign-in
     """
-    def __init__(self, type=None, error=None, user=None):
+    def __init__(self, type=None, user=None, ban=None):
         self.type = type
-        self.error = error
         self.user = user
+        self.ban = ban
         
     def __str__(self):
         return self.error
@@ -56,17 +56,16 @@ def auth_forum(request, email, password):
     Forum auth - check bans and if we are in maintenance - maintenance access
     """
     user = get_user(email, password)
-    if user.is_banned():
-        raise AuthException(
-                            BANNED,
-                            user.ban_reason_user
-                            )
+    user_ban = check_ban(username=user.username, email=user.email)
+    if user_ban:
+        raise AuthException(BANNED, user, user_ban)
     return user;
 
 
 def auth_remember(request, ip):
     """
     Remember-me auth - check if token is valid
+    Dont worry about AuthException being empty, it doesnt have to have anything
     """
     if request.firewall.admin:
         raise AuthException()

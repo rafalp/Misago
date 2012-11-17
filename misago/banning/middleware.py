@@ -13,5 +13,5 @@ class BanningMiddleware(object):
         if not request.firewall.admin:
             request.ban.check_for_updates(request)
             # Make sure banned session is downgraded to guest level
-            if request.user.is_banned() or request.ban.is_banned():
+            if request.ban.is_banned():
                 request.session.sign_out(request)

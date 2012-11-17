@@ -134,10 +134,6 @@ class User(models.Model):
     alerts_new = models.PositiveIntegerField(default=0)
     activation = models.IntegerField(default=0)
     token = models.CharField(max_length=12,null=True,blank=True)
-    banned = models.BooleanField(default=False)
-    ban_reason_admin = models.TextField(null=True,blank=True)
-    ban_reason_user = models.TextField(null=True,blank=True)
-    ban_expires = models.DateTimeField(null=True,blank=True)
     avatar_ban = models.BooleanField(default=False)
     avatar_ban_reason_user = models.TextField(null=True,blank=True)
     avatar_ban_reason_admin = models.TextField(null=True,blank=True)
@@ -172,16 +168,6 @@ class User(models.Model):
     
     def is_crawler(self):
         return False
-
-    def is_banned(self):
-        """
-        Check if user is banned and handle eventual ban expiration.
-        """
-        banned = self.banned and (self.ban_expires == None or self.ban_expires > tz_util.now());
-        if not banned and self.banned:
-            self.banned = False
-            self.save(force_update=True)
-        return banned
 
     def default_avatar(self, db_settings):
         if db_settings['default_avatar'] == 'gallery':
@@ -349,9 +335,6 @@ class Guest(object):
     def is_crawler(self):
         return False
         
-    def is_banned(self):
-        return False
-        
         
 class Crawler(object): 
     """
@@ -371,9 +354,6 @@ class Crawler(object):
     
     def is_crawler(self):
         return True
-        
-    def is_banned(self):
-        return False
     
     
 class Group(models.Model):
