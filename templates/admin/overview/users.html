@@ -1,0 +1,81 @@
+{% extends "admin/layout.html" %}
+{% load i18n %}
+{% load humanize %}
+{% load url from future %}
+{% from "admin/macros.html" import page_title %}
+{% from "admin/overview/plot.html" import draw_plot_tooltips, draw_plot with context %}
+
+{% block title %}{{ page_title(title=_('Users Overview')) }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{% trans %}Users Overview{% endtrans %} <small>{% trans count=users|int, total=users|intcomma -%}One user registered
+{%- pluralize -%}
+{{ total }} users registered
+{%- endtrans %}</small></h1>
+</div>
+
+<div class="alert alert-error">
+  <div class="alert-icon"><span><i class="icon-fire icon-white"></i></span></div>
+  <p><strong>13 user accounts are awaiting activation.</strong></p>
+  <p class="protip"><a href="">{% trans %}Click here to go to inactive users list.{% endtrans %}</a></p>
+</div>
+
+<h2>User Registrations</h2>
+<div class="graph">
+  <canvas id="graph-users" height="150px"></canvas>
+  {{ draw_plot_tooltips('graph-users', graph) }}
+  <div class="timeline">
+    <div class="pull-left">{{ graph.start|date }}</div>
+    <div class="pull-right">{{ graph.end|date(graph.format) }}</div>
+  </div>
+</div>
+<p class="sub-graph pull-right">{% trans count=graph.total|int, total=graph.total|intcomma -%}One registration found in period requested
+{%- pluralize -%}
+{{ total }} registrations found in period requested
+{%- endtrans %}</p>
+<ul class="nav nav-pills sub-graph">
+  <li{% if mode == "day" %} class="active"{% endif %}><a href="{% url 'admin_users_overview' %}">{% trans %}Last 24h{% endtrans %}</a></li>
+  <li{% if mode == "week" %} class="active"{% endif %}><a href="{% url 'admin_users_overview_week' %}">{% trans %}Last Week{% endtrans %}</a></li>
+  <li{% if mode == "month" %} class="active"{% endif %}><a href="{% url 'admin_users_overview_month' %}">{% trans %}Last Month{% endtrans %}</a></li>
+  <li{% if mode == "year" %} class="active"{% endif %}><a href="{% url 'admin_users_overview_year' %}">{% trans %}Last Year{% endtrans %}</a></li>
+</ul>
+
+<hr>
+
+<h2>{% trans %}Staff Online{% endtrans %} <small>{{ staff|length|intcomma }}</small></h2>{% if staff %}
+<div class="row list-tiny">{% for session in staff %}
+  <div class="span2 popover-staff-{{ loop.index }} clickable">
+  	<img src="{{ session.user.get_avatar() }}" class="avatar-tiny"> {{ session.user.username }}
+  </div>{% endfor %}
+</div>{% else %}
+<p>{% trans %}No staff members are currently browsing forums.{% endtrans %}</p>
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">{% if staff %}
+  $(function () {
+  	// Register popovers{% for session in staff %}
+	$('.popover-staff-{{ loop.index }}').popover({
+		placement: 'top',
+		trigger:   'click',
+		title:     '{{ popover_title(session)|escapejs }}',
+		content:   '{{ popover_content(session)|escapejs }}'
+	});{% endfor %}
+  });{% endif %}
+  {{ draw_plot('draw_users', 'graph-users', graph.max, graph.stat) }}
+</script>
+{% endblock %}
+
+{% macro popover_title(session) -%}
+  <div class="user-card">
+  	<img src="{{ session.user.get_avatar() }}" class="avatar-small">
+    {{ session.user.username }}
+  </div>
+{%- endmacro %}
+
+{% macro popover_content(session) -%}
+    <strong>{% trans last_action=session.last|timesince, ip=session.ip %}{{ last_action }} ago from {{ ip }}{% endtrans %}</strong>
+    <p>{{ session.agent }}</p>
+{%- endmacro %}

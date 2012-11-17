@@ -1,0 +1,9 @@
+{% extends "_message/base.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block content %}
+  <div class="alert-icon"><span><i class="icon-remove icon-white"></i></span></div>
+  <p><strong>{% trans username=message.user.username %}{{ username }}, your account has to be activated in order for you to be able to request new password.{% endtrans %}</strong></p>
+  <p class="protip"><a href="{% url 'send_activation' %}">{% trans %}Click here if you haven't received activation e-mail.{% endtrans %}</a></p>
+{% endblock %}

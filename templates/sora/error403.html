@@ -1,0 +1,26 @@
+{% extends "sora/layout.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block title %}{% trans %}Permission denied{% endtrans %} | {{ settings.board_name }}{% endblock %}
+      
+{% block content %}
+<div class="row">
+  <div class="span8 offset2 side-bar">
+    <div class="page-header">
+      <h1>{% if title %}{{ title }}{% else %}{% trans %}Permission denied{% endtrans %}{% endif %}</h1>
+    </div>
+{% if message %}{% set special=true %}
+    <div class="lead">
+      {% include message.tpl %}
+    </div>
+{% else %}
+    <p class="lead">{% trans %}You dont have permission to see this page.{% endtrans %}</p>
+{% endif %}
+    <ul class="unstyled">
+      <li><i class="icon-home"></i> <a href="{% url 'index' %}">{% trans %}Return to board index{% endtrans %}</a></li>
+      <li><i class="icon-arrow-left"></i> <a href="#" class="go-back">{% trans %}Return to previous page{% endtrans %}</a></li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

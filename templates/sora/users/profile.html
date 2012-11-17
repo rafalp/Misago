@@ -1,0 +1,12 @@
+{% extends "sora/layout.html" %}
+{% load i18n %}
+{% load url from future %}
+{% import "_forms.html" as form_theme with context %}
+
+{% block title %}{% trans username=profile.username %}Member Profile: {{ username }}{% endtrans %} | {{ settings.board_name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1><img src="{{ profile.get_avatar() }}" class="avatar" alt="{% trans %}Member Avatar{% endtrans %}" title="{% trans %}Member Avatar{% endtrans %}"> {{ profile.username }} <small>{% trans %}Member Profile{% endtrans %}</small></h1>
+</div>
+{% endblock %}

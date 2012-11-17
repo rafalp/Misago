@@ -1,0 +1,17 @@
+{% extends "_email/base_html.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block content %}
+<p style="margin: 12px 0px; padding: 0px;">{% trans %}You are receiving this message because you have used this email address to sign up on our forums.{% endtrans %}</p>
+
+<h2 style="margin: 12px 0px; padding: 0px;">Your Account Data</h2>
+<div style="background-color: #EFEFEF; border-radius: 3px; margin: 0px; padding: 8px;">
+  <strong>{% trans %}Username{% endtrans %}:</strong> {{ user.username }}<br>
+  <strong>{% trans %}E-mail{% endtrans %}:</strong> {{ user.email }}<br>
+  <strong>{% trans %}Password{% endtrans %}:</strong> {{ password }}
+</div>
+<p style="margin: 12px 0px; padding: 0px;">{% trans %}This is only time you will receive your current password. Due to security reasons we dont store members passwords as they are entered on registration, instead we encrypt those password in un-reversible manner to keep them safe.{% endtrans %}</p>
+{% block activation_instructions %}{% endblock %}
+<p style="margin: 12px 0px; margin-bottom 0px; padding: 0px;">{% trans %}Welcome aboard!{% endtrans %}<br><a href="{{ board_address }}">{% if settings.board_index_title %}{{ settings.board_index_title }}{% else %}{{ settings.board_name }}{% endif %}</a></p>
+{% endblock %}

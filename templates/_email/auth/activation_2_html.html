@@ -1,0 +1,8 @@
+{% extends "_email/auth/activation_0_html.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block activation_instructions %}
+<h2 style="margin: 12px 0px; padding: 0px;">Account Activation</h2>
+<p style="margin: 12px 0px; padding: 0px;">{% trans %}Your account will remain inactive until Board Administrator accepts it. Depending on amount of new registrations this may take few minutes or few days. Thanks for patience!{% endtrans %}</p>
+{% endblock %}

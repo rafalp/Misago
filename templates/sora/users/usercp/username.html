@@ -1,0 +1,10 @@
+{% extends "sora/users/usercp/usercp.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block title %}{% trans %}Change your Username{% endtrans %} | {{ settings.board_name }}{% endblock %}
+
+{% block content %}
+{{ super() }}
+<h2>{% trans %}Change your Username{% endtrans %}</h2>
+{% endblock %}

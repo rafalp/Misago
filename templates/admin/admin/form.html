@@ -1,0 +1,23 @@
+{% extends "admin/admin/layout.html" %}
+{% load i18n %}
+{% load l10n %}
+{% load url from future %}
+{% from "admin/macros.html" import page_title %}
+{% import "admin/messages.html" as messages_theme %}
+{% import "_forms.html" as form_theme with context %}
+
+{% block action_body %}
+<form action="{{ url }}" method="post">
+  {{ form_theme.form_widget(form) }}
+  <div class="form-actions">
+  	<button name="save" type="submit" class="btn btn-primary">{{ action.submit_button }}</button>
+  	{% if action.get_edit_url -%}
+  	<button name="save_edit" type="submit" class="btn btn-warning">{% trans %}Save and Edit{% endtrans %}</button>
+  	{%- endif %}
+  	{% if action.get_new_url -%}
+  	<button name="save_new" type="submit" class="btn btn-success">{% trans %}Save and Add New{% endtrans %}</button>
+  	{%- endif %}
+  	{% if fallback %}<a href="{{ fallback }}" class="btn">{% trans %}Cancel{% endtrans %}</a>{% endif %}
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "_email/base_plain.html" %}
+{% load i18n %}
+{% load url from future %}
+{% block content %}
+{% trans %}You are receiving this message because you have used this email address to sign up on our forums.{% endtrans %}
+
+Your Account Data
+-----------------
+{% trans %}Username{% endtrans %}:    {{ user.username }}
+{% trans %}E-mail{% endtrans %}:    {{ user.email }}
+{% trans %}Password{% endtrans %}:    {{ password }}
+
+{% trans %}This is only time you will receive your current password. Due to security reasons we dont store members passwords as they are entered on registration, instead we encrypt those password in un-reversible manner to keep them safe.{% endtrans %}{% block activation_instructions %}{% endblock %}
+{% endblock %}

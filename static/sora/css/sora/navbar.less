@@ -1,0 +1,162 @@
+// Misago navbars
+// -------------------------
+.navbar-fixed-top {
+  position: static;
+}
+
+.navbar-userbar {
+  .navbar-inner {
+    background: none;
+    background-color: @navbarBackground;
+    border-bottom: 4px solid darken(@navbarBackground, 10%);
+    .box-shadow(none);
+    overflow: auto;
+  }
+  
+  li {
+    a, a:link, a:active, a:visited, button.btn-link {
+      .opacity(50);
+      
+      color: @black;
+      font-weight: bold;
+       
+      i {
+        .opacity(100);
+      }
+    }
+    
+    &.user-profile {
+      a, a:link, a:visited {
+        .opacity(80);
+      }
+    }
+    
+    button {
+      padding-top: 5px;
+    }
+     
+    a:hover, a:active, button.btn-link:hover, button.btn-link:active {
+      .opacity(100);
+      
+      color: @black;
+    }
+      
+    i {
+      background-image: url("@{iconSpritePath}");
+      .opacity(100);
+    }
+    
+    form {
+      margin: 0px;
+      padding: 0px;
+    }
+    
+    span {
+      .border-radius(3px);
+      padding: 2px 6px;
+      margin: -1px 0px;
+      margin-left: 4px;
+      
+      color: @white;
+      font-size: 90%;
+      text-shadow: 1px 1px 0px @black;
+      
+      &.stat {
+        background: @blue;
+      }
+      
+      &.stat.att {
+        background: @red;
+      }
+    }
+  }
+}
+
+.navbar-header {
+  border-bottom: 1px solid darken(@navbarInverseBackground, 15%);
+  
+  .navbar-inner {
+    background: none;
+    background-color: @navbarInverseBackground;
+    border-bottom: 4px solid darken(@navbarInverseBackground, 5%);
+    .box-shadow(none);
+  }
+  
+  .container {
+    height: auto;
+  }
+  
+  a.brand {
+    margin: 24px 0px;
+    padding: 0px;
+    
+    font-size: 230%;
+    
+    span {
+      color: darken(@navbarInverseBackground, 25%);
+      text-shadow: 0px 1px 0px lighten(@navbarInverseBackground, 25%);
+    }
+  }
+       
+  i {
+    background-image: url("@{iconWhiteSpritePath}");
+  }
+        
+  .search-form {
+    background-color: @white;
+    .border-radius(4px);
+    .box-shadow(0px 0px 3px darken(@navbarInverseBackground, 15%));
+    margin: 19px 0px;
+    margin-right: 8px;
+    padding: 1px;
+    float: right;
+    
+    .btn {
+      background: @green;
+      border: none;
+      margin: 0px;
+      margin-left: 1px;
+      padding-left: 7px;
+      padding-right: 7px;
+      
+      i {
+        .opacity(100);
+      }
+      
+      &:hover, &:active {
+        background: lighten(@green, 15%);
+      }
+    }
+    
+    input {
+      background: none;
+      border: none;
+      .box-shadow(none);
+    }
+  }
+  
+  .nav {
+    float: right;
+    margin: 19px 0px;
+    
+    li {
+      a {
+        background-color: @navbarInverseLinkBackground;
+        .border-radius(3px);
+        margin-left: 8px;
+        .opacity(90);
+        padding: 5px 8px;
+      }
+      
+      a:hover {
+        background-color: @navbarInverseLinkBackgroundHover;
+        .box-shadow(0px 0px 3px darken(@navbarInverseBackground, 15%));
+        .opacity(100);
+       
+        i {
+          background-image: url("@{iconSpritePath}");
+        }
+      }
+    }
+  }
+}

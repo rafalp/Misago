@@ -1,0 +1,12 @@
+{% extends "admin/layout.html" %}
+{% load i18n %}
+{% from "admin/macros.html" import page_title %}
+
+{% block title %}{{ page_title(title=_('Unimplemented Admin Action')) }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{% trans %}Unimplemented Admin Action{% endtrans %} <small>{% trans %}Placeholder Page{% endtrans %}</small></h1>
+</div>
+<p>{% trans %}This is placeholder page unimplemented admin actions can refer to.{% endtrans %}</p>
+{% endblock %}

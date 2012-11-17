@@ -1,0 +1,10 @@
+{% extends "_message/base.html" %}
+{% load i18n %}
+
+{% block content %}
+  <div class="alert-icon"><span><i class="icon-info-sign icon-white"></i></span></div>
+  <p><strong>{% trans username=message.user.username %}Welcome aboard, {{ username }}!{% endtrans %}</strong></p>
+  <p>{% trans %}Your account has been registered, but you won't be able to sign in before Board Administrator accepts your account.{% endtrans %}</p>
+  <p>{% trans %}Usually new member accounts are activated on same day, but sometimes this may take little longer.{% endtrans %}</p>
+  <p>{% trans %}Thanks for your patience!{% endtrans %}</p>
+{% endblock %}

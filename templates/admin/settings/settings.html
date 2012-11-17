@@ -1,0 +1,42 @@
+{% extends "admin/layout.html" %}
+{% load i18n %}
+{% load url from future %}
+{% from "admin/macros.html" import page_title %}
+{% import "admin/messages.html" as messages_theme %}
+{% import "_forms.html" as form_theme with context %}
+
+{% block title %}{{ page_title(title=_(active_group.name), parent=_('Settings')) }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{% trans %}Settings{% endtrans %} <small>{% trans %}Change your forum configuration{% endtrans %}</small></h1>
+</div>
+<div class="row">
+  <div class="span3">
+    <ul class="nav nav-pills nav-stacked side-panel">
+      <h4>{% trans %}Search Settings{% endtrans %}</h4>
+      <form action="{% url 'admin_settings_search' %}" class="form-inline" method="post">
+        <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+        {{ form_theme.input_text(search_form.fields.search_text, width=3, attrs={'placeholder': _('Search Settings...')}, horizontal=true) }}
+        <button type="submit" class="btn btn-primary"><i class="icon-search icon-white"></i></button>
+      </form>
+      <h4>{% trans%}Settings Groups{% endtrans %}</h4>{% for group in groups %}
+      <li{% if group.is_active(active_group) %} class="active"{% endif %}><a href="{% url 'admin_settings' group_id=group.id, group_slug=group.key %}"{% if not group.is_active(active_group) and group.description %} class="tooltip-right" title="{{ _(group.description) }}"{% endif %}>{{ _(group.name) }}</a></li>{% endfor %}
+    </ul>
+  </div>
+  <div class="span9">{% block action %}
+  	<h2 class="sidepanel-header">{{ _(active_group.name) }}</h2>{% if message %}
+  	{{ messages_theme.draw_message(message, 'alert-form') }}
+  	{% endif %}{% if active_group.description %}
+  	<p>{{ _(active_group.description) }}</p>{% endif %}
+    <form class="form-vertical" action="{% url 'admin_settings' group_id=active_group.id, group_slug=active_group.key %}" method="post">
+      <div class="form-container">
+       	{{ form_theme.form_widget(form, width=9) }}
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{% trans %}Change Settings{% endtrans %}</button>
+      </div>
+    </form>
+  {% endblock %}</div>
+</div>
+{% endblock %}

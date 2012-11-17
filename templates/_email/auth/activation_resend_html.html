@@ -1,0 +1,12 @@
+{% extends "_email/base_html.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block content %}
+<p style="margin: 12px 0px; padding: 0px;">{% trans %}You are receiving this message because you have requested new activation e-mail.{% endtrans %}</p>
+<p style="margin: 12px 0px; padding: 0px;">{% trans %}To activate your account, click the link below:{% endtrans %}</p>
+<div style="background-color: #EFEFEF; border-radius: 3px; margin: 0px; padding: 8px; text-align: center;">
+  <a href="{{ board_address }}{% url 'activate' username=user.username_slug user=user.id token=user.token %}" style="color: #3465a4; font-size: 150%;">{% trans %}Activate my account{% endtrans %}!</a>
+</div>
+<p style="margin: 12px 0px; margin-bottom 0px; padding: 0px;">{% trans %}Welcome aboard!{% endtrans %}<br><a href="{{ board_address }}">{% if settings.board_index_title %}{{ settings.board_index_title }}{% else %}{{ settings.board_name }}{% endif %}</a></p>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "admin/layout.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block title %}{% trans %}Page not found{% endtrans %} - {{ settings.board_name }}{% endblock %}
+      
+{% block content %}
+<div class="row">
+  <div class="span6 offset3">
+    <div class="page-header">
+      <h2>{% if title %}{{ title }}{% else %}{% trans %}Page not found{% endtrans %}{% endif %} <small>404</small></h2>
+    </div>
+{% if message %}
+    {% if message.is_basic() %}<p>{{ message.message }}</p>{% else %}{% include message.tpl %}{% endif %}
+{% else %}
+    <p>{% trans %}The page you are looking for could not be found.{% endtrans %}</p>
+{% endif %}
+    <ul class="unstyled">
+      <li><i class="icon-arrow-left"></i> <a href="#" class="go-back">{% trans %}Return to previous page{% endtrans %}</a></li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

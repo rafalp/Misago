@@ -1,0 +1,25 @@
+{% extends "admin/layout_compact.html" %}
+{% load i18n %}
+{% load url from future %}
+{% import "_forms.html" as form_theme with context %}
+      
+{% block title %}{% trans %}Sign In{% endtrans %}{% endblock %}
+
+{% block header %}<strong>Misago</strong> {% trans %}Board Administration{% endtrans %}{% endblock %}
+      
+{% block content %}
+          {% if message %}
+          <div class="alert alert-{{ message.type }} block-alert">
+            {% include message.tpl %}
+          </div>
+          {% endif %}
+          <form class="form-vertical" action="{{ admin_index|url() }}" method="post">
+          	<div class="form-container">
+              {{ form_theme.form_widget(form, width=4) }}
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> {% trans %}Sign In{% endtrans %}</button>
+              <a href="{% url 'index' %}" class="btn pull-right"><i class="icon-home"></i> {% trans %}Return to Forums{% endtrans %}</a>
+            </div>
+          </form>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "_message/base.html" %}
+{% load i18n %}
+
+{% block content %}
+  {% if settings.jams_lifetime > 0 %}
+  <p>{% trans %}You have used up allowed sign-in attempts quota and we temporarily banned you from signing in .{% endtrans %}</p>
+  <p>{% trans %}Please try again later.{% endtrans %}</p>
+  {% else %}
+  <p>{% trans %}You have used up allowed sign-in attempts quota and we banned you from signing in .{% endtrans %}</p>
+  {% endif %}
+{% endblock %}

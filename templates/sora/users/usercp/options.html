@@ -1,0 +1,10 @@
+{% extends "sora/users/usercp/usercp.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block title %}{% trans %}Change Forum Options{% endtrans %} | {{ settings.board_name }}{% endblock %}
+
+{% block content %}
+{{ super() }}
+<h2>{% trans %}Change Forum Options{% endtrans %}</h2>
+{% endblock %}

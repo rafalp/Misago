@@ -1,0 +1,33 @@
+{% extends "admin/overview/stats/form.html" %}
+{% load i18n %}
+
+{% import "admin/messages.html" as messages_theme %}
+{% import "_forms.html" as form_theme with context %}
+{% from "admin/overview/plot.html" import draw_plot_tooltips, draw_plot with context %}
+
+{% block title %}{{ page_title(title=title, parent=_('Stats')) }}{% endblock %}
+
+{% block action %}
+<h2>{{ title }} <small>{% trans count=graph.total, total=graph.total|intcomma -%}One item found
+{%- pluralize -%}
+{{ total }} items found
+{%- endtrans %}</small></h2>
+<div class="graph">
+  <canvas id="graph-canvas" height="250px"></canvas>
+  {{ draw_plot_tooltips('graph-canvas', graph) }}
+  <div class="timeline">
+    <div class="pull-left">{{ graph.start|date }}</div>
+    <div class="pull-right">{{ graph.end|date }}</div>
+  </div>
+</div>
+
+<hr>
+
+{{ super() }}
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+  {{ draw_plot('draw_graph', 'graph-canvas', graph.max, graph.stat) }}
+</script>
+{% endblock %}

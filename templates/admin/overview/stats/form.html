@@ -1,0 +1,19 @@
+{% extends "admin/overview/stats/layout.html" %}
+{% load i18n %}
+
+{% import "admin/messages.html" as messages_theme %}
+{% import "_forms.html" as form_theme with context %}
+
+{% block action %}<div class="row">
+  <div class="span8 offset2">
+  	<h2>{% trans %}New Report{% endtrans %}</h2>
+    <form action="{% url 'admin_overview_stats' %}" class="form-vertical" method="post">
+      <div class="form-container">
+        {{ form_theme.form_widget(form, width=8) }}
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{% trans %}Generate Report{% endtrans %}</button>
+      </div>
+    </form>
+  </div>
+</div>{% endblock %}

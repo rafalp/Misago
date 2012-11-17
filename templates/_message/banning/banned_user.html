@@ -1,0 +1,14 @@
+{% extends "_message/base.html" %}
+{% load i18n %}
+
+{% block content %}
+  {% if message.user.ban_reason_public %}
+  <p>{% trans username=message.user.username %}{{ username }}, your account has been locked for following reason:{% endtrans %}</p>
+  <p>{{ if user.ban_reason_public }}</p>
+  {% else %}
+  <p>{% trans username=message.user.username %}{{ username }}, your account has been locked by board administrator.{% endtrans %}</p>
+  {% endif %}
+  {% if message.user.ban_expires %}
+  <p>{% trans %}Your ban will expire on{% endtrans %} <em>{{ message.user.ban_expires|date:"DATE_FORMAT" }}</em></p>
+  {% endif %}
+{% endblock %}

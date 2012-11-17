@@ -1,0 +1,62 @@
+// Misago forms
+// -------------------------
+form {
+  label {
+    color: @gray;
+    font-weight: bold;
+    cursor: pointer;
+  }
+      
+  fieldset {
+    border-top: 1px solid darken(@bodyBackground, 8%);
+    margin: 0px;
+    padding: 0px;
+    padding-top: 16px;
+    padding-bottom: 8px;
+  
+    legend {
+      margin: 0px;
+      margin-bottom: -8px;
+      padding: 0px;
+      padding-top: 8px;
+    }
+        
+    .control-group {
+      padding-bottom: 4px;
+    }
+    
+    .control-group:last-child {
+      padding-bottom: 0px;
+    }
+  }
+  
+  fieldset:first-child {
+    border-top: none;
+    padding-top: 0px;
+  }
+  
+  fieldset:last-child {
+    padding-bottom: 0px;
+  }
+}
+
+// Make textarea resizeable vertically only
+// -------------------------
+textarea {
+  resize: vertical;
+}
+
+// Lists styling
+// -------------------------
+.radio-group, .select-multiple, .yes-no-switch {
+  label {
+    color: @black;
+    font-weight: normal;
+  }
+  
+  margin-bottom: 8px;
+}
+
+.checkbox {
+  font-weight: normal;
+}

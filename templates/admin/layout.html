@@ -1,0 +1,47 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+{% load url from future %}
+{% import "admin/messages.html" as messages_theme %}
+
+{% block body %}
+<div id="page-top" class="navbar navbar-static-top navbar-sections">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="{{ admin_index|url() }}">Misago <span>{{ version }}</span></a>
+      <ul class="nav">{% for section in sections %}
+      	<li{% if section.is_active and not exception_response %} class="active"{% endif %}><a href="{{ section.route|url() }}"><i class="icon-{{ section.icon }}"></i> {{ section.name }}</a></li>{% endfor %}
+      </ul>
+      <form class="navbar-form user-signout pull-right" action="{% url 'admin_sign_out' %}" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><button type="submit" class="btn btn-link"><i class="icon-off"></i> {% trans %}Sign Out{% endtrans %}</button></form>
+      <ul class="nav pull-right">
+      	<li><a href="{% url 'index' %}"><i class="icon-home"></i> {% trans %}Forums Index{% endtrans %}</a></li>
+      </ul>
+      <div class="user-profile pull-right">
+        <img src="{{ user.get_avatar() }}" class="avatar-small" alt="{{ user.username }}" title="{{ user.username }}"> {{ user.username }}
+      </div>
+    </div>
+  </div>
+</div>{% if not exception_response%}
+<div class="navbar navbar-static-top navbar-inverse navbar-actions">
+  <div class="navbar-inner">
+    <div class="container">
+      <ul class="nav">{% for action in actions %}
+      	<li{% if action.is_active %} class="active"{% elif action.help %} class="tooltip-bottom" title="{{ action.help }}"{% endif %}><a href="{{ action.route|url() }}"><i class="icon-{{ action.icon }}"></i> {{ action.name }}</a></li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>{% endif %}
+<div class="container body-container">
+  
+  {% if messages %}
+  <div class="alerts-global">
+  	{{ messages_theme.messages_list(messages) }}
+  </div>{% endif %}
+  {% block content %}
+  {% endblock %}
+  
+  <footer>
+  	Powered by <a href="http://misago-project.org">Misago forum software</a> by Rafał Pitoń
+  	<a href="#page-top" class="go-to-top"><i class="icon-arrow-up"></i>{% trans %}Go to Top{% endtrans %}</a>
+  </footer>
+</div>
+{% endblock %}

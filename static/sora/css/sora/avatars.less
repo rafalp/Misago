@@ -1,0 +1,61 @@
+// Misago avatars sizes
+// -------------------------
+.avatar-big {
+  border-radius: 3px;
+  width: 180px;
+  height: 180px;
+}
+
+.avatar-normal {
+  border-radius: 3px;
+  width: 64px;
+  height: 64px;
+}
+
+.avatar-small {
+  border-radius: 3px;
+  width: 28px;
+  height: 28px;
+}
+
+.avatar-tiny {
+  border-radius: 3px;
+  width: 16px;
+  height: 16px;
+}
+
+// Handle small avatar within different places
+// -------------------------
+.navbar {
+  .avatar-small {
+    margin: -(@baseLineHeight / 2) 0px;
+    position: relative;
+    bottom: (((@navbarHeight - @baseLineHeight - 14) / 2) - 1);
+  }
+}
+
+.page-header {
+  .avatar {
+    .border-radius(3px);
+  }
+  
+  h1 .avatar {
+    width: 46px;
+    height: 46px;
+  }
+  
+  h2 .avatar {
+    width: 40px;
+    height: 40px;
+  }
+  
+  h3 .avatar {
+    width: 28px;
+    height: 28px;
+  }
+  
+  h4 .avatar {
+    width: 22px;
+    height: 22px;
+  }
+}

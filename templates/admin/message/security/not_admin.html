@@ -1,0 +1,8 @@
+{% extends "admin/message/base.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block content %}
+  <div class="alert-icon"><span><i class="icon-remove icon-white"></i></span></div>
+  <p>{% trans %}You need to be administrator to access admin control panel.{% endtrans %}</p>
+{% endblock %}

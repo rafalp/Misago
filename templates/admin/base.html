@@ -1,0 +1,17 @@
+{% from "admin/macros.html" import page_title -%}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}{{ page_title() }}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ STATIC_URL }}admin/css/admin.css" rel="stylesheet">{% block stylesheets %}{% endblock %}
+  </head>
+  <body{% block body_class %}{% endblock %}>
+  	{% block body %}{% endblock %}
+  	<script src="{{ STATIC_URL }}admin/js/jquery-1.7.2.min.js"></script>
+  	<script src="{{ STATIC_URL }}admin/js/bootstrap.min.js"></script>
+  	<script src="{{ STATIC_URL }}admin/js/jquery.toggle.buttons.js"></script>
+  	<script src="{{ STATIC_URL }}admin/js/admin.js"></script>{% block javascripts %}{% endblock %}
+  </body>
+</html>

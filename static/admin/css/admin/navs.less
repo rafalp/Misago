@@ -1,0 +1,85 @@
+// Admin navs
+// -------------------------
+.tabs-header {
+  border-bottom: none;
+  padding-bottom: 0px;
+  
+  .nav-tabs {
+    margin-bottom: 0px;
+  }
+}
+
+.nav-tabs li {
+  a:link, a:active, a:visited {
+    .opacity(60);
+    
+    color: @textColor;
+    font-weight: bold;
+  }
+  
+  i {
+    margin-right: 4px;
+  }
+  
+  &.active a:link, &.active a:active,
+  &.active a:visited, &.active a:hover {
+    background-color: @bodyBackground;
+        
+    i {
+      background-image: url("@{iconSpritePath}");
+    }
+  }
+  
+  &.active a:link, &.active a:active,
+  &.active a:visited, &.active a:hover, a:hover {
+    .opacity(100);
+  }
+  
+  &.fallback {
+    float:right;
+    
+    a:link, a:active,
+    a:visited, a:hover {
+      border-bottom: none;
+      .border-radius(3px);
+      margin-top: 4px;
+      padding: 4px 12px;
+    }
+  }
+}
+
+// Tables lists actions
+td>ul.list-actions {
+  list-style: none;
+  margin: 0px;
+  overflow: auto;
+  padding: 0px;
+  
+  &>li {
+    float: left;
+    margin: 0px;
+    padding: 0px;
+    
+    &>form {
+      margin: 0px;
+      padding: 0px;
+    }
+    
+    &>a, &>form>button {
+      background: none;
+      border: none;
+      .border-radius(3px);
+      display: block;
+      margin: 0px 3px;
+      padding: 2px 5px;
+      
+      &:hover {
+        background-color: @linkColor;
+        
+        i {
+          background-image: url("@{iconWhiteSpritePath}");          
+        }
+      }
+    }
+  }
+}

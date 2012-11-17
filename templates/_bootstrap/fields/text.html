@@ -1,0 +1,6 @@
+<input id="{{ field.html_id }}" name="{{ field.html_name }}" type="{{ field.attrs.type }}" class="span{% spaceless %}
+{% if horizontal %}
+  {% widthratio field.width 140 max_width %}
+{% else %}
+  {% widthratio field.width 100 max_width %}
+{% endif %}{% endspaceless %}"{%if field.attrs.max_length %} maxlength="{{ field.attrs.max_length }}"{% endif %}{% if field.placeholder %} placeholder="{{ field.placeholder }}"{% endif %}{% if field.has_value %} value="{{ field.value }}"{% endif %}{% if field.required%} required="required"{% endif %}>

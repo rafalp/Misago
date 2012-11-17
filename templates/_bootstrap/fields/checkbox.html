@@ -1,0 +1,4 @@
+<label class="checkbox">
+  <input id="{{ field.html_id }}" name="{{ field.html_name }}" type="checkbox"{% if field.required%} required="required"{% endif %}{% if field.value %} checked="checked"{% endif %}>
+  {{ field.help_text }}
+</label>

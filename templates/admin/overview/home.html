@@ -1,0 +1,107 @@
+{% extends "admin/layout.html" %}
+{% load i18n %}
+{% load humanize %}
+{% load url from future %}
+{% from "admin/macros.html" import page_title %}
+
+{% block title %}{{ page_title(title=_('Admin Home')) }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{% trans %}Admin Home{% endtrans %} <small>{% trans %}Misago {{version}}{% endtrans %}</small></h1>
+</div>
+<div class="row">
+  <div class="span8">
+  	<h2>{% trans count=admins|length, total=admins|length|intcomma -%}
+One Administrator Online
+{%- pluralize -%}
+{{ total }} Administrators Online
+{%- endtrans %}</h2>
+	<ul class="list-tiny">{% for session in admins %}
+	  <li class="popover-admin-{{ loop.index }} clickable">
+	  	<img src="{{ session.user.get_avatar() }}" class="avatar-tiny"> {{ session.user.username }}
+	  </li>{% endfor %}
+	</ul>	
+    
+    <hr>
+    
+  	<h3>{% trans %}Board Statistics{% endtrans %}</h3>
+    <table class="table table-striped">
+      <tbody>
+      	<tr>
+      	  <td class="span2 stat-title"><strong>{% trans %}Users{% endtrans %}</strong></td>
+      	  <td>{{ users|intcomma }}</td>
+      	</tr>
+      	<tr>
+      	  <td class="span2 stat-title"><strong>{% trans %}Posts{% endtrans %}</strong></td>
+      	  <td>{{ posts|intcomma }}</td>
+      	</tr>
+      	<tr>
+      	  <td class="span2 stat-title"><strong>{% trans %}Threads{% endtrans %}</strong></td>
+      	  <td>{{ threads|intcomma }}</td>
+      	</tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="span4">
+    <h3>{% trans %}Quick Action{% endtrans %}</h3>
+    <form>
+      <div class="side-search quick-action">
+        <div class="control-group">
+          <label class="control-label" for="inputEmail">User to find:</label>
+          <div class="controls">
+            <input type="text" id="inputEmail" class="span4" placeholder="Email">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Actions to run:</label>
+          <select class="span4">
+            <option>Dont change account state</option>
+            <option>Activate user account</option>
+            <option>Reset user password</option>
+            <option>Ban user for 15 minutes</option>
+            <option>Ban user permanently</option>
+          </select>
+          <label class="checkbox">
+            <input type="checkbox" value="">
+            Remove and block user avatar
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" value="">
+            Remove and block user signature
+          </label>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Run Action</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}{% if admins %}
+<script type="text/javascript">
+  $(function () {
+  	// Register popovers for admin list{% for session in admins %}
+	$('.popover-admin-{{ loop.index }}').popover({
+		placement: 'top',
+		trigger:   'click',
+		title:     '{{ popover_title(session)|escapejs }}',
+		content:   '{{ popover_content(session)|escapejs }}'
+	});{% endfor %}
+  });
+</script>{% endif %}
+{% endblock %}
+
+{% macro popover_title(session) -%}
+  <div class="user-card">
+  	<img src="{{ session.user.get_avatar() }}" class="avatar-small">
+    {{ session.user.username }}
+  </div>
+{%- endmacro %}
+
+{% macro popover_content(session) -%}
+    <strong>{% trans last_action=session.last|timesince, ip=session.ip %}{{ last_action }} ago from {{ ip }}{% endtrans %}</strong>
+    <p>{{ session.agent }}</p>
+{%- endmacro %}

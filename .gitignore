@@ -170,9 +170,17 @@ pip-log.txt
 ##################
 
 
+coffin/**
 debug_toolbar/**
+dev/**
+jinja2/**
 mptt/**
 pytz/**
 recaptcha/**
+south/**
+static/avatars/**
+static/strawman/**
+templates/strawman/**
 unidecode/**
 yaml/**
+path.py

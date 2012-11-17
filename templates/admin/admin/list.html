@@ -1,0 +1,145 @@
+{% extends "admin/admin/layout.html" %}
+{% load i18n %}
+{% load l10n %}
+{% load url from future %}
+{% from "admin/macros.html" import page_title %}
+{% import "admin/messages.html" as messages_theme %}
+{% import "_forms.html" as form_theme with context %}
+
+{% block action_body %}
+{%- if search_form %}
+<div class="row">
+  <div class="span9">{% endif -%}
+{% if items|length > 0 -%}
+<table class="table table-striped">
+  <thead>
+    <tr>{% block table_head scoped %}{% for column in action.columns %}
+      <th{{ th_class(column, sorting, sorting_method) }}>
+      {%- if column[0] in sorting %}<a href="
+      {%- if column[0] == sorting_method[0]-%}
+      {% if sorting_method[1] %}{{ url ~ query(sort=column[0],dir=0) }}{% else %}{{ url ~ query(sort=column[0],dir=1) }}{% endif %}
+      {%- else -%}
+      {{ url ~ query(sort=column[0],dir=sorting[column[0]]) }}
+      {%- endif %}">{{ column[1] }}</a>{% else %}{{ column[1] }}{% endif %}</th>{% endfor %}
+      <th>{% trans %}Actions{% endtrans %}</th>
+      {% if list_form %}<th class="check-cell"><label class="checkbox"><input type="checkbox" class="checkbox-master"></label></th>{% endif %}
+    {% endblock %}</tr>
+  </thead>
+  <tbody>{% for item in items %}
+    <tr>{% block table_row scoped %}{% for column in action.columns %}
+      <td{% if loop.first %} class="lead-cell{% if column[3] is defined %} span{{ widthratio(column[3], 100, 12) }}{% endif %}"{% elif column[3] is defined %} class="span{{ widthratio(column[3], 100, 12) }}"{% endif %}>{{ item[column[0]] }}</td>{% endfor %}{% endblock %}
+      {%- if not hide_actions%}
+      <td class="span2">
+      	{%- set item_actions = action.get_item_actions(request, item) -%}
+      	{% if item_actions -%}
+      	<ul class="list-actions">
+      	  {% for action in item_actions %}
+      	  <li>{% if action.post -%}
+      	  <form action="{{ action.url }}" method="post"{% if action.prompt %} class="confirm" data-jsconfirm="{{ action.prompt }}"{% endif %}>
+            <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+      	    <button type="submit" class="tooltip-top" title="{{ action.name }}"><i class="icon-{{ action.icon }}"></i></button>
+      	  </form>
+      	  {%- else -%}
+      	  <a href="{{ action.url }}" class="tooltip-top{% if action.prompt %} confirm{% endif %}"{% if action.prompt %} data-jsconfirm="{{ action.prompt }}"{% endif %} title="{{ action.name }}"><i class="icon-{{ action.icon }}"></i></a>
+      	  {%- endif %}</li>
+      	  {% endfor %}
+      	</ul>
+      	{%- else -%}
+      	<em>{% trans %}Not available{% endtrans %}</em>
+      	{%- endif %}
+      </td>{% endif %}
+      {% if list_form %}<td class="check-cell"><label class="checkbox"><input form="list_form" name="{{ list_form.fields['list_items']['html_name'] }}" type="checkbox" class="checkbox-member" value="{{ item.pk }}"{% if list_form.fields['list_items']['has_value'] and item.pk in list_form.fields['list_items']['value'] %} checked="checked"{% endif %}></label></td>{% endif %}
+    </tr>{% endfor %}
+  </tbody>
+</table>
+<div class="form-actions table-footer">{% if pagination and (pagination['prev'] > 0 or pagination['next'] > 0)%}
+  <ul class="pager pull-left">
+    {%- if pagination['prev'] > 0 %}<li><a href="{{ action.get_pagination_url(pagination['prev']) }}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{{ action.get_pagination_url(pagination['next']) }}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+  </ul>
+  <div class="table-count pull-left">{%- trans current_page=pagination['page'], pages=pagination['total'] -%}
+  Page {{ current_page }} of {{ pages }}
+  {%- endtrans -%}</div>{% else %}
+  <div class="table-count pull-left">{% trans count=items_total, total=items_total|intcomma, shown=items.count()|intcomma -%}Showing all items
+{%- pluralize -%}
+Showing {{ shown }} of {{ total }} items
+{%- endtrans %}</div>{% endif %}
+  {% if list_form -%}
+  <form id="list_form" class="form-inline pull-right" action="{{ url }}" method="POST">
+    <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+    <input type="hidden" name="origin" value="list">
+    {{ form_theme.input_select(list_form.fields['list_action'],width=20) }}
+    <button type="submit" class="btn btn-primary">{% trans %}Go{% endtrans %}</button>
+  </form>
+{%- endif %}
+</div>
+{%- else -%}
+<div class="alert alert-{% if action.is_filtering %}error{% else %}info{% endif %} alert-form">
+  <div class="alert-icon"><span><i class="icon-{% if action.is_filtering %}remove{% else %}info-sign{% endif %} icon-white"></i></span></div>
+  <p>{% if action.is_filtering %}{{ action.empty_search_message }}{% else %}{{ action.empty_message }}{% endif %}</p>
+</div>
+{% endif -%}
+{%- if search_form %}
+  </div>
+  <div class="span3 side-search">
+  	<h4>{% if search_form.fieldsets[0].legend %}{{ search_form.fieldsets[0].legend }}{% else %}{% trans %}Search Items{% endtrans %}{% endif %}</h4>
+    <form id="search_form" action="{{ url }}" method="post">
+      <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+      <input type="hidden" name="origin" value="search">
+      {% for field in search_form.fieldsets[0].fields %}
+      {{ form_theme.row_widget(field, width=3) }}
+      {% endfor %}
+    </form>
+    <div class="form-actions">
+      <div class="row">
+        <button type="submit" form="search_form" class="btn btn-primary span1"><i class="icon-search icon-white"></i></button>{% if action.is_filtering %}
+        <button type="submit" form="search_clear" class="btn btn-inverse span1 offset1"><i class="icon-remove icon-white"></i></button>{% endif %}
+      </div>
+    </div>
+  </div>
+</div>{% if action.is_filtering %}
+<form id="search_clear" class="form-inline" action="{{ url }}" method="post">
+  <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+  <input type="hidden" name="origin" value="clear">
+</form>{% endif %}{% endif -%}
+{% endblock %}
+
+{% block javascripts -%}
+{{ super() }}
+{%- if action.prompt_select %}
+  <script type="text/javascript">
+    $(function () {
+      $('#list_form').submit(function() {
+        if ($('.check-cell[]:checked').length == 0) {
+          alert('{{ action.nothing_checked_message }}');
+          return false;
+        }
+        {%- for item in action.actions %}{% if item.2 %}
+        if ($('#id_list_action').val() == '{{ item.0 }}') {
+          var decision = confirm('{{ item.2 }}');
+          return decision;
+        }
+        {%- endif %}{% endfor %}
+        return true;
+      });
+    });
+  </script>{% endif %}
+{%- endblock %}
+
+{#- COLUMN CLASS -#}
+{%- macro th_class(column, sorting, sorting_method) -%}
+{%- if column[2] or column[0] in sorting %} class="
+{#- COLUMN WIDTH (ex. "span4") -#}
+{%- if column[2] %}span{{ widthratio(column[2], 100, 12) }}{% endif -%}
+{#- SEPARATOR -#}
+{%- if column[2] and column[0] in sorting %} {% endif -%}
+{#- COLUMN SORTING -#}
+{%- if column[0] in sorting -%}table-sort sort-
+{%- if column[0] == sorting_method[0] -%}
+active-{% if sorting_method[1] %}asc{% else %}desc{% endif -%}
+{%- else -%}
+{%- if sorting[column[0]] -%}asc{% else %}desc{% endif -%}
+{%- endif -%}
+{%- endif -%}
+"{%- endif -%}
+{%- endmacro -%}

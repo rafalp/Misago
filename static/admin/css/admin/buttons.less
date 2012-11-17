@@ -1,0 +1,103 @@
+.button-colors (@btnColor) {
+  background: @btnColor;
+  border: 1px solid @btnColor;
+  *border: 0;
+}
+
+.button-icon (@default, @hover: 100) {
+  i {
+    .opacity(@default);
+  }
+  
+  &:hover, &:active {
+    i {
+      .opacity(@hover);
+    }
+  }
+}
+
+.button-style (@background, @highlight) {
+  .button-colors(@background);
+
+  color: darken(@white, 3%);
+  text-shadow: 0px 1px 0px darken(@background, 5%);
+
+  &:hover, &:active {
+    .button-colors(@highlight);
+  }
+}
+
+.btn {
+  .button-colors(@btnBackground);
+  .box-shadow(none);
+  padding: 4px 10px;
+  
+  color: lighten(@gray, 10%);
+  font-weight: bold;
+  text-shadow: none;
+  
+  &:hover, &:active {
+    .button-colors(@btnBackgroundHighlight);
+    box-shadow: none;
+  
+    color: @linkColor;
+  }
+  
+  .button-icon(70);
+  
+  &.btn-primary,
+  &.btn-info,
+  &.btn-success,
+  &.btn-warning,
+  &.btn-danger,
+  &.btn-inverse {
+    .button-icon(90);
+  
+    color: darken(@white, 5%);
+  
+    &:hover, &:active {  
+      color: @white;
+    }
+  }
+  
+  &.btn-primary {
+    .button-colors(@btnPrimaryBackground);
+    .button-style(@btnPrimaryBackground, @btnPrimaryBackgroundHighlight);
+  }
+  
+  &.btn-info {
+    .button-colors(@btnInfoBackground);
+    .button-style(@btnInfoBackground, @btnInfoBackgroundHighlight);
+  }
+  
+  &.btn-success {
+    .button-colors(@btnSuccessBackground);
+    .button-style(@btnSuccessBackground, @btnSuccessBackgroundHighlight);
+  }
+  
+  &.btn-warning {
+    .button-colors(@btnWarningBackground);
+    .button-style(@btnWarningBackground, @btnWarningBackgroundHighlight);
+  }
+  
+  &.btn-danger {
+    .button-colors(@btnDangerBackground);
+    .button-style(@btnDangerBackground, @btnDangerBackgroundHighlight);
+  }
+  
+  &.btn-inverse {
+    .button-colors(@btnInverseBackground);
+    .button-style(@btnInverseBackground, @btnInverseBackgroundHighlight);
+  }
+  
+  &.btn-link {
+    background: none;
+    border: none;
+  
+    &:hover, &:active {
+      color: @linkColorHover;
+      
+      text-decoration: none;
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{% load url from future %}
+{% load i18n %}
+
+{% trans username=user.username %}Hello, {{ username }}{% endtrans %}
+
+{% block content %}{% endblock %}
+
+========================================{% if settings.email_footnote %}
+{{ settings.email_footnote }}
+----------------------------------------
+{% endif %}
+{{ settings.board_name }} - {{ board_address }}
+{% trans %}This is an automatically generated email.{% endtrans %}

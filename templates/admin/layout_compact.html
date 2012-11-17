@@ -1,0 +1,20 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block body_class %} class="layout-compact"{% endblock %}
+
+{% block body %}
+    <div class="container">
+      <div class="row">
+      	<div class="span4 offset4">
+		  <h1>{% block header %}{% endblock %}</h1>
+		</div>
+      	<div class="span4 offset4">
+      	  <div class="block-bold">
+      	    {% block content %}{% endblock %}
+      	  </div>
+      	</div>
+      </div>
+    </div>
+{% endblock %}

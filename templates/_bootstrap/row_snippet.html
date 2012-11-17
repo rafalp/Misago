@@ -1,0 +1,17 @@
+                <div class="control-group{% if field.errors %} error{% endif %}">{% if field.label %}
+                  <label class="control-label" for="{{ field.html_id }}">{{ field.label }}:</label>{% endif %}{% if field.nested %}
+                  <div class="controls controls-nested">
+                  	<div class="row">
+                    {% for subfield in field.nested %}{% with field=subfield nested=1 %}                     	
+                  	  <div class="span{% widthratio field.width 100 max_width %}">{% include "_bootstrap/field_snippet.html" %}</div>
+                    {% endwith %}{% endfor %}
+                    </div>{% for error in field.errors %}
+                    <p class="help-block" style="font-weight: bold;">{{ error }}</p>{% endfor %}{% if field.widget != "checkbox" and field.help_text %}
+                    <p class="help-block">{{ field.help_text }}</p>{% endif %}
+                  </div>{% else %}
+                  <div class="controls">
+					{% include "_bootstrap/field_snippet.html" %}{% for error in field.errors %}
+                    <p class="help-block" style="font-weight: bold;">{{ error }}</p>{% endfor %}{% if field.widget != "checkbox" and field.help_text %}
+                    <p class="help-block">{{ field.help_text }}</p>{% endif %}
+                  </div>{% endif %}
+                </div>

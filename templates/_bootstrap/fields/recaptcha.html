@@ -1,0 +1,8 @@
+<div class="recaptcha-wrapper">
+  <script type="text/javascript" src="{{ field.attrs.api_server }}/challenge?k={{ field.attrs.public_key }}{{ field.attrs.error_param }}"></script>
+  <noscript>
+    <iframe src="{{ field.attrs.api_server }}/noscript?k={{ field.attrs.public_key }}{{ field.attrs.error_param }}" height="300" width="500" frameborder="0"></iframe><br>
+    <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+    <input type='hidden' name='recaptcha_response_field' value='manual_challenge'>
+  </noscript>
+</div>

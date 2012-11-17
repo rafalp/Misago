@@ -1,0 +1,17 @@
+{% extends "sora/layout.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block title %}{% if settings.board_index_title %}{{ settings.board_index_title }}{% else %}{{ settings.board_name }}{% endif %}{% endblock %}
+     
+{% block meta %}{% if settings.board_index_meta %}
+<meta name="description" content="{{ settings.board_index_meta }}">
+{% endif %}{% endblock %}
+      
+{% block content %}
+<div class="page-header">
+  <h1>TODO: Misago Forum Index</h1>
+</div>
+<h2>Work in progress.</h2>
+<p>Check out <a href="http://area51.misago-project.org">project forums</a> if you want to discuss.</p>
+{% endblock %}

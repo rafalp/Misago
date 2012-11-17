@@ -1,0 +1,7 @@
+{% extends "_message/base.html" %}
+{% load i18n %}
+
+{% block content %}
+  <div class="alert-icon"><span><i class="icon-ok icon-white"></i></span></div>
+  <p>{% trans username=message.user.username %}{{ username }}, Board Administrator has not yet activated your account. Please try again later.{% endtrans %}</p>
+{% endblock %}

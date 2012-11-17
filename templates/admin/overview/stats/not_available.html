@@ -1,0 +1,9 @@
+{% extends "admin/overview/stats/layout.html" %}
+{% load i18n %}
+
+{% block action %}<div class="alert">
+  <div class="alert-icon"><span><i class="icon-info-sign icon-white"></i></span></div>
+  <p><strong>{% trans %}No statistics providers could be found.{% endtrans %}</strong></p>
+  <p>{% trans %}This action is not avaiable because there are no models found that provide filter_overview method necessary to generate statistics reports.{% endtrans %}</p>
+  <p>{% trans %}Some of Misago models provide statistics so you should never see this page.{% endtrans %}</p>
+</div>{% endblock %}

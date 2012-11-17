@@ -1,0 +1,12 @@
+            <fieldset>
+              <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">{% for field in form.hidden %}
+              <input type="hidden" name="{{ field.id }}" value="{{ field.value }}">{% endfor %}{% for fieldset in form.fieldsets %}{% if fieldset.legend %}
+              <legend><div>{{ fieldset.legend }}{% if fieldset.help %} <span>{{ fieldset.help }}</span>{% endif %}</div></legend>{% endif %}
+              {% for field in fieldset.fields %}
+              	{% include "_bootstrap/row_snippet.html" %}
+              	{% if field.endrow %}
+              {% if not field.last %}
+              {% endif %}{% endif %}{% endfor %}{% if not fieldset.last %}
+              <hr>
+            {% endif %}</fieldset>{% if not fieldset.last %}
+            <fieldset>{% endif %}{% endfor %}

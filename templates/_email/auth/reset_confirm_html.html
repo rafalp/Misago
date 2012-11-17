@@ -1,0 +1,12 @@
+{% extends "_email/base_html.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block content %}
+<p style="margin: 12px 0px; padding: 0px;">{% trans %}You are receiving this message because you have requested for new password to be generated and set on your account.{% endtrans %}</p>
+<p style="margin: 12px 0px; padding: 0px;">{% trans %}To confirm that you want to reset your account's password with new one click the link below:{% endtrans %}</p>
+<div style="background-color: #EFEFEF; border-radius: 3px; margin: 0px; padding: 8px; text-align: center;">
+  <a href="{{ board_address }}{% url 'reset_password' username=user.username_slug user=user.id token=user.token %}" style="color: #3465a4; font-size: 150%;">{% trans %}Reset my password{% endtrans %}</a>
+</div>
+<p style="margin: 12px 0px; padding: 0px;">{% trans %}Your new password will be sent back to you in next message once you click confirmation link.{% endtrans %}</p>
+{% endblock %}

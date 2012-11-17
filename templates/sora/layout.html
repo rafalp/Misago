@@ -1,0 +1,37 @@
+{% extends "sora/base.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block body %}
+{% include "sora/userbar.html" with context %}
+<div class="navbar navbar-fixed-top navbar-inverse navbar-header">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="{% url 'index' %}">{% if settings.board_header %}{{ settings.board_header }}{% else %}{{ settings.board_name }}{% endif %}{% if settings.board_header_postscript %} <span>{{ settings.board_header_postscript }}</span>{% endif %}</a>
+      <ul class="nav">
+        <li><a href="{% url 'index' %}" title="{% trans %}Forum Home{% endtrans %}" class="tooltip-bottom"><i class="icon-comment"></i></a></li>{% if not user.crawler %}
+        <li><a href="#" title="{% trans %}Search Community{% endtrans %}" class="tooltip-bottom"><i class="icon-search"></i></a></li>{% endif %}
+        <li><a href="{% url 'users' %}" title="{% trans %}Browse Users{% endtrans %}" class="tooltip-bottom"><i class="icon-user"></i></a></li>
+      </ul>{% if not user.crawler %}
+      <form class="form-inline search-form">
+        <input type="text" class="span3" placeholder="{% trans %}Search community...{% endtrans %}">
+        <button type="submit" class="btn"><i class="icon-search"></i></button>
+      </form>{% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  {% if messages %}
+  <div class="alerts-global">{% for message in messages %}
+  	<div class="alert alert-{{ message.type }}">{% include message.tpl %}</div>
+  {% endfor %}</div>{% endif %}
+  
+  {% block content %}
+  {% endblock %}
+  
+  <footer>{% if settings.board_credits %}
+    <p>{{ settings.board_credits|safe }}</p>{% endif %}
+    <p class="software">This community is powered by <a href="http://misago-project.org">Misago forum software</a> by Rafał Pitoń</p>
+  </footer>
+</div>{% endblock %}
