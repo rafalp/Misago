@@ -80,6 +80,10 @@ def load_settings_group_fixture(group, fixture):
         if setting[1].get('type') == 'boolean':
             value = 1 if value else 0
             value_default = 1 if value_default else 0
+        # Convert array value to string
+        if setting[1].get('type') == 'array':
+            value = ','.join(value) if value else ''
+            value_default = ','.join(value_default) if value_default else ''
         # Store setting in database
         model_setting = Setting(
                                 setting=setting[0],
