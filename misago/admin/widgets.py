@@ -33,7 +33,7 @@ class BaseWidget(object):
         return obj(request, **kwargs)
     
     def get_token(self, token):
-        return '%s_%s_%s' % (self.id, token, str('%s.%s' % (self.admin.model.__module__, self.admin.model.__class__.__name__)))
+        return '%s_%s_%s' % (self.id, token, str('%s.%s' % (self.admin.model.__module__, self.admin.model.__name__)))
         
     def get_url(self):
         return reverse(self.admin.get_action_attr(self.id, 'route'))
@@ -49,6 +49,7 @@ class BaseWidget(object):
          
     def get_templates(self, template):
         return ('%s/%s/%s.html' % (str(self.admin.model.__module__).split('.')[1], str(self.admin.route).lower(), template),
+                '%s/%s.html' % (str(self.admin.model.__module__).split('.')[1], template),
                 'admin/%s.html' % template)
             
     def get_fallback_url(self, request):
@@ -83,6 +84,7 @@ class ListWidget(BaseWidget):
     columns = []
     sortables = {}
     default_sorting = None
+    search_form = None
     is_filtering = False
     pagination = None
     template = 'list'
@@ -117,7 +119,7 @@ class ListWidget(BaseWidget):
         """
         Build a form object with items search
         """
-        return None
+        return self.search_form
             
     def set_filters(self, model, filters):
         """
@@ -275,7 +277,7 @@ class ListWidget(BaseWidget):
                         message = BasicMessage(_("Search form contains errors."))
                     message.type = 'error'
                 else:
-                        search_form = SearchForm(request=request)
+                    search_form = SearchForm(request=request)
                     
                 # Kill search
                 if request.POST.get('origin') == 'clear' and self.is_filtering and request.csrf.request_secure(request):

@@ -52,24 +52,3 @@ class JamCache(object):
     
     def is_jammed(self):
         return self.jammed
-
- 
-"""
-Question-Answer Tests
-"""
-class QATestManager(models.Manager):
-    def random(self):
-        count = self.aggregate(count=models.Count('id'))['count']
-        random_index = randint(0, count - 1)
-        return self.all()[random_index]
-
-    
-class QATest(models.Model):
-    question = models.CharField(_("Question"),max_length=255)
-    helptext = models.TextField(null=True,blank=True)
-    answers = models.TextField()
-    
-    objects = QATestManager()
-    
-    def is_answer_correct(self, answer):
-        return unicode(answer).lower() in (name.lower() for name in unicode(self.answers).splitlines())

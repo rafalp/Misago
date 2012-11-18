@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import AdminSection, AdminAction
+from misago.banning.models import Ban
 from misago.users.models import User
 
 ADMIN_SECTIONS=(
@@ -60,9 +61,29 @@ ADMIN_ACTIONS=(
                name=_("Banning"),
                help=_("Ban or unban users from forums."),
                icon='lock',
+               model=Ban,
+               actions=[
+                        {
+                         'id': 'list',
+                         'icon': 'list-alt',
+                         'name': _("Browse Bans"),
+                         'help': _("Browse all existing bans"),
+                         'route': 'admin_users_bans'
+                         },
+                        {
+                         'id': 'new',
+                         'icon': 'plus',
+                         'name': _("Set Ban"),
+                         'help': _("Set new Ban"),
+                         'route': 'admin_users_bans_new'
+                         },
+                        ],
                route='admin_users_bans',
-               urlpatterns=patterns('misago.admin.views',
-                        url(r'^$', 'todo', name='admin_users_bans'),
+               urlpatterns=patterns('misago.banning.admin.views',
+                        url(r'^$', 'List', name='admin_users_bans'),
+                        url(r'^new/$', 'New', name='admin_users_bans_new'),
+                        url(r'^edit/(?P<target>\d+)/$', 'Edit', name='admin_users_bans_edit'),
+                        url(r'^delete/(?P<target>\d+)/$', 'Delete', name='admin_users_bans_delete'),
                     ),
                ),
    AdminAction(

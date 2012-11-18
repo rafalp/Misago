@@ -29,12 +29,12 @@ class UserRegisterForm(Form):
     layout = [
                  (
                      None,
-                     [('username', {'placeholder': _("Enter your desired username")})]
+                     [('username', {'attrs': {'placeholder': _("Enter your desired username")}})]
                  ),
                  (
                      None,
-                     [('nested', [('email', {'placeholder': _("Enter your e-mail"), 'width': 50}), ('email_rep', {'placeholder': _("Repeat your e-mail"), 'width': 50})]), 
-                      ('nested', [('password', {'has_value': False, 'placeholder': _("Enter your password"), 'width': 50}), ('password_rep', {'has_value': False, 'placeholder': _("Repeat your password"), 'width': 50})])]
+                     [('nested', [('email', {'label': _('E-mail address'), 'attrs': {'placeholder': _("Enter your e-mail")}, 'width': 50}), ('email_rep', {'attrs': {'placeholder': _("Repeat your e-mail")}, 'width': 50})]), 
+                      ('nested', [('password', {'label': _('Password'), 'has_value': False, 'attrs': {'placeholder': _("Enter your password")}, 'width': 50}), ('password_rep', {'has_value': False, 'attrs': {'placeholder': _("Repeat your password")}, 'width': 50})])]
                  ),
                  (
                      None,

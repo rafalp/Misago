@@ -56,7 +56,18 @@ class BanCache(object):
         if (self.version < request.monitor['bans_version']
             or (self.expires != None and self.expires < timezone.now())):
             self.version = request.monitor['bans_version']
-            ban = check_ban(ip=request.session.get_ip(request))
+            
+            # Check Ban
+            if request.user.is_authenticated():
+                ban = check_ban(
+                                ip=request.session.get_ip(request),
+                                username=request.user.username,
+                                email=request.user.email
+                                )
+            else:
+                ban = check_ban(ip=request.session.get_ip(request))
+                
+            # Update ban cache
             if ban:
                 self.banned = True
                 self.reason = ban.reason_user

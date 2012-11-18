@@ -1,7 +1,6 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from misago.forms.layouts import *
-from misago.security.models import QATest
 from recaptcha.client.captcha import submit as recaptcha_submit
 
 class Form(forms.Form):

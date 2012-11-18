@@ -29,16 +29,14 @@ class List(ListWidget):
                'username_slug': 1,
                'join_date': 0,
               }
-    pagination = 15
+    pagination = 25
+    search_form = SearchUsersForm
     nothing_checked_message = _('You have to check at least one user.')
     actions=(
              ('reset', _("Reset passwords"), _("Are you sure you want to reset selected members passwords?")),
              ('remove_avs', _("Remove avatars"), _("Are you sure you want to reset selected members passwords?")),
              ('delete', _("Delete selected"), _("Are you sure you want to delete selected users?")),
              )
-    
-    def get_search_form(self, request):
-        return SearchUsersForm
     
     def set_filters(self, model, filters):
         if 'username' in filters:

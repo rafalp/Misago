@@ -101,7 +101,7 @@
 {%- macro input_date(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
 {%- do field.attrs.update(attrs) -%}
 {%- if horizontal -%}
-  {%- do classes.append('span' ~ widthratio(field.width, 140, width)) -%}
+  {%- do classes.append('span' ~ (widthratio(field.width, 100, width) - 2)) -%}
 {%- else -%}
   {%- do classes.append('span' ~ widthratio(field.width, 100, width)) -%}
 {%- endif -%}
@@ -144,7 +144,7 @@ RECAPTCHA!
 {%- macro input_select(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
 {%- do field.attrs.update(attrs) -%}
 {%- if horizontal %}
-  {%- do classes.append('span' ~ widthratio(field.width, 140, width)) -%}
+  {%- do classes.append('span' ~ (widthratio(field.width, 100, width) - 2)) -%}
 {%- else -%}
   {%- do classes.append('span' ~ widthratio(field.width, 100, width)) -%}
 {%- endif -%}
@@ -158,7 +158,7 @@ RECAPTCHA!
 {%- macro input_text(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
 {%- do field.attrs.update(attrs) -%}
 {%- if horizontal -%}
-  {%- do classes.append('span' ~ widthratio(field.width, 140, width)) -%}
+  {%- do classes.append('span' ~ (widthratio(field.width, 100, width) - 2)) -%}
 {%- else -%}
   {%- do classes.append('span' ~ widthratio(field.width, 100, width)) -%}
 {%- endif -%}
@@ -170,7 +170,7 @@ RECAPTCHA!
 {%- macro input_textarea(field, attrs={'rows': 4}, classes=[], horizontal=false, width=12, nested=false) -%}
 {%- do field.attrs.update(attrs) -%}
 {%- if horizontal -%}
-  {%- do classes.append('span' ~ widthratio(field.width, 140, width)) -%}
+  {%- do classes.append('span' ~ (widthratio(field.width, 100, width) - 2)) -%}
 {%- else -%}
   {%- do classes.append('span' ~ widthratio(field.width, 100, width)) -%}
 {%- endif -%}
