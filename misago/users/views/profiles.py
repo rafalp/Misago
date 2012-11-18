@@ -2,14 +2,14 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
 from misago.users.models import User, Group
-from misago.views import error403, error404
+from misago.views import error404
 
 
-def users(request):
+def list(request):
     pass
 
 
-def user_profile(request, user, username):
+def show(request, user, username):
     user = int(user)
     try:
         user = User.objects.get(pk=user)

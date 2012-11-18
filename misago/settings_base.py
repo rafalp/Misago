@@ -104,7 +104,6 @@ INSTALLED_APPS = (
     'misago.utils', # Utility classes
     # Applications with dependencies
     'misago.acl', # Web crawlers handling
-    'misago.auth', # User register, sign-in and sign-out
     'misago.banning', # Banning and blacklisting users
     'misago.crawlers', # Web crawlers handling
     'misago.cookie_jar', # Cookies helper
