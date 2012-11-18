@@ -49,7 +49,7 @@ class List(ListWidget):
     
     def get_item_actions(self, request, item):
         return (
-                self.action('pencil', _("Edit User Details"), reverse('admin_qa_edit', item)),
+                self.action('pencil', _("Edit User Details"), reverse('admin_users_edit', item)),
                 self.action('remove', _("Delete User"), reverse('admin_users_delete', item), post=True, prompt=_("Are you sure you want to delete this user account?")),
                 )
 
