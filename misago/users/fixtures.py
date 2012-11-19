@@ -1,6 +1,6 @@
 from misago.monitor.fixtures import load_monitor_fixture
 from misago.settings.fixtures import load_settings_fixture
-from misago.users.models import Rank, Group
+from misago.users.models import Rank
 from misago.utils import ugettext_lazy as _
 from misago.utils import get_msgid
 
@@ -161,76 +161,34 @@ def load_fixture():
     load_settings_fixture(settings_fixtures)
     
     rank_staff = Rank(
-                      name=_("Forum Staff").message,
+                      name=_("Forum Team").message,
+                      title=_("Forum Team").message,
                       style='staff',
-                      title=_("Forum Staff").message,
                       special=True,
                       order=0,
+                      as_tab=True,
                       )
     rank_lurker = Rank(
                       name=_("Lurker").message,
                       style='lurker',
-                      title=_("Lurker").message,
-                      order=2,
+                      order=1,
                       criteria="100%"
                       )
     rank_member = Rank(
                       name=_("Member").message,
-                      title=_("Member").message,
-                      order=3,
-                      criteria="15%"
+                      order=2,
+                      criteria="75%"
                       )
     rank_active = Rank(
-                      name=_("Active Member").message,
-                      title=_("Active Member").message,
-                      order=4,
-                      criteria="25"
+                      name=_("Most Valueable Posters").message,
+                      title=_("MVP").message,
+                      style='active',
+                      order=3,
+                      criteria="5%",
+                      as_tab=True,
                       )
     
     rank_staff.save(force_insert=True)
     rank_lurker.save(force_insert=True)
     rank_member.save(force_insert=True)
     rank_active.save(force_insert=True)
-    
-    group_admins = Group(
-                         name=_("Administrators").message,
-                         name_slug='administrators',
-                         tab=_("Staff").message,
-                         position=0,
-                         rank=rank_staff,
-                         special=True,
-                         )
-    group_mods = Group(
-                       name=_("Moderators").message,
-                       name_slug='moderators',
-                       tab=_("Staff").message,
-                       position=1,
-                       rank=rank_staff,
-                       )
-    group_registered = Group(
-                         name=_("Registered").message,
-                         name_slug='registered',
-                         hidden=True,
-                         position=2,
-                         special=True,
-                         )
-    group_guests = Group(
-                         name=_("Guests").message,
-                         name_slug='guests',
-                         hidden=True,
-                         position=3,
-                         special=True,
-                         )
-    group_crawlers = Group(
-                           name=_("Web Crawlers").message,
-                           name_slug='web-crawlers',
-                           hidden=True,
-                           position=4,
-                           special=True,
-                           )
-    
-    group_admins.save(force_insert=True)
-    group_mods.save(force_insert=True)
-    group_registered.save(force_insert=True)
-    group_guests.save(force_insert=True)
-    group_crawlers.save(force_insert=True)    

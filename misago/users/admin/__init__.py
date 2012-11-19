@@ -41,8 +41,8 @@ ADMIN_ACTIONS=(
                urlpatterns=patterns('misago.users.admin.users.views',
                         url(r'^$', 'List', name='admin_users'),
                         url(r'^new/$', 'List', name='admin_users_new'),
-                        url(r'^edit/(?P<slug>([a-zA-Z0-9]|-)+)\.(?P<target>\d+)/$', 'List', name='admin_users_edit'),
-                        url(r'^delete/(?P<slug>([a-zA-Z0-9]|-)+)\.(?P<target>\d+)/$', 'Delete', name='admin_users_delete'),
+                        url(r'^edit/(?P<slug>([a-zA-Z0-9]|-)+)-(?P<target>\d+)/$', 'List', name='admin_users_edit'),
+                        url(r'^delete/(?P<slug>([a-zA-Z0-9]|-)+)-(?P<target>\d+)/$', 'Delete', name='admin_users_delete'),
                     ),
                ),
    AdminAction(
@@ -72,8 +72,8 @@ ADMIN_ACTIONS=(
                urlpatterns=patterns('misago.users.admin.ranks.views',
                         url(r'^$', 'List', name='admin_users_ranks'),
                         url(r'^new/$', 'New', name='admin_users_ranks_new'),
-                        url(r'^edit/(?P<slug>([a-zA-Z0-9]|-)+)\.(?P<target>\d+)/$', 'Edit', name='admin_users_ranks_edit'),
-                        url(r'^delete/(?P<slug>([a-zA-Z0-9]|-)+)\.(?P<target>\d+)/$', 'Delete', name='admin_users_ranks_delete'),
+                        url(r'^edit/(?P<slug>([a-zA-Z0-9]|-)+)-(?P<target>\d+)/$', 'Edit', name='admin_users_ranks_edit'),
+                        url(r'^delete/(?P<slug>([a-zA-Z0-9]|-)+)-(?P<target>\d+)/$', 'Delete', name='admin_users_ranks_delete'),
                     ),
                ),
    AdminAction(

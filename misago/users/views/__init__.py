@@ -9,7 +9,7 @@ from misago.messages import Message
 from misago.security.auth import sign_user_in
 from misago.security.decorators import *
 from misago.users.forms import *
-from misago.users.models import User, Group
+from misago.users.models import User
 from misago.views import error403
 
 @block_banned
@@ -31,7 +31,6 @@ def register(request):
                                                 form.cleaned_data['username'],
                                                 form.cleaned_data['email'],
                                                 form.cleaned_data['password'],
-                                                Group.objects.get(pk=3), # Registered members
                                                 ip=request.session.get_ip(request),
                                                 activation=need_activation,
                                                 request=request

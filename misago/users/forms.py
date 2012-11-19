@@ -107,3 +107,7 @@ class UserSendSpecialMailForm(Form):
             raise ValidationError(_("There is no user with such e-mail address."))
         return email
     
+    
+class QuickFindUserForm(Form):
+    username = forms.CharField()
+    

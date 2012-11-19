@@ -10,6 +10,7 @@ from django.db import models, connection, transaction
 from django.template import RequestContext
 from django.utils import timezone as tz_util
 from django.utils.translation import ugettext_lazy as _
+from misago.acl.models import Role
 from misago.monitor.monitor import Monitor
 from misago.security import get_random_string
 from misago.settings.settings import Settings as DBSettings
@@ -36,7 +37,7 @@ class UserManager(models.Manager):
         monitor['last_user_name'] = last_user.username
         monitor['last_user_slug'] = last_user.username_slug
     
-    def create_user(self, username, email, password, group, timezone=False, ip='127.0.0.1', activation=0, request=False):
+    def create_user(self, username, email, password, timezone=False, ip='127.0.0.1', activation=0, request=False):
         token = ''
         if activation > 0:
             token = get_random_string(12)
@@ -49,6 +50,12 @@ class UserManager(models.Manager):
                 db_settings = DBSettings()
                 timezone = db_settings['default_timezone']
         
+        # Get first rank
+        try:
+            default_rank = Rank.objects.filter(special=0).order_by('order')[0]
+        except Rank.DoesNotExist:
+            default_rank = None
+        
         # Store user in database
         new_user = User(
                         join_date=tz_util.now(),
@@ -56,7 +63,7 @@ class UserManager(models.Manager):
                         activation=activation,
                         token=token,
                         timezone=timezone,
-                        group=group,
+                        rank=default_rank,
                         )
         
         new_user.set_username(username)
@@ -66,8 +73,8 @@ class UserManager(models.Manager):
         new_user.default_avatar(db_settings)
         new_user.save(force_insert=True)
         
-        # Set second group and default avatar
-        new_user.groups.add(group)
+        # Set user roles
+        new_user.roles.add(Role.objects.get(token='registered'))
         new_user.save(force_update=True)
         
         # Load monitor
@@ -128,6 +135,7 @@ class User(models.Model):
     followers_delta = models.IntegerField(default=0)
     score = models.FloatField(default=0,db_index=True)
     rank = models.ForeignKey('Rank',null=True,blank=True,db_index=True,on_delete=models.SET_NULL)
+    title = models.CharField(max_length=255,null=True,blank=True)
     last_post = models.DateTimeField(null=True,blank=True)
     last_search = models.DateTimeField(null=True,blank=True)
     alerts = models.PositiveIntegerField(default=0)
@@ -143,9 +151,7 @@ class User(models.Model):
     signature_ban_reason_admin = models.TextField(null=True,blank=True)
     signature_ban_expires = models.DateTimeField(null=True,blank=True)
     timezone = models.CharField(max_length=255,default='utc')
-    roles = models.CommaSeparatedIntegerField(max_length=255,null=True,blank=True)
-    group = models.ForeignKey('Group',on_delete=models.PROTECT)
-    groups = models.ManyToManyField('Group',related_name='groups')
+    roles = models.ManyToManyField(Role)
     acl_cache = models.TextField(null=True,blank=True)
     
     objects = UserManager()   
@@ -158,7 +164,7 @@ class User(models.Model):
     statistics_name = _('Users Registrations')
         
     def is_admin(self):
-        return 1 == self.group.pk
+        return 1
     
     def is_anonymous(self):
         return False
@@ -300,6 +306,13 @@ class User(models.Model):
             size = 100
         return 'http://www.gravatar.com/avatar/%s?s=%s' % (hashlib.md5(self.email).hexdigest(), size)
     
+    def get_title(self):
+        if self.title:
+            return self.title
+        if self.rank:
+            return self.rank.title
+        return None
+    
     def email_user(self, request, template, subject, context={}):
         templates = request.theme.get_email_templates(template)
         context = RequestContext(request, context)
@@ -356,25 +369,12 @@ class Crawler(object):
         return True
     
     
-class Group(models.Model):
-    """
-    Misago Users Group model
-    """
-    name = models.CharField(max_length=255)
-    name_slug = models.SlugField(max_length=255)
-    hidden = models.BooleanField(default=False)
-    tab = models.CharField(max_length=255,null=True,blank=True)
-    position = models.IntegerField(default=0)
-    rank = models.ForeignKey('Rank',null=True,blank=True,db_index=True,on_delete=models.SET_NULL)
-    special = models.BooleanField(default=False)
-    
-    
 class Rank(models.Model):
     """
     Misago User Rank
     Ranks are ready style/title pairs that are assigned to users either by admin (special ranks) or as result of user activity.
     """
-    name = models.CharField(max_length=255,null=True,blank=True)
+    name = models.CharField(max_length=255)
     name_slug = models.CharField(max_length=255,null=True,blank=True)
     description = models.TextField(null=True,blank=True)
     style = models.CharField(max_length=255,null=True,blank=True)
@@ -382,7 +382,7 @@ class Rank(models.Model):
     special = models.BooleanField(default=False)
     as_tab = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
-    criteria = models.CharField(max_length=255,default='')
+    criteria = models.CharField(max_length=255,null=True,blank=True)
     
     def assign_rank(self, users=0, special_ranks=None):
         if not self.criteria or self.special or users == 0:

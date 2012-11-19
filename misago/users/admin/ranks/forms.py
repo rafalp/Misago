@@ -6,7 +6,7 @@ from misago.forms import Form, YesNoSwitch
 class RankForm(Form):
     name = forms.CharField(max_length=255)
     description = forms.CharField(widget=forms.Textarea,required=False)
-    title = forms.CharField(max_length=255)
+    title = forms.CharField(max_length=255,required=False)
     style = forms.CharField(max_length=255,required=False)
     special = forms.BooleanField(widget=YesNoSwitch,required=False)
     as_tab = forms.BooleanField(widget=YesNoSwitch,required=False)

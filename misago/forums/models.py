@@ -148,12 +148,6 @@ class Vote(models.Model):
     ip = models.GenericIPAddressField()
     option = models.PositiveIntegerField()
     
-   
-class Moderator(models.Model):
-    forum = models.ForeignKey(Forum, related_name='+')
-    group = models.ForeignKey('users.Group', related_name='+', null=True, blank=True)
-    user = models.ForeignKey('users.User', related_name='+', null=True, blank=True)
-    
     
 class Report(models.Model):
     forum = models.ForeignKey(Forum, related_name='+')

@@ -19,7 +19,14 @@ class Command(BaseCommand):
         users_total = User.objects.exclude(rank__in=special_ranks).count()
         
         # Update Ranking
+        defaulted_ranks = False
         for rank in Rank.objects.filter(special=0).order_by('order'):
-            rank.assign_rank(users_total, special_ranks)
+            if defaulted_ranks:
+                # Set ranks according to ranking
+                rank.assign_rank(users_total, special_ranks)
+            else:
+                # Set default rank first
+                Users.objects.exclude(rank__in=special_ranks).update(rank=rank)
+                defaulted_ranks = True
         
         self.stdout.write('Users ranking for has been updated.\n')

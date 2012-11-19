@@ -22,7 +22,7 @@ ADMIN_ACTIONS=(
                urlpatterns=patterns('misago.settings.admin.views',
                         url(r'^$', 'settings', name='admin_settings'),
                         url(r'^search/$', 'settings_search', name='admin_settings_search'),
-                        url(r'^(?P<group_slug>([a-zA-Z0-9]|-)+)\.(?P<group_id>\d+)/$', 'settings', name='admin_settings')
+                        url(r'^(?P<group_slug>([a-zA-Z0-9]|-)+)-(?P<group_id>\d+)/$', 'settings', name='admin_settings')
                     ),
                ),
 )

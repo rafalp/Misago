@@ -68,7 +68,7 @@ def form(request):
                             )
             return redirect(reverse('index'))
         else:
-            message = Message(request, form.non_field_errors()[0])
+            message = Message(request, form.non_field_errors()[0], 'error')
     else:
         form = UserSendSpecialMailForm(request=request)
     return request.theme.render_to_response('users/resend_activation.html',

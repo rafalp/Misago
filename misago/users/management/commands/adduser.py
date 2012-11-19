@@ -2,7 +2,8 @@ from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 from optparse import make_option
-from misago.users.models import UserManager, Group
+from misago.acl.models import Role
+from misago.users.models import UserManager
 
 class Command(BaseCommand):
     args = 'username email password'
@@ -18,19 +19,18 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if len(args) < 3:
             raise CommandError('adduser requires exactly three arguments: user name, e-mail addres and password')
-        
-        # Get group
-        if options['admin']:
-            group = Group.objects.get(pk=1)
-        else:
-            group = Group.objects.get(pk=3)
-           
+                
         # Set user
         try:
             manager = UserManager()
-            manager.create_user(args[0], args[1], args[2], group=group)
+            new_user = manager.create_user(args[0], args[1], args[2])
         except ValidationError as e:
             raise CommandError("New user cannot be created because of following errors:\n\n%s" % '\n'.join(e.messages))
+                
+        # Set admin role
+        if options['admin']:
+            new_user.roles.add(Role.objects.get(token='admin'))
+            new_user.save(force_update=True)
         
         if options['admin']:
             self.stdout.write('Successfully created new administrator "%s"' % args[0])

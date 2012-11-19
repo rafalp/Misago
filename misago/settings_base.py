@@ -83,6 +83,7 @@ MIDDLEWARE_CLASSES = (
     'misago.banning.middleware.BanningMiddleware',
     'misago.messages.middleware.MessagesMiddleware',
     'misago.users.middleware.UserMiddleware',
+    'misago.acl.middleware.ACLMiddleware',
     'django.middleware.common.CommonMiddleware',
 )
 
