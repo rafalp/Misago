@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import AdminSection, AdminAction
 from misago.banning.models import Ban
-from misago.users.models import User
+from misago.users.models import User, Rank
 
 ADMIN_SECTIONS=(
     AdminSection(
@@ -49,11 +49,31 @@ ADMIN_ACTIONS=(
                section='users',
                id='ranks',
                name=_("Ranks"),
-               help=_("Administrate User Ranking system"),
+               help=_("Administrate User Ranks"),
                icon='star',
+               model=Rank,
+               actions=[
+                        {
+                         'id': 'list',
+                         'icon': 'list-alt',
+                         'name': _("Browse Ranks"),
+                         'help': _("Browse all existing ranks"),
+                         'route': 'admin_users_ranks'
+                         },
+                        {
+                         'id': 'new',
+                         'icon': 'plus',
+                         'name': _("Add Rank"),
+                         'help': _("Create new rank"),
+                         'route': 'admin_users_ranks_new'
+                         },
+                        ],
                route='admin_users_ranks',
-               urlpatterns=patterns('misago.admin.views',
-                        url(r'^$', 'todo', name='admin_users_ranks'),
+               urlpatterns=patterns('misago.users.admin.ranks.views',
+                        url(r'^$', 'List', name='admin_users_ranks'),
+                        url(r'^new/$', 'New', name='admin_users_ranks_new'),
+                        url(r'^edit/(?P<slug>([a-zA-Z0-9]|-)+)\.(?P<target>\d+)/$', 'Edit', name='admin_users_ranks_edit'),
+                        url(r'^delete/(?P<slug>([a-zA-Z0-9]|-)+)\.(?P<target>\d+)/$', 'Delete', name='admin_users_ranks_delete'),
                     ),
                ),
    AdminAction(

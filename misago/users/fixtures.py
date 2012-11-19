@@ -165,37 +165,29 @@ def load_fixture():
                       style='staff',
                       title=_("Forum Staff").message,
                       special=True,
-                      order=1,
-                      )
-    rank_guest = Rank(
-                      name=_("Unregistered").message,
-                      style='guest',
-                      title=_("Guest").message,
-                      special=True,
-                      order=2,
+                      order=0,
                       )
     rank_lurker = Rank(
                       name=_("Lurker").message,
                       style='lurker',
                       title=_("Lurker").message,
-                      order=3,
-                      criteria=0
+                      order=2,
+                      criteria="100%"
                       )
     rank_member = Rank(
                       name=_("Member").message,
                       title=_("Member").message,
-                      order=4,
-                      criteria=">15"
+                      order=3,
+                      criteria="15%"
                       )
     rank_active = Rank(
                       name=_("Active Member").message,
                       title=_("Active Member").message,
-                      order=5,
-                      criteria="15%"
+                      order=4,
+                      criteria="25"
                       )
     
     rank_staff.save(force_insert=True)
-    rank_guest.save(force_insert=True)
     rank_lurker.save(force_insert=True)
     rank_member.save(force_insert=True)
     rank_active.save(force_insert=True)
@@ -204,7 +196,7 @@ def load_fixture():
                          name=_("Administrators").message,
                          name_slug='administrators',
                          tab=_("Staff").message,
-                         position=1,
+                         position=0,
                          rank=rank_staff,
                          special=True,
                          )
@@ -212,30 +204,28 @@ def load_fixture():
                        name=_("Moderators").message,
                        name_slug='moderators',
                        tab=_("Staff").message,
-                       position=2,
+                       position=1,
                        rank=rank_staff,
                        )
     group_registered = Group(
                          name=_("Registered").message,
                          name_slug='registered',
                          hidden=True,
-                         position=3,
+                         position=2,
                          special=True,
                          )
     group_guests = Group(
                          name=_("Guests").message,
                          name_slug='guests',
                          hidden=True,
-                         position=4,
-                         rank=rank_guest,
+                         position=3,
                          special=True,
                          )
     group_crawlers = Group(
                            name=_("Web Crawlers").message,
                            name_slug='web-crawlers',
                            hidden=True,
-                           position=5,
-                           rank=rank_guest,
+                           position=4,
                            special=True,
                            )
     

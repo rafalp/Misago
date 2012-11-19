@@ -20,10 +20,10 @@
       {% if sorting_method[1] %}{{ url ~ query(sort=column[0],dir=0) }}{% else %}{{ url ~ query(sort=column[0],dir=1) }}{% endif %}
       {%- else -%}
       {{ url ~ query(sort=column[0],dir=sorting[column[0]]) }}
-      {%- endif %}">{{ column[1] }}</a>{% else %}{{ column[1] }}{% endif %}</th>{% endfor %}
+      {%- endif %}">{{ column[1] }}</a>{% else %}{{ column[1] }}{% endif %}</th>{% endfor %}{% endblock %}
       <th>{% trans %}Actions{% endtrans %}</th>
       {% if list_form %}<th class="check-cell"><label class="checkbox"><input type="checkbox" class="checkbox-master"></label></th>{% endif %}
-    {% endblock %}</tr>
+    </tr>
   </thead>
   <tbody>{% for item in items %}
     <tr>{% block table_row scoped %}{% for column in action.columns %}
@@ -52,7 +52,15 @@
     </tr>{% endfor %}
   </tbody>
 </table>
-<div class="form-actions table-footer">{% if pagination and (pagination['prev'] > 0 or pagination['next'] > 0)%}
+<div class="form-actions table-footer">
+  {% if table_form %}
+  <form id="table_form" class="form-inline table-actions-right pull-left" action="{{ url }}" method="POST">
+    <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+    <input type="hidden" name="origin" value="table">
+    <button type="submit" class="btn btn-primary">{{ action.table_form_button }}</button>
+  </form>
+  {% endif %}
+  {% if pagination and (pagination['prev'] > 0 or pagination['next'] > 0)%}
   <ul class="pager pull-left">
     {%- if pagination['prev'] > 0 %}<li><a href="{{ action.get_pagination_url(pagination['prev']) }}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
     {%- if pagination['next'] > 0 %}<li><a href="{{ action.get_pagination_url(pagination['next']) }}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}

@@ -89,6 +89,7 @@ class ListWidget(BaseWidget):
     pagination = None
     template = 'list'
     hide_actions = False
+    table_form_button = _('Go')
     empty_message = _('There are no items to display')
     empty_search_message = _('Search has returned no items')
     nothing_checked_message = _('You have to select at least one item.')
@@ -133,6 +134,12 @@ class ListWidget(BaseWidget):
         """
         return None
     
+    def table_action(self, request, page_items, cleaned_data):
+        """
+        Handle table form submission, return tuple containing message and redirect link/false
+        """
+        return None
+    
     def get_actions_form(self, page_items):
         """
         Build a form object with list of all items actions
@@ -173,15 +180,25 @@ class ListWidget(BaseWidget):
             request.session[self.get_token('sort')] = sorting_method
             
         if not sorting_method:
-            new_sorting = self.sortables.keys()[0]
-            if self.default_sorting in self.sortables:
-                new_sorting = self.default_sorting
-            sorting_method = [
-                    new_sorting,
-                    self.sortables[new_sorting] == True,
-                    new_sorting if self.sortables[new_sorting] else '-%s' % new_sorting
-                   ]
+            if self.sortables:
+                new_sorting = self.sortables.keys()[0]
+                if self.default_sorting in self.sortables:
+                    new_sorting = self.default_sorting
+                sorting_method = [
+                        new_sorting,
+                        self.sortables[new_sorting] == True,
+                        new_sorting if self.sortables[new_sorting] else '-%s' % new_sorting
+                       ]
+            else:
+                sorting_method = [
+                        id,
+                        True,
+                        '-id'
+                       ]
         return sorting_method
+    
+    def sort_items(self, request, page_items, sorting_method):
+        return page_items.order_by(sorting_method[2])
     
     def get_pagination_url(self, page):
         return reverse(self.admin.get_action_attr(self.id, 'route'), kwargs={'page': page})
@@ -243,12 +260,17 @@ class ListWidget(BaseWidget):
         
         # List items
         items = self.admin.model.objects
+        
         # Filter items?
         if request.session.get(self.get_token('filter')):
             items = self.set_filters(items, request.session.get(self.get_token('filter')))
         else:
             items = items.all()
-        items = items.order_by(sorting_method[2])
+            
+        # Sort them
+        items = self.sort_items(request, items, sorting_method);
+        
+        # Set pagination
         if self.pagination:
             items = items[paginating_method['start']:paginating_method['stop']]
             
@@ -295,7 +317,15 @@ class ListWidget(BaseWidget):
         TableForm = self.get_table_form(request, items)
         if TableForm:
             if request.method == 'POST' and request.POST.get('origin') == 'table':
-                pass
+                table_form = TableForm(request.POST, request=request)
+                if table_form.is_valid():
+                    message, redirect_url = self.table_action(request, items, table_form.cleaned_data)
+                    if redirect_url:
+                        request.messages.set_flash(message, message.type, self.admin.id)
+                        return redirect(redirect_url)
+                else:
+                    message = Message(request, table_form.non_field_errors()[0])
+                    message.type = 'error'
             else:
                 table_form = TableForm(request=request)
         
@@ -309,12 +339,11 @@ class ListWidget(BaseWidget):
                     try:
                         form_action = getattr(self, 'action_' + list_form.cleaned_data['list_action'])
                         message, redirect_url = form_action(request, items, list_form.cleaned_data['list_items'])
-                        if redirect:
+                        if redirect_url:
                             request.messages.set_flash(message, message.type, self.admin.id)
                             return redirect(redirect_url)
                     except AttributeError:
                         message = BasicMessage(_("Action requested is incorrect."))
-                        message.type = 'error'
                 else:
                     if 'list_items' in list_form.errors:
                         message = BasicMessage(self.nothing_checked_message)
@@ -322,7 +351,7 @@ class ListWidget(BaseWidget):
                         message = BasicMessage(_("Action requested is incorrect."))
                     else:
                         message = Message(request, list_form.non_field_errors()[0])
-                    message.type = 'error'
+                message.type = 'error'
             else:
                 list_form = ListForm(request=request)
                 
@@ -339,7 +368,7 @@ class ListWidget(BaseWidget):
                                                  'pagination': paginating_method,
                                                  'list_form': FormLayout(list_form) if list_form else None,
                                                  'search_form': FormLayout(search_form) if search_form else None,
-                                                 'table_form': FormFields(table_form) if table_form else None,
+                                                 'table_form': FormFields(table_form).fields if table_form else None,
                                                  'items': items,
                                                  'items_total': items_total,
                                                 },

@@ -1,0 +1,19 @@
+{% extends "admin/admin/list.html" %}
+{% load i18n %}
+{% load l10n %}
+{% load url from future %}
+{% import "_forms.html" as form_theme with context %}
+
+{% block table_head scoped %}
+  {{ super() }}
+  <th>{% trans %}Order{% endtrans %}</th>
+{% endblock %}
+
+{% block table_row scoped %}
+  <td class="lead-cell">
+  	<strong>{{ item.name }}</strong>{% if item.special %} <span class="label label-info">{% trans %}Special{% endtrans %}</span>{% endif %}{% if item.as_tab %} <span class="label label-inverse">{% trans %}Tab{% endtrans %}</span>{% endif %}
+  </td>
+  <td class="span2">
+  	{{ form_theme.field_widget(table_form['pos_' + item.pk|string], attrs={'class': 'span2', 'form': 'table_form'}) }}
+  </td>
+{% endblock%}

@@ -851,10 +851,12 @@ textarea{resize:vertical;}
 .table-footer .pager>li>a:hover{background-color:#0088cc;}.table-footer .pager>li>a:hover i{background-image:url("../img/glyphicons-halflings-white.png");}
 .table-footer .table-count{padding:11px 0px;color:#555555;}
 .table-footer .form-inline{margin:0px;padding:6px 0px;}
+.table-footer .table-actions-right{margin-right:16px;}
 td.check-cell,th.check-cell{width:32px;}
 td .checkbox,th .checkbox{margin-bottom:0px;position:relative;bottom:1px;}td .checkbox input,th .checkbox input{position:relative;left:9px;}
 td.lead-cell{font-size:120%;}
 .table td{vertical-align:middle;}
+.table input,.table select{margin:0px;}
 th.table-sort{padding:0px;}th.table-sort a:link,th.table-sort a:active,th.table-sort a:visited a:hover{display:block;padding:8px;}
 th.table-sort.sort-active-asc a:link,th.table-sort.sort-active-asc a:active,th.table-sort.sort-active-asc a:visited{border-bottom:3px solid #049cdb;padding-bottom:5px;}
 th.table-sort.sort-active-asc a:hover{border-bottom:3px solid #e4776f;padding-bottom:5px;text-decoration:none;}

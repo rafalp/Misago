@@ -15,9 +15,6 @@ def reverse(route, target=None):
 Views
 """
 class List(ListWidget):
-    """
-    List Users
-    """
     admin = site.get_action('users')
     id = 'list'
     columns=(
@@ -54,7 +51,6 @@ class List(ListWidget):
                 )
 
     def action_delete(self, request, items, checked):
-        print '%r' % checked
         for user in items:
             if unicode(user.pk) in checked:
                 if user.pk == request.user.id:
@@ -68,9 +64,6 @@ class List(ListWidget):
 
 
 class Delete(ButtonWidget):
-    """
-    Delete QA Test
-    """
     admin = site.get_action('users')
     id = 'delete'
     fallback = 'admin_users'
