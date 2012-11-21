@@ -18,7 +18,7 @@ Finally while Misago is build using Django, its not "Django application" and it 
 Dependencies
 ------------
 
-* [Django](http://djangoproject.org)
+* [Django](http://djangoproject.com)
 * [Django Debug Toolbar](https://github.com/django-debug-toolbar/django-debug-toolbar)
 * [Django-MPTT](https://github.com/django-mptt/django-mptt)
 * [Coffin](https://github.com/coffin/coffin)
