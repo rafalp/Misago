@@ -36,6 +36,10 @@ class List(ListWidget):
              )
     
     def set_filters(self, model, filters):
+        if 'role' in filters:
+            model = model.filter(roles__in=filters['role']).distinct()
+        if 'rank' in filters:
+            model = model.filter(rank__in=filters['rank'])
         if 'username' in filters:
             model = model.filter(username_slug__contains=filters['username'])
         if 'email' in filters:

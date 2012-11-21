@@ -384,6 +384,9 @@ class Rank(models.Model):
     order = models.IntegerField(default=0)
     criteria = models.CharField(max_length=255,null=True,blank=True)
     
+    def __unicode__(self):
+        return unicode(_(self.name))
+    
     def assign_rank(self, users=0, special_ranks=None):
         if not self.criteria or self.special or users == 0:
             # Rank cant be rolled in
