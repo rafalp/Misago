@@ -10,6 +10,7 @@ class SearchUsersForm(Form):
     activation = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=(('0', _("Already Active")), ('1', _("By User")), ('2', _("By Administrator"))), required=False)
     rank = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Rank.objects.order_by('order').all(), required=False)
     role = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Role.objects.order_by('name').all(), required=False)
+    
     layout = (
               (
                _("Search Users"),

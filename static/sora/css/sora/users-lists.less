@@ -1,25 +1,5 @@
 // Users list
 // --------------------------------------------------
-.list-tiny {
-  display: block;
-  margin: 0px -6px;
-  margin-bottom: 16px;
-  padding: 4px 0px;
-  overflow: auto;
-  
-  &>li {
-    background: darken(@bodyBackground, 8%);
-    .border-radius(3px);
-    margin: 3px 6px;
-    padding: 4px 7px;
-    padding-bottom: 6px;
-    float: left;
-    list-style: none;
-    
-    font-weight: bold;
-  }
-}
-
 .table-users {
   a:link, a:active,
   a:visited, a:hover {
@@ -32,5 +12,43 @@
     .border-radius(3px);
     width: 42px;
     height: 42px;
+  }
+  
+  // Info popover
+  .info-popover {
+    background: darken(@bodyBackground, 10%);
+    .border-radius(3px);
+    padding: 2px;
+    padding-top: 0px;
+  
+    i {
+      margin: 0px;
+    }
+    
+    &:hover {
+      background: darken(@bodyBackground, 50%);
+      
+      i {
+        background-image: url("@{iconWhiteSpritePath}");
+      }
+    }
+  }
+  
+  // Tiny size, for lists with tons of members
+  &.list-tiny {
+    a:link, a:active,
+    a:visited, a:hover {
+      font-size: 100%;
+    }
+    
+    .avatar {
+      width: 22px;
+      height: 22px;
+    }
+    
+    i {
+      position: relative;
+      top: 2px;
+    }
   }
 }

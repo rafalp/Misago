@@ -866,7 +866,13 @@ th.table-sort.sort-asc a:hover{border-bottom:3px solid #ade6fe;padding-bottom:5p
 th.table-sort.sort-desc a:hover{border-bottom:3px solid #eca09a;padding-bottom:5px;text-decoration:none;}
 .well{background:#fafafa;border:1px solid #ffffff;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;-webkit-box-shadow:0px 0px 3px #c9c9c9;-moz-box-shadow:0px 0px 3px #c9c9c9;box-shadow:0px 0px 3px #c9c9c9;}
 .strong-well{background:#ffffff;border:1px solid #c9c9c9;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;-webkit-box-shadow:0px 0px 0px 3px #e3e3e3;-moz-box-shadow:0px 0px 0px 3px #e3e3e3;box-shadow:0px 0px 0px 3px #e3e3e3;}
-.list-tiny{display:block;margin:0px -6px;margin-bottom:16px;padding:4px 0px;overflow:auto;}.list-tiny>li{background:#ededed;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;margin:3px 6px;padding:4px 7px;padding-bottom:6px;float:left;list-style:none;font-weight:bold;}
+.table-users a:link,.table-users a:active,.table-users a:visited,.table-users a:hover{color:#333333;font-size:150%;text-decoration:none;}
+.table-users .avatar{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;width:42px;height:42px;}
+.table-users .info-popover{background:#e3e3e3;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;padding:2px;padding-top:0px;}.table-users .info-popover i{margin:0px;}
+.table-users .info-popover:hover{background:#7d7d7d;}.table-users .info-popover:hover i{background-image:url("../img/glyphicons-halflings-white.png");}
+.table-users.list-tiny a:link,.table-users.list-tiny a:active,.table-users.list-tiny a:visited,.table-users.list-tiny a:hover{font-size:100%;}
+.table-users.list-tiny .avatar{width:22px;height:22px;}
+.table-users.list-tiny i{position:relative;top:2px;}
 .btn{background:#dcdcdc;border:1px solid #dcdcdc;*border:0;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;padding:4px 10px;color:#6f6f6f;font-weight:bold;text-shadow:none;}.btn:hover,.btn:active{background:#e1e1e1;border:1px solid #e1e1e1;*border:0;box-shadow:none;color:#0088cc;}
 .btn i{opacity:0.7;filter:alpha(opacity=70);}
 .btn:hover i,.btn:active i{opacity:1;filter:alpha(opacity=100);}

@@ -854,9 +854,13 @@ th.table-sort.sort-desc a:hover{border-bottom:3px solid #eca09a;padding-bottom:5
 .well{background-color:#ffffff;border:1px solid #d6d6d6;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:0px 0px 0px 3px #f0f0f0;-moz-box-shadow:0px 0px 0px 3px #f0f0f0;box-shadow:0px 0px 0px 3px #f0f0f0;padding:24px 12px;margin:0px -12px;}.well .alert{border-width:0px 0px 1px 0px;-webkit-border-radius:2px 2px 0px 0px;-moz-border-radius:2px 2px 0px 0px;border-radius:2px 2px 0px 0px;margin:-24px -12px;margin-bottom:12px;padding:12px;font-weight:bold;}
 .well .form-actions{background-color:#fafafa;-webkit-border-radius:0px 0px 3px 3px;-moz-border-radius:0px 0px 3px 3px;border-radius:0px 0px 3px 3px;margin:-44px -12px;margin-top:12px;}
 .well .form-horizontal .form-actions{padding-left:192px;}
-.list-tiny{display:block;margin:0px -6px;margin-bottom:16px;padding:4px 0px;overflow:auto;}.list-tiny>li{background:#e8e8e8;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;margin:3px 6px;padding:4px 7px;padding-bottom:6px;float:left;list-style:none;font-weight:bold;}
 .table-users a:link,.table-users a:active,.table-users a:visited,.table-users a:hover{color:#333333;font-size:150%;text-decoration:none;}
 .table-users .avatar{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;width:42px;height:42px;}
+.table-users .info-popover{background:#e3e3e3;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;padding:2px;padding-top:0px;}.table-users .info-popover i{margin:0px;}
+.table-users .info-popover:hover{background:#7d7d7d;}.table-users .info-popover:hover i{background-image:url("../img/glyphicons-halflings-white.png");}
+.table-users.list-tiny a:link,.table-users.list-tiny a:active,.table-users.list-tiny a:visited,.table-users.list-tiny a:hover{font-size:100%;}
+.table-users.list-tiny .avatar{width:22px;height:22px;}
+.table-users.list-tiny i{position:relative;top:2px;}
 .btn{background:#dcdcdc;border:1px solid #dcdcdc;*border:0;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;padding:4px 10px;color:#6f6f6f;font-weight:bold;text-shadow:none;}.btn:hover,.btn:active{background:#e1e1e1;border:1px solid #e1e1e1;*border:0;box-shadow:none;color:#0088cc;}
 .btn i{opacity:0.7;filter:alpha(opacity=70);}
 .btn:hover i,.btn:active i{opacity:1;filter:alpha(opacity=100);}
