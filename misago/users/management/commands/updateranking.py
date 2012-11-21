@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.core.management.base import BaseCommand, CommandError
+from django.db.models import F
 from django.utils import timezone
 from optparse import make_option
 from misago.users.models import User, Rank
@@ -26,7 +27,10 @@ class Command(BaseCommand):
                 rank.assign_rank(users_total, special_ranks)
             else:
                 # Set default rank first
-                Users.objects.exclude(rank__in=special_ranks).update(rank=rank)
+                User.objects.exclude(rank__in=special_ranks).update(rank=rank)
                 defaulted_ranks = True
+        
+        # Inflate scores
+        User.objects.all().update(score=F('score') * 0.95) # TODO: Ranking system SETTINGS!
         
         self.stdout.write('Users ranking for has been updated.\n')

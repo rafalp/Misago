@@ -133,7 +133,7 @@ class User(models.Model):
     karma_delta = models.IntegerField(default=0)
     followers = models.PositiveIntegerField(default=0)
     followers_delta = models.IntegerField(default=0)
-    score = models.FloatField(default=0,db_index=True)
+    score = models.IntegerField(default=0,db_index=True)
     rank = models.ForeignKey('Rank',null=True,blank=True,db_index=True,on_delete=models.SET_NULL)
     title = models.CharField(max_length=255,null=True,blank=True)
     last_post = models.DateTimeField(null=True,blank=True)
