@@ -6,5 +6,5 @@ monitor_fixtures = {
                   }
 
 
-def load_fixture():
+def load_fixtures():
     load_monitor_fixture(monitor_fixtures)

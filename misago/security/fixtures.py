@@ -1,4 +1,4 @@
-from misago.settings.fixtures import load_settings_fixture
+from misago.settings.fixtures import load_settings_fixture, update_settings_fixture
 from misago.utils import ugettext_lazy as _
 from misago.utils import get_msgid
 
@@ -16,6 +16,7 @@ settings_fixtures = (
                 'separator':    _("Spambots Registrations"),
                 'name':         _("CAPTCHA type"),
                 'description':  _('CAPTCHA stands for "Completely Automated Public Turing test to tell Computers and Humans Apart". Its type of test developed on purpose of blocking automatic registrations.'),
+                'position':     0,
             }),
             ('recaptcha_public', {
                 'type':         "string",
@@ -23,12 +24,14 @@ settings_fixtures = (
                 'separator':    _("reCaptcha"),
                 'name':         _("Public Key"),
                 'description':  _("Enter public API key that you have received from reCaptcha."),
+                'position':     1,
             }),
             ('recaptcha_private', {
                 'type':         "string",
                 'input':        "text",
                 'name':         _("Private Key"),
                 'description':  _("Enter private API key that you have received from reCaptcha."),
+                'position':     2,
             }),
             ('qa_test', {
                 'type':         "string",
@@ -36,22 +39,30 @@ settings_fixtures = (
                 'separator':    _("Question and Answer Test"),
                 'name':         _("Question"),
                 'description':  _("Question visible to your users."),
+                'position':     3,
             }),
             ('qa_test_help', {
                 'type':         "string",
                 'input':        "text",
                 'name':         _("Help Message"),
                 'description':  _("Optional help message displayed on form."),
+                'position':     4,
             }),
             ('qa_test_answers', {
                 'type':         "string",
                 'input':        "textarea",
                 'name':         _("Answers"),
                 'description':  _("Enter allowed answers to this question, each in new line. Test is case-insensitive."),
+                'position':     5,
             }),
         ),
     }),
 )
 
-def load_fixture():
+
+def load_fixtures():
     load_settings_fixture(settings_fixtures)
+
+
+def update_fixtures():
+    update_settings_fixture(settings_fixtures)
