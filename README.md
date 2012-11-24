@@ -25,6 +25,7 @@ Dependencies
 * [Jinja2](https://github.com/mitsuhiko/jinja2)
 * [Markdown](http://pypi.python.org/pypi/Markdown)
 * [path](http://pypi.python.org/pypi/path.py)
+* [Pillow](http://pypi.python.org/pypi/Pillow/)
 * [pyTZ](http://pypi.python.org/pypi/pytz/2012h)
 * [reCAPTCHA](http://pypi.python.org/pypi/recaptcha-client)
 * [South](http://south.aeracode.org)
@@ -78,4 +79,4 @@ This program comes with ABSOLUTELY NO WARRANTY.
 This is free software, and you are welcome to redistribute it
 under certain conditions.
 
-For complete license, see LICENSE.tx
+For complete license, see LICENSE.txt
