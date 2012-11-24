@@ -17,7 +17,7 @@
       <h4>{% trans %}Search Settings{% endtrans %}</h4>
       <form action="{% url 'admin_settings_search' %}" class="form-inline" method="post">
         <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-        {{ form_theme.input_text(search_form.fields.search_text, width=3, attrs={'placeholder': _('Search Settings...')}, horizontal=true) }}
+        {{ form_theme.input_text(search_form.fields.search_text, width=2, attrs={'placeholder': _('Search Settings...')}) }}
         <button type="submit" class="btn btn-primary"><i class="icon-search icon-white"></i></button>
       </form>
       <h4>{% trans%}Settings Groups{% endtrans %}</h4>{% for group in groups %}

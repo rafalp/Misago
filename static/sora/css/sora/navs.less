@@ -4,43 +4,88 @@
   border-bottom: none;
   padding-bottom: 0px;
   margin-bottom: 0px;
-}
 
-.nav-tabs li {
-  a:link, a:active, a:visited {
-    .opacity(60);
+  .nav-tabs li {
+    a:link, a:active, a:visited {
+      .opacity(60);
+      
+      color: @textColor;
+      font-weight: bold;
+    }
     
-    color: @textColor;
-    font-weight: bold;
-  }
-  
-  i {
-    margin-right: 4px;
-  }
-  
-  &.active a:link, &.active a:active,
-  &.active a:visited, &.active a:hover {
-    background-color: @bodyBackground;
-        
     i {
-      background-image: url("@{iconSpritePath}");
+      margin-right: 4px;
+    }
+    
+    &.active a:link, &.active a:active,
+    &.active a:visited, &.active a:hover {
+      background-color: @bodyBackground;
+          
+      i {
+        background-image: url("@{iconSpritePath}");
+      }
+    }
+    
+    &.active a:link, &.active a:active,
+    &.active a:visited, &.active a:hover, a:hover {
+      .opacity(100);
+    }
+    
+    &.fallback {
+      float:right;
+      
+      a:link, a:active,
+      a:visited, a:hover {
+        border-bottom: none;
+        .border-radius(3px);
+        margin-top: 4px;
+        padding: 4px 12px;
+      }
     }
   }
+}
+
+// Tabs on left
+.tabs-left {
+  background-color: darken(@bodyBackground, 2%);
+  .border-radius(3px 0px 0px 3px);
+  padding-left: 8px;
   
-  &.active a:link, &.active a:active,
-  &.active a:visited, &.active a:hover, a:hover {
-    .opacity(100);
-  }
-  
-  &.fallback {
-    float:right;
+  ul {
+    margin-bottom: 0px;
+    width: 100%;
     
-    a:link, a:active,
-    a:visited, a:hover {
-      border-bottom: none;
-      .border-radius(3px);
-      margin-top: 4px;
-      padding: 4px 12px;
+    li {
+      &.nav-header {
+        font-size: 100%;
+      }
+      
+      a, a:link, a:active, a:visited {
+        .opacity(80);
+        font-weight: bold;
+      }
+      
+      a:hover {
+        .opacity(90);
+      }
+      
+      &.active {
+        a, a:link, a:active,
+        a:visited, a:hover {
+          background-color: @bodyBackground;
+          .opacity(100);
+        
+          color: @black;
+            
+          i {
+            background-image: url("@{iconSpritePath}");
+          }          
+        }
+      }
+    }
+    
+    li:first-child {
+      padding-top: 12px;
     }
   }
 }

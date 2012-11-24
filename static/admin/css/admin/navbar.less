@@ -31,7 +31,7 @@
     margin-right: 0px;
     
     li {
-      a, a:link, a:active, a:visited{
+      a, a:link, a:visited, a:active {
         .opacity(50);
         padding: ((@navbarHeight - @baseLineHeight) / 2) 10px ((@navbarHeight - @baseLineHeight) / 2);
         margin: 0px 5px;
@@ -39,9 +39,9 @@
         font-weight: bold;
         text-shadow: 0px 1px 0px @white;
       }
-      
-      a:hover, a:active {
-        background: @navbarLinkBackgroundHover;
+
+      a:focus, a:hover {
+        background-color: @navbarLinkBackgroundHover;
         .border-radius(4px);
         padding: ((@navbarHeight - @baseLineHeight) / 2)-15px 10px ((@navbarHeight - @baseLineHeight) / 2)-15px;
         margin: 15px 5px;

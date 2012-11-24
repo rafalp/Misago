@@ -11,7 +11,7 @@
         <li><a href="{% url 'register' %}" title="{% trans %}Register new account{% endtrans %}" class="tooltip-bottom"><i class="icon-edit"></i> {% trans %}Register{% endtrans %}</a></li>{% endif %}
       {% endif %}</ul>
       <ul class="nav pull-right">{% if user.is_authenticated() %}
-        <li><a href="#" title="{% trans %}Notifications{% endtrans %}" class="tooltip-bottom"><i class="icon-fire"></i><span class="stat att">13</span></a></li>
+        <li><a href="#" title="{% trans %}Your Notifications{% endtrans %}" class="tooltip-bottom"><i class="icon-fire"></i><span class="stat att">13</span></a></li>
         <li><a href="#" title="{% trans %}Private messages{% endtrans %}" class="tooltip-bottom"><i class="icon-inbox"></i><span class="stat">2</span></a></li>
         <li><a href="#" title="{% trans %}Reported posts{% endtrans %}" class="tooltip-bottom"><i class="icon-bell"></i><span class="stat">5</span></a></li>
         <li><a href="#" title="{% trans %}People you are following{% endtrans %}" class="tooltip-bottom"><i class="icon-heart"></i></a></li>

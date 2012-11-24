@@ -5,15 +5,30 @@
 {% block title %}{% trans %}Options{% endtrans %} | {{ settings.board_name }}{% endblock %}
 
 {% block content %}
-<div class="page-header header-tabbed">
+<div class="page-header">
   <h1>{% trans %}Your Control Panel{% endtrans %}</h1>
-  <ul class="nav nav-tabs">
-  	<li{% if tab == 'options' %} class="active"{% endif %}><a href="{% url 'usercp' %}"><i class="icon-cog"></i> {% trans %}Forum Options{% endtrans %}</a></li>
-  	<li{% if tab == 'credentials' %} class="active"{% endif %}><a href="{% url 'usercp_credentials' %}"><i class="icon-edit"></i> {% trans %}Email & Password{% endtrans %}</a></li>
-  	<li{% if tab == 'username' %} class="active"{% endif %}><a href="{% url 'usercp_username' %}"><i class="icon-user"></i> {% trans %}Username{% endtrans %}</a></li>
-  	<li{% if tab == 'avatar' %} class="active"{% endif %}><a href="{% url 'usercp_avatar' %}"><i class="icon-picture"></i> {% trans %}Avatar{% endtrans %}</a></li>
-  	<li{% if tab == 'signature' %} class="active"{% endif %}><a href="{% url 'usercp_signature' %}"><i class="icon-align-left"></i> {% trans %}Signature{% endtrans %}</a></li>
-  	<li{% if tab == 'ignored' %} class="active"{% endif %}><a href="{% url 'usercp_ignored' %}"><i class="icon-eye-close"></i> {% trans %}Ignored Members{% endtrans %}</a></li>
-  </ul>
+</div>
+<div class="row">
+  <div class="span3">
+  	<div class="tabbable tabs-left">
+  	  <ul class="nav nav-tabs">
+        <li class="nav-header">{% trans %}Your Activity{% endtrans %}</li>
+        <li><a href="{% url 'usercp_ignored' %}"><i class="icon-fire"></i> {% trans %}Your Notifications{% endtrans %}</a></li>
+        <li><a href="{% url 'usercp_ignored' %}"><i class="icon-comment"></i> {% trans %}Your Posts{% endtrans %}</a></li>
+        <li class="nav-header">{% trans %}Account Settings{% endtrans %}</li>
+        <li><a href="{% url 'usercp_ignored' %}"><i class="icon-bookmark"></i> {% trans %}Threads you are watching{% endtrans %}</a></li>
+        <li><a href="{% url 'usercp_ignored' %}"><i class="icon-heart"></i> {% trans %}People you are following{% endtrans %}</a></li>
+        <li{% if tab == 'avatar' %} class="active"{% endif %}><a href="{% url 'usercp_avatar' %}"><i class="icon-picture"></i> {% trans %}Change Avatar{% endtrans %}</a></li>
+        <li{% if tab == 'signature' %} class="active"{% endif %}><a href="{% url 'usercp_signature' %}"><i class="icon-align-left"></i> {% trans %}Edit Signature{% endtrans %}</a></li>
+  	    <li{% if tab == 'credentials' %} class="active"{% endif %}><a href="{% url 'usercp_credentials' %}"><i class="icon-edit"></i> {% trans %}Change E-mail or Password{% endtrans %}</a></li>
+  	    <li{% if tab == 'username' %} class="active"{% endif %}><a href="{% url 'usercp_username' %}"><i class="icon-user"></i> {% trans %}Change Username{% endtrans %}</a></li>
+  	    <li{% if tab == 'options' %} class="active"{% endif %}><a href="{% url 'usercp' %}"><i class="icon-cog"></i> {% trans %}Forum Options{% endtrans %}</a></li>
+        <li{% if tab == 'ignored' %} class="active"{% endif %}><a href="{% url 'usercp_ignored' %}"><i class="icon-eye-close"></i> {% trans %}People you ignore{% endtrans %}</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="span9">
+  	{% block action %}{% endblock %}
+  </div>
 </div>
 {% endblock %}
