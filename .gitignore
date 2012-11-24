@@ -184,4 +184,5 @@ static/strawman/**
 templates/strawman/**
 unidecode/**
 yaml/**
+dev-manage.py
 path.py
