@@ -12,7 +12,7 @@ I want software focused on enabling smooth flow of information between forum mem
 
 Secondary goal is making Misago a viable foundation for building and maintaining long-term discussion forums for administrators. Misago trades "casual admin" friendlyness for advanced features aimed for use by web developers looking for tool to build forums for their site.
 
-Finally while Misago is build using Django, its not "Django application" and it wont integrate with existing Django projects. This is result of design decision to use custom users/session/auth/permissions functionality instead of Django native applications.
+Finally while Misago is build using Django, its not "Django application" and it wont integrate with existing Django projects. This is result of design decision to use custom users/session/auth/permissions functionality instead of Django native applications - however in future Misago will provide web API allowing you to add Misago-powered features to your website.
 
 
 Dependencies
@@ -50,7 +50,7 @@ https://docs.djangoproject.com/en/dev/howto/deployment/
 
 Misago is not production ready!
 
-Currently there is no way to update database when codebase changes! To update your development installation you have to delete existing database and create new one.
+Currently there is no way to update database when codebase changes! To update your development installation you have to delete existing database and create new one or maintain your own migrations using South!
 
 
 Contributing
