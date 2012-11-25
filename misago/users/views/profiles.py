@@ -76,17 +76,6 @@ def list(request, rank_slug=None):
                                         context_instance=RequestContext(request));
 
 
-def list_search(request):
-    ranks = Rank.objects.filter(as_tab=1).order_by('order')
-    return request.theme.render_to_response('users/list_search.html',
-                                            {
-                                             'search_form': FormFields(QuickFindUserForm(request=request)),
-                                             'ranks': ranks,
-                                             'users': users,
-                                            },
-                                            context_instance=RequestContext(request));
-
-
 def show(request, user, username):
     user = int(user)
     try:
