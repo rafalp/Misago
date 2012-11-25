@@ -18,7 +18,7 @@ class List(ListWidget):
     admin = site.get_action('users')
     id = 'list'
     columns=(
-             ('username_slug', _("User Name"), 50),
+             ('username_slug', _("User Name"), 35),
              ('join_date', _("Join Date")),
              )
     default_sorting = 'username'

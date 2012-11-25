@@ -8,7 +8,7 @@
   {{ super() }}
 {% endblock %}
 {% block table_row scoped %}
-  <td style="width: 1%;"><img src="{{ item.get_avatar('small') }}" class="avatar-small" alt="{% trans %}User Avatar{% endtrans %}"></td>
+  <td class="avatar-small"><img src="{{ item.get_avatar('small') }}" class="avatar-small" alt="{% trans %}User Avatar{% endtrans %}"></td>
   <td colspan="2" class="lead-cell">
   	<strong>{{ item.username }}</strong> <span class="muted">{{ item.email }}</span>{% if item.activation > 0 %} <span class="label">{% trans %}Inactive{% endtrans %}</span>{% endif %}{% if item.is_admin() %} <span class="label label-info">{% trans %}Admin{% endtrans %}</span>{% endif %}
   </td>
