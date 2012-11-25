@@ -98,6 +98,14 @@ settings_fixtures = (
                 'description':  _("Enter number of days since password was set to force member to change it with new one, or 0 to dont force your members to change their passwords."),
                 'position':     4,
             }),
+            ('password_in_email', {
+                'value':        False,
+                'type':         "boolean",
+                'input':        "yesno",
+                'name':         _("Include User Password in Welcoming E-mail"),
+                'description':  _("If you want to, Misago can include new user password in welcoming e-mail that is sent to new users after successful account creation."),
+                'position':     5,
+            }),
             ('sessions_hidden', {
                 'value':        True,
                 'type':         "boolean",
@@ -105,7 +113,7 @@ settings_fixtures = (
                 'separator':    _("Sessions Settings"),
                 'name':         _("Allow hidden sessions"),
                 'description':  _("Enabling this option will allow users to hide their presence on forums from other members."),
-                'position':     5,
+                'position':     6,
             }),
             ('sessions_validate_ip', {
                 'value':        True,
@@ -113,7 +121,7 @@ settings_fixtures = (
                 'input':        "yesno",
                 'name':         _("Check IP on session authorization"),
                 'description':  _("Makes sessions more secure, but can cause problems with proxies and VPN's."),
-                'position':     6,
+                'position':     7,
             }),
             ('remember_me_allow', {
                 'value':        True,
@@ -122,7 +130,7 @@ settings_fixtures = (
                 'separator':    _("Sign-In Settings"),
                 'name':         _('Enable "Remember Me" functionality'),
                 'description':  _("Turning this option on allows users to sign in on to your board using cookie-based tokens. This may result in account compromisation when user fails to sign out on shared computer."),
-                'position':     7,
+                'position':     8,
             }),
             ('remember_me_lifetime', {
                 'value':        90,
@@ -130,6 +138,7 @@ settings_fixtures = (
                 'input':        "text",
                 'name':         _('"Remember Me" token lifetime'),
                 'description':  _('Number of days since either last use or creation of "Remember Me" token to its expiration.'),
+                'position':     9,
             }),
             ('remember_me_extensible', {
                 'value':        1,
@@ -137,7 +146,7 @@ settings_fixtures = (
                 'input':        "yesno",
                 'name':         _('Allow "Remember Me" tokens refreshing'),
                 'description':  _('Set this setting to off if you want to force your users to periodically update their "Remember Me" tokens by signing in. If this option is on, Tokens are updated when they are used to open new session.'),
-                'position':     8,
+                'position':     10,
             }),
             ('login_attempts_limit', {
                 'value':        3,
@@ -147,7 +156,7 @@ settings_fixtures = (
                 'separator':    _("Brute-Force Countermeasures"),
                 'name':         _("Limit Sign In attempts"),
                 'description':  _('Enter maximal number of allowed Sign In attempts before IP address "jams".'),
-                'position':     9,
+                'position':     11,
             }),
             ('registrations_jams', {
                 'value':        1,
@@ -156,7 +165,7 @@ settings_fixtures = (
                 'input':        "yesno",
                 'name':         _("Count failed register attempts too"),
                 'description':  _("Set this setting to yes if you want failed register attempts to count into limit."),
-                'position':     10,
+                'position':     12,
             }),
             ('jams_lifetime', {
                 'value':        15,
@@ -165,7 +174,7 @@ settings_fixtures = (
                 'input':        "text",
                 'name':         _("Automaticaly unlock jammed IPs"),
                 'description':  _('Enter number of minutes since IP address "jams" to automatically unlock it, or 0 to never unlock jammed IP adresses. Jams dont count as bans.'),
-                'position':     11,
+                'position':     13,
             }),
         ),
     }),

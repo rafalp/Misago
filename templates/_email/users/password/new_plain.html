@@ -1,8 +1,11 @@
 {% extends "_email/base_plain.html" %}
 {% load i18n %}
 {% load url from future %}
+
+{% block title %}{% trans board_name=settings.board_name %}Your New Password on {{ board_name }}{% endtrans %}{% endblock %}
+
 {% block content %}
-{% trans %}You are receiving this message because you have requested for new password to be generated and set on your account.{% endtrans %}
+{% trans username=user.username %}{{ username }}, you are receiving this message because you have requested for new password to be generated and set on your account.{% endtrans %}
 
 {% trans %}Your new password:{% endtrans %} {{ password }}
 

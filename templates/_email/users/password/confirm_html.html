@@ -1,0 +1,17 @@
+{% extends "_email/base_html.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block title %}{% trans board_name=settings.board_name %}Confirm New Password Request{% endtrans %}{% endblock %}
+
+{% block content %}
+<p {{ style_p|safe }}>{% trans username=user.username %}{{ username }}, you are receiving this message because you have requested for new password to be generated and set on your account.{% endtrans %}</p>
+<p {{ style_p|safe }}>{% trans %}To confirm that you want to reset your account's password with new one click the link below:{% endtrans %}</p>
+<a href="{{ board_address }}{% url 'reset_password' username=user.username_slug, user=user.id, token=user.token %}" {{ style_button|safe }}>{% trans %}Reset my password{% endtrans %}</a>
+
+<p {{ style_p|safe }}>{% trans %}If the above link is not clickable, copy and paste this link into your web browser's address bar:{% endtrans %}</p>
+<a href="{{ board_address }}{% url 'reset_password' username=user.username_slug, user=user.id, token=user.token %}" {{ style_link|safe }}>{{ board_address }}{% url 'reset_password' username=user.username_slug, user=user.id, token=user.token %}</a>
+
+<p {{ style_p|safe }}>{% trans %}Your new password will be sent back to you in next message once you click confirmation link.{% endtrans %}</p>
+
+{% endblock %}

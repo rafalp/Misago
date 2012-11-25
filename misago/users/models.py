@@ -159,7 +159,7 @@ class User(models.Model):
     ACTIVATION_NONE = 0
     ACTIVATION_USER = 1
     ACTIVATION_ADMIN = 2
-    ACTIVATION_PASSWORD = 3
+    ACTIVATION_CREDENTIALS = 3
     
     statistics_name = _('Users Registrations')
         
@@ -318,15 +318,21 @@ class User(models.Model):
         context = RequestContext(request, context)
         context['author'] = context['user']
         context['user'] = self
+        
         # Set message recipient
-        if settings.DEBUG:
+        if settings.DEBUG and settings.CATCH_ALL_EMAIL_ADDRESS:
             recipient = settings.CATCH_ALL_EMAIL_ADDRESS
         else:
             recipient = self.email
+            
         # Build and send message
         email = EmailMultiAlternatives(subject, templates[0].render(context), settings.EMAIL_HOST_USER, [recipient])
         email.attach_alternative(templates[1].render(context), "text/html")
         email.send()
+    
+    def get_activation(self):
+        activations = ['none', 'user', 'admin', 'credentials']
+        return activations[self.activation]
     
     def get_date(self):
         return self.join_date

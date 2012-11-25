@@ -1,26 +1,46 @@
-{% load url from future %}
-{% load i18n %}
+{%- load url from future -%}
+{%- load i18n -%}
+{%- set style_link = "style=\"color: #08C;\"" -%}
+{%- set style_p = "style=\"padding: 0px; margin: 16px 0px;\"" -%}
+{%- set style_well = "style=\"background-color: #F0F0F0; border-radius: 3px; margin: 24px 0px; padding: 12px 16px; font-size: 16px;\"" -%}
+{%- set style_well_big = "style=\"background-color: #F0F0F0; border-radius: 3px; margin: 24px 0px; padding: 12px 16px; font-size: 18px; text-align: center;\"" -%}
+{%- set style_button = "style=\"background-color: #08C; border-radius: 3px; color: #FFF; display: block; text-align: center; margin: 24px 0px; padding: 12px 0px; text-decoration: none; font-weight: bold; font-size: 18px;\"" -%}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title></title>
   </head>
-  <body style="background: #F0F0F0; padding: 24px 18px; color: #333;">
-    <div style="max-width: 600px; margin: 0px auto;">
-      <div style="background: #FEFEFE; border-radius: 3px;">
-        <div style="padding: 8px 16px; background: #3465a4; border: 1px solid #204a87; border-radius: 3px 3px 0px 0px;">
-          <h1 style="margin: 0px; padding: 0px; font-weight: normal;"><a href="{{ board_address }}" style="color: #FEFEFE; text-decoration: none;">{{ settings.board_name }} <span style="color: #729fcf;">{{ board_address }}</span></a></h1>
-        </div>
-        <div style="border: 1px solid #babdb6; border-top: none; border-radius: 0px 0px 3px 3px; padding: 12px 16px;">
-          <h1 style="margin: 0px; padding: 0px; margin-bottom: 8px; color: #454545;">{% block title %}{% trans username=user.username %}Hello, {{ username }}{% endtrans %}!{% endblock %}</h1>
-  	      {% block content %}{% endblock %}
-        </div>
-      </div>
-      <div style="color: #999; padding: 12px 16px; padding-bottom: 0px;">{% if settings.email_footnote %}
-        <p style="margin: 0px; padding: 0px; color: #666;">{{ settings.email_footnote }}</p>{% endif %}
-        <p style="margin: 0px; padding: 0px;">{% trans %}This is an automatically generated email.{% endtrans %}</p>
-      </div>
-    </div>
+  <body>
+    <table width="100%">
+      <tbody>
+        <tr>
+          <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px;">
+            <table width="600" align="center">
+              <tbody>
+                <tr>
+                  <td style="padding-bottom: 8px;">
+                  	<h1 style="border-bottom: 1px solid #DDD; margin-bottom: 24px; padding: 12px 0px; font-size: 28px;">
+                  		{% trans username=user.username %}Hey, {{ username }}!{% endtrans %}
+                  		<div style="margin-top: 6px; font-size: 18px; color: #999;">{% block title %}{% endblock %}<div>
+                  	</h1>
+                  	{% block content %}{% endblock %}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table width="600" align="center">
+              <tbody>
+                <tr>
+                  <td style="border-top: 1px solid #DDD; padding: 12px 0px; color: #BBB;">{% if settings.email_footnote %}
+                  	{{ settings.email_footnote|safe }}{% else %}
+                  	{% trans board_name=settings.board_name %}This e-mail was sent from {{ board_name }}.{% endtrans %}<br><a href="{{ board_address }}" {{ style_link|safe }}>{{ board_address }}</a>{% endif %}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </body>
 </html>

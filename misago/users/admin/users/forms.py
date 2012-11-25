@@ -7,7 +7,7 @@ from misago.users.models import Rank
 class SearchUsersForm(Form):
     username = forms.CharField(max_length=255, required=False)
     email = forms.CharField(max_length=255, required=False)
-    activation = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=(('0', _("Already Active")), ('1', _("By User")), ('2', _("By Administrator"))), required=False)
+    activation = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=(('0', _("Already Active")), ('1', _("By User")), ('2', _("By Administrator")), ('3', _("Sign-In Credentials Change"))), required=False)
     rank = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Rank.objects.order_by('order').all(), required=False)
     role = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Role.objects.order_by('name').all(), required=False)
     

@@ -62,9 +62,16 @@ settings_fixture = (
                 'type':         "string",
                 'input':        "textarea",
                 'separator':    _("Board E-Mails"),
-                'name':         _("Custom Footnote"),
-                'description':  _("Custom Footnote to display in e-mail messages sent by board."),
+                'name':         _("Custom Footnote in HTML E-mails"),
+                'description':  _("Custom Footnote to display in HTML e-mail messages sent by board."),
                 'position':     6,
+            }),
+            ('email_footnote_plain', {
+                'type':         "string",
+                'input':        "textarea",
+                'name':         _("Custom Footnote in plain text E-mails"),
+                'description':  _("Custom Footnote to display in plain text e-mail messages sent by board."),
+                'position':     7,
             }),
         ),
    }),
@@ -119,6 +126,17 @@ def update_settings_group_fixture(group, fixture):
         # Update group settings
         fixture = fixture.get('settings', ())
         for setting in fixture:
+            # Clear setting value
+            value = setting[1].get('value')
+            value_default = setting[1].get('default')
+            # Convert boolean True and False to 1 and 0, otherwhise it wont work
+            if setting[1].get('type') == 'boolean':
+                value = 1 if value else 0
+                value_default = 1 if value_default else 0
+            # Convert array value to string
+            if setting[1].get('type') == 'array':
+                value = ','.join(value) if value else ''
+                value_default = ','.join(value_default) if value_default else ''
             try:
                 # Update setting entry
                 model_setting = Setting.objects.get(setting=setting[0])
@@ -132,17 +150,6 @@ def update_settings_group_fixture(group, fixture):
                 model_setting.description = get_msgid(setting[1].get('description'))
                 model_setting.save(force_update=True)
             except Setting.DoesNotExist:
-                # Create new setting entry
-                value = setting[1].get('value')
-                value_default = setting[1].get('default')
-                # Convert boolean True and False to 1 and 0, otherwhise it wont work
-                if setting[1].get('type') == 'boolean':
-                    value = 1 if value else 0
-                    value_default = 1 if value_default else 0
-                # Convert array value to string
-                if setting[1].get('type') == 'array':
-                    value = ','.join(value) if value else ''
-                    value_default = ','.join(value_default) if value_default else ''
                 # Store setting in database
                 model_setting = Setting(
                                         setting=setting[0],
@@ -174,3 +181,7 @@ def update_settings_fixture(fixture):
     
 def load_fixtures():
     load_settings_fixture(settings_fixture)
+    
+    
+def update_fixtures():
+    update_settings_fixture(settings_fixture)

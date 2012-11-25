@@ -1,13 +1,13 @@
 {% load url from future %}
 {% load i18n %}
 
-{% trans username=user.username %}Hello, {{ username }}{% endtrans %}
-
+{% trans username=user.username %}Hey, {{ username }}!{% endtrans %}
+{% block title %}{% endblock %}
+========================================
 {% block content %}{% endblock %}
 
-========================================{% if settings.email_footnote %}
-{{ settings.email_footnote }}
 ----------------------------------------
-{% endif %}
-{{ settings.board_name }} - {{ board_address }}
-{% trans %}This is an automatically generated email.{% endtrans %}
+{% if settings.email_footnote_plain -%}
+{{ settings.email_footnote_plain }}{% else -%}
+{% trans board_name=settings.board_name %}This e-mail was sent from {{ board_name }}.{% endtrans %}
+{{ settings.board_name }} - {{ board_address }}{% endif %}

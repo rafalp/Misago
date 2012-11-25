@@ -27,13 +27,13 @@ def form(request):
             if user_ban:
                 return error_banned(request, user, user_ban)
             elif user.activation != User.ACTIVATION_NONE:
-                return error403(request, Message(request, 'users/activations/required', {'user': user}))
+                return error403(request, Message(request, 'users/activation/required', {'user': user}))
             user.token = get_random_string(12)
             user.save(force_update=True)
-            request.messages.set_flash(Message(request, 'users/passwords/reset_confirm', extra={'user':user}), 'success')
+            request.messages.set_flash(Message(request, 'users/password/reset_confirm', extra={'user':user}), 'success')
             user.email_user(
                             request,
-                            'users/reset_confirm',
+                            'users/password/confirm',
                             _("Confirm New Password Request")
                             )
             return redirect(reverse('index'))
@@ -60,7 +60,7 @@ def reset(request, username="", user="0", token=""):
         if user_ban:
             return error_banned(request, user, user_ban)
         if user.activation != User.ACTIVATION_NONE:
-            return error403(request, Message(request, 'users/activations/required', {'user': user}))
+            return error403(request, Message(request, 'users/activation/required', {'user': user}))
         if not token or not user.token or user.token != token:
             return error403(request, Message(request, 'users/invalid_confirmation_link', {'user': user}))
         new_password = get_random_string(6)
@@ -71,10 +71,10 @@ def reset(request, username="", user="0", token=""):
         Session.objects.filter(user=user).update(user=None)
         Token.objects.filter(user=user).delete()
         # Set flash and mail new password
-        request.messages.set_flash(Message(request, 'users/passwords/reset_done', extra={'user':user}), 'success')
+        request.messages.set_flash(Message(request, 'users/password/reset_done', extra={'user':user}), 'success')
         user.email_user(
                         request,
-                        'users/reset_new',
+                        'users/password/new',
                         _("Your New Password"),
                         {'password': new_password}
                         )

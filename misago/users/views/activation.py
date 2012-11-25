@@ -27,18 +27,18 @@ def activate(request, username="", user="0", token=""):
         if user_ban:
             return error_banned(request, user, user_ban)
         if user.activation == User.ACTIVATION_NONE:
-            return error403(request, Message(request, 'users/activations/not_required', extra={'user': user}))
+            return error403(request, Message(request, 'users/activation/not_required', extra={'user': user}))
         if user.activation == User.ACTIVATION_ADMIN:
-            return error403(request, Message(request, 'users/activations/only_by_admin', extra={'user': user}))
+            return error403(request, Message(request, 'users/activation/only_by_admin', extra={'user': user}))
         if not token or not user.token or user.token != token:
             return error403(request, Message(request, 'users/invalid_confirmation_link', extra={'user': user}))
         # Activate and sign in our member
         user.activation = User.ACTIVATION_NONE
         sign_user_in(request, user)
-        if current_activation == User.ACTIVATION_PASSWORD:
-            request.messages.set_flash(Message(request, 'users/activations/password', extra={'user':user}), 'success')
+        if current_activation == User.ACTIVATION_CREDENTIALS:
+            request.messages.set_flash(Message(request, 'users/activation/credentials', extra={'user':user}), 'success')
         else:
-            request.messages.set_flash(Message(request, 'users/activations/new', extra={'user':user}), 'success')
+            request.messages.set_flash(Message(request, 'users/activation/new', extra={'user':user}), 'success')
         return redirect(reverse('index'))
     except User.DoesNotExist:
         return error404(request)
@@ -57,14 +57,14 @@ def form(request):
             if user_ban:
                 return error_banned(request, user, user_ban)
             if user.activation == User.ACTIVATION_NONE:
-                return error403(request, Message(request, 'users/activations/not_required', extra={'user': user}))
+                return error403(request, Message(request, 'users/activation/not_required', extra={'user': user}))
             if user.activation == User.ACTIVATION_ADMIN:
-                return error403(request, Message(request, 'users/activations/only_by_admin', extra={'user': user}))
-            request.messages.set_flash(Message(request, 'users/activations/resent', extra={'user':user}), 'success')
+                return error403(request, Message(request, 'users/activation/only_by_admin', extra={'user': user}))
+            request.messages.set_flash(Message(request, 'users/activation/resent', extra={'user':user}), 'success')
             user.email_user(
                             request,
-                            'users/activations/resend',
-                            _("New Account Activation"),
+                            'users/activation/resend',
+                            _("Account Activation"),
                             )
             return redirect(reverse('index'))
         else:

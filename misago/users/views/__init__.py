@@ -17,7 +17,7 @@ from misago.views import error403
 @block_jammed
 def register(request):
     if request.settings['account_activation'] == 'block':
-        return error403(request, Message(request, 'auth/registrations_off'))
+        return error403(request, Message(request, 'users/registration/registrations_off'))
     message = None
     if request.method == 'POST':
         form = UserRegisterForm(request.POST, request=request)
@@ -38,21 +38,21 @@ def register(request):
             if need_activation == User.ACTIVATION_NONE:
                 # No need for activation, sign in user
                 sign_user_in(request, new_user)
-                request.messages.set_flash(Message(request, 'auth/registered_activation_none', extra={'user':new_user}), 'success')
+                request.messages.set_flash(Message(request, 'users/activation/none', extra={'user':new_user}), 'success')
             if need_activation == User.ACTIVATION_USER:
                 # Mail user activation e-mail
-                request.messages.set_flash(Message(request, 'auth/registered_activation_user', extra={'user':new_user}), 'info')
+                request.messages.set_flash(Message(request, 'users/registration/activation_user', extra={'user':new_user}), 'info')
                 new_user.email_user(
                                     request,
-                                    'auth/activation_0',
+                                    'users/activation/user',
                                     _("Welcome aboard, %(username)s!" % {'username': new_user.username}),
                                     )
             if need_activation == User.ACTIVATION_ADMIN:
                 # Require admin activation
-                request.messages.set_flash(Message(request, 'users/registered_activation_admin', extra={'user':new_user}), 'info')
+                request.messages.set_flash(Message(request, 'users/registration/activation_admin', extra={'user':new_user}), 'info')
             new_user.email_user(
                                 request,
-                                ('auth/activation_%s' % need_activation),
+                                'users/activation/admin',
                                 _("Welcome aboard, %(username)s!" % {'username': new_user.username}),
                                 {'password': form.cleaned_data['password']}
                                 )
@@ -67,7 +67,7 @@ def register(request):
                 return redirect(reverse('register'))
     else:
         form = UserRegisterForm(request=request)
-    return request.theme.render_to_response('auth/register.html',
+    return request.theme.render_to_response('users/register.html',
                                             {
                                              'message': message,
                                              'form': FormLayout(form),
