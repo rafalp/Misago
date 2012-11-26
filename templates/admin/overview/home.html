@@ -37,10 +37,11 @@ One Administrator Online
       </thead>
       <tbody>
         <tr>{% for session in admins %}    	
-          <td {% if admins|length > 1 %} {% if loop.last and loop.index is odd %}colspan="2"{% else %}class="span4"{% endif %}{% endif %}>
+          <td class="span4">
               <a href="{% url 'user' username=session.user.username_slug, user=session.user.pk %}"><img src="{{ session.user.get_avatar('medium') }}" class="avatar" alt="{% trans %}Admin's Avatar{% endtrans %}" title="{% trans %}Admin's Avatar{% endtrans %}"> <strong>{{ session.user.username }}</strong></a>
               <div class="muted" style="float: right;">{% trans start=session.start|timesince %}started {{ start }} ago{% endtrans %} <span class="info-popover tooltip-top" title="{% trans last=session.last|timesince %}Last click was {{ last }} ago{% endtrans %}"><i class="icon-time"></i></span></div>
-          </td>{% if not loop.last and loop.index is even %}
+          </td>{% if loop.last and loop.index is odd %}
+          <td class="span4">&nbsp;</td>{% endif %}{% if not loop.last and loop.index is even %}
         </tr>
         <tr>{% endif %}
         {% endfor %}</tr>
