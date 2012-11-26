@@ -37,20 +37,19 @@ class UserForm(Form):
         self.request = kwargs['request']
         self.user = user
         
-        # Sort out protected roles
-        if not self.request.user.is_protected():
-            self.base_fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,queryset=Role.objects.filter(protected__exact=False).order_by('name').all(),error_messages={'required': _("User must have at least one role assigned.")})
-        else:
+        # Roles list
+        if self.request.user.is_god():
             self.base_fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,queryset=Role.objects.order_by('name').all(),error_messages={'required': _("User must have at least one role assigned.")})
+        else:
+            self.base_fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,queryset=Role.objects.filter(protected__exact=False).order_by('name').all(),required=False)
             
-        # Keep non-gods from editing permissions and e-mail addressess of protected members
+        # Keep non-gods from editing protected members sign-in credentials
         if user.is_protected() and not self.request.user.is_god():
             # You can edit your own e-mail all-right
             if user.pk != self.request.user.pk:
                 del self.base_fields['email']
-                del self.layout[1][1][0]
-            del self.base_fields['roles']
-            del self.layout[0][1][3]
+                del self.base_fields['new_password']
+                del self.layout[1]
             
         super(UserForm, self).__init__(*args, **kwargs)
     

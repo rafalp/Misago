@@ -103,10 +103,19 @@ class Edit(FormWidget):
     def submit_form(self, request, form, target):
         target.title = form.cleaned_data['title']
         target.rank = form.cleaned_data['rank']
-        if not target.is_protected() or request.user.is_god():
+        
+        # Update user roles
+        if request.user.is_god():
             target.roles.clear()
             for role in form.cleaned_data['roles']:
                 target.roles.add(role)
+        else:
+            for role in target.roles.all():
+                if not role.protected:
+                    target.roles.remove(role)
+            for role in form.cleaned_data['roles']:
+                target.roles.add(role)
+        
         target.save(force_update=True)
         return target, BasicMessage(_('Changes in user\'s "%(name)s" account have been saved.' % {'name': self.original_name}), 'success')
 
