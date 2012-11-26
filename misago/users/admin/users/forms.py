@@ -44,12 +44,10 @@ class UserForm(Form):
             self.base_fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,queryset=Role.objects.filter(protected__exact=False).order_by('name').all(),required=False)
             
         # Keep non-gods from editing protected members sign-in credentials
-        if user.is_protected() and not self.request.user.is_god():
-            # You can edit your own e-mail all-right
-            if user.pk != self.request.user.pk:
-                del self.base_fields['email']
-                del self.base_fields['new_password']
-                del self.layout[1]
+        if user.is_protected() and not self.request.user.is_god() and user.pk != self.request.user.pk:
+            del self.base_fields['email']
+            del self.base_fields['new_password']
+            del self.layout[1]
             
         super(UserForm, self).__init__(*args, **kwargs)
     
