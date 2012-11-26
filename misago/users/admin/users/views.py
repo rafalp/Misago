@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse as django_reverse
 from django.utils.translation import ugettext as _
 from misago.admin import site
 from misago.admin.widgets import *
+from misago.security import get_random_string
 from misago.utils import slugify
 from misago.users.admin.users.forms import UserForm, SearchUsersForm
 from misago.users.models import User
@@ -30,9 +31,13 @@ class List(ListWidget):
     search_form = SearchUsersForm
     nothing_checked_message = _('You have to check at least one user.')
     actions=(
+             ('activate', _("Activate users"), _("Are you sure you want to activate selected members?")),
+             ('deactivate', _("Request e-mail validation"), _("Are you sure you want to deactivate selected members and request them to revalidate their e-mail addresses?")),
+             ('remove_av', _("Remove and lock avatars"), _("Are you sure you want to remove selected members avatars and their ability to change them?")),
+             ('remove_sig', _("Remove and lock signatures"), _("Are you sure you want to remove selected members signatures and their ability to edit them?")),
+             ('remove_locks', _("Remove locks from avatars and signatures"), _("Are you sure you want to remove locks from selected members avatars and signatures?")),
              ('reset', _("Reset passwords"), _("Are you sure you want to reset selected members passwords?")),
-             ('remove_avs', _("Remove avatars"), _("Are you sure you want to reset selected members passwords?")),
-             ('delete', _("Delete selected"), _("Are you sure you want to delete selected users?")),
+             ('delete', _("Delete users"), _("Are you sure you want to delete selected users?")),
              )
     
     def set_filters(self, model, filters):
@@ -56,6 +61,107 @@ class List(ListWidget):
                 self.action('pencil', _("Edit User Details"), reverse('admin_users_edit', item)),
                 self.action('remove', _("Delete User"), reverse('admin_users_delete', item), post=True, prompt=_("Are you sure you want to delete this user account?")),
                 )
+    
+    def action_activate(self, request, items, checked):
+        for user in items:
+            if unicode(user.pk) in checked and user.activation > 0:
+                request.monitor['users_inactive'] = int(request.monitor['users_inactive']) - 1
+                user.activation = user.ACTIVATION_NONE
+                user.save(force_update=True)
+                user.email_user(
+                                request,
+                                'users/activation/admin_done',
+                                _("Your Account has been activated"),
+                                )
+                
+        return BasicMessage(_('Selected users accounts have been activated.'), 'success'), reverse('admin_users')
+    
+    def action_deactivate(self, request, items, checked):
+        # First loop - check for errors
+        for user in items:
+            if unicode(user.pk) in checked:
+                if user.is_protected() and not request.user.is_god():
+                    return BasicMessage(_('You cannot force validation of protected members e-mails.'), 'error'), reverse('admin_users')
+                
+        # Second loop - reset passwords
+        for user in items:
+            if unicode(user.pk) in checked:
+                user.activation = user.ACTIVATION_USER
+                user.token = token = get_random_string(12)
+                user.save(force_update=True)
+                user.email_user(
+                                request,
+                                'users/activation/invalidated',
+                                _("Account Activation"),
+                                )
+                
+        return BasicMessage(_('Selected users accounts have been deactivated and new activation links have been sent to them.'), 'success'), reverse('admin_users')
+
+    def action_remove_av(self, request, items, checked):
+        # First loop - check for errors
+        for user in items:
+            if unicode(user.pk) in checked:
+                if user.is_protected() and not request.user.is_god():
+                    return BasicMessage(_('You cannot remove and block protected members avatars.'), 'error'), reverse('admin_users')
+                
+        # Second loop - reset passwords
+        for user in items:
+            if unicode(user.pk) in checked:
+                user.lock_avatar()
+                user.save(force_update=True)
+                
+        return BasicMessage(_('Selected users avatars were deleted and locked.'), 'success'), reverse('admin_users')
+
+    def action_remove_sig(self, request, items, checked):
+        # First loop - check for errors
+        for user in items:
+            if unicode(user.pk) in checked:
+                if user.is_protected() and not request.user.is_god():
+                    return BasicMessage(_('You cannot remove and block protected members signatures.'), 'error'), reverse('admin_users')
+                
+        # Second loop - reset passwords
+        for user in items:
+            if unicode(user.pk) in checked:
+                user.signature_ban = True
+                user.signature = ''
+                user.signature_preparsed = ''
+                user.save(force_update=True)
+                
+        return BasicMessage(_('Selected users signatures were deleted and locked.'), 'success'), reverse('admin_users')
+   
+    def action_remove_locks(self, request, items, checked):
+        for user in items:
+            if unicode(user.pk) in checked:
+                user.default_avatar(request.settings)
+                user.avatar_ban = False
+                user.signature_ban = False
+                user.save(force_update=True)
+                
+        return BasicMessage(_('Selected users can now edit their avatars and signatures.'), 'success'), reverse('admin_users')
+    
+    def action_reset(self, request, items, checked):
+        # First loop - check for errors
+        for user in items:
+            if unicode(user.pk) in checked:
+                if user.is_protected() and not request.user.is_god():
+                    return BasicMessage(_('You cannot reset protected members passwords.'), 'error'), reverse('admin_users')
+                
+        # Second loop - reset passwords
+        for user in items:
+            if unicode(user.pk) in checked:
+                new_password = get_random_string(8)
+                user.set_password(new_password)
+                user.save(force_update=True)
+                user.email_user(
+                                request,
+                                'users/password/new_admin',
+                                _("Your New Password"),
+                                {
+                                 'password': new_password,
+                                 },
+                                )
+                
+        return BasicMessage(_('Selected users passwords have been reset successfully.'), 'success'), reverse('admin_users')
 
     def action_delete(self, request, items, checked):
         for user in items:
@@ -63,7 +169,7 @@ class List(ListWidget):
                 if user.pk == request.user.id:
                     return BasicMessage(_('You cannot delete yourself.'), 'error'), reverse('admin_users')
                 if user.is_protected():
-                    return BasicMessage(_('You cannot delete protected member.'), 'error'), reverse('admin_users')
+                    return BasicMessage(_('You cannot delete protected members.'), 'error'), reverse('admin_users')
                 
         User.objects.filter(id__in=checked).delete()
         User.objects.resync_monitor(request.monitor)

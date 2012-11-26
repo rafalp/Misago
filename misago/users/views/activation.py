@@ -39,7 +39,7 @@ def activate(request, username="", user="0", token=""):
         sign_user_in(request, user)
         
         # Update monitor
-        request.monitor['users_inactive'] = request.monitor['users_inactive'] - 1
+        request.monitor['users_inactive'] = int(request.monitor['users_inactive']) - 1
         
         if current_activation == User.ACTIVATION_CREDENTIALS:
             request.messages.set_flash(Message(request, 'users/activation/credentials', extra={'user':user}), 'success')

@@ -179,7 +179,9 @@ mptt/**
 pytz/**
 recaptcha/**
 south/**
-static/avatars/**
+static/avatars/protoss
+static/avatars/terran
+static/avatars/zerg
 static/strawman/**
 templates/strawman/**
 unidecode/**

@@ -145,11 +145,9 @@ class User(models.Model):
     avatar_ban = models.BooleanField(default=False)
     avatar_ban_reason_user = models.TextField(null=True,blank=True)
     avatar_ban_reason_admin = models.TextField(null=True,blank=True)
-    avatar_ban_expires = models.DateTimeField(null=True,blank=True)
     signature_ban = models.BooleanField(default=False)
     signature_ban_reason_user = models.TextField(null=True,blank=True)
     signature_ban_reason_admin = models.TextField(null=True,blank=True)
-    signature_ban_expires = models.DateTimeField(null=True,blank=True)
     timezone = models.CharField(max_length=255,default='utc')
     roles = models.ManyToManyField(Role)
     acl_cache = models.TextField(null=True,blank=True)
@@ -172,11 +170,16 @@ class User(models.Model):
         return False #TODO!
     
     def is_god(self):
-        for user in settings.ADMINS:
-            if user[1].lower() == self.email:
-                return True
-        return False
-    
+        try:
+            return self.is_god_cache
+        except AttributeError:
+            for user in settings.ADMINS:
+                if user[1].lower() == self.email:
+                    self.is_god_cache = True
+                    return True
+            self.is_god_cache = False
+            return False
+            
     def is_anonymous(self):
         return False
     
@@ -192,6 +195,20 @@ class User(models.Model):
                 return True
         return False
     
+    def lock_avatar(self):
+        # Kill existing avatar and lock our ability to change it
+        self.delete_avatar()
+        self.avatar_ban = True
+        
+        # Pick new one from _locked gallery
+        galleries = path(settings.STATICFILES_DIRS[0]).joinpath('avatars').joinpath('_locked')
+        avatars_list = galleries.files('*.gif')
+        avatars_list += galleries.files('*.jpg')
+        avatars_list += galleries.files('*.jpeg')
+        avatars_list += galleries.files('*.png')
+        self.avatar_type = 'gallery'
+        self.avatar_image = '/'.join(path(choice(avatars_list)).splitall()[-2:])
+        
     def default_avatar(self, db_settings):
         if db_settings['default_avatar'] == 'gallery':
             try:
@@ -220,6 +237,7 @@ class User(models.Model):
                     return True
             except Exception as e:
                 pass
+            
         self.avatar_type = 'gravatar'
         self.avatar_image = None
         return True

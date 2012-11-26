@@ -23,7 +23,6 @@ def register(request):
         form = UserRegisterForm(request.POST, request=request)
         if form.is_valid():
             need_activation = 0
-            
             if request.settings['account_activation'] == 'user':
                 need_activation = User.ACTIVATION_USER
             if request.settings['account_activation'] == 'admin':
