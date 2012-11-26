@@ -128,7 +128,6 @@ class Edit(FormWidget):
                 }
     
     def submit_form(self, request, form, target):
-        original_name = target.name
         target.name = form.cleaned_data['name']
         target.name_slug = slugify(form.cleaned_data['name'])
         target.description = form.cleaned_data['description']
@@ -138,7 +137,7 @@ class Edit(FormWidget):
         target.as_tab = form.cleaned_data['as_tab']
         target.criteria = form.cleaned_data['criteria']
         target.save(force_update=True)
-        return target, BasicMessage(_('Changes in rank "%(name)s" have been saved.' % {'name': original_name}), 'success')
+        return target, BasicMessage(_('Changes in rank "%(name)s" have been saved.' % {'name': self.original_name}), 'success')
 
 
 class Delete(ButtonWidget):

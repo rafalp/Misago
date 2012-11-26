@@ -31,7 +31,7 @@ ADMIN_ACTIONS=(
                route='admin_overview_stats',
                urlpatterns=patterns('misago.overview.admin.views',
                         url(r'^$', 'overview_stats', name='admin_overview_stats'),
-                        url(r'^(?P<model>[a-zA-Z0-9]+)/(?P<date_start>[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])/(?P<date_end>[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])/(?P<precision>\w+)$', 'overview_graph', name='admin_overview_graph'),
+                        url(r'^(?P<model>[a-z0-9]+)/(?P<date_start>[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])/(?P<date_end>[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])/(?P<precision>\w+)$', 'overview_graph', name='admin_overview_graph'),
                     ),
                ),
    AdminAction(

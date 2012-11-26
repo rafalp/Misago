@@ -266,13 +266,17 @@ class ListWidget(BaseWidget):
             items = self.set_filters(items, request.session.get(self.get_token('filter')))
         else:
             items = items.all()
-            
+                   
         # Sort them
         items = self.sort_items(request, items, sorting_method);
         
         # Set pagination
         if self.pagination:
             items = items[paginating_method['start']:paginating_method['stop']]
+        
+        # Prefetch related?
+        if self.prefetch_related:
+            items = self.prefetch_related(items)
             
         # Default message
         message = request.messages.get_message(self.admin.id)
@@ -383,6 +387,7 @@ class FormWidget(BaseWidget):
     form = None
     layout = None
     target_name = None
+    original_name = None
     submit_fallback = False
     
     def get_url(self, request, model):
@@ -390,6 +395,11 @@ class FormWidget(BaseWidget):
     
     def get_form(self, request, model):
         return self.form
+    
+    def get_form_instance(self, form, request, model, initial, post=False):
+        if post:
+            return form(request.POST, request=request, initial=self.get_initial_data(request, model))
+        return form(request=request, initial=self.get_initial_data(request, model))
     
     def get_layout(self, request, form, model):
         if self.layout:
@@ -413,6 +423,7 @@ class FormWidget(BaseWidget):
         model = None
         if target:
             model = self.get_and_validate_target(request, target)
+            self.original_name = self.get_target_name(model)
             if not model:
                 return redirect(self.get_fallback_url(request))
         original_model = model
@@ -422,7 +433,7 @@ class FormWidget(BaseWidget):
         
         #Submit form
         if request.method == 'POST':
-            form = FormType(request.POST, request=request, initial=self.get_initial_data(request, model))
+            form = self.get_form_instance(FormType, request, model, self.get_initial_data(request, model), True)
             if form.is_valid():
                 model, message = self.submit_form(request, form, model)
                 if message.type != 'error':
@@ -448,7 +459,7 @@ class FormWidget(BaseWidget):
                 message = Message(request, form.non_field_errors()[0])
                 message.type = 'error'
         else:
-            form = FormType(request=request, initial=self.get_initial_data(request, model))
+            form = self.get_form_instance(FormType, request, model, self.get_initial_data(request, model))
             
         # Render form
         return request.theme.render_to_response(self.get_templates(self.template),

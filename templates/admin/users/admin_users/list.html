@@ -3,13 +3,35 @@
 {% load l10n %}
 {% load url from future %}
 
+{% block action_body %}
+{% if monitor.users_inactive|int > 0 %}
+<div class="alert alert-info alert-form">
+  <div class="alert-icon"><span><i class="icon-info-sign icon-white"></i></span></div>
+  <p><a href="{% url 'admin_users_inactive' %}">{%- trans count=monitor.users_inactive|int, total=monitor.users_inactive|int|intcomma -%}
+  There is one inactive user.
+  {%- pluralize -%}
+  There are {{ total }} inactive users.
+  {%- endtrans -%}</a></p>
+</div>
+{% endif %}
+
+{{ super() }}
+{% endblock %}
+
 {% block table_head scoped %}
   <th>&nbsp;</th>
   {{ super() }}
 {% endblock %}
+
 {% block table_row scoped %}
   <td class="avatar-small"><img src="{{ item.get_avatar('small') }}" class="avatar-small" alt="{% trans %}User Avatar{% endtrans %}"></td>
   <td colspan="2" class="lead-cell">
-  	<strong>{{ item.username }}</strong> <span class="muted">{{ item.email }}</span>{% if item.activation > 0 %} <span class="label">{% trans %}Inactive{% endtrans %}</span>{% endif %}{% if item.is_admin() %} <span class="label label-info">{% trans %}Admin{% endtrans %}</span>{% endif %}
+  	<strong>{{ item.username }}</strong> <span class="muted">{{ item.email }}</span>{% if item.is_admin() %} <span class="label label-important">{% trans %}Admin{% endtrans %}</span>{% elif item.is_protected() %} <span class="label label-info">{% trans %}Team{% endtrans %}</span>{% endif %}{% if item.activation > 0 %} <span class="label tooltip-top" title="{% if item.activation == 1 -%}
+  	{% trans %}This user has not yet validated his e-mail address.{% endtrans %}
+  	{%- elif item.activation == 2 -%}
+  	{% trans %}This user is awaiting admin approval.{% endtrans %}
+  	{%- else -%}
+  	{% trans %}This user is changing his sign-in credentials.{% endtrans %}
+  	{%- endif %}">{% trans %}Inactive{% endtrans %}</span>{% endif %}
   </td>
 {% endblock%}

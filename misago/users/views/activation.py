@@ -22,6 +22,7 @@ def activate(request, username="", user="0", token=""):
     try:
         user = User.objects.get(pk=user)
         current_activation = user.activation
+        
         # Run checks
         user_ban = check_ban(username=user.username, email=user.email)
         if user_ban:
@@ -32,9 +33,14 @@ def activate(request, username="", user="0", token=""):
             return error403(request, Message(request, 'users/activation/only_by_admin', extra={'user': user}))
         if not token or not user.token or user.token != token:
             return error403(request, Message(request, 'users/invalid_confirmation_link', extra={'user': user}))
+        
         # Activate and sign in our member
         user.activation = User.ACTIVATION_NONE
         sign_user_in(request, user)
+        
+        # Update monitor
+        request.monitor['users_inactive'] = request.monitor['users_inactive'] - 1
+        
         if current_activation == User.ACTIVATION_CREDENTIALS:
             request.messages.set_flash(Message(request, 'users/activation/credentials', extra={'user':user}), 'success')
         else:

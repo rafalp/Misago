@@ -10,6 +10,18 @@
 <div class="page-header">
   <h1>{% trans %}Admin Home{% endtrans %} <small>{% trans %}Misago {{version}}{% endtrans %}</small></h1>
 </div>
+
+{% if monitor.users_inactive|int > 0 %}
+<div class="alert alert-info alert-form">
+  <div class="alert-icon"><span><i class="icon-info-sign icon-white"></i></span></div>
+  <p><a href="{% url 'admin_users_inactive' %}">{%- trans count=monitor.users_inactive|int, total=monitor.users_inactive|int|intcomma -%}
+  There is one inactive user.
+  {%- pluralize -%}
+  There are {{ total }} inactive users.
+  {%- endtrans -%}</a></p>
+</div>
+{% endif %}
+
 <div class="row">
   <div class="span8">
   	<h2>Administrators Online</h2>

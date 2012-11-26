@@ -23,10 +23,12 @@ def register(request):
         form = UserRegisterForm(request.POST, request=request)
         if form.is_valid():
             need_activation = 0
+            
             if request.settings['account_activation'] == 'user':
                 need_activation = User.ACTIVATION_USER
             if request.settings['account_activation'] == 'admin':
                 need_activation = User.ACTIVATION_ADMIN
+                
             new_user = User.objects.create_user(
                                                 form.cleaned_data['username'],
                                                 form.cleaned_data['email'],
@@ -35,6 +37,7 @@ def register(request):
                                                 activation=need_activation,
                                                 request=request
                                                 )
+                        
             if need_activation == User.ACTIVATION_NONE:
                 # No need for activation, sign in user
                 sign_user_in(request, new_user)

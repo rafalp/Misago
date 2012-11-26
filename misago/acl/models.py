@@ -7,6 +7,7 @@ class Role(models.Model):
     """
     name = models.CharField(max_length=255)
     token = models.CharField(max_length=255,null=True,blank=True)
+    protected = models.BooleanField(default=False)
     
     def __unicode__(self):
         return unicode(_(self.name))

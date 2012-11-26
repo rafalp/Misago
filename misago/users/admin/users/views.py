@@ -3,12 +3,12 @@ from django.utils.translation import ugettext as _
 from misago.admin import site
 from misago.admin.widgets import *
 from misago.utils import slugify
-from misago.users.admin.users.forms import SearchUsersForm
+from misago.users.admin.users.forms import UserForm, SearchUsersForm
 from misago.users.models import User
 
 def reverse(route, target=None):
     if target:
-        return django_reverse(route, kwargs={'target': target.pk, 'slug': slugify(target.username)})
+        return django_reverse(route, kwargs={'target': target.pk, 'slug': target.username_slug})
     return django_reverse(route)
 
 """
@@ -48,6 +48,9 @@ class List(ListWidget):
             model = model.filter(activation__in=filters['activation'])
         return model
     
+    def prefetch_related(self, items):
+        return items.prefetch_related('roles')
+    
     def get_item_actions(self, request, item):
         return (
                 self.action('pencil', _("Edit User Details"), reverse('admin_users_edit', item)),
@@ -59,12 +62,53 @@ class List(ListWidget):
             if unicode(user.pk) in checked:
                 if user.pk == request.user.id:
                     return BasicMessage(_('You cannot delete yourself.'), 'error'), reverse('admin_users')
-                if user.is_god():
-                    return BasicMessage(_('You cannot delete system administrator.'), 'error'), reverse('admin_users')
+                if user.is_protected():
+                    return BasicMessage(_('You cannot delete protected member.'), 'error'), reverse('admin_users')
                 
         User.objects.filter(id__in=checked).delete()
         User.objects.resync_monitor(request.monitor)
         return BasicMessage(_('Selected users have been deleted successfully.'), 'success'), reverse('admin_users')
+    
+
+class Edit(FormWidget):
+    admin = site.get_action('users')
+    id = 'edit'
+    name = _("Edit User")
+    fallback = 'admin_users'
+    form = UserForm
+    target_name = 'username'
+    notfound_message = _('Requested User could not be found.')
+    submit_fallback = True
+    
+    def get_form_instance(self, form, request, model, initial, post=False):
+        if post:
+            return form(model, request.POST, request=request, initial=self.get_initial_data(request, model))
+        return form(model, request=request, initial=self.get_initial_data(request, model))
+        
+    def get_url(self, request, model):
+        return reverse('admin_users_edit', model)
+    
+    def get_edit_url(self, request, model):
+        return self.get_url(request, model)
+    
+    def get_initial_data(self, request, model):
+        return {
+                'username': model.username,
+                'title': model.title,
+                'email': model.email,
+                'rank': model.rank,
+                'roles': model.roles.all(),
+                }
+    
+    def submit_form(self, request, form, target):
+        target.title = form.cleaned_data['title']
+        target.rank = form.cleaned_data['rank']
+        if not target.is_protected() or request.user.is_god():
+            target.roles.clear()
+            for role in form.cleaned_data['roles']:
+                target.roles.add(role)
+        target.save(force_update=True)
+        return target, BasicMessage(_('Changes in user\'s "%(name)s" account have been saved.' % {'name': self.original_name}), 'success')
 
 
 class Delete(ButtonWidget):
@@ -76,8 +120,14 @@ class Delete(ButtonWidget):
     def action(self, request, target):
         if target.pk == request.user.id:
             return BasicMessage(_('You cannot delete yourself.'), 'error'), False
-        if target.is_god():
-            return BasicMessage(_('You cannot delete system administrator.'), 'error'), False
+        if target.is_protected():
+            return BasicMessage(_('You cannot delete protected member.'), 'error'), False
         target.delete()
         User.objects.resync_monitor(request.monitor)
         return BasicMessage(_('User "%(name)s" has been deleted.' % {'name': target.username}), 'success'), False
+    
+
+def inactive(request):
+    token = 'list_filter_misago.users.models.User'
+    request.session[token] = {'activation': ['1', '2', '3']}
+    return redirect(reverse('admin_users'))

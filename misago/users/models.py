@@ -163,8 +163,19 @@ class User(models.Model):
     
     statistics_name = _('Users Registrations')
         
+    def acl(self):
+        pass
+        
     def is_admin(self):
-        return 1
+        if self.is_god():
+            return True
+        return False #TODO!
+    
+    def is_god(self):
+        for user in settings.ADMINS:
+            if user[1].lower() == self.email:
+                return True
+        return False
     
     def is_anonymous(self):
         return False
@@ -175,6 +186,12 @@ class User(models.Model):
     def is_crawler(self):
         return False
 
+    def is_protected(self):
+        for role in self.roles.all():
+            if role.protected:
+                return True
+        return False
+    
     def default_avatar(self, db_settings):
         if db_settings['default_avatar'] == 'gallery':
             try:

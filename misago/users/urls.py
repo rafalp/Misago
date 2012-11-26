@@ -2,10 +2,10 @@ from django.conf.urls import patterns, url, include
 
 urlpatterns = patterns('misago.users.views',
     url(r'^register/$', 'register', name="register"),
-    url(r'^activate/(?P<username>\w+)-(?P<user>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'activation.activate', name="activate"),
+    url(r'^activate/(?P<username>[a-z0-9]+)-(?P<user>\d+)/(?P<token>[a-z0-9]+)/$', 'activation.activate', name="activate"),
     url(r'^resend-activation/$', 'activation.form', name="send_activation"),
     url(r'^reset-pass/$', 'password.form', name="forgot_password"),
-    url(r'^reset-pass/(?P<username>\w+)-(?P<user>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'password.reset', name="reset_password"),
+    url(r'^reset-pass/(?P<username>[a-z0-9]+)-(?P<user>\d+)/(?P<token>[a-z0-9]+)/$', 'password.reset', name="reset_password"),
     url(r'^users/$', 'profiles.list', name="users"),
     url(r'^users/(?P<username>\w+)-(?P<user>\d+)/$', 'profiles.show', name="user"),
     url(r'^users/(?P<rank_slug>(\w|-)+)/$', 'profiles.list', name="users"),

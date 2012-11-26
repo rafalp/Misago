@@ -9,14 +9,14 @@ from misago.users.validators import validate_password, validate_email
 
 
 class UserRegisterForm(Form):
-    username = forms.CharField(max_length=15,help_text=_("Between 3 and 15 characters, only letters and digits are allowed."))
-    email = forms.EmailField(max_length=255,help_text=_("Working e-mail inbox is required to maintain control over your forum account."))
+    username = forms.CharField(max_length=15)
+    email = forms.EmailField(max_length=255)
     email_rep = forms.EmailField(max_length=255)
-    password = forms.CharField(max_length=255,help_text=_("Password you will be using to sign in to your account. Make sure it's strong."))
-    password_rep = forms.CharField(max_length=255)
+    password = forms.CharField(max_length=255,widget=forms.PasswordInput)
+    password_rep = forms.CharField(max_length=255,widget=forms.PasswordInput)
     captcha_qa = captcha.QACaptchaField()
     recaptcha = captcha.ReCaptchaField()
-    accept_tos = forms.BooleanField(required=True,label=_("Forum Terms of Service"),error_messages={'required': _("Acceptation of board ToS is mandatory for membership.")})
+    accept_tos = forms.BooleanField(required=True,error_messages={'required': _("Acceptation of board ToS is mandatory for membership.")})
     
     validate_repeats = (('email', 'email_rep'), ('password', 'password_rep'))
     repeats_errors = [{
@@ -29,12 +29,12 @@ class UserRegisterForm(Form):
     layout = [
                  (
                      None,
-                     [('username', {'attrs': {'placeholder': _("Enter your desired username")}})]
+                     [('username', {'label': _('Username'), 'help_text': _("Your displayed username. Between 3 and 15 characters, only letters and digits are allowed."),'attrs': {'placeholder': _("Enter your desired username")}})]
                  ),
                  (
                      None,
-                     [('nested', [('email', {'label': _('E-mail address'), 'attrs': {'placeholder': _("Enter your e-mail")}, 'width': 50}), ('email_rep', {'attrs': {'placeholder': _("Repeat your e-mail")}, 'width': 50})]), 
-                      ('nested', [('password', {'label': _('Password'), 'has_value': False, 'attrs': {'placeholder': _("Enter your password")}, 'width': 50}), ('password_rep', {'has_value': False, 'attrs': {'placeholder': _("Repeat your password")}, 'width': 50})])]
+                     [('nested', [('email', {'label': _('E-mail address'), 'help_text': _("Working e-mail inbox is required to maintain control over your forum account."), 'attrs': {'placeholder': _("Enter your e-mail")}, 'width': 50}), ('email_rep', {'attrs': {'placeholder': _("Repeat your e-mail")}, 'width': 50})]), 
+                      ('nested', [('password', {'label': _('Password'), 'help_text': _("Password you will be using to sign in to your account. Make sure it's strong."), 'has_value': False, 'attrs': {'placeholder': _("Enter your password")}, 'width': 50}), ('password_rep', {'has_value': False, 'attrs': {'placeholder': _("Repeat your password")}, 'width': 50})])]
                  ),
                  (
                      None,
@@ -42,15 +42,9 @@ class UserRegisterForm(Form):
                  ),
                  (
                      None,
-                     [('accept_tos', {'inline': _("I have read and accept this forums Terms of Service.")})]
+                     [('accept_tos', {'label': _("Forum Terms of Service"), 'inline': _("I have read and accept this forums Terms of Service.")})]
                  ),
              ]
-    
-    class Meta:
-        widgets = {
-            'password': forms.PasswordInput(),
-            'password_rep': forms.PasswordInput(),
-        }
         
     def clean_username(self):
         new_user = User.objects.get_blank_user()

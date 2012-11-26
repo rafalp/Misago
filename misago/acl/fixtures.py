@@ -5,19 +5,21 @@ from misago.utils import get_msgid
 def load_fixtures():
     role_admin = Role(
                       name=_("Administrator").message,
-                      token='admin'
+                      token='admin',
+                      protected=True,
                       )
     role_mod = Role(
                     name=_("Moderator").message,
-                    token='mod'
+                    token='mod',
+                    protected=True,
                     )
     role_registered = Role(
                            name=_("Registered").message,
-                           token='registered'
+                           token='registered',
                            )
     role_guest = Role(
                       name=_("Guest").message,
-                      token='guest'
+                      token='guest',
                       )
     
     role_admin.save(force_insert=True)
