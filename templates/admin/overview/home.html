@@ -24,6 +24,7 @@
 
 <div class="row">
   <div class="span8">
+  	
   	<h2>Administrators Online</h2>
     <table class="table table-striped table-users list-tiny">
       <thead>
@@ -36,20 +37,19 @@ One Administrator Online
         </tr>
       </thead>
       <tbody>
-        <tr>{% for session in admins %}    	
-          <td class="span4">
+        {% for session in admins %}    	
+        <tr>
+          <td>
               <a href="{% url 'user' username=session.user.username_slug, user=session.user.pk %}"><img src="{{ session.user.get_avatar('medium') }}" class="avatar" alt="{% trans %}Admin's Avatar{% endtrans %}" title="{% trans %}Admin's Avatar{% endtrans %}"> <strong>{{ session.user.username }}</strong></a>
-              <div class="muted" style="float: right;">{% trans start=session.start|timesince %}started {{ start }} ago{% endtrans %} <span class="info-popover tooltip-top" title="{% trans last=session.last|timesince %}Last click was {{ last }} ago{% endtrans %}"><i class="icon-time"></i></span></div>
-          </td>{% if loop.last and loop.index is odd %}
-          <td class="span4">&nbsp;</td>{% endif %}{% if not loop.last and loop.index is even %}
-        </tr>
-        <tr>{% endif %}
-        {% endfor %}</tr>
+              <div class="muted" style="float: right;">{% trans start=session.start|timesince, ip=session.ip %}started {{ start }} ago from {{ ip }}{% endtrans %} <span class="info-popover tooltip-top" title="{% trans last=session.last|timesince %}Last click was {{ last }} ago{% endtrans %}"><i class="icon-time"></i></span></div>
+          </td>
+        </tr>{% endfor %}
       </tbody>
     </table>
-    
-    <hr>
-    
+        
+  </div>
+  <div class="span4">
+  	
   	<h3>{% trans %}Board Statistics{% endtrans %}</h3>
     <table class="table table-striped">
       <tbody>
@@ -67,40 +67,7 @@ One Administrator Online
       	</tr>
       </tbody>
     </table>
-  </div>
-  <div class="span4">
-    <h3>{% trans %}Quick Action{% endtrans %}</h3>
-    <form>
-      <div class="side-search quick-action">
-        <div class="control-group">
-          <label class="control-label" for="inputEmail">User to find:</label>
-          <div class="controls">
-            <input type="text" id="inputEmail" class="span4" placeholder="Email">
-          </div>
-        </div>
-        <div class="control-group">
-          <label class="control-label">Actions to run:</label>
-          <select class="span4">
-            <option>Dont change account state</option>
-            <option>Activate user account</option>
-            <option>Reset user password</option>
-            <option>Ban user for 15 minutes</option>
-            <option>Ban user permanently</option>
-          </select>
-          <label class="checkbox">
-            <input type="checkbox" value="">
-            Remove and block user avatar
-          </label>
-          <label class="checkbox">
-            <input type="checkbox" value="">
-            Remove and block user signature
-          </label>
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">Run Action</button>
-        </div>
-      </div>
-    </form>
+    
   </div>
 </div>
 {% endblock %}
