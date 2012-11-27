@@ -7,7 +7,7 @@ ADMIN_SECTIONS=(
                  id='system',
                  name=_("System"),
                  icon='cog',
-                 after='permissions',
+                 after='forums',
                  ),
 )
 

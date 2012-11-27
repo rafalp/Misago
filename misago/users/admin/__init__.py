@@ -47,6 +47,18 @@ ADMIN_ACTIONS=(
                         url(r'^delete/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Delete', name='admin_users_delete'),
                     ),
                ),
+               
+   AdminAction(
+               section='users',
+               id='roles',
+               name=_("Roles"),
+               help=_("Manage User Roles"),
+               icon='adjust',
+               route='admin_users_roles',
+               urlpatterns=patterns('misago.admin.views',
+                        url(r'^$', 'todo', name='admin_users_roles'),
+                    ),
+               ),
    AdminAction(
                section='users',
                id='ranks',
