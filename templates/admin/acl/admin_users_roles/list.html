@@ -1,0 +1,10 @@
+{% extends "admin/admin/list.html" %}
+{% load i18n %}
+{% load l10n %}
+{% load url from future %}
+
+{% block table_row scoped %}
+  <td class="lead-cell">
+  	<strong>{{ _(item.name) }}</strong>{% if item.token %} <span class="label label-important">{% trans %}System Role{% endtrans %}</span>{% elif item.protected %} <span class="label label-info">{% trans %}Protected Role{% endtrans %}</span>{% endif %}
+  </td>
+{% endblock%}

@@ -25,7 +25,7 @@ class List(ListWidget):
     table_form_button = _('Reorder Ranks')
     nothing_checked_message = _('You have to check at least one rank.')
     actions=(
-             ('delete', _("Delete selected"), _("Are you sure you want to delete selected ranks?")),
+             ('delete', _("Delete selected ranks"), _("Are you sure you want to delete selected ranks?")),
              )
     
     

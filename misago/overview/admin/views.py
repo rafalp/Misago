@@ -145,6 +145,7 @@ def check_dates(date_start, date_end, precision):
         return BasicMessage(_('Too few items to display on graph'), type='error')
     return None
         
+
 def build_graph(model, date_start, date_end, precision):
     if precision == 'day':
         format = 'F j, Y'

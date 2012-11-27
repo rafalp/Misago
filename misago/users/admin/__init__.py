@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import AdminSection, AdminAction
+from misago.acl.models import Role
 from misago.banning.models import Ban
 from misago.users.models import User, Rank
 
@@ -43,8 +44,8 @@ ADMIN_ACTIONS=(
                         url(r'^(?P<page>\d+)/$', 'List', name='admin_users'),
                         url(r'^inactive/$', 'inactive', name='admin_users_inactive'),
                         url(r'^new/$', 'List', name='admin_users_new'),
-                        url(r'^edit/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Edit', name='admin_users_edit'),
-                        url(r'^delete/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Delete', name='admin_users_delete'),
+                        url(r'^edit/(?P<slug>[a-z0-9]+)-(?P<target>\d+)/$', 'Edit', name='admin_users_edit'),
+                        url(r'^delete/(?P<slug>[a-z0-9]+)-(?P<target>\d+)/$', 'Delete', name='admin_users_delete'),
                     ),
                ),
                
@@ -54,9 +55,29 @@ ADMIN_ACTIONS=(
                name=_("Roles"),
                help=_("Manage User Roles"),
                icon='adjust',
+               model=Role,
+               actions=[
+                        {
+                         'id': 'list',
+                         'icon': 'list-alt',
+                         'name': _("Browse Roles"),
+                         'help': _("Browse all existing roles"),
+                         'route': 'admin_users_roles'
+                         },
+                        {
+                         'id': 'new',
+                         'icon': 'plus',
+                         'name': _("Add Role"),
+                         'help': _("Create new role"),
+                         'route': 'admin_users_roles_new'
+                         },
+                        ],
                route='admin_users_roles',
-               urlpatterns=patterns('misago.admin.views',
-                        url(r'^$', 'todo', name='admin_users_roles'),
+               urlpatterns=patterns('misago.users.admin.roles.views',
+                        url(r'^$', 'List', name='admin_users_roles'),
+                        url(r'^new/$', 'New', name='admin_users_roles_new'),
+                        url(r'^edit/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Edit', name='admin_users_roles_edit'),
+                        url(r'^delete/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Delete', name='admin_users_roles_delete'),
                     ),
                ),
    AdminAction(
