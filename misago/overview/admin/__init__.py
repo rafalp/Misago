@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import AdminSection, AdminAction
+from misago.sessions.models import Session
 
 ADMIN_SECTIONS=(
     AdminSection(
@@ -40,9 +41,20 @@ ADMIN_ACTIONS=(
                name=_("Online"),
                help=_("See who is currently online on forums."),
                icon='fire',
-               route='admin_overview_online',
-               urlpatterns=patterns('misago.admin.views',
-                        url(r'^$', 'todo', name='admin_overview_online'),
+               model=Session,
+               actions=[
+                        {
+                         'id': 'list',
+                         'icon': 'list-alt',
+                         'name': _("Browse Users"),
+                         'help': _("Browse all registered user accounts"),
+                         'route': 'admin_overview_online'
+                         },
+                        ],
+               route='admin_overview_online', 
+               urlpatterns=patterns('misago.overview.admin.views',
+                        url(r'^$', 'OnlineList', name='admin_overview_online'),
+                        url(r'^(?P<page>\d+)/$', 'OnlineList', name='admin_overview_online'),
                     ),
                ),
    AdminAction(

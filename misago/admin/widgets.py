@@ -47,7 +47,7 @@ class BaseWidget(object):
     def get_id(self):
         return 'admin_%s' % self.id
          
-    def get_templates(self, template):
+    def get_template(self, template):
         return ('%s/%s/%s.html' % (str(self.admin.model.__module__).split('.')[1], str(self.admin.route).lower(), template),
                 '%s/%s.html' % (str(self.admin.model.__module__).split('.')[1], template),
                 'admin/%s.html' % template)
@@ -252,9 +252,17 @@ class ListWidget(BaseWidget):
         # Get basic list attributes
         if request.session.get(self.get_token('filter')):
             self.is_filtering = True
-            items_total = self.set_filters(self.admin.model.objects, request.session.get(self.get_token('filter'))).count()
+            items_total = self.set_filters(self.admin.model.objects, request.session.get(self.get_token('filter')))
         else:
-            items_total = self.admin.model.objects.count()
+            items_total = self.admin.model.objects
+            
+        # Set extra filters?
+        try:
+            items_total = self.select_items(items_total).count()
+        except AttributeError:
+            items_total = items_total.count()
+            
+        # Set sorting and paginating
         sorting_method = self.get_sorting(request)
         paginating_method = self.get_pagination(request, items_total, page)
         
@@ -266,7 +274,13 @@ class ListWidget(BaseWidget):
             items = self.set_filters(items, request.session.get(self.get_token('filter')))
         else:
             items = items.all()
-                   
+         
+        # Set extra filters?
+        try:
+            items = self.select_items(items)
+        except AttributeError:
+            pass
+                  
         # Sort them
         items = self.sort_items(request, items, sorting_method);
         
@@ -275,9 +289,11 @@ class ListWidget(BaseWidget):
             items = items[paginating_method['start']:paginating_method['stop']]
         
         # Prefetch related?
-        if self.prefetch_related:
+        try:
             items = self.prefetch_related(items)
-            
+        except AttributeError:
+            pass
+        
         # Default message
         message = request.messages.get_message(self.admin.id)
         
@@ -360,7 +376,7 @@ class ListWidget(BaseWidget):
                 list_form = ListForm(request=request)
                 
         # Render list
-        return request.theme.render_to_response(self.get_templates(self.template),
+        return request.theme.render_to_response(self.get_template(self.template),
                                                 {
                                                  'admin': self.admin,
                                                  'action': self,
@@ -462,7 +478,7 @@ class FormWidget(BaseWidget):
             form = self.get_form_instance(FormType, request, model, self.get_initial_data(request, model))
             
         # Render form
-        return request.theme.render_to_response(self.get_templates(self.template),
+        return request.theme.render_to_response(self.get_template(self.template),
                                                 {
                                                  'admin': self.admin,
                                                  'action': self,

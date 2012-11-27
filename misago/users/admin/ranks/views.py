@@ -17,9 +17,6 @@ def reverse(route, target=None):
 Views
 """
 class List(ListWidget):
-    """
-    List Users
-    """
     admin = site.get_action('ranks')
     id = 'list'
     columns=(

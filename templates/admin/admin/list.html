@@ -21,14 +21,14 @@
       {%- else -%}
       {{ url ~ query(sort=column[0],dir=sorting[column[0]]) }}
       {%- endif %}">{{ column[1] }}</a>{% else %}{{ column[1] }}{% endif %}</th>{% endfor %}{% endblock %}
-      <th>{% trans %}Actions{% endtrans %}</th>
-      {% if list_form %}<th class="check-cell"><label class="checkbox"><input type="checkbox" class="checkbox-master"></label></th>{% endif %}
+      {% if not action.hide_actions%}<th>{% trans %}Actions{% endtrans %}</th>{% endif -%}
+      {% if list_form %}<th class="check-cell"><label class="checkbox"><input type="checkbox" class="checkbox-master"></label></th>{% endif -%}
     </tr>
   </thead>
   <tbody>{% for item in items %}
     <tr>{% block table_row scoped %}{% for column in action.columns %}
       <td{% if loop.first %} class="lead-cell{% if column[3] is defined %} span{{ widthratio(column[3], 100, 12) }}{% endif %}"{% elif column[3] is defined %} class="span{{ widthratio(column[3], 100, 12) }}"{% endif %}>{{ item[column[0]] }}</td>{% endfor %}{% endblock %}
-      {%- if not hide_actions%}
+      {%- if not action.hide_actions%}
       <td class="span2">
       	{%- set item_actions = action.get_item_actions(request, item) -%}
       	{% if item_actions -%}
