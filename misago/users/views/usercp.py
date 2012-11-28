@@ -40,6 +40,12 @@ def username(request):
  
 @block_guest
 def avatar(request):
+    # Intercept all requests if we cant use avatar
+    if request.user.avatar_ban:
+        return request.theme.render_to_response('users/usercp/avatar_banned.html',
+                                                {'tab': 'avatar'},
+                                                context_instance=RequestContext(request));
+                                                   
     return request.theme.render_to_response('users/usercp/avatar.html',
                                             {
                                              'tab': 'avatar',
@@ -49,6 +55,12 @@ def avatar(request):
  
 @block_guest
 def signature(request):
+    # Intercept all requests if we cant use signature
+    if request.user.avatar_ban:
+        return request.theme.render_to_response('users/usercp/signature_banned.html',
+                                                {'tab': 'signature'},
+                                                context_instance=RequestContext(request));
+                                                
     return request.theme.render_to_response('users/usercp/signature.html',
                                             {
                                              'tab': 'signature',
