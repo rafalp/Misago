@@ -3,8 +3,8 @@
 {# Render whole form macro #}
 {%- macro form_widget(form, horizontal=false, width=12) -%}
 <fieldset>
-  <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">{% for field in form.hidden %}
-  <input type="hidden" name="{{ field.id }}" value="{{ field.value }}">{% endfor %}{% for fieldset in form.fieldsets %}{% if fieldset.legend %}
+  {{ form_hidden_widget(form) }}
+  {% for fieldset in form.fieldsets %}{% if fieldset.legend %}
   <legend><div>{{ fieldset.legend }}{% if fieldset.help %} <span>{{ fieldset.help }}</span>{% endif %}</div></legend>{% endif %}
   {% for field in fieldset.fields %}
     {{ row_widget(field, horizontal=horizontal, width=width) }}
@@ -13,6 +13,11 @@
 <fieldset>{% endif %}{% endfor %}
 {%- endmacro -%}
 
+{# Render hidden fields macro #}
+{%- macro form_hidden_widget(form) -%}
+  <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">{% for field in form.hidden %}
+  <input type="hidden" name="{{ field.id }}" value="{{ field.value }}">{% endfor %}
+{%- endmacro -%}
 
 {# Render form row macro #}
 {%- macro row_widget(field, horizontal=false, width=12) -%}

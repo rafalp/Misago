@@ -182,6 +182,7 @@ class Edit(FormWidget):
     name = _("Edit User")
     fallback = 'admin_users'
     form = UserForm
+    tabbed = True
     target_name = 'username'
     notfound_message = _('Requested User could not be found.')
     submit_fallback = True
@@ -204,12 +205,33 @@ class Edit(FormWidget):
                 'email': model.email,
                 'rank': model.rank,
                 'roles': model.roles.all(),
+                'avatar_ban': model.avatar_ban,
+                'avatar_ban_reason_user': model.avatar_ban_reason_user,
+                'avatar_ban_reason_admin': model.avatar_ban_reason_admin,
+                'signature': model.signature,
+                'signature_ban': model.signature_ban,
+                'signature_ban_reason_user': model.signature_ban_reason_user,
+                'signature_ban_reason_admin': model.signature_ban_reason_admin,
                 }
     
     def submit_form(self, request, form, target):
         target.title = form.cleaned_data['title']
         target.rank = form.cleaned_data['rank']
+        target.avatar_ban_reason_user = form.cleaned_data['avatar_ban_reason_user']
+        target.avatar_ban_reason_admin = form.cleaned_data['avatar_ban_reason_admin']
+        target.set_signature(form.cleaned_data['signature'])
+        target.signature_ban = form.cleaned_data['signature_ban']
+        target.signature_ban_reason_user = form.cleaned_data['signature_ban_reason_user']
+        target.signature_ban_reason_admin = form.cleaned_data['signature_ban_reason_admin']
         
+        # Do avatar ban mumbo-jumbo
+        if target.avatar_ban != form.cleaned_data['avatar_ban']:
+            if form.cleaned_data['avatar_ban']:
+                target.lock_avatar()
+            else:
+                target.default_avatar(request.settings)
+        target.avatar_ban = form.cleaned_data['avatar_ban']
+               
         # Update user roles
         if request.user.is_god():
             target.roles.clear()

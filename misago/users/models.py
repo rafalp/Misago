@@ -254,6 +254,13 @@ class User(models.Model):
     def set_username(self, username):
         self.username = username.strip()
         self.username_slug = slugify(username)
+     
+    def set_signature(self, signature):
+        self.signature = signature.strip()
+        self.signature_preparsed = ''
+        if self.signature:
+            import markdown
+            self.signature_preparsed = markdown.markdown(value, safe_mode='escape', output_format=format)
         
     def is_username_valid(self, e):
         try:

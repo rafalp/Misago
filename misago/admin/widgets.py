@@ -402,6 +402,7 @@ class FormWidget(BaseWidget):
     submit_button = _("Save Changes")
     form = None
     layout = None
+    tabbed = False
     target_name = None
     original_name = None
     submit_fallback = False
@@ -486,6 +487,7 @@ class FormWidget(BaseWidget):
                                                  'url': self.get_url(request, model),
                                                  'fallback': self.get_fallback_url(request),
                                                  'message': message,
+                                                 'tabbed': self.tabbed,
                                                  'target': self.get_target_name(original_model),
                                                  'target_model': original_model,
                                                  'form': FormLayout(form, self.get_layout(request, form, target)),

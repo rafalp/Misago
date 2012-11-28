@@ -13,6 +13,13 @@ class UserForm(Form):
     roles = False
     email = forms.EmailField(max_length=255)
     new_password = forms.CharField(max_length=255,required=False,widget=forms.PasswordInput)
+    signature = forms.CharField(widget=forms.Textarea,required=False)
+    avatar_ban = forms.BooleanField(widget=YesNoSwitch,required=False) 
+    avatar_ban_reason_user = forms.CharField(widget=forms.Textarea,required=False)
+    avatar_ban_reason_admin = forms.CharField(widget=forms.Textarea,required=False)
+    signature_ban = forms.BooleanField(widget=YesNoSwitch,required=False)
+    signature_ban_reason_user = forms.CharField(widget=forms.Textarea,required=False)
+    signature_ban_reason_admin = forms.CharField(widget=forms.Textarea,required=False)
     
     layout = [
               [
@@ -20,15 +27,32 @@ class UserForm(Form):
                [
                 ('username', {'label': _("Username"), 'help_text': _("Username is name under which user is known to other users. Between 3 and 15 characters, only letters and digits are allowed.")}),
                 ('title', {'label': _("User Title"), 'help_text': _("To override user title with custom one, enter it here.")}),
-                ('rank', {'label': _("User Rank"), 'help_text': _("This users's rank.")}),
-                ('roles', {'label': _("User Roles"), 'help_text': _("This user's roles. Roles are sets of user permissions")}),
+                ('rank', {'label': _("User Rank"), 'help_text': _("This user rank.")}),
+                ('roles', {'label': _("User Roles"), 'help_text': _("This user roles. Roles are sets of user permissions")}),
                 ],
                ],
               [
                _("Sign-in Credentials"),
                [
                 ('email', {'label': _("E-mail Address"), 'help_text': _("Username is name under which user is known to other users.")}),
-                ('new_password', {'label': _("Change User Password"), 'help_text': _("If you wish to change user's password, enter here new password. Otherwhise leave this field blank"), 'has_value': False}),
+                ('new_password', {'label': _("Change User Password"), 'help_text': _("If you wish to change user password, enter here new password. Otherwhise leave this field blank."), 'has_value': False}),
+                ],
+               ],
+              [
+               _("User Avatar"),
+               [
+                ('avatar_ban', {'label': _("Lock Member's Avatar"), 'help_text': _("If you set this field to yes, this member's avatar will be deleted and replaced with random one selected from _removed gallery and member will not be able to change his avatar.")}),
+                ('avatar_ban_reason_user', {'label': _("User-visible reason for lock"), 'help_text': _("You can leave message to member explaining why he or she is unable to change his avatar anymore. This message will be displayed to member in his control panel.")}),
+                ('avatar_ban_reason_admin', {'label': _("Forum Team-visible reason for lock"), 'help_text': _("You can leave message to other forum team members exmplaining why this member's avatar has been locked.")}),
+                ],
+               ],
+              [
+               _("User Signature"),
+               [
+                ('signature', {'label': _("Signature"), 'help_text': _("Signature is short message attached at end of member's messages.")}),
+                ('signature_ban', {'label': _("Lock Member's Signature"), 'help_text': _("If you set this field to yes, this member will not be able to change his signature.")}),
+                ('signature_ban_reason_user', {'label': _("User-visible reason for lock"), 'help_text': _("You can leave message to member explaining why he or she is unable to edit his signature anymore. This message will be displayed to member in his control panel.")}),
+                ('signature_ban_reason_admin', {'label': _("Forum Team-visible reason for lock"), 'help_text': _("You can leave message to other forum team members exmplaining why this member's signature has been locked.")}),
                 ],
                ],
               ]
