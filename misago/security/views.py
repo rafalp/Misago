@@ -24,7 +24,6 @@ def signin(request):
         form = SignInForm(
                           request.POST,
                           show_remember_me=not request.firewall.admin and request.settings['remember_me_allow'],
-                          show_stay_hidden=not request.firewall.admin and request.settings['sessions_hidden'],
                           request=request
                           )
         if form.is_valid():
@@ -44,10 +43,7 @@ def signin(request):
                                   form.cleaned_data['user_password'],
                                   )
                 
-                if not request.firewall.admin and request.settings['sessions_hidden'] and form.cleaned_data['user_stay_hidden']:
-                    request.session.hidden = True                    
-                
-                sign_user_in(request, user, request.session.hidden)     
+                sign_user_in(request, user)     
                            
                 remember_me_token = False
                 if not request.firewall.admin and request.settings['remember_me_allow'] and form.cleaned_data['user_remember_me']:
@@ -57,7 +53,6 @@ def signin(request):
                                         user=user,
                                         created=timezone.now(),
                                         accessed=timezone.now(),
-                                        hidden=request.session.hidden
                                         )
                     remember_me.save()
                 if remember_me_token:
@@ -80,22 +75,12 @@ def signin(request):
     else:
         form = SignInForm(
                           show_remember_me=not request.firewall.admin and request.settings['remember_me_allow'],
-                          show_stay_hidden=not request.firewall.admin and request.settings['sessions_hidden'],
                           request=request
                           )
     return request.theme.render_to_response('signin.html',
                                             {
                                              'message': message,
-                                             'form': FormLayout(form, [
-                                                 (
-                                                     None,
-                                                     [('user_email', {'attrs': {'placeholder': _("Enter your e-mail")}}), ('user_password', {'has_value': False, 'placeholder': _("Enter your password")})]
-                                                 ),
-                                                 (
-                                                     None,
-                                                     ['user_remember_me', 'user_stay_hidden'],
-                                                 ),
-                                             ]),
+                                             'form': FormLayout(form),
                                              'hide_signin': True, 
                                             },
                                             context_instance=RequestContext(request));

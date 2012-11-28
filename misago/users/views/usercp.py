@@ -1,14 +1,21 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
+from misago.forms import FormLayout
 from misago.security.decorators import *
+from misago.users.forms import UserForumOptionsForm
 
 
 @block_guest   
 def options(request):
+    form = UserForumOptionsForm(request=request,initial={
+                                                         'timezone': request.user.timezone
+                                                         })
+    
     return request.theme.render_to_response('users/usercp/options.html',
                                             {
                                              'tab': 'options',
+                                             'form': FormLayout(form)
                                              },
                                             context_instance=RequestContext(request));
     

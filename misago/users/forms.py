@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from misago.forms import Form
 from misago.security import captcha
+from misago.timezones import tzlist
 from misago.users.models import User
 from misago.users.validators import validate_password, validate_email
 
@@ -27,24 +28,24 @@ class UserRegisterForm(Form):
                        }]
     
     layout = [
-                 (
-                     None,
-                     [('username', {'label': _('Username'), 'help_text': _("Your displayed username. Between 3 and 15 characters, only letters and digits are allowed."),'attrs': {'placeholder': _("Enter your desired username")}})]
-                 ),
-                 (
-                     None,
-                     [('nested', [('email', {'label': _('E-mail address'), 'help_text': _("Working e-mail inbox is required to maintain control over your forum account."), 'attrs': {'placeholder': _("Enter your e-mail")}, 'width': 50}), ('email_rep', {'attrs': {'placeholder': _("Repeat your e-mail")}, 'width': 50})]), 
-                      ('nested', [('password', {'label': _('Password'), 'help_text': _("Password you will be using to sign in to your account. Make sure it's strong."), 'has_value': False, 'attrs': {'placeholder': _("Enter your password")}, 'width': 50}), ('password_rep', {'has_value': False, 'attrs': {'placeholder': _("Repeat your password")}, 'width': 50})])]
-                 ),
-                 (
-                     None,
-                     ['captcha_qa', 'recaptcha']
-                 ),
-                 (
-                     None,
-                     [('accept_tos', {'label': _("Forum Terms of Service"), 'inline': _("I have read and accept this forums Terms of Service.")})]
-                 ),
-             ]
+              (
+               None,
+               [('username', {'label': _('Username'), 'help_text': _("Your displayed username. Between 3 and 15 characters, only letters and digits are allowed."),'attrs': {'placeholder': _("Enter your desired username")}})]
+               ),
+              (
+               None,
+               [('nested', [('email', {'label': _('E-mail address'), 'help_text': _("Working e-mail inbox is required to maintain control over your forum account."), 'attrs': {'placeholder': _("Enter your e-mail")}, 'width': 50}), ('email_rep', {'attrs': {'placeholder': _("Repeat your e-mail")}, 'width': 50})]), 
+               ('nested', [('password', {'label': _('Password'), 'help_text': _("Password you will be using to sign in to your account. Make sure it's strong."), 'has_value': False, 'attrs': {'placeholder': _("Enter your password")}, 'width': 50}), ('password_rep', {'has_value': False, 'attrs': {'placeholder': _("Repeat your password")}, 'width': 50})])]
+               ),
+              (
+               None,
+               ['captcha_qa', 'recaptcha']
+               ),
+              (
+               None,
+               [('accept_tos', {'label': _("Forum Terms of Service"), 'inline': _("I have read and accept this forums Terms of Service.")})]
+               ),
+              ]
         
     def clean_username(self):
         new_user = User.objects.get_blank_user()
@@ -76,21 +77,21 @@ class UserRegisterForm(Form):
     
     
 class UserSendSpecialMailForm(Form):
-    email = forms.EmailField(max_length=255,label=_("Your E-mail Address"),help_text=_("Your account's email address."))
+    email = forms.EmailField(max_length=255)
     captcha_qa = captcha.QACaptchaField()
     recaptcha = captcha.ReCaptchaField()
     error_source = 'email'
     
     layout = [
-                  (
-                      None,
-                      [('email', {'placeholder': _("Enter your e-mail address.")})]
-                  ),
-                  (
-                      None,
-                      ['captcha_qa', 'recaptcha']
-                  ),
-             ]
+              (
+               None,
+               [('email', {'label': _("Your E-mail Address"), 'help_text': _("Your account's email address."), 'attrs': {'placeholder': _("Enter your e-mail address.")}})]
+               ),
+              (
+               None,
+               ['captcha_qa', 'recaptcha']
+               ),
+              ]
     
     def clean_email(self):
         try:
@@ -105,3 +106,15 @@ class UserSendSpecialMailForm(Form):
 class QuickFindUserForm(Form):
     username = forms.CharField()
     
+
+class UserForumOptionsForm(Form):
+    timezone = forms.ChoiceField(choices=tzlist())
+    
+    layout = (
+              (
+               _("Date and Time"),
+               (
+                ('timezone', {'label': _("Your Current Timezone"), 'help_text': _("If dates and hours displayed by forums are inaccurate, you can fix it by adjusting timezone setting.")}),
+                )
+               ),
+              )

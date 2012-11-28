@@ -1,10 +1,18 @@
 {% extends "sora/users/usercp/usercp.html" %}
 {% load i18n %}
 {% load url from future %}
+{% import "_forms.html" as form_theme with context %}
 
 {% block title %}{% trans %}Change Forum Options{% endtrans %} | {{ settings.board_name }}{% endblock %}
 
 {% block action %}
 {{ super() }}
 <h2>{% trans %}Change Forum Options{% endtrans %}</h2>
+<form action="{{ url }}" method="post">
+  {{ form_theme.form_widget(form) }}
+  <div class="form-actions">
+  	<button name="save" type="submit" class="btn btn-primary">{% trans %}Change Options{% endtrans %}</button>
+  	<a href="{% url 'usercp' %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
+  </div>
+</form>
 {% endblock %}

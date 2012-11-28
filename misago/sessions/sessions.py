@@ -232,5 +232,4 @@ class SessionHuman(SessionMisago):
         return self.hidden
     
     def set_hidden(self, hidden=False):
-        if settings.SESSIONS_HIDDEN:
-            self.hidden = hidden
+        self.hidden = hidden

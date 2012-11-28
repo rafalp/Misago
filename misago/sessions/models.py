@@ -19,4 +19,3 @@ class Token(models.Model):
     user = models.ForeignKey('users.User', related_name='+')
     created = models.DateTimeField()
     accessed = models.DateTimeField()
-    hidden = models.BooleanField(default=False)

@@ -32,7 +32,7 @@ raw_tz = (
     ('America/Noronha', _('(UTC-02:00) Atlantic islands')),
     ('Atlantic/Cape_Verde', _('(UTC-01:00) Cape Verde Time')),
     ('Atlantic/Azores', _('(UTC-01:00) Azores, Scoresbysund'), _('(UTC) Azores, Scoresbysund')),
-    ('UTC', _('(UTC) Coordinated Universal Time')),
+    ('utc', _('(UTC) Coordinated Universal Time')),
     ('Africa/Dakar', _('(UTC) Dakar, Rabat')),
     ('Europe/Lisbon', _('(UTC) Western European Time'), _('(UTC+01:00) Western European Summer Time')),
     ('Africa/Algiers', _('(UTC+01:00) West Africa Time')),

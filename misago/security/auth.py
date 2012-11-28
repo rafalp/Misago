@@ -108,11 +108,12 @@ def auth_admin(request, email, password):
     return user;
 
 
-def sign_user_in(request, user, as_hidden=False):
+def sign_user_in(request, user):
     user.set_last_visit(
                         request.session.get_ip(request),
                         request.META.get('HTTP_USER_AGENT', ''),
-                        as_hidden
                         )
     user.save(force_update=True)
     request.session.set_user(user)
+    if request.settings['sessions_hidden']:
+        request.session.set_hidden(user.hide_activity > 0)

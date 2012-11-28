@@ -124,7 +124,7 @@ class User(models.Model):
     last_date = models.DateTimeField(null=True,blank=True)
     last_ip = models.GenericIPAddressField(null=True,blank=True)
     last_agent = models.TextField(null=True,blank=True)
-    hide_activity = models.BooleanField(default=False)
+    hide_activity = models.PositiveIntegerField(default=0)
     topics = models.PositiveIntegerField(default=0)
     topics_delta = models.IntegerField(default=0)
     posts = models.PositiveIntegerField(default=0)
