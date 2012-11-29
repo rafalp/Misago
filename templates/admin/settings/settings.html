@@ -1,8 +1,7 @@
 {% extends "admin/layout.html" %}
 {% load i18n %}
 {% load url from future %}
-{% from "admin/macros.html" import page_title %}
-{% import "admin/messages.html" as messages_theme %}
+{% from "admin/macros.html" import page_title, draw_message %}
 {% import "_forms.html" as form_theme with context %}
 
 {% block title %}{{ page_title(title=_(active_group.name), parent=_('Settings')) }}{% endblock %}
@@ -26,7 +25,7 @@
   </div>
   <div class="span9">{% block action %}
   	<h2 class="sidepanel-header">{{ _(active_group.name) }}</h2>{% if message %}
-  	{{ messages_theme.draw_message(message, 'alert-form') }}
+  	{{ draw_message(message, 'alert-form') }}
   	{% endif %}{% if active_group.description %}
   	<p>{{ _(active_group.description) }}</p>{% endif %}
     <form class="form-vertical" action="{% url 'admin_settings' group_id=active_group.id, group_slug=active_group.key %}" method="post">

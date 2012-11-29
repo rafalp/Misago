@@ -1,5 +1,27 @@
 {% load i18n %}
 
 {% macro page_title(title='', parent='', page=0) -%}
-{% if parent %}{{ parent }}: {% endif %}{% if title %}{{ title }}{% if page > 1 %} ({% trans page=page %}{{ page }} page{% endtrans %}){% endif %} | {% endif %}{{ settings.boart_title }}
+{% if parent %}{{ parent }}: {% endif %}{% if title %}{{ title }}{% if page > 1 %} ({% trans page=page %}{{ page }} page{% endtrans %}){% endif %} | {% endif %}{{ settings.board_name }}
+{%- endmacro %}
+
+{# Messages list marco #}
+{% macro messages_list(messages) %}{% if messages %}<div class="alerts-list">{% for message in messages %}
+  {{ draw_message(message) }}
+{% endfor %}</div>{% endif %}
+{% endmacro %}
+
+{# Render single message #}
+{% macro draw_message(message, class='') %}
+  <div class="alert alert-{{ message.type }}{% if class %} {{ class }}{% endif %}">
+  	{{ draw_message_icon(message) }} <p><strong>{{ message.message }}</strong></p>
+  </div>
+{%- endmacro %}
+
+{# Render single message #}
+{% macro draw_message_icon(message) -%}
+  	<div class="alert-icon"><span><i class="icon-{% if message.type == 'error' -%}remove
+  		{%- elif message.type == 'success' -%}ok
+  		{%- elif message.type == 'info' -%}info-sign
+  		{%- else -%}warning-sign
+  		{%- endif %} icon-white"></i></span></div>
 {%- endmacro %}

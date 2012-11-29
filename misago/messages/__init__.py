@@ -1,37 +1,28 @@
-from coffin.template.loader import select_template
+class Messages(object):
+    def __init__(self, session):
+        self.session = session
+        self.messages = session.get('messages_list', [])
+        self.session['messages_list'] = []
+        
+    def set_message(self, message, type='info', owner=None):
+        message.type = type
+        message.owner = owner
+        self.messages.append(message)
+    
+    def set_flash(self, message, type='info', owner=None):
+        self.set_message(message, type, owner)
+        self.session['messages_list'].append(message)
+        
+    def get_message(self, owner=None):
+        for index, message in enumerate(self.messages):
+            if message.owner == owner:
+                del self.messages[index]
+                return message
+        return None
+
 
 class Message(object):
-    """
-    Template based mesage used by frontend
-    """
-    def __init__(self, request, type='base', message=None, extra={}, owner=None):
-        self.type = type
-        self.message = message
-        self.owner = owner
-        for key, value in extra.iteritems():
-            setattr(self, key, value)
-        self.tpl = select_template((
-                                    '%s/message/%s.html' % (request.theme.get_theme(), type),
-                                    '_message/%s.html' % type,
-                                    '%s/message/base.html' % request.theme.get_theme(),
-                                    '_message/base.html'
-                                    ))
-        self.tpl = self.tpl.name
-        if self.tpl[9:-5] == 'base':
-            self.message = type
-            
-    def is_basic(self):
-        return False
-
-
-class BasicMessage(object):
-    """
-    Text based mesage used by ACP
-    """
     def __init__(self, message=None, type='info', owner=None):
         self.type = type
         self.message = message
         self.owner = owner
-            
-    def is_basic(self):
-        return True

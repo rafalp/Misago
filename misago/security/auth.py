@@ -10,20 +10,22 @@ from misago.users.models import User
 """
 Exception constants
 """
-CREDENTIALS = 'security/bad_credentials'
-ACTIVATION_USER = 'users/activation_user'
-ACTIVATION_ADMIN = 'users/activation_admin'
-BANNED = 'banned'
-NOT_ADMIN = 'security/not_admin'
+CREDENTIALS = 0
+ACTIVATION_USER = 1
+ACTIVATION_ADMIN = 2
+BANNED = 3
+NOT_ADMIN = 4
 
 
 class AuthException(Exception):
     """
     Auth Exception is thrown when auth_* method finds problem with allowing user to sign-in
     """
-    def __init__(self, type=None, user=None, ban=None):
+    def __init__(self, type=None, error=None, password=False, activation=False, ban=False):
         self.type = type
-        self.user = user
+        self.error = error
+        self.password = password
+        self.activation = activation
         self.ban = ban
         
     def __str__(self):
@@ -37,17 +39,17 @@ def get_user(email, password, admin=False):
     try:
         user = User.objects.get_by_email(email)
         if not user.check_password(password):
-            raise AuthException(CREDENTIALS, user)
+            raise AuthException(CREDENTIALS, _("Your e-mail address or password is incorrect. Please try again."), password=True)
         if not admin:
             if user.activation == User.ACTIVATION_ADMIN:
                 # Only admin can activate your account.
-                raise AuthException(ACTIVATION_ADMIN, user)
+                raise AuthException(ACTIVATION_ADMIN, _("Board Administrator has not yet accepted your account."))
             if user.activation != User.ACTIVATION_NONE:
-                # Only admin can activate your account.
-                raise AuthException(ACTIVATION_USER, user)
-        
+                # You have to activate your account - new member
+                raise AuthException(ACTIVATION_USER, _("You have to activate your account before you will be able to sign-in."), activation=True)
+    
     except User.DoesNotExist:
-        raise AuthException(CREDENTIALS)
+        raise AuthException(CREDENTIALS, _("Your e-mail address or password is incorrect. Please try again."), password=True)
     return user;
 
 
@@ -58,7 +60,9 @@ def auth_forum(request, email, password):
     user = get_user(email, password)
     user_ban = check_ban(username=user.username, email=user.email)
     if user_ban:
-        raise AuthException(BANNED, user, user_ban)
+        if user_ban.reason_user:
+            raise AuthException(BANNED, _("Your account has been banned for following reason:"), ban=user_ban)
+        raise AuthException(BANNED, _("Your account has been banned."), ban=user_ban)
     return user;
 
 
@@ -81,14 +85,17 @@ def auth_remember(request, ip):
         except Token.DoesNotExist:
             request.cookie_jar.delete('TOKEN')
             raise AuthException()
+        
         # See if token is not expired
         token_expires = timezone.now() - timedelta(days=request.settings['remember_me_lifetime'])
         if request.settings['remember_me_extensible'] and token_rk.accessed < token_expires:
             # Token expired because it's last use is smaller than expiration date
             raise AuthException()
+        
         if not request.settings['remember_me_extensible'] and token_rk.created < token_expires:
             # Token expired because it was created before expiration date
             raise AuthException()
+        
         # Update token date
         token_rk.accessed = timezone.now()
         token_rk.save(force_update=True)
@@ -104,7 +111,7 @@ def auth_admin(request, email, password):
     """
     user = get_user(email, password, True)
     if not user.is_admin():
-        raise AuthException(NOT_ADMIN)
+        raise AuthException(NOT_ADMIN, _("Your account does not have admin privileges."))
     return user;
 
 
@@ -115,5 +122,6 @@ def sign_user_in(request, user):
                         )
     user.save(force_update=True)
     request.session.set_user(user)
+    
     if request.settings['sessions_hidden']:
         request.session.set_hidden(user.hide_activity > 0)

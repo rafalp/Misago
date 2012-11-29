@@ -85,7 +85,7 @@ class UserSendSpecialMailForm(Form):
     layout = [
               (
                None,
-               [('email', {'label': _("Your E-mail Address"), 'help_text': _("Your account's email address."), 'attrs': {'placeholder': _("Enter your e-mail address.")}})]
+               [('email', {'label': _("Your E-mail Address"), 'help_text': _("Enter email address you use to sign in to forums."), 'attrs': {'placeholder': _("Enter your e-mail address.")}})]
                ),
               (
                None,

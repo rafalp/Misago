@@ -1,10 +1,11 @@
 {% extends "sora/users/usercp/usercp.html" %}
 {% load i18n %}
 {% load url from future %}
+{% import "sora/macros.html" as macros with context %}
 
-{% block title %}{% trans %}Manage Ignored Members{% endtrans %} | {{ settings.board_name }}{% endblock %}
+{% block title %}{{ macros.page_title(title=_('Ignored Members List')) }}{% endblock %}
 
 {% block action %}
 {{ super() }}
-<h2>{% trans %}Manage Ignored Members{% endtrans %}</h2>
+<h2>{% trans %}Ignored Members List{% endtrans %}</h2>
 {% endblock %}

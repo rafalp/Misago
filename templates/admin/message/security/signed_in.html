@@ -1,7 +1,0 @@
-{% extends "admin/message/base.html" %}
-{% load i18n %}
-
-{% block content %}
-  <div class="alert-icon"><span><i class="icon-ok icon-white"></i></span></div>
-  <p><strong>{% trans username=message.user.username %}Welcome back, {{ username }}!{% endtrans %}</strong> {% trans %}You have signed in successfully.{% endtrans %}</p>
-{% endblock %}

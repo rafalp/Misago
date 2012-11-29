@@ -131,14 +131,14 @@ class Form(forms.Form):
         
     def _check_csrf(self):
         if not self.request.csrf.request_secure(self.request):
-            raise forms.ValidationError('invalid_request')
+            raise forms.ValidationError(_("Request authorization is invalid. Please resubmit your form."))
         
     def _check_fields_errors(self):
         if self.errors:
             if self.error_source and self.error_source in self.errors:
                 field_error, self.errors[self.error_source] = self.errors[self.error_source][0], []
                 raise forms.ValidationError(field_error)
-            raise forms.ValidationError('form_contains_errors')
+            raise forms.ValidationError(_("Form contains errors."))
         
         
 class YesNoSwitch(forms.CheckboxInput):

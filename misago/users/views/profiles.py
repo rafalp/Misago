@@ -56,9 +56,9 @@ def list(request, rank_slug=None):
                 print username
                 users = User.objects.filter(username_slug__startswith=username).order_by('username_slug')[:10]
         elif search_form.non_field_errors()[0] == 'form_contains_errors':
-            message = Message(request, 'users/search_empty', 'error')
+            message = Message(_("To search users you have to enter username in search field."), 'error')
         else:
-            message = Message(request, search_form.non_field_errors()[0], 'error')
+            message = Message(search_form.non_field_errors()[0], 'error')
     else:
         search_form = QuickFindUserForm(request=request)
         if active_rank:

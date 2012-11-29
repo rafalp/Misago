@@ -10,14 +10,15 @@ from misago.security.auth import sign_user_in
 from misago.security.decorators import *
 from misago.users.forms import *
 from misago.users.models import User
-from misago.views import error403
+from misago.views import redirect_message
 
 @block_banned
 @block_authenticated
 @block_jammed
 def register(request):
     if request.settings['account_activation'] == 'block':
-        return error403(request, Message(request, 'users/registration/registrations_off'))
+       return redirect_message(request, Message(_("We are sorry but we don't allow new members registrations at this time.")), 'info')
+    
     message = None
     if request.method == 'POST':
         form = UserRegisterForm(request.POST, request=request)
@@ -40,27 +41,29 @@ def register(request):
             if need_activation == User.ACTIVATION_NONE:
                 # No need for activation, sign in user
                 sign_user_in(request, new_user)
-                request.messages.set_flash(Message(request, 'users/activation/none', extra={'user':new_user}), 'success')
+                request.messages.set_flash(Message(_("Welcome aboard, %(username)s! Your account has been registered successfully.") % {'username': new_user.username}), 'success')
+                
             if need_activation == User.ACTIVATION_USER:
                 # Mail user activation e-mail
-                request.messages.set_flash(Message(request, 'users/registration/activation_user', extra={'user':new_user}), 'info')
+                request.messages.set_flash(Message(_("%(username)s, your account has been registered, but you will have to activate it before you will be able to sign-in. We have sent you an e-mail with activation link.") % {'username': new_user.username}), 'info')
                 new_user.email_user(
                                     request,
                                     'users/activation/user',
-                                    _("Welcome aboard, %(username)s!" % {'username': new_user.username}),
+                                    _("Welcome aboard, %(username)s!") % {'username': new_user.username},
                                     )
+                
             if need_activation == User.ACTIVATION_ADMIN:
                 # Require admin activation
-                request.messages.set_flash(Message(request, 'users/registration/activation_admin', extra={'user':new_user}), 'info')
-            new_user.email_user(
-                                request,
-                                'users/activation/admin',
-                                _("Welcome aboard, %(username)s!" % {'username': new_user.username}),
-                                {'password': form.cleaned_data['password']}
-                                )
+                request.messages.set_flash(Message(_("%(username)s, Your account has been registered, but you won't be able to sign in until board administrator accepts it. We'll notify when this happens. Thank you for your patience!") % {'username': new_user.username}), 'info')
+                new_user.email_user(
+                                    request,
+                                    'users/activation/admin',
+                                    _("Welcome aboard, %(username)s!") % {'username': new_user.username},
+                                    {'password': form.cleaned_data['password']}
+                                    )
             return redirect(reverse('index'))
         else:
-            message = Message(request, form.non_field_errors()[0])
+            message = Message(form.non_field_errors()[0], 'error')
             if request.settings['registrations_jams']:
                 SignInAttempt.objects.register_attempt(request.session.get_ip(request))
             # Have we jammed our account?

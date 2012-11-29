@@ -6,8 +6,8 @@
 {% block table_row scoped %}
   <td class="lead-cell">
   	<strong>{{ item.ban }}</strong> <span class="label {% if item.type == 0 -%}label-inverse">{% trans %}Username and E-mail{% endtrans %}
-  	{%- elif item.type == 1 -%}label-important">{% trans %}Username and E-mail{% endtrans %}
-  	{%- elif item.type == 2 -%}label-warning">{% trans %}Username{% endtrans %}
+  	{%- elif item.type == 1 -%}label-important">{% trans %}Username{% endtrans %}
+  	{%- elif item.type == 2 -%}label-warning">{% trans %}E-mail{% endtrans %}
   	{%- else -%}label-info">{% trans %}IP Address{% endtrans %}
   	{%- endif %}</span>
   </td>

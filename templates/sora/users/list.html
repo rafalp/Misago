@@ -2,8 +2,15 @@
 {% load i18n %}
 {% load url from future %}
 {% import "_forms.html" as form_theme with context %}
+{% import "sora/macros.html" as macros with context %}
 
-{% block title %}{% if in_search %}{% trans %}Search Users{% endtrans %} | {% elif active_rank %}{{ _(active_rank.name) }} | {% endif %}{% trans %}Users List{% endtrans %} | {{ settings.board_name }}{% endblock %}
+{% block title %}{% if in_search -%}
+{{ macros.page_title(title=_('Search Users'), parent=_('Users List')) }}
+{% elif active_rank %}
+{{ macros.page_title(title=_(active_rank.name), parent=_('Users List')) }}
+{%- else -%}
+{{ macros.page_title(title=_('Users List')) }}
+{%- endif %}{% endblock %}
 
 {% block content %}
 <div class="page-header header-tabbed">
@@ -19,9 +26,8 @@
   	</li>
   </ul>
 </div>
-<h2>{% if in_search %}{% trans %}Search Users{% endtrans %}{% elif active_rank %}{{ _(active_rank.name) }}{% endif %}</h2>{% if message %}<div class="alert alert-form alert-error">
-  {% include message.tpl %}
-</div>{% endif %}
+<h2>{% if in_search %}{% trans %}Search Users{% endtrans %}{% elif active_rank %}{{ _(active_rank.name) }}{% endif %}</h2>
+{% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
 
 {% if in_search and not message and users|length > 0 %}
 <p>{% trans %}We couldn't find a member with name you entered, so we present you with some other members with names similiar to one you searched for in hopes that one of them will turn out to be member you are looking for.{% endtrans %}</p>

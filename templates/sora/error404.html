@@ -8,15 +8,13 @@
 <div class="row">
   <div class="span8 offset2 side-bar">
     <div class="page-header">
-      <h1>{% if title %}{{ title }}{% else %}{% trans %}Page not found{% endtrans %}{% endif %}</h1>
+      <h1>{% trans %}Page not found{% endtrans %} <small>{% trans %}Error 404{% endtrans %}</small></h1>
     </div>
-{% if message %}{% set special=true %}
-    <div class="lead">
-      {% include message.tpl %}
-    </div>
-{% else %}
+    {% if message %}
+    <p class="lead">{{ message }}</p>
+    {% else %}
     <p class="lead">{% trans %}The page you are looking for could not be found.{% endtrans %}</p>
-{% endif %}
+    {% endif %}
     <ul class="unstyled">
       <li><i class="icon-home"></i> <a href="{% url 'index' %}">{% trans %}Return to board index{% endtrans %}</a></li>
       <li><i class="icon-arrow-left"></i> <a href="#" class="go-back">{% trans %}Return to previous page{% endtrans %}</a></li>

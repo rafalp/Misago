@@ -41,14 +41,14 @@ class List(ListWidget):
         for item in items:
             if unicode(item.pk) in checked:
                 if item.token:
-                    return BasicMessage(_('You cannot delete system roles.'), 'error'), reverse('admin_users_roles')
+                    return Message(_('You cannot delete system roles.'), 'error'), reverse('admin_users_roles')
                 if item.protected and not request.user.is_god():
-                    return BasicMessage(_('You cannot delete protected roles.'), 'error'), reverse('admin_users_roles')
+                    return Message(_('You cannot delete protected roles.'), 'error'), reverse('admin_users_roles')
                 if item.user_set.count() > 0:
-                    return BasicMessage(_('You cannot delete roles that are assigned to users.'), 'error'), reverse('admin_users_roles')
+                    return Message(_('You cannot delete roles that are assigned to users.'), 'error'), reverse('admin_users_roles')
         
         Role.objects.filter(id__in=checked).delete()
-        return BasicMessage(_('Selected roles have been deleted successfully.'), 'success'), reverse('admin_users_roles')
+        return Message(_('Selected roles have been deleted successfully.'), 'success'), reverse('admin_users_roles')
 
 
 class New(FormWidget):
@@ -69,7 +69,7 @@ class New(FormWidget):
                       name = form.cleaned_data['name'],
                      )
         new_role.save(force_insert=True)
-        return new_role, BasicMessage(_('New Role has been created.'), 'success')
+        return new_role, Message(_('New Role has been created.'), 'success')
     
    
 class Edit(FormWidget):
@@ -96,7 +96,7 @@ class Edit(FormWidget):
     def submit_form(self, request, form, target):
         target.name = form.cleaned_data['name']
         target.save(force_update=True)
-        return target, BasicMessage(_('Changes in role "%(name)s" have been saved.' % {'name': self.original_name}), 'success')
+        return target, Message(_('Changes in role "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
 
 
 class Delete(ButtonWidget):
@@ -107,11 +107,11 @@ class Delete(ButtonWidget):
     
     def action(self, request, target):
         if target.token:
-            return BasicMessage(_('You cannot delete system roles.'), 'error'), reverse('admin_users_roles')
+            return Message(_('You cannot delete system roles.'), 'error'), reverse('admin_users_roles')
         if target.protected and not request.user.is_god():
-            return BasicMessage(_('This role is protected.'), 'error'), reverse('admin_users_roles')
+            return Message(_('This role is protected.'), 'error'), reverse('admin_users_roles')
         if target.user_set.count() > 0:
-            return BasicMessage(_('This role is assigned to one or more usets.'), 'error'), reverse('admin_users_roles')
+            return Message(_('This role is assigned to one or more usets.'), 'error'), reverse('admin_users_roles')
 
         target.delete()
-        return BasicMessage(_('Role "%(name)s" has been deleted.' % {'name': target.name}), 'success'), False
+        return Message(_('Role "%(name)s" has been deleted.') % {'name': target.name}, 'success'), False

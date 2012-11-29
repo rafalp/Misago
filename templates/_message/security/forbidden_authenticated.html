@@ -1,6 +1,0 @@
-{% extends "_message/base.html" %}
-{% load i18n %}
-
-{% block content %}
-  <p>{% trans username=user.username %}{{ username }}, this page is not available to signed in users.{% endtrans %}</p>
-{% endblock %}

@@ -20,7 +20,7 @@ class UserMiddleware(object):
             
             # Display "welcome back!" message
             if request.session.remember_me:
-                request.messages.set_message(_("We have signed you in automatically."), 'info', _("Welcome back, %(username)s!" % {'username': request.user.username}))
+                request.messages.set_message(_("Welcome back, %(username)s! We've signed you in automatically for your convenience.") % {'username': request.user.username}, 'info')
         else:
             # Set guest's timezone
             set_timezone(request.settings['default_timezone'])

@@ -1,4 +1,4 @@
-from misago.messages.messages import Messages
+from misago.messages import Messages
 
 class MessagesMiddleware(object):
     def process_request(self, request):

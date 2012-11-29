@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.http import Http404
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import formats, timezone
@@ -12,10 +11,11 @@ from misago.admin import site
 from misago.admin.widgets import *
 from misago.forms import FormLayout
 from misago.forums.models import Thread, Post
-from misago.messages import Message, BasicMessage
+from misago.messages import Message
 from misago.overview.admin.forms import GenerateStatisticsForm, SearchSessionsForm
 from misago.sessions.models import Session
 from misago.users.models import User
+from misago.views import error404
 
 def overview_home(request):
     return request.theme.render_to_response('overview/home.html', {
@@ -62,11 +62,11 @@ def overview_stats(request):
                 date_start = date_temp
             # Assert that dates are correct
             if date_end == date_start:
-                message = BasicMessage(_('Start and end date are same'), type='error')
+                message = Message(_('Start and end date are same'), type='error')
             elif check_dates(date_start, date_end, form.cleaned_data['stats_precision']):
                 message = check_dates(date_start, date_end, form.cleaned_data['stats_precision'])
             else:
-                request.messages.set_flash(BasicMessage(_('Statistical report has been created.')), 'success', 'admin_stats')
+                request.messages.set_flash(Message(_('Statistical report has been created.')), 'success', 'admin_stats')
                 return redirect(reverse('admin_overview_graph', kwargs={
                                                        'model': form.cleaned_data['provider_model'],
                                                        'date_start': date_start.strftime('%Y-%m-%d'),
@@ -74,8 +74,7 @@ def overview_stats(request):
                                                        'precision': form.cleaned_data['stats_precision']
                                                         }))
         else:
-            message = Message(request, form.non_field_errors()[0])
-            message.type = 'error'
+            message = Message(form.non_field_errors()[0], 'error')
     else:
         form = GenerateStatisticsForm(provider_choices=statistics_providers, request=request)
     
@@ -91,7 +90,7 @@ def overview_graph(request, model, date_start, date_end, precision):
     """
     if date_start == date_end:
         # Bad dates
-        raise Http404()
+        raise error404()
     
     # Turn stuff into datetime's
     date_start = datetime.strptime(date_start, '%Y-%m-%d')
@@ -115,7 +114,7 @@ def overview_graph(request, model, date_start, date_end, precision):
     
     if not model in models_map or check_dates(date_start, date_end, precision):
         # Bad model name or graph data!
-        raise Http404()
+        raise error404()
     
     form = GenerateStatisticsForm(
                                   provider_choices=statistics_providers,
@@ -137,12 +136,12 @@ def check_dates(date_start, date_end, precision):
         or (precision == 'week' and date_diff / 604800 > 60)
         or (precision == 'month' and date_diff / 2592000 > 60)
         or (precision == 'year' and date_diff / 31536000 > 60)):
-        return BasicMessage(_('Too many many items to display on graph.'), type='error')
+        return Message(_('Too many many items to display on graph.'), 'error')
     elif ((precision == 'day' and date_diff / 86400 < 1)
           or (precision == 'week' and date_diff / 604800 < 1)
           or (precision == 'month' and date_diff / 2592000 < 1)
           or (precision == 'year' and date_diff / 31536000 < 1)):
-        return BasicMessage(_('Too few items to display on graph'), type='error')
+        return Message(_('Too few items to display on graph'), 'error')
     return None
         
 

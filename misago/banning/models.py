@@ -49,7 +49,7 @@ class BanCache(object):
         self.banned = False
         self.type = None
         self.expires = None
-        self.reason = None
+        self.reason_user = None
         self.version = 0
         
     def check_for_updates(self, request):
@@ -70,12 +70,12 @@ class BanCache(object):
             # Update ban cache
             if ban:
                 self.banned = True
-                self.reason = ban.reason_user
+                self.reason_user = ban.reason_user
                 self.expires = ban.expires
                 self.type = ban.type
             else:
                 self.banned = False
-                self.reason = None
+                self.reason_user = None
                 self.expires = None
                 self.type = None
             return True

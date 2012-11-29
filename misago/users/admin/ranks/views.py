@@ -50,7 +50,7 @@ class List(ListWidget):
         for item in page_items:
             item.order = cleaned_data['pos_' + str(item.pk)]
             item.save(force_update=True)
-        return BasicMessage(_('Ranks order has been changed'), 'success'), reverse('admin_users_ranks')
+        return Message(_('Ranks order has been changed'), 'success'), reverse('admin_users_ranks')
     
     def sort_items(self, request, page_items, sorting_method):
         return page_items.order_by('order')
@@ -63,7 +63,7 @@ class List(ListWidget):
 
     def action_delete(self, request, items, checked):
         Rank.objects.filter(id__in=checked).delete()
-        return BasicMessage(_('Selected ranks have been deleted successfully.'), 'success'), reverse('admin_users_ranks')
+        return Message(_('Selected ranks have been deleted successfully.'), 'success'), reverse('admin_users_ranks')
 
 
 class New(FormWidget):
@@ -94,7 +94,7 @@ class New(FormWidget):
                       criteria = form.cleaned_data['criteria']
                      )
         new_rank.save(force_insert=True)
-        return new_rank, BasicMessage(_('New Rank has been created.'), 'success')
+        return new_rank, Message(_('New Rank has been created.'), 'success')
     
    
 class Edit(FormWidget):
@@ -134,7 +134,7 @@ class Edit(FormWidget):
         target.as_tab = form.cleaned_data['as_tab']
         target.criteria = form.cleaned_data['criteria']
         target.save(force_update=True)
-        return target, BasicMessage(_('Changes in rank "%(name)s" have been saved.' % {'name': self.original_name}), 'success')
+        return target, Message(_('Changes in rank "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
 
 
 class Delete(ButtonWidget):
@@ -145,4 +145,4 @@ class Delete(ButtonWidget):
     
     def action(self, request, target):
         target.delete()
-        return BasicMessage(_('Rank "%(name)s" has been deleted.' % {'name': target.name}), 'success'), False
+        return Message(_('Rank "%(name)s" has been deleted.') % {'name': target.name}, 'success'), False

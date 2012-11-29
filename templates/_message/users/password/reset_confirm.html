@@ -1,8 +1,0 @@
-{% extends "_message/base.html" %}
-{% load i18n %}
-
-{% block content %}
-  <div class="alert-icon"><span><i class="icon-info-sign icon-white"></i></span></div>
-  <p><strong>{% trans email=message.user.email %}Password reset confirmation has been sent to {{ email }}.{% endtrans %}</strong></p>
-  <p>{% trans %}You have to confirm your request for new password by clicking confirmation link in message we have sent to you.{% endtrans %}</p>
-{% endblock %}

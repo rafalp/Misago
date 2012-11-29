@@ -7,7 +7,7 @@ from jinja2 import TemplateNotFound
 import math
 from misago.forms import Form
 from misago.forms.layouts import *
-from misago.messages import Message, BasicMessage
+from misago.messages import Message
 from misago.search import SearchException
 
 """
@@ -70,9 +70,9 @@ class BaseWidget(object):
             self.get_target(request, model)
             return model
         except self.admin.model.DoesNotExist:
-            request.messages.set_flash(BasicMessage(self.notfound_message), 'error', self.admin.id)
+            request.messages.set_flash(Message(self.notfound_message), 'error', self.admin.id)
         except ValueError as e:
-            request.messages.set_flash(BasicMessage(e.args[0]), 'error', self.admin.id)
+            request.messages.set_flash(Message(e.args[0]), 'error', self.admin.id)
         return None
 
 
@@ -311,12 +311,12 @@ class ListWidget(BaseWidget):
                             if len(criteria) > 0:
                                 search_criteria[field] = criteria
                         if not search_criteria:
-                            message = BasicMessage(_("No search criteria have been defined."))
+                            message = Message(_("No search criteria have been defined."))
                         else:
                             request.session[self.get_token('filter')] = search_criteria
                             return redirect(self.get_url())
                     else:
-                        message = BasicMessage(_("Search form contains errors."))
+                        message = Message(_("Search form contains errors."))
                     message.type = 'error'
                 else:
                     search_form = SearchForm(request=request)
@@ -324,7 +324,7 @@ class ListWidget(BaseWidget):
                 # Kill search
                 if request.POST.get('origin') == 'clear' and self.is_filtering and request.csrf.request_secure(request):
                     request.session[self.get_token('filter')] = None
-                    request.messages.set_flash(BasicMessage(_("Search criteria have been cleared.")), 'info', self.admin.id)
+                    request.messages.set_flash(Message(_("Search criteria have been cleared.")), 'info', self.admin.id)
                     return redirect(self.get_url())
             else:
                 if self.is_filtering:
@@ -344,8 +344,7 @@ class ListWidget(BaseWidget):
                         request.messages.set_flash(message, message.type, self.admin.id)
                         return redirect(redirect_url)
                 else:
-                    message = Message(request, table_form.non_field_errors()[0])
-                    message.type = 'error'
+                    message = Message(table_form.non_field_errors()[0], 'error')
             else:
                 table_form = TableForm(request=request)
         
@@ -363,14 +362,14 @@ class ListWidget(BaseWidget):
                             request.messages.set_flash(message, message.type, self.admin.id)
                             return redirect(redirect_url)
                     except AttributeError:
-                        message = BasicMessage(_("Action requested is incorrect."))
+                        message = Message(_("Action requested is incorrect."))
                 else:
                     if 'list_items' in list_form.errors:
-                        message = BasicMessage(self.nothing_checked_message)
+                        message = Message(self.nothing_checked_message)
                     elif 'list_action' in list_form.errors:
-                        message = BasicMessage(_("Action requested is incorrect."))
+                        message = Message(_("Action requested is incorrect."))
                     else:
-                        message = Message(request, list_form.non_field_errors()[0])
+                        message = Message(list_form.non_field_errors()[0])
                 message.type = 'error'
             else:
                 list_form = ListForm(request=request)
@@ -473,8 +472,7 @@ class FormWidget(BaseWidget):
                         pass
                     return redirect(self.get_fallback_url(request))
             else:
-                message = Message(request, form.non_field_errors()[0])
-                message.type = 'error'
+                message = Message(form.non_field_errors()[0], 'error')
         else:
             form = self.get_form_instance(FormType, request, model, self.get_initial_data(request, model))
             
@@ -515,7 +513,7 @@ class ButtonWidget(BaseWidget):
             
         # Crash if this is invalid request
         if not request.csrf.request_secure(request):
-            request.messages.set_flash(BasicMessage(_("Action authorization is invalid.")), 'error', self.admin.id)
+            request.messages.set_flash(Message(_("Action authorization is invalid.")), 'error', self.admin.id)
             return redirect(self.get_fallback_url(request))
         
         # Do something

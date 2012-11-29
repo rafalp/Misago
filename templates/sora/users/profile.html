@@ -2,8 +2,9 @@
 {% load i18n %}
 {% load url from future %}
 {% import "_forms.html" as form_theme with context %}
+{% import "sora/macros.html" as macros with context %}
 
-{% block title %}{% trans username=profile.username %}Member Profile: {{ username }}{% endtrans %} | {{ settings.board_name }}{% endblock %}
+{% block title %}{{ macros.page_title(title=username, parent=_('Users')) }}{% endblock %}
 
 {% block content %}
 <div class="page-header">

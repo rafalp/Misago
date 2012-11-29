@@ -875,7 +875,7 @@ th.table-sort.sort-desc a:hover{border-bottom:3px solid #eca09a;padding-bottom:5
 .btn.btn-inverse{background:#555555;border:1px solid #555555;*border:0;background:#555555;border:1px solid #555555;*border:0;color:#f7f7f7;text-shadow:0px 1px 0px #484848;}.btn.btn-inverse:hover,.btn.btn-inverse:active{background:#7e7e7e;border:1px solid #7e7e7e;*border:0;}
 .btn.btn-link{background:none;border:none;}.btn.btn-link:hover,.btn.btn-link:active{color:#00aaff;text-decoration:none;}
 .alerts-global{margin-top:16px;}
-.alert-form{margin:0px;margin-bottom:16px;font-weight:bold;}
+.alert-form{margin:0px;margin-bottom:16px;}.alert-form p{font-weight:normal;}
 .alert-inline{margin:0px;padding:0px;}
 .alert-icon{float:left;}.alert-icon span{-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px;padding:1px 2px;}
 .alert .alert-icon span{background:#f89406;}

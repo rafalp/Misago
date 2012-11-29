@@ -8,13 +8,15 @@
 <div class="row">
   <div class="span6 offset3">
     <div class="page-header">
-      <h2>{% if title %}{{ title }}{% else %}{% trans %}Permission denied{% endtrans %}{% endif %} <small>403</small></h2>
+      <h2>{% trans %}Permission denied{% endtrans %} <small>{% trans %}Error 403{% endtrans %}</small></h2>
     </div>
-{% if message %}
-    {% if message.is_basic() %}<p>{{ message.message }}</p>{% else %}{% include message.tpl %}{% endif %}
-{% else %}
-    <p>{% trans %}You dont have permission to see this page.{% endtrans %}</p>
-{% endif %}
+    {% block message %}
+    {% if message %}
+    <p class="lead">{{ message }}</p>
+    {% else %}
+    <p class="lead">{% trans %}You don't have permission to see this page.{% endtrans %}</p>
+    {% endif %}
+    {% endblock %}
     <ul class="unstyled">
       <li><i class="icon-arrow-left"></i> <a href="#" class="go-back">{% trans %}Return to previous page{% endtrans %}</a></li>
     </ul>

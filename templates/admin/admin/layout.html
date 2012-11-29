@@ -2,8 +2,7 @@
 {% load i18n %}
 {% load l10n %}
 {% load url from future %}
-{% from "admin/macros.html" import page_title %}
-{% import "admin/messages.html" as messages_theme %}
+{% from "admin/macros.html" import page_title, draw_message %}
 {% import "_forms.html" as form_theme with context %}
 
 {% block title %}{% if admin.actions[0].id != action.id and action.name -%}
@@ -23,7 +22,7 @@
 <h2>{% if target %}{{ target }} <small>{{ action.name }}</small>{% else %}{{ action.name }}{% if action.help %} <small>{{ action.help }}</small>{% endif %}{% endif %}</h2>
 {% endif %}
 {% if message %}
-{{ messages_theme.draw_message(message, 'alert-form') }}
+{{ draw_message(message, 'alert-form') }}
 {% endif %}
 {% block page_help %}{% endblock %}
 {% block action_body %}

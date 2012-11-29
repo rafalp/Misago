@@ -2,15 +2,17 @@
 {% load i18n %}
 {% load url from future %}
 {% import "_forms.html" as form_theme with context %}
-      
-{% block title %}{% trans %}Sign In{% endtrans %}{% endblock %}
+{% from "admin/macros.html" import page_title, draw_message_icon %}
+
+{% block title %}{{ page_title(title=_('Sign In')) }}{% endblock %}
 
 {% block header %}<strong>Misago</strong> {% trans %}Board Administration{% endtrans %}{% endblock %}
       
 {% block content %}
           {% if message %}
           <div class="alert alert-{{ message.type }} block-alert">
-            {% include message.tpl %}
+            {{ draw_message_icon(message) }}
+	        <p><strong>{{ message.message }}</strong></p>
           </div>
           {% endif %}
           <form class="form-vertical" action="{{ admin_index|url() }}" method="post">

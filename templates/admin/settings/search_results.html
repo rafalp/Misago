@@ -1,13 +1,13 @@
 {% extends "admin/settings/settings.html" %}
 {% load i18n %}
 {% load url from future %}
-{% from "admin/macros.html" import page_title %}
+{% from "admin/macros.html" import page_title, draw_message %}
 
 {% block title %}{{ page_title(title=_('Search Results'), parent=_('Settings')) }}{% endblock %}
 
 {% block action %}
 <h2 class="sidepanel-header">{% trans %}Search Results{% endtrans %}</h2>{% if message %}
-{{ messages_theme.draw_message(message, 'alert-form') }}{% endif %}
+{{ draw_message(message, 'alert-form') }}{% endif %}
 {% for setting in found_settings %}
 <h4>{{ _(setting.name) }} <small>{{ _(setting.group.name) }}</small></h4>
 {%- if setting.description %}<p>{{ _(setting.description) }}</p>{% endif -%}

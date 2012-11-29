@@ -4,7 +4,7 @@ from django.template import RequestContext
 from django.utils.translation import ungettext, ugettext as _
 from misago.forms import Form
 from misago.forms.layouts import FormLayout, FormFields
-from misago.messages import Message, BasicMessage
+from misago.messages import Message
 from misago.search import SearchQuery, SearchException
 from misago.settings.admin.forms import SearchForm
 from misago.settings.models import Group, Setting
@@ -23,7 +23,7 @@ def settings(request, group_id=None, group_slug=None):
                 active_group = group
                 break
         else:
-            return error404(request, BasicMessage(_('The requested settings group could not be found.')))
+            return error404(request, _('The requested settings group could not be found.'))
             
     # Load selected group settings and turn them into form
     group_settings = Setting.objects.filter(group=active_group).order_by('position')
@@ -47,14 +47,13 @@ def settings(request, group_id=None, group_slug=None):
         if form.is_valid():
             for setting in form.cleaned_data.keys():
                 request.settings[setting] = form.cleaned_data[setting]
-            request.messages.set_flash(BasicMessage(_('Configuration has been saved.')), 'success', 'admin_settings')
+            request.messages.set_flash(Message(_('Configuration have been saved.')), 'success', 'admin_settings')
             return redirect(reverse('admin_settings', kwargs={
                                                        'group_id': active_group.pk,
                                                        'group_slug': active_group.key,
                                                        }))
         else:
-            message = Message(request, form.non_field_errors()[0])
-            message.type = 'error'
+            message = Message(form.non_field_errors()[0], 'error')
     else:
         form = SettingsGroupForm(request=request)
     
@@ -91,7 +90,7 @@ def settings_search(request):
                         
                 # Scream if nothing could be found
                 if found_settings:
-                    message = BasicMessage(ungettext(
+                    message = Message(ungettext(
                                                     'One setting that match search criteria has been found.',
                                                     '%(count)d settings that match search criteria have been found.',
                                                 len(found_settings)) % {
@@ -104,7 +103,7 @@ def settings_search(request):
         else:
             raise SearchException(_('Search query is invalid.'))
     except SearchException as e: 
-        message = BasicMessage(e.message, 'error')
+        message = Message(e.message, 'error')
     return request.theme.render_to_response('settings/search_results.html',
                                     {
                                     'message': message,

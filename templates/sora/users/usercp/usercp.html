@@ -2,8 +2,6 @@
 {% load i18n %}
 {% load url from future %}
 
-{% block title %}{% trans %}Options{% endtrans %} | {{ settings.board_name }}{% endblock %}
-
 {% block content %}
 <div class="page-header">
   <h1>{% trans %}Your Control Panel{% endtrans %}</h1>
@@ -18,7 +16,7 @@
         <li{% if tab == 'signature' %} class="active"{% endif %}><a href="{% url 'usercp_signature' %}"><i class="icon-align-left"></i> {% trans %}Edit Signature{% endtrans %}</a></li>
   	    <li{% if tab == 'credentials' %} class="active"{% endif %}><a href="{% url 'usercp_credentials' %}"><i class="icon-edit"></i> {% trans %}Change E-mail or Password{% endtrans %}</a></li>
   	    <li{% if tab == 'username' %} class="active"{% endif %}><a href="{% url 'usercp_username' %}"><i class="icon-user"></i> {% trans %}Change Username{% endtrans %}</a></li>
-        <li{% if tab == 'ignored' %} class="active"{% endif %}><a href="{% url 'usercp_ignored' %}"><i class="icon-eye-close"></i> {% trans %}Ignore People{% endtrans %}</a></li>
+        <li{% if tab == 'ignored' %} class="active"{% endif %}><a href="{% url 'usercp_ignored' %}"><i class="icon-eye-close"></i> {% trans %}Ignored Members List{% endtrans %}</a></li>
       </ul>
     </div>
   </div>

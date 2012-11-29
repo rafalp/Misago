@@ -1,6 +1,7 @@
 {% extends "sora/base.html" %}
 {% load i18n %}
 {% load url from future %}
+{% from "sora/macros.html" import messages_list %}
 
 {% block body %}
 {% include "sora/userbar.html" with context %}
@@ -23,9 +24,9 @@
 
 <div class="container">
   {% if messages %}
-  <div class="alerts-global">{% for message in messages %}
-  	<div class="alert alert-{{ message.type }}">{% include message.tpl %}</div>
-  {% endfor %}</div>{% endif %}
+  <div class="alerts-global">
+  	{{ messages_list(messages) }}
+  </div>{% endif %}
   
   {% block content %}
   {% endblock %}
