@@ -12,8 +12,8 @@
   <div class="avatar-height">
     <img src="{{ profile.get_avatar() }}" class="avatar pull-left" alt="{% trans %}Member Avatar{% endtrans %}" title="{% trans %}Member Avatar{% endtrans %}">
     <div class="pull-left">
-      <h1>{{ profile.username }} <small>{% if profile.title %}{{ _(profile.title) }}{% elif profile.rank.title %}{{ _(profile.rank.title) }}{% endif %}</small></h1>
-      <p class="lead">{% trans joined=profile.join_date|date(f.DATE_FORMAT), member_since=profile.join_date|naturaltime %}Joined on {{ joined }}, {{ member_since }}.{% endtrans %} {% trans last_visit=profile.last_date|naturaltime %}Last seen {{ last_visit }}.{% endtrans %}</p>
+      <h1>{{ profile.username }} <small>{% trans last_visit=profile.last_date|naturaltime %}Last seen {{ last_visit }}{% endtrans %}</small></h1>
+      <p class="lead">{% if profile.title %}{{ _(profile.title) }}{% elif profile.rank.title %}{{ _(profile.rank.title) }}{% endif %}, <span class="muted">{% trans joined=profile.join_date|date(f.DATE_FORMAT) %}Member since {{ joined }}{% endtrans %}</span></p>
     </div>
   </div>	
   <ul class="nav nav-tabs">

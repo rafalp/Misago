@@ -931,5 +931,5 @@ th.table-sort.sort-desc a:hover{border-bottom:3px solid #eca09a;padding-bottom:5
 .clickable{cursor:pointer;}
 .profile-header{overflow:auto;border-bottom:none;margin-bottom:30px;}.profile-header .avatar-height{overflow:auto;}.profile-header .avatar-height .avatar{margin-right:24px;width:125px;height:125px;}
 .profile-header .avatar-height h1{font-size:300%;}
-.profile-header .avatar-height .lead{color:#7b7b7b;}
+.profile-header .avatar-height .lead{color:#555555;}.profile-header .avatar-height .lead .muted{color:#959595;}
 .profile-header .nav-tabs{margin-top:-22px;margin-bottom:0px;padding-left:142px;}

@@ -23,7 +23,11 @@
     }
     
     .lead {
-      color: lighten(@gray, 15%);
+      color: @gray;
+      
+      .muted {
+        color: lighten(@gray, 25%);
+      }
     }
   }
   
