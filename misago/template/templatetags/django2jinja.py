@@ -18,3 +18,13 @@ def query_string(**kwargs):
 def parse_markdown(value, format="html5"):
     import markdown
     return markdown.markdown(value, safe_mode='escape', output_format=format)
+
+
+@register.filter(name='reldate')
+def reldate(value, format=""):
+    return 'TODO: fancydate'
+
+
+@register.filter(name='timesince')
+def timesince(value, format=""):
+    return 'TODO: timesince'

@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django import forms
+from PIL import Image
 from misago.acl.models import Role
 from misago.users.models import User, Rank
 from misago.users.validators import validate_password, validate_email
@@ -14,6 +16,7 @@ class UserForm(Form):
     email = forms.EmailField(max_length=255)
     new_password = forms.CharField(max_length=255,required=False,widget=forms.PasswordInput)
     signature = forms.CharField(widget=forms.Textarea,required=False)
+    avatar_custom = forms.CharField(max_length=255,required=False)
     avatar_ban = forms.BooleanField(widget=YesNoSwitch,required=False) 
     avatar_ban_reason_user = forms.CharField(widget=forms.Textarea,required=False)
     avatar_ban_reason_admin = forms.CharField(widget=forms.Textarea,required=False)
@@ -41,6 +44,7 @@ class UserForm(Form):
               [
                _("User Avatar"),
                [
+                ('avatar_custom', {'label': _("Set Non-Standard Avatar"), 'help_text': _("You can make this member use special avatar by entering name of image file located in avatars directory here.")}),
                 ('avatar_ban', {'label': _("Lock Member's Avatar"), 'help_text': _("If you set this field to yes, this member's avatar will be deleted and replaced with random one selected from _removed gallery and member will not be able to change his avatar.")}),
                 ('avatar_ban_reason_user', {'label': _("User-visible reason for lock"), 'help_text': _("You can leave message to member explaining why he or she is unable to change his avatar anymore. This message will be displayed to member in his control panel.")}),
                 ('avatar_ban_reason_admin', {'label': _("Forum Team-visible reason for lock"), 'help_text': _("You can leave message to other forum team members exmplaining why this member's avatar has been locked.")}),
@@ -101,6 +105,16 @@ class UserForm(Form):
             validate_password(self.cleaned_data['new_password'])
             return self.cleaned_data['new_password']
         return ''
+
+    def clean_avatar_custom(self):
+        if self.cleaned_data['avatar_custom']:
+            try:
+                avatar_image = Image.open('%s/avatars/%s' % (settings.STATICFILES_DIRS[0], self.cleaned_data['avatar_custom']))
+            except IOError:
+                raise ValidationError(_("Avatar does not exist or is not image file."))
+            return self.cleaned_data['avatar_custom']            
+        return ''
+
 
 class SearchUsersForm(Form):
     username = forms.CharField(max_length=255, required=False)

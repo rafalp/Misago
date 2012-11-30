@@ -3,3 +3,33 @@
 .clickable {
   cursor: pointer;
 }
+
+.profile-header {
+  overflow: auto;
+  border-bottom: none;
+  margin-bottom: @baseLineHeight * 1.5;
+  
+  .avatar-height {
+    overflow: auto;
+  
+    .avatar {
+      margin-right: 24px;
+      width: 125px;
+      height: 125px;
+    }
+    
+    h1 {
+      font-size: 300%;
+    }
+    
+    .lead {
+      color: lighten(@gray, 15%);
+    }
+  }
+  
+  .nav-tabs {
+    margin-top: -22px;
+    margin-bottom: 0px;
+    padding-left: 142px;
+  }
+}

@@ -232,6 +232,12 @@ class Edit(FormWidget):
                 target.default_avatar(request.settings)
         target.avatar_ban = form.cleaned_data['avatar_ban']
                
+        # Set custom avatar
+        if form.cleaned_data['avatar_custom']:
+            target.delete_avatar()
+            target.avatar_image = form.cleaned_data['avatar_custom']
+            target.avatar_type = 'gallery'
+        
         # Update user roles
         if request.user.is_god():
             target.roles.clear()

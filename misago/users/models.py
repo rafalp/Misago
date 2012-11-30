@@ -1,6 +1,7 @@
 import hashlib
 import math
 from random import choice
+from path import path
 from django.conf import settings
 from django.contrib.auth.hashers import (
     check_password, make_password, is_password_usable, UNUSABLE_PASSWORD)
@@ -16,7 +17,6 @@ from misago.security import get_random_string
 from misago.settings.settings import Settings as DBSettings
 from misago.users.validators import validate_username, validate_password, validate_email
 from misago.utils import slugify
-from path import path
 
 class UserManager(models.Manager):
     """

@@ -885,12 +885,12 @@ th.table-sort.sort-desc a:hover{border-bottom:3px solid #eca09a;padding-bottom:5
 .alert{padding:10px 11px;}.alert p{margin-left:28px;}
 .alert p:last-child{margin-bottom:0px;}
 .alert p.protip{font-size:100%;}
-.avatar-big{border-radius:3px;width:180px;height:180px;}
+.avatar-big{border-radius:3px;width:125px;height:125px;}
 .avatar-normal{border-radius:3px;width:64px;height:64px;}
 .avatar-small{border-radius:3px;width:28px;height:28px;}
 .avatar-tiny{border-radius:3px;width:16px;height:16px;}
 .navbar .avatar-small{margin:-10px 0px;position:relative;bottom:2px;}
-.page-header .avatar{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}
+.page-header .avatar,.page-header .avatar-big{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}
 .page-header h1 .avatar{width:46px;height:46px;}
 .page-header h2 .avatar{width:40px;height:40px;}
 .page-header h3 .avatar{width:28px;height:28px;}
@@ -929,3 +929,7 @@ th.table-sort.sort-desc a:hover{border-bottom:3px solid #eca09a;padding-bottom:5
 .nav-tabs .tab-search.tab-search-no-tabs{position:relative;bottom:12px;}
 .nav-tabs button{padding-left:7px;padding-right:3px;}
 .clickable{cursor:pointer;}
+.profile-header{overflow:auto;border-bottom:none;margin-bottom:30px;}.profile-header .avatar-height{overflow:auto;}.profile-header .avatar-height .avatar{margin-right:24px;width:125px;height:125px;}
+.profile-header .avatar-height h1{font-size:300%;}
+.profile-header .avatar-height .lead{color:#7b7b7b;}
+.profile-header .nav-tabs{margin-top:-22px;margin-bottom:0px;padding-left:142px;}
