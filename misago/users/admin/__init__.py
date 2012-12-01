@@ -25,14 +25,12 @@ ADMIN_ACTIONS=(
                actions=[
                         {
                          'id': 'list',
-                         'icon': 'list-alt',
                          'name': _("Browse Users"),
                          'help': _("Browse all registered user accounts"),
                          'route': 'admin_users'
                          },
                         {
                          'id': 'new',
-                         'icon': 'plus',
                          'name': _("Add User"),
                          'help': _("Create new user account"),
                          'route': 'admin_users_new'
@@ -59,14 +57,12 @@ ADMIN_ACTIONS=(
                actions=[
                         {
                          'id': 'list',
-                         'icon': 'list-alt',
                          'name': _("Browse Roles"),
                          'help': _("Browse all existing roles"),
                          'route': 'admin_users_roles'
                          },
                         {
                          'id': 'new',
-                         'icon': 'plus',
                          'name': _("Add Role"),
                          'help': _("Create new role"),
                          'route': 'admin_users_roles_new'
@@ -90,14 +86,12 @@ ADMIN_ACTIONS=(
                actions=[
                         {
                          'id': 'list',
-                         'icon': 'list-alt',
                          'name': _("Browse Ranks"),
                          'help': _("Browse all existing ranks"),
                          'route': 'admin_users_ranks'
                          },
                         {
                          'id': 'new',
-                         'icon': 'plus',
                          'name': _("Add Rank"),
                          'help': _("Create new rank"),
                          'route': 'admin_users_ranks_new'
@@ -121,14 +115,12 @@ ADMIN_ACTIONS=(
                actions=[
                         {
                          'id': 'list',
-                         'icon': 'list-alt',
                          'name': _("Browse Bans"),
                          'help': _("Browse all existing bans"),
                          'route': 'admin_users_bans'
                          },
                         {
                          'id': 'new',
-                         'icon': 'plus',
                          'name': _("Set Ban"),
                          'help': _("Set new Ban"),
                          'route': 'admin_users_bans_new'

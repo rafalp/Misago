@@ -45,7 +45,6 @@ ADMIN_ACTIONS=(
                actions=[
                         {
                          'id': 'list',
-                         'icon': 'list-alt',
                          'name': _("Browse Users"),
                          'help': _("Browse all registered user accounts"),
                          'route': 'admin_overview_online'

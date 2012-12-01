@@ -11,12 +11,12 @@
   	<div class="tabbable tabs-left">
   	  <ul class="nav nav-tabs">
         <li class="nav-header">{% trans %}Account Settings{% endtrans %}</li>
-  	    <li{% if tab == 'options' %} class="active"{% endif %}><a href="{% url 'usercp' %}"><i class="icon-cog"></i> {% trans %}Forum Options{% endtrans %}</a></li>
-        <li{% if tab == 'avatar' %} class="active"{% endif %}><a href="{% url 'usercp_avatar' %}"><i class="icon-picture"></i> {% trans %}Change Avatar{% endtrans %}</a></li>
-        <li{% if tab == 'signature' %} class="active"{% endif %}><a href="{% url 'usercp_signature' %}"><i class="icon-align-left"></i> {% trans %}Edit Signature{% endtrans %}</a></li>
-  	    <li{% if tab == 'credentials' %} class="active"{% endif %}><a href="{% url 'usercp_credentials' %}"><i class="icon-edit"></i> {% trans %}Change E-mail or Password{% endtrans %}</a></li>
-  	    <li{% if tab == 'username' %} class="active"{% endif %}><a href="{% url 'usercp_username' %}"><i class="icon-user"></i> {% trans %}Change Username{% endtrans %}</a></li>
-        <li{% if tab == 'ignored' %} class="active"{% endif %}><a href="{% url 'usercp_ignored' %}"><i class="icon-eye-close"></i> {% trans %}Ignored Members List{% endtrans %}</a></li>
+  	    <li{% if tab == 'options' %} class="active"{% endif %}><a href="{% url 'usercp' %}">{% trans %}Forum Options{% endtrans %}</a></li>
+        <li{% if tab == 'avatar' %} class="active"{% endif %}><a href="{% url 'usercp_avatar' %}">{% trans %}Change Avatar{% endtrans %}</a></li>
+        <li{% if tab == 'signature' %} class="active"{% endif %}><a href="{% url 'usercp_signature' %}">{% trans %}Edit Signature{% endtrans %}</a></li>
+  	    <li{% if tab == 'credentials' %} class="active"{% endif %}><a href="{% url 'usercp_credentials' %}">{% trans %}Change E-mail or Password{% endtrans %}</a></li>
+  	    <li{% if tab == 'username' %} class="active"{% endif %}><a href="{% url 'usercp_username' %}">{% trans %}Change Username{% endtrans %}</a></li>
+        <li{% if tab == 'ignored' %} class="active"{% endif %}><a href="{% url 'usercp_ignored' %}">{% trans %}Ignored Members List{% endtrans %}</a></li>
       </ul>
     </div>
   </div>
