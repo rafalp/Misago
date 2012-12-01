@@ -1,6 +1,7 @@
 {% extends "sora/users/usercp/usercp.html" %}
 {% load i18n %}
 {% load url from future %}
+{% import "_forms.html" as form_theme %}
 {% import "sora/macros.html" as macros with context %}
 
 {% block title %}{{ macros.page_title(title=_('Change Forum Options')) }}{% endblock %}

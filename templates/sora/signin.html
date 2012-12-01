@@ -19,7 +19,7 @@
 	    <p class="protip"><a href="{% url 'forgot_password' %}">{% trans %}Click here if you forgot your sign in credentials.{% endtrans %}</a></p>{% endif %}{% if not_active %}
 	    <p class="protip"><a href="{% url 'send_activation' %}">{% trans %}Click here if you didn't receive activation e-mail.{% endtrans %}</a></p>{% endif %}{% if banned_account.reason_user %}
 	    {{ banned_account.reason_user|markdown|safe }}{% endif %}{% if banned_account.expires %}
-        <p class="protip">{% trans ban_expires=banned_account.expires|date(f.DATE_FORMAT) %}Your ban will expire on {{ ban_expires }}{% endtrans %}</p>{% endif %}
+        <p class="protip">{% trans ban_expires=banned_account.expires|date %}Your ban will expire on {{ ban_expires }}{% endtrans %}</p>{% endif %}
 	  </div>{% endif %}
 	  <form class="form-horizontal" action="{% url 'sign_in' %}" method="post">
 	    <div class="form-container">

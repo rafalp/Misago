@@ -27,7 +27,7 @@
     {% endif %}
     {% endif %}
     {% if ban.expires %}
-    <p>{% trans ban_expires=ban.expires|date(f.DATE_FORMAT) %}Your ban will expire on {{ ban_expires }}{% endtrans %}</p>
+    <p>{% trans ban_expires=ban.expires|date %}Your ban will expire on {{ ban_expires }}{% endtrans %}</p>
     {% endif %}
     <ul class="unstyled">
       <li><i class="icon-home"></i> <a href="{% url 'index' %}">{% trans %}Return to board index{% endtrans %}</a></li>

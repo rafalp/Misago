@@ -19,9 +19,9 @@
   	<div class="muted"><strong>{{ item.ip }}</strong>; {{ item.agent }}</div>
   </td>
   <td>
-  	{{ item.start|date(f.DATETIME_FORMAT) }}
+  	{{ item.start|date("DATETIME_FORMAT") }}
   </td>
   <td>
-  	{{ item.last|date(f.TIME_FORMAT) }}
+  	{{ item.last|date("TIME_FORMAT") }}
   </td>
 {% endblock %}

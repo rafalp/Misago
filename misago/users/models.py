@@ -133,6 +133,8 @@ class User(models.Model):
     karma_delta = models.IntegerField(default=0)
     followers = models.PositiveIntegerField(default=0)
     followers_delta = models.IntegerField(default=0)
+    follows = models.ManyToManyField('self',related_name='follows_set',symmetrical=False)
+    ignores = models.ManyToManyField('self',related_name='ignores_set',symmetrical=False)
     score = models.IntegerField(default=0,db_index=True)
     rank = models.ForeignKey('Rank',null=True,blank=True,db_index=True,on_delete=models.SET_NULL)
     title = models.CharField(max_length=255,null=True,blank=True)
@@ -502,22 +504,3 @@ class Rank(models.Model):
                 print 'Error updating users ranking: %s' % e
             transaction.commit_unless_managed()
         return True
-    
-    
-class Follower(models.Model):
-    """
-    Misago Users follow model
-    """
-    user = models.ForeignKey('User',related_name='+')
-    target = models.ForeignKey('User')
-    since = models.DateTimeField()
-    
-    
-class Foe(models.Model):
-    """
-    Misago Users foes model
-    """
-    user = models.ForeignKey('User')
-    target = models.ForeignKey('User',related_name='+')
-    since = models.DateTimeField()
-    

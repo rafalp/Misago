@@ -895,7 +895,7 @@ th.table-sort.sort-desc a:hover{border-bottom:3px solid #eca09a;padding-bottom:5
 .page-header h2 .avatar{width:40px;height:40px;}
 .page-header h3 .avatar{width:28px;height:28px;}
 .page-header h4 .avatar{width:22px;height:22px;}
-.header-tabbed{border-bottom:none;padding-bottom:0px;margin-bottom:0px;}.header-tabbed .nav-tabs li a:link,.header-tabbed .nav-tabs li a:active,.header-tabbed .nav-tabs li a:visited{opacity:0.6;filter:alpha(opacity=60);color:#333333;font-weight:bold;}
+.header-tabbed{border-bottom:none;padding-bottom:0px;margin-bottom:0px;}.header-tabbed .nav-tabs li a:link,.header-tabbed .nav-tabs li a:active,.header-tabbed .nav-tabs li a:visited{font-weight:bold;}
 .header-tabbed .nav-tabs li i{margin-right:4px;}
 .header-tabbed .nav-tabs li.active a:link,.header-tabbed .nav-tabs li.active a:active,.header-tabbed .nav-tabs li.active a:visited,.header-tabbed .nav-tabs li.active a:hover{background-color:#fcfcfc;}.header-tabbed .nav-tabs li.active a:link i,.header-tabbed .nav-tabs li.active a:active i,.header-tabbed .nav-tabs li.active a:visited i,.header-tabbed .nav-tabs li.active a:hover i{background-image:url("../img/glyphicons-halflings.png");}
 .header-tabbed .nav-tabs li.active a:link,.header-tabbed .nav-tabs li.active a:active,.header-tabbed .nav-tabs li.active a:visited,.header-tabbed .nav-tabs li.active a:hover,.header-tabbed .nav-tabs li a:hover{opacity:1;filter:alpha(opacity=100);}

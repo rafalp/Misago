@@ -66,10 +66,6 @@ JINJA2_EXTENSIONS = (
 
 # List of application middlewares
 MIDDLEWARE_CLASSES = (
-    # Uncomment the next line for simple stopwatch
-    # Measured times will be logged in "stopwatch.txt"
-    # file located in directory containing settings.py
-    # 'misago.stopwatch.middleware.StopwatchMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'misago.cookie_jar.middleware.CookieJarMiddleware',
     'misago.settings.middleware.SettingsMiddleware',
@@ -95,7 +91,6 @@ INSTALLED_APPS = (
     # Applications that have no dependencies first!
     'south',
     'coffin',
-    'django.contrib.contenttypes',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'mptt', # Modified Pre-order Tree Transversal - allows us to nest forums 
