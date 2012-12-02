@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse as django_reverse
+from django.db.models import Q
 from django.utils.translation import ugettext as _
 from misago.admin import site
 from misago.admin.widgets import *
@@ -46,9 +47,33 @@ class List(ListWidget):
         if 'rank' in filters:
             model = model.filter(rank__in=filters['rank'])
         if 'username' in filters:
-            model = model.filter(username_slug__contains=filters['username'])
+            if ',' in filters['username']:
+                qs = None
+                for name in filters['username'].split(','):
+                    name = name.strip().lower()
+                    if name:
+                        if qs:
+                            qs = qs | Q(username_slug__contains=name)
+                        else:
+                            qs = Q(username_slug__contains=name)
+                if qs:
+                    model = model.filter(qs)
+            else:
+                model = model.filter(username_slug__contains=filters['username'])
         if 'email' in filters:
-            model = model.filter(email__contains=filters['email'])
+            if ',' in filters['username']:
+                qs = None
+                for name in filters['email'].split(','):
+                    name = name.strip().lower()
+                    if name:
+                        if qs:
+                            qs = qs | Q(email__contains=name)
+                        else:
+                            qs = Q(email__contains=name)
+                if qs:
+                    model = model.filter(qs)
+            else:
+                model = model.filter(email__contains=filters['email'])
         if 'activation' in filters:
             model = model.filter(activation__in=filters['activation'])
         return model
