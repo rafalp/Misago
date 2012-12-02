@@ -10,31 +10,21 @@
 }
 
 .nav-tabs li {
-  a:link, a:active, a:visited {
-    .opacity(60);
-    
-    color: @textColor;
+  a:link, a:active, a:visited {    
     font-weight: bold;
-  }
-  
-  i {
-    margin-right: 4px;
   }
   
   &.active a:link, &.active a:active,
   &.active a:visited, &.active a:hover {
     background-color: @bodyBackground;
+    border-bottom: 4px solid @linkColor;
+    border-width: 0px 0px 4px 0px;
+    padding-top: (@baseLineHeight / 2) - 1px;
+    padding-bottom: (@baseLineHeight / 2) - 5px;
         
-    i {
-      background-image: url("@{iconSpritePath}");
-    }
+    color: @textColor;
   }
-  
-  &.active a:link, &.active a:active,
-  &.active a:visited, &.active a:hover, a:hover {
-    .opacity(100);
-  }
-  
+    
   &.fallback {
     float:right;
     

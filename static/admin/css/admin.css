@@ -909,10 +909,8 @@ td.avatar-big,th.avatar-big,td.avatar-normal,th.avatar-normal,td.avatar-small,th
 .navbar img.avatar-small{margin:-10px 0px;position:relative;bottom:1px;}
 .page-header .avatar-normal{width:42px;height:42px;margin:-10px 0px;position:relative;top:-3px;}
 .tabs-header{border-bottom:none;padding-bottom:0px;}.tabs-header .nav-tabs{margin-bottom:0px;}
-.nav-tabs li a:link,.nav-tabs li a:active,.nav-tabs li a:visited{opacity:0.6;filter:alpha(opacity=60);color:#333333;font-weight:bold;}
-.nav-tabs li i{margin-right:4px;}
-.nav-tabs li.active a:link,.nav-tabs li.active a:active,.nav-tabs li.active a:visited,.nav-tabs li.active a:hover{background-color:#fcfcfc;}.nav-tabs li.active a:link i,.nav-tabs li.active a:active i,.nav-tabs li.active a:visited i,.nav-tabs li.active a:hover i{background-image:url("../img/glyphicons-halflings.png");}
-.nav-tabs li.active a:link,.nav-tabs li.active a:active,.nav-tabs li.active a:visited,.nav-tabs li.active a:hover,.nav-tabs li a:hover{opacity:1;filter:alpha(opacity=100);}
+.nav-tabs li a:link,.nav-tabs li a:active,.nav-tabs li a:visited{font-weight:bold;}
+.nav-tabs li.active a:link,.nav-tabs li.active a:active,.nav-tabs li.active a:visited,.nav-tabs li.active a:hover{background-color:#fcfcfc;border-bottom:4px solid #0088cc;border-width:0px 0px 4px 0px;padding-top:9px;padding-bottom:5px;color:#333333;}
 .nav-tabs li.fallback{float:right;}.nav-tabs li.fallback a:link,.nav-tabs li.fallback a:active,.nav-tabs li.fallback a:visited,.nav-tabs li.fallback a:hover{border-bottom:none;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;margin-top:4px;padding:4px 12px;}
 td>ul.list-actions{list-style:none;margin:0px;overflow:auto;padding:0px;}td>ul.list-actions>li{float:left;margin:0px;padding:0px;}td>ul.list-actions>li>form{margin:0px;padding:0px;}
 td>ul.list-actions>li>a,td>ul.list-actions>li>form>button{background:none;border:none;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;display:block;margin:0px 3px;padding:2px 5px;}td>ul.list-actions>li>a:hover,td>ul.list-actions>li>form>button:hover{background-color:#0088cc;}td>ul.list-actions>li>a:hover i,td>ul.list-actions>li>form>button:hover i{background-image:url("../img/glyphicons-halflings-white.png");}
