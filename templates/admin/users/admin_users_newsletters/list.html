@@ -1,0 +1,11 @@
+{% extends "admin/admin/list.html" %}
+{% load i18n %}
+{% load l10n %}
+{% load url from future %}
+{% import "_forms.html" as form_theme with context %}
+
+{% block table_row scoped %}
+  <td class="lead-cell">
+  	<strong>{{ item.name }}</strong>{% if item.ignore_subscriptions %} <span class="label label-important">{% trans %}Ignoring Subscriptions{% endtrans %}</span>{% endif %}
+  </td>
+{% endblock%}

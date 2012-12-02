@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from misago.admin import AdminSection, AdminAction
 from misago.acl.models import Role
 from misago.banning.models import Ban
-from misago.users.models import User, Rank
+from misago.users.models import User, Rank, Newsletter
 
 ADMIN_SECTIONS=(
     AdminSection(
@@ -152,9 +152,29 @@ ADMIN_ACTIONS=(
                name=_("Newsletters"),
                help=_("Manage and send Newsletters"),
                icon='envelope',
+               model=Newsletter,
+               actions=[
+                        {
+                         'id': 'list',
+                         'name': _("Browse Newsletters"),
+                         'help': _("Browse all existing Newsletters"),
+                         'route': 'admin_users_newsletters'
+                         },
+                        {
+                         'id': 'new',
+                         'name': _("New Newsletter"),
+                         'help': _("Create new Newsletter"),
+                         'route': 'admin_users_newsletters_new'
+                         },
+                        ],
                route='admin_users_newsletters',
-               urlpatterns=patterns('misago.admin.views',
-                        url(r'^$', 'todo', name='admin_users_newsletters'),
+               urlpatterns=patterns('misago.users.admin.newsletters.views',
+                        url(r'^$', 'List', name='admin_users_newsletters'),
+                        url(r'^(?P<page>\d+)/$', 'List', name='admin_users_newsletters'),
+                        url(r'^new/$', 'New', name='admin_users_newsletters_new'),
+                        url(r'^send/(?P<target>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'send', name='admin_users_newsletters_send'),
+                        url(r'^edit/(?P<target>\d+)/$', 'Edit', name='admin_users_newsletters_edit'),
+                        url(r'^delete/(?P<target>\d+)/$', 'Delete', name='admin_users_newsletters_delete'),
                     ),
                ),
 )

@@ -17,7 +17,7 @@ class UserForm(Form):
     new_password = forms.CharField(max_length=255,required=False,widget=forms.PasswordInput)
     signature = forms.CharField(widget=forms.Textarea,required=False)
     avatar_custom = forms.CharField(max_length=255,required=False)
-    avatar_ban = forms.BooleanField(widget=YesNoSwitch,required=False) 
+    avatar_ban = forms.BooleanField(widget=YesNoSwitch,required=False)
     avatar_ban_reason_user = forms.CharField(widget=forms.Textarea,required=False)
     avatar_ban_reason_admin = forms.CharField(widget=forms.Textarea,required=False)
     signature_ban = forms.BooleanField(widget=YesNoSwitch,required=False)
