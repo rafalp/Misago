@@ -103,7 +103,7 @@ class Delete(ButtonWidget):
     admin = site.get_action('roles')
     id = 'delete'
     fallback = 'admin_users_roles'
-    notfound_message = _('Requested role could not be found.')
+    notfound_message = _('Requested Role could not be found.')
     
     def action(self, request, target):
         if target.token:

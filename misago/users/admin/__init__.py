@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from misago.admin import AdminSection, AdminAction
 from misago.acl.models import Role
 from misago.banning.models import Ban
-from misago.users.models import User, Rank, Newsletter
+from misago.users.models import User, Rank, Newsletter, Pruning
 
 ADMIN_SECTIONS=(
     AdminSection(
@@ -137,13 +137,31 @@ ADMIN_ACTIONS=(
                ),
    AdminAction(
                section='users',
-               id='prune',
+               id='pruning',
                name=_("Prune Users"),
                help=_("Delete multiple Users"),
                icon='remove',
-               route='admin_users_prune',
-               urlpatterns=patterns('misago.admin.views',
-                        url(r'^$', 'todo', name='admin_users_prune'),
+               model=Pruning,
+               actions=[
+                        {
+                         'id': 'list',
+                         'name': _("Pruning Policies"),
+                         'help': _("Browse all existing pruning policies"),
+                         'route': 'admin_users_pruning'
+                         },
+                        {
+                         'id': 'new',
+                         'name': _("Set New Policy"),
+                         'help': _("Set new pruning policy"),
+                         'route': 'admin_users_pruning_new'
+                         },
+                        ],
+               route='admin_users_pruning',
+               urlpatterns=patterns('misago.users.admin.pruning.views',
+                        url(r'^$', 'List', name='admin_users_pruning'),
+                        url(r'^new/$', 'New', name='admin_users_pruning_new'),
+                        url(r'^edit/(?P<target>\d+)/$', 'Edit', name='admin_users_pruning_edit'),
+                        url(r'^delete/(?P<target>\d+)/$', 'Delete', name='admin_users_pruning_delete'),
                     ),
                ),
    AdminAction(

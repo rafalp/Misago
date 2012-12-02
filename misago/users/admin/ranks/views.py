@@ -141,7 +141,7 @@ class Delete(ButtonWidget):
     admin = site.get_action('ranks')
     id = 'delete'
     fallback = 'admin_users_ranks'
-    notfound_message = _('Requested rank could not be found.')
+    notfound_message = _('Requested Rank could not be found.')
     
     def action(self, request, target):
         target.delete()

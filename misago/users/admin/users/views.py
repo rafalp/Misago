@@ -316,7 +316,7 @@ class Delete(ButtonWidget):
     admin = site.get_action('users')
     id = 'delete'
     fallback = 'admin_users'
-    notfound_message = _('Requested user account could not be found.')
+    notfound_message = _('Requested User account could not be found.')
     
     def action(self, request, target):
         if target.pk == request.user.id:

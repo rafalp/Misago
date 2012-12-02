@@ -554,4 +554,15 @@ class Newsletter(models.Model):
         for key in tokens:
             content_plain = content_plain.replace(key, tokens[key])
         return content_plain
+
+
+class Pruning(models.Model):
+    """
+    Pruning policy
+    """
+    name = models.CharField(max_length=255)
+    email = models.CharField(max_length=255,null=True,blank=True)
+    posts = models.PositiveIntegerField(default=0)
+    registered = models.PositiveIntegerField(default=0)
+    last_visit = models.PositiveIntegerField(default=0)
     
