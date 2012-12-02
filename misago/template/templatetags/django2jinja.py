@@ -5,7 +5,7 @@ from coffin.template import Library
 from django.utils.dateformat import format, time_format
 from django.utils.timezone import is_aware, utc
 from django.utils.translation import pgettext, ungettext, ugettext as _
-from misago.utils import formats
+from misago.utils import slugify, formats
 
 register = Library()
 
@@ -63,7 +63,7 @@ def reldate(date, arg=""):
         return _("%(day)s, %(hour)s") % {'day': format(date, 'l'), 'hour': time_format(date, formats['TIME_FORMAT'])}
     
     # Fallback to custom      
-    return date(date, arg)
+    return date[1](date, arg)
 
 
 @register.filter(name='reltimesince')
@@ -87,7 +87,7 @@ def reltimesince(date, arg=""):
             if minutes > 0:
                 return ungettext(
                     "Hour and %(minutes)s ago",
-                    "%(hours)s  and %(minutes)s ago",
+                    "%(hours)s hours and %(minutes)s ago",
                 hours) % {'hours': hours, 'minutes': ungettext(
                         "%(minutes)s minute",
                         "%(minutes)s minutes",
@@ -98,5 +98,10 @@ def reltimesince(date, arg=""):
                     "%(hours)s hours ago",
                 hours) % {'hours': hours}
         
-    # Fallback to reldate  
-    return reldate(date, arg)
+    # Fallback to reldate
+    return reldate[1](date, arg)
+
+
+@register.filter(name="slugify")
+def slugify_tag(format_string):
+    return slugify(format_string)
