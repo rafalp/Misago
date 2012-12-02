@@ -2,8 +2,10 @@ from datetime import date, datetime, timedelta
 import math
 import urllib
 from coffin.template import Library
+from django.utils.dateformat import format, time_format
 from django.utils.timezone import is_aware, utc
 from django.utils.translation import pgettext, ungettext, ugettext as _
+from misago.utils import formats
 
 register = Library()
 
@@ -37,9 +39,6 @@ def low(value):
 
 @register.filter(name='date')
 def date(date, arg=""):
-    from django.utils.dateformat import format, time_format
-    from misago.utils import formats
-    
     if not arg:
         arg = formats['DATE_FORMAT']
     elif arg in formats:
@@ -50,12 +49,8 @@ def date(date, arg=""):
 
 @register.filter(name='reldate')
 def reldate(date, arg=""):
-    from django.utils.dateformat import format, time_format
-    from misago.utils import formats
-    
     now = datetime.now(utc if is_aware(date) else None)
     diff = now - date
-    print diff
     
     # Common situations
     if diff.days == 0:
@@ -67,10 +62,41 @@ def reldate(date, arg=""):
     if diff.days > -7 or diff.days < 7:
         return _("%(day)s, %(hour)s") % {'day': format(date, 'l'), 'hour': time_format(date, formats['TIME_FORMAT'])}
     
-    # Custom
-    if not arg:
-        arg = formats['DATE_FORMAT']
-    elif arg in formats:
-        arg = formats[arg]
+    # Fallback to custom      
+    return date(date, arg)
+
+
+@register.filter(name='reltimesince')
+def reltimesince(date, arg=""):
+    now = datetime.now(utc if is_aware(date) else None)
+    diff = now - date
+    
+    # Display specific time
+    if diff.seconds >= 0:
+        if diff.seconds <= 60:
+            return _("Minute ago")
+        if diff.seconds < 3600:
+            minutes = int(math.floor(diff.seconds / 60.0))
+            return ungettext(
+                    "Minute ago",
+                    "%(minutes)s minutes ago",
+                minutes) % {'minutes': minutes}
+        if diff.seconds < 10800:
+            hours = int(math.floor(diff.seconds / 3600.0))
+            minutes = (diff.seconds - (hours * 3600)) / 60
+            if minutes > 0:
+                return ungettext(
+                    "Hour and %(minutes)s ago",
+                    "%(hours)s  and %(minutes)s ago",
+                hours) % {'hours': hours, 'minutes': ungettext(
+                        "%(minutes)s minute",
+                        "%(minutes)s minutes",
+                    minutes) % {'minutes': minutes}}
+                return _("%(hours)s hours and %(minutes)s minutes ago") % {'hours': hours, 'minutes': minutes}
+            return ungettext(
+                    "Hour ago",
+                    "%(hours)s hours ago",
+                hours) % {'hours': hours}
         
-    return format(date, arg)
+    # Fallback to reldate  
+    return reldate(date, arg)
