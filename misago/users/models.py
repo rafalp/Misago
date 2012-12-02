@@ -37,18 +37,18 @@ class UserManager(models.Manager):
         monitor['last_user_name'] = last_user.username
         monitor['last_user_slug'] = last_user.username_slug
     
-    def create_user(self, username, email, password, timezone=False, ip='127.0.0.1', activation=0, request=False):
+    def create_user(self, username, email, password, timezone=False, ip='127.0.0.1', no_roles=False, activation=0, request=False):
         token = ''
         if activation > 0:
             token = get_random_string(12)
+        
+        try:
+            db_settings = request.settings
+        except AttributeError:
+            db_settings = DBSettings()
             
         if timezone == False:
-            try:
-                timezone = request.settings['default_timezone']
-                db_settings = request.settings
-            except AttributeError:
-                db_settings = DBSettings()
-                timezone = db_settings['default_timezone']
+            timezone = db_settings['default_timezone']
         
         # Get first rank
         try:
@@ -58,6 +58,7 @@ class UserManager(models.Manager):
         
         # Store user in database
         new_user = User(
+                        last_sync=tz_util.now(),
                         join_date=tz_util.now(),
                         join_ip=ip,
                         activation=activation,
@@ -73,9 +74,10 @@ class UserManager(models.Manager):
         new_user.default_avatar(db_settings)
         new_user.save(force_insert=True)
         
-        # Set user roles
-        new_user.roles.add(Role.objects.get(token='registered'))
-        new_user.save(force_update=True)
+        # Set user roles?
+        if not no_roles:
+            new_user.roles.add(Role.objects.get(token='registered'))
+            new_user.save(force_update=True)
         
         # Load monitor
         try:

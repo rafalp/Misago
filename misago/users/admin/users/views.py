@@ -4,7 +4,7 @@ from misago.admin import site
 from misago.admin.widgets import *
 from misago.security import get_random_string
 from misago.utils import slugify
-from misago.users.admin.users.forms import UserForm, SearchUsersForm
+from misago.users.admin.users.forms import UserForm, NewUserForm, SearchUsersForm
 from misago.users.models import User
 
 def reverse(route, target=None):
@@ -176,6 +176,39 @@ class List(ListWidget):
         return Message(_('Selected users have been deleted successfully.'), 'success'), reverse('admin_users')
     
 
+class New(FormWidget):
+    admin = site.get_action('users')
+    id = 'new'
+    fallback = 'admin_users' 
+    form = NewUserForm
+    submit_button = _("Save User")
+        
+    def get_new_url(self, request, model):
+        return reverse('admin_users')
+    
+    def get_edit_url(self, request, model):
+        return reverse('admin_users_edit', model)
+    
+    def submit_form(self, request, form, target):
+        new_user = User.objects.create_user(
+                                            form.cleaned_data['username'],
+                                            form.cleaned_data['email'],
+                                            form.cleaned_data['password'],
+                                            request.settings['default_timezone'],
+                                            request.META['REMOTE_ADDR'],
+                                            no_roles=True,
+                                            request=request,
+                                            )
+        new_user.title = form.cleaned_data['title']
+        new_user.rank = form.cleaned_data['rank']
+        
+        for role in form.cleaned_data['roles']:
+            new_user.roles.add(role)
+        new_user.save(force_update=True)
+        
+        return new_user, Message(_('New User has been created.'), 'success')
+    
+    
 class Edit(FormWidget):
     admin = site.get_action('users')
     id = 'edit'

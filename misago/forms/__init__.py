@@ -43,17 +43,21 @@ class Form(forms.Form):
         """
         for key, field in self.base_fields.iteritems():
             try:
-                if field.__class__.__name__ not in ['DateField', 'DateTimeField']:
+                if field.__class__.__name__ == 'ModelChoiceField':
+                    data[key] = int(data[key])
+                elif field.__class__.__name__ == 'ModelMultipleChoiceField':
+                    data.setlist(key, [int(x) for x in data.getlist(key, [])])
+                elif field.__class__.__name__ not in ['DateField', 'DateTimeField']:
                     if not key in self.dont_strip:
                         if field.__class__.__name__ in ['MultipleChoiceField', 'TypedMultipleChoiceField']:
-                            data[key] = [x.strip() for x in data.getlist(key.html_name, [])]
+                            data.setlist(key, [x.strip() for x in data.getlist(key, [])])
                         else:
-                            data[key] = data[key.html_name].strip()
+                            data[key] = data[key].strip()
                     if not key in self.allow_nl:
                         if field.__class__.__name__ in ['MultipleChoiceField', 'TypedMultipleChoiceField']:
-                            data[key] = [x.replace("\n", '') for x in data.getlist(key.html_name, [])]
+                            data.setlist(key, [x.replace("\n", '') for x in data.getlist(key, [])])
                         else:
-                            data[key] = data[key.html_name].replace("\n", '')
+                            data[key] = data[key].replace("\n", '')
             except (KeyError, AttributeError):
                 pass
         return data

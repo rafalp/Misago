@@ -41,7 +41,7 @@ ADMIN_ACTIONS=(
                         url(r'^$', 'List', name='admin_users'),
                         url(r'^(?P<page>\d+)/$', 'List', name='admin_users'),
                         url(r'^inactive/$', 'inactive', name='admin_users_inactive'),
-                        url(r'^new/$', 'List', name='admin_users_new'),
+                        url(r'^new/$', 'New', name='admin_users_new'),
                         url(r'^edit/(?P<slug>[a-z0-9]+)-(?P<target>\d+)/$', 'Edit', name='admin_users_edit'),
                         url(r'^delete/(?P<slug>[a-z0-9]+)-(?P<target>\d+)/$', 'Delete', name='admin_users_delete'),
                     ),
