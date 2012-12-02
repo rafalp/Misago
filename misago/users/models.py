@@ -228,10 +228,11 @@ class User(models.Model):
                 if not avatars_list:
                     avatars_list = []
                     for directory in path(settings.STATICFILES_DIRS[0]).joinpath('avatars').dirs():
-                        avatars_list += directory.files('*.gif')
-                        avatars_list += directory.files('*.jpg')
-                        avatars_list += directory.files('*.jpeg')
-                        avatars_list += directory.files('*.png')
+                        if not directory[-7:] == '_locked':
+                            avatars_list += directory.files('*.gif')
+                            avatars_list += directory.files('*.jpg')
+                            avatars_list += directory.files('*.jpeg')
+                            avatars_list += directory.files('*.png')
                 if avatars_list:
                     # Pick random avatar from list
                     self.avatar_type = 'gallery'
