@@ -61,7 +61,7 @@ class List(ListWidget):
             else:
                 model = model.filter(username_slug__contains=filters['username'])
         if 'email' in filters:
-            if ',' in filters['username']:
+            if ',' in filters['email']:
                 qs = None
                 for name in filters['email'].split(','):
                     name = name.strip().lower()
