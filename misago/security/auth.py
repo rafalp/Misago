@@ -122,6 +122,4 @@ def sign_user_in(request, user):
                         )
     user.save(force_update=True)
     request.session.set_user(user)
-    
-    if request.settings['sessions_hidden']:
-        request.session.set_hidden(user.hide_activity > 0)
+    request.session.set_hidden(user.hide_activity > 0)

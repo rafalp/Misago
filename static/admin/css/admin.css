@@ -843,6 +843,7 @@ form fieldset:first-child{border-top:none;padding-top:0px;}
 form fieldset:last-child{padding-bottom:0px;}
 textarea{resize:vertical;}
 .radio-group,.select-multiple,.yes-no-switch{margin-bottom:8px;}.radio-group label,.select-multiple label,.yes-no-switch label{color:#000000;font-weight:normal;}
+.checkbox{color:#000000;font-weight:normal;}
 .side-search{background:#ffffff;border:1px solid #d6d6d6;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:0px 0px 0px 3px #f0f0f0;-moz-box-shadow:0px 0px 0px 3px #f0f0f0;box-shadow:0px 0px 0px 3px #f0f0f0;padding:8px;margin-left:14px;margin-right:-14px;}.side-search h4{border-bottom:1px solid #d6d6d6;padding-top:0px;padding-bottom:8px;margin-top:0px;}
 .side-search hr{border-top:1px solid #ebebeb;margin-bottom:16px;}
 .side-search label.checkbox,.side-search label.radio{font-weight:normal;}

@@ -836,7 +836,7 @@ form fieldset:first-child{border-top:none;padding-top:0px;}
 form fieldset:last-child{padding-bottom:0px;}
 textarea{resize:vertical;}
 .radio-group,.select-multiple,.yes-no-switch{margin-bottom:8px;}.radio-group label,.select-multiple label,.yes-no-switch label{color:#000000;font-weight:normal;}
-.checkbox{font-weight:normal;}
+.checkbox{color:#000000;font-weight:normal;}
 .table-footer{background:none;margin-bottom:0px;padding:0px 8px;position:relative;bottom:20px;}.table-footer .pager{margin:0px 0px;margin-top:9px;padding:0px;margin-right:6px;}.table-footer .pager>li{margin-right:6px;}.table-footer .pager>li>a:link,.table-footer .pager>li>a:active,.table-footer .pager>li>a:visited{background:#e8e8e8;border:none;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;padding:2px 5px;}
 .table-footer .pager>li>a:hover{background-color:#0088cc;}.table-footer .pager>li>a:hover i{background-image:url("../img/glyphicons-halflings-white.png");}
 .table-footer .table-count{padding:11px 0px;color:#555555;}
@@ -896,7 +896,7 @@ th.table-sort.sort-desc a:hover{border-bottom:3px solid #eca09a;padding-bottom:5
 .page-header h3 .avatar{width:28px;height:28px;}
 .page-header h4 .avatar{width:22px;height:22px;}
 .header-tabbed{border-bottom:none;padding-bottom:0px;margin-bottom:0px;}.header-tabbed .nav-tabs li a:link,.header-tabbed .nav-tabs li a:active,.header-tabbed .nav-tabs li a:visited{font-weight:bold;}
-.header-tabbed .nav-tabs li.active a:link,.header-tabbed .nav-tabs li.active a:active,.header-tabbed .nav-tabs li.active a:visited,.header-tabbed .nav-tabs li.active a:hover{background-color:#fcfcfc;border-bottom:4px solid #0088cc;border-width:0px 0px 4px 0px;padding-bottom:7px;}
+.header-tabbed .nav-tabs li.active a:link,.header-tabbed .nav-tabs li.active a:active,.header-tabbed .nav-tabs li.active a:visited,.header-tabbed .nav-tabs li.active a:hover{background-color:#fcfcfc;border-bottom:4px solid #0088cc;border-width:0px 0px 4px 0px;padding-top:9px;padding-bottom:5px;}
 .header-tabbed .nav-tabs li.fallback{float:right;}.header-tabbed .nav-tabs li.fallback a:link,.header-tabbed .nav-tabs li.fallback a:active,.header-tabbed .nav-tabs li.fallback a:visited,.header-tabbed .nav-tabs li.fallback a:hover{border-bottom:none;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;margin-top:4px;padding:4px 12px;}
 .tabs-left{background-color:#f7f7f7;-webkit-border-radius:3px 0px 0px 3px;-moz-border-radius:3px 0px 0px 3px;border-radius:3px 0px 0px 3px;padding-left:8px;}.tabs-left ul{margin-bottom:0px;width:100%;}.tabs-left ul li.nav-header{font-size:100%;}
 .tabs-left ul li a,.tabs-left ul li a:link,.tabs-left ul li a:active,.tabs-left ul li a:visited{opacity:0.8;filter:alpha(opacity=80);font-weight:bold;}

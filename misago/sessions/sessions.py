@@ -146,8 +146,7 @@ class SessionHuman(SessionMisago):
             # Change session to matched and extract session user and hidden flag
             self._session_rk.matched = True
             self._user = self._session_rk.user
-            if request.settings['sessions_hidden']:
-                self.hidden = self._session_rk.hidden
+            self.hidden = self._session_rk.hidden
         except (Session.DoesNotExist, IncorrectSessionException):
             # Attempt autolog
             try:
@@ -162,9 +161,8 @@ class SessionHuman(SessionMisago):
         else:   
             request.cookie_jar.set('SID', self._session_rk.id)
             
-    def create(self, request, user=None, hidden=False):
+    def create(self, request, user=None):
         self._user = user
-        self.hidden = hidden and request.settings['sessions_hidden']
         while True:
             try:
                 self._session_key = self._get_new_session_key()
@@ -177,7 +175,6 @@ class SessionHuman(SessionMisago):
                                          start=timezone.now(),
                                          last=timezone.now(),
                                          admin=request.firewall.admin,
-                                         hidden=self.hidden
                                          )
                 self._session_rk.save(force_insert=True)
                 if user:

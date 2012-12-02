@@ -125,18 +125,28 @@ class User(models.Model):
     last_ip = models.GenericIPAddressField(null=True,blank=True)
     last_agent = models.TextField(null=True,blank=True)
     hide_activity = models.PositiveIntegerField(default=0)
+    alert_ats = models.PositiveIntegerField(default=0)
+    allow_pms = models.PositiveIntegerField(default=0)
+    receive_newsletters = models.BooleanField(default=True)
     topics = models.PositiveIntegerField(default=0)
     topics_delta = models.IntegerField(default=0)
     posts = models.PositiveIntegerField(default=0)
     posts_delta = models.IntegerField(default=0)
-    karma = models.IntegerField(default=0)
+    votes = models.PositiveIntegerField(default=0)
+    votes_delta = models.IntegerField(default=0)
+    karma_given_p = models.PositiveIntegerField(default=0)
+    karma_given_n = models.PositiveIntegerField(default=0)
+    karma_p = models.PositiveIntegerField(default=0)
+    karma_n = models.PositiveIntegerField(default=0)
     karma_delta = models.IntegerField(default=0)
+    following = models.PositiveIntegerField(default=0)
     followers = models.PositiveIntegerField(default=0)
     followers_delta = models.IntegerField(default=0)
-    follows = models.ManyToManyField('self',related_name='follows_set',symmetrical=False)
-    ignores = models.ManyToManyField('self',related_name='ignores_set',symmetrical=False)
     score = models.IntegerField(default=0,db_index=True)
     rank = models.ForeignKey('Rank',null=True,blank=True,db_index=True,on_delete=models.SET_NULL)
+    last_sync = models.DateTimeField(null=True,blank=True)
+    follows = models.ManyToManyField('self',related_name='follows_set',symmetrical=False)
+    ignores = models.ManyToManyField('self',related_name='ignores_set',symmetrical=False)
     title = models.CharField(max_length=255,null=True,blank=True)
     last_post = models.DateTimeField(null=True,blank=True)
     last_search = models.DateTimeField(null=True,blank=True)
@@ -381,7 +391,9 @@ class User(models.Model):
     
     def get_date(self):
         return self.join_date
-        
+    
+    def sync_user(self):
+        print 'SYNCING USER!'    
         
 class Guest(object):
     """
@@ -505,3 +517,17 @@ class Rank(models.Model):
                 print 'Error updating users ranking: %s' % e
             transaction.commit_unless_managed()
         return True
+    
+
+class Newsletter(models.Model):
+    """
+    Newsletter
+    """
+    name = models.CharField(max_length=255)
+    step_size = models.PositiveIntegerField(default=0)
+    progress = models.PositiveIntegerField(default=0)
+    content_html = models.TextField(null=True,blank=True)
+    content_plain = models.TextField(null=True,blank=True)
+    ignore_subscriptions = models.BooleanField(default=False)
+    roles = models.ManyToManyField(Role)
+    

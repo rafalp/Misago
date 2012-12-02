@@ -29,12 +29,12 @@
     	  <div class="span{{ widthratio(subfield.width, 100, width) }}">{{ field_widget(subfield, horizontal=horizontal, width=width, nested=true) }}</div>
       {% endfor %}
       </div>{% for error in field.errors %}
-      <p class="help-block" style="font-weight: bold;">{{ error }}</p>{% endfor %}{% if field.widget != "checkbox" and field.help_text %}
+      <p class="help-block" style="font-weight: bold;">{{ error }}</p>{% endfor %}{% if field.help_text %}
       <p class="help-block">{{ field.help_text }}</p>{% endif %}
     </div>{% else %}
     <div class="controls">
       {{ field_widget(field, horizontal=horizontal, width=width) }}{% for error in field.errors %}
-      <p class="help-block" style="font-weight: bold;">{{ error }}</p>{% endfor %}{% if field.widget != "checkbox" and field.help_text %}
+      <p class="help-block" style="font-weight: bold;">{{ error }}</p>{% endfor %}{% if field.help_text %}
       <p class="help-block">{{ field.help_text }}</p>{% endif %}
     </div>{% endif %}
   </div>

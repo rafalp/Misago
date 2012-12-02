@@ -11,7 +11,7 @@ class SessionMiddleware(object):
             request.session = SessionHuman(request)
             request.user = request.session.get_user()
             
-            if request.settings['sessions_hidden'] and request.user.is_authenticated():
+            if request.user.is_authenticated():
                 request.session.set_hidden(request.user.hide_activity > 0)
                     
     def process_response(self, request, response):

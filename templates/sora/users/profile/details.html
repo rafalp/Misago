@@ -1,0 +1,149 @@
+{% extends "sora/users/profile/profile.html" %}
+{% load i18n %}
+{% load humanize %}
+{% load url from future %}
+{% import "_forms.html" as form_theme with context %}
+{% import "sora/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(profile.username, _('Member Details')) }}{% endblock %}
+
+{% block content %}
+{{ super() }}
+
+<div class="row">
+  <div class="span6">
+  	
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="2">
+          	{% trans %}Account Details{% endtrans %}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="span2">
+          	 <strong>{% trans %}Member Since{% endtrans %}</strong>
+          </td>
+          <td class="span4">
+          	{{ profile.join_date|date }}
+          </td>
+        </tr>
+        <tr>
+          <td class="span2">
+          	 <strong>{% trans %}Last Seen{% endtrans %}</strong>
+          </td>
+          <td class="span4">
+          	{{ profile.last_date|reltimesince }} <span class="muted">{{ profile.last_date|date("DATETIME_FORMAT") }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  	
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="2">
+          	{% trans %}Forums Activity{% endtrans %}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="span2">
+          	 <strong>{% trans %}Posts Written{% endtrans %}</strong>
+          </td>
+          <td class="span4">
+          	{{ profile.posts|intcomma }}
+          </td>
+        </tr>
+        <tr>
+          <td class="span2">
+          	 <strong>{% trans %}Threads Started{% endtrans %}</strong>
+          </td>
+          <td class="span4">
+          	{{ profile.topics|intcomma }}
+          </td>
+        </tr>
+        <tr>
+          <td class="span2">
+          	 <strong>{% trans %}Votes Cast{% endtrans %}</strong>
+          </td>
+          <td class="span4">
+          	{{ profile.votes|intcomma }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+  </div>
+  <div class="span6">
+  	
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="2">
+          	{% trans %}Ranking Performance{% endtrans %}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="span2">
+          	 <strong>{% trans %}Rank{% endtrans %}</strong>
+          </td>
+          <td class="span4">
+          	{% if profile.rank %}{{ _(profile.rank.name) }}{% else %}<em>{% trans %}Not Ranked{% endtrans %}</em>{% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td class="span2">
+          	 <strong>{% trans %}Karma Received{% endtrans %}</strong>
+          </td>
+          <td class="span4">
+          	<strong><span class="alert-success">+ {{ profile.karma_p }}</span> / <span class="alert-error">- {{ profile.karma_n }}</span></strong>
+          </td>
+        </tr>
+        <tr>
+          <td class="span2">
+          	 <strong>{% trans %}Karma Given{% endtrans %}</strong>
+          </td>
+          <td class="span4">
+          	<strong><span class="alert-success">+ {{ profile.karma_given_p }}</span> / <span class="alert-error">- {{ profile.karma_given_n }}</span></strong>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  	
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="2">
+          	{% trans %}Interactions{% endtrans %}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="span2">
+          	 <strong>{% trans %}Followers{% endtrans %}</strong>
+          </td>
+          <td class="span4">
+          	{{ profile.followers|intcomma }}
+          </td>
+        </tr>
+        <tr>
+          <td class="span2">
+          	 <strong>{% trans %}Following{% endtrans %}</strong>
+          </td>
+          <td class="span4">
+          	{{ profile.following|intcomma }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+  </div>
+</div>
+{% endblock %}
