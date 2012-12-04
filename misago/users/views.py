@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
-from misago.users.models import User, Group
+from misago.users.models import User
 from misago.views import error403, error404
 
 

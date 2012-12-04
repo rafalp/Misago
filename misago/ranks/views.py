@@ -5,8 +5,8 @@ from misago.admin import site
 from misago.admin.widgets import *
 from misago.forms import Form
 from misago.utils import slugify
-from misago.users.admin.ranks.forms import RankForm
-from misago.users.models import Rank
+from misago.ranks.forms import RankForm
+from misago.ranks.models import Rank
 
 def reverse(route, target=None):
     if target:
@@ -50,34 +50,34 @@ class List(ListWidget):
         for item in page_items:
             item.order = cleaned_data['pos_' + str(item.pk)]
             item.save(force_update=True)
-        return Message(_('Ranks order has been changed'), 'success'), reverse('admin_users_ranks')
+        return Message(_('Ranks order has been changed'), 'success'), reverse('admin_ranks')
     
     def sort_items(self, request, page_items, sorting_method):
         return page_items.order_by('order')
     
     def get_item_actions(self, request, item):
         return (
-                self.action('pencil', _("Edit Rank"), reverse('admin_users_ranks_edit', item)),
-                self.action('remove', _("Delete Rank"), reverse('admin_users_ranks_delete', item), post=True, prompt=_("Are you sure you want to delete this rank?")),
+                self.action('pencil', _("Edit Rank"), reverse('admin_ranks_edit', item)),
+                self.action('remove', _("Delete Rank"), reverse('admin_ranks_delete', item), post=True, prompt=_("Are you sure you want to delete this rank?")),
                 )
 
     def action_delete(self, request, items, checked):
         Rank.objects.filter(id__in=checked).delete()
-        return Message(_('Selected ranks have been deleted successfully.'), 'success'), reverse('admin_users_ranks')
+        return Message(_('Selected ranks have been deleted successfully.'), 'success'), reverse('admin_ranks')
 
 
 class New(FormWidget):
     admin = site.get_action('ranks')
     id = 'new'
-    fallback = 'admin_users_ranks' 
+    fallback = 'admin_ranks' 
     form = RankForm
     submit_button = _("Save Rank")
         
     def get_new_url(self, request, model):
-        return reverse('admin_users_ranks')
+        return reverse('admin_ranks')
     
     def get_edit_url(self, request, model):
-        return reverse('admin_users_ranks_edit', model)
+        return reverse('admin_ranks_edit', model)
     
     def submit_form(self, request, form, target):
         position = 0
@@ -101,14 +101,14 @@ class Edit(FormWidget):
     admin = site.get_action('ranks')
     id = 'edit'
     name = _("Edit Rank")
-    fallback = 'admin_users_ranks'
+    fallback = 'admin_ranks'
     form = RankForm
     target_name = 'name'
     notfound_message = _('Requested Rank could not be found.')
     submit_fallback = True
     
     def get_url(self, request, model):
-        return reverse('admin_users_ranks_edit', model)
+        return reverse('admin_ranks_edit', model)
     
     def get_edit_url(self, request, model):
         return self.get_url(request, model)
@@ -140,7 +140,7 @@ class Edit(FormWidget):
 class Delete(ButtonWidget):
     admin = site.get_action('ranks')
     id = 'delete'
-    fallback = 'admin_users_ranks'
+    fallback = 'admin_ranks'
     notfound_message = _('Requested Rank could not be found.')
     
     def action(self, request, target):

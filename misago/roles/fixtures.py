@@ -1,4 +1,4 @@
-from misago.acl.models import Role
+from misago.roles.models import Role
 from misago.utils import ugettext_lazy as _
 from misago.utils import get_msgid
 

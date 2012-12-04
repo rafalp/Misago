@@ -3,8 +3,9 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from misago.forms import FormFields
 from misago.messages import Message
+from misago.ranks.models import Rank
 from misago.users.forms import QuickFindUserForm
-from misago.users.models import User, Rank
+from misago.users.models import User
 from misago.views import error404
 from misago.utils import slugify
 

@@ -79,7 +79,7 @@ MIDDLEWARE_CLASSES = (
     'misago.banning.middleware.BanningMiddleware',
     'misago.messages.middleware.MessagesMiddleware',
     'misago.users.middleware.UserMiddleware',
-    'misago.acl.middleware.ACLMiddleware',
+    'misago.roles.middleware.ACLMiddleware',
     'django.middleware.common.CommonMiddleware',
 )
 
@@ -99,7 +99,6 @@ INSTALLED_APPS = (
     'misago.monitor', # Forum statistics monitor
     'misago.utils', # Utility classes
     # Applications with dependencies
-    'misago.acl', # Web crawlers handling
     'misago.banning', # Banning and blacklisting users
     'misago.crawlers', # Web crawlers handling
     'misago.cookie_jar', # Cookies helper
@@ -113,7 +112,9 @@ INSTALLED_APPS = (
     'misago.stopwatch', # Simple stopwatch to measure time spent on request
     'misago.template', # Templates extensions
     'misago.themes', # Themes
-    'misago.users', # Users and groups
+    'misago.users', # Users
+    'misago.ranks', # User Ranks
+    'misago.roles', # User Roles
 )
 
 # IP's that can see debug toolbar

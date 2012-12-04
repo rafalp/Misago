@@ -9,7 +9,7 @@ class Newsletter(models.Model):
     content_html = models.TextField(null=True,blank=True)
     content_plain = models.TextField(null=True,blank=True)
     ignore_subscriptions = models.BooleanField(default=False)
-    ranks = models.ManyToManyField('users.Rank')
+    ranks = models.ManyToManyField('ranks.Rank')
     
     def generate_token(self):
         self.token = get_random_string(32)

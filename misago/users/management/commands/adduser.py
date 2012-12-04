@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 from optparse import make_option
-from misago.acl.models import Role
+from misago.roles.models import Role
 from misago.users.models import UserManager
 
 class Command(BaseCommand):

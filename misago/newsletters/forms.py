@@ -2,7 +2,7 @@ from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 from misago.forms import Form, YesNoSwitch
-from misago.users.models import Rank
+from misago.ranks.models import Rank
 
 class NewsletterForm(Form):
     name = forms.CharField(max_length=255)

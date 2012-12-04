@@ -1,9 +1,7 @@
-from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import F
-from django.utils import timezone
-from optparse import make_option
-from misago.users.models import User, Rank
+from misago.ranks.models import Rank
+from misago.users.models import User
 
 class Command(BaseCommand):
     """

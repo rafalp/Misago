@@ -7,11 +7,10 @@ from django.contrib.auth.hashers import (
     check_password, make_password, is_password_usable, UNUSABLE_PASSWORD)
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
-from django.db import models, connection, transaction
+from django.db import models
 from django.template import RequestContext
 from django.utils import timezone as tz_util
 from django.utils.translation import ugettext_lazy as _
-from misago.acl.models import Role
 from misago.monitor.monitor import Monitor
 from misago.security import get_random_string
 from misago.settings.settings import Settings as DBSettings
@@ -52,6 +51,7 @@ class UserManager(models.Manager):
         
         # Get first rank
         try:
+            from misago.ranks.models import Rank
             default_rank = Rank.objects.filter(special=0).order_by('order')[0]
         except Rank.DoesNotExist:
             default_rank = None
@@ -76,6 +76,7 @@ class UserManager(models.Manager):
         
         # Set user roles?
         if not no_roles:
+            from misago.roles.models import Role
             new_user.roles.add(Role.objects.get(token='registered'))
             new_user.save(force_update=True)
         
@@ -145,7 +146,7 @@ class User(models.Model):
     followers = models.PositiveIntegerField(default=0)
     followers_delta = models.IntegerField(default=0)
     score = models.IntegerField(default=0,db_index=True)
-    rank = models.ForeignKey('Rank',null=True,blank=True,db_index=True,on_delete=models.SET_NULL)
+    rank = models.ForeignKey('ranks.Rank',null=True,blank=True,db_index=True,on_delete=models.SET_NULL)
     last_sync = models.DateTimeField(null=True,blank=True)
     follows = models.ManyToManyField('self',related_name='follows_set',symmetrical=False)
     ignores = models.ManyToManyField('self',related_name='ignores_set',symmetrical=False)
@@ -163,7 +164,7 @@ class User(models.Model):
     signature_ban_reason_user = models.TextField(null=True,blank=True)
     signature_ban_reason_admin = models.TextField(null=True,blank=True)
     timezone = models.CharField(max_length=255,default='utc')
-    roles = models.ManyToManyField(Role)
+    roles = models.ManyToManyField('roles.Role')
     acl_cache = models.TextField(null=True,blank=True)
     
     objects = UserManager()   
@@ -431,93 +432,6 @@ class Crawler(object):
         return False
     
     def is_crawler(self):
-        return True
-    
-    
-class Rank(models.Model):
-    """
-    Misago User Rank
-    Ranks are ready style/title pairs that are assigned to users either by admin (special ranks) or as result of user activity.
-    """
-    name = models.CharField(max_length=255)
-    name_slug = models.CharField(max_length=255,null=True,blank=True)
-    description = models.TextField(null=True,blank=True)
-    style = models.CharField(max_length=255,null=True,blank=True)
-    title = models.CharField(max_length=255,null=True,blank=True)
-    special = models.BooleanField(default=False)
-    as_tab = models.BooleanField(default=False)
-    order = models.IntegerField(default=0)
-    criteria = models.CharField(max_length=255,null=True,blank=True)
-    
-    def __unicode__(self):
-        return unicode(_(self.name))
-    
-    def assign_rank(self, users=0, special_ranks=None):
-        if not self.criteria or self.special or users == 0:
-            # Rank cant be rolled in
-            return False
-        
-        if self.criteria == "0":
-            # Just update all fellows
-            User.objects.exclude(rank__in=special_ranks).update(rank=self)
-        else:
-            # Count number of users to update
-            if self.criteria[-1] == '%':
-                criteria = int(self.criteria[0:-1])
-                criteria = int(math.ceil(float(users / 100.0)* criteria))
-            else:
-                criteria = int(self.criteria)
-            
-            # Join special ranks
-            if special_ranks:
-                special_ranks = ','.join(special_ranks)
-            
-            # Run raw query
-            cursor = connection.cursor()
-            try:
-                # Postgresql
-                if (settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2'
-                    or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'):
-                    if special_ranks:
-                        cursor.execute('''UPDATE users_user
-                            FROM (
-                                SELECT id
-                                FROM users_user
-                                WHERE rank_id NOT IN (%s)
-                                ORDER BY score DESC LIMIT %s
-                                ) AS updateable
-                            SET rank_id=%s
-                            WHERE id = updateable.id
-                            RETURNING *''' % (self.id, special_ranks, criteria))
-                    else:
-                        cursor.execute('''UPDATE users_user
-                            FROM (
-                                SELECT id
-                                FROM users_user
-                                ORDER BY score DESC LIMIT %s
-                                ) AS updateable
-                            SET rank_id=%s
-                            WHERE id = updateable.id
-                            RETURNING *''', [self.id, criteria])
-                        
-                # MySQL, SQLite and Oracle
-                if (settings.DATABASES['default']['ENGINE'] == 'django.db.backends.mysql'
-                    or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3'
-                    or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.oracle'):
-                    if special_ranks:
-                        cursor.execute('''UPDATE users_user
-                            SET rank_id=%s
-                            WHERE rank_id NOT IN (%s)
-                            ORDER BY score DESC
-                            LIMIT %s''' % (self.id, special_ranks, criteria))
-                    else:
-                        cursor.execute('''UPDATE users_user
-                        SET rank_id=%s
-                        ORDER BY score DESC
-                        LIMIT %s''', [self.id, criteria])
-            except Exception as e:
-                print 'Error updating users ranking: %s' % e
-            transaction.commit_unless_managed()
         return True
 
 
