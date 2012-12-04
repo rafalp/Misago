@@ -6,7 +6,7 @@ from misago.forms import Form
 from misago.forms.layouts import FormLayout, FormFields
 from misago.messages import Message
 from misago.search import SearchQuery, SearchException
-from misago.settings.admin.forms import SearchForm
+from misago.settings.forms import SearchForm
 from misago.settings.models import Group, Setting
 from misago.views import error404
 
