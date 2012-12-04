@@ -1,15 +1,14 @@
 {% extends "admin/layout.html" %}
 {% load i18n %}
-{% from "admin/macros.html" import page_title %}
-{% import "admin/messages.html" as messages_theme %}
+{% import "admin/macros.html" as macros with context %}
 
-{% block title %}{{ page_title(title=_('Stats')) }}{% endblock %}
+{% block title %}{{ macros.page_title(title=_('Stats')) }}{% endblock %}
 
 {% block content %}
 <div class="page-header">
   <h1>{% trans %}Stats{% endtrans %} <small>{% trans %}Create Statistics Reports{% endtrans %}</small></h1>
 </div>{% if message %}
-{{ messages_theme.draw_message(message, 'alert-form') }}
+{{ macros.draw_message(message, 'alert-form') }}
 {% endif %}
 {% block action %}{% endblock %}
 {% endblock %}
