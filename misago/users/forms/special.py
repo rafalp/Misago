@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from misago.forms import Form
-from misago.security import captcha
+import misago.captcha
 from misago.users.models import User
     
     
