@@ -109,22 +109,22 @@ ADMIN_ACTIONS=(
                          'id': 'list',
                          'name': _("Browse Bans"),
                          'help': _("Browse all existing bans"),
-                         'route': 'admin_users_bans'
+                         'route': 'admin_bans'
                          },
                         {
                          'id': 'new',
                          'name': _("Set Ban"),
                          'help': _("Set new Ban"),
-                         'route': 'admin_users_bans_new'
+                         'route': 'admin_bans_new'
                          },
                         ],
-               route='admin_users_bans',
-               urlpatterns=patterns('misago.banning.admin.views',
-                        url(r'^$', 'List', name='admin_users_bans'),
-                        url(r'^(?P<page>\d+)/$', 'List', name='admin_users_bans'),
-                        url(r'^new/$', 'New', name='admin_users_bans_new'),
-                        url(r'^edit/(?P<target>\d+)/$', 'Edit', name='admin_users_bans_edit'),
-                        url(r'^delete/(?P<target>\d+)/$', 'Delete', name='admin_users_bans_delete'),
+               route='admin_bans',
+               urlpatterns=patterns('misago.banning.views.admin',
+                        url(r'^$', 'List', name='admin_bans'),
+                        url(r'^(?P<page>\d+)/$', 'List', name='admin_bans'),
+                        url(r'^new/$', 'New', name='admin_bans_new'),
+                        url(r'^edit/(?P<target>\d+)/$', 'Edit', name='admin_bans_edit'),
+                        url(r'^delete/(?P<target>\d+)/$', 'Delete', name='admin_bans_delete'),
                     ),
                ),
    AdminAction(

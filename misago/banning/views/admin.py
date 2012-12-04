@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.utils.translation import ugettext as _
 from misago.admin import site
 from misago.admin.widgets import *
-from misago.banning.admin.forms import BanForm, SearchBansForm
+from misago.banning.forms import BanForm, SearchBansForm
 from misago.banning.models import Ban
 
 def reverse(route, target=None):
@@ -49,14 +49,14 @@ class List(ListWidget):
     
     def get_item_actions(self, request, item):
         return (
-                self.action('pencil', _("Edit Ban"), reverse('admin_users_bans_edit', item)),
-                self.action('remove', _("Lift Ban"), reverse('admin_users_bans_delete', item), post=True, prompt=_("Are you sure you want to lift this ban?")),
+                self.action('pencil', _("Edit Ban"), reverse('admin_bans_edit', item)),
+                self.action('remove', _("Lift Ban"), reverse('admin_bans_delete', item), post=True, prompt=_("Are you sure you want to lift this ban?")),
                 )
 
     def action_delete(self, request, items, checked):
         Ban.objects.filter(id__in=checked).delete()
         request.monitor['bans_version'] = int(request.monitor['bans_version']) + 1
-        return Message(_('Selected bans have been lifted successfully.'), 'success'), reverse('admin_users_bans')
+        return Message(_('Selected bans have been lifted successfully.'), 'success'), reverse('admin_bans')
     
 
 class New(FormWidget):
@@ -65,15 +65,15 @@ class New(FormWidget):
     """
     admin = site.get_action('bans')
     id = 'new'
-    fallback = 'admin_users_bans' 
+    fallback = 'admin_bans' 
     form = BanForm
     submit_button = _("Set Ban")
         
     def get_new_url(self, request, model):
-        return reverse('admin_users_bans')
+        return reverse('admin_bans')
     
     def get_edit_url(self, request, model):
-        return reverse('admin_users_bans_edit', model)
+        return reverse('admin_bans_edit', model)
     
     def submit_form(self, request, form, target):
         new_ban = Ban(
@@ -95,14 +95,14 @@ class Edit(FormWidget):
     admin = site.get_action('bans')
     id = 'edit'
     name = _("Edit Ban")
-    fallback = 'admin_users_bans'
+    fallback = 'admin_bans'
     form = BanForm
     target_name = 'ban'
     notfound_message = _('Requested Ban could not be found.')
     submit_fallback = True
     
     def get_url(self, request, model):
-        return reverse('admin_users_bans_edit', model)
+        return reverse('admin_bans_edit', model)
     
     def get_edit_url(self, request, model):
         return self.get_url(request, model)
@@ -133,7 +133,7 @@ class Delete(ButtonWidget):
     """
     admin = site.get_action('bans')
     id = 'delete'
-    fallback = 'admin_users_bans'
+    fallback = 'admin_bans'
     notfound_message = _('Requested Ban could not be found.')
     
     def action(self, request, target):
