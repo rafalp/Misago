@@ -10,9 +10,9 @@ ADMIN_ACTIONS=(
                name=_("Home"),
                help=_("Your forums right now"),
                icon='home',
-               route='admin_overview_home',
-               urlpatterns=patterns('misago.overview.admin.views',
-                        url(r'^$', 'overview_home', name='admin_overview_home'),
+               route='admin_home',
+               urlpatterns=patterns('misago.admin.views',
+                        url(r'^$', 'home', name='admin_home'),
                     ),
                ),
    AdminAction(
