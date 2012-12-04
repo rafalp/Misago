@@ -100,7 +100,7 @@ class UserManager(models.Manager):
     def get_by_email(self, email):
         return self.get(email_hash=hashlib.md5(email).hexdigest())
     
-    def filter_overview(self, start, end):
+    def filter_stats(self, start, end):
         return self.filter(join_date__gte=start).filter(join_date__lte=end)
     
         

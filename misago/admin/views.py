@@ -2,7 +2,7 @@ from django.template import RequestContext
 from misago.sessions.models import Session
 
 def home(request):
-    return request.theme.render_to_response('overview/home.html', {
+    return request.theme.render_to_response('home.html', {
         'users': request.monitor['users'],
         'users_inactive': request.monitor['users_inactive'],
         'threads': request.monitor['threads'],

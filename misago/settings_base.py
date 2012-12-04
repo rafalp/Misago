@@ -105,7 +105,7 @@ INSTALLED_APPS = (
     'misago.cookie_jar', # Cookies helper
     'misago.forums', # Forums, threads and posts
     'misago.messages', # Messages and Flashes
-    'misago.overview', # Admin system overview
+    'misago.stats', # Admin statistics generator
     'misago.security', # Security: CSRF, Firewall, etc ect
     'misago.sessions', # Sessions
     'misago.setup', # Installation/update tool

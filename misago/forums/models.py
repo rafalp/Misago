@@ -34,7 +34,7 @@ class Forum(MPTTModel):
 
 
 class ThreadManager(models.Manager):
-    def filter_overview(self, start, end):
+    def filter_stats(self, start, end):
         return self.filter(start__gte=start).filter(start__lte=end)
 
 
@@ -69,7 +69,7 @@ class Thread(models.Model):
 
 
 class PostManager(models.Manager):
-    def filter_overview(self, start, end):
+    def filter_stats(self, start, end):
         return self.filter(date__gte=start).filter(date__lte=end)
     
 
