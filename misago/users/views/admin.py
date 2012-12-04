@@ -4,8 +4,7 @@ from django.utils.translation import ugettext as _
 from misago.admin import site
 from misago.admin.widgets import *
 from misago.security import get_random_string
-from misago.utils import slugify
-from misago.users.admin.users.forms import UserForm, NewUserForm, SearchUsersForm
+from misago.users.forms.admin import UserForm, NewUserForm, SearchUsersForm
 from misago.users.models import User
 
 def reverse(route, target=None):

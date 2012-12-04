@@ -7,7 +7,7 @@ from misago.forms.layouts import FormLayout
 from misago.messages import Message
 from misago.security import get_random_string
 from misago.security.decorators import *
-from misago.users.forms import *
+from misago.users.forms.special import UserSendSpecialMailForm
 from misago.users.models import User
 from misago.views import redirect_message, error404
 

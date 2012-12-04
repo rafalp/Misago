@@ -1,7 +1,6 @@
-from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
 from django import forms
-from misago.forms import Form, YesNoSwitch
+from misago.forms import Form
 
 class PruningForm(Form):
     name = forms.CharField(max_length=255)

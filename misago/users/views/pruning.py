@@ -4,7 +4,7 @@ from django.utils.translation import ugettext as _
 from misago.admin import site
 from misago.admin.widgets import *
 from misago.forms import Form
-from misago.users.admin.pruning.forms import PruningForm
+from misago.users.forms.pruning import PruningForm
 from misago.users.models import Pruning
 
 def reverse(route, target=None):

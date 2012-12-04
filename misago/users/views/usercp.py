@@ -5,7 +5,7 @@ from django.utils.translation import ugettext as _
 from misago.forms import FormLayout
 from misago.messages import Message
 from misago.security.decorators import *
-from misago.users.forms import UserForumOptionsForm
+from misago.users.forms.usercp import UserForumOptionsForm
 
 
 @block_guest   

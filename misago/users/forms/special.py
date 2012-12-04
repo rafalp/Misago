@@ -1,0 +1,33 @@
+from django import forms
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext_lazy as _
+from misago.forms import Form
+from misago.security import captcha
+from misago.users.models import User
+    
+    
+class UserSendSpecialMailForm(Form):
+    email = forms.EmailField(max_length=255)
+    captcha_qa = captcha.QACaptchaField()
+    recaptcha = captcha.ReCaptchaField()
+    error_source = 'email'
+    
+    layout = [
+              (
+               None,
+               [('email', {'label': _("Your E-mail Address"), 'help_text': _("Enter email address you use to sign in to forums."), 'attrs': {'placeholder': _("Enter your e-mail address.")}})]
+               ),
+              (
+               None,
+               ['captcha_qa', 'recaptcha']
+               ),
+              ]
+    
+    def clean_email(self):
+        try:
+            email = self.cleaned_data['email'].lower()
+            email_hash = hashlib.md5(email).hexdigest()
+            self.found_user = User.objects.get(email_hash=email_hash)
+        except User.DoesNotExist:
+            raise ValidationError(_("There is no user with such e-mail address."))
+        return email

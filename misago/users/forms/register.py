@@ -1,4 +1,3 @@
-import hashlib
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
@@ -74,55 +73,3 @@ class UserRegisterForm(Form):
             new_user.is_password_valid(e)
         validate_password(self.cleaned_data['password'])
         return self.cleaned_data['password']
-    
-    
-class UserSendSpecialMailForm(Form):
-    email = forms.EmailField(max_length=255)
-    captcha_qa = captcha.QACaptchaField()
-    recaptcha = captcha.ReCaptchaField()
-    error_source = 'email'
-    
-    layout = [
-              (
-               None,
-               [('email', {'label': _("Your E-mail Address"), 'help_text': _("Enter email address you use to sign in to forums."), 'attrs': {'placeholder': _("Enter your e-mail address.")}})]
-               ),
-              (
-               None,
-               ['captcha_qa', 'recaptcha']
-               ),
-              ]
-    
-    def clean_email(self):
-        try:
-            email = self.cleaned_data['email'].lower()
-            email_hash = hashlib.md5(email).hexdigest()
-            self.found_user = User.objects.get(email_hash=email_hash)
-        except User.DoesNotExist:
-            raise ValidationError(_("There is no user with such e-mail address."))
-        return email
-    
-    
-class QuickFindUserForm(Form):
-    username = forms.CharField()
-    
-
-class UserForumOptionsForm(Form):
-    newsletters = forms.BooleanField(required=False)
-    timezone = forms.ChoiceField(choices=tzlist())
-    hide_activity = forms.ChoiceField(choices=(
-                                               (0, _("Show my presence to everyone")),
-                                               (1, _("Show my presence to people I follow")),
-                                               (2, _("Show my presence to nobody")),
-                                               ))
-    
-    layout = (
-              (
-               _("Forum Options"),
-               (
-                ('hide_activity', {'label': _("Your Visibility"), 'help_text': _("If you want to, you can limit other members ability to track your presence on forums.")}),
-                ('timezone', {'label': _("Your Current Timezone"), 'help_text': _("If dates and hours displayed by forums are inaccurate, you can fix it by adjusting timezone setting.")}),
-                ('newsletters', {'label': _("Newsletters"), 'help_text': _("On occasion board administrator may want to send e-mail message to multiple members."), 'inline': _("Yes, I want to subscribe forum newsletter")}),
-                )
-               ),
-              )

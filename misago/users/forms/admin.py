@@ -1,8 +1,8 @@
+from PIL import Image
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django import forms
-from PIL import Image
 from misago.ranks.models import Rank
 from misago.roles.models import Role
 from misago.users.models import User
