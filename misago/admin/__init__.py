@@ -146,6 +146,21 @@ class AdminSite(object):
         # Orphan actions that have no section yet
         late_actions = []
         
+        # Load default admin site
+        from misago.admin.layout.sections import ADMIN_SECTIONS
+        for section in ADMIN_SECTIONS:
+            self.sections.append(section)
+            self.sections_index[section.id] = section
+            
+            # Loop section actions
+            section_actions = import_module('misago.admin.layout.%s' % section.id)
+            for action in section_actions.ADMIN_ACTIONS:
+                self.actions_index[action.id] = action
+                if not action.after:
+                     action.after = self.sections_index[section.id].last
+                actions.append(action)
+                self.sections_index[section.id].last = action.after
+        
         # Iterate over installed applications
         for app_name in settings.INSTALLED_APPS:
             try:
