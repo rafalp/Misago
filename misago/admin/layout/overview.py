@@ -39,13 +39,13 @@ ADMIN_ACTIONS=(
                          'id': 'list',
                          'name': _("Browse Users"),
                          'help': _("Browse all registered user accounts"),
-                         'route': 'admin_overview_online'
+                         'route': 'admin_online'
                          },
                         ],
-               route='admin_overview_online', 
-               urlpatterns=patterns('misago.overview.admin.views',
-                        url(r'^$', 'OnlineList', name='admin_overview_online'),
-                        url(r'^(?P<page>\d+)/$', 'OnlineList', name='admin_overview_online'),
+               route='admin_online', 
+               urlpatterns=patterns('misago.sessions.views',
+                        url(r'^$', 'List', name='admin_online'),
+                        url(r'^(?P<page>\d+)/$', 'List', name='admin_online'),
                     ),
                ),
    AdminAction(
