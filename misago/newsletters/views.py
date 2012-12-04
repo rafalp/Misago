@@ -1,20 +1,18 @@
-import re
 from django.conf import settings
 from django.core.urlresolvers import reverse as django_reverse
-from django import forms
 from django.db.models import Q
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from misago.admin import site
 from misago.admin.widgets import *
-from misago.forms import Form
-from misago.users.admin.newsletters.forms import NewsletterForm, SearchNewslettersForm
-from misago.users.models import User, Newsletter
+from misago.newsletters.forms import NewsletterForm, SearchNewslettersForm
+from misago.newsletters.models import Newsletter
+from misago.users.models import User
 
 def reverse(route, target=None):
     if target:
-        if route == 'admin_users_newsletters_send':
+        if route == 'admin_newsletters_send':
           return django_reverse(route, kwargs={'target': target.pk, 'token': target.token})
         return django_reverse(route, kwargs={'target': target.pk})
     return django_reverse(route)
@@ -51,29 +49,29 @@ class List(ListWidget):
     
     def get_item_actions(self, request, item):
         return (
-                self.action('envelope', _("Send Newsletter"), reverse('admin_users_newsletters_send', item)),
-                self.action('pencil', _("Edit Newsletter"), reverse('admin_users_newsletters_edit', item)),
-                self.action('remove', _("Delete Newsletter"), reverse('admin_users_newsletters_delete', item), post=True, prompt=_("Are you sure you want to delete this newsletter?")),
+                self.action('envelope', _("Send Newsletter"), reverse('admin_newsletters_send', item)),
+                self.action('pencil', _("Edit Newsletter"), reverse('admin_newsletters_edit', item)),
+                self.action('remove', _("Delete Newsletter"), reverse('admin_newsletters_delete', item), post=True, prompt=_("Are you sure you want to delete this newsletter?")),
                 )
 
     def action_delete(self, request, items, checked):
         Newsletter.objects.filter(id__in=checked).delete()
-        return Message(_('Selected newsletters have been deleted successfully.'), 'success'), reverse('admin_users_newsletters')
+        return Message(_('Selected newsletters have been deleted successfully.'), 'success'), reverse('admin_newsletters')
 
 
 class New(FormWidget):
     admin = site.get_action('newsletters')
     id = 'new'
-    fallback = 'admin_users_newsletters' 
+    fallback = 'admin_newsletters' 
     form = NewsletterForm
     submit_button = _("Save Newsletter")
     tabbed = True
         
     def get_new_url(self, request, model):
-        return reverse('admin_users_newsletters')
+        return reverse('admin_newsletters')
     
     def get_edit_url(self, request, model):
-        return reverse('admin_users_newsletters_edit', model)
+        return reverse('admin_newsletters_edit', model)
     
     def submit_form(self, request, form, target):
         new_newsletter = Newsletter(
@@ -97,7 +95,7 @@ class Edit(FormWidget):
     admin = site.get_action('newsletters')
     id = 'edit'
     name = _("Edit Newsletter")
-    fallback = 'admin_users_newsletters'
+    fallback = 'admin_newsletters'
     form = NewsletterForm
     target_name = 'name'
     notfound_message = _('Requested Newsletter could not be found.')
@@ -105,7 +103,7 @@ class Edit(FormWidget):
     tabbed = True
     
     def get_url(self, request, model):
-        return reverse('admin_users_newsletters_edit', model)
+        return reverse('admin_newsletters_edit', model)
     
     def get_edit_url(self, request, model):
         return self.get_url(request, model)
@@ -139,7 +137,7 @@ class Edit(FormWidget):
 class Delete(ButtonWidget):
     admin = site.get_action('newsletters')
     id = 'delete'
-    fallback = 'admin_users_newsletters'
+    fallback = 'admin_newsletters'
     notfound_message = _('Requested newsletter could not be found.')
     
     def action(self, request, target):
@@ -162,7 +160,7 @@ def send(request, target, token):
         recipients_total = recipients_total.count()
         if recipients_total < 1:
             request.messages.set_flash(Message(_('No recipients for newsletter "%(newsletter)s" could be found.') % {'newsletter': newsletter.name}), 'error', 'newsletters')
-            return redirect(reverse('admin_users_newsletters'))
+            return redirect(reverse('admin_newsletters'))
        
         for user in recipients.all()[newsletter.progress:(newsletter.progress + newsletter.step_size)]:
             tokens = {
@@ -186,7 +184,7 @@ def send(request, target, token):
             newsletter.progress = 0
             newsletter.save(force_update=True)
             request.messages.set_flash(Message(_('Newsletter "%(newsletter)s" has been sent.') % {'newsletter': newsletter.name}), 'success', 'newsletters')
-            return redirect(reverse('admin_users_newsletters'))
+            return redirect(reverse('admin_newsletters'))
         
         # Render Progress
         response = request.theme.render_to_response('processing.html', {
@@ -194,10 +192,10 @@ def send(request, target, token):
                 'target_name': newsletter.name,
                 'message': _('Sent to %(progress)s from %(total)s users') % {'progress': newsletter.progress, 'total': recipients_total},
                 'progress': newsletter.progress * 100 / recipients_total,
-                'cancel_url': reverse('admin_users_newsletters'),
+                'cancel_url': reverse('admin_newsletters'),
             }, context_instance=RequestContext(request));
-        response['refresh'] = '2;url=%s' % reverse('admin_users_newsletters_send', newsletter)
+        response['refresh'] = '2;url=%s' % reverse('admin_newsletters_send', newsletter)
         return response
     except Newsletter.DoesNotExist:
         request.messages.set_flash(Message(_('Requested Newsletter could not be found.')), 'error', 'newsletters')
-        return redirect(reverse('admin_users_newsletters'))
+        return redirect(reverse('admin_newsletters'))

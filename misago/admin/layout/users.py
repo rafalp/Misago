@@ -3,7 +3,8 @@ from django.utils.translation import ugettext_lazy as _
 from misago.admin import AdminAction
 from misago.acl.models import Role
 from misago.banning.models import Ban
-from misago.users.models import User, Rank, Newsletter, Pruning
+from misago.newsletters.models import Newsletter
+from misago.users.models import User, Rank, Pruning
 
 ADMIN_ACTIONS=(
    AdminAction(
@@ -167,23 +168,23 @@ ADMIN_ACTIONS=(
                          'id': 'list',
                          'name': _("Browse Newsletters"),
                          'help': _("Browse all existing Newsletters"),
-                         'route': 'admin_users_newsletters'
+                         'route': 'admin_newsletters'
                          },
                         {
                          'id': 'new',
                          'name': _("New Newsletter"),
                          'help': _("Create new Newsletter"),
-                         'route': 'admin_users_newsletters_new'
+                         'route': 'admin_newsletters_new'
                          },
                         ],
-               route='admin_users_newsletters',
-               urlpatterns=patterns('misago.users.admin.newsletters.views',
-                        url(r'^$', 'List', name='admin_users_newsletters'),
-                        url(r'^(?P<page>\d+)/$', 'List', name='admin_users_newsletters'),
-                        url(r'^new/$', 'New', name='admin_users_newsletters_new'),
-                        url(r'^send/(?P<target>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'send', name='admin_users_newsletters_send'),
-                        url(r'^edit/(?P<target>\d+)/$', 'Edit', name='admin_users_newsletters_edit'),
-                        url(r'^delete/(?P<target>\d+)/$', 'Delete', name='admin_users_newsletters_delete'),
+               route='admin_newsletters',
+               urlpatterns=patterns('misago.newsletters.views',
+                        url(r'^$', 'List', name='admin_newsletters'),
+                        url(r'^(?P<page>\d+)/$', 'List', name='admin_newsletters'),
+                        url(r'^new/$', 'New', name='admin_newsletters_new'),
+                        url(r'^send/(?P<target>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'send', name='admin_newsletters_send'),
+                        url(r'^edit/(?P<target>\d+)/$', 'Edit', name='admin_newsletters_edit'),
+                        url(r'^delete/(?P<target>\d+)/$', 'Delete', name='admin_newsletters_delete'),
                     ),
                ),
 )
