@@ -6,7 +6,7 @@ settings_fixtures = (
     # Register and Sign-In Settings
     ('brute-force', {
         'name': _("Brute-force Countermeasures"),
-        'description': _("Those settings allow you to increase security of your members accounts."),
+        'description': _("Those settings allow you to protect your forum from brute-force attacks."),
         'settings': (
             ('attempts_limit', {
                 'value':        3,

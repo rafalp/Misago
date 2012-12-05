@@ -5,7 +5,7 @@ from misago.utils import get_msgid
 settings_fixtures = (
     # Register and Sign-In Settings
     ('accounts', {
-        'name': _("Member Accounts Settings"),
+        'name': _("Users Accounts Settings"),
         'description': _("Those settings allow you to increase security of your members accounts."),
         'settings': (
             ('account_activation', {
