@@ -2,6 +2,7 @@ from datetime import date, datetime, timedelta
 import math
 import urllib
 from coffin.template import Library
+from django.conf import settings
 from django.utils.dateformat import format, time_format
 from django.utils.timezone import is_aware, utc
 from django.utils.translation import pgettext, ungettext, ugettext as _
@@ -21,8 +22,10 @@ def query_string(**kwargs):
 
 
 @register.filter(name='markdown')
-def parse_markdown(value, format="html5"):
+def parse_markdown(value, format=None):
     import markdown
+    if not format:
+        format = settings.OUTPUT_FORMAT
     return markdown.markdown(value, safe_mode='escape', output_format=format)
 
 

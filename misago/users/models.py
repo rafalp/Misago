@@ -285,7 +285,7 @@ class User(models.Model):
         self.signature_preparsed = ''
         if self.signature:
             import markdown
-            self.signature_preparsed = markdown.markdown(value, safe_mode='escape', output_format=format)
+            self.signature_preparsed = markdown.markdown(value, safe_mode='escape', output_format=settings.OUTPUT_FORMAT)
         
     def is_username_valid(self, e):
         try:

@@ -7,6 +7,9 @@ BOARD_ADDRESS = 'http://127.0.0.1:8000/'
 # Leave this setting empty
 ADMIN_PATH = ''
 
+# Default format of Misago generated HTML
+OUTPUT_FORMAT = 'html5'
+
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
