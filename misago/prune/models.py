@@ -1,7 +1,9 @@
 from datetime import timedelta
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 from misago.users.models import User
 
 class Policy(models.Model):
@@ -14,6 +16,10 @@ class Policy(models.Model):
     registered = models.PositiveIntegerField(default=0)
     last_visit = models.PositiveIntegerField(default=0)
     
+    def clean(self):
+        if not (self.email and self.posts and self.registered and self.last_visit):
+            raise ValidationError(_("Pruning policy must have at least one pruning criteria set to be valid."))
+        
     def get_model(self):
         model = User.objects
         

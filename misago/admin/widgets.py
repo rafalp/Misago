@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
@@ -451,26 +452,29 @@ class FormWidget(BaseWidget):
         if request.method == 'POST':
             form = self.get_form_instance(FormType, request, model, self.get_initial_data(request, model), True)
             if form.is_valid():
-                model, message = self.submit_form(request, form, model)
-                if message.type != 'error':
-                    request.messages.set_flash(message, message.type, self.admin.id)
-                    # Redirect back to right page
-                    try:
-                        if 'save_new' in request.POST and self.get_new_url:
-                            return redirect(self.get_new_url(request, model))
-                    except AttributeError:
-                        pass
-                    try:
-                        if 'save_edit' in request.POST and self.get_edit_url:
-                            return redirect(self.get_edit_url(request, model))
-                    except AttributeError:
-                        pass
-                    try:
-                        if self.get_submit_url:
-                            return redirect(self.get_submit_url(request, model))
-                    except AttributeError:
-                        pass
-                    return redirect(self.get_fallback_url(request))
+                try:
+                    model, message = self.submit_form(request, form, model)
+                    if message.type != 'error':
+                        request.messages.set_flash(message, message.type, self.admin.id)
+                        # Redirect back to right page
+                        try:
+                            if 'save_new' in request.POST and self.get_new_url:
+                                return redirect(self.get_new_url(request, model))
+                        except AttributeError:
+                            pass
+                        try:
+                            if 'save_edit' in request.POST and self.get_edit_url:
+                                return redirect(self.get_edit_url(request, model))
+                        except AttributeError:
+                            pass
+                        try:
+                            if self.get_submit_url:
+                                return redirect(self.get_submit_url(request, model))
+                        except AttributeError:
+                            pass
+                        return redirect(self.get_fallback_url(request))
+                except ValidationError as e:
+                    message = Message(e.messages[0], 'error')
             else:
                 message = Message(form.non_field_errors()[0], 'error')
         else:

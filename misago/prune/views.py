@@ -66,6 +66,7 @@ class New(FormWidget):
                       registered = form.cleaned_data['registered'],
                       last_visit = form.cleaned_data['last_visit'],
                      )
+        new_policy.clean()
         new_policy.save(force_insert=True)
         
         return new_policy, Message(_('New Pruning Policy has been created.'), 'success')
@@ -109,6 +110,7 @@ class Edit(FormWidget):
         target.posts = form.cleaned_data['posts']
         target.registered = form.cleaned_data['registered']
         target.last_visit = form.cleaned_data['last_visit']
+        target.clean()
         target.save(force_update=True)
         
         return target, Message(_('Changes in policy "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
