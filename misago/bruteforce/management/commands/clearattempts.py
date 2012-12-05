@@ -1,8 +1,6 @@
 from datetime import timedelta
-from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
-from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
-from misago.security.models import SignInAttempt
+from misago.bruteforce.models import SignInAttempt
 
 class Command(BaseCommand):
     """

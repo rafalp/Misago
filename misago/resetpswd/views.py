@@ -3,13 +3,14 @@ from django.utils.translation import ugettext as _
 from misago.banning.models import check_ban
 from misago.banning.decorators import block_banned
 from misago.banning.views import error_banned
+from misago.bruteforce.decorators import block_jammed
 from misago.forms.layouts import FormLayout
 from misago.messages import Message
-from misago.security import get_random_string
-from misago.security.decorators import *
+from misago.auth.decorators import block_authenticated
 from misago.resetpswd.forms import UserResetPasswordForm
 from misago.users.models import User
 from misago.views import redirect_message, error404
+from misago.utils import get_random_string
 
 
 @block_banned

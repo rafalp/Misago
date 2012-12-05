@@ -55,7 +55,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'misago.messages.context_processors.messages',
     'misago.monitor.context_processors.monitor',
     'misago.settings.context_processors.settings',
-    'misago.security.context_processors.security',
+    'misago.bruteforce.context_processors.is_jammed',
     'misago.csrf.context_processors.csrf',
     'misago.users.context_processors.user',
 )
@@ -72,11 +72,11 @@ MIDDLEWARE_CLASSES = (
     'misago.settings.middleware.SettingsMiddleware',
     'misago.monitor.middleware.MonitorMiddleware',
     'misago.themes.middleware.ThemeMiddleware',
-    'misago.security.middleware.FirewallMiddleware',
+    'misago.firewalls.middleware.FirewallMiddleware',
     'misago.crawlers.middleware.DetectCrawlerMiddleware',
     'misago.sessions.middleware.SessionMiddleware',
-    'misago.security.middleware.JamMiddleware',
-    'misago.security.middleware.CSRFMiddleware',
+    'misago.bruteforce.middleware.JamMiddleware',
+    'misago.csrf.middleware.CSRFMiddleware',
     'misago.banning.middleware.BanningMiddleware',
     'misago.messages.middleware.MessagesMiddleware',
     'misago.users.middleware.UserMiddleware',
@@ -107,8 +107,9 @@ INSTALLED_APPS = (
     'misago.messages', # Messages and Flashes
     'misago.newsletters', # Send newsletters to members from Admin
     'misago.stats', # Admin statistics generator
-    'misago.security', # Security: CSRF, Firewall, etc ect
     'misago.sessions', # Sessions
+    'misago.auth', # User authentication
+    'misago.bruteforce', # Brute-Force protection
     'misago.csrf', # Cross Site Request Forgery protection
     'misago.setup', # Installation/update tool
     'misago.template', # Templates extensions

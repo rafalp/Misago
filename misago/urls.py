@@ -5,7 +5,7 @@ from misago.admin import ADMIN_PATH, site
 
 # Include frontend patterns
 urlpatterns = patterns('',
-    (r'^', include('misago.security.urls')),
+    (r'^', include('misago.auth.urls')),
     (r'^users/', include('misago.profiles.urls')),
     (r'^usercp/', include('misago.usercp.urls')),
     (r'^register/', include('misago.register.urls')),

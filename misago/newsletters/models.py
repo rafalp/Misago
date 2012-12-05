@@ -1,5 +1,5 @@
 from django.db import models
-from misago.security import get_random_string
+from misago.utils import get_random_string
 
 class Newsletter(models.Model):
     name = models.CharField(max_length=255)

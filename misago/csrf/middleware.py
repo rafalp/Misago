@@ -1,5 +1,5 @@
-from misago.security import get_random_string
 from misago.csrf import CSRFProtection
+from misago.utils import get_random_string
 
 class CSRFMiddleware(object):
     def process_request(self, request):

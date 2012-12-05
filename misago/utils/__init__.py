@@ -32,6 +32,15 @@ def get_msgid(gettext):
 
 
 """
+Random string
+"""
+from django.utils import crypto
+    
+def get_random_string(length):
+    return crypto.get_random_string(length, "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM")
+
+
+"""
 Date formats
 """               
 from django.utils.formats import get_format

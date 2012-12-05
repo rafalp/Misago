@@ -12,10 +12,9 @@ from django.template import RequestContext
 from django.utils import timezone as tz_util
 from django.utils.translation import ugettext_lazy as _
 from misago.monitor.monitor import Monitor
-from misago.security import get_random_string
 from misago.settings.settings import Settings as DBSettings
 from misago.users.validators import validate_username, validate_password, validate_email
-from misago.utils import slugify
+from misago.utils import get_random_string, slugify
 
 class UserManager(models.Manager):
     """

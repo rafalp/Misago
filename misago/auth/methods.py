@@ -3,7 +3,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.banning.models import check_ban
-from misago.security.models import SignInAttempt
+from misago.bruteforce.models import SignInAttempt
 from misago.sessions.models import Token
 from misago.users.models import User
     
