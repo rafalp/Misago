@@ -1,6 +1,4 @@
 from django.conf import settings
-from misago.security import get_random_string
-from misago.security.csrf import CSRFProtection
 from misago.security.firewalls import *
 from misago.security.models import JamCache
 from misago.themes.theme import Theme
@@ -30,14 +28,3 @@ class JamMiddleware(object):
             request.session['jam'] = request.jam
         if not request.firewall.admin:
             request.jam.check_for_updates(request)
-
-class CSRFMiddleware(object):
-    def process_request(self, request):
-        if request.user.is_crawler():
-            return None
-        if 'csrf_token' in request.session:
-            csrf_token = request.session['csrf_token']
-        else:
-            csrf_token = get_random_string(16);
-            request.session['csrf_token'] = csrf_token
-        request.csrf = CSRFProtection(csrf_token)

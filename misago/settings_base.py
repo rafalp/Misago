@@ -56,6 +56,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'misago.monitor.context_processors.monitor',
     'misago.settings.context_processors.settings',
     'misago.security.context_processors.security',
+    'misago.csrf.context_processors.csrf',
     'misago.users.context_processors.user',
 )
 
@@ -108,6 +109,7 @@ INSTALLED_APPS = (
     'misago.stats', # Admin statistics generator
     'misago.security', # Security: CSRF, Firewall, etc ect
     'misago.sessions', # Sessions
+    'misago.csrf', # Cross Site Request Forgery protection
     'misago.setup', # Installation/update tool
     'misago.template', # Templates extensions
     'misago.themes', # Themes

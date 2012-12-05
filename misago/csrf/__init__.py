@@ -1,5 +1,3 @@
-from django import forms
-
 class CSRFProtection(object):
     def __init__(self, csrf_token):
         self.csrf_id = '_csrf_token'
