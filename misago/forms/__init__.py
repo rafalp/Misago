@@ -14,6 +14,7 @@ class Form(forms.Form):
     error_source = None
     def __init__(self, data=None, request=None, *args, **kwargs):
         self.request = request
+        
         # Kill captcha fields
         try:
             if self.request.settings['bots_registration'] != 'recaptcha' or self.request.session.get('captcha_passed'):
@@ -29,6 +30,7 @@ class Form(forms.Form):
                 self.base_fields['captcha_qa'].help_text = self.request.session['qa_test_help']
         except KeyError:
             pass
+        
         # Extract request from first argument
         if data != None:
             # Clean bad data
@@ -43,7 +45,7 @@ class Form(forms.Form):
         """
         for key, field in self.base_fields.iteritems():
             try:
-                if field.__class__.__name__ == 'ModelChoiceField':
+                if field.__class__.__name__ == 'ModelChoiceField' and data[key]:
                     data[key] = int(data[key])
                 elif field.__class__.__name__ == 'ModelMultipleChoiceField':
                     data.setlist(key, [int(x) for x in data.getlist(key, [])])
