@@ -261,7 +261,15 @@ class User(models.Model):
         if self.avatar_type == 'upload':
             # DELETE OUR AVATAR!!!
             pass
-        
+    
+    def delete_content(self):
+        if self.pk:
+            for model_obj in models.get_models():
+                try:
+                    model_obj.objects.delete_user_content(self)
+                except AttributeError:
+                    pass
+    
     def delete(self, *args, **kwargs):
         self.delete_avatar()
         super(User, self).delete(*args, **kwargs)
@@ -269,6 +277,13 @@ class User(models.Model):
     def set_username(self, username):
         self.username = username.strip()
         self.username_slug = slugify(username)
+        
+        if self.pk:
+            for model_obj in models.get_models():
+                try:
+                    model_obj.objects.update_username(self)
+                except AttributeError:
+                    pass
      
     def set_signature(self, signature):
         self.signature = signature.strip()
