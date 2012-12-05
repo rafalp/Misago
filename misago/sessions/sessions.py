@@ -5,7 +5,7 @@ from django.db.models.loading import cache as model_cache
 from django.utils import timezone
 from django.utils.crypto import salted_hmac
 from django.utils.encoding import force_unicode
-from misago.auth.methods import auth_remember, AuthException
+from misago.authn.methods import auth_remember, AuthException
 from misago.sessions.models import *
 from misago.users.models import Guest, User
 from misago.utils import get_random_string

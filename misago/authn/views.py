@@ -8,10 +8,10 @@ from misago.csrf.decorators import check_csrf
 from misago.banning.decorators import block_banned
 from misago.forms.layouts import FormLayout
 from misago.messages import Message
-from misago.auth.methods import auth
-from misago.auth.decorators import block_authenticated, block_guest
-from misago.auth.forms import SignInForm
-from misago.auth.methods import AuthException, auth_admin, auth_forum, sign_user_in
+from misago.authn.methods import auth
+from misago.authn.decorators import block_authenticated, block_guest
+from misago.authn.forms import SignInForm
+from misago.authn.methods import AuthException, auth_admin, auth_forum, sign_user_in
 from misago.bruteforce.decorators import block_jammed
 from misago.bruteforce.models import SignInAttempt
 from misago.sessions.models import Token

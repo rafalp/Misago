@@ -7,8 +7,8 @@ from misago.banning.decorators import block_banned
 from misago.bruteforce.decorators import block_jammed
 from misago.forms.layouts import FormLayout
 from misago.messages import Message
-from misago.auth.decorators import block_authenticated
-from misago.auth.methods import sign_user_in
+from misago.authn.decorators import block_authenticated
+from misago.authn.methods import sign_user_in
 from misago.register.forms import UserRegisterForm
 from misago.users.models import User
 from misago.views import redirect_message

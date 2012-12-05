@@ -4,7 +4,7 @@ from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from misago.forms import FormLayout
 from misago.messages import Message
-from misago.auth.decorators import block_guest
+from misago.authn.decorators import block_guest
 from misago.usercp.forms import UserForumOptionsForm
 
 

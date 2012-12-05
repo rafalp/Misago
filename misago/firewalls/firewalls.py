@@ -1,7 +1,7 @@
 from django.conf import settings
 from misago.admin import ADMIN_PATH
 from misago.views import error403, error404
-from misago.auth.views import signin
+from misago.authn.views import signin
 
 class FirewallForum(object):
     """

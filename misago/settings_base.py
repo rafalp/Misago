@@ -108,7 +108,7 @@ INSTALLED_APPS = (
     'misago.newsletters', # Send newsletters to members from Admin
     'misago.stats', # Admin statistics generator
     'misago.sessions', # Sessions
-    'misago.auth', # User authentication
+    'misago.authn', # User authentication
     'misago.bruteforce', # Brute-Force protection
     'misago.csrf', # Cross Site Request Forgery protection
     'misago.setup', # Installation/update tool
