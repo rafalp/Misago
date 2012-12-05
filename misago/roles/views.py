@@ -57,7 +57,7 @@ class New(FormWidget):
     submit_button = _("Save Role")
         
     def get_new_url(self, request, model):
-        return reverse('admin_roles')
+        return reverse('admin_roles_new')
     
     def get_edit_url(self, request, model):
         return reverse('admin_roles_edit', model)

@@ -19,6 +19,17 @@ class Messages(object):
                 del self.messages[index]
                 return message
         return None
+        
+    def get_messages(self, owner=None):
+        orphans = []
+        messages = []
+        for message in self.messages:
+            if message.owner == owner:
+                messages.append(message)
+            else:
+                orphans.append(message)
+        self.messages = orphans
+        return messages
 
 
 class Message(object):

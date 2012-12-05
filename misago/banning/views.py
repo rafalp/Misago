@@ -90,7 +90,7 @@ class New(FormWidget):
     submit_button = _("Set Ban")
         
     def get_new_url(self, request, model):
-        return reverse('admin_bans')
+        return reverse('admin_bans_new')
     
     def get_edit_url(self, request, model):
         return reverse('admin_bans_edit', model)

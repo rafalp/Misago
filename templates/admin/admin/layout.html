@@ -21,6 +21,9 @@
 {% if admin.actions[0].id != action.id -%}
 <h2>{% if target %}{{ target }} <small>{{ action.name }}</small>{% else %}{{ action.name }}{% if action.help %} <small>{{ action.help }}</small>{% endif %}{% endif %}</h2>
 {% endif %}
+{% for message in messages_log %}
+{{ draw_message(message, 'alert-form') }}
+{% endfor %}
 {% if message %}
 {{ draw_message(message, 'alert-form') }}
 {% endif %}

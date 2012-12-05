@@ -50,6 +50,7 @@ class BaseWidget(object):
     def get_template(self, template):
         return ('%s/%ss/%s.html' % (str(self.admin.model.__module__).split('.')[1], str(self.admin.model.__name__).lower(), template),
                 '%s/%s.html' % (str(self.admin.model.__module__).split('.')[1], template),
+                '%ss/%s.html' % (str(self.admin.model.__name__).lower(), template),
                 'admin/%s.html' % template)
             
     def get_fallback_url(self, request):
@@ -295,7 +296,7 @@ class ListWidget(BaseWidget):
             pass
         
         # Default message
-        message = request.messages.get_message(self.admin.id)
+        message = None
         
         # See if we should make and handle search form
         search_form = None
@@ -381,6 +382,7 @@ class ListWidget(BaseWidget):
                                                  'action': self,
                                                  'request': request,
                                                  'url': self.get_url(),
+                                                 'messages_log': request.messages.get_messages(self.admin.id),
                                                  'message': message,
                                                  'sorting': self.sortables,
                                                  'sorting_method': sorting_method,
@@ -432,9 +434,6 @@ class FormWidget(BaseWidget):
         pass
     
     def __call__(self, request, target=None, slug=None):
-        # Default message
-        message = request.messages.get_message(self.admin.id)
-
         # Fetch target?
         model = None
         if target:
@@ -448,6 +447,7 @@ class FormWidget(BaseWidget):
         FormType = self.get_form(request, target)
         
         #Submit form
+        message = None
         if request.method == 'POST':
             form = self.get_form_instance(FormType, request, model, self.get_initial_data(request, model), True)
             if form.is_valid():
@@ -484,6 +484,7 @@ class FormWidget(BaseWidget):
                                                  'request': request,
                                                  'url': self.get_url(request, model),
                                                  'fallback': self.get_fallback_url(request),
+                                                 'messages_log': request.messages.get_messages(self.admin.id),
                                                  'message': message,
                                                  'tabbed': self.tabbed,
                                                  'target': self.get_target_name(original_model),

@@ -68,7 +68,7 @@ class New(FormWidget):
     tabbed = True
         
     def get_new_url(self, request, model):
-        return reverse('admin_newsletters')
+        return reverse('admin_newsletters_new')
     
     def get_edit_url(self, request, model):
         return reverse('admin_newsletters_edit', model)

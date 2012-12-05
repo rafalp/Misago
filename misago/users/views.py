@@ -194,8 +194,11 @@ class List(ListWidget):
                     return Message(_('You cannot delete yourself.'), 'error'), reverse('admin_users')
                 if user.is_protected():
                     return Message(_('You cannot delete protected members.'), 'error'), reverse('admin_users')
+        
+        for user in items:
+            if unicode(user.pk) in checked:
+                user.delete()
                 
-        User.objects.filter(id__in=checked).delete()
         User.objects.resync_monitor(request.monitor)
         return Message(_('Selected users have been deleted successfully.'), 'success'), reverse('admin_users')
     
@@ -208,7 +211,7 @@ class New(FormWidget):
     submit_button = _("Save User")
         
     def get_new_url(self, request, model):
-        return reverse('admin_users')
+        return reverse('admin_users_new')
     
     def get_edit_url(self, request, model):
         return reverse('admin_users_edit', model)

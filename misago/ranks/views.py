@@ -73,7 +73,7 @@ class New(FormWidget):
     submit_button = _("Save Rank")
         
     def get_new_url(self, request, model):
-        return reverse('admin_ranks')
+        return reverse('admin_ranks_new')
     
     def get_edit_url(self, request, model):
         return reverse('admin_ranks_edit', model)
