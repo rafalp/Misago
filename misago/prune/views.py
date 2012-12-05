@@ -1,11 +1,12 @@
 from django.core.urlresolvers import reverse as django_reverse
 from django import forms
-from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext, ugettext as _
 from misago.admin import site
 from misago.admin.widgets import *
 from misago.forms import Form
 from misago.prune.forms import PolicyForm
 from misago.prune.models import Policy
+from misago.users.models import User
 
 def reverse(route, target=None):
     if target:
@@ -31,8 +32,9 @@ class List(ListWidget):
     
     def get_item_actions(self, request, item):
         return (
-                self.action('pencil', _("Edit Pruning Policy"), reverse('admin_pruning_edit', item)),
-                self.action('remove', _("Delete Pruning Policy"), reverse('admin_pruning_delete', item), post=True, prompt=_("Are you sure you want to delete this rank?")),
+                self.action('filter', _("Apply Policy"), reverse('admin_prune_users_apply', item)),
+                self.action('pencil', _("Edit Policy"), reverse('admin_prune_users_edit', item)),
+                self.action('remove', _("Delete Policy"), reverse('admin_prune_users_delete', item), post=True, prompt=_("Are you sure you want to delete this policy?")),
                 )
 
     def action_delete(self, request, items, checked):
@@ -51,10 +53,10 @@ class New(FormWidget):
     submit_button = _("Save Policy")
         
     def get_new_url(self, request, model):
-        return reverse('admin_prune_users')
+        return reverse('admin_prune_users_new')
     
     def get_edit_url(self, request, model):
-        return reverse('admin_pruning_edit', model)
+        return reverse('admin_prune_users_edit', model)
     
     def submit_form(self, request, form, target):
         new_policy = Policy(
@@ -87,7 +89,7 @@ class Edit(FormWidget):
     submit_fallback = True
     
     def get_url(self, request, model):
-        return reverse('admin_pruning_edit', model)
+        return reverse('admin_prune_users_edit', model)
     
     def get_edit_url(self, request, model):
         return self.get_url(request, model)
@@ -131,3 +133,77 @@ class Delete(ButtonWidget):
         
         target.delete()
         return Message(_('Pruning policy "%(name)s" has been deleted.') % {'name': target.name}, 'success'), False
+    
+
+class Apply(FormWidget):
+    admin = site.get_action('prune_users')
+    id = 'apply'
+    name = _("Apply Pruning Policy")
+    fallback = 'admin_prune_users'
+    form = PolicyForm
+    target_name = 'name'
+    notfound_message = _('Requested pruning policy could not be found.')
+    submit_fallback = True
+    template = 'apply'
+    
+    def get_url(self, request, model):
+        return reverse('admin_prune_users_apply', model)
+    
+    def __call__(self, request, target=None, slug=None):
+
+        # Fetch target
+        model = None
+        if target:
+            model = self.get_and_validate_target(request, target)
+            self.original_name = self.get_target_name(model)
+            if not model:
+                return redirect(self.get_fallback_url(request))
+        original_model = model
+                
+        # Set filter
+        users = model.get_model() 
+        total_users = users
+        total_users = total_users.count()
+        
+        if not total_users:
+            request.messages.set_flash(Message(_('Policy "%(name)s" does not apply to any users.') % {'name': model.name}), 'error', self.admin.id)
+            return redirect(reverse('admin_prune_users'))
+        
+        message = None
+        if request.method == 'POST':
+            deleted = 0
+            if request.csrf.request_secure(request):
+                for user in users.iterator():
+                    if user.is_protected():
+                        request.messages.set_flash(Message(_('User "%(name)s" is protected and was not deleted.') % {'name': user.username}), 'info', self.admin.id)
+                    else:
+                        user.delete()
+                        deleted += 1
+                if deleted:
+                    request.messages.set_flash(Message(ungettext(
+                                                                 'One user has been deleted.',
+                                                                 '%(deleted)d users have been deleted.',
+                                                                 deleted
+                                                                 ) % {'deleted': deleted}), 'success', self.admin.id)
+                    User.objects.resync_monitor(request.monitor)
+                else:
+                    request.messages.set_flash(Message(_("No users have been deleted.")), 'info', self.admin.id)
+                return redirect(reverse('admin_prune_users'))
+            else:
+                message = Message(_("Request authorization is invalid. Please resubmit your form."), 'error')
+        
+        return request.theme.render_to_response(self.get_template(self.template),
+                                                {
+                                                 'admin': self.admin,
+                                                 'action': self,
+                                                 'request': request,
+                                                 'url': self.get_url(request, model),
+                                                 'fallback': self.get_fallback_url(request),
+                                                 'messages': request.messages.get_messages(self.admin.id),
+                                                 'message': message,
+                                                 'tabbed': self.tabbed,
+                                                 'total_users': total_users,
+                                                 'target': self.get_target_name(original_model),
+                                                 'target_model': original_model,
+                                                },
+                                                context_instance=RequestContext(request));

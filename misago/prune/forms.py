@@ -13,7 +13,7 @@ class PolicyForm(Form):
               (
                _("Basic Policy Options"),
                (
-                ('name', {'label': _("Policy Name"), 'help_text': _("Short, describtive name of this pruning policy.")}),
+                ('name', {'label': _("Policy Name"), 'help_text': _("Short, descriptive name of this pruning policy.")}),
                )
               ),
               (

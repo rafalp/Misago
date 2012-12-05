@@ -156,6 +156,7 @@ ADMIN_ACTIONS=(
                         url(r'^new/$', 'New', name='admin_prune_users_new'),
                         url(r'^edit/(?P<target>\d+)/$', 'Edit', name='admin_prune_users_edit'),
                         url(r'^delete/(?P<target>\d+)/$', 'Delete', name='admin_prune_users_delete'),
+                        url(r'^apply/(?P<target>\d+)/$', 'Apply', name='admin_prune_users_apply'),
                     ),
                ),
    AdminAction(
