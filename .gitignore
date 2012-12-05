@@ -182,6 +182,7 @@ south/**
 static/avatars/protoss
 static/avatars/terran
 static/avatars/zerg
+static/avatars/custom.gif
 static/strawman/**
 templates/strawman/**
 unidecode/**
