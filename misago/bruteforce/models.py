@@ -20,7 +20,7 @@ class SignInAttemptsManager(models.Manager):
         
     def is_jammed(self, settings, ip):
         # Limit is off, dont jam IPs?
-        if settings['login_attempts_limit'] == 0:
+        if settings['attempts_limit'] == 0:
             return False
         # Check jam
         if settings['jams_lifetime'] > 0:
@@ -30,7 +30,7 @@ class SignInAttemptsManager(models.Manager):
                                                     )
         else:
             attempts = SignInAttempt.objects.filter(ip=ip)
-        return attempts.count() > settings['login_attempts_limit']
+        return attempts.count() > settings['attempts_limit']
     
     
 class SignInAttempt(models.Model):

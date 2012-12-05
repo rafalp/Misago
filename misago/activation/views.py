@@ -4,7 +4,7 @@ from misago.banning.models import check_ban
 from misago.banning.decorators import block_banned
 from misago.banning.views import error_banned
 from misago.forms.layouts import FormLayout
-from misago.authn.means import sign_user_in
+from misago.authn.methods import sign_user_in
 from misago.authn.decorators import block_authenticated
 from misago.activation.forms import UserSendActivationMailForm
 from misago.bruteforce.decorators import block_jammed
