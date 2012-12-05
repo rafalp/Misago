@@ -8,7 +8,7 @@ You can find development preview of Misago at [project homepage](http://misago-p
 The Tao AKA Mission Statement
 -----------------------------
 
-I want software focused on enabling smooth flow of information between forum members. I dont want to build "Facebook CMS" contain lots of extra functionality like user galleries, blogs or user walls. Posting and replying in threads is only focus of Misago with additional features implemented to improve forum users and staff experience.
+I want software focused on enabling smooth flow of information between forum members. I dont want to build "Facebook CMS" that contains lots of extra functionality like user galleries, blogs or user walls. Posting and replying in threads is only focus of Misago with additional features implemented to improve forum users and staff experience.
 
 Secondary goal is making Misago a viable foundation for building and maintaining long-term discussion forums for administrators. Misago trades "casual admin" friendlyness for advanced features aimed for use by web developers looking for tool to build forums for their site.
 
