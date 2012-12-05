@@ -109,12 +109,17 @@ INSTALLED_APPS = (
     'misago.security', # Security: CSRF, Firewall, etc ect
     'misago.sessions', # Sessions
     'misago.setup', # Installation/update tool
-    'misago.stopwatch', # Simple stopwatch to measure time spent on request
     'misago.template', # Templates extensions
     'misago.themes', # Themes
-    'misago.users', # Users
+    'misago.users', # Users foundation
+    'misago.prune', # Prune Users
     'misago.ranks', # User Ranks
     'misago.roles', # User Roles
+    'misago.usercp', # User Control Panel
+    'misago.profiles', # User Profiles
+    'misago.register', # Register New Users
+    'misago.activation', # Activate inactive User or resend activation e-mail
+    'misago.resetpswd', # Reset User Password
 )
 
 # IP's that can see debug toolbar

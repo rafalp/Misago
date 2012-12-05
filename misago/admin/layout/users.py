@@ -3,9 +3,10 @@ from django.utils.translation import ugettext_lazy as _
 from misago.admin import AdminAction
 from misago.banning.models import Ban
 from misago.newsletters.models import Newsletter
+from misago.prune.models import Policy
 from misago.ranks.models import Rank
 from misago.roles.models import Role
-from misago.users.models import User, Pruning
+from misago.users.models import User
 
 ADMIN_ACTIONS=(
    AdminAction(
@@ -30,7 +31,7 @@ ADMIN_ACTIONS=(
                          },
                         ],
                route='admin_users',
-               urlpatterns=patterns('misago.users.views.admin',
+               urlpatterns=patterns('misago.users.views',
                         url(r'^$', 'List', name='admin_users'),
                         url(r'^(?P<page>\d+)/$', 'List', name='admin_users'),
                         url(r'^inactive/$', 'inactive', name='admin_users_inactive'),
@@ -120,7 +121,7 @@ ADMIN_ACTIONS=(
                          },
                         ],
                route='admin_bans',
-               urlpatterns=patterns('misago.banning.views.admin',
+               urlpatterns=patterns('misago.banning.views',
                         url(r'^$', 'List', name='admin_bans'),
                         url(r'^(?P<page>\d+)/$', 'List', name='admin_bans'),
                         url(r'^new/$', 'New', name='admin_bans_new'),
@@ -130,31 +131,31 @@ ADMIN_ACTIONS=(
                ),
    AdminAction(
                section='users',
-               id='pruning',
+               id='prune_users',
                name=_("Prune Users"),
                help=_("Delete multiple Users"),
                icon='remove',
-               model=Pruning,
+               model=Policy,
                actions=[
                         {
                          'id': 'list',
                          'name': _("Pruning Policies"),
                          'help': _("Browse all existing pruning policies"),
-                         'route': 'admin_users_pruning'
+                         'route': 'admin_prune_users'
                          },
                         {
                          'id': 'new',
                          'name': _("Set New Policy"),
                          'help': _("Set new pruning policy"),
-                         'route': 'admin_users_pruning_new'
+                         'route': 'admin_prune_users_new'
                          },
                         ],
-               route='admin_users_pruning',
-               urlpatterns=patterns('misago.users.views.pruning',
-                        url(r'^$', 'List', name='admin_users_pruning'),
-                        url(r'^new/$', 'New', name='admin_users_pruning_new'),
-                        url(r'^edit/(?P<target>\d+)/$', 'Edit', name='admin_users_pruning_edit'),
-                        url(r'^delete/(?P<target>\d+)/$', 'Delete', name='admin_users_pruning_delete'),
+               route='admin_prune_users',
+               urlpatterns=patterns('misago.prune.views',
+                        url(r'^$', 'List', name='admin_prune_users'),
+                        url(r'^new/$', 'New', name='admin_prune_users_new'),
+                        url(r'^edit/(?P<target>\d+)/$', 'Edit', name='admin_prune_users_edit'),
+                        url(r'^delete/(?P<target>\d+)/$', 'Delete', name='admin_prune_users_delete'),
                     ),
                ),
    AdminAction(

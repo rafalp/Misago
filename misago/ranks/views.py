@@ -28,7 +28,6 @@ class List(ListWidget):
              ('delete', _("Delete selected ranks"), _("Are you sure you want to delete selected ranks?")),
              )
     
-    
     def get_table_form(self, request, page_items):
         order_form = {}
         

@@ -1,0 +1,11 @@
+{% extends "sora/usercp/layout.html" %}
+{% load i18n %}
+{% load url from future %}
+{% import "sora/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=_('Edit your Signature')) }}{% endblock %}
+
+{% block action %}
+{{ super() }}
+<h2>{% trans %}Change your Signature{% endtrans %}</h2>
+{% endblock %}

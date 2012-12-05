@@ -1,0 +1,16 @@
+{% extends "sora/usercp/layout.html" %}
+{% load i18n %}
+{% load url from future %}
+{% import "sora/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=_('Change your Avatar')) }}{% endblock %}
+
+{% block action %}
+<h2>{% trans %}Change your Avatar{% endtrans %}</h2>
+{% if user.avatar_ban_reason_user %}
+<p class="lead">{% trans username=user.username %}{{ username }}, your ability to change your avatar has been removed for following reason:{% endtrans %}</p>
+{{ user.avatar_ban_reason_user|markdown|safe }}
+{% else %}
+<p class="lead">{% trans username=user.username %}{{ username }}, your ability to change your avatar has been removed.{% endtrans %}</p>
+{% endif %}
+{% endblock %}

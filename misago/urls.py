@@ -6,7 +6,11 @@ from misago.admin import ADMIN_PATH, site
 # Include frontend patterns
 urlpatterns = patterns('',
     (r'^', include('misago.security.urls')),
-    (r'^', include('misago.users.urls')),
+    (r'^users/', include('misago.profiles.urls')),
+    (r'^usercp/', include('misago.usercp.urls')),
+    (r'^register/', include('misago.register.urls')),
+    (r'^activate/', include('misago.activation.urls')),
+    (r'^reset-password/', include('misago.resetpswd.urls')),
     url(r'^$', 'misago.views.home', name="index"),
 )
 
