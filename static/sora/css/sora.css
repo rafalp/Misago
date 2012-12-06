@@ -925,7 +925,7 @@ th.table-sort.sort-desc a:hover{border-bottom:3px solid #eca09a;padding-bottom:5
 .navbar-header .nav li a:hover{background-color:#ffffff;-webkit-box-shadow:0px 0px 3px #0077b3;-moz-box-shadow:0px 0px 3px #0077b3;box-shadow:0px 0px 3px #0077b3;opacity:1;filter:alpha(opacity=100);}.navbar-header .nav li a:hover i{background-image:url("../img/glyphicons-halflings.png");}
 .nav-tabs .tab-search form{marging:0px;margin-bottom:-4px;}
 .nav-tabs .tab-search.tab-search-no-tabs{position:relative;bottom:12px;}
-.nav-tabs button{padding-left:7px;padding-right:3px;}
+.nav-tabs button{padding-left:7px;padding-right:7px;}
 .clickable{cursor:pointer;}
 .profile-header{overflow:auto;border-bottom:none;margin-bottom:30px;}.profile-header .avatar-height{overflow:auto;}.profile-header .avatar-height .avatar{-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;margin-right:24px;width:125px;height:125px;}
 .profile-header .avatar-height h1{font-size:300%;}
