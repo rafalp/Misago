@@ -380,6 +380,11 @@ class User(models.Model):
             return self.rank.title
         return None
     
+    def get_style(self):
+        if self.rank:
+            return self.rank.style
+        return ''
+    
     def email_user(self, request, template, subject, context={}):
         templates = request.theme.get_email_templates(template)
         context = RequestContext(request, context)

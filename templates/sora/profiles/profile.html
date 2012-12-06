@@ -8,20 +8,25 @@
 {% block title %}{{ macros.page_title(profile.username) }}{% endblock %}
 
 {% block content %}
-<div class="page-header profile-header header-tabbed">
-  <div class="avatar-height">
-    <img src="{{ profile.get_avatar() }}" class="avatar pull-left" alt="{% trans %}Member Avatar{% endtrans %}" title="{% trans %}Member Avatar{% endtrans %}">
-    <div class="pull-left">
-      <h1>{{ profile.username }}</h1>
-      <p class="lead">{% if profile.title or profile.rank.title %}{% if profile.title %}{{ _(profile.title) }}{% elif profile.rank.title %}{{ _(profile.rank.title) }}{% endif %}; {% endif %}<span class="muted">{% trans last_visit=profile.last_date|reltimesince|low %}Last seen {{ last_visit }}{% endtrans %}</span></p>
-    </div>
-  </div>	
-  <ul class="nav nav-tabs">
-    <li{% if tab == 'posts' %} class="active"{% endif %}><a href="{% url 'user' user=profile.pk, username=profile.username_slug %}">{% trans %}Last Posts{% endtrans %}</a></li>
-    <li{% if tab == 'threads' %} class="active"{% endif %}><a href="{% url 'user_threads' user=profile.pk, username=profile.username_slug %}">{% trans %}Last Threads{% endtrans %}</a></li>
-    <li{% if tab == 'following' %} class="active"{% endif %}><a href="{% url 'user_following' user=profile.pk, username=profile.username_slug %}">{% trans %}Following{% endtrans %}</a></li>
-    <li{% if tab == 'followers' %} class="active"{% endif %}><a href="{% url 'user_followers' user=profile.pk, username=profile.username_slug %}">{% trans %}Followers{% endtrans %}</a></li>
-    <li{% if tab == 'details' %} class="active"{% endif %}><a href="{% url 'user_details' user=profile.pk, username=profile.username_slug %}">{% trans %}Profile Details{% endtrans %}</a></li>
-  </ul>
+<div class="profile-wrapper{% if profile.get_style() %} {{ profile.get_style() }}{% endif %}">
+  <div class="page-header profile-header header-tabbed{% if profile.get_style() %} {{ profile.get_style() }}{% endif %}">
+    <div class="avatar-height">
+      <img src="{{ profile.get_avatar() }}" class="avatar pull-left" alt="{% trans %}Member Avatar{% endtrans %}" title="{% trans %}Member Avatar{% endtrans %}">
+      <div class="pull-left">
+        <h1>{{ profile.username }}</h1>
+        <p class="lead">{% if profile.title or profile.rank.title %}{% if profile.title %}{{ _(profile.title) }}{% elif profile.rank.title %}{{ _(profile.rank.title) }}{% endif %}; {% endif %}<span class="muted">{% trans last_visit=profile.last_date|reltimesince|low %}Last seen {{ last_visit }}{% endtrans %}</span></p>
+      </div>
+    </div>	
+    <ul class="nav nav-tabs">
+      <li{% if tab == 'posts' %} class="active"{% endif %}><a href="{% url 'user' user=profile.pk, username=profile.username_slug %}">{% trans %}Last Posts{% endtrans %}</a></li>
+      <li{% if tab == 'threads' %} class="active"{% endif %}><a href="{% url 'user_threads' user=profile.pk, username=profile.username_slug %}">{% trans %}Last Threads{% endtrans %}</a></li>
+      <li{% if tab == 'following' %} class="active"{% endif %}><a href="{% url 'user_following' user=profile.pk, username=profile.username_slug %}">{% trans %}Following{% endtrans %}</a></li>
+      <li{% if tab == 'followers' %} class="active"{% endif %}><a href="{% url 'user_followers' user=profile.pk, username=profile.username_slug %}">{% trans %}Followers{% endtrans %}</a></li>
+      <li{% if tab == 'details' %} class="active"{% endif %}><a href="{% url 'user_details' user=profile.pk, username=profile.username_slug %}">{% trans %}Profile Details{% endtrans %}</a></li>
+    </ul>
+  </div>
+  <div class="profile-tab{% if profile.get_style() %} {{ profile.get_style() }}{% endif %}">
+  	{% block tab %}{% endblock %}
+  </div>
 </div>
 {% endblock %}

@@ -39,14 +39,18 @@
 <table class="table table-striped table-users">
   <thead>
     <tr>
-      <th{% if users|length > 1 %} colspan="2"{% endif %}>{% if in_search %}{% trans %}Found Users{% endtrans %}{% else %}{% trans %}Users in this group{% endtrans %}{% endif %}</th>
+      <th colspan="2">{% if in_search %}{% trans %}Found Users{% endtrans %}{% else %}{% trans %}Users in this group{% endtrans %}{% endif %}</th>
     </tr>
   </thead>
   <tbody>
-    <tr>{% for user in users %}    	
-      <td{% if users|length > 1 %} {% if loop.last and loop.index is odd %}colspan="2"{% else %}class="span6"{% endif %}{% endif %}>
+    <tr>{% for user in users %}
+      <td class="span6{% if user.get_style() %} {{ user.get_style() }}{% endif %}">
         <a href="{% url 'user' username=user.username_slug, user=user.pk %}"><img src="{{ user.get_avatar('medium') }}" class="avatar" alt="{% trans %}Member's Avatar{% endtrans %}" title="{% trans %}Member's Avatar{% endtrans %}"> <strong>{{ user.username }}</strong>{% if user.title or (in_search and user.get_title()) %} <span class="muted">{% if in_search%}{{ _(user.get_title()) }}{% else %}{{ _(user.title) }}{% endif %}</span>{% endif %}</a>
-      </td>{% if not loop.last and loop.index is even %}
+      </td>{% if loop.last and loop.index is odd %}
+      <td class="span6">
+      	&nbsp;
+      </td>
+      {% endif %}{% if not loop.last and loop.index is even %}
     </tr>
     <tr>{% endif %}
     {% endfor %}</tr>
