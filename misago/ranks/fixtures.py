@@ -5,6 +5,7 @@ from misago.utils import get_msgid
 def load_fixtures():
     rank_staff = Rank(
                       name=_("Forum Team").message,
+                      name_slug='forum_team',
                       title=_("Forum Team").message,
                       style='staff',
                       special=True,
