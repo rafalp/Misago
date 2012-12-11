@@ -5,7 +5,7 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
-    
+
 class Role(models.Model):
     """
     Misago User Role model
@@ -24,16 +24,16 @@ class Role(models.Model):
     
     def get_permissions(self):
         if self.permissions_cache:
-            return permissions_cache
+            return self.permissions_cache
         
         try:
-            self.permissions_cache = base64.decodestring(pickle.loads(self.permissions))
+            self.permissions_cache = pickle.loads(base64.decodestring(self.permissions))
         except Exception:
             # ValueError, SuspiciousOperation, unpickling exceptions. If any of
             # these happen, just return an empty dictionary (an empty permissions list).
             self.permissions_cache = {}
             
-        return permissions_cache
+        return self.permissions_cache
     
     def set_permissions(self, permissions):
         self.permissions_cache = permissions

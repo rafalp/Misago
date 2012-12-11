@@ -1,10 +1,11 @@
+import copy
 from django.core.urlresolvers import reverse as django_reverse
 from django.utils.translation import ugettext as _
 from misago.acl.builder import build_form 
 from misago.admin import site
 from misago.admin.widgets import *
 from misago.utils import slugify
-from misago.roles.forms import RoleForm, PermsForm
+from misago.roles.forms import RoleForm
 from misago.roles.models import Role
 
 def reverse(route, target=None):
@@ -103,13 +104,12 @@ class ACL(FormWidget):
     id = 'acl'
     name = _("Change Role Permissions")
     fallback = 'admin_roles'
-    form = PermsForm
     target_name = 'name'
     notfound_message = _('Requested Role could not be found.')
     submit_fallback = True
     
     def get_form(self, request, target):
-        self.form = build_form(request, self.form, target)
+        self.form = build_form(request, target)
         return self.form
     
     def get_url(self, request, model):
@@ -127,12 +127,12 @@ class ACL(FormWidget):
         return initial
     
     def submit_form(self, request, form, target):
-        raw_acl = model.get_permissions()
+        raw_acl = target.get_permissions()
         for perm in form.cleaned_data:
             raw_acl[perm] = form.cleaned_data[perm]
         target.set_permissions(raw_acl)
         target.save(force_update=True)
-        request.model['acl_version'] = int(request.model['acl_version']) + 1
+        request.monitor['acl_version'] = int(request.monitor['acl_version']) + 1
         
         return target, Message(_('Role "%(name)s" permissions have been changed.') % {'name': self.original_name}, 'success')
 

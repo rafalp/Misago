@@ -83,12 +83,13 @@ MIDDLEWARE_CLASSES = (
     'misago.banning.middleware.BanningMiddleware',
     'misago.messages.middleware.MessagesMiddleware',
     'misago.users.middleware.UserMiddleware',
-    'misago.roles.middleware.ACLMiddleware',
+    'misago.acl.middleware.ACLMiddleware',
     'django.middleware.common.CommonMiddleware',
 )
 
 # List of application permission providers
 PERMISSION_PROVIDERS = (
+    'misago.usercp.acl',
     'misago.admin.acl',
 )
 

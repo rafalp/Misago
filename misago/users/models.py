@@ -5,13 +5,16 @@ from path import path
 from django.conf import settings
 from django.contrib.auth.hashers import (
     check_password, make_password, is_password_usable, UNUSABLE_PASSWORD)
+from django.core.cache import cache, InvalidCacheBackendError
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
 from django.db import models
 from django.template import RequestContext
 from django.utils import timezone as tz_util
 from django.utils.translation import ugettext_lazy as _
+from misago.acl.builder import build_acl
 from misago.monitor.monitor import Monitor
+from misago.roles.models import Role
 from misago.settings.settings import Settings as DBSettings
 from misago.users.validators import validate_username, validate_password, validate_email
 from misago.utils import get_random_string, slugify
@@ -351,6 +354,9 @@ class User(models.Model):
             raw_password = password_reversed
         return check_password(raw_password, self.password, setter)
     
+    def get_roles(self):
+        return self.roles.all()
+        
     def make_acl_key(self):
         roles_ids = []
         for role in self.roles.all():
@@ -358,9 +364,17 @@ class User(models.Model):
         self.acl_key = 'acl_%s' % hashlib.md5('_'.join(roles_ids)).hexdigest()[0:8]
         return self.acl_key
     
-    def get_acl(self):
-        pass
-    
+    def get_acl(self, request):
+        try:
+            acl = cache.get(self.acl_key)
+            if acl.version != request.monitor.acl_version:
+                raise InvalidCacheBackendError()
+        except AttributeError, InvalidCacheBackendError:
+            # build acl cache
+            acl = build_acl(request, self.get_roles())
+            cache.set(self.acl_key, acl, 2592000)
+        return acl
+            
     def get_avatar(self, size='normal'):
         # Get uploaded avatar
         if self.avatar_type == 'upload':
@@ -436,8 +450,14 @@ class Guest(object):
     def is_crawler(self):
         return False
         
+    def get_roles(self):
+        return Role.objects.find(token='guest')
+    
+    def make_acl_key(self):
+        return 'acl_%s' % hashlib.md5(Role.objects.get(token='guest').pk).hexdigest()[0:8]
+
         
-class Crawler(object): 
+class Crawler(Guest): 
     """
     Misago Crawler dummy
     """
