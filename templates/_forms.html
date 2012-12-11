@@ -128,7 +128,7 @@
 
 {# Recaptcha input #}
 {%- macro input_recaptcha(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
-RECAPTCHA!
+{{ field.attrs.html|safe }}
 {%- endmacro -%}
 
 

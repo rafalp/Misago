@@ -24,7 +24,10 @@
   {{ form_theme.form_widget(form) }}
   {% endif %}
   <div class="form-actions">
+  	{% block form_actions %}
+  	{% block form_submit %}
   	<button name="save" type="submit" class="btn btn-primary">{{ action.submit_button }}</button>
+  	{% endblock %}
   	{% if action.get_edit_url -%}
   	<button name="save_edit" type="submit" class="btn btn-warning">{% trans %}Save and Edit{% endtrans %}</button>
   	{%- endif %}
@@ -32,6 +35,7 @@
   	<button name="save_new" type="submit" class="btn btn-success">{% trans %}Save and Add Another{% endtrans %}</button>
   	{%- endif %}
   	{% if fallback %}<a href="{{ fallback }}" class="btn">{% trans %}Cancel{% endtrans %}</a>{% endif %}
+  	{% endblock %}
   </div>
 </form>
 {% endblock %}

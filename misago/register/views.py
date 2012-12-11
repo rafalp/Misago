@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 from misago.banning.decorators import block_banned
 from misago.bruteforce.decorators import block_jammed
+from misago.bruteforce.models import SignInAttempt
 from misago.forms.layouts import FormLayout
 from misago.messages import Message
 from misago.authn.decorators import block_authenticated
@@ -68,7 +69,7 @@ def form(request):
             if request.settings['registrations_jams']:
                 SignInAttempt.objects.register_attempt(request.session.get_ip(request))
             # Have we jammed our account?
-            if SignInAttempt.objects.is_jammed(request.session.get_ip(request)):
+            if SignInAttempt.objects.is_jammed(request.settings, request.session.get_ip(request)):
                 request.jam.expires = timezone.now()
                 return redirect(reverse('register'))
     else:

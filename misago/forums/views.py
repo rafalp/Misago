@@ -253,6 +253,7 @@ class Delete(FormWidget):
     id = 'delete'
     name = _("Delete Forum")
     fallback = 'admin_forums'
+    template = 'delete'
     form = DeleteForm
     target_name = 'name'
     notfound_message = _('Requested Forum could not be found.')

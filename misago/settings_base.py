@@ -106,6 +106,7 @@ INSTALLED_APPS = (
     'misago.banning', # Banning and blacklisting users
     'misago.crawlers', # Web crawlers handling
     'misago.cookie_jar', # Cookies helper
+    'misago.captcha', # Web crawlers handling
     'misago.forums', # Forums, threads and posts
     'misago.messages', # Messages and Flashes
     'misago.newsletters', # Send newsletters to members from Admin

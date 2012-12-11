@@ -97,11 +97,13 @@ class FormFields(object):
                 
             # ReCaptcha      
             if widget_name == 'ReCaptchaWidget':
+                from recaptcha.client.captcha import displayhtml
                 blueprint['widget'] = 'recaptcha'
-                blueprint['attrs'] = get_captcha_dict(
-                                                      form.request.settings,
-                                                      bound_field.field.api_error
-                                                      )
+                blueprint['attrs'] = {'html': displayhtml(
+                                                          form.request.settings['recaptcha_public'],
+                                                          form.request.settings['recaptcha_ssl'],
+                                                          bound_field.field.api_error,
+                                                          )}
                 
             # HiddenInput
             if widget_name == 'HiddenInput':
