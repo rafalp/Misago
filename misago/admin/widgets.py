@@ -247,16 +247,18 @@ class ListWidget(BaseWidget):
         pagination['stop'] = pagination['start'] + self.pagination
         return pagination
     
+    def get_items(self, request):
+        if request.session.get(self.get_token('filter')):
+            self.is_filtering = True
+            return self.set_filters(self.admin.model.objects, request.session.get(self.get_token('filter')))
+        return self.admin.model.objects
+            
     def __call__(self, request, page=0):
         """
         Use widget as view
         """
-        # Get basic list attributes
-        if request.session.get(self.get_token('filter')):
-            self.is_filtering = True
-            items_total = self.set_filters(self.admin.model.objects, request.session.get(self.get_token('filter')))
-        else:
-            items_total = self.admin.model.objects
+        # Get basic list items
+        items_total = self.get_items(request)
             
         # Set extra filters?
         try:
@@ -269,12 +271,8 @@ class ListWidget(BaseWidget):
         paginating_method = self.get_pagination(request, items_total, page)
         
         # List items
-        items = self.admin.model.objects
-        
-        # Filter items?
-        if request.session.get(self.get_token('filter')):
-            items = self.set_filters(items, request.session.get(self.get_token('filter')))
-        else:
+        items = self.get_items(request)
+        if not request.session.get(self.get_token('filter')):
             items = items.all()
          
         # Set extra filters?
@@ -412,13 +410,13 @@ class FormWidget(BaseWidget):
     def get_url(self, request, model):
         return reverse(self.admin.get_action_attr(self.id, 'route'))
     
-    def get_form(self, request, model):
+    def get_form(self, request, target):
         return self.form
     
-    def get_form_instance(self, form, request, model, initial, post=False):
+    def get_form_instance(self, form, request, target, initial, post=False):
         if post:
-            return form(request.POST, request=request, initial=self.get_initial_data(request, model))
-        return form(request=request, initial=self.get_initial_data(request, model))
+            return form(request.POST, request=request, initial=self.get_initial_data(request, target))
+        return form(request=request, initial=self.get_initial_data(request, target))
     
     def get_layout(self, request, form, model):
         if self.layout:
@@ -445,7 +443,7 @@ class FormWidget(BaseWidget):
         original_model = model
         
         # Get form type to instantiate
-        FormType = self.get_form(request, target)
+        FormType = self.get_form(request, model)
         
         #Submit form
         message = None

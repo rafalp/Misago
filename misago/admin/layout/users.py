@@ -39,8 +39,7 @@ ADMIN_ACTIONS=(
                         url(r'^edit/(?P<slug>[a-z0-9]+)-(?P<target>\d+)/$', 'Edit', name='admin_users_edit'),
                         url(r'^delete/(?P<slug>[a-z0-9]+)-(?P<target>\d+)/$', 'Delete', name='admin_users_delete'),
                     ),
-               ),
-               
+               ),               
    AdminAction(
                section='users',
                id='roles',

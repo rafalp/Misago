@@ -45,7 +45,7 @@ class Form(forms.Form):
         """
         for key, field in self.base_fields.iteritems():
             try:
-                if field.__class__.__name__ == 'ModelChoiceField' and data[key]:
+                if field.__class__.__name__ in ['ModelChoiceField', 'TreeForeignKey'] and data[key]:
                     data[key] = int(data[key])
                 elif field.__class__.__name__ == 'ModelMultipleChoiceField':
                     data.setlist(key, [int(x) for x in data.getlist(key, [])])

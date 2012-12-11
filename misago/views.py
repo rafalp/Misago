@@ -3,10 +3,10 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 
 
-def home(request):    
+def home(request):
     return request.theme.render_to_response('index.html',
-                                            {'page_title': 'Hello World!'},
-                                            context_instance=RequestContext(request));
+                                        {'page_title': 'Hello World!'},
+                                        context_instance=RequestContext(request));
 
 
 def redirect_message(request, message, type='info', owner=None):

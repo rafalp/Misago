@@ -20,7 +20,6 @@ class List(ListWidget):
     columns=(
              ('role', _("Role")),
              )
-    table_form_button = _('Reorder Roles')
     nothing_checked_message = _('You have to check at least one role.')
     actions=(
              ('delete', _("Delete selected roles"), _("Are you sure you want to delete selected roles?")),
