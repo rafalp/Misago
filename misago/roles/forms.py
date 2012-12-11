@@ -12,4 +12,7 @@ class RoleForm(Form):
                 ),
               ),
              )
-    
+
+
+class PermsForm(Form):
+    layout = []

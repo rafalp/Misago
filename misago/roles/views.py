@@ -1,9 +1,10 @@
 from django.core.urlresolvers import reverse as django_reverse
 from django.utils.translation import ugettext as _
+from misago.acl.builder import build_form 
 from misago.admin import site
 from misago.admin.widgets import *
 from misago.utils import slugify
-from misago.roles.forms import RoleForm
+from misago.roles.forms import RoleForm, PermsForm
 from misago.roles.models import Role
 
 def reverse(route, target=None):
@@ -30,6 +31,7 @@ class List(ListWidget):
     
     def get_item_actions(self, request, item):
         return (
+                self.action('adjust', _("Role Permissions"), reverse('admin_roles_acl', item)),
                 self.action('pencil', _("Edit Role"), reverse('admin_roles_edit', item)),
                 self.action('remove', _("Delete Role"), reverse('admin_roles_delete', item), post=True, prompt=_("Are you sure you want to delete this role?")),
                 )
@@ -94,6 +96,45 @@ class Edit(FormWidget):
         target.name = form.cleaned_data['name']
         target.save(force_update=True)
         return target, Message(_('Changes in role "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
+
+
+class ACL(FormWidget):
+    admin = site.get_action('roles')
+    id = 'acl'
+    name = _("Change Role Permissions")
+    fallback = 'admin_roles'
+    form = PermsForm
+    target_name = 'name'
+    notfound_message = _('Requested Role could not be found.')
+    submit_fallback = True
+    
+    def get_form(self, request, target):
+        self.form = build_form(request, self.form, target)
+        return self.form
+    
+    def get_url(self, request, model):
+        return reverse('admin_roles_acl', model)
+    
+    def get_edit_url(self, request, model):
+        return self.get_url(request, model)
+    
+    def get_initial_data(self, request, model):
+        raw_acl = model.get_permissions()
+        initial = {}
+        for field in self.form.base_fields:
+            if field in raw_acl:
+                initial[field] = raw_acl[field]
+        return initial
+    
+    def submit_form(self, request, form, target):
+        raw_acl = model.get_permissions()
+        for perm in form.cleaned_data:
+            raw_acl[perm] = form.cleaned_data[perm]
+        target.set_permissions(raw_acl)
+        target.save(force_update=True)
+        request.model['acl_version'] = int(request.model['acl_version']) + 1
+        
+        return target, Message(_('Role "%(name)s" permissions have been changed.') % {'name': self.original_name}, 'success')
 
 
 class Delete(ButtonWidget):
