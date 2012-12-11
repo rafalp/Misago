@@ -4,7 +4,7 @@ from misago.acl.builder import BaseACL
 from misago.forms import YesNoSwitch
 
 def make_form(request, role, form):
-    if role.token != 'admin' and request.user.is_god():
+    if not role.token and request.user.is_god():
         form.base_fields['can_use_acp'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
         form.layout.append((
                             _("Admin Control Panel"),

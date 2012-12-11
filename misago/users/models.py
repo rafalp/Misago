@@ -173,12 +173,7 @@ class User(models.Model):
     ACTIVATION_CREDENTIALS = 3
     
     statistics_name = _('Users Registrations')
-    
-    def is_admin(self):
-        if self.is_god():
-            return True
-        return False #TODO!
-    
+        
     def is_god(self):
         try:
             return self.is_god_cache
@@ -437,10 +432,7 @@ class User(models.Model):
 class Guest(object):
     """
     Misago Guest dummy
-    """
-    def is_admin(self):
-        return False
-    
+    """    
     def is_anonymous(self):
         return True
     
@@ -451,10 +443,10 @@ class Guest(object):
         return False
         
     def get_roles(self):
-        return Role.objects.find(token='guest')
+        return Role.objects.filter(token='guest')
     
     def make_acl_key(self):
-        return 'acl_%s' % hashlib.md5(Role.objects.get(token='guest').pk).hexdigest()[0:8]
+        return 'acl_%s' % hashlib.md5(str(Role.objects.get(token='guest').pk)).hexdigest()[0:8]
 
         
 class Crawler(Guest): 
@@ -463,9 +455,6 @@ class Crawler(Guest):
     """
     def __init__(self, username):
         self.username = username
-    
-    def is_admin(self):
-        return False
     
     def is_anonymous(self):
         return True

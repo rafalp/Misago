@@ -4,11 +4,12 @@ from misago.acl.builder import BaseACL
 from misago.forms import YesNoSwitch
 
 def make_form(request, role, form):
-    form.base_fields['can_use_signature'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
-    form.layout.append((
-                        _("Signature"),
-                        (('can_use_signature', {'label': _("Can have signature")}),),
-                        ))
+    if role.token != 'guest':
+        form.base_fields['can_use_signature'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
+        form.layout.append((
+                            _("Signature"),
+                            (('can_use_signature', {'label': _("Can have signature")}),),
+                            ))
 
 
 class UserCPACL(BaseACL):

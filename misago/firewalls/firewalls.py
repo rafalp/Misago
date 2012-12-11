@@ -1,5 +1,7 @@
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 from misago.admin import ADMIN_PATH
+from misago.messages import Message
 from misago.views import error403, error404
 from misago.authn.views import signin
 
@@ -31,5 +33,7 @@ class FirewallAdmin(FirewallForum):
             # If we are not authenticated or not admin, force us to sign in right way
             if not request.user.is_authenticated():
                 return signin(request)
-            else:
-                return None
+            elif not request.user.is_god() and not request.acl.admin.is_admin():
+                request.messages.set_message(Message(_("Your account does not have admin privileges")), 'error', 'security')
+                return signin(request)
+            return None
