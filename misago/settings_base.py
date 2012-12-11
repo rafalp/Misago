@@ -87,6 +87,11 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
 )
 
+# List of application permission providers
+PERMISSION_PROVIDERS = (
+    'misago.admin.acl',
+)
+
 # Name of root urls configuration
 ROOT_URLCONF = 'misago.urls'
 
@@ -99,6 +104,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'mptt', # Modified Pre-order Tree Transversal - allows us to nest forums 
     'debug_toolbar', # Debug toolbar
+    'misago.acl', # ACL Builder and dehydrator
     'misago.settings', # Database level application configuration
     'misago.monitor', # Forum statistics monitor
     'misago.utils', # Utility classes
