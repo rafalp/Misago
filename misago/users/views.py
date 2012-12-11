@@ -231,6 +231,7 @@ class New(FormWidget):
         
         for role in form.cleaned_data['roles']:
             new_user.roles.add(role)
+        new_user.make_acl_key()
         new_user.save(force_update=True)
         
         return new_user, Message(_('New User has been created.'), 'success')
@@ -310,6 +311,7 @@ class Edit(FormWidget):
             for role in form.cleaned_data['roles']:
                 target.roles.add(role)
         
+        target.make_acl_key()
         target.save(force_update=True)
         return target, Message(_('Changes in user\'s "%(name)s" account have been saved.') % {'name': self.original_name}, 'success')
 

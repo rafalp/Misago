@@ -77,6 +77,7 @@ class UserManager(models.Manager):
         if not no_roles:
             from misago.roles.models import Role
             new_user.roles.add(Role.objects.get(token='registered'))
+            new_user.make_acl_key()
             new_user.save(force_update=True)
         
         # Load monitor
@@ -159,7 +160,7 @@ class User(models.Model):
     signature_ban_reason_admin = models.TextField(null=True,blank=True)
     timezone = models.CharField(max_length=255,default='utc')
     roles = models.ManyToManyField('roles.Role')
-    acl_cache = models.TextField(null=True,blank=True)
+    acl_key = models.CharField(max_length=12,null=True,blank=True)
     
     objects = UserManager()   
     
@@ -169,10 +170,7 @@ class User(models.Model):
     ACTIVATION_CREDENTIALS = 3
     
     statistics_name = _('Users Registrations')
-        
-    def acl(self):
-        pass
-        
+    
     def is_admin(self):
         if self.is_god():
             return True
@@ -352,6 +350,16 @@ class User(models.Model):
                 password_reversed += r 
             raw_password = password_reversed
         return check_password(raw_password, self.password, setter)
+    
+    def make_acl_key(self):
+        roles_ids = []
+        for role in self.roles.all():
+            roles_ids.append(str(role.pk))
+        self.acl_key = 'acl_%s' % hashlib.md5('_'.join(roles_ids)).hexdigest()[0:8]
+        return self.acl_key
+    
+    def get_acl(self):
+        pass
     
     def get_avatar(self, size='normal'):
         # Get uploaded avatar
