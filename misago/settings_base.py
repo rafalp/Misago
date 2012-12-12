@@ -126,6 +126,7 @@ INSTALLED_APPS = (
     'misago.template', # Templates extensions
     'misago.themes', # Themes
     'misago.users', # Users foundation
+    'misago.team', # Forum Team List
     'misago.prune', # Prune Users
     'misago.ranks', # User Ranks
     'misago.roles', # User Roles

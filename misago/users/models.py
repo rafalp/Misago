@@ -163,6 +163,7 @@ class User(models.Model):
     signature_ban_reason_admin = models.TextField(null=True,blank=True)
     timezone = models.CharField(max_length=255,default='utc')
     roles = models.ManyToManyField('roles.Role')
+    is_team = models.BooleanField(default=False,db_index=True)
     acl_key = models.CharField(max_length=12,null=True,blank=True)
     
     objects = UserManager()   

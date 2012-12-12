@@ -21,6 +21,7 @@ class BaseACL(object):
 class ACL(object):
     def __init__(self, version):
         self.version = version
+        self.team = False
 
 
 def build_acl(request, roles):

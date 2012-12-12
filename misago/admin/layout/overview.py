@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import AdminAction
 from misago.sessions.models import Session
+from misago.users.models import User
 
 ADMIN_ACTIONS=(
    AdminAction(
@@ -50,13 +51,22 @@ ADMIN_ACTIONS=(
                ),
    AdminAction(
                section='overview',
-               id='staff',
+               id='team',
                name=_("Forum Team"),
                help=_("List of all forum team members"),
                icon='user',
-               route='admin_overview_staff',
-               urlpatterns=patterns('misago.admin.views',
-                        url(r'^$', 'todo', name='admin_overview_staff'),
+               model=User,
+               actions=[
+                        {
+                         'id': 'list',
+                         'name': _("Forum Team Members"),
+                         'help': _("List of all forum team members"),
+                         'route': 'admin_team'
+                         },
+                        ],
+               route='admin_team',
+               urlpatterns=patterns('misago.team.views',
+                        url(r'^$', 'List', name='admin_team'),
                     ),
                ),
 )

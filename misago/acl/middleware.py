@@ -20,4 +20,7 @@ class ACLMiddleware(object):
             cache.set(acl_key, user_acl, 2592000)
 
         request.acl = user_acl
+        if request.user.is_authenticated() and (request.acl.team or request.user.is_god()) != request.user.is_team:
+            request.user.is_team = (request.acl.team or request.user.is_god())
+            request.user.save(force_update=True)
         

@@ -24,3 +24,6 @@ def build(acl, roles):
     for role in roles:
         if 'can_use_acp' in role and role['can_use_acp'] > acl.admin.acl['can_use_acp']:
             acl.admin.acl['can_use_acp'] = role['can_use_acp']
+            
+    if acl.admin.acl['can_use_acp']:
+        acl.team = True

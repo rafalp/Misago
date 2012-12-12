@@ -49,9 +49,7 @@ class BaseWidget(object):
         return 'admin_%s' % self.id
          
     def get_template(self, template):
-        return ('%s/%ss/%s.html' % (str(self.admin.model.__module__).split('.')[1], str(self.admin.model.__name__).lower(), template),
-                '%s/%s.html' % (str(self.admin.model.__module__).split('.')[1], template),
-                '%ss/%s.html' % (str(self.admin.model.__name__).lower(), template),
+        return ('%s/%s.html' % (self.admin.id, template),
                 'admin/%s.html' % template)
             
     def get_fallback_url(self, request):
