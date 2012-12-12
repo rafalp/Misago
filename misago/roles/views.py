@@ -5,6 +5,8 @@ from misago.acl.builder import build_form
 from misago.admin import site
 from misago.admin.widgets import *
 from misago.utils import slugify
+from misago.forms import Form, YesNoSwitch
+from misago.forums.models import Forum
 from misago.roles.forms import RoleForm
 from misago.roles.models import Role
 
@@ -32,6 +34,7 @@ class List(ListWidget):
     
     def get_item_actions(self, request, item):
         return (
+                self.action('list', _("Forums Permissions"), reverse('admin_roles_forums', item)),
                 self.action('adjust', _("Role Permissions"), reverse('admin_roles_acl', item)),
                 self.action('pencil', _("Edit Role"), reverse('admin_roles_edit', item)),
                 self.action('remove', _("Delete Role"), reverse('admin_roles_delete', item), post=True, prompt=_("Are you sure you want to delete this role?")),
@@ -97,6 +100,56 @@ class Edit(FormWidget):
         target.name = form.cleaned_data['name']
         target.save(force_update=True)
         return target, Message(_('Changes in role "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
+
+
+class Forums(ListWidget):
+    admin = site.get_action('roles')
+    id = 'forums'
+    hide_actions = True
+    name = _('Role Forums Permissions')
+    table_form_button = _('Change Permissions')
+    empty_message = _('No forums are currently defined.')
+    template = 'forums'
+    
+    def get_url(self):
+        reverse('admin_roles_forums', self.role) 
+    
+    def get_items(self, request):
+        return Forum.objects.get(token='root').get_descendants()
+
+    def sort_items(self, request, page_items, sorting_method):
+        return page_items.order_by('lft')
+    
+    def add_template_variables(self, variables):
+        variables['target'] = _(self.role.name)
+        return variables
+    
+    def get_table_form(self, request, page_items):
+        perms_form = {}
+        for item in page_items:
+            perms_form['show_' + str(item.pk)] = forms.BooleanField(widget=YesNoSwitch,required=False)
+            perms_form['read_' + str(item.pk)] = forms.BooleanField(widget=YesNoSwitch,required=False)
+            perms_form['start_' + str(item.pk)] = forms.BooleanField(widget=YesNoSwitch,required=False)
+            perms_form['reply_' + str(item.pk)] = forms.BooleanField(widget=YesNoSwitch,required=False)
+            perms_form['upload_' + str(item.pk)] = forms.BooleanField(widget=YesNoSwitch,required=False)
+            perms_form['download_' + str(item.pk)] = forms.BooleanField(widget=YesNoSwitch,required=False)
+        
+        # Turn dict into object
+        return type('OrderRanksForm', (Form,), perms_form)
+    
+    def table_action(self, request, page_items, cleaned_data):
+        for item in page_items:
+            item.order = cleaned_data['pos_' + str(item.pk)]
+            item.save(force_update=True)
+        return Message(_('Ranks order has been changed'), 'success'), reverse('admin_ranks')
+        
+    def __call__(self, request, slug, target):
+        try:
+            self.role = Role.objects.get(id=target)
+        except Role.DoesNotExist:
+            request.set_flash(Message(_('Requested Role could not be found.')), 'error', 'roles')
+            return reverse('admin_roles')
+        return super(Forums, self).__call__(request)
 
 
 class ACL(FormWidget):

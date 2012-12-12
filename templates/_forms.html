@@ -186,7 +186,7 @@
 {%- macro input_yes_no_switch(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
 {%- do field.attrs.update(attrs) -%}
 {%- do classes.append('yes-no-switch') -%}
-<div{{ field_classes(classes) }}>
+<div{{ field_classes(classes) }} id="{{ field.html_id }}_div">
   <input name="{{ field.html_name }}" id="{{ field.html_id }}" type="checkbox" value="1"{% if field.value %} checked="checked"{% endif %}>
 </div>
 {%- endmacro -%}

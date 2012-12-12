@@ -51,6 +51,9 @@ class BaseWidget(object):
     def get_template(self, template):
         return ('%s/%s.html' % (self.admin.id, template),
                 'admin/%s.html' % template)
+    
+    def add_template_variables(self, variables):
+        return variables
             
     def get_fallback_url(self, request):
         return reverse(self.fallback)
@@ -374,7 +377,7 @@ class ListWidget(BaseWidget):
                 
         # Render list
         return request.theme.render_to_response(self.get_template(self.template),
-                                                {
+                                                self.add_template_variables({
                                                  'admin': self.admin,
                                                  'action': self,
                                                  'request': request,
@@ -389,7 +392,7 @@ class ListWidget(BaseWidget):
                                                  'table_form': FormFields(table_form).fields if table_form else None,
                                                  'items': items,
                                                  'items_total': items_total,
-                                                },
+                                                }),
                                                 context_instance=RequestContext(request));
                                                 
 class FormWidget(BaseWidget):
@@ -478,7 +481,7 @@ class FormWidget(BaseWidget):
             
         # Render form
         return request.theme.render_to_response(self.get_template(self.template),
-                                                {
+                                                self.add_template_variables({
                                                  'admin': self.admin,
                                                  'action': self,
                                                  'request': request,
@@ -490,7 +493,7 @@ class FormWidget(BaseWidget):
                                                  'target': self.get_target_name(original_model),
                                                  'target_model': original_model,
                                                  'form': FormLayout(form, self.get_layout(request, form, target)),
-                                                },
+                                                }),
                                                 context_instance=RequestContext(request));
 
                                         

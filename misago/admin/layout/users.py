@@ -65,6 +65,7 @@ ADMIN_ACTIONS=(
                urlpatterns=patterns('misago.roles.views',
                         url(r'^$', 'List', name='admin_roles'),
                         url(r'^new/$', 'New', name='admin_roles_new'),
+                        url(r'^forums/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Forums', name='admin_roles_forums'),
                         url(r'^acl/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'ACL', name='admin_roles_acl'),
                         url(r'^edit/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Edit', name='admin_roles_edit'),
                         url(r'^delete/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Delete', name='admin_roles_delete'),

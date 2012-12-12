@@ -51,6 +51,38 @@
   }
 }
 
+// Cell colors
+.table {
+  td {
+    &.perm-show,
+    &.perm-read,
+    &.perm-start,
+    &.perm-reply,
+    &.perm-upload,
+    &.perm-download {
+      text-align: center;
+    }
+  }
+  
+  tr:nth-child(even) {
+    .perm-show {background-color: lighten(@blue, 40%);}
+    .perm-read {background-color: lighten(@red, 40%);}
+    .perm-start {background-color: lighten(@green, 40%);}
+    .perm-reply {background-color: lighten(@yellow, 40%);}
+    .perm-upload {background-color: lighten(@pink, 40%);}
+    .perm-download {background-color: lighten(@orange, 40%);}
+  }
+  
+  tr:nth-child(odd) {
+    .perm-show {background-color: lighten(@blue, 30%);}
+    .perm-read {background-color: lighten(@red, 30%);}
+    .perm-start {background-color: lighten(@green, 30%);}
+    .perm-reply {background-color: lighten(@yellow, 30%);}
+    .perm-upload {background-color: lighten(@pink, 30%);}
+    .perm-download {background-color: lighten(@orange, 30%);}
+  }
+}
+
 // Checkbox cell
 td, th {
   &.check-cell {
@@ -80,8 +112,13 @@ td.lead-cell {
     vertical-align: middle;
   }
   
-  input, select {
+  input, select, .yes-no-switch {
     margin: 0px;
+  }
+  
+  .yes-no-switch {
+    position: relative;
+    top: 2px;
   }
 }
 

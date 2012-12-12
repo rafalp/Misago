@@ -854,11 +854,25 @@ textarea{resize:vertical;}
 .table-footer .table-count{padding:11px 0px;color:#555555;}
 .table-footer .form-inline{margin:0px;padding:6px 0px;}
 .table-footer .table-actions-right{margin-right:16px;}
+.table td.perm-show,.table td.perm-read,.table td.perm-start,.table td.perm-reply,.table td.perm-upload,.table td.perm-download{text-align:center;}
+.table tr:nth-child(even) .perm-show{background-color:#ade6fe;}
+.table tr:nth-child(even) .perm-read{background-color:#eca09a;}
+.table tr:nth-child(even) .perm-start{background-color:#cdeacd;}
+.table tr:nth-child(even) .perm-reply{background-color:#fff6d9;}
+.table tr:nth-child(even) .perm-upload{background-color:#f3ceda;}
+.table tr:nth-child(even) .perm-download{background-color:#fee9cc;}
+.table tr:nth-child(odd) .perm-show{background-color:#7bd7fd;}
+.table tr:nth-child(odd) .perm-read{background-color:#e4776f;}
+.table tr:nth-child(odd) .perm-start{background-color:#a9dba9;}
+.table tr:nth-child(odd) .perm-reply{background-color:#ffe9a6;}
+.table tr:nth-child(odd) .perm-upload{background-color:#e8a6ba;}
+.table tr:nth-child(odd) .perm-download{background-color:#fdd49a;}
 td.check-cell,th.check-cell{width:32px;}
 td .checkbox,th .checkbox{margin-bottom:0px;position:relative;bottom:1px;}td .checkbox input,th .checkbox input{position:relative;left:9px;}
 td.lead-cell{font-size:120%;}
 .table td{vertical-align:middle;}
-.table input,.table select{margin:0px;}
+.table input,.table select,.table .yes-no-switch{margin:0px;}
+.table .yes-no-switch{position:relative;top:2px;}
 th.table-sort{padding:0px;}th.table-sort a:link,th.table-sort a:active,th.table-sort a:visited a:hover{display:block;padding:8px;}
 th.table-sort.sort-active-asc a:link,th.table-sort.sort-active-asc a:active,th.table-sort.sort-active-asc a:visited{border-bottom:3px solid #049cdb;padding-bottom:5px;}
 th.table-sort.sort-active-asc a:hover{border-bottom:3px solid #e4776f;padding-bottom:5px;text-decoration:none;}
