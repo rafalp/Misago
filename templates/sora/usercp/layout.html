@@ -11,6 +11,9 @@
   	<div class="tabbable tabs-left">
   	  <ul class="nav nav-tabs">
         <li class="nav-header">{% trans %}Account Settings{% endtrans %}</li>
+        {% for link in tabs %}
+        <li{% if link.active %} class="active"{% endif %}><a href="{{ link.route|url }}">{{ link.name }}</a></li>
+        {% endfor %}
   	    <li{% if tab == 'options' %} class="active"{% endif %}><a href="{% url 'usercp' %}">{% trans %}Forum Options{% endtrans %}</a></li>
         <li{% if tab == 'avatar' %} class="active"{% endif %}><a href="{% url 'usercp_avatar' %}">{% trans %}Change Avatar{% endtrans %}</a></li>
         <li{% if tab == 'signature' %} class="active"{% endif %}><a href="{% url 'usercp_signature' %}">{% trans %}Edit Signature{% endtrans %}</a></li>

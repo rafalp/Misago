@@ -1,11 +1,11 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
-from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from misago.forms import FormLayout
 from misago.messages import Message
 from misago.authn.decorators import block_guest
 from misago.usercp.forms import UserForumOptionsForm
+from misago.usercp.template import RequestContext
 
 
 @block_guest   
@@ -29,66 +29,46 @@ def options(request):
                                                              })
     
     return request.theme.render_to_response('usercp/options.html',
-                                            {
-                                             'message': message,
-                                             'tab': 'options',
-                                             'form': FormLayout(form)
-                                             },
-                                            context_instance=RequestContext(request));
+                                            context_instance=RequestContext(request, {
+                                              'message': message,
+                                              'tab': 'options',
+                                              'form': FormLayout(form)
+                                             }));
     
  
 @block_guest
 def credentials(request):
     return request.theme.render_to_response('usercp/credentials.html',
-                                            {
-                                             'tab': 'credentials',
-                                             },
-                                            context_instance=RequestContext(request));
+                                            context_instance=RequestContext(request, {
+                                              'tab': 'credentials',
+                                             }));
     
  
 @block_guest
 def username(request):
     return request.theme.render_to_response('usercp/username.html',
-                                            {
-                                             'tab': 'username',
-                                             },
-                                            context_instance=RequestContext(request));
-    
- 
-@block_guest
-def avatar(request):
-    # Intercept all requests if we cant use avatar
-    if request.user.avatar_ban:
-        return request.theme.render_to_response('usercp/avatar_banned.html',
-                                                {'tab': 'avatar'},
-                                                context_instance=RequestContext(request));
-                                                   
-    return request.theme.render_to_response('usercp/avatar.html',
-                                            {
-                                             'tab': 'avatar',
-                                             },
-                                            context_instance=RequestContext(request));
-    
+                                            context_instance=RequestContext(request, {
+                                              'tab': 'username',
+                                             }));  
  
 @block_guest
 def signature(request):
     # Intercept all requests if we cant use signature
     if request.user.avatar_ban:
         return request.theme.render_to_response('usercp/signature_banned.html',
-                                                {'tab': 'signature'},
-                                                context_instance=RequestContext(request));
+                                                context_instance=RequestContext(request, {
+                                                  'tab': 'signature',
+                                                 }));
                                                 
     return request.theme.render_to_response('usercp/signature.html',
-                                            {
-                                             'tab': 'signature',
-                                             },
-                                            context_instance=RequestContext(request));
+                                            context_instance=RequestContext(request, {
+                                              'tab': 'signature',
+                                             }));
     
  
 @block_guest
 def ignored(request):
     return request.theme.render_to_response('usercp/ignored.html',
-                                            {
-                                             'tab': 'ignored',
-                                             },
-                                            context_instance=RequestContext(request));
+                                            context_instance=RequestContext(request, {
+                                              'tab': 'ignored',
+                                             }));

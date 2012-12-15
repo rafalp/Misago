@@ -94,6 +94,11 @@ PERMISSION_PROVIDERS = (
     'misago.forums.acl',
 )
 
+# List of UserCP extensions
+USERCP_EXTENSIONS = (
+    'misago.avatarcp',
+)
+
 # Name of root urls configuration
 ROOT_URLCONF = 'misago.urls'
 
