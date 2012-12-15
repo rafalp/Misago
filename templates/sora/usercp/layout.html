@@ -15,9 +15,7 @@
         <li{% if link.active %} class="active"{% endif %}><a href="{{ link.route|url }}">{{ link.name }}</a></li>
         {% endfor %}
         <li class="nav-header">Outdated Actions:</li>
-  	    <li{% if tab == 'options' %} class="active"{% endif %}><a href="{% url 'usercp' %}">{% trans %}Forum Options{% endtrans %}</a></li>
-        <li{% if tab == 'avatar' %} class="active"{% endif %}><a href="{% url 'usercp_avatar' %}">{% trans %}Change Avatar{% endtrans %}</a></li>
-        <li{% if tab == 'signature' %} class="active"{% endif %}><a href="{% url 'usercp_signature' %}">{% trans %}Edit Signature{% endtrans %}</a></li>
+  	    <li{% if tab == 'signature' %} class="active"{% endif %}><a href="{% url 'usercp_signature' %}">{% trans %}Edit Signature{% endtrans %}</a></li>
   	    <li{% if tab == 'credentials' %} class="active"{% endif %}><a href="{% url 'usercp_credentials' %}">{% trans %}Change E-mail or Password{% endtrans %}</a></li>
   	    <li{% if tab == 'username' %} class="active"{% endif %}><a href="{% url 'usercp_username' %}">{% trans %}Change Username{% endtrans %}</a></li>
         <li{% if tab == 'ignored' %} class="active"{% endif %}><a href="{% url 'usercp_ignored' %}">{% trans %}Ignored Members List{% endtrans %}</a></li>

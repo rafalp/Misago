@@ -96,6 +96,7 @@ PERMISSION_PROVIDERS = (
 
 # List of UserCP extensions
 USERCP_EXTENSIONS = (
+    'misago.usercp.options',
     'misago.usercp.avatar',
 )
 

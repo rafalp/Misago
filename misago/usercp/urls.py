@@ -3,7 +3,6 @@ from django.conf.urls import include, patterns, url
 from django.utils.importlib import import_module
 
 urlpatterns = patterns('misago.usercp.views',
-    url(r'^$', 'options', name="usercp"),
     url(r'^credentials/$', 'credentials', name="usercp_credentials"),
     url(r'^username/$', 'username', name="usercp_username"),
     url(r'^signature/$', 'signature', name="usercp_signature"),

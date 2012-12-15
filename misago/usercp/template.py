@@ -12,9 +12,10 @@ def RequestContext(request, context=None):
         try:
             append_links = usercp_module.register_usercp_extension(request)
             for link in append_links:
+                token = link[0][link[0].find('_') + 1:]
                 context['tabs'].append({
                                         'route': link[0],
-                                        'active': context['tab'] == link[0][link[0].find('_') + 1:],
+                                        'active': context['tab'] == token,
                                         'name': link[1],
                                         })
         except AttributeError:
