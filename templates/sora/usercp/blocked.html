@@ -3,9 +3,9 @@
 {% load url from future %}
 {% import "sora/macros.html" as macros with context %}
 
-{% block title %}{{ macros.page_title(title=_('Ignored Members List')) }}{% endblock %}
+{% block title %}{{ macros.page_title(title=_('Blocked Members')) }}{% endblock %}
 
 {% block action %}
 {{ super() }}
-<h2>{% trans %}Ignored Members List{% endtrans %}</h2>
+<h2>{% trans %}Blocked Members List{% endtrans %}</h2>
 {% endblock %}

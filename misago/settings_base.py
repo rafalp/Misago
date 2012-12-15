@@ -98,6 +98,10 @@ PERMISSION_PROVIDERS = (
 USERCP_EXTENSIONS = (
     'misago.usercp.options',
     'misago.usercp.avatar',
+    'misago.usercp.signature',
+    'misago.usercp.credentials',
+    'misago.usercp.username',
+    'misago.usercp.blocked',
 )
 
 # Name of root urls configuration
