@@ -51,6 +51,10 @@
 {{ input_date(field, attrs=attrs, classes=[], horizontal=horizontal, width=width, nested=nested) }}
 {%- endif %}
 
+{%- if field.widget == "file_clearable" -%}
+{{ input_file_clearable(field, attrs=attrs, classes=[], horizontal=horizontal, width=width, nested=nested) }}
+{%- endif -%}
+
 {%- if field.widget == "recaptcha" -%}
 {{ input_recaptcha(field, attrs=attrs, classes=[], horizontal=horizontal, width=width, nested=nested) }}
 {%- endif -%}
@@ -123,6 +127,12 @@
     {{ choice[1] }}
   </label>{% endfor %}
 </div>
+{%- endmacro -%}
+
+
+{# File Upload input #}
+{%- macro input_file_clearable(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
+<input type="file" name="{{ field.html_name }}" id="{{ field.html_id }}" > 
 {%- endmacro -%}
 
 

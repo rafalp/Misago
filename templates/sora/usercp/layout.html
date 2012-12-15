@@ -14,6 +14,7 @@
         {% for link in tabs %}
         <li{% if link.active %} class="active"{% endif %}><a href="{{ link.route|url }}">{{ link.name }}</a></li>
         {% endfor %}
+        <li class="nav-header">Outdated Actions:</li>
   	    <li{% if tab == 'options' %} class="active"{% endif %}><a href="{% url 'usercp' %}">{% trans %}Forum Options{% endtrans %}</a></li>
         <li{% if tab == 'avatar' %} class="active"{% endif %}><a href="{% url 'usercp_avatar' %}">{% trans %}Change Avatar{% endtrans %}</a></li>
         <li{% if tab == 'signature' %} class="active"{% endif %}><a href="{% url 'usercp_signature' %}">{% trans %}Edit Signature{% endtrans %}</a></li>

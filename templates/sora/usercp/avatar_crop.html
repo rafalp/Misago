@@ -1,0 +1,93 @@
+{% extends "sora/usercp/layout.html" %}
+{% load i18n %}
+{% load url from future %}
+{% import "_forms.html" as form_theme with context %}
+{% import "sora/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=_('Crop Avatar')) }}{% endblock %}
+
+{% block action %}
+<h2>{% trans %}Crop Avatar{% endtrans %} <small>{% trans %}Change your Avatar{% endtrans %}</small></h2>
+{% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
+<form action="{% if after_upload %}{% url 'usercp_avatar_upload_crop' %}{% else %}{% url 'usercp_avatar_crop' %}{% endif %}" method="post">
+  <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+  <input type="hidden" id="crop-b" name="crop_b" value="">
+  <input type="hidden" id="crop-w" name="crop_w" value="">
+  <input type="hidden" id="crop-x" name="crop_x" value="">
+  <input type="hidden" id="crop-y" name="crop_y" value="">
+  <div class="row">
+  	<div class="span6">
+      <div class="avatar-crop-target"><img src="{{ MEDIA_URL }}{{ source }}" id="target" alt="{% trans %}Uploaded Image{% endtrans %}"></div>
+    </div>
+    <div class="span3">
+      <div class="avatar-crop-preview">
+        <img src="{{ MEDIA_URL }}{{ source }}" id="preview" alt="{% trans %}Avatar Preview{% endtrans %}" class="jcrop-preview" />
+      </div>
+      <div class="form-actions">
+        <button name="save" type="submit" class="btn btn-primary">{% trans %}Crop Avatar{% endtrans %}</button>
+        <a href="{% url 'usercp_avatar' %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block javascripts %}
+{{ super() }}
+    <script src="/static/sora/js/jquery.Jcrop.min.js"></script>
+    <script type="text/javascript">
+      $(function($){
+        // Create variables (in this scope) to hold the API and image size
+        var jcrop_api, boundx, boundy;
+        var crop_b = $('#crop-b');
+        var crop_w = $('#crop-w');
+        var crop_x = $('#crop-x');
+        var crop_y = $('#crop-y');
+        
+        var target_w = $('#target').width();
+        var target_h = $('#target').height();
+
+        if (target_w > target_h) {
+        	start_select = [ 0, 0, target_h, target_h ];
+        } else {
+        	start_select = [ 0, 0, target_w, target_w ];
+        }
+        
+        $('#target').Jcrop({
+          onChange: updatePreview,
+          onSelect: updatePreview,
+          aspectRatio: 1,
+          minSize: [50, 50],
+          setSelect: start_select,
+        },function(){
+          // Use the API to get the real image size
+          var bounds = this.getBounds();
+          boundx = bounds[0];
+          boundy = bounds[1];
+          $('#crop-b').val(boundx);
+          // Store the API in the jcrop_api variable
+          jcrop_api = this;
+        });
+
+        function updatePreview(c)
+        {
+          if (parseInt(c.w) > 0)
+          {
+            var rx = 125 / c.w;
+            var ry = 125 / c.h;
+            
+            $(crop_w).val(c.w);
+            $(crop_x).val(c.x);
+            $(crop_y).val(c.y);
+
+            $('#preview').css({
+              width: Math.round(rx * boundx) + 'px',
+              height: Math.round(ry * boundy) + 'px',
+              marginLeft: '-' + Math.round(rx * c.x) + 'px',
+              marginTop: '-' + Math.round(ry * c.y) + 'px'
+            });
+          }
+        };
+      });
+    </script>
+{% endblock %}

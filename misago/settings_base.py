@@ -96,7 +96,7 @@ PERMISSION_PROVIDERS = (
 
 # List of UserCP extensions
 USERCP_EXTENSIONS = (
-    'misago.avatarcp',
+    'misago.usercp.avatar',
 )
 
 # Name of root urls configuration

@@ -62,3 +62,40 @@ textarea {
   color: @black;
   font-weight: normal;
 }
+
+.form-button {
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
+  
+  .btn-link {
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+    
+    color: @linkColor;
+    font-weight: normal;
+    
+    &:hover, &:active {
+      text-decoration: underline !important;
+    }
+  }
+}
+
+.form-avatar-select {
+  .form-button {
+    margin-bottom: 4px;
+  }
+    
+  .form-button:hover {
+    img {
+      border: 1px solid @linkColor;
+      border: 1px solid @linkColor;
+      .box-shadow(0 1px 3px @linkColor);
+    }
+  }
+  
+  hr {
+    margin-top: 16px;
+  }
+}

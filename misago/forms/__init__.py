@@ -12,7 +12,7 @@ class Form(forms.Form):
     dont_strip = []
     allow_nl = []
     error_source = None
-    def __init__(self, data=None, request=None, *args, **kwargs):
+    def __init__(self, data=None, file=None, request=None, *args, **kwargs):
         self.request = request
         
         # Kill captcha fields
@@ -35,7 +35,7 @@ class Form(forms.Form):
         if data != None:
             # Clean bad data
             data = self._strip_badchars(data.copy())
-            super(Form, self).__init__(data, *args, **kwargs)
+            super(Form, self).__init__(data, file, *args, **kwargs)
         else:
             super(Form, self).__init__(*args, **kwargs)
         
@@ -141,7 +141,6 @@ class Form(forms.Form):
         
     def _check_fields_errors(self):
         if self.errors:
-            print self.errors
             if self.error_source and self.error_source in self.errors:
                 field_error, self.errors[self.error_source] = self.errors[self.error_source][0], []
                 raise forms.ValidationError(field_error)

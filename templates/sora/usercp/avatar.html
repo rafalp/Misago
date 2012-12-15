@@ -7,6 +7,7 @@
 
 {% block action %}
 <h2>{% trans %}Change your Avatar{% endtrans %}</h2>
+{% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
 <div class="row">
   <div class="span3" style="text-align: right;">
   	<img src="{{ user.get_avatar() }}" class="avatar-big" alt="{% trans %}Your Avatar{% endtrans %}" title="{% trans %}Your Avatar{% endtrans %}">
@@ -20,9 +21,10 @@
     	{% trans %}Gravatar{% endtrans %}
     	{%- endif %} <small>{% trans %}Current Avatar{% endtrans %}</small></h3>
     <ul class="unstyled">
-      <li><i class="icon-share"></i> <a href="#">{% trans %}Use Gravatar{% endtrans %}</a></li>
-      <li><i class="icon-th"></i> <a href="#">{% trans %}Pick Avatar from Gallery{% endtrans %}</a></li>
-      <li><i class="icon-picture"></i> <a href="#">{% trans %}Upload Avatar{% endtrans %}</a></li>
+      {% if 'gravatar' in settings.avatars_types and user.avatar_type != 'gravatar' %}<li><i class="icon-share"></i> <form action="{% url 'usercp_avatar_gravatar' %}" method="post" class="form-button"><button type="submit" class="btn btn-link">{% trans %}Use Gravatar{% endtrans %}</button><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"></form></li>{% endif %}
+      {% if 'gallery' in settings.avatars_types %}<li><i class="icon-th"></i> <a href="{% url 'usercp_avatar_gallery' %}">{% trans %}Pick Avatar from Gallery{% endtrans %}</a></li>{% endif %}
+      {% if user.avatar_type == 'upload' %}<li><i class="icon-fullscreen"></i> <a href="{% url 'usercp_avatar_crop' %}">{% trans %}Crop Your Avatar{% endtrans %}</a></li>{% endif %}
+      {% if 'upload' in settings.avatars_types %}<li><i class="icon-picture"></i> <a href="{% url 'usercp_avatar_upload' %}">{% trans %}Upload Avatar{% endtrans %}</a></li>{% endif %}
     </ul>
   </div>
 </div>

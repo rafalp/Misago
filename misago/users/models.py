@@ -122,6 +122,8 @@ class User(models.Model):
     password_date = models.DateTimeField()
     avatar_type = models.CharField(max_length=10,null=True,blank=True)
     avatar_image = models.CharField(max_length=255,null=True,blank=True)
+    avatar_original = models.CharField(max_length=255,null=True,blank=True)
+    avatar_temp = models.CharField(max_length=255,null=True,blank=True)
     signature = models.TextField(null=True,blank=True)
     signature_preparsed = models.TextField(null=True,blank=True)
     join_date = models.DateTimeField()
@@ -249,11 +251,44 @@ class User(models.Model):
         self.avatar_image = None
         return True
 
+    def delete_avatar_temp(self):
+        if self.avatar_temp:
+            try:
+                av_file = path(settings.MEDIA_ROOT + 'avatars/' + self.avatar_temp)
+                if not av_file.isdir():
+                    av_file.remove()
+            except Exception:
+                pass
+            
+        self.avatar_temp = None
+
+    def delete_avatar_original(self):
+        if self.avatar_original:
+            try:
+                av_file = path(settings.MEDIA_ROOT + 'avatars/' + self.avatar_original)
+                if not av_file.isdir():
+                    av_file.remove()
+            except Exception:
+                pass
+        
+        self.avatar_original = None
+
+    def delete_avatar_image(self):
+        if self.avatar_image:
+            try:
+                av_file = path(settings.MEDIA_ROOT + 'avatars/' + self.avatar_image)
+                if not av_file.isdir():
+                    av_file.remove()
+            except Exception:
+                pass
+        
+        self.avatar_image = None
+
     def delete_avatar(self):
-        if self.avatar_type == 'upload':
-            # DELETE OUR AVATAR!!!
-            pass
-    
+        self.delete_avatar_temp()
+        self.delete_avatar_original()
+        self.delete_avatar_image()
+            
     def delete_content(self):
         if self.pk:
             for model_obj in models.get_models():

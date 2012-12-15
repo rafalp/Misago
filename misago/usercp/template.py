@@ -3,7 +3,6 @@ from django.template import RequestContext as DjangoRequestContext
 from django.utils.importlib import import_module
 
 def RequestContext(request, context=None):
-    print context
     if not context:
         context = {}
     context['tabs'] = []
