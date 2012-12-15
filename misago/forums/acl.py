@@ -16,7 +16,19 @@ def make_forum_form(request, role, form):
     
 
 class ForumsACL(BaseACL):
-    pass
+    def can_see(self, forum):
+        try:
+            return forum.pk in self.acl['can_see']
+        except AttributeError:
+            return forum in self.acl['can_see']
+        
+    def can_browse(self, forum):
+        if self.can_see(forum):
+            try:
+                return forum.pk in self.acl['can_see']
+            except AttributeError:
+                return forum in self.acl['can_see']
+        return False
 
 
 def build_forums(acl, perms, forums, forum_roles):
