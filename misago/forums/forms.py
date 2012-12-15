@@ -5,7 +5,7 @@ from misago.forms import Form
 from misago.forums.models import Forum
 
 class CategoryForm(Form):
-    parent = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(include_self=True),level_indicator=u'- - ')
+    parent = False
     name = forms.CharField(max_length=255)
     description = forms.CharField(widget=forms.Textarea,required=False)
     template = forms.ChoiceField(choices=(
@@ -26,9 +26,13 @@ class CategoryForm(Form):
               ),
              )
     
+    def __init__(self, *args, **kwargs):
+        self.base_fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(include_self=True),level_indicator=u'- - ')
+        super(CategoryForm, self).__init__(*args, **kwargs)
+    
 
 class ForumForm(Form):
-    parent = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ')
+    parent = False
     name = forms.CharField(max_length=255)
     description = forms.CharField(widget=forms.Textarea,required=False)
     template = forms.ChoiceField(choices=(
@@ -57,10 +61,14 @@ class ForumForm(Form):
                 ),
               ),
              )
-
+    
+    def __init__(self, *args, **kwargs):
+        self.base_fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ')
+        super(ForumForm, self).__init__(*args, **kwargs)
+        
 
 class RedirectForm(Form):
-    parent = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ')
+    parent = False
     name = forms.CharField(max_length=255)
     description = forms.CharField(widget=forms.Textarea,required=False)
     redirect = forms.URLField(max_length=255)
@@ -77,9 +85,13 @@ class RedirectForm(Form):
               ),
              )
     
+    def __init__(self, *args, **kwargs):
+        self.base_fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ')
+        super(RedirectForm, self).__init__(*args, **kwargs)
+    
 
 class DeleteForm(Form):
-    parent = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),required=False,empty_label=_("Remove with forum"),level_indicator=u'- - ')
+    parent = False
    
     layout = (
               (
@@ -89,3 +101,7 @@ class DeleteForm(Form):
                 ),
               ),
              )
+        
+    def __init__(self, *args, **kwargs):
+        self.base_fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),required=False,empty_label=_("Remove with forum"),level_indicator=u'- - ')
+        super(DeleteForm, self).__init__(*args, **kwargs)

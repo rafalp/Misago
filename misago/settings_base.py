@@ -91,6 +91,7 @@ MIDDLEWARE_CLASSES = (
 PERMISSION_PROVIDERS = (
     'misago.usercp.acl',
     'misago.admin.acl',
+    'misago.forums.acl',
 )
 
 # Name of root urls configuration
@@ -130,6 +131,7 @@ INSTALLED_APPS = (
     'misago.prune', # Prune Users
     'misago.ranks', # User Ranks
     'misago.roles', # User Roles
+    'misago.forumroles', # Forum Roles
     'misago.usercp', # User Control Panel
     'misago.profiles', # User Profiles
     'misago.register', # Register New Users

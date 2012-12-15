@@ -14,6 +14,6 @@
   	<strong>{{ item.name }}</strong>{% if item.special %} <span class="label label-info">{% trans %}Special{% endtrans %}</span>{% endif %}{% if item.as_tab %} <span class="label label-inverse">{% trans %}Tab{% endtrans %}</span>{% endif %}
   </td>
   <td class="span2">
-  	{{ form_theme.field_widget(table_form['pos_' + item.pk|string], attrs={'class': 'span2', 'form': 'table_form'}) }}
+  	{{ form_theme.field_widget(table_form['pos_' + item.pk|string], attrs={'form': 'table_form'}, width=2) }}
   </td>
 {% endblock%}

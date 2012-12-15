@@ -63,6 +63,8 @@ class BaseWidget(object):
     
     def get_target_name(self, model):
         try:
+            if self.translate_target_name:
+                return _(model.__dict__[self.target_name])
             return model.__dict__[self.target_name]
         except AttributeError:
             return None
@@ -405,6 +407,7 @@ class FormWidget(BaseWidget):
     layout = None
     tabbed = False
     target_name = None
+    translate_target_name = False
     original_name = None
     submit_fallback = False
     

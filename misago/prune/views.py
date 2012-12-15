@@ -152,7 +152,6 @@ class Apply(FormWidget):
         return reverse('admin_prune_users_apply', model)
     
     def __call__(self, request, target=None, slug=None):
-
         # Fetch target
         model = None
         if target:

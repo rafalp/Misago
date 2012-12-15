@@ -9,35 +9,15 @@
 
 {% block table_head scoped %}
   <th>{% trans %}Forum{% endtrans %}</th>
-  <th><a href="#" class="perm-show-switch tooltip-top" title="{% trans %}Forums users with this role can see.{% endtrans %}<br>{% trans %}Click to switch entire column.{% endtrans %}">{% trans %}Show{% endtrans %}</a></th>
-  <th><a href="#" class="perm-read-switch tooltip-top" title="{% trans %}Forums users with this role can browse.{% endtrans %}<br>{% trans %}Click to switch entire column.{% endtrans %}">{% trans %}Read{% endtrans %}</a></th>
-  <th><a href="#" class="perm-start-switch tooltip-top" title="{% trans %}Forums users with this role can start new threads in.{% endtrans %}<br>{% trans %}Click to switch entire column.{% endtrans %}">{% trans %}Start{% endtrans %}</a></th>
-  <th><a href="#" class="perm-reply-switch tooltip-top" title="{% trans %}Forums users with this role can write new posts in.{% endtrans %}<br>{% trans %}Click to switch entire column.{% endtrans %}">{% trans %}Reply{% endtrans %}</a></th>
-  <th><a href="#" class="perm-upload-switch tooltip-top" title="{% trans %}Forums users with this role can upload new files in.{% endtrans %}<br>{% trans %}Click to switch entire column.{% endtrans %}">{% trans %}Upload{% endtrans %}</a></th>
-  <th><a href="#" class="perm-download-switch tooltip-top" title="{% trans %}Forums users with this role can download files from.{% endtrans %}<br>{% trans %}Click to switch entire column.{% endtrans %}">{% trans %}Download{% endtrans %}</a></th>
+  <th class="span3">{% trans %}Role{% endtrans %}</th>
 {% endblock %}
 
 {% block table_row scoped %}
   <td class="lead-cell" style="padding-left: {{ 8 + ((item.level - 1) * 24) }}px;">
   	<i class="icon-{{ forum_icon(item.type) }}"></i> <strong>{{ item.name }}</strong>
   </td>
-  <td class="perm-show">
-  	{{ form_theme.field_widget(table_form['show_' + item.pk|string], attrs={'form': 'table_form'}) }}
-  </td>
-  <td class="perm-read">
-  	{{ form_theme.field_widget(table_form['read_' + item.pk|string], attrs={'form': 'table_form'}) }}
-  </td>
-  <td class="perm-start">
-  	{{ form_theme.field_widget(table_form['start_' + item.pk|string], attrs={'form': 'table_form'}) }}
-  </td>
-  <td class="perm-reply">
-  	{{ form_theme.field_widget(table_form['reply_' + item.pk|string], attrs={'form': 'table_form'}) }}
-  </td>
-  <td class="perm-upload">
-  	{{ form_theme.field_widget(table_form['upload_' + item.pk|string], attrs={'form': 'table_form'}) }}
-  </td>
-  <td class="perm-download">
-  	{{ form_theme.field_widget(table_form['download_' + item.pk|string], attrs={'form': 'table_form'}) }}
+  <td>
+  	{{ form_theme.field_widget(table_form['forum_' + item.pk|string], attrs={'form': 'table_form'}, width=3) }}
   </td>
 {% endblock %}
 
@@ -50,42 +30,3 @@ list
 globe
 {%- endif -%}
 {%- endmacro %}
-
-{% block javascripts %}
-{{ super() }}
-  <script type="text/javascript">
-    var show_switch = true;
-    var read_switch = true;
-    var start_switch = true;
-    var reply_switch = true;
-    var upload_switch = true;
-    var download_switch = true;
-    
-    $(function () {
-      $('.perm-show-switch').click(function() {
-      	$('.perm-show .yes-no-switch').toggleButtons('setState', show_switch);
-      	show_switch = !show_switch;
-      });
-      $('.perm-read-switch').click(function() {
-      	$('.perm-read .yes-no-switch').toggleButtons('setState', read_switch);
-      	read_switch = !read_switch;
-      });
-      $('.perm-start-switch').click(function() {
-      	$('.perm-start .yes-no-switch').toggleButtons('setState', start_switch);
-      	start_switch = !start_switch;
-      });
-      $('.perm-reply-switch').click(function() {
-      	$('.perm-reply .yes-no-switch').toggleButtons('setState', reply_switch);
-      	reply_switch = !reply_switch;
-      });
-      $('.perm-upload-switch').click(function() {
-      	$('.perm-upload .yes-no-switch').toggleButtons('setState', upload_switch);
-      	upload_switch = !upload_switch;
-      });
-      $('.perm-download-switch').click(function() {
-      	$('.perm-download .yes-no-switch').toggleButtons('setState', download_switch);
-      	download_switch = !download_switch;
-      });
-    });
-  </script>
-{% endblock %}

@@ -5,7 +5,6 @@ from misago.banning.models import Ban
 from misago.newsletters.models import Newsletter
 from misago.prune.models import Policy
 from misago.ranks.models import Rank
-from misago.roles.models import Role
 from misago.users.models import User
 
 ADMIN_ACTIONS=(
@@ -38,37 +37,6 @@ ADMIN_ACTIONS=(
                         url(r'^new/$', 'New', name='admin_users_new'),
                         url(r'^edit/(?P<slug>[a-z0-9]+)-(?P<target>\d+)/$', 'Edit', name='admin_users_edit'),
                         url(r'^delete/(?P<slug>[a-z0-9]+)-(?P<target>\d+)/$', 'Delete', name='admin_users_delete'),
-                    ),
-               ),               
-   AdminAction(
-               section='users',
-               id='roles',
-               name=_("Roles"),
-               help=_("Manage User Roles"),
-               icon='adjust',
-               model=Role,
-               actions=[
-                        {
-                         'id': 'list',
-                         'name': _("Browse Roles"),
-                         'help': _("Browse all existing roles"),
-                         'route': 'admin_roles'
-                         },
-                        {
-                         'id': 'new',
-                         'name': _("Add Role"),
-                         'help': _("Create new role"),
-                         'route': 'admin_roles_new'
-                         },
-                        ],
-               route='admin_roles',
-               urlpatterns=patterns('misago.roles.views',
-                        url(r'^$', 'List', name='admin_roles'),
-                        url(r'^new/$', 'New', name='admin_roles_new'),
-                        url(r'^forums/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Forums', name='admin_roles_forums'),
-                        url(r'^acl/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'ACL', name='admin_roles_acl'),
-                        url(r'^edit/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Edit', name='admin_roles_edit'),
-                        url(r'^delete/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Delete', name='admin_roles_delete'),
                     ),
                ),
    AdminAction(

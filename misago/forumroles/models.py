@@ -6,21 +6,16 @@ try:
 except ImportError:
     import pickle
 
-class Role(models.Model):
+class ForumRole(models.Model):
     """
     Misago User Role model
     """
     name = models.CharField(max_length=255)
-    token = models.CharField(max_length=255,null=True,blank=True)
-    protected = models.BooleanField(default=False)
     permissions = models.TextField(null=True,blank=True)
     permissions_cache = {}
     
     def __unicode__(self):
         return unicode(_(self.name))
-    
-    def is_special(self):
-        return token
     
     def get_permissions(self):
         if self.permissions_cache:

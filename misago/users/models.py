@@ -354,6 +354,9 @@ class User(models.Model):
         return self.roles.all()
         
     def make_acl_key(self):
+        if self.acl_key:
+            return self.acl_key
+        
         roles_ids = []
         for role in self.roles.all():
             roles_ids.append(str(role.pk))

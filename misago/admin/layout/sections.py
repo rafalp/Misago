@@ -18,6 +18,11 @@ ADMIN_SECTIONS=(
                  icon='comment',
                  ),
     AdminSection(
+                 id='perms',
+                 name=_("Permissions"),
+                 icon='adjust',
+                 ),
+    AdminSection(
                  id='system',
                  name=_("System"),
                  icon='cog',

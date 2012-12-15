@@ -141,6 +141,7 @@ class Form(forms.Form):
         
     def _check_fields_errors(self):
         if self.errors:
+            print self.errors
             if self.error_source and self.error_source in self.errors:
                 field_error, self.errors[self.error_source] = self.errors[self.error_source][0], []
                 raise forms.ValidationError(field_error)
