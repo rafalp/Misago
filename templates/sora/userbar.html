@@ -2,15 +2,6 @@
   <div class="navbar-inner">
     <div class="container">
       <ul class="nav">{% if user.is_authenticated() %}
-        <li class="user-profile"><a href="{% url 'user' user=user.id, username=user.username_slug %}" title="{% trans %}Go to your profile{% endtrans %}" class="tooltip-bottom"><div><img src="{{ user.get_avatar() }}" class="avatar-small" alt="{{ user.username }}" title="{{ user.username }}"> {{ user.username }}</div></a></li>
-        <li><a href="#" title="{% trans %}Go to Moderator Control Panel{% endtrans %}" class="tooltip-bottom"><i class="icon-tasks"></i> {% trans %}Mod CP{% endtrans %}</a></li>
-        <li><a href="{% url 'usercp' %}" title="{% trans %}Edit your profile options{% endtrans %}" class="tooltip-bottom"><i class="icon-cog"></i> {% trans %}Options{% endtrans %}</a></li>
-        <li><form action="{% url 'sign_out' %}" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><button type="submit" title="{% trans %}Sign Out and browse as guest{% endtrans %}" class="btn btn-link tooltip-bottom"><i class="icon-off"></i> {% trans %}Sign Out{% endtrans %}</button></form></li>
-        {% else %}
-        <li><a href="{% url 'sign_in' %}" title="{% trans %}Sign In using your account data{% endtrans %}" class="tooltip-bottom"><i class="icon-check"></i> {% trans %}Sign In{% endtrans %}</a></li>{% if settings.account_activation != 'block' %}
-        <li><a href="{% url 'register' %}" title="{% trans %}Register new account{% endtrans %}" class="tooltip-bottom"><i class="icon-edit"></i> {% trans %}Register{% endtrans %}</a></li>{% endif %}
-      {% endif %}</ul>
-      <ul class="nav pull-right">{% if user.is_authenticated() %}
         <li><a href="#" title="{% trans %}Your Notifications{% endtrans %}" class="tooltip-bottom"><i class="icon-fire"></i><span class="stat att">13</span></a></li>
         <li><a href="#" title="{% trans %}Private messages{% endtrans %}" class="tooltip-bottom"><i class="icon-inbox"></i><span class="stat">2</span></a></li>
         <li><a href="#" title="{% trans %}Reported posts{% endtrans %}" class="tooltip-bottom"><i class="icon-bell"></i><span class="stat">5</span></a></li>
@@ -19,6 +10,15 @@
         <li><a href="#" title="{% trans %}Today Posts{% endtrans %}" class="tooltip-bottom"><i class="icon-star"></i></a></li>
         <li><a href="#" title="{% trans %}New Posts{% endtrans %}" class="tooltip-bottom"><i class="icon-star-empty "></i></a></li>
       </ul>
+      <ul class="nav pull-right">{% if user.is_authenticated() %}
+        <li class="user-profile"><a href="{% url 'user' user=user.id, username=user.username_slug %}" title="{% trans %}Go to your profile{% endtrans %}" class="tooltip-bottom"><div><img src="{{ user.get_avatar() }}" class="avatar-small" alt="{{ user.username }}" title="{{ user.username }}"> {{ user.username }}</div></a></li>
+        <li><a href="#" title="{% trans %}Go to Moderator Control Panel{% endtrans %}" class="tooltip-bottom"><i class="icon-tasks"></i> {% trans %}Mod CP{% endtrans %}</a></li>
+        <li><a href="{% url 'usercp' %}" title="{% trans %}Edit your profile options{% endtrans %}" class="tooltip-bottom"><i class="icon-cog"></i> {% trans %}Options{% endtrans %}</a></li>
+        <li><form action="{% url 'sign_out' %}" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><button type="submit" title="{% trans %}Sign Out and browse as guest{% endtrans %}" class="btn btn-link tooltip-bottom"><i class="icon-off"></i> {% trans %}Sign Out{% endtrans %}</button></form></li>
+        {% else %}
+        <li><a href="{% url 'sign_in' %}" title="{% trans %}Sign In using your account data{% endtrans %}" class="tooltip-bottom"><i class="icon-check"></i> {% trans %}Sign In{% endtrans %}</a></li>{% if settings.account_activation != 'block' %}
+        <li><a href="{% url 'register' %}" title="{% trans %}Register new account{% endtrans %}" class="tooltip-bottom"><i class="icon-edit"></i> {% trans %}Register{% endtrans %}</a></li>{% endif %}
+      {% endif %}</ul>
     </div>
   </div>
 </div>{% endif %}
