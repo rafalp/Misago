@@ -43,22 +43,13 @@
         var crop_w = $('#crop-w');
         var crop_x = $('#crop-x');
         var crop_y = $('#crop-y');
-        
-        var target_w = $('#target').width();
-        var target_h = $('#target').height();
 
-        if (target_w > target_h) {
-        	start_select = [ 0, 0, target_h, target_h ];
-        } else {
-        	start_select = [ 0, 0, target_w, target_w ];
-        }
-        
         $('#target').Jcrop({
           onChange: updatePreview,
           onSelect: updatePreview,
           aspectRatio: 1,
           minSize: [50, 50],
-          setSelect: start_select,
+          setSelect: [ 0, 0, 5000, 5000 ],
         },function(){
           // Use the API to get the real image size
           var bounds = this.getBounds();

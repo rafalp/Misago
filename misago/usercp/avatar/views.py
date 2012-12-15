@@ -178,8 +178,7 @@ def crop(request, upload=False):
                     request.user.avatar_type = 'upload'
                     request.user.avatar_original = '%s_org_%s%s' % (request.user.pk, get_random_string(8), image_extension)
                     source.save(image_path + request.user.avatar_original)
-                else:
-                    request.user.delete_avatar_temp()
+                request.user.delete_avatar_temp()
                 request.user.avatar_image = image_name
                 request.user.save(force_update=True)
                 
