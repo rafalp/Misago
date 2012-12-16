@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load url from future %}
 
-{% block title %}{% trans board_name=settings.board_name %}Confirm New Password Request{% endtrans %}{% endblock %}
+{% block title %}{% trans board_name=settings.board_name %}Confirm New Password Request on {{ board_name }}{% endtrans %}{% endblock %}
 
 {% block content %}
 <p {{ style_p|safe }}>{% trans username=user.username %}{{ username }}, you are receiving this message because you have requested for new password to be generated and set on your account.{% endtrans %}</p>
