@@ -4,7 +4,8 @@ import markdown
 def signature_markdown(acl, text):
     md = markdown.Markdown(
                            safe_mode='escape',
-                           output_format=settings.OUTPUT_FORMAT)
+                           output_format=settings.OUTPUT_FORMAT,
+                           extensions=['nl2br'])
     
     if not acl.usercp.allow_signature_links():
         del md.inlinePatterns['link']
@@ -27,5 +28,6 @@ def signature_markdown(acl, text):
 def post_markdown(request, text):
     md = markdown.Markdown(
                            safe_mode='escape',
-                           output_format=settings.OUTPUT_FORMAT)
+                           output_format=settings.OUTPUT_FORMAT,
+                           extensions=['nl2br'])
     return md.convert(text)

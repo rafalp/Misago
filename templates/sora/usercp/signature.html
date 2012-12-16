@@ -11,7 +11,7 @@
 <h2>{% trans %}Edit your Signature{% endtrans %}</h2>
 {% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
 {% if user.signature_preparsed %}
-<div class="well" style="margin: 0px; margin-bottom: 32px; padding: 8px;">
+<div class="well" style="margin: 0px; margin-bottom: 32px; padding: 12px;">
   <div class="markdown">
     {{ user.signature_preparsed|safe }}
   </div>
