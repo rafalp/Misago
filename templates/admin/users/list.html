@@ -28,10 +28,8 @@
   <td colspan="2" class="lead-cell">
   	<strong>{{ item.username }}</strong> <span class="muted">{{ item.email }}</span>{% if item.activation > 0 %} <span class="label tooltip-top" title="{% if item.activation == 1 -%}
   	{% trans %}This user has not yet validated his e-mail address.{% endtrans %}
-  	{%- elif item.activation == 2 -%}
-  	{% trans %}This user is awaiting admin approval.{% endtrans %}
   	{%- else -%}
-  	{% trans %}This user is changing his sign-in credentials.{% endtrans %}
+  	{% trans %}This user is awaiting admin approval.{% endtrans %}
   	{%- endif %}">{% trans %}Inactive{% endtrans %}</span>{% endif %}
   </td>
 {% endblock%}
