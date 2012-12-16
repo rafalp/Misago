@@ -61,6 +61,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'misago.bruteforce.context_processors.is_jammed',
     'misago.csrf.context_processors.csrf',
     'misago.users.context_processors.user',
+    'misago.acl.context_processors.acl',
 )
 
 # Jinja2 Template Extensions
