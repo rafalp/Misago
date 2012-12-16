@@ -5,7 +5,7 @@ def block_authenticated(f):
     def decorator(*args, **kwargs):
         request = args[0]
         if not request.firewall.admin and request.user.is_authenticated():
-            return error403(request, _("%{username}s, this page is not available to signed in users.") % {'username': request.user.username})
+            return error403(request, _("%(username)s, this page is not available to signed in users.") % {'username': request.user.username})
         return f(*args, **kwargs)
     return decorator
 

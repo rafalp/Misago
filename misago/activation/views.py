@@ -40,7 +40,7 @@ def form(request):
                             'users/activation/resend',
                             _("Account Activation"),
                             )
-            return redirect_message(request, Message(_("%(username)s, e-mail containing new activation link has been sent to %{emaik}s.") % {'username': user.username, 'email': user.email}), 'success')
+            return redirect_message(request, Message(_("%(username)s, e-mail containing new activation link has been sent to %(email)s.") % {'username': user.username, 'email': user.email}), 'success')
         else:
             message = Message(form.non_field_errors()[0], 'error')
     else:

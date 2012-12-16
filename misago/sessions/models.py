@@ -3,7 +3,7 @@ from django.db import models
 class Session(models.Model):
     id = models.CharField(max_length=42, primary_key=True)
     data = models.TextField(db_column="session_data")
-    user = models.ForeignKey('users.User', related_name='+', null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey('users.User', related_name='sessions', null=True, on_delete=models.SET_NULL)
     crawler = models.CharField(max_length=255, blank=True, null=True)
     ip = models.GenericIPAddressField()
     agent = models.CharField(max_length=255)
@@ -16,6 +16,6 @@ class Session(models.Model):
 
 class Token(models.Model):
     id = models.CharField(max_length=42, primary_key=True)
-    user = models.ForeignKey('users.User', related_name='+')
+    user = models.ForeignKey('users.User', related_name='signin_tokens')
     created = models.DateTimeField()
     accessed = models.DateTimeField()

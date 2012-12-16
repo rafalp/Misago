@@ -6,7 +6,6 @@
 {% block title %}{{ macros.page_title(title=_('Edit your Signature')) }}{% endblock %}
 
 {% block action %}
-{{ super() }}
 <h2>{% trans %}Edit your Signature{% endtrans %}</h2>
 {% if user.signature_ban_reason_user %}
 <p class="lead">{% trans username=user.username %}{{ username }}, your ability to edit your signature has been removed for following reason:{% endtrans %}</p>

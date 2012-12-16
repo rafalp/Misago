@@ -155,6 +155,8 @@ class SessionHuman(SessionMisago):
             except AuthException as e:
                 # Autolog failed
                 self.create(request)
+        self.id = self._session_rk.id        
+        
         # Make cookie live longer
         if request.firewall.admin:
             request.cookie_jar.set('ASID', self._session_rk.id)

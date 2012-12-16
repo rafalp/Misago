@@ -7,7 +7,6 @@
 {% block title %}{{ macros.page_title(title=_('Change Forum Options')) }}{% endblock %}
 
 {% block action %}
-{{ super() }}
 <h2>{% trans %}Change Forum Options{% endtrans %}</h2>
 {% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
 <form action="{% url 'usercp' %}" method="post">

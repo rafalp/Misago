@@ -13,7 +13,7 @@
 <div class="row">
   <div class="span6">
     <div class="well">
-	  {% if message %}<div class="alert alert-form alert-error">
+	  {% if message %}<div class="alert alert-form alert-{{ message.type }}">
   	    {{ macros.draw_message_icon(message) }}
 	    <p><strong>{{ message.message }}</strong></p>{% if bad_password %}
 	    <p class="protip"><a href="{% url 'forgot_password' %}">{% trans %}Click here if you forgot your sign in credentials.{% endtrans %}</a></p>{% endif %}{% if not_active %}

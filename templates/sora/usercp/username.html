@@ -7,7 +7,6 @@
 {% block title %}{{ macros.page_title(title=_('Change your Username')) }}{% endblock %}
 
 {% block action %}
-{{ super() }}
 <h2>{% trans %}Change your Username{% endtrans %}</h2>
 {% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
 <p class="lead">{% if changes_left > 0 -%}

@@ -39,7 +39,7 @@ def form(request):
                             _("Confirm New Password Request")
                             )
             
-            return redirect_message(request, Message(_("%(username)s, new password request confirmation has been sent to %{email}s.") % {'username': user.username, 'email': user.email}), 'info')
+            return redirect_message(request, Message(_("%(username)s, new password request confirmation has been sent to %(email)s.") % {'username': user.username, 'email': user.email}), 'info')
         else:
             message = Message(form.non_field_errors()[0], 'error')
     else:
@@ -87,6 +87,6 @@ def reset(request, username="", user="0", token=""):
                         {'password': new_password}
                         )
         
-        return redirect_message(request, Message(_("%(username)s, your password has been changed with new one that was sent to %{email}s.") % {'username': user.username, 'email': user.email}), 'success')
+        return redirect_message(request, Message(_("%(username)s, your password has been changed with new one that was sent to %(email)s.") % {'username': user.username, 'email': user.email}), 'success')
     except User.DoesNotExist:
         return error404(request)

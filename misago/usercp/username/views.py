@@ -30,10 +30,11 @@ def username(request):
         org_username = request.user.username
         form = UsernameChangeForm(request.POST, request=request)
         if form.is_valid():
-            request.user.username = form.cleaned_data['username']
+            request.user.set_username(form.cleaned_data['username'])
             request.user.save(force_update=True)
-            request.messages.set_flash(Message(_("Your username has been changed")), 'success', 'usercp_username')
             request.user.namechanges.create(date=timezone.now(),old_username=org_username)
+            
+            request.messages.set_flash(Message(_("Your username has been changed.")), 'success', 'usercp_username')
             return redirect(reverse('usercp_username'))
         message = Message(form.non_field_errors()[0], 'error')
     else:
