@@ -1,10 +1,24 @@
 {% extends "sora/usercp/layout.html" %}
 {% load i18n %}
 {% load url from future %}
+{% import "_forms.html" as form_theme with context %}
+{% import "sora/editor.html" as editor with context %}
 {% import "sora/macros.html" as macros with context %}
 
 {% block title %}{{ macros.page_title(title=_('Edit your Signature')) }}{% endblock %}
 
 {% block action %}
 <h2>{% trans %}Edit your Signature{% endtrans %}</h2>
+{% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
+{% if user.signature_preparsed %}
+<div class="well" style="margin: 0px; margin-bottom: 32px; padding: 8px;">
+  <div class="markdown">
+    {{ user.signature_preparsed|safe }}
+  </div>
+</div>
+{% endif %}
+<form action="{% url 'usercp_signature' %}" method="post">
+  <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+  {{ editor.editor(form.fields.signature, _('Save Signature')) }}
+</form>
 {% endblock %}

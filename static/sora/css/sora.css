@@ -834,7 +834,8 @@ form fieldset{border-top:1px solid #e8e8e8;margin:0px;padding:0px;padding-top:16
 form fieldset .control-group{padding-bottom:4px;}
 form fieldset .control-group:last-child{padding-bottom:0px;}
 form fieldset:first-child{border-top:none;padding-top:0px;}
-form fieldset:last-child{padding-bottom:0px;margin-bottom:0px;}
+form fieldset:last-child{padding-bottom:0px;margin-bottom:-8px;}
+.form-actions{margin-top:0px;}
 textarea{resize:vertical;}
 .radio-group,.select-multiple,.yes-no-switch{margin-bottom:8px;}.radio-group label,.select-multiple label,.yes-no-switch label{color:#000000;font-weight:normal;}
 .checkbox{color:#000000;font-weight:normal;}
@@ -933,6 +934,12 @@ th.table-sort.sort-desc a:hover{border-bottom:3px solid #eca09a;padding-bottom:5
 .nav-tabs .tab-search form{marging:0px;margin-bottom:-4px;}
 .nav-tabs .tab-search.tab-search-no-tabs{position:relative;bottom:12px;}
 .nav-tabs button{padding-left:7px;padding-right:7px;}
+.editor{background-color:#e3e3e3;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}.editor .editor-input{padding:8px;}.editor .editor-input div{margin-right:14px;}
+.editor .editor-input textarea{margin:0px;width:100%;font-family:Monaco,Menlo,Consolas,"Courier New",monospace;}
+.editor .editor-actions{border-top:2px solid #c9c9c9;overflow:auto;padding:8px;}
+.markdown{margin-bottom:-12px;}
+.post-content{font-size:100%;}
+.signature{font-size:90%;}
 .clickable{cursor:pointer;}
 .profile-header{overflow:auto;border-bottom:none;margin-bottom:30px;}.profile-header .avatar-height{overflow:auto;}.profile-header .avatar-height .avatar{-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;margin-right:24px;width:125px;height:125px;}
 .profile-header .avatar-height h1{font-size:300%;}

@@ -1,0 +1,15 @@
+{% macro editor(field, submit_button) %}
+<div class="editor">
+  <div class="editor-input">
+    <div>
+      <textarea name="{{ field.html_name }}" id="{{ field.html_id }}" rows="4">{% if field.has_value %}{{ field.value }}{% endif %}</textarea>
+    </div>
+  </div>
+  <div class="editor-actions">
+    <button name="save" type="submit" class="btn btn-primary pull-right">{{ submit_button }}</button>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro editor_js() %}
+{% endmacro %}

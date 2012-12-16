@@ -23,4 +23,4 @@ class ACLMiddleware(object):
         if request.user.is_authenticated() and (request.acl.team or request.user.is_god()) != request.user.is_team:
             request.user.is_team = (request.acl.team or request.user.is_god())
             request.user.save(force_update=True)
-        
+        request.session.team = request.user.is_team

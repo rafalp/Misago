@@ -9,7 +9,7 @@ class Session(models.Model):
     agent = models.CharField(max_length=255)
     start = models.DateTimeField()
     last = models.DateTimeField()
-    staff = models.BooleanField(default=False)
+    team = models.BooleanField(default=False)
     admin = models.BooleanField(default=False)
     matched = models.BooleanField(default=False)
     hidden = models.BooleanField(default=False)

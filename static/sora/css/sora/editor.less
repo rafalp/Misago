@@ -1,0 +1,27 @@
+// Misago editor
+// --------------------------------------------------
+.editor {
+  background-color: darken(@bodyBackground, 10%);
+  .border-radius(3px);
+  
+  .editor-input {
+    padding: 8px;
+    
+    div {
+      margin-right: 14px;
+    }
+    
+    textarea {
+      margin: 0px;
+      width: 100%;
+      
+      font-family: @monoFontFamily;
+    }
+  }
+  
+  .editor-actions {
+    border-top: 2px solid darken(@bodyBackground, 20%);
+    overflow: auto;
+    padding: 8px;
+  }
+}

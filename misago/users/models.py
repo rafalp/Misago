@@ -311,14 +311,7 @@ class User(models.Model):
                     model_obj.objects.update_username(self)
                 except AttributeError:
                     pass
-     
-    def set_signature(self, signature):
-        self.signature = signature.strip()
-        self.signature_preparsed = ''
-        if self.signature:
-            import markdown
-            self.signature_preparsed = markdown.markdown(signature, safe_mode='escape', output_format=settings.OUTPUT_FORMAT)
-        
+    
     def is_username_valid(self, e):
         try:
             raise ValidationError(e.message_dict['username'])

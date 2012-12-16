@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.utils.translation import ugettext as _
 from misago.admin import site
 from misago.admin.widgets import *
+from misago.markdown import signature_markdown
 from misago.users.forms import UserForm, NewUserForm, SearchUsersForm
 from misago.users.models import User
 from misago.utils import get_random_string
@@ -280,10 +281,18 @@ class Edit(FormWidget):
         target.rank = form.cleaned_data['rank']
         target.avatar_ban_reason_user = form.cleaned_data['avatar_ban_reason_user']
         target.avatar_ban_reason_admin = form.cleaned_data['avatar_ban_reason_admin']
-        target.set_signature(form.cleaned_data['signature'])
         target.signature_ban = form.cleaned_data['signature_ban']
         target.signature_ban_reason_user = form.cleaned_data['signature_ban_reason_user']
         target.signature_ban_reason_admin = form.cleaned_data['signature_ban_reason_admin']
+        
+        # Do signature mumbo-jumbo
+        if form.cleaned_data['signature']:
+            target.signature = form.cleaned_data['signature']
+            target.signature_preparsed = signature_markdown(target.get_acl(request),
+                                                            form.cleaned_data['signature'])
+        else:
+            target.signature = None
+            target.signature_preparsed = None
         
         # Do avatar ban mumbo-jumbo
         if target.avatar_ban != form.cleaned_data['avatar_ban']:

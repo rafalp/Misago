@@ -117,54 +117,20 @@ def load_settings_group_fixture(group, fixture):
 
 def update_settings_group_fixture(group, fixture):
     try:
-        # Get and update group entry
         model_group = Group.objects.get(key=group)
-        model_group.name = get_msgid(fixture['name'])
-        model_group.description = get_msgid(fixture.get('description'))
-        model_group.save(force_update=True)
+        settings = {}
+        for setting in model_group.setting_set.all():
+            settings[setting.pk] = setting.value
+        model_group.delete()
+        load_settings_group_fixture(group, fixture)
         
-        # Update group settings
-        fixture = fixture.get('settings', ())
-        for setting in fixture:
-            # Clear setting value
-            value = setting[1].get('value')
-            value_default = setting[1].get('default')
-            # Convert boolean True and False to 1 and 0, otherwhise it wont work
-            if setting[1].get('type') == 'boolean':
-                value = 1 if value else 0
-                value_default = 1 if value_default else 0
-            # Convert array value to string
-            if setting[1].get('type') == 'array':
-                value = ','.join(value) if value else ''
-                value_default = ','.join(value_default) if value_default else ''
+        for setting in settings:
             try:
-                # Update setting entry
-                model_setting = Setting.objects.get(setting=setting[0])
-                model_setting.value_default = value_default
-                model_setting.type = setting[1].get('type')
-                model_setting.input = setting[1].get('input')
-                model_setting.extra = base64.encodestring(pickle.dumps(setting[1].get('extra', {}), pickle.HIGHEST_PROTOCOL))
-                model_setting.position = setting[1].get('position')
-                model_setting.separator = get_msgid(setting[1].get('separator'))
-                model_setting.name = get_msgid(setting[1].get('name'))
-                model_setting.description = get_msgid(setting[1].get('description'))
-                model_setting.save(force_update=True)
+                new_setting = Setting.objects.get(pk=setting)
+                new_setting.value = settings[setting]
+                new_setting.save(force_update=True)
             except Setting.DoesNotExist:
-                # Store setting in database
-                model_setting = Setting(
-                                        setting=setting[0],
-                                        group=model_group,
-                                        value=value,
-                                        value_default=value_default,
-                                        type=setting[1].get('type'),
-                                        input=setting[1].get('input'),
-                                        extra=base64.encodestring(pickle.dumps(setting[1].get('extra', {}), pickle.HIGHEST_PROTOCOL)),
-                                        position=setting[1].get('position'),
-                                        separator=get_msgid(setting[1].get('separator')),
-                                        name=get_msgid(setting[1].get('name')),
-                                        description=get_msgid(setting[1].get('description')),
-                                    )
-                model_setting.save(force_insert=True)
+                pass
     except Group.DoesNotExist:
         load_settings_group_fixture(group, fixture)
     
