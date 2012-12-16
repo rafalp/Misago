@@ -23,6 +23,7 @@
 </div>
 
 <div class="container">
+
   {% if messages %}
   <div class="alerts-global">
   	{{ messages_list(messages) }}
@@ -30,7 +31,7 @@
   
   {% block content %}
   {% endblock %}
-  
+    
   <footer>{% if settings.board_credits %}
     <p>{{ settings.board_credits|safe }}</p>{% endif %}
     <p class="software">This community is powered by <a href="http://misago-project.org">Misago forum software</a> by Rafał Pitoń</p>

@@ -465,6 +465,8 @@ class Guest(object):
     """
     Misago Guest dummy
     """    
+    is_team = False
+    
     def is_anonymous(self):
         return True
     
@@ -485,6 +487,8 @@ class Crawler(Guest):
     """
     Misago Crawler dummy
     """
+    is_team = False
+    
     def __init__(self, username):
         self.username = username
     

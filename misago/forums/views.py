@@ -84,7 +84,9 @@ class NewCategory(FormWidget):
                      name=form.cleaned_data['name'],
                      slug=slugify(form.cleaned_data['name']),
                      type='category',
+                     style=form.cleaned_data['style'],
                      template=form.cleaned_data['template'],
+                     closed=form.cleaned_data['closed'],
                      )
         new_forum.set_description(form.cleaned_data['description'])
         new_forum.insert_at(form.cleaned_data['parent'], position='last-child', save=True)
@@ -109,7 +111,9 @@ class NewForum(FormWidget):
                      name=form.cleaned_data['name'],
                      slug=slugify(form.cleaned_data['name']),
                      type='forum',
+                     style=form.cleaned_data['style'],
                      template=form.cleaned_data['template'],
+                     closed=form.cleaned_data['closed'],
                      prune_days=form.cleaned_data['prune_days'],
                      prune_start=form.cleaned_data['prune_start'],
                      )
@@ -142,6 +146,7 @@ class NewRedirect(FormWidget):
                      name=form.cleaned_data['name'],
                      slug=slugify(form.cleaned_data['name']),
                      redirect=form.cleaned_data['redirect'],
+                     style=form.cleaned_data['style'],
                      type='redirect',
                      )
         new_forum.set_description(form.cleaned_data['description'])
@@ -224,6 +229,8 @@ class Edit(FormWidget):
             initial['redirect'] = model.redirect
         else:
             initial['template'] = model.template
+            initial['style'] = model.style
+            initial['closed'] = model.closed
             
         if model.type == 'forum':
             initial['prune_start'] = model.prune_start
@@ -237,7 +244,10 @@ class Edit(FormWidget):
         if target.type == 'redirect':
             target.redirect = form.cleaned_data['redirect']
         else:
+            target.style = form.cleaned_data['style']
             target.template = form.cleaned_data['template']
+            target.closed = form.cleaned_data['closed']
+            
         if target.type == 'forum':
             target.prune_start = form.cleaned_data['prune_start']
             target.prune_last = form.cleaned_data['prune_last']
