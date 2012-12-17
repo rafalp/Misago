@@ -6,6 +6,7 @@ from misago.forums.models import Forum
 
 class CategoryForm(Form):
     parent = False
+    perms = False
     name = forms.CharField(max_length=255)
     description = forms.CharField(widget=forms.Textarea,required=False)
     closed = forms.BooleanField(widget=YesNoSwitch,required=False)
@@ -16,6 +17,7 @@ class CategoryForm(Form):
                _("Basic Options"),
                (
                 ('parent', {'label': _("Category Parent")}),
+                ('perms', {'label': _("Copy Permissions from")}),
                 ('name', {'label': _("Category Name")}),
                 ('description', {'label': _("Category Description")}),
                 ('closed', {'label': _("Closed Category")}),
@@ -31,11 +33,13 @@ class CategoryForm(Form):
     
     def __init__(self, *args, **kwargs):
         self.base_fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(include_self=True),level_indicator=u'- - ')
+        self.base_fields['perms'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ',required=False,empty_label=_("Don't copy permissions"))
         super(CategoryForm, self).__init__(*args, **kwargs)
     
 
 class ForumForm(Form):
     parent = False
+    perms = False
     name = forms.CharField(max_length=255)
     description = forms.CharField(widget=forms.Textarea,required=False)
     closed = forms.BooleanField(widget=YesNoSwitch,required=False)
@@ -48,6 +52,7 @@ class ForumForm(Form):
                _("Basic Options"),
                (
                 ('parent', {'label': _("Forum Parent")}),
+                ('perms', {'label': _("Copy Permissions from")}),
                 ('name', {'label': _("Forum Name")}),
                 ('description', {'label': _("Forum Description")}),
                 ('closed', {'label': _("Closed Forum")}),
@@ -70,11 +75,13 @@ class ForumForm(Form):
     
     def __init__(self, *args, **kwargs):
         self.base_fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ')
+        self.base_fields['perms'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ',required=False,empty_label=_("Don't copy permissions"))
         super(ForumForm, self).__init__(*args, **kwargs)
         
 
 class RedirectForm(Form):
     parent = False
+    perms = False
     name = forms.CharField(max_length=255)
     description = forms.CharField(widget=forms.Textarea,required=False)
     redirect = forms.URLField(max_length=255)
@@ -85,6 +92,7 @@ class RedirectForm(Form):
                _("Basic Options"),
                (
                 ('parent', {'label': _("Redirect Parent")}),
+                ('perms', {'label': _("Copy Permissions from")}),
                 ('name', {'label': _("Redirect Name")}),
                 ('redirect', {'label': _("Redirect URL")}),
                 ('description', {'label': _("Redirect Description")}),
@@ -100,6 +108,7 @@ class RedirectForm(Form):
     
     def __init__(self, *args, **kwargs):
         self.base_fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ')
+        self.base_fields['perms'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ',required=False,empty_label=_("Don't copy permissions"))
         super(RedirectForm, self).__init__(*args, **kwargs)
     
 

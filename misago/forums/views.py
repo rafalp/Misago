@@ -89,6 +89,11 @@ class NewCategory(FormWidget):
                      )
         new_forum.set_description(form.cleaned_data['description'])
         new_forum.insert_at(form.cleaned_data['parent'], position='last-child', save=True)
+        
+        if form.cleaned_data['perms']:
+            new_forum.copy_permissions(form.cleaned_data['perms'])
+            request.monitor['acl_version'] = int(request.monitor['acl_version']) + 1
+            
         return new_forum, Message(_('New Category has been created.'), 'success')
 
 
@@ -117,6 +122,11 @@ class NewForum(FormWidget):
                      )
         new_forum.set_description(form.cleaned_data['description'])
         new_forum.insert_at(form.cleaned_data['parent'], position='last-child', save=True)
+        
+        if form.cleaned_data['perms']:
+            new_forum.copy_permissions(form.cleaned_data['perms'])
+            request.monitor['acl_version'] = int(request.monitor['acl_version']) + 1
+            
         return new_forum, Message(_('New Forum has been created.'), 'success')
 
     def __call__(self, request):
@@ -149,6 +159,11 @@ class NewRedirect(FormWidget):
                      )
         new_forum.set_description(form.cleaned_data['description'])
         new_forum.insert_at(form.cleaned_data['parent'], position='last-child', save=True)
+        
+        if form.cleaned_data['perms']:
+            new_forum.copy_permissions(form.cleaned_data['perms'])
+            request.monitor['acl_version'] = int(request.monitor['acl_version']) + 1
+            
         return new_forum, Message(_('New Redirect has been created.'), 'success')
     
     def __call__(self, request):
@@ -247,9 +262,18 @@ class Edit(FormWidget):
         if target.type == 'forum':
             target.prune_start = form.cleaned_data['prune_start']
             target.prune_last = form.cleaned_data['prune_last']
+            
         if form.cleaned_data['parent'].pk != target.parent.pk:
             target.move_to(form.cleaned_data['parent'], 'last-child')
+            request.monitor['acl_version'] = int(request.monitor['acl_version']) + 1
+            
         target.save(force_update=True)
+            
+        if form.cleaned_data['perms']:
+            target.copy_permissions(form.cleaned_data['perms'])
+        
+        if form.cleaned_data['parent'].pk != target.parent.pk or form.cleaned_data['perms']:
+            request.monitor['acl_version'] = int(request.monitor['acl_version']) + 1
         
         return target, Message(_('Changes in forum "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
 

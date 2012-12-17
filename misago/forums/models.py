@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
+from misago.roles.models import Role
 
 class ForumManager(models.Manager):
     def treelist(self, forums, parent=None):
@@ -58,6 +59,17 @@ class Forum(MPTTModel):
         if self.description:
             import markdown
             self.description_preparsed = markdown.markdown(description, safe_mode='escape', output_format=settings.OUTPUT_FORMAT)
+       
+    def copy_permissions(self, target):
+        if target.pk != self.pk:
+            for role in Role.objects.all():
+                perms = role.get_permissions()
+                try:
+                    perms['forums'][self.pk] = perms['forums'][target.pk]
+                    role.set_permissions(perms)
+                    role.save(force_update=True)
+                except KeyError:
+                    pass
         
     def move_content(self, target):
         pass
