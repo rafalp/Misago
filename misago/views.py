@@ -1,11 +1,22 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
-
+from misago.sessions.models import Session
+from misago.forums.models import Forum
 
 def home(request):
+    team_online = []
+    team_pks = []
+    for session in Session.objects.filter(team=1).filter(admin=0).order_by('-start').select_related('user', 'user__rank'):
+        if session.user.pk not in team_pks:
+            team_pks.append(session.user.pk)
+            team_online.append(session.user)
+            
     return request.theme.render_to_response('index.html',
-                                        {'page_title': 'Hello World!'},
+                                        {
+                                         'forums_list': Forum.objects.treelist(request.acl.forums.known_forums()),
+                                         'team_online': team_online,
+                                         },
                                         context_instance=RequestContext(request));
 
 

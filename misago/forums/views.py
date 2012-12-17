@@ -85,7 +85,6 @@ class NewCategory(FormWidget):
                      slug=slugify(form.cleaned_data['name']),
                      type='category',
                      style=form.cleaned_data['style'],
-                     template=form.cleaned_data['template'],
                      closed=form.cleaned_data['closed'],
                      )
         new_forum.set_description(form.cleaned_data['description'])
@@ -112,10 +111,9 @@ class NewForum(FormWidget):
                      slug=slugify(form.cleaned_data['name']),
                      type='forum',
                      style=form.cleaned_data['style'],
-                     template=form.cleaned_data['template'],
                      closed=form.cleaned_data['closed'],
-                     prune_days=form.cleaned_data['prune_days'],
                      prune_start=form.cleaned_data['prune_start'],
+                     prune_last=form.cleaned_data['prune_last'],
                      )
         new_forum.set_description(form.cleaned_data['description'])
         new_forum.insert_at(form.cleaned_data['parent'], position='last-child', save=True)
@@ -228,7 +226,6 @@ class Edit(FormWidget):
         if model.type == 'redirect':
             initial['redirect'] = model.redirect
         else:
-            initial['template'] = model.template
             initial['style'] = model.style
             initial['closed'] = model.closed
             
@@ -245,7 +242,6 @@ class Edit(FormWidget):
             target.redirect = form.cleaned_data['redirect']
         else:
             target.style = form.cleaned_data['style']
-            target.template = form.cleaned_data['template']
             target.closed = form.cleaned_data['closed']
             
         if target.type == 'forum':
@@ -291,8 +287,8 @@ class Delete(FormWidget):
             for child in target.get_descendants():
                 child.move_to(new_parent, 'last-child')
                 child.save(force_update=True)
-            target.delete()
         else:
-            for child in target.get_descendants(include_self=True):
+            for child in target.get_descendants():
                 child.delete()
+        target.delete()
         return target, Message(_('Forum "%(name)s" has been deleted.') % {'name': self.original_name}, 'success')

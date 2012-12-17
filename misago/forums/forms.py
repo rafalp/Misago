@@ -10,11 +10,6 @@ class CategoryForm(Form):
     description = forms.CharField(widget=forms.Textarea,required=False)
     closed = forms.BooleanField(widget=YesNoSwitch,required=False)
     style = forms.CharField(max_length=255,required=False)
-    template = forms.ChoiceField(choices=(
-                                          ('rows', _('One forum per row')),
-                                          ('fifty', _('Two forums per row')),
-                                          ('thirty', _('Three forums per row')),
-                                          ))
     
     layout = (
               (
@@ -30,7 +25,6 @@ class CategoryForm(Form):
                _("Display Options"),
                (
                 ('style', {'label': _("Category Style"), 'help_text': _('You can add custom CSS classess to this category, to change way it looks on board index.')}),
-                ('template', {'label': _("Category Layout")}),
                 ),
               ),
              )
@@ -46,11 +40,6 @@ class ForumForm(Form):
     description = forms.CharField(widget=forms.Textarea,required=False)
     closed = forms.BooleanField(widget=YesNoSwitch,required=False)
     style = forms.CharField(max_length=255,required=False)
-    template = forms.ChoiceField(choices=(
-                                          ('rows', _('One forum per row')),
-                                          ('fifty', _('Two forums per row')),
-                                          ('thirty', _('Three forums per row')),
-                                          ))
     prune_start = forms.IntegerField(min_value=0,initial=0)
     prune_last = forms.IntegerField(min_value=0,initial=0)
     
@@ -75,7 +64,6 @@ class ForumForm(Form):
                _("Display Options"),
                (
                 ('style', {'label': _("Forum Style"), 'help_text': _('You can add custom CSS classess to this forum to change way it looks on forums lists.')}),
-                ('template', {'label': _("Subforums List Layout")}),
                 ),
               ),
              )

@@ -16,6 +16,9 @@ def make_forum_form(request, role, form):
     
 
 class ForumsACL(BaseACL):
+    def known_forums(self):
+        return self.acl['can_see']
+    
     def can_see(self, forum):
         try:
             return forum.pk in self.acl['can_see']

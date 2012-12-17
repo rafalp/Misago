@@ -3,6 +3,20 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
 
+class ForumManager(models.Manager):
+    def treelist(self, forums, parent=None):
+        forums_list = []
+        parents = {}
+        for forum in Forum.objects.filter(pk__in=forums).filter(level__lte=3).order_by('lft'):
+            forum.subforums = []
+            parents[forum.pk] = forum
+            if forum.parent_id in parents:
+                parents[forum.parent_id].subforums.append(forum)
+            else:
+                forums_list.append(forum)
+        return forums_list
+
+
 class Forum(MPTTModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
     type = models.CharField(max_length=12)
@@ -12,7 +26,11 @@ class Forum(MPTTModel):
     description = models.TextField(null=True, blank=True)
     description_preparsed = models.TextField(null=True, blank=True)
     threads = models.PositiveIntegerField(default=0)
+    threads_delta = models.PositiveIntegerField(default=0)
     posts = models.PositiveIntegerField(default=0)
+    posts_delta = models.IntegerField(default=0)
+    redirects = models.PositiveIntegerField(default=0)
+    redirects_delta = models.IntegerField(default=0)
     #last_thread = models.ForeignKey('threads.Thread', related_name='+', null=True, blank=True)
     last_thread_name = models.CharField(max_length=255, null=True, blank=True)
     last_thread_slug = models.SlugField(null=True, blank=True)
@@ -25,8 +43,9 @@ class Forum(MPTTModel):
     prune_last = models.PositiveIntegerField(default=0)
     redirect = models.CharField(max_length=255, null=True, blank=True)
     style = models.CharField(max_length=255, null=True, blank=True)
-    template = models.CharField(max_length=255, null=True, blank=True)
     closed = models.BooleanField(default=False)
+    
+    objects = ForumManager()   
     
     def __unicode__(self):
         if self.token == 'root':

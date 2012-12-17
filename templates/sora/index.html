@@ -9,9 +9,49 @@
 {% endif %}{% endblock %}
       
 {% block content %}
-<div class="page-header">
-  <h1>TODO: Misago Forum Index</h1>
+<div class="row">
+  <div class="span9">
+    <div class="forums-list">
+      {% for category in forums_list %}{% if category.subforums %}
+      <div class="category{% if category.style %} {{ category.style }}{% endif %}">
+        <h2>{{ category.name }}{% if category.description %} <small><strong>{{ category.description }}</strong></small>{% endif %}</h2>
+        {% for forum in category.subforums %}
+        <div class="well well-forum{% if forum.style %} {{ forum.style }}{% endif %}">
+          <div class="forum-icon"><i class="icon-comment icon-white"></i></div>
+          <div class="forum-details">
+            <div class="pull-left">
+              <h3><a href="#">{{ forum.name }}</a></h3>
+              {% if forum.description %}<div class="muted">{{ forum.description }}</div>{% endif %}
+            </div>
+            <div class="pull-right forum-stat stat-posts">
+              <span class="stat {% if forum.posts_delta > 0 %}positive{% else %}stag{% endif %}">{% if forum.posts_delta > 0 %}+{{ forum.posts_delta }}{% else %}{{ forum.posts }}{% endif %}</span> <span class="muted">{% trans %}posts{% endtrans %}</span>
+            </div>
+            <div class="pull-right forum-stat stat-topics">
+              <span class="stat {% if forum.threads_delta > 0 %}positive{% else %}stag{% endif %}">{% if forum.posts_delta > 0 %}+{{ forum.threads_delta }}{% else %}{{ forum.threads }}{% endif %}</span> <span class="muted">{% trans %}threads{% endtrans %}</span>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>{% endif %}{% endfor %}
+    </div>
+  </div>
+  <div class="span3 forum-list-side">
+    {% if team_online %}
+    <h3>{% trans %}Team Online{% endtrans %}</h3>
+    {% for user in team_online %}
+    <div class="board-team">
+      <img src="{{ user.get_avatar() }}" alt="" class="avatar-small"> <a href="{% url 'user' username=user.username_slug, user=user.pk %}">{{ user.username }}</a>{% if user.get_title() %} <span class="muted">{{ _(user.get_title()) }}</span>{% endif %}
+    </div>
+    <hr>
+    {% endfor %}
+    {% endif %}
+    
+    <h3>{% trans %}Popular Topics{% endtrans %}</h3>
+    <hr>
+    
+    <h3>{% trans %}Forum Stats{% endtrans %}</h3>
+    <p class="lead board-stat">{{ monitor.posts|int|intcomma }} <small>{% trans %}Posts{% endtrans %}</small></p>
+    <p class="lead board-stat">{{ monitor.users|int|intcomma }} <small>{% trans %}Members{% endtrans %}</small></p>
+  </div>
 </div>
-<h2>Work in progress.</h2>
-<p>Check out <a href="http://area51.misago-project.org">project forums</a> if you want to discuss.</p>
 {% endblock %}
