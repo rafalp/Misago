@@ -11,12 +11,12 @@
   	{{ item.crawler }}
   	{%- else -%}
   	{% trans %}Guest{% endtrans %}
-  	{%- endif %}</strong> {% if item.user -%}
+  	{%- endif %}</strong> <strong class="muted">{{ item.ip }}</strong> {% if item.user -%}
   	<span class="label label-success">{% trans %}Registered Member{% endtrans %}</span>{% if item.hitten %} <span class="label label-info">{% trans %}Hidden{% endtrans %}</span>{% endif %}
   	{%- elif item.crawler -%}
   	<span class="label label-inverse">{% trans %}Crawler{% endtrans %}</span>
   	{%- endif %}
-  	<div class="muted"><strong>{{ item.ip }}</strong>; {{ item.agent }}</div>
+  	<div class="muted">{{ item.agent }}</div>
   </td>
   <td>
   	{{ item.start|date("DATETIME_FORMAT") }}
