@@ -1,8 +1,6 @@
 from datetime import timedelta
-from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.utils import timezone
-from optparse import make_option
 from misago.sessions.models import Token
 
 class Command(BaseCommand):
