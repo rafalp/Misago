@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from mptt.models import MPTTModel, TreeForeignKey
+from mptt.models import MPTTModel,TreeForeignKey
 from misago.roles.models import Role
 
 class ForumManager(models.Manager):
@@ -19,31 +19,31 @@ class ForumManager(models.Manager):
 
 
 class Forum(MPTTModel):
-    parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
+    parent = TreeForeignKey('self',null=True,blank=True,related_name='children')
     type = models.CharField(max_length=12)
-    token = models.CharField(max_length=255,null=True, blank=True)
+    token = models.CharField(max_length=255,null=True,blank=True)
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
-    description = models.TextField(null=True, blank=True)
-    description_preparsed = models.TextField(null=True, blank=True)
+    description = models.TextField(null=True,blank=True)
+    description_preparsed = models.TextField(null=True,blank=True)
     threads = models.PositiveIntegerField(default=0)
     threads_delta = models.PositiveIntegerField(default=0)
     posts = models.PositiveIntegerField(default=0)
     posts_delta = models.IntegerField(default=0)
     redirects = models.PositiveIntegerField(default=0)
     redirects_delta = models.IntegerField(default=0)
-    #last_thread = models.ForeignKey('threads.Thread', related_name='+', null=True, blank=True)
-    last_thread_name = models.CharField(max_length=255, null=True, blank=True)
-    last_thread_slug = models.SlugField(null=True, blank=True)
-    last_thread_date = models.DateTimeField(null=True, blank=True)
-    last_poster = models.ForeignKey('users.User', related_name='+', null=True, blank=True)
-    last_poster_name = models.CharField(max_length=255, null=True, blank=True)
-    last_poster_slug = models.SlugField(max_length=255, null=True, blank=True)
-    last_poster_style = models.CharField(max_length=255, null=True, blank=True)
+    last_thread = models.ForeignKey('threads.Thread',related_name='+',null=True,blank=True,on_delete=models.SET_NULL)
+    last_thread_name = models.CharField(max_length=255,null=True,blank=True)
+    last_thread_slug = models.SlugField(null=True,blank=True)
+    last_thread_date = models.DateTimeField(null=True,blank=True)
+    last_poster = models.ForeignKey('users.User',related_name='+',null=True,blank=True,on_delete=models.SET_NULL)
+    last_poster_name = models.CharField(max_length=255,null=True,blank=True)
+    last_poster_slug = models.SlugField(max_length=255,null=True,blank=True)
+    last_poster_style = models.CharField(max_length=255,null=True,blank=True)
     prune_start = models.PositiveIntegerField(default=0)
     prune_last = models.PositiveIntegerField(default=0)
-    redirect = models.CharField(max_length=255, null=True, blank=True)
-    style = models.CharField(max_length=255, null=True, blank=True)
+    redirect = models.CharField(max_length=255,null=True,blank=True)
+    style = models.CharField(max_length=255,null=True,blank=True)
     closed = models.BooleanField(default=False)
     
     objects = ForumManager()   
@@ -58,7 +58,7 @@ class Forum(MPTTModel):
         self.description_preparsed = ''
         if self.description:
             import markdown
-            self.description_preparsed = markdown.markdown(description, safe_mode='escape', output_format=settings.OUTPUT_FORMAT)
+            self.description_preparsed = markdown.markdown(description,safe_mode='escape',output_format=settings.OUTPUT_FORMAT)
        
     def copy_permissions(self, target):
         if target.pk != self.pk:
