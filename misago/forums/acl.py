@@ -1,6 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 from misago.acl.builder import BaseACL
+from misago.acl.utils import ACLError403, ACLError404
 from misago.forms import YesNoSwitch
 
 def make_forum_form(request, role, form):
@@ -23,15 +24,21 @@ class ForumsACL(BaseACL):
         try:
             return forum.pk in self.acl['can_see']
         except AttributeError:
-            return forum in self.acl['can_see']
+            return long(forum) in self.acl['can_see']
         
     def can_browse(self, forum):
         if self.can_see(forum):
             try:
-                return forum.pk in self.acl['can_see']
+                return forum.pk in self.acl['can_browse']
             except AttributeError:
-                return forum in self.acl['can_see']
+                return long(forum) in self.acl['can_browse']
         return False
+    
+    def check_forum(self, forum):
+        if not self.can_see(forum):
+            raise ACLError404()
+        if not self.can_browse(forum):
+            raise ACLError403(_("You can't browse this forum."))
 
 
 def build_forums(acl, perms, forums, forum_roles):
