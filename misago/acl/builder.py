@@ -29,12 +29,20 @@ def build_forum_form(request, role):
 class BaseACL(object):
     def __init__(self):
         self.acl = {}
+        
+    def __repr__(self):
+        return '%s (%s)' % (self.__class__.__name__[0:-3], self.__class__.__module__)
 
 
 class ACL(object):
     def __init__(self, version):
         self.version = version
         self.team = False
+
+    def __iter__(self):
+        for attr in dir(self):
+            if not attr.startswith("__") and attr not in ['team', 'version']:
+                yield self.__dict__[attr]
 
 
 def build_acl(request, roles):

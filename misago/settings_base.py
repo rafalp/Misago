@@ -93,6 +93,7 @@ PERMISSION_PROVIDERS = (
     'misago.usercp.acl',
     'misago.admin.acl',
     'misago.forums.acl',
+    'misago.threads.acl',
 )
 
 # List of UserCP extensions
@@ -148,6 +149,7 @@ INSTALLED_APPS = (
     'misago.register', # Register New Users
     'misago.activation', # Activate inactive User or resend activation e-mail
     'misago.resetpswd', # Reset User Password
+    'misago.threads', # Threads and Posts
 )
 
 # IP's that can see debug toolbar
@@ -163,6 +165,7 @@ DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.timer.TimerDebugPanel',
     'debug_toolbar.panels.sql.SQLDebugPanel',
     'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
+    'misago.acl.panels.MisagoACLDebugPanel',
     'debug_toolbar.panels.headers.HeaderDebugPanel',
     'debug_toolbar.panels.template.TemplateDebugPanel',
     'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
