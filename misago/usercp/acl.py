@@ -24,7 +24,7 @@ def make_form(request, role, form):
                             ))
 
 
-class UserCPACL(BaseACL):
+class UserCPACL(BaseACL):        
     def show_username_change(self):
         return self.acl['name_changes_allowed'] > 0
     

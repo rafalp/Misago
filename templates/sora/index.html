@@ -10,32 +10,18 @@
       
 {% block content %}
 <div class="row">
-  <div class="span9">
+  <div class="span8">
     <div class="forums-list">
       {% for category in forums_list %}{% if category.subforums %}
       <div class="category{% if category.style %} {{ category.style }}{% endif %}">
         <h2>{{ category.name }}{% if category.description %} <small><strong>{{ category.description }}</strong></small>{% endif %}</h2>
         {% for forum in category.subforums %}
-        <div class="well well-forum{% if forum.style %} {{ forum.style }}{% endif %}">
-          <div class="forum-icon"><i class="icon-comment icon-white"></i></div>
-          <div class="forum-details">
-            <div class="pull-left">
-              <h3><a href="#">{{ forum.name }}</a></h3>
-              {% if forum.description %}<div class="muted">{{ forum.description }}</div>{% endif %}
-            </div>
-            <div class="pull-right forum-stat stat-posts">
-              <span class="stat {% if forum.posts_delta > 0 %}positive{% else %}stag{% endif %}">{% if forum.posts_delta > 0 %}+{{ forum.posts_delta }}{% else %}{{ forum.posts }}{% endif %}</span> <span class="muted">{% trans %}posts{% endtrans %}</span>
-            </div>
-            <div class="pull-right forum-stat stat-topics">
-              <span class="stat {% if forum.threads_delta > 0 %}positive{% else %}stag{% endif %}">{% if forum.posts_delta > 0 %}+{{ forum.threads_delta }}{% else %}{{ forum.threads }}{% endif %}</span> <span class="muted">{% trans %}threads{% endtrans %}</span>
-            </div>
-          </div>
-        </div>
+        {{ draw_forum(category, forum) }}
         {% endfor %}
       </div>{% endif %}{% endfor %}
     </div>
   </div>
-  <div class="span3 forum-list-side">
+  <div class="span4 forum-list-side">
     {% if team_online %}
     <h3>{% trans %}Team Online{% endtrans %}</h3>
     {% for user in team_online %}
@@ -55,3 +41,27 @@
   </div>
 </div>
 {% endblock %}
+
+{% macro draw_forum(category, forum) %}
+        <div class="well well-forum{% if forum.style %} {{ forum.style }}{% endif %}">
+          <div class="forum-icon{% if forum.type == 'redirect' %} redirect-icon{% endif %}"><i class="icon-{% if forum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %} icon-white"></i></div>
+          <div class="forum-details">
+            <div class="pull-left">
+              <h3><a href="{% if forum.type == 'redirect' %}{% url 'redirect' slug=forum.slug, forum=forum.id %}{% else %}{% url 'forum' slug=forum.slug, forum=forum.id %}{% endif %}">{{ forum.name }}</a></h3>
+              {% if forum.description %}<div class="muted">{{ forum.description }}</div>{% endif %}
+            </div>
+            {% if forum.type == 'redirect' %}
+            <div class="pull-right forum-stat stat-redirects">
+              <span class="stat {% if forum.redirects_delta > 0 %}positive{% else %}stag{% endif %}">{% if forum.redirects_delta > 0 %}+{{ forum.redirects_delta }}{% else %}{{ forum.redirects }}{% endif %}</span> <span class="muted">{% trans %}clicks{% endtrans %}</span>
+            </div>
+            {% else %}
+            <div class="pull-right forum-stat stat-posts">
+              <span class="stat {% if forum.posts_delta > 0 %}positive{% else %}stag{% endif %}">{% if forum.posts_delta > 0 %}+{{ forum.posts_delta }}{% else %}{{ forum.posts }}{% endif %}</span> <span class="muted">{% trans %}posts{% endtrans %}</span>
+            </div>
+            <div class="pull-right forum-stat stat-topics">
+              <span class="stat {% if forum.threads_delta > 0 %}positive{% else %}stag{% endif %}">{% if forum.posts_delta > 0 %}+{{ forum.threads_delta }}{% else %}{{ forum.threads }}{% endif %}</span> <span class="muted">{% trans %}threads{% endtrans %}</span>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+{% endmacro %}

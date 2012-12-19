@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
+from django.utils.translation import ugettext as _
 from misago.sessions.models import Session
 from misago.forums.models import Forum
 
@@ -18,6 +19,21 @@ def home(request):
                                          'team_online': team_online,
                                          },
                                         context_instance=RequestContext(request));
+
+
+def redirection(request, forum, slug):
+    if not request.acl.forums.can_see(forum):
+        return error404(request)
+    try:
+        forum = Forum.objects.get(pk=forum, type='redirect')
+        if not request.acl.forums.can_browse(forum):
+            return error403(request, _("You don't have permission to follow this redirect."))
+        forum.redirects += 1
+        forum.redirects_delta += 1
+        forum.save(force_update=True)
+        return redirect(forum.redirect)
+    except Forum.DoesNotExist:
+        return error404(request)
 
 
 def redirect_message(request, message, type='info', owner=None):

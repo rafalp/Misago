@@ -10,8 +10,8 @@ def make_forum_form(request, role, form):
     form.layout.append((
                         _("Forums Permissions"),
                         (
-                         ('can_see_forum', {'label': _("Can see this forum")}),
-                         ('can_see_forum_contents', {'label': _("Can see this forum's contents")}),
+                         ('can_see_forum', {'label': _("Can see forum")}),
+                         ('can_see_forum_contents', {'label': _("Can see forum contents")}),
                         ),
                        ))
     
@@ -74,4 +74,4 @@ def cleanup(acl, perms, forums):
                 try:
                     del acl.forums.acl['can_browse'][acl.forums.acl['can_browse'].index(forum.pk)]
                 except ValueError:
-                    pass            
+                    pass
