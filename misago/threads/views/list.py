@@ -10,15 +10,8 @@ from misago.views import error403, error404
 
 class List(BaseView):
     def fetch_forum(self, forum):
-        try:
-            self.forum = Forum.objects.get(pk=forum, type='forum')
-            self.request.acl.forums.check_forum(self.forum)
-        except Forum.DoesNotExist:
-            return error404(self.request)
-        except ACLError404 as e:
-            return error404(self.request, e.message)
-        except ACLError403 as e:
-            return error403(self.request, e.message)
+        self.forum = Forum.objects.get(pk=forum, type='forum')
+        self.request.acl.forums.check_forum(self.forum)
         
     def fetch_threads(self, page):
         self.threads = Thread.objects.filter(forum=self.forum).order_by('-last').all()
@@ -28,6 +21,8 @@ class List(BaseView):
         try:
             self.fetch_forum(forum)
             self.fetch_threads(page)
+        except Forum.DoesNotExist:
+            return error404(self.request)
         except ACLError403 as e:
             return error403(args[0], e.message)
         except ACLError404 as e:

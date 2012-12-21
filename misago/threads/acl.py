@@ -134,9 +134,9 @@ class ThreadsACL(BaseACL):
     def can_start_threads(self, forum):
         try:
             forum_role = self.acl[forum.pk]
-            if not forum_role['can_read_threads'] or not not forum_role['can_read_threads']:
+            if forum_role['can_read_threads'] == 0 or forum_role['can_start_threads'] == 0:
                 return False
-            if forum.closed and not forum_role['can_close_threads']:
+            if forum.closed and forum_role['can_close_threads'] == 0:
                 return False
             return True
         except KeyError:
@@ -145,9 +145,9 @@ class ThreadsACL(BaseACL):
     def allow_new_threads(self, forum):
         try:
             forum_role = self.acl[forum.pk]
-            if not forum_role['can_read_threads'] or not not forum_role['can_read_threads']:
+            if forum_role['can_read_threads'] == 0 or forum_role['can_start_threads'] == 0:
                 raise ACLError403(_("You don't have permission to start new threads in this forum."))
-            if forum.closed and not forum_role['can_close_threads']:
+            if forum.closed and forum_role['can_close_threads'] == 0:
                 raise ACLError403(_("This forum is closed, you can't start new threads in it."))
         except KeyError:
             raise ACLError403(_("You don't have permission to start new threads in this forum."))
@@ -196,8 +196,8 @@ def build_forums(acl, perms, forums, forum_roles):
                 for p in forum_role:
                     if p in ['attachment_size', 'attachment_limit'] and role[p] == 0:
                         forum_role[p] = 0
-                    elif role[p] > forum_role[p]:
-                        forum_role[p] = role[p]
+                    elif int(role[p]) > forum_role[p]:
+                        forum_role[p] = int(role[p])
             except KeyError:
                 pass
         acl.threads.acl[forum.pk] = forum_role

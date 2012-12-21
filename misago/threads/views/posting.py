@@ -16,25 +16,20 @@ from misago.utils import slugify
 
 class Posting(BaseView):
     def fetch_forum(self, kwargs):
-        try:
-            self.forum = Forum.objects.get(pk=kwargs['forum'], type='forum')
-            self.request.acl.forums.check_forum(self.forum)
-            self.request.acl.threads.allow_new_threads(self.forum)
-        except Forum.DoesNotExist:
-            return error404(self.request)
-        except ACLError404 as e:
-            return error404(self.request, e.message)
-        except ACLError403 as e:
-            return error403(self.request, e.message)
+        self.forum = Forum.objects.get(pk=kwargs['forum'], type='forum')
+        self.request.acl.forums.check_forum(self.forum)
+        self.request.acl.threads.allow_new_threads(self.forum)
         
     def __call__(self, request, **kwargs):
         self.request = request
         try:
             self.fetch_forum(kwargs)
+        except Forum.DoesNotExist:
+            return error404(self.request)
         except ACLError403 as e:
-            return error403(args[0], e.message)
+            return error403(request, e.message)
         except ACLError404 as e:
-            return error404(args[0], e.message)
+            return error404(request, e.message)
         
         message = request.messages.get_message('threads')
         if request.method == 'POST':
