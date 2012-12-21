@@ -11,10 +11,11 @@
   <ul class="nav nav-tabs" id="form-tabs">{% for fieldset in form.fieldsets %}
     <li{% if loop.first %} class="active"{% endif%}><a href="#form-tab-{{ loop.index }}" data-toggle="tab">{{ fieldset.legend }}</a></li>{% endfor %}
   </ul>
-  <div class="tab-content">  	
+  <div class="tab-content">
     {% for fieldset in form.fieldsets %}
     <div class="tab-pane{% if loop.first %} active{% endif%}" id="form-tab-{{ loop.index }}">
-      <fieldset>{% for field in fieldset.fields %}
+      <fieldset>
+        <legend>{{ fieldset.legend }}</legend>{% for field in fieldset.fields %}
           {{ form_theme.row_widget(field) }}{% endfor %}
       </fieldset>
     </div>

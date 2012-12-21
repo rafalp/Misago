@@ -100,6 +100,7 @@ class ACL(FormWidget):
     target_name = 'name'
     notfound_message = _('Requested Forum Role could not be found.')
     submit_fallback = True
+    template = 'acl_form'
     
     def get_form(self, request, target):
         self.form = build_forum_form(request, target)

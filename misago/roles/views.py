@@ -193,6 +193,7 @@ class ACL(FormWidget):
     translate_target_name = True
     notfound_message = _('Requested Role could not be found.')
     submit_fallback = True
+    template = 'acl_form'
     
     def get_form(self, request, target):
         self.form = build_form(request, target)
