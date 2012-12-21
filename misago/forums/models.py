@@ -5,16 +5,41 @@ from mptt.models import MPTTModel,TreeForeignKey
 from misago.roles.models import Role
 
 class ForumManager(models.Manager):
-    def treelist(self, forums, parent=None):
+    def treelist(self, acl, parent=None):
+        complete_list = []
         forums_list = []
         parents = {}
-        for forum in Forum.objects.filter(pk__in=forums).filter(level__lte=3).order_by('lft'):
+        
+        if parent:
+            queryset = Forum.objects.filter(pk__in=acl.known_forums).filter(lft__gt=parent.lft).filter(rght__lt=parent.rght).order_by('lft')
+        else:
+            queryset = Forum.objects.filter(pk__in=acl.known_forums).order_by('lft')
+            
+        for forum in queryset:
             forum.subforums = []
             parents[forum.pk] = forum
+            complete_list.append(forum)
             if forum.parent_id in parents:
                 parents[forum.parent_id].subforums.append(forum)
             else:
                 forums_list.append(forum)
+        
+        # Second iteration - sum up forum counters
+        for forum in reversed(complete_list):
+            if forum.parent_id in parents and parents[forum.parent_id].type != 'redirect':
+                parents[forum.parent_id].threads += forum.threads
+                parents[forum.parent_id].threads_delta += forum.threads_delta
+                parents[forum.parent_id].posts += forum.posts
+                parents[forum.parent_id].posts_delta += forum.posts_delta
+                if acl.can_browse(forum.pk) and forum.last_thread_date and (not parents[forum.parent_id].last_thread_date or forum.last_thread_date > parents[forum.parent_id].last_thread_date):
+                    parents[forum.parent_id].last_thread = forum.last_thread
+                    parents[forum.parent_id].last_thread_name = forum.last_thread_name
+                    parents[forum.parent_id].last_thread_slug = forum.last_thread_slug
+                    parents[forum.parent_id].last_thread_date = forum.last_thread_date
+                    parents[forum.parent_id].last_poster = forum.last_poster
+                    parents[forum.parent_id].last_poster_name = forum.last_poster_name
+                    parents[forum.parent_id].last_poster_slug = forum.last_poster_slug
+                    parents[forum.parent_id].last_poster_style = forum.last_poster_style
         return forums_list
 
 

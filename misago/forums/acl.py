@@ -38,7 +38,7 @@ class ForumsACL(BaseACL):
         if not self.can_see(forum):
             raise ACLError404()
         if not self.can_browse(forum):
-            raise ACLError403(_("You can't browse this forum."))
+            raise ACLError403(_("You don't have permission to browse this forum."))
 
 
 def build_forums(acl, perms, forums, forum_roles):

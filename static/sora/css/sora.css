@@ -845,7 +845,7 @@ textarea{resize:vertical;}
 .form-avatar-select .form-button{margin-bottom:4px;}
 .form-avatar-select .form-button:hover img{border:1px solid #0088cc;border:1px solid #0088cc;-webkit-box-shadow:0 1px 3px #0088cc;-moz-box-shadow:0 1px 3px #0088cc;box-shadow:0 1px 3px #0088cc;}
 .form-avatar-select hr{margin-top:16px;}
-.table-footer{background:none;margin-bottom:0px;padding:0px 8px;position:relative;bottom:20px;}.table-footer .pager{margin:0px 0px;margin-top:9px;padding:0px;margin-right:6px;}.table-footer .pager>li{margin-right:6px;}.table-footer .pager>li>a:link,.table-footer .pager>li>a:active,.table-footer .pager>li>a:visited{background:#e8e8e8;border:none;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;padding:2px 5px;}
+.table-footer{background:#e8e8e8;border-top:1px solid #cfcfcf;-webkit-border-radius:0px 0px 3px 3px;-moz-border-radius:0px 0px 3px 3px;border-radius:0px 0px 3px 3px;margin-bottom:0px;padding:0px 8px;position:relative;bottom:20px;}.table-footer .pager{margin:0px 0px;margin-top:9px;padding:0px;margin-right:6px;}.table-footer .pager>li{margin-right:6px;}.table-footer .pager>li>a:link,.table-footer .pager>li>a:active,.table-footer .pager>li>a:visited{background:#e8e8e8;border:none;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;padding:2px 5px;}
 .table-footer .pager>li>a:hover{background-color:#0088cc;}.table-footer .pager>li>a:hover i{background-image:url("../img/glyphicons-halflings-white.png");}
 .table-footer .table-count{padding:11px 0px;color:#555555;}
 .table-footer .form-inline{margin:0px;padding:6px 0px;}

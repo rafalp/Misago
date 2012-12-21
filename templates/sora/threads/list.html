@@ -1,1 +1,47 @@
-<h1>THREADS LIST!</h1>
+{% extends "sora/layout.html" %}
+{% load i18n %}
+{% load url from future %}
+{% import "sora/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=forum.name) }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{{ forum.name }}{% if forum.description %} <small>{{ forum.description }}</small>{% endif %}</h1>
+</div>
+<div>
+{% if message %}{{ macros.draw_message(message) }}{% endif %}
+[PAGER]
+{% if user.is_authenticated() %}
+<ul class="nav nav-pills pull-right">
+  <li><a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}">{% trans %}New Thread{% endtrans %}</a></li>
+</ul>
+{% endif %}
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th style="width: 1%;">&nbsp;</th>
+      <th>{% trans %}Thread{% endtrans %}</th>
+      <th>{% trans %}Author{% endtrans %}</th>
+      <th>{% trans %}Replies{% endtrans %}</th>
+      <th>{% trans %}Last Poster{% endtrans %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for thread in threads %}
+    <tr>
+      <td>[ICON]</td>
+      <td><a href="#"><strong>{{ thread.name }}</strong></a>[LABELS][JUMP] [ICONS]</td>
+      <td>{% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}</td>
+      <td>{{ thread.replies|intcomma }}</td>
+      <td>{% if thread.last_poster_id %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}">{{ thread.last_poster_name }}</a>{% else %}{{ thread.last_poster_name }}{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class="form-actions table-footer">
+  [MOD ACTIONS]
+</div>
+[PAGER] [BUTTON]
+{% endblock %}

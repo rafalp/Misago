@@ -131,7 +131,26 @@ def make_forum_form(request, role, form):
 
 
 class ThreadsACL(BaseACL):
-    pass
+    def can_start_threads(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            if not forum_role['can_read_threads'] or not not forum_role['can_read_threads']:
+                return False
+            if forum.closed and not forum_role['can_close_threads']:
+                return False
+            return True
+        except KeyError:
+            return False
+    
+    def allow_new_threads(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            if not forum_role['can_read_threads'] or not not forum_role['can_read_threads']:
+                raise ACLError403(_("You don't have permission to start new threads in this forum."))
+            if forum.closed and not forum_role['can_close_threads']:
+                raise ACLError403(_("This forum is closed, you can't start new threads in it."))
+        except KeyError:
+            raise ACLError403(_("You don't have permission to start new threads in this forum."))
 
  
 def build_forums(acl, perms, forums, forum_roles):

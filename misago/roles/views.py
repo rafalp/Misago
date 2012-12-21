@@ -198,7 +198,7 @@ class ACL(FormWidget):
     template = 'acl_form'
     
     def get_form(self, target):
-        self.form = build_form(target)
+        self.form = build_form(self.request, target)
         return self.form
     
     def get_url(self, model):

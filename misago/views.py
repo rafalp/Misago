@@ -2,8 +2,8 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
-from misago.sessions.models import Session
 from misago.forums.models import Forum
+from misago.sessions.models import Session
 
 def home(request):
     team_online = []
@@ -14,11 +14,28 @@ def home(request):
             team_online.append(session.user)
             
     return request.theme.render_to_response('index.html',
-                                        {
-                                         'forums_list': Forum.objects.treelist(request.acl.forums.known_forums()),
-                                         'team_online': team_online,
-                                         },
-                                        context_instance=RequestContext(request));
+                                            {
+                                             'forums_list': Forum.objects.treelist(request.acl.forums),
+                                             'team_online': team_online,
+                                             },
+                                            context_instance=RequestContext(request));
+
+
+def category(request, forum, slug):
+    if not request.acl.forums.can_see(forum):
+        return error404(request)
+    try:
+        forum = Forum.objects.get(pk=forum, type='category')
+        if not request.acl.forums.can_browse(forum):
+            return error403(request, _("You don't have permission to browse this category."))
+    except Forum.DoesNotExist:
+        return error404(request)
+    return request.theme.render_to_response('category.html',
+                                            {
+                                             'category': forum,
+                                             'forums_list': Forum.objects.treelist(request.acl.forums, forum),
+                                             },
+                                            context_instance=RequestContext(request));
 
 
 def redirection(request, forum, slug):
@@ -51,11 +68,11 @@ def error404(request, message=None):
 
 def error_view(request, error, message):
     response = request.theme.render_to_response(('error%s.html' % error),
-                                            {
-                                             'message': message,
-                                             'hide_signin': True,
-                                             'exception_response': True,
-                                             },
-                                            context_instance=RequestContext(request));
+                                                {
+                                                 'message': message,
+                                                 'hide_signin': True,
+                                                 'exception_response': True,
+                                                 },
+                                                context_instance=RequestContext(request));
     response.status_code = error
     return response

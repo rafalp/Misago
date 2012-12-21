@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     (r'^activate/', include('misago.activation.urls')),
     (r'^reset-password/', include('misago.resetpswd.urls')),
     (r'^', include('misago.threads.urls')),
+    url(r'^category/(?P<slug>(\w|-)+)-(?P<forum>\d+)/$', 'misago.views.category', name="category"),
     url(r'^redirect/(?P<slug>(\w|-)+)-(?P<forum>\d+)/$', 'misago.views.redirection', name="redirect"),
     url(r'^$', 'misago.views.home', name="index"),
 )
