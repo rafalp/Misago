@@ -28,18 +28,18 @@ class List(ListWidget):
              ('delete', _("Delete selected forum roles"), _("Are you sure you want to delete selected roles?")),
              )
     
-    def sort_items(self, request, page_items, sorting_method):
+    def sort_items(self, page_items, sorting_method):
         return page_items.order_by('name')
     
-    def get_item_actions(self, request, item):
+    def get_item_actions(self, item):
         return (
                 self.action('adjust', _("Role Permissions"), reverse('admin_roles_forums_acl', item)),
                 self.action('pencil', _("Edit Role"), reverse('admin_roles_forums_edit', item)),
                 self.action('remove', _("Delete Role"), reverse('admin_roles_forums_delete', item), post=True, prompt=_("Are you sure you want to delete this role?")),
                 )
 
-    def action_delete(self, request, items, checked):
-        request.monitor['acl_version'] = int(request.monitor['acl_version']) + 1
+    def action_delete(self, items, checked):
+        self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
         Role.objects.filter(id__in=checked).delete()
         return Message(_('Selected forum roles have been deleted successfully.'), 'success'), reverse('admin_roles_forums')
 
@@ -51,13 +51,13 @@ class New(FormWidget):
     form = ForumRoleForm
     submit_button = _("Save Role")
         
-    def get_new_url(self, request, model):
+    def get_new_url(self, model):
         return reverse('admin_roles_forums_new')
     
-    def get_edit_url(self, request, model):
+    def get_edit_url(self, model):
         return reverse('admin_roles_forums_edit', model)
     
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         new_role = ForumRole(
                       name = form.cleaned_data['name'],
                      )
@@ -75,18 +75,18 @@ class Edit(FormWidget):
     notfound_message = _('Requested Forum Role could not be found.')
     submit_fallback = True
     
-    def get_url(self, request, model):
+    def get_url(self, model):
         return reverse('admin_roles_forums_edit', model)
     
-    def get_edit_url(self, request, model):
-        return self.get_url(request, model)
+    def get_edit_url(self, model):
+        return self.get_url(model)
     
-    def get_initial_data(self, request, model):
+    def get_initial_data(self, model):
         return {
                 'name': model.name,
                 }
     
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         target.name = form.cleaned_data['name']
         target.save(force_update=True)
         return target, Message(_('Changes in forum role "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
@@ -102,17 +102,17 @@ class ACL(FormWidget):
     submit_fallback = True
     template = 'acl_form'
     
-    def get_form(self, request, target):
-        self.form = build_forum_form(request, target)
+    def get_form(self, target):
+        self.form = build_forum_form(target)
         return self.form
     
-    def get_url(self, request, model):
+    def get_url(self, model):
         return reverse('admin_roles_forums_acl', model)
     
-    def get_edit_url(self, request, model):
-        return self.get_url(request, model)
+    def get_edit_url(self, model):
+        return self.get_url(model)
     
-    def get_initial_data(self, request, model):
+    def get_initial_data(self, model):
         raw_acl = model.get_permissions()
         initial = {}
         for field in self.form.base_fields:
@@ -120,13 +120,13 @@ class ACL(FormWidget):
                 initial[field] = raw_acl[field]
         return initial
     
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         raw_acl = target.get_permissions()
         for perm in form.cleaned_data:
             raw_acl[perm] = form.cleaned_data[perm]
         target.set_permissions(raw_acl)
         target.save(force_update=True)
-        request.monitor['acl_version'] = int(request.monitor['acl_version']) + 1
+        self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
         
         return target, Message(_('Forum Role "%(name)s" permissions have been changed.') % {'name': self.original_name}, 'success')
 
@@ -137,7 +137,7 @@ class Delete(ButtonWidget):
     fallback = 'admin_roles_forums'
     notfound_message = _('Requested Forum Role could not be found.')
     
-    def action(self, request, target):
+    def action(self, target):
         target.delete()
-        request.monitor['acl_version'] = int(request.monitor['acl_version']) + 1
+        self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
         return Message(_('Forum Role "%(name)s" has been deleted.') % {'name': _(target.name)}, 'success'), False

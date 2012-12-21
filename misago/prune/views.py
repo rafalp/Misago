@@ -27,18 +27,18 @@ class List(ListWidget):
              ('delete', _("Delete selected policies"), _("Are you sure you want to delete selected policies?")),
              )
     
-    def sort_items(self, request, page_items, sorting_method):
+    def sort_items(self, page_items, sorting_method):
         return page_items.order_by('name')
     
-    def get_item_actions(self, request, item):
+    def get_item_actions(self, item):
         return (
                 self.action('filter', _("Apply Policy"), reverse('admin_prune_users_apply', item)),
                 self.action('pencil', _("Edit Policy"), reverse('admin_prune_users_edit', item)),
                 self.action('remove', _("Delete Policy"), reverse('admin_prune_users_delete', item), post=True, prompt=_("Are you sure you want to delete this policy?")),
                 )
 
-    def action_delete(self, request, items, checked):
-        if not request.user.is_god():
+    def action_delete(self, items, checked):
+        if not self.request.user.is_god():
             return Message(_('Only system administrators can delete pruning policies.'), 'error'), reverse('admin_prune_users')
         
         Policy.objects.filter(id__in=checked).delete()
@@ -52,13 +52,13 @@ class New(FormWidget):
     form = PolicyForm
     submit_button = _("Save Policy")
         
-    def get_new_url(self, request, model):
+    def get_new_url(self, model):
         return reverse('admin_prune_users_new')
     
-    def get_edit_url(self, request, model):
+    def get_edit_url(self, model):
         return reverse('admin_prune_users_edit', model)
     
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         new_policy = Policy(
                       name = form.cleaned_data['name'],
                       email = form.cleaned_data['email'],
@@ -89,13 +89,13 @@ class Edit(FormWidget):
     notfound_message = _('Requested pruning policy could not be found.')
     submit_fallback = True
     
-    def get_url(self, request, model):
+    def get_url(self, model):
         return reverse('admin_prune_users_edit', model)
     
-    def get_edit_url(self, request, model):
-        return self.get_url(request, model)
+    def get_edit_url(self, model):
+        return self.get_url(model)
     
-    def get_initial_data(self, request, model):
+    def get_initial_data(self, model):
         return {
                 'name': model.name,
                 'email': model.email,
@@ -104,7 +104,7 @@ class Edit(FormWidget):
                 'last_visit': model.last_visit,
                 }
     
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         target.name = form.cleaned_data['name']
         target.email = form.cleaned_data['email']
         target.posts = form.cleaned_data['posts']
@@ -129,8 +129,8 @@ class Delete(ButtonWidget):
     fallback = 'admin_prune_users'
     notfound_message = _('Requested pruning policy could not be found.')
     
-    def action(self, request, target):
-        if not request.user.is_god():
+    def action(self, target):
+        if not self.request.user.is_god():
             return Message(_('Only system administrators can delete pruning policies.'), 'error'), False
         
         target.delete()
@@ -148,17 +148,19 @@ class Apply(FormWidget):
     submit_fallback = True
     template = 'apply'
     
-    def get_url(self, request, model):
+    def get_url(self, model):
         return reverse('admin_prune_users_apply', model)
     
     def __call__(self, request, target=None, slug=None):
+        self.request = request
+        
         # Fetch target
         model = None
         if target:
-            model = self.get_and_validate_target(request, target)
+            model = self.get_and_validate_target(target)
             self.original_name = self.get_target_name(model)
             if not model:
-                return redirect(self.get_fallback_url(request))
+                return redirect(self.get_fallback_url())
         original_model = model
                 
         # Set filter
@@ -193,13 +195,13 @@ class Apply(FormWidget):
             else:
                 message = Message(_("Request authorization is invalid. Please resubmit your form."), 'error')
         
-        return request.theme.render_to_response(self.get_template(self.template),
+        return request.theme.render_to_response(self.get_template(),
                                                 {
                                                  'admin': self.admin,
                                                  'action': self,
                                                  'request': request,
-                                                 'url': self.get_url(request, model),
-                                                 'fallback': self.get_fallback_url(request),
+                                                 'url': self.get_url(model),
+                                                 'fallback': self.get_fallback_url(),
                                                  'messages': request.messages.get_messages(self.admin.id),
                                                  'message': message,
                                                  'tabbed': self.tabbed,

@@ -28,7 +28,7 @@ class List(ListWidget):
              ('delete', _("Delete selected ranks"), _("Are you sure you want to delete selected ranks?")),
              )
     
-    def get_table_form(self, request, page_items):
+    def get_table_form(self, page_items):
         order_form = {}
         
         # Build choices list
@@ -45,22 +45,22 @@ class List(ListWidget):
         # Turn dict into object
         return type('OrderRanksForm', (Form,), order_form)
     
-    def table_action(self, request, page_items, cleaned_data):
+    def table_action(self, page_items, cleaned_data):
         for item in page_items:
             item.order = cleaned_data['pos_' + str(item.pk)]
             item.save(force_update=True)
         return Message(_('Ranks order has been changed'), 'success'), reverse('admin_ranks')
     
-    def sort_items(self, request, page_items, sorting_method):
+    def sort_items(self, page_items, sorting_method):
         return page_items.order_by('order')
     
-    def get_item_actions(self, request, item):
+    def get_item_actions(self, item):
         return (
                 self.action('pencil', _("Edit Rank"), reverse('admin_ranks_edit', item)),
                 self.action('remove', _("Delete Rank"), reverse('admin_ranks_delete', item), post=True, prompt=_("Are you sure you want to delete this rank?")),
                 )
 
-    def action_delete(self, request, items, checked):
+    def action_delete(self, items, checked):
         Rank.objects.filter(id__in=checked).delete()
         return Message(_('Selected ranks have been deleted successfully.'), 'success'), reverse('admin_ranks')
 
@@ -72,13 +72,13 @@ class New(FormWidget):
     form = RankForm
     submit_button = _("Save Rank")
         
-    def get_new_url(self, request, model):
+    def get_new_url(self, model):
         return reverse('admin_ranks_new')
     
-    def get_edit_url(self, request, model):
+    def get_edit_url(self, model):
         return reverse('admin_ranks_edit', model)
     
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         position = 0
         last_rank = Rank.objects.latest('order')
         new_rank = Rank(
@@ -106,13 +106,13 @@ class Edit(FormWidget):
     notfound_message = _('Requested Rank could not be found.')
     submit_fallback = True
     
-    def get_url(self, request, model):
+    def get_url(self, model):
         return reverse('admin_ranks_edit', model)
     
-    def get_edit_url(self, request, model):
-        return self.get_url(request, model)
+    def get_edit_url(self, model):
+        return self.get_url(model)
     
-    def get_initial_data(self, request, model):
+    def get_initial_data(self, model):
         return {
                 'name': model.name,
                 'description': model.description,
@@ -123,7 +123,7 @@ class Edit(FormWidget):
                 'criteria': model.criteria
                 }
     
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         target.name = form.cleaned_data['name']
         target.name_slug = slugify(form.cleaned_data['name'])
         target.description = form.cleaned_data['description']
@@ -142,6 +142,6 @@ class Delete(ButtonWidget):
     fallback = 'admin_ranks'
     notfound_message = _('Requested Rank could not be found.')
     
-    def action(self, request, target):
+    def action(self, target):
         target.delete()
         return Message(_('Rank "%(name)s" has been deleted.') % {'name': target.name}, 'success'), False

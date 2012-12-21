@@ -33,7 +33,7 @@ class List(ListWidget):
     pagination = 20
     search_form = SearchNewslettersForm
     
-    def sort_items(self, request, page_items, sorting_method):
+    def sort_items(self, page_items, sorting_method):
         return page_items.order_by('-id')
     
     def set_filters(self, model, filters):
@@ -47,14 +47,14 @@ class List(ListWidget):
             model = model.filter(Q(content_html__icontains=filters['content']) | Q(content_plain__icontains=filters['content']))
         return model
     
-    def get_item_actions(self, request, item):
+    def get_item_actions(self, item):
         return (
                 self.action('envelope', _("Send Newsletter"), reverse('admin_newsletters_send', item)),
                 self.action('pencil', _("Edit Newsletter"), reverse('admin_newsletters_edit', item)),
                 self.action('remove', _("Delete Newsletter"), reverse('admin_newsletters_delete', item), post=True, prompt=_("Are you sure you want to delete this newsletter?")),
                 )
 
-    def action_delete(self, request, items, checked):
+    def action_delete(self, items, checked):
         Newsletter.objects.filter(id__in=checked).delete()
         return Message(_('Selected newsletters have been deleted successfully.'), 'success'), reverse('admin_newsletters')
 
@@ -67,13 +67,13 @@ class New(FormWidget):
     submit_button = _("Save Newsletter")
     tabbed = True
         
-    def get_new_url(self, request, model):
+    def get_new_url(self, model):
         return reverse('admin_newsletters_new')
     
-    def get_edit_url(self, request, model):
+    def get_edit_url(self, model):
         return reverse('admin_newsletters_edit', model)
     
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         new_newsletter = Newsletter(
                       name = form.cleaned_data['name'],
                       step_size = form.cleaned_data['step_size'],
@@ -102,13 +102,13 @@ class Edit(FormWidget):
     submit_fallback = True
     tabbed = True
     
-    def get_url(self, request, model):
+    def get_url(self, model):
         return reverse('admin_newsletters_edit', model)
     
-    def get_edit_url(self, request, model):
-        return self.get_url(request, model)
+    def get_edit_url(self, model):
+        return self.get_url(model)
     
-    def get_initial_data(self, request, model):
+    def get_initial_data(self, model):
         return {
                 'name': model.name,
                 'step_size': model.step_size,
@@ -118,7 +118,7 @@ class Edit(FormWidget):
                 'ranks': model.ranks.all(),
                 }
     
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         target.name = form.cleaned_data['name']
         target.step_size = form.cleaned_data['step_size']
         target.ignore_subscriptions = form.cleaned_data['ignore_subscriptions']
@@ -140,7 +140,7 @@ class Delete(ButtonWidget):
     fallback = 'admin_newsletters'
     notfound_message = _('Requested newsletter could not be found.')
     
-    def action(self, request, target):
+    def action(self, target):
         target.delete()
         return Message(_('Newsletter "%(name)s"" has been deleted.') % {'name': target.name}, 'success'), False
     

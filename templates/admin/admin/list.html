@@ -28,7 +28,7 @@
       <td{% if loop.first %} class="lead-cell{% if column[3] is defined %} span{{ widthratio(column[3], 100, 12) }}{% endif %}"{% elif column[3] is defined %} class="span{{ widthratio(column[3], 100, 12) }}"{% endif %}>{{ item[column[0]] }}</td>{% endfor %}{% endblock %}
       {%- if not action.hide_actions%}
       <td class="span2">
-      	{%- set item_actions = action.get_item_actions(request, item) -%}
+      	{%- set item_actions = action.get_item_actions(item) -%}
       	{% if item_actions -%}
       	<ul class="list-actions">
       	  {% for action in item_actions %}

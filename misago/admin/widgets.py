@@ -48,17 +48,17 @@ class BaseWidget(object):
     def get_id(self):
         return 'admin_%s' % self.id
          
-    def get_template(self, template):
-        return ('%s/%s.html' % (self.admin.id, template),
-                'admin/%s.html' % template)
+    def get_template(self):
+        return ('%s/%s.html' % (self.admin.id, self.template),
+                'admin/%s.html' % self.template)
     
     def add_template_variables(self, variables):
         return variables
             
-    def get_fallback_url(self, request):
+    def get_fallback_url(self):
         return reverse(self.fallback)
         
-    def get_target(self, request, model):
+    def get_target(self, model):
         pass
     
     def get_target_name(self, model):
@@ -69,15 +69,15 @@ class BaseWidget(object):
         except AttributeError:
             return None
         
-    def get_and_validate_target(self, request, target):
+    def get_and_validate_target(self, target):
         try:
             model = self.admin.model.objects.select_related().get(pk=target)
-            self.get_target(request, model)
+            self.get_target(model)
             return model
         except self.admin.model.DoesNotExist:
-            request.messages.set_flash(Message(self.notfound_message), 'error', self.admin.id)
+            self.request.messages.set_flash(Message(self.notfound_message), 'error', self.admin.id)
         except ValueError as e:
-            request.messages.set_flash(Message(e.args[0]), 'error', self.admin.id)
+            self.request.messages.set_flash(Message(e.args[0]), 'error', self.admin.id)
         return None
 
 
@@ -100,7 +100,7 @@ class ListWidget(BaseWidget):
     nothing_checked_message = _('You have to select at least one item.')
     prompt_select = False
     
-    def get_item_actions(self, request, item):
+    def get_item_actions(self, item):
         """
         Provides request and item, should return list of tuples with item actions in following format:
         (id, name, help, icon, link)
@@ -121,7 +121,7 @@ class ListWidget(BaseWidget):
                 'prompt': prompt,
                 }
         
-    def get_search_form(self, request):
+    def get_search_form(self):
         """
         Build a form object with items search
         """
@@ -133,13 +133,13 @@ class ListWidget(BaseWidget):
         """
         return None
     
-    def get_table_form(self, request, page_items):
+    def get_table_form(self, page_items):
         """
         Build a form object with list of all items fields
         """
         return None
     
-    def table_action(self, request, page_items, cleaned_data):
+    def table_action(self, page_items, cleaned_data):
         """
         Handle table form submission, return tuple containing message and redirect link/false
         """
@@ -162,7 +162,7 @@ class ListWidget(BaseWidget):
         form_fields['list_items'] = forms.MultipleChoiceField(choices=list_choices,widget=forms.CheckboxSelectMultiple)
         return type('AdminListForm', (Form,), form_fields)
         
-    def get_sorting(self, request):
+    def get_sorting(self):
         """
         Return list sorting method.
         A list with three values:
@@ -171,18 +171,18 @@ class ListWidget(BaseWidget):
         - order_by() argument
         """
         sorting_method = None
-        if request.session.get(self.get_token('sort')) and request.session.get(self.get_token('sort'))[0] in self.sortables:
-            sorting_method = request.session.get(self.get_token('sort'))
+        if self.request.session.get(self.get_token('sort')) and self.request.session.get(self.get_token('sort'))[0] in self.sortables:
+            sorting_method = self.request.session.get(self.get_token('sort'))
             
-        if request.GET.get('sort') and request.GET.get('sort') in self.sortables:
-            new_sorting = request.GET.get('sort')
-            sorting_dir = int(request.GET.get('dir')) == 1
+        if self.request.GET.get('sort') and self.request.GET.get('sort') in self.sortables:
+            new_sorting = self.request.GET.get('sort')
+            sorting_dir = int(self.request.GET.get('dir')) == 1
             sorting_method = [
                     new_sorting,
                     sorting_dir,
                     new_sorting if sorting_dir else '-%s' % new_sorting
                    ]
-            request.session[self.get_token('sort')] = sorting_method
+            self.request.session[self.get_token('sort')] = sorting_method
             
         if not sorting_method:
             if self.sortables:
@@ -202,13 +202,13 @@ class ListWidget(BaseWidget):
                        ]
         return sorting_method
     
-    def sort_items(self, request, page_items, sorting_method):
+    def sort_items(self, page_items, sorting_method):
         return page_items.order_by(sorting_method[2])
     
     def get_pagination_url(self, page):
         return reverse(self.admin.get_action_attr(self.id, 'route'), kwargs={'page': page})
     
-    def get_pagination(self, request, total, page):
+    def get_pagination(self, total, page):
         """
         Return list pagination.
         A list with three values:
@@ -225,8 +225,8 @@ class ListWidget(BaseWidget):
         
         # Set basic pagination, use either Session cache or new page value
         pagination = {'start': 0, 'stop': 0, 'prev': -1, 'next': -1}
-        if request.session.get(self.get_token('pagination')):
-            pagination['start'] = request.session.get(self.get_token('pagination'))
+        if self.request.session.get(self.get_token('pagination')):
+            pagination['start'] = self.request.session.get(self.get_token('pagination'))
         page = int(page)
         if page > 0:
             pagination['start'] = (page - 1) * self.pagination
@@ -250,18 +250,20 @@ class ListWidget(BaseWidget):
         pagination['stop'] = pagination['start'] + self.pagination
         return pagination
     
-    def get_items(self, request):
-        if request.session.get(self.get_token('filter')):
+    def get_items(self):
+        if self.request.session.get(self.get_token('filter')):
             self.is_filtering = True
-            return self.set_filters(self.admin.model.objects, request.session.get(self.get_token('filter')))
+            return self.set_filters(self.admin.model.objects, self.request.session.get(self.get_token('filter')))
         return self.admin.model.objects
             
     def __call__(self, request, page=0):
         """
         Use widget as view
         """
+        self.request = request
+        
         # Get basic list items
-        items_total = self.get_items(request)
+        items_total = self.get_items()
             
         # Set extra filters?
         try:
@@ -270,11 +272,11 @@ class ListWidget(BaseWidget):
             items_total = items_total.count()
             
         # Set sorting and paginating
-        sorting_method = self.get_sorting(request)
-        paginating_method = self.get_pagination(request, items_total, page)
+        sorting_method = self.get_sorting()
+        paginating_method = self.get_pagination(items_total, page)
         
         # List items
-        items = self.get_items(request)
+        items = self.get_items()
         if not request.session.get(self.get_token('filter')):
             items = items.all()
          
@@ -285,7 +287,7 @@ class ListWidget(BaseWidget):
             pass
                   
         # Sort them
-        items = self.sort_items(request, items, sorting_method);
+        items = self.sort_items(items, sorting_method);
         
         # Set pagination
         if self.pagination:
@@ -302,7 +304,7 @@ class ListWidget(BaseWidget):
         
         # See if we should make and handle search form
         search_form = None
-        SearchForm = self.get_search_form(request)
+        SearchForm = self.get_search_form()
         if SearchForm:
             if request.method == 'POST':
                 # New search
@@ -337,12 +339,12 @@ class ListWidget(BaseWidget):
         
         # See if we sould make and handle tab form
         table_form = None
-        TableForm = self.get_table_form(request, items)
+        TableForm = self.get_table_form(items)
         if TableForm:
             if request.method == 'POST' and request.POST.get('origin') == 'table':
                 table_form = TableForm(request.POST, request=request)
                 if table_form.is_valid():
-                    message, redirect_url = self.table_action(request, items, table_form.cleaned_data)
+                    message, redirect_url = self.table_action(items, table_form.cleaned_data)
                     if redirect_url:
                         request.messages.set_flash(message, message.type, self.admin.id)
                         return redirect(redirect_url)
@@ -360,7 +362,7 @@ class ListWidget(BaseWidget):
                 if list_form.is_valid():
                     try:
                         form_action = getattr(self, 'action_' + list_form.cleaned_data['list_action'])
-                        message, redirect_url = form_action(request, items, list_form.cleaned_data['list_items'])
+                        message, redirect_url = form_action(items, list_form.cleaned_data['list_items'])
                         if redirect_url:
                             request.messages.set_flash(message, message.type, self.admin.id)
                             return redirect(redirect_url)
@@ -378,7 +380,7 @@ class ListWidget(BaseWidget):
                 list_form = ListForm(request=request)
                 
         # Render list
-        return request.theme.render_to_response(self.get_template(self.template),
+        return request.theme.render_to_response(self.get_template(),
                                                 self.add_template_variables({
                                                  'admin': self.admin,
                                                  'action': self,
@@ -411,91 +413,93 @@ class FormWidget(BaseWidget):
     original_name = None
     submit_fallback = False
     
-    def get_url(self, request, model):
+    def get_url(self, model):
         return reverse(self.admin.get_action_attr(self.id, 'route'))
     
-    def get_form(self, request, target):
+    def get_form(self, target):
         return self.form
     
-    def get_form_instance(self, form, request, target, initial, post=False):
+    def get_form_instance(self, form, target, initial, post=False):
         if post:
-            return form(request.POST, request=request, initial=self.get_initial_data(request, target))
-        return form(request=request, initial=self.get_initial_data(request, target))
+            return form(self.request.POST, request=self.request, initial=self.get_initial_data(target))
+        return form(request=self.request, initial=self.get_initial_data(target))
     
-    def get_layout(self, request, form, model):
+    def get_layout(self, form, model):
         if self.layout:
             return self.layout
         return form.layout
     
-    def get_initial_data(self, request, model):
+    def get_initial_data(self, model):
         return {}
     
-    def submit_form(self, request, form, model):
+    def submit_form(self, form, model):
         """
         Handle form submission, ALWAYS return tuple with model and message
         """
         pass
     
     def __call__(self, request, target=None, slug=None):
+        self.request = request
+        
         # Fetch target?
         model = None
         if target:
-            model = self.get_and_validate_target(request, target)
+            model = self.get_and_validate_target(target)
             self.original_name = self.get_target_name(model)
             if not model:
-                return redirect(self.get_fallback_url(request))
+                return redirect(self.get_fallback_url())
         original_model = model
         
         # Get form type to instantiate
-        FormType = self.get_form(request, model)
+        FormType = self.get_form(model)
         
         #Submit form
         message = None
         if request.method == 'POST':
-            form = self.get_form_instance(FormType, request, model, self.get_initial_data(request, model), True)
+            form = self.get_form_instance(FormType, model, self.get_initial_data(model), True)
             if form.is_valid():
                 try:
-                    model, message = self.submit_form(request, form, model)
+                    model, message = self.submit_form(form, model)
                     if message.type != 'error':
                         request.messages.set_flash(message, message.type, self.admin.id)
                         # Redirect back to right page
                         try:
                             if 'save_new' in request.POST and self.get_new_url:
-                                return redirect(self.get_new_url(request, model))
+                                return redirect(self.get_new_url(model))
                         except AttributeError:
                             pass
                         try:
                             if 'save_edit' in request.POST and self.get_edit_url:
-                                return redirect(self.get_edit_url(request, model))
+                                return redirect(self.get_edit_url(model))
                         except AttributeError:
                             pass
                         try:
                             if self.get_submit_url:
-                                return redirect(self.get_submit_url(request, model))
+                                return redirect(self.get_submit_url(model))
                         except AttributeError:
                             pass
-                        return redirect(self.get_fallback_url(request))
+                        return redirect(self.get_fallback_url())
                 except ValidationError as e:
                     message = Message(e.messages[0], 'error')
             else:
                 message = Message(form.non_field_errors()[0], 'error')
         else:
-            form = self.get_form_instance(FormType, request, model, self.get_initial_data(request, model))
+            form = self.get_form_instance(FormType, model, self.get_initial_data(model))
             
         # Render form
-        return request.theme.render_to_response(self.get_template(self.template),
+        return request.theme.render_to_response(self.get_template(),
                                                 self.add_template_variables({
                                                  'admin': self.admin,
                                                  'action': self,
                                                  'request': request,
-                                                 'url': self.get_url(request, model),
-                                                 'fallback': self.get_fallback_url(request),
+                                                 'url': self.get_url(model),
+                                                 'fallback': self.get_fallback_url(),
                                                  'messages_log': request.messages.get_messages(self.admin.id),
                                                  'message': message,
                                                  'tabbed': self.tabbed,
                                                  'target': self.get_target_name(original_model),
                                                  'target_model': original_model,
-                                                 'form': FormLayout(form, self.get_layout(request, form, target)),
+                                                 'form': FormLayout(form, self.get_layout(form, target)),
                                                 }),
                                                 context_instance=RequestContext(request));
 
@@ -510,27 +514,29 @@ class ButtonWidget(BaseWidget):
     - Widget does action and redirects us back to fallback url
     """
     def __call__(self, request, target=None, slug=None):
+        self.request = request
+        
         # Fetch target?
         model = None
         if target:
-            model = self.get_and_validate_target(request, target)
+            model = self.get_and_validate_target(target)
             if not model:
-                return redirect(self.get_fallback_url(request))
+                return redirect(self.get_fallback_url())
         original_model = model
             
         # Crash if this is invalid request
         if not request.csrf.request_secure(request):
             request.messages.set_flash(Message(_("Action authorization is invalid.")), 'error', self.admin.id)
-            return redirect(self.get_fallback_url(request))
+            return redirect(self.get_fallback_url())
         
         # Do something
-        message, url = self.action(request, model)
+        message, url = self.action(model)
         request.messages.set_flash(message, message.type, self.admin.id)
         if url:
             return redirect(url)
-        return redirect(self.get_fallback_url(request))
+        return redirect(self.get_fallback_url())
         
-    def action(self, request, target):
+    def action(self, target):
         """
         Action to be executed when button is pressed
         Define custom one in your Admin action.

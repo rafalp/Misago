@@ -29,13 +29,13 @@ class List(ListWidget):
              )
     empty_message = _('No forums are currently defined.')
     
-    def get_items(self, request):
+    def get_items(self):
         return self.admin.model.objects.get(token='root').get_descendants()
     
-    def sort_items(self, request, page_items, sorting_method):
+    def sort_items(self, page_items, sorting_method):
         return page_items.order_by('lft')
     
-    def get_item_actions(self, request, item):
+    def get_item_actions(self, item):
         if item.type == 'category':
             return (
                     self.action('chevron-up', _("Move Category Up"), reverse('admin_forums_up', item), post=True),
@@ -59,10 +59,10 @@ class List(ListWidget):
                 self.action('remove', _("Delete Redirect"), reverse('admin_forums_delete', item)),
                 )
 
-    def action_resync(self, request, items, checked):
+    def action_resync(self, items, checked):
         return Message(_('Selected forums have been resynchronised successfully.'), 'success'), reverse('admin_forums')
 
-    def action_prune(self, request, items, checked):
+    def action_prune(self, items, checked):
         return Message(_('Selected forums have been pruned successfully.'), 'success'), reverse('admin_forums')
 
 
@@ -73,13 +73,13 @@ class NewCategory(FormWidget):
     form = CategoryForm
     submit_button = _("Save Category")
         
-    def get_new_url(self, request, model):
+    def get_new_url(self, model):
         return reverse('admin_forums_new_category')
     
-    def get_edit_url(self, request, model):
+    def get_edit_url(self, model):
         return reverse('admin_forums_edit', model)
     
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         new_forum = Forum(
                      name=form.cleaned_data['name'],
                      slug=slugify(form.cleaned_data['name']),
@@ -92,7 +92,7 @@ class NewCategory(FormWidget):
         
         if form.cleaned_data['perms']:
             new_forum.copy_permissions(form.cleaned_data['perms'])
-            request.monitor['acl_version'] = int(request.monitor['acl_version']) + 1
+            self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
             
         return new_forum, Message(_('New Category has been created.'), 'success')
 
@@ -104,13 +104,13 @@ class NewForum(FormWidget):
     form = ForumForm
     submit_button = _("Save Forum")
         
-    def get_new_url(self, request, model):
+    def get_new_url(self, model):
         return reverse('admin_forums_new_forum')
     
-    def get_edit_url(self, request, model):
+    def get_edit_url(self, model):
         return reverse('admin_forums_edit', model)
     
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         new_forum = Forum(
                      name=form.cleaned_data['name'],
                      slug=slugify(form.cleaned_data['name']),
@@ -125,14 +125,14 @@ class NewForum(FormWidget):
         
         if form.cleaned_data['perms']:
             new_forum.copy_permissions(form.cleaned_data['perms'])
-            request.monitor['acl_version'] = int(request.monitor['acl_version']) + 1
+            self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
             
         return new_forum, Message(_('New Forum has been created.'), 'success')
 
     def __call__(self, request):
         if self.admin.model.objects.get(token='root').get_descendants().count() == 0:
             request.messages.set_flash(Message(_("You have to create at least one category before you will be able to create forums.")), 'error', self.admin.id)
-            return redirect(self.get_fallback_url(request))
+            return redirect(self.get_fallback_url())
         return super(NewForum, self).__call__(request)
 
 
@@ -143,13 +143,13 @@ class NewRedirect(FormWidget):
     form = RedirectForm
     submit_button = _("Save Forum")
         
-    def get_new_url(self, request, model):
+    def get_new_url(self, model):
         return reverse('admin_forums_new_redirect')
     
-    def get_edit_url(self, request, model):
+    def get_edit_url(self, model):
         return reverse('admin_forums_edit', model)
     
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         new_forum = Forum(
                      name=form.cleaned_data['name'],
                      slug=slugify(form.cleaned_data['name']),
@@ -162,14 +162,14 @@ class NewRedirect(FormWidget):
         
         if form.cleaned_data['perms']:
             new_forum.copy_permissions(form.cleaned_data['perms'])
-            request.monitor['acl_version'] = int(request.monitor['acl_version']) + 1
+            self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
             
         return new_forum, Message(_('New Redirect has been created.'), 'success')
     
     def __call__(self, request):
         if self.admin.model.objects.get(token='root').get_descendants().count() == 0:
             request.messages.set_flash(Message(_("You have to create at least one category before you will be able to create redirects.")), 'error', self.admin.id)
-            return redirect(self.get_fallback_url(request))
+            return redirect(self.get_fallback_url())
         return super(NewRedirect, self).__call__(request)
 
 
@@ -179,7 +179,7 @@ class Up(ButtonWidget):
     fallback = 'admin_forums'
     notfound_message = _('Requested Forum could not be found.')
     
-    def action(self, request, target):
+    def action(self, target):
         previous_sibling = target.get_previous_sibling()
         if previous_sibling:
             target.move_to(previous_sibling, 'left')
@@ -193,7 +193,7 @@ class Down(ButtonWidget):
     fallback = 'admin_forums'
     notfound_message = _('Requested Forum could not be found.')
     
-    def action(self, request, target):
+    def action(self, target):
         next_sibling = target.get_next_sibling()
         if next_sibling:
             target.move_to(next_sibling, 'right')
@@ -211,13 +211,13 @@ class Edit(FormWidget):
     notfound_message = _('Requested Forum could not be found.')
     submit_fallback = True
     
-    def get_url(self, request, model):
+    def get_url(self, model):
         return reverse('admin_forums_edit', model)
     
-    def get_edit_url(self, request, model):
-        return self.get_url(request, model)
+    def get_edit_url(self, model):
+        return self.get_url(model)
     
-    def get_form(self, request, target):
+    def get_form(self, target):
         if target.type == 'category':
             self.name= _("Edit Category")
             self.form = CategoryForm
@@ -231,7 +231,7 @@ class Edit(FormWidget):
         
         return self.form
     
-    def get_initial_data(self, request, model):
+    def get_initial_data(self, model):
         initial = {
                    'parent': model.parent,
                    'name': model.name,
@@ -250,7 +250,7 @@ class Edit(FormWidget):
         
         return initial
     
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         target.name = form.cleaned_data['name']
         target.set_description(form.cleaned_data['description'])
         if target.type == 'redirect':
@@ -265,7 +265,7 @@ class Edit(FormWidget):
             
         if form.cleaned_data['parent'].pk != target.parent.pk:
             target.move_to(form.cleaned_data['parent'], 'last-child')
-            request.monitor['acl_version'] = int(request.monitor['acl_version']) + 1
+            self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
             
         target.save(force_update=True)
             
@@ -273,7 +273,7 @@ class Edit(FormWidget):
             target.copy_permissions(form.cleaned_data['perms'])
         
         if form.cleaned_data['parent'].pk != target.parent.pk or form.cleaned_data['perms']:
-            request.monitor['acl_version'] = int(request.monitor['acl_version']) + 1
+            self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
         
         return target, Message(_('Changes in forum "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
 
@@ -289,10 +289,10 @@ class Delete(FormWidget):
     notfound_message = _('Requested Forum could not be found.')
     submit_fallback = True
     
-    def get_url(self, request, model):
+    def get_url(self, model):
         return reverse('admin_forums_delete', model)
    
-    def get_form(self, request, target):
+    def get_form(self, target):
         if target.type == 'category':
             self.name= _("Delete Category")
         if target.type == 'redirect':
@@ -304,7 +304,7 @@ class Delete(FormWidget):
         
         return self.form
         
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         new_parent = form.cleaned_data['parent']
         if new_parent:
             target.move_content(new_parent)

@@ -81,31 +81,31 @@ class List(ListWidget):
     def prefetch_related(self, items):
         return items.prefetch_related('roles')
     
-    def get_item_actions(self, request, item):
+    def get_item_actions(self, item):
         return (
                 self.action('pencil', _("Edit User Details"), reverse('admin_users_edit', item)),
                 self.action('remove', _("Delete User"), reverse('admin_users_delete', item), post=True, prompt=_("Are you sure you want to delete this user account?")),
                 )
     
-    def action_activate(self, request, items, checked):
+    def action_activate(self, items, checked):
         for user in items:
             if unicode(user.pk) in checked and user.activation > 0:
-                request.monitor['users_inactive'] = int(request.monitor['users_inactive']) - 1
+                self.request.monitor['users_inactive'] = int(self.request.monitor['users_inactive']) - 1
                 user.activation = user.ACTIVATION_NONE
                 user.save(force_update=True)
                 user.email_user(
-                                request,
+                                self.request,
                                 'users/activation/admin_done',
                                 _("Your Account has been activated"),
                                 )
                 
         return Message(_('Selected users accounts have been activated.'), 'success'), reverse('admin_users')
     
-    def action_deactivate(self, request, items, checked):
+    def action_deactivate(self, items, checked):
         # First loop - check for errors
         for user in items:
             if unicode(user.pk) in checked:
-                if user.is_protected() and not request.user.is_god():
+                if user.is_protected() and not self.request.user.is_god():
                     return Message(_('You cannot force validation of protected members e-mails.'), 'error'), reverse('admin_users')
                 
         # Second loop - reset passwords
@@ -115,18 +115,18 @@ class List(ListWidget):
                 user.token = token = get_random_string(12)
                 user.save(force_update=True)
                 user.email_user(
-                                request,
+                                self.request,
                                 'users/activation/invalidated',
                                 _("Account Activation"),
                                 )
                 
         return Message(_('Selected users accounts have been deactivated and new activation links have been sent to them.'), 'success'), reverse('admin_users')
 
-    def action_remove_av(self, request, items, checked):
+    def action_remove_av(self, items, checked):
         # First loop - check for errors
         for user in items:
             if unicode(user.pk) in checked:
-                if user.is_protected() and not request.user.is_god():
+                if user.is_protected() and not self.request.user.is_god():
                     return Message(_('You cannot remove and block protected members avatars.'), 'error'), reverse('admin_users')
                 
         # Second loop - reset passwords
@@ -137,11 +137,11 @@ class List(ListWidget):
                 
         return Message(_('Selected users avatars were deleted and locked.'), 'success'), reverse('admin_users')
 
-    def action_remove_sig(self, request, items, checked):
+    def action_remove_sig(self, items, checked):
         # First loop - check for errors
         for user in items:
             if unicode(user.pk) in checked:
-                if user.is_protected() and not request.user.is_god():
+                if user.is_protected() and not self.request.user.is_god():
                     return Message(_('You cannot remove and block protected members signatures.'), 'error'), reverse('admin_users')
                 
         # Second loop - reset passwords
@@ -154,21 +154,21 @@ class List(ListWidget):
                 
         return Message(_('Selected users signatures were deleted and locked.'), 'success'), reverse('admin_users')
    
-    def action_remove_locks(self, request, items, checked):
+    def action_remove_locks(self, items, checked):
         for user in items:
             if unicode(user.pk) in checked:
-                user.default_avatar(request.settings)
+                user.default_avatar(self.request.settings)
                 user.avatar_ban = False
                 user.signature_ban = False
                 user.save(force_update=True)
                 
         return Message(_('Selected users can now edit their avatars and signatures.'), 'success'), reverse('admin_users')
     
-    def action_reset(self, request, items, checked):
+    def action_reset(self, items, checked):
         # First loop - check for errors
         for user in items:
             if unicode(user.pk) in checked:
-                if user.is_protected() and not request.user.is_god():
+                if user.is_protected() and not self.request.user.is_god():
                     return Message(_('You cannot reset protected members passwords.'), 'error'), reverse('admin_users')
                 
         # Second loop - reset passwords
@@ -178,7 +178,7 @@ class List(ListWidget):
                 user.set_password(new_password)
                 user.save(force_update=True)
                 user.email_user(
-                                request,
+                                self.request,
                                 'users/password/new_admin',
                                 _("Your New Password"),
                                 {
@@ -188,10 +188,10 @@ class List(ListWidget):
                 
         return Message(_('Selected users passwords have been reset successfully.'), 'success'), reverse('admin_users')
 
-    def action_delete(self, request, items, checked):
+    def action_delete(self, items, checked):
         for user in items:
             if unicode(user.pk) in checked:
-                if user.pk == request.user.id:
+                if user.pk == self.request.user.id:
                     return Message(_('You cannot delete yourself.'), 'error'), reverse('admin_users')
                 if user.is_protected():
                     return Message(_('You cannot delete protected members.'), 'error'), reverse('admin_users')
@@ -200,7 +200,7 @@ class List(ListWidget):
             if unicode(user.pk) in checked:
                 user.delete()
                 
-        User.objects.resync_monitor(request.monitor)
+        User.objects.resync_monitor(self.request.monitor)
         return Message(_('Selected users have been deleted successfully.'), 'success'), reverse('admin_users')
     
 
@@ -211,21 +211,21 @@ class New(FormWidget):
     form = NewUserForm
     submit_button = _("Save User")
         
-    def get_new_url(self, request, model):
+    def get_new_url(self, model):
         return reverse('admin_users_new')
     
-    def get_edit_url(self, request, model):
+    def get_edit_url(self, model):
         return reverse('admin_users_edit', model)
     
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         new_user = User.objects.create_user(
                                             form.cleaned_data['username'],
                                             form.cleaned_data['email'],
                                             form.cleaned_data['password'],
-                                            request.settings['default_timezone'],
-                                            request.META['REMOTE_ADDR'],
+                                            self.request.settings['default_timezone'],
+                                            self.request.META['REMOTE_ADDR'],
                                             no_roles=True,
-                                            request=request,
+                                            request=self.request,
                                             )
         new_user.title = form.cleaned_data['title']
         new_user.rank = form.cleaned_data['rank']
@@ -249,18 +249,18 @@ class Edit(FormWidget):
     notfound_message = _('Requested User could not be found.')
     submit_fallback = True
     
-    def get_form_instance(self, form, request, model, initial, post=False):
+    def get_form_instance(self, form, model, initial, post=False):
         if post:
-            return form(model, request.POST, request=request, initial=self.get_initial_data(request, model))
-        return form(model, request=request, initial=self.get_initial_data(request, model))
+            return form(model, self.request.POST, request=self.request, initial=self.get_initial_data(model))
+        return form(model, request=self.request, initial=self.get_initial_data(model))
         
-    def get_url(self, request, model):
+    def get_url(self, model):
         return reverse('admin_users_edit', model)
     
-    def get_edit_url(self, request, model):
-        return self.get_url(request, model)
+    def get_edit_url(self, model):
+        return self.get_url(model)
     
-    def get_initial_data(self, request, model):
+    def get_initial_data(self, model):
         return {
                 'username': model.username,
                 'title': model.title,
@@ -276,7 +276,7 @@ class Edit(FormWidget):
                 'signature_ban_reason_admin': model.signature_ban_reason_admin,
                 }
     
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         target.title = form.cleaned_data['title']
         target.rank = form.cleaned_data['rank']
         target.avatar_ban_reason_user = form.cleaned_data['avatar_ban_reason_user']
@@ -288,7 +288,7 @@ class Edit(FormWidget):
         # Do signature mumbo-jumbo
         if form.cleaned_data['signature']:
             target.signature = form.cleaned_data['signature']
-            target.signature_preparsed = signature_markdown(target.get_acl(request),
+            target.signature_preparsed = signature_markdown(target.get_acl(self.request),
                                                             form.cleaned_data['signature'])
         else:
             target.signature = None
@@ -299,7 +299,7 @@ class Edit(FormWidget):
             if form.cleaned_data['avatar_ban']:
                 target.lock_avatar()
             else:
-                target.default_avatar(request.settings)
+                target.default_avatar(self.request.settings)
         target.avatar_ban = form.cleaned_data['avatar_ban']
                
         # Set custom avatar
@@ -309,7 +309,7 @@ class Edit(FormWidget):
             target.avatar_type = 'gallery'
         
         # Update user roles
-        if request.user.is_god():
+        if self.request.user.is_god():
             target.roles.clear()
             for role in form.cleaned_data['roles']:
                 target.roles.add(role)
@@ -331,13 +331,13 @@ class Delete(ButtonWidget):
     fallback = 'admin_users'
     notfound_message = _('Requested User account could not be found.')
     
-    def action(self, request, target):
-        if target.pk == request.user.id:
+    def action(self, target):
+        if target.pk == self.request.user.id:
             return Message(_('You cannot delete yourself.'), 'error'), False
         if target.is_protected():
             return Message(_('You cannot delete protected member.'), 'error'), False
         target.delete()
-        User.objects.resync_monitor(request.monitor)
+        User.objects.resync_monitor(self.request.monitor)
         return Message(_('User "%(name)s" has been deleted.') % {'name': target.username}, 'success'), False
     
 

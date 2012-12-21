@@ -67,15 +67,15 @@ class List(ListWidget):
             model = model.filter(type__in=filters['type'])
         return model
     
-    def get_item_actions(self, request, item):
+    def get_item_actions(self, item):
         return (
                 self.action('pencil', _("Edit Ban"), reverse('admin_bans_edit', item)),
                 self.action('remove', _("Lift Ban"), reverse('admin_bans_delete', item), post=True, prompt=_("Are you sure you want to lift this ban?")),
                 )
 
-    def action_delete(self, request, items, checked):
+    def action_delete(self, items, checked):
         Ban.objects.filter(id__in=checked).delete()
-        request.monitor['bans_version'] = int(request.monitor['bans_version']) + 1
+        self.request.monitor['bans_version'] = int(self.request.monitor['bans_version']) + 1
         return Message(_('Selected bans have been lifted successfully.'), 'success'), reverse('admin_bans')
     
 
@@ -89,13 +89,13 @@ class New(FormWidget):
     form = BanForm
     submit_button = _("Set Ban")
         
-    def get_new_url(self, request, model):
+    def get_new_url(self, model):
         return reverse('admin_bans_new')
     
-    def get_edit_url(self, request, model):
+    def get_edit_url(self, model):
         return reverse('admin_bans_edit', model)
     
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         new_ban = Ban(
                       type = form.cleaned_data['type'],
                       ban = form.cleaned_data['ban'],
@@ -104,7 +104,7 @@ class New(FormWidget):
                       expires = form.cleaned_data['expires']
                      )
         new_ban.save(force_insert=True)
-        request.monitor['bans_version'] = int(request.monitor['bans_version']) + 1
+        self.request.monitor['bans_version'] = int(self.request.monitor['bans_version']) + 1
         return new_ban, Message(_('New Ban has been set.'), 'success')
     
    
@@ -121,13 +121,13 @@ class Edit(FormWidget):
     notfound_message = _('Requested Ban could not be found.')
     submit_fallback = True
     
-    def get_url(self, request, model):
+    def get_url(self, model):
         return reverse('admin_bans_edit', model)
     
-    def get_edit_url(self, request, model):
-        return self.get_url(request, model)
+    def get_edit_url(self, model):
+        return self.get_url(model)
     
-    def get_initial_data(self, request, model):
+    def get_initial_data(self, model):
         return {
                 'type': model.type,
                 'ban': model.ban,
@@ -136,14 +136,14 @@ class Edit(FormWidget):
                 'expires': model.expires,
                 }
     
-    def submit_form(self, request, form, target):
+    def submit_form(self, form, target):
         target.type = form.cleaned_data['type']
         target.ban = form.cleaned_data['ban']
         target.reason_user = form.cleaned_data['reason_user']
         target.reason_admin = form.cleaned_data['reason_admin']
         target.expires = form.cleaned_data['expires']
         target.save(force_update=True)
-        request.monitor['bans_version'] = int(request.monitor['bans_version']) + 1
+        self.request.monitor['bans_version'] = int(self.request.monitor['bans_version']) + 1
         return target, Message(_('Changes in ban have been saved.'), 'success')
 
 
@@ -156,9 +156,9 @@ class Delete(ButtonWidget):
     fallback = 'admin_bans'
     notfound_message = _('Requested Ban could not be found.')
     
-    def action(self, request, target):
+    def action(self, target):
         target.delete()
-        request.monitor['bans_version'] = int(request.monitor['bans_version']) + 1
+        self.request.monitor['bans_version'] = int(self.request.monitor['bans_version']) + 1
         if target.type == 0:
             return Message(_('E-mail and username Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, 'success'), False
         if target.type == 1:
