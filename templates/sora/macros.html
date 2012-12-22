@@ -1,7 +1,7 @@
 {% load i18n %}
 
 {% macro page_title(title='', parent='', page=0) -%}
-{% if parent %}{{ parent }}: {% endif %}{% if title %}{{ title }}{% if page > 1 %} ({% trans page=page %}{{ page }} page{% endtrans %}){% endif %} | {% endif %}{{ settings.board_name }}
+{% if title %}{{ title }}{% if page > 1 %} | {% trans page=page %}Page {{ page }}{% endtrans %}{% endif %} | {% if parent %}{{ parent }} | {% endif %}{% endif %}{{ settings.board_name }}
 {%- endmacro %}
 
 {# Messages list marco #}
@@ -43,7 +43,7 @@
     <div class="pull-right forum-stat stat-posts">
       <span class="stat {% if forum.posts_delta > 0 %}positive{% else %}stag{% endif %}">{% if forum.posts_delta > 0 %}+{{ forum.posts_delta }}{% else %}{{ forum.posts }}{% endif %}</span> <span class="muted">{% trans %}posts{% endtrans %}</span>
     </div>
-    <div class="pull-right forum-stat stat-topics">
+    <div class="pull-right forum-stat stat-threads">
       <span class="stat {% if forum.threads_delta > 0 %}positive{% else %}stag{% endif %}">{% if forum.posts_delta > 0 %}+{{ forum.threads_delta }}{% else %}{{ forum.threads }}{% endif %}</span> <span class="muted">{% trans %}threads{% endtrans %}</span>
     </div>
     {% endif %}

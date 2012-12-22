@@ -67,7 +67,7 @@
             
           i {
             background-image: url("@{iconSpritePath}");
-          }          
+          }
         }
       }
     }
@@ -82,4 +82,121 @@
 .sidetabs-content {
   padding-top: 0px;
   margin-top: -12px;
+}
+
+// List nav
+.list-nav {
+  overflow: auto;
+  margin-bottom: 4px;
+  
+  .nav-pills {
+    margin: 0px;
+  }
+  
+  &.last {
+    margin-top: -8px;
+  }
+}
+
+// Pills
+.nav-pills {
+  li {
+    margin-left: 8px;
+    
+    &.info, &.danger, &.primary {
+      a:link, a:visited {
+        font-weight: bold;
+      }
+    }
+    
+    &.info {
+      a:link, a:visited {
+        background-color: @grayLighter;
+        
+        color: @gray;
+            
+        i {
+          .opacity(60);
+        }
+      }
+      
+      a:active, a:hover {
+        background-color: @gray !important;
+        color: @white;
+            
+        i {
+          background-image: url("@{iconWhiteSpritePath}");
+          .opacity(100);
+        }
+      }
+    }
+    
+    &.danger, &.primary {
+      a:link, a:visited {
+        color: @white;
+              
+        i {
+          background-image: url("@{iconWhiteSpritePath}");
+        }
+      }
+    }
+    
+    &.danger {
+      a:link, a:visited {
+        background-color: lighten(@red, 20%);
+      }
+      
+      a:active, a:hover {
+        background-color: @red !important;
+      }
+    }
+    
+    &.primary {
+      a:link, a:visited {
+        background-color: desaturate(lighten(@linkColor, 10%), 10%);
+      }
+      
+      a:active, a:hover {
+        background-color: @linkColor !important;
+      }
+    }
+  }
+}
+
+// Pager and nav
+.pager {
+  margin: 0px 0px;
+  margin-top: 6px;
+  padding: 0px;
+  margin-right: 6px;
+  
+  &>li {
+    margin-right: 6px;
+  
+    &>a {
+      &:link, &:active, &:visited {
+        background: darken(@bodyBackground, 8%);
+        border: none;
+        .border-radius(3px);
+        padding: 2px 5px;
+        
+        color: @grayDark;
+        font-weight: bold;
+      }
+    
+      &:hover {
+        background-color: @linkColor;
+        
+        color: @white;
+        
+        i {
+          background-image: url("@{iconWhiteSpritePath}");          
+        }
+      }
+    }
+    
+    &.count {
+      color: lighten(@textColor, 30%);
+    }
+  }
 }

@@ -34,7 +34,7 @@ class ForumsACL(BaseACL):
                 return long(forum) in self.acl['can_browse']
         return False
     
-    def check_forum(self, forum):
+    def allow_forum_view(self, forum):
         if not self.can_see(forum):
             raise ACLError404()
         if not self.can_browse(forum):

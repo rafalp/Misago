@@ -1,18 +1,29 @@
 // Layout elements that dont deserve their own file go there
 // -------------------------
 
-// Custom grid columns
-.spanHalf {
-  width: 50%;
+// Breadcrumbs
+.breadcrumb {
+  .active {
+    color: @textColor;
+  }
+  
+  &.bottom {
+    margin-top: 24px;
+    margin-bottom: 0px;
+  }
 }
 
-.spanQuarter {
-  width: 25%;
+.page-header {
+  .breadcrumb {
+    background: none;
+    padding: 0px;
+    margin-bottom: 0px;
+  }
 }
 
 // Footer
 footer {
-  padding-top: 16px;
+  padding-top: 12px;
   padding-bottom: 32px;
   
   color: darken(@bodyBackground, 30%);

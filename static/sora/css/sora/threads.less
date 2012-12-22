@@ -1,0 +1,128 @@
+// Misago Threads Styles
+// --------------------------------------------------
+.thread-info {
+  overflow: auto;
+  
+  li {
+    float: left;
+    margin-right: 16px;
+    .opacity(50);
+    
+    font-weight: bold;
+    
+    a {
+      color: @textColor;
+    }
+  }
+}
+
+.posts-list {
+  margin-top: 12px;
+  margin-bottom: 20px;
+  
+  .well-post {
+    margin: 0px;
+    margin-bottom: 16px;
+    overflow: auto;
+    padding: 16px 0px;
+
+    .post-author{
+      overflow: auto;
+      float: left;
+      width: 284px;
+      position: relative;
+      bottom: 4px;
+      
+      .avatar-normal {
+        float: left;
+        margin: 4px 0px;
+        margin-left: 16px;
+        width: 80px;
+        height: 80px;
+        .box-shadow(0px 0px 4px @grayLight);
+      }
+        
+      .post-bit {
+        float: left;
+        margin-left: 12px;
+        padding-top: 4px;
+        
+        font-weight: bold;
+        font-size: 120%;
+        
+        p {
+          margin: 0px;
+        }
+        
+        .lead {          
+          font-size: 150%;
+        }
+        
+        .user-title {
+          color: @gray;
+        }
+        
+        .post-date {
+          margin-top: 4px;
+          
+          color: @grayLight;
+          font-weight: normal
+        }
+      }
+    }
+
+    .post-content {
+      margin-left: 284px;
+      padding: 0px 16px;
+      
+      .post-foot {
+        margin-top: 20px;
+        
+        .lead {
+          margin: 0px;
+          
+          color: @grayLight;
+          font-size: 100%;
+          
+          a {
+            color: @grayLight;
+          }
+        }
+        
+        .signature {
+          border-top: 1px solid @grayLighter;
+          padding-top: 12px;
+          
+          .markdown {
+            .opacity(70);
+          }
+        }        
+      }
+    }
+  }
+}
+
+// Quick reply box
+.quick-reply {
+  margin-top: 12px;
+  overflow: auto;
+  
+  .avatar-big, .arrow {
+    float: left;
+  }
+  
+  .arrow {
+      width: 0;
+      height: 0;
+      border-top: 12px solid transparent;
+      border-bottom: 12px solid transparent;
+      border-right: 12px solid darken(@bodyBackground, 10%);
+      position: relative;
+      top: 12px;
+      left: 5px;
+  }
+  
+  .editor {
+    margin-left: 142px;
+  }
+}

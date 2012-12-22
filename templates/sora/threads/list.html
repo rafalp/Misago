@@ -3,20 +3,30 @@
 {% load url from future %}
 {% import "sora/macros.html" as macros with context %}
 
-{% block title %}{{ macros.page_title(title=forum.name) }}{% endblock %}
+{% block title %}{{ macros.page_title(title=forum.name,page=pagination['page']) }}{% endblock %}
+
+{% block breadcrumb %}{{ super() }} <span class="divider">/</span></li>
+{% for parent in parents %}
+<li class="first"><a href="{{ parent.type|url(forum=forum.pk, slug=forum.slug) }}">{{ parent.name }}</a> <span class="divider">/</span></li>
+{% endfor %}
+<li class="active">{{ forum.name }}
+{%- endblock %}
 
 {% block content %}
 <div class="page-header">
+  <ul class="breadcrumb">
+    {{ self.breadcrumb() }}</li>
+  </ul>
   <h1>{{ forum.name }}{% if forum.description %} <small>{{ forum.description }}</small>{% endif %}</h1>
 </div>
-<div>
 {% if message %}{{ macros.draw_message(message) }}{% endif %}
-[PAGER]
-{% if user.is_authenticated() %}
-<ul class="nav nav-pills pull-right">
-  <li><a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}">{% trans %}New Thread{% endtrans %}</a></li>
-</ul>
-{% endif %}
+<div class="list-nav">
+  {{ pager() }}
+  {% if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
+  <ul class="nav nav-pills pull-right">
+    <li class="primary"><a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a></li>
+  </ul>
+  {% endif %}
 </div>
 <table class="table table-striped">
   <thead>
@@ -32,10 +42,10 @@
     {% for thread in threads %}
     <tr>
       <td>[ICON]</td>
-      <td><a href="#"><strong>{{ thread.name }}</strong></a>[LABELS][JUMP] [ICONS]</td>
-      <td>{% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}</td>
+      <td><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}"><strong>{{ thread.name }}</strong></a>[LABELS][JUMP] [ICONS]</td>
+      <td>{% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}" class="tooltip-top" title="{{ thread.start|reltimesince }}">{{ thread.start_poster_name }}</a>{% else %}<em class="tooltip-top muted" title="{{ thread.start|reltimesince }}">{{ thread.start_poster_name }}</em>{% endif %}</td>
       <td>{{ thread.replies|intcomma }}</td>
-      <td>{% if thread.last_poster_id %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}">{{ thread.last_poster_name }}</a>{% else %}{{ thread.last_poster_name }}{% endif %}</td>
+      <td>{% if thread.last_poster_id %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}" class="tooltip-top" title="{{ thread.last|reltimesince }}">{{ thread.last_poster_name }}</a>{% else %}<em class="tooltip-top muted" title="{{ thread.last|reltimesince }}">{{ thread.last_poster_name }}</em>{% endif %}</td>
     </tr>
     {% endfor %}
   </tbody>
@@ -43,5 +53,25 @@
 <div class="form-actions table-footer">
   [MOD ACTIONS]
 </div>
-[PAGER] [BUTTON]
+<div class="list-nav last">
+  {{ pager() }}
+  {% if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
+  <ul class="nav nav-pills pull-right">
+    <li class="primary"><a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a></li>
+  </ul>
+  {% endif %}
+</div>
 {% endblock %}
+
+{% macro pager() %}
+  <ul class="pager pull-left">
+    {%- if pagination['prev'] > 1 %}<li><a href="{% url 'forum' slug=forum.slug, forum=forum.id %}" class="tooltip-top" title="{% trans %}First Page{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}First{% endtrans %}</a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'forum' slug=forum.slug, forum=forum.id, page=pagination['prev'] %}{% else %}{% url 'forum' slug=forum.slug, forum=forum.id %}{% endif %}" class="tooltip-top" title="{% trans %}Newest Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{% url 'forum' slug=forum.slug, forum=forum.id, page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    <li class="count">
+    {%- trans current_page=pagination['page'], pages=pagination['total'] -%}
+    Page {{ current_page }} of {{ pages }}
+    {%- endtrans -%}
+    </li>
+  </ul>
+{% endmacro %}

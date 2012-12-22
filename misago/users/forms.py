@@ -24,61 +24,61 @@ class UserForm(Form):
     signature_ban = forms.BooleanField(widget=YesNoSwitch,required=False)
     signature_ban_reason_user = forms.CharField(widget=forms.Textarea,required=False)
     signature_ban_reason_admin = forms.CharField(widget=forms.Textarea,required=False)
-    
-    layout = [
-              [
-               _("Basic Account Settings"),
-               [
-                ('username', {'label': _("Username"), 'help_text': _("Username is name under which user is known to other users. Between 3 and 15 characters, only letters and digits are allowed.")}),
-                ('title', {'label': _("User Title"), 'help_text': _("To override user title with custom one, enter it here.")}),
-                ('rank', {'label': _("User Rank"), 'help_text': _("This user rank.")}),
-                ('roles', {'label': _("User Roles"), 'help_text': _("This user roles. Roles are sets of user permissions")}),
-                ],
-               ],
-              [
-               _("Sign-in Credentials"),
-               [
-                ('email', {'label': _("E-mail Address"), 'help_text': _("Member e-mail address.")}),
-                ('new_password', {'label': _("Change User Password"), 'help_text': _("If you wish to change user password, enter here new password. Otherwhise leave this field blank."), 'has_value': False}),
-                ],
-               ],
-              [
-               _("User Avatar"),
-               [
-                ('avatar_custom', {'label': _("Set Non-Standard Avatar"), 'help_text': _("You can make this member use special avatar by entering name of image file located in avatars directory here.")}),
-                ('avatar_ban', {'label': _("Lock Member's Avatar"), 'help_text': _("If you set this field to yes, this member's avatar will be deleted and replaced with random one selected from _removed gallery and member will not be able to change his avatar.")}),
-                ('avatar_ban_reason_user', {'label': _("User-visible reason for lock"), 'help_text': _("You can leave message to member explaining why he or she is unable to change his avatar anymore. This message will be displayed to member in his control panel.")}),
-                ('avatar_ban_reason_admin', {'label': _("Forum Team-visible reason for lock"), 'help_text': _("You can leave message to other forum team members exmplaining why this member's avatar has been locked.")}),
-                ],
-               ],
-              [
-               _("User Signature"),
-               [
-                ('signature', {'label': _("Signature"), 'help_text': _("Signature is short message attached at end of member's messages.")}),
-                ('signature_ban', {'label': _("Lock Member's Signature"), 'help_text': _("If you set this field to yes, this member will not be able to change his signature.")}),
-                ('signature_ban_reason_user', {'label': _("User-visible reason for lock"), 'help_text': _("You can leave message to member explaining why he or she is unable to edit his signature anymore. This message will be displayed to member in his control panel.")}),
-                ('signature_ban_reason_admin', {'label': _("Forum Team-visible reason for lock"), 'help_text': _("You can leave message to other forum team members exmplaining why this member's signature has been locked.")}),
-                ],
-               ],
-              ]
-        
+            
     def __init__(self, user=None, *args, **kwargs):
         self.request = kwargs['request']
         self.user = user
+        super(UserForm, self).__init__(*args, **kwargs)
+    
+    def finalize_form(self):
+        self.layout = [
+                       [
+                        _("Basic Account Settings"),
+                        [
+                         ('username', {'label': _("Username"), 'help_text': _("Username is name under which user is known to other users. Between 3 and 15 characters, only letters and digits are allowed.")}),
+                         ('title', {'label': _("User Title"), 'help_text': _("To override user title with custom one, enter it here.")}),
+                         ('rank', {'label': _("User Rank"), 'help_text': _("This user rank.")}),
+                         ('roles', {'label': _("User Roles"), 'help_text': _("This user roles. Roles are sets of user permissions")}),
+                         ],
+                        ],
+                       [
+                        _("Sign-in Credentials"),
+                        [
+                         ('email', {'label': _("E-mail Address"), 'help_text': _("Member e-mail address.")}),
+                         ('new_password', {'label': _("Change User Password"), 'help_text': _("If you wish to change user password, enter here new password. Otherwhise leave this field blank."), 'has_value': False}),
+                         ],
+                        ],
+                       [
+                        _("User Avatar"),
+                        [
+                         ('avatar_custom', {'label': _("Set Non-Standard Avatar"), 'help_text': _("You can make this member use special avatar by entering name of image file located in avatars directory here.")}),
+                         ('avatar_ban', {'label': _("Lock Member's Avatar"), 'help_text': _("If you set this field to yes, this member's avatar will be deleted and replaced with random one selected from _removed gallery and member will not be able to change his avatar.")}),
+                         ('avatar_ban_reason_user', {'label': _("User-visible reason for lock"), 'help_text': _("You can leave message to member explaining why he or she is unable to change his avatar anymore. This message will be displayed to member in his control panel.")}),
+                         ('avatar_ban_reason_admin', {'label': _("Forum Team-visible reason for lock"), 'help_text': _("You can leave message to other forum team members exmplaining why this member's avatar has been locked.")}),
+                         ],
+                        ],
+                       [
+                        _("User Signature"),
+                        [
+                         ('signature', {'label': _("Signature"), 'help_text': _("Signature is short message attached at end of member's messages.")}),
+                         ('signature_ban', {'label': _("Lock Member's Signature"), 'help_text': _("If you set this field to yes, this member will not be able to change his signature.")}),
+                         ('signature_ban_reason_user', {'label': _("User-visible reason for lock"), 'help_text': _("You can leave message to member explaining why he or she is unable to edit his signature anymore. This message will be displayed to member in his control panel.")}),
+                         ('signature_ban_reason_admin', {'label': _("Forum Team-visible reason for lock"), 'help_text': _("You can leave message to other forum team members exmplaining why this member's signature has been locked.")}),
+                         ],
+                        ],
+                       ]
         
         # Roles list
         if self.request.user.is_god():
-            self.base_fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,queryset=Role.objects.order_by('name').all(),error_messages={'required': _("User must have at least one role assigned.")})
+            self.fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,queryset=Role.objects.order_by('name').all(),error_messages={'required': _("User must have at least one role assigned.")})
         else:
-            self.base_fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,queryset=Role.objects.filter(protected__exact=False).order_by('name').all(),required=False)
+            self.fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,queryset=Role.objects.filter(protected__exact=False).order_by('name').all(),required=False)
             
         # Keep non-gods from editing protected members sign-in credentials
-        if user.is_protected() and not self.request.user.is_god() and user.pk != self.request.user.pk:
-            del self.base_fields['email']
-            del self.base_fields['new_password']
+        if self.user.is_protected() and not self.request.user.is_god() and self.user.pk != self.request.user.pk:
+            del self.fields['email']
+            del self.fields['new_password']
             del self.layout[1]
-            
-        super(UserForm, self).__init__(*args, **kwargs)
     
     def clean_username(self):
         self.user.set_username(self.cleaned_data['username'])

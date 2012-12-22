@@ -227,7 +227,7 @@ class Edit(FormWidget):
         
         # Remove invalid targets from parent select
         valid_targets = Forum.tree.get(token='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
-        self.form.base_fields['parent'] = TreeNodeChoiceField(queryset=valid_targets,level_indicator=u'- - ')
+        self.form.fields['parent'] = TreeNodeChoiceField(queryset=valid_targets,level_indicator=u'- - ')
         
         return self.form
     
@@ -300,7 +300,7 @@ class Delete(FormWidget):
         
         # Remove invalid targets from parent select
         valid_targets = Forum.tree.get(token='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
-        self.form.base_fields['parent'] = TreeNodeChoiceField(queryset=valid_targets,required=False,empty_label=_("Remove with forum"),level_indicator=u'- - ')
+        self.form.fields['parent'] = TreeNodeChoiceField(queryset=valid_targets,required=False,empty_label=_("Remove with forum"),level_indicator=u'- - ')
         
         return self.form
         

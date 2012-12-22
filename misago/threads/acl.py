@@ -131,6 +131,14 @@ def make_forum_form(request, role, form):
 
 
 class ThreadsACL(BaseACL):
+    def allow_thread_view(self, thread):
+        try:
+            forum_role = self.acl[thread.forum.pk]
+            if forum_role['can_read_threads'] == 0:
+                raise ACLError403(_("You don't have permission to read threads in this forum."))
+        except KeyError:
+            raise ACLError403(_("You don't have permission to read threads in this forum."))
+        
     def can_start_threads(self, forum):
         try:
             forum_role = self.acl[forum.pk]
@@ -151,6 +159,27 @@ class ThreadsACL(BaseACL):
                 raise ACLError403(_("This forum is closed, you can't start new threads in it."))
         except KeyError:
             raise ACLError403(_("You don't have permission to start new threads in this forum."))
+
+    def can_reply(self, thread):
+        try:
+            forum_role = self.acl[thread.forum.pk]
+            if forum_role['can_write_posts'] == 0:
+                return False
+            if thread.closed and forum_role['can_close_threads'] == 0:
+                return False
+            return True
+        except KeyError:
+            return False
+
+    def allow_reply(self, thread):
+        try:
+            forum_role = self.acl[thread.forum.pk]
+            if forum_role['can_write_posts'] == 0:
+                raise ACLError403(_("You don't have permission to write replies in this forum."))
+            if thread.closed and forum_role['can_close_threads'] == 0:
+                raise ACLError403(_("You can't write replies in closed threads."))
+        except KeyError:
+            raise ACLError403(_("You don't have permission to write replies in this forum."))
 
  
 def build_forums(acl, perms, forums, forum_roles):

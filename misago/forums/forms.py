@@ -31,10 +31,9 @@ class CategoryForm(Form):
               ),
              )
     
-    def __init__(self, *args, **kwargs):
-        self.base_fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(include_self=True),level_indicator=u'- - ')
-        self.base_fields['perms'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ',required=False,empty_label=_("Don't copy permissions"))
-        super(CategoryForm, self).__init__(*args, **kwargs)
+    def finalize_form(self):
+        self.fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(include_self=True),level_indicator=u'- - ')
+        self.fields['perms'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ',required=False,empty_label=_("Don't copy permissions"))
     
 
 class ForumForm(Form):
@@ -61,8 +60,8 @@ class ForumForm(Form):
               (
                _("Prune Forum"),
                (
-                ('prune_start', {'label': _("Delete threads with first post older than"), 'help_text': _('Enter number of days since topic start after which topic will be deleted or zero to don\'t delete topics.')}),
-                ('prune_last', {'label': _("Delete threads with last post older than"), 'help_text': _('Enter number of days since since last reply in topic after which topic will be deleted or zero to don\'t delete topics.')}),
+                ('prune_start', {'label': _("Delete threads with first post older than"), 'help_text': _('Enter number of days since thread start after which thread will be deleted or zero to don\'t delete threads.')}),
+                ('prune_last', {'label': _("Delete threads with last post older than"), 'help_text': _('Enter number of days since since last reply in thread after which thread will be deleted or zero to don\'t delete threads.')}),
                 ),
               ),
               (
@@ -73,10 +72,9 @@ class ForumForm(Form):
               ),
              )
     
-    def __init__(self, *args, **kwargs):
-        self.base_fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ')
-        self.base_fields['perms'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ',required=False,empty_label=_("Don't copy permissions"))
-        super(ForumForm, self).__init__(*args, **kwargs)
+    def finalize_form(self):
+        self.fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ')
+        self.fields['perms'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ',required=False,empty_label=_("Don't copy permissions"))
         
 
 class RedirectForm(Form):
@@ -106,10 +104,9 @@ class RedirectForm(Form):
               ),
              )
     
-    def __init__(self, *args, **kwargs):
-        self.base_fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ')
-        self.base_fields['perms'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ',required=False,empty_label=_("Don't copy permissions"))
-        super(RedirectForm, self).__init__(*args, **kwargs)
+    def finalize_form(self):
+        self.fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ')
+        self.fields['perms'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),level_indicator=u'- - ',required=False,empty_label=_("Don't copy permissions"))
     
 
 class DeleteForm(Form):
@@ -124,6 +121,5 @@ class DeleteForm(Form):
               ),
              )
         
-    def __init__(self, *args, **kwargs):
-        self.base_fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),required=False,empty_label=_("Remove with forum"),level_indicator=u'- - ')
-        super(DeleteForm, self).__init__(*args, **kwargs)
+    def finalize_form(self):
+        self.fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(),required=False,empty_label=_("Remove with forum"),level_indicator=u'- - ')

@@ -162,7 +162,6 @@ class Forums(ListWidget):
         for item in page_items:
             if cleaned_data['forum_' + str(item.pk)] != "0":
                 perms[item.pk] = long(cleaned_data['forum_' + str(item.pk)])
-        print perms
         role_perms = self.role.get_permissions()
         role_perms['forums'] = perms
         self.role.set_permissions(role_perms)

@@ -2,7 +2,7 @@
 
 {# Render whole form macro #}
 {%- macro form_widget(form, horizontal=false, width=12) -%}
-<fieldset>
+<fieldset class="first{% if form.fieldsets|length == 0 %} last{% endif %}">
   {{ form_hidden_widget(form) }}
   {% for fieldset in form.fieldsets %}{% if fieldset.legend %}
   <legend><div>{{ fieldset.legend }}{% if fieldset.help %} <span>{{ fieldset.help }}</span>{% endif %}</div></legend>{% endif %}
@@ -10,7 +10,7 @@
     {{ row_widget(field, horizontal=horizontal, width=width) }}
   {% endfor %}
 </fieldset>{% if not fieldset.last %}
-<fieldset>{% endif %}{% endfor %}
+<fieldset{% if loop.revindex0 == 1 %} class="last"{% endif %}>{% endif %}{% endfor %}
 {%- endmacro -%}
 
 {# Render hidden fields macro #}

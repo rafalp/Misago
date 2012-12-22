@@ -136,7 +136,7 @@ class User(models.Model):
     alert_ats = models.PositiveIntegerField(default=0)
     allow_pms = models.PositiveIntegerField(default=0)
     receive_newsletters = models.BooleanField(default=True)
-    topics = models.PositiveIntegerField(default=0)
+    threads = models.PositiveIntegerField(default=0)
     posts = models.PositiveIntegerField(default=0)
     votes = models.PositiveIntegerField(default=0)
     karma_given_p = models.PositiveIntegerField(default=0)
@@ -459,7 +459,7 @@ class User(models.Model):
         return self.join_date
     
     def sync_user(self):
-        print 'SYNCING USER!'    
+        pass
         
 class Guest(object):
     """

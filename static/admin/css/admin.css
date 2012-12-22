@@ -839,8 +839,8 @@ form label{color:#555555;font-weight:bold;cursor:pointer;}
 form fieldset{border-top:1px solid #e8e8e8;margin:0px;padding:0px;padding-top:16px;padding-bottom:8px;}form fieldset legend{margin:0px;margin-bottom:-8px;padding:0px;padding-top:8px;}
 form fieldset .control-group{padding-bottom:4px;}
 form fieldset .control-group:last-child{padding-bottom:0px;}
-form fieldset:first-child{border-top:none;padding-top:0px;}
-form fieldset:last-child{padding-bottom:0px;margin-bottom:0px;}
+form fieldset.first{border-top:none;padding-top:0px;}
+form fieldset.last{padding-bottom:0px;margin-bottom:0px;}
 form .form-actions{margin-top:-4px;}
 textarea{resize:vertical;}
 .radio-group,.select-multiple,.yes-no-switch{margin-bottom:8px;}.radio-group label,.select-multiple label,.yes-no-switch label{color:#000000;font-weight:normal;}

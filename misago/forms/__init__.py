@@ -14,55 +14,59 @@ class Form(forms.Form):
     error_source = None
     def __init__(self, data=None, file=None, request=None, *args, **kwargs):
         self.request = request
-        
+                
+        # Extract request from first argument
+        if data != None:
+            super(Form, self).__init__(data, file, *args, **kwargs)
+        else:
+            super(Form, self).__init__(*args, **kwargs)
+            
         # Kill captcha fields
         try:
             if self.request.settings['bots_registration'] != 'recaptcha' or self.request.session.get('captcha_passed'):
-                del self.base_fields['recaptcha']
+                del self.fields['recaptcha']
         except KeyError:
             pass
         try:
             if self.request.settings['bots_registration'] != 'qa' or self.request.session.get('captcha_passed'):
-                del self.base_fields['captcha_qa']
+                del self.fields['captcha_qa']
             else:
                 # Make sure we have any questions loaded
-                self.base_fields['captcha_qa'].label = self.request.settings['qa_test']
-                self.base_fields['captcha_qa'].help_text = self.request.session['qa_test_help']
+                self.fields['captcha_qa'].label = self.request.settings['qa_test']
+                self.fields['captcha_qa'].help_text = self.request.session['qa_test_help']
         except KeyError:
             pass
         
-        # Extract request from first argument
-        if data != None:
-            # Clean bad data
-            data = self._strip_badchars(data.copy())
-            super(Form, self).__init__(data, file, *args, **kwargs)
-        else:
-            super(Form, self).__init__(*args, **kwargs)
+        # Let forms do mumbo-jumbo with fields removing
+        self.finalize_form()
+     
+    def finalize_form(self):
+        pass
         
-    def _strip_badchars(self, data):
+    def full_clean(self):
         """
         Trim inputs and strip newlines
         """
         for key, field in self.base_fields.iteritems():
             try:
-                if field.__class__.__name__ in ['ModelChoiceField', 'TreeForeignKey'] and data[key]:
-                    data[key] = int(data[key])
+                if field.__class__.__name__ in ['ModelChoiceField', 'TreeForeignKey'] and self.data[key]:
+                    self.data[key] = int(self.data[key])
                 elif field.__class__.__name__ == 'ModelMultipleChoiceField':
-                    data.setlist(key, [int(x) for x in data.getlist(key, [])])
+                    self.data.setlist(key, [int(x) for x in self.data.getlist(key, [])])
                 elif field.__class__.__name__ not in ['DateField', 'DateTimeField']:
                     if not key in self.dont_strip:
                         if field.__class__.__name__ in ['MultipleChoiceField', 'TypedMultipleChoiceField']:
-                            data.setlist(key, [x.strip() for x in data.getlist(key, [])])
+                            self.data.setlist(key, [x.strip() for x in self.data.getlist(key, [])])
                         else:
-                            data[key] = data[key].strip()
+                            self.data[key] = self.data[key].strip()
                     if not key in self.allow_nl:
                         if field.__class__.__name__ in ['MultipleChoiceField', 'TypedMultipleChoiceField']:
-                            data.setlist(key, [x.replace("\n", '') for x in data.getlist(key, [])])
+                            self.data.setlist(key, [x.replace("\n", '') for x in self.data.getlist(key, [])])
                         else:
-                            data[key] = data[key].replace("\n", '')
+                            self.data[key] = self.data[key].replace("\n", '')
             except (KeyError, AttributeError):
                 pass
-        return data
+        super(Form, self).full_clean()
      
     def clean(self):
         """

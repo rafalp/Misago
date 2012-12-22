@@ -54,7 +54,6 @@ def list(request, rank_slug=None):
             
             # Go for rought match
             if len(username) > 0:
-                print username
                 users = User.objects.filter(username_slug__startswith=username).order_by('username_slug')[:10]
         elif search_form.non_field_errors()[0] == 'form_contains_errors':
             message = Message(_("To search users you have to enter username in search field."), 'error')

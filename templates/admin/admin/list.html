@@ -58,7 +58,7 @@
     <button type="submit" class="btn btn-primary">{{ action.table_form_button }}</button>
   </form>
   {% endif %}
-  {% if pagination and (pagination['prev'] > 0 or pagination['next'] > 0)%}
+  {% if pagination and (pagination['prev'] > 0 or pagination['next'] > 0) %}
   <ul class="pager pull-left">
     {%- if pagination['prev'] > 0 %}<li><a href="{{ action.get_pagination_url(pagination['prev']) }}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
     {%- if pagination['next'] > 0 %}<li><a href="{{ action.get_pagination_url(pagination['next']) }}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
