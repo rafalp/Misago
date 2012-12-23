@@ -1,4 +1,3 @@
-from django.db.utils import DatabaseError
 from django.core.cache import cache
 from django.utils import timezone
 from misago.monitor.models import Item
@@ -13,12 +12,9 @@ class Monitor(object):
         self._items = cache.get('misago.monitor')
         if not self._items:
             self._items = {}
-            try:
-                for i in Item.objects.all():
-                    self._items[i.id] = [i.value, i.updated]
-                cache.set('misago.monitor', self._items)
-            except DatabaseError:
-                pass
+            for i in Item.objects.all():
+                self._items[i.id] = [i.value, i.updated]
+            cache.set('misago.monitor', self._items)
 
     def __contains__(self, key):
         return key in self._items
@@ -30,7 +26,7 @@ class Monitor(object):
         self._items[key][0] = value
         cache.set('misago.monitor', self._items)
         sync_item = Item(id=key, value=value, updated=timezone.now())
-        sync_item.save()
+        sync_item.save(force_update=True)
         return value
         
     def __delitem__(self, key):
