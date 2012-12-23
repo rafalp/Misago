@@ -15,7 +15,8 @@ class ThreadsView(BaseView):
         self.forum = Forum.objects.get(pk=forum, type='forum')
         self.request.acl.forums.allow_forum_view(self.forum)
         self.parents = self.forum.get_ancestors().filter(level__gt=1)
-        self.forum.subforums = Forum.objects.treelist(self.request.acl.forums, self.forum, tracker=ForumsTracker(self.request.user))
+        if self.forum.lft + 1 != self.forum.rght:
+            self.forum.subforums = Forum.objects.treelist(self.request.acl.forums, self.forum, tracker=ForumsTracker(self.request.user))
         self.tracker = ThreadsTracker(self.request.user, self.forum)
                 
     def fetch_threads(self, page):

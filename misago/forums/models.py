@@ -40,11 +40,11 @@ class ForumManager(models.Manager):
                         parents[forum.parent_id].is_read = False
                     # Sum stats
                     if forum.last_thread_date and (not parents[forum.parent_id].last_thread_date or forum.last_thread_date > parents[forum.parent_id].last_thread_date):
-                        parents[forum.parent_id].last_thread = forum.last_thread
+                        parents[forum.parent_id].last_thread_id = forum.last_thread_id
                         parents[forum.parent_id].last_thread_name = forum.last_thread_name
                         parents[forum.parent_id].last_thread_slug = forum.last_thread_slug
                         parents[forum.parent_id].last_thread_date = forum.last_thread_date
-                        parents[forum.parent_id].last_poster = forum.last_poster
+                        parents[forum.parent_id].last_poster_id = forum.last_poster_id
                         parents[forum.parent_id].last_poster_name = forum.last_poster_name
                         parents[forum.parent_id].last_poster_slug = forum.last_poster_slug
                         parents[forum.parent_id].last_poster_style = forum.last_poster_style
