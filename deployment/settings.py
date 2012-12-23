@@ -29,6 +29,12 @@ DATABASES = {
     }
 }
 
+# Cache engine
+# Misago is EXTREMLY data hungry
+# If you don't set any cache, it will BRUTALISE your database and memory
+# In production ALWAYS use cache
+CACHES = {}
+
 # Cookies configuration
 COOKIES_DOMAIN = '' # Set empty for automatic detection.
 COOKIES_PATH = '' # Set empty for automatic detection.

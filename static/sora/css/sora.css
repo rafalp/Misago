@@ -958,7 +958,7 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .forums-list .well-forum .muted{margin-top:4px;color:#737373;}
 .forum-list-side{padding-top:10px;}
 .subforums-list{margin:0px;position:relative;bottom:32px;}.subforums-list .category{margin-bottom:-24px;}
-.threads-list .thread-icon{background-color:#999999;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;padding:5px 6px;}
+.threads-list .thread-icon{background-color:#eeeeee;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;padding:5px 6px;}
 .threads-list .thread-closed{background-color:#9d261d;}
 .threads-list .thread-new{background-color:#0088cc;}
 .thread-info{overflow:auto;}.thread-info li{float:left;margin-right:16px;opacity:0.5;filter:alpha(opacity=50);font-weight:bold;}.thread-info li a{color:#333333;}
