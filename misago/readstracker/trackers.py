@@ -12,7 +12,6 @@ class ForumsTracker(object):
         if self.user.is_authenticated() and settings.READS_TRACKER_LENGTH > 0:
             for forum in Record.objects.filter(user=user).filter(updated__gte=self.cutoff).values('id', 'forum_id', 'updated', 'cleared'):
                  self.forums[forum['forum_id']] = forum
-        print self.forums
                  
     def is_read(self, forum):
         if not self.user.is_authenticated() or not forum.last_thread_date:
