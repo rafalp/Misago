@@ -53,9 +53,9 @@
       <td>
         <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{% if not thread.is_read %}<strong>{{ thread.name }}</strong>{% else %}{{ thread.name }}{% endif %}</a>[LABELS][JUMP] [ICONS]
       </td>
-      <td>{% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}" class="tooltip-top" title="{{ thread.start|reltimesince }}">{{ thread.start_poster_name }}</a>{% else %}<em class="tooltip-top muted" title="{{ thread.start|reltimesince }}">{{ thread.start_poster_name }}</em>{% endif %}</td>
-      <td>{{ thread.replies|intcomma }}</td>
-      <td>{% if thread.last_poster_id %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}" class="tooltip-top" title="{{ thread.last|reltimesince }}">{{ thread.last_poster_name }}</a>{% else %}<em class="tooltip-top muted" title="{{ thread.last|reltimesince }}">{{ thread.last_poster_name }}</em>{% endif %}</td>
+      <td class="span2">{% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}" class="tooltip-top" title="{{ thread.start|reltimesince }}">{{ thread.start_poster_name }}</a>{% else %}<em class="tooltip-top muted" title="{{ thread.start|reltimesince }}">{{ thread.start_poster_name }}</em>{% endif %}</td>
+      <td class="span1">{{ thread.replies|intcomma }}</td>
+      <td class="span2">{% if thread.last_poster_id %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}" class="tooltip-top" title="{{ thread.last|reltimesince }}">{{ thread.last_poster_name }}</a>{% else %}<em class="tooltip-top muted" title="{{ thread.last|reltimesince }}">{{ thread.last_poster_name }}</em>{% endif %}</td>
     </tr>
     {% endfor %}
   </tbody>

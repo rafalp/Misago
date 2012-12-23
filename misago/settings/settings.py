@@ -21,7 +21,6 @@ class Settings(object):
                 pass
         else:
             for i, model in self._models.items():
-                print model
                 self._settings[i] = model.get_value()
             
     def __getattr__(self, key):
