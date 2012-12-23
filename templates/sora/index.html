@@ -16,9 +16,7 @@
       {% for category in forums_list %}{% if category.subforums %}
       <div class="category{% if category.style %} {{ category.style }}{% endif %}">
         <h2>{{ category.name }}{% if category.description %} <small><strong>{{ category.description }}</strong></small>{% endif %}</h2>
-        {% for forum in category.subforums %}
-        {{ macros.draw_forum(category, forum) }}
-        {% endfor %}
+        {{ macros.draw_forums(category, 8) }}
       </div>{% endif %}{% endfor %}
     </div>
   </div>

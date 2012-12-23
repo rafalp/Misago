@@ -63,14 +63,15 @@ class PostingView(BaseView):
         if request.method == 'POST':
             form = self.get_form(True)
             if form.is_valid():
+                now = timezone.now()
                 # Get or create new thread
                 if self.mode in ['new_thread', 'edit_thread']:
                     thread = Thread.objects.create(
                                                    forum=self.forum,
                                                    name=form.cleaned_data['thread_name'],
                                                    slug=slugify(form.cleaned_data['thread_name']),
-                                                   start=timezone.now(),
-                                                   last=timezone.now(),
+                                                   start=now,
+                                                   last=now,
                                                    )
                 else:
                     thread = self.thread
@@ -85,7 +86,7 @@ class PostingView(BaseView):
                                            agent=request.META.get('HTTP_USER_AGENT'),
                                            post=form.cleaned_data['post'],
                                            post_preparsed=post_markdown(request, form.cleaned_data['post']),
-                                           date=timezone.now()
+                                           date=now
                                            )
                 
                 if self.mode == 'new_thread':
@@ -96,7 +97,7 @@ class PostingView(BaseView):
                     if request.user.rank and request.user.rank.style:
                         thread.start_poster_style = request.user.rank.style
                     
-                thread.last = timezone.now()
+                thread.last = now
                 thread.last_post = post
                 thread.last_poster = request.user
                 thread.last_poster_name = request.user.username

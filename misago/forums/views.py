@@ -1,3 +1,4 @@
+import copy
 from django.core.urlresolvers import reverse as django_reverse
 from django.db.models import Q
 from django.utils.translation import ugettext as _
@@ -82,6 +83,7 @@ class NewCategory(FormWidget):
     def submit_form(self, form, target):
         new_forum = Forum(
                      name=form.cleaned_data['name'],
+                     template=form.cleaned_data['template'],
                      slug=slugify(form.cleaned_data['name']),
                      type='category',
                      style=form.cleaned_data['style'],
@@ -115,6 +117,7 @@ class NewForum(FormWidget):
                      name=form.cleaned_data['name'],
                      slug=slugify(form.cleaned_data['name']),
                      type='forum',
+                     template=form.cleaned_data['template'],
                      style=form.cleaned_data['style'],
                      closed=form.cleaned_data['closed'],
                      prune_start=form.cleaned_data['prune_start'],
@@ -219,15 +222,16 @@ class Edit(FormWidget):
     
     def get_form(self, target):
         if target.type == 'category':
-            self.name= _("Edit Category")
+            self.name = _("Edit Category")
             self.form = CategoryForm
         if target.type == 'redirect':
-            self.name= _("Edit Redirect")
+            self.name = _("Edit Redirect")
             self.form = RedirectForm
         
         # Remove invalid targets from parent select
+        self.form = copy.deepcopy(self.form)
         valid_targets = Forum.tree.get(token='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
-        self.form.fields['parent'] = TreeNodeChoiceField(queryset=valid_targets,level_indicator=u'- - ')
+        self.form.base_fields['parent'] = TreeNodeChoiceField(queryset=valid_targets,level_indicator=u'- - ')
         
         return self.form
     
@@ -241,6 +245,7 @@ class Edit(FormWidget):
         if model.type == 'redirect':
             initial['redirect'] = model.redirect
         else:
+            initial['template'] = model.template
             initial['style'] = model.style
             initial['closed'] = model.closed
             
@@ -256,6 +261,7 @@ class Edit(FormWidget):
         if target.type == 'redirect':
             target.redirect = form.cleaned_data['redirect']
         else:
+            target.template = form.cleaned_data['template']
             target.style = form.cleaned_data['style']
             target.closed = form.cleaned_data['closed']
             
@@ -299,8 +305,9 @@ class Delete(FormWidget):
             self.name= _("Delete Redirect")
         
         # Remove invalid targets from parent select
+        self.form = copy.deepcopy(self.form)
         valid_targets = Forum.tree.get(token='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
-        self.form.fields['parent'] = TreeNodeChoiceField(queryset=valid_targets,required=False,empty_label=_("Remove with forum"),level_indicator=u'- - ')
+        self.form.base_fields['parent'] = TreeNodeChoiceField(queryset=valid_targets,required=False,empty_label=_("Remove with forum"),level_indicator=u'- - ')
         
         return self.form
         

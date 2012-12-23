@@ -146,7 +146,7 @@ class User(models.Model):
     following = models.PositiveIntegerField(default=0)
     followers = models.PositiveIntegerField(default=0)
     score = models.IntegerField(default=0,db_index=True)
-    rank = models.ForeignKey('ranks.Rank',null=True,blank=True,db_index=True,on_delete=models.SET_NULL)
+    rank = models.ForeignKey('ranks.Rank',null=True,blank=True,on_delete=models.SET_NULL)
     last_sync = models.DateTimeField(null=True,blank=True)
     follows = models.ManyToManyField('self',related_name='follows_set',symmetrical=False)
     ignores = models.ManyToManyField('self',related_name='ignores_set',symmetrical=False)

@@ -5,6 +5,7 @@ from django.utils.translation import ugettext as _
 from misago.acl.utils import ACLError403, ACLError404
 from misago.forms import FormFields
 from misago.forums.models import Forum
+from misago.readstracker.trackers import ThreadsTracker
 from misago.threads.forms import QuickReplyForm
 from misago.threads.models import Thread, Post
 from misago.threads.views.base import BaseView
@@ -18,14 +19,18 @@ class ThreadView(BaseView):
         self.request.acl.forums.allow_forum_view(self.forum)
         self.request.acl.threads.allow_thread_view(self.thread)
         self.parents = self.forum.get_ancestors(include_self=True).filter(level__gt=1)
+        self.tracker = ThreadsTracker(self.request.user, self.forum)
     
     def fetch_posts(self, page):
         self.count = Post.objects.filter(thread=self.thread).count()
-        self.posts = Post.objects.filter(thread=self.thread).order_by('pk').all()
+        self.posts = Post.objects.filter(thread=self.thread).order_by('pk').all().prefetch_related('user', 'user__rank')
         self.pagination = make_pagination(page, self.count, self.request.settings.posts_per_page)
         if self.request.settings.threads_per_page < self.count:
             self.posts = self.posts[self.pagination['start']:self.pagination['stop']]
-        self.posts.prefetch_related('user', 'user__rank')
+        last_post = self.posts[len(self.posts) - 1]
+        if not self.tracker.is_read(self.thread):
+            self.tracker.set_read(self.thread, last_post)
+            self.tracker.sync()
         
     def __call__(self, request, slug=None, thread=None, page=0):
         self.request = request

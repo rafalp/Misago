@@ -1,5 +1,35 @@
 // Misago Threads Styles
 // --------------------------------------------------
+.subforums-list {
+  margin: 0px;
+  position: relative;
+  bottom: 32px;
+  
+  .category {
+    margin-bottom: -24px;
+  }
+}
+
+// Threads list
+// --------------------------------------------------
+.threads-list {
+  .thread-icon {
+    background-color: @grayLight; 
+    .border-radius(3px);
+    padding: 5px 6px;
+  }
+  
+  .thread-closed {
+    background-color: @red; 
+  }
+  
+  .thread-new {
+    background-color: @linkColor; 
+  }
+}
+
+// Thread view
+// --------------------------------------------------
 .thread-info {
   overflow: auto;
   

@@ -11,6 +11,11 @@ class CategoryForm(Form):
     description = forms.CharField(widget=forms.Textarea,required=False)
     closed = forms.BooleanField(widget=YesNoSwitch,required=False)
     style = forms.CharField(max_length=255,required=False)
+    template = forms.ChoiceField(choices=(
+                                          ('row', _('One forum per row')),
+                                          ('half', _('Two forums per row')),
+                                          ('quarter', _('Four forums per row')),
+                                          ))
     
     layout = (
               (
@@ -26,6 +31,7 @@ class CategoryForm(Form):
               (
                _("Display Options"),
                (
+                ('template', {'label': _("Category Layout"), 'help_text': _('Controls how this category is displayed on forums lists.')}),
                 ('style', {'label': _("Category Style"), 'help_text': _('You can add custom CSS classess to this category, to change way it looks on board index.')}),
                 ),
               ),
@@ -45,6 +51,11 @@ class ForumForm(Form):
     style = forms.CharField(max_length=255,required=False)
     prune_start = forms.IntegerField(min_value=0,initial=0)
     prune_last = forms.IntegerField(min_value=0,initial=0)
+    template = forms.ChoiceField(choices=(
+                                          ('row', _('One forum per row')),
+                                          ('half', _('Two forums per row')),
+                                          ('quarter', _('Four forums per row')),
+                                          ))
     
     layout = (
               (
@@ -67,6 +78,7 @@ class ForumForm(Form):
               (
                _("Display Options"),
                (
+                ('template', {'label': _("Subforums Layout"), 'help_text': _('Controls how this forum displays subforums list.')}),
                 ('style', {'label': _("Forum Style"), 'help_text': _('You can add custom CSS classess to this forum to change way it looks on forums lists.')}),
                 ),
               ),

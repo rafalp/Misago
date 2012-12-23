@@ -13,9 +13,7 @@
         color: lighten(@textColor, 45%);
         font-size: 100%;
       }
-    } 
-    
-    margin-bottom: 12px;
+    }
   }
   
   .category-important {
@@ -40,13 +38,17 @@
     }
     
     .forum-icon {
-      background-color: @linkColor; 
+      background-color: @grayLighter; 
       .border-radius(3px);
       float: left;
       padding: 3px 6px;
       position: relative;
       bottom: 4px;
       margin-bottom: -4px;
+    }
+    
+    .forum-new {
+      background-color: @linkColor !important; 
     }
     
     .redirect-icon {
@@ -95,8 +97,8 @@
       font-size: 110%;
       line-height: 100%;
       
-      a:link, a:active, a:visited {
-        color: @textColor;
+      .read-forum {
+        color: lighten(desaturate(@linkColor, 65%), 20%);
       }
     }
     

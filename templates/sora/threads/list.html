@@ -19,6 +19,14 @@
   </ul>
   <h1>{{ forum.name }}{% if forum.description %} <small>{{ forum.description }}</small>{% endif %}</h1>
 </div>
+{% if forum.subforums %}
+<div class="forums-list subforums-list">
+  <h3>{% trans %}Subforums{% endtrans %}:</h3>
+  <div class="category{% if forum.style %} {{ forum.style }}{% endif %}">
+    {{ macros.draw_forums(forum, 12) }}
+  </div>
+</div>
+{% endif %}
 {% if message %}{{ macros.draw_message(message) }}{% endif %}
 <div class="list-nav">
   {{ pager() }}
@@ -28,7 +36,7 @@
   </ul>
   {% endif %}
 </div>
-<table class="table table-striped">
+<table class="table table-striped threads-list">
   <thead>
     <tr>
       <th style="width: 1%;">&nbsp;</th>
@@ -41,8 +49,10 @@
   <tbody>
     {% for thread in threads %}
     <tr>
-      <td>[ICON]</td>
-      <td><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}"><strong>{{ thread.name }}</strong></a>[LABELS][JUMP] [ICONS]</td>
+      <td><span class="thread-icon{% if not thread.is_read %} {% if thread.closed %}thread-closed{% else %}thread-new{% endif %}{% endif %}"><i class="icon-{% if thread.closed %}remove{% else %}comment{% endif %} icon-white"></i></span></td>
+      <td>
+        <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{% if not thread.is_read %}<strong>{{ thread.name }}</strong>{% else %}{{ thread.name }}{% endif %}</a>[LABELS][JUMP] [ICONS]
+      </td>
       <td>{% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}" class="tooltip-top" title="{{ thread.start|reltimesince }}">{{ thread.start_poster_name }}</a>{% else %}<em class="tooltip-top muted" title="{{ thread.start|reltimesince }}">{{ thread.start_poster_name }}</em>{% endif %}</td>
       <td>{{ thread.replies|intcomma }}</td>
       <td>{% if thread.last_poster_id %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}" class="tooltip-top" title="{{ thread.last|reltimesince }}">{{ thread.last_poster_name }}</a>{% else %}<em class="tooltip-top muted" title="{{ thread.last|reltimesince }}">{{ thread.last_poster_name }}</em>{% endif %}</td>

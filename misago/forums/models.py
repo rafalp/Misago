@@ -5,7 +5,7 @@ from mptt.models import MPTTModel,TreeForeignKey
 from misago.roles.models import Role
 
 class ForumManager(models.Manager):
-    def treelist(self, acl, parent=None):
+    def treelist(self, acl, parent=None, tracker=None):
         complete_list = []
         forums_list = []
         parents = {}
@@ -17,6 +17,9 @@ class ForumManager(models.Manager):
             
         for forum in queryset:
             forum.subforums = []
+            forum.is_read = False
+            if tracker:
+                forum.is_read = tracker.is_read(forum)
             parents[forum.pk] = forum
             complete_list.append(forum)
             if forum.parent_id in parents:
@@ -31,15 +34,20 @@ class ForumManager(models.Manager):
                 parents[forum.parent_id].threads_delta += forum.threads_delta
                 parents[forum.parent_id].posts += forum.posts
                 parents[forum.parent_id].posts_delta += forum.posts_delta
-                if acl.can_browse(forum.pk) and forum.last_thread_date and (not parents[forum.parent_id].last_thread_date or forum.last_thread_date > parents[forum.parent_id].last_thread_date):
-                    parents[forum.parent_id].last_thread = forum.last_thread
-                    parents[forum.parent_id].last_thread_name = forum.last_thread_name
-                    parents[forum.parent_id].last_thread_slug = forum.last_thread_slug
-                    parents[forum.parent_id].last_thread_date = forum.last_thread_date
-                    parents[forum.parent_id].last_poster = forum.last_poster
-                    parents[forum.parent_id].last_poster_name = forum.last_poster_name
-                    parents[forum.parent_id].last_poster_slug = forum.last_poster_slug
-                    parents[forum.parent_id].last_poster_style = forum.last_poster_style
+                if acl.can_browse(forum.pk):
+                    # If forum is unread, make parent unread too
+                    if not forum.is_read:
+                        parents[forum.parent_id].is_read = False
+                    # Sum stats
+                    if forum.last_thread_date and (not parents[forum.parent_id].last_thread_date or forum.last_thread_date > parents[forum.parent_id].last_thread_date):
+                        parents[forum.parent_id].last_thread = forum.last_thread
+                        parents[forum.parent_id].last_thread_name = forum.last_thread_name
+                        parents[forum.parent_id].last_thread_slug = forum.last_thread_slug
+                        parents[forum.parent_id].last_thread_date = forum.last_thread_date
+                        parents[forum.parent_id].last_poster = forum.last_poster
+                        parents[forum.parent_id].last_poster_name = forum.last_poster_name
+                        parents[forum.parent_id].last_poster_slug = forum.last_poster_slug
+                        parents[forum.parent_id].last_poster_style = forum.last_poster_style
         return forums_list
 
 
@@ -68,6 +76,7 @@ class Forum(MPTTModel):
     prune_start = models.PositiveIntegerField(default=0)
     prune_last = models.PositiveIntegerField(default=0)
     redirect = models.CharField(max_length=255,null=True,blank=True)
+    template = models.CharField(max_length=255,null=True,blank=True)
     style = models.CharField(max_length=255,null=True,blank=True)
     closed = models.BooleanField(default=False)
     

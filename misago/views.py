@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from misago.forums.models import Forum
+from misago.readstracker.trackers import ForumsTracker
 from misago.sessions.models import Session
 
 def home(request):
@@ -12,10 +13,10 @@ def home(request):
         if session.user.pk not in team_pks:
             team_pks.append(session.user.pk)
             team_online.append(session.user)
-            
+    reads_tracker = ForumsTracker(request.user)
     return request.theme.render_to_response('index.html',
                                             {
-                                             'forums_list': Forum.objects.treelist(request.acl.forums),
+                                             'forums_list': Forum.objects.treelist(request.acl.forums, tracker=reads_tracker),
                                              'team_online': team_online,
                                              },
                                             context_instance=RequestContext(request));
@@ -30,11 +31,12 @@ def category(request, forum, slug):
             return error403(request, _("You don't have permission to browse this category."))
     except Forum.DoesNotExist:
         return error404(request)
+
+    forum.subforums = Forum.objects.treelist(request.acl.forums, forum, tracker=ForumsTracker(request.user))
     return request.theme.render_to_response('category.html',
                                             {
                                              'category': forum,
                                              'parents': forum.get_ancestors().filter(level__gt=1),
-                                             'forums_list': Forum.objects.treelist(request.acl.forums, forum),
                                              },
                                             context_instance=RequestContext(request));
 

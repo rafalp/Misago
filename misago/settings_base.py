@@ -31,6 +31,12 @@ LOCALE_PATHS = (
 # If DEBUG_MODE is on, all emails will be sent to this address instead of real recipient.
 CATCH_ALL_EMAIL_ADDRESS = ''
 
+# Forums and threads read tracker length (days
+# Enter 0 to turn tracking off
+# The bigger the number, then longer tracker keeps threads reads
+# information and the more costful it is to track reads
+READS_TRACKER_LENGTH = 7
+
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
@@ -150,6 +156,7 @@ INSTALLED_APPS = (
     'misago.activation', # Activate inactive User or resend activation e-mail
     'misago.resetpswd', # Reset User Password
     'misago.threads', # Threads and Posts
+    'misago.readstracker', # Forums and Threads reads tracker
 )
 
 # IP's that can see debug toolbar

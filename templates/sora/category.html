@@ -14,13 +14,14 @@
 
 {% block content %}
 <div class="page-header">
+  <ul class="breadcrumb">
+    {{ self.breadcrumb() }}</li>
+  </ul>
   <h1>{{ category.name }}{% if category.description %} <small>{{ category.description }}</small>{% endif %}</h1>
 </div>
 <div class="forums-list">
   <div class="category{% if category.style %} {{ category.style }}{% endif %}">
-    {% for forum in forums_list %}
-    {{ macros.draw_forum(category, forum) }}
-    {% endfor %}
+    {{ macros.draw_forums(category, 12) }}
   </div>
 </div>
 {% endblock %}
