@@ -19,9 +19,13 @@
   </ul>
   <h1>{{ category.name }}{% if category.description %} <small>{{ category.description }}</small>{% endif %}</h1>
 </div>
+{% if category.subforums %}
 <div class="forums-list">
   <div class="category{% if category.style %} {{ category.style }}{% endif %}">
     {{ macros.draw_forums(category, 12) }}
   </div>
 </div>
+{% else %}
+<p class="lead">{% trans %}Looks like there are no forums to display in this category.{% endtrans %}</p>
+{% endif %}
 {% endblock %}
