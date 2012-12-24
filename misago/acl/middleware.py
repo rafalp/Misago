@@ -15,7 +15,7 @@ class ACLMiddleware(object):
             user_acl = cache.get(acl_key)
             if user_acl.version != request.monitor['acl_version']:
                 raise InvalidCacheBackendError()
-        except AttributeError, InvalidCacheBackendError:
+        except (AttributeError, InvalidCacheBackendError):
             user_acl = build_acl(request, request.user.get_roles())
             cache.set(acl_key, user_acl, 2592000)
         
