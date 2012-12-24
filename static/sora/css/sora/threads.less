@@ -19,12 +19,52 @@
     padding: 5px 6px;
   }
   
+  .jump { 
+    .border-radius(3px);
+    padding: 3px 4px;
+    margin: -3px 0px;
+    .opacity(30);
+        
+    &:hover {
+      .opacity(100);
+      
+      &.jump-new {
+        background-color: @orange;
+      }
+      
+      &.jump-last {
+        background-color: @blue;
+      }
+      
+      i {
+        background-image: url("@{iconWhiteSpritePath}");
+      }
+    }
+  }
+  
+  .thread-stat {
+    text-align: right;
+  }
+  
   .thread-closed {
     background-color: @red; 
   }
   
   .thread-new {
     background-color: @linkColor; 
+  }
+  
+  .thread-flags {
+    float: right;
+    margin: 0px;
+    padding: 0px;
+    
+    li {
+      float: right;
+      margin: 0px;
+      margin-left: 6px;
+      padding: 0px;
+    }
   }
 }
 
@@ -59,7 +99,7 @@
     .post-author{
       overflow: auto;
       float: left;
-      width: 284px;
+      width: 286px;
       position: relative;
       bottom: 4px;
       
@@ -84,7 +124,7 @@
           margin: 0px;
         }
         
-        .lead {          
+        .lead {
           font-size: 150%;
         }
         
@@ -96,14 +136,25 @@
           margin-top: 4px;
           
           color: @grayLight;
+          font-size: 70%;
           font-weight: normal
         }
       }
     }
 
     .post-content {
-      margin-left: 284px;
+      margin-left: 286px;
       padding: 0px 16px;
+      
+      .label {
+        margin-left: 8px;
+        padding: 4px 5px;
+        font-size: 100%;
+      }
+      
+      .label-purple {
+        background-color: @purple;
+      }
       
       .post-foot {
         margin-top: 20px;

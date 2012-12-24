@@ -1,5 +1,7 @@
-from django.utils.translation import ugettext_lazy as _
 from django import forms
+from django.db import models
+from django.db.models import Q
+from django.utils.translation import ugettext_lazy as _
 from misago.acl.builder import BaseACL
 from misago.acl.utils import ACLError403, ACLError404
 from misago.forms import YesNoSwitch
@@ -80,7 +82,7 @@ def make_forum_form(request, role, form):
                         (
                          ('can_write_posts', {'label': _("Can write posts")}),
                          ('can_edit_own_posts', {'label': _("Can edit own posts")}),
-                         ('can_edit_own_posts', {'label': _("Can soft-delete own posts")}),
+                         ('can_soft_delete_own_posts', {'label': _("Can soft-delete own posts")}),
                         ),
                        ),)
     form.layout.append((
@@ -117,7 +119,7 @@ def make_forum_form(request, role, form):
                          ('can_edit_labels', {'label': _("Can edit thread labels")}),
                          ('can_see_changelog', {'label': _("Can see edits history")}),
                          ('can_make_annoucements', {'label': _("Can make annoucements")}),
-                         ('can_pin_threads', {'label': _("Can pin threads")}),
+                         ('can_pin_threads', {'label': _("Can make threads sticky")}),
                          ('can_edit_threads_posts', {'label': _("Can edit threads and posts")}),
                          ('can_move_threads_posts', {'label': _("Can move, merge and split threads and posts")}),
                          ('can_close_threads', {'label': _("Can close threads")}),
@@ -131,14 +133,46 @@ def make_forum_form(request, role, form):
 
 
 class ThreadsACL(BaseACL):
-    def allow_thread_view(self, thread):
+    def get_role(self, forum):
+        try:
+            return self.acl[forum.pk]
+        except KeyError:
+            return {}
+    
+    def allow_thread_view(self, user, thread):
         try:
             forum_role = self.acl[thread.forum.pk]
             if forum_role['can_read_threads'] == 0:
                 raise ACLError403(_("You don't have permission to read threads in this forum."))
+            if thread.moderated and not (forum_role['can_approve'] or (user.is_authenticated() and user == thread.start_poster)):
+                raise ACLError404()
         except KeyError:
             raise ACLError403(_("You don't have permission to read threads in this forum."))
-        
+    
+    def filter_threads(self, request, forum, queryset):
+        try:
+            forum_role = self.acl[forum.pk]
+            if not forum_role['can_approve']:
+                if request.user.is_authenticated():
+                    queryset = queryset.filter(Q(moderated=0) | Q(start_poster=request.user))
+                else:
+                    queryset = queryset.filter(moderated=0)
+        except KeyError:
+            return False
+        return queryset
+    
+    def filter_posts(self, request, thread, queryset):
+        try:
+            forum_role = self.acl[thread.forum.pk]
+            if not forum_role['can_approve']:
+                if request.user.is_authenticated():
+                    queryset = queryset.filter(Q(moderated=0) | Q(user=request.user))
+                else:
+                    queryset = queryset.filter(moderated=0)
+        except KeyError:
+            return False
+        return queryset
+    
     def can_start_threads(self, forum):
         try:
             forum_role = self.acl[forum.pk]
@@ -176,12 +210,52 @@ class ThreadsACL(BaseACL):
             forum_role = self.acl[thread.forum.pk]
             if forum_role['can_write_posts'] == 0:
                 raise ACLError403(_("You don't have permission to write replies in this forum."))
-            if thread.closed and forum_role['can_close_threads'] == 0:
-                raise ACLError403(_("You can't write replies in closed threads."))
+            if forum_role['can_close_threads'] == 0:
+                if forum.closed:
+                    raise ACLError403(_("You can't write replies in closed forums."))
+                if thread.closed:
+                    raise ACLError403(_("You can't write replies in closed threads."))
         except KeyError:
             raise ACLError403(_("You don't have permission to write replies in this forum."))
+    
+    def can_approve(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            return forum_role['can_approve']
+        except KeyError:
+            return False
+        
+    def can_mod_threads(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            return (
+                    forum_role['can_approve']
+                    or forum_role['can_make_annoucements']
+                    or forum_role['can_pin_threads']
+                    or forum_role['can_move_threads_posts']
+                    or forum_role['can_close_threads']
+                    or forum_role['can_delete_threads']
+                    )
+        except KeyError:
+            return False
+        
+    def can_mod_posts(self, thread):
+        try:
+            forum_role = self.acl[thread.forum.pk]
+            return (
+                    forum_role['can_edit_threads_posts']
+                    or forum_role['can_move_threads_posts']
+                    or forum_role['can_close_threads']
+                    or forum_role['can_delete_threads']
+                    or forum_role['can_delete_posts']
+                    )
+        except KeyError:
+            return False
+        
+    def can_mod_thread(self, thread):
+        pass
 
- 
+
 def build_forums(acl, perms, forums, forum_roles):
     acl.threads = ThreadsACL()
     for forum in forums:

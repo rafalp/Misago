@@ -13,6 +13,9 @@ class Thread(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
     replies = models.PositiveIntegerField(default=0)
+    replies_reported = models.PositiveIntegerField(default=0)
+    replies_moderated = models.PositiveIntegerField(default=0)
+    replies_deleted = models.PositiveIntegerField(default=0)
     score = models.PositiveIntegerField(default=30,db_index=True)
     upvotes = models.PositiveIntegerField(default=0)
     downvotes = models.PositiveIntegerField(default=0)
@@ -29,7 +32,7 @@ class Thread(models.Model):
     last_poster_slug = models.SlugField(max_length=255,null=True,blank=True)
     last_poster_style = models.CharField(max_length=255,null=True,blank=True)
     moderated = models.BooleanField(default=False,db_index=True)
-    hidden = models.BooleanField(default=False,db_index=True)
+    deleted = models.BooleanField(default=False,db_index=True)
     closed = models.BooleanField(default=False)
     
     objects = ThreadManager()
@@ -66,7 +69,7 @@ class Post(models.Model):
     edit_user_slug = models.SlugField(max_length=255,null=True,blank=True)
     reported = models.BooleanField(default=False)
     moderated = models.BooleanField(default=False,db_index=True)
-    hidden = models.BooleanField(default=False,db_index=True)
+    deleted = models.BooleanField(default=False,db_index=True)
     protected = models.BooleanField(default=False)
     
     objects = PostManager()

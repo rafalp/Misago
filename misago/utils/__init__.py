@@ -84,6 +84,10 @@ def make_pagination(page, total, max):
             pagination['prev'] = pagination['page'] - 1
         if pagination['page'] < pagination['total']:
             pagination['next'] = pagination['page'] + 1
+
+    # Fix empty pagers
+    if not pagination['total']:
+        pagination['total'] = 1 
             
     # Set stop offset
     pagination['stop'] = pagination['start'] + max

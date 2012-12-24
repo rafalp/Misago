@@ -74,7 +74,7 @@ Showing {{ shown }} of {{ total }} items
   <form id="list_form" class="form-inline pull-right" action="{{ url }}" method="POST">
     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
     <input type="hidden" name="origin" value="list">
-    {{ form_theme.input_select(list_form.fields['list_action'],width=20) }}
+    {{ form_theme.input_select(list_form.fields['list_action'],width=3) }}
     <button type="submit" class="btn btn-primary">{% trans %}Go{% endtrans %}</button>
   </form>
 {%- endif %}
@@ -117,12 +117,12 @@ Showing {{ shown }} of {{ total }} items
     $(function () {
       $('#list_form').submit(function() {
         if ($('.check-cell[]:checked').length == 0) {
-          alert('{{ action.nothing_checked_message }}');
+          alert("{{ action.nothing_checked_message }}");
           return false;
         }
         {%- for item in action.actions %}{% if item.2 %}
         if ($('#id_list_action').val() == '{{ item.0 }}') {
-          var decision = confirm('{{ item.2 }}');
+          var decision = confirm("{{ item.2 }}");
           return decision;
         }
         {%- endif %}{% endfor %}

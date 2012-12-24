@@ -195,8 +195,57 @@
       }
     }
     
+    &.unread>a {
+      &:link, &:active, &:visited {
+        background: darken(@orange, 10%);
+        
+        color: @white;
+        
+        i {
+          background-image: url("@{iconWhiteSpritePath}");          
+        }
+      }
+    
+      &:hover {
+        background: lighten(@orange, 10%);
+      }
+    }
+    
+    &.moderated>a {
+      &:link, &:active, &:visited {
+        background: darken(@purple, 10%);
+        
+        color: @white;
+        
+        i {
+          background-image: url("@{iconWhiteSpritePath}");          
+        }
+      }
+    
+      &:hover {
+        background: lighten(@purple, 10%);
+      }
+    }
+    
+    &.reported>a {
+      &:link, &:active, &:visited {
+        background: @red;
+        
+        color: @white;
+        
+        i {
+          background-image: url("@{iconWhiteSpritePath}");          
+        }
+      }
+    
+      &:hover {
+        background: lighten(@red, 10%);
+      }
+    }
+    
     &.count {
       color: lighten(@textColor, 30%);
+      margin-right: 24px;
     }
   }
 }

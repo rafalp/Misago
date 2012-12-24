@@ -35,6 +35,16 @@ class ThreadsTracker(object):
             self.record = Record(user=user,forum=forum,cleared=self.cutoff)
         self.threads = self.record.get_threads()
     
+    def get_read_date(self, thread):
+        if not self.user.is_authenticated():
+            return timezone.now()
+        try:
+            if self.threads[thread.pk] > self.cutoff:
+                return self.threads[thread.pk]
+        except KeyError:
+            pass
+        return self.cutoff
+        
     def is_read(self, thread):
         if not self.user.is_authenticated():
             return True

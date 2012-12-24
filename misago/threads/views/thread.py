@@ -17,21 +17,25 @@ class ThreadView(BaseView):
         self.thread = Thread.objects.get(pk=thread)
         self.forum = self.thread.forum
         self.request.acl.forums.allow_forum_view(self.forum)
-        self.request.acl.threads.allow_thread_view(self.thread)
+        self.request.acl.threads.allow_thread_view(self.request.user, self.thread)
         self.parents = self.forum.get_ancestors(include_self=True).filter(level__gt=1)
         self.tracker = ThreadsTracker(self.request.user, self.forum)
     
     def fetch_posts(self, page):
-        self.count = Post.objects.filter(thread=self.thread).count()
-        self.posts = Post.objects.filter(thread=self.thread).order_by('pk').all().prefetch_related('user', 'user__rank')
+        self.count = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).count()
+        self.posts = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).order_by('pk').prefetch_related('user', 'user__rank')
         self.pagination = make_pagination(page, self.count, self.request.settings.posts_per_page)
-        if self.request.settings.threads_per_page < self.count:
+        if self.request.settings.posts_per_page < self.count:
             self.posts = self.posts[self.pagination['start']:self.pagination['stop']]
+        self.read_date = self.tracker.get_read_date(self.thread) 
+        for post in self.posts:
+            post.message = self.request.messages.get_message('threads_%s' % post.pk)
+            post.is_read = post.date <= self.read_date
         last_post = self.posts[len(self.posts) - 1]
         if not self.tracker.is_read(self.thread):
             self.tracker.set_read(self.thread, last_post)
             self.tracker.sync()
-        
+     
     def __call__(self, request, slug=None, thread=None, page=0):
         self.request = request
         self.pagination = None
@@ -42,15 +46,16 @@ class ThreadView(BaseView):
         except Thread.DoesNotExist:
             return error404(self.request)
         except ACLError403 as e:
-            return error403(args[0], e.message)
+            return error403(request, e.message)
         except ACLError404 as e:
-            return error404(args[0], e.message)
+            return error404(request, e.message)
         return request.theme.render_to_response('threads/thread.html',
                                                 {
                                                  'message': request.messages.get_message('threads'),
                                                  'forum': self.forum,
                                                  'parents': self.parents,
                                                  'thread': self.thread,
+                                                 'is_read': self.tracker.is_read(self.thread),
                                                  'count': self.count,
                                                  'posts': self.posts,
                                                  'pagination': self.pagination,

@@ -4,44 +4,10 @@
   background: darken(@bodyBackground, 8%);
   border-top: 1px solid darken(@bodyBackground, 18%);
   .border-radius(0px 0px 3px 3px);
-  margin-bottom: 0px;
-  padding: 0px 8px;
-  position: relative;
-  bottom: 20px;
-  
-  .pager {
-    margin: 0px 0px;
-    margin-top: 9px;
-    padding: 0px;
-    margin-right: 6px;
-    
-    &>li {
-      margin-right: 6px;
-    
-      &>a {
-        &:link, &:active, &:visited {
-          background: darken(@bodyBackground, 8%);
-          border: none;
-          .border-radius(3px);
-          padding: 2px 5px;
-        }
-      
-        &:hover {
-          background-color: @linkColor;
-          
-          i {
-            background-image: url("@{iconWhiteSpritePath}");          
-          }
-        }
-      }
-    }
-  }
-  
-  .table-count {
-    padding: 11px 0px;
-    
-    color: @gray;
-  }
+  margin-top: -20px;
+  margin-bottom: 20px;
+  overflow: auto;
+  padding: 0px 12px;
   
   .form-inline {
     margin: 0px;
