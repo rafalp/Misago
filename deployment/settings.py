@@ -30,7 +30,7 @@ DATABASES = {
 }
 
 # Cache engine
-# Misago is EXTREMLY data hungry
+# Misago is EXTREMELY data hungry
 # If you don't set any cache, it will BRUTALISE your database and memory
 # In production ALWAYS use cache
 CACHES = {}
