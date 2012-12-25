@@ -131,7 +131,18 @@ class Forums(ListWidget):
         return Forum.objects.get(token='root').get_descendants()
     
     def sort_items(self, page_items, sorting_method):
-        return page_items.order_by('lft')
+        final_items = []
+        for forum in Forum.objects.filter(token__in=['annoucements', 'reports', 'private']).order_by('token'):
+            if forum.token == 'annoucements':
+                forum.name = _("Global Annoucements")
+            if forum.token == 'reports':
+                forum.name = _("Reports")
+            if forum.token == 'private':
+                forum.name = _("Private Discussions")
+            final_items.append(forum)
+        for forum in page_items.order_by('lft').all():
+            final_items.append(forum)
+        return final_items
 
     def add_template_variables(self, variables):
         variables['target'] = _(self.role.name)

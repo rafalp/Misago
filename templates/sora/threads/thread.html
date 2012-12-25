@@ -54,6 +54,11 @@
       </div>
     </div>
     <div class="post-content">
+      <a href="{% if pagination['page'] > 1 -%}
+      {% url 'thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
+      {%- else -%}
+      {% url 'thread' thread=thread.pk, slug=thread.slug %}
+      {%- endif %}#post-{{ post.pk }}" class="post-perma pull-right tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
       {% if not post.is_read %}
       <span class="label label-warning pull-right">
         {% trans %}New{% endtrans %}
@@ -90,7 +95,39 @@
       </div>
       {% endif %}
     </div>
+    <div class="post-nav">
+      <ul class="nav nav-pills pull-right">
+        <li><a href="#"><i class="icon-info-sign"></i> {% trans %}Info{% endtrans %}</a></li>
+        <li><button class="btn danger"><i class="icon-remove"></i> {% trans %}Delete{% endtrans %}</button></li>
+        <li><a href="#"><i class="icon-edit"></i> {% trans %}Edit{% endtrans %}</a></li>
+        <li><a href="#"><i class="icon-comment"></i> {% trans %}Reply{% endtrans %}</a></li>
+      </ul>
+    </div>
   </div>
+  {% if post.checkpoint_set.all() %}
+  <div class="post-checkpoints">
+    {% for checkpoint in post.checkpoint_set.all() %}
+    <div class="checkpoint">
+      <hr>
+      <span>
+        {%- if checkpoint.action == 'limit' -%}
+        <i class="icon-lock"></i> {% trans  %}This thread has reached post limit and has been closed.{% endtrans %}
+        {%- elif checkpoint.action == 'accepted' -%}
+        <i class="icon-ok"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} accepted this thread {{ date }}{% endtrans %}
+        {%- elif checkpoint.action == 'closed' -%}
+        <i class="icon-lock"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} closed this thread {{ date }}{% endtrans %}
+        {%- elif checkpoint.action == 'opened' -%}
+        <i class="icon-lock"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} opened this thread {{ date }}{% endtrans %}
+        {%- elif checkpoint.action == 'deleted' -%}
+        <i class="icon-trash"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} deleted this thread {{ date }}{% endtrans %}
+        {%- elif checkpoint.action == 'undeleted' -%}
+        <i class="icon-trash"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} restored this thread {{ date }}{% endtrans %}
+        {%- endif -%}
+      </span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
   {% endfor %}
 </div>
 
@@ -134,3 +171,7 @@
     {% endif %}
   </ul>
 {% endmacro %}
+
+{% macro checkpoint_user(checkpoint) -%}
+{{ ('<a href="' ~ 'user'|url(user=checkpoint.user_id, username=checkpoint.user_slug) ~ '">')|safe ~ (checkpoint.user_name) ~ ("</a>")|safe }}
+{%- endmacro %}

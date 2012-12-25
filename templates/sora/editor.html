@@ -1,5 +1,12 @@
 {% macro editor(field, submit_button, placeholder=None, rows=4) %}
 <div class="editor">
+  {% if field.errors %}
+  <div class="editor-error">
+    {% for error in field.errors %}
+    <p class="help-block" style="font-weight: bold;">{{ error }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
   <div class="editor-input">
     <div>
       <textarea name="{{ field.html_name }}" id="{{ field.html_id }}" rows="{{ rows }}"{% if placeholder %} placeholder="{{ placeholder }}"{% endif %}>{% if field.has_value %}{{ field.value }}{% endif %}</textarea>

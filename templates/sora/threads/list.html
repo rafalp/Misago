@@ -55,14 +55,17 @@
     <tr>
       <td><span class="thread-icon{% if not thread.is_read %} {% if thread.closed %}thread-closed{% else %}thread-new{% endif %}{% endif %}"><i class="icon-comment icon-white"></i></span></td>
       <td>
-        <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{% if not thread.is_read %}<strong>{{ thread.name }}</strong>{% else %}{{ thread.name }}{% endif %}</a> {% if not thread.is_read -%}
+        {% if thread.weight > 0 %}<strong>
+        {% if thread.weight == 2 %}
+        <i class="icon-fire"></i> {% trans %}Annoucement:{% endtrans %}
+        {%- else -%}
+        <i class="icon-asterisk"></i> {% trans %}Sticky:{% endtrans %}
+        {%- endif %}</strong> {% endif %}<a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{% if not thread.is_read %}<strong>{{ thread.name }}</strong>{% else %}{{ thread.name }}{% endif %}</a> {% if not user.is_crawler() %}{% if not thread.is_read -%}
         <a href="{% url 'thread_new' thread=thread.pk, slug=thread.slug %}" class="jump jump-new tooltip-top" title="{% trans %}Jump to first unread post{% endtrans %}"><i class="icon-chevron-right"></i></a>
         {%- else -%}
         <a href="{% url 'thread_last' thread=thread.pk, slug=thread.slug %}" class="jump jump-last tooltip-top" title="{% trans %}Jump to last post{% endtrans %}"><i class="icon-chevron-right"></i></a>
-        {%- endif %}
+        {%- endif %}{% endif %}
         <ul class="unstyled thread-flags">
-          {% if thread.weight == 2 %}<li><span class="tooltip-top" title="{% trans %}This thread is annoucement.{% endtrans %}"><i class="icon-fire"></i></span></li>{% endif %}
-          {% if thread.weight == 1 %}<li><span class="tooltip-top" title="{% trans %}This thread is pinned.{% endtrans %}"><i class="icon-star-empty"></i></span></li>{% endif %}
           {% if thread.closed %}<li><span class="tooltip-top" title="{% trans %}This thread is closed for new replies.{% endtrans %}"><i class="icon-lock"></i></span></li>{% endif %}
           {% if thread.moderated %}<li><span class="tooltip-top" title="{% trans %}This thread will not be visible to other members until moderator reviews it.{% endtrans %}"><i class="icon-eye-close"></i></span></li>{% endif %}
           {% if thread.deleted %}<li><span class="tooltip-top" title="{% trans %}This thread has been deleted.{% endtrans %}"><i class="icon-remove"></i></span></li>{% endif %}
@@ -72,7 +75,7 @@
       <td class="span1 thread-stat">{{ thread.replies|intcomma }}</td>
       <td class="span2">{% if thread.last_poster_id %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}" class="tooltip-top" title="{{ thread.last|reltimesince }}">{{ thread.last_poster_name }}</a>{% else %}<em class="tooltip-top muted" title="{{ thread.last|reltimesince }}">{{ thread.last_poster_name }}</em>{% endif %}</td>
       {% if user.is_authenticated() and list_form %}
-      <td class="check-cell"><label class="checkbox"><input form="threads_form" name="{{ list_form['list_items']['html_name'] }}" type="checkbox" class="checkbox-member" value="{{ thread.pk }}"{% if list_form['list_items']['has_value'] and ('' ~ thread.pk) in list_form['list_items']['value'] %} checked="checked"{% endif %}></label></td>
+      <td class="check-cell">{% if thread.forum_id == forum.pk %}<label class="checkbox"><input form="threads_form" name="{{ list_form['list_items']['html_name'] }}" type="checkbox" class="checkbox-member" value="{{ thread.pk }}"{% if list_form['list_items']['has_value'] and ('' ~ thread.pk) in list_form['list_items']['value'] %} checked="checked"{% endif %}></label>{% else %}&nbsp;{% endif %}</td>
       {% endif %}
     </tr>
     {% else %}
@@ -130,7 +133,7 @@
           return false;
         }
         if ($('#id_list_action').val() == 'hard') {
-          var decision = ("{% trans %}Are you sure you want to delete selected threads? This action is not reversible!{% endtrans %}");
+          var decision = confirm("{% trans %}Are you sure you want to delete selected threads? This action is not reversible!{% endtrans %}");
           return decision;
         }
         return true;

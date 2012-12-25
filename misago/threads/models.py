@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 class ThreadManager(models.Manager):
@@ -49,7 +50,7 @@ class PostManager(models.Manager):
     
 
 class Post(models.Model):
-    forum = models.ForeignKey('forums.Forum',related_name='+')
+    forum = models.ForeignKey('forums.Forum')
     thread = models.ForeignKey(Thread)
     user = models.ForeignKey('users.User',null=True,blank=True)
     user_name = models.CharField(max_length=255)
@@ -78,3 +79,47 @@ class Post(models.Model):
     
     def get_date(self):
         return self.date
+    
+    def set_checkpoint(self, request, action):
+        if request.user.is_authenticated():
+            self.checkpoint_set.create(
+                                       forum=self.forum,
+                                       thread=self.thread,
+                                       post=self,
+                                       action=action,
+                                       user=request.user,
+                                       user_name=request.user.username,
+                                       user_slug=request.user.username_slug,
+                                       date=timezone.now(),
+                                       ip=request.session.get_ip(request),
+                                       agent=request.META.get('HTTP_USER_AGENT'),
+                                       )
+
+
+class Change(models.Model):
+    forum = models.ForeignKey('forums.Forum')
+    thread = models.ForeignKey(Thread)
+    post = models.ForeignKey(Post)
+    user = models.ForeignKey('users.User',null=True,blank=True)
+    user_name = models.CharField(max_length=255)
+    user_slug = models.CharField(max_length=255)
+    date = models.DateTimeField()
+    ip = models.GenericIPAddressField()
+    agent = models.CharField(max_length=255)
+    change = models.IntegerField(default=0)
+    thread_name = models.CharField(max_length=255)
+    post_content = models.TextField()
+
+
+class Checkpoint(models.Model):
+    forum = models.ForeignKey('forums.Forum')
+    thread = models.ForeignKey(Thread)
+    post = models.ForeignKey(Post)
+    action = models.CharField(max_length=255)
+    user = models.ForeignKey('users.User',null=True,blank=True)
+    user_name = models.CharField(max_length=255)
+    user_slug = models.CharField(max_length=255)
+    date = models.DateTimeField()
+    ip = models.GenericIPAddressField()
+    agent = models.CharField(max_length=255)
+    

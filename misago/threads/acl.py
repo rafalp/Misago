@@ -45,8 +45,11 @@ def make_forum_form(request, role, form):
     form.base_fields['can_approve'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
     form.base_fields['can_edit_labels'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
     form.base_fields['can_see_changelog'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
-    form.base_fields['can_make_annoucements'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
-    form.base_fields['can_pin_threads'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
+    form.base_fields['can_pin_threads'] = forms.ChoiceField(choices=(
+                                                                     ('0', _("No")),
+                                                                     ('1', _("Yes, to stickies")),
+                                                                     ('2', _("Yes, to annoucements")),
+                                                                     ))
     form.base_fields['can_edit_threads_posts'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
     form.base_fields['can_move_threads_posts'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
     form.base_fields['can_close_threads'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
@@ -119,7 +122,7 @@ def make_forum_form(request, role, form):
                          ('can_edit_labels', {'label': _("Can edit thread labels")}),
                          ('can_see_changelog', {'label': _("Can see edits history")}),
                          ('can_make_annoucements', {'label': _("Can make annoucements")}),
-                         ('can_pin_threads', {'label': _("Can make threads sticky")}),
+                         ('can_pin_threads', {'label': _("Can change threads weight")}),
                          ('can_edit_threads_posts', {'label': _("Can edit threads and posts")}),
                          ('can_move_threads_posts', {'label': _("Can move, merge and split threads and posts")}),
                          ('can_close_threads', {'label': _("Can close threads")}),
@@ -211,7 +214,7 @@ class ThreadsACL(BaseACL):
             if forum_role['can_write_posts'] == 0:
                 raise ACLError403(_("You don't have permission to write replies in this forum."))
             if forum_role['can_close_threads'] == 0:
-                if forum.closed:
+                if thread.forum.closed:
                     raise ACLError403(_("You can't write replies in closed forums."))
                 if thread.closed:
                     raise ACLError403(_("You can't write replies in closed threads."))
@@ -230,7 +233,6 @@ class ThreadsACL(BaseACL):
             forum_role = self.acl[forum.pk]
             return (
                     forum_role['can_approve']
-                    or forum_role['can_make_annoucements']
                     or forum_role['can_pin_threads']
                     or forum_role['can_move_threads_posts']
                     or forum_role['can_close_threads']
@@ -283,7 +285,7 @@ def build_forums(acl, perms, forums, forum_roles):
                      'can_edit_labels': False,
                      'can_see_changelog': False,
                      'can_make_annoucements': False,
-                     'can_pin_threads': False,
+                     'can_pin_threads': 0,
                      'can_edit_threads_posts': False,
                      'can_move_threads_posts': False,
                      'can_close_threads': False,

@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
@@ -23,9 +24,13 @@ class ThreadsView(BaseView, ThreadsFormMixin):
         self.tracker = ThreadsTracker(self.request.user, self.forum)
                 
     def fetch_threads(self, page):
-        self.count = self.request.acl.threads.filter_threads(self.request, self.forum, Thread.objects.filter(forum=self.forum)).count()
-        self.threads = self.request.acl.threads.filter_threads(self.request, self.forum, Thread.objects.filter(forum=self.forum)).order_by('-weight', '-last')
+        self.count = self.request.acl.threads.filter_threads(self.request, self.forum, Thread.objects.filter(forum=self.forum).filter(weight__lt=2)).count()
         self.pagination = make_pagination(page, self.count, self.request.settings.threads_per_page)
+        self.threads = []
+        for thread in Thread.objects.filter(Q(forum=self.request.monitor['anno']) | (Q(forum=self.forum) & Q(weight=2))):
+            self.threads.append(thread)
+        for thread in self.request.acl.threads.filter_threads(self.request, self.forum, Thread.objects.filter(forum=self.forum).filter(weight__lt=2)).order_by('-weight', '-last'):
+            self.threads.append(thread)
         if self.request.settings.threads_per_page < self.count:
             self.threads = self.threads[self.pagination['start']:self.pagination['stop']]
         for thread in self.threads:
@@ -37,11 +42,11 @@ class ThreadsView(BaseView, ThreadsFormMixin):
         try:
             if acl['can_approve']:
                actions.append(('accept', _('Accept threads')))
-            if acl['can_make_annoucements']:
+            if acl['can_pin_threads'] == 2:
                actions.append(('annouce', _('Change to annoucements')))
-            if acl['can_pin_threads']:
+            if acl['can_pin_threads'] > 0:
                actions.append(('sticky', _('Change to sticky threads')))
-            if acl['can_make_annoucements'] or acl['can_pin_threads']:
+            if acl['can_pin_threads'] > 0:
                actions.append(('normal', _('Change to standard thread')))
             if acl['can_move_threads_posts']:
                actions.append(('move', _('Move threads')))
@@ -59,28 +64,31 @@ class ThreadsView(BaseView, ThreadsFormMixin):
             pass
         return actions
     
-    def action_accept(self, ids, threads):
+    def action_accept(self, ids):
         accepted = 0
+        posts = 0
         users = []
-        for thread in self.threads.prefetch_related('last_post', 'last_post__user').all():
+        for thread in self.threads:
             if thread.pk in ids and thread.moderated:
                 accepted += 1
                 # Sync thread and post
                 thread.moderated = False
                 thread.replies_moderated -= 1
                 thread.save(force_update=True)
-                thread.last_post.moderated = False
-                thread.last_post.save(force_update=True)
+                thread.start_post.moderated = False
+                thread.start_post.save(force_update=True)
                 # Sync user
                 if thread.last_post.user:
-                    thread.last_post.user.threads += 1
-                    thread.last_post.user.posts += 1
-                    users.append(thread.last_post.user)
+                    thread.start_post.user.threads += 1
+                    thread.start_post.user.posts += 1
+                    users.append(thread.start_post.user)
+                    thread.last_post.set_checkpoint(self.request, 'accepted')
                 # Sync forum
                 self.forum.threads += 1
                 self.forum.threads_delta += 1
-                self.forum.posts += 1
-                self.forum.posts_delta += 1
+                self.forum.posts += thread.replies + 1
+                posts += thread.replies + 1
+                self.forum.posts_delta += thread.replies + 1
                 if not self.forum.last_thread_date or self.forum.last_thread_date < thread.last:
                     self.forum.last_thread = thread
                     self.forum.last_thread_name = thread.name
@@ -92,11 +100,111 @@ class ThreadsView(BaseView, ThreadsFormMixin):
                     self.forum.last_poster_style = thread.last_poster_style
         if accepted:
             self.request.monitor['threads'] = int(self.request.monitor['threads']) + accepted
-            self.request.monitor['posts'] = int(self.request.monitor['posts']) + accepted
+            self.request.monitor['posts'] = posts
             self.forum.save(force_update=True)
             for user in users:
                 user.save(force_update=True)
             self.request.messages.set_flash(Message(_('Selected threads have been marked as reviewed and made visible to other members.')), 'success', 'threads')
+    
+    def action_annouce(self, ids):
+        acl = self.request.acl.threads.get_role(self.forum)
+        annouced = []
+        for thread in self.threads:
+            if thread.pk in ids and thread.weight < 2:
+                annouced.append(thread.pk)
+        if annouced:
+            Thread.objects.filter(id__in=annouced).update(weight=2)
+            self.request.messages.set_flash(Message(_('Selected threads have been turned into annoucements.')), 'success', 'threads')
+    
+    def action_sticky(self, ids):
+        sticky = []
+        for thread in self.threads:
+            if thread.pk in ids and thread.weight != 1 and (acl['can_pin_threads'] == 2 or thread.weight < 2):
+                sticky.append(thread.pk)
+        if sticky:
+            Thread.objects.filter(id__in=sticky).update(weight=1)
+            self.request.messages.set_flash(Message(_('Selected threads have been sticked to the top of list.')), 'success', 'threads')
+    
+    def action_normal(self, ids):
+        normalised = []
+        for thread in self.threads:
+            if thread.pk in ids and thread.weight > 0:
+                normalised.append(thread.pk)
+        if normalised:
+            Thread.objects.filter(id__in=normalised).update(weight=0)
+            self.request.messages.set_flash(Message(_('Selected threads weight has been removed.')), 'success', 'threads')
+        
+    def action_open(self, ids):
+        opened = []
+        for thread in self.threads:
+            if thread.pk in ids and thread.closed:
+                opened.append(thread.pk)
+                thread.last_post.set_checkpoint(self.request, 'opened')
+        if opened:
+            Thread.objects.filter(id__in=opened).update(closed=False)
+            self.request.messages.set_flash(Message(_('Selected threads have been opened.')), 'success', 'threads')
+    
+    def action_close(self, ids):
+        closed = []
+        for thread in self.threads:
+            if thread.pk in ids and not thread.closed:
+                closed.append(thread.pk)
+                thread.last_post.set_checkpoint(self.request, 'closed')
+        if closed:
+            Thread.objects.filter(id__in=closed).update(closed=True)
+            self.request.messages.set_flash(Message(_('Selected threads have been closed.')), 'success', 'threads')
+    
+    def action_undelete(self, ids):
+        undeleted = []
+        posts = 0
+        for thread in self.threads:
+            if thread.pk in ids and thread.deleted:
+                undeleted.append(thread.pk)
+                posts += thread.replies + 1
+                thread.start_post.deleted = False
+                thread.start_post.save(force_update=True)
+                thread.last_post.set_checkpoint(self.request, 'undeleted')
+        if undeleted:
+            self.request.monitor['threads'] = int(self.request.monitor['threads']) + len(undeleted)
+            self.request.monitor['posts'] = int(self.request.monitor['posts']) + posts
+            self.forum.threads += len(undeleted)
+            self.forum.posts += posts
+            self.forum.save(force_update=True)
+            Thread.objects.filter(id__in=undeleted).update(deleted=False)
+            self.request.messages.set_flash(Message(_('Selected threads have been undeleted.')), 'success', 'threads')
+    
+    def action_soft(self, ids):
+        deleted = []
+        posts = 0
+        for thread in self.threads:
+            if thread.pk in ids and not thread.deleted:
+                deleted.append(thread.pk)
+                posts += thread.replies + 1
+                thread.start_post.deleted = True
+                thread.start_post.save(force_update=True)
+                thread.last_post.set_checkpoint(self.request, 'deleted')
+        if deleted:
+            self.request.monitor['threads'] = int(self.request.monitor['threads']) - len(deleted)
+            self.request.monitor['posts'] = int(self.request.monitor['posts']) - posts
+            self.forum.sync()
+            self.forum.save(force_update=True)
+            Thread.objects.filter(id__in=deleted).update(deleted=True)
+            self.request.messages.set_flash(Message(_('Selected threads have been softly deleted.')), 'success', 'threads')            
+    
+    def action_hard(self, ids):
+        deleted = []
+        posts = 0
+        for thread in self.threads:
+            if thread.pk in ids:
+                deleted.append(thread.pk)
+                posts += thread.replies + 1
+                thread.delete()
+        if deleted:
+            self.request.monitor['threads'] = int(self.request.monitor['threads']) - len(deleted)
+            self.request.monitor['posts'] = int(self.request.monitor['posts']) - posts
+            self.forum.sync()
+            self.forum.save(force_update=True)
+            self.request.messages.set_flash(Message(_('Selected threads have been deleted.')), 'success', 'threads')
     
     def __call__(self, request, slug=None, forum=None, page=0):
         self.request = request

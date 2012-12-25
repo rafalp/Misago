@@ -396,8 +396,10 @@ class ListWidget(BaseWidget):
                                                  'table_form': FormFields(table_form).fields if table_form else None,
                                                  'items': items,
                                                  'items_total': items_total,
+                                                 'items_shown': len(items),
                                                 }),
                                                 context_instance=RequestContext(request));
+
                                                 
 class FormWidget(BaseWidget):
     """

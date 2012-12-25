@@ -976,14 +976,27 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .posts-list .well-post .post-author .post-bit .lead{font-size:150%;}
 .posts-list .well-post .post-author .post-bit .user-title{color:#555555;}
 .posts-list .well-post .post-author .post-bit .post-date{margin-top:4px;color:#999999;font-size:70%;font-weight:normal;}
-.posts-list .well-post .post-content{margin-left:286px;padding:0px 16px;}.posts-list .well-post .post-content .label{margin-left:8px;padding:4px 5px;font-size:100%;}
+.posts-list .well-post .post-content{margin-left:286px;padding:0px 16px;}.posts-list .well-post .post-content .post-perma{margin-left:8px;color:#999999;}
+.posts-list .well-post .post-content .label{margin-left:8px;padding:4px 5px;font-size:100%;}
 .posts-list .well-post .post-content .label-purple{background-color:#7a43b6;}
 .posts-list .well-post .post-content .post-foot{margin-top:20px;}.posts-list .well-post .post-content .post-foot .lead{margin:0px;color:#999999;font-size:100%;}.posts-list .well-post .post-content .post-foot .lead a{color:#999999;}
 .posts-list .well-post .post-content .post-foot .signature{border-top:1px solid #eeeeee;padding-top:12px;}.posts-list .well-post .post-content .post-foot .signature .markdown{opacity:0.7;filter:alpha(opacity=70);}
+.posts-list .well-post .post-nav{clear:both;margin-left:286px;overflow:auto;padding:8px 16px;padding-bottom:0px;margin-bottom:-8px;}.posts-list .well-post .post-nav ul{margin:0px;padding:0px;}
+.posts-list .well-post .post-nav .nav-pills li{opacity:0.1;filter:alpha(opacity=10);}.posts-list .well-post .post-nav .nav-pills li a{padding:6px 7px;}
+.posts-list .well-post .post-nav .nav-pills li button{padding:3px 7px;}
+.posts-list .well-post .post-nav .nav-pills li a,.posts-list .well-post .post-nav .nav-pills li button{background-color:#c9c9c9;border:none;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;margin:0px;color:#ffffff;font-weight:bold;}.posts-list .well-post .post-nav .nav-pills li a:hover,.posts-list .well-post .post-nav .nav-pills li button:hover{background-color:#1ab2ff;}.posts-list .well-post .post-nav .nav-pills li a:hover.danger,.posts-list .well-post .post-nav .nav-pills li button:hover.danger{background-color:#d83a2e;}
+.posts-list .well-post .post-nav .nav-pills li i{background-image:url("../img/glyphicons-halflings-white.png");}
+.posts-list .well-post:hover .nav-pills li{opacity:1;filter:alpha(opacity=100);}
+.posts-list .post-checkpoints{padding-top:4px;}.posts-list .post-checkpoints:last-child{margin-bottom:-24px;}
+.posts-list .post-checkpoints .checkpoint{margin:0px;color:#999999;text-align:center;}.posts-list .post-checkpoints .checkpoint span{background-color:#fcfcfc;display:inline-block;padding:4px 12px;position:relative;bottom:16px;}
+.posts-list .post-checkpoints a{color:#333333;font-weight:bold;}
+.posts-list .post-checkpoints hr{background-color:#999999;background-image:-webkit-gradient(linear, 0 0, 100% 100%, color-stop(0.25, rgba(255, 255, 255, 0.2)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(255, 255, 255, 0.2)), color-stop(0.75, rgba(255, 255, 255, 0.2)), color-stop(0.75, transparent), to(transparent));background-image:-webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);background-image:-moz-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);background-image:-ms-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);background-image:-o-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);background-image:linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);-webkit-background-size:10px 10px;-moz-background-size:10px 10px;background-size:10px 10px;border:none;margin:0px;margin-top:8px;height:4px;}
 .quick-reply{margin-top:12px;overflow:auto;}.quick-reply .avatar-big,.quick-reply .arrow{float:left;}
 .quick-reply .arrow{width:0;height:0;border-top:12px solid transparent;border-bottom:12px solid transparent;border-right:12px solid #e3e3e3;position:relative;top:12px;left:5px;}
 .quick-reply .editor{margin-left:142px;}
-.editor{background-color:#e3e3e3;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}.editor .editor-input{padding:8px;}.editor .editor-input div{margin-right:14px;}
+.editor{background-color:#e3e3e3;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}.editor .editor-error{padding:12px 16px;padding-bottom:0px;}.editor .editor-error .help-block{color:#9d261d;}
+.editor .editor-error .help-block:last-child{margin-bottom:0px;}
+.editor .editor-input{padding:8px;}.editor .editor-input div{margin-right:14px;}
 .editor .editor-input textarea{margin:0px;width:100%;font-family:Monaco,Menlo,Consolas,"Courier New",monospace;}
 .editor .editor-actions{border-top:2px solid #c9c9c9;overflow:auto;padding:8px;}
 .markdown{margin-bottom:-12px;}

@@ -108,19 +108,20 @@ class PostingView(BaseView):
                     if request.user.rank and request.user.rank.style:
                         thread.start_poster_style = request.user.rank.style
                 
-                thread.last = now
-                thread.last_post = post
-                thread.last_poster = request.user
-                thread.last_poster_name = request.user.username
-                thread.last_poster_slug = request.user.username_slug
-                if request.user.rank and request.user.rank.style:
-                    thread.last_poster_style = request.user.rank.style
+                if not moderation:
+                    thread.last = now
+                    thread.last_post = post
+                    thread.last_poster = request.user
+                    thread.last_poster_name = request.user.username
+                    thread.last_poster_slug = request.user.username_slug
+                    if request.user.rank and request.user.rank.style:
+                        thread.last_poster_style = request.user.rank.style
                 if self.mode in ['new_post', 'new_post_quick']:
                     if moderation:
                         thread.replies_moderated += 1
                     else:
                         thread.replies += 1
-                    thread.score += 5
+                        thread.score += 5
                 thread.save(force_update=True)
                 
                 # Update forum and monitor

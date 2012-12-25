@@ -20,6 +20,7 @@
     {{ self.breadcrumb() }}</li>
   </ul>
   <h1>{% trans %}Post New Thread{% endtrans %}</h1>
+  {% if thread %}
   <ul class="unstyled thread-info">
     {% if thread.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
     <li><i class="icon-time"></i> {{ thread.last|reltimesince }}</li>
@@ -30,6 +31,7 @@
       {% trans %}No replies{% endtrans %}
     {%- endif %}</li>
   </ul>
+  {%- endif %}
 </div>
 {% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
 <form action="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}" method="post">

@@ -66,7 +66,7 @@
   <div class="table-count pull-left">{%- trans current_page=pagination['page'], pages=pagination['total'] -%}
   Page {{ current_page }} of {{ pages }}
   {%- endtrans -%}</div>{% else %}
-  <div class="table-count pull-left">{% trans count=items_total, total=items_total|intcomma, shown=items.count()|intcomma -%}Showing all items
+  <div class="table-count pull-left">{% trans count=items_total, total=items_total|intcomma, shown=items_shown|intcomma -%}Showing one item
 {%- pluralize -%}
 Showing {{ shown }} of {{ total }} items
 {%- endtrans %}</div>{% endif %}

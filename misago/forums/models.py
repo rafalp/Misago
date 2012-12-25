@@ -108,5 +108,30 @@ class Forum(MPTTModel):
     def move_content(self, target):
         pass
     
+    def sync(self):
+        self.threads = self.thread_set.filter(moderated=0).filter(deleted=0).count()
+        self.posts = self.post_set.filter(moderated=0).filter(deleted=0).count()
+        self.last_poster = None
+        self.last_poster_name = None
+        self.last_poster_slug = None
+        self.last_poster_style = None
+        self.last_thread = None
+        self.last_thread_date = None
+        self.last_thread_name = None
+        self.last_thread_slug = None
+        try:
+            last_thread = self.thread_set.filter(moderated=0).filter(deleted=0).order_by('-last').all()[1:][0]
+            self.last_poster_name = last_thread.last_poster_name
+            self.last_poster_slug = last_thread.last_poster_slug
+            self.last_poster_style = last_thread.last_poster_style
+            if last_thread.last_poster:
+                self.last_poster = last_thread.last_poster
+            self.last_thread = last_thread
+            self.last_thread_date = last_thread.start
+            self.last_thread_name = last_thread.name
+            self.last_thread_slug = last_thread.slug
+        except (IndexError, AttributeError):
+            pass
+    
     def prune(self):
         pass
