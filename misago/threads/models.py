@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from misago.utils import slugify
 
 class ThreadManager(models.Manager):
     def filter_stats(self, start, end):
@@ -17,6 +18,7 @@ class Thread(models.Model):
     replies_reported = models.PositiveIntegerField(default=0)
     replies_moderated = models.PositiveIntegerField(default=0)
     replies_deleted = models.PositiveIntegerField(default=0)
+    merges = models.PositiveIntegerField(default=0,db_index=True)
     score = models.PositiveIntegerField(default=30,db_index=True)
     upvotes = models.PositiveIntegerField(default=0)
     downvotes = models.PositiveIntegerField(default=0)
@@ -43,6 +45,35 @@ class Thread(models.Model):
     def get_date(self):
         return self.start
     
+    def sync(self):
+        # First post
+        start_post = self.post_set.order_by('merge', 'id')[1:][0]
+        self.start = start_post.date
+        self.start_post = start_post
+        self.start_poster = start_post.user
+        self.start_poster_name = start_post.user_name
+        self.start_poster_slug = slugify(start_post.user_name)
+        self.start_poster_style = start_post.user.rank.style if start_post.user else None
+        self.upvotes = start_post.upvotes
+        self.downvotes = start_post.downvotes
+        # Last post
+        last_post = self.post_set.order_by('-merge', '-id')[1:][0]
+        self.last = last_post.date
+        self.last_post = last_post
+        self.last_poster = last_post.user
+        self.last_poster_name = last_post.user_name
+        self.last_poster_slug = slugify(last_post.user_name)
+        self.last_poster_style = last_post.user.rank.style if last_post.user else None
+        # Flags
+        self.moderated = start_post.moderated
+        self.deleted = start_post.deleted
+        self.merges = last_post.merge
+        # Counters
+        self.replies = self.post_set.filter(moderated=False).filter(deleted=False).count() - 1
+        self.replies_reported = self.post_set.filter(reported=True).count()
+        self.replies_moderated = self.post_set.filter(moderated=True).count()
+        self.replies_deleted = self.post_set.filter(deleted=True).count()
+    
 
 class PostManager(models.Manager):
     def filter_stats(self, start, end):
@@ -52,6 +83,7 @@ class PostManager(models.Manager):
 class Post(models.Model):
     forum = models.ForeignKey('forums.Forum')
     thread = models.ForeignKey(Thread)
+    merge = models.PositiveIntegerField(default=0,db_index=True)
     user = models.ForeignKey('users.User',null=True,blank=True)
     user_name = models.CharField(max_length=255)
     ip = models.GenericIPAddressField()

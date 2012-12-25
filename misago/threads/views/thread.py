@@ -23,7 +23,11 @@ class ThreadView(BaseView):
     
     def fetch_posts(self, page):
         self.count = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).count()
-        self.posts = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).order_by('pk').prefetch_related('checkpoint_set', 'user', 'user__rank')
+        self.posts = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).prefetch_related('checkpoint_set', 'user', 'user__rank')
+        if self.thread.merges > 0:
+            self.posts = self.posts.order_by('merge', 'pk')
+        else:
+            self.posts = self.posts.order_by('pk')
         self.pagination = make_pagination(page, self.count, self.request.settings.posts_per_page)
         if self.request.settings.posts_per_page < self.count:
             self.posts = self.posts[self.pagination['start']:self.pagination['stop']]

@@ -1,0 +1,42 @@
+{% extends "sora/layout.html" %}
+{% load i18n %}
+{% load url from future %}
+{% import "_forms.html" as form_theme with context %}
+{% import "sora/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=_("Merge Threads"),parent=forum.name) }}{% endblock %}
+
+{% block breadcrumb %}{{ super() }} <span class="divider">/</span></li>
+{% for parent in parents %}
+<li class="first"><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider">/</span></li>
+{% endfor %}
+<li class="first"><a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}">{{ forum.name }}</a> <span class="divider">/</span></li>
+<li class="active">{% trans %}Merge Threads{% endtrans %}
+{%- endblock %}
+
+{% block content %}
+<div class="page-header">
+  <ul class="breadcrumb">
+    {{ self.breadcrumb() }}</li>
+  </ul>
+  <h1>{% trans %}Merge Threads{% endtrans %} <small>{{ forum.name }}</small></h1>
+</div>
+<div class="row">
+  <div class="span8 offset2">
+    {% if message %}{{ macros.draw_message(message) }}{% endif %}
+    <form action="{% url 'forum' forum=forum.pk, slug=forum.slug %}" method="post">
+      <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+      <input type="hidden" name="origin" value="merge_form">
+      <input type="hidden" name="list_action" value="merge">
+      {% for thread in threads -%}
+      <input type="hidden" name="list_items" value="{{ thread.pk }}">
+      {% endfor %}
+      {{ form_theme.form_widget(form, width=8) }}
+      <div class="form-actions">
+        <button name="save" type="submit" class="btn btn-primary">{% trans %}Merge Threads{% endtrans %}</button>
+        <a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -90,6 +90,7 @@ class PostingView(BaseView):
                 post = Post.objects.create(
                                            forum=self.forum,
                                            thread=thread,
+                                           merge=thread.merges,
                                            user=request.user,
                                            user_name=request.user.username,
                                            ip=request.session.get_ip(request),

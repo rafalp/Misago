@@ -1,18 +1,21 @@
 from django.core.urlresolvers import reverse
-from django.db.models import Q
+from django.db.models import Q, F
+from django.forms import ValidationError
 from django.shortcuts import redirect
 from django.template import RequestContext
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 from misago.acl.utils import ACLError403, ACLError404
 from misago.forms import FormLayout, FormFields
 from misago.forums.models import Forum
 from misago.messages import Message
 from misago.readstracker.trackers import ForumsTracker, ThreadsTracker
+from misago.threads.forms import MergeThreadsForm
 from misago.threads.models import Thread, Post
 from misago.threads.views.base import BaseView
 from misago.threads.views.mixins import ThreadsFormMixin
 from misago.views import error403, error404
-from misago.utils import make_pagination
+from misago.utils import make_pagination, slugify
 
 class ThreadsView(BaseView, ThreadsFormMixin):
     def fetch_forum(self, forum):
@@ -144,6 +147,56 @@ class ThreadsView(BaseView, ThreadsFormMixin):
             Thread.objects.filter(id__in=opened).update(closed=False)
             self.request.messages.set_flash(Message(_('Selected threads have been opened.')), 'success', 'threads')
     
+    def action_merge(self, ids):
+        if len(ids) < 2:
+            raise ValidationError(_("You have to pick two or more threads to merge."))
+        threads = []
+        for thread in self.threads:
+            if thread.pk in ids:
+                threads.append(thread)
+        if self.request.POST.get('origin') == 'merge_form':
+            form = MergeThreadsForm(self.request.POST,request=self.request,threads=threads)
+            if form.is_valid():
+                new_thread = Thread.objects.create(
+                                                   forum=self.forum,
+                                                   name=form.cleaned_data['thread_name'],
+                                                   slug=slugify(form.cleaned_data['thread_name']),
+                                                   start=timezone.now(),
+                                                   last=timezone.now()
+                                                   )
+                last_merge = 0
+                last_thread = None
+                merged = []
+                for i in range(0, len(threads)):
+                    thread = form.merge_order[i]
+                    merged.append(thread.pk)
+                    if last_thread and last_thread.last > thread.start:
+                        last_merge += thread.merges + 1
+                    thread.post_set.update(thread=new_thread,merge=F('merge') + last_merge)
+                    thread.change_set.update(thread=new_thread)
+                    thread.checkpoint_set.update(thread=new_thread)
+                    last_thread = thread
+                Thread.objects.filter(id__in=merged).delete()
+                new_thread.sync()
+                new_thread.save(force_update=True)
+                self.forum.sync()
+                self.forum.save(force_update=True)
+                self.request.messages.set_flash(Message(_('Selected threads have been merged into new one.')), 'success', 'threads')
+                return None
+            else:
+                self.message = Message(form.non_field_errors()[0], 'error')
+        else:
+            form = MergeThreadsForm(request=self.request,threads=threads)  
+        return self.request.theme.render_to_response('threads/merge.html',
+                                                {
+                                                 'message': self.message,
+                                                 'forum': self.forum,
+                                                 'parents': self.parents,
+                                                 'threads': threads,
+                                                 'form': FormLayout(form),
+                                                 },
+                                                context_instance=RequestContext(self.request));      
+        
     def action_close(self, ids):
         closed = []
         for thread in self.threads:

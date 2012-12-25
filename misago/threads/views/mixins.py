@@ -47,10 +47,13 @@ class ThreadsFormMixin(object):
                                 if thread.start_post_id == post.pk or thread.last_post_id == post.pk:
                                     break
                     form_action = getattr(self, 'action_' + self.form.cleaned_data['list_action'])
-                    response = form_action(checked_items)
-                    if response:
-                        return response
-                    return redirect(self.request.path)
+                    try:
+                        response = form_action(checked_items)
+                        if response:
+                            return response
+                        return redirect(self.request.path)
+                    except forms.ValidationError as e:
+                        self.message = Message(e.messages[0], 'error')
                 else:
                     self.message = Message(_("You have to select at least one thread."), 'error')
             else:
