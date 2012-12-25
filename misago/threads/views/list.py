@@ -10,7 +10,7 @@ from misago.forms import FormLayout, FormFields
 from misago.forums.models import Forum
 from misago.messages import Message
 from misago.readstracker.trackers import ForumsTracker, ThreadsTracker
-from misago.threads.forms import MergeThreadsForm
+from misago.threads.forms import MoveThreadsForm, MergeThreadsForm
 from misago.threads.models import Thread, Post
 from misago.threads.views.base import BaseView
 from misago.threads.views.mixins import ThreadsFormMixin
@@ -147,6 +147,40 @@ class ThreadsView(BaseView, ThreadsFormMixin):
             Thread.objects.filter(id__in=opened).update(closed=False)
             self.request.messages.set_flash(Message(_('Selected threads have been opened.')), 'success', 'threads')
     
+    def action_move(self, ids):
+        threads = []
+        for thread in self.threads:
+            if thread.pk in ids:
+                threads.append(thread)
+        if self.request.POST.get('origin') == 'move_form':
+            form = MoveThreadsForm(self.request.POST,request=self.request,forum=self.forum)
+            if form.is_valid():
+                new_forum = form.cleaned_data['new_forum']
+                for thread in threads:
+                    thread.forum = new_forum
+                    thread.post_set.update(forum=new_forum)
+                    thread.change_set.update(forum=new_forum)
+                    thread.checkpoint_set.update(forum=new_forum)
+                    thread.save(force_update=True)
+                new_forum.sync()
+                new_forum.save(force_update=True)
+                self.forum.sync()
+                self.forum.save(force_update=True)
+                self.request.messages.set_flash(Message(_('Selected threads have been moved to "%(forum)s".') % {'forum': new_forum.name}), 'success', 'threads')
+                return None
+            self.message = Message(form.non_field_errors()[0], 'error')
+        else:
+            form = MoveThreadsForm(request=self.request,forum=self.forum)
+        return self.request.theme.render_to_response('threads/move.html',
+                                                     {
+                                                      'message': self.message,
+                                                      'forum': self.forum,
+                                                      'parents': self.parents,
+                                                      'threads': threads,
+                                                      'form': FormLayout(form),
+                                                      },
+                                                     context_instance=RequestContext(self.request)); 
+            
     def action_merge(self, ids):
         if len(ids) < 2:
             raise ValidationError(_("You have to pick two or more threads to merge."))
@@ -183,19 +217,18 @@ class ThreadsView(BaseView, ThreadsFormMixin):
                 self.forum.save(force_update=True)
                 self.request.messages.set_flash(Message(_('Selected threads have been merged into new one.')), 'success', 'threads')
                 return None
-            else:
-                self.message = Message(form.non_field_errors()[0], 'error')
+            self.message = Message(form.non_field_errors()[0], 'error')
         else:
             form = MergeThreadsForm(request=self.request,threads=threads)  
         return self.request.theme.render_to_response('threads/merge.html',
-                                                {
-                                                 'message': self.message,
-                                                 'forum': self.forum,
-                                                 'parents': self.parents,
-                                                 'threads': threads,
-                                                 'form': FormLayout(form),
-                                                 },
-                                                context_instance=RequestContext(self.request));      
+                                                     {
+                                                      'message': self.message,
+                                                      'forum': self.forum,
+                                                      'parents': self.parents,
+                                                      'threads': threads,
+                                                      'form': FormLayout(form),
+                                                      },
+                                                     context_instance=RequestContext(self.request));      
         
     def action_close(self, ids):
         closed = []

@@ -1,6 +1,8 @@
 from django import forms
 from django.utils.translation import ungettext, ugettext_lazy as _
+from mptt.forms import TreeNodeChoiceField
 from misago.forms import Form
+from misago.forums.models import Forum
 from misago.utils import slugify
 
 class ThreadNameMixin(object):
@@ -53,6 +55,34 @@ class PostForm(Form, ThreadNameMixin):
 
 class QuickReplyForm(Form):
     post = forms.CharField(widget=forms.Textarea)
+
+
+class MoveThreadsForm(Form):
+    error_source = 'new_forum'
+    
+    def __init__(self, data=None, request=None, forum=None, *args, **kwargs):
+        self.forum = forum
+        super(MoveThreadsForm, self).__init__(data, request=request, *args, **kwargs)
+    
+    def finalize_form(self):
+        self.fields['new_forum'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']),level_indicator=u'- - ')
+        self.layout = [
+                       [
+                        _("Thread Options"),
+                        [
+                         ('new_forum', {'label': _("Move Thread to"), 'help_text': _("Select forum you want to move threads to.")}),
+                         ],
+                        ],
+                       ]
+            
+    def clean_new_forum(self):
+        new_forum = self.cleaned_data['new_forum']
+        # Assert its forum and its not current forum
+        if new_forum.type != 'forum':
+            raise forms.ValidationError(_("This is not forum."))
+        if new_forum.pk == self.forum.pk:
+            raise forms.ValidationError(_("New forum is same as current one."))
+        return new_forum
 
 
 class MergeThreadsForm(Form, ThreadNameMixin):
