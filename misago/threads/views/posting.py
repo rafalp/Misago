@@ -123,6 +123,11 @@ class PostingView(BaseView):
                     else:
                         thread.replies += 1
                         thread.score += 5
+                        if (self.request.settings.thread_length > 0
+                            and not thread.closed
+                            and thread.replies >= self.request.settings.thread_length):
+                            thread.closed = True
+                            post.set_checkpoint(self.request, 'limit')
                 thread.save(force_update=True)
                 
                 # Update forum and monitor

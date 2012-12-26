@@ -111,7 +111,7 @@
       <hr>
       <span>
         {%- if checkpoint.action == 'limit' -%}
-        <i class="icon-lock"></i> {% trans  %}This thread has reached post limit and has been closed.{% endtrans %}
+        <i class="icon-lock"></i> {% trans  %}This thread has reached its post limit and has been closed.{% endtrans %}
         {%- elif checkpoint.action == 'accepted' -%}
         <i class="icon-ok"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} accepted this thread {{ date }}{% endtrans %}
         {%- elif checkpoint.action == 'closed' -%}
