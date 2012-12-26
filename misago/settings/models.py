@@ -45,7 +45,7 @@ class Setting(models.Model):
         if self.type == 'float':
             return float(self.value)
         if self.type == 'boolean':
-            return True if self.value == "1" else False
+            return self.value == "1"
         return self.value
             
     def set_value(self, value):
@@ -75,10 +75,9 @@ class Setting(models.Model):
                 field_validators.append(validators.MinValueValidator(extra['min']))
         if 'max' in extra:
             if self.type == 'string' or self.type == 'array':
-                field_validators.append(validators.MinValueValidator(extra['max']))
-            if self.type == 'integer' or self.type == 'float':
                 field_validators.append(validators.MaxLengthValidator(extra['max']))
-                
+            if self.type == 'integer' or self.type == 'float':
+                field_validators.append(validators.MaxValueValidator(extra['max']))
         
         # Yes-no
         if self.input == 'yesno':
