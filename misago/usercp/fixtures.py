@@ -16,7 +16,6 @@ settings_fixtures = (
                 'separator':    _("General Settings"),
                 'name':         _("Allowed Avatars"),
                 'description':  _("Select Avatar types allowed on your forum."),
-                'position':     0,
             }),
             ('default_avatar', {
                 'value':        "gravatar",
@@ -25,7 +24,6 @@ settings_fixtures = (
                 'extra':        {'choices': [('gravatar', _("Gravatar")), ('gallery', _("Random Avatar from Gallery"))]},
                 'name':         _("Default Avatar"),
                 'description':  _("Default Avatar assigned to new members. If you creade directory and name it \"_default\", forum will select random avatar from that directory instead of regular gallery. If no avatar can be picked from gallery, Gravatar will be used."),
-                'position':     1,
             }),
             ('upload_limit', {
                 'value':        128,
@@ -35,7 +33,6 @@ settings_fixtures = (
                 'separator':    _("Avatar Upload Settings"),
                 'name':         _("Maxmimum size of uploaded file"),
                 'description':  _("Select maximum allowed file size (in KB) for Avatar uploads."),
-                'position':     2,
             }),
        ),
     }),

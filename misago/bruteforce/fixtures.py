@@ -16,7 +16,6 @@ settings_fixtures = (
                 'separator':    _("Brute-force Countermeasures"),
                 'name':         _("IP invalid attempts limit"),
                 'description':  _('Enter maximal number of allowed attempts before IP address "jams". Defautly forum records only failed sign-in attempts.'),
-                'position':     0,
             }),
             ('registrations_jams', {
                 'value':        1,
@@ -25,7 +24,6 @@ settings_fixtures = (
                 'input':        "yesno",
                 'name':         _("Protect register form"),
                 'description':  _("Set this setting to yes if you want failed register attempts to count into limit. Majority of failed register attempts are caused by CAPTCHA protection against spam-bots, however same protection may cause problems for users with disabilities or ones that have problems understanding Q&A challenge."),
-                'position':     1,
             }),
             ('jams_lifetime', {
                 'value':        15,
@@ -34,7 +32,6 @@ settings_fixtures = (
                 'input':        "text",
                 'name':         _("Automaticaly unlock jammed IPs"),
                 'description':  _('Enter number of minutes since IP address "jams" to automatically unlock it, or 0 to never unlock jammed IP adresses. Jams don\'t count as bans.'),
-                'position':     2,
             }),
         ),
     }),

@@ -14,7 +14,6 @@ settings_fixtures = (
                 'extra':        {'choices': [('', _("No validation required")), ('user', _("Activation Token sent to User")), ('admin', _("Activation by Administrator")), ('block', _("Dont allow new registrations"))]},
                 'separator':    _("Users Registrations"),
                 'name':         _("New accounts validation"),
-                'position':     0,
             }),
             ('default_timezone', {
                 'value':        "utc",
@@ -23,7 +22,6 @@ settings_fixtures = (
                 'extra':        {'choices': '#TZ#'},
                 'name':         _("Default Timezone"),
                 'description':  _("Used by guests, crawlers and newly registered users."),
-                'position':     1,
             }),
             ('password_length', {
                 'value':        4,
@@ -32,7 +30,6 @@ settings_fixtures = (
                 'extra':        {'min': 1},
                 'separator':    _("Users Passwords"),
                 'name':         _("Minimum user password length"),
-                'position':     2,
             }),
             ('password_complexity', {
                 'value':        [],
@@ -40,7 +37,6 @@ settings_fixtures = (
                 'input':        "mlist",
                 'extra':        {'choices': [('case', _("Require mixed Case")), ('digits', _("Require digits")), ('special', _("Require special characters"))]},
                 'name':         _("Password Complexity"),
-                'position':     3,
             }),
             ('password_lifetime', {
                 'value':        0,
@@ -49,7 +45,6 @@ settings_fixtures = (
                 'extra':        {'min': 0},
                 'name':         _("Password Lifetime"),
                 'description':  _("Enter number of days since password was set to force member to change it with new one, or 0 to dont force your members to change their passwords."),
-                'position':     4,
             }),
             ('password_in_email', {
                 'value':        False,
@@ -57,7 +52,6 @@ settings_fixtures = (
                 'input':        "yesno",
                 'name':         _("Include User Password in Welcoming E-mail"),
                 'description':  _("If you want to, Misago can include new user password in welcoming e-mail that is sent to new users after successful account creation."),
-                'position':     5,
             }),
         ),
     }),

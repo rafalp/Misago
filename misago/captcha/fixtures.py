@@ -16,7 +16,6 @@ settings_fixtures = (
                 'separator':    _("Spambots Registrations"),
                 'name':         _("CAPTCHA type"),
                 'description':  _('CAPTCHA stands for "Completely Automated Public Turing test to tell Computers and Humans Apart". Its type of test developed on purpose of blocking automatic registrations.'),
-                'position':     0,
             }),
             ('recaptcha_public', {
                 'type':         "string",
@@ -24,14 +23,12 @@ settings_fixtures = (
                 'separator':    _("reCaptcha"),
                 'name':         _("Public Key"),
                 'description':  _("Enter public API key that you have received from reCaptcha."),
-                'position':     1,
             }),
             ('recaptcha_private', {
                 'type':         "string",
                 'input':        "text",
                 'name':         _("Private Key"),
                 'description':  _("Enter private API key that you have received from reCaptcha."),
-                'position':     2,
             }),
             ('recaptcha_ssl', {
                 'value':        False,
@@ -39,7 +36,6 @@ settings_fixtures = (
                 'input':        "yesno",
                 'name':         _("Use SSL in reCaptcha"),
                 'description':  _("Do you want forum to use SSL when making requests to reCaptha servers?"),
-                'position':     3,
             }),
             ('qa_test', {
                 'type':         "string",
@@ -47,21 +43,18 @@ settings_fixtures = (
                 'separator':    _("Question and Answer Test"),
                 'name':         _("Question"),
                 'description':  _("Question visible to your users."),
-                'position':     4,
             }),
             ('qa_test_help', {
                 'type':         "string",
                 'input':        "text",
                 'name':         _("Help Message"),
                 'description':  _("Optional help message displayed on form."),
-                'position':     5,
             }),
             ('qa_test_answers', {
                 'type':         "string",
                 'input':        "textarea",
                 'name':         _("Answers"),
                 'description':  _("Enter allowed answers to this question, each in new line. Test is case-insensitive."),
-                'position':     6,
             }),
         ),
     }),
