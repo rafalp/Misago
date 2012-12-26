@@ -4,6 +4,7 @@ from mptt.forms import TreeNodeChoiceField
 from misago.forms import Form
 from misago.forums.models import Forum
 from misago.utils import slugify
+from misago.utils.validators import validate_sluggable
 
 class ThreadNameMixin(object):
     def clean_thread_name(self):
@@ -15,11 +16,16 @@ class ThreadNameMixin(object):
                                                   "Thread name must contain at least %(count)d alpha-numeric characters.",
                                                   self.request.settings['thread_name_min']
                                                   ) % {'count': self.request.settings['thread_name_min']})
+        if len(data) > self.request.settings['thread_name_max']:
+            raise forms.ValidationError(ungettext(
+                                                  "Thread name cannot be longer than %(count)d character.",
+                                                  "Thread name cannot be longer than %(count)d characters.",
+                                                  self.request.settings['thread_name_max']
+                                                  ) % {'count': self.request.settings['thread_name_max']})
         return data
 
 
 class PostForm(Form, ThreadNameMixin):
-    thread_name = forms.CharField(max_length=255)
     post = forms.CharField(widget=forms.Textarea)
 
     def __init__(self, data=None, file=None, request=None, mode=None, *args, **kwargs):
@@ -40,7 +46,14 @@ class PostForm(Form, ThreadNameMixin):
         if self.mode not in ['edit_thread', 'new_thread']:
             del self.fields['thread_name']
             del self.layout[0][1][0]
-            
+        else:
+            self.fields['thread_name'] = forms.CharField(
+                                                         max_length=self.request.settings['thread_name_max'],
+                                                         validators=[validate_sluggable(
+                                                                                        _("Thread name must contain at least one alpha-numeric character."),
+                                                                                        _("Thread name is too long. Try shorter name.")
+                                                                                        )])
+    
     def clean_post(self):
         data = self.cleaned_data['post']
         if len(data) < self.request.settings['post_length_min']:
@@ -91,7 +104,13 @@ class MergeThreadsForm(Form, ThreadNameMixin):
         super(MergeThreadsForm, self).__init__(data, request=request, *args, **kwargs)
     
     def finalize_form(self):
-        self.fields['thread_name'] = forms.CharField(max_length=255, initial=self.threads[0].name)
+        self.fields['thread_name'] = forms.CharField(
+                                                     max_length=self.request.settings['thread_name_max'],
+                                                     initial=self.threads[0].name,
+                                                     validators=[validate_sluggable(
+                                                                                    _("Thread name must contain at least one alpha-numeric character."),
+                                                                                    _("Thread name is too long. Try shorter name.")
+                                                                                    )])
         self.layout = [
                        [
                         _("Thread Options"),
