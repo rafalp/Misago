@@ -67,7 +67,7 @@ class Forum(MPTTModel):
     redirects_delta = models.IntegerField(default=0)
     last_thread = models.ForeignKey('threads.Thread',related_name='+',null=True,blank=True,on_delete=models.SET_NULL)
     last_thread_name = models.CharField(max_length=255,null=True,blank=True)
-    last_thread_slug = models.SlugField(null=True,blank=True)
+    last_thread_slug = models.SlugField(max_length=255,null=True,blank=True)
     last_thread_date = models.DateTimeField(null=True,blank=True)
     last_poster = models.ForeignKey('users.User',related_name='+',null=True,blank=True,on_delete=models.SET_NULL)
     last_poster_name = models.CharField(max_length=255,null=True,blank=True)
