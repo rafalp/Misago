@@ -25,7 +25,7 @@ settings_fixtures = (
                 'description':  _('Minimal allowed thread name length.'),
             }),
             ('thread_name_max', {
-                'value':        20,
+                'value':        35,
                 'type':         "integer",
                 'input':        "text",
                 'extra':        {'min': 5, 'max': 60},
