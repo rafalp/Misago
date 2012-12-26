@@ -30,9 +30,14 @@ class ThreadsView(BaseView, ThreadsFormMixin):
         self.count = self.request.acl.threads.filter_threads(self.request, self.forum, Thread.objects.filter(forum=self.forum).filter(weight__lt=2)).count()
         self.pagination = make_pagination(page, self.count, self.request.settings.threads_per_page)
         self.threads = []
-        for thread in Thread.objects.filter(Q(forum=self.request.monitor['anno']) | (Q(forum=self.forum) & Q(weight=2))):
+        queryset_anno = Thread.objects.filter(Q(forum=self.request.monitor['anno']) | (Q(forum=self.forum) & Q(weight=2)))
+        queryset_threads = self.request.acl.threads.filter_threads(self.request, self.forum, Thread.objects.filter(forum=self.forum).filter(weight__lt=2)).order_by('-weight', '-last')
+        if self.request.settings.avatars_on_threads_list:
+            queryset_anno = queryset_anno.prefetch_related('start_poster', 'last_post')
+            queryset_threads = queryset_threads.prefetch_related('start_poster', 'last_poster')
+        for thread in queryset_anno:
             self.threads.append(thread)
-        for thread in self.request.acl.threads.filter_threads(self.request, self.forum, Thread.objects.filter(forum=self.forum).filter(weight__lt=2)).order_by('-weight', '-last'):
+        for thread in queryset_threads:
             self.threads.append(thread)
         if self.request.settings.threads_per_page < self.count:
             self.threads = self.threads[self.pagination['start']:self.pagination['stop']]

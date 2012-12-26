@@ -847,6 +847,7 @@ textarea{resize:vertical;}
 .form-avatar-select .form-button:hover img{border:1px solid #0088cc;border:1px solid #0088cc;-webkit-box-shadow:0 1px 3px #0088cc;-moz-box-shadow:0 1px 3px #0088cc;box-shadow:0 1px 3px #0088cc;}
 .form-avatar-select hr{margin-top:16px;}
 .table-footer{background:#e8e8e8;border-top:1px solid #cfcfcf;-webkit-border-radius:0px 0px 3px 3px;-moz-border-radius:0px 0px 3px 3px;border-radius:0px 0px 3px 3px;margin-top:-20px;margin-bottom:20px;overflow:auto;padding:0px 12px;}.table-footer .form-inline{margin:0px;padding:6px 0px;}
+.table td{vertical-align:middle;}
 td.check-cell,th.check-cell{width:32px;}
 td .checkbox,th .checkbox{margin-bottom:0px;position:relative;bottom:1px;}td .checkbox input,th .checkbox input{position:relative;left:9px;}
 td.lead-cell{color:#555555;font-weight:bold;}
@@ -888,7 +889,7 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .avatar-big{border-radius:3px;width:125px;height:125px;}
 .avatar-normal{border-radius:3px;width:64px;height:64px;}
 .avatar-small{border-radius:3px;width:28px;height:28px;}
-.avatar-tiny{border-radius:3px;width:16px;height:16px;}
+.avatar-tiny{border-radius:3px;margin:-8px 0px;width:24px;height:24px;position:relative;bottom:1px;}
 .navbar .avatar-small{margin:-10px 0px;position:relative;bottom:2px;}
 .page-header .avatar,.page-header .avatar-big{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}
 .page-header h1 .avatar{width:46px;height:46px;}
@@ -967,6 +968,7 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .threads-list .jump:hover.jump-last{background-color:#049cdb;}
 .threads-list .jump:hover i{background-image:url("../img/glyphicons-halflings-white.png");}
 .threads-list .thread-stat{text-align:right;}
+.threads-list .thread-author,.threads-list .thread-poster{font-weight:bold;}.threads-list .thread-author a,.threads-list .thread-poster a{color:#333333;}
 .threads-list .thread-closed{background-color:#9d261d;}
 .threads-list .thread-new{background-color:#0088cc;}
 .threads-list .thread-flags{float:right;margin:0px;padding:0px;}.threads-list .thread-flags li{float:right;margin:0px;margin-left:6px;padding:0px;}

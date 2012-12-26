@@ -40,6 +40,13 @@ settings_fixtures = (
                 'name':         _("Threads per page"),
                 'description':  _("Number of threads displayed on page in forum view."),
             }),
+            ('avatars_on_threads_list', {
+                'value':        True,
+                'type':         "boolean",
+                'input':        "yesno",
+                'name':         _("Display avatars on threads list"),
+                'description':  _("Unlike basic user data, avatars are not cached - turning this option on will cause one extra query on threads lists."),
+            }),
             ('post_length_min', {
                 'value':        5,
                 'type':         "integer",

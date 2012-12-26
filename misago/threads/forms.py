@@ -44,7 +44,6 @@ class PostForm(Form, ThreadNameMixin):
                        ]
     
         if self.mode not in ['edit_thread', 'new_thread']:
-            del self.fields['thread_name']
             del self.layout[0][1][0]
         else:
             self.fields['thread_name'] = forms.CharField(

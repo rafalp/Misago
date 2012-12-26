@@ -4,7 +4,12 @@
 {% if title %}{{ title }}{% if page > 1 %} | {% trans page=page %}Page {{ page }}{% endtrans %}{% endif %} | {% if parent %}{{ parent }} | {% endif %}{% endif %}{{ settings.board_name }}
 {%- endmacro %}
 
-{# Messages list marco #}
+{# Guest avatar #}
+{% macro avatar_guest() -%}
+{{ STATIC_URL }}avatars/avatar_guest.jpg
+{%- endmacro %}
+
+{# Messages list macro #}
 {% macro messages_list(messages) %}{% if messages %}<div class="alerts-list">{% for message in messages %}
   {{ draw_message(message) }}
 {% endfor %}</div>{% endif %}
