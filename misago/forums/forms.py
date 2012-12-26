@@ -3,11 +3,15 @@ from django import forms
 from mptt.forms import TreeNodeChoiceField
 from misago.forms import Form, YesNoSwitch
 from misago.forums.models import Forum
+from misago.utils.validators import validate_sluggable
 
 class CategoryForm(Form):
     parent = False
     perms = False
-    name = forms.CharField(max_length=255)
+    name = forms.CharField(max_length=255,validators=[validate_sluggable(
+                                                                         _("Category name must be sluggable."),
+                                                                         _("Category name is too long.")
+                                                                         )])
     description = forms.CharField(widget=forms.Textarea,required=False)
     closed = forms.BooleanField(widget=YesNoSwitch,required=False)
     style = forms.CharField(max_length=255,required=False)
@@ -45,7 +49,10 @@ class CategoryForm(Form):
 class ForumForm(Form):
     parent = False
     perms = False
-    name = forms.CharField(max_length=255)
+    name = forms.CharField(max_length=255,validators=[validate_sluggable(
+                                                                         _("Forum name must be sluggable."),
+                                                                         _("Forum name is too long.")
+                                                                         )])
     description = forms.CharField(widget=forms.Textarea,required=False)
     closed = forms.BooleanField(widget=YesNoSwitch,required=False)
     style = forms.CharField(max_length=255,required=False)
@@ -92,7 +99,10 @@ class ForumForm(Form):
 class RedirectForm(Form):
     parent = False
     perms = False
-    name = forms.CharField(max_length=255)
+    name = forms.CharField(max_length=255,validators=[validate_sluggable(
+                                                                         _("Redirect name must be sluggable."),
+                                                                         _("Redirect name is too long.")
+                                                                         )])
     description = forms.CharField(widget=forms.Textarea,required=False)
     redirect = forms.URLField(max_length=255)
     style = forms.CharField(max_length=255,required=False)

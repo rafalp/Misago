@@ -3,9 +3,13 @@ from django.utils.translation import ugettext_lazy as _
 from django import forms
 from misago.forms import Form, YesNoSwitch
 from misago.ranks.models import Rank
+from misago.utils.validators import validate_sluggable
 
 class NewsletterForm(Form):
-    name = forms.CharField(max_length=255)
+    name = forms.CharField(max_length=255,validators=[validate_sluggable(
+                                                                         _("Newsletter name must be sluggable."),
+                                                                         _("Newsletter name is too long.")
+                                                                         )])
     step_size = forms.IntegerField(initial=300,min_value=1)
     content_html = forms.CharField(widget=forms.Textarea)
     content_plain = forms.CharField(widget=forms.Textarea)

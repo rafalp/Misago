@@ -1,9 +1,13 @@
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 from misago.forms import Form, YesNoSwitch
+from misago.utils.validators import validate_sluggable
 
 class RoleForm(Form):
-    name = forms.CharField(max_length=255)
+    name = forms.CharField(max_length=255,validators=[validate_sluggable(
+                                                                         _("Role name must be sluggable."),
+                                                                         _("Role name is too long.")
+                                                                         )])
     protected = forms.BooleanField(widget=YesNoSwitch,required=False)
     
     def finalize_form(self):

@@ -2,9 +2,13 @@ from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 from misago.forms import Form, YesNoSwitch
+from misago.utils.validators import validate_sluggable
 
 class RankForm(Form):
-    name = forms.CharField(max_length=255)
+    name = forms.CharField(max_length=255,validators=[validate_sluggable(
+                                                                         _("Rank name must be sluggable."),
+                                                                         _("Rank name is too long.")
+                                                                         )])
     description = forms.CharField(widget=forms.Textarea,required=False)
     title = forms.CharField(max_length=255,required=False)
     style = forms.CharField(max_length=255,required=False)

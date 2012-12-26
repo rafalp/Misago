@@ -1,9 +1,13 @@
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 from misago.forms import Form
+from misago.utils.validators import validate_sluggable
 
 class PolicyForm(Form):
-    name = forms.CharField(max_length=255)
+    name = forms.CharField(max_length=255,validators=[validate_sluggable(
+                                                                         _("Policy name must be sluggable."),
+                                                                         _("Policy name is too long.")
+                                                                         )])
     email = forms.CharField(max_length=255,required=False)
     posts = forms.IntegerField(min_value=0,initial=0)
     registered = forms.IntegerField(min_value=0,initial=0)
