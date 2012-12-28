@@ -64,8 +64,8 @@
         {
           if (parseInt(c.w) > 0)
           {
-            var rx = 125 / c.w;
-            var ry = 125 / c.h;
+            var rx = {{ avatar_size }} / c.w;
+            var ry = {{ avatar_size }} / c.h;
             
             $(crop_w).val(c.w);
             $(crop_x).val(c.x);

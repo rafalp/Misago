@@ -182,9 +182,9 @@ south/**
 static/avatars/protoss
 static/avatars/terran
 static/avatars/zerg
+static/avatars/_thumbs
+static/avatars/custom
 static/avatars/custom.gif
-static/strawman/**
-templates/strawman/**
 unidecode/**
 yaml/**
 dev-manage.py

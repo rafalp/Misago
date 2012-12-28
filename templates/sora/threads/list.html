@@ -28,6 +28,7 @@
   </div>
 </div>
 {% endif %}
+      
 {% if message %}{{ macros.draw_message(message) }}{% endif %}
 <div class="list-nav">
   {{ pager() }}
@@ -71,9 +72,9 @@
           {% if thread.deleted %}<li><span class="tooltip-top" title="{% trans %}This thread has been deleted.{% endtrans %}"><i class="icon-remove"></i></span></li>{% endif %}
         </ul>
       </td>
-      <td class="span2 thread-author"><span class="tooltip-top" title="{{ thread.start|reltimesince }}">{% if thread.start_poster_id %}{% if settings.avatars_on_threads_list %}<img src="{{ thread.start_poster.get_avatar() }}" alt="" class="avatar-tiny"> {% endif %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}">{{ thread.start_poster_name }}</a>{% else %}{% if settings.avatars_on_threads_list %}<img src="{{ macros.avatar_guest() }}" alt="" class="avatar-tiny"> {% endif %}<em class="muted">{{ thread.start_poster_name }}</em>{% endif %}</span></td>
+      <td class="span2 thread-author"><span class="tooltip-top" title="{{ thread.start|reltimesince }}">{% if thread.start_poster_id %}{% if settings.avatars_on_threads_list %}<img src="{{ thread.start_poster.get_avatar(24) }}" alt="" class="avatar-tiny"> {% endif %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}">{{ thread.start_poster_name }}</a>{% else %}{% if settings.avatars_on_threads_list %}<img src="{{ macros.avatar_guest(24) }}" alt="" class="avatar-tiny"> {% endif %}<em class="muted">{{ thread.start_poster_name }}</em>{% endif %}</span></td>
       <td class="span1 thread-stat">{{ thread.replies|intcomma }}</td>
-      <td class="span2 thread-poster"><span class="tooltip-top"title="{{ thread.last|reltimesince }}">{% if thread.last_poster_id %}{% if settings.avatars_on_threads_list %}<img src="{{ thread.last_poster.get_avatar() }}" alt="" class="avatar-tiny"> {% endif %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}">{{ thread.last_poster_name }}</a>{% else %}{% if settings.avatars_on_threads_list %}<img src="{{ macros.avatar_guest() }}" alt="" class="avatar-tiny"> {% endif %}<em class="muted">{{ thread.last_poster_name }}</em>{% endif %}</span></td>
+      <td class="span2 thread-poster"><span class="tooltip-top" title="{{ thread.last|reltimesince }}">{% if thread.last_poster_id %}{% if settings.avatars_on_threads_list %}<img src="{{ thread.last_poster.get_avatar(24) }}" alt="" class="avatar-tiny"> {% endif %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}">{{ thread.last_poster_name }}</a>{% else %}{% if settings.avatars_on_threads_list %}<img src="{{ macros.avatar_guest(24) }}" alt="" class="avatar-tiny"> {% endif %}<em class="muted">{{ thread.last_poster_name }}</em>{% endif %}</span></td>
       {% if user.is_authenticated() and list_form %}
       <td class="check-cell">{% if thread.forum_id == forum.pk %}<label class="checkbox"><input form="threads_form" name="{{ list_form['list_items']['html_name'] }}" type="checkbox" class="checkbox-member" value="{{ thread.pk }}"{% if list_form['list_items']['has_value'] and ('' ~ thread.pk) in list_form['list_items']['value'] %} checked="checked"{% endif %}></label>{% else %}&nbsp;{% endif %}</td>
       {% endif %}

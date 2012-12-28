@@ -969,6 +969,7 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .threads-list .jump:hover i{background-image:url("../img/glyphicons-halflings-white.png");}
 .threads-list .thread-stat{text-align:right;}
 .threads-list .thread-author,.threads-list .thread-poster{font-weight:bold;}.threads-list .thread-author a,.threads-list .thread-poster a{color:#333333;}
+.threads-list .thread-author .avatar-tiny,.threads-list .thread-poster .avatar-tiny{margin-right:4px;}
 .threads-list .thread-closed{background-color:#9d261d;}
 .threads-list .thread-new{background-color:#0088cc;}
 .threads-list .thread-flags{float:right;margin:0px;padding:0px;}.threads-list .thread-flags li{float:right;margin:0px;margin-left:6px;padding:0px;}

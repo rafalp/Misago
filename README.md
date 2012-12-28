@@ -42,6 +42,7 @@ After you set low-level configuration of Misago, fire following commands on mana
 * __syncdb__ - this will create database structure for Misago
 * __loadfixtures__ - this will populate Misago database with default data
 * __adduser Admin admin@example.com password --admin__ - this will create first admin user
+* __genavatars__ - this will rebuild avatars gallery thumbnails
 
 Misago stands on shoulders of Django and Django documentation covers deployment of apps extensively:
 https://docs.djangoproject.com/en/dev/howto/deployment/

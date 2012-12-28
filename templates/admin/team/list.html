@@ -14,7 +14,7 @@
     <tr>
       {% for user in items %} 
       <td class="colspan6">
-          <a href="{% url 'user' username=user.username_slug, user=user.pk %}"><img src="{{ user.get_avatar() }}" class="avatar" alt="{% trans %}User's Avatar{% endtrans %}" title="{% trans %}Admin's Avatar{% endtrans %}"> <strong>{{ user.username }}</strong></a>
+          <a href="{% url 'user' username=user.username_slug, user=user.pk %}"><img src="{{ user.get_avatar(42) }}" class="avatar" alt="{% trans %}User's Avatar{% endtrans %}" title="{% trans %}Admin's Avatar{% endtrans %}"> <strong>{{ user.username }}</strong></a>
       </td>{% if loop.last and loop.index is odd %}
       <td class="span6">
       	&nbsp;

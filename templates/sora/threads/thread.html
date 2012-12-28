@@ -46,7 +46,7 @@
   {% if post.message %}{{ macros.draw_message(post.message) }}{% endif %}
   <div id="post-{{ post.pk }}" class="well well-post{% if post.user and post.user.rank and post.user.rank.style %} {{ post.user.rank.style }}{% endif %}">
     <div class="post-author">
-      <img src="{{ post.user.get_avatar() }}" alt="" class="avatar-normal">
+      <img src="{{ post.user.get_avatar(80) }}" alt="" class="avatar-normal">
       <div class="post-bit">
         <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="lead">{{ post.user.username }}</a>{% if post.user.get_title() %}
         <p class="user-title">{{ _(post.user.get_title()) }}</p>{% endif %}
@@ -145,7 +145,7 @@
   <form action="{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}" method="post">
     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
     <input type="hidden" name="quick_reply" value="1">
-    <img src="{{ user.get_avatar(big) }}" alt="{% trans %}Your Avatar{% endtrans %}" class="avatar-big">
+    <img src="{{ user.get_avatar() }}" alt="{% trans %}Your Avatar{% endtrans %}" class="avatar-big">
     <div class="arrow"></div>
     {{ editor.editor(quick_reply.post, _('Post Reply')) }}
   </form>

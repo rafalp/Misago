@@ -163,14 +163,18 @@ def crop(request, upload=False):
                 crop_y = int(aspect * float(request.POST['crop_y']))
                 crop_w = int(aspect * float(request.POST['crop_w']))
                 avatar = source.crop((crop_x, crop_y, crop_x + crop_w, crop_y + crop_w))
-                avatar.thumbnail((125, 125), Image.ANTIALIAS)
-                
+                avatar.thumbnail((settings.AVATAR_SIZES[0], settings.AVATAR_SIZES[0]), Image.ANTIALIAS)
+                            
                 if upload:
                     image_name, image_extension = path(request.user.avatar_temp).splitext()
                 else:
                     image_name, image_extension = path(request.user.avatar_original).splitext()
                 image_name = '%s_%s%s' % (request.user.pk, get_random_string(8), image_extension)
                 avatar.save(image_path + image_name)
+                
+                for size in settings.AVATAR_SIZES[1:]:
+                    avatar.thumbnail((size, size), Image.ANTIALIAS)
+                    avatar.save(image_path + str(size) + '_' + image_name)
                 
                 request.user.delete_avatar_image()
                 if upload:
@@ -194,6 +198,7 @@ def crop(request, upload=False):
                                             context_instance=RequestContext(request, {
                                               'message': message,
                                               'after_upload': upload,
+                                              'avatar_size': settings.AVATAR_SIZES[0],
                                               'source': 'avatars/%s' % (request.user.avatar_temp if upload else request.user.avatar_original),
                                               'tab': 'avatar',
                                             }));

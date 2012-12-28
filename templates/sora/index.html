@@ -25,7 +25,7 @@
     <h3>{% trans %}Team Online{% endtrans %}</h3>
     {% for user in team_online %}
     <div class="board-team">
-      <img src="{{ user.get_avatar() }}" alt="" class="avatar-small"> <a href="{% url 'user' username=user.username_slug, user=user.pk %}">{{ user.username }}</a>{% if user.get_title() %} <span class="muted">{{ _(user.get_title()) }}</span>{% endif %}
+      <img src="{{ user.get_avatar(28) }}" alt="" class="avatar-small"> <a href="{% url 'user' username=user.username_slug, user=user.pk %}">{{ user.username }}</a>{% if user.get_title() %} <span class="muted">{{ _(user.get_title()) }}</span>{% endif %}
     </div>
     <hr>
     {% endfor %}

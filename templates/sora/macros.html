@@ -5,8 +5,8 @@
 {%- endmacro %}
 
 {# Guest avatar #}
-{% macro avatar_guest() -%}
-{{ STATIC_URL }}avatars/avatar_guest.jpg
+{% macro avatar_guest(size=None) -%}
+{{ STATIC_URL }}avatars/{% if size %}{{ size }}_{% endif %}avatar_guest.jpg
 {%- endmacro %}
 
 {# Messages list macro #}

@@ -18,6 +18,7 @@ from misago.roles.models import Role
 from misago.settings.settings import Settings as DBSettings
 from misago.users.validators import validate_username, validate_password, validate_email
 from misago.utils import get_random_string, slugify
+from misago.utils.avatars import avatar_size
 
 class UserManager(models.Manager):
     """
@@ -234,7 +235,7 @@ class User(models.Model):
                 if not avatars_list:
                     avatars_list = []
                     for directory in path(settings.STATICFILES_DIRS[0]).joinpath('avatars').dirs():
-                        if not directory[-7:] == '_locked':
+                        if not directory[-7:] == '_locked' and not directory[-7:] == '_thumbs':
                             avatars_list += directory.files('*.gif')
                             avatars_list += directory.files('*.jpg')
                             avatars_list += directory.files('*.jpeg')
@@ -275,6 +276,13 @@ class User(models.Model):
 
     def delete_avatar_image(self):
         if self.avatar_image:
+            for size in settings.AVATAR_SIZES[1:]:
+                try:
+                    av_file = path(settings.MEDIA_ROOT + 'avatars/' + str(size) + '_' + self.avatar_image)
+                    if not av_file.isdir():
+                        av_file.remove()
+                except Exception as e:
+                    print e
             try:
                 av_file = path(settings.MEDIA_ROOT + 'avatars/' + self.avatar_image)
                 if not av_file.isdir():
@@ -402,25 +410,23 @@ class User(models.Model):
             cache.set(self.acl_key, acl, 2592000)
         return acl
             
-    def get_avatar(self, size='normal'):
+    def get_avatar(self, size=None):
+        image_size = avatar_size(size) if size else None
+                
         # Get uploaded avatar
         if self.avatar_type == 'upload':
-            return settings.MEDIA_URL + 'avatars/' + self.avatar_image
+            image_prefix = '%s_' % image_size if image_size else ''
+            return settings.MEDIA_URL + 'avatars/' + image_prefix + self.avatar_image
         
         # Get gallery avatar
         if self.avatar_type == 'gallery':
-            return settings.STATIC_URL + 'avatars/' + self.avatar_image
+            image_prefix = '_thumbs/%s/' % image_size if image_size else ''
+            return settings.STATIC_URL + 'avatars/' + image_prefix + self.avatar_image
         
         # No avatar found, get gravatar
-        if size == 'big':
-            size = 150;
-        elif size == 'small':
-            size = 64;
-        elif size == 'tiny':
-            size = 46;
-        else:
-            size = 100
-        return 'http://www.gravatar.com/avatar/%s?s=%s' % (hashlib.md5(self.email).hexdigest(), size)
+        if not image_size:
+            image_size = settings.AVATAR_SIZES[0]
+        return 'http://www.gravatar.com/avatar/%s?s=%s' % (hashlib.md5(self.email).hexdigest(), image_size)
     
     def get_title(self):
         if self.title:

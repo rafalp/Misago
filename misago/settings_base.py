@@ -10,6 +10,11 @@ ADMIN_PATH = ''
 # Default format of Misago generated HTML
 OUTPUT_FORMAT = 'html5'
 
+# Default avatar sizes
+# Those are avatar sizes Misago generates images for
+# Remember to run "genavatars" command when you change this setting!
+AVATAR_SIZES = (125, 100, 80, 60, 40, 24)
+
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
