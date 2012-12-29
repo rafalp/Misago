@@ -187,11 +187,11 @@ class Forums(ListWidget):
                 request.messages.set_flash(Message(_('Role "%(name)s" is protected, you cannot edit it.') % {'name': _(self.role.name)}), 'error', self.admin.id)
                 return redirect(reverse('admin_roles'))
         except Role.DoesNotExist:
-            request.set_flash(Message(_('Requested Role could not be found.')), 'error', self.admin.id)
+            request.messages.set_flash(Message(_('Requested Role could not be found.')), 'error', self.admin.id)
             return redirect(reverse('admin_roles'))
         self.roles = ForumRole.objects.order_by('name').all()
         if not self.roles:
-            request.set_flash(Message(_('No forum roles are currently set.')), 'error', self.admin.id)
+            request.messages.set_flash(Message(_('No forum roles are currently set.')), 'error', self.admin.id)
             return redirect(reverse('admin_roles'))
         return super(Forums, self).__call__(request)
 
