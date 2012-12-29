@@ -179,6 +179,7 @@ mptt/**
 pytz/**
 recaptcha/**
 south/**
+custom/**
 static/avatars/protoss
 static/avatars/terran
 static/avatars/zerg
