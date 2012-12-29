@@ -56,7 +56,7 @@ class UserManager(models.Manager):
         try:
             from misago.ranks.models import Rank
             default_rank = Rank.objects.filter(special=0).order_by('order')[0]
-        except Rank.DoesNotExist:
+        except IndexError:
             default_rank = None
         
         # Store user in database

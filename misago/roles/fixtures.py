@@ -25,15 +25,13 @@ def load_fixtures():
                            name=_("Registered").message,
                            token='registered',
                            )
-    role_registered.set_permissions({
-                                     })
+    role_registered.set_permissions({})
     
     role_guest = Role(
                       name=_("Guest").message,
                       token='guest',
                       )
-    role_guest.set_permissions({
-                                })
+    role_guest.set_permissions({})
     
     role_admin.save(force_insert=True)
     role_mod.save(force_insert=True)
