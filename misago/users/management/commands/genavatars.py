@@ -7,6 +7,7 @@ try:
 except ImportError:
     has_pil = False
 from misago.users.models import User
+from misago.utils.avatars import resizeimage
     
 class Command(BaseCommand):
     help = 'Regenerates avatar images for new dimensions'
@@ -18,13 +19,11 @@ class Command(BaseCommand):
         self.stdout.write('\n\nAvatar images have been regenerated.\n')
         
     def scale_image(self, image_src, image_dir=None):
-        avatar = Image.open(image_src).convert("RGBA")
         image_name = path.basename(path(image_src))
         if not image_dir:
             image_dir = path.dirname(path(image_src)) + '/%s_'
         for size in settings.AVATAR_SIZES[1:]:
-            avatar.thumbnail((size, size), Image.ANTIALIAS)
-            avatar.save(image_dir % size + image_name)
+            resizeimage(image_src, size, image_dir % size + image_name)
     
     def scale_user_avatars(self):
         for user in User.objects.filter(avatar_type='upload').iterator():

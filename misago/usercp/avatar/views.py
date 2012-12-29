@@ -1,6 +1,7 @@
 from path import path
 from PIL import Image
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
@@ -11,6 +12,7 @@ from misago.usercp.template import RequestContext
 from misago.usercp.avatar.forms import UploadAvatarForm
 from misago.views import error404
 from misago.utils import get_random_string
+from misago.utils.avatars import resizeimage
 
 def avatar_view(f):
     def decorator(*args, **kwargs):
@@ -103,7 +105,6 @@ def gallery(request):
 def upload(request):
     if not 'upload' in request.settings.avatars_types:
         return error404(request)
-    
     message = request.messages.get_message('usercp_avatar')
     if request.method == 'POST':
         form = UploadAvatarForm(request.POST, request.FILES, request=request)
@@ -119,11 +120,17 @@ def upload(request):
                 for chunk in image.chunks():
                     destination.write(chunk)
             request.user.save()
-            image = Image.open(image_path)
-            image.seek(0)
-            image.save(image_path)
-            
-            return redirect(reverse('usercp_avatar_upload_crop'))
+            try:
+                image = Image.open(image_path)
+                if not image.format in ['GIF', 'PNG', 'JPEG']:
+                    raise ValidationError()
+                image.seek(0)
+                image.save(image_path)
+                return redirect(reverse('usercp_avatar_upload_crop'))
+            except ValidationError:
+                request.user.delete_avatar()
+                request.user.default_avatar(request.settings)
+                message = Message(_("Only gif, jpeg and png files are allowed for member avatars."), 'error') 
         else:
             message = Message(form.non_field_errors()[0], 'error')          
     else:
@@ -162,19 +169,16 @@ def crop(request, upload=False):
                 crop_x = int(aspect * float(request.POST['crop_x']))
                 crop_y = int(aspect * float(request.POST['crop_y']))
                 crop_w = int(aspect * float(request.POST['crop_w']))
-                avatar = source.crop((crop_x, crop_y, crop_x + crop_w, crop_y + crop_w))
-                avatar.thumbnail((settings.AVATAR_SIZES[0], settings.AVATAR_SIZES[0]), Image.ANTIALIAS)
-                            
+                crop = source.crop((crop_x, crop_y, crop_x + crop_w, crop_y + crop_w))
+                           
                 if upload:
                     image_name, image_extension = path(request.user.avatar_temp).splitext()
                 else:
                     image_name, image_extension = path(request.user.avatar_original).splitext()
                 image_name = '%s_%s%s' % (request.user.pk, get_random_string(8), image_extension)
-                avatar.save(image_path + image_name)
-                
+                resizeimage(crop, settings.AVATAR_SIZES[0], image_path + image_name, info=source.info, format=source.format)
                 for size in settings.AVATAR_SIZES[1:]:
-                    avatar.thumbnail((size, size), Image.ANTIALIAS)
-                    avatar.save(image_path + str(size) + '_' + image_name)
+                    resizeimage(crop, size, image_path + str(size) + '_' + image_name, info=source.info, format=source.format)
                 
                 request.user.delete_avatar_image()
                 if upload:

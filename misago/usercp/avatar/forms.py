@@ -27,6 +27,6 @@ class UploadAvatarForm(Form):
                 else:
                     limit = '%s Kb' % self.request.settings.upload_limit
                 raise ValidationError(_("Avatar image cannot be larger than %(limit)s.") % {'limit': limit})
-            return image
         else:
             raise ValidationError(_("Couldn't read uploaded image"))
+        return image

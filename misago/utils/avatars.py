@@ -19,12 +19,14 @@ def avatar_size(size):
     return avatar_sizes[size]
 
 
-def resizeimage(image, size, target):
+def resizeimage(image, size, target, info=None, format=None):
     if isinstance(image, basestring):
         image = Image.open(image)
-    info = image.info
-    format = image.format
-    if format in "GIF":
+    if not info:
+        info = image.info
+    if not format:
+        format = image.format
+    if format == "GIF":
         if 'transparency' in info:
             image = image.resize((size, size), Image.ANTIALIAS)
             image.save(target, image.format, transparency=info['transparency'])
@@ -33,7 +35,7 @@ def resizeimage(image, size, target):
             image = image.resize((size, size), Image.ANTIALIAS)
             image = image.convert('P', palette=Image.ADAPTIVE)
             image.save(target, image.format)
-    if format in "PNG":
+    if format == "PNG":
         image = image.resize((size, size), Image.ANTIALIAS)
         image.save(target, quality=95)
     if format == "JPEG":
