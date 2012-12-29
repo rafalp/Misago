@@ -11,7 +11,7 @@
         <li><a href="#" title="{% trans %}New Posts{% endtrans %}" class="tooltip-bottom"><i class="icon-star-empty "></i></a></li>
       </ul>
       <ul class="nav pull-right">{% if user.is_authenticated() %}
-        <li class="user-profile"><a href="{% url 'user' user=user.id, username=user.username_slug %}" title="{% trans %}Go to your profile{% endtrans %}" class="tooltip-bottom"><div><img src="{{ user.get_avatar(28) }}" class="avatar-small" alt="{{ user.username }}" title="{{ user.username }}"> {{ user.username }}</div></a></li>
+        <li class="user-profile"><a href="{% url 'user' user=user.id, username=user.username_slug %}" title="{% trans %}Go to your profile{% endtrans %}" class="tooltip-bottom"><div><img src="{{ user.get_avatar(28) }}" class="avatar-small" alt=""> {{ user.username }}</div></a></li>
         <li><a href="#" title="{% trans %}Go to Moderator Control Panel{% endtrans %}" class="tooltip-bottom"><i class="icon-tasks"></i> {% trans %}Mod CP{% endtrans %}</a></li>
         <li><a href="{% url 'usercp' %}" title="{% trans %}Edit your profile options{% endtrans %}" class="tooltip-bottom"><i class="icon-cog"></i> {% trans %}Options{% endtrans %}</a></li>
         <li><form action="{% url 'sign_out' %}" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><button type="submit" title="{% trans %}Sign Out and browse as guest{% endtrans %}" class="btn btn-link tooltip-bottom"><i class="icon-off"></i> {% trans %}Sign Out{% endtrans %}</button></form></li>

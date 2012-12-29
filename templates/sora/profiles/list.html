@@ -45,7 +45,7 @@
   <tbody>
     <tr>{% for user in users %}
       <td class="span6{% if user.get_style() %} {{ user.get_style() }}{% endif %}">
-        <a href="{% url 'user' username=user.username_slug, user=user.pk %}"><img src="{{ user.get_avatar(42) }}" class="avatar" alt="{% trans %}Member's Avatar{% endtrans %}" title="{% trans %}Member's Avatar{% endtrans %}"> <strong>{{ user.username }}</strong>{% if user.title or (in_search and user.get_title()) %} <span class="muted">{% if in_search%}{{ _(user.get_title()) }}{% else %}{{ _(user.title) }}{% endif %}</span>{% endif %}</a>
+        <a href="{% url 'user' username=user.username_slug, user=user.pk %}"><img src="{{ user.get_avatar(42) }}" class="avatar" alt=""> <strong>{{ user.username }}</strong>{% if user.title or (in_search and user.get_title()) %} <span class="muted">{% if in_search%}{{ _(user.get_title()) }}{% else %}{{ _(user.title) }}{% endif %}</span>{% endif %}</a>
       </td>{% if loop.last and loop.index is odd %}
       <td class="span6">
       	&nbsp;

@@ -11,7 +11,7 @@
 <div class="profile-wrapper{% if profile.get_style() %} {{ profile.get_style() }}{% endif %}">
   <div class="page-header profile-header header-tabbed{% if profile.get_style() %} {{ profile.get_style() }}{% endif %}">
     <div class="avatar-height">
-      <img src="{{ profile.get_avatar() }}" class="avatar pull-left" alt="{% trans %}Member Avatar{% endtrans %}" title="{% trans %}Member Avatar{% endtrans %}">
+      <img src="{{ profile.get_avatar() }}" class="avatar pull-left" alt="">
       <div class="pull-left">
         <h1>{{ profile.username }}</h1>
         <p class="lead">{% if profile.title or profile.rank.title %}{% if profile.title %}{{ _(profile.title) }}{% elif profile.rank.title %}{{ _(profile.rank.title) }}{% endif %}; {% endif %}<span class="muted">{% trans last_visit=profile.last_date|reltimesince|low %}Last seen {{ last_visit }}{% endtrans %}</span></p>
