@@ -10,10 +10,21 @@
 <h2>{% trans %}Upload Avatar{% endtrans %} <small>{% trans %}Change your Avatar{% endtrans %}</small></h2>
 {% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
 <form action="{% url 'usercp_avatar_upload' %}" method="post" enctype="multipart/form-data">
+  <input type="hidden" id="js_check" name="js_check" value="0">
   {{ form_theme.form_widget(form, width=9) }}
   <div class="form-actions">
   	<button name="save" type="submit" class="btn btn-primary">{% trans %}Upload Avatar{% endtrans %}</button>
   	<a href="{% url 'usercp_avatar' %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
   </div>
 </form>
+{% endblock %}
+
+
+{% block javascripts %}
+{{ super() }}
+    <script type="text/javascript">
+      $(function($){
+        $('#js_check').val(1);
+      });
+    </script>
 {% endblock %}

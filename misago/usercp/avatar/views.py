@@ -126,7 +126,28 @@ def upload(request):
                     raise ValidationError()
                 image.seek(0)
                 image.save(image_path)
-                return redirect(reverse('usercp_avatar_upload_crop'))
+                if request.POST.get('js_check'):
+                    return redirect(reverse('usercp_avatar_upload_crop'))
+                # Redirect to crop page didnt happen, handle avatar with old school hollywood way
+                image_path = settings.MEDIA_ROOT + 'avatars/'
+                source = Image.open(image_path + request.user.avatar_temp)
+                image_name, image_extension = path(request.user.avatar_temp).splitext()
+                image_name = '%s_%s%s' % (request.user.pk, get_random_string(8), image_extension)
+                resizeimage(source, settings.AVATAR_SIZES[0], image_path + image_name, info=source.info, format=source.format)
+                for size in settings.AVATAR_SIZES[1:]:
+                    resizeimage(source, size, image_path + str(size) + '_' + image_name, info=source.info, format=source.format)
+                # Update user model one more time
+                request.user.delete_avatar_image()
+                request.user.delete_avatar_original()
+                request.user.avatar_type = 'upload'
+                request.user.avatar_original = '%s_org_%s%s' % (request.user.pk, get_random_string(8), image_extension)
+                source.save(image_path + request.user.avatar_original)
+                request.user.delete_avatar_temp()
+                request.user.avatar_image = image_name
+                request.user.save(force_update=True)
+                # Set message and adios!
+                request.messages.set_flash(Message(_("Your avatar has changed.")), 'success', 'usercp_avatar')
+                return redirect(reverse('usercp_avatar'))
             except ValidationError:
                 request.user.delete_avatar()
                 request.user.default_avatar(request.settings)
@@ -189,7 +210,6 @@ def crop(request, upload=False):
                 request.user.delete_avatar_temp()
                 request.user.avatar_image = image_name
                 request.user.save(force_update=True)
-                
                 request.messages.set_flash(Message(_("Your avatar has been cropped.")), 'success', 'usercp_avatar')
                 return redirect(reverse('usercp_avatar'))
             except Exception:
