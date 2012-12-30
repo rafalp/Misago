@@ -117,6 +117,18 @@ USERCP_EXTENSIONS = (
     'misago.usercp.blocked',
 )
 
+# List of User Profile extensions
+PROFILE_EXTENSIONS = (
+    '',
+    '',
+)
+
+# List of Markdown Extensions
+MARKDOWN_EXTENSIONS = (
+    'misago.markdown.extensions.quotes.QuoteTitlesExtension',
+    'misago.markdown.extensions.ats.AtsExtension',
+)
+
 # Name of root urls configuration
 ROOT_URLCONF = 'misago.urls'
 

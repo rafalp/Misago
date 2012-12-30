@@ -8,7 +8,7 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider">/</span></li>
 {% for parent in parents %}
-<li class="first"><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider">/</span></li>
+<li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider">/</span></li>
 {% endfor %}
 <li class="active">{{ forum.name }}
 {%- endblock %}

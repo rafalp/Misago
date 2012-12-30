@@ -11,4 +11,5 @@ urlpatterns = patterns('misago.threads.views',
     url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/reported/$', 'FirstReportedView', name="thread_reported"),
     url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<page>\d+)/$', 'ThreadView', name="thread"),
     url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/reply/$', 'PostingView', name="thread_reply", kwargs={'mode': 'new_post'}),
+    url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/reply/(?P<quote>\d+)/$', 'PostingView', name="thread_reply", kwargs={'mode': 'new_post'}),
 )

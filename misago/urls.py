@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     (r'^', include('misago.threads.urls')),
     url(r'^category/(?P<slug>(\w|-)+)-(?P<forum>\d+)/$', 'misago.views.category', name="category"),
     url(r'^redirect/(?P<slug>(\w|-)+)-(?P<forum>\d+)/$', 'misago.views.redirection', name="redirect"),
+    url(r'^markdown/preview/$', 'misago.markdown.views.preview', name="md_preview"),
     url(r'^$', 'misago.views.home', name="index"),
 )
 

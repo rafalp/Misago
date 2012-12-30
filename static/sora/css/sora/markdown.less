@@ -1,7 +1,46 @@
 // Markdown styles
 // -------------------------
 .markdown {
-  margin-bottom: -12px
+  margin-bottom: -12px;
+  
+  h1 {font-size: 160%;}
+  h2 {font-size: 120%;}
+  
+  blockquote {
+    background-color: @bodyBackground;
+    border: 1px solid lighten(@grayLight, 20%);
+    border-bottom-width: 2px;
+    .border-radius(3px);
+    display: inline-block;
+    padding: 14px 16px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    
+    h3 {
+      margin: 0px;
+      margin-top: -10px;
+      padding: 0px;
+      
+      color: @gray;
+      font-size: 100%;
+    }
+    
+    blockquote, pre {
+      display: block;
+    }
+  }
+  
+  pre {
+    display: inline-block;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    
+    pre {
+      display: block;
+    }
+  }
 }
 
 .post-content {

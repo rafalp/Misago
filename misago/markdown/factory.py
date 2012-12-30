@@ -1,5 +1,9 @@
-from django.conf import settings
+import re
 import markdown
+from django.conf import settings
+from django.utils.importlib import import_module
+from django.utils.translation import ugettext_lazy as _
+from misago.utils import get_random_string
 
 def signature_markdown(acl, text):
     md = markdown.Markdown(
@@ -29,5 +33,32 @@ def post_markdown(request, text):
     md = markdown.Markdown(
                            safe_mode='escape',
                            output_format=settings.OUTPUT_FORMAT,
-                           extensions=['nl2br'])
-    return md.convert(text)
+                           extensions=['nl2br', 'fenced_code'])
+    md.mi_token = get_random_string(16)
+    for extension in settings.MARKDOWN_EXTENSIONS:
+        module = '.'.join(extension.split('.')[:-1])
+        extension = extension.split('.')[-1]
+        module = import_module(module)
+        attr = getattr(module, extension)
+        ext = attr()
+        ext.extendMarkdown(md)
+    text = md.convert(text)
+    # Final cleanups
+    print 'PRE-FINALISE'
+    print '------------------------------------------------'
+    print text
+    text = text.replace('<p><h3><quotetitle>', '<h3><quotetitle>')
+    text = text.replace('</quotetitle></h3></p>', '</quotetitle></h3>')
+    text = text.replace('</quotetitle></h3><br>\n', '</quotetitle></h3>\n<p>')
+    text = text.replace('\n<p></p>', '')
+    try:
+        def trans_quotetitle(match):
+            return _("Posted by %(user)s") % {'user': match.group('content')} 
+        text = re.sub(r'<quotetitle>(?P<content>.+)</quotetitle>', trans_quotetitle, text)
+        print 'REPLACED!'
+    except Exception as e:
+        print 'Kaput: %s' % e
+    print 'POST-FINALISE'
+    print '------------------------------------------------'
+    print text
+    return text

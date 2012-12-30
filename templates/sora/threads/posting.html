@@ -5,13 +5,18 @@
 {% import "sora/editor.html" as editor with context %}
 {% import "sora/macros.html" as macros with context %}
 
-{% block title %}{{ macros.page_title(title=_("Post New Thread"), parent=forum.name) }}{% endblock %}
+{% block title %}{% if thread -%}
+{{ macros.page_title(title=_(get_title()), parent=thread.name) }}
+{%- else -%}
+{{ macros.page_title(title=_(get_title()), parent=forum.name) }}
+{%- endif %}{% endblock %}
 
 {% block breadcrumb %}{{ super() }} <span class="divider">/</span></li>
 {% for parent in parents %}
-<li class="first"><a href="{{ parent.type|url(forum=forum.pk, slug=forum.slug) }}">{{ parent.name }}</a> <span class="divider">/</span></li>
+<li><a href="{{ parent.type|url(forum=forum.pk, slug=forum.slug) }}">{{ parent.name }}</a> <span class="divider">/</span></li>
 {% endfor %}
-<li class="active">{% trans %}Post New Thread{% endtrans %}
+{% if thread %}<li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider">/</span></li>{% endif %}
+<li class="active">{{ get_title() }}
 {%- endblock %}
 
 {% block content %}
@@ -19,7 +24,7 @@
   <ul class="breadcrumb">
     {{ self.breadcrumb() }}</li>
   </ul>
-  <h1>{% trans %}Post New Thread{% endtrans %}</h1>
+  <h1>{{ get_title() }} <small>{% if thread %}{{ thread.name }}{% else %}{{ forum.name }}{% endif %}</small></h1>
   {% if thread %}
   <ul class="unstyled thread-info">
     {% if thread.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
@@ -34,9 +39,75 @@
   {%- endif %}
 </div>
 {% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
-<form action="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}" method="post">
+<form action="{{ get_action() }}" method="post">
   <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+  {% if 'thread_name' in form.fields %}
   {{ form_theme.row_widget(form.fields.thread_name) }}
-  {{ editor.editor(form.fields.post, _('Post Thread'), rows=8) }}
+  {% endif %}
+  {{ editor.editor(form.fields.post, get_button(), rows=8) }}
 </form>
+<div class="well well-small" id="md-border" style="display: none;">
+  <div class="markdown" id="md-preview"></div>
+</div>
 {% endblock %}
+
+{% block javascripts %}
+{{ super() }}
+    <script type="text/javascript">
+      $(function($){
+        var xhr = false;
+        preview = $('#md-preview')
+        $('#md-border').fadeIn(200);
+        $('#id_post').keyup(function() {
+          if (xhr != false) {
+            xhr.abort();
+          }
+          xhr = $.ajax({
+            type: "POST",
+            url: "{% url 'md_preview' %}",
+            data: { raw: $(this).val() },
+            success: function(data) {
+              $(preview).html(data);
+            }
+          });
+        });
+      });
+    </script>
+{% endblock %}
+
+
+{% macro get_action() -%}
+{% if mode == 'new_thread' -%}
+{% url 'thread_new' forum=forum.pk, slug=forum.slug %}
+{%- elif mode == 'edit_thread' -%}
+NADA!
+{%- elif mode in ['new_post', 'new_post_quick'] -%}
+{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}
+{%- elif mode == 'edit_post' -%}
+NADA!
+{%- endif %}
+{%- endmacro %}
+
+{% macro get_title() -%}
+{% if mode == 'new_thread' -%}
+{% trans %}Post New Thread{% endtrans %}
+{%- elif mode == 'edit_thread' -%}
+{% trans %}Edit Thread{% endtrans %}
+{%- elif mode in ['new_post', 'new_post_quick'] -%}
+{% trans %}Post New Reply{% endtrans %}
+{%- elif mode == 'edit_post' -%}
+{% trans %}Edit Reply{% endtrans %}
+{%- endif %}
+{%- endmacro %}
+
+{% macro get_button() -%}
+{% if mode == 'new_thread' -%}
+{% trans %}Post Thread{% endtrans %}
+{%- elif mode == 'edit_thread' -%}
+{% trans %}Edit Thread{% endtrans %}
+{%- elif mode in ['new_post', 'new_post_quick'] -%}
+{% trans %}Post Reply{% endtrans %}
+{%- elif mode == 'edit_post' -%}
+{% trans %}Edit Reply{% endtrans %}
+{%- endif %}
+{%- endmacro %}

@@ -8,7 +8,7 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider">/</span></li>
 {% for parent in parents %}
-<li class="first"><a href="{{ parent.type|url(forum=forum.pk, slug=forum.slug) }}">{{ parent.name }}</a> <span class="divider">/</span></li>
+<li><a href="{{ parent.type|url(forum=forum.pk, slug=forum.slug) }}">{{ parent.name }}</a> <span class="divider">/</span></li>
 {% endfor %}
 <li class="active">{{ thread.name }}
 {%- endblock %}
@@ -36,7 +36,7 @@
   {% if user.is_authenticated() %}
   <ul class="nav nav-pills pull-right">
     <li class="info"><a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}"><i class="icon-ok"></i> {% trans %}Watch Thread{% endtrans %}</a></li>{% if acl.threads.can_reply(thread) %}
-    <li class="primary"><a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}"><i class="icon-plus"></i> {% trans %}Reply{% endtrans %}</a></li>{% endif %}
+    <li class="primary"><a href="{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}"><i class="icon-plus"></i> {% trans %}Reply{% endtrans %}</a></li>{% endif %}
   </ul>
   {% endif %}
 </div>
@@ -54,31 +54,33 @@
       </div>
     </div>
     <div class="post-content">
-      <a href="{% if pagination['page'] > 1 -%}
-      {% url 'thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
-      {%- else -%}
-      {% url 'thread' thread=thread.pk, slug=thread.slug %}
-      {%- endif %}#post-{{ post.pk }}" class="post-perma pull-right tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
-      {% if not post.is_read %}
-      <span class="label label-warning pull-right">
-        {% trans %}New{% endtrans %}
-      </span>
-      {% endif %}
-      {% if post.moderated %}
-      <span class="label label-purple pull-right">
-        {% trans %}Unreviewed{% endtrans %}
-      </span>
-      {% endif %}
-      {% if post.reported %}
-      <span class="label label-important pull-right">
-        {% trans %}Reported{% endtrans %}
-      </span>
-      {% endif %}
-      {% if post.deleted %}
-      <span class="label label-inverse pull-right">
-        {% trans %}Deleted{% endtrans %}
-      </span>
-      {% endif %}
+      <div class="post-extra">
+        <a href="{% if pagination['page'] > 1 -%}
+        {% url 'thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
+        {%- else -%}
+        {% url 'thread' thread=thread.pk, slug=thread.slug %}
+        {%- endif %}#post-{{ post.pk }}" class="post-perma pull-right tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
+        {% if not post.is_read %}
+        <span class="label label-warning pull-right">
+          {% trans %}New{% endtrans %}
+        </span>
+        {% endif %}
+        {% if post.moderated %}
+        <span class="label label-purple pull-right">
+          {% trans %}Unreviewed{% endtrans %}
+        </span>
+        {% endif %}
+        {% if post.reported %}
+        <span class="label label-important pull-right">
+          {% trans %}Reported{% endtrans %}
+        </span>
+        {% endif %}
+        {% if post.deleted %}
+        <span class="label label-inverse pull-right">
+          {% trans %}Deleted{% endtrans %}
+        </span>
+        {% endif %}
+      </div>
       <div class="markdown">
         {{ post.post_preparsed|safe }}
       </div>
@@ -96,12 +98,16 @@
       {% endif %}
     </div>
     <div class="post-nav">
+      {% if user.is_authenticated() %}
       <ul class="nav nav-pills pull-right">
+        {% if 1 == 2 %}
         <li><a href="#"><i class="icon-info-sign"></i> {% trans %}Info{% endtrans %}</a></li>
         <li><button class="btn danger"><i class="icon-remove"></i> {% trans %}Delete{% endtrans %}</button></li>
         <li><a href="#"><i class="icon-edit"></i> {% trans %}Edit{% endtrans %}</a></li>
-        <li><a href="#"><i class="icon-comment"></i> {% trans %}Reply{% endtrans %}</a></li>
+        {% endif %}
+        {% if acl.threads.can_reply(thread) %}<li><a href="{% url 'thread_reply' thread=thread.pk, slug=thread.slug, quote=post.pk %}"><i class="icon-comment"></i> {% trans %}Reply{% endtrans %}</a></li>{% endif %}
       </ul>
+      {% endif %}
     </div>
   </div>
   {% if post.checkpoint_set.all() %}
@@ -135,7 +141,7 @@
   {{ pager(false) }}
   {% if user.is_authenticated() and acl.threads.can_reply(thread) %}
   <ul class="nav nav-pills pull-right">
-    <li class="primary"><a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}"><i class="icon-plus"></i> {% trans %}Reply{% endtrans %}</a></li>
+    <li class="primary"><a href="{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}"><i class="icon-plus"></i> {% trans %}Reply{% endtrans %}</a></li>
   </ul>
   {% endif %}
 </div>

@@ -34,16 +34,29 @@ class PostingView(BaseView):
         self.request.acl.threads.allow_thread_view(self.request.user, self.thread)
         self.request.acl.threads.allow_reply(self.thread)
         self.parents = self.forum.get_ancestors(include_self=True).filter(level__gt=1)
+        if kwargs.get('quote'):
+            self.quote = Post.objects.select_related('user').get(pk=kwargs['quote'], thread=self.thread.pk)
         
     def get_form(self, bound=False):            
         if bound:            
             return PostForm(self.request.POST,request=self.request,mode=self.mode)
+        if self.quote:
+            quote_post = []
+            if self.quote.user:
+                quote_post.append('@%s' % self.quote.user.username)
+            else:
+                quote_post.append('@%s' % self.quote.user_name)
+            for line in self.quote.post.split('\n'):
+                quote_post.append('> %s' % line)
+            quote_post.append('\n')
+            return PostForm(request=self.request,mode=self.mode,initial={'post': '\n'.join(quote_post)})
         return PostForm(request=self.request,mode=self.mode)
             
     def __call__(self, request, **kwargs):
         self.request = request
         self.forum = None
         self.thread = None
+        self.quote = None
         self.post = None
         self.parents = None
         self.mode = kwargs.get('mode')
