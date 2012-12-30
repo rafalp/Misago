@@ -339,7 +339,7 @@ class Delete(ButtonWidget):
         target.delete()
         User.objects.resync_monitor(self.request.monitor)
         return Message(_('User "%(name)s" has been deleted.') % {'name': target.username}, 'success'), False
-    
+
 
 def inactive(request):
     token = 'list_filter_misago.users.models.User'
