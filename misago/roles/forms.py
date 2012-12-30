@@ -21,6 +21,6 @@ class RoleForm(Form):
                         ],
                        ]
         
-        if self.request.user.is_god():
+        if not self.request.user.is_god():
             del self.fields['protected']
-            del self.layout[0][1][1]    
+            del self.layout[0][1][1]
