@@ -16,7 +16,7 @@ class SessionMiddleware(object):
         
     def process_response(self, request, response):
         try:
-            request.session.save(request, response)
+            request.session.save()
         except AttributeError:
             pass
         return response
