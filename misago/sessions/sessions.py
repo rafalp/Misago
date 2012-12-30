@@ -69,7 +69,7 @@ class SessionMisago(SessionBase):
     def set_ban(self, ban):
         return False
     
-    def save(self, request, response):
+    def save(self):
         self._session_rk.data = self.encode(self._get_session())
         self._session_rk.last = timezone.now()
         self._session_rk.save(force_update=True)
@@ -147,6 +147,7 @@ class SessionHuman(SessionMisago):
             self._session_rk.matched = True
             self._user = self._session_rk.user
             self.hidden = self._session_rk.hidden
+            self.team = self._session_rk.team
         except (Session.DoesNotExist, IncorrectSessionException):
             # Attempt autolog
             try:
@@ -192,11 +193,11 @@ class SessionHuman(SessionMisago):
                 # Key wasn't unique. Try again.
                 continue
     
-    def save(self, request, response):
+    def save(self):
         self._session_rk.user = self._user
         self._session_rk.hidden = self.hidden
         self._session_rk.team = self.team
-        super(SessionHuman, self).save(request, response)
+        super(SessionHuman, self).save()
         
     def human_session(self):
         return True

@@ -389,10 +389,9 @@ class User(models.Model):
     def get_roles(self):
         return self.roles.all()
         
-    def make_acl_key(self):
-        if self.acl_key:
+    def make_acl_key(self, force=False):
+        if not force and self.acl_key:
             return self.acl_key
-        
         roles_ids = []
         for role in self.roles.all():
             roles_ids.append(str(role.pk))
@@ -466,7 +465,8 @@ class User(models.Model):
     
     def sync_user(self):
         pass
-        
+
+
 class Guest(object):
     """
     Misago Guest dummy
@@ -486,7 +486,7 @@ class Guest(object):
         return Role.objects.filter(token='guest')
     
     def make_acl_key(self):
-        return 'acl_%s' % hashlib.md5(str(Role.objects.get(token='guest').pk)).hexdigest()[0:8]
+        return 'acl_guest'
 
         
 class Crawler(Guest): 
