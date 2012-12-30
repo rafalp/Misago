@@ -1,11 +1,8 @@
-from misago.admin import site
-print site.get_action('bans')
 from django.core.urlresolvers import reverse as django_reverse
 from django.db.models import Q
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from misago.admin import site
-print site.get_action('bans')
 from misago.admin.widgets import *
 from misago.banning.forms import BanForm, SearchBansForm
 from misago.banning.models import Ban

@@ -42,8 +42,6 @@ class QuoteTitlesPreprocessor(markdown.preprocessors.Preprocessor):
                     clean.append(line)
             except IndexError:
                 clean.append(line)
-            except Exception as e:
-                print e
         return clean
 
 

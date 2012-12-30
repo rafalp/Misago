@@ -43,22 +43,14 @@ def post_markdown(request, text):
         ext = attr()
         ext.extendMarkdown(md)
     text = md.convert(text)
+    
     # Final cleanups
-    print 'PRE-FINALISE'
-    print '------------------------------------------------'
-    print text
     text = text.replace('<p><h3><quotetitle>', '<h3><quotetitle>')
     text = text.replace('</quotetitle></h3></p>', '</quotetitle></h3>')
     text = text.replace('</quotetitle></h3><br>\n', '</quotetitle></h3>\n<p>')
     text = text.replace('\n<p></p>', '')
-    try:
-        def trans_quotetitle(match):
-            return _("Posted by %(user)s") % {'user': match.group('content')} 
-        text = re.sub(r'<quotetitle>(?P<content>.+)</quotetitle>', trans_quotetitle, text)
-        print 'REPLACED!'
-    except Exception as e:
-        print 'Kaput: %s' % e
-    print 'POST-FINALISE'
-    print '------------------------------------------------'
-    print text
+    def trans_quotetitle(match):
+        return _("Posted by %(user)s") % {'user': match.group('content')} 
+    text = re.sub(r'<quotetitle>(?P<content>.+)</quotetitle>', trans_quotetitle, text)
+    
     return text

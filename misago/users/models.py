@@ -281,8 +281,8 @@ class User(models.Model):
                     av_file = path(settings.MEDIA_ROOT + 'avatars/' + str(size) + '_' + self.avatar_image)
                     if not av_file.isdir():
                         av_file.remove()
-                except Exception as e:
-                    print e
+                except Exception:
+                    pass
             try:
                 av_file = path(settings.MEDIA_ROOT + 'avatars/' + self.avatar_image)
                 if not av_file.isdir():
