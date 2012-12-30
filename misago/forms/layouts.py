@@ -61,15 +61,16 @@ class FormFields(object):
             if widget.needs_multipart_form:
                 self.multipart_form = True
             
-            # Get errors
-            for error in bound_field._errors():
-                blueprint['errors'].append(error)
-            try:
-                for error in form.errors[field]:
-                    if not error in blueprint['errors']:
-                        blueprint['errors'].append(error)
-            except KeyError:
-                pass
+            # Get errors?
+            if form.is_bound:
+                for error in bound_field._errors():
+                    blueprint['errors'].append(error)
+                try:
+                    for error in form.errors[field]:
+                        if not error in blueprint['errors']:
+                            blueprint['errors'].append(error)
+                except KeyError:
+                    pass
             
             # Use clean value instead?
             try:

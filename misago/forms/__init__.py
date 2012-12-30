@@ -47,7 +47,8 @@ class Form(forms.Form):
         """
         Trim inputs and strip newlines
         """
-        for key, field in self.base_fields.iteritems():
+        self.data = self.data.copy() 
+        for key, field in self.fields.iteritems():
             try:
                 if field.__class__.__name__ in ['ModelChoiceField', 'TreeForeignKey'] and self.data[key]:
                     self.data[key] = int(self.data[key])
