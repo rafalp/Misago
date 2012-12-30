@@ -83,9 +83,10 @@ class NewCategory(FormWidget):
     def submit_form(self, form, target):
         new_forum = Forum(
                      name=form.cleaned_data['name'],
-                     template=form.cleaned_data['template'],
                      slug=slugify(form.cleaned_data['name']),
                      type='category',
+                     template=form.cleaned_data['template'],
+                     show_details=form.cleaned_data['show_details'],
                      style=form.cleaned_data['style'],
                      closed=form.cleaned_data['closed'],
                      )
@@ -119,6 +120,7 @@ class NewForum(FormWidget):
                      slug=slugify(form.cleaned_data['name']),
                      type='forum',
                      template=form.cleaned_data['template'],
+                     show_details=form.cleaned_data['show_details'],
                      style=form.cleaned_data['style'],
                      closed=form.cleaned_data['closed'],
                      prune_start=form.cleaned_data['prune_start'],
@@ -249,6 +251,7 @@ class Edit(FormWidget):
             initial['redirect'] = model.redirect
         else:
             initial['template'] = model.template
+            initial['show_details'] = model.show_details
             initial['style'] = model.style
             initial['closed'] = model.closed
             
@@ -265,6 +268,7 @@ class Edit(FormWidget):
             target.redirect = form.cleaned_data['redirect']
         else:
             target.template = form.cleaned_data['template']
+            target.show_details = form.cleaned_data['show_details']
             target.style = form.cleaned_data['style']
             target.closed = form.cleaned_data['closed']
             

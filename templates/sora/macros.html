@@ -60,7 +60,7 @@
         <h3><a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}"{% if forum.type != 'redirect' and forum.is_read %} class="read-forum"{% endif %}>{{ forum.name }}</a></h3>
         {% if forum.description %}<div class="muted">{{ forum.description }}</div>{% endif %}
       </div>
-      {% if category.template != 'quarter' %}
+      {% if category.show_details and category.template != 'quarter' %}
       {% if forum.type == 'redirect' %}
       <div class="pull-right forum-stat stat-redirects">
         <span class="stat {% if forum.redirects_delta > 0 %}positive{% else %}stag{% endif %}">{% if forum.redirects_delta > 0 %}+{{ forum.redirects_delta }}{% else %}{{ forum.redirects }}{% endif %}</span> <span class="muted">{% trans %}clicks{% endtrans %}</span>
@@ -71,7 +71,7 @@
       </div>
       {% if category.template != 'half' %}
       <div class="pull-right forum-stat stat-threads">
-        <span class="stat {% if forum.threads_delta > 0 %}positive{% else %}stag{% endif %}">{% if forum.posts_delta > 0 %}+{{ forum.threads_delta }}{% else %}{{ forum.threads }}{% endif %}</span> <span class="muted">{% trans %}threads{% endtrans %}</span>
+        <span class="stat {% if forum.threads_delta > 0 %}positive{% else %}stag{% endif %}">{% if forum.threads_delta > 0 %}+{{ forum.threads_delta }}{% else %}{{ forum.threads }}{% endif %}</span> <span class="muted">{% trans %}threads{% endtrans %}</span>
       </div>
       {% endif %}
       {% endif %}

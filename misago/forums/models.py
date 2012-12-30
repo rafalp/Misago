@@ -108,7 +108,8 @@ class Forum(MPTTModel):
     prune_start = models.PositiveIntegerField(default=0)
     prune_last = models.PositiveIntegerField(default=0)
     redirect = models.CharField(max_length=255,null=True,blank=True)
-    template = models.CharField(max_length=255,null=True,blank=True)
+    template = models.CharField(default='row',max_length=255,null=True,blank=True)
+    show_details = models.BooleanField(default=True)
     style = models.CharField(max_length=255,null=True,blank=True)
     closed = models.BooleanField(default=False)
     

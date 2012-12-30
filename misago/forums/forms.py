@@ -20,6 +20,7 @@ class CategoryForm(Form):
                                           ('half', _('Two forums per row')),
                                           ('quarter', _('Four forums per row')),
                                           ))
+    show_details = forms.BooleanField(widget=YesNoSwitch,required=False)
     
     layout = (
               (
@@ -36,6 +37,7 @@ class CategoryForm(Form):
                _("Display Options"),
                (
                 ('template', {'label': _("Category Layout"), 'help_text': _('Controls how this category is displayed on forums lists.')}),
+                ('show_details', {'label': _("Show Subforums Details"), 'help_text': _('Allows you to prevent this category subforums from displaying statistics, last post data, etc. ect. on forums lists.')}),
                 ('style', {'label': _("Category Style"), 'help_text': _('You can add custom CSS classess to this category, to change way it looks on board index.')}),
                 ),
               ),
@@ -63,6 +65,7 @@ class ForumForm(Form):
                                           ('half', _('Two forums per row')),
                                           ('quarter', _('Four forums per row')),
                                           ))
+    show_details = forms.BooleanField(widget=YesNoSwitch,required=False)
     
     layout = (
               (
@@ -86,6 +89,7 @@ class ForumForm(Form):
                _("Display Options"),
                (
                 ('template', {'label': _("Subforums Layout"), 'help_text': _('Controls how this forum displays subforums list.')}),
+                ('show_details', {'label': _("Show Subforums Details"), 'help_text': _("Allows you to prevent this forum's subforums from displaying statistics, last post data, etc. ect. on subforums list.")}),
                 ('style', {'label': _("Forum Style"), 'help_text': _('You can add custom CSS classess to this forum to change way it looks on forums lists.')}),
                 ),
               ),

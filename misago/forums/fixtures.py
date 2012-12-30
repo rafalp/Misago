@@ -29,7 +29,7 @@ def load_fixtures():
     post = Post.objects.create(
                                forum=forum,
                                thread=thread,
-                               user_name='Misago Project',
+                               user_name='MisagoProject',
                                ip='127.0.0.1',
                                agent='',
                                post='Welcome to Misago!',
@@ -37,11 +37,11 @@ def load_fixtures():
                                date=now,
                                )
     thread.start_post = post
-    thread.start_poster_name = 'Misago Project'
-    thread.start_poster_slug = 'misago-project'
+    thread.start_poster_name = 'MisagoProject'
+    thread.start_poster_slug = 'misagoproject'
     thread.last_post = post
-    thread.last_poster_name = 'Misago Project'
-    thread.last_poster_slug = 'misago-project'
+    thread.last_poster_name = 'MisagoProject'
+    thread.last_poster_slug = 'misagoproject'
     thread.save(force_update=True)
     forum.last_thread = thread
     forum.last_thread_name = thread.name

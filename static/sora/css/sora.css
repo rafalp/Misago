@@ -978,7 +978,8 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .posts-list{margin-top:12px;margin-bottom:20px;}.posts-list .well-post{margin:0px;margin-bottom:16px;overflow:auto;padding:16px 0px;}.posts-list .well-post .post-author{overflow:auto;float:left;width:286px;position:relative;bottom:4px;}.posts-list .well-post .post-author .avatar-normal{float:left;margin:4px 0px;margin-left:16px;width:80px;height:80px;-webkit-box-shadow:0px 0px 4px #999999;-moz-box-shadow:0px 0px 4px #999999;box-shadow:0px 0px 4px #999999;}
 .posts-list .well-post .post-author .post-bit{float:left;margin-left:12px;padding-top:4px;font-weight:bold;font-size:120%;}.posts-list .well-post .post-author .post-bit p{margin:0px;}
 .posts-list .well-post .post-author .post-bit .lead{font-size:150%;}
-.posts-list .well-post .post-author .post-bit .user-title{color:#555555;}
+.posts-list .well-post .post-author .post-bit span.lead{color:#cccccc;}
+.posts-list .well-post .post-author .post-bit .user-title{color:#999999;}
 .posts-list .well-post .post-author .post-bit .post-date{margin-top:4px;color:#999999;font-size:70%;font-weight:normal;}
 .posts-list .well-post .post-content{margin-left:286px;padding:0px 16px;}.posts-list .well-post .post-content .post-extra{overflow:auto;float:right;margin-bottom:12px;}.posts-list .well-post .post-content .post-extra .post-perma{margin-left:8px;color:#999999;}
 .posts-list .well-post .post-content .post-extra .label{margin-left:8px;padding:4px 5px;font-size:100%;}
