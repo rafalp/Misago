@@ -3,7 +3,6 @@ from django.utils import timezone
 from django.db import models
 from django.db.models import Q
 
-
 BAN_NAME_EMAIL = 0
 BAN_NAME = 1
 BAN_EMAIL = 2

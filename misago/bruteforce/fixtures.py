@@ -18,8 +18,8 @@ settings_fixtures = (
                 'description':  _('Enter maximal number of allowed attempts before IP address "jams". Defautly forum records only failed sign-in attempts.'),
             }),
             ('registrations_jams', {
-                'value':        1,
-                'default':      1,
+                'value':        False,
+                'default':      False,
                 'type':         "boolean",
                 'input':        "yesno",
                 'name':         _("Protect register form"),

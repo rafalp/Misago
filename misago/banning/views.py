@@ -1,8 +1,11 @@
+from misago.admin import site
+print site.get_action('bans')
 from django.core.urlresolvers import reverse as django_reverse
 from django.db.models import Q
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from misago.admin import site
+print site.get_action('bans')
 from misago.admin.widgets import *
 from misago.banning.forms import BanForm, SearchBansForm
 from misago.banning.models import Ban
@@ -166,6 +169,4 @@ class Delete(ButtonWidget):
         if target.type == 2:
             return Message(_('E-mail Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, 'success'), False
         if target.type == 3:
-            return Message(_('IP Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, 'success'), False
-        
-        
+            return Message(_('IP Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, 'success'), False        
