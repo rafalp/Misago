@@ -46,10 +46,15 @@
   {% if post.message %}{{ macros.draw_message(post.message) }}{% endif %}
   <div id="post-{{ post.pk }}" class="well well-post{% if post.user and post.user.rank and post.user.rank.style %} {{ post.user.rank.style }}{% endif %}">
     <div class="post-author">
-      <img src="{{ post.user.get_avatar(80) }}" alt="" class="avatar-normal">
+      <img src="{% if post.user_id %}{{ post.user.get_avatar(80) }}{% else %}{{ macros.avatar_guest(80) }}{% endif %}" alt="" class="avatar-normal">
       <div class="post-bit">
-        <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="lead">{{ post.user.username }}</a>{% if post.user.get_title() %}
-        <p class="user-title">{{ _(post.user.get_title()) }}</p>{% endif %}
+        {% if post.user_id %}
+        <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="lead">{{ post.user.username }}</a>
+        {% if post.user.get_title() %}<p class="user-title">{{ _(post.user.get_title()) }}</p>{% endif %}
+        {% else %}
+        <span class="lead">{{ post.user_name }}</span>
+        <p class="user-title">{% trans %}Unregistered{% endtrans %}</p>
+        {% endif %}
         <p class="post-date">{{ post.date|reltimesince|low }}</p>
       </div>
     </div>

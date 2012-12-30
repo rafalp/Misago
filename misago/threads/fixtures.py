@@ -79,7 +79,6 @@ settings_fixtures = (
 
 
 def load_fixtures():
-    load_monitor_fixture(monitor_fixtures)
     load_settings_fixture(settings_fixtures)
     
     

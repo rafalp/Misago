@@ -22,14 +22,13 @@
       .box-shadow(0px 0px 0px 3px lighten(@linkColor, 30%));
     }
   }
-  
+    
   .well-forum {
-    margin: 0px -8px;
     margin-bottom: 14px;
     overflow: auto;
     padding: 12px 8px;
     padding-bottom: 8px;
-    
+        
     .row {
       .span3 {
         margin-left: 0px;
@@ -106,6 +105,12 @@
       margin-top: 4px;
         
       color: lighten(@textColor, 25%);
+    }
+  }
+  
+  .span4, .span2 {
+    .well-forum {
+      margin: 0px -8px; 
     }
   }
 }

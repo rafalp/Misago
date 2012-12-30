@@ -29,11 +29,12 @@ class ThreadsTracker(object):
         self.user = user
         self.forum = forum
         self.cutoff = timezone.now() - timedelta(days=settings.READS_TRACKER_LENGTH)
-        try:
-            self.record = Record.objects.get(user=user,forum=forum)
-        except Record.DoesNotExist:
-            self.record = Record(user=user,forum=forum,cleared=self.cutoff)
-        self.threads = self.record.get_threads()
+        if user.is_authenticated():
+            try:
+                self.record = Record.objects.get(user=user,forum=forum)
+            except Record.DoesNotExist:
+                self.record = Record(user=user,forum=forum,cleared=self.cutoff)
+            self.threads = self.record.get_threads()
     
     def get_read_date(self, thread):
         if not self.user.is_authenticated():

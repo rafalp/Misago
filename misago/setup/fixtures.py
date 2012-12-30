@@ -12,6 +12,9 @@ def load_app_fixtures(app):
         return True
     except (ImportError, AttributeError):
         return False
+    except Exception as e:
+        print 'Could not load fixtures from %s:\n%s' % (app, e)
+        return False
 
     
 def update_app_fixtures(app):
@@ -25,4 +28,7 @@ def update_app_fixtures(app):
         fixture.update_fixtures()
         return True
     except (ImportError, AttributeError):
+        return False
+    except Exception as e:
+        print 'Could not update fixtures from %s:\n%s' % (app, e)
         return False

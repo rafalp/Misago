@@ -950,7 +950,7 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .nav-tabs button{padding-left:7px;padding-right:7px;}
 .forums-list{padding-top:4px;}.forums-list .category h2{color:#666666;font-size:110%;margin-bottom:0px;}.forums-list .category h2 small{color:#a6a6a6;font-size:100%;}
 .forums-list .category-important .well-forum{border:1px solid #0099e6;-webkit-box-shadow:0px 0px 0px 3px #66ccff;-moz-box-shadow:0px 0px 0px 3px #66ccff;box-shadow:0px 0px 0px 3px #66ccff;}
-.forums-list .well-forum{margin:0px -8px;margin-bottom:14px;overflow:auto;padding:12px 8px;padding-bottom:8px;}.forums-list .well-forum .row .span3{margin-left:0px;padding-left:16px;}
+.forums-list .well-forum{margin-bottom:14px;overflow:auto;padding:12px 8px;padding-bottom:8px;}.forums-list .well-forum .row .span3{margin-left:0px;padding-left:16px;}
 .forums-list .well-forum .forum-icon{background-color:#eeeeee;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;float:left;padding:3px 6px;position:relative;bottom:4px;margin-bottom:-4px;}
 .forums-list .well-forum .forum-new{background-color:#0088cc !important;}
 .forums-list .well-forum .redirect-icon{background-color:#46a546;}
@@ -961,6 +961,7 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .forums-list .well-forum .forum-stat .positive{background-color:#cdeacd;color:#3e933e;}
 .forums-list .well-forum h3{margin:0px;padding:0px;font-size:110%;line-height:100%;}.forums-list .well-forum h3 .read-forum{color:#75a5bd;}
 .forums-list .well-forum .muted{margin-top:4px;color:#737373;}
+.forums-list .span4 .well-forum,.forums-list .span2 .well-forum{margin:0px -8px;}
 .forum-list-side{padding-top:10px;}
 .subforums-list{margin:0px;position:relative;bottom:32px;}.subforums-list .category{margin-bottom:-24px;}
 .threads-list .thread-icon{background-color:#eeeeee;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;padding:5px 6px;}

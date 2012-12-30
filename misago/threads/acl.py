@@ -299,10 +299,13 @@ def build_forums(acl, perms, forums, forum_roles):
             try:
                 role = forum_roles[perm['forums'][forum.pk]]
                 for p in forum_role:
-                    if p in ['attachment_size', 'attachment_limit'] and role[p] == 0:
-                        forum_role[p] = 0
-                    elif int(role[p]) > forum_role[p]:
-                        forum_role[p] = int(role[p])
+                    try:
+                        if p in ['attachment_size', 'attachment_limit'] and role[p] == 0:
+                            forum_role[p] = 0
+                        elif int(role[p]) > forum_role[p]:
+                            forum_role[p] = int(role[p])
+                    except KeyError:
+                        pass
             except KeyError:
                 pass
         acl.threads.acl[forum.pk] = forum_role

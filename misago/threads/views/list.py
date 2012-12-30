@@ -21,7 +21,7 @@ class ThreadsView(BaseView, ThreadsFormMixin):
     def fetch_forum(self, forum):
         self.forum = Forum.objects.get(pk=forum, type='forum')
         self.request.acl.forums.allow_forum_view(self.forum)
-        self.parents = Forum.objects.forum_parents(forum.pk)
+        self.parents = Forum.objects.forum_parents(self.forum.pk)
         if self.forum.lft + 1 != self.forum.rght:
             self.forum.subforums = Forum.objects.treelist(self.request.acl.forums, self.forum, tracker=ForumsTracker(self.request.user))
         self.tracker = ThreadsTracker(self.request.user, self.forum)

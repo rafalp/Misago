@@ -1,11 +1,10 @@
+from misago.forumroles.models import ForumRole
 from misago.utils import ugettext_lazy as _
 from misago.utils import get_msgid
-from misago.forumroles.models import ForumRole
-
 
 def load_fixtures():
     role = ForumRole()
-    role.name(get_msgid(_('Full Access')))
+    role.name = _('Full Access').message
     role.set_permissions({
                           'can_see_forum': True,
                           'can_see_forum_contents': True,
@@ -44,7 +43,7 @@ def load_fixtures():
     role.save(force_insert=True)
     
     role = ForumRole()
-    role.name(get_msgid(_('Standard Access and Upload')))
+    role.name = _('Standard Access and Upload').message
     role.set_permissions({
                           'can_see_forum': True,
                           'can_see_forum_contents': True,
@@ -66,7 +65,7 @@ def load_fixtures():
     role.save(force_insert=True)
     
     role = ForumRole()
-    role.name(get_msgid(_('Standard Access')))
+    role.name = _('Standard Access').message
     role.set_permissions({
                           'can_see_forum': True,
                           'can_see_forum_contents': True,
@@ -85,7 +84,7 @@ def load_fixtures():
     role.save(force_insert=True)
     
     role = ForumRole()
-    role.name(get_msgid(_('Read and Download')))
+    role.name = _('Read and Download').message
     role.set_permissions({
                           'can_see_forum': True,
                           'can_see_forum_contents': True,
@@ -95,7 +94,7 @@ def load_fixtures():
     role.save(force_insert=True)
     
     role = ForumRole()
-    role.name(get_msgid(_('Threads list only')))
+    role.name = _('Threads list only').message
     role.set_permissions({
                           'can_see_forum': True,
                           'can_see_forum_contents': True,
@@ -103,7 +102,7 @@ def load_fixtures():
     role.save(force_insert=True)
     
     role = ForumRole()
-    role.name(get_msgid(_('Read only')))
+    role.name = _('Read only').message
     role.set_permissions({
                           'can_see_forum': True,
                           'can_see_forum_contents': True,

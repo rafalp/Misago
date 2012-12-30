@@ -52,10 +52,10 @@
 
 {# Render forum on list #}
 {% macro draw_forum(category, forum, width=12) %}
-<div{% if category.template != 'row' %} class="{% if category.template == 'half' %}span{{ widthratio(50, 100, width) }}{% elif category.template == 'quarter' %}span{{ widthratio(25, 100, width) }}{% endif %}"{% endif %}>
+<div{% if category.template != 'row' %} class="span{% if category.template == 'half' %}{{ widthratio(50, 100, width) }}{% elif category.template == 'quarter' %}{{ widthratio(25, 100, width) }}{% endif %}"{% endif %}>
   <div class="well well-forum{% if forum.style %} {{ forum.style }}{% endif %}">
     <div class="forum-icon {% if forum.type == 'redirect' %} redirect-icon{% elif not forum.is_read %} forum-new{% endif %}"><i class="icon-{% if forum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %} icon-white"></i></div>
-    {% if category.template != 'quarter' %}<div class="forum-details">{% endif %}
+    <div class="forum-details">
       <div class="pull-left">
         <h3><a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}"{% if forum.type != 'redirect' and forum.is_read %} class="read-forum"{% endif %}>{{ forum.name }}</a></h3>
         {% if forum.description %}<div class="muted">{{ forum.description }}</div>{% endif %}
@@ -76,7 +76,7 @@
       {% endif %}
       {% endif %}
       {% endif %}
-    {% if category.template != 'quarter' %}</div>{% endif %}
+    </div>
   </div>
 </div>
 {% endmacro %}

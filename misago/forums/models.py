@@ -26,14 +26,14 @@ class ForumManager(models.Manager):
                     self.forums_tree[forum.token] = forum
             cache.set('forums_tree', self.forums_tree)
     
-    def forum_parents(self, forum, include_self):
+    def forum_parents(self, forum, include_self=False):
         self.populate_tree()
         parents = []
         parent = self.forums_tree[forum]
         if include_self:
             parents.append(parent)
         while parent.level > 1:
-            parent = self.forums_tree[parent.pk]
+            parent = self.forums_tree[parent.parent_id]
             parents.append(parent)
         return reversed(parents)
         
