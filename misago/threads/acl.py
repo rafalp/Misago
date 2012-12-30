@@ -152,6 +152,13 @@ class ThreadsACL(BaseACL):
         except KeyError:
             raise ACLError403(_("You don't have permission to read threads in this forum."))
     
+    def get_readable_forums(self, acl):
+        readable = []
+        for forum in self.acl:
+            if acl.forums.can_browse(forum) and self.acl[forum]['can_read_threads']:
+                readable.append(forum)
+        return readable
+    
     def filter_threads(self, request, forum, queryset):
         try:
             forum_role = self.acl[forum.pk]

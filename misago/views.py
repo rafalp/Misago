@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
@@ -5,19 +6,30 @@ from django.utils.translation import ugettext as _
 from misago.forums.models import Forum
 from misago.readstracker.trackers import ForumsTracker
 from misago.sessions.models import Session
+from misago.threads.models import Thread
 
 def home(request):
+    # Threads ranking
+    popular_threads = cache.get('thread_ranking_%s' % request.user.make_acl_key(), 'nada')
+    if popular_threads == 'nada' and request.settings['thread_ranking_size'] > 0:
+        popular_threads = []
+        for thread in Thread.objects.filter(moderated=False).filter(deleted=False).filter(forum__in=request.acl.threads.get_readable_forums(request.acl)).prefetch_related('forum').order_by('-score')[:request.settings['thread_ranking_size']]:
+            popular_threads.append(thread)
+        cache.set('thread_ranking_%s' % request.user.make_acl_key(), popular_threads, request.settings['thread_ranking_refresh'])  
+    # Team online
     team_online = []
     team_pks = []
     for session in Session.objects.filter(team=1).filter(admin=0).filter(user__isnull=False).order_by('-start').select_related('user', 'user__rank'):
         if session.user.pk not in team_pks:
             team_pks.append(session.user.pk)
             team_online.append(session.user)
+    # Render page with forums list
     reads_tracker = ForumsTracker(request.user)
     return request.theme.render_to_response('index.html',
                                             {
                                              'forums_list': Forum.objects.treelist(request.acl.forums, tracker=reads_tracker),
                                              'team_online': team_online,
+                                             'popular_threads': popular_threads,
                                              },
                                             context_instance=RequestContext(request));
 

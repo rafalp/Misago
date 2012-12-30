@@ -31,8 +31,14 @@
     {% endfor %}
     {% endif %}
     
+    {% if popular_threads %}
     <h3>{% trans %}Popular Threads{% endtrans %}</h3>
+    {% for thread in popular_threads %}
+    <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="lead">{{ thread.name }}</a><br />
+    <a href="{% url 'forum' forum=thread.forum.pk, slug=thread.forum.slug %}">{{ thread.forum.name }}</a> - {{ thread.last|reltimesince }}
     <hr>
+    {% endfor %}
+    {% endif %}
     
     <h3>{% trans %}Forum Stats{% endtrans %}</h3>
     <p class="lead board-stat">{{ monitor.posts|int|intcomma }} <small>{% trans %}Posts{% endtrans %}</small></p>

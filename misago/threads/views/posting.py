@@ -93,6 +93,7 @@ class PostingView(BaseView):
                                                    start=now,
                                                    last=now,
                                                    moderated=moderation,
+                                                   score=request.settings['thread_ranking_initial_score'],
                                                    )
                     if moderation:
                         thread.replies_moderated += 1
@@ -122,6 +123,18 @@ class PostingView(BaseView):
                     if request.user.rank and request.user.rank.style:
                         thread.start_poster_style = request.user.rank.style
                 
+                if self.mode in ['new_post', 'new_post_quick']:
+                    if moderation:
+                        thread.replies_moderated += 1
+                    else:
+                        thread.replies += 1
+                        if thread.last_poster_id != request.user.pk:
+                            thread.score += request.settings['thread_ranking_reply_score']
+                        if (self.request.settings.thread_length > 0
+                            and not thread.closed
+                            and thread.replies >= self.request.settings.thread_length):
+                            thread.closed = True
+                            post.set_checkpoint(self.request, 'limit')
                 if not moderation:
                     thread.last = now
                     thread.last_post = post
@@ -130,17 +143,6 @@ class PostingView(BaseView):
                     thread.last_poster_slug = request.user.username_slug
                     if request.user.rank and request.user.rank.style:
                         thread.last_poster_style = request.user.rank.style
-                if self.mode in ['new_post', 'new_post_quick']:
-                    if moderation:
-                        thread.replies_moderated += 1
-                    else:
-                        thread.replies += 1
-                        thread.score += 5
-                        if (self.request.settings.thread_length > 0
-                            and not thread.closed
-                            and thread.replies >= self.request.settings.thread_length):
-                            thread.closed = True
-                            post.set_checkpoint(self.request, 'limit')
                 thread.save(force_update=True)
                 
                 # Update forum and monitor
