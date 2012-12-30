@@ -25,11 +25,14 @@
 
 {% block table_row scoped %}
   <td class="avatar-small"><img src="{{ item.get_avatar(28) }}" class="avatar-small" alt=""></td>
-  <td colspan="2" class="lead-cell">
+  <td class="lead-cell">
   	<strong>{{ item.username }}</strong> <span class="muted">{{ item.email }}</span>{% if item.activation > 0 %} <span class="label tooltip-top" title="{% if item.activation == 1 -%}
   	{% trans %}This user has not yet validated his e-mail address.{% endtrans %}
   	{%- else -%}
   	{% trans %}This user is awaiting admin approval.{% endtrans %}
   	{%- endif %}">{% trans %}Inactive{% endtrans %}</span>{% endif %}
+  </td>
+  <td>
+	{{ item.join_date|date("DATETIME_FORMAT") }}
   </td>
 {% endblock%}
