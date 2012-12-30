@@ -25,7 +25,7 @@ class PostingView(BaseView):
         self.forum = Forum.objects.get(pk=kwargs['forum'], type='forum')
         self.request.acl.forums.allow_forum_view(self.forum)
         self.request.acl.threads.allow_new_threads(self.forum)
-        self.parents = self.forum.get_ancestors(include_self=True).filter(level__gt=1)
+        self.parents = Forum.objects.forum_parents(self.forum.pk, True)
     
     def fetch_thread(self, kwargs):
         self.thread = Thread.objects.get(pk=kwargs['thread'])
@@ -33,7 +33,7 @@ class PostingView(BaseView):
         self.request.acl.forums.allow_forum_view(self.forum)
         self.request.acl.threads.allow_thread_view(self.request.user, self.thread)
         self.request.acl.threads.allow_reply(self.thread)
-        self.parents = self.forum.get_ancestors(include_self=True).filter(level__gt=1)
+        self.parents = Forum.objects.forum_parents(self.forum.pk, True)
         if kwargs.get('quote'):
             self.quote = Post.objects.select_related('user').get(pk=kwargs['quote'], thread=self.thread.pk)
         

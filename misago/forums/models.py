@@ -1,10 +1,42 @@
 from django.conf import settings
+from django.core.cache import cache
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel,TreeForeignKey
 from misago.roles.models import Role
 
 class ForumManager(models.Manager):
+    forums_tree = None
+    
+    def token_to_pk(self, token):
+        self.populate_tree()
+        try:
+            return self.forums_tree[token].pk
+        except KeyError:
+            return 0
+    
+    def populate_tree(self, force=False):
+        if not self.forums_tree:
+            self.forums_tree = cache.get('forums_tree')
+        if not self.forums_tree or force:
+            self.forums_tree = {}
+            for forum in Forum.objects.order_by('lft'):
+                self.forums_tree[forum.pk] = forum
+                if forum.token:
+                    self.forums_tree[forum.token] = forum
+            cache.set('forums_tree', self.forums_tree)
+    
+    def forum_parents(self, forum, include_self):
+        self.populate_tree()
+        parents = []
+        parent = self.forums_tree[forum]
+        if include_self:
+            parents.append(parent)
+        while parent.level > 1:
+            parent = self.forums_tree[parent.pk]
+            parents.append(parent)
+        return reversed(parents)
+        
     def treelist(self, acl, parent=None, tracker=None):
         complete_list = []
         forums_list = []
@@ -86,7 +118,7 @@ class Forum(MPTTModel):
         if self.token == 'root':
            return unicode(_('Root Category')) 
         return unicode(self.name)
-    
+        
     def set_description(self, description):
         self.description = description.strip()
         self.description_preparsed = ''

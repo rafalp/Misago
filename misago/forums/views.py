@@ -91,6 +91,7 @@ class NewCategory(FormWidget):
                      )
         new_forum.set_description(form.cleaned_data['description'])
         new_forum.insert_at(form.cleaned_data['parent'], position='last-child', save=True)
+        Forum.objects.populate_tree(True)
         
         if form.cleaned_data['perms']:
             new_forum.copy_permissions(form.cleaned_data['perms'])
@@ -125,6 +126,7 @@ class NewForum(FormWidget):
                      )
         new_forum.set_description(form.cleaned_data['description'])
         new_forum.insert_at(form.cleaned_data['parent'], position='last-child', save=True)
+        Forum.objects.populate_tree(True)
         
         if form.cleaned_data['perms']:
             new_forum.copy_permissions(form.cleaned_data['perms'])
@@ -162,6 +164,7 @@ class NewRedirect(FormWidget):
                      )
         new_forum.set_description(form.cleaned_data['description'])
         new_forum.insert_at(form.cleaned_data['parent'], position='last-child', save=True)
+        Forum.objects.populate_tree(True)
         
         if form.cleaned_data['perms']:
             new_forum.copy_permissions(form.cleaned_data['perms'])
@@ -274,6 +277,7 @@ class Edit(FormWidget):
             self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
             
         target.save(force_update=True)
+        Forum.objects.populate_tree(True)
             
         if form.cleaned_data['perms']:
             target.copy_permissions(form.cleaned_data['perms'])
@@ -322,4 +326,5 @@ class Delete(FormWidget):
             for child in target.get_descendants():
                 child.delete()
         target.delete()
+        Forum.objects.populate_tree(True)
         return target, Message(_('Forum "%(name)s" has been deleted.') % {'name': self.original_name}, 'success')

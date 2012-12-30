@@ -36,7 +36,7 @@ def make_forum_form(request, role, form):
     form.base_fields['can_see_votes'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
     form.base_fields['can_make_polls'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
     form.base_fields['can_vote_in_polls'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
-    form.base_fields['can_see_votes'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
+    form.base_fields['can_see_poll_votes'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
     form.base_fields['can_see_attachments'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
     form.base_fields['can_upload_attachments'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
     form.base_fields['can_download_attachments'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
@@ -102,7 +102,7 @@ def make_forum_form(request, role, form):
                         (
                          ('can_make_polls', {'label': _("Can make polls")}),
                          ('can_vote_in_polls', {'label': _("Can vote in polls")}),
-                         ('can_see_votes', {'label': _("Can see who voted in poll")}),
+                         ('can_see_poll_votes', {'label': _("Can see who voted in poll")}),
                         ),
                        ),)
     form.layout.append((
@@ -275,7 +275,7 @@ def build_forums(acl, perms, forums, forum_roles):
                      'can_see_votes': False,
                      'can_make_polls': False,
                      'can_vote_in_polls': False,
-                     'can_see_votes': False,
+                     'can_see_poll_votes': False,
                      'can_see_attachments': False,
                      'can_upload_attachments': False,
                      'can_download_attachments': False,

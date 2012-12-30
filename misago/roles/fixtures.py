@@ -2,38 +2,38 @@ from misago.roles.models import Role
 from misago.utils import ugettext_lazy as _
 
 def load_fixtures():
-    role_admin = Role(
-                      name=_("Administrator").message,
-                      token='admin',
-                      protected=True,
-                      )
-    role_admin.set_permissions({
-                                'can_use_acp': True,
-                                'can_use_signature': True,
-                                })
+    role = Role(name=_("Administrator").message, token='admin', protected=True)
+    role.set_permissions({
+                          'name_changes_allowed': 5,
+                          'changes_expire': 7,
+                          'can_use_acp': True,
+                          'can_use_signature': True,
+                          'allow_signature_links': True,
+                          'allow_signature_images': True,
+                          'forums': {5: 1, 6: 1, 7: 1},
+                          })
+    role.save(force_insert=True)
     
-    role_mod = Role(
-                    name=_("Moderator").message,
-                    token='mod',
-                    protected=True,
-                    )
-    role_admin.set_permissions({
-                                'can_use_signature': True,
-                                })
+    role = Role(name=_("Moderator").message, token='mod', protected=True)
+    role.set_permissions({
+                          'name_changes_allowed': 3,
+                          'changes_expire': 14,
+                          'can_use_signature': True,
+                          'allow_signature_links': True,
+                          'forums': {5: 1, 6: 1, 7: 1},
+                          })
+    role.save(force_insert=True)
     
-    role_registered = Role(
-                           name=_("Registered").message,
-                           token='registered',
-                           )
-    role_registered.set_permissions({})
+    role = Role(name=_("Registered").message, token='registered')
+    role.set_permissions({
+                          'name_changes_allowed': 2,
+                          'can_use_signature': False,
+                          'forums': {5: 3, 6: 3, 7: 3},
+                          })
+    role.save(force_insert=True)
     
-    role_guest = Role(
-                      name=_("Guest").message,
-                      token='guest',
-                      )
-    role_guest.set_permissions({})
-    
-    role_admin.save(force_insert=True)
-    role_mod.save(force_insert=True)
-    role_registered.save(force_insert=True)
-    role_guest.save(force_insert=True)    
+    role = Role(name=_("Guest").message, token='guest')
+    role.set_permissions({
+                          'forums': {5: 6, 6: 6, 7: 6},
+                          })
+    role.save(force_insert=True)

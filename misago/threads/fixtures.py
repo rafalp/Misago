@@ -1,13 +1,6 @@
-from misago.monitor.fixtures import load_monitor_fixture
 from misago.settings.fixtures import load_settings_fixture, update_settings_fixture
 from misago.utils import ugettext_lazy as _
 from misago.utils import get_msgid
-
-monitor_fixtures = {
-                  'threads': 0,
-                  'posts': 0,
-                  }
-
 
 settings_fixtures = (
     # Threads Settings

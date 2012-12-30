@@ -6,6 +6,7 @@ try:
 except ImportError:
     import pickle
 
+
 class ForumRole(models.Model):
     """
     Misago User Role model

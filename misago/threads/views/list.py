@@ -21,7 +21,7 @@ class ThreadsView(BaseView, ThreadsFormMixin):
     def fetch_forum(self, forum):
         self.forum = Forum.objects.get(pk=forum, type='forum')
         self.request.acl.forums.allow_forum_view(self.forum)
-        self.parents = self.forum.get_ancestors().filter(level__gt=1)
+        self.parents = Forum.objects.forum_parents(forum.pk)
         if self.forum.lft + 1 != self.forum.rght:
             self.forum.subforums = Forum.objects.treelist(self.request.acl.forums, self.forum, tracker=ForumsTracker(self.request.user))
         self.tracker = ThreadsTracker(self.request.user, self.forum)
@@ -30,7 +30,7 @@ class ThreadsView(BaseView, ThreadsFormMixin):
         self.count = self.request.acl.threads.filter_threads(self.request, self.forum, Thread.objects.filter(forum=self.forum).filter(weight__lt=2)).count()
         self.pagination = make_pagination(page, self.count, self.request.settings.threads_per_page)
         self.threads = []
-        queryset_anno = Thread.objects.filter(Q(forum=self.request.monitor['anno']) | (Q(forum=self.forum) & Q(weight=2)))
+        queryset_anno = Thread.objects.filter(Q(forum=Forum.objects.token_to_pk('annoucements')) | (Q(forum=self.forum) & Q(weight=2)))
         queryset_threads = self.request.acl.threads.filter_threads(self.request, self.forum, Thread.objects.filter(forum=self.forum).filter(weight__lt=2)).order_by('-weight', '-last')
         if self.request.settings.avatars_on_threads_list:
             queryset_anno = queryset_anno.prefetch_related('start_poster', 'last_post')

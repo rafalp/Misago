@@ -36,7 +36,7 @@ def category(request, forum, slug):
     return request.theme.render_to_response('category.html',
                                             {
                                              'category': forum,
-                                             'parents': forum.get_ancestors().filter(level__gt=1),
+                                             'parents': Forum.objects.forum_parents(forum.pk),
                                              },
                                             context_instance=RequestContext(request));
 
