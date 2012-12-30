@@ -378,6 +378,11 @@ class ListWidget(BaseWidget):
                 message.type = 'error'
             else:
                 list_form = ListForm(request=request)
+        
+        # Little hax to keep counters correct 
+        items_shown = len(items)
+        if items_total < items_shown:
+            items_total = items_shown
                 
         # Render list
         return request.theme.render_to_response(self.get_template(),
@@ -396,7 +401,7 @@ class ListWidget(BaseWidget):
                                                  'table_form': FormFields(table_form).fields if table_form else None,
                                                  'items': items,
                                                  'items_total': items_total,
-                                                 'items_shown': len(items),
+                                                 'items_shown': items_shown,
                                                 }),
                                                 context_instance=RequestContext(request));
 
