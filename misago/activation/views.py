@@ -18,10 +18,8 @@ from misago.views import redirect_message, error404
 @block_jammed
 def form(request):
     message = None
-    
     if request.method == 'POST':
-        form = UserSendSpecialMailForm(request.POST, request=request)
-        
+        form = UserSendActivationMailForm(request.POST, request=request)
         if form.is_valid():
             user = form.found_user
             user_ban = check_ban(username=user.username, email=user.email)
@@ -44,7 +42,7 @@ def form(request):
         else:
             message = Message(form.non_field_errors()[0], 'error')
     else:
-        form = UserSendSpecialMailForm(request=request)
+        form = UserSendActivationMailForm(request=request)
     return request.theme.render_to_response('resend_activation.html',
                                             {
                                              'message': message,
