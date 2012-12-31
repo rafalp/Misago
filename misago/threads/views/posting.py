@@ -134,7 +134,7 @@ class PostingView(BaseView):
                         # Notify quoted poster of reply?
                         if self.quote and self.quote.user_id and self.quote.user_id != request.user.pk:
                             alert = self.quote.user.alert(ugettext_lazy("%(username)s has replied to your post in thread %(thread)s").message)
-                            alert.user('username', request.user)
+                            alert.profile('username', request.user)
                             alert.post('thread', self.thread, post)
                             alert.save_all()
                         if (self.request.settings.thread_length > 0
