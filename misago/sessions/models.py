@@ -10,6 +10,7 @@ class Session(models.Model):
     start = models.DateTimeField()
     last = models.DateTimeField()
     team = models.BooleanField(default=False)
+    rank = models.ForeignKey('ranks.Rank', related_name='sessions', null=True, on_delete=models.SET_NULL)
     admin = models.BooleanField(default=False)
     matched = models.BooleanField(default=False)
     hidden = models.BooleanField(default=False)

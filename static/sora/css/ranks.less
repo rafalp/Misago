@@ -1,0 +1,71 @@
+// Ranks styles
+// -------------------------
+
+// .rank-team
+.well-post.rank-team {
+  border: 1px solid lighten(@linkColor, 5%);
+  .box-shadow(0px 0px 0px 3px lighten(@linkColor, 30%));
+}
+
+.team-online.rank-team ul {
+  li {
+    background-color: @linkColor;
+     
+    div {
+      a {
+        color: @white;
+        text-shadow: 0px 1px 0px darken(@blue, 40%);
+      }
+      
+      .muted {
+        color: darken(@blue, 25%);
+      }
+    }
+  }
+}
+
+// .rank-mvp
+.well-post.rank-mvp {
+  border: 1px solid lighten(@purple, 5%);
+  .box-shadow(0px 0px 0px 3px lighten(@purple, 30%));
+}
+
+.team-online.rank-mvp ul {
+  li {
+    background-color: lighten(@purple, 10%);
+     
+    div {
+      a {
+        color: @white;
+        text-shadow: 0px 1px 0px darken(@purple, 40%);
+      }
+      
+      .muted {
+        color: darken(@purple, 25%);
+      }
+    }
+  }
+}
+
+// .rank-active
+.well-post.rank-active {
+  border: 1px solid lighten(@orange, 5%);
+  .box-shadow(0px 0px 0px 3px lighten(@orange, 30%));
+}
+
+.team-online.rank-active ul {
+  li {
+    background-color: @orange;
+     
+    div {
+      a {
+        color: @white;
+        text-shadow: 0px 1px 0px darken(@orange, 40%);
+      }
+      
+      .muted {
+        color: darken(@orange, 25%);
+      }
+    }
+  }
+}
