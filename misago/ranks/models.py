@@ -14,6 +14,7 @@ class Rank(models.Model):
     title = models.CharField(max_length=255,null=True,blank=True)
     special = models.BooleanField(default=False)
     as_tab = models.BooleanField(default=False)
+    on_index = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
     criteria = models.CharField(max_length=255,null=True,blank=True)
     

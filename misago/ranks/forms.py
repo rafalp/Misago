@@ -14,6 +14,7 @@ class RankForm(Form):
     style = forms.CharField(max_length=255,required=False)
     special = forms.BooleanField(widget=YesNoSwitch,required=False)
     as_tab = forms.BooleanField(widget=YesNoSwitch,required=False)
+    on_index = forms.BooleanField(widget=YesNoSwitch,required=False)
     criteria = forms.CharField(max_length=255,initial='0',validators=[RegexValidator(regex='^(\d+)(%?)$',message=_('This is incorrect rank match rule.'))],required=False)
     
     layout = (
@@ -22,7 +23,8 @@ class RankForm(Form):
                (
                 ('name', {'label': _("Rank Name"), 'help_text': _("Rank Name is used to identify rank in Admin Control Panel and is used as page and tab title if you decide to make this rank act as tab on users list.")}),
                 ('description', {'label': _("Rank Description"), 'help_text': _("If this rank acts as tab on users list, here you can enter optional description that will be displayed above list of users with this rank.")}),
-                ('as_tab', {'label': _("As Tab"), 'help_text': _("Should this rank have its own page on users list, containing rank's description and list of users that have it? This is good option for rank used by forum team members or members that should be visible and easily reachable.")}),
+                ('as_tab', {'label': _("As Tab on Users List"), 'help_text': _("Should this rank have its own page on users list, containing rank's description and list of users that have it? This is good option for rank used by forum team members or members that should be visible and easily reachable.")}),
+                ('on_index', {'label': _("Display members online"), 'help_text': _("Should users online with this rank be displayed on board index?")}),
                )
               ),
               (

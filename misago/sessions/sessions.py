@@ -119,6 +119,7 @@ class SessionHuman(SessionMisago):
         self.expired = False
         self.hidden = False
         self.team = False
+        self.rank = None
         self.remember_me = None
         self._user = None
         self._ip = self.get_ip(request)
@@ -197,6 +198,7 @@ class SessionHuman(SessionMisago):
         self._session_rk.user = self._user
         self._session_rk.hidden = self.hidden
         self._session_rk.team = self.team
+        self._session_rk.rank_id = self.rank
         super(SessionHuman, self).save()
         
     def human_session(self):

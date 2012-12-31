@@ -13,6 +13,7 @@
         <li><a href="{% url 'index' %}" title="{% trans %}Forum Home{% endtrans %}" class="tooltip-bottom"><i class="icon-comment"></i></a></li>{% if not user.crawler %}
         <li><a href="#" title="{% trans %}Search Community{% endtrans %}" class="tooltip-bottom"><i class="icon-search"></i></a></li>{% endif %}
         <li><a href="{% url 'users' %}" title="{% trans %}Browse Users{% endtrans %}" class="tooltip-bottom"><i class="icon-user"></i></a></li>
+        {% if settings.tos_url or settings.tos_content %}<li><a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{% url 'tos' %}{% endif %}" title="{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Forum Terms of Service{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-certificate"></i></a></li>{% endif %}
       </ul>{% if not user.crawler %}
       <form class="form-inline search-form">
         <input type="text" class="span3" placeholder="{% trans %}Search community...{% endtrans %}">

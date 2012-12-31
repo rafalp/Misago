@@ -51,30 +51,6 @@
 </div>
 {% endblock %}
 
-{% block javascripts %}
-{{ super() }}
-    <script type="text/javascript">
-      $(function($){
-        var xhr = false;
-        preview = $('#md-preview')
-        $('#md-border').fadeIn(200);
-        $('#id_post').keyup(function() {
-          if (xhr != false) {
-            xhr.abort();
-          }
-          xhr = $.ajax({
-            type: "POST",
-            url: "{% url 'md_preview' %}",
-            data: { raw: $(this).val() },
-            success: function(data) {
-              $(preview).html(data);
-            }
-          });
-        });
-      });
-    </script>
-{% endblock %}
-
 
 {% macro get_action() -%}
 {% if mode == 'new_thread' -%}
@@ -82,7 +58,11 @@
 {%- elif mode == 'edit_thread' -%}
 NADA!
 {%- elif mode in ['new_post', 'new_post_quick'] -%}
+{%- if quote -%}
+{% url 'thread_reply' thread=thread.pk, slug=thread.slug, quote=quote.pk %}
+{%- else -%}
 {% url 'thread_reply' thread=thread.pk, slug=thread.slug %}
+{%- endif -%}
 {%- elif mode == 'edit_post' -%}
 NADA!
 {%- endif %}

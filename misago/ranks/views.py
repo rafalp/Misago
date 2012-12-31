@@ -89,6 +89,7 @@ class New(FormWidget):
                       title = form.cleaned_data['title'],
                       special = form.cleaned_data['special'],
                       as_tab = form.cleaned_data['as_tab'],
+                      on_index = form.cleaned_data['on_index'],
                       order = (last_rank.order + 1 if last_rank else 0),
                       criteria = form.cleaned_data['criteria']
                      )
@@ -120,6 +121,7 @@ class Edit(FormWidget):
                 'title': model.title,
                 'special': model.special,
                 'as_tab': model.as_tab,
+                'on_index': model.on_index,
                 'criteria': model.criteria
                 }
     
@@ -131,6 +133,7 @@ class Edit(FormWidget):
         target.title = form.cleaned_data['title']
         target.special = form.cleaned_data['special']
         target.as_tab = form.cleaned_data['as_tab']
+        target.on_index = form.cleaned_data['on_index']
         target.criteria = form.cleaned_data['criteria']
         target.save(force_update=True)
         return target, Message(_('Changes in rank "%(name)s" have been saved.') % {'name': self.original_name}, 'success')

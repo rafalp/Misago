@@ -12,7 +12,7 @@ from misago.threads.forms import PostForm
 from misago.threads.models import Thread, Post
 from misago.threads.views.base import BaseView
 from misago.views import error403, error404
-from misago.utils import make_pagination, slugify
+from misago.utils import make_pagination, slugify, ugettext_lazy
 
 class PostingView(BaseView):
     def fetch_target(self, kwargs):
@@ -36,6 +36,7 @@ class PostingView(BaseView):
         self.parents = Forum.objects.forum_parents(self.forum.pk, True)
         if kwargs.get('quote'):
             self.quote = Post.objects.select_related('user').get(pk=kwargs['quote'], thread=self.thread.pk)
+            self.request.acl.threads.allow_post_view(self.request.user, self.thread, self.quote)
         
     def get_form(self, bound=False):            
         if bound:            
@@ -46,7 +47,7 @@ class PostingView(BaseView):
                 quote_post.append('@%s' % self.quote.user.username)
             else:
                 quote_post.append('@%s' % self.quote.user_name)
-            for line in self.quote.post.split('\n'):
+            for line in self.quote.post.splitlines():
                 quote_post.append('> %s' % line)
             quote_post.append('\n')
             return PostForm(request=self.request,mode=self.mode,initial={'post': '\n'.join(quote_post)})
@@ -130,11 +131,18 @@ class PostingView(BaseView):
                         thread.replies += 1
                         if thread.last_poster_id != request.user.pk:
                             thread.score += request.settings['thread_ranking_reply_score']
+                        # Notify quoted poster of reply?
+                        if self.quote and self.quote.user_id and self.quote.user_id != request.user.pk:
+                            alert = self.quote.user.alert(ugettext_lazy("%(username)s has replied to your post in thread %(thread)s").message)
+                            alert.user('username', request.user)
+                            alert.post('thread', self.thread, post)
+                            alert.save_all()
                         if (self.request.settings.thread_length > 0
                             and not thread.closed
                             and thread.replies >= self.request.settings.thread_length):
                             thread.closed = True
                             post.set_checkpoint(self.request, 'limit')
+                
                 if not moderation:
                     thread.last = now
                     thread.last_post = post
@@ -201,6 +209,7 @@ class PostingView(BaseView):
                                                  'forum': self.forum,
                                                  'thread': self.thread,
                                                  'post': self.post,
+                                                 'quote': self.quote,
                                                  'parents': self.parents,
                                                  'message': message,
                                                  'form': FormLayout(form),

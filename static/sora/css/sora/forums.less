@@ -13,6 +13,28 @@
         color: lighten(@textColor, 45%);
         font-size: 100%;
       }
+      
+      .form-inline {
+        float: right;
+        margin: 0px;
+        padding: 0px;
+        
+        .btn-link {
+          .opacity(25);
+          
+          &:hover, &:active {
+            background-color: lighten(@red, 20%);
+            .border-radius(3px);
+            .opacity(100);
+                      
+            color: @white;
+            
+            i {
+              background-image: url("@{iconWhiteSpritePath}");
+            }
+          }
+        } 
+      }
     }
   }
   

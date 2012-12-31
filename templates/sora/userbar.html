@@ -3,7 +3,7 @@
     <div class="container">
       <ul class="nav">{% if user.is_authenticated() %}
         <li><a href="#" title="{% trans %}Active Reports{% endtrans %}" class="tooltip-bottom"><i class="icon-warning-sign"></i><span class="stat">5</span></a></li>
-        <li><a href="#" title="{% trans %}Your Notifications{% endtrans %}" class="tooltip-bottom"><i class="icon-fire"></i><span class="stat att">13</span></a></li>
+        <li><a href="{% url 'alerts' %}" title="{% if user.alerts %}{% trans %}You have new notifications!{% endtrans %}{% else %}{% trans %}Your Notifications{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-fire"></i>{% if user.alerts %}<span class="stat">{{ user.alerts }}</span>{% endif %}</a></li>
         <li><a href="#" title="{% trans %}Private messages{% endtrans %}" class="tooltip-bottom"><i class="icon-inbox"></i><span class="stat">2</span></a></li>
         <li><a href="#" title="{% trans %}People you are following{% endtrans %}" class="tooltip-bottom"><i class="icon-heart"></i></a></li>
         <li><a href="#" title="{% trans %}Threads you are watching{% endtrans %}" class="tooltip-bottom"><i class="icon-bookmark"></i></a></li>{% endif %}

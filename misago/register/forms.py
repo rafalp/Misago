@@ -25,26 +25,31 @@ class UserRegisterForm(Form):
                       {
                        'different': _("Entered passwords do not match."),
                        }]
-    
-    layout = [
-              (
-               None,
-               [('username', {'label': _('Username'), 'help_text': _("Your displayed username. Between 3 and 15 characters, only letters and digits are allowed."),'attrs': {'placeholder': _("Enter your desired username")}})]
-               ),
-              (
-               None,
-               [('nested', [('email', {'label': _('E-mail address'), 'help_text': _("Working e-mail inbox is required to maintain control over your forum account."), 'attrs': {'placeholder': _("Enter your e-mail")}, 'width': 50}), ('email_rep', {'attrs': {'placeholder': _("Repeat your e-mail")}, 'width': 50})]), 
-               ('nested', [('password', {'label': _('Password'), 'help_text': _("Password you will be using to sign in to your account. Make sure it's strong."), 'has_value': False, 'attrs': {'placeholder': _("Enter your password")}, 'width': 50}), ('password_rep', {'has_value': False, 'attrs': {'placeholder': _("Repeat your password")}, 'width': 50})])]
-               ),
-              (
-               None,
-               ['captcha_qa', 'recaptcha']
-               ),
-              (
-               None,
-               [('accept_tos', {'label': _("Forum Terms of Service"), 'inline': _("I have read and accept this forums Terms of Service.")})]
-               ),
-              ]
+      
+    def finalize_form(self):
+        self.layout = [
+                      (
+                       None,
+                       [('username', {'label': _('Username'), 'help_text': _("Your displayed username. Between 3 and 15 characters, only letters and digits are allowed."),'attrs': {'placeholder': _("Enter your desired username")}})]
+                       ),
+                      (
+                       None,
+                       [('nested', [('email', {'label': _('E-mail address'), 'help_text': _("Working e-mail inbox is required to maintain control over your forum account."), 'attrs': {'placeholder': _("Enter your e-mail")}, 'width': 50}), ('email_rep', {'attrs': {'placeholder': _("Repeat your e-mail")}, 'width': 50})]), 
+                       ('nested', [('password', {'label': _('Password'), 'help_text': _("Password you will be using to sign in to your account. Make sure it's strong."), 'has_value': False, 'attrs': {'placeholder': _("Enter your password")}, 'width': 50}), ('password_rep', {'has_value': False, 'attrs': {'placeholder': _("Repeat your password")}, 'width': 50})])]
+                       ),
+                      (
+                       None,
+                       ['captcha_qa', 'recaptcha']
+                       ),
+                      (
+                       None,
+                       [('accept_tos', {'label': _("Forum Terms of Service"), 'widget': 'forumTos'})]
+                       ),
+                      ]
+        
+        if not self.request.settings['tos_url'] and not self.request.settings['tos_content']:
+            del self.fields['accept_tos']
+            del self.layout[3]
         
     def clean_username(self):
         new_user = User.objects.get_blank_user()

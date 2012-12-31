@@ -43,7 +43,7 @@ def form(request):
         else:
             message = Message(form.non_field_errors()[0], 'error')
     else:
-        form = UserSendSpecialMailForm(request=request)
+        form = UserResetPasswordForm(request=request)
     return request.theme.render_to_response('reset_password.html',
                                             {
                                              'message': message,

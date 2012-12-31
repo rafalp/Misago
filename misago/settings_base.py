@@ -145,6 +145,7 @@ INSTALLED_APPS = (
     'misago.settings', # Database level application configuration
     'misago.monitor', # Forum statistics monitor
     'misago.utils', # Utility classes
+    'misago.tos', # Terms of Service AKA Guidelines
     # Applications with dependencies
     'misago.banning', # Banning and blacklisting users
     'misago.crawlers', # Web crawlers handling
@@ -162,6 +163,7 @@ INSTALLED_APPS = (
     'misago.template', # Templates extensions
     'misago.themes', # Themes
     'misago.users', # Users foundation
+    'misago.alerts', # Users Notifications
     'misago.team', # Forum Team List
     'misago.prune', # Prune Users
     'misago.ranks', # User Ranks
