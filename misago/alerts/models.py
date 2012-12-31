@@ -38,6 +38,18 @@ class Alert(models.Model):
             self.vars_raw = {var: url}
         return self
     
+    def user(self, var, user):
+        from django.core.urlresolvers import reverse
+        return self.url(var, user.username, reverse('user', kwargs={'user': user.pk, 'username': user.username_slug}))
+    
+    def thread(self, var, thread):
+        from django.core.urlresolvers import reverse
+        return self.url(var, thread.name, reverse('thread', kwargs={'thread': thread.pk, 'slug': thread.slug}))
+    
+    def post(self, var, thread, post):
+        from django.core.urlresolvers import reverse
+        return self.url(var, thread.name, reverse('thread_find', kwargs={'thread': thread.pk, 'slug': thread.slug, 'post': post.pk}))
+    
     def save_all(self, *args, **kwargs):
         self.save(force_insert=True)
         self.user.save(force_update=True)

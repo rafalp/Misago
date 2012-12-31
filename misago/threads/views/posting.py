@@ -133,9 +133,9 @@ class PostingView(BaseView):
                             thread.score += request.settings['thread_ranking_reply_score']
                         # Notify quoted poster of reply?
                         if self.quote and self.quote.user_id and self.quote.user_id != request.user.pk:
-                            alert = self.quote.user.alert(ugettext_lazy("%(username)s has replied to your post in thread %(thread)s.").message)
-                            alert.url('username', request.user.username, reverse('user', kwargs={'user': request.user.pk, 'username': request.user.username_slug}))
-                            alert.url('thread', self.thread.name, reverse('thread_find', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'post': post.pk}))
+                            alert = self.quote.user.alert(ugettext_lazy("%(username)s has replied to your post in thread %(thread)s").message)
+                            alert.user('username', request.user)
+                            alert.post('thread', self.thread, post)
                             alert.save_all()
                         if (self.request.settings.thread_length > 0
                             and not thread.closed
