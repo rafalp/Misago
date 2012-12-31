@@ -12,7 +12,7 @@ settings_fixtures = (
                 'value':        "Terms of Service",
                 'type':         "string",
                 'input':        "text",
-                'separator':    _("Terms of Service Settings"),
+                'separator':    _("Terms of Service Options"),
                 'name':         _("Page Title"),
                 'description':  _("Title of page community ToS are displayed on."),
             }),
