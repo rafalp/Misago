@@ -1029,6 +1029,7 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .profile-header .avatar-height .lead{color:#555555;}.profile-header .avatar-height .lead .muted{color:#959595;}
 .profile-header .nav-tabs{margin-top:-22px;margin-bottom:0px;padding-left:142px;}
 .avatar-menu h3{margin-top:0px;}
+.alerts-list a{font-weight:bold;}
 .well-post.rank-team{border:1px solid #0099e6;-webkit-box-shadow:0px 0px 0px 3px #66ccff;-moz-box-shadow:0px 0px 0px 3px #66ccff;box-shadow:0px 0px 0px 3px #66ccff;}
 .team-online.rank-team ul li{background-color:#0088cc;}.team-online.rank-team ul li div a{color:#ffffff;text-shadow:0px 1px 0px #000d13;}
 .team-online.rank-team ul li div .muted{color:#02435e;}

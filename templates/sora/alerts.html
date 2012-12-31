@@ -1,0 +1,59 @@
+{% extends "sora/layout.html" %}
+{% load i18n %}
+{% import "sora/macros.html" as macros with context %}
+
+{% block title %}{% if user.alerts_new -%}
+{{ macros.page_title(title=get_title(),parent=_('Your Notifications')) }}
+{%- else -%}
+{{ macros.page_title(title=get_title()) }}
+{%- endif %}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{% if user.alerts_new %}{{ get_title() }} <small>{% trans %}Your Notifications{% endtrans %}</small>
+      {%- else -%}
+      {% trans %}Your Notifications{% endtrans %}{% endif %}</h1>
+</div>
+{% if alerts %}
+<div class="alerts-list">
+{% if alerts.today %}{{ alerts_list(_("Today Notifications"), alerts.today) }}{% endif %}
+{% if alerts.yesterday %}{{ alerts_list(_("Yesterday Notifications"), alerts.yesterday) }}{% endif %}
+{% if alerts.week %}{{ alerts_list(_("This Week Notifications"), alerts.week) }}{% endif %}
+{% if alerts.month %}{{ alerts_list(_("This Month Notifications"), alerts.month) }}{% endif %}
+{% if alerts.older %}{{ alerts_list(_("Older Notifications"), alerts.older) }}{% endif %}
+</div>
+{% else %}
+<p class="lead">{% trans %}Looks like you don't have any notifications... yet.{% endtrans %}</p>
+{% endif %}
+{% endblock %}
+
+{% macro get_title() -%}
+{% if user.alerts_new -%}
+{% trans count=user.alerts_new -%}
+You have one new alert
+{%- pluralize -%}
+You have {{ count }} new alerts
+{%- endtrans %}
+{%- else -%}
+{% trans %}Your Notifications{% endtrans %}
+{%- endif %}
+{%- endmacro %}
+
+{% macro alerts_list(title, alerts) %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>{{ title }}</th>
+        <th class="span3">{% trans %}Date{% endtrans %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for alert in alerts %}
+      <tr>
+        <td>{% if alert.new %}<span class="label label-warning">{% trans %}New{% endtrans %}</span> {% endif %}{{ (_(alert.message) % alert.vars())|safe }}</td>
+        <td class="muted">{{ alert.date|reltimesince }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endmacro %}

@@ -15,6 +15,8 @@ from misago.sessions.models import Session
 from misago.threads.models import Thread
 
 def home(request):
+    # Alert ourselves
+    request.user.alert("%(username)s, you have checked board index page.").url('username', request.user.username, reverse('user', kwargs={'user': request.user.pk, 'username': request.user.username_slug})).save_all()
     # Threads ranking
     popular_threads = cache.get('thread_ranking_%s' % request.user.make_acl_key(), 'nada')
     if popular_threads == 'nada' and request.settings['thread_ranking_size'] > 0:

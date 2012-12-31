@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^redirect/(?P<slug>(\w|-)+)-(?P<forum>\d+)/$', 'misago.views.redirection', name="redirect"),
     url(r'^markdown/preview/$', 'misago.markdown.views.preview', name="md_preview"),
     url(r'^$', 'misago.views.home', name="index"),
+    url(r'^alerts/$', 'misago.alerts.views.show_alerts', name="alerts"),
     url(r'^tos/$', 'misago.tos.views.forum_tos', name="tos"),
     url(r'^read/$', 'misago.views.read_all', name="read_all"),
 )
