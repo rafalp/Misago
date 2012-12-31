@@ -55,6 +55,10 @@
 {{ input_file_clearable(field, attrs=attrs, classes=[], horizontal=horizontal, width=width, nested=nested) }}
 {%- endif -%}
 
+{%- if field.widget == "forumTos" -%}
+{{ input_forum_tos(field, attrs=attrs, classes=[], horizontal=horizontal, width=width, nested=nested) }}
+{%- endif -%}
+
 {%- if field.widget == "recaptcha" -%}
 {{ input_recaptcha(field, attrs=attrs, classes=[], horizontal=horizontal, width=width, nested=nested) }}
 {%- endif -%}
@@ -105,6 +109,16 @@
 </label>
 {%- endmacro -%}
 
+{# Forum Terms of Service input #}
+{%- macro input_forum_tos(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
+<label class="checkbox">
+  <input type="checkbox" name="{{ field.html_name }}" id="{{ field.html_id }}" value="1"{% if field.value %} checked="checked"{% endif %}>
+  {% trans forum_tos=make_tos()|safe %}I have read and accept this forums {{forum_tos}}.{% endtrans %}
+</label>
+{%- endmacro -%}
+{%- macro make_tos() -%}
+<a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{% url 'tos' %}{% endif %}">{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Terms of Service{% endtrans %}{% endif %}</a>
+{%- endmacro -%}
 
 {# Date input #}
 {%- macro input_date(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
