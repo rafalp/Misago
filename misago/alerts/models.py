@@ -38,7 +38,7 @@ class Alert(models.Model):
             self.vars_raw = {var: url}
         return self
     
-    def user(self, var, user):
+    def profile(self, var, user):
         from django.core.urlresolvers import reverse
         return self.url(var, user.username, reverse('user', kwargs={'user': user.pk, 'username': user.username_slug}))
     
