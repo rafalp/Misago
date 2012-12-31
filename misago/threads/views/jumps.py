@@ -16,6 +16,10 @@ class JumpView(BaseView):
         self.request.acl.forums.allow_forum_view(self.forum)
         self.request.acl.threads.allow_thread_view(self.request.user, self.thread)
         
+    def fetch_post(self, post):
+        self.post = self.thread.post_set.get(pk=post)
+        self.request.acl.threads.allow_post_view(self.request.user, self.thread, self.post)
+        
     def redirect(self, post):
         pagination = make_pagination(0, self.request.acl.threads.filter_posts(self.request, self.thread, self.thread.post_set.filter(date__lt=post.date)).count() + 1, self.request.settings.posts_per_page)
         if pagination['total'] > 1:
@@ -25,12 +29,14 @@ class JumpView(BaseView):
     def make_jump(self):
         raise NotImplementedError('JumpView cannot be called directly.')
         
-    def __call__(self, request, slug=None, thread=None):
+    def __call__(self, request, slug=None, thread=None, post=None):
         self.request = request
         try:
             self.fetch_thread(thread)
+            if post:
+                self.fetch_post(post)
             return self.make_jump()
-        except Thread.DoesNotExist:
+        except (Thread.DoesNotExist, Post.DoesNotExist):
             return error404(self.request)
         except ACLError403 as e:
             return error403(request, e.message)
@@ -43,6 +49,11 @@ class LastReplyView(JumpView):
         return self.redirect(self.thread.post_set.order_by('-id')[:1][0])
 
 
+class FindReplyView(JumpView):
+    def make_jump(self):
+        return self.redirect(self.post)
+
+    
 class NewReplyView(JumpView):
     def make_jump(self):
         if not self.request.user.is_authenticated():

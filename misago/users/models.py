@@ -155,7 +155,6 @@ class User(models.Model):
     last_post = models.DateTimeField(null=True,blank=True)
     last_search = models.DateTimeField(null=True,blank=True)
     alerts = models.PositiveIntegerField(default=0)
-    alerts_new = models.PositiveIntegerField(default=0)
     alerts_date = models.DateTimeField(null=True,blank=True)
     activation = models.IntegerField(default=0)
     token = models.CharField(max_length=12,null=True,blank=True)
@@ -464,7 +463,6 @@ class User(models.Model):
     def alert(self, message):
         from misago.alerts.models import Alert
         self.alerts += 1
-        self.alerts_new += 1
         return Alert(user=self, message=message, date=tz_util.now())
     
     def get_date(self):

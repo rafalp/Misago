@@ -8,11 +8,9 @@ from misago.views import error404
 def show_alerts(request):
     now = timezone.now()
     alerts = {}
-    all_alerts = 0
     if not request.user.alerts_date:
         request.user.alerts_date = request.user.join_date
     for alert in request.user.alert_set.order_by('-id'):
-        all_alerts += 1
         alert.new = alert.date > request.user.alerts_date
         diff = now - alert.date
         if diff.days <= 0:
@@ -45,8 +43,8 @@ def show_alerts(request):
                                                  'alerts': alerts
                                                  },
                                                 context_instance=RequestContext(request));
-    request.user.alerts = all_alerts
-    request.user.alerts_new = 0
+    # Sync alerts
+    request.user.alerts = 0
     request.user.alerts_date = now
     request.user.save(force_update=True)
     return response

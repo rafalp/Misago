@@ -2,7 +2,7 @@
 {% load i18n %}
 {% import "sora/macros.html" as macros with context %}
 
-{% block title %}{% if user.alerts_new -%}
+{% block title %}{% if user.alerts -%}
 {{ macros.page_title(title=get_title(),parent=_('Your Notifications')) }}
 {%- else -%}
 {{ macros.page_title(title=get_title()) }}
@@ -10,7 +10,7 @@
 
 {% block content %}
 <div class="page-header">
-  <h1>{% if user.alerts_new %}{{ get_title() }} <small>{% trans %}Your Notifications{% endtrans %}</small>
+  <h1>{% if user.alerts %}{{ get_title() }} <small>{% trans %}Your Notifications{% endtrans %}</small>
       {%- else -%}
       {% trans %}Your Notifications{% endtrans %}{% endif %}</h1>
 </div>
@@ -28,8 +28,8 @@
 {% endblock %}
 
 {% macro get_title() -%}
-{% if user.alerts_new -%}
-{% trans count=user.alerts_new -%}
+{% if user.alerts -%}
+{% trans count=user.alerts -%}
 You have one new alert
 {%- pluralize -%}
 You have {{ count }} new alerts

@@ -144,13 +144,20 @@ class ThreadsACL(BaseACL):
     
     def allow_thread_view(self, user, thread):
         try:
-            forum_role = self.acl[thread.forum.pk]
+            forum_role = self.acl[thread.forum_id]
             if forum_role['can_read_threads'] == 0:
                 raise ACLError403(_("You don't have permission to read threads in this forum."))
             if thread.moderated and not (forum_role['can_approve'] or (user.is_authenticated() and user == thread.start_poster)):
                 raise ACLError404()
         except KeyError:
             raise ACLError403(_("You don't have permission to read threads in this forum."))
+    
+    def allow_post_view(self, user, thread, post):
+        forum_role = self.acl[thread.forum_id]
+        if post.moderated and not (forum_role['can_approve'] or (user.is_authenticated() and user == post.user)):
+            raise ACLError404()
+        if post.deleted and not (forum_role['can_delete_posts'] or (user.is_authenticated() and user == post.user)):
+            raise ACLError404()
     
     def get_readable_forums(self, acl):
         readable = []
