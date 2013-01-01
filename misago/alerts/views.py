@@ -38,13 +38,14 @@ def show_alerts(request):
                 alerts['older'].append(alert)
             except KeyError:
                 alerts['older'] = [alert]
-    response = request.theme.render_to_response('alerts.html',
-                                                {
-                                                 'alerts': alerts
-                                                 },
-                                                context_instance=RequestContext(request));
-    # Sync alerts
+    
+    new_alerts = request.user.alerts
     request.user.alerts = 0
     request.user.alerts_date = now
     request.user.save(force_update=True)
-    return response
+    return request.theme.render_to_response('alerts.html',
+                                            {
+                                             'new_alerts': new_alerts,
+                                             'alerts': alerts,
+                                             },
+                                            context_instance=RequestContext(request));

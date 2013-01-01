@@ -28,8 +28,8 @@
 {% endblock %}
 
 {% macro get_title() -%}
-{% if user.alerts -%}
-{% trans count=user.alerts -%}
+{% if new_alerts -%}
+{% trans count=new_alerts -%}
 You have one new alert
 {%- pluralize -%}
 You have {{ count }} new alerts
