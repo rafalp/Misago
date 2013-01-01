@@ -32,6 +32,8 @@ class ThreadsTracker(object):
         if user.is_authenticated():
             try:
                 self.record = Record.objects.get(user=user,forum=forum)
+                if self.record.cleared > self.cutoff:
+                    self.cutoff = self.record.cleared
             except Record.DoesNotExist:
                 self.record = Record(user=user,forum=forum,cleared=self.cutoff)
             self.threads = self.record.get_threads()
