@@ -35,7 +35,7 @@
   {{ pager() }}
   {% if user.is_authenticated() %}
   <ul class="nav nav-pills pull-right">
-    <li class="info"><a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}"><i class="icon-ok"></i> {% trans %}Watch Thread{% endtrans %}</a></li>{% if acl.threads.can_reply(thread) %}
+    <li class="info"><a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}"><i class="icon-ok"></i> {% trans %}Watch Thread{% endtrans %}</a></li>{% if acl.threads.can_reply(forum, thread) %}
     <li class="primary"><a href="{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}"><i class="icon-plus"></i> {% trans %}Reply{% endtrans %}</a></li>{% endif %}
   </ul>
   {% endif %}
@@ -103,14 +103,25 @@
       {% endif %}
     </div>
     <div class="post-nav">
+      {% if post.edits %}
+      {% if acl.threads.can_see_changelog(user, forum, post) %}
+      <a href="{% url 'changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</a>
+      {% else %}
+      <span class="changelog">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</span>
+      {% endif %}
+      {% endif %}
       {% if user.is_authenticated() %}
       <ul class="nav nav-pills pull-right">
         {% if 1 == 2 %}
         <li><a href="#"><i class="icon-info-sign"></i> {% trans %}Info{% endtrans %}</a></li>
         <li><button class="btn danger"><i class="icon-remove"></i> {% trans %}Delete{% endtrans %}</button></li>
-        <li><a href="#"><i class="icon-edit"></i> {% trans %}Edit{% endtrans %}</a></li>
         {% endif %}
-        {% if acl.threads.can_reply(thread) %}<li><a href="{% url 'thread_reply' thread=thread.pk, slug=thread.slug, quote=post.pk %}"><i class="icon-comment"></i> {% trans %}Reply{% endtrans %}</a></li>{% endif %}
+        {% if acl.threads.can_edit_thread(user, forum, thread, post) and thread.start_post_id == post.pk -%}
+        <li><a href="{% url 'thread_edit' thread=thread.pk, slug=thread.slug %}"><i class="icon-edit"></i> {% trans %}Edit{% endtrans %}</a></li>
+        {% elif acl.threads.can_edit_reply(user, forum, thread, post) %}
+        <li><a href="{% url 'post_edit' thread=thread.pk, slug=thread.slug, post=post.pk %}"><i class="icon-edit"></i> {% trans %}Edit{% endtrans %}</a></li>
+        {%- endif %}
+        {% if acl.threads.can_reply(forum, thread) %}<li><a href="{% url 'thread_reply' thread=thread.pk, slug=thread.slug, quote=post.pk %}"><i class="icon-comment"></i> {% trans %}Reply{% endtrans %}</a></li>{% endif %}
       </ul>
       {% endif %}
     </div>
@@ -144,14 +155,14 @@
 
 <div class="list-nav last">
   {{ pager(false) }}
-  {% if user.is_authenticated() and acl.threads.can_reply(thread) %}
+  {% if user.is_authenticated() and acl.threads.can_reply(forum, thread) %}
   <ul class="nav nav-pills pull-right">
     <li class="primary"><a href="{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}"><i class="icon-plus"></i> {% trans %}Reply{% endtrans %}</a></li>
   </ul>
   {% endif %}
 </div>
 
-{% if user.is_authenticated() and acl.threads.can_reply(thread) %}
+{% if user.is_authenticated() and acl.threads.can_reply(forum, thread) %}
 <div class="quick-reply">
   <form action="{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}" method="post">
     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">

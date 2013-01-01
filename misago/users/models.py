@@ -476,6 +476,8 @@ class Guest(object):
     """
     Misago Guest dummy
     """    
+    id = -1
+    pk = -1
     is_team = False
     
     def is_anonymous(self):

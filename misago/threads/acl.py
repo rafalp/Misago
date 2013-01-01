@@ -210,37 +210,107 @@ class ThreadsACL(BaseACL):
                 raise ACLError403(_("This forum is closed, you can't start new threads in it."))
         except KeyError:
             raise ACLError403(_("You don't have permission to start new threads in this forum."))
-
-    def can_reply(self, thread):
+    
+    def can_edit_thread(self, user, forum, thread, post):
         try:
-            forum_role = self.acl[thread.forum.pk]
+            forum_role = self.acl[thread.forum_id]
+            if forum_role['can_close_threads'] == 0 and (forum.closed or thread.closed):
+                return False
+            if forum_role['can_edit_threads_posts']:
+                return True
+            if forum_role['can_edit_own_threads'] and not post.protected and post.user_id == user.pk:
+                return True
+            return False
+        except KeyError:
+            return False
+    
+    def allow_thread_edit(self, user, forum, thread, post):
+        try:
+            forum_role = self.acl[thread.forum_id]
+            if not forum_role['can_close_threads']:
+                if forum.closed:
+                    raise ACLError403(_("You can't edit threads in closed forums."))
+                if thread.closed:
+                    raise ACLError403(_("You can't edit closed threads."))
+            if not forum_role['can_edit_threads_posts']:
+                if post.user_id != user.pk:
+                    raise ACLError403(_("You can't edit other members threads."))
+                if not forum_role['can_edit_own_threads']:
+                    raise ACLError403(_("You can't edit your threads."))
+                if post.protected:
+                    raise ACLError403(_("This thread is protected, you cannot edit it."))
+        except KeyError:
+            raise ACLError403(_("You don't have permission to edit threads in this forum."))
+
+    def can_reply(self, forum, thread):
+        try:
+            forum_role = self.acl[forum.pk]
             if forum_role['can_write_posts'] == 0:
                 return False
-            if thread.closed and forum_role['can_close_threads'] == 0:
+            if (forum.closed or thread.closed) and forum_role['can_close_threads'] == 0:
                 return False
             return True
         except KeyError:
             return False
 
-    def allow_reply(self, thread):
+    def allow_reply(self, forum, thread):
         try:
             forum_role = self.acl[thread.forum.pk]
             if forum_role['can_write_posts'] == 0:
                 raise ACLError403(_("You don't have permission to write replies in this forum."))
             if forum_role['can_close_threads'] == 0:
-                if thread.forum.closed:
+                if forum.closed:
                     raise ACLError403(_("You can't write replies in closed forums."))
                 if thread.closed:
                     raise ACLError403(_("You can't write replies in closed threads."))
         except KeyError:
             raise ACLError403(_("You don't have permission to write replies in this forum."))
     
-    def can_approve(self, forum):
+    def can_edit_reply(self, user, forum, thread, post):
         try:
-            forum_role = self.acl[forum.pk]
-            return forum_role['can_approve']
+            forum_role = self.acl[thread.forum_id]
+            if forum_role['can_close_threads'] == 0 and (forum.closed or thread.closed):
+                return False
+            if forum_role['can_edit_threads_posts']:
+                return True
+            if forum_role['can_edit_own_posts'] and not post.protected and post.user_id == user.pk:
+                return True
+            return False
         except KeyError:
             return False
+    
+    def allow_reply_edit(self, user, forum, thread, post):
+        try:
+            forum_role = self.acl[thread.forum_id]
+            if not forum_role['can_close_threads']:
+                if forum.closed:
+                    raise ACLError403(_("You can't edit replies in closed forums."))
+                if thread.closed:
+                    raise ACLError403(_("You can't edit replies in closed threads."))
+            if not forum_role['can_edit_threads_posts']:
+                if post.user_id != user.pk:
+                    raise ACLError403(_("You can't edit other members replies."))
+                if not forum_role['can_edit_own_posts']:
+                    raise ACLError403(_("You can't edit your replies."))
+                if post.protected:
+                    raise ACLError403(_("This reply is protected, you cannot edit it."))
+        except KeyError:
+            raise ACLError403(_("You don't have permission to edit replies in this forum."))
+    
+    def can_see_changelog(self, user, forum, post):
+        try:
+            forum_role = self.acl[forum.pk]
+            return forum_role['can_see_changelog'] or user.pk == post.user_id
+        except KeyError:
+            return False
+    
+    def allow_changelog_view(self, user, forum, post):
+        try:
+            forum_role = self.acl[forum.pk]
+            if not (forum_role['can_see_changelog'] or user.pk == post.user_id):
+                raise ACLError403(_("You don't have permission to see history of changes made to this post."))
+        except KeyError:
+            raise ACLError403(_("You don't have permission to see history of changes made to this post."))
         
     def can_mod_threads(self, forum):
         try:
@@ -270,6 +340,13 @@ class ThreadsACL(BaseACL):
         
     def can_mod_thread(self, thread):
         pass
+    
+    def can_approve(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            return forum_role['can_approve']
+        except KeyError:
+            return False
 
 
 def build_forums(acl, perms, forums, forum_roles):

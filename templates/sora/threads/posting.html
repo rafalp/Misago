@@ -41,9 +41,8 @@
 {% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
 <form action="{{ get_action() }}" method="post">
   <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-  {% if 'thread_name' in form.fields %}
-  {{ form_theme.row_widget(form.fields.thread_name) }}
-  {% endif %}
+  {% if 'thread_name' in form.fields %}{{ form_theme.row_widget(form.fields.thread_name) }}{% endif %}
+  {% if 'edit_reason' in form.fields %}{{ form_theme.row_widget(form.fields.edit_reason) }}{% endif %}
   {{ editor.editor(form.fields.post, get_button(), rows=8) }}
 </form>
 <div class="well well-small" id="md-border" style="display: none;">
@@ -56,7 +55,7 @@
 {% if mode == 'new_thread' -%}
 {% url 'thread_new' forum=forum.pk, slug=forum.slug %}
 {%- elif mode == 'edit_thread' -%}
-NADA!
+{% url 'thread_edit' thread=thread.pk, slug=thread.slug %}
 {%- elif mode in ['new_post', 'new_post_quick'] -%}
 {%- if quote -%}
 {% url 'thread_reply' thread=thread.pk, slug=thread.slug, quote=quote.pk %}
@@ -64,7 +63,7 @@ NADA!
 {% url 'thread_reply' thread=thread.pk, slug=thread.slug %}
 {%- endif -%}
 {%- elif mode == 'edit_post' -%}
-NADA!
+{% url 'post_edit' thread=thread.pk, slug=thread.slug, post=post.pk %}
 {%- endif %}
 {%- endmacro %}
 

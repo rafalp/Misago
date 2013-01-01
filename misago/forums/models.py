@@ -37,6 +37,22 @@ class ForumManager(models.Manager):
             parents.append(parent)
         return reversed(parents)
         
+    def parents_aware_forum(self, forum):
+        self.populate_tree()
+        proxy = Forum()
+        try:
+            proxy.id = forum.pk
+            proxy.pk = forum.pk
+        except AttributeError:
+            proxy.id = forum
+            proxy.pk = forum
+        proxy.closed = False
+        for parent in self.forum_parents(proxy.pk):
+            if parent.closed:
+                proxy.closed = True
+                return proxy
+        return proxy
+        
     def treelist(self, acl, parent=None, tracker=None):
         complete_list = []
         forums_list = []

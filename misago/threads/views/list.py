@@ -20,6 +20,7 @@ from misago.utils import make_pagination, slugify
 class ThreadsView(BaseView, ThreadsFormMixin):
     def fetch_forum(self, forum):
         self.forum = Forum.objects.get(pk=forum, type='forum')
+        self.proxy = Forum.objects.parents_aware_forum(self.forum)
         self.request.acl.forums.allow_forum_view(self.forum)
         self.parents = Forum.objects.forum_parents(self.forum.pk)
         if self.forum.lft + 1 != self.forum.rght:
@@ -316,6 +317,8 @@ class ThreadsView(BaseView, ThreadsFormMixin):
             return error403(request, e.message)
         except ACLError404 as e:
             return error404(request, e.message)
+        # Merge proxy into forum
+        self.forum.closed = self.proxy.closed
         return request.theme.render_to_response('threads/list.html',
                                                 {
                                                  'message': self.message,

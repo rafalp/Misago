@@ -38,11 +38,17 @@ class PostForm(Form, ThreadNameMixin):
                         None,
                         [
                          ('thread_name', {'label': _("Thread Name")}),
+                         ('edit_reason', {'label': _("Edit Reason")}),
                          ('post', {'label': _("Post Content")}),
                          ],
                         ],
                        ]
     
+        if self.mode in ['edit_thread', 'edit_post']:
+            self.fields['edit_reason'] = forms.CharField(max_length=255,required=False,help_text=_("Optional reason for changing this post."))
+        else:
+            del self.layout[0][1][1]
+            
         if self.mode not in ['edit_thread', 'new_thread']:
             del self.layout[0][1][0]
         else:

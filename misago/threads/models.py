@@ -93,7 +93,6 @@ class Post(models.Model):
     upvotes = models.PositiveIntegerField(default=0)
     downvotes = models.PositiveIntegerField(default=0)
     date = models.DateTimeField()
-    edited = models.BooleanField(default=False)
     edits = models.PositiveIntegerField(default=0)
     edit_date = models.DateTimeField(null=True,blank=True)
     edit_reason = models.CharField(max_length=255,null=True,blank=True)
@@ -138,9 +137,12 @@ class Change(models.Model):
     date = models.DateTimeField()
     ip = models.GenericIPAddressField()
     agent = models.CharField(max_length=255)
-    change = models.IntegerField(default=0)
-    thread_name = models.CharField(max_length=255)
+    reason = models.CharField(max_length=255,null=True,blank=True)
+    thread_name_new = models.CharField(max_length=255,null=True,blank=True)
+    thread_name_old = models.CharField(max_length=255,null=True,blank=True)
     post_content = models.TextField()
+    size = models.IntegerField(default=0)
+    change = models.IntegerField(default=0)
 
 
 class Checkpoint(models.Model):

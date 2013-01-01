@@ -50,3 +50,55 @@
     font-weight: bold;
   }
 }
+
+// Diff table
+// --------------------------------------------------
+.diff {
+  margin: 18px 0px;
+  padding: 0px;
+  
+  table {
+    .border-radius(3px);
+    width: 100%;
+    
+    tr {
+      td {
+        padding: 2px 8px;
+        
+        &.line {
+          background-color: @grayLighter;
+          border-right: 1px solid @grayLight;
+          width: 1%;
+          
+          text-align: right;
+          
+          a {
+            color: @gray; 
+          }
+        }
+        
+        &.even {
+          background-color: darken(@white, 8%);
+        }
+        
+        &.added {
+          background-color: lighten(@green, 40%);
+          
+          &.even {
+            background-color: lighten(@green, 32%);
+          }
+        }
+        
+        &.removed {
+          background-color: lighten(@red, 50%);
+          
+          &.even {
+            background-color: lighten(@red, 42%);
+          }
+        }
+      }
+    }
+  }
+  font-family: @monoFontFamily;
+  font-weight: bold;
+}

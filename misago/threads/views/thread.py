@@ -16,6 +16,7 @@ class ThreadView(BaseView):
     def fetch_thread(self, thread):
         self.thread = Thread.objects.get(pk=thread)
         self.forum = self.thread.forum
+        self.proxy = Forum.objects.parents_aware_forum(self.forum)
         self.request.acl.forums.allow_forum_view(self.forum)
         self.request.acl.threads.allow_thread_view(self.request.user, self.thread)
         self.parents = Forum.objects.forum_parents(self.forum.pk, True)
@@ -53,6 +54,8 @@ class ThreadView(BaseView):
             return error403(request, e.message)
         except ACLError404 as e:
             return error404(request, e.message)
+        # Merge proxy into forum
+        self.forum.closed = self.proxy.closed
         return request.theme.render_to_response('threads/thread.html',
                                                 {
                                                  'message': request.messages.get_message('threads'),

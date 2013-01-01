@@ -5,17 +5,17 @@ from misago.threads.models import Thread, Post
 from misago.utils import slugify
 
 def load_fixtures():
-    Forum(token='annoucements', name='annoucements', slug='annoucements', type='forum').insert_at(target=None,save=True)
-    Forum(token='private', name='private', slug='private', type='forum').insert_at(target=None,save=True)
-    Forum(token='reports', name='reports', slug='reports', type='forum').insert_at(target=None,save=True)
+    Forum(token='annoucements', name='annoucements', slug='annoucements', type='forum').insert_at(None,save=True)
+    Forum(token='private', name='private', slug='private', type='forum').insert_at(None,save=True)
+    Forum(token='reports', name='reports', slug='reports', type='forum').insert_at(None,save=True)
     
     root = Forum(token='root', name='root', slug='root')
-    root.insert_at(target=None,save=True)
+    root.insert_at(None,save=True)
     cat = Forum(type='category', name='First Category', slug='first-category')
-    cat.insert_at(target=root,save=True)
+    cat.insert_at(root,save=True)
     forum = Forum(type='forum', name='First Forum', slug='first-forum', threads=1, posts=1)
-    forum.insert_at(target=cat,save=True)
-    Forum(type='redirect', name='Project Homepage', slug='project-homepage', redirect='http://misago-project.org').insert_at(target=cat,save=True)
+    forum.insert_at(cat,save=True)
+    Forum(type='redirect', name='Project Homepage', slug='project-homepage', redirect='http://misago-project.org').insert_at(cat,position='last-child',save=True)
     Forum.objects.populate_tree(True)
     
     now = timezone.now()
