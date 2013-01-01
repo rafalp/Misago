@@ -72,6 +72,7 @@ class ChangelogDiffView(ChangelogBaseView):
             prev = self.post.change_set.filter(id__lt=self.change.pk).order_by('-id')[:1][0]
         except IndexError:
             prev = None
+        self.forum.closed = self.proxy.closed
         return request.theme.render_to_response('threads/changelog_diff.html',
                                                 {
                                                  'forum': self.forum,
@@ -89,7 +90,12 @@ class ChangelogDiffView(ChangelogBaseView):
 
 
 class ChangelogRevertView(ChangelogDiffView):
-    def dispatch(self, request, **kwargs):
+    def fetch_target(self, kwargs):
+        super(ChangelogDiffView, self).fetch_target(kwargs)
+        self.change = self.post.change_set.get(pk=kwargs['change'])
+        self.request.acl.threads.allow_revert(self.proxy, self.thread)
+        
+    def dispatch(self, request, **kwargs):        
         if ((not self.change.thread_name_old or self.thread.name == self.change.thread_name_old)
             and (self.change.post_content == self.post.post)):
             request.messages.set_flash(Message(_("No changes to revert.")), 'error', 'changelog')

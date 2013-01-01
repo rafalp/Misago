@@ -45,7 +45,7 @@
 {% if acl.threads.can_edit_reply(user, forum, thread, post) or prev or next %}
 <div class="list-nav">
   {{ pager() }}
-  {% if user.is_authenticated() and acl.threads.can_edit_reply(user, forum, thread, post) %}
+  {% if user.is_authenticated() and acl.threads.can_make_revert(forum, thread) %}
   <form class="form-inline" action="{% url 'changelog_revert' thread=thread.pk, slug=thread.slug, post=post.pk, change=change.pk %}" method="post">
     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
     <ul class="nav nav-pills pull-right">

@@ -312,6 +312,28 @@ class ThreadsACL(BaseACL):
         except KeyError:
             raise ACLError403(_("You don't have permission to see history of changes made to this post."))
         
+    def can_make_revert(self, forum, thread):
+        try:
+            forum_role = self.acl[forum.pk]
+            if not forum_role['can_close_threads'] and (forum.closed or thread.closed):
+                return False
+            return forum_role['can_edit_threads_posts']
+        except KeyError:
+            return False
+    
+    def allow_revert(self, forum, thread):
+        try:
+            forum_role = self.acl[forum.pk]
+            if not forum_role['can_close_threads']:
+                if forum.closed:
+                    raise ACLError403(_("You can't make reverts in closed forums."))
+                if thread.closed:
+                    raise ACLError403(_("You can't make reverts in closed threads."))
+            if not forum_role['can_edit_threads_posts']:
+                raise ACLError403(_("You don't have permission to make reverts in this forum."))
+        except KeyError:
+            raise ACLError403(_("You don't have permission to make reverts in this forum."))
+            
     def can_mod_threads(self, forum):
         try:
             forum_role = self.acl[forum.pk]
