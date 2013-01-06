@@ -19,7 +19,7 @@
         {%- if user.is_authenticated() -%}
         <form action="{% url 'read_all' %}" method="post" class="form-inline">
           <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-          <button type"submit" class="btn btn-link"><i class="icon-ok"></i> {% trans %}Mark forums read{% endtrans %}</button>
+          <button type="submit" class="btn btn-link"><i class="icon-ok"></i> {% trans %}Mark forums read{% endtrans %}</button>
         </form>
         {%- endif %}</h2>
         {{ macros.draw_forums(category, 8) }}
