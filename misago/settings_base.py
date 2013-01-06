@@ -82,6 +82,7 @@ JINJA2_EXTENSIONS = (
 
 # List of application middlewares
 MIDDLEWARE_CLASSES = (
+    'misago.stopwatch.middleware.StopwatchMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'misago.cookie_jar.middleware.CookieJarMiddleware',
     'misago.settings.middleware.SettingsMiddleware',
@@ -177,6 +178,9 @@ INSTALLED_APPS = (
     'misago.threads', # Threads and Posts
     'misago.readstracker', # Forums and Threads reads tracker
 )
+
+# Stopwatch target file
+STOPWATCH_LOG = ''
 
 # IP's that can see debug toolbar
 INTERNAL_IPS = ('127.0.0.1', '::1')

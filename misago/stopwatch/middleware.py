@@ -1,4 +1,5 @@
-from . import Stopwatch
+from django.conf import settings
+from misago.stopwatch import Stopwatch
 
 class StopwatchMiddleware(object):
     def process_request(self, request):
@@ -7,10 +8,10 @@ class StopwatchMiddleware(object):
     def process_response(self, request, response):
         try:
             time = request.stopwatch.time()
-            import os
-            stat_file = open(os.getcwd() + os.sep + 'stopwatch.txt', 'a')
-            stat_file.write("%s s\n" % time)
-            stat_file.close()
+            if settings.STOPWATCH_LOG:
+                stat_file = open(settings.STOPWATCH_LOG, 'a')
+                stat_file.write("%s %s s\n" % (request.path_info, time))
+                stat_file.close()
         except AttributeError:
             pass
         return response

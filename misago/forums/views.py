@@ -5,9 +5,9 @@ from django.utils.translation import ugettext as _
 from mptt.forms import TreeNodeChoiceField
 from misago.admin import site
 from misago.admin.widgets import *
-from misago.utils import slugify
 from misago.forums.forms import CategoryForm, ForumForm, RedirectForm, DeleteForm
 from misago.forums.models import Forum
+from misago.utils import slugify
 
 def reverse(route, target=None):
     if target:
@@ -263,6 +263,7 @@ class Edit(FormWidget):
     
     def submit_form(self, form, target):
         target.name = form.cleaned_data['name']
+        target.slug = slugify(form.cleaned_data['name'])
         target.set_description(form.cleaned_data['description'])
         if target.type == 'redirect':
             target.redirect = form.cleaned_data['redirect']
