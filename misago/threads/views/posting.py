@@ -150,6 +150,9 @@ class PostingView(BaseView):
                         post.post = '%s\n\n- - -\n**%s**\n%s' % (post.post, _("Added on %(date)s:") % {'date': date(now, 'SHORT_DATETIME_FORMAT')}, form.cleaned_data['post'])
                         post.post_preparsed = post_markdown(request, post.post)
                         post.save(force_update=True)
+                        # Ignore rest of posting action
+                        request.messages.set_flash(Message(_("Your reply has been added to previous one.")), 'success', 'threads_%s' % post.pk)
+                        return self.redirect_to_post(post)
                     else:
                         post = Post.objects.create(
                                                    forum=self.forum,
@@ -284,18 +287,13 @@ class PostingView(BaseView):
                         request.messages.set_flash(Message(_("Your reply has been posted. It will be hidden from other members until moderator reviews it.")), 'success', 'threads_%s' % post.pk)
                     else:
                         request.messages.set_flash(Message(_("Your reply has been posted.")), 'success', 'threads_%s' % post.pk)
-                    pagination = make_pagination(0, self.request.acl.threads.filter_posts(self.request, self.thread, self.thread.post_set).count(), self.request.settings.posts_per_page)
-                    if pagination['total'] > 1:
-                        return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'page': pagination['total']}) + ('#post-%s' % post.pk))
-                    return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % post.pk))
+                    return self.redirect_to_post(post)
                 
                 if self.mode == 'edit_thread':
                     request.messages.set_flash(Message(_("Your thread has been edited.")), 'success', 'threads_%s' % self.post.pk)
                 if self.mode == 'edit_post':
                     request.messages.set_flash(Message(_("Your reply has been edited.")), 'success', 'threads_%s' % self.post.pk)
-                    pagination = make_pagination(0, self.request.acl.threads.filter_posts(self.request, self.thread, self.thread.post_set).filter(id__lte=self.post.pk).count(), self.request.settings.posts_per_page)
-                    if pagination['total'] > 1:
-                        return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'page': pagination['total']}) + ('#post-%s' % self.post.pk))
+                    return self.redirect_to_post(self.post)
                 return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % self.post.pk))
             message = Message(form.non_field_errors()[0], 'error')
         else:
