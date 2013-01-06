@@ -153,7 +153,7 @@ class SessionHuman(SessionMisago):
             # Attempt autolog
             try:
                 self.remember_me = auth_remember(request, self.get_ip(request))
-                self.create(request, user=self.remember_me.user, hidden=self.remember_me.hidden)
+                self.create(request, user=self.remember_me.user)
             except AuthException as e:
                 # Autolog failed
                 self.create(request)
