@@ -366,14 +366,18 @@ class ThreadsACL(BaseACL):
                     )
         except KeyError:
             return False
-        
-    def can_mod_thread(self, thread):
-        pass
     
     def can_approve(self, forum):
         try:
             forum_role = self.acl[forum.pk]
             return forum_role['can_approve']
+        except KeyError:
+            return False
+        
+    def can_protect(self, forum):
+        try:
+            forum_role = self.acl[thread.forum.pk]
+            return forum_role['can_protect_posts']
         except KeyError:
             return False
 

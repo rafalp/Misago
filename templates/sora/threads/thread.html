@@ -60,6 +60,9 @@
       </div>
     </div>
     <div class="post-extra">
+      {% if user.is_authenticated() and posts_form %}
+      <label class="checkbox post-checkbox"><input form="posts_form" name="{{ posts_form['list_items']['html_name'] }}" type="checkbox" class="checkbox-member" value="{{ post.pk }}"{% if posts_form['list_items']['has_value'] and ('' ~ post.pk) in posts_form['list_items']['value'] %} checked="checked"{% endif %}></label>
+      {% endif %}
       <a href="{% if pagination['page'] > 1 -%}
       {% url 'thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
       {%- else -%}
@@ -83,6 +86,11 @@
       {% if post.deleted %}
       <span class="label label-inverse pull-right">
         {% trans %}Deleted{% endtrans %}
+      </span>
+      {% endif %}
+      {% if post.protected and acl.threads.can_protect(forum) %}
+      <span class="label label-info pull-right">
+        {% trans %}Protected{% endtrans %}
       </span>
       {% endif %}
     </div>
@@ -156,14 +164,24 @@
   {% endfor %}
 </div>
 
-{% if user.is_authenticated() and thread_form %}
+{% if user.is_authenticated() and (thread_form or posts_form) %}
 <div class="form-actions table-footer mod-actions">
-  <form id="thread_form" class="form-inline" action="{% url 'thread' slug=thread.slug, thread=thread.id, page=pagination['page'] %}" method="POST">
+  {% if thread_form%}
+  <form id="thread_form" class="form-inline pull-left" action="{% url 'thread' slug=thread.slug, thread=thread.id, page=pagination['page'] %}" method="POST">
     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
     <input type="hidden" name="origin" value="thread_form">
     {{ form_theme.input_select(thread_form['thread_action'],width=3) }}
     <button type="submit" class="btn btn-primary">{% trans %}Go{% endtrans %}</button>
   </form>
+  {% endif %}
+  {% if posts_form%}
+  <form id="posts_form" class="form-inline pull-right" action="{% url 'thread' slug=thread.slug, thread=thread.id, page=pagination['page'] %}" method="POST">
+    <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+    <input type="hidden" name="origin" value="posts_form">
+    {{ form_theme.input_select(posts_form['list_action'],width=3) }}
+    <button type="submit" class="btn btn-primary">{% trans %}Go{% endtrans %}</button>
+  </form>
+  {% endif %}
 </div>
 {% endif %}
 
@@ -220,6 +238,25 @@
       $('#thread_form').submit(function() {
         if ($('#id_thread_action').val() == 'hard') {
           var decision = confirm("{% trans %}Are you sure you want to delete this thread? This action is not reversible!{% endtrans %}");
+          return decision;
+        }
+        return true;
+      });
+      $('#posts_form').submit(function() {
+        if ($('.post-checkbox[]:checked').length == 0) {
+          alert("{% trans %}You have to select at least one post.{% endtrans %}");
+          return false;
+        }
+        if ($('#id_list_action').val() == 'merge') {
+          if ($('.post-checkbox[]:checked').length < 2) {
+              alert("{% trans %}You have to select at least two posts you want to merge.{% endtrans %}");
+              return false;
+          }
+          var decision = confirm("{% trans %}Are you sure you want to merge selected posts? This action is not reversible!{% endtrans %}");
+          return decision;
+        }
+        if ($('#id_list_action').val() == 'hard') {
+          var decision = confirm("{% trans %}Are you sure you want to delete selected posts? This action is not reversible!{% endtrans %}");
           return decision;
         }
         return true;

@@ -43,7 +43,74 @@ class ThreadView(BaseView):
         if not self.tracker.is_read(self.thread):
             self.tracker.set_read(self.thread, last_post)
             self.tracker.sync()
+            
+    def get_post_actions(self):
+        acl = self.request.acl.threads.get_role(self.thread.forum_id)
+        actions = []
+        try:
+            if acl['can_approve'] and self.thread.replies_moderated > 0:
+                actions.append(('accept', _('Accept posts')))
+            if acl['can_move_threads_posts']:
+                actions.append(('merge', _('Merge posts into one')))
+                actions.append(('split', _('Split posts to new thread')))
+                actions.append(('move', _('Move posts to other thread')))
+            if acl['can_protect_posts']:
+                actions.append(('protect', _('Protect posts')))
+                actions.append(('unprotect', _('Remove posts protection')))
+            if acl['can_delete_posts']:
+                if self.thread.replies_deleted > 0:
+                    actions.append(('undelete', _('Undelete posts')))
+                actions.append(('soft', _('Soft delete posts')))
+            if acl['can_delete_posts'] == 2:
+                actions.append(('hard', _('Hard delete posts')))
+        except KeyError:
+            pass
+        return actions
     
+    def make_posts_form(self):
+        self.posts_form = None
+        list_choices = self.get_post_actions();
+        if (not self.request.user.is_authenticated()
+            or not list_choices):
+            return
+        
+        form_fields = {}
+        form_fields['list_action'] = forms.ChoiceField(choices=list_choices)
+        list_choices = []
+        for item in self.posts:
+            list_choices.append((item.pk, None))
+        if not list_choices:
+            return
+        form_fields['list_items'] = forms.MultipleChoiceField(choices=list_choices,widget=forms.CheckboxSelectMultiple)
+        self.posts_form = type('PostsViewForm', (Form,), form_fields)
+     
+    def handle_posts_form(self):
+        if self.request.method == 'POST' and self.request.POST.get('origin') == 'posts_form':
+            self.posts_form = self.posts_form(self.request.POST, request=self.request)
+            if self.posts_form.is_valid():
+                checked_items = []
+                for post in self.posts:
+                    if str(post.pk) in self.posts_form.cleaned_data['list_items']:
+                        checked_items.append(post.pk)
+                if checked_items:
+                    form_action = getattr(self, 'post_action_' + self.posts_form.cleaned_data['list_action'])
+                    try:
+                        response = form_action(checked_items)
+                        if response:
+                            return response
+                        return redirect(self.request.path)
+                    except forms.ValidationError as e:
+                        self.message = Message(e.messages[0], 'error')
+                else:
+                    self.message = Message(_("You have to select at least one post."), 'error')
+            else:
+                if 'list_action' in self.posts_form.errors:
+                    self.message = Message(_("Action requested is incorrect."), 'error')
+                else:
+                    self.message = Message(posts_form.non_field_errors()[0], 'error')
+        else:
+            self.posts_form = self.posts_form(request=self.request)
+            
     def get_thread_actions(self):
         acl = self.request.acl.threads.get_role(self.thread.forum_id)
         actions = []
@@ -244,6 +311,11 @@ class ThreadView(BaseView):
                 response = self.handle_thread_form()
                 if response:
                     return response
+            self.make_posts_form()
+            if self.posts_form:
+                response = self.handle_posts_form()
+                if response:
+                    return response
         except Thread.DoesNotExist:
             return error404(self.request)
         except ACLError403 as e:
@@ -264,5 +336,6 @@ class ThreadView(BaseView):
                                                  'pagination': self.pagination,
                                                  'quick_reply': FormFields(QuickReplyForm(request=request)).fields,
                                                  'thread_form': FormFields(self.thread_form).fields if self.thread_form else None,
+                                                 'posts_form': FormFields(self.posts_form).fields if self.posts_form else None,
                                                  },
                                                 context_instance=RequestContext(request));

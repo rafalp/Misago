@@ -65,7 +65,6 @@ class ThreadsView(BaseView):
                 actions.append(('close', _('Close threads')))
             if acl['can_delete_threads']:
                 actions.append(('undelete', _('Undelete threads')))
-            if acl['can_delete_threads']:
                 actions.append(('soft', _('Soft delete threads')))
             if acl['can_delete_threads'] == 2:
                 actions.append(('hard', _('Hard delete threads')))
