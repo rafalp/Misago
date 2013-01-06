@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from django.conf import settings
 
 class CookieJar(object):
@@ -26,13 +27,13 @@ class CookieJar(object):
                                 settings.COOKIES_PREFIX + cookie['name'],
                                 cookie['value'],
                                 max_age=cookie['max_age'],
-                                path=settings.COOKIES_PATH or '/',
-                                domain=settings.COOKIES_DOMAIN or None,
-                                secure=settings.COOKIES_SECURE or False
+                                path=settings.COOKIES_PATH,
+                                domain=settings.COOKIES_DOMAIN,
+                                secure=settings.COOKIES_SECURE
                                 )
         for cookie in self._delete_cookies:
             response.delete_cookie(
                                    settings.COOKIES_PREFIX + cookie,
-                                   path=settings.COOKIES_PATH or '/',
-                                   domain=settings.COOKIES_DOMAIN or None
+                                   path=settings.COOKIES_PATH,
+                                   domain=settings.COOKIES_DOMAIN,
                                    )
