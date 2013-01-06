@@ -8,6 +8,7 @@ from misago.forms import FormLayout
 from misago.forums.models import Forum
 from misago.markdown import post_markdown
 from misago.messages import Message
+from misago.template.templatetags.django2jinja import date
 from misago.threads.forms import PostForm
 from misago.threads.models import Thread, Post
 from misago.threads.views.base import BaseView
@@ -137,19 +138,32 @@ class PostingView(BaseView):
                 
                 # Create new message
                 if self.mode in ['new_thread', 'new_post', 'new_post_quick']:
-                    post = Post.objects.create(
-                                               forum=self.forum,
-                                               thread=thread,
-                                               merge=thread.merges,
-                                               user=request.user,
-                                               user_name=request.user.username,
-                                               ip=request.session.get_ip(request),
-                                               agent=request.META.get('HTTP_USER_AGENT'),
-                                               post=form.cleaned_data['post'],
-                                               post_preparsed=post_markdown(request, form.cleaned_data['post']),
-                                               date=now,
-                                               moderated=moderation,
-                                               )
+                    # Use last post instead?
+                    if (self.mode in ['new_post', 'new_post_quick']
+                        and request.settings.post_merge_time
+                        and (now - self.thread.last).seconds < (request.settings.post_merge_time * 60)
+                        and self.thread.last_poster_id == request.user.id):
+                        # Overtake posting
+                        post = self.thread.last_post
+                        post.moderated = moderation
+                        post.date = now
+                        post.post = '%s\n\n- - -\n**%s**\n%s' % (post.post, _("Added on %(date)s:") % {'date': date(now, 'SHORT_DATETIME_FORMAT')}, form.cleaned_data['post'])
+                        post.post_preparsed = post_markdown(request, post.post)
+                        post.save(force_update=True)
+                    else:
+                        post = Post.objects.create(
+                                                   forum=self.forum,
+                                                   thread=thread,
+                                                   merge=thread.merges,
+                                                   user=request.user,
+                                                   user_name=request.user.username,
+                                                   ip=request.session.get_ip(request),
+                                                   agent=request.META.get('HTTP_USER_AGENT'),
+                                                   post=form.cleaned_data['post'],
+                                                   post_preparsed=post_markdown(request, form.cleaned_data['post']),
+                                                   date=now,
+                                                   moderated=moderation,
+                                                   )
                 elif changed_post:
                     # Change message
                     post = self.post
