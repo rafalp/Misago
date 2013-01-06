@@ -1,23 +1,23 @@
 from django.core.urlresolvers import reverse
 from django.db.models import Q, F
+from django import forms
 from django.forms import ValidationError
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 from misago.acl.utils import ACLError403, ACLError404
-from misago.forms import FormLayout, FormFields
+from misago.forms import Form, FormLayout, FormFields
 from misago.forums.models import Forum
 from misago.messages import Message
 from misago.readstracker.trackers import ForumsTracker, ThreadsTracker
 from misago.threads.forms import MoveThreadsForm, MergeThreadsForm
 from misago.threads.models import Thread, Post
 from misago.threads.views.base import BaseView
-from misago.threads.views.mixins import ThreadsFormMixin
 from misago.views import error403, error404
 from misago.utils import make_pagination, slugify
 
-class ThreadsView(BaseView, ThreadsFormMixin):
+class ThreadsView(BaseView):
     def fetch_forum(self, forum):
         self.forum = Forum.objects.get(pk=forum, type='forum')
         self.proxy = Forum.objects.parents_aware_forum(self.forum)
@@ -50,32 +50,89 @@ class ThreadsView(BaseView, ThreadsFormMixin):
         actions = []
         try:
             if acl['can_approve']:
-               actions.append(('accept', _('Accept threads')))
+                actions.append(('accept', _('Accept threads')))
             if acl['can_pin_threads'] == 2:
-               actions.append(('annouce', _('Change to annoucements')))
+                actions.append(('annouce', _('Change to annoucements')))
             if acl['can_pin_threads'] > 0:
-               actions.append(('sticky', _('Change to sticky threads')))
+                actions.append(('sticky', _('Change to sticky threads')))
             if acl['can_pin_threads'] > 0:
-               actions.append(('normal', _('Change to standard thread')))
+                actions.append(('normal', _('Change to standard thread')))
             if acl['can_move_threads_posts']:
-               actions.append(('move', _('Move threads')))
-               actions.append(('merge', _('Merge threads')))
+                actions.append(('move', _('Move threads')))
+                actions.append(('merge', _('Merge threads')))
             if acl['can_close_threads']:
-               actions.append(('open', _('Open threads')))
-               actions.append(('close', _('Close threads')))
+                actions.append(('open', _('Open threads')))
+                actions.append(('close', _('Close threads')))
             if acl['can_delete_threads']:
-               actions.append(('undelete', _('Undelete threads')))
+                actions.append(('undelete', _('Undelete threads')))
             if acl['can_delete_threads']:
-               actions.append(('soft', _('Soft delete threads')))
+                actions.append(('soft', _('Soft delete threads')))
             if acl['can_delete_threads'] == 2:
-               actions.append(('hard', _('Hard delete threads')))
+                actions.append(('hard', _('Hard delete threads')))
         except KeyError:
             pass
         return actions
     
+    def make_form(self):
+        self.form = None
+        list_choices = self.get_thread_actions();
+        if (not self.request.user.is_authenticated()
+            or not list_choices):
+            return
+        
+        form_fields = {}
+        form_fields['list_action'] = forms.ChoiceField(choices=list_choices)
+        list_choices = []
+        for item in self.threads:
+            if item.forum_id == self.forum.pk:
+                list_choices.append((item.pk, None))
+        if not list_choices:
+            return
+        form_fields['list_items'] = forms.MultipleChoiceField(choices=list_choices,widget=forms.CheckboxSelectMultiple)
+        self.form = type('ThreadsViewForm', (Form,), form_fields)
+    
+    def handle_form(self):
+        if self.request.method == 'POST':
+            self.form = self.form(self.request.POST, request=self.request)
+            if self.form.is_valid():
+                checked_items = []
+                posts = []
+                for thread in self.threads:
+                    if str(thread.pk) in self.form.cleaned_data['list_items'] and thread.forum_id == self.forum.pk:
+                        posts.append(thread.start_post_id)
+                        if thread.start_post_id != thread.last_post_id:
+                            posts.append(thread.last_post_id)
+                        checked_items.append(thread.pk)
+                if checked_items:
+                    if posts:
+                        for post in Post.objects.filter(id__in=posts).prefetch_related('user'):
+                            for thread in self.threads:
+                                if thread.start_post_id == post.pk:
+                                    thread.start_post = post
+                                if thread.last_post_id == post.pk:
+                                    thread.last_post = post
+                                if thread.start_post_id == post.pk or thread.last_post_id == post.pk:
+                                    break
+                    form_action = getattr(self, 'action_' + self.form.cleaned_data['list_action'])
+                    try:
+                        response = form_action(checked_items)
+                        if response:
+                            return response
+                        return redirect(self.request.path)
+                    except forms.ValidationError as e:
+                        self.message = Message(e.messages[0], 'error')
+                else:
+                    self.message = Message(_("You have to select at least one thread."), 'error')
+            else:
+                if 'list_action' in self.form.errors:
+                    self.message = Message(_("Action requested is incorrect."), 'error')
+                else:
+                    self.message = Message(form.non_field_errors()[0], 'error')
+        else:
+            self.form = self.form(request=self.request)
+            
     def action_accept(self, ids):
         accepted = 0
-        posts = 0
         users = []
         for thread in self.threads:
             if thread.pk in ids and thread.moderated:
@@ -86,30 +143,18 @@ class ThreadsView(BaseView, ThreadsFormMixin):
                 thread.save(force_update=True)
                 thread.start_post.moderated = False
                 thread.start_post.save(force_update=True)
+                thread.last_post.set_checkpoint(self.request, 'accepted')
                 # Sync user
                 if thread.last_post.user:
                     thread.start_post.user.threads += 1
                     thread.start_post.user.posts += 1
                     users.append(thread.start_post.user)
-                    thread.last_post.set_checkpoint(self.request, 'accepted')
-                # Sync forum
-                self.forum.threads += 1
-                self.forum.threads_delta += 1
-                self.forum.posts += thread.replies + 1
-                posts += thread.replies + 1
-                self.forum.posts_delta += thread.replies + 1
-                if not self.forum.last_thread_date or self.forum.last_thread_date < thread.last:
-                    self.forum.last_thread = thread
-                    self.forum.last_thread_name = thread.name
-                    self.forum.last_thread_slug = thread.slug
-                    self.forum.last_thread_date = thread.last
-                    self.forum.last_poster = thread.last_poster
-                    self.forum.last_poster_name = thread.last_poster_name
-                    self.forum.last_poster_slug = thread.last_poster_slug
-                    self.forum.last_poster_style = thread.last_poster_style
         if accepted:
             self.request.monitor['threads'] = int(self.request.monitor['threads']) + accepted
-            self.request.monitor['posts'] = posts
+            self.request.monitor['posts'] = int(self.request.monitor['posts']) + accepted
+            self.forum.threads_delta += 1
+            self.forum.posts_delta += self.thread.replies + 1
+            self.forum.sync()
             self.forum.save(force_update=True)
             for user in users:
                 user.save(force_update=True)
@@ -142,16 +187,6 @@ class ThreadsView(BaseView, ThreadsFormMixin):
         if normalised:
             Thread.objects.filter(id__in=normalised).update(weight=0)
             self.request.messages.set_flash(Message(_('Selected threads weight has been removed.')), 'success', 'threads')
-        
-    def action_open(self, ids):
-        opened = []
-        for thread in self.threads:
-            if thread.pk in ids and thread.closed:
-                opened.append(thread.pk)
-                thread.last_post.set_checkpoint(self.request, 'opened')
-        if opened:
-            Thread.objects.filter(id__in=opened).update(closed=False)
-            self.request.messages.set_flash(Message(_('Selected threads have been opened.')), 'success', 'threads')
     
     def action_move(self, ids):
         threads = []
@@ -234,7 +269,17 @@ class ThreadsView(BaseView, ThreadsFormMixin):
                                                       'threads': threads,
                                                       'form': FormLayout(form),
                                                       },
-                                                     context_instance=RequestContext(self.request));      
+                                                     context_instance=RequestContext(self.request)); 
+    
+    def action_open(self, ids):
+        opened = []
+        for thread in self.threads:
+            if thread.pk in ids and thread.closed:
+                opened.append(thread.pk)
+                thread.last_post.set_checkpoint(self.request, 'opened')
+        if opened:
+            Thread.objects.filter(id__in=opened).update(closed=False)
+            self.request.messages.set_flash(Message(_('Selected threads have been opened.')), 'success', 'threads')     
         
     def action_close(self, ids):
         closed = []
@@ -259,8 +304,7 @@ class ThreadsView(BaseView, ThreadsFormMixin):
         if undeleted:
             self.request.monitor['threads'] = int(self.request.monitor['threads']) + len(undeleted)
             self.request.monitor['posts'] = int(self.request.monitor['posts']) + posts
-            self.forum.threads += len(undeleted)
-            self.forum.posts += posts
+            self.forum.sync()
             self.forum.save(force_update=True)
             Thread.objects.filter(id__in=undeleted).update(deleted=False)
             self.request.messages.set_flash(Message(_('Selected threads have been undeleted.')), 'success', 'threads')

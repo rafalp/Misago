@@ -213,7 +213,7 @@ class PostingView(BaseView):
                             post.set_checkpoint(self.request, 'limit')
                 
                 # Update last poster data
-                if not moderation:
+                if not moderation and self.mode not in ['edit_thread', 'edit_post']:
                     thread.last = now
                     thread.last_post = post
                     thread.last_poster = request.user

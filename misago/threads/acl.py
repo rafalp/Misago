@@ -138,7 +138,10 @@ def make_forum_form(request, role, form):
 class ThreadsACL(BaseACL):
     def get_role(self, forum):
         try:
-            return self.acl[forum.pk]
+            try:
+                return self.acl[forum.pk]
+            except AttributeError:
+                return self.acl[forum]
         except KeyError:
             return {}
     

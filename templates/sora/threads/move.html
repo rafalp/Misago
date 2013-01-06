@@ -4,14 +4,23 @@
 {% import "_forms.html" as form_theme with context %}
 {% import "sora/macros.html" as macros with context %}
 
-{% block title %}{{ macros.page_title(title=_("Move Threads"),parent=forum.name) }}{% endblock %}
+{% block title %}{% if thread is defined -%}
+{{ macros.page_title(title=_("Move Thread"),parent=thread.name) }}
+{%- else -%}
+{{ macros.page_title(title=_("Move Threads"),parent=forum.name) }}
+{%- endif %}{% endblock %}
 
 {% block breadcrumb %}{{ super() }} <span class="divider">/</span></li>
 {% for parent in parents %}
 <li class="first"><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider">/</span></li>
 {% endfor %}
-<li class="first"><a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}">{{ forum.name }}</a> <span class="divider">/</span></li>
+<li><a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}">{{ forum.name }}</a> <span class="divider">/</span></li>
+{% if thread is defined %}
+<li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider">/</span></li>
+<li class="active">{% trans %}Move Thread{% endtrans %}
+{% else %}
 <li class="active">{% trans %}Move Threads{% endtrans %}
+{% endif %}
 {%- endblock %}
 
 {% block content %}
@@ -19,22 +28,40 @@
   <ul class="breadcrumb">
     {{ self.breadcrumb() }}</li>
   </ul>
+  {% if thread is defined %}
+  <h1>{% trans %}Move Thread{% endtrans %} <small>{{ thread.name }}</small></h1>
+  {% else %}
   <h1>{% trans %}Move Threads{% endtrans %} <small>{{ forum.name }}</small></h1>
+  {% endif %}
 </div>
 <div class="row">
   <div class="span8 offset2">
     {% if message %}{{ macros.draw_message(message) }}{% endif %}
-    <form action="{% url 'forum' forum=forum.pk, slug=forum.slug %}" method="post">
+    <form action="{% if thread is defined %}
+    {% url 'thread' thread=thread.pk, slug=thread.slug %}
+    {%- else -%}
+    {% url 'forum' forum=forum.pk, slug=forum.slug %}
+    {%- endif %}" method="post">
       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+      {% if thread is defined %}
+      <input type="hidden" name="origin" value="thread_form">
+      <input type="hidden" name="thread_action" value="move">
+      <input type="hidden" name="do" value="move">
+      {% else %}
       <input type="hidden" name="origin" value="move_form">
       <input type="hidden" name="list_action" value="move">
       {% for thread in threads -%}
       <input type="hidden" name="list_items" value="{{ thread.pk }}">
       {% endfor %}
+      {% endif %}
       {{ form_theme.form_widget(form, width=8) }}
       <div class="form-actions">
-        <button name="save" type="submit" class="btn btn-primary">{% trans %}Move Threads{% endtrans %}</button>
-        <a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
+        <button name="save" type="submit" class="btn btn-primary">{% if thread is defined %}{% trans %}Move Thread{% endtrans %}{% else %}{% trans %}Move Threads{% endtrans %}{% endif %}</button>
+        <a href="{% if thread is defined -%}
+    {% url 'thread' thread=thread.pk, slug=thread.slug %}
+    {%- else -%}
+    {% url 'forum' forum=forum.pk, slug=forum.slug %}
+    {%- endif %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
       </div>
     </form>
   </div>

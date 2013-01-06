@@ -1,6 +1,7 @@
 {% extends "sora/layout.html" %}
 {% load i18n %}
 {% load url from future %}
+{% import "_forms.html" as form_theme with context %}
 {% import "sora/editor.html" as editor with context %}
 {% import "sora/macros.html" as macros with context %}
 
@@ -58,34 +59,34 @@
         <p class="post-date">{{ post.date|reltimesince|low }}</p>
       </div>
     </div>
+    <div class="post-extra">
+      <a href="{% if pagination['page'] > 1 -%}
+      {% url 'thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
+      {%- else -%}
+      {% url 'thread' thread=thread.pk, slug=thread.slug %}
+      {%- endif %}#post-{{ post.pk }}" class="post-perma pull-right tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
+      {% if not post.is_read %}
+      <span class="label label-warning pull-right">
+        {% trans %}New{% endtrans %}
+      </span>
+      {% endif %}
+      {% if post.moderated %}
+      <span class="label label-purple pull-right">
+        {% trans %}Unreviewed{% endtrans %}
+      </span>
+      {% endif %}
+      {% if post.reported %}
+      <span class="label label-important pull-right">
+        {% trans %}Reported{% endtrans %}
+      </span>
+      {% endif %}
+      {% if post.deleted %}
+      <span class="label label-inverse pull-right">
+        {% trans %}Deleted{% endtrans %}
+      </span>
+      {% endif %}
+    </div>
     <div class="post-content">
-      <div class="post-extra">
-        <a href="{% if pagination['page'] > 1 -%}
-        {% url 'thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
-        {%- else -%}
-        {% url 'thread' thread=thread.pk, slug=thread.slug %}
-        {%- endif %}#post-{{ post.pk }}" class="post-perma pull-right tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
-        {% if not post.is_read %}
-        <span class="label label-warning pull-right">
-          {% trans %}New{% endtrans %}
-        </span>
-        {% endif %}
-        {% if post.moderated %}
-        <span class="label label-purple pull-right">
-          {% trans %}Unreviewed{% endtrans %}
-        </span>
-        {% endif %}
-        {% if post.reported %}
-        <span class="label label-important pull-right">
-          {% trans %}Reported{% endtrans %}
-        </span>
-        {% endif %}
-        {% if post.deleted %}
-        <span class="label label-inverse pull-right">
-          {% trans %}Deleted{% endtrans %}
-        </span>
-        {% endif %}
-      </div>
       <div class="markdown">
         {{ post.post_preparsed|safe }}
       </div>
@@ -112,6 +113,8 @@
       {% endif %}
       {% if user.is_authenticated() %}
       <ul class="nav nav-pills pull-right">
+        <li class="tooltip-top" title="{% trans %}Delete this thread for good{% endtrans %}"><button class="btn danger"><i class="icon-remove"></i></button></li>
+        <li><button class="btn danger"><i class="icon-trash"></i> {% trans %}Delete{% endtrans %}</button></li>
         {% if 1 == 2 %}
         <li><a href="#"><i class="icon-info-sign"></i> {% trans %}Info{% endtrans %}</a></li>
         <li><button class="btn danger"><i class="icon-remove"></i> {% trans %}Delete{% endtrans %}</button></li>
@@ -152,6 +155,17 @@
   {% endif %}
   {% endfor %}
 </div>
+
+{% if user.is_authenticated() and thread_form %}
+<div class="form-actions table-footer mod-actions">
+  <form id="thread_form" class="form-inline" action="{% url 'thread' slug=thread.slug, thread=thread.id, page=pagination['page'] %}" method="POST">
+    <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+    <input type="hidden" name="origin" value="thread_form">
+    {{ form_theme.input_select(thread_form['thread_action'],width=3) }}
+    <button type="submit" class="btn btn-primary">{% trans %}Go{% endtrans %}</button>
+  </form>
+</div>
+{% endif %}
 
 <div class="list-nav last">
   {{ pager(false) }}
@@ -197,3 +211,19 @@
 {% macro checkpoint_user(checkpoint) -%}
 {{ ('<a href="' ~ 'user'|url(user=checkpoint.user_id, username=checkpoint.user_slug) ~ '">')|safe ~ (checkpoint.user_name) ~ ("</a>")|safe }}
 {%- endmacro %}
+
+{% block javascripts -%}
+{{ super() }}
+{%- if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
+  <script type="text/javascript">
+    $(function () {
+      $('#thread_form').submit(function() {
+        if ($('#id_thread_action').val() == 'hard') {
+          var decision = confirm("{% trans %}Are you sure you want to delete this thread? This action is not reversible!{% endtrans %}");
+          return decision;
+        }
+        return true;
+      });
+    });
+  </script>{% endif %}
+{%- endblock %}
