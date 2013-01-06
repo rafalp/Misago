@@ -1,8 +1,10 @@
 from django.core.urlresolvers import reverse
 from django import forms
+from django.db.models import F
 from django.forms import ValidationError
 from django.shortcuts import redirect
 from django.template import RequestContext
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 from misago.acl.utils import ACLError403, ACLError404
 from misago.forms import Form, FormLayout, FormFields
@@ -10,11 +12,11 @@ from misago.forums.models import Forum
 from misago.markdown import post_markdown
 from misago.messages import Message
 from misago.readstracker.trackers import ThreadsTracker
-from misago.threads.forms import MoveThreadsForm, SplitThreadForm, QuickReplyForm
-from misago.threads.models import Thread, Post
+from misago.threads.forms import MoveThreadsForm, SplitThreadForm, MovePostsForm, QuickReplyForm
+from misago.threads.models import Thread, Post, Change, Checkpoint
 from misago.threads.views.base import BaseView
 from misago.views import error403, error404
-from misago.utils import make_pagination
+from misago.utils import make_pagination, slugify
 
 class ThreadView(BaseView):
     def fetch_thread(self, thread):
@@ -121,16 +123,7 @@ class ThreadView(BaseView):
             self.thread.post_set.filter(id__in=ids).update(moderated=False)
             self.thread.sync()
             self.thread.save(force_update=True)
-            self.request.messages.set_flash(Message(_('Selected posts have been accepted and made visible to other members.')), 'success', 'threads')
-            
-    def post_action_protect(self, ids):
-        protected = 0
-        for post in self.posts:
-            if post.pk in ids and not post.protected:
-                protected += 1
-        if protected:
-            self.thread.post_set.filter(id__in=ids).update(protected=True)
-            self.request.messages.set_flash(Message(_('Selected posts have been protected from edition.')), 'success', 'threads')            
+            self.request.messages.set_flash(Message(_('Selected posts have been accepted and made visible to other members.')), 'success', 'threads')           
             
     def post_action_merge(self, ids):
         users = []
@@ -159,14 +152,44 @@ class ThreadView(BaseView):
         self.request.messages.set_flash(Message(_('Selected posts have been merged into one message.')), 'success', 'threads')
                     
     def post_action_split(self, ids):
+        for id in ids:
+            if id == self.thread.start_post_id:
+                raise forms.ValidationError(_("You cannot split first post from thread."))
         message = None
         if self.request.POST.get('do') == 'split':
             form = SplitThreadForm(self.request.POST,request=self.request)
             if form.is_valid():
-                return None
+                new_thread = Thread()
+                new_thread.forum = form.cleaned_data['thread_forum']
+                new_thread.name = form.cleaned_data['thread_name']
+                new_thread.slug = slugify(form.cleaned_data['thread_name'])
+                new_thread.start = timezone.now()
+                new_thread.last = timezone.now()
+                new_thread.start_poster_name = 'n'
+                new_thread.start_poster_slug = 'n'
+                new_thread.last_poster_name = 'n'
+                new_thread.last_poster_slug = 'n'
+                new_thread.save(force_insert=True)
+                self.thread.post_set.filter(id__in=ids).update(thread=new_thread, forum=new_thread.forum)
+                Change.objects.filter(post__in=ids).update(thread=new_thread, forum=new_thread.forum)
+                Checkpoint.objects.filter(post__in=ids).update(thread=new_thread, forum=new_thread.forum)
+                new_thread.sync()
+                new_thread.save(force_update=True)
+                self.thread.sync()
+                self.thread.save(force_update=True)
+                self.forum.sync()
+                self.forum.save(force_update=True)
+                if new_thread.forum != self.forum:
+                    new_thread.forum.sync()
+                    new_thread.forum.save(force_update=True)
+                self.request.messages.set_flash(Message(_("Selected posts have been split to new thread.")), 'success', 'threads')
+                return redirect(reverse('thread', kwargs={'thread': new_thread.pk, 'slug': new_thread.slug}))
             message = Message(form.non_field_errors()[0], 'error')
         else:
-            form = SplitThreadForm(request=self.request)
+            form = SplitThreadForm(request=self.request, initial={
+                                                                  'thread_name': _('[Split] %s') % self.thread.name,
+                                                                  'thread_forum': self.forum,
+                                                                  })
         return self.request.theme.render_to_response('threads/split.html',
                                                      {
                                                       'message': message,
@@ -177,7 +200,66 @@ class ThreadView(BaseView):
                                                       'form': FormLayout(form),
                                                       },
                                                      context_instance=RequestContext(self.request));
-        
+    
+    def post_action_move(self, ids):
+        message = None
+        if self.request.POST.get('do') == 'move':
+            form = MovePostsForm(self.request.POST,request=self.request,thread=self.thread)
+            if form.is_valid():
+                thread = form.cleaned_data['thread_url']
+                self.thread.post_set.filter(id__in=ids).update(thread=thread, forum=thread.forum, merge=F('merge') + thread.merges + 1)
+                Change.objects.filter(post__in=ids).update(thread=thread, forum=thread.forum)
+                Checkpoint.objects.filter(post__in=ids).update(thread=thread, forum=thread.forum)
+                if self.thread.post_set.count() == 0:
+                    self.thread.delete()
+                else:
+                    self.thread.sync()
+                    self.thread.save(force_update=True)
+                thread.sync()
+                thread.save(force_update=True)
+                thread.forum.sync()
+                thread.forum.save(force_update=True)
+                if self.forum.pk != thread.forum.pk:
+                    self.forum.sync()
+                    self.forum.save(force_update=True)
+                self.request.messages.set_flash(Message(_("Selected posts have been moved to new thread.")), 'success', 'threads')
+                return redirect(reverse('thread', kwargs={'thread': thread.pk, 'slug': thread.slug}))
+            message = Message(form.non_field_errors()[0], 'error')
+        else:
+            form = MovePostsForm(request=self.request)
+        return self.request.theme.render_to_response('threads/move.html',
+                                                     {
+                                                      'message': message,
+                                                      'forum': self.forum,
+                                                      'parents': self.parents,
+                                                      'thread': self.thread,
+                                                      'posts': ids,
+                                                      'form': FormLayout(form),
+                                                      },
+                                                     context_instance=RequestContext(self.request));
+    
+    def post_action_undelete(self, ids):
+        undeleted = []
+        for post in self.posts:
+            if post.pk in ids and post.deleted:
+                undeleted.append(post.pk)
+        if undeleted:
+            self.thread.post_set.filter(id__in=undeleted).update(deleted=False)
+            self.thread.sync()
+            self.thread.save(force_update=True)
+            self.forum.sync()
+            self.forum.save(force_update=True)
+            self.request.messages.set_flash(Message(_('Selected posts have been restored.')), 'success', 'threads')
+    
+    def post_action_protect(self, ids):
+        protected = 0
+        for post in self.posts:
+            if post.pk in ids and not post.protected:
+                protected += 1
+        if protected:
+            self.thread.post_set.filter(id__in=ids).update(protected=True)
+            self.request.messages.set_flash(Message(_('Selected posts have been protected from edition.')), 'success', 'threads')
+      
     def post_action_unprotect(self, ids):
         unprotected = 0
         for post in self.posts:
@@ -186,7 +268,41 @@ class ThreadView(BaseView):
         if unprotected:
             self.thread.post_set.filter(id__in=ids).update(protected=False)
             self.request.messages.set_flash(Message(_('Protection from editions has been removed from selected posts.')), 'success', 'threads')
-                
+    
+    def post_action_soft(self, ids):
+        deleted = []
+        for post in self.posts:
+            if post.pk in ids and not post.deleted:
+                if post.pk == self.thread.start_post_id:
+                    raise forms.ValidationError(_("You cannot delete first post of thread using this action. If you want to delete thread, use thread moderation instead."))
+                deleted.append(post.pk)
+        if deleted:
+            self.thread.post_set.filter(id__in=deleted).update(deleted=True)
+            self.thread.sync()
+            self.thread.save(force_update=True)
+            self.forum.sync()
+            self.forum.save(force_update=True)
+            self.request.messages.set_flash(Message(_('Selected posts have been deleted.')), 'success', 'threads')
+    
+    def post_action_hard(self, ids):
+        deleted = []
+        for post in self.posts:
+            if post.pk in ids and not post.deleted:
+                if post.pk == self.thread.start_post_id:
+                    raise forms.ValidationError(_("You cannot delete first post of thread using this action. If you want to delete thread, use thread moderation instead."))
+                deleted.append(post.pk)
+        if deleted:
+            for post in deleted:
+                post.delete()
+            self.thread.post_set.filter(id__in=deleted).delete()
+            Change.objects.d(post__in=ids).delete()
+            Checkpoint.objects.filter(post__in=ids).delete()
+            self.thread.sync()
+            self.thread.save(force_update=True)
+            self.forum.sync()
+            self.forum.save(force_update=True)
+            self.request.messages.set_flash(Message(_('Selected posts have been deleted.')), 'success', 'threads')
+               
     def get_thread_actions(self):
         acl = self.request.acl.threads.get_role(self.thread.forum_id)
         actions = []
