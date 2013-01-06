@@ -147,6 +147,8 @@ class ThreadsACL(BaseACL):
             forum_role = self.acl[thread.forum_id]
             if forum_role['can_read_threads'] == 0:
                 raise ACLError403(_("You don't have permission to read threads in this forum."))
+            if forum_role['can_read_threads'] == 1 and thread.weight < 2 and thread.start_poster_id != user.id:
+                raise ACLError404()
             if thread.moderated and not (forum_role['can_approve'] or (user.is_authenticated() and user == thread.start_poster)):
                 raise ACLError404()
         except KeyError:
@@ -174,6 +176,8 @@ class ThreadsACL(BaseACL):
                     queryset = queryset.filter(Q(moderated=0) | Q(start_poster=request.user))
                 else:
                     queryset = queryset.filter(moderated=0)
+            if forum_role['can_read_threads'] == 1:
+                queryset = queryset.filter(Q(weight=2) | Q(start_poster_id=request.user.id))
         except KeyError:
             return False
         return queryset
