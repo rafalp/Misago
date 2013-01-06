@@ -45,6 +45,29 @@
 <div class="posts-list">
   {% for post in posts %}
   {% if post.message %}{{ macros.draw_message(post.message) }}{% endif %}
+  {% if post.deleted and not acl.threads.can_see_deleted_posts(forum) %}
+  <div id="post-{{ post.pk }}" class="well well-post well-post-deleted{% if post.user and post.user.rank and post.user.rank.style %} {{ post.user.rank.style }}{% endif %}">
+    <div class="post-author">
+      <div class="post-bit">
+        {% if post.user_id %}
+        <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="lead">{{ post.user.username }}</a>
+        {% else %}
+        <span class="lead">{{ post.user_name }}</span>
+        {% endif %}
+      </div>
+    </div>
+    <div class="post-extra">
+      <a href="{% if pagination['page'] > 1 -%}
+      {% url 'thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
+      {%- else -%}
+      {% url 'thread' thread=thread.pk, slug=thread.slug %}
+      {%- endif %}#post-{{ post.pk }}" class="post-perma pull-right tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
+    </div>
+    <div class="post-content">
+      {% trans user=edit_user(post), date=post.edit_date|reltimesince|low %}{{ user }} has deleted this reply {{ date }}{% endtrans %}
+    </div>
+  </div>
+  {% else %}
   <div id="post-{{ post.pk }}" class="well well-post{% if post.user and post.user.rank and post.user.rank.style %} {{ post.user.rank.style }}{% endif %}">
     <div class="post-author">
       <img src="{% if post.user_id %}{{ post.user.get_avatar(80) }}{% else %}{{ macros.avatar_guest(80) }}{% endif %}" alt="" class="avatar-normal">
@@ -121,11 +144,19 @@
       {% endif %}
       {% if user.is_authenticated() %}
       <ul class="nav nav-pills pull-right">
-        <li class="tooltip-top" title="{% trans %}Delete this thread for good{% endtrans %}"><button class="btn danger"><i class="icon-remove"></i></button></li>
-        <li><button class="btn danger"><i class="icon-trash"></i> {% trans %}Delete{% endtrans %}</button></li>
         {% if 1 == 2 %}
         <li><a href="#"><i class="icon-info-sign"></i> {% trans %}Info{% endtrans %}</a></li>
-        <li><button class="btn danger"><i class="icon-remove"></i> {% trans %}Delete{% endtrans %}</button></li>
+        {% endif %}
+        {% if post.pk == thread.start_post_id %}
+        {% if acl.threads.can_delete_thread(user, forum, thread, post) == 2 -%}
+            <li class="tooltip-top" title="{% trans %}Delete this thread for good{% endtrans %}"><form action="{% url 'thread_delete' thread=thread.pk, slug=thread.slug %}" method="post"><button type="submit" class="btn danger"><i class="icon-remove"></i></button><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"></form></li>{% endif %}
+        {% if not post.deleted and acl.threads.can_delete_thread(user, forum, thread, post) -%}
+            <li><form action="{% url 'thread_hide' thread=thread.pk, slug=thread.slug %}" method="post"><button type="submit" class="btn danger"><i class="icon-trash"></i> {% trans %}Delete{% endtrans %}</button><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"></form></li>{% endif %}
+        {% elif post.pk != thread.start_post_id and acl.threads.can_delete_post(user, forum, thread, post) %}
+        {% if acl.threads.can_delete_post(user, forum, thread, post) == 2 -%}
+            <li class="tooltip-top" title="{% trans %}Delete this reply for good{% endtrans %}"><form action="{% url 'post_delete' thread=thread.pk, slug=thread.slug, post=post.pk %}" method="post"><button type="submit" class="btn danger"><i class="icon-remove"></i></button><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"></form></li>{% endif %}
+        {% if not post.deleted and acl.threads.can_delete_post(user, forum, thread, post) -%}
+            <li><form action="{% url 'post_hide' thread=thread.pk, slug=thread.slug, post=post.pk %}" method="post"><button type="submit" class="btn danger"><i class="icon-trash"></i> {% trans %}Delete{% endtrans %}</button><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"></form></li>{% endif %}
         {% endif %}
         {% if acl.threads.can_edit_thread(user, forum, thread, post) and thread.start_post_id == post.pk -%}
         <li><a href="{% url 'thread_edit' thread=thread.pk, slug=thread.slug %}"><i class="icon-edit"></i> {% trans %}Edit{% endtrans %}</a></li>
@@ -137,6 +168,7 @@
       {% endif %}
     </div>
   </div>
+  {% endif %}
   {% if post.checkpoint_set.all() %}
   <div class="post-checkpoints">
     {% for checkpoint in post.checkpoint_set.all() %}
@@ -227,7 +259,19 @@
 {% endmacro %}
 
 {% macro checkpoint_user(checkpoint) -%}
+{%- if checkpoint.user_id -%}
 {{ ('<a href="' ~ 'user'|url(user=checkpoint.user_id, username=checkpoint.user_slug) ~ '">')|safe ~ (checkpoint.user_name) ~ ("</a>")|safe }}
+{%- else -%}
+<strong>{{ checkpoint.user_name }}</strong>
+{%- endif -%}
+{%- endmacro %}
+
+{% macro edit_user(post) -%}
+{%- if post.edit_user_id -%}
+{{ ('<a href="' ~ 'user'|url(user=post.edit_user_id, username=post.edit_user_slug) ~ '">')|safe ~ (post.edit_user_name) ~ ("</a>")|safe }}
+{%- else -%}
+<strong>{{ post.edit_user_name }}</strong>
+{%- endif -%}
 {%- endmacro %}
 
 {% block javascripts -%}

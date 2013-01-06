@@ -46,6 +46,13 @@ class Thread(models.Model):
         return self.start
     
     def sync(self):
+        # Counters
+        self.replies = self.post_set.filter(moderated=False).filter(deleted=False).count() - 1
+        if self.replies < 0:
+            self.replies = 0
+        self.replies_reported = self.post_set.filter(reported=True).count()
+        self.replies_moderated = self.post_set.filter(moderated=True).count()
+        self.replies_deleted = self.post_set.filter(deleted=True).count()
         # First post
         start_post = self.post_set.order_by('merge', 'id')[0:][0]
         self.start = start_post.date
@@ -57,7 +64,10 @@ class Thread(models.Model):
         self.upvotes = start_post.upvotes
         self.downvotes = start_post.downvotes
         # Last post
-        last_post = self.post_set.order_by('-merge', '-id').filter(moderated=False).filter(deleted=False)[0:][0]
+        if self.replies > 0:
+            last_post = self.post_set.order_by('-merge', '-id').filter(moderated=False).filter(deleted=False)[0:][0]
+        else:
+            last_post = start_post
         self.last = last_post.date
         self.last_post = last_post
         self.last_poster = last_post.user
@@ -68,11 +78,6 @@ class Thread(models.Model):
         self.moderated = start_post.moderated
         self.deleted = start_post.deleted
         self.merges = last_post.merge
-        # Counters
-        self.replies = self.post_set.filter(moderated=False).filter(deleted=False).count() - 1
-        self.replies_reported = self.post_set.filter(reported=True).count()
-        self.replies_moderated = self.post_set.filter(moderated=True).count()
-        self.replies_deleted = self.post_set.filter(deleted=True).count()
     
 
 class PostManager(models.Manager):

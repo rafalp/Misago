@@ -158,8 +158,8 @@ class Forum(MPTTModel):
         pass
     
     def sync(self):
-        self.threads = self.thread_set.filter(moderated=0).filter(deleted=0).count()
-        self.posts = self.post_set.filter(moderated=0).filter(deleted=0).count()
+        self.threads = self.thread_set.filter(moderated=False).filter(deleted=False).count()
+        self.posts = self.post_set.filter(moderated=False).filter(deleted=False).count()
         self.last_poster = None
         self.last_poster_name = None
         self.last_poster_slug = None
@@ -169,7 +169,7 @@ class Forum(MPTTModel):
         self.last_thread_name = None
         self.last_thread_slug = None
         try:
-            last_thread = self.thread_set.filter(moderated=0).filter(deleted=0).order_by('-last').all()[1:][0]
+            last_thread = self.thread_set.filter(moderated=False).filter(deleted=False).order_by('-last').all()[0:][0]
             self.last_poster_name = last_thread.last_poster_name
             self.last_poster_slug = last_thread.last_poster_slug
             self.last_poster_style = last_thread.last_poster_style

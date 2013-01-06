@@ -154,6 +154,8 @@ class ThreadsACL(BaseACL):
                 raise ACLError404()
             if thread.moderated and not (forum_role['can_approve'] or (user.is_authenticated() and user == thread.start_poster)):
                 raise ACLError404()
+            if thread.deleted and not forum_role['can_delete_threads']:
+                raise ACLError404()
         except KeyError:
             raise ACLError403(_("You don't have permission to read threads in this forum."))
     
@@ -181,6 +183,8 @@ class ThreadsACL(BaseACL):
                     queryset = queryset.filter(moderated=0)
             if forum_role['can_read_threads'] == 1:
                 queryset = queryset.filter(Q(weight=2) | Q(start_poster_id=request.user.id))
+            if not forum_role['can_delete_threads']:
+                queryset = queryset.filter(deleted=False)
         except KeyError:
             return False
         return queryset
@@ -234,6 +238,7 @@ class ThreadsACL(BaseACL):
     def allow_thread_edit(self, user, forum, thread, post):
         try:
             forum_role = self.acl[thread.forum_id]
+            self.allow_deleted_post_view(forum)
             if not forum_role['can_close_threads']:
                 if forum.closed:
                     raise ACLError403(_("You can't edit threads in closed forums."))
@@ -289,6 +294,7 @@ class ThreadsACL(BaseACL):
     def allow_reply_edit(self, user, forum, thread, post):
         try:
             forum_role = self.acl[thread.forum_id]
+            self.allow_deleted_post_view(forum)
             if not forum_role['can_close_threads']:
                 if forum.closed:
                     raise ACLError403(_("You can't edit replies in closed forums."))
@@ -314,6 +320,7 @@ class ThreadsACL(BaseACL):
     def allow_changelog_view(self, user, forum, post):
         try:
             forum_role = self.acl[forum.pk]
+            self.allow_deleted_post_view(forum)
             if not (forum_role['can_see_changelog'] or user.pk == post.user_id):
                 raise ACLError403(_("You don't have permission to see history of changes made to this post."))
         except KeyError:
@@ -376,10 +383,100 @@ class ThreadsACL(BaseACL):
         
     def can_protect(self, forum):
         try:
-            forum_role = self.acl[thread.forum.pk]
+            forum_role = self.acl[forum.pk]
             return forum_role['can_protect_posts']
         except KeyError:
             return False
+
+    def can_delete_thread(self, user, forum, thread, post):
+        try:
+            forum_role = self.acl[forum.pk]
+            if not forum_role['can_close_threads'] and (forum.closed or thread.closed):
+                return False
+            if post.protected and not forum_role['can_protect_posts']:
+                return False
+            if forum_role['can_delete_threads']:
+                return forum_role['can_delete_threads']
+            if thread.start_poster_id == user.pk and forum_role['can_soft_delete_own_threads']:
+                return 1
+            return False
+        except KeyError:
+            return False
+        
+    def allow_delete_thread(self, user, forum, thread, post, delete=False):
+        try:
+            forum_role = self.acl[forum.pk]
+            if not forum_role['can_close_threads']:
+                if forum.closed:
+                    raise ACLError403(_("You don't have permission to delete threads in closed forum."))
+                if thread.closed:
+                    raise ACLError403(_("This thread is closed, you cannot delete it."))
+            if post.protected and not forum_role['can_protect_posts']:
+                raise ACLError403(_("This post is protected, you cannot delete it."))
+            if delete and forum_role['can_delete_threads'] < 2:
+                raise ACLError403(_("You cannot hard delete this thread."))
+            if not (forum_role['can_delete_threads'] or (thread.start_poster_id == user.pk and forum_role['can_soft_delete_own_threads'])):
+                raise ACLError403(_("You don't have permission to delete this thread."))
+            if thread.deleted and not delete:
+                raise ACLError403(_("This thread is already deleted."))
+        except KeyError:
+            raise ACLError403(_("You don't have permission to delete this thread."))
+
+    def can_delete_post(self, user, forum, thread, post):
+        try:
+            forum_role = self.acl[forum.pk]
+            if not forum_role['can_close_threads'] and (forum.closed or thread.closed):
+                return False
+            if post.protected and not forum_role['can_protect_posts']:
+                return False
+            if forum_role['can_delete_posts']:
+                return forum_role['can_delete_posts']
+            if post.user_id == user.pk and not post.protected and forum_role['can_soft_delete_own_posts']:
+                return 1
+            return False
+        except KeyError:
+            return False
+
+    def allow_delete_post(self, user, forum, thread, post, delete=False):
+        try:
+            forum_role = self.acl[forum.pk]
+            if not forum_role['can_close_threads']:
+                if forum.closed:
+                    raise ACLError403(_("You don't have permission to delete posts in closed forum."))
+                if thread.closed:
+                    raise ACLError403(_("This thread is closed, you cannot delete its posts."))
+            if post.protected and not forum_role['can_protect_posts']:
+                raise ACLError403(_("This post is protected, you cannot delete it."))
+            if delete and forum_role['can_delete_posts'] < 2:
+                raise ACLError403(_("You cannot hard delete this post."))
+            if not (forum_role['can_delete_posts'] or (post.user_id == user.pk and forum_role['can_soft_delete_own_posts'])):
+                raise ACLError403(_("You don't have permission to delete this post."))
+            if post.deleted and not delete:
+                raise ACLError403(_("This post is already deleted."))
+        except KeyError:
+            raise ACLError403(_("You don't have permission to delete this post."))
+    
+    def can_see_deleted_threads(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            return forum_role['can_delete_threads']
+        except KeyError:
+            raise false
+        
+    def can_see_deleted_posts(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            return forum_role['can_delete_posts']
+        except KeyError:
+            raise false
+        
+    def allow_deleted_post_view(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            if not forum_role['can_delete_posts']:
+                raise ACLError404()
+        except KeyError:
+            raise ACLError404()
 
 
 def build_forums(acl, perms, forums, forum_roles):

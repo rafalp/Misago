@@ -51,7 +51,7 @@ class PostingView(BaseView):
         if self.mode == 'edit_thread':
             self.request.acl.threads.allow_thread_edit(self.request.user, self.proxy, self.thread, self.post)
         if self.mode == 'edit_post':
-            self.request.acl.threads.allow_post_edit(self.request.user, self.proxy, self.thread, self.post)     
+            self.request.acl.threads.allow_reply_edit(self.request.user, self.proxy, self.thread, self.post)     
         
     def get_form(self, bound=False):
         initial = {}
@@ -104,7 +104,7 @@ class PostingView(BaseView):
                     old_name = self.thread.name
                     old_post = self.post.post
                     # If there is no change, throw user back
-                    changed_name = old_name != form.cleaned_data['thread_name']
+                    changed_name = (old_name != form.cleaned_data['thread_name']) if self.mode == 'edit_thread' else False
                     changed_post = old_post != form.cleaned_data['post']
                     changed_anything = changed_name or changed_post
                 
@@ -191,7 +191,7 @@ class PostingView(BaseView):
                                                 reason=form.cleaned_data['edit_reason'],
                                                 size=len(self.post.post),
                                                 change=len(self.post.post) - len(old_post),
-                                                thread_name_old=old_name if form.cleaned_data['thread_name'] != old_name else None,
+                                                thread_name_old=old_name if self.mode == 'edit_thread' and form.cleaned_data['thread_name'] != old_name else None,
                                                 thread_name_new=self.thread.name if form.cleaned_data['thread_name'] != old_name else None,
                                                 post_content=old_post,
                                                 )

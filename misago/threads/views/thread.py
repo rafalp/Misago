@@ -7,9 +7,10 @@ from django.utils.translation import ugettext as _
 from misago.acl.utils import ACLError403, ACLError404
 from misago.forms import Form, FormLayout, FormFields
 from misago.forums.models import Forum
+from misago.markdown import post_markdown
 from misago.messages import Message
 from misago.readstracker.trackers import ThreadsTracker
-from misago.threads.forms import MoveThreadsForm, QuickReplyForm
+from misago.threads.forms import MoveThreadsForm, SplitThreadForm, QuickReplyForm
 from misago.threads.models import Thread, Post
 from misago.threads.views.base import BaseView
 from misago.views import error403, error404
@@ -111,6 +112,81 @@ class ThreadView(BaseView):
         else:
             self.posts_form = self.posts_form(request=self.request)
             
+    def post_action_accept(self, ids):
+        accepted = 0
+        for post in self.posts:
+            if post.pk in ids and post.moderated:
+                accepted += 1
+        if accepted:
+            self.thread.post_set.filter(id__in=ids).update(moderated=False)
+            self.thread.sync()
+            self.thread.save(force_update=True)
+            self.request.messages.set_flash(Message(_('Selected posts have been accepted and made visible to other members.')), 'success', 'threads')
+            
+    def post_action_protect(self, ids):
+        protected = 0
+        for post in self.posts:
+            if post.pk in ids and not post.protected:
+                protected += 1
+        if protected:
+            self.thread.post_set.filter(id__in=ids).update(protected=True)
+            self.request.messages.set_flash(Message(_('Selected posts have been protected from edition.')), 'success', 'threads')            
+            
+    def post_action_merge(self, ids):
+        users = []
+        posts = []
+        for post in self.posts:
+            if post.pk in ids:
+                posts.append(post)
+                if not post.user_id in users:
+                    users.append(post.user_id)
+                if len(users) > 1:
+                    raise forms.ValidationError(_("You cannot merge replies made by different members!"))
+        if len(posts) < 2:
+            raise forms.ValidationError(_("You have to select two or more posts you want to merge."))
+        new_post = posts[0]
+        for post in posts[1:]:
+            new_post.post = '%s\n- - -\n%s' % (new_post.post, post.post)
+            post.change_set.update(post=new_post)
+            post.checkpoint_set.update(post=new_post)
+            post.delete()
+        new_post.post_preparsed = post_markdown(self.request, new_post.post)
+        new_post.save(force_update=True)
+        self.thread.sync()
+        self.thread.save(force_update=True)
+        self.forum.sync()
+        self.forum.save(force_update=True)
+        self.request.messages.set_flash(Message(_('Selected posts have been merged into one message.')), 'success', 'threads')
+                    
+    def post_action_split(self, ids):
+        message = None
+        if self.request.POST.get('do') == 'split':
+            form = SplitThreadForm(self.request.POST,request=self.request)
+            if form.is_valid():
+                return None
+            message = Message(form.non_field_errors()[0], 'error')
+        else:
+            form = SplitThreadForm(request=self.request)
+        return self.request.theme.render_to_response('threads/split.html',
+                                                     {
+                                                      'message': message,
+                                                      'forum': self.forum,
+                                                      'parents': self.parents,
+                                                      'thread': self.thread,
+                                                      'posts': ids,
+                                                      'form': FormLayout(form),
+                                                      },
+                                                     context_instance=RequestContext(self.request));
+        
+    def post_action_unprotect(self, ids):
+        unprotected = 0
+        for post in self.posts:
+            if post.pk in ids and post.protected:
+                unprotected += 1
+        if unprotected:
+            self.thread.post_set.filter(id__in=ids).update(protected=False)
+            self.request.messages.set_flash(Message(_('Protection from editions has been removed from selected posts.')), 'success', 'threads')
+                
     def get_thread_actions(self):
         acl = self.request.acl.threads.get_role(self.thread.forum_id)
         actions = []
@@ -306,6 +382,7 @@ class ThreadView(BaseView):
         try:
             self.fetch_thread(thread)
             self.fetch_posts(page)
+            self.message = request.messages.get_message('threads')
             self.make_thread_form()
             if self.thread_form:
                 response = self.handle_thread_form()
@@ -326,7 +403,7 @@ class ThreadView(BaseView):
         self.forum.closed = self.proxy.closed
         return request.theme.render_to_response('threads/thread.html',
                                                 {
-                                                 'message': request.messages.get_message('threads'),
+                                                 'message': self.message,
                                                  'forum': self.forum,
                                                  'parents': self.parents,
                                                  'thread': self.thread,

@@ -71,6 +71,10 @@ class PostForm(Form, ThreadNameMixin):
         
         
 
+class SplitThreadForm(Form, ThreadNameMixin):
+    pass
+
+
 class QuickReplyForm(Form):
     post = forms.CharField(widget=forms.Textarea)
 
