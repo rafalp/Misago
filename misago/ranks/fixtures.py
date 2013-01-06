@@ -15,7 +15,7 @@ def load_fixtures():
                         )
     
     Rank.objects.create(
-                        name=_("Most Valueable Posters").message,
+                        name=_("Most Valuable Posters").message,
                         title=_("MVP").message,
                         style='rank-mvp',
                         special=True,
