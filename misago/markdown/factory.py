@@ -5,11 +5,20 @@ from django.utils.importlib import import_module
 from django.utils.translation import ugettext_lazy as _
 from misago.utils import get_random_string
 
+def remove_unsupported(md):
+    del md.preprocessors['reference']
+    del md.inlinePatterns['reference']
+    del md.inlinePatterns['image_reference']
+    del md.inlinePatterns['short_reference']
+    
+
 def signature_markdown(acl, text):
     md = markdown.Markdown(
                            safe_mode='escape',
                            output_format=settings.OUTPUT_FORMAT,
                            extensions=['nl2br'])
+    
+    remove_unsupported(md)
     
     if not acl.usercp.allow_signature_links():
         del md.inlinePatterns['link']
@@ -24,7 +33,11 @@ def signature_markdown(acl, text):
     del md.parser.blockprocessors['quote']
     del md.parser.blockprocessors['hr']
     del md.parser.blockprocessors['olist']
-    del md.parser.blockprocessors['ulist']
+    del md.parser.blockprocessors['ulist']    
+    del md.preprocessors['reference']
+    del md.inlinePatterns['reference']
+    del md.inlinePatterns['image_reference']
+    del md.inlinePatterns['short_reference']
     
     return md.convert(text)
 
@@ -34,6 +47,8 @@ def post_markdown(request, text):
                            safe_mode='escape',
                            output_format=settings.OUTPUT_FORMAT,
                            extensions=['nl2br', 'fenced_code'])
+    
+    remove_unsupported(md)
     md.mi_token = get_random_string(16)
     for extension in settings.MARKDOWN_EXTENSIONS:
         module = '.'.join(extension.split('.')[:-1])
