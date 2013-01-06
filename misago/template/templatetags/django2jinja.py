@@ -1,12 +1,8 @@
-from datetime import date, datetime, timedelta
 import math
 import urllib
 from coffin.template import Library
 from django.conf import settings
-from django.utils.dateformat import format, time_format
-from django.utils.timezone import is_aware, utc
-from django.utils.translation import pgettext, ungettext, ugettext as _
-from misago.utils import slugify, formats
+from misago.utils import slugify
 
 register = Library()
 
@@ -40,39 +36,50 @@ def low(value):
     return '%s%s' % (unicode(value[0]).lower(), rest)
 
 
-@register.filter(name='date')
-def date(date, arg=""):
+@register.filter(name="slugify")
+def slugify_tag(format_string):
+    return slugify(format_string)
+
+"""
+Date and time filters
+"""
+from datetime import datetime, timedelta
+from django.utils.dateformat import format, time_format
+from django.utils.timezone import is_aware, localtime, utc
+from django.utils.translation import pgettext, ungettext, ugettext as _
+from misago.utils import slugify, formats
+
+def date(val, arg=""):
     if not arg:
         arg = formats['DATE_FORMAT']
     elif arg in formats:
         arg = formats[arg]
-        
-    return format(date, arg)
+    return format(localtime(val), arg)
 
 
-@register.filter(name='reldate')
-def reldate(date, arg=""):
-    now = datetime.now(utc if is_aware(date) else None)
-    diff = now - date
+def reldate(val, arg=""):
+    now = datetime.now(utc if is_aware(val) else None)
+    diff = now - val
+    local = localtime(val)
     
     # Common situations
     if diff.days == 0:
-        return _("Today, %(hour)s") % {'hour': time_format(date, formats['TIME_FORMAT'])}
+        return _("Today, %(hour)s") % {'hour': time_format(local, formats['TIME_FORMAT'])}
     if diff.days == 1:
-        return _("Yesterday, %(hour)s") % {'hour': time_format(date, formats['TIME_FORMAT'])}
+        return _("Yesterday, %(hour)s") % {'hour': time_format(local, formats['TIME_FORMAT'])}
     if diff.days == -1:
-        return _("Tomorrow, %(hour)s") % {'hour': time_format(date, formats['TIME_FORMAT'])}
+        return _("Tomorrow, %(hour)s") % {'hour': time_format(local, formats['TIME_FORMAT'])}
     if diff.days > -7 or diff.days < 7:
-        return _("%(day)s, %(hour)s") % {'day': format(date, 'l'), 'hour': time_format(date, formats['TIME_FORMAT'])}
+        return _("%(day)s, %(hour)s") % {'day': format(local, 'l'), 'hour': time_format(local, formats['TIME_FORMAT'])}
     
     # Fallback to custom      
-    return date[1](date, arg)
+    return date(val, arg)
 
 
-@register.filter(name='reltimesince')
-def reltimesince(date, arg=""):
-    now = datetime.now(utc if is_aware(date) else None)
-    diff = now - date
+def reltimesince(val, arg=""):
+    now = datetime.now(utc if is_aware(val) else None)
+    diff = now - val
+    local = localtime(val)
     
     # Display specific time
     if diff.seconds >= 0:
@@ -102,9 +109,18 @@ def reltimesince(date, arg=""):
                 hours) % {'hours': hours}
         
     # Fallback to reldate
-    return reldate[1](date, arg)
+    return reldate(val, arg)
+
+@register.filter(name='date')
+def date_filter(val, arg=""):
+    return date(val, arg)
 
 
-@register.filter(name="slugify")
-def slugify_tag(format_string):
-    return slugify(format_string)
+@register.filter(name='reldate')
+def reldate_filter(val, arg=""):
+    return reldate(val, arg)
+
+
+@register.filter(name='reltimesince')
+def reltimesince_filter(val, arg=""):
+    return reltimesince(val, arg)
