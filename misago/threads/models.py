@@ -27,7 +27,7 @@ class Thread(models.Model):
     start_poster = models.ForeignKey('users.User',null=True,blank=True)
     start_poster_name = models.CharField(max_length=255)
     start_poster_slug = models.SlugField(max_length=255)
-    start_poster_style = models.CharField(max_length=255)
+    start_poster_style = models.CharField(max_length=255,null=True,blank=True)
     last = models.DateTimeField(db_index=True)
     last_post = models.ForeignKey('Post',related_name='+',null=True,blank=True,on_delete=models.SET_NULL)
     last_poster = models.ForeignKey('users.User',related_name='+',null=True,blank=True)
@@ -47,23 +47,23 @@ class Thread(models.Model):
     
     def sync(self):
         # First post
-        start_post = self.post_set.order_by('merge', 'id')[1:][0]
+        start_post = self.post_set.order_by('merge', 'id')[0:][0]
         self.start = start_post.date
         self.start_post = start_post
         self.start_poster = start_post.user
         self.start_poster_name = start_post.user_name
         self.start_poster_slug = slugify(start_post.user_name)
-        self.start_poster_style = start_post.user.rank.style if start_post.user else None
+        self.start_poster_style = start_post.user.rank.style if start_post.user else ''
         self.upvotes = start_post.upvotes
         self.downvotes = start_post.downvotes
         # Last post
-        last_post = self.post_set.order_by('-merge', '-id')[1:][0]
+        last_post = self.post_set.order_by('-merge', '-id').filter(moderated=False).filter(deleted=False)[0:][0]
         self.last = last_post.date
         self.last_post = last_post
         self.last_poster = last_post.user
         self.last_poster_name = last_post.user_name
         self.last_poster_slug = slugify(last_post.user_name)
-        self.last_poster_style = last_post.user.rank.style if last_post.user else None
+        self.last_poster_style = last_post.user.rank.style if last_post.user else ''
         # Flags
         self.moderated = start_post.moderated
         self.deleted = start_post.deleted
