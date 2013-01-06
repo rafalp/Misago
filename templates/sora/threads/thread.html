@@ -149,14 +149,14 @@
         {% endif %}
         {% if post.pk == thread.start_post_id %}
         {% if acl.threads.can_delete_thread(user, forum, thread, post) == 2 -%}
-            <li class="tooltip-top" title="{% trans %}Delete this thread for good{% endtrans %}"><form action="{% url 'thread_delete' thread=thread.pk, slug=thread.slug %}" method="post"><button type="submit" class="btn danger"><i class="icon-remove"></i></button><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"></form></li>{% endif %}
+            <li class="tooltip-top" title="{% trans %}Delete this thread for good{% endtrans %}"><form action="{% url 'thread_delete' thread=thread.pk, slug=thread.slug %}" class="prompt-delete-thread" method="post"><button type="submit" class="btn danger"><i class="icon-remove"></i></button><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"></form></li>{% endif %}
         {% if not post.deleted and acl.threads.can_delete_thread(user, forum, thread, post) -%}
-            <li><form action="{% url 'thread_hide' thread=thread.pk, slug=thread.slug %}" method="post"><button type="submit" class="btn danger"><i class="icon-trash"></i> {% trans %}Delete{% endtrans %}</button><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"></form></li>{% endif %}
+            <li><form action="{% url 'thread_hide' thread=thread.pk, slug=thread.slug %}" class="prompt-delete-thread" method="post"><button type="submit" class="btn danger"><i class="icon-trash"></i> {% trans %}Delete{% endtrans %}</button><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"></form></li>{% endif %}
         {% elif post.pk != thread.start_post_id and acl.threads.can_delete_post(user, forum, thread, post) %}
         {% if acl.threads.can_delete_post(user, forum, thread, post) == 2 -%}
-            <li class="tooltip-top" title="{% trans %}Delete this reply for good{% endtrans %}"><form action="{% url 'post_delete' thread=thread.pk, slug=thread.slug, post=post.pk %}" method="post"><button type="submit" class="btn danger"><i class="icon-remove"></i></button><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"></form></li>{% endif %}
+            <li class="tooltip-top" title="{% trans %}Delete this reply for good{% endtrans %}"><form action="{% url 'post_delete' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="prompt-delete-post" method="post"><button type="submit" class="btn danger"><i class="icon-remove"></i></button><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"></form></li>{% endif %}
         {% if not post.deleted and acl.threads.can_delete_post(user, forum, thread, post) -%}
-            <li><form action="{% url 'post_hide' thread=thread.pk, slug=thread.slug, post=post.pk %}" method="post"><button type="submit" class="btn danger"><i class="icon-trash"></i> {% trans %}Delete{% endtrans %}</button><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"></form></li>{% endif %}
+            <li><form action="{% url 'post_hide' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="prompt-delete-post" method="post"><button type="submit" class="btn danger"><i class="icon-trash"></i> {% trans %}Delete{% endtrans %}</button><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"></form></li>{% endif %}
         {% endif %}
         {% if acl.threads.can_edit_thread(user, forum, thread, post) and thread.start_post_id == post.pk -%}
         <li><a href="{% url 'thread_edit' thread=thread.pk, slug=thread.slug %}"><i class="icon-edit"></i> {% trans %}Edit{% endtrans %}</a></li>
@@ -276,7 +276,7 @@
 
 {% block javascripts -%}
 {{ super() }}
-{%- if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
+{%- if user.is_authenticated() %}
   <script type="text/javascript">
     $(function () {
       $('#thread_form').submit(function() {
@@ -304,6 +304,14 @@
           return decision;
         }
         return true;
+      });
+      $('.prompt-delete-thread').submit(function() {
+          var decision = confirm("{% trans %}Are you sure you want to delete this thread?{% endtrans %}");
+          return decision;
+      });
+      $('.prompt-delete-post').submit(function() {
+          var decision = confirm("{% trans %}Are you sure you want to delete this post?{% endtrans %}");
+          return decision;
       });
     });
   </script>{% endif %}
