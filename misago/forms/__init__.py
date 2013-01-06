@@ -33,7 +33,7 @@ class Form(forms.Form):
             else:
                 # Make sure we have any questions loaded
                 self.fields['captcha_qa'].label = self.request.settings['qa_test']
-                self.fields['captcha_qa'].help_text = self.request.session['qa_test_help']
+                self.fields['captcha_qa'].help_text = self.request.settings['qa_test_help']
         except KeyError:
             pass
         
