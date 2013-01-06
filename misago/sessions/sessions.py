@@ -126,7 +126,7 @@ class SessionHuman(SessionMisago):
         self._session_token = None
         if request.firewall.admin:
             self._cookie_sid = settings.COOKIES_PREFIX + 'ASID'
-        else:   
+        else:
             self._cookie_sid = settings.COOKIES_PREFIX + 'SID'
         try:
             # Do we have correct session ID?

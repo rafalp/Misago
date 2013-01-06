@@ -1,9 +1,10 @@
 from datetime import datetime, timedelta
 from django.conf import settings
 
-class CookieJar(object):
-    _set_cookies = []
-    _delete_cookies = []
+class CookieJar(object):    
+    def __init__(self):
+        self._set_cookies = []
+        self._delete_cookies = []
     
     def set(self, cookie, value, permanent=False):
         if permanent:
@@ -31,6 +32,7 @@ class CookieJar(object):
                                 domain=settings.COOKIES_DOMAIN,
                                 secure=settings.COOKIES_SECURE
                                 )
+        
         for cookie in self._delete_cookies:
             response.delete_cookie(
                                    settings.COOKIES_PREFIX + cookie,
