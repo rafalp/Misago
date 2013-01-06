@@ -232,13 +232,13 @@ class Edit(FormWidget):
         if target.type == 'redirect':
             self.name = _("Edit Redirect")
             self.form = RedirectForm
-        
-        # Remove invalid targets from parent select
-        self.form = copy.deepcopy(self.form)
-        valid_targets = Forum.tree.get(token='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
-        self.form.base_fields['parent'] = TreeNodeChoiceField(queryset=valid_targets,level_indicator=u'- - ')
-        
         return self.form
+    
+    def get_form_instance(self, form, target, initial, post=False):
+        form_inst = super(Edit, self).get_form_instance(form, target, initial, post)
+        valid_targets = Forum.tree.get(token='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
+        form_inst.fields['parent'] = TreeNodeChoiceField(queryset=valid_targets,level_indicator=u'- - ')
+        return form_inst
     
     def get_initial_data(self, model):
         initial = {
@@ -312,13 +312,13 @@ class Delete(FormWidget):
             self.name= _("Delete Category")
         if target.type == 'redirect':
             self.name= _("Delete Redirect")
-        
-        # Remove invalid targets from parent select
-        self.form = copy.deepcopy(self.form)
-        valid_targets = Forum.tree.get(token='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
-        self.form.base_fields['parent'] = TreeNodeChoiceField(queryset=valid_targets,required=False,empty_label=_("Remove with forum"),level_indicator=u'- - ')
-        
         return self.form
+    
+    def get_form_instance(self, form, target, initial, post=False):
+        form_inst = super(Edit, self).get_form_instance(form, target, initial, post)
+        valid_targets = Forum.tree.get(token='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
+        self.form_inst.fields['parent'] = TreeNodeChoiceField(queryset=valid_targets,required=False,empty_label=_("Remove with forum"),level_indicator=u'- - ')
+        return form_inst
         
     def submit_form(self, form, target):
         new_parent = form.cleaned_data['parent']
