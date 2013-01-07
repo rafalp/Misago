@@ -80,6 +80,8 @@ class SessionCrawler(SessionMisago):
     Crawler Session controller
     """
     def __init__(self, request):
+        self.hidden = False
+        self.team = False
         self._ip = self.get_ip(request)
         try:
             self._session_rk = Session.objects.get(crawler=request.user.username, ip=self._ip)
