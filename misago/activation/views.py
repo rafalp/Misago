@@ -80,7 +80,7 @@ def activate(request, username="", user="0", token=""):
         sign_user_in(request, user)
         
         # Update monitor
-        request.monitor['users_inactive'] = int(request.monitor['users_inactive']) - 1
+        User.objects.resync_monitor(request.monitor)
         
         if current_activation == User.ACTIVATION_CREDENTIALS:
             return redirect_message(request, Message(_("%(username)s, your account has been successfully reactivated after change of sign-in credentials.") % {'username': user.username}), 'success')

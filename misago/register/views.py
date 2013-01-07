@@ -41,7 +41,12 @@ def form(request):
                                                 )
                         
             if need_activation == User.ACTIVATION_NONE:
-                # No need for activation, sign in user
+                # No need for activation, update monitor with fresh data
+                request.monitor['users'] = int(request.monitor['users']) + 1
+                request.monitor['last_user'] = new_user.pk
+                request.monitor['last_user_name'] = new_user.username
+                request.monitor['last_user_slug'] = new_user.username_slug
+                # Sign in user
                 sign_user_in(request, new_user)
                 request.messages.set_flash(Message(_("Welcome aboard, %(username)s! Your account has been registered successfully.") % {'username': new_user.username}), 'success')
                 
