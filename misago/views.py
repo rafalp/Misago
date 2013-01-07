@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
@@ -36,13 +37,13 @@ def home(request):
             ranks_list.append(rank_entry)
             ranks_dict[rank.pk] = rank_entry
         if ranks_dict:
-            for session in Session.objects.select_related('user').filter(rank__in=ranks_dict.keys()).filter(user__isnull=False):
+            for session in Session.objects.select_related('user').filter(rank__in=ranks_dict.keys()).filter(last__gte=timezone.now() - timedelta(minutes=10)).filter(user__isnull=False):
                 if not session.user_id in users_list:
                     ranks_dict[session.user.rank_id]['online'].append(session.user)
                     users_list.append(session.user_id)
             del ranks_dict
             del users_list
-        cache.set('ranks_list', ranks_list, 15)
+        cache.set('ranks_list', ranks_list, 10)
             
     # Render page with forums list
     reads_tracker = ForumsTracker(request.user)
