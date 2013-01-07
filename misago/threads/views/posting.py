@@ -195,7 +195,7 @@ class PostingView(BaseView):
                                                 size=len(self.post.post),
                                                 change=len(self.post.post) - len(old_post),
                                                 thread_name_old=old_name if self.mode == 'edit_thread' and form.cleaned_data['thread_name'] != old_name else None,
-                                                thread_name_new=self.thread.name if form.cleaned_data['thread_name'] != old_name else None,
+                                                thread_name_new=self.thread.name if self.mode == 'edit_thread' and form.cleaned_data['thread_name'] != old_name else None,
                                                 post_content=old_post,
                                                 )
                 
