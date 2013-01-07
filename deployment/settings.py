@@ -42,7 +42,7 @@ COOKIES_PREFIX = '' # Allows you to avoid cookies collisions with other applicat
 COOKIES_SECURE = False # Set this to true if AND ONLY IF you are using SSL on your forum.
 
 # Sessions configuration
-SESSION_LIFETIME = 86400 # Number of seconds since last request after which session is marked as expired.
+SESSION_LIFETIME = 3600 # Number of seconds since last request after which session is marked as expired.
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
