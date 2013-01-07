@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from misago.utils import get_random_string
 
 def remove_unsupported(md):
+    # References are evil, we dont support them
     del md.preprocessors['reference']
     del md.inlinePatterns['reference']
     del md.inlinePatterns['image_reference']
@@ -25,7 +26,6 @@ def signature_markdown(acl, text):
         del md.inlinePatterns['autolink']
     if not acl.usercp.allow_signature_images():
         del md.inlinePatterns['image_link']
-        del md.inlinePatterns['image_reference']
         
     del md.parser.blockprocessors['hashheader']
     del md.parser.blockprocessors['setextheader']
@@ -33,11 +33,7 @@ def signature_markdown(acl, text):
     del md.parser.blockprocessors['quote']
     del md.parser.blockprocessors['hr']
     del md.parser.blockprocessors['olist']
-    del md.parser.blockprocessors['ulist']    
-    del md.preprocessors['reference']
-    del md.inlinePatterns['reference']
-    del md.inlinePatterns['image_reference']
-    del md.inlinePatterns['short_reference']
+    del md.parser.blockprocessors['ulist']
     
     return md.convert(text)
 
