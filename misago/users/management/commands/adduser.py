@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 from optparse import make_option
 from misago.roles.models import Role
-from misago.users.models import UserManager
+from misago.users.models import User
 
 class Command(BaseCommand):
     args = 'username email password'
@@ -22,8 +22,7 @@ class Command(BaseCommand):
                 
         # Set user
         try:
-            manager = UserManager()
-            new_user = manager.create_user(args[0], args[1], args[2])
+            new_user = User.objects.create_user(args[0], args[1], args[2])
         except ValidationError as e:
             raise CommandError("New user cannot be created because of following errors:\n\n%s" % '\n'.join(e.messages))
                 
