@@ -23,16 +23,16 @@ def form(request):
         if form.is_valid():
             user = form.found_user
             user_ban = check_ban(username=user.username, email=user.email)
-            
+
             if user_ban:
                 return error_banned(request, user, user_ban)
-            
+
             if user.activation == User.ACTIVATION_NONE:
                 return redirect_message(request, Message(_("%(username)s, your account is already active.") % {'username': user.username}), 'info')
-            
+
             if user.activation == User.ACTIVATION_ADMIN:
                 return redirect_message(request, Message(_("%(username)s, only board administrator can activate your account.") % {'username': user.username}), 'info')
-        
+
             user.email_user(
                             request,
                             'users/activation/resend',
@@ -56,32 +56,32 @@ def form(request):
 @block_jammed
 def activate(request, username="", user="0", token=""):
     user = int(user)
-    
+
     try:
         user = User.objects.get(pk=user)
         current_activation = user.activation
-        
+
         # Run checks
         user_ban = check_ban(username=user.username, email=user.email)
         if user_ban:
             return error_banned(request, user, user_ban)
-        
+
         if user.activation == User.ACTIVATION_NONE:
             return redirect_message(request, Message(_("%(username)s, your account is already active.") % {'username': user.username}), 'info')
-            
+
         if user.activation == User.ACTIVATION_ADMIN:
             return redirect_message(request, Message(_("%(username)s, only board administrator can activate your account.") % {'username': user.username}), 'info')
-        
+
         if not token or not user.token or user.token != token:
             return redirect_message(request, Message(_("%(username)s, your activation link is invalid. Try again or request new activation e-mail.") % {'username': user.username}), 'error')
-        
+
         # Activate and sign in our member
         user.activation = User.ACTIVATION_NONE
         sign_user_in(request, user)
-        
+
         # Update monitor
         User.objects.resync_monitor(request.monitor)
-        
+
         if current_activation == User.ACTIVATION_CREDENTIALS:
             return redirect_message(request, Message(_("%(username)s, your account has been successfully reactivated after change of sign-in credentials.") % {'username': user.username}), 'success')
         else:

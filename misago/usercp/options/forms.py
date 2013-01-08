@@ -12,7 +12,7 @@ class UserForumOptionsForm(Form):
                                                (1, _("Show my presence to people I follow")),
                                                (2, _("Show my presence to nobody")),
                                                ))
-    
+
     layout = (
               (
                _("Forum Options"),

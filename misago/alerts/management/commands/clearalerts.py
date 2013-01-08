@@ -10,4 +10,4 @@ class Command(BaseCommand):
     help = 'Clears old alerts'
     def handle(self, *args, **options):
         Alert.objects.filter(date__lte=timezone.now() - timedelta(days=14)).delete()
-        self.stdout.write('Old Alerts have been cleared.\n')        
+        self.stdout.write('Old Alerts have been cleared.\n')

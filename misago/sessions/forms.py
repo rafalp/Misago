@@ -13,7 +13,7 @@ class SearchSessionsForm(Form):
                                       ('guest', _("Guests Sessions")),
                                       ('crawler', _("Crawler Sessions")),
                                       ), required=False)
-    
+
     layout = (
               (
                _("Search Sessions"),

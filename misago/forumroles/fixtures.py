@@ -41,7 +41,7 @@ def load_fixtures():
                           'can_delete_attachments': True,
                           })
     role.save(force_insert=True)
-    
+
     role = ForumRole()
     role.name = _('Standard Access and Upload').message
     role.set_permissions({
@@ -63,7 +63,7 @@ def load_fixtures():
                           'attachment_limit': 3,
                           })
     role.save(force_insert=True)
-    
+
     role = ForumRole()
     role.name = _('Standard Access').message
     role.set_permissions({
@@ -82,7 +82,7 @@ def load_fixtures():
                           'can_download_attachments': True,
                           })
     role.save(force_insert=True)
-    
+
     role = ForumRole()
     role.name = _('Read and Download').message
     role.set_permissions({
@@ -92,7 +92,7 @@ def load_fixtures():
                           'can_download_attachments': True,
                           })
     role.save(force_insert=True)
-    
+
     role = ForumRole()
     role.name = _('Threads list only').message
     role.set_permissions({
@@ -100,7 +100,7 @@ def load_fixtures():
                           'can_see_forum_contents': True,
                           })
     role.save(force_insert=True)
-    
+
     role = ForumRole()
     role.name = _('Read only').message
     role.set_permissions({

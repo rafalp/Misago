@@ -58,7 +58,7 @@ def gravatar(request):
 def gallery(request):
     if not 'gallery' in request.settings.avatars_types:
         return error404(request)
-    
+
     allowed_avatars = []
     galleries = []
     for directory in path(settings.STATICFILES_DIRS[0]).joinpath('avatars').dirs():
@@ -72,11 +72,11 @@ def gallery(request):
                 gallery['avatars'].append('/'.join(path(item).splitall()[-2:]))
             galleries.append(gallery)
             allowed_avatars += gallery['avatars']
-    
+
     if not allowed_avatars:
         request.messages.set_flash(Message(_("No avatars are avaiable.")), 'info', 'usercp_avatar')
         return redirect(reverse('usercp_avatar'))
-    
+
     message = request.messages.get_message('usercp_avatar')
     if request.method == 'POST':
         if request.csrf.request_secure(request):
@@ -91,7 +91,7 @@ def gallery(request):
             message = Message(_("Selected Avatar is incorrect."), 'error')
         else:
             message = Message(_("Request authorisation is invalid."), 'error')
-    
+
     return request.theme.render_to_response('usercp/avatar_gallery.html',
                                             context_instance=RequestContext(request, {
                                               'message': message,
@@ -151,12 +151,12 @@ def upload(request):
             except ValidationError:
                 request.user.delete_avatar()
                 request.user.default_avatar(request.settings)
-                message = Message(_("Only gif, jpeg and png files are allowed for member avatars."), 'error') 
+                message = Message(_("Only gif, jpeg and png files are allowed for member avatars."), 'error')
         else:
-            message = Message(form.non_field_errors()[0], 'error')          
+            message = Message(form.non_field_errors()[0], 'error')
     else:
         form = UploadAvatarForm(request=request)
-        
+
     return request.theme.render_to_response('usercp/avatar_upload.html',
                                             context_instance=RequestContext(request, {
                                               'message': message,
@@ -170,11 +170,11 @@ def upload(request):
 def crop(request, upload=False):
     if upload and (not request.user.avatar_temp or not 'upload' in request.settings.avatars_types):
         return error404(request)
-    
+
     if not upload and request.user.avatar_type != 'upload':
         request.messages.set_flash(Message(_("Crop Avatar option is avaiable only when you use uploaded image as your avatar.")), 'error', 'usercp_avatar')
         return redirect(reverse('usercp_avatar'))
-    
+
     message = request.messages.get_message('usercp_avatar')
     if request.method == 'POST':
         if request.csrf.request_secure(request):
@@ -185,13 +185,13 @@ def crop(request, upload=False):
                 else:
                     source = Image.open(image_path + request.user.avatar_original)
                 width, height = source.size
-                
+
                 aspect = float(width) / float(request.POST['crop_b'])
                 crop_x = int(aspect * float(request.POST['crop_x']))
                 crop_y = int(aspect * float(request.POST['crop_y']))
                 crop_w = int(aspect * float(request.POST['crop_w']))
                 crop = source.crop((crop_x, crop_y, crop_x + crop_w, crop_y + crop_w))
-                           
+
                 if upload:
                     image_name, image_extension = path(request.user.avatar_temp).splitext()
                 else:
@@ -200,7 +200,7 @@ def crop(request, upload=False):
                 resizeimage(crop, settings.AVATAR_SIZES[0], image_path + image_name, info=source.info, format=source.format)
                 for size in settings.AVATAR_SIZES[1:]:
                     resizeimage(crop, size, image_path + str(size) + '_' + image_name, info=source.info, format=source.format)
-                
+
                 request.user.delete_avatar_image()
                 if upload:
                     request.user.delete_avatar_original()
@@ -216,8 +216,8 @@ def crop(request, upload=False):
                 message = Message(_("Form contains errors."), 'error')
         else:
             message = Message(_("Request authorisation is invalid."), 'error')
-    
-    
+
+
     return request.theme.render_to_response('usercp/avatar_crop.html',
                                             context_instance=RequestContext(request, {
                                               'message': message,

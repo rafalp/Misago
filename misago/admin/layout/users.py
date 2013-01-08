@@ -7,7 +7,7 @@ from misago.prune.models import Policy
 from misago.ranks.models import Rank
 from misago.users.models import User
 
-ADMIN_ACTIONS=(
+ADMIN_ACTIONS = (
    AdminAction(
                section='users',
                id='users',

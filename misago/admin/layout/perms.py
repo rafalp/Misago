@@ -5,7 +5,7 @@ from misago.roles.models import Role
 from misago.forumroles.models import ForumRole
 
 
-ADMIN_ACTIONS=(
+ADMIN_ACTIONS = (
    AdminAction(
                section='perms',
                id='roles',

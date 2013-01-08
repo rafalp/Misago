@@ -6,7 +6,7 @@ from misago.forms import Form
 class UsernameChangeForm(Form):
     username = forms.CharField(max_length=255)
     error_source = 'username'
-    
+
     layout = [
               [
                None,
@@ -15,14 +15,14 @@ class UsernameChangeForm(Form):
                 ],
                ],
               ]
-    
+
     def clean_username(self):
         org_username = self.request.user.username
-        
+
         self.request.user.set_username(self.cleaned_data['username'])
         if org_username == self.request.user.username:
             raise ValidationError(_("Your new username is same as current one."))
-        
+
         try:
             self.request.user.full_clean()
         except ValidationError as e:

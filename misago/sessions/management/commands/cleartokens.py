@@ -10,4 +10,4 @@ class Command(BaseCommand):
     help = 'Clears "Remember Me" tokens'
     def handle(self, *args, **options):
         Token.objects.filter(accessed__lte=timezone.now() - timedelta(days=5)).delete()
-        self.stdout.write('Sessions tokens have been cleared.\n')        
+        self.stdout.write('Sessions tokens have been cleared.\n')

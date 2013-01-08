@@ -6,7 +6,7 @@ from misago.banning.models import check_ban
 from misago.bruteforce.models import SignInAttempt
 from misago.sessions.models import Token
 from misago.users.models import User
-    
+
 """
 Exception constants
 """
@@ -27,11 +27,11 @@ class AuthException(Exception):
         self.password = password
         self.activation = activation
         self.ban = ban
-        
+
     def __str__(self):
         return self.error
-      
-    
+
+
 def get_user(email, password, admin=False):
     """
     Fetch user from DB using email/pass pair, scream if either of data is incorrect
@@ -47,7 +47,7 @@ def get_user(email, password, admin=False):
             if user.activation != User.ACTIVATION_NONE:
                 # You have to activate your account - new member
                 raise AuthException(ACTIVATION_USER, _("You have to activate your account before you will be able to sign-in."), activation=True)
-    
+
     except User.DoesNotExist:
         raise AuthException(CREDENTIALS, _("Your e-mail address or password is incorrect. Please try again."), password=True)
     return user;
@@ -85,17 +85,17 @@ def auth_remember(request, ip):
         except Token.DoesNotExist:
             request.cookie_jar.delete('TOKEN')
             raise AuthException()
-        
+
         # See if token is not expired
         token_expires = timezone.now() - timedelta(days=request.settings['remember_me_lifetime'])
         if request.settings['remember_me_extensible'] and token_rk.accessed < token_expires:
             # Token expired because it's last use is smaller than expiration date
             raise AuthException()
-        
+
         if not request.settings['remember_me_extensible'] and token_rk.created < token_expires:
             # Token expired because it was created before expiration date
             raise AuthException()
-        
+
         # Update token date
         token_rk.accessed = timezone.now()
         token_rk.save(force_update=True)

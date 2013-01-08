@@ -37,7 +37,7 @@ settings_fixtures = (
 
 def load_fixtures():
     load_settings_fixture(settings_fixtures)
-    
-    
+
+
 def update_fixtures():
     update_settings_fixture(settings_fixtures)

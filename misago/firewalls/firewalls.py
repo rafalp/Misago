@@ -16,14 +16,14 @@ class FirewallForum(object):
         Firewall test, it checks if requested path is behind firewall
         """
         return path[:len(self.prefix)] == self.prefix
-    
+
     def process_view(self, request, callback, callback_args, callback_kwargs):
         return None
-    
-    
+
+
 class FirewallAdmin(FirewallForum):
     admin = True
-    prefix = '/' + ADMIN_PATH    
+    prefix = '/' + ADMIN_PATH
     def process_view(self, request, callback, callback_args, callback_kwargs):
         # Block all crawlers with 403
         if request.user.is_crawler():

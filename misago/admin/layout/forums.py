@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from misago.admin import AdminAction
 from misago.forums.models import Forum
 
-ADMIN_ACTIONS=(
+ADMIN_ACTIONS = (
    AdminAction(
                section='forums',
                id='forums',

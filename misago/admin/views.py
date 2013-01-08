@@ -10,6 +10,6 @@ def home(request):
         'admins': Session.objects.filter(user__isnull=False).filter(admin=1).order_by('user__username_slug').select_related(depth=1),
         }, context_instance=RequestContext(request));
 
- 
+
 def todo(request):
     return request.theme.render_to_response('todo.html', context_instance=RequestContext(request));

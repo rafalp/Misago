@@ -2,19 +2,19 @@ from django.conf import settings
 from django.core.cache import cache
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from mptt.models import MPTTModel,TreeForeignKey
+from mptt.models import MPTTModel, TreeForeignKey
 from misago.roles.models import Role
 
 class ForumManager(models.Manager):
     forums_tree = None
-    
+
     def token_to_pk(self, token):
         self.populate_tree()
         try:
             return self.forums_tree[token].pk
         except KeyError:
             return 0
-    
+
     def populate_tree(self, force=False):
         if not self.forums_tree:
             self.forums_tree = cache.get('forums_tree')
@@ -25,7 +25,7 @@ class ForumManager(models.Manager):
                 if forum.token:
                     self.forums_tree[forum.token] = forum
             cache.set('forums_tree', self.forums_tree)
-    
+
     def forum_parents(self, forum, include_self=False):
         self.populate_tree()
         parents = []
@@ -36,7 +36,7 @@ class ForumManager(models.Manager):
             parent = self.forums_tree[parent.parent_id]
             parents.append(parent)
         return reversed(parents)
-        
+
     def parents_aware_forum(self, forum):
         self.populate_tree()
         proxy = Forum()
@@ -52,17 +52,17 @@ class ForumManager(models.Manager):
                 proxy.closed = True
                 return proxy
         return proxy
-        
+
     def treelist(self, acl, parent=None, tracker=None):
         complete_list = []
         forums_list = []
         parents = {}
-        
+
         if parent:
             queryset = Forum.objects.filter(pk__in=acl.known_forums).filter(lft__gt=parent.lft).filter(rght__lt=parent.rght).order_by('lft')
         else:
             queryset = Forum.objects.filter(pk__in=acl.known_forums).order_by('lft')
-            
+
         for forum in queryset:
             forum.subforums = []
             forum.is_read = False
@@ -74,7 +74,7 @@ class ForumManager(models.Manager):
                 parents[forum.parent_id].subforums.append(forum)
             else:
                 forums_list.append(forum)
-        
+
         # Second iteration - sum up forum counters
         for forum in reversed(complete_list):
             if forum.parent_id in parents and parents[forum.parent_id].type != 'redirect':
@@ -100,49 +100,49 @@ class ForumManager(models.Manager):
 
 
 class Forum(MPTTModel):
-    parent = TreeForeignKey('self',null=True,blank=True,related_name='children')
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
     type = models.CharField(max_length=12)
-    token = models.CharField(max_length=255,null=True,blank=True)
+    token = models.CharField(max_length=255, null=True, blank=True)
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
-    description = models.TextField(null=True,blank=True)
-    description_preparsed = models.TextField(null=True,blank=True)
+    description = models.TextField(null=True, blank=True)
+    description_preparsed = models.TextField(null=True, blank=True)
     threads = models.PositiveIntegerField(default=0)
     threads_delta = models.PositiveIntegerField(default=0)
     posts = models.PositiveIntegerField(default=0)
     posts_delta = models.IntegerField(default=0)
     redirects = models.PositiveIntegerField(default=0)
     redirects_delta = models.IntegerField(default=0)
-    last_thread = models.ForeignKey('threads.Thread',related_name='+',null=True,blank=True,on_delete=models.SET_NULL)
-    last_thread_name = models.CharField(max_length=255,null=True,blank=True)
-    last_thread_slug = models.SlugField(max_length=255,null=True,blank=True)
-    last_thread_date = models.DateTimeField(null=True,blank=True)
-    last_poster = models.ForeignKey('users.User',related_name='+',null=True,blank=True,on_delete=models.SET_NULL)
-    last_poster_name = models.CharField(max_length=255,null=True,blank=True)
-    last_poster_slug = models.SlugField(max_length=255,null=True,blank=True)
-    last_poster_style = models.CharField(max_length=255,null=True,blank=True)
+    last_thread = models.ForeignKey('threads.Thread', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
+    last_thread_name = models.CharField(max_length=255, null=True, blank=True)
+    last_thread_slug = models.SlugField(max_length=255, null=True, blank=True)
+    last_thread_date = models.DateTimeField(null=True, blank=True)
+    last_poster = models.ForeignKey('users.User', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
+    last_poster_name = models.CharField(max_length=255, null=True, blank=True)
+    last_poster_slug = models.SlugField(max_length=255, null=True, blank=True)
+    last_poster_style = models.CharField(max_length=255, null=True, blank=True)
     prune_start = models.PositiveIntegerField(default=0)
     prune_last = models.PositiveIntegerField(default=0)
-    redirect = models.CharField(max_length=255,null=True,blank=True)
-    template = models.CharField(default='row',max_length=255,null=True,blank=True)
+    redirect = models.CharField(max_length=255, null=True, blank=True)
+    template = models.CharField(default='row', max_length=255, null=True, blank=True)
     show_details = models.BooleanField(default=True)
-    style = models.CharField(max_length=255,null=True,blank=True)
+    style = models.CharField(max_length=255, null=True, blank=True)
     closed = models.BooleanField(default=False)
-    
-    objects = ForumManager()   
-    
+
+    objects = ForumManager()
+
     def __unicode__(self):
         if self.token == 'root':
-           return unicode(_('Root Category')) 
+           return unicode(_('Root Category'))
         return unicode(self.name)
-        
+
     def set_description(self, description):
         self.description = description.strip()
         self.description_preparsed = ''
         if self.description:
             import markdown
-            self.description_preparsed = markdown.markdown(description,safe_mode='escape',output_format=settings.OUTPUT_FORMAT)
-       
+            self.description_preparsed = markdown.markdown(description, safe_mode='escape', output_format=settings.OUTPUT_FORMAT)
+
     def copy_permissions(self, target):
         if target.pk != self.pk:
             for role in Role.objects.all():
@@ -153,10 +153,10 @@ class Forum(MPTTModel):
                     role.save(force_update=True)
                 except KeyError:
                     pass
-        
+
     def move_content(self, target):
         pass
-    
+
     def sync(self):
         self.threads = self.thread_set.filter(moderated=False).filter(deleted=False).count()
         self.posts = self.post_set.filter(moderated=False).filter(deleted=False).count()
@@ -181,6 +181,6 @@ class Forum(MPTTModel):
             self.last_thread_slug = last_thread.slug
         except (IndexError, AttributeError):
             pass
-    
+
     def prune(self):
         pass

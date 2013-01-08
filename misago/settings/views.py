@@ -24,7 +24,7 @@ def settings(request, group_id=None, group_slug=None):
                 break
         else:
             return error404(request, _('The requested settings group could not be found.'))
-            
+
     # Load selected group settings and turn them into form
     group_settings = Setting.objects.filter(group=active_group).order_by('position')
     last_fieldset = (None, [])
@@ -39,7 +39,7 @@ def settings(request, group_id=None, group_slug=None):
         group_form[setting.pk] = setting.get_field()
     group_form['layout'].append(last_fieldset)
     SettingsGroupForm = type('SettingsGroupForm', (Form,), group_form)
-    
+
     #Submit form
     message = request.messages.get_message('admin_settings')
     if request.method == 'POST':
@@ -56,7 +56,7 @@ def settings(request, group_id=None, group_slug=None):
             message = Message(form.non_field_errors()[0], 'error')
     else:
         form = SettingsGroupForm(request=request)
-    
+
     # Display settings group form      
     return request.theme.render_to_response('settings/settings.html',
                                             {
@@ -80,14 +80,14 @@ def settings_search(request):
             if form.is_valid():
                 # Start search
                 search_strings = SearchQuery(form.cleaned_data['search_text'])
-                
+
                 # Loop over groups using our search query
                 for setting in Setting.objects.all().order_by('setting'):
                     if (search_strings.search(_(setting.name))
                         or (setting.description and search_strings.search(_(setting.description)))
                         or (setting.value and search_strings.search(setting.value))):
                         found_settings.append(setting)
-                        
+
                 # Scream if nothing could be found
                 if found_settings:
                     message = Message(ungettext(
@@ -96,13 +96,13 @@ def settings_search(request):
                                                 len(found_settings)) % {
                                                     'count': len(found_settings),
                                                 }, 'success')
-                else:                    
+                else:
                     raise SearchException(_('No settings that match search criteria has been found.'))
             else:
                 raise SearchException(_('Search query is empty.'))
         else:
             raise SearchException(_('Search query is invalid.'))
-    except SearchException as e: 
+    except SearchException as e:
         message = Message(e.message, 'error')
     return request.theme.render_to_response('settings/search_results.html',
                                     {

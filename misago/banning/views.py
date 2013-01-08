@@ -40,12 +40,12 @@ class List(ListWidget):
     """
     admin = site.get_action('bans')
     id = 'list'
-    columns=(
+    columns = (
              ('ban', _("Ban"), 50),
              ('expires', _("Expires")),
              )
     default_sorting = 'expires'
-    sortables={
+    sortables = {
                'ban': 1,
                'expires': 0,
               }
@@ -54,10 +54,10 @@ class List(ListWidget):
     empty_message = _('No bans are currently set.')
     empty_search_message = _('No bans have been found.')
     nothing_checked_message = _('You have to check at least one ban.')
-    actions=(
+    actions = (
              ('delete', _("Lift selected bans"), _("Are you sure you want to lift selected bans?")),
              )
-    
+
     def set_filters(self, model, filters):
         if 'ban' in filters:
             model = model.filter(ban__contains=filters['ban'])
@@ -66,7 +66,7 @@ class List(ListWidget):
         if 'type' in filters:
             model = model.filter(type__in=filters['type'])
         return model
-    
+
     def get_item_actions(self, item):
         return (
                 self.action('pencil', _("Edit Ban"), reverse('admin_bans_edit', item)),
@@ -77,7 +77,7 @@ class List(ListWidget):
         Ban.objects.filter(id__in=checked).delete()
         self.request.monitor['bans_version'] = int(self.request.monitor['bans_version']) + 1
         return Message(_('Selected bans have been lifted successfully.'), 'success'), reverse('admin_bans')
-    
+
 
 class New(FormWidget):
     """
@@ -85,29 +85,29 @@ class New(FormWidget):
     """
     admin = site.get_action('bans')
     id = 'new'
-    fallback = 'admin_bans' 
+    fallback = 'admin_bans'
     form = BanForm
     submit_button = _("Set Ban")
-        
+
     def get_new_url(self, model):
         return reverse('admin_bans_new')
-    
+
     def get_edit_url(self, model):
         return reverse('admin_bans_edit', model)
-    
+
     def submit_form(self, form, target):
         new_ban = Ban(
-                      type = form.cleaned_data['type'],
-                      ban = form.cleaned_data['ban'],
-                      reason_user = form.cleaned_data['reason_user'],
-                      reason_admin = form.cleaned_data['reason_admin'],
-                      expires = form.cleaned_data['expires']
+                      type=form.cleaned_data['type'],
+                      ban=form.cleaned_data['ban'],
+                      reason_user=form.cleaned_data['reason_user'],
+                      reason_admin=form.cleaned_data['reason_admin'],
+                      expires=form.cleaned_data['expires']
                      )
         new_ban.save(force_insert=True)
         self.request.monitor['bans_version'] = int(self.request.monitor['bans_version']) + 1
         return new_ban, Message(_('New Ban has been set.'), 'success')
-    
-   
+
+
 class Edit(FormWidget):
     """
     Edit Ban
@@ -120,13 +120,13 @@ class Edit(FormWidget):
     target_name = 'ban'
     notfound_message = _('Requested Ban could not be found.')
     submit_fallback = True
-    
+
     def get_url(self, model):
         return reverse('admin_bans_edit', model)
-    
+
     def get_edit_url(self, model):
         return self.get_url(model)
-    
+
     def get_initial_data(self, model):
         return {
                 'type': model.type,
@@ -135,7 +135,7 @@ class Edit(FormWidget):
                 'reason_admin': model.reason_admin,
                 'expires': model.expires,
                 }
-    
+
     def submit_form(self, form, target):
         target.type = form.cleaned_data['type']
         target.ban = form.cleaned_data['ban']
@@ -155,7 +155,7 @@ class Delete(ButtonWidget):
     id = 'delete'
     fallback = 'admin_bans'
     notfound_message = _('Requested Ban could not be found.')
-    
+
     def action(self, target):
         target.delete()
         self.request.monitor['bans_version'] = int(self.request.monitor['bans_version']) + 1
@@ -166,4 +166,4 @@ class Delete(ButtonWidget):
         if target.type == 2:
             return Message(_('E-mail Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, 'success'), False
         if target.type == 3:
-            return Message(_('IP Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, 'success'), False        
+            return Message(_('IP Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, 'success'), False

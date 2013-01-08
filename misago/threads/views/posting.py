@@ -25,14 +25,14 @@ class PostingView(BaseView):
                 self.fetch_post(self.thread.start_post_id)
             if self.mode == 'edit_post':
                 self.fetch_post(kwargs['post'])
-    
+
     def fetch_forum(self, kwargs):
         self.forum = Forum.objects.get(pk=kwargs['forum'], type='forum')
         self.proxy = Forum.objects.parents_aware_forum(self.forum)
         self.request.acl.forums.allow_forum_view(self.forum)
         self.request.acl.threads.allow_new_threads(self.proxy)
         self.parents = Forum.objects.forum_parents(self.forum.pk, True)
-    
+
     def fetch_thread(self, kwargs):
         self.thread = Thread.objects.get(pk=kwargs['thread'])
         self.forum = self.thread.forum
@@ -44,15 +44,15 @@ class PostingView(BaseView):
         if kwargs.get('quote'):
             self.quote = Post.objects.select_related('user').get(pk=kwargs['quote'], thread=self.thread.pk)
             self.request.acl.threads.allow_post_view(self.request.user, self.thread, self.quote)
-    
+
     def fetch_post(self, post):
         self.post = self.thread.post_set.get(pk=post)
         self.request.acl.threads.allow_post_view(self.request.user, self.thread, self.post)
         if self.mode == 'edit_thread':
             self.request.acl.threads.allow_thread_edit(self.request.user, self.proxy, self.thread, self.post)
         if self.mode == 'edit_post':
-            self.request.acl.threads.allow_reply_edit(self.request.user, self.proxy, self.thread, self.post)     
-        
+            self.request.acl.threads.allow_reply_edit(self.request.user, self.proxy, self.thread, self.post)
+
     def get_form(self, bound=False):
         initial = {}
         if self.mode == 'edit_thread':
@@ -69,11 +69,11 @@ class PostingView(BaseView):
                 quote_post.append('> %s' % line)
             quote_post.append('\n')
             initial['post'] = '\n'.join(quote_post)
-            
-        if bound:            
-            return PostForm(self.request.POST,request=self.request,mode=self.mode,initial=initial)
-        return PostForm(request=self.request,mode=self.mode,initial=initial)
-            
+
+        if bound:
+            return PostForm(self.request.POST, request=self.request, mode=self.mode, initial=initial)
+        return PostForm(request=self.request, mode=self.mode, initial=initial)
+
     def __call__(self, request, **kwargs):
         self.request = request
         self.forum = None
@@ -94,7 +94,7 @@ class PostingView(BaseView):
             return error403(request, e.message)
         except ACLError404 as e:
             return error404(request, e.message)
-        
+
         message = request.messages.get_message('threads')
         if request.method == 'POST':
             form = self.get_form(True)
@@ -107,7 +107,7 @@ class PostingView(BaseView):
                     changed_name = (old_name != form.cleaned_data['thread_name']) if self.mode == 'edit_thread' else False
                     changed_post = old_post != form.cleaned_data['post']
                     changed_anything = changed_name or changed_post
-                
+
                 # Some extra initialisation
                 now = timezone.now()
                 moderation = False
@@ -115,8 +115,8 @@ class PostingView(BaseView):
                     if self.mode == 'new_thread' and request.acl.threads.acl[self.forum.pk]['can_start_threads'] == 1:
                         moderation = True
                     if self.mode in ['new_post', 'new_post_quick'] and request.acl.threads.acl[self.forum.pk]['can_write_posts'] == 1:
-                        moderation = True 
-                        
+                        moderation = True
+
                 # Get or create new thread
                 if self.mode == 'new_thread':
                     thread = Thread.objects.create(
@@ -134,8 +134,8 @@ class PostingView(BaseView):
                     thread = self.thread
                     if self.mode == 'edit_thread':
                         thread.name = form.cleaned_data['thread_name']
-                        thread.slug = slugify(form.cleaned_data['thread_name']) 
-                
+                        thread.slug = slugify(form.cleaned_data['thread_name'])
+
                 # Create new message
                 if self.mode in ['new_thread', 'new_post', 'new_post_quick']:
                     # Use last post instead?
@@ -178,7 +178,7 @@ class PostingView(BaseView):
                     post.edit_user_name = request.user.username
                     post.edit_user_slug = request.user.username_slug
                     post.save(force_update=True)
-                
+
                 # Record this edit in changelog?
                 if self.mode in ['edit_thread', 'edit_post'] and changed_anything:
                     self.post.change_set.create(
@@ -198,7 +198,7 @@ class PostingView(BaseView):
                                                 thread_name_new=self.thread.name if self.mode == 'edit_thread' and form.cleaned_data['thread_name'] != old_name else None,
                                                 post_content=old_post,
                                                 )
-                
+
                 # Set thread start post and author data
                 if self.mode == 'new_thread':
                     thread.start_post = post
@@ -207,7 +207,7 @@ class PostingView(BaseView):
                     thread.start_poster_slug = request.user.username_slug
                     if request.user.rank and request.user.rank.style:
                         thread.start_poster_style = request.user.rank.style
-                
+
                 # New post - increase post counters, thread score
                 # Notify quoted post author and close thread if it has hit limit
                 if self.mode in ['new_post', 'new_post_quick']:
@@ -228,7 +228,7 @@ class PostingView(BaseView):
                             and thread.replies >= self.request.settings.thread_length):
                             thread.closed = True
                             post.set_checkpoint(self.request, 'limit')
-                
+
                 # Update last poster data
                 if not moderation and self.mode not in ['edit_thread', 'edit_post']:
                     thread.last = now
@@ -238,23 +238,23 @@ class PostingView(BaseView):
                     thread.last_poster_slug = request.user.username_slug
                     if request.user.rank and request.user.rank.style:
                         thread.last_poster_style = request.user.rank.style
-                        
+
                 # Final update of thread entry
                 if self.mode != 'edit_post':
                     thread.save(force_update=True)
-                
+
                 # Update forum and monitor
                 if not moderation:
                     if self.mode == 'new_thread':
                         self.request.monitor['threads'] = int(self.request.monitor['threads']) + 1
                         self.forum.threads += 1
                         self.forum.threads_delta += 1
-                        
+
                     if self.mode in ['new_thread', 'new_post', 'new_post_quick']:
                         self.request.monitor['posts'] = int(self.request.monitor['posts']) + 1
                         self.forum.posts += 1
                         self.forum.posts_delta += 1
-                        
+
                     self.forum.last_thread = thread
                     self.forum.last_thread_name = thread.name
                     self.forum.last_thread_slug = thread.slug
@@ -264,7 +264,7 @@ class PostingView(BaseView):
                     self.forum.last_poster_slug = thread.last_poster_slug
                     self.forum.last_poster_style = thread.last_poster_style
                     self.forum.save(force_update=True)
-                
+
                 # Update user
                 if not moderation:
                     if self.mode == 'new_thread':
@@ -273,7 +273,7 @@ class PostingView(BaseView):
                 if self.mode in ['new_thread', 'new_post', 'new_post_quick']:
                     request.user.last_post = thread.last
                     request.user.save(force_update=True)
-                
+
                 # Set flash and redirect user to his post
                 if self.mode == 'new_thread':
                     if moderation:
@@ -281,14 +281,14 @@ class PostingView(BaseView):
                     else:
                         request.messages.set_flash(Message(_("New thread has been posted.")), 'success', 'threads')
                     return redirect(reverse('thread', kwargs={'thread': thread.pk, 'slug': thread.slug}) + ('#post-%s' % post.pk))
-                
+
                 if self.mode in ['new_post', 'new_post_quick']:
                     if moderation:
                         request.messages.set_flash(Message(_("Your reply has been posted. It will be hidden from other members until moderator reviews it.")), 'success', 'threads_%s' % post.pk)
                     else:
                         request.messages.set_flash(Message(_("Your reply has been posted.")), 'success', 'threads_%s' % post.pk)
                     return self.redirect_to_post(post)
-                
+
                 if self.mode == 'edit_thread':
                     request.messages.set_flash(Message(_("Your thread has been edited.")), 'success', 'threads_%s' % self.post.pk)
                 if self.mode == 'edit_post':
@@ -298,7 +298,7 @@ class PostingView(BaseView):
             message = Message(form.non_field_errors()[0], 'error')
         else:
             form = self.get_form()
-            
+
         # Merge proxy into forum
         self.forum.closed = self.proxy.closed
         return request.theme.render_to_response('threads/posting.html',

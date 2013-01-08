@@ -18,7 +18,7 @@ class UserMiddleware(object):
             # Set user timezone and rank
             request.session.rank = request.user.rank_id
             set_timezone(request.user.timezone)
-            
+
             # Display "welcome back!" message
             if request.session.remember_me:
                 request.messages.set_message(Message(_("Welcome back, %(username)s! We've signed you in automatically for your convenience.") % {'username': request.user.username}), 'info')

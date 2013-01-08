@@ -8,7 +8,7 @@ from misago.forms import Form
 class UploadAvatarForm(Form):
     avatar_upload = forms.ImageField(error_messages={'invalid_image': _("Uploaded file is not correct image.")})
     error_source = 'avatar_upload'
-    
+
     layout = [
               [
                None,
@@ -17,9 +17,9 @@ class UploadAvatarForm(Form):
                 ],
                ],
               ]
-    
+
     def clean_avatar_upload(self):
-        image = self.cleaned_data.get('avatar_upload',False)
+        image = self.cleaned_data.get('avatar_upload', False)
         if image:
             if image._size > self.request.settings.upload_limit * 1024:
                 if self.request.settings.upload_limit > 1024:

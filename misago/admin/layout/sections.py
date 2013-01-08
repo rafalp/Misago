@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import AdminSection
 
-ADMIN_SECTIONS=(
+ADMIN_SECTIONS = (
     AdminSection(
                  id='overview',
                  name=_("Overview"),

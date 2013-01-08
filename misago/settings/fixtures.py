@@ -6,7 +6,7 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
-    
+
 settings_fixture = (
    # Basic options
    ('basic', {
@@ -116,7 +116,7 @@ def update_settings_group_fixture(group, fixture):
             settings[setting.pk] = setting.value
         model_group.delete()
         load_settings_group_fixture(group, fixture)
-        
+
         for setting in settings:
             try:
                 new_setting = Setting.objects.get(pk=setting)
@@ -126,21 +126,21 @@ def update_settings_group_fixture(group, fixture):
                 pass
     except Group.DoesNotExist:
         load_settings_group_fixture(group, fixture)
-    
+
 
 def load_settings_fixture(fixture):
     for group in fixture:
         load_settings_group_fixture(group[0], group[1])
-    
-    
+
+
 def update_settings_fixture(fixture):
     for group in fixture:
         update_settings_group_fixture(group[0], group[1])
-    
-    
+
+
 def load_fixtures():
     load_settings_fixture(settings_fixture)
-    
-    
+
+
 def update_fixtures():
     update_settings_fixture(settings_fixture)

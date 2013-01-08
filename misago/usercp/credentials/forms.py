@@ -7,10 +7,10 @@ from misago.users.models import User
 from misago.users.validators import validate_password, validate_email
 
 class CredentialsChangeForm(Form):
-    new_email = forms.EmailField(max_length=255,required=False)
-    new_password = forms.CharField(max_length=255,widget=forms.PasswordInput,required=False)
-    current_password = forms.CharField(max_length=255,widget=forms.PasswordInput)
-    
+    new_email = forms.EmailField(max_length=255, required=False)
+    new_password = forms.CharField(max_length=255, widget=forms.PasswordInput, required=False)
+    current_password = forms.CharField(max_length=255, widget=forms.PasswordInput)
+
     layout = [
               (
                None,
@@ -21,7 +21,7 @@ class CredentialsChangeForm(Form):
                 ]
                ),
               ]
-        
+
     def clean_new_email(self):
         if self.cleaned_data['new_email']:
             new_hash = hashlib.md5(self.cleaned_data['new_email'].lower()).hexdigest()
@@ -34,17 +34,17 @@ class CredentialsChangeForm(Form):
                 pass
             validate_email(self.cleaned_data['new_email'])
         return self.cleaned_data['new_email'].lower()
-        
+
     def clean_new_password(self):
         if self.cleaned_data['new_password']:
             validate_password(self.cleaned_data['new_password'])
         return self.cleaned_data['new_password']
-        
+
     def clean_current_password(self):
         if not self.request.user.check_password(self.cleaned_data['current_password']):
             raise ValidationError(_("You have entered wrong password."))
         return ''
-        
+
     def clean(self):
         cleaned_data = super(CredentialsChangeForm, self).clean()
         if not cleaned_data['new_email'] and not cleaned_data['new_password']:

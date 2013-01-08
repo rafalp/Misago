@@ -26,7 +26,7 @@ if ADMIN_PATH:
     urlpatterns += patterns('',
         url(r'^' + ADMIN_PATH, include(site.discover())),
     )
-    
+
 # Include static and media patterns in DEBUG
 if settings.DEBUG:
     urlpatterns += patterns('django.views.static',

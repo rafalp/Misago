@@ -6,16 +6,16 @@ from misago.ranks.models import Rank
 from misago.utils.validators import validate_sluggable
 
 class NewsletterForm(Form):
-    name = forms.CharField(max_length=255,validators=[validate_sluggable(
-                                                                         _("Newsletter name must be sluggable."),
-                                                                         _("Newsletter name is too long.")
-                                                                         )])
-    step_size = forms.IntegerField(initial=300,min_value=1)
+    name = forms.CharField(max_length=255, validators=[validate_sluggable(
+                                                                          _("Newsletter name must be sluggable."),
+                                                                          _("Newsletter name is too long.")
+                                                                          )])
+    step_size = forms.IntegerField(initial=300, min_value=1)
     content_html = forms.CharField(widget=forms.Textarea)
     content_plain = forms.CharField(widget=forms.Textarea)
-    ignore_subscriptions = forms.BooleanField(widget=YesNoSwitch,required=False) 
-    ranks = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,queryset=Rank.objects.order_by('name').all(),required=False)
-    
+    ignore_subscriptions = forms.BooleanField(widget=YesNoSwitch, required=False)
+    ranks = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Rank.objects.order_by('name').all(), required=False)
+
     layout = (
               (
                _("Newsletter Options"),
@@ -36,12 +36,12 @@ class NewsletterForm(Form):
              )
 
 
-class SearchNewslettersForm(Form):    
+class SearchNewslettersForm(Form):
     name = forms.CharField(max_length=255, required=False)
     contains = forms.CharField(max_length=255, required=False)
     type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=(('0', _("Only to subscribers")), ('1', _("To every member"))), required=False)
     rank = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Rank.objects.order_by('order').all(), required=False)
-    
+
     layout = (
               (
                _("Search Newsletters"),

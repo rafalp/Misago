@@ -16,7 +16,7 @@ def load_app_fixtures(app):
         print 'Could not load fixtures from %s:\n%s' % (app, e)
         return False
 
-    
+
 def update_app_fixtures(app):
     """
     See if application has fixtures module defining update_fixtures function

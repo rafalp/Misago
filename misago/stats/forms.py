@@ -9,7 +9,7 @@ class GenerateStatisticsForm(Form):
     date_start = forms.DateField(initial=tz.now() - timedelta(days=7))
     date_end = forms.DateField(initial=tz.now())
     stats_precision = forms.ChoiceField(choices=(('day', _('For each day')), ('week', _('For each week')), ('month', _('For each month')), ('year', _('For each year'))))
-    
+
     layout = (
               (None, (
                         ('provider_model', {'label': _('Report Type'), 'help_text': _('Select statistics provider.')}),
@@ -20,7 +20,7 @@ class GenerateStatisticsForm(Form):
                         ('stats_precision', {'label': _('Graph Precision')}),
                       )),
               )
-    
+
     def __init__(self, *args, **kwargs):
         provider_choices = kwargs.get('provider_choices')
         del kwargs['provider_choices']

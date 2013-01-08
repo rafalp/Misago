@@ -25,7 +25,7 @@ def home(request):
             thread.forum_slug = thread.forum.slug
             popular_threads.append(thread)
         cache.set('thread_ranking_%s' % request.user.make_acl_key(), popular_threads, request.settings['thread_ranking_refresh'])
-          
+
     # Ranks online
     ranks_list = cache.get('users_online', 'nada')
     if ranks_list == 'nada':
@@ -44,7 +44,7 @@ def home(request):
             del ranks_dict
             del users_list
         cache.set('ranks_list', ranks_list, 10)
-            
+
     # Render page with forums list
     reads_tracker = ForumsTracker(request.user)
     return request.theme.render_to_response('index.html',
@@ -114,7 +114,7 @@ def redirect_message(request, message, type='info', owner=None):
 def error403(request, message=None):
     return error_view(request, 403, message)
 
-                                            
+
 def error404(request, message=None):
     return error_view(request, 404, message)
 

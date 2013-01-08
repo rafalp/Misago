@@ -5,14 +5,14 @@ from django.utils.translation import ugettext_lazy as _
 from misago.forms import Form
 from misago import captcha
 from misago.users.models import User
-    
-    
+
+
 class UserSendActivationMailForm(Form):
     email = forms.EmailField(max_length=255)
     captcha_qa = captcha.QACaptchaField()
     recaptcha = captcha.ReCaptchaField()
     error_source = 'email'
-    
+
     layout = [
               (
                None,
@@ -23,7 +23,7 @@ class UserSendActivationMailForm(Form):
                ['captcha_qa', 'recaptcha']
                ),
               ]
-    
+
     def clean_email(self):
         try:
             email = self.cleaned_data['email'].lower()

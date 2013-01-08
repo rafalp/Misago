@@ -12,11 +12,11 @@ BAN_IP = 3
 class Ban(models.Model):
     type = models.PositiveIntegerField(default=BAN_NAME_EMAIL)
     ban = models.CharField(max_length=255)
-    reason_user = models.TextField(null=True,blank=True)
-    reason_admin = models.TextField(null=True,blank=True)
-    expires = models.DateTimeField(null=True,blank=True,db_index=True)
+    reason_user = models.TextField(null=True, blank=True)
+    reason_admin = models.TextField(null=True, blank=True)
+    expires = models.DateTimeField(null=True, blank=True, db_index=True)
 
-    
+
 def check_ban(ip=False, username=False, email=False):
     bans_model = Ban.objects.filter(Q(expires=None) | Q(expires__gt=timezone.now()))
     if not (ip and username and email):
@@ -32,13 +32,13 @@ def check_ban(ip=False, username=False, email=False):
         if (
             # Check user name
             ((username and (ban.type == BAN_NAME_EMAIL or ban.type == BAN_NAME))
-            and re.search('^'+re.escape(ban.ban).replace('\*', '(.*?)')+'$', username, flags=re.IGNORECASE))
+            and re.search('^' + re.escape(ban.ban).replace('\*', '(.*?)') + '$', username, flags=re.IGNORECASE))
             or # Check user email
             ((email and (ban.type == BAN_NAME_EMAIL or ban.type == BAN_EMAIL))
-            and re.search('^'+re.escape(ban.ban).replace('\*', '(.*?)')+'$', email, flags=re.IGNORECASE))
+            and re.search('^' + re.escape(ban.ban).replace('\*', '(.*?)') + '$', email, flags=re.IGNORECASE))
             or # Check IP address
             (ip and ban.type == BAN_IP
-            and re.search('^'+re.escape(ban.ban).replace('\*', '(.*?)')+'$', ip, flags=re.IGNORECASE))):
+            and re.search('^' + re.escape(ban.ban).replace('\*', '(.*?)') + '$', ip, flags=re.IGNORECASE))):
                 return ban
     return False
 
@@ -50,12 +50,12 @@ class BanCache(object):
         self.expires = None
         self.reason_user = None
         self.version = 0
-        
+
     def check_for_updates(self, request):
         if (self.version < request.monitor['bans_version']
             or (self.expires != None and self.expires < timezone.now())):
             self.version = request.monitor['bans_version']
-            
+
             # Check Ban
             if request.user.is_authenticated():
                 ban = check_ban(
@@ -65,7 +65,7 @@ class BanCache(object):
                                 )
             else:
                 ban = check_ban(ip=request.session.get_ip(request))
-                
+
             # Update ban cache
             if ban:
                 self.banned = True
@@ -78,7 +78,7 @@ class BanCache(object):
                 self.expires = None
                 self.type = None
             return True
-        return False    
-    
+        return False
+
     def is_banned(self):
         return self.banned

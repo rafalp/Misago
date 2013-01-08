@@ -11,18 +11,18 @@ class Policy(models.Model):
     Pruning policy
     """
     name = models.CharField(max_length=255)
-    email = models.CharField(max_length=255,null=True,blank=True)
+    email = models.CharField(max_length=255, null=True, blank=True)
     posts = models.PositiveIntegerField(default=0)
     registered = models.PositiveIntegerField(default=0)
     last_visit = models.PositiveIntegerField(default=0)
-    
+
     def clean(self):
         if not (self.email and self.posts and self.registered and self.last_visit):
             raise ValidationError(_("Pruning policy must have at least one pruning criteria set to be valid."))
-        
+
     def get_model(self):
         model = User.objects
-        
+
         if self.email:
             if ',' in self.email:
                 qs = None
@@ -37,16 +37,16 @@ class Policy(models.Model):
                     model = model.filter(qs)
             else:
                 model = model.filter(email__iendswith=self.email)
-                
+
         if self.posts:
             model = model.filter(posts__lt=self.posts)
-            
+
         if self.registered:
             date = timezone.now() - timedelta(days=self.registered)
             model = model.filter(join_date__gte=date)
-            
+
         if self.last_visit:
             date = timezone.now() - timedelta(days=self.last_visit)
             model = model.filter(last_date__gte=date)
-            
+
         return model

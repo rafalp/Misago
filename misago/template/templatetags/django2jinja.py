@@ -61,7 +61,7 @@ def reldate(val, arg=""):
     now = datetime.now(utc if is_aware(val) else None)
     diff = now - val
     local = localtime(val)
-    
+
     # Common situations
     if diff.days == 0:
         return _("Today, %(hour)s") % {'hour': time_format(local, formats['TIME_FORMAT'])}
@@ -71,7 +71,7 @@ def reldate(val, arg=""):
         return _("Tomorrow, %(hour)s") % {'hour': time_format(local, formats['TIME_FORMAT'])}
     if diff.days > -7 or diff.days < 7:
         return _("%(day)s, %(hour)s") % {'day': format(local, 'l'), 'hour': time_format(local, formats['TIME_FORMAT'])}
-    
+
     # Fallback to custom      
     return date(val, arg)
 
@@ -80,7 +80,7 @@ def reltimesince(val, arg=""):
     now = datetime.now(utc if is_aware(val) else None)
     diff = now - val
     local = localtime(val)
-    
+
     # Display specific time
     if diff.seconds >= 0:
         if diff.seconds <= 60:
@@ -107,7 +107,7 @@ def reltimesince(val, arg=""):
                     "Hour ago",
                     "%(hours)s hours ago",
                 hours) % {'hours': hours}
-        
+
     # Fallback to reldate
     return reldate(val, arg)
 

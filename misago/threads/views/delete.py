@@ -29,7 +29,7 @@ class DeleteView(BaseView):
             if not acl['can_delete_threads']:
                 if self.thread.post_set.exclude(user_id=self.request.user.id).count() > 0:
                     raise ACLError403(_("Somebody has already replied to this thread. You cannot delete it."))
-            
+
     def fetch_post(self, kwargs):
         self.post = self.thread.post_set.get(pk=kwargs['post'])
         if self.post.pk == self.thread.start_post_id:
@@ -44,7 +44,7 @@ class DeleteView(BaseView):
         acl = self.request.acl.threads.get_role(self.thread.forum_id)
         if not acl['can_delete_posts'] and self.thread.post_set.filter(id__gt=self.post.pk).count() > 0:
             raise ACLError403(_("Somebody has already replied to this post, you cannot delete it."))
-        
+
     def __call__(self, request, **kwargs):
         self.request = request
         self.mode = kwargs['mode']
@@ -60,14 +60,14 @@ class DeleteView(BaseView):
             return error403(request, e.message)
         except ACLError404 as e:
             return error404(request, e.message)
-        
+
         if self.mode == 'delete_thread':
             self.thread.delete()
             self.forum.sync()
             self.forum.save(force_update=True)
             request.messages.set_flash(Message(_('Thread "%(thread)s" has been deleted.') % {'thread': self.thread.name}), 'success', 'threads')
             return redirect(reverse('forum', kwargs={'forum': self.thread.forum.pk, 'slug': self.thread.forum.slug}))
-        
+
         if self.mode == 'hide_thread':
             self.thread.start_post.deleted = True
             self.thread.start_post.save(force_update=True)
@@ -80,7 +80,7 @@ class DeleteView(BaseView):
             if request.acl.threads.can_see_deleted_threads(self.thread.forum):
                 return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))
             return redirect(reverse('forum', kwargs={'forum': self.thread.forum.pk, 'slug': self.thread.forum.slug}))
-        
+
         if self.mode == 'delete_post':
             self.post.delete()
             self.thread.sync()
@@ -89,7 +89,7 @@ class DeleteView(BaseView):
             self.forum.save(force_update=True)
             request.messages.set_flash(Message(_("Selected Reply has been deleted.")), 'success', 'threads')
             return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))
-            
+
         if self.mode == 'hide_post':
             self.post.deleted = True
             self.post.edit_date = timezone.now()

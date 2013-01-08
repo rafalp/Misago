@@ -38,7 +38,7 @@ def show_alerts(request):
                 alerts['older'].append(alert)
             except KeyError:
                 alerts['older'] = [alert]
-    
+
     new_alerts = request.user.alerts
     request.user.alerts = 0
     request.user.alerts_date = now

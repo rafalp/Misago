@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 from misago.setup.fixtures import load_app_fixtures
-from misago.monitor.models import Item 
+from misago.monitor.models import Item
 from optparse import make_option
 
 class Command(BaseCommand):

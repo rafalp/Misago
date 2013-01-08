@@ -1,5 +1,5 @@
 from django.db import models
-       
+
 class Session(models.Model):
     id = models.CharField(max_length=42, primary_key=True)
     data = models.TextField(db_column="session_data")

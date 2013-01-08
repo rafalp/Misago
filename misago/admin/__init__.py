@@ -14,7 +14,7 @@ if settings.ADMIN_PATH:
     while ADMIN_PATH[-1:] == '/':
         ADMIN_PATH = ADMIN_PATH[:-1]
     ADMIN_PATH += '/'
-    
+
 
 """
 Admin lists sorter for admin sections and actions
@@ -22,7 +22,7 @@ Admin lists sorter for admin sections and actions
 class SortList(object):
     def __init__(self, unsorted):
         self.unsorted = unsorted
-        
+
     def sort(self):
         # Sort and return sorted list
         order = []
@@ -53,8 +53,8 @@ class SortList(object):
                     sorted.append(object)
                     break
         return sorted
-        
-            
+
+
 """
 Admin site section
 """
@@ -68,8 +68,8 @@ class AdminSiteItem(object):
         self.target = target
         self.route = route
         self.sorted = False
-    
-    
+
+
 """
 Admin site action
 """
@@ -81,13 +81,13 @@ class AdminAction(AdminSiteItem):
         self.messages = messages
         self.urlpatterns = urlpatterns
         super(AdminAction, self).__init__(**kwargs)
-    
+
     def get_action_attr(self, id, attr):
         for action in self.actions:
             if action['id'] == id:
                 return action[attr]
         return None
-    
+
     def is_active(self, full_path, section=None):
         if section:
             action_path = '/%s%s/%s/' % (ADMIN_PATH, section, self.id)
@@ -105,7 +105,7 @@ class AdminSection(AdminSiteItem):
         self.actions = []
         self.last = None
         super(AdminSection, self).__init__(**kwargs)
-        
+
     def get_routes(self):
         routes = []
         first_action = True
@@ -116,7 +116,7 @@ class AdminSection(AdminSiteItem):
             else:
                 routes += patterns('', url(('^%s/' % action.id), include(action.urlpatterns)))
         return routes
-            
+
     def is_active(self, full_path):
         action_path = '/%s%s/' % (ADMIN_PATH, self.id)
         # Paths overlap = active action
@@ -131,7 +131,7 @@ class AdminSite(object):
     routes = []
     sections = []
     sections_index = {}
-    
+
     def discover(self):
         """
         Build admin site structure
@@ -139,19 +139,19 @@ class AdminSite(object):
         # Return discovered admin routes, so we dont repeat ourself
         if self.routes:
             return self.routes
-        
+
         # Found actions
         actions = []
-        
+
         # Orphan actions that have no section yet
         late_actions = []
-        
+
         # Load default admin site
         from misago.admin.layout.sections import ADMIN_SECTIONS
         for section in ADMIN_SECTIONS:
             self.sections.append(section)
             self.sections_index[section.id] = section
-            
+
             # Loop section actions
             section_actions = import_module('misago.admin.layout.%s' % section.id)
             for action in section_actions.ADMIN_ACTIONS:
@@ -160,12 +160,12 @@ class AdminSite(object):
                      action.after = self.sections_index[section.id].last
                 actions.append(action)
                 self.sections_index[section.id].last = action.after
-        
+
         # Iterate over installed applications
         for app_name in settings.INSTALLED_APPS:
             try:
                 app = import_module(app_name + '.admin')
-                
+
                 # Attempt to import sections
                 try:
                     for section in app.ADMIN_SECTIONS:
@@ -173,7 +173,7 @@ class AdminSite(object):
                         self.sections_index[section.id] = section
                 except AttributeError:
                     pass
-                
+
                 # Attempt to import actions
                 try:
                     for action in app.ADMIN_ACTIONS:
@@ -189,20 +189,20 @@ class AdminSite(object):
                     pass
             except ImportError:
                 pass
-                
+
         # So actions and late actions
         actions += late_actions
-        
+
         # Sorth sections and actions
         sort_sections = SortList(self.sections)
         sort_actions = SortList(actions)
         self.sections = sort_sections.sort()
         actions = sort_actions.sort()
-        
+
         # Put actions in sections
         for action in actions:
             self.sections_index[action.section].actions.append(action)
-        
+
         # Return ready admin routing
         first_section = True
         for section in self.sections:
@@ -212,19 +212,19 @@ class AdminSite(object):
             else:
                 self.routes += patterns('', url(('^%s/' % section.id), include(section.get_routes())))
         return self.routes
-    
+
     def get_action(self, action):
         """
         Get admin action
         """
         return self.actions_index.get(action)
-            
+
     def get_admin_index(self):
         """
         Return admin index route - first action of first section
         """
         return self.sections[0].actions[0].route
-            
+
     def get_admin_navigation(self, request):
         """
         Find and return current admin navigation
@@ -233,7 +233,7 @@ class AdminSite(object):
         actions = []
         active_section = False
         active_action = False
-        
+
         # Loop sections, build list of sections and find active section
         for section in self.sections:
             is_active = section.is_active(request.path)
@@ -245,12 +245,12 @@ class AdminSite(object):
                              })
             if is_active:
                 active_section = section
-        
+
         # If no section was found to be active, default to first one
         if not active_section:
             active_section = self.sections[0]
             sections[0]['is_active'] = True
-            
+
         # Loop active section actions
         for action in active_section.actions:
             is_active = action.is_active(request.path, active_section.id if active_section != self.sections[0] else None)
@@ -263,12 +263,12 @@ class AdminSite(object):
                              })
             if is_active:
                 active_action = action
-        
+
         # If no action was found to be active, default to first one
         if not active_action:
             active_action = active_section.actions[0]
             actions[0]['is_active'] = True
-        
+
         # Return admin navigation for this location
         return {
                 'sections': sections,

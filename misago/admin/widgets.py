@@ -24,7 +24,7 @@ class BaseWidget(object):
     name = None
     help = None
     notfound_message = None
-    
+
     def __new__(cls, request, **kwargs):
         obj = super(BaseWidget, cls).__new__(cls)
         if not obj.name:
@@ -32,35 +32,35 @@ class BaseWidget(object):
         if not obj.help:
             obj.help = obj.get_help()
         return obj(request, **kwargs)
-    
+
     def get_token(self, token):
         return '%s_%s_%s' % (self.id, token, str('%s.%s' % (self.admin.model.__module__, self.admin.model.__name__)))
-        
+
     def get_url(self):
         return reverse(self.admin.get_action_attr(self.id, 'route'))
-    
+
     def get_name(self):
         return self.admin.get_action_attr(self.id, 'name')
-    
+
     def get_help(self):
         return self.admin.get_action_attr(self.id, 'help')
-    
+
     def get_id(self):
         return 'admin_%s' % self.id
-         
+
     def get_template(self):
         return ('%s/%s.html' % (self.admin.id, self.template),
                 'admin/%s.html' % self.template)
-    
+
     def add_template_variables(self, variables):
         return variables
-            
+
     def get_fallback_url(self):
         return reverse(self.fallback)
-        
+
     def get_target(self, model):
         pass
-    
+
     def get_target_name(self, model):
         try:
             if self.translate_target_name:
@@ -68,7 +68,7 @@ class BaseWidget(object):
             return model.__dict__[self.target_name]
         except AttributeError:
             return None
-        
+
     def get_and_validate_target(self, target):
         try:
             model = self.admin.model.objects.select_related().get(pk=target)
@@ -85,7 +85,7 @@ class ListWidget(BaseWidget):
     """
     Items list widget
     """
-    actions =[]
+    actions = []
     columns = []
     sortables = {}
     default_sorting = None
@@ -99,14 +99,14 @@ class ListWidget(BaseWidget):
     empty_search_message = _('Search has returned no items')
     nothing_checked_message = _('You have to select at least one item.')
     prompt_select = False
-    
+
     def get_item_actions(self, item):
         """
         Provides request and item, should return list of tuples with item actions in following format:
         (id, name, help, icon, link)
         """
         return []
-    
+
     def action(self, icon=None, name=None, url=None, post=False, prompt=None):
         """
         Function call to make hash with item actions
@@ -120,31 +120,31 @@ class ListWidget(BaseWidget):
                 'post': post,
                 'prompt': prompt,
                 }
-        
+
     def get_search_form(self):
         """
         Build a form object with items search
         """
         return self.search_form
-            
+
     def set_filters(self, model, filters):
         """
         Set filters on model using filters from session
         """
         return None
-    
+
     def get_table_form(self, page_items):
         """
         Build a form object with list of all items fields
         """
         return None
-    
+
     def table_action(self, page_items, cleaned_data):
         """
         Handle table form submission, return tuple containing message and redirect link/false
         """
         return None
-    
+
     def get_actions_form(self, page_items):
         """
         Build a form object with list of all items actions
@@ -159,9 +159,9 @@ class ListWidget(BaseWidget):
         list_choices = []
         for item in page_items:
             list_choices.append((item.pk, None))
-        form_fields['list_items'] = forms.MultipleChoiceField(choices=list_choices,widget=forms.CheckboxSelectMultiple)
+        form_fields['list_items'] = forms.MultipleChoiceField(choices=list_choices, widget=forms.CheckboxSelectMultiple)
         return type('AdminListForm', (Form,), form_fields)
-        
+
     def get_sorting(self):
         """
         Return list sorting method.
@@ -173,7 +173,7 @@ class ListWidget(BaseWidget):
         sorting_method = None
         if self.request.session.get(self.get_token('sort')) and self.request.session.get(self.get_token('sort'))[0] in self.sortables:
             sorting_method = self.request.session.get(self.get_token('sort'))
-            
+
         if self.request.GET.get('sort') and self.request.GET.get('sort') in self.sortables:
             new_sorting = self.request.GET.get('sort')
             sorting_dir = int(self.request.GET.get('dir')) == 1
@@ -183,7 +183,7 @@ class ListWidget(BaseWidget):
                     new_sorting if sorting_dir else '-%s' % new_sorting
                    ]
             self.request.session[self.get_token('sort')] = sorting_method
-            
+
         if not sorting_method:
             if self.sortables:
                 new_sorting = self.sortables.keys()[0]
@@ -201,13 +201,13 @@ class ListWidget(BaseWidget):
                         '-id'
                        ]
         return sorting_method
-    
+
     def sort_items(self, page_items, sorting_method):
         return page_items.order_by(sorting_method[2])
-    
+
     def get_pagination_url(self, page):
         return reverse(self.admin.get_action_attr(self.id, 'route'), kwargs={'page': page})
-    
+
     def get_pagination(self, total, page):
         """
         Return list pagination.
@@ -222,86 +222,86 @@ class ListWidget(BaseWidget):
         if not self.pagination or total < 0:
             # Dont do anything if we are not paging
             return None
-        
+
         # Set basic pagination, use either Session cache or new page value
-        pagination = {'start': 0, 'stop': 0, 'prev': -1, 'next': -1}
+        pagination = {'start': 0, 'stop': 0, 'prev':-1, 'next':-1}
         if self.request.session.get(self.get_token('pagination')):
             pagination['start'] = self.request.session.get(self.get_token('pagination'))
         page = int(page)
         if page > 0:
             pagination['start'] = (page - 1) * self.pagination
-            
+
         # Set page and total stat
         pagination['page'] = int(pagination['start'] / self.pagination) + 1
         pagination['total'] = int(math.ceil(total / float(self.pagination)))
-            
+
         # Fix too large offset
         if pagination['start'] > total:
             pagination['start'] = 0
-            
+
         # Allow prev/next?
         if total > self.pagination:
             if pagination['page'] > 1:
                 pagination['prev'] = pagination['page'] - 1
             if pagination['page'] < pagination['total']:
                 pagination['next'] = pagination['page'] + 1
-                
+
         # Set stop offset
         pagination['stop'] = pagination['start'] + self.pagination
         return pagination
-    
+
     def get_items(self):
         if self.request.session.get(self.get_token('filter')):
             self.is_filtering = True
             return self.set_filters(self.admin.model.objects, self.request.session.get(self.get_token('filter')))
         return self.admin.model.objects
-            
+
     def __call__(self, request, page=0):
         """
         Use widget as view
         """
         self.request = request
-        
+
         # Get basic list items
         items_total = self.get_items()
-            
+
         # Set extra filters?
         try:
             items_total = self.select_items(items_total).count()
         except AttributeError:
             items_total = items_total.count()
-            
+
         # Set sorting and paginating
         sorting_method = self.get_sorting()
         paginating_method = self.get_pagination(items_total, page)
-        
+
         # List items
         items = self.get_items()
         if not request.session.get(self.get_token('filter')):
             items = items.all()
-         
+
         # Set extra filters?
         try:
             items = self.select_items(items)
         except AttributeError:
             pass
-                  
+
         # Sort them
         items = self.sort_items(items, sorting_method);
-        
+
         # Set pagination
         if self.pagination:
             items = items[paginating_method['start']:paginating_method['stop']]
-        
+
         # Prefetch related?
         try:
             items = self.prefetch_related(items)
         except AttributeError:
             pass
-        
+
         # Default message
         message = None
-        
+
         # See if we should make and handle search form
         search_form = None
         SearchForm = self.get_search_form()
@@ -325,7 +325,7 @@ class ListWidget(BaseWidget):
                     message.type = 'error'
                 else:
                     search_form = SearchForm(request=request)
-                    
+
                 # Kill search
                 if request.POST.get('origin') == 'clear' and self.is_filtering and request.csrf.request_secure(request):
                     request.session[self.get_token('filter')] = None
@@ -336,7 +336,7 @@ class ListWidget(BaseWidget):
                     search_form = SearchForm(request=request, initial=request.session.get(self.get_token('filter')))
                 else:
                     search_form = SearchForm(request=request)
-        
+
         # See if we sould make and handle tab form
         table_form = None
         TableForm = self.get_table_form(items)
@@ -352,7 +352,7 @@ class ListWidget(BaseWidget):
                     message = Message(table_form.non_field_errors()[0], 'error')
             else:
                 table_form = TableForm(request=request)
-        
+
         # See if we should make and handle list form
         list_form = None
         ListForm = self.get_actions_form(items)
@@ -378,12 +378,12 @@ class ListWidget(BaseWidget):
                 message.type = 'error'
             else:
                 list_form = ListForm(request=request)
-        
+
         # Little hax to keep counters correct 
         items_shown = len(items)
         if items_total < items_shown:
             items_total = items_shown
-                
+
         # Render list
         return request.theme.render_to_response(self.get_template(),
                                                 self.add_template_variables({
@@ -405,7 +405,7 @@ class ListWidget(BaseWidget):
                                                 }),
                                                 context_instance=RequestContext(request));
 
-                                                
+
 class FormWidget(BaseWidget):
     """
     Form page widget
@@ -419,35 +419,35 @@ class FormWidget(BaseWidget):
     translate_target_name = False
     original_name = None
     submit_fallback = False
-    
+
     def get_url(self, model):
         return reverse(self.admin.get_action_attr(self.id, 'route'))
-    
+
     def get_form(self, target):
         return self.form
-    
+
     def get_form_instance(self, form, target, initial, post=False):
         if post:
             return form(self.request.POST, request=self.request, initial=self.get_initial_data(target))
         return form(request=self.request, initial=self.get_initial_data(target))
-    
+
     def get_layout(self, form, model):
         if self.layout:
             return self.layout
         return form.layout
-    
+
     def get_initial_data(self, model):
         return {}
-    
+
     def submit_form(self, form, model):
         """
         Handle form submission, ALWAYS return tuple with model and message
         """
         pass
-    
+
     def __call__(self, request, target=None, slug=None):
         self.request = request
-        
+
         # Fetch target?
         model = None
         if target:
@@ -456,10 +456,10 @@ class FormWidget(BaseWidget):
             if not model:
                 return redirect(self.get_fallback_url())
         original_model = model
-        
+
         # Get form type to instantiate
         FormType = self.get_form(model)
-        
+
         #Submit form
         message = None
         if request.method == 'POST':
@@ -492,7 +492,7 @@ class FormWidget(BaseWidget):
                 message = Message(form.non_field_errors()[0], 'error')
         else:
             form = self.get_form_instance(FormType, model, self.get_initial_data(model))
-            
+
         # Render form
         return request.theme.render_to_response(self.get_template(),
                                                 self.add_template_variables({
@@ -510,7 +510,7 @@ class FormWidget(BaseWidget):
                                                 }),
                                                 context_instance=RequestContext(request));
 
-                                        
+
 class ButtonWidget(BaseWidget):
     """
     Button Action Widget
@@ -522,7 +522,7 @@ class ButtonWidget(BaseWidget):
     """
     def __call__(self, request, target=None, slug=None):
         self.request = request
-        
+
         # Fetch target?
         model = None
         if target:
@@ -530,19 +530,19 @@ class ButtonWidget(BaseWidget):
             if not model:
                 return redirect(self.get_fallback_url())
         original_model = model
-            
+
         # Crash if this is invalid request
         if not request.csrf.request_secure(request):
             request.messages.set_flash(Message(_("Action authorization is invalid.")), 'error', self.admin.id)
             return redirect(self.get_fallback_url())
-        
+
         # Do something
         message, url = self.action(model)
         request.messages.set_flash(message, message.type, self.admin.id)
         if url:
             return redirect(url)
         return redirect(self.get_fallback_url())
-        
+
     def action(self, target):
         """
         Action to be executed when button is pressed

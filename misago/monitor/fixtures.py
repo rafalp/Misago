@@ -1,6 +1,6 @@
 from django.utils import timezone
 from misago.monitor.models import Item
-    
+
 def load_monitor_fixture(fixture):
     for id in fixture.keys():
         item = Item(

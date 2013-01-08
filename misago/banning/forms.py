@@ -12,8 +12,8 @@ class BanForm(Form):
                                       (2, _('Ban E-mail address')),
                                       (3, _('Ban IP Address'))
                                       ))
-    reason_user = forms.CharField(widget=forms.Textarea,required=False)
-    reason_admin = forms.CharField(widget=forms.Textarea,required=False)
+    reason_user = forms.CharField(widget=forms.Textarea, required=False)
+    reason_admin = forms.CharField(widget=forms.Textarea, required=False)
     ban = forms.CharField(max_length=255)
     expires = forms.DateField(required=False)
     layout = (

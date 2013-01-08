@@ -34,7 +34,7 @@ class PostForm(Form, ThreadNameMixin):
     def __init__(self, data=None, file=None, request=None, mode=None, *args, **kwargs):
         self.mode = mode
         super(PostForm, self).__init__(data, file, request=request, *args, **kwargs)
-    
+
     def finalize_form(self):
         self.layout = [
                        [
@@ -46,12 +46,12 @@ class PostForm(Form, ThreadNameMixin):
                          ],
                         ],
                        ]
-    
+
         if self.mode in ['edit_thread', 'edit_post']:
-            self.fields['edit_reason'] = forms.CharField(max_length=255,required=False,help_text=_("Optional reason for changing this post."))
+            self.fields['edit_reason'] = forms.CharField(max_length=255, required=False, help_text=_("Optional reason for changing this post."))
         else:
             del self.layout[0][1][1]
-            
+
         if self.mode not in ['edit_thread', 'new_thread']:
             del self.layout[0][1][0]
         else:
@@ -61,7 +61,7 @@ class PostForm(Form, ThreadNameMixin):
                                                                                         _("Thread name must contain at least one alpha-numeric character."),
                                                                                         _("Thread name is too long. Try shorter name.")
                                                                                         )])
-    
+
     def clean_post(self):
         data = self.cleaned_data['post']
         if len(data) < self.request.settings['post_length_min']:
@@ -71,10 +71,10 @@ class PostForm(Form, ThreadNameMixin):
                                                   self.request.settings['post_length_min']
                                                   ) % {'count': self.request.settings['post_length_min']})
         return data
-        
-        
 
-class SplitThreadForm(Form, ThreadNameMixin):        
+
+
+class SplitThreadForm(Form, ThreadNameMixin):
     def finalize_form(self):
         self.layout = [
                        [
@@ -85,15 +85,15 @@ class SplitThreadForm(Form, ThreadNameMixin):
                          ],
                         ],
                        ]
-    
+
         self.fields['thread_name'] = forms.CharField(
                                                      max_length=self.request.settings['thread_name_max'],
                                                      validators=[validate_sluggable(
                                                                                     _("Thread name must contain at least one alpha-numeric character."),
                                                                                     _("Thread name is too long. Try shorter name.")
                                                                                     )])
-        self.fields['thread_forum'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']),level_indicator=u'- - ')
-            
+        self.fields['thread_forum'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']), level_indicator=u'- - ')
+
     def clean_thread_forum(self):
         new_forum = self.cleaned_data['thread_forum']
         # Assert its forum and its not current forum
@@ -102,13 +102,13 @@ class SplitThreadForm(Form, ThreadNameMixin):
         return new_forum
 
 
-class MovePostsForm(Form, ThreadNameMixin):  
+class MovePostsForm(Form, ThreadNameMixin):
     error_source = 'thread_url'
 
     def __init__(self, data=None, request=None, thread=None, *args, **kwargs):
         self.thread = thread
         super(MovePostsForm, self).__init__(data, request=request, *args, **kwargs)
-          
+
     def finalize_form(self):
         self.layout = [
                        [
@@ -118,9 +118,9 @@ class MovePostsForm(Form, ThreadNameMixin):
                          ],
                         ],
                        ]
-    
+
         self.fields['thread_url'] = forms.CharField()
-            
+
     def clean_thread_url(self):
         from django.core.urlresolvers import resolve
         from django.http import Http404
@@ -145,13 +145,13 @@ class QuickReplyForm(Form):
 
 class MoveThreadsForm(Form):
     error_source = 'new_forum'
-    
+
     def __init__(self, data=None, request=None, forum=None, *args, **kwargs):
         self.forum = forum
         super(MoveThreadsForm, self).__init__(data, request=request, *args, **kwargs)
-    
+
     def finalize_form(self):
-        self.fields['new_forum'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']),level_indicator=u'- - ')
+        self.fields['new_forum'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']), level_indicator=u'- - ')
         self.layout = [
                        [
                         _("Thread Options"),
@@ -160,7 +160,7 @@ class MoveThreadsForm(Form):
                          ],
                         ],
                        ]
-            
+
     def clean_new_forum(self):
         new_forum = self.cleaned_data['new_forum']
         # Assert its forum and its not current forum
@@ -175,7 +175,7 @@ class MergeThreadsForm(Form, ThreadNameMixin):
     def __init__(self, data=None, request=None, threads=[], *args, **kwargs):
         self.threads = threads
         super(MergeThreadsForm, self).__init__(data, request=request, *args, **kwargs)
-    
+
     def finalize_form(self):
         self.fields['thread_name'] = forms.CharField(
                                                      max_length=self.request.settings['thread_name_max'],
@@ -197,15 +197,15 @@ class MergeThreadsForm(Form, ThreadNameMixin):
                          ],
                         ],
                        ]
-        
+
         choices = []
         for i, thread in enumerate(self.threads):
             choices.append((str(i), i + 1))
         for i, thread in enumerate(self.threads):
-            self.fields['thread_%s' % thread.pk] = forms.ChoiceField(choices=choices,initial=str(i))
+            self.fields['thread_%s' % thread.pk] = forms.ChoiceField(choices=choices, initial=str(i))
             self.layout[1][1].append(('thread_%s' % thread.pk, {'label': thread.name}))
-            
-    def clean(self):        
+
+    def clean(self):
         cleaned_data = super(MergeThreadsForm, self).clean()
         self.merge_order = {}
         lookback = []

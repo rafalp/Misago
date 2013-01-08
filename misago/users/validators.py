@@ -14,7 +14,7 @@ def validate_username(value):
         raise ValidationError(_("Username can only contain letters and digits."))
     if check_ban(username=value):
         raise ValidationError(_("This username is forbidden."))
-        
+
 
 def validate_password(value):
     value = unicode(value).strip()

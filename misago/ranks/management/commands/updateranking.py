@@ -13,10 +13,10 @@ class Command(BaseCommand):
         special_ranks = []
         for rank in Rank.objects.filter(special=1):
             special_ranks.append(str(rank.pk))
-        
+
         # Count users that are in ranking
         users_total = User.objects.exclude(rank__in=special_ranks).count()
-        
+
         # Update Ranking
         defaulted_ranks = False
         for rank in Rank.objects.filter(special=0).order_by('order'):
@@ -27,8 +27,8 @@ class Command(BaseCommand):
                 # Set default rank first
                 User.objects.exclude(rank__in=special_ranks).update(rank=rank)
                 defaulted_ranks = True
-        
+
         # Inflate scores
         User.objects.all().update(score=F('score') * 0.95) # TODO: Ranking system SETTINGS!
-        
+
         self.stdout.write('Users ranking for has been updated.\n')

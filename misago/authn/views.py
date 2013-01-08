@@ -24,15 +24,15 @@ def signin(request):
     message = request.messages.get_message('security')
     bad_password = False
     not_active = False
-    banned_account = False   
-    
+    banned_account = False
+
     if request.method == 'POST':
         form = SignInForm(
                           request.POST,
                           show_remember_me=not request.firewall.admin and request.settings['remember_me_allow'],
                           request=request
                           )
-        
+
         if form.is_valid():
             try:
                 # Configure correct auth and redirect links
@@ -42,17 +42,17 @@ def signin(request):
                 else:
                     auth_method = auth_forum
                     success_redirect = reverse('index')
-                
+
                 # Authenticate user
                 user = auth_method(
                                   request,
                                   form.cleaned_data['user_email'],
                                   form.cleaned_data['user_password'],
                                   )
-                
-                sign_user_in(request, user)     
+
+                sign_user_in(request, user)
                 remember_me_token = False
-                
+
                 if not request.firewall.admin and request.settings['remember_me_allow'] and form.cleaned_data['user_remember_me']:
                     remember_me_token = get_random_string(42)
                     remember_me = Token(
@@ -71,11 +71,11 @@ def signin(request):
                 bad_password = e.password
                 banned_account = e.ban
                 not_active = e.activation
-                
+
                 # If not in Admin, register failed attempt
                 if not request.firewall.admin and e.type == auth.CREDENTIALS:
                     SignInAttempt.objects.register_attempt(request.session.get_ip(request))
-                    
+
                     # Have we jammed our account?
                     if SignInAttempt.objects.is_jammed(request.settings, request.session.get_ip(request)):
                         request.jam.expires = timezone.now()
@@ -94,7 +94,7 @@ def signin(request):
                                              'banned_account': banned_account,
                                              'not_active': not_active,
                                              'form': FormLayout(form),
-                                             'hide_signin': True, 
+                                             'hide_signin': True,
                                              },
                                             context_instance=RequestContext(request));
 

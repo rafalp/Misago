@@ -38,7 +38,7 @@ def credentials(request):
         message = Message(form.non_field_errors()[0], 'error')
     else:
         form = CredentialsChangeForm(request=request)
-        
+
     return request.theme.render_to_response('usercp/credentials.html',
                                             context_instance=RequestContext(request, {
                                               'message': message,
@@ -52,12 +52,12 @@ def activate(request, token):
     new_credentials = request.session.get('new_credentials')
     if not new_credentials or new_credentials['token'] != token:
         return error404(request)
-    
+
     if new_credentials['new_email']:
         request.user.set_email(new_credentials['new_email'])
     if new_credentials['new_password']:
         request.user.set_password(new_credentials['new_password'])
-        
+
     try:
         request.user.full_clean()
         request.user.save(force_update=True)
@@ -70,4 +70,3 @@ def activate(request, token):
     except ValidationError:
         request.messages.set_flash(Message(_("Your new credentials have been invalidated. Please try again.")), 'error', 'usercp_credentials')
         return redirect(reverse('usercp_credentials'))
-    

@@ -83,5 +83,5 @@ def tzlist():
             else:
                 ready_list.append((tz[0], tz[1]))
         else:
-           ready_list.append((tz[0], tz[1])) 
+           ready_list.append((tz[0], tz[1]))
     return tuple(ready_list)

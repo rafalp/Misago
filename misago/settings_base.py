@@ -29,7 +29,7 @@ USE_TZ = True
 # List of directories that contain Misago locale files
 # Defautly set Django to look for Misago translations in misago/locale directory
 LOCALE_PATHS = (
-    ('%slocale%s' % (os.path.dirname( __file__ ) + os.sep, os.sep)),
+    ('%slocale%s' % (os.path.dirname(__file__) + os.sep, os.sep)),
 )
 
 # Catch-all e-mail address

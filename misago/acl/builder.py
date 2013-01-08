@@ -29,7 +29,7 @@ def build_forum_form(request, role):
 class BaseACL(object):
     def __init__(self):
         self.acl = {}
-        
+
     def __repr__(self):
         return '%s (%s)' % (self.__class__.__name__[0:-3], self.__class__.__module__)
 
@@ -50,13 +50,13 @@ def build_acl(request, roles):
     forums = Forum.objects.get(token='root').get_descendants().order_by('lft')
     perms = []
     forum_roles = {}
-    
+
     for role in roles:
         perms.append(role.get_permissions())
-    
+
     for role in ForumRole.objects.all():
         forum_roles[role.pk] = role.get_permissions()
-    
+
     for provider in settings.PERMISSION_PROVIDERS:
         app_module = import_module(provider)
         try:
@@ -67,7 +67,7 @@ def build_acl(request, roles):
             app_module.build_forums(acl, perms, forums, forum_roles)
         except AttributeError:
             pass
-        
+
     for provider in settings.PERMISSION_PROVIDERS:
         app_module = import_module(provider)
         try:

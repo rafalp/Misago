@@ -23,19 +23,19 @@ Views
 class List(ListWidget):
     admin = site.get_action('newsletters')
     id = 'list'
-    columns=(
+    columns = (
              ('newsletter', _("Newsletter")),
              )
     nothing_checked_message = _('You have to check at least one newsletter.')
-    actions=(
+    actions = (
              ('delete', _("Delete selected newsletters"), _("Are you sure you want to delete selected newsletters?")),
              )
     pagination = 20
     search_form = SearchNewslettersForm
-    
+
     def sort_items(self, page_items, sorting_method):
         return page_items.order_by('-id')
-    
+
     def set_filters(self, model, filters):
         if 'rank' in filters:
             model = model.filter(ranks__in=filters['rank']).distinct()
@@ -46,7 +46,7 @@ class List(ListWidget):
         if 'content' in filters:
             model = model.filter(Q(content_html__icontains=filters['content']) | Q(content_plain__icontains=filters['content']))
         return model
-    
+
     def get_item_actions(self, item):
         return (
                 self.action('envelope', _("Send Newsletter"), reverse('admin_newsletters_send', item)),
@@ -62,35 +62,35 @@ class List(ListWidget):
 class New(FormWidget):
     admin = site.get_action('newsletters')
     id = 'new'
-    fallback = 'admin_newsletters' 
+    fallback = 'admin_newsletters'
     form = NewsletterForm
     submit_button = _("Save Newsletter")
     tabbed = True
-        
+
     def get_new_url(self, model):
         return reverse('admin_newsletters_new')
-    
+
     def get_edit_url(self, model):
         return reverse('admin_newsletters_edit', model)
-    
+
     def submit_form(self, form, target):
         new_newsletter = Newsletter(
-                      name = form.cleaned_data['name'],
-                      step_size = form.cleaned_data['step_size'],
-                      content_html = form.cleaned_data['content_html'],
-                      content_plain = form.cleaned_data['content_plain'],
-                      ignore_subscriptions = form.cleaned_data['ignore_subscriptions'],
+                      name=form.cleaned_data['name'],
+                      step_size=form.cleaned_data['step_size'],
+                      content_html=form.cleaned_data['content_html'],
+                      content_plain=form.cleaned_data['content_plain'],
+                      ignore_subscriptions=form.cleaned_data['ignore_subscriptions'],
                      )
         new_newsletter.generate_token()
         new_newsletter.save(force_insert=True)
-        
+
         for rank in form.cleaned_data['ranks']:
             new_newsletter.ranks.add(rank)
         new_newsletter.save(force_update=True)
-        
+
         return new_newsletter, Message(_('New Newsletter has been created.'), 'success')
-    
-   
+
+
 class Edit(FormWidget):
     admin = site.get_action('newsletters')
     id = 'edit'
@@ -101,13 +101,13 @@ class Edit(FormWidget):
     notfound_message = _('Requested Newsletter could not be found.')
     submit_fallback = True
     tabbed = True
-    
+
     def get_url(self, model):
         return reverse('admin_newsletters_edit', model)
-    
+
     def get_edit_url(self, model):
         return self.get_url(model)
-    
+
     def get_initial_data(self, model):
         return {
                 'name': model.name,
@@ -117,7 +117,7 @@ class Edit(FormWidget):
                 'content_plain': model.content_plain,
                 'ranks': model.ranks.all(),
                 }
-    
+
     def submit_form(self, form, target):
         target.name = form.cleaned_data['name']
         target.step_size = form.cleaned_data['step_size']
@@ -125,11 +125,11 @@ class Edit(FormWidget):
         target.content_html = form.cleaned_data['content_html']
         target.content_plain = form.cleaned_data['content_plain']
         target.generate_token()
-        
+
         target.ranks.clear()
         for rank in form.cleaned_data['ranks']:
             target.ranks.add(rank)
-            
+
         target.save(force_update=True)
         return target, Message(_('Changes in newsletter "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
 
@@ -139,29 +139,29 @@ class Delete(ButtonWidget):
     id = 'delete'
     fallback = 'admin_newsletters'
     notfound_message = _('Requested newsletter could not be found.')
-    
+
     def action(self, target):
         target.delete()
         return Message(_('Newsletter "%(name)s"" has been deleted.') % {'name': target.name}, 'success'), False
-    
+
 
 def send(request, target, token):
     try:
         newsletter = Newsletter.objects.get(pk=target, token=token)
-        
+
         # Build recipients selector
         recipients = User.objects
         if newsletter.ranks.all():
             recipients.filter(rank__in=[x.pk for x in newsletter.ranks.all()])
         if not newsletter.ignore_subscriptions:
             recipients.filter(receive_newsletters=1)
-        
+
         recipients_total = recipients
         recipients_total = recipients_total.count()
         if recipients_total < 1:
             request.messages.set_flash(Message(_('No recipients for newsletter "%(newsletter)s" could be found.') % {'newsletter': newsletter.name}), 'error', 'newsletters')
             return redirect(reverse('admin_newsletters'))
-       
+
         for user in recipients.all()[newsletter.progress:(newsletter.progress + newsletter.step_size)]:
             tokens = {
               '{{ board_name }}': request.settings.board_name,
@@ -179,13 +179,13 @@ def send(request, target, token):
             newsletter.progress += 1
         newsletter.generate_token()
         newsletter.save(force_update=True)
-        
+
         if newsletter.progress >= recipients_total:
             newsletter.progress = 0
             newsletter.save(force_update=True)
             request.messages.set_flash(Message(_('Newsletter "%(newsletter)s" has been sent.') % {'newsletter': newsletter.name}), 'success', 'newsletters')
             return redirect(reverse('admin_newsletters'))
-        
+
         # Render Progress
         response = request.theme.render_to_response('processing.html', {
                 'task_name': _('Sending Newsletter'),

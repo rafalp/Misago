@@ -5,12 +5,12 @@ class FormLayout(object):
     def __init__(self, form, fieldsets=False):
         scaffold_fields = FormFields(form)
         scaffold_fieldsets = FormFieldsets(form, scaffold_fields.fields, fieldsets)
-        
+
         self.multipart_form = scaffold_fields.multipart_form
         self.fieldsets = scaffold_fieldsets.fieldsets
         self.fields = scaffold_fields.fields
         self.hidden = scaffold_fields.hidden
-    
+
 class FormFields(object):
     """
     Hydrator that builds fields list from form and blueprint
@@ -19,14 +19,14 @@ class FormFields(object):
         self.multipart_form = False
         self.fields = {}
         self.hidden = []
-        
+
         # Extract widgets from meta
         self.meta_widgets = {}
         try:
             self.meta_widgets = form.Meta.widgets
         except AttributeError:
             pass
-                
+
         # Find out field input types
         for field in form.fields.keys():
             widget = self._get_widget(field, form.fields[field])
@@ -56,11 +56,11 @@ class FormFields(object):
                          'widget': '',
                          'choices': [],
                         }
-            
+
             # Set multipart form
             if widget.needs_multipart_form:
                 self.multipart_form = True
-            
+
             # Get errors?
             if form.is_bound:
                 for error in bound_field._errors():
@@ -71,14 +71,14 @@ class FormFields(object):
                             blueprint['errors'].append(error)
                 except KeyError:
                     pass
-            
+
             # Use clean value instead?
             try:
                 if field in form.cleaned_data:
                     blueprint['value'] = form.cleaned_data[field]
             except AttributeError:
                 pass
-            
+
             # TextInput
             if widget_name in ['TextInput', 'PasswordInput', 'Textarea']:
                 blueprint['widget'] = 'text'
@@ -87,15 +87,15 @@ class FormFields(object):
                     blueprint['attrs']['maxlength'] = bound_field.field.max_length
                 except AttributeError:
                     pass
-            
+
             # PasswordInput
             if widget_name == 'PasswordInput':
                 blueprint['attrs']['type'] = 'password'
-              
+
             # Textarea      
             if widget_name == 'Textarea':
                 blueprint['widget'] = 'textarea'
-                
+
             # ReCaptcha      
             if widget_name == 'ReCaptchaWidget':
                 from recaptcha.client.captcha import displayhtml
@@ -105,26 +105,26 @@ class FormFields(object):
                                                           form.request.settings['recaptcha_ssl'],
                                                           bound_field.field.api_error,
                                                           )}
-                
+
             # HiddenInput
             if widget_name == 'HiddenInput':
                 blueprint['widget'] = 'hidden'
-                
+
             # MultipleHiddenInput
             if widget_name == 'MultipleHiddenInput':
                 blueprint['widget'] = 'multiple_hidden'
                 blueprint['attrs'] = {
                                       'choices': widget.choices
                                      }
-            
+
             # FileInput
             if widget_name == 'FileInput':
                 blueprint['widget'] = 'file'
-            
+
             # ClearableFileInput
             if widget_name == 'ClearableFileInput':
                 blueprint['widget'] = 'file_clearable'
-                
+
             # DateInput
             if widget_name == 'DateInput':
                 blueprint['widget'] = 'date'
@@ -132,7 +132,7 @@ class FormFields(object):
                     blueprint['value'] = blueprint['value'].strftime('%Y-%m-%d')
                 except AttributeError as e:
                     pass
-            
+
             # DateTimeInput
             if widget_name == 'DateTimeInput':
                 blueprint['widget'] = 'datetime'
@@ -140,7 +140,7 @@ class FormFields(object):
                     blueprint['value'] = blueprint['value'].strftime('%Y-%m-%d %H:%M')
                 except AttributeError as e:
                     pass
-            
+
             # TimeInput
             if widget_name == 'TimeInput':
                 blueprint['widget'] = 'time'
@@ -148,87 +148,87 @@ class FormFields(object):
                     blueprint['value'] = blueprint['value'].strftime('%H:%M')
                 except AttributeError as e:
                     pass
-                
+
             # CheckboxInput
             if widget_name == 'CheckboxInput':
                 blueprint['widget'] = 'checkbox'
-                
+
             # Select, NullBooleanSelect, SelectMultiple, RadioSelect, CheckboxSelectMultiple
             if widget_name in ['Select', 'NullBooleanSelect', 'SelectMultiple', 'RadioSelect', 'CheckboxSelectMultiple']:
                 blueprint['choices'] = widget.choices
-                
+
             # Yes-no radio select
             if widget_name == 'YesNoSwitch':
                 blueprint['widget'] = 'yes_no_switch'
-            
+
             # Select
             if widget_name == 'Select':
                 blueprint['widget'] = 'select'
                 if not blueprint['value']:
                     blueprint['value'] = u''
-                
+
             # NullBooleanSelect
             if widget_name == 'NullBooleanSelect':
                 blueprint['widget'] = 'null_boolean_select'
-                
+
             # SelectMultiple
             if widget_name == 'SelectMultiple':
                 blueprint['widget'] = 'select_multiple'
-                
+
             # RadioSelect
             if widget_name == 'RadioSelect':
                 blueprint['widget'] = 'radio_select'
                 if not blueprint['value']:
                     blueprint['value'] = u''
-                
+
             # CheckboxSelectMultiple
             if widget_name == 'CheckboxSelectMultiple':
                 blueprint['widget'] = 'checkbox_select_multiple'
-            
+
             # MultiWidget
             if widget_name == 'MultiWidget':
                 blueprint['widget'] = 'multi'
-            
+
             # SplitDateTimeWidget
             if widget_name == 'SplitDateTimeWidget':
                 blueprint['widget'] = 'split_datetime'
-            
+
             # SplitHiddenDateTimeWidget
             if widget_name == 'SplitHiddenDateTimeWidget':
                 blueprint['widget'] = 'split_hidden_datetime'
-            
+
             # SelectDateWidget
             if widget_name == 'SelectDateWidget':
                 blueprint['widget'] = 'select_date'
                 blueprint['years'] = widget.years
-                
+
             # Store field in either of collections
             if blueprint['hidden']:
                 blueprint['attrs']['type'] = 'hidden'
                 self.hidden.append(blueprint)
             else:
                 self.fields[field] = blueprint
-                                
+
     def _get_widget(self, name, field):
         if name in self.meta_widgets:
             return self.meta_widgets[name]
         return field.widget
-    
-    
+
+
 class FormFieldsets(object):
     """
     Hydrator that builds fieldset from form and blueprint
     """
     def __init__(self, form, fields, fieldsets=None):
         self.fieldsets = []
-        
+
         # Use form layout
         if not fieldsets:
             try:
                 fieldsets = form.layout
             except AttributeError:
                 pass
-        
+
         # Build fieldsets data
         if fieldsets:
             for blueprint in fieldsets:
@@ -268,7 +268,7 @@ class FormFieldsets(object):
                             if not subfields['help_text']:
                                 subfields['help_text'] = subfields['nested'][0]['help_text']
                             try:
-                                subfields['errors'] = form.errors["_".join(subfiels_ids)] 
+                                subfields['errors'] = form.errors["_".join(subfiels_ids)]
                             except KeyError:
                                 pass
                             fieldset['fields'].append(subfields)
@@ -291,10 +291,9 @@ class FormFieldsets(object):
                     fieldset['help'] = blueprint[2]
                 except IndexError:
                     pass
-                
+
                 # Append complete fieldset
                 if fieldset['fields']:
                     self.fieldsets.append(fieldset)
             self.fieldsets[-1]['last'] = True
-        
-        
+

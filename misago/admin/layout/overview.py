@@ -4,7 +4,7 @@ from misago.admin import AdminAction
 from misago.sessions.models import Session
 from misago.users.models import User
 
-ADMIN_ACTIONS=(
+ADMIN_ACTIONS = (
    AdminAction(
                section='overview',
                id='home',
@@ -43,7 +43,7 @@ ADMIN_ACTIONS=(
                          'route': 'admin_online'
                          },
                         ],
-               route='admin_online', 
+               route='admin_online',
                urlpatterns=patterns('misago.sessions.views',
                         url(r'^$', 'List', name='admin_online'),
                         url(r'^(?P<page>\d+)/$', 'List', name='admin_online'),

@@ -19,19 +19,19 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if len(args) < 3:
             raise CommandError('adduser requires exactly three arguments: user name, e-mail addres and password')
-                
+
         # Set user
         try:
             new_user = User.objects.create_user(args[0], args[1], args[2])
         except ValidationError as e:
             raise CommandError("New user cannot be created because of following errors:\n\n%s" % '\n'.join(e.messages))
-                
+
         # Set admin role
         if options['admin']:
             new_user.roles.add(Role.objects.get(token='admin'))
             new_user.make_acl_key(True)
             new_user.save(force_update=True)
-        
+
         if options['admin']:
             self.stdout.write('Successfully created new administrator "%s"' % args[0])
         else:

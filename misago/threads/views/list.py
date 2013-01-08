@@ -26,7 +26,7 @@ class ThreadsView(BaseView):
         if self.forum.lft + 1 != self.forum.rght:
             self.forum.subforums = Forum.objects.treelist(self.request.acl.forums, self.forum, tracker=ForumsTracker(self.request.user))
         self.tracker = ThreadsTracker(self.request.user, self.forum)
-                
+
     def fetch_threads(self, page):
         self.count = self.request.acl.threads.filter_threads(self.request, self.forum, Thread.objects.filter(forum=self.forum).filter(weight__lt=2)).count()
         self.pagination = make_pagination(page, self.count, self.request.settings.threads_per_page)
@@ -44,7 +44,7 @@ class ThreadsView(BaseView):
             self.threads = self.threads[self.pagination['start']:self.pagination['stop']]
         for thread in self.threads:
             thread.is_read = self.tracker.is_read(thread)
-    
+
     def get_thread_actions(self):
         acl = self.request.acl.threads.get_role(self.forum)
         actions = []
@@ -71,14 +71,14 @@ class ThreadsView(BaseView):
         except KeyError:
             pass
         return actions
-    
+
     def make_form(self):
         self.form = None
         list_choices = self.get_thread_actions();
         if (not self.request.user.is_authenticated()
             or not list_choices):
             return
-        
+
         form_fields = {}
         form_fields['list_action'] = forms.ChoiceField(choices=list_choices)
         list_choices = []
@@ -87,9 +87,9 @@ class ThreadsView(BaseView):
                 list_choices.append((item.pk, None))
         if not list_choices:
             return
-        form_fields['list_items'] = forms.MultipleChoiceField(choices=list_choices,widget=forms.CheckboxSelectMultiple)
+        form_fields['list_items'] = forms.MultipleChoiceField(choices=list_choices, widget=forms.CheckboxSelectMultiple)
         self.form = type('ThreadsViewForm', (Form,), form_fields)
-    
+
     def handle_form(self):
         if self.request.method == 'POST':
             self.form = self.form(self.request.POST, request=self.request)
@@ -129,7 +129,7 @@ class ThreadsView(BaseView):
                     self.message = Message(form.non_field_errors()[0], 'error')
         else:
             self.form = self.form(request=self.request)
-            
+
     def action_accept(self, ids):
         accepted = 0
         users = []
@@ -158,7 +158,7 @@ class ThreadsView(BaseView):
             for user in users:
                 user.save(force_update=True)
             self.request.messages.set_flash(Message(_('Selected threads have been marked as reviewed and made visible to other members.')), 'success', 'threads')
-    
+
     def action_annouce(self, ids):
         acl = self.request.acl.threads.get_role(self.forum)
         annouced = []
@@ -168,7 +168,7 @@ class ThreadsView(BaseView):
         if annouced:
             Thread.objects.filter(id__in=annouced).update(weight=2)
             self.request.messages.set_flash(Message(_('Selected threads have been turned into annoucements.')), 'success', 'threads')
-    
+
     def action_sticky(self, ids):
         sticky = []
         for thread in self.threads:
@@ -177,7 +177,7 @@ class ThreadsView(BaseView):
         if sticky:
             Thread.objects.filter(id__in=sticky).update(weight=1)
             self.request.messages.set_flash(Message(_('Selected threads have been sticked to the top of list.')), 'success', 'threads')
-    
+
     def action_normal(self, ids):
         normalised = []
         for thread in self.threads:
@@ -186,14 +186,14 @@ class ThreadsView(BaseView):
         if normalised:
             Thread.objects.filter(id__in=normalised).update(weight=0)
             self.request.messages.set_flash(Message(_('Selected threads weight has been removed.')), 'success', 'threads')
-    
+
     def action_move(self, ids):
         threads = []
         for thread in self.threads:
             if thread.pk in ids:
                 threads.append(thread)
         if self.request.POST.get('origin') == 'move_form':
-            form = MoveThreadsForm(self.request.POST,request=self.request,forum=self.forum)
+            form = MoveThreadsForm(self.request.POST, request=self.request, forum=self.forum)
             if form.is_valid():
                 new_forum = form.cleaned_data['new_forum']
                 for thread in threads:
@@ -210,7 +210,7 @@ class ThreadsView(BaseView):
                 return None
             self.message = Message(form.non_field_errors()[0], 'error')
         else:
-            form = MoveThreadsForm(request=self.request,forum=self.forum)
+            form = MoveThreadsForm(request=self.request, forum=self.forum)
         return self.request.theme.render_to_response('threads/move.html',
                                                      {
                                                       'message': self.message,
@@ -219,8 +219,8 @@ class ThreadsView(BaseView):
                                                       'threads': threads,
                                                       'form': FormLayout(form),
                                                       },
-                                                     context_instance=RequestContext(self.request)); 
-            
+                                                     context_instance=RequestContext(self.request));
+
     def action_merge(self, ids):
         if len(ids) < 2:
             raise ValidationError(_("You have to pick two or more threads to merge."))
@@ -229,7 +229,7 @@ class ThreadsView(BaseView):
             if thread.pk in ids:
                 threads.append(thread)
         if self.request.POST.get('origin') == 'merge_form':
-            form = MergeThreadsForm(self.request.POST,request=self.request,threads=threads)
+            form = MergeThreadsForm(self.request.POST, request=self.request, threads=threads)
             if form.is_valid():
                 new_thread = Thread.objects.create(
                                                    forum=self.forum,
@@ -246,7 +246,7 @@ class ThreadsView(BaseView):
                     merged.append(thread.pk)
                     if last_thread and last_thread.last > thread.start:
                         last_merge += thread.merges + 1
-                    thread.post_set.update(thread=new_thread,merge=F('merge') + last_merge)
+                    thread.post_set.update(thread=new_thread, merge=F('merge') + last_merge)
                     thread.change_set.update(thread=new_thread)
                     thread.checkpoint_set.update(thread=new_thread)
                     last_thread = thread
@@ -259,7 +259,7 @@ class ThreadsView(BaseView):
                 return None
             self.message = Message(form.non_field_errors()[0], 'error')
         else:
-            form = MergeThreadsForm(request=self.request,threads=threads)  
+            form = MergeThreadsForm(request=self.request, threads=threads)
         return self.request.theme.render_to_response('threads/merge.html',
                                                      {
                                                       'message': self.message,
@@ -268,8 +268,8 @@ class ThreadsView(BaseView):
                                                       'threads': threads,
                                                       'form': FormLayout(form),
                                                       },
-                                                     context_instance=RequestContext(self.request)); 
-    
+                                                     context_instance=RequestContext(self.request));
+
     def action_open(self, ids):
         opened = []
         for thread in self.threads:
@@ -278,8 +278,8 @@ class ThreadsView(BaseView):
                 thread.last_post.set_checkpoint(self.request, 'opened')
         if opened:
             Thread.objects.filter(id__in=opened).update(closed=False)
-            self.request.messages.set_flash(Message(_('Selected threads have been opened.')), 'success', 'threads')     
-        
+            self.request.messages.set_flash(Message(_('Selected threads have been opened.')), 'success', 'threads')
+
     def action_close(self, ids):
         closed = []
         for thread in self.threads:
@@ -289,7 +289,7 @@ class ThreadsView(BaseView):
         if closed:
             Thread.objects.filter(id__in=closed).update(closed=True)
             self.request.messages.set_flash(Message(_('Selected threads have been closed.')), 'success', 'threads')
-    
+
     def action_undelete(self, ids):
         undeleted = []
         posts = 0
@@ -307,7 +307,7 @@ class ThreadsView(BaseView):
             self.forum.save(force_update=True)
             Thread.objects.filter(id__in=undeleted).update(deleted=False)
             self.request.messages.set_flash(Message(_('Selected threads have been undeleted.')), 'success', 'threads')
-    
+
     def action_soft(self, ids):
         deleted = []
         posts = 0
@@ -324,8 +324,8 @@ class ThreadsView(BaseView):
             self.forum.sync()
             self.forum.save(force_update=True)
             Thread.objects.filter(id__in=deleted).update(deleted=True)
-            self.request.messages.set_flash(Message(_('Selected threads have been softly deleted.')), 'success', 'threads')            
-    
+            self.request.messages.set_flash(Message(_('Selected threads have been softly deleted.')), 'success', 'threads')
+
     def action_hard(self, ids):
         deleted = []
         posts = 0
@@ -340,7 +340,7 @@ class ThreadsView(BaseView):
             self.forum.sync()
             self.forum.save(force_update=True)
             self.request.messages.set_flash(Message(_('Selected threads have been deleted.')), 'success', 'threads')
-    
+
     def __call__(self, request, slug=None, forum=None, page=0):
         self.request = request
         self.pagination = None

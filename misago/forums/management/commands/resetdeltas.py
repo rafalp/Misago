@@ -7,5 +7,5 @@ class Command(BaseCommand):
     """
     help = 'Clears users sessions'
     def handle(self, *args, **options):
-        Forum.objects.all().update(threads_delta=0,posts_delta=0,redirects_delta=0)
+        Forum.objects.all().update(threads_delta=0, posts_delta=0, redirects_delta=0)
         self.stdout.write('Forums deltas have been reset.\n')

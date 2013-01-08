@@ -17,7 +17,7 @@ def signature(request):
                                                 context_instance=RequestContext(request, {
                                                   'tab': 'signature',
                                                  }));
-    
+
     siggy_text = ''
     message = request.messages.get_message('usercp_signature')
     if request.method == 'POST':
@@ -36,7 +36,7 @@ def signature(request):
             message = Message(form.non_field_errors()[0], 'error')
     else:
         form = SignatureForm(request=request, initial={'signature': request.user.signature})
-        
+
     return request.theme.render_to_response('usercp/signature.html',
                                             context_instance=RequestContext(request, {
                                               'message': message,

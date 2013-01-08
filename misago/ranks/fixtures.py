@@ -13,7 +13,7 @@ def load_fixtures():
                         as_tab=True,
                         on_index=True,
                         )
-    
+
     Rank.objects.create(
                         name=_("Most Valuable Posters").message,
                         name_slug='most-valuable-posters',
@@ -23,24 +23,24 @@ def load_fixtures():
                         order=1,
                         as_tab=True,
                         )
-    
+
     Rank.objects.create(
                         name=_("Lurkers").message,
                         name_slug='lurkers',
                         order=1,
                         criteria="100%"
                         )
-    
+
     Rank.objects.create(
                         name=_("Members").message,
-                        name_slug='members'
+                        name_slug='members',
                         order=2,
                         criteria="75%"
                         )
-    
+
     Rank.objects.create(
                         name=_("Active Members").message,
-                        name_slug='active-members'
+                        name_slug='active-members',
                         style='rank-active',
                         order=3,
                         criteria="10%",

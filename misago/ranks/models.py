@@ -8,24 +8,24 @@ class Rank(models.Model):
     Ranks are ready style/title pairs that are assigned to users either by admin (special ranks) or as result of user activity.
     """
     name = models.CharField(max_length=255)
-    name_slug = models.CharField(max_length=255,null=True,blank=True)
-    description = models.TextField(null=True,blank=True)
-    style = models.CharField(max_length=255,null=True,blank=True)
-    title = models.CharField(max_length=255,null=True,blank=True)
+    name_slug = models.CharField(max_length=255, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    style = models.CharField(max_length=255, null=True, blank=True)
+    title = models.CharField(max_length=255, null=True, blank=True)
     special = models.BooleanField(default=False)
     as_tab = models.BooleanField(default=False)
     on_index = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
-    criteria = models.CharField(max_length=255,null=True,blank=True)
-    
+    criteria = models.CharField(max_length=255, null=True, blank=True)
+
     def __unicode__(self):
         return unicode(_(self.name))
-    
+
     def assign_rank(self, users=0, special_ranks=None):
         if not self.criteria or self.special or users == 0:
             # Rank cant be rolled in
             return False
-        
+
         if self.criteria == "0":
             # Just update all fellows
             User.objects.exclude(rank__in=special_ranks).update(rank=self)
@@ -33,14 +33,14 @@ class Rank(models.Model):
             # Count number of users to update
             if self.criteria[-1] == '%':
                 criteria = int(self.criteria[0:-1])
-                criteria = int(math.ceil(float(users / 100.0)* criteria))
+                criteria = int(math.ceil(float(users / 100.0) * criteria))
             else:
                 criteria = int(self.criteria)
-            
+
             # Join special ranks
             if special_ranks:
                 special_ranks = ','.join(special_ranks)
-            
+
             # Run raw query
             cursor = connection.cursor()
             try:
@@ -68,7 +68,7 @@ class Rank(models.Model):
                             SET rank_id=%s
                             WHERE id = updateable.id
                             RETURNING *''', [self.id, criteria])
-                        
+
                 # MySQL, SQLite and Oracle
                 if (settings.DATABASES['default']['ENGINE'] == 'django.db.backends.mysql'
                     or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3'

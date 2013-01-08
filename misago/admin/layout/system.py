@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import AdminAction
 
-ADMIN_ACTIONS=(
+ADMIN_ACTIONS = (
    AdminAction(
                section='system',
                id='settings',

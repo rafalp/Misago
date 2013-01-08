@@ -6,7 +6,7 @@ def RequestContext(request, context=None):
     if not context:
         context = {}
     context['tabs'] = []
-    
+
     for extension in settings.USERCP_EXTENSIONS:
         usercp_module = import_module(extension + '.usercp')
         try:
@@ -21,6 +21,5 @@ def RequestContext(request, context=None):
                                             })
         except AttributeError:
             pass
-    
+
     return DjangoRequestContext(request, context)
-    

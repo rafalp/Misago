@@ -5,7 +5,7 @@ from misago.themes.theme import Theme
 class FirewallMiddleware(object):
     firewall_admin = FirewallAdmin()
     firewall_forum = FirewallForum()
-    
+
     def process_request(self, request):
         if settings.ADMIN_PATH and self.firewall_admin.behind_firewall(request.path_info):
             request.firewall = self.firewall_admin

@@ -44,7 +44,7 @@ settings_fixtures = (
                 'value':        10,
                 'type':         "integer",
                 'input':        "text",
-                'extra':        {'min': 0,'max': 30},
+                'extra':        {'min': 0, 'max': 30},
                 'separator':    _("Thread Popularity Ranking"),
                 'name':         _('Threads on "Popular Threads" list'),
                 'description':  _('Enter number of threads to be displayed on "Popular Threads" list on board index or 0 to don\'t display any threads there.'),
@@ -121,7 +121,7 @@ settings_fixtures = (
 
 def load_fixtures():
     load_settings_fixture(settings_fixtures)
-    
-    
+
+
 def update_fixtures():
     update_settings_fixture(settings_fixtures)

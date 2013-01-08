@@ -27,7 +27,7 @@ class ThreadView(BaseView):
         self.request.acl.threads.allow_thread_view(self.request.user, self.thread)
         self.parents = Forum.objects.forum_parents(self.forum.pk, True)
         self.tracker = ThreadsTracker(self.request.user, self.forum)
-    
+
     def fetch_posts(self, page):
         self.count = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).count()
         self.posts = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).prefetch_related('checkpoint_set', 'user', 'user__rank')
@@ -38,7 +38,7 @@ class ThreadView(BaseView):
         self.pagination = make_pagination(page, self.count, self.request.settings.posts_per_page)
         if self.request.settings.posts_per_page < self.count:
             self.posts = self.posts[self.pagination['start']:self.pagination['stop']]
-        self.read_date = self.tracker.get_read_date(self.thread) 
+        self.read_date = self.tracker.get_read_date(self.thread)
         for post in self.posts:
             post.message = self.request.messages.get_message('threads_%s' % post.pk)
             post.is_read = post.date <= self.read_date
@@ -46,7 +46,7 @@ class ThreadView(BaseView):
         if not self.tracker.is_read(self.thread):
             self.tracker.set_read(self.thread, last_post)
             self.tracker.sync()
-            
+
     def get_post_actions(self):
         acl = self.request.acl.threads.get_role(self.thread.forum_id)
         actions = []
@@ -69,14 +69,14 @@ class ThreadView(BaseView):
         except KeyError:
             pass
         return actions
-    
+
     def make_posts_form(self):
         self.posts_form = None
         list_choices = self.get_post_actions();
         if (not self.request.user.is_authenticated()
             or not list_choices):
             return
-        
+
         form_fields = {}
         form_fields['list_action'] = forms.ChoiceField(choices=list_choices)
         list_choices = []
@@ -84,9 +84,9 @@ class ThreadView(BaseView):
             list_choices.append((item.pk, None))
         if not list_choices:
             return
-        form_fields['list_items'] = forms.MultipleChoiceField(choices=list_choices,widget=forms.CheckboxSelectMultiple)
+        form_fields['list_items'] = forms.MultipleChoiceField(choices=list_choices, widget=forms.CheckboxSelectMultiple)
         self.posts_form = type('PostsViewForm', (Form,), form_fields)
-     
+
     def handle_posts_form(self):
         if self.request.method == 'POST' and self.request.POST.get('origin') == 'posts_form':
             self.posts_form = self.posts_form(self.request.POST, request=self.request)
@@ -113,7 +113,7 @@ class ThreadView(BaseView):
                     self.message = Message(posts_form.non_field_errors()[0], 'error')
         else:
             self.posts_form = self.posts_form(request=self.request)
-            
+
     def post_action_accept(self, ids):
         accepted = 0
         for post in self.posts:
@@ -123,8 +123,8 @@ class ThreadView(BaseView):
             self.thread.post_set.filter(id__in=ids).update(moderated=False)
             self.thread.sync()
             self.thread.save(force_update=True)
-            self.request.messages.set_flash(Message(_('Selected posts have been accepted and made visible to other members.')), 'success', 'threads')           
-            
+            self.request.messages.set_flash(Message(_('Selected posts have been accepted and made visible to other members.')), 'success', 'threads')
+
     def post_action_merge(self, ids):
         users = []
         posts = []
@@ -150,14 +150,14 @@ class ThreadView(BaseView):
         self.forum.sync()
         self.forum.save(force_update=True)
         self.request.messages.set_flash(Message(_('Selected posts have been merged into one message.')), 'success', 'threads')
-                    
+
     def post_action_split(self, ids):
         for id in ids:
             if id == self.thread.start_post_id:
                 raise forms.ValidationError(_("You cannot split first post from thread."))
         message = None
         if self.request.POST.get('do') == 'split':
-            form = SplitThreadForm(self.request.POST,request=self.request)
+            form = SplitThreadForm(self.request.POST, request=self.request)
             if form.is_valid():
                 new_thread = Thread()
                 new_thread.forum = form.cleaned_data['thread_forum']
@@ -200,11 +200,11 @@ class ThreadView(BaseView):
                                                       'form': FormLayout(form),
                                                       },
                                                      context_instance=RequestContext(self.request));
-    
+
     def post_action_move(self, ids):
         message = None
         if self.request.POST.get('do') == 'move':
-            form = MovePostsForm(self.request.POST,request=self.request,thread=self.thread)
+            form = MovePostsForm(self.request.POST, request=self.request, thread=self.thread)
             if form.is_valid():
                 thread = form.cleaned_data['thread_url']
                 self.thread.post_set.filter(id__in=ids).update(thread=thread, forum=thread.forum, merge=F('merge') + thread.merges + 1)
@@ -237,7 +237,7 @@ class ThreadView(BaseView):
                                                       'form': FormLayout(form),
                                                       },
                                                      context_instance=RequestContext(self.request));
-    
+
     def post_action_undelete(self, ids):
         undeleted = []
         for post in self.posts:
@@ -250,7 +250,7 @@ class ThreadView(BaseView):
             self.forum.sync()
             self.forum.save(force_update=True)
             self.request.messages.set_flash(Message(_('Selected posts have been restored.')), 'success', 'threads')
-    
+
     def post_action_protect(self, ids):
         protected = 0
         for post in self.posts:
@@ -259,7 +259,7 @@ class ThreadView(BaseView):
         if protected:
             self.thread.post_set.filter(id__in=ids).update(protected=True)
             self.request.messages.set_flash(Message(_('Selected posts have been protected from edition.')), 'success', 'threads')
-      
+
     def post_action_unprotect(self, ids):
         unprotected = 0
         for post in self.posts:
@@ -268,7 +268,7 @@ class ThreadView(BaseView):
         if unprotected:
             self.thread.post_set.filter(id__in=ids).update(protected=False)
             self.request.messages.set_flash(Message(_('Protection from editions has been removed from selected posts.')), 'success', 'threads')
-    
+
     def post_action_soft(self, ids):
         deleted = []
         for post in self.posts:
@@ -283,7 +283,7 @@ class ThreadView(BaseView):
             self.forum.sync()
             self.forum.save(force_update=True)
             self.request.messages.set_flash(Message(_('Selected posts have been deleted.')), 'success', 'threads')
-    
+
     def post_action_hard(self, ids):
         deleted = []
         for post in self.posts:
@@ -302,7 +302,7 @@ class ThreadView(BaseView):
             self.forum.sync()
             self.forum.save(force_update=True)
             self.request.messages.set_flash(Message(_('Selected posts have been deleted.')), 'success', 'threads')
-               
+
     def get_thread_actions(self):
         acl = self.request.acl.threads.get_role(self.thread.forum_id)
         actions = []
@@ -335,16 +335,16 @@ class ThreadView(BaseView):
         except KeyError:
             pass
         return actions
-    
+
     def make_thread_form(self):
         self.thread_form = None
         list_choices = self.get_thread_actions();
         if (not self.request.user.is_authenticated()
             or not list_choices):
-            return      
+            return
         form_fields = {'thread_action': forms.ChoiceField(choices=list_choices)}
         self.thread_form = type('ThreadViewForm', (Form,), form_fields)
-    
+
     def handle_thread_form(self):
         if self.request.method == 'POST' and self.request.POST.get('origin') == 'thread_form':
             self.thread_form = self.thread_form(self.request.POST, request=self.request)
@@ -377,7 +377,7 @@ class ThreadView(BaseView):
         if self.thread.last_post.user:
             self.thread.start_post.user.threads += 1
             self.thread.start_post.user.posts += 1
-            self.thread.start_post.user.save(force_update=True)            
+            self.thread.start_post.user.save(force_update=True)
         # Sync forum
         self.forum.threads_delta += 1
         self.forum.posts_delta += self.thread.replies + 1
@@ -387,26 +387,26 @@ class ThreadView(BaseView):
         self.request.monitor['threads'] = int(self.request.monitor['threads']) + 1
         self.request.monitor['posts'] = int(self.request.monitor['posts']) + self.thread.replies + 1
         self.request.messages.set_flash(Message(_('Thread has been marked as reviewed and made visible to other members.')), 'success', 'threads')
-    
+
     def thread_action_annouce(self):
         self.thread.weight = 2
         self.thread.save(force_update=True)
         self.request.messages.set_flash(Message(_('Thread has been turned into annoucement.')), 'success', 'threads')
-    
+
     def thread_action_sticky(self):
         self.thread.weight = 1
         self.thread.save(force_update=True)
         self.request.messages.set_flash(Message(_('Thread has been turned into sticky.')), 'success', 'threads')
-    
+
     def thread_action_normal(self):
         self.thread.weight = 0
         self.thread.save(force_update=True)
         self.request.messages.set_flash(Message(_('Thread weight has been changed to normal.')), 'success', 'threads')
-    
+
     def thread_action_move(self):
         message = None
         if self.request.POST.get('do') == 'move':
-            form = MoveThreadsForm(self.request.POST,request=self.request,forum=self.forum)
+            form = MoveThreadsForm(self.request.POST, request=self.request, forum=self.forum)
             if form.is_valid():
                 new_forum = form.cleaned_data['new_forum']
                 self.thread.forum = new_forum
@@ -420,7 +420,7 @@ class ThreadView(BaseView):
                 return None
             message = Message(form.non_field_errors()[0], 'error')
         else:
-            form = MoveThreadsForm(request=self.request,forum=self.forum)
+            form = MoveThreadsForm(request=self.request, forum=self.forum)
         return self.request.theme.render_to_response('threads/move.html',
                                                      {
                                                       'message': message,
@@ -430,19 +430,19 @@ class ThreadView(BaseView):
                                                       'form': FormLayout(form),
                                                       },
                                                      context_instance=RequestContext(self.request));
-        
+
     def thread_action_open(self):
         self.thread.closed = False
         self.thread.save(force_update=True)
         self.thread.last_post.set_checkpoint(self.request, 'opened')
         self.request.messages.set_flash(Message(_('Thread has been opened.')), 'success', 'threads')
-        
+
     def thread_action_close(self):
         self.thread.closed = True
         self.thread.save(force_update=True)
         self.thread.last_post.set_checkpoint(self.request, 'closed')
         self.request.messages.set_flash(Message(_('Thread has been closed.')), 'success', 'threads')
-    
+
     def thread_action_undelete(self):
         # Update thread
         self.thread.deleted = False
@@ -460,7 +460,7 @@ class ThreadView(BaseView):
         self.request.monitor['threads'] = int(self.request.monitor['threads']) + 1
         self.request.monitor['posts'] = int(self.request.monitor['posts']) + self.thread.replies + 1
         self.request.messages.set_flash(Message(_('Thread has been undeleted.')), 'success', 'threads')
-    
+
     def thread_action_soft(self):
         # Update thread
         self.thread.deleted = True
@@ -477,8 +477,8 @@ class ThreadView(BaseView):
         # Update monitor
         self.request.monitor['threads'] = int(self.request.monitor['threads']) - 1
         self.request.monitor['posts'] = int(self.request.monitor['posts']) - self.thread.replies - 1
-        self.request.messages.set_flash(Message(_('Thread has been deleted.')), 'success', 'threads')        
-    
+        self.request.messages.set_flash(Message(_('Thread has been deleted.')), 'success', 'threads')
+
     def thread_action_hard(self):
         # Delete thread
         self.thread.delete()
@@ -490,7 +490,7 @@ class ThreadView(BaseView):
         self.request.monitor['posts'] = int(self.request.monitor['posts']) - self.thread.replies - 1
         self.request.messages.set_flash(Message(_('Thread "%(thread)s" has been deleted.') % {'thread': self.thread.name}), 'success', 'threads')
         return redirect(reverse('forum', kwargs={'forum': self.forum.pk, 'slug': self.forum.slug}))
-    
+
     def __call__(self, request, slug=None, thread=None, page=0):
         self.request = request
         self.pagination = None

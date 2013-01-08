@@ -4,7 +4,7 @@ from misago.stopwatch import Stopwatch
 class StopwatchMiddleware(object):
     def process_request(self, request):
         request.stopwatch = Stopwatch()
-        
+
     def process_response(self, request, response):
         try:
             time = request.stopwatch.time()

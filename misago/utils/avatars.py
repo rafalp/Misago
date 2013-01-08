@@ -40,7 +40,7 @@ def resizeimage(image, size, target, info=None, format=None):
         image.save(target, quality=95)
     if format == "JPEG":
         image = image.convert("RGB")
-        image = image.resize((size, size), Image.ANTIALIAS) 
+        image = image.resize((size, size), Image.ANTIALIAS)
         image = image.convert('P', palette=Image.ADAPTIVE)
         image = image.convert("RGB", dither=None)
         image.save(target, image.format, quality=95)

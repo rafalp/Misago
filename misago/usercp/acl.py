@@ -7,11 +7,11 @@ from misago.forms import YesNoSwitch
 
 def make_form(request, role, form):
     if role.token != 'guest':
-        form.base_fields['name_changes_allowed'] = forms.IntegerField(min_value=0,initial=1)
-        form.base_fields['changes_expire'] = forms.IntegerField(min_value=0,initial=0)
-        form.base_fields['can_use_signature'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
-        form.base_fields['allow_signature_links'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
-        form.base_fields['allow_signature_images'] = forms.BooleanField(widget=YesNoSwitch,initial=False,required=False)
+        form.base_fields['name_changes_allowed'] = forms.IntegerField(min_value=0, initial=1)
+        form.base_fields['changes_expire'] = forms.IntegerField(min_value=0, initial=0)
+        form.base_fields['can_use_signature'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['allow_signature_links'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['allow_signature_images'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
         form.layout.append((
                             _("User Profile"),
                             (
@@ -24,34 +24,34 @@ def make_form(request, role, form):
                             ))
 
 
-class UserCPACL(BaseACL):        
+class UserCPACL(BaseACL):
     def show_username_change(self):
         return self.acl['name_changes_allowed'] > 0
-    
+
     def changes_expire(self):
         return self.acl['changes_expire'] > 0
-    
+
     def changes_left(self, user):
         if not self.acl['name_changes_allowed']:
             return 0
-        
+
         if self.acl['changes_expire']:
             changes_left = self.acl['name_changes_allowed'] - user.namechanges.filter(
                                                     date__gte=timezone.now() - timedelta(days=self.acl['changes_expire']),
                                                     ).count()
         else:
             changes_left = self.acl['name_changes_allowed'] - user.namechanges.all().count()
-            
+
         if changes_left:
             return changes_left
         return 0
-    
+
     def can_use_signature(self):
         return self.acl['signature']
-    
+
     def allow_signature_links(self):
         return self.acl['signature_links']
-    
+
     def allow_signature_images(self):
         return self.acl['signature_images']
 
@@ -63,19 +63,19 @@ def build(acl, roles):
     acl.usercp.acl['signature'] = False
     acl.usercp.acl['signature_links'] = False
     acl.usercp.acl['signature_images'] = False
-    
+
     for role in roles:
         if 'name_changes_allowed' in role and role['name_changes_allowed'] > acl.usercp.acl['name_changes_allowed']:
             acl.usercp.acl['name_changes_allowed'] = role['name_changes_allowed']
 
         if 'changes_expire' in role and role['changes_expire'] > acl.usercp.acl['changes_expire']:
             acl.usercp.acl['changes_expire'] = role['changes_expire']
-            
+
         if 'can_use_signature' in role and role['can_use_signature'] > acl.usercp.acl['signature']:
             acl.usercp.acl['signature'] = role['can_use_signature']
-            
+
         if 'allow_signature_links' in role and role['allow_signature_links'] > acl.usercp.acl['signature_links']:
             acl.usercp.acl['signature_links'] = role['allow_signature_links']
-            
+
         if 'allow_signature_images' in role and role['allow_signature_images'] > acl.usercp.acl['signature_images']:
             acl.usercp.acl['signature_images'] = role['allow_signature_images']

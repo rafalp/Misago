@@ -11,7 +11,6 @@ from misago.messages import Message
 from misago.stats.forms import GenerateStatisticsForm
 from misago.views import error404
 
-
 def form(request):
     """
     Allow admins to generate fancy statistic graphs for different models
@@ -33,7 +32,7 @@ def form(request):
         """
         return request.theme.render_to_response('stats/not_available.html',
                                                 context_instance=RequestContext(request));
-    
+
     message = None
     if request.method == 'POST':
         form = GenerateStatisticsForm(request.POST, provider_choices=statistics_providers, request=request)
@@ -62,7 +61,7 @@ def form(request):
             message = Message(form.non_field_errors()[0], 'error')
     else:
         form = GenerateStatisticsForm(provider_choices=statistics_providers, request=request)
-    
+
     return request.theme.render_to_response('stats/form.html', {
                                             'form': FormLayout(form),
                                             'message': message,
@@ -76,12 +75,12 @@ def graph(request, model, date_start, date_end, precision):
     if date_start == date_end:
         # Bad dates
         raise error404()
-    
+
     # Turn stuff into datetime's
     date_start = datetime.strptime(date_start, '%Y-%m-%d')
     date_end = datetime.strptime(date_end, '%Y-%m-%d')
-    
-    
+
+
     statistics_providers = []
     models_map = {}
     for model_obj in models.get_models():
@@ -96,11 +95,11 @@ def graph(request, model, date_start, date_end, precision):
         # Like before, q.q on lack of models
         return request.theme.render_to_response('stats/not_available.html',
                                                 context_instance=RequestContext(request));
-    
+
     if not model in models_map or check_dates(date_start, date_end, precision):
         # Bad model name or graph data!
         raise error404()
-    
+
     form = GenerateStatisticsForm(
                                   provider_choices=statistics_providers,
                                   request=request,
@@ -116,7 +115,7 @@ def graph(request, model, date_start, date_end, precision):
 def check_dates(date_start, date_end, precision):
     date_diff = date_end - date_start
     date_diff = date_diff.seconds + date_diff.days * 86400
-    
+
     if ((precision == 'day' and date_diff / 86400 > 60)
         or (precision == 'week' and date_diff / 604800 > 60)
         or (precision == 'month' and date_diff / 2592000 > 60)
@@ -128,7 +127,7 @@ def check_dates(date_start, date_end, precision):
           or (precision == 'year' and date_diff / 31536000 < 1)):
         return Message(_('Too few items to display on graph'), 'error')
     return None
-        
+
 
 def build_graph(model, date_start, date_end, precision):
     if precision == 'day':
@@ -143,19 +142,19 @@ def build_graph(model, date_start, date_end, precision):
     if precision == 'year':
         format = 'Y'
         step = 31536000
-    
+
     date_end = timezone.make_aware(date_end, timezone.get_current_timezone())
     date_start = timezone.make_aware(date_start, timezone.get_current_timezone())
-    
+
     date_diff = date_end - date_start
     date_diff = date_diff.seconds + date_diff.days * 86400
     steps = int(math.ceil(float(date_diff / step))) + 1
     timeline = [0 for i in range(0, steps)]
     for i in range(0, steps):
         step_date = date_end - timedelta(seconds=(i * step));
-        timeline[steps - i - 1] = step_date    
+        timeline[steps - i - 1] = step_date
     stat = {'total': 0, 'max': 0, 'stat': [0 for i in range(0, steps)], 'timeline': timeline, 'start': date_start, 'end': date_end, 'format': format}
-        
+
     # Loop model items
     for item in model.objects.filter_stats(date_start, date_end).iterator():
         date_diff = date_end - item.get_date()
@@ -163,7 +162,7 @@ def build_graph(model, date_start, date_end, precision):
         date_diff = steps - int(math.floor(float(date_diff / step))) - 2
         stat['stat'][date_diff] += 1
         stat['total'] += 1
-        
+
     # Find max
     for i in stat['stat']:
         if i > stat['max']:

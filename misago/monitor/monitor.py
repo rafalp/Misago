@@ -7,7 +7,7 @@ class Monitor(object):
         self._cache_deleted = False
         self._items = {}
         self.refresh()
-            
+
     def refresh(self):
         self._items = cache.get('misago.monitor')
         if not self._items:
@@ -28,20 +28,20 @@ class Monitor(object):
         sync_item = Item(id=key, value=value, updated=timezone.now())
         sync_item.save(force_update=True)
         return value
-        
+
     def __delitem__(self, key):
         pass
-        
+
     def get(self, key, default=None):
         if not key in self._items:
             return default
         return self._items[key][0]
-    
+
     def get_updated(self, key):
         if key in self._items:
             return self._items[key][1]
         return None
-        
+
     def has_key(self, key):
         return key in self._items
 

@@ -11,25 +11,25 @@ from misago.forms import Form, YesNoSwitch
 
 class UserForm(Form):
     username = forms.CharField(max_length=255)
-    title = forms.CharField(max_length=255,required=False)
-    rank = forms.ModelChoiceField(queryset=Rank.objects.order_by('order').all(),required=False,empty_label=_('No rank assigned'))
+    title = forms.CharField(max_length=255, required=False)
+    rank = forms.ModelChoiceField(queryset=Rank.objects.order_by('order').all(), required=False, empty_label=_('No rank assigned'))
     roles = False
     email = forms.EmailField(max_length=255)
-    new_password = forms.CharField(max_length=255,required=False,widget=forms.PasswordInput)
-    signature = forms.CharField(widget=forms.Textarea,required=False)
-    avatar_custom = forms.CharField(max_length=255,required=False)
-    avatar_ban = forms.BooleanField(widget=YesNoSwitch,required=False)
-    avatar_ban_reason_user = forms.CharField(widget=forms.Textarea,required=False)
-    avatar_ban_reason_admin = forms.CharField(widget=forms.Textarea,required=False)
-    signature_ban = forms.BooleanField(widget=YesNoSwitch,required=False)
-    signature_ban_reason_user = forms.CharField(widget=forms.Textarea,required=False)
-    signature_ban_reason_admin = forms.CharField(widget=forms.Textarea,required=False)
-            
+    new_password = forms.CharField(max_length=255, required=False, widget=forms.PasswordInput)
+    signature = forms.CharField(widget=forms.Textarea, required=False)
+    avatar_custom = forms.CharField(max_length=255, required=False)
+    avatar_ban = forms.BooleanField(widget=YesNoSwitch, required=False)
+    avatar_ban_reason_user = forms.CharField(widget=forms.Textarea, required=False)
+    avatar_ban_reason_admin = forms.CharField(widget=forms.Textarea, required=False)
+    signature_ban = forms.BooleanField(widget=YesNoSwitch, required=False)
+    signature_ban_reason_user = forms.CharField(widget=forms.Textarea, required=False)
+    signature_ban_reason_admin = forms.CharField(widget=forms.Textarea, required=False)
+
     def __init__(self, user=None, *args, **kwargs):
         self.request = kwargs['request']
         self.user = user
         super(UserForm, self).__init__(*args, **kwargs)
-    
+
     def finalize_form(self):
         self.layout = [
                        [
@@ -67,19 +67,19 @@ class UserForm(Form):
                          ],
                         ],
                        ]
-        
+
         # Roles list
         if self.request.user.is_god():
-            self.fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,queryset=Role.objects.order_by('name').all(),error_messages={'required': _("User must have at least one role assigned.")})
+            self.fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Role.objects.order_by('name').all(), error_messages={'required': _("User must have at least one role assigned.")})
         else:
-            self.fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,queryset=Role.objects.filter(protected__exact=False).order_by('name').all(),required=False)
-            
+            self.fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Role.objects.filter(protected__exact=False).order_by('name').all(), required=False)
+
         # Keep non-gods from editing protected members sign-in credentials
         if self.user.is_protected() and not self.request.user.is_god() and self.user.pk != self.request.user.pk:
             del self.fields['email']
             del self.fields['new_password']
             del self.layout[1]
-    
+
     def clean_username(self):
         self.user.set_username(self.cleaned_data['username'])
         try:
@@ -87,7 +87,7 @@ class UserForm(Form):
         except ValidationError as e:
             self.user.is_username_valid(e)
         return self.cleaned_data['username']
-        
+
     def clean_email(self):
         self.user.set_email(self.cleaned_data['email'])
         try:
@@ -95,7 +95,7 @@ class UserForm(Form):
         except ValidationError as e:
             self.user.is_email_valid(e)
         return self.cleaned_data['email']
-        
+
     def clean_new_password(self):
         if self.cleaned_data['new_password']:
             self.user.set_password(self.cleaned_data['new_password'])
@@ -113,18 +113,18 @@ class UserForm(Form):
                 avatar_image = Image.open('%s/avatars/%s' % (settings.STATICFILES_DIRS[0], self.cleaned_data['avatar_custom']))
             except IOError:
                 raise ValidationError(_("Avatar does not exist or is not image file."))
-            return self.cleaned_data['avatar_custom']            
+            return self.cleaned_data['avatar_custom']
         return ''
 
 
 class NewUserForm(Form):
     username = forms.CharField(max_length=255)
-    title = forms.CharField(max_length=255,required=False)
-    rank = forms.ModelChoiceField(queryset=Rank.objects.order_by('order').all(),required=False,empty_label=_('No rank assigned'))
+    title = forms.CharField(max_length=255, required=False)
+    rank = forms.ModelChoiceField(queryset=Rank.objects.order_by('order').all(), required=False, empty_label=_('No rank assigned'))
     roles = False
     email = forms.EmailField(max_length=255)
-    password = forms.CharField(max_length=255,widget=forms.PasswordInput)
-    
+    password = forms.CharField(max_length=255, widget=forms.PasswordInput)
+
     layout = [
               [
                _("Basic Account Settings"),
@@ -143,18 +143,18 @@ class NewUserForm(Form):
                 ],
                ],
               ]
-        
+
     def __init__(self, *args, **kwargs):
         self.request = kwargs['request']
-        
+
         # Roles list
         if self.request.user.is_god():
-            self.base_fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,queryset=Role.objects.order_by('name').all(),error_messages={'required': _("User must have at least one role assigned.")})
+            self.base_fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Role.objects.order_by('name').all(), error_messages={'required': _("User must have at least one role assigned.")})
         else:
-            self.base_fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,queryset=Role.objects.filter(protected__exact=False).order_by('name').all(),required=False)
-        
+            self.base_fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Role.objects.filter(protected__exact=False).order_by('name').all(), required=False)
+
         super(NewUserForm, self).__init__(*args, **kwargs)
-        
+
     def clean_username(self):
         new_user = User.objects.get_blank_user()
         new_user.set_username(self.cleaned_data['username'])
@@ -163,7 +163,7 @@ class NewUserForm(Form):
         except ValidationError as e:
             new_user.is_username_valid(e)
         return self.cleaned_data['username']
-        
+
     def clean_email(self):
         new_user = User.objects.get_blank_user()
         new_user.set_email(self.cleaned_data['email'])
@@ -172,7 +172,7 @@ class NewUserForm(Form):
         except ValidationError as e:
             new_user.is_email_valid(e)
         return self.cleaned_data['email']
-        
+
     def clean_password(self):
         new_user = User.objects.get_blank_user()
         new_user.set_password(self.cleaned_data['password'])
@@ -190,7 +190,7 @@ class SearchUsersForm(Form):
     activation = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=(('0', _("Already Active")), ('1', _("By User")), ('2', _("By Administrator"))), required=False)
     rank = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Rank.objects.order_by('order').all(), required=False)
     role = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Role.objects.order_by('name').all(), required=False)
-    
+
     layout = (
               (
                _("Search Users"),
@@ -203,4 +203,3 @@ class SearchUsersForm(Form):
                ),
               ),
              )
-    

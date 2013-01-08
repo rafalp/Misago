@@ -7,7 +7,7 @@ class Settings(object):
         self._settings = {}
         self._models = {}
         self.refresh()
-        
+
     def refresh(self):
         self._models = cache.get('misago.settings')
         if not self._models:
@@ -22,10 +22,10 @@ class Settings(object):
         else:
             for i, model in self._models.items():
                 self._settings[i] = model.get_value()
-            
+
     def __getattr__(self, key):
         return self._settings[key]
-    
+
     def __contains__(self, key):
         return key in self._settings.keys()
 
@@ -39,16 +39,16 @@ class Settings(object):
             self._settings[key] = value
             cache.set('misago.settings', self._models)
         return value
-        
+
     def __delitem__(self, key):
         pass
-        
+
     def get(self, key, default=None):
         try:
             return self._settings[key]
         except KeyError:
             return None
-        
+
     def has_key(self, key):
         return key in self._settings.keys()
 

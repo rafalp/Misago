@@ -17,7 +17,7 @@ class MisagoACLDebugPanel(DebugPanel):
 
     def process_request(self, request):
         self.request = request
-        
+
     def content(self):
         context = self.context.copy()
         context['acl'] = self.request.acl

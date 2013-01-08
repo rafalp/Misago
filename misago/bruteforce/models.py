@@ -17,7 +17,7 @@ class SignInAttemptsManager(models.Manager):
     def register_attempt(self, ip):
         attempt = SignInAttempt(ip=ip, date=timezone.now())
         attempt.save(force_insert=True)
-        
+
     def is_jammed(self, settings, ip):
         # Limit is off, dont jam IPs?
         if settings['attempts_limit'] == 0:
@@ -31,15 +31,15 @@ class SignInAttemptsManager(models.Manager):
         else:
             attempts = SignInAttempt.objects.filter(ip=ip)
         return attempts.count() > settings['attempts_limit']
-    
-    
+
+
 class SignInAttempt(models.Model):
     ip = models.GenericIPAddressField(db_index=True)
     date = models.DateTimeField()
-    
+
     objects = SignInAttemptsManager()
-    
-    
+
+
 class JamCache(object):
     jammed = False
     expires = timezone.now()
@@ -49,6 +49,6 @@ class JamCache(object):
             self.expires = timezone.now() + timedelta(minutes=request.settings['jams_lifetime'])
             return True
         return False
-    
+
     def is_jammed(self):
         return self.jammed

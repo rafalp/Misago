@@ -12,7 +12,7 @@ from misago.views import error404
 
 def list(request, rank_slug=None):
     ranks = Rank.objects.filter(as_tab=1).order_by('order')
-    
+
     # Find active rank
     active_rank = None
     if rank_slug:
@@ -23,12 +23,12 @@ def list(request, rank_slug=None):
             return error404(request)
     elif ranks:
         active_rank = ranks[0]
-    
+
     # Empty Defaults
     message = None
     users = []
     in_search = False
-    
+
     # Users search?
     if request.method == 'POST':
         in_search = True
@@ -42,7 +42,7 @@ def list(request, rank_slug=None):
                 return redirect(reverse('user', args=(user.username_slug, user.pk)))
             except User.DoesNotExist:
                 pass
-            
+
             # Looks like well have to find near match
             if len(username) > 6:
                 username = username[0:-3]
@@ -51,7 +51,7 @@ def list(request, rank_slug=None):
             elif len(username) > 4:
                 username = username[0:-1]
             username = slugify(username.strip())
-            
+
             # Go for rought match
             if len(username) > 0:
                 users = User.objects.filter(username_slug__startswith=username).order_by('username_slug')[:10]
@@ -63,7 +63,7 @@ def list(request, rank_slug=None):
         search_form = QuickFindUserForm(request=request)
         if active_rank:
             users = User.objects.filter(rank=active_rank).order_by('username_slug')
-    
+
     return request.theme.render_to_response('profiles/list.html',
                                         {
                                          'message': message,
@@ -86,7 +86,7 @@ def profile(request, user, username, tab='posts'):
         return globals()['profile_%s' % tab](request, user)
     except User.DoesNotExist:
         return error404(request)
-    
+
 
 def profile_posts(request, user):
     return request.theme.render_to_response('profiles/profile.html',
@@ -95,7 +95,7 @@ def profile_posts(request, user):
                                              'tab': 'posts',
                                             },
                                             context_instance=RequestContext(request));
-    
+
 
 def profile_threads(request, user):
     return request.theme.render_to_response('profiles/profile.html',
@@ -104,7 +104,7 @@ def profile_threads(request, user):
                                              'tab': 'threads',
                                             },
                                             context_instance=RequestContext(request));
-    
+
 
 def profile_following(request, user):
     return request.theme.render_to_response('profiles/profile.html',
@@ -113,7 +113,7 @@ def profile_following(request, user):
                                              'tab': 'following',
                                             },
                                             context_instance=RequestContext(request));
-    
+
 
 def profile_followers(request, user):
     return request.theme.render_to_response('profiles/profile.html',
@@ -122,7 +122,7 @@ def profile_followers(request, user):
                                              'tab': 'followers',
                                             },
                                             context_instance=RequestContext(request));
-    
+
 
 def profile_details(request, user):
     return request.theme.render_to_response('profiles/details.html',

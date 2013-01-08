@@ -8,7 +8,7 @@ from misago.usercp.options.forms import UserForumOptionsForm
 from misago.usercp.template import RequestContext
 
 
-@block_guest   
+@block_guest
 def options(request):
     message = request.messages.get_message('usercp_options')
     if request.method == 'POST':
@@ -22,12 +22,12 @@ def options(request):
             return redirect(reverse('usercp'))
         message = Message(form.non_field_errors()[0], 'error')
     else:
-        form = UserForumOptionsForm(request=request,initial={
+        form = UserForumOptionsForm(request=request, initial={
                                                              'newsletters': request.user.receive_newsletters,
                                                              'hide_activity': request.user.hide_activity,
                                                              'timezone': request.user.timezone,
                                                              })
-    
+
     return request.theme.render_to_response('usercp/options.html',
                                             context_instance=RequestContext(request, {
                                               'message': message,
