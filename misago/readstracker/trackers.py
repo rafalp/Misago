@@ -9,10 +9,12 @@ class ForumsTracker(object):
         self.user = user
         self.cutoff = timezone.now() - timedelta(days=settings.READS_TRACKER_LENGTH)
         self.forums = {}
-        if self.user.is_authenticated() and settings.READS_TRACKER_LENGTH > 0:
+        if user.is_authenticated() and settings.READS_TRACKER_LENGTH > 0:
+            if user.join_date > self.cutoff:
+                self.cutoff = user.join_date
             for forum in Record.objects.filter(user=user).filter(updated__gte=self.cutoff).values('id', 'forum_id', 'updated', 'cleared'):
                  self.forums[forum['forum_id']] = forum
-                 
+
     def is_read(self, forum):
         if not self.user.is_authenticated() or not forum.last_thread_date:
             return True
@@ -30,14 +32,16 @@ class ThreadsTracker(object):
         self.forum = forum
         self.cutoff = timezone.now() - timedelta(days=settings.READS_TRACKER_LENGTH)
         if request.user.is_authenticated():
+            if request.user.join_date > self.cutoff:
+                self.cutoff = request.user.join_date
             try:
-                self.record = Record.objects.get(user=request.user,forum=forum)
+                self.record = Record.objects.get(user=request.user, forum=forum)
                 if self.record.cleared > self.cutoff:
                     self.cutoff = self.record.cleared
             except Record.DoesNotExist:
-                self.record = Record(user=request.user,forum=forum,cleared=self.cutoff)
+                self.record = Record(user=request.user, forum=forum, cleared=self.cutoff)
             self.threads = self.record.get_threads()
-    
+
     def get_read_date(self, thread):
         if not self.request.user.is_authenticated():
             return timezone.now()
@@ -47,7 +51,7 @@ class ThreadsTracker(object):
         except KeyError:
             pass
         return self.cutoff
-        
+
     def is_read(self, thread):
         if not self.request.user.is_authenticated():
             return True
@@ -58,7 +62,7 @@ class ThreadsTracker(object):
             return thread.last <= self.cutoff or thread.last <= self.threads[thread.pk]
         except KeyError:
             return False
-        
+
     def set_read(self, thread, post):
         if self.request.user.is_authenticated():
             try:
@@ -68,7 +72,7 @@ class ThreadsTracker(object):
             except KeyError:
                 self.threads[thread.pk] = post.date
                 self.need_sync = True
-                        
+
     def sync(self):
         now = timezone.now()
         if self.need_sync:
@@ -78,7 +82,7 @@ class ThreadsTracker(object):
                     unread_threads += 1
             if not unread_threads:
                 self.record.cleared = now
-                
+
         if self.need_sync or self.need_update:
             self.record.updated = now
             self.record.set_threads(self.threads)
