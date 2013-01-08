@@ -25,7 +25,7 @@ class ThreadsView(BaseView):
         self.parents = Forum.objects.forum_parents(self.forum.pk)
         if self.forum.lft + 1 != self.forum.rght:
             self.forum.subforums = Forum.objects.treelist(self.request.acl.forums, self.forum, tracker=ForumsTracker(self.request.user))
-        self.tracker = ThreadsTracker(self.request.user, self.forum)
+        self.tracker = ThreadsTracker(self.request, self.forum)
 
     def fetch_threads(self, page):
         self.count = self.request.acl.threads.filter_threads(self.request, self.forum, Thread.objects.filter(forum=self.forum).filter(weight__lt=2)).count()

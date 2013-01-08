@@ -23,23 +23,23 @@ class ForumsTracker(object):
 
 
 class ThreadsTracker(object):
-    def __init__(self, user, forum):
+    def __init__(self, request, forum):
         self.need_sync = False
         self.need_update = False
-        self.user = user
+        self.request = request
         self.forum = forum
         self.cutoff = timezone.now() - timedelta(days=settings.READS_TRACKER_LENGTH)
-        if user.is_authenticated():
+        if request.user.is_authenticated():
             try:
-                self.record = Record.objects.get(user=user,forum=forum)
+                self.record = Record.objects.get(user=request.user,forum=forum)
                 if self.record.cleared > self.cutoff:
                     self.cutoff = self.record.cleared
             except Record.DoesNotExist:
-                self.record = Record(user=user,forum=forum,cleared=self.cutoff)
+                self.record = Record(user=request.user,forum=forum,cleared=self.cutoff)
             self.threads = self.record.get_threads()
     
     def get_read_date(self, thread):
-        if not self.user.is_authenticated():
+        if not self.request.user.is_authenticated():
             return timezone.now()
         try:
             if self.threads[thread.pk] > self.cutoff:
@@ -49,7 +49,7 @@ class ThreadsTracker(object):
         return self.cutoff
         
     def is_read(self, thread):
-        if not self.user.is_authenticated():
+        if not self.request.user.is_authenticated():
             return True
         try:
             if thread.last <= self.cutoff and thread.pk in self.threads:
@@ -60,7 +60,7 @@ class ThreadsTracker(object):
             return False
         
     def set_read(self, thread, post):
-        if self.user.is_authenticated():
+        if self.request.user.is_authenticated():
             try:
                 if self.threads[thread.pk] < post.date:
                     self.threads[thread.pk] = post.date
@@ -73,7 +73,7 @@ class ThreadsTracker(object):
         now = timezone.now()
         if self.need_sync:
             unread_threads = 0
-            for thread in Thread.objects.filter(last__gte=self.record.cleared).all():
+            for thread in self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set.filter(last__gte=self.record.cleared)):
                 if not self.is_read(thread):
                     unread_threads += 1
             if not unread_threads:

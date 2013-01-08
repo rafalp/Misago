@@ -26,7 +26,7 @@ class ThreadView(BaseView):
         self.request.acl.forums.allow_forum_view(self.forum)
         self.request.acl.threads.allow_thread_view(self.request.user, self.thread)
         self.parents = Forum.objects.forum_parents(self.forum.pk, True)
-        self.tracker = ThreadsTracker(self.request.user, self.forum)
+        self.tracker = ThreadsTracker(self.request, self.forum)
 
     def fetch_posts(self, page):
         self.count = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).count()
