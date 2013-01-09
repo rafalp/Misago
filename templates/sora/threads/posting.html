@@ -27,14 +27,7 @@
   <h1>{{ get_title() }} <small>{% if thread %}{{ thread.name }}{% else %}{{ forum.name }}{% endif %}</small></h1>
   {% if thread %}
   <ul class="unstyled thread-info">
-    {% if thread.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
-    <li><i class="icon-time"></i> {{ thread.last|reltimesince }}</li>
-    <li><i class="icon-user"></i> {% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}</li>
-    <li><i class="icon-comment"></i> {% if thread.replies > 0 -%}
-      {% trans count=thread.replies, replies=thread.replies|intcomma %}One reply{% pluralize %}{{ replies }} replies{% endtrans %}
-    {%- else -%}
-      {% trans %}No replies{% endtrans %}
-    {%- endif %}</li>
+    {{ get_info() }}
   </ul>
   {%- endif %}
 </div>
@@ -76,6 +69,28 @@
 {% trans %}Post New Reply{% endtrans %}
 {%- elif mode == 'edit_post' -%}
 {% trans %}Edit Reply{% endtrans %}
+{%- endif %}
+{%- endmacro %}
+
+{% macro get_info() -%}
+{% if mode == 'edit_post' -%}
+    {% if post.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
+    <li><i class="icon-time"></i> {{ post.date|reltimesince }}</li>
+    <li><i class="icon-user"></i> {% if post.user %}<a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
+    <li><i class="icon-pencil"></i> {% if post.edits > 0 -%}
+      {% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}
+    {%- else -%}
+      {% trans %}First edit{% endtrans %}
+    {%- endif %}</li>
+{%- else -%}
+    {% if thread.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
+    <li><i class="icon-time"></i> {{ thread.last|reltimesince }}</li>
+    <li><i class="icon-user"></i> {% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}</li>
+    <li><i class="icon-comment"></i> {% if thread.replies > 0 -%}
+      {% trans count=thread.replies, replies=thread.replies|intcomma %}One reply{% pluralize %}{{ replies }} replies{% endtrans %}
+    {%- else -%}
+      {% trans %}No replies{% endtrans %}
+    {%- endif %}</li>
 {%- endif %}
 {%- endmacro %}
 
