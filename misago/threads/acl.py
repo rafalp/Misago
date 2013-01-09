@@ -238,7 +238,8 @@ class ThreadsACL(BaseACL):
     def allow_thread_edit(self, user, forum, thread, post):
         try:
             forum_role = self.acl[thread.forum_id]
-            self.allow_deleted_post_view(forum)
+            if thread.deleted or post.deleted:
+                self.allow_deleted_post_view(forum)
             if not forum_role['can_close_threads']:
                 if forum.closed:
                     raise ACLError403(_("You can't edit threads in closed forums."))
@@ -294,7 +295,8 @@ class ThreadsACL(BaseACL):
     def allow_reply_edit(self, user, forum, thread, post):
         try:
             forum_role = self.acl[thread.forum_id]
-            self.allow_deleted_post_view(forum)
+            if thread.deleted or post.deleted:
+                self.allow_deleted_post_view(forum)
             if not forum_role['can_close_threads']:
                 if forum.closed:
                     raise ACLError403(_("You can't edit replies in closed forums."))
@@ -320,7 +322,8 @@ class ThreadsACL(BaseACL):
     def allow_changelog_view(self, user, forum, post):
         try:
             forum_role = self.acl[forum.pk]
-            self.allow_deleted_post_view(forum)
+            if post.thread.deleted or post.deleted:
+                self.allow_deleted_post_view(forum)
             if not (forum_role['can_see_changelog'] or user.pk == post.user_id):
                 raise ACLError403(_("You don't have permission to see history of changes made to this post."))
         except KeyError:

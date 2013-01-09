@@ -21,6 +21,7 @@ class ChangelogBaseView(BaseView):
         self.request.acl.threads.allow_thread_view(self.request.user, self.thread)
         self.parents = Forum.objects.forum_parents(self.forum.pk, True)
         self.post = Post.objects.select_related('user').get(pk=kwargs['post'], thread=self.thread.pk)
+        self.post.thread = self.thread
         self.request.acl.threads.allow_post_view(self.request.user, self.thread, self.post)
         self.request.acl.threads.allow_changelog_view(self.request.user, self.forum, self.post)
 
