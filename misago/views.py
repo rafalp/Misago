@@ -82,9 +82,13 @@ def redirection(request, forum, slug):
         forum = Forum.objects.get(pk=forum, type='redirect')
         if not request.acl.forums.can_browse(forum):
             return error403(request, _("You don't have permission to follow this redirect."))
-        forum.redirects += 1
-        forum.redirects_delta += 1
-        forum.save(force_update=True)
+        redirects_tracker = request.session.get('redirects', [])
+        if forum.pk not in redirects_tracker:
+            redirects_tracker.append(forum.pk)
+            request.session['redirects'] = redirects_tracker
+            forum.redirects += 1
+            forum.redirects_delta += 1
+            forum.save(force_update=True)
         return redirect(forum.redirect)
     except Forum.DoesNotExist:
         return error404(request)
