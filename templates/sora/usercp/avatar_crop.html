@@ -34,7 +34,7 @@
 
 {% block javascripts %}
 {{ super() }}
-    <script src="/static/sora/js/jquery.Jcrop.min.js"></script>
+    <script src="{{ STATIC_URL }}sora/js/jquery.Jcrop.min.js"></script>
     <script type="text/javascript">
       $(function($){
         // Create variables (in this scope) to hold the API and image size
