@@ -59,16 +59,22 @@ def date(val, arg=""):
 
 def reldate(val, arg=""):
     now = datetime.now(utc if is_aware(val) else None)
+    local_now = localtime(now)
     diff = now - val
     local = localtime(val)
 
-    # Common situations
-    if diff.days == 0:
+    # Today check
+    if format(local, 'Y-z') == format(local_now, 'Y-z'):
         return _("Today, %(hour)s") % {'hour': time_format(local, formats['TIME_FORMAT'])}
-    if diff.days == 1:
+    # Yesteday check
+    yesterday = localtime(now - timedelta(days=1))
+    if format(local, 'Y-z') == format(yesterday, 'Y-z'):
         return _("Yesterday, %(hour)s") % {'hour': time_format(local, formats['TIME_FORMAT'])}
-    if diff.days == -1:
+    # Tomorrow Check
+    tomorrow = localtime(now + timedelta(days=1))
+    if format(local, 'Y-z') == format(tomorrow, 'Y-z'):
         return _("Tomorrow, %(hour)s") % {'hour': time_format(local, formats['TIME_FORMAT'])}
+    # Week check
     if diff.days > -7 or diff.days < 7:
         return _("%(day)s, %(hour)s") % {'day': format(local, 'l'), 'hour': time_format(local, formats['TIME_FORMAT'])}
 
@@ -80,6 +86,10 @@ def reltimesince(val, arg=""):
     now = datetime.now(utc if is_aware(val) else None)
     diff = now - val
     local = localtime(val)
+
+    # Difference is greater than day for sure
+    if diff.days != 0:
+        return reldate(val, arg)
 
     # Display specific time
     if diff.seconds >= 0:
