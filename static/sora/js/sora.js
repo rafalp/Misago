@@ -54,4 +54,13 @@ $(function () {
 	$('.go-back').on('click', function (e) {
 	  history.go(-1)
 	})
+	
+	// Add labels to images
+	$('.markdown img').each(function() {
+        $(this).addClass('img-rounded');
+        $(this).wrap(function() {
+            return '<div class="md-img span5" />';
+        });
+        $(this).after('<a href="' + $(this).attr('src') + '" class="md-img-label"><i class="icon-picture"></i> ' + $(this).attr('alt') + '</a>');
+	});
 })

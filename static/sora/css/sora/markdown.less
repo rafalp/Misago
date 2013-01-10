@@ -41,6 +41,31 @@
       display: block;
     }
   }
+  
+  .md-img {
+    text-align: center;
+    margin: 24px auto;
+    padding: 0px;
+    float: none;
+    
+    img {
+      .box-shadow(0px 0px 3px @grayLight); 
+    }
+               
+    .md-img-label {
+      display: block;
+      .opacity(50);
+      padding: 6px 0px;
+      
+      color: @textColor;
+      font-weight: bold;
+      
+      &:hover {
+        .opacity(100);
+        text-decoration: none;
+      }
+    }
+  }
 }
 
 .post-content {
