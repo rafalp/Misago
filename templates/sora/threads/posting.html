@@ -105,3 +105,8 @@
 {% trans %}Edit Reply{% endtrans %}
 {%- endif %}
 {%- endmacro %}
+
+{% block javascripts %}
+{{ super() }}
+  {{ editor.js() }}
+{% endblock %}

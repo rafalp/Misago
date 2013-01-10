@@ -315,4 +315,7 @@
       });
     });
   </script>{% endif %}
+  {% if user.is_authenticated() and acl.threads.can_reply(forum, thread) %}
+  {{ editor.js() }}
+  {% endif %}
 {%- endblock %}

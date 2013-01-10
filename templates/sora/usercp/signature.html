@@ -19,6 +19,14 @@
 {% endif %}
 <form action="{% url 'usercp_signature' %}" method="post">
   <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-  {{ editor.editor(form.fields.signature, _('Save Signature')) }}
+  {{ editor.editor(form.fields.signature, _('Save Signature'),
+        hide_links=(not acl.usercp.allow_signature_links()),
+        hide_images=(not acl.usercp.allow_signature_images()),
+        hide_hr=True) }}
 </form>
+{% endblock %}
+
+{% block javascripts %}
+{{ super() }}
+  {{ editor.js() }}
 {% endblock %}

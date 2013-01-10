@@ -36,5 +36,33 @@
     border-top: 2px solid darken(@bodyBackground, 20%);
     overflow: auto;
     padding: 8px;
+    
+    .editor-tools {
+      display: none;
+      overflow: auto;
+      margin: -6px;
+      padding: 6px;
+      
+      li {
+        float: left;
+        list-style: none;
+        margin-right: 6px;
+        
+        &.divider {
+          margin-left: 6px;
+        }
+        
+        a {
+          background-color: @grayLighter;
+          border-color: @white;
+          .box-shadow(0px 0px 3px @grayLight);
+          padding: 4px 7px;
+          
+          &:hover {
+            background-color: @white;
+          }
+        }
+      }
+    }
   }
 }
