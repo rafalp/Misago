@@ -20,3 +20,16 @@ def profile_view(fallback='user'):
     
         return wraps(f)(inner_decorator)
     return outer_decorator
+
+
+def user_view(f):
+    def inner_decorator(request, user, *args, **kwargs):
+        request = request
+        user_pk = int(user)
+        try:
+            user = User.objects.get(pk=user_pk)
+            return f(request, user, *args, **kwargs)
+        except User.DoesNotExist:
+            return error404(request)
+
+    return wraps(f)(inner_decorator)

@@ -48,4 +48,4 @@ def show_alerts(request):
                                              'new_alerts': new_alerts,
                                              'alerts': alerts,
                                              },
-                                            context_instance=RequestContext(request));
+                                            context_instance=RequestContext(request))

@@ -1,9 +1,39 @@
 import re
 import markdown
+from HTMLParser import HTMLParser
 from django.conf import settings
 from django.utils.importlib import import_module
 from django.utils.translation import ugettext_lazy as _
 from misago.utils import get_random_string
+
+class ClearHTMLParser(HTMLParser):
+    def __init__(self):
+        HTMLParser.__init__(self)
+        self.clean_text = ''
+        
+    def handle_starttag(self, tag, attrs):
+        try:
+            if tag == 'img':
+                for attr in attrs:
+                    if attr[0] == 'src':
+                        self.clean_text += attr[1]
+            if tag == 'a':
+                for attr in attrs:
+                    if attr[0] == 'href':
+                        self.clean_text += attr[1]
+        except IndexError, KeyError:
+            pass
+        print "Encountered a start tag %s with attrs %s" % (tag, attrs)
+        
+    def handle_data(self, data):
+        self.clean_text += data
+
+
+def clear_markdown(text):
+    parser = ClearHTMLParser()
+    parser.feed(text)
+    return parser.clean_text
+
 
 def remove_unsupported(md):
     # References are evil, we dont support them

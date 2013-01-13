@@ -386,6 +386,18 @@ class User(models.Model):
             raw_password = password_reversed
         return check_password(raw_password, self.password, setter)
 
+    def is_following(self, user):
+        try:
+            return self.follows.filter(id=user.pk).count() > 0
+        except AttributeError:
+            return self.follows.filter(id=user).count() > 0
+
+    def is_ignoring(self, user):
+        try:
+            return self.ignores.filter(id=user.pk).count() > 0
+        except AttributeError:
+            return self.ignores.filter(id=user).count() > 0
+
     def get_roles(self):
         return self.roles.all()
 

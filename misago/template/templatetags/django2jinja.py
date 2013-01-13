@@ -44,6 +44,8 @@ def parse_markdown(value, format=None):
 
 @register.filter(name='markdown_short')
 def short_markdown(value, length=300):
+    from misago.markdown.factory import clear_markdown
+    value = clear_markdown(value)
     if len(value) <= length:
         return ' '.join(value.splitlines())
     value = ' '.join(value.splitlines())

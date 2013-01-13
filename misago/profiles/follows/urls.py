@@ -6,9 +6,11 @@ def register_profile_urls(first=False):
         urlpatterns += patterns('misago.profiles.follows.views',
             url(r'^$', 'follows', name="user"),
             url(r'^$', 'follows', name="user_follows"),
+            url(r'^(?P<page>\d+)/$', 'follows', name="user_follows"),
         )
     else:
         urlpatterns += patterns('misago.profiles.follows.views',
             url(r'^follows/$', 'follows', name="user_follows"),
+            url(r'^follows/(?P<page>\d+)/$', 'follows', name="user_follows"),
         )
     return urlpatterns

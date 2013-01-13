@@ -30,7 +30,7 @@
   {% for item in items %}
   <li>
     <img src="{{ profile.get_avatar(36) }}" class="avatar">
-    <p class="message">{{ item.start_post.post|markdown_short(300) }}</p>
+    <p class="message">{{ item.start_post.post_preparsed|markdown_short(300) }}</p>
     <p class="location">{% trans thread=thread(item), forum=forum(item.forum), user=username(profile), date=item.start|reldate|low %}Thread {{ thread }} posted in {{ forum }} by {{ user }} {{ date }}{% endtrans %}</p>
   </li>
   {% endfor %}

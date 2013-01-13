@@ -13,3 +13,10 @@ for extension in settings.USERCP_EXTENSIONS:
         )
     except AttributeError:
         pass
+
+urlpatterns += patterns('misago.usercp.views',
+    url(r'^follow/(?P<user>\d+)/$', 'follow', name="follow_user"),
+    url(r'^unfollow/(?P<user>\d+)/$', 'unfollow', name="unfollow_user"),
+    url(r'^ignore/(?P<user>\d+)/$', 'ignore', name="ignore_user"),
+    url(r'^unignore/(?P<user>\d+)/$', 'unignore', name="unignore_user"),
+)

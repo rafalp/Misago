@@ -14,17 +14,42 @@
       <img src="{{ profile.get_avatar() }}" class="avatar pull-left" alt="">
       <div class="pull-left">
         <h1>{{ profile.username }}</h1>
-        <p class="lead">{% if profile.title or profile.rank.title %}{% if profile.title %}{{ _(profile.title) }}{% elif profile.rank.title %}{{ _(profile.rank.title) }}{% endif %}; {% endif %}<span class="muted">{% trans last_visit=profile.last_date|reltimesince|low %}Last seen {{ last_visit }}{% endtrans %}</span></p>
+        <p class="lead">
+          {% if profile.title or profile.rank.title %}{% if profile.title %}{{ _(profile.title) }}{% elif profile.rank.title %}{{ _(profile.rank.title) }}{% endif %}; {% endif %}<span class="muted">{% trans last_visit=profile.last_date|reltimesince|low %}Last seen {{ last_visit }}{% endtrans %}</span>
+        </p>
       </div>
-    </div>	
+    </div>
     <ul class="nav nav-tabs">
       {% for link in tabs %}
-      <li{% if link.active %} class="active"{% endif %}><a href="{{ link.route|url(user=profile.pk, username=profile.username_slug) }}">{{ link.name }}</a></li>
+      <li{% if link.active %} class="active"{% endif %}>
+        <a href="{{ link.route|url(user=profile.pk, username=profile.username_slug) }}">{{ link.name }}</a></li>
       {% endfor %}
     </ul>
+    {% if user.is_authenticated() and user.pk != profile.pk %}
+    <ul class="nav nav-pills tabs-extra">
+      <li class="{% if ignores %}danger{% else %}info{% endif %}">
+        <form action="{% if ignores %}{% url 'unignore_user' user=profile.id %}{% else %}{% url 'ignore_user' user=profile.id %}{% endif %}" method="post">
+          <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+          <input type="hidden" name="fallback" value="{{ fallback }}">
+          <button type="submit" class="btn">
+            <i class="icon-ban-circle"></i> {% if ignores %}{% trans %}Don't Ignore{% endtrans %}{% else %}{% trans %}Ignore{% endtrans %}{% endif %}
+          </button>
+        </form>
+      </li>
+      <li class="{% if follows %}success{% else %}info{% endif %}">
+        <form action="{% if follows %}{% url 'unfollow_user' user=profile.id %}{% else %}{% url 'follow_user' user=profile.id %}{% endif %}" method="post">
+          <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+          <input type="hidden" name="fallback" value="{{ fallback }}">
+          <button type="submit" class="btn">
+            <i class="icon-heart"></i> {% if follows %}{% trans %}Don't Follow{% endtrans %}{% else %}{% trans %}Follow{% endtrans %}{% endif %}
+          </button>
+        </form>
+      </li>
+    </ul>
+    {% endif %}
   </div>
   <div class="profile-tab{% if profile.get_style() %} {{ profile.get_style() }}{% endif %}">
-  	{% block tab %}{% endblock %}
+    {% block tab %}{% endblock %}
   </div>
 </div>
 {% endblock %}
