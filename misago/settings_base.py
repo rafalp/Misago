@@ -120,8 +120,10 @@ USERCP_EXTENSIONS = (
 
 # List of User Profile extensions
 PROFILE_EXTENSIONS = (
-    '',
-    '',
+    'misago.profiles.content',
+    'misago.profiles.follows',
+    'misago.profiles.followers',
+    'misago.profiles.details',
 )
 
 # List of Markdown Extensions

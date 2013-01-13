@@ -15,7 +15,7 @@ def signature(request):
     if request.user.signature_ban:
         return request.theme.render_to_response('usercp/signature_banned.html',
                                                 context_instance=RequestContext(request, {
-                                                  'tab': 'signature',
+                                                 'tab': 'signature',
                                                  }));
 
     siggy_text = ''
@@ -39,7 +39,7 @@ def signature(request):
 
     return request.theme.render_to_response('usercp/signature.html',
                                             context_instance=RequestContext(request, {
-                                              'message': message,
-                                              'tab': 'signature',
-                                              'form': FormLayout(form),
+                                             'message': message,
+                                             'tab': 'signature',
+                                             'form': FormLayout(form),
                                              }));

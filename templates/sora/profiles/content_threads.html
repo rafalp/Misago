@@ -1,0 +1,69 @@
+{% extends "sora/profiles/profile.html" %}
+{% load i18n %}
+{% load humanize %}
+{% load url from future %}
+{% import "_forms.html" as form_theme with context %}
+{% import "sora/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(_('Threads'), profile.username) }}{% endblock %}
+
+{% block tab %}
+<h2>{% trans username=profile.username %}{{ username }}'s Threads{% endtrans %} <small>{% if items_total -%}
+    {% trans count=items_total, total=items_total|intcomma, username=profile.username -%}
+    {{ username }} started one thread
+    {%- pluralize -%}
+    {{ username }} started {{ total }} threads
+    {%- endtrans %}
+    {%- else -%}
+    {% trans username=profile.username %}{{ username }} has no threads{% endtrans %}
+    {%- endif %}</small></h2>
+
+{% if items_total %}
+<div class="list-nav">
+  {{ pager() }}
+  <ul class="nav nav-pills pull-right">
+    <li class="info"><a href="{% url 'user_posts' user=profile.id, username=profile.username_slug %}">{% trans %}Posts{% endtrans %}</a></li>
+    <li class="primary"><a href="{% url 'user_threads' user=profile.id, username=profile.username_slug %}">{% trans %}Threads{% endtrans %}</a></li>
+  </ul>
+</div>
+<ul class="unstyled shorts-list">
+  {% for item in items %}
+  <li>
+    <img src="{{ profile.get_avatar(36) }}" class="avatar">
+    <p class="message">{{ item.start_post.post|markdown_short(300) }}</p>
+    <p class="location">{% trans thread=thread(item), forum=forum(item.forum), user=username(profile), date=item.start|reldate|low %}Thread {{ thread }} posted in {{ forum }} by {{ user }} {{ date }}{% endtrans %}</p>
+  </li>
+  {% endfor %}
+</ul>
+<div class="list-nav">
+  {{ pager() }}
+</div>
+{% else %}
+<p class="lead">{% trans username=profile.username %}{{ username }} has no threads{% endtrans %}</p>
+{% endif %}
+{% endblock %}
+
+{% macro pager() -%}
+  <ul class="pager pull-left">
+    {%- if pagination['prev'] > 1 %}<li><a href="{% url 'user_threads' user=profile.id, username=profile.username_slug %}" class="tooltip-top" title="{% trans %}Lastest Posts{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}Latest{% endtrans %}</a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'user_threads' user=profile.id, username=profile.username_slug, page=pagination['prev'] %}{% else %}{% url 'user_threads' user=profile.id, username=profile.username_slug %}{% endif %}" class="tooltip-top" title="{% trans %}Newer Posts{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{% url 'user_threads' user=profile.id, username=profile.username_slug, page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Older Posts{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    <li class="count">
+    {%- trans current_page=pagination['page'], pages=pagination['total'] -%}
+    Page {{ current_page }} of {{ pages }}
+    {%- endtrans -%}
+    </li>
+  </ul>
+{%- endmacro %}
+
+{% macro thread(item) -%}
+<a href="{% url 'thread' thread=item.pk, slug=item.slug %}">{{ item.name }}</a>
+{%- endmacro %}
+
+{% macro forum(forum) -%}
+<a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}">{{ forum.name }}</a>
+{%- endmacro %}
+
+{% macro username(user) -%}
+<a href="{% url 'user' user=user.pk, username=user.username_slug %}">{{ user.username }}</a>
+{%- endmacro %}

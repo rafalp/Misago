@@ -18,11 +18,9 @@
       </div>
     </div>	
     <ul class="nav nav-tabs">
-      <li{% if tab == 'posts' %} class="active"{% endif %}><a href="{% url 'user' user=profile.pk, username=profile.username_slug %}">{% trans %}Last Posts{% endtrans %}</a></li>
-      <li{% if tab == 'threads' %} class="active"{% endif %}><a href="{% url 'user_threads' user=profile.pk, username=profile.username_slug %}">{% trans %}Last Threads{% endtrans %}</a></li>
-      <li{% if tab == 'following' %} class="active"{% endif %}><a href="{% url 'user_following' user=profile.pk, username=profile.username_slug %}">{% trans %}Following{% endtrans %}</a></li>
-      <li{% if tab == 'followers' %} class="active"{% endif %}><a href="{% url 'user_followers' user=profile.pk, username=profile.username_slug %}">{% trans %}Followers{% endtrans %}</a></li>
-      <li{% if tab == 'details' %} class="active"{% endif %}><a href="{% url 'user_details' user=profile.pk, username=profile.username_slug %}">{% trans %}Profile Details{% endtrans %}</a></li>
+      {% for link in tabs %}
+      <li{% if link.active %} class="active"{% endif %}><a href="{{ link.route|url(user=profile.pk, username=profile.username_slug) }}">{{ link.name }}</a></li>
+      {% endfor %}
     </ul>
   </div>
   <div class="profile-tab{% if profile.get_style() %} {{ profile.get_style() }}{% endif %}">

@@ -20,8 +20,8 @@ def avatar_view(f):
         if request.user.avatar_ban:
             return request.theme.render_to_response('usercp/avatar_banned.html',
                                                     context_instance=RequestContext(request, {
-                                                        'tab': 'avatar',
-                                                    }));
+                                                     'tab': 'avatar',
+                                                     }));
         return f(*args, **kwargs)
     return decorator
 
@@ -32,8 +32,8 @@ def avatar(request):
     message = request.messages.get_message('usercp_avatar')
     return request.theme.render_to_response('usercp/avatar.html',
                                             context_instance=RequestContext(request, {
-                                              'message': message,
-                                              'tab': 'avatar',
+                                             'message': message,
+                                             'tab': 'avatar',
                                              }));
 
 
@@ -94,9 +94,9 @@ def gallery(request):
 
     return request.theme.render_to_response('usercp/avatar_gallery.html',
                                             context_instance=RequestContext(request, {
-                                              'message': message,
-                                              'galleries': galleries,
-                                              'tab': 'avatar',
+                                             'message': message,
+                                             'galleries': galleries,
+                                             'tab': 'avatar',
                                              }));
 
 
@@ -159,10 +159,10 @@ def upload(request):
 
     return request.theme.render_to_response('usercp/avatar_upload.html',
                                             context_instance=RequestContext(request, {
-                                              'message': message,
-                                              'form': FormLayout(form),
-                                              'tab': 'avatar',
-                                            }));
+                                             'message': message,
+                                             'form': FormLayout(form),
+                                             'tab': 'avatar',
+                                             }));
 
 
 @block_guest
@@ -220,9 +220,9 @@ def crop(request, upload=False):
 
     return request.theme.render_to_response('usercp/avatar_crop.html',
                                             context_instance=RequestContext(request, {
-                                              'message': message,
-                                              'after_upload': upload,
-                                              'avatar_size': settings.AVATAR_SIZES[0],
-                                              'source': 'avatars/%s' % (request.user.avatar_temp if upload else request.user.avatar_original),
-                                              'tab': 'avatar',
-                                            }));
+                                             'message': message,
+                                             'after_upload': upload,
+                                             'avatar_size': settings.AVATAR_SIZES[0],
+                                             'source': 'avatars/%s' % (request.user.avatar_temp if upload else request.user.avatar_original),
+                                             'tab': 'avatar',
+                                             }));

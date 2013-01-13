@@ -16,15 +16,6 @@ def query_string(**kwargs):
     query = urllib.urlencode(kwargs)
     return '?%s' % (query if kwargs else '')
 
-
-@register.filter(name='markdown')
-def parse_markdown(value, format=None):
-    import markdown
-    if not format:
-        format = settings.OUTPUT_FORMAT
-    return markdown.markdown(value, safe_mode='escape', output_format=format)
-
-
 @register.filter(name='low')
 def low(value):
     if not value:
@@ -39,6 +30,31 @@ def low(value):
 @register.filter(name="slugify")
 def slugify_tag(format_string):
     return slugify(format_string)
+
+
+"""
+Markdown filters
+"""
+@register.filter(name='markdown')
+def parse_markdown(value, format=None):
+    import markdown
+    if not format:
+        format = settings.OUTPUT_FORMAT
+    return markdown.markdown(value, safe_mode='escape', output_format=format)
+
+@register.filter(name='markdown_short')
+def short_markdown(value, length=300):
+    if len(value) <= length:
+        return ' '.join(value.splitlines())
+    value = ' '.join(value.splitlines())
+    value = value[0:length]
+    while value[-1] != ' ':
+        value = value[0:-1]
+    value = value.strip()
+    if value[-3:3] != '...':
+        value = '%s...' % value
+    return value
+
 
 """
 Date and time filters

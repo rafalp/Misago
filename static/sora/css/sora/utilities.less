@@ -102,3 +102,39 @@
   font-family: @monoFontFamily;
   font-weight: bold;
 }
+
+// Shorts-list
+// --------------------------------------------------
+.shorts-list {
+  border-top: 1px solid @grayLighter;
+  margin-top: 12px;
+  
+  li {
+    border-bottom: 1px solid @grayLighter;
+    padding: 0px;
+    padding-bottom: 12px;
+    margin: 0px;
+    margin-top: 12px;
+    
+    .avatar{
+      .border-radius(3px);
+      float: left;
+      width: 40px;
+      height: 40px;
+    }
+    
+    p {
+      margin: 0px;
+      margin-left: 54px;
+      
+      &.message {        
+        color: @gray;
+      }
+      
+      &.location {
+        color: @grayLight;
+        font-size: 80%;
+      }
+    }
+  }
+}

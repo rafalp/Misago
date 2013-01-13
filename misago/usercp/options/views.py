@@ -30,7 +30,7 @@ def options(request):
 
     return request.theme.render_to_response('usercp/options.html',
                                             context_instance=RequestContext(request, {
-                                              'message': message,
-                                              'tab': 'options',
-                                              'form': FormLayout(form)
+                                             'message': message,
+                                             'tab': 'options',
+                                             'form': FormLayout(form)
                                              }));

@@ -41,9 +41,9 @@ def credentials(request):
 
     return request.theme.render_to_response('usercp/credentials.html',
                                             context_instance=RequestContext(request, {
-                                              'message': message,
-                                              'form': FormLayout(form),
-                                              'tab': 'credentials',
+                                             'message': message,
+                                             'form': FormLayout(form),
+                                             'tab': 'credentials',
                                              }));
 
 

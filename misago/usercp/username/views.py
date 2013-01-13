@@ -42,10 +42,10 @@ def username(request):
 
     return request.theme.render_to_response('usercp/username.html',
                                             context_instance=RequestContext(request, {
-                                              'message': message,
-                                              'changes_left': changes_left,
-                                              'form': FormLayout(form),
-                                              'next_change': next_change,
-                                              'changes_history': request.user.namechanges.order_by('-date')[:10],
-                                              'tab': 'username',
+                                             'message': message,
+                                             'changes_left': changes_left,
+                                             'form': FormLayout(form),
+                                             'next_change': next_change,
+                                             'changes_history': request.user.namechanges.order_by('-date')[:10],
+                                             'tab': 'username',
                                              }));

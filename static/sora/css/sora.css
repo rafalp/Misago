@@ -1043,6 +1043,9 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .diff table tr td.even{background-color:#ebebeb;}
 .diff table tr td.added{background-color:#cdeacd;}.diff table tr td.added.even{background-color:#b1deb1;}
 .diff table tr td.removed{background-color:#f4c8c5;}.diff table tr td.removed.even{background-color:#eea8a2;}
+.shorts-list{border-top:1px solid #eeeeee;margin-top:12px;}.shorts-list li{border-bottom:1px solid #eeeeee;padding:0px;padding-bottom:12px;margin:0px;margin-top:12px;}.shorts-list li .avatar{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;float:left;width:40px;height:40px;}
+.shorts-list li p{margin:0px;margin-left:54px;}.shorts-list li p.message{color:#555555;}
+.shorts-list li p.location{color:#999999;font-size:80%;}
 .well-post.rank-team{border:1px solid #0099e6;-webkit-box-shadow:0px 0px 0px 3px #66ccff;-moz-box-shadow:0px 0px 0px 3px #66ccff;box-shadow:0px 0px 0px 3px #66ccff;}
 .team-online.rank-team ul li{background-color:#0088cc;}.team-online.rank-team ul li div a{color:#ffffff;text-shadow:0px 1px 0px #000d13;}
 .team-online.rank-team ul li div .muted{color:#02435e;}

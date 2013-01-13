@@ -5,7 +5,7 @@
 {% import "_forms.html" as form_theme with context %}
 {% import "sora/macros.html" as macros with context %}
 
-{% block title %}{{ macros.page_title(profile.username, _('Member Details')) }}{% endblock %}
+{% block title %}{{ macros.page_title(_('Member Details'), profile.username) }}{% endblock %}
 
 {% block tab %}
 <div class="row">
