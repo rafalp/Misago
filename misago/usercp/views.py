@@ -66,6 +66,7 @@ def ignore(request, user):
 
 @block_guest
 @check_csrf
+@user_view
 def unignore(request, user):
     if request.user.pk == user.pk:
         return error404(request)
