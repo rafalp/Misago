@@ -13,6 +13,7 @@ def RequestContext(request, context=None):
             append_links = usercp_module.register_usercp_extension(request)
             if append_links:
                 for link in append_links:
+                    link = list(link)
                     token = link[0][link[0].find('_') + 1:]
                     context['tabs'].append({
                                             'route': link[0],

@@ -9,7 +9,7 @@
 {% block action %}
 <h2>{% trans %}Change Forum Options{% endtrans %}</h2>
 {% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
-<form action="{% url 'usercp' %}" method="post">
+<form action="{% url 'usercp_options' %}" method="post">
   {{ form_theme.form_widget(form, width=9) }}
   <div class="form-actions">
   	<button name="save" type="submit" class="btn btn-primary">{% trans %}Change Options{% endtrans %}</button>
