@@ -8,15 +8,12 @@
 {% block title %}{{ macros.page_title(_('Follows'), profile.username) }}{% endblock %}
 
 {% block tab %}
-<h2>{% trans username=profile.username %}Who {{ username }} Follows{% endtrans %} <small>{% if items_total -%}
-    {% trans count=items_total, total=items_total|intcomma, username=profile.username -%}
+<h2>{% trans username=profile.username %}Who {{ username }} Follows{% endtrans %}{% if items_total %} <small>
+    {%- trans count=items_total, total=items_total|intcomma, username=profile.username -%}
     {{ username }} follows one member
     {%- pluralize -%}
     {{ username }} follows {{ total }} members
-    {%- endtrans %}
-    {%- else -%}
-    {% trans username=profile.username %}{{ username }} follows nobody{% endtrans %}
-    {%- endif %}</small></h2>
+    {%- endtrans -%}</small>{%- endif %}</h2>
 
 {% if items_total %}
 <div class="list-nav">

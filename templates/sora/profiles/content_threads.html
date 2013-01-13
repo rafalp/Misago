@@ -8,15 +8,13 @@
 {% block title %}{{ macros.page_title(_('Threads'), profile.username) }}{% endblock %}
 
 {% block tab %}
-<h2>{% trans username=profile.username %}{{ username }}'s Threads{% endtrans %} <small>{% if items_total -%}
-    {% trans count=items_total, total=items_total|intcomma, username=profile.username -%}
+<h2>{% trans username=profile.username %}{{ username }}'s Threads{% endtrans %}{% if items_total %} <small>
+    {%- trans count=items_total, total=items_total|intcomma, username=profile.username -%}
     {{ username }} started one thread
     {%- pluralize -%}
     {{ username }} started {{ total }} threads
-    {%- endtrans %}
-    {%- else -%}
-    {% trans username=profile.username %}{{ username }} has no threads{% endtrans %}
-    {%- endif %}</small></h2>
+    {%- endtrans -%}
+    </small>{% endif %}</h2>
 
 {% if items_total %}
 <div class="list-nav">
