@@ -8,7 +8,11 @@
 {% block title %}{{ macros.page_title(_('Follows'), profile.username) }}{% endblock %}
 
 {% block tab %}
+<<<<<<< HEAD
 <h2>{% trans username=profile.username %}Who {{ username }} Follows{% endtrans %}{% if items_total %} <small>
+=======
+<h2>{% trans username=profile.username %}Who {{ username }} follows{% endtrans %}{% if items_total %} <small>
+>>>>>>> Fixes in new templates.
     {%- trans count=items_total, total=items_total|intcomma, username=profile.username -%}
     {{ username }} follows one member
     {%- pluralize -%}
@@ -49,7 +53,7 @@
   {{ pager() }}
 </div>
 {% else %}
-<p class="lead">{% trans username=profile.username %}{{ username }} follows nobody{% endtrans %}</p>
+<p class="lead">{% trans username=profile.username %}{{ username }} follows nobody  at this time{% endtrans %}</p>
 {% endif %}
 {% endblock %}
 

@@ -8,7 +8,11 @@
 {% block title %}{{ macros.page_title(_('Posts'), profile.username) }}{% endblock %}
 
 {% block tab %}
+<<<<<<< HEAD
 <h2>{% trans username=profile.username %}{{ username }}'s Posts{% endtrans %}{% if items_total %} <small>
+=======
+<h2>{% trans username=profile.username %}{{ username }}'s posts{% endtrans %}{% if items_total %} <small>
+>>>>>>> Fixes in new templates.
     {%- trans count=items_total, total=items_total|intcomma, username=profile.username -%}
     {{ username }} has one post
     {%- pluralize -%}
