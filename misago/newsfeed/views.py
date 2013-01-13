@@ -1,0 +1,2 @@
+def newsfeed(request):
+    pass
