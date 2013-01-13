@@ -8,11 +8,7 @@
 {% block title %}{{ macros.page_title(_('Followers'), profile.username) }}{% endblock %}
 
 {% block tab %}
-<<<<<<< HEAD
-<h2>{% trans username=profile.username %}{{ username }}'s Followers{% endtrans %}{% if items_total %} <small>
-=======
 <h2>{% trans username=profile.username %}{{ username }}'s followers{% endtrans %}{% if items_total %} <small>
->>>>>>> Fixes in new templates.
     {%- trans count=items_total, total=items_total|intcomma, username=profile.username -%}
     {{ username }} has one follower
     {%- pluralize -%}
@@ -27,9 +23,9 @@
   <thead>
     <tr>
       <th colspan="4">{% trans count=items_total, total=items_total|intcomma, username=profile.username -%}
-    {{ username }} has one follower at this time
+    {{ username }} has one follower
     {%- pluralize -%}
-    {{ username }} has {{ total }} followers at this time
+    {{ username }} has {{ total }} followers
     {%- endtrans %}</th>
     </tr>
   </thead>

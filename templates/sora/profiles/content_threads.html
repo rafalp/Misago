@@ -8,11 +8,7 @@
 {% block title %}{{ macros.page_title(_('Threads'), profile.username) }}{% endblock %}
 
 {% block tab %}
-<<<<<<< HEAD
-<h2>{% trans username=profile.username %}{{ username }}'s Threads{% endtrans %}{% if items_total %} <small>
-=======
 <h2>{% trans username=profile.username %}{{ username }}'s threads{% endtrans %}{% if items_total %} <small>
->>>>>>> Fixes in new templates.
     {%- trans count=items_total, total=items_total|intcomma, username=profile.username -%}
     {{ username }} started one thread
     {%- pluralize -%}
