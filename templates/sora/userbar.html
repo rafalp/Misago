@@ -5,10 +5,9 @@
         <li><a href="#" title="{% trans %}Active Reports{% endtrans %}" class="tooltip-bottom"><i class="icon-warning-sign"></i><span class="stat">5</span></a></li>
         <li><a href="{% url 'alerts' %}" title="{% if user.alerts %}{% trans %}You have new notifications!{% endtrans %}{% else %}{% trans %}Your Notifications{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-fire"></i>{% if user.alerts %}<span class="stat">{{ user.alerts }}</span>{% endif %}</a></li>
         <li><a href="#" title="{% trans %}Private messages{% endtrans %}" class="tooltip-bottom"><i class="icon-inbox"></i><span class="stat">2</span></a></li>
-        <li><a href="#" title="{% trans %}People you are following{% endtrans %}" class="tooltip-bottom"><i class="icon-heart"></i></a></li>
+        <li><a href="#" title="{% trans %}Your News Feed{% endtrans %}" class="tooltip-bottom"><i class="icon-signal"></i></a></li>
         <li><a href="#" title="{% trans %}Threads you are watching{% endtrans %}" class="tooltip-bottom"><i class="icon-bookmark"></i></a></li>{% endif %}
         <li><a href="#" title="{% trans %}Today Posts{% endtrans %}" class="tooltip-bottom"><i class="icon-star"></i></a></li>
-        <li><a href="#" title="{% trans %}New Posts{% endtrans %}" class="tooltip-bottom"><i class="icon-star-empty "></i></a></li>
       </ul>
       <ul class="nav pull-right">{% if user.is_authenticated() %}
         <li class="user-profile"><a href="{% url 'user' user=user.id, username=user.username_slug %}" title="{% trans %}Go to your profile{% endtrans %}" class="tooltip-bottom"><div><img src="{{ user.get_avatar(28) }}" class="avatar-small" alt=""> {{ user.username }}</div></a></li>
