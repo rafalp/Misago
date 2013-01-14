@@ -6,7 +6,7 @@ from misago.utils import make_pagination
 def follows(request, user, page=0):
     queryset = user.follows.order_by('username_slug')
     count = queryset.count()
-    pagination = make_pagination(page, count, 40)
+    pagination = make_pagination(page, count, 24)
     return request.theme.render_to_response('profiles/follows.html',
                                             context_instance=RequestContext(request, {
                                              'profile': user,

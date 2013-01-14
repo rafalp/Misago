@@ -24,7 +24,7 @@ def home(request):
             thread.forum_name = thread.forum.name
             thread.forum_slug = thread.forum.slug
             popular_threads.append(thread)
-        cache.set('thread_ranking_%s' % request.user.make_acl_key(), popular_threads, request.settings['thread_ranking_refresh'])
+        cache.set('thread_ranking_%s' % request.user.make_acl_key(), popular_threads, 60 * request.settings['thread_ranking_refresh'])
 
     # Ranks online
     ranks_list = cache.get('users_online', 'nada')
@@ -43,7 +43,7 @@ def home(request):
                     users_list.append(session.user_id)
             del ranks_dict
             del users_list
-        cache.set('ranks_list', ranks_list, 10)
+        cache.set('ranks_list', ranks_list, 300)
 
     # Render page with forums list
     reads_tracker = ForumsTracker(request.user)
