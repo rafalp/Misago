@@ -1,8 +1,8 @@
 from django.template import RequestContext
 from misago.authn.decorators import block_guest
 from misago.threads.models import Post
-from misago.views import error404
 
+@block_guest
 def newsfeed(request):
     follows = []
     for user in request.user.follows.iterator():
