@@ -93,7 +93,7 @@ def reldate(val, arg=""):
     if format(local, 'Y-z') == format(tomorrow, 'Y-z'):
         return _("Tomorrow, %(hour)s") % {'hour': time_format(local, formats['TIME_FORMAT'])}
     # Week check
-    if diff.days > -7 or diff.days < 7:
+    if format(local, 'D') != format(local_now, 'D') and (diff.days > -6 or diff.days < 6):
         return _("%(day)s, %(hour)s") % {'day': format(local, 'l'), 'hour': time_format(local, formats['TIME_FORMAT'])}
 
     # Fallback to custom      
