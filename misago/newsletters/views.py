@@ -149,15 +149,14 @@ def send(request, target, token):
     try:
         newsletter = Newsletter.objects.get(pk=target, token=token)
 
-        # Build recipients selector
+        # Build recipients queryset
         recipients = User.objects
         if newsletter.ranks.all():
-            recipients.filter(rank__in=[x.pk for x in newsletter.ranks.all()])
+            recipients = recipients.filter(rank__in=[x.pk for x in newsletter.ranks.all()])
         if not newsletter.ignore_subscriptions:
-            recipients.filter(receive_newsletters=1)
+            recipients = recipients.filter(receive_newsletters=1)
 
-        recipients_total = recipients
-        recipients_total = recipients_total.count()
+        recipients_total = recipients.count()
         if recipients_total < 1:
             request.messages.set_flash(Message(_('No recipients for newsletter "%(newsletter)s" could be found.') % {'newsletter': newsletter.name}), 'error', 'newsletters')
             return redirect(reverse('admin_newsletters'))
