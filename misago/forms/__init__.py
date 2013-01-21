@@ -10,7 +10,6 @@ class Form(forms.Form):
     validate_repeats = []
     repeats_errors = []
     dont_strip = []
-    allow_nl = []
     error_source = None
     def __init__(self, data=None, file=None, request=None, *args, **kwargs):
         self.request = request
@@ -60,11 +59,10 @@ class Form(forms.Form):
                             self.data.setlist(key, [x.strip() for x in self.data.getlist(key, [])])
                         else:
                             self.data[key] = self.data[key].strip()
-                    if not key in self.allow_nl:
-                        if field.__class__.__name__ in ['MultipleChoiceField', 'TypedMultipleChoiceField']:
-                            self.data.setlist(key, [x.replace("\n", '') for x in self.data.getlist(key, [])])
-                        else:
-                            self.data[key] = self.data[key].replace("\n", '')
+                    if field.__class__.__name__ in ['MultipleChoiceField', 'TypedMultipleChoiceField']:
+                        self.data.setlist(key, [x.replace("\r\n", '') for x in self.data.getlist(key, [])])
+                    elif not field.widget.__class__.__name__ in ['Textarea']:
+                        self.data[key] = self.data[key].replace("\r\n", '')
             except (KeyError, AttributeError):
                 pass
         super(Form, self).full_clean()
