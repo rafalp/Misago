@@ -34,7 +34,7 @@ class BaseWidget(object):
         return obj(request, **kwargs)
 
     def get_token(self, token):
-        return '%s_%s_%s' % (self.id, token, str('%s.%s' % (self.admin.model.__module__, self.admin.model.__name__)))
+        return '%s_%s_%s' % (self.id, token, str('%s.%s' % (self.admin.id, self.admin.model.__name__)))
 
     def get_url(self):
         return reverse(self.admin.get_action_attr(self.id, 'route'))
