@@ -40,7 +40,6 @@ Misago comes with "deployment" python module that contains empty Misago configur
 After you set low-level configuration of Misago, fire following commands on manage.py:
 
 * __syncdb__ - this will create database structure for Misago
-* __loadfixtures__ - this will populate Misago database with default data
 * __adduser Admin admin@example.com password --admin__ - this will create first admin user
 * __genavatars__ - this will rebuild avatars gallery thumbnails
 
