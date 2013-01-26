@@ -4,6 +4,7 @@ from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 from misago.admin import site
+from misago.crawlers.decorators import block_crawlers
 from misago.csrf.decorators import check_csrf
 from misago.banning.decorators import block_banned
 from misago.forms.layouts import FormLayout
@@ -17,6 +18,7 @@ from misago.bruteforce.models import SignInAttempt
 from misago.sessions.models import Token
 from misago.utils import get_random_string
 
+@block_crawlers
 @block_banned
 @block_authenticated
 @block_jammed
@@ -99,6 +101,7 @@ def signin(request):
                                             context_instance=RequestContext(request));
 
 
+@block_crawlers
 @block_guest
 @check_csrf
 def signout(request):

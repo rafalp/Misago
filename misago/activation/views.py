@@ -3,6 +3,7 @@ from django.utils.translation import ugettext as _
 from misago.banning.models import check_ban
 from misago.banning.decorators import block_banned
 from misago.banning.views import error_banned
+from misago.crawlers.decorators import block_crawlers
 from misago.forms.layouts import FormLayout
 from misago.authn.methods import sign_user_in
 from misago.authn.decorators import block_authenticated
@@ -13,6 +14,7 @@ from misago.users.models import User
 from misago.views import redirect_message, error404
 
 
+@block_crawlers
 @block_banned
 @block_authenticated
 @block_jammed

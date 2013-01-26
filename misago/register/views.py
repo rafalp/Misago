@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _
 from misago.banning.decorators import block_banned
 from misago.bruteforce.decorators import block_jammed
 from misago.bruteforce.models import SignInAttempt
+from misago.crawlers.decorators import block_crawlers
 from misago.forms.layouts import FormLayout
 from misago.messages import Message
 from misago.authn.decorators import block_authenticated
@@ -14,6 +15,7 @@ from misago.register.forms import UserRegisterForm
 from misago.users.models import User
 from misago.views import redirect_message
 
+@block_crawlers
 @block_banned
 @block_authenticated
 @block_jammed
