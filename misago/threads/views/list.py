@@ -132,6 +132,7 @@ class ThreadsView(BaseView):
 
     def action_accept(self, ids):
         accepted = 0
+        last_posts = []
         users = []
         for thread in self.threads:
             if thread.pk in ids and thread.moderated:
@@ -143,12 +144,14 @@ class ThreadsView(BaseView):
                 thread.start_post.moderated = False
                 thread.start_post.save(force_update=True)
                 thread.last_post.set_checkpoint(self.request, 'accepted')
+                last_posts.append(thread.last_post.pk)
                 # Sync user
                 if thread.last_post.user:
                     thread.start_post.user.threads += 1
                     thread.start_post.user.posts += 1
                     users.append(thread.start_post.user)
         if accepted:
+            Post.objects.filter(id__in=last_posts).update(checkpoints=True)
             self.request.monitor['threads'] = int(self.request.monitor['threads']) + accepted
             self.request.monitor['posts'] = int(self.request.monitor['posts']) + accepted
             self.forum.threads_delta += 1
@@ -272,26 +275,33 @@ class ThreadsView(BaseView):
 
     def action_open(self, ids):
         opened = []
+        last_posts = []
         for thread in self.threads:
             if thread.pk in ids and thread.closed:
                 opened.append(thread.pk)
                 thread.last_post.set_checkpoint(self.request, 'opened')
+                last_posts.append(thread.last_post.pk)
         if opened:
+            Post.objects.filter(id__in=last_posts).update(checkpoints=True)
             Thread.objects.filter(id__in=opened).update(closed=False)
             self.request.messages.set_flash(Message(_('Selected threads have been opened.')), 'success', 'threads')
 
     def action_close(self, ids):
         closed = []
+        last_posts = []
         for thread in self.threads:
             if thread.pk in ids and not thread.closed:
                 closed.append(thread.pk)
                 thread.last_post.set_checkpoint(self.request, 'closed')
+                last_posts.append(thread.last_post.pk)
         if closed:
+            Post.objects.filter(id__in=last_posts).update(checkpoints=True)
             Thread.objects.filter(id__in=closed).update(closed=True)
             self.request.messages.set_flash(Message(_('Selected threads have been closed.')), 'success', 'threads')
 
     def action_undelete(self, ids):
         undeleted = []
+        last_posts = []
         posts = 0
         for thread in self.threads:
             if thread.pk in ids and thread.deleted:
@@ -305,11 +315,13 @@ class ThreadsView(BaseView):
             self.request.monitor['posts'] = int(self.request.monitor['posts']) + posts
             self.forum.sync()
             self.forum.save(force_update=True)
+            Post.objects.filter(id__in=last_posts).update(checkpoints=True)
             Thread.objects.filter(id__in=undeleted).update(deleted=False)
             self.request.messages.set_flash(Message(_('Selected threads have been undeleted.')), 'success', 'threads')
 
     def action_soft(self, ids):
         deleted = []
+        last_posts = []
         posts = 0
         for thread in self.threads:
             if thread.pk in ids and not thread.deleted:
@@ -318,11 +330,13 @@ class ThreadsView(BaseView):
                 thread.start_post.deleted = True
                 thread.start_post.save(force_update=True)
                 thread.last_post.set_checkpoint(self.request, 'deleted')
+                last_posts.append(thread.last_post.pk)
         if deleted:
             self.request.monitor['threads'] = int(self.request.monitor['threads']) - len(deleted)
             self.request.monitor['posts'] = int(self.request.monitor['posts']) - posts
             self.forum.sync()
             self.forum.save(force_update=True)
+            Post.objects.filter(id__in=last_posts).update(checkpoints=True)
             Thread.objects.filter(id__in=deleted).update(deleted=True)
             self.request.messages.set_flash(Message(_('Selected threads have been softly deleted.')), 'success', 'threads')
 

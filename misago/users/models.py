@@ -16,6 +16,7 @@ from misago.acl.builder import build_acl
 from misago.monitor.monitor import Monitor
 from misago.roles.models import Role
 from misago.settings.settings import Settings as DBSettings
+from misago.users.signals import delete_user_content, rename_user
 from misago.users.validators import validate_username, validate_password, validate_email
 from misago.utils import get_random_string, slugify
 from misago.utils.avatars import avatar_size
@@ -298,12 +299,7 @@ class User(models.Model):
         self.delete_avatar_image()
 
     def delete_content(self):
-        if self.pk:
-            for model_obj in models.get_models():
-                try:
-                    model_obj.objects.delete_user_content(self)
-                except AttributeError:
-                    pass
+        delete_user_content.send(sender=self)
 
     def delete(self, *args, **kwargs):
         self.delete_avatar()
@@ -312,13 +308,8 @@ class User(models.Model):
     def set_username(self, username):
         self.username = username.strip()
         self.username_slug = slugify(username)
-
         if self.pk:
-            for model_obj in models.get_models():
-                try:
-                    model_obj.objects.update_username(self)
-                except AttributeError:
-                    pass
+            rename_user.send(sender=self)
 
     def is_username_valid(self, e):
         try:

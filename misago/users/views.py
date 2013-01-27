@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.utils.translation import ugettext as _
 from misago.admin import site
 from misago.admin.widgets import *
+from misago.forums.models import Forum
 from misago.markdown import signature_markdown
 from misago.users.forms import UserForm, NewUserForm, SearchUsersForm
 from misago.users.models import User
@@ -38,6 +39,7 @@ class List(ListWidget):
                ('remove_sig', _("Remove and lock signatures"), _("Are you sure you want to remove selected members signatures and their ability to edit them?")),
                ('remove_locks', _("Remove locks from avatars and signatures"), _("Are you sure you want to remove locks from selected members avatars and signatures?")),
                ('reset', _("Reset passwords"), _("Are you sure you want to reset selected members passwords?")),
+               ('delete_content', _("Delete users with content"), _("Are you sure you want to delete selected users and their content?")),
                ('delete', _("Delete users"), _("Are you sure you want to delete selected users?")),
                )
 
@@ -187,6 +189,26 @@ class List(ListWidget):
                                 )
 
         return Message(_('Selected users passwords have been reset successfully.'), 'success'), reverse('admin_users')
+
+    def action_delete_content(self, items, checked):
+        for user in items:
+            if unicode(user.pk) in checked:
+                if user.pk == self.request.user.id:
+                    return Message(_('You cannot delete yourself.'), 'error'), reverse('admin_users')
+                if user.is_protected():
+                    return Message(_('You cannot delete protected members.'), 'error'), reverse('admin_users')
+
+        for user in items:
+            if unicode(user.pk) in checked:
+                user.delete_content()
+                user.delete()
+
+        for forum in Forum.objects.all():
+            forum.sync()
+            forum.save(force_update=True)
+        
+        User.objects.resync_monitor(self.request.monitor)
+        return Message(_('Selected users and their content have been deleted successfully.'), 'success'), reverse('admin_users')
 
     def action_delete(self, items, checked):
         for user in items:

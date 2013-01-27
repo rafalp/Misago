@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
 from misago.roles.models import Role
+from misago.users.signals import rename_user
 
 class ForumManager(models.Manager):
     forums_tree = None
@@ -184,3 +185,15 @@ class Forum(MPTTModel):
 
     def prune(self):
         pass
+
+
+"""
+Signals
+"""
+def rename_user_handler(sender, **kwargs):
+    Forum.objects.filter(last_poster=sender).update(
+                                                    last_poster_name=sender.username,
+                                                    last_poster_slug=sender.username_slug,
+                                                    )
+
+rename_user.connect(rename_user_handler, dispatch_uid="rename_forums_last_poster")

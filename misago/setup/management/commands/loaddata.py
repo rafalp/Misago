@@ -12,6 +12,13 @@ class Command(BaseCommand):
     Loads Misago fixtures
     """
     help = 'Load Misago fixtures'
+    option_list = BaseCommand.option_list + (
+        make_option('--quiet',
+            action='store_true',
+            dest='quiet',
+            default=False,
+            help='Dont display output from this message'),
+        )
     
     def handle(self, *args, **options):
         fixture_data = {}
@@ -23,10 +30,13 @@ class Command(BaseCommand):
             if app in fixture_data:
                 if update_app_fixtures(app):
                     updated += 1
-                    print 'Updating fixtures from %s' % app
+                    if not options['quiet']:
+                        self.stdout.write('Updating fixtures from %s' % app)
             else:
                 if load_app_fixtures(app):
                     loaded += 1
-                    print 'Loading fixtures from %s' % app
                     Fixture.objects.create(app_name=app)
-        self.stdout.write('Loaded %s fixtures and updated %s fixtures.\n' % (loaded, updated))
+                    if not options['quiet']:
+                        self.stdout.write('Loading fixtures from %s' % app)
+        if not options['quiet']:
+            self.stdout.write('Loaded %s fixtures and updated %s fixtures.\n' % (loaded, updated))

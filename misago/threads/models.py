@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from misago.users.signals import delete_user_content, rename_user
 from misago.utils import slugify
 
 class ThreadManager(models.Manager):
@@ -97,6 +98,7 @@ class Post(models.Model):
     post_preparsed = models.TextField()
     upvotes = models.PositiveIntegerField(default=0)
     downvotes = models.PositiveIntegerField(default=0)
+    checkpoints = models.BooleanField(default=False, db_index=True)
     date = models.DateTimeField()
     edits = models.PositiveIntegerField(default=0)
     edit_date = models.DateTimeField(null=True, blank=True)
@@ -118,6 +120,7 @@ class Post(models.Model):
 
     def set_checkpoint(self, request, action):
         if request.user.is_authenticated():
+            self.checkpoints = True
             self.checkpoint_set.create(
                                        forum=self.forum,
                                        thread=self.thread,
@@ -161,3 +164,57 @@ class Checkpoint(models.Model):
     date = models.DateTimeField()
     ip = models.GenericIPAddressField()
     agent = models.CharField(max_length=255)
+
+
+"""
+Signals
+"""
+def rename_user_handler(sender, **kwargs):
+    Thread.objects.filter(start_poster=sender).update(
+                                                     start_poster_name=sender.username,
+                                                     start_poster_slug=sender.username_slug,
+                                                     )
+    Thread.objects.filter(last_poster=sender).update(
+                                                     last_poster_name=sender.username,
+                                                     last_poster_slug=sender.username_slug,
+                                                     )
+    Post.objects.filter(user=sender).update(
+                                            user_name=sender.username,
+                                            )
+    Post.objects.filter(edit_user=sender).update(
+                                                 edit_user_name=sender.username,
+                                                 edit_user_slug=sender.username_slug,
+                                                 )
+    Change.objects.filter(user=sender).update(
+                                              user_name=sender.username,
+                                              user_slug=sender.username_slug,
+                                              )
+    Checkpoint.objects.filter(user=sender).update(
+                                                  user_name=sender.username,
+                                                  user_slug=sender.username_slug,
+                                                  )
+
+rename_user.connect(rename_user_handler, dispatch_uid="rename_user_threads")
+
+
+def delete_user_content_handler(sender, **kwargs):
+    Thread.objects.filter(start_poster=sender).delete()
+    threads = []
+    prev_posts = []
+    for post in sender.post_set.filter(checkpoints=True):
+        threads.append(post.thread_id)
+        prev_post = Post.objects.filter(thread=post.thread_id).exclude(user=sender).order_by('-id')[:1][0]
+        post.checkpoint_set.update(post=prev_post)
+        if not prev_post.pk in prev_posts:
+            prev_posts.append(prev_post.pk)
+    sender.post_set.all().delete()
+    Post.objects.filter(id__in=prev_posts).update(checkpoints=True)
+    for post in sender.post_set.distinct().values('thread_id').iterator():
+        if not post['thread_id'] in threads:
+            threads.append(post['thread_id'])
+    Post.objects.filter(user=sender).delete()
+    for thread in Thread.objects.filter(id__in=threads):
+        thread.sync()
+        thread.save(force_update=True)
+
+delete_user_content.connect(delete_user_content_handler, dispatch_uid="delete_user_threads_posts")

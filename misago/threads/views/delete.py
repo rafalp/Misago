@@ -72,6 +72,7 @@ class DeleteView(BaseView):
             self.thread.start_post.deleted = True
             self.thread.start_post.save(force_update=True)
             self.thread.last_post.set_checkpoint(request, 'deleted')
+            self.thread.last_post.save(force_update=True)
             self.thread.sync()
             self.thread.save(force_update=True)
             self.forum.sync()

@@ -237,3 +237,11 @@ class SessionHuman(SessionMisago):
 
     def set_hidden(self, hidden=False):
         self.hidden = hidden
+
+
+class SessionMock(object):
+    def get_ip(self, request):
+        try:
+            return self.ip
+        except AttributeError:
+            return '127.0.0.1'
