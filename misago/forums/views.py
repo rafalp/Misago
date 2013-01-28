@@ -341,8 +341,8 @@ class Delete(FormWidget):
                     child.save(force_update=True)
         else:
             for child in target.get_descendants().order_by('-lft'):
-                child.delete()
-        target.delete()
+                Forum.objects.get(id=child.pk).delete()
+        Forum.objects.get(id=target.pk).delete()
         Forum.objects.populate_tree(True)
         self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
         return target, Message(_('Forum "%(name)s" has been deleted.') % {'name': self.original_name}, 'success')
