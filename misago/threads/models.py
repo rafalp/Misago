@@ -1,7 +1,9 @@
 from django.db import models
+from django.db.models import F
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.forums.signals import move_forum_content
+from misago.threads.signals import move_thread, merge_thread, move_post, merge_post
 from misago.users.signals import delete_user_content, rename_user
 from misago.utils import slugify
 
@@ -46,6 +48,13 @@ class Thread(models.Model):
 
     def get_date(self):
         return self.start
+
+    def move_to(self, move_to):
+        move_thread.send(sender=self, move_to=move_to)
+        self.forum = move_to
+
+    def merge_with(self, thread, merge):
+        merge_thread.send(sender=self, new_thread=thread, merge=merge)
 
     def sync(self):
         # Counters
@@ -118,6 +127,15 @@ class Post(models.Model):
 
     def get_date(self):
         return self.date
+
+    def move_to(self, thread):
+        move_post.send(sender=self, move_to=thread)
+        self.thread = thread
+        self.forum = thread.forum
+        
+    def merge_with(self, post):
+        post.post = '%s\n- - -\n%s' % (post.post, self.post)
+        merge_post.send(sender=self, new_post=post)
 
     def set_checkpoint(self, request, action):
         if request.user.is_authenticated():
@@ -204,7 +222,7 @@ def delete_user_content_handler(sender, **kwargs):
     prev_posts = []
     for post in sender.post_set.filter(checkpoints=True):
         threads.append(post.thread_id)
-        prev_post = Post.objects.filter(thread=post.thread_id).exclude(user=sender).order_by('-id')[:1][0]
+        prev_post = Post.objects.filter(thread=post.thread_id).exclude(merge__gt=post.merge).exclude(user=sender).order_by('merge', '-id')[:1][0]
         post.checkpoint_set.update(post=prev_post)
         if not prev_post.pk in prev_posts:
             prev_posts.append(prev_post.pk)
@@ -228,3 +246,40 @@ def move_forum_content_handler(sender, **kwargs):
     Checkpoint.objects.filter(forum=sender).update(forum=kwargs['move_to'])
 
 move_forum_content.connect(move_forum_content_handler, dispatch_uid="move_forum_threads_posts")
+
+
+def move_thread_handler(sender, **kwargs):
+    Post.objects.filter(forum=sender.forum_pk).update(forum=kwargs['move_to'])
+    Change.objects.filter(forum=sender.forum_pk).update(forum=kwargs['move_to'])
+    Checkpoint.objects.filter(forum=sender.forum_pk).update(forum=kwargs['move_to'])
+
+move_thread.connect(move_thread_handler, dispatch_uid="move_thread")
+
+
+def merge_thread_handler(sender, **kwargs):
+    Post.objects.filter(thread=sender).update(thread=kwargs['new_thread'], merge=F('merge') + kwargs['merge'])
+    Change.objects.filter(thread=sender).update(thread=kwargs['new_thread'])
+    Checkpoint.objects.filter(thread=sender).delete()
+
+merge_thread.connect(merge_thread_handler, dispatch_uid="merge_threads")
+
+
+def move_posts_handler(sender, **kwargs):
+    Change.objects.filter(post=sender).update(forum=kwargs['move_to'].forum, thread=kwargs['move_to'])
+    if sender.checkpoints:
+        prev_post = Post.objects.filter(thread=sender.thread_id).filter(merge__lte=sender.merge).exclude(id=sender.pk).order_by('merge', '-id')[:1][0]
+        Checkpoint.objects.filter(post=sender).update(post=prev_post)
+        prev_post.checkpoints = True
+        prev_post.save(force_update=True)
+    sender.checkpoints = False
+
+move_post.connect(move_posts_handler, dispatch_uid="move_posts")
+
+
+def merge_posts_handler(sender, **kwargs):
+    Change.objects.filter(post=sender).update(post=kwargs['new_post'])
+    Checkpoint.objects.filter(post=sender).update(post=kwargs['new_post'])
+    if sender.checkpoints:
+        kwargs['new_post'].checkpoints = True
+
+merge_post.connect(merge_posts_handler, dispatch_uid="merge_posts")

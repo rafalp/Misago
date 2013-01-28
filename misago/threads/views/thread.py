@@ -139,9 +139,7 @@ class ThreadView(BaseView):
             raise forms.ValidationError(_("You have to select two or more posts you want to merge."))
         new_post = posts[0]
         for post in posts[1:]:
-            new_post.post = '%s\n- - -\n%s' % (new_post.post, post.post)
-            post.change_set.update(post=new_post)
-            post.checkpoint_set.update(post=new_post)
+            post.merge_with(new_post)
             post.delete()
         new_post.post_preparsed = post_markdown(self.request, new_post.post)
         new_post.save(force_update=True)
@@ -170,9 +168,16 @@ class ThreadView(BaseView):
                 new_thread.last_poster_name = 'n'
                 new_thread.last_poster_slug = 'n'
                 new_thread.save(force_insert=True)
-                self.thread.post_set.filter(id__in=ids).update(thread=new_thread, forum=new_thread.forum)
-                Change.objects.filter(post__in=ids).update(thread=new_thread, forum=new_thread.forum)
-                Checkpoint.objects.filter(post__in=ids).update(thread=new_thread, forum=new_thread.forum)
+                prev_merge = -1
+                merge = -1
+                for post in self.posts:
+                    if post.pk in ids:
+                        if prev_merge != post.merge:
+                            prev_merge = post.merge
+                            merge += 1
+                        post.merge = merge
+                        post.move_to(new_thread)
+                        post.save(force_update=True)
                 new_thread.sync()
                 new_thread.save(force_update=True)
                 self.thread.sync()
@@ -207,9 +212,16 @@ class ThreadView(BaseView):
             form = MovePostsForm(self.request.POST, request=self.request, thread=self.thread)
             if form.is_valid():
                 thread = form.cleaned_data['thread_url']
-                self.thread.post_set.filter(id__in=ids).update(thread=thread, forum=thread.forum, merge=F('merge') + thread.merges + 1)
-                Change.objects.filter(post__in=ids).update(thread=thread, forum=thread.forum)
-                Checkpoint.objects.filter(post__in=ids).update(thread=thread, forum=thread.forum)
+                prev_merge = -1
+                merge = -1
+                for post in self.posts:
+                    if post.pk in ids:
+                        if prev_merge != post.merge:
+                            prev_merge = post.merge
+                            merge += 1
+                        post.merge = merge + thread.merges
+                        post.move_to(thread)
+                        post.save(force_update=True)
                 if self.thread.post_set.count() == 0:
                     self.thread.delete()
                 else:
@@ -409,13 +421,12 @@ class ThreadView(BaseView):
             form = MoveThreadsForm(self.request.POST, request=self.request, forum=self.forum)
             if form.is_valid():
                 new_forum = form.cleaned_data['new_forum']
-                self.thread.forum = new_forum
-                self.thread.post_set.update(forum=new_forum)
-                self.thread.change_set.update(forum=new_forum)
-                self.thread.checkpoint_set.update(forum=new_forum)
+                self.thread.move_to(new_forum)
                 self.thread.save(force_update=True)
                 self.forum.sync()
                 self.forum.save(force_update=True)
+                new_forum.sync()
+                new_forum.save(force_update=True)
                 self.request.messages.set_flash(Message(_('Thread has been moved to "%(forum)s".') % {'forum': new_forum.name}), 'success', 'threads')
                 return None
             message = Message(form.non_field_errors()[0], 'error')

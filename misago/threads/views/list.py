@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from django.db.models import Q, F
+from django.db.models import Q
 from django import forms
 from django.forms import ValidationError
 from django.shortcuts import redirect
@@ -200,10 +200,7 @@ class ThreadsView(BaseView):
             if form.is_valid():
                 new_forum = form.cleaned_data['new_forum']
                 for thread in threads:
-                    thread.forum = new_forum
-                    thread.post_set.update(forum=new_forum)
-                    thread.change_set.update(forum=new_forum)
-                    thread.checkpoint_set.update(forum=new_forum)
+                    thread.move_to(new_forum)
                     thread.save(force_update=True)
                 new_forum.sync()
                 new_forum.save(force_update=True)
@@ -249,9 +246,7 @@ class ThreadsView(BaseView):
                     merged.append(thread.pk)
                     if last_thread and last_thread.last > thread.start:
                         last_merge += thread.merges + 1
-                    thread.post_set.update(thread=new_thread, merge=F('merge') + last_merge)
-                    thread.change_set.update(thread=new_thread)
-                    thread.checkpoint_set.update(thread=new_thread)
+                    thread.merge_with(new_thread, last_merge=last_merge)
                     last_thread = thread
                 Thread.objects.filter(id__in=merged).delete()
                 new_thread.sync()
