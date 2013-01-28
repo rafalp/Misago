@@ -136,16 +136,35 @@ class RedirectForm(Form):
 
 
 class DeleteForm(Form):
-    parent = False
-
     layout = (
               (
                _("Delete Options"),
                (
-                ('parent', {'label': _("Move deleted Forum contents to")}),
+                ('contents', {'label': _("Move threads to")}),
+                ('subforums', {'label': _("Move subforums to")}),
                 ),
                ),
               )
 
+    def __init__(self, *args, **kwargs):
+        self.forum = kwargs.pop('forum')
+        super(DeleteForm, self).__init__(*args, **kwargs)
+
     def finalize_form(self):
-        self.fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(), required=False, empty_label=_("Remove with forum"), level_indicator=u'- - ')
+        self.fields['contents'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(), required=False, empty_label=_("Remove with forum"), level_indicator=u'- - ')
+        self.fields['subforums'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(), required=False, empty_label=_("Remove with forum"), level_indicator=u'- - ')
+
+    def clean_contents(self):
+        data = self.cleaned_data['contents']
+        if data:
+            if data.type == 'category':
+                raise forms.ValidationError(_("Categories cannot contain threads."))
+            if data.type == 'redirect':
+                raise forms.ValidationError(_("Redirects cannot contain threads."))
+        return data
+
+    def clean(self):
+        cleaned_data = super(DeleteForm, self).clean()
+        if self.forum.type == 'forum' and cleaned_data['contents'] and cleaned_data['contents'].lft > self.forum.lft and cleaned_data['contents'].rght < self.forum.rght and not cleaned_data['subforums']:
+            raise forms.ValidationError(_("Destination you want to move this forum's threads to will be deleted with this forum."))
+        return cleaned_data

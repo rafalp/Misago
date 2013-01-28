@@ -316,21 +316,33 @@ class Delete(FormWidget):
         return self.form
 
     def get_form_instance(self, form, target, initial, post=False):
-        form_inst = super(Delete, self).get_form_instance(form, target, initial, post)
-        valid_targets = Forum.tree.get(token='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
-        form_inst.fields['parent'] = TreeNodeChoiceField(queryset=valid_targets, required=False, empty_label=_("Remove with forum"), level_indicator=u'- - ')
+        if post:
+            form_inst = form(self.request.POST, forum=target, request=self.request, initial=self.get_initial_data(target))
+        else:
+            form_inst = form(forum=target, request=self.request, initial=self.get_initial_data(target))
+        if target.type != 'forum':
+            del form_inst.fields['contents']
+        valid_targets = Forum.tree.get(token='root').get_descendants().exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
+        form_inst.fields['subforums'] = TreeNodeChoiceField(queryset=valid_targets, required=False, empty_label=_("Remove with forum"), level_indicator=u'- - ')
         return form_inst
 
     def submit_form(self, form, target):
-        new_parent = form.cleaned_data['parent']
+        if target.type == 'forum':
+            new_forum = form.cleaned_data['contents']
+            if new_forum:
+                target.move_content(new_forum)
+                new_forum.sync()
+                new_forum.save(force_update=True)
+        new_parent = form.cleaned_data['subforums']
         if new_parent:
-            target.move_content(new_parent)
             for child in target.get_descendants():
-                child.move_to(new_parent, 'last-child')
-                child.save(force_update=True)
+                if child.parent_id == target.pk:
+                    child.move_to(new_parent, 'last-child')
+                    child.save(force_update=True)
         else:
-            for child in target.get_descendants():
+            for child in target.get_descendants().order_by('-lft'):
                 child.delete()
         target.delete()
         Forum.objects.populate_tree(True)
+        self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
         return target, Message(_('Forum "%(name)s" has been deleted.') % {'name': self.original_name}, 'success')

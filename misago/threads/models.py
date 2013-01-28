@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from misago.forums.signals import move_forum_content
 from misago.users.signals import delete_user_content, rename_user
 from misago.utils import slugify
 
@@ -218,3 +219,12 @@ def delete_user_content_handler(sender, **kwargs):
         thread.save(force_update=True)
 
 delete_user_content.connect(delete_user_content_handler, dispatch_uid="delete_user_threads_posts")
+
+
+def move_forum_content_handler(sender, **kwargs):
+    Thread.objects.filter(forum=sender).update(forum=kwargs['move_to'])
+    Post.objects.filter(forum=sender).update(forum=kwargs['move_to'])
+    Change.objects.filter(forum=sender).update(forum=kwargs['move_to'])
+    Checkpoint.objects.filter(forum=sender).update(forum=kwargs['move_to'])
+
+move_forum_content.connect(move_forum_content_handler, dispatch_uid="move_forum_threads_posts")

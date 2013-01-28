@@ -3,6 +3,7 @@ from django.core.cache import cache
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
+from misago.forums.signals import move_forum_content, delete_forum_content
 from misago.roles.models import Role
 from misago.users.signals import rename_user
 
@@ -156,7 +157,7 @@ class Forum(MPTTModel):
                     pass
 
     def move_content(self, target):
-        pass
+        move_forum_content.send(sender=self, move_to=target)
 
     def sync(self):
         self.threads = self.thread_set.filter(moderated=False).filter(deleted=False).count()
@@ -185,7 +186,10 @@ class Forum(MPTTModel):
 
     def prune(self):
         pass
-
+    
+    def delete(self, *args, **kwargs):
+        delete_forum_content.send(sender=self)
+        super(Forum, self).delete(*args, **kwargs)
 
 """
 Signals
