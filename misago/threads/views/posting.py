@@ -218,7 +218,7 @@ class PostingView(BaseView):
                         if thread.last_poster_id != request.user.pk:
                             thread.score += request.settings['thread_ranking_reply_score']
                         # Notify quoted poster of reply?
-                        if self.quote and self.quote.user_id and self.quote.user_id != request.user.pk:
+                        if self.quote and self.quote.user_id and self.quote.user_id != request.user.pk and not self.quote.user.is_ignoring(request.user):
                             alert = self.quote.user.alert(ugettext_lazy("%(username)s has replied to your post in thread %(thread)s").message)
                             alert.profile('username', request.user)
                             alert.post('thread', self.thread, post)
