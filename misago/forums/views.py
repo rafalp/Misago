@@ -316,9 +316,9 @@ class Delete(FormWidget):
         return self.form
 
     def get_form_instance(self, form, target, initial, post=False):
-        form_inst = super(Edit, self).get_form_instance(form, target, initial, post)
+        form_inst = super(Delete, self).get_form_instance(form, target, initial, post)
         valid_targets = Forum.tree.get(token='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
-        self.form_inst.fields['parent'] = TreeNodeChoiceField(queryset=valid_targets, required=False, empty_label=_("Remove with forum"), level_indicator=u'- - ')
+        form_inst.fields['parent'] = TreeNodeChoiceField(queryset=valid_targets, required=False, empty_label=_("Remove with forum"), level_indicator=u'- - ')
         return form_inst
 
     def submit_form(self, form, target):
