@@ -240,3 +240,12 @@ LOGGING = {
         },
     }
 }
+
+# Create copy of installed apps list
+# South overrides INSTALLED_APPS list with custom one
+# that doesn't contain apps without models when it
+# runs its own syncdb
+# Misago's loaddata command requires complete list of
+# installed apps in order to work correctly
+import copy
+INSTALLED_APPS_COMPLETE = copy.copy(INSTALLED_APPS)

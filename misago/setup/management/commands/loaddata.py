@@ -21,12 +21,16 @@ class Command(BaseCommand):
         )
     
     def handle(self, *args, **options):
+        if not options['quiet']:
+            self.stdout.write('\nLoading data from fixtures...')
+            
         fixture_data = {}
         for fixture in Fixture.objects.all():
             fixture_data[fixture.app_name] = fixture
         loaded = 0
         updated = 0
-        for app in settings.INSTALLED_APPS:
+        
+        for app in settings.INSTALLED_APPS_COMPLETE:
             if app in fixture_data:
                 if update_app_fixtures(app):
                     updated += 1
@@ -38,5 +42,6 @@ class Command(BaseCommand):
                     Fixture.objects.create(app_name=app)
                     if not options['quiet']:
                         self.stdout.write('\nLoading fixtures from %s' % app)
+        
         if not options['quiet']:
             self.stdout.write('\nLoaded %s fixtures and updated %s fixtures.\n' % (loaded, updated))
