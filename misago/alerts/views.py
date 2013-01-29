@@ -32,7 +32,7 @@ def show_alerts(request):
             try:
                 alerts['month'].append(alert)
             except KeyError:
-                alerts['mont'] = [alert]
+                alerts['month'] = [alert]
         else:
             try:
                 alerts['older'].append(alert)
