@@ -110,7 +110,6 @@ class ForumManager(models.Manager):
         if check_ids and user.is_authenticated():
             for user in user.ignores.filter(id__in=check_ids).values('id'):
                 ignored_ids.append(user['id'])
-        print ignored_ids
 
 
 class Forum(MPTTModel):
