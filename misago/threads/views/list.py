@@ -31,6 +31,7 @@ class ThreadsView(BaseView):
         self.count = self.request.acl.threads.filter_threads(self.request, self.forum, Thread.objects.filter(forum=self.forum).filter(weight__lt=2)).count()
         self.pagination = make_pagination(page, self.count, self.request.settings.threads_per_page)
         self.threads = []
+        ignored_users = []
         queryset_anno = Thread.objects.filter(Q(forum=Forum.objects.token_to_pk('annoucements')) | (Q(forum=self.forum) & Q(weight=2)))
         queryset_threads = self.request.acl.threads.filter_threads(self.request, self.forum, Thread.objects.filter(forum=self.forum).filter(weight__lt=2)).order_by('-weight', '-last')
         if self.request.user.is_authenticated():
