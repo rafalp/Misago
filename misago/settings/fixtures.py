@@ -26,7 +26,7 @@ settings_fixture = (
                 'description':  _("Some themes allow you to define text in board header. Leave empty to use Board Name instead."),
             }),
             ('board_header_postscript', {
-                'value':        "Work in progress ",
+                'value':        "Work in progress",
                 'type':         "string",
                 'input':        "text",
                 'name':         _("Board Header Postscript"),
