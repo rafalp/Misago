@@ -45,11 +45,17 @@ def home(request):
             del users_list
         cache.set('ranks_list', ranks_list, 300)
 
-    # Render page with forums list
+    # Load reads tracker and build forums list
     reads_tracker = ForumsTracker(request.user)
+    forums_list = Forum.objects.treelist(request.acl.forums, tracker=reads_tracker)
+    
+    # Whitelist ignored members
+    Forum.objects.ignored_users(request.user, forums_list)
+        
+    # Render page 
     return request.theme.render_to_response('index.html',
                                             {
-                                             'forums_list': Forum.objects.treelist(request.acl.forums, tracker=reads_tracker),
+                                             'forums_list': forums_list,
                                              'ranks_online': ranks_list,
                                              'popular_threads': popular_threads,
                                              },

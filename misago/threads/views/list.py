@@ -33,6 +33,10 @@ class ThreadsView(BaseView):
         self.threads = []
         queryset_anno = Thread.objects.filter(Q(forum=Forum.objects.token_to_pk('annoucements')) | (Q(forum=self.forum) & Q(weight=2)))
         queryset_threads = self.request.acl.threads.filter_threads(self.request, self.forum, Thread.objects.filter(forum=self.forum).filter(weight__lt=2)).order_by('-weight', '-last')
+        if self.request.user.is_authenticated():
+            ignored_users = self.request.user.ignored_users()
+            if ignored_users:
+                queryset_threads = queryset_threads.extra(where=["`threads_thread`.`start_poster_id` IS NULL OR `threads_thread`.`start_poster_id` NOT IN (%s)" % ','.join([str(i) for i in ignored_users])])
         if self.request.settings.avatars_on_threads_list:
             queryset_anno = queryset_anno.prefetch_related('start_poster', 'last_post')
             queryset_threads = queryset_threads.prefetch_related('start_poster', 'last_poster')
@@ -44,6 +48,8 @@ class ThreadsView(BaseView):
             self.threads = self.threads[self.pagination['start']:self.pagination['stop']]
         for thread in self.threads:
             thread.is_read = self.tracker.is_read(thread)
+            thread.last_poster_ignored = thread.last_poster_id in ignored_users
+            
 
     def get_thread_actions(self):
         acl = self.request.acl.threads.get_role(self.forum)

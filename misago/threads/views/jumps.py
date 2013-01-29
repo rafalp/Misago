@@ -1,8 +1,12 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
+from django.utils.translation import ugettext as _
 from misago.acl.utils import ACLError403, ACLError404
+from misago.authn.decorators import block_guest
+from misago.csrf.decorators import check_csrf
 from misago.forums.models import Forum
+from misago.messages import Message
 from misago.readstracker.trackers import ThreadsTracker
 from misago.threads.models import Thread, Post
 from misago.threads.views.base import BaseView
@@ -42,6 +46,19 @@ class JumpView(BaseView):
             return error403(request, e.message)
         except ACLError404 as e:
             return error404(request, e.message)
+
+
+class ShowHiddenRepliesView(JumpView):
+    def make_jump(self):
+        @block_guest
+        @check_csrf
+        def view(request):
+            ignored_exclusions = request.session.get('unignore_threads', [])
+            ignored_exclusions.append(self.thread.pk)
+            request.session['unignore_threads'] = ignored_exclusions
+            request.messages.set_flash(Message(_('Replies made to this thread by members on your ignore list have been revealed.')), 'success', 'threads')
+            return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))
+        return view(self.request)
 
 
 class LastReplyView(JumpView):

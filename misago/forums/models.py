@@ -99,6 +99,18 @@ class ForumManager(models.Manager):
                         parents[forum.parent_id].last_poster_slug = forum.last_poster_slug
                         parents[forum.parent_id].last_poster_style = forum.last_poster_style
         return forums_list
+    
+    def ignored_users(self, user, forums):
+        check_ids = []
+        for forum in forums:
+            forum.last_poster_ignored = False
+            if user.is_authenticated() and user.pk != forum.last_poster_id and forum.last_poster_id and not forum.last_poster_id in check_ids:
+                check_ids.append(forum.last_poster_id)
+        ignored_ids = []
+        if check_ids and user.is_authenticated():
+            for user in user.ignores.filter(id__in=check_ids).values('id'):
+                ignored_ids.append(user['id'])
+        print ignored_ids
 
 
 class Forum(MPTTModel):

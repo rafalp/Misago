@@ -36,8 +36,9 @@
   {{ pager() }}
   {% if user.is_authenticated() %}
   <ul class="nav nav-pills pull-right">
+    {% if ignored_posts %}<li class="discourage"><form action="{% url 'thread_show_hidden' thread=thread.pk, slug=thread.slug %}" class="form-inline" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><button type="submit" class="btn"><i class="icon-eye-open"></i> {% trans %}Show Hidden Replies{% endtrans %}</button></form></li>{% endif %}
     <li class="info"><a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}"><i class="icon-ok"></i> {% trans %}Watch Thread{% endtrans %}</a></li>{% if acl.threads.can_reply(forum, thread) %}
-    <li class="primary"><a href="{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}"><i class="icon-plus"></i> {% trans %}Reply{% endtrans %}</a></li>{% endif %}
+    <li class="primary"><a href="{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}"><i class="icon-pencil"></i> {% trans %}Reply{% endtrans %}</a></li>{% endif %}
   </ul>
   {% endif %}
 </div>
@@ -65,6 +66,24 @@
     </div>
     <div class="post-content">
       {% trans user=edit_user(post), date=post.edit_date|reltimesince|low %}{{ user }} has deleted this reply {{ date }}{% endtrans %}
+    </div>
+  </div>
+  {% elif post.ignored %}
+  <div id="post-{{ post.pk }}" class="well well-post well-post-deleted{% if post.user and post.user.rank and post.user.rank.style %} {{ post.user.rank.style }}{% endif %}">
+    <div class="post-author">
+      <div class="post-bit">
+        <span class="lead">{% trans %}Hidden Reply{% endtrans %}</span>
+      </div>
+    </div>
+    <div class="post-extra">
+      <a href="{% if pagination['page'] > 1 -%}
+      {% url 'thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
+      {%- else -%}
+      {% url 'thread' thread=thread.pk, slug=thread.slug %}
+      {%- endif %}#post-{{ post.pk }}" class="post-perma pull-right tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
+    </div>
+    <div class="post-content">
+      {% trans user=yabadaba %}This reply was posted by user that is on your ignored list.{% endtrans %}
     </div>
   </div>
   {% else %}
@@ -221,7 +240,7 @@
   {{ pager(false) }}
   {% if user.is_authenticated() and acl.threads.can_reply(forum, thread) %}
   <ul class="nav nav-pills pull-right">
-    <li class="primary"><a href="{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}"><i class="icon-plus"></i> {% trans %}Reply{% endtrans %}</a></li>
+    <li class="primary"><a href="{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}"><i class="icon-pencil"></i> {% trans %}Reply{% endtrans %}</a></li>
   </ul>
   {% endif %}
 </div>

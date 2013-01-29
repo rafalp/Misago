@@ -388,6 +388,9 @@ class User(models.Model):
             return self.ignores.filter(id=user.pk).count() > 0
         except AttributeError:
             return self.ignores.filter(id=user).count() > 0
+        
+    def ignored_users(self):
+        return [item['id'] for item in self.ignores.values('id')]
 
     def get_roles(self):
         return self.roles.all()

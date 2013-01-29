@@ -910,12 +910,15 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .sidetabs-content{padding-top:0px;margin-top:-12px;}
 .list-nav{overflow:auto;margin-bottom:4px;}.list-nav .nav-pills{margin:0px;}
 .list-nav.last{margin-top:-8px;}
+.list-nav button,.list-nav button:hover,.list-nav button:active{border:none;margin:0px;position:relative;top:2px;padding:6px 12px;padding-bottom:5px;}
 .nav-pills li{margin-left:8px;}.nav-pills li form{margin:0px;padding:0px;}
 .nav-pills li button,.nav-pills li button:hover,.nav-pills li button:active{border:none;}
 .nav-pills li.info a:link,.nav-pills li.danger a:link,.nav-pills li.primary a:link,.nav-pills li.success a:link,.nav-pills li.info a:visited,.nav-pills li.danger a:visited,.nav-pills li.primary a:visited,.nav-pills li.success a:visited{font-weight:bold;}
 .nav-pills li.info a:link,.nav-pills li.info a:visited,.nav-pills li.info button{background-color:#eeeeee;color:#555555;}.nav-pills li.info a:link i,.nav-pills li.info a:visited i,.nav-pills li.info button i{opacity:0.6;filter:alpha(opacity=60);}
 .nav-pills li.info a:active,.nav-pills li.info a:hover,.nav-pills li.info button:active,.nav-pills li.info button:hover{background-color:#555555 !important;color:#ffffff;}.nav-pills li.info a:active i,.nav-pills li.info a:hover i,.nav-pills li.info button:active i,.nav-pills li.info button:hover i{background-image:url("../img/glyphicons-halflings-white.png");opacity:1;filter:alpha(opacity=100);}
 .nav-pills li.danger a:link,.nav-pills li.primary a:link,.nav-pills li.success a:link,.nav-pills li.danger a:visited,.nav-pills li.primary a:visited,.nav-pills li.success a:visited,.nav-pills li.danger button,.nav-pills li.primary button,.nav-pills li.success button{color:#ffffff;}.nav-pills li.danger a:link i,.nav-pills li.primary a:link i,.nav-pills li.success a:link i,.nav-pills li.danger a:visited i,.nav-pills li.primary a:visited i,.nav-pills li.success a:visited i,.nav-pills li.danger button i,.nav-pills li.primary button i,.nav-pills li.success button i{background-image:url("../img/glyphicons-halflings-white.png");}
+.nav-pills li.discourage a:link,.nav-pills li.discourage a:visited,.nav-pills li.discourage button{background-color:#eeeeee;opacity:0.4;filter:alpha(opacity=40);color:#333333;}
+.nav-pills li.discourage a:active,.nav-pills li.discourage a:hover,.nav-pills li.discourage button:active,.nav-pills li.discourage button:hover{opacity:0.8;filter:alpha(opacity=80);}
 .nav-pills li.danger a:link,.nav-pills li.danger a:visited,.nav-pills li.danger button{background-color:#dc4e44 !important;}
 .nav-pills li.danger a:active,.nav-pills li.danger a:hover,.nav-pills li.danger button:active,.nav-pills li.danger button:hover{background-color:#9d261d !important;}
 .nav-pills li.primary a:link,.nav-pills li.primary a:visited,.nav-pills li.primary button{background-color:#0da6f2 !important;}

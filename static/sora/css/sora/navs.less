@@ -102,6 +102,15 @@
   &.last {
     margin-top: -8px;
   }
+    
+  button, button:hover, button:active {
+    border: none;
+    margin: 0px;
+    position: relative;
+    top: 2px;
+    padding: 6px 12px;
+    padding-bottom: 5px;
+  }
 }
 
 // Pills
@@ -153,6 +162,19 @@
         i {
           background-image: url("@{iconWhiteSpritePath}");
         }
+      }
+    }
+    
+    &.discourage {
+      a:link, a:visited, button {
+        background-color: @grayLighter;
+        .opacity(40);
+        
+        color: @grayDark;
+      }
+      
+      a:active, a:hover, button:active, button:hover {
+        .opacity(80);
       }
     }
     

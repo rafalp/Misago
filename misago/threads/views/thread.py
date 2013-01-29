@@ -39,9 +39,15 @@ class ThreadView(BaseView):
         if self.request.settings.posts_per_page < self.count:
             self.posts = self.posts[self.pagination['start']:self.pagination['stop']]
         self.read_date = self.tracker.get_read_date(self.thread)
+        ignored_users = []
+        if self.request.user.is_authenticated():
+            ignored_users = self.request.user.ignored_users()        
         for post in self.posts:
             post.message = self.request.messages.get_message('threads_%s' % post.pk)
             post.is_read = post.date <= self.read_date
+            post.ignored = self.thread.start_post_id != post.pk and not self.thread.pk in self.request.session.get('unignore_threads', []) and post.user_id in ignored_users
+            if post.ignored:
+                self.ignored = True
         last_post = self.posts[len(self.posts) - 1]
         if not self.tracker.is_read(self.thread):
             self.tracker.set_read(self.thread, last_post)
@@ -506,6 +512,7 @@ class ThreadView(BaseView):
         self.request = request
         self.pagination = None
         self.parents = None
+        self.ignored = False
         try:
             self.fetch_thread(thread)
             self.fetch_posts(page)
@@ -537,6 +544,7 @@ class ThreadView(BaseView):
                                                  'is_read': self.tracker.is_read(self.thread),
                                                  'count': self.count,
                                                  'posts': self.posts,
+                                                 'ignored_posts': self.ignored,
                                                  'pagination': self.pagination,
                                                  'quick_reply': FormFields(QuickReplyForm(request=request)).fields,
                                                  'thread_form': FormFields(self.thread_form).fields if self.thread_form else None,
