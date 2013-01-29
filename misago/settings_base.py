@@ -115,7 +115,6 @@ USERCP_EXTENSIONS = (
     'misago.usercp.signature',
     'misago.usercp.credentials',
     'misago.usercp.username',
-    'misago.usercp.blocked',
 )
 
 # List of User Profile extensions
