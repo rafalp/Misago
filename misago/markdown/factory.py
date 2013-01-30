@@ -23,10 +23,10 @@ class ClearHTMLParser(HTMLParser):
                         self.clean_text += attr[1]
         except IndexError, KeyError:
             pass
-        print "Encountered a start tag %s with attrs %s" % (tag, attrs)
         
     def handle_data(self, data):
-        self.clean_text += data
+        if self.clean_text[-len(data):] != data:
+            self.clean_text += ' %s' % data
 
 
 def clear_markdown(text):
@@ -94,4 +94,4 @@ def post_markdown(request, text):
         return _("Posted by %(user)s") % {'user': match.group('content')}
     text = re.sub(r'<quotetitle>(?P<content>.+)</quotetitle>', trans_quotetitle, text)
 
-    return text
+    return md, text

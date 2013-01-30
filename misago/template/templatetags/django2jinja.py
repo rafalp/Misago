@@ -40,7 +40,7 @@ def parse_markdown(value, format=None):
     import markdown
     if not format:
         format = settings.OUTPUT_FORMAT
-    return markdown.markdown(value, safe_mode='escape', output_format=format)
+    return markdown.markdown(value, safe_mode='escape', output_format=format).strip()
 
 @register.filter(name='markdown_short')
 def short_markdown(value, length=300):
