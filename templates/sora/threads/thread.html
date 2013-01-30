@@ -83,7 +83,7 @@
       {%- endif %}#post-{{ post.pk }}" class="post-perma pull-right tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
     </div>
     <div class="post-content">
-      {% trans user=yabadaba %}This reply was posted by user that is on your ignored list.{% endtrans %}
+      {% trans %}This reply was posted by user that is on your ignored list.{% endtrans %}
     </div>
   </div>
   {% else %}
@@ -176,6 +176,9 @@
             <li class="tooltip-top" title="{% trans %}Delete this reply for good{% endtrans %}"><form action="{% url 'post_delete' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="prompt-delete-post" method="post"><button type="submit" class="btn danger"><i class="icon-remove"></i></button><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"></form></li>{% endif %}
         {% if not post.deleted and acl.threads.can_delete_post(user, forum, thread, post) -%}
             <li><form action="{% url 'post_hide' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="prompt-delete-post" method="post"><button type="submit" class="btn danger"><i class="icon-trash"></i> {% trans %}Delete{% endtrans %}</button><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"></form></li>{% endif %}
+        {% endif %}
+        {% if acl.users.can_see_users_trails() -%}
+        <li><a href="{% url 'post_info' thread=thread.pk, slug=thread.slug, post=post.pk %}"><i class="icon-qrcode"></i> {% trans %}Info{% endtrans %}</a></li>
         {% endif %}
         {% if acl.threads.can_edit_thread(user, forum, thread, post) and thread.start_post_id == post.pk -%}
         <li><a href="{% url 'thread_edit' thread=thread.pk, slug=thread.slug %}"><i class="icon-edit"></i> {% trans %}Edit{% endtrans %}</a></li>

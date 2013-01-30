@@ -15,14 +15,20 @@
       <div class="pull-left">
         <h1>{{ profile.username }}</h1>
         <p class="lead">
-          {% if profile.title or profile.rank.title %}{% if profile.title %}{{ _(profile.title) }}{% elif profile.rank.title %}{{ _(profile.rank.title) }}{% endif %}; {% endif %}<span class="muted">{% trans last_visit=profile.last_date|reltimesince|low %}Last seen {{ last_visit }}{% endtrans %}</span>
+          {% if profile.title or profile.rank.title %}{% if profile.title %}{{ _(profile.title) }}{% elif profile.rank.title %}{{ _(profile.rank.title) }}{% endif %};{% endif %}
+          {% if online and (not hidden or acl.users.can_see_hidden_users()) %}<span class="badge badge-success">{% if profile.hide_activity -%}
+              {% trans %}Online, hidden{% endtrans %}
+              {%- else -%}
+              {% trans %}Online{% endtrans %}
+              {%- endif %}</span>{% else %}<span class="badge">{% trans %}Offline{% endtrans %}</span>{% endif %} <span class="muted">{% trans last_visit=profile.last_date|reltimesince|low %}Last seen {{ last_visit }}{% endtrans %}</span>
         </p>
       </div>
     </div>
     <ul class="nav nav-tabs">
       {% for link in tabs %}
       <li{% if link.active %} class="active"{% endif %}>
-        <a href="{{ link.route|url(user=profile.pk, username=profile.username_slug) }}">{{ link.name }}</a></li>
+        <a href="{{ link.route|url(user=profile.pk, username=profile.username_slug) }}">{{ link.name }}</a>
+      </li>
       {% endfor %}
     </ul>
     {% if user.is_authenticated() and user.pk != profile.pk %}

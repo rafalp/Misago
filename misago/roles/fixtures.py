@@ -11,6 +11,10 @@ def load_fixtures():
                           'can_use_signature': True,
                           'allow_signature_links': True,
                           'allow_signature_images': True,
+                          'can_search_users': True,
+                          'can_see_users_emails': True,
+                          'can_see_users_trails': True,
+                          'can_see_hidden_users': True,
                           'forums': {5: 1, 6: 1, 7: 1},
                           })
     role.save(force_insert=True)
@@ -21,6 +25,10 @@ def load_fixtures():
                           'changes_expire': 14,
                           'can_use_signature': True,
                           'allow_signature_links': True,
+                          'can_search_users': True,
+                          'can_see_users_emails': True,
+                          'can_see_users_trails': True,
+                          'can_see_hidden_users': True,
                           'forums': {5: 1, 6: 1, 7: 1},
                           })
     role.save(force_insert=True)
@@ -29,12 +37,14 @@ def load_fixtures():
     role.set_permissions({
                           'name_changes_allowed': 2,
                           'can_use_signature': False,
+                          'can_search_users': True,
                           'forums': {5: 3, 6: 3, 7: 3},
                           })
     role.save(force_insert=True)
     
     role = Role(name=_("Guest").message, token='guest')
     role.set_permissions({
+                          'can_search_users': True,
                           'forums': {5: 6, 6: 6, 7: 6},
                           })
     role.save(force_insert=True)

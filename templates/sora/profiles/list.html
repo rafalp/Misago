@@ -17,6 +17,7 @@
   <h1>{% trans %}Users List{% endtrans %} <small>{% trans %}Browse notable user groups or find specific user{% endtrans %}</small></h1>
   <ul class="nav nav-tabs">{% for rank in ranks %}
   	<li{% if active_rank.id == rank.id %} class="active"{% endif %}><a href="{% if loop.first %}{% url 'users' %}{% else %}{% url 'users' rank_slug=rank.name_slug %}{% endif %}">{{ _(rank.name) }}</a></li>{% endfor %}
+  	{% if acl.users.can_search_users() and not user.is_crawler() %}
   	<li class="tab-search{% if not ranks %} tab-search-no-tabs{% endif %} pull-right">
       <form action="{% url 'users' %}" class="form-inline" method="post">
         <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
@@ -24,6 +25,7 @@
         <button type="submit" class="btn btn-primary"><i class="icon-search icon-white"></i></button>
       </form>
   	</li>
+  	{% endif %}
   </ul>
 </div>
 <h2>{% if in_search %}{% trans %}Search Users{% endtrans %}{% elif active_rank %}{{ _(active_rank.name) }}{% endif %}</h2>

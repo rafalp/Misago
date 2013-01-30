@@ -7,7 +7,7 @@ from misago.profiles.forms import QuickFindUserForm
 from misago.ranks.models import Rank
 from misago.users.models import User
 from misago.utils import slugify
-from misago.views import error404
+from misago.views import error403, error404
 
 def list(request, rank_slug=None):
     ranks = Rank.objects.filter(as_tab=1).order_by('order')
@@ -30,6 +30,8 @@ def list(request, rank_slug=None):
 
     # Users search?
     if request.method == 'POST':
+        if not acl.users.can_search_users():
+            return error403(request)
         in_search = True
         active_rank = None
         search_form = QuickFindUserForm(request.POST, request=request)

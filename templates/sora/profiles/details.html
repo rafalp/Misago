@@ -20,6 +20,16 @@
         </tr>
       </thead>
       <tbody>
+        {% if acl.users.can_see_users_emails() %}
+        <tr>
+          <td class="span2">
+             <strong>{% trans %}E-mail Address{% endtrans %}</strong>
+          </td>
+          <td class="span4">
+            <a href="mailto:{{ profile.email }}">{{ profile.email }}</a>
+          </td>
+        </tr>
+        {% endif %}
         <tr>
           <td class="span2">
           	 <strong>{% trans %}Member Since{% endtrans %}</strong>
@@ -33,7 +43,11 @@
           	 <strong>{% trans %}Last Seen{% endtrans %}</strong>
           </td>
           <td class="span4">
+            {% if not hidden or acl.users.can_see_hidden_users() %}
           	{{ profile.last_date|reltimesince }} <span class="muted">{{ profile.last_date|date("DATETIME_FORMAT") }}</span>
+          	{% else %}
+          	<em class="muted">{% trans %}Hidden{% endtrans %}</em>
+          	{% endif %}
           </td>
         </tr>
       </tbody>
@@ -144,4 +158,72 @@
     
   </div>
 </div>
+    
+{% if acl.users.can_see_users_trails() %}
+<hr>
+<div class="row">
+  <div class="span6">
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="2">
+            {% trans %}Registration Details{% endtrans %}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="span2">
+             <strong>{% trans %}IP Address{% endtrans %}</strong>
+          </td>
+          <td class="span4">
+            {{ profile.join_ip }}
+          </td>
+        </tr>
+        <tr>
+          <td class="span2">
+             <strong>{% trans %}UserAgent String{% endtrans %}</strong>
+          </td>
+          <td class="span4">
+            {% if profile.join_agent %}{{ profile.join_agent }}{% else %}<em class="muted">{% trans %}Created from console{% endtrans %}</em>{% endif %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+  </div>
+  <div class="span6">
+      
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="2">
+            {% trans %}Last Visit Details{% endtrans %}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="span2">
+             <strong>{% trans %}IP Address{% endtrans %}</strong>
+          </td>
+          <td class="span4">
+            {{ profile.last_ip }}
+          </td>
+        </tr>
+        <tr>
+          <td class="span2">
+             <strong>{% trans %}UserAgent String{% endtrans %}</strong>
+          </td>
+          <td class="span4">
+            {% if profile.last_agent %}{{ profile.last_agent }}{% else %}<em class="muted">{% trans %}Created from console{% endtrans %}</em>{% endif %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+  </div>
+</div>
+{% endif %}
 {% endblock %}

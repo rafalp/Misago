@@ -103,6 +103,7 @@ MIDDLEWARE_CLASSES = (
 # List of application permission providers
 PERMISSION_PROVIDERS = (
     'misago.usercp.acl',
+    'misago.users.acl',
     'misago.admin.acl',
     'misago.forums.acl',
     'misago.threads.acl',

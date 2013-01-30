@@ -33,6 +33,10 @@
 <ul class="unstyled thread-info">
   <li><i class="icon-time"></i> <a href="{% url 'thread_find' thread=thread.pk, slug=thread.slug, post=post.pk %}">{{ post.date|reltimesince }}</a></li>
   <li><i class="icon-user"></i> {% if change.user_id %}<a href="{% url 'user' user=change.user_id, username=change.user_slug %}">{{ change.user_name }}</a>{% else %}{{ change.user_name }}{% endif %}</li>
+  {% if acl.users.can_see_users_trails() %}
+  <li><i class="icon-globe"></i> {{ change.ip }}</li>
+  <li><i class="icon-qrcode"></i> {{ change.agent }}</li>
+  {% endif %}
   {% if change.change != 0 %}<li><i class="icon-{% if change.change > 0 %}plus{% elif change.change < 0 %}minus{% endif %}"></i> {% if change.change > 0 -%}
   {% trans chars=change.change %}Added one character{% pluralize %}Added {{ chars }} characters{% endtrans %}
   {%- elif change.change < 0 -%}

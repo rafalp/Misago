@@ -1043,7 +1043,8 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .clickable{cursor:pointer;}
 .profile-header{overflow:auto;border-bottom:none;margin-bottom:30px;}.profile-header .avatar-height{overflow:auto;}.profile-header .avatar-height .avatar{-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;margin-right:24px;width:125px;height:125px;}
 .profile-header .avatar-height h1{font-size:300%;}
-.profile-header .avatar-height .lead{color:#555555;}.profile-header .avatar-height .lead .muted{color:#959595;}
+.profile-header .avatar-height .lead{color:#555555;}.profile-header .avatar-height .lead .badge{position:relative;bottom:3px;}
+.profile-header .avatar-height .lead .muted{color:#959595;}
 .profile-header .tabs-extra{margin-top:-33px;}
 .profile-header .nav-tabs{margin-top:-22px;margin-bottom:0px;padding-left:142px;}
 .avatar-menu h3{margin-top:0px;}
