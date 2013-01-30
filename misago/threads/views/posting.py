@@ -98,7 +98,7 @@ class PostingView(BaseView):
         message = request.messages.get_message('threads')
         if request.method == 'POST':
             form = self.get_form(True)
-            if form.is_valid():
+            if form.is_valid():                
                 # Record original vars if user is editing 
                 if self.mode in ['edit_thread', 'edit_post']:
                     old_name = self.thread.name
@@ -110,6 +110,7 @@ class PostingView(BaseView):
 
                 # Some extra initialisation
                 now = timezone.now()
+                md = None
                 moderation = False
                 if not request.acl.threads.acl[self.forum.pk]['can_approve']:
                     if self.mode == 'new_thread' and request.acl.threads.acl[self.forum.pk]['can_start_threads'] == 1:
@@ -148,12 +149,13 @@ class PostingView(BaseView):
                         post.moderated = moderation
                         post.date = now
                         post.post = '%s\n\n- - -\n**%s**\n%s' % (post.post, _("Added on %(date)s:") % {'date': date(now, 'SHORT_DATETIME_FORMAT')}, form.cleaned_data['post'])
-                        post.post_preparsed = post_markdown(request, post.post)
+                        md, post.post_preparsed = post_markdown(request, post.post)
                         post.save(force_update=True)
                         # Ignore rest of posting action
                         request.messages.set_flash(Message(_("Your reply has been added to previous one.")), 'success', 'threads_%s' % post.pk)
                         return self.redirect_to_post(post)
                     else:
+                        md, post_preparsed = post_markdown(request, form.cleaned_data['post'])
                         post = Post.objects.create(
                                                    forum=self.forum,
                                                    thread=thread,
@@ -163,7 +165,7 @@ class PostingView(BaseView):
                                                    ip=request.session.get_ip(request),
                                                    agent=request.META.get('HTTP_USER_AGENT'),
                                                    post=form.cleaned_data['post'],
-                                                   post_preparsed=post_markdown(request, form.cleaned_data['post']),
+                                                   post_preparsed=post_preparsed,
                                                    date=now,
                                                    moderated=moderation,
                                                    )
@@ -171,7 +173,7 @@ class PostingView(BaseView):
                     # Change message
                     post = self.post
                     post.post = form.cleaned_data['post']
-                    post.post_preparsed = post_markdown(request, form.cleaned_data['post'])
+                    md, post.post_preparsed = post_markdown(request, form.cleaned_data['post'])
                     post.edits += 1
                     post.edit_date = now
                     post.edit_user = request.user
@@ -273,6 +275,17 @@ class PostingView(BaseView):
                 if self.mode in ['new_thread', 'new_post', 'new_post_quick']:
                     request.user.last_post = thread.last
                     request.user.save(force_update=True)
+                    
+                # Notify users about post
+                if md:
+                    try:
+                        if self.quote and self.quote.user_id:
+                            del md.mentions[self.quote.user.username_slug]
+                    except KeyError:
+                        pass
+                    if md.mentions:
+                        self.post.notify_mentioned(request, md.mentions)
+                        self.post.save(force_update=True)
 
                 # Set flash and redirect user to his post
                 if self.mode == 'new_thread':

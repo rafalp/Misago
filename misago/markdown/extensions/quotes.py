@@ -27,15 +27,11 @@ class QuoteTitlesPreprocessor(markdown.preprocessors.Preprocessor):
                 if line.strip():
                     at_match = QUOTE_AUTHOR_RE.match(line.strip())
                     if at_match and lines[l + 1].strip()[0] == '>':
-                        username = '<%(token)s:quotetitle><%(token)s:username>%(name)s</%(token)s:username></%(token)s:quotetitle>' % {'token': self.markdown.mi_token, 'name': at_match.group('username')}
+                        username = '<%(token)s:quotetitle>@%(name)s</%(token)s:quotetitle>' % {'token': self.markdown.mi_token, 'name': at_match.group('username')}
                         if at_match.group('arrows'):
                             clean.append('> %s%s' % (at_match.group('arrows'), username))
                         else:
                             clean.append('> %s' % username)
-                        try:
-                            self.markdown.mi_usernames.append(username)
-                        except AttributeError:
-                            self.markdown.mi_usernames = [username]
                     else:
                         clean.append(line)
                 else:
@@ -49,4 +45,14 @@ class QuoteTitlesPostprocessor(markdown.postprocessors.Postprocessor):
     def run(self, text):
         text = text.replace('&lt;%s:quotetitle&gt;' % self.markdown.mi_token, '<h3><quotetitle>')
         text = text.replace('&lt;/%s:quotetitle&gt;' % self.markdown.mi_token, '</quotetitle></h3>')
-        return text
+        lines = text.splitlines()
+        clean = []
+        for l, line in enumerate(lines):
+            clean.append(line)
+            try:
+                if line == '<blockquote>':
+                    if lines[l + 1][0:7] != '<p><h3>':
+                        clean.append('<h3><quotesingletitle></h3>')
+            except IndexError:
+                pass
+        return '\r\n'.join(clean)

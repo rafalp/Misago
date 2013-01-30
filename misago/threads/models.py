@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from misago.forums.signals import move_forum_content
 from misago.threads.signals import move_thread, merge_thread, move_post, merge_post
 from misago.users.signals import delete_user_content, rename_user
-from misago.utils import slugify
+from misago.utils import slugify, ugettext_lazy
 
 class ThreadManager(models.Manager):
     def filter_stats(self, start, end):
@@ -108,6 +108,7 @@ class Post(models.Model):
     post_preparsed = models.TextField()
     upvotes = models.PositiveIntegerField(default=0)
     downvotes = models.PositiveIntegerField(default=0)
+    mentions = models.ManyToManyField('users.User', related_name="mention_set")
     checkpoints = models.BooleanField(default=False, db_index=True)
     date = models.DateTimeField()
     edits = models.PositiveIntegerField(default=0)
@@ -152,6 +153,27 @@ class Post(models.Model):
                                        ip=request.session.get_ip(request),
                                        agent=request.META.get('HTTP_USER_AGENT'),
                                        )
+            
+    def notify_mentioned(self, request, users):
+        from misago.acl.builder import get_acl
+        from misago.acl.utils import ACLError403, ACLError404
+        
+        mentioned = self.mentions.all()
+        for slug, user in users.items():
+            if user.pk != request.user.pk and user not in mentioned:
+                self.mentions.add(user)
+                try:                    
+                    acl = get_acl(request, user)
+                    acl.forums.allow_forum_view(self.forum)
+                    acl.threads.allow_thread_view(user, self.thread)
+                    acl.threads.allow_post_view(user, self.thread, self)
+                    if not user.is_ignoring(request.user):
+                        alert = user.alert(ugettext_lazy("%(username)s has mentioned you in his reply in thread %(thread)s").message)
+                        alert.profile('username', request.user)
+                        alert.post('thread', self.thread, self)
+                        alert.save_all()
+                except (ACLError403, ACLError404):
+                    pass
 
 
 class Change(models.Model):

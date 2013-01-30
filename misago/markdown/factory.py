@@ -88,10 +88,11 @@ def post_markdown(request, text):
     # Final cleanups
     text = text.replace('<p><h3><quotetitle>', '<h3><quotetitle>')
     text = text.replace('</quotetitle></h3></p>', '</quotetitle></h3>')
-    text = text.replace('</quotetitle></h3><br>\n', '</quotetitle></h3>\n<p>')
-    text = text.replace('\n<p></p>', '')
+    text = text.replace('</quotetitle></h3><br>\r\n', '</quotetitle></h3>\r\n<p>')
+    text = text.replace('\r\n<p></p>', '')
     def trans_quotetitle(match):
         return _("Posted by %(user)s") % {'user': match.group('content')}
     text = re.sub(r'<quotetitle>(?P<content>.+)</quotetitle>', trans_quotetitle, text)
+    text = re.sub(r'<quotesingletitle>', _("Quote"), text)
 
     return md, text

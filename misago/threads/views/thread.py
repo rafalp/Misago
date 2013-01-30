@@ -147,7 +147,7 @@ class ThreadView(BaseView):
         for post in posts[1:]:
             post.merge_with(new_post)
             post.delete()
-        new_post.post_preparsed = post_markdown(self.request, new_post.post)
+        md, new_post.post_preparsed = post_markdown(self.request, new_post.post)
         new_post.save(force_update=True)
         self.thread.sync()
         self.thread.save(force_update=True)

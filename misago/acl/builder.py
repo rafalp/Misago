@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.cache import cache, InvalidCacheBackendError
 from django.utils.importlib import import_module
 from misago.forms import Form
 from misago.forums.models import Forum
@@ -43,6 +44,18 @@ class ACL(object):
         for attr in dir(self):
             if not attr.startswith("__") and attr not in ['team', 'version']:
                 yield self.__dict__[attr]
+
+
+def get_acl(request, user):
+    acl_key = user.make_acl_key()
+    try:
+        user_acl = cache.get(acl_key)
+        if user_acl.version != request.monitor['acl_version']:
+            raise InvalidCacheBackendError()
+    except (AttributeError, InvalidCacheBackendError):
+        user_acl = build_acl(request, request.user.get_roles())
+        cache.set(acl_key, user_acl, 2592000)
+    return user_acl
 
 
 def build_acl(request, roles):
