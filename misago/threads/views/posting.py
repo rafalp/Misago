@@ -284,8 +284,8 @@ class PostingView(BaseView):
                     except KeyError:
                         pass
                     if md.mentions:
-                        self.post.notify_mentioned(request, md.mentions)
-                        self.post.save(force_update=True)
+                        post.notify_mentioned(request, md.mentions)
+                        post.save(force_update=True)
 
                 # Set flash and redirect user to his post
                 if self.mode == 'new_thread':

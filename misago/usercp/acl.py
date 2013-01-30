@@ -13,7 +13,7 @@ def make_form(request, role, form):
         form.base_fields['allow_signature_links'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
         form.base_fields['allow_signature_images'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
         form.layout.append((
-                            _("User Profile"),
+                            _("Owned Profile"),
                             (
                              ('name_changes_allowed', {'label': _("Allowed Username changes number"), 'help_text': _("Enter zero to don't allow users with this role to change their names.")}),
                              ('changes_expire', {'label': _("Don't count username changes older than"), 'help_text': _("Number of days since name change that makes that change no longer count to limit. For example, if you enter 7 days and set changes limit 3, users with this rank will not be able to make more than three changes in duration of 7 days. Enter zero to make all changes count.")}),
