@@ -68,6 +68,8 @@ from django.utils.translation import pgettext, ungettext, ugettext as _
 from misago.utils import slugify, formats
 
 def date(val, arg=""):
+    if not val:
+        return _("Never")
     if not arg:
         arg = formats['DATE_FORMAT']
     elif arg in formats:
@@ -76,6 +78,8 @@ def date(val, arg=""):
 
 
 def reldate(val, arg=""):
+    if not val:
+        return _("Never")
     now = datetime.now(utc if is_aware(val) else None)
     local_now = localtime(now)
     diff = now - val
@@ -101,6 +105,8 @@ def reldate(val, arg=""):
 
 
 def reltimesince(val, arg=""):
+    if not val:
+        return _("Never")
     now = datetime.now(utc if is_aware(val) else None)
     diff = now - val
     local = localtime(val)
