@@ -89,6 +89,13 @@ $(function() {
       ta = get_textarea(this).attr('id');
       var link_url = $.trim(prompt(ed_lang_enter_link_url));
       if (link_url.length > 0) {
+          link_url = link_url.toLowerCase();
+          var pattern = /^(("[\w-+\s]+")|([\w-+]+(?:\.[\w-+]+)*)|("[\w-+\s]+")([\w-+]+(?:\.[\w-+]+)*))(@((?:[\w-+]+\.)*\w[\w-+]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][\d]\.|1[\d]{2}\.|[\d]{1,2}\.))((25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\.){2}(25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\]?$)/i;
+          if (!pattern.test(link_url)) {
+              if (link_url.indexOf("http://") != 0 && link_url.indexOf("https://") != 0 && link_url.indexOf("ftp://") != 0) {
+                  link_url = "http://" + link_url;
+              }
+          }
           var link_label = $.trim(prompt(ed_lang_enter_link_label));
           if (link_label.length > 0) {
               makeReplace(ta, '[' + link_label + '](' + link_url + ')');
