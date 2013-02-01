@@ -30,7 +30,7 @@ def list(request, rank_slug=None):
 
     # Users search?
     if request.method == 'POST':
-        if not acl.users.can_search_users():
+        if not request.acl.users.can_search_users():
             return error403(request)
         in_search = True
         active_rank = None
