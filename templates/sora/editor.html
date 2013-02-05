@@ -1,4 +1,4 @@
-{% macro editor(field, submit_button, placeholder=None, rows=4, hide_links=False, hide_images=False, hide_hr=False) %}
+{% macro editor(field, submit_button, placeholder=None, rows=4, hide_links=False, hide_images=False, hide_hr=False, extra=None) %}
 <div class="editor">
   {% if field.errors %}
   <div class="editor-error">
@@ -21,6 +21,7 @@
       {% if not hide_hr %}<li class="divider"><a href="#" class="tooltip-top btn editor-hr" title="{% trans %}Insert Horizontal Line{% endtrans %}"><i class="icon-minus"></i></a></li>{% endif %}
     </ul>
     <button name="save" type="submit" class="btn btn-primary pull-right">{{ submit_button }}</button>
+    {% if extra %}{{ extra }}{% endif %}
   </div>
 </div>
 {% endmacro %}

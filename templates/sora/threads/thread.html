@@ -255,46 +255,12 @@
     <input type="hidden" name="quick_reply" value="1">
     <img src="{{ user.get_avatar() }}" alt="{% trans %}Your Avatar{% endtrans %}" class="avatar-big">
     <div class="arrow"></div>
-    {{ editor.editor(quick_reply.post, _('Post Reply')) }}
+    {{ editor.editor(quick_reply.post, _('Post Reply'), extra=editor_extra()) }}
   </form>
 </div>
 {% endif %}
 {% endblock %}
 
-{% macro pager(extra=true) %}
-  <ul class="pager pull-left">
-    {%- if pagination['prev'] > 1 %}<li><a href="{% url 'thread' slug=thread.slug, thread=thread.id %}" class="tooltip-top" title="{% trans %}Go to first page{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}First{% endtrans %}</a></li>{% endif -%}
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'thread' slug=thread.slug, thread=thread.id, page=pagination['prev'] %}{% else %}{% url 'thread' slug=thread.slug, thread=thread.id %}{% endif %}" class="tooltip-top" title="{% trans %}Older Posts{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{% url 'thread' slug=thread.slug, thread=thread.id, page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Newest Posts{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 and pagination['next'] < pagination['total'] %}<li><a href="{% url 'thread' slug=thread.slug, thread=thread.id, page=pagination['total'] %}" class="tooltip-top" title="{% trans %}Go to last page{% endtrans %}">{% trans %}Last{% endtrans %} <i class="icon-chevron-right"></i></a></li>{% endif -%}
-    <li class="count">
-    {%- trans current_page=pagination['page'], pages=pagination['total'] -%}
-    Page {{ current_page }} of {{ pages }}
-    {%- endtrans -%}
-    </li>
-    {% if extra and user.is_authenticated() %}
-    {% if not is_read %}<li class="unread"><a href="{% url 'thread_new' slug=thread.slug, thread=thread.id %}" class="tooltip-top" title="{% trans %}Go to first unread{% endtrans %}"><i class="icon-star"></i> {% trans %}First Unread{% endtrans %}</a></li>{% endif %}
-    {% if thread.replies_moderated > 0 and acl.threads.can_approve(forum) %}<li class="moderated"><a href="{% url 'thread_moderated' slug=thread.slug, thread=thread.id %}" class="tooltip-top" title="{% trans %}Go to first post awaiting review{% endtrans %}"><i class="icon-eye-close"></i> {% trans %}First Unreviewed{% endtrans %}</a></li>{% endif %}
-    {% if thread.replies_reported > 0 and acl.threads.can_mod_posts(thread) %}<li class="reported"><a href="{% url 'thread_reported' slug=thread.slug, thread=thread.id %}" class="tooltip-top" title="{% trans %}Go to first reported post{% endtrans %}"><i class="icon-fire"></i> {% trans %}First Reported{% endtrans %}</a></li>{% endif %}
-    {% endif %}
-  </ul>
-{% endmacro %}
-
-{% macro checkpoint_user(checkpoint) -%}
-{%- if checkpoint.user_id -%}
-{{ ('<a href="' ~ 'user'|url(user=checkpoint.user_id, username=checkpoint.user_slug) ~ '">')|safe ~ (checkpoint.user_name) ~ ("</a>")|safe }}
-{%- else -%}
-<strong>{{ checkpoint.user_name }}</strong>
-{%- endif -%}
-{%- endmacro %}
-
-{% macro edit_user(post) -%}
-{%- if post.edit_user_id -%}
-{{ ('<a href="' ~ 'user'|url(user=post.edit_user_id, username=post.edit_user_slug) ~ '">')|safe ~ (post.edit_user_name) ~ ("</a>")|safe }}
-{%- else -%}
-<strong>{{ post.edit_user_name }}</strong>
-{%- endif -%}
-{%- endmacro %}
 
 {% block javascripts -%}
 {{ super() }}
@@ -341,3 +307,46 @@
   {{ editor.js() }}
   {% endif %}
 {%- endblock %}
+
+
+{% macro pager(extra=true) %}
+  <ul class="pager pull-left">
+    {%- if pagination['prev'] > 1 %}<li><a href="{% url 'thread' slug=thread.slug, thread=thread.id %}" class="tooltip-top" title="{% trans %}Go to first page{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}First{% endtrans %}</a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'thread' slug=thread.slug, thread=thread.id, page=pagination['prev'] %}{% else %}{% url 'thread' slug=thread.slug, thread=thread.id %}{% endif %}" class="tooltip-top" title="{% trans %}Older Posts{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{% url 'thread' slug=thread.slug, thread=thread.id, page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Newest Posts{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 and pagination['next'] < pagination['total'] %}<li><a href="{% url 'thread' slug=thread.slug, thread=thread.id, page=pagination['total'] %}" class="tooltip-top" title="{% trans %}Go to last page{% endtrans %}">{% trans %}Last{% endtrans %} <i class="icon-chevron-right"></i></a></li>{% endif -%}
+    <li class="count">
+    {%- trans current_page=pagination['page'], pages=pagination['total'] -%}
+    Page {{ current_page }} of {{ pages }}
+    {%- endtrans -%}
+    </li>
+    {% if extra and user.is_authenticated() %}
+    {% if not is_read %}<li class="unread"><a href="{% url 'thread_new' slug=thread.slug, thread=thread.id %}" class="tooltip-top" title="{% trans %}Go to first unread{% endtrans %}"><i class="icon-star"></i> {% trans %}First Unread{% endtrans %}</a></li>{% endif %}
+    {% if thread.replies_moderated > 0 and acl.threads.can_approve(forum) %}<li class="moderated"><a href="{% url 'thread_moderated' slug=thread.slug, thread=thread.id %}" class="tooltip-top" title="{% trans %}Go to first post awaiting review{% endtrans %}"><i class="icon-eye-close"></i> {% trans %}First Unreviewed{% endtrans %}</a></li>{% endif %}
+    {% if thread.replies_reported > 0 and acl.threads.can_mod_posts(thread) %}<li class="reported"><a href="{% url 'thread_reported' slug=thread.slug, thread=thread.id %}" class="tooltip-top" title="{% trans %}Go to first reported post{% endtrans %}"><i class="icon-fire"></i> {% trans %}First Reported{% endtrans %}</a></li>{% endif %}
+    {% endif %}
+  </ul>
+{% endmacro %}
+
+
+{% macro checkpoint_user(checkpoint) -%}
+{%- if checkpoint.user_id -%}
+{{ ('<a href="' ~ 'user'|url(user=checkpoint.user_id, username=checkpoint.user_slug) ~ '">')|safe ~ (checkpoint.user_name) ~ ("</a>")|safe }}
+{%- else -%}
+<strong>{{ checkpoint.user_name }}</strong>
+{%- endif -%}
+{%- endmacro %}
+
+
+{% macro edit_user(post) -%}
+{%- if post.edit_user_id -%}
+{{ ('<a href="' ~ 'user'|url(user=post.edit_user_id, username=post.edit_user_slug) ~ '">')|safe ~ (post.edit_user_name) ~ ("</a>")|safe }}
+{%- else -%}
+<strong>{{ post.edit_user_name }}</strong>
+{%- endif -%}
+{%- endmacro %}
+
+
+{% macro editor_extra() %}
+  <button id="editor-preview" name="preview" type="submit" class="btn btn-success pull-right">{% trans %}Go full{% endtrans %}</button>
+{% endmacro %}

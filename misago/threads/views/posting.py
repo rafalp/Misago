@@ -98,6 +98,25 @@ class PostingView(BaseView):
         message = request.messages.get_message('threads')
         if request.method == 'POST':
             form = self.get_form(True)
+            if 'preview' in request.POST:
+                if form['post'].value():
+                    md, preparsed = post_markdown(request, form['post'].value())
+                else:
+                    md, preparsed = None, None
+                form.empty_errors()
+                return request.theme.render_to_response('threads/posting.html',
+                                                        {
+                                                         'mode': self.mode,
+                                                         'forum': self.forum,
+                                                         'thread': self.thread,
+                                                         'post': self.post,
+                                                         'quote': self.quote,
+                                                         'parents': self.parents,
+                                                         'message': message,
+                                                         'preview': preparsed,
+                                                         'form': FormLayout(form),
+                                                         },
+                                                        context_instance=RequestContext(request));
             if form.is_valid():                
                 # Record original vars if user is editing 
                 if self.mode in ['edit_thread', 'edit_post']:

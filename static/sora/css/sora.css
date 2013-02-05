@@ -1029,11 +1029,12 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .editor .editor-error .help-block:last-child{margin-bottom:0px;}
 .editor .editor-input{padding:8px;}.editor .editor-input div{margin-right:14px;}
 .editor .editor-input textarea{margin:0px;width:100%;font-family:Monaco,Menlo,Consolas,"Courier New",monospace;}
-.editor .editor-actions{border-top:2px solid #c9c9c9;overflow:auto;padding:8px;}.editor .editor-actions .editor-tools{display:none;overflow:auto;margin:-6px;padding:6px;}.editor .editor-actions .editor-tools li{float:left;list-style:none;margin-right:6px;}.editor .editor-actions .editor-tools li.divider{margin-left:6px;}
+.editor .editor-actions{border-top:2px solid #c9c9c9;overflow:auto;padding:8px;}.editor .editor-actions>.btn{margin-left:8px;}
+.editor .editor-actions .editor-tools{display:none;overflow:auto;margin:-6px;padding:6px;}.editor .editor-actions .editor-tools li{float:left;list-style:none;margin-right:6px;}.editor .editor-actions .editor-tools li.divider{margin-left:6px;}
 .editor .editor-actions .editor-tools li a{background-color:#eeeeee;border-color:#ffffff;-webkit-box-shadow:0px 0px 3px #999999;-moz-box-shadow:0px 0px 3px #999999;box-shadow:0px 0px 3px #999999;padding:4px 7px;}.editor .editor-actions .editor-tools li a:hover{background-color:#ffffff;}
 .markdown{margin-bottom:-12px;}.markdown h1{font-size:160%;}
 .markdown h2{font-size:120%;}
-.markdown blockquote{background-color:#fcfcfc;border:1px solid #cccccc;border-bottom-width:2px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;display:inline-block;padding:14px 16px;width:90%;margin-left:auto;margin-right:auto;}.markdown blockquote h3{margin:0px;margin-top:-10px;padding:0px;color:#555555;font-size:100%;}
+.markdown blockquote{background-color:#fcfcfc;border:1px solid #cccccc;border-bottom-width:2px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;padding:14px 16px;margin-left:16px;margin-right:16px;}.markdown blockquote h3{margin:0px;margin-top:-10px;padding:0px;color:#555555;font-size:100%;}
 .markdown blockquote blockquote,.markdown blockquote pre{display:block;}
 .markdown pre{display:inline-block;width:90%;margin-left:auto;margin-right:auto;}.markdown pre pre{display:block;}
 .markdown .md-img{text-align:center;margin:24px auto;padding:0px;float:none;}.markdown .md-img img{-webkit-box-shadow:0px 0px 3px #999999;-moz-box-shadow:0px 0px 3px #999999;box-shadow:0px 0px 3px #999999;}

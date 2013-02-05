@@ -148,6 +148,10 @@ class Form(forms.Form):
                 field_error, self.errors[self.error_source] = self.errors[self.error_source][0], []
                 raise forms.ValidationError(field_error)
             raise forms.ValidationError(_("Form contains errors."))
+        
+    def empty_errors(self):
+        for i in self.errors:
+            self.errors[i] = []
 
 
 class YesNoSwitch(forms.CheckboxInput):

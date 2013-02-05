@@ -32,15 +32,26 @@
   {%- endif %}
 </div>
 {% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
+{% if preview %}
+<div class="well" style="margin: 0px; margin-bottom: 32px; padding: 12px;">
+  <div class="markdown">
+    {{ preview|safe }}
+  </div>
+</div>
+<hr>
+{% endif %}
 <form action="{{ get_action() }}" method="post">
   <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
   {% if 'thread_name' in form.fields %}{{ form_theme.row_widget(form.fields.thread_name) }}{% endif %}
   {% if 'edit_reason' in form.fields %}{{ form_theme.row_widget(form.fields.edit_reason) }}{% endif %}
-  {{ editor.editor(form.fields.post, get_button(), rows=8) }}
+  {{ editor.editor(form.fields.post, get_button(), rows=8, extra=get_extra()) }}
 </form>
-<div class="well well-small" id="md-border" style="display: none;">
-  <div class="markdown" id="md-preview"></div>
-</div>
+{% endblock %}
+
+
+{% block javascripts %}
+{{ super() }}
+  {{ editor.js() }}
 {% endblock %}
 
 
@@ -60,6 +71,7 @@
 {%- endif %}
 {%- endmacro %}
 
+
 {% macro get_title() -%}
 {% if mode == 'new_thread' -%}
 {% trans %}Post New Thread{% endtrans %}
@@ -71,6 +83,7 @@
 {% trans %}Edit Reply{% endtrans %}
 {%- endif %}
 {%- endmacro %}
+
 
 {% macro get_info() -%}
 {% if mode == 'edit_post' -%}
@@ -94,6 +107,7 @@
 {%- endif %}
 {%- endmacro %}
 
+
 {% macro get_button() -%}
 {% if mode == 'new_thread' -%}
 {% trans %}Post Thread{% endtrans %}
@@ -106,7 +120,7 @@
 {%- endif %}
 {%- endmacro %}
 
-{% block javascripts %}
-{{ super() }}
-  {{ editor.js() }}
-{% endblock %}
+
+{% macro get_extra() %}
+  <button id="editor-preview" name="preview" type="submit" class="btn btn-success pull-right">{% trans %}Preview{% endtrans %}</button>
+{% endmacro %}
