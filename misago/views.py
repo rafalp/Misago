@@ -116,6 +116,15 @@ def read_all(request):
     return redirect(reverse('index'))
 
 
+def forum_map(request):
+    return request.theme.render_to_response('forum_map.html',
+                                            {
+                                             'ranks': Rank.objects.filter(as_tab=1).order_by('order'),
+                                             'forums': Forum.objects.treelist(request.acl.forums),
+                                             },
+                                            context_instance=RequestContext(request));
+
+
 def redirect_message(request, message, type='info', owner=None):
     request.messages.set_flash(message, type, owner)
     return redirect(reverse('index'))

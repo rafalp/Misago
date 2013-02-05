@@ -179,6 +179,7 @@ INSTALLED_APPS = (
     'misago.resetpswd', # Reset User Password
     'misago.threads', # Threads and Posts
     'misago.readstracker', # Forums and Threads reads tracker
+    'misago.watcher', # Observe threads
 )
 
 # Stopwatch target file

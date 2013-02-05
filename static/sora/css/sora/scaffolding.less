@@ -11,6 +11,26 @@
     background-color: darken(@bodyBackground, 10%);
     margin-top: 24px;
     margin-bottom: 0px;
+    
+    .divider {
+      color: @grayLight;
+    }
+    
+    .pull-right {
+      .opacity(60);
+      padding-left: 8px;
+      
+      a {
+        color: @grayDark;
+        font-weight: bold;
+        
+        &:hover {text-decoration: none;}
+      }
+      
+      &:hover {
+        .opacity(90);
+      }
+    }
   }
 }
 

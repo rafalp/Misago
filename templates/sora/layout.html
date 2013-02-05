@@ -23,8 +23,8 @@
   </div>
 </div>
 
-<div class="container">  
-    
+<div class="container">
+  
   {% if messages %}
   <div class="alerts-global">
   	{{ messages_list(messages) }}
@@ -36,6 +36,7 @@
     
   <ul class="breadcrumb bottom">
     {% block breadcrumb %}<li class="first"><a href="{% url 'index' %}">{{ settings.board_name }}</a>{% endblock %}</li>
+    <li class="pull-right"><i class="icon-move"></i> <a href="{% url 'forum_map' %}">{% trans %}Forum Map{% endtrans %}</a></li>
   </ul>
   
   <footer>{% if settings.board_credits %}

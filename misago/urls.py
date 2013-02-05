@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^news/$', 'misago.newsfeed.views.newsfeed', name="newsfeed"),
     url(r'^tos/$', 'misago.tos.views.forum_tos', name="tos"),
     url(r'^read/$', 'misago.views.read_all', name="read_all"),
+    url(r'^forum-map/$', 'misago.views.forum_map', name="forum_map"),
 )
 
 # Include admin patterns

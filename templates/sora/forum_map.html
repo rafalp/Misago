@@ -1,0 +1,79 @@
+{% extends "sora/layout.html" %}
+{% load i18n %}
+{% import "sora/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=_("Forum Map")) }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{% trans %}Forum Map{% endtrans %}</h1>
+</div>
+<h3>{% trans %}General Links{% endtrans %}</h3>
+<div class="well" style="padding: 8px 0;">
+  <ul class="nav nav-list">
+    <li><a href="{% url 'index' %}">{% trans %}Forum Home{% endtrans %}</a></li>
+    {% if user.is_authenticated() %}
+    <li><a href="{% url 'newsfeed' %}">{% trans %}News Feed{% endtrans %}</a></li>
+    {% endif %}
+    <li class="divider"></li>
+    <li><a href="{% url 'users' %}">{% trans %}Browse Users{% endtrans %}</a></li>
+    {% if ranks %}
+    <li>
+      <ul class="nav nav-list">
+      {% for rank in ranks %}
+        <li><a href="{% if loop.first %}{% url 'users' %}{% else %}{% url 'users' rank_slug=rank.name_slug %}{% endif %}">{{ _(rank.name) }}</a></li>
+      {% endfor %}
+      </ul>
+    </li>
+    {% endif %}
+    {% if user.is_authenticated() %}
+    <li class="divider"></li>
+    <li><a href="{% url 'user' user=user.pk, username=user.username_slug %}">{% trans %}Your Profile{% endtrans %}</a></li>
+    <li><a href="{% url 'usercp' %}">{% trans %}Your Control Panel{% endtrans %}</a></li>
+    <li><a href="{% url 'alerts' %}">{% trans %}Your Notifications{% endtrans %}</a></li>
+    {% elif not user.is_cralwer() %}
+    <li class="divider"></li>
+    <li><a href="{% url 'sign_in' %}">{% trans %}Sign In{% endtrans %}</a></li>
+    {% if settings.account_activation != 'block' %}
+    <li><a href="{% url 'register' %}">{% trans %}Register{% endtrans %}</a></li>
+    {% endif %}
+    <li><a href="{% url 'forgot_password' %}">{% trans %}Reset password{% endtrans %}</a></li>
+    <li><a href="{% url 'send_activation' %}">{% trans %}Resend activation e-mail{% endtrans %}</a></li>
+    {% endif %}
+  </ul>
+</div>
+<hr>
+<h3>{% trans %}Forum List{% endtrans %}</h3>
+{% if forums %}
+<div class="well" style="padding: 8px 0;">
+  <ul class="nav nav-list">
+    {% for forum in forums %}
+    {% if forum.subforums %}
+    <li class="nav-header">{{ forum.name }}</li>
+    {% for child in forum.subforums %}
+    {{ draw_forum(child) }}
+    {% endfor %}
+    {% endif %}
+    {% if not loop.last %}
+    <li class="divider"></li>
+    {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+{% else %}
+<p class="large">{% trans %}Looks like no forums exist that you have permission to see.{% endtrans %}</p>
+{% endif %}
+{% endblock %}
+
+{% macro draw_forum(forum) %}
+<li><a href="{{ forum.type|url(forum=forum.pk, slug=forum.slug) }}">{{ forum.name }}</a></li>
+{% if forum.subforums %}
+<li>
+  <ul class="nav nav-list">
+  {% for child in forum.subforums %}
+  {{ draw_forum(child) }}
+  {% endfor %}
+  </ul>
+</li>
+{% endif %}
+{% endmacro %}
