@@ -13,7 +13,7 @@
 {% if user.signature_preparsed %}
 <div class="well" style="margin: 0px; margin-bottom: 32px; padding: 12px;">
   <div class="markdown">
-    {{ user.signature_preparsed|safe }}
+    {{ user.signature_preparsed|markdown_final|safe }}
   </div>
 </div>
 {% endif %}

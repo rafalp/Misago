@@ -58,6 +58,12 @@ def short_markdown(value, length=300):
     return value
 
 
+@register.filter(name='markdown_final')
+def finalize_markdown(value):
+    from misago.markdown.factory import finalize_markdown
+    return finalize_markdown(value)
+
+
 """
 Date and time filters
 """

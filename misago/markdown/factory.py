@@ -64,7 +64,7 @@ def signature_markdown(acl, text):
     del md.parser.blockprocessors['hr']
     del md.parser.blockprocessors['olist']
     del md.parser.blockprocessors['ulist']
-
+    
     return md.convert(text)
 
 
@@ -84,15 +84,20 @@ def post_markdown(request, text):
         ext = attr()
         ext.extendMarkdown(md)
     text = md.convert(text)
+    return tidy_markdown(md, text)
 
-    # Final cleanups
+
+def tidy_markdown(md, text):
     text = text.replace('<p><h3><quotetitle>', '<h3><quotetitle>')
     text = text.replace('</quotetitle></h3></p>', '</quotetitle></h3>')
     text = text.replace('</quotetitle></h3><br>\r\n', '</quotetitle></h3>\r\n<p>')
     text = text.replace('\r\n<p></p>', '')
+    return md, text
+
+
+def finalize_markdown(text):
     def trans_quotetitle(match):
         return _("Posted by %(user)s") % {'user': match.group('content')}
     text = re.sub(r'<quotetitle>(?P<content>.+)</quotetitle>', trans_quotetitle, text)
     text = re.sub(r'<quotesingletitle>', _("Quote"), text)
-
-    return md, text
+    return text

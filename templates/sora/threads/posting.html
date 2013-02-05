@@ -35,7 +35,7 @@
 {% if preview %}
 <div class="well" style="margin: 0px; margin-bottom: 32px; padding: 12px;">
   <div class="markdown">
-    {{ preview|safe }}
+    {{ preview|markdown_final|safe }}
   </div>
 </div>
 <hr>
