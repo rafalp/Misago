@@ -1008,7 +1008,7 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .posts-list .well-post .post-extra .label-purple{background-color:#7a43b6;}
 .posts-list .well-post .post-nav{clear:both;margin-left:286px;overflow:auto;padding:8px 16px;padding-bottom:0px;margin-bottom:-8px;}.posts-list .well-post .post-nav .changelog{float:left;opacity:0.5;filter:alpha(opacity=50);color:#999999;}
 .posts-list .well-post .post-nav ul{margin:0px;padding:0px;}
-.posts-list .well-post .post-nav .nav-pills li{opacity:0.1;filter:alpha(opacity=10);}.posts-list .well-post .post-nav .nav-pills li form{margin:0px;}
+.posts-list .well-post .post-nav .nav-pills li{opacity:0.4;filter:alpha(opacity=40);}.posts-list .well-post .post-nav .nav-pills li form{margin:0px;}
 .posts-list .well-post .post-nav .nav-pills li a{padding:6px 7px;}
 .posts-list .well-post .post-nav .nav-pills li button{padding:3px 7px;}
 .posts-list .well-post .post-nav .nav-pills li a,.posts-list .well-post .post-nav .nav-pills li button{background-color:#c9c9c9;border:none;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;margin:0px;color:#ffffff;font-weight:bold;}.posts-list .well-post .post-nav .nav-pills li a:hover,.posts-list .well-post .post-nav .nav-pills li button:hover{background-color:#1ab2ff;}.posts-list .well-post .post-nav .nav-pills li a:hover.danger,.posts-list .well-post .post-nav .nav-pills li button:hover.danger{background-color:#d83a2e;}
