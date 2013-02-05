@@ -10,7 +10,7 @@
     <div class="container">
       <a class="brand" href="{% url 'index' %}">{% if settings.board_header %}{{ settings.board_header }}{% else %}{{ settings.board_name }}{% endif %}{% if settings.board_header_postscript %} <span>{{ settings.board_header_postscript }}</span>{% endif %}</a>
       <ul class="nav">
-        <li><a href="{% url 'index' %}" title="{% trans %}Forum Home{% endtrans %}" class="tooltip-bottom"><i class="icon-comment"></i></a></li>{% if not user.crawler %}
+        <li><a href="{% url 'index' %}" title="{% trans %}Forum Home{% endtrans %}" class="tooltip-bottom"><i class="icon-th-list"></i></a></li>{% if not user.crawler %}
         <li><a href="#" title="{% trans %}Search Community{% endtrans %}" class="tooltip-bottom"><i class="icon-search"></i></a></li>{% endif %}
         <li><a href="{% url 'users' %}" title="{% trans %}Browse Users{% endtrans %}" class="tooltip-bottom"><i class="icon-user"></i></a></li>
         {% if settings.tos_url or settings.tos_content %}<li><a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{% url 'tos' %}{% endif %}" title="{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Forum Terms of Service{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-certificate"></i></a></li>{% endif %}
