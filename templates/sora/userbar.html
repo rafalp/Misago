@@ -2,9 +2,9 @@
   <div class="navbar-inner">
     <div class="container">
       <ul class="nav">{% if user.is_authenticated() %}
-        <li><a href="#" title="{% trans %}Active Reports{% endtrans %}" class="tooltip-bottom"><i class="icon-warning-sign"></i><span class="stat">5</span></a></li>
+        {#<li><a href="#" title="{% trans %}Active Reports{% endtrans %}" class="tooltip-bottom"><i class="icon-warning-sign"></i><span class="stat">5</span></a></li>#}
         <li><a href="{% url 'alerts' %}" title="{% if user.alerts %}{% trans %}You have new notifications!{% endtrans %}{% else %}{% trans %}Your Notifications{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-fire"></i>{% if user.alerts %}<span class="stat">{{ user.alerts }}</span>{% endif %}</a></li>
-        <li><a href="#" title="{% trans %}Private messages{% endtrans %}" class="tooltip-bottom"><i class="icon-inbox"></i><span class="stat">2</span></a></li>
+        {#<li><a href="#" title="{% trans %}Private messages{% endtrans %}" class="tooltip-bottom"><i class="icon-inbox"></i><span class="stat">2</span></a></li>#}
         <li><a href="{% url 'newsfeed' %}" title="{% trans %}Your News Feed{% endtrans %}" class="tooltip-bottom"><i class="icon-signal"></i></a></li>
         <li><a href="#" title="{% trans %}Threads you are watching{% endtrans %}" class="tooltip-bottom"><i class="icon-bookmark"></i></a></li>{% endif %}
         <li><a href="#" title="{% trans %}Today Posts{% endtrans %}" class="tooltip-bottom"><i class="icon-star"></i></a></li>
