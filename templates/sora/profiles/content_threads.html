@@ -17,7 +17,9 @@
     </small>{% endif %}</h2>
     
 <div class="list-nav">
+  {% if items_total %}
   {{ pager() }}
+  {% endif %}
   <ul class="nav nav-pills pull-right">
     <li class="info"><a href="{% url 'user_posts' user=profile.id, username=profile.username_slug %}">{% trans %}Posts{% endtrans %}</a></li>
     <li class="primary"><a href="{% url 'user_threads' user=profile.id, username=profile.username_slug %}">{% trans %}Threads{% endtrans %}</a></li>
