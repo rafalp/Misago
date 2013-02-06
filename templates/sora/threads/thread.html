@@ -36,9 +36,23 @@
   {{ pager() }}
   {% if user.is_authenticated() %}
   <ul class="nav nav-pills pull-right">
-    {% if ignored_posts %}<li class="discourage"><form action="{% url 'thread_show_hidden' thread=thread.pk, slug=thread.slug %}" class="form-inline" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><button type="submit" class="btn"><i class="icon-eye-open"></i> {% trans %}Show Hidden Replies{% endtrans %}</button></form></li>{% endif %}
-    <li class="info"><a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}"><i class="icon-ok"></i> {% trans %}Watch Thread{% endtrans %}</a></li>{% if acl.threads.can_reply(forum, thread) %}
-    <li class="primary"><a href="{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}"><i class="icon-pencil"></i> {% trans %}Reply{% endtrans %}</a></li>{% endif %}
+    {% if ignored_posts %}
+    <li class="discourage"><form action="{% url 'thread_show_hidden' thread=thread.pk, slug=thread.slug %}" class="form-inline" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><button type="submit" class="btn"><i class="icon-eye-open"></i> {% trans %}Show Hidden Replies{% endtrans %}</button></form></li>
+    {% endif %}
+    {% if watcher %}
+    {% if watcher.email %}
+    <li class="success"><form action="{% url 'thread_unwatch_email' thread=thread.pk, slug=thread.slug %}" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><input type="hidden" name="retreat" value="{{ request_path }}"><button type="submit" class="btn tooltip-top" title="{% trans %}Don't e-mail me anymore if anyone replies to this thread{% endtrans %}"><i class="icon-envelope"></i></button></form></li>
+    {% else %}
+    <li class="info"><form action="{% url 'thread_watch_email' thread=thread.pk, slug=thread.slug %}" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><input type="hidden" name="retreat" value="{{ request_path }}"><button type="submit" class="btn tooltip-top" title="{% trans %}E-mail me if anyone replies{% endtrans %}"><i class="icon-envelope"></i></button></form></li>
+    {% endif %}
+    <li class="success"><form action="{% url 'thread_unwatch' thread=thread.pk, slug=thread.slug %}" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><input type="hidden" name="retreat" value="{{ request_path }}"><button type="submit" class="btn tooltip-top" title="{% trans %}Remove thread from watched list{% endtrans %}"><i class="icon-bookmark"></i></button></form></li>
+    {% else %}
+    <li class="info"><form action="{% url 'thread_watch_email' thread=thread.pk, slug=thread.slug %}" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><input type="hidden" name="retreat" value="{{ request_path }}"><button type="submit" class="btn tooltip-top" title="{% trans %}Add thread to watched list and e-mail me if anyone replies{% endtrans %}"><i class="icon-envelope"></i></button></form></li>
+    <li class="info"><form action="{% url 'thread_watch' thread=thread.pk, slug=thread.slug %}" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><input type="hidden" name="retreat" value="{{ request_path }}"><button type="submit" class="btn tooltip-top" title="{% trans %}Add thread to watched list{% endtrans %}"><i class="icon-bookmark"></i></button></form></li>
+    {% endif %}
+    {% if acl.threads.can_reply(forum, thread) %}
+    <li class="primary"><a href="{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}"><i class="icon-pencil"></i> {% trans %}Reply{% endtrans %}</a></li>
+    {% endif %}
   </ul>
   {% endif %}
 </div>

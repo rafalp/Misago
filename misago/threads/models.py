@@ -6,6 +6,7 @@ from misago.forums.signals import move_forum_content
 from misago.threads.signals import move_thread, merge_thread, move_post, merge_post
 from misago.users.signals import delete_user_content, rename_user
 from misago.utils import slugify, ugettext_lazy
+from misago.watcher.models import ThreadWatch
 
 class ThreadManager(models.Manager):
     def filter_stats(self, start, end):
@@ -89,6 +90,28 @@ class Thread(models.Model):
         self.moderated = start_post.moderated
         self.deleted = start_post.deleted
         self.merges = last_post.merge
+        
+    def email_watchers(self, request, post):
+        from misago.acl.builder import get_acl
+        from misago.acl.utils import ACLError403, ACLError404
+        
+        for watch in ThreadWatch.objects.filter(thread=self).filter(email=True).filter(last_read__gte=self.previous_last):
+            user = watch.user
+            if user.pk != request.user.pk:
+                try:
+                    acl = get_acl(request, user)
+                    acl.forums.allow_forum_view(self.forum)
+                    acl.threads.allow_thread_view(user, self)
+                    acl.threads.allow_post_view(user, self, post)
+                    if not user.is_ignoring(request.user):
+                        user.email_user(
+                            request,
+                            'post_notification',
+                            _('New reply in thread "%(thread)s"') % {'thread': self.name},
+                            {'author': request.user, 'post': post, 'thread': self}
+                            )
+                except (ACLError403, ACLError404):
+                    pass
 
 
 class PostManager(models.Manager):

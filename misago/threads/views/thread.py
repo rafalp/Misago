@@ -17,6 +17,7 @@ from misago.threads.models import Thread, Post, Change, Checkpoint
 from misago.threads.views.base import BaseView
 from misago.views import error403, error404
 from misago.utils import make_pagination, slugify
+from misago.watcher.models import ThreadWatch
 
 class ThreadView(BaseView):
     def fetch_thread(self, thread):
@@ -27,6 +28,11 @@ class ThreadView(BaseView):
         self.request.acl.threads.allow_thread_view(self.request.user, self.thread)
         self.parents = Forum.objects.forum_parents(self.forum.pk, True)
         self.tracker = ThreadsTracker(self.request, self.forum)
+        if self.request.user.is_authenticated():
+            try:
+                self.watcher = ThreadWatch.objects.get(user=self.request.user, thread=self.thread)
+            except ThreadWatch.DoesNotExist:
+                pass
 
     def fetch_posts(self, page):
         self.count = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).count()
@@ -52,6 +58,9 @@ class ThreadView(BaseView):
         if not self.tracker.is_read(self.thread):
             self.tracker.set_read(self.thread, last_post)
             self.tracker.sync()
+        if self.watcher and last_post.date > self.watcher.last_read:
+            self.watcher.last_read = timezone.now()
+            self.watcher.save(force_update=True)
 
     def get_post_actions(self):
         acl = self.request.acl.threads.get_role(self.thread.forum_id)
@@ -513,6 +522,7 @@ class ThreadView(BaseView):
         self.pagination = None
         self.parents = None
         self.ignored = False
+        self.watcher = None
         try:
             self.fetch_thread(thread)
             self.fetch_posts(page)
@@ -545,6 +555,7 @@ class ThreadView(BaseView):
                                                  'count': self.count,
                                                  'posts': self.posts,
                                                  'ignored_posts': self.ignored,
+                                                 'watcher': self.watcher,
                                                  'pagination': self.pagination,
                                                  'quick_reply': FormFields(QuickReplyForm(request=request)).fields,
                                                  'thread_form': FormFields(self.thread_form).fields if self.thread_form else None,

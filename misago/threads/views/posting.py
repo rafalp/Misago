@@ -98,6 +98,7 @@ class PostingView(BaseView):
         message = request.messages.get_message('threads')
         if request.method == 'POST':
             form = self.get_form(True)
+            # Show message preview
             if 'preview' in request.POST:
                 if form['post'].value():
                     md, preparsed = post_markdown(request, form['post'].value())
@@ -117,6 +118,7 @@ class PostingView(BaseView):
                                                          'form': FormLayout(form),
                                                          },
                                                         context_instance=RequestContext(request));
+            # Commit form to database
             if form.is_valid():                
                 # Record original vars if user is editing 
                 if self.mode in ['edit_thread', 'edit_post']:
@@ -155,6 +157,7 @@ class PostingView(BaseView):
                     if self.mode == 'edit_thread':
                         thread.name = form.cleaned_data['thread_name']
                         thread.slug = slugify(form.cleaned_data['thread_name'])
+                thread.previous_last = thread.last 
 
                 # Create new message
                 if self.mode in ['new_thread', 'new_post', 'new_post_quick']:
@@ -315,6 +318,7 @@ class PostingView(BaseView):
                     return redirect(reverse('thread', kwargs={'thread': thread.pk, 'slug': thread.slug}) + ('#post-%s' % post.pk))
 
                 if self.mode in ['new_post', 'new_post_quick']:
+                    thread.email_watchers(request, post)
                     if moderation:
                         request.messages.set_flash(Message(_("Your reply has been posted. It will be hidden from other members until moderator reviews it.")), 'success', 'threads_%s' % post.pk)
                     else:

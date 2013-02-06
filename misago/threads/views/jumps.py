@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 from misago.acl.utils import ACLError403, ACLError404
 from misago.authn.decorators import block_guest
@@ -12,6 +13,7 @@ from misago.threads.models import Thread, Post
 from misago.threads.views.base import BaseView
 from misago.views import error403, error404
 from misago.utils import make_pagination
+from misago.watcher.models import ThreadWatch
 
 class JumpView(BaseView):
     def fetch_thread(self, thread):
@@ -46,19 +48,6 @@ class JumpView(BaseView):
             return error403(request, e.message)
         except ACLError404 as e:
             return error404(request, e.message)
-
-
-class ShowHiddenRepliesView(JumpView):
-    def make_jump(self):
-        @block_guest
-        @check_csrf
-        def view(request):
-            ignored_exclusions = request.session.get('unignore_threads', [])
-            ignored_exclusions.append(self.thread.pk)
-            request.session['unignore_threads'] = ignored_exclusions
-            request.messages.set_flash(Message(_('Replies made to this thread by members on your ignore list have been revealed.')), 'success', 'threads')
-            return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))
-        return view(self.request)
 
 
 class LastReplyView(JumpView):
@@ -103,3 +92,69 @@ class FirstReportedView(JumpView):
                 self.thread.post_set.get(reported=True))
         except Post.DoesNotExist:
             return error404(self.request)
+
+
+class ShowHiddenRepliesView(JumpView):
+    def make_jump(self):
+        @block_guest
+        @check_csrf
+        def view(request):
+            ignored_exclusions = request.session.get('unignore_threads', [])
+            ignored_exclusions.append(self.thread.pk)
+            request.session['unignore_threads'] = ignored_exclusions
+            request.messages.set_flash(Message(_('Replies made to this thread by members on your ignore list have been revealed.')), 'success', 'threads')
+            return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))
+        return view(self.request)
+
+
+class WatchThreadView(JumpView):
+    def get_retreat(self):
+        return redirect(self.request.POST.get('retreat', reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug})))
+    
+    def update_watcher(self, request, watcher):
+        request.messages.set_flash(Message(_('This thread has been added to your watched threads list.')), 'success', 'threads')
+    
+    def make_jump(self):
+        @block_guest
+        @check_csrf
+        def view(request):
+            try:
+                watcher = ThreadWatch.objects.get(user=request.user, thread=self.thread)
+            except ThreadWatch.DoesNotExist:
+                watcher = ThreadWatch()
+                watcher.user = request.user
+                watcher.forum = self.forum
+                watcher.thread = self.thread
+                watcher.last_read = timezone.now()
+            self.update_watcher(request, watcher)
+            if watcher.pk:
+                watcher.save(force_update=True)
+            else:
+                watcher.save(force_insert=True)
+            return self.get_retreat()
+        return view(self.request)
+
+
+class WatchEmailThreadView(WatchThreadView):
+    def update_watcher(self, request, watcher):
+        watcher.email = True
+        if watcher.pk:
+            request.messages.set_flash(Message(_('You will now receive e-mail with notification when somebody replies to this thread.')), 'success', 'threads')
+        else:
+            request.messages.set_flash(Message(_('This thread has been added to your watched threads list. You will also receive e-mail with notification when somebody replies to it.')), 'success', 'threads')
+
+
+class UnwatchThreadView(WatchThreadView):
+    def update_watcher(self, request, watcher):
+        watcher.deleted = True
+        watcher.delete()
+        if watcher.email:
+            request.messages.set_flash(Message(_('This thread has been removed from your watched threads list. You will no longer receive e-mails with notifications when somebody replies to it.')), 'success', 'threads')
+        else:
+            request.messages.set_flash(Message(_('This thread has been removed from your watched threads list.')), 'success', 'threads')
+
+
+class UnwatchEmailThreadView(WatchThreadView):
+    def update_watcher(self, request, watcher):
+        watcher.email = False
+        request.messages.set_flash(Message(_('You will no longer receive e-mails with notifications when somebody replies to this thread.')), 'success', 'threads')

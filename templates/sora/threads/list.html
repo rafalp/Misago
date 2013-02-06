@@ -135,7 +135,7 @@
 
 {% block javascripts -%}
 {{ super() }}
-{%- if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
+{%- if user.is_authenticated() and list_form %}
   <script type="text/javascript">
     $(function () {
       $('#threads_form').submit(function() {
