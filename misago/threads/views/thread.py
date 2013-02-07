@@ -52,7 +52,7 @@ class ThreadView(BaseView):
         for post in self.posts:
             posts_dict[post.pk] = post
             post.message = self.request.messages.get_message('threads_%s' % post.pk)
-            post.is_read = post.date <= self.read_date
+            post.is_read = post.date <= self.read_date or (post.pk != self.thread.start_post_id and (post.deleted or post.moderated))
             post.karma_vote = None
             post.ignored = self.thread.start_post_id != post.pk and not self.thread.pk in self.request.session.get('unignore_threads', []) and post.user_id in ignored_users
             if post.ignored:
