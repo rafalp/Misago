@@ -109,6 +109,19 @@
           	{% if profile.rank %}{{ _(profile.rank.name) }}{% else %}<em>{% trans %}Not Ranked{% endtrans %}</em>{% endif %}
           </td>
         </tr>
+        {% if settings.ranking_positions_visible or settings.ranking_scores_visible %}
+        <tr>
+          <td class="span2">
+             <strong>{% if settings.ranking_positions_visible %}{% trans %}Ranking Position{% endtrans %}{% else %}{% trans %}Score{% endtrans %}{% endif %}</strong>
+          </td>
+          <td class="span4">
+            {% if settings.ranking_positions_visible %}
+            #{{ profile.get_ranking()|intcomma }}{% if settings.ranking_scores_visible %} <span class="muted">{{ profile.score|intcomma }}</span>{% endif %}
+            {% else %}{{ profile.score|intcomma }}
+            {% endif %}
+          </td>
+        </tr>
+        {% endif %}
         <tr>
           <td class="span2">
           	 <strong>{% trans %}Karma Received{% endtrans %}</strong>

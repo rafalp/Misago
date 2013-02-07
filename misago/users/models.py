@@ -148,6 +148,7 @@ class User(models.Model):
     following = models.PositiveIntegerField(default=0)
     followers = models.PositiveIntegerField(default=0)
     score = models.IntegerField(default=0, db_index=True)
+    ranking = models.PositiveIntegerField(default=0)
     rank = models.ForeignKey('ranks.Rank', null=True, blank=True, on_delete=models.SET_NULL)
     last_sync = models.DateTimeField(null=True, blank=True)
     follows = models.ManyToManyField('self', related_name='follows_set', symmetrical=False)
@@ -432,6 +433,12 @@ class User(models.Model):
         if not image_size:
             image_size = settings.AVATAR_SIZES[0]
         return 'http://www.gravatar.com/avatar/%s?s=%s' % (hashlib.md5(self.email).hexdigest(), image_size)
+
+    def get_ranking(self):
+        if not self.ranking:
+            self.ranking = User.objects.filter(score__gt=self.score).count() + 1
+            self.save(force_update=True)
+        return self.ranking
 
     def get_title(self):
         if self.title:

@@ -215,6 +215,87 @@
       .label-purple {
         background-color: @purple;
       }
+      
+      .post-rating {
+        clear: both;
+        padding: 12px 0px;
+        margin: 0px;
+        
+        li {
+          margin: 0px;
+          padding: 0px 4px;
+          
+          form {
+            margin: 0px;
+            padding: 0px;
+          }
+          
+          .label {
+            background-color: @grayLight;
+            margin: 0px;
+            position: relative;
+            top: 1px;
+            padding: 3px 6px;
+            padding-left: 7px;
+            
+            &.label-success {
+              background-color: @green;
+            }
+            
+            &.label-important {
+              background-color: @red;
+            }
+            
+            &:hover {
+              background-color: @grayLight;
+              
+              &.label-success {
+                background-color: @green;
+              }
+              
+              &.label-important {
+                background-color: @red;
+              }
+            }
+          }
+          
+          button {
+            padding: 1px 4px;
+            margin: 0px;
+            .opacity(40);
+            
+            &:hover {
+              i {
+                background-image: url("@{iconWhiteSpritePath}");
+              }
+              
+              &.btn-upvote {
+                background-color: @green;
+              }
+              
+              &.btn-downvote {
+                background-color: @red;
+              }
+            }
+          }
+          
+          &.active {
+            button {
+              i {
+                background-image: url("@{iconWhiteSpritePath}");
+              }
+              
+              &.btn-upvote {
+                background-color: @green;
+              }
+              
+              &.btn-downvote {
+                background-color: @red;
+              }
+            }
+          }
+        }
+      }
     }
     
     .post-nav {
@@ -279,6 +360,14 @@
     &:hover {
       .changelog, .nav-pills li {
         .opacity(100);
+      }
+        
+      .post-rating {
+        li {
+          button {
+            .opacity(100);
+          }
+        }
       }
     }
   }

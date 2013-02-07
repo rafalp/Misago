@@ -278,7 +278,6 @@ class Edit(FormWidget):
             target.prune_last = form.cleaned_data['prune_last']
 
         if form.cleaned_data['parent'].pk != target.parent.pk:
-            print 'MOVE FORUM!'
             target.move_to(form.cleaned_data['parent'], 'last-child')
             self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
 

@@ -13,7 +13,7 @@ from misago.markdown import post_markdown
 from misago.messages import Message
 from misago.readstracker.trackers import ThreadsTracker
 from misago.threads.forms import MoveThreadsForm, SplitThreadForm, MovePostsForm, QuickReplyForm
-from misago.threads.models import Thread, Post, Change, Checkpoint
+from misago.threads.models import Thread, Post, Karma, Change, Checkpoint
 from misago.threads.views.base import BaseView
 from misago.views import error403, error404
 from misago.utils import make_pagination, slugify
@@ -47,10 +47,13 @@ class ThreadView(BaseView):
         self.read_date = self.tracker.get_read_date(self.thread)
         ignored_users = []
         if self.request.user.is_authenticated():
-            ignored_users = self.request.user.ignored_users()        
+            ignored_users = self.request.user.ignored_users()
+        posts_dict = {}
         for post in self.posts:
+            posts_dict[post.pk] = post
             post.message = self.request.messages.get_message('threads_%s' % post.pk)
             post.is_read = post.date <= self.read_date
+            post.karma_vote = None
             post.ignored = self.thread.start_post_id != post.pk and not self.thread.pk in self.request.session.get('unignore_threads', []) and post.user_id in ignored_users
             if post.ignored:
                 self.ignored = True
@@ -61,6 +64,9 @@ class ThreadView(BaseView):
         if self.watcher and last_post.date > self.watcher.last_read:
             self.watcher.last_read = timezone.now()
             self.watcher.save(force_update=True)
+        if self.request.user.is_authenticated():
+            for karma in Karma.objects.filter(post_id__in=posts_dict.keys()).filter(user=self.request.user):
+                posts_dict[karma.post_id].karma_vote = karma
 
     def get_post_actions(self):
         acl = self.request.acl.threads.get_role(self.thread.forum_id)

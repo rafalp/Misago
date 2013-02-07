@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
@@ -168,11 +169,14 @@ class PostingView(BaseView):
                         and self.thread.last_poster_id == request.user.id):
                         # Overtake posting
                         post = self.thread.last_post
+                        post.appended = True
                         post.moderated = moderation
                         post.date = now
                         post.post = '%s\n\n- - -\n**%s**\n%s' % (post.post, _("Added on %(date)s:") % {'date': date(now, 'SHORT_DATETIME_FORMAT')}, form.cleaned_data['post'])
                         md, post.post_preparsed = post_markdown(request, post.post)
                         post.save(force_update=True)
+                        thread.last = now
+                        thread.save(force_update=True)
                         # Ignore rest of posting action
                         request.messages.set_flash(Message(_("Your reply has been added to previous one.")), 'success', 'threads_%s' % post.pk)
                         return self.redirect_to_post(post)
@@ -191,6 +195,7 @@ class PostingView(BaseView):
                                                    date=now,
                                                    moderated=moderation,
                                                    )
+                        post.appended = False
                 elif changed_post:
                     # Change message
                     post = self.post
@@ -231,6 +236,9 @@ class PostingView(BaseView):
                     thread.start_poster_slug = request.user.username_slug
                     if request.user.rank and request.user.rank.style:
                         thread.start_poster_style = request.user.rank.style
+                    # Reward user for posting new thread?
+                    if request.user.last_post < timezone.now() - timedelta(seconds=request.settings['score_reward_new_post_cooldown']):
+                        request.user.score += request.settings['score_reward_new_thread']
 
                 # New post - increase post counters, thread score
                 # Notify quoted post author and close thread if it has hit limit
@@ -252,6 +260,9 @@ class PostingView(BaseView):
                             and thread.replies >= self.request.settings.thread_length):
                             thread.closed = True
                             post.set_checkpoint(self.request, 'limit')
+                    # Reward user for posting new post?
+                    if not post.appended and request.user.last_post < timezone.now() - timedelta(seconds=request.settings['score_reward_new_post_cooldown']):
+                        request.user.score += request.settings['score_reward_new_post']
 
                 # Update last poster data
                 if not moderation and self.mode not in ['edit_thread', 'edit_post']:

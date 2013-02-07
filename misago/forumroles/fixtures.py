@@ -17,7 +17,7 @@ def load_fixtures():
                           'can_soft_delete_own_posts': True,
                           'can_upvote_posts': True,
                           'can_downvote_posts': True,
-                          'can_see_posts_scores': '2',
+                          'can_see_posts_scores': 2,
                           'can_see_votes': True,
                           'can_make_polls': True,
                           'can_vote_in_polls': True,
@@ -55,6 +55,7 @@ def load_fixtures():
                           'can_soft_delete_own_posts': True,
                           'can_upvote_posts': True,
                           'can_downvote_posts': True,
+                          'can_see_posts_scores': 1,
                           'can_make_polls': True,
                           'can_vote_in_polls': True,
                           'can_upload_attachments': True,
@@ -77,6 +78,7 @@ def load_fixtures():
                           'can_soft_delete_own_posts': True,
                           'can_upvote_posts': True,
                           'can_downvote_posts': True,
+                          'can_see_posts_scores': 1,
                           'can_make_polls': True,
                           'can_vote_in_polls': True,
                           'can_download_attachments': True,
@@ -90,6 +92,7 @@ def load_fixtures():
                           'can_see_forum_contents': True,
                           'can_read_threads': '2',
                           'can_download_attachments': True,
+                          'can_see_posts_scores': 1,
                           })
     role.save(force_insert=True)
 

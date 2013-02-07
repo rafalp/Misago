@@ -5,7 +5,7 @@ from misago.threads.models import Thread, Post
 from misago.threads.views.base import BaseView
 from misago.views import error403, error404
 
-class DetailsView(BaseView):
+class KarmaVotesView(BaseView):
     def fetch_target(self, kwargs):
         self.thread = Thread.objects.get(pk=kwargs['thread'])
         self.forum = self.thread.forum
@@ -16,7 +16,7 @@ class DetailsView(BaseView):
         self.post = Post.objects.select_related('user').get(pk=kwargs['post'], thread=self.thread.pk)
         self.post.thread = self.thread
         self.request.acl.threads.allow_post_view(self.request.user, self.thread, self.post)
-        self.request.acl.users.allow_details_view()
+        self.request.acl.threads.allow_post_votes_view(self.forum)
 
     def __call__(self, request, **kwargs):
         self.request = request
@@ -31,11 +31,13 @@ class DetailsView(BaseView):
             return error403(request, e.message)
         except ACLError404 as e:
             return error404(request, e.message)
-        return request.theme.render_to_response('threads/details.html',
+        return request.theme.render_to_response('threads/karmas.html',
                                                 {
                                                  'forum': self.forum,
                                                  'parents': self.parents,
                                                  'thread': self.thread,
                                                  'post': self.post,
+                                                 'upvotes': self.post.karma_set.filter(score=1),
+                                                 'downvotes': self.post.karma_set.filter(score=-1),
                                                  },
                                                 context_instance=RequestContext(request))

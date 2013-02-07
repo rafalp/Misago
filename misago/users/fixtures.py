@@ -1,4 +1,6 @@
 from misago.monitor.fixtures import load_monitor_fixture
+from misago.utils import ugettext_lazy as _
+from misago.utils import get_msgid
 
 monitor_fixtures = {
                   'users': 0,

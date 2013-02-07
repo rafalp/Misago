@@ -860,7 +860,7 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .table-users .avatar{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;width:42px;height:42px;}
 .table-users .info-popover{background:#e3e3e3;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;padding:2px;padding-top:0px;}.table-users .info-popover i{margin:0px;}
 .table-users .info-popover:hover{background:#7d7d7d;}.table-users .info-popover:hover i{background-image:url("../img/glyphicons-halflings-white.png");}
-.table-users.list-tiny a:link,.table-users.list-tiny a:active,.table-users.list-tiny a:visited,.table-users.list-tiny a:hover{font-size:100%;}
+.table-users.list-tiny a:link,.table-users.list-tiny a:active,.table-users.list-tiny a:visited,.table-users.list-tiny a:hover{font-size:100%;font-weight:bold;}
 .table-users.list-tiny .avatar{width:22px;height:22px;}
 .table-users.list-tiny i{position:relative;top:2px;}
 .btn{background:#dcdcdc;border:1px solid #dcdcdc;*border:0;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;padding:4px 10px;color:#6f6f6f;font-weight:bold;text-shadow:none;}.btn:hover,.btn:active{background:#e1e1e1;border:1px solid #e1e1e1;*border:0;box-shadow:none;}
@@ -1008,6 +1008,17 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .posts-list .well-post .post-extra .post-checkbox{float:right;margin-left:4px;}
 .posts-list .well-post .post-extra .label{margin-left:8px;margin-bottom:8px;padding:4px 5px;font-size:100%;}
 .posts-list .well-post .post-extra .label-purple{background-color:#7a43b6;}
+.posts-list .well-post .post-extra .post-rating{clear:both;padding:12px 0px;margin:0px;}.posts-list .well-post .post-extra .post-rating li{margin:0px;padding:0px 4px;}.posts-list .well-post .post-extra .post-rating li form{margin:0px;padding:0px;}
+.posts-list .well-post .post-extra .post-rating li .label{background-color:#999999;margin:0px;position:relative;top:1px;padding:3px 6px;padding-left:7px;}.posts-list .well-post .post-extra .post-rating li .label.label-success{background-color:#46a546;}
+.posts-list .well-post .post-extra .post-rating li .label.label-important{background-color:#9d261d;}
+.posts-list .well-post .post-extra .post-rating li .label:hover{background-color:#999999;}.posts-list .well-post .post-extra .post-rating li .label:hover.label-success{background-color:#46a546;}
+.posts-list .well-post .post-extra .post-rating li .label:hover.label-important{background-color:#9d261d;}
+.posts-list .well-post .post-extra .post-rating li button{padding:1px 4px;margin:0px;opacity:0.4;filter:alpha(opacity=40);}.posts-list .well-post .post-extra .post-rating li button:hover i{background-image:url("../img/glyphicons-halflings-white.png");}
+.posts-list .well-post .post-extra .post-rating li button:hover.btn-upvote{background-color:#46a546;}
+.posts-list .well-post .post-extra .post-rating li button:hover.btn-downvote{background-color:#9d261d;}
+.posts-list .well-post .post-extra .post-rating li.active button i{background-image:url("../img/glyphicons-halflings-white.png");}
+.posts-list .well-post .post-extra .post-rating li.active button.btn-upvote{background-color:#46a546;}
+.posts-list .well-post .post-extra .post-rating li.active button.btn-downvote{background-color:#9d261d;}
 .posts-list .well-post .post-nav{clear:both;margin-left:286px;overflow:auto;padding:8px 16px;padding-bottom:0px;margin-bottom:-8px;}.posts-list .well-post .post-nav .changelog{float:left;opacity:0.5;filter:alpha(opacity=50);color:#999999;}
 .posts-list .well-post .post-nav ul{margin:0px;padding:0px;}
 .posts-list .well-post .post-nav .nav-pills li{opacity:0.4;filter:alpha(opacity=40);}.posts-list .well-post .post-nav .nav-pills li form{margin:0px;}
@@ -1016,6 +1027,7 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .posts-list .well-post .post-nav .nav-pills li a,.posts-list .well-post .post-nav .nav-pills li button{background-color:#c9c9c9;border:none;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;margin:0px;color:#ffffff;font-weight:bold;}.posts-list .well-post .post-nav .nav-pills li a:hover,.posts-list .well-post .post-nav .nav-pills li button:hover{background-color:#1ab2ff;}.posts-list .well-post .post-nav .nav-pills li a:hover.danger,.posts-list .well-post .post-nav .nav-pills li button:hover.danger{background-color:#d83a2e;}
 .posts-list .well-post .post-nav .nav-pills li i{background-image:url("../img/glyphicons-halflings-white.png");}
 .posts-list .well-post:hover .changelog,.posts-list .well-post:hover .nav-pills li{opacity:1;filter:alpha(opacity=100);}
+.posts-list .well-post:hover .post-rating li button{opacity:1;filter:alpha(opacity=100);}
 .posts-list .post-checkpoints{padding-top:4px;}.posts-list .post-checkpoints:last-child{margin-bottom:-24px;}
 .posts-list .post-checkpoints .checkpoint{margin:0px;color:#999999;text-align:center;}.posts-list .post-checkpoints .checkpoint span{background-color:#fcfcfc;display:inline-block;padding:4px 12px;position:relative;bottom:16px;}
 .posts-list .post-checkpoints a{color:#333333;font-weight:bold;}

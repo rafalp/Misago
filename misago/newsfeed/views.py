@@ -7,7 +7,6 @@ def newsfeed(request):
     follows = []
     for user in request.user.follows.iterator():
         follows.append(user.pk)
-    print follows
     queryset = []
     if follows:
         queryset = Post.objects.filter(forum_id__in=request.acl.threads.get_readable_forums(request.acl))

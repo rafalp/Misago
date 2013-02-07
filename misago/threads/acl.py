@@ -464,14 +464,14 @@ class ThreadsACL(BaseACL):
             forum_role = self.acl[forum.pk]
             return forum_role['can_delete_threads']
         except KeyError:
-            raise false
+            return False
 
     def can_see_deleted_posts(self, forum):
         try:
             forum_role = self.acl[forum.pk]
             return forum_role['can_delete_posts']
         except KeyError:
-            raise false
+            return False
 
     def allow_deleted_post_view(self, forum):
         try:
@@ -480,6 +480,58 @@ class ThreadsACL(BaseACL):
                 raise ACLError404()
         except KeyError:
             raise ACLError404()
+        
+    def can_upvote_posts(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            return forum_role['can_upvote_posts']
+        except KeyError:
+            return False
+        
+    def can_downvote_posts(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            return forum_role['can_downvote_posts']
+        except KeyError:
+            return False
+        
+    def can_see_post_score(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            return forum_role['can_see_posts_scores']
+        except KeyError:
+            return False
+        
+    def can_see_post_votes(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            return forum_role['can_see_votes']
+        except KeyError:
+            return False
+
+    def allow_post_upvote(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            if not forum_role['can_upvote_posts']:
+                raise ACLError403(_("You cannot upvote posts in this forum."))
+        except KeyError:
+            raise ACLError403(_("You cannot upvote posts in this forum."))
+
+    def allow_post_downvote(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            if not forum_role['can_downvote_posts']:
+                raise ACLError403(_("You cannot downvote posts in this forum."))
+        except KeyError:
+            raise ACLError403(_("You cannot downvote posts in this forum."))
+        
+    def allow_post_votes_view(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            if not forum_role['can_see_votes']:
+                raise ACLError403(_("You don't have permission to see who voted on this post."))
+        except KeyError:
+            raise ACLError403(_("You don't have permission to see who voted on this post."))
 
 
 def build_forums(acl, perms, forums, forum_roles):

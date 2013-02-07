@@ -9,7 +9,7 @@ from misago.csrf.decorators import check_csrf
 from misago.forums.models import Forum
 from misago.messages import Message
 from misago.readstracker.trackers import ThreadsTracker
-from misago.threads.models import Thread, Post
+from misago.threads.models import Thread, Post, Karma
 from misago.threads.views.base import BaseView
 from misago.views import error403, error404
 from misago.utils import make_pagination
@@ -110,10 +110,10 @@ class ShowHiddenRepliesView(JumpView):
 class WatchThreadView(JumpView):
     def get_retreat(self):
         return redirect(self.request.POST.get('retreat', reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug})))
-    
+
     def update_watcher(self, request, watcher):
         request.messages.set_flash(Message(_('This thread has been added to your watched threads list.')), 'success', 'threads')
-    
+
     def make_jump(self):
         @block_guest
         @check_csrf
@@ -158,3 +158,85 @@ class UnwatchEmailThreadView(WatchThreadView):
     def update_watcher(self, request, watcher):
         watcher.email = False
         request.messages.set_flash(Message(_('You will no longer receive e-mails with notifications when somebody replies to this thread.')), 'success', 'threads')
+
+
+class UpvotePostView(JumpView):        
+    def make_jump(self):
+        @block_guest
+        @check_csrf
+        def view(request):
+            if self.post.user_id == request.user.id:
+                return error404(request)
+            self.check_acl(request)
+            try:
+                vote = Karma.objects.get(user=request.user, post=self.post)
+                if self.thread.start_post_id == self.post.pk:
+                    if vote.score > 0:
+                        self.thread.upvotes -= 1
+                    else:
+                        self.thread.downvotes -= 1
+                if vote.score > 0:
+                    self.post.upvotes -= 1
+                    request.user.karma_given_p -= 1
+                    if self.post.user_id:
+                        self.post.user.karma_p -= 1
+                else:
+                    self.post.downvotes -= 1
+                    request.user.karma_given_n -= 1
+                    if self.post.user_id:
+                        self.post.user.karma_n -= 1
+            except Karma.DoesNotExist:
+                vote = Karma()
+            vote.forum = self.forum
+            vote.thread = self.thread
+            vote.post = self.post
+            vote.user = request.user
+            vote.user_name = request.user.username
+            vote.user_slug = request.user.username_slug
+            vote.date = timezone.now()
+            vote.ip = request.session.get_ip(request)
+            vote.agent = request.META.get('HTTP_USER_AGENT')
+            self.make_vote(request, vote)
+            request.messages.set_flash(Message(_('Your vote has been saved.')), 'success', 'threads_%s' % self.post.pk)
+            if vote.pk:
+                vote.save(force_update=True)
+            else:
+                vote.save(force_insert=True)
+            if self.thread.start_post_id == self.post.pk:
+                if vote.score > 0:
+                    self.thread.upvotes += 1
+                else:
+                    self.thread.downvotes += 1
+                self.thread.save(force_update=True)
+            if vote.score > 0:
+                self.post.upvotes += 1
+                request.user.karma_given_p += 1
+                if self.post.user_id:
+                    self.post.user.karma_p += 1
+                    self.post.user.score += request.settings['score_reward_karma_positive']
+            else:
+                self.post.downvotes += 1
+                request.user.karma_given_n += 1
+                if self.post.user_id:
+                    self.post.user.karma_n += 1
+                    self.post.user.score -= request.settings['score_reward_karma_negative']
+            self.post.save(force_update=True)
+            request.user.save(force_update=True)
+            if self.post.user_id:
+                self.post.user.save(force_update=True)
+            return self.redirect(self.post)
+        return view(self.request)
+    
+    def check_acl(self, request):
+        request.acl.threads.allow_post_upvote(self.forum)
+    
+    def make_vote(self, request, vote):
+        vote.score = 1
+
+
+class DownvotePostView(UpvotePostView):
+    def check_acl(self, request):
+        request.acl.threads.allow_post_downvote(self.forum)
+    
+    def make_vote(self, request, vote):
+        vote.score = -1

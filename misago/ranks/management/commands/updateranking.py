@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import F
+from misago.settings.settings import Settings
 from misago.ranks.models import Rank
 from misago.users.models import User
 
@@ -29,6 +30,8 @@ class Command(BaseCommand):
                 defaulted_ranks = True
 
         # Inflate scores
-        User.objects.all().update(score=F('score') * 0.95) # TODO: Ranking system SETTINGS!
+        settings = Settings()
+        inflation = float(100 - settings['ranking_inflation']) / 100
+        User.objects.all().update(score=F('score') * inflation, ranking=0)
 
         self.stdout.write('Users ranking for has been updated.\n')
