@@ -11,8 +11,7 @@ Your Account Data
 -----------------
 {% trans %}Username{% endtrans %}:    {{ user.username }}
 {% trans %}E-mail{% endtrans %}:    {{ user.email }}{% if settings.password_in_email %}
-{% trans %}Password{% endtrans %}:    {{ password }}{% endif %}
+{% trans %}Password{% endtrans %}:    {{ password }}
 
-{% trans %}This is only time you will receive your current password. Due to security reasons we don't store members passwords as they are entered on registration, instead we encrypt those password in un-reversible manner to keep them safe.{% endtrans %}{% block activation_instructions %}{% endblock %}
-{% endif %}
+{% trans %}This is only time you will receive your current password. Due to security reasons we don't store members passwords as they are entered on registration, instead we encrypt those password in un-reversible manner to keep them safe.{% endtrans %}{% endif %}{% block activation_instructions %}{% endblock %}
 {% endblock %}
