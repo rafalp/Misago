@@ -31,7 +31,7 @@
     <li><a href="{% url 'user' user=user.pk, username=user.username_slug %}">{% trans %}Your Profile{% endtrans %}</a></li>
     <li><a href="{% url 'usercp' %}">{% trans %}Your Control Panel{% endtrans %}</a></li>
     <li><a href="{% url 'alerts' %}">{% trans %}Your Notifications{% endtrans %}</a></li>
-    {% elif not user.is_cralwer() %}
+    {% elif not user.is_crawler() %}
     <li class="divider"></li>
     <li><a href="{% url 'sign_in' %}">{% trans %}Sign In{% endtrans %}</a></li>
     {% if settings.account_activation != 'block' %}
