@@ -67,23 +67,6 @@
 {% endblock %}
 
 
-{% block javascripts -%}
-{{ super() }}
-{%- if user.is_authenticated() and list_form %}
-  <script type="text/javascript">
-    $(function () {
-      $('#threads_form').submit(function() {
-        if ($('.check-cell[]:checked').length == 0) {
-          alert("{% trans %}You have to select at least one thread.{% endtrans %}");
-          return false;
-        }
-        return true;
-      });
-    });
-  </script>{% endif %}
-{%- endblock %}
-
-
 {% macro pager() -%}
   <ul class="pager pull-left">
     {% if new %}
@@ -107,6 +90,7 @@
 {% macro forum(forum) -%}
 <a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}">{{ forum.name }}</a>
 {%- endmacro %}
+
 
 {% macro username(id, username, slug) -%}
 {%- if id -%}

@@ -125,6 +125,15 @@ def forum_map(request):
                                             context_instance=RequestContext(request));
 
 
+def active_threads(request):
+    cutoff = timezone.now() - timedelta(days=2)
+    return request.theme.render_to_response('active_threads.html',
+                                            {
+                                             'threads': Thread.objects.filter(forum_id__in=request.acl.threads.get_readable_forums(request.acl)).filter(deleted=False).filter(moderated=False).filter(last__gte=cutoff).order_by('-score').prefetch_related('start_poster', 'last_poster', 'forum')[:50]
+                                             },
+                                            context_instance=RequestContext(request));
+
+
 def redirect_message(request, message, type='info', owner=None):
     request.messages.set_flash(message, type, owner)
     return redirect(reverse('index'))
