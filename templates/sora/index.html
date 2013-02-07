@@ -16,7 +16,7 @@
       {% for category in forums_list %}{% if category.subforums %}
       <div class="category{% if category.style %} {{ category.style }}{% endif %}">
         <h2>{{ category.name }}{% if category.description %} <small><strong>{{ category.description }}</strong></small>{% endif %}
-        {%- if user.is_authenticated() -%}
+        {%- if user.is_authenticated() and loop.first -%}
         <form action="{% url 'read_all' %}" method="post" class="form-inline">
           <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
           <button type="submit" class="btn btn-link"><i class="icon-ok"></i> {% trans %}Mark forums read{% endtrans %}</button>
