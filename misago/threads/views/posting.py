@@ -237,7 +237,7 @@ class PostingView(BaseView):
                     if request.user.rank and request.user.rank.style:
                         thread.start_poster_style = request.user.rank.style
                     # Reward user for posting new thread?
-                    if request.user.last_post < timezone.now() - timedelta(seconds=request.settings['score_reward_new_post_cooldown']):
+                    if not request.user.last_post or request.user.last_post < timezone.now() - timedelta(seconds=request.settings['score_reward_new_post_cooldown']):
                         request.user.score += request.settings['score_reward_new_thread']
 
                 # New post - increase post counters, thread score
@@ -261,7 +261,7 @@ class PostingView(BaseView):
                             thread.closed = True
                             post.set_checkpoint(self.request, 'limit')
                     # Reward user for posting new post?
-                    if not post.appended and request.user.last_post < timezone.now() - timedelta(seconds=request.settings['score_reward_new_post_cooldown']):
+                    if not post.appended and (not request.user.last_post or request.user.last_post < timezone.now() - timedelta(seconds=request.settings['score_reward_new_post_cooldown'])):
                         request.user.score += request.settings['score_reward_new_post']
 
                 # Update last poster data
