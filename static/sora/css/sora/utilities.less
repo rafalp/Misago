@@ -4,6 +4,35 @@
   cursor: pointer;
 }
 
+.hover-opacity {
+  .opacity(60);
+  
+  &:hover, &:active {
+    .opacity(90);
+  }
+}
+
+.hover-opacity-strong {
+  .opacity(30);
+  
+  &:hover, &:active {
+    .opacity(90);
+  }
+}
+
+.span-actions {
+  text-align: right;
+  
+  form {
+    margin: 0px;
+    padding: 0px;
+  }
+  
+  .btn {
+    margin-left: 8px;
+  }
+}
+
 .profile-header {
   overflow: auto;
   border-bottom: none;
@@ -136,6 +165,12 @@
       margin: 0px;
       margin-left: 54px;
       
+      &.title {
+        a {
+          color: @textColor;
+        }
+      }
+      
       &.message {        
         color: @gray;
       }
@@ -146,4 +181,11 @@
       }
     }
   }
+}
+
+.shorts-list-footer {
+  background: none;
+  border: none;
+  margin-top: 0px;
+  padding-left: 0px;
 }
