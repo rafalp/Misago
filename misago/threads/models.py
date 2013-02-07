@@ -294,7 +294,7 @@ def delete_user_content_handler(sender, **kwargs):
     for post in sender.post_set.distinct().values('thread_id').iterator():
         if not post['thread_id'] in threads:
             threads.append(post['thread_id'])
-    for post in Post.objects.filter(user=sender).delete():
+    for post in Post.objects.filter(user=sender):
         post.delete()
     for thread in Thread.objects.filter(id__in=threads):
         thread.sync()
