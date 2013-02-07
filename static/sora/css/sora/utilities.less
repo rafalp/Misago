@@ -171,8 +171,15 @@
         }
       }
       
-      &.message {        
+      &.message {
         color: @gray;
+        
+        a {
+          &:link, &:active, &:visited, &:hover{
+            color: @gray;
+            text-decoration: none;
+          }
+        }
       }
       
       &.location {

@@ -30,7 +30,7 @@
   {% for item in items %}
   <li>
     <img src="{{ profile.get_avatar(36) }}" class="avatar">
-    <p class="message">{{ item.post_preparsed|markdown_short(300) }}</p>
+    <p class="message"><a href="{% url 'thread_find' thread=item.thread.pk, slug=item.thread.slug, post=item.pk %}">{{ item.post_preparsed|markdown_short(300) }}</a></p>
     <p class="location">{% if item.thread.start_post_id == item.pk -%}
         {% trans thread=thread(item), forum=forum(item.forum), user=username(profile), date=item.date|reldate|low %}Thread {{ thread }} posted in {{ forum }} by {{ user }} {{ date }}{% endtrans %}
         {%- else -%}
