@@ -66,10 +66,12 @@
       <div class="span2">
         <strong>{{ monitor.posts|int|intcomma }}</strong>
         {% trans %}Posts{% endtrans %}
+        <div class="sub">{% trans count=monitor.threads, threads=monitor.threads|int|intcomma %}{{ threads }} thread{% pluralize %}{{ threads }} threads{% endtrans %}</div>
       </div>
       <div class="span2">
         <strong>{{ monitor.users|int|intcomma }}</strong>
         {% trans %}Members{% endtrans %}
+        <div class="sub">{% trans count=users_online, online=users_online|int|intcomma %}{{ online }} user online{% pluralize %}{{ online }} users online{% endtrans %}</div>
       </div>
     </div>
   </div>

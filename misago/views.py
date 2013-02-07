@@ -27,7 +27,7 @@ def home(request):
         cache.set('thread_ranking_%s' % request.user.make_acl_key(), popular_threads, 60 * request.settings['thread_ranking_refresh'])
 
     # Ranks online
-    ranks_list = cache.get('users_online', 'nada')
+    ranks_list = cache.get('ranks_online', 'nada')
     if ranks_list == 'nada':
         ranks_dict = {}
         ranks_list = []
@@ -43,7 +43,13 @@ def home(request):
                     users_list.append(session.user_id)
             del ranks_dict
             del users_list
-        cache.set('ranks_list', ranks_list, 300)
+        cache.set('ranks_online', ranks_list, 300)
+
+    # Users online
+    users_online = cache.get('users_online', 'nada')
+    if users_online == 'nada':
+        users_online = Session.objects.filter(matched=True).filter(crawler__isnull=True).filter(last__gte=timezone.now() - timedelta(seconds=300)).count()
+        cache.set('users_online', users_online, 300)
 
     # Load reads tracker and build forums list
     reads_tracker = ForumsTracker(request.user)
@@ -57,6 +63,7 @@ def home(request):
                                             {
                                              'forums_list': forums_list,
                                              'ranks_online': ranks_list,
+                                             'users_online': users_online,
                                              'popular_threads': popular_threads,
                                              },
                                             context_instance=RequestContext(request));

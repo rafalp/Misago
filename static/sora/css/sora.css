@@ -967,7 +967,8 @@ td.lead-cell{color:#555555;font-weight:bold;}
 .team-online img{float:left;margin-right:12px;width:48px;height:48px;}
 .thread-ranking{margin-bottom:8px;}.thread-ranking li{padding:8px 0px;}
 .thread-ranking a{color:#999999;}.thread-ranking a.lead{display:block;margin:0px;margin-bottom:-4px;padding:0px;color:#333333;font-size:120%;font-weight:bold;}
-.forum-stats{color:#b3b3b3;}.forum-stats strong{padding-left:8px;color:#555555;font-size:170%;}
+.forum-stats{color:#b3b3b3;font-weight:bold;}.forum-stats strong{padding-left:8px;color:#555555;font-size:170%;}
+.forum-stats .sub{padding-left:8px;font-weight:normal;}
 .forums-list{padding-top:4px;}.forums-list .category h2{color:#666666;font-size:110%;margin-bottom:0px;}.forums-list .category h2 small{color:#a6a6a6;font-size:100%;}
 .forums-list .category h2 .form-inline{float:right;margin:0px;padding:0px;}.forums-list .category h2 .form-inline .btn-link{opacity:0.25;filter:alpha(opacity=25);}.forums-list .category h2 .form-inline .btn-link:hover,.forums-list .category h2 .form-inline .btn-link:active{background-color:#dc4e44;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;opacity:1;filter:alpha(opacity=100);color:#ffffff;}.forums-list .category h2 .form-inline .btn-link:hover i,.forums-list .category h2 .form-inline .btn-link:active i{background-image:url("../img/glyphicons-halflings-white.png");}
 .forums-list .category-important .well-forum{border:1px solid #0099e6;-webkit-box-shadow:0px 0px 0px 3px #66ccff;-moz-box-shadow:0px 0px 0px 3px #66ccff;box-shadow:0px 0px 0px 3px #66ccff;}
