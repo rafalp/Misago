@@ -25,6 +25,13 @@ class Alert(models.Model):
         except AttributeError:
             self.vars_raw = {var: value}
         return self
+    
+    def strong(self, var, value):
+        try:
+            self.vars_raw[var] = '<strong>%s</strong>' % cgi.escape(value, True)
+        except AttributeError:
+            self.vars_raw = {var: '<strong>%s</strong>' % cgi.escape(value, True)}
+        return self
 
     def url(self, var, value, href, attrs=None):
         url = '<a href="%s"' % cgi.escape(href, True)
@@ -54,10 +61,14 @@ class Alert(models.Model):
         self.save(force_insert=True)
         self.user.save(force_update=True)
 
-    def save(self, *args, **kwargs):
+    def hydrate(self):
         try:
             self.variables = base64.encodestring(pickle.dumps(self.vars_raw, pickle.HIGHEST_PROTOCOL))
         except AttributeError:
             self.variables = base64.encodestring(pickle.dumps({}, pickle.HIGHEST_PROTOCOL))
+        return self
+
+    def save(self, *args, **kwargs):
+        self.hydrate()
         super(Alert, self).save(*args, **kwargs)
         return self.user

@@ -15,7 +15,7 @@ from misago.ranks.models import Rank
 from misago.sessions.models import Session
 from misago.threads.models import Thread
 
-def home(request):
+def home(request):     
     # Threads ranking
     popular_threads = cache.get('thread_ranking_%s' % request.user.make_acl_key(), 'nada')
     if popular_threads == 'nada' and request.settings['thread_ranking_size'] > 0:

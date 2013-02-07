@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse as django_reverse
 from django.db.models import Q
+from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from misago.admin import site
 from misago.admin.widgets import *

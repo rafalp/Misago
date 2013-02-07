@@ -1,4 +1,6 @@
 from functools import wraps
+from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
 from misago.utils import slugify
 from misago.views import error404
 from misago.users.models import User
