@@ -29,13 +29,13 @@ class Thread(models.Model):
     downvotes = models.PositiveIntegerField(default=0)
     start = models.DateTimeField(db_index=True)
     start_post = models.ForeignKey('Post', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
-    start_poster = models.ForeignKey('users.User', null=True, blank=True)
+    start_poster = models.ForeignKey('users.User', null=True, blank=True, on_delete=models.SET_NULL)
     start_poster_name = models.CharField(max_length=255)
     start_poster_slug = models.SlugField(max_length=255)
     start_poster_style = models.CharField(max_length=255, null=True, blank=True)
     last = models.DateTimeField(db_index=True)
     last_post = models.ForeignKey('Post', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
-    last_poster = models.ForeignKey('users.User', related_name='+', null=True, blank=True)
+    last_poster = models.ForeignKey('users.User', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
     last_poster_slug = models.SlugField(max_length=255, null=True, blank=True)
     last_poster_style = models.CharField(max_length=255, null=True, blank=True)
@@ -123,7 +123,7 @@ class Post(models.Model):
     forum = models.ForeignKey('forums.Forum')
     thread = models.ForeignKey(Thread)
     merge = models.PositiveIntegerField(default=0, db_index=True)
-    user = models.ForeignKey('users.User', null=True, blank=True)
+    user = models.ForeignKey('users.User', null=True, blank=True, on_delete=models.SET_NULL)
     user_name = models.CharField(max_length=255)
     ip = models.GenericIPAddressField()
     agent = models.CharField(max_length=255)
@@ -137,7 +137,7 @@ class Post(models.Model):
     edits = models.PositiveIntegerField(default=0)
     edit_date = models.DateTimeField(null=True, blank=True)
     edit_reason = models.CharField(max_length=255, null=True, blank=True)
-    edit_user = models.ForeignKey('users.User', related_name='+', null=True)
+    edit_user = models.ForeignKey('users.User', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
     edit_user_name = models.CharField(max_length=255, null=True, blank=True)
     edit_user_slug = models.SlugField(max_length=255, null=True, blank=True)
     reported = models.BooleanField(default=False)
@@ -199,11 +199,24 @@ class Post(models.Model):
                     pass
 
 
+class Karma(models.Model):
+    forum = models.ForeignKey('forums.Forum')
+    thread = models.ForeignKey(Thread)
+    post = models.ForeignKey(Post)
+    user = models.ForeignKey('users.User', null=True, blank=True, on_delete=models.SET_NULL)
+    user_name = models.CharField(max_length=255)
+    user_slug = models.CharField(max_length=255)
+    date = models.DateTimeField()
+    ip = models.GenericIPAddressField()
+    agent = models.CharField(max_length=255)
+    score = models.IntegerField(default=0)
+    
+
 class Change(models.Model):
     forum = models.ForeignKey('forums.Forum')
     thread = models.ForeignKey(Thread)
     post = models.ForeignKey(Post)
-    user = models.ForeignKey('users.User', null=True, blank=True)
+    user = models.ForeignKey('users.User', null=True, blank=True, on_delete=models.SET_NULL)
     user_name = models.CharField(max_length=255)
     user_slug = models.CharField(max_length=255)
     date = models.DateTimeField()
@@ -222,7 +235,7 @@ class Checkpoint(models.Model):
     thread = models.ForeignKey(Thread)
     post = models.ForeignKey(Post)
     action = models.CharField(max_length=255)
-    user = models.ForeignKey('users.User', null=True, blank=True)
+    user = models.ForeignKey('users.User', null=True, blank=True, on_delete=models.SET_NULL)
     user_name = models.CharField(max_length=255)
     user_slug = models.CharField(max_length=255)
     date = models.DateTimeField()
@@ -249,6 +262,10 @@ def rename_user_handler(sender, **kwargs):
                                                  edit_user_name=sender.username,
                                                  edit_user_slug=sender.username_slug,
                                                  )
+    Karma.objects.filter(user=sender).update(
+                                             user_name=sender.username,
+                                             user_slug=sender.username_slug,
+                                             )
     Change.objects.filter(user=sender).update(
                                               user_name=sender.username,
                                               user_slug=sender.username_slug,
@@ -262,7 +279,8 @@ rename_user.connect(rename_user_handler, dispatch_uid="rename_user_threads")
 
 
 def delete_user_content_handler(sender, **kwargs):
-    Thread.objects.filter(start_poster=sender).delete()
+    for thread in Thread.objects.filter(start_poster=sender):
+        thread.delete()
     threads = []
     prev_posts = []
     for post in sender.post_set.filter(checkpoints=True):
@@ -276,7 +294,8 @@ def delete_user_content_handler(sender, **kwargs):
     for post in sender.post_set.distinct().values('thread_id').iterator():
         if not post['thread_id'] in threads:
             threads.append(post['thread_id'])
-    Post.objects.filter(user=sender).delete()
+    for post in Post.objects.filter(user=sender).delete():
+        post.delete()
     for thread in Thread.objects.filter(id__in=threads):
         thread.sync()
         thread.save(force_update=True)
@@ -287,6 +306,7 @@ delete_user_content.connect(delete_user_content_handler, dispatch_uid="delete_us
 def move_forum_content_handler(sender, **kwargs):
     Thread.objects.filter(forum=sender).update(forum=kwargs['move_to'])
     Post.objects.filter(forum=sender).update(forum=kwargs['move_to'])
+    Karma.objects.filter(forum=sender).update(forum=kwargs['move_to'])
     Change.objects.filter(forum=sender).update(forum=kwargs['move_to'])
     Checkpoint.objects.filter(forum=sender).update(forum=kwargs['move_to'])
 
@@ -295,6 +315,7 @@ move_forum_content.connect(move_forum_content_handler, dispatch_uid="move_forum_
 
 def move_thread_handler(sender, **kwargs):
     Post.objects.filter(forum=sender.forum_pk).update(forum=kwargs['move_to'])
+    Karma.objects.filter(forum=sender.forum_pk).update(forum=kwargs['move_to'])
     Change.objects.filter(forum=sender.forum_pk).update(forum=kwargs['move_to'])
     Checkpoint.objects.filter(forum=sender.forum_pk).update(forum=kwargs['move_to'])
 
@@ -303,6 +324,7 @@ move_thread.connect(move_thread_handler, dispatch_uid="move_thread")
 
 def merge_thread_handler(sender, **kwargs):
     Post.objects.filter(thread=sender).update(thread=kwargs['new_thread'], merge=F('merge') + kwargs['merge'])
+    Karma.objects.filter(thread=sender).update(thread=kwargs['new_thread'])
     Change.objects.filter(thread=sender).update(thread=kwargs['new_thread'])
     Checkpoint.objects.filter(thread=sender).delete()
 
@@ -311,6 +333,7 @@ merge_thread.connect(merge_thread_handler, dispatch_uid="merge_threads")
 
 def move_posts_handler(sender, **kwargs):
     Change.objects.filter(post=sender).update(forum=kwargs['move_to'].forum, thread=kwargs['move_to'])
+    Karma.objects.filter(post=sender).update(forum=kwargs['move_to'].forum, thread=kwargs['move_to'])
     if sender.checkpoints:
         prev_post = Post.objects.filter(thread=sender.thread_id).filter(merge__lte=sender.merge).exclude(id=sender.pk).order_by('merge', '-id')[:1][0]
         Checkpoint.objects.filter(post=sender).update(post=prev_post)
@@ -324,7 +347,11 @@ move_post.connect(move_posts_handler, dispatch_uid="move_posts")
 def merge_posts_handler(sender, **kwargs):
     Change.objects.filter(post=sender).update(post=kwargs['new_post'])
     Checkpoint.objects.filter(post=sender).update(post=kwargs['new_post'])
+    Karma.objects.filter(post=sender).update(post=kwargs['new_post'])
     if sender.checkpoints:
         kwargs['new_post'].checkpoints = True
+    kwargs['new_post'].upvotes += self.upvotes
+    kwargs['new_post'].downvotes += self.downvotes
+    kwargs['new_post'].score += self.score
 
 merge_post.connect(merge_posts_handler, dispatch_uid="merge_posts")
