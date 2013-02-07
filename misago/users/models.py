@@ -33,9 +33,9 @@ class UserManager(models.Manager):
         return blank_user
 
     def resync_monitor(self, monitor):
-        monitor['users'] = self.count()
+        monitor['users'] = self.filter(activation=0).count()
         monitor['users_inactive'] = self.filter(activation__gt=0).count()
-        last_user = self.latest('id')
+        last_user = self.filter(activation=0).latest('id')
         monitor['last_user'] = last_user.pk
         monitor['last_user_name'] = last_user.username
         monitor['last_user_slug'] = last_user.username_slug
