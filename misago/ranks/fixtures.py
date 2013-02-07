@@ -23,14 +23,14 @@ settings_fixtures = (
                 'value':        True,
                 'type':         "boolean",
                 'input':        "yesno",
-                'name':         _("Dont Keep Users Scores Secret"),
+                'name':         _("Don't Keep Users Ranking Positions Secret"),
                 'description':  _("Changing this to yes will cause forum to display user position in ranking on his profile page."),
             }),
             ('ranking_scores_visible', {
                 'value':        True,
                 'type':         "boolean",
                 'input':        "yesno",
-                'name':         _("Dont Keep Users Scores Secret"),
+                'name':         _("Don't Keep Users Scores Secret"),
                 'description':  _("Changing this to yes will cause forum to display user score on his profile page."),
             }),
             ('score_reward_new_thread', {
