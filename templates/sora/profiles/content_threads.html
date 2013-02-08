@@ -31,7 +31,7 @@
   {% for item in items %}
   <li>
     <img src="{{ profile.get_avatar(36) }}" class="avatar">
-    <p class="message"><a href="{% url 'thread_find' thread=item.thread.pk, slug=item.thread.slug, post=item.pk %}">{{ item.start_post.post_preparsed|markdown_short(300) }}</a></p>
+    <p class="message"><a href="{% url 'thread' thread=item.pk, slug=item.slug %}">{{ item.start_post.post_preparsed|markdown_short(300) }}</a></p>
     <p class="location">{% trans thread=thread(item), forum=forum(item.forum), user=username(profile), date=item.start|reldate|low %}Thread {{ thread }} posted in {{ forum }} by {{ user }} {{ date }}{% endtrans %}</p>
   </li>
   {% endfor %}
