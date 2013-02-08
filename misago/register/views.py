@@ -38,6 +38,7 @@ def form(request):
                                                 form.cleaned_data['email'],
                                                 form.cleaned_data['password'],
                                                 ip=request.session.get_ip(request),
+                                                agent=request.META.get('HTTP_USER_AGENT'),
                                                 activation=need_activation,
                                                 request=request
                                                 )

@@ -40,7 +40,7 @@ class UserManager(models.Manager):
         monitor['last_user_name'] = last_user.username
         monitor['last_user_slug'] = last_user.username_slug
 
-    def create_user(self, username, email, password, timezone=False, ip='127.0.0.1', no_roles=False, activation=0, request=False):
+    def create_user(self, username, email, password, timezone=False, ip='127.0.0.1', agent='', no_roles=False, activation=0, request=False):
         token = ''
         if activation > 0:
             token = get_random_string(12)
@@ -65,6 +65,7 @@ class UserManager(models.Manager):
                         last_sync=tz_util.now(),
                         join_date=tz_util.now(),
                         join_ip=ip,
+                        join_agent=agent,
                         activation=activation,
                         token=token,
                         timezone=timezone,
