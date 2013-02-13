@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.template import RequestContext as DjangoRequestContext
+from django.utils import timezone
 from django.utils.importlib import import_module
 from misago.users.models import User
 
@@ -26,9 +27,12 @@ def RequestContext(request, context=None):
 
     # Find out if this user is online:
     if request.user.pk != context['profile'].pk:
-        context['online'] = context['profile'].sessions.count() > 0
+        try:
+            context['online'] = context['profile'].sessions.filter(admin=False).order_by('-last')[0:1][0]
+        except IndexError:
+            context['online'] = False
     else:
-        context['online'] = True
+        context['online'] = timezone.now()
 
     context['tabs'] = []
     for extension in settings.PROFILE_EXTENSIONS:

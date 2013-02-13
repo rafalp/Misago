@@ -20,7 +20,17 @@
               {% trans %}Online, hidden{% endtrans %}
               {%- else -%}
               {% trans %}Online{% endtrans %}
-              {%- endif %}</span>{% else %}<span class="badge">{% trans %}Offline{% endtrans %}</span>{% endif %} <span class="muted">{% trans last_visit=profile.last_date|reltimesince|low %}Last seen {{ last_visit }}{% endtrans %}</span>
+              {%- endif %}</span>{% else %}<span class="badge">{% trans %}Offline{% endtrans %}</span>{% endif %} <span class="muted">{% if not hidden or acl.users.can_see_hidden_users() -%}
+                    {%- if online -%}
+                      {% trans last_click=online|reltimesince|low %}Last click {{ last_click }}{% endtrans %}
+                    {%- elif profile.last_date -%}
+                      {% trans last_visit=profile.last_date|reltimesince|low %}Last seen {{ last_visit }}{% endtrans %}
+                    {%- else -%}
+                      {% trans %}Never visited{% endtrans %}
+                    {%- endif -%}
+                  {%- else -%}
+                    {% trans %}Hiding activity{% endtrans %}
+                  {%- endif %}</span>
         </p>
       </div>
     </div>
