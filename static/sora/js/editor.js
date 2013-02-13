@@ -120,7 +120,7 @@ $(function() {
   
   $('.editor-hr').click(function() {
       ta = get_textarea(this).attr('id');
-      makeReplace(ta, '- - - - -');
+      makeReplace(ta, '\r\n\r\n- - - - -\r\n\r\n');
       return false;
   });
 });
