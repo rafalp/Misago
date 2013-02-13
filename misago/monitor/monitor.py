@@ -9,12 +9,12 @@ class Monitor(object):
         self.refresh()
 
     def refresh(self):
-        self._items = cache.get('misago.monitor')
+        self._items = cache.get('monitor')
         if not self._items:
             self._items = {}
             for i in Item.objects.all():
                 self._items[i.id] = [i.value, i.updated]
-            cache.set('misago.monitor', self._items)
+            cache.set('monitor', self._items)
 
     def __contains__(self, key):
         return key in self._items
@@ -24,7 +24,7 @@ class Monitor(object):
 
     def __setitem__(self, key, value):
         self._items[key][0] = value
-        cache.set('misago.monitor', self._items)
+        cache.set('monitor', self._items)
         sync_item = Item(id=key, value=value, updated=timezone.now())
         sync_item.save(force_update=True)
         return value

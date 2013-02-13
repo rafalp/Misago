@@ -9,14 +9,14 @@ class Settings(object):
         self.refresh()
 
     def refresh(self):
-        self._models = cache.get('misago.settings')
+        self._models = cache.get('settings')
         if not self._models:
             self._models = {}
             try:
                 for i in Setting.objects.all():
                     self._models[i.pk] = i
                     self._settings[i.pk] = i.get_value()
-                cache.set('misago.settings', self._models)
+                cache.set('settings', self._models)
             except DatabaseError:
                 pass
         else:
@@ -37,7 +37,7 @@ class Settings(object):
             self._models[key].set_value(value)
             self._models[key].save(force_update=True)
             self._settings[key] = value
-            cache.set('misago.settings', self._models)
+            cache.set('settings', self._models)
         return value
 
     def __delitem__(self, key):
