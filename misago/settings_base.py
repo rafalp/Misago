@@ -15,6 +15,9 @@ OUTPUT_FORMAT = 'html5'
 # Remember to run "genavatars" command when you change this setting!
 AVATAR_SIZES = (125, 100, 80, 60, 40, 24)
 
+# Allow usernames to contain diacritics
+UNICODE_USERNAMES = True 
+
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True

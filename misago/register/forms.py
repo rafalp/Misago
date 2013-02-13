@@ -5,7 +5,7 @@ from misago.forms import Form
 from misago import captcha
 from misago.timezones import tzlist
 from misago.users.models import User
-from misago.users.validators import validate_password, validate_email
+from misago.users.validators import validate_username, validate_password, validate_email
 
 
 class UserRegisterForm(Form):
@@ -52,6 +52,7 @@ class UserRegisterForm(Form):
             del self.layout[3]
         
     def clean_username(self):
+        validate_username(self.cleaned_data['username'])
         new_user = User.objects.get_blank_user()
         new_user.set_username(self.cleaned_data['username'])
         try:

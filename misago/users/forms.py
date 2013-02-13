@@ -6,7 +6,7 @@ from django import forms
 from misago.ranks.models import Rank
 from misago.roles.models import Role
 from misago.users.models import User
-from misago.users.validators import validate_password, validate_email
+from misago.users.validators import validate_username, validate_password, validate_email
 from misago.forms import Form, YesNoSwitch
 
 class UserForm(Form):
@@ -81,6 +81,7 @@ class UserForm(Form):
             del self.layout[1]
 
     def clean_username(self):
+        validate_username(self.cleaned_data['username'])
         self.user.set_username(self.cleaned_data['username'])
         try:
             self.user.full_clean()
@@ -156,6 +157,7 @@ class NewUserForm(Form):
         super(NewUserForm, self).__init__(*args, **kwargs)
 
     def clean_username(self):
+        validate_username(self.cleaned_data['username'])
         new_user = User.objects.get_blank_user()
         new_user.set_username(self.cleaned_data['username'])
         try:

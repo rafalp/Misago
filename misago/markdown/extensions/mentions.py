@@ -6,7 +6,7 @@ from misago.users.models import User
 from misago.utils import slugify
 
 # Global vars
-MENTION_RE = re.compile(r'([^\w\d]?)@(?P<username>(\w|\d)+)')
+MENTION_RE = re.compile(r'([^\w]?)@(?P<username>(\w)+)', re.UNICODE)
 
 class MentionsExtension(markdown.Extension):
     def extendMarkdown(self, md):

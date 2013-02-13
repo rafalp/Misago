@@ -1,4 +1,5 @@
 import re
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ungettext, ugettext_lazy as _
 from misago.banning.models import check_ban
@@ -10,8 +11,12 @@ def validate_username(value):
         raise ValidationError(_("Username cannot be shorter than 3 characters."))
     if len(value) > 12:
         raise ValidationError(_("Username cannot be longer than 12 characters."))
-    if not re.search('^[0-9a-zA-Z]+$', value):
-        raise ValidationError(_("Username can only contain letters and digits."))
+    if settings.UNICODE_USERNAMES:
+        if not re.search('^[^\W_]+$', value, re.UNICODE):
+            raise ValidationError(_("Username can only contain letters and digits."))
+    else:
+        if not re.search('^[^\W_]+$', value):
+            raise ValidationError(_("Username can only contain latin alphabet letters and digits."))
     if check_ban(username=value):
         raise ValidationError(_("This username is forbidden."))
 
