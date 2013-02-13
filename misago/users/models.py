@@ -70,6 +70,8 @@ class UserManager(models.Manager):
                         token=token,
                         timezone=timezone,
                         rank=default_rank,
+                        subscribe_start=db_settings['subscribe_start'],
+                        subscribe_reply=db_settings['subscribe_reply'],
                         )
 
         new_user.set_username(username)
@@ -136,8 +138,9 @@ class User(models.Model):
     last_ip = models.GenericIPAddressField(null=True, blank=True)
     last_agent = models.TextField(null=True, blank=True)
     hide_activity = models.PositiveIntegerField(default=0)
-    alert_ats = models.PositiveIntegerField(default=0)
     allow_pms = models.PositiveIntegerField(default=0)
+    subscribe_start = models.PositiveIntegerField(default=0)
+    subscribe_reply = models.PositiveIntegerField(default=0)
     receive_newsletters = models.BooleanField(default=True)
     threads = models.PositiveIntegerField(default=0)
     posts = models.PositiveIntegerField(default=0)

@@ -15,6 +15,7 @@ from misago.threads.models import Thread, Post
 from misago.threads.views.base import BaseView
 from misago.views import error403, error404
 from misago.utils import make_pagination, slugify, ugettext_lazy
+from misago.watcher.models import ThreadWatch
 
 class PostingView(BaseView):
     def fetch_target(self, kwargs):
@@ -319,6 +320,28 @@ class PostingView(BaseView):
                     if md.mentions:
                         post.notify_mentioned(request, md.mentions)
                         post.save(force_update=True)
+
+                # Set thread watch status
+                if self.mode == 'new_thread' and request.user.subscribe_start:
+                    ThreadWatch.objects.create(
+                                               user=request.user,
+                                               forum=self.forum,
+                                               thread=thread,
+                                               last_read=now,
+                                               email=(request.user.subscribe_start == 2),
+                                               )
+                    
+                if self.mode in ['new_post', 'new_post_quick'] and request.user.subscribe_reply:
+                    try:
+                        watcher = ThreadWatch.objects.get(user=request.user, thread=self.thread)
+                    except ThreadWatch.DoesNotExist:
+                        ThreadWatch.objects.create(
+                                                   user=request.user,
+                                                   forum=self.forum,
+                                                   thread=thread,
+                                                   last_read=now,
+                                                   email=(request.user.subscribe_reply == 2),
+                                                   )
 
                 # Set flash and redirect user to his post
                 if self.mode == 'new_thread':

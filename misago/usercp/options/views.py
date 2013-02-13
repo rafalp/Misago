@@ -17,6 +17,8 @@ def options(request):
             request.user.receive_newsletters = form.cleaned_data['newsletters']
             request.user.hide_activity = form.cleaned_data['hide_activity']
             request.user.timezone = form.cleaned_data['timezone']
+            request.user.subscribe_start = form.cleaned_data['subscribe_start']
+            request.user.subscribe_reply = form.cleaned_data['subscribe_reply']
             request.user.save(force_update=True)
             request.messages.set_flash(Message(_("Forum options have been changed.")), 'success', 'usercp_options')
             return redirect(reverse('usercp'))
@@ -26,6 +28,8 @@ def options(request):
                                                              'newsletters': request.user.receive_newsletters,
                                                              'hide_activity': request.user.hide_activity,
                                                              'timezone': request.user.timezone,
+                                                             'subscribe_start': request.user.subscribe_start,
+                                                             'subscribe_reply': request.user.subscribe_reply,
                                                              })
 
     return request.theme.render_to_response('usercp/options.html',
