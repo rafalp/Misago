@@ -1,0 +1,39 @@
+{% macro editor(field, submit_button, placeholder=None, rows=4, hide_links=False, hide_images=False, hide_hr=False, extra=None) %}
+<div class="editor">
+  {% if field.errors %}
+  <div class="editor-error">
+    {% for error in field.errors %}
+    <p class="help-block" style="font-weight: bold;">{{ error }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <div class="editor-input">
+    <div>
+      <textarea name="{{ field.html_name }}" id="{{ field.html_id }}" rows="{{ rows }}"{% if placeholder %} placeholder="{{ placeholder }}"{% endif %}>{% if field.has_value %}{{ field.value }}{% endif %}</textarea>
+    </div>
+  </div>
+  <div class="editor-actions">
+    <ul class="editor-tools unstyled pull-left">
+      <li><a href="#" class="tooltip-top btn editor-bold" title="{% trans %}Bold{% endtrans %}"><i class="icon-bold"></i></a></li>
+      <li><a href="#" class="tooltip-top btn editor-emphasis" title="{% trans %}Emphasis{% endtrans %}"><i class="icon-italic"></i></a></li>
+      {% if not hide_links %}<li class="divider"><a href="#" class="tooltip-top btn editor-link" title="{% trans %}Insert Link{% endtrans %}"><i class="icon-share-alt"></i></a></li>{% endif %}
+      {% if not hide_images %}<li{% if hide_links %} class="divider"{% endif %}><a href="#" class="tooltip-top btn editor-image" title="{% trans %}Insert Image{% endtrans %}"><i class="icon-picture"></i></a></li>{% endif %}
+      {% if not hide_hr %}<li class="divider"><a href="#" class="tooltip-top btn editor-hr" title="{% trans %}Insert Horizontal Line{% endtrans %}"><i class="icon-minus"></i></a></li>{% endif %}
+    </ul>
+    <button name="save" type="submit" class="btn btn-primary pull-right">{{ submit_button }}</button>
+    {% if extra %}{{ extra }}{% endif %}
+  </div>
+</div>
+{% endmacro %}
+
+{% macro js() %}
+  <script type="text/javascript">
+    $(function () {
+        ed_lang_enter_link_url = "{% trans %}Enter link address{% endtrans %}";
+        ed_lang_enter_link_label = "{% trans %}Enter link label (optional){% endtrans %}";
+        ed_lang_enter_image_url = "{% trans %}Enter image address{% endtrans %}";
+        ed_lang_enter_image_label = "{% trans %}Enter image label{% endtrans %}";
+    });
+  </script>
+  <script src="{{ STATIC_URL }}cranefly/js/editor.js"></script>
+{% endmacro %}

@@ -1,0 +1,126 @@
+{% extends "cranefly/layout.html" %}
+{% load i18n %}
+{% load url from future %}
+{% import "_forms.html" as form_theme with context %}
+{% import "cranefly/editor.html" as editor with context %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block title %}{% if thread -%}
+{{ macros.page_title(title=_(get_title()), parent=thread.name) }}
+{%- else -%}
+{{ macros.page_title(title=_(get_title()), parent=forum.name) }}
+{%- endif %}{% endblock %}
+
+{% block breadcrumb %}{{ super() }} <span class="divider">/</span></li>
+{% for parent in parents %}
+<li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider">/</span></li>
+{% endfor %}
+{% if thread %}<li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider">/</span></li>{% endif %}
+<li class="active">{{ get_title() }}
+{%- endblock %}
+
+{% block content %}
+<div class="page-header">
+  <ul class="breadcrumb">
+    {{ self.breadcrumb() }}</li>
+  </ul>
+  <h1>{{ get_title() }} <small>{% if thread %}{{ thread.name }}{% else %}{{ forum.name }}{% endif %}</small></h1>
+  {% if thread %}
+  <ul class="unstyled thread-info">
+    {{ get_info() }}
+  </ul>
+  {%- endif %}
+</div>
+{% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
+{% if preview %}
+<div class="well" style="margin: 0px; margin-bottom: 32px; padding: 12px;">
+  <div class="markdown">
+    {{ preview|markdown_final|safe }}
+  </div>
+</div>
+<hr>
+{% endif %}
+<form action="{{ get_action() }}" method="post">
+  <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+  {% if 'thread_name' in form.fields %}{{ form_theme.row_widget(form.fields.thread_name) }}{% endif %}
+  {% if 'edit_reason' in form.fields %}{{ form_theme.row_widget(form.fields.edit_reason) }}{% endif %}
+  {{ editor.editor(form.fields.post, get_button(), rows=8, extra=get_extra()) }}
+</form>
+{% endblock %}
+
+
+{% block javascripts %}
+{{ super() }}
+  {{ editor.js() }}
+{% endblock %}
+
+
+{% macro get_action() -%}
+{% if mode == 'new_thread' -%}
+{% url 'thread_new' forum=forum.pk, slug=forum.slug %}
+{%- elif mode == 'edit_thread' -%}
+{% url 'thread_edit' thread=thread.pk, slug=thread.slug %}
+{%- elif mode in ['new_post', 'new_post_quick'] -%}
+{%- if quote -%}
+{% url 'thread_reply' thread=thread.pk, slug=thread.slug, quote=quote.pk %}
+{%- else -%}
+{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}
+{%- endif -%}
+{%- elif mode == 'edit_post' -%}
+{% url 'post_edit' thread=thread.pk, slug=thread.slug, post=post.pk %}
+{%- endif %}
+{%- endmacro %}
+
+
+{% macro get_title() -%}
+{% if mode == 'new_thread' -%}
+{% trans %}Post New Thread{% endtrans %}
+{%- elif mode == 'edit_thread' -%}
+{% trans %}Edit Thread{% endtrans %}
+{%- elif mode in ['new_post', 'new_post_quick'] -%}
+{% trans %}Post New Reply{% endtrans %}
+{%- elif mode == 'edit_post' -%}
+{% trans %}Edit Reply{% endtrans %}
+{%- endif %}
+{%- endmacro %}
+
+
+{% macro get_info() -%}
+{% if mode == 'edit_post' -%}
+    {% if post.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
+    <li><i class="icon-time"></i> {{ post.date|reltimesince }}</li>
+    <li><i class="icon-user"></i> {% if post.user %}<a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
+    <li><i class="icon-pencil"></i> {% if post.edits > 0 -%}
+      {% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}
+    {%- else -%}
+      {% trans %}First edit{% endtrans %}
+    {%- endif %}</li>
+{%- else -%}
+    {% if thread.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
+    <li><i class="icon-time"></i> {{ thread.last|reltimesince }}</li>
+    <li><i class="icon-user"></i> {% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}</li>
+    <li><i class="icon-comment"></i> {% if thread.replies > 0 -%}
+      {% trans count=thread.replies, replies=thread.replies|intcomma %}One reply{% pluralize %}{{ replies }} replies{% endtrans %}
+    {%- else -%}
+      {% trans %}No replies{% endtrans %}
+    {%- endif %}</li>
+{%- endif %}
+{%- endmacro %}
+
+
+{% macro get_button() -%}
+{% if mode == 'new_thread' -%}
+{% trans %}Post Thread{% endtrans %}
+{%- elif mode == 'edit_thread' -%}
+{% trans %}Edit Thread{% endtrans %}
+{%- elif mode in ['new_post', 'new_post_quick'] -%}
+{% trans %}Post Reply{% endtrans %}
+{%- elif mode == 'edit_post' -%}
+{% trans %}Edit Reply{% endtrans %}
+{%- endif %}
+{%- endmacro %}
+
+
+{% macro get_extra() %}
+  <button id="editor-preview" name="preview" type="submit" class="btn btn-success pull-right">{% trans %}Preview{% endtrans %}</button>
+{% endmacro %}

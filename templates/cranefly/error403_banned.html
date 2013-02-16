@@ -1,0 +1,37 @@
+{% extends "cranefly/layout.html" %}
+{% load i18n %}
+{% load url from future %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=_('You are banned')) }}{% endblock %}
+      
+{% block content %}
+<div class="row">
+  <div class="span8 offset2 side-bar">
+    <div class="page-header">
+      <h1>{% trans %}You are banned{% endtrans %}</h1>
+    </div>
+    {% if banned_user %}
+    {% if ban.reason_user %}
+    <p class="lead">{% trans username=banned_user.username %}{{ username }}, your account has been banned for following reason:{% endtrans %}</p>
+    {{ ban.reason_user|markdown|safe }}
+    {% else %}
+    <p class="lead">{% trans username=banned_user.username %}{{ username }}, your account has been banned.{% endtrans %}</p>
+    {% endif %}
+    {% else %}
+    {% if ban.reason_user %}
+    <p class="lead">{% trans %}Guest, your IP Address has been banned from accessing this page for following reason:{% endtrans %}</p>
+    {{ ban.reason_user|markdown|safe }}
+    {% else %}
+    <p class="lead">{% trans %}Guest, your IP Address has been banned from accessing this page.{% endtrans %}</p>
+    {% endif %}
+    {% endif %}
+    {% if ban.expires %}
+    <p>{% trans ban_expires=ban.expires|date %}Your ban will expire on {{ ban_expires }}{% endtrans %}</p>
+    {% endif %}
+    <ul class="unstyled">
+      <li><i class="icon-home"></i> <a href="{% url 'index' %}">{% trans %}Return to board index{% endtrans %}</a></li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

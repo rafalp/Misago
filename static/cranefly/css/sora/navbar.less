@@ -1,0 +1,148 @@
+// Navbar
+// -------------------------
+
+.navbar {
+  .navbar-inner {
+    background: none;
+    background-color: @navbarBackground;
+    border-bottom: 1px solid @navbarBorder;
+    .box-shadow(none);
+
+    .brand {
+      text-shadow: none;
+
+      &:link, &:active, &:visited, &:hover {
+        color: @navbarBrandColor;
+        font-size: 200%;
+
+        span {
+          color: @navbarMottoColor;
+        } 
+      }
+    }
+
+    .navbar-search-form {
+      background-color: @white;
+      border: 1px solid @navbarBorder;
+      border-radius: 3px;
+      margin-top: ((@navbarHeight - @baseLineHeight) / 2) - 6;
+
+      color: @textColor;
+
+      input {
+        border: none;
+        .box-shadow(none);
+        margin: 0px;
+      }
+
+      button {
+        margin: 0px;
+        .opacity(30);
+
+        &:hover, &:active {
+          .opacity(80);
+        }
+      }
+    }
+
+    .navbar-blocks {
+      margin-left: 6px;
+
+      li {
+        margin-left: 6px;
+
+        form {
+          margin: 0px;
+          padding: 0px;
+        }
+
+        a:link, a:visited, .btn-link {
+          background-color: lighten(@navbarBackground, 2%);
+          border: 1px solid darken(@navbarBorder, 2%);
+          border-radius: 3px;
+          padding: 5px 8px;
+          margin-top: ((@navbarHeight - @baseLineHeight) / 2) - 6;
+
+          i {
+            .opacity(70);
+          }
+
+          .label {
+            background-color: @red;
+            margin-left: 4px;
+            position: relative;
+            bottom: 1px;
+          }
+        }
+
+        a:hover, a:active, .btn-link:hover, .btn-link:active {
+          background-color: @linkColor;
+          border-color: @linkColor;
+
+          &.danger {
+            background-color: @red;
+            border-color: @red;
+          }
+
+          &.hot {
+            background-color: @orange;
+            border-color: @orange;
+          }
+
+          i {
+            background-image: url("@{iconWhiteSpritePath}");
+            .opacity(100);
+          }
+
+          .label {
+            background-color: @grayLighter;
+
+            color: @textColor;
+          }
+        }
+
+        &.user-profile {
+          a:link, a:visited, a:hover, a:active {
+            background: none;
+            border: none;
+            margin-right: 8px;
+            margin-top: 5px;
+
+            font-weight: bold;
+            text-shadow: none;
+
+            img {
+              background-color: @white;
+              border-radius: 3px;
+              .box-shadow(0px 0px 4px @grayLighter);
+              margin-right: 4px;
+              width: 32px;
+              height: 32px;
+              position: relative;
+              bottom: 1px;
+            }
+          }
+        }
+      }
+    }
+
+    .navbar-user-nav {
+      li {
+        a:link, a:visited {
+          .opacity(50);
+          padding: 2px 8px;
+          margin-left: 8px;
+          margin-top: (@baseLineHeight / 2) + 3;
+
+          color: @black;
+          font-weight: bold;
+          text-shadow: none;
+        }
+
+        a:active, a:hover {
+          .opacity(90);
+        }
+      }
+    }
+  }
+}

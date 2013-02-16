@@ -120,7 +120,7 @@ TEMPLATE_DIRS = (
 
 # List of installed themes
 INSTALLED_THEMES = (
-    'sora', # Default style always first
+    'cranefly', # Default style always first
     'admin', # Admin theme always last
 )
 

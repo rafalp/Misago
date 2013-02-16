@@ -1,0 +1,79 @@
+{% extends "cranefly/layout.html" %}
+{% load i18n %}
+{% load url from future %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block title %}{% if settings.board_index_title %}{{ settings.board_index_title }}{% else %}{{ settings.board_name }}{% endif %}{% endblock %}
+     
+{% block meta %}{% if settings.board_index_meta %}
+<meta name="description" content="{{ settings.board_index_meta }}">
+{% endif %}{% endblock %}
+      
+{% block content %}
+<div class="row">
+  <div class="span8">
+    <div class="forums-list">
+      {% for category in forums_list %}{% if category.subforums %}
+      <div class="category{% if category.style %} {{ category.style }}{% endif %}">
+        <h2>{{ category.name }}{% if category.description %} <small><strong>{{ category.description }}</strong></small>{% endif %}
+        {%- if user.is_authenticated() and loop.first -%}
+        <form action="{% url 'read_all' %}" method="post" class="form-inline">
+          <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+          <button type="submit" class="btn btn-link"><i class="icon-ok"></i> {% trans %}Mark forums read{% endtrans %}</button>
+        </form>
+        {%- endif %}</h2>
+        {{ macros.draw_forums(category, 8) }}
+      </div>{% endif %}
+      {% else %}
+      <p class="list-empty">{% trans %}Looks like there are no forums that you have permission to see.{% endtrans %}</p>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="span4 forum-list-side">
+    
+    {% for rank in ranks_online %}{% if rank.online %}
+    <div class="index-block team-online{% if rank.style %} {{ rank.style }}{% endif %}">
+      <h3>{% trans rank_name=_(rank.name) %}{{ rank_name }} Online{% endtrans %}</h3>
+      <ul class="unstyled">
+        {% for user in rank.online %}
+        <li>
+          <img src="{{ user.get_avatar(48) }}" alt="" class="avatar-small">
+          <div>
+            <a href="{% url 'user' username=user.username_slug, user=user.pk %}">{{ user.username }}</a>
+            {% if rank.title or user.title %}<span class="muted">{% if user.title %}{{ user.title }}{% else %}{{ _(rank.title) }}{% endif %}</span>{% endif %}
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}{% endfor %}
+    
+    {% if popular_threads %}
+    <div class="index-block thread-ranking">
+      <h3>{% trans %}Popular Threads{% endtrans %}</h3>
+      <ul class="unstyled">
+        {% for thread in popular_threads %}
+        <li>
+          <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="lead">{{ thread.name }}</a>
+          <div class="muted"><a href="{% url 'forum' forum=thread.forum_id, slug=thread.forum_slug %}">{{ thread.forum_name }}</a> - {{ thread.last|reltimesince }}</div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    
+    <div class="row forum-stats">
+      <div class="span2">
+        <strong>{{ monitor.posts|int|intcomma }}</strong>
+        {% trans %}Posts{% endtrans %}
+        <div class="sub">{% trans count=monitor.threads, threads=monitor.threads|int|intcomma %}{{ threads }} thread{% pluralize %}{{ threads }} threads{% endtrans %}</div>
+      </div>
+      <div class="span2">
+        <strong>{{ monitor.users|int|intcomma }}</strong>
+        {% trans %}Members{% endtrans %}
+        <div class="sub">{% trans count=users_online, online=users_online|int|intcomma %}{{ online }} user online{% pluralize %}{{ online }} users online{% endtrans %}</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "cranefly/layout.html" %}
+{% load i18n %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=_('Active Threads')) }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{% trans %}Active Threads{% endtrans %}</h1>
+</div>
+{% if threads %}
+<p class="lead">{% trans %}Following threads are currently experiencing most activity:{% endtrans %}</p>
+<ul class="unstyled shorts-list">
+{% for row in threads|batch(2, '') %}
+  <li>
+    <div class="row">
+      {% for thread in row %}{% if thread %}
+      <div class="span6">
+        <img src="{% if thread.start_poster_id %}{{ thread.start_poster.get_avatar(36) }}{% else %}{{ macros.avatar_guest(24) }}{% endif %}" class="avatar tooltip-top" title="{% trans username=thread.start_poster_name %}Thread started by {{ username }}{% endtrans %}">
+        <p class="title">
+          <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="hover-opacity tooltip-top" title="{% trans %}Jump to thread start{% endtrans %}"><i class="icon-asterisk"></i></a>
+          <a href="{% url 'thread_last' thread=thread.pk, slug=thread.slug %}" class="jump jump-last tooltip-top" title="{% trans %}Jump to latest reply{% endtrans %}"><strong>{{ thread.name }}</strong></a>
+        </p>
+        <p class="location">{% trans forum=forum(thread.forum), starter=username(thread.start_poster_id, thread.start_poster_name, thread.start_poster_slug), start=thread.start|reldate %}Thread started by {{ starter }} in {{ forum }} on {{ start }}.{% endtrans %}</p>
+      </div>
+      {% endif %}{% endfor %}
+    </div>
+  </li>
+{% endfor %}
+</ul>
+{% else %}
+<p class="lead">{% trans %}Looks like there are no active threads.{% endtrans %}</p>
+{% endif %}
+{%- endblock %}
+
+
+{% macro forum(forum) -%}
+<a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}">{{ forum.name }}</a>
+{%- endmacro %}
+
+
+{% macro username(id, username, slug) -%}
+{%- if id -%}
+<a href="{% url 'user' user=id, username=slug %}">{{ username }}</a>
+{%- else -%}
+{{ username }}
+{%- endif -%}
+{%- endmacro %}

@@ -1,0 +1,71 @@
+{% extends "cranefly/layout.html" %}
+{% load i18n %}
+{% load humanize %}
+{% load url from future %}
+{% import "_forms.html" as form_theme with context %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(profile.username) }}{% endblock %}
+
+{% block content %}
+<div class="profile-wrapper{% if profile.get_style() %} {{ profile.get_style() }}{% endif %}">
+  <div class="page-header profile-header header-tabbed{% if profile.get_style() %} {{ profile.get_style() }}{% endif %}">
+    <div class="avatar-height">
+      <img src="{{ profile.get_avatar() }}" class="avatar pull-left" alt="">
+      <div class="pull-left">
+        <h1>{{ profile.username }}</h1>
+        <p class="lead">
+          {% if profile.title or profile.rank.title %}{% if profile.title %}{{ _(profile.title) }}{% elif profile.rank.title %}{{ _(profile.rank.title) }}{% endif %};{% endif %}
+          {% if online and (not hidden or acl.users.can_see_hidden_users()) %}<span class="badge badge-success">{% if profile.hide_activity -%}
+              {% trans %}Online, hidden{% endtrans %}
+              {%- else -%}
+              {% trans %}Online{% endtrans %}
+              {%- endif %}</span>{% else %}<span class="badge">{% trans %}Offline{% endtrans %}</span>{% endif %} <span class="muted">{% if not hidden or acl.users.can_see_hidden_users() -%}
+                    {%- if online -%}
+                      {% trans last_click=online|reltimesince|low %}Last click {{ last_click }}{% endtrans %}
+                    {%- elif profile.last_date -%}
+                      {% trans last_visit=profile.last_date|reltimesince|low %}Last seen {{ last_visit }}{% endtrans %}
+                    {%- else -%}
+                      {% trans %}Never visited{% endtrans %}
+                    {%- endif -%}
+                  {%- else -%}
+                    {% trans %}Hiding activity{% endtrans %}
+                  {%- endif %}</span>
+        </p>
+      </div>
+    </div>
+    <ul class="nav nav-tabs">
+      {% for link in tabs %}
+      <li{% if link.active %} class="active"{% endif %}>
+        <a href="{{ link.route|url(user=profile.pk, username=profile.username_slug) }}">{{ link.name }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% if user.is_authenticated() and user.pk != profile.pk %}
+    <ul class="nav nav-pills tabs-extra">
+      <li class="{% if ignores %}danger{% else %}info{% endif %}">
+        <form action="{% if ignores %}{% url 'unignore_user' user=profile.id %}{% else %}{% url 'ignore_user' user=profile.id %}{% endif %}" method="post">
+          <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+          <input type="hidden" name="fallback" value="{{ fallback }}">
+          <button type="submit" class="btn">
+            <i class="icon-ban-circle"></i> {% if ignores %}{% trans %}Don't Ignore{% endtrans %}{% else %}{% trans %}Ignore{% endtrans %}{% endif %}
+          </button>
+        </form>
+      </li>
+      <li class="{% if follows %}success{% else %}info{% endif %}">
+        <form action="{% if follows %}{% url 'unfollow_user' user=profile.id %}{% else %}{% url 'follow_user' user=profile.id %}{% endif %}" method="post">
+          <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+          <input type="hidden" name="fallback" value="{{ fallback }}">
+          <button type="submit" class="btn">
+            <i class="icon-heart"></i> {% if follows %}{% trans %}Don't Follow{% endtrans %}{% else %}{% trans %}Follow{% endtrans %}{% endif %}
+          </button>
+        </form>
+      </li>
+    </ul>
+    {% endif %}
+  </div>
+  <div class="profile-tab{% if profile.get_style() %} {{ profile.get_style() }}{% endif %}">
+    {% block tab %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

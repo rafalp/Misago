@@ -1,0 +1,41 @@
+// Layout classess
+// -------------------------
+
+html, body {
+  height: 100%;
+}
+
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto ((@footerHeight + @baseLineHeight) * -1);
+
+  &>.container {
+    padding-top: @navbarHeight + 16px;
+    padding-bottom: @footerHeight + (@footerHeight * 0.5);
+  }
+}
+
+// Footer
+// -------------------------
+footer {
+  background-color: @footerBackground;
+  border-top: 1px solid @footerBorder;
+  height: @footerHeight;
+  padding: @paddingLarge;
+
+  hr {
+    border-bottom: 1px solid @footerBorder;
+    margin: (@baseLineHeight / 2) 0px;
+  }
+
+  .credits {
+    color: @gray;
+    font-size: 90%;
+
+    a:link, a:active, a:visited, a:hover {
+      color: @gray;
+    }
+  }
+}

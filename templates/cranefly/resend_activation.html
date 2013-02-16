@@ -1,0 +1,26 @@
+{% extends "cranefly/layout.html" %}
+{% load i18n %}
+{% load url from future %}
+{% import "_forms.html" as form_theme with context %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=_('Request new Activation E-mail')) }}{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="span8 offset2">
+    <div class="page-header">
+      <h1>{% trans %}Request new Activation E-mail{% endtrans %}</h1>
+    </div>
+    {% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
+    <form action="{% url 'send_activation' %}" method="post">
+      <div class="form-container">
+        {{ form_theme.form_widget(form, width=8) }}
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{% trans %}Request new E-mail{% endtrans %}</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

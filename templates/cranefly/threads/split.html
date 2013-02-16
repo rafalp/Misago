@@ -1,0 +1,43 @@
+{% extends "cranefly/layout.html" %}
+{% load i18n %}
+{% load url from future %}
+{% import "_forms.html" as form_theme with context %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=_("Split Thread"),parent=thread.name) }}{% endblock %}
+
+{% block breadcrumb %}{{ super() }} <span class="divider">/</span></li>
+{% for parent in parents %}
+<li class="first"><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider">/</span></li>
+{% endfor %}
+<li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider">/</span></li>
+<li class="active">{% trans %}Split Thread{% endtrans %}
+{%- endblock %}
+
+{% block content %}
+<div class="page-header">
+  <ul class="breadcrumb">
+    {{ self.breadcrumb() }}</li>
+  </ul>
+  <h1>{% trans %}Split Thread{% endtrans %} <small>{{ thread.name }}</small></h1>
+</div>
+<div class="row">
+  <div class="span8 offset2">
+    {% if message %}{{ macros.draw_message(message) }}{% endif %}
+    <form action="{% url 'thread' thread=thread.pk, slug=thread.slug %}" method="post">
+      <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+      <input type="hidden" name="origin" value="posts_form">
+      <input type="hidden" name="list_action" value="split">
+      <input type="hidden" name="do" value="split">
+      {% for post in posts -%}
+      <input type="hidden" name="list_items" value="{{ post }}">
+      {% endfor %}
+      {{ form_theme.form_widget(form, width=8) }}
+      <div class="form-actions">
+        <button name="save" type="submit" class="btn btn-primary">{% trans %}Split Thread{% endtrans %}</button>
+        <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
