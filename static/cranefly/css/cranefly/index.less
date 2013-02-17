@@ -39,18 +39,18 @@
       .forum-icon-wrap {
       	background-color: @itemOldColor;
       	border: 1px solid darken(@itemOldColor, 10%);
-  		border-radius: @baseBorderRadius;
-  		padding: (@forumIconSize - 1px) @forumIconSize;
+    		border-radius: @baseBorderRadius;
+    		padding: (@forumIconSize - 1px) @forumIconSize;
 
-  		&.forum-icon-new {
-	      background-color: @itemNewColor;
-	      border: 1px solid darken(@itemNewColor, 10%);
-  		}
+    		&.forum-icon-new {
+  	      background-color: @itemNewColor;
+  	      border: 1px solid darken(@itemNewColor, 10%);
+    		}
 
-  		&.forum-icon-redirect {
-	      background-color: @itemMovedColor;
-	      border: 1px solid darken(@itemMovedColor, 10%);
-  		}
+    		&.forum-icon-redirect {
+  	      background-color: @itemMovedColor;
+  	      border: 1px solid darken(@itemMovedColor, 10%);
+    		}
       }
     }
     
@@ -79,6 +79,10 @@
 
         color: @grayLight;
         font-weight: bold;
+
+        .label {
+          margin-top: -1px;
+        }
       }
 
       .forum-description {
