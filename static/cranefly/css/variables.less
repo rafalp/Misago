@@ -21,6 +21,7 @@
 // Accent colors
 // -------------------------
 @blue:                  #049cdb;
+@bluePale:              #3c85a3;
 @blueDark:              #0064cd;
 @green:                 #46a546;
 @red:                   #cf402e;
@@ -74,6 +75,11 @@
 @borderRadiusLarge:     5px;
 @borderRadiusSmall:     2px;
 
+// Page header
+// -------------------------
+@pageHeaderBackground:              darken(@bodyBackground, 8%);
+@pageHeaderBorder:                  darken(@bodyBackground, 14%);
+
 // Items styles
 // -------------------------
 @itemOldColor:                      darken(@grayLight, 5%);
@@ -84,7 +90,7 @@
 // -------------------------
 @categoryBackground:                lighten(@bodyBackground, 5%);
 @categoryBorder:                    darken(@bodyBackground, 15%);
-@categoryHeader:                    desaturate(@blue, 50%);
+@categoryHeader:                    @bluePale;
 @categoryShadow:                    darken(@bodyBackground, 5%);
 
 @forumIconSize:                     4px;

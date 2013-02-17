@@ -9,18 +9,28 @@
 {% block content %}
 <div class="row">
   <div class="span8 offset2">
-    <div class="page-header">
-      <h1>{% trans %}Register new account{% endtrans %}</h1>
+    <div class="form-container">
+
+      <div class="form-header">
+        <h1>{% trans %}Register new account{% endtrans %}</h1>
+      </div>
+
+      {% if message %}
+      <div class="messages-list">
+        {{ macros.draw_message(message) }}
+      </div>
+      {% endif %}
+
+      <form action="{% url 'register' %}" method="post">
+        <div class="form-fields">
+          {{ form_theme.form_widget(form, width=8) }}
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">{% trans %}Register account{% endtrans %}</button>
+        </div>
+      </form>
+
     </div>
-    {% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
-    <form action="{% url 'register' %}" method="post">
-      <div class="form-container">
-        {{ form_theme.form_widget(form, width=8) }}
-      </div>
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary">{% trans %}Register account{% endtrans %}</button>
-      </div>
-    </form>
   </div>
 </div>
 {% endblock %}
