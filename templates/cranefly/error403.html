@@ -1,24 +1,25 @@
 {% extends "cranefly/layout.html" %}
 {% load i18n %}
 {% load url from future %}
+{% import "cranefly/macros.html" as macros with context %}
 
-{% block title %}{% trans %}Permission denied{% endtrans %} | {{ settings.board_name }}{% endblock %}
+{% block title %}{{ macros.page_title(title=_('Error')) }}{% endblock %}
       
 {% block content %}
 <div class="row">
-  <div class="span8 offset2 side-bar">
+  <div class="span6 offset3 error-page">
     <div class="page-header">
-      <h1>{% trans %}Permission denied{% endtrans %} <small>{% trans %}Error 403{% endtrans %}</small></h1>
+      <h1><span class="error-color">403</span> {% trans %}Permission Denied{% endtrans %}</h1>
     </div>
     {% if message %}
     <p class="lead">{{ message }}</p>
     {% else %}
     <p class="lead">{% trans %}You dont have permission to see this page.{% endtrans %}</p>
     {% endif %}
-    <ul class="unstyled">
-      <li><i class="icon-arrow-left"></i> <a href="#" class="go-back">{% trans %}Return to previous page{% endtrans %}</a></li>
-      <li><i class="icon-home"></i> <a href="{% url 'index' %}">{% trans %}Return to board index{% endtrans %}</a></li>
-    </ul>
+    <div class="error-protips">
+      <a href="#" class="go-back"><i class="icon-arrow-left icon-white"></i> {% trans %}Return to previous page{% endtrans %}</a>
+      <a href="{% url 'index' %}"><i class="icon-home icon-white"></i> {% trans %}Return to board index{% endtrans %}</a>
+    </div>
   </div>
 </div>
 {% endblock %}
