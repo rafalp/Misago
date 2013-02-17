@@ -24,7 +24,7 @@
     .navbar-search-form {
       background-color: @white;
       border: 1px solid @navbarBorder;
-      border-radius: 3px;
+      border-radius: @baseBorderRadius;
       margin-top: ((@navbarHeight - @baseLineHeight) / 2) - 6;
 
       color: @textColor;
@@ -59,7 +59,7 @@
         a:link, a:visited, .btn-link {
           background-color: lighten(@navbarBackground, 2%);
           border: 1px solid darken(@navbarBorder, 2%);
-          border-radius: 3px;
+          border-radius: @baseBorderRadius;
           padding: 5px 8px;
           margin-top: ((@navbarHeight - @baseLineHeight) / 2) - 6;
 
@@ -113,7 +113,7 @@
 
             img {
               background-color: @white;
-              border-radius: 3px;
+              border-radius: @baseBorderRadius;
               .box-shadow(0px 0px 4px @grayLighter);
               margin-right: 4px;
               width: 32px;

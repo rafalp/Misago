@@ -28,7 +28,7 @@
         {% if not user.is_crawler() %}
         {% if user.is_authenticated() %}
         <ul class="nav navbar-blocks pull-right">
-          <li class="user-profile"><a href="{% url 'user' user=user.id, username=user.username_slug %}" title="{% trans %}Go to your profile{% endtrans %}" class="tooltip-bottom"><div><img src="{{ user.get_avatar(28) }}" class="avatar-small" alt=""> {{ user.username }}</div></a></li>
+          <li class="user-profile"><a href="{% url 'user' user=user.id, username=user.username_slug %}" title="{% trans %}Go to your profile{% endtrans %}" class="tooltip-bottom"><div><img src="{{ user.get_avatar(28) }}" alt=""> {{ user.username }}</div></a></li>
           {#<li><a href="#" title="{% trans %}Active Reports{% endtrans %}" class="tooltip-bottom"><i class="icon-warning-sign"></i><span class="stat">5</span></a></li>#}
           <li><a href="{% url 'alerts' %}" title="{% if user.alerts %}{% trans %}You have new notifications!{% endtrans %}{% else %}{% trans %}Your Notifications{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-asterisk"></i>{% if user.alerts %}<span class="label label-important">{{ user.alerts }}</span>{% endif %}</a></li>
           {#<li><a href="#" title="{% trans %}Private messages{% endtrans %}" class="tooltip-bottom"><i class="icon-inbox"></i><span class="stat">2</span></a></li>#}
@@ -48,30 +48,11 @@
       </div>
     </div>
   </div>
-  {#
-  {% include "cranefly/userbar.html" with context %}
-  <div class="navbar navbar-fixed-top navbar-inverse navbar-header">
-    <div class="navbar-inner">
-      <div class="container">
-        <a class="brand" href="{% url 'index' %}">{% if settings.board_header %}{{ settings.board_header }}{% else %}{{ settings.board_name }}{% endif %}{% if settings.board_header_postscript %} <span>{{ settings.board_header_postscript }}</span>{% endif %}</a>
-        <ul class="nav">
-          <li><a href="{% url 'index' %}" title="{% trans %}Forum Home{% endtrans %}" class="tooltip-bottom"><i class="icon-th-list"></i></a></li>{% if not user.crawler %}
-          <li><a href="#" title="{% trans %}Search Community{% endtrans %}" class="tooltip-bottom"><i class="icon-search"></i></a></li>{% endif %}
-          <li><a href="{% url 'users' %}" title="{% trans %}Browse Users{% endtrans %}" class="tooltip-bottom"><i class="icon-user"></i></a></li>
-          {% if settings.tos_url or settings.tos_content %}<li><a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{% url 'tos' %}{% endif %}" title="{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Forum Terms of Service{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-certificate"></i></a></li>{% endif %}
-        </ul>{% if not user.crawler %}
-        <form class="form-inline search-form">
-          <input type="text" class="span3" placeholder="{% trans %}Search community...{% endtrans %}">
-          <button type="submit" class="btn"><i class="icon-search"></i></button>
-        </form>{% endif %}
-      </div>
-    </div>
-  </div>
-  #}
-  <div class="container">
-    
+
+  {% block container %}
+  <div class="container container-primary">
     {% if messages %}
-    <div class="alerts-global">
+    <div class="messages-list">
     	{{ messages_list(messages) }}
     </div>
     {% endif %}
@@ -79,6 +60,7 @@
     {% block content %}
     {% endblock %}
   </div>
+  {% endblock %}
 
 </div><!--/#wrap -->
 

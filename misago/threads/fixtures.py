@@ -41,7 +41,7 @@ settings_fixtures = (
                 'description':  _("Unlike basic user data, avatars are not cached - turning this option on will cause one extra query on threads lists."),
             }),
             ('thread_ranking_size', {
-                'value':        10,
+                'value':        6,
                 'type':         "integer",
                 'input':        "text",
                 'extra':        {'min': 0, 'max': 30},

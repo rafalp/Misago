@@ -17,14 +17,16 @@ from misago.threads.models import Thread
 
 def home(request):     
     # Threads ranking
-    popular_threads = cache.get('thread_ranking_%s' % request.user.make_acl_key(), 'nada')
-    if popular_threads == 'nada' and request.settings['thread_ranking_size'] > 0:
-        popular_threads = []
-        for thread in Thread.objects.filter(moderated=False).filter(deleted=False).filter(forum__in=request.acl.threads.get_readable_forums(request.acl)).prefetch_related('forum').order_by('-score')[:request.settings['thread_ranking_size']]:
-            thread.forum_name = thread.forum.name
-            thread.forum_slug = thread.forum.slug
-            popular_threads.append(thread)
-        cache.set('thread_ranking_%s' % request.user.make_acl_key(), popular_threads, 60 * request.settings['thread_ranking_refresh'])
+    popular_threads = []
+    if request.settings['thread_ranking_size'] > 0:
+        popular_threads = cache.get('thread_ranking_%s' % request.user.make_acl_key(), 'nada')
+        if popular_threads == 'nada':
+            popular_threads = []
+            for thread in Thread.objects.filter(moderated=False).filter(deleted=False).filter(forum__in=request.acl.threads.get_readable_forums(request.acl)).prefetch_related('forum').order_by('-score')[:request.settings['thread_ranking_size']]:
+                thread.forum_name = thread.forum.name
+                thread.forum_slug = thread.forum.slug
+                popular_threads.append(thread)
+            cache.set('thread_ranking_%s' % request.user.make_acl_key(), popular_threads, 60 * request.settings['thread_ranking_refresh'])
 
     # Ranks online
     ranks_list = cache.get('ranks_online', 'nada')

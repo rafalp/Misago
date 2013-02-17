@@ -5,13 +5,13 @@
     <meta charset="utf-8">
     <title>{% block title %}{{ page_title() }}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="{{ STATIC_URL }}cranefly/css/sora.css" rel="stylesheet">{% block stylesheets %}{% endblock %}
+    <link href="{{ STATIC_URL }}cranefly/css/cranefly.css" rel="stylesheet">{% block stylesheets %}{% endblock %}
   </head>
   <body{% block body_class %}{% endblock %}>
   	{% block body %}{% endblock %}
 
   	<script src="{{ STATIC_URL }}cranefly/js/jquery-1.7.2.min.js"></script>
   	<script src="{{ STATIC_URL }}cranefly/js/bootstrap.min.js"></script>
-  	<script src="{{ STATIC_URL }}cranefly/js/sora.js"></script>{% block javascripts %}{% endblock %}
+  	<script src="{{ STATIC_URL }}cranefly/js/cranefly.js"></script>{% block javascripts %}{% endblock %}
   </body>
 </html>

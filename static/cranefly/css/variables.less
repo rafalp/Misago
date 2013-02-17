@@ -70,9 +70,24 @@
 @paddingSmall:          2px 10px;  // 26px
 @paddingMini:           0 6px;   // 22px
 
-@baseBorderRadius:      4px;
-@borderRadiusLarge:     6px;
-@borderRadiusSmall:     3px;
+@baseBorderRadius:      3px;
+@borderRadiusLarge:     5px;
+@borderRadiusSmall:     2px;
+
+// Items styles
+// -------------------------
+@itemOldColor:                      darken(@grayLight, 5%);
+@itemNewColor:                      @linkColor;
+@itemMovedColor:                    lighten(@purple, 10%);
+
+// Board index forums list
+// -------------------------
+@categoryBackground:                lighten(@bodyBackground, 5%);
+@categoryBorder:                    darken(@bodyBackground, 15%);
+@categoryHeader:                    desaturate(@blue, 50%);
+@categoryShadow:                    darken(@bodyBackground, 5%);
+
+@forumIconSize:                     4px;
 
 
 // Tables
@@ -236,21 +251,21 @@
 
 // Form states and alerts
 // -------------------------
-@warningText:             #c09853;
+@warningText:             #FFF;
 @warningBackground:       #fcf8e3;
 @warningBorder:           darken(spin(@warningBackground, -10), 3%);
 
-@errorText:               #b94a48;
-@errorBackground:         #f2dede;
-@errorBorder:             darken(spin(@errorBackground, -10), 3%);
+@errorText:               @red;
+@errorBackground:         desaturate(@red, 10%);
+@errorBorder:             darken(@errorBackground, 10%);
 
-@successText:             #468847;
-@successBackground:       #dff0d8;
-@successBorder:           darken(spin(@successBackground, -10), 5%);
+@successText:             @green;
+@successBackground:       desaturate(@green, 10%);
+@successBorder:           darken(@successBackground, 10%);
 
-@infoText:                #3a87ad;
-@infoBackground:          #d9edf7;
-@infoBorder:              darken(spin(@infoBackground, -10), 7%);
+@infoText:                @blue;
+@infoBackground:          desaturate(@blue, 15%);
+@infoBorder:              darken(@infoBackground, 10%);
 
 
 // Tooltips and popovers
