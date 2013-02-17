@@ -40,8 +40,8 @@
         </ul>
         {% else %}
         <ul class="nav navbar-user-nav pull-right">
-          <li><a href="{% url 'sign_in' %}" title="{% trans %}Sign In using your account data{% endtrans %}" class="tooltip-bottom"><i class="icon-check"></i> {% trans %}Sign In{% endtrans %}</a></li>{% if settings.account_activation != 'block' %}
-          <li><a href="{% url 'register' %}" title="{% trans %}Register new account{% endtrans %}" class="tooltip-bottom"><i class="icon-edit"></i> {% trans %}Register{% endtrans %}</a></li>{% endif %}
+          <li><a href="{% url 'sign_in' %}" title="{% trans %}Sign In using your account data{% endtrans %}" class="tooltip-bottom btn btn-danger"><i class="icon-check"></i> {% trans %}Sign In{% endtrans %}</a></li>{% if settings.account_activation != 'block' %}
+          <li><a href="{% url 'register' %}" title="{% trans %}Register new account{% endtrans %}" class="tooltip-bottom btn btn-inverse"><i class="icon-edit"></i> {% trans %}Register{% endtrans %}</a></li>{% endif %}
         </ul>
         {% endif %}
         {% endif %}

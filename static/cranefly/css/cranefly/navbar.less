@@ -128,19 +128,32 @@
 
     .navbar-user-nav {
       li {
-        a:link, a:visited {
-          .opacity(50);
+        .btn {
           padding: 2px 8px;
           margin-left: 8px;
           margin-top: (@baseLineHeight / 2) + 3;
 
-          color: @black;
-          font-weight: bold;
-          text-shadow: none;
-        }
+          &:link, &:active, &:hover, &:visited {
+            color: @white;
+          }
 
-        a:active, a:hover {
-          .opacity(90);
+          &.btn-danger {
+            text-shadow: 0px 1px 0px darken(@red, 15%);
+
+            &:hover, &:active, &:focus {
+              background-color: saturate(@red, 20%);
+              border-color: darken(saturate(@red, 20%), 5%);
+            }
+          }
+
+          &.btn-inverse {
+            text-shadow: 0px 1px 0px darken(@textColor, 15%);
+
+            &:hover, &:active, &:focus {
+              background-color: darken(@textColor, 5%);
+              border-color: darken(@textColor, 10%);
+            }
+          }
         }
       }
     }
