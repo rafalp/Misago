@@ -852,7 +852,7 @@ a.label:hover,a.label:focus,a.badge:hover,a.badge:focus{color:#ffffff;text-decor
 #wrap{min-height:100%;height:auto !important;height:100%;margin:0 auto -100px;}#wrap .container-primary{padding-top:20px;padding-bottom:120px;}
 footer{background-color:#eeeeee;border-top:1px solid #dadada;height:80px;padding:11px 19px;}footer hr{border-bottom:1px solid #dadada;margin:10px 0px;}
 footer .credits{color:#555555;font-size:90%;}footer .credits a:link,footer .credits a:active,footer .credits a:visited,footer .credits a:hover{color:#555555;}
-.header-primary{background-color:#e7e7e7;border-bottom:1px solid #d7d7d7;margin-top:0px;padding-top:10px;}.header-primary h1{font-size:29.75px;font-weight:normal;}
+.header-primary{background-color:#e7e7e7;border-bottom:1px solid #d7d7d7;margin:0px;margin-top:0px;padding-top:10px;}.header-primary h1{color:#555555;font-size:35px;font-weight:normal;}
 .navbar .navbar-inner{background:none;background-color:#f3f3f3;border-bottom:1px solid #dfdfdf;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;}.navbar .navbar-inner .brand{text-shadow:none;}.navbar .navbar-inner .brand:link,.navbar .navbar-inner .brand:active,.navbar .navbar-inner .brand:visited,.navbar .navbar-inner .brand:hover{color:#0088cc;font-size:200%;}.navbar .navbar-inner .brand:link span,.navbar .navbar-inner .brand:active span,.navbar .navbar-inner .brand:visited span,.navbar .navbar-inner .brand:hover span{color:#c0c0c0;}
 .navbar .navbar-inner .navbar-search-form{background-color:#ffffff;border:1px solid #dfdfdf;border-radius:3px;margin-top:9px;color:#333333;}.navbar .navbar-inner .navbar-search-form input{border:none;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;margin:0px;}
 .navbar .navbar-inner .navbar-search-form button{margin:0px;opacity:0.3;filter:alpha(opacity=30);}.navbar .navbar-inner .navbar-search-form button:hover,.navbar .navbar-inner .navbar-search-form button:active{opacity:0.8;filter:alpha(opacity=80);}
@@ -902,6 +902,13 @@ footer .breadcrumb li.active{color:#555555;}
 .error-page .error-ban-expires{color:#cf402e;font-weight:bold;}
 .error-page .error-protips{margin-top:40px;}.error-page .error-protips a:link,.error-page .error-protips a:visited{background-color:#333333;border:1px solid #000000;border-radius:5px;margin:2px 10px;opacity:0.7;filter:alpha(opacity=70);padding:11px 19px;color:#ffffff;font-weight:bold;text-decoration:none;}
 .error-page .error-protips a:hover,.error-page .error-protips a:active{opacity:1;filter:alpha(opacity=100);}
+.markdown{margin:0px;}.markdown:first-child{margin-top:0px;}
+.markdown:last-child{margin-bottom:0px;}
+.markdown h1{font-size:28px;}
+.markdown h2{font-size:23.8px;}
+.markdown h3{font-size:21px;}
+.markdown h4{font-size:16.8px;}
+.markdown hr{border:none;border-top:1px solid #eeeeee;}
 .index-sidebar{position:relative;bottom:9px;}
 .index-category{background-color:#ffffff;border:1px solid #d5d5d5;border-radius:2px;-webkit-box-shadow:0px 0px 0px 3px #eeeeee;-moz-box-shadow:0px 0px 0px 3px #eeeeee;box-shadow:0px 0px 0px 3px #eeeeee;margin-bottom:20px;}.index-category table{margin:0px;}.index-category table caption{background-color:#3c85a3;border:1px solid #357690;border-radius:2px 2px 0px 0px;margin:-1px;padding:2px 10px;color:#ffffff;font-size:11.9px;font-weight:bold;text-align:left;text-shadow:0px 1px 0px #1a3946;}
 .index-category table .forum-icon{width:1%;}.index-category table .forum-icon .forum-icon-wrap{background-color:#8c8c8c;border:1px solid #737373;border-radius:3px;padding:3px 4px;}.index-category table .forum-icon .forum-icon-wrap.forum-icon-new{background-color:#0088cc;border:1px solid #006699;}

@@ -8,15 +8,26 @@
 {{ macros.page_title(title=_('Terms of Service')) }}
 {%- endif %}{% endblock %}
 
-{% block content %}
-<div class="page-header">
-  <h1>{% if settings.tos_title -%}
+
+{% block container %}
+<div class="page-header header-primary">
+  <div class="container">
+    {% if messages %}
+    <div class="messages-list">
+      {{ messages_list(messages) }}
+    </div>
+    {% endif %}
+    <h1>{% if settings.tos_title -%}
 {{ settings.tos_title }}
 {%- else -%}
 {% trans %}Terms of Service{% endtrans %}
 {%- endif %}</h1>
+  </div>
 </div>
-<div class="markdown">
-{{ settings.tos_content|markdown|safe }}
+
+<div class="container container-primary">
+  <div class="markdown">
+    {{ settings.tos_content|markdown|safe }}
+  </div>
 </div>
 {% endblock %}

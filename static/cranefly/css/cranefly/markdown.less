@@ -1,0 +1,35 @@
+// Markdown output
+// -------------------------
+
+.markdown {
+  margin: 0px;
+
+  &:first-child {
+    margin-top: 0px;
+  }
+
+  &:last-child {
+    margin-bottom: 0px;
+  }
+
+  h1 {
+    font-size: @baseFontSize * 2;
+  }
+
+  h2 {
+    font-size: @baseFontSize * 1.7;
+  }
+
+  h3 {
+    font-size: @baseFontSize * 1.5;
+  }
+
+  h4 {
+    font-size: @baseFontSize * 1.2;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid @hrBorder;
+  }
+}
