@@ -112,7 +112,7 @@ class Form(forms.Form):
         for index, repeat in enumerate(self.validate_repeats):
             # Check empty fields
             for field in repeat:
-                if not self.data[field]:
+                if not field in self.data:
                     try:
                         if len(repeat) == 2:
                             self.errors['_'.join(repeat)] = [self.repeats_errors[index]['fill_both']]

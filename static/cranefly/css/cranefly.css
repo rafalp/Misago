@@ -880,6 +880,8 @@ footer .breadcrumb li.active{color:#555555;}
 .form-container{background:#ffffff;border:1px solid #e7e7e7;border-radius:3px;margin:0px -21px;margin-bottom:20px;padding:20px;padding-top:-15px;}.form-container .form-header{border-bottom:1px solid #e7e7e7;margin-top:-20px;margin-bottom:20px;padding:10px 0px;}.form-container .form-header h1{margin:0px;padding:0px;font-size:17.5px;}
 .form-container form{margin:0px;}.form-container form fieldset{border-top:1px solid #e7e7e7;padding-top:10px;}.form-container form fieldset.first{border-top:none;padding-top:0px;}
 .form-container form .control-label{font-weight:bold;}
+.form-container form.form-horizontal fieldset.last .control-group:last-child{margin-bottom:0px;padding-bottom:0px;}
+.form-container form.form-horizontal .form-actions{padding-left:200px;}
 .form-container .form-actions{border-radius:0px 0px 3px 3px;margin:-20px;margin-top:10px;}
 .btn{background:none;background-color:#fbfbfb;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;font-weight:bold;}.btn:hover,.btn:active{background-color:#ffffff;border-color:#a6a6a6;}
 .btn.btn-primary{background-color:#3c85a3;border-color:#357690;text-shadow:0px 1px 0px #27576b;}.btn.btn-primary:hover,.btn.btn-primary:active{background-color:#268eb9;border-color:#217ea4;}
@@ -894,7 +896,7 @@ footer .breadcrumb li.active{color:#555555;}
 .btn.btn-danger i{background-image:url("../img/glyphicons-halflings-white.png");}
 .btn.btn-inverse{background-color:#333333;border-color:#262626;text-shadow:0px 1px 0px #0d0d0d;}.btn.btn-inverse:hover,.btn.btn-inverse:active{background-color:#262626;border-color:#1a1a1a;}
 .btn.btn-inverse i{background-image:url("../img/glyphicons-halflings-white.png");}
-.btn.btn-link{opacity:0.6;filter:alpha(opacity=60);color:#333333;}.btn.btn-link:hover,.btn.btn-link:active{opacity:0.9;filter:alpha(opacity=90);}
+.btn.btn-link{background:none;border:none;opacity:0.7;filter:alpha(opacity=70);color:#333333;}.btn.btn-link:hover,.btn.btn-link:active{opacity:0.9;filter:alpha(opacity=90);}
 .error-page{text-align:center;}.error-page .error-color{color:#cf402e;}
 .error-page .error-ban-reason{border:1px solid #cf402e;border-radius:3px;background-color:#fbeeed;background-image:repeating-linear-gradient(45deg, transparent, transparent 5px, #fdf6f5 5px, #fdf6f5 10px);-webkit-box-shadow:0px 0px 0px 3px #e38b80;-moz-box-shadow:0px 0px 0px 3px #e38b80;box-shadow:0px 0px 0px 3px #e38b80;padding:11px 19px;text-align:left;}.error-page .error-ban-reason :last-child{margin-bottom:0px;padding-bottom:0px;}
 .error-page .error-ban-expires{color:#cf402e;font-weight:bold;}
@@ -917,6 +919,9 @@ footer .breadcrumb li.active{color:#555555;}
 .index-popular-threads ul{margin:0px;margin-bottom:20px;padding:0px;}.index-popular-threads ul li{border-bottom:1px solid #e2e2e2;padding:7px 0px;}.index-popular-threads ul li a:link,.index-popular-threads ul li a:active,.index-popular-threads ul li a:visited,.index-popular-threads ul li a:hover{color:#333333;font-weight:bold;}
 .index-popular-threads ul li .muted{font-size:10.5px;}.index-popular-threads ul li .muted a:link,.index-popular-threads ul li .muted a:active,.index-popular-threads ul li .muted a:visited,.index-popular-threads ul li .muted a:hover{color:#555555;}
 .index-stats{margin-bottom:20px;opacity:0.6;filter:alpha(opacity=60);overflow:auto;font-weight:bold;}.index-stats ul li{float:left;padding:0px;padding-right:20px;}
+.signin-help h2{margin-bottom:0px;color:#999999;font-size:17.5px;}
+.signin-help ul{margin-bottom:0px;}
+.signin-help a:link,.signin-help a:visited{opacity:0.9;filter:alpha(opacity=90);color:#333333;font-weight:bold;}
 .index-rank-team ul li{background-color:#cf402e;border-color:#ae3627;}.index-rank-team ul li a:link,.index-rank-team ul li a:active,.index-rank-team ul li a:visited,.index-rank-team ul li a:hover{color:#ffffff;text-shadow:0px 1px 0px #3d130e;}
 .index-rank-team ul li .muted{color:#672017;}
 .index-rank-mvp ul li{background-color:#1a93c5;border-color:#037fb3;}.index-rank-mvp ul li a:link,.index-rank-mvp ul li a:active,.index-rank-mvp ul li a:visited,.index-rank-mvp ul li a:hover{color:#ffffff;text-shadow:0px 1px 0px #011f2c;}
