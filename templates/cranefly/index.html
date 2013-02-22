@@ -20,7 +20,6 @@
           <caption>{{ category.name }}</caption>
           <tbody>
             {% for forum in category.subforums %}
-            {% do forum.__dict__.update({'is_read': True}) %}
             <tr>
               <td class="forum-icon"><span class="forum-icon-wrap{% if forum.type == 'redirect' %} forum-icon-redirect{% elif not forum.is_read %} forum-icon-new{% endif %}"><i class="icon-{% if forum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %} icon-white"></i></span></td>
               <td class="forum-main">

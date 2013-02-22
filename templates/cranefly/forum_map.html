@@ -4,76 +4,79 @@
 
 {% block title %}{{ macros.page_title(title=_("Forum Map")) }}{% endblock %}
 
-{% block content %}
-<div class="page-header">
-  <h1>{% trans %}Forum Map{% endtrans %}</h1>
+{% block container %}
+<div class="page-header header-primary">
+  <div class="container">
+    {% if messages %}
+    <div class="messages-list">
+      {{ messages_list(messages) }}
+    </div>
+    {% endif %}
+    <h1>{% trans %}Forum Map{% endtrans %}</h1>
+  </div>
 </div>
-<h3>{% trans %}General Links{% endtrans %}</h3>
-<div class="well" style="padding: 8px 0;">
-  <ul class="nav nav-list">
-    <li><a href="{% url 'index' %}">{% trans %}Forum Home{% endtrans %}</a></li>
-    {% if user.is_authenticated() %}
-    <li><a href="{% url 'newsfeed' %}">{% trans %}News Feed{% endtrans %}</a></li>
-    {% endif %}
-    <li class="divider"></li>
-    <li><a href="{% url 'users' %}">{% trans %}Browse Users{% endtrans %}</a></li>
-    {% if ranks %}
-    <li>
-      <ul class="nav nav-list">
-      {% for rank in ranks %}
-        <li><a href="{% if loop.first %}{% url 'users' %}{% else %}{% url 'users' rank_slug=rank.name_slug %}{% endif %}">{{ _(rank.name) }}</a></li>
-      {% endfor %}
-      </ul>
-    </li>
-    {% endif %}
-    {% if user.is_authenticated() %}
-    <li class="divider"></li>
-    <li><a href="{% url 'user' user=user.pk, username=user.username_slug %}">{% trans %}Your Profile{% endtrans %}</a></li>
-    <li><a href="{% url 'usercp' %}">{% trans %}Your Control Panel{% endtrans %}</a></li>
-    <li><a href="{% url 'alerts' %}">{% trans %}Your Notifications{% endtrans %}</a></li>
-    {% elif not user.is_crawler() %}
-    <li class="divider"></li>
-    <li><a href="{% url 'sign_in' %}">{% trans %}Sign In{% endtrans %}</a></li>
-    {% if settings.account_activation != 'block' %}
-    <li><a href="{% url 'register' %}">{% trans %}Register{% endtrans %}</a></li>
-    {% endif %}
-    <li><a href="{% url 'forgot_password' %}">{% trans %}Reset password{% endtrans %}</a></li>
-    <li><a href="{% url 'send_activation' %}">{% trans %}Resend activation e-mail{% endtrans %}</a></li>
-    {% endif %}
-  </ul>
+
+<div class="container container-primary">
+  {% if forums %}
+  <div class="row">
+    <div class="span6">
+      {% for category in forums %}{% if loop.index is odd and category.subforums %}
+      {{ draw_category(category) }}
+      {% endif %}{% endfor %}
+    </div>
+    <div class="span6">
+      {% for category in forums %}{% if loop.index is even and category.subforums %}
+      {{ draw_category(category) }}
+      {% endif %}{% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <p class="lead">{% trans %}Looks like no forums exist that you have permission to see.{% endtrans %}</p>
+  {% endif %}
 </div>
-<hr>
-<h3>{% trans %}Forum List{% endtrans %}</h3>
-{% if forums %}
-<div class="well" style="padding: 8px 0;">
-  <ul class="nav nav-list">
-    {% for forum in forums %}
-    {% if forum.subforums %}
-    <li class="nav-header">{{ forum.name }}</li>
-    {% for child in forum.subforums %}
-    {{ draw_forum(child) }}
-    {% endfor %}
-    {% endif %}
-    {% if not loop.last %}
-    <li class="divider"></li>
-    {% endif %}
-    {% endfor %}
-  </ul>
-</div>
-{% else %}
-<p class="large">{% trans %}Looks like no forums exist that you have permission to see.{% endtrans %}</p>
-{% endif %}
 {% endblock %}
 
-{% macro draw_forum(forum) %}
-<li><a href="{{ forum.type|url(forum=forum.pk, slug=forum.slug) }}">{{ forum.name }}</a></li>
-{% if forum.subforums %}
-<li>
-  <ul class="nav nav-list">
-  {% for child in forum.subforums %}
-  {{ draw_forum(child) }}
-  {% endfor %}
-  </ul>
-</li>
-{% endif %}
+
+{% macro draw_category(category) %}
+<div class="forum-map-category{% if category.style %} forum-map-category-{{ category.style }}{% endif %}">
+  <table class="table">
+    <caption>{{ category.name }}</caption>
+    <tbody>
+      {% for forum in category.subforums%}
+      {{ draw_forum(forum) }}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endmacro %}
+
+{% macro draw_forum(forum, depth=0, branch='', last=false) %}
+<tr>
+  <td class="{% if depth -%}
+    forum-map-subforum
+    {%- else -%}
+    forum-map-forum
+    {%- endif %}"><h3>{% if depth %}{% if last -%}
+    {{ draw_tree(branch ~ 'l') }}
+    {%- else -%}
+    {{ draw_tree(branch ~ 't') }}
+    {%- endif %}{% endif %}<a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3></td>
+</tr>
+{% for subforum in forum.subforums %}
+  {% if depth %}
+    {% if last %}
+    {{ draw_forum(subforum, (depth + 1), (branch ~ 's'), loop.last) }}
+    {% else %}
+    {{ draw_forum(subforum, (depth + 1), (branch ~ 'i'), loop.last) }}
+    {% endif %}
+  {% else %}
+  {{ draw_forum(subforum, (depth + 1), '', loop.last) }}
+  {% endif %}
+{% endfor %}
+{% endmacro %}
+
+{% macro draw_tree(branch) %}
+{% for item in branch %}
+<span class="tree-{{ item }}"><span></span></span>
+{% endfor %}
 {% endmacro %}

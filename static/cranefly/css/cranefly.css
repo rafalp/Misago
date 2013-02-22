@@ -929,6 +929,15 @@ footer .breadcrumb li.active{color:#555555;}
 .signin-help h2{margin-bottom:0px;color:#999999;font-size:17.5px;}
 .signin-help ul{margin-bottom:0px;}
 .signin-help a:link,.signin-help a:visited{opacity:0.9;filter:alpha(opacity=90);color:#333333;font-weight:bold;}
+.forum-map-category{background-color:#ffffff;border:1px solid #d5d5d5;border-radius:2px;-webkit-box-shadow:0px 0px 0px 3px #eeeeee;-moz-box-shadow:0px 0px 0px 3px #eeeeee;box-shadow:0px 0px 0px 3px #eeeeee;margin-bottom:20px;}.forum-map-category table{margin:0px;}.forum-map-category table caption{background-color:#3c85a3;border:1px solid #357690;border-radius:2px 2px 0px 0px;margin:-1px;padding:2px 10px;color:#ffffff;font-size:11.9px;font-weight:bold;text-align:left;text-shadow:0px 1px 0px #1a3946;}
+.forum-map-category table .forum-map-forum h3,.forum-map-category table .forum-map-subforum h3{margin:0px;padding:0px;font-size:14px;line-height:20px;}.forum-map-category table .forum-map-forum h3 a:link,.forum-map-category table .forum-map-subforum h3 a:link,.forum-map-category table .forum-map-forum h3 a:visited,.forum-map-category table .forum-map-subforum h3 a:visited{color:#555555;}
+.forum-map-category table .forum-map-forum h3 a:active,.forum-map-category table .forum-map-subforum h3 a:active,.forum-map-category table .forum-map-forum h3 a:hover,.forum-map-category table .forum-map-subforum h3 a:hover{color:#333333;}
+.forum-map-category table .forum-map-subforum{padding-left:15px;}.forum-map-category table .forum-map-subforum span.tree-t,.forum-map-category table .forum-map-subforum span.tree-l,.forum-map-category table .forum-map-subforum span.tree-s,.forum-map-category table .forum-map-subforum span.tree-i{display:inline-block;height:20px;width:10px;}
+.forum-map-category table .forum-map-subforum span.tree-t{border-left:2px solid #eeeeee;}.forum-map-category table .forum-map-subforum span.tree-t span{border-top:2px solid #eeeeee;display:inline-block;height:1px;width:100%;margin-bottom:3px;}
+.forum-map-category table .forum-map-subforum span.tree-l span{border-left:2px solid #eeeeee;border-bottom:2px solid #eeeeee;display:inline-block;height:10px;width:100%;margin-bottom:3px;}
+.forum-map-category table .forum-map-subforum span.tree-i{border-left:2px solid #eeeeee;position:relative;top:5px;margin-right:4px;}
+.forum-map-category table .forum-map-subforum span.tree-s{width:12px;margin-right:4px;}
+.forum-map-category.forum-map-category-important caption{background-color:#cf402e;border:1px solid #ba3a29;text-shadow:0px 1px 0px #672017;}
 .index-rank-team ul li{background-color:#cf402e;border-color:#ae3627;}.index-rank-team ul li a:link,.index-rank-team ul li a:active,.index-rank-team ul li a:visited,.index-rank-team ul li a:hover{color:#ffffff;text-shadow:0px 1px 0px #3d130e;}
 .index-rank-team ul li .muted{color:#672017;}
 .index-rank-mvp ul li{background-color:#1a93c5;border-color:#037fb3;}.index-rank-mvp ul li a:link,.index-rank-mvp ul li a:active,.index-rank-mvp ul li a:visited,.index-rank-mvp ul li a:hover{color:#ffffff;text-shadow:0px 1px 0px #011f2c;}
