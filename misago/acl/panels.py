@@ -19,6 +19,9 @@ class MisagoACLDebugPanel(DebugPanel):
         self.request = request
 
     def content(self):
-        context = self.context.copy()
-        context['acl'] = self.request.acl
-        return render_to_string('debug_toolbar/panels/acl.html', context)
+        if self.request.heartbeat:
+            self.has_content = False
+        else:
+            context = self.context.copy()
+            context['acl'] = self.request.acl
+            return render_to_string('debug_toolbar/panels/acl.html', context)

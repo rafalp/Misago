@@ -1,4 +1,7 @@
 def settings(request):
-    return {
-        'settings' : request.settings,
-    }
+    try:
+        return {
+            'settings' : request.settings,
+        }
+    except AttributeError:
+        pass

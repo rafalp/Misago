@@ -1,4 +1,7 @@
 def messages(request):
-    return {
-        'messages' : request.messages.messages,
-    }
+    try:
+        return {
+            'messages' : request.messages.messages,
+        }
+    except AttributeError:
+        pass

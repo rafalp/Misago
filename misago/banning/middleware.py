@@ -3,7 +3,7 @@ from misago.users.models import Guest
 
 class BanningMiddleware(object):
     def process_request(self, request):
-        if request.user.is_crawler():
+        if request.heartbeat or request.user.is_crawler():
             return None
         try:
             request.ban = request.session['ban']

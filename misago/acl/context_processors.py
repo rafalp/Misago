@@ -1,4 +1,7 @@
 def acl(request):
-    return {
-        'acl': request.acl,
-    }
+    try:
+        return {
+            'acl': request.acl,
+        }
+    except AttributeError:
+        pass

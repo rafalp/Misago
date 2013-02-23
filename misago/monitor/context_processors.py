@@ -1,4 +1,7 @@
 def monitor(request):
-    return {
-        'monitor' : request.monitor,
-    }
+    try:
+        return {
+            'monitor' : request.monitor,
+        }
+    except AttributeError:
+        pass

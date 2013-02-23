@@ -16,7 +16,7 @@ OUTPUT_FORMAT = 'html5'
 AVATAR_SIZES = (125, 100, 80, 60, 40, 24)
 
 # Allow usernames to contain diacritics
-UNICODE_USERNAMES = True 
+UNICODE_USERNAMES = True
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -44,6 +44,12 @@ CATCH_ALL_EMAIL_ADDRESS = ''
 # The bigger the number, then longer tracker keeps threads reads
 # information and the more costful it is to track reads
 READS_TRACKER_LENGTH = 7
+
+# Heartbeat Path for crons
+# Use this path if you wish to keep Misago alive using separate cron
+# By quering this path from your cron you'll keep Misago's base clean
+# Leave empty if you don't use Heartbeat cron
+HEARTBEAT_PATH = ''
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -87,6 +93,7 @@ JINJA2_EXTENSIONS = (
 MIDDLEWARE_CLASSES = (
     'misago.stopwatch.middleware.StopwatchMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'misago.heartbeat.middleware.HeartbeatMiddleware',
     'misago.cookie_jar.middleware.CookieJarMiddleware',
     'misago.settings.middleware.SettingsMiddleware',
     'misago.monitor.middleware.MonitorMiddleware',

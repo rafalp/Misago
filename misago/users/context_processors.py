@@ -1,4 +1,7 @@
 def user(request):
-    return {
-        'user': request.user,
-    }
+    try:
+        return {
+            'user': request.user,
+        }
+    except AttributeError:
+        pass
