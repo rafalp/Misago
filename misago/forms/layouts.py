@@ -165,7 +165,7 @@ class FormFields(object):
             if widget_name == 'Select':
                 blueprint['widget'] = 'select'
                 if not blueprint['value']:
-                    blueprint['value'] = u''
+                    blueprint['value'] = None
 
             # NullBooleanSelect
             if widget_name == 'NullBooleanSelect':

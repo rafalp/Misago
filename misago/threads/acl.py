@@ -7,32 +7,32 @@ from misago.acl.utils import ACLError403, ACLError404
 from misago.forms import YesNoSwitch
 
 def make_forum_form(request, role, form):
-    form.base_fields['can_read_threads'] = forms.ChoiceField(choices=(
-                                                                     ('0', _("No")),
-                                                                     ('1', _("Yes, owned")),
-                                                                     ('2', _("Yes, all")),
-                                                                     ))
-    form.base_fields['can_start_threads'] = forms.ChoiceField(choices=(
-                                                                       ('0', _("No")),
-                                                                       ('1', _("Yes, with moderation")),
-                                                                       ('2', _("Yes")),
-                                                                       ))
+    form.base_fields['can_read_threads'] = forms.TypedChoiceField(choices=(
+                                                                  (0, _("No")),
+                                                                  (1, _("Yes, owned")),
+                                                                  (2, _("Yes, all")),
+                                                                  ), coerce=int)
+    form.base_fields['can_start_threads'] = forms.TypedChoiceField(choices=(
+                                                                   (0, _("No")),
+                                                                   (1, _("Yes, with moderation")),
+                                                                   (2, _("Yes")),
+                                                                   ), coerce=int)
     form.base_fields['can_edit_own_threads'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_soft_delete_own_threads'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_write_posts'] = forms.ChoiceField(choices=(
-                                                                     ('0', _("No")),
-                                                                     ('1', _("Yes, with moderation")),
-                                                                     ('2', _("Yes")),
-                                                                     ))
+    form.base_fields['can_write_posts'] = forms.TypedChoiceField(choices=(
+                                                                 (0, _("No")),
+                                                                 (1, _("Yes, with moderation")),
+                                                                 (2, _("Yes")),
+                                                                 ), coerce=int)
     form.base_fields['can_edit_own_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_soft_delete_own_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_upvote_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_downvote_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_see_posts_scores'] = forms.ChoiceField(choices=(
-                                                                          ('0', _("No")),
-                                                                          ('1', _("Yes, final score")),
-                                                                          ('2', _("Yes, both up and down-votes")),
-                                                                          ))
+    form.base_fields['can_see_posts_scores'] = forms.TypedChoiceField(choices=(
+                                                                      (0, _("No")),
+                                                                      (1, _("Yes, final score")),
+                                                                      (2, _("Yes, both up and down-votes")),
+                                                                      ), coerce=int)
     form.base_fields['can_see_votes'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_make_polls'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_vote_in_polls'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
@@ -45,30 +45,30 @@ def make_forum_form(request, role, form):
     form.base_fields['can_approve'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_edit_labels'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_see_changelog'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_pin_threads'] = forms.ChoiceField(choices=(
-                                                                     ('0', _("No")),
-                                                                     ('1', _("Yes, to stickies")),
-                                                                     ('2', _("Yes, to annoucements")),
-                                                                     ))
+    form.base_fields['can_pin_threads'] = forms.TypedChoiceField(choices=(
+                                                                 (0, _("No")),
+                                                                 (1, _("Yes, to stickies")),
+                                                                 (2, _("Yes, to annoucements")),
+                                                                 ), coerce=int)
     form.base_fields['can_edit_threads_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_move_threads_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_close_threads'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_protect_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_delete_threads'] = forms.ChoiceField(choices=(
-                                                                        ('0', _("No")),
-                                                                        ('1', _("Yes, soft-delete")),
-                                                                        ('2', _("Yes, hard-delete")),
-                                                                        ))
-    form.base_fields['can_delete_posts'] = forms.ChoiceField(choices=(
-                                                                      ('0', _("No")),
-                                                                      ('1', _("Yes, soft-delete")),
-                                                                      ('2', _("Yes, hard-delete")),
-                                                                      ))
-    form.base_fields['can_delete_polls'] = forms.ChoiceField(choices=(
-                                                                      ('0', _("No")),
-                                                                      ('1', _("Yes, soft-delete")),
-                                                                      ('2', _("Yes, hard-delete")),
-                                                                      ))
+    form.base_fields['can_delete_threads'] = forms.TypedChoiceField(choices=(
+                                                                    (0, _("No")),
+                                                                    (1, _("Yes, soft-delete")),
+                                                                    (2, _("Yes, hard-delete")),
+                                                                    ), coerce=int)
+    form.base_fields['can_delete_posts'] = forms.TypedChoiceField(choices=(
+                                                                  (0, _("No")),
+                                                                  (1, _("Yes, soft-delete")),
+                                                                  (2, _("Yes, hard-delete")),
+                                                                   ), coerce=int)
+    form.base_fields['can_delete_polls'] = forms.TypedChoiceField(choices=(
+                                                                  (0, _("No")),
+                                                                  (1, _("Yes, soft-delete")),
+                                                                  (2, _("Yes, hard-delete")),
+                                                                  ), coerce=int)
     form.base_fields['can_delete_attachments'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
 
     form.layout.append((
@@ -578,8 +578,8 @@ def build_forums(acl, perms, forums, forum_roles):
                     try:
                         if p in ['attachment_size', 'attachment_limit'] and role[p] == 0:
                             forum_role[p] = 0
-                        elif int(role[p]) > forum_role[p]:
-                            forum_role[p] = int(role[p])
+                        elif role[p] > forum_role[p]:
+                            forum_role[p] = role[p]
                     except KeyError:
                         pass
             except KeyError:

@@ -39,7 +39,7 @@ class NewsletterForm(Form):
 class SearchNewslettersForm(Form):
     name = forms.CharField(max_length=255, required=False)
     contains = forms.CharField(max_length=255, required=False)
-    type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=(('0', _("Only to subscribers")), ('1', _("To every member"))), required=False)
+    type = forms.TypedMultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=((0, _("Only to subscribers")), (1, _("To every member"))), coerce=int, required=False)
     rank = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Rank.objects.order_by('order').all(), required=False)
 
     layout = (

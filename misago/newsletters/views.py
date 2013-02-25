@@ -40,7 +40,7 @@ class List(ListWidget):
         if 'rank' in filters:
             model = model.filter(ranks__in=filters['rank']).distinct()
         if 'type' in filters:
-            model = model.filter(ignore_subscriptions__in=[int(x) for x in filters['type']])
+            model = model.filter(ignore_subscriptions__in=filters['type'])
         if 'name' in filters:
             model = model.filter(name__icontains=filters['name'])
         if 'content' in filters:
