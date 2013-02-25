@@ -8,7 +8,15 @@
     border-bottom: 1px solid @navbarBorder;
     .box-shadow(none);
 
+    .container {
+      background: url(@navbarLogoImage);
+      background-position: left center;
+      background-repeat: no-repeat;
+    }
+
     .brand {
+      margin-left: @navbarLogoWidth - @baseFontSize;
+
       text-shadow: none;
 
       &:link, &:active, &:visited, &:hover {
