@@ -8,22 +8,35 @@
 {% block title %}{{ macros.page_title(title=_('Edit your Signature')) }}{% endblock %}
 
 {% block action %}
-<h2>{% trans %}Edit your Signature{% endtrans %}</h2>
-{% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
-{% if user.signature_preparsed %}
-<div class="well" style="margin: 0px; margin-bottom: 32px; padding: 12px;">
-  <div class="markdown">
-    {{ user.signature_preparsed|markdown_final|safe }}
+<div class="form-container">
+
+  <div class="form-header">
+    <h1>{% trans %}Edit your Signature{% endtrans %}</h1>
   </div>
+
+  {% if message %}
+  <div class="messages-list">
+    {{ macros.draw_message(message) }}
+  </div>
+  {% endif %}
+
+  {% if user.signature_preparsed %}
+  <div class="form-preview signature-preview">
+    <div class="markdown">
+      {{ user.signature_preparsed|markdown_final|safe }}
+    </div>
+  </div>
+  {% endif %}
+
+  <form action="{% url 'usercp_signature' %}" method="post">
+    <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+    {{ editor.editor(form.fields.signature, _('Save Signature'),
+      hide_links=(not acl.usercp.allow_signature_links()),
+      hide_images=(not acl.usercp.allow_signature_images()),
+      hide_hr=True) }}
+  </form>
+  
 </div>
-{% endif %}
-<form action="{% url 'usercp_signature' %}" method="post">
-  <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-  {{ editor.editor(form.fields.signature, _('Save Signature'),
-        hide_links=(not acl.usercp.allow_signature_links()),
-        hide_images=(not acl.usercp.allow_signature_images()),
-        hide_hr=True) }}
-</form>
 {% endblock %}
 
 {% block javascripts %}

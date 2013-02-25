@@ -1,0 +1,54 @@
+// Editor style
+// -------------------------
+
+.editor {
+  background-color: @editorBackground;
+  border: 1px solid darken(@editorBackground, 10%);
+  border-radius: @baseBorderRadius;
+
+  .editor-error {
+    padding: @editorPadding;
+    padding-bottom: 0px;
+    margin-bottom: @editorPadding * -1;
+
+    .help-block {
+      color: @red;
+      font-weight: bold;
+    }
+  }
+
+  .editor-input {
+    padding: @editorPadding;
+
+    &>div {
+      margin-top: -1px;
+      margin-right: @editorPadding + 3px;
+
+      textarea {
+        box-shadow: none;
+        margin-bottom: 0px;
+        width: 100%;
+      } 
+    }
+  }
+
+  .editor-actions {
+    border-top: 1px solid darken(@editorBackground, 10%);
+    overflow: auto;
+    padding: @editorPadding;
+
+    .editor-tools {
+      margin: 0px;
+
+      li {
+        float: left;
+        margin-right: @editorPadding;
+
+        .btn {
+          padding-left: 7px;
+          padding-right: 7px;
+        }
+      }
+    }
+  }
+}

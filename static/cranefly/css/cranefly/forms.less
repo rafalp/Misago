@@ -13,55 +13,98 @@
   padding-top: @baseLineHeight * -0.75;
 
   .form-header {
-		border-bottom: 1px solid darken(@bodyBackground, 8%);
-		margin-top: @baseLineHeight * -1;
-		margin-bottom: @baseLineHeight;
-		padding: (@baseLineHeight / 2) 0px;
+  	border-bottom: 1px solid darken(@bodyBackground, 8%);
+  	margin-top: @baseLineHeight * -1;
+  	margin-bottom: @baseLineHeight;
+  	padding: (@baseLineHeight / 2) 0px;
 
-		h1 {
-		  margin: 0px;
-		  padding: 0px;
+  	h1 {
+  	  margin: 0px;
+  	  padding: 0px;
 
-		  font-size: @fontSizeLarge;
-		}
+  	  font-size: @fontSizeLarge;
+
+      small {
+        font-size: @fontSizeLarge * 0.75;
+        font-weight: bold;
+      }
+  	}
+
+    .btn {
+      margin-left: @baseFontSize;
+      position: relative;
+      bottom: @baseLineHeight * 1.5;
+    }
+  }
+
+  .form-preview {
+    background-color: @bodyBackground;
+    border: 1px solid darken(@bodyBackground, 8%);
+    border-radius: @baseBorderRadius;
+    margin-bottom: @baseLineHeight;
+    padding: @baseLineHeight;
   }
 
   form {
-		margin: 0px;
+  	margin: 0px;
 
-		fieldset {
-		  border-top: 1px solid darken(@bodyBackground, 8%);
-		  padding-top: @baseLineHeight * 0.5;
+  	fieldset {
+  	  border-top: 1px solid darken(@bodyBackground, 8%);
+  	  padding-top: @baseLineHeight * 0.5;
 
-		  &.first {
-		  	border-top: none;
-		  	padding-top: 0px;
+      legend {
+        margin-bottom: @baseLineHeight * -0.5;
+
+        color: @grayLight;
+        font-size: @baseFontSize;
+        font-weight: bold;
+
+        div {
+          margin-bottom: @baseLineHeight * -0.5;
+        }
+      }
+
+  	  &.first {
+  	  	border-top: none;
+  	  	padding-top: 0px;
+  	  }
+  	}
+
+  	.control-label {
+  	  font-weight: bold;
+  	}
+
+  	&.form-horizontal {
+  		fieldset {
+  			&.last {
+  		    .control-group:last-child {
+  		  		margin-bottom: 0px;
+  		  		padding-bottom: 0px;
+  		    }
+  		  }
+  		}
+
+		  .form-actions {
+	      padding-left: @horizontalComponentOffset + @baseLineHeight;
 		  }
-		}
-
-		.control-label {
-		  font-weight: bold;
-		}
-
-		&.form-horizontal {
-			fieldset {
-				&.last {
-			    .control-group:last-child {
-			  		margin-bottom: 0px;
-			  		padding-bottom: 0px;
-			    }
-				}
-			}
-
-			.form-actions {
-    		padding-left: @horizontalComponentOffset + @baseLineHeight;
-			}
-		}
+	  }
   }
 
   .form-actions {
 		border-radius: 0px 0px @baseBorderRadius @baseBorderRadius;
 		margin: (@baseLineHeight * -1);
 		margin-top: @baseLineHeight * 0.5;
+
+    .form-actions-protip {
+      margin-left: @baseFontSize;
+
+      color: @gray;
+      font-weight: bold;
+    }
   }
+}
+
+// Only v-resize textareas
+textarea {
+  resize: vertical;
 }

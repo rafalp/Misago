@@ -1,0 +1,113 @@
+// User Control Panel
+// -------------------------
+
+.usercp {
+  .usercp-tabs {
+    border: none;
+
+    li {
+      float: none;
+      display: block;
+      width: 100%;
+
+      a:link, a:visited {
+        border: none;
+        border-radius: @borderRadiusSmall 0px 0px @borderRadiusSmall;
+        float: none;
+        display: block;
+        width: 100%;
+
+        color: @gray;
+        font-weight: bold;
+      }
+
+      a:active, a:hover {
+        background-color: @bluePale;
+
+        color: @white;
+        text-shadow: 0px 1px 0px darken(@bluePale, 25%);
+      }
+
+      &.active {
+        a:link, a:visited, a:active, a:hover {
+          background-color: @red;
+
+          color: @white;
+          text-shadow: 0px 1px 0px darken(@red, 25%);
+        }
+      }
+    }
+  }
+
+  .usercp-action {
+    .form-container {
+      min-height: 180px;
+    }
+  }
+}
+
+// Avatar Edit
+// -------------------------
+.usercp-avatar-menu {
+  margin-bottom: 0px;
+
+  .media-object {
+    border-radius: @borderRadiusLarge;
+    margin-top: @baseFontSize;
+    width: 125px;
+    height: 125px;
+  }
+
+  .media-body {
+    margin-left: (@baseFontSize * 2) + 125px;
+
+    ul.unstyled {
+      margin-left: @baseFontSize * -1 + 1px;
+    }
+  }
+}
+
+.usercp-avatar-select {
+  .usercp-avatar-gallery {
+    margin: 0px (@baseFontSize * -1);
+    overflow: auto;
+    padding-bottom-bottom: @baseFontSize;
+
+    .usercp-avatar-select-form {
+      margin: 0px;
+      padding: 0px;
+      float: left;
+
+      .usercp-btn-avatar {
+        margin: @baseFontSize;
+        padding: 0px;
+
+        &, &:active, &:hover {
+          .opacity(100);
+
+          img {
+            .opacity(100);
+          }
+        }
+
+        &:active, &:hover {
+          img {
+            border-color: @linkColor;
+            .box-shadow(0px 0px 3px @linkColor);
+          }
+        }
+      } 
+    }
+  }
+}
+
+.usercp-avatar-crop {
+  .avatar-crop-preview {
+    border-radius: @borderRadiusLarge;
+    float: left;
+    width: @fontSizeLarge * 2.5;
+    height: @fontSizeLarge * 2.5;
+    margin-right: @baseFontSize;
+    overflow: hidden;
+  }
+}

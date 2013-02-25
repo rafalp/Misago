@@ -7,7 +7,11 @@
   .box-shadow(none);
 
   font-weight: bold;
-
+  
+  i {
+    position: relative;
+    bottom: 1px;
+  }
 
   &:hover, &:active {
     background-color: @white;
@@ -21,8 +25,10 @@
     text-shadow: 0px 1px 0px darken(@bluePale, 15%);
 
     &:hover, &:active {
-      background-color: saturate(@bluePale, 20%);
-      border-color: darken(saturate(@bluePale, 20%), 5%);
+      &:enabled {
+        background-color: saturate(@bluePale, 20%);
+        border-color: darken(saturate(@bluePale, 20%), 5%);
+      }
     }
 
     i {
@@ -37,8 +43,10 @@
     text-shadow: 0px 1px 0px darken(desaturate(@bluePale, 25%), 15%);
 
     &:hover, &:active {
-      background-color: desaturate(@bluePale, 10%);
-      border-color: darken(desaturate(@bluePale, 10%), 5%);
+      &:enabled {
+        background-color: desaturate(@bluePale, 10%);
+        border-color: darken(desaturate(@bluePale, 10%), 5%);
+      }
     }
 
     i {
@@ -53,8 +61,10 @@
     text-shadow: 0px 1px 0px darken(@green, 15%);
 
     &:hover, &:active {
-      background-color: @green;
-      border-color: darken(@green, 5%);
+      &:enabled {
+        background-color: @green;
+        border-color: darken(@green, 5%);
+      }
     }
 
     i {
@@ -69,8 +79,10 @@
     text-shadow: 0px 1px 0px darken(@orange, 15%);
 
     &:hover, &:active {
-      background-color: @orange;
-      border-color: darken(@orange, 5%);
+      &:enabled {
+        background-color: @orange;
+        border-color: darken(@orange, 5%);
+      }
     }
 
     i {
@@ -85,8 +97,10 @@
     text-shadow: 0px 1px 0px darken(@red, 15%);
 
     &:hover, &:active {
-      background-color: saturate(@red, 20%);
-      border-color: darken(saturate(@red, 20%), 5%);
+      &:enabled {
+        background-color: saturate(@red, 20%);
+        border-color: darken(saturate(@red, 20%), 5%);
+      }
     }
 
     i {
@@ -101,8 +115,10 @@
     text-shadow: 0px 1px 0px darken(@textColor, 15%);
 
     &:hover, &:active {
-      background-color: darken(@textColor, 5%);
-      border-color: darken(@textColor, 10%);
+      &:enabled {
+        background-color: darken(@textColor, 5%);
+        border-color: darken(@textColor, 10%);
+      }
     }
 
     i {
@@ -117,8 +133,21 @@
 
     color: @textColor;
 
-    &:hover, &:active {
-      .opacity(90);
+    &:hover, &:active, &:focus {
+      &:enabled {
+        .opacity(90);
+        
+        text-decoration: none;
+      }
     }
+  }
+}
+
+a.btn-link {
+  &:hover, &:active, &:focus {
+    .opacity(90);
+
+    color: @textColor;
+    text-decoration: none;
   }
 }

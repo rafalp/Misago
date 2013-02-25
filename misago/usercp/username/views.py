@@ -21,7 +21,6 @@ def username(request):
         return error404(request)
 
     changes_left = request.acl.usercp.changes_left(request.user)
-
     next_change = None
     if request.acl.usercp.changes_expire() and not changes_left:
         next_change = request.user.namechanges.filter(
@@ -31,30 +30,34 @@ def username(request):
 
     message = request.messages.get_message('usercp_username')
     if request.method == 'POST':
-        org_username = request.user.username
-        form = UsernameChangeForm(request.POST, request=request)
-        if form.is_valid():
-            request.user.set_username(form.cleaned_data['username'])
-            request.user.save(force_update=True)
-            request.user.namechanges.create(date=timezone.now(), old_username=org_username)
-            request.messages.set_flash(Message(_("Your username has been changed.")), 'success', 'usercp_username')
-            # Alert followers of namechange
-            alert_time = timezone.now()
-            bulk_alerts = []
-            alerted_users = []
-            for follower in request.user.follows_set.iterator():
-                alerted_users.append(follower.pk)
-                alert = Alert(user=follower, message=ugettext_lazy("User that you are following, %(username)s, has changed his name to %(newname)s").message, date=alert_time)
-                alert.strong('username', org_username)
-                alert.profile('newname', request.user)
-                alert.hydrate()
-                bulk_alerts.append(alert)
-            if bulk_alerts:
-                Alert.objects.bulk_create(bulk_alerts)
-                User.objects.filter(id__in=alerted_users).update(alerts=F('alerts') + 1)
-            # Hop back
-            return redirect(reverse('usercp_username'))
-        message = Message(form.non_field_errors()[0], 'error')
+        if changes_left:
+            message = Message(_("You have exceeded the maximum number of name changes."), 'error')
+            form = UsernameChangeForm(request=request)
+        else:
+            org_username = request.user.username
+            form = UsernameChangeForm(request.POST, request=request)
+            if form.is_valid():
+                request.user.set_username(form.cleaned_data['username'])
+                request.user.save(force_update=True)
+                request.user.namechanges.create(date=timezone.now(), old_username=org_username)
+                request.messages.set_flash(Message(_("Your username has been changed.")), 'success', 'usercp_username')
+                # Alert followers of namechange
+                alert_time = timezone.now()
+                bulk_alerts = []
+                alerted_users = []
+                for follower in request.user.follows_set.iterator():
+                    alerted_users.append(follower.pk)
+                    alert = Alert(user=follower, message=ugettext_lazy("User that you are following, %(username)s, has changed his name to %(newname)s").message, date=alert_time)
+                    alert.strong('username', org_username)
+                    alert.profile('newname', request.user)
+                    alert.hydrate()
+                    bulk_alerts.append(alert)
+                if bulk_alerts:
+                    Alert.objects.bulk_create(bulk_alerts)
+                    User.objects.filter(id__in=alerted_users).update(alerts=F('alerts') + 1)
+                # Hop back
+                return redirect(reverse('usercp_username'))
+            message = Message(form.non_field_errors()[0], 'error')
     else:
         form = UsernameChangeForm(request=request)
 

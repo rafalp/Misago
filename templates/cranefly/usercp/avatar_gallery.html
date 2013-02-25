@@ -6,21 +6,34 @@
 {% block title %}{{ macros.page_title(title=_('Avatars Gallery')) }}{% endblock %}
 
 {% block action %}
-<h2>{% trans %}Pick Avatar from Gallery{% endtrans %} <small>{% trans %}Change your Avatar{% endtrans %}</small></h2>
-{% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
+<div class="form-container">
 
-<div class="form-avatar-select">
+  <div class="form-header">
+    <h1>{% trans %}Pick Avatar from Gallery{% endtrans %} <small>{% trans %}Change your Avatar{% endtrans %}</small></h1>
+  </div>
+
+  {% if message %}
+  <div class="messages-list">
+    {{ macros.draw_message(message) }}
+  </div>
+  {% endif %}
+
+  <div class="usercp-avatar-select">
   {% for gallery in galleries %}
-  {% if loop.index > 0 %}<hr>{% endif %}
-  {% for avatar in gallery.avatars %}
-  <form action="{% url 'usercp_avatar_gallery' %}" method="post" class="form-button">
-    <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-    <input type="hidden" name="avatar_image" value="{{ avatar }}">
-    <button type="submit" class="btn btn-link">
-      <img src="{{ STATIC_URL }}avatars/{{ avatar }}" alt="{% trans %}Gallery Avatar{% endtrans %}" class="avatar-big img-polaroid">
-    </button>
-  </form>
+    {% if loop.index0 > 0 and gallery.avatars %}<hr>{% endif %}
+    <div class="usercp-avatar-gallery">
+      {% for avatar in gallery.avatars %}
+      <form action="{% url 'usercp_avatar_gallery' %}" class="usercp-avatar-select-form" method="post">
+        <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+        <input type="hidden" name="avatar_image" value="{{ avatar }}">
+        <button type="submit" class="btn btn-link usercp-btn-avatar">
+          <img src="{{ STATIC_URL }}avatars/{{ avatar }}" alt="{% trans %}Gallery Avatar{% endtrans %}" class="img-polaroid">
+        </button>
+      </form>
+      {% endfor %}
+    </div>
   {% endfor %}
-  {% endfor %}
+  </div>
+  
 </div>
 {% endblock %}

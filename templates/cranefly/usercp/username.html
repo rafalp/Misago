@@ -7,50 +7,40 @@
 {% block title %}{{ macros.page_title(title=_('Change your Username')) }}{% endblock %}
 
 {% block action %}
-<h2>{% trans %}Change your Username{% endtrans %}</h2>
-{% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
-<p class="lead">{% if changes_left > 0 -%}
-{% trans count=changes_left -%}
-You can change your username one more time.
-{%- pluralize -%}
-You can change your username {{ count }} more times.
-{%- endtrans %}
-{%- else -%}
-{% trans %}You have exceeded the maximum number of name changes.{% endtrans %}
-{%- if acl.usercp.changes_expire() -%}
-<br>
-{% trans next_change=next_change|reldate|low %}You will be able to change your username on {{ next_change }}{% endtrans %}
-{%- endif %}
-{%- endif %}</p>
-{% if changes_left > 0 %}
-<form action="{% url 'usercp_username' %}" method="post">
-  {{ form_theme.form_widget(form, width=9) }}
-  <div class="form-actions">
-  	<button name="save" type="submit" class="btn btn-primary">{% trans %}Change Name{% endtrans %}</button>
+<div class="form-container">
+
+  <div class="form-header">
+    <h1>{% trans %}Change your Username{% endtrans %}</h1>
   </div>
-</form>
-{% endif %}
-{% if changes_history|length > 0 %}
-<h3>{% trans count=changes_history|length -%}
-Last name changes
-{%- pluralize -%}
-Last {{ count }} name changes
-{%- endtrans %}</h3>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th class="span3">{% trans %}Old Name{% endtrans %}</th>
-      <th>{% trans %}Change Date{% endtrans %}</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for change in changes_history %}
-    <tr>
-      <td><strong>{{ change.old_username }}</strong></td>
-      <td>{{ change.date|reltimesince }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% endif %}
+
+  {% if message %}
+  <div class="messages-list">
+    {{ macros.draw_message(message) }}
+  </div>
+  {% endif %}
+
+  <form action="{% url 'usercp_username' %}" method="post">
+    <div class="form-fields">
+      {% if changes_left == 0 %}
+      {% do form.fields['username']['attrs'].update({'disabled': 'disabled'}) %}
+      {% endif %}
+      {{ form_theme.form_widget(form, width=9) }}
+    </div>
+    <div class="form-actions">
+      <button name="save" type="submit" class="btn btn-primary"{% if changes_left == 0 %} disabled="disabled"{% endif %}>{% trans %}Change Name{% endtrans %}</button>
+      <span class="form-actions-protip">{% if changes_left > 0 -%}
+      {% trans count=changes_left -%}
+      You can change your username one more time.
+      {%- pluralize -%}
+      You can change your username {{ count }} more times.
+      {%- endtrans %}
+      {%- elif acl.usercp.changes_expire() -%}
+      {% trans next_change=next_change|reldate|low %}You will be able to change your username on {{ next_change }}{% endtrans %}
+      {%- else -%}
+      {% trans %}You have exceeded the maximum number of name changes.{% endtrans %}
+      {%- endif %}
+      </span>
+    </div>
+  </form>
+</div>
 {% endblock %}

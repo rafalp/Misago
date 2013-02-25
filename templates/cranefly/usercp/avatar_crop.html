@@ -7,6 +7,38 @@
 {% block title %}{{ macros.page_title(title=_('Crop Avatar')) }}{% endblock %}
 
 {% block action %}
+<div class="form-container usercp-avatar-crop">
+
+  <form action="{% if after_upload %}{% url 'usercp_avatar_upload_crop' %}{% else %}{% url 'usercp_avatar_crop' %}{% endif %}" method="post">
+
+    <div class="form-header">
+      <div class="avatar-crop-preview">
+        <img src="{{ MEDIA_URL }}{{ source }}" id="preview" alt="{% trans %}Avatar Preview{% endtrans %}" class="jcrop-preview" />
+      </div>
+      <h1>{% trans %}Crop Avatar{% endtrans %} <small>{% trans %}Change your Avatar{% endtrans %}</h1>
+      <a href="{% url 'usercp_avatar' %}" class="btn btn-inverse pull-right">{% trans %}Cancel{% endtrans %}</a>
+      <button name="save" type="submit" class="btn btn-danger pull-right">{% trans %}Crop Avatar{% endtrans %}</button>
+    </div>
+
+    {% if message %}
+    <div class="messages-list">
+      {{ macros.draw_message(message) }}
+    </div>
+    {% endif %}
+
+    <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+    <input type="hidden" id="crop-b" name="crop_b" value="">
+    <input type="hidden" id="crop-w" name="crop_w" value="">
+    <input type="hidden" id="crop-x" name="crop_x" value="">
+    <input type="hidden" id="crop-y" name="crop_y" value="">
+
+    <div class="avatar-crop-target"><img src="{{ MEDIA_URL }}{{ source }}" id="target" alt="{% trans %}Uploaded Image{% endtrans %}"></div>
+
+  </form>
+  
+</div>
+
+{#
 <h2>{% trans %}Crop Avatar{% endtrans %} <small>{% trans %}Change your Avatar{% endtrans %}</small></h2>
 {% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
 <form action="{% if after_upload %}{% url 'usercp_avatar_upload_crop' %}{% else %}{% url 'usercp_avatar_crop' %}{% endif %}" method="post">
@@ -29,7 +61,7 @@
       </div>
     </div>
   </div>
-</form>
+</form>#}
 {% endblock %}
 
 {% block javascripts %}
@@ -43,6 +75,7 @@
         var crop_w = $('#crop-w');
         var crop_x = $('#crop-x');
         var crop_y = $('#crop-y');
+        var afx = $('.avatar-crop-preview').width() / {{ avatar_size }};
 
         $('#target').Jcrop({
           onChange: updatePreview,
@@ -72,10 +105,10 @@
             $(crop_y).val(c.y);
 
             $('#preview').css({
-              width: Math.round(rx * boundx) + 'px',
-              height: Math.round(ry * boundy) + 'px',
-              marginLeft: '-' + Math.round(rx * c.x) + 'px',
-              marginTop: '-' + Math.round(ry * c.y) + 'px'
+              width: Math.round(rx * boundx * afx) + 'px',
+              height: Math.round(ry * boundy * afx) + 'px',
+              marginLeft: '-' + Math.round(rx * c.x * afx) + 'px',
+              marginTop: '-' + Math.round(ry * c.y * afx) + 'px'
             });
           }
         };
