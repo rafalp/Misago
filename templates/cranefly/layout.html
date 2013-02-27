@@ -20,7 +20,7 @@
         {% endif %}
         <ul class="nav navbar-blocks pull-left">
           <li><a href="{% url 'index' %}" title="{% trans %}Forum Home{% endtrans %}" class="tooltip-bottom"><i class="icon-th-list"></i></a></li>
-          <li><a href="{% url 'active_threads' %}" title="{% trans %}Popular Threads{% endtrans %}" class="hot tooltip-bottom"><i class="icon-fire"></i></a></li>{% if not user.crawler %}
+          <li><a href="{% url 'popular_threads' %}" title="{% trans %}Popular Threads{% endtrans %}" class="hot tooltip-bottom"><i class="icon-fire"></i></a></li>{% if not user.crawler %}
           <li><a href="#" title="{% trans %}Search Community{% endtrans %}" class="tooltip-bottom"><i class="icon-search"></i></a></li>{% endif %}
           <li><a href="{% url 'users' %}" title="{% trans %}Browse Users{% endtrans %}" class="tooltip-bottom"><i class="icon-user"></i></a></li>
           {% if settings.tos_url or settings.tos_content %}<li><a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{% url 'tos' %}{% endif %}" title="{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Forum Terms of Service{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-certificate"></i></a></li>{% endif %}
@@ -34,7 +34,6 @@
           {#<li><a href="#" title="{% trans %}Private messages{% endtrans %}" class="tooltip-bottom"><i class="icon-inbox"></i><span class="stat">2</span></a></li>#}
           <li><a href="{% url 'newsfeed' %}" title="{% trans %}Your News Feed{% endtrans %}" class="tooltip-bottom"><i class="icon-signal"></i></a></li>
           <li><a href="{% url 'watched_threads' %}" title="{% trans %}Threads you are watching{% endtrans %}" class="tooltip-bottom"><i class="icon-bookmark"></i></a></li>
-          <li><a href="{% url 'active_threads' %}" title="{% trans %}Active Threads{% endtrans %}" class="tooltip-bottom"><i class="icon-fire"></i></a></li>
           <li><a href="{% url 'usercp' %}" title="{% trans %}Edit your profile options{% endtrans %}" class="tooltip-bottom"><i class="icon-cog"></i></a></li>
           <li><form action="{% url 'sign_out' %}" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><button type="submit" title="{% trans %}Sign Out and browse as guest{% endtrans %}" class="btn btn-link danger tooltip-bottom"><i class="icon-off"></i></button></form></li>
         </ul>
