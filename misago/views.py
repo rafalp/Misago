@@ -137,7 +137,7 @@ def forum_map(request):
 def popular_threads(request):
     return request.theme.render_to_response('popular_threads.html',
                                             {
-                                             'threads': Thread.objects.filter(forum_id__in=request.acl.threads.get_readable_forums(request.acl)).filter(deleted=False).filter(moderated=False).order_by('-score').prefetch_related('start_poster', 'last_poster', 'forum')[:50]
+                                             'threads': Thread.objects.filter(forum_id__in=request.acl.threads.get_readable_forums(request.acl)).filter(deleted=False).filter(moderated=False).order_by('-score').prefetch_related('start_poster', 'last_poster', 'forum')[:50],
                                              },
                                             context_instance=RequestContext(request));
 

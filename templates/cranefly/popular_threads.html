@@ -2,42 +2,67 @@
 {% load i18n %}
 {% import "cranefly/macros.html" as macros with context %}
 
-{% block title %}{{ macros.page_title(title=_('Active Threads')) }}{% endblock %}
+{% block title %}{{ macros.page_title(title=_('Popular Threads')) }}{% endblock %}
 
-{% block content %}
-<div class="page-header">
-  <h1>{% trans %}Active Threads{% endtrans %}</h1>
+{% block container %}
+<div class="page-header header-primary">
+  <div class="container">
+    {% if messages %}
+    <div class="messages-list">
+      {{ messages_list(messages) }}
+    </div>
+    {% endif %}
+    <h1>{% trans %}Popular Threads{% endtrans %}</h1>
+  </div>
 </div>
-{% if threads %}
-<p class="lead">{% trans %}Following threads are currently experiencing most activity:{% endtrans %}</p>
-<ul class="unstyled shorts-list">
-{% for row in threads|batch(2, '') %}
-  <li>
+
+<div class="container container-primary">
+  {% if threads %}
+  <div class="popular-threads">
+  {% for thread in threads %}
+  {% do thread.__dict__.update({'warmth': loop.index}) %}
+  {% endfor %}
+  {% for row in threads|batch(2, '') %}
     <div class="row">
       {% for thread in row %}{% if thread %}
       <div class="span6">
-        <img src="{% if thread.start_poster_id %}{{ thread.start_poster.get_avatar(36) }}{% else %}{{ macros.avatar_guest(24) }}{% endif %}" class="avatar tooltip-top" title="{% trans username=thread.start_poster_name %}Thread started by {{ username }}{% endtrans %}">
-        <p class="title">
-          <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="hover-opacity tooltip-top" title="{% trans %}Jump to thread start{% endtrans %}"><i class="icon-asterisk"></i></a>
-          <a href="{% url 'thread_last' thread=thread.pk, slug=thread.slug %}" class="jump jump-last tooltip-top" title="{% trans %}Jump to latest reply{% endtrans %}"><strong>{{ thread.name }}</strong></a>
-        </p>
-        <p class="location">{% trans forum=forum(thread.forum), starter=username(thread.start_poster_id, thread.start_poster_name, thread.start_poster_slug), start=thread.start|reldate %}Thread started by {{ starter }} in {{ forum }} on {{ start }}.{% endtrans %}</p>
+        <div class="popular-thread">
+          <a href="{% url 'thread_new' thread=thread.pk, slug=thread.slug %}" class="label popular-thread-warmth popular-thread-warmth-{{ warmth(thread.warmth) }} tooltip-top" title="{% trans %}Jump to latest reply{% endtrans %}"><i class="icon-fire"></i></a>
+          <div class="popular-thread-details">
+            <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="popular-thread-title tooltip-top" title="{% trans %}Jump to thread start{% endtrans %}">{{ thread.name }}</a>
+            <p class="popular-thread-info">
+              {% trans forum=forum(thread.forum), starter=username(thread.start_poster_id, thread.start_poster_name, thread.start_poster_slug), last=thread.last|reldate, replies=replies(thread.replies) %}By {{ starter }} - {{ forum }} - {{ replies }} - last on {{ last }}.{% endtrans %}
+            </p>
+          </div>
+        </div>
       </div>
       {% endif %}{% endfor %}
     </div>
-  </li>
-{% endfor %}
-</ul>
-{% else %}
-<p class="lead">{% trans %}Looks like there are no active threads.{% endtrans %}</p>
-{% endif %}
-{%- endblock %}
+    <hr>
+  {% endfor %}
+  </div>
+  {% else %}
+  <p class="lead">{% trans %}Looks like there are no popular threads... yet!{% endtrans %}</p>
+  {% endif %}
+</div>
+{% endblock %}
 
+
+{% macro warmth(loop_index) -%}
+{% if loop_index < 5 %}0{% elif loop_index < 20 %}1{% elif loop_index < 35 %}2{% else %}3{% endif %}
+{%- endmacro %}
+
+{% macro replies(thread_replies) -%}
+{% trans count=thread_replies, replies=thread_replies|intcomma -%}
+One reply
+{%- pluralize -%}
+{{ replies }} replies
+{%- endtrans %}
+{%- endmacro %}
 
 {% macro forum(forum) -%}
 <a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}">{{ forum.name }}</a>
 {%- endmacro %}
-
 
 {% macro username(id, username, slug) -%}
 {%- if id -%}
