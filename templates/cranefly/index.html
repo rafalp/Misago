@@ -24,6 +24,7 @@
               <td class="forum-icon"><span class="forum-icon-wrap{% if forum.type == 'redirect' %} forum-icon-redirect{% elif not forum.is_read %} forum-icon-new{% endif %}"><i class="icon-{% if forum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %} icon-white"></i></span></td>
               <td class="forum-main">
                 <h3{% if not forum.is_read %} class="forum-title-new"{% endif %}><a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3>
+                {% if forum.show_details %}
                 <div class="forum-details">
                   {% if forum.type == 'redirect' %}
                   <span class="label{% if forum.redirects_delta %} label-success{% endif %}">{{ forum.redirects|intcomma }}</span> {% trans %}Clicks{% endtrans %}
@@ -31,6 +32,7 @@
                   <span class="label{% if forum.posts_delta %} label-success{% endif %}">{{ forum.posts|intcomma }}</span> {% trans %}Posts{% endtrans %}
                   {% endif %}
                 </div>
+                {% endif %}
                 {% if forum.description %}<p class="forum-description">{{ forum.description }}</p>{% endif %}
               </td>
             </tr>
