@@ -6303,7 +6303,8 @@ a.btn-link:focus {
   font-weight: bold;
 }
 .index-category table .forum-main .forum-details .label {
-  margin-top: -1px;
+  position: relative;
+  bottom: 1px;
 }
 .index-category table .forum-main .forum-description {
   clear: both;

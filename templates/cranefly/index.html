@@ -27,9 +27,9 @@
                 {% if forum.show_details %}
                 <div class="forum-details">
                   {% if forum.type == 'redirect' %}
-                  <span class="label{% if forum.redirects_delta %} label-success{% endif %}">{{ forum.redirects|intcomma }}</span> {% trans %}Clicks{% endtrans %}
+                  <span class="label{% if forum.redirects_delta < forum.redirects %} label-success{% endif %}">{{ forum.redirects|intcomma }}</span> {% trans %}Clicks{% endtrans %}
                   {% else %}
-                  <span class="label{% if forum.posts_delta %} label-success{% endif %}">{{ forum.posts|intcomma }}</span> {% trans %}Posts{% endtrans %}
+                  <span class="label{% if forum.posts_delta < forum.posts %} label-success{% endif %}">{{ forum.posts|intcomma }}</span> {% trans %}Posts{% endtrans %}
                   {% endif %}
                 </div>
                 {% endif %}
