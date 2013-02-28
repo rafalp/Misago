@@ -5769,6 +5769,8 @@ footer .credits a:hover {
 .navbar .navbar-inner .navbar-blocks li .btn-link .label {
   background-color: #cf402e;
   margin-left: 4px;
+  padding-left: 6px;
+  padding-right: 5px;
   position: relative;
   bottom: 1px;
 }
@@ -6788,6 +6790,41 @@ a.btn-link:focus {
 .user-alerts td.alert-date {
   color: #999999;
   text-align: right;
+}
+.news-feed .media {
+  overflow: auto;
+}
+.news-feed .media .media-object {
+  border-radius: 3px;
+  width: 52px;
+  height: 52px;
+}
+.news-feed .media .media-body {
+  margin-left: 66px;
+}
+.news-feed .media .media-body .post-preview:link,
+.news-feed .media .media-body .post-preview:active,
+.news-feed .media .media-body .post-preview:visited,
+.news-feed .media .media-body .post-preview:hover {
+  display: block;
+  margin-top: 7px;
+  color: #333333;
+  font-size: 16.8px;
+  text-decoration: none;
+}
+.news-feed .media .media-body .media-footer {
+  margin: 0px;
+  color: #999999;
+  font-size: 10.5px;
+  font-weight: normal;
+}
+.news-feed .media .media-body .media-footer a {
+  color: #555555;
+}
+.news-feed hr {
+  border: none;
+  border-top: 1px solid #eeeeee;
+  margin: 20px 0px;
 }
 .category-forums-list {
   background-color: #ffffff;

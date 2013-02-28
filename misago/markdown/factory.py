@@ -10,23 +10,28 @@ class ClearHTMLParser(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
         self.clean_text = ''
+        self.lookback = []
         
     def handle_starttag(self, tag, attrs):
+        self.lookback.append(tag)
+
+    def handle_endtag(self, tag):
         try:
-            if tag == 'img':
-                for attr in attrs:
-                    if attr[0] == 'src':
-                        self.clean_text += attr[1]
-            if tag == 'a':
-                for attr in attrs:
-                    if attr[0] == 'href':
-                        self.clean_text += attr[1]
-        except IndexError, KeyError:
+            if self.lookback[-1] == tag:
+                self.lookback.pop()
+        except IndexError:
             pass
+
         
     def handle_data(self, data):
+        # String does not repeat itself
         if self.clean_text[-len(data):] != data:
-            self.clean_text += ' %s' % data
+            # String is not "QUOTE"
+            try:
+                if not (data == 'Quote' and self.lookback[-1] == 'h3' and self.lookback[-2] == 'blockquote'):
+                    self.clean_text += ' %s' % data
+            except IndexError:
+                self.clean_text += ' %s' % data
 
 
 def clear_markdown(text):
