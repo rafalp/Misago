@@ -16,7 +16,7 @@ class CategoryForm(Form):
     closed = forms.BooleanField(widget=YesNoSwitch, required=False)
     style = forms.CharField(max_length=255, required=False)
     attrs = forms.CharField(max_length=255, required=False)
-    show_details = forms.BooleanField(widget=YesNoSwitch, required=False)
+    show_details = forms.BooleanField(widget=YesNoSwitch, required=False, initial=True)
 
     layout = (
               (
@@ -66,7 +66,7 @@ class ForumForm(Form):
     prune_start = forms.IntegerField(min_value=0, initial=0)
     prune_last = forms.IntegerField(min_value=0, initial=0)
     attrs = forms.CharField(max_length=255, required=False)
-    show_details = forms.BooleanField(widget=YesNoSwitch, required=False)
+    show_details = forms.BooleanField(widget=YesNoSwitch, required=False, initial=True)
 
     layout = (
               (

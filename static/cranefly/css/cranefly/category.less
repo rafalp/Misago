@@ -1,0 +1,88 @@
+// Category view
+// -------------------------
+
+.category-forums-list {
+  background-color: @categoryBackground;
+  border: 1px solid @categoryBorder;
+  border-radius: @borderRadiusSmall;
+  .box-shadow(0px 0px 0px 3px @categoryShadow);
+  margin-bottom: @baseLineHeight;
+
+  table {
+    margin: 0px;
+    
+    tr:first-child {
+      td {
+        border-top: none;
+      }
+    }
+
+    .forum-icon {
+      width: 1%;
+
+      .forum-icon-wrap {
+        background-color: @itemOldColor;
+        border: 1px solid darken(@itemOldColor, 10%);
+        border-radius: @baseBorderRadius;
+        padding: (@forumIconSize - 1px) @forumIconSize;
+
+        &.forum-icon-new {
+          background-color: @itemNewColor;
+          border: 1px solid darken(@itemNewColor, 10%);
+        }
+
+        &.forum-icon-redirect {
+          background-color: @itemMovedColor;
+          border: 1px solid darken(@itemMovedColor, 10%);
+        }
+      }
+    }
+    
+    .forum-main {
+      h3 {
+        float: left;
+        margin: 0px;
+        padding: 0px;
+
+        font-size: @fontSizeLarge;
+        line-height: @baseLineHeight;
+
+        a:link, a:visited {
+          color: lighten(@textColor, 35%);
+        }
+
+        &.forum-title-new {
+          a:link, a:visited {
+            color: @textColor;
+          }
+        }
+      }
+
+      .forum-details {
+        float: right;
+
+        color: @grayLight;
+        font-weight: bold;
+
+        .label {
+          position: relative;
+          bottom: 1px;
+        }
+      }
+
+      .forum-description {
+        clear: both;
+        margin: 0px;
+        padding: 0px;
+
+        color: lighten(@textColor, 35%);
+        font-size: @fontSizeSmall;
+      }
+    }
+  }
+
+  &.category-forums-important {
+    border: 1px solid darken(@red, 15%);
+    .box-shadow(0px 0px 0px 3px @red);
+  }
+}

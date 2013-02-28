@@ -3,14 +3,66 @@
 {% load url from future %}
 {% import "cranefly/macros.html" as macros with context %}
 
-{% block breadcrumb %}{{ super() }} <span class="divider">/</span></li>
+{% block title %}{{ macros.page_title(title=category.name) }}{% endblock %}
+
+{% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {% for parent in parents %}
-<li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider">/</span></li>
+<li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {% endfor %}
 <li class="active">{{ category.name }}
 {%- endblock %}
 
-{% block title %}{{ macros.page_title(title=category.name) }}{% endblock %}
+{% block container %}
+<div class="page-header header-primary">
+  <div class="container">
+    {% if messages %}
+    <div class="messages-list">
+      {{ messages_list(messages) }}
+    </div>
+    {% endif %}
+    <ul class="breadcrumb">
+      {{ self.breadcrumb() }}</li>
+    </ul>
+    <h1>{{ category.name }}</h1>
+  </div>
+</div>
+
+<div class="container container-primary">
+  {% if category.description %}
+  <div class="markdown lead page-description">
+    {{ category.description_preparsed|markdown_final|safe }}
+  </div>
+  {% endif %}
+  {% if category.subforums %}
+  <div class="category-forums-list{% if category.style %} category-forums-{{ category.style }}{% endif %}">
+    <table class="table">
+      <tbody>
+        {% for forum in category.subforums %}
+        <tr>
+          <td class="forum-icon"><span class="forum-icon-wrap{% if forum.type == 'redirect' %} forum-icon-redirect{% elif not forum.is_read %} forum-icon-new{% endif %}"><i class="icon-{% if forum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %} icon-white"></i></span></td>
+          <td class="forum-main">
+            <h3{% if not forum.is_read %} class="forum-title-new"{% endif %}><a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3>
+            {% if forum.show_details %}
+            <div class="forum-details">
+              {% if forum.type == 'redirect' %}
+              <span class="label{% if forum.redirects_delta < forum.redirects %} label-success{% endif %}">{{ forum.redirects|intcomma }}</span> {% trans %}Clicks{% endtrans %}
+              {% else %}
+              <span class="label{% if forum.posts_delta < forum.posts %} label-success{% endif %}">{{ forum.posts|intcomma }}</span> {% trans %}Posts{% endtrans %}
+              {% endif %}
+            </div>
+            {% endif %}
+            {% if forum.description %}<p class="forum-description">{{ forum.description }}</p>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="lead">{% trans %}Looks like there are no forums to display in this category.{% endtrans %}</p>
+  {% endif %}
+</div>
+{% endblock %}
 
 {% block content %}
 <div class="page-header">

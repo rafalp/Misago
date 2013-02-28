@@ -37,7 +37,10 @@ class ForumManager(models.Manager):
         while parent.level > 1:
             parent = self.forums_tree[parent.parent_id]
             parents.append(parent)
-        return reversed(parents)
+        result = []
+        for i in reversed(parents):
+            result.append(i)
+        return list(result)
 
     def parents_aware_forum(self, forum):
         self.populate_tree()
