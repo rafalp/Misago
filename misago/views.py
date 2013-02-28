@@ -102,7 +102,6 @@ def redirection(request, forum, slug):
             redirects_tracker.append(forum.pk)
             request.session['redirects'] = redirects_tracker
             forum.redirects += 1
-            forum.redirects_delta += 1
             forum.save(force_update=True)
         return redirect(forum.redirect)
     except Forum.DoesNotExist:

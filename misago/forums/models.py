@@ -81,9 +81,7 @@ class ForumManager(models.Manager):
         for forum in reversed(complete_list):
             if forum.parent_id in parents and parents[forum.parent_id].type != 'redirect':
                 parents[forum.parent_id].threads += forum.threads
-                parents[forum.parent_id].threads_delta += forum.threads_delta
                 parents[forum.parent_id].posts += forum.posts
-                parents[forum.parent_id].posts_delta += forum.posts_delta
                 if acl.can_browse(forum.pk):
                     # If forum is unread, make parent unread too
                     if not forum.is_read:

@@ -412,8 +412,6 @@ class ThreadView(BaseView):
             self.thread.start_post.user.posts += 1
             self.thread.start_post.user.save(force_update=True)
         # Sync forum
-        self.forum.threads_delta += 1
-        self.forum.posts_delta += self.thread.replies + 1
         self.forum.sync()
         self.forum.save(force_update=True)
         # Update monitor

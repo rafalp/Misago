@@ -161,8 +161,6 @@ class ThreadsView(BaseView):
             Post.objects.filter(id__in=last_posts).update(checkpoints=True)
             self.request.monitor['threads'] = int(self.request.monitor['threads']) + accepted
             self.request.monitor['posts'] = int(self.request.monitor['posts']) + accepted
-            self.forum.threads_delta += 1
-            self.forum.posts_delta += self.thread.replies + 1
             self.forum.sync()
             self.forum.save(force_update=True)
             for user in users:

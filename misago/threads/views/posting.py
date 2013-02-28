@@ -284,12 +284,10 @@ class PostingView(BaseView):
                     if self.mode == 'new_thread':
                         self.request.monitor['threads'] = int(self.request.monitor['threads']) + 1
                         self.forum.threads += 1
-                        self.forum.threads_delta += 1
 
                     if self.mode in ['new_thread', 'new_post', 'new_post_quick']:
                         self.request.monitor['posts'] = int(self.request.monitor['posts']) + 1
                         self.forum.posts += 1
-                        self.forum.posts_delta += 1
 
                     self.forum.last_thread = thread
                     self.forum.last_thread_name = thread.name
