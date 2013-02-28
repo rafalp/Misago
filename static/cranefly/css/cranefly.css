@@ -5599,7 +5599,8 @@ a.badge:focus {
   border-radius: 0px;
   margin-bottom: 4px;
   padding: 6.666666666666667px 10px;
-  color: #6f6f6f;
+  color: #888888;
+  font-weight: bold;
 }
 .header-primary .header-tabs li a:hover,
 .header-primary .header-tabs li a:active {
@@ -5615,8 +5616,7 @@ a.badge:focus {
   background: none;
   border-bottom: 4px solid #cf402e;
   margin-bottom: 0px;
-  color: #cf402e;
-  font-weight: bold;
+  color: #333333;
 }
 html,
 body {
@@ -6725,6 +6725,36 @@ a.btn-link:focus {
 .watched-threads .table .thread-forum a:active,
 .watched-threads .table .thread-forum a:hover {
   color: #333333;
+}
+.user-alerts td {
+  vertical-align: middle;
+}
+.user-alerts td.alert-icon .label {
+  background-color: #555555;
+  border: 1px solid #2f2f2f;
+  border-radius: 3px;
+  padding: 4px;
+  padding-top: 3px;
+}
+.user-alerts td.alert-icon .label i {
+  background-image: url("../img/glyphicons-halflings-white.png");
+}
+.user-alerts td.alert-icon .label.label-warning {
+  background-color: #cf402e;
+  border: 1px solid #902d20;
+}
+.user-alerts td.alert-message {
+  color: #555555;
+  font-size: 16.8px;
+}
+.user-alerts td.alert-message a:link,
+.user-alerts td.alert-message a:visited {
+  color: #333333;
+  font-weight: bold;
+}
+.user-alerts td.alert-date {
+  color: #999999;
+  text-align: right;
 }
 .index-rank-team ul li {
   background-color: #cf402e;

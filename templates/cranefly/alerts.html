@@ -8,23 +8,33 @@
 {{ macros.page_title(title=get_title()) }}
 {%- endif %}{% endblock %}
 
-{% block content %}
-<div class="page-header">
-  <h1>{% if user.alerts %}{{ get_title() }} <small>{% trans %}Your Notifications{% endtrans %}</small>
+{% block container %}
+<div class="page-header header-primary">
+  <div class="container">
+    {% if messages %}
+    <div class="messages-list">
+      {{ messages_list(messages) }}
+    </div>
+    {% endif %}
+    <h1>{% if user.alerts %}{{ get_title() }} <small>{% trans %}Your Notifications{% endtrans %}</small>
       {%- else -%}
       {% trans %}Your Notifications{% endtrans %}{% endif %}</h1>
+  </div>
 </div>
-{% if alerts %}
-<div class="alerts-list">
-{% if alerts.today %}{{ alerts_list(_("Today Notifications"), alerts.today) }}{% endif %}
-{% if alerts.yesterday %}{{ alerts_list(_("Yesterday Notifications"), alerts.yesterday) }}{% endif %}
-{% if alerts.week %}{{ alerts_list(_("This Week Notifications"), alerts.week) }}{% endif %}
-{% if alerts.month %}{{ alerts_list(_("This Month Notifications"), alerts.month) }}{% endif %}
-{% if alerts.older %}{{ alerts_list(_("Older Notifications"), alerts.older) }}{% endif %}
+
+<div class="container container-primary">
+  {% if alerts %}
+  <div class="user-alerts">
+    {% if alerts.today %}{{ alerts_list(_("Today Notifications"), alerts.today) }}{% endif %}
+    {% if alerts.yesterday %}{{ alerts_list(_("Yesterday Notifications"), alerts.yesterday) }}{% endif %}
+    {% if alerts.week %}{{ alerts_list(_("This Week"), alerts.week) }}{% endif %}
+    {% if alerts.month %}{{ alerts_list(_("This Month"), alerts.month) }}{% endif %}
+    {% if alerts.older %}{{ alerts_list(_("Older Notifications"), alerts.older) }}{% endif %}
+  </div>
+  {% else %}
+  <p class="lead">{% trans %}Looks like you don't have any notifications... yet.{% endtrans %}</p>
+  {% endif %}
 </div>
-{% else %}
-<p class="lead">{% trans %}Looks like you don't have any notifications... yet.{% endtrans %}</p>
-{% endif %}
 {% endblock %}
 
 {% macro get_title() -%}
@@ -43,15 +53,16 @@ You have {{ count }} new alerts
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>{{ title }}</th>
-        <th class="span3">{% trans %}Date{% endtrans %}</th>
+        <th style="width: 1%;">&nbsp;</th>
+        <th colspan="2">{{ title }}</th>
       </tr>
     </thead>
     <tbody>
       {% for alert in alerts %}
       <tr>
-        <td>{% if alert.new %}<span class="label label-warning">{% trans %}New{% endtrans %}</span> {% endif %}{{ (_(alert.message) % alert.vars())|safe }}</td>
-        <td class="muted">{{ alert.date|reltimesince }}</td>
+        <td class="alert-icon"><span class="label {% if alert.new %} label-warning{% endif %} tooltip-top" title="{% if alert.new %}{% trans %}New notification{% endtrans %}{% else %}{% trans %}Old notification{% endtrans %}{% endif %}"><i class="icon-fire"></i></label></td>
+        <td class="alert-message">{{ (_(alert.message) % alert.vars())|safe }}</td>
+        <td class="alert-date">{{ alert.date|reltimesince }}</td>
       </tr>
       {% endfor %}
     </tbody>

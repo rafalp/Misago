@@ -1,0 +1,42 @@
+// User Alerts
+// -------------------------
+
+.user-alerts {
+  td {
+    vertical-align: middle;
+
+    &.alert-icon {
+      .label {
+        background-color: @gray;
+        border: 1px solid darken(@gray, 15%);
+        border-radius: @baseBorderRadius;
+        padding: 4px;
+        padding-top: 3px;
+
+        i {
+          background-image: url("@{iconWhiteSpritePath}");
+        }
+
+        &.label-warning {
+          background-color: @red;
+          border: 1px solid darken(@red, 15%);
+        }
+      }
+    }
+
+    &.alert-message {
+      color: @gray;
+      font-size: @baseFontSize * 1.2;
+
+      a:link, a:visited {
+        color: @textColor;
+        font-weight: bold;
+      }
+    }
+
+    &.alert-date {
+      color: @grayLight;
+      text-align: right;
+    }
+  }
+}
