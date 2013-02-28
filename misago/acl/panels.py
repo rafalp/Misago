@@ -23,5 +23,8 @@ class MisagoACLDebugPanel(DebugPanel):
             self.has_content = False
         else:
             context = self.context.copy()
-            context['acl'] = self.request.acl
+            try:
+                context['acl'] = self.request.acl
+            except AttributeError:
+                context['acl'] = {}
             return render_to_string('debug_toolbar/panels/acl.html', context)

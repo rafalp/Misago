@@ -135,7 +135,7 @@ class Forum(MPTTModel):
     prune_start = models.PositiveIntegerField(default=0)
     prune_last = models.PositiveIntegerField(default=0)
     redirect = models.CharField(max_length=255, null=True, blank=True)
-    template = models.CharField(default='row', max_length=255, null=True, blank=True)
+    attrs = models.CharField(max_length=255, null=True, blank=True)
     show_details = models.BooleanField(default=True)
     style = models.CharField(max_length=255, null=True, blank=True)
     closed = models.BooleanField(default=False)
@@ -167,6 +167,9 @@ class Forum(MPTTModel):
 
     def move_content(self, target):
         move_forum_content.send(sender=self, move_to=target)
+
+    def attr(self, att):
+        return att in self.attrs.split()
 
     def sync(self):
         self.threads = self.thread_set.filter(moderated=False).filter(deleted=False).count()

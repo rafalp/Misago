@@ -15,11 +15,7 @@ class CategoryForm(Form):
     description = forms.CharField(widget=forms.Textarea, required=False)
     closed = forms.BooleanField(widget=YesNoSwitch, required=False)
     style = forms.CharField(max_length=255, required=False)
-    template = forms.ChoiceField(choices=(
-                                          ('row', _('One forum per row')),
-                                          ('half', _('Two forums per row')),
-                                          ('quarter', _('Four forums per row')),
-                                          ))
+    attrs = forms.CharField(max_length=255, required=False)
     show_details = forms.BooleanField(widget=YesNoSwitch, required=False)
 
     layout = (
@@ -36,7 +32,7 @@ class CategoryForm(Form):
               (
                _("Display Options"),
                (
-                ('template', {'label': _("Category Layout"), 'help_text': _('Controls how this category is displayed on forums lists.')}),
+                ('attrs', {'label': _("Category Attributes"), 'help_text': _('Custom templates can check categories for predefined attributes that will change way they are rendered.')}),
                 ('show_details', {'label': _("Show Subforums Details"), 'help_text': _('Allows you to prevent this category subforums from displaying statistics, last post data, etc. ect. on forums lists.')}),
                 ('style', {'label': _("Category Style"), 'help_text': _('You can add custom CSS classess to this category, to change way it looks on board index.')}),
                 ),
@@ -46,6 +42,15 @@ class CategoryForm(Form):
     def finalize_form(self):
         self.fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(include_self=True), level_indicator=u'- - ')
         self.fields['perms'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions"))
+
+    def clean_attrs(self):
+        clean = []
+        data = self.cleaned_data['attrs'].strip().split()
+        for i in data:
+            i = i.strip()
+            if not i in clean:
+                clean.append(i)
+        return ' '.join(clean)
 
 
 class ForumForm(Form):
@@ -60,11 +65,7 @@ class ForumForm(Form):
     style = forms.CharField(max_length=255, required=False)
     prune_start = forms.IntegerField(min_value=0, initial=0)
     prune_last = forms.IntegerField(min_value=0, initial=0)
-    template = forms.ChoiceField(choices=(
-                                          ('row', _('One forum per row')),
-                                          ('half', _('Two forums per row')),
-                                          ('quarter', _('Four forums per row')),
-                                          ))
+    attrs = forms.CharField(max_length=255, required=False)
     show_details = forms.BooleanField(widget=YesNoSwitch, required=False)
 
     layout = (
@@ -88,7 +89,7 @@ class ForumForm(Form):
               (
                _("Display Options"),
                (
-                ('template', {'label': _("Subforums Layout"), 'help_text': _('Controls how this forum displays subforums list.')}),
+                ('attrs', {'label': _("Subforums List Attributes"), 'help_text': _('Custom templates can check forums for predefined attributes that will change way subforums lists are rendered.')}),
                 ('show_details', {'label': _("Show Subforums Details"), 'help_text': _("Allows you to prevent this forum's subforums from displaying statistics, last post data, etc. ect. on subforums list.")}),
                 ('style', {'label': _("Forum Style"), 'help_text': _('You can add custom CSS classess to this forum to change way it looks on forums lists.')}),
                 ),
@@ -98,6 +99,15 @@ class ForumForm(Form):
     def finalize_form(self):
         self.fields['parent'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(), level_indicator=u'- - ')
         self.fields['perms'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions"))
+
+    def clean_attrs(self):
+        clean = []
+        data = self.cleaned_data['attrs'].strip().split()
+        for i in data:
+            i = i.strip()
+            if not i in clean:
+                clean.append(i)
+        return ' '.join(clean)
 
 
 class RedirectForm(Form):
