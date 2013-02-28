@@ -31,52 +31,9 @@
   		{%- endif %} icon-white"></i></span></div>
 {%- endmacro %}
 
-{# Render forums list #}
-{% macro draw_forums(category, width=12) %}
-{% if category.template != 'row' %}
-<div class="row">
-  {% for forum in category.subforums %}
-    {{ draw_forum(category, forum, width) }}
-    {% if not loop.last and ((category.template == 'half' and loop.index is even()) or (category.template == 'quad' and loop.index is divisibleby(4))) %}
-    </div>
-    <div class="row">
-    {% endif %}
-  {% endfor %}
-</div>
-{% else %}
-{% for forum in category.subforums %}
-  {{ draw_forum(category, forum, width) }}
-{% endfor %}
-{% endif %}
-{% endmacro %}
-
-{# Render forum on list #}
-{% macro draw_forum(category, forum, width=12) %}
-<div{% if category.template != 'row' %} class="span{% if category.template == 'half' %}{{ widthratio(50, 100, width) }}{% elif category.template == 'quarter' %}{{ widthratio(25, 100, width) }}{% endif %}"{% endif %}>
-  <div class="well well-forum{% if forum.style %} {{ forum.style }}{% endif %}">
-    <div class="forum-icon {% if forum.type == 'redirect' %} redirect-icon{% elif not forum.is_read %} forum-new{% endif %}"><i class="icon-{% if forum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %} icon-white"></i></div>
-    <div class="forum-details">
-      <div class="pull-left">
-        <h3><a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}"{% if forum.type != 'redirect' and forum.is_read %} class="read-forum"{% endif %}>{{ forum.name }}</a></h3>
-        {% if forum.description %}<div class="muted">{{ forum.description }}</div>{% endif %}
-      </div>
-      {% if category.show_details and category.template != 'quarter' %}
-      {% if forum.type == 'redirect' %}
-      <div class="pull-right forum-stat stat-redirects">
-        <span class="stat {% if forum.redirects_delta > 0 %}positive{% else %}stag{% endif %}">{% if forum.redirects_delta > 0 %}+{{ forum.redirects_delta }}{% else %}{{ forum.redirects }}{% endif %}</span> <span class="muted">{% trans %}clicks{% endtrans %}</span>
-      </div>
-      {% else %}
-      <div class="pull-right forum-stat stat-posts">
-        <span class="stat {% if forum.posts_delta > 0 %}positive{% else %}stag{% endif %}">{% if forum.posts_delta > 0 %}+{{ forum.posts_delta }}{% else %}{{ forum.posts }}{% endif %}</span> <span class="muted">{% trans %}posts{% endtrans %}</span>
-      </div>
-      {% if category.template != 'half' %}
-      <div class="pull-right forum-stat stat-threads">
-        <span class="stat {% if forum.threads_delta > 0 %}positive{% else %}stag{% endif %}">{% if forum.threads_delta > 0 %}+{{ forum.threads_delta }}{% else %}{{ forum.threads }}{% endif %}</span> <span class="muted">{% trans %}threads{% endtrans %}</span>
-      </div>
-      {% endif %}
-      {% endif %}
-      {% endif %}
-    </div>
-  </div>
-</div>
-{% endmacro %}
+{# Render pagination label #}
+{% macro pager_label(pagination) -%}
+{%- trans current_page=('<strong>' ~ pagination['page'] ~ '</strong>')|safe, pages=('<strong>' ~ pagination['total'] ~ '</strong>')|safe -%}
+    Page {{ current_page }} of {{ pages }}
+{%- endtrans -%}
+{%- endmacro %}

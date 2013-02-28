@@ -1,0 +1,55 @@
+// Primary header
+// -------------------------
+.header-primary {
+  background-color: @pageHeaderBackground;
+  border-bottom: 1px solid @pageHeaderBorder;
+  margin: 0px;
+  margin-top: 0px;
+  padding-top: @baseLineHeight / 2;
+
+  h1 {
+    color: @gray;
+    font-size: @fontSizeLarge * 2;
+    font-weight: normal;
+  }
+
+  .header-tabs {
+    border-bottom: 0px;
+    margin: 0px;
+    margin-top: (@baseLineHeight  * -0.5);
+    position: relative;
+    top: (@baseLineHeight * 0.5) - 1px;
+
+    li {
+      a {
+        &:link, &:visited {
+          border: none;
+          border-radius: 0px;
+          margin-bottom: 4px;
+          padding: (@baseLineHeight / 3) (@baseLineHeight / 2);
+
+          color: lighten(@gray, 10%);
+        }
+
+        &:hover, &:active {
+          background: none;
+          border-bottom: 4px solid @gray;
+          margin-bottom: 0px;
+
+          color: @gray;
+        }
+      }
+
+      &.active {
+        a:link, a:visited, a:hover, a:active {
+          background: none;
+          border-bottom: 4px solid @red;
+          margin-bottom: 0px;
+
+          color: @red;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}

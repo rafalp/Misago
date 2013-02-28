@@ -1,0 +1,47 @@
+// Pagination
+// -------------------------
+.pagination {
+  margin: 0px;
+  padding: 0px;
+  
+  .count {
+    margin-right: @baseFontSize * 0.75;
+    padding: 4px 0px;
+
+    color: @grayLight;
+  }
+
+  ul {
+    .box-shadow(none);
+
+    li {
+      float: left;
+      margin: 0px;
+      margin-right: @baseFontSize / 3;
+      padding: 0px;
+
+      a:link, a:visited {
+        background-color: @paginationBackground;
+        border: 1px solid @paginationBorder;
+        border-radius: @baseBorderRadius;
+        padding: 3px 7px;
+
+        color: @grayLight;
+
+        i {
+          .opacity(55);
+        }
+      }
+
+      a:active, a:hover {
+        border: 1px solid @paginationActiveBackground;
+
+        color: @gray;
+
+        i {
+          .opacity(100);
+        }
+      }
+    }
+  }
+}

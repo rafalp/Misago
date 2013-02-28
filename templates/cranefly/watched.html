@@ -4,71 +4,96 @@
 
 {% block title %}{{ macros.page_title(title=_('Threads you are watching')) }}{% endblock %}
 
-{% block content %}
-<div class="page-header">
-  <h1>{% trans %}Threads you are watching{% endtrans %}</h1>
-</div>
-
-{% if message %}{{ macros.draw_message(message) }}{% endif %}
-
-<div class="list-nav">
-  {% if items_total %}
-  {{ pager() }}
-  {% endif %}
-  <ul class="nav nav-pills pull-right">
-    <li class="{% if new %}primary{% else %}info{% endif %}"><a href="{% url 'watched_threads_new' %}">{% trans %}Unread Threads{% endtrans %}</a></li>
-    <li class="{% if not new %}primary{% else %}info{% endif %}"><a href="{% url 'watched_threads' %}">{% trans %}All Threads{% endtrans %}</a></li>
-  </ul>
-</div>
-
-{% if threads %}
-<ul class="unstyled shorts-list">
-  {% for thread in threads %}
-  <li id="watch-{{ loop.index }}">
-    <div class="row">
-      <div class="span7">
-        <img src="{% if thread.start_poster_id %}{{ thread.start_poster.get_avatar(36) }}{% else %}{{ macros.avatar_guest(24) }}{% endif %}" class="avatar tooltip-top" title="{% trans username=thread.start_poster_name %}Thread started by {{ username }}{% endtrans %}">
-        <p class="title">
-          <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="hover-opacity tooltip-top" title="{% trans %}Jump to thread start{% endtrans %}"><i class="icon-asterisk"></i></a>
-          {% if not thread.is_read -%}
-          <a href="{% url 'thread_new' thread=thread.pk, slug=thread.slug %}" class="jump jump-new tooltip-top" title="{% trans %}Jump to first unread post{% endtrans %}">
-          {%- else -%}
-          <a href="{% url 'thread_last' thread=thread.pk, slug=thread.slug %}" class="jump jump-last tooltip-top" title="{% trans %}Jump to last post{% endtrans %}">
-          {%- endif -%}{% if not thread.is_read %}<strong>{{ thread.name }}</strong>{% else %}{{ thread.name }}{% endif %}</a>
-        </p>
-        <p class="location">{% trans forum=forum(thread.forum), starter=username(thread.start_poster_id, thread.start_poster_name, thread.start_poster_slug), start=thread.start|reldate %}Thread started by {{ starter }} in {{ forum }} on {{ start }}.{% endtrans %}</p>
-      </div>
-      <div class="span5 span-actions hover-opacity-strong">
-        <form action="{% url 'thread_unwatch' thread=thread.pk, slug=thread.slug %}" class="form-inline pull-right" method="post">
-          <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-          <input type="hidden" name="retreat" value="{{ delete_retreat(loop) }}">
-          <button class="btn btn-danger"><i class="icon-remove icon-white"></i> {% trans %}Unwatch{% endtrans %}</button>
-        </form>
-        <form action="{% if thread.send_email %}{% url 'thread_unwatch_email' thread=thread.pk, slug=thread.slug %}{% else %}{% url 'thread_watch_email' thread=thread.pk, slug=thread.slug %}{% endif %}" class="form-inline pull-right" method="post">
-          <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-          <input type="hidden" name="retreat" value="{{ request_path }}#watch-{{ loop.index }}">
-          <button class="btn{% if thread.send_email %} btn-success{% endif %}"><i class="icon-envelope{% if thread.send_email %} icon-white{% endif %}"></i> {% trans %}E-mail{% endtrans %}</button>
-        </form>
-      </div>
+{% block container %}
+<div class="page-header header-primary">
+  <div class="container">
+    {% if messages %}
+    <div class="messages-list">
+      {{ messages_list(messages) }}
     </div>
-  </li>
-  {% endfor %}
-</ul>
-<div class="list-nav last">
-  {{ pager() }}
+    {% endif %}
+    <h1>{% trans %}Threads you are watching{% endtrans %}</h1>
+
+    <ul class="nav nav-tabs header-tabs">
+      <li class="{% if not new %}active{% endif %}"><a href="{% url 'watched_threads' %}">{% trans %}All Threads{% endtrans %}</a></li>
+      <li class="{% if new %}active{% endif %}"><a href="{% url 'watched_threads_new' %}">{% trans %}Unread Threads{% endtrans %}</a></li>
+    </ul>
+  </div>
 </div>
-{% else %}
-<p class="lead">{% if new -%}
+
+<div class="container container-primary">
+  {% if message %}
+  <div class="messages-list">
+    {{ macros.draw_message(message) }}
+  </div>
+  {% endif %}
+
+  {% if threads %}
+  <div class="watched-threads">
+    {{ pager() }}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th style="width: 1%">&nbsp;</th>
+          <th colspan="2">{% trans %}Thread{% endtrans %}</th>
+          <th class="span4">{% trans %}Forum{% endtrans %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for thread in threads %}
+        <tr id="watch-{{ loop.index }}">
+          <td nowrap="nowrap">
+            <div class="watched-thread-flags">
+              <form action="{% url 'thread_unwatch' thread=thread.pk, slug=thread.slug %}" method="post">
+                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                <input type="hidden" name="retreat" value="{{ delete_retreat(loop) }}">
+                <button type="submit" class="btn btn-danger tooltip-top" title="{% trans %}Unwatch{% endtrans %}"><i class="icon-remove"></i></button>
+              </form>
+
+              <form action="{% if thread.send_email %}{% url 'thread_unwatch_email' thread=thread.pk, slug=thread.slug %}{% else %}{% url 'thread_watch_email' thread=thread.pk, slug=thread.slug %}{% endif %}" method="post">
+                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                <input type="hidden" name="retreat" value="{{ request_path }}#watch-{{ loop.index }}">
+                <button type="submit" class="btn btn-{% if thread.send_email %}success{% else %}inverse{% endif %} tooltip-top" title="{% if thread.send_email %}{% trans %}Don't notify with e-mail{% endtrans %}{% else %}{% trans %}Notify with e-mail{% endtrans %}{% endif %}"><i class="icon-envelope"></i></button>
+              </form>
+
+              <span class="label thread-{% if thread.is_read -%}read{% else %}new{% endif %} tooltip-top" title="{% if thread.is_read %}{% trans %}No new posts{% endtrans %}{% else %}{% trans %}New posts{% endtrans %}{% endif %}"><i class="icon-comment"></i></span>
+            </div>
+          </td>
+          <td>
+            {% if not thread.is_read -%}
+            <a href="{% url 'thread_new' thread=thread.pk, slug=thread.slug %}" class="thread-title thread-title-new tooltip-top" title="{% trans %}Jump to first unread post{% endtrans %}">
+            {%- else -%}
+            <a href="{% url 'thread_last' thread=thread.pk, slug=thread.slug %}" class="thread-title tooltip-top" title="{% trans %}Jump to last post{% endtrans %}">
+            {%- endif -%}{{ thread.name }}</a>
+          </td>
+          <td class="thread-replies">
+            {% trans replies=replies(thread.replies), last=thread.last|reldate|low %}{{ replies }}, last one on {{ last }}{% endtrans %}
+          </td>
+          <td class="thread-forum">
+            <a href="{% url 'forum' forum=thread.forum.pk, slug=thread.forum.slug %}">{{ thread.forum.name }}</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {{ pager() }}
+  </div>
+  {% else %}
+  <p class="lead">{% if new -%}
     {% trans %}There are no unread threads that you are watching.{% endtrans %}
     {%- else -%}
     {% trans %}You are not watching any threads.{% endtrans %}
     {%- endif %}</p>
-{% endif %}
+  {% endif %}
+</div>
 {% endblock %}
 
 
 {% macro pager() -%}
-  <ul class="pager pull-left">
+{% if pagination['total'] > 1 %}
+<div class="pagination">
+  <ul>
+    <li class="count">{{ macros.pager_label(pagination) }}</li>
     {% if new %}
     {%- if pagination['prev'] > 1 %}<li><a href="{% url 'watched_threads_new' %}" class="tooltip-top" title="{% trans %}Latest Threads{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}Latest{% endtrans %}</a></li>{% endif -%}
     {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'watched_threads_new' page=pagination['prev'] %}{% else %}{% url 'watched_threads_new' %}{% endif %}" class="tooltip-top" title="{% trans %}Newer Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
@@ -78,26 +103,18 @@
     {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'watched_threads' page=pagination['prev'] %}{% else %}{% url 'watched_threads' %}{% endif %}" class="tooltip-top" title="{% trans %}Newer Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
     {%- if pagination['next'] > 0 %}<li><a href="{% url 'watched_threads' page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
     {% endif %}
-    <li class="count">
-    {%- trans current_page=pagination['page'], pages=pagination['total'] -%}
-    Page {{ current_page }} of {{ pages }}
-    {%- endtrans -%}
-    </li>
   </ul>
+</div>
+{% endif %}
 {%- endmacro %}
 
 
-{% macro forum(forum) -%}
-<a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}">{{ forum.name }}</a>
-{%- endmacro %}
-
-
-{% macro username(id, username, slug) -%}
-{%- if id -%}
-<a href="{% url 'user' user=id, username=slug %}">{{ username }}</a>
-{%- else -%}
-{{ username }}
-{%- endif -%}
+{% macro replies(thread_replies) -%}
+{% trans count=thread_replies, replies=thread_replies|intcomma -%}
+One reply
+{%- pluralize -%}
+{{ replies }} replies
+{%- endtrans %}
 {%- endmacro %}
 
 
