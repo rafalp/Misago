@@ -313,8 +313,10 @@ class User(models.Model):
     def set_username(self, username):
         self.username = username.strip()
         self.username_slug = slugify(username)
-        if self.pk:
-            rename_user.send(sender=self)
+
+    def sync_username(self):
+        print 'SYNCING NAME CACHES!'
+        rename_user.send(sender=self)
 
     def is_username_valid(self, e):
         try:

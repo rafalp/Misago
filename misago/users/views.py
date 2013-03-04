@@ -308,6 +308,10 @@ class Edit(FormWidget):
         target.signature_ban_reason_user = form.cleaned_data['signature_ban_reason_user']
         target.signature_ban_reason_admin = form.cleaned_data['signature_ban_reason_admin']
 
+        # Sync username?
+        if target.username != self.original_name:
+            target.sync_username()
+
         # Do signature mumbo-jumbo
         if form.cleaned_data['signature']:
             target.signature = form.cleaned_data['signature']

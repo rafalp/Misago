@@ -30,7 +30,7 @@ def username(request):
 
     message = request.messages.get_message('usercp_username')
     if request.method == 'POST':
-        if changes_left:
+        if not changes_left:
             message = Message(_("You have exceeded the maximum number of name changes."), 'error')
             form = UsernameChangeForm(request=request)
         else:
@@ -39,6 +39,7 @@ def username(request):
             if form.is_valid():
                 request.user.set_username(form.cleaned_data['username'])
                 request.user.save(force_update=True)
+                request.user.sync_username()
                 request.user.namechanges.create(date=timezone.now(), old_username=org_username)
                 request.messages.set_flash(Message(_("Your username has been changed.")), 'success', 'usercp_username')
                 # Alert followers of namechange
