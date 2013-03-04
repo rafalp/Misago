@@ -7,7 +7,7 @@ def home(request):
         'users_inactive': request.monitor['users_inactive'],
         'threads': request.monitor['threads'],
         'posts': request.monitor['posts'],
-        'admins': Session.objects.filter(user__isnull=False).filter(admin=1).order_by('user__username_slug').select_related(depth=1),
+        'admins': Session.objects.filter(user__isnull=False).filter(admin=1).order_by('user__username_slug').select_related('user'),
         }, context_instance=RequestContext(request));
 
 
