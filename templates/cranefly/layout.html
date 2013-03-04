@@ -50,11 +50,7 @@
 
   {% block container %}
   <div class="container container-primary">
-    {% if messages %}
-    <div class="messages-list">
-    	{{ messages_list(messages) }}
-    </div>
-    {% endif %}
+    {{ messages_list(messages) }}
     
     {% block content %}
     {% endblock %}

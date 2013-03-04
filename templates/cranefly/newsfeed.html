@@ -9,11 +9,7 @@
 {% block container %}
 <div class="page-header header-primary">
   <div class="container">
-    {% if messages %}
-    <div class="messages-list">
-      {{ messages_list(messages) }}
-    </div>
-    {% endif %}
+    {{ messages_list(messages) }}
     <h1>{% trans %}Your News Feed{% endtrans %}</h1>
   </div>
 </div>

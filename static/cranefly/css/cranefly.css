@@ -855,7 +855,7 @@ a.label:hover,a.label:focus,a.badge:hover,a.badge:focus{color:#ffffff;text-decor
 .header-primary .header-tabs{border-bottom:0px;margin:0px;margin-top:-10px;position:relative;top:9px;}.header-primary .header-tabs li a:link,.header-primary .header-tabs li a:visited{background:none;border:none;border-radius:0px;margin-bottom:4px;padding:6.666666666666667px 10px;color:#888888;font-weight:bold;}
 .header-primary .header-tabs li a:hover,.header-primary .header-tabs li a:active,.header-primary .header-tabs li a a:focus{background:none;border-bottom:4px solid #555555;margin-bottom:0px;color:#555555;}
 .header-primary .header-tabs li.active a:link,.header-primary .header-tabs li.active a:visited,.header-primary .header-tabs li.active a:hover,.header-primary .header-tabs li.active a:active{background:none;border-bottom:4px solid #cf402e;margin-bottom:0px;color:#333333;}
-.header-primary .header-tabs li .form-inline{margin:0px;margin-bottom:7px;}.header-primary .header-tabs li .form-inline .btn-icon{padding-left:7px;padding-right:7px;}
+.header-primary .header-tabs li .form-inline{margin:0px;margin-left:14px;margin-bottom:7px;}.header-primary .header-tabs li .form-inline .btn-icon{padding-left:7px;padding-right:7px;}
 html,body{height:100%;}
 #wrap{min-height:100%;height:auto !important;height:100%;margin:0 auto -100px;}#wrap .container-primary{padding-top:20px;padding-bottom:120px;}#wrap .container-primary .page-description{margin-bottom:20px;}
 footer{background-color:#eeeeee;border-top:1px solid #dadada;height:80px;padding:11px 19px;}footer hr{border-bottom:1px solid #dadada;margin:10px 0px;}
@@ -1007,6 +1007,16 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{opacity:0.9;filter:alpha(opa
 .profiles-list .user-cell{overflow:auto;}.profiles-list .user-cell .user-avatar{float:left;}.profiles-list .user-cell .user-avatar img{border-radius:3px;width:42px;height:42px;}
 .profiles-list .user-cell .user-details{margin:0px;margin-left:56px;}.profiles-list .user-cell .user-details a:link,.profiles-list .user-cell .user-details a:active,.profiles-list .user-cell .user-details a:visited,.profiles-list .user-cell .user-details a:hover{display:block;margin-top:3px;color:#333333;font-size:19.599999999999998px;font-weight:bold;}
 .profiles-list .user-cell .user-details .user-info{display:block;color:#999999;font-size:10.5px;}
+.user-profile .user-profile-header .header-avatar{border-radius:3px;float:left;width:80px;height:80px;margin-top:-8px;}
+.user-profile .user-profile-header .header-side{margin-left:94px;}.user-profile .user-profile-header .header-side h1{margin-left:6.666666666666667px;}
+.user-profile hr{border:none;border-top:1px solid #eeeeee;margin:14px 0px;}
+.user-profile .user-details .label{font-size:14px;}
+.user-profile .user-list .user-cell{overflow:auto;}.user-profile .user-list .user-cell .user-avatar{float:left;}.user-profile .user-list .user-cell .user-avatar img{border-radius:3px;width:42px;height:42px;}
+.user-profile .user-list .user-cell .user-details{margin:0px;margin-left:56px;}.user-profile .user-list .user-cell .user-details a:link,.user-profile .user-list .user-cell .user-details a:active,.user-profile .user-list .user-cell .user-details a:visited,.user-profile .user-list .user-cell .user-details a:hover{display:block;margin-top:3px;color:#333333;font-size:19.599999999999998px;font-weight:bold;}
+.user-profile .user-list .user-cell .user-details .user-info{display:block;color:#999999;font-size:10.5px;}
+.user-profile .content-list .media{overflow:auto;}.user-profile .content-list .media .media-object{border-radius:3px;width:52px;height:52px;}
+.user-profile .content-list .media .media-body{margin-left:66px;}.user-profile .content-list .media .media-body .post-preview:link,.user-profile .content-list .media .media-body .post-preview:active,.user-profile .content-list .media .media-body .post-preview:visited,.user-profile .content-list .media .media-body .post-preview:hover{display:block;margin-top:7px;color:#333333;font-size:16.8px;text-decoration:none;}
+.user-profile .content-list .media .media-body .media-footer{margin:0px;color:#999999;font-size:10.5px;font-weight:normal;}.user-profile .content-list .media .media-body .media-footer a{color:#555555;}
 .index-rank-team ul li{background-color:#cf402e;border-color:#ae3627;}.index-rank-team ul li a:link,.index-rank-team ul li a:active,.index-rank-team ul li a:visited,.index-rank-team ul li a:hover{color:#ffffff;text-shadow:0px 1px 0px #3d130e;}
 .index-rank-team ul li .muted{color:#672017;}
 .index-rank-mvp ul li{background-color:#1a93c5;border-color:#037fb3;}.index-rank-mvp ul li a:link,.index-rank-mvp ul li a:active,.index-rank-mvp ul li a:visited,.index-rank-mvp ul li a:hover{color:#ffffff;text-shadow:0px 1px 0px #011f2c;}

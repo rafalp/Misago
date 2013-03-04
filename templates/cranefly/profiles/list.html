@@ -15,11 +15,7 @@
 {% block container %}
 <div class="page-header header-primary">
   <div class="container">
-    {% if messages %}
-    <div class="messages-list">
-      {{ messages_list(messages) }}
-    </div>
-    {% endif %}
+    {{ messages_list(messages) }}
     <h1>{% trans %}Users List{% endtrans %} <small>{% trans %}Browse notable user groups or find specific user{% endtrans %}</small></h1>
     <ul class="nav nav-tabs header-tabs">
       {% for rank in ranks %}

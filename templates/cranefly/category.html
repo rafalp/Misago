@@ -15,11 +15,7 @@
 {% block container %}
 <div class="page-header header-primary">
   <div class="container">
-    {% if messages %}
-    <div class="messages-list">
-      {{ messages_list(messages) }}
-    </div>
-    {% endif %}
+    {{ messages_list(messages) }}
     <ul class="breadcrumb">
       {{ self.breadcrumb() }}</li>
     </ul>

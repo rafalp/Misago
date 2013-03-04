@@ -11,11 +11,7 @@
 {% block container %}
 <div class="page-header header-primary">
   <div class="container">
-    {% if messages %}
-    <div class="messages-list">
-      {{ messages_list(messages) }}
-    </div>
-    {% endif %}
+    {{ messages_list(messages) }}
     <h1>{% if user.alerts %}{{ get_title() }} <small>{% trans %}Your Notifications{% endtrans %}</small>
       {%- else -%}
       {% trans %}Your Notifications{% endtrans %}{% endif %}</h1>

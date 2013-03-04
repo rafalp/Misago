@@ -2,29 +2,22 @@
 {% load i18n %}
 {% load url from future %}
 
-{% block container %}
-<div class="container container-primary">
-  {% if messages %}
-  <div class="messages-list">
-    {{ messages_list(messages) }}
+{% block content %}
+<div class="row usercp">
+  <div class="span3">
+
+    <ul class="nav nav-pills usercp-tabs">
+      <li class="nav-header">{% trans %}Your Control Panel{% endtrans %}</li>
+      {% for link in tabs %}
+      <li{% if link.active %} class="active"{% endif %}><a href="{{ link.route|url }}">{{ link.name }}</a></li>
+      {% endfor %}
+    </ul>
+
   </div>
-  {% endif %}
-  <div class="row usercp">
-    <div class="span3">
+  <div class="span9 usercp-action">
 
-      <ul class="nav nav-pills usercp-tabs">
-        <li class="nav-header">{% trans %}Your Control Panel{% endtrans %}</li>
-        {% for link in tabs %}
-        <li{% if link.active %} class="active"{% endif %}><a href="{{ link.route|url }}">{{ link.name }}</a></li>
-        {% endfor %}
-      </ul>
+    {% block action %}{% endblock %}
 
-    </div>
-    <div class="span9 usercp-action">
-
-      {% block action %}{% endblock %}
-
-    </div>
   </div>
 </div>
 {% endblock %}

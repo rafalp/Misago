@@ -10,9 +10,14 @@
 {%- endmacro %}
 
 {# Messages list macro #}
-{% macro messages_list(messages) %}{% for message in messages %}
+{% macro messages_list(messages) %}
+{% if messages %}
+<div class="messages-list">
+  {% for message in messages %}
   {{ draw_message(message) }}
-{% endfor %}
+  {% endfor %}
+</div>
+{% endif %}
 {% endmacro %}
 
 {# Render single message #}
