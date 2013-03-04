@@ -15,7 +15,7 @@ from misago.ranks.models import Rank
 from misago.sessions.models import Session
 from misago.threads.models import Thread
 
-def home(request):     
+def home(request):
     # Threads ranking
     popular_threads = []
     if request.settings['thread_ranking_size'] > 0:

@@ -1,5 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from misago.users.validators import validate_username
 from django.utils.translation import ugettext_lazy as _
 from misago.forms import Form
 
@@ -18,13 +19,13 @@ class UsernameChangeForm(Form):
 
     def clean_username(self):
         org_username = self.request.user.username
-
-        self.request.user.set_username(self.cleaned_data['username'])
-        if org_username == self.request.user.username:
+        if org_username == self.cleaned_data['username']:
             raise ValidationError(_("Your new username is same as current one."))
-
+        validate_username(self.cleaned_data['username'])
+        self.request.user.set_username(self.cleaned_data['username'])
         try:
             self.request.user.full_clean()
         except ValidationError as e:
             self.request.user.is_username_valid(e)
+            self.request.user.set_username(org_username)
         return self.cleaned_data['username']

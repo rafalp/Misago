@@ -3,7 +3,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ungettext, ugettext_lazy as _
 from misago.banning.models import check_ban
-from misago.settings.settings import Settings
+from misago.settings.settings import Settings as DBSettings
 
 def validate_username(value):
     value = unicode(value).strip()
@@ -23,7 +23,7 @@ def validate_username(value):
 
 def validate_password(value):
     value = unicode(value).strip()
-    db_settings = Settings()
+    db_settings = DBSettings()
     if len(value) < db_settings['password_length']:
         raise ValidationError(ungettext(
             'Correct password has to be at least one character long.',
