@@ -173,6 +173,7 @@ pip-log.txt
 coffin/**
 debug_toolbar/**
 dev/**
+django/**
 jinja2/**
 markdown/**
 mptt/**
