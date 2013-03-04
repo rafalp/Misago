@@ -34,7 +34,7 @@ class SignInAttemptsManager(models.Manager):
 
 
 class SignInAttempt(models.Model):
-    ip = models.GenericIPAddressField(db_index=True)
+    ip = models.GenericIPAddressField()
     date = models.DateTimeField()
 
     objects = SignInAttemptsManager()

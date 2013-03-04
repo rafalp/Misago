@@ -14,7 +14,7 @@ class Ban(models.Model):
     ban = models.CharField(max_length=255)
     reason_user = models.TextField(null=True, blank=True)
     reason_admin = models.TextField(null=True, blank=True)
-    expires = models.DateTimeField(null=True, blank=True, db_index=True)
+    expires = models.DateTimeField(null=True, blank=True)
 
 
 def check_ban(ip=False, username=False, email=False):

@@ -153,7 +153,7 @@ class User(models.Model):
     karma_n = models.PositiveIntegerField(default=0)
     following = models.PositiveIntegerField(default=0)
     followers = models.PositiveIntegerField(default=0)
-    score = models.IntegerField(default=0, db_index=True)
+    score = models.IntegerField(default=0)
     ranking = models.PositiveIntegerField(default=0)
     rank = models.ForeignKey('ranks.Rank', null=True, blank=True, on_delete=models.SET_NULL)
     last_sync = models.DateTimeField(null=True, blank=True)
@@ -174,7 +174,7 @@ class User(models.Model):
     signature_ban_reason_admin = models.TextField(null=True, blank=True)
     timezone = models.CharField(max_length=255, default='utc')
     roles = models.ManyToManyField('roles.Role')
-    is_team = models.BooleanField(default=False, db_index=True)
+    is_team = models.BooleanField(default=False)
     acl_key = models.CharField(max_length=12, null=True, blank=True)
 
     objects = UserManager()
