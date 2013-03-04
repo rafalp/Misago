@@ -15,15 +15,9 @@
     {{ username }} has {{ total }} posts
     {%- endtrans -%}</small>{% endif %}</h2>
 
-<div class="list-nav">
-  {% if items_total %}
-  {{ pager() }}
-  {% endif %}
-  <ul class="nav nav-pills pull-right">
-    <li class="primary"><a href="{% url 'user_posts' user=profile.id, username=profile.username_slug %}">{% trans %}Posts{% endtrans %}</a></li>
-    <li class="info"><a href="{% url 'user_threads' user=profile.id, username=profile.username_slug %}">{% trans %}Threads{% endtrans %}</a></li>
-  </ul>
-</div>
+{% if items_total %}
+{{ pager() }}
+{% endif %}
 
 {% if items_total %}
 <ul class="unstyled shorts-list">
