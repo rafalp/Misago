@@ -12,6 +12,90 @@
 {{ macros.page_title(title=_('Users List')) }}
 {%- endif %}{% endblock %}
 
+{% block container %}
+<div class="page-header header-primary">
+  <div class="container">
+    {% if messages %}
+    <div class="messages-list">
+      {{ messages_list(messages) }}
+    </div>
+    {% endif %}
+    <h1>{% trans %}Users List{% endtrans %} <small>{% trans %}Browse notable user groups or find specific user{% endtrans %}</small></h1>
+    <ul class="nav nav-tabs header-tabs">
+      {% for rank in ranks %}
+      <li{% if active_rank.id == rank.id %} class="active"{% endif %}><a href="{% if loop.first %}{% url 'users' %}{% else %}{% url 'users' rank_slug=rank.name_slug %}{% endif %}">{{ _(rank.name) }}</a></li>
+      {% endfor %}
+      {% if acl.users.can_search_users() and not user.is_crawler() %}
+      <li class="pull-right">
+        <form action="{% url 'users' %}" class="form-inline" method="post">
+          <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+          {{ form_theme.field_widget(search_form.username, width=2, attrs={'placeholder': _('Find user...')}) }}
+          <button type="submit" class="btn btn-icon"><i class="icon-search"></i></button>
+        </form>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+</div>
+
+<div class="container container-primary">
+  <div class="profiles-list">
+
+    <h2>{% if in_search %}{% trans %}Search Users{% endtrans %}{% elif active_rank %}{{ _(active_rank.name) }}{% endif %}</h2>
+
+    {% if message %}
+    <div class="messages-list">
+      {{ macros.draw_message(message, 'alert-form') }}
+    </div>
+    {% endif %}
+
+    {% if in_search and not message and users|length > 0 %}
+    <p class="lead">{% trans %}We couldn't find a member with name you entered, so we present you with some other members with names similiar to one you searched for in hopes that one of them will turn out to be member you are looking for.{% endtrans %}</p>
+    {% elif active_rank and active_rank.description %}
+    <div class="markdown">{{ active_rank.description|markdown|safe }}</div>
+    {% endif %}
+
+    {% if users|length > 0 %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="4">{% if in_search %}{% trans %}Found Users{% endtrans %}{% else %}{% trans %}Users in this group{% endtrans %}{% endif %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in users|batch(4, '') %}
+        <tr>
+          {% for user in row %}
+          <td class="span3 user-cell{% if user and user.get_style() %} user-cell-{{ user.get_style() }}{% endif %}">
+            {% if user %}
+            <a href="{% url 'user' username=user.username_slug, user=user.pk %}" class="user-avatar"><img src="{{ user.get_avatar(42) }}" alt=""></a>
+            <p class="user-details">
+              <a href="{% url 'user' username=user.username_slug, user=user.pk %}">{{ user.username }}</a>
+              <span class="user-info">{% if user.title or (in_search and user.get_title()) %}<strong>{% if in_search %}{{ _(user.get_title()) }}{% else %}{{ _(user.title) }}{% endif %}</strong>, {% endif %}{% trans join=user.join_date|reldate %}Member since {{ join }}{% endtrans %}</span>
+            </p>
+            {% else %}
+            &nbsp;
+            {% endif %}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% elif not message %}
+    <p class="lead">
+      {%- if in_search -%}
+      {% trans %}We couldn't find any members with specified name.{% endtrans %}
+      {%- else -%}
+      {% trans %}Looks like there is nobody there.{% endtrans %}
+      {%- endif -%}
+    </p>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="page-header header-tabbed">
   <h1>{% trans %}Users List{% endtrans %} <small>{% trans %}Browse notable user groups or find specific user{% endtrans %}</small></h1>

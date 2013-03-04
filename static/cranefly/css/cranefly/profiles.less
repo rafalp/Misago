@@ -1,0 +1,43 @@
+// User Profiles
+// -------------------------
+
+.profiles-list {
+  .user-cell {
+    overflow: auto;
+
+    .user-avatar {
+      float: left;
+
+      img {
+        border-radius: @baseBorderRadius;
+        width: 42px;
+        height: 42px; 
+      }
+    }
+
+    .user-details {
+      margin: 0px;
+      margin-left: 42px + @baseFontSize;
+
+      a:link, a:active, a:visited, a:hover {
+        display: block;
+        margin-top: 3px;
+
+        color: @textColor;
+        font-size: @baseFontSize * 1.4;
+        font-weight: bold;
+      }
+
+      .user-info {
+        display: block;
+
+        color: @grayLight;
+        font-size: @fontSizeMini;
+      }
+    }
+  }
+}
+
+.user-profile {
+  
+}

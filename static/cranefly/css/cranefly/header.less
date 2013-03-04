@@ -56,6 +56,7 @@
     li {
       a {
         &:link, &:visited {
+          background: none;
           border: none;
           border-radius: 0px;
           margin-bottom: 4px;
@@ -65,7 +66,7 @@
           font-weight: bold;
         }
 
-        &:hover, &:active {
+        &:hover, &:active, a:focus {
           background: none;
           border-bottom: 4px solid @gray;
           margin-bottom: 0px;
@@ -81,6 +82,16 @@
           margin-bottom: 0px;
 
           color: @textColor;
+        }
+      }
+
+      .form-inline {
+        margin: 0px;
+        margin-bottom: 7px;
+
+        .btn-icon {
+          padding-left: 7px;
+          padding-right: 7px;
         }
       }
     }
