@@ -74,6 +74,8 @@ class UserManager(models.Manager):
                         subscribe_reply=db_settings['subscribe_reply'],
                         )
 
+        validate_username(username, db_settings)
+        validate_password(password, db_settings)
         new_user.set_username(username)
         new_user.set_email(email)
         new_user.set_password(password)
@@ -117,7 +119,7 @@ class User(models.Model):
     """
     Misago User model
     """
-    username = models.CharField(max_length=255, validators=[validate_username])
+    username = models.CharField(max_length=255)
     username_slug = models.SlugField(max_length=255, unique=True,
                                      error_messages={'unique': _("This user name is already in use by another user.")})
     email = models.EmailField(max_length=255, validators=[validate_email])

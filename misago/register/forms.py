@@ -30,7 +30,7 @@ class UserRegisterForm(Form):
         self.layout = [
                       (
                        None,
-                       [('username', {'label': _('Username'), 'help_text': _("Your displayed username. Between 3 and 15 characters, only letters and digits are allowed."),'attrs': {'placeholder': _("Enter your desired username")}})]
+                       [('username', {'label': _('Username'), 'help_text': _("Your displayed username. Between %(min)s and %(max)s characters, only letters and digits are allowed.") % {'min': self.request.settings['username_length_min'], 'max': self.request.settings['username_length_max']},'attrs': {'placeholder': _("Enter your desired username")}})]
                        ),
                       (
                        None,
@@ -52,7 +52,7 @@ class UserRegisterForm(Form):
             del self.layout[3]
         
     def clean_username(self):
-        validate_username(self.cleaned_data['username'])
+        validate_username(self.cleaned_data['username'], self.request.settings)
         new_user = User.objects.get_blank_user()
         new_user.set_username(self.cleaned_data['username'])
         try:
@@ -71,11 +71,11 @@ class UserRegisterForm(Form):
         return self.cleaned_data['email']
         
     def clean_password(self):
+        validate_password(self.cleaned_data['password'], self.request.settings)
         new_user = User.objects.get_blank_user()
         new_user.set_password(self.cleaned_data['password'])
         try:
             new_user.full_clean()
         except ValidationError as e:
             new_user.is_password_valid(e)
-        validate_password(self.cleaned_data['password'])
         return self.cleaned_data['password']

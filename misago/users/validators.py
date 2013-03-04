@@ -5,12 +5,24 @@ from django.utils.translation import ungettext, ugettext_lazy as _
 from misago.banning.models import check_ban
 from misago.settings.settings import Settings as DBSettings
 
-def validate_username(value):
+def validate_username(value, db_settings):
     value = unicode(value).strip()
-    if len(value) < 3:
-        raise ValidationError(_("Username cannot be shorter than 3 characters."))
-    if len(value) > 12:
-        raise ValidationError(_("Username cannot be longer than 12 characters."))
+    if len(value) < db_settings['username_length_min']:
+        raise ValidationError(ungettext(
+            'Username must be at least one character long.',
+            'Username must be at least %(count)d characters long.',
+            db_settings['username_length_min']
+        ) % {
+            'count': db_settings['username_length_min'],
+        })
+    if len(value) > db_settings['username_length_max']:
+        raise ValidationError(ungettext(
+            'Username cannot be longer than one characters.',
+            'Username cannot be longer than %(count)d characters.',
+            db_settings['username_length_max']
+        ) % {
+            'count': db_settings['username_length_max'],
+        })
     if settings.UNICODE_USERNAMES:
         if not re.search('^[^\W_]+$', value, re.UNICODE):
             raise ValidationError(_("Username can only contain letters and digits."))
@@ -21,9 +33,8 @@ def validate_username(value):
         raise ValidationError(_("This username is forbidden."))
 
 
-def validate_password(value):
+def validate_password(value, db_settings):
     value = unicode(value).strip()
-    db_settings = DBSettings()
     if len(value) < db_settings['password_length']:
         raise ValidationError(ungettext(
             'Correct password has to be at least one character long.',

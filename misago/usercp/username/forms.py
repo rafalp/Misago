@@ -21,7 +21,7 @@ class UsernameChangeForm(Form):
         org_username = self.request.user.username
         if org_username == self.cleaned_data['username']:
             raise ValidationError(_("Your new username is same as current one."))
-        validate_username(self.cleaned_data['username'])
+        validate_username(self.cleaned_data['username'], self.request.settings)
         self.request.user.set_username(self.cleaned_data['username'])
         try:
             self.request.user.full_clean()
