@@ -164,9 +164,11 @@ class PostingView(BaseView):
                 # Create new message
                 if self.mode in ['new_thread', 'new_post', 'new_post_quick']:
                     # Use last post instead?
+                    merge_diff = (now - self.thread.last)
+                    merge_diff = (merge_diff.days * 86400) + merge_diff.seconds
                     if (self.mode in ['new_post', 'new_post_quick']
                         and request.settings.post_merge_time
-                        and (now - self.thread.last).seconds < (request.settings.post_merge_time * 60)
+                        and merge_diff < (request.settings.post_merge_time * 60)
                         and self.thread.last_poster_id == request.user.id):
                         # Overtake posting
                         post = self.thread.last_post
