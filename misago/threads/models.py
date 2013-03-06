@@ -59,7 +59,7 @@ class Thread(models.Model):
 
     def sync(self):
         # Counters
-        self.replies = self.post_set.filter(moderated=False).filter(deleted=False).count() - 1
+        self.replies = self.post_set.filter(moderated=False).count() - 1
         if self.replies < 0:
             self.replies = 0
         self.replies_reported = self.post_set.filter(reported=True).count()
@@ -75,9 +75,9 @@ class Thread(models.Model):
         self.start_poster_style = start_post.user.rank.style if start_post.user else ''
         self.upvotes = start_post.upvotes
         self.downvotes = start_post.downvotes
-        # Last post
+        # Last visible post
         if self.replies > 0:
-            last_post = self.post_set.order_by('-merge', '-id').filter(moderated=False).filter(deleted=False)[0:][0]
+            last_post = self.post_set.order_by('-merge', '-id').filter(moderated=False)[0:][0]
         else:
             last_post = start_post
         self.last = last_post.date

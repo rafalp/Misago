@@ -176,7 +176,7 @@ class Forum(MPTTModel):
 
     def sync(self):
         self.threads = self.thread_set.filter(moderated=False).filter(deleted=False).count()
-        self.posts = self.post_set.filter(moderated=False).filter(deleted=False).count()
+        self.posts = self.post_set.filter(moderated=False).count()
         self.last_poster = None
         self.last_poster_name = None
         self.last_poster_slug = None
