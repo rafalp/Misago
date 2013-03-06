@@ -178,6 +178,7 @@ class ThreadsView(BaseView):
             self.request.messages.set_flash(Message(_('Selected threads have been turned into annoucements.')), 'success', 'threads')
 
     def action_sticky(self, ids):
+        acl = self.request.acl.threads.get_role(self.forum)
         sticky = []
         for thread in self.threads:
             if thread.pk in ids and thread.weight != 1 and (acl['can_pin_threads'] == 2 or thread.weight < 2):
