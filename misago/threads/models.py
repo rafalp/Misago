@@ -314,10 +314,10 @@ move_forum_content.connect(move_forum_content_handler, dispatch_uid="move_forum_
 
 
 def move_thread_handler(sender, **kwargs):
-    Post.objects.filter(forum=sender.forum_pk).update(forum=kwargs['move_to'])
-    Karma.objects.filter(forum=sender.forum_pk).update(forum=kwargs['move_to'])
-    Change.objects.filter(forum=sender.forum_pk).update(forum=kwargs['move_to'])
-    Checkpoint.objects.filter(forum=sender.forum_pk).update(forum=kwargs['move_to'])
+    Post.objects.filter(forum=sender.forum_id).update(forum=kwargs['move_to'])
+    Karma.objects.filter(forum=sender.forum_id).update(forum=kwargs['move_to'])
+    Change.objects.filter(forum=sender.forum_id).update(forum=kwargs['move_to'])
+    Checkpoint.objects.filter(forum=sender.forum_id).update(forum=kwargs['move_to'])
 
 move_thread.connect(move_thread_handler, dispatch_uid="move_thread")
 

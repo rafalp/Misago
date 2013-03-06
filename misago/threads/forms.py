@@ -1,9 +1,8 @@
 from django import forms
 from django.conf import settings
 from django.utils.translation import ungettext, ugettext_lazy as _
-from mptt.forms import TreeNodeChoiceField
 from misago.acl.utils import ACLError403, ACLError404
-from misago.forms import Form
+from misago.forms import Form, ForumChoiceField
 from misago.forums.models import Forum
 from misago.threads.models import Thread
 from misago.utils import slugify
@@ -92,7 +91,7 @@ class SplitThreadForm(Form, ThreadNameMixin):
                                                                                     _("Thread name must contain at least one alpha-numeric character."),
                                                                                     _("Thread name is too long. Try shorter name.")
                                                                                     )])
-        self.fields['thread_forum'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']), level_indicator=u'- - ')
+        self.fields['thread_forum'] = ForumChoiceField(queryset=Forum.tree.get(token='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']))
 
     def clean_thread_forum(self):
         new_forum = self.cleaned_data['thread_forum']
@@ -151,12 +150,12 @@ class MoveThreadsForm(Form):
         super(MoveThreadsForm, self).__init__(data, request=request, *args, **kwargs)
 
     def finalize_form(self):
-        self.fields['new_forum'] = TreeNodeChoiceField(queryset=Forum.tree.get(token='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']), level_indicator=u'- - ')
+        self.fields['new_forum'] = ForumChoiceField(queryset=Forum.tree.get(token='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']))
         self.layout = [
                        [
-                        _("Thread Options"),
+                        None,
                         [
-                         ('new_forum', {'label': _("Move Thread to"), 'help_text': _("Select forum you want to move threads to.")}),
+                         ('new_forum', {'label': _("Move Threads to"), 'help_text': _("Select forum you want to move threads to.")}),
                          ],
                         ],
                        ]
@@ -177,6 +176,7 @@ class MergeThreadsForm(Form, ThreadNameMixin):
         super(MergeThreadsForm, self).__init__(data, request=request, *args, **kwargs)
 
     def finalize_form(self):
+        self.fields['new_forum'] = ForumChoiceField(queryset=Forum.tree.get(token='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']), initial=self.threads[0].forum)
         self.fields['thread_name'] = forms.CharField(
                                                      max_length=self.request.settings['thread_name_max'],
                                                      initial=self.threads[0].name,
@@ -186,9 +186,10 @@ class MergeThreadsForm(Form, ThreadNameMixin):
                                                                                     )])
         self.layout = [
                        [
-                        _("Thread Options"),
+                        None,
                         [
                          ('thread_name', {'label': _("Thread Name"), 'help_text': _("Name of new thread that will be created as result of merge.")}),
+                         ('new_forum', {'label': _("Thread Forum"), 'help_text': _("Select forum you want to put new thread in.")}),
                          ],
                         ],
                        [
@@ -204,6 +205,13 @@ class MergeThreadsForm(Form, ThreadNameMixin):
         for i, thread in enumerate(self.threads):
             self.fields['thread_%s' % thread.pk] = forms.ChoiceField(choices=choices, initial=str(i))
             self.layout[1][1].append(('thread_%s' % thread.pk, {'label': thread.name}))
+
+    def clean_new_forum(self):
+        new_forum = self.cleaned_data['new_forum']
+        # Assert its forum
+        if new_forum.type != 'forum':
+            raise forms.ValidationError(_("This is not forum."))
+        return new_forum
 
     def clean(self):
         cleaned_data = super(MergeThreadsForm, self).clean()

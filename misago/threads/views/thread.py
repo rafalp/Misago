@@ -260,7 +260,7 @@ class ThreadView(BaseView):
             message = Message(form.non_field_errors()[0], 'error')
         else:
             form = MovePostsForm(request=self.request)
-        return self.request.theme.render_to_response('threads/move.html',
+        return self.request.theme.render_to_response('threads/move_posts.html',
                                                      {
                                                       'message': message,
                                                       'forum': self.forum,
@@ -451,7 +451,7 @@ class ThreadView(BaseView):
             message = Message(form.non_field_errors()[0], 'error')
         else:
             form = MoveThreadsForm(request=self.request, forum=self.forum)
-        return self.request.theme.render_to_response('threads/move.html',
+        return self.request.theme.render_to_response('threads/move_thread.html',
                                                      {
                                                       'message': message,
                                                       'forum': self.forum,

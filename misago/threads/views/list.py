@@ -217,7 +217,7 @@ class ThreadsView(BaseView):
             self.message = Message(form.non_field_errors()[0], 'error')
         else:
             form = MoveThreadsForm(request=self.request, forum=self.forum)
-        return self.request.theme.render_to_response('threads/move.html',
+        return self.request.theme.render_to_response('threads/move_threads.html',
                                                      {
                                                       'message': self.message,
                                                       'forum': self.forum,
@@ -238,7 +238,7 @@ class ThreadsView(BaseView):
             form = MergeThreadsForm(self.request.POST, request=self.request, threads=threads)
             if form.is_valid():
                 new_thread = Thread.objects.create(
-                                                   forum=self.forum,
+                                                   forum=form.cleaned_data['new_forum'],
                                                    name=form.cleaned_data['thread_name'],
                                                    slug=slugify(form.cleaned_data['thread_name']),
                                                    start=timezone.now(),
@@ -259,6 +259,9 @@ class ThreadsView(BaseView):
                 new_thread.save(force_update=True)
                 self.forum.sync()
                 self.forum.save(force_update=True)
+                if form.cleaned_data['new_forum'].pk != self.forum.pk:
+                    form.cleaned_data['new_forum'].sync()
+                    form.cleaned_data['new_forum'].save(force_update=True)
                 self.request.messages.set_flash(Message(_('Selected threads have been merged into new one.')), 'success', 'threads')
                 return None
             self.message = Message(form.non_field_errors()[0], 'error')

@@ -4,14 +4,14 @@
 {% import "_forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
-{% block title %}{{ macros.page_title(title=_("Split Thread"),parent=thread.name) }}{% endblock %}
+{% block title %}{{ macros.page_title(title=_("Move Posts"),parent=thread.name) }}{% endblock %}
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {% for parent in parents %}
 <li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {% endfor %}
 <li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-<li class="active">{% trans %}Split Thread{% endtrans %}
+<li class="active">{% trans %}Move Posts{% endtrans %}
 {%- endblock %}
 
 {% block container %}
@@ -21,7 +21,7 @@
     <ul class="breadcrumb">
       {{ self.breadcrumb() }}</li>
     </ul>
-    <h1>{% trans %}Split Thread{% endtrans %} <small>{{ thread.name }}</small></h1>
+    <h1>{% trans %}Move Posts{% endtrans %} <small>{{ thread.name }}</small></h1>
   </div>
 </div>
 
@@ -31,7 +31,7 @@
       <div class="form-container">
 
         <div class="form-header">
-          <h1>{% trans %}Split Thread{% endtrans %}</h1>
+          <h1>{% trans %}Move Posts{% endtrans %}</h1>
         </div>
 
         {% if message %}
@@ -42,8 +42,8 @@
 
         <form action="{% url 'thread' thread=thread.pk, slug=thread.slug %}" method="post">
           <input type="hidden" name="origin" value="posts_form">
-          <input type="hidden" name="list_action" value="split">
-          <input type="hidden" name="do" value="split">
+          <input type="hidden" name="list_action" value="move">
+          <input type="hidden" name="do" value="move">
           {% for post in posts -%}
           <input type="hidden" name="list_items" value="{{ post }}">
           {% endfor %}
@@ -51,7 +51,7 @@
             {{ form_theme.form_widget(form, width=6) }}
           </div>
           <div class="form-actions">
-            <button type="submit" class="btn btn-primary">{% trans %}Split Thread{% endtrans %}</button>
+            <button type="submit" class="btn btn-primary">{% trans %}Move Posts{% endtrans %}</button>
             <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
           </div>
         </form>

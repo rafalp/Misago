@@ -139,6 +139,12 @@
           <td class="check-cell">{% if thread.forum_id == forum.pk %}<label class="checkbox"><input form="threads_form" name="{{ list_form['list_items']['html_name'] }}" type="checkbox" class="checkbox-member" value="{{ thread.pk }}"{% if list_form['list_items']['has_value'] and ('' ~ thread.pk) in list_form['list_items']['value'] %} checked="checked"{% endif %}></label>{% else %}&nbsp;{% endif %}</td>
           {% endif %}
         </tr>
+        {% else %}
+        <tr>
+          <td colspan="4" class="threads-list-empty">
+            {% trans %}There are no threads in this forum.{% endtrans %}
+          </td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>

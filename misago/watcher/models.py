@@ -22,7 +22,7 @@ move_forum_content.connect(move_forum_content_handler, dispatch_uid="move_forum_
 
 
 def move_thread_handler(sender, **kwargs):
-    ThreadWatch.objects.filter(forum=sender.forum_pk).update(forum=kwargs['move_to'])
+    ThreadWatch.objects.filter(forum=sender.forum_id).update(forum=kwargs['move_to'])
 
 move_thread.connect(move_thread_handler, dispatch_uid="move_thread_watchers")
 
