@@ -8,129 +8,188 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {% for parent in parents %}
-<li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider">/</span></li>
+<li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {% endfor %}
 <li class="active">{{ forum.name }}
 {%- endblock %}
 
-{% block content %}
-<div class="page-header">
-  <ul class="breadcrumb">
-    {{ self.breadcrumb() }}</li>
-  </ul>
-  <h1>{{ forum.name }}{% if forum.description %}<br><small>{{ forum.description }}</small>{% endif %}</h1>
-</div>
-{% if forum.subforums %}
-<div class="forums-list subforums-list">
-  <h3>{% trans %}Subforums{% endtrans %}:</h3>
-  <div class="category{% if forum.style %} {{ forum.style }}{% endif %}">
-    {{ macros.draw_forums(forum, 12) }}
+{% block container %}
+<div class="page-header header-primary">
+  <div class="container">
+    {{ messages_list(messages) }}
+    <ul class="breadcrumb">
+      {{ self.breadcrumb() }}</li>
+    </ul>
+    <h1>{{ forum.name }}</h1>
   </div>
 </div>
-{% endif %}
-      
-{% if message %}{{ macros.draw_message(message) }}{% endif %}
-<div class="list-nav">
-  {{ pager() }}
-  {% if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
-  <ul class="nav nav-pills pull-right">
-    <li class="primary"><a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a></li>
-  </ul>
+
+<div class="container container-primary">
+
+  {% if forum.description %}
+  <div class="markdown lead page-description">
+    {{ forum.description_preparsed|markdown_final|safe }}
+  </div>
   {% endif %}
-</div>
-<table class="table table-striped threads-list">
-  <thead>
-    <tr>
-      <th style="width: 1%;">&nbsp;</th>
-      <th>{% trans %}Thread{% endtrans %}</th>
-      <th>{% trans %}Author{% endtrans %}</th>
-      <th>{% trans %}Replies{% endtrans %}</th>
-      <th>{% trans %}Last Poster{% endtrans %}</th>
-      {% if user.is_authenticated() and list_form %}
-      <th class="check-cell"><label class="checkbox"><input type="checkbox" class="checkbox-master"></label></th>
-      {% endif %}
-    </tr>
-  </thead>
-  <tbody>
-    {% for thread in threads %}
-    <tr>
-      <td><span class="thread-icon{% if not thread.is_read %} {% if thread.closed %}thread-closed{% else %}thread-new{% endif %}{% endif %}"><i class="icon-comment icon-white"></i></span></td>
-      <td>
-        {% if thread.weight > 0 %}<strong>
-        {% if thread.weight == 2 %}
-        <i class="icon-fire"></i> {% trans %}Annoucement:{% endtrans %}
-        {%- else -%}
-        <i class="icon-asterisk"></i> {% trans %}Sticky:{% endtrans %}
-        {%- endif %}</strong> {% endif %}<a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{% if not thread.is_read %}<strong>{{ thread.name }}</strong>{% else %}{{ thread.name }}{% endif %}</a> {% if not user.is_crawler() %}{% if not thread.is_read -%}
-        <a href="{% url 'thread_new' thread=thread.pk, slug=thread.slug %}" class="jump jump-new tooltip-top" title="{% trans %}Jump to first unread post{% endtrans %}"><i class="icon-chevron-right"></i></a>
-        {%- else -%}
-        <a href="{% url 'thread_last' thread=thread.pk, slug=thread.slug %}" class="jump jump-last tooltip-top" title="{% trans %}Jump to last post{% endtrans %}"><i class="icon-chevron-right"></i></a>
-        {%- endif %}{% endif %}
-        <ul class="unstyled thread-flags">
-          {% if thread.closed %}<li><span class="tooltip-top" title="{% trans %}This thread is closed for new replies.{% endtrans %}"><i class="icon-lock"></i></span></li>{% endif %}
-          {% if thread.moderated %}<li><span class="tooltip-top" title="{% trans %}This thread will not be visible to other members until moderator reviews it.{% endtrans %}"><i class="icon-eye-close"></i></span></li>{% endif %}
-          {% if thread.deleted %}<li><span class="tooltip-top" title="{% trans %}This thread has been deleted.{% endtrans %}"><i class="icon-remove"></i></span></li>{% endif %}
-        </ul>
-      </td>
-      <td class="span3 thread-author"><span class="tooltip-top" title="{{ thread.start|reltimesince }}">{% if thread.start_poster_id -%}
-          {% if settings.avatars_on_threads_list %}<img src="{{ thread.start_poster.get_avatar(24) }}" alt="" class="avatar-tiny"> {% endif %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}">{{ thread.start_poster_name }}</a>
-          {%- else -%}
-          {% if settings.avatars_on_threads_list %}<img src="{{ macros.avatar_guest(24) }}" alt="" class="avatar-tiny"> {% endif %}<em class="muted">{{ thread.start_poster_name }}</em>
-      {% endif %}</span></td>
-      <td class="span1 thread-stat">{{ thread.replies|intcomma }}</td>
-      <td class="span3 thread-poster"><span class="tooltip-top" title="{{ thread.last|reltimesince }}">{% if thread.last_poster_ignored -%}
-          {% if settings.avatars_on_threads_list %}<img src="{{ macros.avatar_guest(24) }}" alt="" class="avatar-tiny"> {% endif %}<em class="muted">{% trans %}Ignored Member{% endtrans %}</em>
-          {%- elif thread.last_poster_id -%}
-          {% if settings.avatars_on_threads_list %}<img src="{{ thread.last_poster.get_avatar(24) }}" alt="" class="avatar-tiny"> {% endif %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}">{{ thread.last_poster_name }}</a>
-          {%- else -%}
-          {% if settings.avatars_on_threads_list %}<img src="{{ macros.avatar_guest(24) }}" alt="" class="avatar-tiny"> {% endif %}<em class="muted">{{ thread.last_poster_name }}</em>
-          {%- endif %}</span></td>
-      {% if user.is_authenticated() and list_form %}
-      <td class="check-cell">{% if thread.forum_id == forum.pk %}<label class="checkbox"><input form="threads_form" name="{{ list_form['list_items']['html_name'] }}" type="checkbox" class="checkbox-member" value="{{ thread.pk }}"{% if list_form['list_items']['has_value'] and ('' ~ thread.pk) in list_form['list_items']['value'] %} checked="checked"{% endif %}></label>{% else %}&nbsp;{% endif %}</td>
-      {% endif %}
-    </tr>
-    {% else %}
-    <tr>
-      <td colspan="5" style="text-align: center;">
-        <p class="lead">{% trans %}Looks like there are no threads in this forum.{% endtrans %}</p>
-        {% if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
-        <a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}" class="btn btn-primary btn-large">{% trans %}Let's Change This!{% endtrans %}</a></li>
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% if user.is_authenticated() and list_form %}
-<div class="form-actions table-footer">
-  <form id="threads_form" class="form-inline pull-right" action="{% url 'forum' slug=forum.slug, forum=forum.id, page=pagination['page'] %}" method="POST">
-    <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-    {{ form_theme.input_select(list_form['list_action'],width=3) }}
-    <button type="submit" class="btn btn-primary">{% trans %}Go{% endtrans %}</button>
-  </form>
-</div>
-{% endif %}
-<div class="list-nav last">
-  {{ pager() }}
-  {% if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
-  <ul class="nav nav-pills pull-right">
-    <li class="primary"><a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a></li>
-  </ul>
+
+  {% if forum.subforums %}
+  <div class="forum-subforums-list{% if forum.style %} forum-subforums-{{ forum.style }}{% endif %}">
+    <table class="table">
+      <caption>{% trans %}Child forums{% endtrans %}</caption>
+      <tbody>
+        {% for subforum in forum.subforums %}
+        <tr>
+          <td class="forum-icon"><span class="forum-icon-wrap{% if subforum.type == 'redirect' %} forum-icon-redirect{% elif not subforum.is_read %} forum-icon-new{% endif %}"><i class="icon-{% if subforum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %} icon-white"></i></span></td>
+          <td class="forum-main">
+            <h3><a href="{{ subforum.type|url(slug=subforum.slug, forum=subforum.id) }}">{{ subforum.name }}</a></h3>
+            {% if subforum.show_details %}
+            <div class="forum-details">
+              {% if subforum.type == 'redirect' %}
+              <span class="label{% if subforum.redirects_delta < subforum.redirects %} label-success{% endif %}">{{ subforum.redirects|intcomma }}</span> {% trans %}Clicks{% endtrans %}
+              {% else %}
+              <span class="label{% if subforum.posts_delta < subforum.posts %} label-success{% endif %}">{{ subforum.posts|intcomma }}</span> {% trans %}Posts{% endtrans %}
+              {% endif %}
+            </div>
+            {% endif %}
+            {% if subforum.description %}<p class="forum-description">{{ subforum.description }}</p>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
   {% endif %}
+
+  {% if message %}
+  <div class="messages-list">
+    {{ macros.draw_message(message) }}
+  </div>
+  {% endif %}
+
+  <div class="forum-threads-extra extra-top">
+    {{ pager() }}
+    {% if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
+    <a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}" class="btn btn-primary pull-right"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a>
+    {% endif %}
+  </div>
+
+  <div class="forum-threads-list">
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="width: 1%;">&nbsp;</th>
+          <th>{% trans %}Thread{% endtrans %}</th>
+          <th class="span1">{% trans %}Rating{% endtrans %}</th>
+          <th class="span5">{% trans %}Activity{% endtrans %}</th>
+          {% if user.is_authenticated() and list_form %}
+          <th class="check-cell"><label class="checkbox"><input type="checkbox" class="checkbox-master"></label></th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for thread in threads %}
+        <tr>
+          <td>
+            <a href="{% url 'thread_new' thread=thread.pk, slug=thread.slug %}" class="thread-icon{% if not thread.is_read %} thread-new{% endif %} tooltip-top" title="{% if not thread.is_read -%}
+            {% trans %}Click to see first unread post{% endtrans %}
+            {%- else -%}
+            {% trans %}Click to see last post{% endtrans %}
+            {%- endif %}"><i class="icon-comment"></i></a>
+          </td>
+          <td>
+            <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="thread-name">{{ thread.name }}</a>
+            <span class="thread-details">
+              {% trans user=thread_starter(thread), start=thread.start|reldate|low %}by {{ user }} {{ start }}{% endtrans %}
+            </span>
+            <ul class="unstyled thread-flags">
+              {% if thread.replies_reported %}
+              <li><i class="icon-warning-sign tooltip-top" title="{% trans %}This thread has reported replies{% endtrans %}"></i></li>
+              {% endif %}
+              {% if thread.replies_moderated %}
+              <li><i class="icon-question-sign tooltip-top" title="{% trans %}This thread has unreviewed replies{% endtrans %}"></i></li>
+              {% endif %}
+              {% if thread.weight == 2 %}
+              <li><i class="icon-star tooltip-top" title="{% trans %}This thread is an annoucement{% endtrans %}"></i></li>
+              {% endif %}
+              {% if thread.weight == 1 %}
+              <li><i class="icon-star-empty tooltip-top" title="{% trans %}This thread is sticky{% endtrans %}"></i></li>
+              {% endif %}
+              {% if thread.moderated  %}
+              <li><i class="icon-eye-close tooltip-top" title="{% trans %}This thread awaits review{% endtrans %}"></i></li>
+              {% endif %}
+              {% if thread.deleted %}
+              <li><i class="icon-trash tooltip-top" title="{% trans %}This thread is deleted{% endtrans %}"></i></li>
+              {% endif %}
+              {% if thread.closed %}
+              <li><i class="icon-lock tooltip-top" title="{% trans %}This thread is closed{% endtrans %}"></i></li>
+              {% endif %}
+            </ul>
+          </td>
+          <td>
+            <div class="thread-rating{% if (thread.upvotes-thread.downvotes) > 0 %} thread-rating-positive{% elif (thread.upvotes-thread.downvotes) < 0 %} thread-rating-negative{% endif %}">
+              {{ (thread.upvotes-thread.downvotes)|abs|intcomma }}
+            </div>
+          </td>
+          <td>
+            <div class="thread-last-reply">
+              {{ replies(thread.replies) }} - {% trans user=thread_reply(thread), last=thread.last|reldate|low %}last by {{ user }} {{ last }}{% endtrans %}
+            </div>
+          </td>
+          {% if user.is_authenticated() and list_form %}
+          <td class="check-cell">{% if thread.forum_id == forum.pk %}<label class="checkbox"><input form="threads_form" name="{{ list_form['list_items']['html_name'] }}" type="checkbox" class="checkbox-member" value="{{ thread.pk }}"{% if list_form['list_items']['has_value'] and ('' ~ thread.pk) in list_form['list_items']['value'] %} checked="checked"{% endif %}></label>{% else %}&nbsp;{% endif %}</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if user.is_authenticated() and list_form %}
+    <div class="threads-actions">
+      <form id="threads_form" class="form-inline pull-right" action="{% url 'forum' slug=forum.slug, forum=forum.id, page=pagination['page'] %}" method="POST">
+        <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+        {{ form_theme.input_select(list_form['list_action'],width=3) }}
+        <button type="submit" class="btn btn-danger">{% trans %}Go{% endtrans %}</button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="forum-threads-extra">
+    {{ pager() }}
+    {% if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
+    <a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}" class="btn btn-primary pull-right"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a>
+    {% endif %}
+  </div>
+
 </div>
 {% endblock %}
 
+{% macro replies(thread_replies) -%}
+{% trans count=thread_replies, replies=('<strong>' ~ (thread_replies|intcomma) ~ '</strong>')|safe -%}
+{{ replies }} reply
+{%- pluralize -%}
+{{ replies }} replies
+{%- endtrans %}
+{%- endmacro %}
+
+{% macro thread_starter(thread) -%}
+{% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}" class="user-link">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}
+{%- endmacro %}
+
+{% macro thread_reply(thread) -%}
+{% if thread.last_poster_id %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}" class="user-link">{{ thread.last_poster_name }}</a>{% else %}{{ thread.last_poster_name }}{% endif %}
+{%- endmacro %}
+
 {% macro pager() %}
-  <ul class="pager pull-left">
+{% if pagination['total'] > 0 %}
+<div class="pagination pull-left">
+  <ul>
+    <li class="count">{{ macros.pager_label(pagination) }}</li>
     {%- if pagination['prev'] > 1 %}<li><a href="{% url 'forum' slug=forum.slug, forum=forum.id %}" class="tooltip-top" title="{% trans %}First Page{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}First{% endtrans %}</a></li>{% endif -%}
     {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'forum' slug=forum.slug, forum=forum.id, page=pagination['prev'] %}{% else %}{% url 'forum' slug=forum.slug, forum=forum.id %}{% endif %}" class="tooltip-top" title="{% trans %}Newest Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
     {%- if pagination['next'] > 0 %}<li><a href="{% url 'forum' slug=forum.slug, forum=forum.id, page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
-    <li class="count">
-    {%- trans current_page=pagination['page'], pages=pagination['total'] -%}
-    Page {{ current_page }} of {{ pages }}
-    {%- endtrans -%}
-    </li>
   </ul>
+</div>
+{% endif %}
 {% endmacro %}
 
 {% block javascripts -%}
