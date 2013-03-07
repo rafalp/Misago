@@ -52,15 +52,22 @@ $(function () {
 	
 	// Go back one page
 	$('.go-back').on('click', function (e) {
-	  history.go(-1)
+	    history.go(-1)
 	})
 	
 	// Add labels to images
 	$('.markdown img').each(function() {
-        $(this).addClass('img-rounded');
-        $(this).wrap(function() {
-            return '<div class="md-img span5" />';
-        });
-        $(this).after('<a href="' + $(this).attr('src') + '" class="md-img-label"><i class="icon-picture"></i> ' + $(this).attr('alt') + '</a>');
+    $(this).addClass('img-rounded');
+    $(this).wrap(function() { return '<div class="md-img" />'; });
+    $(this).wrap(function() { return '<div class="span5 md-img-span" />'; });
+    $(this).wrap(function() { return '<div class="md-img-wrap" />'; });
+    $(this).after('<a href="' + $(this).attr('src') + '" class="md-img-label" target="_blank">' + $(this).attr('alt') + '</a>');
+    $(this).wrap(function() { return '<div class="md-img-bg" />'; });
 	});
+
+	// Handle prokened images
+  $('.markdown img').one('error', function() {
+  	$(this).after('<div class="md-img-error"><span>' + l_img_broken_msg + '</span></div>');
+  	$(this).hide();
+	}); 
 })

@@ -3,6 +3,7 @@
 
 .markdown {
   margin: 0px;
+  overflow: auto;
 
   &>:first-child {
     margin-top: 0px;
@@ -66,6 +67,70 @@
       border: 1px solid darken(@postBackground, 5%);
       border-radius: @baseBorderRadius;
       padding: @baseFontSize;
+    }
+  }
+
+  img {
+    border-radius: @baseBorderRadius;
+    box-shadow: 0px 0px 4px @gray;
+  }
+
+  .md-img {
+    overflow: auto;
+
+    .md-img-span {
+      margin: 0px auto;
+      float: none;
+
+      .md-img-wrap {
+        background-color: @grayDarker;
+        border: 1px solid @white;
+        border-radius: @baseBorderRadius + 1px;
+        box-shadow: 0px 0px 2px @grayLight;
+        margin: 3px;
+
+        .md-img-bg {
+          background-color: @white;
+          border-radius: @baseBorderRadius;
+          text-align: center;
+
+          img {
+            border-radius: @baseBorderRadius;
+            box-shadow: none;
+          }
+
+          .md-img-error {
+            background: url('../img/img_broken.jpg');
+            border-radius: @baseBorderRadius;
+            padding: (@baseLineHeight * 2.5) 0px;
+
+            span {
+              background-color: @grayDark;
+              border-radius: @borderRadiusLarge;
+              .opacity(80);
+              padding: (@baseFontSize / 2) @baseFontSize;
+              margin: 0px auto;
+
+              color: @white;
+              text-shadow: 0px 1px 0px @black;
+            }
+          }
+        }
+
+        .md-img-label {
+          display: block;
+          padding: (@baseFontSize / 2) @baseFontSize;
+          text-align: center;
+
+          color: @grayLight;
+          font-weight: bold;
+
+          &:hover, &:active {
+            color: @white;
+            text-decoration: none;
+          }
+        }
+      }
     }
   }
 }
