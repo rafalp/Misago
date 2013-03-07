@@ -32,4 +32,40 @@
     border: none;
     border-top: 1px solid @hrBorder;
   }
+
+  blockquote {
+    background-color: darken(@postBackground, 1%);
+    border: 1px solid darken(@postBackground, 6%);
+    border-radius: @baseBorderRadius;
+    padding: @baseFontSize;
+
+    &>h3:first-child {
+      margin: 0px;
+      margin-bottom: @baseLineHeight / 2;
+      padding: 0px;
+
+      font-size: @baseFontSize;
+      line-height: @baseLineHeight;
+    }
+
+    &>:first-child {
+      margin-top: 0px;
+    }
+
+    &>:last-child {
+      margin-bottom: 0px;
+    }
+
+    p {
+      margin: 0 0 @baseLineHeight / 2;
+      font-size: @fontSizeSmall;
+    }
+
+    blockquote {
+      background-color: @postBackground;
+      border: 1px solid darken(@postBackground, 5%);
+      border-radius: @baseBorderRadius;
+      padding: @baseFontSize;
+    }
+  }
 }

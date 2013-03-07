@@ -46,6 +46,30 @@
     font-weight: normal;
   }
 
+  .header-stats {
+    overflow: auto;
+    margin-bottom: 0px;
+
+    color: @grayLight;
+
+    li {
+      float: left;
+      margin-right: @baseFontSize;
+
+      &>a {
+        color: @grayLight;
+
+        &:hover, &:active {
+          color: @textColor;
+        }
+      }
+
+      &>i {
+        .opacity(50);
+      }
+    }
+  }
+
   .header-tabs {
     border-bottom: 0px;
     margin: 0px;

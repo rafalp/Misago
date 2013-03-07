@@ -69,7 +69,7 @@
   <div class="forum-threads-extra extra-top">
     {{ pager() }}
     {% if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
-    <a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}" class="btn btn-primary pull-right"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a>
+    <a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}" class="btn btn-inverse pull-right"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a>
     {% endif %}
   </div>
 
@@ -162,7 +162,7 @@
   <div class="forum-threads-extra">
     {{ pager() }}
     {% if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
-    <a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}" class="btn btn-primary pull-right"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a>
+    <a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}" class="btn btn-inverse pull-right"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a>
     {% endif %}
   </div>
 

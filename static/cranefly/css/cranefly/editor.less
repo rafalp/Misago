@@ -21,13 +21,16 @@
     padding: @editorPadding;
 
     &>div {
-      margin-top: -1px;
-      margin-right: @editorPadding + 3px;
+      margin-right: 2px;
 
       textarea {
+        border: none;
         box-shadow: none;
-        margin-bottom: 0px;
+        margin: @editorPadding * -1;
+        padding: @editorPadding;
         width: 100%;
+
+        font-family: @monoFontFamily;
       } 
     }
   }
@@ -36,6 +39,10 @@
     border-top: 1px solid darken(@editorBackground, 10%);
     overflow: auto;
     padding: @editorPadding;
+
+    &>.btn {
+      margin-left: @baseFontSize;
+    }
 
     .editor-tools {
       margin: 0px;
