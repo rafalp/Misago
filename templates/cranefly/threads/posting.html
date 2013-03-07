@@ -48,9 +48,16 @@
 </form>
 {% endblock %}
 
+{% block stylesheets %}{{ super() }}
+<link href="{{ STATIC_URL }}cranefly/highlight/styles/monokai.css" rel="stylesheet">
+{% endblock %}
 
-{% block javascripts %}
-{{ super() }}
+{% block javascripts %}{{ super() }}
+  <script src="{{ STATIC_URL }}cranefly/highlight/highlight.pack.js"></script>
+  <script type="text/javascript">
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
+  </script>
   {{ editor.js() }}
 {% endblock %}
 

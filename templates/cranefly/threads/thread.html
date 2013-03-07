@@ -410,11 +410,16 @@
 </div>
 {% endblock %}
 
+{% block stylesheets %}{{ super() }}
+<link href="{{ STATIC_URL }}cranefly/highlight/styles/monokai.css" rel="stylesheet">
+{% endblock %}
 
-{% block javascripts -%}
-{{ super() }}
-{%- if user.is_authenticated() %}
+{% block javascripts -%}{{ super() }}
+  <script src="{{ STATIC_URL }}cranefly/highlight/highlight.pack.js"></script>
   <script type="text/javascript">
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
+    {%- if user.is_authenticated() %}
     $(function () {
       $('#thread_form').submit(function() {
         if ($('#id_thread_action').val() == 'hard') {
@@ -451,7 +456,8 @@
           return decision;
       });
     });
-  </script>{% endif %}
+    {% endif %}
+  </script>
   {% if user.is_authenticated() and acl.threads.can_reply(forum, thread) %}
   {{ editor.js() }}
   {% endif %}
