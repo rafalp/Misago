@@ -1,0 +1,55 @@
+// Post Love/Hate Votes List
+// -------------------------
+
+.post-votes-list {
+  .vote-user {
+    &, &:link, &:visited {
+      display: block;
+
+      color: @gray;
+      font-size: @fontSizeLarge;
+      font-weight: bold;
+    }
+
+    .vote-icon {
+      background-color: @grayLight;
+      border-radius: @baseBorderRadius;
+      padding: 2px 3px;
+      position: relative;
+      bottom: (@fontSizeLarge - @baseFontSize) / 2;
+
+      font-size: @baseFontSize;
+
+      i {
+        background-image: url("@{iconWhiteSpritePath}");
+      }
+    }
+  }
+
+  a.vote-user {
+    &:hover, &:active {
+      color: @textColor;
+      text-decoration: none;
+    }
+  }
+
+  .post-likes {
+    .vote-icon {
+      background-color: @green;
+    }
+  }
+
+  .post-hates {
+    .vote-icon {
+      background-color: @red;
+    }
+  }
+
+  .vote-date {
+    margin: 0px;
+    padding: 0px;
+    
+    color: @grayLight;
+    font-size: @fontSizeMini;
+  }
+}
