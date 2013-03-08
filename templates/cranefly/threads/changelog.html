@@ -5,13 +5,40 @@
 
 {% block title %}{{ macros.page_title(title=(_("Post #%(post)s Changelog") % {'post': post.pk}),parent=thread.name) }}{% endblock %}
 
-{% block breadcrumb %}{{ super() }} <span class="divider">/</span></li>
+{% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {% for parent in parents %}
-<li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider">/</span></li>
+<li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {% endfor %}
-<li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider">/</span></li>
+<li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li class="active">{% trans post=post.pk %}Post #{{ post }} Changelog{% endtrans %}
 {%- endblock %}
+
+{% block container %}
+<div class="page-header header-primary">
+  <div class="container">
+    {{ messages_list(messages) }}
+    <ul class="breadcrumb">
+      {{ self.breadcrumb() }}</li>
+    </ul>
+    <h1>{% trans post=post.pk %}Post #{{ post }} Votes{% endtrans %} <small>{{ thread.name }}</small></h1>
+    <ul class="unstyled header-stats">
+      <li><i class="icon-time"></i> <a href="{% url 'thread_find' thread=thread.pk, slug=thread.slug, post=post.pk %}">{{ post.date|reltimesince }}</a></li>
+      <li><i class="icon-user"></i> {% if post.user %}<a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
+      <li><i class="icon-pencil"></i> {% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}</li>
+      {% if post.protected %}<li><i class="icon-lock"></i> {% trans %}Protected{% endtrans %}</li>{% endif %}
+    </ul>
+  </div>
+</div>
+
+<div class="container container-primary">
+  <div class="post-changelog">
+    {% if edits %}
+    {% else %}
+    <p class="lead">{% trans %}This post was never edited.{% endtrans %}</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
 
 {% block content %}
 <div class="page-header">
