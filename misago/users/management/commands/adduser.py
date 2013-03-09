@@ -18,7 +18,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if len(args) < 3:
-            raise CommandError('adduser requires exactly three arguments: user name, e-mail addres and password')
+            raise CommandError('adduser requires exactly three arguments: user name, e-mail address and password')
 
         # Set user
         try:
