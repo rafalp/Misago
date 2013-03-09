@@ -924,6 +924,7 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{opacity:0.9;filter:alpha(opa
 .editor .editor-input{padding:10.5px;}.editor .editor-input>div{margin-right:2px;}.editor .editor-input>div textarea{border:none;box-shadow:none;margin:-10.5px;padding:10.5px;width:100%;font-family:Monaco,Menlo,Consolas,"Courier New",monospace;}
 .editor .editor-actions{border-top:1px solid #e6e6e6;overflow:auto;padding:10.5px;}.editor .editor-actions>.btn{margin-left:14px;}
 .editor .editor-actions .editor-tools{margin:0px;}.editor .editor-actions .editor-tools li{float:left;margin-right:10.5px;}.editor .editor-actions .editor-tools li .btn{padding-left:7px;padding-right:7px;}
+.form-container .editor{border-color:#cccccc;}.form-container .editor .editor-actions{border-top-color:#cccccc;}
 .error-page{text-align:center;}.error-page .error-color{color:#cf402e;}
 .error-page .error-ban-reason{border:1px solid #cf402e;border-radius:3px;background-color:#fbeeed;background-image:repeating-linear-gradient(45deg, transparent, transparent 5px, #fdf6f5 5px, #fdf6f5 10px);-webkit-box-shadow:0px 0px 0px 3px #e38b80;-moz-box-shadow:0px 0px 0px 3px #e38b80;box-shadow:0px 0px 0px 3px #e38b80;padding:11px 19px;text-align:left;}.error-page .error-ban-reason :last-child{margin-bottom:0px;padding-bottom:0px;}
 .error-page .error-ban-expires{color:#cf402e;font-weight:bold;}
@@ -1111,7 +1112,7 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{opacity:0.9;filter:alpha(opa
 .post-diff .diff-extra{overflow:auto;}
 .post-diff .post-diff-details{background-color:#ffffff;border:1px solid #d5d5d5;border-radius:2px;-webkit-box-shadow:0px 0px 0px 3px #eeeeee;-moz-box-shadow:0px 0px 0px 3px #eeeeee;box-shadow:0px 0px 0px 3px #eeeeee;margin-bottom:20px;}.post-diff .post-diff-details table{margin:0px;width:100%;}.post-diff .post-diff-details table td{padding:1px 4px;}.post-diff .post-diff-details table td.line{background-color:#eeeeee;border-right:1px solid #d5d5d5;padding-left:14px;width:1%;text-align:right;}.post-diff .post-diff-details table td.line a:link,.post-diff .post-diff-details table td.line a:active,.post-diff .post-diff-details table td.line a:visited,.post-diff .post-diff-details table td.line a:hover{color:#999999;}
 .post-diff .post-diff-details table td.even{background-color:#f7f7f7;}
-.post-diff .post-diff-details table td.added{background-color:#faeae8;color:#7c261b;font-weight:bold;}.post-diff .post-diff-details table td.added.even{background-color:#f5d7d4;}
+.post-diff .post-diff-details table td.added{background-color:#dff1df;color:#285d28;font-weight:bold;}.post-diff .post-diff-details table td.added.even{background-color:#cdeacd;}
 .post-diff .post-diff-details table td.removed{background-color:#faeae8;color:#7c261b;font-weight:bold;}.post-diff .post-diff-details table td.removed.even{background-color:#f5d7d4;}
 .post-diff .post-diff-details table td.stag{color:#555555;}
 .index-rank-team ul li{background-color:#cf402e;border-color:#ae3627;}.index-rank-team ul li a:link,.index-rank-team ul li a:active,.index-rank-team ul li a:visited,.index-rank-team ul li a:hover{color:#ffffff;text-shadow:0px 1px 0px #3d130e;}

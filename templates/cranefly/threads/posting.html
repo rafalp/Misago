@@ -11,13 +11,78 @@
 {{ macros.page_title(title=_(get_title()), parent=forum.name) }}
 {%- endif %}{% endblock %}
 
-{% block breadcrumb %}{{ super() }} <span class="divider">/</span></li>
+{% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {% for parent in parents %}
-<li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider">/</span></li>
+<li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {% endfor %}
-{% if thread %}<li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider">/</span></li>{% endif %}
+{% if thread %}<li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>{% endif %}
 <li class="active">{{ get_title() }}
 {%- endblock %}
+
+{% block container %}
+<div class="page-header header-primary">
+  <div class="container">
+    {{ messages_list(messages) }}
+    <ul class="breadcrumb">
+      {{ self.breadcrumb() }}</li>
+    </ul>
+    <h1>{{ get_title() }} <small>{% if thread %}{{ thread.name }}{% else %}{{ forum.name }}{% endif %}</small></h1>
+    {% if thread %}
+    <ul class="unstyled header-stats">
+      {{ get_info() }}
+    </ul>
+    {% endif %}
+  </div>
+</div>
+<div class="container container-primary">
+  <div class="row">
+    <div class="span8 offset2">
+      <div class="posting">
+        <div class="form-container">
+
+          <div class="form-header">
+            <h1>{{ get_title() }}</h1>
+          </div>
+
+          {% if message %}
+          <div class="messages-list">
+            {{ macros.draw_message(message) }}
+          </div>
+          {% endif %}
+
+          {% if preview %}
+          <div class="form-preview">
+            <div class="markdown">
+              {{ preview|markdown_final|safe }}
+            </div>
+          </div>
+          {% endif %}
+
+          <form action="{{ get_action() }}" method="post">
+            <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+            {% if 'thread_name' in form.fields %}
+            {{ form_theme.row_widget(form.fields.thread_name) }}
+            <hr>
+            <h4>Message Body</h4>
+            {% endif %}
+            {{ editor.editor(form.fields.post, get_button(), rows=8, extra=get_extra()) }}
+            {% if 'edit_reason' in form.fields %}
+            <hr>
+            {{ form_theme.row_widget(form.fields.edit_reason) }}
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">{{ get_button() }}</button>
+              <button id="editor-preview" name="preview" type="submit" class="btn">{% trans %}Preview{% endtrans %}</button>
+            </div>
+            {% endif %}
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
 
 {% block content %}
 <div class="page-header">
@@ -129,5 +194,5 @@
 
 
 {% macro get_extra() %}
-  <button id="editor-preview" name="preview" type="submit" class="btn btn-success pull-right">{% trans %}Preview{% endtrans %}</button>
+  <button id="editor-preview" name="preview" type="submit" class="btn pull-right">{% trans %}Preview{% endtrans %}</button>
 {% endmacro %}
