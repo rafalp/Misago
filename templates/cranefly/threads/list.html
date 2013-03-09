@@ -77,7 +77,6 @@
     <table class="table">
       <thead>
         <tr>
-          <th style="width: 1px;">&nbsp;</th>
           <th>{% trans %}Thread{% endtrans %}</th>
           <th class="span1">{% trans %}Rating{% endtrans %}</th>
           <th class="span5">{% trans %}Activity{% endtrans %}</th>
@@ -95,8 +94,6 @@
             {%- else -%}
             {% trans %}Click to see last post{% endtrans %}
             {%- endif %}"><i class="icon-comment"></i></a>
-          </td>
-          <td>
             <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="thread-name">{{ thread.name }}</a>
             <span class="thread-details">
               {% trans user=thread_starter(thread), start=thread.start|reldate|low %}by {{ user }} {{ start }}{% endtrans %}
