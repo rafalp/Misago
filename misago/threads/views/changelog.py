@@ -117,7 +117,8 @@ class ChangelogRevertView(ChangelogDiffView):
             md, self.post.post_preparsed = post_markdown(request, self.change.post_content)
             self.post.save(force_update=True)
 
-        request.messages.set_flash(Message(_("Post has been reverted previous state.")), 'success', 'threads_%s' % self.post.pk)
+        from misago.template.templatetags.django2jinja import reldate
+        request.messages.set_flash(Message(_("Post has been reverted to state from %(date)s.") % {'date': reldate(self.change.date).lower()}), 'success', 'threads_%s' % self.post.pk)
         pagination = make_pagination(0, request.acl.threads.filter_posts(self.request, self.thread, self.thread.post_set).filter(id__lte=self.post.pk).count(), self.request.settings.posts_per_page)
         if pagination['total'] > 1:
             return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'page': pagination['total']}) + ('#post-%s' % self.post.pk))
