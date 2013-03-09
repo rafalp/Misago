@@ -1100,6 +1100,20 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{opacity:0.9;filter:alpha(opa
 .post-votes-list .post-likes .vote-icon{background-color:#46a546;}
 .post-votes-list .post-hates .vote-icon{background-color:#cf402e;}
 .post-votes-list .vote-date{margin:0px;padding:0px;color:#999999;font-size:10.5px;}
+.post-changelog table td{vertical-align:middle;}.post-changelog table td .change-added,.post-changelog table td .change-removed,.post-changelog table td .change-none{display:block;font-size:28px;font-weight:bold;text-align:right;}.post-changelog table td .change-added.change-small,.post-changelog table td .change-removed.change-small,.post-changelog table td .change-none.change-small{font-size:14px;}
+.post-changelog table td .change-neutral{color:#555555;}
+.post-changelog table td .change-added{color:#46a546;}
+.post-changelog table td .change-removed{color:#cf402e;}
+.post-changelog table td .change-reason a:link,.post-changelog table td .change-reason a:active,.post-changelog table td .change-reason a:visited,.post-changelog table td .change-reason a:hover{color:#333333;font-weight:bold;}
+.post-changelog table td .change-no:link,.post-changelog table td .change-no:active,.post-changelog table td .change-no:visited,.post-changelog table td .change-no:hover{float:right;color:#555555;font-weight:bold;}
+.post-changelog table td .change-description{float:left;font-size:11.9px;}.post-changelog table td .change-description a:link,.post-changelog table td .change-description a:active,.post-changelog table td .change-description a:visited,.post-changelog table td .change-description a:hover{color:#333333;}
+.post-changelog table td .change-description .change-details{color:#999999;}.post-changelog table td .change-description .change-details a:link,.post-changelog table td .change-description .change-details a:visited{color:#555555;}
+.post-diff .diff-extra{overflow:auto;}
+.post-diff .post-diff-details{background-color:#ffffff;border:1px solid #d5d5d5;border-radius:2px;-webkit-box-shadow:0px 0px 0px 3px #eeeeee;-moz-box-shadow:0px 0px 0px 3px #eeeeee;box-shadow:0px 0px 0px 3px #eeeeee;margin-bottom:20px;}.post-diff .post-diff-details table{margin:0px;width:100%;}.post-diff .post-diff-details table td{padding:1px 4px;}.post-diff .post-diff-details table td.line{background-color:#eeeeee;border-right:1px solid #d5d5d5;padding-left:14px;width:1%;text-align:right;}.post-diff .post-diff-details table td.line a:link,.post-diff .post-diff-details table td.line a:active,.post-diff .post-diff-details table td.line a:visited,.post-diff .post-diff-details table td.line a:hover{color:#999999;}
+.post-diff .post-diff-details table td.even{background-color:#f7f7f7;}
+.post-diff .post-diff-details table td.added{background-color:#faeae8;color:#7c261b;font-weight:bold;}.post-diff .post-diff-details table td.added.even{background-color:#f5d7d4;}
+.post-diff .post-diff-details table td.removed{background-color:#faeae8;color:#7c261b;font-weight:bold;}.post-diff .post-diff-details table td.removed.even{background-color:#f5d7d4;}
+.post-diff .post-diff-details table td.stag{color:#555555;}
 .index-rank-team ul li{background-color:#cf402e;border-color:#ae3627;}.index-rank-team ul li a:link,.index-rank-team ul li a:active,.index-rank-team ul li a:visited,.index-rank-team ul li a:hover{color:#ffffff;text-shadow:0px 1px 0px #3d130e;}
 .index-rank-team ul li .muted{color:#672017;}
 .post-label-team{background-color:#cf402e;}

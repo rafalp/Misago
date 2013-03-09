@@ -1,2 +1,133 @@
 // Post Changelog
 // -------------------------
+
+.post-changelog {
+  table {
+    td {
+      vertical-align: middle;
+
+      .change-added, .change-removed, .change-none {
+        display: block;
+        font-size: @baseFontSize * 2;
+        font-weight: bold;
+        text-align: right;
+
+        &.change-small {
+          font-size: @baseFontSize;
+        }
+      }
+
+      .change-neutral {
+        color: @gray;
+      }
+
+      .change-added {
+        color: @green;
+      }
+
+      .change-removed {
+        color: @red;
+      }
+
+      .change-reason {
+        a:link, a:active, a:visited, a:hover {
+          color: @textColor;
+          font-weight: bold;
+        }
+      }
+
+      .change-no {
+        &:link, &:active, &:visited, &:hover {
+          float: right;
+
+          color: @gray;
+          font-weight: bold;
+        }
+      }
+
+      .change-description {
+        float: left;
+
+        font-size: @fontSizeSmall;
+
+        a:link, a:active, a:visited, a:hover {
+          color: @textColor;
+        }
+
+        .change-details {
+          color: @grayLight;
+
+          a:link, a:visited {
+            color: @gray;
+          }
+        }
+      }
+    }
+  }
+}
+
+.post-diff {
+  .diff-extra {
+    overflow: auto;
+  }
+
+  .post-diff-details {
+    background-color: @white;
+    border: 1px solid @categoryBorder;
+    border-radius: @borderRadiusSmall;
+    .box-shadow(0px 0px 0px 3px @categoryShadow);
+    margin-bottom: @baseLineHeight;
+
+    table {
+      margin: 0px;
+      width: 100%;
+
+      td {
+        padding: 1px 4px;
+
+        &.line {
+          background-color: @categoryShadow;
+          border-right: 1px solid @categoryBorder;
+          padding-left: @baseFontSize;
+          width: 1%;
+
+          text-align: right;
+
+          a:link, a:active, a:visited, a:hover {
+            color: @grayLight;
+          }
+        }
+
+        &.even {
+          background-color: darken(@white, 3%);
+        }
+
+        &.added {
+          background-color: lighten(@green, 45%);
+
+          color: darken(@green, 20%);
+          font-weight: bold;
+
+          &.even {
+            background-color: lighten(@green, 40%);
+          }
+        }
+
+        &.removed {
+          background-color: lighten(@red, 45%);
+
+          color: darken(@red, 20%);
+          font-weight: bold;
+
+          &.even {
+            background-color: lighten(@red, 40%);
+          }
+        }
+
+        &.stag {
+          color: @gray;
+        }
+      }
+    }
+  }
+}
