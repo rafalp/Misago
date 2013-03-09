@@ -1,6 +1,6 @@
 0 */4 * * * python $HOME/misago/manage.py clearsessions
 0 3 * * * python $HOME/misago/manage.py clearalerts
-5 3 * * * python $HOME/misago/manage.py resetdeltas
+5 3 * * * python $HOME/misago/manage.py syncdeltas
 10 3 * * * python $HOME/misago/manage.py updateranking
 15 3 * * * python $HOME/misago/manage.py cleartracker
 20 3 * * * python $HOME/misago/manage.py cleartokens
