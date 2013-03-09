@@ -17,7 +17,7 @@
       {% for category in forums_list %}{% if category.subforums %}
       <div class="index-category{% if category.style %} index-category-{{ category.style }}{% endif %}">
         <table class="table">
-          <caption>{{ category.name }}</caption>
+          <caption>{{ category.name }}{% if category.description %} <small>{{ category.description }}</small>{% endif %}</caption>
           <tbody>
             {% for forum in category.subforums %}
             <tr>

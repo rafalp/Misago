@@ -13,16 +13,22 @@
 
   	caption {
   	  background-color: @categoryHeader;
-      border: 1px solid darken(@categoryHeader, 5%);
+      border: 1px solid @categoryBorder;
       border-radius: @borderRadiusSmall @borderRadiusSmall 0px 0px;
       margin: -1px;
-  	  padding: @paddingSmall;
+      padding: (@fontSizeSmall / 3) (@fontSizeSmall - 2px);
 
-      color: @white;
-  	  font-size: @fontSizeSmall;
-  	  font-weight: bold;
-  	  text-align: left;
-      text-shadow: 0px 1px 0px darken(@categoryHeader, 25%);
+      color: @grayDark;
+      font-size: @fontSizeSmall;
+      font-weight: bold;
+      text-align: left;
+
+      small {
+        margin-left: @baseFontSize / 2;
+
+        color: @grayLight;
+        font-size: @fontSizeSmall;
+      }
   	}
     
     .forum-map-forum, .forum-map-subforum {
@@ -41,6 +47,14 @@
 			    color: @textColor;
 			  }
       }
+
+      .forum-details {
+        float: right;
+        margin-top: (@baseLineHeight * -1) - 1px;
+
+        color: @grayLight;
+        font-weight: bold;
+      }
     }
 
     .forum-map-subforum {
@@ -54,10 +68,11 @@
     		}
 
     		&.tree-t {
-    			border-left: 2px solid @grayLighter;
+    			border-left: 1px solid @grayLight;
+          margin-right: 2px;
 
     			span {
-    				border-top: 2px solid @grayLighter;
+    				border-top: 1px solid @grayLight;
     			  display: inline-block;
     				height: 1px;
     				width: 100%;
@@ -66,9 +81,11 @@
     		}
 
     		&.tree-l {
+          margin-right: 4px;
+
     			span {
-    			  border-left: 2px solid @grayLighter;
-    				border-bottom: 2px solid @grayLighter;
+    			  border-left: 1px solid @grayLight;
+    				border-bottom: 1px solid @grayLight;
     			  display: inline-block;
     				height: @baseLineHeight * 0.5;
     				width: 100%;
@@ -77,13 +94,15 @@
     		}
 
     		&.tree-i {
-    			border-left: 2px solid @grayLighter;
+    			border-left: 1px solid @grayLight;
     			position: relative;
     			top: 5px;
+          margin-top: -5px;
     			margin-right: 4px;
     		}
 
     		&.tree-s {
+          height: 1px;
     			width: (@baseLineHeight * 0.5) + 2px;
     			margin-right: 4px;
     		}
@@ -94,9 +113,45 @@
   &.forum-map-category-important {
     caption {
       background-color: @red;
-      border: 1px solid darken(@red, 5%);
+      border: 1px solid darken(@red, 10%);
 
+      color: @white;
       text-shadow: 0px 1px 0px darken(@red, 25%);
+
+      small {
+        color: darken(@red, 40%);
+        text-shadow: none;
+      }
+    }
+  }
+
+  &.forum-map-category-inverse {
+    caption {
+      background-color: @grayDark;
+      border: 1px solid darken(@grayDark, 10%);
+
+      color: @grayLighter;
+      text-shadow: 0px 1px 0px darken(@black, 25%);
+
+      small {
+        color: lighten(@grayLight, 10%);
+        text-shadow: none;
+      }
+    }
+  }
+
+  &.forum-map-category-info {
+    caption {
+      background-color: @bluePale;
+      border: 1px solid darken(@bluePale, 10%);
+
+      color: @white;
+      text-shadow: 0px 1px 0px darken(@bluePale, 25%);
+
+      small {
+        color: darken(@bluePale, 25%);
+        text-shadow: none;
+      }
     }
   }
 }
