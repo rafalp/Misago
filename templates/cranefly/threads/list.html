@@ -124,7 +124,7 @@
           </td>
           <td>
             <div class="thread-rating{% if (thread.upvotes-thread.downvotes) > 0 %} thread-rating-positive{% elif (thread.upvotes-thread.downvotes) < 0 %} thread-rating-negative{% endif %}">
-              {{ (thread.upvotes-thread.downvotes)|abs|intcomma }}
+              {% if (thread.upvotes-thread.downvotes) > 0 %}+{% elif (thread.upvotes-thread.downvotes) < 0 %}-{% endif %}{{ (thread.upvotes-thread.downvotes)|abs|intcomma }}
             </div>
           </td>
           <td>
