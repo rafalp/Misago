@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 from misago import get_version
-from optparse import make_option
 
 class Command(BaseCommand):
     """

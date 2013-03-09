@@ -2,7 +2,7 @@ Misago
 ======
 
 Misago is internet forum application written in Python and using Django as its foundation.
-You can find development preview of Misago at [project homepage](http://misago-project.org).
+Visit project homepage for discussion and demo: <http://misago-project.org>
 
 
 The Tao AKA Mission Statement
@@ -39,18 +39,15 @@ Misago comes with "deployment" python module that contains empty Misago configur
 
 After you set low-level configuration of Misago, fire following commands on manage.py:
 
-* __syncdb__ - this will create database structure for Misago
+* __initmisago__ - creates DB structure for Misago and populates it with default data
 * __adduser Admin admin@example.com password --admin__ - this will create first admin user
-* __genavatars__ - this will rebuild avatars gallery thumbnails
 
 Misago stands on shoulders of Django and Django documentation covers deployment of apps extensively:
 https://docs.djangoproject.com/en/dev/howto/deployment/
 
 ### WARNING!
 
-Misago is not production ready!
-
-Currently there is no way to update database when codebase changes! To update your development installation you have to delete existing database and create new one or maintain your own migrations using South!
+Misago is not production ready! Don't ever use it in anything thats anywhere close to production enviroment!
 
 
 Contributing
@@ -58,7 +55,7 @@ Contributing
 
 Misago is open source project. You are free to submit pull requests against master branch, and use issues system to report bugs, propose improvements and new features.
 
-There is currently no support forum for Misago, however one will be created when project nears production ready state.
+Finally, you can participate in discussion on [project forums](http://misago-project.org). Your feedback means much for project, don't keep it to yourself!
 
 
 Authors

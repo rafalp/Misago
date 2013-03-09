@@ -16,7 +16,6 @@ class ThreadManager(models.Manager):
 class Thread(models.Model):
     forum = models.ForeignKey('forums.Forum')
     weight = models.PositiveIntegerField(default=0)
-    type = models.PositiveIntegerField(default=0)
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
     replies = models.PositiveIntegerField(default=0)
