@@ -3,6 +3,9 @@ import os
 # Board address
 BOARD_ADDRESS = 'http://127.0.0.1:8000/'
 
+# Allowed hosts
+ALLOWED_HOSTS = ['*']
+
 # Admin control panel path
 # Leave this setting empty
 ADMIN_PATH = ''
