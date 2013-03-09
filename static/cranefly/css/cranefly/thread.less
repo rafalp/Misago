@@ -29,6 +29,32 @@
         border: 1px solid @postBorder;
         border-radius: @borderRadiusLarge;
         margin-left: 100px + (@baseFontSize * 1.5);
+        position: relative;
+
+        &:after, &:before {
+          right: 100%;
+          border: solid transparent;
+          content: "";
+          height: 0; width: 0;
+          position: absolute;
+          pointer-events: none;
+        }
+
+        &:after {
+          border-color: transparent;
+          border-right-color: @postBackground;
+          border-width: @fontSizeMini;
+          top: @baseFontSize;
+          margin-top: (@baseFontSize * -1) + @baseFontSize;
+        }
+
+        &:before {
+           border-color: transparent;
+           border-right-color: @postBorder;
+           border-width: @fontSizeMini + 1;
+           top: @baseFontSize;
+           margin-top: (@baseFontSize * -1) + @baseFontSize - 1px;
+        }
 
         .post-header {
           padding: (@baseFontSize / 2) @baseFontSize;
@@ -182,9 +208,11 @@
               .btn-link {
                 float: right;
                 margin: 0px;
-                margin-left: (@baseFontSize / 4); 
+                margin-left: (@baseFontSize / 4);
+                .opacity(100);
                 padding: 0px;
 
+                color: @grayLight;
                 font-weight: normal;
 
                 &:hover, &:active, &:focus {
@@ -213,7 +241,7 @@
 
             color: @grayLight;
 
-            a, form {
+            a, span, form {
               float: left;
               overflow: auto;
             }
@@ -249,6 +277,7 @@
               float: right;
               margin: 0px;
               margin-left: @baseFontSize;
+              .opacity(100);
               padding: 0px;
 
               color: @grayLight;
@@ -261,19 +290,6 @@
             }
           }
         }
-      }
-
-      .post-arrow {
-        border-top: @fontSizeMini solid transparent;
-        border-bottom: @fontSizeMini solid transparent;
-        border-right: @fontSizeMini solid @postBackground;
-        float: left;
-        width: 0;
-        height: 0;
-        position: relative;
-        top: @baseFontSize + 1px;
-        left: @baseFontSize - 2px;
-        z-index: (@zindexDropdown - 1);
       }
 
       &.post-muted {        
@@ -393,20 +409,33 @@
     height: 125px;
   }
 
-  .arrow {
-    border-top: @baseFontSize solid transparent;
-    border-bottom: @baseFontSize solid transparent;
-    border-right: @baseFontSize solid @white;
-    float: left;
-    width: 0;
-    height: 0;
-    position: relative;
-    top: @baseFontSize / 2;
-    left: @baseFontSize + 1px;
-    z-index: (@zindexDropdown - 1);
-  }
-
   .editor {
     margin-left: 125px + (@baseFontSize * 2);
+    position: relative;
+
+    &:after, &:before {
+      right: 100%;
+      border: solid transparent;
+      content: "";
+      height: 0; width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    &:after {
+      border-color: transparent;
+      border-right-color: @editorBackground;
+      border-width: @baseFontSize;
+      top: @baseFontSize / 2;
+      margin-top: ((@baseFontSize / 2) * -1) + @baseFontSize;
+    }
+
+    &:before {
+       border-color: transparent;
+       border-right-color: darken(@editorBackground, 10%);
+       border-width: @baseFontSize + 1;
+       top: @baseFontSize / 2;
+       margin-top: ((@baseFontSize / 2) * -1) + @baseFontSize - 1px;
+    }
   }
 }
