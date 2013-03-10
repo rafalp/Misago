@@ -260,7 +260,7 @@
               </form>
               {% endif %}
               {% else %}
-              <span class="post-{% if post.upvotes %}likes{% else %}neutral{% endif %}">{% trans %}Likes{% endtrans %}</span>
+              <span class="post-{% if post.upvotes %}like{% else %}neutral{% endif %}">{% trans %}Likes{% endtrans %}</span>
               {% endif %}
             {% if acl.threads.can_see_post_score(forum) == 2 %}
             </div>
