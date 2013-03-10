@@ -37,7 +37,7 @@
     }
 
     .forum-icon {
-      padding-right: 0px;
+      padding-right: (@fontSizeSmall / 2) - 3px;
       width: 1%;
 
       .forum-icon-wrap {
@@ -75,13 +75,22 @@
 
       .forum-details {
         float: right;
+        margin-top: ((@baseFontSize - @fontSizeSmall) * -1) + 1px;
 
         color: @grayLight;
-        font-weight: bold;
+        font-size: @fontSizeSmall;
 
-        .label {
-          position: relative;
-          bottom: 1px;
+        strong, a {
+          color: @gray;
+          font-weight: normal
+        }
+
+        a:hover, a:active {
+          color: @textColor;
+        }
+
+        strong.stat-increment {
+          color: @green;
         }
       }
 

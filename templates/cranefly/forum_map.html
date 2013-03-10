@@ -60,9 +60,9 @@
     {%- endif %}{% endif %} <a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3>
     <div class="forum-details">
       {% if forum.type == 'redirect' %}
-      <span class="label{% if forum.redirects_delta < forum.redirects %} label-success{% endif %}">{{ forum.redirects|intcomma }}</span> {% trans %}Clicks{% endtrans %}
+      {{ redirect_stats(forum) }}
       {% else %}
-      <span class="label{% if forum.posts_delta < forum.posts %} label-success{% endif %}">{{ forum.posts|intcomma }}</span> {% trans %}Posts{% endtrans %}
+      {{ forum_stats(forum) }}
       {% endif %}
     </div>
 </td>
@@ -85,3 +85,35 @@
 <span class="tree-{{ item }}"><span></span></span>
 {% endfor %}
 {% endmacro %}
+
+{% macro forum_stats(forum) -%}
+{% if forum.last_thread_id and not forum.attr('hidethread') -%}
+  {% trans count=forum.posts, posts=fancy_number(forum.posts, forum.posts_delta), thread=forum_thread(forum) -%}
+  {{ posts }} post - last in {{ thread }}
+  {%- pluralize -%}
+  {{ posts }} posts - last in {{ thread }}
+  {%- endtrans %}
+{%- else -%}
+  {% trans count=forum.posts, posts=fancy_number(forum.posts, forum.posts_delta) -%}
+  {{ posts }} post
+  {%- pluralize -%}
+  {{ posts }} posts
+  {%- endtrans %}
+{%- endif %}
+{%- endmacro %}
+
+{% macro forum_thread(forum) -%}
+<a href="{% url 'thread' thread=forum.last_thread_id, slug=forum.last_thread_slug %}">{{ forum.last_thread_name }}</a>
+{%- endmacro %}
+
+{% macro redirect_stats(forum) -%}
+{% trans count=forum.redirects, redirects=fancy_number(forum.redirects, forum.redirects_delta) -%}
+{{ redirects }} click
+{%- pluralize -%}
+{{ redirects }} clicks
+{%- endtrans %}
+{%- endmacro %}
+
+{% macro fancy_number(number, delta) -%}
+<strong{% if delta < number %} class="stat-increment"{% endif %}>{{ number|intcomma }}</strong>
+{%- endmacro %}
