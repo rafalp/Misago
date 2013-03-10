@@ -67,7 +67,7 @@
             <a href="{% url 'user' username=user.username_slug, user=user.pk %}" class="user-avatar"><img src="{{ user.get_avatar(42) }}" alt=""></a>
             <p class="user-details">
               <a href="{% url 'user' username=user.username_slug, user=user.pk %}">{{ user.username }}</a>
-              <span class="user-info">{% if user.title or (in_search and user.get_title()) %}<strong>{% if in_search %}{{ _(user.get_title()) }}{% else %}{{ _(user.title) }}{% endif %}</strong>, {% endif %}{% trans join=user.join_date|reldate %}Joined {{ join }}{% endtrans %}</span>
+              {% if user.title or (in_search and user.get_title()) %}<span class="user-info">{% if in_search and user.get_title() %}{{ _(user.get_title()) }}{% else %}{{ _(user.title) }}{% endif %}</span>{% endif %}
             </p>
             {% else %}
             &nbsp;
