@@ -4,4 +4,4 @@ def banning(request):
             'is_banned': request.ban.is_banned(),
         }
     except AttributeError:
-        pass
+        return {}

@@ -5,4 +5,4 @@ def csrf(request):
             'csrf_token': request.csrf.csrf_token,
         }
     except AttributeError:
-        pass
+        return {}

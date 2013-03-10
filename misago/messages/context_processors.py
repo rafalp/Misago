@@ -4,4 +4,4 @@ def messages(request):
             'messages' : request.messages.messages,
         }
     except AttributeError:
-        pass
+        return {}

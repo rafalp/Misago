@@ -4,4 +4,4 @@ def is_jammed(request):
             'is_jammed': request.jam.is_jammed(),
         }
     except AttributeError:
-        pass
+        return {}

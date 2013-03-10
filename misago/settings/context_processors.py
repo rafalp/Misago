@@ -4,4 +4,4 @@ def settings(request):
             'settings' : request.settings,
         }
     except AttributeError:
-        pass
+        return {}
