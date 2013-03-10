@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.conf import settings
 from django.template import RequestContext as DjangoRequestContext
 from django.utils import timezone
@@ -28,7 +29,7 @@ def RequestContext(request, context=None):
     # Find out if this user is online:
     if request.user.pk != context['profile'].pk:
         try:
-            context['online'] = context['profile'].sessions.filter(admin=False).order_by('-last')[0:1][0]
+            context['online'] = context['profile'].sessions.filter(admin=False).filter(last__gt=(timezone.now() - timedelta(minutes=10))).order_by('-last')[0:1][0]
         except IndexError:
             context['online'] = False
     else:
