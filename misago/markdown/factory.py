@@ -21,14 +21,15 @@ class ClearHTMLParser(HTMLParser):
                 self.lookback.pop()
         except IndexError:
             pass
-
         
     def handle_data(self, data):
         # String does not repeat itself
         if self.clean_text[-len(data):] != data:
             # String is not "QUOTE"
             try:
-                if not (data == 'Quote' and self.lookback[-1] == 'h3' and self.lookback[-2] == 'blockquote'):
+                if self.lookback[-1] in ('strong', 'em'):
+                    self.clean_text += data
+                elif not (data == 'Quote' and self.lookback[-1] == 'h3' and self.lookback[-2] == 'blockquote'):
                     self.clean_text += ' %s' % data
             except IndexError:
                 self.clean_text += ' %s' % data
