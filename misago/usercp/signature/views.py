@@ -7,11 +7,13 @@ from misago.markdown import signature_markdown
 from misago.messages import Message
 from misago.usercp.template import RequestContext
 from misago.usercp.signature.forms import SignatureForm
-from misago.views import error404
+from misago.views import error403, error404
 
 @block_guest
 def signature(request):
-    # Intercept all requests if we cant use signature
+    # Intercept all requests if we can't use signature
+    if not request.acl.usercp.can_use_signature():
+        return error403(request)
     if request.user.signature_ban:
         return request.theme.render_to_response('usercp/signature_banned.html',
                                                 context_instance=RequestContext(request, {
