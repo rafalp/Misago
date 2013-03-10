@@ -52,6 +52,10 @@ def home(request):
     if users_online == 'nada':
         users_online = Session.objects.filter(matched=True).filter(crawler__isnull=True).filter(last__gte=timezone.now() - timedelta(seconds=300)).count()
         cache.set('users_online', users_online, 300)
+    if not users_online and not request.user.is_crawler():
+        # Cheatey trick to make sure we'll never display
+        # zero users online to human client
+        users_online = 1
 
     # Load reads tracker and build forums list
     reads_tracker = ForumsTracker(request.user)
