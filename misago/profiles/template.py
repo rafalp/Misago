@@ -32,7 +32,8 @@ def RequestContext(request, context=None):
         except IndexError:
             context['online'] = False
     else:
-        context['online'] = timezone.now()
+        # Fake "right now" time
+        context['online'] = {'last': timezone.now()}
 
     context['tabs'] = []
     for extension in settings.PROFILE_EXTENSIONS:
