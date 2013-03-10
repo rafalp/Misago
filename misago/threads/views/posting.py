@@ -293,7 +293,7 @@ class PostingView(BaseView):
                         self.request.monitor['posts'] = int(self.request.monitor['posts']) + 1
                         self.forum.posts += 1
 
-                    if self.mode not in ['edit_thread', 'edit_post']
+                    if self.mode not in ['edit_thread', 'edit_post']:
                         self.forum.last_thread = thread
                         self.forum.last_thread_name = thread.name
                         self.forum.last_thread_slug = thread.slug
