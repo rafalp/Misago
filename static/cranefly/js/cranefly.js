@@ -70,7 +70,7 @@ $(function () {
   	$(this).after('<div class="md-img-error"><span>' + l_img_broken_msg + '</span></div>');
   	$(this).hide();
 	});
-	
+
 	// Automagically turn links into players
 	var players = new Array();
 	$('.markdown a').each(function() {
@@ -90,14 +90,14 @@ $(function () {
 // Turn link to player
 function link2player(link) {
 	// Youtube link
-	var re = /watch\?v=([A-Za-z0-9]+)/;
+	var re = /watch\?v=((\w|-)+)/;
 	if (re.test(link.href)) {
 		media_url = link.href.match(re);
 		return '<iframe width="480" height="360" src="http://www.youtube.com/embed/' + media_url[1] + '" frameborder="0" allowfullscreen></iframe>';
 	}
 
 	// Youtube embed with start time
-	var re = /youtu.be\/([A-Za-z0-9]+)\?t=([A-Za-z0-9]+)/;
+	var re = /youtu.be\/((\w|-)+)\?t=([A-Za-z0-9]+)/;
 	if (re.test(link.href)) {
 		media_url = link.href.match(re);
 		media_minutes = media_url[2].match(/([0-9]+)m/);
@@ -109,7 +109,7 @@ function link2player(link) {
 	}
 	
 	// Youtube embed
-	var re = /youtu.be\/([A-Za-z0-9]+)/;
+	var re = /youtu.be\/((\w|-)+)/;
 	if (re.test(link.href)) {
 		media_url = link.href.match(re);
 		return '<iframe width="480" height="360" src="http://www.youtube.com/embed/' + media_url[1] + '" frameborder="0" allowfullscreen></iframe>';
