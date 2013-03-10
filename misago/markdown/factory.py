@@ -12,6 +12,12 @@ class ClearHTMLParser(HTMLParser):
         self.clean_text = ''
         self.lookback = []
         
+    def handle_entityref(self, name):
+        if name == 'gt':
+            self.clean_text += '>'
+        if name == 'lt':
+            self.clean_text += '<'
+
     def handle_starttag(self, tag, attrs):
         self.lookback.append(tag)
 
@@ -30,9 +36,9 @@ class ClearHTMLParser(HTMLParser):
                 if self.lookback[-1] in ('strong', 'em'):
                     self.clean_text += data
                 elif not (data == 'Quote' and self.lookback[-1] == 'h3' and self.lookback[-2] == 'blockquote'):
-                    self.clean_text += ' %s' % data
+                    self.clean_text += data
             except IndexError:
-                self.clean_text += ' %s' % data
+                self.clean_text += data
 
 
 def clear_markdown(text):
