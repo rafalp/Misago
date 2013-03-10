@@ -74,7 +74,7 @@ $(function () {
 	// Automagically turn links into players
 	var players = new Array();
 	$('.markdown a').each(function() {
-		if (this.href == $(this).text()) {
+		if (this.href == $.trim($(this).text())) {
 			match = link2player(this);
 			if (match && $.inArray(match, players) == -1) {
 				players.push(match);
