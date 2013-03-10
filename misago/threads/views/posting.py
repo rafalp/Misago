@@ -181,6 +181,8 @@ class PostingView(BaseView):
                         post.save(force_update=True)
                         thread.last = now
                         thread.save(force_update=True)
+                        self.forum.last = now
+                        self.forum.save(force_update=True)
                         # Ignore rest of posting action
                         request.messages.set_flash(Message(_("Your reply has been added to previous one.")), 'success', 'threads_%s' % post.pk)
                         return self.redirect_to_post(post)
