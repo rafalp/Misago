@@ -963,8 +963,10 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{opacity:0.9;filter:alpha(opa
 .index-category.index-category-info caption{background-color:#3c85a3;border:1px solid #2e677e;color:#ffffff;text-shadow:0px 1px 0px #1a3946;}.index-category.index-category-info caption small{color:#1a3946;text-shadow:none;}
 .index-forums-read-all{margin:0px;padding:0px;}.index-forums-read-all .btn-link{margin:0px;opacity:0.5;filter:alpha(opacity=50);padding:0px;color:#333333;font-weight:bold;}.index-forums-read-all .btn-link:active,.index-forums-read-all .btn-link:hover{opacity:0.9;filter:alpha(opacity=90);}
 .index-ranks-list h3{margin:0px;padding:0px;color:#999999;font-size:17.5px;font-weight:bold;}
-.index-ranks-list ul{margin:0px;margin-bottom:20px;padding:0px;}.index-ranks-list ul li{background-color:#eeeeee;border:1px solid #dadada;border-radius:3px;margin:0px;margin-bottom:10.5px;padding:6px;font-weight:bold;}.index-ranks-list ul li img{background-color:#ffffff;border-radius:2px;width:24px;height:24px;}
-.index-ranks-list ul li a:link,.index-ranks-list ul li a:active,.index-ranks-list ul li a:visited,.index-ranks-list ul li a:hover{color:#333333;}
+.index-ranks-list ul{background-color:#ffffff;border:1px solid #e2e2e2;border-radius:3px;margin:0px;margin-bottom:20px;padding:0px;}.index-ranks-list ul li{border-bottom:1px dotted #e2e2e2;margin:0px;padding:6px 8px;font-weight:bold;}.index-ranks-list ul li img{background-color:#ffffff;border-radius:2px;width:28px;height:28px;}
+.index-ranks-list ul li a:link,.index-ranks-list ul li a:active,.index-ranks-list ul li a:visited,.index-ranks-list ul li a:hover{position:relative;top:1.75px;margin:0px 4px;color:#333333;font-size:17.5px;}
+.index-ranks-list ul li .label{float:right;position:relative;top:4.5px;}
+.index-ranks-list ul li:last-child{border-bottom:none;}
 .index-popular-threads h3{margin:0px;margin-bottom:-10px;padding:0px;color:#999999;font-size:17.5px;font-weight:bold;}
 .index-popular-threads ul{margin:0px;margin-bottom:20px;padding:0px;}.index-popular-threads ul li{border-bottom:1px solid #e2e2e2;padding:7px 0px;}.index-popular-threads ul li a:link,.index-popular-threads ul li a:active,.index-popular-threads ul li a:visited,.index-popular-threads ul li a:hover{color:#333333;font-weight:bold;}
 .index-popular-threads ul li .muted{font-size:10.5px;}.index-popular-threads ul li .muted a:link,.index-popular-threads ul li .muted a:active,.index-popular-threads ul li .muted a:visited,.index-popular-threads ul li .muted a:hover{color:#555555;}
@@ -1138,12 +1140,9 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{opacity:0.9;filter:alpha(opa
 .post-diff .post-diff-details table td.added{background-color:#dff1df;color:#285d28;font-weight:bold;}.post-diff .post-diff-details table td.added.even{background-color:#cdeacd;}
 .post-diff .post-diff-details table td.removed{background-color:#faeae8;color:#7c261b;font-weight:bold;}.post-diff .post-diff-details table td.removed.even{background-color:#f5d7d4;}
 .post-diff .post-diff-details table td.stag{color:#555555;}
-.index-rank-team ul li{background-color:#cf402e;border-color:#ae3627;}.index-rank-team ul li a:link,.index-rank-team ul li a:active,.index-rank-team ul li a:visited,.index-rank-team ul li a:hover{color:#ffffff;text-shadow:0px 1px 0px #3d130e;}
-.index-rank-team ul li .muted{color:#672017;}
+.index-rank-team ul li .label{background-color:#cf402e;color:#ffffff;text-shadow:0px 1px 0px #3d130e;}
 .post-label-team{background-color:#cf402e;}
-.index-rank-mvp ul li{background-color:#1a93c5;border-color:#037fb3;}.index-rank-mvp ul li a:link,.index-rank-mvp ul li a:active,.index-rank-mvp ul li a:visited,.index-rank-mvp ul li a:hover{color:#ffffff;text-shadow:0px 1px 0px #011f2c;}
-.index-rank-mvp ul li .muted{color:#02435e;}
+.index-rank-mvp ul li .label{background-color:#049cdb;color:#ffffff;text-shadow:0px 1px 0px #011f2c;}
 .post-label-mcp{background-color:#049cdb;}
-.index-rank-active ul li{background-color:#f3b700;border-color:#e3ac00;}.index-rank-active ul li a:link,.index-rank-active ul li a:active,.index-rank-active ul li a:visited,.index-rank-active ul li a:hover{color:#ffffff;text-shadow:0px 1px 0px #5a4400;}
-.index-rank-active ul li .muted{color:#8d6a00;}
+.index-rank-active ul li .label{background-color:#8d6a00;color:#ffffff;text-shadow:0px 1px 0px #5a4400;}
 .post-label-mcp{background-color:#ffc40d;}

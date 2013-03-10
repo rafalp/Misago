@@ -190,29 +190,44 @@
   }
 
   ul {
+    background-color: @white;
+    border: 1px solid darken(@bodyBackground, 10%);
+    border-radius: @baseBorderRadius;
     margin: 0px;
     margin-bottom: @baseLineHeight;
     padding: 0px;
 
     li {
-      background-color: darken(@bodyBackground, 5%);
-      border: 1px solid darken(@bodyBackground, 13%);
-      border-radius: @baseBorderRadius;
+      border-bottom: 1px dotted darken(@bodyBackground, 10%);
       margin: 0px;
-      margin-bottom: (@baseFontSize * .75);
-      padding: 6px;
+      padding: 6px 8px;
 
       font-weight: bold;
 
       img {
         background-color: @white;
         border-radius: @borderRadiusSmall;
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
       }
 
       a:link, a:active, a:visited, a:hover {
+        position: relative;
+        top: (@fontSizeLarge - @baseFontSize) / 2;
+        margin: 0px 4px;
+
         color: @textColor;
+        font-size: @fontSizeLarge;
+      }
+
+      .label {
+        float: right;
+        position: relative;
+        top: (@fontSizeLarge - @baseFontSize) + 1px;
+      }
+
+      &:last-child {
+        border-bottom: none;
       }
     }
   }

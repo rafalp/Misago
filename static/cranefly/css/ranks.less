@@ -4,16 +4,11 @@
 // .rank-team
 .index-rank-team ul {
   li {
-    background-color: @red;
-    border-color: darken(@red, 8%);
+    .label {
+      background-color: @red;
 
-    a:link, a:active, a:visited, a:hover {
       color: @white;
       text-shadow: 0px 1px 0px darken(@red, 35%);
-    }
-
-    .muted {
-      color: darken(@red, 25%);
     }
   }
 }
@@ -25,16 +20,11 @@
 // .rank-mvp
 .index-rank-mvp ul {
   li {
-    background-color: desaturate(@blue, 20%);
-    border-color: darken(@blue, 8%);
+    .label {
+      background-color: @blue;
 
-    a:link, a:active, a:visited, a:hover {
       color: @white;
       text-shadow: 0px 1px 0px darken(@blue, 35%);
-    }
-
-    .muted {
-      color: darken(@blue, 25%);
     }
   }
 }
@@ -46,16 +36,11 @@
 // .rank-active
 .index-rank-active ul {
   li {
-    background-color: darken(@yellow, 5%);
-    border-color: darken(@yellow, 8%);
+    .label {
+      background-color: darken(@yellow, 25%);
 
-    a:link, a:active, a:visited, a:hover {
       color: @white;
       text-shadow: 0px 1px 0px darken(@yellow, 35%);
-    }
-
-    .muted {
-      color: darken(@yellow, 25%);
     }
   }
 }
