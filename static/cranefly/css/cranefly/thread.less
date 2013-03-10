@@ -302,15 +302,17 @@
         .post-content {
           margin-left: 50px + (@baseFontSize * 1.5);
           .opacity(75);
+          padding: @baseFontSize;
 
           .post-header {
             float: right;
             margin: 0px;
-            margin-top: @baseFontSize / 2;
+            margin-top: ((@baseFontSize / 2) * -1);
+            margin-right: @baseFontSize * -1;
 
             .post-header-compact {
               float: left;
-              margin-right: @baseLineHeight;
+              margin-right: @baseFontSize;
             }
           }
 

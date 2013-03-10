@@ -110,7 +110,7 @@
             {% url 'thread' thread=thread.pk, slug=thread.slug %}
             {%- endif %}#post-{{ post.pk }}" class="post-perma tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
 
-            {% if 1 ==1 or not post.is_read %}
+            {% if not post.is_read %}
             <div class="post-extra">
               <span class="label label-warning">
                 {% trans %}New{% endtrans %}
