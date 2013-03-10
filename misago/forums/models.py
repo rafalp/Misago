@@ -172,7 +172,9 @@ class Forum(MPTTModel):
         move_forum_content.send(sender=self, move_to=target)
 
     def attr(self, att):
-        return att in self.attrs.split()
+        if self.attrs:
+            return att in self.attrs.split()
+        return False
 
     def sync(self):
         self.threads = self.thread_set.filter(moderated=False).filter(deleted=False).count()
