@@ -277,8 +277,7 @@ class PostingView(BaseView):
                     thread.last_poster = request.user
                     thread.last_poster_name = request.user.username
                     thread.last_poster_slug = request.user.username_slug
-                    if request.user.rank and request.user.rank.style:
-                        thread.last_poster_style = request.user.rank.style
+                    thread.last_poster_style = request.user.rank.style
 
                 # Final update of thread entry
                 if self.mode != 'edit_post':
@@ -294,15 +293,16 @@ class PostingView(BaseView):
                         self.request.monitor['posts'] = int(self.request.monitor['posts']) + 1
                         self.forum.posts += 1
 
-                    self.forum.last_thread = thread
-                    self.forum.last_thread_name = thread.name
-                    self.forum.last_thread_slug = thread.slug
-                    self.forum.last_thread_date = thread.last
-                    self.forum.last_poster = thread.last_poster
-                    self.forum.last_poster_name = thread.last_poster_name
-                    self.forum.last_poster_slug = thread.last_poster_slug
-                    self.forum.last_poster_style = thread.last_poster_style
-                    self.forum.save(force_update=True)
+                    if self.mode not in ['edit_thread', 'edit_post']
+                        self.forum.last_thread = thread
+                        self.forum.last_thread_name = thread.name
+                        self.forum.last_thread_slug = thread.slug
+                        self.forum.last_thread_date = thread.last
+                        self.forum.last_poster = thread.last_poster
+                        self.forum.last_poster_name = thread.last_poster_name
+                        self.forum.last_poster_slug = thread.last_poster_slug
+                        self.forum.last_poster_style = thread.last_poster_style
+                        self.forum.save(force_update=True)
 
                 # Update user
                 if not moderation:
