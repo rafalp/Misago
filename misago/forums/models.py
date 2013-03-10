@@ -193,7 +193,7 @@ class Forum(MPTTModel):
             if last_thread.last_poster:
                 self.last_poster = last_thread.last_poster
             self.last_thread = last_thread
-            self.last_thread_date = last_thread.start
+            self.last_thread_date = last_thread.last
             self.last_thread_name = last_thread.name
             self.last_thread_slug = last_thread.slug
         except (IndexError, AttributeError):
