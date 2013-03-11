@@ -35,7 +35,7 @@ def home(request):
         ranks_list = []
         users_list = []
         for rank in Rank.objects.filter(on_index=True).order_by('order'):
-            rank_entry = {'name': rank.name, 'style': rank.style, 'title': rank.title, 'online': []}
+            rank_entry = {'id':rank.id, 'name': rank.name, 'style': rank.style, 'title': rank.title, 'online': []}
             ranks_list.append(rank_entry)
             ranks_dict[rank.pk] = rank_entry
         if ranks_dict:
@@ -43,6 +43,10 @@ def home(request):
                 if not session.user_id in users_list:
                     ranks_dict[session.user.rank_id]['online'].append(session.user)
                     users_list.append(session.user_id)
+            # Assert we are on list
+            if (request.user.is_authenticated() and request.user.rank_id in ranks_dict.keys()
+                and not request.user.id in users_list):
+                    ranks_dict[request.user.rank_id]['online'].append(request.user)
             del ranks_dict
             del users_list
         cache.set('ranks_online', ranks_list, 300)
