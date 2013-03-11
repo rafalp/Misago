@@ -95,13 +95,14 @@
   img {
     border-radius: @baseBorderRadius;
     box-shadow: 0px 0px 4px @gray;
+    margin: (@baseLineHeight / 2) 0px;
   }
 
   .md-img {
     overflow: auto;
 
     .md-img-span {
-      margin: 0px;
+      margin: (@baseLineHeight / 2) 0px;
       float: none;
 
       .md-img-wrap {
@@ -153,6 +154,20 @@
           }
         }
       }
+    }
+  }
+
+  // Blocks margins
+  pre, blockquote, iframe {
+    margin-top: @baseLineHeight / 2;
+    margin-bottom: @baseLineHeight / 2;
+
+    &>:first-child {
+      margin-top: 0px;
+    }
+
+    &>:last-child {
+      margin-bottom: 0px;
     }
   }
 }
