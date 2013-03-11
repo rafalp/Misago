@@ -863,7 +863,7 @@ html,body{height:100%;}
 #wrap .container-primary hr{border:none;border-top:1px solid #eeeeee;}
 footer{background-color:#eeeeee;border-top:1px solid #dadada;height:80px;padding:11px 19px;}footer hr{border-bottom:1px solid #dadada;margin:10px 0px;}
 footer .credits{color:#555555;font-size:90%;}footer .credits a:link,footer .credits a:active,footer .credits a:visited,footer .credits a:hover{color:#555555;}
-::selection{background:#cf402e;color:#f89406;}
+::selection{background:#f89406;color:#ffffff;}
 ::-moz-selection{background:#f89406;color:#ffffff;}
 .navbar .navbar-inner{background:none;background-color:#f3f3f3;border-bottom:1px solid #dfdfdf;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;}.navbar .navbar-inner .container{background:url("../img/logo.png");background-position:left center;background-repeat:no-repeat;}
 .navbar .navbar-inner .brand{margin-left:6px;text-shadow:none;}.navbar .navbar-inner .brand:link,.navbar .navbar-inner .brand:active,.navbar .navbar-inner .brand:visited,.navbar .navbar-inner .brand:hover{color:#c24a3b;font-size:200%;}.navbar .navbar-inner .brand:link span,.navbar .navbar-inner .brand:active span,.navbar .navbar-inner .brand:visited span,.navbar .navbar-inner .brand:hover span{color:#c0c0c0;}
