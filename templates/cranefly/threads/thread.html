@@ -242,7 +242,7 @@
             </div>
             {% endif %}
           </div>
-          <div class="post-footer">
+          <div class="post-footer">{% filter trim %}
             {% if acl.threads.can_see_post_score(forum) %}
             <div class="post-rating">
               {% if acl.threads.can_see_post_score(forum) == 1 %}
@@ -333,7 +333,7 @@
             </div>
             {% endif %}
             {% endif %}
-          </div>
+          {% endfilter %}</div>
         </div>
       </div>
       {% endif %}

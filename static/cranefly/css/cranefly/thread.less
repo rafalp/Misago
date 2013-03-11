@@ -29,6 +29,7 @@
         border: 1px solid @postBorder;
         border-radius: @borderRadiusLarge;
         margin-left: 100px + (@baseFontSize * 1.5);
+        min-height: 100px;
         position: relative;
 
         &:after, &:before {
@@ -152,6 +153,10 @@
         .post-footer {
           border-top: 1px solid @postBorder;
           overflow: auto;
+
+          &:empty {
+            display: none;
+          }
 
           .post-rating {
             float: left;
@@ -301,6 +306,7 @@
 
         .post-content {
           margin-left: 50px + (@baseFontSize * 1.5);
+          min-height: 0px;
           .opacity(75);
           padding: @baseFontSize;
 
