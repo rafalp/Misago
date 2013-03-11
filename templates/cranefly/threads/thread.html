@@ -391,6 +391,8 @@
     {{ pager(false) }}
     {% if user.is_authenticated() and acl.threads.can_reply(forum, thread) %}
     <a href="{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}" class="btn btn-inverse pull-right"><i class="icon-pencil"></i> {% trans %}Reply{% endtrans %}</a>
+    {% elif not user.is_authenticated() and not user.is_crawler() %}
+    <p class="lead thread-signin-message"><a href="{% url 'sign_in' %}">{% trans %}Sign in or register to reply.{% endtrans %}</a></p>
     {% endif %}
   </div>
 

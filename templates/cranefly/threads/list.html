@@ -160,6 +160,8 @@
     {{ pager() }}
     {% if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
     <a href="{% url 'thread_new' forum=forum.pk, slug=forum.slug %}" class="btn btn-inverse pull-right"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a>
+    {% elif not user.is_authenticated() and not user.is_crawler() %}
+    <p class="lead threads-signin-message"><a href="{% url 'sign_in' %}">{% trans %}Sign in or register to start threads.{% endtrans %}</a></p>
     {% endif %}
   </div>
 
