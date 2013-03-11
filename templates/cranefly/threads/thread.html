@@ -231,7 +231,7 @@
             </div>
           </div>
           <div class="post-message">
-            <div class="markdown">
+            <div class="markdown js-extra">
               {{ post.post_preparsed|markdown_final|safe }}
             </div>
             {% if post.user.signature %}
@@ -419,6 +419,7 @@
   <script type="text/javascript">
     hljs.tabReplace = '    ';
     hljs.initHighlightingOnLoad();
+    EnhancePostsMD();
     {%- if user.is_authenticated() %}
     $(function () {
       $('#thread_form').submit(function() {

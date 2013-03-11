@@ -52,7 +52,7 @@
 
           {% if preview %}
           <div class="form-preview">
-            <div class="markdown">
+            <div class="markdown js-extra">
               {{ preview|markdown_final|safe }}
             </div>
           </div>
@@ -122,6 +122,7 @@
   <script type="text/javascript">
     hljs.tabReplace = '    ';
     hljs.initHighlightingOnLoad();
+    EnhancePostsMD();
   </script>
   {{ editor.js() }}
 {% endblock %}

@@ -54,38 +54,42 @@ $(function () {
 	$('.go-back').on('click', function (e) {
 	    history.go(-1)
 	})
+})
 
-	// Add labels to images
-	$('.markdown img').each(function() {
-    $(this).addClass('img-rounded');
-    $(this).wrap(function() { return '<div class="md-img" />'; });
-    $(this).wrap(function() { return '<div class="span5 md-img-span" />'; });
-    $(this).wrap(function() { return '<div class="md-img-wrap" />'; });
-    $(this).after('<a href="' + $(this).attr('src') + '" class="md-img-label" target="_blank">' + $(this).attr('alt') + '</a>');
-    $(this).wrap(function() { return '<div class="md-img-bg" />'; });
-	});
+function EnhancePostsMD() {
+	$(function () {
+		// Add labels to images
+		$('.markdown.js-extra img').each(function() {
+	    $(this).addClass('img-rounded');
+	    $(this).wrap(function() { return '<div class="md-img" />'; });
+	    $(this).wrap(function() { return '<div class="span5 md-img-span" />'; });
+	    $(this).wrap(function() { return '<div class="md-img-wrap" />'; });
+	    $(this).after('<a href="' + $(this).attr('src') + '" class="md-img-label" target="_blank">' + $(this).attr('alt') + '</a>');
+	    $(this).wrap(function() { return '<div class="md-img-bg" />'; });
+		});
 
-	// Handle prokened images
-  $('.markdown img').one('error', function() {
-  	$(this).after('<div class="md-img-error"><span>' + l_img_broken_msg + '</span></div>');
-  	$(this).hide();
-	});
+		// Handle prokened images
+	  $('.markdown.js-extra img').one('error', function() {
+	  	$(this).after('<div class="md-img-error"><span>' + l_img_broken_msg + '</span></div>');
+	  	$(this).hide();
+		});
 
-	// Automagically turn links into players
-	var players = new Array();
-	$('.markdown a').each(function() {
-		if (this.href == $.trim($(this).text())) {
-			match = link2player(this);
-			if (match && $.inArray(match, players) == -1) {
-				players.push(match);
-				$(this).replaceWith(match);
-				if (players.length == 10) {
-					return false;
+		// Automagically turn links into players
+		var players = new Array();
+		$('.markdown.js-extra a').each(function() {
+			if (this.href == $.trim($(this).text())) {
+				match = link2player(this);
+				if (match && $.inArray(match, players) == -1) {
+					players.push(match);
+					$(this).replaceWith(match);
+					if (players.length == 10) {
+						return false;
+					}
 				}
 			}
-		}
+		});
 	});
-})
+}
 
 // Turn link to player
 function link2player(link) {
