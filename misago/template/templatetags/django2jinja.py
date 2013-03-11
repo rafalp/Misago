@@ -28,7 +28,7 @@ def low(value):
 
 
 @register.filter(name="slugify")
-def slugify_tag(format_string):
+def slugify_function(format_string):
     return slugify(format_string)
 
 
