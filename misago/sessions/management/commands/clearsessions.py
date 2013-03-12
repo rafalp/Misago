@@ -11,4 +11,4 @@ class Command(BaseCommand):
     help = 'Clears users sessions'
     def handle(self, *args, **options):
         Session.objects.filter(last__lte=timezone.now() - timedelta(seconds=settings.SESSION_LIFETIME)).delete()
-        self.stdout.write('Sessions have been cleared.\n')
+        self.stdout.write('\nSessions have been cleared.\n')

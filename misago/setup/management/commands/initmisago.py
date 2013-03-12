@@ -12,4 +12,4 @@ class Command(BaseCommand):
         call_command('syncdb')
         call_command('migrate')
         call_command('initdata')
-        self.stdout.write('\nInstallation complete! Don\'t forget to run adduser to create first admin!')
+        self.stdout.write('\nInstallation complete! Don\'t forget to run adduser to create first admin!\n')

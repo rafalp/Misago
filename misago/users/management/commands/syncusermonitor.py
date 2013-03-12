@@ -9,4 +9,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         User.objects.resync_monitor(Monitor())
-        self.stdout.write('\n\nForum monitor has been updated to contain to date user information.\n')
+        self.stdout.write('\nForum monitor has been updated to contain to date user information.\n')

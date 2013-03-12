@@ -11,4 +11,4 @@ class Command(BaseCommand):
         self.stdout.write('\nUpdating Misago database to latest version...')
         call_command('migrate')
         call_command('initdata')
-        self.stdout.write('\nUpdate complete!')
+        self.stdout.write('\nUpdate complete!\n')
