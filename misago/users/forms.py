@@ -148,44 +148,44 @@ class NewUserForm(Form):
               ]
 
     def __init__(self, *args, **kwargs):
-            self.request = kwargs['request']
+        self.request = kwargs['request']
 
-            # Roles list
-            if self.request.user.is_god():
-                    self.base_fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Role.objects.order_by('name').all(), error_messages={'required': _("User must have at least one role assigned.")})
-            else:
-                    self.base_fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Role.objects.filter(protected__exact=False).order_by('name').all(), required=False)
+        # Roles list
+        if self.request.user.is_god():
+            self.base_fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Role.objects.order_by('name').all(), error_messages={'required': _("User must have at least one role assigned.")})
+        else:
+            self.base_fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Role.objects.filter(protected__exact=False).order_by('name').all(), required=False)
 
-            super(NewUserForm, self).__init__(*args, **kwargs)
+        super(NewUserForm, self).__init__(*args, **kwargs)
 
     def clean_username(self):
-            validate_username(self.cleaned_data['username'])
-            new_user = User.objects.get_blank_user()
-            new_user.set_username(self.cleaned_data['username'])
-            try:
-                    new_user.full_clean()
-            except ValidationError as e:
-                    new_user.is_username_valid(e)
-            return self.cleaned_data['username']
+        validate_username(self.cleaned_data['username'], self.request.settings)
+        new_user = User.objects.get_blank_user()
+        new_user.set_username(self.cleaned_data['username'])
+        try:
+            new_user.full_clean()
+        except ValidationError as e:
+            new_user.is_username_valid(e)
+        return self.cleaned_data['username']
 
     def clean_email(self):
-            new_user = User.objects.get_blank_user()
-            new_user.set_email(self.cleaned_data['email'])
-            try:
-                    new_user.full_clean()
-            except ValidationError as e:
-                    new_user.is_email_valid(e)
-            return self.cleaned_data['email']
+        new_user = User.objects.get_blank_user()
+        new_user.set_email(self.cleaned_data['email'])
+        try:
+            new_user.full_clean()
+        except ValidationError as e:
+            new_user.is_email_valid(e)
+        return self.cleaned_data['email']
 
     def clean_password(self):
-            new_user = User.objects.get_blank_user()
-            new_user.set_password(self.cleaned_data['password'])
-            try:
-                    new_user.full_clean()
-            except ValidationError as e:
-                    new_user.is_password_valid(e)
-            validate_password(self.cleaned_data['password'])
-            return self.cleaned_data['password']
+        new_user = User.objects.get_blank_user()
+        new_user.set_password(self.cleaned_data['password'])
+        try:
+            new_user.full_clean()
+        except ValidationError as e:
+            new_user.is_password_valid(e)
+        validate_password(self.cleaned_data['password'],  self.request.settings)
+        return self.cleaned_data['password']
 
 
 class SearchUsersForm(Form):
@@ -196,14 +196,14 @@ class SearchUsersForm(Form):
     role = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Role.objects.order_by('name').all(), required=False)
 
     layout = (
-            (
-             _("Search Users"),
-             (
+              (
+               _("Search Users"),
+               (
                 ('username', {'label': _("Username"), 'attrs': {'placeholder': _("Username contains...")}}),
                 ('email', {'label': _("E-mail Address"), 'attrs': {'placeholder': _("E-mail address contains...")}}),
                 ('activation', {'label': _("Activation Requirement")}),
                 ('rank', {'label': _("Rank is")}),
                 ('role', {'label': _("Has Role")}),
-             ),
                 ),
-             )
+               ),
+              )
