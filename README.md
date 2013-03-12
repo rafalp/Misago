@@ -45,6 +45,10 @@ After you set low-level configuration of Misago, fire following commands on mana
 Misago stands on shoulders of Django and Django documentation covers deployment of apps extensively:
 https://docs.djangoproject.com/en/dev/howto/deployment/
 
+Don't forget to set up maintenance cronjobs to keep your database clean, look into cront.txt file to see what crons to set up.
+
+While Misago will run without cache set up, you are stronly encouraged to set one up for it.
+
 ### WARNING!
 
 Misago is not production ready! Don't ever use it in anything thats anywhere close to production enviroment!
