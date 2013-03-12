@@ -10,6 +10,13 @@ $(function () {
 	$('.popover-bottom').popover({placement: 'bottom'})
 	$('.popover-left').popover({placement: 'left'})
 	$('.popover-right').popover({placement: 'right'})
+
+	// Dont fire popovers on touch devices
+	$("[class^='tooltip-']").on('show', function (e) {
+	  if ('ontouchstart' in document.documentElement) {
+	  	e.preventDefault();
+	  }
+	});
 	
 	// Start all dropdowns
 	$('.dropdown-toggle').dropdown()
@@ -50,6 +57,13 @@ $(function () {
 		return decision
 	});
 	
+	// Show go back link?
+	if (document.referrer
+			&& document.referrer.indexOf(location.protocol + "//" + location.host) === 0
+			&& document.referrer != document.url) {
+		$('.go-back').show();
+	}
+
 	// Go back one page
 	$('.go-back').on('click', function (e) {
 	    history.go(-1)

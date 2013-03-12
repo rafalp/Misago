@@ -928,7 +928,8 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{opacity:0.9;filter:alpha(opa
 .error-page{text-align:center;}.error-page .error-color{color:#cf402e;}
 .error-page .error-ban-reason{border:1px solid #cf402e;border-radius:3px;background-color:#fbeeed;background-image:repeating-linear-gradient(45deg, transparent, transparent 5px, #fdf6f5 5px, #fdf6f5 10px);-webkit-box-shadow:0px 0px 0px 3px #e38b80;-moz-box-shadow:0px 0px 0px 3px #e38b80;box-shadow:0px 0px 0px 3px #e38b80;padding:11px 19px;text-align:left;}.error-page .error-ban-reason :last-child{margin-bottom:0px;padding-bottom:0px;}
 .error-page .error-ban-expires{color:#cf402e;font-weight:bold;}
-.error-page .error-protips{margin-top:40px;}.error-page .error-protips a:link,.error-page .error-protips a:visited{background-color:#333333;border:1px solid #000000;border-radius:5px;margin:2px 10px;opacity:0.7;filter:alpha(opacity=70);padding:11px 19px;color:#ffffff;font-weight:bold;text-decoration:none;}
+.error-page .error-protips{margin-top:40px;}.error-page .error-protips .go-back{display:none;}
+.error-page .error-protips a:link,.error-page .error-protips a:visited{background-color:#333333;border:1px solid #000000;border-radius:5px;margin:2px 10px;opacity:0.7;filter:alpha(opacity=70);padding:11px 19px;color:#ffffff;font-weight:bold;text-decoration:none;}
 .error-page .error-protips a:hover,.error-page .error-protips a:active{opacity:1;filter:alpha(opacity=100);}
 .markdown{margin:0px;overflow:auto;}.markdown>:first-child{margin-top:0px;}
 .markdown>:last-child{margin-bottom:0px;}
