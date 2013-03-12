@@ -1003,9 +1003,8 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{opacity:0.9;filter:alpha(opa
 .popular-threads hr{margin:14px 0px;border:none;border-top:1px solid #eeeeee;}
 .popular-threads .popular-thread{overflow:auto;}.popular-threads .popular-thread .popular-thread-warmth{display:block;float:left;margin-top:1px;margin-right:14px;padding:10.5px;color:#ffffff;text-align:center;font-weight:bold;text-shadow:0px 1px 0px #3b3b3b;}.popular-threads .popular-thread .popular-thread-warmth i{background-image:url("../img/glyphicons-halflings-white.png");}
 .popular-threads .popular-thread .popular-thread-warmth.popular-thread-warmth-0{background-color:#cf402e;border:1px solid #a53325;}
-.popular-threads .popular-thread .popular-thread-warmth.popular-thread-warmth-1{background-color:#af594e;border:1px solid #8c473e;}
+.popular-threads .popular-thread .popular-thread-warmth.popular-thread-warmth-1{background-color:#a95d54;border:1px solid #874b43;}
 .popular-threads .popular-thread .popular-thread-warmth.popular-thread-warmth-2{background-color:#90716d;border:1px solid #735a57;}
-.popular-threads .popular-thread .popular-thread-warmth.popular-thread-warmth-3{background-color:#555555;border:1px solid #3b3b3b;}
 .popular-threads .popular-thread .popular-thread-details .popular-thread-title:link,.popular-threads .popular-thread .popular-thread-details .popular-thread-title:visited{color:#555555;font-weight:bold;}
 .popular-threads .popular-thread .popular-thread-details .popular-thread-title:hover,.popular-threads .popular-thread .popular-thread-details .popular-thread-title:active{color:#333333;}
 .popular-threads .popular-thread .popular-thread-details .popular-thread-info{margin:0px;margin-left:14px;padding:0px;color:#999999;font-size:11.9px;}.popular-threads .popular-thread .popular-thread-details .popular-thread-info a:link,.popular-threads .popular-thread .popular-thread-details .popular-thread-info a:visited{color:#555555;}

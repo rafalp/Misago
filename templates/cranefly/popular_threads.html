@@ -45,7 +45,7 @@
 
 
 {% macro warmth(loop_index) -%}
-{% if loop_index < 5 %}0{% elif loop_index < 20 %}1{% elif loop_index < 35 %}2{% else %}3{% endif %}
+{% if loop_index < 5 %}0{% elif loop_index < 11 %}1{% else %}2{% endif %}
 {%- endmacro %}
 
 {% macro replies(thread_replies) -%}
