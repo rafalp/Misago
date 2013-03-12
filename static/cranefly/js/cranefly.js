@@ -67,6 +67,7 @@ $(function () {
 	// Go back one page
 	$('.go-back').on('click', function (e) {
 	    history.go(-1)
+	    return false;
 	})
 })
 
