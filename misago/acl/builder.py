@@ -32,7 +32,8 @@ class BaseACL(object):
         self.acl = {}
 
     def __repr__(self):
-        return '%s (%s)' % (self.__class__.__name__[0:-3], self.__class__.__module__)
+        return '%s (%s)' % (self.__class__.__name__[0:-3],
+                            self.__class__.__module__)
 
 
 class ACL(object):
