@@ -144,6 +144,7 @@ PROFILE_EXTENSIONS = (
 MARKDOWN_EXTENSIONS = (
     'misago.markdown.extensions.quotes.QuoteTitlesExtension',
     'misago.markdown.extensions.mentions.MentionsExtension',
+    'misago.markdown.extensions.magiclinks.MagicLinksExtension',
 )
 
 # Name of root urls configuration
