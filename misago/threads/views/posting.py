@@ -293,15 +293,22 @@ class PostingView(BaseView):
                         self.request.monitor['posts'] = int(self.request.monitor['posts']) + 1
                         self.forum.posts += 1
 
-                    if self.mode not in ['edit_thread', 'edit_post']:
+                    if self.mode in ['new_thread', 'new_post', 'new_post_quick'] or (
+                        self.mode == 'edit_thread'
+                        and self.forum.last_thread_id == thread.pk
+                        and self.forum.last_thread_name != thread.name):
                         self.forum.last_thread = thread
                         self.forum.last_thread_name = thread.name
                         self.forum.last_thread_slug = thread.slug
                         self.forum.last_thread_date = thread.last
+
+                    if self.mode in ['new_thread', 'new_post', 'new_post_quick']:
                         self.forum.last_poster = thread.last_poster
                         self.forum.last_poster_name = thread.last_poster_name
                         self.forum.last_poster_slug = thread.last_poster_slug
                         self.forum.last_poster_style = thread.last_poster_style
+
+                    if self.mode != 'edit_post':
                         self.forum.save(force_update=True)
 
                 # Update user
