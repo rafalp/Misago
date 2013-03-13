@@ -1,6 +1,4 @@
 {% extends "cranefly/layout.html" %}
-{% load i18n %}
-{% load url from future %}
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{{ macros.page_title(title=(_("Post #%(post)s Votes") % {'post': post.pk}),parent=thread.name) }}{% endblock %}

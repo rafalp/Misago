@@ -1,5 +1,3 @@
-{% load i18n %}
-
 {% macro page_title(title='', parent='', page=0) -%}
 {% if title %}{{ title }}{% if page > 1 %} | {% trans page=page %}Page {{ page }}{% endtrans %}{% endif %} | {% if parent %}{{ parent }} | {% endif %}{% endif %}{{ settings.board_name }}
 {%- endmacro %}

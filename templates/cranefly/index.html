@@ -1,6 +1,4 @@
 {% extends "cranefly/layout.html" %}
-{% load i18n %}
-{% load url from future %}
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{% if settings.board_index_title %}{{ settings.board_index_title }}{% else %}{{ settings.board_name }}{% endif %}{% endblock %}

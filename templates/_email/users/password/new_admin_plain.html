@@ -1,6 +1,4 @@
 {% extends "_email/users/password/new_plain.html" %}
-{% load i18n %}
-{% load url from future %}
 
 {% block content %}
 {% trans username=user.username %}{{ username }}, you are receiving this message because board administrator has reset your account's password with new one.{% endtrans %}
