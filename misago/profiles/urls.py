@@ -4,6 +4,7 @@ from django.utils.importlib import import_module
 
 urlpatterns = patterns('misago.profiles.views',
     url(r'^$', 'list', name="users"),
+    url(r'^(?P<page>[0-9]+)/$', 'list', name="users"),
 )
 
 # Build extensions URLs
@@ -20,4 +21,5 @@ for extension in settings.PROFILE_EXTENSIONS:
 
 urlpatterns += patterns('misago.profiles.views',
     url(r'^(?P<rank_slug>(\w|-)+)/$', 'list', name="users"),
+    url(r'^(?P<rank_slug>(\w|-)+)/(?P<page>[0-9]+)/$', 'list', name="users"),
 )

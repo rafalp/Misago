@@ -32,11 +32,8 @@
         {% for user in row %}
         <td class="span3 user-cell">
           {% if user %}
-          <a href="{% url 'user' username=user.username_slug, user=user.pk %}" class="user-avatar"><img src="{{ user.get_avatar(42) }}" alt=""></a>
-          <p class="user-details">
-            <a href="{% url 'user' username=user.username_slug, user=user.pk %}">{{ user.username }}</a>
-            {% if user.title or user.get_title() %}<span class="user-info">{% if user.get_title() %}{{ _(user.get_title()) }}{% else %}{{ _(user.title) }}{% endif %}</span>{% endif %}
-          </p>
+          <a href="{% url 'user' username=user.username_slug, user=user.pk %}" class="user-avatar"><img src="{{ user.get_avatar(36) }}" alt=""></a>
+          <a href="{% url 'user' username=user.username_slug, user=user.pk %}" class="user-name">{{ user.username }}</a>
           {% else %}
           &nbsp;
           {% endif %}

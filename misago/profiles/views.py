@@ -6,13 +6,14 @@ from misago.messages import Message
 from misago.profiles.forms import QuickFindUserForm
 from misago.ranks.models import Rank
 from misago.users.models import User
-from misago.utils import slugify
+from misago.utils import slugify, make_pagination
 from misago.views import error403, error404
 
-def list(request, rank_slug=None):
+def list(request, rank_slug=None, page=1):
     ranks = Rank.objects.filter(as_tab=1).order_by('order')
 
     # Find active rank
+    default_rank = False
     active_rank = None
     if rank_slug:
         for rank in ranks:
@@ -21,11 +22,14 @@ def list(request, rank_slug=None):
         if not active_rank:
             return error404(request)
     elif ranks:
+        default_rank = True
         active_rank = ranks[0]
 
     # Empty Defaults
     message = None
     users = []
+    items_total = 0
+    pagination = None
     in_search = False
 
     # Users search?
@@ -63,7 +67,10 @@ def list(request, rank_slug=None):
     else:
         search_form = QuickFindUserForm(request=request)
         if active_rank:
-            users = User.objects.filter(rank=active_rank).order_by('username_slug')
+            users = User.objects.filter(rank=active_rank)
+            count = users.count()
+            pagination = make_pagination(page, count, 4)
+            users = users.order_by('username_slug')[pagination['start']:pagination['stop']]
 
     return request.theme.render_to_response('profiles/list.html',
                                         {
@@ -71,7 +78,10 @@ def list(request, rank_slug=None):
                                          'search_form': FormFields(search_form).fields,
                                          'in_search': in_search,
                                          'active_rank': active_rank,
+                                         'default_rank': default_rank,
+                                         'items_total': count,
                                          'ranks': ranks,
                                          'users': users,
+                                         'pagination': pagination,
                                         },
                                         context_instance=RequestContext(request));
