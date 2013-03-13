@@ -1,0 +1,70 @@
+{% extends "cranefly/layout.html" %}
+{% load i18n %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=_('New Threads')) }}{% endblock %}
+
+{% block container %}
+<div class="page-header header-primary">
+  <div class="container">
+    {{ messages_list(messages) }}
+    <h1>{% trans %}New Threads{% endtrans %}</h1>
+  </div>
+</div>
+
+<div class="container container-primary">
+  {% if threads %}
+  <div class="new-threads">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{% trans %}Thread{% endtrans %}</th>
+          <th class="span6">{% trans %}Started{% endtrans %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for thread in threads %}
+        <tr>
+          <td>
+            <a href="{% url 'thread_new' thread=thread.pk, slug=thread.slug %}" class="label thread-reply{% if thread.has_reply %} has-reply{% endif %} tooltip-top" title="{% if thread.has_reply %}{% trans %}You've replied to this thread{% endtrans %}{% else %}{% trans %}This thread waits for your voice{% endtrans %}{% endif %}"><i class="icon-comment"></i></a>
+            <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="thread-title">{{ thread.name }}</a>
+          </td>
+          <td class="thread-details">
+            {% trans forum=forum(thread.forum), starter=username(thread.start_poster_id, thread.start_poster_name, thread.start_poster_slug), start=thread.start|reltimesince %}{{ start }} - by {{ starter }} - {{ forum }}{% endtrans %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {{ pager() }}
+  {% else %}
+  <p class="lead">{% trans %}No new threads were started in last 48 hours.{% endtrans %}</p>
+  {% endif %}
+</div>
+{% endblock %}
+
+
+{% macro forum(forum) -%}
+<a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}">{{ forum.name }}</a>
+{%- endmacro %}
+
+{% macro username(id, username, slug) -%}
+{%- if id -%}
+<a href="{% url 'user' user=id, username=slug %}">{{ username }}</a>
+{%- else -%}
+{{ username }}
+{%- endif -%}
+{%- endmacro %}
+
+{% macro pager() -%}
+{% if items_total > 0 and pagination['total'] > 1 %}
+<div class="pagination">
+  <ul>
+    <li class="count">{{ macros.pager_label(pagination) }}</li>
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'new_threads' page=pagination['prev'] %}{% else %}{% url 'new_threads' %}{% endif %}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{% url 'new_threads' page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+  </ul>
+</div>
+{% endif %}
+{%- endmacro %}

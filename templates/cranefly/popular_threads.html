@@ -27,7 +27,7 @@
           <div class="popular-thread-details">
             <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="popular-thread-title tooltip-top" title="{% trans %}Jump to thread start{% endtrans %}">{{ thread.name }}</a>
             <p class="popular-thread-info">
-              {% trans forum=forum(thread.forum), starter=username(thread.start_poster_id, thread.start_poster_name, thread.start_poster_slug), last=thread.last|reldate, replies=replies(thread.replies) %}By {{ starter }} - {{ forum }} - {{ replies }} - last on {{ last }}.{% endtrans %}
+              {% trans forum=forum(thread.forum), starter=username(thread.start_poster_id, thread.start_poster_name, thread.start_poster_slug), last=thread.last|reldate, replies=replies(thread.replies) %}By {{ starter }} - {{ forum }} - {{ replies }} - last on {{ last }}{% endtrans %}
             </p>
           </div>
         </div>

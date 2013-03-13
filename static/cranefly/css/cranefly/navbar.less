@@ -88,16 +88,21 @@
 
         a:hover, a:active, .btn-link:hover, .btn-link:active {
           background-color: @linkColor;
-          border-color: @linkColor;
+          border-color: darken(@linkColor, 10%);
 
           &.danger {
             background-color: @red;
-            border-color: @red;
+            border-color: darken(@red, 10%);
           }
 
           &.hot {
             background-color: @orange;
-            border-color: @orange;
+            border-color: darken(@orange, 10%);
+          }
+
+          &.fresh {
+            background-color: @green;
+            border-color: darken(@green, 10%);
           }
 
           i {

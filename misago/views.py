@@ -13,7 +13,8 @@ from misago.readstracker.models import Record
 from misago.readstracker.trackers import ForumsTracker
 from misago.ranks.models import Rank
 from misago.sessions.models import Session
-from misago.threads.models import Thread
+from misago.threads.models import Thread, Post
+from misago.utils import make_pagination
 
 def home(request):
     # Threads ranking
@@ -145,6 +146,33 @@ def popular_threads(request):
     return request.theme.render_to_response('popular_threads.html',
                                             {
                                              'threads': Thread.objects.filter(forum_id__in=request.acl.threads.get_readable_forums(request.acl)).filter(deleted=False).filter(moderated=False).order_by('-score').prefetch_related('start_poster', 'last_poster', 'forum')[:14],
+                                             },
+                                            context_instance=RequestContext(request));
+
+
+def new_threads(request, page=0):
+    threads = []
+    queryset = Thread.objects.filter(forum_id__in=request.acl.threads.get_readable_forums(request.acl)).filter(deleted=False).filter(moderated=False).filter(start__gte=(timezone.now() - timedelta(days=2)))
+    items_total = queryset.count();
+    pagination = None
+    if items_total > 0:
+        pagination = make_pagination(page, items_total, 30)
+        threads_dict = {}
+
+        for thread in Thread.objects.filter(forum_id__in=request.acl.threads.get_readable_forums(request.acl)).filter(deleted=False).filter(moderated=False).order_by('-start').prefetch_related('start_poster', 'forum')[pagination['start']:pagination['stop']]:
+            thread.has_reply = False
+            threads.append(thread)
+            threads_dict[thread.pk] = thread
+
+        if request.user.is_authenticated():
+            for post in Post.objects.values('thread_id').distinct().filter(user=request.user).filter(thread_id__in=threads_dict.keys()):
+                threads_dict[post['thread_id']].has_reply = True
+
+    return request.theme.render_to_response('new_threads.html',
+                                            {
+                                             'items_total': items_total,
+                                             'threads': threads,
+                                             'pagination': pagination,
                                              },
                                             context_instance=RequestContext(request));
 

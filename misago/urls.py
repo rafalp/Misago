@@ -22,6 +22,8 @@ urlpatterns = patterns('',
     url(r'^read/$', 'misago.views.read_all', name="read_all"),
     url(r'^forum-map/$', 'misago.views.forum_map', name="forum_map"),
     url(r'^popular/$', 'misago.views.popular_threads', name="popular_threads"),
+    url(r'^new/$', 'misago.views.new_threads', name="new_threads"),
+    url(r'^new/(?P<page>[0-9]+)/$', 'misago.views.new_threads', name="new_threads"),
 )
 
 # Include admin patterns

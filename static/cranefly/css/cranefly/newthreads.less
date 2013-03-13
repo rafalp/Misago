@@ -1,0 +1,51 @@
+// New threads
+// -------------------------
+
+.new-threads {
+  table {
+    td {
+      vertical-align: middle; 
+    }
+  }
+
+  .thread-reply {
+    background-color: @grayDark;
+    border: 1px solid darken(@grayDark, 10%);
+    margin-top: 1px;
+    margin-right: @baseFontSize / 2;
+    padding: 3px 4px;
+
+    i {
+      background-image: url("@{iconWhiteSpritePath}");
+    }
+
+    &.has-reply {
+      background-color: @green;
+      border: 1px solid darken(@green, 10%);
+    }
+  }
+
+  .thread-title {
+    &:link, &:visited {
+      color: @gray;
+      font-weight: bold;
+    }
+
+    &:hover, &:active {
+      color: @textColor;
+    }
+  }
+
+  .thread-details {
+    color: @grayLight;
+    font-size: @fontSizeSmall;
+
+    a:link, a:visited {
+      color: @gray;
+    }
+
+    a:hover, a:active {
+      color: @textColor;
+    }
+  }
+}
