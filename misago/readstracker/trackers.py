@@ -73,15 +73,6 @@ class ThreadsTracker(object):
 
     def sync(self):
         now = timezone.now()
-        need_sync = False
-        if self.need_create or self.need_delete or self.need_update:
-            unread_threads = 0
-            for thread in self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set.filter(last__gte=self.record.cleared)):
-                if not self.is_read(thread):
-                    unread_threads += 1
-            if not unread_threads:
-                self.record.cleared = now
-                need_sync = True
 
         if self.need_create:
             ThreadRecord.objects.bulk_create(
@@ -90,6 +81,12 @@ class ThreadsTracker(object):
         if self.need_update:
             ThreadRecord.objects.filter(user_id=self.request.user.id).filter(thread_id__in=self.need_update).update(updated=now)
 
-        if self.need_create or self.need_delete or self.need_update or need_sync:
+        if self.need_create or self.need_delete or self.need_update:
+            unread_threads = 0
+            for thread in self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set.filter(last__gte=self.record.cleared)):
+                if not self.is_read(thread):
+                    unread_threads += 1
+            if not unread_threads:
+                self.record.cleared = now
             self.record.updated = now
             self.record.save(force_update=self.record.pk)
