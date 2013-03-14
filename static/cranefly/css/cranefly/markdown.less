@@ -106,7 +106,7 @@
       float: none;
 
       .md-img-wrap {
-        background-color: @grayDarker;
+        background-color: @grayLighter;
         border: 1px solid @white;
         border-radius: @baseBorderRadius + 1px;
         box-shadow: 0px 0px 2px @grayLight;
@@ -120,6 +120,7 @@
           img {
             border-radius: @baseBorderRadius;
             box-shadow: none;
+            margin: (@baseLineHeight / 2);
           }
 
           .md-img-error {
@@ -143,13 +144,11 @@
         .md-img-label {
           display: block;
           padding: (@baseFontSize / 2) @baseFontSize;
-          text-align: center;
 
-          color: @grayLight;
-          font-weight: bold;
+          color: @grayDark;
 
           &:hover, &:active {
-            color: @white;
+            color: @textColor;
             text-decoration: none;
           }
         }
