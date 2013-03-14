@@ -34,7 +34,7 @@ settings_fixtures = (
                 'description':  _("Number of threads displayed on page in forum view."),
             }),
             ('avatars_on_threads_list', {
-                'value':        True,
+                'value':        False,
                 'type':         "boolean",
                 'input':        "yesno",
                 'name':         _("Display avatars on threads list"),

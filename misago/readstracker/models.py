@@ -1,25 +1,23 @@
+from datetime import timedelta
+from django.conf import settings
 from django.db import models
-import base64
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+from django.utils import timezone
 
-class Record(models.Model):
+class ThreadRecord(models.Model):
     user = models.ForeignKey('users.User')
     forum = models.ForeignKey('forums.Forum')
-    threads = models.TextField(null=True,blank=True)
+    thread = models.ForeignKey('threads.Thread')
+    updated = models.DateTimeField()
+    
+
+class ForumRecord(models.Model):
+    user = models.ForeignKey('users.User')
+    forum = models.ForeignKey('forums.Forum')
     updated = models.DateTimeField()
     cleared = models.DateTimeField()
     
     def get_threads(self):
-        try:
-            return pickle.loads(base64.decodestring(self.threads))
-        except Exception:
-            # ValueError, SuspiciousOperation, unpickling exceptions. If any of
-            # these happen, just return an empty dictionary (an empty permissions list).
-            return {}
-    
-    def set_threads(self, threads):
-        self.threads = base64.encodestring(pickle.dumps(threads, pickle.HIGHEST_PROTOCOL))
-    
+        threads = {}
+        for thread in ThreadRecord.objects.filter(user=self.user, forum=self.forum, updated__gte=(timezone.now() - timedelta(days=settings.READS_TRACKER_LENGTH))):
+            threads[thread.thread_id] = thread
+        return threads

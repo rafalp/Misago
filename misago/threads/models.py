@@ -1,3 +1,5 @@
+from datetime import timedelta
+from django.conf import settings
 from django.db import models
 from django.db.models import F
 from django.utils import timezone
@@ -6,11 +8,31 @@ from misago.forums.signals import move_forum_content
 from misago.threads.signals import move_thread, merge_thread, move_post, merge_post
 from misago.users.signals import delete_user_content, rename_user
 from misago.utils import slugify, ugettext_lazy
+from misago.readstracker.models import ThreadRecord
 from misago.watcher.models import ThreadWatch
 
 class ThreadManager(models.Manager):
     def filter_stats(self, start, end):
         return self.filter(start__gte=start).filter(start__lte=end)
+
+    def with_reads(self, queryset, user):
+        threads = []
+        threads_dict = {}
+        cutoff = timezone.now() - timedelta(days=settings.READS_TRACKER_LENGTH)
+
+        if user.is_authenticated() and user.join_date > cutoff:
+            cutoff = user.join_date
+
+        for thread in queryset:
+            thread.is_read = not user.is_authenticated() or thread.last <= cutoff
+            threads.append(thread)
+            threads_dict[thread.pk] = thread
+
+        if user.is_authenticated:
+            for read in ThreadRecord.objects.filter(user=user).filter(thread__in=threads_dict.keys()):
+                thread.is_read = threads_dict[read.thread_id].last <= cutoff or threads_dict[read.thread_id].last <= read.updated
+
+        return threads
 
 
 class Thread(models.Model):

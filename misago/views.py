@@ -9,7 +9,7 @@ from misago.authn.decorators import block_guest
 from misago.csrf.decorators import check_csrf
 from misago.forums.models import Forum
 from misago.messages import Message
-from misago.readstracker.models import Record
+from misago.readstracker.models import ForumRecord, ThreadRecord
 from misago.readstracker.trackers import ForumsTracker
 from misago.ranks.models import Rank
 from misago.sessions.models import Session
@@ -120,15 +120,15 @@ def redirection(request, forum, slug):
 @block_guest
 @check_csrf
 def read_all(request):
-    Record.objects.filter(user=request.user).delete()
+    ForumRecord.objects.filter(user=request.user).delete()
+    ThreadRecord.objects.filter(user=request.user).delete()
     now = timezone.now()
     bulk = []
     for forum in request.acl.forums.known_forums():
-        new_record = Record(user=request.user, forum_id=forum, updated=now, cleared=now)
-        new_record.set_threads({})
+        new_record = ForumRecord(user=request.user, forum_id=forum, updated=now, cleared=now)
         bulk.append(new_record)
     if bulk:
-        Record.objects.bulk_create(bulk)
+        ForumRecord.objects.bulk_create(bulk)
     request.messages.set_flash(Message(_("All forums have been marked as read.")), 'success')
     return redirect(reverse('index'))
 
@@ -142,36 +142,37 @@ def forum_map(request):
                                             context_instance=RequestContext(request));
 
 
-def popular_threads(request):
+def popular_threads(request, page=0):
+    queryset = Thread.objects.filter(forum_id__in=request.acl.threads.get_readable_forums(request.acl)).filter(deleted=False).filter(moderated=False)
+    items_total = queryset.count();
+    pagination = make_pagination(page, items_total, 30)
+
+    queryset = queryset.order_by('-score').prefetch_related('forum')[pagination['start']:pagination['stop']];
+    if request.settings['avatars_on_threads_list']:
+        queryset = queryset.prefetch_related('start_poster', 'last_poster')
+
     return request.theme.render_to_response('popular_threads.html',
                                             {
-                                             'threads': Thread.objects.filter(forum_id__in=request.acl.threads.get_readable_forums(request.acl)).filter(deleted=False).filter(moderated=False).order_by('-score').prefetch_related('start_poster', 'last_poster', 'forum')[:14],
+                                             'items_total': items_total,
+                                             'threads': Thread.objects.with_reads(queryset, request.user),
+                                             'pagination': pagination,
                                              },
                                             context_instance=RequestContext(request));
 
 
 def new_threads(request, page=0):
-    threads = []
     queryset = Thread.objects.filter(forum_id__in=request.acl.threads.get_readable_forums(request.acl)).filter(deleted=False).filter(moderated=False).filter(start__gte=(timezone.now() - timedelta(days=2)))
     items_total = queryset.count();
-    pagination = None
-    if items_total > 0:
-        pagination = make_pagination(page, items_total, 30)
-        threads_dict = {}
+    pagination = make_pagination(page, items_total, 30)
 
-        for thread in Thread.objects.filter(forum_id__in=request.acl.threads.get_readable_forums(request.acl)).filter(deleted=False).filter(moderated=False).order_by('-start').prefetch_related('start_poster', 'forum')[pagination['start']:pagination['stop']]:
-            thread.has_reply = False
-            threads.append(thread)
-            threads_dict[thread.pk] = thread
-
-        if request.user.is_authenticated():
-            for post in Post.objects.values('thread_id').distinct().filter(user=request.user).filter(thread_id__in=threads_dict.keys()):
-                threads_dict[post['thread_id']].has_reply = True
+    queryset = queryset.order_by('-start').prefetch_related('forum')[pagination['start']:pagination['stop']];
+    if request.settings['avatars_on_threads_list']:
+        queryset = queryset.prefetch_related('start_poster', 'last_poster')
 
     return request.theme.render_to_response('new_threads.html',
                                             {
                                              'items_total': items_total,
-                                             'threads': threads,
+                                             'threads': Thread.objects.with_reads(queryset, request.user),
                                              'pagination': pagination,
                                              },
                                             context_instance=RequestContext(request));
