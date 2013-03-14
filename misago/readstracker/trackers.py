@@ -30,9 +30,8 @@ class ForumsTracker(object):
 class ThreadsTracker(object):
     def __init__(self, request, forum):
         self.need_sync = False
-        self.need_create = []
-        self.need_update = []
-        self.need_delete = []
+        self.need_create = None
+        self.need_update = None
         self.request = request
         self.forum = forum
         self.cutoff = timezone.now() - timedelta(days=settings.READS_TRACKER_LENGTH)
@@ -87,8 +86,8 @@ class ThreadsTracker(object):
             self.threads[new_record.thread_id] = new_record
 
         if self.need_update:
-            need_update.updated = now
-            need_update.save(force_update=True)
+            self.need_update.updated = now
+            self.need_update.save(force_update=True)
 
         if self.need_create or self.need_delete or self.need_update:
             unread_threads = 0
