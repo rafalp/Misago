@@ -123,7 +123,7 @@
 {%- endmacro %}
 
 {% macro forum_thread(forum) -%}
-<a href="{% url 'thread' thread=forum.last_thread_id, slug=forum.last_thread_slug %}">{{ forum.last_thread_name }}</a>
+<a href="{% url 'thread_new' thread=forum.last_thread_id, slug=forum.last_thread_slug %}">{{ forum.last_thread_name }}</a>
 {%- endmacro %}
 
 {% macro redirect_stats(forum) -%}
