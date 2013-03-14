@@ -68,21 +68,27 @@ class ThreadsTracker(object):
     def set_read(self, thread, post):
         if self.request.user.is_authenticated() and post.date > self.cutoff:
             try:
-                if self.threads[thread.pk].updated < post.date:
-                    self.need_update.append(thread.pk)
                 self.threads[thread.pk].updated = post.date
+                self.need_update = thread
             except KeyError:
-                self.need_create.append(thread)
+                self.need_create = thread
 
     def sync(self):
         now = timezone.now()
 
         if self.need_create:
-            ThreadRecord.objects.bulk_create(
-                [ThreadRecord(user=self.request.user, thread=t, forum=self.forum, updated=now) for t in self.need_create])
+            new_record = ThreadRecord(
+                                      user=self.request.user,
+                                      thread=self.need_create,
+                                      forum=self.forum,
+                                      updated=now
+                                      )
+            new_record.save(force_insert=True)
+            self.threads[new_record.thread_id] = new_record
 
         if self.need_update:
-            ThreadRecord.objects.filter(user_id=self.request.user.id).filter(thread_id__in=self.need_update).update(updated=now)
+            need_update.updated = now
+            need_update.save(force_update=True)
 
         if self.need_create or self.need_delete or self.need_update:
             unread_threads = 0
@@ -92,4 +98,7 @@ class ThreadsTracker(object):
             if not unread_threads:
                 self.record.cleared = now
             self.record.updated = now
-            self.record.save(force_update=self.record.pk)
+            if self.record.pk:
+                self.record.save(force_update=True)
+            else:
+                self.record.save(force_insert=True)
