@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <title>{% block title %}{{ page_title() }}{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">{% block meta %}{% endblock %}
     <link href="{{ STATIC_URL }}cranefly/css/cranefly.css" rel="stylesheet">{% block stylesheets %}{% endblock %}
     <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico" />
   </head>

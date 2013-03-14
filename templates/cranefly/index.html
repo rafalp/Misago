@@ -4,8 +4,8 @@
 {% block title %}{% if settings.board_index_title %}{{ settings.board_index_title }}{% else %}{{ settings.board_name }}{% endif %}{% endblock %}
      
 {% block meta %}{% if settings.board_index_meta %}
-<meta name="description" content="{{ settings.board_index_meta }}">
-{% endif %}{% endblock %}
+    <meta name="description" content="{{ settings.board_index_meta }}">
+{%- endif %}{%- endblock %}
       
 {% block content %}
 <div class="row">
