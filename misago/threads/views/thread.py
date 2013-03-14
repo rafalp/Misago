@@ -320,16 +320,14 @@ class ThreadView(BaseView):
     def post_action_hard(self, ids):
         deleted = []
         for post in self.posts:
-            if post.pk in ids and not post.deleted:
+            if post.pk in ids:
                 if post.pk == self.thread.start_post_id:
                     raise forms.ValidationError(_("You cannot delete first post of thread using this action. If you want to delete thread, use thread moderation instead."))
                 deleted.append(post.pk)
         if deleted:
-            for post in deleted:
-                post.delete()
-            self.thread.post_set.filter(id__in=deleted).delete()
-            Change.objects.d(post__in=ids).delete()
-            Checkpoint.objects.filter(post__in=ids).delete()
+            for post in self.posts:
+                if post.pk in deleted:
+                    post.delete()
             self.thread.sync()
             self.thread.save(force_update=True)
             self.forum.sync()
