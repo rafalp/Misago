@@ -19,6 +19,9 @@ class ForumsTracker(object):
         if not self.user.is_authenticated() or not forum.last_thread_date:
             return True
         try:
+            print '===='
+            print forum.last_thread_date
+            print self.forums[forum.pk]['cleared']
             return forum.last_thread_date <= self.cutoff or forum.last_thread_date <= self.forums[forum.pk]['cleared']
         except KeyError:
             return False
