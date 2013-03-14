@@ -35,13 +35,13 @@ class Command(BaseCommand):
                 if update_app_fixtures(app):
                     updated += 1
                     if not options['quiet']:
-                        self.stdout.write('\nUpdating fixtures from %s' % app)
+                        self.stdout.write('Updating fixtures from %s' % app)
             else:
                 if load_app_fixtures(app):
                     loaded += 1
                     Fixture.objects.create(app_name=app)
                     if not options['quiet']:
-                        self.stdout.write('\nLoading fixtures from %s' % app)
+                        self.stdout.write('Loading fixtures from %s' % app)
         
         if not options['quiet']:
             self.stdout.write('\nLoaded %s fixtures and updated %s fixtures.\n' % (loaded, updated))
