@@ -8,7 +8,7 @@ from misago.forums.signals import move_forum_content
 from misago.threads.signals import move_thread, merge_thread, move_post, merge_post
 from misago.users.signals import delete_user_content, rename_user
 from misago.utils import slugify, ugettext_lazy
-from misago.readstracker.models import ThreadRecord
+from misago.readstracker.models import ForumRecord, ThreadRecord
 from misago.watcher.models import ThreadWatch
 
 class ThreadManager(models.Manager):
@@ -18,19 +18,33 @@ class ThreadManager(models.Manager):
     def with_reads(self, queryset, user):
         threads = []
         threads_dict = {}
+        forum_reads = {}
         cutoff = timezone.now() - timedelta(days=settings.READS_TRACKER_LENGTH)
 
         if user.is_authenticated() and user.join_date > cutoff:
             cutoff = user.join_date
+            for row in ForumRecord.objects.filter(user=user).values('forum_id', 'cleared'):
+                forum_reads[row['forum_id']] = row['cleared']
 
         for thread in queryset:
-            thread.is_read = not user.is_authenticated() or thread.last <= cutoff
+            thread.is_read = True
+            if user.is_authenticated() and thread.last > cutoff:
+                try:
+                    thread.is_read = thread.last <= forum_reads[thread.forum_id]
+                except KeyError:
+                    pass
+
             threads.append(thread)
             threads_dict[thread.pk] = thread
 
-        if user.is_authenticated:
+        if user.is_authenticated():
             for read in ThreadRecord.objects.filter(user=user).filter(thread__in=threads_dict.keys()):
-                thread.is_read = threads_dict[read.thread_id].last <= cutoff or threads_dict[read.thread_id].last <= read.updated
+                try:
+                    threads_dict[read.thread_id].is_read = (threads_dict[read.thread_id].last <= cutoff or 
+                                                            threads_dict[read.thread_id].last <= read.updated or
+                                                            threads_dict[read.thread_id].last <= forum_reads[read.forum_id])
+                except KeyError:
+                    pass
 
         return threads
 
