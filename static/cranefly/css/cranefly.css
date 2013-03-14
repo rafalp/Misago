@@ -1001,39 +1001,13 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{opacity:0.9;filter:alpha(opa
 .forum-map-category.forum-map-category-important caption{background-color:#cf402e;border:1px solid #a53325;color:#ffffff;text-shadow:0px 1px 0px #672017;}.forum-map-category.forum-map-category-important caption small{color:#280c09;text-shadow:none;}
 .forum-map-category.forum-map-category-inverse caption{background-color:#333333;border:1px solid #1a1a1a;color:#eeeeee;text-shadow:0px 1px 0px #000000;}.forum-map-category.forum-map-category-inverse caption small{color:#b3b3b3;text-shadow:none;}
 .forum-map-category.forum-map-category-info caption{background-color:#3c85a3;border:1px solid #2e677e;color:#ffffff;text-shadow:0px 1px 0px #1a3946;}.forum-map-category.forum-map-category-info caption small{color:#1a3946;text-shadow:none;}
-.popular-threads-list{background-color:#ffffff;border:1px solid #d5d5d5;border-radius:2px;-webkit-box-shadow:0px 0px 0px 3px #eeeeee;-moz-box-shadow:0px 0px 0px 3px #eeeeee;box-shadow:0px 0px 0px 3px #eeeeee;margin-bottom:20px;}.popular-threads-list table{margin:0px;}.popular-threads-list table th{background-color:#fbfbfb;border-bottom:1px solid #eeeeee;padding:2px 10px;color:#999999;font-size:11.9px;}
-.popular-threads-list table td{vertical-align:middle;}.popular-threads-list table td.threads-list-empty{padding:11px 19px;font-size:17.5px;text-align:center;}
-.popular-threads-list table td .thread-icon:link,.popular-threads-list table td .thread-icon:active,.popular-threads-list table td .thread-icon:visited,.popular-threads-list table td .thread-icon:hover{background-color:#555555;border:1px solid #2f2f2f;border-radius:3px;margin-right:7px;padding:3px 4px;}.popular-threads-list table td .thread-icon:link.thread-new,.popular-threads-list table td .thread-icon:active.thread-new,.popular-threads-list table td .thread-icon:visited.thread-new,.popular-threads-list table td .thread-icon:hover.thread-new{background-color:#cf402e;border:1px solid #902d20;}
-.popular-threads-list table td .thread-icon i{background-image:url("../img/glyphicons-halflings-white.png");}
-.popular-threads-list table td .thread-name{color:#333333;font-weight:bold;}
-.popular-threads-list table td .thread-details,.popular-threads-list table td .thread-last-reply{color:#999999;}.popular-threads-list table td .thread-details a:link,.popular-threads-list table td .thread-last-reply a:link,.popular-threads-list table td .thread-details a:visited,.popular-threads-list table td .thread-last-reply a:visited{color:#333333;}
-.popular-threads-list table td .thread-details{font-size:10.5px;}
-.popular-threads-list table td .thread-flags{float:right;margin:0px;opacity:0.8;filter:alpha(opacity=80);padding:0px;}.popular-threads-list table td .thread-flags li{margin-left:3px;float:left;}
-.popular-threads-list table td .thread-rating{background-color:#eeeeee;border-radius:3px;padding:4px;color:#999999;font-size:17.5px;font-weight:bold;text-align:center;}.popular-threads-list table td .thread-rating.thread-rating-negative,.popular-threads-list table td .thread-rating.thread-rating-positive{color:#ffffff;}
-.popular-threads-list table td .thread-rating.thread-rating-negative{background-color:#cf402e;}
-.popular-threads-list table td .thread-rating.thread-rating-positive{background-color:#46a546;}
-.watched-threads .table td{vertical-align:middle;}
-.watched-threads .table .watched-thread-flags{overflow:auto;width:118px;}.watched-threads .table .watched-thread-flags form{display:inline-block;float:left;margin:0px;}.watched-threads .table .watched-thread-flags form .btn{padding:3px 5px;padding-bottom:0px;margin-right:16px;}
-.watched-threads .table .watched-thread-flags .label{border:1px solid #555555;float:left;padding:1px 5px;padding-bottom:2px;line-height:20px;}.watched-threads .table .watched-thread-flags .label i{background-image:url("../img/glyphicons-halflings-white.png");}
-.watched-threads .table .watched-thread-flags .label.thread-read{border-color:#737373;background-color:#999999;}
-.watched-threads .table .watched-thread-flags .label.thread-new{border-color:#27576b;background-color:#3c85a3;}
-.watched-threads .table .thread-title:link,.watched-threads .table .thread-title:visited{color:#555555;}
-.watched-threads .table .thread-title:active,.watched-threads .table .thread-title:hover{color:#333333;}
-.watched-threads .table .thread-title.thread-title-new{font-weight:bold;}
-.watched-threads .table .thread-replies{color:#999999;text-align:right;}
-.watched-threads .table .thread-forum a:link,.watched-threads .table .thread-forum a:visited{color:#555555;}
-.watched-threads .table .thread-forum a:active,.watched-threads .table .thread-forum a:hover{color:#333333;}
-.new-threads-list{background-color:#ffffff;border:1px solid #d5d5d5;border-radius:2px;-webkit-box-shadow:0px 0px 0px 3px #eeeeee;-moz-box-shadow:0px 0px 0px 3px #eeeeee;box-shadow:0px 0px 0px 3px #eeeeee;margin-bottom:20px;}.new-threads-list table{margin:0px;}.new-threads-list table th{background-color:#fbfbfb;border-bottom:1px solid #eeeeee;padding:2px 10px;color:#999999;font-size:11.9px;}
-.new-threads-list table td{vertical-align:middle;}.new-threads-list table td.threads-list-empty{padding:11px 19px;font-size:17.5px;text-align:center;}
-.new-threads-list table td .thread-icon:link,.new-threads-list table td .thread-icon:active,.new-threads-list table td .thread-icon:visited,.new-threads-list table td .thread-icon:hover{background-color:#555555;border:1px solid #2f2f2f;border-radius:3px;margin-right:7px;padding:3px 4px;}.new-threads-list table td .thread-icon:link.thread-new,.new-threads-list table td .thread-icon:active.thread-new,.new-threads-list table td .thread-icon:visited.thread-new,.new-threads-list table td .thread-icon:hover.thread-new{background-color:#cf402e;border:1px solid #902d20;}
-.new-threads-list table td .thread-icon i{background-image:url("../img/glyphicons-halflings-white.png");}
-.new-threads-list table td .thread-name{color:#333333;font-weight:bold;}
-.new-threads-list table td .thread-details,.new-threads-list table td .thread-last-reply{color:#999999;}.new-threads-list table td .thread-details a:link,.new-threads-list table td .thread-last-reply a:link,.new-threads-list table td .thread-details a:visited,.new-threads-list table td .thread-last-reply a:visited{color:#333333;}
-.new-threads-list table td .thread-details{font-size:10.5px;}
-.new-threads-list table td .thread-flags{float:right;margin:0px;opacity:0.8;filter:alpha(opacity=80);padding:0px;}.new-threads-list table td .thread-flags li{margin-left:3px;float:left;}
-.new-threads-list table td .thread-rating{background-color:#eeeeee;border-radius:3px;padding:4px;color:#999999;font-size:17.5px;font-weight:bold;text-align:center;}.new-threads-list table td .thread-rating.thread-rating-negative,.new-threads-list table td .thread-rating.thread-rating-positive{color:#ffffff;}
-.new-threads-list table td .thread-rating.thread-rating-negative{background-color:#cf402e;}
-.new-threads-list table td .thread-rating.thread-rating-positive{background-color:#46a546;}
+.watched-threads table .watched-thread-flags{overflow:auto;}.watched-threads table .watched-thread-flags form{float:right;margin:0px;padding:0px;}.watched-threads table .watched-thread-flags form .btn{float:right;padding:3px 5px;padding-bottom:0px;margin-right:16px;}
+.watched-threads table .thread-title:link,.watched-threads table .thread-title:visited{color:#555555;}
+.watched-threads table .thread-title:active,.watched-threads table .thread-title:hover{color:#333333;}
+.watched-threads table .thread-title.thread-title-new{font-weight:bold;}
+.watched-threads table .thread-replies{color:#999999;text-align:right;}
+.watched-threads table .thread-forum a:link,.watched-threads table .thread-forum a:visited{color:#555555;font-weight:bold;}
+.watched-threads table .thread-forum a:active,.watched-threads table .thread-forum a:hover{color:#333333;}
 .user-alerts td{vertical-align:middle;}.user-alerts td.alert-icon .label{background-color:#555555;border:1px solid #2f2f2f;border-radius:3px;padding:4px;padding-top:3px;}.user-alerts td.alert-icon .label i{background-image:url("../img/glyphicons-halflings-white.png");}
 .user-alerts td.alert-icon .label.label-warning{background-color:#cf402e;border:1px solid #902d20;}
 .user-alerts td.alert-message{color:#555555;font-size:16.8px;}.user-alerts td.alert-message a:link,.user-alerts td.alert-message a:visited{color:#333333;font-weight:bold;}
