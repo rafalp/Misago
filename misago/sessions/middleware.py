@@ -1,4 +1,5 @@
-from sessions import SessionCrawler, SessionHuman
+from django.utils import timezone
+from misago.sessions.sessions import SessionCrawler, SessionHuman
 
 class SessionMiddleware(object):
     def process_request(self, request):
@@ -16,6 +17,13 @@ class SessionMiddleware(object):
 
     def process_response(self, request, response):
         try:
+            # Sync last visit date
+            if request.user.is_authenticated():
+                visit_sync = request.session.get('visit_sync')
+                if not visit_sync or (timezone.now() - visit_sync).seconds >= 900:
+                    request.session['visit_sync'] = timezone.now()
+                    request.user.last_date = timezone.now()
+                    request.user.save(force_update=True)
             request.session.save()
         except AttributeError:
             pass
