@@ -29,7 +29,6 @@ class ForumsTracker(object):
 
 class ThreadsTracker(object):
     def __init__(self, request, forum):
-        self.need_sync = False
         self.need_create = None
         self.need_update = None
         self.request = request
@@ -89,7 +88,7 @@ class ThreadsTracker(object):
             self.need_update.updated = now
             self.need_update.save(force_update=True)
 
-        if self.need_create or self.need_delete or self.need_update:
+        if self.need_create or self.need_update:
             unread_threads = 0
             for thread in self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set.filter(last__gte=self.record.cleared)):
                 if not self.is_read(thread):
