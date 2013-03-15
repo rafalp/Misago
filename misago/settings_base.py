@@ -159,42 +159,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'mptt', # Modified Pre-order Tree Transversal - allows us to nest forums 
     'debug_toolbar', # Debug toolbar
-    'misago.acl', # ACL Builder and dehydrator
-    'misago.settings', # Database level application configuration
-    'misago.monitor', # Forum statistics monitor
-    'misago.utils', # Utility classes
-    'misago.tos', # Terms of Service AKA Guidelines
-    # Applications with dependencies
-    'misago.banning', # Banning and blacklisting users
-    'misago.crawlers', # Web crawlers handling
-    'misago.cookie_jar', # Cookies helper
-    'misago.captcha', # Web crawlers handling
-    'misago.forums', # Forums, threads and posts
-    'misago.messages', # Messages and Flashes
-    'misago.newsletters', # Send newsletters to members from Admin
-    'misago.stats', # Admin statistics generator
-    'misago.sessions', # Sessions
-    'misago.authn', # User authentication
-    'misago.bruteforce', # Brute-Force protection
-    'misago.csrf', # Cross Site Request Forgery protection
-    'misago.setup', # Installation/update tool
-    'misago.template', # Templates extensions
-    'misago.themes', # Themes
-    'misago.users', # Users foundation
-    'misago.alerts', # Users Notifications
-    'misago.team', # Forum Team List
-    'misago.prune', # Prune Users
-    'misago.ranks', # User Ranks
-    'misago.roles', # User Roles
-    'misago.forumroles', # Forum Roles
-    'misago.usercp', # User Control Panel
-    'misago.profiles', # User Profiles
-    'misago.register', # Register New Users
-    'misago.activation', # Activate inactive User or resend activation e-mail
-    'misago.resetpswd', # Reset User Password
-    'misago.threads', # Threads and Posts
-    'misago.readstracker', # Forums and Threads reads tracker
-    'misago.watcher', # Observe threads
+    'misago', # Misago Forum App
 )
 
 # Stopwatch target file
