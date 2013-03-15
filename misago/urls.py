@@ -4,6 +4,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from misago.admin import ADMIN_PATH, site
 
 # Include frontend patterns
+"""
 urlpatterns = patterns('',
     (r'^', include('misago.authn.urls')),
     (r'^users/', include('misago.profiles.urls')),
@@ -42,3 +43,4 @@ if settings.DEBUG:
 # Set error handlers
 handler403 = 'misago.views.error403'
 handler404 = 'misago.views.error404'
+"""
