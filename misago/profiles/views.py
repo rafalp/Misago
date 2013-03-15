@@ -68,8 +68,8 @@ def list(request, rank_slug=None, page=1):
         search_form = QuickFindUserForm(request=request)
         if active_rank:
             users = User.objects.filter(rank=active_rank)
-            count = users.count()
-            pagination = make_pagination(page, count, 4)
+            items_total = users.count()
+            pagination = make_pagination(page, items_total, 4)
             users = users.order_by('username_slug')[pagination['start']:pagination['stop']]
 
     return request.theme.render_to_response('profiles/list.html',
@@ -79,7 +79,7 @@ def list(request, rank_slug=None, page=1):
                                          'in_search': in_search,
                                          'active_rank': active_rank,
                                          'default_rank': default_rank,
-                                         'items_total': count,
+                                         'items_total': items_total,
                                          'ranks': ranks,
                                          'users': users,
                                          'pagination': pagination,
