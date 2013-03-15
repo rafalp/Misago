@@ -50,7 +50,6 @@ class ThreadsView(BaseView):
         for thread in self.threads:
             thread.is_read = self.tracker.is_read(thread)
             thread.last_poster_ignored = thread.last_poster_id in ignored_users
-            
 
     def get_thread_actions(self):
         acl = self.request.acl.threads.get_role(self.forum)
