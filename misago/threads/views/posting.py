@@ -17,6 +17,46 @@ from misago.views import error403, error404
 from misago.utils import make_pagination, slugify, ugettext_lazy
 from misago.watcher.models import ThreadWatch
 
+
+class PostingBaseView(BaseView):
+    def __call__(self, request, **kwargs):
+        self.request = request
+
+        # Empty context attributes
+        self.forum = None
+        self.thread = None
+        self.quote = None
+        self.post = None
+
+        # Let inheriting class  set context
+        self.set_context()
+
+        # And set forum parents for render
+        self.parents = Forum.objects.forum_parents(self.forum.pk, True)
+
+        # Create form instance
+        
+
+    def set_context(self):
+        raise NotImplementedError(u"\"set_context\" method should be implemented in inheriting objects.")
+
+
+class PostingNewThreadView(PostingBaseView):
+    pass
+
+
+class PostingEditThreadView(PostingBaseView):
+    pass
+
+
+class PostingNewReplyView(PostingBaseView):
+    pass
+
+
+class PostingEditReplyView(PostingBaseView):
+    pass
+
+
 class PostingView(BaseView):
     def fetch_target(self, kwargs):
         if self.mode == 'new_thread':
