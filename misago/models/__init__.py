@@ -1,0 +1,1 @@
+from misago.models.alert import Alert
