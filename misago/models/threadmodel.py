@@ -3,9 +3,8 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from misago.forums.signals import move_forum_content
-from misago.threads.signals import move_thread, merge_thread
-from misago.users.signals import delete_user_content, rename_user
+from misago.signals import (delete_user_content, merge_thread, move_forum_content,
+                            move_thread, rename_user)
 from misago.utils.strings import slugify
 
 class ThreadManager(models.Manager):

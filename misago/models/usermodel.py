@@ -15,7 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 from misago.acl.builder import build_acl
 from misago.monitor.monitor import Monitor
 from misago.core.settings import DBSettings
-from misago.users.signals import delete_user_content, rename_user
+from misago.signals import delete_user_content, rename_user
 from misago.users.validators import validate_username, validate_password, validate_email
 from misago.utils.strings import random_string, slugify
 from misago.utils.avatars import avatar_size

@@ -10,7 +10,7 @@ from misago.models.karmamodel import Karma
 from misago.models.monitoritemmodel import MonitorItem
 from misago.models.newslettermodel import Newsletter
 from misago.models.postmodel import Post
-from misago.models.prunepolicymodel import PrunePolicy
+from misago.models.pruningpolicymodel import PruningPolicy
 from misago.models.rankmodel import Rank
 from misago.models.rolemodel import Role
 from misago.models.sessionmodel import Session

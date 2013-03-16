@@ -1,6 +1,6 @@
 from django.db import models
-from misago.forums.signals import move_forum_content
-from misago.threads.signals import move_thread, merge_thread
+from misago.forums.signals import 
+from misago.signals import merge_thread, move_forum_content, move_thread
 
 class WatchedThread(models.Model):
     user = models.ForeignKey('User')

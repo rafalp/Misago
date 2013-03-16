@@ -2,9 +2,8 @@ from django.db import models
 from django.db.models import F
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from misago.forums.signals import move_forum_content
-from misago.threads.signals import move_thread, merge_thread, move_post, merge_post
-from misago.users.signals import delete_user_content, rename_user
+from misago.signals import (delete_user_content, merge_post, merge_thread,
+                            move_forum_content, move_post, move_thread, rename_user)
 
 class PostManager(models.Manager):
     def filter_stats(self, start, end):

@@ -1,5 +1,5 @@
 from django.db import models
-from misago.utils.string import random_string
+from misago.utils.strings import random_string
 
 class Newsletter(models.Model):
     name = models.CharField(max_length=255)

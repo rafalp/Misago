@@ -1,7 +1,6 @@
 from django.db import models
-from misago.forums.signals import move_forum_content
-from misago.threads.signals import move_thread, merge_thread, move_post, merge_post
-from misago.users.signals import rename_user
+from misago.signals import (merge_post, merge_thread, move_forum_content,
+                            move_post, move_thread, rename_user)
 
 class Change(models.Model):
     forum = models.ForeignKey('Forum')

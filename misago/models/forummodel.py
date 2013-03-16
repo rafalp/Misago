@@ -3,8 +3,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from misago.forums.signals import move_forum_content, delete_forum_content
-from misago.users.signals import rename_user
+from misago.signals import delete_forum_content, move_forum_content, rename_user
 
 class ForumManager(models.Manager):
     forums_tree = None

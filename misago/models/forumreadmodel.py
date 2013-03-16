@@ -2,8 +2,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
-from misago.forums.signals import move_forum_content
-from misago.threads.signals import move_thread
+from misago.signals import move_forum_content
 
 class ForumRead(models.Model):
     user = models.ForeignKey('User')
