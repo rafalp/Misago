@@ -1,4 +1,4 @@
-from misago.core.cookiejar import CookieJar
+from misago.cookiejar import CookieJar
 
 class CookieJarMiddleware(object):
     def process_request(self, request):

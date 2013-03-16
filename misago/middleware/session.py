@@ -1,5 +1,5 @@
 from django.utils import timezone
-from misago.core.sessions import CrawlerSession, HumanSession
+from misago.sessions import CrawlerSession, HumanSession
 
 class SessionMiddleware(object):
     def process_request(self, request):

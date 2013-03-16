@@ -2,7 +2,7 @@ from mptt.forms import TreeNodeChoiceField
 from django.forms import fields
 from django.utils.html import conditional_escape, mark_safe
 from django.utils.translation import ugettext_lazy as _
-from misago.core.forms.widgets import ReCaptchaWidget
+from misago.forms.widgets import ReCaptchaWidget
 
 class ForumChoiceField(TreeNodeChoiceField):
     """

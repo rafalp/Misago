@@ -1,5 +1,5 @@
 from django.conf import settings
-from misago.core.stopwatch import Stopwatch
+from misago.stopwatch import Stopwatch
 
 class StopwatchMiddleware(object):
     def process_request(self, request):

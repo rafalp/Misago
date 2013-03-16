@@ -1,4 +1,4 @@
-from misago.core.monitor import Monitor
+from misago.monitor import Monitor
 
 class MonitorMiddleware(object):
     def process_request(self, request):
