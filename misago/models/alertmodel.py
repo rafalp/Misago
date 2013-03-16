@@ -12,6 +12,9 @@ class Alert(models.Model):
     message = models.TextField()
     variables = models.TextField(null=True, blank=True)
 
+    class Meta:
+        app_label = 'misago'
+
     def vars(self):
         try:
             return pickle.loads(base64.decodestring(self.variables))
