@@ -1,17 +1,17 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from mptt.forms import TreeNodeChoiceField
-from misago.forms.layouts import *
 from recaptcha.client.captcha import submit as recaptcha_submit
 
 class Form(forms.Form):
     """
-    Custom form implementation extending Django Forms functionality
+    Misago-native form abstract extending Django's one with automatic trimming
+    of user input, captacha support and more accessible validation errors
     """
     validate_repeats = []
     repeats_errors = []
     dont_strip = []
     error_source = None
+
     def __init__(self, data=None, file=None, request=None, *args, **kwargs):
         self.request = request
 
@@ -153,23 +153,3 @@ class Form(forms.Form):
     def empty_errors(self):
         for i in self.errors:
             self.errors[i] = []
-
-
-class YesNoSwitch(forms.CheckboxInput):
-    """
-    Custom Yes-No switch as fancier alternative to checkboxes
-    """
-    pass
-
-
-class ForumChoiceField(TreeNodeChoiceField):
-    """
-    Custom forum choice field
-    """
-    def __init__(self, *args, **kwargs):
-        kwargs['level_indicator'] = u'- - '
-        super(ForumChoiceField, self).__init__(*args, **kwargs)
-
-    def _get_level_indicator(self, obj):
-        level = getattr(obj, obj._mptt_meta.level_attr)
-        return mark_safe(conditional_escape(self.level_indicator) * (level - 1))
