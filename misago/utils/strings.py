@@ -12,5 +12,5 @@ def slugify(string):
     return django.template.defaultfilters.slugify(string)
 
 
-def get_random_string(length):
+def random_string(length):
     return crypto.get_random_string(length, "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM")

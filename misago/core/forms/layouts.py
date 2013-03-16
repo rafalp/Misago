@@ -1,4 +1,5 @@
 from UserDict import IterableUserDict
+from recaptcha.client.captcha import displayhtml
 from django.utils import formats
 
 class FormLayout(object):
@@ -102,7 +103,6 @@ class FormFields(object):
 
             # ReCaptcha      
             if widget_name == 'ReCaptchaWidget':
-                from recaptcha.client.captcha import displayhtml
                 blueprint['widget'] = 'recaptcha'
                 blueprint['attrs'] = {'html': displayhtml(
                                                           form.request.settings['recaptcha_public'],

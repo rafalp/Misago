@@ -75,7 +75,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
-    'misago.context_processors.core',
+    'misago.context_processors.misago',
     'misago.admin.context_processors.admin',
     'misago.banning.context_processors.banning',
     'misago.messages.context_processors.messages',
@@ -94,16 +94,16 @@ JINJA2_EXTENSIONS = (
 
 # List of application middlewares
 MIDDLEWARE_CLASSES = (
-    #'misago.stopwatch.middleware.StopwatchMiddleware',
+    'misago.stopwatch.middleware.StopwatchMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     #'misago.heartbeat.middleware.HeartbeatMiddleware',
-    #'misago.cookie_jar.middleware.CookieJarMiddleware',
+    'misago.middleware.cookiejar.CookieJarMiddleware',
     'misago.middleware.settings.SettingsMiddleware',
     'misago.middleware.monitor.MonitorMiddleware',
     #'misago.themes.middleware.ThemeMiddleware',
     #'misago.firewalls.middleware.FirewallMiddleware',
     #'misago.crawlers.middleware.DetectCrawlerMiddleware',
-    #'misago.sessions.middleware.SessionMiddleware',
+    'misago.middleware.session.SessionMiddleware',
     #'misago.bruteforce.middleware.JamMiddleware',
     #'misago.csrf.middleware.CSRFMiddleware',
     #'misago.banning.middleware.BanningMiddleware',

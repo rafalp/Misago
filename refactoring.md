@@ -14,11 +14,13 @@ misago/                        App root structure
     +-forms.py                 Custom form base class
     +-layouts.py               Forums layouts (wrapper around Django forms that enables templating)
     +-widgets.py               Custom widgets
+  +-cookiejar.py               CookieJar allows for easy setting and removing cookies without direct access to response object
   +-monitor.py                 Monitor controller that tracks forum stats
   +-settings.py                DB based settings controller
   +-stopwatch.py               Stopwatch controller for measuring request processing time
 +-fixtures/                    Starting data
   +-basicsettings.py           "Basic Settings" group fixture
+  +-captchasettings.py         "Captcha Settings" group fixture
   +-usersmonitor.py            Users Monitor fixture
 +-front/                       Frontend apps
 +-management/                  manage.py commands
@@ -40,7 +42,9 @@ misago/                        App root structure
 +-__init__.py                  Misago init, contains Misago version
 +-context_processors.py        Misago context processors
 +-settingsbase.py              Base configuration
++-signals.py                   Misago's signals
 +-urls.py                      Default urls
++-validators.py                Misago's validators
 ```
 
 
@@ -66,18 +70,23 @@ Authn
 
 Banning
 -------
+* Moved Ban model to models package.
 
 
 Bruteforce
 ----------
+* Moved SignInAttempt model to models package.
 
 
 Captcha
 -------
+* Turned into module and moved to core.forms package
 
 
-Cookiejar
+CookieJar
 ---------
+* Moved controller to core package.
+* Moved middleware to middleware package.
 
 
 Crawlers
@@ -98,12 +107,14 @@ Forms
 * Split __init__.py into three modules.
 
 
-Forumroles
+ForumRoles
 ----------
+* Moved ForumRole model to models package.
 
 
 Forums
 ------
+* Moved Forum model to models package.
 
 
 Heartbeat
@@ -133,6 +144,7 @@ Newsfeed
 
 Newsletters
 -----------
+* Moved Newsletter model to models package.
 
 
 Profiles
@@ -141,14 +153,18 @@ Profiles
 
 Prune
 -----
+* Renamed "Policy" model to "PruningPolicy" and moved to models package.
 
 
 Ranks
 -----
+* Moved Rank model to models package.
 
 
 Readstracker
 ------------
+* Renamed "ForumRecord" model to "ForumRead" and moved to models package.
+* Renamed "ThreadRecord" model to "ThreadRead" and moved to models package.
 
 
 Register
@@ -161,6 +177,7 @@ ResetPswd
 
 Roles
 -----
+* Moved Role model to models package.
 
 
 Search
@@ -169,6 +186,7 @@ Search
 
 Sessions
 --------
+* Moved Session model to models package.
 
 
 Settings
@@ -180,7 +198,7 @@ Settings
 * Moved Setting model to models package.
 * Renamed "type" attribute on Setting model to "normalizes_to".
 * Renamed "input" attribute on Setting model to "field".
-* Renamed model Group to SettingsGroup and moved it to models package.
+* Renamed model "Group" to "SettingsGroup" and moved it to models package.
 
 
 Setup
@@ -217,6 +235,11 @@ Themes
 
 Threads
 -------
+* Moved Thread model to models package.
+* Moved Post model to models package.
+* Moved Karma model to models package.
+* Moved Change model to models package.
+* Moved Checkpoint model to models package.
 
 
 Timezones
@@ -230,16 +253,22 @@ ToS
 
 UserCP
 ------
+* Moved UsernameChange model to models package.
 
 
 Users
 -----
+* Moved User model to models package.
+* Moved Guest model to models package.
+* Moved Crawler model to models package.
 
 
 Utils
 -----
 * Split __init__.py module into datesformat, pagination, translation and strings modules.
+* Renamed "get_random_string" function to "random_String" in strings module.
 
 
 Watcher
 -------
+* Renamed "ThreadWatch" model to "WatchedThread" and moved to models package.

@@ -1,7 +1,8 @@
 from django import forms
 
+class ReCaptchaWidget(forms.TextInput):
+    pass
+
+
 class YesNoSwitch(forms.CheckboxInput):
-    """
-    Custom Yes-No switch as fancier alternative to checkboxes
-    """
     pass

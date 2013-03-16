@@ -1,6 +1,6 @@
+from recaptcha.client.captcha import submit as recaptcha_submit
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from recaptcha.client.captcha import submit as recaptcha_submit
 
 class Form(forms.Form):
     """

@@ -1,10 +1,9 @@
+from mptt.models import MPTTModel, TreeForeignKey
 from django.conf import settings
 from django.core.cache import cache
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from mptt.models import MPTTModel, TreeForeignKey
 from misago.forums.signals import move_forum_content, delete_forum_content
-from misago.roles.models import Role
 from misago.users.signals import rename_user
 
 class ForumManager(models.Manager):
@@ -127,11 +126,11 @@ class Forum(MPTTModel):
     posts_delta = models.IntegerField(default=0)
     redirects = models.PositiveIntegerField(default=0)
     redirects_delta = models.IntegerField(default=0)
-    last_thread = models.ForeignKey('threads.Thread', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
+    last_thread = models.ForeignKey('Thread', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
     last_thread_name = models.CharField(max_length=255, null=True, blank=True)
     last_thread_slug = models.SlugField(max_length=255, null=True, blank=True)
     last_thread_date = models.DateTimeField(null=True, blank=True)
-    last_poster = models.ForeignKey('users.User', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
+    last_poster = models.ForeignKey('User', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
     last_poster_slug = models.SlugField(max_length=255, null=True, blank=True)
     last_poster_style = models.CharField(max_length=255, null=True, blank=True)
@@ -166,6 +165,7 @@ class Forum(MPTTModel):
 
     def copy_permissions(self, target):
         if target.pk != self.pk:
+            from misago.models import Role
             for role in Role.objects.all():
                 perms = role.get_permissions()
                 try:
