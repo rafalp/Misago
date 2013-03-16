@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
-from misago import get_version
+from misago import __version__
 
 class Command(BaseCommand):
     """
@@ -16,7 +16,7 @@ class Command(BaseCommand):
         self.stdout.write('                      /_/ /_/ /_/_/____/\__,_/\__, /\____/ \n')
         self.stdout.write('                                             /____/\n')
         self.stdout.write('\n')
-        self.stdout.write('                    Your community is powered by Misago v.%s' % get_version())
+        self.stdout.write('                    Your community is powered by Misago v.%s' % __version__)
         self.stdout.write('\n              For help and feedback visit http://misago-project.org')
         self.stdout.write('\n\n')
         self.stdout.write('================================================================================')
