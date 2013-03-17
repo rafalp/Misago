@@ -3,7 +3,7 @@ from misago.utils.translation import ugettext_lazy as _
 
 settings_fixture = (
    # Spam Countermeasures
-   ('spam', {
+   ('captcha', {
         'name': _("Spam Countermeasures"),
         'description': _("Those settings allow you to combat automatic registrations and spam messages on your forum."),
         'settings': (
