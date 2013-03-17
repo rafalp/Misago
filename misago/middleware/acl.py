@@ -8,6 +8,7 @@ class ACLMiddleware(object):
             (request.acl.team or request.user.is_god()) != request.user.is_team):
             request.user.is_team = (request.acl.team or request.user.is_god())
             request.user.save(force_update=True)
+            
         if request.session.team != request.user.is_team:
             request.session.team = request.user.is_team
             request.session.save()

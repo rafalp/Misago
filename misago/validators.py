@@ -3,9 +3,6 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ungettext, ugettext_lazy as _
 from misago.models import Ban
-from misago.settings import DBSettings
-from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
 from misago.utils.strings import slugify
 
 class validate_sluggable(object):
@@ -23,6 +20,7 @@ class validate_sluggable(object):
 
 def validate_username(value, db_settings):
     value = unicode(value).strip()
+
     if len(value) < db_settings['username_length_min']:
         raise ValidationError(ungettext(
             'Username must be at least one character long.',
@@ -31,6 +29,7 @@ def validate_username(value, db_settings):
         ) % {
             'count': db_settings['username_length_min'],
         })
+
     if len(value) > db_settings['username_length_max']:
         raise ValidationError(ungettext(
             'Username cannot be longer than one characters.',
@@ -39,18 +38,21 @@ def validate_username(value, db_settings):
         ) % {
             'count': db_settings['username_length_max'],
         })
+
     if settings.UNICODE_USERNAMES:
         if not re.search('^[^\W_]+$', value, re.UNICODE):
             raise ValidationError(_("Username can only contain letters and digits."))
     else:
         if not re.search('^[^\W_]+$', value):
             raise ValidationError(_("Username can only contain latin alphabet letters and digits."))
+
     if Ban.objects.check_ban(username=value):
         raise ValidationError(_("This username is forbidden."))
 
 
 def validate_password(value, db_settings):
     value = unicode(value).strip()
+
     if len(value) < db_settings['password_length']:
         raise ValidationError(ungettext(
             'Correct password has to be at least one character long.',
@@ -59,6 +61,7 @@ def validate_password(value, db_settings):
         ) % {
             'count': db_settings['password_length'],
         })
+
     for test in db_settings['password_complexity']:
         if test in ('case', 'digits', 'special'):
             if not re.search('[a-zA-Z]', value):

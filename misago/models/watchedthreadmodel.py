@@ -1,5 +1,4 @@
 from django.db import models
-from misago.forums.signals import 
 from misago.signals import merge_thread, move_forum_content, move_thread
 
 class WatchedThread(models.Model):

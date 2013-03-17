@@ -185,6 +185,9 @@ class User(models.Model):
 
     statistics_name = _('Users Registrations')
 
+    class Meta:
+        app_label = 'misago'
+
     def is_god(self):
         try:
             return self.is_god_cache
