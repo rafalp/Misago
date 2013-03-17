@@ -206,7 +206,6 @@ class AdminSite(object):
         # Return ready admin routing
         first_section = True
         for section in self.sections:
-            print section.get_routes()
             if first_section:
                 self.routes += patterns('', url('^', include(section.get_routes())))
                 first_section = False
