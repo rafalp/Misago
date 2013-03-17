@@ -169,7 +169,7 @@ class Forum(MPTTModel):
                 perms = role.permissions
                 try:
                     perms['forums'][self.pk] = perms['forums'][target.pk]
-                    role.set_permissions(perms)
+                    role.permissions = perms
                     role.save(force_update=True)
                 except KeyError:
                     pass

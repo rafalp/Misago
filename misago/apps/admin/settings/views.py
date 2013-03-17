@@ -6,8 +6,8 @@ from misago.forms import Form, FormLayout, FormFields
 from misago.messages import Message
 from misago.search import SearchQuery, SearchException
 from misago.models import SettingsGroup, Setting
-from misago.core.views import error404
-from misago.core.admin.settings.forms import SearchForm
+from misago.apps.views import error404
+from misago.apps.admin.settings.forms import SearchForm
 
 def settings(request, group_id=None, group_slug=None):
     # Load groups and find selected group

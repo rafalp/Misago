@@ -3,11 +3,11 @@ from django.core.urlresolvers import reverse as django_reverse
 from django.utils.translation import ugettext as _
 from misago.acl.builder import build_forum_form
 from misago.admin import site
-from misago.core.admin.widgets import *
+from misago.apps.admin.widgets import *
 from misago.forms import Form, YesNoSwitch
 from misago.models import ForumRole
 from misago.utils.strings import slugify
-from misago.core.admin.forumroles.forms import ForumRoleForm
+from misago.apps.admin.forumroles.forms import ForumRoleForm
 
 def reverse(route, target=None):
     if target:

@@ -2,11 +2,11 @@ from django.core.urlresolvers import reverse as django_reverse
 from django import forms
 from django.utils.translation import ugettext as _
 from misago.admin import site
-from misago.core.admin.widgets import *
+from misago.apps.admin.widgets import *
 from misago.forms import Form
 from misago.models import ThemeAdjustment
 from misago.utils.strings import slugify
-from misago.core.admin.clients.forms import ThemeAdjustmentForm
+from misago.apps.admin.clients.forms import ThemeAdjustmentForm
 
 def reverse(route, target=None):
     if target:

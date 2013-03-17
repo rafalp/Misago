@@ -4,16 +4,16 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from misago.admin import ADMIN_PATH, site
 
 # Include frontend patterns
-urlpatterns = patterns('misago.core.front',
+urlpatterns = patterns('misago.apps.front',
     url(r'^$', 'index.index', name="index"),
     url(r'^read-all/$', 'readall.read_all', name="read_all"),
 )
 
 # Include shared Sign-In action
 urlpatterns += patterns('',
-    (r'^', include('misago.core.signin.urls')),
+    (r'^', include('misago.apps.signin.urls')),
     # Remove after ACP was refactored
-    url(r'^users/(?P<username>\w+)-(?P<user>\d+)/$', 'misago.core.admin.adminindex.todo', name="user"),    
+    url(r'^users/(?P<username>\w+)-(?P<user>\d+)/$', 'misago.apps.admin.adminindex.todo', name="user"),    
 )
 
 """
@@ -49,5 +49,5 @@ if settings.DEBUG:
     )
 
 # Set error handlers
-handler403 = 'misago.core.views.error403'
-handler404 = 'misago.core.views.error404'
+handler403 = 'misago.apps.views.error403'
+handler404 = 'misago.apps.views.error404'

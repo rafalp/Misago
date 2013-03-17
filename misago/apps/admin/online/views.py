@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext as _
 from misago.admin import site
-from misago.core.admin.widgets import ListWidget
-from misago.core.admin.online.forms import SearchSessionsForm
+from misago.apps.admin.widgets import ListWidget
+from misago.apps.admin.online.forms import SearchSessionsForm
 
 class List(ListWidget):
     admin = site.get_action('online')

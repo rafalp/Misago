@@ -4,11 +4,11 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from misago.acl.builder import build_form 
 from misago.admin import site
-from misago.core.admin.widgets import *
+from misago.apps.admin.widgets import *
 from misago.forms import Form, YesNoSwitch
 from misago.models import Forum, ForumRole, Role
 from misago.utils.strings import slugify
-from misago.core.admin.roles.forms import RoleForm
+from misago.apps.admin.roles.forms import RoleForm
 
 def reverse(route, target=None):
     if target:
