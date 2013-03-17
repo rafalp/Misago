@@ -1,4 +1,4 @@
-from django.template.defaultfilters import slugify
+from django.template.defaultfilters import slugify as django_slugify
 from django.utils import crypto
 try:
     from unidecode import unidecode
@@ -9,7 +9,7 @@ except ImportError:
 def slugify(string):
     if use_unidecode:
         string = unidecode(string)
-    return django.template.defaultfilters.slugify(string)
+    return django_slugify(string)
 
 
 def random_string(length):
