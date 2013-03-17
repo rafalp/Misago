@@ -38,9 +38,10 @@ def load():
                         )
 
     Rank.objects.create(
-                        name=_("Active Members").message,
-                        name_slug='active-members',
-                        style='active',
+                        name=_("Top Posters").message,
+                        name_slug='top-posters',
+                        title="Top",
+                        style='top',
                         order=3,
                         criteria="10%",
                         as_tab=True,

@@ -1132,5 +1132,5 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{opacity:0.9;filter:alpha(opa
 .post-label-team{background-color:#cf402e;}
 .index-rank-mvp ul li .label{background-color:#049cdb;color:#ffffff;text-shadow:0px 1px 0px #011f2c;}
 .post-label-mvp{background-color:#049cdb;}
-.index-rank-active ul li .label{background-color:#8d6a00;color:#ffffff;text-shadow:0px 1px 0px #5a4400;}
-.post-label-active{background-color:#ffc40d;}
+.index-rank-top ul li .label{background-color:#7c4a03;color:#ffffff;text-shadow:0px 1px 0px #4a2c02;}
+.post-label-top{background-color:#f89406;}
