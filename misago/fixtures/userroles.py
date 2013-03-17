@@ -3,7 +3,7 @@ from misago.utils.translation import ugettext_lazy as _
 
 def load():
     role = Role(name=_("Administrator").message, token='admin', protected=True)
-    role.petmissions = {
+    role.permissions = {
                         'name_changes_allowed': 5,
                         'changes_expire': 7,
                         'can_use_acp': True,
@@ -19,7 +19,7 @@ def load():
     role.save(force_insert=True)
     
     role = Role(name=_("Moderator").message, token='mod', protected=True)
-    role.petmissions = {
+    role.permissions = {
                         'name_changes_allowed': 3,
                         'changes_expire': 14,
                         'can_use_signature': True,
@@ -33,7 +33,7 @@ def load():
     role.save(force_insert=True)
     
     role = Role(name=_("Registered").message, token='registered')
-    role.petmissions = {
+    role.permissions = {
                         'name_changes_allowed': 2,
                         'can_use_signature': False,
                         'can_search_users': True,
@@ -42,7 +42,7 @@ def load():
     role.save(force_insert=True)
     
     role = Role(name=_("Guest").message, token='guest')
-    role.petmissions = {
+    role.permissions = {
                         'can_search_users': True,
                         'forums': {5: 6, 6: 6, 7: 6},
                        }
