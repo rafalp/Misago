@@ -4,9 +4,9 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from misago.admin import ADMIN_PATH, site
 
 # Include frontend patterns
-"""
 urlpatterns = patterns('',
-    (r'^', include('misago.authn.urls')),
+    (r'^', include('misago.shared.signin.urls')),
+    """
     (r'^users/', include('misago.profiles.urls')),
     (r'^usercp/', include('misago.usercp.urls')),
     (r'^register/', include('misago.register.urls')),
@@ -26,8 +26,10 @@ urlpatterns = patterns('',
     url(r'^popular/(?P<page>[0-9]+)/$', 'misago.views.popular_threads', name="popular_threads"),
     url(r'^new/$', 'misago.views.new_threads', name="new_threads"),
     url(r'^new/(?P<page>[0-9]+)/$', 'misago.views.new_threads', name="new_threads"),
+    """
 )
 
+"""
 # Include admin patterns
 if ADMIN_PATH:
     urlpatterns += patterns('',
