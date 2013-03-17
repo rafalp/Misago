@@ -166,7 +166,7 @@ class Forum(MPTTModel):
         if target.pk != self.pk:
             from misago.models import Role
             for role in Role.objects.all():
-                perms = role.get_permissions()
+                perms = role.permissions
                 try:
                     perms['forums'][self.pk] = perms['forums'][target.pk]
                     role.set_permissions(perms)

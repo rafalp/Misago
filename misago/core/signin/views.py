@@ -7,13 +7,12 @@ from misago.admin import site
 from misago.forms import FormLayout
 from misago.messages import Message
 import misago.auth as auth
-from misago.auth.decorators import 
-from misago.shared.signin.forms import SignInForm
 from misago.auth import AuthException, auth_admin, auth_forum, sign_user_in
 from misago.decorators import (block_authenticated, block_banned, block_crawlers,
                             block_guest, block_jammed, check_csrf)
 from misago.models import SignInAttempt, Token
-from misago.utils import random_string
+from misago.core.signin.forms import SignInForm
+from misago.utils.strings import random_string
 
 @block_crawlers
 @block_banned

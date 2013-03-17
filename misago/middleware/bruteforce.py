@@ -4,8 +4,8 @@ from misago.models import SignInAttempt
 
 class JamCache(object):
     def __init__(self):
-        jammed = False
-        expires = timezone.now()
+        self.jammed = False
+        self.expires = timezone.now()
     
     def check_for_updates(self, request):
         if self.expires < timezone.now():

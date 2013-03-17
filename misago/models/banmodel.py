@@ -1,4 +1,7 @@
+import re
 from django.db import models
+from django.db.models import Q
+from django.utils import timezone
 
 BAN_NAME_EMAIL = 0
 BAN_NAME = 1
@@ -39,6 +42,8 @@ class Ban(models.Model):
     reason_admin = models.TextField(null=True, blank=True)
     expires = models.DateTimeField(null=True, blank=True)
 
+    objects = BansManager()
+
     class Meta:
         app_label = 'misago'
 
@@ -58,13 +63,13 @@ class BanCache(object):
 
             # Check Ban
             if request.user.is_authenticated():
-                ban = check_ban(
+                ban = Ban.objects.check_ban(
                                 ip=request.session.get_ip(request),
                                 username=request.user.username,
                                 email=request.user.email
                                 )
             else:
-                ban = check_ban(ip=request.session.get_ip(request))
+                ban = Ban.objects.check_ban(ip=request.session.get_ip(request))
 
             # Update ban cache
             if ban:

@@ -86,9 +86,9 @@ JINJA2_EXTENSIONS = (
 
 # List of application middlewares
 MIDDLEWARE_CLASSES = (
-    'misago.stopwatch.middleware.StopwatchMiddleware',
+    'misago.middleware.stopwatch.StopwatchMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'misago.heartbeat.middleware.HeartbeatMiddleware',
+    'misago.middleware.heartbeat.HeartbeatMiddleware',
     'misago.middleware.cookiejar.CookieJarMiddleware',
     'misago.middleware.settings.SettingsMiddleware',
     'misago.middleware.monitor.MonitorMiddleware',
@@ -100,36 +100,36 @@ MIDDLEWARE_CLASSES = (
     'misago.middleware.csrf.CSRFMiddleware',
     'misago.middleware.banning.BanningMiddleware',
     'misago.middleware.messages.MessagesMiddleware',
-    'misago.middleware.users.UserMiddleware',
+    'misago.middleware.user.UserMiddleware',
     'misago.middleware.acl.ACLMiddleware',
     'django.middleware.common.CommonMiddleware',
 )
 
 # List of application permission providers
 PERMISSION_PROVIDERS = (
-    'misago.usercp.acl',
-    'misago.users.acl',
-    'misago.admin.acl',
-    'misago.forums.acl',
-    'misago.threads.acl',
+    'misago.acl.permissions.admin',
+    'misago.acl.permissions.usercp',
+    'misago.acl.permissions.users',
+    'misago.acl.permissions.forums',
+    'misago.acl.permissions.threads',
 )
 
 # List of UserCP extensions
 USERCP_EXTENSIONS = (
-    'misago.usercp.options',
-    'misago.usercp.avatar',
-    'misago.usercp.signature',
-    'misago.usercp.credentials',
-    'misago.usercp.username',
+    'misago.core.front.usercp.options',
+    'misago.core.front.usercp.avatar',
+    'misago.core.front.usercp.signature',
+    'misago.core.front.usercp.credentials',
+    'misago.core.front.usercp.username',
 )
 
 # List of User Profile extensions
 PROFILE_EXTENSIONS = (
-    'misago.profiles.posts',
-    'misago.profiles.threads',
-    'misago.profiles.follows',
-    'misago.profiles.followers',
-    'misago.profiles.details',
+    'misago.core.front.profiles.posts',
+    'misago.core.front.profiles.threads',
+    'misago.core.front.profiles.follows',
+    'misago.core.front.profiles.followers',
+    'misago.core.front.profiles.details',
 )
 
 # List of Markdown Extensions
@@ -170,7 +170,7 @@ DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.timer.TimerDebugPanel',
     'debug_toolbar.panels.sql.SQLDebugPanel',
     'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
-    #'misago.acl.panels.MisagoACLDebugPanel',
+    'misago.acl.panels.MisagoACLDebugPanel',
     'debug_toolbar.panels.headers.HeaderDebugPanel',
     'debug_toolbar.panels.template.TemplateDebugPanel',
     'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',

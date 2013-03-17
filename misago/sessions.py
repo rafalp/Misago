@@ -5,9 +5,9 @@ from django.db.models.loading import cache as model_cache
 from django.utils import timezone
 from django.utils.crypto import salted_hmac
 from django.utils.encoding import force_unicode
-from misago.auth.methods import auth_remember, AuthException
+from misago.auth import auth_remember, AuthException
 from misago.models import Session, Token, Guest, User
-from misago.utils.string import random_string
+from misago.utils.strings import random_string
 
 # Assert models are loaded
 if not model_cache.loaded:

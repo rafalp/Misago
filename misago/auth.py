@@ -2,10 +2,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from misago.banning.models import check_ban
-from misago.bruteforce.models import SignInAttempt
-from misago.sessions.models import Token
-from misago.users.models import User
+from misago.models import Ban, SignInAttempt, Token, User
 
 """
 Exception constants
@@ -58,7 +55,7 @@ def auth_forum(request, email, password):
     Forum auth - check bans and if we are in maintenance - maintenance access
     """
     user = get_user(email, password)
-    user_ban = check_ban(username=user.username, email=user.email)
+    user_ban = Ban.objects.check_ban(username=user.username, email=user.email)
     if user_ban:
         if user_ban.reason_user:
             raise AuthException(BANNED, _("Your account has been banned for following reason:"), ban=user_ban)
@@ -80,6 +77,7 @@ def auth_remember(request, ip):
         cookie_token = request.COOKIES[cookie_token]
         if len(cookie_token) != 42:
             raise AuthException()
+            
         try:
             token_rk = Token.objects.select_related().get(pk=cookie_token)
         except Token.DoesNotExist:

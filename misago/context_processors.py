@@ -25,4 +25,4 @@ def common(request):
 
 
 def admin(request):
-    site.get_admin_navigation(request)
+    return site.get_admin_navigation(request)

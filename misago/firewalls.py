@@ -2,7 +2,8 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import ADMIN_PATH
 from misago.messages import Message
-from misago.shared.views import error403, error404, signin
+from misago.core.views import error403, error404
+from misago.core.signin.views import signin
 
 class FirewallForum(object):
     admin = False

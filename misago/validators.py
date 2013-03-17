@@ -45,7 +45,7 @@ def validate_username(value, db_settings):
     else:
         if not re.search('^[^\W_]+$', value):
             raise ValidationError(_("Username can only contain latin alphabet letters and digits."))
-
+    
     if Ban.objects.check_ban(username=value):
         raise ValidationError(_("This username is forbidden."))
 

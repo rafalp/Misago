@@ -16,8 +16,8 @@ from misago.acl.builder import build_acl
 from misago.monitor import Monitor
 from misago.dbsettings import DBSettings
 from misago.signals import delete_user_content, rename_user
-from misago.utils.strings import random_string, slugify
 from misago.utils.avatars import avatar_size
+from misago.utils.strings import random_string, slugify
 from misago.validators import validate_username, validate_password, validate_email
 
 class UserManager(models.Manager):
@@ -54,7 +54,7 @@ class UserManager(models.Manager):
 
         # Get first rank
         try:
-            from misago.ranks.models import Rank
+            from misago.models import Rank
             default_rank = Rank.objects.filter(special=0).order_by('order')[0]
         except IndexError:
             default_rank = None
@@ -484,7 +484,7 @@ class User(models.Model):
         return activations[self.activation]
 
     def alert(self, message):
-        from misago.alerts.models import Alert
+        from misago.models import Alert
         self.alerts += 1
         return Alert(user=self, message=message, date=tz_util.now())
 

@@ -65,10 +65,10 @@ def build_acl(request, roles):
     forum_roles = {}
 
     for role in roles:
-        perms.append(role.get_permissions())
+        perms.append(role.permissions)
 
     for role in ForumRole.objects.all():
-        forum_roles[role.pk] = role.get_permissions()
+        forum_roles[role.pk] = role.permissions
 
     for provider in settings.PERMISSION_PROVIDERS:
         app_module = import_module(provider)

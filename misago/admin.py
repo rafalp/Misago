@@ -147,13 +147,13 @@ class AdminSite(object):
         late_actions = []
 
         # Load default admin site
-        from misago.admin.layout.sections import ADMIN_SECTIONS
+        from misago.core.admin.sections import ADMIN_SECTIONS
         for section in ADMIN_SECTIONS:
             self.sections.append(section)
             self.sections_index[section.id] = section
 
             # Loop section actions
-            section_actions = import_module('misago.admin.layout.%s' % section.id)
+            section_actions = import_module('misago.core.admin.sections.%s' % section.id)
             for action in section_actions.ADMIN_ACTIONS:
                 self.actions_index[action.id] = action
                 if not action.after:
@@ -206,11 +206,13 @@ class AdminSite(object):
         # Return ready admin routing
         first_section = True
         for section in self.sections:
+            print section.get_routes()
             if first_section:
                 self.routes += patterns('', url('^', include(section.get_routes())))
                 first_section = False
             else:
                 self.routes += patterns('', url(('^%s/' % section.id), include(section.get_routes())))
+        
         return self.routes
 
     def get_action(self, action):
