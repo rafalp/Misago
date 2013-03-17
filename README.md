@@ -39,7 +39,7 @@ Misago comes with "deployment" python module that contains empty Misago configur
 
 After you set low-level configuration of Misago, fire following commands on manage.py:
 
-* __initmisago__ - creates DB structure for Misago and populates it with default data
+* __startmisago__ - creates DB structure for Misago and populates it with default data
 * __adduser Admin admin@example.com password --admin__ - this will create first admin user
 
 Misago stands on shoulders of Django and Django documentation covers deployment of apps extensively:
@@ -52,6 +52,12 @@ While Misago will run without cache set up, you are stronly encouraged to set on
 ### WARNING!
 
 Misago is not production ready! Don't ever use it in anything thats anywhere close to production enviroment!
+
+
+Updating
+--------
+
+You can use **updatemisago** command to update your forums database to latest version.
 
 
 Contributing
