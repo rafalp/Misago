@@ -18,9 +18,6 @@ def load_fixture(name):
         return True
     except (ImportError, AttributeError):
         return False
-    except Exception as e:
-        print 'Could not load fixtures from %s:\n%s' % (name, e)
-        return False
 
 
 def update_fixture(name):
@@ -32,9 +29,6 @@ def update_fixture(name):
         fixture.update()
         return True
     except (ImportError, AttributeError):
-        return False
-    except Exception as e:
-        print 'Could not update fixture from %s:\n%s' % (name, e)
         return False
 
 
