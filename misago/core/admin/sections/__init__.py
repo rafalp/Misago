@@ -7,27 +7,27 @@ ADMIN_SECTIONS = (
                  name=_("Overview"),
                  icon='signal',
                  ),
+    AdminSection(
+                 id='system',
+                 name=_("System"),
+                 icon='cog',
+                 ),
 )
 
 """
-AdminSection(
-             id='users',
-             name=_("Users"),
-             icon='user',
-             ),
-AdminSection(
-             id='forums',
-             name=_("Forums"),
-             icon='comment',
-             ),
-AdminSection(
-             id='perms',
-             name=_("Permissions"),
-             icon='adjust',
-             ),
-AdminSection(
-             id='system',
-             name=_("System"),
-             icon='cog',
-             ),
+    AdminSection(
+                 id='users',
+                 name=_("Users"),
+                 icon='user',
+                 ),
+    AdminSection(
+                 id='forums',
+                 name=_("Forums"),
+                 icon='comment',
+                 ),
+    AdminSection(
+                 id='perms',
+                 name=_("Permissions"),
+                 icon='adjust',
+                 ),
 """

@@ -11,7 +11,7 @@ ADMIN_ACTIONS = (
                help=_("Change your forum configuration"),
                icon='wrench',
                route='admin_settings',
-               urlpatterns=patterns('misago.settings.views',
+               urlpatterns=patterns('misago.core.admin.settings.views',
                         url(r'^$', 'settings', name='admin_settings'),
                         url(r'^search/$', 'settings_search', name='admin_settings_search'),
                         url(r'^(?P<group_slug>([a-z0-9]|-)+)-(?P<group_id>\d+)/$', 'settings', name='admin_settings')
@@ -39,7 +39,7 @@ ADMIN_ACTIONS = (
                          },
                         ],
                route='admin_clients',
-               urlpatterns=patterns('misago.themes.views',
+               urlpatterns=patterns('misago.core.admin.clients.views',
                         url(r'^$', 'List', name='admin_clients'),
                         url(r'^new/$', 'New', name='admin_clients_new'),
                         url(r'^edit/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Edit', name='admin_clients_edit'),

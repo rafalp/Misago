@@ -3,7 +3,7 @@ import markdown
 from markdown.util import etree
 from django.core.urlresolvers import reverse
 from misago.models import User
-from misago.utils import slugify
+from misago.utils.strings import slugify
 
 # Global vars
 MENTION_RE = re.compile(r'([^\w]?)@(?P<username>(\w)+)', re.UNICODE)
