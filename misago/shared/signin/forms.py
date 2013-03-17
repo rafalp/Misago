@@ -22,8 +22,7 @@ class SignInForm(Form):
               ]
 
     def __init__(self, *args, **kwargs):
-        show_remember_me = kwargs['show_remember_me']
-        del kwargs['show_remember_me']
+        show_remember_me = kwargs.pop('show_remember_me')
 
         super(SignInForm, self).__init__(*args, **kwargs)
         if not show_remember_me:
