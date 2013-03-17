@@ -8,6 +8,11 @@ ADMIN_SECTIONS = (
                  icon='signal',
                  ),
     AdminSection(
+                 id='perms',
+                 name=_("Permissions"),
+                 icon='adjust',
+                 ),
+    AdminSection(
                  id='system',
                  name=_("System"),
                  icon='cog',
@@ -24,10 +29,5 @@ ADMIN_SECTIONS = (
                  id='forums',
                  name=_("Forums"),
                  icon='comment',
-                 ),
-    AdminSection(
-                 id='perms',
-                 name=_("Permissions"),
-                 icon='adjust',
                  ),
 """

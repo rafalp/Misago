@@ -3,7 +3,6 @@ from django.utils.translation import ugettext_lazy as _
 from misago.admin import AdminAction
 from misago.models import ForumRole, Role
 
-
 ADMIN_ACTIONS = (
    AdminAction(
                section='perms',
@@ -27,7 +26,7 @@ ADMIN_ACTIONS = (
                          },
                         ],
                route='admin_roles',
-               urlpatterns=patterns('misago.roles.views',
+               urlpatterns=patterns('misago.core.admin.roles.views',
                         url(r'^$', 'List', name='admin_roles'),
                         url(r'^new/$', 'New', name='admin_roles_new'),
                         url(r'^forums/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Forums', name='admin_roles_masks'),
@@ -58,7 +57,7 @@ ADMIN_ACTIONS = (
                          },
                         ],
                route='admin_roles_forums',
-               urlpatterns=patterns('misago.forumroles.views',
+               urlpatterns=patterns('misago.core.admin.forumroles.views',
                         url(r'^$', 'List', name='admin_roles_forums'),
                         url(r'^new/$', 'New', name='admin_roles_forums_new'),
                         url(r'^acl/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'ACL', name='admin_roles_forums_acl'),
