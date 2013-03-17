@@ -48,26 +48,24 @@ ADMIN_ACTIONS = (
                         url(r'^(?P<page>\d+)/$', 'List', name='admin_online'),
                     ),
                ),
+    AdminAction(
+               section='overview',
+               id='team',
+               name=_("Forum Team"),
+               help=_("List of all forum team members"),
+               icon='user',
+               model=User,
+               actions=[
+                        {
+                         'id': 'list',
+                         'name': _("Forum Team Members"),
+                         'help': _("List of all forum team members"),
+                         'route': 'admin_team'
+                         },
+                        ],
+               route='admin_team',
+               urlpatterns=patterns('misago.core.admin.team',
+                        url(r'^$', 'List', name='admin_team'),
+                    ),
+               ),
 )
-"""
-AdminAction(
-           section='overview',
-           id='team',
-           name=_("Forum Team"),
-           help=_("List of all forum team members"),
-           icon='user',
-           model=User,
-           actions=[
-                    {
-                     'id': 'list',
-                     'name': _("Forum Team Members"),
-                     'help': _("List of all forum team members"),
-                     'route': 'admin_team'
-                     },
-                    ],
-           route='admin_team',
-           urlpatterns=patterns('misago.team.views',
-                    url(r'^$', 'List', name='admin_team'),
-                ),
-           ),
-"""
