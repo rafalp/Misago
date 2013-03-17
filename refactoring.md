@@ -8,20 +8,15 @@ Directory Tree
 misago/                        App root structure
 +-admin/                       Admin apps
 +-shared/                      Shared (Admin/Front) apps
-+-core/                        Core features
-  +-forms/                     Misago forms
-    +-fields.py                Custom fields
-    +-forms.py                 Custom form base class
-    +-layouts.py               Forums layouts (wrapper around Django forms that enables templating)
-    +-widgets.py               Custom widgets
-  +-cookiejar.py               CookieJar allows for easy setting and removing cookies without direct access to response object
-  +-monitor.py                 Monitor controller that tracks forum stats
-  +-settings.py                DB based settings controller
-  +-stopwatch.py               Stopwatch controller for measuring request processing time
 +-fixtures/                    Starting data
   +-basicsettings.py           "Basic Settings" group fixture
   +-captchasettings.py         "Captcha Settings" group fixture
   +-usersmonitor.py            Users Monitor fixture
++-forms/                     Misago forms
+  +-fields.py                Custom fields
+  +-forms.py                 Custom form base class
+  +-layouts.py               Forums layouts (wrapper around Django forms that enables templating)
+  +-widgets.py               Custom widgets
 +-front/                       Frontend apps
 +-management/                  manage.py commands
 +-migrations/                  South DB migrations
@@ -41,10 +36,14 @@ misago/                        App root structure
   +-translation.py             Functions for working with translation strings
 +-__init__.py                  Misago init, contains Misago version
 +-context_processors.py        Misago context processors
++-cookiejar.py                 CookieJar allows for easy setting and removing cookies without direct access to response object
++-dbsettings.py                DB based settings controller
++-monitor.py                   Monitor controller that tracks forum stats
 +-settingsbase.py              Base configuration
 +-signals.py                   Misago's signals
 +-urls.py                      Default urls
 +-validators.py                Misago's validators
++-stopwatch.py                 Stopwatch controller for measuring request processing time
 ```
 
 

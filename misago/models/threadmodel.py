@@ -128,7 +128,7 @@ class Thread(models.Model):
         self.merges = last_post.merge
         
     def email_watchers(self, request, post):
-        from misago.acl.builder import get_acl
+        from misago.acl.builder import acl
         from misago.acl.utils import ACLError403, ACLError404
         from misago.models import ThreadRead
 
@@ -136,7 +136,7 @@ class Thread(models.Model):
             user = watch.user
             if user.pk != request.user.pk:
                 try:
-                    acl = get_acl(request, user)
+                    acl = acl(request, user)
                     acl.forums.allow_forum_view(self.forum)
                     acl.threads.allow_thread_view(user, self)
                     acl.threads.allow_post_view(user, self, post)

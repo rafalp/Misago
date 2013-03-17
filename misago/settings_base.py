@@ -96,7 +96,7 @@ JINJA2_EXTENSIONS = (
 MIDDLEWARE_CLASSES = (
     'misago.stopwatch.middleware.StopwatchMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    #'misago.heartbeat.middleware.HeartbeatMiddleware',
+    'misago.heartbeat.middleware.HeartbeatMiddleware',
     'misago.middleware.cookiejar.CookieJarMiddleware',
     'misago.middleware.settings.SettingsMiddleware',
     'misago.middleware.monitor.MonitorMiddleware',
@@ -106,7 +106,7 @@ MIDDLEWARE_CLASSES = (
     'misago.middleware.session.SessionMiddleware',
     #'misago.bruteforce.middleware.JamMiddleware',
     #'misago.csrf.middleware.CSRFMiddleware',
-    #'misago.banning.middleware.BanningMiddleware',
+    'misago.middleware.banning.BanningMiddleware',
     #'misago.messages.middleware.MessagesMiddleware',
     #'misago.users.middleware.UserMiddleware',
     #'misago.acl.middleware.ACLMiddleware',

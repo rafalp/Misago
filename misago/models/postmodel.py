@@ -72,7 +72,7 @@ class Post(models.Model):
                                        )
             
     def notify_mentioned(self, request, users):
-        from misago.acl.builder import get_acl
+        from misago.acl.builder import acl
         from misago.acl.utils import ACLError403, ACLError404
         
         mentioned = self.mentions.all()
@@ -80,7 +80,7 @@ class Post(models.Model):
             if user.pk != request.user.pk and user not in mentioned:
                 self.mentions.add(user)
                 try:                    
-                    acl = get_acl(request, user)
+                    acl = acl(request, user)
                     acl.forums.allow_forum_view(self.forum)
                     acl.threads.allow_thread_view(user, self.thread)
                     acl.threads.allow_post_view(user, self.thread, self)

@@ -13,12 +13,12 @@ from django.template import RequestContext
 from django.utils import timezone as tz_util
 from django.utils.translation import ugettext_lazy as _
 from misago.acl.builder import build_acl
-from misago.monitor.monitor import Monitor
+from misago.monitor import Monitor
 from misago.dbsettings import DBSettings
 from misago.signals import delete_user_content, rename_user
-from misago.users.validators import validate_username, validate_password, validate_email
 from misago.utils.strings import random_string, slugify
 from misago.utils.avatars import avatar_size
+from misago.validators import validate_username, validate_password, validate_email
 
 class UserManager(models.Manager):
     """
@@ -412,7 +412,7 @@ class User(models.Model):
         self.acl_key = 'acl_%s' % hashlib.md5('_'.join(roles_ids)).hexdigest()[0:8]
         return self.acl_key
 
-    def get_acl(self, request):
+    def acl(self, request):
         try:
             acl = cache.get(self.acl_key)
             if acl.version != request.monitor.acl_version:

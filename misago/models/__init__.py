@@ -1,5 +1,5 @@
 from misago.models.alertmodel import Alert
-from misago.models.banmodel import Ban
+from misago.models.banmodel import Ban, BanCache
 from misago.models.changemodel import Change
 from misago.models.checkpointmodel import Checkpoint
 from misago.models.fixturemodel import Fixture
