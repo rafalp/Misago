@@ -1,4 +1,5 @@
 from optparse import make_option
+import traceback
 import os.path
 import pkgutil
 from django.core.management.base import BaseCommand
@@ -31,18 +32,21 @@ class Command(BaseCommand):
         updated = 0
         
         fixtures_path = os.path.dirname(misago.fixtures.__file__)
-        for _, name, _ in pkgutil.iter_modules([fixtures_path]):
-            if name in fixture_data:
-                if update_fixture('misago.fixtures.' + name):
-                    updated += 1
-                    if not options['quiet']:
-                        self.stdout.write('Updating "%s" fixture...' % name)
-            else:
-                if load_fixture('misago.fixtures.' + name):
-                    loaded += 1
-                    Fixture.objects.create(name=name)
-                    if not options['quiet']:
-                        self.stdout.write('Loading "%s" fixture...' % name)
+        try:
+            for _, name, _ in pkgutil.iter_modules([fixtures_path]):
+                if name in fixture_data:
+                    if update_fixture('misago.fixtures.' + name):
+                        updated += 1
+                        if not options['quiet']:
+                            self.stdout.write('Updating "%s" fixture...' % name)
+                else:
+                    if load_fixture('misago.fixtures.' + name):
+                        loaded += 1
+                        Fixture.objects.create(name=name)
+                        if not options['quiet']:
+                            self.stdout.write('Loading "%s" fixture...' % name)
+        except:
+            self.stderr.write(traceback.format_exc())
 
         if not options['quiet']:
             self.stdout.write('\nLoaded %s fixtures and updated %s fixtures.\n' % (loaded, updated))

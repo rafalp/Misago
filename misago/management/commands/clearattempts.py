@@ -1,6 +1,6 @@
 from datetime import timedelta
 from django.utils import timezone
-from misago.bruteforce.models import SignInAttempt
+from misago.models import SignInAttempt
 
 class Command(BaseCommand):
     """
