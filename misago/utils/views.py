@@ -5,9 +5,6 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 
 def redirect_message(request, message, type='info', owner=None):
-    """
-    Set flash message and redirect to board index.
-    """
     request.messages.set_flash(message, type, owner)
     return redirect(reverse('index'))
 

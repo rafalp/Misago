@@ -12,7 +12,7 @@ urlpatterns = patterns('misago.apps',
 
 # Remove after ACP was refactored
 urlpatterns += patterns('',
-    url(r'^users/(?P<username>\w+)-(?P<user>\d+)/$', 'misago.apps.admin.index.todo', name="user"),    
+    url(r'^users/(?P<username>\w+)-(?P<user>\d+)/$', 'misago.apps.admin.index.todo', name="user"),
 )
 
 """
