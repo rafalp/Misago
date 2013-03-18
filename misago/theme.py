@@ -1,5 +1,6 @@
 from django.conf import settings
-from coffin.shortcuts import render, render_to_response
+from coffin.shortcuts import render_to_response
+from coffin.template import dict_from_django_context
 from coffin.template.loader import get_template, select_template, render_to_string
 
 '''Monkeypatch Django to mimic Jinja2 behaviour'''
@@ -35,9 +36,6 @@ class Theme(object):
             prefixed += templates
             return prefixed
 
-    def render(self, request, *args, **kwargs):
-        return render(request, *args, **kwargs)
-
     def render_to_string(self, templates, *args, **kwargs):
         templates = self.prefix_templates(templates)
         return render_to_string(templates, *args, **kwargs)
@@ -45,6 +43,17 @@ class Theme(object):
     def render_to_response(self, templates, *args, **kwargs):
         templates = self.prefix_templates(templates)
         return render_to_response(templates, *args, **kwargs)
+
+    def macro(self, templates, macro, dictionary={}, context_instance=None):
+        templates = self.prefix_templates(templates)
+        template = select_template(templates)
+        if context_instance:
+            context_instance.update(dictionary)
+        else:
+            context_instance = dictionary
+        context_instance = dict_from_django_context(context_instance)
+        _macro = getattr(template.make_module(context_instance), macro)
+        return unicode(_macro()).strip()
 
     def get_email_templates(self, template, contex={}):
             email_type_plain = '_email/%s_plain.html' % template
