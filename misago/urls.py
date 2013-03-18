@@ -7,33 +7,29 @@ from misago.admin import ADMIN_PATH, site
 urlpatterns = patterns('misago.apps',
     url(r'^$', 'index.index', name="index"),
     url(r'^read-all/$', 'readall.read_all', name="read_all"),
-    (r'^', include('misago.apps.signin.urls')),
+    url(r'^register/$', 'register.views.form', name="register"),
+    url(r'^category/(?P<slug>(\w|-)+)-(?P<forum>\d+)/$', 'category.category', name="category"),
+    url(r'^redirect/(?P<slug>(\w|-)+)-(?P<forum>\d+)/$', 'redirect.redirect', name="redirect"),
+    url(r'^alerts/$', 'alerts.alerts', name="alerts"),
+    url(r'^news/$', 'newsfeed.newsfeed', name="newsfeed"),
+    url(r'^tos/$', 'tos.tos', name="tos"),
+    url(r'^forum-map/$', 'forummap.forum_map', name="forum_map"),
+    url(r'^popular/$', 'popularthreads.popular_threads', name="popular_threads"),
+    url(r'^popular/(?P<page>[0-9]+)/$', 'popularthreads.popular_threads', name="popular_threads"),
+    url(r'^new/$', 'newthreads.new_threads', name="new_threads"),
+    url(r'^new/(?P<page>[0-9]+)/$', 'newthreads.new_threads', name="new_threads"),
 )
 
-# Remove after ACP was refactored
 urlpatterns += patterns('',
-    url(r'^users/(?P<username>\w+)-(?P<user>\d+)/$', 'misago.apps.admin.index.todo', name="user"),
+    (r'^', include('misago.apps.signin.urls')),
+    (r'^users/', include('misago.apps.profiles.urls')),
+    (r'^usercp/', include('misago.apps.usercp.urls')),
+    (r'^activate/', include('misago.apps.activation.urls')),
+    (r'^reset-password/', include('misago.apps.resetpswd.urls')),
+    (r'^', include('misago.apps.threads.urls')),
+    (r'^watched-threads/', include('misago.apps.watchedthreads.urls')),
 )
 
-"""
-(r'^users/', include('misago.profiles.urls')),
-(r'^usercp/', include('misago.usercp.urls')),
-(r'^register/', include('misago.register.urls')),
-(r'^activate/', include('misago.activation.urls')),
-(r'^reset-password/', include('misago.resetpswd.urls')),
-(r'^', include('misago.threads.urls')),
-(r'^', include('misago.watcher.urls')),
-url(r'^category/(?P<slug>(\w|-)+)-(?P<forum>\d+)/$', 'misago.views.category', name="category"),
-url(r'^redirect/(?P<slug>(\w|-)+)-(?P<forum>\d+)/$', 'misago.views.redirection', name="redirect"),
-url(r'^alerts/$', 'misago.alerts.views.show_alerts', name="alerts"),
-url(r'^news/$', 'misago.newsfeed.views.newsfeed', name="newsfeed"),
-url(r'^tos/$', 'misago.tos.views.forum_tos', name="tos"),
-url(r'^forum-map/$', 'misago.views.forum_map', name="forum_map"),
-url(r'^popular/$', 'misago.views.popular_threads', name="popular_threads"),
-url(r'^popular/(?P<page>[0-9]+)/$', 'misago.views.popular_threads', name="popular_threads"),
-url(r'^new/$', 'misago.views.new_threads', name="new_threads"),
-url(r'^new/(?P<page>[0-9]+)/$', 'misago.views.new_threads', name="new_threads"),
-"""
 
 # Include admin patterns
 if ADMIN_PATH:

@@ -61,7 +61,7 @@ def signin(request):
                                         )
                     remember_me.save()
                 if remember_me_token:
-                    request.cookie_jar.set('TOKEN', remember_me_token, True)
+                    request.cookiejar.set('TOKEN', remember_me_token, True)
                 request.messages.set_flash(Message(_("Welcome back, %(username)s!") % {'username': user.username}), 'success', 'security')
                 return redirect(success_redirect)
             except AuthException as e:

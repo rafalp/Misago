@@ -73,7 +73,7 @@ class Post(models.Model):
             
     def notify_mentioned(self, request, users):
         from misago.acl.builder import acl
-        from misago.acl.utils import ACLError403, ACLError404
+        from misago.acl.exceptions import ACLError403, ACLError404
         
         mentioned = self.mentions.all()
         for slug, user in users.items():

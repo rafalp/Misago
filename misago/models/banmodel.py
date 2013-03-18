@@ -8,8 +8,9 @@ BAN_NAME = 1
 BAN_EMAIL = 2
 BAN_IP = 3
 
+
 class BansManager(models.Manager):
-    def check_ban(ip=False, username=False, email=False):
+    def check_ban(self, ip=False, username=False, email=False):
         bans_model = Ban.objects.filter(Q(expires=None) | Q(expires__gt=timezone.now()))
         if not (ip and username and email):
             if ip:

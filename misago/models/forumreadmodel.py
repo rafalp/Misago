@@ -14,8 +14,10 @@ class ForumRead(models.Model):
         app_label = 'misago'
 
     def get_threads(self):
+        from misago.models import ThreadRead
+        
         threads = {}
-        for thread in ThreadRecord.objects.filter(user=self.user, forum=self.forum, updated__gte=(timezone.now() - timedelta(days=settings.READS_TRACKER_LENGTH))):
+        for thread in ThreadRead.objects.filter(user=self.user, forum=self.forum, updated__gte=(timezone.now() - timedelta(days=settings.READS_TRACKER_LENGTH))):
             threads[thread.thread_id] = thread
         return threads
 

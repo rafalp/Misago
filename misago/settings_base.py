@@ -116,20 +116,20 @@ PERMISSION_PROVIDERS = (
 
 # List of UserCP extensions
 USERCP_EXTENSIONS = (
-    'misago.apps.front.usercp.options',
-    'misago.apps.front.usercp.avatar',
-    'misago.apps.front.usercp.signature',
-    'misago.apps.front.usercp.credentials',
-    'misago.apps.front.usercp.username',
+    'misago.apps.usercp.options',
+    'misago.apps.usercp.avatar',
+    'misago.apps.usercp.signature',
+    'misago.apps.usercp.credentials',
+    'misago.apps.usercp.username',
 )
 
 # List of User Profile extensions
 PROFILE_EXTENSIONS = (
-    'misago.apps.front.profiles.posts',
-    'misago.apps.front.profiles.threads',
-    'misago.apps.front.profiles.follows',
-    'misago.apps.front.profiles.followers',
-    'misago.apps.front.profiles.details',
+    'misago.apps.profiles.posts',
+    'misago.apps.profiles.threads',
+    'misago.apps.profiles.follows',
+    'misago.apps.profiles.followers',
+    'misago.apps.profiles.details',
 )
 
 # List of Markdown Extensions

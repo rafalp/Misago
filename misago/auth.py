@@ -81,7 +81,7 @@ def auth_remember(request, ip):
         try:
             token_rk = Token.objects.select_related().get(pk=cookie_token)
         except Token.DoesNotExist:
-            request.cookie_jar.delete('TOKEN')
+            request.cookiejar.delete('TOKEN')
             raise AuthException()
 
         # See if token is not expired
@@ -97,7 +97,7 @@ def auth_remember(request, ip):
         # Update token date
         token_rk.accessed = timezone.now()
         token_rk.save(force_update=True)
-        request.cookie_jar.set('TOKEN', token_rk.id, True)
+        request.cookiejar.set('TOKEN', token_rk.id, True)
     except (AttributeError, KeyError):
         raise AuthException()
     return token_rk

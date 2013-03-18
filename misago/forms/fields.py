@@ -1,4 +1,5 @@
 from mptt.forms import TreeNodeChoiceField
+from recaptcha.client.captcha import API_SSL_SERVER, API_SERVER, VERIFY_SERVER
 from django.forms import fields
 from django.utils.html import conditional_escape, mark_safe
 from django.utils.translation import ugettext_lazy as _
