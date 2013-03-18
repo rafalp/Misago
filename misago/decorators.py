@@ -1,6 +1,6 @@
 from django.utils.translation import ugettext as _
 from misago.acl.exceptions import ACLError403, ACLError404
-from misago.apps.views import error403, error404, error_banned
+from misago.apps.errors import error403, error404, error_banned
 
 def acl_errors(f):
     def decorator(*args, **kwargs):

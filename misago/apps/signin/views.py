@@ -11,8 +11,8 @@ from misago.auth import AuthException, auth_admin, auth_forum, sign_user_in
 from misago.decorators import (block_authenticated, block_banned, block_crawlers,
                             block_guest, block_jammed, check_csrf)
 from misago.models import SignInAttempt, Token
-from misago.apps.signin.forms import SignInForm
 from misago.utils.strings import random_string
+from misago.apps.signin.forms import SignInForm
 
 @block_crawlers
 @block_banned
