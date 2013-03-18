@@ -10,7 +10,7 @@ urlpatterns = patterns('misago.apps',
     (r'^', include('misago.apps.signin.urls')),
 )
 
-    # Remove after ACP was refactored
+# Remove after ACP was refactored
 urlpatterns += patterns('',
     url(r'^users/(?P<username>\w+)-(?P<user>\d+)/$', 'misago.apps.admin.index.todo', name="user"),    
 )
