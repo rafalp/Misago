@@ -1,11 +1,12 @@
 from django.conf import settings
 from misago import __version__
-from misago.admin import site
+from misago.admin import ADMIN_PATH, site
 
 def common(request):
     try:
         return {
             'acl': request.acl,
+            'ADMIN_PATH': ADMIN_PATH,
             'board_address': settings.BOARD_ADDRESS,
             'csrf_id': request.csrf.csrf_id,
             'csrf_token': request.csrf.csrf_token,

@@ -7,6 +7,7 @@ def load():
                         'name_changes_allowed': 5,
                         'changes_expire': 7,
                         'can_use_acp': True,
+                        'can_use_mcp': True,
                         'can_use_signature': True,
                         'allow_signature_links': True,
                         'allow_signature_images': True,
@@ -22,6 +23,7 @@ def load():
     role.permissions = {
                         'name_changes_allowed': 3,
                         'changes_expire': 14,
+                        'can_use_mcp': True,
                         'can_use_signature': True,
                         'allow_signature_links': True,
                         'can_search_users': True,

@@ -4,7 +4,28 @@
 {% block body %}
 <div id="wrap">
 
-  <div class="navbar navbar-static-top">
+  {% if acl.special.can_use_mcp() %}
+  <div class="navbar navbar-inverse navbar-modbar navbar-static-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <ul class="nav">
+          <li><a href="#">Frontlines</a></li>
+          <li class="active"><a href="#">Reports <span class="label label-important">5</span></a></li>
+          <li><a href="#">Warnings</a></li>
+          <li><a href="#">Annoucements</a></li>
+        </ul>
+        <form class="navbar-form pull-right">
+          <div class="navbar-search-form">
+            <input type="text" class="span2" placeholder="{% trans %}Search IP Address...{% endtrans %}">
+            <button type="submit" class="btn btn-link"><i class="icon-search"></i></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="navbar navbar-header navbar-static-top">
     <div class="navbar-inner">
       <div class="container">
         <a href="{% url 'index' %}" class="brand">{% if settings.board_header %}{{ settings.board_header }}{% else %}{{ settings.board_name }}{% endif %}</a>
@@ -28,9 +49,8 @@
         {% if user.is_authenticated() %}
         <ul class="nav navbar-blocks pull-right">
           <li class="user-profile"><a href="{% url 'user' user=user.id, username=user.username_slug %}" title="{% trans %}Go to your profile{% endtrans %}" class="tooltip-bottom"><div><img src="{{ user.get_avatar(28) }}" alt=""> {{ user.username }}</div></a></li>
-          {#<li><a href="#" title="{% trans %}Active Reports{% endtrans %}" class="tooltip-bottom"><i class="icon-warning-sign"></i><span class="stat">5</span></a></li>#}
           <li><a href="{% url 'alerts' %}" title="{% if user.alerts %}{% trans %}You have new notifications!{% endtrans %}{% else %}{% trans %}Your Notifications{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-asterisk"></i>{% if user.alerts %}<span class="label label-important">{{ user.alerts }}</span>{% endif %}</a></li>
-          {#<li><a href="#" title="{% trans %}Private messages{% endtrans %}" class="tooltip-bottom"><i class="icon-inbox"></i><span class="stat">2</span></a></li>#}
+          <li><a href="#" title="{% trans %}Private messages{% endtrans %}" class="tooltip-bottom"><i class="icon-inbox"></i><span class="label label-important">2</span></a></li>
           <li><a href="{% url 'newsfeed' %}" title="{% trans %}Your News Feed{% endtrans %}" class="tooltip-bottom"><i class="icon-signal"></i></a></li>
           <li><a href="{% url 'watched_threads' %}" title="{% trans %}Threads you are watching{% endtrans %}" class="tooltip-bottom"><i class="icon-bookmark"></i></a></li>
           <li><a href="{% url 'usercp' %}" title="{% trans %}Edit your profile options{% endtrans %}" class="tooltip-bottom"><i class="icon-cog"></i></a></li>

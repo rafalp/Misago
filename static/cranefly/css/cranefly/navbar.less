@@ -1,7 +1,6 @@
 // Navbar
 // -------------------------
-
-.navbar {
+.navbar-header {
   .navbar-inner {
     background: none;
     background-color: @navbarBackground;
@@ -170,6 +169,114 @@
               border-color: darken(@textColor, 10%);
             }
           }
+        }
+      }
+    }
+  }
+}
+
+// Inversed navbar, used for moderation tools
+.navbar-modbar {
+  background-color: darken(@red, 15%);
+  background-image: -webkit-gradient(linear, 0 0, 100% 100%,
+              color-stop(.25, rgba(194, 74, 59, 1)), color-stop(.25, transparent),
+              color-stop(.5, transparent), color-stop(.5, rgba(194, 74, 59, 1)),
+              color-stop(.75, rgba(194, 74, 59, 1)), color-stop(.75, transparent),
+              to(transparent));
+  background-image: -webkit-linear-gradient(-45deg, rgba(194, 74, 59, 1) 25%, transparent 25%,
+            transparent 50%, rgba(194, 74, 59, 1) 50%, rgba(194, 74, 59, 1) 75%,
+            transparent 75%, transparent);
+  background-image: -moz-linear-gradient(-45deg, rgba(194, 74, 59, 1) 25%, transparent 25%,
+            transparent 50%, rgba(194, 74, 59, 1) 50%, rgba(194, 74, 59, 1) 75%,
+            transparent 75%, transparent);
+  background-image: -ms-linear-gradient(-45deg, rgba(194, 74, 59, 1) 25%, transparent 25%,
+            transparent 50%, rgba(194, 74, 59, 1) 50%, rgba(194, 74, 59, 1) 75%,
+            transparent 75%, transparent);
+  background-image: -o-linear-gradient(-45deg, rgba(194, 74, 59, 1) 25%, transparent 25%,
+            transparent 50%, rgba(194, 74, 59, 1) 50%, rgba(194, 74, 59, 1) 75%,
+            transparent 75%, transparent);
+  background-image: linear-gradient(-45deg, rgba(194, 74, 59, 1) 25%, transparent 25%,
+            transparent 50%, rgba(194, 74, 59, 1) 50%, rgba(194, 74, 59, 1) 75%,
+            transparent 75%, transparent);
+  -webkit-background-size: 15px 15px;
+  -moz-background-size: 15px 15px;
+  background-size: 15px 15px;
+  padding-bottom: 6px;
+
+  .navbar-inner {
+    background: none;
+    background-color: @grayDarker;
+    background-image: -webkit-gradient(linear, 0 0, 100% 100%,
+                color-stop(.25, rgba(0, 0, 0, 0.1)), color-stop(.25, transparent),
+                color-stop(.5, transparent), color-stop(.5, rgba(0, 0, 0, 0.1)),
+                color-stop(.75, rgba(0, 0, 0, 0.1)), color-stop(.75, transparent),
+                to(transparent));
+    background-image: -webkit-linear-gradient(-45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%,
+              transparent 50%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.1) 75%,
+              transparent 75%, transparent);
+    background-image: -moz-linear-gradient(-45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%,
+              transparent 50%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.1) 75%,
+              transparent 75%, transparent);
+    background-image: -ms-linear-gradient(-45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%,
+              transparent 50%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.1) 75%,
+              transparent 75%, transparent);
+    background-image: -o-linear-gradient(-45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%,
+              transparent 50%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.1) 75%,
+              transparent 75%, transparent);
+    background-image: linear-gradient(-45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%,
+              transparent 50%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.1) 75%,
+              transparent 75%, transparent);
+    -webkit-background-size: 15px 15px;
+    -moz-background-size: 15px 15px;
+    background-size: 15px 15px;
+    min-height: 1px;
+
+    .nav {
+      a:link, a:visited {
+        padding: @fontSizeMini (@fontSizeMini * 1.4);
+
+        color: darken(@white, 30%);
+        text-shadow: 0px 1px 0px @black;
+      }
+
+      a:hover, a:active {
+        color: @white;
+      }
+
+      li.active {
+        a:link, a:visited {
+          color: @white;
+        }
+      }
+    }
+
+    .navbar-search-form {
+      background-color: darken(@grayDark, 15%);
+      border-radius: @baseBorderRadius;
+      margin-top: ((@navbarHeight - @baseLineHeight) / 2) - 9px;
+      padding: 1px 0px;
+
+      input {
+        background-color: darken(@grayDark, 15%);
+        border: none;
+        .box-shadow(none);
+        margin: 0px;
+
+        color: @grayLighter;
+        text-shadow: 0px 1px 0px @black;
+      }
+
+      button {
+        margin: 0px;
+        .opacity(60);
+
+        i {
+          background-image: url("@{iconWhiteSpritePath}");
+          .opacity(100);
+        }
+
+        &:hover, &:active {
+          .opacity(100);
         }
       }
     }
