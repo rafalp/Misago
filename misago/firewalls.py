@@ -2,7 +2,7 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import ADMIN_PATH
 from misago.messages import Message
-from misago.apps.views import error403, error404
+from misago.apps.errors import error403, error404
 from misago.apps.signin.views import signin
 
 class FirewallForum(object):

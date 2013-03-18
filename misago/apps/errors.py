@@ -1,18 +1,5 @@
-from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
 from django.template import RequestContext
 
-def redirect_message(request, message, type='info', owner=None):
-    """
-    Set flash message and redirect to board index.
-    """
-    request.messages.set_flash(message, type, owner)
-    return redirect(reverse('index'))
-
-
-"""
-Error views
-"""
 def error_view(request, error, message):
     response = request.theme.render_to_response(('error%s.html' % error),
                                                 {

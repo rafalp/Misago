@@ -6,7 +6,7 @@ from misago.forms import Form, FormLayout, FormFields
 from misago.messages import Message
 from misago.search import SearchQuery, SearchException
 from misago.models import SettingsGroup, Setting
-from misago.apps.views import error404
+from misago.apps.errors import error404
 from misago.apps.admin.settings.forms import SearchForm
 
 def settings(request, group_id=None, group_slug=None):

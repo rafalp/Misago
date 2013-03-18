@@ -9,7 +9,7 @@ from django.utils.translation import ugettext as _
 from misago.forms import FormLayout
 from misago.messages import Message
 from misago.apps.admin.stats.forms import GenerateStatisticsForm
-from misago.apps.views import error404
+from misago.apps.errors import error404
 
 def form(request):
     """
