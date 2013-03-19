@@ -54,7 +54,7 @@
             {%- endif %}"><i class="icon-comment"></i></a>
             <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="thread-name">{{ thread.name }}</a>
             <span class="thread-details">
-              {% trans user=thread_starter(thread), start=thread.start|reldate|low %}by {{ user }} {{ start }}{% endtrans %}
+              {% trans user=thread_starter(thread), start=thread.start|reltimesince|low %}by {{ user }} {{ start }}{% endtrans %}
             </span>
             <ul class="unstyled thread-flags">
               {% if thread.replies_reported %}

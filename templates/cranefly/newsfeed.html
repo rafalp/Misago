@@ -23,9 +23,9 @@
       <div class="media-body">
         <a href="{% url 'thread_find' thread=item.thread.pk, slug=item.thread.slug, post=item.pk %}" class="post-preview">{{ item.post_preparsed|markdown_short(300) }}</a>
         <div class="media-footer">{% if item.thread.start_post_id == item.pk -%}
-        {% trans thread=thread(item), forum=forum(item.forum), user=username(item.user), date=item.date|reldate|low %}Thread {{ thread }} posted in {{ forum }} by {{ user }} {{ date }}{% endtrans %}
+        {% trans thread=thread(item), forum=forum(item.forum), user=username(item.user), date=item.date|reltimesince|low %}Thread {{ thread }} posted in {{ forum }} by {{ user }} {{ date }}{% endtrans %}
         {%- else -%}
-        {% trans thread=thread(item), forum=forum(item.forum), user=username(item.user), date=item.date|reldate|low %}Reply to {{ thread }} posted in {{ forum }} by {{ user }} {{ date }}{% endtrans %}
+        {% trans thread=thread(item), forum=forum(item.forum), user=username(item.user), date=item.date|reltimesince|low %}Reply to {{ thread }} posted in {{ forum }} by {{ user }} {{ date }}{% endtrans %}
         {%- endif %}</div>
       </div>
     </div>

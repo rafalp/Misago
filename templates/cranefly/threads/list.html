@@ -127,7 +127,7 @@
           </td>
           <td>
             <div class="thread-last-reply">
-              {{ replies(thread.replies) }} - {% trans user=thread_reply(thread), last=thread.last|reldate|low %}last by {{ user }} {{ last }}{% endtrans %}
+              {{ replies(thread.replies) }} - {% trans user=thread_reply(thread), last=thread.last|reltimesince|low %}last by {{ user }} {{ last }}{% endtrans %}
             </div>
           </td>
           {% if user.is_authenticated() and list_form %}

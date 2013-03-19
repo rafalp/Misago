@@ -24,7 +24,7 @@
     </a>
     <div class="media-body">
       <a href="{% url 'thread' thread=item.pk, slug=item.slug %}" class="post-preview">{{ item.start_post.post_preparsed|markdown_short(300) }}</a>
-      <div class="media-footer">{% trans thread=thread(item), forum=forum(item.forum), date=item.start|reldate|low %}Thread {{ thread }} posted in {{ forum }} {{ date }}{% endtrans %}</div>
+      <div class="media-footer">{% trans thread=thread(item), forum=forum(item.forum), date=item.start|reltimesince|low %}Thread {{ thread }} posted in {{ forum }} {{ date }}{% endtrans %}</div>
     </div>
   </div>
   <hr>
