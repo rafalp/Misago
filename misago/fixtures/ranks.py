@@ -4,7 +4,7 @@ from misago.utils.translation import ugettext_lazy as _
 def load():
     Rank.objects.create(
                         name=_("Forum Team").message,
-                        name_slug='forum-team',
+                        slug='forum-team',
                         title=_("Forum Team").message,
                         style='team',
                         special=True,
@@ -15,7 +15,7 @@ def load():
 
     Rank.objects.create(
                         name=_("Most Valuable Posters").message,
-                        name_slug='most-valuable-posters',
+                        slug='most-valuable-posters',
                         title=_("MVP").message,
                         style='mvp',
                         special=True,
@@ -25,7 +25,7 @@ def load():
 
     Rank.objects.create(
                         name=_("Top Posters").message,
-                        name_slug='top-posters',
+                        slug='top-posters',
                         title="Top",
                         style='top',
                         order=2,
@@ -35,14 +35,14 @@ def load():
 
     Rank.objects.create(
                         name=_("Members").message,
-                        name_slug='members',
+                        slug='members',
                         order=4,
                         criteria="75%"
                         )
 
     Rank.objects.create(
                         name=_("Lurkers").message,
-                        name_slug='lurkers',
+                        slug='lurkers',
                         order=5,
                         criteria="100%"
                         )

@@ -84,7 +84,7 @@ class New(FormWidget):
         last_rank = Rank.objects.latest('order')
         new_rank = Rank(
                       name=form.cleaned_data['name'],
-                      name_slug=slugify(form.cleaned_data['name']),
+                      slug=slugify(form.cleaned_data['name']),
                       description=form.cleaned_data['description'],
                       style=form.cleaned_data['style'],
                       title=form.cleaned_data['title'],
@@ -128,7 +128,7 @@ class Edit(FormWidget):
 
     def submit_form(self, form, target):
         target.name = form.cleaned_data['name']
-        target.name_slug = slugify(form.cleaned_data['name'])
+        target.slug = slugify(form.cleaned_data['name'])
         target.description = form.cleaned_data['description']
         target.style = form.cleaned_data['style']
         target.title = form.cleaned_data['title']
