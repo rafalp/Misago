@@ -24,25 +24,25 @@ def load():
                         )
 
     Rank.objects.create(
-                        name=_("Lurkers").message,
-                        name_slug='lurkers',
-                        order=1,
-                        criteria="100%"
+                        name=_("Top Posters").message,
+                        name_slug='top-posters',
+                        title="Top",
+                        style='top',
+                        order=2,
+                        criteria="10%",
+                        as_tab=True,
                         )
 
     Rank.objects.create(
                         name=_("Members").message,
                         name_slug='members',
-                        order=2,
+                        order=4,
                         criteria="75%"
                         )
 
     Rank.objects.create(
-                        name=_("Top Posters").message,
-                        name_slug='top-posters',
-                        title="Top",
-                        style='top',
-                        order=3,
-                        criteria="10%",
-                        as_tab=True,
+                        name=_("Lurkers").message,
+                        name_slug='lurkers',
+                        order=5,
+                        criteria="100%"
                         )
