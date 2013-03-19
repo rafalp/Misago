@@ -24,7 +24,7 @@ class Role(models.Model):
     
     @property
     def special(self):
-        return _special
+        return self._special
 
     @property
     def permissions(self):
