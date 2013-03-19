@@ -102,8 +102,8 @@
 <div class="pagination">
   <ul>
     <li class="count">{{ macros.pager_label(pagination) }}</li>
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'users' rank_slug=active_rank.rank_slug, page=pagination['prev'] %}{% else %}{% url 'users' rank_slug=active_rank.rank_slug %}{% endif %}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{% url 'users' rank_slug=active_rank.rank_slug, page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'users' rank_slug=active_rank.name_slug, page=pagination['prev'] %}{% else %}{% url 'users' rank_slug=active_rank.name_slug %}{% endif %}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{% url 'users' rank_slug=active_rank.name_slug, page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
   </ul>
 </div>
 {% endif %}

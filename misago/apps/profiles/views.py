@@ -69,7 +69,7 @@ def list(request, rank_slug=None, page=1):
         if active_rank:
             users = User.objects.filter(rank=active_rank)
             items_total = users.count()
-            pagination = make_pagination(page, items_total, 4)
+            pagination = make_pagination(page, items_total, 24)
             users = users.order_by('username_slug')[pagination['start']:pagination['stop']]
 
     return request.theme.render_to_response('profiles/list.html',
