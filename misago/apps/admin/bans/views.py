@@ -46,8 +46,8 @@ class List(ListWidget):
             model = model.filter(ban__contains=filters['ban'])
         if 'reason' in filters:
             model = model.filter(Q(reason_user__contains=filters['reason']) | Q(reason_admin__contains=filters['reason']))
-        if 'type' in filters:
-            model = model.filter(type__in=filters['type'])
+        if 'test' in filters:
+            model = model.filter(test__in=filters['test'])
         return model
 
     def get_item_actions(self, item):
@@ -80,7 +80,7 @@ class New(FormWidget):
 
     def submit_form(self, form, target):
         new_ban = Ban(
-                      type=form.cleaned_data['type'],
+                      test=form.cleaned_data['test'],
                       ban=form.cleaned_data['ban'],
                       reason_user=form.cleaned_data['reason_user'],
                       reason_admin=form.cleaned_data['reason_admin'],
@@ -112,7 +112,7 @@ class Edit(FormWidget):
 
     def get_initial_data(self, model):
         return {
-                'type': model.type,
+                'test': model.test,
                 'ban': model.ban,
                 'reason_user': model.reason_user,
                 'reason_admin': model.reason_admin,
@@ -120,7 +120,7 @@ class Edit(FormWidget):
                 }
 
     def submit_form(self, form, target):
-        target.type = form.cleaned_data['type']
+        target.test = form.cleaned_data['test']
         target.ban = form.cleaned_data['ban']
         target.reason_user = form.cleaned_data['reason_user']
         target.reason_admin = form.cleaned_data['reason_admin']
@@ -142,11 +142,11 @@ class Delete(ButtonWidget):
     def action(self, target):
         target.delete()
         self.request.monitor['bans_version'] = int(self.request.monitor['bans_version']) + 1
-        if target.type == 0:
+        if target.test == 0:
             return Message(_('E-mail and username Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, 'success'), False
-        if target.type == 1:
+        if target.test == 1:
             return Message(_('Username Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, 'success'), False
-        if target.type == 2:
+        if target.test == 2:
             return Message(_('E-mail Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, 'success'), False
-        if target.type == 3:
+        if target.test == 3:
             return Message(_('IP Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, 'success'), False
