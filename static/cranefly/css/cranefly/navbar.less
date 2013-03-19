@@ -177,32 +177,6 @@
 
 // Inversed navbar, used for moderation tools
 .navbar-modbar {
-  background-color: darken(@red, 15%);
-  background-image: -webkit-gradient(linear, 0 0, 100% 100%,
-              color-stop(.25, rgba(194, 74, 59, 1)), color-stop(.25, transparent),
-              color-stop(.5, transparent), color-stop(.5, rgba(194, 74, 59, 1)),
-              color-stop(.75, rgba(194, 74, 59, 1)), color-stop(.75, transparent),
-              to(transparent));
-  background-image: -webkit-linear-gradient(-45deg, rgba(194, 74, 59, 1) 25%, transparent 25%,
-            transparent 50%, rgba(194, 74, 59, 1) 50%, rgba(194, 74, 59, 1) 75%,
-            transparent 75%, transparent);
-  background-image: -moz-linear-gradient(-45deg, rgba(194, 74, 59, 1) 25%, transparent 25%,
-            transparent 50%, rgba(194, 74, 59, 1) 50%, rgba(194, 74, 59, 1) 75%,
-            transparent 75%, transparent);
-  background-image: -ms-linear-gradient(-45deg, rgba(194, 74, 59, 1) 25%, transparent 25%,
-            transparent 50%, rgba(194, 74, 59, 1) 50%, rgba(194, 74, 59, 1) 75%,
-            transparent 75%, transparent);
-  background-image: -o-linear-gradient(-45deg, rgba(194, 74, 59, 1) 25%, transparent 25%,
-            transparent 50%, rgba(194, 74, 59, 1) 50%, rgba(194, 74, 59, 1) 75%,
-            transparent 75%, transparent);
-  background-image: linear-gradient(-45deg, rgba(194, 74, 59, 1) 25%, transparent 25%,
-            transparent 50%, rgba(194, 74, 59, 1) 50%, rgba(194, 74, 59, 1) 75%,
-            transparent 75%, transparent);
-  -webkit-background-size: 15px 15px;
-  -moz-background-size: 15px 15px;
-  background-size: 15px 15px;
-  padding-bottom: 6px;
-
   .navbar-inner {
     background: none;
     background-color: @grayDarker;
@@ -229,6 +203,7 @@
     -webkit-background-size: 15px 15px;
     -moz-background-size: 15px 15px;
     background-size: 15px 15px;
+    border-bottom: 2px dashed @red;
     min-height: 1px;
 
     .nav {
