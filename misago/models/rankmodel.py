@@ -9,7 +9,7 @@ class Rank(models.Model):
     Ranks are ready style/title pairs that are assigned to users either by admin (special ranks) or as result of user activity.
     """
     name = models.CharField(max_length=255)
-    name_slug = models.CharField(max_length=255, null=True, blank=True)
+    slug = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     style = models.CharField(max_length=255, null=True, blank=True)
     title = models.CharField(max_length=255, null=True, blank=True)

@@ -20,6 +20,6 @@ for extension in settings.PROFILE_EXTENSIONS:
         pass
 
 urlpatterns += patterns('misago.apps.profiles.views',
-    url(r'^(?P<rank_slug>(\w|-)+)/$', 'list', name="users"),
-    url(r'^(?P<rank_slug>(\w|-)+)/(?P<page>[0-9]+)/$', 'list', name="users"),
+    url(r'^(?P<slug>(\w|-)+)/$', 'list', name="users"),
+    url(r'^(?P<slug>(\w|-)+)/(?P<page>[0-9]+)/$', 'list', name="users"),
 )

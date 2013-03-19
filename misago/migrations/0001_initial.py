@@ -226,7 +226,7 @@ class Migration(SchemaMigration):
         db.create_table(u'misago_rank', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('name_slug', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
+            ('slug', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
             ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('style', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
             ('title', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
@@ -739,9 +739,9 @@ class Migration(SchemaMigration):
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'name_slug': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'on_index': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'order': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'slug': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'special': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'style': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'})

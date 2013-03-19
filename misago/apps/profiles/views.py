@@ -9,15 +9,15 @@ from misago.utils.strings import slugify
 from misago.utils.pagination import make_pagination
 from misago.apps.profiles.forms import QuickFindUserForm
 
-def list(request, rank_slug=None, page=1):
+def list(request, slug=None, page=1):
     ranks = Rank.objects.filter(as_tab=1).order_by('order')
 
     # Find active rank
     default_rank = False
     active_rank = None
-    if rank_slug:
+    if slug:
         for rank in ranks:
-            if rank.name_slug == rank_slug:
+            if rank.slug == slug:
                 active_rank = rank
         if not active_rank:
             return error404(request)
@@ -69,7 +69,7 @@ def list(request, rank_slug=None, page=1):
         if active_rank:
             users = User.objects.filter(rank=active_rank)
             items_total = users.count()
-            pagination = make_pagination(page, items_total, 24)
+            pagination = make_pagination(page, items_total, request.settings['profiles_per_list'])
             users = users.order_by('username_slug')[pagination['start']:pagination['stop']]
 
     return request.theme.render_to_response('profiles/list.html',

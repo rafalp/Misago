@@ -88,6 +88,14 @@ settings_fixture = (
                                              )},
                 'name':         _("Watch threads user replied in"),
             }),
+            ('profiles_per_list', {
+                'value':        24,
+                'type':         "integer",
+                'input':        "string",
+                'extra':        {'min': 1, 'max': 128},
+                'separator':    _("Users List"),
+                'name':         _("Number of Profiles Per Page"),
+            }),
         ),
     }),
 )
