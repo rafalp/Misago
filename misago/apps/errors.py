@@ -1,5 +1,10 @@
 from django.template import RequestContext
 
+def error_not_implemented(request, *args, **kwargs):
+    """Generic "NOT IMPLEMENTED!" Error"""
+    raise NotImplemenetedError("This action is not implemented!")
+
+
 def error_view(request, error, message):
     response = request.theme.render_to_response(('error%s.html' % error),
                                                 {

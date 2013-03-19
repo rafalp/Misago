@@ -11,9 +11,9 @@ class Role(models.Model):
     Misago User Role model
     """
     name = models.CharField(max_length=255)
-    token = models.CharField(max_length=255,null=True,blank=True)
+    _special = models.CharField(db_column='special', max_length=255,null=True,blank=True)
     protected = models.BooleanField(default=False)
-    _permissions = models.TextField(db_column = 'permissions', null=True, blank=True)
+    _permissions = models.TextField(db_column='permissions', null=True, blank=True)
     permissions_cache = {}
 
     class Meta:
@@ -22,8 +22,9 @@ class Role(models.Model):
     def __unicode__(self):
         return unicode(_(self.name))
     
-    def is_special(self):
-        return token
+    @property
+    def special(self):
+        return _special
 
     @property
     def permissions(self):

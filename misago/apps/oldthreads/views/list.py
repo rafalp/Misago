@@ -32,7 +32,7 @@ class ThreadsView(BaseView):
         self.pagination = make_pagination(page, self.count, self.request.settings.threads_per_page)
         self.threads = []
         ignored_users = []
-        queryset_anno = Thread.objects.filter(Q(forum=Forum.objects.token_to_pk('annoucements')) | (Q(forum=self.forum) & Q(weight=2)))
+        queryset_anno = Thread.objects.filter(Q(forum=Forum.objects.special_pk('announcements')) | (Q(forum=self.forum) & Q(weight=2)))
         queryset_threads = self.request.acl.threads.filter_threads(self.request, self.forum, Thread.objects.filter(forum=self.forum).filter(weight__lt=2)).order_by('-weight', '-last')
         if self.request.user.is_authenticated():
             ignored_users = self.request.user.ignored_users()
@@ -58,7 +58,7 @@ class ThreadsView(BaseView):
             if acl['can_approve']:
                 actions.append(('accept', _('Accept threads')))
             if acl['can_pin_threads'] == 2:
-                actions.append(('annouce', _('Change to annoucements')))
+                actions.append(('annouce', _('Change to announcements')))
             if acl['can_pin_threads'] > 0:
                 actions.append(('sticky', _('Change to sticky threads')))
             if acl['can_pin_threads'] > 0:
@@ -174,7 +174,7 @@ class ThreadsView(BaseView):
                 annouced.append(thread.pk)
         if annouced:
             Thread.objects.filter(id__in=annouced).update(weight=2)
-            self.request.messages.set_flash(Message(_('Selected threads have been turned into annoucements.')), 'success', 'threads')
+            self.request.messages.set_flash(Message(_('Selected threads have been turned into announcements.')), 'success', 'threads')
 
     def action_sticky(self, ids):
         acl = self.request.acl.threads.get_role(self.forum)

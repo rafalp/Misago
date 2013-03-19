@@ -78,7 +78,7 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('parent', self.gf('mptt.fields.TreeForeignKey')(blank=True, related_name='children', null=True, to=orm['misago.Forum'])),
             ('type', self.gf('django.db.models.fields.CharField')(max_length=12)),
-            ('token', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
+            ('special', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('slug', self.gf('django.db.models.fields.SlugField')(max_length=255)),
             ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
@@ -242,7 +242,7 @@ class Migration(SchemaMigration):
         db.create_table(u'misago_role', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('token', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
+            ('_special', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, db_column='special', blank=True)),
             ('protected', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('_permissions', self.gf('django.db.models.fields.TextField')(null=True, db_column='permissions', blank=True)),
         ))
@@ -642,10 +642,10 @@ class Migration(SchemaMigration):
             'rght': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
             'show_details': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length': '255'}),
+            'special': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'style': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'threads': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'threads_delta': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'token': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'tree_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
             'type': ('django.db.models.fields.CharField', [], {'max_length': '12'})
         },
@@ -749,10 +749,10 @@ class Migration(SchemaMigration):
         'misago.role': {
             'Meta': {'object_name': 'Role'},
             '_permissions': ('django.db.models.fields.TextField', [], {'null': 'True', 'db_column': "'permissions'", 'blank': 'True'}),
+            '_special': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'db_column': "'special'", 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'protected': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'token': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'})
+            'protected': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
         },
         'misago.session': {
             'Meta': {'object_name': 'Session'},

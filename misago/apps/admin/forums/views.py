@@ -32,7 +32,7 @@ class List(ListWidget):
     empty_message = _('No forums are currently defined.')
 
     def get_items(self):
-        return self.admin.model.objects.get(token='root').get_descendants()
+        return self.admin.model.objects.get(special='root').get_descendants()
 
     def sort_items(self, page_items, sorting_method):
         return page_items.order_by('lft')
@@ -138,7 +138,7 @@ class NewForum(FormWidget):
         return new_forum, Message(_('New Forum has been created.'), 'success')
 
     def __call__(self, request):
-        if self.admin.model.objects.get(token='root').get_descendants().count() == 0:
+        if self.admin.model.objects.get(special='root').get_descendants().count() == 0:
             request.messages.set_flash(Message(_("You have to create at least one category before you will be able to create forums.")), 'error', self.admin.id)
             return redirect(self.get_fallback_url())
         return super(NewForum, self).__call__(request)
@@ -176,7 +176,7 @@ class NewRedirect(FormWidget):
         return new_forum, Message(_('New Redirect has been created.'), 'success')
 
     def __call__(self, request):
-        if self.admin.model.objects.get(token='root').get_descendants().count() == 0:
+        if self.admin.model.objects.get(special='root').get_descendants().count() == 0:
             request.messages.set_flash(Message(_("You have to create at least one category before you will be able to create redirects.")), 'error', self.admin.id)
             return redirect(self.get_fallback_url())
         return super(NewRedirect, self).__call__(request)
@@ -237,7 +237,7 @@ class Edit(FormWidget):
 
     def get_form_instance(self, form, target, initial, post=False):
         form_inst = super(Edit, self).get_form_instance(form, target, initial, post)
-        valid_targets = Forum.tree.get(token='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
+        valid_targets = Forum.tree.get(special='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
         form_inst.fields['parent'] = TreeNodeChoiceField(queryset=valid_targets, level_indicator=u'- - ')
         return form_inst
 
@@ -322,7 +322,7 @@ class Delete(FormWidget):
             form_inst = form(forum=target, request=self.request, initial=self.get_initial_data(target))
         if target.type != 'forum':
             del form_inst.fields['contents']
-        valid_targets = Forum.tree.get(token='root').get_descendants().exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
+        valid_targets = Forum.tree.get(special='root').get_descendants().exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
         form_inst.fields['subforums'] = TreeNodeChoiceField(queryset=valid_targets, required=False, empty_label=_("Remove with forum"), level_indicator=u'- - ')
         return form_inst
 

@@ -340,7 +340,7 @@ class ThreadView(BaseView):
             if acl['can_approve'] and self.thread.moderated:
                 actions.append(('accept', _('Accept this thread')))
             if acl['can_pin_threads'] == 2 and self.thread.weight < 2:
-                actions.append(('annouce', _('Change this thread to annoucement')))
+                actions.append(('annouce', _('Change this thread to announcement')))
             if acl['can_pin_threads'] > 0 and self.thread.weight != 1:
                 actions.append(('sticky', _('Change this thread to sticky')))
             if acl['can_pin_threads'] > 0:
@@ -419,7 +419,7 @@ class ThreadView(BaseView):
     def thread_action_annouce(self):
         self.thread.weight = 2
         self.thread.save(force_update=True)
-        self.request.messages.set_flash(Message(_('Thread has been turned into annoucement.')), 'success', 'threads')
+        self.request.messages.set_flash(Message(_('Thread has been turned into announcement.')), 'success', 'threads')
 
     def thread_action_sticky(self):
         self.thread.weight = 1

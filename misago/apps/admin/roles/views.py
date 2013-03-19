@@ -44,7 +44,7 @@ class List(ListWidget):
     def action_delete(self, items, checked):
         for item in items:
             if unicode(item.pk) in checked:
-                if item.token:
+                if item.special:
                     return Message(_('You cannot delete system roles.'), 'error'), reverse('admin_roles')
                 if item.protected and not self.request.user.is_god():
                     return Message(_('You cannot delete protected roles.'), 'error'), reverse('admin_roles')
@@ -127,16 +127,16 @@ class Forums(ListWidget):
         return reverse('admin_roles_masks', self.role) 
     
     def get_items(self):
-        return Forum.objects.get(token='root').get_descendants()
+        return Forum.objects.get(special='root').get_descendants()
     
     def sort_items(self, page_items, sorting_method):
         final_items = []
-        for forum in Forum.objects.filter(token__in=['annoucements', 'reports', 'private']).order_by('token'):
-            if forum.token == 'annoucements':
-                forum.name = _("Global Annoucements")
-            if forum.token == 'reports':
+        for forum in Forum.objects.filter(special__in=['announcements', 'reports', 'private']).order_by('special'):
+            if forum.special == 'announcements':
+                forum.name = _("Global Announcements")
+            if forum.special == 'reports':
                 forum.name = _("Reports")
-            if forum.token == 'private':
+            if forum.special == 'private':
                 forum.name = _("Private Discussions")
             final_items.append(forum)
         for forum in page_items.order_by('lft').all():
@@ -249,7 +249,7 @@ class Delete(ButtonWidget):
     notfound_message = _('Requested Role could not be found.')
     
     def action(self, target):
-        if target.token:
+        if target.special:
             return Message(_('You cannot delete system roles.'), 'error'), reverse('admin_roles')
         if target.protected and not self.request.user.is_god():
             return Message(_('This role is protected.'), 'error'), reverse('admin_roles')

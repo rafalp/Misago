@@ -4,11 +4,11 @@ from misago.utils.fixtures import load_monitor_fixture
 from misago.utils.strings import slugify
 
 def load():
-    Forum(token='annoucements', name='annoucements', slug='annoucements', type='forum').insert_at(None, save=True)
-    Forum(token='private', name='private', slug='private', type='forum').insert_at(None, save=True)
-    Forum(token='reports', name='reports', slug='reports', type='forum').insert_at(None, save=True)
+    Forum(special='announcements', name='announcements', slug='announcements', type='forum').insert_at(None, save=True)
+    Forum(special='private', name='private', slug='private', type='forum').insert_at(None, save=True)
+    Forum(special='reports', name='reports', slug='reports', type='forum').insert_at(None, save=True)
 
-    root = Forum(token='root', name='root', slug='root')
+    root = Forum(special='root', name='root', slug='root')
     root.insert_at(None, save=True)
     cat = Forum(type='category', name='First Category', slug='first-category')
     cat.insert_at(root, save=True)

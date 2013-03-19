@@ -27,7 +27,7 @@ class Command(BaseCommand):
 
         # Set admin role
         if options['admin']:
-            new_user.roles.add(Role.objects.get(token='admin'))
+            new_user.roles.add(Role.objects.get(_special='admin'))
             new_user.make_acl_key(True)
             new_user.save(force_update=True)
 

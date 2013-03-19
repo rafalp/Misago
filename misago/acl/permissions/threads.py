@@ -48,7 +48,7 @@ def make_forum_form(request, role, form):
     form.base_fields['can_pin_threads'] = forms.TypedChoiceField(choices=(
                                                                  (0, _("No")),
                                                                  (1, _("Yes, to stickies")),
-                                                                 (2, _("Yes, to annoucements")),
+                                                                 (2, _("Yes, to announcements")),
                                                                  ), coerce=int)
     form.base_fields['can_edit_threads_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_move_threads_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
@@ -121,7 +121,7 @@ def make_forum_form(request, role, form):
                          ('can_approve', {'label': _("Can accept threads and posts")}),
                          ('can_edit_labels', {'label': _("Can edit thread labels")}),
                          ('can_see_changelog', {'label': _("Can see edits history")}),
-                         ('can_make_annoucements', {'label': _("Can make annoucements")}),
+                         ('can_make_announcements', {'label': _("Can make announcements")}),
                          ('can_pin_threads', {'label': _("Can change threads weight")}),
                          ('can_edit_threads_posts', {'label': _("Can edit threads and posts")}),
                          ('can_move_threads_posts', {'label': _("Can move, merge and split threads and posts")}),
@@ -560,7 +560,7 @@ def build_forums(acl, perms, forums, forum_roles):
                      'can_approve': False,
                      'can_edit_labels': False,
                      'can_see_changelog': False,
-                     'can_make_annoucements': False,
+                     'can_make_announcements': False,
                      'can_pin_threads': 0,
                      'can_edit_threads_posts': False,
                      'can_move_threads_posts': False,

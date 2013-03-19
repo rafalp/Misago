@@ -85,7 +85,7 @@ class UserManager(models.Manager):
         # Set user roles?
         if not no_roles:
             from misago.models import Role
-            new_user.roles.add(Role.objects.get(token='registered'))
+            new_user.roles.add(Role.objects.get(_special='registered'))
             new_user.make_acl_key()
             new_user.save(force_update=True)
 
@@ -514,7 +514,7 @@ class Guest(object):
 
     def get_roles(self):
         from misago.models import Role
-        return Role.objects.filter(token='guest')
+        return Role.objects.filter(_special='guest')
 
     def make_acl_key(self):
         return 'acl_guest'

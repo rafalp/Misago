@@ -8,12 +8,13 @@ from misago.signals import delete_forum_content, move_forum_content, rename_user
 class ForumManager(models.Manager):
     forums_tree = None
 
-    def token_to_pk(self, token):
+    def special_pk(self, name):
         self.populate_tree()
-        try:
-            return self.forums_tree[token].pk
-        except KeyError:
-            return 0
+        return self.forums_tree[name].pk
+
+    def special_model(self, name):
+        self.populate_tree()
+        return self.forums_tree[name]
 
     def populate_tree(self, force=False):
         if not self.forums_tree:
@@ -22,8 +23,8 @@ class ForumManager(models.Manager):
             self.forums_tree = {}
             for forum in Forum.objects.order_by('lft'):
                 self.forums_tree[forum.pk] = forum
-                if forum.token:
-                    self.forums_tree[forum.token] = forum
+                if forum.special:
+                    self.forums_tree[forum.special] = forum
             cache.set('forums_tree', self.forums_tree)
 
     def forum_parents(self, forum, include_self=False):
@@ -114,7 +115,7 @@ class ForumManager(models.Manager):
 class Forum(MPTTModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
     type = models.CharField(max_length=12)
-    token = models.CharField(max_length=255, null=True, blank=True)
+    special = models.CharField(max_length=255, null=True, blank=True)
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
     description = models.TextField(null=True, blank=True)
@@ -151,7 +152,13 @@ class Forum(MPTTModel):
         super(Forum, self).delete(*args, **kwargs)
 
     def __unicode__(self):
-        if self.token == 'root':
+        if self.special == 'announcements':
+           return unicode(_('Global Announcements'))
+        if self.special == 'private':
+           return unicode(_('Private Threads'))
+        if self.special == 'reports':
+           return unicode(_('Content Report'))
+        if self.special == 'root':
            return unicode(_('Root Category'))
         return unicode(self.name)
 

@@ -60,7 +60,8 @@ def acl(request, user):
 
 def build_acl(request, roles):
     acl = ACL(request.monitor['acl_version'])
-    forums = Forum.objects.get(token='root').get_descendants().order_by('lft')
+    forums = (Forum.objects.filter(special__in=('announcements', 'private', 'reports'))
+              | Forum.objects.get(special='root').get_descendants().order_by('lft'))
     perms = []
     forum_roles = {}
 

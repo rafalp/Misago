@@ -182,12 +182,10 @@
 {% macro get_button() -%}
 {% if mode == 'new_thread' -%}
 {% trans %}Post Thread{% endtrans %}
-{%- elif mode == 'edit_thread' -%}
-{% trans %}Edit Thread{% endtrans %}
 {%- elif mode in ['new_post', 'new_post_quick'] -%}
 {% trans %}Post Reply{% endtrans %}
-{%- elif mode == 'edit_post' -%}
-{% trans %}Edit Reply{% endtrans %}
+{%- else -%}
+{% trans %}Save Changes{% endtrans %}
 {%- endif %}
 {%- endmacro %}
 

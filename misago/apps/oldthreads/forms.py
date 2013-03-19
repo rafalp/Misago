@@ -90,7 +90,7 @@ class SplitThreadForm(Form, ThreadNameMixin):
                                                                                     _("Thread name must contain at least one alpha-numeric character."),
                                                                                     _("Thread name is too long. Try shorter name.")
                                                                                     )])
-        self.fields['thread_forum'] = ForumChoiceField(queryset=Forum.tree.get(token='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']))
+        self.fields['thread_forum'] = ForumChoiceField(queryset=Forum.tree.get(special='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']))
 
     def clean_thread_forum(self):
         new_forum = self.cleaned_data['thread_forum']
@@ -149,7 +149,7 @@ class MoveThreadsForm(Form):
         super(MoveThreadsForm, self).__init__(data, request=request, *args, **kwargs)
 
     def finalize_form(self):
-        self.fields['new_forum'] = ForumChoiceField(queryset=Forum.tree.get(token='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']))
+        self.fields['new_forum'] = ForumChoiceField(queryset=Forum.tree.get(special='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']))
         self.layout = [
                        [
                         None,
@@ -175,7 +175,7 @@ class MergeThreadsForm(Form, ThreadNameMixin):
         super(MergeThreadsForm, self).__init__(data, request=request, *args, **kwargs)
 
     def finalize_form(self):
-        self.fields['new_forum'] = ForumChoiceField(queryset=Forum.tree.get(token='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']), initial=self.threads[0].forum)
+        self.fields['new_forum'] = ForumChoiceField(queryset=Forum.tree.get(special='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']), initial=self.threads[0].forum)
         self.fields['thread_name'] = forms.CharField(
                                                      max_length=self.request.settings['thread_name_max'],
                                                      initial=self.threads[0].name,

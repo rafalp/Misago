@@ -6,7 +6,7 @@ from misago.acl.builder import BaseACL
 from misago.forms import YesNoSwitch
 
 def make_form(request, role, form):
-    if role.token != 'guest':
+    if role.special != 'guest':
         form.base_fields['name_changes_allowed'] = forms.IntegerField(min_value=0, initial=1)
         form.base_fields['changes_expire'] = forms.IntegerField(min_value=0, initial=0)
         form.base_fields['can_use_signature'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
