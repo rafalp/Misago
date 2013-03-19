@@ -62,7 +62,7 @@ class NewReplyView(JumpView):
         if not self.request.user.is_authenticated():
             return self.redirect(self.thread.post_set.order_by('-id')[:1][0])
         tracker = ThreadsTracker(self.request, self.forum)
-        read_date = tracker.get_read_date(self.thread)
+        read_date = tracker.read_date(self.thread)
         post = self.thread.post_set.filter(date__gt=read_date).order_by('id')[:1]
         if not post:
             return self.redirect(self.thread.post_set.order_by('-id')[:1][0])

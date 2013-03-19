@@ -41,7 +41,7 @@ class ThreadsTracker(object):
                 self.record = ForumRead(user=request.user, forum=forum, cleared=self.cutoff)
             self.threads = self.record.get_threads()
 
-    def get_read_date(self, thread):
+    def read_date(self, thread):
         if not self.request.user.is_authenticated():
             return timezone.now()
         try:
@@ -63,7 +63,7 @@ class ThreadsTracker(object):
         if self.request.user.is_authenticated() and post.date > self.cutoff:
             try:
                 self.threads[thread.pk].updated = post.date
-                self.need_update = thread
+                self.need_update = self.threads[thread.pk]
             except KeyError:
                 self.need_create = thread
 
@@ -72,11 +72,11 @@ class ThreadsTracker(object):
 
         if self.need_create:
             new_record = ThreadRead(
-                                      user=self.request.user,
-                                      thread=self.need_create,
-                                      forum=self.forum,
-                                      updated=now
-                                      )
+                                    user=self.request.user,
+                                    thread=self.need_create,
+                                    forum=self.forum,
+                                    updated=now
+                                    )
             new_record.save(force_insert=True)
             self.threads[new_record.thread_id] = new_record
 

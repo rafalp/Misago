@@ -43,7 +43,7 @@ class ThreadView(BaseView):
         self.pagination = make_pagination(page, self.count, self.request.settings.posts_per_page)
         if self.request.settings.posts_per_page < self.count:
             self.posts = self.posts[self.pagination['start']:self.pagination['stop']]
-        self.read_date = self.tracker.get_read_date(self.thread)
+        self.read_date = self.tracker.read_date(self.thread)
         ignored_users = []
         if self.request.user.is_authenticated():
             ignored_users = self.request.user.ignored_users()
