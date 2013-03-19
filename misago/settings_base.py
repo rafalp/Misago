@@ -87,8 +87,8 @@ JINJA2_EXTENSIONS = (
 # List of application middlewares
 MIDDLEWARE_CLASSES = (
     'misago.middleware.stopwatch.StopwatchMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'misago.middleware.heartbeat.HeartbeatMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'misago.middleware.cookiejar.CookieJarMiddleware',
     'misago.middleware.settings.SettingsMiddleware',
     'misago.middleware.monitor.MonitorMiddleware',

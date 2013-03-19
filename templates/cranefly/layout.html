@@ -10,9 +10,11 @@
       <div class="container">
         <ul class="nav">
           <li><a href="#">Frontlines</a></li>
-          <li class="active"><a href="#">Reports <span class="label label-important">5</span></a></li>
+          <li><a href="#">Reports <span class="label label-important">5</span></a></li>
           <li><a href="#">Warnings</a></li>
-          <li><a href="#">Annoucements</a></li>
+          {% if acl.forums.can_browse(announcements) %}
+          <li{% if forum and forum.special == 'announcements' %} class="active"{% endif %}><a href="{% url 'announcements' %}">{% trans %}Manage Announcements{% endtrans %}</a></li>
+          {% endif %}
         </ul>
         <form class="navbar-form pull-right">
           <div class="navbar-search-form">

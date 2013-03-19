@@ -15,7 +15,7 @@ def load():
                         'can_see_users_emails': True,
                         'can_see_users_trails': True,
                         'can_see_hidden_users': True,
-                        'forums': {5: 1, 6: 1, 7: 1},
+                        'forums': {1: 1, 2: 1, 3: 1, 5: 1, 6: 1, 7: 1},
                        }
     role.save(force_insert=True)
     
@@ -30,7 +30,7 @@ def load():
                         'can_see_users_emails': True,
                         'can_see_users_trails': True,
                         'can_see_hidden_users': True,
-                        'forums': {5: 1, 6: 1, 7: 1},
+                        'forums': {1: 1, 2: 1, 3: 1, 5: 1, 6: 1, 7: 1},
                        }
     role.save(force_insert=True)
     
@@ -39,7 +39,7 @@ def load():
                         'name_changes_allowed': 2,
                         'can_use_signature': False,
                         'can_search_users': True,
-                        'forums': {5: 3, 6: 3, 7: 3},
+                        'forums': {2: 3, 5: 3, 6: 3, 7: 3},
                        }
     role.save(force_insert=True)
     

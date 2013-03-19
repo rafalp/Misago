@@ -3,7 +3,7 @@ from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
 from misago.forms import FormFields
 from misago.models import Forum
-from misago.readstrackers import ForumsTracker, ThreadsTracker
+from misago.readstrackers import ForumsTracker
 
 class ThreadsListBaseView(object):
     def _fetch_forum(self):
@@ -14,7 +14,6 @@ class ThreadsListBaseView(object):
             self.parents = Forum.objects.forum_parents(self.forum.pk)
         if self.forum.lft + 1 != self.forum.rght:
             self.forum.subforums = Forum.objects.treelist(self.request.acl.forums, self.forum, tracker=ForumsTracker(self.request.user))
-        self.tracker = ThreadsTracker(self.request, self.forum)
     
     def __new__(cls, request, **kwargs):
         obj = super(ThreadsListBaseView, cls).__new__(cls)
@@ -25,6 +24,7 @@ class ThreadsListBaseView(object):
         self.kwargs = kwargs
         self.pagination = {}
         self.parents = []
+        self.threads = []
         self.message = request.messages.get_message('threads')
         try:
             self._fetch_forum()
@@ -38,11 +38,13 @@ class ThreadsListBaseView(object):
         except Forum.DoesNotExist:
             return error404(request)
         except ACLError403 as e:
-            return error403(request, e.message)
+            return error403(request, unicode(e))
         except ACLError404 as e:
-            return error404(request, e.message)
+            return error404(request, unicode(e))
+
         # Merge proxy into forum
         self.forum.closed = self.proxy.closed
+        
         return request.theme.render_to_response(('%s/list.html' % self.templates_prefix),
                                                 {
                                                  'message': self.message,

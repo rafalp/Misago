@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load debug_toolbar_utils %}
 <div class="clearfix">
 	<ul class="stats">
 		{% for alias, info in databases %}
@@ -26,7 +27,7 @@
 				<tr class="djDebugHoverable {% cycle 'djDebugOdd' 'djDebugEven' %}{% if query.is_slow %} djDebugRowWarning{% endif %}{% if query.starts_trans %} djDebugStartTransaction{% endif %}{% if query.ends_trans %} djDebugEndTransaction{% endif %}{% if query.in_trans %} djDebugInTransaction{% endif %}" id="sqlMain_{{ forloop.counter }}">
 					<td class="color"><span style="background-color: rgb({{ query.rgb_color|join:", " }});">&nbsp;</span></td>
 					<td class="toggle">
-						<a class="djToggleSwitch" data-toggle-id="{{ forloop.counter }}" data-toggle-open="+" data-toggle-close="-" href="javascript:void(0)">+</a>
+						<a class="djToggleSwitch" data-toggle-name="sqlMain" data-toggle-id="{{ forloop.counter }}" data-toggle-open="+" data-toggle-close="-" href="javascript:void(0)">+</a>
 					</td>
 					<td class="query">
 						<div class="djDebugSqlWrap">
@@ -34,7 +35,7 @@
 						</div>
 					</td>
 					<td class="timeline">
-						<div class="djDebugTimeline"><div class="djDebugLineChart{% if query.is_slow %} djDebugLineChartWarning{% endif %}" style="left:{{ query.start_offset }}%;"><strong style="width:{{ query.width_ratio }}%;">{{ query.width_ratio }}%</strong></div></div>
+						<div class="djDebugTimeline"><div class="djDebugLineChart{% if query.is_slow %} djDebugLineChartWarning{% endif %}" style="left:{{ query.start_offset|dotted_number }}%;"><strong style="width:{{ query.width_ratio_relative|dotted_number }}%;">{{ query.width_ratio }}%</strong></div></div>
 					</td>
 					<td class="time">
 						{{ query.duration|floatformat:"2" }}
@@ -42,10 +43,10 @@
 					<td class="actions">
 					{% if query.params %}
 						{% if query.is_select %}
-							<a class="remoteCall" href="/__debug__/sql_select/?sql={{ query.raw_sql|urlencode }}&amp;params={{ query.params|urlencode }}&amp;duration={{ query.duration|floatformat:"2"|urlencode }}&amp;hash={{ query.hash }}">Sel</a>
-							<a class="remoteCall" href="/__debug__/sql_explain/?sql={{ query.raw_sql|urlencode }}&amp;params={{ query.params|urlencode }}&amp;duration={{ query.duration|floatformat:"2"|urlencode }}&amp;hash={{ query.hash }}">Expl</a>
+							<a class="remoteCall" href="/__debug__/sql_select/?sql={{ query.raw_sql|urlencode }}&amp;params={{ query.params|urlencode }}&amp;duration={{ query.duration|floatformat:"2"|urlencode }}&amp;hash={{ query.hash }}&amp;alias={{ query.alias|urlencode }}">Sel</a>
+							<a class="remoteCall" href="/__debug__/sql_explain/?sql={{ query.raw_sql|urlencode }}&amp;params={{ query.params|urlencode }}&amp;duration={{ query.duration|floatformat:"2"|urlencode }}&amp;hash={{ query.hash }}&amp;alias={{ query.alias|urlencode }}">Expl</a>
 							{% ifequal query.engine 'mysql' %}
-								<a class="remoteCall" href="/__debug__/sql_profile/?sql={{ query.raw_sql|urlencode }}&amp;params={{ query.params|urlencode }}&amp;duration={{ query.duration|floatformat:"2"|urlencode }}&amp;hash={{ query.hash }}">Prof</a>
+								<a class="remoteCall" href="/__debug__/sql_profile/?sql={{ query.raw_sql|urlencode }}&amp;params={{ query.params|urlencode }}&amp;duration={{ query.duration|floatformat:"2"|urlencode }}&amp;hash={{ query.hash }}&amp;alias={{ query.alias|urlencode }}">Prof</a>
 							{% endifequal %}
 						{% endif %}
 					{% endif %}
@@ -55,12 +56,12 @@
 					<td colspan="2"></td>
 					<td colspan="4">
 						<div class="djSQLDetailsDiv">
-							<p><strong>Connection:</strong> {{ query.alias }}</p>
+							<p><strong>{% trans "Connection:" %}</strong> {{ query.alias }}</p>
 							{% if query.iso_level %}
-								<p><strong>Isolation Level:</strong> {{ query.iso_level }}</p>
+								<p><strong>{% trans "Isolation level:" %}</strong> {{ query.iso_level }}</p>
 							{% endif %}
 							{% if query.trans_status %}
-								<p><strong>Transaction Status:</strong> {{ query.trans_status }}</p>
+								<p><strong>{% trans "Transaction status:" %}</strong> {{ query.trans_status }}</p>
 							{% endif %}
 							{% if query.stacktrace %}
 								<pre class="stack">{{ query.stacktrace }}</pre>
@@ -74,7 +75,7 @@
 									</tr>
 									{% endfor %}
 								</table>
-								<p><strong>{{ query.template_info.name|default:"(unknown)" }}</strong></p>
+								<p><strong>{{ query.template_info.name|default:_("(unknown)") }}</strong></p>
 							{% endif %}
 						</div>
 					</td>
@@ -83,5 +84,5 @@
 		</tbody>
 	</table>
 {% else %}
-	<p>No SQL queries were recorded during this request.</p>
+	<p>{% trans "No SQL queries were recorded during this request." %}</p>
 {% endif %}

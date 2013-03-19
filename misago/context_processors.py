@@ -1,6 +1,7 @@
 from django.conf import settings
 from misago import __version__
 from misago.admin import site
+from misago.models import Forum
 
 def common(request):
     try:
@@ -18,6 +19,9 @@ def common(request):
             'stopwatch': request.stopwatch.time(),
             'user': request.user,
             'version': __version__,
+            'announcements': Forum.objects.special_model('announcements'),
+            'private': Forum.objects.special_model('private'),
+            'reports': Forum.objects.special_model('reports'),
         }
     except AttributeError:
         # If request lacks required service, let template crash in context processor's stead
