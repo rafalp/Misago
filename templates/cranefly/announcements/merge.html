@@ -1,0 +1,57 @@
+{% extends "cranefly/layout.html" %}
+{% import "_forms.html" as form_theme with context %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=_("Merge Announcements"),parent=_('Global Announcements')) }}{% endblock %}
+
+{% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{% url 'announcements' %}">{% trans %}Global Announcements{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li class="active">{% trans %}Merge Announcements{% endtrans %}
+{%- endblock %}
+
+{% block container %}
+<div class="page-header header-primary">
+  <div class="container">
+    {{ messages_list(messages) }}
+    <ul class="breadcrumb">
+      {{ self.breadcrumb() }}</li>
+    </ul>
+    <h1>{% trans %}Merge Announcements{% endtrans %} <small>{% trans %}Global Announcements{% endtrans %}</small></h1>
+  </div>
+</div>
+
+<div class="container container-primary">
+  <div class="row">
+    <div class="span6 offset3">
+      <div class="form-container">
+
+        <div class="form-header">
+          <h1>{% trans %}Merge Announcements{% endtrans %}</h1>
+        </div>
+
+        {% if message %}
+        <div class="messages-list">
+          {{ macros.draw_message(message) }}
+        </div>
+        {% endif %}
+
+        <form action="{% url 'announcements' %}" method="post">
+          <input type="hidden" name="origin" value="merge_form">
+          <input type="hidden" name="list_action" value="merge">
+          {% for thread in threads -%}
+          <input type="hidden" name="list_items" value="{{ thread.pk }}">
+          {% endfor %}
+          <div class="form-fields">
+            {{ form_theme.form_widget(form, width=6) }}
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{% trans %}Merge Threads{% endtrans %}</button>
+            <a href="{% url 'announcements' %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
