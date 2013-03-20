@@ -1,8 +1,8 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
-from misago.apps.forumbase.mixins import RedirectToPostMixin
-from misago.apps.forumbase.posting import NewThreadBaseView
+from misago.apps.threadtype.mixins import RedirectToPostMixin
+from misago.apps.threadtype.posting import NewThreadBaseView
 from misago.messages import Message
 from misago.models import Forum, Thread, Post
 from misago.apps.threads.mixins import TypeMixin

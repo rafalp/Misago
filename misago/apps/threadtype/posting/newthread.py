@@ -3,8 +3,8 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.translation import ugettext as _
-from misago.apps.forumbase.posting.base import PostingBaseView
-from misago.apps.forumbase.posting.forms import NewThreadForm
+from misago.apps.threadtype.posting.base import PostingBaseView
+from misago.apps.threadtype.posting.forms import NewThreadForm
 from misago.markdown import post_markdown
 from misago.messages import Message
 from misago.models import Forum, Thread, Post

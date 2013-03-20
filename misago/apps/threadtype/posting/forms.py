@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from misago.apps.forumbase.mixins import ValidateThreadNameMixin
+from misago.apps.threadtype.mixins import ValidateThreadNameMixin
 from misago.forms import Form
 from misago.validators import validate_sluggable
 

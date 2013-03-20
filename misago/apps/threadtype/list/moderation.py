@@ -4,7 +4,7 @@ from django.utils.translation import ugettext as _
 from misago.forms import FormLayout
 from misago.messages import Message
 from misago.models import Forum, Thread, Post
-from misago.apps.forumbase.list.forms import MoveThreadsForm, MergeThreadsForm
+from misago.apps.threadtype.list.forms import MoveThreadsForm, MergeThreadsForm
 
 class ThreadsListModeration(object):
     def action_accept(self, ids):

@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from misago.forms import Form, ForumChoiceField
 from misago.models import Forum
 from misago.validators import validate_sluggable
-from misago.apps.forumbase.mixins import ValidateThreadNameMixin
+from misago.apps.threadtype.mixins import ValidateThreadNameMixin
 
 class MoveThreadsForm(Form):
     error_source = 'new_forum'

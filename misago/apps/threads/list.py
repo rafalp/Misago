@@ -1,6 +1,6 @@
 from django.utils.translation import ugettext as _
 from itertools import chain
-from misago.apps.forumbase.list import ThreadsListBaseView, ThreadsListModeration
+from misago.apps.threadtype.list import ThreadsListBaseView, ThreadsListModeration
 from misago.models import Forum, Thread
 from misago.readstrackers import ThreadsTracker
 from misago.utils.pagination import make_pagination
