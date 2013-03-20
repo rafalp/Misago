@@ -43,6 +43,11 @@ class EditThreadView(EditThreadBaseView, TypeMixin):
 
 
 class NewReplyView(NewReplyBaseView, RedirectToPostMixin, TypeMixin):
+    action = 'new_reply'
+
+    def set_context(self):
+        pass
+        
     def response(self):
         if self.post.moderated:
             request.messages.set_flash(Message(_("Your reply has been posted. It will be hidden from other members until moderator reviews it.")), 'success', 'threads_%s' % self.post.pk)
