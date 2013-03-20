@@ -59,6 +59,8 @@ class PostingBaseView(object):
                 else:
                     if form.is_valid():
                         self.post_form(form)
+                        self.watch_thread()
+                        return self.response()
                     else:
                         message = Message(form.non_field_errors()[0], 'error')
             else:

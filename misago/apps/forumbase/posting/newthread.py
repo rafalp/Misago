@@ -1,26 +1,17 @@
+from datetime import timedelta
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.translation import ugettext as _
-from itertools import chain
-from misago.apps.forumbase.mixins import RedirectToPostMixin
-from misago.apps.forumbase.posting import PostingBaseView
+from misago.apps.forumbase.posting.base import PostingBaseView
+from misago.apps.forumbase.posting.forms import NewThreadForm
 from misago.markdown import post_markdown
 from misago.messages import Message
 from misago.models import Forum, Thread, Post
 from misago.utils.strings import slugify
-from misago.apps.threads.forms import NewThreadForm
-from misago.apps.threads.mixins import TypeMixin
 
-class NewThreadView(PostingBaseView, TypeMixin, RedirectToPostMixin):
-    action = 'new_thread'
+class NewThreadBaseView(PostingBaseView):
     form_type = NewThreadForm
-
-    def set_context(self):
-        self.forum = Forum.objects.get(pk=self.kwargs.get('forum'), type='forum')
-        self.request.acl.forums.allow_forum_view(self.forum)
-        self.proxy = Forum.objects.parents_aware_forum(self.forum)
-        self.request.acl.threads.allow_new_threads(self.proxy)
 
     def post_form(self, form):
         now = timezone.now()
@@ -61,7 +52,7 @@ class NewThreadView(PostingBaseView, TypeMixin, RedirectToPostMixin):
 
         # Set thread status
         if 'close_thread' in form.cleaned_data:
-            self.thread.closed = True
+            self.thread.closed = form.cleaned_data['close_thread']
         if 'thread_weight' in form.cleaned_data:
             self.thread.weight = form.cleaned_data['thread_weight']
 
@@ -93,13 +84,3 @@ class NewThreadView(PostingBaseView, TypeMixin, RedirectToPostMixin):
         if md.mentions:
             self.post.notify_mentioned(self.request, md.mentions)
             self.post.save(force_update=True)
-
-        # Set thread watch status
-        self.watch_thread()
-
-        # Set flash and redirect user to his post
-        if moderation:
-            self.request.messages.set_flash(Message(_("New thread has been posted. It will be hidden from other members until moderator reviews it.")), 'success', 'threads')
-        else:
-            self.request.messages.set_flash(Message(_("New thread has been posted.")), 'success', 'threads')
-        return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % self.post.pk))

@@ -12,9 +12,9 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
 
     def threads_queryset(self):
         announcements = Forum.objects.special_model('announcements')
-        annos_global = announcements.thread_set.filter(deleted=False).filter(moderated=False)
-        annos_forum = self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set).filter(weight=2)
-        rest = self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set).filter(weight__lt=2)
+        annos_global = announcements.thread_set.filter(deleted=False).filter(moderated=False).order_by('-pk')
+        annos_forum = self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set).filter(weight=2).order_by('-pk')
+        rest = self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set).filter(weight__lt=2).order_by('-last')
 
         # Dont display threads by ignored users (unless they are important)
         if self.request.user.is_authenticated():

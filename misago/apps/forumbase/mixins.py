@@ -25,7 +25,7 @@ class ValidateThreadNameMixin(object):
 
 
 class RedirectToPostMixin(object):
-    def redirect_to_post(self, link, post):
+    def _redirect_to_post(self, link, post):
         pagination = make_pagination(0, self.request.acl.threads.filter_posts(self.request, self.thread, self.thread.post_set).filter(id__lte=post.pk).count(), self.request.settings.posts_per_page)
         if pagination['total'] > 1:
             return redirect(reverse(link, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'page': pagination['total']}) + ('#post-%s' % post.pk))
