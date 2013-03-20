@@ -35,7 +35,7 @@
 <div class="container container-primary">
   <div class="profiles-list">
 
-    <h2>{% if in_search %}{% trans %}Search Users{% endtrans %}{% elif active_rank %}{{ _(active_rank.name) }}{% endif %}</h2>
+    {% if in_search %}<h2>{% trans %}Search Users{% endtrans %}</h2>{% endif %}
 
     {% if message %}
     <div class="messages-list">
@@ -46,7 +46,7 @@
     {% if in_search and not message and users|length > 0 %}
     <p class="lead">{% trans %}We couldn't find a member with name you entered, so we present you with some other members with names similiar to one you searched for in hopes that one of them will turn out to be member you are looking for.{% endtrans %}</p>
     {% elif active_rank and active_rank.description %}
-    <div class="markdown">{{ active_rank.description|markdown|safe }}</div>
+    <div class="markdown lead">{{ active_rank.description }}</div>
     {% endif %}
 
     {% if users|length > 0 %}
@@ -62,8 +62,8 @@
           {% for user in row %}
           <td class="span3 user-cell{% if user and user.get_style() %} user-cell-{{ user.get_style() }}{% endif %}">
             {% if user %}
-            <a href="{% url 'user' username=user.userslug, user=user.pk %}" class="user-avatar"><img src="{{ user.get_avatar(36) }}" alt=""></a>
-            <a href="{% url 'user' username=user.userslug, user=user.pk %}" class="user-name">{{ user.username }}</a>
+            <a href="{% url 'user' username=user.username_slug, user=user.pk %}" class="user-avatar"><img src="{{ user.get_avatar(36) }}" alt=""></a>
+            <a href="{% url 'user' username=user.username_slug, user=user.pk %}" class="user-name">{{ user.username }}</a>
             {% else %}
             &nbsp;
             {% endif %}
