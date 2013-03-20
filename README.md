@@ -63,7 +63,7 @@ You can use **updatemisago** command to update your forums database to latest ve
 Contributing
 ------------
 
-Misago is open source project. You are free to submit pull requests against master branch, and use issues system to report bugs, propose improvements and new features.
+Misago is open source project. You are free to submit pull requests against master branch, but I request all interested in contributing to project to register on project forums and participate in [development discussion](http://misago-project.org/category/development-discussion-17/).
 
 Finally, you can participate in discussion on [project forums](http://misago-project.org). Your feedback means much for project, don't keep it to yourself!
 
