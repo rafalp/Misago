@@ -14,10 +14,14 @@ class FormLayout(object):
         self.fieldsets = scaffold_fieldsets.fieldsets
         self.hidden = scaffold_fields.hidden
 
-        self.fields = {}
-        for fieldset in self.fieldsets:
-            for field in fieldset['fields']:
-                self.fields[field['id']] = field
+        if self.fieldsets:
+            self.fields = {}
+            for fieldset in self.fieldsets:
+                for field in fieldset['fields']:
+                    print field['id']
+                    self.fields[field['id']] = field
+        else:
+            self.fields = scaffold_fields.fields
 
 
 class FormFields(object):
