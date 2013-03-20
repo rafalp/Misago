@@ -421,12 +421,12 @@
   .user-avatar {
     border-radius: @baseBorderRadius;
     float: left;
-    width: 125px;
-    height: 125px;
+    width: 100px;
+    height: 100px;
   }
 
   .editor {
-    margin-left: 125px + (@baseFontSize * 2);
+    margin-left: 100px + (@baseFontSize * 1.5);
     position: relative;
 
     &:after, &:before {
@@ -441,17 +441,17 @@
     &:after {
       border-color: transparent;
       border-right-color: @editorBackground;
-      border-width: @baseFontSize;
-      top: @baseFontSize / 2;
-      margin-top: ((@baseFontSize / 2) * -1) + @baseFontSize;
+      border-width: @fontSizeMini;
+      top: @baseFontSize;
+      margin-top: (@baseFontSize * -1) + @baseFontSize;
     }
 
     &:before {
        border-color: transparent;
        border-right-color: darken(@editorBackground, 10%);
-       border-width: @baseFontSize + 1;
-       top: @baseFontSize / 2;
-       margin-top: ((@baseFontSize / 2) * -1) + @baseFontSize - 1px;
+       border-width: @fontSizeMini + 1;
+       top: @baseFontSize;
+       margin-top: (@baseFontSize * -1) + @baseFontSize - 1px;
     }
   }
 }

@@ -399,7 +399,7 @@
     <form action="{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}" method="post">
       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
       <input type="hidden" name="quick_reply" value="1">
-      <img src="{{ user.get_avatar() }}" alt="{% trans %}Your Avatar{% endtrans %}" class="user-avatar">
+      <img src="{{ user.get_avatar(100) }}" alt="{% trans %}Your Avatar{% endtrans %}" class="user-avatar">
       {{ editor.editor(quick_reply.post, _('Post Reply'), extra=editor_extra()) }}
     </form>
   </div>
