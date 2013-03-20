@@ -121,7 +121,6 @@ def make_forum_form(request, role, form):
                          ('can_approve', {'label': _("Can accept threads and posts")}),
                          ('can_edit_labels', {'label': _("Can edit thread labels")}),
                          ('can_see_changelog', {'label': _("Can see edits history")}),
-                         ('can_make_announcements', {'label': _("Can make announcements")}),
                          ('can_pin_threads', {'label': _("Can change threads weight")}),
                          ('can_edit_threads_posts', {'label': _("Can edit threads and posts")}),
                          ('can_move_threads_posts', {'label': _("Can move, merge and split threads and posts")}),
@@ -384,10 +383,24 @@ class ThreadsACL(BaseACL):
         except KeyError:
             return False
 
+    def can_close(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            return forum_role['can_close_threads']
+        except KeyError:
+            return False
+
     def can_protect(self, forum):
         try:
             forum_role = self.acl[forum.pk]
             return forum_role['can_protect_posts']
+        except KeyError:
+            return False
+
+    def can_pin_threads(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            return forum_role['can_pin_threads']
         except KeyError:
             return False
 
@@ -560,7 +573,6 @@ def build_forums(acl, perms, forums, forum_roles):
                      'can_approve': False,
                      'can_edit_labels': False,
                      'can_see_changelog': False,
-                     'can_make_announcements': False,
                      'can_pin_threads': 0,
                      'can_edit_threads_posts': False,
                      'can_move_threads_posts': False,

@@ -86,6 +86,24 @@ class Thread(models.Model):
     def get_date(self):
         return self.start
 
+    def new_start_post(self, post):
+        self.start = post.date
+        self.start_post = post
+        self.start_poster = post.user
+        self.start_poster_name = post.user.username
+        self.start_poster_slug = post.user.username_slug
+        if post.user.rank_id and post.user.rank.style:
+            self.start_poster_style = post.user.rank.style
+
+    def new_last_post(self, post):
+        self.last = post.date
+        self.last_post = post
+        self.last_poster = post.user
+        self.last_poster_name = post.user.username
+        self.last_poster_slug = post.user.username_slug
+        if post.user.rank_id and post.user.rank.style:
+            self.last_poster_style = post.user.rank.style
+
     def move_to(self, move_to):
         move_thread.send(sender=self, move_to=move_to)
         self.forum = move_to

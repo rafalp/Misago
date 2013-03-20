@@ -17,45 +17,6 @@ from misago.utils.translation import ugettext_lazy
 from misago.apps.threads.forms import PostForm
 from misago.apps.threads.views.base import BaseView
 
-class PostingBaseView(BaseView):
-    def __call__(self, request, **kwargs):
-        self.request = request
-
-        # Empty context attributes
-        self.forum = None
-        self.thread = None
-        self.quote = None
-        self.post = None
-
-        # Let inheriting class  set context
-        self.set_context()
-
-        # And set forum parents for render
-        self.parents = Forum.objects.forum_parents(self.forum.pk, True)
-
-        # Create form instance
-        
-
-    def set_context(self):
-        raise NotImplementedError(u"\"set_context\" method should be implemented in inheriting objects.")
-
-
-class PostingNewThreadView(PostingBaseView):
-    pass
-
-
-class PostingEditThreadView(PostingBaseView):
-    pass
-
-
-class PostingNewReplyView(PostingBaseView):
-    pass
-
-
-class PostingEditReplyView(PostingBaseView):
-    pass
-
-
 class PostingView(BaseView):
     def fetch_target(self, kwargs):
         if self.mode == 'new_thread':
@@ -198,7 +159,7 @@ class PostingView(BaseView):
                     if self.mode == 'edit_thread':
                         thread.name = form.cleaned_data['thread_name']
                         thread.slug = slugify(form.cleaned_data['thread_name'])
-                thread.previous_last = thread.last 
+                thread.previous_last = thread.last
 
                 # Create new message
                 if self.mode in ['new_thread', 'new_post', 'new_post_quick']:

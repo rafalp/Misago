@@ -189,6 +189,16 @@ class Forum(MPTTModel):
             return att in self.attrs.split()
         return False
 
+    def new_last_thread(self, thread):
+        self.last_thread = thread
+        self.last_thread_name = thread.name
+        self.last_thread_slug = thread.slug
+        self.last_thread_date = thread.last
+        self.last_poster = thread.last_poster
+        self.last_poster_name = thread.last_poster_name
+        self.last_poster_slug = thread.last_poster_slug
+        self.last_poster_style = thread.last_poster_style
+
     def sync(self):
         self.threads = self.thread_set.filter(moderated=False).filter(deleted=False).count()
         self.posts = self.post_set.filter(moderated=False).count()

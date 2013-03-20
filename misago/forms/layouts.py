@@ -12,8 +12,12 @@ class FormLayout(object):
 
         self.multipart_form = scaffold_fields.multipart_form
         self.fieldsets = scaffold_fieldsets.fieldsets
-        self.fields = scaffold_fields.fields
         self.hidden = scaffold_fields.hidden
+
+        self.fields = {}
+        for fieldset in self.fieldsets:
+            for field in fieldset['fields']:
+                self.fields[field['id']] = field
 
 
 class FormFields(object):
@@ -168,7 +172,7 @@ class FormFields(object):
             # Select
             if widget_name == 'Select':
                 blueprint['widget'] = 'select'
-                if not blueprint['value']:
+                if not blueprint['has_value']:
                     blueprint['value'] = None
 
             # NullBooleanSelect
@@ -182,8 +186,6 @@ class FormFields(object):
             # RadioSelect
             if widget_name == 'RadioSelect':
                 blueprint['widget'] = 'radio_select'
-                if not blueprint['value']:
-                    blueprint['value'] = u''
 
             # CheckboxSelectMultiple
             if widget_name == 'CheckboxSelectMultiple':
