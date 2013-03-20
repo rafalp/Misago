@@ -1,5 +1,5 @@
-from django.utils.translation import ugettext as _
 from itertools import chain
+from django.utils.translation import ugettext as _
 from misago.apps.threadtype.list import ThreadsListBaseView, ThreadsListModeration
 from misago.models import Forum, Thread
 from misago.readstrackers import ThreadsTracker

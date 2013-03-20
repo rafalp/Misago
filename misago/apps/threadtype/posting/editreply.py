@@ -1,0 +1,2 @@
+class EditReplyBaseView(object):
+    pass

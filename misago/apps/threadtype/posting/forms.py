@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from misago.apps.threadtype.mixins import ValidateThreadNameMixin
 from misago.forms import Form
@@ -14,14 +15,13 @@ class PostingForm(Form):
 
     def set_extra_fields(self):
         # Can we change threads states?
-        if self.request.acl.threads.can_pin_threads(self.forum):
+        if (self.request.acl.threads.can_pin_threads(self.forum) >= self.thread.weight and
+                self.request.acl.threads.can_pin_threads(self.forum)):
             thread_weight = []
-            if (not self.thread or self.thread.weight < 2) and self.request.acl.threads.can_pin_threads(self.forum) == 2:
+            if self.request.acl.threads.can_pin_threads(self.forum) == 2:
                 thread_weight.append((2, _("Announcement")))
-            if (not self.thread or self.thread.weight == 0) and self.request.acl.threads.can_pin_threads(self.forum):
-                thread_weight.append((1, _("Sticky")))
-            if (not self.thread or self.thread.weight != 0):
-                thread_weight.append((0, _("Standard")))
+            thread_weight.append((1, _("Sticky")))
+            thread_weight.append((0, _("Standard")))
             if thread_weight:
                 self.layout[0][1].append(('thread_weight', {'label': _("Thread Importance")}))
                 self.fields['thread_weight'] = forms.TypedChoiceField(widget=forms.RadioSelect, choices=thread_weight, coerce=int, initial=0)
@@ -52,3 +52,11 @@ class NewThreadForm(PostingForm, ValidateThreadNameMixin):
                                                                                     _("Thread name is too long. Try shorter name."))])
 
         self.set_extra_fields()
+
+
+class EditThreadForm(NewThreadForm, ValidateThreadNameMixin):
+    def finalize_form(self):
+        super(EditThreadForm, self).finalize_form()
+        self.fields['edit_reason'] = forms.CharField(max_length=255, required=False, help_text=_("Optional reason for editing this thread."))
+        self.layout[0][1].append(('edit_reason', {'label': _("Edit Reason")}))
+
