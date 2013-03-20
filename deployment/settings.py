@@ -29,11 +29,20 @@ DATABASES = {
     }
 }
 
+# Override DB if we are in tests
+if 'test' in sys.argv:
+    DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
+    SKIP_SOUTH_TESTS = True
+
 # Cache engine
 # Misago is EXTREMELY data hungry
 # If you don't set any cache, it will BRUTALISE your database and memory
 # In production ALWAYS use cache
-CACHES = {}
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+   }
+}
 
 # Cookies configuration
 COOKIES_DOMAIN = '' # For example cookie domain for "www.mysite.com" or "forum.mysite.com" is ".mysite.com"
