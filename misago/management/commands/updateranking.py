@@ -19,7 +19,7 @@ class Command(BaseCommand):
 
         # Update Ranking
         defaulted_ranks = False
-        for rank in Rank.objects.filter(special=0).order_by('order'):
+        for rank in Rank.objects.filter(special=0).order_by('-order'):
             if defaulted_ranks:
                 # Set ranks according to ranking
                 rank.assign_rank(users_total, special_ranks)
