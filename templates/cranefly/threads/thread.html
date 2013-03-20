@@ -82,7 +82,7 @@
           <div class="post-header">
             <div class="post-header-compact">
               {% if post.user_id %}
-              <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="post-author">{{ post.user.username }}</a>{% if post.user.get_title() %} <span class="label post-author-label{% if post.user.rank and post.user.rank.style %} post-label-{{ post.user.rank.style }}{% endif %}">{{ post.user.get_title() }}</span>{% endif %}
+              <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="post-author">{{ post.user.username }}</a>{% if post.user.get_title() %} {{ user_label(post.user) }}{% endif %}
               {% else %}
               <span class="post-author">{{ post.user_name }}</span> <span class="label post-author-label post-label-guest">{% trans %}Unregistered{% endtrans %}</span>
               {% endif %}
@@ -167,7 +167,7 @@
         <div class="post-content">
           <div class="post-header">
             {% if post.user_id %}
-            <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="post-author">{{ post.user.username }}</a>{% if post.user.get_title() %} <span class="label post-author-label{% if post.user.rank and post.user.rank.style %} post-label-{{ post.user.rank.style }}{% endif %}">{{ post.user.get_title() }}</span>{% endif %}
+            <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="post-author">{{ post.user.username }}</a>{% if post.user.get_title() %} {{ user_label(post.user) }}{% endif %}
             {% else %}
             <span class="post-author">{{ post.user_name }}</span> <span class="label post-author-label post-label-guest">{% trans %}Unregistered{% endtrans %}</span>
             {% endif %}
@@ -461,6 +461,11 @@
   {{ editor.js() }}
   {% endif %}
 {%- endblock %}
+
+
+{% macro user_label(user) -%}
+<{% if user.rank and user.rank.as_tab %}a href="{% url 'users' slug=user.rank.slug %}"{% else %}span{% endif %} class="label post-author-label{% if user.rank and user.rank.style %} post-label-{{ user.rank.style }}{% endif %}">{{ user.get_title() }}</{% if user.rank and user.rank.as_tab%}a{% else %}span{% endif %}>
+{%- endmacro %}
 
 
 {% macro pager(extra=true) %}

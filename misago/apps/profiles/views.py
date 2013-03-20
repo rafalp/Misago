@@ -21,6 +21,8 @@ def list(request, slug=None, page=1):
                 active_rank = rank
         if not active_rank:
             return error404(request)
+        if ranks and active_rank.slug == ranks[0].slug:
+            return redirect(reverse('users'))
     elif ranks:
         default_rank = True
         active_rank = ranks[0]
