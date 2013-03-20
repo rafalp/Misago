@@ -6,12 +6,9 @@ from misago.forms import FormLayout
 from misago.markdown import post_markdown
 from misago.messages import Message
 from misago.models import Forum, WatchedThread
+from misago.apps.threadtype.base import ViewBase
 
-class PostingBaseView(object):
-    def __new__(cls, request, **kwargs):
-        obj = super(PostingBaseView, cls).__new__(cls)
-        return obj(request, **kwargs)
-
+class PostingBaseView(ViewBase):
     def form_initial_data(self):
         return {}
 

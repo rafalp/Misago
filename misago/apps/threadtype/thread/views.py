@@ -11,9 +11,10 @@ from misago.messages import Message
 from misago.models import Forum, Thread, Post, Karma, WatchedThread
 from misago.readstrackers import ThreadsTracker
 from misago.utils.pagination import make_pagination
+from misago.apps.threadtype.base import ViewBase
 from misago.apps.threadtype.thread.forms import QuickReplyForm
 
-class ThreadBaseView(object):
+class ThreadBaseView(ViewBase):
     def fetch_thread(self):
         self.thread = Thread.objects.get(pk=self.kwargs.get('thread'))
         self.forum = self.thread.forum
@@ -152,10 +153,6 @@ class ThreadBaseView(object):
                     self.message = Message(posts_form.non_field_errors()[0], 'error')
         else:
             self.posts_form = self.posts_form(request=self.request)
-
-    def __new__(cls, request, **kwargs):
-        obj = super(ThreadBaseView, cls).__new__(cls)
-        return obj(request, **kwargs)
 
     def __call__(self, request, **kwargs):
         self.request = request

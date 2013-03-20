@@ -9,8 +9,9 @@ from misago.apps.errors import error403, error404
 from misago.forms import Form, FormFields
 from misago.models import Forum, Thread, Post
 from misago.readstrackers import ForumsTracker
+from misago.apps.threadtype.base import ViewBase
 
-class ThreadsListBaseView(object):
+class ThreadsListBaseView(ViewBase):
     def _fetch_forum(self):
         self.fetch_forum()
         self.proxy = Forum.objects.parents_aware_forum(self.forum)
@@ -81,10 +82,6 @@ class ThreadsListBaseView(object):
                     self.message = Message(form.non_field_errors()[0], 'error')
         else:
             self.form = self.form(request=self.request)
-
-    def __new__(cls, request, **kwargs):
-        obj = super(ThreadsListBaseView, cls).__new__(cls)
-        return obj(request, **kwargs)
 
     def __call__(self, request, **kwargs):
         self.request = request

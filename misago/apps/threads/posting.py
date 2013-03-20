@@ -1,7 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
-from misago.apps.threadtype.mixins import RedirectToPostMixin
 from misago.apps.threadtype.posting import NewThreadBaseView, EditThreadBaseView, NewReplyBaseView, EditReplyBaseView
 from misago.messages import Message
 from misago.models import Forum, Thread, Post
@@ -42,12 +41,12 @@ class EditThreadView(EditThreadBaseView, TypeMixin):
         return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % self.post.pk))
 
 
-class NewReplyView(NewReplyBaseView, RedirectToPostMixin, TypeMixin):
+class NewReplyView(NewReplyBaseView, TypeMixin):
     action = 'new_reply'
 
     def set_context(self):
         pass
-        
+
     def response(self):
         if self.post.moderated:
             request.messages.set_flash(Message(_("Your reply has been posted. It will be hidden from other members until moderator reviews it.")), 'success', 'threads_%s' % self.post.pk)
@@ -56,5 +55,5 @@ class NewReplyView(NewReplyBaseView, RedirectToPostMixin, TypeMixin):
         return self.redirect_to_post(post)
 
 
-class EditReplyView(EditReplyBaseView, RedirectToPostMixin, TypeMixin):
+class EditReplyView(EditReplyBaseView, TypeMixin):
     pass
