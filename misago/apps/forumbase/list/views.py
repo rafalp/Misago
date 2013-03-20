@@ -1,5 +1,7 @@
 from django import forms
+from django.core.urlresolvers import reverse
 from django.forms import ValidationError
+from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from misago.acl.exceptions import ACLError403, ACLError404
