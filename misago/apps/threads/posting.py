@@ -42,8 +42,14 @@ class EditThreadView(EditThreadBaseView, TypeMixin):
         return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % self.post.pk))
 
 
-class NewReplyView(NewReplyBaseView, TypeMixin):
-    pass
+class NewReplyView(NewReplyBaseView, RedirectToPostMixin, TypeMixin):
+    def response(self):
+        if self.post.moderated:
+            request.messages.set_flash(Message(_("Your reply has been posted. It will be hidden from other members until moderator reviews it.")), 'success', 'threads_%s' % self.post.pk)
+        else:
+            request.messages.set_flash(Message(_("Your reply has been posted.")), 'success', 'threads_%s' % self.post.pk)
+        return self.redirect_to_post(post)
 
-class EditReplyView(EditReplyBaseView, TypeMixin):
+
+class EditReplyView(EditReplyBaseView, RedirectToPostMixin, TypeMixin):
     pass
