@@ -160,6 +160,7 @@ class ThreadBaseView(ViewBase):
         self.kwargs = kwargs
         self.parents = []
         self.ignored = False
+        self.watcher = False
         self.message = request.messages.get_message('threads')
         try:
             self.fetch_thread()

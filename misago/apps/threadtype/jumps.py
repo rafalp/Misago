@@ -9,9 +9,9 @@ from misago.messages import Message
 from misago.models import Forum, Thread, Post, Karma, WatchedThread
 from misago.readstrackers import ThreadsTracker
 from misago.utils.pagination import make_pagination
-from misago.apps.threadtype.base import BaseView
+from misago.apps.threadtype.base import ViewBase
 
-class JumpView(BaseView):
+class JumpView(ViewBase):
     def fetch_thread(self, thread):
         self.thread = Thread.objects.get(pk=thread)
         self.forum = self.thread.forum
@@ -27,8 +27,11 @@ class JumpView(BaseView):
 
     def __call__(self, request, slug=None, thread=None, post=None):
         self.request = request
+        self.parents = []
         try:
             self.fetch_thread(thread)
+            if self.forum.level:
+                self.parents = Forum.objects.forum_parents(self.forum.pk, True)
             self.check_forum_type()
             if post:
                 self.fetch_post(post)
@@ -126,7 +129,7 @@ class WatchThreadBaseView(JumpView):
         return view(self.request)
 
 
-class WatchEmailThreadBaseView(WatchThreadView):
+class WatchEmailThreadBaseView(WatchThreadBaseView):
     def update_watcher(self, request, watcher):
         watcher.email = True
         if watcher.pk:
@@ -135,7 +138,7 @@ class WatchEmailThreadBaseView(WatchThreadView):
             request.messages.set_flash(Message(_('This thread has been added to your watched threads list. You will also receive e-mail with notification when somebody replies to it.')), 'success', 'threads')
 
 
-class UnwatchThreadBaseView(WatchThreadView):
+class UnwatchThreadBaseView(WatchThreadBaseView):
     def update_watcher(self, request, watcher):
         watcher.deleted = True
         watcher.delete()
@@ -145,13 +148,13 @@ class UnwatchThreadBaseView(WatchThreadView):
             request.messages.set_flash(Message(_('This thread has been removed from your watched threads list.')), 'success', 'threads')
 
 
-class UnwatchEmailThreadBaseView(WatchThreadView):
+class UnwatchEmailThreadBaseView(WatchThreadBaseView):
     def update_watcher(self, request, watcher):
         watcher.email = False
         request.messages.set_flash(Message(_('You will no longer receive e-mails with notifications when somebody replies to this thread.')), 'success', 'threads')
 
 
-class UpvotePostBaseView(JumpView):        
+class UpvotePostBaseView(JumpView):
     def make_jump(self):
         @block_guest
         @check_csrf
@@ -225,7 +228,7 @@ class UpvotePostBaseView(JumpView):
         vote.score = 1
 
 
-class DownvotePostBaseView(UpvotePostView):
+class DownvotePostBaseView(UpvotePostBaseView):
     def check_acl(self, request):
         request.acl.threads.allow_post_downvote(self.forum)
     
