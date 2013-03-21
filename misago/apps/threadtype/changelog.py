@@ -52,6 +52,7 @@ class ChangelogChangesBaseView(ChangelogBaseView):
     def dispatch(self, request, **kwargs):
         return request.theme.render_to_response('%ss/changelog.html' % self.type_prefix,
                                                 {
+                                                 'type_prefix': self.type_prefix,
                                                  'forum': self.forum,
                                                  'parents': self.parents,
                                                  'thread': self.thread,
@@ -78,6 +79,7 @@ class ChangelogDiffBaseView(ChangelogBaseView):
         self.forum.closed = self.proxy.closed
         return request.theme.render_to_response('%ss/changelog_diff.html' % self.type_prefix,
                                                 {
+                                                 'type_prefix': self.type_prefix,
                                                  'forum': self.forum,
                                                  'parents': self.parents,
                                                  'thread': self.thread,

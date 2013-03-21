@@ -92,8 +92,9 @@ class PostsModeration(object):
                                                                   'thread_name': _('[Split] %s') % self.thread.name,
                                                                   'thread_forum': self.forum,
                                                                   })
-        return self.request.theme.render_to_response('threads/split.html',
+        return self.request.theme.render_to_response('%ss/split.html' % self.type_prefix,
                                                      {
+                                                      'type_prefix': self.type_prefix,
                                                       'message': message,
                                                       'forum': self.forum,
                                                       'parents': self.parents,
@@ -136,8 +137,9 @@ class PostsModeration(object):
             message = Message(form.non_field_errors()[0], 'error')
         else:
             form = MovePostsForm(request=self.request)
-        return self.request.theme.render_to_response('threads/move_posts.html',
+        return self.request.theme.render_to_response('%ss/move_posts.html' % self.type_prefix,
                                                      {
+                                                      'type_prefix': self.type_prefix,
                                                       'message': message,
                                                       'forum': self.forum,
                                                       'parents': self.parents,

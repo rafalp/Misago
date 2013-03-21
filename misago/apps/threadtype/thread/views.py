@@ -186,8 +186,9 @@ class ThreadBaseView(ViewBase):
         # Merge proxy into forum
         self.forum.closed = self.proxy.closed
 
-        return request.theme.render_to_response(('%ss/thread.html' % self.type_prefix),
+        return request.theme.render_to_response('%ss/thread.html' % self.type_prefix,
                                                 {
+                                                 'type_prefix': self.type_prefix,
                                                  'message': self.message,
                                                  'forum': self.forum,
                                                  'parents': self.parents,

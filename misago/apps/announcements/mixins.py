@@ -1,2 +1,8 @@
+from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
+
 class TypeMixin(object):
-    templates_prefix = 'announcements'
+    type_prefix = 'announcement'
+
+    def threads_list_redirect(self):
+        return redirect(reverse('announcements'))

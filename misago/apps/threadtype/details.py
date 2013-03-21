@@ -44,6 +44,7 @@ class DetailsBaseView(ExtraBaseView):
     def response(self):
         return self.request.theme.render_to_response('%ss/details.html' % self.type_prefix,
                                                      {
+                                                      'type_prefix': self.type_prefix,
                                                       'forum': self.forum,
                                                       'parents': self.parents,
                                                       'thread': self.thread,
@@ -59,6 +60,7 @@ class KarmaVotesBaseView(ExtraBaseView):
     def response(self):
         return self.request.theme.render_to_response('%ss/karmas.html' % self.type_prefix,
                                                      {
+                                                      'type_prefix': self.type_prefix,
                                                       'forum': self.forum,
                                                       'parents': self.parents,
                                                       'thread': self.thread,

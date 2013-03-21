@@ -115,6 +115,7 @@ class PostingBaseView(ViewBase):
 
         return request.theme.render_to_response(('%ss/posting.html' % self.type_prefix),
                                                 {
+                                                 'type_prefix': self.type_prefix,
                                                  'action': self.action,
                                                  'message': self.message,
                                                  'forum': self.forum,

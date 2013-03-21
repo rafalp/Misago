@@ -112,6 +112,7 @@ class ThreadsListBaseView(ViewBase):
 
         return request.theme.render_to_response(('%ss/list.html' % self.type_prefix),
                                                 {
+                                                 'type_prefix': self.type_prefix,
                                                  'message': self.message,
                                                  'forum': self.forum,
                                                  'parents': self.parents,

@@ -87,8 +87,9 @@ class ThreadsListModeration(object):
             self.message = Message(form.non_field_errors()[0], 'error')
         else:
             form = MoveThreadsForm(request=self.request, forum=self.forum)
-        return self.request.theme.render_to_response(('%ss/move_threads.html' % self.type_prefix),
+        return self.request.theme.render_to_response('%ss/move_threads.html' % self.type_prefix,
                                                      {
+                                                      'type_prefix': self.type_prefix,
                                                       'message': self.message,
                                                       'forum': self.forum,
                                                       'parents': self.parents,
@@ -139,6 +140,7 @@ class ThreadsListModeration(object):
             form = MergeThreadsForm(request=self.request, threads=threads)
         return self.request.theme.render_to_response(('%ss/merge.html' % self.type_prefix),
                                                      {
+                                                      'type_prefix': self.type_prefix,
                                                       'message': self.message,
                                                       'forum': self.forum,
                                                       'parents': self.parents,

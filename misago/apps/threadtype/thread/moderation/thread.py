@@ -58,8 +58,9 @@ class ThreadModeration(object):
             message = Message(form.non_field_errors()[0], 'error')
         else:
             form = MoveThreadsForm(request=self.request, forum=self.forum)
-        return self.request.theme.render_to_response('threads/move_thread.html',
+        return self.request.theme.render_to_response('%ss/move_thread.html' % self.type_prefix,
                                                      {
+                                                      'type_prefix': self.type_prefix,
                                                       'message': message,
                                                       'forum': self.forum,
                                                       'parents': self.parents,
