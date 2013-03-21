@@ -369,6 +369,6 @@ class Delete(ButtonWidget):
 
 
 def inactive(request):
-    token = 'list_filter_misago.users.models.User'
-    request.session[token] = {'activation': ['1', '2', '3']}
+    token = 'list_filter.users.User'
+    request.session[token] = {'activation': [1, 2, 3]}
     return redirect(reverse('admin_users'))
