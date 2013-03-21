@@ -78,6 +78,6 @@ class NewReplyForm(PostingForm):
 
 class EditReplyForm(PostingForm):
     def finalize_form(self):
-        super(EditThreadForm, self).finalize_form()
+        super(EditReplyForm, self).finalize_form()
         self.fields['edit_reason'] = forms.CharField(max_length=255, required=False, help_text=_("Optional reason for editing this reply."))
         self.layout[0][1].append(('edit_reason', {'label': _("Edit Reason")}))

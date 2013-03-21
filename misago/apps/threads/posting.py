@@ -40,4 +40,8 @@ class NewReplyView(NewReplyBaseView, TypeMixin):
 
 
 class EditReplyView(EditReplyBaseView, TypeMixin):
-    pass
+    action = 'edit_reply'
+
+    def response(self):
+        self.request.messages.set_flash(Message(_("Your reply has been changed.")), 'success', 'threads_%s' % self.post.pk)
+        return self.redirect_to_post(self.post)

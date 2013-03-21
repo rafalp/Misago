@@ -27,7 +27,6 @@ class EditThreadBaseView(PostingBaseView):
 
         changed_thread = old_name != form.cleaned_data['thread_name']
         changed_post = old_post != form.cleaned_data['post']
-        changed_anything = changed_thread or changed_post
 
         if 'close_thread' in form.cleaned_data and form.cleaned_data['close_thread']:
             self.thread.closed = not self.thread.closed
@@ -48,15 +47,13 @@ class EditThreadBaseView(PostingBaseView):
             self.thread.save(force_update=True)
 
         if changed_post:
-            md, self.post.post_preparsed = post_markdown(self.request, form.cleaned_data['post'])
+            self.md, self.post.post_preparsed = post_markdown(self.request, form.cleaned_data['post'])
             self.post.edits += 1
             self.post.edit_date = now
             self.post.edit_user = self.request.user
             self.post.edit_user_name = self.request.user.username
             self.post.edit_user_slug = self.request.user.username_slug
-            if md.mentions:
-                post.notify_mentioned(self.request, md.mentions)
             self.post.save(force_update=True)
 
-        if changed_anything:
+        if changed_thread or changed_post:
             self.record_edit(form, old_name, old_post)

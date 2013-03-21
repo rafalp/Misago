@@ -5,7 +5,7 @@ from misago.apps.errors import error403, error404
 from misago.forms import FormLayout
 from misago.markdown import post_markdown
 from misago.messages import Message
-from misago.models import Forum, Thread, WatchedThread
+from misago.models import Forum, Thread, Post, WatchedThread
 from misago.apps.threadtype.base import ViewBase
 from misago.apps.threadtype.thread.forms import QuickReplyForm
 
@@ -34,8 +34,8 @@ class PostingBaseView(ViewBase):
                                     reason=form.cleaned_data['edit_reason'],
                                     size=len(self.post.post),
                                     change=len(self.post.post) - len(old_post),
-                                    thread_name_old=old_name if form.cleaned_data['thread_name'] != old_name else None,
-                                    thread_name_new=self.thread.name if form.cleaned_data['thread_name'] != old_name else None,
+                                    thread_name_old=old_name if 'thread_name' in form.cleaned_data and form.cleaned_data['thread_name'] != old_name else None,
+                                    thread_name_new=self.thread.name if 'thread_name' in form.cleaned_data and form.cleaned_data['thread_name'] != old_name else None,
                                     post_content=old_post,
                                     )
 
@@ -105,7 +105,7 @@ class PostingBaseView(ViewBase):
                         self.message = Message(form.non_field_errors()[0], 'error')
             else:
                 form = self.form_type(request=request, forum=self.forum, thread=self.thread, initial=self.form_initial_data())
-        except Forum.DoesNotExist:
+        except (Forum.DoesNotExist, Thread.DoesNotExist, Post.DoesNotExist):
             return error404(request)
         except ACLError403 as e:
             return error403(request, unicode(e))

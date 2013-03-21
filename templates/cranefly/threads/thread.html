@@ -16,7 +16,7 @@
 <div class="page-header header-primary">
   <div class="container">
     {{ messages_list(messages) }}
-    <ul class="breadcrumb">
+    <ul class="breadcrumb" {{ macros.itemprop_bread() }}>
       {{ self.breadcrumb() }}</li>
     </ul>
     <h1>{{ thread.name }}</h1>

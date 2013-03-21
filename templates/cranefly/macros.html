@@ -25,7 +25,7 @@
   </div>
 {%- endmacro %}
 
-{# Render single message #}
+{# Render icon #}
 {% macro draw_message_icon(message) -%}
   	<div class="alert-icon"><span><i class="icon-{% if message.type == 'error' -%}remove
   		{%- elif message.type == 'success' -%}ok
@@ -39,4 +39,8 @@
 {%- trans current_page=('<strong>' ~ pagination['page'] ~ '</strong>')|safe, pages=('<strong>' ~ pagination['total'] ~ '</strong>')|safe -%}
     Page {{ current_page }} of {{ pages }}
 {%- endtrans -%}
+{%- endmacro %}
+
+{% macro itemprop_bread() -%}
+itemprop="breadcrumb"
 {%- endmacro %}
