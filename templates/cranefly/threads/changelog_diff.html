@@ -8,7 +8,7 @@
 <li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {% endfor %}
 <li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-<li><a href="{% url 'changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}">{% trans post=post.pk %}Post #{{ post }} Changelog{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{% url 'thread_changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}">{% trans post=post.pk %}Post #{{ post }} Changelog{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li class="active">{% trans date=change.date|reltimesince|low %}Edit from {{ date }}{% endtrans %}
 {%- endblock %}
 
@@ -52,7 +52,7 @@
     <div class="diff-extra">
       {{ pager() }}
       {% if user.is_authenticated() and acl.threads.can_make_revert(forum, thread) %}
-      <form class="form-inline pull-right" action="{% url 'changelog_revert' thread=thread.pk, slug=thread.slug, post=post.pk, change=change.pk %}" method="post">
+      <form class="form-inline pull-right" action="{% url 'thread_changelog_revert' thread=thread.pk, slug=thread.slug, post=post.pk, change=change.pk %}" method="post">
         <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
         <button type="submit" class="btn btn-danger">{% trans %}Revert this edit{% endtrans %}</button></li>
       </form>
@@ -89,8 +89,8 @@
 {% if prev or prev %}
 <div class="pagination pull-left">
   <ul>
-    {% if prev %}<li><a href="{% url 'changelog_diff' thread=thread.pk, slug=thread.slug, post=post.pk, change=prev.pk %}"><i class="icon-chevron-left"></i> {{ prev.date|reldate }}</a></li>{% endif %}
-    {% if next %}<li><a href="{% url 'changelog_diff' thread=thread.pk, slug=thread.slug, post=post.pk, change=next.pk %}">{{ next.date|reldate }} <i class="icon-chevron-right"></i></a></li>{% endif %}
+    {% if prev %}<li><a href="{% url 'thread_changelog_diff' thread=thread.pk, slug=thread.slug, post=post.pk, change=prev.pk %}"><i class="icon-chevron-left"></i> {{ prev.date|reldate }}</a></li>{% endif %}
+    {% if next %}<li><a href="{% url 'thread_changelog_diff' thread=thread.pk, slug=thread.slug, post=post.pk, change=next.pk %}">{{ next.date|reldate }} <i class="icon-chevron-right"></i></a></li>{% endif %}
   </ul>
 </div>
 {% endif %}

@@ -42,6 +42,7 @@ class EditReplyBaseView(PostingBaseView):
             self.thread.save(force_update=True)
 
         if changed_post:
+            self.post.post = form.cleaned_data['post']
             self.md, self.post.post_preparsed = post_markdown(self.request, form.cleaned_data['post'])
             self.post.edits += 1
             self.post.edit_date = now
