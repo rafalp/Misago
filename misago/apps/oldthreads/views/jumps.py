@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
+from django.shortcuts import redirect as django_redirect
 from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
@@ -10,9 +10,9 @@ from misago.messages import Message
 from misago.models import Forum, Thread, Post, Karma, WatchedThread
 from misago.readstrackers import ThreadsTracker
 from misago.utils.pagination import make_pagination
-from misago.apps.threads.views.base import BaseView
+from misago.apps.threads.views.base import ViewBase
 
-class JumpView(BaseView):
+class JumpViewBase(ViewBase):
     def fetch_thread(self, thread):
         self.thread = Thread.objects.get(pk=thread)
         self.forum = self.thread.forum
@@ -23,11 +23,11 @@ class JumpView(BaseView):
         self.post = self.thread.post_set.get(pk=post)
         self.request.acl.threads.allow_post_view(self.request.user, self.thread, self.post)
 
-    def redirect(self, post):
+    def redirect_to_post(self, post):
         pagination = make_pagination(0, self.request.acl.threads.filter_posts(self.request, self.thread, self.thread.post_set.filter(date__lt=post.date)).count() + 1, self.request.settings.posts_per_page)
         if pagination['total'] > 1:
-            return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'page': pagination['total']}) + ('#post-%s' % post.pk))
-        return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % post.pk))
+            return django_redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'page': pagination['total']}) + ('#post-%s' % post.pk))
+        return django_redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % post.pk))
 
     def make_jump(self):
         raise NotImplementedError('JumpView cannot be called directly.')
@@ -49,24 +49,24 @@ class JumpView(BaseView):
 
 class LastReplyView(JumpView):
     def make_jump(self):
-        return self.redirect(self.thread.post_set.order_by('-id')[:1][0])
+        return self.redirect_to_post(self.thread.post_set.order_by('-id')[:1][0])
 
 
 class FindReplyView(JumpView):
     def make_jump(self):
-        return self.redirect(self.post)
+        return self.redirect_to_post(self.post)
 
 
 class NewReplyView(JumpView):
     def make_jump(self):
         if not self.request.user.is_authenticated():
-            return self.redirect(self.thread.post_set.order_by('-id')[:1][0])
+            return self.redirect_to_post(self.thread.post_set.order_by('-id')[:1][0])
         tracker = ThreadsTracker(self.request, self.forum)
         read_date = tracker.read_date(self.thread)
         post = self.thread.post_set.filter(date__gt=read_date).order_by('id')[:1]
         if not post:
-            return self.redirect(self.thread.post_set.order_by('-id')[:1][0])
-        return self.redirect(post[0])
+            return self.redirect_to_post(self.thread.post_set.order_by('-id')[:1][0])
+        return self.redirect_to_post(post[0])
 
 
 class FirstModeratedView(JumpView):
@@ -74,7 +74,7 @@ class FirstModeratedView(JumpView):
         if not self.request.acl.threads.can_approve(self.forum):
             raise ACLError404()
         try:
-            return self.redirect(
+            return self.redirect_to_post(
                 self.thread.post_set.get(moderated=True))
         except Post.DoesNotExist:
             return error404(self.request)
@@ -85,7 +85,7 @@ class FirstReportedView(JumpView):
         if not self.request.acl.threads.can_mod_posts(self.forum):
             raise ACLError404()
         try:
-            return self.redirect(
+            return self.redirect_to_post(
                 self.thread.post_set.get(reported=True))
         except Post.DoesNotExist:
             return error404(self.request)
@@ -221,7 +221,7 @@ class UpvotePostView(JumpView):
             request.user.save(force_update=True)
             if self.post.user_id:
                 self.post.user.save(force_update=True)
-            return self.redirect(self.post)
+            return self.redirect_to_post(self.post)
         return view(self.request)
     
     def check_acl(self, request):

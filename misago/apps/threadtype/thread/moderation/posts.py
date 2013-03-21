@@ -85,7 +85,7 @@ class PostsModeration(object):
                     new_thread.forum.sync()
                     new_thread.forum.save(force_update=True)
                 self.request.messages.set_flash(Message(_("Selected posts have been split to new thread.")), 'success', 'threads')
-                return redirect(reverse(self.thread_url, kwargs={'thread': new_thread.pk, 'slug': new_thread.slug}))
+                return redirect(reverse(self.type_prefix, kwargs={'thread': new_thread.pk, 'slug': new_thread.slug}))
             message = Message(form.non_field_errors()[0], 'error')
         else:
             form = SplitThreadForm(request=self.request, initial={
@@ -132,7 +132,7 @@ class PostsModeration(object):
                     self.forum.sync()
                     self.forum.save(force_update=True)
                 self.request.messages.set_flash(Message(_("Selected posts have been moved to new thread.")), 'success', 'threads')
-                return redirect(reverse(self.thread_url, kwargs={'thread': thread.pk, 'slug': thread.slug}))
+                return redirect(reverse(self.type_prefix, kwargs={'thread': thread.pk, 'slug': thread.slug}))
             message = Message(form.non_field_errors()[0], 'error')
         else:
             form = MovePostsForm(request=self.request)

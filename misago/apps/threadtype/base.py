@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+from django.http import Http404
 from django.shortcuts import redirect
 from misago.models import Forum, Thread, Post
 from misago.utils.pagination import make_pagination
@@ -21,8 +22,21 @@ class ViewBase(object):
     def set_post_contex(self):
         pass
 
+    def check_forum_type(self):
+        type_prefix = self.type_prefix
+        if type_prefix == 'thread':
+            type_prefix = 'root'
+        else:
+            type_prefix = '%ss' % type_prefix
+        try:
+            if self.parents[0].parent_id != Forum.objects.special_pk(type_prefix):
+                raise Http404()
+        except (AttributeError, IndexError):
+            if self.forum.special != type_prefix:
+                raise Http404()
+
     def redirect_to_post(self, post):
         pagination = make_pagination(0, self.request.acl.threads.filter_posts(self.request, self.thread, self.thread.post_set).filter(id__lte=post.pk).count(), self.request.settings.posts_per_page)
         if pagination['total'] > 1:
-            return redirect(reverse(self.thread_url, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'page': pagination['total']}) + ('#post-%s' % post.pk))
-        return redirect(reverse(self.thread_url, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % post.pk))
+            return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'page': pagination['total']}) + ('#post-%s' % post.pk))
+        return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % post.pk))

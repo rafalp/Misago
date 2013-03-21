@@ -109,7 +109,7 @@ class ThreadsListBaseView(ViewBase):
         # Merge proxy into forum
         self.forum.closed = self.proxy.closed
 
-        return request.theme.render_to_response(('%s/list.html' % self.templates_prefix),
+        return request.theme.render_to_response(('%ss/list.html' % self.type_prefix),
                                                 {
                                                  'message': self.message,
                                                  'forum': self.forum,

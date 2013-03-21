@@ -24,8 +24,8 @@ class PostingForm(Form, ValidatePostLengthMixin):
                        ]
 
         # Can we change threads states?
-        if (self.request.acl.threads.can_pin_threads(self.forum) >= self.thread.weight and
-                self.request.acl.threads.can_pin_threads(self.forum)):
+        if (self.request.acl.threads.can_pin_threads(self.forum) and
+            (not self.thread or self.request.acl.threads.can_pin_threads(self.forum) >= self.thread.weight)):
             thread_weight = []
             if self.request.acl.threads.can_pin_threads(self.forum) == 2:
                 thread_weight.append((2, _("Announcement")))
@@ -33,11 +33,15 @@ class PostingForm(Form, ValidatePostLengthMixin):
             thread_weight.append((0, _("Standard")))
             if thread_weight:
                 self.layout[0][1].append(('thread_weight', {'label': _("Thread Importance")}))
+                try:
+                    current_weight = self.thread.weight
+                except AttributeError:
+                    current_weight = 0
                 self.fields['thread_weight'] = forms.TypedChoiceField(widget=forms.RadioSelect,
                                                                       choices=thread_weight,
                                                                       required=False,
                                                                       coerce=int,
-                                                                      initial=(self.thread.weight if self.thread else 0))
+                                                                      initial=current_weight)
 
         # Can we lock threads?
         if self.request.acl.threads.can_close(self.forum):
@@ -50,8 +54,10 @@ class PostingForm(Form, ValidatePostLengthMixin):
     def clean_thread_weight(self):
         data = self.cleaned_data['thread_weight']
         if not data:
-            if self.thread:
+            try:
                 return self.thread.weight
+            except AttributeError:
+                pass
             return 0
         return data
 

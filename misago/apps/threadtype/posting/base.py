@@ -77,6 +77,7 @@ class PostingBaseView(ViewBase):
 
         try:
             self._set_context()
+            self.check_forum_type()
             if request.method == 'POST':
                 # Create correct form instance
                 if self.allow_quick_reply and 'quick_reply' in request.POST:
@@ -112,7 +113,7 @@ class PostingBaseView(ViewBase):
         except ACLError404 as e:
             return error404(request, unicode(e))
 
-        return request.theme.render_to_response(('%s/posting.html' % self.templates_prefix),
+        return request.theme.render_to_response(('%ss/posting.html' % self.type_prefix),
                                                 {
                                                  'action': self.action,
                                                  'message': self.message,

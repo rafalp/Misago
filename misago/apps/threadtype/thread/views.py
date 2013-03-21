@@ -163,6 +163,7 @@ class ThreadBaseView(ViewBase):
         self.message = request.messages.get_message('threads')
         try:
             self.fetch_thread()
+            self.check_forum_type()
             self.fetch_posts()
             self.make_thread_form()
             if self.thread_form:
@@ -184,7 +185,7 @@ class ThreadBaseView(ViewBase):
         # Merge proxy into forum
         self.forum.closed = self.proxy.closed
 
-        return request.theme.render_to_response(('%s/thread.html' % self.templates_prefix),
+        return request.theme.render_to_response(('%ss/thread.html' % self.type_prefix),
                                                 {
                                                  'message': self.message,
                                                  'forum': self.forum,
