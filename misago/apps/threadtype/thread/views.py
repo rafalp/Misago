@@ -176,7 +176,7 @@ class ThreadBaseView(ViewBase):
                 response = self.handle_posts_form()
                 if response:
                     return response
-        except Forum.DoesNotExist:
+        except (Forum.DoesNotExist, Thread.DoesNotExist):
             return error404(request)
         except ACLError403 as e:
             return error403(request, unicode(e))

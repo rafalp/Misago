@@ -18,6 +18,7 @@ class ThreadsListBaseView(ViewBase):
         self.request.acl.forums.allow_forum_view(self.forum)
         if self.forum.level:
             self.parents = Forum.objects.forum_parents(self.forum.pk)
+        self.check_forum_type()
         if self.forum.lft + 1 != self.forum.rght:
             self.forum.subforums = Forum.objects.treelist(self.request.acl.forums, self.forum, tracker=ForumsTracker(self.request.user))
 
@@ -99,7 +100,7 @@ class ThreadsListBaseView(ViewBase):
                 response = self.handle_form()
                 if response:
                     return response
-        except Forum.DoesNotExist:
+        except (Forum.DoesNotExist, Thread.DoesNotExist):
             return error404(request)
         except ACLError403 as e:
             return error403(request, unicode(e))
