@@ -27,7 +27,7 @@
   <div class="forum-threads-extra extra-top">
     {{ pager() }}
     {% if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
-    <a href="{% url 'thread_start' forum=forum.pk, slug=forum.slug %}" class="btn btn-inverse pull-right"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a>
+    <a href="{% url 'announcement_start' %}" class="btn btn-inverse pull-right"><i class="icon-plus"></i> {% trans %}Make Announcement{% endtrans %}</a>
     {% endif %}
   </div>
 
@@ -97,7 +97,7 @@
         {% else %}
         <tr>
           <td colspan="4" class="threads-list-empty">
-            {% trans %}There are no threads in this forum.{% endtrans %}
+            {% trans %}No global announcements are currently defined.{% endtrans %}
           </td>
         </tr>
         {% endfor %}
@@ -105,7 +105,7 @@
     </table>
     {% if user.is_authenticated() and list_form %}
     <div class="threads-actions">
-      <form id="threads_form" class="form-inline pull-right" action="{% url 'forum' slug=forum.slug, forum=forum.id, page=pagination['page'] %}" method="POST">
+      <form id="threads_form" class="form-inline pull-right" action="{% url 'announcements' page=pagination['page'] %}" method="POST">
         <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
         {{ form_theme.input_select(list_form['list_action'],width=3) }}
         <button type="submit" class="btn btn-danger">{% trans %}Go{% endtrans %}</button>
@@ -117,9 +117,7 @@
   <div class="forum-threads-extra">
     {{ pager() }}
     {% if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
-    <a href="{% url 'thread_start' forum=forum.pk, slug=forum.slug %}" class="btn btn-inverse pull-right"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a>
-    {% elif not user.is_authenticated() and not user.is_crawler() %}
-    <p class="lead threads-signin-message"><a href="{% url 'sign_in' %}">{% trans %}Sign in or register to start threads.{% endtrans %}</a></p>
+    <a href="{% url 'announcement_start' %}" class="btn btn-inverse pull-right"><i class="icon-plus"></i> {% trans %}Make Announcement{% endtrans %}</a>
     {% endif %}
   </div>
 
@@ -180,9 +178,9 @@
 <div class="pagination pull-left">
   <ul>
     <li class="count">{{ macros.pager_label(pagination) }}</li>
-    {%- if pagination['prev'] > 1 %}<li><a href="{% url 'forum' slug=forum.slug, forum=forum.id %}" class="tooltip-top" title="{% trans %}First Page{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}First{% endtrans %}</a></li>{% endif -%}
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'forum' slug=forum.slug, forum=forum.id, page=pagination['prev'] %}{% else %}{% url 'forum' slug=forum.slug, forum=forum.id %}{% endif %}" class="tooltip-top" title="{% trans %}Newest Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{% url 'forum' slug=forum.slug, forum=forum.id, page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 1 %}<li><a href="{% url 'announcements' %}" class="tooltip-top" title="{% trans %}First Page{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}First{% endtrans %}</a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'announcements' page=pagination['prev'] %}{% else %}{% url 'announcements' %}{% endif %}" class="tooltip-top" title="{% trans %}Newest Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{% url 'announcements' page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
   </ul>
 </div>
 {% endif %}

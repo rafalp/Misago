@@ -10,7 +10,7 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
         self.forum = Forum.objects.get(special='announcements')
 
     def fetch_threads(self):
-        queryset = self.request.acl.threads.filter_threads(self.request, self.forum, Thread.objects.filter(forum=self.forum))
+        queryset = self.request.acl.threads.filter_threads(self.request, self.forum, Thread.objects.filter(forum=self.forum)).order_by('-start')
         self.count = queryset.count()
         self.pagination = make_pagination(self.kwargs.get('page', 0), self.count, self.request.settings.threads_per_page)
         

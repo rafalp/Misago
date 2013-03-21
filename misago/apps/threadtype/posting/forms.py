@@ -6,6 +6,8 @@ from misago.forms import Form
 from misago.validators import validate_sluggable
 
 class PostingForm(Form, ValidatePostLengthMixin):
+    include_thread_weight = True
+    include_close_thread = True
     post = forms.CharField(widget=forms.Textarea)
 
     def __init__(self, data=None, file=None, request=None, forum=None, thread=None, *args, **kwargs):
@@ -24,7 +26,7 @@ class PostingForm(Form, ValidatePostLengthMixin):
                        ]
 
         # Can we change threads states?
-        if (self.request.acl.threads.can_pin_threads(self.forum) and
+        if self.include_thread_weight and (self.request.acl.threads.can_pin_threads(self.forum) and
             (not self.thread or self.request.acl.threads.can_pin_threads(self.forum) >= self.thread.weight)):
             thread_weight = []
             if self.request.acl.threads.can_pin_threads(self.forum) == 2:
@@ -44,7 +46,7 @@ class PostingForm(Form, ValidatePostLengthMixin):
                                                                       initial=current_weight)
 
         # Can we lock threads?
-        if self.request.acl.threads.can_close(self.forum):
+        if self.include_close_thread and self.request.acl.threads.can_close(self.forum):
             self.fields['close_thread'] = forms.BooleanField(required=False)
             if self.thread and self.thread.closed:
                 self.layout[0][1].append(('close_thread', {'inline': _("Open Thread")}))

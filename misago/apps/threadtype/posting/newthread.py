@@ -32,7 +32,7 @@ class NewThreadBaseView(PostingBaseView):
                                             )
 
         # Create our post
-        md, post_preparsed = post_markdown(self.request, form.cleaned_data['post'])
+        self.md, post_preparsed = post_markdown(self.request, form.cleaned_data['post'])
         self.post = Post.objects.create(
                                         forum=self.forum,
                                         thread=self.thread,
@@ -79,8 +79,3 @@ class NewThreadBaseView(PostingBaseView):
             self.request.user.posts += 1
         self.request.user.last_post = now
         self.request.user.save(force_update=True)
-
-        # Notify mentioned
-        if md.mentions:
-            self.post.notify_mentioned(self.request, md.mentions)
-            self.post.save(force_update=True)
