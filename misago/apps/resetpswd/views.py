@@ -4,7 +4,7 @@ from misago.apps.errors import error404, error_banned
 from misago.decorators import block_authenticated, block_banned, block_crawlers, block_jammed
 from misago.forms import FormLayout
 from misago.messages import Message
-from misago.models import Ban, User
+from misago.models import Ban, Session, Token, User
 from misago.utils.strings import random_string
 from misago.utils.views import redirect_message
 from misago.apps.resetpswd.forms import UserResetPasswordForm
