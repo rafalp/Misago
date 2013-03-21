@@ -9,11 +9,8 @@ from misago.apps.threads.mixins import TypeMixin
 class NewThreadView(NewThreadBaseView, TypeMixin):
     action = 'new_thread'
 
-    def set_context(self):
+    def set_forum_context(self):
         self.forum = Forum.objects.get(pk=self.kwargs.get('forum'), type='forum')
-        self.request.acl.forums.allow_forum_view(self.forum)
-        self.proxy = Forum.objects.parents_aware_forum(self.forum)
-        self.request.acl.threads.allow_new_threads(self.proxy)
 
     def response(self):
         if self.post.moderated:
@@ -25,16 +22,6 @@ class NewThreadView(NewThreadBaseView, TypeMixin):
 
 class EditThreadView(EditThreadBaseView, TypeMixin):
     action = 'edit_thread'
-
-    def set_context(self):
-        self.thread = Thread.objects.get(pk=self.kwargs.get('thread'))
-        self.forum = self.thread.forum
-        self.proxy = Forum.objects.parents_aware_forum(self.forum)
-        self.request.acl.forums.allow_forum_view(self.forum)
-        self.request.acl.threads.allow_thread_view(self.request.user, self.thread)
-        self.post = self.thread.start_post
-        self.request.acl.threads.allow_post_view(self.request.user, self.thread, self.post)
-        self.request.acl.threads.allow_thread_edit(self.request.user, self.proxy, self.thread, self.post)
     
     def response(self):
         self.request.messages.set_flash(Message(_("Your thread has been edited.")), 'success', 'threads_%s' % self.post.pk)
@@ -44,15 +31,12 @@ class EditThreadView(EditThreadBaseView, TypeMixin):
 class NewReplyView(NewReplyBaseView, TypeMixin):
     action = 'new_reply'
 
-    def set_context(self):
-        pass
-
     def response(self):
         if self.post.moderated:
-            request.messages.set_flash(Message(_("Your reply has been posted. It will be hidden from other members until moderator reviews it.")), 'success', 'threads_%s' % self.post.pk)
+            self.request.messages.set_flash(Message(_("Your reply has been posted. It will be hidden from other members until moderator reviews it.")), 'success', 'threads_%s' % self.post.pk)
         else:
-            request.messages.set_flash(Message(_("Your reply has been posted.")), 'success', 'threads_%s' % self.post.pk)
-        return self.redirect_to_post(post)
+            self.request.messages.set_flash(Message(_("Your reply has been posted.")), 'success', 'threads_%s' % self.post.pk)
+        return self.redirect_to_post(self.post)
 
 
 class EditReplyView(EditReplyBaseView, TypeMixin):

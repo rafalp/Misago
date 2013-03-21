@@ -5,10 +5,13 @@ from misago.apps.errors import error403, error404
 from misago.forms import FormLayout
 from misago.markdown import post_markdown
 from misago.messages import Message
-from misago.models import Forum, WatchedThread
+from misago.models import Forum, Thread, WatchedThread
 from misago.apps.threadtype.base import ViewBase
+from misago.apps.threadtype.thread.forms import QuickReplyForm
 
 class PostingBaseView(ViewBase):
+    allow_quick_reply = False
+
     def form_initial_data(self):
         return {}
 
@@ -36,6 +39,16 @@ class PostingBaseView(ViewBase):
                                     post_content=old_post,
                                     )
 
+    def notify_users(self):
+        try:
+            if self.quote and self.quote.user_id:
+                del self.md.mentions[self.quote.user.username_slug]
+        except KeyError:
+            pass
+        if self.md.mentions:
+            self.post.notify_mentioned(self.request, self.md.mentions)
+            self.post.save(force_update=True)
+
     def watch_thread(self):
         if self.request.user.subscribe_start:
             try:
@@ -60,15 +73,22 @@ class PostingBaseView(ViewBase):
         self.message = request.messages.get_message('threads')
 
         post_preview = ''
+        form = None
 
         try:
             self._set_context()
             if request.method == 'POST':
-                try:
-                    form = self.form_type(request.POST, request.FILE, request=request, forum=self.forum, thread=self.thread)
-                except AttributeError:
-                    form = self.form_type(request.POST, request=request, forum=self.forum, thread=self.thread)
-
+                # Create correct form instance
+                if self.allow_quick_reply and 'quick_reply' in request.POST:
+                    form = QuickReplyForm(request.POST, request=request)
+                if not form or 'preview' in request.POST or not form.is_valid():
+                    # Override "quick reply" form with full one
+                    try:
+                        form = self.form_type(request.POST, request.FILE, request=request, forum=self.forum, thread=self.thread)
+                    except AttributeError:
+                        form = self.form_type(request.POST, request=request, forum=self.forum, thread=self.thread)
+                
+                # Handle specific submit
                 if 'preview' in request.POST:
                     form.empty_errors()
                     if form['post'].value():
@@ -79,9 +99,10 @@ class PostingBaseView(ViewBase):
                     if form.is_valid():
                         self.post_form(form)
                         self.watch_thread()
+                        self.notify_users()
                         return self.response()
                     else:
-                        message = Message(form.non_field_errors()[0], 'error')
+                        self.message = Message(form.non_field_errors()[0], 'error')
             else:
                 form = self.form_type(request=request, forum=self.forum, thread=self.thread, initial=self.form_initial_data())
         except Forum.DoesNotExist:

@@ -18,7 +18,6 @@ class FormLayout(object):
             self.fields = {}
             for fieldset in self.fieldsets:
                 for field in fieldset['fields']:
-                    print field['id']
                     self.fields[field['id']] = field
         else:
             self.fields = scaffold_fields.fields

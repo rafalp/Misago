@@ -148,7 +148,7 @@ class Thread(models.Model):
     def email_watchers(self, request, post):
         from misago.acl.builder import acl
         from misago.acl.exceptions import ACLError403, ACLError404
-        from misago.models import ThreadRead
+        from misago.models import ThreadRead, WatchedThread
 
         for watch in WatchedThread.objects.filter(thread=self).filter(email=True).filter(last_read__gte=self.previous_last):
             user = watch.user

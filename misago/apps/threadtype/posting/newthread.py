@@ -1,17 +1,19 @@
 from datetime import timedelta
-from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
 from django.utils import timezone
-from django.utils.translation import ugettext as _
 from misago.apps.threadtype.posting.base import PostingBaseView
 from misago.apps.threadtype.posting.forms import NewThreadForm
 from misago.markdown import post_markdown
-from misago.messages import Message
 from misago.models import Forum, Thread, Post
 from misago.utils.strings import slugify
 
 class NewThreadBaseView(PostingBaseView):
     form_type = NewThreadForm
+
+    def set_context(self):
+        self.set_forum_context()
+        self.request.acl.forums.allow_forum_view(self.forum)
+        self.proxy = Forum.objects.parents_aware_forum(self.forum)
+        self.request.acl.threads.allow_new_threads(self.proxy)
 
     def post_form(self, form):
         now = timezone.now()
@@ -27,8 +29,6 @@ class NewThreadBaseView(PostingBaseView):
                                             last=now,
                                             moderated=moderation,
                                             score=self.request.settings['thread_ranking_initial_score'],
-                                            replies=1,
-                                            replies_moderated=int(moderation),
                                             )
 
         # Create our post
@@ -59,11 +59,6 @@ class NewThreadBaseView(PostingBaseView):
         # Finally save complete thread
         self.thread.save(force_update=True)
 
-        # Reward user for posting new thread?
-        if (not self.request.user.last_post
-                or self.request.user.last_post < timezone.now() - timedelta(seconds=self.request.settings['score_reward_new_post_cooldown'])):
-            self.request.user.score += self.request.settings['score_reward_new_thread']
-
         # Update forum monitor
         if not moderation:
             self.request.monitor['threads'] = int(self.request.monitor['threads']) + 1
@@ -73,12 +68,17 @@ class NewThreadBaseView(PostingBaseView):
             self.forum.new_last_thread(self.thread)
             self.forum.save(force_update=True)
 
+        # Reward user for posting new thread?
+        if not moderation and (not self.request.user.last_post
+                or self.request.user.last_post < timezone.now() - timedelta(seconds=self.request.settings['score_reward_new_post_cooldown'])):
+            self.request.user.score += self.request.settings['score_reward_new_thread']
+
         # Update user
         if not moderation:
             self.request.user.threads += 1
             self.request.user.posts += 1
-            self.request.user.last_post = now
-            self.request.user.save(force_update=True)
+        self.request.user.last_post = now
+        self.request.user.save(force_update=True)
 
         # Notify mentioned
         if md.mentions:

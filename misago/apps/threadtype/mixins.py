@@ -19,3 +19,15 @@ class ValidateThreadNameMixin(object):
                                                   self.request.settings['thread_name_max']
                                                   ) % {'count': self.request.settings['thread_name_max']})
         return data
+
+
+class ValidatePostLengthMixin(object):
+    def clean_post(self):
+        data = self.cleaned_data['post']
+        if len(data) < self.request.settings['post_length_min']:
+            raise forms.ValidationError(ungettext(
+                                                  "Post content cannot be empty.",
+                                                  "Post content cannot be shorter than %(count)d characters.",
+                                                  self.request.settings['post_length_min']
+                                                  ) % {'count': self.request.settings['post_length_min']})
+        return data

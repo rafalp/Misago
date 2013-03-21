@@ -13,13 +13,17 @@ class Form(forms.Form):
     error_source = None
 
     def __init__(self, data=None, file=None, request=None, *args, **kwargs):
+        self.form_finalized = False
         self.request = request
 
-        # Extract request from first argument
+        # Extract request from first arguments
         if data != None:
             super(Form, self).__init__(data, file, *args, **kwargs)
         else:
             super(Form, self).__init__(*args, **kwargs)
+
+        # Let forms do mumbo-jumbo with fields removing
+        self.ensure_finalization()
 
         # Kill captcha fields
         try:
@@ -37,8 +41,10 @@ class Form(forms.Form):
         except KeyError:
             pass
 
-        # Let forms do mumbo-jumbo with fields removing
-        self.finalize_form()
+    def ensure_finalization(self):
+        if not self.form_finalized:
+            self.form_finalized = True
+            self.finalize_form()
 
     def finalize_form(self):
         pass
@@ -47,6 +53,7 @@ class Form(forms.Form):
         """
         Trim inputs and strip newlines
         """
+        self.ensure_finalization()
         self.data = self.data.copy()
         for key, field in self.fields.iteritems():
             try:

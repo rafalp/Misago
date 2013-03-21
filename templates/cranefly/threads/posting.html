@@ -13,6 +13,7 @@
 {% for parent in parents %}
 <li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {% endfor %}
+<li><a href="{{ forum.type|url(forum=forum.pk, slug=forum.slug) }}">{{ forum.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {% if thread %}<li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>{% endif %}
 <li class="active">{{ get_title() }}
 {%- endblock %}
@@ -135,16 +136,16 @@
 {% trans %}Post New Thread{% endtrans %}
 {%- elif action == 'edit_thread' -%}
 {% trans %}Edit Thread{% endtrans %}
-{%- elif action in ['new_post', 'new_post_quick'] -%}
+{%- elif action == 'new_reply' -%}
 {% trans %}Post New Reply{% endtrans %}
-{%- elif action == 'edit_post' -%}
+{%- elif action == 'edit_reply' -%}
 {% trans %}Edit Reply{% endtrans %}
 {%- endif %}
 {%- endmacro %}
 
 
 {% macro get_info() -%}
-{% if mode == 'edit_post' -%}
+{% if action == 'edit_reply' -%}
     {% if post.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
     <li><i class="icon-time"></i> {{ post.date|reltimesince }}</li>
     <li><i class="icon-user"></i> {% if post.user %}<a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
@@ -167,9 +168,9 @@
 
 
 {% macro get_button() -%}
-{% if mode == 'new_thread' -%}
+{% if action == 'new_thread' -%}
 {% trans %}Post Thread{% endtrans %}
-{%- elif mode in ['new_post', 'new_post_quick'] -%}
+{%- elif action == 'new_reply' -%}
 {% trans %}Post Reply{% endtrans %}
 {%- else -%}
 {% trans %}Save Changes{% endtrans %}

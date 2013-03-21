@@ -1,18 +1,18 @@
-from datetime import timedelta
-from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
 from django.utils import timezone
-from django.utils.translation import ugettext as _
 from misago.apps.threadtype.posting.base import PostingBaseView
 from misago.apps.threadtype.posting.forms import EditThreadForm
 from misago.markdown import post_markdown
-from misago.messages import Message
-from misago.models import Forum, Thread, Post
 from misago.utils.strings import slugify
 
 class EditThreadBaseView(PostingBaseView):
     form_type = EditThreadForm
 
+    def set_context(self):
+        self.set_thread_context()
+        self.post = self.thread.start_post
+        self.request.acl.threads.allow_post_view(self.request.user, self.thread, self.post)
+        self.request.acl.threads.allow_thread_edit(self.request.user, self.proxy, self.thread, self.post)
+        
     def form_initial_data(self):
         return {
                 'thread_name': self.thread.name,
