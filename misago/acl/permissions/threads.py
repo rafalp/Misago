@@ -200,6 +200,13 @@ class ThreadsACL(BaseACL):
             return False
         return queryset
 
+    def can_read_threads(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            return forum_role['can_read_threads']
+        except KeyError:
+            return False
+
     def can_start_threads(self, forum):
         try:
             forum_role = self.acl[forum.pk]
