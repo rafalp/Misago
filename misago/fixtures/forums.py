@@ -4,7 +4,6 @@ from misago.utils.fixtures import load_monitor_fixture
 from misago.utils.strings import slugify
 
 def load():
-    Forum(special='announcements', name='announcements', slug='announcements', type='forum').insert_at(None, save=True)
     Forum(special='private', name='private', slug='private', type='forum').insert_at(None, save=True)
     Forum(special='reports', name='reports', slug='reports', type='forum').insert_at(None, save=True)
 

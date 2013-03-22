@@ -19,7 +19,6 @@ def common(request):
             'stopwatch': request.stopwatch.time(),
             'user': request.user,
             'version': __version__,
-            'announcements': Forum.objects.special_model('announcements'),
             'private': Forum.objects.special_model('private'),
             'reports': Forum.objects.special_model('reports'),
         }

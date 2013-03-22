@@ -131,9 +131,7 @@ class Forums(ListWidget):
     
     def sort_items(self, page_items, sorting_method):
         final_items = []
-        for forum in Forum.objects.filter(special__in=['announcements', 'reports', 'private']).order_by('special'):
-            if forum.special == 'announcements':
-                forum.name = _("Global Announcements")
+        for forum in Forum.objects.filter(special__in=['reports', 'private']).order_by('special'):
             if forum.special == 'reports':
                 forum.name = _("Reports")
             if forum.special == 'private':

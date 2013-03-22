@@ -152,12 +152,10 @@ class Forum(MPTTModel):
         super(Forum, self).delete(*args, **kwargs)
 
     def __unicode__(self):
-        if self.special == 'announcements':
-           return unicode(_('Global Announcements'))
         if self.special == 'private':
            return unicode(_('Private Threads'))
         if self.special == 'reports':
-           return unicode(_('Content Report'))
+           return unicode(_('Reports'))
         if self.special == 'root':
            return unicode(_('Root Category'))
         return unicode(self.name)

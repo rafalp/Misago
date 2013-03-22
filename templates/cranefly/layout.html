@@ -12,13 +12,10 @@
           <li><a href="#">Frontlines</a></li>
           <li><a href="#">Reports <span class="label label-important">5</span></a></li>
           <li><a href="#">Warnings</a></li>
-          {% if acl.forums.can_browse(announcements) %}
-          <li{% if forum and forum.special == 'announcements' %} class="active"{% endif %}><a href="{% url 'announcements' %}">{% trans %}Manage Announcements{% endtrans %}</a></li>
-          {% endif %}
         </ul>
         <form class="navbar-form pull-right">
           <div class="navbar-search-form">
-            <input type="text" class="span2" placeholder="{% trans %}Search IP Address...{% endtrans %}">
+            <input type="text" class="span2" placeholder="{% trans %}Enter IP Address or Username...{% endtrans %}">
             <button type="submit" class="btn btn-link"><i class="icon-search"></i></button>
           </div>
         </form>
