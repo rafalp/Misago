@@ -1114,12 +1114,11 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{opacity:0.9;filter:alpha(opa
 .thread-quick-reply .editor{margin-left:121px;position:relative;}.thread-quick-reply .editor:after,.thread-quick-reply .editor:before{right:100%;border:solid transparent;content:"";height:0;width:0;position:absolute;pointer-events:none;}
 .thread-quick-reply .editor:after{border-color:transparent;border-right-color:#ffffff;border-width:10.5px;top:14px;margin-top:0px;}
 .thread-quick-reply .editor:before{border-color:transparent;border-right-color:#e6e6e6;border-width:11.5px;top:14px;margin-top:-1px;}
-.post-votes-list .vote-user,.post-votes-list .vote-user:link,.post-votes-list .vote-user:visited{display:block;color:#555555;font-size:17.5px;font-weight:bold;}
+.post-votes-list .vote-user,.post-votes-list .vote-user:link,.post-votes-list .vote-user:visited{color:#555555;font-size:17.5px;font-weight:bold;}
 .post-votes-list .vote-user .vote-icon{background-color:#999999;border-radius:3px;padding:2px 3px;position:relative;bottom:1.75px;font-size:14px;}.post-votes-list .vote-user .vote-icon i{background-image:url("../img/glyphicons-halflings-white.png");}
 .post-votes-list a.vote-user:hover,.post-votes-list a.vote-user:active{color:#333333;text-decoration:none;}
 .post-votes-list .post-likes .vote-icon{background-color:#46a546;}
 .post-votes-list .post-hates .vote-icon{background-color:#cf402e;}
-.post-votes-list .vote-date{margin:0px;padding:0px;color:#999999;font-size:10.5px;}
 .post-changelog table td{vertical-align:middle;}.post-changelog table td .change-added,.post-changelog table td .change-removed,.post-changelog table td .change-none{display:block;font-size:28px;font-weight:bold;text-align:right;}.post-changelog table td .change-added.change-small,.post-changelog table td .change-removed.change-small,.post-changelog table td .change-none.change-small{font-size:14px;}
 .post-changelog table td .change-neutral{color:#555555;}
 .post-changelog table td .change-added{color:#46a546;}

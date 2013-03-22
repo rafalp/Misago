@@ -93,7 +93,26 @@
 </div>
 {% endblock %}
 
+{% block javascripts %}{{ super() }}
+  <script type="text/javascript">
+    $(function() {
+      {% for vote in (upvotes|list + downvotes|list) %}
+      $('.vote-{{ vote.id }}').popover({
+        'placement': 'top',
+        'trigger': 'hover',
+        'html': true,
+        {% if acl.users.can_see_users_trails() %}
+        'title': '<strong>{{ vote.date|reldate }}</strong>',
+        'content': '{% trans ip=vote.ip %}From {{ ip }}{% endtrans %}'
+        {% else %}
+        'content': '<strong>{{ vote.ip }}</strong>'
+        {% endif %}
+      });
+      {% endfor %}
+    });
+  </script>
+{% endblock %}
+
 {% macro vote_details(vote, icon) %}
-{% if vote.user_id %}<a href="{% url 'user' user=vote.user_id, username=vote.user_slug %}" class="vote-user"><span class="vote-icon"><i class="icon-{{ icon }}"></i></span> {{ vote.user_name }}</a>{% else %}<span class="vote-user"><span class="vote-icon"><i class="icon-{{ icon }}"></i></span> {{ vote.user_name }}</span>{% endif %}
-<p class="vote-date {% if acl.users.can_see_users_trails() %} tooltip-top{% endif %}"{% if acl.users.can_see_users_trails() %} title="{{ vote.agent }}"{% endif %}>{{ vote.date|reldate }}{% if acl.users.can_see_users_trails() %}, {{ vote.ip }}{% endif %}</p>
+{% if vote.user_id %}<a href="{% url 'user' user=vote.user_id, username=vote.user_slug %}" class="vote-user vote-{{ vote.pk }}"><span class="vote-icon"><i class="icon-{{ icon }}"></i></span> {{ vote.user_name }}</a>{% else %}<span class="vote-user vote-{{ vote.pk }}"><span class="vote-icon"><i class="icon-{{ icon }}"></i></span> {{ vote.user_name }}</span>{% endif %}
 {% endmacro %}
