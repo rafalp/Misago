@@ -60,6 +60,9 @@ class Migration(SchemaMigration):
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['misago.User'], null=True, on_delete=models.SET_NULL, blank=True)),
             ('user_name', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('user_slug', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('target_user', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, on_delete=models.SET_NULL, to=orm['misago.User'])),
+            ('target_user_name', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('target_user_slug', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('date', self.gf('django.db.models.fields.DateTimeField')()),
             ('ip', self.gf('django.db.models.fields.GenericIPAddressField')(max_length=39)),
             ('agent', self.gf('django.db.models.fields.CharField')(max_length=255)),
@@ -340,6 +343,14 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal('misago', ['Thread'])
 
+        # Adding M2M table for field participants on 'Thread'
+        db.create_table(u'misago_thread_participants', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('thread', models.ForeignKey(orm['misago.thread'], null=False)),
+            ('user', models.ForeignKey(orm['misago.user'], null=False))
+        ))
+        db.create_unique(u'misago_thread_participants', ['thread_id', 'user_id'])
+
         # Adding model 'ThreadRead'
         db.create_table(u'misago_threadread', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -533,6 +544,9 @@ class Migration(SchemaMigration):
         # Deleting model 'Thread'
         db.delete_table(u'misago_thread')
 
+        # Removing M2M table for field participants on 'Thread'
+        db.delete_table('misago_thread_participants')
+
         # Deleting model 'ThreadRead'
         db.delete_table(u'misago_threadread')
 
@@ -604,6 +618,9 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'ip': ('django.db.models.fields.GenericIPAddressField', [], {'max_length': '39'}),
             'post': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['misago.Post']"}),
+            'target_user': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['misago.User']"}),
+            'target_user_name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'target_user_slug': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'thread': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['misago.Thread']"}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['misago.User']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
             'user_name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
@@ -820,6 +837,7 @@ class Migration(SchemaMigration):
             'merges': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'moderated': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'participants': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'+'", 'symmetrical': 'False', 'to': "orm['misago.User']"}),
             'replies': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'replies_deleted': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'replies_moderated': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),

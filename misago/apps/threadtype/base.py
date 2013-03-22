@@ -35,6 +35,12 @@ class ViewBase(object):
             if self.forum.special != type_prefix:
                 raise Http404()
 
+    def _check_permissions(self):
+        try:
+            self.check_permissions()
+        except AttributeError:
+            pass
+
     def redirect_to_post(self, post):
         pagination = make_pagination(0, self.request.acl.threads.filter_posts(self.request, self.thread, self.thread.post_set).filter(id__lte=post.pk).count(), self.request.settings.posts_per_page)
         if pagination['total'] > 1:

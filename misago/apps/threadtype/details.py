@@ -28,6 +28,7 @@ class ExtraBaseView(ViewBase):
         try:
             self.fetch_target()
             self.check_acl()
+            self._check_permissions()
         except (Forum.DoesNotExist, Thread.DoesNotExist, Post.DoesNotExist):
             return error404(self.request)
         except ACLError403 as e:

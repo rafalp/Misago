@@ -3,7 +3,7 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns('misago.apps.threads',
     url(r'^forum/(?P<slug>(\w|-)+)-(?P<forum>\d+)/$', 'list.ThreadsListView', name="forum"),
     url(r'^forum/(?P<slug>(\w|-)+)-(?P<forum>\d+)/(?P<page>\d+)/$', 'list.ThreadsListView', name="forum"),
-    url(r'^forum/(?P<slug>(\w|-)+)-(?P<forum>\d+)/new/$', 'posting.NewThreadView', name="thread_start"),
+    url(r'^forum/(?P<slug>(\w|-)+)-(?P<forum>\d+)/start/$', 'posting.NewThreadView', name="thread_start"),
     url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/edit/$', 'posting.EditThreadView', name="thread_edit"),
     url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/reply/$', 'posting.NewReplyView', name="thread_reply"),
     url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<quote>\d+)/reply/$', 'posting.NewReplyView', name="thread_reply"),

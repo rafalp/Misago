@@ -71,7 +71,7 @@ class Post(models.Model):
                                        agent=request.META.get('HTTP_USER_AGENT'),
                                        )
             
-    def notify_mentioned(self, request, users):
+    def notify_mentioned(self, request, thread_type, users):
         from misago.acl.builder import acl
         from misago.acl.exceptions import ACLError403, ACLError404
         
@@ -87,7 +87,7 @@ class Post(models.Model):
                     if not user.is_ignoring(request.user):
                         alert = user.alert(ugettext_lazy("%(username)s has mentioned you in his reply in thread %(thread)s").message)
                         alert.profile('username', request.user)
-                        alert.post('thread', self.thread, self)
+                        alert.post('thread', thread_type, self.thread, self)
                         alert.save_all()
                 except (ACLError403, ACLError404):
                     pass

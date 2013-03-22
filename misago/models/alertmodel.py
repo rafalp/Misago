@@ -52,13 +52,13 @@ class Alert(models.Model):
         from django.core.urlresolvers import reverse
         return self.url(var, user.username, reverse('user', kwargs={'user': user.pk, 'username': user.username_slug}))
 
-    def thread(self, var, thread):
+    def thread(self, var, thread_type, thread):
         from django.core.urlresolvers import reverse
-        return self.url(var, thread.name, reverse('thread', kwargs={'thread': thread.pk, 'slug': thread.slug}))
+        return self.url(var, thread.name, reverse(thread_type, kwargs={'thread': thread.pk, 'slug': thread.slug}))
 
-    def post(self, var, thread, post):
+    def post(self, var, thread_type, thread, post):
         from django.core.urlresolvers import reverse
-        return self.url(var, thread.name, reverse('thread_find', kwargs={'thread': thread.pk, 'slug': thread.slug, 'post': post.pk}))
+        return self.url(var, thread.name, reverse('%s_find' % thread_type, kwargs={'thread': thread.pk, 'slug': thread.slug, 'post': post.pk}))
 
     def save_all(self, *args, **kwargs):
         self.save(force_insert=True)

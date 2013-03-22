@@ -6,14 +6,11 @@
 {% block title %}{% if thread -%}
 {{ macros.page_title(title=_(get_title()), parent=thread.name) }}
 {%- else -%}
-{{ macros.page_title(title=_(get_title()), parent=forum.name) }}
+{{ macros.page_title(title=_(get_title()), parent=_("Private Threads")) }}
 {%- endif %}{% endblock %}
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
-{% for parent in parents %}
-<li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-{% endfor %}
-<li><a href="{{ forum.type|url(forum=forum.pk, slug=forum.slug) }}">{{ forum.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{% url 'private_threads' %}">{% trans %}Private Threads{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {% if thread %}<li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>{% endif %}
 <li class="active">{{ get_title() }}
 {%- endblock %}
@@ -25,7 +22,7 @@
     <ul class="breadcrumb">
       {{ self.breadcrumb() }}</li>
     </ul>
-    <h1>{{ get_title() }} <small>{% if thread %}{{ thread.name }}{% else %}{{ forum.name }}{% endif %}</small></h1>
+    <h1>{{ get_title() }} <small>{% if thread %}{{ thread.name }}{% else %}{% trans %}Private Threads{% endtrans %}{% endif %}</small></h1>
     {% if thread %}
     <ul class="unstyled header-stats">
       {{ get_info() }}
@@ -65,25 +62,9 @@
             <h4>Message Body</h4>
             {% endif %}
             {{ editor.editor(form.fields.post, get_button(), rows=8, extra=get_extra()) }}
-            {% if intersect(form.fields, ('edit_reason', 'thread_weight', 'close_thread')) %}
-            <hr>
             {% if 'edit_reason' in form.fields %}
+            <hr>
             {{ form_theme.row_widget(form.fields.edit_reason, width=8) }}
-            {% endif %}
-
-            {% if intersect(form.fields, ('thread_weight', 'close_thread')) %}
-            <div class="control-group">
-              <label class="control-label">{% trans %}Thread Status{% endtrans %}:</label>
-              <div class="controls">
-                {% if 'thread_weight' in form.fields %}
-                {{ form_theme.input_radio_select(form.fields.thread_weight, width=8) }}
-                {% endif %}
-                {% if 'close_thread' in form.fields %}
-                {{ form_theme.input_checkbox(form.fields.close_thread, width=8) }}
-                {% endif %}
-              </div>
-            </div>
-            {% endif %}
 
             <div class="form-actions">
               <button type="submit" class="btn btn-primary">{{ get_button() }}</button>
@@ -116,14 +97,14 @@
 
 {% macro get_action() -%}
 {% if action == 'new_thread' -%}
-{% url 'thread_start' forum=forum.pk, slug=forum.slug %}
+{% url 'private_thread_start' %}
 {%- elif action == 'edit_thread' -%}
-{% url 'thread_edit' thread=thread.pk, slug=thread.slug %}
+{% url 'private_thread_edit' thread=thread.pk, slug=thread.slug %}
 {%- elif action in 'new_reply' -%}
 {%- if quote -%}
-{% url 'thread_reply' thread=thread.pk, slug=thread.slug, quote=quote.pk %}
+{% url 'private_thread_reply' thread=thread.pk, slug=thread.slug, quote=quote.pk %}
 {%- else -%}
-{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}
+{% url 'private_thread_reply' thread=thread.pk, slug=thread.slug %}
 {%- endif -%}
 {%- elif action == 'edit_reply' -%}
 {% url 'post_edit' thread=thread.pk, slug=thread.slug, post=post.pk %}

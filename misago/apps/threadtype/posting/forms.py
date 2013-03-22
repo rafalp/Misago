@@ -53,6 +53,12 @@ class PostingForm(Form, ValidatePostLengthMixin):
             else:
                 self.layout[0][1].append(('close_thread', {'inline': _("Close Thread")}))
 
+        # Give inheritor chance to set custom fields
+        try:
+            self.type_fields()
+        except AttributeError:
+            pass
+
     def clean_thread_weight(self):
         data = self.cleaned_data['thread_weight']
         if not data:

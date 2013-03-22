@@ -19,7 +19,7 @@ def common(request):
             'stopwatch': request.stopwatch.time(),
             'user': request.user,
             'version': __version__,
-            'private_threads': Forum.objects.special_model('private'),
+            'private_threads': Forum.objects.special_model('private_threads'),
             'reports': Forum.objects.special_model('reports'),
         }
     except AttributeError:

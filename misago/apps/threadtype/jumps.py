@@ -33,6 +33,7 @@ class JumpView(ViewBase):
             if self.forum.level:
                 self.parents = Forum.objects.forum_parents(self.forum.pk, True)
             self.check_forum_type()
+            self._check_permissions()
             if post:
                 self.fetch_post(post)
             return self.make_jump()

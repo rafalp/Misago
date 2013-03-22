@@ -31,6 +31,7 @@ class DeleteHideBaseView(ViewBase):
         self.parents = []
         try:
             self._set_context()
+            self._check_permissions()
             self.delete()
             self.message()
             return self.response()

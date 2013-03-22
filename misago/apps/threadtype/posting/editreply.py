@@ -4,6 +4,7 @@ from misago.apps.threadtype.posting.forms import EditReplyForm
 from misago.markdown import post_markdown
 
 class EditReplyBaseView(PostingBaseView):
+    action = 'edit_reply'
     form_type = EditReplyForm
 
     def set_context(self):

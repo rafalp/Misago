@@ -72,6 +72,7 @@ class Thread(models.Model):
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
     last_poster_slug = models.SlugField(max_length=255, null=True, blank=True)
     last_poster_style = models.CharField(max_length=255, null=True, blank=True)
+    participants = models.ManyToManyField('User', related_name='+')
     moderated = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     closed = models.BooleanField(default=False)
@@ -145,7 +146,7 @@ class Thread(models.Model):
         self.deleted = start_post.deleted
         self.merges = last_post.merge
         
-    def email_watchers(self, request, post):
+    def email_watchers(self, request, thread_type, post):
         from misago.acl.builder import acl
         from misago.acl.exceptions import ACLError403, ACLError404
         from misago.models import ThreadRead, WatchedThread
@@ -161,7 +162,7 @@ class Thread(models.Model):
                     if not user.is_ignoring(request.user):
                         user.email_user(
                             request,
-                            'post_notification',
+                            '%s_reply_notification' % thread_type,
                             _('New reply in thread "%(thread)s"') % {'thread': self.name},
                             {'author': request.user, 'post': post, 'thread': self}
                             )

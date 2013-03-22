@@ -7,6 +7,7 @@ from misago.models import Forum, Thread, Post
 from misago.utils.strings import slugify
 
 class NewThreadBaseView(PostingBaseView):
+    action = 'new_thread'
     form_type = NewThreadForm
 
     def set_context(self):

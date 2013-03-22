@@ -86,7 +86,6 @@ class New(FormWidget):
 
         for rank in form.cleaned_data['ranks']:
             new_newsletter.ranks.add(rank)
-        new_newsletter.save(force_update=True)
 
         return new_newsletter, Message(_('New Newsletter has been created.'), 'success')
 

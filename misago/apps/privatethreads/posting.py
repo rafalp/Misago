@@ -4,11 +4,19 @@ from django.utils.translation import ugettext as _
 from misago.apps.threadtype.posting import NewThreadBaseView, EditThreadBaseView, NewReplyBaseView, EditReplyBaseView
 from misago.messages import Message
 from misago.models import Forum, Thread, Post
-from misago.apps.threads.mixins import TypeMixin
+from misago.apps.privatethreads.forms import (NewThreadForm, EditThreadForm,
+                                              NewReplyForm, EditReplyForm)
+from misago.apps.privatethreads.mixins import TypeMixin
 
 class NewThreadView(NewThreadBaseView, TypeMixin):
+    form_type = NewThreadForm
+
     def set_forum_context(self):
-        self.forum = Forum.objects.get(pk=self.kwargs.get('forum'), type='forum')
+        self.forum = Forum.objects.get(special='private_threads')
+
+    def after_form(self):
+        self.thread.participants.add(self.request.user)
+        self.whitelist_mentions()
 
     def response(self):
         if self.post.moderated:
@@ -19,12 +27,22 @@ class NewThreadView(NewThreadBaseView, TypeMixin):
 
 
 class EditThreadView(EditThreadBaseView, TypeMixin):
+    form_type = EditThreadForm
+
+    def after_form(self):
+        self.whitelist_mentions()
+    
     def response(self):
         self.request.messages.set_flash(Message(_("Your thread has been edited.")), 'success', 'threads_%s' % self.post.pk)
         return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % self.post.pk))
 
 
 class NewReplyView(NewReplyBaseView, TypeMixin):
+    form_type = NewReplyForm
+
+    def after_form(self):
+        self.whitelist_mentions()
+
     def response(self):
         if self.post.moderated:
             self.request.messages.set_flash(Message(_("Your reply has been posted. It will be hidden from other members until moderator reviews it.")), 'success', 'threads_%s' % self.post.pk)
@@ -34,6 +52,11 @@ class NewReplyView(NewReplyBaseView, TypeMixin):
 
 
 class EditReplyView(EditReplyBaseView, TypeMixin):
+    form_type = EditReplyForm
+
+    def after_form(self):
+        self.whitelist_mentions()
+
     def response(self):
         self.request.messages.set_flash(Message(_("Your reply has been changed.")), 'success', 'threads_%s' % self.post.pk)
         return self.redirect_to_post(self.post)

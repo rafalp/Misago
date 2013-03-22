@@ -37,8 +37,10 @@ class ChangelogBaseView(ViewBase):
         self.parents = []
         try:
             self.fetch_target()
+            self._check_permissions()
             if not request.user.is_authenticated():
                 raise ACLError403(_("Guest, you have to sign-in in order to see posts changelogs."))
+            self.check_permissions()
         except (Forum.DoesNotExist, Thread.DoesNotExist, Post.DoesNotExist, Change.DoesNotExist):
             return error404(self.request)
         except ACLError403 as e:

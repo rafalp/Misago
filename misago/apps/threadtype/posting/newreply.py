@@ -9,6 +9,7 @@ from misago.apps.threadtype.posting.base import PostingBaseView
 from misago.apps.threadtype.posting.forms import NewReplyForm
 
 class NewReplyBaseView(PostingBaseView):
+    action = 'new_reply'
     allow_quick_reply = True
     form_type = NewReplyForm
 
@@ -128,8 +129,8 @@ class NewReplyBaseView(PostingBaseView):
                 and not self.quote.user.is_ignoring(self.request.user)):
             alert = self.quote.user.alert(ugettext_lazy("%(username)s has replied to your post in thread %(thread)s").message)
             alert.profile('username', self.request.user)
-            alert.post('thread', self.thread, self.post)
+            alert.post('thread', self.type_prefix, self.thread, self.post)
             alert.save_all()
 
         # E-mail users about new response
-        self.thread.email_watchers(self.request, self.post)
+        self.thread.email_watchers(self.request, self.type_prefix, self.post)

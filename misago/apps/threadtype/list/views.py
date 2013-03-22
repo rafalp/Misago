@@ -12,6 +12,8 @@ from misago.readstrackers import ForumsTracker
 from misago.apps.threadtype.base import ViewBase
 
 class ThreadsListBaseView(ViewBase):
+    template = 'list'
+
     def _fetch_forum(self):
         self.fetch_forum()
         self.proxy = Forum.objects.parents_aware_forum(self.forum)
@@ -84,6 +86,9 @@ class ThreadsListBaseView(ViewBase):
         else:
             self.form = self.form(request=self.request)
 
+    def template_vars(self, context):
+        return context
+
     def __call__(self, request, **kwargs):
         self.request = request
         self.kwargs = kwargs
@@ -93,6 +98,7 @@ class ThreadsListBaseView(ViewBase):
         self.message = request.messages.get_message('threads')
         try:
             self._fetch_forum()
+            self.check_permissions()
             self.fetch_threads()
             self.form = None
             self.make_form()
@@ -110,8 +116,8 @@ class ThreadsListBaseView(ViewBase):
         # Merge proxy into forum
         self.forum.closed = self.proxy.closed
 
-        return request.theme.render_to_response(('%ss/list.html' % self.type_prefix),
-                                                {
+        return request.theme.render_to_response('%ss/%s.html' % (self.type_prefix, self.template),
+                                                self.template_vars({
                                                  'type_prefix': self.type_prefix,
                                                  'message': self.message,
                                                  'forum': self.forum,
@@ -120,5 +126,5 @@ class ThreadsListBaseView(ViewBase):
                                                  'list_form': FormFields(self.form).fields if self.form else None,
                                                  'threads': self.threads,
                                                  'pagination': self.pagination,
-                                                 },
+                                                 }),
                                                 context_instance=RequestContext(request));

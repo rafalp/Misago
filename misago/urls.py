@@ -27,7 +27,7 @@ urlpatterns += patterns('',
     (r'^activate/', include('misago.apps.activation.urls')),
     (r'^watched-threads/', include('misago.apps.watchedthreads.urls')),
     (r'^reset-password/', include('misago.apps.resetpswd.urls')),
-    #(r'^private-discussions/', include('misago.apps.privatethreads.urls')),
+    (r'^private-threads/', include('misago.apps.privatethreads.urls')),
     #(r'^reports/', include('misago.apps.reports.urls')),
     (r'^', include('misago.apps.threads.urls')),
 )

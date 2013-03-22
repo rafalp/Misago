@@ -165,6 +165,7 @@ class ThreadBaseView(ViewBase):
         try:
             self.fetch_thread()
             self.check_forum_type()
+            self._check_permissions()
             self.fetch_posts()
             self.make_thread_form()
             if self.thread_form:

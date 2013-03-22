@@ -131,11 +131,11 @@ class Forums(ListWidget):
     
     def sort_items(self, page_items, sorting_method):
         final_items = []
-        for forum in Forum.objects.filter(special__in=['reports', 'private']).order_by('special'):
+        for forum in Forum.objects.filter(special__in=['reports', 'private_threads']).order_by('special'):
             if forum.special == 'reports':
                 forum.name = _("Reports")
-            if forum.special == 'private':
-                forum.name = _("Private Discussions")
+            if forum.special == 'private_threads':
+                forum.name = _("Private Threads")
             final_items.append(forum)
         for forum in page_items.order_by('lft').all():
             final_items.append(forum)

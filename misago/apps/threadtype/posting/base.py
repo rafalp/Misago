@@ -6,6 +6,7 @@ from misago.forms import FormLayout
 from misago.markdown import post_markdown
 from misago.messages import Message
 from misago.models import Forum, Thread, Post, WatchedThread
+from misago.utils.translation import ugettext_lazy
 from misago.apps.threadtype.base import ViewBase
 from misago.apps.threadtype.thread.forms import QuickReplyForm
 
@@ -39,6 +40,9 @@ class PostingBaseView(ViewBase):
                                     post_content=old_post,
                                     )
 
+    def after_form(self):
+        pass
+
     def notify_users(self):
         try:
             if self.quote and self.quote.user_id:
@@ -46,7 +50,7 @@ class PostingBaseView(ViewBase):
         except KeyError:
             pass
         if self.md.mentions:
-            self.post.notify_mentioned(self.request, self.md.mentions)
+            self.post.notify_mentioned(self.request, self.type_prefix, self.md.mentions)
             self.post.save(force_update=True)
 
     def watch_thread(self):
@@ -78,6 +82,7 @@ class PostingBaseView(ViewBase):
         try:
             self._set_context()
             self.check_forum_type()
+            self._check_permissions()
             if request.method == 'POST':
                 # Create correct form instance
                 if self.allow_quick_reply and 'quick_reply' in request.POST:
@@ -100,6 +105,7 @@ class PostingBaseView(ViewBase):
                     if form.is_valid():
                         self.post_form(form)
                         self.watch_thread()
+                        self.after_form()
                         self.notify_users()
                         return self.response()
                     else:

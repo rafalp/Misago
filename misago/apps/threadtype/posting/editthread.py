@@ -5,6 +5,7 @@ from misago.markdown import post_markdown
 from misago.utils.strings import slugify
 
 class EditThreadBaseView(PostingBaseView):
+    action = 'edit_thread'
     form_type = EditThreadForm
 
     def set_context(self):
