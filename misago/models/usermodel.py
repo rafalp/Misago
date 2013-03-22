@@ -163,6 +163,7 @@ class User(models.Model):
     last_search = models.DateTimeField(null=True, blank=True)
     alerts = models.PositiveIntegerField(default=0)
     alerts_date = models.DateTimeField(null=True, blank=True)
+    unread_pds = models.PositiveIntegerField(default=0)
     activation = models.IntegerField(default=0)
     token = models.CharField(max_length=12, null=True, blank=True)
     avatar_ban = models.BooleanField(default=False)

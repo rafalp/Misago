@@ -403,6 +403,7 @@ class Migration(SchemaMigration):
             ('last_search', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
             ('alerts', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
             ('alerts_date', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
+            ('unread_pds', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
             ('activation', self.gf('django.db.models.fields.IntegerField')(default=0)),
             ('token', self.gf('django.db.models.fields.CharField')(max_length=12, null=True, blank=True)),
             ('avatar_ban', self.gf('django.db.models.fields.BooleanField')(default=False)),
@@ -904,6 +905,7 @@ class Migration(SchemaMigration):
             'timezone': ('django.db.models.fields.CharField', [], {'default': "'utc'", 'max_length': '255'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'token': ('django.db.models.fields.CharField', [], {'max_length': '12', 'null': 'True', 'blank': 'True'}),
+            'unread_pds': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'username': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'username_slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '255'}),
             'votes': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'})
