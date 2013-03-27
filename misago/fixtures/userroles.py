@@ -15,7 +15,14 @@ def load():
                         'can_see_users_emails': True,
                         'can_see_users_trails': True,
                         'can_see_hidden_users': True,
-                        'forums': {1: 1, 2: 1, 3: 1, 5: 1, 6: 1},
+                        'can_use_private_threads': True,
+                        'can_start_private_threads': True,
+                        'can_upload_attachments_in_private_threads': True,
+                        'private_thread_attachment_size': 0,
+                        'private_thread_attachments_limit': 0,
+                        'can_invite_ignoring': True,
+                        'private_threads_mod': True,
+                        'forums': {3: 1, 5: 1, 6: 1},
                        }
     role.save(force_insert=True)
     
@@ -30,7 +37,14 @@ def load():
                         'can_see_users_emails': True,
                         'can_see_users_trails': True,
                         'can_see_hidden_users': True,
-                        'forums': {1: 1, 2: 1, 3: 1, 5: 1, 6: 1},
+                        'can_use_private_threads': True,
+                        'can_start_private_threads': True,
+                        'can_upload_attachments_in_private_threads': True,
+                        'private_thread_attachment_size': 0,
+                        'private_thread_attachments_limit': 0,
+                        'can_invite_ignoring': True,
+                        'private_threads_mod': True,
+                        'forums': {3: 1, 5: 1, 6: 1},
                        }
     role.save(force_insert=True)
     
@@ -39,7 +53,14 @@ def load():
                         'name_changes_allowed': 2,
                         'can_use_signature': False,
                         'can_search_users': True,
-                        'forums': {1: 3, 4: 3, 5: 3, 6: 3},
+                        'can_use_private_threads': True,
+                        'can_start_private_threads': True,
+                        'can_upload_attachments_in_private_threads': False,
+                        'private_thread_attachment_size': 100,
+                        'private_thread_attachments_limit': 30,
+                        'can_invite_ignoring': False,
+                        'private_threads_mod': False,
+                        'forums': {4: 3, 5: 3, 6: 3},
                        }
     role.save(force_insert=True)
     
