@@ -21,9 +21,8 @@
     <h1>{% trans %}Private Threads{% endtrans %}</h1>
 
     <ul class="nav nav-tabs header-tabs">
-      <li class="{% if tab == 'all' %}active{% endif %}"><a href="{% url 'private_threads' %}">{% trans %}All Threads{% endtrans %}</a></li>
-      <li class="{% if tab == 'new' %}active{% endif %}"><a href="{% url 'new_private_threads' %}">{% trans %}Unread Threads{% endtrans %}</a></li>
-      <li class="{% if tab == 'my' %}active{% endif %}"><a href="{% url 'my_private_threads' %}">{% trans %}My Threads{% endtrans %}</a></li>
+      <li class="{% if tab == 'all' %}active{% endif %}"><a href="{% url 'private_threads' %}">{% trans %}Threads I participate in{% endtrans %}</a></li>
+      <li class="{% if tab == 'my' %}active{% endif %}"><a href="{% url 'my_private_threads' %}">{% trans %}Threads I've started{% endtrans %}</a></li>
     </ul>
   </div>
 </div>

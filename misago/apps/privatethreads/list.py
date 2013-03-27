@@ -11,77 +11,31 @@ class AllThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
         self.forum = Forum.objects.get(special='private_threads')
 
     def threads_queryset(self):
-        announcements = self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set).filter(weight=2).order_by('-pk')
-        threads = self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set).filter(weight__lt=2).order_by('-last')
+        return self.forum.thread_set.filter(participants__id=self.request.user.pk).order_by('-last')
 
-        # Dont display threads by ignored users (unless they are important)
-        if self.request.user.is_authenticated():
-            ignored_users = self.request.user.ignored_users()
-            if ignored_users:
-                threads = threads.extra(where=["`threads_thread`.`start_poster_id` IS NULL OR `threads_thread`.`start_poster_id` NOT IN (%s)" % ','.join([str(i) for i in ignored_users])])
+    def fetch_threads(self):
+        qs_threads = self.threads_queryset()
 
         # Add in first and last poster
         if self.request.settings.avatars_on_threads_list:
-            announcements = announcements.prefetch_related('start_poster', 'last_poster')
-            threads = threads.prefetch_related('start_poster', 'last_poster')
+            qs_threads = qs_threads.prefetch_related('start_poster', 'last_poster')
 
-        return announcements, threads
-
-    def fetch_threads(self):
-        qs_announcements, qs_threads = self.threads_queryset()
         self.count = qs_threads.count()
         self.pagination = make_pagination(self.kwargs.get('page', 0), self.count, self.request.settings.threads_per_page)
 
         tracker_forum = ThreadsTracker(self.request, self.forum)
-        for thread in list(chain(qs_announcements, qs_threads[self.pagination['start']:self.pagination['stop']])):
+        for thread in qs_threads[self.pagination['start']:self.pagination['stop']]:
             thread.is_read = tracker_forum.is_read(thread)
             self.threads.append(thread)
-
-    def threads_actions(self):
-        acl = self.request.acl.threads.get_role(self.forum)
-        actions = []
-        try:
-            if acl['can_approve']:
-                actions.append(('accept', _('Accept threads')))
-            if acl['can_pin_threads'] == 2:
-                actions.append(('annouce', _('Change to announcements')))
-            if acl['can_pin_threads'] > 0:
-                actions.append(('sticky', _('Change to sticky threads')))
-            if acl['can_pin_threads'] > 0:
-                actions.append(('normal', _('Change to standard thread')))
-            if acl['can_move_threads_posts']:
-                actions.append(('move', _('Move threads')))
-                actions.append(('merge', _('Merge threads')))
-            if acl['can_close_threads']:
-                actions.append(('open', _('Open threads')))
-                actions.append(('close', _('Close threads')))
-            if acl['can_delete_threads']:
-                actions.append(('undelete', _('Undelete threads')))
-                actions.append(('soft', _('Soft delete threads')))
-            if acl['can_delete_threads'] == 2:
-                actions.append(('hard', _('Hard delete threads')))
-        except KeyError:
-            pass
-        return actions
 
     def template_vars(self, context):
         context['tab'] = 'all'
         return context
 
 
-class NewThreadsListView(AllThreadsListView, ThreadsListModeration, TypeMixin):
-    def template_vars(self, context):
-        context['tab'] = 'new'
-        return context
-
-
 class MyThreadsListView(AllThreadsListView, ThreadsListModeration, TypeMixin):
-    def threads_actions(self):
-        return (
-                ('open', _('Open threads')),
-                ('close', _('Close threads')),
-                ('hard', _('Delete threads')),
-                )
+    def threads_queryset(self):
+        return self.forum.thread_set.filter(start_poster_id=self.request.user.pk).order_by('-last')
 
     def template_vars(self, context):
         context['tab'] = 'my'

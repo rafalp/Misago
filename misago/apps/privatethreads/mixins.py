@@ -14,3 +14,6 @@ class TypeMixin(object):
         for user in self.md.mentions:
             if user not in participants and user not in mentioned:
                 self.post.mentioned.add(user)
+
+    def threads_list_redirect(self):
+        return redirect(reverse('private_threads'))
