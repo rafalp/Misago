@@ -130,16 +130,7 @@ class Forums(ListWidget):
         return Forum.objects.get(special='root').get_descendants()
     
     def sort_items(self, page_items, sorting_method):
-        final_items = []
-        for forum in Forum.objects.filter(special__in=['reports', 'private_threads']).order_by('special'):
-            if forum.special == 'reports':
-                forum.name = _("Reports")
-            if forum.special == 'private_threads':
-                forum.name = _("Private Threads")
-            final_items.append(forum)
-        for forum in page_items.order_by('lft').all():
-            final_items.append(forum)
-        return final_items
+        return page_items.order_by('lft').all()
 
     def add_template_variables(self, variables):
         variables['target'] = _(self.role.name)

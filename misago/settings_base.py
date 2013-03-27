@@ -111,6 +111,7 @@ PERMISSION_PROVIDERS = (
     'misago.acl.permissions.users',
     'misago.acl.permissions.forums',
     'misago.acl.permissions.threads',
+    'misago.acl.permissions.privatethreads',
     'misago.acl.permissions.special',
 )
 
