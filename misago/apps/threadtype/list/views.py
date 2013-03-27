@@ -86,9 +86,6 @@ class ThreadsListBaseView(ViewBase):
         else:
             self.form = self.form(request=self.request)
 
-    def template_vars(self, context):
-        return context
-
     def __call__(self, request, **kwargs):
         self.request = request
         self.kwargs = kwargs
@@ -98,7 +95,7 @@ class ThreadsListBaseView(ViewBase):
         self.message = request.messages.get_message('threads')
         try:
             self._fetch_forum()
-            self.check_permissions()
+            self._check_permissions()
             self.fetch_threads()
             self.form = None
             self.make_form()

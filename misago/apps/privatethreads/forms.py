@@ -1,3 +1,5 @@
+from django import forms
+from misago.forms import Form
 from misago.apps.threadtype.posting.forms import (NewThreadForm as NewThreadBaseForm,
                                                   EditThreadForm as EditThreadBaseForm,
                                                   NewReplyForm as NewReplyBaseForm,
@@ -21,3 +23,7 @@ class NewReplyForm(NewReplyBaseForm):
 class EditReplyForm(EditReplyBaseForm):
     include_thread_weight = False
     include_close_thread = False
+
+
+class InviteMemberForm(Form):
+    username = forms.CharField(max_length=200)

@@ -13,14 +13,6 @@ class NewReplyView(NewReplyBaseView, TypeMixin):
     pass
 
 
-class FirstModeratedView(FirstModeratedBaseView, TypeMixin):
-    pass
-
-
-class FirstReportedView(FirstReportedBaseView, TypeMixin):
-    pass
-
-
 class ShowHiddenRepliesView(ShowHiddenRepliesBaseView, TypeMixin):
     pass
 
@@ -47,3 +39,13 @@ class UpvotePostView(UpvotePostBaseView, TypeMixin):
 
 class DownvotePostView(DownvotePostBaseView, TypeMixin):
     pass
+
+
+class InviteUserView(JumpView, TypeMixin):
+    def make_jump(self):
+        print 'ZOMG INVITING USER'
+
+
+class RemoveUserView(JumpView, TypeMixin):
+    def make_jump(self):
+        print 'ZOMG REMOVING USER'

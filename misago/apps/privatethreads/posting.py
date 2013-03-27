@@ -23,7 +23,7 @@ class NewThreadView(NewThreadBaseView, TypeMixin):
             self.request.messages.set_flash(Message(_("New thread has been posted. It will be hidden from other members until moderator reviews it.")), 'success', 'threads')
         else:
             self.request.messages.set_flash(Message(_("New thread has been posted.")), 'success', 'threads')
-        return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % self.post.pk))
+        return redirect(reverse('private_thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % self.post.pk))
 
 
 class EditThreadView(EditThreadBaseView, TypeMixin):
@@ -34,7 +34,7 @@ class EditThreadView(EditThreadBaseView, TypeMixin):
     
     def response(self):
         self.request.messages.set_flash(Message(_("Your thread has been edited.")), 'success', 'threads_%s' % self.post.pk)
-        return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % self.post.pk))
+        return redirect(reverse('private_thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % self.post.pk))
 
 
 class NewReplyView(NewReplyBaseView, TypeMixin):

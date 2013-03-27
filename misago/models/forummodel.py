@@ -114,11 +114,11 @@ class ForumManager(models.Manager):
     def readable_forums(self, acl, include_special=False):
         self.populate_tree()
         readable = []
-        for forum in self.forums_tree:
+        for pk, forum in self.forums_tree.items():
             if ((include_special or not forum.special) and 
-                    acl.forums.can_browse(forum.pk) and
-                    acl.threads.acl[forum.pk]['can_read_threads']):
-                readable.append(forum.pk)
+                    acl.forums.can_browse(pk) and
+                    acl.threads.acl[pk]['can_read_threads']):
+                readable.append(pk)
         return readable
 
 

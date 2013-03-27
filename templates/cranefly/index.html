@@ -52,7 +52,7 @@
         <ul class="unstyled">
           {% for online in rank.online %}
           <li>
-            <img src="{{ online.get_avatar(48) }}" alt="" class="avatar-small">
+            <img src="{{ online.get_avatar(24) }}" alt="" class="avatar-small">
             <a href="{% url 'user' username=online.username_slug, user=online.pk %}">{{ online.username }}</a>
             {% if rank.title or online.title %}<span class="label">{% if online.title %}{{ online.title }}{% else %}{{ _(rank.title) }}{% endif %}</span>{% endif %}
           </li>

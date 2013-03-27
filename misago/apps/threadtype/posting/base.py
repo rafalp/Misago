@@ -120,7 +120,7 @@ class PostingBaseView(ViewBase):
             return error404(request, unicode(e))
 
         return request.theme.render_to_response(('%ss/posting.html' % self.type_prefix),
-                                                {
+                                                self.template_vars({
                                                  'type_prefix': self.type_prefix,
                                                  'action': self.action,
                                                  'message': self.message,
@@ -131,5 +131,5 @@ class PostingBaseView(ViewBase):
                                                  'parents': self.parents,
                                                  'preview': post_preview,
                                                  'form': FormLayout(form),
-                                                 },
+                                                 }),
                                                 context_instance=RequestContext(request));

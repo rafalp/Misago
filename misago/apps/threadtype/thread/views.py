@@ -188,7 +188,7 @@ class ThreadBaseView(ViewBase):
         self.forum.closed = self.proxy.closed
 
         return request.theme.render_to_response('%ss/thread.html' % self.type_prefix,
-                                                {
+                                                self.template_vars({
                                                  'type_prefix': self.type_prefix,
                                                  'message': self.message,
                                                  'forum': self.forum,
@@ -203,5 +203,5 @@ class ThreadBaseView(ViewBase):
                                                  'quick_reply': FormFields(QuickReplyForm(request=request)).fields,
                                                  'thread_form': FormFields(self.thread_form).fields if self.thread_form else None,
                                                  'posts_form': FormFields(self.posts_form).fields if self.posts_form else None,
-                                                 },
+                                                 }),
                                                 context_instance=RequestContext(request));

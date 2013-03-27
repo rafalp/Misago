@@ -46,3 +46,6 @@ class ViewBase(object):
         if pagination['total'] > 1:
             return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'page': pagination['total']}) + ('#post-%s' % post.pk))
         return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % post.pk))
+
+    def template_vars(self, context):
+        return context

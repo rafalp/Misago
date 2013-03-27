@@ -27,6 +27,11 @@
       {%- else -%}
         {% trans %}No replies{% endtrans %}
       {%- endif %}</li>
+      <li class="stats-form">
+        <form action="" method="post">
+          <button type="submit" class="btn"><i class="icon-remove"></i> Leave Thread</button>
+        </form>
+      </li>
     </ul>
   </div>
 </div>
@@ -38,320 +43,362 @@
   </div>
   {% endif %}
 
-  <div class="thread-buttons">
-    {{ pager() }} 
-    {% if acl.threads.can_reply(forum, thread) %}
-    <a href="{% url 'private_thread_reply' thread=thread.pk, slug=thread.slug %}" class="btn btn-inverse pull-right"><i class="icon-pencil"></i> {% trans %}Reply{% endtrans %}</a>
-    {% endif %}
-    {% if watcher %}
-    <form action="{% url 'private_thread_unwatch' thread=thread.pk, slug=thread.slug %}" class="form-inline pull-right" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><input type="hidden" name="retreat" value="{{ request_path }}"><button type="submit" class="btn btn-success tooltip-top" title="{% trans %}Remove thread from watched list{% endtrans %}"><i class="icon-bookmark"></i></button></form>
-    {% if watcher.email %}
-    <form action="{% url 'private_thread_unwatch_email' thread=thread.pk, slug=thread.slug %}" class="form-inline pull-right" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><input type="hidden" name="retreat" value="{{ request_path }}"><button type="submit" class="btn btn-success tooltip-top" title="{% trans %}Don't e-mail me anymore if anyone replies to this thread{% endtrans %}"><i class="icon-envelope"></i></button></form>
-    {% else %}
-    <form action="{% url 'private_thread_watch_email' thread=thread.pk, slug=thread.slug %}" class="form-inline pull-right" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><input type="hidden" name="retreat" value="{{ request_path }}"><button type="submit" class="btn tooltip-top" title="{% trans %}E-mail me if anyone replies{% endtrans %}"><i class="icon-envelope"></i></button></form>
-    {% endif %}
-    {% else %}
-    <form action="{% url 'private_thread_watch' thread=thread.pk, slug=thread.slug %}" class="form-inline pull-right" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><input type="hidden" name="retreat" value="{{ request_path }}"><button type="submit" class="btn tooltip-top" title="{% trans %}Add thread to watched list{% endtrans %}"><i class="icon-bookmark"></i></button></form>
-    <form action="{% url 'private_thread_watch_email' thread=thread.pk, slug=thread.slug %}" class="form-inline pull-right" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><input type="hidden" name="retreat" value="{{ request_path }}"><button type="submit" class="btn tooltip-top" title="{% trans %}Add thread to watched list and e-mail me if anyone replies{% endtrans %}"><i class="icon-envelope"></i></button></form>
-    {% endif %}
-    {% if ignored_posts %}
-    <form action="{% url 'private_thread_show_hidden' thread=thread.pk, slug=thread.slug %}" class="form-inline pull-right" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><button type="submit" class="btn"><i class="icon-eye-open"></i> {% trans %}Show Hidden Replies{% endtrans %}</button></form>
-    {% endif %}
-  </div>
+  <div class="row">
+    <div class="span9">
 
-  <div class="thread-body">
-    {% for post in posts %}
-    <div id="post-{{ post.pk }}" class="post-wrapper">
-      {% if post.message %}
-      <div class="messages-list">
-        {{ macros.draw_message(post.message) }}
+      <div class="thread-buttons">
+        {{ pager() }} 
+        {% if acl.threads.can_reply(forum, thread) and participants|length > 1 %}
+        <a href="{% url 'private_thread_reply' thread=thread.pk, slug=thread.slug %}" class="btn btn-inverse pull-right"><i class="icon-pencil"></i> {% trans %}Reply{% endtrans %}</a>
+        {% endif %}
+        {% if watcher %}
+        <form action="{% url 'private_thread_unwatch' thread=thread.pk, slug=thread.slug %}" class="form-inline pull-right" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><input type="hidden" name="retreat" value="{{ request_path }}"><button type="submit" class="btn btn-success tooltip-top" title="{% trans %}Remove thread from watched list{% endtrans %}"><i class="icon-bookmark"></i></button></form>
+        {% if watcher.email %}
+        <form action="{% url 'private_thread_unwatch_email' thread=thread.pk, slug=thread.slug %}" class="form-inline pull-right" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><input type="hidden" name="retreat" value="{{ request_path }}"><button type="submit" class="btn btn-success tooltip-top" title="{% trans %}Don't e-mail me anymore if anyone replies to this thread{% endtrans %}"><i class="icon-envelope"></i></button></form>
+        {% else %}
+        <form action="{% url 'private_thread_watch_email' thread=thread.pk, slug=thread.slug %}" class="form-inline pull-right" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><input type="hidden" name="retreat" value="{{ request_path }}"><button type="submit" class="btn tooltip-top" title="{% trans %}E-mail me if anyone replies{% endtrans %}"><i class="icon-envelope"></i></button></form>
+        {% endif %}
+        {% else %}
+        <form action="{% url 'private_thread_watch' thread=thread.pk, slug=thread.slug %}" class="form-inline pull-right" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><input type="hidden" name="retreat" value="{{ request_path }}"><button type="submit" class="btn tooltip-top" title="{% trans %}Add thread to watched list{% endtrans %}"><i class="icon-bookmark"></i></button></form>
+        <form action="{% url 'private_thread_watch_email' thread=thread.pk, slug=thread.slug %}" class="form-inline pull-right" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><input type="hidden" name="retreat" value="{{ request_path }}"><button type="submit" class="btn tooltip-top" title="{% trans %}Add thread to watched list and e-mail me if anyone replies{% endtrans %}"><i class="icon-envelope"></i></button></form>
+        {% endif %}
+        {% if ignored_posts %}
+        <form action="{% url 'private_thread_show_hidden' thread=thread.pk, slug=thread.slug %}" class="form-inline pull-right" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><button type="submit" class="btn"><i class="icon-eye-open"></i> {% trans %}Show Hidden Replies{% endtrans %}</button></form>
+        {% endif %}
+      </div>
+
+      <div class="thread-body">
+        {% for post in posts %}
+        <div id="post-{{ post.pk }}" class="post-wrapper">
+          {% if post.message %}
+          <div class="messages-list">
+            {{ macros.draw_message(post.message) }}
+          </div>
+          {% endif %}
+          {% if post.deleted and not acl.threads.can_see_deleted_posts(forum) %}
+          <div class="post-body post-muted">
+            {% if post.user_id %}
+            <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}"><img src="{{ post.user.get_avatar(50) }}" alt="" class="user-avatar"></a>
+            {% else %}
+            <img src="{{ macros.avatar_guest(60) }}" alt="" class="user-avatar"></a>
+            {% endif %}
+            <div class="post-content">
+              <div class="post-header">
+                <div class="post-header-compact">
+                  {% if post.user_id %}
+                  <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="post-author">{{ post.user.username }}</a>{% if post.user.get_title() %} {{ user_label(post.user) }}{% endif %}
+                  {% else %}
+                  <span class="post-author">{{ post.user_name }}</span> <span class="label post-author-label post-label-guest">{% trans %}Unregistered{% endtrans %}</span>
+                  {% endif %}
+                  <span class="separator">&ndash;</span>
+                  <a href="{% if pagination['page'] > 1 -%}
+                  {% url 'private_thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
+                  {%- else -%}
+                  {% url 'private_thread' thread=thread.pk, slug=thread.slug %}
+                  {%- endif %}#post-{{ post.pk }}" class="post-date">{{ post.date|reltimesince }}</a>
+                  {% if post.edits %}
+                  <span class="separator">&ndash;</span>
+                  {% if acl.threads.can_see_changelog(user, forum, post) %}
+                  <a href="{% url 'changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</a>
+                  {% else %}
+                  <span class="post-changelog">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</span>
+                  {% endif %}
+                  {% endif %}
+                </div>
+
+                <a href="{% if pagination['page'] > 1 -%}
+                {% url 'private_thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
+                {%- else -%}
+                {% url 'private_thread' thread=thread.pk, slug=thread.slug %}
+                {%- endif %}#post-{{ post.pk }}" class="post-perma tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
+
+                {% if not post.is_read %}
+                <div class="post-extra">
+                  <span class="label label-warning">
+                    {% trans %}New{% endtrans %}
+                  </span>
+                </div>
+                {% endif %}
+
+              </div>
+              <div class="post-message">
+                {% trans user=edit_user(post), date=post.edit_date|reltimesince|low %}{{ user }} has deleted this reply {{ date }}{% endtrans %}
+              </div>
+            </dv>
+          </div>
+          {% elif post.ignored %}
+          <div class="post-body post-muted">
+            <img src="{{ macros.avatar_guest(60) }}" alt="" class="user-avatar"></a>
+            <div class="post-arrow"></div>
+            <div class="post-content">
+              <div class="post-header">
+                <div class="post-header-compact">
+                  <a href="{% if pagination['page'] > 1 -%}
+                  {% url 'private_thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
+                  {%- else -%}
+                  {% url 'private_thread' thread=thread.pk, slug=thread.slug %}
+                  {%- endif %}#post-{{ post.pk }}" class="post-date">{{ post.date|reltimesince }}</a>
+                </div>
+
+                <a href="{% if pagination['page'] > 1 -%}
+                {% url 'private_thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
+                {%- else -%}
+                {% url 'private_thread' thread=thread.pk, slug=thread.slug %}
+                {%- endif %}#post-{{ post.pk }}" class="post-perma tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
+
+                {% if not post.is_read %}
+                <div class="post-extra">
+                  <span class="label label-warning">
+                    {% trans %}New{% endtrans %}
+                  </span>
+                </div>
+                {% endif %}
+
+              </div>
+              <div class="post-message">
+                {% trans %}This reply was posted by user that is on your ignored list.{% endtrans %}
+              </div>
+            </dv>
+          </div>
+          {% else %}
+          <div class="post-body">
+            {% if post.user_id %}
+            <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}"><img src="{{ post.user.get_avatar(100) }}" alt="" class="user-avatar"></a>
+            {% else %}
+            <img src="{{ macros.avatar_guest(100) }}" alt="" class="user-avatar"></a>
+            {% endif %}
+            <div class="post-arrow"></div>
+            <div class="post-content">
+              <div class="post-header">
+                {% if post.user_id %}
+                <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="post-author">{{ post.user.username }}</a>{% if post.user.get_title() %} {{ user_label(post.user) }}{% endif %}
+                {% else %}
+                <span class="post-author">{{ post.user_name }}</span> <span class="label post-author-label post-label-guest">{% trans %}Unregistered{% endtrans %}</span>
+                {% endif %}
+                <span class="separator">&ndash;</span>
+                <a href="{% if pagination['page'] > 1 -%}
+                {% url 'private_thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
+                {%- else -%}
+                {% url 'private_thread' thread=thread.pk, slug=thread.slug %}
+                {%- endif %}#post-{{ post.pk }}" class="post-date">{{ post.date|reltimesince }}</a>
+                {% if post.edits %}
+                <span class="separator">&ndash;</span>
+                {% if acl.threads.can_see_changelog(user, forum, post) %}
+                <a href="{% url 'private_thread_changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</a>
+                {% else %}
+                <span class="post-changelog">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</span>
+                {% endif %}
+                {% endif %}
+
+                {% if posts_form %}
+                <label class="checkbox post-checkbox"><input form="posts_form" name="{{ posts_form['list_items']['html_name'] }}" type="checkbox" class="checkbox-member" value="{{ post.pk }}"{% if posts_form['list_items']['has_value'] and ('' ~ post.pk) in posts_form['list_items']['value'] %} checked="checked"{% endif %}></label>
+                {% endif %}
+
+                <a href="{% if pagination['page'] > 1 -%}
+                {% url 'private_thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
+                {%- else -%}
+                {% url 'private_thread' thread=thread.pk, slug=thread.slug %}
+                {%- endif %}#post-{{ post.pk }}" class="post-perma tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
+
+                <div class="post-extra">
+                  {% if post.protected and acl.threads.can_protect(forum) %}
+                  <span class="label label-info">
+                    {% trans %}Protected{% endtrans %}
+                  </span>
+                  {% endif %}
+
+                  {% if post.deleted %}
+                  <span class="label label-inverse">
+                    {% trans %}Deleted{% endtrans %}
+                  </span>
+                  {% endif %}
+
+                  {% if post.moderated %}
+                  <span class="label label-purple">
+                    {% trans %}Unreviewed{% endtrans %}
+                  </span>
+                  {% endif %}
+
+                  {% if post.reported %}
+                  <span class="label label-important">
+                    {% trans %}Reported{% endtrans %}
+                  </span>
+                  {% endif %}
+
+                  {% if not post.is_read %}
+                  <span class="label label-warning">
+                    {% trans %}New{% endtrans %}
+                  </span>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="post-message">
+                <div class="markdown js-extra">
+                  {{ post.post_preparsed|markdown_final|safe }}
+                </div>
+                {% if post.user.signature %}
+                <div class="post-signature">
+                  <div class="markdown">
+                    {{ post.user.signature_preparsed|markdown_final|safe }}
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+              <div class="post-footer">{% filter trim %}
+                <div class="post-actions">              
+                  {% if acl.users.can_see_users_trails() -%}
+                  <a href="{% url 'private_post_info' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-trail">{% trans %}Info{% endtrans %}</a>
+                  {% endif %}
+                  {% if acl.threads.can_edit_thread(user, forum, thread, post) and thread.start_post_id == post.pk %}
+                  <a href="{% url 'private_thread_edit' thread=thread.pk, slug=thread.slug %}" class="post-edit">{% trans %}Edit{% endtrans %}</a>
+                  {% elif acl.threads.can_edit_reply(user, forum, thread, post) %}
+                  <a href="{% url 'private_post_edit' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-edit">{% trans %}Edit{% endtrans %}</a>
+                  {%- endif %}
+                  {% if acl.threads.can_reply(forum, thread) %}<a href="{% url 'private_thread_reply' thread=thread.pk, slug=thread.slug, quote=post.pk %}" class="post-reply">{% trans %}Reply{% endtrans %}</a>{% endif %}
+                </div>
+                {% if post.pk == thread.start_post_id %}
+                <div class="post-actions">
+                  {% if acl.threads.can_delete_thread(user, forum, thread, post) == 2 %}
+                  <form action="{% url 'private_thread_delete' thread=thread.pk, slug=thread.slug %}" class="form-inline prompt-delete-thread" method="post">
+                    <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                    <span>{% trans %}Delete thread:{% endtrans %}</span>
+                    <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Delete this thread for good{% endtrans %}">{% trans %}Hard{% endtrans %}</button>
+                  </form>
+                  {% endif %}
+                  {% if not post.deleted and acl.threads.can_delete_thread(user, forum, thread, post) %}
+                  <form action="{% url 'private_thread_hide' thread=thread.pk, slug=thread.slug %}" class="form-inline prompt-delete-thread" method="post">
+                    <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Hide this thread from other users{% endtrans %}">{% trans %}Soft{% endtrans %}</button>
+                    <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                  </form>
+                  {% endif %}
+                </div>
+                {% elif post.pk != thread.start_post_id and acl.threads.can_delete_post(user, forum, thread, post) %}
+                <div class="post-actions">
+                  {% if acl.threads.can_delete_post(user, forum, thread, post) == 2 -%}
+                  <form action="{% url 'private_post_delete' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline prompt-delete-post" method="post">
+                    <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                    <span>{% trans %}Delete reply:{% endtrans %}</span>
+                    <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Delete this reply for good{% endtrans %}">{% trans %}Hard{% endtrans %}</button>
+                  </form>
+                  {% endif %}
+                  {% if not post.deleted and acl.threads.can_delete_post(user, forum, thread, post) %}
+                  <form action="{% url 'private_post_hide' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline prompt-delete-post" method="post">
+                    <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                    <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Hide this reply from other users{% endtrans %}">{% trans %}Soft{% endtrans %}</button>
+                  </form>
+                  {% endif %}
+                </div>
+                {% endif %}
+              {% endfilter %}</div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+
+        {% if post.checkpoint_set.all() %}
+        <div class="post-checkpoints">
+          {% for checkpoint in post.checkpoint_set.all() %}
+          <div class="post-checkpoint">
+            <hr>
+            <span>
+              {%- if checkpoint.action == 'limit' -%}
+              <i class="icon-lock"></i> {% trans  %}This thread has reached its post limit and has been closed.{% endtrans %}
+              {%- elif checkpoint.action == 'accepted' -%}
+              <i class="icon-ok"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} accepted this thread {{ date }}{% endtrans %}
+              {%- elif checkpoint.action == 'closed' -%}
+              <i class="icon-lock"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} closed this thread {{ date }}{% endtrans %}
+              {%- elif checkpoint.action == 'opened' -%}
+              <i class="icon-lock"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} opened this thread {{ date }}{% endtrans %}
+              {%- elif checkpoint.action == 'deleted' -%}
+              <i class="icon-trash"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} deleted this thread {{ date }}{% endtrans %}
+              {%- elif checkpoint.action == 'undeleted' -%}
+              <i class="icon-trash"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} restored this thread {{ date }}{% endtrans %}
+              {%- endif -%}
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if thread_form or posts_form %}
+      <div class="thread-moderation">
+        {% if thread_form%}
+        <form id="thread_form" class="form-inline pull-left" action="{% url 'private_thread' slug=thread.slug, thread=thread.id, page=pagination['page'] %}" method="POST">
+          <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+          <input type="hidden" name="origin" value="thread_form">
+          {{ form_theme.input_select(thread_form['thread_action'],width=3) }}
+          <button type="submit" class="btn btn-danger">{% trans %}Go{% endtrans %}</button>
+        </form>
+        {% endif %}
+        {% if posts_form%}
+        <form id="posts_form" class="form-inline pull-right" action="{% url 'private_thread' slug=thread.slug, thread=thread.id, page=pagination['page'] %}" method="POST">
+          <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+          <input type="hidden" name="origin" value="posts_form">
+          {{ form_theme.input_select(posts_form['list_action'],width=3) }}
+          <button type="submit" class="btn btn-danger">{% trans %}Go{% endtrans %}</button>
+        </form>
+        {% endif %}
       </div>
       {% endif %}
-      {% if post.deleted and not acl.threads.can_see_deleted_posts(forum) %}
-      <div class="post-body post-muted">
-        {% if post.user_id %}
-        <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}"><img src="{{ post.user.get_avatar(50) }}" alt="" class="user-avatar"></a>
+
+      <div class="thread-buttons">
+        {{ pager(false) }}
+        {% if acl.threads.can_reply(forum, thread) and participants|length > 1 %}
+        <a href="{% url 'private_thread_reply' thread=thread.pk, slug=thread.slug %}" class="btn btn-inverse pull-right"><i class="icon-pencil"></i> {% trans %}Reply{% endtrans %}</a>
         {% else %}
-        <img src="{{ macros.avatar_guest(60) }}" alt="" class="user-avatar"></a>
+        <p class="lead thread-signin-message">{% trans %}This thread has no participants.{% endtrans %}</p>
         {% endif %}
-        <div class="post-content">
-          <div class="post-header">
-            <div class="post-header-compact">
-              {% if post.user_id %}
-              <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="post-author">{{ post.user.username }}</a>{% if post.user.get_title() %} {{ user_label(post.user) }}{% endif %}
-              {% else %}
-              <span class="post-author">{{ post.user_name }}</span> <span class="label post-author-label post-label-guest">{% trans %}Unregistered{% endtrans %}</span>
-              {% endif %}
-              <span class="separator">&ndash;</span>
-              <a href="{% if pagination['page'] > 1 -%}
-              {% url 'private_thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
-              {%- else -%}
-              {% url 'private_thread' thread=thread.pk, slug=thread.slug %}
-              {%- endif %}#post-{{ post.pk }}" class="post-date">{{ post.date|reltimesince }}</a>
-              {% if post.edits %}
-              <span class="separator">&ndash;</span>
-              {% if acl.threads.can_see_changelog(user, forum, post) %}
-              <a href="{% url 'changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</a>
-              {% else %}
-              <span class="post-changelog">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</span>
-              {% endif %}
-              {% endif %}
-            </div>
-
-            <a href="{% if pagination['page'] > 1 -%}
-            {% url 'private_thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
-            {%- else -%}
-            {% url 'private_thread' thread=thread.pk, slug=thread.slug %}
-            {%- endif %}#post-{{ post.pk }}" class="post-perma tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
-
-            {% if not post.is_read %}
-            <div class="post-extra">
-              <span class="label label-warning">
-                {% trans %}New{% endtrans %}
-              </span>
-            </div>
-            {% endif %}
-
-          </div>
-          <div class="post-message">
-            {% trans user=edit_user(post), date=post.edit_date|reltimesince|low %}{{ user }} has deleted this reply {{ date }}{% endtrans %}
-          </div>
-        </dv>
       </div>
-      {% elif post.ignored %}
-      <div class="post-body post-muted">
-        <img src="{{ macros.avatar_guest(60) }}" alt="" class="user-avatar"></a>
-        <div class="post-arrow"></div>
-        <div class="post-content">
-          <div class="post-header">
-            <div class="post-header-compact">
-              <a href="{% if pagination['page'] > 1 -%}
-              {% url 'private_thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
-              {%- else -%}
-              {% url 'private_thread' thread=thread.pk, slug=thread.slug %}
-              {%- endif %}#post-{{ post.pk }}" class="post-date">{{ post.date|reltimesince }}</a>
-            </div>
 
-            <a href="{% if pagination['page'] > 1 -%}
-            {% url 'private_thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
-            {%- else -%}
-            {% url 'private_thread' thread=thread.pk, slug=thread.slug %}
-            {%- endif %}#post-{{ post.pk }}" class="post-perma tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
-
-            {% if not post.is_read %}
-            <div class="post-extra">
-              <span class="label label-warning">
-                {% trans %}New{% endtrans %}
-              </span>
-            </div>
-            {% endif %}
-
-          </div>
-          <div class="post-message">
-            {% trans %}This reply was posted by user that is on your ignored list.{% endtrans %}
-          </div>
-        </dv>
+      {% if acl.threads.can_reply(forum, thread) and participants|length > 1 %}
+      <div class="thread-quick-reply">
+        <form action="{% url 'private_thread_reply' thread=thread.pk, slug=thread.slug %}" method="post">
+          <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+          <input type="hidden" name="quick_reply" value="1">
+          <img src="{{ user.get_avatar(100) }}" alt="{% trans %}Your Avatar{% endtrans %}" class="user-avatar">
+          {{ editor.editor(quick_reply.post, _('Post Reply'), extra=editor_extra()) }}
+        </form>
       </div>
-      {% else %}
-      <div class="post-body">
-        {% if post.user_id %}
-        <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}"><img src="{{ post.user.get_avatar(100) }}" alt="" class="user-avatar"></a>
-        {% else %}
-        <img src="{{ macros.avatar_guest(100) }}" alt="" class="user-avatar"></a>
+      {% endif %}
+
+    </div>
+    <div class="span3">
+      <div class="thread-participants">
+        <h3>{% trans count=participants|length -%}
+          One participant
+          {%- pluralize -%}
+          {{ count }} participants
+          {%- endtrans %}</h3>
+        <ul class="unstyled">{% for participant in participants %}
+          <li>
+            <img src="{{ participant.get_avatar(24) }}" alt="" class="avatar-small">
+            <a href="{% url 'user' username=participant.username_slug, user=participant.pk %}">{{ participant.username }}</a>
+            {% if user.pk == thread.start_poster_id %}
+            <form class="form-inline" action="" method="post">
+              <button type="submit" class="btn btn-{% if participant.pk == user.pk %}danger{% else %}inverse{% endif %} btn-small tooltip-left" title="{% if participant.pk == user.pk %}{% trans %}Leave this thread{% endtrans %}{% else %}{% trans %}Remove from this thread{% endtrans %}{% endif %}"><i class="icon-remove"></i></button>
+            </form>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+
+        {% if participants|length < 2%}
+        <p class="no-participants">{% trans %}This thread has too few participants. Invite other users to open it for new replies.{% endtrans %}</p>
         {% endif %}
-        <div class="post-arrow"></div>
-        <div class="post-content">
-          <div class="post-header">
-            {% if post.user_id %}
-            <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="post-author">{{ post.user.username }}</a>{% if post.user.get_title() %} {{ user_label(post.user) }}{% endif %}
-            {% else %}
-            <span class="post-author">{{ post.user_name }}</span> <span class="label post-author-label post-label-guest">{% trans %}Unregistered{% endtrans %}</span>
-            {% endif %}
-            <span class="separator">&ndash;</span>
-            <a href="{% if pagination['page'] > 1 -%}
-            {% url 'private_thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
-            {%- else -%}
-            {% url 'private_thread' thread=thread.pk, slug=thread.slug %}
-            {%- endif %}#post-{{ post.pk }}" class="post-date">{{ post.date|reltimesince }}</a>
-            {% if post.edits %}
-            <span class="separator">&ndash;</span>
-            {% if acl.threads.can_see_changelog(user, forum, post) %}
-            <a href="{% url 'private_thread_changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</a>
-            {% else %}
-            <span class="post-changelog">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</span>
-            {% endif %}
-            {% endif %}
 
-            {% if posts_form %}
-            <label class="checkbox post-checkbox"><input form="posts_form" name="{{ posts_form['list_items']['html_name'] }}" type="checkbox" class="checkbox-member" value="{{ post.pk }}"{% if posts_form['list_items']['has_value'] and ('' ~ post.pk) in posts_form['list_items']['value'] %} checked="checked"{% endif %}></label>
-            {% endif %}
-
-            <a href="{% if pagination['page'] > 1 -%}
-            {% url 'private_thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
-            {%- else -%}
-            {% url 'private_thread' thread=thread.pk, slug=thread.slug %}
-            {%- endif %}#post-{{ post.pk }}" class="post-perma tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
-
-            <div class="post-extra">
-              {% if post.protected and acl.threads.can_protect(forum) %}
-              <span class="label label-info">
-                {% trans %}Protected{% endtrans %}
-              </span>
-              {% endif %}
-
-              {% if post.deleted %}
-              <span class="label label-inverse">
-                {% trans %}Deleted{% endtrans %}
-              </span>
-              {% endif %}
-
-              {% if post.moderated %}
-              <span class="label label-purple">
-                {% trans %}Unreviewed{% endtrans %}
-              </span>
-              {% endif %}
-
-              {% if post.reported %}
-              <span class="label label-important">
-                {% trans %}Reported{% endtrans %}
-              </span>
-              {% endif %}
-
-              {% if not post.is_read %}
-              <span class="label label-warning">
-                {% trans %}New{% endtrans %}
-              </span>
-              {% endif %}
-            </div>
-          </div>
-          <div class="post-message">
-            <div class="markdown js-extra">
-              {{ post.post_preparsed|markdown_final|safe }}
-            </div>
-            {% if post.user.signature %}
-            <div class="post-signature">
-              <div class="markdown">
-                {{ post.user.signature_preparsed|markdown_final|safe }}
-              </div>
-            </div>
-            {% endif %}
-          </div>
-          <div class="post-footer">{% filter trim %}
-            <div class="post-actions">              
-              {% if acl.users.can_see_users_trails() -%}
-              <a href="{% url 'private_post_info' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-trail">{% trans %}Info{% endtrans %}</a>
-              {% endif %}
-              {% if acl.threads.can_edit_thread(user, forum, thread, post) and thread.start_post_id == post.pk %}
-              <a href="{% url 'private_thread_edit' thread=thread.pk, slug=thread.slug %}" class="post-edit">{% trans %}Edit{% endtrans %}</a>
-              {% elif acl.threads.can_edit_reply(user, forum, thread, post) %}
-              <a href="{% url 'private_post_edit' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-edit">{% trans %}Edit{% endtrans %}</a>
-              {%- endif %}
-              {% if acl.threads.can_reply(forum, thread) %}<a href="{% url 'private_thread_reply' thread=thread.pk, slug=thread.slug, quote=post.pk %}" class="post-reply">{% trans %}Reply{% endtrans %}</a>{% endif %}
-            </div>
-            {% if post.pk == thread.start_post_id %}
-            <div class="post-actions">
-              {% if acl.threads.can_delete_thread(user, forum, thread, post) == 2 %}
-              <form action="{% url 'private_thread_delete' thread=thread.pk, slug=thread.slug %}" class="form-inline prompt-delete-thread" method="post">
-                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-                <span>{% trans %}Delete thread:{% endtrans %}</span>
-                <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Delete this thread for good{% endtrans %}">{% trans %}Hard{% endtrans %}</button>
-              </form>
-              {% endif %}
-              {% if not post.deleted and acl.threads.can_delete_thread(user, forum, thread, post) %}
-              <form action="{% url 'private_thread_hide' thread=thread.pk, slug=thread.slug %}" class="form-inline prompt-delete-thread" method="post">
-                <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Hide this thread from other users{% endtrans %}">{% trans %}Soft{% endtrans %}</button>
-                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-              </form>
-              {% endif %}
-            </div>
-            {% elif post.pk != thread.start_post_id and acl.threads.can_delete_post(user, forum, thread, post) %}
-            <div class="post-actions">
-              {% if acl.threads.can_delete_post(user, forum, thread, post) == 2 -%}
-              <form action="{% url 'private_post_delete' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline prompt-delete-post" method="post">
-                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-                <span>{% trans %}Delete reply:{% endtrans %}</span>
-                <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Delete this reply for good{% endtrans %}">{% trans %}Hard{% endtrans %}</button>
-              </form>
-              {% endif %}
-              {% if not post.deleted and acl.threads.can_delete_post(user, forum, thread, post) %}
-              <form action="{% url 'private_post_hide' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline prompt-delete-post" method="post">
-                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-                <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Hide this reply from other users{% endtrans %}">{% trans %}Soft{% endtrans %}</button>
-              </form>
-              {% endif %}
-            </div>
-            {% endif %}
-          {% endfilter %}</div>
+        <h4>{% trans %}Invite User{% endtrans %}</h4>
+        <div class="invite-participant">
+          <form class="form-inline">
+            <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+            {{ form_theme.input_text(invite_form.fields.username, width="2", attrs={'placeholder':_("User to invite...")}) }}
+            <button class="btn" type="submit"><i class="icon-plus"></i></button>
+          </form>
         </div>
       </div>
-      {% endif %}
     </div>
-
-    {% if post.checkpoint_set.all() %}
-    <div class="post-checkpoints">
-      {% for checkpoint in post.checkpoint_set.all() %}
-      <div class="post-checkpoint">
-        <hr>
-        <span>
-          {%- if checkpoint.action == 'limit' -%}
-          <i class="icon-lock"></i> {% trans  %}This thread has reached its post limit and has been closed.{% endtrans %}
-          {%- elif checkpoint.action == 'accepted' -%}
-          <i class="icon-ok"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} accepted this thread {{ date }}{% endtrans %}
-          {%- elif checkpoint.action == 'closed' -%}
-          <i class="icon-lock"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} closed this thread {{ date }}{% endtrans %}
-          {%- elif checkpoint.action == 'opened' -%}
-          <i class="icon-lock"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} opened this thread {{ date }}{% endtrans %}
-          {%- elif checkpoint.action == 'deleted' -%}
-          <i class="icon-trash"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} deleted this thread {{ date }}{% endtrans %}
-          {%- elif checkpoint.action == 'undeleted' -%}
-          <i class="icon-trash"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} restored this thread {{ date }}{% endtrans %}
-          {%- endif -%}
-        </span>
-      </div>
-      {% endfor %}
-    </div>
-    {% endif %}
-    {% endfor %}
   </div>
-
-  {% if thread_form or posts_form %}
-  <div class="thread-moderation">
-    {% if thread_form%}
-    <form id="thread_form" class="form-inline pull-left" action="{% url 'private_thread' slug=thread.slug, thread=thread.id, page=pagination['page'] %}" method="POST">
-      <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-      <input type="hidden" name="origin" value="thread_form">
-      {{ form_theme.input_select(thread_form['thread_action'],width=3) }}
-      <button type="submit" class="btn btn-danger">{% trans %}Go{% endtrans %}</button>
-    </form>
-    {% endif %}
-    {% if posts_form%}
-    <form id="posts_form" class="form-inline pull-right" action="{% url 'private_thread' slug=thread.slug, thread=thread.id, page=pagination['page'] %}" method="POST">
-      <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-      <input type="hidden" name="origin" value="posts_form">
-      {{ form_theme.input_select(posts_form['list_action'],width=3) }}
-      <button type="submit" class="btn btn-danger">{% trans %}Go{% endtrans %}</button>
-    </form>
-    {% endif %}
-  </div>
-  {% endif %}
-
-  <div class="thread-buttons">
-    {{ pager(false) }}
-    {% if acl.threads.can_reply(forum, thread) %}
-    <a href="{% url 'private_thread_reply' thread=thread.pk, slug=thread.slug %}" class="btn btn-inverse pull-right"><i class="icon-pencil"></i> {% trans %}Reply{% endtrans %}</a>
-    {% endif %}
-  </div>
-
-  {% if acl.threads.can_reply(forum, thread) %}
-  <div class="thread-quick-reply">
-    <form action="{% url 'private_thread_reply' thread=thread.pk, slug=thread.slug %}" method="post">
-      <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-      <input type="hidden" name="quick_reply" value="1">
-      <img src="{{ user.get_avatar(100) }}" alt="{% trans %}Your Avatar{% endtrans %}" class="user-avatar">
-      {{ editor.editor(quick_reply.post, _('Post Reply'), extra=editor_extra()) }}
-    </form>
-  </div>
-  {% endif %}
 
 </div>
 {% endblock %}

@@ -72,9 +72,11 @@ class NewReplyBaseView(PostingBaseView):
                                         )
 
         # Update thread data and score?
+        if not moderation:
+            self.thread.new_last_post(self.post)
+
         if not merged:
             if not moderation:
-                self.thread.new_last_post(self.post)
                 self.thread.replies += 1
             else:
                 self.thread.replies_moderated += 1

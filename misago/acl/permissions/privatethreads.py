@@ -71,7 +71,7 @@ def cleanup(acl, perms, forums):
                 acl.forums.acl['can_see'].append(forum)
                 acl.forums.acl['can_browse'].append(forum)
             if perm['can_start_private_threads']:
-                acl.threads.acl[forum]['can_start_threads'] = True
+                acl.threads.acl[forum]['can_start_threads'] = 2
             if perm['can_upload_attachments_in_private_threads']:
                 acl.threads.acl[forum]['can_upload_attachments'] = True
             if perm['private_thread_attachment_size']:

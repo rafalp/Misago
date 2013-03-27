@@ -1,7 +1,9 @@
 from django.utils.translation import ugettext as _
 from misago.apps.threadtype.thread import ThreadBaseView, ThreadModeration, PostsModeration
+from misago.forms import FormFields
 from misago.models import Forum, Thread
 from misago.apps.privatethreads.mixins import TypeMixin
+from misago.apps.privatethreads.forms import InviteMemberForm
 
 class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
     def posts_actions(self):
@@ -42,3 +44,8 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
         except KeyError:
             pass
         return actions
+
+    def template_vars(self, context):
+        context['participants'] = self.thread.participants.all().prefetch_related('rank')
+        context['invite_form'] = FormFields(InviteMemberForm(request=self.request))
+        return context
