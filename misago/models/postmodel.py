@@ -55,7 +55,7 @@ class Post(models.Model):
         post.post = '%s\n- - -\n%s' % (post.post, self.post)
         merge_post.send(sender=self, new_post=post)
 
-    def set_checkpoint(self, request, action):
+    def set_checkpoint(self, request, action, user=None):
         if request.user.is_authenticated():
             self.checkpoints = True
             self.checkpoint_set.create(
@@ -69,6 +69,9 @@ class Post(models.Model):
                                        date=timezone.now(),
                                        ip=request.session.get_ip(request),
                                        agent=request.META.get('HTTP_USER_AGENT'),
+                                       target_user=user,
+                                       target_user_name=(user.username if user else None),
+                                       target_user_slug=(user.username_slug if user else None),
                                        )
             
     def notify_mentioned(self, request, thread_type, users):

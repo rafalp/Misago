@@ -28,7 +28,9 @@
         {% trans %}No replies{% endtrans %}
       {%- endif %}</li>
       <li class="stats-form">
-        <form action="" method="post">
+        <form class="leave-form" action="{% url 'private_thread_remove_user' thread=thread.pk, slug=thread.slug %}" method="post">
+          <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+          <input type="hidden" name="user" value="{{ user.pk }}">
           <button type="submit" class="btn"><i class="icon-remove"></i> Leave Thread</button>
         </form>
       </li>
@@ -319,8 +321,10 @@
               <i class="icon-trash"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} deleted this thread {{ date }}{% endtrans %}
               {%- elif checkpoint.action == 'undeleted' -%}
               <i class="icon-trash"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} restored this thread {{ date }}{% endtrans %}
-              {%- elif checkpoint.action == 'invited' -%}
-              <i class="icon-trash"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} restored this thread {{ date }}{% endtrans %}
+              {%- elif checkpoint.action == 'removed' -%}
+              <i class="icon-remove-sign"></i> {% trans user=checkpoint_user(checkpoint), removed=checkpoint_target(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} removed {{ removed }} from thread {{ date }}{% endtrans %}
+              {%- elif checkpoint.action == 'left' -%}
+              <i class="icon-remove-sign"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} left thread {{ date }}{% endtrans %}
               {%- endif -%}
             </span>
           </div>
@@ -383,9 +387,10 @@
           <li>
             <img src="{{ participant.get_avatar(24) }}" alt="" class="avatar-small">
             <a href="{% url 'user' username=participant.username_slug, user=participant.pk %}">{{ participant.username }}</a>
-            {% if user.pk == thread.start_poster_id %}
-            <form class="form-inline tooltip-left" action="" method="post" title="{% if participant.pk == user.pk %}{% trans %}Leave this thread{% endtrans %}{% else %}{% trans %}Remove from this thread{% endtrans %}{% endif %}">
+            {% if user.pk == thread.start_poster_id or acl.private_threads.is_mod() %}
+            <form class="form-inline {% if user.pk == thread.start_poster_id %}leave-form{% else %}kick-form{% endif %} tooltip-left" action="{% url 'private_thread_remove_user' thread=thread.pk, slug=thread.slug %}" method="post" title="{% if participant.pk == user.pk %}{% trans %}Leave this thread{% endtrans %}{% else %}{% trans %}Remove from this thread{% endtrans %}{% endif %}">
               <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+              <input type="hidden" name="retreat" value="{{ request_path }}">
               <input type="hidden" name="user" value="{{ participant.pk }}">
               <button type="submit" class="btn btn-{% if participant.pk == user.pk %}danger{% else %}inverse{% endif %} btn-small"><i class="icon-remove"></i></button>
             </form>
@@ -424,6 +429,18 @@
     hljs.initHighlightingOnLoad();
     EnhancePostsMD();
     $(function () {
+      $('.leave-form').submit(function() {
+        var decision = confirm("{% if participants|length == 1 -%}
+          {% trans %}Are you sure you want to leave this thread? It will be deleted after you leave!{% endtrans %}
+          {%- else -%}
+          {% trans %}Are you sure you want to leave this thread?{% endtrans %}
+          {%- endif %}");
+        return decision;
+      });
+      $('.kick-form').submit(function() {
+        var decision = confirm("{% trans %}Are you sure you want to remove this member from this thread?{% endtrans %}");
+        return decision;
+      });
       $('#thread_form').submit(function() {
         if ($('#id_thread_action').val() == 'hard') {
           var decision = confirm("{% trans %}Are you sure you want to delete this thread? This action is not reversible!{% endtrans %}");
@@ -498,7 +515,7 @@
 {%- endmacro %}
 
 
-{% macro checkpoint_invited(checkpoint) -%}
+{% macro checkpoint_target(checkpoint) -%}
 {%- if checkpoint.target_user_id -%}
 <a href="{{ 'user'|url(user=checkpoint.target_user_id, username=checkpoint.target_user_slug) }}">{{ checkpoint.target_user_name }}</a>
 {%- else -%}

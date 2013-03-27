@@ -49,3 +49,8 @@ class ViewBase(object):
 
     def template_vars(self, context):
         return context
+
+    def retreat_redirect(self):
+        if self.request.POST.get('retreat'):
+            return redirect(self.request.POST.get('retreat'))
+        return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))

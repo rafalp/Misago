@@ -108,7 +108,7 @@ def auth_admin(request, email, password):
     Admin auth - check ACP permissions
     """
     user = get_user(email, password, True)
-    if not user.is_god() and not user.get_acl(request).admin.is_admin():
+    if not user.is_god() and not user.acl(request).special.is_admin():
         raise AuthException(NOT_ADMIN, _("Your account does not have admin privileges."))
     return user;
 
