@@ -308,8 +308,11 @@
               {% endif %}
               {% if not post.deleted and acl.threads.can_delete_thread(user, forum, thread, post) %}
               <form action="{% url 'thread_hide' thread=thread.pk, slug=thread.slug %}" class="form-inline prompt-delete-thread" method="post">
-                <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Hide this thread from other users{% endtrans %}">{% trans %}Soft{% endtrans %}</button>
                 <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                {% if acl.threads.can_delete_thread(user, forum, thread, post) != 2 %}
+                <span>{% trans %}Delete thread:{% endtrans %}</span>
+                {% endif %}
+                <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Hide this thread from other users{% endtrans %}">{% trans %}Soft{% endtrans %}</button>
               </form>
               {% endif %}
             </div>
@@ -325,6 +328,9 @@
               {% if not post.deleted and acl.threads.can_delete_post(user, forum, thread, post) %}
               <form action="{% url 'post_hide' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline prompt-delete-post" method="post">
                 <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                {% if acl.threads.can_delete_post(user, forum, thread, post) != 2 %}
+                <span>{% trans %}Delete reply:{% endtrans %}</span>
+                {% endif %}
                 <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Hide this reply from other users{% endtrans %}">{% trans %}Soft{% endtrans %}</button>
               </form>
               {% endif %}
@@ -490,7 +496,7 @@
 
 {% macro checkpoint_user(checkpoint) -%}
 {%- if checkpoint.user_id -%}
-{{ ('<a href="' ~ 'user'|url(user=checkpoint.user_id, username=checkpoint.user_slug) ~ '">')|safe ~ (checkpoint.user_name) ~ ("</a>")|safe }}
+<a href="{{ 'user'|url(user=checkpoint.user_id, username=checkpoint.user_slug) }}">{{ checkpoint.user_name }}</a>
 {%- else -%}
 <strong>{{ checkpoint.user_name }}</strong>
 {%- endif -%}
@@ -499,7 +505,7 @@
 
 {% macro edit_user(post) -%}
 {%- if post.edit_user_id -%}
-{{ ('<a href="' ~ 'user'|url(user=post.edit_user_id, username=post.edit_user_slug) ~ '">')|safe ~ (post.edit_user_name) ~ ("</a>")|safe }}
+<a href="{{ 'user'|url(user=post.edit_user_id, username=post.edit_user_slug) }}">{{ post.edit_user_name }}</a>
 {%- else -%}
 <strong>{{ post.edit_user_name }}</strong>
 {%- endif -%}

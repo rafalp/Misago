@@ -267,8 +267,11 @@
                   {% endif %}
                   {% if not post.deleted and acl.threads.can_delete_thread(user, forum, thread, post) %}
                   <form action="{% url 'private_thread_hide' thread=thread.pk, slug=thread.slug %}" class="form-inline prompt-delete-thread" method="post">
-                    <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Hide this thread from other users{% endtrans %}">{% trans %}Soft{% endtrans %}</button>
                     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                    {% if acl.threads.can_delete_thread(user, forum, thread, post) != 2 %}
+                    <span>{% trans %}Delete thread:{% endtrans %}</span>
+                    {% endif %}
+                    <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Hide this thread from other users{% endtrans %}">{% trans %}Soft{% endtrans %}</button>
                   </form>
                   {% endif %}
                 </div>
@@ -284,6 +287,9 @@
                   {% if not post.deleted and acl.threads.can_delete_post(user, forum, thread, post) %}
                   <form action="{% url 'private_post_hide' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline prompt-delete-post" method="post">
                     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                    {% if acl.threads.can_delete_post(user, forum, thread, post) != 2 %}
+                    <span>{% trans %}Delete reply:{% endtrans %}</span>
+                    {% endif %}
                     <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Hide this reply from other users{% endtrans %}">{% trans %}Soft{% endtrans %}</button>
                   </form>
                   {% endif %}
@@ -312,6 +318,8 @@
               {%- elif checkpoint.action == 'deleted' -%}
               <i class="icon-trash"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} deleted this thread {{ date }}{% endtrans %}
               {%- elif checkpoint.action == 'undeleted' -%}
+              <i class="icon-trash"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} restored this thread {{ date }}{% endtrans %}
+              {%- elif checkpoint.action == 'invited' -%}
               <i class="icon-trash"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} restored this thread {{ date }}{% endtrans %}
               {%- endif -%}
             </span>
@@ -376,8 +384,10 @@
             <img src="{{ participant.get_avatar(24) }}" alt="" class="avatar-small">
             <a href="{% url 'user' username=participant.username_slug, user=participant.pk %}">{{ participant.username }}</a>
             {% if user.pk == thread.start_poster_id %}
-            <form class="form-inline" action="" method="post">
-              <button type="submit" class="btn btn-{% if participant.pk == user.pk %}danger{% else %}inverse{% endif %} btn-small tooltip-left" title="{% if participant.pk == user.pk %}{% trans %}Leave this thread{% endtrans %}{% else %}{% trans %}Remove from this thread{% endtrans %}{% endif %}"><i class="icon-remove"></i></button>
+            <form class="form-inline tooltip-left" action="" method="post" title="{% if participant.pk == user.pk %}{% trans %}Leave this thread{% endtrans %}{% else %}{% trans %}Remove from this thread{% endtrans %}{% endif %}">
+              <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+              <input type="hidden" name="user" value="{{ participant.pk }}">
+              <button type="submit" class="btn btn-{% if participant.pk == user.pk %}danger{% else %}inverse{% endif %} btn-small"><i class="icon-remove"></i></button>
             </form>
             {% endif %}
           </li>
@@ -481,16 +491,25 @@
 
 {% macro checkpoint_user(checkpoint) -%}
 {%- if checkpoint.user_id -%}
-{{ ('<a href="' ~ 'user'|url(user=checkpoint.user_id, username=checkpoint.user_slug) ~ '">')|safe ~ (checkpoint.user_name) ~ ("</a>")|safe }}
+<a href="{{ 'user'|url(user=checkpoint.user_id, username=checkpoint.user_slug) }}">{{ checkpoint.user_name }}</a>
 {%- else -%}
 <strong>{{ checkpoint.user_name }}</strong>
 {%- endif -%}
 {%- endmacro %}
 
 
+{% macro checkpoint_invited(checkpoint) -%}
+{%- if checkpoint.target_user_id -%}
+<a href="{{ 'user'|url(user=checkpoint.target_user_id, username=checkpoint.target_user_slug) }}">{{ checkpoint.target_user_name }}</a>
+{%- else -%}
+<strong>{{ checkpoint.target_user_name }}</strong>
+{%- endif -%}
+{%- endmacro %}
+
+
 {% macro edit_user(post) -%}
 {%- if post.edit_user_id -%}
-{{ ('<a href="' ~ 'user'|url(user=post.edit_user_id, username=post.edit_user_slug) ~ '">')|safe ~ (post.edit_user_name) ~ ("</a>")|safe }}
+<a href="{{ 'user'|url(user=post.edit_user_id, username=post.edit_user_slug) }}">{{ post.edit_user_name }}</a>
 {%- else -%}
 <strong>{{ post.edit_user_name }}</strong>
 {%- endif -%}
