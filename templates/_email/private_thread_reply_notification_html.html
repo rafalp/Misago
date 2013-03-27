@@ -1,0 +1,9 @@
+{% extends "_email/base_html.html" %}
+
+{% block title %}{% trans %}New reply notification{% endtrans %}{% endblock %}
+
+{% block content %}
+<p {{ style_p|safe }}>{% trans username=user.username, author=author.username, thread=thread.name %}{{ username }}, you are receiving this message because {{ author }} has replied to private thread "{{ thread }}" that you are watching.{% endtrans %}</p>
+<p {{ style_p|safe }}>{% trans %}To go to this reply follow the link below:{% endtrans %}</p>
+<a href="{{ board_address }}{% url 'private_thread_find' thread=thread.pk, slug=thread.slug, post=post.pk %}" {{ style_link|safe }}>{{ board_address }}{% url 'private_thread_find' thread=thread.pk, slug=thread.slug, post=post.pk %}</a>
+{% endblock %}
