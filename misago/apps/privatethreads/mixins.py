@@ -1,10 +1,13 @@
+from misago.acl.exceptions import ACLError404
+
 class TypeMixin(object):
     type_prefix = 'private_thread'
 
     def check_permissions(self):
         try:
             if self.thread.pk:
-                pass
+                if not self.request.user in self.thread.participants.all():
+                    raise ACLError404()
         except AttributeError:
             pass
 

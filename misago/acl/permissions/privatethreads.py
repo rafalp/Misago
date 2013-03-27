@@ -81,6 +81,8 @@ def cleanup(acl, perms, forums):
             if perm['can_invite_ignoring']:
                 acl.threads.acl[forum]['can_invite_ignoring'] = True
             if perm['private_threads_mod']:
+                acl.threads.acl[forum]['can_close_threads'] = True
+                acl.threads.acl[forum]['can_protect_posts'] = True
                 acl.threads.acl[forum]['can_edit_threads_posts'] = True
                 acl.threads.acl[forum]['can_move_threads_posts'] = True
                 acl.threads.acl[forum]['can_see_changelog'] = True

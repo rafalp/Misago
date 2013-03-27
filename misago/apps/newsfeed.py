@@ -1,6 +1,6 @@
 from django.template import RequestContext
 from misago.decorators import block_guest
-from misago.models import Post
+from misago.models import Forum, Post
 
 @block_guest
 def newsfeed(request):
@@ -9,7 +9,7 @@ def newsfeed(request):
         follows.append(user.pk)
     queryset = []
     if follows:
-        queryset = Post.objects.filter(forum_id__in=request.acl.threads.get_readable_forums(request.acl))
+        queryset = Post.objects.filter(forum_id__in=Forum.objects.readable_forums(request.acl))
         queryset = queryset.filter(deleted=False).filter(moderated=False)
         queryset = queryset.filter(user_id__in=follows)
         queryset = queryset.prefetch_related('thread', 'forum', 'user').order_by('-id')

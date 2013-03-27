@@ -10,7 +10,6 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
         try:
             if acl['can_move_threads_posts']:
                 actions.append(('merge', _('Merge posts into one')))
-                actions.append(('split', _('Split posts to new thread')))
             if acl['can_protect_posts']:
                 actions.append(('protect', _('Protect posts')))
                 actions.append(('unprotect', _('Remove posts protection')))

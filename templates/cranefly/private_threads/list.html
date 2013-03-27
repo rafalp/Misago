@@ -5,9 +5,6 @@
 {% block title %}{{ macros.page_title(title=_("Private Threads"),page=pagination['page']) }}{% endblock %}
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
-{% for parent in parents %}
-<li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-{% endfor %}
 <li class="active">{% trans %}Private Threads{% endtrans %}
 {%- endblock %}
 

@@ -111,6 +111,16 @@ class ForumManager(models.Manager):
             for user in user.ignores.filter(id__in=check_ids).values('id'):
                 ignored_ids.append(user['id'])
 
+    def readable_forums(self, acl, include_special=False):
+        self.populate_tree()
+        readable = []
+        for forum in self.forums_tree:
+            if ((include_special or not forum.special) and 
+                    acl.forums.can_browse(forum.pk) and
+                    acl.threads.acl[forum.pk]['can_read_threads']):
+                readable.append(forum.pk)
+        return readable
+
 
 class Forum(MPTTModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')

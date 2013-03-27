@@ -1,11 +1,11 @@
 from datetime import timedelta
 from django.template import RequestContext
 from django.utils import timezone
-from misago.models import Thread
+from misago.models import Forum, Thread
 from misago.utils.pagination import make_pagination
 
 def popular_threads(request, page=0):
-    queryset = Thread.objects.filter(forum_id__in=request.acl.threads.get_readable_forums(request.acl)).filter(deleted=False).filter(moderated=False)
+    queryset = Thread.objects.filter(forum_id__in=Forum.objects.readable_forums(request.acl)).filter(deleted=False).filter(moderated=False)
     items_total = queryset.count();
     pagination = make_pagination(page, items_total, 30)
 

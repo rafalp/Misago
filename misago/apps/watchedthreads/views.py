@@ -7,13 +7,13 @@ from django.utils.translation import ugettext as _
 from misago.decorators import block_guest
 from misago.forms import Form, FormLayout, FormFields
 from misago.messages import Message
-from misago.models import WatchedThread
+from misago.models import Forum, WatchedThread
 from misago.utils.pagination import make_pagination
 
 @block_guest
 def watched_threads(request, page=0, new=False):
     # Find mode and fetch threads
-    queryset = WatchedThread.objects.filter(user=request.user).filter(forum_id__in=request.acl.threads.get_readable_forums(request.acl)).select_related('thread').filter(thread__moderated=False).filter(thread__deleted=False)
+    queryset = WatchedThread.objects.filter(user=request.user).filter(forum_id__in=Forum.objects.readable_forums(request.acl, True)).select_related('thread').filter(thread__moderated=False).filter(thread__deleted=False)
     if new:
         queryset = queryset.filter(last_read__lt=F('thread__last'))
     count = queryset.count()
