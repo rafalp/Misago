@@ -47,14 +47,17 @@ def build(acl, roles):
     acl.users.acl['can_see_hidden_users'] = False
 
     for role in roles:
-        if 'can_search_users' in role and role['can_search_users']:
-            acl.users.acl['can_search_users'] = True
+        try:
+            if 'can_search_users' in role and role['can_search_users']:
+                acl.users.acl['can_search_users'] = True
 
-        if 'can_see_users_emails' in role and role['can_see_users_emails']:
-            acl.users.acl['can_see_users_emails'] = True
+            if 'can_see_users_emails' in role and role['can_see_users_emails']:
+                acl.users.acl['can_see_users_emails'] = True
 
-        if 'can_see_users_trails' in role and role['can_see_users_trails']:
-            acl.users.acl['can_see_users_trails'] = True
+            if 'can_see_users_trails' in role and role['can_see_users_trails']:
+                acl.users.acl['can_see_users_trails'] = True
 
-        if 'can_see_hidden_users' in role and role['can_see_hidden_users']:
-            acl.users.acl['can_see_hidden_users'] = True
+            if 'can_see_hidden_users' in role and role['can_see_hidden_users']:
+                acl.users.acl['can_see_hidden_users'] = True
+        except KeyError:
+            pass

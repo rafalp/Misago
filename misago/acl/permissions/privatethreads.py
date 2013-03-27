@@ -28,6 +28,27 @@ def make_form(request, role, form):
                             ))
 
 
+class PrivateThreadsACL(BaseACL):
+    def is_mod(self):
+        return self.acl['private_threads_mod']
+
+
+def build(acl, roles):
+    acl.private_threads = PrivateThreadsACL()
+    acl.private_threads.acl['can_use_private_threads'] = False
+    acl.private_threads.acl['can_start_private_threads'] = False
+    acl.private_threads.acl['can_upload_attachments_in_private_threads'] = False
+    acl.private_threads.acl['private_thread_attachment_size'] = False
+    acl.private_threads.acl['private_thread_attachments_limit'] = False
+    acl.private_threads.acl['can_invite_ignoring'] = False
+    acl.private_threads.acl['private_threads_mod'] = False
+
+    for role in roles:
+        for perm, value in acl.private_threads.acl.items():
+            if perm in role and role[perm] > value:
+                acl.private_threads.acl[perm] = role[perm]
+
+
 def cleanup(acl, perms, forums):
     forum = Forum.objects.special_pk('private_threads')
     acl.threads.acl[forum] = {

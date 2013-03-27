@@ -65,17 +65,20 @@ def build(acl, roles):
     acl.usercp.acl['signature_images'] = False
 
     for role in roles:
-        if 'name_changes_allowed' in role and role['name_changes_allowed'] > acl.usercp.acl['name_changes_allowed']:
-            acl.usercp.acl['name_changes_allowed'] = role['name_changes_allowed']
+        try:
+            if 'name_changes_allowed' in role and role['name_changes_allowed'] > acl.usercp.acl['name_changes_allowed']:
+                acl.usercp.acl['name_changes_allowed'] = role['name_changes_allowed']
 
-        if 'changes_expire' in role and role['changes_expire'] > acl.usercp.acl['changes_expire']:
-            acl.usercp.acl['changes_expire'] = role['changes_expire']
+            if 'changes_expire' in role and role['changes_expire'] > acl.usercp.acl['changes_expire']:
+                acl.usercp.acl['changes_expire'] = role['changes_expire']
 
-        if 'can_use_signature' in role and role['can_use_signature']:
-            acl.usercp.acl['signature'] = role['can_use_signature']
+            if 'can_use_signature' in role and role['can_use_signature']:
+                acl.usercp.acl['signature'] = role['can_use_signature']
 
-        if 'allow_signature_links' in role and role['allow_signature_links']:
-            acl.usercp.acl['signature_links'] = role['allow_signature_links']
+            if 'allow_signature_links' in role and role['allow_signature_links']:
+                acl.usercp.acl['signature_links'] = role['allow_signature_links']
 
-        if 'allow_signature_images' in role and role['allow_signature_images']:
-            acl.usercp.acl['signature_images'] = role['allow_signature_images']
+            if 'allow_signature_images' in role and role['allow_signature_images']:
+                acl.usercp.acl['signature_images'] = role['allow_signature_images']
+        except KeyError:
+            pass
