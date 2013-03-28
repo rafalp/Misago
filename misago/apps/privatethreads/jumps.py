@@ -62,8 +62,8 @@ class InviteUserView(JumpView, TypeMixin):
             if not acl.private_threads.can_participate():
                     self.request.messages.set_flash(Message(_('%(user)s cannot participate in private threads.') % {'user': user.username}), 'info', 'threads')
             elif (not self.request.acl.private_threads.can_invite_ignoring() and
-                    user.is_ignoring(self.request.user)):
-                self.request.messages.set_flash(Message(_('%(user)s does not wish to participate in your private threads.') % {'user': user.username}), 'info', 'threads')
+                    user.allow_pd_invite(self.request.user)):
+                self.request.messages.set_flash(Message(_('%(user)s restricts who can invite him to private threads.') % {'user': user.username}), 'info', 'threads')
             else:
                 self.thread.participants.add(user)
                 user.sync_pds = True

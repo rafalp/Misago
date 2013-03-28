@@ -139,7 +139,6 @@ class User(models.Model):
     last_ip = models.GenericIPAddressField(null=True, blank=True)
     last_agent = models.TextField(null=True, blank=True)
     hide_activity = models.PositiveIntegerField(default=0)
-    allow_pms = models.PositiveIntegerField(default=0)
     subscribe_start = models.PositiveIntegerField(default=0)
     subscribe_reply = models.PositiveIntegerField(default=0)
     receive_newsletters = models.BooleanField(default=True)
@@ -163,6 +162,7 @@ class User(models.Model):
     last_search = models.DateTimeField(null=True, blank=True)
     alerts = models.PositiveIntegerField(default=0)
     alerts_date = models.DateTimeField(null=True, blank=True)
+    allow_pds = models.PositiveIntegerField(default=0)
     unread_pds = models.PositiveIntegerField(default=0)
     sync_pds = models.BooleanField(default=False)
     activation = models.IntegerField(default=0)
@@ -404,6 +404,18 @@ class User(models.Model):
         
     def ignored_users(self):
         return [item['id'] for item in self.ignores.values('id')]
+
+    def allow_pd_invite(self, user):
+        # PD's from nobody
+        if self.allow_pds == 3:
+            return False
+        # PD's from followed
+        if self.allow_pds == 2:
+            return self.is_following(user)
+        # PD's from non-ignored
+        if self.allow_pds == 1:
+            return not self.is_ignoring(user)
+        return True
 
     def get_roles(self):
         return self.roles.all()

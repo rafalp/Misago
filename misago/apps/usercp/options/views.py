@@ -13,8 +13,9 @@ def options(request):
     if request.method == 'POST':
         form = UserForumOptionsForm(request.POST, request=request)
         if form.is_valid():
-            request.user.receive_newsletters = form.cleaned_data['newsletters']
             request.user.hide_activity = form.cleaned_data['hide_activity']
+            request.user.allow_pds = form.cleaned_data['allow_pds']
+            request.user.receive_newsletters = form.cleaned_data['newsletters']
             request.user.timezone = form.cleaned_data['timezone']
             request.user.subscribe_start = form.cleaned_data['subscribe_start']
             request.user.subscribe_reply = form.cleaned_data['subscribe_reply']
@@ -26,6 +27,7 @@ def options(request):
         form = UserForumOptionsForm(request=request, initial={
                                                              'newsletters': request.user.receive_newsletters,
                                                              'hide_activity': request.user.hide_activity,
+                                                             'allow_pds': request.user.allow_pds,
                                                              'timezone': request.user.timezone,
                                                              'subscribe_start': request.user.subscribe_start,
                                                              'subscribe_reply': request.user.subscribe_reply,
