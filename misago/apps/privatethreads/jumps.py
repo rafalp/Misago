@@ -104,6 +104,8 @@ class RemoveUserView(JumpView, TypeMixin):
                 self.request.messages.set_flash(Message(_('You have left the "%(thread)s" thread.') % {'thread': self.thread.name}), 'info', 'threads')
                 return self.threads_list_redirect()
             # Nope, somebody else removed user
+            user.sync_pds = True
+            user.save(force_update=True)
             self.thread.last_post.set_checkpoint(self.request, 'removed', user)
             self.thread.last_post.save(force_update=True)
             self.request.messages.set_flash(Message(_('Selected participant was removed from thread.')), 'info', 'threads')
