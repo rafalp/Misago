@@ -16,11 +16,6 @@
       {{ self.breadcrumb() }}</li>
     </ul>
     <h1>{% trans %}Private Threads{% endtrans %}</h1>
-
-    <ul class="nav nav-tabs header-tabs">
-      <li class="{% if tab == 'all' %}active{% endif %}"><a href="{% url 'private_threads' %}">{% trans %}Threads I participate in{% endtrans %}</a></li>
-      <li class="{% if tab == 'my' %}active{% endif %}"><a href="{% url 'my_private_threads' %}">{% trans %}Threads I've started{% endtrans %}</a></li>
-    </ul>
   </div>
 </div>
 
@@ -119,7 +114,7 @@
     </table>
     {% if list_form %}
     <div class="threads-actions">
-      <form id="threads_form" class="form-inline pull-right" action="{{ route_name()|url() }}" method="POST">
+      <form id="threads_form" class="form-inline pull-right" action="{% url 'private_threads' %}" method="POST">
         <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
         {{ form_theme.input_select(list_form['list_action'],width=3) }}
         <button type="submit" class="btn btn-danger">{% trans %}Go{% endtrans %}</button>
@@ -138,18 +133,6 @@
 </div>
 {% endblock %}
 
-
-{% macro route_name() -%}
-{% filter trim %}
-{% if tab == 'all' %}
-private_threads
-{% elif tab == 'new' %}
-new_private_threads
-{% else %}
-my_private_threads
-{% endif %}
-{% endfilter %}
-{%- endmacro %}
 
 {% macro replies(thread_replies) -%}
 {% trans count=thread_replies, replies=('<strong>' ~ (thread_replies|intcomma) ~ '</strong>')|safe -%}
@@ -172,9 +155,9 @@ my_private_threads
 <div class="pagination pull-left">
   <ul>
     <li class="count">{{ macros.pager_label(pagination) }}</li>
-    {%- if pagination['prev'] > 1 %}<li><a href="{{ route_name()|url }}" class="tooltip-top" title="{% trans %}First Page{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}First{% endtrans %}</a></li>{% endif -%}
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ route_name()|url(page=pagination['prev']) }}{% else %}{{ route_name()|url() }}{% endif %}" class="tooltip-top" title="{% trans %}Newest Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{{ route_name()|url(page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 1 %}<li><a href="{% url 'private_threads' %}" class="tooltip-top" title="{% trans %}First Page{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}First{% endtrans %}</a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'private_threads' page=pagination['prev'] %}{% else %}{% url 'private_threads' %}{% endif %}" class="tooltip-top" title="{% trans %}Newest Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{% url 'private_threads' page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
   </ul>
 </div>
 {% endif %}

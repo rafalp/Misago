@@ -1,10 +1,8 @@
 from django.conf.urls import patterns, url
 
 urlpatterns = patterns('misago.apps.privatethreads',
-    url(r'^$', 'list.AllThreadsListView', name="private_threads"),
-    url(r'^(?P<page>\d+)/$', 'list.AllThreadsListView', name="private_threads"),
-    url(r'^my/$', 'list.MyThreadsListView', name="my_private_threads"),
-    url(r'^my/(?P<page>\d+)/$', 'list.MyThreadsListView', name="my_private_threads"),
+    url(r'^$', 'list.ThreadsListView', name="private_threads"),
+    url(r'^(?P<page>\d+)/$', 'list.ThreadsListView', name="private_threads"),
     url(r'^start/$', 'posting.NewThreadView', name="private_thread_start"),
     url(r'^(?P<slug>(\w|-)+)-(?P<thread>\d+)/edit/$', 'posting.EditThreadView', name="private_thread_edit"),
     url(r'^(?P<slug>(\w|-)+)-(?P<thread>\d+)/reply/$', 'posting.NewReplyView', name="private_thread_reply"),

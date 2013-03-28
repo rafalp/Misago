@@ -6,7 +6,7 @@ from misago.readstrackers import ThreadsTracker
 from misago.utils.pagination import make_pagination
 from misago.apps.privatethreads.mixins import TypeMixin
 
-class AllThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
+class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
     def fetch_forum(self):
         self.forum = Forum.objects.get(special='private_threads')
 
@@ -27,16 +27,3 @@ class AllThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
         for thread in qs_threads[self.pagination['start']:self.pagination['stop']]:
             thread.is_read = tracker_forum.is_read(thread)
             self.threads.append(thread)
-
-    def template_vars(self, context):
-        context['tab'] = 'all'
-        return context
-
-
-class MyThreadsListView(AllThreadsListView, ThreadsListModeration, TypeMixin):
-    def threads_queryset(self):
-        return self.forum.thread_set.filter(start_poster_id=self.request.user.pk).order_by('-last')
-
-    def template_vars(self, context):
-        context['tab'] = 'my'
-        return context
