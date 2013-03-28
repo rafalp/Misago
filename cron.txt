@@ -5,3 +5,4 @@
 15 3 * * * python $HOME/misago/manage.py cleartracker
 20 3 * * * python $HOME/misago/manage.py cleartokens
 25 3 * * * python $HOME/misago/manage.py updatethreadranking
+0 0 * * 0 python $HOME/misago/manage.py forcepdssync
