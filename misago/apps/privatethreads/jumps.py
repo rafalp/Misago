@@ -1,7 +1,8 @@
 from django.utils.translation import ugettext as _
 from misago.acl.exceptions import ACLError403, ACLError404
-from misago.models import User
 from misago.apps.threadtype.jumps import *
+from misago.models import User
+from misago.utils.strings import slugify
 from misago.apps.privatethreads.mixins import TypeMixin
 
 class LastReplyView(LastReplyBaseView, TypeMixin):
@@ -46,12 +47,12 @@ class DownvotePostView(DownvotePostBaseView, TypeMixin):
 
 class InviteUserView(JumpView, TypeMixin):
     def make_jump(self):
-        username = self.request.POST.get('username', '').strip()
+        username = slugify(self.request.POST.get('username', '').strip())
         if not username:
             self.request.messages.set_flash(Message(_('You have to enter name of user you want to invite to thread.')), 'error', 'threads')
             return self.retreat_redirect()
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(username_slug=username)
             acl = user.acl(self.request)
             if user in self.thread.participants.all():
                 if user.pk == self.request.user.pk:
@@ -62,6 +63,7 @@ class InviteUserView(JumpView, TypeMixin):
                     self.request.messages.set_flash(Message(_('%(user)s cannot participate in private threads.') % {'user': user.username}), 'info', 'threads')
             else:
                 self.thread.participants.add(user)
+                user.email_user(self.request, 'private_thread_invite', _("You've been invited to private thread \"%(thread)s\" by %(user)s") % {'thread': self.thread.name, 'user': self.request.user.username}, {'author': self.request.user, 'thread': self.thread})
                 self.thread.last_post.set_checkpoint(self.request, 'invited', user)
                 self.thread.last_post.save(force_update=True)
                 self.request.messages.set_flash(Message(_('%(user)s has been added to this thread.') % {'user': user.username}), 'success', 'threads')

@@ -1,0 +1,10 @@
+{% extends "_email/base_plain.html" %}
+
+{% block title %}{% trans %}You've been invited to private thread{% endtrans %}{% endblock %}
+
+{% block content %}
+{% trans username=user.username, author=author.username, thread=thread.name %}{{ username }}, you are receiving this message because {{ author }} has invited you to participate in private thread "{{ thread }}".{% endtrans %}
+
+{% trans %}You can see this thread by clicking link below:{% endtrans %}
+{{ board_address }}{% url 'private_thread' thread=thread.pk, slug=thread.slug %}
+{% endblock %}
