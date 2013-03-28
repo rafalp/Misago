@@ -1,7 +1,7 @@
 from datetime import timedelta
 from django.conf import settings
 from django.db import models
-from django django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.signals import (delete_user_content, merge_thread, move_forum_content,
