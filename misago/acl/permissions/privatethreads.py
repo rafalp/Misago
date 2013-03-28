@@ -29,6 +29,9 @@ def make_form(request, role, form):
 
 
 class PrivateThreadsACL(BaseACL):
+    def can_participate(self):
+        return self.acl['can_use_private_threads']
+        
     def is_mod(self):
         return self.acl['private_threads_mod']
 

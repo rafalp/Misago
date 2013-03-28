@@ -46,7 +46,29 @@ class DownvotePostView(DownvotePostBaseView, TypeMixin):
 
 class InviteUserView(JumpView, TypeMixin):
     def make_jump(self):
-        print 'ZOMG INVITING USER'
+        username = self.request.POST.get('username', '').strip()
+        if not username:
+            self.request.messages.set_flash(Message(_('You have to enter name of user you want to invite to thread.')), 'error', 'threads')
+            return self.retreat_redirect()
+        try:
+            user = User.objects.get(username=username)
+            acl = user.acl(self.request)
+            if user in self.thread.participants.all():
+                if user.pk == self.request.user.pk:
+                    self.request.messages.set_flash(Message(_('You cannot add yourself to this thread.')), 'error', 'threads')
+                else:
+                    self.request.messages.set_flash(Message(_('%(user)s is already participating in this thread.') % {'user': user.username}), 'info', 'threads')
+            if not acl.private_threads.can_participate():
+                    self.request.messages.set_flash(Message(_('%(user)s cannot participate in private threads.') % {'user': user.username}), 'info', 'threads')
+            else:
+                self.thread.participants.add(user)
+                self.thread.last_post.set_checkpoint(self.request, 'invited', user)
+                self.thread.last_post.save(force_update=True)
+                self.request.messages.set_flash(Message(_('%(user)s has been added to this thread.') % {'user': user.username}), 'success', 'threads')
+            return self.retreat_redirect()
+        except User.DoesNotExist:
+            self.request.messages.set_flash(Message(_('User with requested username could not be found.')), 'error', 'threads')
+            return self.retreat_redirect()
 
 
 class RemoveUserView(JumpView, TypeMixin):
@@ -69,6 +91,7 @@ class RemoveUserView(JumpView, TypeMixin):
             # Nope, see if we removed ourselves
             if user.pk == self.request.user.pk:
                 self.thread.last_post.set_checkpoint(self.request, 'left')
+                self.thread.last_post.save(force_update=True)
                 self.request.messages.set_flash(Message(_('You have left the "%(thread)s" thread.') % {'thread': self.thread.name}), 'info', 'threads')
                 return self.threads_list_redirect()
             # Nope, somebody else removed user
