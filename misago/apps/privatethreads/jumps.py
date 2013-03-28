@@ -61,6 +61,9 @@ class InviteUserView(JumpView, TypeMixin):
                     self.request.messages.set_flash(Message(_('%(user)s is already participating in this thread.') % {'user': user.username}), 'info', 'threads')
             if not acl.private_threads.can_participate():
                     self.request.messages.set_flash(Message(_('%(user)s cannot participate in private threads.') % {'user': user.username}), 'info', 'threads')
+            elif (not self.request.acl.private_threads.can_invite_ignoring() and
+                    user.is_ignoring(self.request.user)):
+                self.request.messages.set_flash(Message(_('%(user)s does not wish to participate in your private threads.') % {'user': user.username}), 'info', 'threads')
             else:
                 self.thread.participants.add(user)
                 user.email_user(self.request, 'private_thread_invite', _("You've been invited to private thread \"%(thread)s\" by %(user)s") % {'thread': self.thread.name, 'user': self.request.user.username}, {'author': self.request.user, 'thread': self.thread})

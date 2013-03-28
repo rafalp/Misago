@@ -14,8 +14,10 @@ class NewThreadView(NewThreadBaseView, TypeMixin):
     def set_forum_context(self):
         self.forum = Forum.objects.get(special='private_threads')
 
-    def after_form(self):
+    def after_form(self, form):
         self.thread.participants.add(self.request.user)
+        self.invite_users(form.invite_users)
+
         self.whitelist_mentions()
 
     def response(self):
@@ -29,7 +31,7 @@ class NewThreadView(NewThreadBaseView, TypeMixin):
 class EditThreadView(EditThreadBaseView, TypeMixin):
     form_type = EditThreadForm
 
-    def after_form(self):
+    def after_form(self, form):
         self.whitelist_mentions()
     
     def response(self):
@@ -40,7 +42,8 @@ class EditThreadView(EditThreadBaseView, TypeMixin):
 class NewReplyView(NewReplyBaseView, TypeMixin):
     form_type = NewReplyForm
 
-    def after_form(self):
+    def after_form(self, form):
+        self.invite_users(form.invite_users)
         self.whitelist_mentions()
 
     def response(self):
@@ -54,7 +57,7 @@ class NewReplyView(NewReplyBaseView, TypeMixin):
 class EditReplyView(EditReplyBaseView, TypeMixin):
     form_type = EditReplyForm
 
-    def after_form(self):
+    def after_form(self, form):
         self.whitelist_mentions()
 
     def response(self):

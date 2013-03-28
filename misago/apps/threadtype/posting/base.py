@@ -40,7 +40,7 @@ class PostingBaseView(ViewBase):
                                     post_content=old_post,
                                     )
 
-    def after_form(self):
+    def after_form(self, form):
         pass
 
     def notify_users(self):
@@ -105,7 +105,7 @@ class PostingBaseView(ViewBase):
                     if form.is_valid():
                         self.post_form(form)
                         self.watch_thread()
-                        self.after_form()
+                        self.after_form(form)
                         self.notify_users()
                         return self.response()
                     else:

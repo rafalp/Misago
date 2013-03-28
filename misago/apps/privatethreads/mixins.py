@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
+from django.utils.translation import ugettext as _
 from misago.acl.exceptions import ACLError404
 
 class TypeMixin(object):
@@ -13,6 +14,18 @@ class TypeMixin(object):
         except AttributeError:
             pass
 
+    def invite_users(self, users):
+        sync_last_post = False
+        for user in users:
+            if not user in self.thread.participants.all():
+                self.thread.participants.add(user)
+                user.email_user(self.request, 'private_thread_invite', _("You've been invited to private thread \"%(thread)s\" by %(user)s") % {'thread': self.thread.name, 'user': self.request.user.username}, {'author': self.request.user, 'thread': self.thread})
+                if self.action == 'new_reply':
+                    self.thread.last_post.set_checkpoint(self.request, 'invited', user)
+        if sync_last_post:
+            self.thread.last_post.save(force_update=True)
+
+                
     def whitelist_mentions(self):
         participants = self.thread.participants.all()
         mentioned = self.post.mentions.all()

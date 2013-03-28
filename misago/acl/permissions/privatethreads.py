@@ -32,6 +32,9 @@ class PrivateThreadsACL(BaseACL):
     def can_participate(self):
         return self.acl['can_use_private_threads']
         
+    def can_invite_ignoring(self):
+        return self.acl['can_invite_ignoring']
+        
     def is_mod(self):
         return self.acl['private_threads_mod']
 
