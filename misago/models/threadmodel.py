@@ -1,6 +1,7 @@
 from datetime import timedelta
 from django.conf import settings
 from django.db import models
+from django django.db.models.signals import pre_delete
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.signals import (delete_user_content, merge_thread, move_forum_content,
@@ -194,3 +195,14 @@ def move_forum_content_handler(sender, **kwargs):
     Thread.objects.filter(forum=sender).update(forum=kwargs['move_to'])
 
 move_forum_content.connect(move_forum_content_handler, dispatch_uid="move_forum_threads")
+
+
+def delete_user_handler(sender, instance, using):
+    from misago.models import User
+    if sender == User:
+        for thread in user.participants_set:
+            thread.participants.remove(instance)
+            if not thread.participants.count():
+                thread.delete()
+
+pre_delete.connect(delete_user_handler, dispatch_uid="delete_user_participations")
