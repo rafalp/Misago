@@ -1,3 +1,4 @@
+import sys
 from misago.settings_base import *
 
 # Allow debug?
