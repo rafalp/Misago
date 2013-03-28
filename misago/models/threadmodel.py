@@ -197,7 +197,7 @@ def move_forum_content_handler(sender, **kwargs):
 move_forum_content.connect(move_forum_content_handler, dispatch_uid="move_forum_threads")
 
 
-def delete_user_handler(sender, instance, using):
+def delete_user_handler(sender, instance, using, **kwargs):
     from misago.models import User
     if sender == User:
         for thread in user.participants_set:
