@@ -1,4 +1,4 @@
-{% extends "_email/users/activation/none_plain.html" %}
+{% extends "_email/users/activation/none.txt" %}
 
 {% block content %}
 {% trans username=user.username %}{{ username }}, you are receiving this message because board administrator has activated your account.{% endtrans %}

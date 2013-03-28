@@ -1,4 +1,4 @@
-{% extends "_email/users/activation/none_plain.html" %}
+{% extends "_email/users/activation/none.txt" %}
 
 {% block content %}
 {{ super() }}

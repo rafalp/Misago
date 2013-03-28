@@ -1,4 +1,4 @@
-{% extends "_email/base_plain.html" %}
+{% extends "_email/base.txt" %}
 
 {% block title %}{% trans board_name=settings.board_name %}Confirm New Password Request on {{ board_name }}{% endtrans %}{% endblock %}
 

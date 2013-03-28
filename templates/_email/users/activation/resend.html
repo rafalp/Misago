@@ -1,9 +1,9 @@
-{% extends "_email/users/activation/none_html.html" %}
+{% extends "_email/base.html" %}
+
+{% block title %}{% trans board_name=settings.board_name %}Account Activation on {{ board_name }}{% endtrans %}{% endblock %}
 
 {% block content %}
-{{ super() }}
-
-<p {{ style_p|safe }}>{% trans %}We require our members to prove validity of e-mail address used during registration. To prove that you are owner of e-mail address used to create this account, click the link below:{% endtrans %}</p>
+<p {{ style_p|safe }}>{% trans username=user.username %}{{ username }}, you are receiving this message because you have requested new activation e-mail.{% endtrans %}</p>
 <p {{ style_p|safe }}>{% trans %}To activate your account, click the link below:{% endtrans %}</p>
 <a href="{{ board_address }}{% url 'activate' username=user.username_slug, user=user.id, token=user.token %}" {{ style_button|safe }}>{% trans %}Activate my account!{% endtrans %}</a>
 

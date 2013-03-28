@@ -56,8 +56,8 @@ class Theme(object):
         return unicode(_macro()).strip()
 
     def get_email_templates(self, template, contex={}):
-            email_type_plain = '_email/%s_plain.html' % template
-            email_type_html = '_email/%s_html.html' % template
+            email_type_plain = '_email/%s.txt' % template
+            email_type_html = '_email/%s.html' % template
             return (
                     select_template(('%s/%s' % (self._theme, email_type_plain[1:]), email_type_plain)),
                     select_template(('%s/%s' % (self._theme, email_type_html[1:]), email_type_html)),

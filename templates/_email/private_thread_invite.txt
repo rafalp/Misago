@@ -1,4 +1,4 @@
-{% extends "_email/base_plain.html" %}
+{% extends "_email/base.txt" %}
 
 {% block title %}{% trans %}You've been invited to private thread{% endtrans %}{% endblock %}
 

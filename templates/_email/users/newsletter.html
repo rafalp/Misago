@@ -1,7 +1,7 @@
-{% extends "_email/base_plain.html" %}
+{% extends "_email/base.html" %}
 
 {% block title %}{{ subject }}{% endblock %}
 
 {% block content %}
-{{ content_plain }}
+{{ content_html|safe }}
 {% endblock %}
