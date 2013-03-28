@@ -25,6 +25,8 @@ class TypeMixin(object):
         if sync_last_post:
             self.thread.last_post.save(force_update=True)
 
+    def force_stats_sync(self):
+        self.thread.participants.exclude(id=self.request.user.id).update(sync_pds=True)
                 
     def whitelist_mentions(self):
         participants = self.thread.participants.all()

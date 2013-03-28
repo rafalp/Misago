@@ -65,8 +65,7 @@ class ThreadBaseView(ViewBase):
         last_post = self.posts[len(self.posts) - 1]
 
         if not self.tracker.is_read(self.thread):
-            self.tracker.set_read(self.thread, last_post)
-            self.tracker.sync()
+            self.tracker_update(last_post)
 
         if self.watcher and last_post.date > self.watcher.last_read:
             self.watcher.last_read = timezone.now()
@@ -75,6 +74,10 @@ class ThreadBaseView(ViewBase):
         if self.request.user.is_authenticated():
             for karma in Karma.objects.filter(post_id__in=posts_dict.keys()).filter(user=self.request.user):
                 posts_dict[karma.post_id].karma_vote = karma
+
+    def tracker_update(self, last_post):
+        self.tracker.set_read(self.thread, last_post)
+        self.tracker.sync()
 
     def thread_actions(self):
         pass

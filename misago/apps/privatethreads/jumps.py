@@ -66,6 +66,8 @@ class InviteUserView(JumpView, TypeMixin):
                 self.request.messages.set_flash(Message(_('%(user)s does not wish to participate in your private threads.') % {'user': user.username}), 'info', 'threads')
             else:
                 self.thread.participants.add(user)
+                user.sync_pds = True
+                user.save(force_update=True)
                 user.email_user(self.request, 'private_thread_invite', _("You've been invited to private thread \"%(thread)s\" by %(user)s") % {'thread': self.thread.name, 'user': self.request.user.username}, {'author': self.request.user, 'thread': self.thread})
                 self.thread.last_post.set_checkpoint(self.request, 'invited', user)
                 self.thread.last_post.save(force_update=True)
@@ -88,6 +90,8 @@ class RemoveUserView(JumpView, TypeMixin):
             self.thread.participants.remove(user)
             self.thread.threadread_set.filter(id=user.pk).delete()
             self.thread.watchedthread_set.filter(id=user.pk).delete()
+            user.sync_pds = True
+            user.save(force_update=True)
             # If there are no more participants in thread, remove it
             if self.thread.participants.count() == 0:
                 self.thread.delete()

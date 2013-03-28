@@ -17,8 +17,8 @@ class NewThreadView(NewThreadBaseView, TypeMixin):
     def after_form(self, form):
         self.thread.participants.add(self.request.user)
         self.invite_users(form.invite_users)
-
         self.whitelist_mentions()
+        self.force_stats_sync()
 
     def response(self):
         if self.post.moderated:
@@ -43,8 +43,12 @@ class NewReplyView(NewReplyBaseView, TypeMixin):
     form_type = NewReplyForm
 
     def after_form(self, form):
-        self.invite_users(form.invite_users)
+        try:
+            self.invite_users(form.invite_users)
+        except AttributeError:
+            pass
         self.whitelist_mentions()
+        self.force_stats_sync()
 
     def response(self):
         if self.post.moderated:

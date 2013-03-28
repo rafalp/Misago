@@ -164,6 +164,7 @@ class User(models.Model):
     alerts = models.PositiveIntegerField(default=0)
     alerts_date = models.DateTimeField(null=True, blank=True)
     unread_pds = models.PositiveIntegerField(default=0)
+    sync_pds = models.BooleanField(default=False)
     activation = models.IntegerField(default=0)
     token = models.CharField(max_length=12, null=True, blank=True)
     avatar_ban = models.BooleanField(default=False)
@@ -488,6 +489,10 @@ class User(models.Model):
         from misago.models import Alert
         self.alerts += 1
         return Alert(user=self, message=message, date=tz_util.now())
+
+    def sync_unread_pds(self, unread):
+        self.unread_pds = unread
+        self.sync_pds = False
 
     def get_date(self):
         return self.join_date

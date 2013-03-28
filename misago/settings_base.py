@@ -102,6 +102,7 @@ MIDDLEWARE_CLASSES = (
     'misago.middleware.messages.MessagesMiddleware',
     'misago.middleware.user.UserMiddleware',
     'misago.middleware.acl.ACLMiddleware',
+    'misago.middleware.privatethreads.PrivateThreadsMiddleware',
     'django.middleware.common.CommonMiddleware',
 )
 

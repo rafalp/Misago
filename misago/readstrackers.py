@@ -67,6 +67,18 @@ class ThreadsTracker(object):
             except KeyError:
                 self.need_create = thread
 
+    def unread_count(self, queryset=None):
+        try:
+            return self.unread_threads
+        except AttributeError:
+            self.unread_threads = 0
+            if not queryset:
+                queryset = self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set)
+            for thread in queryset.filter(last__gte=self.record.cleared):
+                if not self.is_read(thread):
+                    self.unread_threads += 1
+            return self.unread_threads
+
     def sync(self):
         now = timezone.now()
 
@@ -85,11 +97,7 @@ class ThreadsTracker(object):
             self.need_update.save(force_update=True)
 
         if self.need_create or self.need_update:
-            unread_threads = 0
-            for thread in self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set.filter(last__gte=self.record.cleared)):
-                if not self.is_read(thread):
-                    unread_threads += 1
-            if not unread_threads:
+            if not self.unread_count():
                 self.record.cleared = now
             self.record.updated = now
             if self.record.pk:

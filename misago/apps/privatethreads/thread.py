@@ -49,3 +49,9 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
         context['participants'] = self.thread.participants.all().prefetch_related('rank')
         context['invite_form'] = FormFields(InviteMemberForm(request=self.request))
         return context
+
+    def tracker_update(self, last_post):
+        super(ThreadView, self).tracker_update(last_post)
+        unread = self.tracker.unread_count(self.forum.thread_set.filter(participants__id=self.request.user.pk))
+        self.request.user.sync_unread_pds(unread)
+        self.request.user.save(force_update=True)
