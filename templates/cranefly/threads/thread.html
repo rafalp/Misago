@@ -242,47 +242,41 @@
           </div>
           <div class="post-footer">{% filter trim %}
             {% if acl.threads.can_see_post_score(forum) %}
-            <div class="post-rating">
-              {% if acl.threads.can_see_post_score(forum) == 1 %}
-              <span class="post-score{% if (post.upvotes - post.downvotes) > 0 %} post-score-good{% elif (post.upvotes - post.downvotes) < 0 %} post-score-bad{% endif %}">{{ post.upvotes - post.downvotes }}</span>
-              {% elif acl.threads.can_see_post_score(forum) == 2%}
-              <span class="post-score{% if post.upvotes %} post-score-good{% endif %}">{{ post.upvotes }}</span>
+            <div{% if user.is_authenticated() and user.pk != post.user_id %} class="post-rating-actions"{% endif %}>
+              <div class="post-rating">
+                {% if acl.threads.can_see_post_score(forum) == 1 %}
+                <span class="post-score post-score-total{% if (post.upvotes - post.downvotes) > 0 %} post-score-good{% elif (post.upvotes - post.downvotes) < 0 %} post-score-bad{% endif %}">{{ post.upvotes - post.downvotes }}</span>
+                {% elif acl.threads.can_see_post_score(forum) == 2%}
+                <span class="post-score post-score-upvotes{% if post.upvotes %} post-score-good{% endif %}">{{ post.upvotes }}</span>
+                {% endif %}
+                {% if user.is_authenticated() and user.pk != post.user_id and acl.threads.can_upvote_posts(forum) %}
+                <form action="{% url 'post_upvote' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline form-upvote" method="post">
+                  <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                  <button type="submit" class="btn btn-link post-like"{% if post.karma_vote and post.karma_vote.score > 0 %} disabled="disabled"{% endif %}>{% trans %}Like{% endtrans %}</button>
+                </form>
+                {% else %}
+                <span class="post-{% if post.upvotes %}like{% else %}neutral{% endif %}">{% trans %}Likes{% endtrans %}</span>
+                {% endif %}
+              {% if acl.threads.can_see_post_score(forum) == 2 %}
+              </div>
+              <div class="post-rating">
+                <span class="post-score post-score-downvotes{% if post.downvotes %} post-score-bad{% endif %}">{{ post.downvotes }}</span>
               {% endif %}
-              {% if user.is_authenticated() and user.pk != post.user_id and acl.threads.can_upvote_posts(forum) %}
-              {% if post.karma_vote and post.karma_vote.score > 0 %}
-              <span class="post-like">{% trans %}Like{% endtrans %}</span>
-              {% else %}
-              <form action="{% url 'post_upvote' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline" method="post">
-                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-                <button type="submit" class="btn btn-link post-like">{% trans %}Like{% endtrans %}</button>
-              </form>
+                {% if user.is_authenticated() and user.pk != post.user_id and acl.threads.can_downvote_posts(forum) %}
+                <form action="{% url 'post_downvote' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline form-downvote" method="post">
+                  <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                  <button type="submit" class="btn btn-link post-hate"{% if post.karma_vote and post.karma_vote.score < 0 %} disabled="disabled"{% endif %}>{% trans %}Hate{% endtrans %}</button>
+                </form>
+                {% elif acl.threads.can_see_post_score(forum) == 2 %}
+                <span class="post-{% if post.downvotes %}hate{% else %}neutral{% endif %}">{% trans %}Hates{% endtrans %}</span>
+                {% endif %}
+              </div>
+              {% if acl.threads.can_see_post_votes(forum) %}
+              <div class="post-rating">
+                <a href="{% url 'post_votes' thread=thread.pk, slug=thread.slug, post=post.pk %}">{% trans %}Show Votes{% endtrans %}</a>
+              </div>
               {% endif %}
-              {% else %}
-              <span class="post-{% if post.upvotes %}like{% else %}neutral{% endif %}">{% trans %}Likes{% endtrans %}</span>
-              {% endif %}
-            {% if acl.threads.can_see_post_score(forum) == 2 %}
             </div>
-            <div class="post-rating">
-              <span class="post-score{% if post.downvotes %} post-score-bad{% endif %}">{{ post.downvotes }}</span>
-            {% endif %}
-              {% if user.is_authenticated() and user.pk != post.user_id and acl.threads.can_downvote_posts(forum) %}
-              {% if post.karma_vote and post.karma_vote.score < 0 %}
-              <span class="post-hate">{% trans %}Hate{% endtrans %}</span>
-              {% else %}
-              <form action="{% url 'post_downvote' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline" method="post">
-                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-                <button type="submit" class="btn btn-link post-hate">{% trans %}Hate{% endtrans %}</button>
-              </form>
-              {% endif %}
-              {% elif acl.threads.can_see_post_score(forum) == 2 %}
-              <span class="post-{% if post.downvotes %}hate{% else %}neutral{% endif %}">{% trans %}Hates{% endtrans %}</span>
-              {% endif %}
-            </div>
-            {% if acl.threads.can_see_post_votes(forum) %}
-            <div class="post-rating">
-              <a href="{% url 'post_votes' thread=thread.pk, slug=thread.slug, post=post.pk %}">{% trans %}Show Votes{% endtrans %}</a>
-            </div>
-            {% endif %}
             {% endif %}
 
             {% if user.is_authenticated() %}

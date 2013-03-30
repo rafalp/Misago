@@ -9,6 +9,7 @@ from misago.messages import Message
 from misago.models import Forum, Thread, Post, Karma, WatchedThread
 from misago.readstrackers import ThreadsTracker
 from misago.utils.pagination import make_pagination
+from misago.utils.views import json_response
 from misago.apps.threadtype.base import ViewBase
 
 class JumpView(ViewBase):
@@ -40,9 +41,9 @@ class JumpView(ViewBase):
         except (Thread.DoesNotExist, Post.DoesNotExist):
             return error404(self.request)
         except ACLError403 as e:
-            return error403(request, e.message)
+            return error403(request, e)
         except ACLError404 as e:
-            return error404(request, e.message)
+            return error404(request, e)
 
 
 class LastReplyBaseView(JumpView):
@@ -192,7 +193,6 @@ class UpvotePostBaseView(JumpView):
             vote.ip = request.session.get_ip(request)
             vote.agent = request.META.get('HTTP_USER_AGENT')
             self.make_vote(request, vote)
-            request.messages.set_flash(Message(_('Your vote has been saved.')), 'success', 'threads_%s' % self.post.pk)
             if vote.pk:
                 vote.save(force_update=True)
             else:
@@ -219,6 +219,14 @@ class UpvotePostBaseView(JumpView):
             request.user.save(force_update=True)
             if self.post.user_id:
                 self.post.user.save(force_update=True)
+            if request.is_ajax():
+                return json_response(request, {
+                                               'score_total': self.post.upvotes - self.post.downvotes,
+                                               'score_upvotes': self.post.upvotes,
+                                               'score_downvotes': self.post.downvotes,
+                                               'user_vote': vote.score,
+                                              })
+            request.messages.set_flash(Message(_('Your vote has been saved.')), 'success', 'threads_%s' % self.post.pk)
             return self.redirect_to_post(self.post)
         return view(self.request)
     

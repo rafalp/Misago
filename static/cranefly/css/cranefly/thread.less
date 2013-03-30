@@ -233,14 +233,20 @@
                 }
 
                 &.post-like {
-                  &:hover, &:active, &:focus {
+                  &:hover, &:active, &:focus, &:disabled {
                     color: @green;
                   }
                 }
 
                 &.post-hate {
-                  &:hover, &:active, &:focus {
+                  &:hover, &:active, &:focus, &:disabled {
                     color: @red;
+                  }
+                }
+
+                &:disabled {
+                  &:hover, &:active, &:focus {
+                    text-decoration: none;
                   }
                 }
               }
