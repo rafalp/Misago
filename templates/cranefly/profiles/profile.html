@@ -9,7 +9,11 @@
     <div class="container">
       {{ messages_list(messages) }}
       <div class="header-row">
+        {% if profile.id == user.id and not user.avatar_ban %}
+        <a href="{% url 'usercp_avatar' %}"><img src="{{ profile.get_avatar() }}" class="header-avatar tooltip-right" title="{% trans %}Click to jump to your Avatar Settings{% endtrans %}"></a>
+        {% else %}
         <img src="{{ profile.get_avatar() }}" class="header-avatar">
+        {% endif %}
         <div class="header-side">
           <h1>{{ profile.username }} <small>{% if profile.title or profile.rank.title -%}
             <strong>{% if profile.title %}{{ _(profile.title) }}{% elif profile.rank.title %}{{ _(profile.rank.title) }}{% endif %}</strong>; {% endif %}
