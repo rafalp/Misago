@@ -136,6 +136,7 @@ PROFILE_EXTENSIONS = (
 
 # List of Markdown Extensions
 MARKDOWN_EXTENSIONS = (
+    'misago.markdown.extensions.strikethrough.StrikethroughExtension',
     'misago.markdown.extensions.quotes.QuoteTitlesExtension',
     'misago.markdown.extensions.mentions.MentionsExtension',
     'misago.markdown.extensions.magiclinks.MagicLinksExtension',
