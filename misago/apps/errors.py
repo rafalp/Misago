@@ -7,7 +7,9 @@ def error_not_implemented(request, *args, **kwargs):
     raise NotImplementedError("This action is not implemented!")
 
 
-def error_view(request, error, message):
+def error_view(request, error, message=None):
+    if message:
+        message = unicode(message)
     if request.is_ajax():
         if not message:
             if error == 404:
@@ -17,7 +19,7 @@ def error_view(request, error, message):
         return json_response(request, status=error, message=message)
     response = request.theme.render_to_response(('error%s.html' % error),
                                                 {
-                                                 'message': unicode(message),
+                                                 'message': message,
                                                  'hide_signin': True,
                                                  'exception_response': True,
                                                  },
