@@ -40,7 +40,9 @@
           <li><a href="{% url 'index' %}" title="{% trans %}Forum Home{% endtrans %}" class="tooltip-bottom"><i class="icon-th-list"></i></a></li>
           <li><a href="{% url 'popular_threads' %}" title="{% trans %}Popular Threads{% endtrans %}" class="hot tooltip-bottom"><i class="icon-fire"></i></a></li>
           <li><a href="{% url 'new_threads' %}" title="{% trans %}New Threads{% endtrans %}" class="fresh tooltip-bottom"><i class="icon-leaf"></i></a></li>{% if not user.crawler %}
+          {% if not user.is_crawler() %}
           <li><a href="#" title="{% trans %}Search Community{% endtrans %}" class="tooltip-bottom"><i class="icon-search"></i></a></li>{% endif %}
+          {% endif %}
           <li><a href="{% url 'users' %}" title="{% trans %}Browse Users{% endtrans %}" class="tooltip-bottom"><i class="icon-user"></i></a></li>
           {% if settings.tos_url or settings.tos_content %}<li><a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{% url 'tos' %}{% endif %}" title="{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Forum Terms of Service{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-certificate"></i></a></li>{% endif %}
         </ul>
