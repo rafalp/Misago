@@ -1,3 +1,4 @@
+from hashlib import md5
 from datetime import timedelta
 from django.conf import settings
 from django.contrib.sessions.backends.base import SessionBase, CreateError
@@ -71,7 +72,10 @@ class MisagoSession(SessionBase):
     def save(self):
         self._session_rk.data = self.encode(self._get_session())
         self._session_rk.last = timezone.now()
-        self._session_rk.save(force_update=True)
+        if self._session_rk.pk:
+            self._session_rk.save(force_update=True)
+        else:
+            self._session_rk.save(force_insert=True)
 
 
 class CrawlerSession(MisagoSession):
@@ -82,30 +86,30 @@ class CrawlerSession(MisagoSession):
         self.hidden = False
         self.team = False
         self._ip = self.get_ip(request)
+        self._session_key = md5('%s-%s' % (request.user.username, self._ip)).hexdigest()
         try:
-            self._session_rk = Session.objects.get(crawler=request.user.username, ip=self._ip)
+            self._session_rk = Session.objects.get(id=self._session_key)
             self._session_key = self._session_rk.id
         except Session.DoesNotExist:
             self.create(request)
 
     def create(self, request):
+        self._session_rk = Session(
+                                   id=self._session_key,
+                                   data=self.encode({}),
+                                   crawler=request.user.username,
+                                   ip=self._ip,
+                                   agent=request.META.get('HTTP_USER_AGENT', ''),
+                                   start=timezone.now(),
+                                   last=timezone.now(),
+                                   matched=True
+                                   )
         while True:
             try:
-                self._session_key = self._get_new_session_key()
-                self._session_rk = Session(
-                                         id=self._session_key,
-                                         data=self.encode({}),
-                                         crawler=request.user.username,
-                                         ip=self._ip,
-                                         agent=request.META.get('HTTP_USER_AGENT', ''),
-                                         start=timezone.now(),
-                                         last=timezone.now(),
-                                         matched=True
-                                         )
                 self._session_rk.save(force_insert=True)
                 break
             except CreateError:
-                # Key wasn't unique. Try again.
+                # Key wasn't unique, we'll try again after request ends
                 continue
 
     def human_session(self):
