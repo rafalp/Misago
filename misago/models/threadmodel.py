@@ -73,7 +73,7 @@ class Thread(models.Model):
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
     last_poster_slug = models.SlugField(max_length=255, null=True, blank=True)
     last_poster_style = models.CharField(max_length=255, null=True, blank=True)
-    participants = models.ManyToManyField('User', related_name='+')
+    participants = models.ManyToManyField('User', related_name='private_thread_set')
     moderated = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     closed = models.BooleanField(default=False)
@@ -200,7 +200,7 @@ move_forum_content.connect(move_forum_content_handler, dispatch_uid="move_forum_
 def delete_user_handler(sender, instance, using, **kwargs):
     from misago.models import User
     if sender == User:
-        for thread in user.participants_set:
+        for thread in instance.private_thread_set.all():
             thread.participants.remove(instance)
             if not thread.participants.count():
                 thread.delete()
