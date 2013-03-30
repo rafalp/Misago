@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect as django_redirect
 from django.utils.translation import ugettext as _
 from misago.apps.errors import error403, error404
 from misago.models import Forum
@@ -16,6 +16,6 @@ def redirect(request, forum, slug):
             request.session['redirects'] = redirects_tracker
             forum.redirects += 1
             forum.save(force_update=True)
-        return redirect(forum.redirect)
+        return django_redirect(forum.redirect)
     except Forum.DoesNotExist:
         return error404(request)
