@@ -17,7 +17,7 @@ def error_view(request, error, message):
         return json_response(request, status=error, message=message)
     response = request.theme.render_to_response(('error%s.html' % error),
                                                 {
-                                                 'message': message,
+                                                 'message': unicode(message),
                                                  'hide_signin': True,
                                                  'exception_response': True,
                                                  },

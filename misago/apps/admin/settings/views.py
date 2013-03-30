@@ -102,7 +102,7 @@ def settings_search(request):
         else:
             raise SearchException(_('Search query is invalid.'))
     except SearchException as e:
-        message = Message(e.message, 'error')
+        message = Message(unicode(e), 'error')
     return request.theme.render_to_response('settings/search_results.html',
                                     {
                                     'message': message,

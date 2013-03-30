@@ -7,9 +7,9 @@ def acl_errors(f):
         try:
             return f(*args, **kwargs)
         except ACLError403 as e:
-            return error403(args[0], e.message)
+            return error403(args[0], e)
         except ACLError404 as e:
-            return error404(args[0], e.message)
+            return error404(args[0], e)
     return decorator
 
 

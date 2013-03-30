@@ -44,9 +44,9 @@ class ChangelogBaseView(ViewBase):
         except (Forum.DoesNotExist, Thread.DoesNotExist, Post.DoesNotExist, Change.DoesNotExist):
             return error404(self.request)
         except ACLError403 as e:
-            return error403(request, e.message)
+            return error403(request, e)
         except ACLError404 as e:
-            return error404(request, e.message)
+            return error404(request, e)
         return self.dispatch(request)
 
 
