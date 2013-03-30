@@ -34,18 +34,32 @@
         {% for forum in category.subforums %}
         <tr>
           <td class="forum-icon"><span class="forum-icon-wrap{% if forum.type == 'redirect' %} forum-icon-redirect{% elif not forum.is_read %} forum-icon-new{% endif %}"><i class="icon-{% if forum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %} icon-white"></i></span></td>
-          <td class="forum-main">
-            <h3{% if not forum.is_read %} class="forum-title-new"{% endif %}><a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3>
-            {% if forum.show_details %}
+          <td id="forum-{{ forum.id }}" class="forum-main">
+            <h3 class="forum-title{% if not forum.is_read %} forum-title-new{% endif %}"><a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3>
+            {% if forum.show_details and forum.type != 'redirect' %}
             <div class="forum-details">
-              {% if forum.type == 'redirect' %}
-              {{ redirect_stats(forum) }}
-              {% else %}
-              {{ forum_stats(forum) }}
-              {% endif %}
+              {% if acl.forums.can_browse(forum) and (acl.threads.can_read_threads(forum) == 2 or (acl.threads.can_read_threads(forum) == 1 and forum.last_poster_id == user.pk)) %}
+              {% if forum.last_thread_id -%}
+              {% trans %}Latest{% endtrans %}: <a href="{% url 'thread_new' thread=forum.last_thread_id, slug=forum.last_thread_slug %}" class="tooltip-top" title="{{ forum.last_thread_name }}">{{ forum.last_thread_name|short_string(28) }}</a>
+              {%- else -%}
+              <em>{% trans %}This forum is empty{% endtrans %}</em>
+              {%- endif %}
+              {%- else -%}
+              <em>{% trans %}This forum is protected{% endtrans %}</em>
+              {%- endif %}
             </div>
             {% endif %}
-            {% if forum.description %}<p class="forum-description">{{ forum.description }}</p>{% endif %}
+            <div class="hide forum-meta">
+              {% if forum.description %}<p class="forum-description">{{ forum.description }}</p>{% endif %}
+              <div class="forum-stats">
+                {% if forum.type != 'redirect' %}
+                <span>{% trans %}Posts{% endtrans %}: <strong>{{ forum.posts|intcomma }}</strong></span>
+                {% trans %}Threads{% endtrans %}: <strong>{{ forum.threads|intcomma }}</strong>
+                {% else %}
+                {% trans %}Clicks{% endtrans %}: <strong>{{ forum.redirects|intcomma }}</strong>
+                {% endif %}
+              </div>
+            </div>
           </td>
         </tr>
         {% endfor %}
@@ -58,35 +72,20 @@
 </div>
 {% endblock %}
 
-
-{% macro forum_stats(forum) -%}
-{% if forum.last_thread_id and not forum.attr('hidethread') -%}
-  {% trans count=forum.posts, posts=fancy_number(forum.posts, forum.posts_delta), thread=forum_thread(forum) -%}
-  {{ posts }} post - last in {{ thread }}
-  {%- pluralize -%}
-  {{ posts }} posts - last in {{ thread }}
-  {%- endtrans %}
-{%- else -%}
-  {% trans count=forum.posts, posts=fancy_number(forum.posts, forum.posts_delta) -%}
-  {{ posts }} post
-  {%- pluralize -%}
-  {{ posts }} posts
-  {%- endtrans %}
-{%- endif %}
-{%- endmacro %}
-
-{% macro forum_thread(forum) -%}
-<a href="{% url 'thread_new' thread=forum.last_thread_id, slug=forum.last_thread_slug %}">{{ forum.last_thread_name }}</a>
-{%- endmacro %}
-
-{% macro redirect_stats(forum) -%}
-{% trans count=forum.redirects, redirects=fancy_number(forum.redirects, forum.redirects_delta) -%}
-{{ redirects }} click
-{%- pluralize -%}
-{{ redirects }} clicks
-{%- endtrans %}
-{%- endmacro %}
-
-{% macro fancy_number(number, delta) -%}
-<strong{% if delta < number %} class="stat-increment"{% endif %}>{{ number|intcomma }}</strong>
-{%- endmacro %}
+{% block javascripts -%}{{ super() }}
+  <script type="text/javascript">
+    $(function () {
+      function populateForumTooltip(target) {
+        return $('#forum-' + target + ' .forum-meta').html();
+      };
+      {% for category in forums_list %}{% for forum in category.subforums %}
+        $('#forum-{{ forum.id }} .forum-title').tooltip({
+          template: '<div class="tooltip forum-meta-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
+          placement: 'right',
+          html: true,
+          title: populateForumTooltip({{ forum.id }})
+        });
+      {% endfor %}{% endfor %}
+    });
+  </script>
+{%- endblock %}
