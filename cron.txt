@@ -6,3 +6,4 @@
 20 3 * * * python $HOME/misago/manage.py cleartokens
 25 3 * * * python $HOME/misago/manage.py updatethreadranking
 0 0 * * 0 python $HOME/misago/manage.py forcepdssync
+0 3 */2 * * python $HOME/misago/manage.py pruneforums
