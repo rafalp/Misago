@@ -237,7 +237,7 @@ class Edit(FormWidget):
 
     def get_form_instance(self, form, target, initial, post=False):
         form_inst = super(Edit, self).get_form_instance(form, target, initial, post)
-        valid_targets = Forum.tree.get(special='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
+        valid_targets = Forum.objects.get(special='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
         form_inst.fields['parent'] = TreeNodeChoiceField(queryset=valid_targets, level_indicator=u'- - ')
         return form_inst
 
@@ -322,7 +322,7 @@ class Delete(FormWidget):
             form_inst = form(forum=target, request=self.request, initial=self.get_initial_data(target))
         if target.type != 'forum':
             del form_inst.fields['contents']
-        valid_targets = Forum.tree.get(special='root').get_descendants().exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
+        valid_targets = Forum.objects.get(special='root').get_descendants().exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
         form_inst.fields['subforums'] = TreeNodeChoiceField(queryset=valid_targets, required=False, empty_label=_("Remove with forum"), level_indicator=u'- - ')
         return form_inst
 

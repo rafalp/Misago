@@ -13,7 +13,7 @@ class MoveThreadsForm(Form):
         super(MoveThreadsForm, self).__init__(data, request=request, *args, **kwargs)
 
     def finalize_form(self):
-        self.fields['new_forum'] = ForumChoiceField(queryset=Forum.tree.get(special='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']))
+        self.fields['new_forum'] = ForumChoiceField(queryset=Forum.objects.get(special='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']))
         self.layout = [
                        [
                         None,
@@ -39,7 +39,7 @@ class MergeThreadsForm(Form, ValidateThreadNameMixin):
         super(MergeThreadsForm, self).__init__(data, request=request, *args, **kwargs)
 
     def finalize_form(self):
-        self.fields['new_forum'] = ForumChoiceField(queryset=Forum.tree.get(special='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']), initial=self.threads[0].forum)
+        self.fields['new_forum'] = ForumChoiceField(queryset=Forum.objects.get(special='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']), initial=self.threads[0].forum)
         self.fields['thread_name'] = forms.CharField(
                                                      max_length=self.request.settings['thread_name_max'],
                                                      initial=self.threads[0].name,

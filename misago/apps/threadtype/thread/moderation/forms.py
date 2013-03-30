@@ -22,7 +22,7 @@ class SplitThreadForm(Form, ValidateThreadNameMixin):
                                                      validators=[validate_sluggable(_("Thread name must contain at least one alpha-numeric character."),
                                                                                     _("Thread name is too long. Try shorter name.")
                                                                                     )])
-        self.fields['thread_forum'] = ForumChoiceField(queryset=Forum.tree.get(special='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']))
+        self.fields['thread_forum'] = ForumChoiceField(queryset=Forum.objects.get(special='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']))
 
     def clean_thread_forum(self):
         new_forum = self.cleaned_data['thread_forum']
