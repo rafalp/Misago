@@ -321,7 +321,6 @@ class User(models.Model):
         self.username_slug = slugify(username)
 
     def sync_username(self):
-        print 'SYNCING NAME CACHES!'
         rename_user.send(sender=self)
 
     def is_username_valid(self, e):

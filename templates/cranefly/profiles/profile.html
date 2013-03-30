@@ -57,6 +57,11 @@
                 </button>
               </form>
             </li>
+            {% if acl.private_threads.can_start() %}
+            <li class="pull-right">
+              <a href="{% url 'private_thread_start_with' username=profile.username_slug, user=profile.pk %}" class="btn"><i class="icon-envelope"></i> {% trans %}Message{% endtrans %}</a>
+            </li>
+            {% endif %}
             {% endif %}
           </ul>
         </div>

@@ -1,9 +1,10 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
+from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.threadtype.posting import NewThreadBaseView, EditThreadBaseView, NewReplyBaseView, EditReplyBaseView
 from misago.messages import Message
-from misago.models import Forum, Thread, Post
+from misago.models import Forum, Thread, Post, User
 from misago.apps.privatethreads.forms import (NewThreadForm, EditThreadForm,
                                               NewReplyForm, EditReplyForm)
 from misago.apps.privatethreads.mixins import TypeMixin
@@ -13,6 +14,21 @@ class NewThreadView(NewThreadBaseView, TypeMixin):
 
     def set_forum_context(self):
         self.forum = Forum.objects.get(special='private_threads')
+
+    def form_initial_data(self):
+        if self.kwargs.get('user'):
+            try:
+                user = User.objects.get(id=self.kwargs.get('user'))
+                acl = user.acl(self.request)
+                if not acl.private_threads.can_participate():
+                    raise ACLError403(_("This member can not participate in private threads."))
+                if (not self.request.acl.private_threads.can_invite_ignoring() and
+                        not user.allow_pd_invite(self.request.user)):
+                    raise ACLError403(_('%(user)s restricts who can invite him to private threads.') % {'user': user.username})
+                return {'invite_users': user.username}
+            except User.DoesNotExist:
+                raise ACLError404()
+        return {}
 
     def after_form(self, form):
         self.thread.participants.add(self.request.user)

@@ -144,6 +144,28 @@
           top: 0px;
         }
       }
+
+      & {
+        a.btn {
+          border: 1px solid @btnBorder;
+          *border: 0; // Remove the border to prevent IE7's black border on input:focus
+          border-radius: @baseBorderRadius;
+          margin: 0px;
+          padding: 4px 12px;
+
+          color: @textColor;
+
+          i {
+            position: relative;
+            top: 0px;
+          }
+
+          &:visited, &:hover {
+            background-color: @white;
+            border-color: lighten(@grayLight, 5%);
+          }
+        }
+      }
     }
   }
 }

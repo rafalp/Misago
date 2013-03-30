@@ -860,6 +860,8 @@ a.label:hover,a.label:focus,a.badge:hover,a.badge:focus{color:#ffffff;text-decor
 .header-primary .header-tabs li.active a:link,.header-primary .header-tabs li.active a:visited,.header-primary .header-tabs li.active a:hover,.header-primary .header-tabs li.active a:active{background:none;border-bottom:4px solid #cf402e;margin-bottom:0px;color:#333333;}
 .header-primary .header-tabs li .form-inline{margin:0px;margin-left:14px;margin-bottom:7px;}.header-primary .header-tabs li .form-inline .btn-icon{padding-left:7px;padding-right:7px;}
 .header-primary .header-tabs li .form-inline i{position:relative;top:0px;}
+.header-primary .header-tabs li a.btn{border:1px solid #cccccc;*border:0;border-radius:3px;margin:0px;padding:4px 12px;color:#333333;}.header-primary .header-tabs li a.btn i{position:relative;top:0px;}
+.header-primary .header-tabs li a.btn:visited,.header-primary .header-tabs li a.btn:hover{background-color:#ffffff;border-color:#a6a6a6;}
 html,body{height:100%;}
 #wrap{min-height:100%;height:auto !important;height:100%;margin:0 auto -100px;}#wrap .container-primary{padding-top:20px;padding-bottom:120px;}#wrap .container-primary .page-description{margin-bottom:20px;}
 #wrap .container-primary hr{border:none;border-top:1px solid #eeeeee;}
