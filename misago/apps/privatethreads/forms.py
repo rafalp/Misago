@@ -28,7 +28,7 @@ class InviteUsersMixin(object):
                     if not user.acl(self.request).private_threads.can_participate():
                         raise forms.ValidationError(_('%(user)s cannot participate in private threads.') % {'user': user.username})
                     if (not self.request.acl.private_threads.can_invite_ignoring() and
-                        user.allow_pd_invite(self.request.user)):
+                        not user.allow_pd_invite(self.request.user)):
                         raise forms.ValidationError(_('%(user)s restricts who can invite him to private threads.') % {'user': user.username})
                     self.invite_users.append(user)
                 except User.DoesNotExist:

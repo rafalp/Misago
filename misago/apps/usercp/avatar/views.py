@@ -75,7 +75,7 @@ def gallery(request):
             allowed_avatars += gallery['avatars']
 
     if not allowed_avatars:
-        request.messages.set_flash(Message(_("No avatars are avaiable.")), 'info', 'usercp_avatar')
+        request.messages.set_flash(Message(_("No avatar galleries are available at the moment.")), 'info', 'usercp_avatar')
         return redirect(reverse('usercp_avatar'))
 
     message = request.messages.get_message('usercp_avatar')

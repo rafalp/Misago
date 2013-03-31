@@ -16,7 +16,7 @@ def RequestContext(request, context=None):
     if request.user.is_authenticated() and request.user.pk != context['profile'].pk:
         context['follows'] = request.user.is_following(context['profile'])
         context['ignores'] = request.user.is_ignoring(context['profile'])
-        
+    
     # Find out if this user allows us to see his activity
     if request.user.pk != context['profile'].pk:
         if context['profile'].hide_activity == 2:
@@ -35,6 +35,11 @@ def RequestContext(request, context=None):
     else:
         # Fake "right now" time
         context['online'] = {'last': timezone.now()}
+
+    # Sync member
+    if context['profile'].sync_profile():
+        print 'SYNCED!'
+        context['profile'].save(force_update=True)
 
     context['tabs'] = []
     for extension in settings.PROFILE_EXTENSIONS:

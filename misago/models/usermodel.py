@@ -1,4 +1,5 @@
 import hashlib
+from datetime import timedelta
 import math
 from random import choice
 from path import path
@@ -14,7 +15,7 @@ from django.utils import timezone as tz_util
 from django.utils.translation import ugettext_lazy as _
 from misago.acl.builder import build_acl
 from misago.monitor import Monitor
-from misago.signals import delete_user_content, rename_user
+from misago.signals import delete_user_content, rename_user, sync_user_profile
 from misago.utils.avatars import avatar_size
 from misago.utils.strings import random_string, slugify
 from misago.validators import validate_username, validate_password, validate_email
@@ -508,8 +509,13 @@ class User(models.Model):
     def get_date(self):
         return self.join_date
 
-    def sync_user(self):
-        pass
+    def sync_profile(self):
+        if (settings.PROFILES_SYNC_FREQUENCY > 0 and
+                self.last_sync <= tz_util.now() - timedelta(days=settings.PROFILES_SYNC_FREQUENCY)):
+            sync_user_profile.send(sender=self)
+            self.last_sync = tz_util.now()
+            return True
+        return False
 
 
 class Guest(object):
@@ -555,3 +561,12 @@ class Crawler(Guest):
     def is_crawler(self):
         return True
 
+
+"""
+Signals handlers
+"""
+def sync_user_handler(sender, **kwargs):
+    sender.following = sender.follows.count()
+    sender.followers = sender.follows_set.count()
+
+sync_user_profile.connect(sync_user_handler, dispatch_uid="sync_user_follows")

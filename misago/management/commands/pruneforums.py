@@ -1,7 +1,8 @@
 from datetime import timedelta
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from misago.models import Forum, Thread
+from misago.models import Forum, Thread, Post
+from misago.monitor import Monitor
 
 class Command(BaseCommand):
     """
@@ -22,4 +23,7 @@ class Command(BaseCommand):
             if deleted:
                 forum.sync()
                 forum.save(force_update=True)
+        monitor = Monitor()
+        monitor['threads'] = Post.objects.count()
+        monitor['posts'] = Post.objects.count()
         self.stdout.write('Forums were pruned.\n')

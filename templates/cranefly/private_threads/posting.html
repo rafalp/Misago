@@ -117,7 +117,7 @@
 {% url 'private_thread_reply' thread=thread.pk, slug=thread.slug %}
 {%- endif -%}
 {%- elif action == 'edit_reply' -%}
-{% url 'post_edit' thread=thread.pk, slug=thread.slug, post=post.pk %}
+{% url 'private_post_edit' thread=thread.pk, slug=thread.slug, post=post.pk %}
 {%- endif %}
 {%- endmacro %}
 

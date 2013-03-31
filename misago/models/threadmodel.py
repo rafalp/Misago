@@ -5,7 +5,7 @@ from django.db.models.signals import pre_delete
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.signals import (delete_user_content, merge_thread, move_forum_content,
-                            move_thread, rename_user)
+                            move_thread, rename_user, sync_user_profile)
 from misago.utils.strings import slugify
 
 class ThreadManager(models.Manager):
@@ -156,17 +156,17 @@ class Thread(models.Model):
             user = watch.user
             if user.pk != request.user.pk:
                 try:
-                    acl = acl(request, user)
-                    acl.forums.allow_forum_view(self.forum)
-                    acl.threads.allow_thread_view(user, self)
-                    acl.threads.allow_post_view(user, self, post)
+                    user_acl = acl(request, user)
+                    user_acl.forums.allow_forum_view(self.forum)
+                    user_acl.threads.allow_thread_view(user, self)
+                    user_acl.threads.allow_post_view(user, self, post)
                     if not user.is_ignoring(request.user):
                         user.email_user(
-                            request,
-                            '%s_reply_notification' % thread_type,
-                            _('New reply in thread "%(thread)s"') % {'thread': self.name},
-                            {'author': request.user, 'post': post, 'thread': self}
-                            )
+                                        request,
+                                        '%s_reply_notification' % thread_type,
+                                        _('New reply in thread "%(thread)s"') % {'thread': self.name},
+                                        {'author': request.user, 'post': post, 'thread': self}
+                                        )
                 except (ACLError403, ACLError404):
                     pass
 
@@ -206,3 +206,9 @@ def delete_user_handler(sender, instance, using, **kwargs):
                 thread.delete()
 
 pre_delete.connect(delete_user_handler, dispatch_uid="delete_user_participations")
+
+
+def sync_user_handler(sender, **kwargs):
+    sender.threads = sender.thread_set.count()
+
+sync_user_profile.connect(sync_user_handler, dispatch_uid="sync_user_threads")
