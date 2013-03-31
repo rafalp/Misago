@@ -46,7 +46,7 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
         return actions
 
     def template_vars(self, context):
-        context['participants'] = self.thread.participants.all().prefetch_related('rank')
+        context['participants'] = self.thread.participants.all().order_by('username_slug').prefetch_related('rank')
         context['invite_form'] = FormFields(InviteMemberForm(request=self.request))
         return context
 
