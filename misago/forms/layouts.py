@@ -14,11 +14,16 @@ class FormLayout(object):
         self.fieldsets = scaffold_fieldsets.fieldsets
         self.hidden = scaffold_fields.hidden
 
+        # Extract fields definitions from form layout
         if self.fieldsets:
             self.fields = {}
             for fieldset in self.fieldsets:
                 for field in fieldset['fields']:
-                    self.fields[field['id']] = field
+                    if field['nested']:
+                        for nested in field['nested']:
+                            self.fields[nested['id']] = nested
+                    else:
+                        self.fields[field['id']] = field
         else:
             self.fields = scaffold_fields.fields
 
