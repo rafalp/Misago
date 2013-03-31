@@ -53,8 +53,8 @@ move_post.connect(move_posts_handler, dispatch_uid="move_posts_karmas")
 
 def merge_posts_handler(sender, **kwargs):
     Karma.objects.filter(post=sender).update(post=kwargs['new_post'])
-    kwargs['new_post'].upvotes += self.upvotes
-    kwargs['new_post'].downvotes += self.downvotes
-    kwargs['new_post'].score += self.score
+    kwargs['new_post'].upvotes += sender.upvotes
+    kwargs['new_post'].downvotes += sender.downvotes
+    kwargs['new_post'].score += sender.score
 
 merge_post.connect(merge_posts_handler, dispatch_uid="merge_posts_karmas")
