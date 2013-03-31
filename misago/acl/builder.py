@@ -59,9 +59,8 @@ def acl(request, user):
 
 
 def build_acl(request, roles):
-    acl = ACL(request.monitor['acl_version'])
-    forums = (Forum.objects.filter(special__in=('private_threads', 'reports'))
-              | Forum.objects.get(special='root').get_descendants().order_by('lft'))
+    new_acl = ACL(request.monitor['acl_version'])
+    forums = Forum.objects.get(special='root').get_descendants().order_by('lft')
     perms = []
     forum_roles = {}
 
@@ -74,19 +73,19 @@ def build_acl(request, roles):
     for provider in settings.PERMISSION_PROVIDERS:
         app_module = import_module(provider)
         try:
-            app_module.build(acl, perms)
+            app_module.build(new_acl, perms)
         except AttributeError:
             pass
         try:
-            app_module.build_forums(acl, perms, forums, forum_roles)
+            app_module.build_forums(new_acl, perms, forums, forum_roles)
         except AttributeError:
             pass
 
     for provider in settings.PERMISSION_PROVIDERS:
         app_module = import_module(provider)
         try:
-            app_module.cleanup(acl, perms, forums)
+            app_module.cleanup(new_acl, perms, forums)
         except AttributeError:
             pass
 
-    return acl
+    return new_acl
