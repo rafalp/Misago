@@ -44,7 +44,7 @@
             <div class="forum-details">
               {% if acl.forums.can_browse(forum) and (acl.threads.can_read_threads(forum) == 2 or (acl.threads.can_read_threads(forum) == 1 and forum.last_poster_id == user.pk)) %}
               {% if forum.last_thread_id -%}
-              {% trans %}Latest{% endtrans %}: <a href="{% url 'thread_new' thread=forum.last_thread_id, slug=forum.last_thread_slug %}" class="tooltip-top" title="{{ forum.last_thread_name }}">{{ forum.last_thread_name|short_string(28) }}</a>
+              {% trans %}Latest{% endtrans %}: <a href="{% url 'thread_new' thread=forum.last_thread_id, slug=forum.last_thread_slug %}" class="tooltip-top" title="{{ forum.last_thread_name }}">{{ forum.last_thread_name|short_string(30) }}</a>
               {%- else -%}
               <em>{% trans %}This forum is empty{% endtrans %}</em>
               {%- endif %}
