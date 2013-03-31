@@ -27,6 +27,7 @@
       {%- else -%}
         {% trans %}No replies{% endtrans %}
       {%- endif %}</li>
+      {% if thread.closed %}<li><i class="icon-lock"></i> {% trans %}Locked{% endtrans %}</li>{% endif %}
       <li class="stats-form">
         <form class="leave-form" action="{% url 'private_thread_remove_user' thread=thread.pk, slug=thread.slug %}" method="post">
           <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
