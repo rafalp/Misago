@@ -37,12 +37,12 @@
         {% for thread in threads %}
         <tr id="watch-{{ loop.index }}">
           <td>
-            <a href="{% url 'thread_new' thread=thread.pk, slug=thread.slug %}" class="thread-icon{% if not thread.is_read %} thread-new{% endif %} tooltip-top" title="{% if not thread.is_read -%}
+            <a href="{{ thread_new(thread) }}" class="thread-icon{% if not thread.is_read %} thread-new{% endif %} tooltip-top" title="{% if not thread.is_read -%}
             {% trans %}Click to see first unread post{% endtrans %}
             {%- else -%}
             {% trans %}Click to see last post{% endtrans %}
             {%- endif %}"><i class="icon-comment"></i></a>
-            <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="thread-name">{{ thread.name }}</a>
+            <a href="{{ thread_start(thread) }}" class="thread-name">{{ thread.name }}</a>
             <span class="thread-details">
               {% trans user=thread_starter(thread), forum=thread_forum(thread), start=thread.start|reltimesince|low %}by {{ user }} in {{ forum }} {{ start }}{% endtrans %}
             </span>
@@ -82,6 +82,26 @@
 {% endblock %}
 
 
+{% macro thread_new(thread) -%}
+{% if thread.forum_id == private_threads.pk %}
+{% url 'private_thread_new' thread=thread.pk, slug=thread.slug %}
+{% elif thread.forum_id == reports.pk %}
+TODO!
+{% else %}
+{% url 'thread_new' thread=thread.pk, slug=thread.slug %}
+{% endif%}
+{%- endmacro%}
+
+{% macro thread_start(thread) -%}
+{% if thread.forum_id == private_threads.pk %}
+{% url 'private_thread' thread=thread.pk, slug=thread.slug %}
+{% elif thread.forum_id == reports.pk %}
+TODO!
+{% else %}
+{% url 'thread' thread=thread.pk, slug=thread.slug %}
+{% endif%}
+{%- endmacro%}
+
 {% macro replies(thread_replies) -%}
 {% trans count=thread_replies, replies=('<strong>' ~ (thread_replies|intcomma) ~ '</strong>')|safe -%}
 {{ replies }} reply
@@ -94,9 +114,15 @@
 {% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}" class="user-link">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}
 {%- endmacro %}
 
-{% macro thread_forum(thread) -%}
+{% macro thread_forum(thread) -%}{% filter trim %}
+{% if thread.forum_id == private_threads.pk %}
+<a href="{% url 'private_threads' %}" class="forum-link">{% trans %}Private Threads{% endtrans %}</a>
+{% elif thread.forum_id == reports.pk %}
+TODO!
+{% else %}
 <a href="{% url 'forum' forum=thread.forum_id, slug=thread.forum.slug %}" class="forum-link">{{ thread.forum.name }}</a>
-{%- endmacro %}
+{% endif%}
+{% endfilter %}{%- endmacro %}
 
 {% macro thread_reply(thread) -%}
 {% if thread.last_poster_id %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}" class="user-link">{{ thread.last_poster_name }}</a>{% else %}{{ thread.last_poster_name }}{% endif %}
