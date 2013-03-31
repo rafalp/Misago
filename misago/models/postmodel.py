@@ -3,7 +3,8 @@ from django.db.models import F
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.signals import (delete_user_content, merge_post, merge_thread,
-                            move_forum_content, move_post, move_thread, rename_user)
+                            move_forum_content, move_post, move_thread,
+                            rename_user, sync_user_profile)
 
 class PostManager(models.Manager):
     def filter_stats(self, start, end):
@@ -154,3 +155,9 @@ def merge_thread_handler(sender, **kwargs):
     Post.objects.filter(thread=sender).update(thread=kwargs['new_thread'], merge=F('merge') + kwargs['merge'])
 
 merge_thread.connect(merge_thread_handler, dispatch_uid="merge_threads_posts")
+
+
+def sync_user_handler(sender, **kwargs):
+    sender.posts = sender.post_set.count()
+
+sync_user_profile.connect(sync_user_handler, dispatch_uid="sync_user_posts")

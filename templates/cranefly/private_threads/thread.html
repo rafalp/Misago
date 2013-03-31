@@ -390,7 +390,7 @@
             <img src="{{ participant.get_avatar(24) }}" alt="" class="avatar-small">
             <a href="{% url 'user' username=participant.username_slug, user=participant.pk %}">{{ participant.username }}</a>
             {% if user.pk == thread.start_poster_id or acl.private_threads.is_mod() %}
-            <form class="form-inline {% if user.pk == thread.start_poster_id %}leave-form{% else %}kick-form{% endif %} tooltip-left" action="{% url 'private_thread_remove_user' thread=thread.pk, slug=thread.slug %}" method="post" title="{% if participant.pk == user.pk %}{% trans %}Leave this thread{% endtrans %}{% else %}{% trans %}Remove from this thread{% endtrans %}{% endif %}">
+            <form class="form-inline {% if user.pk == participant.pk %}leave-form{% else %}kick-form{% endif %} tooltip-left" action="{% url 'private_thread_remove_user' thread=thread.pk, slug=thread.slug %}" method="post" title="{% if participant.pk == user.pk %}{% trans %}Leave this thread{% endtrans %}{% else %}{% trans %}Remove from this thread{% endtrans %}{% endif %}">
               <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
               <input type="hidden" name="retreat" value="{{ request_path }}">
               <input type="hidden" name="user" value="{{ participant.pk }}">

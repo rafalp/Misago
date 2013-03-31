@@ -42,11 +42,15 @@ LOCALE_PATHS = (
 # If DEBUG_MODE is on, all emails will be sent to this address instead of real recipient.
 CATCH_ALL_EMAIL_ADDRESS = ''
 
-# Forums and threads read tracker length (days
+# Forums and threads read tracker length (days)
 # Enter 0 to turn tracking off
 # The bigger the number, then longer tracker keeps threads reads
 # information and the more costful it is to track reads
 READS_TRACKER_LENGTH = 7
+
+# Min. number of days between synchronisating member profiles
+# Allows you to keep your member profiles up to date, enter 0 to never sync
+PROFILES_SYNC_FREQUENCY = 7
 
 # Heartbeat Path for crons
 # Use this path if you wish to keep Misago alive using separate cron

@@ -46,9 +46,12 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
         return actions
 
     def template_vars(self, context):
-        context['participants'] = self.thread.participants.all().prefetch_related('rank')
+        context['participants'] = self.thread.participants.all().order_by('username_slug').prefetch_related('rank')
         context['invite_form'] = FormFields(InviteMemberForm(request=self.request))
         return context
+
+    def tracker_queryset(self):
+        return self.forum.thread_set.filter(participants__id=self.request.user.pk)
 
     def tracker_update(self, last_post):
         super(ThreadView, self).tracker_update(last_post)
