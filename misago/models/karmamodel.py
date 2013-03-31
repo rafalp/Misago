@@ -1,6 +1,7 @@
 from django.db import models
+from django.db.models import Sum
 from misago.signals import (merge_post, merge_thread, move_forum_content,
-                            move_post, move_thread, rename_user)
+                            move_post, move_thread, rename_user, sync_user_profile)
 
 class Karma(models.Model):
     forum = models.ForeignKey('Forum')
@@ -57,3 +58,12 @@ def merge_posts_handler(sender, **kwargs):
     kwargs['new_post'].downvotes += sender.downvotes
 
 merge_post.connect(merge_posts_handler, dispatch_uid="merge_posts_karmas")
+
+
+def sync_user_handler(sender, **kwargs):
+    sender.karma_given_p = sender.karma_set.filter(score__gt=0).count()
+    sender.karma_given_n = sender.karma_set.filter(score__lt=0).count()
+    sender.karma_p = sender.post_set.all().aggregate(Sum('upvotes'))['upvotes__sum']
+    sender.karma_n = sender.post_set.all().aggregate(Sum('downvotes'))['downvotes__sum']
+
+sync_user_profile.connect(sync_user_handler, dispatch_uid="sync_user_karmas")
