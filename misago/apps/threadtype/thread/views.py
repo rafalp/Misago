@@ -77,7 +77,10 @@ class ThreadBaseView(ViewBase):
 
     def tracker_update(self, last_post):
         self.tracker.set_read(self.thread, last_post)
-        self.tracker.sync()
+        try:
+            self.tracker.sync(self.tracker_queryset())
+        except AttributeError:
+            self.tracker.sync()
 
     def thread_actions(self):
         pass

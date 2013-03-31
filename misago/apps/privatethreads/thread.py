@@ -50,6 +50,9 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
         context['invite_form'] = FormFields(InviteMemberForm(request=self.request))
         return context
 
+    def tracker_queryset(self):
+        return self.forum.thread_set.filter(participants__id=self.request.user.pk)
+
     def tracker_update(self, last_post):
         super(ThreadView, self).tracker_update(last_post)
         unread = self.tracker.unread_count(self.forum.thread_set.filter(participants__id=self.request.user.pk))
