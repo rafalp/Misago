@@ -14,7 +14,6 @@ from django.template import RequestContext
 from django.utils import timezone as tz_util
 from django.utils.translation import ugettext_lazy as _
 from misago.acl.builder import build_acl
-from misago.monitor import Monitor
 from misago.signals import delete_user_content, rename_user, sync_user_profile
 from misago.utils.avatars import avatar_size
 from misago.utils.strings import random_string, slugify
@@ -94,6 +93,7 @@ class UserManager(models.Manager):
         try:
             monitor = request.monitor
         except AttributeError:
+            from misago.monitor import Monitor
             monitor = Monitor()
 
         # Update forum stats
