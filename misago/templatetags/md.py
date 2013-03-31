@@ -1,4 +1,4 @@
-import markdown
+from markdown import markdown
 from coffin.template import Library
 from django.conf import settings
 import misago.markdown
@@ -10,7 +10,7 @@ register = Library()
 def parse_markdown(value, format=None):
     if not format:
         format = settings.OUTPUT_FORMAT
-    return markdown.markdown(value, safe_mode='escape', output_format=format).strip()
+    return markdown(value, safe_mode='escape', output_format=format).strip()
 
 
 @register.filter(name='markdown_short')
