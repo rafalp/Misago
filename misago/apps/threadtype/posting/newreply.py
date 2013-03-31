@@ -87,7 +87,7 @@ class NewReplyBaseView(PostingBaseView):
 
         # Set thread status
         if 'close_thread' in form.cleaned_data:
-            self.thread.closed = form.cleaned_data['close_thread']
+            self.thread.closed = not self.thread.closed
         if 'thread_weight' in form.cleaned_data:
             self.thread.weight = form.cleaned_data['thread_weight']
 
