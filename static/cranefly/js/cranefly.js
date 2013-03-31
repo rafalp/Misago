@@ -145,14 +145,6 @@ function link2player(link) {
 	return false;
 }
 
-// Ajax errors handler
-$(document).ajaxError(function(event, jqXHR, settings) {
-	var responseJSON = jQuery.parseJSON(jqXHR.responseText);
-	if (responseJSON.message) {
-		alert(responseJSON.message);
-	}
-});
-
 // Ajax: Post votes
 $(function() {
 	$('.post-rating-actions').each(function() {
@@ -188,7 +180,10 @@ $(function() {
 					$(action_parent).find('.form-upvote button').removeAttr("disabled");
 					$(action_parent).find('.form-downvote button').attr("disabled", "disabled");
 				}
-			}).error();
+			}).fail(function() {
+				$(form).unbind();
+				$(form).trigger('submit');
+			});
 			return false;
 		});
 	});
