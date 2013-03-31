@@ -29,6 +29,7 @@
       {%- else -%}
         {% trans %}No replies{% endtrans %}
       {%- endif %}</li>
+      {% if thread.closed %}<li><i class="icon-lock"></i> {% trans %}Locked{% endtrans %}</li>{% endif %}
     </ul>
   </div>
 </div>

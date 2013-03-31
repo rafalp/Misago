@@ -44,3 +44,7 @@
 {% macro itemprop_bread() -%}
 itemprop="breadcrumb"
 {%- endmacro %}
+
+{% macro wrap(item, wrap) -%}
+<{{ wrap }}>{{ item }}</{{ wrap }}>
+{%- endmacro %}

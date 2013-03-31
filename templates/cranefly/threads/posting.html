@@ -164,6 +164,7 @@
       {% trans %}No replies{% endtrans %}
     {%- endif %}</li>
 {%- endif %}
+    {% if thread.closed %}<li><i class="icon-lock"></i> {% trans %}Locked{% endtrans %}</li>{% endif %}
 {%- endmacro %}
 
 

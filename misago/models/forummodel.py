@@ -158,9 +158,14 @@ class Forum(MPTTModel):
     class Meta:
         app_label = 'misago'
     
+    def save(self, *args, **kwargs):
+        super(Forum, self).save(*args, **kwargs)
+        cache.delete('forums_tree')
+    
     def delete(self, *args, **kwargs):
         delete_forum_content.send(sender=self)
         super(Forum, self).delete(*args, **kwargs)
+        cache.delete('forums_tree')
 
     def __unicode__(self):
         if self.special == 'private_threads':
