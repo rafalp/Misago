@@ -16,7 +16,7 @@
 <div class="page-header header-primary">
   <div class="container">
     {{ messages_list(messages) }}
-    <ul class="breadcrumb">
+    <ul class="breadcrumb" {{ macros.itemprop_bread() }}>
       {{ self.breadcrumb() }}</li>
     </ul>
     <h1>{{ thread.name }}</h1>
@@ -82,7 +82,7 @@
           <div class="post-header">
             <div class="post-header-compact">
               {% if post.user_id %}
-              <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="post-author">{{ post.user.username }}</a>{% if post.user.get_title() %} <span class="label post-author-label{% if post.user.rank and post.user.rank.style %} post-label-{{ post.user.rank.style }}{% endif %}">{{ post.user.get_title() }}</span>{% endif %}
+              <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="post-author">{{ post.user.username }}</a>{% if post.user.get_title() %} {{ user_label(post.user) }}{% endif %}
               {% else %}
               <span class="post-author">{{ post.user_name }}</span> <span class="label post-author-label post-label-guest">{% trans %}Unregistered{% endtrans %}</span>
               {% endif %}
@@ -167,7 +167,7 @@
         <div class="post-content">
           <div class="post-header">
             {% if post.user_id %}
-            <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="post-author">{{ post.user.username }}</a>{% if post.user.get_title() %} <span class="label post-author-label{% if post.user.rank and post.user.rank.style %} post-label-{{ post.user.rank.style }}{% endif %}">{{ post.user.get_title() }}</span>{% endif %}
+            <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="post-author">{{ post.user.username }}</a>{% if post.user.get_title() %} {{ user_label(post.user) }}{% endif %}
             {% else %}
             <span class="post-author">{{ post.user_name }}</span> <span class="label post-author-label post-label-guest">{% trans %}Unregistered{% endtrans %}</span>
             {% endif %}
@@ -180,7 +180,7 @@
             {% if post.edits %}
             <span class="separator">&ndash;</span>
             {% if acl.threads.can_see_changelog(user, forum, post) %}
-            <a href="{% url 'changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</a>
+            <a href="{% url 'thread_changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</a>
             {% else %}
             <span class="post-changelog">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</span>
             {% endif %}
@@ -242,47 +242,41 @@
           </div>
           <div class="post-footer">{% filter trim %}
             {% if acl.threads.can_see_post_score(forum) %}
-            <div class="post-rating">
-              {% if acl.threads.can_see_post_score(forum) == 1 %}
-              <span class="post-score{% if (post.upvotes - post.downvotes) > 0 %} post-score-good{% elif (post.upvotes - post.downvotes) < 0 %} post-score-bad{% endif %}">{{ post.upvotes - post.downvotes }}</span>
-              {% elif acl.threads.can_see_post_score(forum) == 2%}
-              <span class="post-score{% if post.upvotes %} post-score-good{% endif %}">{{ post.upvotes }}</span>
+            <div{% if user.is_authenticated() and user.pk != post.user_id %} class="post-rating-actions"{% endif %}>
+              <div class="post-rating">
+                {% if acl.threads.can_see_post_score(forum) == 1 %}
+                <span class="post-score post-score-total{% if (post.upvotes - post.downvotes) > 0 %} post-score-good{% elif (post.upvotes - post.downvotes) < 0 %} post-score-bad{% endif %}">{{ post.upvotes - post.downvotes }}</span>
+                {% elif acl.threads.can_see_post_score(forum) == 2%}
+                <span class="post-score post-score-upvotes{% if post.upvotes %} post-score-good{% endif %}">{{ post.upvotes }}</span>
+                {% endif %}
+                {% if user.is_authenticated() and user.pk != post.user_id and acl.threads.can_upvote_posts(forum) %}
+                <form action="{% url 'post_upvote' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline form-upvote" method="post">
+                  <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                  <button type="submit" class="btn btn-link post-like"{% if post.karma_vote and post.karma_vote.score > 0 %} disabled="disabled"{% endif %}>{% trans %}Like{% endtrans %}</button>
+                </form>
+                {% else %}
+                <span class="post-{% if post.upvotes %}like{% else %}neutral{% endif %}">{% trans %}Likes{% endtrans %}</span>
+                {% endif %}
+              {% if acl.threads.can_see_post_score(forum) == 2 %}
+              </div>
+              <div class="post-rating">
+                <span class="post-score post-score-downvotes{% if post.downvotes %} post-score-bad{% endif %}">{{ post.downvotes }}</span>
               {% endif %}
-              {% if user.is_authenticated() and user.pk != post.user_id and acl.threads.can_upvote_posts(forum) %}
-              {% if post.karma_vote and post.karma_vote.score > 0 %}
-              <span class="post-like">{% trans %}Like{% endtrans %}</span>
-              {% else %}
-              <form action="{% url 'post_upvote' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline" method="post">
-                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-                <button type="submit" class="btn btn-link post-like">{% trans %}Like{% endtrans %}</button>
-              </form>
+                {% if user.is_authenticated() and user.pk != post.user_id and acl.threads.can_downvote_posts(forum) %}
+                <form action="{% url 'post_downvote' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline form-downvote" method="post">
+                  <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                  <button type="submit" class="btn btn-link post-hate"{% if post.karma_vote and post.karma_vote.score < 0 %} disabled="disabled"{% endif %}>{% trans %}Hate{% endtrans %}</button>
+                </form>
+                {% elif acl.threads.can_see_post_score(forum) == 2 %}
+                <span class="post-{% if post.downvotes %}hate{% else %}neutral{% endif %}">{% trans %}Hates{% endtrans %}</span>
+                {% endif %}
+              </div>
+              {% if acl.threads.can_see_post_votes(forum) %}
+              <div class="post-rating">
+                <a href="{% url 'post_votes' thread=thread.pk, slug=thread.slug, post=post.pk %}">{% trans %}Show Votes{% endtrans %}</a>
+              </div>
               {% endif %}
-              {% else %}
-              <span class="post-{% if post.upvotes %}like{% else %}neutral{% endif %}">{% trans %}Likes{% endtrans %}</span>
-              {% endif %}
-            {% if acl.threads.can_see_post_score(forum) == 2 %}
             </div>
-            <div class="post-rating">
-              <span class="post-score{% if post.downvotes %} post-score-bad{% endif %}">{{ post.downvotes }}</span>
-            {% endif %}
-              {% if user.is_authenticated() and user.pk != post.user_id and acl.threads.can_downvote_posts(forum) %}
-              {% if post.karma_vote and post.karma_vote.score < 0 %}
-              <span class="post-hate">{% trans %}Hate{% endtrans %}</span>
-              {% else %}
-              <form action="{% url 'post_downvote' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline" method="post">
-                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-                <button type="submit" class="btn btn-link post-hate">{% trans %}Hate{% endtrans %}</button>
-              </form>
-              {% endif %}
-              {% elif acl.threads.can_see_post_score(forum) == 2 %}
-              <span class="post-{% if post.downvotes %}hate{% else %}neutral{% endif %}">{% trans %}Hates{% endtrans %}</span>
-              {% endif %}
-            </div>
-            {% if acl.threads.can_see_post_votes(forum) %}
-            <div class="post-rating">
-              <a href="{% url 'post_votes' thread=thread.pk, slug=thread.slug, post=post.pk %}">{% trans %}Show Votes{% endtrans %}</a>
-            </div>
-            {% endif %}
             {% endif %}
 
             {% if user.is_authenticated() %}
@@ -308,8 +302,11 @@
               {% endif %}
               {% if not post.deleted and acl.threads.can_delete_thread(user, forum, thread, post) %}
               <form action="{% url 'thread_hide' thread=thread.pk, slug=thread.slug %}" class="form-inline prompt-delete-thread" method="post">
-                <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Hide this thread from other users{% endtrans %}">{% trans %}Soft{% endtrans %}</button>
                 <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                {% if acl.threads.can_delete_thread(user, forum, thread, post) != 2 %}
+                <span>{% trans %}Delete thread:{% endtrans %}</span>
+                {% endif %}
+                <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Hide this thread from other users{% endtrans %}">{% trans %}Soft{% endtrans %}</button>
               </form>
               {% endif %}
             </div>
@@ -325,6 +322,9 @@
               {% if not post.deleted and acl.threads.can_delete_post(user, forum, thread, post) %}
               <form action="{% url 'post_hide' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline prompt-delete-post" method="post">
                 <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                {% if acl.threads.can_delete_post(user, forum, thread, post) != 2 %}
+                <span>{% trans %}Delete reply:{% endtrans %}</span>
+                {% endif %}
                 <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Hide this reply from other users{% endtrans %}">{% trans %}Soft{% endtrans %}</button>
               </form>
               {% endif %}
@@ -399,7 +399,7 @@
     <form action="{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}" method="post">
       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
       <input type="hidden" name="quick_reply" value="1">
-      <img src="{{ user.get_avatar() }}" alt="{% trans %}Your Avatar{% endtrans %}" class="user-avatar">
+      <img src="{{ user.get_avatar(100) }}" alt="{% trans %}Your Avatar{% endtrans %}" class="user-avatar">
       {{ editor.editor(quick_reply.post, _('Post Reply'), extra=editor_extra()) }}
     </form>
   </div>
@@ -463,6 +463,11 @@
 {%- endblock %}
 
 
+{% macro user_label(user) -%}
+<{% if user.rank and user.rank.as_tab %}a href="{% url 'users' slug=user.rank.slug %}"{% else %}span{% endif %} class="label post-author-label{% if user.rank and user.rank.style %} post-label-{{ user.rank.style }}{% endif %}">{{ user.get_title() }}</{% if user.rank and user.rank.as_tab%}a{% else %}span{% endif %}>
+{%- endmacro %}
+
+
 {% macro pager(extra=true) %}
 <div class="pagination pull-left">
   <ul>
@@ -485,7 +490,7 @@
 
 {% macro checkpoint_user(checkpoint) -%}
 {%- if checkpoint.user_id -%}
-{{ ('<a href="' ~ 'user'|url(user=checkpoint.user_id, username=checkpoint.user_slug) ~ '">')|safe ~ (checkpoint.user_name) ~ ("</a>")|safe }}
+<a href="{{ 'user'|url(user=checkpoint.user_id, username=checkpoint.user_slug) }}">{{ checkpoint.user_name }}</a>
 {%- else -%}
 <strong>{{ checkpoint.user_name }}</strong>
 {%- endif -%}
@@ -494,7 +499,7 @@
 
 {% macro edit_user(post) -%}
 {%- if post.edit_user_id -%}
-{{ ('<a href="' ~ 'user'|url(user=post.edit_user_id, username=post.edit_user_slug) ~ '">')|safe ~ (post.edit_user_name) ~ ("</a>")|safe }}
+<a href="{{ 'user'|url(user=post.edit_user_id, username=post.edit_user_slug) }}">{{ post.edit_user_name }}</a>
 {%- else -%}
 <strong>{{ post.edit_user_name }}</strong>
 {%- endif -%}

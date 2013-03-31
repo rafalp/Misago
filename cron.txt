@@ -1,7 +1,10 @@
-0 */4 * * * python $HOME/misago/manage.py clearsessions
 0 3 * * * python $HOME/misago/manage.py clearalerts
+0 3 * * * python $HOME/misago/manage.py clearattempts
+0 */4 * * * python $HOME/misago/manage.py clearsessions
+20 3 * * * python $HOME/misago/manage.py cleartokens
+15 3 * * * python $HOME/misago/manage.py cleartracker
+0 0 * * 0 python $HOME/misago/manage.py forcepdssync
+0 3 */2 * * python $HOME/misago/manage.py pruneforums
 5 3 * * * python $HOME/misago/manage.py syncdeltas
 10 3 * * * python $HOME/misago/manage.py updateranking
-15 3 * * * python $HOME/misago/manage.py cleartracker
-20 3 * * * python $HOME/misago/manage.py cleartokens
 25 3 * * * python $HOME/misago/manage.py updatethreadranking

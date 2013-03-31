@@ -2,11 +2,12 @@ import re
 import markdown
 from markdown.util import etree
 from django.core.urlresolvers import reverse
-from misago.users.models import User
-from misago.utils import slugify
+from misago.models import User
+from misago.utils.strings import slugify
 
 # Global vars
 MENTION_RE = re.compile(r'([^\w]?)@(?P<username>(\w)+)', re.UNICODE)
+
 
 class MentionsExtension(markdown.Extension):
     def extendMarkdown(self, md):

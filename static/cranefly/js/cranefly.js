@@ -144,3 +144,52 @@ function link2player(link) {
 	// No link
 	return false;
 }
+
+// Ajax errors handler
+$(document).ajaxError(function(event, jqXHR, settings) {
+	var responseJSON = jQuery.parseJSON(jqXHR.responseText);
+	if (responseJSON.message) {
+		alert(responseJSON.message);
+	}
+});
+
+// Ajax: Post votes
+$(function() {
+	$('.post-rating-actions').each(function() {
+		var action_parent = this;
+		var csrf_token = $(this).find('input[name="_csrf_token"]').val();
+		$(this).find('form').submit(function() {
+			var form = this;
+			$.post(this.action, {'_csrf_token': csrf_token}, "json").done(function(data, textStatus, jqXHR) {
+				// Reset stuff and set classess
+				$(action_parent).find('.post-score').removeClass('post-score-good post-score-bad');
+				if (data.score_total > 0) {
+					$(action_parent).find('.post-score-total').addClass('post-score-good');
+				} else if (data.score_total < 0) {
+					$(action_parent).find('.post-score-total').addClass('post-score-bad');
+				} 
+				if (data.score_upvotes > 0) {
+					$(action_parent).find('.post-score-upvotes').addClass('post-score-good');
+				}
+				if (data.score_downvotes > 0) {
+					$(action_parent).find('.post-score-downvotes').addClass('post-score-bad');
+				}
+
+				// Set votes
+				$(action_parent).find('.post-score-total').text(data.score_total);
+				$(action_parent).find('.post-score-upvotes').text(data.score_upvotes);
+				$(action_parent).find('.post-score-downvotes').text(data.score_downvotes);
+
+				// Disable and enable forms
+				if (data.user_vote == 1) {
+					$(action_parent).find('.form-upvote button').attr("disabled", "disabled");
+					$(action_parent).find('.form-downvote button').removeAttr("disabled");
+				} else {
+					$(action_parent).find('.form-upvote button').removeAttr("disabled");
+					$(action_parent).find('.form-downvote button').attr("disabled", "disabled");
+				}
+			}).error();
+			return false;
+		});
+	});
+});

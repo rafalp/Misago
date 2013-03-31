@@ -1,0 +1,12 @@
+{% extends "_email/base.txt" %}
+
+{% block title %}{% trans board_name=settings.board_name %}Your New Password on {{ board_name }}{% endtrans %}{% endblock %}
+
+{% block content %}
+{% trans username=user.username %}{{ username }}, you are receiving this message because you have requested for new password to be generated and set on your account.{% endtrans %}
+
+{% trans %}Your new password:{% endtrans %} {{ password }}
+
+{% trans %}You can sign in to your account using new password by following this link:{% endtrans %}
+{{ board_address }}{% url 'sign_in' %}
+{% endblock %}

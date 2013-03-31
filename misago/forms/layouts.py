@@ -1,15 +1,27 @@
 from UserDict import IterableUserDict
+from recaptcha.client.captcha import displayhtml
 from django.utils import formats
 
 class FormLayout(object):
+    """
+    Conglomelate of fields and fieldsets describing form structure
+    """
     def __init__(self, form, fieldsets=False):
         scaffold_fields = FormFields(form)
         scaffold_fieldsets = FormFieldsets(form, scaffold_fields.fields, fieldsets)
 
         self.multipart_form = scaffold_fields.multipart_form
         self.fieldsets = scaffold_fieldsets.fieldsets
-        self.fields = scaffold_fields.fields
         self.hidden = scaffold_fields.hidden
+
+        if self.fieldsets:
+            self.fields = {}
+            for fieldset in self.fieldsets:
+                for field in fieldset['fields']:
+                    self.fields[field['id']] = field
+        else:
+            self.fields = scaffold_fields.fields
+
 
 class FormFields(object):
     """
@@ -98,7 +110,6 @@ class FormFields(object):
 
             # ReCaptcha      
             if widget_name == 'ReCaptchaWidget':
-                from recaptcha.client.captcha import displayhtml
                 blueprint['widget'] = 'recaptcha'
                 blueprint['attrs'] = {'html': displayhtml(
                                                           form.request.settings['recaptcha_public'],
@@ -164,7 +175,7 @@ class FormFields(object):
             # Select
             if widget_name == 'Select':
                 blueprint['widget'] = 'select'
-                if not blueprint['value']:
+                if not blueprint['has_value']:
                     blueprint['value'] = None
 
             # NullBooleanSelect
@@ -178,8 +189,6 @@ class FormFields(object):
             # RadioSelect
             if widget_name == 'RadioSelect':
                 blueprint['widget'] = 'radio_select'
-                if not blueprint['value']:
-                    blueprint['value'] = u''
 
             # CheckboxSelectMultiple
             if widget_name == 'CheckboxSelectMultiple':
@@ -296,4 +305,3 @@ class FormFieldsets(object):
                 if fieldset['fields']:
                     self.fieldsets.append(fieldset)
             self.fieldsets[-1]['last'] = True
-

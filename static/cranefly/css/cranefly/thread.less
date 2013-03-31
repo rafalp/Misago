@@ -233,14 +233,20 @@
                 }
 
                 &.post-like {
-                  &:hover, &:active, &:focus {
+                  &:hover, &:active, &:focus, &:disabled {
                     color: @green;
                   }
                 }
 
                 &.post-hate {
-                  &:hover, &:active, &:focus {
+                  &:hover, &:active, &:focus, &:disabled {
                     color: @red;
+                  }
+                }
+
+                &:disabled {
+                  &:hover, &:active, &:focus {
+                    text-decoration: none;
                   }
                 }
               }
@@ -421,12 +427,12 @@
   .user-avatar {
     border-radius: @baseBorderRadius;
     float: left;
-    width: 125px;
-    height: 125px;
+    width: 100px;
+    height: 100px;
   }
 
   .editor {
-    margin-left: 125px + (@baseFontSize * 2);
+    margin-left: 100px + (@baseFontSize * 1.5);
     position: relative;
 
     &:after, &:before {
@@ -441,17 +447,121 @@
     &:after {
       border-color: transparent;
       border-right-color: @editorBackground;
-      border-width: @baseFontSize;
-      top: @baseFontSize / 2;
-      margin-top: ((@baseFontSize / 2) * -1) + @baseFontSize;
+      border-width: @fontSizeMini;
+      top: @baseFontSize;
+      margin-top: (@baseFontSize * -1) + @baseFontSize;
     }
 
     &:before {
        border-color: transparent;
        border-right-color: darken(@editorBackground, 10%);
-       border-width: @baseFontSize + 1;
-       top: @baseFontSize / 2;
-       margin-top: ((@baseFontSize / 2) * -1) + @baseFontSize - 1px;
+       border-width: @fontSizeMini + 1;
+       top: @baseFontSize;
+       margin-top: (@baseFontSize * -1) + @baseFontSize - 1px;
+    }
+  }
+}
+
+// Thread participants list
+.thread-participants {
+  h3 {
+    margin: 0px;
+    margin-top: (@baseLineHeight - @baseFontSize) * -1;
+    padding: 0px;
+
+    color: @gray;
+    font-size: @fontSizeLarge;
+    font-weight: bold;
+  }
+
+  ul {
+    background-color: @white;
+    border: 1px solid darken(@bodyBackground, 10%);
+    border-radius: @baseBorderRadius;
+    margin: 0px;
+    margin-bottom: @baseLineHeight;
+    padding: 0px;
+
+    li {
+      border-bottom: 1px dotted darken(@bodyBackground, 10%);
+      margin: 0px;
+      padding: 6px 8px;
+
+      font-weight: bold;
+
+      img {
+        background-color: @white;
+        border-radius: @borderRadiusSmall;
+        width: 24px;
+        height: 24px;
+      }
+
+      a:link, a:active, a:visited, a:hover {
+        margin: 0px 4px;
+
+        color: @textColor;
+        font-weight: bold;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      form {
+        float: right;
+        margin: 0px;
+        padding: 0px;
+
+        button {
+          padding-left: 5px;
+          padding-right: 5px;
+
+          i {
+            position: relative;
+            top: 1px;
+          }
+        }
+      }
+    }
+  }
+
+  h4 {
+    margin: 0px;
+    padding: 0px;
+
+    color: @gray;
+    font-size: @baseFontSize * 1.2;
+    font-weight: bold;
+  }
+
+  .no-participants {
+    margin-bottom: @baseLineHeight;
+  }
+
+  .invite-participant {
+    background-color: @white;
+    border: 1px solid darken(@bodyBackground, 15%);
+    border-radius: @baseBorderRadius;
+    margin-top: @baseLineHeight - @baseFontSize;
+    padding: 1px;
+
+    form {
+      margin: 0px;
+      padding: 0px;
+
+      input, button {
+        border: none;
+        background: none;
+        box-shadow: none;
+      }
+
+      input {
+        width: 70%;
+      }
+
+      button {
+        float: right;
+      }
     }
   }
 }

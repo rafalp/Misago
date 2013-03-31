@@ -115,12 +115,13 @@
         .md-img-bg {
           background-color: @white;
           border-radius: @baseBorderRadius;
+          padding: (@baseLineHeight / 2);
+          
           text-align: center;
 
           img {
             border-radius: @baseBorderRadius;
             box-shadow: none;
-            margin: (@baseLineHeight / 2);
           }
 
           .md-img-error {
@@ -158,8 +159,8 @@
 
   // Blocks margins
   pre, blockquote, iframe {
-    margin-top: @baseLineHeight / 2;
-    margin-bottom: @baseLineHeight / 2;
+    margin-top: @baseLineHeight;
+    margin-bottom: @baseLineHeight;
 
     &>:first-child {
       margin-top: 0px;

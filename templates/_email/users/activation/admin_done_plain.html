@@ -1,8 +1,0 @@
-{% extends "_email/users/activation/none_plain.html" %}
-
-{% block content %}
-{% trans username=user.username %}{{ username }}, you are receiving this message because board administrator has activated your account.{% endtrans %}
-
-{% trans %}You can sign in to your account using new password by following this link:{% endtrans %}
-{{ board_address }}{% url 'sign_in' %}
-{% endblock %}

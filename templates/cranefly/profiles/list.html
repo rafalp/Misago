@@ -17,7 +17,7 @@
     <h1>{% trans %}Users List{% endtrans %} <small>{% trans %}Browse notable user groups or find specific user{% endtrans %}</small></h1>
     <ul class="nav nav-tabs header-tabs">
       {% for rank in ranks %}
-      <li{% if active_rank.id == rank.id %} class="active"{% endif %}><a href="{% if loop.first %}{% url 'users' %}{% else %}{% url 'users' rank_slug=rank.name_slug %}{% endif %}">{{ _(rank.name) }}</a></li>
+      <li{% if active_rank.id == rank.id %} class="active"{% endif %}><a href="{% if loop.first %}{% url 'users' %}{% else %}{% url 'users' slug=rank.slug %}{% endif %}">{{ _(rank.name) }}</a></li>
       {% endfor %}
       {% if acl.users.can_search_users() and not user.is_crawler() %}
       <li class="pull-right">
@@ -35,7 +35,7 @@
 <div class="container container-primary">
   <div class="profiles-list">
 
-    <h2>{% if in_search %}{% trans %}Search Users{% endtrans %}{% elif active_rank %}{{ _(active_rank.name) }}{% endif %}</h2>
+    {% if in_search %}<h2>{% trans %}Search Users{% endtrans %}</h2>{% endif %}
 
     {% if message %}
     <div class="messages-list">
@@ -46,7 +46,7 @@
     {% if in_search and not message and users|length > 0 %}
     <p class="lead">{% trans %}We couldn't find a member with name you entered, so we present you with some other members with names similiar to one you searched for in hopes that one of them will turn out to be member you are looking for.{% endtrans %}</p>
     {% elif active_rank and active_rank.description %}
-    <div class="markdown">{{ active_rank.description|markdown|safe }}</div>
+    <div class="markdown lead">{{ active_rank.description }}</div>
     {% endif %}
 
     {% if users|length > 0 %}
@@ -102,8 +102,8 @@
 <div class="pagination">
   <ul>
     <li class="count">{{ macros.pager_label(pagination) }}</li>
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'users' rank_slug=active_rank.rank_slug, page=pagination['prev'] %}{% else %}{% url 'users' rank_slug=active_rank.rank_slug %}{% endif %}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{% url 'users' rank_slug=active_rank.rank_slug, page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'users' slug=active_rank.slug, page=pagination['prev'] %}{% else %}{% url 'users' slug=active_rank.slug %}{% endif %}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{% url 'users' slug=active_rank.slug, page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
   </ul>
 </div>
 {% endif %}

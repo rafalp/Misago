@@ -1,0 +1,14 @@
+{% extends "_email/users/password/new.html" %}
+
+{% block content %}
+<p {{ style_p|safe }}>{% trans username=user.username %}{{ username }}, you are receiving this message because board administrator has reset your account's password with new one.{% endtrans %}</p>
+<p {{ style_p|safe }}>{% trans %}Your new password:{% endtrans %}</p>
+<div {{ style_well_big|safe }}>
+  {{ password }}
+</div>
+<p {{ style_p|safe }}>{% trans %}You can sign in to your account using new password by following this link:{% endtrans %}</p>
+<a href="{{ board_address }}{% url 'sign_in' %}" {{ style_button|safe }}>{% trans %}Sign In{% endtrans %}</a>
+
+<p {{ style_p|safe }}>{% trans %}If the above link is not clickable, copy and paste this link into your web browser's address bar:{% endtrans %}</p>
+<a href="{{ board_address }}{% url 'sign_in' %}" {{ style_link|safe }}>{{ board_address }}{% url 'sign_in' %}</a>
+{% endblock %}

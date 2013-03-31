@@ -47,13 +47,13 @@
             </span>
           </td>
           <td>
-            <a href="{% url 'changelog_diff' thread=thread.pk, slug=thread.slug, post=post.pk, change=edit.pk %}" class="change-no">#{{ loop.revindex }}</a>
+            <a href="{% url 'thread_changelog_diff' thread=thread.pk, slug=thread.slug, post=post.pk, change=edit.pk %}" class="change-no">#{{ loop.revindex }}</a>
             {% if edit.reason %}
             <div class="change-reason">
-              <a href="{% url 'changelog_diff' thread=thread.pk, slug=thread.slug, post=post.pk, change=edit.pk %}">{{ edit.reason }}</a>
+              <a href="{% url 'thread_changelog_diff' thread=thread.pk, slug=thread.slug, post=post.pk, change=edit.pk %}">{{ edit.reason }}</a>
             </div>{% endif %}
             <div class="change-description">
-              <a href="{% url 'changelog_diff' thread=thread.pk, slug=thread.slug, post=post.pk, change=edit.pk %}">
+              <a href="{% url 'thread_changelog_diff' thread=thread.pk, slug=thread.slug, post=post.pk, change=edit.pk %}">
               {% if edit.change != 0 %}{% if edit.change > 0 -%}
               {% trans chars=edit.change %}Added one character to post.{% pluralize %}Added {{ chars }} characters to post.{% endtrans %}
               {%- elif edit.change < 0 -%}

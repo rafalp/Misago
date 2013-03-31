@@ -8,7 +8,7 @@
     <link href="{{ STATIC_URL }}cranefly/css/cranefly.css" rel="stylesheet">{% block stylesheets %}{% endblock %}
     <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico" />
   </head>
-  <body{% block body_class %}{% endblock %}>
+  <body itemscope itemtype="http://schema.org/WebPage"{% block body_class %}{% endblock %}>
   	{% block body %}{% endblock %}
 
   	<script src="{{ STATIC_URL }}cranefly/js/jquery-1.7.2.min.js"></script>

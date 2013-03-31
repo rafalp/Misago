@@ -75,16 +75,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
-    'misago.context_processors.core',
-    'misago.admin.context_processors.admin',
-    'misago.banning.context_processors.banning',
-    'misago.messages.context_processors.messages',
-    'misago.monitor.context_processors.monitor',
-    'misago.settings.context_processors.settings',
-    'misago.bruteforce.context_processors.is_jammed',
-    'misago.csrf.context_processors.csrf',
-    'misago.users.context_processors.user',
-    'misago.acl.context_processors.acl',
+    'misago.context_processors.common',
+    'misago.context_processors.admin',
 )
 
 # Jinja2 Template Extensions
@@ -94,54 +86,57 @@ JINJA2_EXTENSIONS = (
 
 # List of application middlewares
 MIDDLEWARE_CLASSES = (
-    'misago.stopwatch.middleware.StopwatchMiddleware',
+    'misago.middleware.stopwatch.StopwatchMiddleware',
+    'misago.middleware.heartbeat.HeartbeatMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'misago.heartbeat.middleware.HeartbeatMiddleware',
-    'misago.cookie_jar.middleware.CookieJarMiddleware',
-    'misago.settings.middleware.SettingsMiddleware',
-    'misago.monitor.middleware.MonitorMiddleware',
-    'misago.themes.middleware.ThemeMiddleware',
-    'misago.firewalls.middleware.FirewallMiddleware',
-    'misago.crawlers.middleware.DetectCrawlerMiddleware',
-    'misago.sessions.middleware.SessionMiddleware',
-    'misago.bruteforce.middleware.JamMiddleware',
-    'misago.csrf.middleware.CSRFMiddleware',
-    'misago.banning.middleware.BanningMiddleware',
-    'misago.messages.middleware.MessagesMiddleware',
-    'misago.users.middleware.UserMiddleware',
-    'misago.acl.middleware.ACLMiddleware',
+    'misago.middleware.cookiejar.CookieJarMiddleware',
+    'misago.middleware.settings.SettingsMiddleware',
+    'misago.middleware.monitor.MonitorMiddleware',
+    'misago.middleware.theme.ThemeMiddleware',
+    'misago.middleware.firewalls.FirewallMiddleware',
+    'misago.middleware.crawlers.DetectCrawlerMiddleware',
+    'misago.middleware.session.SessionMiddleware',
+    'misago.middleware.bruteforce.JamMiddleware',
+    'misago.middleware.csrf.CSRFMiddleware',
+    'misago.middleware.banning.BanningMiddleware',
+    'misago.middleware.messages.MessagesMiddleware',
+    'misago.middleware.user.UserMiddleware',
+    'misago.middleware.acl.ACLMiddleware',
+    'misago.middleware.privatethreads.PrivateThreadsMiddleware',
     'django.middleware.common.CommonMiddleware',
 )
 
 # List of application permission providers
 PERMISSION_PROVIDERS = (
-    'misago.usercp.acl',
-    'misago.users.acl',
-    'misago.admin.acl',
-    'misago.forums.acl',
-    'misago.threads.acl',
+    'misago.acl.permissions.usercp',
+    'misago.acl.permissions.users',
+    'misago.acl.permissions.forums',
+    'misago.acl.permissions.threads',
+    'misago.acl.permissions.privatethreads',
+    'misago.acl.permissions.special',
 )
 
 # List of UserCP extensions
 USERCP_EXTENSIONS = (
-    'misago.usercp.options',
-    'misago.usercp.avatar',
-    'misago.usercp.signature',
-    'misago.usercp.credentials',
-    'misago.usercp.username',
+    'misago.apps.usercp.options',
+    'misago.apps.usercp.avatar',
+    'misago.apps.usercp.signature',
+    'misago.apps.usercp.credentials',
+    'misago.apps.usercp.username',
 )
 
 # List of User Profile extensions
 PROFILE_EXTENSIONS = (
-    'misago.profiles.posts',
-    'misago.profiles.threads',
-    'misago.profiles.follows',
-    'misago.profiles.followers',
-    'misago.profiles.details',
+    'misago.apps.profiles.posts',
+    'misago.apps.profiles.threads',
+    'misago.apps.profiles.follows',
+    'misago.apps.profiles.followers',
+    'misago.apps.profiles.details',
 )
 
 # List of Markdown Extensions
 MARKDOWN_EXTENSIONS = (
+    'misago.markdown.extensions.strikethrough.StrikethroughExtension',
     'misago.markdown.extensions.quotes.QuoteTitlesExtension',
     'misago.markdown.extensions.mentions.MentionsExtension',
     'misago.markdown.extensions.magiclinks.MagicLinksExtension',
@@ -159,42 +154,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'mptt', # Modified Pre-order Tree Transversal - allows us to nest forums 
     'debug_toolbar', # Debug toolbar
-    'misago.acl', # ACL Builder and dehydrator
-    'misago.settings', # Database level application configuration
-    'misago.monitor', # Forum statistics monitor
-    'misago.utils', # Utility classes
-    'misago.tos', # Terms of Service AKA Guidelines
-    # Applications with dependencies
-    'misago.banning', # Banning and blacklisting users
-    'misago.crawlers', # Web crawlers handling
-    'misago.cookie_jar', # Cookies helper
-    'misago.captcha', # Web crawlers handling
-    'misago.forums', # Forums, threads and posts
-    'misago.messages', # Messages and Flashes
-    'misago.newsletters', # Send newsletters to members from Admin
-    'misago.stats', # Admin statistics generator
-    'misago.sessions', # Sessions
-    'misago.authn', # User authentication
-    'misago.bruteforce', # Brute-Force protection
-    'misago.csrf', # Cross Site Request Forgery protection
-    'misago.setup', # Installation/update tool
-    'misago.template', # Templates extensions
-    'misago.themes', # Themes
-    'misago.users', # Users foundation
-    'misago.alerts', # Users Notifications
-    'misago.team', # Forum Team List
-    'misago.prune', # Prune Users
-    'misago.ranks', # User Ranks
-    'misago.roles', # User Roles
-    'misago.forumroles', # Forum Roles
-    'misago.usercp', # User Control Panel
-    'misago.profiles', # User Profiles
-    'misago.register', # Register New Users
-    'misago.activation', # Activate inactive User or resend activation e-mail
-    'misago.resetpswd', # Reset User Password
-    'misago.threads', # Threads and Posts
-    'misago.readstracker', # Forums and Threads reads tracker
-    'misago.watcher', # Observe threads
+    'misago', # Misago Forum App
 )
 
 # Stopwatch target file

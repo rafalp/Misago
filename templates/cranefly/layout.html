@@ -4,7 +4,27 @@
 {% block body %}
 <div id="wrap">
 
-  <div class="navbar navbar-static-top">
+  {#{% if acl.special.can_use_mcp() %}
+  <div class="navbar navbar-inverse navbar-modbar navbar-static-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <ul class="nav">
+          <li><a href="#">Frontlines</a></li>
+          <li><a href="#">Reports <span class="label label-important">5</span></a></li>
+          <li><a href="#">Warnings</a></li>
+        </ul>
+        <form class="navbar-form pull-right">
+          <div class="navbar-search-form">
+            <input type="text" class="span2" placeholder="{% trans %}Enter IP Address or Username...{% endtrans %}">
+            <button type="submit" class="btn btn-link"><i class="icon-search"></i></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}#}
+
+  <div class="navbar navbar-header navbar-static-top">
     <div class="navbar-inner">
       <div class="container">
         <a href="{% url 'index' %}" class="brand">{% if settings.board_header %}{{ settings.board_header }}{% else %}{{ settings.board_name }}{% endif %}</a>
@@ -20,7 +40,9 @@
           <li><a href="{% url 'index' %}" title="{% trans %}Forum Home{% endtrans %}" class="tooltip-bottom"><i class="icon-th-list"></i></a></li>
           <li><a href="{% url 'popular_threads' %}" title="{% trans %}Popular Threads{% endtrans %}" class="hot tooltip-bottom"><i class="icon-fire"></i></a></li>
           <li><a href="{% url 'new_threads' %}" title="{% trans %}New Threads{% endtrans %}" class="fresh tooltip-bottom"><i class="icon-leaf"></i></a></li>{% if not user.crawler %}
+          {% if not user.is_crawler() %}
           <li><a href="#" title="{% trans %}Search Community{% endtrans %}" class="tooltip-bottom"><i class="icon-search"></i></a></li>{% endif %}
+          {% endif %}
           <li><a href="{% url 'users' %}" title="{% trans %}Browse Users{% endtrans %}" class="tooltip-bottom"><i class="icon-user"></i></a></li>
           {% if settings.tos_url or settings.tos_content %}<li><a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{% url 'tos' %}{% endif %}" title="{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Forum Terms of Service{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-certificate"></i></a></li>{% endif %}
         </ul>
@@ -28,9 +50,10 @@
         {% if user.is_authenticated() %}
         <ul class="nav navbar-blocks pull-right">
           <li class="user-profile"><a href="{% url 'user' user=user.id, username=user.username_slug %}" title="{% trans %}Go to your profile{% endtrans %}" class="tooltip-bottom"><div><img src="{{ user.get_avatar(28) }}" alt=""> {{ user.username }}</div></a></li>
-          {#<li><a href="#" title="{% trans %}Active Reports{% endtrans %}" class="tooltip-bottom"><i class="icon-warning-sign"></i><span class="stat">5</span></a></li>#}
           <li><a href="{% url 'alerts' %}" title="{% if user.alerts %}{% trans %}You have new notifications!{% endtrans %}{% else %}{% trans %}Your Notifications{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-asterisk"></i>{% if user.alerts %}<span class="label label-important">{{ user.alerts }}</span>{% endif %}</a></li>
-          {#<li><a href="#" title="{% trans %}Private messages{% endtrans %}" class="tooltip-bottom"><i class="icon-inbox"></i><span class="stat">2</span></a></li>#}
+          {% if settings.enable_private_threads and acl.forums.can_browse(private_threads) and acl.threads.can_read_threads(private_threads) %}
+          <li><a href="{% url 'private_threads' %}" title="{% if user.unread_pds %}{% trans %}There are unread Private Threads!{% endtrans %}{% else %}{% trans %}Your Private Threads{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-inbox"></i>{% if user.unread_pds %}<span class="label label-important">{{ user.unread_pds }}</span>{% endif %}</a></li>
+          {% endif %}
           <li><a href="{% url 'newsfeed' %}" title="{% trans %}Your News Feed{% endtrans %}" class="tooltip-bottom"><i class="icon-signal"></i></a></li>
           <li><a href="{% url 'watched_threads' %}" title="{% trans %}Threads you are watching{% endtrans %}" class="tooltip-bottom"><i class="icon-bookmark"></i></a></li>
           <li><a href="{% url 'usercp' %}" title="{% trans %}Edit your profile options{% endtrans %}" class="tooltip-bottom"><i class="icon-cog"></i></a></li>

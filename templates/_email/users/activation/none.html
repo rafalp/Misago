@@ -1,0 +1,16 @@
+{% extends "_email/base.html" %}
+
+{% block title %}{% trans board_name=settings.board_name %}Welcome aboard {{ board_name }}!{% endtrans %}{% endblock %}
+
+{% block content %}
+<p {{ style_p|safe }}>{% trans username=user.username %}{{ username }}, you are receiving this message because you have used this email address to sign up on our forums.{% endtrans %}</p>
+
+<div {{ style_well|safe }}>
+  <p {{ style_p|safe }}><b>{% trans %}Username{% endtrans %}:</b><br>{{ user.username }}</p>
+  <p {{ style_p|safe }}><b>{% trans %}E-mail{% endtrans %}:</b><br>{{ user.email }}</p>{% if settings.password_in_email %}
+  <p {{ style_p|safe }}><b>{% trans %}Password{% endtrans %}:</b><br>{{ password }}</p>{% endif %}
+</div>
+{% if settings.password_in_email %}
+<p {{ style_p|safe }}>{% trans %}This is only time you will receive your current password. For security reasons we don't store members passwords as they are entered on registration, instead we encrypt them in unreversible manner to keep them safe.{% endtrans %}</p>
+{% endif %}
+{% endblock %}

@@ -47,7 +47,7 @@
   }
 
   .header-stats {
-    overflow: auto;
+    overflow: visible;
     margin-bottom: 0px;
 
     color: @grayLight;
@@ -66,6 +66,26 @@
 
       &>i {
         .opacity(50);
+      }
+
+      &.stats-form {
+        float: right;
+
+        form {
+          margin: 0px;
+          margin-bottom: -12px;
+          padding: 0px;
+
+          button {
+            position: relative;
+            bottom: 12px;
+
+            &>i {
+              position: relative;
+              top: 0px;
+            }
+          }
+        }
       }
     }
   }
@@ -117,6 +137,33 @@
         .btn-icon {
           padding-left: 7px;
           padding-right: 7px;
+        }
+
+        i {
+          position: relative;
+          top: 0px;
+        }
+      }
+
+      & {
+        a.btn {
+          border: 1px solid @btnBorder;
+          *border: 0; // Remove the border to prevent IE7's black border on input:focus
+          border-radius: @baseBorderRadius;
+          margin: 0px;
+          padding: 4px 12px;
+
+          color: @textColor;
+
+          i {
+            position: relative;
+            top: 0px;
+          }
+
+          &:visited, &:hover {
+            background-color: @white;
+            border-color: lighten(@grayLight, 5%);
+          }
         }
       }
     }

@@ -2,8 +2,7 @@ from django.conf import settings
 from django.core.cache import cache, InvalidCacheBackendError
 from django.utils.importlib import import_module
 from misago.forms import Form
-from misago.forums.models import Forum
-from misago.forumroles.models import ForumRole
+from misago.models import Forum, ForumRole
 
 def build_form(request, role):
     form_type = type('ACLForm', (Form,), dict(layout=[]))
@@ -47,7 +46,7 @@ class ACL(object):
                 yield self.__dict__[attr]
 
 
-def get_acl(request, user):
+def acl(request, user):
     acl_key = user.make_acl_key()
     try:
         user_acl = cache.get(acl_key)
@@ -61,15 +60,16 @@ def get_acl(request, user):
 
 def build_acl(request, roles):
     acl = ACL(request.monitor['acl_version'])
-    forums = Forum.objects.get(token='root').get_descendants().order_by('lft')
+    forums = (Forum.objects.filter(special__in=('private_threads', 'reports'))
+              | Forum.objects.get(special='root').get_descendants().order_by('lft'))
     perms = []
     forum_roles = {}
 
     for role in roles:
-        perms.append(role.get_permissions())
+        perms.append(role.permissions)
 
     for role in ForumRole.objects.all():
-        forum_roles[role.pk] = role.get_permissions()
+        forum_roles[role.pk] = role.permissions
 
     for provider in settings.PERMISSION_PROVIDERS:
         app_module = import_module(provider)

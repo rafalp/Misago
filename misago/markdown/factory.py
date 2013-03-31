@@ -4,7 +4,7 @@ from HTMLParser import HTMLParser
 from django.conf import settings
 from django.utils.importlib import import_module
 from django.utils.translation import ugettext_lazy as _
-from misago.utils import get_random_string
+from misago.utils.strings import random_string
 
 class ClearHTMLParser(HTMLParser):
     def __init__(self):
@@ -87,7 +87,7 @@ def post_markdown(request, text):
                            extensions=['nl2br', 'fenced_code'])
 
     remove_unsupported(md)
-    md.mi_token = get_random_string(16)
+    md.mi_token = random_string(16)
     for extension in settings.MARKDOWN_EXTENSIONS:
         module = '.'.join(extension.split('.')[:-1])
         extension = extension.split('.')[-1]

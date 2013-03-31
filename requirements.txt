@@ -1,0 +1,12 @@
+django
+django-debug-toolbar
+django-mptt
+coffin
+jinja2
+markdown
+path.py
+Pillow
+pytz
+recaptcha-client
+South
+Unidecode
