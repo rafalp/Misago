@@ -142,6 +142,7 @@ class Command(BaseCommand):
                                            description=row['description'],
                                            description_preparsed=row['description_preparsed'],
                                            redirect=row['redirect'],
+                                           redirects=row['redirects'],
                                            attrs=row['attrs'],
                                            show_details=row['show_details'],
                                            style=row['style'],
