@@ -89,7 +89,7 @@
 {% endblock %}
 
 {% macro pager() -%}
-{% if pagination['total'] > 1 %}
+{% if pagination and pagination['total'] > 1 %}
 {% if default_rank %}
 <div class="pagination">
   <ul>
