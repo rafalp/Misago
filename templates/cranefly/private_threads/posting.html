@@ -147,7 +147,11 @@
     {%- endif %}</li>
 {%- else -%}
     {% if thread.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
-    <li><i class="icon-time"></i> {{ thread.last|reltimesince }}</li>
+    {% if action == 'edit_thread' %}
+    <li><i class="icon-time"></i> <a href="{% url 'private_thread_find' thread=thread.pk, slug=thread.slug, post=thread.start_post_id %}">{{ thread.start|reltimesince }}</a></li>
+    {% else %}
+    <li><i class="icon-time"></i> <a href="{% url 'private_thread_new' thread=thread.pk, slug=thread.slug %}">{{ thread.last|reltimesince }}</a></li>
+    {% endif %}
     <li><i class="icon-user"></i> {% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}</li>
     <li><i class="icon-comment"></i> {% if thread.replies > 0 -%}
       {% trans count=thread.replies, replies=thread.replies|intcomma %}One reply{% pluralize %}{{ replies }} replies{% endtrans %}
