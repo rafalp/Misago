@@ -138,7 +138,7 @@
 {% macro get_info() -%}
 {% if action == 'edit_reply' -%}
     {% if post.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
-    <li><i class="icon-time"></i> {{ post.date|reltimesince }}</li>
+    <li><i class="icon-time"></i> <a href="{% url 'private_thread_find' thread=thread.pk, slug=thread.slug, post=post.pk %}">{{ post.date|reltimesince }}</a></li>
     <li><i class="icon-user"></i> {% if post.user %}<a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
     <li><i class="icon-pencil"></i> {% if post.edits > 0 -%}
       {% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}
