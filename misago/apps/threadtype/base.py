@@ -9,6 +9,13 @@ class ViewBase(object):
         obj = super(ViewBase, cls).__new__(cls)
         return obj(request, **kwargs)
         
+    def _type_available(self):
+        try:
+            if not self.type_available():
+                raise Http404()
+        except AttributeError:
+            pass
+
     def set_forum_context(self):
         pass
 

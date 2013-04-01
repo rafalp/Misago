@@ -80,6 +80,7 @@ class PostingBaseView(ViewBase):
         form = None
 
         try:
+            self._type_available()
             self._set_context()
             self.check_forum_type()
             self._check_permissions()

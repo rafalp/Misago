@@ -48,7 +48,7 @@
               <div class="thread-name">
                 <a href="{% url 'thread_new' thread=subforum.last_thread_id, slug=subforum.last_thread_slug %}"{% if subforum.last_thread_name|length > 36 %} class="tooltip-top" title="{{ subforum.last_thread_name }}"{% endif %}>{{ subforum.last_thread_name|short_string(36) }}</a>
               </div>
-              <div class="muted">{% if subforum.last_poster_id %}<a href="{% url 'user' user=subforum.last_poster_id, username=subforum.last_poster_slug %}" class="last-poster">{{ subforum.last_poster_name }}</a>{% else %}<span class="last-poster">{{ subforum.last_poster_name }}</span>{% endif %} - {{ subforum.last_thread_date|reldate }}</div>
+              <div class="muted">{% if subforum.last_poster_id %}<a href="{% url 'user' user=subforum.last_poster_id, username=subforum.last_poster_slug %}" class="last-poster">{{ subforum.last_poster_name }}</a>{% else %}<span class="last-poster">{{ subforum.last_poster_name }}</span>{% endif %} - {{ subforum.last_thread_date|reltimesince }}</div>
               {%- else -%}
               <em>{% trans %}This forum is empty{% endtrans %}</em>
               {%- endif %}
@@ -129,7 +129,7 @@
             {%- endif %}"><i class="icon-comment"></i></a>
             <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="thread-name">{{ thread.name }}</a>
             <span class="thread-details">
-              {% trans user=thread_starter(thread), start=thread.start|reldate|low %}by {{ user }} {{ start }}{% endtrans %}
+              {% trans user=thread_starter(thread), start=thread.start|reltimesince|low %}by {{ user }} {{ start }}{% endtrans %}
             </span>
             <ul class="unstyled thread-flags">
               {% if thread.replies_reported %}

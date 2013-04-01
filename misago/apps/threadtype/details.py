@@ -26,6 +26,7 @@ class ExtraBaseView(ViewBase):
         self.post = None
         self.parents = []
         try:
+            self._type_available()
             self.fetch_target()
             self.check_acl()
             self._check_permissions()
