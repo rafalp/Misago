@@ -30,6 +30,7 @@ class DeleteHideBaseView(ViewBase):
         self.kwargs = kwargs
         self.parents = []
         try:
+            self._type_available()
             self._set_context()
             self._check_permissions()
             self.delete()

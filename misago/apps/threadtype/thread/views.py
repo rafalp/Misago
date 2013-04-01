@@ -169,6 +169,7 @@ class ThreadBaseView(ViewBase):
         self.watcher = False
         self.message = request.messages.get_message('threads')
         try:
+            self._type_available()
             self.fetch_thread()
             self.check_forum_type()
             self._check_permissions()

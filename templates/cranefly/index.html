@@ -30,7 +30,7 @@
                   <div class="thread-name">
                     <a href="{% url 'thread_new' thread=forum.last_thread_id, slug=forum.last_thread_slug %}"{% if forum.last_thread_name|length > 36 %} class="tooltip-top" title="{{ forum.last_thread_name }}"{% endif %}>{{ forum.last_thread_name|short_string(36) }}</a>
                   </div>
-                  <div class="muted">{% if forum.last_poster_id %}<a href="{% url 'user' user=forum.last_poster_id, username=forum.last_poster_slug %}" class="last-poster">{{ forum.last_poster_name }}</a>{% else %}<span class="last-poster">{{ forum.last_poster_name }}</span>{% endif %} - {{ forum.last_thread_date|reldate }}</div>
+                  <div class="muted">{% if forum.last_poster_id %}<a href="{% url 'user' user=forum.last_poster_id, username=forum.last_poster_slug %}" class="last-poster">{{ forum.last_poster_name }}</a>{% else %}<span class="last-poster">{{ forum.last_poster_name }}</span>{% endif %} - {{ forum.last_thread_date|reltimesince }}</div>
                   {%- else -%}
                   <em>{% trans %}This forum is empty{% endtrans %}</em>
                   {%- endif %}

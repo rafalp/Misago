@@ -94,6 +94,7 @@ class ThreadsListBaseView(ViewBase):
         self.threads = []
         self.message = request.messages.get_message('threads')
         try:
+            self._type_available()
             self._fetch_forum()
             self._check_permissions()
             self.fetch_threads()
