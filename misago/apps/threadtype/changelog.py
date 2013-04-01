@@ -36,6 +36,7 @@ class ChangelogBaseView(ViewBase):
         self.post = None
         self.parents = []
         try:
+            self._type_available()
             self.fetch_target()
             self._check_permissions()
             if not request.user.is_authenticated():

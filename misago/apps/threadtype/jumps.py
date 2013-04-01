@@ -30,6 +30,7 @@ class JumpView(ViewBase):
         self.request = request
         self.parents = []
         try:
+            self._type_available()
             self.fetch_thread(thread)
             if self.forum.level:
                 self.parents = Forum.objects.forum_parents(self.forum.pk, True)
