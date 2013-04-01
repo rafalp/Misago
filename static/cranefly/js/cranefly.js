@@ -92,14 +92,12 @@ function EnhancePostsMD() {
 		// Automagically turn links into players
 		var players = new Array();
 		$('.markdown.js-extra a').each(function() {
-			if (this.href == $.trim($(this).text())) {
-				match = link2player(this);
-				if (match && $.inArray(match, players) == -1) {
-					players.push(match);
-					$(this).replaceWith(match);
-					if (players.length == 10) {
-						return false;
-					}
+			match = link2player($.trim($(this).text()));
+			if (match && $.inArray(match, players) == -1) {
+				players.push(match);
+				$(this).replaceWith(match);
+				if (players.length == 10) {
+					return false;
 				}
 			}
 		});
@@ -107,18 +105,25 @@ function EnhancePostsMD() {
 }
 
 // Turn link to player
-function link2player(link) {
+function link2player(link_href) {
 	// Youtube link
 	var re = /watch\?v=((\w|-)+)/;
-	if (re.test(link.href)) {
-		media_url = link.href.match(re);
+	if (re.test(link_href)) {
+		media_url = link_href.match(re);
+		return '<iframe width="480" height="360" src="http://www.youtube.com/embed/' + media_url[1] + '" frameborder="0" allowfullscreen></iframe>';
+	}
+
+	// Youtube feature=embed
+	var re = /watch\?feature=player_embedded&v=((\w|-)+)/;
+	if (re.test(link_href)) {
+		media_url = link_href.match(re);
 		return '<iframe width="480" height="360" src="http://www.youtube.com/embed/' + media_url[1] + '" frameborder="0" allowfullscreen></iframe>';
 	}
 
 	// Youtube embed with start time
 	var re = /youtu.be\/((\w|-)+)\?t=([A-Za-z0-9]+)/;
-	if (re.test(link.href)) {
-		media_url = link.href.match(re);
+	if (re.test(link_href)) {
+		media_url = link_href.match(re);
 		media_minutes = media_url[2].match(/([0-9]+)m/);
 		media_seconds = media_url[2].match(/([0-9]+)s/);
 		media_url[2] = 0;
@@ -129,15 +134,15 @@ function link2player(link) {
 	
 	// Youtube embed
 	var re = /youtu.be\/((\w|-)+)/;
-	if (re.test(link.href)) {
-		media_url = link.href.match(re);
+	if (re.test(link_href)) {
+		media_url = link_href.match(re);
 		return '<iframe width="480" height="360" src="http://www.youtube.com/embed/' + media_url[1] + '" frameborder="0" allowfullscreen></iframe>';
 	}
 
 	// Vimeo link
 	var re = /vimeo.com\/([0-9]+)/;
-	if (re.test(link.href)) {
-		media_url = link.href.match(re);
+	if (re.test(link_href)) {
+		media_url = link_href.match(re);
 		return '<iframe src="http://player.vimeo.com/video/' + media_url[1] + '?color=CF402E" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
 	}
 
