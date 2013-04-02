@@ -7,6 +7,7 @@ except ImportError:
     use_unidecode = False
 
 def slugify(string):
+    string = unicode(string)
     if use_unidecode:
         string = unidecode(string)
     return django_slugify(string)
