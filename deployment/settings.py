@@ -23,7 +23,7 @@ ADMINS = ()
 # NEVER EVER SHARE THIS KEY WITH ANYBODY!
 # Make it messed up and long, this is example of good secret key:
 # yaobeifl1a6hf&3)^uc#^vlu1ud7xp^+*c5zoq*tf)fvs#*o$#
-SECRET_KEY = 'CHANGE-ME'
+SECRET_KEY = ''
 
 # Database connection
 DATABASES = {
@@ -36,11 +36,6 @@ DATABASES = {
         'PORT': '', # Set to empty string for default. Not used with sqlite3.
     }
 }
-
-# Override DB if we are in tests
-if 'test' in sys.argv:
-    DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'db4testing'}
-    SKIP_SOUTH_TESTS = True
 
 # Cache engine
 # Misago is EXTREMELY data hungry
@@ -143,3 +138,15 @@ INSTALLED_THEMES = (
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'deployment.wsgi.application'
+
+# Empty secret key if its known
+if SECRET_KEY == 'yaobeifl1a6hf&3)^uc#^vlu1ud7xp^+*c5zoq*tf)fvs#*o$#':
+    SECRET_KEY = ''
+
+# Override config if we are in tests
+if 'test' in sys.argv:
+    if not SECRET_KEY:
+        SECRET_KEY = 'SECRET4TESTS'
+    DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'db4testing'}
+    CACHES['default'] = {'BACKEND': 'django.core.cache.backends.dummy.DummyCache'}
+    SKIP_SOUTH_TESTS = True
