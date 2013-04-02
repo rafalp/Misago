@@ -152,7 +152,7 @@ class Thread(models.Model):
         from misago.acl.exceptions import ACLError403, ACLError404
         from misago.models import ThreadRead, WatchedThread
 
-        for watch in WatchedThread.objects.filter(thread=self).filter(email=True).filter(last_read__gte=self.previous_last):
+        for watch in WatchedThread.objects.filter(thread=self).filter(email=True).filter(last_read__gte=self.previous_last.date):
             user = watch.user
             if user.pk != request.user.pk:
                 try:

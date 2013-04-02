@@ -26,6 +26,9 @@ class EditReplyBaseView(PostingBaseView):
         changed_thread = False
         changed_post = old_post != form.cleaned_data['post']
 
+        if self.thread.last_post_id == self.post.pk:
+            self.thread.last_post == self.post
+
         if 'close_thread' in form.cleaned_data and form.cleaned_data['close_thread']:
             self.thread.closed = not self.thread.closed
             changed_thread = True
@@ -33,6 +36,8 @@ class EditReplyBaseView(PostingBaseView):
                 self.thread.last_post.set_checkpoint(self.request, 'closed')
             else:
                 self.thread.last_post.set_checkpoint(self.request, 'opened')
+            if self.thread.last_post_id != self.post.pk or not changed_post:
+                self.thread.last_post.save(force_update=True)
 
         if ('thread_weight' in form.cleaned_data and
                 form.cleaned_data['thread_weight'] != self.thread.weight):

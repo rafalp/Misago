@@ -45,13 +45,19 @@ class PostingBaseView(ViewBase):
 
     def notify_users(self):
         try:
-            if self.quote and self.quote.user_id:
-                del self.md.mentions[self.quote.user.username_slug]
-        except KeyError:
-            pass
-        if self.md.mentions:
-            self.post.notify_mentioned(self.request, self.type_prefix, self.md.mentions)
-            self.post.save(force_update=True)
+            post_content = self.md
+        except AttributeError:
+            post_content = False
+
+        if post_content:
+            try:
+                if self.quote and self.quote.user_id:
+                    del post_content.mentions[self.quote.user.username_slug]
+            except KeyError:
+                pass
+            if post_content.mentions:
+                self.post.notify_mentioned(self.request, self.type_prefix, post_content.mentions)
+                self.post.save(force_update=True)
 
     def watch_thread(self):
         if self.request.user.subscribe_start:
