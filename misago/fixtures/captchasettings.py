@@ -8,9 +8,10 @@ settings_fixture = (
         'description': _("Those settings allow you to combat automatic registrations and spam messages on your forum."),
         'settings': (
             ('bots_registration', {
+                'value':        'no',
                 'type':         "string",
                 'input':        "choice",
-                'extra':        {'choices': [('', _("No protection")), ('recaptcha', _("reCaptcha")), ('qa', _("Question & Answer"))]},
+                'extra':        {'choices': [('no', _("No protection")), ('recaptcha', _("reCaptcha")), ('qa', _("Question & Answer"))]},
                 'separator':    _("Spambots Registrations"),
                 'name':         _("CAPTCHA type"),
                 'description':  _('CAPTCHA stands for "Completely Automated Public Turing test to tell Computers and Humans Apart". Its type of test developed on purpose of blocking automatic registrations.'),

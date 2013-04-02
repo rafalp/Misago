@@ -18,6 +18,12 @@ ADMIN_PATH = 'admincp'
 # System admins
 ADMINS = ()
 
+# Secret key is used by Django and Misago in hashes generation
+# YOU MUST REPLACE IT with random combination of characters
+# Make it messed up and long, this is example of good secret key:
+# JA*^Sd09as809!^*(DSA!K1m12o7ds8a791k1#@!829758!@@ii_*091)
+SECRET_KEY = 'CHANGE-ME!'
+
 # Database connection
 DATABASES = {
     'default': {
@@ -32,7 +38,7 @@ DATABASES = {
 
 # Override DB if we are in tests
 if 'test' in sys.argv:
-    DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
+    DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'db4testing'}
     SKIP_SOUTH_TESTS = True
 
 # Cache engine
