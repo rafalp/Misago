@@ -32,6 +32,8 @@ DATABASES = {
 
 # Override DB if we are in tests
 if 'test' in sys.argv:
+    if not SECRET_KEY:
+        SECRET_KEY = 'TEST-SECRET'
     DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
     SKIP_SOUTH_TESTS = True
 
