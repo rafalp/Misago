@@ -52,7 +52,6 @@
   margin-bottom: 0px;
 
   .media-object {
-    background-color: @white;
     border-radius: @borderRadiusLarge;
     margin-top: @baseFontSize;
     width: 125px;
@@ -87,7 +86,6 @@
           .opacity(100);
 
           img {
-            background-color: @white;
             .opacity(100);
           }
         }
@@ -105,12 +103,17 @@
 
 .usercp-avatar-crop {
   .avatar-crop-preview {
-    background-color: @white;
     border-radius: @borderRadiusLarge;
     float: left;
     width: @fontSizeLarge * 2.5;
     height: @fontSizeLarge * 2.5;
     margin-right: @baseFontSize;
     overflow: hidden;
+  }
+
+  .avatar-crop-target {
+    img {
+      background-color: @white;
+    }
   }
 }

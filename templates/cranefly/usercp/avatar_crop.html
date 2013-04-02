@@ -35,31 +35,6 @@
   </form>
   
 </div>
-
-{#
-<h2>{% trans %}Crop Avatar{% endtrans %} <small>{% trans %}Change your Avatar{% endtrans %}</small></h2>
-{% if message %}{{ macros.draw_message(message, 'alert-form') }}{% endif %}
-<form action="{% if after_upload %}{% url 'usercp_avatar_upload_crop' %}{% else %}{% url 'usercp_avatar_crop' %}{% endif %}" method="post">
-  <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-  <input type="hidden" id="crop-b" name="crop_b" value="">
-  <input type="hidden" id="crop-w" name="crop_w" value="">
-  <input type="hidden" id="crop-x" name="crop_x" value="">
-  <input type="hidden" id="crop-y" name="crop_y" value="">
-  <div class="row">
-  	<div class="span6">
-      <div class="avatar-crop-target"><img src="{{ MEDIA_URL }}{{ source }}" id="target" alt="{% trans %}Uploaded Image{% endtrans %}"></div>
-    </div>
-    <div class="span3">
-      <div class="avatar-crop-preview">
-        <img src="{{ MEDIA_URL }}{{ source }}" id="preview" alt="{% trans %}Avatar Preview{% endtrans %}" class="jcrop-preview" />
-      </div>
-      <div class="form-actions">
-        <button name="save" type="submit" class="btn btn-primary">{% trans %}Crop Avatar{% endtrans %}</button>
-        <a href="{% url 'usercp_avatar' %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
-      </div>
-    </div>
-  </div>
-</form>#}
 {% endblock %}
 
 {% block javascripts %}
