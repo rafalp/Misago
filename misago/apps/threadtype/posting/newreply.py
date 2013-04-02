@@ -38,7 +38,7 @@ class NewReplyBaseView(PostingBaseView):
         moderation = (not self.request.acl.threads.acl[self.forum.pk]['can_approve']
                       and self.request.acl.threads.acl[self.forum.pk]['can_start_threads'] == 1)
 
-        self.thread.previous_last = self.thread.last
+        self.thread.previous_last = self.thread.last_post
         self.md, post_preparsed = post_markdown(self.request, form.cleaned_data['post'])
 
         # Count merge diff and see if we are merging
@@ -85,12 +85,6 @@ class NewReplyBaseView(PostingBaseView):
             if self.thread.last_poster_id != self.request.user.pk:
                 self.thread.score += self.request.settings['thread_ranking_reply_score']
 
-        # Set thread status
-        if 'close_thread' in form.cleaned_data:
-            self.thread.closed = not self.thread.closed
-        if 'thread_weight' in form.cleaned_data:
-            self.thread.weight = form.cleaned_data['thread_weight']
-
         # Save updated thread
         self.thread.save(force_update=True)
 
@@ -113,17 +107,30 @@ class NewReplyBaseView(PostingBaseView):
         self.request.user.last_post = now
         self.request.user.save(force_update=True)
 
+        # Set thread weight
+        if 'thread_weight' in form.cleaned_data:
+            self.thread.weight = form.cleaned_data['thread_weight']
+
         # Set "closed" checkpoint, either due to thread limit or posters wish
         if (self.request.settings.thread_length > 0
                 and not merged and not moderation and not self.thread.closed
                 and self.thread.replies >= self.request.settings.thread_length):
             self.thread.closed = True
             self.post.set_checkpoint(self.request, 'limit')
+            self.post.save(force_update=True)
+            self.thread.save(force_update=True)
         elif 'close_thread' in form.cleaned_data and form.cleaned_data['close_thread']:
-            if self.thread.closed:
-                self.thread.last_post.set_checkpoint(self.request, 'closed')
+            self.thread.closed = not self.thread.closed
+            if merged:
+                checkpoint_post = self.post
             else:
-                self.thread.last_post.set_checkpoint(self.request, 'opened')
+                checkpoint_post = self.thread.previous_last
+            if self.thread.closed:
+                checkpoint_post.set_checkpoint(self.request, 'closed')
+            else:
+                checkpoint_post.set_checkpoint(self.request, 'opened')
+            checkpoint_post.save(force_update=True)
+            self.thread.save(force_update=True)
 
         # Notify user we quoted?
         if (self.quote and self.quote.user_id and not merged
