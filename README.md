@@ -1,7 +1,4 @@
-Misago
-======
-
-[![Build Status](https://travis-ci.org/rafalp/misago.png)](https://travis-ci.org/rafalp/misago)
+# Misago [![Build Status](https://travis-ci.org/rafalp/Misago.png)](https://travis-ci.org/rafalp/Misago)
 
 Misago is an internet forum application written in Python and using Django as its foundation.
 Visit project homepage for discussion and demo: <http://misago-project.org>
