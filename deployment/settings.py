@@ -20,9 +20,10 @@ ADMINS = ()
 
 # Secret key is used by Django and Misago in hashes generation
 # YOU MUST REPLACE IT with random combination of characters
+# NEVER EVER SHARE THIS KEY WITH ANYBODY!
 # Make it messed up and long, this is example of good secret key:
-# JA*^Sd09as809!^*(DSA!K1m12o7ds8a791k1#@!829758!@@ii_*091)
-SECRET_KEY = 'CHANGE-ME!'
+# yaobeifl1a6hf&3)^uc#^vlu1ud7xp^+*c5zoq*tf)fvs#*o$#
+SECRET_KEY = 'CHANGE-ME'
 
 # Database connection
 DATABASES = {
@@ -139,9 +140,6 @@ INSTALLED_THEMES = (
     'cranefly', # Default style always first
     'admin', # Admin theme always last
 )
-
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = ''
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'deployment.wsgi.application'
