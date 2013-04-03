@@ -1,3 +1,4 @@
+import urlparse
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 from django.conf import settings
@@ -202,6 +203,13 @@ class Forum(MPTTModel):
         if self.attrs:
             return att in self.attrs.split()
         return False
+
+    def redirect_domain(self):
+        hostname = urlparse.urlparse(self.redirect).hostname
+        scheme = urlparse.urlparse(self.redirect).scheme
+        if scheme:
+            scheme = '%s://' % scheme
+        return '%s%s' % (scheme, hostname)
 
     def new_last_thread(self, thread):
         self.last_thread = thread
