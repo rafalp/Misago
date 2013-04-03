@@ -20,7 +20,7 @@ class InviteUsersMixin(object):
         for username in self.cleaned_data['invite_users'].split(','):
             username = username.strip()
             slug = slugify(username)
-            if len(slug) > 3 and not slug in slugs:
+            if len(slug) >= 3 and not slug in slugs:
                 slugs.append(slug)
                 usernames.append(username)
                 try:
