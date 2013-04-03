@@ -1,8 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 
 class SearchException(Exception):
-    def __init__(self, message):
-        self.message = message
+    pass
 
 
 class SearchQuery(object):
