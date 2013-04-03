@@ -56,7 +56,10 @@
               <em>{% trans %}This forum is protected{% endtrans %}</em>
               {%- endif %}
               {%- else -%}
-              <div class="forum-clicks">{% trans clicks=macros.wrap(subforum.redirects|intcomma, 'strong') %}{{ clicks }} clicks{% endtrans %}</div>
+              <div class="thread-name">
+                <a href="{% url 'redirect' slug=forum.slug, forum=forum.id %}">{{ forum.redirect_domain() }}</a>
+              </div>
+              <div class="muted">{% trans clicks=macros.wrap(forum.redirects|intcomma, 'span', 'class="last-poster"') %}{{ clicks }} clicks{% endtrans %}</div>
               {%- endif %}
             </div>
             {% endif %}

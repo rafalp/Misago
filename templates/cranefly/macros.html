@@ -45,6 +45,6 @@
 itemprop="breadcrumb"
 {%- endmacro %}
 
-{% macro wrap(item, wrap) -%}
-<{{ wrap }}>{{ item }}</{{ wrap }}>
+{% macro wrap(item, wrap, extra='') -%}
+<{{ wrap }}{% if extra %} {{ extra|safe }}{% endif %}>{{ item }}</{{ wrap }}>
 {%- endmacro %}
