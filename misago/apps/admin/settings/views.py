@@ -22,7 +22,7 @@ def settings(request, group_id=None, group_slug=None):
                 active_group = group
                 break
         else:
-            return error404(request, _('The requested settings group could not be found.'))
+            return error404(request, _('Requested settings group could not be found.'))
 
     # Load selected group settings and turn them into form
     group_settings = Setting.objects.filter(group=active_group).order_by('position')
@@ -46,7 +46,7 @@ def settings(request, group_id=None, group_slug=None):
         if form.is_valid():
             for setting in form.cleaned_data.keys():
                 request.settings[setting] = form.cleaned_data[setting]
-            request.messages.set_flash(Message(_('Configuration have been saved.')), 'success', 'admin_settings')
+            request.messages.set_flash(Message(_('Configuration has been changed.')), 'success', 'admin_settings')
             return redirect(reverse('admin_settings', kwargs={
                                                        'group_id': active_group.pk,
                                                        'group_slug': active_group.key,
@@ -90,13 +90,13 @@ def settings_search(request):
                 # Scream if nothing could be found
                 if found_settings:
                     message = Message(ungettext(
-                                                    'One setting that match search criteria has been found.',
-                                                    '%(count)d settings that match search criteria have been found.',
+                                                'One setting that matches search criteria has been found.',
+                                                '%(count)d settings that match search criteria have been found.',
                                                 len(found_settings)) % {
                                                     'count': len(found_settings),
                                                 }, 'success')
                 else:
-                    raise SearchException(_('No settings that match search criteria has been found.'))
+                    raise SearchException(_('No settings that match search criteria have been found.'))
             else:
                 raise SearchException(_('Search query is empty.'))
         else:
