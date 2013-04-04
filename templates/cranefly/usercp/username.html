@@ -27,10 +27,10 @@
     <div class="form-actions">
       <button name="save" type="submit" class="btn btn-primary"{% if changes_left == 0 %} disabled="disabled"{% endif %}>{% trans %}Change Name{% endtrans %}</button>
       <span class="form-actions-protip">{% if changes_left > 0 -%}
-      {% trans count=changes_left -%}
+      {% trans changes=changes_left -%}
       You can change your username one more time.
       {%- pluralize -%}
-      You can change your username {{ count }} more times.
+      You can change your username {{ changes }} more times.
       {%- endtrans %}
       {%- elif acl.usercp.changes_expire() -%}
       {% trans next_change=next_change|reldate|low %}You will be able to change your username on {{ next_change }}{% endtrans %}

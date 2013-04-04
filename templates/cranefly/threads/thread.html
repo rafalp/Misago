@@ -96,9 +96,9 @@
               {% if post.edits %}
               <span class="separator">&ndash;</span>
               {% if acl.threads.can_see_changelog(user, forum, post) %}
-              <a href="{% url 'changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</a>
+              <a href="{% url 'changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}</a>
               {% else %}
-              <span class="post-changelog">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</span>
+              <span class="post-changelog">{% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}</span>
               {% endif %}
               {% endif %}
             </div>
@@ -181,9 +181,9 @@
             {% if post.edits %}
             <span class="separator">&ndash;</span>
             {% if acl.threads.can_see_changelog(user, forum, post) %}
-            <a href="{% url 'thread_changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</a>
+            <a href="{% url 'thread_changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}</a>
             {% else %}
-            <span class="post-changelog">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</span>
+            <span class="post-changelog">{% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}</span>
             {% endif %}
             {% endif %}
 

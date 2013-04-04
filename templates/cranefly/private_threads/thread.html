@@ -102,9 +102,9 @@
                   {% if post.edits %}
                   <span class="separator">&ndash;</span>
                   {% if acl.threads.can_see_changelog(user, forum, post) %}
-                  <a href="{% url 'changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</a>
+                  <a href="{% url 'changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}</a>
                   {% else %}
-                  <span class="post-changelog">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</span>
+                  <span class="post-changelog">{% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}</span>
                   {% endif %}
                   {% endif %}
                 </div>
@@ -187,9 +187,9 @@
                 {% if post.edits %}
                 <span class="separator">&ndash;</span>
                 {% if acl.threads.can_see_changelog(user, forum, post) %}
-                <a href="{% url 'private_thread_changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</a>
+                <a href="{% url 'private_thread_changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}</a>
                 {% else %}
-                <span class="post-changelog">{% trans count=post.edits %}One edit{% pluralize %}{{ count }} edits{% endtrans %}</span>
+                <span class="post-changelog">{% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}</span>
                 {% endif %}
                 {% endif %}
 
@@ -381,10 +381,10 @@
     </div>
     <div class="span3">
       <div class="thread-participants">
-        <h3>{% trans count=participants|length -%}
+        <h3>{% trans participants=participants|length -%}
           One participant
           {%- pluralize -%}
-          {{ count }} participants
+          {{ participants }} participants
           {%- endtrans %}</h3>
         <ul class="unstyled">{% for participant in participants %}
           <li>
