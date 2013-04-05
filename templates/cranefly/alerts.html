@@ -34,10 +34,10 @@
 
 {% macro get_title() -%}
 {% if new_alerts -%}
-{% trans count=new_alerts -%}
+{% trans alerts=new_alerts -%}
 You have one new alert
 {%- pluralize -%}
-You have {{ count }} new alerts
+You have {{ alerts }} new alerts
 {%- endtrans %}
 {%- else -%}
 {% trans %}Your Notifications{% endtrans %}

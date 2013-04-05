@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from misago.signals import (delete_user_content, merge_post, merge_thread,
                             move_forum_content, move_post, move_thread,
                             rename_user, sync_user_profile)
+from misago.utils.translation import ugettext_lazy
 
 class PostManager(models.Manager):
     def filter_stats(self, start, end):
