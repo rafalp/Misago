@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Misago PL\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-04-03 18:32+0000\n"
-"PO-Revision-Date: 2013-04-05 00:38+0100\n"
+"PO-Revision-Date: 2013-04-06 00:44+0100\n"
 "Last-Translator: L0ud PL <loudml@gmail.com>\n"
 "Language-Team: FxDev <loudpl@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -4025,33 +4025,35 @@ msgstr ""
 
 #: apps/usercp/options/forms.py:25
 msgid "From everyone"
-msgstr ""
+msgstr "Od każdego"
 
 #: apps/usercp/options/forms.py:26
 msgid "From everyone but not members I ignore"
-msgstr ""
+msgstr "Od każdego oprócz użytkowników których ignoruję"
 
 #: apps/usercp/options/forms.py:27
 msgid "From members I follow"
-msgstr ""
+msgstr "Od każdego, kogo obserwuję"
 
 #: apps/usercp/options/forms.py:28
 msgid "From nobody"
-msgstr ""
+msgstr "Od nikogo"
 
 #: apps/usercp/options/forms.py:33
 msgid "Privacy"
-msgstr ""
+msgstr "Prywatność"
 
 #: apps/usercp/options/forms.py:35
 msgid "Your Visibility"
-msgstr ""
+msgstr "Twoja widoczność"
 
 #: apps/usercp/options/forms.py:35
 msgid ""
 "If you want to, you can limit other members ability to track your presence "
 "on forums."
 msgstr ""
+"Jeżeli chcesz, możesz ukryć swoją obecność przed zwykłymi użytkownikami tego "
+"forum."
 
 #: apps/usercp/options/forms.py:36
 msgid "Allow Private Threads Invitations"
@@ -4065,79 +4067,83 @@ msgstr ""
 
 #: apps/usercp/options/forms.py:40 apps/usercp/options/usercp.py:4
 msgid "Forum Options"
-msgstr ""
+msgstr "Opcje forum"
 
 #: apps/usercp/options/forms.py:42
 msgid "Your Current Timezone"
-msgstr ""
+msgstr "Twoja strefa czasowa"
 
 #: apps/usercp/options/forms.py:42
 msgid ""
 "If dates and hours displayed by forums are inaccurate, you can fix it by "
 "adjusting timezone setting."
 msgstr ""
+"Jeżeli daty i godziny na forum nie są wyświetlane poprawnie, możesz to "
+"poprawić, poprzez dostosowanie ustawień strefy czasowej."
 
 #: apps/usercp/options/forms.py:43
 msgid ""
 "On occasion board administrator may want to send e-mail message to multiple "
 "members."
 msgstr ""
+"Czasami, administrator forum może chcieć rozesłać wiadomość e-mail do "
+"członków forum."
 
 #: apps/usercp/options/forms.py:43
 msgid "Yes, I want to subscribe forum newsletter"
-msgstr ""
+msgstr "Tak, chcę subskrybować biuletyn tego forum"
 
 #: apps/usercp/options/forms.py:47
 msgid "Watching Threads"
-msgstr ""
+msgstr "Obserwowanie tematów"
 
 #: apps/usercp/options/forms.py:49
 msgid "Threads I start"
-msgstr ""
+msgstr "Tematy rozpoczęte przeze mnie"
 
 #: apps/usercp/options/forms.py:50
 msgid "Threads I reply to"
-msgstr ""
+msgstr "Tematy, na które odpowiedziałem"
 
 #: apps/usercp/options/views.py:23
 msgid "Forum options have been changed."
-msgstr ""
+msgstr "Ustawienia forum zostały zmienione."
 
 #: apps/usercp/signature/forms.py:13
 msgid "Your Signature"
-msgstr ""
+msgstr "Twoja sygnaturka"
 
 #: apps/usercp/signature/usercp.py:5
 msgid "Edit Signature"
-msgstr ""
+msgstr "Modyfikacja sygnaturki"
 
 #: apps/usercp/signature/views.py:35
 msgid "Your signature has been changed."
-msgstr ""
+msgstr "Twoja sygnaturka została zmieniona."
 
 #: apps/usercp/username/forms.py:15
 msgid "Change Username to"
-msgstr ""
+msgstr "Zmien nazwę użytkownika na"
 
 #: apps/usercp/username/forms.py:15
 msgid "Enter new desired username."
-msgstr ""
+msgstr "Wprowadź pożądaną nazwę użytkownika."
 
 #: apps/usercp/username/forms.py:23
 msgid "Your new username is same as current one."
-msgstr ""
+msgstr "Wprowadzona nowa nazwa użytkownika jest taka sama jak obecna."
 
 #: apps/usercp/username/usercp.py:5
 msgid "Change Username"
-msgstr ""
+msgstr "Zmień nazwę użytkownika"
 
 #: apps/usercp/username/views.py:32 templates/cranefly/usercp/username.html:34
 msgid "You have exceeded the maximum number of name changes."
-msgstr ""
+msgstr "Przekroczyłeś maksymalną liczbę zmian nazwy użytkownika."
 
 #: apps/usercp/username/views.py:42
 msgid "Your username has been changed."
-msgstr ""
+msgstr "Twoja nazwa została zmieniona."
 
 #: apps/usercp/username/views.py:49
 #, python-format
@@ -4145,14 +4151,16 @@ msgid ""
 "User that you are following, %(username)s, has changed his name to "
 "%(newname)s"
 msgstr ""
+"Użytkownik którego obserwujesz, %(username)s, zmienił swoja nazwę na "
+"%(newname)s"
 
 #: fixtures/accountssetings.py:7
 msgid "Users Accounts Settings"
-msgstr ""
+msgstr "Ustawienia profili użytkowników"
 
 #: fixtures/accountssetings.py:8
 msgid "Those settings allow you to increase security of your members accounts."
-msgstr ""
+msgstr "Dane ustawienia mogą zwiększyć bezpieczeństwo członków Twojego forum."
 
 #: fixtures/accountssetings.py:13
 msgid "No validation required"
@@ -4168,35 +4176,36 @@ msgstr ""
 
 #: fixtures/accountssetings.py:13
 msgid "Dont allow new registrations"
-msgstr ""
+msgstr "Nie pozwalaj na nowe rejestracje"
 
 #: fixtures/accountssetings.py:14 models/usermodel.py:189
 msgid "Users Registrations"
-msgstr ""
+msgstr "Rejestracje użytkowników"
 
 #: fixtures/accountssetings.py:15
 msgid "New accounts validation"
-msgstr ""
+msgstr "Walidacja nowych kont"
 
 #: fixtures/accountssetings.py:22
 msgid "Default Timezone"
-msgstr ""
+msgstr "Domyślna strefa czasowa"
 
 #: fixtures/accountssetings.py:23
 msgid "Used by guests, crawlers and newly registered users."
 msgstr ""
+"Używana przez gości, boty wyszukiwarek i nowo zarejestrowanych użytkowników."
 
 #: fixtures/accountssetings.py:30
 msgid "Users Names"
-msgstr ""
+msgstr "Nazwy użytkowników"
 
 #: fixtures/accountssetings.py:31
 msgid "Minimum allowed username length"
-msgstr ""
+msgstr "Minimalna, dozwolona długość nazwy uzytkownika"
 
 #: fixtures/accountssetings.py:38
 msgid "Maxim allowed username length"
-msgstr ""
+msgstr "Maksymalna, dozwolona długość nazwy uzytkownika"
 
 #: fixtures/accountssetings.py:45
 msgid "Users Passwords"
@@ -4277,31 +4286,31 @@ msgstr ""
 
 #: fixtures/avatarssettings.py:14 templates/cranefly/usercp/avatar.html:22
 msgid "Uploaded Avatar"
-msgstr ""
+msgstr "Przesłany avatar"
 
 #: fixtures/avatarssettings.py:14
 msgid "Avatars Gallery"
-msgstr ""
+msgstr "Galeria avatarów"
 
 #: fixtures/avatarssettings.py:15
 msgid "General Settings"
-msgstr ""
+msgstr "Ogólne ustawienia"
 
 #: fixtures/avatarssettings.py:16
 msgid "Allowed Avatars"
-msgstr ""
+msgstr "Dozwolone avatary"
 
 #: fixtures/avatarssettings.py:17
 msgid "Select Avatar types allowed on your forum."
-msgstr ""
+msgstr "Wybierz typy avatarów, dozwolone na tym forum."
 
 #: fixtures/avatarssettings.py:23
 msgid "Random Avatar from Gallery"
-msgstr ""
+msgstr "Losowy avatar z galerii"
 
 #: fixtures/avatarssettings.py:24
 msgid "Default Avatar"
-msgstr ""
+msgstr "Domyślny avatar"
 
 #: fixtures/avatarssettings.py:25
 msgid ""
@@ -4310,36 +4319,42 @@ msgid ""
 "regular gallery. If no avatar can be picked from gallery, Gravatar will be "
 "used."
 msgstr ""
+"Domyślny avatar przypisany do nowych użytkowników. Jeżeli utworzysz katalog "
+"i nazwiesz go \"_default\", forum wybierze losowy avatar z tego katalogu "
+"zamiast z normalnej galerii. Jeżeli nie uda się wybrać avatara z galerii, "
+"zostanie użyty Gravatar."
 
 #: fixtures/avatarssettings.py:32
 msgid "Avatar Upload Settings"
-msgstr ""
+msgstr "Ustawienia wgrywania avatara"
 
 #: fixtures/avatarssettings.py:33
 msgid "Maxmimum size of uploaded file"
-msgstr ""
+msgstr "Maksymalna wielkość wgrywanego pliku"
 
 #: fixtures/avatarssettings.py:34
 msgid "Select maximum allowed file size (in KB) for Avatar uploads."
-msgstr ""
+msgstr "Wskaż maksymalną wielkość pliku (w KB)"
 
 #: fixtures/basicsettings.py:7
 msgid "Basic Settings"
-msgstr ""
+msgstr "Podstawowe ustawienia"
 
 #: fixtures/basicsettings.py:13 fixtures/basicsettings.py:14
 msgid "Board Name"
-msgstr ""
+msgstr "Nazwa forum"
 
 #: fixtures/basicsettings.py:19
 msgid "Board Header"
-msgstr ""
+msgstr "Nagłówek forum"
 
 #: fixtures/basicsettings.py:20
 msgid ""
 "Some themes allow you to define text in board header. Leave empty to use "
 "Board Name instead."
 msgstr ""
+"Część szablonów pozwala na zdefiniowanie tekstu w nagłówku forum. Zostaw to "
+"pole puste, aby zamiast niego użyć nazwy forum."
 
 #: fixtures/basicsettings.py:26
 msgid "Board Header Postscript"
@@ -4348,32 +4363,36 @@ msgstr ""
 #: fixtures/basicsettings.py:27
 msgid "Additional text displayed in some themes board header after board name."
 msgstr ""
+"Dodatkowy tekst wyświetlany w nagłówku niektórych szablonów po nazwie forum."
 
 #: fixtures/basicsettings.py:32
 msgid "Board Index"
-msgstr ""
+msgstr "Indeks forum"
 
 #: fixtures/basicsettings.py:33
 msgid "Board Index Title"
-msgstr ""
+msgstr "Tytuł indeksu forum"
 
 #: fixtures/basicsettings.py:34
 msgid ""
 "If you want to, you can replace page title content on Board Index with "
 "custom one."
 msgstr ""
+"Jeżeli chcesz, możesz zamienić tytuł strony indeksu forum na swój własny."
 
 #: fixtures/basicsettings.py:39
 msgid "Board Index Meta-Description"
-msgstr ""
+msgstr "Opis znacznika Meta indeksu forum"
 
 #: fixtures/basicsettings.py:40
 msgid "Meta-Description used to describe your board's index page."
 msgstr ""
+"Zawartość znacznika Meta-Description używanego do opisu strony głównej "
+"Twojego forum."
 
 #: fixtures/basicsettings.py:45
 msgid "Board Footer"
-msgstr ""
+msgstr "Ogon forum"
 
 #: fixtures/basicsettings.py:46
 msgid "Custom Credit"
@@ -4448,7 +4467,7 @@ msgstr ""
 
 #: fixtures/captchasettings.py:7
 msgid "Spam Countermeasures"
-msgstr ""
+msgstr "Zabezpieczenia antyspamowe"
 
 #: fixtures/captchasettings.py:8
 msgid ""
@@ -4458,7 +4477,7 @@ msgstr ""
 
 #: fixtures/captchasettings.py:14
 msgid "No protection"
-msgstr ""
+msgstr "Bez zabezpieczeń"
 
 #: fixtures/captchasettings.py:14 fixtures/captchasettings.py:22
 msgid "reCaptcha"
@@ -4485,7 +4504,7 @@ msgstr ""
 
 #: fixtures/captchasettings.py:23
 msgid "Public Key"
-msgstr ""
+msgstr "Klucz publiczny"
 
 #: fixtures/captchasettings.py:24
 msgid "Enter public API key that you have received from reCaptcha."
@@ -4493,7 +4512,7 @@ msgstr ""
 
 #: fixtures/captchasettings.py:29
 msgid "Private Key"
-msgstr ""
+msgstr "Klucz prywatny"
 
 #: fixtures/captchasettings.py:30
 msgid "Enter private API key that you have received from reCaptcha."
@@ -4513,57 +4532,59 @@ msgstr ""
 
 #: fixtures/captchasettings.py:43
 msgid "Question"
-msgstr ""
+msgstr "Pytanie"
 
 #: fixtures/captchasettings.py:44
 msgid "Question visible to your users."
-msgstr ""
+msgstr "Pytanie widoczne dla użytkowników."
 
 #: fixtures/captchasettings.py:49
 msgid "Help Message"
-msgstr ""
+msgstr "Pomocnicza wiadomość"
 
 #: fixtures/captchasettings.py:50
 msgid "Optional help message displayed on form."
-msgstr ""
+msgstr "Opcjonalna podpowiedź wyświetlana w formularzu."
 
 #: fixtures/captchasettings.py:55
 msgid "Answers"
-msgstr ""
+msgstr "Odpowiedzi"
 
 #: fixtures/captchasettings.py:56
 msgid ""
 "Enter allowed answers to this question, each in new line. Test is case-"
 "insensitive."
 msgstr ""
+"Wprowadź dozwolone odpowiedzi na to pytanie, każda w nowej linii. Wielkość "
+"liter nie gra roli."
 
 #: fixtures/forumsroles.py:6
 msgid "Full Access"
-msgstr ""
+msgstr "Pełny dostęp"
 
 #: fixtures/forumsroles.py:45
 msgid "Standard Access and Upload"
-msgstr ""
+msgstr "Standardowy dostęp i przysyłanie plików"
 
 #: fixtures/forumsroles.py:68
 msgid "Standard Access"
-msgstr ""
+msgstr "Standardowy dostęp"
 
 #: fixtures/forumsroles.py:88
 msgid "Read and Download"
-msgstr ""
+msgstr "Czytanie i pobieranie"
 
 #: fixtures/forumsroles.py:99
 msgid "Threads list only"
-msgstr ""
+msgstr "Tylko lista tematów"
 
 #: fixtures/forumsroles.py:107
 msgid "Read only"
-msgstr ""
+msgstr "Tylko odczyt"
 
 #: fixtures/privatethreadssettings.py:7
 msgid "Private Threads Settings"
-msgstr ""
+msgstr "Ustawienia prywatnych tematów"
 
 #: fixtures/privatethreadssettings.py:8
 msgid "Those settings control your forum's private threads."
@@ -4601,44 +4622,51 @@ msgstr ""
 
 #: fixtures/rankingsettings.py:23
 msgid "Don't Keep Users Ranking Positions Secret"
-msgstr ""
+msgstr "Nie ukrywaj pozycji użytkownika w rankingu"
 
 #: fixtures/rankingsettings.py:24
 msgid ""
 "Changing this to yes will cause forum to display user position in ranking on "
 "his profile page."
 msgstr ""
+"Ustawienie tej wartości na \"Tak\" spowoduje wyświetlenie pozycji "
+"użytkownika w rankingu na stronie jego profilu."
 
 #: fixtures/rankingsettings.py:30
 msgid "Don't Keep Users Scores Secret"
-msgstr ""
+msgstr "Nie ukrywaj punktów użytkownika"
 
 #: fixtures/rankingsettings.py:31
 msgid ""
 "Changing this to yes will cause forum to display user score on his profile "
 "page."
 msgstr ""
+"Zamiana tej wartości na \"Tak\" spowoduje wyświetlenie punktów użytkownika "
+"na stronie jego profilu."
 
 #: fixtures/rankingsettings.py:37
 msgid "Posting Rewards"
-msgstr ""
+msgstr "Nagrody za postowanie"
 
 #: fixtures/rankingsettings.py:38
 msgid "New Thread Reward"
-msgstr ""
+msgstr "Nagrody za nowe tematy"
 
 #: fixtures/rankingsettings.py:39
 msgid "Score user will receive (or lose) whenever he posts new thread."
 msgstr ""
+"Liczba punktów, które użytkownik uzyska (lub straci), gdy utworzy nowy temat."
 
 #: fixtures/rankingsettings.py:45
 msgid "New Reply Reward"
-msgstr ""
+msgstr "Nagroda za odpowiadanie"
 
 #: fixtures/rankingsettings.py:46
 msgid ""
 "Score user will receive (or lose) whenever he posts new reply in thread."
 msgstr ""
+"Liczba punktów, które użytkownik uzyska (lub straci), gdy zamieści jakąś "
+"odpowiedź w temacie."
 
 #: fixtures/rankingsettings.py:53
 msgid "Reward Cooldown"
@@ -4656,15 +4684,15 @@ msgstr ""
 
 #: fixtures/rankingsettings.py:62
 msgid "Upvote Reward"
-msgstr ""
+msgstr "Nagroda za polubienie wiadomości"
 
 #: fixtures/rankingsettings.py:63
 msgid "Score user will receive every time his post receives upvote."
-msgstr ""
+msgstr "Punkty, które otrzyma użytkownik, gdy ktoś polubi jego post."
 
 #: fixtures/rankingsettings.py:70
 msgid "Downvote Punishment"
-msgstr ""
+msgstr "Kara za "
 
 #: fixtures/rankingsettings.py:71
 msgid "Score user will lose every time his post receives downvote."
@@ -4672,11 +4700,11 @@ msgstr ""
 
 #: fixtures/ranks.py:17
 msgid "Most Valuable Posters"
-msgstr ""
+msgstr "Najbardziej wartościowi "
 
 #: fixtures/ranks.py:19
 msgid "MVP"
-msgstr ""
+msgstr "MVP"
 
 #: fixtures/ranks.py:27
 msgid "Top Posters"
@@ -4684,40 +4712,42 @@ msgstr ""
 
 #: fixtures/ranks.py:37 templates/cranefly/index.html:127
 msgid "Members"
-msgstr ""
+msgstr "Członkowie"
 
 #: fixtures/ranks.py:44
 msgid "Lurkers"
-msgstr ""
+msgstr "Zaglądacze"
 
 #: fixtures/signingsettings.py:7
 msgid "Sign-In and Sessions Settings"
-msgstr ""
+msgstr "Ustawienia logowania i sesji"
 
 #: fixtures/signingsettings.py:8
 msgid "Those settings control behaviour of signed-in accounts."
-msgstr ""
+msgstr "Te ustawienia kontrolują zachowanie zalogowanych profilów."
 
 #: fixtures/signingsettings.py:14
 msgid "Sessions Settings"
-msgstr ""
+msgstr "Ustawienia sesji"
 
 #: fixtures/signingsettings.py:15
 msgid "Check IP on session authorization"
-msgstr ""
+msgstr "Sprawdź adres IP przy autoryzacji sesji."
 
 #: fixtures/signingsettings.py:16
 msgid ""
 "Makes sessions more secure, but can cause problems with proxies and VPN's."
 msgstr ""
+"Sprawia, że sesje są bardziej bezpieczne, ale może spowodować problemy z "
+"serwerami proxy i VPN."
 
 #: fixtures/signingsettings.py:22
 msgid "\"Remember Me\" Feature"
-msgstr ""
+msgstr "Opcja \"Zapamiętaj mnie\""
 
 #: fixtures/signingsettings.py:23
 msgid "Enable \"Remember Me\" feature"
-msgstr ""
+msgstr "Włącz opcję \"Zapamiętaj mnie\""
 
 #: fixtures/signingsettings.py:24
 msgid ""
@@ -4725,6 +4755,11 @@ msgid ""
 "based tokens. This may result in account compromisation when user fails to "
 "sign out on shared computer or his cookie is stolen."
 msgstr ""
+"Włączenie tej opcji pozwala na zwiększenie komfortu użytkowników, przez "
+"możliwość ich automatycznego zalogowania na podstawie ciasteczek (cookies). "
+"W skrajnych przypadkach, może jednak dojść do naruszenia bezpieczeństwa "
+"profilu użytkownika, gdy ten zapomni się wylogować na współdzielonym "
+"komputerze, lub dopuści do kradzieży swoich ciasteczek (cookies)."
 
 #: fixtures/signingsettings.py:30
 msgid "\"Remember Me\" token lifetime"
@@ -4749,53 +4784,56 @@ msgstr ""
 
 #: fixtures/threadssettings.py:7
 msgid "Threads and Posts Settings"
-msgstr ""
+msgstr "Ustawienia tematów i postów"
 
 #: fixtures/threadssettings.py:8
 msgid "Those settings control your forum's threads and posts."
-msgstr ""
+msgstr "Te ustawienia wpływają na tematy i posty na Twoim forum."
 
 #: fixtures/threadssettings.py:16
 msgid "Min. Thread Name Length"
-msgstr ""
+msgstr "Minimalna długość tematu"
 
 #: fixtures/threadssettings.py:17
 msgid "Minimal allowed thread name length."
-msgstr ""
+msgstr "Najmniejsza dozwolona długość tematu."
 
 #: fixtures/threadssettings.py:24
 msgid "Max. Thread Name Length"
-msgstr ""
+msgstr "Maksymalna dlugość tematu"
 
 #: fixtures/threadssettings.py:25
 msgid "Maximum allowed thread name length."
-msgstr ""
+msgstr "Maksymalna dozwolona długość tematu."
 
 #: fixtures/threadssettings.py:32
 msgid "Threads per page"
-msgstr ""
+msgstr "Tematów na stronę"
 
 #: fixtures/threadssettings.py:33
 msgid "Number of threads displayed on page in forum view."
-msgstr ""
+msgstr "Liczba tematów wyświetlana na stronie w widoku forum."
 
 #: fixtures/threadssettings.py:39
 msgid "Display avatars on threads list"
-msgstr ""
+msgstr "Wyświetlaj avatary na liście tematów"
 
 #: fixtures/threadssettings.py:40
 msgid ""
 "Unlike basic user data, avatars are not cached - turning this option on will "
 "cause one extra query on threads lists."
 msgstr ""
+"W przeciwieństwie do zwykłych danych użytkownika, avatary nie są trzymane w "
+"pamięci podręcznej. Włączenie tej opcji może minimalnie przedłużyć czas "
+"generowania listy tematów. "
 
 #: fixtures/threadssettings.py:47
 msgid "Thread Popularity Ranking"
-msgstr ""
+msgstr "Ranking popularności tematów"
 
 #: fixtures/threadssettings.py:48
 msgid "Threads on \"Popular Threads\" list"
-msgstr ""
+msgstr "Tematy na liście \"Popularnych tematów\""
 
 #: fixtures/threadssettings.py:49
 msgid ""
@@ -4805,29 +4843,36 @@ msgstr ""
 
 #: fixtures/threadssettings.py:56
 msgid "Ranking Update Frequency"
-msgstr ""
+msgstr "Częstotliwośc aktualizacji rankingu"
 
 #: fixtures/threadssettings.py:57
 msgid ""
 "Enter minimum of number of minutes between ranking updates or zero to update "
 "ranking on every request - strongly discouraged for active forums."
 msgstr ""
+"Wprowadź minimalną liczbę minut pomiędzy kolejnymi aktualizacjami rankingu. "
+"Wpisanie zera spowoduje aktualizowanie rankingu co każde odświeżenie strony "
+"- wysoce niezalecane dla aktywnych forów."
 
 #: fixtures/threadssettings.py:64
 msgid "Initial Thread Score"
-msgstr ""
+msgstr "Początkowe punkty tematu"
 
 #: fixtures/threadssettings.py:65
 msgid "Initial Thread Score helps new threads overtake old threads in ranking."
 msgstr ""
+"\"Początkowe punkty tematu\" pomagją nowym tematom wybić sie ponad stare w "
+"rankingu."
 
 #: fixtures/threadssettings.py:72
 msgid "New Reply Score"
-msgstr ""
+msgstr "Punkty dla nowej odpowiedzi"
 
 #: fixtures/threadssettings.py:73
 msgid "Only replies visible to all members increase thread inflation."
 msgstr ""
+"Tylko odpowiedzi widoczne dla wszystkich użytkowników zwiększaja punkty "
+"tematu."
 
 #: fixtures/threadssettings.py:80
 msgid "Score inflation"
@@ -4844,33 +4889,35 @@ msgstr ""
 
 #: fixtures/threadssettings.py:89
 msgid "Min. Post Length"
-msgstr ""
+msgstr "Minimalna długość postu"
 
 #: fixtures/threadssettings.py:90
 msgid "Minimal allowed post length."
-msgstr ""
+msgstr "Minimalna dozwolona długość postu"
 
 #: fixtures/threadssettings.py:97
 msgid "Automatic Post Merge timespan"
-msgstr ""
+msgstr "Graniczny czas dla automatycznego łączenia postów"
 
 #: fixtures/threadssettings.py:98
 msgid ""
 "Forum can automatically merge member posts if interval between postings is "
 "shorter than specified number of minutes."
 msgstr ""
+"Forum może automatycznie łaczyć posty użytkownika, jeżeli czas pomiędzy ich "
+"napisaniem jest krótszy niż podana wartość w minutach."
 
 #: fixtures/threadssettings.py:105
 msgid "Posts per page"
-msgstr ""
+msgstr "Postów na stronę"
 
 #: fixtures/threadssettings.py:106
 msgid "Number of posts per page in thread view."
-msgstr ""
+msgstr "Liczba postów na stronie w widoku tematu."
 
 #: fixtures/threadssettings.py:113
 msgid "Thread Length Limit"
-msgstr ""
+msgstr "Limit długości tematu"
 
 #: fixtures/threadssettings.py:114
 msgid ""
@@ -4879,89 +4926,97 @@ msgid ""
 "Users with \"Can close threads\" permission will still be able to post in "
 "threads that have reached posts limit."
 msgstr ""
+"Długie tematy trudno się czyta i przeszukuje. Możesz zmusić użytkowników do "
+"tworzenia kilku krótszych tematów zamiast jednego długiego, ustawiając limit "
+"długości tematów. Temat dłuższy niż limit, zostanie zamknięty. Użytkownicy z "
+"uprawnieniami do zamykania tematów, wciąż jednak będą mogli w nim postować."
 
 #: fixtures/tossettings.py:8
 msgid "Those settings allow you to set up forum terms of service."
-msgstr ""
+msgstr "Te ustawienia pozwalają na skonfigurowanie regulaminu forum."
 
 #: fixtures/tossettings.py:14
 msgid "Terms of Service Options"
-msgstr ""
+msgstr "Opcje regulaminu forum"
 
 #: fixtures/tossettings.py:15
 msgid "Page Title"
-msgstr ""
+msgstr "Tytuł strony regulaminu"
 
 #: fixtures/tossettings.py:16
 msgid "Title of page community ToS are displayed on."
-msgstr ""
+msgstr "Tytuł, który wyświetli się na stronie regulaminu."
 
 #: fixtures/tossettings.py:22
 msgid "Link to remote page with ToS"
-msgstr ""
+msgstr "Adres do zewnętrznej strony z regulaminem"
 
 #: fixtures/tossettings.py:23
 msgid "If your forum's ToS are located on remote page, enter here its address."
 msgstr ""
+"Jeżeli regulamin tego forum jest umieszczony na zewnętrznej stronie, "
+"wprowadź tutaj jej adres."
 
 #: fixtures/tossettings.py:29
 msgid "OR enter ToS content"
-msgstr ""
+msgstr "LUB wprowadź treść regulaminu"
 
 #: fixtures/tossettings.py:30
 msgid ""
 "Instead of linking to remote page, forum can create dedicated ToS page for "
 "you. To display ToS page, enter here your forum Terms of Service."
 msgstr ""
+"Zamiast adresu do zewnętrznej strony, forum może stworzyć dedykowaną dla "
+"regulaminu. Aby aktywować stronę regulaminu forum, wprowadź tutaj jego treść."
 
 #: fixtures/userroles.py:5
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #: fixtures/userroles.py:29
 msgid "Moderator"
-msgstr ""
+msgstr "Moderator"
 
 #: fixtures/userroles.py:51
 msgid "Registered"
-msgstr ""
+msgstr "Zarejestrowany"
 
 #: fixtures/userroles.py:67 templates/admin/online/list.html:13
 msgid "Guest"
-msgstr ""
+msgstr "Gość"
 
 #: forms/fields.py:24
 msgid "Verification Code"
-msgstr ""
+msgstr "Kod weryfikacji"
 
 #: forms/forms.py:97
 msgid "Entered words are incorrect. Please try again."
-msgstr ""
+msgstr "Wprowadzone słowa nie sa poprawne. Spróbuj ponownie."
 
 #: forms/forms.py:107
 msgid "The answer you entered is incorrect."
-msgstr ""
+msgstr "Odpowiedź na pytanie nie jest poprawna."
 
 #: forms/forms.py:131
 msgid "You have to fill in both fields."
-msgstr ""
+msgstr "Musisz uzupełnić oba pola."
 
 #: forms/forms.py:133
 msgid "You have to fill in all fields."
-msgstr ""
+msgstr "Musisz uzupełnić wszystkie pola."
 
 #: forms/forms.py:144
 msgid "Entered values differ from each other."
-msgstr ""
+msgstr "Wprowadzone wartości różnią się."
 
 #: markdown/factory.py:112
 #, python-format
 msgid "Posted by %(user)s"
-msgstr ""
+msgstr "%(user)s napisał/a"
 
 #: markdown/factory.py:114
 msgid "Quote"
-msgstr ""
+msgstr "Cytat"
 
 #: middleware/user.py:24
 #, python-format
@@ -4969,10 +5024,12 @@ msgid ""
 "Welcome back, %(username)s! We've signed you in automatically for your "
 "convenience."
 msgstr ""
+"Witaj ponownie, %(username)s! Dla Twojej wygody, zalogowaliśmy Cię "
+"automatycznie."
 
 #: models/forummodel.py:175
 msgid "Reports"
-msgstr ""
+msgstr "Raporty"
 
 #: models/forummodel.py:177
 msgid "Root Category"
@@ -4980,12 +5037,12 @@ msgstr ""
 
 #: models/postmodel.py:42
 msgid "New Posts"
-msgstr ""
+msgstr "Nowe posty"
 
 #: models/postmodel.py:92
 #, python-format
 msgid "%(username)s has mentioned you in his reply in thread %(thread)s"
-msgstr ""
+msgstr "%(username)s zwrócił się do Ciebie w odpowiedzi w temacie %(thread)s"
 
 #: models/pruningpolicymodel.py:20
 msgid "Pruning policy must have at least one pruning criteria set to be valid."
@@ -4998,52 +5055,52 @@ msgstr ""
 #: models/threadmodel.py:83 templates/cranefly/layout.html:42
 #: templates/cranefly/new_threads.html:10
 msgid "New Threads"
-msgstr ""
+msgstr "Nowe tematy"
 
 #: models/threadmodel.py:167
 #, python-format
 msgid "New reply in thread \"%(thread)s\""
-msgstr ""
+msgstr "Nowa odpowiedź w temacie \"%(thread)s\""
 
 #: models/usermodel.py:124
 msgid "This user name is already in use by another user."
-msgstr ""
+msgstr "Ta nazwa jest już zajęta przez innego użytkownika."
 
 #: models/usermodel.py:127
 msgid "This email address is already in use by another user."
-msgstr ""
+msgstr "Ten adres e-mail jest już używany przez innego użytkownika."
 
 #: search/__init__.py:37
 msgid "One or more search phrases are shorter than four characters."
-msgstr ""
+msgstr "Przynajmniej jedna z wyszukiwanych fraz jest krótsza niż cztery znaki."
 
 #: search/__init__.py:66
 msgid "You have to define search query before you will be able to search."
-msgstr ""
+msgstr "Należy najpierw zdefiniować kryteria wyszukiwania."
 
 #: templates/_forms.html:114
 #, python-format
 msgid "I have read and accept this forums %(forum_tos)s."
-msgstr ""
+msgstr "Przeczytałem i akceptuję %(forum_tos)s."
 
 #: templates/_forms.html:118 templates/cranefly/forum_tos.html:17
 msgid "Terms of Service"
-msgstr ""
+msgstr "Regulamin"
 
 #: templates/_email/base.html:21 templates/_email/base.txt:1
 #, python-format
 msgid "Hey, %(username)s!"
-msgstr ""
+msgstr "Hej, %(username)s!"
 
 #: templates/_email/base.html:34 templates/_email/base.txt:9
 #, python-format
 msgid "This e-mail was sent from %(board_name)s."
-msgstr ""
+msgstr "Ta wiadomość została wysłana przez %(board_name)s."
 
 #: templates/_email/private_thread_invite.html:3
 #: templates/_email/private_thread_invite.txt:3
 msgid "You've been invited to private thread"
-msgstr ""
+msgstr "Zostałeś zaproszony do prywatnego tematu"
 
 #: templates/_email/private_thread_invite.html:6
 #: templates/_email/private_thread_invite.txt:6
@@ -5052,18 +5109,20 @@ msgid ""
 "%(username)s, you are receiving this message because %(author)s has invited "
 "you to participate in private thread \"%(thread)s\"."
 msgstr ""
+"%(username)s, otrzymujesz tą wiadomość, ponieważ %(author)s zaprosił Cię do "
+"uczestnictwa w prywatnym temacie \"%(thread)s\"."
 
 #: templates/_email/private_thread_invite.html:7
 #: templates/_email/private_thread_invite.txt:8
 msgid "You can see this thread by clicking link below:"
-msgstr ""
+msgstr "Możesz zobaczyć ten temat, klikajac na poniższy link:"
 
 #: templates/_email/private_thread_reply_notification.html:3
 #: templates/_email/private_thread_reply_notification.txt:3
 #: templates/_email/thread_reply_notification.html:3
 #: templates/_email/thread_reply_notification.txt:3
 msgid "New reply notification"
-msgstr ""
+msgstr "Informacja o nowej odpowiedzi"
 
 #: templates/_email/private_thread_reply_notification.html:6
 #: templates/_email/private_thread_reply_notification.txt:6
@@ -5072,13 +5131,15 @@ msgid ""
 "%(username)s, you are receiving this message because %(author)s has replied "
 "to private thread \"%(thread)s\" that you are watching."
 msgstr ""
+"%(username)s, otrzymujesz tą wiadomość, ponieważ %(author)s odpowiedział w "
+"obserwowanym przez Ciebie prywatnym temacie \"%(thread)s\"."
 
 #: templates/_email/private_thread_reply_notification.html:7
 #: templates/_email/private_thread_reply_notification.txt:8
 #: templates/_email/thread_reply_notification.html:7
 #: templates/_email/thread_reply_notification.txt:8
 msgid "To go to this reply follow the link below:"
-msgstr ""
+msgstr "Aby zobaczyć tą odpowiedź, kliknij na poniższy link:"
 
 #: templates/_email/thread_reply_notification.html:6
 #: templates/_email/thread_reply_notification.txt:6
@@ -5087,12 +5148,14 @@ msgid ""
 "%(username)s, you are receiving this message because %(author)s has replied "
 "to thread \"%(thread)s\" that you are watching."
 msgstr ""
+"%(username)s, otrzymujesz tą wiadomość, ponieważ %(author)s odpowiedział w "
+"obserwowanym przez Ciebie temacie \"%(thread)s\"."
 
 #: templates/_email/users/new_credentials.html:3
 #: templates/_email/users/new_credentials.txt:3
 #, python-format
 msgid "Activate new Sign-In Credentials on %(board_name)s"
-msgstr ""
+msgstr "Aktywacja nowych danych logowania na %(board_name)s"
 
 #: templates/_email/users/new_credentials.html:6
 #: templates/_email/users/new_credentials.txt:6
@@ -5101,17 +5164,19 @@ msgid ""
 "%(username)s, you are receiving this message because you have changed your "
 "acount's sign-in credentials."
 msgstr ""
+"%(username)s, otrzymujesz tą wiadomość, ponieważ zmieniłeś dane logowania do "
+"swojego konta na forum."
 
 #: templates/_email/users/new_credentials.html:7
 #: templates/_email/users/new_credentials.txt:8
 msgid ""
 "To confirm that you want to change your account's sign-in credentials with "
 "new ones click the link below:"
-msgstr ""
+msgstr "Aby potwierdzić tą zmianę, kliknij na poniższy link:"
 
 #: templates/_email/users/new_credentials.html:8
 msgid "Activate New Credentials"
-msgstr ""
+msgstr "Aktywacja nowych danych logowania"
 
 #: templates/_email/users/new_credentials.html:10
 #: templates/_email/users/activation/admin_done.html:9
@@ -5125,6 +5190,8 @@ msgid ""
 "If the above link is not clickable, copy and paste this link into your web "
 "browser's address bar:"
 msgstr ""
+"Jeżeli kliknięcie na powyższy link nie działa, skopiuj i wklej ten link w "
+"pasek adresu swojej przeglądarki internetowej:"
 
 #: templates/_email/users/activation/admin.html:6
 msgid ""
@@ -5132,6 +5199,9 @@ msgid ""
 "Depending on number of new registrations this may take few minutes or few "
 "days. Thanks for your patience!"
 msgstr ""
+"Twoje konto pozostanie nieaktywne do czasu akceptacji przez administratora "
+"forum. W zależności od ilości nowych rejestracji, może to potrwać od kilku "
+"minut, do kilku dni. Dziękujemy za cierpliwość!"
 
 #: templates/_email/users/activation/admin.txt:6
 msgid ""
@@ -5139,6 +5209,9 @@ msgid ""
 "Depending on number of new registrations this may take few minutes or few "
 "days. Thanks for patience!"
 msgstr ""
+"Twoje konto pozostanie nieaktywne do czasu akceptacji przez administratora "
+"forum. W zależności od ilości nowych rejestracji, może to potrwać od kilku "
+"minut, do kilku dni. Dziękujemy za cierpliwość!"
 
 #: templates/_email/users/activation/admin_done.html:4
 #: templates/_email/users/activation/admin_done.txt:4
@@ -5147,6 +5220,8 @@ msgid ""
 "%(username)s, you are receiving this message because board administrator has "
 "activated your account."
 msgstr ""
+"%(username)s, otrzymujesz tą wiadomość, ponieważ administrator forum "
+"aktywował Twoje konto."
 
 #: templates/_email/users/activation/admin_done.html:6
 #: templates/_email/users/activation/admin_done.txt:6
@@ -5387,12 +5462,12 @@ msgstr[2] "%(total)s administratorów online"
 #: templates/admin/index.html:31
 #, python-format
 msgid "started %(start)s ago from %(ip)s"
-msgstr ""
+msgstr "rozpoczęty %(start)s temu z adresu IP %(ip)s"
 
 #: templates/admin/index.html:31
 #, python-format
 msgid "Last click was %(last)s ago"
-msgstr ""
+msgstr "Ostatnie kliknięcie było %(last)s temu"
 
 #: templates/admin/index.html:40
 msgid "Board Statistics"
@@ -5447,7 +5522,7 @@ msgstr ""
 
 #: templates/admin/admin/acl_form.html:15
 msgid "Permission"
-msgstr ""
+msgstr "Zezwolenie"
 
 #: templates/admin/admin/acl_form.html:38 templates/admin/admin/form.html:33
 msgid "Save and Edit"
@@ -6563,50 +6638,50 @@ msgstr "Ten temat osiągnął limit postów i został automatycznie zamknięty."
 #: templates/cranefly/threads/thread.html:350
 #, python-format
 msgid "%(user)s accepted this thread %(date)s"
-msgstr ""
+msgstr "%(user)s zaakceptował ten temat %(date)s"
 
 #: templates/cranefly/private_threads/thread.html:318
 #: templates/cranefly/threads/thread.html:352
 #, python-format
 msgid "%(user)s closed this thread %(date)s"
-msgstr ""
+msgstr "%(user)s zamknął ten temat %(date)s"
 
 #: templates/cranefly/private_threads/thread.html:320
 #: templates/cranefly/threads/thread.html:354
 #, python-format
 msgid "%(user)s opened this thread %(date)s"
-msgstr ""
+msgstr "%(user)s otworzył ten temat %(date)s"
 
 #: templates/cranefly/private_threads/thread.html:322
 #: templates/cranefly/threads/thread.html:356
 #, python-format
 msgid "%(user)s deleted this thread %(date)s"
-msgstr ""
+msgstr "%(user)s usunął ten temat %(date)s"
 
 #: templates/cranefly/private_threads/thread.html:324
 #: templates/cranefly/threads/thread.html:358
 #, python-format
 msgid "%(user)s restored this thread %(date)s"
-msgstr ""
+msgstr "%(user)s przywrócił ten temat %(date)s"
 
 #: templates/cranefly/private_threads/thread.html:326
 #, python-format
 msgid "%(user)s added %(invited)s to thread %(date)s"
-msgstr ""
+msgstr "%(user)s dodał %(invited)s do tematu %(date)s"
 
 #: templates/cranefly/private_threads/thread.html:328
 #, python-format
 msgid "%(user)s removed %(removed)s from thread %(date)s"
-msgstr ""
+msgstr "%(user)s usunął %(removed)s z tematu %(date)s"
 
 #: templates/cranefly/private_threads/thread.html:330
 #, python-format
 msgid "%(user)s left thread %(date)s"
-msgstr ""
+msgstr "%(user)s opuścił temat %(date)s"
 
 #: templates/cranefly/private_threads/thread.html:366
 msgid "This thread has no participants."
-msgstr ""
+msgstr "Ten temat nie ma żadnych uczestników."
 
 #: templates/cranefly/private_threads/thread.html:375
 #: templates/cranefly/threads/thread.html:403
@@ -6617,58 +6692,63 @@ msgstr "Twój avatar"
 #, python-format
 msgid "One participant"
 msgid_plural "%(participants)s participants"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Jeden uczestnik"
+msgstr[1] "%(participants)s uczestników"
+msgstr[2] "%(participants)s uczestników"
 
 #: templates/cranefly/private_threads/thread.html:390
 msgid "Leave this thread"
-msgstr ""
+msgstr "Wypisz się z tego tematu"
 
 #: templates/cranefly/private_threads/thread.html:390
 msgid "Remove from this thread"
-msgstr ""
+msgstr "Usuń z tego tematu"
 
 #: templates/cranefly/private_threads/thread.html:402
 msgid ""
 "This thread has too few participants. Invite other users to open it for new "
 "replies."
 msgstr ""
+"Ten temat ma zbyt mało uczestników. Zaproś innych użytkowników, aby "
+"umożliwić dyskusję."
 
 #: templates/cranefly/private_threads/thread.html:405
 msgid "Invite User"
-msgstr ""
+msgstr "Zaproś użytkownika"
 
 #: templates/cranefly/private_threads/thread.html:434
 msgid ""
 "Are you sure you want to leave this thread? It will be deleted after you "
 "leave!"
-msgstr ""
+msgstr "Czy aby na pewno chcesz opuścić ten temat? Zostanie po tym usunięty!"
 
 #: templates/cranefly/private_threads/thread.html:436
 msgid "Are you sure you want to leave this thread?"
-msgstr ""
+msgstr "Czy aby na pewno chcesz opuścić ten temat?"
 
 #: templates/cranefly/private_threads/thread.html:441
 msgid "Are you sure you want to remove this member from this thread?"
-msgstr ""
+msgstr "Czy aby na pewno chcesz usunąć tego użytkownika z dyskusji?"
 
 #: templates/cranefly/private_threads/thread.html:446
 #: templates/cranefly/threads/thread.html:426
 msgid ""
 "Are you sure you want to delete this thread? This action is not reversible!"
 msgstr ""
+"Czy aby na pewno chcesz usunąć ten temat? Nie będzie można już tego cofnąć!"
 
 #: templates/cranefly/private_threads/thread.html:458
 #: templates/cranefly/threads/thread.html:438
 msgid "You have to select at least two posts you want to merge."
-msgstr ""
+msgstr "Musisz zaznaczyć przynajmniej dwa posty, aby móc je połączyć."
 
 #: templates/cranefly/private_threads/thread.html:461
 #: templates/cranefly/threads/thread.html:441
 msgid ""
 "Are you sure you want to merge selected posts? This action is not reversible!"
 msgstr ""
+"Czy aby na pewno chcesz połączyć zaznaczone posty? Nie będzie można już tego "
+"cofnąć!"
 
 #: templates/cranefly/private_threads/thread.html:465
 #: templates/cranefly/threads/thread.html:445
@@ -6676,16 +6756,18 @@ msgid ""
 "Are you sure you want to delete selected posts? This action is not "
 "reversible!"
 msgstr ""
+"Czy aby na pewno chcesz usunąć zaznaczone posty? Nie będzie można już tego "
+"cofnąć!"
 
 #: templates/cranefly/private_threads/thread.html:471
 #: templates/cranefly/threads/thread.html:451
 msgid "Are you sure you want to delete this thread?"
-msgstr ""
+msgstr "Czy aby na pewno chcesz usunąć ten temat?"
 
 #: templates/cranefly/private_threads/thread.html:475
 #: templates/cranefly/threads/thread.html:455
 msgid "Are you sure you want to delete this post?"
-msgstr ""
+msgstr "Czy aby na pewno chcesz usunąć ten post?"
 
 #: templates/cranefly/private_threads/thread.html:496
 #: templates/cranefly/threads/thread.html:477
@@ -6717,41 +6799,41 @@ msgstr "Ostatni"
 #: templates/cranefly/private_threads/thread.html:498
 #: templates/cranefly/threads/thread.html:479
 msgid "Go to first unread"
-msgstr ""
+msgstr "Idź do pierwszego nieprzeczytanego posta"
 
 #: templates/cranefly/private_threads/thread.html:498
 #: templates/cranefly/threads/thread.html:479
 msgid "First Unread"
-msgstr ""
+msgstr "Pierwszy nieprzeczytany post"
 
 #: templates/cranefly/private_threads/thread.html:533
 #: templates/cranefly/threads/thread.html:507
 msgid "Full Editor"
-msgstr ""
+msgstr "Pełny edytor"
 
 #: templates/cranefly/profiles/details.html:16
 msgid "Account Details"
-msgstr ""
+msgstr "Szczegóły profilu"
 
 #: templates/cranefly/profiles/details.html:33
 msgid "Member Since"
-msgstr ""
+msgstr "Członek forum od"
 
 #: templates/cranefly/profiles/details.html:41
 msgid "Last Seen"
-msgstr ""
+msgstr "Ostatnio widziany"
 
 #: templates/cranefly/profiles/details.html:58
 msgid "Forums Activity"
-msgstr ""
+msgstr "Aktywność na forum"
 
 #: templates/cranefly/profiles/details.html:65
 msgid "Posts Written"
-msgstr ""
+msgstr "Napisanych postów"
 
 #: templates/cranefly/profiles/details.html:73
 msgid "Threads Started"
-msgstr ""
+msgstr "Rozpoczętych tematów"
 
 #: templates/cranefly/profiles/details.html:81
 msgid "Votes Cast"
@@ -6759,7 +6841,7 @@ msgstr ""
 
 #: templates/cranefly/profiles/details.html:97
 msgid "Ranking Performance"
-msgstr ""
+msgstr "Ranking"
 
 #: templates/cranefly/profiles/details.html:107
 msgid "Not Ranked"
@@ -6767,11 +6849,11 @@ msgstr ""
 
 #: templates/cranefly/profiles/details.html:113
 msgid "Ranking Position"
-msgstr ""
+msgstr "Pozycja w rankingu"
 
 #: templates/cranefly/profiles/details.html:113
 msgid "Score"
-msgstr ""
+msgstr "Wynik"
 
 #: templates/cranefly/profiles/details.html:125
 msgid "Karma Received"
@@ -6783,70 +6865,71 @@ msgstr ""
 
 #: templates/cranefly/profiles/details.html:146
 msgid "Interactions"
-msgstr ""
+msgstr "Interkacje"
 
 #: templates/cranefly/profiles/details.html:161
 #: templates/cranefly/profiles/profile.html:51
 msgid "Following"
-msgstr ""
+msgstr "Obserwuje"
 
 #: templates/cranefly/profiles/details.html:182
 msgid "Registration Details"
-msgstr ""
+msgstr "Zarejestrowany z"
 
 #: templates/cranefly/profiles/details.html:197
 #: templates/cranefly/profiles/details.html:228
 msgid "UserAgent String"
-msgstr ""
+msgstr "UserAgent przeglądarki"
 
 #: templates/cranefly/profiles/details.html:200
 #: templates/cranefly/profiles/details.html:231
 msgid "Created from console"
-msgstr ""
+msgstr "Utworzony spod konsoli"
 
 #: templates/cranefly/profiles/details.html:213
 msgid "Last Visit Details"
-msgstr ""
+msgstr "Ostatnia wizyta z"
 
 #: templates/cranefly/profiles/followers.html:9
 #, python-format
 msgid "%(username)s is followed by one member"
 msgid_plural "%(username)s is followed by %(total)s members"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%(username)s jest obserwowany przez jednego użytkownika"
+msgstr[1] "%(username)s jest obserwowany przez %(total)s użytkowników"
+msgstr[2] "%(username)s jest obserwowany przez %(total)s użytkowników"
 
 #: templates/cranefly/profiles/followers.html:11
 #, python-format
 msgid "%(username)s has no followers"
-msgstr ""
+msgstr "%(username)s nie jest obserwowany przez nikogo"
 
 #: templates/cranefly/profiles/followers.html:19
 #, python-format
 msgid "Users that are following %(username)s"
-msgstr ""
+msgstr "Użytkownicy, którzy obserwują %(username)s"
 
 #: templates/cranefly/profiles/follows.html:9
 #, python-format
 msgid "%(username)s is following one member"
 msgid_plural "%(username)s is following %(total)s members"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%(username)s obserwuje jednego użytkownika"
+msgstr[1] "%(username)s obserwuje %(total)s użytkowników"
+msgstr[2] "%(username)s obserwuje %(total)s użytkowników"
 
 #: templates/cranefly/profiles/follows.html:11
 #, python-format
 msgid "%(username)s is not following anybody"
-msgstr ""
+msgstr "%(username)s nie obserwuje nikogo"
 
 #: templates/cranefly/profiles/follows.html:19
 #, python-format
 msgid "Users %(username)s is following"
-msgstr ""
+msgstr "Użytkownicy, których obserwuje %(username)s"
 
 #: templates/cranefly/profiles/list.html:17
 msgid "Browse notable user groups or find specific user"
 msgstr ""
+"Przejrzyj najistotniejsze grupy, albo wyszukaj konkretnego użytkownika."
 
 #: templates/cranefly/profiles/list.html:47
 msgid ""
@@ -6854,90 +6937,94 @@ msgid ""
 "other members with names similiar to one you searched for in hopes that one "
 "of them will turn out to be member you are looking for."
 msgstr ""
+"Nie udało się nam odnaleźć użytkownika o dokładnie takiej nazwie. Poniżej "
+"wyświetlamy listę użytkowników o zbliżonych nazwach."
 
 #: templates/cranefly/profiles/list.html:56
 msgid "Found Users"
-msgstr ""
+msgstr "Odnalezieni użytkownicy"
 
 #: templates/cranefly/profiles/list.html:56
 msgid "Users in this group"
-msgstr ""
+msgstr "Użytkownicy w tej grupie"
 
 #: templates/cranefly/profiles/list.html:80
 msgid "We couldn't find any members with specified name."
 msgstr ""
+"Nie udało nam się odnaleźć żadnych użytkowników o takiej, lub zbliżonej "
+"nazwie."
 
 #: templates/cranefly/profiles/list.html:82
 msgid "Looks like this group has no members..."
-msgstr ""
+msgstr "Wygląda na to, że ta grupa nie ma żadnych członków..."
 
 #: templates/cranefly/profiles/posts.html:9
 #, python-format
 msgid "%(username)s has one post"
 msgid_plural "%(username)s has %(total)s posts"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%(username)s posiada jeden post"
+msgstr[1] "%(username)s posiada %(total)s posty"
+msgstr[2] "%(username)s posiada %(total)s postów"
 
 #: templates/cranefly/profiles/posts.html:11
 #, python-format
 msgid "%(username)s has no posts"
-msgstr ""
+msgstr "%(username)s nie posiada żadnych postów"
 
 #: templates/cranefly/profiles/posts.html:24
 #: templates/cranefly/profiles/threads.html:23
 #, python-format
 msgid "Thread %(thread)s posted in %(forum)s %(date)s"
-msgstr ""
+msgstr "Temat %(thread)s utworzony w %(forum)s %(date)s"
 
 #: templates/cranefly/profiles/posts.html:26
 #, python-format
 msgid "Reply to %(thread)s posted in %(forum)s %(date)s"
-msgstr ""
+msgstr "Odpowiedź do %(thread)s w %(forum)s %(date)s"
 
 #: templates/cranefly/profiles/posts.html:42
 #: templates/cranefly/profiles/threads.html:38
 msgid "Lastest Posts"
-msgstr ""
+msgstr "Ostatnie posty"
 
 #: templates/cranefly/profiles/posts.html:42
 #: templates/cranefly/profiles/threads.html:38
 msgid "Newer Posts"
-msgstr ""
+msgstr "Nowsze posty"
 
 #: templates/cranefly/profiles/profile.html:13
 msgid "Click to jump to your Avatar Settings"
-msgstr ""
+msgstr "Kliknij, aby przejść do ustawień swojego avatara"
 
 #: templates/cranefly/profiles/profile.html:22
 msgid "Online, hidden"
-msgstr ""
+msgstr "Online, ukryty"
 
 #: templates/cranefly/profiles/profile.html:27
 msgid "Offline"
-msgstr ""
+msgstr "Offline"
 
 #: templates/cranefly/profiles/profile.html:30
 #, python-format
 msgid "last click %(last_click)s"
-msgstr ""
+msgstr "ostatnie kliknięcie %(last_click)s"
 
 #: templates/cranefly/profiles/profile.html:32
 #, python-format
 msgid "last seen %(last_visit)s"
-msgstr ""
+msgstr "ostatnio widziany %(last_visit)s"
 
 #: templates/cranefly/profiles/profile.html:34
 msgid "never visited"
-msgstr ""
+msgstr "nigdy nie zalogowany"
 
 #: templates/cranefly/profiles/profile.html:37
 msgid "hiding activity"
-msgstr ""
+msgstr "ukrywanie aktywności"
 
 #: templates/cranefly/profiles/profile.html:51
 msgid "Follow"
-msgstr ""
+msgstr "Obserwuj"
 
 #: templates/cranefly/profiles/profile.html:60
 msgid "Ignoring"
@@ -6945,235 +7032,235 @@ msgstr ""
 
 #: templates/cranefly/profiles/profile.html:60
 msgid "Ignore"
-msgstr ""
+msgstr "Ignoruj"
 
 #: templates/cranefly/profiles/threads.html:9
 #, python-format
 msgid "%(username)s started one thread"
 msgid_plural "%(username)s started %(total)s threads"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%(username)s rozpoczął jeden temat"
+msgstr[1] "%(username)s rozpoczął %(total)s tematy"
+msgstr[2] "%(username)s rozpoczął %(total)s tematów"
 
 #: templates/cranefly/profiles/threads.html:11
 #, python-format
 msgid "%(username)s started no threads"
-msgstr ""
+msgstr "%(username)s nie rozpoczął żadnych tematów"
 
 #: templates/cranefly/threads/karmas.html:11
 #: templates/cranefly/threads/karmas.html:21
 #, python-format
 msgid "Post #%(post)s Votes"
-msgstr ""
+msgstr "Głosy postu #%(post)s "
 
 #: templates/cranefly/threads/karmas.html:34
 #, python-format
 msgid "One like"
 msgid_plural "%(votes)s likes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Jedna osoba polubiła ten post"
+msgstr[1] "%(votes)s osoby polubiły ten post"
+msgstr[2] "%(votes)s osób poubiło ten post"
 
 #: templates/cranefly/threads/karmas.html:54
 msgid "Nobody liked this post."
-msgstr ""
+msgstr "Nikt nie polubił tego postu."
 
 #: templates/cranefly/threads/karmas.html:61
 #, python-format
 msgid "One hate"
 msgid_plural "%(votes)s hates"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Jedna osoba nie lubi tego postu"
+msgstr[1] "%(votes)s osoby nie lubią tego postu"
+msgstr[2] "%(votes)s osób nie lubi tego postu"
 
 #: templates/cranefly/threads/karmas.html:81
 msgid "Nobody hated this post."
-msgstr ""
+msgstr "Nikt nie wyraził niechęci do tego postu."
 
 #: templates/cranefly/threads/karmas.html:98
 #, python-format
 msgid "From %(ip)s"
-msgstr ""
+msgstr "Z %(ip)s"
 
 #: templates/cranefly/threads/list.html:36
 msgid "Child forums"
-msgstr ""
+msgstr "Subfora"
 
 #: templates/cranefly/threads/list.html:178
 msgid "There are no threads in this forum."
-msgstr ""
+msgstr "Aktualnie nie ma żadnych tematów na tym forum."
 
 #: templates/cranefly/threads/list.html:200
 msgid "Sign in or register to start threads."
-msgstr ""
+msgstr "Zaloguj się lub zarejestruj, aby rozpocząć nowe tematy."
 
 #: templates/cranefly/threads/merge.html:12
 #: templates/cranefly/threads/merge.html:22
 #: templates/cranefly/threads/merge.html:32
 #: templates/cranefly/threads/merge.html:51
 msgid "Merge Threads"
-msgstr ""
+msgstr "Połącz tematy"
 
 #: templates/cranefly/threads/move_posts.html:12
 #: templates/cranefly/threads/move_posts.html:22
 #: templates/cranefly/threads/move_posts.html:32
 #: templates/cranefly/threads/move_posts.html:52
 msgid "Move Posts"
-msgstr ""
+msgstr "Przenieś posty"
 
 #: templates/cranefly/threads/move_thread.html:12
 #: templates/cranefly/threads/move_thread.html:22
 #: templates/cranefly/threads/move_thread.html:32
 #: templates/cranefly/threads/move_thread.html:53
 msgid "Move Thread"
-msgstr ""
+msgstr "Przenieś temat"
 
 #: templates/cranefly/threads/move_thread.html:49
 msgid "Move Thread To"
-msgstr ""
+msgstr "Przenieś temat do"
 
 #: templates/cranefly/threads/move_thread.html:49
 msgid "Select forum you want to move this thread to."
-msgstr ""
+msgstr "Wskaż forum, do którego chcesz przenieść ten temat."
 
 #: templates/cranefly/threads/move_threads.html:12
 #: templates/cranefly/threads/move_threads.html:22
 #: templates/cranefly/threads/move_threads.html:32
 #: templates/cranefly/threads/move_threads.html:51
 msgid "Move Threads"
-msgstr ""
+msgstr "Przenieś tematy"
 
 #: templates/cranefly/threads/posting.html:76
 msgid "Thread Status"
-msgstr ""
+msgstr "Typ tematu"
 
 #: templates/cranefly/threads/split.html:12
 #: templates/cranefly/threads/split.html:22
 #: templates/cranefly/threads/split.html:32
 #: templates/cranefly/threads/split.html:52
 msgid "Split Thread"
-msgstr ""
+msgstr "Podziel temat"
 
 #: templates/cranefly/threads/thread.html:256
 msgid "Like"
-msgstr ""
+msgstr "Lubię"
 
 #: templates/cranefly/threads/thread.html:259
 msgid "Likes"
-msgstr ""
+msgstr "Lubi"
 
 #: templates/cranefly/threads/thread.html:269
 msgid "Hate"
-msgstr ""
+msgstr "Nie lubię"
 
 #: templates/cranefly/threads/thread.html:272
 msgid "Hates"
-msgstr ""
+msgstr "Nie lubi"
 
 #: templates/cranefly/threads/thread.html:277
 msgid "Show Votes"
-msgstr ""
+msgstr "Zobacz głosy"
 
 #: templates/cranefly/threads/thread.html:394
 msgid "Sign in or register to reply."
-msgstr ""
+msgstr "Zaloguj się lub zarejestruj, aby odpowiedzieć."
 
 #: templates/cranefly/threads/thread.html:480
 msgid "Go to first post awaiting review"
-msgstr ""
+msgstr "Idź do pierwszego postu oczekującego na akceptację"
 
 #: templates/cranefly/threads/thread.html:480
 msgid "First Unreviewed"
-msgstr ""
+msgstr "Pierwszy nieprzejrzany"
 
 #: templates/cranefly/threads/thread.html:481
 msgid "Go to first reported post"
-msgstr ""
+msgstr "Idź do pierwszego zgłoszonego postu"
 
 #: templates/cranefly/threads/thread.html:481
 msgid "First Reported"
-msgstr ""
+msgstr "Pierwszy zgłoszony"
 
 #: templates/cranefly/usercp/avatar.html:24
 #: templates/cranefly/usercp/avatar_gallery.html:28
 msgid "Gallery Avatar"
-msgstr ""
+msgstr "Avatar z galerii"
 
 #: templates/cranefly/usercp/avatar.html:30
 msgid "Use Gravatar"
-msgstr ""
+msgstr "Użyj Gravatara"
 
 #: templates/cranefly/usercp/avatar.html:31
 #: templates/cranefly/usercp/avatar_gallery.html:10
 msgid "Pick Avatar from Gallery"
-msgstr ""
+msgstr "Wybierz avatar z galerii"
 
 #: templates/cranefly/usercp/avatar.html:32
 msgid "Crop Your Avatar"
-msgstr ""
+msgstr "Przytnij swój avatar"
 
 #: templates/cranefly/usercp/avatar.html:33
 #: templates/cranefly/usercp/avatar_upload.html:11
 #: templates/cranefly/usercp/avatar_upload.html:24
 msgid "Upload Avatar"
-msgstr ""
+msgstr "Prześlij avatar"
 
 #: templates/cranefly/usercp/avatar_banned.html:10
 #: templates/cranefly/usercp/avatar_crop.html:16
 #: templates/cranefly/usercp/avatar_gallery.html:10
 #: templates/cranefly/usercp/avatar_upload.html:11
 msgid "Change your Avatar"
-msgstr ""
+msgstr "Zmień swój avatar"
 
 #: templates/cranefly/usercp/avatar_banned.html:14
 #, python-format
 msgid ""
 "%(username)s, your ability to change your avatar has been removed for "
 "following reason:"
-msgstr ""
+msgstr "%(username)s, nie możesz już zmienić avatara z następującego powodu:"
 
 #: templates/cranefly/usercp/avatar_banned.html:19
 #, python-format
 msgid "%(username)s, your ability to change your avatar has been removed."
-msgstr ""
+msgstr "%(username)s, administrator odebrał Ci możliwość zmiany avatara."
 
 #: templates/cranefly/usercp/avatar_crop.html:14
 msgid "Avatar Preview"
-msgstr ""
+msgstr "Podgląd avatara"
 
 #: templates/cranefly/usercp/avatar_crop.html:16
 #: templates/cranefly/usercp/avatar_crop.html:18
 msgid "Crop Avatar"
-msgstr ""
+msgstr "Przycinanie avatara"
 
 #: templates/cranefly/usercp/avatar_crop.html:33
 msgid "Uploaded Image"
-msgstr ""
+msgstr "Przesłany obrazek"
 
 #: templates/cranefly/usercp/credentials.html:11
 msgid "Change Sign-In Credentials"
-msgstr ""
+msgstr "Zmień dane logowania"
 
 #: templates/cranefly/usercp/credentials.html:25
 msgid "Change Credentials"
-msgstr ""
+msgstr "Zmień dane"
 
 #: templates/cranefly/usercp/layout.html:8
 msgid "Your Control Panel"
-msgstr ""
+msgstr "Opcje Twojego profilu"
 
 #: templates/cranefly/usercp/options.html:11
 msgid "Change Forum Options"
-msgstr ""
+msgstr "Zmień opcje forum"
 
 #: templates/cranefly/usercp/options.html:25
 msgid "Change Options"
-msgstr ""
+msgstr "Zmień opcje"
 
 #: templates/cranefly/usercp/signature.html:12
 #: templates/cranefly/usercp/signature_banned.html:10
 msgid "Edit your Signature"
-msgstr ""
+msgstr "Zmodyfikuj swoją sygnaturkę"
 
 #: templates/cranefly/usercp/signature_banned.html:14
 #, python-format
@@ -7181,97 +7268,98 @@ msgid ""
 "%(username)s, your ability to edit your signature has been removed for "
 "following reason:"
 msgstr ""
+"%(username)s, nie możesz już zmienić sygnaturki z następującego powodu:"
 
 #: templates/cranefly/usercp/signature_banned.html:19
 #, python-format
 msgid "%(username)s, your ability to edit your signature has been removed."
-msgstr ""
+msgstr "%(username)s, administrator odebrał Ci możliwość zmiany sygnaturki."
 
 #: templates/cranefly/usercp/username.html:11
 msgid "Change your Username"
-msgstr ""
+msgstr "Zmień swoją nazwę"
 
 #: templates/cranefly/usercp/username.html:28
 msgid "Change Name"
-msgstr ""
+msgstr "Zmień nazwę"
 
 #: templates/cranefly/usercp/username.html:30
 #, python-format
 msgid "You can change your username one more time."
 msgid_plural "You can change your username %(changes)s more times."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Możesz zmienić swoją nazwę użytkownika jeszcze jeden raz."
+msgstr[1] "Możesz zmienić swoją nazwę użytkownika jeszcze %(changes)s razy."
+msgstr[2] "Możesz zmienić swoją nazwę użytkownika jeszcze %(changes)s razy."
 
 #: templates/cranefly/usercp/username.html:32
 #, python-format
 msgid "You will be able to change your username on %(next_change)s"
-msgstr ""
+msgstr "Będziesz mógł zmienić swoją nazwę użytkownika %(next_change)s"
 
 #: utils/datesformats.py:25 utils/datesformats.py:35 utils/datesformats.py:65
 msgid "Never"
-msgstr ""
+msgstr "Nigdy"
 
 #: utils/datesformats.py:43
 #, python-format
 msgid "Today, %(hour)s"
-msgstr ""
+msgstr "Dzisiaj, o %(hour)s"
 
 #: utils/datesformats.py:48
 #, python-format
 msgid "Yesterday, %(hour)s"
-msgstr ""
+msgstr "Wczoraj, o %(hour)s"
 
 #: utils/datesformats.py:53
 #, python-format
 msgid "Tomorrow, %(hour)s"
-msgstr ""
+msgstr "Jutro, o %(hour)s"
 
 #: utils/datesformats.py:57
 #, python-format
 msgid "%(day)s, %(hour)s"
-msgstr ""
+msgstr "%(day)s, o %(hour)s"
 
 #: utils/datesformats.py:77
 msgid "Just now"
-msgstr ""
+msgstr "Tuż przed chwilą"
 
 #: utils/datesformats.py:80 utils/datesformats.py:85
 #, python-format
 msgid "Minute ago"
 msgid_plural "%(minutes)s minutes ago"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Minutę temu"
+msgstr[1] "%(minutes)s minuty temu"
+msgstr[2] "%(minutes)s minut temu"
 
 #: utils/datesformats.py:95
 #, python-format
 msgid "Hour and %(minutes)s ago"
 msgid_plural "%(hours)s hours and %(minutes)s ago"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Jedną godzinę i %(minutes)s temu"
+msgstr[1] "%(hours)s godziny i %(minutes)s temu"
+msgstr[2] "%(hours)s godzin i %(minutes)s temu"
 
 #: utils/datesformats.py:98
 #, python-format
 msgid "%(minutes)s minute"
 msgid_plural "%(minutes)s minutes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%(minutes)s minutę"
+msgstr[1] "%(minutes)s minuty"
+msgstr[2] "%(minutes)s minut"
 
 #: utils/datesformats.py:101
 #, python-format
 msgid "%(hours)s hours and %(minutes)s minutes ago"
-msgstr ""
+msgstr "%(hours)s godzin i %(minutes)s minut temu"
 
 #: utils/datesformats.py:104
 #, python-format
 msgid "Hour ago"
 msgid_plural "%(hours)s hours ago"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Godzinę temu"
+msgstr[1] "%(hours)s godziny temu"
+msgstr[2] "%(hours)s godzin temu"
 
 #: utils/timezones.py:7
 msgid "(UTC-13:00) Samoa"
