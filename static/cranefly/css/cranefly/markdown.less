@@ -95,29 +95,39 @@
   img {
     background-color: @white;
     border-radius: @baseBorderRadius;
-    box-shadow: 0px 0px 4px @gray;
+    box-shadow: 0px 0px 3px @gray;
     margin: (@baseLineHeight / 2) 0px;
   }
 
   .md-img {
     overflow: auto;
     margin: (@baseLineHeight / 2) 0px;
+    padding: 4px;
+    position: relative;
+    right: 4px;
 
     .md-img-span {
       float: none;
+      margin: 0px;
 
       .md-img-wrap {
-        .md-img-bg {          
-          text-align: center;
+        float: left;
+        max-width: 600px;
+
+        .md-img-bg {
+          img {
+            margin: 0px;
+          }
 
           .md-img-error {
             background: url('../img/img_broken.jpg');
             border-radius: @baseBorderRadius;
             padding: (@baseLineHeight * 2.5) 0px;
+            width: 160px;
 
             span {
               background-color: @grayDark;
-              border-radius: @borderRadiusLarge;
+              border-radius: @baseBorderRadius;
               .opacity(80);
               padding: (@baseFontSize / 2) @baseFontSize;
               margin: 0px auto;
@@ -129,19 +139,38 @@
         }
 
         .md-img-label {
+          background: fadeout(@black, 20);
+          border-radius: 0px 0px @baseBorderRadius @baseBorderRadius;
           display: block;
-          margin-top: (@baseLineHeight - @fontSizeSmall) / -2;
+          position: relative;
+          bottom: @baseLineHeight + 6px;
+          margin-bottom: @baseLineHeight * -1;
+          .opacity(50);
 
-          color: @grayLight;
-          font-size: @fontSizeSmall;
-          text-align: center;
+          color: @grayLighter;
+          font-size: @fontSizeMini;
+          text-align: left;
+          padding: 3px 9px;
 
           &:hover, &:active {
-            color: @textColor;
+            color: @white;
             text-decoration: none;
           }
         }
+
+        &:hover {
+          .md-img-label {
+            .opacity(100);
+          }
+        }
       }
+    }
+  }
+
+  // Quoted image label
+  blockquote {
+    .md-img-label {
+      bottom: @baseLineHeight - 1px !important;
     }
   }
 
