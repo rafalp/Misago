@@ -89,10 +89,12 @@
     </ul>
     <hr>
     <div class="credits">
-      {% if settings.board_credits %}
-      <p>{{ settings.board_credits|safe }}</p>
-      {% endif %}
-      <p class="software"><a href="http://misago-project.org">This community is powered by Misago forum software by Rafał Pitoń</a></p>
+      <p>
+        {% if settings.board_credits %}
+        {{ settings.board_credits|safe }}<br>
+        {% endif %}
+        <a href="http://misago-project.org">This community is powered by Misago forum software by Rafał Pitoń</a>
+      </p>
     </div>
   </div>
 </footer>{% endblock %}
