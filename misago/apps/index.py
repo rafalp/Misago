@@ -50,7 +50,6 @@ def index(request):
             del users_list
         cache.set('ranks_online', ranks_list, request.settings['sessions_tracker_sync_frequency'])
 
-    print cache.get('team_users_online')
     # Users online
     users_online = {
                     'members': request.onlines.members(),

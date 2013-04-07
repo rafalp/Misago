@@ -110,6 +110,5 @@ def signout(request):
     else:
         request.onlines.sign_out()
         if user.pk in cache.get('team_users_online', []):
-            print 'SYNC TEH ONLINEZ'
             cache.delete_many(['team_users_online', 'ranks_online'])
     return redirect(reverse('index'))
