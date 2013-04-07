@@ -93,6 +93,7 @@
   }
 
   img {
+    background-color: @white;
     border-radius: @baseBorderRadius;
     box-shadow: 0px 0px 4px @gray;
     margin: (@baseLineHeight / 2) 0px;
@@ -100,29 +101,14 @@
 
   .md-img {
     overflow: auto;
+    margin: (@baseLineHeight / 2) 0px;
 
     .md-img-span {
-      margin: (@baseLineHeight / 2) 0px;
       float: none;
 
       .md-img-wrap {
-        background-color: @grayLighter;
-        border: 1px solid @white;
-        border-radius: @baseBorderRadius + 1px;
-        box-shadow: 0px 0px 2px @grayLight;
-        margin: 3px;
-
-        .md-img-bg {
-          background-color: @white;
-          border-radius: @baseBorderRadius;
-          padding: (@baseLineHeight / 2);
-          
+        .md-img-bg {          
           text-align: center;
-
-          img {
-            border-radius: @baseBorderRadius;
-            box-shadow: none;
-          }
 
           .md-img-error {
             background: url('../img/img_broken.jpg');
@@ -144,9 +130,11 @@
 
         .md-img-label {
           display: block;
-          padding: (@baseFontSize / 2) @baseFontSize;
+          margin-top: (@baseLineHeight - @fontSizeSmall) / -2;
 
-          color: @grayDark;
+          color: @grayLight;
+          font-size: @fontSizeSmall;
+          text-align: center;
 
           &:hover, &:active {
             color: @textColor;
