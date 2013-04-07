@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Misago PL\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-04-03 18:32+0000\n"
-"PO-Revision-Date: 2013-04-06 00:44+0100\n"
+"PO-Revision-Date: 2013-04-07 22:41+0100\n"
 "Last-Translator: L0ud PL <loudml@gmail.com>\n"
 "Language-Team: FxDev <loudpl@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -141,11 +141,11 @@ msgstr "To forum zabrania rejestracji z podanego adresu e-mail."
 
 #: acl/panels.py:10
 msgid "Misago ACL"
-msgstr ""
+msgstr "Misago ACL"
 
 #: acl/panels.py:13
 msgid "Misago User ACL"
-msgstr ""
+msgstr "ACL Użytkownika"
 
 #: acl/permissions/forums.py:11 apps/admin/roles/views.py:38
 msgid "Forums Permissions"
@@ -1100,7 +1100,7 @@ msgid "Adjustment using theme \"%(name)s\" has been deleted."
 msgstr "Przypisanie dla szablonu \"%(name)s\" zostało usunięte."
 
 #: apps/admin/forumroles/forms.py:8 apps/admin/roles/forms.py:8
-msgid "Role name must be sluggable."
+msgid "Role name must contain alphanumeric characters."
 msgstr "Nazwa roli nie może zawierać wyłącznie znaków specjalnych."
 
 #: apps/admin/forumroles/forms.py:9 apps/admin/roles/forms.py:9
@@ -1182,7 +1182,7 @@ msgstr "Zmiany w roli \"%(name)s\" zostały zachowane."
 
 #: apps/admin/forumroles/views.py:99
 msgid "Change Forum Role Permissions"
-msgstr ""
+msgstr "Zmień uprawnienia roli użytkownika"
 
 #: apps/admin/forumroles/views.py:132
 #, python-format
@@ -1195,7 +1195,7 @@ msgid "Forum Role \"%(name)s\" has been deleted."
 msgstr "Rola \"%(name)s\" została usunięta."
 
 #: apps/admin/forums/forms.py:12
-msgid "Category name must be sluggable."
+msgid "Category name must contain alphanumeric characters."
 msgstr "Nazwa kategorii nie może zawierać samych znaków specjalnych."
 
 #: apps/admin/forums/forms.py:13
@@ -1276,7 +1276,7 @@ msgid "Don't copy permissions"
 msgstr "Nie kopiuj uprawnień"
 
 #: apps/admin/forums/forms.py:60
-msgid "Forum name must be sluggable."
+msgid "Forum name must contain alphanumeric characters."
 msgstr "Nazwa forum nie może składać się wyłącznie ze znaków specjlanych."
 
 #: apps/admin/forums/forms.py:61
@@ -1354,7 +1354,7 @@ msgid ""
 msgstr ""
 
 #: apps/admin/forums/forms.py:117
-msgid "Redirect name must be sluggable."
+msgid "Redirect name must contain alphanumeric characters."
 msgstr "Nazwa przekierowania nie może się składać tylko ze znaków specjalnych."
 
 #: apps/admin/forums/forms.py:118
@@ -1430,7 +1430,7 @@ msgstr "Musisz zaznaczyć przynajmniej jedno forum."
 
 #: apps/admin/forums/views.py:29
 msgid "Resynchronise forums"
-msgstr ""
+msgstr "Zsynchronizuj fora"
 
 #: apps/admin/forums/views.py:30
 msgid "Prune forums"
@@ -1442,7 +1442,7 @@ msgstr "Czy ta pewno chcesz usunąć całą zawartość zaznaczonych forów?"
 
 #: apps/admin/forums/views.py:32 apps/admin/roles/views.py:123
 msgid "No forums are currently defined."
-msgstr ""
+msgstr "Nie zdefiniowano jeszcze żadnych forów."
 
 #: apps/admin/forums/views.py:43
 msgid "Move Category Up"
@@ -1574,7 +1574,7 @@ msgid "Forum \"%(name)s\" has been deleted."
 msgstr "Forum \"%(name)s\" zostało usunięte."
 
 #: apps/admin/newsletters/forms.py:10
-msgid "Newsletter name must be sluggable."
+msgid "Newsletter name must contain alphanumeric characters."
 msgstr "Nazwa newslettera nie może składać się tylko ze znaków specjalnych."
 
 #: apps/admin/newsletters/forms.py:11
@@ -1823,7 +1823,7 @@ msgid "Looks like nobody is currently online on forums."
 msgstr "Wygląda na to, że w danej chwili nikt nie jest zalogowany."
 
 #: apps/admin/pruneusers/forms.py:8
-msgid "Policy name must be sluggable."
+msgid "Policy name must contain alphanumeric characters."
 msgstr ""
 
 #: apps/admin/pruneusers/forms.py:9
@@ -1998,7 +1998,7 @@ msgstr ""
 "Autoryzacja żądania jest niepoprawna. Spróbuj ponownie wysłać formularz."
 
 #: apps/admin/ranks/forms.py:9
-msgid "Rank name must be sluggable."
+msgid "Rank name must contain alphanumeric characters."
 msgstr "Nazwa rangi nie może składać się tylko ze znaków specjalnych."
 
 #: apps/admin/ranks/forms.py:10
@@ -2011,31 +2011,35 @@ msgstr ""
 
 #: apps/admin/ranks/forms.py:22
 msgid "Basic Rank Options"
-msgstr ""
+msgstr "Podstawowe ustawienia rangi"
 
 #: apps/admin/ranks/forms.py:24
 msgid "Rank Name"
-msgstr ""
+msgstr "Nazwa rangi"
 
 #: apps/admin/ranks/forms.py:24
 msgid ""
 "Rank Name is used to identify rank in Admin Control Panel and is used as "
 "page and tab title if you decide to make this rank act as tab on users list."
 msgstr ""
+"Nazwa rangi jest używana do jej identyfikacji w panelu administracyjnym ACP. "
+"Stanowi też treść karty przy wyświetlaniu rangi w module użytkowników."
 
 #: apps/admin/ranks/forms.py:25
 msgid "Rank Description"
-msgstr ""
+msgstr "Opis rangi"
 
 #: apps/admin/ranks/forms.py:25
 msgid ""
 "If this rank acts as tab on users list, here you can enter optional "
 "description that will be displayed above list of users with this rank."
 msgstr ""
+"Jeżeli ranga ma włączoną kartę w module użytkowników, możesz tutaj wpisać "
+"opis, który będzie wyświetlany nad listą posiadających ją członków forum."
 
 #: apps/admin/ranks/forms.py:26
 msgid "As Tab on Users List"
-msgstr ""
+msgstr "Jako karta w module użytkowników"
 
 #: apps/admin/ranks/forms.py:26
 msgid ""
@@ -2044,30 +2048,34 @@ msgid ""
 "used by forum team members or members that should be visible and easily "
 "reachable."
 msgstr ""
+"Ustala, czy ranga posiada swoją kartę w module użytkowników, na której "
+"znajduje się lista jej posiadaczy. Dobrym pomysłem jest włączenie tej opcji "
+"tylko dla najbardziej wartościowych rang, jak np. ekipa forum, moderatorzy, "
+"najbardziej cenieni użytkownicy itp."
 
 #: apps/admin/ranks/forms.py:27
 msgid "Display members online"
-msgstr ""
+msgstr "Wyświetlaj użytkowników online"
 
 #: apps/admin/ranks/forms.py:27
 msgid "Should users online with this rank be displayed on board index?"
-msgstr ""
+msgstr "Czy wyrózniać zalogowanych użytkowników z tą rangą na stronie głównej?"
 
 #: apps/admin/ranks/forms.py:31
 msgid "Rank Looks"
-msgstr ""
+msgstr "Wygląd rangi"
 
 #: apps/admin/ranks/forms.py:33
 msgid "Rank Title"
-msgstr ""
+msgstr "Tytuł rangi"
 
 #: apps/admin/ranks/forms.py:33
 msgid "Short description of rank's bearer role in your community."
-msgstr ""
+msgstr "Najkrótszy mozliwy opis dowolnego posiadacza tej rangi na Twoim forum."
 
 #: apps/admin/ranks/forms.py:34
 msgid "Rank CSS Class"
-msgstr ""
+msgstr "Klasa CSS rangi"
 
 #: apps/admin/ranks/forms.py:34
 msgid ""
@@ -2075,24 +2083,29 @@ msgid ""
 "rank's owner or his content, allowing you to make them stand out from other "
 "members."
 msgstr ""
+"Do rangi można przypisać opcjonalną klasę CSS, która zostanie dodana do "
+"każdego elementu związanego z jej członkami (profile, posty, tematy), "
+"umożliwiając ich wyróżnienie."
 
 #: apps/admin/ranks/forms.py:38
 msgid "Rank Attainability"
-msgstr ""
+msgstr "Dosięgalność rangi"
 
 #: apps/admin/ranks/forms.py:40
 msgid "Special Rank"
-msgstr ""
+msgstr "Ranga specjalna"
 
 #: apps/admin/ranks/forms.py:40
 msgid ""
 "Special ranks are ignored during updates of user ranking, making them "
 "unattainable without admin ingerention."
 msgstr ""
+"Specjalne rangi są ignorowane przy aktualizacjach rankingu użytkowników, co "
+"czyni je niezmiennymi bez ingerencji administratora."
 
 #: apps/admin/ranks/forms.py:41
 msgid "Rank Criteria"
-msgstr ""
+msgstr "Kryteria przyznania rangi"
 
 #: apps/admin/ranks/forms.py:41
 msgid ""
@@ -2102,68 +2115,74 @@ msgid ""
 "10 most active members, enter \"10\". This setting is ignored for special "
 "ranks as they don't participate in user's ranking updates."
 msgstr ""
+"To ustawienie umożliwia Ci określenie liczby użytkowników, którzy utrzymają "
+"daną rangę. Wpisanie 0 przypisuje tą rangę dla każdego użytkownika (dobre "
+"dla rangi określającej zarejestrowanego członka forum). Aby nadać rangę dla "
+"10% najbardziej aktywnych użytkowników, wpisz \"10%\". Aby nadać tą rangę 10 "
+"najbardziej aktywnym użytkownikom, wprowadź \"10\". To ustawienie jest "
+"ignorowane dla rank specjalnych (nie są one aktualizowane automatycznie)."
 
 #: apps/admin/ranks/views.py:24 templates/cranefly/profiles/details.html:104
 msgid "Rank"
-msgstr ""
+msgstr "Ranga"
 
 #: apps/admin/ranks/views.py:26
 msgid "Reorder Ranks"
-msgstr ""
+msgstr "Zmień istotność rang"
 
 #: apps/admin/ranks/views.py:27
 msgid "You have to check at least one rank."
-msgstr ""
+msgstr "Musisz zaznaczyć przynajmniej jedną rangę."
 
 #: apps/admin/ranks/views.py:29
 msgid "Delete selected ranks"
-msgstr ""
+msgstr "Usuń zaznaczone rangi"
 
 #: apps/admin/ranks/views.py:29
 msgid "Are you sure you want to delete selected ranks?"
-msgstr ""
+msgstr "Czy aby na pewno chcesz usunąć zaznaczone rangi?"
 
 #: apps/admin/ranks/views.py:53
 msgid "Ranks order has been changed"
-msgstr ""
+msgstr "Istotność rang została zmieniona."
 
 #: apps/admin/ranks/views.py:60 apps/admin/ranks/views.py:104
 msgid "Edit Rank"
-msgstr ""
+msgstr "Zmodyfikuj rangę"
 
 #: apps/admin/ranks/views.py:61
 msgid "Delete Rank"
-msgstr ""
+msgstr "Usuń rangę"
 
 #: apps/admin/ranks/views.py:61
 msgid "Are you sure you want to delete this rank?"
-msgstr ""
+msgstr "Czy aby na pewno chcesz usunąć tę rangę?"
 
 #: apps/admin/ranks/views.py:66
 msgid "Selected ranks have been deleted successfully."
-msgstr ""
+msgstr "Zaznaczone rangi zostały pomyślnie usunięte."
 
 #: apps/admin/ranks/views.py:74
 msgid "Save Rank"
-msgstr ""
+msgstr "Zapisz rangę"
 
 #: apps/admin/ranks/views.py:98
 msgid "New Rank has been created."
-msgstr ""
+msgstr "Nowa ranga została utworzona."
 
 #: apps/admin/ranks/views.py:108 apps/admin/ranks/views.py:147
 msgid "Requested Rank could not be found."
-msgstr ""
+msgstr "Żądana ranga nie mogła zostać odnaleziona."
 
 #: apps/admin/ranks/views.py:140
 #, python-format
 msgid "Changes in rank \"%(name)s\" have been saved."
-msgstr ""
+msgstr "Zmiany w randze \"%(name)s\" zostały zachowane."
 
 #: apps/admin/ranks/views.py:151
 #, python-format
 msgid "Rank \"%(name)s\" has been deleted."
-msgstr ""
+msgstr "Ranga \"%(name)s\" została usunięta."
 
 #: apps/admin/roles/forms.py:19
 msgid "Protect this Role"
@@ -2233,7 +2252,7 @@ msgstr "Uprawnienia roli do forów zostały zapisane."
 
 #: apps/admin/roles/views.py:182
 msgid "No forum roles are currently set."
-msgstr ""
+msgstr "Nie zdefiniowano żadnych roli na forum."
 
 #: apps/admin/roles/views.py:190
 msgid "Change Role Permissions"
@@ -2327,7 +2346,7 @@ msgstr "Filtr słów"
 
 #: apps/admin/sections/forums.py:67
 msgid "Forbid usage of words in messages"
-msgstr ""
+msgstr "Zabroń używania niektórych słów w wiadomościach"
 
 #: apps/admin/sections/forums.py:77
 msgid "Tests"
@@ -2355,25 +2374,25 @@ msgstr "Statystyki"
 
 #: apps/admin/sections/overview.py:22 templates/admin/stats/layout.html:9
 msgid "Create Statistics Reports"
-msgstr ""
+msgstr "Generowanie raportów statystycznych"
 
 #: apps/admin/sections/overview.py:33 templates/cranefly/index.html:130
 #: templates/cranefly/profiles/profile.html:24
 msgid "Online"
-msgstr ""
+msgstr "Online"
 
 #: apps/admin/sections/overview.py:34
 msgid "See who is currently online on forums."
-msgstr ""
+msgstr "Zobacz, kto jest aktualnie zalogowany na forum."
 
 #: apps/admin/sections/overview.py:40 apps/admin/sections/users.py:17
 #: templates/cranefly/layout.html:46
 msgid "Browse Users"
-msgstr ""
+msgstr "Przeglądanie użytkowników"
 
 #: apps/admin/sections/overview.py:41 apps/admin/sections/users.py:18
 msgid "Browse all registered user accounts"
-msgstr ""
+msgstr "Przeglądaj konta zarejestrowanych użytkowników"
 
 #: apps/admin/sections/overview.py:54 fixtures/ranks.py:6 fixtures/ranks.py:8
 msgid "Forum Team"
@@ -2438,80 +2457,80 @@ msgstr "Dopasuj warstwę prezentacji dla przeglądarek"
 
 #: apps/admin/sections/system.py:30
 msgid "Browse Clients"
-msgstr ""
+msgstr "Lista dostosowań"
 
 #: apps/admin/sections/system.py:31
 msgid "Browse all existing clients"
-msgstr ""
+msgstr "Przeglądaj wszystkie istniejące przypisania stylów do przeglądarek"
 
 #: apps/admin/sections/system.py:36
 msgid "Add New Adjustment"
-msgstr ""
+msgstr "Dodaj nowe dostosowanie"
 
 #: apps/admin/sections/system.py:37
 msgid "Create new client adjustment"
-msgstr ""
+msgstr "Utwórz nowe dopasowanie stylu do przeglądarki"
 
 #: apps/admin/sections/users.py:10 fixtures/accountssetings.py:96
 #: templates/cranefly/profiles/list.html:17
 msgid "Users List"
-msgstr ""
+msgstr "Lista użytkowników"
 
 #: apps/admin/sections/users.py:11
 msgid "Search and browse users"
-msgstr ""
+msgstr "Wyszukaj i przeglądaj użytkowników"
 
 #: apps/admin/sections/users.py:23
 msgid "Add User"
-msgstr ""
+msgstr "Dodaj użytkownika"
 
 #: apps/admin/sections/users.py:24
 msgid "Create new user account"
-msgstr ""
+msgstr "Utwórz nowe konto użytkownika"
 
 #: apps/admin/sections/users.py:41
 msgid "Ranks"
-msgstr ""
+msgstr "Rangi"
 
 #: apps/admin/sections/users.py:42
 msgid "Administrate User Ranks"
-msgstr ""
+msgstr "Zarządzaj rangami użytkowników"
 
 #: apps/admin/sections/users.py:48
 msgid "Browse Ranks"
-msgstr ""
+msgstr "Przeglądadaj rangi"
 
 #: apps/admin/sections/users.py:49
 msgid "Browse all existing ranks"
-msgstr ""
+msgstr "Przeglądaj wszystkie istniejące rangi na forum."
 
 #: apps/admin/sections/users.py:54
 msgid "Add Rank"
-msgstr ""
+msgstr "Dodaj rangę"
 
 #: apps/admin/sections/users.py:55
 msgid "Create new rank"
-msgstr ""
+msgstr "Utwórz nową rangę"
 
 #: apps/admin/sections/users.py:70
 msgid "Bans"
-msgstr ""
+msgstr "Bany"
 
 #: apps/admin/sections/users.py:71
 msgid "Ban or unban users from forums."
-msgstr ""
+msgstr "Zablokuj lub odblokuj profile użytkowników na forum."
 
 #: apps/admin/sections/users.py:77
 msgid "Browse Bans"
-msgstr ""
+msgstr "Przeglądaj bany"
 
 #: apps/admin/sections/users.py:78
 msgid "Browse all existing bans"
-msgstr ""
+msgstr "Przeglądaj blokady nałożone na użytkowników"
 
 #: apps/admin/sections/users.py:84
 msgid "Set new Ban"
-msgstr ""
+msgstr "Nałóż nowego bana"
 
 #: apps/admin/sections/users.py:100
 msgid "Prune Users"
@@ -2724,7 +2743,7 @@ msgstr ""
 
 #: apps/admin/users/forms.py:53
 msgid "Lock Member's Avatar"
-msgstr ""
+msgstr "Zablokuj avatar użytkownika"
 
 #: apps/admin/users/forms.py:53
 msgid ""
@@ -2756,25 +2775,25 @@ msgstr ""
 
 #: apps/admin/users/forms.py:59
 msgid "User Signature"
-msgstr ""
+msgstr "Sygnaturka użytkownika"
 
 #: apps/admin/users/forms.py:61
 msgid "Signature"
-msgstr ""
+msgstr "Sygnaturka"
 
 #: apps/admin/users/forms.py:61
 msgid "Signature is short message attached at end of member's messages."
-msgstr ""
+msgstr "Sygnaturka to krótka wiadomość dołączana do postów użytkownika."
 
 #: apps/admin/users/forms.py:62
 msgid "Lock Member's Signature"
-msgstr ""
+msgstr "Zablokuj sygnaturkę użytkownika"
 
 #: apps/admin/users/forms.py:62
 msgid ""
 "If you set this field to yes, this member will not be able to change his "
 "signature."
-msgstr ""
+msgstr "Ustawione na tak, uniemożliwia użytkownikowi zmiany swojej sygnaturki."
 
 #: apps/admin/users/forms.py:63
 msgid ""
@@ -2782,148 +2801,163 @@ msgid ""
 "his signature anymore. This message will be displayed to member in his "
 "control panel."
 msgstr ""
+"Możesz pozostawić użytkownikowi wiadomość z uzasadnieniem, dlaczego nie może "
+"ponownie zmieniać swojej sygnaturki. Będzie wyświetlona podczas próby jej "
+"zmiany."
 
 #: apps/admin/users/forms.py:64
 msgid ""
 "You can leave message to other forum team members exmplaining why this "
 "member's signature has been locked."
 msgstr ""
+"Możesz pozostawić uzasadnienie zablokowania sygnaturki tego użytkownika dla "
+"innych członków ekipy forum."
 
 #: apps/admin/users/forms.py:71 apps/admin/users/forms.py:153
 msgid "User must have at least one role assigned."
-msgstr ""
+msgstr "Użytkownik musi mieć przypisaną przynamniej jedną rolę."
 
 #: apps/admin/users/forms.py:116
 msgid "Avatar does not exist or is not image file."
-msgstr ""
+msgstr "Avatar nie istnieje, lub nie jest obrazkiem."
 
 #: apps/admin/users/forms.py:143
 msgid "User Password"
-msgstr ""
+msgstr "Hasło użytkownika."
 
 #: apps/admin/users/forms.py:143
 msgid "Member password."
-msgstr ""
+msgstr "Hasło członka tego forum/"
 
 #: apps/admin/users/forms.py:192
 msgid "Already Active"
-msgstr ""
+msgstr "Już aktywowany"
 
 #: apps/admin/users/forms.py:192
 msgid "By User"
-msgstr ""
+msgstr "Przez użytkownika"
 
 #: apps/admin/users/forms.py:192
 msgid "By Administrator"
-msgstr ""
+msgstr "Przez adminsitratora"
 
 #: apps/admin/users/forms.py:198 templates/cranefly/profiles/list.html:38
 msgid "Search Users"
-msgstr ""
+msgstr "Wyszukiwanie użytkowników"
 
 #: apps/admin/users/forms.py:200
 msgid "Username contains..."
-msgstr ""
+msgstr "Nazwa użytkownika zawiera..."
 
 #: apps/admin/users/forms.py:201
 msgid "E-mail address contains..."
-msgstr ""
+msgstr "Adres e-mail zawiera..."
 
 #: apps/admin/users/forms.py:202
 msgid "Activation Requirement"
-msgstr ""
+msgstr "Oczekuje na aktywację"
 
 #: apps/admin/users/forms.py:203
 msgid "Rank is"
-msgstr ""
+msgstr "Ranga to"
 
 #: apps/admin/users/forms.py:204
 msgid "Has Role"
-msgstr ""
+msgstr "Posiada rolę"
 
 #: apps/admin/users/views.py:25
 msgid "User Name"
-msgstr ""
+msgstr "Nazwa użytkownika"
 
 #: apps/admin/users/views.py:26
 msgid "Join Date"
-msgstr ""
+msgstr "Data dołączenia"
 
 #: apps/admin/users/views.py:35
 msgid "You have to check at least one user."
-msgstr ""
+msgstr "Musisz zaznaczyć przynajmniej jednego użytkownika."
 
 #: apps/admin/users/views.py:37
 msgid "Activate users"
-msgstr ""
+msgstr "Aktywacja użytkowników"
 
 #: apps/admin/users/views.py:37
 msgid "Are you sure you want to activate selected members?"
-msgstr ""
+msgstr "Czy aby na pewno chcesz aktywować zaznaczonych użytkowników?"
 
 #: apps/admin/users/views.py:38
 msgid "Request e-mail validation"
-msgstr ""
+msgstr "Zażądaj walidacji adresu e-mail"
 
 #: apps/admin/users/views.py:38
 msgid ""
 "Are you sure you want to deactivate selected members and request them to "
 "revalidate their e-mail addresses?"
 msgstr ""
+"Czy aby na pewno chcesz zdezaktywować zaznaczonych użytkowników i zażądać "
+"rewalidacji ich adresu e-mail?"
 
 #: apps/admin/users/views.py:39
 msgid "Remove and lock avatars"
-msgstr ""
+msgstr "Usuń i zablokuj avataty"
 
 #: apps/admin/users/views.py:39
 msgid ""
 "Are you sure you want to remove selected members avatars and their ability "
 "to change them?"
 msgstr ""
+"Czy aby na pewno chcesz usunąć avatary zaznaczonych użytkowników i odebrać "
+"im możliwość ich ustawiania?"
 
 #: apps/admin/users/views.py:40
 msgid "Remove and lock signatures"
-msgstr ""
+msgstr "Usuń i zablokuj sygnaturki"
 
 #: apps/admin/users/views.py:40
 msgid ""
 "Are you sure you want to remove selected members signatures and their "
 "ability to edit them?"
 msgstr ""
+"Czy aby na pewno chcesz usunąć sygnaturki zaznaczonych użytkowników i "
+"odebrać im możliwość ich edycji?"
 
 #: apps/admin/users/views.py:41
 msgid "Remove locks from avatars and signatures"
-msgstr ""
+msgstr "Usuń blokadę zmiany avatarów i sygnaturek"
 
 #: apps/admin/users/views.py:41
 msgid ""
 "Are you sure you want to remove locks from selected members avatars and "
 "signatures?"
 msgstr ""
+"Czy aby na pewno chcesz przywrócić możliwość zamiany avatarów i sygnaturek "
+"dla zaznaczonych użytkowników?"
 
 #: apps/admin/users/views.py:42
 msgid "Reset passwords"
-msgstr ""
+msgstr "Reset haseł"
 
 #: apps/admin/users/views.py:42
 msgid "Are you sure you want to reset selected members passwords?"
-msgstr ""
+msgstr "Czy aby na pewno chcesz zresetować hasła zaznaczonych użytkowników?"
 
 #: apps/admin/users/views.py:43
 msgid "Delete users with content"
-msgstr ""
+msgstr "Usuń użytkowników wraz z postami"
 
 #: apps/admin/users/views.py:43
 msgid "Are you sure you want to delete selected users and their content?"
 msgstr ""
+"Czy aby na pewno chcesz usunąć zaznaczonych użytkowników wraz z całą ich "
+"aktywnością?"
 
 #: apps/admin/users/views.py:44
 msgid "Delete users"
-msgstr ""
+msgstr "Usuń użytkowników"
 
 #: apps/admin/users/views.py:44
 msgid "Are you sure you want to delete selected users?"
-msgstr ""
+msgstr "Czy aby na pewno chcesz usunąć zaznaczonych użytkowników?"
 
 #: apps/admin/users/views.py:89
 msgid "Edit User Details"
@@ -3338,76 +3372,76 @@ msgstr ""
 
 #: apps/signin/forms.py:6
 msgid "Your email"
-msgstr ""
+msgstr "Twój adres e-mail"
 
 #: apps/signin/forms.py:7
 msgid "Your password"
-msgstr ""
+msgstr "Twoje hasło"
 
 #: apps/signin/forms.py:8
 msgid "Stay Signed In"
-msgstr ""
+msgstr "Zapamiętaj mnie"
 
 #: apps/signin/forms.py:8
 msgid "Sign me In automatically next time"
-msgstr ""
+msgstr "Zaloguj mnie automatycznie przy kolejnych wizytach"
 
 #: apps/signin/views.py:65
 #, python-format
 msgid "Welcome back, %(username)s!"
-msgstr ""
+msgstr "Witaj ponownie, %(username)s!"
 
 #: apps/signin/views.py:106
 msgid "You have been signed out."
-msgstr ""
+msgstr "Pomyślnie wylogowano z forum."
 
 #: apps/threads/list.py:45
 msgid "Accept threads"
-msgstr ""
+msgstr "Zaakceptuj tematy"
 
 #: apps/threads/list.py:47
 msgid "Change to announcements"
-msgstr ""
+msgstr "Zamień na ogłoszenia"
 
 #: apps/threads/list.py:49
 msgid "Change to sticky threads"
-msgstr ""
+msgstr "Zamień na przyklejone tematy"
 
 #: apps/threads/list.py:51
 msgid "Change to standard thread"
-msgstr ""
+msgstr "Zamien na standardowe tematy"
 
 #: apps/threads/list.py:53
 msgid "Move threads"
-msgstr ""
+msgstr "Przesuń tematy"
 
 #: apps/threads/list.py:54
 msgid "Merge threads"
-msgstr ""
+msgstr "Połącz tematy"
 
 #: apps/threads/list.py:56
 msgid "Open threads"
-msgstr ""
+msgstr "Otwórz tematy"
 
 #: apps/threads/list.py:57
 msgid "Close threads"
-msgstr ""
+msgstr "Zamknij tematy"
 
 #: apps/threads/list.py:59
 msgid "Undelete threads"
-msgstr ""
+msgstr "Przywróć tematy"
 
 #: apps/threads/list.py:60
 msgid "Soft delete threads"
-msgstr ""
+msgstr "Usuń nietrwale tematy"
 
 #: apps/threads/list.py:62
 msgid "Hard delete threads"
-msgstr ""
+msgstr "Usuń tematy na stałe"
 
 #: apps/threads/thread.py:12
 msgid "Accept posts"
-msgstr ""
+msgstr "Zaakceptuj posty"
 
 #: apps/threads/thread.py:15
 msgid "Split posts to new thread"
@@ -3415,62 +3449,66 @@ msgstr ""
 
 #: apps/threads/thread.py:16
 msgid "Move posts to other thread"
-msgstr ""
+msgstr "Przesuń posty do innego tematu"
 
 #: apps/threads/thread.py:35
 msgid "Accept this thread"
-msgstr ""
+msgstr "Zaakceptuj ten temat"
 
 #: apps/threads/thread.py:37
 msgid "Change this thread to announcement"
-msgstr ""
+msgstr "Zamień to ogłoszenie w zwykły temat"
 
 #: apps/threads/thread.py:39
 msgid "Change this thread to sticky"
-msgstr ""
+msgstr "Przypnij ten temat"
 
 #: apps/threads/thread.py:42
 msgid "Change this thread to normal"
-msgstr ""
+msgstr "Zamień ten temat na zwykły"
 
 #: apps/threads/thread.py:44
 msgid "Unpin this thread"
-msgstr ""
+msgstr "Odepnij ten temat"
 
 #: apps/threads/thread.py:46
 msgid "Move this thread"
-msgstr ""
+msgstr "Przenieś ten temat"
 
 #: apps/threadtype/changelog.py:43
 msgid "Guest, you have to sign-in in order to see posts changelogs."
 msgstr ""
+"Gościu, aby przegladać historię zmian postów, musisz się najpierw zalogować."
 
 #: apps/threadtype/changelog.py:108
 msgid "No changes to revert."
-msgstr ""
+msgstr "Brak zmian do cofnięcia."
 
 #: apps/threadtype/changelog.py:126
 #, python-format
 msgid "Post has been reverted to state from %(date)s."
-msgstr ""
+msgstr "Post został przwrócony do stanu z %(date)s."
 
 #: apps/threadtype/delete.py:55 apps/threadtype/delete.py:77
 msgid "Somebody has already replied to this thread. You cannot delete it."
 msgstr ""
+"Ktoś już odpowiedział w tym temacie, w związku z czym nie możesz już go "
+"usunąć."
 
 #: apps/threadtype/delete.py:63 apps/threadtype/delete.py:90
 #: apps/threadtype/thread/moderation/thread.py:129
 #, python-format
 msgid "Thread \"%(thread)s\" has been deleted."
-msgstr ""
+msgstr "Temat \"%(thread)s\" został usunięty."
 
 #: apps/threadtype/delete.py:104 apps/threadtype/delete.py:126
 msgid "Somebody has already replied to this post, you cannot delete it."
 msgstr ""
+"Ktoś już odpowiedział na tem post, w związku z czym nie możesz już go usunąć."
 
 #: apps/threadtype/delete.py:114 apps/threadtype/delete.py:141
 msgid "Selected Reply has been deleted."
-msgstr ""
+msgstr "Zaznaczona odpowiedź została usunięta."
 
 #: apps/threadtype/jumps.py:102
 msgid ""
@@ -3647,75 +3685,75 @@ msgstr ""
 
 #: apps/threadtype/posting/forms.py:23
 msgid "Post Content"
-msgstr ""
+msgstr "Treść posta"
 
 #: apps/threadtype/posting/forms.py:33
 msgid "Announcement"
-msgstr ""
+msgstr "Ogłoszenie"
 
 #: apps/threadtype/posting/forms.py:34
 msgid "Sticky"
-msgstr ""
+msgstr "Przypięty"
 
 #: apps/threadtype/posting/forms.py:35
 msgid "Standard"
-msgstr ""
+msgstr "Standardowy"
 
 #: apps/threadtype/posting/forms.py:37
 msgid "Thread Importance"
-msgstr ""
+msgstr "Istotnośc tematu"
 
 #: apps/threadtype/posting/forms.py:52
 msgid "Open Thread"
-msgstr ""
+msgstr "Otwórz temat"
 
 #: apps/threadtype/posting/forms.py:54
 msgid "Close Thread"
-msgstr ""
+msgstr "Zamknij temat"
 
 #: apps/threadtype/posting/forms.py:85
 msgid "Optional reason for editing this thread."
-msgstr ""
+msgstr "Opcjonalny powód edycji tego tematu."
 
 #: apps/threadtype/posting/forms.py:86 apps/threadtype/posting/forms.py:97
 msgid "Edit Reason"
-msgstr ""
+msgstr "Powód edycji"
 
 #: apps/threadtype/posting/forms.py:96
 msgid "Optional reason for editing this reply."
-msgstr ""
+msgstr "Opcjonalny powód edycji tej odpowiedzi."
 
 #: apps/threadtype/posting/newreply.py:54
 #, python-format
 msgid "Added on %(date)s:"
-msgstr ""
+msgstr "Dodano %(date)s:"
 
 #: apps/threadtype/posting/newreply.py:139
 #, python-format
 msgid "%(username)s has replied to your post in thread %(thread)s"
-msgstr ""
+msgstr "%(username)s odpowiedział na twój post w temacie %(thread)s"
 
 #: apps/threadtype/thread/views.py:155
 #: templates/cranefly/private_threads/thread.html:453
 #: templates/cranefly/threads/thread.html:433
 msgid "You have to select at least one post."
-msgstr ""
+msgstr "Musisz zaznaczyć przynajmniej jednego posta."
 
 #: apps/threadtype/thread/moderation/forms.py:15
 msgid "New Thread Name"
-msgstr ""
+msgstr "Nowa nazwa tematu"
 
 #: apps/threadtype/thread/moderation/forms.py:16
 msgid "New Thread Forum"
-msgstr ""
+msgstr "Nowe forum tematu"
 
 #: apps/threadtype/thread/moderation/forms.py:31
 msgid "This is not a forum."
-msgstr ""
+msgstr "To nie jest forum."
 
 #: apps/threadtype/thread/moderation/forms.py:47
 msgid "New Thread Link"
-msgstr ""
+msgstr "Nowy link do tematu"
 
 #: apps/threadtype/thread/moderation/forms.py:47
 msgid "To select new thread, simply copy and paste here its link."
@@ -3920,7 +3958,7 @@ msgstr ""
 
 #: apps/usercp/avatar/views.py:217 forms/forms.py:158
 msgid "Form contains errors."
-msgstr ""
+msgstr "Formularz zawiera błędy."
 
 #: apps/usercp/credentials/forms.py:18
 msgid "New E-mail"
@@ -3999,20 +4037,20 @@ msgstr ""
 
 #: apps/usercp/options/forms.py:10
 msgid "Show my presence to everyone"
-msgstr ""
+msgstr "Pokazuj każdemu moją obecność"
 
 #: apps/usercp/options/forms.py:11
 msgid "Show my presence to people I follow"
-msgstr ""
+msgstr "Pokazuj obecność tylko osobom, które obserwuję"
 
 #: apps/usercp/options/forms.py:12
 msgid "Show my presence to nobody"
-msgstr ""
+msgstr "Nie pokazuj nikomu mojej obecności"
 
 #: apps/usercp/options/forms.py:15 apps/usercp/options/forms.py:20
 #: fixtures/accountssetings.py:74 fixtures/accountssetings.py:85
 msgid "Don't watch"
-msgstr ""
+msgstr "Nie obserwuj"
 
 #: apps/usercp/options/forms.py:16 apps/usercp/options/forms.py:21
 #: fixtures/accountssetings.py:75 fixtures/accountssetings.py:86
@@ -4213,7 +4251,7 @@ msgstr ""
 
 #: fixtures/accountssetings.py:46
 msgid "Minimum user password length"
-msgstr ""
+msgstr "Najkrótsza możliwa dlugość hasła"
 
 #: fixtures/accountssetings.py:52
 msgid "Require mixed Case"
@@ -4221,35 +4259,39 @@ msgstr ""
 
 #: fixtures/accountssetings.py:52
 msgid "Require digits"
-msgstr ""
+msgstr "Wymagane cyfry"
 
 #: fixtures/accountssetings.py:52
 msgid "Require special characters"
-msgstr ""
+msgstr "Wymagane znaki specjalne"
 
 #: fixtures/accountssetings.py:53
 msgid "Password Complexity"
-msgstr ""
+msgstr "Złożoność hasła"
 
 #: fixtures/accountssetings.py:60
 msgid "Password Lifetime"
-msgstr ""
+msgstr "Długość życia hasła"
 
 #: fixtures/accountssetings.py:61
 msgid ""
 "Enter number of days since password was set to force member to change it "
 "with new one, or 0 to dont force your members to change their passwords."
 msgstr ""
+"Wprowadź liczbę dni, po których użytkownicy będą zmuszeni do zamiany swojego "
+"hasła na nowe. Wprowadzenie zera wyłącza wymuszanie zmiany haseł."
 
 #: fixtures/accountssetings.py:67
 msgid "Include User Password in Welcoming E-mail"
-msgstr ""
+msgstr "Umieść hasło użytkownika w powitalnym e-mailu"
 
 #: fixtures/accountssetings.py:68
 msgid ""
 "If you want to, Misago can include new user password in welcoming e-mail "
 "that is sent to new users after successful account creation."
 msgstr ""
+"Jeżeli chcesz, Misago może umieścić hasło nowego użytkownika w powitalnym e-"
+"mailu, który otrzyma po pomyślnej rejestracji."
 
 #: fixtures/accountssetings.py:76 fixtures/accountssetings.py:87
 msgid "Put on watched threads list and e-mail user when somebody replies"
@@ -4282,7 +4324,7 @@ msgstr ""
 #: fixtures/avatarssettings.py:14 fixtures/avatarssettings.py:23
 #: templates/cranefly/usercp/avatar.html:26
 msgid "Gravatar"
-msgstr ""
+msgstr "Gravatar"
 
 #: fixtures/avatarssettings.py:14 templates/cranefly/usercp/avatar.html:22
 msgid "Uploaded Avatar"
@@ -5462,7 +5504,7 @@ msgstr[2] "%(total)s administratorów online"
 #: templates/admin/index.html:31
 #, python-format
 msgid "started %(start)s ago from %(ip)s"
-msgstr "rozpoczęty %(start)s temu z adresu IP %(ip)s"
+msgstr "zalogowany %(start)s temu z adresu IP %(ip)s"
 
 #: templates/admin/index.html:31
 #, python-format
@@ -5619,7 +5661,7 @@ msgstr "Użytkownicy do usunięcia"
 
 #: templates/admin/ranks/list.html:9
 msgid "Order"
-msgstr "Kolejność"
+msgstr "Istotność"
 
 #: templates/admin/ranks/list.html:14
 msgid "Special"
