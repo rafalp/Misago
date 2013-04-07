@@ -189,3 +189,5 @@ unidecode/**
 yaml/**
 dev-manage.py
 path.py
+!templates/debug_toolbar/panels/acl.html
+templates/debug_toolbar/**
