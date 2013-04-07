@@ -6,7 +6,7 @@ from misago.validators import validate_sluggable
 
 class RankForm(Form):
     name = forms.CharField(max_length=255, validators=[validate_sluggable(
-                                                                          _("Rank name must be sluggable."),
+                                                                          _("Rank name must contain alphanumeric characters."),
                                                                           _("Rank name is too long.")
                                                                           )])
     description = forms.CharField(widget=forms.Textarea, required=False)

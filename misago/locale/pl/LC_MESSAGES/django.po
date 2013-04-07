@@ -1100,7 +1100,7 @@ msgid "Adjustment using theme \"%(name)s\" has been deleted."
 msgstr "Przypisanie dla szablonu \"%(name)s\" zostało usunięte."
 
 #: apps/admin/forumroles/forms.py:8 apps/admin/roles/forms.py:8
-msgid "Role name must be sluggable."
+msgid "Role name must contain alphanumeric characters."
 msgstr "Nazwa roli nie może zawierać wyłącznie znaków specjalnych."
 
 #: apps/admin/forumroles/forms.py:9 apps/admin/roles/forms.py:9
@@ -1195,7 +1195,7 @@ msgid "Forum Role \"%(name)s\" has been deleted."
 msgstr "Rola \"%(name)s\" została usunięta."
 
 #: apps/admin/forums/forms.py:12
-msgid "Category name must be sluggable."
+msgid "Category name must contain alphanumeric characters."
 msgstr "Nazwa kategorii nie może zawierać samych znaków specjalnych."
 
 #: apps/admin/forums/forms.py:13
@@ -1276,7 +1276,7 @@ msgid "Don't copy permissions"
 msgstr "Nie kopiuj uprawnień"
 
 #: apps/admin/forums/forms.py:60
-msgid "Forum name must be sluggable."
+msgid "Forum name must contain alphanumeric characters."
 msgstr "Nazwa forum nie może składać się wyłącznie ze znaków specjlanych."
 
 #: apps/admin/forums/forms.py:61
@@ -1354,7 +1354,7 @@ msgid ""
 msgstr ""
 
 #: apps/admin/forums/forms.py:117
-msgid "Redirect name must be sluggable."
+msgid "Redirect name must contain alphanumeric characters."
 msgstr "Nazwa przekierowania nie może się składać tylko ze znaków specjalnych."
 
 #: apps/admin/forums/forms.py:118
@@ -1574,7 +1574,7 @@ msgid "Forum \"%(name)s\" has been deleted."
 msgstr "Forum \"%(name)s\" zostało usunięte."
 
 #: apps/admin/newsletters/forms.py:10
-msgid "Newsletter name must be sluggable."
+msgid "Newsletter name must contain alphanumeric characters."
 msgstr "Nazwa newslettera nie może składać się tylko ze znaków specjalnych."
 
 #: apps/admin/newsletters/forms.py:11
@@ -1823,7 +1823,7 @@ msgid "Looks like nobody is currently online on forums."
 msgstr "Wygląda na to, że w danej chwili nikt nie jest zalogowany."
 
 #: apps/admin/pruneusers/forms.py:8
-msgid "Policy name must be sluggable."
+msgid "Policy name must contain alphanumeric characters."
 msgstr ""
 
 #: apps/admin/pruneusers/forms.py:9
@@ -1998,7 +1998,7 @@ msgstr ""
 "Autoryzacja żądania jest niepoprawna. Spróbuj ponownie wysłać formularz."
 
 #: apps/admin/ranks/forms.py:9
-msgid "Rank name must be sluggable."
+msgid "Rank name must contain alphanumeric characters."
 msgstr "Nazwa rangi nie może składać się tylko ze znaków specjalnych."
 
 #: apps/admin/ranks/forms.py:10

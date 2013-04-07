@@ -9,7 +9,7 @@ class CategoryForm(Form):
     parent = False
     perms = False
     name = forms.CharField(max_length=255, validators=[validate_sluggable(
-                                                                          _("Category name must be sluggable."),
+                                                                          _("Category name must contain alphanumeric characters."),
                                                                           _("Category name is too long.")
                                                                           )])
     description = forms.CharField(widget=forms.Textarea, required=False)
@@ -57,7 +57,7 @@ class ForumForm(Form):
     parent = False
     perms = False
     name = forms.CharField(max_length=255, validators=[validate_sluggable(
-                                                                          _("Forum name must be sluggable."),
+                                                                          _("Forum name must contain alphanumeric characters."),
                                                                           _("Forum name is too long.")
                                                                           )])
     description = forms.CharField(widget=forms.Textarea, required=False)
@@ -114,7 +114,7 @@ class RedirectForm(Form):
     parent = False
     perms = False
     name = forms.CharField(max_length=255, validators=[validate_sluggable(
-                                                                          _("Redirect name must be sluggable."),
+                                                                          _("Redirect name must contain alphanumeric characters."),
                                                                           _("Redirect name is too long.")
                                                                           )])
     description = forms.CharField(widget=forms.Textarea, required=False)

@@ -5,7 +5,7 @@ from misago.validators import validate_sluggable
 
 class ForumRoleForm(Form):
     name = forms.CharField(max_length=255, validators=[validate_sluggable(
-                                                                         _("Role name must be sluggable."),
+                                                                         _("Role name must contain alphanumeric characters."),
                                                                          _("Role name is too long.")
                                                                          )])
 
