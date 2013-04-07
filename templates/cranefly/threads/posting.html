@@ -150,7 +150,7 @@
     <li><i class="icon-time"></i> <a href="{% url 'thread_find' thread=thread.pk, slug=thread.slug, post=post.pk %}">{{ post.date|reltimesince }}</a></li>
     <li><i class="icon-user"></i> {% if post.user %}<a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
     <li><i class="icon-pencil"></i> {% if post.edits > 0 -%}
-      {% trans edit=post.edits %}One edit{% pluralize %}{{ edit }} edits{% endtrans %}
+      {% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}
     {%- else -%}
       {% trans %}First edit{% endtrans %}
     {%- endif %}</li>

@@ -109,8 +109,10 @@ class CrawlerSession(MisagoSession):
                 self._session_rk.save(force_insert=True)
                 break
             except CreateError:
-                # Key wasn't unique, we'll try again after request ends
-                continue
+                try:
+                    self._session_rk =  Session.objects.get(id=self._session_key)                    
+                except Session.DoesNotExist:
+                    continue
 
     def human_session(self):
         return False

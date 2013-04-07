@@ -3,5 +3,5 @@
 {% block content %}
 {{ super() }}
 
-{% trans %}Your account will remain inactive until Board Administrator accepts it. Depending on number of new registrations this may take few minutes or few days. Thanks for patience!{% endtrans %}
+{% trans %}Your account will remain inactive until Board Administrator accepts it. Depending on number of new registrations this may take few minutes or few days. Thanks for your patience!{% endtrans %}
 {% endblock %}
