@@ -49,6 +49,8 @@ class ThreadModeration(object):
                 new_forum = form.cleaned_data['new_forum']
                 self.thread.move_to(new_forum)
                 self.thread.save(force_update=True)
+                self.thread.last_post.set_checkpoint(self.request, 'moved', forum=self.forum)
+                self.thread.last_post.save(force_update=True)
                 self.forum.sync()
                 self.forum.save(force_update=True)
                 new_forum.sync()

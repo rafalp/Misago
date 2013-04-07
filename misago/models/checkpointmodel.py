@@ -1,6 +1,6 @@
 from django.db import models
 from misago.signals import (merge_post, merge_thread, move_forum_content,
-                            move_post, move_thread, rename_user)
+                            move_post, move_thread, rename_forum, rename_user)
 
 class Checkpoint(models.Model):
     forum = models.ForeignKey('Forum')
@@ -13,12 +13,24 @@ class Checkpoint(models.Model):
     target_user = models.ForeignKey('User', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     target_user_name = models.CharField(max_length=255, null=True, blank=True)
     target_user_slug = models.CharField(max_length=255, null=True, blank=True)
+    old_forum = models.ForeignKey('Forum', null=True, blank=True, related_name='+')
+    old_forum_name = models.CharField(max_length=255, null=True, blank=True)
+    old_forum_slug = models.CharField(max_length=255, null=True, blank=True)
     date = models.DateTimeField()
     ip = models.GenericIPAddressField()
     agent = models.CharField(max_length=255)
 
     class Meta:
         app_label = 'misago'
+
+
+def rename_forum_handler(sender, **kwargs):
+    Checkpoint.objects.filter(old_forum=sender).update(
+                                                  old_forum_name=sender.name,
+                                                  old_forum_slug=sender.slug,
+                                                  )
+
+rename_forum.connect(rename_forum_handler, dispatch_uid="rename_forum_checkpoints")
 
 
 def rename_user_handler(sender, **kwargs):

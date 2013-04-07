@@ -291,6 +291,9 @@ class Edit(FormWidget):
         if form.cleaned_data['parent'].pk != target.parent.pk or form.cleaned_data['perms']:
             self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
 
+        if self.original_name != target.name:
+            target.sync_name()
+
         return target, Message(_('Changes in forum "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
 
 

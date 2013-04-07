@@ -78,6 +78,8 @@ class ThreadsListModeration(object):
                 for thread in threads:
                     thread.move_to(new_forum)
                     thread.save(force_update=True)
+                    thread.last_post.set_checkpoint(self.request, 'moved', forum=self.forum)
+                    thread.last_post.save(force_update=True)
                 new_forum.sync()
                 new_forum.save(force_update=True)
                 self.forum.sync()

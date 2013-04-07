@@ -57,7 +57,7 @@ class Post(models.Model):
         post.post = '%s\n- - -\n%s' % (post.post, self.post)
         merge_post.send(sender=self, new_post=post)
 
-    def set_checkpoint(self, request, action, user=None):
+    def set_checkpoint(self, request, action, user=None, forum=None):
         if request.user.is_authenticated():
             self.checkpoints = True
             self.checkpoint_set.create(
@@ -74,6 +74,9 @@ class Post(models.Model):
                                        target_user=user,
                                        target_user_name=(user.username if user else None),
                                        target_user_slug=(user.username_slug if user else None),
+                                       old_forum=forum,
+                                       old_forum_name=(forum.name if forum else None),
+                                       old_forum_slug=(forum.slug if forum else None),
                                        )
             
     def notify_mentioned(self, request, thread_type, users):

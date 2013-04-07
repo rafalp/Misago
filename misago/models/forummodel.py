@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from misago.signals import delete_forum_content, move_forum_content, rename_user
+from misago.signals import delete_forum_content, move_forum_content, rename_forum, rename_user
 
 class ForumManager(TreeManager):
     forums_tree = None
@@ -198,6 +198,9 @@ class Forum(MPTTModel):
 
     def move_content(self, target):
         move_forum_content.send(sender=self, move_to=target)
+
+    def sync_name(self):
+        rename_forum.send(sender=self)
 
     def attr(self, att):
         if self.attrs:

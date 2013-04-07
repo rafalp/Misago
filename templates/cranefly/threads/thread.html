@@ -356,6 +356,8 @@
           <i class="icon-trash"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} deleted this thread {{ date }}{% endtrans %}
           {%- elif checkpoint.action == 'undeleted' -%}
           <i class="icon-trash"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} restored this thread {{ date }}{% endtrans %}
+          {%- elif checkpoint.action == 'moved' and acl.forums.can_see(checkpoint.old_forum_id) -%}
+          <i class="icon-arrow-right"></i> {% trans user=checkpoint_user(checkpoint), forum=checkpoint_forum(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} moved this thread from {{ forum }} {{ date }}{% endtrans %}
           {%- endif -%}
         </span>
       </div>
@@ -494,6 +496,15 @@
 <a href="{{ 'user'|url(user=checkpoint.user_id, username=checkpoint.user_slug) }}">{{ checkpoint.user_name }}</a>
 {%- else -%}
 <strong>{{ checkpoint.user_name }}</strong>
+{%- endif -%}
+{%- endmacro %}
+
+
+{% macro checkpoint_forum(checkpoint) -%}
+{%- if checkpoint.old_forum_id -%}
+<a href="{% url 'forum' forum=checkpoint.old_forum_id, slug=checkpoint.old_forum_slug %}">{{ checkpoint.old_forum_name }}</a>
+{%- else -%}
+<strong>{{ checkpoint.old_forum_name }}</strong>
 {%- endif -%}
 {%- endmacro %}
 
