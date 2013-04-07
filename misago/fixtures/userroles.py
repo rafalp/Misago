@@ -22,6 +22,7 @@ def load():
                         'private_thread_attachments_limit': 0,
                         'can_invite_ignoring': True,
                         'private_threads_mod': True,
+                        'can_delete_checkpoints': 2,
                         'forums': {3: 1, 5: 1, 6: 1},
                        }
     role.save(force_insert=True)
@@ -44,6 +45,7 @@ def load():
                         'private_thread_attachments_limit': 0,
                         'can_invite_ignoring': True,
                         'private_threads_mod': True,
+                        'can_delete_checkpoints': 1,
                         'forums': {3: 1, 5: 1, 6: 1},
                        }
     role.save(force_insert=True)

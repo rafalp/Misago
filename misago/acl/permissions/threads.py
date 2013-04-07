@@ -46,30 +46,36 @@ def make_forum_form(request, role, form):
     form.base_fields['can_edit_labels'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_see_changelog'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_pin_threads'] = forms.TypedChoiceField(choices=(
-                                                                 (0, _("No")),
-                                                                 (1, _("Yes, to stickies")),
-                                                                 (2, _("Yes, to announcements")),
-                                                                 ), coerce=int)
+                                                                          (0, _("No")),
+                                                                          (1, _("Yes, to stickies")),
+                                                                          (2, _("Yes, to announcements")),
+                                                                          ), coerce=int)
     form.base_fields['can_edit_threads_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_move_threads_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_close_threads'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_protect_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_delete_threads'] = forms.TypedChoiceField(choices=(
-                                                                    (0, _("No")),
-                                                                    (1, _("Yes, soft-delete")),
-                                                                    (2, _("Yes, hard-delete")),
-                                                                    ), coerce=int)
+                                                                              (0, _("No")),
+                                                                              (1, _("Yes, soft-delete")),
+                                                                              (2, _("Yes, hard-delete")),
+                                                                              ), coerce=int)
     form.base_fields['can_delete_posts'] = forms.TypedChoiceField(choices=(
-                                                                  (0, _("No")),
-                                                                  (1, _("Yes, soft-delete")),
-                                                                  (2, _("Yes, hard-delete")),
-                                                                   ), coerce=int)
+                                                                           (0, _("No")),
+                                                                           (1, _("Yes, soft-delete")),
+                                                                           (2, _("Yes, hard-delete")),
+                                                                           ), coerce=int)
     form.base_fields['can_delete_polls'] = forms.TypedChoiceField(choices=(
-                                                                  (0, _("No")),
-                                                                  (1, _("Yes, soft-delete")),
-                                                                  (2, _("Yes, hard-delete")),
-                                                                  ), coerce=int)
+                                                                           (0, _("No")),
+                                                                           (1, _("Yes, soft-delete")),
+                                                                           (2, _("Yes, hard-delete")),
+                                                                           ), coerce=int)
     form.base_fields['can_delete_attachments'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_delete_checkpoints'] = forms.TypedChoiceField(choices=(
+                                                                                 (0, _("No")),
+                                                                                 (1, _("Yes, soft-delete")),
+                                                                                 (2, _("Yes, hard-delete")),
+                                                                                 ), coerce=int)
+    form.base_fields['can_see_deleted_checkpoints'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
 
     form.layout.append((
                         _("Threads"),
@@ -130,6 +136,8 @@ def make_forum_form(request, role, form):
                          ('can_delete_posts', {'label': _("Can delete posts")}),
                          ('can_delete_polls', {'label': _("Can delete polls")}),
                          ('can_delete_attachments', {'label': _("Can delete attachments")}),
+                         ('can_delete_checkpoints', {'label': _("Can delete checkpoints")}),
+                         ('can_see_deleted_checkpoints', {'label': _("Can see deleted checkpoints")}),
                         ),
                        ),)
 
@@ -546,6 +554,53 @@ class ThreadsACL(BaseACL):
         except KeyError:
             raise ACLError403(_("You don't have permission to see who voted on this post."))
 
+    def can_see_checkpoint(self, forum, checkpoint):
+        if not checkpoint.deleted:
+            return True
+        try:
+            return self.acl[forum.pk]['can_see_deleted_checkpoints']
+        except KeyError:
+            raise False
+
+    def can_delete_checkpoint(self, forum):
+        try:
+            return self.acl[forum.pk]['can_delete_checkpoints']
+        except KeyError:
+            raise False
+
+    def allow_checkpoint_view(self, forum, checkpoint):
+        if checkpoint.deleted:
+            try:
+                forum_role = self.acl[forum.pk]
+                if not forum_role['can_see_deleted_checkpoints']:
+                    raise ACLError403(_("Selected checkpoint could not be found."))
+            except KeyError:
+                raise ACLError403(_("Selected checkpoint could not be found."))
+
+    def allow_checkpoint_hide(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            if not forum_role['can_delete_checkpoints']:
+                raise ACLError403(_("You cannot hide checkpoints!"))
+        except KeyError:
+            raise ACLError403(_("You cannot hide checkpoints!"))
+
+    def allow_checkpoint_delete(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            if forum_role['can_delete_checkpoints'] != 2:
+                raise ACLError403(_("You cannot delete checkpoints!"))
+        except KeyError:
+            raise ACLError403(_("You cannot delete checkpoints!"))
+
+    def allow_checkpoint_show(self, forum):
+        try:
+            forum_role = self.acl[forum.pk]
+            if not forum_role['can_delete_checkpoints']:
+                raise ACLError403(_("You cannot show checkpoints!"))
+        except KeyError:
+            raise ACLError403(_("You cannot show checkpoints!"))
+
 
 def build_forums(acl, perms, forums, forum_roles):
     acl.threads = ThreadsACL()
@@ -582,7 +637,10 @@ def build_forums(acl, perms, forums, forum_roles):
                      'can_delete_posts': 0,
                      'can_delete_polls': 0,
                      'can_delete_attachments': False,
+                     'can_see_deleted_checkpoints': False,
+                     'can_delete_checkpoints': 0,
                      }
+
         for perm in perms:
             try:
                 role = forum_roles[perm['forums'][forum.pk]]

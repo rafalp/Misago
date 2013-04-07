@@ -5,10 +5,13 @@ from django.utils.translation import ugettext as _
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
 from misago.messages import Message
-from misago.models import Forum, Thread, Post
+from misago.models import Forum, Thread, Post, Checkpoint
 from misago.apps.threadtype.base import ViewBase
 
 class DeleteHideBaseView(ViewBase):
+    def set_context(self):
+        pass
+
     def _set_context(self):
         self.thread = Thread.objects.get(pk=self.kwargs.get('thread'))
         self.forum = self.thread.forum
@@ -23,6 +26,10 @@ class DeleteHideBaseView(ViewBase):
             self.post = self.thread.post_set.get(id=self.kwargs.get('post'))
             self.request.acl.threads.allow_post_view(self.request.user, self.thread, self.post)
 
+        if self.kwargs.get('checkpoint'):
+            self.checkpoint = self.post.checkpoint_set.get(id=self.kwargs.get('checkpoint'))
+            self.request.acl.threads.allow_checkpoint_view(self.forum, self.checkpoint)
+
         self.set_context()
 
     def __call__(self, request, **kwargs):
@@ -36,7 +43,7 @@ class DeleteHideBaseView(ViewBase):
             self.delete()
             self.message()
             return self.response()
-        except (Forum.DoesNotExist, Thread.DoesNotExist, Post.DoesNotExist):
+        except (Forum.DoesNotExist, Thread.DoesNotExist, Post.DoesNotExist, Checkpoint.DoesNotExist):
             return error404(request)
         except ACLError403 as e:
             return error403(request, unicode(e))
@@ -139,6 +146,54 @@ class HideReplyBaseView(DeleteHideBaseView):
 
     def message(self):
         self.request.messages.set_flash(Message(_("Selected Reply has been deleted.")), 'success', 'threads_%s' % self.post.pk)
+
+    def response(self):
+        return self.redirect_to_post(self.post)
+
+
+class DeleteCheckpointBaseView(DeleteHideBaseView):
+    def set_context(self):
+        self.request.acl.threads.allow_checkpoint_delete(self.forum)
+
+    def delete(self):
+        self.checkpoint.delete()
+        self.post.checkpoints = self.post.checkpoint_set.count() > 0
+        self.post.save(force_update=True)
+
+    def message(self):
+        self.request.messages.set_flash(Message(_("Selected checkpoint has been deleted.")), 'success', 'threads_%s' % self.post.pk)
+
+    def response(self):
+        return self.redirect_to_post(self.post)
+
+
+class HideCheckpointBaseView(DeleteHideBaseView):
+    def set_context(self):
+        self.request.acl.threads.allow_checkpoint_hide(self.forum)
+        if self.checkpoint.deleted:
+            raise ACLError403(_('This checkpoint is already hidden!'))
+
+    def delete(self):
+        self.checkpoint.deleted = True
+        self.checkpoint.save(force_update=True)
+
+    def message(self):
+        self.request.messages.set_flash(Message(_("Selected checkpoint has been hidden.")), 'success', 'threads_%s' % self.post.pk)
+
+    def response(self):
+        return self.redirect_to_post(self.post)
+
+
+class ShowCheckpointBaseView(DeleteHideBaseView):
+    def set_context(self):
+        self.request.acl.threads.allow_checkpoint_show(self.forum)
+
+    def delete(self):
+        self.checkpoint.deleted = False
+        self.checkpoint.save(force_update=True)
+
+    def message(self):
+        self.request.messages.set_flash(Message(_("Selected checkpoint has been made visible.")), 'success', 'threads_%s' % self.post.pk)
 
     def response(self):
         return self.redirect_to_post(self.post)

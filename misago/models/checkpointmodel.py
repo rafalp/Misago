@@ -19,6 +19,7 @@ class Checkpoint(models.Model):
     date = models.DateTimeField()
     ip = models.GenericIPAddressField()
     agent = models.CharField(max_length=255)
+    deleted = models.BooleanField(default=False)
 
     class Meta:
         app_label = 'misago'

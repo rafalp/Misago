@@ -14,6 +14,12 @@ def make_form(request, role, form):
         form.base_fields['private_thread_attachments_limit'] = forms.IntegerField(min_value=0, initial=3, required=False)
         form.base_fields['can_invite_ignoring'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
         form.base_fields['private_threads_mod'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['can_delete_checkpoints'] = forms.TypedChoiceField(choices=(
+                                                                                     (0, _("No")),
+                                                                                     (1, _("Yes, soft-delete")),
+                                                                                     (2, _("Yes, hard-delete")),
+                                                                                     ), coerce=int)
+
         form.layout.append((
                             _("Private Threads"),
                             (
@@ -24,6 +30,7 @@ def make_form(request, role, form):
                              ('private_thread_attachments_limit', {'label': _("Max. number of attachments per post")}),
                              ('can_invite_ignoring', {'label': _("Can invite users that ignore him")}),
                              ('private_threads_mod', {'label': _("Can moderate threads"), 'help_text': _("Makes user with this role Private Threads moderator capable of closing, deleting and editing all private threads he participates in at will.")}),
+                             ('can_delete_checkpoints', {'label': _("Can delete checkpoints")}),
                              ),
                             ))
 
@@ -52,6 +59,8 @@ def build(acl, roles):
     acl.private_threads.acl['private_thread_attachments_limit'] = False
     acl.private_threads.acl['can_invite_ignoring'] = False
     acl.private_threads.acl['private_threads_mod'] = False
+    acl.private_threads.acl['can_delete_checkpoints'] = 0
+    acl.private_threads.acl['can_see_deleted_checkpoints'] = False
 
     for role in roles:
         for perm, value in acl.private_threads.acl.items():
@@ -94,6 +103,8 @@ def cleanup(acl, perms, forums):
                               'can_delete_polls': 0,
                               'can_delete_attachments': False,
                               'can_invite_ignoring': False,
+                              'can_delete_checkpoints': 0,
+                              'can_see_deleted_checkpoints': False,
                              }
 
     for perm in perms:
@@ -120,5 +131,8 @@ def cleanup(acl, perms, forums):
                 acl.threads.acl[forum]['can_delete_threads'] = 2
                 acl.threads.acl[forum]['can_delete_posts'] = 2
                 acl.threads.acl[forum]['can_delete_attachments'] = True
+                acl.threads.acl[forum]['can_see_deleted_checkpoints'] = True
+            if perm['can_delete_checkpoints'] > acl.threads.acl[forum]['can_delete_checkpoints']:
+                acl.threads.acl[forum]['can_delete_checkpoints'] = perm['can_delete_checkpoints']
         except KeyError:
             pass

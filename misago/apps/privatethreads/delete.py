@@ -15,3 +15,15 @@ class DeleteReplyView(DeleteReplyBaseView, TypeMixin):
 
 class HideReplyView(HideReplyBaseView, TypeMixin):
     pass
+
+
+class DeleteCheckpointView(DeleteCheckpointBaseView, TypeMixin):
+    pass
+
+
+class HideCheckpointView(HideCheckpointBaseView, TypeMixin):
+    pass
+
+
+class ShowCheckpointView(ShowCheckpointBaseView, TypeMixin):
+    pass

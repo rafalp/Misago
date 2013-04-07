@@ -329,6 +329,27 @@
               {%- elif checkpoint.action == 'left' -%}
               <i class="icon-remove-sign"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} left thread {{ date }}{% endtrans %}
               {%- endif -%}
+              {% if user.is_authenticated() %}
+              {% if acl.threads.can_delete_checkpoint(forum) %}
+              {% if checkpoint.deleted %}
+              <form action="{% url 'private_post_checkpoint_show' slug=thread.slug, thread=thread.pk, post=post.pk, checkpoint=checkpoint.pk %}" method="post" class="form-inline">
+                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                <button type="submit" class="btn btn-link btn-show">{% trans %}Show{% endtrans %}</button>
+              </form>
+              {% else %}
+              <form action="{% url 'private_post_checkpoint_hide' slug=thread.slug, thread=thread.pk, post=post.pk, checkpoint=checkpoint.pk %}" method="post" class="form-inline">
+                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                <button type="submit" class="btn btn-link btn-hide">{% trans %}Hide{% endtrans %}</button>
+              </form>
+              {% endif %}
+              {% endif %}
+              {% if acl.threads.can_delete_checkpoint(forum) == 2 %}
+              <form action="{% url 'private_post_checkpoint_delete' slug=thread.slug, thread=thread.pk, post=post.pk, checkpoint=checkpoint.pk %}" method="post" class="form-inline prompt-delete-checkpoint">
+                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                <button type="submit" class="btn btn-link btn-delete">{% trans %}Delete{% endtrans %}</button>
+              </form>
+              {% endif %}
+              {% endif %}
             </span>
           </div>
           {% endfor %}
@@ -477,6 +498,10 @@
       });
       $('.prompt-delete-post').submit(function() {
           var decision = confirm("{% trans %}Are you sure you want to delete this post?{% endtrans %}");
+          return decision;
+      });
+      $('.prompt-delete-checkpoint').submit(function() {
+          var decision = confirm("{% trans %}Are you sure you want to delete this checkpoint?{% endtrans %}");
           return decision;
       });
     });
