@@ -25,7 +25,14 @@ def index(request):
         ranks_list = []
         users_list = []
         for rank in Rank.objects.filter(on_index=True).order_by('order'):
-            rank_entry = {'id':rank.id, 'name': rank.name, 'style': rank.style, 'title': rank.title, 'online': []}
+            rank_entry = {
+                          'id':rank.id,
+                          'name': rank.name,
+                          'slug': rank.slug if rank.as_tab else '',
+                          'style': rank.style,
+                          'title': rank.title,
+                          'online': [],
+                         }
             ranks_list.append(rank_entry)
             ranks_dict[rank.pk] = rank_entry
         if ranks_dict:

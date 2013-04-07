@@ -302,6 +302,12 @@
     color: @grayLight;
     font-size: @fontSizeLarge;
     font-weight: bold;
+
+    a:link, a:active, a:visited, a:hover {
+      color: @grayLight;
+      font-size: @fontSizeLarge;
+      text-decoration: none;
+    }
   }
 
   ul {
@@ -326,13 +332,15 @@
         height: 28px;
       }
 
-      a:link, a:active, a:visited, a:hover {
-        position: relative;
-        top: (@fontSizeLarge - @baseFontSize) / 2;
-        margin: 0px 4px;
+      .user-name {
+        &:link, &:active, &:visited, &:hover {
+          position: relative;
+          top: (@fontSizeLarge - @baseFontSize) / 2;
+          margin: 0px 4px;
 
-        color: @textColor;
-        font-size: @fontSizeLarge;
+          color: @textColor;
+          font-size: @fontSizeLarge;
+        }
       }
 
       .label {

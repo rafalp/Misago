@@ -86,13 +86,19 @@
     <div class="index-ranks-list">
       {% for rank in ranks_online %}{% if rank.online %}
       <div class="inder-rank{% if rank.style %} index-rank-{{ rank.style }}{% endif %}">
-        <h3>{% trans rank_name=_(rank.name) %}{{ rank_name }} Online{% endtrans %}</h3>
+        <h3>{% if rank.slug %}<a href="{% url 'users' slug=rank.slug %}">{% endif %}{% trans rank_name=_(rank.name) %}{{ rank_name }} Online{% endtrans %}{% if rank.slug %}</a>{% endif %}</h3>
         <ul class="unstyled">
           {% for online in rank.online %}
           <li>
             <img src="{{ online.get_avatar(24) }}" alt="" class="avatar-small">
-            <a href="{% url 'user' username=online.username_slug, user=online.pk %}">{{ online.username }}</a>
-            {% if rank.title or online.title %}<span class="label">{% if online.title %}{{ online.title }}{% else %}{{ _(rank.title) }}{% endif %}</span>{% endif %}
+            <a href="{% url 'user' username=online.username_slug, user=online.pk %}" class="user-name">{{ online.username }}</a>
+            {% if rank.title or online.title %}
+            {% if rank.slug -%}
+            <a href="{% url 'users' slug=rank.slug %}" class="label">{% if online.title %}{{ online.title }}{% else %}{{ _(rank.title) }}{% endif %}</a>
+            {%- else -%}
+            <span class="label">{% if online.title %}{{ online.title }}{% else %}{{ _(rank.title) }}{% endif %}</span>
+            {% endif %}
+            {% endif %}
           </li>
           {% endfor %}
         </ul>
