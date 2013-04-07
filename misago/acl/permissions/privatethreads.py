@@ -98,7 +98,7 @@ def cleanup(acl, perms, forums):
 
     for perm in perms:
         try:
-            if perm['can_use_private_threads']:
+            if perm['can_use_private_threads'] and forum not in acl.forums.acl['can_see']:
                 acl.forums.acl['can_see'].append(forum)
                 acl.forums.acl['can_browse'].append(forum)
             if perm['can_start_private_threads']:
