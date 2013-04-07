@@ -358,11 +358,10 @@ class User(models.Model):
         self.password_date = tz_util.now()
         self.password = make_password(raw_password.strip())
 
-    def set_last_visit(self, ip, agent, hidden=False):
+    def set_last_visit(self, ip, agent):
         self.last_date = tz_util.now()
         self.last_ip = ip
         self.last_agent = agent
-        self.last_hide = hidden
 
     def check_password(self, raw_password, mobile=False):
         """
@@ -553,7 +552,7 @@ class Crawler(Guest):
         self.username = username
 
     def is_anonymous(self):
-        return True
+        return False
 
     def is_authenticated(self):
         return False

@@ -41,6 +41,12 @@ class MisagoSession(SessionBase):
         """We use sessions to track onlines so sorry, only sessions cleaner may delete sessions"""
         pass
 
+    def created(self):
+        try:
+            return self.started
+        except AttributeError:
+            return False
+
     def flush(self):
         """We use sessions to track onlines so sorry, only sessions cleaner may delete sessions"""
         pass
@@ -50,12 +56,6 @@ class MisagoSession(SessionBase):
 
     def session_expired(self):
         return False
-
-    def get_hidden(self):
-        return False
-
-    def set_hidden(self, hidden=False):
-        pass
 
     def get_ip(self, request):
         return request.META.get('HTTP_X_FORWARDED_FOR', '') or request.META.get('REMOTE_ADDR')
@@ -83,7 +83,7 @@ class CrawlerSession(MisagoSession):
     Crawler Session controller
     """
     def __init__(self, request):
-        self.hidden = False
+        self.started = False
         self.team = False
         self._ip = self.get_ip(request)
         self._session_key = md5('%s-%s' % (request.user.username, self._ip)).hexdigest()
@@ -123,8 +123,8 @@ class HumanSession(MisagoSession):
     Human Session controller
     """
     def __init__(self, request):
+        self.started = False
         self.expired = False
-        self.hidden = False
         self.team = False
         self.rank = None
         self.remember_me = None
@@ -153,16 +153,18 @@ class HumanSession(MisagoSession):
                 self.expired = True
                 raise IncorrectSessionException()
             
-            # Change session to matched and extract session user and hidden flag
+            # Change session to matched and extract session user
+            if not self._session_rk.matched:
+                self.started = True
             self._session_rk.matched = True
             self._user = self._session_rk.user
-            self.hidden = self._session_rk.hidden
             self.team = self._session_rk.team
         except (Session.DoesNotExist, IncorrectSessionException):
             # Attempt autolog
             try:
                 self.remember_me = auth_remember(request, self.get_ip(request))
                 self.create(request, user=self.remember_me.user)
+                self.started = True
             except AuthException as e:
                 # Autolog failed
                 self.create(request)
@@ -194,8 +196,7 @@ class HumanSession(MisagoSession):
                     # Update user data
                     user.set_last_visit(
                                         self.get_ip(request),
-                                        request.META.get('HTTP_USER_AGENT', ''),
-                                        hidden=self.hidden
+                                        request.META.get('HTTP_USER_AGENT', '')
                                         )
                     user.save(force_update=True)
                 break
@@ -205,7 +206,6 @@ class HumanSession(MisagoSession):
 
     def save(self):
         self._session_rk.user = self._user
-        self._session_rk.hidden = self.hidden
         self._session_rk.team = self.team
         self._session_rk.rank_id = self.rank
         super(HumanSession, self).save()
@@ -233,17 +233,10 @@ class HumanSession(MisagoSession):
                         if len(request.COOKIES[cookie_token]) > 0:
                             Token.objects.filter(id=request.COOKIES[cookie_token]).delete()
                         request.cookiejar.delete('TOKEN')
-                self.hidden = False
                 self._user = None
                 request.user = Guest()
         except AttributeError:
             pass
-
-    def get_hidden(self):
-        return self.hidden
-
-    def set_hidden(self, hidden=False):
-        self.hidden = hidden
 
 
 class SessionMock(object):

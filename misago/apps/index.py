@@ -36,27 +36,32 @@ def index(request):
             ranks_list.append(rank_entry)
             ranks_dict[rank.pk] = rank_entry
         if ranks_dict:
-            for session in Session.objects.select_related('user').filter(rank__in=ranks_dict.keys()).filter(last__gte=timezone.now() - timedelta(minutes=10)).filter(user__isnull=False):
+            for session in Session.objects.select_related('user').filter(rank__in=ranks_dict.keys()).filter(last__gte=timezone.now() - timedelta(seconds=request.settings['sessions_tracker_sync_frequency'])).filter(user__isnull=False):
                 if not session.user_id in users_list:
                     ranks_dict[session.user.rank_id]['online'].append(session.user)
                     users_list.append(session.user_id)
             # Assert we are on list
             if (request.user.is_authenticated() and request.user.rank_id in ranks_dict.keys()
-                and not request.user.id in users_list):
+                and not request.user.pk in users_list):
                     ranks_dict[request.user.rank_id]['online'].append(request.user)
+                    users_list.append(request.user.pk)
+            cache.set('team_users_online', users_list, request.settings['sessions_tracker_sync_frequency'])
             del ranks_dict
             del users_list
-        cache.set('ranks_online', ranks_list, 300)
+        cache.set('ranks_online', ranks_list, request.settings['sessions_tracker_sync_frequency'])
 
+    print cache.get('team_users_online')
     # Users online
-    users_online = cache.get('users_online', 'nada')
-    if users_online == 'nada':
-        users_online = Session.objects.filter(matched=True).filter(crawler__isnull=True).filter(last__gte=timezone.now() - timedelta(seconds=300)).count()
-        cache.set('users_online', users_online, 300)
-    if not users_online and not request.user.is_crawler():
-        # Cheatey trick to make sure we'll never display
-        # zero users online to human client
-        users_online = 1
+    users_online = {
+                    'members': request.onlines.members(),
+                    'all': request.onlines.all(),
+                   }
+    if not users_online['members'] and request.user.is_authenticated():
+        users_online['members'] += 1
+    if users_online['members'] > users_online['all']:
+        users_online['all'] = users_online['members']
+    if users_online['members'] >= users_online['all'] and request.user.is_anonymous():
+        users_online['all'] += 1
 
     # Load reads tracker and build forums list
     reads_tracker = ForumsTracker(request.user)

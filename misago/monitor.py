@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.core.cache import cache
 from django.utils import timezone
 from misago.models import MonitorItem
@@ -41,6 +42,9 @@ class Monitor(object):
         if key in self._items:
             return self._items[key][1]
         return None
+
+    def expired(self, key, seconds=5):
+        return self._items[key][1] < (timezone.now() - timedelta(seconds=seconds))
 
     def has_key(self, key):
         return key in self._items

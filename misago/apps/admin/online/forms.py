@@ -9,7 +9,6 @@ class SearchSessionsForm(Form):
     type = forms.ChoiceField(choices=(
                                       ('all', _("All types")),
                                       ('registered', _("Registered Members Sessions")),
-                                      ('hidden', _("Hidden Sessions")),
                                       ('guest', _("Guests Sessions")),
                                       ('crawler', _("Crawler Sessions")),
                                       ), required=False)

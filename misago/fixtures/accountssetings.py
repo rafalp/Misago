@@ -8,9 +8,10 @@ settings_fixture = (
         'description': _("Those settings allow you to increase security of your members accounts."),
         'settings': (
             ('account_activation', {
+                'value':        "none",
                 'type':         "string",
                 'input':        "choice",
-                'extra':        {'choices': [('', _("No validation required")), ('user', _("Activation Token sent to User")), ('admin', _("Activation by Administrator")), ('block', _("Dont allow new registrations"))]},
+                'extra':        {'choices': [('none', _("No validation required")), ('user', _("Activation Token sent to User")), ('admin', _("Activation by Administrator")), ('block', _("Dont allow new registrations"))]},
                 'separator':    _("Users Registrations"),
                 'name':         _("New accounts validation"),
             }),

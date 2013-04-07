@@ -133,7 +133,7 @@
           <span class="tooltip-top" title="{% trans %}Members{% endtrans %}"><i class="icon-user"></i> {{ monitor.users|int|intcomma }}</span>
         </li>
         <li>
-          <span class="tooltip-top" title="{% trans %}Online{% endtrans %}"><i class="icon-map-marker"></i> {{ users_online|int|intcomma }}</span>
+          <span class="tooltip-top" title="{% trans %}Online{% endtrans %}"><i class="icon-map-marker"></i> {{ users_online.members|int|intcomma }} <span class="muted">{{ users_online.all|int|intcomma }}</spam></span>
         </li>
       </ul>
     </div>

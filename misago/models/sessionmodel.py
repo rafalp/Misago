@@ -13,7 +13,6 @@ class Session(models.Model):
     rank = models.ForeignKey('Rank', related_name='sessions', null=True, on_delete=models.SET_NULL)
     admin = models.BooleanField(default=False)
     matched = models.BooleanField(default=False)
-    hidden = models.BooleanField(default=False)
 
     class Meta:
         app_label = 'misago'

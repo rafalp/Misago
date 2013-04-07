@@ -15,6 +15,14 @@ settings_fixture = (
                 'name':         _("Check IP on session authorization"),
                 'description':  _("Makes sessions more secure, but can cause problems with proxies and VPN's."),
             }),
+            ('sessions_tracker_sync_frequency', {
+                'value':        300,
+                'type':         "integer",
+                'input':        "text",
+                'extra':         {'min': 15},
+                'name':         _("Online Tracker Updates Frequency"),
+                'description':  _("How often do you want online tracker to synchronize itself with database? Low numbers provide good accuracy at cost of database traffic while great number provides your users with general idea how many are currently online while at same time keeping stress off your database."),
+            }),
             ('remember_me_allow', {
                 'value':        True,
                 'type':         "boolean",
