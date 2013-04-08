@@ -1,6 +1,7 @@
 from django import forms
 from django.core.urlresolvers import reverse
 from django.forms import ValidationError
+from django.http import Http404
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
@@ -42,7 +43,11 @@ class ThreadBaseView(ViewBase):
         else:
             self.posts = self.posts.order_by('pk')
 
-        self.pagination = make_pagination(self.kwargs.get('page', 0), self.count, self.request.settings.posts_per_page)
+        try:
+            self.pagination = make_pagination(self.kwargs.get('page', 0), self.count, self.request.settings.posts_per_page)
+        except Http404:
+            return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))
+
         if self.request.settings.posts_per_page < self.count:
             self.posts = self.posts[self.pagination['start']:self.pagination['stop']]
 
@@ -178,7 +183,9 @@ class ThreadBaseView(ViewBase):
             self.fetch_thread()
             self.check_forum_type()
             self._check_permissions()
-            self.fetch_posts()
+            response = self.fetch_posts()
+            if response:
+                return response
             self.make_thread_form()
             if self.thread_form:
                 response = self.handle_thread_form()

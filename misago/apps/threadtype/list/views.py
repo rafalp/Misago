@@ -97,7 +97,9 @@ class ThreadsListBaseView(ViewBase):
             self._type_available()
             self._fetch_forum()
             self._check_permissions()
-            self.fetch_threads()
+            response = self.fetch_threads()
+            if response:
+                return response
             self.form = None
             self.make_form()
             if self.form:

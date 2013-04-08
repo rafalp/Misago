@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+from django.http import Http404
 from django.shortcuts import redirect
 from django.template import RequestContext
 from misago.apps.errors import error403, error404
@@ -71,7 +72,12 @@ def list(request, slug=None, page=1):
         if active_rank:
             users = User.objects.filter(rank=active_rank)
             items_total = users.count()
-            pagination = make_pagination(page, items_total, request.settings['profiles_per_list'])
+            try:
+                pagination = make_pagination(page, items_total, request.settings['profiles_per_list'])
+            except Http404:
+                if not default_rank and active_rank:
+                    return redirect(reverse('users', kwargs={'slug': active_rank.slug}))
+                return redirect(reverse('users'))
             users = users.order_by('username_slug')[pagination['start']:pagination['stop']]
 
     return request.theme.render_to_response('profiles/list.html',

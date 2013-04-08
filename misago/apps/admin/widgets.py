@@ -1,6 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
+from django.http import Http404
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
@@ -8,6 +9,7 @@ from jinja2 import TemplateNotFound
 import math
 from misago.forms import Form, FormLayout, FormFields, FormFieldsets
 from misago.messages import Message
+from misago.utils.pagination import make_pagination
 
 """
 Class widgets
@@ -207,46 +209,7 @@ class ListWidget(BaseWidget):
         return reverse(self.admin.get_action_attr(self.id, 'route'), kwargs={'page': page})
 
     def get_pagination(self, total, page):
-        """
-        Return list pagination.
-        A list with three values:
-        - Offset for ORM slicing
-        - Length of slice
-        - no. of prev page (or -1 for first page)
-        - no. of next page (or -1 for last page)
-        - Current page
-        - Pages total
-        """
-        if not self.pagination or total < 0:
-            # Dont do anything if we are not paging
-            return None
-
-        # Set basic pagination, use either Session cache or new page value
-        pagination = {'start': 0, 'stop': 0, 'prev':-1, 'next':-1}
-        if self.request.session.get(self.get_token('pagination')):
-            pagination['start'] = self.request.session.get(self.get_token('pagination'))
-        page = int(page)
-        if page > 0:
-            pagination['start'] = (page - 1) * self.pagination
-
-        # Set page and total stat
-        pagination['page'] = int(pagination['start'] / self.pagination) + 1
-        pagination['total'] = int(math.ceil(total / float(self.pagination)))
-
-        # Fix too large offset
-        if pagination['start'] > total:
-            pagination['start'] = 0
-
-        # Allow prev/next?
-        if total > self.pagination:
-            if pagination['page'] > 1:
-                pagination['prev'] = pagination['page'] - 1
-            if pagination['page'] < pagination['total']:
-                pagination['next'] = pagination['page'] + 1
-
-        # Set stop offset
-        pagination['stop'] = pagination['start'] + self.pagination
-        return pagination
+        return make_pagination(page, total, self.pagination)
 
     def get_items(self):
         if self.request.session.get(self.get_token('filter')):
@@ -271,7 +234,10 @@ class ListWidget(BaseWidget):
 
         # Set sorting and paginating
         sorting_method = self.get_sorting()
-        paginating_method = self.get_pagination(items_total, page)
+        try:
+            paginating_method = self.get_pagination(items_total, page)
+        except Http404:
+            return redirect(self.get_url())
 
         # List items
         items = self.get_items()

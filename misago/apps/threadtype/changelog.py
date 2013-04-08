@@ -10,7 +10,6 @@ from misago.messages import Message
 from misago.models import Forum, Thread, Post, Change
 from misago.utils.datesformats import reldate
 from misago.utils.strings import slugify
-from misago.utils.pagination import make_pagination
 from misago.apps.threadtype.base import ViewBase
 
 class ChangelogBaseView(ViewBase):

@@ -1,4 +1,7 @@
 from itertools import chain
+from django.core.urlresolvers import reverse
+from django.http import Http404
+from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from misago.apps.threadtype.list import ThreadsListBaseView, ThreadsListModeration
 from misago.models import Forum, Thread
@@ -30,7 +33,11 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
     def fetch_threads(self):
         qs_announcements, qs_threads = self.threads_queryset()
         self.count = qs_threads.count()
-        self.pagination = make_pagination(self.kwargs.get('page', 0), self.count, self.request.settings.threads_per_page)
+
+        try:
+            self.pagination = make_pagination(self.kwargs.get('page', 0), self.count, self.request.settings.threads_per_page)
+        except Http404:
+            return self.threads_list_redirect()
 
         tracker_forum = ThreadsTracker(self.request, self.forum)
         for thread in list(chain(qs_announcements, qs_threads[self.pagination['start']:self.pagination['stop']])):

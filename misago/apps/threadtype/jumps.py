@@ -8,7 +8,6 @@ from misago.decorators import block_guest, check_csrf
 from misago.messages import Message
 from misago.models import Forum, Thread, Post, Karma, WatchedThread
 from misago.readstrackers import ThreadsTracker
-from misago.utils.pagination import make_pagination
 from misago.utils.views import json_response
 from misago.apps.threadtype.base import ViewBase
 

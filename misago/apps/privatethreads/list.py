@@ -1,4 +1,5 @@
 from itertools import chain
+from django.http import Http404
 from django.utils.translation import ugettext as _
 from misago.apps.threadtype.list import ThreadsListBaseView, ThreadsListModeration
 from misago.models import Forum, Thread
@@ -21,7 +22,10 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
             qs_threads = qs_threads.prefetch_related('start_poster', 'last_poster')
 
         self.count = qs_threads.count()
-        self.pagination = make_pagination(self.kwargs.get('page', 0), self.count, self.request.settings.threads_per_page)
+        try:
+            self.pagination = make_pagination(self.kwargs.get('page', 0), self.count, self.request.settings.threads_per_page)
+        except Http404:
+            return self.threads_list_redirect()
 
         tracker_forum = ThreadsTracker(self.request, self.forum)
         for thread in qs_threads[self.pagination['start']:self.pagination['stop']]:
