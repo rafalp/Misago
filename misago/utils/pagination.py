@@ -4,6 +4,15 @@ from django.http import Http404
 def make_pagination(page, total, per):
     pagination = {'start': 0, 'stop': 0, 'prev':-1, 'next':-1}
     page = int(page)
+
+    if page == 1:
+        # This is fugly abuse of "wrong page" handling
+        # It's done to combat "duplicate content" errors
+        # If page is 1 instead of 0, that suggests user came
+        # to page from somewhere/1/ instead of somewhere/
+        # when this happens We raise 404 to drop /1/ part from url
+        raise Http404()
+
     if page > 0:
         pagination['start'] = (page - 1) * per
 
