@@ -66,11 +66,11 @@ class ThreadBaseView(ViewBase):
             post.ignored = self.thread.start_post_id != post.pk and not self.thread.pk in self.request.session.get('unignore_threads', []) and post.user_id in ignored_users
             if post.ignored:
                 self.ignored = True
-            post.checkpoints = []
-            if post.checkpoint_set.all():
+            post.checkpoints_visible = []
+            if post.checkpoints_set.all():
                 for checkpoint in post.checkpoint_set.all():
                     if self.request.acl.threads.can_see_checkpoint(self.forum, checkpoint):
-                        post.checkpoints.append(checkpoint)
+                        post.checkpoints_visible.append(checkpoint)
 
         last_post = self.posts[len(self.posts) - 1]
 

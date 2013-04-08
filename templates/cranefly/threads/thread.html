@@ -324,9 +324,9 @@
       {% endif %}
     </div>
 
-    {% if post.checkpoints %}
+    {% if post.checkpoints_visible %}
     <div class="post-checkpoints">
-      {% for checkpoint in post.checkpoints %}
+      {% for checkpoint in post.checkpoints_visible %}
       <div class="post-checkpoint{% if checkpoint.deleted %} checkpoint-deleted{% endif %}">
         <hr>
         <span>

@@ -298,9 +298,9 @@
           {% endif %}
         </div>
 
-        {% if post.checkpoint_set.all() %}
+        {% if post.checkpoints_visible %}
         <div class="post-checkpoints">
-          {% for checkpoint in post.checkpoint_set.all() %}
+          {% for checkpoint in post.checkpoints_visible %}
           <div class="post-checkpoint">
             <hr>
             <span>
