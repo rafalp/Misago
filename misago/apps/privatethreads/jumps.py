@@ -59,7 +59,7 @@ class InviteUserView(JumpView, TypeMixin):
                     self.request.messages.set_flash(Message(_('You cannot add yourself to this thread.')), 'error', 'threads')
                 else:
                     self.request.messages.set_flash(Message(_('%(user)s is already participating in this thread.') % {'user': user.username}), 'info', 'threads')
-            if not acl.private_threads.can_participate():
+            elif not acl.private_threads.can_participate():
                     self.request.messages.set_flash(Message(_('%(user)s cannot participate in private threads.') % {'user': user.username}), 'info', 'threads')
             elif (not self.request.acl.private_threads.can_invite_ignoring() and
                     not user.allow_pd_invite(self.request.user)):
@@ -72,10 +72,9 @@ class InviteUserView(JumpView, TypeMixin):
                 self.thread.last_post.set_checkpoint(self.request, 'invited', user)
                 self.thread.last_post.save(force_update=True)
                 self.request.messages.set_flash(Message(_('%(user)s has been added to this thread.') % {'user': user.username}), 'success', 'threads')
-            return self.retreat_redirect()
         except User.DoesNotExist:
             self.request.messages.set_flash(Message(_('User with requested username could not be found.')), 'error', 'threads')
-            return self.retreat_redirect()
+        return self.retreat_redirect()
 
 
 class RemoveUserView(JumpView, TypeMixin):
