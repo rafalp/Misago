@@ -415,6 +415,8 @@ class ThreadsACL(BaseACL):
     def can_delete_thread(self, user, forum, thread, post):
         try:
             forum_role = self.acl[forum.pk]
+            if post.pk != thread.start_post_id:
+                return False
             if not forum_role['can_close_threads'] and (forum.closed or thread.closed):
                 return False
             if post.protected and not forum_role['can_protect_posts']:
@@ -449,6 +451,8 @@ class ThreadsACL(BaseACL):
     def can_delete_post(self, user, forum, thread, post):
         try:
             forum_role = self.acl[forum.pk]
+            if post.pk == thread.start_post_id:
+                return False
             if not forum_role['can_close_threads'] and (forum.closed or thread.closed):
                 return False
             if post.protected and not forum_role['can_protect_posts']:

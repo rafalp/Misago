@@ -294,39 +294,49 @@
             </div>
             {% if post.pk == thread.start_post_id %}
             <div class="post-actions">
+              {% if acl.threads.can_delete_thread(user, forum, thread, post) %}
+              {% if post.deleted %}
+              <form action="{% url 'thread_show' thread=thread.pk, slug=thread.slug %}" class="form-inline" method="post">
+                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                <span>{% trans %}Delete thread:{% endtrans %}</span>
+                <button type="submit" class="btn btn-link btn-hide tooltip-top" title="{% trans %}Make this thread visible to other users{% endtrans %}">{% trans %}Restore{% endtrans %}</button>
+              </form>
+              {% else %}
+              <form action="{% url 'thread_hide' thread=thread.pk, slug=thread.slug %}" class="form-inline" method="post">
+                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                <span>{% trans %}Delete thread:{% endtrans %}</span>
+                <button type="submit" class="btn btn-link btn-hide tooltip-top" title="{% trans %}Hide this thread from other users{% endtrans %}">{% trans %}Hide{% endtrans %}</button>
+              </form>
+              {% endif %}
+              {% endif %}
               {% if acl.threads.can_delete_thread(user, forum, thread, post) == 2 %}
               <form action="{% url 'thread_delete' thread=thread.pk, slug=thread.slug %}" class="form-inline prompt-delete-thread" method="post">
                 <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-                <span>{% trans %}Delete thread:{% endtrans %}</span>
-                <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Delete this thread for good{% endtrans %}">{% trans %}Hard{% endtrans %}</button>
-              </form>
-              {% endif %}
-              {% if not post.deleted and acl.threads.can_delete_thread(user, forum, thread, post) %}
-              <form action="{% url 'thread_hide' thread=thread.pk, slug=thread.slug %}" class="form-inline prompt-delete-thread" method="post">
-                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-                {% if acl.threads.can_delete_thread(user, forum, thread, post) != 2 %}
-                <span>{% trans %}Delete thread:{% endtrans %}</span>
-                {% endif %}
-                <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Hide this thread from other users{% endtrans %}">{% trans %}Soft{% endtrans %}</button>
+                <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Delete this thread for good{% endtrans %}">{% trans %}Delete{% endtrans %}</button>
               </form>
               {% endif %}
             </div>
             {% elif post.pk != thread.start_post_id and acl.threads.can_delete_post(user, forum, thread, post) %}
             <div class="post-actions">
+              {% if acl.threads.can_delete_post(user, forum, thread, post) %}
+              {% if post.deleted %}
+              <form action="{% url 'post_show' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline" method="post">
+                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                <span>{% trans %}Delete reply:{% endtrans %}</span>
+                <button type="submit" class="btn btn-link btn-hide tooltip-top" title="{% trans %}Make this reply visible to other users{% endtrans %}">{% trans %}Restore{% endtrans %}</button>
+              </form>
+              {% else %}
+              <form action="{% url 'post_hide' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline" method="post">
+                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                <span>{% trans %}Delete reply:{% endtrans %}</span>
+                <button type="submit" class="btn btn-link btn-hide tooltip-top" title="{% trans %}Hide this reply from other users{% endtrans %}">{% trans %}Hide{% endtrans %}</button>
+              </form>
+              {% endif %}
+              {% endif %}
               {% if acl.threads.can_delete_post(user, forum, thread, post) == 2 -%}
               <form action="{% url 'post_delete' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline prompt-delete-post" method="post">
                 <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-                <span>{% trans %}Delete reply:{% endtrans %}</span>
-                <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Delete this reply for good{% endtrans %}">{% trans %}Hard{% endtrans %}</button>
-              </form>
-              {% endif %}
-              {% if not post.deleted and acl.threads.can_delete_post(user, forum, thread, post) %}
-              <form action="{% url 'post_hide' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline prompt-delete-post" method="post">
-                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-                {% if acl.threads.can_delete_post(user, forum, thread, post) != 2 %}
-                <span>{% trans %}Delete reply:{% endtrans %}</span>
-                {% endif %}
-                <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Hide this reply from other users{% endtrans %}">{% trans %}Soft{% endtrans %}</button>
+                <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Delete this reply for good{% endtrans %}">{% trans %}Delete{% endtrans %}</button>
               </form>
               {% endif %}
             </div>
@@ -364,7 +374,7 @@
           {% if checkpoint.deleted %}
           <form action="{% url 'post_checkpoint_show' slug=thread.slug, thread=thread.pk, post=post.pk, checkpoint=checkpoint.pk %}" method="post" class="form-inline">
             <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-            <button type="submit" class="btn btn-link btn-show">{% trans %}Show{% endtrans %}</button>
+            <button type="submit" class="btn btn-link btn-show">{% trans %}Restore{% endtrans %}</button>
           </form>
           {% else %}
           <form action="{% url 'post_checkpoint_hide' slug=thread.slug, thread=thread.pk, post=post.pk, checkpoint=checkpoint.pk %}" method="post" class="form-inline">

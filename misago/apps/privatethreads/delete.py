@@ -9,11 +9,19 @@ class HideThreadView(HideThreadBaseView, TypeMixin):
     pass
 
 
+class ShowThreadView(ShowThreadBaseView, TypeMixin):
+    pass
+
+
 class DeleteReplyView(DeleteReplyBaseView, TypeMixin):
     pass
 
 
 class HideReplyView(HideReplyBaseView, TypeMixin):
+    pass
+
+
+class ShowReplyView(ShowReplyBaseView, TypeMixin):
     pass
 
 

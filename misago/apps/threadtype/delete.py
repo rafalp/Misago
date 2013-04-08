@@ -55,11 +55,6 @@ class DeleteThreadBaseView(DeleteHideBaseView):
     def set_context(self):
         self.request.acl.threads.allow_delete_thread(self.request.user, self.proxy,
                                                      self.thread, self.thread.start_post, True)
-        # Assert we are not user trying to delete thread with replies
-        acl = self.request.acl.threads.get_role(self.thread.forum_id)
-        if not acl['can_delete_threads']:
-            if self.thread.post_set.exclude(user_id=self.request.user.id).count() > 0:
-                raise ACLError403(_("Somebody has already replied to this thread. You cannot delete it."))
 
     def delete(self):
         self.thread.delete()
@@ -102,13 +97,37 @@ class HideThreadBaseView(DeleteHideBaseView):
         return self.threads_list_redirect()
 
 
+class ShowThreadBaseView(DeleteHideBaseView):
+    def set_context(self):
+        acl = self.request.acl.threads.get_role(self.thread.forum_id)
+        if not acl['can_delete_threads']:
+            raise ACLError403(_("You cannot undelete this thread."))
+        if not self.thread.start_post.deleted:
+            raise ACLError403(_('This thread is already visible!'))
+
+    def delete(self):
+        self.thread.start_post.deleted = False
+        self.thread.start_post.save(force_update=True)
+        self.thread.last_post.set_checkpoint(self.request, 'undeleted')
+        self.thread.last_post.save(force_update=True)
+        self.thread.sync()
+        self.thread.save(force_update=True)
+        self.forum.sync()
+        self.forum.save(force_update=True)
+
+    def message(self):
+        self.request.messages.set_flash(Message(_('Thread "%(thread)s" has been restored.') % {'thread': self.thread.name}), 'success', 'threads')
+
+    def response(self):
+        if self.request.acl.threads.can_see_deleted_threads(self.thread.forum):
+            return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))
+        return self.threads_list_redirect()
+
+
 class DeleteReplyBaseView(DeleteHideBaseView):
     def set_context(self):
         self.request.acl.threads.allow_delete_post(self.request.user, self.forum,
                                                    self.thread, self.post, True)
-        acl = self.request.acl.threads.get_role(self.thread.forum_id)
-        if not acl['can_delete_posts'] and self.thread.post_set.filter(id__gt=self.post.pk).count() > 0:
-            raise ACLError403(_("Somebody has already replied to this post, you cannot delete it."))
 
     def delete(self):
         self.post.delete()
@@ -118,7 +137,7 @@ class DeleteReplyBaseView(DeleteHideBaseView):
         self.forum.save(force_update=True)
 
     def message(self):
-        self.request.messages.set_flash(Message(_("Selected Reply has been deleted.")), 'success', 'threads')
+        self.request.messages.set_flash(Message(_("Selected reply has been deleted.")), 'success', 'threads')
 
     def response(self):
         return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))
@@ -145,7 +164,34 @@ class HideReplyBaseView(DeleteHideBaseView):
         self.forum.save(force_update=True)
 
     def message(self):
-        self.request.messages.set_flash(Message(_("Selected Reply has been deleted.")), 'success', 'threads_%s' % self.post.pk)
+        self.request.messages.set_flash(Message(_("Selected reply has been deleted.")), 'success', 'threads_%s' % self.post.pk)
+
+    def response(self):
+        return self.redirect_to_post(self.post)
+
+
+class ShowReplyBaseView(DeleteHideBaseView):
+    def set_context(self):
+        acl = self.request.acl.threads.get_role(self.thread.forum_id)
+        if not acl['can_delete_posts']:
+            raise ACLError403(_("You cannot undelete this reply."))
+        if not self.post.deleted:
+            raise ACLError403(_('This reply is already visible!'))
+
+    def delete(self):
+        self.post.deleted = False
+        self.post.edit_date = timezone.now()
+        self.post.edit_user = self.request.user
+        self.post.edit_user_name = self.request.user.username
+        self.post.edit_user_slug = self.request.user.username_slug
+        self.post.save(force_update=True)
+        self.thread.sync()
+        self.thread.save(force_update=True)
+        self.forum.sync()
+        self.forum.save(force_update=True)
+
+    def message(self):
+        self.request.messages.set_flash(Message(_("Selected reply has been restored.")), 'success', 'threads_%s' % self.post.pk)
 
     def response(self):
         return self.redirect_to_post(self.post)
@@ -187,13 +233,15 @@ class HideCheckpointBaseView(DeleteHideBaseView):
 class ShowCheckpointBaseView(DeleteHideBaseView):
     def set_context(self):
         self.request.acl.threads.allow_checkpoint_show(self.forum)
+        if self.checkpoint.deleted:
+            raise ACLError403(_('This checkpoint is already visible!'))
 
     def delete(self):
         self.checkpoint.deleted = False
         self.checkpoint.save(force_update=True)
 
     def message(self):
-        self.request.messages.set_flash(Message(_("Selected checkpoint has been made visible.")), 'success', 'threads_%s' % self.post.pk)
+        self.request.messages.set_flash(Message(_("Selected checkpoint has been restored.")), 'success', 'threads_%s' % self.post.pk)
 
     def response(self):
         return self.redirect_to_post(self.post)

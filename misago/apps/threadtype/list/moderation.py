@@ -195,7 +195,7 @@ class ThreadsListModeration(object):
             self.forum.save(force_update=True)
             Post.objects.filter(id__in=last_posts).update(checkpoints=True)
             Thread.objects.filter(id__in=undeleted).update(deleted=False)
-            self.request.messages.set_flash(Message(_('Selected threads have been undeleted.')), 'success', 'threads')
+            self.request.messages.set_flash(Message(_('Selected threads have been restored.')), 'success', 'threads')
 
     def action_soft(self, ids):
         deleted = []
@@ -216,7 +216,7 @@ class ThreadsListModeration(object):
             self.forum.save(force_update=True)
             Post.objects.filter(id__in=last_posts).update(checkpoints=True)
             Thread.objects.filter(id__in=deleted).update(deleted=True)
-            self.request.messages.set_flash(Message(_('Selected threads have been softly deleted.')), 'success', 'threads')
+            self.request.messages.set_flash(Message(_('Selected threads have been hidden.')), 'success', 'threads')
 
     def action_hard(self, ids):
         deleted = []

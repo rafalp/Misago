@@ -56,10 +56,10 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
                 actions.append(('open', _('Open threads')))
                 actions.append(('close', _('Close threads')))
             if acl['can_delete_threads']:
-                actions.append(('undelete', _('Undelete threads')))
-                actions.append(('soft', _('Soft delete threads')))
+                actions.append(('undelete', _('Restore threads')))
+                actions.append(('soft', _('Hide threads')))
             if acl['can_delete_threads'] == 2:
-                actions.append(('hard', _('Hard delete threads')))
+                actions.append(('hard', _('Delete threads')))
         except KeyError:
             pass
         return actions

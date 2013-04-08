@@ -99,7 +99,7 @@ class ThreadModeration(object):
         # Update monitor
         self.request.monitor['threads'] = int(self.request.monitor['threads']) + 1
         self.request.monitor['posts'] = int(self.request.monitor['posts']) + self.thread.replies + 1
-        self.request.messages.set_flash(Message(_('Thread has been undeleted.')), 'success', 'threads')
+        self.request.messages.set_flash(Message(_('Thread has been restored.')), 'success', 'threads')
 
     def thread_action_soft(self):
         # Update thread
@@ -117,7 +117,7 @@ class ThreadModeration(object):
         # Update monitor
         self.request.monitor['threads'] = int(self.request.monitor['threads']) - 1
         self.request.monitor['posts'] = int(self.request.monitor['posts']) - self.thread.replies - 1
-        self.request.messages.set_flash(Message(_('Thread has been deleted.')), 'success', 'threads')
+        self.request.messages.set_flash(Message(_('Thread has been hidden.')), 'success', 'threads')
 
     def thread_action_hard(self):
         # Delete thread
