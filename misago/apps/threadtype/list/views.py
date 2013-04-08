@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
 from misago.forms import Form, FormFields
+from misago.messages import Message
 from misago.models import Forum, Thread, Post
 from misago.readstrackers import ForumsTracker
 from misago.apps.threadtype.base import ViewBase
