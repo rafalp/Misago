@@ -369,6 +369,6 @@ class Delete(ButtonWidget):
 
 
 def inactive(request):
-    token = 'list_filter.users.User'
+    token = 'list_filter_users.User'
     request.session[token] = {'activation': [1, 2, 3]}
     return redirect(reverse('admin_users'))
