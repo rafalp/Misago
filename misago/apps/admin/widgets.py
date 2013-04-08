@@ -426,8 +426,8 @@ class FormWidget(BaseWidget):
 
     def get_form_instance(self, form, target, initial, post=False):
         if post:
-            return form(self.request.POST, request=self.request, initial=self.get_initial_data(target))
-        return form(request=self.request, initial=self.get_initial_data(target))
+            return form(self.request.POST, request=self.request, initial=initial)
+        return form(request=self.request, initial=initial)
 
     def get_layout(self, form, model):
         if self.layout:

@@ -19,30 +19,16 @@ ADMIN_ACTIONS = (
                          'route': 'admin_forums'
                          },
                         {
-                         'id': 'new_category',
-                         'name': _("New Category"),
-                         'help': _("Create new category"),
-                         'route': 'admin_forums_new_category'
-                         },
-                        {
-                         'id': 'new_forum',
-                         'name': _("New Forum"),
-                         'help': _("Create new forum"),
-                         'route': 'admin_forums_new_forum'
-                         },
-                        {
-                         'id': 'new_redirect',
-                         'name': _("New Redirect"),
-                         'help': _("Create new redirect"),
-                         'route': 'admin_forums_new_redirect'
+                         'id': 'new',
+                         'name': _("New Node"),
+                         'help': _("Create new forums tree node"),
+                         'route': 'admin_forums_new'
                          },
                         ],
                route='admin_forums',
                urlpatterns=patterns('misago.apps.admin.forums.views',
                         url(r'^$', 'List', name='admin_forums'),
-                        url(r'^new/category/$', 'NewCategory', name='admin_forums_new_category'),
-                        url(r'^new/forum/$', 'NewForum', name='admin_forums_new_forum'),
-                        url(r'^new/redirect/$', 'NewRedirect', name='admin_forums_new_redirect'),
+                        url(r'^new/$', 'NewNode', name='admin_forums_new'),
                         url(r'^up/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Up', name='admin_forums_up'),
                         url(r'^down/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Down', name='admin_forums_down'),
                         url(r'^edit/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Edit', name='admin_forums_edit'),

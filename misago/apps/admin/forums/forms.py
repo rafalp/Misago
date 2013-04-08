@@ -5,7 +5,77 @@ from misago.forms import Form, YesNoSwitch
 from misago.models import Forum
 from misago.validators import validate_sluggable
 
-class CategoryForm(Form):
+class CleanAttrsMixin(object):
+    def clean_attrs(self):
+        clean = []
+        data = self.cleaned_data['attrs'].strip().split()
+        for i in data:
+            i = i.strip()
+            if not i in clean:
+                clean.append(i)
+        return ' '.join(clean)
+
+
+class NewNodeForm(Form, CleanAttrsMixin):
+    parent = False
+    perms = False
+    role = forms.ChoiceField(choices=(
+                                      ('category', _("Category")),
+                                      ('forum', _("Forum")),
+                                      ('redirect', _("Redirection")),
+                                      ))
+    name = forms.CharField(max_length=255, validators=[validate_sluggable(
+                                                                          _("Category name must contain alphanumeric characters."),
+                                                                          _("Category name is too long.")
+                                                                          )])
+    redirect = forms.URLField(max_length=255, required=False)
+    description = forms.CharField(widget=forms.Textarea, required=False)
+    closed = forms.BooleanField(widget=YesNoSwitch, required=False)
+    attrs = forms.CharField(max_length=255, required=False)
+    show_details = forms.BooleanField(widget=YesNoSwitch, required=False, initial=True)
+    style = forms.CharField(max_length=255, required=False)
+
+    layout = (
+              (
+               _("Basic Options"),
+               (
+                ('parent', {'label': _("Node Parent")}),
+                ('perms', {'label': _("Copy Permissions from")}),
+                ('role', {'label': _("Node Type"), 'help_text': _("Each Node has specific role in forums tree. This role cannot be changed after node is created.")}),
+                ('name', {'label': _("Node Name")}),
+                ('description', {'label': _("Node Description")}),
+                ('redirect', {'label': _("Redirect URL"), 'help_text': _("Redirection nodes require you to specify URL they will redirect users to upon click.")}),
+                ('closed', {'label': _("Closed Node")}),
+                ),
+              ),
+              (
+               _("Display Options"),
+               (
+                ('attrs', {'label': _("Node Attributes"), 'help_text': _('Custom templates can check nodes for predefined attributes that will change way they are rendered.')}),
+                ('show_details', {'label': _("Show Subforums Details"), 'help_text': _('Allows you to prevent this node subforums from displaying statistics, last post data, etc. ect. on forums lists.')}),
+                ('style', {'label': _("Node Style"), 'help_text': _('You can add custom CSS classess to this node, to change way it looks on board index.')}),
+                ),
+              ),
+             )
+
+    def finalize_form(self):
+        self.fields['parent'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(include_self=True), level_indicator=u'- - ')
+        self.fields['perms'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions"))
+
+    def clean(self):
+        cleaned_data = super(NewNodeForm, self).clean()
+        node_role = cleaned_data['role']
+
+        if node_role != 'category' and cleaned_data['parent'].special == 'root':
+            raise forms.ValidationError(_("Only categories can use Root Category as their parent."))
+        if node_role == 'redirect' and not cleaned_data['redirect']:
+            raise forms.ValidationError(_("You have to define redirection URL"))
+
+        return cleaned_data
+
+
+
+class CategoryForm(Form, CleanAttrsMixin):
     parent = False
     perms = False
     name = forms.CharField(max_length=255, validators=[validate_sluggable(
@@ -43,17 +113,8 @@ class CategoryForm(Form):
         self.fields['parent'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(include_self=True), level_indicator=u'- - ')
         self.fields['perms'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions"))
 
-    def clean_attrs(self):
-        clean = []
-        data = self.cleaned_data['attrs'].strip().split()
-        for i in data:
-            i = i.strip()
-            if not i in clean:
-                clean.append(i)
-        return ' '.join(clean)
 
-
-class ForumForm(Form):
+class ForumForm(Form, CleanAttrsMixin):
     parent = False
     perms = False
     name = forms.CharField(max_length=255, validators=[validate_sluggable(
@@ -89,7 +150,7 @@ class ForumForm(Form):
               (
                _("Display Options"),
                (
-                ('attrs', {'label': _("Subforums List Attributes"), 'help_text': _('Custom templates can check forums for predefined attributes that will change way subforums lists are rendered.')}),
+                ('attrs', {'label': _("Forum Attributes"), 'help_text': _('Custom templates can check forums for predefined attributes that will change way subforums lists are rendered.')}),
                 ('show_details', {'label': _("Show Subforums Details"), 'help_text': _("Allows you to prevent this forum's subforums from displaying statistics, last post data, etc. ect. on subforums list.")}),
                 ('style', {'label': _("Forum Style"), 'help_text': _('You can add custom CSS classess to this forum to change way it looks on forums lists.')}),
                 ),
@@ -100,17 +161,8 @@ class ForumForm(Form):
         self.fields['parent'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ')
         self.fields['perms'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions"))
 
-    def clean_attrs(self):
-        clean = []
-        data = self.cleaned_data['attrs'].strip().split()
-        for i in data:
-            i = i.strip()
-            if not i in clean:
-                clean.append(i)
-        return ' '.join(clean)
 
-
-class RedirectForm(Form):
+class RedirectForm(Form, CleanAttrsMixin):
     parent = False
     perms = False
     name = forms.CharField(max_length=255, validators=[validate_sluggable(
@@ -135,6 +187,7 @@ class RedirectForm(Form):
               (
                _("Display Options"),
                (
+                ('attrs', {'label': _("Forum Attributes"), 'help_text': _('Custom templates can check forums for predefined attributes that will change way subforums lists are rendered.')}),
                 ('style', {'label': _("Redirect Style"), 'help_text': _('You can add custom CSS classess to this redirect to change way it looks on forums lists.')}),
                 ),
                ),
