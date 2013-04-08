@@ -91,15 +91,16 @@ function EnhancePostsMD() {
 
     // Automagically turn links into players
     var players = new Array();
-    $('.markdown.js-extra a').each(function() {
-      match = link2player($.trim($(this).text()));
-      if (match && $.inArray(match, players) == -1) {
-        players.push(match);
-        $(this).replaceWith(match);
-        if (players.length == 10) {
-          return false;
+    $('.markdown.js-extra').each(function() {
+      var post_players = 0;
+      $(this).find('a').each(function() {
+        match = link2player($.trim($(this).text()));
+        if (match && $.inArray(match, players) == -1 && players.length < 16 && post_players < 4) {
+          players.push(match);
+          post_players ++;
+          $(this).replaceWith(match);
         }
-      }
+      });
     });
   });
 }
