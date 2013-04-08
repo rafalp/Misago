@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Misago PL\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-04-03 18:32+0000\n"
-"PO-Revision-Date: 2013-04-07 22:41+0100\n"
+"PO-Revision-Date: 2013-04-08 23:46+0100\n"
 "Last-Translator: L0ud PL <loudml@gmail.com>\n"
 "Language-Team: FxDev <loudpl@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -2051,7 +2051,7 @@ msgstr ""
 "Ustala, czy ranga posiada swoją kartę w module użytkowników, na której "
 "znajduje się lista jej posiadaczy. Dobrym pomysłem jest włączenie tej opcji "
 "tylko dla najbardziej wartościowych rang, jak np. ekipa forum, moderatorzy, "
-"najbardziej cenieni użytkownicy itp."
+"przyjaciele forum itp."
 
 #: apps/admin/ranks/forms.py:27
 msgid "Display members online"
@@ -2743,7 +2743,7 @@ msgstr ""
 
 #: apps/admin/users/forms.py:53
 msgid "Lock Member's Avatar"
-msgstr "Zablokuj avatar użytkownika"
+msgstr "Zablokuj awatar użytkownika"
 
 #: apps/admin/users/forms.py:53
 msgid ""
@@ -2819,7 +2819,7 @@ msgstr "Użytkownik musi mieć przypisaną przynamniej jedną rolę."
 
 #: apps/admin/users/forms.py:116
 msgid "Avatar does not exist or is not image file."
-msgstr "Avatar nie istnieje, lub nie jest obrazkiem."
+msgstr "Awatar nie istnieje, lub nie jest obrazkiem."
 
 #: apps/admin/users/forms.py:143
 msgid "User Password"
@@ -2906,7 +2906,7 @@ msgid ""
 "Are you sure you want to remove selected members avatars and their ability "
 "to change them?"
 msgstr ""
-"Czy aby na pewno chcesz usunąć avatary zaznaczonych użytkowników i odebrać "
+"Czy aby na pewno chcesz usunąć awatary zaznaczonych użytkowników i odebrać "
 "im możliwość ich ustawiania?"
 
 #: apps/admin/users/views.py:40
@@ -2923,15 +2923,15 @@ msgstr ""
 
 #: apps/admin/users/views.py:41
 msgid "Remove locks from avatars and signatures"
-msgstr "Usuń blokadę zmiany avatarów i sygnaturek"
+msgstr "Usuń blokadę modyfikacji awatarów i sygnaturek"
 
 #: apps/admin/users/views.py:41
 msgid ""
 "Are you sure you want to remove locks from selected members avatars and "
 "signatures?"
 msgstr ""
-"Czy aby na pewno chcesz przywrócić możliwość zamiany avatarów i sygnaturek "
-"dla zaznaczonych użytkowników?"
+"Czy aby na pewno chcesz przywrócić możliwość modyfikacji awatarów i "
+"sygnaturek dla zaznaczonych użytkowników?"
 
 #: apps/admin/users/views.py:42
 msgid "Reset passwords"
@@ -3015,7 +3015,7 @@ msgstr ""
 
 #: apps/admin/users/views.py:186 apps/resetpswd/views.py:83
 msgid "Your New Password"
-msgstr ""
+msgstr "Twoje nowe hasło"
 
 #: apps/admin/users/views.py:192
 msgid "Selected users passwords have been reset successfully."
@@ -3024,236 +3024,243 @@ msgstr ""
 #: apps/admin/users/views.py:198 apps/admin/users/views.py:218
 #: apps/admin/users/views.py:363
 msgid "You cannot delete yourself."
-msgstr ""
+msgstr "Nie możesz usunąć swojego profilu."
 
 #: apps/admin/users/views.py:200 apps/admin/users/views.py:220
 msgid "You cannot delete protected members."
-msgstr ""
+msgstr "Nie możesz usunąć chronionych użytkowników."
 
 #: apps/admin/users/views.py:212
 msgid "Selected users and their content have been deleted successfully."
-msgstr ""
+msgstr "Zaznaczeni użytkownicy i ich posty zostały pomyślnie usunięte."
 
 #: apps/admin/users/views.py:227
 msgid "Selected users have been deleted successfully."
-msgstr ""
+msgstr "Pomyślnie usunięto zaznaczonych użytkowników."
 
 #: apps/admin/users/views.py:235
 msgid "Save User"
-msgstr ""
+msgstr "Zapisz użytkownika"
 
 #: apps/admin/users/views.py:261
 msgid "New User has been created."
-msgstr ""
+msgstr "Nowy użytkownik został dodany."
 
 #: apps/admin/users/views.py:267
 msgid "Edit User"
-msgstr ""
+msgstr "Zmodyfikuj użytkownika"
 
 #: apps/admin/users/views.py:272
 msgid "Requested User could not be found."
-msgstr ""
+msgstr "Nie odnaleziono żądanego użytkownika."
 
 #: apps/admin/users/views.py:352
 #, python-format
 msgid "Changes in user's \"%(name)s\" account have been saved."
-msgstr ""
+msgstr "Zmiany w profilu użytkownika \"%(name)s\" zostały zachowane."
 
 #: apps/admin/users/views.py:359
 msgid "Requested User account could not be found."
-msgstr ""
+msgstr "Żądane konto użytkownika nie zostało odnalezione."
 
 #: apps/admin/users/views.py:365
 msgid "You cannot delete protected member."
-msgstr ""
+msgstr "Nie możesz usunąć chronionego użytkownika."
 
 #: apps/admin/users/views.py:368
 #, python-format
 msgid "User \"%(name)s\" has been deleted."
-msgstr ""
+msgstr "Użytkownik \"%(name)s\" został usunięty."
 
 #: apps/privatethreads/forms.py:13
 msgid "Invite members to thread"
-msgstr ""
+msgstr "Zaproś użytkowników do dyskusji"
 
 #: apps/privatethreads/forms.py:13
 msgid "user1, user2, user3..."
-msgstr ""
+msgstr "Użytkownik1, użytkownik2, użytkownik3..."
 
 #: apps/privatethreads/forms.py:29 apps/privatethreads/jumps.py:63
 #, python-format
 msgid "%(user)s cannot participate in private threads."
-msgstr ""
+msgstr "%(user)s nie może uczestniczyć w prywatnych dyskusjach."
 
 #: apps/privatethreads/forms.py:32 apps/privatethreads/jumps.py:66
 #: apps/privatethreads/posting.py:27
 #, python-format
 msgid "%(user)s restricts who can invite him to private threads."
-msgstr ""
+msgstr "%(user)s nie pozwala Ci zaprosić go do dyskusji."
 
 #: apps/privatethreads/forms.py:35
 #, python-format
 msgid "User \"%(username)s\" could not be found."
-msgstr ""
+msgstr "Użytkownik \"%(username)s\" nie został odnaleziony."
 
 #: apps/privatethreads/forms.py:37
 msgid ""
 "You cannot invite more than 8 members at single time. Post thread and then "
 "invite additional members."
 msgstr ""
+"Nie możesz zaprosić więcej niż 8 osób na raz. Utwórz temat i wtedy zaproś "
+"pozostałych członków."
 
 #: apps/privatethreads/jumps.py:52
 msgid "You have to enter name of user you want to invite to thread."
 msgstr ""
+"Musisz wprowadzić nazwę użytkownika, którego chcesz zaprosić do dyskusji."
 
 #: apps/privatethreads/jumps.py:59
 msgid "You cannot add yourself to this thread."
-msgstr ""
+msgstr "Nie możesz zaprosić tutaj sam siebie."
 
 #: apps/privatethreads/jumps.py:61
 #, python-format
 msgid "%(user)s is already participating in this thread."
-msgstr ""
+msgstr "%(user)s już uczestniczy w tej dyskusji."
 
 #: apps/privatethreads/jumps.py:71 apps/privatethreads/mixins.py:25
 #, python-format
 msgid "You've been invited to private thread \"%(thread)s\" by %(user)s"
-msgstr ""
+msgstr "%(user)s zaprosił Cię do prywatnej dyskusji \"%(thread)s\""
 
 #: apps/privatethreads/jumps.py:74
 #, python-format
 msgid "%(user)s has been added to this thread."
-msgstr ""
+msgstr "%(user)s został dodany do dyskusji."
 
 #: apps/privatethreads/jumps.py:77
 msgid "User with requested username could not be found."
-msgstr ""
+msgstr "Użytkownik o podanej nazwie nie został odnaleziony."
 
 #: apps/privatethreads/jumps.py:87
 msgid "You don't have permission to remove discussion participants."
-msgstr ""
+msgstr "Nie posiadasz uprawnień do usuwania członków dyskusji."
 
 #: apps/privatethreads/jumps.py:98
 msgid "Thread has been deleted because last participant left it."
-msgstr ""
+msgstr "Temat został usunięty, ponieważ opuścił go ostatni uczestnik."
 
 #: apps/privatethreads/jumps.py:104
 #, python-format
 msgid "You have left the \"%(thread)s\" thread."
-msgstr ""
+msgstr "Opuściłeś temat \"%(thread)s\"."
 
 #: apps/privatethreads/jumps.py:111
 msgid "Selected participant was removed from thread."
-msgstr ""
+msgstr "Zaznaczony członek został wykluczony z dyskusji."
 
 #: apps/privatethreads/jumps.py:114
 msgid "Requested thread participant does not exist."
-msgstr ""
+msgstr "Nie odnaleziono żądanego członka dyskusji."
 
 #: apps/privatethreads/posting.py:24
 msgid "This member can not participate in private threads."
-msgstr ""
+msgstr "Ten użytkownik nie może uczestniczyć w prywatnych dyskusjach."
 
 #: apps/privatethreads/posting.py:41 apps/threads/posting.py:15
 msgid ""
 "New thread has been posted. It will be hidden from other members until "
 "moderator reviews it."
 msgstr ""
+"Nowy temat został utworzony. Do czasu przejrzenia przez moderatora, "
+"pozostanie ukryty dla innych użytkowników."
 
 #: apps/privatethreads/posting.py:43 apps/threads/posting.py:17
 msgid "New thread has been posted."
-msgstr ""
+msgstr "Nowy temat został utworzony."
 
 #: apps/privatethreads/posting.py:54 apps/threads/posting.py:23
 msgid "Your thread has been edited."
-msgstr ""
+msgstr "Twój temat został zmodyfikowany."
 
 #: apps/privatethreads/posting.py:71 apps/threads/posting.py:30
 msgid ""
 "Your reply has been posted. It will be hidden from other members until "
 "moderator reviews it."
 msgstr ""
+"Twoja odpowiedź została dodana. Do czasu przejrzenia przez moderatora, "
+"pozostanie ukryta dla innych użytkowników."
 
 #: apps/privatethreads/posting.py:73 apps/threads/posting.py:32
 msgid "Your reply has been posted."
-msgstr ""
+msgstr "Twoja odpowiedź została zapisana."
 
 #: apps/privatethreads/posting.py:84 apps/threads/posting.py:38
 msgid "Your reply has been changed."
-msgstr ""
+msgstr "Twoja odpowiedź została zmodyfikowana."
 
 #: apps/privatethreads/thread.py:14 apps/threads/thread.py:14
 msgid "Merge posts into one"
-msgstr ""
+msgstr "Połącz posty w jeden"
 
 #: apps/privatethreads/thread.py:16 apps/threads/thread.py:18
 msgid "Protect posts"
-msgstr ""
+msgstr "Zabezpiecz posty"
 
 #: apps/privatethreads/thread.py:17 apps/threads/thread.py:19
 msgid "Remove posts protection"
-msgstr ""
+msgstr "Zdejmij ochronę postów"
 
 #: apps/privatethreads/thread.py:20 apps/threads/thread.py:22
 msgid "Undelete posts"
-msgstr ""
+msgstr "Przywróć posty"
 
 #: apps/privatethreads/thread.py:21 apps/threads/thread.py:23
 msgid "Soft delete posts"
-msgstr ""
+msgstr "Odwracalnie usuń posty"
 
 #: apps/privatethreads/thread.py:23 apps/threads/thread.py:25
 msgid "Hard delete posts"
-msgstr ""
+msgstr "Usuń posty na stałe"
 
 #: apps/privatethreads/thread.py:34 apps/threads/thread.py:49
 msgid "Open this thread"
-msgstr ""
+msgstr "Otwórz ten temat"
 
 #: apps/privatethreads/thread.py:36 apps/threads/thread.py:51
 msgid "Close this thread"
-msgstr ""
+msgstr "Zamknij ten temat"
 
 #: apps/privatethreads/thread.py:39 apps/threads/thread.py:54
 msgid "Undelete this thread"
-msgstr ""
+msgstr "Przywróć ten temat"
 
 #: apps/privatethreads/thread.py:41 apps/threads/thread.py:56
 msgid "Soft delete this thread"
-msgstr ""
+msgstr "Usuń przywracalnie ten temat"
 
 #: apps/privatethreads/thread.py:43 apps/threads/thread.py:58
 msgid "Hard delete this thread"
-msgstr ""
+msgstr "Usuń ten temat na stałe"
 
 #: apps/profiles/views.py:66
 msgid "To search users you have to enter username in search field."
-msgstr ""
+msgstr "Aby szukać, wprowadź nazwę użytkownika w polu wyszukiwania."
 
 #: apps/profiles/details/profile.py:4
 msgid "Profile Details"
-msgstr ""
+msgstr "Szczegóły o użytkowniku"
 
 #: apps/profiles/followers/profile.py:4
 #: templates/cranefly/profiles/details.html:153
 msgid "Followers"
-msgstr ""
+msgstr "Obserwatorzy"
 
 #: apps/profiles/follows/profile.py:4
 msgid "Follows"
-msgstr ""
+msgstr "Obserwuje"
 
 #: apps/register/forms.py:17
 msgid "Acceptation of board ToS is mandatory for membership."
-msgstr ""
+msgstr "Akceptacja regulaminu forum jest obowiązkowa do członkowstwa."
 
 #: apps/register/forms.py:21
 msgid "Entered addresses do not match."
-msgstr ""
+msgstr "Wprowadzone adresy e-mail nie pasują do siebie."
 
 #: apps/register/forms.py:24
 msgid "Entered passwords do not match."
-msgstr ""
+msgstr "Wprowadzone hasła nie pasują do siebie."
 
 #: apps/register/forms.py:31
 #, python-format
@@ -3261,56 +3268,62 @@ msgid ""
 "Your displayed username. Between %(min)s and %(max)s characters, only "
 "letters and digits are allowed."
 msgstr ""
+"Twoja wyświetlana nazwa. Pomiędzy %(min)s a %(max)s znaków, dozwolone są "
+"tylko litery i cyfry."
 
 #: apps/register/forms.py:31
 msgid "Enter your desired username"
-msgstr ""
+msgstr "Wprowadź pożądaną nazwę użytkownika"
 
 #: apps/register/forms.py:35
 msgid ""
 "Working e-mail inbox is required to maintain control over your forum account."
 msgstr ""
+"Aby utrzymać kontrolę nad kontem użytkownika, potrzebny jest działający "
+"adres e-mail."
 
 #: apps/register/forms.py:35 apps/signin/forms.py:14
 msgid "Enter your e-mail"
-msgstr ""
+msgstr "Wprowadź swój adres -email"
 
 #: apps/register/forms.py:35
 msgid "Repeat your e-mail"
-msgstr ""
+msgstr "Powtórz swój adres e-mail"
 
 #: apps/register/forms.py:36 templates/_email/users/activation/none.html:11
 #: templates/_email/users/activation/none.txt:12
 msgid "Password"
-msgstr ""
+msgstr "Hasło"
 
 #: apps/register/forms.py:36
 msgid ""
 "Password you will be using to sign in to your account. Make sure it's strong."
 msgstr ""
+"Hasło będzie potrzebne do zalogowania się na Twoje konto. Upewnij się, że "
+"jest silne."
 
 #: apps/register/forms.py:36 apps/signin/forms.py:15
 msgid "Enter your password"
-msgstr ""
+msgstr "Wprowadź swoje hasło"
 
 #: apps/register/forms.py:36
 msgid "Repeat your password"
-msgstr ""
+msgstr "Powtórz swoje hasło"
 
 #: apps/register/forms.py:44 fixtures/tossettings.py:7
 #: templates/cranefly/layout.html:47
 msgid "Forum Terms of Service"
-msgstr ""
+msgstr "Regulamin forum"
 
 #: apps/register/views.py:20
 msgid "We are sorry but we don't allow new members registrations at this time."
-msgstr ""
+msgstr "Przepraszamy, ale w danej chwili nie akceptujemy nowych rejestracji."
 
 #: apps/register/views.py:45
 #, python-format
 msgid ""
 "Welcome aboard, %(username)s! Your account has been registered successfully."
-msgstr ""
+msgstr "Twoje konto zostało pomyślnie zarejestrowane. Witaj, %(username)s!"
 
 #: apps/register/views.py:49
 #, python-format
@@ -3319,11 +3332,14 @@ msgid ""
 "activate it before you will be able to sign-in. We have sent you an e-mail "
 "with activation link."
 msgstr ""
+"%(username)s, Twoje konto zostało zarejestrowane, jednak przed zalogowaniem "
+"się musisz je aktywować. Wysłaliśmy Ci wiadomość e-mail z linkiem "
+"aktywacyjnym."
 
 #: apps/register/views.py:53 apps/register/views.py:62
 #, python-format
 msgid "Welcome aboard, %(username)s!"
-msgstr ""
+msgstr "Witaj na forum, %(username)s!"
 
 #: apps/register/views.py:58
 #, python-format
@@ -3332,6 +3348,9 @@ msgid ""
 "sign in until board administrator accepts it. We'll notify when this "
 "happens. Thank you for your patience!"
 msgstr ""
+"%(username)s, Twoje konto zostało utworzone, ale nie możesz się zalogować, "
+"dopóki nie zostaniesz potwierdzony przez administratora. Poinformujemy Cię o "
+"tym. Dziękujemy za cierpliwość!"
 
 #: apps/resetpswd/forms.py:17
 msgid ""
@@ -3413,7 +3432,7 @@ msgstr "Zamien na standardowe tematy"
 
 #: apps/threads/list.py:53
 msgid "Move threads"
-msgstr "Przesuń tematy"
+msgstr "Przenieś tematy"
 
 #: apps/threads/list.py:54
 msgid "Merge threads"
@@ -3449,7 +3468,7 @@ msgstr ""
 
 #: apps/threads/thread.py:16
 msgid "Move posts to other thread"
-msgstr "Przesuń posty do innego tematu"
+msgstr "Przenieś posty do innego tematu"
 
 #: apps/threads/thread.py:35
 msgid "Accept this thread"
@@ -3457,7 +3476,7 @@ msgstr "Zaakceptuj ten temat"
 
 #: apps/threads/thread.py:37
 msgid "Change this thread to announcement"
-msgstr "Zamień to ogłoszenie w zwykły temat"
+msgstr "Przemień ten temat w ogłoszenie"
 
 #: apps/threads/thread.py:39
 msgid "Change this thread to sticky"
@@ -3550,7 +3569,7 @@ msgstr ""
 
 #: apps/threadtype/jumps.py:230
 msgid "Your vote has been saved."
-msgstr ""
+msgstr "Twój głos został zapisany."
 
 #: apps/threadtype/mixins.py:11 apps/threadtype/list/forms.py:47
 #: apps/threadtype/posting/forms.py:78
@@ -3569,76 +3588,78 @@ msgstr[2] ""
 #, python-format
 msgid "Thread name cannot be longer than %(count)d character."
 msgid_plural "Thread name cannot be longer than %(count)d characters."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Nazwa tematu nie może być dłuższa niż %(count)d znak."
+msgstr[1] "Nazwa tematu nie może być dłuższa niż %(count)d znaki."
+msgstr[2] "Nazwa tematu nie może być dłuższa niż %(count)d znaków."
 
 #: apps/threadtype/mixins.py:29
 #, python-format
 msgid "Post content cannot be empty."
 msgid_plural "Post content cannot be shorter than %(count)d characters."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Treść posta nie może być pusta."
+msgstr[1] "Treść posta nie może być krótsza niż %(count)d znaki."
+msgstr[2] "Treść posta nie może być krótsza niż %(count)d znaków."
 
 #: apps/threadtype/list/forms.py:21
 msgid "Move Threads to"
-msgstr ""
+msgstr "Przenieś tematy do"
 
 #: apps/threadtype/list/forms.py:21
 msgid "Select forum you want to move threads to."
-msgstr ""
+msgstr "Wskaż forum, do którego chcesz przenieś zaznaczone tematy."
 
 #: apps/threadtype/list/forms.py:30 apps/threadtype/list/forms.py:76
 msgid "This is not forum."
-msgstr ""
+msgstr "To nie jest forum."
 
 #: apps/threadtype/list/forms.py:32
 msgid "New forum is same as current one."
-msgstr ""
+msgstr "Wskazane forum jest aktualnym forum tych tematów."
 
 #: apps/threadtype/list/forms.py:48 apps/threadtype/posting/forms.py:79
 #: apps/threadtype/thread/moderation/forms.py:23
 msgid "Thread name is too long. Try shorter name."
-msgstr ""
+msgstr "Nazwa tematu jest zbyt długa. Spróbuj ją skrócić."
 
 #: apps/threadtype/list/forms.py:54 apps/threadtype/posting/forms.py:76
 msgid "Thread Name"
-msgstr ""
+msgstr "Nazwa tematu"
 
 #: apps/threadtype/list/forms.py:54
 msgid "Name of new thread that will be created as result of merge."
-msgstr ""
+msgstr "Nazwa nowego tematu, który powstanie w wyniku połączenia zaznaczonych."
 
 #: apps/threadtype/list/forms.py:55
 msgid "Thread Forum"
-msgstr ""
+msgstr "Forum dla tematu"
 
 #: apps/threadtype/list/forms.py:55
 msgid "Select forum you want to put new thread in."
-msgstr ""
+msgstr "Wybierz forum, w którym ma zostać umieszczony wynikowy temat."
 
 #: apps/threadtype/list/forms.py:59
 msgid "Merge Order"
-msgstr ""
+msgstr "Kolejność łączenia"
 
 #: apps/threadtype/list/forms.py:86
 msgid "One or more threads have same position in merge order."
-msgstr ""
+msgstr "Jeden lub więcej tematów ma taką samą pozycję w kolejności łączenia."
 
 #: apps/threadtype/list/moderation.py:38
 msgid ""
 "Selected threads have been marked as reviewed and made visible to other "
 "members."
 msgstr ""
+"Zaznaczone tematy zostały oznaczone jako przejrzane i są już widoczne dla "
+"innych użytkowników."
 
 #: apps/threadtype/list/moderation.py:48
 msgid "Selected threads have been turned into announcements."
-msgstr ""
+msgstr "Zaznaczone tematy zostały przemienione w ogłoszenia."
 
 #: apps/threadtype/list/moderation.py:58
 msgid "Selected threads have been sticked to the top of list."
-msgstr ""
+msgstr "Zaznaczone tematy zostały przypięte na górę listy."
 
 #: apps/threadtype/list/moderation.py:67
 msgid "Selected threads weight has been removed."
@@ -3647,41 +3668,41 @@ msgstr ""
 #: apps/threadtype/list/moderation.py:85
 #, python-format
 msgid "Selected threads have been moved to \"%(forum)s\"."
-msgstr ""
+msgstr "Zaznaczone tematy zostały przeniesione do \"%(forum)s\"."
 
 #: apps/threadtype/list/moderation.py:103
 msgid "You have to pick two or more threads to merge."
-msgstr ""
+msgstr "Musisz zaznaczyć przynajmniej dwa tematy do połączenia."
 
 #: apps/threadtype/list/moderation.py:136
 msgid "Selected threads have been merged into new one."
-msgstr ""
+msgstr "Zaznaczone tematy zostały połaczone w jeden nowy."
 
 #: apps/threadtype/list/moderation.py:163
 msgid "Selected threads have been opened."
-msgstr ""
+msgstr "Zaznaczone tematy zostały otwarte."
 
 #: apps/threadtype/list/moderation.py:176
 msgid "Selected threads have been closed."
-msgstr ""
+msgstr "Zaznaczone tematy zostały zamknięte."
 
 #: apps/threadtype/list/moderation.py:196
 msgid "Selected threads have been undeleted."
-msgstr ""
+msgstr "Zaznaczone tematy zostały przywrócone."
 
 #: apps/threadtype/list/moderation.py:217
 msgid "Selected threads have been softly deleted."
-msgstr ""
+msgstr "Zaznaczone tematy zostały nietrwale usunięte."
 
 #: apps/threadtype/list/moderation.py:232
 msgid "Selected threads have been deleted."
-msgstr ""
+msgstr "Zaznaczone tematy zostały usunięte."
 
 #: apps/threadtype/list/views.py:80
 #: templates/cranefly/private_threads/list.html:166
 #: templates/cranefly/threads/list.html:267
 msgid "You have to select at least one thread."
-msgstr ""
+msgstr "Musisz zaznaczyć przynajmniej jeden temat."
 
 #: apps/threadtype/posting/forms.py:23
 msgid "Post Content"
@@ -3753,11 +3774,12 @@ msgstr "To nie jest forum."
 
 #: apps/threadtype/thread/moderation/forms.py:47
 msgid "New Thread Link"
-msgstr "Nowy link do tematu"
+msgstr "Link do nowego tematu"
 
 #: apps/threadtype/thread/moderation/forms.py:47
 msgid "To select new thread, simply copy and paste here its link."
 msgstr ""
+"Aby wskazać nowy temat, po prostu skopiuj i wklej tutaj jego URL (adres)."
 
 #: apps/threadtype/thread/moderation/forms.py:64
 msgid "New thread is same as current one."
@@ -3765,23 +3787,25 @@ msgstr ""
 
 #: apps/threadtype/thread/moderation/forms.py:67
 msgid "This is not a correct thread URL."
-msgstr ""
+msgstr "To nie jest poprawny URL do tematu."
 
 #: apps/threadtype/thread/moderation/forms.py:69
 msgid "Thread could not be found."
-msgstr ""
+msgstr "Temat nie został odnaleziony."
 
 #: apps/threadtype/thread/moderation/posts.py:23
 msgid "Selected posts have been accepted and made visible to other members."
 msgstr ""
+"Zaznaczone posty zostały zaakceptowane. Inni użytkownicy mogą je już "
+"zobaczyć."
 
 #: apps/threadtype/thread/moderation/posts.py:34
 msgid "You cannot merge replies made by different members!"
-msgstr ""
+msgstr "Nie możesz połączyć postów napisanych przez różnych użytkowników!"
 
 #: apps/threadtype/thread/moderation/posts.py:36
 msgid "You have to select two or more posts you want to merge."
-msgstr ""
+msgstr "Musisz wskazać przynajmniej dwa posty do połączenia."
 
 #: apps/threadtype/thread/moderation/posts.py:47
 msgid "Selected posts have been merged into one message."
@@ -3802,19 +3826,19 @@ msgstr ""
 
 #: apps/threadtype/thread/moderation/posts.py:135
 msgid "Selected posts have been moved to new thread."
-msgstr ""
+msgstr "Wybrane posty zostały przeniesione do nowego tematu."
 
 #: apps/threadtype/thread/moderation/posts.py:163
 msgid "Selected posts have been restored."
-msgstr ""
+msgstr "Wybrane posty zostały przywrócone."
 
 #: apps/threadtype/thread/moderation/posts.py:172
 msgid "Selected posts have been protected from edition."
-msgstr ""
+msgstr "Wybrane posty zostały zabezpieczone przed edycją."
 
 #: apps/threadtype/thread/moderation/posts.py:181
 msgid "Protection from editions has been removed from selected posts."
-msgstr ""
+msgstr "Wybrane posty zostały pozbawione blokady edycji."
 
 #: apps/threadtype/thread/moderation/posts.py:188
 #: apps/threadtype/thread/moderation/posts.py:203
@@ -3822,23 +3846,27 @@ msgid ""
 "You cannot delete first post of thread using this action. If you want to "
 "delete thread, use thread moderation instead."
 msgstr ""
+"Nie możesz w ten sposób usunąć pierwszego postu w temacie. Jeżeli chcesz "
+"usunąć temat, użyj opcji dotyczących tematów, a nie postów."
 
 #: apps/threadtype/thread/moderation/posts.py:196
 #: apps/threadtype/thread/moderation/posts.py:213
 msgid "Selected posts have been deleted."
-msgstr ""
+msgstr "Zaznaczone posty zostały usunięte."
 
 #: apps/threadtype/thread/moderation/thread.py:27
 msgid "Thread has been marked as reviewed and made visible to other members."
 msgstr ""
+"Temat został oznaczony jako przejrzany. Inni użytkownicy mogą już go "
+"zobaczyć."
 
 #: apps/threadtype/thread/moderation/thread.py:32
 msgid "Thread has been turned into announcement."
-msgstr ""
+msgstr "Temat został przemieniony w ogłoszenie."
 
 #: apps/threadtype/thread/moderation/thread.py:37
 msgid "Thread has been turned into sticky."
-msgstr ""
+msgstr "Temat został przypięty."
 
 #: apps/threadtype/thread/moderation/thread.py:42
 msgid "Thread weight has been changed to normal."
@@ -3847,114 +3875,118 @@ msgstr ""
 #: apps/threadtype/thread/moderation/thread.py:56
 #, python-format
 msgid "Thread has been moved to \"%(forum)s\"."
-msgstr ""
+msgstr "Temat został przeniesiony do \"%(forum)s\"."
 
 #: apps/threadtype/thread/moderation/thread.py:76
 msgid "Thread has been opened."
-msgstr ""
+msgstr "Temat został otwarty."
 
 #: apps/threadtype/thread/moderation/thread.py:82
 msgid "Thread has been closed."
-msgstr ""
+msgstr "Temat został zamknięty."
 
 #: apps/threadtype/thread/moderation/thread.py:100
 msgid "Thread has been undeleted."
-msgstr ""
+msgstr "Temat został przywrócony."
 
 #: apps/threadtype/thread/moderation/thread.py:118
 msgid "Thread has been deleted."
-msgstr ""
+msgstr "Temat został usunięty."
 
 #: apps/usercp/views.py:25
 #, python-format
 msgid "You are now following %(username)s"
-msgstr ""
+msgstr "Zacząłeś obserwować %(username)s"
 
 #: apps/usercp/views.py:31
 #, python-format
 msgid "%(username)s is now following you"
-msgstr ""
+msgstr "%(username)s zaczął Cię obserwować"
 
 #: apps/usercp/views.py:46
 #, python-format
 msgid "You have stopped following %(username)s"
-msgstr ""
+msgstr "Przestałeś obserwować %(username)s"
 
 #: apps/usercp/views.py:62
 #, python-format
 msgid "You are now ignoring %(username)s"
-msgstr ""
+msgstr "%(username)s jest teraz przez Ciebie ignorowany"
 
 #: apps/usercp/views.py:74
 #, python-format
 msgid "You have stopped ignoring %(username)s"
-msgstr ""
+msgstr "Przestałes ignorować użytkownika %(username)s"
 
 #: apps/usercp/avatar/forms.py:9
 msgid "Uploaded file is not correct image."
-msgstr ""
+msgstr "Przesłany plik nie jest poprawnym obrazkiem."
 
 #: apps/usercp/avatar/forms.py:16
 msgid "Upload Image File"
-msgstr ""
+msgstr "Prześlij obrazek z komptera"
 
 #: apps/usercp/avatar/forms.py:16
 msgid ""
 "Select image file on your computer you wish to use as forum avatar. You will "
 "be able to crop image after upload. Animations will be stripped."
 msgstr ""
+"Wskaż plik obrazka, którego chciałbyś użyć jako awatara. Będziesz mógł go "
+"przyciąć po przesłaniu. Ewentualna animacja zostanie usunięta."
 
 #: apps/usercp/avatar/forms.py:29
 #, python-format
 msgid "Avatar image cannot be larger than %(limit)s."
-msgstr ""
+msgstr "Obrazek awatara nie może być większy niż %(limit)s."
 
 #: apps/usercp/avatar/forms.py:31
 msgid "Couldn't read uploaded image"
-msgstr ""
+msgstr "Nie udało się odczytać przesłanego obrazka"
 
 #: apps/usercp/avatar/usercp.py:4
 msgid "Change Avatar"
-msgstr ""
+msgstr "Zmiana awatara"
 
 #: apps/usercp/avatar/views.py:51
 msgid "Your avatar has been changed to Gravatar."
-msgstr ""
+msgstr "Użyto obrazka z Gravatara."
 
 #: apps/usercp/avatar/views.py:53 apps/usercp/avatar/views.py:94
 #: apps/usercp/avatar/views.py:219
 msgid "Request authorisation is invalid."
-msgstr ""
+msgstr "Autoryzacja żądania jest nieprawidłowa."
 
 #: apps/usercp/avatar/views.py:78
 msgid "No avatar galleries are available at the moment."
-msgstr ""
+msgstr "Niestety nie ma aktualnie dostępnych żadnych galerii awatarów."
 
 #: apps/usercp/avatar/views.py:90
 msgid "Your avatar has been changed to one from gallery."
-msgstr ""
+msgstr "Ustawiono awatar z galerii."
 
 #: apps/usercp/avatar/views.py:92
 msgid "Selected Avatar is incorrect."
-msgstr ""
+msgstr "Wskazany awatar jest niepoprawny."
 
 #: apps/usercp/avatar/views.py:150
 msgid "Your avatar has changed."
-msgstr ""
+msgstr "Twój awatar został zmieniony."
 
 #: apps/usercp/avatar/views.py:155
 msgid "Only gif, jpeg and png files are allowed for member avatars."
-msgstr ""
+msgstr "Dozwolone rozszerzenia to png, jpeg oraz gif."
 
 #: apps/usercp/avatar/views.py:176
 msgid ""
 "Crop Avatar option is avaiable only when you use uploaded image as your "
 "avatar."
 msgstr ""
+"Opcja przycinania awatara jest dostępna tylko w przypadku przesyłania "
+"obrazka z komputera."
 
 #: apps/usercp/avatar/views.py:214
 msgid "Your avatar has been cropped."
-msgstr ""
+msgstr "Twój awatar został przycięty."
 
 #: apps/usercp/avatar/views.py:217 forms/forms.py:158
 msgid "Form contains errors."
@@ -3962,43 +3994,47 @@ msgstr "Formularz zawiera błędy."
 
 #: apps/usercp/credentials/forms.py:18
 msgid "New E-mail"
-msgstr ""
+msgstr "Nowy adres e-mail"
 
 #: apps/usercp/credentials/forms.py:18
 msgid ""
 "Enter new e-mail address or leave this field empty if you want only to "
 "change your password."
 msgstr ""
+"Wprowadź swój nowy adres e-mail, lub pozostaw to pole puste, aby zmienić "
+"tylko hasło."
 
 #: apps/usercp/credentials/forms.py:19
 msgid "New Password"
-msgstr ""
+msgstr "Nowe hasło"
 
 #: apps/usercp/credentials/forms.py:19
 msgid ""
 "Enter new password or leave this empty if you only want to change your e-"
 "mail address."
 msgstr ""
+"Wprowadź swoje nowe hasło, lub pozostaw to pole puste, aby zmienić tylko "
+"adres e-mail."
 
 #: apps/usercp/credentials/forms.py:20
 msgid "Current Password"
-msgstr ""
+msgstr "Obecne hasło"
 
 #: apps/usercp/credentials/forms.py:20
-msgid "Confirm changes by entering new password."
-msgstr ""
+msgid "Confirm changes by entering your current password."
+msgstr "Potwierdź zmiany, wpisując swoje aktualne hasło."
 
 #: apps/usercp/credentials/forms.py:29
 msgid "New e-mail is same as your current e-mail."
-msgstr ""
+msgstr "Nowy adres e-mail jest taki sam jak obecny."
 
 #: apps/usercp/credentials/forms.py:32
 msgid "New e-mail address is already in use by other member."
-msgstr ""
+msgstr "Podany nowy adres e-mail jest już używany przez innego użytkownika."
 
 #: apps/usercp/credentials/forms.py:45
 msgid "You have entered wrong password."
-msgstr ""
+msgstr "Wprowadzono błędne hasło."
 
 #: apps/usercp/credentials/forms.py:51
 msgid "You have to enter either new e-mail address or new password."
@@ -4006,7 +4042,7 @@ msgstr ""
 
 #: apps/usercp/credentials/usercp.py:4
 msgid "Change E-mail or Password"
-msgstr ""
+msgstr "Zmień adres e-mail lub hasło"
 
 #: apps/usercp/credentials/views.py:23
 msgid "Activate new Sign-In Credentials"
@@ -4029,7 +4065,7 @@ msgstr ""
 #: apps/usercp/credentials/views.py:66
 #, python-format
 msgid "%(username)s, your Sign-In credentials have been changed."
-msgstr ""
+msgstr "%(username)s, Twoje dane do logowania zostały zmienione."
 
 #: apps/usercp/credentials/views.py:71
 msgid "Your new credentials have been invalidated. Please try again."
@@ -4055,11 +4091,12 @@ msgstr "Nie obserwuj"
 #: apps/usercp/options/forms.py:16 apps/usercp/options/forms.py:21
 #: fixtures/accountssetings.py:75 fixtures/accountssetings.py:86
 msgid "Put on watched threads list"
-msgstr ""
+msgstr "Umieść na liście obserwowanych tematów"
 
 #: apps/usercp/options/forms.py:17 apps/usercp/options/forms.py:22
 msgid "Put on watched threads list and e-mail me when somebody replies"
 msgstr ""
+"Umieść na liście obserwowanych tematów i wyślij mi e-mail, gdy ktoś odpisze"
 
 #: apps/usercp/options/forms.py:25
 msgid "From everyone"
@@ -4095,13 +4132,16 @@ msgstr ""
 
 #: apps/usercp/options/forms.py:36
 msgid "Allow Private Threads Invitations"
-msgstr ""
+msgstr "Pozwalaj na zaproszenia do prywatnych dyskusji"
 
 #: apps/usercp/options/forms.py:36
 msgid ""
 "If you wish, you can restrict who can invite you to private threads. Keep in "
 "mind some groups or members may be allowed to override this preference."
 msgstr ""
+"Jeżeli chcesz, możesz ograniczyć liczbę użytkowników, którzy mogą zaprosić "
+"Cię do prywatnych dyskusji. Miej na uwadzę, ograniczenie może nie dotyczyć "
+"niektórych grup (np. administratorów)."
 
 #: apps/usercp/options/forms.py:40 apps/usercp/options/usercp.py:4
 msgid "Forum Options"
@@ -4202,15 +4242,15 @@ msgstr "Dane ustawienia mogą zwiększyć bezpieczeństwo członków Twojego for
 
 #: fixtures/accountssetings.py:13
 msgid "No validation required"
-msgstr ""
+msgstr "Nie wymagaj walidacji"
 
 #: fixtures/accountssetings.py:13
 msgid "Activation Token sent to User"
-msgstr ""
+msgstr "Aktywacja poprzez potwierdzenie z wiadomości e-mail."
 
 #: fixtures/accountssetings.py:13
 msgid "Activation by Administrator"
-msgstr ""
+msgstr "Aktywacja przez administratora"
 
 #: fixtures/accountssetings.py:13
 msgid "Dont allow new registrations"
@@ -4247,7 +4287,7 @@ msgstr "Maksymalna, dozwolona długość nazwy uzytkownika"
 
 #: fixtures/accountssetings.py:45
 msgid "Users Passwords"
-msgstr ""
+msgstr "Hasła użytkowników"
 
 #: fixtures/accountssetings.py:46
 msgid "Minimum user password length"
@@ -4311,15 +4351,15 @@ msgstr ""
 
 #: fixtures/accountssetings.py:97
 msgid "Number of Profiles Per Page"
-msgstr ""
+msgstr "Liczba profili na stronę"
 
 #: fixtures/avatarssettings.py:7
 msgid "Users Avatars Settings"
-msgstr ""
+msgstr "Ustawienia awatarów użytkowników"
 
 #: fixtures/avatarssettings.py:8
 msgid "Those settings allow you to control your users avatars."
-msgstr ""
+msgstr "Te ustawienia pozwalają na kontrolę awatarów użytkowników."
 
 #: fixtures/avatarssettings.py:14 fixtures/avatarssettings.py:23
 #: templates/cranefly/usercp/avatar.html:26
@@ -4328,11 +4368,11 @@ msgstr "Gravatar"
 
 #: fixtures/avatarssettings.py:14 templates/cranefly/usercp/avatar.html:22
 msgid "Uploaded Avatar"
-msgstr "Przesłany avatar"
+msgstr "Przesłany awatar"
 
 #: fixtures/avatarssettings.py:14
 msgid "Avatars Gallery"
-msgstr "Galeria avatarów"
+msgstr "Galeria awatarów"
 
 #: fixtures/avatarssettings.py:15
 msgid "General Settings"
@@ -4340,19 +4380,19 @@ msgstr "Ogólne ustawienia"
 
 #: fixtures/avatarssettings.py:16
 msgid "Allowed Avatars"
-msgstr "Dozwolone avatary"
+msgstr "Dozwolone awatary"
 
 #: fixtures/avatarssettings.py:17
 msgid "Select Avatar types allowed on your forum."
-msgstr "Wybierz typy avatarów, dozwolone na tym forum."
+msgstr "Wybierz typy awatarów, dozwolone na tym forum."
 
 #: fixtures/avatarssettings.py:23
 msgid "Random Avatar from Gallery"
-msgstr "Losowy avatar z galerii"
+msgstr "Losowy awatar z galerii"
 
 #: fixtures/avatarssettings.py:24
 msgid "Default Avatar"
-msgstr "Domyślny avatar"
+msgstr "Domyślny awatar"
 
 #: fixtures/avatarssettings.py:25
 msgid ""
@@ -4361,14 +4401,14 @@ msgid ""
 "regular gallery. If no avatar can be picked from gallery, Gravatar will be "
 "used."
 msgstr ""
-"Domyślny avatar przypisany do nowych użytkowników. Jeżeli utworzysz katalog "
+"Domyślny awatar przypisany do nowych użytkowników. Jeżeli utworzysz katalog "
 "i nazwiesz go \"_default\", forum wybierze losowy avatar z tego katalogu "
 "zamiast z normalnej galerii. Jeżeli nie uda się wybrać avatara z galerii, "
 "zostanie użyty Gravatar."
 
 #: fixtures/avatarssettings.py:32
 msgid "Avatar Upload Settings"
-msgstr "Ustawienia wgrywania avatara"
+msgstr "Ustawienia wgrywania awatara"
 
 #: fixtures/avatarssettings.py:33
 msgid "Maxmimum size of uploaded file"
@@ -4742,15 +4782,15 @@ msgstr ""
 
 #: fixtures/ranks.py:17
 msgid "Most Valuable Posters"
-msgstr "Najbardziej wartościowi "
+msgstr "Przyjaciele forum"
 
 #: fixtures/ranks.py:19
 msgid "MVP"
-msgstr "MVP"
+msgstr "Przyjaciel forum"
 
 #: fixtures/ranks.py:27
 msgid "Top Posters"
-msgstr ""
+msgstr "Najaktywniejsi"
 
 #: fixtures/ranks.py:37 templates/cranefly/index.html:127
 msgid "Members"
@@ -4858,14 +4898,14 @@ msgstr "Liczba tematów wyświetlana na stronie w widoku forum."
 
 #: fixtures/threadssettings.py:39
 msgid "Display avatars on threads list"
-msgstr "Wyświetlaj avatary na liście tematów"
+msgstr "Wyświetlaj awatary na liście tematów"
 
 #: fixtures/threadssettings.py:40
 msgid ""
 "Unlike basic user data, avatars are not cached - turning this option on will "
 "cause one extra query on threads lists."
 msgstr ""
-"W przeciwieństwie do zwykłych danych użytkownika, avatary nie są trzymane w "
+"W przeciwieństwie do zwykłych danych użytkownika, awatary nie są trzymane w "
 "pamięci podręcznej. Włączenie tej opcji może minimalnie przedłużyć czas "
 "generowania listy tematów. "
 
@@ -6517,7 +6557,7 @@ msgstr "Wyślij odpowiedź"
 #: templates/cranefly/threads/thread.html:293
 #: templates/cranefly/threads/thread.html:392
 msgid "Reply"
-msgstr "Odpowiedź"
+msgstr "Odpowiedz"
 
 #: templates/cranefly/private_threads/thread.html:58
 #: templates/cranefly/threads/thread.html:51
@@ -6728,7 +6768,7 @@ msgstr "Ten temat nie ma żadnych uczestników."
 #: templates/cranefly/private_threads/thread.html:375
 #: templates/cranefly/threads/thread.html:403
 msgid "Your Avatar"
-msgstr "Twój avatar"
+msgstr "Twój awatar"
 
 #: templates/cranefly/private_threads/thread.html:384
 #, python-format
@@ -6970,8 +7010,7 @@ msgstr "Użytkownicy, których obserwuje %(username)s"
 
 #: templates/cranefly/profiles/list.html:17
 msgid "Browse notable user groups or find specific user"
-msgstr ""
-"Przejrzyj najistotniejsze grupy, albo wyszukaj konkretnego użytkownika."
+msgstr "Najważniejsze rangi i wyszukiwanie użytkowników"
 
 #: templates/cranefly/profiles/list.html:47
 msgid ""
@@ -7036,7 +7075,7 @@ msgstr "Nowsze posty"
 
 #: templates/cranefly/profiles/profile.html:13
 msgid "Click to jump to your Avatar Settings"
-msgstr "Kliknij, aby przejść do ustawień swojego avatara"
+msgstr "Kliknij, aby przejść do ustawień swojego awatara"
 
 #: templates/cranefly/profiles/profile.html:22
 msgid "Online, hidden"
@@ -7226,7 +7265,7 @@ msgstr "Pierwszy zgłoszony"
 #: templates/cranefly/usercp/avatar.html:24
 #: templates/cranefly/usercp/avatar_gallery.html:28
 msgid "Gallery Avatar"
-msgstr "Avatar z galerii"
+msgstr "Awatar z galerii"
 
 #: templates/cranefly/usercp/avatar.html:30
 msgid "Use Gravatar"
@@ -7235,45 +7274,45 @@ msgstr "Użyj Gravatara"
 #: templates/cranefly/usercp/avatar.html:31
 #: templates/cranefly/usercp/avatar_gallery.html:10
 msgid "Pick Avatar from Gallery"
-msgstr "Wybierz avatar z galerii"
+msgstr "Wybierz awatar z galerii"
 
 #: templates/cranefly/usercp/avatar.html:32
 msgid "Crop Your Avatar"
-msgstr "Przytnij swój avatar"
+msgstr "Przytnij swój awatar"
 
 #: templates/cranefly/usercp/avatar.html:33
 #: templates/cranefly/usercp/avatar_upload.html:11
 #: templates/cranefly/usercp/avatar_upload.html:24
 msgid "Upload Avatar"
-msgstr "Prześlij avatar"
+msgstr "Prześlij awatar"
 
 #: templates/cranefly/usercp/avatar_banned.html:10
 #: templates/cranefly/usercp/avatar_crop.html:16
 #: templates/cranefly/usercp/avatar_gallery.html:10
 #: templates/cranefly/usercp/avatar_upload.html:11
 msgid "Change your Avatar"
-msgstr "Zmień swój avatar"
+msgstr "Zmień swój awatar"
 
 #: templates/cranefly/usercp/avatar_banned.html:14
 #, python-format
 msgid ""
 "%(username)s, your ability to change your avatar has been removed for "
 "following reason:"
-msgstr "%(username)s, nie możesz już zmienić avatara z następującego powodu:"
+msgstr "%(username)s, nie możesz już zmienić awatara z następującego powodu:"
 
 #: templates/cranefly/usercp/avatar_banned.html:19
 #, python-format
 msgid "%(username)s, your ability to change your avatar has been removed."
-msgstr "%(username)s, administrator odebrał Ci możliwość zmiany avatara."
+msgstr "%(username)s, administrator odebrał Ci możliwość zmiany awatara."
 
 #: templates/cranefly/usercp/avatar_crop.html:14
 msgid "Avatar Preview"
-msgstr "Podgląd avatara"
+msgstr "Podgląd awatara"
 
 #: templates/cranefly/usercp/avatar_crop.html:16
 #: templates/cranefly/usercp/avatar_crop.html:18
 msgid "Crop Avatar"
-msgstr "Przycinanie avatara"
+msgstr "Przycinanie awatara"
 
 #: templates/cranefly/usercp/avatar_crop.html:33
 msgid "Uploaded Image"
