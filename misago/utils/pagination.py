@@ -1,4 +1,5 @@
 import math
+from django.http import Http404
 
 def make_pagination(page, total, per):
     pagination = {'start': 0, 'stop': 0, 'prev':-1, 'next':-1}
@@ -36,6 +37,10 @@ def make_pagination(page, total, per):
             pagination['stop'] += last_page
             pagination['total'] -= 1
             pagination['next'] = -1
+
+    # Raise 404 if page is out of range
+    if pagination['page'] > pagination['total']:
+        raise Http404()
 
     # Return complete pager
     return pagination
