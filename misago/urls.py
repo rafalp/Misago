@@ -15,9 +15,9 @@ urlpatterns = patterns('misago.apps',
     url(r'^tos/$', 'tos.tos', name="tos"),
     url(r'^forum-map/$', 'forummap.forum_map', name="forum_map"),
     url(r'^popular/$', 'popularthreads.popular_threads', name="popular_threads"),
-    url(r'^popular/(?P<page>[0-9]+)/$', 'popularthreads.popular_threads', name="popular_threads"),
+    url(r'^popular/(?P<page>[^0][0-9]+)/$', 'popularthreads.popular_threads', name="popular_threads"),
     url(r'^new/$', 'newthreads.new_threads', name="new_threads"),
-    url(r'^new/(?P<page>[0-9]+)/$', 'newthreads.new_threads', name="new_threads"),
+    url(r'^new/(?P<page>[^0][0-9]+)/$', 'newthreads.new_threads', name="new_threads"),
 )
 
 urlpatterns += patterns('',
