@@ -114,7 +114,7 @@
     </table>
     {% if list_form %}
     <div class="threads-actions">
-      <form id="threads_form" class="form-inline pull-right" action="{% url 'private_threads' %}" method="POST">
+      <form id="threads_form" class="form-inline pull-right" action="{{ request_path }}" method="POST">
         <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
         {{ form_theme.input_select(list_form['list_action'],width=3) }}
         <button type="submit" class="btn btn-danger">{% trans %}Go{% endtrans %}</button>

@@ -94,26 +94,18 @@
                   <span class="post-author">{{ post.user_name }}</span> <span class="label post-author-label post-label-guest">{% trans %}Unregistered{% endtrans %}</span>
                   {% endif %}
                   <span class="separator">&ndash;</span>
-                  <a href="{% if pagination['page'] > 1 -%}
-                  {% url 'private_thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
-                  {%- else -%}
-                  {% url 'private_thread' thread=thread.pk, slug=thread.slug %}
-                  {%- endif %}#post-{{ post.pk }}" class="post-date">{{ post.date|reltimesince }}</a>
+                  <a href="{% url 'private_thread_find' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-date">{{ post.date|reltimesince }}</a>
                   {% if post.edits %}
                   <span class="separator">&ndash;</span>
                   {% if acl.threads.can_see_changelog(user, forum, post) %}
-                  <a href="{% url 'changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}</a>
+                  <a href="{% url 'private_thread_changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}</a>
                   {% else %}
                   <span class="post-changelog">{% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}</span>
                   {% endif %}
                   {% endif %}
                 </div>
 
-                <a href="{% if pagination['page'] > 1 -%}
-                {% url 'private_thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
-                {%- else -%}
-                {% url 'private_thread' thread=thread.pk, slug=thread.slug %}
-                {%- endif %}#post-{{ post.pk }}" class="post-perma tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
+                <a href="{% url 'private_thread_find' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-perma tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
 
                 {% if not post.is_read %}
                 <div class="post-extra">
@@ -136,18 +128,10 @@
             <div class="post-content">
               <div class="post-header">
                 <div class="post-header-compact">
-                  <a href="{% if pagination['page'] > 1 -%}
-                  {% url 'private_thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
-                  {%- else -%}
-                  {% url 'private_thread' thread=thread.pk, slug=thread.slug %}
-                  {%- endif %}#post-{{ post.pk }}" class="post-date">{{ post.date|reltimesince }}</a>
+                  <a href="{% url 'private_thread_find' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-date">{{ post.date|reltimesince }}</a>
                 </div>
 
-                <a href="{% if pagination['page'] > 1 -%}
-                {% url 'private_thread' thread=thread.pk, slug=thread.slug, page=pagination['page'] %}
-                {%- else -%}
-                {% url 'private_thread' thread=thread.pk, slug=thread.slug %}
-                {%- endif %}#post-{{ post.pk }}" class="post-perma tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
+                <a href="{% url 'private_thread_find' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-perma tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
 
                 {% if not post.is_read %}
                 <div class="post-extra">
@@ -371,7 +355,7 @@
       {% if thread_form or posts_form %}
       <div class="thread-moderation">
         {% if thread_form%}
-        <form id="thread_form" class="form-inline pull-left" action="{% url 'private_thread' slug=thread.slug, thread=thread.id, page=pagination['page'] %}" method="POST">
+        <form id="thread_form" class="form-inline pull-left" action="{{ request_path }}" method="POST">
           <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
           <input type="hidden" name="origin" value="thread_form">
           {{ form_theme.input_select(thread_form['thread_action'],width=3) }}
@@ -379,7 +363,7 @@
         </form>
         {% endif %}
         {% if posts_form%}
-        <form id="posts_form" class="form-inline pull-right" action="{% url 'private_thread' slug=thread.slug, thread=thread.id, page=pagination['page'] %}" method="POST">
+        <form id="posts_form" class="form-inline pull-right" action="{{ request_path }}" method="POST">
           <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
           <input type="hidden" name="origin" value="posts_form">
           {{ form_theme.input_select(posts_form['list_action'],width=3) }}
