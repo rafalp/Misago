@@ -10,7 +10,7 @@ from misago.utils.strings import slugify
 from misago.utils.pagination import make_pagination
 from misago.apps.profiles.forms import QuickFindUserForm
 
-def list(request, slug=None, page=1):
+def list(request, slug=None, page=0):
     ranks = Rank.objects.filter(as_tab=1).order_by('order')
 
     # Find active rank
