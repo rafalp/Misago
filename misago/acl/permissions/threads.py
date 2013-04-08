@@ -419,7 +419,7 @@ class ThreadsACL(BaseACL):
                 return False
             if not forum_role['can_close_threads'] and (forum.closed or thread.closed):
                 return False
-            if post.protected and not forum_role['can_protect_posts']:
+            if post.protected and not forum_role['can_protect_posts'] and not forum_role['can_delete_threads']:
                 return False
             if forum_role['can_delete_threads']:
                 return forum_role['can_delete_threads']
@@ -437,11 +437,11 @@ class ThreadsACL(BaseACL):
                     raise ACLError403(_("You don't have permission to delete threads in closed forum."))
                 if thread.closed:
                     raise ACLError403(_("This thread is closed, you cannot delete it."))
-            if post.protected and not forum_role['can_protect_posts']:
+            if post.protected and not forum_role['can_protect_posts'] and not forum_role['can_delete_threads']:
                 raise ACLError403(_("This post is protected, you cannot delete it."))
-            if delete and forum_role['can_delete_threads'] < 2:
-                raise ACLError403(_("You cannot hard delete this thread."))
-            if not (forum_role['can_delete_threads'] or (thread.start_poster_id == user.pk and forum_role['can_soft_delete_own_threads'])):
+            if not (forum_role['can_delete_threads'] == 2 or
+                    (not delete and (forum_role['can_delete_threads'] == 1 or 
+                    (thread.start_poster_id == user.pk and forum_role['can_soft_delete_own_threads'])))):
                 raise ACLError403(_("You don't have permission to delete this thread."))
             if thread.deleted and not delete:
                 raise ACLError403(_("This thread is already deleted."))
@@ -455,7 +455,7 @@ class ThreadsACL(BaseACL):
                 return False
             if not forum_role['can_close_threads'] and (forum.closed or thread.closed):
                 return False
-            if post.protected and not forum_role['can_protect_posts']:
+            if post.protected and not forum_role['can_protect_posts'] and not forum_role['can_delete_posts']:
                 return False
             if forum_role['can_delete_posts']:
                 return forum_role['can_delete_posts']
@@ -473,11 +473,11 @@ class ThreadsACL(BaseACL):
                     raise ACLError403(_("You don't have permission to delete posts in closed forum."))
                 if thread.closed:
                     raise ACLError403(_("This thread is closed, you cannot delete its posts."))
-            if post.protected and not forum_role['can_protect_posts']:
+            if post.protected and not forum_role['can_protect_posts'] and not forum_role['can_delete_posts']:
                 raise ACLError403(_("This post is protected, you cannot delete it."))
-            if delete and forum_role['can_delete_posts'] < 2:
-                raise ACLError403(_("You cannot hard delete this post."))
-            if not (forum_role['can_delete_posts'] or (post.user_id == user.pk and forum_role['can_soft_delete_own_posts'])):
+            if not (forum_role['can_delete_posts'] == 2 or
+                    (not delete and (forum_role['can_delete_posts'] == 1 or 
+                    (post.user_id == user.pk and forum_role['can_soft_delete_own_posts'])))):
                 raise ACLError403(_("You don't have permission to delete this post."))
             if post.deleted and not delete:
                 raise ACLError403(_("This post is already deleted."))
