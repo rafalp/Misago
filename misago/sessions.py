@@ -2,6 +2,7 @@ from hashlib import md5
 from datetime import timedelta
 from django.conf import settings
 from django.contrib.sessions.backends.base import SessionBase, CreateError
+from django.db import IntegrityError
 from django.db.models.loading import cache as model_cache
 from django.utils import timezone
 from django.utils.crypto import salted_hmac
@@ -109,6 +110,8 @@ class CrawlerSession(MisagoSession):
                 self._session_rk.save(force_insert=True)
                 break
             except CreateError:
+                continue
+            except IntegrityError:
                 try:
                     self._session_rk =  Session.objects.get(id=self._session_key)                    
                 except Session.DoesNotExist:
