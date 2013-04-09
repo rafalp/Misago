@@ -209,6 +209,9 @@ class ListWidget(BaseWidget):
         return reverse(self.admin.get_action_attr(self.id, 'route'), kwargs={'page': page})
 
     def get_pagination(self, total, page):
+        if not self.pagination or total < 0:
+            # Dont do anything if we are not paging
+            return None
         return make_pagination(page, total, self.pagination)
 
     def get_items(self):
