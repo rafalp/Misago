@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Misago PL\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-04-03 18:32+0000\n"
-"PO-Revision-Date: 2013-04-08 23:46+0100\n"
+"PO-Revision-Date: 2013-04-10 23:47+0100\n"
 "Last-Translator: L0ud PL <loudml@gmail.com>\n"
 "Language-Team: FxDev <loudpl@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -1118,7 +1118,7 @@ msgstr "Nazwa roli"
 #: apps/admin/forumroles/forms.py:17 apps/admin/roles/forms.py:18
 msgid "Role Name is used to identify this role in Admin Control Panel."
 msgstr ""
-"Nazwa roli służy do zidentyfikowania tej roli w panelu administratora (ACP)."
+"Nazwa roli służy do zidentyfikowania jej w panelu administratora (ACP)."
 
 #: apps/admin/forumroles/views.py:25 apps/admin/roles/views.py:26
 #: templates/admin/roles/forums.html:12
@@ -1336,12 +1336,16 @@ msgid ""
 "Custom templates can check forums for predefined attributes that will change "
 "way subforums lists are rendered."
 msgstr ""
+"Niestandardowe szablony moga szukać w forach predefiniowanych atrybutów i na "
+"ich podstawie zmieniać wygląd listy subforów."
 
 #: apps/admin/forums/forms.py:93
 msgid ""
 "Allows you to prevent this forum's subforums from displaying statistics, "
 "last post data, etc. ect. on subforums list."
 msgstr ""
+"Umożliwia wyłączenie wyświetlania statystyk i danych (typu ostatni post) na "
+"liście subforów tego forum."
 
 #: apps/admin/forums/forms.py:94
 msgid "Forum Style"
@@ -1352,6 +1356,7 @@ msgid ""
 "You can add custom CSS classess to this forum to change way it looks on "
 "forums lists."
 msgstr ""
+"Możesz dodać własne klasy CSS, aby zmienić wygląd tego forum na liście forów."
 
 #: apps/admin/forums/forms.py:117
 msgid "Redirect name must contain alphanumeric characters."
@@ -1404,7 +1409,7 @@ msgstr "Przenieś subfora do"
 #: apps/admin/forums/forms.py:164 apps/admin/forums/forms.py:165
 #: apps/admin/forums/views.py:326
 msgid "Remove with forum"
-msgstr ""
+msgstr "Usuń razem z forum"
 
 #: apps/admin/forums/forms.py:171
 msgid "Categories cannot contain threads."
@@ -1419,6 +1424,8 @@ msgid ""
 "Destination you want to move this forum's threads to will be deleted with "
 "this forum."
 msgstr ""
+"Nowe miejsce do, którego miałyby zostać przeniesione tematy, zostałoby "
+"usunięte wraz z usuwanym forum."
 
 #: apps/admin/forums/views.py:25 templates/admin/roles/forums.html:11
 msgid "Forum"
@@ -1551,6 +1558,8 @@ msgstr "Forum \"%(name)s\" zostało przesunięte w górę."
 msgid ""
 "Forum \"%(name)s\" is first child of its parent node and cannot be moved up."
 msgstr ""
+"Forum \"%(name)s\" jest pierwsze na tym poziomie i odgałęzieniu i nie mozesz "
+"być przesunięte wyżej."
 
 #: apps/admin/forums/views.py:209
 #, python-format
@@ -1562,6 +1571,8 @@ msgstr "Forum \"%(name)s\" zostało przesunięte w dół."
 msgid ""
 "Forum \"%(name)s\" is last child of its parent node and cannot be moved down."
 msgstr ""
+"Forum \"%(name)s\" jest ostatnie na tym poziomie i odgałęzieniu i nie mozesz "
+"być przesunięte niżej."
 
 #: apps/admin/forums/views.py:294
 #, python-format
@@ -1598,68 +1609,82 @@ msgstr ""
 
 #: apps/admin/newsletters/forms.py:24
 msgid "Step Size"
-msgstr ""
+msgstr "Użytkowników na jeden krok wysyłania"
 
 #: apps/admin/newsletters/forms.py:24
 msgid ""
 "Number of users that message will be sent to before forum refreshes page "
 "displaying sending progress."
 msgstr ""
+"Liczba użytkowników do których zostanie wysłany newsletter, zanim zostanie "
+"odświeżona strona z postępem wysyłania. Zbyt mała liczba znacząco spowolni "
+"wysyłanie. Zbyt duża liczba uniemożliwi Ci kontrolowanie procesu i może "
+"zbytnio obciążyć serwer."
 
 #: apps/admin/newsletters/forms.py:25
 msgid "Limit to roles"
-msgstr ""
+msgstr "Roześlij tylko do posiadaczy rangi"
 
 #: apps/admin/newsletters/forms.py:25
 msgid ""
 "You can limit this newsletter only to members who have specific ranks. If "
 "you dont set any ranks, this newsletter will be sent to every user."
 msgstr ""
+"Możesz przeznaczyć ten newsletter tylko dla posiadaczy wybranych rang. "
+"Jeżeli nie zaznaczysz żadnych rangi, newsletter zostanie wysłany do "
+"wszystkich użytkowników."
 
 #: apps/admin/newsletters/forms.py:26
 msgid "Ignore members preferences"
-msgstr ""
+msgstr "Ignoruj preferencje użytkowników"
 
 #: apps/admin/newsletters/forms.py:26
 msgid ""
 "Change this option to yes if you want to send this newsletter to members "
 "that don't want to receive newsletters. This is good for emergencies."
 msgstr ""
+"Ustaw tę opcję na \"Tak\", w celu rozesłania newslettera nawet do członków, "
+"którzy nie wyrazili chęci otrzymywania newsletterów. Opcja przydatna w "
+"sytuacjach krytycznych."
 
 #: apps/admin/newsletters/forms.py:30
 #: templates/cranefly/profiles/profile.html:66
 msgid "Message"
-msgstr ""
+msgstr "Wiadomość"
 
 #: apps/admin/newsletters/forms.py:32
 msgid "HTML Message"
-msgstr ""
+msgstr "Wiadomość w formacie HTML"
 
 #: apps/admin/newsletters/forms.py:32
 msgid "HTML message visible to members who can read HTML e-mails."
 msgstr ""
+"Wiadomość w formacie HTML dla członków z klientami pocztowymi "
+"wyświetlającymi HTML."
 
 #: apps/admin/newsletters/forms.py:33
 msgid "Plain Text Message"
-msgstr ""
+msgstr "Wiadomość w czystym tekście"
 
 #: apps/admin/newsletters/forms.py:33
 msgid ""
 "Alternative plain text message that will be visible to members that can't or "
 "dont want to read HTML e-mails."
 msgstr ""
+"Alternatywna forma wiadomości - czysty tekst, który będzie wyświetlany w "
+"przypadku programu pocztowego z brakiem obsługi HTML."
 
 #: apps/admin/newsletters/forms.py:42
 msgid "Only to subscribers"
-msgstr ""
+msgstr "Tylko dla zapisanych do newslettera"
 
 #: apps/admin/newsletters/forms.py:42
 msgid "To every member"
-msgstr ""
+msgstr "Dla każdego użytkownika"
 
 #: apps/admin/newsletters/forms.py:47
 msgid "Search Newsletters"
-msgstr ""
+msgstr "Wyszukiwanie newsletterów"
 
 #: apps/admin/newsletters/forms.py:49
 msgid "Name contains..."
@@ -1667,7 +1692,7 @@ msgstr "Nazwa zawiera..."
 
 #: apps/admin/newsletters/forms.py:50
 msgid "Message Contents"
-msgstr "Wiadomość zawiera..."
+msgstr "Wiadomość zawiera"
 
 #: apps/admin/newsletters/forms.py:50
 msgid "Message contains..."
@@ -1679,7 +1704,7 @@ msgstr "Typ newslettera"
 
 #: apps/admin/newsletters/forms.py:52
 msgid "Recipient Rank"
-msgstr ""
+msgstr "Przeznaczony dla rangi"
 
 #: apps/admin/newsletters/views.py:27
 msgid "Newsletter"
@@ -1824,41 +1849,43 @@ msgstr "Wygląda na to, że w danej chwili nikt nie jest zalogowany."
 
 #: apps/admin/pruneusers/forms.py:8
 msgid "Policy name must contain alphanumeric characters."
-msgstr ""
+msgstr "Nazwa reguły musi zawierać alfanumeryczne znaki."
 
 #: apps/admin/pruneusers/forms.py:9
 msgid "Policy name is too long."
-msgstr ""
+msgstr "Nazwa reguły jest zbyt długa."
 
 #: apps/admin/pruneusers/forms.py:18
 msgid "Basic Policy Options"
-msgstr ""
+msgstr "Podstawowe opcje reguły"
 
 #: apps/admin/pruneusers/forms.py:20
 msgid "Policy Name"
-msgstr ""
+msgstr "Nazwa reguły"
 
 #: apps/admin/pruneusers/forms.py:20
 msgid "Short, descriptive name of this pruning policy."
-msgstr ""
+msgstr "Krótka nazwa opisująca tą regułę usuwania użytkowników."
 
 #: apps/admin/pruneusers/forms.py:24
 msgid "Pruning Policy Criteria"
-msgstr ""
+msgstr "Kryteria tej reguły usuwania"
 
 #: apps/admin/pruneusers/forms.py:26
 msgid "Member E-mail Address ends with"
-msgstr ""
+msgstr "Adres e-mail użytkownika kończy się na"
 
 #: apps/admin/pruneusers/forms.py:26
 msgid ""
 "If you want to, you can enter more than one e-mail suffix by separating them "
 "with comma."
 msgstr ""
+"Jeżeli chcesz, możesz zdefiniować więcej końcówek adresów e-mail, "
+"oddzielając je przecinkiem."
 
 #: apps/admin/pruneusers/forms.py:27
 msgid "Member has no more posts than"
-msgstr ""
+msgstr "Użytkownik ma nie więcej postów niż"
 
 #: apps/admin/pruneusers/forms.py:27
 msgid ""
@@ -1867,10 +1894,14 @@ msgid ""
 "that has less than 10 posts will be deleted. Enter zero to dont use this "
 "criteria"
 msgstr ""
+"Maksymalna liczba postów, którą może mieć użytkownik, aby podpaść pod to "
+"kryterium. Dla przykładu, jeżeli wpiszesz tutaj 10 i będzie to jedyne "
+"kryterium usuwania, profile użytkowników posiadających mniej niż 10 postów "
+"zostaną usunięte.  Wpisz zero, aby nie używać tego kryterium."
 
 #: apps/admin/pruneusers/forms.py:28
 msgid "User is member for no more than"
-msgstr ""
+msgstr "Użytkownik jest członkiem forum nie dłużej niż"
 
 #: apps/admin/pruneusers/forms.py:28
 msgid ""
@@ -1881,7 +1912,7 @@ msgstr ""
 
 #: apps/admin/pruneusers/forms.py:29
 msgid "User last visit was before"
-msgstr ""
+msgstr "Ostatnia wizyta użytkownika była przed"
 
 #: apps/admin/pruneusers/forms.py:29
 msgid ""
@@ -1890,95 +1921,106 @@ msgid ""
 "not signed into forums in last 300 days will be deleted. Enter zero to dont "
 "use this criteria."
 msgstr ""
+"Maksymalny dozwolony okres bezczynności w dniach. Dla przykładu, jeżeli "
+"wpiszesz tutaj 300 i będzie to jedyne kryterium usuwania użytkowników, "
+"profil każdego użytkownika, który nie logował się przez ostatnie 300 dni "
+"zostanie usunięty. Wpisz zero, aby nie używać tego kryterium."
 
 #: apps/admin/pruneusers/views.py:23
 msgid "Pruning Policy"
-msgstr ""
+msgstr "Reguła usuwania"
 
 #: apps/admin/pruneusers/views.py:25
 msgid "You have to check at least one policy."
-msgstr ""
+msgstr "Musisz zaznaczyć przynajmniej jedną regułę usuwania użytkowników."
 
 #: apps/admin/pruneusers/views.py:27
 msgid "Delete selected policies"
-msgstr ""
+msgstr "Usuń zaznaczone reguły"
 
 #: apps/admin/pruneusers/views.py:27
 msgid "Are you sure you want to delete selected policies?"
 msgstr ""
+"Czy aby na pewno chcesz usunąć zaznaczone reguły usuwania użytkowników?"
 
 #: apps/admin/pruneusers/views.py:35 templates/admin/prune/apply.html:13
 msgid "Apply Policy"
-msgstr ""
+msgstr "Zastosuj regułę"
 
 #: apps/admin/pruneusers/views.py:36
 msgid "Edit Policy"
-msgstr ""
+msgstr "Edytuj regułę"
 
 #: apps/admin/pruneusers/views.py:37
 msgid "Delete Policy"
-msgstr ""
+msgstr "Usuń regułę"
 
 #: apps/admin/pruneusers/views.py:37
 msgid "Are you sure you want to delete this policy?"
-msgstr ""
+msgstr "Czy aby na pewno chcesz usunąć tę regułę?"
 
 #: apps/admin/pruneusers/views.py:42 apps/admin/pruneusers/views.py:134
 msgid "Only system administrators can delete pruning policies."
 msgstr ""
+"Tylko administratorzy systemowi mogą usuwać reguły wycinania profili "
+"użytkowników."
 
 #: apps/admin/pruneusers/views.py:45
 msgid "Selected pruning policies have been deleted successfully."
-msgstr ""
+msgstr "Zaznaczone reguły zostały pomyślnie usunięte."
 
 #: apps/admin/pruneusers/views.py:53
 msgid "Save Policy"
-msgstr ""
+msgstr "Zapisz regułę"
 
 #: apps/admin/pruneusers/views.py:72
 msgid "New Pruning Policy has been created."
-msgstr ""
+msgstr "Nowa reguła usuwania użytkowników została utworzona."
 
 #: apps/admin/pruneusers/views.py:76
 msgid "Only system administrators can set new pruning policies."
 msgstr ""
+"Tylko administratorzy systemowi mogą dodawać nowe reguły usuwania "
+"użytkowników."
 
 #: apps/admin/pruneusers/views.py:85
 msgid "Edit Pruning Policy"
-msgstr ""
+msgstr "Edycja reguły usuwania użytkowników"
 
 #: apps/admin/pruneusers/views.py:89 apps/admin/pruneusers/views.py:130
 #: apps/admin/pruneusers/views.py:147
 msgid "Requested pruning policy could not be found."
-msgstr ""
+msgstr "Żądana reguła nie została odnaleziona."
 
 #: apps/admin/pruneusers/views.py:116
 #, python-format
 msgid "Changes in policy \"%(name)s\" have been saved."
-msgstr ""
+msgstr "Zmiany w regule \"%(name)s\" zostały zachowane."
 
 #: apps/admin/pruneusers/views.py:120
 msgid "Only system administrators can edit pruning policies."
 msgstr ""
+"Tylko administratorzy systemowi mogą modyfikować reguły usuwania "
+"użytkowników."
 
 #: apps/admin/pruneusers/views.py:137
 #, python-format
 msgid "Pruning policy \"%(name)s\" has been deleted."
-msgstr ""
+msgstr "Reguła \"%(name)s\" została usunięta."
 
 #: apps/admin/pruneusers/views.py:143
 msgid "Apply Pruning Policy"
-msgstr ""
+msgstr "Zastosuj regułę usuwania użytkowników"
 
 #: apps/admin/pruneusers/views.py:172
 #, python-format
 msgid "Policy \"%(name)s\" does not apply to any users."
-msgstr ""
+msgstr "Reguła \"%(name)s\" nie odnosi się do żadnych aktualnych użytkowników."
 
 #: apps/admin/pruneusers/views.py:181
 #, python-format
 msgid "User \"%(name)s\" is protected and was not deleted."
-msgstr ""
+msgstr "Użytkownik \"%(name)s\" jest chroniony i nie został usunięty."
 
 #: apps/admin/pruneusers/views.py:187
 #, python-format
@@ -2534,212 +2576,220 @@ msgstr "Nałóż nowego bana"
 
 #: apps/admin/sections/users.py:100
 msgid "Prune Users"
-msgstr ""
+msgstr "Wykrajanie użytkowników"
 
 #: apps/admin/sections/users.py:101
 msgid "Delete multiple Users"
-msgstr ""
+msgstr "Usuwanie wielu użytkowników na raz"
 
 #: apps/admin/sections/users.py:107
 msgid "Pruning Policies"
-msgstr ""
+msgstr "Reguły usuwania"
 
 #: apps/admin/sections/users.py:108
 msgid "Browse all existing pruning policies"
-msgstr ""
+msgstr "Przeglądaj wszystkie reguły usuwania użytkowników"
 
 #: apps/admin/sections/users.py:113
 msgid "Set New Policy"
-msgstr ""
+msgstr "Ustal nową regułę"
 
 #: apps/admin/sections/users.py:114
 msgid "Set new pruning policy"
-msgstr ""
+msgstr "Utwórz nową regułę usuwania użytkowników"
 
 #: apps/admin/sections/users.py:130 apps/usercp/options/forms.py:43
 msgid "Newsletters"
-msgstr ""
+msgstr "Newslettery"
 
 #: apps/admin/sections/users.py:131
 msgid "Manage and send Newsletters"
-msgstr ""
+msgstr "Zarządzaj i wysyłaj newslettery"
 
 #: apps/admin/sections/users.py:137
 msgid "Browse Newsletters"
-msgstr ""
+msgstr "Przeglądaj newslettery"
 
 #: apps/admin/sections/users.py:138
 msgid "Browse all existing Newsletters"
-msgstr ""
+msgstr "Przeglądaj wszystkie istniejące newslettery"
 
 #: apps/admin/sections/users.py:143
 msgid "New Newsletter"
-msgstr ""
+msgstr "Nowy newsletter"
 
 #: apps/admin/sections/users.py:144
 msgid "Create new Newsletter"
-msgstr ""
+msgstr "Utwórz nowy newsletter"
 
 #: apps/admin/settings/views.py:25
 msgid "Requested settings group could not be found."
-msgstr ""
+msgstr "Ządana grupa ustawień nie została odnaleziona."
 
 #: apps/admin/settings/views.py:49
 msgid "Configuration has been changed."
-msgstr ""
+msgstr "Konfiguracja została zmodyfikowana."
 
 #: apps/admin/settings/views.py:93
 #, python-format
 msgid "One setting that matches search criteria has been found."
 msgid_plural "%(count)d settings that match search criteria have been found."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Odnaleziono jedną opcję spełniającą podane kryteria."
+msgstr[1] "Odnaleziono %(count)d opcje spełniające podane kryteria."
+msgstr[2] "Odnaleziono %(count)d opcji spełniających podane kryteria."
 
 #: apps/admin/settings/views.py:99
 msgid "No settings that match search criteria have been found."
-msgstr ""
+msgstr "Nie odnaleziono żadnej opcji spełniającej podanych kryteriów."
 
 #: apps/admin/settings/views.py:101
 msgid "Search query is empty."
-msgstr ""
+msgstr "Wyszukiwane hasło jest puste."
 
 #: apps/admin/settings/views.py:103 search/__init__.py:49
 msgid "Search query is invalid."
-msgstr ""
+msgstr "Wyszukiwane hasło jest nieprawidłowe."
 
 #: apps/admin/stats/forms.py:11
 msgid "For each day"
-msgstr ""
+msgstr "Dla każdego dnia"
 
 #: apps/admin/stats/forms.py:11
 msgid "For each week"
-msgstr ""
+msgstr "Dla każdego tygodnia"
 
 #: apps/admin/stats/forms.py:11
 msgid "For each month"
-msgstr ""
+msgstr "Dla każdego miesiąca"
 
 #: apps/admin/stats/forms.py:11
 msgid "For each year"
-msgstr ""
+msgstr "Dla każdego roku"
 
 #: apps/admin/stats/forms.py:15
 msgid "Report Type"
-msgstr ""
+msgstr "Typ raportu"
 
 #: apps/admin/stats/forms.py:15
 msgid "Select statistics provider."
-msgstr ""
+msgstr "Wybierz źródło statystyk."
 
 #: apps/admin/stats/forms.py:17
 msgid "Time"
-msgstr ""
+msgstr "Czas"
 
 #: apps/admin/stats/forms.py:17
 msgid ""
 "Enter start and end date for time period you want to take data from to use "
 "in graph."
 msgstr ""
+"Wprowadź przedział czasu (datę startową i końcową), dla którego zostanie "
+"wygenerowany wykres."
 
 #: apps/admin/stats/forms.py:17
 msgid "Start Date: YYYY-MM-DD"
-msgstr ""
+msgstr "Data startowa: YYYY-MM-DD (rok, miesiąc, dzień)"
 
 #: apps/admin/stats/forms.py:18
 msgid "End Date: YYYY-MM-DD"
-msgstr ""
+msgstr "Data końcowa: YYYY-MM-DD (rok, miesiąc, dzień)"
 
 #: apps/admin/stats/forms.py:20
 msgid "Graph Precision"
-msgstr ""
+msgstr "Precyzja wykresu"
 
 #: apps/admin/stats/views.py:49
 msgid "Start and end date are same"
-msgstr ""
+msgstr "Data startowa i początkowa nie może być taka sama."
 
 #: apps/admin/stats/views.py:53
 msgid "Statistical report has been created."
-msgstr ""
+msgstr "Raport statystyczny został wygenerowany."
 
 #: apps/admin/stats/views.py:123
 msgid "Too many many items to display on graph."
-msgstr ""
+msgstr "Na wykresie jest zbyt wiele elementów do wyświetlenia."
 
 #: apps/admin/stats/views.py:128
 msgid "Too few items to display on graph"
-msgstr ""
+msgstr "Na wykresie jest zbyt mało elementów do wyświetlenia."
 
 #: apps/admin/users/forms.py:13 apps/admin/users/forms.py:124
 msgid "No rank assigned"
-msgstr ""
+msgstr "Brak przypisanej rangi"
 
 #: apps/admin/users/forms.py:34 apps/admin/users/forms.py:131
 msgid "Basic Account Settings"
-msgstr ""
+msgstr "Podstawowe ustawienia konta"
 
 #: apps/admin/users/forms.py:36 apps/admin/users/forms.py:133
 msgid ""
 "Username is name under which user is known to other users. Between 3 and 15 "
 "characters, only letters and digits are allowed."
 msgstr ""
+"Nazwa użytkownika, pod którą jest on znany dla innych członków. Długość w "
+"przedziale 3 - 15 znaków, dozwolone tylko litery i cyfry."
 
 #: apps/admin/users/forms.py:37 apps/admin/users/forms.py:134
 msgid "User Title"
-msgstr ""
+msgstr "Tytuł użytkownika"
 
 #: apps/admin/users/forms.py:37 apps/admin/users/forms.py:134
 msgid "To override user title with custom one, enter it here."
-msgstr ""
+msgstr "Możesz zastąpić rangę użytkownika niestandardowym tytułem."
 
 #: apps/admin/users/forms.py:38 apps/admin/users/forms.py:135
 msgid "User Rank"
-msgstr ""
+msgstr "Ranga użytkownika"
 
 #: apps/admin/users/forms.py:38 apps/admin/users/forms.py:135
 msgid "This user rank."
-msgstr ""
+msgstr "Ranga tego użytkownika."
 
 #: apps/admin/users/forms.py:39 apps/admin/users/forms.py:136
 msgid "This user roles. Roles are sets of user permissions"
-msgstr ""
+msgstr "Role tego użytkownika. Role to zbiory uprawnień."
 
 #: apps/admin/users/forms.py:43 apps/admin/users/forms.py:140
 msgid "Sign-in Credentials"
-msgstr ""
+msgstr "Dane do logowania"
 
 #: apps/admin/users/forms.py:45 apps/admin/users/forms.py:142
 #: apps/admin/users/forms.py:201 templates/cranefly/profiles/details.html:24
 msgid "E-mail Address"
-msgstr ""
+msgstr "Adres e-mail"
 
 #: apps/admin/users/forms.py:45 apps/admin/users/forms.py:142
 msgid "Member e-mail address."
-msgstr ""
+msgstr "Adres e-mail użytkownika."
 
 #: apps/admin/users/forms.py:46
 msgid "Change User Password"
-msgstr ""
+msgstr "Zmień hasło użytkownika"
 
 #: apps/admin/users/forms.py:46
 msgid ""
 "If you wish to change user password, enter here new password. Otherwhise "
 "leave this field blank."
 msgstr ""
+"Jeżeli chcesz zmienić hasło użytkownika, wpisz tutaj nowe. W przeciwnym "
+"wypadku, pozostaw to pole puste."
 
 #: apps/admin/users/forms.py:50
 msgid "User Avatar"
-msgstr ""
+msgstr "Awatar użytkownika"
 
 #: apps/admin/users/forms.py:52
 msgid "Set Non-Standard Avatar"
-msgstr ""
+msgstr "Ustaw niestandardowy awatar"
 
 #: apps/admin/users/forms.py:52
 msgid ""
 "You can make this member use special avatar by entering name of image file "
 "located in avatars directory here."
 msgstr ""
+"Możesz ustawić temu użytkownikowi specjalny awatar, wprowadzając tu nazwę "
+"pliku obrazka umieszczonego w katalogu awatarów."
 
 #: apps/admin/users/forms.py:53
 msgid "Lock Member's Avatar"
@@ -2751,10 +2801,13 @@ msgid ""
 "replaced with random one selected from _removed gallery and member will not "
 "be able to change his avatar."
 msgstr ""
+"Jeżeli ustawisz tę opcję na \"Tak\", awatar użytkownika zostanie usunięty i "
+"zastąpiony losowym z galerii \"_removed\", a sam użytkownik pozbawiony "
+"możliwości dalszych zmian awatara."
 
 #: apps/admin/users/forms.py:54 apps/admin/users/forms.py:63
 msgid "User-visible reason for lock"
-msgstr ""
+msgstr "Uzasadnienie blokady awatara dla użytkownika"
 
 #: apps/admin/users/forms.py:54
 msgid ""
@@ -2762,16 +2815,20 @@ msgid ""
 "his avatar anymore. This message will be displayed to member in his control "
 "panel."
 msgstr ""
+"Możesz tutaj pozostawić wiadomość, którą zobaczy użytkownik jako "
+"uzasadnienie braku możliwości dalszych zmian awatara."
 
 #: apps/admin/users/forms.py:55 apps/admin/users/forms.py:64
 msgid "Forum Team-visible reason for lock"
-msgstr ""
+msgstr "Uzasadnienie dla ekipy forum"
 
 #: apps/admin/users/forms.py:55
 msgid ""
 "You can leave message to other forum team members exmplaining why this "
 "member's avatar has been locked."
 msgstr ""
+"Możesz tu wpisać uzasadnienie blokady awatara użytkownika dla innych "
+"członków ekipy forum."
 
 #: apps/admin/users/forms.py:59
 msgid "User Signature"
@@ -2827,7 +2884,7 @@ msgstr "Hasło użytkownika."
 
 #: apps/admin/users/forms.py:143
 msgid "Member password."
-msgstr "Hasło członka tego forum/"
+msgstr "Hasło członka tego forum."
 
 #: apps/admin/users/forms.py:192
 msgid "Already Active"
@@ -2839,7 +2896,7 @@ msgstr "Przez użytkownika"
 
 #: apps/admin/users/forms.py:192
 msgid "By Administrator"
-msgstr "Przez adminsitratora"
+msgstr "Przez administratora"
 
 #: apps/admin/users/forms.py:198 templates/cranefly/profiles/list.html:38
 msgid "Search Users"
@@ -2961,57 +3018,64 @@ msgstr "Czy aby na pewno chcesz usunąć zaznaczonych użytkowników?"
 
 #: apps/admin/users/views.py:89
 msgid "Edit User Details"
-msgstr ""
+msgstr "Modyfikacja szczegółów użytkownika"
 
 #: apps/admin/users/views.py:90
 msgid "Delete User"
-msgstr ""
+msgstr "Usuń użytkownika"
 
 #: apps/admin/users/views.py:90
 msgid "Are you sure you want to delete this user account?"
-msgstr ""
+msgstr "Czy aby na pewno chcesz usunąć profil tego użytkownika?"
 
 #: apps/admin/users/views.py:102
 msgid "Your Account has been activated"
-msgstr ""
+msgstr "Twoje konto zostało aktywowane"
 
 #: apps/admin/users/views.py:105
 msgid "Selected users accounts have been activated."
-msgstr ""
+msgstr "Konta zaznaczonych użytkowników zostały aktywowane."
 
 #: apps/admin/users/views.py:112
 msgid "You cannot force validation of protected members e-mails."
-msgstr ""
+msgstr "Nie możesz wymusić walidacji e-maili chronionych użytkowników."
 
 #: apps/admin/users/views.py:126
 msgid ""
 "Selected users accounts have been deactivated and new activation links have "
 "been sent to them."
 msgstr ""
+"Konta zaznaczonych użytkowników zostały tymczasowo zdezaktywowane. Rozesłano "
+"do nich nowe e-maile aktywacyjne."
 
 #: apps/admin/users/views.py:133
 msgid "You cannot remove and block protected members avatars."
 msgstr ""
+"Nie możesz usunąć, ani zablokować możliwości zmiany awatara u chronionych "
+"użytkowników."
 
 #: apps/admin/users/views.py:141
 msgid "Selected users avatars were deleted and locked."
-msgstr ""
+msgstr "Awatary zaznaczonych użytkowników zostały usunięte i zablokowane."
 
 #: apps/admin/users/views.py:148
 msgid "You cannot remove and block protected members signatures."
 msgstr ""
+"Nie możesz usunąć, ani zablokować możliwości zmiany sygnaturki u chronionych "
+"użytkowników."
 
 #: apps/admin/users/views.py:158
 msgid "Selected users signatures were deleted and locked."
-msgstr ""
+msgstr "Sygnaturki zaznaczonych użytkowników zostały usunięte i zablokowane."
 
 #: apps/admin/users/views.py:168
 msgid "Selected users can now edit their avatars and signatures."
 msgstr ""
+"Zaznaczeniu użytkownicy mogą ponownie modyfikować swoje awatary i sygnaturki."
 
 #: apps/admin/users/views.py:175
 msgid "You cannot reset protected members passwords."
-msgstr ""
+msgstr "Nie możesz zrestartować hasła u chronionych użytkowników."
 
 #: apps/admin/users/views.py:186 apps/resetpswd/views.py:83
 msgid "Your New Password"
@@ -3019,7 +3083,7 @@ msgstr "Twoje nowe hasło"
 
 #: apps/admin/users/views.py:192
 msgid "Selected users passwords have been reset successfully."
-msgstr ""
+msgstr "Hasła zaznaczonych użytkowników zostały pomyślnie zrestartowane."
 
 #: apps/admin/users/views.py:198 apps/admin/users/views.py:218
 #: apps/admin/users/views.py:363
@@ -3239,7 +3303,7 @@ msgstr "Aby szukać, wprowadź nazwę użytkownika w polu wyszukiwania."
 
 #: apps/profiles/details/profile.py:4
 msgid "Profile Details"
-msgstr "Szczegóły o użytkowniku"
+msgstr "Informacje szczegółowe"
 
 #: apps/profiles/followers/profile.py:4
 #: templates/cranefly/profiles/details.html:153
@@ -3357,6 +3421,8 @@ msgid ""
 "Enter email address password reset confirmation e-mail will be sent to. It "
 "must be valid e-mail you used to register on forums."
 msgstr ""
+"Wprowadź adres e-mail, na który zostanie wysłane potwierdzenie zmiany hasła. "
+"Musi być to poprawny adres e-mail, podany podczas rejestracji na forum."
 
 #: apps/resetpswd/views.py:29 apps/resetpswd/views.py:65
 #, python-format
@@ -3364,16 +3430,19 @@ msgid ""
 "%(username)s, your account has to be activated in order for you to be able "
 "to request new password."
 msgstr ""
+"%(username)s, Twoje konto musi być aktywne, abyś mógł zażądać nowego hasła."
 
 #: apps/resetpswd/views.py:36
 msgid "Confirm New Password Request"
-msgstr ""
+msgstr "Potwierdź żądanie nowego hasła"
 
 #: apps/resetpswd/views.py:39
 #, python-format
 msgid ""
 "%(username)s, new password request confirmation has been sent to %(email)s."
 msgstr ""
+"%(username)s, żądanie potwierdzenia zmiany hasła zostało wysłane na "
+"%(email)s."
 
 #: apps/resetpswd/views.py:68
 #, python-format
@@ -3381,6 +3450,8 @@ msgid ""
 "%(username)s, request confirmation link is invalid. Please request new "
 "confirmation link."
 msgstr ""
+"%(username)s, link potwierdzający jest niepoprawny. Spróbuj powtórzyć całą "
+"procedurę."
 
 #: apps/resetpswd/views.py:87
 #, python-format
@@ -3388,6 +3459,8 @@ msgid ""
 "%(username)s, your password has been changed with new one that was sent to "
 "%(email)s."
 msgstr ""
+"%(username)s, Twoje hasło zostało pomyślnie zmienione na to, które zostało "
+"wysłane na %(email)s."
 
 #: apps/signin/forms.py:6
 msgid "Your email"
@@ -3464,7 +3537,7 @@ msgstr "Zaakceptuj posty"
 
 #: apps/threads/thread.py:15
 msgid "Split posts to new thread"
-msgstr ""
+msgstr "Wydziel posty do nowego tematu"
 
 #: apps/threads/thread.py:16
 msgid "Move posts to other thread"
@@ -3534,38 +3607,45 @@ msgid ""
 "Replies made to this thread by members on your ignore list have been "
 "revealed."
 msgstr ""
+"Odpowiedzi napisane w tym temacie przez ignorowanych przez Ciebie "
+"użytkowników, zostały odkryte."
 
 #: apps/threadtype/jumps.py:112
 msgid "This thread has been added to your watched threads list."
-msgstr ""
+msgstr "Temat został dodany do Twojej listy obserwowanych tematów."
 
 #: apps/threadtype/jumps.py:139
 msgid ""
 "You will now receive e-mail with notification when somebody replies to this "
 "thread."
-msgstr ""
+msgstr "Poinformujemy Cię w wiadomości e-mail, gdy ktoś odpowie w tym temacie."
 
 #: apps/threadtype/jumps.py:141
 msgid ""
 "This thread has been added to your watched threads list. You will also "
 "receive e-mail with notification when somebody replies to it."
 msgstr ""
+"Temat został dodany do Twojej listy obserwowanych tematów. Poinformujemy Cię "
+"też w wiadomości e-mail, gdy ktoś odpowie w nim odpowie."
 
 #: apps/threadtype/jumps.py:149
 msgid ""
 "This thread has been removed from your watched threads list. You will no "
 "longer receive e-mails with notifications when somebody replies to it."
 msgstr ""
+"Temat został usunięty z Twojej listy obserwowanych tematów. Nie otrzymasz "
+"też więcej powiadomień na e-mail, gdy ktoś w nim odpowie."
 
 #: apps/threadtype/jumps.py:151
 msgid "This thread has been removed from your watched threads list."
-msgstr ""
+msgstr "Temat został usunięty z Twojej listy obserwowanych tematów."
 
 #: apps/threadtype/jumps.py:157
 msgid ""
 "You will no longer receive e-mails with notifications when somebody replies "
 "to this thread."
 msgstr ""
+"Nie otrzymasz więcej powiadomień na e-mail, gdy ktoś odpowie w tym temacie."
 
 #: apps/threadtype/jumps.py:230
 msgid "Your vote has been saved."
@@ -3809,15 +3889,15 @@ msgstr "Musisz wskazać przynajmniej dwa posty do połączenia."
 
 #: apps/threadtype/thread/moderation/posts.py:47
 msgid "Selected posts have been merged into one message."
-msgstr ""
+msgstr "Zaznaczone posty zostały połączone w jedną wiadomośc."
 
 #: apps/threadtype/thread/moderation/posts.py:52
 msgid "You cannot split first post from thread."
-msgstr ""
+msgstr "Nie możesz wydzelić pierwszego postu z tematu."
 
 #: apps/threadtype/thread/moderation/posts.py:87
 msgid "Selected posts have been split to new thread."
-msgstr ""
+msgstr "Zaznaczone posty zostały wydzielone w nowy temat."
 
 #: apps/threadtype/thread/moderation/posts.py:92
 #, python-format
@@ -4046,7 +4126,7 @@ msgstr "Zmień adres e-mail lub hasło"
 
 #: apps/usercp/credentials/views.py:23
 msgid "Activate new Sign-In Credentials"
-msgstr ""
+msgstr "Aktywacja nowych danych do logowania"
 
 #: apps/usercp/credentials/views.py:34
 msgid ""
@@ -4164,7 +4244,7 @@ msgid ""
 "On occasion board administrator may want to send e-mail message to multiple "
 "members."
 msgstr ""
-"Czasami, administrator forum może chcieć rozesłać wiadomość e-mail do "
+"Czasami administrator forum może chcieć rozesłać wiadomość e-mail do "
 "członków forum."
 
 #: apps/usercp/options/forms.py:43
@@ -4201,7 +4281,7 @@ msgstr "Twoja sygnaturka została zmieniona."
 
 #: apps/usercp/username/forms.py:15
 msgid "Change Username to"
-msgstr "Zmien nazwę użytkownika na"
+msgstr "Zmień nazwę użytkownika na"
 
 #: apps/usercp/username/forms.py:15
 msgid "Enter new desired username."
@@ -4336,6 +4416,7 @@ msgstr ""
 #: fixtures/accountssetings.py:76 fixtures/accountssetings.py:87
 msgid "Put on watched threads list and e-mail user when somebody replies"
 msgstr ""
+"Umieść na liście obserwowanych tematów i wyślij e-mail, gdy ktoś odpisze"
 
 #: fixtures/accountssetings.py:78
 msgid "Default Watching Preferences"
@@ -4508,12 +4589,12 @@ msgstr ""
 
 #: fixtures/bruteforcesettings.py:7 fixtures/bruteforcesettings.py:15
 msgid "Brute-force Countermeasures"
-msgstr ""
+msgstr "Zapobieganie atakom typu brute-force"
 
 #: fixtures/bruteforcesettings.py:8
 msgid ""
 "Those settings allow you to protect your forum from brute-force attacks."
-msgstr ""
+msgstr "Ustawienia pomagające chronić forum przed atakami typu brute-force."
 
 #: fixtures/bruteforcesettings.py:16
 msgid "IP invalid attempts limit"
@@ -4527,7 +4608,7 @@ msgstr ""
 
 #: fixtures/bruteforcesettings.py:24
 msgid "Protect register form"
-msgstr ""
+msgstr "Chroń formularz rejestracji"
 
 #: fixtures/bruteforcesettings.py:25
 msgid ""
@@ -4567,11 +4648,11 @@ msgstr ""
 
 #: fixtures/captchasettings.py:14
 msgid "Question & Answer"
-msgstr ""
+msgstr "Pytanie i odpowiedź (Q&A)"
 
 #: fixtures/captchasettings.py:15
 msgid "Spambots Registrations"
-msgstr ""
+msgstr "Rejestracje spambotów"
 
 #: fixtures/captchasettings.py:16
 msgid "CAPTCHA type"
@@ -4610,7 +4691,7 @@ msgstr ""
 
 #: fixtures/captchasettings.py:42
 msgid "Question and Answer Test"
-msgstr ""
+msgstr "Test typu \"Pytanie i odpowiedź\""
 
 #: fixtures/captchasettings.py:43
 msgid "Question"
@@ -4670,15 +4751,15 @@ msgstr "Ustawienia prywatnych tematów"
 
 #: fixtures/privatethreadssettings.py:8
 msgid "Those settings control your forum's private threads."
-msgstr ""
+msgstr "Te ustawienia wpływaja na prywatne tematy na tym forum."
 
 #: fixtures/privatethreadssettings.py:15
 msgid "Enable Private Threads"
-msgstr ""
+msgstr "Uaktywnij prywatne dyskusje"
 
 #: fixtures/rankingsettings.py:7
 msgid "Members Ranking"
-msgstr ""
+msgstr "Ranking użytkowników"
 
 #: fixtures/rankingsettings.py:8
 msgid ""
@@ -4688,7 +4769,7 @@ msgstr ""
 
 #: fixtures/rankingsettings.py:15
 msgid "Basic Ranking Settings"
-msgstr ""
+msgstr "Podstawowe ustawienia rankingu"
 
 #: fixtures/rankingsettings.py:16
 msgid "Ranking Inflation"
@@ -4845,17 +4926,19 @@ msgstr ""
 
 #: fixtures/signingsettings.py:30
 msgid "\"Remember Me\" token lifetime"
-msgstr ""
+msgstr "Czas życia tokenu opcji \"Zapamiętaj mnie\""
 
 #: fixtures/signingsettings.py:31
 msgid ""
 "Number of days since either last use or creation of \"Remember Me\" token to "
 "its expiration."
 msgstr ""
+"Liczba dni od ostatniego użycia lub utworzenia tokenu opcji \"Zapamiętaj mnie"
+"\" do jego wygaśnięcia."
 
 #: fixtures/signingsettings.py:37
 msgid "Allow \"Remember Me\" tokens refreshing"
-msgstr ""
+msgstr "Pozwól na automatycznie odświeżanie tokenu opcji \"Zapamiętaj mnie\""
 
 #: fixtures/signingsettings.py:38
 msgid ""
@@ -4863,6 +4946,10 @@ msgid ""
 "update their \"Remember Me\" tokens by signing in. If this option is on, "
 "Tokens are updated when they are used to open new session."
 msgstr ""
+"Wyłączenie tej opcji zmusza użytkowników do okresowego zaktualizowania "
+"swoich tokenów opcji \"Zapamiętaj mnie\" poprzez ręczne zalogowanie się. "
+"Jeżeli ta opcja jest włączona, tokeny zostaną przedłużone od samego wejścia "
+"na forum."
 
 #: fixtures/threadssettings.py:7
 msgid "Threads and Posts Settings"
@@ -4922,6 +5009,8 @@ msgid ""
 "Enter number of threads to be displayed on \"Popular Threads\" list on board "
 "index or 0 to don't display any threads there."
 msgstr ""
+"Wprowadź liczbę tematów wyświetlanych na liście \"popularnych tematów\" na "
+"stronie głównej forum, lub wprowadź 0 aby wyłączyć tą listę."
 
 #: fixtures/threadssettings.py:56
 msgid "Ranking Update Frequency"
@@ -5709,7 +5798,7 @@ msgstr "Specjalna"
 
 #: templates/admin/ranks/list.html:14
 msgid "Tab"
-msgstr "Zakładka"
+msgstr "Ma kartę"
 
 #: templates/admin/ranks/list.html:14
 msgid "On Index"
@@ -6947,12 +7036,12 @@ msgstr ""
 
 #: templates/cranefly/profiles/details.html:146
 msgid "Interactions"
-msgstr "Interkacje"
+msgstr "Interakcje"
 
 #: templates/cranefly/profiles/details.html:161
 #: templates/cranefly/profiles/profile.html:51
 msgid "Following"
-msgstr "Obserwuje"
+msgstr "Obserwowany"
 
 #: templates/cranefly/profiles/details.html:182
 msgid "Registration Details"
@@ -7109,7 +7198,7 @@ msgstr "Obserwuj"
 
 #: templates/cranefly/profiles/profile.html:60
 msgid "Ignoring"
-msgstr ""
+msgstr "Ignorowany"
 
 #: templates/cranefly/profiles/profile.html:60
 msgid "Ignore"
