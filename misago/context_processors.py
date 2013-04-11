@@ -4,8 +4,9 @@ from misago.admin import site
 from misago.models import Forum
 
 def common(request):
+    context = {}
     try:
-        context = {
+        context.update({
             'acl': request.acl,
             'board_address': settings.BOARD_ADDRESS,
             'messages' : request.messages.messages,
@@ -15,7 +16,7 @@ def common(request):
             'stopwatch': request.stopwatch.time(),
             'user': request.user,
             'version': __version__,
-        }
+        })
         context.update({
             'csrf_id': request.csrf.csrf_id,
             'csrf_token': request.csrf.csrf_token,
@@ -25,7 +26,7 @@ def common(request):
             'reports': Forum.objects.special_model('reports'),
         })
     except AttributeError as e:
-        pass
+        pass 
     return context
 
 
