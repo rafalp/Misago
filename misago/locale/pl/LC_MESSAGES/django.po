@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Misago PL\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-04-03 18:32+0000\n"
-"PO-Revision-Date: 2013-04-10 23:47+0100\n"
+"PO-Revision-Date: 2013-04-12 00:36+0100\n"
 "Last-Translator: L0ud PL <loudml@gmail.com>\n"
 "Language-Team: FxDev <loudpl@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -127,9 +127,8 @@ msgid "Password must contain characters that have different case."
 msgstr "Hasło musi zawierać znaki o różnej wielkości."
 
 #: validators.py:74
-#, fuzzy
 msgid "Password must contain digits in addition to characters."
-msgstr "Hasło musi zawierać też jakieś cyfry."
+msgstr "Hasło musi zawierać też cyfry."
 
 #: validators.py:77
 msgid "Password must contain special (non alphanumerical) characters."
@@ -197,7 +196,6 @@ msgid "Max. number of attachments per post"
 msgstr "Maksymalna liczba załączników w poście"
 
 #: acl/permissions/privatethreads.py:25
-#, fuzzy
 msgid "Can invite users that ignore him"
 msgstr "Może zapraszać do prywatnych dyskusji użytkowników, którzy go ignorują"
 
@@ -1204,9 +1202,8 @@ msgstr "Nazwa kategorii jest zbyt długa."
 
 #: apps/admin/forums/forms.py:23 apps/admin/forums/forms.py:73
 #: apps/admin/forums/forms.py:126
-#, fuzzy
 msgid "Basic Options"
-msgstr "Dane podstawowe"
+msgstr "Opcje podstawowe"
 
 #: apps/admin/forums/forms.py:25
 msgid "Category Parent"
@@ -1227,7 +1224,7 @@ msgstr "Opis kategorii"
 
 #: apps/admin/forums/forms.py:29
 msgid "Closed Category"
-msgstr "Zamknięta kategoria"
+msgstr "Kategoria zamknięta"
 
 #: apps/admin/forums/forms.py:33 apps/admin/forums/forms.py:90
 #: apps/admin/forums/forms.py:136
@@ -1248,7 +1245,7 @@ msgstr ""
 
 #: apps/admin/forums/forms.py:36 apps/admin/forums/forms.py:93
 msgid "Show Subforums Details"
-msgstr "Pokaż szczczegóły podforów"
+msgstr "Pokaż szczegóły podforów"
 
 #: apps/admin/forums/forms.py:36
 msgid ""
@@ -1329,7 +1326,7 @@ msgstr ""
 
 #: apps/admin/forums/forms.py:92
 msgid "Subforums List Attributes"
-msgstr ""
+msgstr "Atrybuty stylu listy subforów"
 
 #: apps/admin/forums/forms.py:92
 msgid ""
@@ -1441,7 +1438,7 @@ msgstr "Zsynchronizuj fora"
 
 #: apps/admin/forums/views.py:30
 msgid "Prune forums"
-msgstr ""
+msgstr "Wyczyść forum"
 
 #: apps/admin/forums/views.py:30
 msgid "Are you sure you want to delete all content from selected forums?"
@@ -1506,7 +1503,7 @@ msgstr "Zaznaczone fora zostały pomyślnie zsynchronizowane."
 
 #: apps/admin/forums/views.py:68
 msgid "Selected forums have been pruned successfully."
-msgstr ""
+msgstr "Wskazane fora zostały pomyślnie wyczyszczone."
 
 #: apps/admin/forums/views.py:76
 msgid "Save Category"
@@ -1909,6 +1906,10 @@ msgid ""
 "days and make this only criteria, every user who is member for less than 15 "
 "days will be deleted. Enter zero to dont use this criteria."
 msgstr ""
+"Maksymalna liczba dni od rejestracji. Dla przykładu, jeżeli wpiszesz tutaj "
+"15 i będzie to jedyne kryterium usuwania użytkowników, profil każdego "
+"użytkownika, który zarejestrował się wcześniej niż 15 dni temu zostanie "
+"usunięty. Wpisz zero, aby nie używać tego kryterium."
 
 #: apps/admin/pruneusers/forms.py:29
 msgid "User last visit was before"
@@ -2049,7 +2050,7 @@ msgstr "Nazwa rangi jest zbyt długa."
 
 #: apps/admin/ranks/forms.py:18
 msgid "This is incorrect rank match rule."
-msgstr ""
+msgstr "Niepoprawne kryteria przyznania rangi."
 
 #: apps/admin/ranks/forms.py:22
 msgid "Basic Rank Options"
@@ -3902,7 +3903,7 @@ msgstr "Zaznaczone posty zostały wydzielone w nowy temat."
 #: apps/threadtype/thread/moderation/posts.py:92
 #, python-format
 msgid "[Split] %s"
-msgstr ""
+msgstr "[Wydzielony] %s"
 
 #: apps/threadtype/thread/moderation/posts.py:135
 msgid "Selected posts have been moved to new thread."
@@ -4134,6 +4135,10 @@ msgid ""
 "click to confirm change of your sign-in credentials. This link will be valid "
 "only for duration of this session, do not sign out until you confirm change!"
 msgstr ""
+"Wysłaliśmy wiadomość potwierdzającą zmianę danych logowania na Twój nowy "
+"adres e-mail. Kliknij na znajdujący się w niej link. Uwaga, link w "
+"wiadomości będzie aktualny tylko na czas trwania aktualnej sesji. Nie "
+"wylogowuj się, dopóki nie potwierdzisz zmian!"
 
 #: apps/usercp/credentials/views.py:36
 msgid ""
@@ -4141,6 +4146,10 @@ msgid ""
 "click to confirm change of your sign-in credentials. This link will be valid "
 "only for duration of this session, do not sign out until you confirm change!"
 msgstr ""
+"Wysłaliśmy wiadomość potwierdzającą zmianę danych logowania na Twój adres e-"
+"mail. Kliknij na znajdujący się w niej link. Uwaga, link w wiadomości będzie "
+"aktualny tylko na czas trwania aktualnej sesji. Nie wylogowuj się, dopóki "
+"nie potwierdzisz zmian!"
 
 #: apps/usercp/credentials/views.py:66
 #, python-format
@@ -4150,6 +4159,8 @@ msgstr "%(username)s, Twoje dane do logowania zostały zmienione."
 #: apps/usercp/credentials/views.py:71
 msgid "Your new credentials have been invalidated. Please try again."
 msgstr ""
+"Niestety, nowe dane logowania już wygasły. Prosimy powtórzyć cała procedurę "
+"ich zmiany - unikając tym razem przerwania sesji."
 
 #: apps/usercp/options/forms.py:10
 msgid "Show my presence to everyone"
@@ -4314,7 +4325,7 @@ msgstr ""
 
 #: fixtures/accountssetings.py:7
 msgid "Users Accounts Settings"
-msgstr "Ustawienia profili użytkowników"
+msgstr "Profile użytkowników"
 
 #: fixtures/accountssetings.py:8
 msgid "Those settings allow you to increase security of your members accounts."
@@ -4375,7 +4386,7 @@ msgstr "Najkrótsza możliwa dlugość hasła"
 
 #: fixtures/accountssetings.py:52
 msgid "Require mixed Case"
-msgstr ""
+msgstr "Wymagane wielkie i małe i litery"
 
 #: fixtures/accountssetings.py:52
 msgid "Require digits"
@@ -4411,7 +4422,7 @@ msgid ""
 "that is sent to new users after successful account creation."
 msgstr ""
 "Jeżeli chcesz, Misago może umieścić hasło nowego użytkownika w powitalnym e-"
-"mailu, który otrzyma po pomyślnej rejestracji."
+"mailu, którego ten otrzyma po pomyślnej rejestracji."
 
 #: fixtures/accountssetings.py:76 fixtures/accountssetings.py:87
 msgid "Put on watched threads list and e-mail user when somebody replies"
@@ -4420,15 +4431,15 @@ msgstr ""
 
 #: fixtures/accountssetings.py:78
 msgid "Default Watching Preferences"
-msgstr ""
+msgstr "Domyślne ustawienia obserwowania tematów"
 
 #: fixtures/accountssetings.py:79
 msgid "Watch threads user started"
-msgstr ""
+msgstr "Obserwowanie tematów rozpoczętych przez użytkownika"
 
 #: fixtures/accountssetings.py:89
 msgid "Watch threads user replied in"
-msgstr ""
+msgstr "Obserwowanie tematów w których użytkownik odpisał"
 
 #: fixtures/accountssetings.py:97
 msgid "Number of Profiles Per Page"
@@ -4436,7 +4447,7 @@ msgstr "Liczba profili na stronę"
 
 #: fixtures/avatarssettings.py:7
 msgid "Users Avatars Settings"
-msgstr "Ustawienia awatarów użytkowników"
+msgstr "Awatary użytkowników"
 
 #: fixtures/avatarssettings.py:8
 msgid "Those settings allow you to control your users avatars."
@@ -4598,13 +4609,15 @@ msgstr "Ustawienia pomagające chronić forum przed atakami typu brute-force."
 
 #: fixtures/bruteforcesettings.py:16
 msgid "IP invalid attempts limit"
-msgstr ""
+msgstr "Limit nieudanych prób na IP"
 
 #: fixtures/bruteforcesettings.py:17
 msgid ""
 "Enter maximal number of allowed attempts before IP address \"jams\". "
 "Defautly forum records only failed sign-in attempts."
 msgstr ""
+"Wprowadź maksymalną liczbę nieudanych prób, po których adres IP zostanie "
+"zablokowany. Domyślnie forum uwzględnia tylko nieudane próby logowania."
 
 #: fixtures/bruteforcesettings.py:24
 msgid "Protect register form"
@@ -4617,16 +4630,23 @@ msgid ""
 "against spam-bots, however same protection may cause problems for users with "
 "disabilities or ones that have problems understanding Q&A challenge."
 msgstr ""
+"Ustawienie tej opcji na \"Tak\" spowoduje wliczanie nieudanych rejestracji "
+"do limitu. Większośc nieudanych rejestracji jest spowodowana zabezpieczeniem "
+"CAPTCHA, przeciwko spam botom. "
 
 #: fixtures/bruteforcesettings.py:32
 msgid "Automaticaly unlock jammed IPs"
-msgstr ""
+msgstr "Automatycznie odblokowuj zablokowane adresy IP"
 
 #: fixtures/bruteforcesettings.py:33
 msgid ""
 "Enter number of minutes since IP address \"jams\" to automatically unlock "
 "it, or 0 to never unlock jammed IP adresses. Jams don't count as bans."
 msgstr ""
+"Blokady adresów IP nie liczą się jako bany i powinny być ostatecznie "
+"automatycznie zdejmowane. Wprowadź liczbę minut, po których adres IP "
+"zostanie odblokowany. Wpisz 0, aby nigdy nie zdejmować blokady adresów IP, "
+"aczkolwiek nie jest to zalecane. "
 
 #: fixtures/captchasettings.py:7
 msgid "Spam Countermeasures"
@@ -4637,6 +4657,8 @@ msgid ""
 "Those settings allow you to combat automatic registrations and spam messages "
 "on your forum."
 msgstr ""
+"Te ustawienia pomagają zwalczać automatyczne rejestracje botów i spam na "
+"forum."
 
 #: fixtures/captchasettings.py:14
 msgid "No protection"
@@ -4644,7 +4666,7 @@ msgstr "Bez zabezpieczeń"
 
 #: fixtures/captchasettings.py:14 fixtures/captchasettings.py:22
 msgid "reCaptcha"
-msgstr ""
+msgstr "Zabezpieczenie reCaptcha"
 
 #: fixtures/captchasettings.py:14
 msgid "Question & Answer"
@@ -4656,7 +4678,7 @@ msgstr "Rejestracje spambotów"
 
 #: fixtures/captchasettings.py:16
 msgid "CAPTCHA type"
-msgstr ""
+msgstr "Typ CAPTCHA"
 
 #: fixtures/captchasettings.py:17
 msgid ""
@@ -4672,6 +4694,7 @@ msgstr "Klucz publiczny"
 #: fixtures/captchasettings.py:24
 msgid "Enter public API key that you have received from reCaptcha."
 msgstr ""
+"Wprowadź publiczny klucz API (public API key), który otrzymałeś od reCaptcha."
 
 #: fixtures/captchasettings.py:29
 msgid "Private Key"
@@ -4680,14 +4703,17 @@ msgstr "Klucz prywatny"
 #: fixtures/captchasettings.py:30
 msgid "Enter private API key that you have received from reCaptcha."
 msgstr ""
+"Wprowadź prywatny klucz API (private API key), który otrzymałeś od reCaptcha."
 
 #: fixtures/captchasettings.py:36
 msgid "Use SSL in reCaptcha"
-msgstr ""
+msgstr "Używaj SSL w reCaptcha"
 
 #: fixtures/captchasettings.py:37
 msgid "Do you want forum to use SSL when making requests to reCaptha servers?"
 msgstr ""
+"Czy chcesz, aby forum używało szyfrowania SSL przy wykonywaniu żądań do "
+"serwerów reCaptha?"
 
 #: fixtures/captchasettings.py:42
 msgid "Question and Answer Test"
@@ -5221,7 +5247,7 @@ msgstr ""
 
 #: models/themeadjustmentmodel.py:7
 msgid "User agents for this theme are already defined."
-msgstr ""
+msgstr "User agenty dla tego szablonu zostały już wcześniej przypisane."
 
 #: models/threadmodel.py:83 templates/cranefly/layout.html:42
 #: templates/cranefly/new_threads.html:10
@@ -6214,7 +6240,7 @@ msgstr "Ten temat jest zamknięty"
 #: templates/cranefly/threads/list.html:168
 #, python-format
 msgid "last by %(user)s %(last)s"
-msgstr "ostatni przez %(user)s %(last)s"
+msgstr "ostatnia przez %(user)s %(last)s"
 
 #: templates/cranefly/new_threads.html:70
 msgid "No new threads were started in last 48 hours."
