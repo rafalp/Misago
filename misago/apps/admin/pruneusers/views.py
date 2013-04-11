@@ -41,7 +41,7 @@ class List(ListWidget):
         if not self.request.user.is_god():
             return Message(_('Only system administrators can delete pruning policies.'), 'error'), reverse('admin_prune_users')
 
-        Policy.objects.filter(id__in=checked).delete()
+        PruningPolicy.objects.filter(id__in=checked).delete()
         return Message(_('Selected pruning policies have been deleted successfully.'), 'success'), reverse('admin_prune_users')
 
 
@@ -59,7 +59,7 @@ class New(FormWidget):
         return reverse('admin_prune_users_edit', model)
 
     def submit_form(self, form, target):
-        new_policy = Policy(
+        new_policy = PruningPolicy(
                       name=form.cleaned_data['name'],
                       email=form.cleaned_data['email'],
                       posts=form.cleaned_data['posts'],
