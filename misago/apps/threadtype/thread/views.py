@@ -67,7 +67,7 @@ class ThreadBaseView(ViewBase):
             if post.ignored:
                 self.ignored = True
             post.checkpoints_visible = []
-            if post.checkpoints_set.all():
+            if post.checkpoint_set.all():
                 for checkpoint in post.checkpoint_set.all():
                     if self.request.acl.threads.can_see_checkpoint(self.forum, checkpoint):
                         post.checkpoints_visible.append(checkpoint)
