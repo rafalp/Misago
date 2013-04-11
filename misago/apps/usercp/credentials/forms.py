@@ -37,7 +37,7 @@ class CredentialsChangeForm(Form):
 
     def clean_new_password(self):
         if self.cleaned_data['new_password']:
-            validate_password(self.cleaned_data['new_password'])
+            validate_password(self.cleaned_data['new_password'],  self.request.settings)
         return self.cleaned_data['new_password']
 
     def clean_current_password(self):
