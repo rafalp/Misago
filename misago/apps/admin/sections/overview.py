@@ -45,7 +45,7 @@ ADMIN_ACTIONS = (
                route='admin_online',
                urlpatterns=patterns('misago.apps.admin.online.views',
                         url(r'^$', 'List', name='admin_online'),
-                        url(r'^(?P<page>[^0]\d+)/$', 'List', name='admin_online'),
+                        url(r'^(?P<page>[1-9]([0-9]+)?)/$', 'List', name='admin_online'),
                     ),
                ),
     AdminAction(

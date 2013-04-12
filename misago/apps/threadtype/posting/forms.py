@@ -20,7 +20,7 @@ class PostingForm(Form, ValidatePostLengthMixin):
                        [
                         None,
                         [
-                         ('post', {'label': _("Post Content")}),
+                         ('post', {'label': _("Message Body")}),
                          ]
                         ]
                        ]
