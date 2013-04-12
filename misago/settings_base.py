@@ -144,6 +144,7 @@ MARKDOWN_EXTENSIONS = (
     'misago.markdown.extensions.quotes.QuoteTitlesExtension',
     'misago.markdown.extensions.mentions.MentionsExtension',
     'misago.markdown.extensions.magiclinks.MagicLinksExtension',
+    'misago.markdown.extensions.cleanlinks.CleanLinksExtension',
 )
 
 # Name of root urls configuration
