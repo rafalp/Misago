@@ -113,6 +113,8 @@ $(function() {
       var image_label = $.trim(prompt(ed_lang_enter_image_label));
       if (image_label.length > 0) {
         makeReplace(ta, '![' + image_label + '](' + image_url + ')');
+      } else {
+        makeReplace(ta, '![' + image_url + '](' + image_url + ')');
       }
     }
     return false;
