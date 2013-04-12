@@ -60,7 +60,7 @@
             {% if 'thread_name' in form.fields %}
             {{ form_theme.row_widget(form.fields.thread_name, width=8) }}
             <hr>
-            <h4>Message Body</h4>
+            <h4>{% trans %}Message Body{% endtrans %}</h4>
             {% endif %}
             {{ editor.editor(form.fields.post, get_button(), rows=8, extra=get_extra()) }}
             {% if intersect(form.fields, ('edit_reason', 'thread_weight', 'close_thread')) %}
