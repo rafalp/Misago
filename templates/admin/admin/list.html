@@ -112,7 +112,7 @@ Showing {{ shown }} of {{ total }} items
 
 {% block javascripts -%}
 {{ super() }}
-{%- if action.prompt_select %}
+{%- if list_form %}
   <script type="text/javascript">
     $(function () {
       $('#list_form').submit(function() {
