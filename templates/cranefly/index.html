@@ -13,7 +13,7 @@
     <div class="index-forums-list">
 
       {% for category in forums_list %}{% if category.subforums %}
-      <div class="index-category{% if category.style %} index-category-{{ category.style }}{% endif %}">
+      <div id="{{ category.slug }}" class="index-category{% if category.style %} index-category-{{ category.style }}{% endif %}">
         <table class="table">
           <caption>{{ category.name }}{% if category.description %} <small>{{ category.description }}</small>{% endif %}</caption>
           <tbody>
@@ -47,6 +47,7 @@
                 {% endif %}
                 {% if forum.subforums %}
                 <div class="dropdown">
+                  {% if forum.subforums|length > 1 %}
                   <a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}#subforums" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-chevron-down"></i> {% trans %}Subforums{% endtrans %}</a>
                   <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                     <div class="dropdown-shadow">
@@ -57,6 +58,9 @@
                       </ul>
                     </div>
                   </div>
+                  {% else %}
+                  <a href="{{ forum.subforums[0].type|url(slug=forum.subforums[0].slug, forum=forum.subforums[0].id) }}" class="subforum tooltip-top" title="{% trans %}Click to go to this subforum{% endtrans %}">{{ forum.subforums[0].name|short_string(16) }}</a>
+                  {% endif %}
                 </div>
                 {% endif%}
                 <div class="hide forum-meta">

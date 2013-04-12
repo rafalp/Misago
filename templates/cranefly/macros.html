@@ -45,6 +45,12 @@
 itemprop="breadcrumb"
 {%- endmacro %}
 
+{% macro parents_list(forums) -%}
+{% for forum in forums %}
+{% if loop.first %}{% url 'index' %}#{{ forum.slug }}{% else %}<li><a href="{{ forum.type|url(forum=forum.pk, slug=forum.slug) }}{% endif %}">{{ forum.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+{% endfor %}
+{%- endmacro %}
+
 {% macro wrap(item, wrap, extra='') -%}
 <{{ wrap }}{% if extra %} {{ extra|safe }}{% endif %}>{{ item }}</{{ wrap }}>
 {%- endmacro %}
