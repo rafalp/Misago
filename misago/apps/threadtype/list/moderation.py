@@ -36,6 +36,8 @@ class ThreadsListModeration(object):
             for user in users:
                 user.save(force_update=True)
             self.request.messages.set_flash(Message(_('Selected threads have been marked as reviewed and made visible to other members.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No threads were marked as reviewed.')), 'info', 'threads')
 
     def action_annouce(self, ids):
         acl = self.request.acl.threads.get_role(self.forum)
@@ -46,6 +48,8 @@ class ThreadsListModeration(object):
         if annouced:
             Thread.objects.filter(id__in=annouced).update(weight=2)
             self.request.messages.set_flash(Message(_('Selected threads have been turned into announcements.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No threads were turned into announcements.')), 'info', 'threads')
 
     def action_sticky(self, ids):
         acl = self.request.acl.threads.get_role(self.forum)
@@ -56,6 +60,8 @@ class ThreadsListModeration(object):
         if sticky:
             Thread.objects.filter(id__in=sticky).update(weight=1)
             self.request.messages.set_flash(Message(_('Selected threads have been sticked to the top of list.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No threads were turned into stickies.')), 'info', 'threads')
 
     def action_normal(self, ids):
         normalised = []
@@ -65,6 +71,8 @@ class ThreadsListModeration(object):
         if normalised:
             Thread.objects.filter(id__in=normalised).update(weight=0)
             self.request.messages.set_flash(Message(_('Selected threads weight has been removed.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No threads have had their weight removed.')), 'info', 'threads')
 
     def action_move(self, ids):
         threads = []
@@ -163,6 +171,8 @@ class ThreadsListModeration(object):
             Post.objects.filter(id__in=last_posts).update(checkpoints=True)
             Thread.objects.filter(id__in=opened).update(closed=False)
             self.request.messages.set_flash(Message(_('Selected threads have been opened.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No threads were opened.')), 'info', 'threads')
 
     def action_close(self, ids):
         closed = []
@@ -176,6 +186,8 @@ class ThreadsListModeration(object):
             Post.objects.filter(id__in=last_posts).update(checkpoints=True)
             Thread.objects.filter(id__in=closed).update(closed=True)
             self.request.messages.set_flash(Message(_('Selected threads have been closed.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No threads were closed.')), 'info', 'threads')
 
     def action_undelete(self, ids):
         undeleted = []
@@ -196,6 +208,8 @@ class ThreadsListModeration(object):
             Post.objects.filter(id__in=last_posts).update(checkpoints=True)
             Thread.objects.filter(id__in=undeleted).update(deleted=False)
             self.request.messages.set_flash(Message(_('Selected threads have been restored.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No threads were restored.')), 'info', 'threads')
 
     def action_soft(self, ids):
         deleted = []
@@ -217,6 +231,8 @@ class ThreadsListModeration(object):
             Post.objects.filter(id__in=last_posts).update(checkpoints=True)
             Thread.objects.filter(id__in=deleted).update(deleted=True)
             self.request.messages.set_flash(Message(_('Selected threads have been hidden.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No threads were hidden.')), 'info', 'threads')
 
     def action_hard(self, ids):
         deleted = []
@@ -232,3 +248,5 @@ class ThreadsListModeration(object):
             self.forum.sync()
             self.forum.save(force_update=True)
             self.request.messages.set_flash(Message(_('Selected threads have been deleted.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No threads were deleted.')), 'info', 'threads')

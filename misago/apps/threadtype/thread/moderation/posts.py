@@ -21,6 +21,8 @@ class PostsModeration(object):
             self.thread.sync()
             self.thread.save(force_update=True)
             self.request.messages.set_flash(Message(_('Selected posts have been accepted and made visible to other members.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No posts were accepted.')), 'info', 'threads')
 
     def post_action_merge(self, ids):
         users = []
@@ -161,6 +163,8 @@ class PostsModeration(object):
             self.forum.sync()
             self.forum.save(force_update=True)
             self.request.messages.set_flash(Message(_('Selected posts have been restored.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No posts were restored.')), 'info', 'threads')
 
     def post_action_protect(self, ids):
         protected = 0
@@ -170,6 +174,8 @@ class PostsModeration(object):
         if protected:
             self.thread.post_set.filter(id__in=ids).update(protected=True)
             self.request.messages.set_flash(Message(_('Selected posts have been protected from edition.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No posts were protected.')), 'info', 'threads')
 
     def post_action_unprotect(self, ids):
         unprotected = 0
@@ -179,6 +185,8 @@ class PostsModeration(object):
         if unprotected:
             self.thread.post_set.filter(id__in=ids).update(protected=False)
             self.request.messages.set_flash(Message(_('Protection from editions has been removed from selected posts.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No posts were unprotected.')), 'info', 'threads')
 
     def post_action_soft(self, ids):
         deleted = []
@@ -193,7 +201,9 @@ class PostsModeration(object):
             self.thread.save(force_update=True)
             self.forum.sync()
             self.forum.save(force_update=True)
-            self.request.messages.set_flash(Message(_('Selected posts have been deleted.')), 'success', 'threads')
+            self.request.messages.set_flash(Message(_('Selected posts have been hidden.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No posts were hidden.')), 'info', 'threads')
 
     def post_action_hard(self, ids):
         deleted = []
@@ -211,3 +221,5 @@ class PostsModeration(object):
             self.forum.sync()
             self.forum.save(force_update=True)
             self.request.messages.set_flash(Message(_('Selected posts have been deleted.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No posts were deleted.')), 'info', 'threads')
