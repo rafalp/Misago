@@ -3,6 +3,7 @@ from urlparse import urlparse
 from django.core.urlresolvers import resolve, reverse as django_reverse
 from django.db.models import Q
 from django.http import Http404
+from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from mptt.forms import TreeNodeChoiceField
 from misago.admin import site
@@ -28,8 +29,8 @@ class List(ListWidget):
                )
     nothing_checked_message = _('You have to select at least one forum.')
     actions = (
-               ('resync', _("Resynchronise forums")),
-               ('prune', _("Prune forums"), _("Are you sure you want to delete all content from selected forums?")),
+               ('resync_fast', _("Resynchronize forums (fast)")),
+               ('resync', _("Resynchronize forums")),
                )
     empty_message = _('No forums are currently defined.')
 
@@ -63,11 +64,66 @@ class List(ListWidget):
                 self.action('remove', _("Delete Redirect"), reverse('admin_forums_delete', item)),
                 )
 
-    def action_resync(self, items, checked):
-        return Message(_('Selected forums have been resynchronised successfully.'), 'success'), reverse('admin_forums')
+    def action_resync_fast(self, items, checked):
+        for forum in items:
+            if forum.pk in checked:
+                forum.sync()
+                forum.save(force_update=True)
+        return Message(_('Selected forums have been resynchronized successfully.'), 'success'), reverse('admin_forums')
 
-    def action_prune(self, items, checked):
-        return Message(_('Selected forums have been pruned successfully.'), 'success'), reverse('admin_forums')
+    def action_resync(self, items, checked):
+        clean_checked = []
+        for item in items:
+            if item.pk in checked and item.type == 'forum':
+                clean_checked.append(item.pk)
+        if not clean_checked:
+            return Message(_('Only forums can be resynchronized.'), 'error'), reverse('admin_forums')
+        self.request.session['sync_forums'] = clean_checked
+        return Message('Meh', 'success'), django_reverse('admin_forums_resync')
+
+
+def resync_forums(request, forum=0, progress=0):
+    progress = int(progress)
+    forums = request.session.get('sync_forums')
+    if not forums:
+        request.messages.set_flash(Message(_('No forums to resynchronize.')), 'info', 'forums')
+        return redirect(reverse('admin_forums'))
+    try:
+        if not forum:
+            forum = request.session['sync_forums'].pop()
+        forum = Forum.objects.get(id=forum)
+    except Forum.DoesNotExist:
+        del request.session['sync_forums']
+        request.messages.set_flash(Message(_('Forum for resynchronization does not exist.')), 'error', 'forums')
+        return redirect(reverse('admin_forums'))
+
+    # Sync 50 threads
+    threads_total = forum.thread_set.count()
+    for thread in forum.thread_set.all()[progress:(progress+1)]:
+        thread.sync()
+        thread.save(force_update=True)
+        progress += 1
+
+    if not threads_total:
+        return redirect(django_reverse('admin_forums_resync'))
+
+    # Render Progress
+    response = request.theme.render_to_response('processing.html', {
+            'task_name': _('Resynchronizing Forums'),
+            'target_name': forum.name,
+            'message': _('Resynchronized %(progress)s from %(total)s threads') % {'progress': progress, 'total': threads_total},
+            'progress': progress * 100 / threads_total,
+            'cancel_url': reverse('admin_forums'),
+        }, context_instance=RequestContext(request));
+
+    # Redirect where to?
+    if progress >= threads_total:
+        forum.sync()
+        forum.save(force_update=True)
+        response['refresh'] = '2;url=%s' % django_reverse('admin_forums_resync')
+    else:
+        response['refresh'] = '2;url=%s' % django_reverse('admin_forums_resync', kwargs={'forum': forum.pk, 'progress': progress})
+    return response
 
 
 class NewNode(FormWidget):
