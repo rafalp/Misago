@@ -152,6 +152,7 @@ class Thread(models.Model):
         from misago.acl.exceptions import ACLError403, ACLError404
         from misago.models import ThreadRead, WatchedThread
 
+        emailed = []
         for watch in WatchedThread.objects.filter(thread=self).filter(email=True).filter(last_read__gte=self.previous_last.date):
             user = watch.user
             if user.pk != request.user.pk:
@@ -167,8 +168,10 @@ class Thread(models.Model):
                                         _('New reply in thread "%(thread)s"') % {'thread': self.name},
                                         {'author': request.user, 'post': post, 'thread': self}
                                         )
+                        emailed.append(user)
                 except (ACLError403, ACLError404):
                     pass
+        return emailed
 
 
 def rename_user_handler(sender, **kwargs):

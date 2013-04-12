@@ -132,14 +132,21 @@ class NewReplyBaseView(PostingBaseView):
             checkpoint_post.save(force_update=True)
             self.thread.save(force_update=True)
 
-        # Notify user we quoted?
-        if (self.quote and self.quote.user_id and not merged
+        # Mute quoted user?
+        if not (self.quote and self.quote.user_id and not merged
                 and self.quote.user_id != self.request.user.pk
                 and not self.quote.user.is_ignoring(self.request.user)):
-            alert = self.quote.user.alert(ugettext_lazy("%(username)s has replied to your post in thread %(thread)s").message)
-            alert.profile('username', self.request.user)
-            alert.post('thread', self.type_prefix, self.thread, self.post)
-            alert.save_all()
+            self.quote = None
 
-        # E-mail users about new response
-        self.thread.email_watchers(self.request, self.type_prefix, self.post)
+    # E-mail users about new response
+    def email_watchers(self, notified_users):
+        emailed = self.thread.email_watchers(self.request, self.type_prefix, self.post)
+        for user in emailed:
+            if not user in notified_users:
+                if user.pk == self.thread.start_poster_id:
+                    alert = user.alert(ugettext_lazy("%(username)s has replied to your thread %(thread)s").message)
+                else:
+                    alert = user.alert(ugettext_lazy("%(username)s has replied to thread %(thread)s that you are watching").message)
+                alert.profile('username', self.request.user)
+                alert.post('thread', self.type_prefix, self.thread, self.post)
+                alert.save_all()

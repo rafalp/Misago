@@ -43,21 +43,35 @@ class PostingBaseView(ViewBase):
     def after_form(self, form):
         pass
 
+    def email_watchers(self, notified_users):
+        pass
+
     def notify_users(self):
         try:
             post_content = self.md
         except AttributeError:
             post_content = False
 
+        notified_users = []
+
         if post_content:
             try:
-                if self.quote and self.quote.user_id:
+                if (self.quote and self.quote.user_id and
+                        self.quote.user.username_slug in post_content.mentions):
                     del post_content.mentions[self.quote.user.username_slug]
+                    if not self.quote.user in self.post.mentions.all():
+                        notified_users.append(self.quote.user)
+                        alert = self.quote.user.alert(ugettext_lazy("%(username)s has replied to your post in thread %(thread)s").message)
+                        alert.profile('username', self.request.user)
+                        alert.post('thread', self.type_prefix, self.thread, self.post)
+                        alert.save_all()
             except KeyError:
                 pass
             if post_content.mentions:
+                notified_users += [x for x in post_content.mentions.itervalues()]
                 self.post.notify_mentioned(self.request, self.type_prefix, post_content.mentions)
                 self.post.save(force_update=True)
+        self.email_watchers(notified_users)
 
     def watch_thread(self):
         if self.request.user.subscribe_start:
