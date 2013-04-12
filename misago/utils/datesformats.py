@@ -75,12 +75,9 @@ def reltimesince(val, arg=""):
     if diff.seconds >= 0:
         if diff.seconds <= 5:
             return _("Just now")
-            
-        if diff.seconds <= 60:
-            return _("Minute ago")
-            
+                        
         if diff.seconds < 3600:
-            minutes = int(math.floor(diff.seconds / 60.0))
+            minutes = int(math.ceil(diff.seconds / 60.0))
             return ungettext(
                     "Minute ago",
                     "%(minutes)s minutes ago",
