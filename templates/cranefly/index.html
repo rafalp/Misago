@@ -41,7 +41,7 @@
                   <div class="thread-name">
                     <a href="{% url 'redirect' slug=forum.slug, forum=forum.id %}">{{ forum.redirect_domain() }}</a>
                   </div>
-                  <div class="muted">{% trans clicks=macros.wrap(forum.redirects|intcomma, 'span', 'class="last-poster"') %}{{ clicks }} clicks{% endtrans %}</div>
+                  <div class="muted">{% trans count=forum.redirects, clicks=macros.wrap(forum.redirects|intcomma, 'span', 'class="last-poster"') %}{{ clicks }} click{% pluralize %}{{ clicks }} clicks{% endtrans %}</div>
                   {%- endif %}
                 </div>
                 {% endif %}
