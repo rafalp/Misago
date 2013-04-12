@@ -12,7 +12,7 @@ class SignInForm(Form):
                None,
                (
                 ('user_email', {'attrs': {'placeholder': _("Enter your e-mail")}}),
-                ('user_password', {'has_value': False, 'placeholder': _("Enter your password")}),
+                ('user_password', {'has_value': False, 'attrs': {'placeholder': _("Enter your password")}}),
                 )
                ),
               (
