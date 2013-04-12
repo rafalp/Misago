@@ -15,12 +15,12 @@
   {% if forums %}
   <div class="row">
     <div class="span6">
-      {% for category in forums %}{% if loop.index is odd and category.subforums %}
+      {% for category in forums %}{% if loop.index0 is odd and category.subforums %}
       {{ draw_category(category) }}
       {% endif %}{% endfor %}
     </div>
     <div class="span6">
-      {% for category in forums %}{% if loop.index is even and category.subforums %}
+      {% for category in forums %}{% if loop.index0 is even and category.subforums %}
       {{ draw_category(category) }}
       {% endif %}{% endfor %}
     </div>
