@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Misago PL\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-03 18:32+0000\n"
-"PO-Revision-Date: 2013-04-12 00:36+0100\n"
+"POT-Creation-Date: 2013-04-12 21:51+0000\n"
+"PO-Revision-Date: 2013-04-13 00:05+0100\n"
 "Last-Translator: L0ud PL <loudml@gmail.com>\n"
 "Language-Team: FxDev <loudpl@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -118,7 +118,6 @@ msgstr[1] "Hasło musi być długie na co najmniej %(count)d znaki."
 msgstr[2] "Hasło musi być długie na co najmniej %(count)d znaków."
 
 #: validators.py:68
-#, fuzzy
 msgid "Password must contain alphabetical characters."
 msgstr "Hasło musi zawierać jakiekolwiek znaki alfabetu."
 
@@ -162,8 +161,28 @@ msgstr "Ma dostęp do zawartości forum"
 msgid "You don't have permission to browse this forum."
 msgstr "Nie masz wystarczających uprawnień, aby przeglądać to forum."
 
-#: acl/permissions/privatethreads.py:18 fixtures/privatethreadssettings.py:14
-#: models/forummodel.py:173 templates/cranefly/watched.html:105
+#: acl/permissions/privatethreads.py:18 acl/permissions/threads.py:11
+#: acl/permissions/threads.py:16 acl/permissions/threads.py:23
+#: acl/permissions/threads.py:32 acl/permissions/threads.py:49
+#: acl/permissions/threads.py:58 acl/permissions/threads.py:63
+#: acl/permissions/threads.py:68 acl/permissions/threads.py:74
+msgid "No"
+msgstr "Nie"
+
+#: acl/permissions/privatethreads.py:19 acl/permissions/threads.py:59
+#: acl/permissions/threads.py:64 acl/permissions/threads.py:69
+#: acl/permissions/threads.py:75
+msgid "Yes, soft-delete"
+msgstr "Tak, z możliwością przywrócenia"
+
+#: acl/permissions/privatethreads.py:20 acl/permissions/threads.py:60
+#: acl/permissions/threads.py:65 acl/permissions/threads.py:70
+#: acl/permissions/threads.py:76
+msgid "Yes, hard-delete"
+msgstr "Tak, z możliwością kompletnego usunięcia"
+
+#: acl/permissions/privatethreads.py:24 fixtures/privatethreadssettings.py:14
+#: models/forummodel.py:174 templates/cranefly/watched.html:105
 #: templates/cranefly/private_threads/changelog.html:7
 #: templates/cranefly/private_threads/changelog_diff.html:7
 #: templates/cranefly/private_threads/details.html:7
@@ -175,41 +194,45 @@ msgstr "Nie masz wystarczających uprawnień, aby przeglądać to forum."
 msgid "Private Threads"
 msgstr "Prywatne tematy"
 
-#: acl/permissions/privatethreads.py:20
+#: acl/permissions/privatethreads.py:26
 msgid "Can participate in private threads"
 msgstr "Może uczestniczyć w prywatnych tematach"
 
-#: acl/permissions/privatethreads.py:21
+#: acl/permissions/privatethreads.py:27
 msgid "Can start private threads"
 msgstr "Może rozpoczynać prywatne tematy"
 
-#: acl/permissions/privatethreads.py:22
+#: acl/permissions/privatethreads.py:28
 msgid "Can upload files in attachments"
 msgstr "Może umieszczać pliki w załącznikach"
 
-#: acl/permissions/privatethreads.py:23
+#: acl/permissions/privatethreads.py:29
 msgid "Max. size of single attachment (in KB)"
 msgstr "Maksymalny rozmiar pojedynczego załacznika (w KB)"
 
-#: acl/permissions/privatethreads.py:24
+#: acl/permissions/privatethreads.py:30
 msgid "Max. number of attachments per post"
 msgstr "Maksymalna liczba załączników w poście"
 
-#: acl/permissions/privatethreads.py:25
+#: acl/permissions/privatethreads.py:31
 msgid "Can invite users that ignore him"
 msgstr "Może zapraszać do prywatnych dyskusji użytkowników, którzy go ignorują"
 
-#: acl/permissions/privatethreads.py:26
+#: acl/permissions/privatethreads.py:32
 msgid "Can moderate threads"
 msgstr "Może moderować tematy"
 
-#: acl/permissions/privatethreads.py:26
+#: acl/permissions/privatethreads.py:32
 msgid ""
 "Makes user with this role Private Threads moderator capable of closing, "
 "deleting and editing all private threads he participates in at will."
 msgstr ""
 "Czyni użytkownika moderatorem prywatnych tematów. Moderator może zamykać, "
 "modyfikować i edytować wszystkie prywatne tematy, w których uczestniczy."
+
+#: acl/permissions/privatethreads.py:33 acl/permissions/threads.py:139
+msgid "Can delete checkpoints"
+msgstr "Może usuwać etykiety zdarzeń"
 
 #: acl/permissions/special.py:10
 #, fuzzy
@@ -239,13 +262,6 @@ msgstr ""
 "Ustawienie tej opcji na Tak, mianuje użytkowników z daną rolą "
 "administratorami tego forum."
 
-#: acl/permissions/threads.py:11 acl/permissions/threads.py:16
-#: acl/permissions/threads.py:23 acl/permissions/threads.py:32
-#: acl/permissions/threads.py:49 acl/permissions/threads.py:58
-#: acl/permissions/threads.py:63 acl/permissions/threads.py:68
-msgid "No"
-msgstr "Nie"
-
 #: acl/permissions/threads.py:12
 msgid "Yes, owned"
 msgstr "Tak, własne"
@@ -255,9 +271,8 @@ msgid "Yes, all"
 msgstr "Tak, wszystkie"
 
 #: acl/permissions/threads.py:17 acl/permissions/threads.py:24
-#, fuzzy
 msgid "Yes, with moderation"
-msgstr "Akceptacja przez moderatora"
+msgstr "Tak, z wymogiem akceptacji przez moderatora"
 
 #: acl/permissions/threads.py:18 acl/permissions/threads.py:25
 msgid "Yes"
@@ -279,331 +294,327 @@ msgstr "Tak, dla przyklejonych tematów"
 msgid "Yes, to announcements"
 msgstr "Tak, dla ogłoszeń"
 
-#: acl/permissions/threads.py:59 acl/permissions/threads.py:64
-#: acl/permissions/threads.py:69
-msgid "Yes, soft-delete"
-msgstr "Tak, z możliwością przywrócenia"
-
-#: acl/permissions/threads.py:60 acl/permissions/threads.py:65
-#: acl/permissions/threads.py:70
-msgid "Yes, hard-delete"
-msgstr "Tak, z możliwością kompletnego usunięcia"
-
-#: acl/permissions/threads.py:75 apps/profiles/threads/profile.py:4
+#: acl/permissions/threads.py:81 apps/profiles/threads/profile.py:4
 #: fixtures/threadssettings.py:15 templates/admin/index.html:52
-#: templates/cranefly/category.html:81 templates/cranefly/index.html:67
-#: templates/cranefly/index.html.py:124
-#: templates/cranefly/threads/list.html:85
+#: templates/cranefly/category.html:83 templates/cranefly/index.html:71
+#: templates/cranefly/index.html.py:134
+#: templates/cranefly/threads/list.html:87
 msgid "Threads"
 msgstr "Tematy"
 
-#: acl/permissions/threads.py:77
+#: acl/permissions/threads.py:83
 msgid "Can read threads"
 msgstr "Może czytać tematy"
 
-#: acl/permissions/threads.py:78
+#: acl/permissions/threads.py:84
 msgid "Can start new threads"
 msgstr "Może otwierać nowe tematy"
 
-#: acl/permissions/threads.py:79
+#: acl/permissions/threads.py:85
 msgid "Can edit own threads"
 msgstr "Może modyfikować swoje tematy"
 
-#: acl/permissions/threads.py:80
+#: acl/permissions/threads.py:86
 msgid "Can soft-delete own threads"
 msgstr "Może usuwać swoje tematy (nie na trwałe)"
 
-#: acl/permissions/threads.py:84 apps/profiles/posts/profile.py:4
+#: acl/permissions/threads.py:90 apps/profiles/posts/profile.py:4
 #: fixtures/threadssettings.py:88 templates/admin/index.html:48
-#: templates/cranefly/category.html:80 templates/cranefly/index.html:66
-#: templates/cranefly/index.html.py:121
-#: templates/cranefly/threads/list.html:84
+#: templates/cranefly/category.html:82 templates/cranefly/index.html:70
+#: templates/cranefly/index.html.py:131
+#: templates/cranefly/threads/list.html:86
 msgid "Posts"
 msgstr "Posty"
 
-#: acl/permissions/threads.py:86
+#: acl/permissions/threads.py:92
 msgid "Can write posts"
 msgstr "Może publikować posty"
 
-#: acl/permissions/threads.py:87
+#: acl/permissions/threads.py:93
 msgid "Can edit own posts"
 msgstr "Może edytować swoje posty"
 
-#: acl/permissions/threads.py:88
+#: acl/permissions/threads.py:94
 msgid "Can soft-delete own posts"
 msgstr "Może usuwać swoje posty (nie na trwałe)"
 
-#: acl/permissions/threads.py:92
+#: acl/permissions/threads.py:98
 msgid "Karma"
 msgstr "Karma"
 
-#: acl/permissions/threads.py:94
-#, fuzzy
+#: acl/permissions/threads.py:100
 msgid "Can upvote posts"
 msgstr "Może głosować za"
 
-#: acl/permissions/threads.py:95
-#, fuzzy
+#: acl/permissions/threads.py:101
 msgid "Can downvote posts"
 msgstr "Może głosować przeciw"
 
-#: acl/permissions/threads.py:96
-#, fuzzy
+#: acl/permissions/threads.py:102
 msgid "Can see post score"
 msgstr "Może zobaczyć ocenę postu"
 
-#: acl/permissions/threads.py:97
+#: acl/permissions/threads.py:103
 msgid "Can see who voted on post"
 msgstr "Może zobaczyć, kto głosował na dany post"
 
-#: acl/permissions/threads.py:101
+#: acl/permissions/threads.py:107
 msgid "Polls"
 msgstr "Ankiety"
 
-#: acl/permissions/threads.py:103
+#: acl/permissions/threads.py:109
 msgid "Can make polls"
 msgstr "Może tworzyć ankiety"
 
-#: acl/permissions/threads.py:104
+#: acl/permissions/threads.py:110
 msgid "Can vote in polls"
 msgstr "Może głosować w ankietach"
 
-#: acl/permissions/threads.py:105
+#: acl/permissions/threads.py:111
 msgid "Can see who voted in poll"
 msgstr "Może zobaczyć kto głosował w ankiecie"
 
-#: acl/permissions/threads.py:109 apps/admin/sections/forums.py:88
+#: acl/permissions/threads.py:115 apps/admin/sections/forums.py:76
 msgid "Attachments"
 msgstr "Załączniki"
 
-#: acl/permissions/threads.py:111
+#: acl/permissions/threads.py:117
 msgid "Can see attachments"
 msgstr "Może zobaczyć załączniki"
 
-#: acl/permissions/threads.py:112
+#: acl/permissions/threads.py:118
 msgid "Can upload attachments"
 msgstr "Może umieszczać załaczniki"
 
-#: acl/permissions/threads.py:113
+#: acl/permissions/threads.py:119
 msgid "Can download attachments"
 msgstr "Może pobierać załączniki"
 
-#: acl/permissions/threads.py:114
+#: acl/permissions/threads.py:120
 msgid "Max size of single attachment (in Kb)"
 msgstr "Maksymalny rozmiar pojedynczego załacznika (w KB)"
 
-#: acl/permissions/threads.py:114 acl/permissions/threads.py:115
+#: acl/permissions/threads.py:120 acl/permissions/threads.py:121
 msgid "Enter zero for no limit."
 msgstr "Wpisz 0, aby wyłączyć limit."
 
-#: acl/permissions/threads.py:115
+#: acl/permissions/threads.py:121
 msgid "Max number of attachments per post"
 msgstr "Maksymalna liczba załączników na post."
 
-#: acl/permissions/threads.py:119
+#: acl/permissions/threads.py:125
 msgid "Moderation"
 msgstr "Moderacja"
 
-#: acl/permissions/threads.py:121
+#: acl/permissions/threads.py:127
 msgid "Can accept threads and posts"
 msgstr "Może zatwierdzać tematy i posty"
 
-#: acl/permissions/threads.py:122
+#: acl/permissions/threads.py:128
 msgid "Can edit thread labels"
 msgstr "Może modyfikować etykiety tematów"
 
-#: acl/permissions/threads.py:123
+#: acl/permissions/threads.py:129
 msgid "Can see edits history"
 msgstr "Może zobaczyć historię edycji"
 
-#: acl/permissions/threads.py:124
-#, fuzzy
+#: acl/permissions/threads.py:130
 msgid "Can change threads weight"
-msgstr "Może zmienić istotność tematu"
+msgstr "Może przekształcać tematy (w ogłoszenie, w przypięty i zwykły temat)"
 
-#: acl/permissions/threads.py:125
+#: acl/permissions/threads.py:131
 msgid "Can edit threads and posts"
 msgstr "Może modyfikować tematy i posty"
 
-#: acl/permissions/threads.py:126
+#: acl/permissions/threads.py:132
 msgid "Can move, merge and split threads and posts"
 msgstr "Może przenosić, łączyć i rozdzielać tematy i posty"
 
-#: acl/permissions/threads.py:127
+#: acl/permissions/threads.py:133
 msgid "Can close threads"
 msgstr "Może zamykać tematy"
 
-#: acl/permissions/threads.py:128
+#: acl/permissions/threads.py:134
 msgid "Can protect posts"
 msgstr "Może zabezpieczać posty"
 
-#: acl/permissions/threads.py:128
+#: acl/permissions/threads.py:134
 msgid "Protected posts cannot be changed by their owners."
 msgstr "Zabezpieczone posty nie mogą być zmodyfikowane przez ich właścicieli."
 
-#: acl/permissions/threads.py:129
+#: acl/permissions/threads.py:135
 msgid "Can delete threads"
 msgstr "Może usuwać tematy"
 
-#: acl/permissions/threads.py:130
+#: acl/permissions/threads.py:136
 msgid "Can delete posts"
 msgstr "Może usuwać posty"
 
-#: acl/permissions/threads.py:131
+#: acl/permissions/threads.py:137
 msgid "Can delete polls"
 msgstr "Może usuwać ankiety"
 
-#: acl/permissions/threads.py:132
+#: acl/permissions/threads.py:138
 msgid "Can delete attachments"
 msgstr "Może usuwać załączniki"
 
-#: acl/permissions/threads.py:151 acl/permissions/threads.py:159
+#: acl/permissions/threads.py:140
+msgid "Can see deleted checkpoints"
+msgstr "Może zobaczyć usunięte etykiety zdarzeń"
+
+#: acl/permissions/threads.py:159 acl/permissions/threads.py:167
 msgid "You don't have permission to read threads in this forum."
 msgstr "Nie posiadasz uprawnień do czytania tematów na tym forum."
 
-#: acl/permissions/threads.py:218 acl/permissions/threads.py:222
+#: acl/permissions/threads.py:226 acl/permissions/threads.py:230
 msgid "You don't have permission to start new threads in this forum."
 msgstr "Nie posiadasz uprawnień do otwierania nowych tematów na tym forum."
 
-#: acl/permissions/threads.py:220
+#: acl/permissions/threads.py:228
 msgid "This forum is closed, you can't start new threads in it."
 msgstr "To forum jest zamknięte, nie możesz otwierać w nim nowych tematów."
 
-#: acl/permissions/threads.py:244
+#: acl/permissions/threads.py:252
 msgid "You can't edit threads in closed forums."
 msgstr "Nie możesz modyfikować tematów w zamkniętych forach."
 
-#: acl/permissions/threads.py:246
+#: acl/permissions/threads.py:254
 msgid "You can't edit closed threads."
 msgstr "Nie możesz modyfikować zamkniętych tematów."
 
-#: acl/permissions/threads.py:249
+#: acl/permissions/threads.py:257
 msgid "You can't edit other members threads."
 msgstr "Nie możesz modyfikować tematów innych użytkowników."
 
-#: acl/permissions/threads.py:251
+#: acl/permissions/threads.py:259
 msgid "You can't edit your threads."
 msgstr "Nie możesz modyfikować swoich tematów."
 
-#: acl/permissions/threads.py:253
+#: acl/permissions/threads.py:261
 msgid "This thread is protected, you cannot edit it."
 msgstr "Ten temat jest chroniony, nie możesz go modyfikować."
 
-#: acl/permissions/threads.py:255
+#: acl/permissions/threads.py:263
 msgid "You don't have permission to edit threads in this forum."
 msgstr "Nie posiadasz uprawnień do modyfikowania tematów na tym forum."
 
-#: acl/permissions/threads.py:272 acl/permissions/threads.py:279
+#: acl/permissions/threads.py:280 acl/permissions/threads.py:287
 msgid "You don't have permission to write replies in this forum."
 msgstr "Nie posiadasz uprawnień do postowania odpowiedzi na tym forum."
 
-#: acl/permissions/threads.py:275
+#: acl/permissions/threads.py:283
 msgid "You can't write replies in closed forums."
 msgstr "Nie możesz pisać odpowiedzi w zamkniętych forach."
 
-#: acl/permissions/threads.py:277
+#: acl/permissions/threads.py:285
 msgid "You can't write replies in closed threads."
 msgstr "Nie możesz pisać odpowiedzi w zamkniętych tematach."
 
-#: acl/permissions/threads.py:301
+#: acl/permissions/threads.py:309
 msgid "You can't edit replies in closed forums."
 msgstr "Nie mozesz edytować odpowiedzi w zamkniętych forach."
 
-#: acl/permissions/threads.py:303
+#: acl/permissions/threads.py:311
 msgid "You can't edit replies in closed threads."
 msgstr "Nie możesz edytować odpowiedzi w zamkniętych tematach."
 
-#: acl/permissions/threads.py:306
+#: acl/permissions/threads.py:314
 msgid "You can't edit other members replies."
 msgstr "Nie możesz edytować odpowiedzi innych użytkowników."
 
-#: acl/permissions/threads.py:308
+#: acl/permissions/threads.py:316
 msgid "You can't edit your replies."
 msgstr "Nie możesz edytować swoich odpowiedzi."
 
-#: acl/permissions/threads.py:310
+#: acl/permissions/threads.py:318
 msgid "This reply is protected, you cannot edit it."
 msgstr "Ta odpowiedź jest chroniona, nie możesz jej modyfikować."
 
-#: acl/permissions/threads.py:312
+#: acl/permissions/threads.py:320
 msgid "You don't have permission to edit replies in this forum."
 msgstr "Nie posiadasz uprawnień do modyfikacji odpowiedzi na tym forum."
 
-#: acl/permissions/threads.py:327 acl/permissions/threads.py:329
+#: acl/permissions/threads.py:335 acl/permissions/threads.py:337
 msgid "You don't have permission to see history of changes made to this post."
 msgstr ""
 "Nie posiadasz uprawnień, potrzebnych do zobaczenia historii edycji tego "
 "postu."
 
-#: acl/permissions/threads.py:345
+#: acl/permissions/threads.py:353
 msgid "You can't make reverts in closed forums."
 msgstr "Nie możesz dokonywać przywróceń w zamkniętych forach."
 
-#: acl/permissions/threads.py:347
+#: acl/permissions/threads.py:355
 msgid "You can't make reverts in closed threads."
 msgstr "Nie możesz dokonywać przywróceń w zamkniętych tematach."
 
-#: acl/permissions/threads.py:349 acl/permissions/threads.py:351
+#: acl/permissions/threads.py:357 acl/permissions/threads.py:359
 msgid "You don't have permission to make reverts in this forum."
 msgstr "Nie posiadasz uprawnień do dokonywania przywróceń na tym forum."
 
-#: acl/permissions/threads.py:427
+#: acl/permissions/threads.py:437
 msgid "You don't have permission to delete threads in closed forum."
 msgstr "Nie posiadasz uprawnień do usuwania tematów na tym forum."
 
-#: acl/permissions/threads.py:429
+#: acl/permissions/threads.py:439
 msgid "This thread is closed, you cannot delete it."
 msgstr "Ten temat jest zamknięty, nie możesz go usunąć."
 
-#: acl/permissions/threads.py:431 acl/permissions/threads.py:465
+#: acl/permissions/threads.py:441 acl/permissions/threads.py:477
 msgid "This post is protected, you cannot delete it."
 msgstr "Ten post jest chroniony, nie możesz go usunąć."
 
-#: acl/permissions/threads.py:433
-msgid "You cannot hard delete this thread."
-msgstr "Nie możesz trwale usunąć tego tematu."
-
-#: acl/permissions/threads.py:435 acl/permissions/threads.py:439
+#: acl/permissions/threads.py:445 acl/permissions/threads.py:449
 msgid "You don't have permission to delete this thread."
 msgstr "Nie posiadasz uprawnień do usunięcia tego tematu."
 
-#: acl/permissions/threads.py:437
+#: acl/permissions/threads.py:447
 msgid "This thread is already deleted."
 msgstr "Ten temat został już usunięty."
 
-#: acl/permissions/threads.py:461
+#: acl/permissions/threads.py:473
 msgid "You don't have permission to delete posts in closed forum."
 msgstr "Nie posiadasz uprawnień do usuwania postów w zamkniętym forum."
 
-#: acl/permissions/threads.py:463
+#: acl/permissions/threads.py:475
 msgid "This thread is closed, you cannot delete its posts."
 msgstr "Ten temat jest zamknięty, nie możesz usunąć jego postów."
 
-#: acl/permissions/threads.py:467
-msgid "You cannot hard delete this post."
-msgstr "Nie mozesz usunąć tego postu na trwałe."
-
-#: acl/permissions/threads.py:469 acl/permissions/threads.py:473
+#: acl/permissions/threads.py:481 acl/permissions/threads.py:485
 msgid "You don't have permission to delete this post."
 msgstr "Nie masz uprawnień do usunięcia tego postu."
 
-#: acl/permissions/threads.py:471
+#: acl/permissions/threads.py:483
 msgid "This post is already deleted."
 msgstr "Ten post został już usunięty."
 
-#: acl/permissions/threads.py:529 acl/permissions/threads.py:531
-#, fuzzy
+#: acl/permissions/threads.py:541 acl/permissions/threads.py:543
 msgid "You cannot upvote posts in this forum."
 msgstr "Nie możesz głosować za postami na tym forum."
 
-#: acl/permissions/threads.py:537 acl/permissions/threads.py:539
-#, fuzzy
+#: acl/permissions/threads.py:549 acl/permissions/threads.py:551
 msgid "You cannot downvote posts in this forum."
 msgstr "Nie możesz głosować przeciw postom na tym forum."
 
-#: acl/permissions/threads.py:545 acl/permissions/threads.py:547
+#: acl/permissions/threads.py:557 acl/permissions/threads.py:559
 msgid "You don't have permission to see who voted on this post."
 msgstr "Nie posiadasz uprawnień, aby zobaczyć kto głosował na ten post."
+
+#: acl/permissions/threads.py:580 acl/permissions/threads.py:582
+msgid "Selected checkpoint could not be found."
+msgstr "Żądana etykieta zdarzenia nie została odnaleziona."
+
+#: acl/permissions/threads.py:588 acl/permissions/threads.py:590
+msgid "You cannot hide checkpoints!"
+msgstr "Nie mozesz ukrywać etykiet zdarzeń!"
+
+#: acl/permissions/threads.py:596 acl/permissions/threads.py:598
+msgid "You cannot delete checkpoints!"
+msgstr "Nie mozesz usuwać etykiet zdarzeń!"
+
+#: acl/permissions/threads.py:604 acl/permissions/threads.py:606
+msgid "You cannot show checkpoints!"
+msgstr "Nie możesz odkrywać etykiet zdarzeń!"
 
 #: acl/permissions/usercp.py:16
 msgid "Profile Settings"
@@ -680,7 +691,6 @@ msgid "You don't have permission to see requested page."
 msgstr "Nie posiadasz uprawnień do zobaczenia tej strony."
 
 #: apps/errors.py:43
-#, fuzzy
 msgid "You are banned."
 msgstr "Twoje konto zostało zablokowane."
 
@@ -689,7 +699,6 @@ msgid "All forums have been marked as read."
 msgstr "Wszystkie fora zostały oznaczone jako przeczytane."
 
 #: apps/redirect.py:12
-#, fuzzy
 msgid "You don't have permission to follow this redirect."
 msgstr "Nie posiadasz uprawnień do podążania za tym przekierowaniem."
 
@@ -746,16 +755,16 @@ msgstr ""
 "zażądaj nowego e-maila z linkiem aktywacyjnym."
 
 #: apps/activation/views.py:83
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(username)s, your account has been successfully reactivated after change of "
 "sign-in credentials."
 msgstr ""
-"%(username)s, Twoje konto zostało pomyślnie reaktywowane po zamianie danych "
+"%(username)s, Twoje konto zostało pomyślnie reaktywowane po zmianie danych "
 "logowania."
 
 #: apps/activation/views.py:85
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(username)s, your account has been successfully activated. Welcome aboard!"
 msgstr ""
@@ -765,54 +774,53 @@ msgstr ""
 msgid "Team Member"
 msgstr "Członek zespołu forum"
 
-#: apps/admin/widgets.py:95 templates/admin/admin/list.html:70
+#: apps/admin/widgets.py:97 templates/admin/admin/list.html:70
 #: templates/cranefly/private_threads/list.html:120
-#: templates/cranefly/private_threads/thread.html:347
-#: templates/cranefly/private_threads/thread.html:355
-#: templates/cranefly/threads/list.html:189
-#: templates/cranefly/threads/thread.html:375
-#: templates/cranefly/threads/thread.html:383
+#: templates/cranefly/private_threads/thread.html:358
+#: templates/cranefly/private_threads/thread.html:366
+#: templates/cranefly/threads/list.html:191
+#: templates/cranefly/threads/thread.html:378
+#: templates/cranefly/threads/thread.html:386
 msgid "Go"
 msgstr "Idź"
 
-#: apps/admin/widgets.py:96
+#: apps/admin/widgets.py:98
 msgid "There are no items to display"
 msgstr "Nie ma żadnych elementów do wyświetlenia"
 
-#: apps/admin/widgets.py:97
+#: apps/admin/widgets.py:99
 msgid "Search has returned no items"
 msgstr "Wyszukiwanie nie zwróciło żadnych wyników"
 
-#: apps/admin/widgets.py:98
+#: apps/admin/widgets.py:100
 msgid "You have to select at least one item."
 msgstr "Musisz wybrać przynajmniej jeden element."
 
-#: apps/admin/widgets.py:317
+#: apps/admin/widgets.py:286
 msgid "No search criteria have been defined."
 msgstr "Nie zdefiniowano żadnych kryteriów wyszukiwania."
 
-#: apps/admin/widgets.py:322
+#: apps/admin/widgets.py:291
 msgid "Search form contains errors."
 msgstr "Formularz wyszukiwania zawiera błędy."
 
-#: apps/admin/widgets.py:330
+#: apps/admin/widgets.py:299
 msgid "Search criteria have been cleared."
 msgstr "Kryteria wyszukiwania zostały wyczyszczone."
 
-#: apps/admin/widgets.py:368 apps/admin/widgets.py:373
-#: apps/threadtype/list/views.py:83 apps/threadtype/thread/views.py:111
-#: apps/threadtype/thread/views.py:158
-#, fuzzy
+#: apps/admin/widgets.py:337 apps/admin/widgets.py:342
+#: apps/threadtype/list/views.py:84 apps/threadtype/thread/views.py:121
+#: apps/threadtype/thread/views.py:168
 msgid "Action requested is incorrect."
 msgstr "Żądana akcja jest niepoprawna."
 
-#: apps/admin/widgets.py:412
+#: apps/admin/widgets.py:381
 #: templates/cranefly/private_threads/posting.html:172
-#: templates/cranefly/threads/posting.html:181
+#: templates/cranefly/threads/posting.html:179
 msgid "Save Changes"
 msgstr "Zapisz zmiany"
 
-#: apps/admin/widgets.py:534
+#: apps/admin/widgets.py:503
 msgid "Action authorization is invalid."
 msgstr "Autoryzacja dla żądanej akcji jest niepoprawna."
 
@@ -894,7 +902,7 @@ msgstr "Opcjonalny. Powód blokady, który wyświetli się członkom zespołu fo
 msgid "Username and e-mail"
 msgstr "Nazwa użytkownika i e-mail"
 
-#: apps/admin/bans/forms.py:43 apps/admin/online/forms.py:22
+#: apps/admin/bans/forms.py:43 apps/admin/online/forms.py:21
 #: apps/admin/users/forms.py:36 apps/admin/users/forms.py:133
 #: apps/admin/users/forms.py:200 apps/register/forms.py:31
 #: templates/_email/users/activation/none.html:9
@@ -907,12 +915,12 @@ msgstr "Nazwa użytkownika"
 msgid "E-mail address"
 msgstr "Adres e-mail"
 
-#: apps/admin/bans/forms.py:45 apps/admin/online/forms.py:21
+#: apps/admin/bans/forms.py:45 apps/admin/online/forms.py:20
 #: templates/admin/banning/list.html:11
 #: templates/cranefly/private_threads/details.html:30
 #: templates/cranefly/profiles/details.html:189
 #: templates/cranefly/profiles/details.html:220
-#: templates/cranefly/threads/details.html:32
+#: templates/cranefly/threads/details.html:30
 msgid "IP Address"
 msgstr "Adres IP"
 
@@ -1192,50 +1200,153 @@ msgstr "Uprawnienia roli \"%(name)s\" zostały zmienione."
 msgid "Forum Role \"%(name)s\" has been deleted."
 msgstr "Rola \"%(name)s\" została usunięta."
 
-#: apps/admin/forums/forms.py:12
+#: apps/admin/forums/forms.py:23
+msgid "Category"
+msgstr "Kategoria"
+
+#: apps/admin/forums/forms.py:24 apps/admin/forums/views.py:28
+#: templates/admin/roles/forums.html:11
+msgid "Forum"
+msgstr "Forum"
+
+#: apps/admin/forums/forms.py:25
+msgid "Redirection"
+msgstr "Przekierowanie"
+
+#: apps/admin/forums/forms.py:28 apps/admin/forums/forms.py:82
 msgid "Category name must contain alphanumeric characters."
 msgstr "Nazwa kategorii nie może zawierać samych znaków specjalnych."
 
-#: apps/admin/forums/forms.py:13
+#: apps/admin/forums/forms.py:29 apps/admin/forums/forms.py:83
 msgid "Category name is too long."
 msgstr "Nazwa kategorii jest zbyt długa."
 
-#: apps/admin/forums/forms.py:23 apps/admin/forums/forms.py:73
-#: apps/admin/forums/forms.py:126
+#: apps/admin/forums/forms.py:40 apps/admin/forums/forms.py:93
+#: apps/admin/forums/forms.py:134 apps/admin/forums/forms.py:185
 msgid "Basic Options"
 msgstr "Opcje podstawowe"
 
-#: apps/admin/forums/forms.py:25
-msgid "Category Parent"
-msgstr "Rodzic kategorii"
+#: apps/admin/forums/forms.py:42
+msgid "Node Parent"
+msgstr "Rodzic węzła"
 
-#: apps/admin/forums/forms.py:26 apps/admin/forums/forms.py:76
-#: apps/admin/forums/forms.py:129
+#: apps/admin/forums/forms.py:43 apps/admin/forums/forms.py:96
+#: apps/admin/forums/forms.py:137 apps/admin/forums/forms.py:188
 msgid "Copy Permissions from"
 msgstr "Skopiuj uprawnienia z"
 
-#: apps/admin/forums/forms.py:27
-msgid "Category Name"
-msgstr "Nazwa kategorii"
+#: apps/admin/forums/forms.py:44
+msgid "Node Type"
+msgstr "Typ węzła"
 
-#: apps/admin/forums/forms.py:28
-msgid "Category Description"
-msgstr "Opis kategorii"
+#: apps/admin/forums/forms.py:44
+msgid ""
+"Each Node has specific role in forums tree. This role cannot be changed "
+"after node is created."
+msgstr ""
+"Każdy węzeł ma swoją konkretną rolę w drzewie forów. Rola nie może zostać "
+"zmieniona po utworzeniu węzła."
 
-#: apps/admin/forums/forms.py:29
-msgid "Closed Category"
-msgstr "Kategoria zamknięta"
+#: apps/admin/forums/forms.py:45
+msgid "Node Name"
+msgstr "Nazwa węzła"
 
-#: apps/admin/forums/forms.py:33 apps/admin/forums/forms.py:90
-#: apps/admin/forums/forms.py:136
+#: apps/admin/forums/forms.py:46
+msgid "Node Description"
+msgstr "Opis węzła"
+
+#: apps/admin/forums/forms.py:47 apps/admin/forums/forms.py:190
+msgid "Redirect URL"
+msgstr "Adres URL przekierowania"
+
+#: apps/admin/forums/forms.py:47
+msgid ""
+"Redirection nodes require you to specify URL they will redirect users to "
+"upon click."
+msgstr ""
+"Węzeł przekierowujący wymaga podania adres URL, do którego po kliknięciu "
+"będzie przekierowywał użytkowników."
+
+#: apps/admin/forums/forms.py:48
+msgid "Closed Node"
+msgstr "Zamknięty węzeł"
+
+#: apps/admin/forums/forms.py:52 apps/admin/forums/forms.py:103
+#: apps/admin/forums/forms.py:152 apps/admin/forums/forms.py:195
 msgid "Display Options"
 msgstr "Wyświetl opcje"
 
-#: apps/admin/forums/forms.py:35
+#: apps/admin/forums/forms.py:54
+msgid "Node Attributes"
+msgstr "Atrybuty węzła"
+
+#: apps/admin/forums/forms.py:54
+msgid ""
+"Custom templates can check nodes for predefined attributes that will change "
+"way they are rendered."
+msgstr ""
+"Specjalne szablony, mogą różnie wyświetlać węzły, w zależności od "
+"zdefiniowanych atrybutów."
+
+#: apps/admin/forums/forms.py:55 apps/admin/forums/forms.py:106
+#: apps/admin/forums/forms.py:155
+msgid "Show Subforums Details"
+msgstr "Pokaż szczegóły podforów"
+
+#: apps/admin/forums/forms.py:55
+msgid ""
+"Allows you to prevent this node subforums from displaying statistics, last "
+"post data, etc. ect. on forums lists."
+msgstr ""
+"Umożliwia wyłączenie wyświetlania statystyk (np. informacji o ostatnim "
+"poście) dla podforów danego węzła."
+
+#: apps/admin/forums/forms.py:56
+msgid "Node Style"
+msgstr "Styl węzła"
+
+#: apps/admin/forums/forms.py:56
+msgid ""
+"You can add custom CSS classess to this node, to change way it looks on "
+"board index."
+msgstr ""
+"Możesz zdefiniować specjalne klasy CSS, które zmienią wygląd tego węzła na "
+"stronie głównej forum."
+
+#: apps/admin/forums/forms.py:63 apps/admin/forums/forms.py:113
+#: apps/admin/forums/forms.py:162 apps/admin/forums/forms.py:204
+msgid "Don't copy permissions"
+msgstr "Nie kopiuj uprawnień"
+
+#: apps/admin/forums/forms.py:70
+msgid "Only categories can use Root Category as their parent."
+msgstr "Tylko kategorie mogą mieć główny korzeń jako rodzica."
+
+#: apps/admin/forums/forms.py:72
+msgid "You have to define redirection URL"
+msgstr "Musisz zdefiniować adres URL przekierowania"
+
+#: apps/admin/forums/forms.py:95
+msgid "Category Parent"
+msgstr "Rodzic kategorii"
+
+#: apps/admin/forums/forms.py:97
+msgid "Category Name"
+msgstr "Nazwa kategorii"
+
+#: apps/admin/forums/forms.py:98
+msgid "Category Description"
+msgstr "Opis kategorii"
+
+#: apps/admin/forums/forms.py:99
+msgid "Closed Category"
+msgstr "Kategoria zamknięta"
+
+#: apps/admin/forums/forms.py:105
 msgid "Category Attributes"
 msgstr "Atrybuty kategorii"
 
-#: apps/admin/forums/forms.py:35
+#: apps/admin/forums/forms.py:105
 msgid ""
 "Custom templates can check categories for predefined attributes that will "
 "change way they are rendered."
@@ -1243,11 +1354,7 @@ msgstr ""
 "Specjalne szablony, mogą różnie wyświetlać kategorie, w zależności od "
 "zdefiniowanych atrybutów."
 
-#: apps/admin/forums/forms.py:36 apps/admin/forums/forms.py:93
-msgid "Show Subforums Details"
-msgstr "Pokaż szczegóły podforów"
-
-#: apps/admin/forums/forms.py:36
+#: apps/admin/forums/forms.py:106
 msgid ""
 "Allows you to prevent this category subforums from displaying statistics, "
 "last post data, etc. ect. on forums lists."
@@ -1255,11 +1362,11 @@ msgstr ""
 "Umożliwia wyłączenie wyświetlania statystyk (np. informacji o ostatnim "
 "poście) dla podforów danej kategorii."
 
-#: apps/admin/forums/forms.py:37
+#: apps/admin/forums/forms.py:107
 msgid "Category Style"
 msgstr "Styl kategorii"
 
-#: apps/admin/forums/forms.py:37
+#: apps/admin/forums/forms.py:107
 msgid ""
 "You can add custom CSS classess to this category, to change way it looks on "
 "board index."
@@ -1267,44 +1374,39 @@ msgstr ""
 "Możesz zdefiniować specjalne klasy CSS, które zmienią wygląd kategorii w na "
 "stronie głównej forum."
 
-#: apps/admin/forums/forms.py:44 apps/admin/forums/forms.py:101
-#: apps/admin/forums/forms.py:145
-msgid "Don't copy permissions"
-msgstr "Nie kopiuj uprawnień"
-
-#: apps/admin/forums/forms.py:60
+#: apps/admin/forums/forms.py:121
 msgid "Forum name must contain alphanumeric characters."
 msgstr "Nazwa forum nie może składać się wyłącznie ze znaków specjlanych."
 
-#: apps/admin/forums/forms.py:61
+#: apps/admin/forums/forms.py:122
 msgid "Forum name is too long."
 msgstr "Nazwa forum jest zbyt długa."
 
-#: apps/admin/forums/forms.py:75
+#: apps/admin/forums/forms.py:136
 msgid "Forum Parent"
 msgstr "Rodzic forum"
 
-#: apps/admin/forums/forms.py:77
+#: apps/admin/forums/forms.py:138
 msgid "Forum Name"
 msgstr "Nazwa forum"
 
-#: apps/admin/forums/forms.py:78
+#: apps/admin/forums/forms.py:139
 msgid "Forum Description"
 msgstr "Opis forum"
 
-#: apps/admin/forums/forms.py:79
+#: apps/admin/forums/forms.py:140
 msgid "Closed Forum"
 msgstr "Zamknięte forum"
 
-#: apps/admin/forums/forms.py:83
+#: apps/admin/forums/forms.py:144
 msgid "Prune Forum"
 msgstr "Automatyczne czyszczenie forum"
 
-#: apps/admin/forums/forms.py:85
+#: apps/admin/forums/forms.py:146
 msgid "Delete threads with first post older than"
 msgstr "Usuń tematy, których pierwszy post jest starszy niż"
 
-#: apps/admin/forums/forms.py:85
+#: apps/admin/forums/forms.py:146
 msgid ""
 "Enter number of days since thread start after which thread will be deleted "
 "or zero to don't delete threads."
@@ -1312,11 +1414,11 @@ msgstr ""
 "Podaj ilość dni od rozpoczęcia tematu, po których zostanie on usunięty. "
 "Wpisz 0, aby wyłączyć usuwanie na podstawie tego kryterium."
 
-#: apps/admin/forums/forms.py:86
+#: apps/admin/forums/forms.py:147
 msgid "Delete threads with last post older than"
 msgstr "Usuń tematy, których ostatni post jest starszy niż"
 
-#: apps/admin/forums/forms.py:86
+#: apps/admin/forums/forms.py:147
 msgid ""
 "Enter number of days since since last reply in thread after which thread "
 "will be deleted or zero to don't delete threads."
@@ -1324,11 +1426,23 @@ msgstr ""
 "Podaj ilość dni od ostatniej odpowiedzi w temacie, po których zostanie on "
 "usunięty. Wpisz 0, aby wyłączyć usuwanie na podstawie tego kryterium."
 
-#: apps/admin/forums/forms.py:92
-msgid "Subforums List Attributes"
-msgstr "Atrybuty stylu listy subforów"
+#: apps/admin/forums/forms.py:148
+msgid "Archive pruned threads?"
+msgstr "Czy archiwizować automatycznie usuwane tematy?"
 
-#: apps/admin/forums/forms.py:92
+#: apps/admin/forums/forms.py:148
+msgid ""
+"If you want, you can archive pruned threads in other forum instead of "
+"deleting them."
+msgstr ""
+"Jeżeli chcesz, możesz zamiast usuwać, archiwizować stare tematy, podczas "
+"automatycznego czyszczenia forum."
+
+#: apps/admin/forums/forms.py:154 apps/admin/forums/forms.py:197
+msgid "Forum Attributes"
+msgstr "Atrybuty forum"
+
+#: apps/admin/forums/forms.py:154 apps/admin/forums/forms.py:197
 msgid ""
 "Custom templates can check forums for predefined attributes that will change "
 "way subforums lists are rendered."
@@ -1336,7 +1450,7 @@ msgstr ""
 "Niestandardowe szablony moga szukać w forach predefiniowanych atrybutów i na "
 "ich podstawie zmieniać wygląd listy subforów."
 
-#: apps/admin/forums/forms.py:93
+#: apps/admin/forums/forms.py:155
 msgid ""
 "Allows you to prevent this forum's subforums from displaying statistics, "
 "last post data, etc. ect. on subforums list."
@@ -1344,46 +1458,50 @@ msgstr ""
 "Umożliwia wyłączenie wyświetlania statystyk i danych (typu ostatni post) na "
 "liście subforów tego forum."
 
-#: apps/admin/forums/forms.py:94
+#: apps/admin/forums/forms.py:156
 msgid "Forum Style"
 msgstr "Styl forum"
 
-#: apps/admin/forums/forms.py:94
+#: apps/admin/forums/forms.py:156
 msgid ""
 "You can add custom CSS classess to this forum to change way it looks on "
 "forums lists."
 msgstr ""
 "Możesz dodać własne klasy CSS, aby zmienić wygląd tego forum na liście forów."
 
-#: apps/admin/forums/forms.py:117
+#: apps/admin/forums/forms.py:163
+msgid "Don't archive pruned threads"
+msgstr "Nie archiwizuj automatycznie usuwanych tematów."
+
+#: apps/admin/forums/forms.py:168
+msgid "Forum cannot be its own archive."
+msgstr "Forum nie może stanowić swojego własnego archiwum."
+
+#: apps/admin/forums/forms.py:176
 msgid "Redirect name must contain alphanumeric characters."
 msgstr "Nazwa przekierowania nie może się składać tylko ze znaków specjalnych."
 
-#: apps/admin/forums/forms.py:118
+#: apps/admin/forums/forms.py:177
 msgid "Redirect name is too long."
 msgstr "Nazwa przekierowania jest zbyt długa."
 
-#: apps/admin/forums/forms.py:128
+#: apps/admin/forums/forms.py:187
 msgid "Redirect Parent"
 msgstr "Rodzic przekierowania"
 
-#: apps/admin/forums/forms.py:130
+#: apps/admin/forums/forms.py:189
 msgid "Redirect Name"
 msgstr "Nazwa przekierowania"
 
-#: apps/admin/forums/forms.py:131
-msgid "Redirect URL"
-msgstr "Adres URL przekierowania"
-
-#: apps/admin/forums/forms.py:132
+#: apps/admin/forums/forms.py:191
 msgid "Redirect Description"
 msgstr "Opis przekierowania"
 
-#: apps/admin/forums/forms.py:138
+#: apps/admin/forums/forms.py:198
 msgid "Redirect Style"
 msgstr "Styl przekierowania"
 
-#: apps/admin/forums/forms.py:138
+#: apps/admin/forums/forms.py:198
 msgid ""
 "You can add custom CSS classess to this redirect to change way it looks on "
 "forums lists."
@@ -1391,32 +1509,32 @@ msgstr ""
 "Do przekierowania możesz przypisać specjalną klasę CSS, aby zmienić jego "
 "wygląd na liście forów."
 
-#: apps/admin/forums/forms.py:151
+#: apps/admin/forums/forms.py:210
 msgid "Delete Options"
 msgstr "Opcje usuwania"
 
-#: apps/admin/forums/forms.py:153
+#: apps/admin/forums/forms.py:212
 msgid "Move threads to"
 msgstr "Przenieś tematy do"
 
-#: apps/admin/forums/forms.py:154
+#: apps/admin/forums/forms.py:213
 msgid "Move subforums to"
 msgstr "Przenieś subfora do"
 
-#: apps/admin/forums/forms.py:164 apps/admin/forums/forms.py:165
-#: apps/admin/forums/views.py:326
+#: apps/admin/forums/forms.py:223 apps/admin/forums/forms.py:224
+#: apps/admin/forums/views.py:352
 msgid "Remove with forum"
 msgstr "Usuń razem z forum"
 
-#: apps/admin/forums/forms.py:171
+#: apps/admin/forums/forms.py:230
 msgid "Categories cannot contain threads."
 msgstr "Kategorie nie mogą zawierać tematów."
 
-#: apps/admin/forums/forms.py:173
+#: apps/admin/forums/forms.py:232
 msgid "Redirects cannot contain threads."
 msgstr "Przekierowania nie mogą zawierać tematów."
 
-#: apps/admin/forums/forms.py:179
+#: apps/admin/forums/forms.py:238
 msgid ""
 "Destination you want to move this forum's threads to will be deleted with "
 "this forum."
@@ -1424,133 +1542,123 @@ msgstr ""
 "Nowe miejsce do, którego miałyby zostać przeniesione tematy, zostałoby "
 "usunięte wraz z usuwanym forum."
 
-#: apps/admin/forums/views.py:25 templates/admin/roles/forums.html:11
-msgid "Forum"
-msgstr "Forum"
-
-#: apps/admin/forums/views.py:27
+#: apps/admin/forums/views.py:30
 msgid "You have to select at least one forum."
 msgstr "Musisz zaznaczyć przynajmniej jedno forum."
 
-#: apps/admin/forums/views.py:29
-msgid "Resynchronise forums"
+#: apps/admin/forums/views.py:32
+msgid "Resynchronize forums (fast)"
+msgstr "Zsynchronizuj fora (szybko)"
+
+#: apps/admin/forums/views.py:33
+msgid "Resynchronize forums"
 msgstr "Zsynchronizuj fora"
 
-#: apps/admin/forums/views.py:30
-msgid "Prune forums"
-msgstr "Wyczyść forum"
-
-#: apps/admin/forums/views.py:30
-msgid "Are you sure you want to delete all content from selected forums?"
-msgstr "Czy ta pewno chcesz usunąć całą zawartość zaznaczonych forów?"
-
-#: apps/admin/forums/views.py:32 apps/admin/roles/views.py:123
+#: apps/admin/forums/views.py:35 apps/admin/roles/views.py:123
 msgid "No forums are currently defined."
 msgstr "Nie zdefiniowano jeszcze żadnych forów."
 
-#: apps/admin/forums/views.py:43
+#: apps/admin/forums/views.py:46
 msgid "Move Category Up"
 msgstr "Przesuń kategorię w górę"
 
-#: apps/admin/forums/views.py:44
+#: apps/admin/forums/views.py:47
 msgid "Move Category Down"
 msgstr "Przesuń kategorię w dół"
 
-#: apps/admin/forums/views.py:45 apps/admin/forums/views.py:231
+#: apps/admin/forums/views.py:48 apps/admin/forums/views.py:251
 msgid "Edit Category"
 msgstr "Zmodyfikuj kategorię"
 
-#: apps/admin/forums/views.py:46 apps/admin/forums/views.py:313
+#: apps/admin/forums/views.py:49 apps/admin/forums/views.py:339
 msgid "Delete Category"
 msgstr "Usuń kategorię"
 
-#: apps/admin/forums/views.py:51
+#: apps/admin/forums/views.py:54
 msgid "Move Forum Up"
 msgstr "Przesuń forum w górę"
 
-#: apps/admin/forums/views.py:52
+#: apps/admin/forums/views.py:55
 msgid "Move Forum Down"
 msgstr "Przesuń forum w dół"
 
-#: apps/admin/forums/views.py:53 apps/admin/forums/views.py:216
+#: apps/admin/forums/views.py:56 apps/admin/forums/views.py:236
 msgid "Edit Forum"
 msgstr "Zmodyfikuj forum"
 
-#: apps/admin/forums/views.py:54 apps/admin/forums/views.py:300
+#: apps/admin/forums/views.py:57 apps/admin/forums/views.py:326
 #: templates/admin/forums/delete.html:5
 msgid "Delete Forum"
 msgstr "Usuń forum"
 
-#: apps/admin/forums/views.py:58
+#: apps/admin/forums/views.py:61
 msgid "Move Redirect Up"
 msgstr "Przesuń przekierowanie w górę"
 
-#: apps/admin/forums/views.py:59
+#: apps/admin/forums/views.py:62
 msgid "Move Redirect Down"
 msgstr "Przesuń przekierowanie w doł"
 
-#: apps/admin/forums/views.py:60 apps/admin/forums/views.py:234
+#: apps/admin/forums/views.py:63 apps/admin/forums/views.py:254
 msgid "Edit Redirect"
 msgstr "Zmodyfikuj przekierowanie"
 
-#: apps/admin/forums/views.py:61 apps/admin/forums/views.py:315
+#: apps/admin/forums/views.py:64 apps/admin/forums/views.py:341
 msgid "Delete Redirect"
 msgstr "Usuń przekierowanie"
 
-#: apps/admin/forums/views.py:65
-msgid "Selected forums have been resynchronised successfully."
+#: apps/admin/forums/views.py:72
+msgid "Selected forums have been resynchronized successfully."
 msgstr "Zaznaczone fora zostały pomyślnie zsynchronizowane."
 
-#: apps/admin/forums/views.py:68
-msgid "Selected forums have been pruned successfully."
-msgstr "Wskazane fora zostały pomyślnie wyczyszczone."
+#: apps/admin/forums/views.py:80
+msgid "Only forums can be resynchronized."
+msgstr "Zsynchronizowane mogą zostać jedynie fora."
 
-#: apps/admin/forums/views.py:76
-msgid "Save Category"
-msgstr "Zapisz kategorię"
+#: apps/admin/forums/views.py:89
+msgid "No forums to resynchronize."
+msgstr "Nie zdefiniowano forów do synchronizacji."
 
-#: apps/admin/forums/views.py:102
+#: apps/admin/forums/views.py:97
+msgid "Forum for resynchronization does not exist."
+msgstr "Wskazane forum do zsynchronizowania nie istnieje."
+
+#: apps/admin/forums/views.py:112
+msgid "Resynchronizing Forums"
+msgstr "Synchronizowanie forów"
+
+#: apps/admin/forums/views.py:114
+#, python-format
+msgid "Resynchronized %(progress)s from %(total)s threads"
+msgstr "Zsynchronizowano %(progress)s z %(total)s tematów"
+
+#: apps/admin/forums/views.py:134
+msgid "Save Node"
+msgstr "Zapisz węzeł"
+
+#: apps/admin/forums/views.py:198
 msgid "New Category has been created."
 msgstr "Pomyślnie utworzono nową kategorię."
 
-#: apps/admin/forums/views.py:110 apps/admin/forums/views.py:152
-msgid "Save Forum"
-msgstr "Zapisz forum"
-
-#: apps/admin/forums/views.py:138
+#: apps/admin/forums/views.py:200
 msgid "New Forum has been created."
 msgstr "Pomyślnie utworzono nowe forum."
 
-#: apps/admin/forums/views.py:142
-msgid ""
-"You have to create at least one category before you will be able to create "
-"forums."
-msgstr ""
-"Aby utworzyć forum, musisz najpierw posiadać przynajmniej jedną kategorię."
-
-#: apps/admin/forums/views.py:176
+#: apps/admin/forums/views.py:202
 msgid "New Redirect has been created."
 msgstr "Pomyślnie utworzono nowe przekierowanie."
 
-#: apps/admin/forums/views.py:180
-msgid ""
-"You have to create at least one category before you will be able to create "
-"redirects."
-msgstr ""
-"Aby utworzyć przekierowanie, musisz najpierw posiadać przynajmniej jedną "
-"kategorię."
-
-#: apps/admin/forums/views.py:189 apps/admin/forums/views.py:203
-#: apps/admin/forums/views.py:220 apps/admin/forums/views.py:305
+#: apps/admin/forums/views.py:209 apps/admin/forums/views.py:223
+#: apps/admin/forums/views.py:240 apps/admin/forums/views.py:331
 msgid "Requested Forum could not be found."
 msgstr "Żądane forum nie zostało odnalezione."
 
-#: apps/admin/forums/views.py:195
+#: apps/admin/forums/views.py:215
 #, python-format
 msgid "Forum \"%(name)s\" has been moved up."
 msgstr "Forum \"%(name)s\" zostało przesunięte w górę."
 
-#: apps/admin/forums/views.py:196
+#: apps/admin/forums/views.py:216
 #, python-format
 msgid ""
 "Forum \"%(name)s\" is first child of its parent node and cannot be moved up."
@@ -1558,12 +1666,12 @@ msgstr ""
 "Forum \"%(name)s\" jest pierwsze na tym poziomie i odgałęzieniu i nie mozesz "
 "być przesunięte wyżej."
 
-#: apps/admin/forums/views.py:209
+#: apps/admin/forums/views.py:229
 #, python-format
 msgid "Forum \"%(name)s\" has been moved down."
 msgstr "Forum \"%(name)s\" zostało przesunięte w dół."
 
-#: apps/admin/forums/views.py:210
+#: apps/admin/forums/views.py:230
 #, python-format
 msgid ""
 "Forum \"%(name)s\" is last child of its parent node and cannot be moved down."
@@ -1571,12 +1679,12 @@ msgstr ""
 "Forum \"%(name)s\" jest ostatnie na tym poziomie i odgałęzieniu i nie mozesz "
 "być przesunięte niżej."
 
-#: apps/admin/forums/views.py:294
+#: apps/admin/forums/views.py:320
 #, python-format
 msgid "Changes in forum \"%(name)s\" have been saved."
 msgstr "Pomyślnie zachowano zmiany w forum \"%(name)s\"."
 
-#: apps/admin/forums/views.py:348
+#: apps/admin/forums/views.py:374
 #, python-format
 msgid "Forum \"%(name)s\" has been deleted."
 msgstr "Forum \"%(name)s\" zostało usunięte."
@@ -1793,38 +1901,34 @@ msgid "Registered Members Sessions"
 msgstr "Sesje zarejestrowanych użytkowników"
 
 #: apps/admin/online/forms.py:12
-msgid "Hidden Sessions"
-msgstr "Ukryte sesje"
-
-#: apps/admin/online/forms.py:13
 msgid "Guests Sessions"
 msgstr "Sesje gości"
 
-#: apps/admin/online/forms.py:14
+#: apps/admin/online/forms.py:13
 msgid "Crawler Sessions"
 msgstr "Sesje botów wyszukiwarek"
 
-#: apps/admin/online/forms.py:19
+#: apps/admin/online/forms.py:18
 msgid "Search Sessions"
 msgstr "Wyszukiwanie sesji"
 
-#: apps/admin/online/forms.py:21
+#: apps/admin/online/forms.py:20
 msgid "IP begins with..."
 msgstr "Adres IP zaczyna się na..."
 
-#: apps/admin/online/forms.py:22
+#: apps/admin/online/forms.py:21
 msgid "Username begings with..."
 msgstr "Nazwa użytkownika zaczyna się na..."
 
-#: apps/admin/online/forms.py:23
+#: apps/admin/online/forms.py:22
 msgid "User Agent"
 msgstr "User Agent"
 
-#: apps/admin/online/forms.py:23
+#: apps/admin/online/forms.py:22
 msgid "User Agent contains..."
 msgstr "User Agent zaczyna się na..."
 
-#: apps/admin/online/forms.py:24
+#: apps/admin/online/forms.py:23
 msgid "Session Type"
 msgstr "Typ sesji"
 
@@ -2352,54 +2456,38 @@ msgid "All existing forums"
 msgstr "Wszystkie istniejące fora"
 
 #: apps/admin/sections/forums.py:23
-msgid "New Category"
-msgstr "Nowa kategoria"
+msgid "New Node"
+msgstr "Nowy węzeł"
 
 #: apps/admin/sections/forums.py:24
-msgid "Create new category"
-msgstr "Utwórz nową kategorię"
+msgid "Create new forums tree node"
+msgstr "Utwórz nowy węzeł w drzewie forów"
 
-#: apps/admin/sections/forums.py:29
-msgid "New Forum"
-msgstr "Nowe forum"
-
-#: apps/admin/sections/forums.py:30
-msgid "Create new forum"
-msgstr "Utwórz nowe forum"
-
-#: apps/admin/sections/forums.py:35
-msgid "New Redirect"
-msgstr "Nowe przekierowanie"
-
-#: apps/admin/sections/forums.py:36
-msgid "Create new redirect"
-msgstr "Utwórz nowe przekierowanie"
-
-#: apps/admin/sections/forums.py:55
+#: apps/admin/sections/forums.py:43
 msgid "Thread Labels"
 msgstr "Etykiety tematów"
 
-#: apps/admin/sections/forums.py:56
+#: apps/admin/sections/forums.py:44
 msgid "Thread Labels allow you to group threads together within forums."
 msgstr "Etykiety tematów umożliwają grupowanie ich razem na forach."
 
-#: apps/admin/sections/forums.py:66
+#: apps/admin/sections/forums.py:54
 msgid "Words Filter"
 msgstr "Filtr słów"
 
-#: apps/admin/sections/forums.py:67
+#: apps/admin/sections/forums.py:55
 msgid "Forbid usage of words in messages"
 msgstr "Zabroń używania niektórych słów w wiadomościach"
 
-#: apps/admin/sections/forums.py:77
+#: apps/admin/sections/forums.py:65
 msgid "Tests"
 msgstr "Testy wiadomości"
 
-#: apps/admin/sections/forums.py:78
+#: apps/admin/sections/forums.py:66
 msgid "Tests that new messages have to pass"
 msgstr "Testy, którymi będa poddawane nowe wiadomości"
 
-#: apps/admin/sections/forums.py:89
+#: apps/admin/sections/forums.py:77
 msgid "Manage allowed attachment types."
 msgstr "Zarządzanie dozwolonymi typami załączników."
 
@@ -2419,7 +2507,7 @@ msgstr "Statystyki"
 msgid "Create Statistics Reports"
 msgstr "Generowanie raportów statystycznych"
 
-#: apps/admin/sections/overview.py:33 templates/cranefly/index.html:130
+#: apps/admin/sections/overview.py:33 templates/cranefly/index.html:140
 #: templates/cranefly/profiles/profile.html:24
 msgid "Online"
 msgstr "Online"
@@ -2514,7 +2602,7 @@ msgstr "Dodaj nowe dostosowanie"
 msgid "Create new client adjustment"
 msgstr "Utwórz nowe dopasowanie stylu do przeglądarki"
 
-#: apps/admin/sections/users.py:10 fixtures/accountssetings.py:96
+#: apps/admin/sections/users.py:10 fixtures/accountssetings.py:97
 #: templates/cranefly/profiles/list.html:17
 msgid "Users List"
 msgstr "Lista użytkowników"
@@ -2635,9 +2723,9 @@ msgstr "Konfiguracja została zmodyfikowana."
 #, python-format
 msgid "One setting that matches search criteria has been found."
 msgid_plural "%(count)d settings that match search criteria have been found."
-msgstr[0] "Odnaleziono jedną opcję spełniającą podane kryteria."
-msgstr[1] "Odnaleziono %(count)d opcje spełniające podane kryteria."
-msgstr[2] "Odnaleziono %(count)d opcji spełniających podane kryteria."
+msgstr[0] "Odnaleziono jedno ustawienie spełniające podane kryteria."
+msgstr[1] "Odnaleziono %(count)d ustawienia spełniające podane kryteria."
+msgstr[2] "Odnaleziono %(count)d ustawień spełniających podane kryteria."
 
 #: apps/admin/settings/views.py:99
 msgid "No settings that match search criteria have been found."
@@ -3193,28 +3281,28 @@ msgstr "%(user)s zaprosił Cię do prywatnej dyskusji \"%(thread)s\""
 msgid "%(user)s has been added to this thread."
 msgstr "%(user)s został dodany do dyskusji."
 
-#: apps/privatethreads/jumps.py:77
+#: apps/privatethreads/jumps.py:76
 msgid "User with requested username could not be found."
 msgstr "Użytkownik o podanej nazwie nie został odnaleziony."
 
-#: apps/privatethreads/jumps.py:87
+#: apps/privatethreads/jumps.py:86
 msgid "You don't have permission to remove discussion participants."
 msgstr "Nie posiadasz uprawnień do usuwania członków dyskusji."
 
-#: apps/privatethreads/jumps.py:98
+#: apps/privatethreads/jumps.py:97
 msgid "Thread has been deleted because last participant left it."
 msgstr "Temat został usunięty, ponieważ opuścił go ostatni uczestnik."
 
-#: apps/privatethreads/jumps.py:104
+#: apps/privatethreads/jumps.py:103
 #, python-format
 msgid "You have left the \"%(thread)s\" thread."
 msgstr "Opuściłeś temat \"%(thread)s\"."
 
-#: apps/privatethreads/jumps.py:111
+#: apps/privatethreads/jumps.py:110
 msgid "Selected participant was removed from thread."
 msgstr "Zaznaczony członek został wykluczony z dyskusji."
 
-#: apps/privatethreads/jumps.py:114
+#: apps/privatethreads/jumps.py:113
 msgid "Requested thread participant does not exist."
 msgstr "Nie odnaleziono żądanego członka dyskusji."
 
@@ -3267,16 +3355,16 @@ msgid "Remove posts protection"
 msgstr "Zdejmij ochronę postów"
 
 #: apps/privatethreads/thread.py:20 apps/threads/thread.py:22
-msgid "Undelete posts"
+msgid "Restore posts"
 msgstr "Przywróć posty"
 
 #: apps/privatethreads/thread.py:21 apps/threads/thread.py:23
-msgid "Soft delete posts"
-msgstr "Odwracalnie usuń posty"
+msgid "Hide posts"
+msgstr "Ukryj posty"
 
 #: apps/privatethreads/thread.py:23 apps/threads/thread.py:25
-msgid "Hard delete posts"
-msgstr "Usuń posty na stałe"
+msgid "Delete posts"
+msgstr "Usuń posty"
 
 #: apps/privatethreads/thread.py:34 apps/threads/thread.py:49
 msgid "Open this thread"
@@ -3287,18 +3375,18 @@ msgid "Close this thread"
 msgstr "Zamknij ten temat"
 
 #: apps/privatethreads/thread.py:39 apps/threads/thread.py:54
-msgid "Undelete this thread"
+msgid "Restore this thread"
 msgstr "Przywróć ten temat"
 
 #: apps/privatethreads/thread.py:41 apps/threads/thread.py:56
-msgid "Soft delete this thread"
-msgstr "Usuń przywracalnie ten temat"
+msgid "Hide this thread"
+msgstr "Ukryj ten temat"
 
 #: apps/privatethreads/thread.py:43 apps/threads/thread.py:58
-msgid "Hard delete this thread"
-msgstr "Usuń ten temat na stałe"
+msgid "Delete this thread"
+msgstr "Usuń ten temat"
 
-#: apps/profiles/views.py:66
+#: apps/profiles/views.py:67
 msgid "To search users you have to enter username in search field."
 msgstr "Aby szukać, wprowadź nazwę użytkownika w polu wyszukiwania."
 
@@ -3349,7 +3437,7 @@ msgstr ""
 
 #: apps/register/forms.py:35 apps/signin/forms.py:14
 msgid "Enter your e-mail"
-msgstr "Wprowadź swój adres -email"
+msgstr "Wprowadź swój adres e-mail"
 
 #: apps/register/forms.py:35
 msgid "Repeat your e-mail"
@@ -3479,58 +3567,58 @@ msgstr "Zapamiętaj mnie"
 msgid "Sign me In automatically next time"
 msgstr "Zaloguj mnie automatycznie przy kolejnych wizytach"
 
-#: apps/signin/views.py:65
+#: apps/signin/views.py:66
 #, python-format
 msgid "Welcome back, %(username)s!"
 msgstr "Witaj ponownie, %(username)s!"
 
-#: apps/signin/views.py:106
+#: apps/signin/views.py:107
 msgid "You have been signed out."
 msgstr "Pomyślnie wylogowano z forum."
 
-#: apps/threads/list.py:45
+#: apps/threads/list.py:52
 msgid "Accept threads"
 msgstr "Zaakceptuj tematy"
 
-#: apps/threads/list.py:47
+#: apps/threads/list.py:54
 msgid "Change to announcements"
-msgstr "Zamień na ogłoszenia"
+msgstr "Przekształć w ogłoszenia"
 
-#: apps/threads/list.py:49
+#: apps/threads/list.py:56
 msgid "Change to sticky threads"
 msgstr "Zamień na przyklejone tematy"
 
-#: apps/threads/list.py:51
+#: apps/threads/list.py:58
 msgid "Change to standard thread"
 msgstr "Zamien na standardowe tematy"
 
-#: apps/threads/list.py:53
+#: apps/threads/list.py:60
 msgid "Move threads"
 msgstr "Przenieś tematy"
 
-#: apps/threads/list.py:54
+#: apps/threads/list.py:61
 msgid "Merge threads"
 msgstr "Połącz tematy"
 
-#: apps/threads/list.py:56
+#: apps/threads/list.py:63
 msgid "Open threads"
 msgstr "Otwórz tematy"
 
-#: apps/threads/list.py:57
+#: apps/threads/list.py:64
 msgid "Close threads"
 msgstr "Zamknij tematy"
 
-#: apps/threads/list.py:59
-msgid "Undelete threads"
+#: apps/threads/list.py:66
+msgid "Restore threads"
 msgstr "Przywróć tematy"
 
-#: apps/threads/list.py:60
-msgid "Soft delete threads"
-msgstr "Usuń nietrwale tematy"
+#: apps/threads/list.py:67
+msgid "Hide threads"
+msgstr "Ukryj tematy"
 
-#: apps/threads/list.py:62
-msgid "Hard delete threads"
-msgstr "Usuń tematy na stałe"
+#: apps/threads/list.py:69
+msgid "Delete threads"
+msgstr "Usuń tematy"
 
 #: apps/threads/thread.py:12
 msgid "Accept posts"
@@ -3550,7 +3638,7 @@ msgstr "Zaakceptuj ten temat"
 
 #: apps/threads/thread.py:37
 msgid "Change this thread to announcement"
-msgstr "Przemień ten temat w ogłoszenie"
+msgstr "Przekształć ten temat w ogłoszenie"
 
 #: apps/threads/thread.py:39
 msgid "Change this thread to sticky"
@@ -3558,7 +3646,7 @@ msgstr "Przypnij ten temat"
 
 #: apps/threads/thread.py:42
 msgid "Change this thread to normal"
-msgstr "Zamień ten temat na zwykły"
+msgstr "Przekształć w zwykły temat"
 
 #: apps/threads/thread.py:44
 msgid "Unpin this thread"
@@ -3568,42 +3656,87 @@ msgstr "Odepnij ten temat"
 msgid "Move this thread"
 msgstr "Przenieś ten temat"
 
-#: apps/threadtype/changelog.py:43
+#: apps/threadtype/changelog.py:42
 msgid "Guest, you have to sign-in in order to see posts changelogs."
 msgstr ""
 "Gościu, aby przegladać historię zmian postów, musisz się najpierw zalogować."
 
-#: apps/threadtype/changelog.py:108
+#: apps/threadtype/changelog.py:107
 msgid "No changes to revert."
 msgstr "Brak zmian do cofnięcia."
 
-#: apps/threadtype/changelog.py:126
+#: apps/threadtype/changelog.py:125
 #, python-format
 msgid "Post has been reverted to state from %(date)s."
 msgstr "Post został przwrócony do stanu z %(date)s."
 
-#: apps/threadtype/delete.py:55 apps/threadtype/delete.py:77
+#: apps/threadtype/delete.py:65 apps/threadtype/delete.py:92
+#: apps/threadtype/thread/moderation/thread.py:131
+#, python-format
+msgid "Thread \"%(thread)s\" has been deleted."
+msgstr "Temat \"%(thread)s\" został usunięty."
+
+#: apps/threadtype/delete.py:79
 msgid "Somebody has already replied to this thread. You cannot delete it."
 msgstr ""
 "Ktoś już odpowiedział w tym temacie, w związku z czym nie możesz już go "
 "usunąć."
 
-#: apps/threadtype/delete.py:63 apps/threadtype/delete.py:90
-#: apps/threadtype/thread/moderation/thread.py:129
-#, python-format
-msgid "Thread \"%(thread)s\" has been deleted."
-msgstr "Temat \"%(thread)s\" został usunięty."
+#: apps/threadtype/delete.py:104
+msgid "You cannot undelete this thread."
+msgstr "Nie możesz przywrócić tego tematu."
 
-#: apps/threadtype/delete.py:104 apps/threadtype/delete.py:126
+#: apps/threadtype/delete.py:106
+msgid "This thread is already visible!"
+msgstr "Ten temat jest już widoczny!"
+
+#: apps/threadtype/delete.py:119
+#, python-format
+msgid "Thread \"%(thread)s\" has been restored."
+msgstr "Temat \"%(thread)s\" został przywrócony."
+
+#: apps/threadtype/delete.py:140 apps/threadtype/delete.py:167
+msgid "Selected reply has been deleted."
+msgstr "Zaznaczona odpowiedź została usunięta."
+
+#: apps/threadtype/delete.py:152
 msgid "Somebody has already replied to this post, you cannot delete it."
 msgstr ""
 "Ktoś już odpowiedział na tem post, w związku z czym nie możesz już go usunąć."
 
-#: apps/threadtype/delete.py:114 apps/threadtype/delete.py:141
-msgid "Selected Reply has been deleted."
-msgstr "Zaznaczona odpowiedź została usunięta."
+#: apps/threadtype/delete.py:177
+msgid "You cannot undelete this reply."
+msgstr "Nie możesz przywrócić tej odpowiedzi."
 
-#: apps/threadtype/jumps.py:102
+#: apps/threadtype/delete.py:179
+msgid "This reply is already visible!"
+msgstr "Ta odpowiedź jest już widoczna!"
+
+#: apps/threadtype/delete.py:194
+msgid "Selected reply has been restored."
+msgstr "Zaznaczona odpowiedź została przywrócona."
+
+#: apps/threadtype/delete.py:210
+msgid "Selected checkpoint has been deleted."
+msgstr "Zaznaczone etykiety zdarzeń zostały usunięte."
+
+#: apps/threadtype/delete.py:220
+msgid "This checkpoint is already hidden!"
+msgstr "Ta etykieta zdarzenia jest już widoczna!"
+
+#: apps/threadtype/delete.py:227
+msgid "Selected checkpoint has been hidden."
+msgstr "Wybrana etykieta zdarzenia została ukryta."
+
+#: apps/threadtype/delete.py:237
+msgid "This checkpoint is already visible!"
+msgstr "Ten punkt kontrolny jest już widoczny!"
+
+#: apps/threadtype/delete.py:244
+msgid "Selected checkpoint has been restored."
+msgstr "Wybrane etykiety zdarzeń zostały przywrócone."
+
+#: apps/threadtype/jumps.py:101
 msgid ""
 "Replies made to this thread by members on your ignore list have been "
 "revealed."
@@ -3611,17 +3744,17 @@ msgstr ""
 "Odpowiedzi napisane w tym temacie przez ignorowanych przez Ciebie "
 "użytkowników, zostały odkryte."
 
-#: apps/threadtype/jumps.py:112
+#: apps/threadtype/jumps.py:111
 msgid "This thread has been added to your watched threads list."
 msgstr "Temat został dodany do Twojej listy obserwowanych tematów."
 
-#: apps/threadtype/jumps.py:139
+#: apps/threadtype/jumps.py:138
 msgid ""
 "You will now receive e-mail with notification when somebody replies to this "
 "thread."
 msgstr "Poinformujemy Cię w wiadomości e-mail, gdy ktoś odpowie w tym temacie."
 
-#: apps/threadtype/jumps.py:141
+#: apps/threadtype/jumps.py:140
 msgid ""
 "This thread has been added to your watched threads list. You will also "
 "receive e-mail with notification when somebody replies to it."
@@ -3629,7 +3762,7 @@ msgstr ""
 "Temat został dodany do Twojej listy obserwowanych tematów. Poinformujemy Cię "
 "też w wiadomości e-mail, gdy ktoś odpowie w nim odpowie."
 
-#: apps/threadtype/jumps.py:149
+#: apps/threadtype/jumps.py:148
 msgid ""
 "This thread has been removed from your watched threads list. You will no "
 "longer receive e-mails with notifications when somebody replies to it."
@@ -3637,24 +3770,24 @@ msgstr ""
 "Temat został usunięty z Twojej listy obserwowanych tematów. Nie otrzymasz "
 "też więcej powiadomień na e-mail, gdy ktoś w nim odpowie."
 
-#: apps/threadtype/jumps.py:151
+#: apps/threadtype/jumps.py:150
 msgid "This thread has been removed from your watched threads list."
 msgstr "Temat został usunięty z Twojej listy obserwowanych tematów."
 
-#: apps/threadtype/jumps.py:157
+#: apps/threadtype/jumps.py:156
 msgid ""
 "You will no longer receive e-mails with notifications when somebody replies "
 "to this thread."
 msgstr ""
 "Nie otrzymasz więcej powiadomień na e-mail, gdy ktoś odpowie w tym temacie."
 
-#: apps/threadtype/jumps.py:230
+#: apps/threadtype/jumps.py:229
 msgid "Your vote has been saved."
 msgstr "Twój głos został zapisany."
 
 #: apps/threadtype/mixins.py:11 apps/threadtype/list/forms.py:47
 #: apps/threadtype/posting/forms.py:78
-#: apps/threadtype/thread/moderation/forms.py:22
+#: apps/threadtype/thread/moderation/forms.py:23
 #, python-format
 msgid "Thread name must contain at least one alpha-numeric character."
 msgid_plural ""
@@ -3698,7 +3831,7 @@ msgid "New forum is same as current one."
 msgstr "Wskazane forum jest aktualnym forum tych tematów."
 
 #: apps/threadtype/list/forms.py:48 apps/threadtype/posting/forms.py:79
-#: apps/threadtype/thread/moderation/forms.py:23
+#: apps/threadtype/thread/moderation/forms.py:24
 msgid "Thread name is too long. Try shorter name."
 msgstr "Nazwa tematu jest zbyt długa. Spróbuj ją skrócić."
 
@@ -3734,60 +3867,103 @@ msgstr ""
 "Zaznaczone tematy zostały oznaczone jako przejrzane i są już widoczne dla "
 "innych użytkowników."
 
-#: apps/threadtype/list/moderation.py:48
-msgid "Selected threads have been turned into announcements."
-msgstr "Zaznaczone tematy zostały przemienione w ogłoszenia."
+#: apps/threadtype/list/moderation.py:40
+msgid "No threads were marked as reviewed."
+msgstr "Nie oznaczono żadnych tematów jako przejrzane."
 
-#: apps/threadtype/list/moderation.py:58
+#: apps/threadtype/list/moderation.py:50
+msgid "Selected threads have been turned into announcements."
+msgstr "Zaznaczone tematy zostały przekształcone w ogłoszenia."
+
+#: apps/threadtype/list/moderation.py:52
+msgid "No threads were turned into announcements."
+msgstr "Nie przekształcono żadnych tematów w ogłoszenia."
+
+#: apps/threadtype/list/moderation.py:62
 msgid "Selected threads have been sticked to the top of list."
 msgstr "Zaznaczone tematy zostały przypięte na górę listy."
 
-#: apps/threadtype/list/moderation.py:67
-msgid "Selected threads weight has been removed."
-msgstr ""
+#: apps/threadtype/list/moderation.py:64
+msgid "No threads were turned into stickies."
+msgstr "Nie przypięto żadnych tematów."
 
-#: apps/threadtype/list/moderation.py:85
+#: apps/threadtype/list/moderation.py:73
+msgid "Selected threads weight has been removed."
+msgstr "Zaznaczone elementy przekształcono w zwykłe tematy."
+
+#: apps/threadtype/list/moderation.py:75
+msgid "No threads have had their weight removed."
+msgstr "Zaznaczono wyłącznie zwykłe tematy - nie dokonano żadnych zmian."
+
+#: apps/threadtype/list/moderation.py:95
 #, python-format
 msgid "Selected threads have been moved to \"%(forum)s\"."
 msgstr "Zaznaczone tematy zostały przeniesione do \"%(forum)s\"."
 
-#: apps/threadtype/list/moderation.py:103
+#: apps/threadtype/list/moderation.py:113
 msgid "You have to pick two or more threads to merge."
 msgstr "Musisz zaznaczyć przynajmniej dwa tematy do połączenia."
 
-#: apps/threadtype/list/moderation.py:136
+#: apps/threadtype/list/moderation.py:146
 msgid "Selected threads have been merged into new one."
 msgstr "Zaznaczone tematy zostały połaczone w jeden nowy."
 
-#: apps/threadtype/list/moderation.py:163
+#: apps/threadtype/list/moderation.py:173
 msgid "Selected threads have been opened."
 msgstr "Zaznaczone tematy zostały otwarte."
 
-#: apps/threadtype/list/moderation.py:176
+#: apps/threadtype/list/moderation.py:175
+msgid "No threads were opened."
+msgstr "Nie otwarto żadnych tematów."
+
+#: apps/threadtype/list/moderation.py:188
 msgid "Selected threads have been closed."
 msgstr "Zaznaczone tematy zostały zamknięte."
 
-#: apps/threadtype/list/moderation.py:196
-msgid "Selected threads have been undeleted."
+#: apps/threadtype/list/moderation.py:190
+msgid "No threads were closed."
+msgstr "Nie zamknięto żadnych tematów."
+
+#: apps/threadtype/list/moderation.py:210
+msgid "Selected threads have been restored."
 msgstr "Zaznaczone tematy zostały przywrócone."
 
-#: apps/threadtype/list/moderation.py:217
-msgid "Selected threads have been softly deleted."
-msgstr "Zaznaczone tematy zostały nietrwale usunięte."
+#: apps/threadtype/list/moderation.py:212
+msgid "No threads were restored."
+msgstr "Nie przywrócono żadnych tematów."
 
-#: apps/threadtype/list/moderation.py:232
+#: apps/threadtype/list/moderation.py:233
+msgid "Selected threads have been hidden."
+msgstr "Zaznaczone tematy zostały ukryte."
+
+#: apps/threadtype/list/moderation.py:235
+msgid "No threads were hidden."
+msgstr "Nie ukryto żadnych tematów."
+
+#: apps/threadtype/list/moderation.py:250
 msgid "Selected threads have been deleted."
 msgstr "Zaznaczone tematy zostały usunięte."
 
-#: apps/threadtype/list/views.py:80
+#: apps/threadtype/list/moderation.py:252
+msgid "No threads were deleted."
+msgstr "Nie usunięto żadnych tematów."
+
+#: apps/threadtype/list/views.py:81
 #: templates/cranefly/private_threads/list.html:166
-#: templates/cranefly/threads/list.html:267
+#: templates/cranefly/threads/list.html:269
 msgid "You have to select at least one thread."
 msgstr "Musisz zaznaczyć przynajmniej jeden temat."
 
+#: apps/threadtype/posting/base.py:64
+#, python-format
+msgid "%(username)s has replied to your post in thread %(thread)s"
+msgstr "%(username)s odpowiedział na twój post w temacie %(thread)s"
+
 #: apps/threadtype/posting/forms.py:23
-msgid "Post Content"
-msgstr "Treść posta"
+#: templates/cranefly/private_threads/posting.html:67
+#: templates/cranefly/threads/posting.html:63
+msgid "Message Body"
+msgstr "Treść wiadomości"
 
 #: apps/threadtype/posting/forms.py:33
 msgid "Announcement"
@@ -3830,47 +4006,53 @@ msgstr "Opcjonalny powód edycji tej odpowiedzi."
 msgid "Added on %(date)s:"
 msgstr "Dodano %(date)s:"
 
-#: apps/threadtype/posting/newreply.py:139
+#: apps/threadtype/posting/newreply.py:147
 #, python-format
-msgid "%(username)s has replied to your post in thread %(thread)s"
-msgstr "%(username)s odpowiedział na twój post w temacie %(thread)s"
+msgid "%(username)s has replied to your thread %(thread)s"
+msgstr "%(username)s odpowiedział w Twoim temacie %(thread)s"
 
-#: apps/threadtype/thread/views.py:155
-#: templates/cranefly/private_threads/thread.html:453
-#: templates/cranefly/threads/thread.html:433
+#: apps/threadtype/posting/newreply.py:149
+#, python-format
+msgid "%(username)s has replied to thread %(thread)s that you are watching"
+msgstr ""
+"%(username)s odpowiedział w obserwowanym przez Ciebie temacie %(thread)s"
+
+#: apps/threadtype/thread/views.py:165
+#: templates/cranefly/private_threads/thread.html:464
+#: templates/cranefly/threads/thread.html:436
 msgid "You have to select at least one post."
 msgstr "Musisz zaznaczyć przynajmniej jednego posta."
 
-#: apps/threadtype/thread/moderation/forms.py:15
+#: apps/threadtype/thread/moderation/forms.py:16
 msgid "New Thread Name"
 msgstr "Nowa nazwa tematu"
 
-#: apps/threadtype/thread/moderation/forms.py:16
+#: apps/threadtype/thread/moderation/forms.py:17
 msgid "New Thread Forum"
 msgstr "Nowe forum tematu"
 
-#: apps/threadtype/thread/moderation/forms.py:31
+#: apps/threadtype/thread/moderation/forms.py:32
 msgid "This is not a forum."
 msgstr "To nie jest forum."
 
-#: apps/threadtype/thread/moderation/forms.py:47
+#: apps/threadtype/thread/moderation/forms.py:48
 msgid "New Thread Link"
 msgstr "Link do nowego tematu"
 
-#: apps/threadtype/thread/moderation/forms.py:47
+#: apps/threadtype/thread/moderation/forms.py:48
 msgid "To select new thread, simply copy and paste here its link."
 msgstr ""
 "Aby wskazać nowy temat, po prostu skopiuj i wklej tutaj jego URL (adres)."
 
-#: apps/threadtype/thread/moderation/forms.py:64
+#: apps/threadtype/thread/moderation/forms.py:65
 msgid "New thread is same as current one."
 msgstr ""
 
-#: apps/threadtype/thread/moderation/forms.py:67
+#: apps/threadtype/thread/moderation/forms.py:68
 msgid "This is not a correct thread URL."
 msgstr "To nie jest poprawny URL do tematu."
 
-#: apps/threadtype/thread/moderation/forms.py:69
+#: apps/threadtype/thread/moderation/forms.py:70
 msgid "Thread could not be found."
 msgstr "Temat nie został odnaleziony."
 
@@ -3880,49 +4062,65 @@ msgstr ""
 "Zaznaczone posty zostały zaakceptowane. Inni użytkownicy mogą je już "
 "zobaczyć."
 
-#: apps/threadtype/thread/moderation/posts.py:34
+#: apps/threadtype/thread/moderation/posts.py:25
+msgid "No posts were accepted."
+msgstr "Nie zaakceptowano żadnych postów."
+
+#: apps/threadtype/thread/moderation/posts.py:36
 msgid "You cannot merge replies made by different members!"
 msgstr "Nie możesz połączyć postów napisanych przez różnych użytkowników!"
 
-#: apps/threadtype/thread/moderation/posts.py:36
+#: apps/threadtype/thread/moderation/posts.py:38
 msgid "You have to select two or more posts you want to merge."
 msgstr "Musisz wskazać przynajmniej dwa posty do połączenia."
 
-#: apps/threadtype/thread/moderation/posts.py:47
+#: apps/threadtype/thread/moderation/posts.py:49
 msgid "Selected posts have been merged into one message."
 msgstr "Zaznaczone posty zostały połączone w jedną wiadomośc."
 
-#: apps/threadtype/thread/moderation/posts.py:52
+#: apps/threadtype/thread/moderation/posts.py:54
 msgid "You cannot split first post from thread."
 msgstr "Nie możesz wydzelić pierwszego postu z tematu."
 
-#: apps/threadtype/thread/moderation/posts.py:87
+#: apps/threadtype/thread/moderation/posts.py:89
 msgid "Selected posts have been split to new thread."
 msgstr "Zaznaczone posty zostały wydzielone w nowy temat."
 
-#: apps/threadtype/thread/moderation/posts.py:92
+#: apps/threadtype/thread/moderation/posts.py:94
 #, python-format
 msgid "[Split] %s"
 msgstr "[Wydzielony] %s"
 
-#: apps/threadtype/thread/moderation/posts.py:135
+#: apps/threadtype/thread/moderation/posts.py:137
 msgid "Selected posts have been moved to new thread."
 msgstr "Wybrane posty zostały przeniesione do nowego tematu."
 
-#: apps/threadtype/thread/moderation/posts.py:163
+#: apps/threadtype/thread/moderation/posts.py:165
 msgid "Selected posts have been restored."
 msgstr "Wybrane posty zostały przywrócone."
 
-#: apps/threadtype/thread/moderation/posts.py:172
+#: apps/threadtype/thread/moderation/posts.py:167
+msgid "No posts were restored."
+msgstr "Nie przywrócono żadnych postów."
+
+#: apps/threadtype/thread/moderation/posts.py:176
 msgid "Selected posts have been protected from edition."
 msgstr "Wybrane posty zostały zabezpieczone przed edycją."
 
-#: apps/threadtype/thread/moderation/posts.py:181
+#: apps/threadtype/thread/moderation/posts.py:178
+msgid "No posts were protected."
+msgstr "Nie objęto ochroną żadnych nowych postów."
+
+#: apps/threadtype/thread/moderation/posts.py:187
 msgid "Protection from editions has been removed from selected posts."
 msgstr "Wybrane posty zostały pozbawione blokady edycji."
 
-#: apps/threadtype/thread/moderation/posts.py:188
-#: apps/threadtype/thread/moderation/posts.py:203
+#: apps/threadtype/thread/moderation/posts.py:189
+msgid "No posts were unprotected."
+msgstr "Nie zdjęto ochrony żadnych postów."
+
+#: apps/threadtype/thread/moderation/posts.py:196
+#: apps/threadtype/thread/moderation/posts.py:213
 msgid ""
 "You cannot delete first post of thread using this action. If you want to "
 "delete thread, use thread moderation instead."
@@ -3930,10 +4128,21 @@ msgstr ""
 "Nie możesz w ten sposób usunąć pierwszego postu w temacie. Jeżeli chcesz "
 "usunąć temat, użyj opcji dotyczących tematów, a nie postów."
 
-#: apps/threadtype/thread/moderation/posts.py:196
-#: apps/threadtype/thread/moderation/posts.py:213
+#: apps/threadtype/thread/moderation/posts.py:204
+msgid "Selected posts have been hidden."
+msgstr "Zaznaczone posty zostały ukryte."
+
+#: apps/threadtype/thread/moderation/posts.py:206
+msgid "No posts were hidden."
+msgstr "Nie ukryto żadnych postów."
+
+#: apps/threadtype/thread/moderation/posts.py:223
 msgid "Selected posts have been deleted."
 msgstr "Zaznaczone posty zostały usunięte."
+
+#: apps/threadtype/thread/moderation/posts.py:225
+msgid "No posts were deleted."
+msgstr "Nie usunięto żadnych postów."
 
 #: apps/threadtype/thread/moderation/thread.py:27
 msgid "Thread has been marked as reviewed and made visible to other members."
@@ -3943,7 +4152,7 @@ msgstr ""
 
 #: apps/threadtype/thread/moderation/thread.py:32
 msgid "Thread has been turned into announcement."
-msgstr "Temat został przemieniony w ogłoszenie."
+msgstr "Temat został przekształcony w ogłoszenie."
 
 #: apps/threadtype/thread/moderation/thread.py:37
 msgid "Thread has been turned into sticky."
@@ -3951,28 +4160,28 @@ msgstr "Temat został przypięty."
 
 #: apps/threadtype/thread/moderation/thread.py:42
 msgid "Thread weight has been changed to normal."
-msgstr ""
+msgstr "Pomyślnie przekształcono w zwykły temat."
 
-#: apps/threadtype/thread/moderation/thread.py:56
+#: apps/threadtype/thread/moderation/thread.py:58
 #, python-format
 msgid "Thread has been moved to \"%(forum)s\"."
 msgstr "Temat został przeniesiony do \"%(forum)s\"."
 
-#: apps/threadtype/thread/moderation/thread.py:76
+#: apps/threadtype/thread/moderation/thread.py:78
 msgid "Thread has been opened."
 msgstr "Temat został otwarty."
 
-#: apps/threadtype/thread/moderation/thread.py:82
+#: apps/threadtype/thread/moderation/thread.py:84
 msgid "Thread has been closed."
 msgstr "Temat został zamknięty."
 
-#: apps/threadtype/thread/moderation/thread.py:100
-msgid "Thread has been undeleted."
+#: apps/threadtype/thread/moderation/thread.py:102
+msgid "Thread has been restored."
 msgstr "Temat został przywrócony."
 
-#: apps/threadtype/thread/moderation/thread.py:118
-msgid "Thread has been deleted."
-msgstr "Temat został usunięty."
+#: apps/threadtype/thread/moderation/thread.py:120
+msgid "Thread has been hidden."
+msgstr "Temat został ukryty."
 
 #: apps/usercp/views.py:25
 #, python-format
@@ -4120,6 +4329,8 @@ msgstr "Wprowadzono błędne hasło."
 #: apps/usercp/credentials/forms.py:51
 msgid "You have to enter either new e-mail address or new password."
 msgstr ""
+"Nie podano ani nowego hasła, ani nowego adresu e-mail. Przynajmniej jedno z "
+"nich jest wymagane."
 
 #: apps/usercp/credentials/usercp.py:4
 msgid "Change E-mail or Password"
@@ -4175,12 +4386,12 @@ msgid "Show my presence to nobody"
 msgstr "Nie pokazuj nikomu mojej obecności"
 
 #: apps/usercp/options/forms.py:15 apps/usercp/options/forms.py:20
-#: fixtures/accountssetings.py:74 fixtures/accountssetings.py:85
+#: fixtures/accountssetings.py:75 fixtures/accountssetings.py:86
 msgid "Don't watch"
 msgstr "Nie obserwuj"
 
 #: apps/usercp/options/forms.py:16 apps/usercp/options/forms.py:21
-#: fixtures/accountssetings.py:75 fixtures/accountssetings.py:86
+#: fixtures/accountssetings.py:76 fixtures/accountssetings.py:87
 msgid "Put on watched threads list"
 msgstr "Umieść na liście obserwowanych tematów"
 
@@ -4331,80 +4542,80 @@ msgstr "Profile użytkowników"
 msgid "Those settings allow you to increase security of your members accounts."
 msgstr "Dane ustawienia mogą zwiększyć bezpieczeństwo członków Twojego forum."
 
-#: fixtures/accountssetings.py:13
+#: fixtures/accountssetings.py:14
 msgid "No validation required"
 msgstr "Nie wymagaj walidacji"
 
-#: fixtures/accountssetings.py:13
+#: fixtures/accountssetings.py:14
 msgid "Activation Token sent to User"
 msgstr "Aktywacja poprzez potwierdzenie z wiadomości e-mail."
 
-#: fixtures/accountssetings.py:13
+#: fixtures/accountssetings.py:14
 msgid "Activation by Administrator"
 msgstr "Aktywacja przez administratora"
 
-#: fixtures/accountssetings.py:13
+#: fixtures/accountssetings.py:14
 msgid "Dont allow new registrations"
 msgstr "Nie pozwalaj na nowe rejestracje"
 
-#: fixtures/accountssetings.py:14 models/usermodel.py:189
+#: fixtures/accountssetings.py:15 models/usermodel.py:189
 msgid "Users Registrations"
 msgstr "Rejestracje użytkowników"
 
-#: fixtures/accountssetings.py:15
+#: fixtures/accountssetings.py:16
 msgid "New accounts validation"
 msgstr "Walidacja nowych kont"
 
-#: fixtures/accountssetings.py:22
+#: fixtures/accountssetings.py:23
 msgid "Default Timezone"
 msgstr "Domyślna strefa czasowa"
 
-#: fixtures/accountssetings.py:23
+#: fixtures/accountssetings.py:24
 msgid "Used by guests, crawlers and newly registered users."
 msgstr ""
 "Używana przez gości, boty wyszukiwarek i nowo zarejestrowanych użytkowników."
 
-#: fixtures/accountssetings.py:30
+#: fixtures/accountssetings.py:31
 msgid "Users Names"
 msgstr "Nazwy użytkowników"
 
-#: fixtures/accountssetings.py:31
+#: fixtures/accountssetings.py:32
 msgid "Minimum allowed username length"
 msgstr "Minimalna, dozwolona długość nazwy uzytkownika"
 
-#: fixtures/accountssetings.py:38
+#: fixtures/accountssetings.py:39
 msgid "Maxim allowed username length"
 msgstr "Maksymalna, dozwolona długość nazwy uzytkownika"
 
-#: fixtures/accountssetings.py:45
+#: fixtures/accountssetings.py:46
 msgid "Users Passwords"
 msgstr "Hasła użytkowników"
 
-#: fixtures/accountssetings.py:46
+#: fixtures/accountssetings.py:47
 msgid "Minimum user password length"
-msgstr "Najkrótsza możliwa dlugość hasła"
+msgstr "Minimalna możliwa dlugość hasła"
 
-#: fixtures/accountssetings.py:52
+#: fixtures/accountssetings.py:53
 msgid "Require mixed Case"
 msgstr "Wymagane wielkie i małe i litery"
 
-#: fixtures/accountssetings.py:52
+#: fixtures/accountssetings.py:53
 msgid "Require digits"
 msgstr "Wymagane cyfry"
 
-#: fixtures/accountssetings.py:52
+#: fixtures/accountssetings.py:53
 msgid "Require special characters"
 msgstr "Wymagane znaki specjalne"
 
-#: fixtures/accountssetings.py:53
+#: fixtures/accountssetings.py:54
 msgid "Password Complexity"
 msgstr "Złożoność hasła"
 
-#: fixtures/accountssetings.py:60
+#: fixtures/accountssetings.py:61
 msgid "Password Lifetime"
 msgstr "Długość życia hasła"
 
-#: fixtures/accountssetings.py:61
+#: fixtures/accountssetings.py:62
 msgid ""
 "Enter number of days since password was set to force member to change it "
 "with new one, or 0 to dont force your members to change their passwords."
@@ -4412,11 +4623,11 @@ msgstr ""
 "Wprowadź liczbę dni, po których użytkownicy będą zmuszeni do zamiany swojego "
 "hasła na nowe. Wprowadzenie zera wyłącza wymuszanie zmiany haseł."
 
-#: fixtures/accountssetings.py:67
+#: fixtures/accountssetings.py:68
 msgid "Include User Password in Welcoming E-mail"
 msgstr "Umieść hasło użytkownika w powitalnym e-mailu"
 
-#: fixtures/accountssetings.py:68
+#: fixtures/accountssetings.py:69
 msgid ""
 "If you want to, Misago can include new user password in welcoming e-mail "
 "that is sent to new users after successful account creation."
@@ -4424,24 +4635,24 @@ msgstr ""
 "Jeżeli chcesz, Misago może umieścić hasło nowego użytkownika w powitalnym e-"
 "mailu, którego ten otrzyma po pomyślnej rejestracji."
 
-#: fixtures/accountssetings.py:76 fixtures/accountssetings.py:87
+#: fixtures/accountssetings.py:77 fixtures/accountssetings.py:88
 msgid "Put on watched threads list and e-mail user when somebody replies"
 msgstr ""
 "Umieść na liście obserwowanych tematów i wyślij e-mail, gdy ktoś odpisze"
 
-#: fixtures/accountssetings.py:78
+#: fixtures/accountssetings.py:79
 msgid "Default Watching Preferences"
 msgstr "Domyślne ustawienia obserwowania tematów"
 
-#: fixtures/accountssetings.py:79
+#: fixtures/accountssetings.py:80
 msgid "Watch threads user started"
 msgstr "Obserwowanie tematów rozpoczętych przez użytkownika"
 
-#: fixtures/accountssetings.py:89
+#: fixtures/accountssetings.py:90
 msgid "Watch threads user replied in"
 msgstr "Obserwowanie tematów w których użytkownik odpisał"
 
-#: fixtures/accountssetings.py:97
+#: fixtures/accountssetings.py:98
 msgid "Number of Profiles Per Page"
 msgstr "Liczba profili na stronę"
 
@@ -4532,7 +4743,7 @@ msgstr ""
 
 #: fixtures/basicsettings.py:26
 msgid "Board Header Postscript"
-msgstr ""
+msgstr "Dodatkowa informacja w nagłówku"
 
 #: fixtures/basicsettings.py:27
 msgid "Additional text displayed in some themes board header after board name."
@@ -4570,33 +4781,37 @@ msgstr "Ogon forum"
 
 #: fixtures/basicsettings.py:46
 msgid "Custom Credit"
-msgstr ""
+msgstr "Dodatkowa informacja"
 
 #: fixtures/basicsettings.py:47
 msgid ""
 "Custom Credit to display in board footer above software and theme copyright "
 "information. You can use HTML."
 msgstr ""
+"Dodatkowa informacja w ogonie forum, ponad tą o Misago i ew. autorze stylu. "
+"Można używać HTML."
 
 #: fixtures/basicsettings.py:52
 msgid "Board E-Mails"
-msgstr ""
+msgstr "Wiadomości e-mail od forum"
 
 #: fixtures/basicsettings.py:53
 msgid "Custom Footnote in HTML E-mails"
-msgstr ""
+msgstr "Niestandardowa stopka wiadomości HTML"
 
 #: fixtures/basicsettings.py:54
 msgid "Custom Footnote to display in HTML e-mail messages sent by board."
-msgstr ""
+msgstr "Niestandardowa stopka dołączana do wiadomości HTML."
 
 #: fixtures/basicsettings.py:59
 msgid "Custom Footnote in plain text E-mails"
-msgstr ""
+msgstr "Niestandardowa stopka wiadomości w czystym tekście"
 
 #: fixtures/basicsettings.py:60
 msgid "Custom Footnote to display in plain text e-mail messages sent by board."
 msgstr ""
+"Niestandardowa stopka dołączana do wiadomości w czystym tekście (gdy klient "
+"pocztowy nie obsługuje HTML)."
 
 #: fixtures/bruteforcesettings.py:7 fixtures/bruteforcesettings.py:15
 msgid "Brute-force Countermeasures"
@@ -4632,7 +4847,10 @@ msgid ""
 msgstr ""
 "Ustawienie tej opcji na \"Tak\" spowoduje wliczanie nieudanych rejestracji "
 "do limitu. Większośc nieudanych rejestracji jest spowodowana zabezpieczeniem "
-"CAPTCHA, przeciwko spam botom. "
+"CAPTCHA, przeciwko spam-botom. Niemniej, ta opcja może poważnie utrudnić, a "
+"nawet uniemożliwić rejestrację użytkownikom niepełnosprawnym, albo "
+"posiadającym problemy z odnalezieniem odpowiedzi na pytanie rejestracyjne "
+"(jeżeli istnieje)."
 
 #: fixtures/bruteforcesettings.py:32
 msgid "Automaticaly unlock jammed IPs"
@@ -4686,6 +4904,9 @@ msgid ""
 "Computers and Humans Apart\". Its type of test developed on purpose of "
 "blocking automatic registrations."
 msgstr ""
+"CAPTCHA to test służący do odróżniania botów (programów) od prawdziwych "
+"użytkowników. Misago wykorzystuje go do blokowania automatycznych "
+"rejestracji."
 
 #: fixtures/captchasettings.py:23
 msgid "Public Key"
@@ -4751,23 +4972,23 @@ msgstr ""
 msgid "Full Access"
 msgstr "Pełny dostęp"
 
-#: fixtures/forumsroles.py:45
+#: fixtures/forumsroles.py:47
 msgid "Standard Access and Upload"
-msgstr "Standardowy dostęp i przysyłanie plików"
+msgstr "Standardowy dostęp i wgrywanie plików"
 
-#: fixtures/forumsroles.py:68
+#: fixtures/forumsroles.py:70
 msgid "Standard Access"
 msgstr "Standardowy dostęp"
 
-#: fixtures/forumsroles.py:88
+#: fixtures/forumsroles.py:90
 msgid "Read and Download"
 msgstr "Czytanie i pobieranie"
 
-#: fixtures/forumsroles.py:99
+#: fixtures/forumsroles.py:101
 msgid "Threads list only"
 msgstr "Tylko lista tematów"
 
-#: fixtures/forumsroles.py:107
+#: fixtures/forumsroles.py:109
 msgid "Read only"
 msgstr "Tylko odczyt"
 
@@ -4866,10 +5087,13 @@ msgid ""
 "Minimal time (in seconds) that has to pass between postings for new message "
 "to receive karma vote. This is useful to combat flood."
 msgstr ""
+"Minimalny odstęp czasu (w sekundach), który musi upłynąć pomiędzy kolejnymi "
+"postami użytkownika, aby ten otrzymał punkty. Pomaga zwalczać nabijanie "
+"punktów serią postów."
 
 #: fixtures/rankingsettings.py:61
 msgid "Karma System"
-msgstr ""
+msgstr "System punktów"
 
 #: fixtures/rankingsettings.py:62
 msgid "Upvote Reward"
@@ -4886,6 +5110,7 @@ msgstr "Kara za "
 #: fixtures/rankingsettings.py:71
 msgid "Score user will lose every time his post receives downvote."
 msgstr ""
+"Ilość punktów, które utraci użytkownik, gdy jego post otrzyma głos w dół."
 
 #: fixtures/ranks.py:17
 msgid "Most Valuable Posters"
@@ -4899,7 +5124,7 @@ msgstr "Przyjaciel forum"
 msgid "Top Posters"
 msgstr "Najaktywniejsi"
 
-#: fixtures/ranks.py:37 templates/cranefly/index.html:127
+#: fixtures/ranks.py:37 templates/cranefly/index.html:137
 msgid "Members"
 msgstr "Członkowie"
 
@@ -4930,15 +5155,30 @@ msgstr ""
 "Sprawia, że sesje są bardziej bezpieczne, ale może spowodować problemy z "
 "serwerami proxy i VPN."
 
-#: fixtures/signingsettings.py:22
+#: fixtures/signingsettings.py:23
+msgid "Online Tracker Updates Frequency"
+msgstr "Częstotliwość aktualizacji listy online"
+
+#: fixtures/signingsettings.py:24
+msgid ""
+"How often do you want online tracker to synchronize itself with database? "
+"Low numbers provide good accuracy at cost of database traffic while great "
+"number provides your users with general idea how many are currently online "
+"while at same time keeping stress off your database."
+msgstr ""
+"Jak często ma być aktualizowana lista online? Niskie liczby dają bardzo "
+"dobrą dokładność liczby użytkowników online, kosztem pracy bazy danych. Duże "
+"liczby zmniejszają obciążenie bazy, dając jedynie podglądowe wyniki."
+
+#: fixtures/signingsettings.py:30
 msgid "\"Remember Me\" Feature"
 msgstr "Opcja \"Zapamiętaj mnie\""
 
-#: fixtures/signingsettings.py:23
+#: fixtures/signingsettings.py:31
 msgid "Enable \"Remember Me\" feature"
 msgstr "Włącz opcję \"Zapamiętaj mnie\""
 
-#: fixtures/signingsettings.py:24
+#: fixtures/signingsettings.py:32
 msgid ""
 "Turning this option on allows users to sign in on to your board using cookie-"
 "based tokens. This may result in account compromisation when user fails to "
@@ -4950,11 +5190,11 @@ msgstr ""
 "profilu użytkownika, gdy ten zapomni się wylogować na współdzielonym "
 "komputerze, lub dopuści do kradzieży swoich ciasteczek (cookies)."
 
-#: fixtures/signingsettings.py:30
+#: fixtures/signingsettings.py:38
 msgid "\"Remember Me\" token lifetime"
 msgstr "Czas życia tokenu opcji \"Zapamiętaj mnie\""
 
-#: fixtures/signingsettings.py:31
+#: fixtures/signingsettings.py:39
 msgid ""
 "Number of days since either last use or creation of \"Remember Me\" token to "
 "its expiration."
@@ -4962,11 +5202,11 @@ msgstr ""
 "Liczba dni od ostatniego użycia lub utworzenia tokenu opcji \"Zapamiętaj mnie"
 "\" do jego wygaśnięcia."
 
-#: fixtures/signingsettings.py:37
+#: fixtures/signingsettings.py:45
 msgid "Allow \"Remember Me\" tokens refreshing"
 msgstr "Pozwól na automatycznie odświeżanie tokenu opcji \"Zapamiętaj mnie\""
 
-#: fixtures/signingsettings.py:38
+#: fixtures/signingsettings.py:46
 msgid ""
 "Set this setting to off if you want to force your users to periodically "
 "update their \"Remember Me\" tokens by signing in. If this option is on, "
@@ -5170,15 +5410,15 @@ msgstr ""
 msgid "Administrator"
 msgstr "Administrator"
 
-#: fixtures/userroles.py:29
+#: fixtures/userroles.py:30
 msgid "Moderator"
 msgstr "Moderator"
 
-#: fixtures/userroles.py:51
+#: fixtures/userroles.py:53
 msgid "Registered"
 msgstr "Zarejestrowany"
 
-#: fixtures/userroles.py:67 templates/admin/online/list.html:13
+#: fixtures/userroles.py:69 templates/admin/online/list.html:13
 msgid "Guest"
 msgstr "Gość"
 
@@ -5206,16 +5446,16 @@ msgstr "Musisz uzupełnić wszystkie pola."
 msgid "Entered values differ from each other."
 msgstr "Wprowadzone wartości różnią się."
 
-#: markdown/factory.py:112
+#: markdown/factory.py:81
 #, python-format
 msgid "Posted by %(user)s"
 msgstr "%(user)s napisał/a"
 
-#: markdown/factory.py:114
+#: markdown/factory.py:83
 msgid "Quote"
 msgstr "Cytat"
 
-#: middleware/user.py:24
+#: middleware/user.py:31
 #, python-format
 msgid ""
 "Welcome back, %(username)s! We've signed you in automatically for your "
@@ -5224,19 +5464,19 @@ msgstr ""
 "Witaj ponownie, %(username)s! Dla Twojej wygody, zalogowaliśmy Cię "
 "automatycznie."
 
-#: models/forummodel.py:175
+#: models/forummodel.py:176
 msgid "Reports"
 msgstr "Raporty"
 
-#: models/forummodel.py:177
+#: models/forummodel.py:178
 msgid "Root Category"
-msgstr ""
+msgstr "Główny korzeń"
 
-#: models/postmodel.py:42
+#: models/postmodel.py:43
 msgid "New Posts"
 msgstr "Nowe posty"
 
-#: models/postmodel.py:92
+#: models/postmodel.py:96
 #, python-format
 msgid "%(username)s has mentioned you in his reply in thread %(thread)s"
 msgstr "%(username)s zwrócił się do Ciebie w odpowiedzi w temacie %(thread)s"
@@ -5244,6 +5484,8 @@ msgstr "%(username)s zwrócił się do Ciebie w odpowiedzi w temacie %(thread)s"
 #: models/pruningpolicymodel.py:20
 msgid "Pruning policy must have at least one pruning criteria set to be valid."
 msgstr ""
+"Zasada usuwania użytkowników musi zawierać przynajmniej jedno kryterium, aby "
+"była poprawna."
 
 #: models/themeadjustmentmodel.py:7
 msgid "User agents for this theme are already defined."
@@ -5254,7 +5496,7 @@ msgstr "User agenty dla tego szablonu zostały już wcześniej przypisane."
 msgid "New Threads"
 msgstr "Nowe tematy"
 
-#: models/threadmodel.py:167
+#: models/threadmodel.py:169
 #, python-format
 msgid "New reply in thread \"%(thread)s\""
 msgstr "Nowa odpowiedź w temacie \"%(thread)s\""
@@ -5391,20 +5633,11 @@ msgstr ""
 "pasek adresu swojej przeglądarki internetowej:"
 
 #: templates/_email/users/activation/admin.html:6
-msgid ""
-"Your account will remain inactive until Board Administrator accepts it. "
-"Depending on number of new registrations this may take few minutes or few "
-"days. Thanks for your patience!"
-msgstr ""
-"Twoje konto pozostanie nieaktywne do czasu akceptacji przez administratora "
-"forum. W zależności od ilości nowych rejestracji, może to potrwać od kilku "
-"minut, do kilku dni. Dziękujemy za cierpliwość!"
-
 #: templates/_email/users/activation/admin.txt:6
 msgid ""
 "Your account will remain inactive until Board Administrator accepts it. "
 "Depending on number of new registrations this may take few minutes or few "
-"days. Thanks for patience!"
+"days. Thanks for your patience!"
 msgstr ""
 "Twoje konto pozostanie nieaktywne do czasu akceptacji przez administratora "
 "forum. W zależności od ilości nowych rejestracji, może to potrwać od kilku "
@@ -5718,6 +5951,7 @@ msgstr ""
 "funkcjonalności."
 
 #: templates/admin/admin/acl_form.html:15
+#: templates/debug_toolbar/panels/acl.html:8
 msgid "Permission"
 msgstr "Zezwolenie"
 
@@ -5731,11 +5965,11 @@ msgstr "Zapisz i dodaj kolejne"
 
 #: templates/admin/admin/acl_form.html:43 templates/admin/admin/form.html:38
 #: templates/admin/prune/apply.html:14
-#: templates/cranefly/threads/merge.html:52
-#: templates/cranefly/threads/move_posts.html:53
-#: templates/cranefly/threads/move_thread.html:54
-#: templates/cranefly/threads/move_threads.html:52
-#: templates/cranefly/threads/split.html:53
+#: templates/cranefly/threads/merge.html:50
+#: templates/cranefly/threads/move_posts.html:51
+#: templates/cranefly/threads/move_thread.html:52
+#: templates/cranefly/threads/move_threads.html:50
+#: templates/cranefly/threads/split.html:51
 #: templates/cranefly/usercp/avatar_crop.html:17
 #: templates/cranefly/usercp/avatar_upload.html:25
 #: templates/cranefly/usercp/options.html:26
@@ -5932,33 +6166,41 @@ msgstr "Stare powiadomienie"
 msgid "Image could not be loaded."
 msgstr "Nie udało się wczytać obrazka."
 
-#: templates/cranefly/category.html:49 templates/cranefly/index.html:35
-#: templates/cranefly/threads/list.html:53
+#: templates/cranefly/category.html:47 templates/cranefly/index.html:35
+#: templates/cranefly/threads/list.html:51
 msgid "This forum is empty"
 msgstr "To forum jest puste"
 
-#: templates/cranefly/category.html:52 templates/cranefly/index.html:38
-#: templates/cranefly/threads/list.html:56
+#: templates/cranefly/category.html:50 templates/cranefly/index.html:38
+#: templates/cranefly/threads/list.html:54
 msgid "This forum is protected"
 msgstr "To forum jest chronione"
 
-#: templates/cranefly/category.html:58 templates/cranefly/index.html:44
-#: templates/cranefly/threads/list.html:62
+#: templates/cranefly/category.html:56 templates/cranefly/index.html:44
+#: templates/cranefly/threads/list.html:60
 #, python-format
-msgid "%(clicks)s clicks"
-msgstr "%(clicks)s kliknięć"
+msgid "%(clicks)s click"
+msgid_plural "%(clicks)s clicks"
+msgstr[0] "%(clicks)s kliknięcie"
+msgstr[1] "%(clicks)s kliknięcia"
+msgstr[2] "%(clicks)s kliknięć"
 
-#: templates/cranefly/category.html:64 templates/cranefly/index.html:50
-#: templates/cranefly/threads/list.html:68
+#: templates/cranefly/category.html:63 templates/cranefly/index.html:51
+#: templates/cranefly/threads/list.html:67
 msgid "Subforums"
 msgstr "Subfora"
 
-#: templates/cranefly/category.html:83 templates/cranefly/index.html:69
-#: templates/cranefly/threads/list.html:87
+#: templates/cranefly/category.html:74 templates/cranefly/index.html:62
+#: templates/cranefly/threads/list.html:78
+msgid "Click to go to this subforum"
+msgstr "Kliknij, aby przejść do tego subforum"
+
+#: templates/cranefly/category.html:85 templates/cranefly/index.html:73
+#: templates/cranefly/threads/list.html:89
 msgid "Clicks"
 msgstr "Kliknięcia"
 
-#: templates/cranefly/category.html:94
+#: templates/cranefly/category.html:96
 msgid "Looks like there are no forums to display in this category."
 msgstr ""
 "Wygląda na to, że w tej kategorii nie ma żadnych forów do wyświetlenia."
@@ -6061,7 +6303,7 @@ msgid "Looks like no forums exist that you have permission to see."
 msgstr "Wygląda na to, że nie istnieje żadne forum, które możesz zobaczyć."
 
 #: templates/cranefly/forum_map.html:90
-#: templates/cranefly/threads/list.html:210
+#: templates/cranefly/threads/list.html:212
 #, python-format
 msgid "%(posts)s post - last in %(thread)s"
 msgid_plural "%(posts)s posts - last in %(thread)s"
@@ -6070,7 +6312,7 @@ msgstr[1] "%(posts)s posty - ostatni w %(thread)s"
 msgstr[2] "%(posts)s postów - ostatni w %(thread)s"
 
 #: templates/cranefly/forum_map.html:92
-#: templates/cranefly/threads/list.html:212
+#: templates/cranefly/threads/list.html:214
 #, python-format
 msgid "%(posts)s post"
 msgid_plural "%(posts)s posts"
@@ -6079,7 +6321,7 @@ msgstr[1] "%(posts)s posty"
 msgstr[2] "%(posts)s postów"
 
 #: templates/cranefly/forum_map.html:101
-#: templates/cranefly/threads/list.html:221
+#: templates/cranefly/threads/list.html:223
 #, python-format
 msgid "%(redirects)s click"
 msgid_plural "%(redirects)s clicks"
@@ -6087,17 +6329,17 @@ msgstr[0] "jedno kliknięcie"
 msgstr[1] "%(redirects)s kliknięcia"
 msgstr[2] "%(redirects)s kliknięć"
 
-#: templates/cranefly/index.html:89
+#: templates/cranefly/index.html:93
 #, python-format
 msgid "%(rank_name)s Online"
 msgstr "%(rank_name)s Online"
 
-#: templates/cranefly/index.html:106 templates/cranefly/layout.html:41
+#: templates/cranefly/index.html:116 templates/cranefly/layout.html:41
 #: templates/cranefly/popular_threads.html:10
 msgid "Popular Threads"
 msgstr "Popularne tematy"
 
-#: templates/cranefly/index.html:138
+#: templates/cranefly/index.html:148
 msgid "Mark forums read"
 msgstr "Oznacz wszystkie fora jako przeczytane"
 
@@ -6149,9 +6391,9 @@ msgstr "Zmodyfikuj ustawienia swojego profilu"
 msgid "Sign Out and browse as guest"
 msgstr "Wyloguj się i przegladaj forum jako gość"
 
-#: templates/cranefly/layout.html:64
-msgid "Sign In using your account data"
-msgstr "Zaloguj się na swoje konto"
+#: templates/cranefly/layout.html:64 templates/cranefly/signin.html:13
+msgid "Sign In to Your Account"
+msgstr "Formularz logowania"
 
 #: templates/cranefly/layout.html:65 templates/cranefly/register.html:13
 msgid "Register new account"
@@ -6170,14 +6412,14 @@ msgstr "Strona %(page)s"
 #: templates/cranefly/popular_threads.html:20
 #: templates/cranefly/watched.html:32
 #: templates/cranefly/private_threads/list.html:41
-#: templates/cranefly/threads/list.html:116
+#: templates/cranefly/threads/list.html:118
 msgid "Thread"
 msgstr "Temat"
 
 #: templates/cranefly/new_threads.html:21
 #: templates/cranefly/popular_threads.html:21
 #: templates/cranefly/private_threads/list.html:42
-#: templates/cranefly/threads/list.html:117
+#: templates/cranefly/threads/list.html:119
 msgid "Rating"
 msgstr "Ocena"
 
@@ -6185,7 +6427,7 @@ msgstr "Ocena"
 #: templates/cranefly/popular_threads.html:22
 #: templates/cranefly/watched.html:33
 #: templates/cranefly/private_threads/list.html:43
-#: templates/cranefly/threads/list.html:118
+#: templates/cranefly/threads/list.html:120
 msgid "Activity"
 msgstr "Aktywność"
 
@@ -6193,7 +6435,7 @@ msgstr "Aktywność"
 #: templates/cranefly/popular_threads.html:33
 #: templates/cranefly/watched.html:41
 #: templates/cranefly/private_threads/list.html:54
-#: templates/cranefly/threads/list.html:129
+#: templates/cranefly/threads/list.html:131
 msgid "Click to see first unread post"
 msgstr "Kliknij, żeby zobaczyć ostatni nieprzeczytany post"
 
@@ -6201,7 +6443,7 @@ msgstr "Kliknij, żeby zobaczyć ostatni nieprzeczytany post"
 #: templates/cranefly/popular_threads.html:35
 #: templates/cranefly/watched.html:43
 #: templates/cranefly/private_threads/list.html:56
-#: templates/cranefly/threads/list.html:131
+#: templates/cranefly/threads/list.html:133
 msgid "Click to see last post"
 msgstr "Kliknij, aby zobaczyć ostatni post"
 
@@ -6210,26 +6452,26 @@ msgstr "Kliknij, aby zobaczyć ostatni post"
 #: templates/cranefly/watched.html:47
 #, python-format
 msgid "by %(user)s in %(forum)s %(start)s"
-msgstr "przez %(user)s w %(forum)s %(start)s"
+msgstr "od %(user)s w %(forum)s %(start)s"
 
 #: templates/cranefly/new_threads.html:43
 #: templates/cranefly/popular_threads.html:43
 #: templates/cranefly/private_threads/list.html:70
-#: templates/cranefly/threads/list.html:145
+#: templates/cranefly/threads/list.html:147
 msgid "This thread is an annoucement"
 msgstr "Ten temat jest ogłoszeniem"
 
 #: templates/cranefly/new_threads.html:46
 #: templates/cranefly/popular_threads.html:46
 #: templates/cranefly/private_threads/list.html:73
-#: templates/cranefly/threads/list.html:148
+#: templates/cranefly/threads/list.html:150
 msgid "This thread is sticky"
 msgstr "Ten temat jest przyklejony"
 
 #: templates/cranefly/new_threads.html:49
 #: templates/cranefly/popular_threads.html:49
 #: templates/cranefly/private_threads/list.html:82
-#: templates/cranefly/threads/list.html:157
+#: templates/cranefly/threads/list.html:159
 msgid "This thread is closed"
 msgstr "Ten temat jest zamknięty"
 
@@ -6237,10 +6479,10 @@ msgstr "Ten temat jest zamknięty"
 #: templates/cranefly/popular_threads.html:60
 #: templates/cranefly/watched.html:52
 #: templates/cranefly/private_threads/list.html:93
-#: templates/cranefly/threads/list.html:168
+#: templates/cranefly/threads/list.html:170
 #, python-format
 msgid "last by %(user)s %(last)s"
-msgstr "ostatnia przez %(user)s %(last)s"
+msgstr "ostatnia od %(user)s %(last)s"
 
 #: templates/cranefly/new_threads.html:70
 msgid "No new threads were started in last 48 hours."
@@ -6250,11 +6492,11 @@ msgstr "W ciągu ostatnich 48 godzin nie rozpoczęto żadnych nowych tematów."
 #: templates/cranefly/popular_threads.html:76
 #: templates/cranefly/watched.html:96
 #: templates/cranefly/private_threads/list.html:138
-#: templates/cranefly/threads/list.html:229
+#: templates/cranefly/threads/list.html:231
 #, python-format
 msgid "%(replies)s reply"
 msgid_plural "%(replies)s replies"
-msgstr[0] "jedna odpowiedź"
+msgstr[0] "%(replies)s odpowiedź"
 msgstr[1] "%(replies)s odpowiedzi"
 msgstr[2] "%(replies)s odpowiedzi"
 
@@ -6304,10 +6546,6 @@ msgstr "Operacja zmiany hasła"
 #: templates/cranefly/reset_password.html:27
 msgid "Reset Password"
 msgstr "Zresetuj hasło"
-
-#: templates/cranefly/signin.html:13
-msgid "Sign In to Your Account"
-msgstr "Formularz logowania"
 
 #: templates/cranefly/signin.html:22
 msgid "Click here if you forgot your sign in credentials."
@@ -6377,7 +6615,7 @@ msgstr "Nowsze tematy"
 
 #: templates/cranefly/watched.html:123 templates/cranefly/watched.html:124
 #: templates/cranefly/private_threads/list.html:154
-#: templates/cranefly/threads/list.html:245
+#: templates/cranefly/threads/list.html:247
 msgid "Older Threads"
 msgstr "Starsze tematy"
 
@@ -6385,10 +6623,10 @@ msgstr "Starsze tematy"
 #: templates/cranefly/private_threads/changelog.html:19
 #: templates/cranefly/private_threads/changelog_diff.html:9
 #: templates/cranefly/private_threads/changelog_diff.html:20
-#: templates/cranefly/threads/changelog.html:11
-#: templates/cranefly/threads/changelog.html:21
-#: templates/cranefly/threads/changelog_diff.html:11
-#: templates/cranefly/threads/changelog_diff.html:22
+#: templates/cranefly/threads/changelog.html:9
+#: templates/cranefly/threads/changelog.html:19
+#: templates/cranefly/threads/changelog_diff.html:9
+#: templates/cranefly/threads/changelog_diff.html:20
 #, python-format
 msgid "Post #%(post)s Changelog"
 msgstr "Historia zmian postu #%(post)s"
@@ -6396,17 +6634,17 @@ msgstr "Historia zmian postu #%(post)s"
 #: templates/cranefly/private_threads/changelog.html:23
 #: templates/cranefly/private_threads/details.html:23
 #: templates/cranefly/private_threads/posting.html:144
-#: templates/cranefly/private_threads/thread.html:105
-#: templates/cranefly/private_threads/thread.html:107
-#: templates/cranefly/private_threads/thread.html:190
-#: templates/cranefly/private_threads/thread.html:192
-#: templates/cranefly/threads/changelog.html:25
-#: templates/cranefly/threads/details.html:25
-#: templates/cranefly/threads/posting.html:153
-#: templates/cranefly/threads/thread.html:99
-#: templates/cranefly/threads/thread.html:101
-#: templates/cranefly/threads/thread.html:184
-#: templates/cranefly/threads/thread.html:186
+#: templates/cranefly/private_threads/thread.html:101
+#: templates/cranefly/private_threads/thread.html:103
+#: templates/cranefly/private_threads/thread.html:174
+#: templates/cranefly/private_threads/thread.html:176
+#: templates/cranefly/threads/changelog.html:23
+#: templates/cranefly/threads/details.html:23
+#: templates/cranefly/threads/posting.html:151
+#: templates/cranefly/threads/thread.html:93
+#: templates/cranefly/threads/thread.html:95
+#: templates/cranefly/threads/thread.html:162
+#: templates/cranefly/threads/thread.html:164
 #, python-format
 msgid "One edit"
 msgid_plural "%(edits)s edits"
@@ -6416,20 +6654,20 @@ msgstr[2] "%(edits)s edycji"
 
 #: templates/cranefly/private_threads/changelog.html:24
 #: templates/cranefly/private_threads/details.html:24
-#: templates/cranefly/private_threads/thread.html:209
-#: templates/cranefly/threads/changelog.html:26
-#: templates/cranefly/threads/details.html:26
-#: templates/cranefly/threads/thread.html:203
+#: templates/cranefly/private_threads/thread.html:193
+#: templates/cranefly/threads/changelog.html:24
+#: templates/cranefly/threads/details.html:24
+#: templates/cranefly/threads/thread.html:177
 msgid "Protected"
 msgstr "Chroniony"
 
 #: templates/cranefly/private_threads/changelog.html:36
-#: templates/cranefly/threads/changelog.html:38
+#: templates/cranefly/threads/changelog.html:36
 msgid "Change Log"
 msgstr "Historia zmian"
 
 #: templates/cranefly/private_threads/changelog.html:56
-#: templates/cranefly/threads/changelog.html:58
+#: templates/cranefly/threads/changelog.html:56
 #, python-format
 msgid "Added one character to post."
 msgid_plural "Added %(chars)s characters to post."
@@ -6438,7 +6676,7 @@ msgstr[1] "Dodano %(chars)s znaki do treści postu."
 msgstr[2] "Dodano %(chars)s znaków do treści postu."
 
 #: templates/cranefly/private_threads/changelog.html:58
-#: templates/cranefly/threads/changelog.html:60
+#: templates/cranefly/threads/changelog.html:58
 #, python-format
 msgid "Removed one character from post."
 msgid_plural "Removed %(chars)s characters from post."
@@ -6447,43 +6685,43 @@ msgstr[1] "Usunięto %(chars)s znaki z treści postu."
 msgstr[2] "Usunięto %(chars)s znaków z treści postu."
 
 #: templates/cranefly/private_threads/changelog.html:60
-#: templates/cranefly/threads/changelog.html:62
+#: templates/cranefly/threads/changelog.html:60
 msgid "No change in message's length."
 msgstr "Bez zmian w długości postu."
 
 #: templates/cranefly/private_threads/changelog.html:61
-#: templates/cranefly/threads/changelog.html:63
+#: templates/cranefly/threads/changelog.html:61
 #, python-format
 msgid "Changed thread name from \"%(old)s\" to \"%(new)s\"."
 msgstr "Zmieniono nazwę tematu z \"%(old)s\" na \"%(new)s\"."
 
 #: templates/cranefly/private_threads/changelog.html:61
-#: templates/cranefly/threads/changelog.html:63
+#: templates/cranefly/threads/changelog.html:61
 #, python-format
 msgid "Renamed thread from \"%(old)s\" to \"%(new)s\"."
 msgstr "Zmieniono nazwę tematu z \"%(old)s\" na \"%(new)s\"."
 
 #: templates/cranefly/private_threads/changelog.html:63
-#: templates/cranefly/threads/changelog.html:65
+#: templates/cranefly/threads/changelog.html:63
 #, python-format
 msgid "By %(user)s %(date)s"
 msgstr "Przez %(user)s %(date)s"
 
 #: templates/cranefly/private_threads/changelog.html:72
-#: templates/cranefly/threads/changelog.html:74
+#: templates/cranefly/threads/changelog.html:72
 msgid "This post was never edited."
 msgstr "Ten post nigdy nie był zmieniany."
 
 #: templates/cranefly/private_threads/changelog_diff.html:10
 #: templates/cranefly/private_threads/changelog_diff.html:20
-#: templates/cranefly/threads/changelog_diff.html:12
-#: templates/cranefly/threads/changelog_diff.html:22
+#: templates/cranefly/threads/changelog_diff.html:10
+#: templates/cranefly/threads/changelog_diff.html:20
 #, python-format
 msgid "Edit from %(date)s"
 msgstr "Zmiana z %(date)s"
 
 #: templates/cranefly/private_threads/changelog_diff.html:29
-#: templates/cranefly/threads/changelog_diff.html:31
+#: templates/cranefly/threads/changelog_diff.html:29
 #, python-format
 msgid "Added one character"
 msgid_plural "Added %(chars)s characters"
@@ -6492,7 +6730,7 @@ msgstr[1] "Dodano %(chars)s znaki"
 msgstr[2] "Dodano %(chars)s znaków"
 
 #: templates/cranefly/private_threads/changelog_diff.html:31
-#: templates/cranefly/threads/changelog_diff.html:33
+#: templates/cranefly/threads/changelog_diff.html:31
 #, python-format
 msgid "Removed one character"
 msgid_plural "Removed %(chars)s characters"
@@ -6501,53 +6739,53 @@ msgstr[1] "Usunięto %(chars)s znaki"
 msgstr[2] "Usunięto %(chars)s znaków"
 
 #: templates/cranefly/private_threads/changelog_diff.html:55
-#: templates/cranefly/threads/changelog_diff.html:57
+#: templates/cranefly/threads/changelog_diff.html:55
 msgid "Revert this edit"
 msgstr "Cofnij tą zmianę"
 
 #: templates/cranefly/private_threads/details.html:9
 #: templates/cranefly/private_threads/details.html:19
-#: templates/cranefly/threads/details.html:11
-#: templates/cranefly/threads/details.html:21
+#: templates/cranefly/threads/details.html:9
+#: templates/cranefly/threads/details.html:19
 #, python-format
 msgid "Post #%(post)s Info"
 msgstr "Informacje o poście #%(post)s"
 
 #: templates/cranefly/private_threads/details.html:32
-#: templates/cranefly/threads/details.html:34
+#: templates/cranefly/threads/details.html:32
 msgid "UserAgent"
 msgstr "UserAgent"
 
 #: templates/cranefly/private_threads/list.html:33
 #: templates/cranefly/private_threads/list.html:129
-#: templates/cranefly/threads/list.html:108
-#: templates/cranefly/threads/list.html:198
+#: templates/cranefly/threads/list.html:110
+#: templates/cranefly/threads/list.html:200
 msgid "New Thread"
 msgstr "Załóż nowy temat"
 
 #: templates/cranefly/private_threads/list.html:60
-#: templates/cranefly/threads/list.html:135
+#: templates/cranefly/threads/list.html:137
 #, python-format
 msgid "by %(user)s %(start)s"
 msgstr "przez %(user)s %(start)s"
 
 #: templates/cranefly/private_threads/list.html:64
-#: templates/cranefly/threads/list.html:139
+#: templates/cranefly/threads/list.html:141
 msgid "This thread has reported replies"
 msgstr "Ten temat ma odpowiedzi, które zostały zgłoszone do moderacji"
 
 #: templates/cranefly/private_threads/list.html:67
-#: templates/cranefly/threads/list.html:142
+#: templates/cranefly/threads/list.html:144
 msgid "This thread has unreviewed replies"
 msgstr "Ten temat ma odpowiedzi, które oczekują na akceptację"
 
 #: templates/cranefly/private_threads/list.html:76
-#: templates/cranefly/threads/list.html:151
+#: templates/cranefly/threads/list.html:153
 msgid "This thread awaits review"
 msgstr "Ten temat oczekuje na akceptację"
 
 #: templates/cranefly/private_threads/list.html:79
-#: templates/cranefly/threads/list.html:154
+#: templates/cranefly/threads/list.html:156
 msgid "This thread is deleted"
 msgstr "Ten temat został usunięty"
 
@@ -6564,24 +6802,24 @@ msgid "You have started no private threads."
 msgstr "Nie rozpocząłeś żadnych prywatnych tematów."
 
 #: templates/cranefly/private_threads/list.html:154
-#: templates/cranefly/threads/list.html:245
+#: templates/cranefly/threads/list.html:247
 msgid "First Page"
 msgstr "Pierwsza strona"
 
 #: templates/cranefly/private_threads/list.html:154
-#: templates/cranefly/private_threads/thread.html:496
-#: templates/cranefly/threads/list.html:245
-#: templates/cranefly/threads/thread.html:477
+#: templates/cranefly/private_threads/thread.html:511
+#: templates/cranefly/threads/list.html:247
+#: templates/cranefly/threads/thread.html:484
 msgid "First"
 msgstr "Pierwszy"
 
 #: templates/cranefly/private_threads/list.html:154
-#: templates/cranefly/threads/list.html:245
+#: templates/cranefly/threads/list.html:247
 msgid "Newest Threads"
 msgstr "Nowsze tematy"
 
 #: templates/cranefly/private_threads/list.html:170
-#: templates/cranefly/threads/list.html:271
+#: templates/cranefly/threads/list.html:273
 msgid ""
 "Are you sure you want to delete selected threads? This action is not "
 "reversible!"
@@ -6591,49 +6829,49 @@ msgstr ""
 
 #: templates/cranefly/private_threads/posting.html:81
 #: templates/cranefly/private_threads/posting.html:178
-#: templates/cranefly/threads/posting.html:90
-#: templates/cranefly/threads/posting.html:187
+#: templates/cranefly/threads/posting.html:88
+#: templates/cranefly/threads/posting.html:185
 msgid "Preview"
 msgstr "Podgląd"
 
 #: templates/cranefly/private_threads/posting.html:127
-#: templates/cranefly/threads/posting.html:136
+#: templates/cranefly/threads/posting.html:134
 msgid "Post New Thread"
-msgstr "Zakładanie nowego tematu"
+msgstr "Nowy temat"
 
 #: templates/cranefly/private_threads/posting.html:129
-#: templates/cranefly/threads/posting.html:138
+#: templates/cranefly/threads/posting.html:136
 msgid "Edit Thread"
 msgstr "Modyfikacja tematu"
 
 #: templates/cranefly/private_threads/posting.html:131
-#: templates/cranefly/threads/posting.html:140
+#: templates/cranefly/threads/posting.html:138
 msgid "Post New Reply"
-msgstr "Tworzenie nowej odpowiedzi"
+msgstr "Nowa odpowiedź"
 
 #: templates/cranefly/private_threads/posting.html:133
-#: templates/cranefly/threads/posting.html:142
+#: templates/cranefly/threads/posting.html:140
 msgid "Edit Reply"
 msgstr "Edycja odpowiedzi"
 
 #: templates/cranefly/private_threads/posting.html:140
 #: templates/cranefly/private_threads/posting.html:149
 #: templates/cranefly/private_threads/thread.html:22
-#: templates/cranefly/threads/posting.html:149
-#: templates/cranefly/threads/posting.html:158
-#: templates/cranefly/threads/thread.html:24
+#: templates/cranefly/threads/posting.html:147
+#: templates/cranefly/threads/posting.html:156
+#: templates/cranefly/threads/thread.html:22
 msgid "Not Reviewed"
 msgstr "Oczekuje na akceptację"
 
 #: templates/cranefly/private_threads/posting.html:146
-#: templates/cranefly/threads/posting.html:155
+#: templates/cranefly/threads/posting.html:153
 msgid "First edit"
 msgstr "Pierwsza edycja"
 
 #: templates/cranefly/private_threads/posting.html:157
 #: templates/cranefly/private_threads/thread.html:26
-#: templates/cranefly/threads/posting.html:166
-#: templates/cranefly/threads/thread.html:28
+#: templates/cranefly/threads/posting.html:164
+#: templates/cranefly/threads/thread.html:26
 #, python-format
 msgid "One reply"
 msgid_plural "%(replies)s replies"
@@ -6643,249 +6881,258 @@ msgstr[2] "%(replies)s odpowiedzi"
 
 #: templates/cranefly/private_threads/posting.html:159
 #: templates/cranefly/private_threads/thread.html:28
-#: templates/cranefly/threads/posting.html:168
-#: templates/cranefly/threads/thread.html:30
+#: templates/cranefly/threads/posting.html:166
+#: templates/cranefly/threads/thread.html:28
 msgid "No replies"
 msgstr "Brak odpowiedzi"
 
 #: templates/cranefly/private_threads/posting.html:162
 #: templates/cranefly/private_threads/thread.html:30
-#: templates/cranefly/threads/posting.html:171
-#: templates/cranefly/threads/thread.html:32
+#: templates/cranefly/threads/posting.html:169
+#: templates/cranefly/threads/thread.html:30
 msgid "Locked"
 msgstr "Zamknięty"
 
 #: templates/cranefly/private_threads/posting.html:168
-#: templates/cranefly/threads/posting.html:177
+#: templates/cranefly/threads/posting.html:175
 msgid "Post Thread"
 msgstr "Załóż temat"
 
 #: templates/cranefly/private_threads/posting.html:170
-#: templates/cranefly/threads/posting.html:179
+#: templates/cranefly/threads/posting.html:177
 msgid "Post Reply"
 msgstr "Wyślij odpowiedź"
 
 #: templates/cranefly/private_threads/thread.html:55
-#: templates/cranefly/private_threads/thread.html:260
-#: templates/cranefly/private_threads/thread.html:364
-#: templates/cranefly/threads/thread.html:48
-#: templates/cranefly/threads/thread.html:293
-#: templates/cranefly/threads/thread.html:392
+#: templates/cranefly/private_threads/thread.html:244
+#: templates/cranefly/private_threads/thread.html:375
+#: templates/cranefly/threads/thread.html:46
+#: templates/cranefly/threads/thread.html:267
+#: templates/cranefly/threads/thread.html:395
 msgid "Reply"
 msgstr "Odpowiedz"
 
 #: templates/cranefly/private_threads/thread.html:58
-#: templates/cranefly/threads/thread.html:51
+#: templates/cranefly/threads/thread.html:49
 msgid "Remove thread from watched list"
 msgstr "Zaprzestań obserwacji tego tematu"
 
 #: templates/cranefly/private_threads/thread.html:60
-#: templates/cranefly/threads/thread.html:53
+#: templates/cranefly/threads/thread.html:51
 msgid "Don't e-mail me anymore if anyone replies to this thread"
 msgstr "Nie informuj mnie już e-mailowo o odpowiedziach w tym temacie"
 
 #: templates/cranefly/private_threads/thread.html:62
-#: templates/cranefly/threads/thread.html:55
+#: templates/cranefly/threads/thread.html:53
 msgid "E-mail me if anyone replies"
 msgstr "Poinformuj mnie mailowo, gdy ktoś odpisze"
 
 #: templates/cranefly/private_threads/thread.html:65
-#: templates/cranefly/threads/thread.html:58
+#: templates/cranefly/threads/thread.html:56
 msgid "Add thread to watched list"
 msgstr "Dodaj ten temat do listy obserwowanych"
 
 #: templates/cranefly/private_threads/thread.html:66
-#: templates/cranefly/threads/thread.html:59
+#: templates/cranefly/threads/thread.html:57
 msgid "Add thread to watched list and e-mail me if anyone replies"
 msgstr ""
 "Dodaj ten temat do listy obserwowanych i poinformuj mnie mailowo, gdy ktoś "
 "odpisze"
 
 #: templates/cranefly/private_threads/thread.html:69
-#: templates/cranefly/threads/thread.html:62
+#: templates/cranefly/threads/thread.html:60
 msgid "Show Hidden Replies"
 msgstr "Pokaż ukryte odpowiedzi"
 
 #: templates/cranefly/private_threads/thread.html:94
-#: templates/cranefly/private_threads/thread.html:179
-#: templates/cranefly/threads/thread.html:88
-#: templates/cranefly/threads/thread.html:173
+#: templates/cranefly/private_threads/thread.html:163
+#: templates/cranefly/threads/thread.html:86
+#: templates/cranefly/threads/thread.html:155
 msgid "Unregistered"
 msgstr "Niezarejestrowany"
 
-#: templates/cranefly/private_threads/thread.html:105
-#: templates/cranefly/private_threads/thread.html:190
-#: templates/cranefly/threads/thread.html:99
-#: templates/cranefly/threads/thread.html:184
+#: templates/cranefly/private_threads/thread.html:101
+#: templates/cranefly/private_threads/thread.html:174
+#: templates/cranefly/threads/thread.html:93
+#: templates/cranefly/threads/thread.html:162
 msgid "Show changelog"
 msgstr "Pokaż historię zmian"
 
-#: templates/cranefly/private_threads/thread.html:116
-#: templates/cranefly/private_threads/thread.html:150
-#: templates/cranefly/private_threads/thread.html:204
-#: templates/cranefly/threads/thread.html:110
-#: templates/cranefly/threads/thread.html:144
-#: templates/cranefly/threads/thread.html:198
+#: templates/cranefly/private_threads/thread.html:108
+#: templates/cranefly/private_threads/thread.html:134
+#: templates/cranefly/private_threads/thread.html:188
+#: templates/cranefly/threads/thread.html:100
+#: templates/cranefly/threads/thread.html:126
+#: templates/cranefly/threads/thread.html:172
 msgid "Direct link to this post"
 msgstr "Bezpośredni link do tego postu"
 
-#: templates/cranefly/private_threads/thread.html:121
-#: templates/cranefly/private_threads/thread.html:155
-#: templates/cranefly/private_threads/thread.html:233
-#: templates/cranefly/threads/thread.html:115
-#: templates/cranefly/threads/thread.html:149
-#: templates/cranefly/threads/thread.html:227
+#: templates/cranefly/private_threads/thread.html:113
+#: templates/cranefly/private_threads/thread.html:139
+#: templates/cranefly/private_threads/thread.html:217
+#: templates/cranefly/threads/thread.html:105
+#: templates/cranefly/threads/thread.html:131
+#: templates/cranefly/threads/thread.html:201
 msgid "New"
 msgstr "Nowy"
 
-#: templates/cranefly/private_threads/thread.html:128
-#: templates/cranefly/threads/thread.html:122
+#: templates/cranefly/private_threads/thread.html:120
+#: templates/cranefly/threads/thread.html:112
 #, python-format
 msgid "%(user)s has deleted this reply %(date)s"
 msgstr "%(user)s usunął tą odpowiedź %(date)s"
 
-#: templates/cranefly/private_threads/thread.html:162
-#: templates/cranefly/threads/thread.html:156
+#: templates/cranefly/private_threads/thread.html:146
+#: templates/cranefly/threads/thread.html:138
 msgid "This reply was posted by user that is on your ignored list."
 msgstr ""
 "Ten post został napisany przez użytkownika, który znajduje się na twojej "
 "liście ignorowanych."
 
-#: templates/cranefly/private_threads/thread.html:215
-#: templates/cranefly/threads/thread.html:209
+#: templates/cranefly/private_threads/thread.html:199
+#: templates/cranefly/threads/thread.html:183
 msgid "Deleted"
 msgstr "Usunięty"
 
-#: templates/cranefly/private_threads/thread.html:221
-#: templates/cranefly/threads/thread.html:215
+#: templates/cranefly/private_threads/thread.html:205
+#: templates/cranefly/threads/thread.html:189
 msgid "Unreviewed"
 msgstr "Oczekuje na akceptację"
 
-#: templates/cranefly/private_threads/thread.html:227
-#: templates/cranefly/threads/thread.html:221
+#: templates/cranefly/private_threads/thread.html:211
+#: templates/cranefly/threads/thread.html:195
 msgid "Reported"
 msgstr "Zgłoszony"
 
-#: templates/cranefly/private_threads/thread.html:253
-#: templates/cranefly/threads/thread.html:286
+#: templates/cranefly/private_threads/thread.html:237
+#: templates/cranefly/threads/thread.html:260
 msgid "Info"
 msgstr "Info"
 
-#: templates/cranefly/private_threads/thread.html:256
-#: templates/cranefly/private_threads/thread.html:258
-#: templates/cranefly/threads/thread.html:289
-#: templates/cranefly/threads/thread.html:291
+#: templates/cranefly/private_threads/thread.html:240
+#: templates/cranefly/private_threads/thread.html:242
+#: templates/cranefly/threads/thread.html:263
+#: templates/cranefly/threads/thread.html:265
 msgid "Edit"
 msgstr "Edytuj"
 
-#: templates/cranefly/private_threads/thread.html:267
-#: templates/cranefly/private_threads/thread.html:275
-#: templates/cranefly/threads/thread.html:300
-#: templates/cranefly/threads/thread.html:308
-msgid "Delete thread:"
-msgstr "Usuń temat"
+#: templates/cranefly/private_threads/thread.html:252
+#: templates/cranefly/threads/thread.html:275
+msgid "Make this thread visible to other users"
+msgstr "Uczyń ten temat widocznym dla innych użytkowników"
 
-#: templates/cranefly/private_threads/thread.html:268
-#: templates/cranefly/threads/thread.html:301
-msgid "Delete this thread for good"
-msgstr "Usuń ten temat na stałe"
+#: templates/cranefly/private_threads/thread.html:252
+#: templates/cranefly/private_threads/thread.html:274
+#: templates/cranefly/private_threads/thread.html:327
+#: templates/cranefly/threads/thread.html:275
+#: templates/cranefly/threads/thread.html:297
+#: templates/cranefly/threads/thread.html:347
+msgid "Restore"
+msgstr "Przywróć"
 
-#: templates/cranefly/private_threads/thread.html:268
-#: templates/cranefly/private_threads/thread.html:287
-#: templates/cranefly/threads/thread.html:301
-#: templates/cranefly/threads/thread.html:320
-msgid "Hard"
-msgstr "Na stałe"
-
-#: templates/cranefly/private_threads/thread.html:277
-#: templates/cranefly/threads/thread.html:310
+#: templates/cranefly/private_threads/thread.html:257
+#: templates/cranefly/threads/thread.html:280
 msgid "Hide this thread from other users"
 msgstr "Ukryj ten temat dla innych użytkowników"
 
-#: templates/cranefly/private_threads/thread.html:277
-#: templates/cranefly/private_threads/thread.html:296
-#: templates/cranefly/threads/thread.html:310
-#: templates/cranefly/threads/thread.html:329
-msgid "Soft"
-msgstr "Odwracalnie"
+#: templates/cranefly/private_threads/thread.html:257
+#: templates/cranefly/private_threads/thread.html:279
+#: templates/cranefly/private_threads/thread.html:332
+#: templates/cranefly/threads/thread.html:280
+#: templates/cranefly/threads/thread.html:302
+#: templates/cranefly/threads/thread.html:352
+msgid "Hide"
+msgstr "Ukryj"
 
+#: templates/cranefly/private_threads/thread.html:264
+#: templates/cranefly/threads/thread.html:287
+msgid "Delete this thread for good"
+msgstr "Usuń ten temat na stałe"
+
+#: templates/cranefly/private_threads/thread.html:264
 #: templates/cranefly/private_threads/thread.html:286
-#: templates/cranefly/private_threads/thread.html:294
-#: templates/cranefly/threads/thread.html:319
-#: templates/cranefly/threads/thread.html:327
-msgid "Delete reply:"
-msgstr "Usuń odpowiedź:"
+#: templates/cranefly/private_threads/thread.html:339
+#: templates/cranefly/threads/thread.html:287
+#: templates/cranefly/threads/thread.html:309
+#: templates/cranefly/threads/thread.html:359
+msgid "Delete"
+msgstr "Usuń"
 
-#: templates/cranefly/private_threads/thread.html:287
-#: templates/cranefly/threads/thread.html:320
-msgid "Delete this reply for good"
-msgstr "Usuń odpowiedź na dobre"
+#: templates/cranefly/private_threads/thread.html:274
+#: templates/cranefly/threads/thread.html:297
+msgid "Make this reply visible to other users"
+msgstr "Uczyń tą odpowiedź widoczną dla innych użytkowników"
 
-#: templates/cranefly/private_threads/thread.html:296
-#: templates/cranefly/threads/thread.html:329
+#: templates/cranefly/private_threads/thread.html:279
+#: templates/cranefly/threads/thread.html:302
 msgid "Hide this reply from other users"
 msgstr "Ukryj odpowiedź "
 
-#: templates/cranefly/private_threads/thread.html:314
-#: templates/cranefly/threads/thread.html:348
+#: templates/cranefly/private_threads/thread.html:286
+#: templates/cranefly/threads/thread.html:309
+msgid "Delete this reply for good"
+msgstr "Usuń odpowiedź na dobre"
+
+#: templates/cranefly/private_threads/thread.html:304
+#: templates/cranefly/threads/thread.html:328
 msgid "This thread has reached its post limit and has been closed."
 msgstr "Ten temat osiągnął limit postów i został automatycznie zamknięty."
 
-#: templates/cranefly/private_threads/thread.html:316
-#: templates/cranefly/threads/thread.html:350
+#: templates/cranefly/private_threads/thread.html:306
+#: templates/cranefly/threads/thread.html:330
 #, python-format
 msgid "%(user)s accepted this thread %(date)s"
 msgstr "%(user)s zaakceptował ten temat %(date)s"
 
-#: templates/cranefly/private_threads/thread.html:318
-#: templates/cranefly/threads/thread.html:352
+#: templates/cranefly/private_threads/thread.html:308
+#: templates/cranefly/threads/thread.html:332
 #, python-format
 msgid "%(user)s closed this thread %(date)s"
 msgstr "%(user)s zamknął ten temat %(date)s"
 
-#: templates/cranefly/private_threads/thread.html:320
-#: templates/cranefly/threads/thread.html:354
+#: templates/cranefly/private_threads/thread.html:310
+#: templates/cranefly/threads/thread.html:334
 #, python-format
 msgid "%(user)s opened this thread %(date)s"
 msgstr "%(user)s otworzył ten temat %(date)s"
 
-#: templates/cranefly/private_threads/thread.html:322
-#: templates/cranefly/threads/thread.html:356
+#: templates/cranefly/private_threads/thread.html:312
+#: templates/cranefly/threads/thread.html:336
 #, python-format
 msgid "%(user)s deleted this thread %(date)s"
 msgstr "%(user)s usunął ten temat %(date)s"
 
-#: templates/cranefly/private_threads/thread.html:324
-#: templates/cranefly/threads/thread.html:358
+#: templates/cranefly/private_threads/thread.html:314
+#: templates/cranefly/threads/thread.html:338
 #, python-format
 msgid "%(user)s restored this thread %(date)s"
 msgstr "%(user)s przywrócił ten temat %(date)s"
 
-#: templates/cranefly/private_threads/thread.html:326
+#: templates/cranefly/private_threads/thread.html:316
 #, python-format
 msgid "%(user)s added %(invited)s to thread %(date)s"
 msgstr "%(user)s dodał %(invited)s do tematu %(date)s"
 
-#: templates/cranefly/private_threads/thread.html:328
+#: templates/cranefly/private_threads/thread.html:318
 #, python-format
 msgid "%(user)s removed %(removed)s from thread %(date)s"
 msgstr "%(user)s usunął %(removed)s z tematu %(date)s"
 
-#: templates/cranefly/private_threads/thread.html:330
+#: templates/cranefly/private_threads/thread.html:320
 #, python-format
 msgid "%(user)s left thread %(date)s"
 msgstr "%(user)s opuścił temat %(date)s"
 
-#: templates/cranefly/private_threads/thread.html:366
+#: templates/cranefly/private_threads/thread.html:377
 msgid "This thread has no participants."
 msgstr "Ten temat nie ma żadnych uczestników."
 
-#: templates/cranefly/private_threads/thread.html:375
-#: templates/cranefly/threads/thread.html:403
+#: templates/cranefly/private_threads/thread.html:386
+#: templates/cranefly/threads/thread.html:406
 msgid "Your Avatar"
 msgstr "Twój awatar"
 
-#: templates/cranefly/private_threads/thread.html:384
+#: templates/cranefly/private_threads/thread.html:395
 #, python-format
 msgid "One participant"
 msgid_plural "%(participants)s participants"
@@ -6893,15 +7140,15 @@ msgstr[0] "Jeden uczestnik"
 msgstr[1] "%(participants)s uczestników"
 msgstr[2] "%(participants)s uczestników"
 
-#: templates/cranefly/private_threads/thread.html:390
+#: templates/cranefly/private_threads/thread.html:401
 msgid "Leave this thread"
 msgstr "Wypisz się z tego tematu"
 
-#: templates/cranefly/private_threads/thread.html:390
+#: templates/cranefly/private_threads/thread.html:401
 msgid "Remove from this thread"
 msgstr "Usuń z tego tematu"
 
-#: templates/cranefly/private_threads/thread.html:402
+#: templates/cranefly/private_threads/thread.html:413
 msgid ""
 "This thread has too few participants. Invite other users to open it for new "
 "replies."
@@ -6909,46 +7156,46 @@ msgstr ""
 "Ten temat ma zbyt mało uczestników. Zaproś innych użytkowników, aby "
 "umożliwić dyskusję."
 
-#: templates/cranefly/private_threads/thread.html:405
+#: templates/cranefly/private_threads/thread.html:416
 msgid "Invite User"
 msgstr "Zaproś użytkownika"
 
-#: templates/cranefly/private_threads/thread.html:434
+#: templates/cranefly/private_threads/thread.html:445
 msgid ""
 "Are you sure you want to leave this thread? It will be deleted after you "
 "leave!"
 msgstr "Czy aby na pewno chcesz opuścić ten temat? Zostanie po tym usunięty!"
 
-#: templates/cranefly/private_threads/thread.html:436
+#: templates/cranefly/private_threads/thread.html:447
 msgid "Are you sure you want to leave this thread?"
 msgstr "Czy aby na pewno chcesz opuścić ten temat?"
 
-#: templates/cranefly/private_threads/thread.html:441
+#: templates/cranefly/private_threads/thread.html:452
 msgid "Are you sure you want to remove this member from this thread?"
 msgstr "Czy aby na pewno chcesz usunąć tego użytkownika z dyskusji?"
 
-#: templates/cranefly/private_threads/thread.html:446
-#: templates/cranefly/threads/thread.html:426
+#: templates/cranefly/private_threads/thread.html:457
+#: templates/cranefly/threads/thread.html:429
 msgid ""
 "Are you sure you want to delete this thread? This action is not reversible!"
 msgstr ""
 "Czy aby na pewno chcesz usunąć ten temat? Nie będzie można już tego cofnąć!"
 
-#: templates/cranefly/private_threads/thread.html:458
-#: templates/cranefly/threads/thread.html:438
+#: templates/cranefly/private_threads/thread.html:469
+#: templates/cranefly/threads/thread.html:441
 msgid "You have to select at least two posts you want to merge."
 msgstr "Musisz zaznaczyć przynajmniej dwa posty, aby móc je połączyć."
 
-#: templates/cranefly/private_threads/thread.html:461
-#: templates/cranefly/threads/thread.html:441
+#: templates/cranefly/private_threads/thread.html:472
+#: templates/cranefly/threads/thread.html:444
 msgid ""
 "Are you sure you want to merge selected posts? This action is not reversible!"
 msgstr ""
 "Czy aby na pewno chcesz połączyć zaznaczone posty? Nie będzie można już tego "
 "cofnąć!"
 
-#: templates/cranefly/private_threads/thread.html:465
-#: templates/cranefly/threads/thread.html:445
+#: templates/cranefly/private_threads/thread.html:476
+#: templates/cranefly/threads/thread.html:448
 msgid ""
 "Are you sure you want to delete selected posts? This action is not "
 "reversible!"
@@ -6956,55 +7203,60 @@ msgstr ""
 "Czy aby na pewno chcesz usunąć zaznaczone posty? Nie będzie można już tego "
 "cofnąć!"
 
-#: templates/cranefly/private_threads/thread.html:471
-#: templates/cranefly/threads/thread.html:451
+#: templates/cranefly/private_threads/thread.html:482
+#: templates/cranefly/threads/thread.html:454
 msgid "Are you sure you want to delete this thread?"
 msgstr "Czy aby na pewno chcesz usunąć ten temat?"
 
-#: templates/cranefly/private_threads/thread.html:475
-#: templates/cranefly/threads/thread.html:455
+#: templates/cranefly/private_threads/thread.html:486
+#: templates/cranefly/threads/thread.html:458
 msgid "Are you sure you want to delete this post?"
 msgstr "Czy aby na pewno chcesz usunąć ten post?"
 
-#: templates/cranefly/private_threads/thread.html:496
-#: templates/cranefly/threads/thread.html:477
+#: templates/cranefly/private_threads/thread.html:490
+#: templates/cranefly/threads/thread.html:462
+msgid "Are you sure you want to delete this checkpoint?"
+msgstr "Czy aby na pewno chcesz usunąć tę etykietę zdarzenia?"
+
+#: templates/cranefly/private_threads/thread.html:511
+#: templates/cranefly/threads/thread.html:484
 msgid "Go to first page"
 msgstr "Idź do pierwszej strony"
 
-#: templates/cranefly/private_threads/thread.html:496
+#: templates/cranefly/private_threads/thread.html:511
 #: templates/cranefly/profiles/posts.html:42
 #: templates/cranefly/profiles/threads.html:38
-#: templates/cranefly/threads/thread.html:477
+#: templates/cranefly/threads/thread.html:484
 msgid "Older Posts"
 msgstr "Starsze posty"
 
-#: templates/cranefly/private_threads/thread.html:496
-#: templates/cranefly/threads/thread.html:477
+#: templates/cranefly/private_threads/thread.html:511
+#: templates/cranefly/threads/thread.html:484
 msgid "Newest Posts"
 msgstr "Nowsze posty"
 
-#: templates/cranefly/private_threads/thread.html:496
-#: templates/cranefly/threads/thread.html:477
+#: templates/cranefly/private_threads/thread.html:511
+#: templates/cranefly/threads/thread.html:484
 msgid "Go to last page"
 msgstr "Idź do ostatniej strony"
 
-#: templates/cranefly/private_threads/thread.html:496
-#: templates/cranefly/threads/thread.html:477
+#: templates/cranefly/private_threads/thread.html:511
+#: templates/cranefly/threads/thread.html:484
 msgid "Last"
 msgstr "Ostatni"
 
-#: templates/cranefly/private_threads/thread.html:498
-#: templates/cranefly/threads/thread.html:479
+#: templates/cranefly/private_threads/thread.html:513
+#: templates/cranefly/threads/thread.html:486
 msgid "Go to first unread"
 msgstr "Idź do pierwszego nieprzeczytanego posta"
 
-#: templates/cranefly/private_threads/thread.html:498
-#: templates/cranefly/threads/thread.html:479
+#: templates/cranefly/private_threads/thread.html:513
+#: templates/cranefly/threads/thread.html:486
 msgid "First Unread"
 msgstr "Pierwszy nieprzeczytany post"
 
-#: templates/cranefly/private_threads/thread.html:533
-#: templates/cranefly/threads/thread.html:507
+#: templates/cranefly/private_threads/thread.html:548
+#: templates/cranefly/threads/thread.html:523
 msgid "Full Editor"
 msgstr "Pełny edytor"
 
@@ -7042,7 +7294,7 @@ msgstr "Ranking"
 
 #: templates/cranefly/profiles/details.html:107
 msgid "Not Ranked"
-msgstr ""
+msgstr "Nie dotyczy"
 
 #: templates/cranefly/profiles/details.html:113
 msgid "Ranking Position"
@@ -7054,11 +7306,11 @@ msgstr "Wynik"
 
 #: templates/cranefly/profiles/details.html:125
 msgid "Karma Received"
-msgstr ""
+msgstr "Otrzymane głosy"
 
 #: templates/cranefly/profiles/details.html:133
 msgid "Karma Given"
-msgstr ""
+msgstr "Oddane głosy"
 
 #: templates/cranefly/profiles/details.html:146
 msgid "Interactions"
@@ -7067,7 +7319,7 @@ msgstr "Interakcje"
 #: templates/cranefly/profiles/details.html:161
 #: templates/cranefly/profiles/profile.html:51
 msgid "Following"
-msgstr "Obserwowany"
+msgstr "Obserwuje"
 
 #: templates/cranefly/profiles/details.html:182
 msgid "Registration Details"
@@ -7243,13 +7495,13 @@ msgstr[2] "%(username)s rozpoczął %(total)s tematów"
 msgid "%(username)s started no threads"
 msgstr "%(username)s nie rozpoczął żadnych tematów"
 
-#: templates/cranefly/threads/karmas.html:11
-#: templates/cranefly/threads/karmas.html:21
+#: templates/cranefly/threads/karmas.html:9
+#: templates/cranefly/threads/karmas.html:19
 #, python-format
 msgid "Post #%(post)s Votes"
 msgstr "Głosy postu #%(post)s "
 
-#: templates/cranefly/threads/karmas.html:34
+#: templates/cranefly/threads/karmas.html:32
 #, python-format
 msgid "One like"
 msgid_plural "%(votes)s likes"
@@ -7257,11 +7509,11 @@ msgstr[0] "Jedna osoba polubiła ten post"
 msgstr[1] "%(votes)s osoby polubiły ten post"
 msgstr[2] "%(votes)s osób poubiło ten post"
 
-#: templates/cranefly/threads/karmas.html:54
+#: templates/cranefly/threads/karmas.html:52
 msgid "Nobody liked this post."
 msgstr "Nikt nie polubił tego postu."
 
-#: templates/cranefly/threads/karmas.html:61
+#: templates/cranefly/threads/karmas.html:59
 #, python-format
 msgid "One hate"
 msgid_plural "%(votes)s hates"
@@ -7269,111 +7521,116 @@ msgstr[0] "Jedna osoba nie lubi tego postu"
 msgstr[1] "%(votes)s osoby nie lubią tego postu"
 msgstr[2] "%(votes)s osób nie lubi tego postu"
 
-#: templates/cranefly/threads/karmas.html:81
+#: templates/cranefly/threads/karmas.html:79
 msgid "Nobody hated this post."
 msgstr "Nikt nie wyraził niechęci do tego postu."
 
-#: templates/cranefly/threads/karmas.html:98
+#: templates/cranefly/threads/karmas.html:96
 #, python-format
 msgid "From %(ip)s"
 msgstr "Z %(ip)s"
 
-#: templates/cranefly/threads/list.html:36
+#: templates/cranefly/threads/list.html:34
 msgid "Child forums"
 msgstr "Subfora"
 
-#: templates/cranefly/threads/list.html:178
+#: templates/cranefly/threads/list.html:180
 msgid "There are no threads in this forum."
 msgstr "Aktualnie nie ma żadnych tematów na tym forum."
 
-#: templates/cranefly/threads/list.html:200
+#: templates/cranefly/threads/list.html:202
 msgid "Sign in or register to start threads."
-msgstr "Zaloguj się lub zarejestruj, aby rozpocząć nowe tematy."
+msgstr "Zaloguj się lub zarejestruj, aby rozpoczynać nowe tematy."
 
-#: templates/cranefly/threads/merge.html:12
-#: templates/cranefly/threads/merge.html:22
-#: templates/cranefly/threads/merge.html:32
-#: templates/cranefly/threads/merge.html:51
+#: templates/cranefly/threads/merge.html:10
+#: templates/cranefly/threads/merge.html:20
+#: templates/cranefly/threads/merge.html:30
+#: templates/cranefly/threads/merge.html:49
 msgid "Merge Threads"
 msgstr "Połącz tematy"
 
-#: templates/cranefly/threads/move_posts.html:12
-#: templates/cranefly/threads/move_posts.html:22
-#: templates/cranefly/threads/move_posts.html:32
-#: templates/cranefly/threads/move_posts.html:52
+#: templates/cranefly/threads/move_posts.html:10
+#: templates/cranefly/threads/move_posts.html:20
+#: templates/cranefly/threads/move_posts.html:30
+#: templates/cranefly/threads/move_posts.html:50
 msgid "Move Posts"
 msgstr "Przenieś posty"
 
-#: templates/cranefly/threads/move_thread.html:12
-#: templates/cranefly/threads/move_thread.html:22
-#: templates/cranefly/threads/move_thread.html:32
-#: templates/cranefly/threads/move_thread.html:53
+#: templates/cranefly/threads/move_thread.html:10
+#: templates/cranefly/threads/move_thread.html:20
+#: templates/cranefly/threads/move_thread.html:30
+#: templates/cranefly/threads/move_thread.html:51
 msgid "Move Thread"
 msgstr "Przenieś temat"
 
-#: templates/cranefly/threads/move_thread.html:49
+#: templates/cranefly/threads/move_thread.html:47
 msgid "Move Thread To"
 msgstr "Przenieś temat do"
 
-#: templates/cranefly/threads/move_thread.html:49
+#: templates/cranefly/threads/move_thread.html:47
 msgid "Select forum you want to move this thread to."
 msgstr "Wskaż forum, do którego chcesz przenieść ten temat."
 
-#: templates/cranefly/threads/move_threads.html:12
-#: templates/cranefly/threads/move_threads.html:22
-#: templates/cranefly/threads/move_threads.html:32
-#: templates/cranefly/threads/move_threads.html:51
+#: templates/cranefly/threads/move_threads.html:10
+#: templates/cranefly/threads/move_threads.html:20
+#: templates/cranefly/threads/move_threads.html:30
+#: templates/cranefly/threads/move_threads.html:49
 msgid "Move Threads"
 msgstr "Przenieś tematy"
 
-#: templates/cranefly/threads/posting.html:76
+#: templates/cranefly/threads/posting.html:74
 msgid "Thread Status"
 msgstr "Typ tematu"
 
-#: templates/cranefly/threads/split.html:12
-#: templates/cranefly/threads/split.html:22
-#: templates/cranefly/threads/split.html:32
-#: templates/cranefly/threads/split.html:52
+#: templates/cranefly/threads/split.html:10
+#: templates/cranefly/threads/split.html:20
+#: templates/cranefly/threads/split.html:30
+#: templates/cranefly/threads/split.html:50
 msgid "Split Thread"
 msgstr "Podziel temat"
 
-#: templates/cranefly/threads/thread.html:256
+#: templates/cranefly/threads/thread.html:230
 msgid "Like"
 msgstr "Lubię"
 
-#: templates/cranefly/threads/thread.html:259
+#: templates/cranefly/threads/thread.html:233
 msgid "Likes"
 msgstr "Lubi"
 
-#: templates/cranefly/threads/thread.html:269
+#: templates/cranefly/threads/thread.html:243
 msgid "Hate"
 msgstr "Nie lubię"
 
-#: templates/cranefly/threads/thread.html:272
+#: templates/cranefly/threads/thread.html:246
 msgid "Hates"
 msgstr "Nie lubi"
 
-#: templates/cranefly/threads/thread.html:277
+#: templates/cranefly/threads/thread.html:251
 msgid "Show Votes"
 msgstr "Zobacz głosy"
 
-#: templates/cranefly/threads/thread.html:394
-msgid "Sign in or register to reply."
-msgstr "Zaloguj się lub zarejestruj, aby odpowiedzieć."
+#: templates/cranefly/threads/thread.html:340
+#, python-format
+msgid "%(user)s moved this thread from %(forum)s %(date)s"
+msgstr "%(user)s przeniósł ten temat z %(forum)s %(date)s"
 
-#: templates/cranefly/threads/thread.html:480
+#: templates/cranefly/threads/thread.html:397
+msgid "Sign in or register to reply."
+msgstr "Zaloguj się lub zarejestruj, aby odpowiadać."
+
+#: templates/cranefly/threads/thread.html:487
 msgid "Go to first post awaiting review"
 msgstr "Idź do pierwszego postu oczekującego na akceptację"
 
-#: templates/cranefly/threads/thread.html:480
+#: templates/cranefly/threads/thread.html:487
 msgid "First Unreviewed"
 msgstr "Pierwszy nieprzejrzany"
 
-#: templates/cranefly/threads/thread.html:481
+#: templates/cranefly/threads/thread.html:488
 msgid "Go to first reported post"
 msgstr "Idź do pierwszego zgłoszonego postu"
 
-#: templates/cranefly/threads/thread.html:481
+#: templates/cranefly/threads/thread.html:488
 msgid "First Reported"
 msgstr "Pierwszy zgłoszony"
 
@@ -7492,6 +7749,10 @@ msgstr[2] "Możesz zmienić swoją nazwę użytkownika jeszcze %(changes)s razy.
 msgid "You will be able to change your username on %(next_change)s"
 msgstr "Będziesz mógł zmienić swoją nazwę użytkownika %(next_change)s"
 
+#: templates/debug_toolbar/panels/acl.html:9
+msgid "Value"
+msgstr "Wartość"
+
 #: utils/datesformats.py:25 utils/datesformats.py:35 utils/datesformats.py:65
 msgid "Never"
 msgstr "Nigdy"
@@ -7518,9 +7779,9 @@ msgstr "%(day)s, o %(hour)s"
 
 #: utils/datesformats.py:77
 msgid "Just now"
-msgstr "Tuż przed chwilą"
+msgstr "Przed chwilą"
 
-#: utils/datesformats.py:80 utils/datesformats.py:85
+#: utils/datesformats.py:82
 #, python-format
 msgid "Minute ago"
 msgid_plural "%(minutes)s minutes ago"
@@ -7528,15 +7789,15 @@ msgstr[0] "Minutę temu"
 msgstr[1] "%(minutes)s minuty temu"
 msgstr[2] "%(minutes)s minut temu"
 
-#: utils/datesformats.py:95
+#: utils/datesformats.py:92
 #, python-format
 msgid "Hour and %(minutes)s ago"
 msgid_plural "%(hours)s hours and %(minutes)s ago"
-msgstr[0] "Jedną godzinę i %(minutes)s temu"
+msgstr[0] "godzinę i %(minutes)s temu"
 msgstr[1] "%(hours)s godziny i %(minutes)s temu"
 msgstr[2] "%(hours)s godzin i %(minutes)s temu"
 
-#: utils/datesformats.py:98
+#: utils/datesformats.py:95
 #, python-format
 msgid "%(minutes)s minute"
 msgid_plural "%(minutes)s minutes"
@@ -7544,12 +7805,12 @@ msgstr[0] "%(minutes)s minutę"
 msgstr[1] "%(minutes)s minuty"
 msgstr[2] "%(minutes)s minut"
 
-#: utils/datesformats.py:101
+#: utils/datesformats.py:98
 #, python-format
 msgid "%(hours)s hours and %(minutes)s minutes ago"
 msgstr "%(hours)s godzin i %(minutes)s minut temu"
 
-#: utils/datesformats.py:104
+#: utils/datesformats.py:101
 #, python-format
 msgid "Hour ago"
 msgid_plural "%(hours)s hours ago"
@@ -7892,3 +8153,101 @@ msgstr ""
 #: utils/timezones.py:69
 msgid "(UTC+14:00) Nuku'alofa"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Archive pruned forums?"
+#~ msgstr "Wyczyść forum"
+
+#~ msgid "Post Content"
+#~ msgstr "Treść posta"
+
+#~ msgid "Subforums List Attributes"
+#~ msgstr "Atrybuty stylu listy subforów"
+
+#~ msgid "Are you sure you want to delete all content from selected forums?"
+#~ msgstr "Czy ta pewno chcesz usunąć całą zawartość zaznaczonych forów?"
+
+#~ msgid "Selected forums have been pruned successfully."
+#~ msgstr "Wskazane fora zostały pomyślnie wyczyszczone."
+
+#~ msgid "Save Category"
+#~ msgstr "Zapisz kategorię"
+
+#~ msgid "Save Forum"
+#~ msgstr "Zapisz forum"
+
+#~ msgid ""
+#~ "You have to create at least one category before you will be able to "
+#~ "create forums."
+#~ msgstr ""
+#~ "Aby utworzyć forum, musisz najpierw posiadać przynajmniej jedną kategorię."
+
+#~ msgid ""
+#~ "You have to create at least one category before you will be able to "
+#~ "create redirects."
+#~ msgstr ""
+#~ "Aby utworzyć przekierowanie, musisz najpierw posiadać przynajmniej jedną "
+#~ "kategorię."
+
+#~ msgid "Hidden Sessions"
+#~ msgstr "Ukryte sesje"
+
+#~ msgid "Create new category"
+#~ msgstr "Utwórz nową kategorię"
+
+#~ msgid "New Forum"
+#~ msgstr "Nowe forum"
+
+#~ msgid "Create new redirect"
+#~ msgstr "Utwórz nowe przekierowanie"
+
+#~ msgid "Soft delete posts"
+#~ msgstr "Odwracalnie usuń posty"
+
+#~ msgid "Hard delete posts"
+#~ msgstr "Usuń posty na stałe"
+
+#~ msgid "Soft delete this thread"
+#~ msgstr "Usuń przywracalnie ten temat"
+
+#~ msgid "Hard delete this thread"
+#~ msgstr "Usuń ten temat na stałe"
+
+#~ msgid "Undelete threads"
+#~ msgstr "Przywróć tematy"
+
+#~ msgid "Soft delete threads"
+#~ msgstr "Usuń nietrwale tematy"
+
+#~ msgid "Hard delete threads"
+#~ msgstr "Usuń tematy na stałe"
+
+#~ msgid "Selected threads have been undeleted."
+#~ msgstr "Zaznaczone tematy zostały przywrócone."
+
+#~ msgid "Selected threads have been softly deleted."
+#~ msgstr "Zaznaczone tematy zostały nietrwale usunięte."
+
+#~ msgid "Thread has been undeleted."
+#~ msgstr "Temat został przywrócony."
+
+#~ msgid ""
+#~ "Your account will remain inactive until Board Administrator accepts it. "
+#~ "Depending on number of new registrations this may take few minutes or few "
+#~ "days. Thanks for patience!"
+#~ msgstr ""
+#~ "Twoje konto pozostanie nieaktywne do czasu akceptacji przez "
+#~ "administratora forum. W zależności od ilości nowych rejestracji, może to "
+#~ "potrwać od kilku minut, do kilku dni. Dziękujemy za cierpliwość!"
+
+#~ msgid "Sign In using your account data"
+#~ msgstr "Zaloguj się na swoje konto"
+
+#~ msgid "Hard"
+#~ msgstr "Na stałe"
+
+#~ msgid "Soft"
+#~ msgstr "Odwracalnie"
+
+#~ msgid "Delete reply:"
+#~ msgstr "Usuń odpowiedź:"
