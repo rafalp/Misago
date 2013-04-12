@@ -76,11 +76,9 @@ function EnhancePostsMD() {
     // Add labels to images
     $('.markdown.js-extra img').each(function() {
       $(this).addClass('img-rounded');
-      $(this).wrap(function() { return '<div class="md-img" />'; });
-      $(this).wrap(function() { return '<div class="span5 md-img-span" />'; });
-      $(this).wrap(function() { return '<div class="md-img-wrap" />'; });
-      $(this).after('<a href="' + $(this).attr('src') + '" class="md-img-label" target="_blank">' + $(this).attr('alt') + '</a>');
-      $(this).wrap(function() { return '<div class="md-img-bg" />'; });
+      $(this).attr('title', $(this).attr('alt'));
+      $(this).tooltip({placement: 'top', container: 'body'});
+      $(this).wrap('<a href="' + $(this).attr('src') + '" target="_blank"/>');
     });
 
     // Handle prokened images
