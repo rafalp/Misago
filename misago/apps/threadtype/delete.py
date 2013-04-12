@@ -233,7 +233,7 @@ class HideCheckpointBaseView(DeleteHideBaseView):
 class ShowCheckpointBaseView(DeleteHideBaseView):
     def set_context(self):
         self.request.acl.threads.allow_checkpoint_show(self.forum)
-        if self.checkpoint.deleted:
+        if not self.checkpoint.deleted:
             raise ACLError403(_('This checkpoint is already visible!'))
 
     def delete(self):
