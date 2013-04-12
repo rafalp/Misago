@@ -272,14 +272,14 @@
       function populateForumTooltip(target) {
         return $('#forum-' + target + ' .forum-meta').html();
       };
-      {% for category in forums_list %}{% for forum in category.subforums %}
-        $('#forum-{{ forum.id }} .forum-title').tooltip({
+      {% for subforum in forum.subforums %}
+        $('#forum-{{ subforum.id }} .forum-title').tooltip({
           template: '<div class="tooltip forum-meta-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
           placement: 'right',
           html: true,
-          title: populateForumTooltip({{ forum.id }})
+          title: populateForumTooltip({{ subforum.id }})
         });
-      {% endfor %}{% endfor %}
+      {% endfor %}
       {%- if user.is_authenticated() and list_form %}
       $('#threads_form').submit(function() {
         if ($('.check-cell[]:checked').length == 0) {

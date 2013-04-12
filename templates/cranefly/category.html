@@ -102,14 +102,14 @@
       function populateForumTooltip(target) {
         return $('#forum-' + target + ' .forum-meta').html();
       };
-      {% for category in forums_list %}{% for forum in category.subforums %}
+      {% for forum in category.subforums %}
         $('#forum-{{ forum.id }} .forum-title').tooltip({
           template: '<div class="tooltip forum-meta-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
           placement: 'right',
           html: true,
           title: populateForumTooltip({{ forum.id }})
         });
-      {% endfor %}{% endfor %}
+      {% endfor %}
     });
   </script>
 {%- endblock %}
