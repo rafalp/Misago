@@ -148,6 +148,7 @@ class Forum(MPTTModel):
     last_poster_style = models.CharField(max_length=255, null=True, blank=True)
     prune_start = models.PositiveIntegerField(default=0)
     prune_last = models.PositiveIntegerField(default=0)
+    pruned_archive = models.ForeignKey('self', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
     redirect = models.CharField(max_length=255, null=True, blank=True)
     attrs = models.CharField(max_length=255, null=True, blank=True)
     show_details = models.BooleanField(default=True)

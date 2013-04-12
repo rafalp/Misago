@@ -10,19 +10,34 @@ class Command(BaseCommand):
     """
     help = 'Updates Popular Threads ranking'
     def handle(self, *args, **options):
+        sync_forums = []
         for forum in Forum.objects.all():
+            archive = forum.pruned_archive
             deleted = 0
             if forum.prune_start:
                 for thread in forum.thread_set.filter(weight=0).filter(start__lte=timezone.now() - timedelta(days=forum.prune_start)):
-                    thread.delete()
+                    if archive:
+                        thread.move_to(archive)
+                        thread.save(force_update=True)
+                    else:
+                        thread.delete()                        
                     deleted += 1
             if forum.prune_last:
                 for thread in forum.thread_set.filter(weight=0).filter(last__lte=timezone.now() - timedelta(days=forum.prune_last)):
-                    thread.delete()
+                    if archive:
+                        thread.move_to(archive)
+                        thread.save(force_update=True)
+                    else:
+                        thread.delete()
                     deleted += 1
             if deleted:
-                forum.sync()
-                forum.save(force_update=True)
+                if forum not in sync_forums:
+                    sync_forums.append(forum)
+                if archive and archive not in sync_forums:
+                    sync_forums.append(archive)
+        for forum in sync_forums:
+            forum.sync()
+            forum.save(force_update=True)
         monitor = Monitor()
         monitor['threads'] = Post.objects.count()
         monitor['posts'] = Post.objects.count()

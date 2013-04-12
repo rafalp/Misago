@@ -203,6 +203,7 @@ class Edit(FormWidget):
         form_inst = super(Edit, self).get_form_instance(form, target, initial, post)
         valid_targets = Forum.objects.get(special='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
         form_inst.fields['parent'] = TreeNodeChoiceField(queryset=valid_targets, level_indicator=u'- - ')
+        form_inst.target_forum = target
         return form_inst
 
     def get_initial_data(self, model):
@@ -223,6 +224,7 @@ class Edit(FormWidget):
         if model.type == 'forum':
             initial['prune_start'] = model.prune_start
             initial['prune_last'] = model.prune_last
+            initial['pruned_archive'] = model.pruned_archive
 
         return initial
 
@@ -241,6 +243,7 @@ class Edit(FormWidget):
         if target.type == 'forum':
             target.prune_start = form.cleaned_data['prune_start']
             target.prune_last = form.cleaned_data['prune_last']
+            target.pruned_archive = form.cleaned_data['pruned_archive']
 
         if form.cleaned_data['parent'].pk != target.parent.pk:
             target.move_to(form.cleaned_data['parent'], 'last-child')

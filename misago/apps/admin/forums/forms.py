@@ -110,13 +110,13 @@ class CategoryForm(Form, CleanAttrsMixin):
              )
 
     def finalize_form(self):
-        self.fields['parent'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(include_self=True), level_indicator=u'- - ')
         self.fields['perms'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions"))
 
 
 class ForumForm(Form, CleanAttrsMixin):
     parent = False
     perms = False
+    pruned_archive = False
     name = forms.CharField(max_length=255, validators=[validate_sluggable(
                                                                           _("Forum name must contain alphanumeric characters."),
                                                                           _("Forum name is too long.")
@@ -145,6 +145,7 @@ class ForumForm(Form, CleanAttrsMixin):
                (
                 ('prune_start', {'label': _("Delete threads with first post older than"), 'help_text': _('Enter number of days since thread start after which thread will be deleted or zero to don\'t delete threads.')}),
                 ('prune_last', {'label': _("Delete threads with last post older than"), 'help_text': _('Enter number of days since since last reply in thread after which thread will be deleted or zero to don\'t delete threads.')}),
+                ('pruned_archive', {'label': _("Archive pruned forums?"), 'help_text': _('If you want, you can archive pruned threads in other forum instead of deleting them.')})
                 ),
                ),
               (
@@ -158,8 +159,14 @@ class ForumForm(Form, CleanAttrsMixin):
               )
 
     def finalize_form(self):
-        self.fields['parent'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ')
         self.fields['perms'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions"))
+        self.fields['pruned_archive'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't archive pruned threads"))
+
+    def clean_pruned_archive(self):
+        data = self.cleaned_data['pruned_archive']
+        if data and data.pk == self.target_forum.pk:
+            raise forms.ValidationError(_("Forum cannot be its own archive."))
+        return data
 
 
 class RedirectForm(Form, CleanAttrsMixin):
@@ -194,7 +201,6 @@ class RedirectForm(Form, CleanAttrsMixin):
               )
 
     def finalize_form(self):
-        self.fields['parent'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ')
         self.fields['perms'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions"))
 
 
