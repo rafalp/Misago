@@ -249,13 +249,11 @@
                   {% if post.deleted %}
                   <form action="{% url 'private_thread_show' thread=thread.pk, slug=thread.slug %}" class="form-inline" method="post">
                     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-                    <span>{% trans %}Delete thread:{% endtrans %}</span>
                     <button type="submit" class="btn btn-link btn-hide tooltip-top" title="{% trans %}Make this thread visible to other users{% endtrans %}">{% trans %}Restore{% endtrans %}</button>
                   </form>
                   {% else %}
                   <form action="{% url 'private_thread_hide' thread=thread.pk, slug=thread.slug %}" class="form-inline" method="post">
                     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-                    <span>{% trans %}Delete thread:{% endtrans %}</span>
                     <button type="submit" class="btn btn-link btn-hide tooltip-top" title="{% trans %}Hide this thread from other users{% endtrans %}">{% trans %}Hide{% endtrans %}</button>
                   </form>
                   {% endif %}
@@ -273,13 +271,11 @@
                   {% if post.deleted %}
                   <form action="{% url 'private_post_show' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline" method="post">
                     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-                    <span>{% trans %}Delete reply:{% endtrans %}</span>
                     <button type="submit" class="btn btn-link btn-hide tooltip-top" title="{% trans %}Make this reply visible to other users{% endtrans %}">{% trans %}Restore{% endtrans %}</button>
                   </form>
                   {% else %}
                   <form action="{% url 'private_post_hide' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline" method="post">
                     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-                    <span>{% trans %}Delete reply:{% endtrans %}</span>
                     <button type="submit" class="btn btn-link btn-hide tooltip-top" title="{% trans %}Hide this reply from other users{% endtrans %}">{% trans %}Hide{% endtrans %}</button>
                   </form>
                   {% endif %}

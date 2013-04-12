@@ -268,6 +268,32 @@
             form {
               margin: 0px;
               padding: 0px;
+
+              .btn {
+                float: right;
+                margin: 0px;
+                margin-left: @baseFontSize;
+                .opacity(100);
+                padding: 0px;
+
+                color: @grayLight;
+                font-weight: normal;
+
+                &:hover, &:active, &:focus {
+                  color: @red;
+                  text-decoration: underline;
+                }
+
+                &.btn-hide {
+                  &:hover, &:active, &:focus {
+                    color: @orange;
+                  }
+                }
+              }
+
+              &:first-child .btn {
+                margin-left: 0px;
+              }
             }
 
             a {
@@ -288,28 +314,6 @@
 
                 &:hover, a:active {
                   color: @blue;
-                }
-              }
-            }
-
-            .btn {
-              float: right;
-              margin: 0px;
-              margin-left: @baseFontSize;
-              .opacity(100);
-              padding: 0px;
-
-              color: @grayLight;
-              font-weight: normal;
-
-              &:hover, &:active, &:focus {
-                color: @red;
-                text-decoration: underline;
-              }
-
-              &.btn-hide {
-                &:hover, &:active, &:focus {
-                  color: @orange;
                 }
               }
             }
