@@ -63,6 +63,17 @@
         float: right;
         right: @baseFontSize;
 
+        .subforum {
+          &:link, &:visited {
+            color: @grayLight;
+            font-weight: bold;
+          }
+
+          &:hover, &:active {
+            color: @textColor;
+          }
+        }
+
         .dropdown-toggle {
           padding: 4px 8px;
           .opacity(60);
