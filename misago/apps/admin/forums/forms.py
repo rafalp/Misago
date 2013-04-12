@@ -145,7 +145,7 @@ class ForumForm(Form, CleanAttrsMixin):
                (
                 ('prune_start', {'label': _("Delete threads with first post older than"), 'help_text': _('Enter number of days since thread start after which thread will be deleted or zero to don\'t delete threads.')}),
                 ('prune_last', {'label': _("Delete threads with last post older than"), 'help_text': _('Enter number of days since since last reply in thread after which thread will be deleted or zero to don\'t delete threads.')}),
-                ('pruned_archive', {'label': _("Archive pruned forums?"), 'help_text': _('If you want, you can archive pruned threads in other forum instead of deleting them.')})
+                ('pruned_archive', {'label': _("Archive pruned threads?"), 'help_text': _('If you want, you can archive pruned threads in other forum instead of deleting them.')})
                 ),
                ),
               (
