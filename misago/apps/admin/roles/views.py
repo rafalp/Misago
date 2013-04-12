@@ -43,7 +43,7 @@ class List(ListWidget):
 
     def action_delete(self, items, checked):
         for item in items:
-            if unicode(item.pk) in checked:
+            if item.pk in checked:
                 if item.special:
                     return Message(_('You cannot delete system roles.'), 'error'), reverse('admin_roles')
                 if item.protected and not self.request.user.is_god():

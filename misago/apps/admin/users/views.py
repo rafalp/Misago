@@ -92,7 +92,7 @@ class List(ListWidget):
 
     def action_activate(self, items, checked):
         for user in items:
-            if unicode(user.pk) in checked and user.activation > 0:
+            if user.pk in checked and user.activation > 0:
                 self.request.monitor['users_inactive'] = int(self.request.monitor['users_inactive']) - 1
                 user.activation = user.ACTIVATION_NONE
                 user.save(force_update=True)
@@ -107,13 +107,13 @@ class List(ListWidget):
     def action_deactivate(self, items, checked):
         # First loop - check for errors
         for user in items:
-            if unicode(user.pk) in checked:
+            if user.pk in checked:
                 if user.is_protected() and not self.request.user.is_god():
                     return Message(_('You cannot force validation of protected members e-mails.'), 'error'), reverse('admin_users')
 
         # Second loop - reset passwords
         for user in items:
-            if unicode(user.pk) in checked:
+            if user.pk in checked:
                 user.activation = user.ACTIVATION_USER
                 user.token = token = random_string(12)
                 user.save(force_update=True)
@@ -128,13 +128,13 @@ class List(ListWidget):
     def action_remove_av(self, items, checked):
         # First loop - check for errors
         for user in items:
-            if unicode(user.pk) in checked:
+            if user.pk in checked:
                 if user.is_protected() and not self.request.user.is_god():
                     return Message(_('You cannot remove and block protected members avatars.'), 'error'), reverse('admin_users')
 
         # Second loop - reset passwords
         for user in items:
-            if unicode(user.pk) in checked:
+            if user.pk in checked:
                 user.lock_avatar()
                 user.save(force_update=True)
 
@@ -143,13 +143,13 @@ class List(ListWidget):
     def action_remove_sig(self, items, checked):
         # First loop - check for errors
         for user in items:
-            if unicode(user.pk) in checked:
+            if user.pk in checked:
                 if user.is_protected() and not self.request.user.is_god():
                     return Message(_('You cannot remove and block protected members signatures.'), 'error'), reverse('admin_users')
 
         # Second loop - reset passwords
         for user in items:
-            if unicode(user.pk) in checked:
+            if user.pk in checked:
                 user.signature_ban = True
                 user.signature = ''
                 user.signature_preparsed = ''
@@ -159,7 +159,7 @@ class List(ListWidget):
 
     def action_remove_locks(self, items, checked):
         for user in items:
-            if unicode(user.pk) in checked:
+            if user.pk in checked:
                 user.default_avatar(self.request.settings)
                 user.avatar_ban = False
                 user.signature_ban = False
@@ -170,13 +170,13 @@ class List(ListWidget):
     def action_reset(self, items, checked):
         # First loop - check for errors
         for user in items:
-            if unicode(user.pk) in checked:
+            if user.pk in checked:
                 if user.is_protected() and not self.request.user.is_god():
                     return Message(_('You cannot reset protected members passwords.'), 'error'), reverse('admin_users')
 
         # Second loop - reset passwords
         for user in items:
-            if unicode(user.pk) in checked:
+            if user.pk in checked:
                 new_password = random_string(8)
                 user.set_password(new_password)
                 user.save(force_update=True)
@@ -193,14 +193,14 @@ class List(ListWidget):
 
     def action_delete_content(self, items, checked):
         for user in items:
-            if unicode(user.pk) in checked:
+            if user.pk in checked:
                 if user.pk == self.request.user.id:
                     return Message(_('You cannot delete yourself.'), 'error'), reverse('admin_users')
                 if user.is_protected():
                     return Message(_('You cannot delete protected members.'), 'error'), reverse('admin_users')
 
         for user in items:
-            if unicode(user.pk) in checked:
+            if user.pk in checked:
                 user.delete_content()
                 user.delete()
 
@@ -213,14 +213,14 @@ class List(ListWidget):
 
     def action_delete(self, items, checked):
         for user in items:
-            if unicode(user.pk) in checked:
+            if user.pk in checked:
                 if user.pk == self.request.user.id:
                     return Message(_('You cannot delete yourself.'), 'error'), reverse('admin_users')
                 if user.is_protected():
                     return Message(_('You cannot delete protected members.'), 'error'), reverse('admin_users')
 
         for user in items:
-            if unicode(user.pk) in checked:
+            if user.pk in checked:
                 user.delete()
 
         User.objects.resync_monitor(self.request.monitor)

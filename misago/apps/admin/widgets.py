@@ -329,7 +329,7 @@ class ListWidget(BaseWidget):
                 if list_form.is_valid():
                     try:
                         form_action = getattr(self, 'action_' + list_form.cleaned_data['list_action'])
-                        message, redirect_url = form_action(items, list_form.cleaned_data['list_items'])
+                        message, redirect_url = form_action(items, [int(x) for x in list_form.cleaned_data['list_items']])
                         if redirect_url:
                             request.messages.set_flash(message, message.type, self.admin.id)
                             return redirect(redirect_url)
