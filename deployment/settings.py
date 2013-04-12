@@ -121,7 +121,6 @@ EMAIL_SUBJECT_PREFIX = '[Misago]'
 # If DEBUG_MODE is on, all emails will be sent to this address instead of real recipient.
 CATCH_ALL_EMAIL_ADDRESS = ''
 
-
 # Directories with templates
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
