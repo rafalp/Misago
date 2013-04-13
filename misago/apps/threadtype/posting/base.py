@@ -22,6 +22,12 @@ class PostingBaseView(ViewBase):
             self.parents = Forum.objects.forum_parents(self.forum.pk)
 
     def record_edit(self, form, old_name, old_post):
+        self.post.edits += 1
+        self.post.edit_date = timezone.now()
+        self.post.edit_user = self.request.user
+        self.post.edit_user_name = self.request.user.username
+        self.post.edit_user_slug = self.request.user.username_slug
+        self.post.save(force_update=True)
         self.post.change_set.create(
                                     forum=self.forum,
                                     thread=self.thread,
