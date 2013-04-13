@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Misago PL\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-04-12 21:51+0000\n"
-"PO-Revision-Date: 2013-04-13 00:05+0100\n"
+"PO-Revision-Date: 2013-04-13 12:33+0100\n"
 "Last-Translator: L0ud PL <loudml@gmail.com>\n"
 "Language-Team: FxDev <loudpl@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -1274,7 +1274,7 @@ msgstr "Zamknięty węzeł"
 #: apps/admin/forums/forms.py:52 apps/admin/forums/forms.py:103
 #: apps/admin/forums/forms.py:152 apps/admin/forums/forms.py:195
 msgid "Display Options"
-msgstr "Wyświetl opcje"
+msgstr "Opcje wyświetlania"
 
 #: apps/admin/forums/forms.py:54
 msgid "Node Attributes"
@@ -4046,7 +4046,7 @@ msgstr ""
 
 #: apps/threadtype/thread/moderation/forms.py:65
 msgid "New thread is same as current one."
-msgstr ""
+msgstr "Temat do którego chcesz przenieść posty, jest taki sam jak obecny."
 
 #: apps/threadtype/thread/moderation/forms.py:68
 msgid "This is not a correct thread URL."
@@ -6033,7 +6033,7 @@ msgstr "Ignorowanie subskrypcji"
 
 #: templates/admin/online/list.html:15
 msgid "Registered Member"
-msgstr "Zarejestrowany członek"
+msgstr "Zarejestrowany"
 
 #: templates/admin/online/list.html:15
 #: templates/cranefly/profiles/details.html:47
@@ -7286,7 +7286,7 @@ msgstr "Rozpoczętych tematów"
 
 #: templates/cranefly/profiles/details.html:81
 msgid "Votes Cast"
-msgstr ""
+msgstr "Głosów w ankietach"
 
 #: templates/cranefly/profiles/details.html:97
 msgid "Ranking Performance"
