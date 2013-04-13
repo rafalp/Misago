@@ -49,7 +49,7 @@ CACHES = {
 
 # Cookies configuration
 COOKIES_DOMAIN = '' # For example cookie domain for "www.mysite.com" or "forum.mysite.com" is ".mysite.com"
-COOKIES_PATH = ''
+COOKIES_PATH = '/'
 COOKIES_PREFIX = '' # Allows you to avoid cookies collisions with other applications.
 COOKIES_SECURE = False # Set this to true if AND ONLY IF you are using SSL on your forum.
 
