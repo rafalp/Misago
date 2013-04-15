@@ -67,6 +67,7 @@ class PostingBaseView(ViewBase):
                     del post_content.mentions[self.quote.user.username_slug]
                     if not self.quote.user in self.post.mentions.all():
                         notified_users.append(self.quote.user)
+                        self.post.mentions.add(self.quote.user)
                         alert = self.quote.user.alert(ugettext_lazy("%(username)s has replied to your post in thread %(thread)s").message)
                         alert.profile('username', self.request.user)
                         alert.post('thread', self.type_prefix, self.thread, self.post)
