@@ -28,7 +28,7 @@
                   {% if acl.forums.can_browse(forum) and (acl.threads.can_read_threads(forum) == 2 or (acl.threads.can_read_threads(forum) == 1 and forum.last_poster_id == user.pk)) %}
                   {% if forum.last_thread_id -%}
                   <div class="thread-name">
-                    <a href="{% url 'thread_new' thread=forum.last_thread_id, slug=forum.last_thread_slug %}"{% if forum.last_thread_name|length > 36 %} class="tooltip-top" title="{{ forum.last_thread_name }}"{% endif %}>{{ forum.last_thread_name|short_string(36) }}</a>
+                    <a href="{% url 'thread_new' thread=forum.last_thread_id, slug=forum.last_thread_slug %}"{% if forum.last_thread_name|length > 28 %} class="tooltip-top" title="{{ forum.last_thread_name }}"{% endif %}>{{ forum.last_thread_name|short_string(28) }}</a>
                   </div>
                   <div class="muted">{% if forum.last_poster_id %}<a href="{% url 'user' user=forum.last_poster_id, username=forum.last_poster_slug %}" class="last-poster">{{ forum.last_poster_name }}</a>{% else %}<span class="last-poster">{{ forum.last_poster_name }}</span>{% endif %} - {{ forum.last_thread_date|reltimesince }}</div>
                   {%- else -%}
@@ -117,7 +117,7 @@
       <ul class="unstyled">
         {% for thread in popular_threads %}
         <li>
-          <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="index-popular-thread">{{ thread.name|short_string(38) }}</a>
+          <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="index-popular-thread{% if thread.name|length > 28 %} tooltip-top{% endif %}"{% if thread.name|length > 28 %} title="{{ thread.name }}"{% endif %}>{{ thread.name|short_string(28) }}</a>
           <div class="muted"><a href="{% url 'forum' forum=thread.forum_id, slug=thread.forum_slug %}">{{ thread.forum_name }}</a> - {{ thread.last|reltimesince }}</div>
         </li>
         {% endfor %}

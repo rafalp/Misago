@@ -44,7 +44,7 @@
               {% if acl.forums.can_browse(subforum) and (acl.threads.can_read_threads(subforum) == 2 or (acl.threads.can_read_threads(subforum) == 1 and subforum.last_poster_id == user.pk)) %}
               {% if subforum.last_thread_id -%}
               <div class="thread-name">
-                <a href="{% url 'thread_new' thread=subforum.last_thread_id, slug=subforum.last_thread_slug %}"{% if subforum.last_thread_name|length > 36 %} class="tooltip-top" title="{{ subforum.last_thread_name }}"{% endif %}>{{ subforum.last_thread_name|short_string(36) }}</a>
+                <a href="{% url 'thread_new' thread=subforum.last_thread_id, slug=subforum.last_thread_slug %}"{% if subforum.last_thread_name|length > 28 %} class="tooltip-top" title="{{ subforum.last_thread_name }}"{% endif %}>{{ subforum.last_thread_name|short_string(28) }}</a>
               </div>
               <div class="muted">{% if subforum.last_poster_id %}<a href="{% url 'user' user=subforum.last_poster_id, username=subforum.last_poster_slug %}" class="last-poster">{{ subforum.last_poster_name }}</a>{% else %}<span class="last-poster">{{ subforum.last_poster_name }}</span>{% endif %} - {{ subforum.last_thread_date|reltimesince }}</div>
               {%- else -%}

@@ -20,6 +20,7 @@ def random_string(length):
 def short_string(string, length=16):
     if len(string) <= length:
         return string;
+    length -= 3
     string = string[0:length]
     bits = string.split()
     if len(bits[-1]) > length:
