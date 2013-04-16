@@ -32,6 +32,7 @@ def index(request):
                           'style': rank.style,
                           'title': rank.title,
                           'online': [],
+                          'pks': [],
                          }
             ranks_list.append(rank_entry)
             ranks_dict[rank.pk] = rank_entry
@@ -39,16 +40,25 @@ def index(request):
             for session in Session.objects.select_related('user').filter(rank__in=ranks_dict.keys()).filter(last__gte=timezone.now() - timedelta(seconds=request.settings['sessions_tracker_sync_frequency'])).filter(user__isnull=False):
                 if not session.user_id in users_list:
                     ranks_dict[session.user.rank_id]['online'].append(session.user)
+                    ranks_dict[session.user.rank_id]['pks'].append(session.user.pk)
                     users_list.append(session.user_id)
             # Assert we are on list
             if (request.user.is_authenticated() and request.user.rank_id in ranks_dict.keys()
                 and not request.user.pk in users_list):
                     ranks_dict[request.user.rank_id]['online'].append(request.user)
+                    ranks_dict[session.user.rank_id]['pks'].append(request.user.pk)
                     users_list.append(request.user.pk)
             cache.set('team_users_online', users_list, request.settings['sessions_tracker_sync_frequency'])
             del ranks_dict
             del users_list
         cache.set('ranks_online', ranks_list, request.settings['sessions_tracker_sync_frequency'])
+    elif request.user.is_authenticated():
+        for rank in ranks_list:
+            if rank['id'] == request.user.rank_id and not request.user.pk in rank['pks']:
+                rank['online'].append(request.user)
+                rank['pks'].append(request.user.pk)
+                cache.delete_many(['team_users_online', 'ranks_online'])
+                break
 
     # Users online
     users_online = {
