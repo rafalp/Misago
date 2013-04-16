@@ -20,11 +20,8 @@ def random_string(length):
 def short_string(string, length=16):
     if len(string) <= length:
         return string;
-    length -= 3
-    string = string[0:length]
+    string = string[0:length - 3]
     bits = string.split()
-    if len(bits[-1]) > length:
-        bits[-1] = bits[-1][0:length]
     if len(bits[-1]) < 3:
         bits.pop()
     return '%s...' % (' '.join(bits))
