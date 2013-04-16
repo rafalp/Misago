@@ -50,6 +50,10 @@ class EditThreadBaseView(PostingBaseView):
             self.thread.name = form.cleaned_data['thread_name']
             self.thread.slug = slugify(form.cleaned_data['thread_name'])
             self.thread.save(force_update=True)
+            if self.forum.last_thread_id == self.thread.pk:
+                self.forum.last_thread_name = self.thread.name
+                self.forum.last_thread_slug = self.thread.slug
+                self.forum.save(force_update=True)
 
         if changed_post:
             self.post.post = form.cleaned_data['post']
