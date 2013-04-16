@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Misago PL\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-15 18:25+0000\n"
-"PO-Revision-Date: 2013-04-16 15:35+0100\n"
+"POT-Creation-Date: 2013-04-16 20:50+0000\n"
+"PO-Revision-Date: 2013-04-16 23:43+0100\n"
 "Last-Translator: L0ud PL <loudml@gmail.com>\n"
 "Language-Team: FxDev <loudpl@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -192,7 +192,7 @@ msgstr "Tak, z możliwością kompletnego usunięcia"
 #: templates/cranefly/private_threads/posting.html:25
 #: templates/cranefly/private_threads/thread.html:9
 msgid "Private Threads"
-msgstr "Prywatne dyskusje"
+msgstr "Twoje prywatne dyskusje"
 
 #: acl/permissions/privatethreads.py:26
 msgid "Can participate in private threads"
@@ -1752,7 +1752,6 @@ msgstr ""
 "sytuacjach krytycznych."
 
 #: apps/admin/newsletters/forms.py:30
-#: templates/cranefly/profiles/profile.html:66
 msgid "Message"
 msgstr "Wiadomość"
 
@@ -2664,7 +2663,7 @@ msgstr "Nałóż nowego bana"
 
 #: apps/admin/sections/users.py:100
 msgid "Prune Users"
-msgstr "Wykrajanie użytkowników"
+msgstr "Masowe usuwanie"
 
 #: apps/admin/sections/users.py:101
 msgid "Delete multiple Users"
@@ -2986,7 +2985,7 @@ msgstr "Przez użytkownika"
 msgid "By Administrator"
 msgstr "Przez administratora"
 
-#: apps/admin/users/forms.py:198 templates/cranefly/profiles/list.html:37
+#: apps/admin/users/forms.py:198 templates/cranefly/profiles/list.html:38
 msgid "Search Users"
 msgstr "Wyszukiwanie użytkowników"
 
@@ -4000,12 +3999,12 @@ msgstr "Powód edycji"
 msgid "Optional reason for editing this reply."
 msgstr "Opcjonalny powód edycji tej odpowiedzi."
 
-#: apps/threadtype/posting/newreply.py:147
+#: apps/threadtype/posting/newreply.py:146
 #, python-format
 msgid "%(username)s has replied to your thread %(thread)s"
 msgstr "%(username)s odpowiedział w Twoim temacie %(thread)s"
 
-#: apps/threadtype/posting/newreply.py:149
+#: apps/threadtype/posting/newreply.py:148
 #, python-format
 msgid "%(username)s has replied to thread %(thread)s that you are watching"
 msgstr ""
@@ -5992,8 +5991,8 @@ msgstr "Niedostępne"
 #: templates/cranefly/popular_threads.html:96
 #: templates/cranefly/profiles/followers.html:49
 #: templates/cranefly/profiles/follows.html:49
-#: templates/cranefly/profiles/list.html:96
-#: templates/cranefly/profiles/list.html:102
+#: templates/cranefly/profiles/list.html:97
+#: templates/cranefly/profiles/list.html:103
 msgid "Previous Page"
 msgstr "Poprzednia strona"
 
@@ -6001,8 +6000,8 @@ msgstr "Poprzednia strona"
 #: templates/cranefly/popular_threads.html:96
 #: templates/cranefly/profiles/followers.html:49
 #: templates/cranefly/profiles/follows.html:49
-#: templates/cranefly/profiles/list.html:96
-#: templates/cranefly/profiles/list.html:102
+#: templates/cranefly/profiles/list.html:97
+#: templates/cranefly/profiles/list.html:103
 msgid "Next Page"
 msgstr "Następna strona"
 
@@ -6144,7 +6143,7 @@ msgstr "Nieaktywny"
 #: templates/cranefly/alerts.html:14 templates/cranefly/alerts.html.py:16
 #: templates/cranefly/alerts.html:39 templates/cranefly/layout.html:53
 msgid "Your Notifications"
-msgstr "Twoje powiadomienia"
+msgstr "Powiadomienia"
 
 #: templates/cranefly/alerts.html:30
 msgid "Looks like you don't have any notifications... yet."
@@ -6361,7 +6360,7 @@ msgstr "Strona główna forum"
 
 #: templates/cranefly/layout.html:44
 msgid "Search Community"
-msgstr "Przeszukaj forum"
+msgstr "Wyszukiwanie zaawansowane"
 
 #: templates/cranefly/layout.html:52
 msgid "Go to your profile"
@@ -6377,7 +6376,7 @@ msgstr "Masz nieprzeczytane prywatne dyskusje!"
 
 #: templates/cranefly/layout.html:55
 msgid "Your Private Threads"
-msgstr "Twoje prywatne dyskusje"
+msgstr "Prywatne dyskusje"
 
 #: templates/cranefly/layout.html:57 templates/cranefly/newsfeed.html:10
 msgid "Your News Feed"
@@ -6385,11 +6384,11 @@ msgstr "Nowości dla Ciebie"
 
 #: templates/cranefly/layout.html:58 templates/cranefly/watched.html:10
 msgid "Threads you are watching"
-msgstr "Tematy obserwowane przez Ciebie"
+msgstr "Obserwowane tematy"
 
 #: templates/cranefly/layout.html:59
 msgid "Edit your profile options"
-msgstr "Zmodyfikuj ustawienia swojego profilu"
+msgstr "Ustawienia profilu"
 
 #: templates/cranefly/layout.html:60
 msgid "Sign Out and browse as guest"
@@ -7270,7 +7269,7 @@ msgstr "Szczegóły profilu"
 
 #: templates/cranefly/profiles/details.html:33
 msgid "Member Since"
-msgstr "Członek forum od"
+msgstr "Dołączył"
 
 #: templates/cranefly/profiles/details.html:41
 msgid "Last Seen"
@@ -7321,7 +7320,6 @@ msgid "Interactions"
 msgstr "Interakcje"
 
 #: templates/cranefly/profiles/details.html:161
-#: templates/cranefly/profiles/profile.html:51
 msgid "Following"
 msgstr "Obserwowany"
 
@@ -7383,7 +7381,7 @@ msgstr "Użytkownicy, których obserwuje %(username)s"
 msgid "Browse notable user groups or find specific user"
 msgstr "Najważniejsze rangi i wyszukiwanie użytkowników"
 
-#: templates/cranefly/profiles/list.html:46
+#: templates/cranefly/profiles/list.html:47
 msgid ""
 "We couldn't find a member with name you entered, so we present you with some "
 "other members with names similiar to one you searched for in hopes that one "
@@ -7392,21 +7390,21 @@ msgstr ""
 "Nie udało się nam odnaleźć użytkownika o dokładnie takiej nazwie. Poniżej "
 "wyświetlamy listę użytkowników o zbliżonych nazwach."
 
-#: templates/cranefly/profiles/list.html:55
+#: templates/cranefly/profiles/list.html:56
 msgid "Found Users"
 msgstr "Odnalezieni użytkownicy"
 
-#: templates/cranefly/profiles/list.html:55
+#: templates/cranefly/profiles/list.html:56
 msgid "Users in this group"
 msgstr "Użytkownicy w tej grupie"
 
-#: templates/cranefly/profiles/list.html:79
+#: templates/cranefly/profiles/list.html:80
 msgid "We couldn't find any members with specified name."
 msgstr ""
 "Nie udało nam się odnaleźć żadnych użytkowników o takiej, lub zbliżonej "
 "nazwie."
 
-#: templates/cranefly/profiles/list.html:81
+#: templates/cranefly/profiles/list.html:82
 msgid "Looks like this group has no members..."
 msgstr "Wygląda na to, że ta grupa nie ma żadnych członków..."
 
@@ -7474,17 +7472,30 @@ msgstr "nigdy nie zalogowany"
 msgid "hiding activity"
 msgstr "ukrywanie aktywności"
 
-#: templates/cranefly/profiles/profile.html:51
-msgid "Follow"
-msgstr "Obserwuj"
+#: templates/cranefly/profiles/profile.html:50
+#, python-format
+msgid "Remove %(user)s from ignored"
+msgstr "Przestań ignorować %(user)s"
 
-#: templates/cranefly/profiles/profile.html:60
-msgid "Ignoring"
-msgstr "Ignorowany"
+#: templates/cranefly/profiles/profile.html:50
+#, python-format
+msgid "Add %(user)s to ignored"
+msgstr "Dodaj %(user)s do listy ignorowanych"
 
-#: templates/cranefly/profiles/profile.html:60
-msgid "Ignore"
-msgstr "Ignoruj"
+#: templates/cranefly/profiles/profile.html:59
+#, python-format
+msgid "Stop following %(user)s"
+msgstr "Przestań obserwować %(user)s"
+
+#: templates/cranefly/profiles/profile.html:59
+#, python-format
+msgid "Start following %(user)s"
+msgstr "Zacznij obserwować %(user)s"
+
+#: templates/cranefly/profiles/profile.html:66
+#, python-format
+msgid "Start private thread with %(user)s"
+msgstr "Rozpocznij prywatną dyskusję z %(user)s"
 
 #: templates/cranefly/profiles/threads.html:9
 #, python-format
@@ -8157,6 +8168,15 @@ msgstr ""
 #: utils/timezones.py:69
 msgid "(UTC+14:00) Nuku'alofa"
 msgstr ""
+
+#~ msgid "Follow"
+#~ msgstr "Obserwuj"
+
+#~ msgid "Ignoring"
+#~ msgstr "Ignorowany"
+
+#~ msgid "Ignore"
+#~ msgstr "Ignoruj"
 
 #~ msgid "Added on %(date)s:"
 #~ msgstr "Dodano %(date)s:"
