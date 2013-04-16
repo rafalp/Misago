@@ -117,7 +117,7 @@
       <ul class="unstyled">
         {% for thread in popular_threads %}
         <li>
-          <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="index-popular-thread{% if thread.name|length > 28 %} tooltip-top{% endif %}"{% if thread.name|length > 28 %} title="{{ thread.name }}"{% endif %}>{{ thread.name|short_string(28) }}</a>
+          <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="index-popular-thread{% if thread.name|length > 36 %} tooltip-top{% endif %}"{% if thread.name|length > 36 %} title="{{ thread.name }}"{% endif %}>{{ thread.name|short_string(28) }}</a>
           <div class="muted"><a href="{% url 'forum' forum=thread.forum_id, slug=thread.forum_slug %}">{{ thread.forum_name }}</a> - {{ thread.last|reltimesince }}</div>
         </li>
         {% endfor %}
