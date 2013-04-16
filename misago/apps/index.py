@@ -46,7 +46,7 @@ def index(request):
             if (request.user.is_authenticated() and request.user.rank_id in ranks_dict.keys()
                 and not request.user.pk in users_list):
                     ranks_dict[request.user.rank_id]['online'].append(request.user)
-                    ranks_dict[session.user.rank_id]['pks'].append(request.user.pk)
+                    ranks_dict[request.user.rank_id]['pks'].append(request.user.pk)
                     users_list.append(request.user.pk)
             cache.set('team_users_online', users_list, request.settings['sessions_tracker_sync_frequency'])
             del ranks_dict
