@@ -41,6 +41,8 @@ DATABASES = {
 # Misago is EXTREMELY data hungry
 # If you don't set any cache, it will BRUTALISE your database and memory
 # In production ALWAYS use cache
+# For reference read following document:
+# https://docs.djangoproject.com/en/dev/topics/cache/
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
