@@ -102,7 +102,6 @@ class NewReplyBaseView(PostingBaseView):
 
         # Update user
         if not moderation and not merged:
-            self.request.user.threads += 1
             self.request.user.posts += 1
         self.request.user.last_post = now
         self.request.user.save(force_update=True)
