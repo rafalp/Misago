@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Misago PL\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-12 21:51+0000\n"
-"PO-Revision-Date: 2013-04-13 12:33+0100\n"
+"POT-Creation-Date: 2013-04-15 18:25+0000\n"
+"PO-Revision-Date: 2013-04-16 15:35+0100\n"
 "Last-Translator: L0ud PL <loudml@gmail.com>\n"
 "Language-Team: FxDev <loudpl@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -192,7 +192,7 @@ msgstr "Tak, z możliwością kompletnego usunięcia"
 #: templates/cranefly/private_threads/posting.html:25
 #: templates/cranefly/private_threads/thread.html:9
 msgid "Private Threads"
-msgstr "Prywatne tematy"
+msgstr "Prywatne dyskusje"
 
 #: acl/permissions/privatethreads.py:26
 msgid "Can participate in private threads"
@@ -200,7 +200,7 @@ msgstr "Może uczestniczyć w prywatnych tematach"
 
 #: acl/permissions/privatethreads.py:27
 msgid "Can start private threads"
-msgstr "Może rozpoczynać prywatne tematy"
+msgstr "Może rozpoczynać prywatne dyskusje"
 
 #: acl/permissions/privatethreads.py:28
 msgid "Can upload files in attachments"
@@ -227,7 +227,7 @@ msgid ""
 "Makes user with this role Private Threads moderator capable of closing, "
 "deleting and editing all private threads he participates in at will."
 msgstr ""
-"Czyni użytkownika moderatorem prywatnych tematów. Moderator może zamykać, "
+"Czyni użytkownika moderatorem prywatnych dyskusji. Moderator może zamykać, "
 "modyfikować i edytować wszystkie prywatne tematy, w których uczestniczy."
 
 #: acl/permissions/privatethreads.py:33 acl/permissions/threads.py:139
@@ -235,7 +235,6 @@ msgid "Can delete checkpoints"
 msgstr "Może usuwać etykiety zdarzeń"
 
 #: acl/permissions/special.py:10
-#, fuzzy
 msgid "Special Access"
 msgstr "Specjalny dostęp"
 
@@ -340,7 +339,7 @@ msgstr "Może usuwać swoje posty (nie na trwałe)"
 
 #: acl/permissions/threads.py:98
 msgid "Karma"
-msgstr "Karma"
+msgstr "Ocenianie postów"
 
 #: acl/permissions/threads.py:100
 msgid "Can upvote posts"
@@ -1663,7 +1662,7 @@ msgstr "Forum \"%(name)s\" zostało przesunięte w górę."
 msgid ""
 "Forum \"%(name)s\" is first child of its parent node and cannot be moved up."
 msgstr ""
-"Forum \"%(name)s\" jest pierwsze na tym poziomie i odgałęzieniu i nie mozesz "
+"Forum \"%(name)s\" jest pierwsze na tym poziomie i odgałęzieniu. Nie może "
 "być przesunięte wyżej."
 
 #: apps/admin/forums/views.py:229
@@ -1676,7 +1675,7 @@ msgstr "Forum \"%(name)s\" zostało przesunięte w dół."
 msgid ""
 "Forum \"%(name)s\" is last child of its parent node and cannot be moved down."
 msgstr ""
-"Forum \"%(name)s\" jest ostatnie na tym poziomie i odgałęzieniu i nie mozesz "
+"Forum \"%(name)s\" jest ostatnie na tym poziomie i odgałęzieniu. Nie może "
 "być przesunięte niżej."
 
 #: apps/admin/forums/views.py:320
@@ -2519,7 +2518,7 @@ msgstr "Zobacz, kto jest aktualnie zalogowany na forum."
 #: apps/admin/sections/overview.py:40 apps/admin/sections/users.py:17
 #: templates/cranefly/layout.html:46
 msgid "Browse Users"
-msgstr "Przeglądanie użytkowników"
+msgstr "Użytkownicy"
 
 #: apps/admin/sections/overview.py:41 apps/admin/sections/users.py:18
 msgid "Browse all registered user accounts"
@@ -2987,7 +2986,7 @@ msgstr "Przez użytkownika"
 msgid "By Administrator"
 msgstr "Przez administratora"
 
-#: apps/admin/users/forms.py:198 templates/cranefly/profiles/list.html:38
+#: apps/admin/users/forms.py:198 templates/cranefly/profiles/list.html:37
 msgid "Search Users"
 msgstr "Wyszukiwanie użytkowników"
 
@@ -3392,7 +3391,7 @@ msgstr "Aby szukać, wprowadź nazwę użytkownika w polu wyszukiwania."
 
 #: apps/profiles/details/profile.py:4
 msgid "Profile Details"
-msgstr "Informacje szczegółowe"
+msgstr "Szczegóły"
 
 #: apps/profiles/followers/profile.py:4
 #: templates/cranefly/profiles/details.html:153
@@ -3954,7 +3953,7 @@ msgstr "Nie usunięto żadnych tematów."
 msgid "You have to select at least one thread."
 msgstr "Musisz zaznaczyć przynajmniej jeden temat."
 
-#: apps/threadtype/posting/base.py:64
+#: apps/threadtype/posting/base.py:71
 #, python-format
 msgid "%(username)s has replied to your post in thread %(thread)s"
 msgstr "%(username)s odpowiedział na twój post w temacie %(thread)s"
@@ -4000,11 +3999,6 @@ msgstr "Powód edycji"
 #: apps/threadtype/posting/forms.py:96
 msgid "Optional reason for editing this reply."
 msgstr "Opcjonalny powód edycji tej odpowiedzi."
-
-#: apps/threadtype/posting/newreply.py:54
-#, python-format
-msgid "Added on %(date)s:"
-msgstr "Dodano %(date)s:"
 
 #: apps/threadtype/posting/newreply.py:147
 #, python-format
@@ -4206,7 +4200,7 @@ msgstr "%(username)s jest teraz przez Ciebie ignorowany"
 #: apps/usercp/views.py:74
 #, python-format
 msgid "You have stopped ignoring %(username)s"
-msgstr "Przestałes ignorować użytkownika %(username)s"
+msgstr "Przestałeś ignorować użytkownika %(username)s"
 
 #: apps/usercp/avatar/forms.py:9
 msgid "Uploaded file is not correct image."
@@ -4994,11 +4988,11 @@ msgstr "Tylko odczyt"
 
 #: fixtures/privatethreadssettings.py:7
 msgid "Private Threads Settings"
-msgstr "Ustawienia prywatnych tematów"
+msgstr "Ustawienia prywatnych dyskusji"
 
 #: fixtures/privatethreadssettings.py:8
 msgid "Those settings control your forum's private threads."
-msgstr "Te ustawienia wpływaja na prywatne tematy na tym forum."
+msgstr "Te ustawienia wpływaja na prywatne dyskusje na tym forum."
 
 #: fixtures/privatethreadssettings.py:15
 msgid "Enable Private Threads"
@@ -5013,6 +5007,8 @@ msgid ""
 "Those settings control mechanisms of members activity ranking which allows "
 "you to gamificate your forum."
 msgstr ""
+"Te ustawienia wpływają na ranking użytkowników, który skłania użytkowników "
+"do aktywnego uczestnictwa w życiu forum."
 
 #: fixtures/rankingsettings.py:15
 msgid "Basic Ranking Settings"
@@ -5020,7 +5016,7 @@ msgstr "Podstawowe ustawienia rankingu"
 
 #: fixtures/rankingsettings.py:16
 msgid "Ranking Inflation"
-msgstr ""
+msgstr "Inflacja w rankingu"
 
 #: fixtures/rankingsettings.py:17
 msgid ""
@@ -5029,6 +5025,10 @@ msgid ""
 "inactivity and requiring users to remain active in order to remain high in "
 "ranking."
 msgstr ""
+"Wprowadź w procentach ilość punktów, którą użytkownik będzie stopniowo "
+"tracił. Inflacja wyników jest ważnym mechanizmem, który kara za "
+"nieaktywność. Aby utrzymać wysoką pozycję w rankingu, użytkownik musi "
+"wypowiadać się na forum."
 
 #: fixtures/rankingsettings.py:23
 msgid "Don't Keep Users Ranking Positions Secret"
@@ -5080,7 +5080,7 @@ msgstr ""
 
 #: fixtures/rankingsettings.py:53
 msgid "Reward Cooldown"
-msgstr ""
+msgstr "Minimalny odstep czasowy pomiędzy nagrodami"
 
 #: fixtures/rankingsettings.py:54
 msgid ""
@@ -5280,7 +5280,7 @@ msgstr ""
 
 #: fixtures/threadssettings.py:56
 msgid "Ranking Update Frequency"
-msgstr "Częstotliwośc aktualizacji rankingu"
+msgstr "Częstotliwość aktualizacji rankingu"
 
 #: fixtures/threadssettings.py:57
 msgid ""
@@ -5313,16 +5313,20 @@ msgstr ""
 
 #: fixtures/threadssettings.py:80
 msgid "Score inflation"
-msgstr ""
+msgstr "Stopniowa utrata punktów"
 
 #: fixtures/threadssettings.py:81
 #, python-format
 msgid ""
 "Thread popularity system requires inflation to be defined in order to be "
 "effective. updatethreadranking task will lower thread scores by percent "
-"defined here on every launch. For example, yf you enter 5, thread scores "
-"will be lowered by 5% on every update. Enter zero to disable inflation."
+"defined here on every launch. For example, if you enter 5, thread scores "
+"will be lowered by 5%% on every update. Enter zero to disable inflation."
 msgstr ""
+"System popularności tematów wymaga zdefiniowanej wartości stopniowej utraty "
+"punktów do skutecznego działania. Wartość w procentach.  Dla przykładu, "
+"jeżeli wpiszesz tutaj 5, co każdą aktualizację, każdy temat utraci 5%% "
+"swoich punktów. Wpisanie zera wyłącza utratę punktów."
 
 #: fixtures/threadssettings.py:89
 msgid "Min. Post Length"
@@ -5539,7 +5543,7 @@ msgstr "Ta wiadomość została wysłana przez %(board_name)s."
 #: templates/_email/private_thread_invite.html:3
 #: templates/_email/private_thread_invite.txt:3
 msgid "You've been invited to private thread"
-msgstr "Zostałeś zaproszony do prywatnego tematu"
+msgstr "Zostałeś zaproszony do prywatnej dyskusji"
 
 #: templates/_email/private_thread_invite.html:6
 #: templates/_email/private_thread_invite.txt:6
@@ -5549,12 +5553,12 @@ msgid ""
 "you to participate in private thread \"%(thread)s\"."
 msgstr ""
 "%(username)s, otrzymujesz tą wiadomość, ponieważ %(author)s zaprosił Cię do "
-"uczestnictwa w prywatnym temacie \"%(thread)s\"."
+"uczestnictwa w prywatnej dyskusji \"%(thread)s\"."
 
 #: templates/_email/private_thread_invite.html:7
 #: templates/_email/private_thread_invite.txt:8
 msgid "You can see this thread by clicking link below:"
-msgstr "Możesz zobaczyć ten temat, klikajac na poniższy link:"
+msgstr "Możesz zobaczyć tę dyskusję, klikajac na poniższy link:"
 
 #: templates/_email/private_thread_reply_notification.html:3
 #: templates/_email/private_thread_reply_notification.txt:3
@@ -5988,8 +5992,8 @@ msgstr "Niedostępne"
 #: templates/cranefly/popular_threads.html:96
 #: templates/cranefly/profiles/followers.html:49
 #: templates/cranefly/profiles/follows.html:49
-#: templates/cranefly/profiles/list.html:97
-#: templates/cranefly/profiles/list.html:103
+#: templates/cranefly/profiles/list.html:96
+#: templates/cranefly/profiles/list.html:102
 msgid "Previous Page"
 msgstr "Poprzednia strona"
 
@@ -5997,8 +6001,8 @@ msgstr "Poprzednia strona"
 #: templates/cranefly/popular_threads.html:96
 #: templates/cranefly/profiles/followers.html:49
 #: templates/cranefly/profiles/follows.html:49
-#: templates/cranefly/profiles/list.html:97
-#: templates/cranefly/profiles/list.html:103
+#: templates/cranefly/profiles/list.html:96
+#: templates/cranefly/profiles/list.html:102
 msgid "Next Page"
 msgstr "Następna strona"
 
@@ -6369,11 +6373,11 @@ msgstr "Masz nowe powiadomienia!"
 
 #: templates/cranefly/layout.html:55
 msgid "There are unread Private Threads!"
-msgstr "Masz nieprzeczytane prywatne tematy!"
+msgstr "Masz nieprzeczytane prywatne dyskusje!"
 
 #: templates/cranefly/layout.html:55
 msgid "Your Private Threads"
-msgstr "Twoje prywatne tematy"
+msgstr "Twoje prywatne dyskusje"
 
 #: templates/cranefly/layout.html:57 templates/cranefly/newsfeed.html:10
 msgid "Your News Feed"
@@ -6795,11 +6799,11 @@ msgstr "Aktualnie nie uczestniczysz w żadnej prywatnej dyskusji."
 
 #: templates/cranefly/private_threads/list.html:106
 msgid "There are no unread private threads."
-msgstr "Nie masz nieprzeczytanych prywatnych tematów."
+msgstr "Nie masz nieprzeczytanych prywatnych dyskusji."
 
 #: templates/cranefly/private_threads/list.html:108
 msgid "You have started no private threads."
-msgstr "Nie rozpocząłeś żadnych prywatnych tematów."
+msgstr "Nie rozpocząłeś żadnych prywatnych dyskusji."
 
 #: templates/cranefly/private_threads/list.html:154
 #: templates/cranefly/threads/list.html:247
@@ -7319,7 +7323,7 @@ msgstr "Interakcje"
 #: templates/cranefly/profiles/details.html:161
 #: templates/cranefly/profiles/profile.html:51
 msgid "Following"
-msgstr "Obserwuje"
+msgstr "Obserwowany"
 
 #: templates/cranefly/profiles/details.html:182
 msgid "Registration Details"
@@ -7379,7 +7383,7 @@ msgstr "Użytkownicy, których obserwuje %(username)s"
 msgid "Browse notable user groups or find specific user"
 msgstr "Najważniejsze rangi i wyszukiwanie użytkowników"
 
-#: templates/cranefly/profiles/list.html:47
+#: templates/cranefly/profiles/list.html:46
 msgid ""
 "We couldn't find a member with name you entered, so we present you with some "
 "other members with names similiar to one you searched for in hopes that one "
@@ -7388,21 +7392,21 @@ msgstr ""
 "Nie udało się nam odnaleźć użytkownika o dokładnie takiej nazwie. Poniżej "
 "wyświetlamy listę użytkowników o zbliżonych nazwach."
 
-#: templates/cranefly/profiles/list.html:56
+#: templates/cranefly/profiles/list.html:55
 msgid "Found Users"
 msgstr "Odnalezieni użytkownicy"
 
-#: templates/cranefly/profiles/list.html:56
+#: templates/cranefly/profiles/list.html:55
 msgid "Users in this group"
 msgstr "Użytkownicy w tej grupie"
 
-#: templates/cranefly/profiles/list.html:80
+#: templates/cranefly/profiles/list.html:79
 msgid "We couldn't find any members with specified name."
 msgstr ""
 "Nie udało nam się odnaleźć żadnych użytkowników o takiej, lub zbliżonej "
 "nazwie."
 
-#: templates/cranefly/profiles/list.html:82
+#: templates/cranefly/profiles/list.html:81
 msgid "Looks like this group has no members..."
 msgstr "Wygląda na to, że ta grupa nie ma żadnych członków..."
 
@@ -7793,7 +7797,7 @@ msgstr[2] "%(minutes)s minut temu"
 #, python-format
 msgid "Hour and %(minutes)s ago"
 msgid_plural "%(hours)s hours and %(minutes)s ago"
-msgstr[0] "godzinę i %(minutes)s temu"
+msgstr[0] "Godzinę i %(minutes)s temu"
 msgstr[1] "%(hours)s godziny i %(minutes)s temu"
 msgstr[2] "%(hours)s godzin i %(minutes)s temu"
 
@@ -8153,6 +8157,9 @@ msgstr ""
 #: utils/timezones.py:69
 msgid "(UTC+14:00) Nuku'alofa"
 msgstr ""
+
+#~ msgid "Added on %(date)s:"
+#~ msgstr "Dodano %(date)s:"
 
 #, fuzzy
 #~ msgid "Archive pruned forums?"
