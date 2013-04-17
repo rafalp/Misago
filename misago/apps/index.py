@@ -65,11 +65,14 @@ def index(request):
                     'members': request.onlines.members(),
                     'all': request.onlines.all(),
                    }
+
+    # Final cleanup of stats to don't confuse people
     if not users_online['members'] and request.user.is_authenticated():
         users_online['members'] += 1
     if users_online['members'] > users_online['all']:
         users_online['all'] = users_online['members']
-    if users_online['members'] >= users_online['all'] and request.user.is_anonymous():
+    if (users_online['members'] == users_online['all'] and
+            not request.user.is_authenticated()):
         users_online['all'] += 1
 
     # Load reads tracker and build forums list

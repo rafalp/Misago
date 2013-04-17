@@ -10,10 +10,14 @@ class MembersOnline(object):
         self._all = int(monitor['online_all'])
         self._om = self._members
         self._oa = self._all
-        if monitor.expired('online_all', frequency):
-            queryset = Session.objects.filter(matched=True).filter(crawler__isnull=True).filter(last__gte=timezone.now() - timedelta(seconds=frequency))
-            self._all = queryset.count()
-            self._members = queryset.filter(user__isnull=False).count()
+        if (monitor.expired('online_all', frequency) or
+                monitor.expired('online_members', frequency)):
+            self.count_sessions()
+
+    def count_sessions(self):
+        queryset = Session.objects.filter(matched=True).filter(crawler__isnull=True).filter(last__gte=timezone.now() - timedelta(seconds=self.frequency))
+        self._all = queryset.count()
+        self._members = queryset.filter(user__isnull=False).count()
 
     def new_session(self):
         self._all += 1
