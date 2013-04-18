@@ -32,7 +32,7 @@
         <form class="leave-form" action="{% url 'private_thread_remove_user' thread=thread.pk, slug=thread.slug %}" method="post">
           <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
           <input type="hidden" name="user" value="{{ user.pk }}">
-          <button type="submit" class="btn"><i class="icon-remove"></i> Leave Thread</button>
+          <button type="submit" class="btn"><i class="icon-remove"></i> {% trans %}Leave Thread{% endtrans %}</button>
         </form>
       </li>
     </ul>
