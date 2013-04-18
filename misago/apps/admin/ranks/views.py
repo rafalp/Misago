@@ -106,6 +106,7 @@ class Edit(FormWidget):
     form = RankForm
     target_name = 'name'
     notfound_message = _('Requested Rank could not be found.')
+    translate_target_name = True
     submit_fallback = True
 
     def get_url(self, model):
@@ -148,4 +149,4 @@ class Delete(ButtonWidget):
 
     def action(self, target):
         target.delete()
-        return Message(_('Rank "%(name)s" has been deleted.') % {'name': target.name}, 'success'), False
+        return Message(_('Rank "%(name)s" has been deleted.') % {'name': _(target.name)}, 'success'), False
