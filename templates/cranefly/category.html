@@ -71,7 +71,7 @@
                 </div>
               </div>
               {% else %}
-              <a href="{{ forum.subforums[0].type|url(slug=forum.subforums[0].slug, forum=forum.subforums[0].id) }}" class="subforum tooltip-top" title="{% trans %}Click to go to this subforum{% endtrans %}">{{ forum.subforums[0].name }}</a>
+              <a href="{{ forum.subforums[0].type|url(slug=forum.subforums[0].slug, forum=forum.subforums[0].id) }}" class="subforum tooltip-top" title="{% trans forum=forum.subforums[0].name %}Go to the {{ forum }} subforum{% endtrans %}">{{ forum.subforums[0].name }}</a>
               {% endif %}
             </div>
             {% endif%}
