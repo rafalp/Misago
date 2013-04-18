@@ -81,12 +81,6 @@ function EnhancePostsMD() {
       $(this).wrap('<a href="' + $(this).attr('src') + '" target="_blank"/>');
     });
 
-    // Handle prokened images
-    $('.markdown.js-extra img').one('error', function() {
-      $(this).after('<div class="md-img-error"><span>' + l_img_broken_msg + '</span></div>');
-      $(this).hide();
-    });
-
     // Automagically turn links into players
     var players = new Array();
     $('.markdown.js-extra').each(function() {
