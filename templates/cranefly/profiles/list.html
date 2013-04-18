@@ -23,7 +23,7 @@
       <li class="pull-right">
         <form action="{% url 'users' %}" class="form-inline" method="post">
           <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-          {{ form_theme.field_widget(search_form.username, width=2, attrs={'placeholder': _('Find user...')}) }}
+          {{ form_theme.field_widget(search_form.username, width=2, attrs={'placeholder': lang_find_user()}) }}
           <button type="submit" class="btn btn-icon"><i class="icon-search"></i></button>
         </form>
       </li>
@@ -109,3 +109,6 @@
 {% endif %}
 {% endif %}
 {%- endmacro %}
+
+{# Language strings macros #}
+{% macro lang_find_user() -%}{% trans %}Find User...{% endtrans %}{%- endmacro %}
