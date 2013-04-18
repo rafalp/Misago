@@ -422,7 +422,7 @@
           <form class="form-inline" action="{% url 'private_thread_invite_user' thread=thread.pk, slug=thread.slug %}" method="post">
             <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
             <input type="hidden" name="retreat" value="{{ request_path }}">
-            {{ form_theme.input_text(invite_form.fields.username, width="2", attrs={'placeholder':_("User to invite...")}) }}
+            {{ form_theme.input_text(invite_form.fields.username, width="2", attrs={'placeholder':lang_user_to_invite()}) }}
             <button class="btn" type="submit"><i class="icon-plus"></i></button>
           </form>
         </div>
@@ -555,3 +555,7 @@
 {% macro editor_extra() %}
   <button id="editor-preview" name="preview" type="submit" class="btn pull-right">{% trans %}Full Editor{% endtrans %}</button>
 {% endmacro %}
+
+
+{# Language strings macros #}
+{% macro lang_user_to_invite() -%}{% trans %}User to invite...{% endtrans %}{%- endmacro %}
