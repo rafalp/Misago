@@ -48,3 +48,9 @@ if settings.DEBUG:
 # Set error handlers
 handler403 = 'misago.apps.errors.error403'
 handler404 = 'misago.apps.errors.error404'
+
+# Make sure people are not keeping uploads and app under same domain
+from django.core.exceptions import ImproperlyConfigured
+from urlparse import urlparse
+if not settings.DEBUG and not urlparse(settings.MEDIA_URL).netloc:
+    raise ImproperlyConfigured('Sharing same domain name between application and user uploaded media is a security risk. Create a subdomain pointing to your media directory (eg. "uploads.myforum.com") and change your MEDIA_URL.')
