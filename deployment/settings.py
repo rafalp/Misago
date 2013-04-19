@@ -151,3 +151,4 @@ if 'test' in sys.argv:
     DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'db4testing'}
     CACHES['default'] = {'BACKEND': 'django.core.cache.backends.dummy.DummyCache'}
     SKIP_SOUTH_TESTS = True
+    MEDIA_URL = "http://media.domain.com"
