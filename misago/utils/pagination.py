@@ -56,8 +56,11 @@ def make_pagination(page, total, per):
 
 
 def page_number(item, total, per):
+    item += 1
     page_item = int(item / per) + 1
     pages_total = int(math.ceil(total / float(per)))
-    if page_item == pages_total and total - (total * pages_total) < int(per / 5):
+    last_page = total - ((pages_total - 1) * per)
+    cutoff = int(per / 5)
+    if cutoff > 1 and cutoff > last_page and item > (total - last_page):
         page_item -= 1
     return page_item
