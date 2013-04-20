@@ -49,9 +49,15 @@ class ViewBase(object):
             pass
 
     def redirect_to_post(self, post):
-        pagination = make_pagination(0, self.request.acl.threads.filter_posts(self.request, self.thread, self.thread.post_set).filter(id__lte=post.pk).count(), self.request.settings.posts_per_page)
-        if pagination['total'] > 1:
-            return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'page': pagination['total']}) + ('#post-%s' % post.pk))
+        queryset = self.request.acl.threads.filter_posts(self.request, self.thread, self.thread.post_set)
+        total = queryset.count()
+        page = int(queryset.filter(id__lte=post.pk).count() / self.request.settings.posts_per_page)
+        try:
+            pagination = make_pagination(page, total, self.request.settings.posts_per_page)
+            if pagination['total'] > 1:
+                return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'page': pagination['total']}) + ('#post-%s' % post.pk))
+        except Http404:
+            pass
         return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % post.pk))
 
     def template_vars(self, context):
