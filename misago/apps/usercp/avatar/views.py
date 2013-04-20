@@ -125,7 +125,7 @@ def upload(request):
             try:
                 if is_zipfile(image_path):
                     # Composite file upload
-                    raise ValidationError()                    
+                    raise ValidationError()                 
                 image = Image.open(image_path)
                 if not image.format in ['GIF', 'PNG', 'JPEG']:
                     raise ValidationError()
