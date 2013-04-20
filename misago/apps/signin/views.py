@@ -1,4 +1,3 @@
-from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
@@ -107,7 +106,5 @@ def signout(request):
     request.messages.set_flash(Message(_("You have been signed out.")), 'info', 'security')
     if request.firewall.admin:
         return redirect(reverse(site.get_admin_index()))
-    request.onlines.sign_out()
-    if user.pk in cache.get('team_users_online', []):
-        cache.delete_many(['team_users_online', 'ranks_online'])
+    request.onlines.count_sessions()
     return redirect(reverse('index'))
