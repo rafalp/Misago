@@ -8,3 +8,5 @@
 5 3 * * * python $HOME/misago/manage.py syncdeltas
 10 3 * * * python $HOME/misago/manage.py updateranking
 25 3 * * * python $HOME/misago/manage.py updatethreadranking
+# Uncomment next line for heartbeat cron
+#3 * * * * python $HOME/misago/heartbeat.py --log=heartbeats.txt
