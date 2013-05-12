@@ -1157,7 +1157,7 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{opacity:0.9;filter:alpha(opa
 .post-votes-list .vote-user .vote-icon{background-color:#999999;border-radius:3px;padding:2px 3px;position:relative;bottom:1.75px;font-size:14px;}.post-votes-list .vote-user .vote-icon i{background-image:url("../img/glyphicons-halflings-white.png");}
 .post-votes-list a.vote-user:hover,.post-votes-list a.vote-user:active{color:#333333;text-decoration:none;}
 .post-votes-list .post-likes .vote-icon{background-color:#46a546;}
-.post-votes-list .post-hates .vote-icon{background-color:#cf402e;}
+.post-votes-list .post-dislikes .vote-icon{background-color:#cf402e;}
 .post-changelog table td{vertical-align:middle;}.post-changelog table td .change-added,.post-changelog table td .change-removed,.post-changelog table td .change-none{display:block;font-size:28px;font-weight:bold;text-align:right;}.post-changelog table td .change-added.change-small,.post-changelog table td .change-removed.change-small,.post-changelog table td .change-none.change-small{font-size:14px;}
 .post-changelog table td .change-neutral{color:#555555;}
 .post-changelog table td .change-added{color:#46a546;}

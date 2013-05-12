@@ -240,10 +240,10 @@
                 {% if user.is_authenticated() and user.pk != post.user_id and acl.threads.can_downvote_posts(forum) %}
                 <form action="{% url 'post_downvote' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline form-downvote" method="post">
                   <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-                  <button type="submit" class="btn btn-link post-hate"{% if post.karma_vote and post.karma_vote.score < 0 %} disabled="disabled"{% endif %}>{% trans %}Hate{% endtrans %}</button>
+                  <button type="submit" class="btn btn-link post-hate"{% if post.karma_vote and post.karma_vote.score < 0 %} disabled="disabled"{% endif %}>{% trans %}Dislike{% endtrans %}</button>
                 </form>
                 {% elif acl.threads.can_see_post_score(forum) == 2 %}
-                <span class="post-{% if post.downvotes %}hate{% else %}neutral{% endif %}">{% trans %}Hates{% endtrans %}</span>
+                <span class="post-{% if post.downvotes %}hate{% else %}neutral{% endif %}">{% trans %}Dislikes{% endtrans %}</span>
                 {% endif %}
               </div>
               {% if acl.threads.can_see_post_votes(forum) %}

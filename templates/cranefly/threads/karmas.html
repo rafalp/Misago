@@ -59,11 +59,11 @@
 
     <hr>
 
-    <div class="post-hates">
+    <div class="post-dislikes">
       <h2>{% trans count=downvotes|length, votes=downvotes|length|intcomma -%}
-        One hate
+        One dislike
         {%- pluralize -%}
-        {{ votes }} hates
+        {{ votes }} dislikes
         {%- endtrans %}</h2>
       {% if downvotes %}
       <table class="table table-striped">
@@ -84,7 +84,7 @@
         </tbody>
       </table>
       {% else %}
-      <p class="lead">{% trans %}Nobody hated this post.{% endtrans %}</p>
+      <p class="lead">{% trans %}Nobody disliked this post.{% endtrans %}</p>
       {% endif %}
     </div>
   </div>
