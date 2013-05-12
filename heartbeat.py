@@ -9,12 +9,11 @@ except ImportError:
 
 
 def log_entry(logfile, response=None):
-    if response.time > 1:
-        stopwatch = '%ss' % round(response.time, 3)
-    else:
-        stopwatch = '%sms' % int(response.time * 1000)
-
-    if response and response.code == 200:
+    if response and response.getcode() == 200:
+        if response.time > 1:
+            stopwatch = '%ss' % round(response.time, 3)
+        else:
+            stopwatch = '%sms' % int(response.time * 1000)
         msg = 'OK! HTTP 200 after %s' % stopwatch
     else:
         msg = 'FAIL!'
