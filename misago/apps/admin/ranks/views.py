@@ -83,18 +83,20 @@ class New(FormWidget):
         position = 0
         last_rank = Rank.objects.latest('order')
         new_rank = Rank(
-                      name=form.cleaned_data['name'],
-                      slug=slugify(form.cleaned_data['name']),
-                      description=form.cleaned_data['description'],
-                      style=form.cleaned_data['style'],
-                      title=form.cleaned_data['title'],
-                      special=form.cleaned_data['special'],
-                      as_tab=form.cleaned_data['as_tab'],
-                      on_index=form.cleaned_data['on_index'],
-                      order=(last_rank.order + 1 if last_rank else 0),
-                      criteria=form.cleaned_data['criteria']
-                     )
+                        name=form.cleaned_data['name'],
+                        slug=slugify(form.cleaned_data['name']),
+                        description=form.cleaned_data['description'],
+                        style=form.cleaned_data['style'],
+                        title=form.cleaned_data['title'],
+                        special=form.cleaned_data['special'],
+                        as_tab=form.cleaned_data['as_tab'],
+                        on_index=form.cleaned_data['on_index'],
+                        order=(last_rank.order + 1 if last_rank else 0),
+                        criteria=form.cleaned_data['criteria']
+                        )  
         new_rank.save(force_insert=True)
+        for role in form.cleaned_data['roles']:
+            new_rank.roles.add(role)
         return new_rank, Message(_('New Rank has been created.'), 'success')
 
 
@@ -124,7 +126,8 @@ class Edit(FormWidget):
                 'special': model.special,
                 'as_tab': model.as_tab,
                 'on_index': model.on_index,
-                'criteria': model.criteria
+                'criteria': model.criteria,
+                'roles': model.roles.all(),
                 }
 
     def submit_form(self, form, target):
@@ -138,6 +141,18 @@ class Edit(FormWidget):
         target.on_index = form.cleaned_data['on_index']
         target.criteria = form.cleaned_data['criteria']
         target.save(force_update=True)
+
+        if self.request.user.is_god():
+            target.roles.clear()
+        else:
+            for role in target.roles.all():
+                if not role.protected:
+                    target.roles.remove(role)
+        for role in form.cleaned_data['roles']:
+            target.roles.add(role)
+
+        target.user_set.update(acl_key=None)
+
         return target, Message(_('Changes in rank "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
 
 

@@ -2,6 +2,7 @@ from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 from misago.forms import Form, YesNoSwitch
+from misago.models import Role
 from misago.validators import validate_sluggable
 
 class RankForm(Form):
@@ -16,6 +17,7 @@ class RankForm(Form):
     as_tab = forms.BooleanField(widget=YesNoSwitch, required=False)
     on_index = forms.BooleanField(widget=YesNoSwitch, required=False)
     criteria = forms.CharField(max_length=255, initial='0', validators=[RegexValidator(regex='^(\d+)(%?)$', message=_('This is incorrect rank match rule.'))], required=False)
+    roles = False
 
     layout = (
               (
@@ -25,6 +27,12 @@ class RankForm(Form):
                 ('description', {'label': _("Rank Description"), 'help_text': _("If this rank acts as tab on users list, here you can enter optional description that will be displayed above list of users with this rank.")}),
                 ('as_tab', {'label': _("As Tab on Users List"), 'help_text': _("Should this rank have its own page on users list, containing rank's description and list of users that have it? This is good option for rank used by forum team members or members that should be visible and easily reachable.")}),
                 ('on_index', {'label': _("Display members online"), 'help_text': _("Should users online with this rank be displayed on board index?")}),
+                )
+               ),
+              (
+               _("Rank Roles"),
+               (
+                ('roles', {'label': _("Rank Roles"), 'help_text': _("You can grant users with this rank extra roles to serve either as rewards or signs of trust to active members.")}),
                 )
                ),
               (
@@ -42,3 +50,9 @@ class RankForm(Form):
                 ),
                ),
               )
+
+    def finalize_form(self):
+        if self.request.user.is_god():
+            self.fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Role.objects.order_by('name').all(), required=False)
+        else:
+            self.fields['roles'] = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Role.objects.filter(protected__exact=False).order_by('name').all(), required=False)

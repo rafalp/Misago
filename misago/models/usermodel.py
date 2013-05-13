@@ -417,6 +417,8 @@ class User(models.Model):
         return True
 
     def get_roles(self):
+        if self.rank:
+            return self.roles.all() | self.rank.roles.all()
         return self.roles.all()
 
     def make_acl_key(self, force=False):
@@ -424,12 +426,18 @@ class User(models.Model):
             return self.acl_key
         roles_ids = []
         for role in self.roles.all():
-            roles_ids.append(str(role.pk))
-        self.acl_key = 'acl_%s' % hashlib.md5('_'.join(roles_ids)).hexdigest()[0:8]
+            roles_ids.append(role.pk)
+        for role in self.rank.roles.all():
+            if not role.pk in roles_ids:
+                roles_ids.append(role.pk)
+        roles_ids.sort()
+        self.acl_key = 'acl_%s' % hashlib.md5('_'.join(str(x) for x in roles_ids)).hexdigest()[0:8]
+        self.save(update_fields=('acl_key',))
         return self.acl_key
 
     def acl(self, request):
         try:
+            self.make_acl_key()
             acl = cache.get(self.acl_key)
             if acl.version != request.monitor.acl_version:
                 raise InvalidCacheBackendError()

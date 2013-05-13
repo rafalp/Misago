@@ -31,6 +31,6 @@ class Command(BaseCommand):
         # Inflate scores
         settings = DBSettings()
         inflation = float(100 - settings['ranking_inflation']) / 100
-        User.objects.all().update(score=F('score') * inflation, ranking=0)
+        User.objects.all().update(acl_key=None, score=F('score') * inflation, ranking=0)
 
         self.stdout.write('Users ranking for has been updated.\n')
