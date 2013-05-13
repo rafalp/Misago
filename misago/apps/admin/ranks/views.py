@@ -145,9 +145,7 @@ class Edit(FormWidget):
         if self.request.user.is_god():
             target.roles.clear()
         else:
-            for role in target.roles.all():
-                if not role.protected:
-                    target.roles.remove(role)
+            target.roles.remove(*target.roles.filter(protected=False))
         for role in form.cleaned_data['roles']:
             target.roles.add(role)
 
