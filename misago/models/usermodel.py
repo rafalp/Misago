@@ -55,7 +55,7 @@ class UserManager(models.Manager):
         # Get first rank
         try:
             from misago.models import Rank
-            default_rank = Rank.objects.filter(special=0).order_by('order')[0]
+            default_rank = Rank.objects.filter(special=0).order_by('-order')[0]
         except IndexError:
             default_rank = None
 
