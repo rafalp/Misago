@@ -36,4 +36,4 @@ class Command(BaseCommand):
         else:
             User.objects.all().update(acl_key=None)
 
-        self.stdout.write('Users ranking for has been updated.\n')
+        self.stdout.write('Users ranking has been updated.\n')
