@@ -12,11 +12,11 @@ class ForumManager(TreeManager):
 
     def special_pk(self, name):
         self.populate_tree()
-        return self.forums_tree[name].pk
+        return self.forums_tree.get(name).pk
 
     def special_model(self, name):
         self.populate_tree()
-        return self.forums_tree[name]
+        return self.forums_tree.get(name)
 
     def populate_tree(self, force=False):
         if not self.forums_tree:
