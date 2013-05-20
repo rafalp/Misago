@@ -146,6 +146,7 @@ MARKDOWN_EXTENSIONS = (
     'misago.markdown.extensions.mentions.MentionsExtension',
     'misago.markdown.extensions.magiclinks.MagicLinksExtension',
     'misago.markdown.extensions.cleanlinks.CleanLinksExtension',
+    'misago.markdown.extensions.bbcodes.BBCodesExtension',
 )
 
 # Name of root urls configuration
