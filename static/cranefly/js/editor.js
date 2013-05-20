@@ -23,6 +23,13 @@ function getSelection(textId) {
   }
 }
 
+function getSelectionText(textId) {
+  var ctrl = document.getElementById(textId);
+  var text = ctrl.value;
+  myRange = getSelection(textId);
+  return $.trim(text.substring(myRange.start, myRange.end));
+}
+
 function setSelection(textId, SelectionRange) {
   ctrl = document.getElementById(textId);
   if (ctrl.setSelectionRange) {
@@ -81,7 +88,7 @@ $(function() {
   
   $('.editor-emphasis').click(function() {
     ta = get_textarea(this).attr('id');
-    makeWrap(ta, '_', '_');
+    makeWrap(ta, '*', '*');
     return false;
   });
   
@@ -96,7 +103,7 @@ $(function() {
           link_url = "http://" + link_url;
         }
       }
-      var link_label = $.trim(prompt(ed_lang_enter_link_label));
+      var link_label = $.trim(prompt(ed_lang_enter_link_label, $.trim(getSelectionText(get_textarea(this).attr('id')))));
       if (link_label.length > 0) {
         makeReplace(ta, '[' + link_label + '](' + link_url + ')');
       } else {
@@ -108,7 +115,7 @@ $(function() {
   
   $('.editor-image').click(function() {
     ta = get_textarea(this).attr('id');
-    var image_url = $.trim(prompt(ed_lang_enter_image_url));
+    var image_url = $.trim(prompt(ed_lang_enter_image_url, $.trim(getSelectionText(get_textarea(this).attr('id')))));
     if (image_url.length > 0) {
       var image_label = $.trim(prompt(ed_lang_enter_image_label));
       if (image_label.length > 0) {
