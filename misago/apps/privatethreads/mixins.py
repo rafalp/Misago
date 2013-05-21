@@ -32,11 +32,15 @@ class TypeMixin(object):
         self.thread.participants.exclude(id=self.request.user.id).update(sync_pds=True)
                 
     def whitelist_mentions(self):
-        participants = self.thread.participants.all()
-        mentioned = self.post.mentions.all()
-        for user in self.md.mentions:
-            if user not in participants and user not in mentioned:
-                self.post.mentioned.add(user)
+        try:
+            if self.md.mentions:
+                participants = self.thread.participants.all()
+                mentioned = self.post.mentions.all()
+                for user in self.md.mentions:
+                    if user not in participants and user not in mentioned:
+                        self.post.mentioned.add(user)
+        except AttributeError:
+            pass
 
     def threads_list_redirect(self):
         return redirect(reverse('private_threads'))
