@@ -1,4 +1,5 @@
 import urlparse
+import threading
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 from django.conf import settings
@@ -7,8 +8,20 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from misago.signals import delete_forum_content, move_forum_content, rename_forum, rename_user
 
+thread_local = threading.local()
+
 class ForumManager(TreeManager):
-    forums_tree = None
+    @property
+    def forums_tree(self):
+        try:
+            return thread_local.misago_forums_tree
+        except AttributeError:
+            thread_local.misago_forums_tree = None
+        return thread_local.misago_forums_tree
+
+    @forums_tree.setter
+    def forums_tree(self, value):
+        thread_local.misago_forums_tree = value
 
     def special_pk(self, name):
         self.populate_tree()
