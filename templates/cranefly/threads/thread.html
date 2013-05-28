@@ -205,7 +205,9 @@
           </div>
           <div class="post-message">
             <div class="markdown js-extra">
-              {{ post.post_preparsed|markdown_final|safe }}
+              <article>
+                {{ post.post_preparsed|markdown_final|safe }}
+              </article>
             </div>
             {% if post.user.signature %}
             <div class="post-signature">

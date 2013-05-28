@@ -49,7 +49,9 @@
           {% if preview %}
           <div class="form-preview">
             <div class="markdown js-extra">
-              {{ preview|markdown_final|safe }}
+              <article>
+                {{ preview|markdown_final|safe }}
+              </article>
             </div>
           </div>
           {% endif %}
