@@ -27,7 +27,7 @@ class CleanLinksTreeprocessor(markdown.treeprocessors.Treeprocessor):
                 node.set('src', '%s' % clean_inner(node.get('src')))
 
         try:
-            if self.inurl and is_url(node.text) and is_inner(node.text):
+            if self.inurl and node.text and is_url(node.text) and is_inner(node.text):
                 node.text = clean_inner(node.text)[1:]
         except TypeError:
             pass

@@ -74,7 +74,7 @@ $(function () {
 function EnhancePostsMD() {
   $(function () {
     // Add labels to images
-    $('.markdown.js-extra img').each(function() {
+    $('.markdown.js-extra img').not('.emoji').each(function() {
       $(this).addClass('img-rounded');
       $(this).attr('title', $(this).attr('alt'));
       $(this).tooltip({placement: 'top', container: 'body'});

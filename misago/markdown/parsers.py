@@ -8,7 +8,7 @@ class RemoveHTMLParser(HTMLParser):
         HTMLParser.__init__(self)
         self.clean_text = ''
         self.lookback = []
-        
+
     def handle_entityref(self, name):
         if name == 'gt':
             self.clean_text += '>'
@@ -16,13 +16,26 @@ class RemoveHTMLParser(HTMLParser):
             self.clean_text += '<'
 
     def handle_starttag(self, tag, attrs):
-        self.lookback.append(tag)
+        if tag == 'img':
+            self.handle_startendtag(tag, attrs)
+        else:
+            self.lookback.append(tag)
 
     def handle_endtag(self, tag):
         try:
             if self.lookback[-1] == tag:
                 self.lookback.pop()
         except IndexError:
+            pass
+
+    def handle_startendtag(self, tag, attrs):
+        try:
+            if tag == 'img':
+                for attr in attrs:
+                    if attr[0] == 'alt':
+                        self.clean_text += attr[1]
+                        break
+        except KeyError:
             pass
         
     def handle_data(self, data):

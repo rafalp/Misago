@@ -14,19 +14,19 @@
   }
 
   h1 {
-    font-size: @baseFontSize * 2;
-  }
-
-  h2 {
     font-size: @baseFontSize * 1.7;
   }
 
-  h3 {
+  h2 {
     font-size: @baseFontSize * 1.5;
   }
 
-  h4 {
+  h3 {
     font-size: @baseFontSize * 1.2;
+  }
+
+  h4 {
+    font-size: @baseFontSize;
   }
 
   hr {
@@ -109,6 +109,58 @@
 
     &>:last-child {
       margin-bottom: 0px;
+    }
+  }
+
+  // Emoticons
+  .emoji {
+    background: none;
+    border-radius: 0px;
+    margin: 0px;
+    vertical-align: middle;
+  }
+
+  h1 {
+    .emoji {
+      width: (@baseFontSize * 1.7) + 4px;
+      height: (@baseFontSize * 1.7) + 4px;
+    }
+  }
+
+  h2 {
+    .emoji {
+      width: (@baseFontSize * 1.5) + 4px;
+      height: (@baseFontSize * 1.5) + 4px;
+    }
+  }
+
+  h3 {
+    .emoji {
+      width: (@baseFontSize * 1.2) + 4px;
+      height: (@baseFontSize * 1.2) + 4px;
+    }
+  }
+
+  h4 {
+    .emoji {
+      width: @baseFontSize + 4px;
+      height: @baseFontSize + 4px;
+    }
+  }
+
+  p {
+    .emoji {
+      width: @baseFontSize + 4px;
+      height: @baseFontSize + 4px;
+    }
+  }
+
+  blockquote {
+    p {
+      .emoji {
+        width: @fontSizeSmall + 2px;
+        height: @fontSizeSmall + 2px;
+      }
     }
   }
 }

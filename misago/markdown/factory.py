@@ -5,6 +5,7 @@ from django.utils.importlib import import_module
 from django.utils.translation import ugettext_lazy as _
 from misago.utils.strings import random_string
 from misago.markdown.extensions.cleanlinks import CleanLinksExtension
+from misago.markdown.extensions.emoji import EmojiExtension
 from misago.markdown.parsers import RemoveHTMLParser
 
 def clear_markdown(text):
@@ -36,6 +37,9 @@ def signature_markdown(acl, text):
         del md.inlinePatterns['autolink']
     if not acl.usercp.allow_signature_images():
         del md.inlinePatterns['image_link']
+    else:
+        emojis = EmojiExtension()
+        emojis.extendMarkdown(md)
 
     del md.parser.blockprocessors['hashheader']
     del md.parser.blockprocessors['setextheader']
