@@ -21,6 +21,7 @@ class SessionMiddleware(object):
                     request.session['visit_sync'] = timezone.now()
                     request.user.last_date = timezone.now()
                     request.user.save(force_update=True)
+            request.session.match()
             request.session.save()
         except AttributeError:
             pass

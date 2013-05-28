@@ -61,21 +61,7 @@ def index(request):
                 break
 
     # Users online
-    users_online = request.onlines.stats()
-
-    # Here we check for signs that online stats are out of sync
-    # If they are, we trigger recount. Dont worry about repeated count_sessions()
-    # calls, function is smart enough to to dont recount more than once per request
-    if not users_online['members'] and request.user.is_authenticated():
-        request.onlines.count_sessions()
-    if users_online['members'] > users_online['all']:
-        request.onlines.count_sessions()
-    if (users_online['members'] == users_online['all'] and
-            not request.user.is_authenticated()):
-        request.onlines.count_sessions()
-
-    # Use recounted information
-    users_online = request.onlines.stats()
+    users_online = request.onlines.stats(request)
 
     # Load reads tracker and build forums list
     reads_tracker = ForumsTracker(request.user)

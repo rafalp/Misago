@@ -78,12 +78,16 @@ class MisagoSession(SessionBase):
         else:
             self._session_rk.save(force_insert=True)
 
+    def match(self):
+        self._session_rk.matched = True
+
 
 class CrawlerSession(MisagoSession):
     """
     Crawler Session controller
     """
     def __init__(self, request):
+        self.matched = True
         self.started = False
         self.team = False
         self._ip = self.get_ip(request)
@@ -127,6 +131,7 @@ class HumanSession(MisagoSession):
     """
     def __init__(self, request):
         self.started = False
+        self.matched = False
         self.expired = False
         self.team = False
         self.rank = None
@@ -157,9 +162,10 @@ class HumanSession(MisagoSession):
                 raise IncorrectSessionException()
             
             # Change session to matched and extract session user
-            if not self._session_rk.matched:
+            if self._session_rk.matched:
+                self.matched = True
+            else:
                 self.started = True
-            self._session_rk.matched = True
             self._user = self._session_rk.user
             self.team = self._session_rk.team
         except (Session.DoesNotExist, IncorrectSessionException):
@@ -168,6 +174,7 @@ class HumanSession(MisagoSession):
                 self.remember_me = auth_remember(request, self.get_ip(request))
                 self.create(request, user=self.remember_me.user)
                 self.started = True
+                self._session_rk.matched = True
             except AuthException as e:
                 # Autolog failed
                 self.create(request)
