@@ -73,9 +73,9 @@ def post_markdown(request, text):
 
 
 def tidy_markdown(md, text):
-    text = text.replace('<p><h3><quotetitle>', '<h3><quotetitle>')
-    text = text.replace('</quotetitle></h3></p>', '</quotetitle></h3>')
-    text = text.replace('</quotetitle></h3><br>\r\n', '</quotetitle></h3>\r\n<p>')
+    text = text.replace('<p><h3><quotetitle>', '<article><header><quotetitle>')
+    text = text.replace('</quotetitle></h3></p>', '</quotetitle></header></article>')
+    text = text.replace('</quotetitle></h3><br>\r\n', '</quotetitle></header></article>\r\n<p>')
     text = text.replace('\r\n<p></p>', '')
     return md, text
 

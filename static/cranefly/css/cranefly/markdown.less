@@ -11,6 +11,10 @@
 
   &>:last-child {
     margin-bottom: 0px;
+
+    img:last-child {
+      margin-bottom: 0px;
+    }
   }
 
   h1 {
@@ -39,14 +43,20 @@
     background-color: darken(@postBackground, 1%);
     border: 1px solid darken(@postBackground, 6%);
     border-radius: @baseBorderRadius;
+    .opacity(60);
     padding: @baseFontSize;
 
-    &>h3:first-child {
-      margin: 0px;
-      margin-bottom: @baseLineHeight / 2;
-      padding: 0px;
+    &:hover {
+      .opacity(100);
+    }
 
-      font-size: @baseFontSize;
+    header {
+      border-bottom: 1px solid darken(@postBackground, 12%);
+      margin-bottom: @baseLineHeight / 2;
+      padding-bottom: @baseFontSize;
+
+      font-size: @baseFontSize * 1.2;
+      font-weight: bold;
       line-height: @baseLineHeight;
     }
 
@@ -56,6 +66,10 @@
 
     &>:last-child {
       margin-bottom: 0px;
+      
+      img:last-child {
+        margin-bottom: 0px;
+      }
     }
 
     p {
