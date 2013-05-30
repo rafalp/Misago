@@ -949,8 +949,8 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{opacity:0.9;filter:alpha(opa
 .markdown h3,.markdown article h3{font-size:16.8px;}
 .markdown h4,.markdown article h4{font-size:14px;}
 .markdown hr,.markdown article hr{border:none;border-top:1px solid #eeeeee;margin:20px 0px;}
-.markdown blockquote,.markdown article blockquote{background-color:#fcfcfc;border:1px solid #f0f0f0;border-radius:3px;opacity:0.6;filter:alpha(opacity=60);padding:14px;}.markdown blockquote:hover,.markdown article blockquote:hover{opacity:1;filter:alpha(opacity=100);}
-.markdown blockquote header,.markdown article blockquote header{border-bottom:1px solid #e0e0e0;margin-bottom:10px;padding-bottom:14px;font-size:16.8px;font-weight:bold;line-height:20px;}
+.markdown blockquote,.markdown article blockquote{background-color:#fcfcfc;border:1px solid #f0f0f0;border-radius:3px;padding:14px;}.markdown blockquote:hover,.markdown article blockquote:hover{border-color:#e0e0e0;}.markdown blockquote:hover header,.markdown article blockquote:hover header{opacity:1;filter:alpha(opacity=100);}
+.markdown blockquote header,.markdown article blockquote header{border-bottom:1px solid #e0e0e0;margin-bottom:10px;opacity:0.7;filter:alpha(opacity=70);padding-bottom:14px;font-size:16.8px;font-weight:bold;line-height:20px;}
 .markdown blockquote>:first-child,.markdown article blockquote>:first-child{margin-top:0px;}
 .markdown blockquote>:last-child,.markdown article blockquote>:last-child{margin-bottom:0px;}.markdown blockquote>:last-child img:last-child,.markdown article blockquote>:last-child img:last-child{margin-bottom:0px;}
 .markdown blockquote p,.markdown article blockquote p{margin:0 0 10px;font-size:11.9px;}

@@ -43,16 +43,20 @@
     background-color: darken(@postBackground, 1%);
     border: 1px solid darken(@postBackground, 6%);
     border-radius: @baseBorderRadius;
-    .opacity(60);
     padding: @baseFontSize;
 
     &:hover {
-      .opacity(100);
+      border-color: darken(@postBackground, 12%);
+
+      header {
+        .opacity(100);
+      }
     }
 
     header {
       border-bottom: 1px solid darken(@postBackground, 12%);
       margin-bottom: @baseLineHeight / 2;
+      .opacity(70);
       padding-bottom: @baseFontSize;
 
       font-size: @baseFontSize * 1.2;
