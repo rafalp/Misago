@@ -119,7 +119,7 @@ class ChangelogRevertBaseView(ChangelogDiffBaseView):
 
         if self.change.post_content != self.post.post:
             self.post.post = self.change.post_content
-            md, self.post.post_preparsed = post_markdown(request, self.change.post_content)
+            md, self.post.post_preparsed = post_markdown(self.change.post_content)
             self.post.save(force_update=True)
 
         request.messages.set_flash(Message(_("Post has been reverted to state from %(date)s.") % {'date': reldate(self.change.date).lower()}), 'success', 'threads_%s' % self.post.pk)

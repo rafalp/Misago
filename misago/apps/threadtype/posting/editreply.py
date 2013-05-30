@@ -48,6 +48,6 @@ class EditReplyBaseView(PostingBaseView):
 
         if changed_post:
             self.post.post = form.cleaned_data['post']
-            self.md, self.post.post_preparsed = post_markdown(self.request, form.cleaned_data['post'])
+            self.md, self.post.post_preparsed = post_markdown(form.cleaned_data['post'])
             self.post.save(force_update=True)
             self.record_edit(form, self.thread.name, old_post)

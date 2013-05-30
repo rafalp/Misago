@@ -39,7 +39,7 @@ class NewReplyBaseView(PostingBaseView):
                       and self.request.acl.threads.acl[self.forum.pk]['can_start_threads'] == 1)
 
         self.thread.previous_last = self.thread.last_post
-        self.md, post_preparsed = post_markdown(self.request, form.cleaned_data['post'])
+        self.md, post_preparsed = post_markdown(form.cleaned_data['post'])
 
         # Count merge diff and see if we are merging
         merge_diff = (now - self.thread.last)
@@ -52,7 +52,7 @@ class NewReplyBaseView(PostingBaseView):
             self.post = self.thread.last_post
             self.post.date = now
             self.post.post = '%s\n\n%s' % (self.post.post, form.cleaned_data['post'])
-            self.md, self.post.post_preparsed = post_markdown(self.request, self.post.post)
+            self.md, self.post.post_preparsed = post_markdown(self.post.post)
             self.post.save(force_update=True)
         else:
             # Create new post

@@ -33,7 +33,7 @@ class NewThreadBaseView(PostingBaseView):
                                             )
 
         # Create our post
-        self.md, post_preparsed = post_markdown(self.request, form.cleaned_data['post'])
+        self.md, post_preparsed = post_markdown(form.cleaned_data['post'])
         self.post = Post.objects.create(
                                         forum=self.forum,
                                         thread=self.thread,

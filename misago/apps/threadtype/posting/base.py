@@ -126,7 +126,7 @@ class PostingBaseView(ViewBase):
                 if 'preview' in request.POST:
                     form.empty_errors()
                     if form['post'].value():
-                        md, post_preview = post_markdown(request, form['post'].value())
+                        md, post_preview = post_markdown(form['post'].value())
                     else:
                         md, post_preview = None, None
                 else:

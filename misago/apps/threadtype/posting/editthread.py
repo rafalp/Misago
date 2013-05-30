@@ -57,7 +57,7 @@ class EditThreadBaseView(PostingBaseView):
 
         if changed_post:
             self.post.post = form.cleaned_data['post']
-            self.md, self.post.post_preparsed = post_markdown(self.request, form.cleaned_data['post'])
+            self.md, self.post.post_preparsed = post_markdown(form.cleaned_data['post'])
             self.post.save(force_update=True)
 
         if changed_thread or changed_post:
