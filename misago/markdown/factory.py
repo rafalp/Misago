@@ -85,4 +85,5 @@ def finalize_markdown(text):
         return _("Posted by %(user)s") % {'user': match.group('content')}
     text = re.sub(r'<quotetitle>(?P<content>.+)</quotetitle>', trans_quotetitle, text)
     text = re.sub(r'<quotesingletitle>', _("Quote"), text)
+    text = re.sub(r'<imgalt>', _("Posted image"), text)
     return text

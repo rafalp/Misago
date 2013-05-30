@@ -76,9 +76,11 @@ function EnhancePostsMD() {
     // Add labels to images
     $('.markdown.js-extra img').not('.emoji').each(function() {
       $(this).addClass('img-rounded');
-      $(this).attr('title', $(this).attr('alt'));
+      if ($(this).attr('alt').length > 0 && $(this).attr('alt') != $(this).attr('src')) {
+        $(this).attr('title', $(this).attr('alt'));
+      }
       $(this).tooltip({placement: 'top', container: 'body'});
-      $(this).wrap('<a href="' + $(this).attr('src') + '" target="_blank"/>');
+      $(this).wrap('<a href="' + escape($(this).attr('src')) + '" target="_blank"/>');
     });
 
     // Automagically turn links into players

@@ -152,6 +152,7 @@ MARKDOWN_EXTENSIONS = (
     'misago.markdown.extensions.mentions.MentionsExtension',
     'misago.markdown.extensions.magiclinks.MagicLinksExtension',
     'misago.markdown.extensions.cleanlinks.CleanLinksExtension',
+    'misago.markdown.extensions.shorthandimgs.ShorthandImagesExtension',
     # Uncomment for EXPERIMENTAL BBCode support
     #'misago.markdown.extensions.bbcodes.BBCodesExtension',
     # Uncomment for emoji support, requires emoji directory in static dir.
