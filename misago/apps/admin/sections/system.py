@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import AdminAction
-from misago.models import ThemeAdjustment
 
 ADMIN_ACTIONS = (
     AdminAction(
