@@ -10,6 +10,12 @@ ALLOWED_HOSTS = ['*']
 # Leave this setting empty
 ADMIN_PATH = ''
 
+# Enable mobile subdomain for mobile stuff
+MOBILE_SUBDOMAIN = ''
+
+# Templates used by mobile version
+MOBILE_TEMPLATES = ''
+
 # Default format of Misago generated HTML
 OUTPUT_FORMAT = 'html5'
 

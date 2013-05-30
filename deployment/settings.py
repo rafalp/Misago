@@ -137,6 +137,12 @@ INSTALLED_THEMES = (
     'admin', # Admin theme always last
 )
 
+# Enable mobile subdomain for mobile stuff
+MOBILE_SUBDOMAIN = ''
+
+# Templates used by mobile version
+MOBILE_TEMPLATES = ''
+
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'deployment.wsgi.application'
 
