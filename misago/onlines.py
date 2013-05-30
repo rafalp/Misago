@@ -4,14 +4,15 @@ from django.utils import timezone
 from misago.models import Session
 
 class MembersOnline(object):
-    def __init__(self, monitor, frequency=180):
+    def __init__(self, mode, monitor, frequency=180):
         self.monitor = monitor
         self.frequency = frequency
+        self._mode = mode
         self._members = int(monitor['online_members'])
         self._all = int(monitor['online_all'])
         self._om = self._members
         self._oa = self._all
-        if (monitor.expired('online_all', frequency) or
+        if (self._mode != 'no' or monitor.expired('online_all', frequency) or
                 monitor.expired('online_members', frequency)):
             self.count_sessions()
 
@@ -40,41 +41,14 @@ class MembersOnline(object):
         return self._members
 
     def sync(self):
-        if self._members != self._om:
-            self.monitor['online_members'] = self._members
-        if self._all != self._oa:
-            self.monitor['online_all'] = self._all
+        if self._mode == 'snap':
+            if self._members != self._om:
+                self.monitor['online_members'] = self._members
+            if self._all != self._oa:
+                self.monitor['online_all'] = self._all
 
-    def stats(self, request=None):
-        # Are we request-aware?
-        if not request:
-            return {
-                    'members': self.members,
-                    'all': self.all,
-                   }
-
-        online = self.stats()
-
-        # Here we check for signs that online stats are out of sync
-        try:
-            if not online['members'] and request.user.is_authenticated():
-                raise ValueError()
-            if online['members'] > online['all']:
-                raise ValueError()
-            if (online['members'] == online['all'] and
-                    not request.user.is_authenticated()):
-                raise ValueError()
-            return online
-        except ValueError:
-            if request.session.matched:
-                self.count_sessions()
-                return self.stats()
-            else:
-                if request.user.is_authenticated() and not online['members']:
-                    online['members'] += 1
-                if online['members'] > online['all']:
-                    online['all'] = online['members']
-                if request.user.is_anonymous() and online['members'] == online['all']:
-                    online['all'] += 1
-                return online
-
+    def stats(self):
+        return {
+                'members': self.members,
+                'all': self.all,
+               }

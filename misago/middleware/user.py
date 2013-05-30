@@ -15,7 +15,7 @@ def set_timezone(new_tz):
 
 class UserMiddleware(object):
     def process_request(self, request):
-        request.onlines = MembersOnline(request.monitor, request.settings['sessions_tracker_sync_frequency'])
+        request.onlines = MembersOnline(request.settings['online_counting'], request.monitor, request.settings['online_counting_frequency'])
 
         if request.session.created() and not request.firewall.admin:
             request.onlines.new_session()
