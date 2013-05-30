@@ -34,20 +34,17 @@
 
 {% macro draw_category(category) %}
 <div class="forum-map-category{% if category.style %} forum-map-category-{{ category.style }}{% endif %}">
-  <table class="table">
-    <caption>{{ category.name }}</caption>
-    <tbody>
-      {% for forum in category.subforums%}
-      {{ draw_forum(forum) }}
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="header">
+    <h2>{{ category.name }}</h2>
+  </div>
+  {% for forum in category.subforums%}
+  {{ draw_forum(forum) }}
+  {% endfor %}
 </div>
 {% endmacro %}
 
 {% macro draw_forum(forum, depth=0, branch='', last=false) %}
-<tr>
-  <td class="{% if depth -%}
+  <div class="{% if depth -%}
     forum-map-subforum
     {%- else -%}
     forum-map-forum
@@ -57,19 +54,18 @@
     {%- else -%}
     {{ draw_tree(branch ~ 't') }}
     {%- endif %}{% endif %} <a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3>
-</td>
-</tr>
-{% for subforum in forum.subforums %}
-  {% if depth %}
-    {% if last %}
-    {{ draw_forum(subforum, (depth + 1), (branch ~ 's'), loop.last) }}
+  </div>
+  {% for subforum in forum.subforums %}
+    {% if depth %}
+      {% if last %}
+      {{ draw_forum(subforum, (depth + 1), (branch ~ 's'), loop.last) }}
+      {% else %}
+      {{ draw_forum(subforum, (depth + 1), (branch ~ 'i'), loop.last) }}
+      {% endif %}
     {% else %}
-    {{ draw_forum(subforum, (depth + 1), (branch ~ 'i'), loop.last) }}
+    {{ draw_forum(subforum, (depth + 1), '', loop.last) }}
     {% endif %}
-  {% else %}
-  {{ draw_forum(subforum, (depth + 1), '', loop.last) }}
-  {% endif %}
-{% endfor %}
+  {% endfor %}
 {% endmacro %}
 
 {% macro draw_tree(branch) %}

@@ -8,19 +8,22 @@
   .box-shadow(0px 0px 0px 3px @categoryShadow);
   margin-bottom: @baseLineHeight;
 
-  table {
-  	margin: 0px;
+  .header {
+    background-color: @categoryHeader;
+    border: 1px solid @categoryBorder;
+    border-radius: @borderRadiusSmall @borderRadiusSmall 0px 0px;
+    margin: -1px;
+    margin-bottom: 0px;
+    padding: (@fontSizeSmall / 3) (@fontSizeSmall - 2px);
 
-  	caption {
-  	  background-color: @categoryHeader;
-      border: 1px solid @categoryBorder;
-      border-radius: @borderRadiusSmall @borderRadiusSmall 0px 0px;
-      margin: -1px;
-      padding: (@fontSizeSmall / 3) (@fontSizeSmall - 2px);
+    h2 {
+      margin: 0px;
+      padding: 0px;
 
       color: @grayDark;
       font-size: @fontSizeSmall;
       font-weight: bold;
+      line-height: @baseLineHeight;
       text-align: left;
 
       small {
@@ -29,120 +32,134 @@
         color: @grayLight;
         font-size: @fontSizeSmall;
       }
-  	}
-    
-    .forum-map-forum, .forum-map-subforum {
-      h3 {
-				margin: 0px;
-				padding: 0px;
-
-				font-size: @baseFontSize;
-				line-height: @baseLineHeight;
-
-				a:link, a:visited {
-				  color: @gray;
-				}
-
-	      a:active, a:hover {
-			    color: @textColor;
-			  }
-      }
-    }
-
-    .forum-map-subforum {
-    	padding-left: @baseLineHeight * 0.75;
-
-    	span {
-    		&.tree-t, &.tree-l, &.tree-s, &.tree-i {
-    			display: inline-block;
-    			height: @baseLineHeight;
-    			width: @baseLineHeight * 0.5;
-    		}
-
-    		&.tree-t {
-    			border-left: 1px solid @grayLight;
-          margin-right: 2px;
-
-    			span {
-    				border-top: 1px solid @grayLight;
-    			  display: inline-block;
-    				height: 1px;
-    				width: 100%;
-    				margin-bottom: 3px;
-    			}
-    		}
-
-    		&.tree-l {
-          margin-right: 4px;
-
-    			span {
-    			  border-left: 1px solid @grayLight;
-    				border-bottom: 1px solid @grayLight;
-    			  display: inline-block;
-    				height: @baseLineHeight * 0.5;
-    				width: 100%;
-    				margin-bottom: 3px;
-    			}
-    		}
-
-    		&.tree-i {
-    			border-left: 1px solid @grayLight;
-    			position: relative;
-    			top: 5px;
-          margin-top: -5px;
-    			margin-right: 4px;
-    		}
-
-    		&.tree-s {
-          height: 1px;
-    			width: (@baseLineHeight * 0.5) + 2px;
-    			margin-right: 4px;
-    		}
-    	}
     }
   }
 
+  .forum-map-forum, .forum-map-subforum {
+    border-bottom: 1px solid @categoryBorder;
+    overflow: auto;
+    padding: (@fontSizeSmall / 2) (@fontSizeSmall - 2px);
+
+    h3 {
+      margin: 0px;
+      padding: 0px;
+
+      font-size: @baseFontSize;
+      line-height: @baseLineHeight;
+
+      a:link, a:visited {
+        color: @gray;
+      }
+
+      a:active, a:hover {
+        color: @textColor;
+      }
+    }
+  }
+
+  .forum-map-subforum {
+  	padding-left: @baseLineHeight * 0.75;
+
+  	span {
+  		&.tree-t, &.tree-l, &.tree-s, &.tree-i {
+  			display: inline-block;
+  			height: @baseLineHeight;
+  			width: @baseLineHeight * 0.5;
+  		}
+
+  		&.tree-t {
+  			border-left: 1px solid @grayLight;
+        margin-right: 2px;
+
+  			span {
+  				border-top: 1px solid @grayLight;
+  			  display: inline-block;
+  				height: 1px;
+  				width: 100%;
+  				margin-bottom: 3px;
+  			}
+  		}
+
+  		&.tree-l {
+        margin-right: 4px;
+
+  			span {
+  			  border-left: 1px solid @grayLight;
+  				border-bottom: 1px solid @grayLight;
+  			  display: inline-block;
+  				height: @baseLineHeight * 0.5;
+  				width: 100%;
+  				margin-bottom: 3px;
+  			}
+  		}
+
+  		&.tree-i {
+  			border-left: 1px solid @grayLight;
+  			position: relative;
+  			top: 5px;
+        margin-top: -5px;
+  			margin-right: 4px;
+  		}
+
+  		&.tree-s {
+        height: 1px;
+  			width: (@baseLineHeight * 0.5) + 2px;
+  			margin-right: 4px;
+  		}
+  	}
+  }
+
+  &>div:last-child {
+    border-bottom: none;
+  }
+  
   &.forum-map-category-important {
-    caption {
+    .header {
       background-color: @red;
       border: 1px solid darken(@red, 10%);
 
-      color: @white;
-      text-shadow: 0px 1px 0px darken(@red, 25%);
+      h2 {
+        color: @white;
+        text-shadow: 0px 1px 0px darken(@red, 25%);
 
-      small {
-        color: darken(@red, 40%);
-        text-shadow: none;
+        small {
+          color: darken(@red, 40%);
+          text-shadow: none;
+        }
       }
     }
   }
 
   &.forum-map-category-inverse {
-    caption {
+    .header {
       background-color: @grayDark;
       border: 1px solid darken(@grayDark, 10%);
 
-      color: @grayLighter;
-      text-shadow: 0px 1px 0px darken(@black, 25%);
+      h2 {
+        color: @grayLighter;
+        text-shadow: 0px 1px 0px darken(@black, 25%);
 
-      small {
-        color: lighten(@grayLight, 10%);
-        text-shadow: none;
+        small {
+          color: lighten(@grayLight, 10%);
+          text-shadow: none;
+        }
       }
     }
   }
 
   &.forum-map-category-info {
-    caption {
+    .header {
       background-color: @bluePale;
       border: 1px solid darken(@bluePale, 10%);
 
-      color: @white;
-      text-shadow: 0px 1px 0px darken(@bluePale, 25%);
+      h2 {
+        color: @white;
+        text-shadow: 0px 1px 0px darken(@bluePale, 25%);
 
-      small {
-        color: darken(@bluePale, 25%);
-        text-shadow: none;
+        small {
+          color: darken(@bluePale, 25%);
+          text-shadow: none;
+        }
       }
     }
   }

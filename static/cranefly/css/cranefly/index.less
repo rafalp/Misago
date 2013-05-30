@@ -16,20 +16,23 @@
   .box-shadow(0px 0px 0px 3px @categoryShadow);
   margin-bottom: @baseLineHeight;
 
-  table {
-  	margin: 0px;
+  .header {
+    background-color: @categoryHeader;
+    border: 1px solid @categoryBorder;
+    border-radius: @borderRadiusSmall @borderRadiusSmall 0px 0px;
+    margin: -1px;
+    margin-bottom: 0px;
+    padding: (@fontSizeSmall / 3) (@fontSizeSmall - 2px);
 
-  	caption {
-  	  background-color: @categoryHeader;
-      border: 1px solid @categoryBorder;
-      border-radius: @borderRadiusSmall @borderRadiusSmall 0px 0px;
-      margin: -1px;
-      padding: (@fontSizeSmall / 3) (@fontSizeSmall - 2px);
+    h2 {
+      margin: 0px;
+      padding: 0px;
 
       color: @grayDark;
-  	  font-size: @fontSizeSmall;
-  	  font-weight: bold;
-  	  text-align: left;
+      font-size: @fontSizeSmall;
+      font-weight: bold;
+      line-height: @baseLineHeight;
+      text-align: left;
 
       small {
         margin-left: @baseFontSize / 2;
@@ -37,44 +40,51 @@
         color: @grayLight;
         font-size: @fontSizeSmall;
       }
-  	}
-    
-    td {
-      padding: ((@fontSizeLarge / 2) + 6px) (@fontSizeSmall - 2px);
-      padding-bottom: (@fontSizeLarge / 2) + 7px;
+    }
+  }
+
+  .forum {
+    border-bottom: 1px solid @categoryBorder;
+    height: 21px;
+    overflow: visible;
+    padding: ((@fontSizeLarge / 2) + 6px) (@fontSizeSmall - 2px);
+
+    &.last {
+      border-bottom: none;
     }
 
     .forum-icon {
-      padding-right: (@fontSizeSmall / 2) - 3px;
-      width: 1%;
+      float: left;
 
       .forum-icon-wrap {
-      	background-color: @itemOldColor;
-      	border: 1px solid darken(@itemOldColor, 10%);
-    		border-radius: @baseBorderRadius;
-    		padding: (@forumIconSize - 1px) @forumIconSize;
+        background-color: @itemOldColor;
+        border: 1px solid darken(@itemOldColor, 10%);
+        border-radius: @baseBorderRadius;
+        padding: (@forumIconSize - 1px) @forumIconSize;
 
-    		&.forum-icon-new {
-  	      background-color: @itemNewColor;
-  	      border: 1px solid darken(@itemNewColor, 10%);
-    		}
+        &.forum-icon-new {
+          background-color: @itemNewColor;
+          border: 1px solid darken(@itemNewColor, 10%);
+        }
 
-    		&.forum-icon-redirect {
-  	      background-color: @itemMovedColor;
-  	      border: 1px solid darken(@itemMovedColor, 10%);
-    		}
+        &.forum-icon-redirect {
+          background-color: @itemMovedColor;
+          border: 1px solid darken(@itemMovedColor, 10%);
+        }
       }
     }
-    
+
     .forum-main {
+      margin-left: 34px;
+
       h3 {
         float: left;
-    		margin: 0px;
-    		padding: 0px;
+        margin: 0px;
+        padding: 0px;
 
-    		font-size: @fontSizeLarge;
+        font-size: @fontSizeLarge;
         font-weight: normal;
-    		line-height: @baseLineHeight;
+        line-height: @baseLineHeight;
 
         a:link, a:visited {
           color: @textColor;
@@ -240,46 +250,53 @@
   }
 
   &.index-category-important {
-    caption {
+    .header {
       background-color: @red;
       border: 1px solid darken(@red, 10%);
 
-      color: @white;
-      text-shadow: 0px 1px 0px darken(@red, 25%);
+      h2 {
+        color: @white;
+        text-shadow: 0px 1px 0px darken(@red, 25%);
 
-      small {
-        color: darken(@red, 40%);
-        text-shadow: none;
+        small {
+          color: darken(@red, 40%);
+          text-shadow: none;
+        }
       }
     }
   }
 
   &.index-category-inverse {
-    caption {
+    .header {
       background-color: @grayDark;
       border: 1px solid darken(@grayDark, 10%);
 
-      color: @grayLighter;
-      text-shadow: 0px 1px 0px darken(@black, 25%);
+      h2 {
+        color: @grayLighter;
+        text-shadow: 0px 1px 0px darken(@black, 25%);
 
-      small {
-        color: lighten(@grayLight, 10%);
-        text-shadow: none;
+        small {
+          color: lighten(@grayLight, 10%);
+          text-shadow: none;
+        }
       }
     }
   }
 
   &.index-category-info {
-    caption {
+    .header{
       background-color: @bluePale;
       border: 1px solid darken(@bluePale, 10%);
 
-      color: @white;
-      text-shadow: 0px 1px 0px darken(@bluePale, 25%);
+      h2 {
 
-      small {
-        color: darken(@bluePale, 25%);
-        text-shadow: none;
+        color: @white;
+        text-shadow: 0px 1px 0px darken(@bluePale, 25%);
+
+        small {
+          color: darken(@bluePale, 25%);
+          text-shadow: none;
+        }
       }
     }
   }
