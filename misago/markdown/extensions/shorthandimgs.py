@@ -20,9 +20,13 @@ class ShorthandImagePattern(LinkPattern):
     def handleMatch(self, m):
         img_src = m.groups()[2].strip()
         if is_inner(img_src):
-            img_src = clean_inner(img_src)
+            img_src = self.sanitize_url(clean_inner(img_src))
         if img_src:
-            el = etree.Element("img")
-            el.set('alt', img_src)
-            el.set('src', img_src)
-            return el
+            a = etree.Element("a")
+            a.set('href', img_src)
+            a.set('rel', 'nofollow')
+            a.set('target', '_blank')
+            img = etree.SubElement(a, "img")
+            img.set('src', img_src)
+            img.set('alt', img_src)
+            return a
