@@ -180,6 +180,7 @@ class EmojiPattern(SubstituteTagPattern):
         element = etree.Element('img')
         element.set('class', 'emoji')
         element.set('alt', ':%s:' % self.emo)
+        element.set('title', ':%s:' % self.emo)
         element.set('src', '%semojis/%s.png' % (settings.STATIC_URL, self.emo))
         return element
 
