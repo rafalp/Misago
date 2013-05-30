@@ -15,8 +15,6 @@ def set_timezone(new_tz):
 
 class UserMiddleware(object):
     def process_request(self, request):
-        request.onlines = MembersOnline(request.settings['online_counting'], request.monitor, request.settings['online_counting_frequency'])
-
         if request.session.created() and not request.firewall.admin:
             request.onlines.new_session()
 
@@ -33,6 +31,9 @@ class UserMiddleware(object):
             # Set guest's timezone and empty rank
             set_timezone(request.settings['default_timezone'])
             request.session.rank = None
+
+        # Build online list    
+        request.onlines = MembersOnline(request.settings['online_counting'], request.monitor, request.settings['online_counting_frequency'])
 
     def process_response(self, request, response):
         try:
