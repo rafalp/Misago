@@ -138,7 +138,7 @@
         </li>
         {% if settings.online_counting != 'no' %}
         <li>
-          <span class="tooltip-top" title="{% trans %}Online{% endtrans %}"><i class="icon-map-marker"></i> {{ users_online.members|int|intcomma }} <span class="muted">{{ users_online.all|int|intcomma }}</spam></span>
+          <span class="tooltip-top" title="{% trans %}Online{% endtrans %}"><i class="icon-map-marker"></i> {{ users_online.members|int|intcomma }} <span class="muted">{{ users_online.all|int|intcomma }}</span></span>
         </li>
         {% endif %}
       </ul>
