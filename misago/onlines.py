@@ -47,8 +47,16 @@ class MembersOnline(object):
             if self._all != self._oa:
                 self.monitor['online_all'] = self._all
 
-    def stats(self):
-        return {
+    def stats(self, request):
+        stat = {
                 'members': self.members,
                 'all': self.all,
                }
+
+        if not request.session.matched:
+            if request.user.is_authenticated():
+                stat['members'] += 1
+            if not request.user.is_crawler():
+                stat['all'] += 1
+        
+        return stat

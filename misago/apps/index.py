@@ -19,7 +19,7 @@ def index(request):
             cache.set('thread_ranking_%s' % request.user.make_acl_key(), popular_threads, 60 * request.settings['thread_ranking_refresh'])
 
     # Users online
-    users_online = request.onlines.stats()
+    users_online = request.onlines.stats(request)
 
     # Ranks online
     ranks_list = cache.get('ranks_online', 'nada')
