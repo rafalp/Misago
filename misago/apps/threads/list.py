@@ -15,7 +15,7 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
 
     def threads_queryset(self):
         announcements = self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set).filter(weight=2).order_by('-pk')
-        threads = self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set).filter(weight__lt=2).order_by('-last')
+        threads = self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set).filter(weight__lt=2).order_by('-weight', '-last')
 
         # Dont display threads by ignored users (unless they are important)
         if self.request.user.is_authenticated():
