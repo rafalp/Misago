@@ -12,7 +12,7 @@ def index(request):
         popular_threads = cache.get('thread_ranking_%s' % request.user.make_acl_key(), 'nada')
         if popular_threads == 'nada':
             popular_threads = []
-            for thread in Thread.objects.filter(moderated=False).filter(deleted=False).filter(forum__in=Forum.objects.readable_forums(request.acl)).prefetch_related('forum').order_by('-score')[:request.settings['thread_ranking_size']]:
+            for thread in Thread.objects.filter(moderated=False).filter(deleted=False).filter(forum__in=Forum.objects.readable_forums(request.acl)).prefetch_related('forum').order_by('-score', '-last')[:request.settings['thread_ranking_size']]:
                 thread.forum_name = thread.forum.name
                 thread.forum_slug = thread.forum.slug
                 popular_threads.append(thread)
