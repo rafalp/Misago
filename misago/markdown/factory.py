@@ -87,3 +87,10 @@ def finalize_markdown(text):
     text = re.sub(r'<quotesingletitle>', _("Quote"), text)
     text = re.sub(r'<imgalt>', _("Posted image"), text)
     return text
+
+
+def emojis():
+    if 'misago.markdown.extensions.emoji.EmojiExtension' in settings.MARKDOWN_EXTENSIONS:
+        from misago.markdown.extensions.emoji.EmojiExtension import EMOJIS
+        return EMOJIS
+    return []

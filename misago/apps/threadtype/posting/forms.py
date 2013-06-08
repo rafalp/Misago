@@ -3,6 +3,7 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from misago.apps.threadtype.mixins import ValidateThreadNameMixin, ValidatePostLengthMixin
 from misago.forms import Form
+from misago.markdown.factory import emojis
 from misago.validators import validate_sluggable
 
 class PostingForm(Form, ValidatePostLengthMixin):

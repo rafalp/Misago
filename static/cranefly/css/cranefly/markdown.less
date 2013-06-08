@@ -40,52 +40,25 @@
   }
 
   blockquote {
-    background-color: darken(@postBackground, 1%);
-    border: 1px solid darken(@postBackground, 6%);
-    border-radius: @baseBorderRadius;
-    padding: @baseFontSize;
-
-    &:hover {
-      border-color: darken(@postBackground, 12%);
-
-      header {
-        .opacity(100);
-      }
-    }
+    border-left-color: darken(@grayLighter, 5%);
+    padding: (@baseFontSize / 3) @baseFontSize;
 
     header {
-      border-bottom: 1px solid darken(@postBackground, 12%);
-      margin-bottom: @baseLineHeight / 2;
-      .opacity(70);
-      padding-bottom: @baseFontSize;
+      padding-bottom: (@baseLineHeight / 2);
 
-      font-size: @baseFontSize * 1.2;
+      font-size: @baseFontSize * 1.1;
       font-weight: bold;
       line-height: @baseLineHeight;
     }
 
-    &>:first-child {
-      margin-top: 0px;
-    }
-
-    &>:last-child {
-      margin-bottom: 0px;
-      
-      img:last-child {
-        margin-bottom: 0px;
-      }
-    }
-
     p {
-      margin: 0 0 @baseLineHeight / 2;
-      font-size: @fontSizeSmall;
+      margin: 0 0 (@baseLineHeight / 2);
+
+      font-size: @baseFontSize;
     }
 
     blockquote {
-      background-color: @postBackground;
-      border: 1px solid darken(@postBackground, 5%);
-      border-radius: @baseBorderRadius;
-      padding: @baseFontSize;
+      .opacity(85);
     }
   }
 
