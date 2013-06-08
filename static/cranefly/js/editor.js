@@ -72,64 +72,108 @@ function makeReplace(textId, replacement) {
   _makeReplace(textId, getSelection(textId), replacement);
 }
 
-// Nice editor functionality
+function extractor(query) {
+    var result = /([^\s]+)$/.exec(query);
+    if(result && result[1])
+        return result[1].trim();
+    return '';
+}
+
+// Small and nice editor functionality
 $(function() {
   $('.editor-tools').fadeIn(600);
-  
-  function get_textarea(obj) {
-    return $(obj).parent().parent().parent().parent().find('textarea');
-  }
-  
-  $('.editor-bold').click(function() {
-    ta = get_textarea(this).attr('id');
-    makeWrap(ta, '**', '**');
-    return false;
-  });
-  
-  $('.editor-emphasis').click(function() {
-    ta = get_textarea(this).attr('id');
-    makeWrap(ta, '*', '*');
-    return false;
-  });
-  
-  $('.editor-link').click(function() {
-    ta = get_textarea(this).attr('id');
-    var link_url = $.trim(prompt(ed_lang_enter_link_url));
-    if (link_url.length > 0) {
-      link_url = link_url.toLowerCase();
-      var pattern = /^(("[\w-+\s]+")|([\w-+]+(?:\.[\w-+]+)*)|("[\w-+\s]+")([\w-+]+(?:\.[\w-+]+)*))(@((?:[\w-+]+\.)*\w[\w-+]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][\d]\.|1[\d]{2}\.|[\d]{1,2}\.))((25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\.){2}(25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\]?$)/i;
-      if (!pattern.test(link_url)) {
-        if (link_url.indexOf("http://") != 0 && link_url.indexOf("https://") != 0 && link_url.indexOf("ftp://") != 0) {
-          link_url = "http://" + link_url;
+  $('.editor').each(function() {
+    // Get textarea stuff
+    var textarea = $(this).find('textarea');
+    var textarea_id = $(textarea).attr('id');
+    
+    // Do we have emojis?
+    if (1==2 && ed_emojis.length > 1) {
+      var mode = 0;
+      var open = -1;
+
+      $(textarea).focusout(function() {
+        mode = 0;
+        open = -1;
+      });
+
+      $(textarea).keyup(function() {
+        text = $(textarea).val();
+        cursor = getSelection(textarea_id).start;
+        if (cursor > 0) {
+          // Read typed character and previous character
+          input = text.substring(cursor - 1, cursor);
+          if (cursor > 1) {
+            pre = text.substring(cursor - 2, cursor - 1);
+          } else {
+            pre = '';
+          }
+
+          // Act accordingly to current mode
+          if (mode == 0) {
+            if (input == ':' && !pre.match(/^[A-Za-z0-9]+$/i)) {
+              // Test passed, mode 1 engaged!
+              mode = 1;
+              open = cursor;
+            }
+          } else if (mode == 1) {
+            // Inside emoji mode, we are helping user enter emoji input
+            if (cursor > open && !input.match(/^(\+|\-|[_A-Za-z0-9])+$/i)) {
+              // Emoji fail
+              mode = 0;
+            }
+          }
+        }
+      });
+    }
+
+    // Handle buttons
+    $('.editor-bold').click(function() {
+      makeWrap(textarea_id, '**', '**');
+      return false;
+    });
+    
+    $('.editor-emphasis').click(function() {
+      makeWrap(textarea_id, '*', '*');
+      return false;
+    });
+    
+    $('.editor-link').click(function() {
+      var link_url = $.trim(prompt(ed_lang_enter_link_url));
+      if (link_url.length > 0) {
+        link_url = link_url.toLowerCase();
+        var pattern = /^(("[\w-+\s]+")|([\w-+]+(?:\.[\w-+]+)*)|("[\w-+\s]+")([\w-+]+(?:\.[\w-+]+)*))(@((?:[\w-+]+\.)*\w[\w-+]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][\d]\.|1[\d]{2}\.|[\d]{1,2}\.))((25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\.){2}(25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\]?$)/i;
+        if (!pattern.test(link_url)) {
+          if (link_url.indexOf("http://") != 0 && link_url.indexOf("https://") != 0 && link_url.indexOf("ftp://") != 0) {
+            link_url = "http://" + link_url;
+          }
+        }
+        var link_label = $.trim(prompt(ed_lang_enter_link_label, $.trim(getSelectionText(get_textarea(this).attr('id')))));
+        if (link_label.length > 0) {
+          makeReplace(textarea_id, '[' + link_label + '](' + link_url + ')');
+        } else {
+          makeReplace(textarea_id, '<' + link_url + '>');
         }
       }
-      var link_label = $.trim(prompt(ed_lang_enter_link_label, $.trim(getSelectionText(get_textarea(this).attr('id')))));
-      if (link_label.length > 0) {
-        makeReplace(ta, '[' + link_label + '](' + link_url + ')');
-      } else {
-        makeReplace(ta, '<' + link_url + '>');
+      return false;
+    });
+    
+    $('.editor-image').click(function() {
+      var image_url = $.trim(prompt(ed_lang_enter_image_url, $.trim(getSelectionText(get_textarea(this).attr('id')))));
+      if (image_url.length > 0) {
+        var image_label = $.trim(prompt(ed_lang_enter_image_label));
+        if (image_label.length > 0) {
+          makeReplace(textarea_id, '![' + image_label + '](' + image_url + ')');
+        } else {
+          makeReplace(textarea_id, '!(' + image_url + ')');
+        }
       }
-    }
-    return false;
-  });
-  
-  $('.editor-image').click(function() {
-    ta = get_textarea(this).attr('id');
-    var image_url = $.trim(prompt(ed_lang_enter_image_url, $.trim(getSelectionText(get_textarea(this).attr('id')))));
-    if (image_url.length > 0) {
-      var image_label = $.trim(prompt(ed_lang_enter_image_label));
-      if (image_label.length > 0) {
-        makeReplace(ta, '![' + image_label + '](' + image_url + ')');
-      } else {
-        makeReplace(ta, '!(' + image_url + ')');
-      }
-    }
-    return false;
-  });
-  
-  $('.editor-hr').click(function() {
-    ta = get_textarea(this).attr('id');
-    makeReplace(ta, '\r\n\r\n- - - - -\r\n\r\n');
-    return false;
+      return false;
+    });
+    
+    $('.editor-hr').click(function() {
+      makeReplace(textarea_id, '\r\n\r\n- - - - -\r\n\r\n');
+      return false;
+    });
   });
 });

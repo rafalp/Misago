@@ -91,6 +91,6 @@ def finalize_markdown(text):
 
 def emojis():
     if 'misago.markdown.extensions.emoji.EmojiExtension' in settings.MARKDOWN_EXTENSIONS:
-        from misago.markdown.extensions.emoji.EmojiExtension import EMOJIS
+        from misago.markdown.extensions.emoji import EMOJIS
         return EMOJIS
     return []

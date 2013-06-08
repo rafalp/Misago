@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
 from misago.forms import Form, FormLayout, FormFields
+from misago.markdown import emojis
 from misago.messages import Message
 from misago.models import Forum, Thread, Post, Karma, WatchedThread
 from misago.readstrackers import ThreadsTracker
@@ -219,6 +220,7 @@ class ThreadBaseView(ViewBase):
                                                  'ignored_posts': self.ignored,
                                                  'watcher': self.watcher,
                                                  'pagination': self.pagination,
+                                                 'emojis': emojis(),
                                                  'quick_reply': FormFields(QuickReplyForm(request=request)).fields,
                                                  'thread_form': FormFields(self.thread_form).fields if self.thread_form else None,
                                                  'posts_form': FormFields(self.posts_form).fields if self.posts_form else None,
