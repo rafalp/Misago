@@ -82,7 +82,10 @@ def reltimesince(val, arg=""):
                     "Minute ago",
                     "%(minutes)s minutes ago",
                 minutes) % {'minutes': minutes}
-                
+
+        if diff.seconds < 3660:
+            return _("Hour ago")
+        
         if diff.seconds < 10800:
             hours = int(math.floor(diff.seconds / 3600.0))
             minutes = (diff.seconds - (hours * 3600)) / 60
