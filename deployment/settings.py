@@ -23,13 +23,13 @@ ADMINS = ()
 # NEVER EVER SHARE THIS KEY WITH ANYBODY!
 # Make it messed up and long, this is example of good secret key:
 # yaobeifl1a6hf&3)^uc#^vlu1ud7xp^+*c5zoq*tf)fvs#*o$#
-SECRET_KEY = ''
+SECRET_KEY = 'secret-key'
 
 # Database connection
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '', # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3', # Can be either 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'database.db', # Name of the database or the path to the database file if using sqlite3.
         'USER': '', # Not used with sqlite3.
         'PASSWORD': '', # Not used with sqlite3.
         'HOST': '', # Set to empty string for localhost. Not used with sqlite3.
@@ -44,14 +44,14 @@ DATABASES = {
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-   }
+    }
 }
 
 # Cookies configuration
-COOKIES_DOMAIN = '' # For example cookie domain for "www.mysite.com" or "forum.mysite.com" is ".mysite.com"
-COOKIES_PATH = ''
+COOKIES_DOMAIN = '192.168.33.10' # E.g. a cookie domain for "www.mysite.com" or "forum.mysite.com" is ".mysite.com"
+COOKIES_PATH = '/'
 COOKIES_PREFIX = '' # Allows you to avoid cookies collisions with other applications.
-COOKIES_SECURE = False # Set this to true if AND ONLY IF you are using SSL on your forum.
+COOKIES_SECURE = False # Set this to true if, AND ONLY IF, you are using SSL on your forum.
 
 # Sessions configuration
 SESSION_LIFETIME = 3600 # Number of seconds since last request after which session is marked as expired.
@@ -72,7 +72,7 @@ LANGUAGE_CODE = 'en_US'
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Always use forward slashes, even on Windows.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = '/vagrant/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -96,7 +96,7 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     # Make sure directory containing avatars is located under first directory on list
-    '/static',
+    '/vagrant/static/',
 )
 
 # E-mail host
@@ -127,7 +127,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/templates'
+    '/vagrant/templates'
 )
 
 # List of installed themes
