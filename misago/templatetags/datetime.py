@@ -20,10 +20,10 @@ def reltimesince_filter(val, arg=""):
 
 
 @register.filter(name='compact')
-def compact_filter(val, arg=""):
-    return compact(val, arg)
+def compact_filter(val):
+    return compact(val)
 
 
 @register.filter(name='relcompact')
-def relcompact_filter(val, arg=""):
-    return relcompact(val, arg)
+def relcompact_filter(val):
+    return relcompact(val)

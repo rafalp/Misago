@@ -120,7 +120,6 @@ def compact(val):
     return format(localtime(val), _('j M y'))
 
 
-
 def relcompact(val):
     if not val:
         return _("Never")
