@@ -36,7 +36,7 @@
     {% for subforum in forum.subforums %}
     <div class="forum{% if loop.last %} last{% endif %}">
       <div class="forum-icon">
-        <span class="forum-icon-wrap{% if subforum.type == 'redirect' %} forum-icon-redirect{% elif not subforum.is_read %} forum-icon-new{% endif %}"><i class="icon-{% if subforum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %} icon-white"></i></span>
+        <div class="forum-icon-wrap{% if subforum.type == 'redirect' %} forum-icon-redirect{% elif not subforum.is_read %} forum-icon-new{% endif %}"><i class="icon-{% if subforum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %} icon-white"></i></div>
       </div>
       <div id="forum-{{ subforum.id }}" class="forum-main">
         <h3 class="forum-title{% if not subforum.is_read %} forum-title-new{% endif %}"><a href="{{ subforum.type|url(slug=subforum.slug, forum=subforum.id) }}">{{ subforum.name }}</a></h3>

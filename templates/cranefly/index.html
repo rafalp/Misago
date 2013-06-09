@@ -20,7 +20,7 @@
         {% for forum in category.subforums %}
         <div class="forum{% if loop.last %} last{% endif %}">
           <div class="forum-icon">
-            <span class="forum-icon-wrap{% if forum.type == 'redirect' %} forum-icon-redirect{% elif not forum.is_read %} forum-icon-new{% endif %}"><i class="icon-{% if forum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %} icon-white"></i></span>
+            <div class="forum-icon-wrap{% if forum.type == 'redirect' %} forum-icon-redirect{% elif not forum.is_read %} forum-icon-new{% endif %}"><i class="icon-{% if forum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %} icon-white"></i></div>
           </div>
           <div id="forum-{{ forum.id }}" class="forum-main">
             <h3 class="forum-title{% if not forum.is_read %} forum-title-new{% endif %}"><a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3>
