@@ -32,7 +32,7 @@ Dependencies
 Installation
 ------------
 
-## Vagrant setup
+### Vagrant setup
 
 Misago comes with a Puppet-provisioned Vagrant-setup that you can use to get Misago up and running in a development environment with just a couple of commands. The first thing you want to do is clone Misago:
 
@@ -40,7 +40,7 @@ Misago comes with a Puppet-provisioned Vagrant-setup that you can use to get Mis
 git clone git://github.com/rafalp/Misago.git
 ```
 
-The next is to boot up the VM and provision it:
+The next step is to boot up the VM and provision it:
 
 ```sh
 cd Misago && vagrant up
@@ -56,25 +56,25 @@ sudo python manage.py runserver 192.168.33.10:80 # Private network address as pe
 
 Now navigate to [192.168.33.10](http://192.168.33.10) in your browser of choice to find your forums all set up and ready for testing and development. Puppet will have taken care of bootstrapping your Misago installation with a database, some dummy content and an admin user with the following credentials:
 
-__Username__: Admin
-__Email__: admin@example.com
+__Username__: Admin  
+__Email__: admin@example.com  
 __Password__: password
 
-To be aware that the defualt configuration doesn't contain anything besides the bare-minimum for Misago to run - this meaning that things like an SMTP server will have to added manually if you wish to test Misago's email features.
+Be aware that the defualt configuration doesn't contain anything besides the bare-minimum for Misago to run - this meaning that things like an SMTP server will have to added manually if you wish to test Misago's email features.
 
-## Manual setup
+### Manual setup
 
 If you'd like to test Misago in a more production-ish environment instead of the Vagrant development environment, you're free to do so. The very first thing that needs to be done is ensure you have all the dependencies installed, most of which can be installed through `pip`.
 
 Misago comes with the "deployment" Python module that contains an empty Misago configuration and a default Django WSGI container for you to use in your deployments. On top of this you can then add an HTTP and/or HTTP Proxy server - Gunicorn and Nginx would be a good mix.
 
-After you set low-level configuration of Misago (`settings/settings.py`), fire the following commands on manage.py through the Python executable:
+After you set low-level configuration of Misago ([`deployment/settings.py`](deployment/settings.py)), fire the following commands on manage.py through the Python executable:
 
-* #### `startmisago [--quiet]`  
+* `startmisago [--quiet]`  
   Creates the DB structure for Misago and populates it with default data
-* #### `adduser [--admin] <username> <email> <password>`
+* `adduser [--admin] <username> <email> <password>`  
   Adds a new user to the database.  
-  Make sure to do something like `adduser Admin admin@example.com password --admin` to add an admin when you first setup your forums.
+  Make sure to do something like `adduser Admin admin@example.com password --admin` to add an admin user when you first setup your forums.
 
 Misago stands on shoulders of Django and Django documentation covers deployment of apps extensively: https://docs.djangoproject.com/en/dev/howto/deployment/
 
@@ -82,17 +82,17 @@ Don't forget to set up maintenance cronjobs to keep your database clean. You can
 
 While Misago will run without a cache set up, you are strongly encouraged to set one up for it. Even if you choose not to run one, you will still need to set a default one (such as dummy caching).
 
-### WARNING!
-
-Misago is not production ready yet! Don't ever use it in anything thats anywhere close to a live production enviroment!
+> ### Notice!
+>
+> __Misago is not yet production ready! Don't ever use it in anything thats anywhere close to a production enviroment!__
 
 
 Updating
 --------
 
-You can use the `updatemisago` command to update your forums database to latest version _unless_ you are updating from 0.1 which is incompatibile with 0.2 and later releases.
+You can use the `updatemisago` command to update your forums database to latest version _unless_ you are updating from `0.1` which is incompatibile with `0.2` and later releases.
 
-If you want to move data from 0.1 to 0.2, install 0.2 to new database, then add a connection to the 0.1 database in your settings.py and name it "deprecated". When you are ready, use the `migratefrom01` management command to move data from the 0.1 database over to 0.2.
+If you want to move data from `0.1` to `0.2`, install `0.2` to new database, then add a connection to the `0.1` database in your settings.py and name it "deprecated". When you are ready, use the `migratefrom01` management command to move data from the `0.1` database over to `0.2`.
 
 
 Contributing
@@ -116,8 +116,8 @@ Authors
 Copyright and license
 ---------------------
 
-Misago Copyright © 2012 Rafał Pitoń  
-This program comes with ABSOLUTELY NO WARRANTY.  
-This is free software and you are welcome to redistribute it under the conditions described in the license.
-
-For the complete license, refer to [LICENSE.md](LICENSE.md)
+> __Misago__ - Copyright © 2013 [Rafał Pitoń](http://github.com/ralfp)  
+> This program comes with ABSOLUTELY NO WARRANTY.  
+> This is free software and you are welcome to redistribute it under the conditions described in the license.
+>
+> For the complete license, refer to [LICENSE.md](LICENSE.md)
