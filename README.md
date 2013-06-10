@@ -2,6 +2,10 @@
 
 Misago is an internet forum application written in Python and using Django as its foundation. Visit the project homepage for discussion and a live demo: <http://misago-project.org>
 
+> #### Notice!
+>
+> __Misago is not yet production ready! Don't ever use it in anything thats anywhere close to a production enviroment!__
+
 The Tao AKA Mission Statement
 -----------------------------
 
@@ -81,10 +85,6 @@ Misago stands on shoulders of Django and Django documentation covers deployment 
 Don't forget to set up maintenance cronjobs to keep your database clean. You can look into [cron.txt](cron.txt) file to see what cronjobs to set up.
 
 While Misago will run without a cache set up, you are strongly encouraged to set one up for it. Even if you choose not to run one, you will still need to set a default one (such as dummy caching).
-
-> ### Notice!
->
-> __Misago is not yet production ready! Don't ever use it in anything thats anywhere close to a production enviroment!__
 
 
 Updating
