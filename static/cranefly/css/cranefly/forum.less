@@ -304,123 +304,197 @@
   .box-shadow(0px 0px 0px 3px @categoryShadow);
   margin-bottom: @baseLineHeight;
 
-  table {
-    margin: 0px;
+  .header {
+    background-color: @categoryHeader;
+    border: 1px solid @categoryBorder;
+    border-radius: @borderRadiusSmall @borderRadiusSmall 0px 0px;
+    margin: -1px;
+    margin-bottom: 0px;
+    padding-bottom: 1px;
+    overflow: auto;
 
-    th {
-      background-color: @bodyBackground;
-      border-bottom: 1px solid @grayLighter;
-      padding: @paddingSmall;
+    color: @grayLight;
+    font-weight: bold;
+    font-size: @fontSizeSmall;
 
-      color: @grayLight;
-      font-size: @fontSizeSmall;
-    }
-
-    td {
-      vertical-align: middle;
-
-      &.threads-list-empty {
-        padding: @paddingLarge;
-
-        font-size: @fontSizeLarge;
-        text-align: center;
+    .row-fluid {
+      &>div {
+        min-height: auto;
+        padding: @paddingSmall;
       }
 
+      .thread-replies {
+        float: left;
+        width: 106px;
+      }
+
+      .thread-last {
+        float: left;
+      }
+    }
+
+    .check-cell {
+      label {
+        margin: 0px;
+      }
+    }
+  }
+
+  .thread-row {
+    border-bottom: 1px solid @categoryBorder;
+    height: 24px;
+    overflow: hidden;
+    padding: (@fontSizeSmall - 2px) 0px;
+
+    .row-fluid {
+      &>div {
+        min-height: auto;
+        padding: @paddingSmall;
+        padding-bottom: 0px;
+      }
+    }
+
+    &.thread-last {
+      border-bottom: none;
+
+      &>div {
+        padding-bottom: 1px;
+      }
+    }
+
+    .thread-icon {
+      background-color: @itemOldColor;
+      border: 1px solid darken(@itemOldColor, 10%);
+      .border-radius(@baseBorderRadius);
+      display: block;
+      float: left;
+      margin: -2px 0px;
+      margin-left: -1px;
+      padding: 1px 4px;
+
+      &:hover, &:active {
+        .opacity(100);
+      }
+
+      i {
+        background-image: url("@{iconWhiteSpritePath}");
+      }
+    }
+
+    &.thread-new {
       .thread-icon {
-        &:link, &:active, &:visited, &:hover {
-          background-color: @itemOldColor;
-          border: 1px solid darken(@itemOldColor, 15%);
-          border-radius: @baseBorderRadius;
-          margin-right: @baseFontSize / 2;
-          padding: 3px 4px;
-
-          &.thread-new {
-            background-color: @itemNewColor;
-            border: 1px solid darken(@itemNewColor, 15%);
-          }
-        }
-
-        i {
-          background-image: url("@{iconWhiteSpritePath}");
-        }
+        background-color: @itemNewColor;
+        border: 1px solid darken(@itemNewColor, 10%);
       }
 
       .thread-name {
-        color: @textColor;
-        font-weight: bold;
-      }
-
-      .thread-details, .thread-last-reply {
-        color: @grayLight;
-
-        a:link, a:visited {
-          color: @textColor;
-        }
-      }
-
-      .thread-details {
-        font-size: @fontSizeMini;
-      }
-
-      .thread-flags {
-        float: right;
-        margin: 0px;
-        .opacity(80);
-        padding: 0px;
-
-        li {
-          margin-left: 3px;
-          float: left;
-        }
-      }
-
-      .thread-rating {
-        background-color: @grayLighter;
-        border-radius: @baseBorderRadius;
-        padding: 4px;
-
-        color: @grayLight;
-        font-size: @fontSizeLarge;
-        font-weight: bold;
-        text-align: center;
-
-        &.thread-rating-negative, &.thread-rating-positive {
-          color: @white;
-        }
-
-        &.thread-rating-negative {
-          background-color: @red;
-        }
-
-        &.thread-rating-positive {
-          background-color: @green;
-        }
+        color: @textColor !important;
       }
     }
 
-    th, td {
-      &.check-cell {
-        width: 1%;
-        text-align: center;
-        vertical-align: middle;
+    &.threads-list-empty {
+      padding: @paddingLarge;
 
-        .checkbox {
-          margin: 0px;
-          padding: 0px;
+      font-size: @fontSizeLarge;
+      text-align: center;
+    }
 
-          input {
-            margin: 0px;
-            padding: 0px;
+    .thread-name {
+      margin-left: 10px;
+
+      color: lighten(@textColor, 17%);
+      font-size: @baseFontSize + 2px;
+      font-weight: bold;
+    }
+
+    .thread-details, .thread-last-reply {
+      color: @grayLight;
+
+      a:link, a:visited {
+        color: @textColor;
+      }
+    }
+
+    .thread-details {
+      font-size: @fontSizeMini;
+    }
+
+    .thread-flags {
+      float: right;
+      margin: 0px;
+      padding: 0px;
+      position: relative;
+      right: -26px;
+
+      li {
+        float: left;
+        margin-left: 3px;
+      }
+    }
+
+    .thread-activity {
+      border-left: 1px dotted darken(@categoryBackground, 12%);
+
+      color: @grayLight;
+
+      a:link, a:active, a:visited, a:hover {
+        color: @gray;
+        font-weight: bold;
+      }
+
+      .thread-replies {
+        float: left;
+        margin-right: @baseFontSize;
+        .opacity(60);
+        width: 76px;
+
+        color: @textColor;
+        font-size: @fontSizeLarge;
+        font-weight: bold;
+        text-align: right;
+
+        i {
+          position: relative;
+          top: 2px;
+        }
+      }
+
+      .thread-last-reply {
+        border-left: 1px dotted darken(@categoryBackground, 12%);
+        float: left;
+        padding-left: @baseFontSize;
+
+        .thread-last-avatar {
+          img {
+            .border-radius(@baseBorderRadius);
+            margin: -6px 0px;
             position: relative;
-            top: 3px;
+            bottom: 1px;
+            width: 28px;
+            height: 28px;
           }
         }
       }
-    }
 
-    th.check-cell {
-      input{
-        right: 2px;
+      .thread-select {
+        background-color: darken(@categoryBackground, 5%);
+        display: block;
+        float: right;
+        margin: -12px -11px;
+        margin-left: 0px;
+        width: 29px;
+        height: 44px;
+
+        &:hover, &:focus, &:active {
+          background-color: @linkColor;
+        }
+
+        input {
+          margin: 0px;
+          position: relative;
+          right: 2px;
+          top: 16px;
+        }
       }
     }
   }

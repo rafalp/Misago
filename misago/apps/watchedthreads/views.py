@@ -18,6 +18,8 @@ def watched_threads(request, page=0, new=False):
     if not request.settings['enable_private_threads']:
         readable_forums.remove(Forum.objects.special_pk('private_threads'))
     queryset = WatchedThread.objects.filter(user=request.user).filter(forum_id__in=readable_forums).select_related('thread').filter(thread__moderated=False).filter(thread__deleted=False)
+    if request.settings['avatars_on_threads_list']:
+        queryset = queryset.prefetch_related('thread__last_poster')
     if new:
         queryset = queryset.filter(last_read__lt=F('thread__last'))
     count = queryset.count()
