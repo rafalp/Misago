@@ -66,7 +66,7 @@
         {% if subforum.subforums %}
         <div class="dropdown">
           {% if subforum.subforums|length > 1 %}
-          <a href="{{ subforum.type|url(slug=subforum.slug, forum=subforum.id) }}#subforums" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-chevron-down"></i> {% trans %}Subsubforums{% endtrans %}</a>
+          <a href="{{ subforum.type|url(slug=subforum.slug, forum=subforum.id) }}#subforums" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-chevron-down"></i> {% trans %}Subforums{% endtrans %}</a>
           <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
             <div class="dropdown-shadow">
               <ul>
@@ -77,7 +77,7 @@
             </div>
           </div>
           {% else %}
-          <a href="{{ subforum.subforums[0].type|url(slug=subforum.subforums[0].slug, forum=subforum.subforums[0].id) }}" class="subsubforum tooltip-top" title="{% trans subforum=subforum.subforums[0].name %}Go to the {{ subforum }} subsubforum{% endtrans %}">{{ subforum.subforums[0].name|short_string(16) }}</a>
+          <a href="{{ subforum.subforums[0].type|url(slug=subforum.subforums[0].slug, forum=subforum.subforums[0].id) }}" class="subforum tooltip-top" title="{% trans subforum=subforum.subforums[0].name %}Go to the {{ subforum }} subforum{% endtrans %}">{{ subforum.subforums[0].name|short_string(16) }}</a>
           {% endif %}
         </div>
         {% endif%}
