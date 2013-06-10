@@ -192,3 +192,11 @@ path.py
 !templates/debug_toolbar/panels/acl.html
 static/emojis/**
 templates/debug_toolbar/**
+
+
+############
+## Vagrant
+############
+
+.vagrant
+database.db
