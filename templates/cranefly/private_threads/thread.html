@@ -83,7 +83,7 @@
             {% if post.user_id %}
             <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}"><img src="{{ post.user.get_avatar(50) }}" alt="" class="user-avatar"></a>
             {% else %}
-            <img src="{{ macros.avatar_guest(60) }}" alt="" class="user-avatar"></a>
+            <img src="{{ macros.avatar_guest(60) }}" alt="" class="user-avatar">
             {% endif %}
             <div class="post-content">
               <div class="post-header">
@@ -123,7 +123,7 @@
           </div>
           {% elif post.ignored %}
           <div class="post-body post-muted">
-            <img src="{{ macros.avatar_guest(60) }}" alt="" class="user-avatar"></a>
+            <img src="{{ macros.avatar_guest(60) }}" alt="" class="user-avatar">
             <div class="post-arrow"></div>
             <div class="post-content">
               <div class="post-header">
@@ -152,7 +152,7 @@
             {% if post.user_id %}
             <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}"><img src="{{ post.user.get_avatar(100) }}" alt="" class="user-avatar"></a>
             {% else %}
-            <img src="{{ macros.avatar_guest(100) }}" alt="" class="user-avatar"></a>
+            <img src="{{ macros.avatar_guest(100) }}" alt="" class="user-avatar">
             {% endif %}
             <div class="post-arrow"></div>
             <div class="post-content">
