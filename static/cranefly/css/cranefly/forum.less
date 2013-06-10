@@ -342,7 +342,7 @@
 
   .thread-row {
     border-bottom: 1px solid @categoryBorder;
-    height: 24px;
+    height: 38px;
     overflow: hidden;
     padding: (@fontSizeSmall - 2px) 0px;
 
@@ -409,6 +409,7 @@
 
     .thread-details, .thread-last-reply {
       color: @grayLight;
+      line-height: @baseFontSize;
 
       a:link, a:visited {
         color: @textColor;
@@ -416,64 +417,103 @@
     }
 
     .thread-details {
+      margin-left: 34px;
+
       font-size: @fontSizeMini;
     }
 
     .thread-flags {
       float: right;
       margin: 0px;
-      padding: 0px;
       position: relative;
-      right: -26px;
+      right: -30px;
+      top: 5px;
+      padding: 0px;
 
       li {
+        border: 1px solid @gray;
+        .border-radius(@baseBorderRadius);
+        display: block;
         float: left;
         margin-left: 3px;
+        padding: 1px 4px;
+
+        &.flag-reported {
+          background-color: @flagReported;
+          border-color: darken(@flagReported, 10%);
+        }
+
+        &.flag-notreviewed {
+          background-color: @flagReviewed;
+          border-color: darken(@flagReviewed, 10%);
+        }
+
+        &.flag-announcement {
+          background-color: @flagAnnouncement;
+          border-color: darken(@flagAnnouncement, 10%);
+        }
+
+        &.flag-sticky {
+          background-color: @flagSticky;
+          border-color: darken(@flagSticky, 10%);
+        }
+
+        &.flag-deleted {
+          background-color: @flagDeleted;
+          border-color: darken(@flagDeleted, 10%);
+        }
+
+        &.flag-closed {
+          background-color: @flagClosed;
+          border-color: darken(@flagClosed, 10%);
+        }
+      }
+
+      i {
+        background-image: url("@{iconWhiteSpritePath}");
       }
     }
 
     .thread-activity {
       border-left: 1px dotted darken(@categoryBackground, 12%);
+      position: relative;
+      bottom: 3px;
 
-      color: @grayLight;
+      .thread-last-avatar {
+        float: left;
 
-      a:link, a:active, a:visited, a:hover {
-        color: @gray;
-        font-weight: bold;
+        img {
+          .border-radius(@baseBorderRadius);
+          margin: 0px;
+          margin-right: @baseFontSize;
+          width: 40px;
+          height: 40px;
+        }
       }
 
       .thread-replies {
         float: left;
+        margin-top: -1px;
         margin-right: @baseFontSize;
-        .opacity(60);
-        width: 76px;
 
-        color: @textColor;
-        font-size: @fontSizeLarge;
-        font-weight: bold;
-        text-align: right;
+        color: @grayLight;
+        font-size: @fontSizeSmall;
 
-        i {
-          position: relative;
-          top: 2px;
+        .lead {
+          font-size: @baseFontSize;
+          font-weight: bold;
+          line-height: @baseLineHeight;
+        }
+
+        a:link, a:active, a:visited, a:hover {
+          color: @gray;
         }
       }
 
       .thread-last-reply {
         border-left: 1px dotted darken(@categoryBackground, 12%);
-        float: left;
         padding-left: @baseFontSize;
 
-        .thread-last-avatar {
-          img {
-            .border-radius(@baseBorderRadius);
-            margin: -6px 0px;
-            position: relative;
-            bottom: 1px;
-            width: 28px;
-            height: 28px;
-          }
-        }
       }
 
       .thread-select {
@@ -483,7 +523,7 @@
         margin: -12px -11px;
         margin-left: 0px;
         width: 29px;
-        height: 44px;
+        height: 60px;
 
         &:hover, &:focus, &:active {
           background-color: @linkColor;

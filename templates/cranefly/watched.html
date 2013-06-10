@@ -30,7 +30,7 @@
       <div class="row-fluid">
         <div class="span7">{% trans %}Thread{% endtrans %}</div>
         <div class="span5 thread-activity">
-          <div class="thread-last">{% trans %}Last Reply{% endtrans %}</div>
+          <div class="thread-replies">{% trans %}Activity{% endtrans %}</div>
         </div>
       </div>
     </div>
@@ -44,23 +44,29 @@
           <a href="{% url 'thread_new' thread=thread.pk, slug=thread.slug %}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}"><i class="icon-fire"></i></a>
           {% endif %}
 
+          {{ macros.thread_flags(thread) }}
+
           <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="thread-name">{{ thread.name }}</a>
-          <span class="thread-details">
-            {% trans user=thread_starter(thread), forum=thread_forum(thread) %}by {{ user }} in {{ forum }}{% endtrans %}
-          </span>
+
+          <div class="thread-details">
+            {% trans user=thread_starter(thread), forum=thread_forum(thread), start=thread.start|reltimesince|low %}by {{ user }} in {{ forum }} {{ start }}{% endtrans %}
+          </div>
+
         </div>
         <div class="span5 thread-activity">
-          <div class="thread-last-reply">
-            {% if settings.avatars_on_threads_list %}
-            <span class="thread-last-avatar">
-              {% if thread.last_poster_id %}
-              <a href="{% url 'user' user=thread.last_poster.pk, username=thread.last_poster.username_slug %}"><img src="{{ thread.last_poster.get_avatar(30) }}" alt=""></a>
-              {% else %}
-              <img src="{{ macros.avatar_guest(40) }}" alt="" class="user-avatar">
-              {% endif %}
-            </span>
+          {% if settings.avatars_on_threads_list %}
+          <div class="thread-last-avatar">
+            {% if thread.last_poster_id %}
+            <a href="{% url 'user' user=thread.last_poster.pk, username=thread.last_poster.username_slug %}"><img src="{{ thread.last_poster.get_avatar(40) }}" alt=""></a>
+            {% else %}
+            <img src="{{ macros.avatar_guest(40) }}" alt="" class="user-avatar">
             {% endif %}
-            {{ thread_reply(thread) }}, {{ thread.last|reldate|low }}
+          </div>
+          {% endif %}
+
+          <div class="thread-replies">
+            <strong class="lead">{{ thread_reply(thread) }}, {{ thread.last|reldate|low }}</strong><br>
+            {{ replies(thread.replies) }}, <span{% if (thread.upvotes-thread.downvotes) > 0 %} class="text-success"{% elif (thread.upvotes-thread.downvotes) < 0 %} class="text-error"{% endif %}><strong>{% if (thread.upvotes-thread.downvotes) > 0 %}+{% elif (thread.upvotes-thread.downvotes) < 0 %}-{% endif %}</strong>{% trans rating=(thread.upvotes-thread.downvotes)|abs|intcomma %}{{ rating }} thread rating{% endtrans %}</span>
           </div>
 
           <div class="thread-options">
