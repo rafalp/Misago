@@ -35,10 +35,10 @@
       </div>
     </div>
     {% for thread in threads %}
-    <div id="watch-{{ loop.index }}" class="thread-row{% if thread.pk == 2 or not thread.is_read %} thread-new{% endif %}{% if loop.last %} thread-last{% endif %}">
+    <div id="watch-{{ loop.index }}" class="thread-row{% if not thread.is_read %} thread-new{% endif %}{% if loop.last %} thread-last{% endif %}">
       <div class="row-fluid">
         <div class="span7">
-          {% if thread.is_read and not thread.pk == 2 %}
+          {% if thread.is_read %}
           <a href="{% url 'thread_new' thread=thread.pk, slug=thread.slug %}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}"><i class="icon-asterisk"></i></a>
           {% else %}
           <a href="{% url 'thread_new' thread=thread.pk, slug=thread.slug %}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}"><i class="icon-fire"></i></a>
