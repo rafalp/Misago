@@ -72,6 +72,11 @@ function makeReplace(textId, replacement) {
   _makeReplace(textId, getSelection(textId), replacement);
 }
 
+var url_pattern = new RegExp('^(https?:\\/\\/)?((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|((\\d{1,3}\\.){3}\\d{1,3}))(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*(\\?[;&a-z\\d%_.~+=-]*)?(\\#[-a-z\\d_]*)?$','i');
+function is_url(str) {
+  return url_pattern.test($.trim(str));
+}
+
 function extractor(query) {
     var result = /([^\s]+)$/.exec(query);
     if(result && result[1])
@@ -139,35 +144,54 @@ $(function() {
     });
     
     $('.editor-link').click(function() {
-      var link_url = $.trim(prompt(ed_lang_enter_link_url));
-      if (link_url.length > 0) {
-        link_url = link_url.toLowerCase();
-        var pattern = /^(("[\w-+\s]+")|([\w-+]+(?:\.[\w-+]+)*)|("[\w-+\s]+")([\w-+]+(?:\.[\w-+]+)*))(@((?:[\w-+]+\.)*\w[\w-+]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][\d]\.|1[\d]{2}\.|[\d]{1,2}\.))((25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\.){2}(25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\]?$)/i;
-        if (!pattern.test(link_url)) {
-          if (link_url.indexOf("http://") != 0 && link_url.indexOf("https://") != 0 && link_url.indexOf("ftp://") != 0) {
-            link_url = "http://" + link_url;
-          }
+      var selection = $.trim(getSelectionText(textarea_id));
+      if (is_url(selection)) {
+        var link_url = $.trim(prompt(ed_lang_enter_link_url, selection));
+        selection = false;
+      } else {
+        var link_url = $.trim(prompt(ed_lang_enter_link_url));
+      }
+
+      if (is_url(link_url)) {
+        if (selection) {
+          var link_label = $.trim(prompt(ed_lang_enter_link_label, selection));
+        } else {
+          var link_label = $.trim(prompt(ed_lang_enter_link_label));
         }
-        var link_label = $.trim(prompt(ed_lang_enter_link_label, $.trim(getSelectionText(get_textarea(this).attr('id')))));
+
         if (link_label.length > 0) {
           makeReplace(textarea_id, '[' + link_label + '](' + link_url + ')');
         } else {
           makeReplace(textarea_id, '<' + link_url + '>');
         }
       }
+
       return false;
     });
     
     $('.editor-image').click(function() {
-      var image_url = $.trim(prompt(ed_lang_enter_image_url, $.trim(getSelectionText(get_textarea(this).attr('id')))));
-      if (image_url.length > 0) {
-        var image_label = $.trim(prompt(ed_lang_enter_image_label));
+      var selection = $.trim(getSelectionText(textarea_id));
+      if (is_url(selection)) {
+        var image_url = $.trim(prompt(ed_lang_enter_image_url, selection));
+        selection = false;
+      } else {
+        var image_url = $.trim(prompt(ed_lang_enter_image_url));
+      }
+
+      if (is_url(image_url)) {
+        if (selection) {
+          var image_label = $.trim(prompt(ed_lang_enter_image_label, selection));
+        } else {
+          var image_label = $.trim(prompt(ed_lang_enter_image_label));
+        }
+
         if (image_label.length > 0) {
           makeReplace(textarea_id, '![' + image_label + '](' + image_url + ')');
         } else {
           makeReplace(textarea_id, '!(' + image_url + ')');
         }
       }
+
       return false;
     });
     
