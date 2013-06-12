@@ -1,4 +1,5 @@
 from functools import wraps
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from misago.apps.errors import error404
@@ -12,7 +13,10 @@ def profile_view(fallback='user'):
             user_pk = int(user)
             user_slug = username
             try:
-                user = User.objects.get(pk=user_pk)
+                user = User.objects
+                if settings.PROFILE_EXTENSIONS_PRELOAD:
+                    user = user.select_related(*settings.PROFILE_EXTENSIONS_PRELOAD)
+                user = user.get(pk=user_pk)
                 if user.username_slug != user_slug:
                     # Force crawlers to take notice of updated username
                     return redirect(reverse(fallback, args=(user.username_slug, user.pk)), permanent=True)

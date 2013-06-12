@@ -148,6 +148,12 @@ PROFILE_EXTENSIONS = (
     'misago.apps.profiles.details',
 )
 
+# List of User Model relations that should be loaded by session handler
+USER_EXTENSIONS_PRELOAD = ()
+
+# List of User Model relations that should be loaded when displaying users profiles
+PROFILE_EXTENSIONS_PRELOAD = ()
+
 # List of Markdown Extensions
 MARKDOWN_EXTENSIONS = (
     'misago.markdown.extensions.strikethrough.StrikethroughExtension',

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import redirect
@@ -46,7 +47,10 @@ def list(request, slug=None, page=0):
             # Direct hit?
             username = search_form.cleaned_data['username']
             try:
-                user = User.objects.get(username__iexact=username)
+                user = User.objects
+                if settings.PROFILE_EXTENSIONS_PRELOAD:
+                    user = user.select_related(*settings.PROFILE_EXTENSIONS_PRELOAD)
+                user = user.get(username__iexact=username)
                 return redirect(reverse('user', args=(user.username_slug, user.pk)))
             except User.DoesNotExist:
                 pass
@@ -62,7 +66,10 @@ def list(request, slug=None, page=0):
 
             # Go for rought match
             if len(username) > 0:
-                users = User.objects.filter(username_slug__startswith=username).order_by('username_slug')[:10]
+                users = User.objects
+                if settings.PROFILE_EXTENSIONS_PRELOAD:
+                    users = users.select_related(*settings.PROFILE_EXTENSIONS_PRELOAD)
+                users = users.filter(username_slug__startswith=username).order_by('username_slug')[:10]
         elif search_form.non_field_errors()[0] == 'form_contains_errors':
             message = Message(_("To search users you have to enter username in search field."), 'error')
         else:
@@ -78,6 +85,8 @@ def list(request, slug=None, page=0):
                 if not default_rank and active_rank:
                     return redirect(reverse('users', kwargs={'slug': active_rank.slug}))
                 return redirect(reverse('users'))
+            if settings.PROFILE_EXTENSIONS_PRELOAD:
+                users = users.select_related(*settings.PROFILE_EXTENSIONS_PRELOAD)
             users = users.order_by('username_slug')[pagination['start']:pagination['stop']]
 
     return request.theme.render_to_response('profiles/list.html',

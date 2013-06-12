@@ -148,10 +148,13 @@ class HumanSession(MisagoSession):
             if self._cookie_sid not in request.COOKIES or len(request.COOKIES[self._cookie_sid]) != 42:
                 raise IncorrectSessionException()
             self._session_key = request.COOKIES[self._cookie_sid]
-            self._session_rk = Session.objects.select_related().get(
-                                                                    pk=self._session_key,
-                                                                    admin=request.firewall.admin
-                                                                    )
+            self._session_rk = Session.objects.select_related('user', 'rank')
+            if settings.USER_EXTENSIONS_PRELOAD:
+                self._session_rk = self._session_rk.select_related(*settings.USER_EXTENSIONS_PRELOAD)
+            self._session_rk = self._session_rk.get(
+                                                    pk=self._session_key,
+                                                    admin=request.firewall.admin
+                                                    )
             # IP invalid
             if request.settings.sessions_validate_ip and self._session_rk.ip != self._ip:
                 raise IncorrectSessionException()
@@ -202,6 +205,8 @@ class HumanSession(MisagoSession):
                                          admin=request.firewall.admin,
                                          )
                 self._session_rk.save(force_insert=True)
+                if settings.USER_EXTENSIONS_PRELOAD:
+                    self._session_rk = self._session_rk.select_related(*settings.USER_EXTENSIONS_PRELOAD)
                 if user:
                     # Update user data
                     user.set_last_visit(
