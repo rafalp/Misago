@@ -143,6 +143,9 @@ MOBILE_SUBDOMAIN = ''
 # Templates used by mobile version
 MOBILE_TEMPLATES = ''
 
+# Name of root urls configuration
+ROOT_URLCONF = 'deployment.urls'
+
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'deployment.wsgi.application'
 
