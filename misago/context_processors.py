@@ -5,6 +5,7 @@ from misago.models import Forum
 
 def common(request):
     context = {
+        'hook_append_extra': u'',
         'hook_primary_menu_prepend': u'',
         'hook_primary_menu_append': u'',
         'hook_foot_menu_prepend': u'',

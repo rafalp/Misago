@@ -17,5 +17,6 @@
       var l_img_broken_msg = "{{ _('Image could not be loaded.') }}";
     </script>
   	<script src="{{ STATIC_URL }}cranefly/js/cranefly.js"></script>{% block javascripts %}{% endblock %}
+    {{ hook_append_extra|safe }}
   </body>
 </html>
