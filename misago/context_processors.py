@@ -4,7 +4,18 @@ from misago.admin import site
 from misago.models import Forum
 
 def common(request):
-    context = {}
+    context = {
+        'hook_primary_menu_prepend': u'',
+        'hook_primary_menu_append': u'',
+        'hook_foot_menu_prepend': u'',
+        'hook_foot_menu_append': u'',
+        'hook_guest_menu_prepend': u'',
+        'hook_guest_menu_append': u'',
+        'hook_user_menu_prepend': u'',
+        'hook_user_menu_append': u'',
+        'hook_credits_side': u'',
+    }
+
     try:
         context.update({
             'acl': request.acl,

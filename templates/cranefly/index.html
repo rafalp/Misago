@@ -8,9 +8,11 @@
 {%- endif %}{%- endblock %}
       
 {% block content %}
+{{ hook_above_forum_home|safe }}
 <div class="row">
   <div class="span8">
     <div class="index-forums-list">
+      {{ hook_above_home_forums_list|safe }}
 
       {% for category in forums_list %}{% if category.subforums %}
       <div id="{{ category.slug }}" class="index-category{% if category.style %} index-category-{{ category.style }}{% endif %}">
@@ -82,9 +84,12 @@
       </div>
       {% endif %}{% endfor %}
 
+      {{ hook_below_home_forums_list|safe }}
     </div>
   </div>
   <div class="span4 index-sidebar">
+
+    {{ hook_above_home_sidepanel|safe }}
 
     {% if ranks_online %}
     <div class="index-ranks-list">
@@ -111,6 +116,8 @@
     </div>
     {% endif %}
 
+    {{ hook_after_home_sidepanel_ranks_online|safe }}
+
     {% if popular_threads %}
     <div class="index-popular-threads">
       <h4>{% trans %}Popular Threads{% endtrans %}</h4>
@@ -124,6 +131,8 @@
       </ul>
     </div>
     {% endif %}
+
+    {{ hook_after_home_sidepanel_popular_threads|safe }}
 
     <div class="index-stats">
       <ul class="unstyled">
@@ -144,6 +153,8 @@
       </ul>
     </div>
 
+    {{ hook_after_home_sidepanel_forum_stats|safe }}
+
     {% if user.is_authenticated() %}
     <form action="{% url 'read_all' %}" method="post" class="index-forums-read-all">
       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
@@ -151,8 +162,11 @@
     </form>
     {% endif %}
 
+    {{ hook_below_home_sidepanel|safe }}
+
   </div>
 </div>
+{{ hook_below_forum_home|safe }}
 {% endblock %}
 
 {% block javascripts -%}{{ super() }}

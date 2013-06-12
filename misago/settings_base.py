@@ -89,6 +89,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'misago.context_processors.admin',
 )
 
+# Template middlewares
+TEMPLATE_MIDDLEWARES = ()
+
 # Jinja2 Template Extensions
 JINJA2_EXTENSIONS = (
     'jinja2.ext.do',
