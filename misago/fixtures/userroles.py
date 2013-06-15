@@ -23,6 +23,10 @@ def load():
                         'can_invite_ignoring': True,
                         'private_threads_mod': True,
                         'can_delete_checkpoints': 2,
+                        'can_report_content': True,
+                        'can_handle_reports': True,
+                        'can_mod_reports_discussions': True,
+                        'can_delete_reports': True,
                         'forums': {3: 1, 5: 1, 6: 1},
                        }
     role.save(force_insert=True)
@@ -46,6 +50,8 @@ def load():
                         'can_invite_ignoring': True,
                         'private_threads_mod': True,
                         'can_delete_checkpoints': 1,
+                        'can_report_content': True,
+                        'can_handle_reports': True,
                         'forums': {3: 1, 5: 1, 6: 1},
                        }
     role.save(force_insert=True)
@@ -62,6 +68,7 @@ def load():
                         'private_thread_attachments_limit': 30,
                         'can_invite_ignoring': False,
                         'private_threads_mod': False,
+                        'can_report_content': True,
                         'forums': {4: 3, 5: 3, 6: 3},
                        }
     role.save(force_insert=True)
