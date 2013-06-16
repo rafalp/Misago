@@ -5,9 +5,11 @@ from django.utils.translation import ugettext as _
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
 from misago.decorators import block_guest, check_csrf
+from misago.markdown import post_markdown
 from misago.messages import Message
-from misago.models import Forum, Thread, Post, Karma, WatchedThread
+from misago.models import Forum, Checkpoint, Thread, Post, Karma, WatchedThread
 from misago.readstrackers import ThreadsTracker
+from misago.utils.strings import short_string, slugify
 from misago.utils.views import json_response
 from misago.apps.threadtype.base import ViewBase
 
@@ -243,3 +245,116 @@ class DownvotePostBaseView(UpvotePostBaseView):
     
     def make_vote(self, request, vote):
         vote.score = -1
+
+
+class ReportPostBaseView(JumpView):
+    def make_jump(self):
+        self.request.acl.reports.allow_report()
+
+        @block_guest
+        @check_csrf
+        def view(request):
+            reported = None
+            if self.post.reported:
+                reported = self.post.live_report()
+
+            if reported and reported.start_poster_id != request.user.pk:
+                # Append our q.q to existing report?
+                try:
+                    reported.start_post.checkpoint_set.get(user=request.user, action="reported")
+                except Checkpoint.DoesNotExist:
+                    reported.start_post.set_checkpoint(self.request, 'reported', user)
+                    reported.start_post.save(force_update=True)
+            else:
+                # File up new report
+                now = timezone.now()
+                report_name = _('#%(post)s by %(author)s in "%(thread)s"')
+                report_name = report_name % {
+                                             'post': self.post.pk,
+                                             'thread': self.thread.name,
+                                             'author': self.post.user_name
+                                            }
+                report_name = short_string(report_name, request.settings['thread_name_max'])
+
+                reason_post = _('''
+Member @%(reporter)s has reported following post by @%(reported)s:
+
+%(quote)s
+
+**Post link:** <%(post)s>
+''')
+
+                reason_post = reason_post.strip() % {
+                                             'reporter': request.user.username,
+                                             'reported': self.post.user_name,
+                                             'post': self.redirect_to_post(self.post),
+                                             'quote': self.post.quote(),
+                                            }
+
+                md, reason_post_preparsed = post_markdown(reason_post)
+
+                reports = Forum.objects.special_model('reports')
+                report = Thread.objects.create(
+                                               forum=reports,
+                                               weight=2,
+                                               name=report_name,
+                                               slug=slugify(report_name),
+                                               start=now,
+                                               start_poster=request.user,
+                                               start_poster_name=request.user.username,
+                                               start_poster_slug=request.user.username_slug,
+                                               start_poster_style=request.user.rank.style,
+                                               last=now,
+                                               last_poster=request.user,
+                                               last_poster_name=request.user.username,
+                                               last_poster_slug=request.user.username_slug,
+                                               last_poster_style=request.user.rank.style,
+                                               report_for=self.post,
+                                               )
+
+                reason = Post.objects.create(
+                                             forum=reports,
+                                             thread=report,
+                                             user=request.user,
+                                             user_name=request.user.username,
+                                             ip=request.session.get_ip(self.request),
+                                             agent=request.META.get('HTTP_USER_AGENT'),
+                                             post=reason_post,
+                                             post_preparsed=reason_post_preparsed,
+                                             date=now,
+                                             )
+
+                report.start_post = reason
+                report.last_post = reason
+                report.save(force_update=True)
+
+                for m in self.post.mentions.all():
+                    reason.mentions.add(m)
+
+                self.post.reported = True
+                self.post.save(force_update=True)
+                self.thread.replies_reported += 1
+                self.thread.save(force_update=True)
+                request.monitor.increase('reported_posts')
+            if request.is_ajax():
+                return json_response(request, message=_("Selected post has been reported and will receive moderator attention. Thank you."))
+            self.request.messages.set_flash(Message(_("Selected post has been reported and will receive moderator attention. Thank you.")), 'info', 'threads_%s' % self.post.pk)
+            return self.redirect_to_post(self.post)
+        return view(self.request)
+
+
+class ShowPostReportBaseView(JumpView):
+    def make_jump(self):
+        self.request.acl.reports.allow_report()
+
+        @block_guest
+        def view(request):
+            if not self.post.reported:
+                return error404()
+            reports = Forum.objects.special_model('reports')
+            self.request.acl.forums.allow_thread_view(reports)
+            report = self.post.live_report()
+            if not report:
+                return error404()
+            return redirect(reverse('report', kwargs={'thread': report.pk, 'slug': report.slug}))
+        return view(self.request)

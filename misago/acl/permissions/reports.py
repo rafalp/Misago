@@ -27,6 +27,10 @@ class ReportsACL(BaseACL):
     def can_report(self):
         return self.acl['can_report_content']
 
+    def allow_report(self):
+        if not self.acl['can_report_content']:
+            raise ACLError403(_("You don't have permission to report posts."))
+
     def can_handle(self):
         return self.acl['can_handle_reports']
         

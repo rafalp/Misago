@@ -22,15 +22,7 @@ class NewReplyBaseView(PostingBaseView):
 
     def form_initial_data(self):
         if self.quote:
-            quote_post = []
-            if self.quote.user:
-                quote_post.append('@%s' % self.quote.user.username)
-            else:
-                quote_post.append('@%s' % self.quote.user_name)
-            for line in self.quote.post.splitlines():
-                quote_post.append('> %s' % line)
-            quote_post.append('\r\n')
-            return {'post': '\r\n'.join(quote_post)}
+            return {'post': self.quote.quote()}
         return {}
 
     def post_form(self, form):

@@ -37,11 +37,15 @@ class UnwatchEmailThreadView(UnwatchEmailThreadBaseView, TypeMixin):
     pass
 
 
-class UpvotePostView(UpvotePostBaseView, TypeMixin):
+class FirstReportedView(FirstReportedBaseView, TypeMixin):
     pass
 
 
-class DownvotePostView(DownvotePostBaseView, TypeMixin):
+class ReportPostView(ReportPostBaseView, TypeMixin):
+    pass
+
+
+class ShowPostReportView(ShowPostReportBaseView, TypeMixin):
     pass
 
 

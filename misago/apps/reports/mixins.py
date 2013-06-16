@@ -1,2 +1,2 @@
 class TypeMixin(object):
-    templates_prefix = 'reports'
+    type_prefix = 'report'

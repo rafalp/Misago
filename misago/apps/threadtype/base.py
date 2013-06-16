@@ -48,12 +48,13 @@ class ViewBase(object):
         except AttributeError:
             pass
 
-    def redirect_to_post(self, post):
+    def redirect_to_post(self, post, type_prefix=None):
+        type_prefix = type_prefix or self.type_prefix
         queryset = self.request.acl.threads.filter_posts(self.request, self.thread, self.thread.post_set)
         page = page_number(queryset.filter(id__lte=post.pk).count(), queryset.count(), self.request.settings.posts_per_page)
         if page > 1:
-            return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'page': page}) + ('#post-%s' % post.pk))
-        return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % post.pk))
+            return redirect(reverse(type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'page': page}) + ('#post-%s' % post.pk))
+        return redirect(reverse(type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % post.pk))
 
     def template_vars(self, context):
         return context

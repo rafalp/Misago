@@ -206,7 +206,7 @@
                   </span>
                   {% endif %}
 
-                  {% if post.reported %}
+                  {% if acl.threads.can_mod_posts(forum) and post.reported %}
                   <span class="label label-important">
                     {% trans %}Reported{% endtrans %}
                   </span>
@@ -237,6 +237,15 @@
                 <div class="post-actions">              
                   {% if acl.users.can_see_users_trails() -%}
                   <a href="{% url 'private_post_info' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-trail">{% trans %}Info{% endtrans %}</a>
+                  {% endif %}
+                  {% if post.reported and acl.reports.can_handle() and acl.threads.can_mod_posts(forum) %}
+                  <a href="{% url 'private_post_report_show' thread=thread.pk, slug=thread.slug, post=post.pk %}">{% trans %}Show report{% endtrans %}</a>
+                  {% endif %}
+                  {% if acl.reports.can_report() %}
+                  <form action="{% url 'private_post_report' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="form-inline form-report" method="post" autocomplete="off">
+                    <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                    <button type="submit" class="btn btn-link btn-report tooltip-top" title="{% trans %}Bring this post to moderator attention.{% endtrans %}">{% trans %}Report{% endtrans %}</button>
+                  </form>
                   {% endif %}
                   {% if acl.threads.can_edit_thread(user, forum, thread, post) and thread.start_post_id == post.pk %}
                   <a href="{% url 'private_thread_edit' thread=thread.pk, slug=thread.slug %}" class="post-edit">{% trans %}Edit{% endtrans %}</a>
@@ -442,6 +451,7 @@
 {% block javascripts -%}{{ super() }}
   <script src="{{ STATIC_URL }}cranefly/highlight/highlight.pack.js"></script>
   <script type="text/javascript">
+    var l_post_reported = "{{ _('Reported!') }}";
     hljs.tabReplace = '    ';
     hljs.initHighlightingOnLoad();
     EnhancePostsMD();
@@ -522,6 +532,7 @@
     {% if extra %}
     {% if not is_read %}<li><a href="{% url 'private_thread_new' slug=thread.slug, thread=thread.id %}" class="tooltip-top" title="{% trans %}Go to first unread{% endtrans %}"><i class="icon-star"></i> {% trans %}First Unread{% endtrans %}</a></li>{% endif %}
     {% endif %}
+    {% if thread.replies_reported > 0 and acl.threads.can_mod_posts(thread) %}<li><a href="{% url 'private_thread_reported' slug=thread.slug, thread=thread.id %}" class="tooltip-top" title="{% trans %}Go to first reported post{% endtrans %}"><i class="icon-fire"></i> {% trans %}First Reported{% endtrans %}</a></li>{% endif %}
   </ul>
 </div>
 {% endmacro %}

@@ -24,21 +24,34 @@ class ThreadModeration(object):
         # Update monitor
         self.request.monitor.increase('threads')
         self.request.monitor.increase('posts', self.thread.replies + 1)
+        # After
+        self.after_thread_action_accept()
+
+    def after_thread_action_accept(self):
         self.request.messages.set_flash(Message(_('Thread has been marked as reviewed and made visible to other members.')), 'success', 'threads')
 
     def thread_action_annouce(self):
         self.thread.weight = 2
         self.thread.save(force_update=True)
+        self.after_thread_action_annouce()
+
+    def after_thread_action_annouce(self):
         self.request.messages.set_flash(Message(_('Thread has been turned into announcement.')), 'success', 'threads')
 
     def thread_action_sticky(self):
         self.thread.weight = 1
         self.thread.save(force_update=True)
+        self.after_thread_action_sticky()
+    
+    def after_thread_action_sticky(self):
         self.request.messages.set_flash(Message(_('Thread has been turned into sticky.')), 'success', 'threads')
 
     def thread_action_normal(self):
         self.thread.weight = 0
         self.thread.save(force_update=True)
+        self.after_thread_action_normal()
+
+    def after_thread_action_normal(self):
         self.request.messages.set_flash(Message(_('Thread weight has been changed to normal.')), 'success', 'threads')
 
     def thread_action_move(self):
@@ -75,12 +88,18 @@ class ThreadModeration(object):
         self.thread.closed = False
         self.thread.save(force_update=True)
         self.thread.last_post.set_checkpoint(self.request, 'opened')
+        self.after_thread_action_open()
+
+    def after_thread_action_open(self):
         self.request.messages.set_flash(Message(_('Thread has been opened.')), 'success', 'threads')
 
     def thread_action_close(self):
         self.thread.closed = True
         self.thread.save(force_update=True)
         self.thread.last_post.set_checkpoint(self.request, 'closed')
+        self.after_thread_action_close()
+
+    def after_thread_action_close(self):
         self.request.messages.set_flash(Message(_('Thread has been closed.')), 'success', 'threads')
 
     def thread_action_undelete(self):
@@ -99,6 +118,9 @@ class ThreadModeration(object):
         # Update monitor
         self.request.monitor.increase('threads')
         self.request.monitor.increase('posts', self.thread.replies + 1)
+        self.after_thread_action_undelete()
+
+    def after_thread_action_undelete(self):
         self.request.messages.set_flash(Message(_('Thread has been restored.')), 'success', 'threads')
 
     def thread_action_soft(self):
@@ -117,6 +139,9 @@ class ThreadModeration(object):
         # Update monitor
         self.request.monitor.decrease('threads')
         self.request.monitor.decrease('posts', self.thread.replies + 1)
+        self.after_thread_action_soft()
+
+    def after_thread_action_soft(self):
         self.request.messages.set_flash(Message(_('Thread has been hidden.')), 'success', 'threads')
 
     def thread_action_hard(self):
@@ -128,5 +153,8 @@ class ThreadModeration(object):
         # Update monitor
         self.request.monitor.decrease('threads')
         self.request.monitor.decrease('posts', self.thread.replies + 1)
-        self.request.messages.set_flash(Message(_('Thread "%(thread)s" has been deleted.') % {'thread': self.thread.name}), 'success', 'threads')
+        self.after_thread_action_hard()
         return self.threads_list_redirect()
+
+    def after_thread_action_hard(self):
+        self.request.messages.set_flash(Message(_('Thread "%(thread)s" has been deleted.') % {'thread': self.thread.name}), 'success', 'threads')

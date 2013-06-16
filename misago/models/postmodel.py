@@ -33,7 +33,7 @@ class Post(models.Model):
     edit_user = models.ForeignKey('User', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
     edit_user_name = models.CharField(max_length=255, null=True, blank=True)
     edit_user_slug = models.SlugField(max_length=255, null=True, blank=True)
-    reported = models.BooleanField(default=False)
+    reported = models.BooleanField(default=False, db_index=True)
     moderated = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     protected = models.BooleanField(default=False)
@@ -47,6 +47,14 @@ class Post(models.Model):
 
     def get_date(self):
         return self.date
+
+    def quote(self):
+        quote = []
+        quote.append('@%s' % self.user_name)
+        for line in self.post.splitlines():
+            quote.append('> %s' % line)
+        quote.append('\r\n')
+        return '\r\n'.join(quote)
 
     def move_to(self, thread):
         move_post.send(sender=self, move_to=thread)
@@ -99,6 +107,15 @@ class Post(models.Model):
                         alert.save_all()
                 except (ACLError403, ACLError404):
                     pass
+
+    def is_reported(self):
+        self.reported = self.reports.filter(weight=2).count() > 0
+
+    def live_report(self):
+        try:
+            return self.reports.filter(weight=2)[0]
+        except IndexError:
+            return None
 
 
 def rename_user_handler(sender, **kwargs):

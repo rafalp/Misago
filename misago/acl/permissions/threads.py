@@ -371,9 +371,9 @@ class ThreadsACL(BaseACL):
         except KeyError:
             return False
 
-    def can_mod_posts(self, thread):
+    def can_mod_posts(self, forum):
         try:
-            forum_role = self.acl[thread.forum.pk]
+            forum_role = self.acl[forum.pk]
             return (
                     forum_role['can_edit_threads_posts']
                     or forum_role['can_move_threads_posts']

@@ -1,7 +1,7 @@
 from datetime import timedelta
 from django.conf import settings
 from django.db import models
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_save, pre_delete
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.signals import (delete_user_content, merge_thread, move_forum_content,
@@ -74,6 +74,7 @@ class Thread(models.Model):
     last_poster_slug = models.SlugField(max_length=255, null=True, blank=True)
     last_poster_style = models.CharField(max_length=255, null=True, blank=True)
     participants = models.ManyToManyField('User', related_name='private_thread_set')
+    report_for = models.ForeignKey('Post', null=True, blank=True, related_name='reports', on_delete=models.SET_NULL)
     moderated = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     closed = models.BooleanField(default=False)
@@ -186,6 +187,32 @@ def rename_user_handler(sender, **kwargs):
                                                      )
 
 rename_user.connect(rename_user_handler, dispatch_uid="rename_user_threads")
+
+
+def report_update_handler(sender, **kwargs):
+    if sender == Thread:
+        thread = kwargs.get('instance')
+        if thread.weight < 2 and thread.report_for_id:
+            reported_post = thread.report_for
+            reported_post.reported = False
+            reported_post.save(force_update=True)
+            reported_post.thread.replies_reported -= 1
+            reported_post.thread.save(force_update=True)
+
+pre_save.connect(report_update_handler, dispatch_uid="sync_post_reports_on_update")
+
+
+def report_delete_handler(sender, **kwargs):
+    if sender == Thread:
+        thread = kwargs.get('instance')
+        if thread.report_for_id:
+            reported_post = thread.report_for
+            reported_post.reported = False
+            reported_post.save(force_update=True)
+            reported_post.thread.replies_reported -= 1
+            reported_post.thread.save(force_update=True)
+
+pre_delete.connect(report_delete_handler, dispatch_uid="sync_post_reports_on_delete")
 
 
 def delete_user_content_handler(sender, **kwargs):

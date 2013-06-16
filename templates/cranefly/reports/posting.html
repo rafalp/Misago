@@ -1,0 +1,183 @@
+{% extends "cranefly/layout.html" %}
+{% import "_forms.html" as form_theme with context %}
+{% import "cranefly/editor.html" as editor with context %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=_(get_title()), parent=thread.name) }}{% endblock %}
+
+{% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{% url 'reports' %}">{% trans %}Reported Posts{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+{% if thread %}<li><a href="{% url 'report' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>{% endif %}
+<li class="active">{{ get_title() }}
+{%- endblock %}
+
+{% block container %}
+<div class="page-header header-primary">
+  <div class="container">
+    {{ messages_list(messages) }}
+    <ul class="breadcrumb">
+      {{ self.breadcrumb() }}</li>
+    </ul>
+    <h1>{{ get_title() }} <small>{% if thread %}{{ thread.name }}{% else %}{{ forum.name }}{% endif %}</small></h1>
+    {% if thread %}
+    <ul class="unstyled header-stats">
+      {{ get_info() }}
+    </ul>
+    {% endif %}
+  </div>
+</div>
+<div class="container container-primary">
+  <div class="row">
+    <div class="span8 offset2">
+      <div class="posting">
+        <div class="form-container">
+
+          <div class="form-header">
+            <h1>{{ get_title() }}</h1>
+          </div>
+
+          {% if message %}
+          <div class="messages-list">
+            {{ macros.draw_message(message) }}
+          </div>
+          {% endif %}
+
+          {% if preview %}
+          <div class="form-preview">
+            <div class="markdown js-extra">
+              <article>
+                {{ preview|markdown_final|safe }}
+              </article>
+            </div>
+          </div>
+          {% endif %}
+
+          <form action="{{ get_action() }}" method="post">
+            <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+            {% if 'thread_name' in form.fields %}
+            {{ form_theme.row_widget(form.fields.thread_name, width=8) }}
+            <hr>
+            <h4>{% trans %}Message Body{% endtrans %}</h4>
+            {% endif %}
+            {{ editor.editor(form.fields.post, get_button(), rows=8, extra=get_extra()) }}
+            {% if intersect(form.fields, ('edit_reason', 'thread_weight', 'close_thread')) %}
+            <hr>
+            {% if 'edit_reason' in form.fields %}
+            {{ form_theme.row_widget(form.fields.edit_reason, width=8) }}
+            {% endif %}
+
+            {% if intersect(form.fields, ('thread_weight', 'close_thread')) %}
+            <div class="control-group">
+              <label class="control-label">{% trans %}Thread Status{% endtrans %}:</label>
+              <div class="controls">
+                {% if 'thread_weight' in form.fields %}
+                {{ form_theme.input_radio_select(form.fields.thread_weight, width=8) }}
+                {% endif %}
+                {% if 'close_thread' in form.fields %}
+                {{ form_theme.input_checkbox(form.fields.close_thread, width=8) }}
+                {% endif %}
+              </div>
+            </div>
+            {% endif %}
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">{{ get_button() }}</button>
+              <button id="editor-preview" name="preview" type="submit" class="btn">{% trans %}Preview{% endtrans %}</button>
+            </div>
+            {% endif %}
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}{{ super() }}
+<link href="{{ STATIC_URL }}cranefly/highlight/styles/monokai.css" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}{{ super() }}
+  <script src="{{ STATIC_URL }}cranefly/highlight/highlight.pack.js"></script>
+  <script type="text/javascript">
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
+    EnhancePostsMD();
+  </script>
+  {{ editor.js() }}
+{% endblock %}
+
+
+{% macro get_action() -%}
+{% if action == 'new_thread' -%}
+{% url 'report_start' forum=forum.pk, slug=forum.slug %}
+{%- elif action == 'edit_thread' -%}
+{% url 'report_edit' thread=thread.pk, slug=thread.slug %}
+{%- elif action in 'new_reply' -%}
+{%- if quote -%}
+{% url 'report_reply' thread=thread.pk, slug=thread.slug, quote=quote.pk %}
+{%- else -%}
+{% url 'report_reply' thread=thread.pk, slug=thread.slug %}
+{%- endif -%}
+{%- elif action == 'edit_reply' -%}
+{% url 'post_edit' thread=thread.pk, slug=thread.slug, post=post.pk %}
+{%- endif %}
+{%- endmacro %}
+
+
+{% macro get_title() -%}
+{% if action == 'new_thread' -%}
+{% trans %}Post New Thread{% endtrans %}
+{%- elif action == 'edit_thread' -%}
+{% trans %}Edit Thread{% endtrans %}
+{%- elif action == 'new_reply' -%}
+{% trans %}Post New Reply{% endtrans %}
+{%- elif action == 'edit_reply' -%}
+{% trans %}Edit Reply{% endtrans %}
+{%- endif %}
+{%- endmacro %}
+
+
+{% macro get_info() -%}
+{% if action == 'edit_reply' -%}
+    {% if post.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
+    <li><i class="icon-time"></i> <a href="{% url 'report_find' thread=thread.pk, slug=thread.slug, post=post.pk %}">{{ post.date|reltimesince }}</a></li>
+    <li><i class="icon-user"></i> {% if post.user %}<a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
+    <li><i class="icon-pencil"></i> {% if post.edits > 0 -%}
+      {% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}
+    {%- else -%}
+      {% trans %}First edit{% endtrans %}
+    {%- endif %}</li>
+{%- else -%}
+    {% if thread.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
+    {% if action == 'edit_thread' %}
+    <li><i class="icon-time"></i> <a href="{% url 'report_find' thread=thread.pk, slug=thread.slug, post=thread.start_post_id %}">{{ thread.start|reltimesince }}</a></li>
+    {% else %}
+    <li><i class="icon-time"></i> <a href="{% url 'report_new' thread=thread.pk, slug=thread.slug %}">{{ thread.last|reltimesince }}</a></li>
+    {% endif %}
+    <li><i class="icon-user"></i> {% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}</li>
+    <li><i class="icon-comment"></i> {% if thread.replies > 0 -%}
+      {% trans count=thread.replies, replies=thread.replies|intcomma %}One reply{% pluralize %}{{ replies }} replies{% endtrans %}
+    {%- else -%}
+      {% trans %}No replies{% endtrans %}
+    {%- endif %}</li>
+{%- endif %}
+    {% if thread.closed %}<li><i class="icon-lock"></i> {% trans %}Locked{% endtrans %}</li>{% endif %}
+{%- endmacro %}
+
+
+{% macro get_button() -%}
+{% if action == 'new_thread' -%}
+{% trans %}Post Thread{% endtrans %}
+{%- elif action == 'new_reply' -%}
+{% trans %}Post Reply{% endtrans %}
+{%- else -%}
+{% trans %}Save Changes{% endtrans %}
+{%- endif %}
+{%- endmacro %}
+
+
+{% macro get_extra() %}
+  <button id="editor-preview" name="preview" type="submit" class="btn pull-right">{% trans %}Preview{% endtrans %}</button>
+{% endmacro %}
