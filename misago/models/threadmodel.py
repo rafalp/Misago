@@ -194,10 +194,11 @@ def report_update_handler(sender, **kwargs):
         thread = kwargs.get('instance')
         if thread.weight < 2 and thread.report_for_id:
             reported_post = thread.report_for
-            reported_post.reported = False
-            reported_post.save(force_update=True)
-            reported_post.thread.replies_reported -= 1
-            reported_post.thread.save(force_update=True)
+            if reported_post.reported:
+                reported_post.reported = False
+                reported_post.save(force_update=True)
+                reported_post.thread.replies_reported -= 1
+                reported_post.thread.save(force_update=True)
 
 pre_save.connect(report_update_handler, dispatch_uid="sync_post_reports_on_update")
 
@@ -207,10 +208,11 @@ def report_delete_handler(sender, **kwargs):
         thread = kwargs.get('instance')
         if thread.report_for_id:
             reported_post = thread.report_for
-            reported_post.reported = False
-            reported_post.save(force_update=True)
-            reported_post.thread.replies_reported -= 1
-            reported_post.thread.save(force_update=True)
+            if reported_post.reported:
+                reported_post.reported = False
+                reported_post.save(force_update=True)
+                reported_post.thread.replies_reported -= 1
+                reported_post.thread.save(force_update=True)
 
 pre_delete.connect(report_delete_handler, dispatch_uid="sync_post_reports_on_delete")
 

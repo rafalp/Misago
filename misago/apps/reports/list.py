@@ -1,11 +1,12 @@
 from itertools import chain
 from django.core.urlresolvers import reverse
+from django.db.models import F
 from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from misago.apps.threadtype.list import ThreadsListBaseView, ThreadsListModeration
 from misago.messages import Message
-from misago.models import Forum, Thread
+from misago.models import Forum, Thread, Post
 from misago.readstrackers import ThreadsTracker
 from misago.utils.pagination import make_pagination
 from misago.apps.reports.mixins import TypeMixin
@@ -15,8 +16,8 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
         self.forum = Forum.objects.get(special='reports')
 
     def threads_queryset(self):
-        announcements = self.forum.thread_set.filter(weight=2).order_by('-pk')
-        threads = self.forum.thread_set.filter(weight__lt=2).order_by('-weight', '-last')
+        announcements = self.forum.thread_set.filter(weight=2).prefetch_related('report_for').order_by('-pk')
+        threads = self.forum.thread_set.filter(weight__lt=2).prefetch_related('report_for').order_by('-weight', '-last')
 
         # Add in first and last poster
         if self.request.settings.avatars_on_threads_list:
@@ -52,22 +53,40 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
             actions.append(('sticky', _('Change to resolved')))
             actions.append(('normal', _('Change to bogus')))
             if acl['can_delete_threads']:
-                actions.append(('undelete', _('Restore threads')))
-                actions.append(('soft', _('Hide threads')))
+                actions.append(('undelete', _('Restore reports')))
+                actions.append(('soft', _('Hide reports')))
             if acl['can_delete_threads'] == 2:
-                actions.append(('hard', _('Delete threads')))
+                actions.append(('hard', _('Delete reports')))
         except KeyError:
             pass
         return actions
 
+    def mass_resolve(self, ids):
+        reported_posts = []
+        reported_threads = []
+        second_pass = []
+        for thread in self.threads:
+            if thread.pk in ids:
+                 reported_posts.append(thread.report_for.pk)
+                 reported_threads.append(thread.report_for.thread_id)
+                 if thread.weight == 2:
+                    second_pass.append(thread.pk)
+        if reported_threads:
+            Thread.objects.filter(id__in=reported_threads).update(replies_reported=F('replies_reported') - 1)
+            Post.objects.filter(id__in=reported_posts).update(reported=False)
+        if second_pass:
+            Thread.objects.filter(id__in=second_pass).update(weight=1)
+
     def action_sticky(self, ids):
         if self._action_sticky(ids):
+            self.mass_resolve(ids)
             self.request.messages.set_flash(Message(_('Selected reports were set as resolved.')), 'success', 'threads')
         else:
             self.request.messages.set_flash(Message(_('No reports were set as resolved.')), 'info', 'threads')
 
     def action_normal(self, ids):
         if self._action_normal(ids):
+            self.mass_resolve(ids)
             self.request.messages.set_flash(Message(_('Selected reports were set as bogus.')), 'success', 'threads')
         else:
             self.request.messages.set_flash(Message(_('No reports were set as bogus.')), 'info', 'threads')
@@ -80,6 +99,7 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
 
     def action_soft(self, ids):
         if self._action_soft(ids):
+            self.mass_resolve(ids)
             self.request.messages.set_flash(Message(_('Selected reports have been hidden.')), 'success', 'threads')
         else:
             self.request.messages.set_flash(Message(_('No reports were hidden.')), 'info', 'threads')

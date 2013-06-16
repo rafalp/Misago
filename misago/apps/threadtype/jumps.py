@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils import timezone
@@ -254,18 +255,21 @@ class ReportPostBaseView(JumpView):
         @block_guest
         @check_csrf
         def view(request):
-            reported = None
+            report = None
+            made_report = False
             if self.post.reported:
-                reported = self.post.live_report()
+                report = self.post.live_report()
 
-            if reported and reported.start_poster_id != request.user.pk:
-                # Append our q.q to existing report?
-                try:
-                    reported.start_post.checkpoint_set.get(user=request.user, action="reported")
-                except Checkpoint.DoesNotExist:
-                    reported.start_post.set_checkpoint(self.request, 'reported', user)
-                    reported.start_post.save(force_update=True)
-            else:
+                if report and report.start_poster_id != request.user.pk:
+                    # Append our q.q to existing report?
+                    try:
+                        report.start_post.checkpoint_set.get(user=request.user, action="reported")
+                    except Checkpoint.DoesNotExist:
+                        report.start_post.set_checkpoint(self.request, 'reported', user)
+                        report.start_post.save(force_update=True)
+                    made_report = True
+
+            if not report:
                 # File up new report
                 now = timezone.now()
                 report_name = _('#%(post)s by %(author)s in "%(thread)s"')
@@ -287,7 +291,7 @@ Member @%(reporter)s has reported following post by @%(reported)s:
                 reason_post = reason_post.strip() % {
                                              'reporter': request.user.username,
                                              'reported': self.post.user_name,
-                                             'post': self.redirect_to_post(self.post),
+                                             'post': settings.BOARD_ADDRESS + self.redirect_to_post(self.post)['Location'],
                                              'quote': self.post.quote(),
                                             }
 
@@ -336,9 +340,17 @@ Member @%(reporter)s has reported following post by @%(reported)s:
                 self.thread.replies_reported += 1
                 self.thread.save(force_update=True)
                 request.monitor.increase('reported_posts')
-            if request.is_ajax():
-                return json_response(request, message=_("Selected post has been reported and will receive moderator attention. Thank you."))
-            self.request.messages.set_flash(Message(_("Selected post has been reported and will receive moderator attention. Thank you.")), 'info', 'threads_%s' % self.post.pk)
+                made_report = True
+
+            if made_report:
+                if request.is_ajax():
+                    return json_response(request, message=_("Selected post has been reported and will receive moderator attention. Thank you."))
+                self.request.messages.set_flash(Message(_("Selected post has been reported and will receive moderator attention. Thank you.")), 'info', 'threads_%s' % self.post.pk)
+            else:
+                if request.is_ajax():
+                    return json_response(request, message=_("You have already reported this post. One of moderators will handle it as soon as it is possible. Thank you for your patience."))
+                self.request.messages.set_flash(Message(_("You have already reported this post. One of moderators will handle it as soon as it is possible. Thank you for your patience.")), 'info', 'threads_%s' % self.post.pk)
+
             return self.redirect_to_post(self.post)
         return view(self.request)
 
@@ -352,7 +364,7 @@ class ShowPostReportBaseView(JumpView):
             if not self.post.reported:
                 return error404()
             reports = Forum.objects.special_model('reports')
-            self.request.acl.forums.allow_thread_view(reports)
+            self.request.acl.forums.allow_forum_view(reports)
             report = self.post.live_report()
             if not report:
                 return error404()
