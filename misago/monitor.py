@@ -33,6 +33,12 @@ class Monitor(object):
     def __delitem__(self, key):
         pass
 
+    def increase(self, key, i=1):
+        self[key] = int(self[key]) + i
+
+    def decrease(self, key, i=1):
+        self[key] = int(self[key]) - i
+
     def get(self, key, default=None):
         if not key in self._items:
             return default

@@ -40,7 +40,7 @@ class List(ListWidget):
                 )
 
     def action_delete(self, items, checked):
-        self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
+        self.request.monitor.increase('acl_version')
         Role.objects.filter(id__in=checked).delete()
         return Message(_('Selected forum roles have been deleted successfully.'), 'success'), reverse('admin_roles_forums')
 
@@ -127,7 +127,7 @@ class ACL(FormWidget):
             raw_acl[perm] = form.cleaned_data[perm]
         target.permissions = raw_acl
         target.save(force_update=True)
-        self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
+        self.request.monitor.increase('acl_version')
 
         return target, Message(_('Forum Role "%(name)s" permissions have been changed.') % {'name': self.original_name}, 'success')
 
@@ -140,5 +140,5 @@ class Delete(ButtonWidget):
 
     def action(self, target):
         target.delete()
-        self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
+        self.request.monitor.increase('acl_version')
         return Message(_('Forum Role "%(name)s" has been deleted.') % {'name': _(target.name)}, 'success'), False

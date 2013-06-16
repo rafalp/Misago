@@ -22,8 +22,8 @@ class ThreadModeration(object):
         self.forum.sync()
         self.forum.save(force_update=True)
         # Update monitor
-        self.request.monitor['threads'] = int(self.request.monitor['threads']) + 1
-        self.request.monitor['posts'] = int(self.request.monitor['posts']) + self.thread.replies + 1
+        self.request.monitor.increase('threads')
+        self.request.monitor.increase('posts', self.thread.replies + 1)
         self.request.messages.set_flash(Message(_('Thread has been marked as reviewed and made visible to other members.')), 'success', 'threads')
 
     def thread_action_annouce(self):
@@ -97,8 +97,8 @@ class ThreadModeration(object):
         self.forum.sync()
         self.forum.save(force_update=True)
         # Update monitor
-        self.request.monitor['threads'] = int(self.request.monitor['threads']) + 1
-        self.request.monitor['posts'] = int(self.request.monitor['posts']) + self.thread.replies + 1
+        self.request.monitor.increase('threads')
+        self.request.monitor.increase('posts', self.thread.replies + 1)
         self.request.messages.set_flash(Message(_('Thread has been restored.')), 'success', 'threads')
 
     def thread_action_soft(self):
@@ -115,8 +115,8 @@ class ThreadModeration(object):
         self.forum.sync()
         self.forum.save(force_update=True)
         # Update monitor
-        self.request.monitor['threads'] = int(self.request.monitor['threads']) - 1
-        self.request.monitor['posts'] = int(self.request.monitor['posts']) - self.thread.replies - 1
+        self.request.monitor.decrease('threads')
+        self.request.monitor.decrease('posts', self.thread.replies + 1)
         self.request.messages.set_flash(Message(_('Thread has been hidden.')), 'success', 'threads')
 
     def thread_action_hard(self):
@@ -126,7 +126,7 @@ class ThreadModeration(object):
         self.forum.sync()
         self.forum.save(force_update=True)
         # Update monitor
-        self.request.monitor['threads'] = int(self.request.monitor['threads']) - 1
-        self.request.monitor['posts'] = int(self.request.monitor['posts']) - self.thread.replies - 1
+        self.request.monitor.decrease('threads')
+        self.request.monitor.decrease('posts', self.thread.replies + 1)
         self.request.messages.set_flash(Message(_('Thread "%(thread)s" has been deleted.') % {'thread': self.thread.name}), 'success', 'threads')
         return self.threads_list_redirect()

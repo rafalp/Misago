@@ -98,12 +98,12 @@ class UserManager(models.Manager):
 
         # Update forum stats
         if activation == 0:
-            monitor['users'] = int(monitor['users']) + 1
+            monitor.increase('users')
             monitor['last_user'] = new_user.pk
             monitor['last_user_name'] = new_user.username
             monitor['last_user_slug'] = new_user.username_slug
         else:
-            monitor['users_inactive'] = int(monitor['users_inactive']) + 1
+            monitor.increase('users_inactive')
 
         # Return new user
         return new_user

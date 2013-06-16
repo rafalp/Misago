@@ -90,7 +90,7 @@ class NewReplyBaseView(PostingBaseView):
 
         # Update forum and monitor
         if not moderation and not merged:
-            self.request.monitor['posts'] = int(self.request.monitor['posts']) + 1
+            self.request.monitor.increase('posts')
             self.forum.posts += 1
             self.forum.new_last_thread(self.thread)
             self.forum.save(force_update=True)

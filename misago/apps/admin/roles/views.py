@@ -110,7 +110,7 @@ class Edit(FormWidget):
         if self.request.user.is_god():
             target.protected = form.cleaned_data['protected']
         target.save(force_update=True)
-        self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
+        self.request.monitor.increase('acl_version')
         return target, Message(_('Changes in role "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
 
 
@@ -226,7 +226,7 @@ class ACL(FormWidget):
             raw_acl[perm] = form.cleaned_data[perm]
         target.permissions = raw_acl
         target.save(force_update=True)
-        self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
+        self.request.monitor.increase('acl_version')
         
         return target, Message(_('Role "%(name)s" permissions have been changed.') % {'name': self.original_name}, 'success')
 

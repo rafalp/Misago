@@ -5,6 +5,5 @@ class Command(BaseCommand):
     help = 'Rebuilds ACLs for all users'
 
     def handle(self, *args, **options):
-        monitor = Monitor()
-        monitor['acl_version'] = int(monitor['acl_version']) + 1
+        Monitor().increase('acl_version')
         self.stdout.write('\nUser ACLs cache has been set as outdated and will be rebuild when needed.\n')

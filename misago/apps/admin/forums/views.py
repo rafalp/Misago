@@ -186,7 +186,7 @@ class NewNode(FormWidget):
 
         if form.cleaned_data['perms']:
             new_forum.copy_permissions(form.cleaned_data['perms'])
-            self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
+            self.request.monitor.increase('acl_version')
 
         self.request.session['forums_admin_preffs'] = {
             'parent': form.cleaned_data['parent'].pk,
@@ -303,7 +303,7 @@ class Edit(FormWidget):
 
         if form.cleaned_data['parent'].pk != target.parent.pk:
             target.move_to(form.cleaned_data['parent'], 'last-child')
-            self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
+            self.request.monitor.increase('acl_version')
 
         target.save(force_update=True)
         Forum.objects.populate_tree(True)
@@ -312,7 +312,7 @@ class Edit(FormWidget):
             target.copy_permissions(form.cleaned_data['perms'])
 
         if form.cleaned_data['parent'].pk != target.parent.pk or form.cleaned_data['perms']:
-            self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
+            self.request.monitor.increase('acl_version')
 
         if self.original_name != target.name:
             target.sync_name()
@@ -370,5 +370,5 @@ class Delete(FormWidget):
                 Forum.objects.get(id=child.pk).delete()
         Forum.objects.get(id=target.pk).delete()
         Forum.objects.populate_tree(True)
-        self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
+        self.request.monitor.increase('acl_version')
         return target, Message(_('Forum "%(name)s" has been deleted.') % {'name': self.original_name}, 'success')

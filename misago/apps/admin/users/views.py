@@ -93,7 +93,7 @@ class List(ListWidget):
     def action_activate(self, items, checked):
         for user in items:
             if user.pk in checked and user.activation > 0:
-                self.request.monitor['users_inactive'] = int(self.request.monitor['users_inactive']) - 1
+                self.request.monitor.decrease('users_inactive')
                 user.activation = user.ACTIVATION_NONE
                 user.save(force_update=True)
                 user.email_user(
