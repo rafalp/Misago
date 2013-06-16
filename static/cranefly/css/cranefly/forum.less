@@ -432,41 +432,34 @@
       padding: 0px;
 
       li {
-        border: 1px solid @gray;
         .border-radius(@baseBorderRadius);
         display: block;
         float: left;
         margin-left: 3px;
-        padding: 1px 4px;
+        padding: 2px 5px;
 
         &.flag-reported {
           background-color: @flagReported;
-          border-color: darken(@flagReported, 10%);
         }
 
         &.flag-notreviewed {
           background-color: @flagReviewed;
-          border-color: darken(@flagReviewed, 10%);
         }
 
         &.flag-announcement {
           background-color: @flagAnnouncement;
-          border-color: darken(@flagAnnouncement, 10%);
         }
 
         &.flag-sticky {
           background-color: @flagSticky;
-          border-color: darken(@flagSticky, 10%);
         }
 
         &.flag-deleted {
           background-color: @flagDeleted;
-          border-color: darken(@flagDeleted, 10%);
         }
 
         &.flag-closed {
           background-color: @flagClosed;
-          border-color: darken(@flagClosed, 10%);
         }
       }
 
