@@ -15,6 +15,7 @@ class Theme(object):
 
     def __init__(self, theme):
         self.set_theme(theme);
+        self._mutex = None
 
         if not self.middlewares:
             self.load_middlewares(settings.TEMPLATE_MIDDLEWARES)
@@ -36,6 +37,10 @@ class Theme(object):
         return context_instance
 
     def process_context(self, templates, context):
+        if self._mutex:
+            return context
+        self._mutex = True
+
         for middleware in self.middlewares:
             try:
                 new_context = middleware.process_context(self, templates, context)
@@ -43,6 +48,8 @@ class Theme(object):
                     context = new_context
             except AttributeError:
                 pass
+
+        self._mutex = None
         return context
 
     def process_template(self, templates, context):
