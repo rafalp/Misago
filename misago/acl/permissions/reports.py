@@ -10,7 +10,11 @@ def make_form(request, role, form):
         form.base_fields['can_report_content'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
         form.base_fields['can_handle_reports'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
         form.base_fields['can_mod_reports_discussions'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['can_delete_reports'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['can_delete_reports'] = forms.TypedChoiceField(choices=(
+                                                                                 (0, _("No")),
+                                                                                 (1, _("Yes, soft-delete")),
+                                                                                 (2, _("Yes, hard-delete")),
+                                                                                 ), coerce=int)
 
         form.layout.append((
                             _("Reporting Content"),
@@ -104,7 +108,7 @@ def cleanup(acl, perms, forums):
                 acl.threads.acl[forum]['can_delete_attachments'] = True
                 acl.threads.acl[forum]['can_delete_checkpoints'] = True
                 acl.threads.acl[forum]['can_see_deleted_checkpoints'] = True
-            if perm['can_delete_reports']:
-                acl.threads.acl[forum]['can_delete_threads'] = 2
+            if perm['can_delete_reports'] > acl.threads.acl[forum]['can_delete_threads']:
+                acl.threads.acl[forum]['can_delete_threads'] = perm['can_delete_reports']
         except KeyError:
             pass

@@ -55,10 +55,10 @@ def make_forum_form(request, role, form):
     form.base_fields['can_close_threads'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_protect_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_delete_threads'] = forms.TypedChoiceField(choices=(
-                                                                              (0, _("No")),
-                                                                              (1, _("Yes, soft-delete")),
-                                                                              (2, _("Yes, hard-delete")),
-                                                                              ), coerce=int)
+                                                                             (0, _("No")),
+                                                                             (1, _("Yes, soft-delete")),
+                                                                             (2, _("Yes, hard-delete")),
+                                                                             ), coerce=int)
     form.base_fields['can_delete_posts'] = forms.TypedChoiceField(choices=(
                                                                            (0, _("No")),
                                                                            (1, _("Yes, soft-delete")),
