@@ -12,7 +12,12 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
         self.forum = Forum.objects.get(special='private_threads')
 
     def threads_queryset(self):
-        return self.forum.thread_set.filter(participants__id=self.request.user.pk).order_by('-last')
+        qs_threads = self.forum.thread_set.filter(participants__id=self.request.user.pk).order_by('-last')
+        if self.request.acl.private_threads.is_mod():
+            qs_reported = self.forum.thread_set.filter(replies_reported__gt=0)
+            qs_threads = qs_threads | qs_reported
+            qs_threads = qs_threads.distinct()
+        return qs_threads
 
     def fetch_threads(self):
         qs_threads = self.threads_queryset()

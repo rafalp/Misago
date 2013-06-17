@@ -12,7 +12,8 @@ class TypeMixin(object):
     def check_permissions(self):
         try:
             if self.thread.pk:
-                if not self.request.user in self.thread.participants.all():
+                if not ((self.thread.replies_reported > 0 and self.request.acl.private_threads.is_mod())
+                        or (self.request.user in self.thread.participants.all())):
                     raise ACLError404()
         except AttributeError:
             pass
