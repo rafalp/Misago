@@ -63,7 +63,7 @@
           {% endif %}
           {{ hook_user_menu_important_append|safe }}
           <li class="user-profile dropdown">
-            <a href="{% url 'user' user=user.id, username=user.username_slug %}" class="dropdown-toggle" data-toggle="dropdown"><div>{{ user.username }} <img src="{{ user.get_avatar(28) }}" alt=""></div></a>
+            <a href="{% url 'user' user=user.id, username=user.username_slug %}" class="dropdown-toggle" data-toggle="dropdown"><div>{{ user.username }} <img src="{{ user.get_avatar(28) }}" alt=""><span class="caret-border"><b class="caret"></b></span></div></a>
             <ul class="dropdown-menu">
               <li><a href="{% url 'user' user=user.id, username=user.username_slug %}"><i class="icon-user"></i> {% trans %}Your profile{% endtrans %}</a></li>
               <li><a href="{% url 'usercp' %}"><i class="icon-cog"></i> {% trans %}Change options{% endtrans %}</a></li>
