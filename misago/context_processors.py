@@ -18,7 +18,7 @@ def common(request):
         'hook_user_menu_important_append': u'',
         'hook_user_menu_dropdown_prepend': u'',
         'hook_user_menu_dropdown_append': u'',
-        'hook_credits_side': u'',
+        'hook_html_credits_side': u'',
     }
 
     try:
