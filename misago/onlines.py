@@ -53,10 +53,10 @@ class MembersOnline(object):
                 'all': self.all,
                }
 
-        if not request.session.matched:
-            if request.user.is_authenticated():
+        if not request.user.is_crawler():
+            if not stat['members'] and request.user.is_authenticated():
                 stat['members'] += 1
-            if not request.user.is_crawler():
                 stat['all'] += 1
-        
+            if not stat['all']:
+                stat['all'] += 1        
         return stat
