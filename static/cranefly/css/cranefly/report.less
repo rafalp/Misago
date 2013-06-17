@@ -33,6 +33,47 @@
 
     .post-body {
       margin-bottom: 0px;
+
+      .report-actions {
+        border-left: none !important;
+        float: left !important;
+        padding: 0px !important;
+
+        &:first-child .btn {
+          .border-radius(0px 0px 0px @baseBorderRadius) !important;
+        }
+
+        .btn {
+          .opacity(90) !important;
+          margin: 0px !important;
+          padding: 8px 12px !important;
+
+          color: @white !important;
+          font-weight: bold !important;
+
+          i {
+            background-image: url("@{iconWhiteSpritePath}");
+            position: relative;
+            top: 0px;
+          }
+
+          &:hover, &:active, &:focus {
+            .opacity(100) !important;
+
+            text-decoration: none !important;
+          }
+
+          &.btn-resolve {
+            background-color: darken(@green, 5%);
+            text-shadow: 0px 1px 0px darken(@green, 20%);
+          }
+
+          &.btn-bogus {
+            background-color: @grayDark;
+            text-shadow: 0px 1px 0px darken(@grayDark, 20%);
+          }
+        }
+      }
     }
   }
 }

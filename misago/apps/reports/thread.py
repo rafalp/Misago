@@ -39,9 +39,13 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
         return actions
 
     def after_thread_action_sticky(self):
+        self.thread.last_post.set_checkpoint(self.request, 'resolved')
+        self.thread.last_post.save(force_update=True)
         self.request.messages.set_flash(Message(_('Report has been set as resolved.')), 'success', 'threads')
 
     def after_thread_action_normal(self):
+        self.thread.last_post.set_checkpoint(self.request, 'bogus')
+        self.thread.last_post.save(force_update=True)
         self.request.messages.set_flash(Message(_('Report has been set as bogus.')), 'success', 'threads')
 
     def after_thread_action_undelete(self):

@@ -68,10 +68,15 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
         reported_threads = []
         for thread in self.threads:
             if thread.pk in ids:
+                if thread.original_weight != thread.weight:
+                    if thread.weight == 1:
+                        thread.last_post.set_checkpoint(self.request, 'resolved')
+                    if thread.weight == 0:
+                        thread.last_post.set_checkpoint(self.request, 'bogus')
+                    thread.last_post.save(force_update=True)
                 if thread.original_weight == 2:
                     reported_posts.append(thread.report_for.pk)
                     reported_threads.append(thread.report_for.thread_id)
-                    second_pass.append(thread.pk)
         if reported_threads:
             Thread.objects.filter(id__in=reported_threads).update(replies_reported=F('replies_reported') - 1)
             Post.objects.filter(id__in=reported_posts).update(reported=False)

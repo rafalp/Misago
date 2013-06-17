@@ -135,6 +135,38 @@
             </div>
           </div>
           <div class="post-footer">{% filter trim %}
+            {% if post.pk == thread.start_post_id %}
+            <div class="post-actions report-actions">
+              {% if thread.weight == 2 %}
+              <form action="{{ request_path }}" class="form-inline" method="post">
+                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                <input type="hidden" name="origin" value="thread_form">
+                <input type="hidden" name="thread_action" value="sticky">
+                <button type="submit" class="btn btn-link btn-resolve tooltip-top" title="{% trans %}Set this report as resolved{% endtrans %}"><i class="icon-ok"></i> {% trans %}Resolved{% endtrans %}</button>
+              </form>
+              <form action="{{ request_path }}" class="form-inline" method="post">
+                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                <input type="hidden" name="origin" value="thread_form">
+                <input type="hidden" name="thread_action" value="normal">
+                <button type="submit" class="btn btn-link btn-bogus tooltip-top" title="{% trans %}Set this report as bogus{% endtrans %}"><i class="icon-remove"></i> {% trans %}Bogus{% endtrans %}</button>
+              </form>
+              {% elif thread.weight != 1 %}
+              <form action="{{ request_path }}" class="form-inline" method="post">
+                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                <input type="hidden" name="origin" value="thread_form">
+                <input type="hidden" name="thread_action" value="sticky">
+                <button type="submit" class="btn btn-link btn-resolve tooltip-top" title="{% trans %}Set this report as bogus{% endtrans %}"><i class="icon-ok"></i> {% trans %}Resolved{% endtrans %}</button>
+              </form>
+              {% elif thread.weight != 0 %}
+              <form action="{{ request_path }}" class="form-inline" method="post">
+                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                <input type="hidden" name="origin" value="thread_form">
+                <input type="hidden" name="thread_action" value="normal">
+                <button type="submit" class="btn btn-link btn-bogus tooltip-top" title="{% trans %}Set this report as resolved{% endtrans %}"><i class="icon-remove"></i> {% trans %}Bogus{% endtrans %}</button>
+              </form>
+              {% endif %}
+            </div>
+            {% endif %}
             <div class="post-actions">
               {% if acl.users.can_see_users_trails() -%}
               <a href="{% url 'post_info' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-trail">{% trans %}Info{% endtrans %}</a>
@@ -204,12 +236,16 @@
         <span>
           {%- if checkpoint.action == 'limit' -%}
           <i class="icon-lock"></i> {% trans  %}This thread has reached its post limit and has been closed.{% endtrans %}
+          {%- elif checkpoint.action == 'resolved' -%}
+          <i class="icon-ok"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} has set this report as resolved {{ date }}{% endtrans %}
+          {%- elif checkpoint.action == 'bogus' -%}
+          <i class="icon-remove"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} has set this report as bogus {{ date }}{% endtrans %}
+          {%- elif checkpoint.action == 'reported' -%}
+          <i class="icon-fire"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} has also reported this post {{ date }}{% endtrans %}
           {%- elif checkpoint.action == 'deleted' -%}
           <i class="icon-trash"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} deleted this thread {{ date }}{% endtrans %}
           {%- elif checkpoint.action == 'undeleted' -%}
           <i class="icon-trash"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} restored this thread {{ date }}{% endtrans %}
-          {%- elif checkpoint.action == 'reported' -%}
-          <i class="icon-fire"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} has also reported this post {{ date }}{% endtrans %}
           {%- endif -%}
           {% if acl.threads.can_delete_checkpoint(forum) %}
           {% if checkpoint.deleted %}
@@ -240,14 +276,12 @@
 
   {% if thread_form or posts_form %}
   <div class="thread-moderation">
-    {% if thread_form%}
     <form id="thread_form" class="form-inline pull-left" action="{{ request_path }}" method="POST">
       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
       <input type="hidden" name="origin" value="thread_form">
       {{ form_theme.input_select(thread_form['thread_action'],width=3) }}
       <button type="submit" class="btn btn-danger">{% trans %}Go{% endtrans %}</button>
     </form>
-    {% endif %}
     {% if posts_form%}
     <form id="posts_form" class="form-inline pull-right" action="{{ request_path }}" method="POST">
       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
