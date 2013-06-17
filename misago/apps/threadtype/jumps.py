@@ -272,19 +272,11 @@ class ReportPostBaseView(JumpView):
             if not report:
                 # File up new report
                 now = timezone.now()
-                report_name = _('#%(post)s by %(author)s in "%(thread)s"')
-                report_name = report_name % {
-                                             'post': self.post.pk,
-                                             'thread': self.thread.name,
-                                             'author': self.post.user_name
-                                            }
-                report_name = short_string(report_name, request.settings['thread_name_max'])
 
                 reason_post = _('''
 Member @%(reporter)s has reported following post by @%(reported)s:
 
 %(quote)s
-
 **Post link:** <%(post)s>
 ''')
 
@@ -301,8 +293,8 @@ Member @%(reporter)s has reported following post by @%(reported)s:
                 report = Thread.objects.create(
                                                forum=reports,
                                                weight=2,
-                                               name=report_name,
-                                               slug=slugify(report_name),
+                                               name=self.thread.name,
+                                               slug=slugify(self.thread.slug),
                                                start=now,
                                                start_poster=request.user,
                                                start_poster_name=request.user.username,

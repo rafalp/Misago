@@ -7,7 +7,7 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li><a href="{% url 'reports' %}">{% trans %}Reported Posts{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-{% if thread %}<li><a href="{% url 'report' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>{% endif %}
+<li><a href="{% url 'report' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li class="active">{{ get_title() }}
 {%- endblock %}
 
@@ -18,12 +18,17 @@
     <ul class="breadcrumb">
       {{ self.breadcrumb() }}</li>
     </ul>
-    <h1>{{ get_title() }} <small>{% if thread %}{{ thread.name }}{% else %}{{ forum.name }}{% endif %}</small></h1>
-    {% if thread %}
+    <h1>{{ get_title() }} <small>{{ thread.name }}</small></h1>
     <ul class="unstyled header-stats">
+      <li><i class="icon-tag"></i> {% if thread.weight == 2 -%}
+        {% trans %}Open{% endtrans %}
+        {%- elif thread.weight == 1 -%}
+        Resolved
+        {%- else -%}
+        Bogus
+        {%- endif %}</li>
       {{ get_info() }}
     </ul>
-    {% endif %}
   </div>
 </div>
 <div class="container container-primary">
@@ -66,16 +71,11 @@
             {{ form_theme.row_widget(form.fields.edit_reason, width=8) }}
             {% endif %}
 
-            {% if intersect(form.fields, ('thread_weight', 'close_thread')) %}
+            {% if 'thread_weight' in form.fields %}
             <div class="control-group">
-              <label class="control-label">{% trans %}Thread Status{% endtrans %}:</label>
+              <label class="control-label">{% trans %}Set Report Status{% endtrans %}:</label>
               <div class="controls">
-                {% if 'thread_weight' in form.fields %}
                 {{ form_theme.input_radio_select(form.fields.thread_weight, width=8) }}
-                {% endif %}
-                {% if 'close_thread' in form.fields %}
-                {{ form_theme.input_checkbox(form.fields.close_thread, width=8) }}
-                {% endif %}
               </div>
             </div>
             {% endif %}
@@ -127,21 +127,18 @@
 
 
 {% macro get_title() -%}
-{% if action == 'new_thread' -%}
-{% trans %}Post New Thread{% endtrans %}
-{%- elif action == 'edit_thread' -%}
-{% trans %}Edit Thread{% endtrans %}
+{%- if action == 'edit_thread' -%}
+{% trans %}Edit Report{% endtrans %}
 {%- elif action == 'new_reply' -%}
-{% trans %}Post New Reply{% endtrans %}
+{% trans %}Post New Comment{% endtrans %}
 {%- elif action == 'edit_reply' -%}
-{% trans %}Edit Reply{% endtrans %}
+{% trans %}Edit Comment{% endtrans %}
 {%- endif %}
 {%- endmacro %}
 
 
 {% macro get_info() -%}
 {% if action == 'edit_reply' -%}
-    {% if post.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
     <li><i class="icon-time"></i> <a href="{% url 'report_find' thread=thread.pk, slug=thread.slug, post=post.pk %}">{{ post.date|reltimesince }}</a></li>
     <li><i class="icon-user"></i> {% if post.user %}<a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
     <li><i class="icon-pencil"></i> {% if post.edits > 0 -%}
@@ -150,7 +147,6 @@
       {% trans %}First edit{% endtrans %}
     {%- endif %}</li>
 {%- else -%}
-    {% if thread.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
     {% if action == 'edit_thread' %}
     <li><i class="icon-time"></i> <a href="{% url 'report_find' thread=thread.pk, slug=thread.slug, post=thread.start_post_id %}">{{ thread.start|reltimesince }}</a></li>
     {% else %}
@@ -158,9 +154,9 @@
     {% endif %}
     <li><i class="icon-user"></i> {% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}</li>
     <li><i class="icon-comment"></i> {% if thread.replies > 0 -%}
-      {% trans count=thread.replies, replies=thread.replies|intcomma %}One reply{% pluralize %}{{ replies }} replies{% endtrans %}
+      {% trans count=thread.replies, replies=thread.replies|intcomma %}One comment{% pluralize %}{{ replies }} comments{% endtrans %}
     {%- else -%}
-      {% trans %}No replies{% endtrans %}
+      {% trans %}No comments{% endtrans %}
     {%- endif %}</li>
 {%- endif %}
     {% if thread.closed %}<li><i class="icon-lock"></i> {% trans %}Locked{% endtrans %}</li>{% endif %}
@@ -168,10 +164,8 @@
 
 
 {% macro get_button() -%}
-{% if action == 'new_thread' -%}
-{% trans %}Post Thread{% endtrans %}
-{%- elif action == 'new_reply' -%}
-{% trans %}Post Reply{% endtrans %}
+{% if action == 'new_reply' -%}
+{% trans %}Post Comment{% endtrans %}
 {%- else -%}
 {% trans %}Save Changes{% endtrans %}
 {%- endif %}

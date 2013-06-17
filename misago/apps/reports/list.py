@@ -38,9 +38,11 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
         tracker_forum = ThreadsTracker(self.request, self.forum)
         unresolved_count = 0
         for thread in list(chain(qs_announcements, qs_threads[self.pagination['start']:self.pagination['stop']])):
+            thread.original_weight = thread.weight
             if thread.weight == 2:
                 unresolved_count += 1
             thread.is_read = tracker_forum.is_read(thread)
+            thread.report_forum = Forum.objects.forums_tree.get(thread.report_for.forum_id)
             self.threads.append(thread)
 
         if int(self.request.monitor['reported_posts']) != unresolved_count:
@@ -64,18 +66,15 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
     def mass_resolve(self, ids):
         reported_posts = []
         reported_threads = []
-        second_pass = []
         for thread in self.threads:
             if thread.pk in ids:
-                 reported_posts.append(thread.report_for.pk)
-                 reported_threads.append(thread.report_for.thread_id)
-                 if thread.weight == 2:
+                if thread.original_weight == 2:
+                    reported_posts.append(thread.report_for.pk)
+                    reported_threads.append(thread.report_for.thread_id)
                     second_pass.append(thread.pk)
         if reported_threads:
             Thread.objects.filter(id__in=reported_threads).update(replies_reported=F('replies_reported') - 1)
             Post.objects.filter(id__in=reported_posts).update(reported=False)
-        if second_pass:
-            Thread.objects.filter(id__in=second_pass).update(weight=1)
 
     def action_sticky(self, ids):
         if self._action_sticky(ids):

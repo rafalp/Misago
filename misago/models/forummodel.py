@@ -4,6 +4,7 @@ from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 from django.conf import settings
 from django.core.cache import cache
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from misago.signals import delete_forum_content, move_forum_content, rename_forum, rename_user
@@ -190,6 +191,13 @@ class Forum(MPTTModel):
         if self.special == 'root':
            return unicode(_('Root Category'))
         return unicode(self.name)
+
+    def forum_url(self):
+        if self.special == 'private_threads':
+           reverse('private-threads')
+        if self.special == 'reports':
+           reverse('reports')
+        return reverse('forum', kwargs={'forum': self.pk, 'slug': self.slug})
 
     def set_description(self, description):
         self.description = description.strip()

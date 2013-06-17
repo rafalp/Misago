@@ -31,13 +31,13 @@
     {{ pager() }}
   </div>
 
-  <div class="forum-threads-list">
+  <div class="forum-threads-list reports-list">
     <div class="header">
       <div class="row-fluid">
-        <div class="span7">{% trans %}Report{% endtrans %}</div>
-        <div class="span5 thread-activity">
+        <div class="span6 offset2">{% trans %}Report{% endtrans %}</div>
+        <div class="span4 thread-activity">
           <div class="thread-replies">{% trans %}Activity{% endtrans %}</div>
-          {% if user.is_authenticated() and list_form %}
+          {% if list_form %}
           <div class="pull-right check-cell">
             <label class="checkbox"><input type="checkbox" class="checkbox-master"></label>
           </div>
@@ -48,40 +48,44 @@
     {% for thread in threads %}
     <div class="thread-row{% if not thread.is_read %} thread-new{% endif %}{% if loop.last %} thread-last{% endif %}">
       <div class="row-fluid">
-        <div class="span7">
-          {% if thread.is_read %}
-          <a href="{% url 'report_new' thread=thread.pk, slug=thread.slug %}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}"><i class="icon-asterisk"></i></a>
+        <div class="span2 thread-label">
+          {% if thread.weight == 2 %}
+          <span class="report-label report-open"><i class="icon-time"></i> {% trans %}Open{% endtrans %}</span>
+          {% elif thread.weight == 1 %}
+          <span class="report-label report-resolved"><i class="icon-ok"></i> {% trans %}Resolved{% endtrans %}</span>
           {% else %}
-          <a href="{% url 'report_new' thread=thread.pk, slug=thread.slug %}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}"><i class="icon-fire"></i></a>
+          <span class="report-label report-bogus"><i class="icon-remove"></i> {% trans %}Bogus{% endtrans %}</span>
+          {% endif %}
+        </div>
+        <div class="span6">
+
+          {% if thread.deleted %}
+          <ul class="unstyled thread-flags">
+            <li class="flag-deleted"><i class="icon-trash tooltip-top" title="{% trans %}This thread is deleted{% endtrans %}"></i></li>
+          </ul>
+          {% endif %}
+          
+          <a href="{% url 'report' thread=thread.pk, slug=thread.slug %}" class="thread-name"><span class="report-id">#892431</span> {{ thread.name }}</a>
+          
+          {% if thread.is_read %}
+          <a href="{% url 'report_new' thread=thread.pk, slug=thread.slug %}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last comment{% endtrans %}"><i class="icon-asterisk"></i></a>
+          {% else %}
+          <a href="{% url 'report_new' thread=thread.pk, slug=thread.slug %}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread comment{% endtrans %}"><i class="icon-fire"></i></a>
           {% endif %}
 
-          {{ macros.thread_flags(thread) }}
-          
-          <a href="{% url 'report' thread=thread.pk, slug=thread.slug %}" class="thread-name">{{ thread.name }}</a>
-          
           <div class="thread-details">
-            {% trans user=thread_starter(thread), start=thread.start|reldate|low %}by {{ user }}, {{ start }}{% endtrans %}
+            {% trans user=thread_starter(thread), start=thread.start|reldate|low, forum=report_forum(thread) %}Reported by {{ user }} {{ start }} in forum {{ forum }}{% endtrans %}
           </div>
 
         </div>
-        <div class="span5 thread-activity">
-
-          {% if settings.avatars_on_threads_list %}
-          <div class="thread-last-avatar">
-            {% if thread.last_poster_id %}
-            <a href="{% url 'user' user=thread.last_poster.pk, username=thread.last_poster.username_slug %}"><img src="{{ thread.last_poster.get_avatar(40) }}" alt=""></a>
-            {% else %}
-            <img src="{{ macros.avatar_guest(40) }}" alt="" class="user-avatar">
-            {% endif %}
-          </div>
-          {% endif %}
+        <div class="span4 thread-activity">
 
           <div class="thread-replies">
             <strong class="lead">{{ thread_reply(thread) }}, {{ thread.last|reldate|low }}</strong><br>
-            {{ replies(thread.replies) }}, <span{% if (thread.upvotes-thread.downvotes) > 0 %} class="text-success"{% elif (thread.upvotes-thread.downvotes) < 0 %} class="text-error"{% endif %}><strong>{% if (thread.upvotes-thread.downvotes) > 0 %}+{% elif (thread.upvotes-thread.downvotes) < 0 %}-{% endif %}</strong>{% trans rating=(thread.upvotes-thread.downvotes)|abs|intcomma %}{{ rating }} thread rating{% endtrans %}</span>
+            {{ replies(thread.replies) }}
           </div>
 
-          {% if user.is_authenticated() and list_form %}
+          {% if list_form %}
           <label class="thread-select checkbox"><input form="threads_form" name="{{ list_form['list_items']['html_name'] }}" type="checkbox" class="checkbox-member" value="{{ thread.pk }}"{% if list_form['list_items']['has_value'] and ('' ~ thread.pk) in list_form['list_items']['value'] %} checked="checked"{% endif %}></label>
           {% endif %}
         </div>
@@ -89,11 +93,11 @@
     </div>
     {% else %}
     <div class="thread-row threads-list-empty">
-      {% trans %}There are no threads in this forum.{% endtrans %}
+      {% trans %}There are no reports currently. Whef!{% endtrans %}
     </div>
     {% endfor %}
 
-    {% if user.is_authenticated() and list_form %}
+    {% if list_form %}
     <div class="threads-actions">
       <form id="threads_form" class="form-inline pull-right" action="{{ request_path }}" method="POST">
         <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
@@ -127,6 +131,10 @@
 {% if thread.last_poster_id %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}" class="user-link">{{ thread.last_poster_name }}</a>{% else %}{{ thread.last_poster_name }}{% endif %}
 {%- endmacro %}
 
+{% macro report_forum(thread) -%}
+{% if thread.report_forum %}<a href="{{ thread.report_forum.forum_url() }}" class="forum-link">{{ thread.report_forum }}</a>{% else %}<em>{% trans %}Deleted{% endtrans %}</em>{% endif %}
+{%- endmacro %}
+
 {% macro pager() %}
 {% if pagination['total'] > 0 %}
 <div class="pagination pull-left">
@@ -154,7 +162,7 @@
           title: populateForumTooltip({{ subforum.id }})
         });
       {% endfor %}
-      {%- if user.is_authenticated() and list_form %}
+      {%- if list_form %}
       $('#threads_form').submit(function() {
         if ($('.thread-select[]:checked').length == 0) {
           alert("{% trans %}You have to select at least one thread.{% endtrans %}");
