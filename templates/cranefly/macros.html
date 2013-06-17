@@ -57,7 +57,7 @@ itemprop="breadcrumb"
 
 {% macro thread_flags(thread) -%}
 <ul class="unstyled thread-flags">
-  {% if acl.threads.can_mod_posts(forum) and thread.replies_reported %}
+  {% if thread.replies_reported and ((forum is defined and acl.threads.can_mod_posts(forum)) or acl.threads.can_mod_posts(thread.forum)) %}
   <li class="flag-reported"><i class="icon-warning-sign tooltip-top" title="{% trans %}This thread has reported replies{% endtrans %}"></i></li>
   {% endif %}
   {% if thread.replies_moderated %}
