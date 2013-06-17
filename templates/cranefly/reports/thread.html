@@ -289,28 +289,28 @@
     $(function () {
       $('#thread_form').submit(function() {
         if ($('#id_thread_action').val() == 'hard') {
-          var decision = confirm("{% trans %}Are you sure you want to delete this thread? This action is not reversible!{% endtrans %}");
+          var decision = confirm("{% trans %}Are you sure you want to delete this report? This action is not reversible!{% endtrans %}");
           return decision;
         }
         return true;
       });
       $('#posts_form').submit(function() {
         if ($('.post-checkbox[]:checked').length == 0) {
-          alert("{% trans %}You have to select at least one post.{% endtrans %}");
+          alert("{% trans %}You have to select at least one comment.{% endtrans %}");
           return false;
         }
         if ($('#id_list_action').val() == 'hard') {
-          var decision = confirm("{% trans %}Are you sure you want to delete selected posts? This action is not reversible!{% endtrans %}");
+          var decision = confirm("{% trans %}Are you sure you want to delete selected comments? This action is not reversible!{% endtrans %}");
           return decision;
         }
         return true;
       });
       $('.prompt-delete-thread').submit(function() {
-          var decision = confirm("{% trans %}Are you sure you want to delete this thread?{% endtrans %}");
+          var decision = confirm("{% trans %}Are you sure you want to delete this report?{% endtrans %}");
           return decision;
       });
       $('.prompt-delete-post').submit(function() {
-          var decision = confirm("{% trans %}Are you sure you want to delete this post?{% endtrans %}");
+          var decision = confirm("{% trans %}Are you sure you want to delete this comment?{% endtrans %}");
           return decision;
       });
       $('.prompt-delete-checkpoint').submit(function() {
