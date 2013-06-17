@@ -14,6 +14,10 @@ def common(request):
         'hook_guest_menu_append': u'',
         'hook_user_menu_prepend': u'',
         'hook_user_menu_append': u'',
+        'hook_user_menu_important_prepend': u'',
+        'hook_user_menu_important_append': u'',
+        'hook_user_menu_dropdown_prepend': u'',
+        'hook_user_menu_dropdown_append': u'',
         'hook_credits_side': u'',
     }
 
