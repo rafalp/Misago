@@ -77,9 +77,6 @@ class NewReplyBaseView(PostingBaseView):
             if self.thread.last_poster_id != self.request.user.pk:
                 self.thread.score += self.request.settings['thread_ranking_reply_score']
 
-        # Save updated thread
-        self.thread.save(force_update=True)
-
         # Update forum and monitor
         if not moderation and not merged:
             self.request.monitor.increase('posts')
@@ -109,7 +106,6 @@ class NewReplyBaseView(PostingBaseView):
             self.thread.closed = True
             self.post.set_checkpoint(self.request, 'limit')
             self.post.save(force_update=True)
-            self.thread.save(force_update=True)
         elif 'close_thread' in form.cleaned_data and form.cleaned_data['close_thread']:
             self.thread.closed = not self.thread.closed
             if merged:
@@ -121,7 +117,9 @@ class NewReplyBaseView(PostingBaseView):
             else:
                 checkpoint_post.set_checkpoint(self.request, 'opened')
             checkpoint_post.save(force_update=True)
-            self.thread.save(force_update=True)
+
+        # Save updated thread
+        self.thread.save(force_update=True)
 
         # Mute quoted user?
         if not (self.quote and self.quote.user_id and not merged
