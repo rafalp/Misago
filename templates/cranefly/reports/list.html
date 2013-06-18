@@ -74,7 +74,11 @@
           {% endif %}
 
           <div class="thread-details">
-            {% trans user=thread_starter(thread), start=thread.start|reldate|low, forum=report_forum(thread) %}Reported by {{ user }} {{ start }} in forum {{ forum }}{% endtrans %}
+            {% if thread.report_forum %}
+            {% trans user=thread_starter(thread), start=thread.start|reldate|low, forum=report_forum(thread) %}Post reported by {{ user }} {{ start }} in forum {{ forum }}{% endtrans %}
+            {% else %}
+            {% trans user=thread_starter(thread), start=thread.start|reldate|low %}Deleted post reported by {{ user }} {{ start }}{% endtrans %}
+            {% endif %}
           </div>
 
         </div>
@@ -132,7 +136,7 @@
 {%- endmacro %}
 
 {% macro report_forum(thread) -%}
-{% if thread.report_forum %}<a href="{{ thread.report_forum.forum_url() }}" class="forum-link">{{ thread.report_forum }}</a>{% else %}<em>{% trans %}Deleted{% endtrans %}</em>{% endif %}
+<a href="{{ thread.report_forum.forum_url() }}" class="forum-link">{{ thread.report_forum }}</a>
 {%- endmacro %}
 
 {% macro pager() %}
