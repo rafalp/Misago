@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import F
+from django.db.models.signals import pre_save, pre_delete
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.markdown import clear_markdown
@@ -45,6 +46,15 @@ class Post(models.Model):
 
     class Meta:
         app_label = 'misago'
+
+    def delete(self, *args, **kwargs):
+        """
+        FUGLY HAX for weird stuff that happens with
+        relations on model deletion in MySQL
+        """
+        if self.reported:
+            self.report_set.update(report_for=None)
+        return super(Post, self).delete(*args, **kwargs)
 
     def get_date(self):
         return self.date
@@ -114,11 +124,11 @@ class Post(models.Model):
                     pass
 
     def is_reported(self):
-        self.reported = self.reports.filter(weight=2).count() > 0
+        self.reported = self.report_set.filter(weight=2).count() > 0
 
     def live_report(self):
         try:
-            return self.reports.filter(weight=2)[0]
+            return self.report_set.filter(weight=2)[0]
         except IndexError:
             return None
 

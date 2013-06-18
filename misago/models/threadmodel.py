@@ -74,7 +74,7 @@ class Thread(models.Model):
     last_poster_slug = models.SlugField(max_length=255, null=True, blank=True)
     last_poster_style = models.CharField(max_length=255, null=True, blank=True)
     participants = models.ManyToManyField('User', related_name='private_thread_set')
-    report_for = models.ForeignKey('Post', null=True, blank=True, related_name='reports', on_delete=models.SET_NULL)
+    report_for = models.ForeignKey('Post', related_name='report_set', null=True, blank=True, on_delete=models.SET_NULL)
     moderated = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     closed = models.BooleanField(default=False)
@@ -85,6 +85,17 @@ class Thread(models.Model):
 
     class Meta:
         app_label = 'misago'
+
+    def delete(self, *args, **kwargs):
+        """
+        FUGLY HAX for weird stuff that happens with
+        relations on model deletion in MySQL
+        """
+        if self.replies_reported:
+            clear_reports = [post.pk for post in self.post_set.filter(reported=True)]
+            if clear_reports:
+                Thread.objects.filter(report_for__in=clear_reports).update(report_for=None)
+        return super(Thread, self).delete(*args, **kwargs)
 
     def get_date(self):
         return self.start
