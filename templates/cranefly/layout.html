@@ -3,33 +3,12 @@
 
 {% block body %}
 <div id="wrap">
-
-  {#{% if acl.special.can_use_mcp() %}
-  <div class="navbar navbar-inverse navbar-modbar navbar-static-top">
-    <div class="navbar-inner">
-      <div class="container">
-        <ul class="nav">
-          <li><a href="#">Frontlines</a></li>
-          <li><a href="#">Reports <span class="label label-important">5</span></a></li>
-          <li><a href="#">Warnings</a></li>
-        </ul>
-        <form class="navbar-form pull-right">
-          <div class="navbar-search-form">
-            <input type="text" class="span2" placeholder="{% trans %}Enter IP Address or Username...{% endtrans %}">
-            <button type="submit" class="btn btn-link"><i class="icon-search"></i></button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-  {% endif %}#}
-
   <div class="navbar navbar-header navbar-static-top">
     <div class="navbar-inner">
       <div class="container">
         <a href="{% url 'index' %}" class="brand">{% if settings.board_header %}{{ settings.board_header }}{% else %}{{ settings.board_name }}{% endif %}</a>
         {% if not user.is_crawler() %}
-        <form class="navbar-form pull-left">
+        <form action="" method="post" class="navbar-form pull-left">
           <div class="navbar-search-form">
             <input type="text" class="span2" placeholder="{% trans %}Search community...{% endtrans %}">
             <button type="submit" class="btn btn-link"><i class="icon-search"></i></button>
@@ -69,12 +48,12 @@
               <li><a href="{% url 'usercp' %}"><i class="icon-cog"></i> {% trans %}Change options{% endtrans %}</a></li>
               <li role="presentation" class="divider"></li>
               {% if acl.reports.can_handle() %}
-              <li><a href="{% url 'reports' %}"><i class="icon-fire"></i> {% trans %}Reported Posts{% endtrans %}{% if monitor.reported_posts %}<span class="label">{{ monitor.reported_posts }}</span>{% endif %}</a></li>
+              <li><a href="{% url 'reports' %}">{% if monitor.reported_posts %}<span class="label">{{ monitor.reported_posts }}</span>{% endif %}<i class="icon-fire"></i> {% trans %}Reported Posts{% endtrans %}</a></li>
               {% endif %}
-              <li><a href="{% url 'alerts' %}"><i class="icon-asterisk"></i> {% trans %}Notifications{% endtrans %}{% if user.alerts %}<span class="label">{{ user.alerts }}</span>{% endif %}</a></li>
+              <li><a href="{% url 'alerts' %}">{% if user.alerts %}<span class="label">{{ user.alerts }}</span>{% endif %}<i class="icon-asterisk"></i> {% trans %}Notifications{% endtrans %}</a></li>
               {{ hook_user_menu_dropdown_prepend|safe }}
               {% if settings.enable_private_threads and acl.private_threads.can_participate() %}
-              <li><a href="{% url 'private_threads' %}"><i class="icon-inbox"></i> {% trans %}Private Threads{% endtrans %}{% if user.unread_pds %}<span class="label">{{ user.unread_pds }}</span>{% endif %}</a></li>
+              <li><a href="{% url 'private_threads' %}">{% if user.unread_pds %}<span class="label">{{ user.unread_pds }}</span>{% endif %}<i class="icon-inbox"></i> {% trans %}Private Threads{% endtrans %}</a></li>
               {% endif %}
               <li><a href="{% url 'newsfeed' %}"><i class="icon-signal"></i> {% trans %}News Feed{% endtrans %}</a></li>
               <li><a href="{% url 'watched_threads' %}"><i class="icon-bookmark"></i> {% trans %}Watched Threads{% endtrans %}</a></li>
