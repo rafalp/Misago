@@ -14,7 +14,7 @@ class Monitor(object):
         if not self._items:
             self._items = {}
             for i in MonitorItem.objects.all():
-                self._items[i.id] = [i.value, i.updated]
+                self._items[i.id] = [i.value, i.updated, i.type]
             cache.set('monitor', self._items)
 
     def __contains__(self, key):
@@ -26,7 +26,12 @@ class Monitor(object):
     def __setitem__(self, key, value):
         self._items[key][0] = value
         cache.set('monitor', self._items)
-        sync_item = MonitorItem(id=key, value=value, updated=timezone.now())
+        sync_item = MonitorItem(
+                                id=key,
+                                value=value,
+                                type=self._items[key][2],
+                                updated=timezone.now()
+                                )
         sync_item.save(force_update=True)
         return value
 
