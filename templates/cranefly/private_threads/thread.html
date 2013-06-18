@@ -51,7 +51,7 @@
 
       <div class="thread-buttons">
         {{ pager() }} 
-        {% if acl.threads.can_reply(forum, thread) and participants|length > 1 %}
+        {% if acl.threads.can_reply(forum, thread) and (acl.private_threads.is_mod() or participants|length > 1) %}
         <a href="{% url 'private_thread_reply' thread=thread.pk, slug=thread.slug %}" class="btn btn-inverse pull-right"><i class="icon-pencil"></i> {% trans %}Reply{% endtrans %}</a>
         {% endif %}
         {% if watcher %}
@@ -252,7 +252,9 @@
                   {% elif acl.threads.can_edit_reply(user, forum, thread, post) %}
                   <a href="{% url 'private_post_edit' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-edit">{% trans %}Edit{% endtrans %}</a>
                   {%- endif %}
-                  {% if acl.threads.can_reply(forum, thread) %}<a href="{% url 'private_thread_reply' thread=thread.pk, slug=thread.slug, quote=post.pk %}" class="post-reply">{% trans %}Reply{% endtrans %}</a>{% endif %}
+                  {% if acl.threads.can_reply(forum, thread) and (acl.private_threads.is_mod() or participants|length > 1) %}
+                  <a href="{% url 'private_thread_reply' thread=thread.pk, slug=thread.slug, quote=post.pk %}" class="post-reply">{% trans %}Reply{% endtrans %}</a>
+                  {% endif %}
                 </div>
                 {% if post.pk == thread.start_post_id %}
                 <div class="post-actions">
@@ -382,14 +384,14 @@
 
       <div class="thread-buttons">
         {{ pager(false) }}
-        {% if acl.threads.can_reply(forum, thread) and participants|length > 1 %}
+        {% if acl.threads.can_reply(forum, thread) and (acl.private_threads.is_mod() or participants|length > 1) %}
         <a href="{% url 'private_thread_reply' thread=thread.pk, slug=thread.slug %}" class="btn btn-inverse pull-right"><i class="icon-pencil"></i> {% trans %}Reply{% endtrans %}</a>
         {% else %}
-        <p class="lead thread-signin-message">{% trans %}This thread has no participants.{% endtrans %}</p>
+        <p class="lead thread-signin-message">{% trans %}This thread has too few participants.{% endtrans %}</p>
         {% endif %}
       </div>
 
-      {% if acl.threads.can_reply(forum, thread) and participants|length > 1 %}
+      {% if acl.threads.can_reply(forum, thread) and (acl.private_threads.is_mod() or participants|length > 1) %}
       <div class="thread-quick-reply">
         <form action="{% url 'private_thread_reply' thread=thread.pk, slug=thread.slug %}" method="post">
           <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
@@ -424,7 +426,7 @@
           {% endfor %}
         </ul>
 
-        {% if participants|length < 2%}
+        {% if participants|length < 2 %}
         <p class="no-participants">{% trans %}This thread has too few participants. Invite other users to open it for new replies.{% endtrans %}</p>
         {% endif %}
 
