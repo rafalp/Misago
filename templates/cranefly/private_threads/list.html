@@ -81,7 +81,7 @@
 
           <div class="thread-replies">
             <strong class="lead">{{ thread_reply(thread) }}, {{ thread.last|reldate|low }}</strong><br>
-            {{ replies(thread.replies) }}, <span{% if (thread.upvotes-thread.downvotes) > 0 %} class="text-success"{% elif (thread.upvotes-thread.downvotes) < 0 %} class="text-error"{% endif %}><strong>{% if (thread.upvotes-thread.downvotes) > 0 %}+{% elif (thread.upvotes-thread.downvotes) < 0 %}-{% endif %}</strong>{% trans rating=(thread.upvotes-thread.downvotes)|abs|intcomma %}{{ rating }} thread rating{% endtrans %}</span>
+            {{ replies(thread.replies) }}
           </div>
 
           {% if list_form %}
