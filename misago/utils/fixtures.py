@@ -109,6 +109,7 @@ def load_monitor_fixture(fixture):
                                           updated=timezone.now()
                                           )
 
+
 def update_monitor_fixture(fixture):
     for id in fixture.keys():
         try:
