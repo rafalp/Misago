@@ -49,6 +49,16 @@ CACHES = {
     }
 }
 
+# Search engine
+# Misago relies on 3rd party search engines to index and search your forum content
+# Read following for information on configurating search:
+# http://django-haystack.readthedocs.org/en/latest/tutorial.html#modify-your-settings-py
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.',
+    },
+}
+
 # Cookies configuration
 COOKIES_DOMAIN = '192.168.33.10' # E.g. a cookie domain for "www.mysite.com" or "forum.mysite.com" is ".mysite.com"
 COOKIES_PATH = '/'

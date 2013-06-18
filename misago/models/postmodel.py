@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import F
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from misago.markdown import clear_markdown
 from misago.signals import (delete_user_content, merge_post, merge_thread,
                             move_forum_content, move_post, move_thread,
                             rename_user, sync_user_profile)
@@ -55,6 +56,10 @@ class Post(models.Model):
             quote.append('> %s' % line)
         quote.append('\r\n')
         return '\r\n'.join(quote)
+
+    @property
+    def post_clean(self):
+        return clear_markdown(self.post_preparsed)
 
     def move_to(self, thread):
         move_post.send(sender=self, move_to=thread)

@@ -172,6 +172,7 @@ coffin/**
 debug_toolbar/**
 dev/**
 django/**
+haystack/**
 jinja2/**
 markdown/**
 mptt/**
@@ -179,8 +180,8 @@ pytz/**
 recaptcha/**
 south/**
 whoosh/**
-haystack/**
 custom/**
+searchindex/**
 static/avatars/protoss
 static/avatars/terran
 static/avatars/zerg

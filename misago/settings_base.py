@@ -175,12 +175,13 @@ ROOT_URLCONF = 'misago.urls'
 #Installed applications
 INSTALLED_APPS = (
     # Applications that have no dependencies first!
-    'south',
-    'coffin',
+    'south', # Database schema building and updating
+    'coffin', # Jinja2 integration
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'mptt', # Modified Pre-order Tree Transversal - allows us to nest forums 
-    'debug_toolbar', # Debug toolbar
+    'haystack', # Search engines bridge
+    'debug_toolbar', # Debug toolbar'
     'misago', # Misago Forum App
 )
 

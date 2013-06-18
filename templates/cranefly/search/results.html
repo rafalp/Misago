@@ -1,0 +1,23 @@
+{% extends "cranefly/layout.html" %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=_('Search Community')) }}{% endblock %}
+
+{% block container %}
+<div class="page-header header-primary">
+  <div class="container">
+    <h1>{% trans %}Search Community{% endtrans %}</h1>
+  </div>
+</div>
+
+<div class="container container-primary">
+  <div class="search-results">
+    {% for result in results %}
+    <h2><a href="">{{ result.object.thread.name }}</a> <a href="">{{ result.object.forum.name }}</a></h2>
+    <p>{{ result.object.post_clean|highlight(search_phrase)|safe }}</p>
+    {% else %}
+    <p class="lead">Nothing was found :C</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

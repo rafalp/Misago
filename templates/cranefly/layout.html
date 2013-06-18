@@ -8,9 +8,10 @@
       <div class="container">
         <a href="{% url 'index' %}" class="brand">{% if settings.board_header %}{{ settings.board_header }}{% else %}{{ settings.board_name }}{% endif %}</a>
         {% if not user.is_crawler() %}
-        <form action="" method="post" class="navbar-form pull-left">
+        <form action="{% url 'search' %}" method="post" class="navbar-form pull-left">
           <div class="navbar-search-form">
-            <input type="text" class="span2" placeholder="{% trans %}Search community...{% endtrans %}">
+            <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+            <input type="text" name="search_query" class="span2" placeholder="{% trans %}Search community...{% endtrans %}"{% if search_phrase is defined %} value="{{ search_phrase }}"{% endif %}>
             <button type="submit" class="btn btn-link"><i class="icon-search"></i></button>
           </div>
         </form>
