@@ -42,7 +42,9 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
             if thread.weight == 2:
                 unresolved_count += 1
             thread.is_read = tracker_forum.is_read(thread)
-            thread.report_forum = Forum.objects.forums_tree.get(thread.report_for.forum_id)
+            thread.report_forum = None
+            if thread.report_for_id:
+                thread.report_forum = Forum.objects.forums_tree.get(thread.report_for.forum_id)
             self.threads.append(thread)
 
         if int(self.request.monitor['reported_posts']) != unresolved_count:
@@ -74,7 +76,7 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
                     if thread.weight == 0:
                         thread.last_post.set_checkpoint(self.request, 'bogus')
                     thread.last_post.save(force_update=True)
-                if thread.original_weight == 2:
+                if thread.original_weight == 2 and thread.report_for_id:
                     reported_posts.append(thread.report_for.pk)
                     reported_threads.append(thread.report_for.thread_id)
         if reported_threads:
