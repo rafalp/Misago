@@ -178,6 +178,8 @@ mptt/**
 pytz/**
 recaptcha/**
 south/**
+whoosh/**
+haystack/**
 custom/**
 static/avatars/protoss
 static/avatars/terran
