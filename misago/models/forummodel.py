@@ -194,7 +194,7 @@ class Forum(MPTTModel):
 
     def forum_url(self):
         if self.special == 'private_threads':
-           reverse('private-threads')
+           reverse('private_threads')
         if self.special == 'reports':
            reverse('reports')
         return reverse('forum', kwargs={'forum': self.pk, 'slug': self.slug})
