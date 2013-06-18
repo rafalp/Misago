@@ -192,12 +192,20 @@ class Forum(MPTTModel):
            return unicode(_('Root Category'))
         return unicode(self.name)
 
-    def forum_url(self):
+    @property
+    def url(self):
         if self.special == 'private_threads':
            reverse('private_threads')
         if self.special == 'reports':
            reverse('reports')
         return reverse('forum', kwargs={'forum': self.pk, 'slug': self.slug})
+
+    def thread_url(self, thread, route=None):
+        route_prefix = 'thread'
+        if self.special:
+            route_prefix = self.special[0:-1]
+        link = '%s_%s' % (route_prefix, route) if route else route_prefix
+        return reverse(link, kwargs={'thread': thread.pk, 'slug': thread.slug})
 
     def set_description(self, description):
         self.description = description.strip()

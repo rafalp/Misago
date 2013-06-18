@@ -102,6 +102,18 @@ class Post(models.Model):
                                        old_forum_slug=(forum.slug if forum else None),
                                        )
             
+    def previous(self):
+        return self.thread.post_set.filter(merge__lte=self.merge).exclude(id=self.pk).order_by('-merge', '-date')[:1][0]
+
+    def pass_checkpoints(self):
+        if self.checkpoints:
+            prev = self.previous()
+            self.checkpoints = False
+            self.checkpoint_set.update(post=prev)
+            if not prev.checkpoints:
+                prev.checkpoints = True
+                prev.save(force_update=True)
+
     def notify_mentioned(self, request, thread_type, users):
         from misago.acl.builder import acl
         from misago.acl.exceptions import ACLError403, ACLError404

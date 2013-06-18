@@ -108,14 +108,10 @@ class NewReplyBaseView(PostingBaseView):
             self.post.save(force_update=True)
         elif 'close_thread' in form.cleaned_data and form.cleaned_data['close_thread']:
             self.thread.closed = not self.thread.closed
-            if merged:
-                checkpoint_post = self.post
-            else:
-                checkpoint_post = self.thread.previous_last
             if self.thread.closed:
-                checkpoint_post.set_checkpoint(self.request, 'closed')
+                self.post.set_checkpoint(self.request, 'closed')
             else:
-                checkpoint_post.set_checkpoint(self.request, 'opened')
+                self.post.set_checkpoint(self.request, 'opened')
             checkpoint_post.save(force_update=True)
 
         # Save updated thread

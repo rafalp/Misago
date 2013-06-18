@@ -130,6 +130,7 @@ class DeleteReplyBaseView(DeleteHideBaseView):
                                                    self.thread, self.post, True)
 
     def delete(self):
+        self.post.pass_checkpoints()
         self.post.delete()
         self.thread.sync()
         self.thread.save(force_update=True)
