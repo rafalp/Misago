@@ -8,23 +8,45 @@
   .box-shadow(0px 0px 0px 3px @categoryShadow);
   margin-bottom: @baseLineHeight;
 
-  table {
-    margin: 0px;
-    
-    tr:first-child {
-      td {
-        border-top: none;
+  .header {
+    background-color: @categoryHeader;
+    border: 1px solid @categoryBorder;
+    border-radius: @borderRadiusSmall @borderRadiusSmall 0px 0px;
+    margin: -1px;
+    margin-bottom: 0px;
+    padding: (@fontSizeSmall / 3) (@fontSizeSmall - 2px);
+
+    h2 {
+      margin: 0px;
+      padding: 0px;
+
+      color: @grayDark;
+      font-size: @fontSizeSmall;
+      font-weight: bold;
+      line-height: @baseLineHeight;
+      text-align: left;
+
+      small {
+        margin-left: @baseFontSize / 2;
+
+        color: @grayLight;
+        font-size: @fontSizeSmall;
       }
     }
-    
-    td {
-      padding: ((@fontSizeLarge / 2) + 6px) (@fontSizeSmall - 2px);
-      padding-bottom: (@fontSizeLarge / 2) + 7px;
+  }
+
+  .forum {
+    border-bottom: 1px solid @categoryBorder;
+    height: 21px;
+    overflow: visible;
+    padding: ((@fontSizeLarge / 2) + 6px) (@fontSizeSmall - 2px);
+
+    &.last {
+      border-bottom: none;
     }
 
     .forum-icon {
-      padding-right: (@fontSizeSmall / 2) - 3px;
-      width: 1%;
+      float: left;
 
       .forum-icon-wrap {
         background-color: @itemOldColor;
@@ -45,8 +67,10 @@
         }
       }
     }
-    
+
     .forum-main {
+      margin-left: @forumIconSize + 10px;
+
       h3 {
         float: left;
         margin: 0px;
@@ -220,17 +244,17 @@
   }
 
   &.category-forums-important {
-    border: 1px solid darken(@red, 15%);
-    .box-shadow(0px 0px 0px 3px @red);
+    border-color: @red;
+    .box-shadow(0px 0px 0px 3px darken(@red, 10%));
   }
 
   &.category-forums-inverse {
-    border: 1px solid @grayDark;
-    .box-shadow(0px 0px 0px 3px @gray);
+    border-color: @grayDark;
+    .box-shadow(0px 0px 0px 3px darken(@grayDark, 10%));
   }
 
   &.category-forums-info {
-    border: 1px solid darken(@bluePale, 15%);
-    .box-shadow(0px 0px 0px 3px @bluePale);
+    border-color: @bluePale;
+    .box-shadow(0px 0px 0px 3px darken(@bluePale, 10%));
   }
 }
