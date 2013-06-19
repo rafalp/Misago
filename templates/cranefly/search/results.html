@@ -12,10 +12,11 @@
       <div class="result">
         <h3><a href="{{ result.forum.thread_link('find')|url(thread=result.thread_id, slug=result.thread.slug, post=result.pk) }}">{{ result.thread.name }}</a></h3>
         <p class="post-extra">{% trans forum=forum(result.forum), user=username(result), date=result.date|reltimesince|low %}In {{ forum }} by {{ user }} {{ date }}{% endtrans %}</p>
-        <p class="post-preview">{{ result.post_clean|highlight(search_query)|safe }}</p>
+        <p class="post-preview">{{ result.post_clean|highlight(search_query, 320)|safe }}</p>
       </div>
       {% endfor %}
     </div>
+    {{ pager() }}
     {% else %}
     <p class="lead">{% trans %}Looks like your search has expired. Please try searching again.{% endtrans %}</p>
     {% endif %}
@@ -32,4 +33,16 @@
 {%- else -%}
 {{ post.user_name }}
 {%- endif %}
+{%- endmacro %}
+
+{% macro pager() -%}
+{% if items_total > 0 and pagination['total'] > 1 %}
+<div class="pagination">
+  <ul>
+    <li class="count">{{ macros.pager_label(pagination) }}</li>
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ ('%s_results'|format(search_route))|url(page=pagination['prev']) }}{% else %}{{ ('%s_results'|format(search_route))|url() }}{% endif %}" class="tooltip-top" title="{% trans %}Newer Posts{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{{ ('%s_results'|format(search_route))|url(page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Older Posts{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+  </ul>
+</div>
+{% endif %}
 {%- endmacro %}

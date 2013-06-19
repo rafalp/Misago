@@ -5,6 +5,7 @@ from misago.apps.search.views import do_search, results
 
 def allow_search(f):
     def decorator(*args, **kwargs):
+        request = args[0]
         if not request.acl.reports.can_handle():
             return error404()
         return f(*args, **kwargs)
@@ -20,5 +21,5 @@ def search_reports(request):
 
 @block_crawlers
 @allow_search
-def show_reports_results(request):
-    return results(request, 'reports')
+def show_reports_results(request, page=0):
+    return results(request, page, 'reports')

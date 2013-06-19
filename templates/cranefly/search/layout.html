@@ -5,7 +5,7 @@
 {% block title %}{{ macros.page_title(title=_('Search Community')) }}{% endblock %}
 
 {% block container %}
-<div class="page-header header-primary search-header">
+<div class="page-header header-primary header-search">
   <div class="container">
     <h1>{% trans %}Search{% endtrans %} <form action="{{ search_route|url() }}" class="form-inline" method="post">
        <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">

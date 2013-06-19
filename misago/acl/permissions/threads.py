@@ -178,9 +178,9 @@ class ThreadsACL(BaseACL):
             forum_role = self.acl[forum.pk]
             if not forum_role['can_approve']:
                 if request.user.is_authenticated():
-                    queryset = queryset.filter(Q(moderated=0) | Q(start_poster=request.user))
+                    queryset = queryset.filter(Q(moderated=False) | Q(start_poster=request.user))
                 else:
-                    queryset = queryset.filter(moderated=0)
+                    queryset = queryset.filter(moderated=False)
             if forum_role['can_read_threads'] == 1:
                 queryset = queryset.filter(Q(weight=2) | Q(start_poster_id=request.user.id))
             if not forum_role['can_delete_threads']:

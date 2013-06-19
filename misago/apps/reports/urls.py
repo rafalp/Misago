@@ -31,5 +31,6 @@ urlpatterns = patterns('misago.apps.reports',
     url(r'^(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<post>\d+)/changelog/(?P<change>\d+)/revert/$', 'changelog.ChangelogRevertView', name="report_changelog_revert"),
     # Extra search routes
     url(r'^search/$', 'search.search_reports', name="reports_search"),
-    url(r'^search/results/$', 'search.show_reports_results', name="reports_search_results"),
+    url(r'^search/results/$', 'search.show_reports_results', name="reports_results"),
+    url(r'^search/results/(?P<page>[1-9]([0-9]+)?)/$', 'search.show_reports_results', name="reports_results"),
 )

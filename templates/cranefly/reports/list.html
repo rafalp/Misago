@@ -9,13 +9,17 @@
 {%- endblock %}
 
 {% block container %}
-<div class="page-header header-primary">
+<div class="page-header header-primary header-search">
   <div class="container">
     {{ messages_list(messages) }}
     <ul class="breadcrumb" {{ macros.itemprop_bread() }}>
       {{ self.breadcrumb() }}</li>
     </ul>
-    <h1>{% trans %}Reported Posts{% endtrans %}</h1>
+    <h1>{% trans %}Reported Posts{% endtrans %} <form action="{% url 'reports_search' %}" class="form-inline" method="post">
+       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+       <input maxlength="255" type="text" name="search_query" class="span4">
+       <button type="submit" class="btn btn-primary">{% trans %}Search{% endtrans %}</button>
+    </form></h1>
   </div>
 </div>
 

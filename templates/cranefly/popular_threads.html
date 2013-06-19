@@ -63,6 +63,7 @@
     </div>
     {% endfor %}
   </div>
+  {{ pager() }}
   {% else %}
   <p class="lead">{% trans %}Looks like there are no popular threads... yet!{% endtrans %}</p>
   {% endif %}

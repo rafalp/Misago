@@ -5,6 +5,7 @@ from misago.apps.search.views import do_search, results
 
 def allow_search(f):
     def decorator(*args, **kwargs):
+        request = args[0]
         if not (request.acl.private_threads.can_participate()
                 and request.settings['enable_private_threads']):
             return error404()
@@ -22,5 +23,5 @@ def search_private_threads(request):
 
 @block_crawlers
 @allow_search
-def show_private_threads_results(request):
-    return results(request, 'private_threads')
+def show_private_threads_results(request, page=0):
+    return results(request, page, 'private_threads')

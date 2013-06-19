@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+from django.http import Http404
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
@@ -8,6 +9,7 @@ from misago.decorators import block_crawlers
 from misago.forms import FormFields
 from misago.models import Forum, Thread, Post, User
 from misago.search import SearchException
+from misago.utils.pagination import make_pagination
 from misago.apps.errors import error403, error404
 from misago.apps.profiles.views import list as users_list
 from misago.apps.search.forms import QuickSearchForm
@@ -51,7 +53,7 @@ def do_search(request, queryset, search_route=None):
                 request.POST['username'] = form.target
                 return users_list(request)
             sqs = RelatedSearchQuerySet().auto_query(form.cleaned_data['search_query']).order_by('-id').load_all()
-            sqs = sqs.load_all_queryset(Post, queryset.select_related('thread', 'forum'))[:24]
+            sqs = sqs.load_all_queryset(Post, queryset.filter(deleted=False).filter(moderated=False).select_related('thread', 'forum'))[:120]
             request.user.last_search = timezone.now()
             request.user.save(force_update=True)
             if not sqs:
@@ -75,11 +77,11 @@ def do_search(request, queryset, search_route=None):
 
 
 @block_crawlers
-def show_results(request):
-    return results(request)
+def show_results(request, page=0):
+    return results(request, page)
 
 
-def results(request, search_route=None):
+def results(request, page=0, search_route=None):
     if not request.acl.search.can_search():
         return error403(request, _("You don't have permission to search community."))
 
@@ -96,14 +98,22 @@ def results(request, search_route=None):
                                                 },
                                                 context_instance=RequestContext(request))
 
+    queryset = Post.objects.filter(id__in=result['search_results'])
+    items_total = queryset.count();
+    try:
+        pagination = make_pagination(page, items_total, 12)
+    except Http404:
+        return redirect(reverse('%s_results' % search_route))
+
     form = QuickSearchForm(request=request, initial={'search_query': result['search_query']})
     return request.theme.render_to_response('search/results.html',
                                             {
                                              'form': FormFields(form),
                                              'search_route': search_route,
                                              'search_query': result['search_query'],
-                                             'results': Post.objects.filter(id__in=result['search_results']).select_related('thread', 'forum', 'user'),
+                                             'results': queryset.select_related('thread', 'forum', 'user')[pagination['start']:pagination['stop']],
                                              'disable_search': True,
+                                             'pagination': pagination,
                                             },
                                             context_instance=RequestContext(request))
 

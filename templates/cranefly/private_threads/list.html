@@ -9,11 +9,15 @@
 {%- endblock %}
 
 {% block container %}
-<div class="page-header header-primary">
+<div class="page-header header-primary header-search">
   <div class="container">
     {{ messages_list(messages) }}
     <ul class="breadcrumb" {{ macros.itemprop_bread() }}>
-      {{ self.breadcrumb() }}</li>
+      {{ self.breadcrumb() }} <form action="{% url 'private_threads_search' %}" class="form-inline" method="post">
+       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+       <input maxlength="255" type="text" name="search_query" class="span4">
+       <button type="submit" class="btn btn-primary">{% trans %}Search{% endtrans %}</button>
+    </form></li>
     </ul>
     <h1>{% trans %}Private Threads{% endtrans %}</h1>
   </div>
