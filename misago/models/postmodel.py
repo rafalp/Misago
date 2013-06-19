@@ -27,7 +27,6 @@ class Post(models.Model):
     upvotes = models.PositiveIntegerField(default=0)
     downvotes = models.PositiveIntegerField(default=0)
     mentions = models.ManyToManyField('User', related_name="mention_set")
-    checkpoints = models.BooleanField(default=False)
     date = models.DateTimeField()
     edits = models.PositiveIntegerField(default=0)
     edit_date = models.DateTimeField(null=True, blank=True)
@@ -80,40 +79,6 @@ class Post(models.Model):
         post.post = '%s\n- - -\n%s' % (post.post, self.post)
         merge_post.send(sender=self, new_post=post)
 
-    def set_checkpoint(self, request, action, user=None, forum=None):
-        if request.user.is_authenticated():
-            self.checkpoints = True
-            self.checkpoint_set.create(
-                                       forum=self.forum,
-                                       thread=self.thread,
-                                       post=self,
-                                       action=action,
-                                       user=request.user,
-                                       user_name=request.user.username,
-                                       user_slug=request.user.username_slug,
-                                       date=timezone.now(),
-                                       ip=request.session.get_ip(request),
-                                       agent=request.META.get('HTTP_USER_AGENT'),
-                                       target_user=user,
-                                       target_user_name=(user.username if user else None),
-                                       target_user_slug=(user.username_slug if user else None),
-                                       old_forum=forum,
-                                       old_forum_name=(forum.name if forum else None),
-                                       old_forum_slug=(forum.slug if forum else None),
-                                       )
-            
-    def previous(self):
-        return self.thread.post_set.filter(merge__lte=self.merge).exclude(id=self.pk).order_by('-merge', '-date')[:1][0]
-
-    def pass_checkpoints(self):
-        if self.checkpoints:
-            prev = self.previous()
-            self.checkpoints = False
-            self.checkpoint_set.update(post=prev)
-            if not prev.checkpoints:
-                prev.checkpoints = True
-                prev.save(force_update=True)
-
     def notify_mentioned(self, request, thread_type, users):
         from misago.acl.builder import acl
         from misago.acl.exceptions import ACLError403, ACLError404
@@ -161,24 +126,11 @@ def delete_user_content_handler(sender, **kwargs):
     from misago.models import Thread
 
     threads = []
-    prev_posts = []
-
-    for post in sender.post_set.filter(checkpoints=True):
-        threads.append(post.thread_id)
-        prev_post = Post.objects.filter(thread=post.thread_id).exclude(merge__gt=post.merge).exclude(user=sender).order_by('merge', '-id')[:1][0]
-        post.checkpoint_set.update(post=prev_post)
-        if not prev_post.pk in prev_posts:
-            prev_posts.append(prev_post.pk)
-
-    sender.post_set.all().delete()
-    Post.objects.filter(id__in=prev_posts).update(checkpoints=True)
-
     for post in sender.post_set.distinct().values('thread_id').iterator():
         if not post['thread_id'] in threads:
             threads.append(post['thread_id'])
 
-    for post in Post.objects.filter(user=sender):
-        post.delete()
+    sender.post_set.all().delete()
 
     for thread in Thread.objects.filter(id__in=threads):
         thread.sync()

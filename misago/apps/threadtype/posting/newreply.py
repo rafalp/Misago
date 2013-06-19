@@ -104,15 +104,13 @@ class NewReplyBaseView(PostingBaseView):
                 and not merged and not moderation and not self.thread.closed
                 and self.thread.replies >= self.request.settings.thread_length):
             self.thread.closed = True
-            self.post.set_checkpoint(self.request, 'limit')
-            self.post.save(force_update=True)
+            self.thread.set_checkpoint(self.request, 'limit')
         elif 'close_thread' in form.cleaned_data and form.cleaned_data['close_thread']:
             self.thread.closed = not self.thread.closed
             if self.thread.closed:
-                self.post.set_checkpoint(self.request, 'closed')
+                self.thread.set_checkpoint(self.request, 'closed')
             else:
-                self.post.set_checkpoint(self.request, 'opened')
-            checkpoint_post.save(force_update=True)
+                self.thread.set_checkpoint(self.request, 'opened')
 
         # Save updated thread
         self.thread.save(force_update=True)

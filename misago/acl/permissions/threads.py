@@ -558,9 +558,7 @@ class ThreadsACL(BaseACL):
         except KeyError:
             raise ACLError403(_("You don't have permission to see who voted on this post."))
 
-    def can_see_checkpoint(self, forum, checkpoint):
-        if not checkpoint.deleted:
-            return True
+    def can_see_all_checkpoints(self, forum):
         try:
             return self.acl[forum.pk]['can_see_deleted_checkpoints']
         except KeyError:

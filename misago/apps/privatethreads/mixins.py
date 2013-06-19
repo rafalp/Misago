@@ -19,15 +19,12 @@ class TypeMixin(object):
             pass
 
     def invite_users(self, users):
-        sync_last_post = False
         for user in users:
             if not user in self.thread.participants.all():
                 self.thread.participants.add(user)
                 user.email_user(self.request, 'private_thread_invite', _("You've been invited to private thread \"%(thread)s\" by %(user)s") % {'thread': self.thread.name, 'user': self.request.user.username}, {'author': self.request.user, 'thread': self.thread})
                 if self.action == 'new_reply':
-                    self.thread.last_post.set_checkpoint(self.request, 'invited', user)
-        if sync_last_post:
-            self.thread.last_post.save(force_update=True)
+                    self.thread.set_checkpoint(self.request, 'invited', user)
 
     def force_stats_sync(self):
         self.thread.participants.exclude(id=self.request.user.id).update(sync_pds=True)

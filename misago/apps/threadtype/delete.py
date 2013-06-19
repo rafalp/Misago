@@ -27,7 +27,7 @@ class DeleteHideBaseView(ViewBase):
             self.request.acl.threads.allow_post_view(self.request.user, self.thread, self.post)
 
         if self.kwargs.get('checkpoint'):
-            self.checkpoint = self.post.checkpoint_set.get(id=self.kwargs.get('checkpoint'))
+            self.checkpoint = self.thread.checkpoint_set.get(id=self.kwargs.get('checkpoint'))
             self.request.acl.threads.allow_checkpoint_view(self.forum, self.checkpoint)
 
         self.set_context()
@@ -81,8 +81,7 @@ class HideThreadBaseView(DeleteHideBaseView):
     def delete(self):
         self.thread.start_post.deleted = True
         self.thread.start_post.save(force_update=True)
-        self.thread.last_post.set_checkpoint(self.request, 'deleted')
-        self.thread.last_post.save(force_update=True)
+        self.thread.set_checkpoint(self.request, 'deleted')
         self.thread.sync()
         self.thread.save(force_update=True)
         self.forum.sync()
@@ -108,8 +107,7 @@ class ShowThreadBaseView(DeleteHideBaseView):
     def delete(self):
         self.thread.start_post.deleted = False
         self.thread.start_post.save(force_update=True)
-        self.thread.last_post.set_checkpoint(self.request, 'undeleted')
-        self.thread.last_post.save(force_update=True)
+        self.thread.set_checkpoint(self.request, 'undeleted')
         self.thread.sync()
         self.thread.save(force_update=True)
         self.forum.sync()
@@ -130,7 +128,6 @@ class DeleteReplyBaseView(DeleteHideBaseView):
                                                    self.thread, self.post, True)
 
     def delete(self):
-        self.post.pass_checkpoints()
         self.post.delete()
         self.thread.sync()
         self.thread.save(force_update=True)
@@ -204,17 +201,17 @@ class DeleteCheckpointBaseView(DeleteHideBaseView):
 
     def delete(self):
         self.checkpoint.delete()
-        self.post.checkpoints = self.post.checkpoint_set.count() > 0
-        self.post.save(force_update=True)
 
     def message(self):
-        self.request.messages.set_flash(Message(_("Selected checkpoint has been deleted.")), 'success', 'threads_%s' % self.post.pk)
+        self.request.messages.set_flash(Message(_("Selected checkpoint has been deleted.")), 'success', 'threads')
 
     def response(self):
-        return self.redirect_to_post(self.post)
+        if 'retreat' in self.request.POST:
+            return redirect(self.request.POST.get('retreat'))
+        return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))
 
 
-class HideCheckpointBaseView(DeleteHideBaseView):
+class HideCheckpointBaseView(DeleteCheckpointBaseView):
     def set_context(self):
         self.request.acl.threads.allow_checkpoint_hide(self.forum)
         if self.checkpoint.deleted:
@@ -225,13 +222,10 @@ class HideCheckpointBaseView(DeleteHideBaseView):
         self.checkpoint.save(force_update=True)
 
     def message(self):
-        self.request.messages.set_flash(Message(_("Selected checkpoint has been hidden.")), 'success', 'threads_%s' % self.post.pk)
-
-    def response(self):
-        return self.redirect_to_post(self.post)
+        self.request.messages.set_flash(Message(_("Selected checkpoint has been hidden.")), 'success', 'threads')
 
 
-class ShowCheckpointBaseView(DeleteHideBaseView):
+class ShowCheckpointBaseView(DeleteCheckpointBaseView):
     def set_context(self):
         self.request.acl.threads.allow_checkpoint_show(self.forum)
         if not self.checkpoint.deleted:
@@ -242,7 +236,4 @@ class ShowCheckpointBaseView(DeleteHideBaseView):
         self.checkpoint.save(force_update=True)
 
     def message(self):
-        self.request.messages.set_flash(Message(_("Selected checkpoint has been restored.")), 'success', 'threads_%s' % self.post.pk)
-
-    def response(self):
-        return self.redirect_to_post(self.post)
+        self.request.messages.set_flash(Message(_("Selected checkpoint has been restored.")), 'success', 'threads')

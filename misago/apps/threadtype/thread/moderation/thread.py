@@ -12,7 +12,7 @@ class ThreadModeration(object):
         self.thread.save(force_update=True)
         self.thread.start_post.moderated = False
         self.thread.start_post.save(force_update=True)
-        self.thread.last_post.set_checkpoint(self.request, 'accepted')
+        self.thread.set_checkpoint(self.request, 'accepted')
         # Sync user
         if self.thread.last_post.user:
             self.thread.start_post.user.threads += 1
@@ -62,8 +62,7 @@ class ThreadModeration(object):
                 new_forum = form.cleaned_data['new_forum']
                 self.thread.move_to(new_forum)
                 self.thread.save(force_update=True)
-                self.thread.last_post.set_checkpoint(self.request, 'moved', forum=self.forum)
-                self.thread.last_post.save(force_update=True)
+                self.thread.set_checkpoint(self.request, 'moved', forum=self.forum)
                 self.forum.sync()
                 self.forum.save(force_update=True)
                 new_forum.sync()
@@ -87,7 +86,7 @@ class ThreadModeration(object):
     def thread_action_open(self):
         self.thread.closed = False
         self.thread.save(force_update=True)
-        self.thread.last_post.set_checkpoint(self.request, 'opened')
+        self.thread.set_checkpoint(self.request, 'opened')
         self.after_thread_action_open()
 
     def after_thread_action_open(self):
@@ -96,7 +95,7 @@ class ThreadModeration(object):
     def thread_action_close(self):
         self.thread.closed = True
         self.thread.save(force_update=True)
-        self.thread.last_post.set_checkpoint(self.request, 'closed')
+        self.thread.set_checkpoint(self.request, 'closed')
         self.after_thread_action_close()
 
     def after_thread_action_close(self):
@@ -111,7 +110,7 @@ class ThreadModeration(object):
         self.thread.start_post.deleted = False
         self.thread.start_post.save(force_update=True)
         # Set checkpoint
-        self.thread.last_post.set_checkpoint(self.request, 'undeleted')
+        self.thread.set_checkpoint(self.request, 'undeleted')
         # Update forum
         self.forum.sync()
         self.forum.save(force_update=True)
@@ -132,7 +131,7 @@ class ThreadModeration(object):
         self.thread.start_post.deleted = True
         self.thread.start_post.save(force_update=True)
         # Set checkpoint
-        self.thread.last_post.set_checkpoint(self.request, 'deleted')
+        self.thread.set_checkpoint(self.request, 'deleted')
         # Update forum
         self.forum.sync()
         self.forum.save(force_update=True)

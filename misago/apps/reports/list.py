@@ -72,10 +72,9 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
             if thread.pk in ids:
                 if thread.original_weight != thread.weight:
                     if thread.weight == 1:
-                        thread.last_post.set_checkpoint(self.request, 'resolved')
+                        thread.set_checkpoint(self.request, 'resolved')
                     if thread.weight == 0:
-                        thread.last_post.set_checkpoint(self.request, 'bogus')
-                    thread.last_post.save(force_update=True)
+                        thread.set_checkpoint(self.request, 'bogus')
                 if thread.original_weight == 2 and thread.report_for_id:
                     reported_posts.append(thread.report_for.pk)
                     reported_threads.append(thread.report_for.thread_id)

@@ -15,9 +15,9 @@ class SetStateCheckpointMixin(object):
             if self.thread.original_weight == 2:
                 self.request.monitor.decrease('reported_posts')
             if self.thread.weight == 1:
-                self.thread.last_post.set_checkpoint(self.request, 'resolved')
+                self.thread.set_checkpoint(self.request, 'resolved')
             if self.thread.weight == 0:
-                self.thread.last_post.set_checkpoint(self.request, 'bogus')
+                self.thread.set_checkpoint(self.request, 'bogus')
 
 
 class EditThreadView(SetStateCheckpointMixin, EditThreadBaseView, TypeMixin):

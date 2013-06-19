@@ -102,7 +102,7 @@
             {% endif %}
 
             {% if posts_form and thread.start_post_id == post.pk %}
-            <a href="{% url 'report_find' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-perma tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}"><i class="icon-">#1</i></a>
+            <a href="{% url 'report_find' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-perma tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#1</i></a>
             {% else %}
             <a href="{% url 'report_find' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-perma tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index0 }}</a>
             {% endif %}
@@ -249,20 +249,23 @@
           {%- endif -%}
           {% if acl.threads.can_delete_checkpoint(forum) %}
           {% if checkpoint.deleted %}
-          <form action="{% url 'report_post_checkpoint_show' slug=thread.slug, thread=thread.pk, post=post.pk, checkpoint=checkpoint.pk %}" method="post" class="form-inline">
+          <form action="{% url 'report_post_checkpoint_show' slug=thread.slug, thread=thread.pk, checkpoint=checkpoint.pk %}" method="post" class="form-inline">
             <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+            <input type="hidden" name="retreat" value="{{ request_path }}#post-{{ post.pk }}">
             <button type="submit" class="btn btn-link btn-show">{% trans %}Restore{% endtrans %}</button>
           </form>
           {% else %}
-          <form action="{% url 'report_post_checkpoint_hide' slug=thread.slug, thread=thread.pk, post=post.pk, checkpoint=checkpoint.pk %}" method="post" class="form-inline">
+          <form action="{% url 'report_post_checkpoint_hide' slug=thread.slug, thread=thread.pk, checkpoint=checkpoint.pk %}" method="post" class="form-inline">
             <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+            <input type="hidden" name="retreat" value="{{ request_path }}#post-{{ post.pk }}">
             <button type="submit" class="btn btn-link btn-hide">{% trans %}Hide{% endtrans %}</button>
           </form>
           {% endif %}
           {% endif %}
           {% if acl.threads.can_delete_checkpoint(forum) == 2 %}
-          <form action="{% url 'report_post_checkpoint_delete' slug=thread.slug, thread=thread.pk, post=post.pk, checkpoint=checkpoint.pk %}" method="post" class="form-inline prompt-delete-checkpoint">
+          <form action="{% url 'report_post_checkpoint_delete' slug=thread.slug, thread=thread.pk, checkpoint=checkpoint.pk %}" method="post" class="form-inline prompt-delete-checkpoint">
             <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+            <input type="hidden" name="retreat" value="{{ request_path }}#post-{{ post.pk }}">
             <button type="submit" class="btn btn-link btn-delete">{% trans %}Delete{% endtrans %}</button>
           </form>
           {% endif %}

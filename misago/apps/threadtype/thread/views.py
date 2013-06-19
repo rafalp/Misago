@@ -37,7 +37,7 @@ class ThreadBaseView(ViewBase):
 
     def fetch_posts(self):
         self.count = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).count()
-        self.posts = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).prefetch_related('checkpoint_set', 'user', 'user__rank')
+        self.posts = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).prefetch_related('user', 'user__rank')
         
         if self.thread.merges > 0:
             self.posts = self.posts.order_by('merge', 'pk')
@@ -49,8 +49,11 @@ class ThreadBaseView(ViewBase):
         except Http404:
             return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))
 
+        checkpoints_range = None
         if self.request.settings.posts_per_page < self.count:
-            self.posts = self.posts[self.pagination['start']:self.pagination['stop']]
+            self.posts = self.posts[self.pagination['start']:self.pagination['stop'] + 1]
+            checkpoints_range = self.posts[-1].date
+            self.posts = self.posts[0:-1]
 
         self.read_date = self.tracker.read_date(self.thread)
 
@@ -67,11 +70,9 @@ class ThreadBaseView(ViewBase):
             post.ignored = self.thread.start_post_id != post.pk and not self.thread.pk in self.request.session.get('unignore_threads', []) and post.user_id in ignored_users
             if post.ignored:
                 self.ignored = True
-            post.checkpoints_visible = []
-            if post.checkpoint_set.all():
-                for checkpoint in post.checkpoint_set.all():
-                    if self.request.acl.threads.can_see_checkpoint(self.forum, checkpoint):
-                        post.checkpoints_visible.append(checkpoint)
+
+        self.thread.set_checkpoints(self.request.acl.threads.can_see_all_checkpoints(self.forum),
+                                    self.posts, checkpoints_range)
 
         last_post = self.posts[len(self.posts) - 1]
 

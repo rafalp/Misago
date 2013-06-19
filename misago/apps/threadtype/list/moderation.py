@@ -15,7 +15,6 @@ class ThreadsListModeration(object):
 
     def _action_accept(self, ids):
         accepted = 0
-        last_posts = []
         users = []
         for thread in self.threads:
             if thread.pk in ids and thread.moderated:
@@ -26,15 +25,13 @@ class ThreadsListModeration(object):
                 thread.save(force_update=True)
                 thread.start_post.moderated = False
                 thread.start_post.save(force_update=True)
-                thread.last_post.set_checkpoint(self.request, 'accepted')
-                last_posts.append(thread.last_post.pk)
+                thread.set_checkpoint(self.request, 'accepted')
                 # Sync user
                 if thread.last_post.user:
                     thread.start_post.user.threads += 1
                     thread.start_post.user.posts += 1
                     users.append(thread.start_post.user)
         if accepted:
-            Post.objects.filter(id__in=last_posts).update(checkpoints=True)
             self.request.monitor['threads'] = int(self.request.monitor['threads']) + accepted
             self.request.monitor['posts'] = int(self.request.monitor['posts']) + accepted
             self.forum.sync()
@@ -102,8 +99,7 @@ class ThreadsListModeration(object):
                 for thread in threads:
                     thread.move_to(new_forum)
                     thread.save(force_update=True)
-                    thread.last_post.set_checkpoint(self.request, 'moved', forum=self.forum)
-                    thread.last_post.save(force_update=True)
+                    thread.set_checkpoint(self.request, 'moved', forum=self.forum)
                 new_forum.sync()
                 new_forum.save(force_update=True)
                 self.forum.sync()
@@ -183,14 +179,11 @@ class ThreadsListModeration(object):
 
     def _action_open(self, ids):        
         opened = []
-        last_posts = []
         for thread in self.threads:
             if thread.pk in ids and thread.closed:
                 opened.append(thread.pk)
-                thread.last_post.set_checkpoint(self.request, 'opened')
-                last_posts.append(thread.last_post.pk)
+                thread.set_checkpoint(self.request, 'opened')
         if opened:
-            Post.objects.filter(id__in=last_posts).update(checkpoints=True)
             Thread.objects.filter(id__in=opened).update(closed=False)
         return opened
 
@@ -202,14 +195,11 @@ class ThreadsListModeration(object):
 
     def _action_close(self, ids):
         closed = []
-        last_posts = []
         for thread in self.threads:
             if thread.pk in ids and not thread.closed:
                 closed.append(thread.pk)
-                thread.last_post.set_checkpoint(self.request, 'closed')
-                last_posts.append(thread.last_post.pk)
+                thread.set_checkpoint(self.request, 'closed')
         if closed:
-            Post.objects.filter(id__in=last_posts).update(checkpoints=True)
             Thread.objects.filter(id__in=closed).update(closed=True)
         return closed
 
@@ -221,7 +211,6 @@ class ThreadsListModeration(object):
 
     def _action_undelete(self, ids):
         undeleted = []
-        last_posts = []
         posts = 0
         for thread in self.threads:
             if thread.pk in ids and thread.deleted:
@@ -229,13 +218,12 @@ class ThreadsListModeration(object):
                 posts += thread.replies + 1
                 thread.start_post.deleted = False
                 thread.start_post.save(force_update=True)
-                thread.last_post.set_checkpoint(self.request, 'undeleted')
+                thread.set_checkpoint(self.request, 'undeleted')
         if undeleted:
             self.request.monitor['threads'] = int(self.request.monitor['threads']) + len(undeleted)
             self.request.monitor['posts'] = int(self.request.monitor['posts']) + posts
             self.forum.sync()
             self.forum.save(force_update=True)
-            Post.objects.filter(id__in=last_posts).update(checkpoints=True)
             Thread.objects.filter(id__in=undeleted).update(deleted=False)
         return undeleted
 
@@ -247,7 +235,6 @@ class ThreadsListModeration(object):
 
     def _action_soft(self, ids):
         deleted = []
-        last_posts = []
         posts = 0
         for thread in self.threads:
             if thread.pk in ids and not thread.deleted:
@@ -255,14 +242,12 @@ class ThreadsListModeration(object):
                 posts += thread.replies + 1
                 thread.start_post.deleted = True
                 thread.start_post.save(force_update=True)
-                thread.last_post.set_checkpoint(self.request, 'deleted')
-                last_posts.append(thread.last_post.pk)
+                thread.set_checkpoint(self.request, 'deleted')
         if deleted:
             self.request.monitor['threads'] = int(self.request.monitor['threads']) - len(deleted)
             self.request.monitor['posts'] = int(self.request.monitor['posts']) - posts
             self.forum.sync()
             self.forum.save(force_update=True)
-            Post.objects.filter(id__in=last_posts).update(checkpoints=True)
             Thread.objects.filter(id__in=deleted).update(deleted=True)
         return deleted
 

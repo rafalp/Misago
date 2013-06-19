@@ -263,10 +263,9 @@ class ReportPostBaseView(JumpView):
                 if report and report.start_poster_id != request.user.pk:
                     # Append our q.q to existing report?
                     try:
-                        report.start_post.checkpoint_set.get(user=request.user, action="reported")
+                        report.checkpoint_set.get(user=request.user, action="reported")
                     except Checkpoint.DoesNotExist:
-                        report.start_post.set_checkpoint(self.request, 'reported', user)
-                        report.start_post.save(force_update=True)
+                        report.set_checkpoint(self.request, 'reported', user)
                     made_report = True
 
             if not report:

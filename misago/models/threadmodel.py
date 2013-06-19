@@ -100,6 +100,41 @@ class Thread(models.Model):
     def get_date(self):
         return self.start
 
+    def set_checkpoints(self, show_all, posts, stop=None):
+        qs = self.checkpoint_set.filter(date__gte=posts[0].date)
+        if not show_all:
+            qs = qs.filter(deleted=False)
+        if stop:
+            qs = qs.filter(date__lte=stop)
+        checkpoints = [i for i in qs]
+
+        i_max = len(posts) - 1
+        for i, post in enumerate(posts):
+            post.checkpoints_visible = []
+            for c in checkpoints:
+                if c.date >= post.date and (i == i_max or c.date < posts[i+1].date):
+                    post.checkpoints_visible.append(c)
+
+    def set_checkpoint(self, request, action, user=None, forum=None):
+        if request.user.is_authenticated():
+            self.checkpoint_set.create(
+                                       forum=self.forum,
+                                       thread=self,
+                                       action=action,
+                                       user=request.user,
+                                       user_name=request.user.username,
+                                       user_slug=request.user.username_slug,
+                                       date=timezone.now(),
+                                       ip=request.session.get_ip(request),
+                                       agent=request.META.get('HTTP_USER_AGENT'),
+                                       target_user=user,
+                                       target_user_name=(user.username if user else None),
+                                       target_user_slug=(user.username_slug if user else None),
+                                       old_forum=forum,
+                                       old_forum_name=(forum.name if forum else None),
+                                       old_forum_slug=(forum.slug if forum else None),
+                                       )
+
     def new_start_post(self, post):
         self.start = post.date
         self.start_post = post
