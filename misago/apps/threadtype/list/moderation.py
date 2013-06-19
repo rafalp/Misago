@@ -161,7 +161,7 @@ class ThreadsListModeration(object):
         lookback = threads[0].last_post_id
         for thread in threads[1:]:
             if thread.start_post_id < lookback:
-                warning = Message(_("Warning: Posting times in one or more threads overlaps. This may result in disturbed flow of merged thread."), 'warning')
+                warning = Message(_("Warning: Posting times in one or more of threads that you are going to merge are overlapping. This may result in disturbed flow of merged thread."), 'warning')
                 break
             else:
                 lookback = thread.last_post_id
