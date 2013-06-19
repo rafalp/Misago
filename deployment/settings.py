@@ -171,3 +171,4 @@ if 'test' in sys.argv:
     CACHES['default'] = {'BACKEND': 'django.core.cache.backends.dummy.DummyCache'}
     SKIP_SOUTH_TESTS = True
     MEDIA_URL = "http://media.domain.com/"
+    HAYSTACK_CONNECTIONS = {'default': {'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',},}
