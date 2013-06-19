@@ -25,6 +25,7 @@ class Monitor(object):
 
     def __setitem__(self, key, value):
         self._items[key][0] = value
+        self._items[key][1] = timezone.now()
         cache.set('monitor', self._items)
         sync_item = MonitorItem(
                                 id=key,
@@ -39,10 +40,10 @@ class Monitor(object):
         pass
 
     def increase(self, key, i=1):
-        self[key] = int(self[key]) + i
+        self[key] = self[key] + i
 
     def decrease(self, key, i=1):
-        self[key] = int(self[key]) - i
+        self[key] = self[key] - i
 
     def get(self, key, default=None):
         if not key in self._items:
