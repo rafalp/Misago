@@ -49,7 +49,7 @@ class ThreadBaseView(ViewBase):
         checkpoints_range = None
         if self.request.settings.posts_per_page < self.count:
             self.posts = self.posts[self.pagination['start']:self.pagination['stop'] + 1]
-            checkpoints_range = self.posts[-1].date
+            checkpoints_range = self.posts[len(self.posts) - 1].date
             self.posts = self.posts[0:-1]
 
         self.read_date = self.tracker.read_date(self.thread)
