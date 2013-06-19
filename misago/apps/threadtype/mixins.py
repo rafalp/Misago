@@ -1,6 +1,6 @@
 from django import forms
 from django.utils import timezone
-from django.utils.translation import ungettext_laxy, ugettext_lazy as _
+from django.utils.translation import ungettext_lazy, ugettext_lazy as _
 from misago.utils.strings import slugify
 
 class FloodProtectionMixin(object):
