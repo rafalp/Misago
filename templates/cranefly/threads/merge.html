@@ -30,9 +30,14 @@
           <h1>{% trans %}Merge Threads{% endtrans %}</h1>
         </div>
 
-        {% if message %}
+        {% if message or warning %}
         <div class="messages-list">
+          {% if message %}
           {{ macros.draw_message(message) }}
+          {% endif %}
+          {% if warning %}
+          {{ macros.draw_message(warning) }}
+          {% endif %}
         </div>
         {% endif %}
 
