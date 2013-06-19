@@ -12,6 +12,6 @@
   	{%- endif %}</span>
   </td>
   <td>
-  	{% if item.expires %}{{ item.expires|date }}{% else %}<em>{% trans %}Permanent ban{% endtrans %}</em>{% endif %}
+  	{% if item.expires %}{{ item.expires|date }}{% else %}<em>{% trans %}Permanent{% endtrans %}</em>{% endif %}
   </td>
-{% endblock%}
+{% endblock %}
