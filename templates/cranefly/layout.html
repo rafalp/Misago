@@ -7,12 +7,12 @@
     <div class="navbar-inner">
       <div class="container">
         <a href="{% url 'index' %}" class="brand">{% if settings.board_header %}{{ settings.board_header }}{% else %}{{ settings.board_name }}{% endif %}</a>
-        {% if not user.is_crawler() %}
+        {% if acl.search.can_search() and not user.is_crawler() %}
         <form action="{% url 'search' %}" method="post" class="navbar-form pull-left">
-          <div class="navbar-search-form">
+          <div class="navbar-search-form{% if disable_search %} search-disabled{% endif %}">
             <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-            <input type="text" name="search_query" class="span2" placeholder="{% trans %}Search community...{% endtrans %}"{% if search_phrase is defined %} value="{{ search_phrase }}"{% endif %}>
-            <button type="submit" class="btn btn-link"><i class="icon-search"></i></button>
+            <input type="text" name="search_query"{% if disable_search %} disabled="disabled"{% endif %} class="span2" placeholder="{% trans %}Search forums...{% endtrans %}"{% if search_phrase is defined %} value="{{ search_query }}"{% endif %}>
+            <button type="submit"{% if disable_search %} disabled="disabled"{% endif %} class="btn btn-link"><i class="icon-search"></i></button>
           </div>
         </form>
         {% endif %}
@@ -21,8 +21,8 @@
           {{ hook_primary_menu_prepend|safe }}
           <li><a href="{% url 'popular_threads' %}" title="{% trans %}Popular Threads{% endtrans %}" class="hot tooltip-bottom"><i class="icon-fire"></i></a></li>
           <li><a href="{% url 'new_threads' %}" title="{% trans %}New Threads{% endtrans %}" class="fresh tooltip-bottom"><i class="icon-leaf"></i></a></li>{% if not user.crawler %}
-          {% if not user.is_crawler() %}
-          <li><a href="#" title="{% trans %}Search Community{% endtrans %}" class="tooltip-bottom"><i class="icon-search"></i></a></li>{% endif %}
+          {% if acl.search.can_search() and not user.is_crawler() %}
+          <li><a href="{% url 'search' %}" title="{% trans %}Search Forums{% endtrans %}" class="tooltip-bottom"><i class="icon-search"></i></a></li>{% endif %}
           {% endif %}
           <li><a href="{% url 'users' %}" title="{% trans %}Browse Users{% endtrans %}" class="tooltip-bottom"><i class="icon-user"></i></a></li>
           {% if settings.tos_url or settings.tos_content %}<li><a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{% url 'tos' %}{% endif %}" title="{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Forum Terms of Service{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-certificate"></i></a></li>{% endif %}

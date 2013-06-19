@@ -32,6 +32,7 @@ def common(request):
             'stopwatch': request.stopwatch.time(),
             'user': request.user,
             'version': __version__,
+            'disable_search': False,
         })
         context.update({
             'csrf_id': request.csrf.csrf_id,

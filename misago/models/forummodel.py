@@ -137,6 +137,21 @@ class ForumManager(TreeManager):
                 readable.append(forum.pk)
         return readable
 
+    def forum_by_name(self, forum, acl):
+        forums = self.readable_forums(acl, True)
+        forum = forum.lower()
+        for f in forums:
+            f = self.forums_tree[f]
+            if forum == unicode(f).lower():
+                return f
+        forum_len = len(forum)
+        for f in forums:
+            f = self.forums_tree[f]
+            name = unicode(f).lower()
+            if forum == unicode(f).lower()[0:forum_len]:
+                return f
+        return None
+
 
 class Forum(MPTTModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
@@ -198,7 +213,22 @@ class Forum(MPTTModel):
            reverse('private_threads')
         if self.special == 'reports':
            reverse('reports')
+        if self.type == 'category':
+            return reverse('category', kwargs={'forum': self.pk, 'slug': self.slug})
+        if self.type == 'redirect':
+            return reverse('redirect', kwargs={'forum': self.pk, 'slug': self.slug})
         return reverse('forum', kwargs={'forum': self.pk, 'slug': self.slug})
+
+    def thread_link(self, extra):
+        if self.special == 'private_threads':
+           route_prefix = 'private_thread'
+        if self.special == 'reports':
+           route_prefix = 'report'
+        else:
+            route_prefix = 'thread'
+        if extra:
+            return '%s_%s' % (route_prefix, extra) if extra else route_prefix
+        return route_prefix
 
     def thread_url(self, thread, route=None):
         route_prefix = 'thread'
@@ -254,9 +284,7 @@ class Forum(MPTTModel):
         self.last_poster_slug = thread.last_poster_slug
         self.last_poster_style = thread.last_poster_style
 
-    def sync(self):
-        self.threads = self.thread_set.filter(moderated=False).filter(deleted=False).count()
-        self.posts = self.post_set.filter(moderated=False).count()
+    def sync_last(self):
         self.last_poster = None
         self.last_poster_name = None
         self.last_poster_slug = None
@@ -266,7 +294,7 @@ class Forum(MPTTModel):
         self.last_thread_name = None
         self.last_thread_slug = None
         try:
-            last_thread = self.thread_set.filter(moderated=False).filter(deleted=False).order_by('-last').all()[0:][0]
+            last_thread = self.thread_set.filter(moderated=False).filter(deleted=False).order_by('-last').all()[:1][0]
             self.last_poster_name = last_thread.last_poster_name
             self.last_poster_slug = last_thread.last_poster_slug
             self.last_poster_style = last_thread.last_poster_style
@@ -278,6 +306,11 @@ class Forum(MPTTModel):
             self.last_thread_slug = last_thread.slug
         except (IndexError, AttributeError):
             pass
+
+    def sync(self):
+        self.threads = self.thread_set.filter(moderated=False).filter(deleted=False).count()
+        self.posts = self.post_set.filter(moderated=False).count()
+        self.sync_last()
 
     def prune(self):
         pass

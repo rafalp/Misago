@@ -1,23 +1,35 @@
-{% extends "cranefly/layout.html" %}
+{% extends "cranefly/search/layout.html" %}
 {% import "cranefly/macros.html" as macros with context %}
 
-{% block title %}{{ macros.page_title(title=_('Search Community')) }}{% endblock %}
+{% block title %}{{ macros.page_title(title=_("Results"),parent=_('Search Community')) }}{% endblock %}
 
-{% block container %}
-<div class="page-header header-primary">
-  <div class="container">
-    <h1>{% trans %}Search Community{% endtrans %}</h1>
-  </div>
-</div>
-
-<div class="container container-primary">
+{% block action %}
   <div class="search-results">
-    {% for result in results %}
-    <h2><a href="">{{ result.object.thread.name }}</a> <a href="">{{ result.object.forum.name }}</a></h2>
-    <p>{{ result.object.post_clean|highlight(search_phrase)|safe }}</p>
+    {% if results %}
+    <h2>{% trans results=results|length|intcomma %}Search has returned one result{% pluralize %}Search has returned {{ results }} results:{% endtrans %}</h2>
+    <div class="results-list">
+      {% for result in results %}
+      <div class="result">
+        <h3><a href="{{ result.forum.thread_link('find')|url(thread=result.thread_id, slug=result.thread.slug, post=result.pk) }}">{{ result.thread.name }}</a></h3>
+        <p class="post-extra">{% trans forum=forum(result.forum), user=username(result), date=result.date|reltimesince|low %}In {{ forum }} by {{ user }} {{ date }}{% endtrans %}</p>
+        <p class="post-preview">{{ result.post_clean|highlight(search_query)|safe }}</p>
+      </div>
+      {% endfor %}
+    </div>
     {% else %}
-    <p class="lead">Nothing was found :C</p>
-    {% endfor %}
+    <p class="lead">{% trans %}Looks like your search has expired. Please try searching again.{% endtrans %}</p>
+    {% endif %}
   </div>
-</div>
 {% endblock %}
+
+{% macro forum(forum) -%}
+<a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}" class="forum-link">{{ forum.name }}</a>
+{%- endmacro %}
+
+{% macro username(post) -%}
+{% if post.user_id -%}
+<a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="user-link">{{ post.user.username }}</a>
+{%- else -%}
+{{ post.user_name }}
+{%- endif %}
+{%- endmacro %}

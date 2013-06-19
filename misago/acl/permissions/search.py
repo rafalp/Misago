@@ -21,9 +21,6 @@ class SearchACL(BaseACL):
     def search_cooldown(self):
         return self.acl['search_cooldown']
 
-    def allow_search(self, user):
-        pass
-
 
 def build(acl, roles):
     acl.search = SearchACL()

@@ -37,9 +37,14 @@
 
       color: @textColor;
 
-      input {
+      &.search-disabled {
+        .opacity(60);
+      }
+
+      input, input:disabled {
         border: none;
         .box-shadow(none);
+        background: none;
         margin: 0px;
       }
 
