@@ -227,11 +227,11 @@ class ThreadsListModeration(object):
                 thread.start_post.save(force_update=True)
                 thread.set_checkpoint(self.request, 'undeleted')
         if undeleted:
+            Thread.objects.filter(id__in=undeleted).update(deleted=False)
             self.request.monitor['threads'] = int(self.request.monitor['threads']) + len(undeleted)
             self.request.monitor['posts'] = int(self.request.monitor['posts']) + posts
             self.forum.sync()
             self.forum.save(force_update=True)
-            Thread.objects.filter(id__in=undeleted).update(deleted=False)
         return undeleted
 
     def action_soft(self, ids):
@@ -251,11 +251,11 @@ class ThreadsListModeration(object):
                 thread.start_post.save(force_update=True)
                 thread.set_checkpoint(self.request, 'deleted')
         if deleted:
+            Thread.objects.filter(id__in=deleted).update(deleted=True)
             self.request.monitor['threads'] = int(self.request.monitor['threads']) - len(deleted)
             self.request.monitor['posts'] = int(self.request.monitor['posts']) - posts
             self.forum.sync()
             self.forum.save(force_update=True)
-            Thread.objects.filter(id__in=deleted).update(deleted=True)
         return deleted
 
     def action_hard(self, ids):
