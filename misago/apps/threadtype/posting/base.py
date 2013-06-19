@@ -1,5 +1,4 @@
 from django.template import RequestContext
-from django.utils import timezone
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
 from misago.forms import FormLayout

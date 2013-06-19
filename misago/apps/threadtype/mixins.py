@@ -1,6 +1,17 @@
 from django import forms
-from django.utils.translation import ungettext
+from django.utils import timezone
+from django.utils.translation import ungettext, ugettext_lazy as _
 from misago.utils.strings import slugify
+
+class FloodProtectionMixin(object):
+    def clean(self):
+        cleaned_data = super(FloodProtectionMixin, self).clean()
+        diff = timezone.now() - self.request.user.last_post
+        diff = diff.seconds + (diff.days * 86400)
+        if diff < 35:
+            raise forms.ValidationError(_("You can't post one message so quickly after another. Please wait a moment and try again."))
+        return cleaned_data
+
 
 class ValidateThreadNameMixin(object):
     def clean_thread_name(self):
