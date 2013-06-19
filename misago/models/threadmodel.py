@@ -57,7 +57,6 @@ class Thread(models.Model):
     replies_reported = models.PositiveIntegerField(default=0)
     replies_moderated = models.PositiveIntegerField(default=0)
     replies_deleted = models.PositiveIntegerField(default=0)
-    merges = models.PositiveIntegerField(default=0)
     score = models.PositiveIntegerField(default=30)
     upvotes = models.PositiveIntegerField(default=0)
     downvotes = models.PositiveIntegerField(default=0)
@@ -157,8 +156,8 @@ class Thread(models.Model):
         move_thread.send(sender=self, move_to=move_to)
         self.forum = move_to
 
-    def merge_with(self, thread, merge):
-        merge_thread.send(sender=self, new_thread=thread, merge=merge)
+    def merge_with(self, thread):
+        merge_thread.send(sender=self, new_thread=thread)
 
     def sync(self):
         # Counters
@@ -169,7 +168,7 @@ class Thread(models.Model):
         self.replies_moderated = self.post_set.filter(moderated=True).count()
         self.replies_deleted = self.post_set.filter(deleted=True).count()
         # First post
-        start_post = self.post_set.order_by('merge', 'id')[0:][0]
+        start_post = self.post_set.order_by('id')[0:][0]
         self.start = start_post.date
         self.start_post = start_post
         self.start_poster = start_post.user
@@ -180,7 +179,7 @@ class Thread(models.Model):
         self.downvotes = start_post.downvotes
         # Last visible post
         if self.replies > 0:
-            last_post = self.post_set.order_by('-merge', '-id').filter(moderated=False)[0:][0]
+            last_post = self.post_set.order_by('-id').filter(moderated=False)[0:][0]
         else:
             last_post = start_post
         self.last = last_post.date
@@ -192,7 +191,6 @@ class Thread(models.Model):
         # Flags
         self.moderated = start_post.moderated
         self.deleted = start_post.deleted
-        self.merges = last_post.merge
         
     def email_watchers(self, request, thread_type, post):
         from misago.acl.builder import acl

@@ -39,10 +39,7 @@ class ThreadBaseView(ViewBase):
         self.count = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).count()
         self.posts = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).prefetch_related('user', 'user__rank')
         
-        if self.thread.merges > 0:
-            self.posts = self.posts.order_by('merge', 'pk')
-        else:
-            self.posts = self.posts.order_by('pk')
+        self.posts = self.posts.order_by('id')
 
         try:
             self.pagination = make_pagination(self.kwargs.get('page', 0), self.count, self.request.settings.posts_per_page)

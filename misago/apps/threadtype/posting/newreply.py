@@ -59,7 +59,6 @@ class NewReplyBaseView(PostingBaseView):
                                             post=form.cleaned_data['post'],
                                             post_preparsed=post_preparsed,
                                             date=now,
-                                            merge=self.thread.merges,
                                             moderated=moderation,
                                         )
 

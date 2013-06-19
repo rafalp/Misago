@@ -17,7 +17,6 @@ class PostManager(models.Manager):
 class Post(models.Model):
     forum = models.ForeignKey('Forum')
     thread = models.ForeignKey('Thread')
-    merge = models.PositiveIntegerField(default=0)
     user = models.ForeignKey('User', null=True, blank=True, on_delete=models.SET_NULL)
     user_name = models.CharField(max_length=255)
     ip = models.GenericIPAddressField()
@@ -152,7 +151,7 @@ move_thread.connect(move_thread_handler, dispatch_uid="move_thread_posts")
 
 
 def merge_thread_handler(sender, **kwargs):
-    Post.objects.filter(thread=sender).update(thread=kwargs['new_thread'], merge=F('merge') + kwargs['merge'])
+    Post.objects.filter(thread=sender).update(thread=kwargs['new_thread'])
 
 merge_thread.connect(merge_thread_handler, dispatch_uid="merge_threads_posts")
 
