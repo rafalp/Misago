@@ -102,13 +102,12 @@ class ThreadModeration(object):
         self.request.messages.set_flash(Message(_('Thread has been closed.')), 'success', 'threads')
 
     def thread_action_undelete(self):
-        # Update thread
-        self.thread.deleted = False
-        self.thread.replies_deleted -= 1
-        self.thread.save(force_update=True)
         # Update first post in thread
         self.thread.start_post.deleted = False
         self.thread.start_post.save(force_update=True)
+        # Update thread
+        self.thread.sync()
+        self.thread.save(force_update=True)
         # Set checkpoint
         self.thread.set_checkpoint(self.request, 'undeleted')
         # Update forum
@@ -123,13 +122,12 @@ class ThreadModeration(object):
         self.request.messages.set_flash(Message(_('Thread has been restored.')), 'success', 'threads')
 
     def thread_action_soft(self):
-        # Update thread
-        self.thread.deleted = True
-        self.thread.replies_deleted += 1
-        self.thread.save(force_update=True)
         # Update first post in thread
         self.thread.start_post.deleted = True
         self.thread.start_post.save(force_update=True)
+        # Update thread
+        self.thread.sync()
+        self.thread.save(force_update=True)
         # Set checkpoint
         self.thread.set_checkpoint(self.request, 'deleted')
         # Update forum

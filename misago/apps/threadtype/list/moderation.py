@@ -218,18 +218,15 @@ class ThreadsListModeration(object):
 
     def _action_undelete(self, ids):
         undeleted = []
-        posts = 0
         for thread in self.threads:
             if thread.pk in ids and thread.deleted:
                 undeleted.append(thread.pk)
-                posts += thread.replies + 1
                 thread.start_post.deleted = False
                 thread.start_post.save(force_update=True)
+                thread.sync()
+                thread.save(force_update=True)
                 thread.set_checkpoint(self.request, 'undeleted')
         if undeleted:
-            Thread.objects.filter(id__in=undeleted).update(deleted=False)
-            self.request.monitor['threads'] = int(self.request.monitor['threads']) + len(undeleted)
-            self.request.monitor['posts'] = int(self.request.monitor['posts']) + posts
             self.forum.sync()
             self.forum.save(force_update=True)
         return undeleted
@@ -242,18 +239,15 @@ class ThreadsListModeration(object):
 
     def _action_soft(self, ids):
         deleted = []
-        posts = 0
         for thread in self.threads:
             if thread.pk in ids and not thread.deleted:
                 deleted.append(thread.pk)
-                posts += thread.replies + 1
                 thread.start_post.deleted = True
                 thread.start_post.save(force_update=True)
+                thread.sync()
+                thread.save(force_update=True)
                 thread.set_checkpoint(self.request, 'deleted')
         if deleted:
-            Thread.objects.filter(id__in=deleted).update(deleted=True)
-            self.request.monitor['threads'] = int(self.request.monitor['threads']) - len(deleted)
-            self.request.monitor['posts'] = int(self.request.monitor['posts']) - posts
             self.forum.sync()
             self.forum.save(force_update=True)
         return deleted
@@ -266,15 +260,11 @@ class ThreadsListModeration(object):
     
     def _action_hard(self, ids):        
         deleted = []
-        posts = 0
         for thread in self.threads:
             if thread.pk in ids:
                 deleted.append(thread.pk)
-                posts += thread.replies + 1
                 thread.delete()
         if deleted:
-            self.request.monitor['threads'] = int(self.request.monitor['threads']) - len(deleted)
-            self.request.monitor['posts'] = int(self.request.monitor['posts']) - posts
             self.forum.sync()
             self.forum.save(force_update=True)
         return deleted
