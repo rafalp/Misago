@@ -67,14 +67,8 @@ class PostsModeration(object):
                 new_thread.last_poster_name = 'n'
                 new_thread.last_poster_slug = 'n'
                 new_thread.save(force_insert=True)
-                prev_merge = -1
-                merge = -1
                 for post in self.posts:
                     if post.pk in ids:
-                        if prev_merge != post.merge:
-                            prev_merge = post.merge
-                            merge += 1
-                        post.merge = merge
                         post.move_to(new_thread)
                         post.save(force_update=True)
                 new_thread.sync()
@@ -112,14 +106,8 @@ class PostsModeration(object):
             form = MovePostsForm(self.request.POST, request=self.request, thread=self.thread)
             if form.is_valid():
                 thread = form.cleaned_data['thread_url']
-                prev_merge = -1
-                merge = -1
                 for post in self.posts:
                     if post.pk in ids:
-                        if prev_merge != post.merge:
-                            prev_merge = post.merge
-                            merge += 1
-                        post.merge = merge + thread.merges
                         post.move_to(thread)
                         post.save(force_update=True)
                 if self.thread.post_set.count() == 0:

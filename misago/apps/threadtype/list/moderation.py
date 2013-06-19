@@ -1,10 +1,12 @@
 from django.forms import ValidationError
 from django.template import RequestContext
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 from misago.forms import FormLayout
 from misago.messages import Message
 from misago.models import Forum, Thread, Post
 from misago.apps.threadtype.list.forms import MoveThreadsForm, MergeThreadsForm
+from misago.utils.strings import slugify
 
 class ThreadsListModeration(object):
     def action_accept(self, ids):
@@ -137,16 +139,10 @@ class ThreadsListModeration(object):
                                                    start=timezone.now(),
                                                    last=timezone.now()
                                                    )
-                last_merge = 0
-                last_thread = None
                 merged = []
-                for i in range(0, len(threads)):
-                    thread = form.merge_order[i]
+                for thread in reversed(threads):
                     merged.append(thread.pk)
-                    if last_thread and last_thread.last > thread.start:
-                        last_merge += thread.merges + 1
-                    thread.merge_with(new_thread, last_merge=last_merge)
-                    last_thread = thread
+                    thread.merge_with(new_thread)
                 Thread.objects.filter(id__in=merged).delete()
                 new_thread.sync()
                 new_thread.save(force_update=True)
