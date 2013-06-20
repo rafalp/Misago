@@ -118,6 +118,7 @@ class Post(models.Model):
 def rename_user_handler(sender, **kwargs):
     Post.objects.filter(user=sender).update(
                                             user_name=sender.username,
+                                            current_date=timezone.now(),
                                             )
     Post.objects.filter(edit_user=sender).update(
                                                  edit_user_name=sender.username,

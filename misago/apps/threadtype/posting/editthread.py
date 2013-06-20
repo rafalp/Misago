@@ -58,5 +58,8 @@ class EditThreadBaseView(PostingBaseView):
             self.md, self.post.post_preparsed = post_markdown(form.cleaned_data['post'])
             self.post.save(force_update=True)
 
+        if old_name != form.cleaned_data['thread_name']:
+            self.thread.update_current_dates()
+
         if changed_thread or changed_post:
             self.record_edit(form, old_name, old_post)
