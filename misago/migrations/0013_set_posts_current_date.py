@@ -1,23 +1,18 @@
 # -*- coding: utf-8 -*-
 import datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
-
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
-        # Deleting field 'Checkpoint.post'
-        db.delete_column(u'misago_checkpoint', 'post_id')
-
-        # Deleting field 'Post.checkpoints'
-        db.delete_column(u'misago_post', 'checkpoints')
-
+        for post in orm.Post.objects.all(): 
+            post.current_date = post.edit_date or post.date 
+            post.save()
 
     def backwards(self, orm):
         raise RuntimeError("Cannot reverse this migration.")
-
 
     models = {
         'misago.alert': {
@@ -168,6 +163,7 @@ class Migration(SchemaMigration):
         'misago.post': {
             'Meta': {'object_name': 'Post'},
             'agent': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'current_date': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True'}),
             'date': ('django.db.models.fields.DateTimeField', [], {}),
             'deleted': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'downvotes': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
@@ -181,7 +177,6 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'ip': ('django.db.models.fields.GenericIPAddressField', [], {'max_length': '39'}),
             'mentions': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'mention_set'", 'symmetrical': 'False', 'to': "orm['misago.User']"}),
-            'merge': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'moderated': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'post': ('django.db.models.fields.TextField', [], {}),
             'post_preparsed': ('django.db.models.fields.TextField', [], {}),
@@ -279,7 +274,6 @@ class Migration(SchemaMigration):
             'last_poster_name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'last_poster_slug': ('django.db.models.fields.SlugField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'last_poster_style': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'merges': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'moderated': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'participants': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'private_thread_set'", 'symmetrical': 'False', 'to': "orm['misago.User']"}),
@@ -394,3 +388,4 @@ class Migration(SchemaMigration):
     }
 
     complete_apps = ['misago']
+    symmetrical = True

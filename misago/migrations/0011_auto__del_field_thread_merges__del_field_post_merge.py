@@ -16,15 +16,7 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        # Adding field 'Thread.merges'
-        db.add_column(u'misago_thread', 'merges',
-                      self.gf('django.db.models.fields.PositiveIntegerField')(default=0),
-                      keep_default=False)
-
-        # Adding field 'Post.merge'
-        db.add_column(u'misago_post', 'merge',
-                      self.gf('django.db.models.fields.PositiveIntegerField')(default=0),
-                      keep_default=False)
+        raise RuntimeError("Cannot reverse this migration.")
 
 
     models = {

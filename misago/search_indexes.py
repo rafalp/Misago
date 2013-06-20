@@ -11,5 +11,8 @@ class PostIndex(indexes.SearchIndex, indexes.Indexable):
     def get_model(self):
         return Post
 
+    def get_updated_field(self):
+        return 'current_date'
+
     def index_queryset(self, using=None):
         return self.get_model().objects.all()

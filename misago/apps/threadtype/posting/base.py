@@ -22,8 +22,8 @@ class PostingBaseView(ViewBase):
             self.parents = Forum.objects.forum_parents(self.forum.pk)
 
     def record_edit(self, form, old_name, old_post):
+        self.post.current_date = timezone.now()
         self.post.edits += 1
-        self.post.edit_date = timezone.now()
         self.post.edit_user = self.request.user
         self.post.edit_user_name = self.request.user.username
         self.post.edit_user_slug = self.request.user.username_slug
@@ -35,7 +35,7 @@ class PostingBaseView(ViewBase):
                                     user=self.request.user,
                                     user_name=self.request.user.username,
                                     user_slug=self.request.user.username_slug,
-                                    date=self.post.edit_date,
+                                    date=self.post.current_date,
                                     ip=self.request.session.get_ip(self.request),
                                     agent=self.request.META.get('HTTP_USER_AGENT'),
                                     reason=form.cleaned_data['edit_reason'],

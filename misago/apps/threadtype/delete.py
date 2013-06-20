@@ -150,11 +150,8 @@ class HideReplyBaseView(DeleteHideBaseView):
             raise ACLError403(_("Somebody has already replied to this post, you cannot delete it."))
 
     def delete(self):
+        self.post.current_date = timezone.now()
         self.post.deleted = True
-        self.post.edit_date = timezone.now()
-        self.post.edit_user = self.request.user
-        self.post.edit_user_name = self.request.user.username
-        self.post.edit_user_slug = self.request.user.username_slug
         self.post.save(force_update=True)
         self.thread.sync()
         self.thread.save(force_update=True)
@@ -178,10 +175,6 @@ class ShowReplyBaseView(DeleteHideBaseView):
 
     def delete(self):
         self.post.deleted = False
-        self.post.edit_date = timezone.now()
-        self.post.edit_user = self.request.user
-        self.post.edit_user_name = self.request.user.username
-        self.post.edit_user_slug = self.request.user.username_slug
         self.post.save(force_update=True)
         self.thread.sync()
         self.thread.save(force_update=True)

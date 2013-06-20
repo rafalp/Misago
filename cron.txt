@@ -9,5 +9,6 @@
 10 3 * * * python $HOME/misago/manage.py updateranking
 25 3 * * * python $HOME/misago/manage.py updatethreadranking
 */30 * * * * python $HOME/misago/manage.py countreports
+* */2 * * * python $HOME/misago/manage.py update_index --age=2
 # Uncomment next line for heartbeat cron
 #*/3 * * * * python $HOME/misago/heartbeat.py deployment.settings --log=heartbeats.txt

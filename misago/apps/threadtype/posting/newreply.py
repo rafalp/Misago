@@ -43,6 +43,7 @@ class NewReplyBaseView(PostingBaseView):
             merged = True
             self.post = self.thread.last_post
             self.post.date = now
+            self.post.current_date = now
             self.post.post = '%s\n\n%s' % (self.post.post, form.cleaned_data['post'])
             self.md, self.post.post_preparsed = post_markdown(self.post.post)
             self.post.save(force_update=True)
@@ -59,6 +60,7 @@ class NewReplyBaseView(PostingBaseView):
                                             post=form.cleaned_data['post'],
                                             post_preparsed=post_preparsed,
                                             date=now,
+                                            current_date=now,
                                             moderated=moderation,
                                         )
 

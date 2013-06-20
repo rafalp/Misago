@@ -41,6 +41,7 @@ class PostsModeration(object):
             post.merge_with(new_post)
             post.delete()
         md, new_post.post_preparsed = post_markdown(new_post.post)
+        new_post.current_date = timezone.now()
         new_post.save(force_update=True)
         self.thread.sync()
         self.thread.save(force_update=True)
@@ -184,7 +185,7 @@ class PostsModeration(object):
                     raise forms.ValidationError(_("You cannot delete first post of thread using this action. If you want to delete thread, use thread moderation instead."))
                 deleted.append(post.pk)
         if deleted:
-            self.thread.post_set.filter(id__in=deleted).update(deleted=True)
+            self.thread.post_set.filter(id__in=deleted).update(deleted=True, current_date=timezone.now())
             self.thread.sync()
             self.thread.save(force_update=True)
             self.forum.sync()
