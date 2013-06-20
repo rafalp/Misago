@@ -116,7 +116,7 @@ def results(request, page=0, search_route=None):
                                              'form': FormFields(form),
                                              'search_route': search_route,
                                              'search_query': result['search_query'],
-                                             'results': queryset.select_related('thread', 'forum', 'user')[pagination['start']:pagination['stop']],
+                                             'results': queryset.order_by('-pk').select_related('thread', 'forum', 'user')[pagination['start']:pagination['stop']],
                                              'disable_search': True,
                                              'items_total': items_total,
                                              'pagination': pagination,
