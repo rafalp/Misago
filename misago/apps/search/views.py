@@ -53,7 +53,7 @@ def do_search(request, queryset, search_route=None):
                 request.POST['username'] = form.target
                 return users_list(request)
             sqs = RelatedSearchQuerySet().auto_query(form.cleaned_data['search_query']).order_by('-id').load_all()
-            sqs = sqs.load_all_queryset(Post, queryset.filter(deleted=False).filter(moderated=False).select_related('thread', 'forum'))[:120]
+            sqs = sqs.load_all_queryset(Post, queryset.filter(deleted=False).filter(moderated=False).select_related('thread', 'forum', 'user'))[:60]
 
             if request.user.is_authenticated():
                 request.user.last_search = timezone.now()
@@ -65,7 +65,7 @@ def do_search(request, queryset, search_route=None):
                 raise SearchException(_("Search returned no results. Change search query and try again."))
             request.session['%s_result' % search_route] = {
                                                            'search_query': form.cleaned_data['search_query'],
-                                                           'search_results': [p.object.pk for p in sqs],
+                                                           'search_results': [p.object for p in sqs],
                                                            }
             return redirect(reverse('%s_results' % search_route))
         else:
@@ -103,8 +103,8 @@ def results(request, page=0, search_route=None):
                                                 },
                                                 context_instance=RequestContext(request))
 
-    queryset = Post.objects.filter(id__in=result['search_results'])
-    items_total = queryset.count();
+    items = result['search_results']
+    items_total = len(items);
     try:
         pagination = make_pagination(page, items_total, 12)
     except Http404:
@@ -116,7 +116,7 @@ def results(request, page=0, search_route=None):
                                              'form': FormFields(form),
                                              'search_route': search_route,
                                              'search_query': result['search_query'],
-                                             'results': queryset.order_by('-pk').select_related('thread', 'forum', 'user')[pagination['start']:pagination['stop']],
+                                             'results': items[pagination['start']:pagination['stop']],
                                              'disable_search': True,
                                              'items_total': items_total,
                                              'pagination': pagination,
