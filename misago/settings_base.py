@@ -10,6 +10,12 @@ ALLOWED_HOSTS = ['*']
 # Leave this setting empty
 ADMIN_PATH = ''
 
+# Enable mobile subdomain for mobile stuff
+MOBILE_SUBDOMAIN = ''
+
+# Templates used by mobile version
+MOBILE_TEMPLATES = ''
+
 # Default format of Misago generated HTML
 OUTPUT_FORMAT = 'html5'
 
@@ -83,6 +89,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'misago.context_processors.admin',
 )
 
+# Template middlewares
+TEMPLATE_MIDDLEWARES = ()
+
 # Jinja2 Template Extensions
 JINJA2_EXTENSIONS = (
     'jinja2.ext.do',
@@ -105,6 +114,7 @@ MIDDLEWARE_CLASSES = (
     'misago.middleware.banning.BanningMiddleware',
     'misago.middleware.messages.MessagesMiddleware',
     'misago.middleware.user.UserMiddleware',
+    'misago.middleware.mailsqueue.MailsQueueMiddleware',
     'misago.middleware.acl.ACLMiddleware',
     'misago.middleware.privatethreads.PrivateThreadsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -113,10 +123,12 @@ MIDDLEWARE_CLASSES = (
 # List of application permission providers
 PERMISSION_PROVIDERS = (
     'misago.acl.permissions.usercp',
+    'misago.acl.permissions.search',
     'misago.acl.permissions.users',
     'misago.acl.permissions.forums',
     'misago.acl.permissions.threads',
     'misago.acl.permissions.privatethreads',
+    'misago.acl.permissions.reports',
     'misago.acl.permissions.special',
 )
 
@@ -138,12 +150,24 @@ PROFILE_EXTENSIONS = (
     'misago.apps.profiles.details',
 )
 
+# List of User Model relations that should be loaded by session handler
+USER_EXTENSIONS_PRELOAD = ()
+
+# List of User Model relations that should be loaded when displaying users profiles
+PROFILE_EXTENSIONS_PRELOAD = ()
+
 # List of Markdown Extensions
 MARKDOWN_EXTENSIONS = (
     'misago.markdown.extensions.strikethrough.StrikethroughExtension',
     'misago.markdown.extensions.quotes.QuoteTitlesExtension',
     'misago.markdown.extensions.mentions.MentionsExtension',
     'misago.markdown.extensions.magiclinks.MagicLinksExtension',
+    'misago.markdown.extensions.cleanlinks.CleanLinksExtension',
+    'misago.markdown.extensions.shorthandimgs.ShorthandImagesExtension',
+    # Uncomment for EXPERIMENTAL BBCode support
+    #'misago.markdown.extensions.bbcodes.BBCodesExtension',
+    # Uncomment for emoji support, requires emoji directory in static dir.
+    #'misago.markdown.extensions.emoji.EmojiExtension',
 )
 
 # Name of root urls configuration
@@ -152,12 +176,13 @@ ROOT_URLCONF = 'misago.urls'
 #Installed applications
 INSTALLED_APPS = (
     # Applications that have no dependencies first!
-    'south',
-    'coffin',
+    'south', # Database schema building and updating
+    'coffin', # Jinja2 integration
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'mptt', # Modified Pre-order Tree Transversal - allows us to nest forums 
-    'debug_toolbar', # Debug toolbar
+    'haystack', # Search engines bridge
+    'debug_toolbar', # Debug toolbar'
     'misago', # Misago Forum App
 )
 

@@ -86,6 +86,15 @@
 @itemNewColor:                      @red;
 @itemMovedColor:                    lighten(@purple, 10%);
 
+// Thread flags colors
+// -------------------------
+@flagReported:                      @orange;
+@flagReviewed:                      @purple;
+@flagAnnouncement:                  @blue;
+@flagSticky:                        @bluePale;
+@flagDeleted:                       @grayDark;
+@flagClosed:                        @red;
+
 // Board index forums list
 // -------------------------
 @categoryBackground:                lighten(@bodyBackground, 5%);
@@ -93,7 +102,7 @@
 @categoryHeader:                    @bodyBackground;
 @categoryShadow:                    darken(@bodyBackground, 5%);
 
-@forumIconSize:                     4px;
+@forumIconSize:                     24px;
 
 // Posts
 // -------------------------
@@ -248,7 +257,7 @@
 
 // Footer
 // -------------------------
-@footerHeight:                        80px;
+@footerHeight:                        90px;
 @footerBackground:                    darken(@bodyBackground, 5%);
 @footerBorder:                        darken(@footerBackground, 8%);
 
@@ -269,7 +278,7 @@
 // Form states and alerts
 // -------------------------
 @warningText:             #FFF;
-@warningBackground:       #fcf8e3;
+@warningBackground:       desaturate(@orange, 10%);
 @warningBorder:           darken(spin(@warningBackground, -10), 3%);
 
 @errorText:               @red;

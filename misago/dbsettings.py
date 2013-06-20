@@ -19,7 +19,6 @@ class DBSettings(object):
                 for i in Setting.objects.all():
                     self._models[i.pk] = i
                     self._settings[i.pk] = i.get_value()
-                cache.set('settings', self._models)
             except DatabaseError:
                 pass
         else:
@@ -36,11 +35,10 @@ class DBSettings(object):
         return self._settings[key]
 
     def __setitem__(self, key, value):
-        if key in self._settings.keys():
+        if key in self._settings:
             self._models[key].set_value(value)
             self._models[key].save(force_update=True)
             self._settings[key] = value
-            cache.set('settings', self._models)
         return value
 
     def __delitem__(self, key):

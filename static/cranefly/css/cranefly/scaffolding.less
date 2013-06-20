@@ -9,11 +9,11 @@ html, body {
   min-height: 100%;
   height: auto !important;
   height: 100%;
-  margin: 0 auto ((@footerHeight + @baseLineHeight) * -1);
+  margin: 0 auto ((@footerHeight * -1) - @baseFontSize + 2px);
 
   .container-primary {
     padding-top: @baseLineHeight;
-    padding-bottom: @footerHeight + (@footerHeight * 0.5);
+    padding-bottom: @footerHeight + (@baseLineHeight * 1.5);
 
     .page-description {
       margin-bottom: @baseLineHeight;
@@ -33,18 +33,25 @@ footer {
   border-top: 1px solid @footerBorder;
   height: @footerHeight;
   padding: @paddingLarge;
+  padding-bottom: 0px;
 
-  hr {
-    border-bottom: 1px solid @footerBorder;
-    margin: (@baseLineHeight / 2) 0px;
-  }
+  .container {
+    hr {
+      border-bottom: 1px solid @footerBorder;
+      margin: (@baseLineHeight / 2) 0px;
+    }
 
-  .credits {
-    color: @gray;
-    font-size: 90%;
+    .credits {
+      p {
+        margin-bottom: 0px;
 
-    a:link, a:active, a:visited, a:hover {
-      color: @gray;
+        color: @gray;
+        font-size: 90%;
+
+        a:link, a:active, a:visited, a:hover {
+          color: @gray;
+        }
+      }
     }
   }
 }

@@ -64,6 +64,10 @@ def sync_user_handler(sender, **kwargs):
     sender.karma_given_p = sender.karma_set.filter(score__gt=0).count()
     sender.karma_given_n = sender.karma_set.filter(score__lt=0).count()
     sender.karma_p = sender.post_set.all().aggregate(Sum('upvotes'))['upvotes__sum']
+    if not sender.karma_p:
+        sender.karma_p = 0
     sender.karma_n = sender.post_set.all().aggregate(Sum('downvotes'))['downvotes__sum']
+    if not sender.karma_n:
+        sender.karma_n = 0
 
 sync_user_profile.connect(sync_user_handler, dispatch_uid="sync_user_karmas")

@@ -10,9 +10,7 @@
 {%- endif %}{% endblock %}
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
-{% for parent in parents %}
-<li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-{% endfor %}
+{{ macros.parents_list(parents) }}
 <li><a href="{{ forum.type|url(forum=forum.pk, slug=forum.slug) }}">{{ forum.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {% if thread %}<li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>{% endif %}
 <li class="active">{{ get_title() }}
@@ -52,7 +50,9 @@
           {% if preview %}
           <div class="form-preview">
             <div class="markdown js-extra">
-              {{ preview|markdown_final|safe }}
+              <article>
+                {{ preview|markdown_final|safe }}
+              </article>
             </div>
           </div>
           {% endif %}
@@ -62,7 +62,7 @@
             {% if 'thread_name' in form.fields %}
             {{ form_theme.row_widget(form.fields.thread_name, width=8) }}
             <hr>
-            <h4>Message Body</h4>
+            <h4>{% trans %}Message Body{% endtrans %}</h4>
             {% endif %}
             {{ editor.editor(form.fields.post, get_button(), rows=8, extra=get_extra()) }}
             {% if intersect(form.fields, ('edit_reason', 'thread_weight', 'close_thread')) %}

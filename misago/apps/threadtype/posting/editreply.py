@@ -20,7 +20,6 @@ class EditReplyBaseView(PostingBaseView):
                 }
 
     def post_form(self, form):
-        now = timezone.now()
         old_post = self.post.post
 
         changed_thread = False
@@ -33,11 +32,9 @@ class EditReplyBaseView(PostingBaseView):
             self.thread.closed = not self.thread.closed
             changed_thread = True
             if self.thread.closed:
-                self.thread.last_post.set_checkpoint(self.request, 'closed')
+                self.thread.set_checkpoint(self.request, 'closed')
             else:
-                self.thread.last_post.set_checkpoint(self.request, 'opened')
-            if self.thread.last_post_id != self.post.pk or not changed_post:
-                self.thread.last_post.save(force_update=True)
+                self.thread.set_checkpoint(self.request, 'opened')
 
         if ('thread_weight' in form.cleaned_data and
                 form.cleaned_data['thread_weight'] != self.thread.weight):
@@ -49,11 +46,6 @@ class EditReplyBaseView(PostingBaseView):
 
         if changed_post:
             self.post.post = form.cleaned_data['post']
-            self.md, self.post.post_preparsed = post_markdown(self.request, form.cleaned_data['post'])
-            self.post.edits += 1
-            self.post.edit_date = now
-            self.post.edit_user = self.request.user
-            self.post.edit_user_name = self.request.user.username
-            self.post.edit_user_slug = self.request.user.username_slug
+            self.md, self.post.post_preparsed = post_markdown(form.cleaned_data['post'])
             self.post.save(force_update=True)
             self.record_edit(form, self.thread.name, old_post)

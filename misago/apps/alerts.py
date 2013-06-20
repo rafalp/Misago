@@ -1,24 +1,29 @@
+from copy import deepcopy
+from datetime import timedelta
 from django.template import RequestContext
 from django.utils import timezone
+from django.utils.timezone import localtime
 from django.utils.translation import ugettext as _
 from misago.decorators import block_guest
 
 @block_guest
 def alerts(request):
-    now = timezone.now()
+    now = localtime(timezone.now())
+    yesterday = now - timedelta(days=1)
     alerts = {}
     if not request.user.alerts_date:
         request.user.alerts_date = request.user.join_date
 
     for alert in request.user.alert_set.order_by('-id'):
         alert.new = alert.date > request.user.alerts_date
-        diff = now - alert.date
-        if diff.days <= 0:
+        alert_date = localtime(deepcopy(alert.date))
+        diff = now - alert_date
+        if now.date() == alert_date.date():
             try:
                 alerts['today'].append(alert)
             except KeyError:
                 alerts['today'] = [alert]
-        elif diff.days <= 1:
+        elif yesterday.date() == alert_date.date():
             try:
                 alerts['yesterday'].append(alert)
             except KeyError:

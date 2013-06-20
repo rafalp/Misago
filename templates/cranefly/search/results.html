@@ -1,0 +1,48 @@
+{% extends "cranefly/search/layout.html" %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=_("Results"),parent=_('Search Community')) }}{% endblock %}
+
+{% block action %}
+  <div class="search-results">
+    {% if results %}
+    <h2>{% trans results=results|length|intcomma %}Search has returned one result{% pluralize %}Search has returned {{ results }} results:{% endtrans %}</h2>
+    <div class="results-list">
+      {% for result in results %}
+      <div class="result">
+        <h3><a href="{{ result.forum.thread_link('find')|url(thread=result.thread_id, slug=result.thread.slug, post=result.pk) }}">{{ result.thread.name }}</a></h3>
+        <p class="post-extra">{% trans forum=forum(result.forum), user=username(result), date=result.date|reltimesince|low %}In {{ forum }} by {{ user }} {{ date }}{% endtrans %}</p>
+        <p class="post-preview">{{ result.post_clean|highlight(search_query, 320)|safe }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    {{ pager() }}
+    {% else %}
+    <p class="lead">{% trans %}Looks like your search has expired. Please try searching again.{% endtrans %}</p>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% macro forum(forum) -%}
+<a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}" class="forum-link">{{ forum.name }}</a>
+{%- endmacro %}
+
+{% macro username(post) -%}
+{% if post.user_id -%}
+<a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="user-link">{{ post.user.username }}</a>
+{%- else -%}
+{{ post.user_name }}
+{%- endif %}
+{%- endmacro %}
+
+{% macro pager() -%}
+{% if items_total > 0 and pagination['total'] > 1 %}
+<div class="pagination">
+  <ul>
+    <li class="count">{{ macros.pager_label(pagination) }}</li>
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ ('%s_results'|format(search_route))|url(page=pagination['prev']) }}{% else %}{{ ('%s_results'|format(search_route))|url() }}{% endif %}" class="tooltip-top" title="{% trans %}Newer Posts{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{{ ('%s_results'|format(search_route))|url(page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Older Posts{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+  </ul>
+</div>
+{% endif %}
+{%- endmacro %}

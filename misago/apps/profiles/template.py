@@ -38,7 +38,6 @@ def RequestContext(request, context=None):
 
     # Sync member
     if context['profile'].sync_profile():
-        print 'SYNCED!'
         context['profile'].save(force_update=True)
 
     context['tabs'] = []

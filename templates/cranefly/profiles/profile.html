@@ -44,26 +44,26 @@
             {% endfor %}
             {% if user.is_authenticated() and user.pk != profile.pk %}
             <li class="pull-right">
-              <form class="form-inline" action="{% if follows %}{% url 'unfollow_user' user=profile.id %}{% else %}{% url 'follow_user' user=profile.id %}{% endif %}" method="post">
+              <form class="form-inline" action="{% if ignores %}{% url 'unignore_user' user=profile.id %}{% else %}{% url 'ignore_user' user=profile.id %}{% endif %}" method="post">
                 <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
                 <input type="hidden" name="fallback" value="{{ fallback }}">
-                <button type="submit" class="btn{% if follows %} btn-success{% endif %}">
-                  <i class="icon-heart"></i> {% if follows %}{% trans %}Following{% endtrans %}{% else %}{% trans %}Follow{% endtrans %}{% endif %}
+                <button type="submit" class="btn tooltip-top{% if ignores %} btn-inverse{% endif %}" title="{% if ignores %}{% trans user=profile.username %}Remove {{ user }} from ignored{% endtrans %}{% else %}{% trans user=profile.username %}Add {{ user }} to ignored{% endtrans %}{% endif %}">
+                  <i class="icon-ban-circle"></i>
                 </button>
               </form>
             </li>
             <li class="pull-right">
-              <form class="form-inline" action="{% if ignores %}{% url 'unignore_user' user=profile.id %}{% else %}{% url 'ignore_user' user=profile.id %}{% endif %}" method="post">
+              <form class="form-inline" action="{% if follows %}{% url 'unfollow_user' user=profile.id %}{% else %}{% url 'follow_user' user=profile.id %}{% endif %}" method="post">
                 <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
                 <input type="hidden" name="fallback" value="{{ fallback }}">
-                <button type="submit" class="btn{% if ignores %} btn-inverse{% endif %}">
-                  <i class="icon-ban-circle"></i> {% if ignores %}{% trans %}Ignoring{% endtrans %}{% else %}{% trans %}Ignore{% endtrans %}{% endif %}
+                <button type="submit" class="btn tooltip-top{% if follows %} btn-success{% endif %}" title="{% if follows %}{% trans user=profile.username %}Stop following {{ user }}{% endtrans %}{% else %}{% trans user=profile.username %}Start following {{ user }}{% endtrans %}{% endif %}">
+                  <i class="icon-heart"></i>
                 </button>
               </form>
             </li>
             {% if acl.private_threads.can_start() %}
             <li class="pull-right">
-              <a href="{% url 'private_thread_start_with' username=profile.username_slug, user=profile.pk %}" class="btn"><i class="icon-envelope"></i> {% trans %}Message{% endtrans %}</a>
+              <a href="{% url 'private_thread_start_with' username=profile.username_slug, user=profile.pk %}" class="btn tooltip-top" title="{% trans user=profile.username %}Start private thread with {{ user }}{% endtrans %}"><i class="icon-envelope"></i></a>
             </li>
             {% endif %}
             {% endif %}

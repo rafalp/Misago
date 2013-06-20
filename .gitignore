@@ -172,13 +172,16 @@ coffin/**
 debug_toolbar/**
 dev/**
 django/**
+haystack/**
 jinja2/**
 markdown/**
 mptt/**
 pytz/**
 recaptcha/**
 south/**
+whoosh/**
 custom/**
+searchindex/**
 static/avatars/protoss
 static/avatars/terran
 static/avatars/zerg
@@ -190,6 +193,7 @@ yaml/**
 dev-manage.py
 path.py
 !templates/debug_toolbar/panels/acl.html
+static/emojis/**
 templates/debug_toolbar/**
 
 

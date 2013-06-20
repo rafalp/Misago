@@ -75,17 +75,17 @@ def reltimesince(val, arg=""):
     if diff.seconds >= 0:
         if diff.seconds <= 5:
             return _("Just now")
-            
-        if diff.seconds <= 60:
-            return _("Minute ago")
-            
-        if diff.seconds < 3600:
-            minutes = int(math.floor(diff.seconds / 60.0))
+                        
+        if diff.seconds < 3540:
+            minutes = int(math.ceil(diff.seconds / 60.0))
             return ungettext(
                     "Minute ago",
                     "%(minutes)s minutes ago",
                 minutes) % {'minutes': minutes}
-                
+
+        if diff.seconds < 3660:
+            return _("Hour ago")
+        
         if diff.seconds < 10800:
             hours = int(math.floor(diff.seconds / 3600.0))
             minutes = (diff.seconds - (hours * 3600)) / 60
@@ -107,3 +107,38 @@ def reltimesince(val, arg=""):
 
     # Fallback to reldate
     return reldate(val, arg)
+
+
+def compact(val):
+    if not val:
+        return _("Never")
+    now = datetime.now(utc if is_aware(val) else None)
+    local = localtime(val)
+
+    if now.year == local.year:        
+        return format(localtime(val), _('j M'))
+    return format(localtime(val), _('j M y'))
+
+
+def relcompact(val):
+    if not val:
+        return _("Never")
+    now = datetime.now(utc if is_aware(val) else None)
+    diff = now - val
+    local = localtime(val)
+
+    # Difference is greater than day for sure
+    if diff.days != 0:
+        return compact(val)
+
+    if diff.seconds >= 0:
+        if diff.seconds <= 60:
+            return _("Now")
+        if diff.seconds < 3600:
+            minutes = int(math.ceil(diff.seconds / 60.0))
+            return pgettext("number of minutes", "%(minute)sm") % {'minute': minutes}
+        if diff.seconds < 86400:
+            hours = int(math.ceil(diff.seconds / 3600.0))
+            return pgettext("number of hours", "%(hour)sh") % {'hour': hours}
+
+    return compact(val)

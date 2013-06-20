@@ -17,7 +17,6 @@ from misago.models.sessionmodel import Session
 from misago.models.settingmodel import Setting
 from misago.models.settingsgroupmodel import SettingsGroup
 from misago.models.signinattemptmodel import SignInAttempt
-from misago.models.themeadjustmentmodel import ThemeAdjustment
 from misago.models.threadmodel import Thread
 from misago.models.threadreadmodel import ThreadRead
 from misago.models.tokenmodel import Token

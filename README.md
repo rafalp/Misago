@@ -23,6 +23,7 @@ Dependencies
 * [Django Debug Toolbar](https://github.com/django-debug-toolbar/django-debug-toolbar)
 * [Django-MPTT](https://github.com/django-mptt/django-mptt)
 * [Coffin](https://github.com/coffin/coffin)
+* [Django Haystack 2](http://haystacksearch.org/)
 * [Jinja2](https://github.com/mitsuhiko/jinja2)
 * [Markdown](http://pypi.python.org/pypi/Markdown)
 * [path](http://pypi.python.org/pypi/path.py)
@@ -32,6 +33,7 @@ Dependencies
 * [South](http://south.aeracode.org)
 * [Unidecode](http://pypi.python.org/pypi/Unidecode)
 
+You will also need search engine to provide search functionality. If you don't have one, [Whoosh 2](https://pypi.python.org/pypi/Whoosh/) is pure Python search engine that's easy to setup.
 
 Installation
 ------------
@@ -92,7 +94,7 @@ Updating
 
 You can use the `updatemisago` command to update your forums database to latest version _unless_ you are updating from `0.1` which is incompatibile with `0.2` and later releases.
 
-If you want to move data from `0.1` to `0.2`, install `0.2` to new database, then add a connection to the `0.1` database in your settings.py and name it "deprecated". When you are ready, use the `migratefrom01` management command to move data from the `0.1` database over to `0.2`.
+Support for migrations from `0.1` has been dropped with `0.3` release.
 
 
 Contributing

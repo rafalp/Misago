@@ -15,12 +15,12 @@
   {% if forums %}
   <div class="row">
     <div class="span6">
-      {% for category in forums %}{% if loop.index is odd and category.subforums %}
+      {% for category in forums %}{% if loop.index0 is odd and category.subforums %}
       {{ draw_category(category) }}
       {% endif %}{% endfor %}
     </div>
     <div class="span6">
-      {% for category in forums %}{% if loop.index is even and category.subforums %}
+      {% for category in forums %}{% if loop.index0 is even and category.subforums %}
       {{ draw_category(category) }}
       {% endif %}{% endfor %}
     </div>
@@ -34,20 +34,17 @@
 
 {% macro draw_category(category) %}
 <div class="forum-map-category{% if category.style %} forum-map-category-{{ category.style }}{% endif %}">
-  <table class="table">
-    <caption>{{ category.name }}</caption>
-    <tbody>
-      {% for forum in category.subforums%}
-      {{ draw_forum(forum) }}
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="header">
+    <h2>{{ category.name }}</h2>
+  </div>
+  {% for forum in category.subforums%}
+  {{ draw_forum(forum) }}
+  {% endfor %}
 </div>
 {% endmacro %}
 
 {% macro draw_forum(forum, depth=0, branch='', last=false) %}
-<tr>
-  <td class="{% if depth -%}
+  <div class="{% if depth -%}
     forum-map-subforum
     {%- else -%}
     forum-map-forum
@@ -57,26 +54,18 @@
     {%- else -%}
     {{ draw_tree(branch ~ 't') }}
     {%- endif %}{% endif %} <a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3>
-    <div class="forum-details">
-      {% if forum.type == 'redirect' %}
-      {{ redirect_stats(forum) }}
+  </div>
+  {% for subforum in forum.subforums %}
+    {% if depth %}
+      {% if last %}
+      {{ draw_forum(subforum, (depth + 1), (branch ~ 's'), loop.last) }}
       {% else %}
-      {{ forum_stats(forum) }}
+      {{ draw_forum(subforum, (depth + 1), (branch ~ 'i'), loop.last) }}
       {% endif %}
-    </div>
-</td>
-</tr>
-{% for subforum in forum.subforums %}
-  {% if depth %}
-    {% if last %}
-    {{ draw_forum(subforum, (depth + 1), (branch ~ 's'), loop.last) }}
     {% else %}
-    {{ draw_forum(subforum, (depth + 1), (branch ~ 'i'), loop.last) }}
+    {{ draw_forum(subforum, (depth + 1), '', loop.last) }}
     {% endif %}
-  {% else %}
-  {{ draw_forum(subforum, (depth + 1), '', loop.last) }}
-  {% endif %}
-{% endfor %}
+  {% endfor %}
 {% endmacro %}
 
 {% macro draw_tree(branch) %}
@@ -84,35 +73,3 @@
 <span class="tree-{{ item }}"><span></span></span>
 {% endfor %}
 {% endmacro %}
-
-{% macro forum_stats(forum) -%}
-{% if forum.last_thread_id and not forum.attr('hidethread') -%}
-  {% trans count=forum.posts, posts=fancy_number(forum.posts, forum.posts_delta), thread=forum_thread(forum) -%}
-  {{ posts }} post - last in {{ thread }}
-  {%- pluralize -%}
-  {{ posts }} posts - last in {{ thread }}
-  {%- endtrans %}
-{%- else -%}
-  {% trans count=forum.posts, posts=fancy_number(forum.posts, forum.posts_delta) -%}
-  {{ posts }} post
-  {%- pluralize -%}
-  {{ posts }} posts
-  {%- endtrans %}
-{%- endif %}
-{%- endmacro %}
-
-{% macro forum_thread(forum) -%}
-<a href="{% url 'thread' thread=forum.last_thread_id, slug=forum.last_thread_slug %}">{{ forum.last_thread_name }}</a>
-{%- endmacro %}
-
-{% macro redirect_stats(forum) -%}
-{% trans count=forum.redirects, redirects=fancy_number(forum.redirects, forum.redirects_delta) -%}
-{{ redirects }} click
-{%- pluralize -%}
-{{ redirects }} clicks
-{%- endtrans %}
-{%- endmacro %}
-
-{% macro fancy_number(number, delta) -%}
-<strong{% if delta < number %} class="stat-increment"{% endif %}>{{ number|intcomma }}</strong>
-{%- endmacro %}

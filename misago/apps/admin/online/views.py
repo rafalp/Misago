@@ -30,8 +30,6 @@ class List(ListWidget):
             model = model.filter(agent__icontains=filters['useragent'])
         if filters['type'] == 'registered':
             model = model.filter(user__isnull=False)
-        if filters['type'] == 'hidden':
-            model = model.filter(hidden=True)
         if filters['type'] == 'guest':
             model = model.filter(user__isnull=True)
         if filters['type'] == 'crawler':

@@ -3,7 +3,7 @@ from django.utils import timezone
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
 from misago.forms import FormLayout
-from misago.markdown import post_markdown
+from misago.markdown import emojis, post_markdown
 from misago.messages import Message
 from misago.models import Forum, Thread, Post, WatchedThread
 from misago.utils.translation import ugettext_lazy
@@ -22,6 +22,12 @@ class PostingBaseView(ViewBase):
             self.parents = Forum.objects.forum_parents(self.forum.pk)
 
     def record_edit(self, form, old_name, old_post):
+        self.post.current_date = timezone.now()
+        self.post.edits += 1
+        self.post.edit_user = self.request.user
+        self.post.edit_user_name = self.request.user.username
+        self.post.edit_user_slug = self.request.user.username_slug
+        self.post.save(force_update=True)
         self.post.change_set.create(
                                     forum=self.forum,
                                     thread=self.thread,
@@ -29,7 +35,7 @@ class PostingBaseView(ViewBase):
                                     user=self.request.user,
                                     user_name=self.request.user.username,
                                     user_slug=self.request.user.username_slug,
-                                    date=self.post.edit_date,
+                                    date=self.post.current_date,
                                     ip=self.request.session.get_ip(self.request),
                                     agent=self.request.META.get('HTTP_USER_AGENT'),
                                     reason=form.cleaned_data['edit_reason'],
@@ -43,21 +49,36 @@ class PostingBaseView(ViewBase):
     def after_form(self, form):
         pass
 
+    def email_watchers(self, notified_users):
+        pass
+
     def notify_users(self):
         try:
             post_content = self.md
         except AttributeError:
             post_content = False
 
+        notified_users = []
+
         if post_content:
             try:
-                if self.quote and self.quote.user_id:
+                if (self.quote and self.quote.user_id and
+                        self.quote.user.username_slug in post_content.mentions):
                     del post_content.mentions[self.quote.user.username_slug]
+                    if not self.quote.user in self.post.mentions.all():
+                        notified_users.append(self.quote.user)
+                        self.post.mentions.add(self.quote.user)
+                        alert = self.quote.user.alert(ugettext_lazy("%(username)s has replied to your post in thread %(thread)s").message)
+                        alert.profile('username', self.request.user)
+                        alert.post('thread', self.type_prefix, self.thread, self.post)
+                        alert.save_all()
             except KeyError:
                 pass
             if post_content.mentions:
+                notified_users += [x for x in post_content.mentions.itervalues()]
                 self.post.notify_mentioned(self.request, self.type_prefix, post_content.mentions)
                 self.post.save(force_update=True)
+        self.email_watchers(notified_users)
 
     def watch_thread(self):
         if self.request.user.subscribe_start:
@@ -105,7 +126,7 @@ class PostingBaseView(ViewBase):
                 if 'preview' in request.POST:
                     form.empty_errors()
                     if form['post'].value():
-                        md, post_preview = post_markdown(request, form['post'].value())
+                        md, post_preview = post_markdown(form['post'].value())
                     else:
                         md, post_preview = None, None
                 else:
@@ -138,5 +159,6 @@ class PostingBaseView(ViewBase):
                                                  'parents': self.parents,
                                                  'preview': post_preview,
                                                  'form': FormLayout(form),
+                                                 'emojis': emojis(),
                                                  }),
                                                 context_instance=RequestContext(request));

@@ -11,7 +11,7 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li><a href="{% url 'private_threads' %}">{% trans %}Private Threads{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-{% if thread %}<li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>{% endif %}
+{% if thread %}<li><a href="{% url 'private_thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>{% endif %}
 <li class="active">{{ get_title() }}
 {%- endblock %}
 
@@ -49,7 +49,9 @@
           {% if preview %}
           <div class="form-preview">
             <div class="markdown js-extra">
-              {{ preview|markdown_final|safe }}
+              <article>
+                {{ preview|markdown_final|safe }}
+              </article>
             </div>
           </div>
           {% endif %}
@@ -64,7 +66,7 @@
             {% endif %}
             {% if 'thread_name' in form.fields or (action == 'new_thread' and 'invite_users' in form.fields) %}
             <hr>
-            <h4>Message Body</h4>
+            <h4>{% trans %}Message Body{% endtrans %}</h4>
             {% endif %}
             {{ editor.editor(form.fields.post, get_button(), rows=8, extra=get_extra()) }}
             {% if 'edit_reason' in form.fields or (action == 'new_reply' and 'invite_users' in form.fields) %}

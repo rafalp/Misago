@@ -37,11 +37,15 @@ class UnwatchEmailThreadView(UnwatchEmailThreadBaseView, TypeMixin):
     pass
 
 
-class UpvotePostView(UpvotePostBaseView, TypeMixin):
+class FirstReportedView(FirstReportedBaseView, TypeMixin):
     pass
 
 
-class DownvotePostView(DownvotePostBaseView, TypeMixin):
+class ReportPostView(ReportPostBaseView, TypeMixin):
+    pass
+
+
+class ShowPostReportView(ShowPostReportBaseView, TypeMixin):
     pass
 
 
@@ -59,7 +63,7 @@ class InviteUserView(JumpView, TypeMixin):
                     self.request.messages.set_flash(Message(_('You cannot add yourself to this thread.')), 'error', 'threads')
                 else:
                     self.request.messages.set_flash(Message(_('%(user)s is already participating in this thread.') % {'user': user.username}), 'info', 'threads')
-            if not acl.private_threads.can_participate():
+            elif not acl.private_threads.can_participate():
                     self.request.messages.set_flash(Message(_('%(user)s cannot participate in private threads.') % {'user': user.username}), 'info', 'threads')
             elif (not self.request.acl.private_threads.can_invite_ignoring() and
                     not user.allow_pd_invite(self.request.user)):
@@ -69,13 +73,11 @@ class InviteUserView(JumpView, TypeMixin):
                 user.sync_pds = True
                 user.save(force_update=True)
                 user.email_user(self.request, 'private_thread_invite', _("You've been invited to private thread \"%(thread)s\" by %(user)s") % {'thread': self.thread.name, 'user': self.request.user.username}, {'author': self.request.user, 'thread': self.thread})
-                self.thread.last_post.set_checkpoint(self.request, 'invited', user)
-                self.thread.last_post.save(force_update=True)
+                self.thread.set_checkpoint(self.request, 'invited', user)
                 self.request.messages.set_flash(Message(_('%(user)s has been added to this thread.') % {'user': user.username}), 'success', 'threads')
-            return self.retreat_redirect()
         except User.DoesNotExist:
             self.request.messages.set_flash(Message(_('User with requested username could not be found.')), 'error', 'threads')
-            return self.retreat_redirect()
+        return self.retreat_redirect()
 
 
 class RemoveUserView(JumpView, TypeMixin):
@@ -99,15 +101,13 @@ class RemoveUserView(JumpView, TypeMixin):
                 return self.threads_list_redirect()
             # Nope, see if we removed ourselves
             if user.pk == self.request.user.pk:
-                self.thread.last_post.set_checkpoint(self.request, 'left')
-                self.thread.last_post.save(force_update=True)
+                self.thread.set_checkpoint(self.request, 'left')
                 self.request.messages.set_flash(Message(_('You have left the "%(thread)s" thread.') % {'thread': self.thread.name}), 'info', 'threads')
                 return self.threads_list_redirect()
             # Nope, somebody else removed user
             user.sync_pds = True
             user.save(force_update=True)
-            self.thread.last_post.set_checkpoint(self.request, 'removed', user)
-            self.thread.last_post.save(force_update=True)
+            self.thread.set_checkpoint(self.request, 'removed', user)
             self.request.messages.set_flash(Message(_('Selected participant was removed from thread.')), 'info', 'threads')
             return self.retreat_redirect()
         except User.DoesNotExist:

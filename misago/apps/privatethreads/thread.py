@@ -17,10 +17,10 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
                 actions.append(('unprotect', _('Remove posts protection')))
             if acl['can_delete_posts']:
                 if self.thread.replies_deleted > 0:
-                    actions.append(('undelete', _('Undelete posts')))
-                actions.append(('soft', _('Soft delete posts')))
+                    actions.append(('undelete', _('Restore posts')))
+                actions.append(('soft', _('Hide posts')))
             if acl['can_delete_posts'] == 2:
-                actions.append(('hard', _('Hard delete posts')))
+                actions.append(('hard', _('Delete posts')))
         except KeyError:
             pass
         return actions
@@ -36,11 +36,11 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
                     actions.append(('close', _('Close this thread')))
             if acl['can_delete_threads']:
                 if self.thread.deleted:
-                    actions.append(('undelete', _('Undelete this thread')))
+                    actions.append(('undelete', _('Restore this thread')))
                 else:
-                    actions.append(('soft', _('Soft delete this thread')))
+                    actions.append(('soft', _('Hide this thread')))
             if acl['can_delete_threads'] == 2:
-                actions.append(('hard', _('Hard delete this thread')))
+                actions.append(('hard', _('Delete this thread')))
         except KeyError:
             pass
         return actions

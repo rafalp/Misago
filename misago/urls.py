@@ -15,9 +15,9 @@ urlpatterns = patterns('misago.apps',
     url(r'^tos/$', 'tos.tos', name="tos"),
     url(r'^forum-map/$', 'forummap.forum_map', name="forum_map"),
     url(r'^popular/$', 'popularthreads.popular_threads', name="popular_threads"),
-    url(r'^popular/(?P<page>[0-9]+)/$', 'popularthreads.popular_threads', name="popular_threads"),
+    url(r'^popular/(?P<page>[1-9]([0-9]+)?)/$', 'popularthreads.popular_threads', name="popular_threads"),
     url(r'^new/$', 'newthreads.new_threads', name="new_threads"),
-    url(r'^new/(?P<page>[0-9]+)/$', 'newthreads.new_threads', name="new_threads"),
+    url(r'^new/(?P<page>[1-9]([0-9]+)?)/$', 'newthreads.new_threads', name="new_threads"),
 )
 
 urlpatterns += patterns('',
@@ -28,7 +28,8 @@ urlpatterns += patterns('',
     (r'^watched-threads/', include('misago.apps.watchedthreads.urls')),
     (r'^reset-password/', include('misago.apps.resetpswd.urls')),
     (r'^private-threads/', include('misago.apps.privatethreads.urls')),
-    #(r'^reports/', include('misago.apps.reports.urls')),
+    (r'^reports/', include('misago.apps.reports.urls')),
+    (r'^search/', include('misago.apps.search.urls')),
     (r'^', include('misago.apps.threads.urls')),
 )
 
@@ -48,3 +49,9 @@ if settings.DEBUG:
 # Set error handlers
 handler403 = 'misago.apps.errors.error403'
 handler404 = 'misago.apps.errors.error404'
+
+# Make sure people are not keeping uploads and app under same domain
+import warnings
+from urlparse import urlparse
+if not settings.DEBUG and not urlparse(settings.MEDIA_URL).netloc:
+    warnings.warn('Sharing same domain name between application and user uploaded media is a security risk. Create a subdomain pointing to your media directory (eg. "uploads.myforum.com") and change your MEDIA_URL.', RuntimeWarning)

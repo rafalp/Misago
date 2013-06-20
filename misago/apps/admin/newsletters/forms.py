@@ -7,7 +7,7 @@ from misago.validators import validate_sluggable
 
 class NewsletterForm(Form):
     name = forms.CharField(max_length=255, validators=[validate_sluggable(
-                                                                          _("Newsletter name must be sluggable."),
+                                                                          _("Newsletter name must contain alphanumeric characters."),
                                                                           _("Newsletter name is too long.")
                                                                           )])
     step_size = forms.IntegerField(initial=300, min_value=1)

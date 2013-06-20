@@ -2,37 +2,29 @@
 // -------------------------
 
 .watched-threads {
-  table {
-    .watched-thread-flags {
+  .thread-last-reply {
+    border-left: none !important;
+    padding-left: 0px !important;
+  }
+
+  .thread-options {
+    float: right;
+    overflow: auto;
+    position: relative;
+    top: 8px;
+
+    form {
+      display: inline-block;
+      float: left;
+      margin: 0px;
+      padding: 0px;
       overflow: auto;
 
-      form {
+      .btn {
         float: right;
-        margin: 0px;
-        padding: 0px;
-
-        .btn {
-          float: right;
-          padding: 3px 5px;
-          padding-bottom: 0px;
-          margin-right: @baseFontSize + 2px;
-        }
-      }
-    }
-    
-    .thread-replies {
-      color: @grayLight;
-      text-align: right;
-    }
-
-    .thread-forum {
-      a:link, a:visited {
-        color: @gray;
-        font-weight: bold;
-      }
-
-      a:active, a:hover {
-        color: @textColor;
+        padding: 3px 5px;
+        padding-bottom: 0px;
+        margin-left: @baseFontSize + 2px;
       }
     }
   }

@@ -21,6 +21,8 @@ class PostsModeration(object):
             self.thread.sync()
             self.thread.save(force_update=True)
             self.request.messages.set_flash(Message(_('Selected posts have been accepted and made visible to other members.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No posts were accepted.')), 'info', 'threads')
 
     def post_action_merge(self, ids):
         users = []
@@ -38,7 +40,8 @@ class PostsModeration(object):
         for post in posts[1:]:
             post.merge_with(new_post)
             post.delete()
-        md, new_post.post_preparsed = post_markdown(self.request, new_post.post)
+        md, new_post.post_preparsed = post_markdown(new_post.post)
+        new_post.current_date = timezone.now()
         new_post.save(force_update=True)
         self.thread.sync()
         self.thread.save(force_update=True)
@@ -65,14 +68,8 @@ class PostsModeration(object):
                 new_thread.last_poster_name = 'n'
                 new_thread.last_poster_slug = 'n'
                 new_thread.save(force_insert=True)
-                prev_merge = -1
-                merge = -1
                 for post in self.posts:
                     if post.pk in ids:
-                        if prev_merge != post.merge:
-                            prev_merge = post.merge
-                            merge += 1
-                        post.merge = merge
                         post.move_to(new_thread)
                         post.save(force_update=True)
                 new_thread.sync()
@@ -110,14 +107,8 @@ class PostsModeration(object):
             form = MovePostsForm(self.request.POST, request=self.request, thread=self.thread)
             if form.is_valid():
                 thread = form.cleaned_data['thread_url']
-                prev_merge = -1
-                merge = -1
                 for post in self.posts:
                     if post.pk in ids:
-                        if prev_merge != post.merge:
-                            prev_merge = post.merge
-                            merge += 1
-                        post.merge = merge + thread.merges
                         post.move_to(thread)
                         post.save(force_update=True)
                 if self.thread.post_set.count() == 0:
@@ -161,6 +152,8 @@ class PostsModeration(object):
             self.forum.sync()
             self.forum.save(force_update=True)
             self.request.messages.set_flash(Message(_('Selected posts have been restored.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No posts were restored.')), 'info', 'threads')
 
     def post_action_protect(self, ids):
         protected = 0
@@ -170,6 +163,8 @@ class PostsModeration(object):
         if protected:
             self.thread.post_set.filter(id__in=ids).update(protected=True)
             self.request.messages.set_flash(Message(_('Selected posts have been protected from edition.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No posts were protected.')), 'info', 'threads')
 
     def post_action_unprotect(self, ids):
         unprotected = 0
@@ -179,6 +174,8 @@ class PostsModeration(object):
         if unprotected:
             self.thread.post_set.filter(id__in=ids).update(protected=False)
             self.request.messages.set_flash(Message(_('Protection from editions has been removed from selected posts.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No posts were unprotected.')), 'info', 'threads')
 
     def post_action_soft(self, ids):
         deleted = []
@@ -188,12 +185,14 @@ class PostsModeration(object):
                     raise forms.ValidationError(_("You cannot delete first post of thread using this action. If you want to delete thread, use thread moderation instead."))
                 deleted.append(post.pk)
         if deleted:
-            self.thread.post_set.filter(id__in=deleted).update(deleted=True)
+            self.thread.post_set.filter(id__in=deleted).update(deleted=True, current_date=timezone.now())
             self.thread.sync()
             self.thread.save(force_update=True)
             self.forum.sync()
             self.forum.save(force_update=True)
-            self.request.messages.set_flash(Message(_('Selected posts have been deleted.')), 'success', 'threads')
+            self.request.messages.set_flash(Message(_('Selected posts have been hidden.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No posts were hidden.')), 'info', 'threads')
 
     def post_action_hard(self, ids):
         deleted = []
@@ -211,3 +210,5 @@ class PostsModeration(object):
             self.forum.sync()
             self.forum.save(force_update=True)
             self.request.messages.set_flash(Message(_('Selected posts have been deleted.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No posts were deleted.')), 'info', 'threads')

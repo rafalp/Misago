@@ -2,7 +2,7 @@
 {% import "_forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
-{% block title %}{{ macros.page_title(_('Member Details'), profile.username) }}{% endblock %}
+{% block title %}{{ macros.page_title(lang_member_details(), profile.username) }}{% endblock %}
 
 {% block tab %}
 <div class="user-details">
@@ -239,3 +239,6 @@
 </div>
 {% endif %}
 {% endblock %}
+
+{# Language strings macros #}
+{% macro lang_member_details() -%}{% trans %}Member Details{% endtrans %}{%- endmacro %}

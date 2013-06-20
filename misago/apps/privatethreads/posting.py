@@ -58,6 +58,11 @@ class EditThreadView(EditThreadBaseView, TypeMixin):
 class NewReplyView(NewReplyBaseView, TypeMixin):
     form_type = NewReplyForm
 
+    def set_context(self):
+        super(NewReplyView, self).set_context()
+        if not (self.request.acl.private_threads.is_mod() or len(self.thread.participants) < 2):
+            raise ACLError403(_("This thread needs to have more than one participant to allow new replies."))
+
     def after_form(self, form):
         try:
             self.invite_users(form.invite_users)

@@ -58,7 +58,7 @@ class List(ListWidget):
 
     def action_delete(self, items, checked):
         Ban.objects.filter(id__in=checked).delete()
-        self.request.monitor['bans_version'] = int(self.request.monitor['bans_version']) + 1
+        self.request.monitor.increase('bans_version')
         return Message(_('Selected bans have been lifted successfully.'), 'success'), reverse('admin_bans')
 
 
@@ -87,7 +87,7 @@ class New(FormWidget):
                       expires=form.cleaned_data['expires']
                      )
         new_ban.save(force_insert=True)
-        self.request.monitor['bans_version'] = int(self.request.monitor['bans_version']) + 1
+        self.request.monitor.increase('bans_version')
         return new_ban, Message(_('New Ban has been set.'), 'success')
 
 
@@ -126,7 +126,7 @@ class Edit(FormWidget):
         target.reason_admin = form.cleaned_data['reason_admin']
         target.expires = form.cleaned_data['expires']
         target.save(force_update=True)
-        self.request.monitor['bans_version'] = int(self.request.monitor['bans_version']) + 1
+        self.request.monitor.increase('bans_version')
         return target, Message(_('Changes in ban have been saved.'), 'success')
 
 
@@ -141,7 +141,7 @@ class Delete(ButtonWidget):
 
     def action(self, target):
         target.delete()
-        self.request.monitor['bans_version'] = int(self.request.monitor['bans_version']) + 1
+        self.request.monitor.increase('bans_version')
         if target.test == 0:
             return Message(_('E-mail and username Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, 'success'), False
         if target.test == 1:

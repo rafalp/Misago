@@ -18,6 +18,7 @@ class Rank(models.Model):
     on_index = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
     criteria = models.CharField(max_length=255, null=True, blank=True)
+    roles = models.ManyToManyField('Role')
 
     class Meta:
         app_label = 'misago'
@@ -52,10 +53,10 @@ class Rank(models.Model):
                 if (settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2'
                     or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'):
                     if special_ranks:
-                        cursor.execute('''UPDATE users_user
+                        cursor.execute('''UPDATE misago_user
                             FROM (
                                 SELECT id
-                                FROM users_user
+                                FROM misago_user
                                 WHERE rank_id NOT IN (%s)
                                 ORDER BY score DESC LIMIT %s
                                 ) AS updateable
@@ -63,10 +64,10 @@ class Rank(models.Model):
                             WHERE id = updateable.id
                             RETURNING *''' % (self.id, special_ranks, criteria))
                     else:
-                        cursor.execute('''UPDATE users_user
+                        cursor.execute('''UPDATE misago_user
                             FROM (
                                 SELECT id
-                                FROM users_user
+                                FROM misago_user
                                 ORDER BY score DESC LIMIT %s
                                 ) AS updateable
                             SET rank_id=%s
@@ -78,13 +79,13 @@ class Rank(models.Model):
                     or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3'
                     or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.oracle'):
                     if special_ranks:
-                        cursor.execute('''UPDATE users_user
+                        cursor.execute('''UPDATE misago_user
                             SET rank_id=%s
                             WHERE rank_id NOT IN (%s)
                             ORDER BY score DESC
                             LIMIT %s''' % (self.id, special_ranks, criteria))
                     else:
-                        cursor.execute('''UPDATE users_user
+                        cursor.execute('''UPDATE misago_user
                         SET rank_id=%s
                         ORDER BY score DESC
                         LIMIT %s''', [self.id, criteria])

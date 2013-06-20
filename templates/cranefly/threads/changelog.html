@@ -4,9 +4,7 @@
 {% block title %}{{ macros.page_title(title=(_("Post #%(post)s Changelog") % {'post': post.pk}),parent=thread.name) }}{% endblock %}
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
-{% for parent in parents %}
-<li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-{% endfor %}
+{{ macros.parents_list(parents) }}
 <li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li class="active">{% trans post=post.pk %}Post #{{ post }} Changelog{% endtrans %}
 {%- endblock %}
@@ -60,7 +58,7 @@
               {% trans chars=edit.change|abs %}Removed one character from post.{% pluralize %}Removed {{ chars }} characters from post.{% endtrans %}
               {%- else -%}
               {% trans %}No change in message's length.{% endtrans %}
-              {%- endif %}{% endif %}{% if edit.thread_name_old %} {% trans old=edit.thread_name_old, new=edit.thread_name_new %}Changed thread name from "{{ old }}" to "{{ new }}".{% endtrans %}{% endif %}{% if edit.thread_name_old %} {% trans old=edit.thread_name_old, new=edit.thread_name_new %}Renamed thread from "{{ old }}" to "{{ new }}".{% endtrans %}{% endif %}</a>
+              {%- endif %}{% endif %}{% if edit.thread_name_old %} {% trans old=edit.thread_name_old, new=edit.thread_name_new %}Changed thread name from "{{ old }}" to "{{ new }}".{% endtrans %}{% endif %}</a>
               <span class="change-details">
                 {% trans user=edit_user(edit), date=edit.date|reldate|low %}By {{ user }} {{ date }}{% endtrans %}
               </span>

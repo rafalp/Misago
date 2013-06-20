@@ -29,10 +29,11 @@
 {% macro js() %}
   <script type="text/javascript">
     $(function () {
-        ed_lang_enter_link_url = "{% trans %}Enter link address{% endtrans %}";
-        ed_lang_enter_link_label = "{% trans %}Enter link label (optional){% endtrans %}";
-        ed_lang_enter_image_url = "{% trans %}Enter image address{% endtrans %}";
-        ed_lang_enter_image_label = "{% trans %}Enter image label{% endtrans %}";
+      ed_lang_enter_link_url = "{% trans %}Enter link address{% endtrans %}";
+      ed_lang_enter_link_label = "{% trans %}Enter link label (optional){% endtrans %}";
+      ed_lang_enter_image_url = "{% trans %}Enter image address{% endtrans %}";
+      ed_lang_enter_image_label = "{% trans %}Enter image label{% endtrans %}";
+      ed_emojis = ['{{ ("', '".join(emojis))|safe }}'];
     });
   </script>
   <script src="{{ STATIC_URL }}cranefly/js/editor.js"></script>

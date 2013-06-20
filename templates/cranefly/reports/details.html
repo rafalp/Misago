@@ -1,0 +1,35 @@
+{% extends "cranefly/layout.html" %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=(_("Post #%(post)s Info") % {'post': post.pk}),parent=thread.name) }}{% endblock %}
+
+{% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{% url 'reports' %}">{% trans %}Reported Posts{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{% url 'report' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li class="active">{% trans post=post.pk %}Post #{{ post }} Info{% endtrans %}
+{%- endblock %}
+
+{% block container %}
+<div class="page-header header-primary">
+  <div class="container">
+    {{ messages_list(messages) }}
+    <ul class="breadcrumb">
+      {{ self.breadcrumb() }}</li>
+    </ul>
+    <h1>{% trans post=post.pk %}Post #{{ post }} Info{% endtrans %} <small>{{ thread.name }}</small></h1>
+    <ul class="unstyled header-stats">
+      <li><i class="icon-time"></i> <a href="{% url 'report_find' thread=thread.pk, slug=thread.slug, post=post.pk %}">{{ post.date|reltimesince }}</a></li>
+      <li><i class="icon-user"></i> {% if post.user %}<a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
+      <li><i class="icon-pencil"></i> {% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}</li>
+      {% if post.protected %}<li><i class="icon-lock"></i> {% trans %}Protected{% endtrans %}</li>{% endif %}
+    </ul>
+  </div>
+</div>
+
+<div class="container container-primary">
+  <h2>{% trans %}IP Address{% endtrans %}</h2>
+  <p class="lead">{{ post.ip }}</p>
+  <h2>{% trans %}UserAgent{% endtrans %}</h2>
+  <p class="lead">{{ post.agent }}</p>
+</div>
+{% endblock %}

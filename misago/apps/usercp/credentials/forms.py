@@ -17,7 +17,7 @@ class CredentialsChangeForm(Form):
                [
                 ('new_email', {'label': _('New E-mail'), 'help_text': _("Enter new e-mail address or leave this field empty if you want only to change your password.")}),
                 ('new_password', {'label': _('New Password'), 'help_text': _("Enter new password or leave this empty if you only want to change your e-mail address.")}),
-                ('current_password', {'label': _('Current Password'), 'help_text': _("Confirm changes by entering new password.")})
+                ('current_password', {'label': _('Current Password'), 'help_text': _("Confirm changes by entering your current password.")})
                 ]
                ),
               ]
@@ -37,7 +37,7 @@ class CredentialsChangeForm(Form):
 
     def clean_new_password(self):
         if self.cleaned_data['new_password']:
-            validate_password(self.cleaned_data['new_password'])
+            validate_password(self.cleaned_data['new_password'],  self.request.settings)
         return self.cleaned_data['new_password']
 
     def clean_current_password(self):

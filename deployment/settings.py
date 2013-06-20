@@ -41,10 +41,22 @@ DATABASES = {
 # Misago is EXTREMELY data hungry
 # If you don't set any cache, it will BRUTALISE your database and memory
 # In production ALWAYS use cache
+# For reference read following document:
+# https://docs.djangoproject.com/en/dev/topics/cache/
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
+}
+
+# Search engine
+# Misago relies on 3rd party search engines to index and search your forum content
+# Read following for information on configurating search:
+# http://django-haystack.readthedocs.org/en/latest/tutorial.html#modify-your-settings-py
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.',
+    },
 }
 
 # Cookies configuration
@@ -121,7 +133,6 @@ EMAIL_SUBJECT_PREFIX = '[Misago]'
 # If DEBUG_MODE is on, all emails will be sent to this address instead of real recipient.
 CATCH_ALL_EMAIL_ADDRESS = ''
 
-
 # Directories with templates
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -135,6 +146,15 @@ INSTALLED_THEMES = (
     'cranefly', # Default style always first
     'admin', # Admin theme always last
 )
+
+# Enable mobile subdomain for mobile stuff
+MOBILE_SUBDOMAIN = ''
+
+# Templates used by mobile version
+MOBILE_TEMPLATES = ''
+
+# Name of root urls configuration
+ROOT_URLCONF = 'deployment.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'deployment.wsgi.application'
@@ -150,3 +170,5 @@ if 'test' in sys.argv:
     DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'db4testing'}
     CACHES['default'] = {'BACKEND': 'django.core.cache.backends.dummy.DummyCache'}
     SKIP_SOUTH_TESTS = True
+    MEDIA_URL = "http://media.domain.com/"
+    HAYSTACK_CONNECTIONS = {'default': {'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',},}

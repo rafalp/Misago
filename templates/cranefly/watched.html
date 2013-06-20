@@ -24,9 +24,69 @@
   {% endif %}
 
   {% if threads %}
+  {{ pager() }}
   <div class="forum-threads-list watched-threads">
-    {{ pager() }}
-    <table class="table">
+    <div class="header">
+      <div class="row-fluid">
+        <div class="span7">{% trans %}Thread{% endtrans %}</div>
+        <div class="span5 thread-activity">
+          <div class="thread-replies">{% trans %}Activity{% endtrans %}</div>
+        </div>
+      </div>
+    </div>
+    {% for thread in threads %}
+    <div id="watch-{{ loop.index }}" class="thread-row{% if not thread.is_read %} thread-new{% endif %}{% if loop.last %} thread-last{% endif %}">
+      <div class="row-fluid">
+        <div class="span7">
+          {% if thread.is_read %}
+          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}"><i class="icon-asterisk"></i></a>
+          {% else %}
+          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}"><i class="icon-fire"></i></a>
+          {% endif %}
+
+          {{ macros.thread_flags(thread) }}
+
+          <a href="{{ thread_url(thread) }}" class="thread-name">{{ thread.name }}</a>
+
+          <div class="thread-details">
+            {% trans user=thread_starter(thread), forum=thread_forum(thread), start=thread.start|reltimesince|low %}by {{ user }} in {{ forum }} {{ start }}{% endtrans %}
+          </div>
+
+        </div>
+        <div class="span5 thread-activity">
+          {% if settings.avatars_on_threads_list %}
+          <div class="thread-last-avatar">
+            {% if thread.last_poster_id %}
+            <a href="{% url 'user' user=thread.last_poster.pk, username=thread.last_poster.username_slug %}"><img src="{{ thread.last_poster.get_avatar(40) }}" alt=""></a>
+            {% else %}
+            <img src="{{ macros.avatar_guest(40) }}" alt="" class="user-avatar">
+            {% endif %}
+          </div>
+          {% endif %}
+
+          <div class="thread-replies">
+            <strong class="lead">{{ thread_reply(thread) }}, {{ thread.last|reldate|low }}</strong><br>
+            {{ replies(thread.replies) }}, <span{% if (thread.upvotes-thread.downvotes) > 0 %} class="text-success"{% elif (thread.upvotes-thread.downvotes) < 0 %} class="text-error"{% endif %}><strong>{% if (thread.upvotes-thread.downvotes) > 0 %}+{% elif (thread.upvotes-thread.downvotes) < 0 %}-{% endif %}</strong>{% trans rating=(thread.upvotes-thread.downvotes)|abs|intcomma %}{{ rating }} thread rating{% endtrans %}</span>
+          </div>
+
+          <div class="thread-options">
+            <form action="{% if thread.send_email %}{{ thread_url(thread, 'unwatch_email') }}{% else %}{{ thread_url(thread, 'watch_email') }}{% endif %}" method="post">
+              <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+              <input type="hidden" name="retreat" value="{{ request_path }}#watch-{{ loop.index }}">
+              <button type="submit" class="btn btn-{% if thread.send_email %}success{% else %}inverse{% endif %} tooltip-top" title="{% if thread.send_email %}{% trans %}Don't notify with e-mail{% endtrans %}{% else %}{% trans %}Notify with e-mail{% endtrans %}{% endif %}"><i class="icon-envelope"></i></button>
+            </form>
+
+            <form action="{{ thread_url(thread, 'unwatch') }}" method="post">
+              <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+              <input type="hidden" name="retreat" value="{{ delete_retreat(loop) }}">
+              <button type="submit" class="btn btn-danger tooltip-top" title="{% trans %}Unwatch{% endtrans %}"><i class="icon-remove"></i></button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    {#<table class="table">
       <thead>
         <tr>
           <th>{% trans %}Thread{% endtrans %}</th>
@@ -68,9 +128,9 @@
         </tr>
         {% endfor %}
       </tbody>
-    </table>
-    {{ pager() }}
+    </table>#}
   </div>
+  {{ pager() }}
   {% else %}
   <p class="lead">{% if new -%}
     {% trans %}There are no unread threads that you are watching.{% endtrans %}
@@ -104,15 +164,9 @@ thread
 {% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}" class="user-link">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}
 {%- endmacro %}
 
-{% macro thread_forum(thread) -%}{% filter trim %}
-{% if thread.forum_id == private_threads.pk %}
-<a href="{% url 'private_threads' %}" class="forum-link">{% trans %}Private Threads{% endtrans %}</a>
-{% elif thread.forum_id == reports.pk %}
-TODO!
-{% else %}
-<a href="{% url 'forum' forum=thread.forum_id, slug=thread.forum.slug %}" class="forum-link">{{ thread.forum.name }}</a>
-{% endif%}
-{% endfilter %}{%- endmacro %}
+{% macro thread_forum(thread) -%}
+<a href="{{ thread.forum.url }}" class="forum-link">{{ thread.forum }}</a>
+{%- endmacro %}
 
 {% macro thread_reply(thread) -%}
 {% if thread.last_poster_id %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}" class="user-link">{{ thread.last_poster_name }}</a>{% else %}{{ thread.last_poster_name }}{% endif %}

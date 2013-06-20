@@ -17,7 +17,7 @@ settings_fixture = (
                 'description':  _('Minimal allowed thread name length.'),
             }),
             ('thread_name_max', {
-                'value':        50,
+                'value':        60,
                 'type':         "integer",
                 'input':        "text",
                 'extra':        {'min': 5, 'max': 100},
@@ -78,7 +78,7 @@ settings_fixture = (
                 'input':        "text",
                 'extra':        {'min': 0, 'max': 99},
                 'name':         _('Score inflation'),
-                'description':  _("Thread popularity system requires inflation to be defined in order to be effective. updatethreadranking task will lower thread scores by percent defined here on every launch. For example, yf you enter 5, thread scores will be lowered by 5% on every update. Enter zero to disable inflation."),
+                'description':  _("Thread popularity system requires inflation to be defined in order to be effective. updatethreadranking task will lower thread scores by percent defined here on every launch. For example, if you enter 5, thread scores will be lowered by 5%% on every update. Enter zero to disable inflation."),
             }),
             ('post_length_min', {
                 'value':        5,

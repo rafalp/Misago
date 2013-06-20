@@ -268,6 +268,38 @@
             form {
               margin: 0px;
               padding: 0px;
+
+              .btn {
+                float: right;
+                margin: 0px;
+                margin-left: @baseFontSize;
+                .opacity(100);
+                padding: 0px;
+
+                color: @grayLight;
+                font-weight: normal;
+
+                &:hover, &:active, &:focus {
+                  color: @red;
+                  text-decoration: underline;
+                }
+
+                &.btn-report {
+                  &:disabled {
+                    color: @green;
+                  }
+                }
+
+                &.btn-hide {
+                  &:hover, &:active, &:focus {
+                    color: @orange;
+                  }
+                }
+              }
+
+              &:first-child .btn {
+                margin-left: 0px;
+              }
             }
 
             a {
@@ -289,22 +321,6 @@
                 &:hover, a:active {
                   color: @blue;
                 }
-              }
-            }
-
-            .btn {
-              float: right;
-              margin: 0px;
-              margin-left: @baseFontSize;
-              .opacity(100);
-              padding: 0px;
-
-              color: @grayLight;
-              font-weight: normal;
-
-              &:hover, &:active, &:focus {
-                color: @red;
-                text-decoration: underline;
               }
             }
           }
@@ -356,6 +372,14 @@
 
       margin-bottom: @baseLineHeight;
 
+      &.checkpoint-deleted {
+        .opacity(30);
+
+        &:hover {
+          .opacity(60);
+        }
+      }
+
       hr {
         background-color: @grayLight;
         background-image: -webkit-gradient(linear, 0 0, 100% 100%,
@@ -398,6 +422,37 @@
 
         i {
           .opacity(43);
+        }
+
+        form {
+          display: inline-block;
+          margin: 0px;
+          margin-top: -3px;
+          margin-left: @baseFontSize / 2;
+          padding: 0px;
+
+          .btn {
+            margin-top: -2px;
+            padding: 0px;
+
+            font-weight: normal;
+
+            &:active, &:hover {
+              text-decoration: underline;
+
+              &.btn-show, &.btn-hide {
+                color: @orange;
+              }
+
+              &.btn-delete {
+                color: @red;
+              }
+            }
+          }
+        }
+
+        form:first-of-type {
+          margin-left: @baseFontSize;
         }
       }
     }

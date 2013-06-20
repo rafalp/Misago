@@ -1,48 +1,15 @@
 import re
 import markdown
-from HTMLParser import HTMLParser
 from django.conf import settings
 from django.utils.importlib import import_module
 from django.utils.translation import ugettext_lazy as _
 from misago.utils.strings import random_string
-
-class ClearHTMLParser(HTMLParser):
-    def __init__(self):
-        HTMLParser.__init__(self)
-        self.clean_text = ''
-        self.lookback = []
-        
-    def handle_entityref(self, name):
-        if name == 'gt':
-            self.clean_text += '>'
-        if name == 'lt':
-            self.clean_text += '<'
-
-    def handle_starttag(self, tag, attrs):
-        self.lookback.append(tag)
-
-    def handle_endtag(self, tag):
-        try:
-            if self.lookback[-1] == tag:
-                self.lookback.pop()
-        except IndexError:
-            pass
-        
-    def handle_data(self, data):
-        # String does not repeat itself
-        if self.clean_text[-len(data):] != data:
-            # String is not "QUOTE"
-            try:
-                if self.lookback[-1] in ('strong', 'em'):
-                    self.clean_text += data
-                elif not (data == 'Quote' and self.lookback[-1] == 'h3' and self.lookback[-2] == 'blockquote'):
-                    self.clean_text += data
-            except IndexError:
-                self.clean_text += data
-
+from misago.markdown.extensions.cleanlinks import CleanLinksExtension
+from misago.markdown.extensions.emoji import EmojiExtension
+from misago.markdown.parsers import RemoveHTMLParser
 
 def clear_markdown(text):
-    parser = ClearHTMLParser()
+    parser = RemoveHTMLParser()
     parser.feed(text)
     return parser.clean_text
 
@@ -62,12 +29,17 @@ def signature_markdown(acl, text):
                            extensions=['nl2br'])
 
     remove_unsupported(md)
+    cleanlinks = CleanLinksExtension()
+    cleanlinks.extendMarkdown(md)
 
     if not acl.usercp.allow_signature_links():
         del md.inlinePatterns['link']
         del md.inlinePatterns['autolink']
     if not acl.usercp.allow_signature_images():
         del md.inlinePatterns['image_link']
+    else:
+        emojis = EmojiExtension()
+        emojis.extendMarkdown(md)
 
     del md.parser.blockprocessors['hashheader']
     del md.parser.blockprocessors['setextheader']
@@ -80,7 +52,7 @@ def signature_markdown(acl, text):
     return md.convert(text)
 
 
-def post_markdown(request, text):
+def post_markdown(text):
     md = markdown.Markdown(
                            safe_mode='escape',
                            output_format=settings.OUTPUT_FORMAT,
@@ -96,13 +68,14 @@ def post_markdown(request, text):
         ext = attr()
         ext.extendMarkdown(md)
     text = md.convert(text)
-    return tidy_markdown(md, text)
+    md, text = tidy_markdown(md, text)
+    return md, text
 
 
 def tidy_markdown(md, text):
-    text = text.replace('<p><h3><quotetitle>', '<h3><quotetitle>')
-    text = text.replace('</quotetitle></h3></p>', '</quotetitle></h3>')
-    text = text.replace('</quotetitle></h3><br>\r\n', '</quotetitle></h3>\r\n<p>')
+    text = text.replace('<p><h3><quotetitle>', '<article><header><quotetitle>')
+    text = text.replace('</quotetitle></h3></p>', '</quotetitle></header></article>')
+    text = text.replace('</quotetitle></h3><br>\r\n', '</quotetitle></header></article>\r\n<p>')
     text = text.replace('\r\n<p></p>', '')
     return md, text
 
@@ -112,4 +85,12 @@ def finalize_markdown(text):
         return _("Posted by %(user)s") % {'user': match.group('content')}
     text = re.sub(r'<quotetitle>(?P<content>.+)</quotetitle>', trans_quotetitle, text)
     text = re.sub(r'<quotesingletitle>', _("Quote"), text)
+    text = re.sub(r'<imgalt>', _("Posted image"), text)
     return text
+
+
+def emojis():
+    if 'misago.markdown.extensions.emoji.EmojiExtension' in settings.MARKDOWN_EXTENSIONS:
+        from misago.markdown.extensions.emoji import EMOJIS
+        return EMOJIS
+    return []

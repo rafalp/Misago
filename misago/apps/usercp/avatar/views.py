@@ -1,5 +1,6 @@
 from path import path
 from PIL import Image
+from zipfile import is_zipfile
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
@@ -122,6 +123,9 @@ def upload(request):
                     destination.write(chunk)
             request.user.save()
             try:
+                if is_zipfile(image_path):
+                    # Composite file upload
+                    raise ValidationError()                 
                 image = Image.open(image_path)
                 if not image.format in ['GIF', 'PNG', 'JPEG']:
                     raise ValidationError()
