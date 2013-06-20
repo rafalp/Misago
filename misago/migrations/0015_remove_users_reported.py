@@ -1,20 +1,16 @@
 # -*- coding: utf-8 -*-
 import datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
-
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
-        # Deleting field 'Post.edit_date'
-        db.delete_column(u'misago_post', 'edit_date')
-
+        orm.MonitorItem.objects.filter(pk='users_reported').delete()
 
     def backwards(self, orm):
         raise RuntimeError("Cannot reverse this migration.")
-
 
     models = {
         'misago.alert': {
@@ -389,3 +385,4 @@ class Migration(SchemaMigration):
     }
 
     complete_apps = ['misago']
+    symmetrical = True
