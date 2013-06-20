@@ -44,7 +44,6 @@ class NewThreadBaseView(PostingBaseView):
                                         post=form.cleaned_data['post'],
                                         post_preparsed=post_preparsed,
                                         date=now,
-                                        current_date=now,
                                         moderated=moderation,
                                         )
 

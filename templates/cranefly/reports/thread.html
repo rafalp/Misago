@@ -72,6 +72,50 @@
         {{ macros.draw_message(post.message) }}
       </div>
       {% endif %}
+      {% if post.deleted and not acl.threads.can_see_deleted_posts(forum) %}
+      <div class="post-body post-muted">
+        {% if post.user_id %}
+        <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}"><img src="{{ post.user.get_avatar(50) }}" alt="" class="user-avatar"></a>
+        {% else %}
+        <img src="{{ macros.avatar_guest(60) }}" alt="" class="user-avatar">
+        {% endif %}
+        <div class="post-content">
+          <div class="post-header">
+            <div class="post-header-compact">
+              {% if post.user_id %}
+              <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="post-author">{{ post.user.username }}</a>{% if post.user.get_title() %} {{ user_label(post.user) }}{% endif %}
+              {% else %}
+              <span class="post-author">{{ post.user_name }}</span> <span class="label post-author-label post-label-guest">{% trans %}Unregistered{% endtrans %}</span>
+              {% endif %}
+              <span class="separator">&ndash;</span>
+              <a href="{% url 'report_find' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-date">{{ post.date|reltimesince }}</a>
+              {% if post.edits %}
+              <span class="separator">&ndash;</span>
+              {% if acl.threads.can_see_changelog(user, forum, post) %}
+              <a href="{% url 'report_changelog' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-changelog tooltip-bottom" title="{% trans %}Show changelog{% endtrans %}">{% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}</a>
+              {% else %}
+              <span class="post-changelog">{% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}</span>
+              {% endif %}
+              {% endif %}
+            </div>
+
+            <a href="{% url 'report_find' thread=thread.pk, slug=thread.slug, post=post.pk %}" class="post-perma tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
+
+            {% if not post.is_read %}
+            <div class="post-extra">
+              <span class="label label-warning">
+                {% trans %}New{% endtrans %}
+              </span>
+            </div>
+            {% endif %}
+
+          </div>
+          <div class="post-message">
+            {% trans user=edit_user(post), date=post.delete_date|reltimesince|low %}{{ user }} has deleted this reply {{ date }}{% endtrans %}
+          </div>
+        </dv>
+      </div>
+      {% else %}
       <div class="post-body">
         {% if post.user_id %}
         <a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}"><img src="{{ post.user.get_avatar(100) }}" alt="" class="user-avatar"></a>
@@ -226,6 +270,7 @@
           {% endfilter %}</div>
         </div>
       </div>
+      {% endif %}
     </div>
 
     {% if post.checkpoints_visible %}

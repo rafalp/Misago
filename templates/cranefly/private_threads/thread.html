@@ -117,7 +117,7 @@
 
               </div>
               <div class="post-message">
-                {% trans user=edit_user(post), date=post.current_date|reltimesince|low %}{{ user }} has deleted this reply {{ date }}{% endtrans %}
+                {% trans user=edit_user(post), date=post.delete_date|reltimesince|low %}{{ user }} has deleted this reply {{ date }}{% endtrans %}
               </div>
             </dv>
           </div>

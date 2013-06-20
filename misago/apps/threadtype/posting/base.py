@@ -22,7 +22,6 @@ class PostingBaseView(ViewBase):
             self.parents = Forum.objects.forum_parents(self.forum.pk)
 
     def record_edit(self, form, old_name, old_post):
-        self.post.current_date = timezone.now()
         self.post.edits += 1
         self.post.edit_user = self.request.user
         self.post.edit_user_name = self.request.user.username
