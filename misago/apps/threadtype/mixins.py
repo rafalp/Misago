@@ -10,7 +10,7 @@ class FloodProtectionMixin(object):
             diff = timezone.now() - self.request.user.last_post
             diff = diff.seconds + (diff.days * 86400)
             flood_limit = 35
-            wait_for = flood - diff
+            wait_for = flood_limit - diff
             if wait_for > 0:
                 if wait_for < 5:
                     raise forms.ValidationError(_("You can't post one message so quickly after another. Please wait a moment and try again."))
