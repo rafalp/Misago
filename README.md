@@ -92,7 +92,7 @@ Updating
 
 You can use the `updatemisago` command to update your forums database to latest version _unless_ you are updating from `0.1` which is incompatibile with `0.2` and later releases.
 
-If you want to move data from `0.1` to `0.2`, install `0.2` to new database, then add a connection to the `0.1` database in your settings.py and name it "deprecated". When you are ready, use the `migratefrom01` management command to move data from the `0.1` database over to `0.2`.
+Support for migrations from `0.1` has been dropped with `0.3` release.
 
 
 Contributing
