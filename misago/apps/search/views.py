@@ -54,8 +54,13 @@ def do_search(request, queryset, search_route=None):
                 return users_list(request)
             sqs = RelatedSearchQuerySet().auto_query(form.cleaned_data['search_query']).order_by('-id').load_all()
             sqs = sqs.load_all_queryset(Post, queryset.filter(deleted=False).filter(moderated=False).select_related('thread', 'forum'))[:120]
-            request.user.last_search = timezone.now()
-            request.user.save(force_update=True)
+
+            if request.user.is_authenticated():
+                request.user.last_search = timezone.now()
+                request.user.save(force_update=True)
+            if request.user.is_anonymous():
+                request.session['last_search'] = timezone.now()
+            
             if not sqs:
                 raise SearchException(_("Search returned no results. Change search query and try again."))
             request.session['%s_result' % search_route] = {

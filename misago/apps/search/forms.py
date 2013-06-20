@@ -31,6 +31,13 @@ class QuickSearchForm(Form):
 
     def clean(self):
         cleaned_data = super(QuickSearchForm, self).clean()
+        if self.request.user.is_authenticated():
+            self.check_flood_user()
+        if self.request.user.is_anonymous():
+            self.check_flood_guest()
+        return cleaned_data
+
+    def check_flood_user(self):
         if self.request.user.last_search:
             diff = timezone.now() - self.request.user.last_search
             diff = diff.seconds + (diff.days * 86400)
@@ -45,4 +52,24 @@ class QuickSearchForm(Form):
                         wait_for) % {
                             'seconds': wait_for,
                         })
-        return cleaned_data
+
+    def check_flood_guest(self):
+        if not self.request.session.matched:
+            raise forms.ValidationError(_("Search requires enabled cookies in order to work."))
+        
+        if self.request.session.get('last_search'):
+            diff = timezone.now() - self.request.session.get('last_search')
+            diff = diff.seconds + (diff.days * 86400)
+            wait_for = self.request.acl.search.search_cooldown() - diff
+            if wait_for > 0:
+                if wait_for < 5:
+                    raise forms.ValidationError(_("You can't perform one search so quickly after another. Please wait a moment and try again."))
+                else:
+                    raise forms.ValidationError(ungettext(
+                            "You can't perform one search so quickly after another. Please wait %(seconds)d second and try again.",
+                            "You can't perform one search so quickly after another. Please wait %(seconds)d seconds and try again.",
+                        wait_for) % {
+                            'seconds': wait_for,
+                        })
+
+
