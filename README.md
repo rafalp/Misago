@@ -23,6 +23,7 @@ Dependencies
 * [Django Debug Toolbar](https://github.com/django-debug-toolbar/django-debug-toolbar)
 * [Django-MPTT](https://github.com/django-mptt/django-mptt)
 * [Coffin](https://github.com/coffin/coffin)
+* [Django Haystack 2](http://haystacksearch.org/)
 * [Jinja2](https://github.com/mitsuhiko/jinja2)
 * [Markdown](http://pypi.python.org/pypi/Markdown)
 * [path](http://pypi.python.org/pypi/path.py)
@@ -32,6 +33,7 @@ Dependencies
 * [South](http://south.aeracode.org)
 * [Unidecode](http://pypi.python.org/pypi/Unidecode)
 
+You will also need search engine to provide search functionality. If you don't have one, [Whoosh 2](https://pypi.python.org/pypi/Whoosh/) is pure Python search engine that's easy to setup.
 
 Installation
 ------------
