@@ -60,7 +60,7 @@ def do_search(request, queryset, search_route=None):
                 request.user.save(force_update=True)
             if request.user.is_anonymous():
                 request.session['last_search'] = timezone.now()
-            
+
             if not sqs:
                 raise SearchException(_("Search returned no results. Change search query and try again."))
             request.session['%s_result' % search_route] = {
@@ -118,6 +118,7 @@ def results(request, page=0, search_route=None):
                                              'search_query': result['search_query'],
                                              'results': queryset.select_related('thread', 'forum', 'user')[pagination['start']:pagination['stop']],
                                              'disable_search': True,
+                                             'items_total': items_total,
                                              'pagination': pagination,
                                             },
                                             context_instance=RequestContext(request))
