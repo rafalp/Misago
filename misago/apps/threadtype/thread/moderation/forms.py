@@ -2,9 +2,10 @@ from django import forms
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 from misago.acl.exceptions import ACLError403, ACLError404
-from misago.apps.threadtype.mixins import ValidateThreadNameMixin
-from misago.forms import Form
+from misago.forms import Form, ForumChoiceField
+from misago.models import Thread
 from misago.validators import validate_sluggable
+from misago.apps.threadtype.mixins import ValidateThreadNameMixin
 
 class SplitThreadForm(Form, ValidateThreadNameMixin):
     def finalize_form(self):

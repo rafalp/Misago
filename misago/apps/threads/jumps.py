@@ -47,3 +47,11 @@ class UpvotePostView(UpvotePostBaseView, TypeMixin):
 
 class DownvotePostView(DownvotePostBaseView, TypeMixin):
     pass
+
+
+class ReportPostView(ReportPostBaseView, TypeMixin):
+    pass
+
+
+class ShowPostReportView(ShowPostReportBaseView, TypeMixin):
+    pass

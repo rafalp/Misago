@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
@@ -46,6 +47,7 @@ def settings(request, group_id=None, group_slug=None):
         if form.is_valid():
             for setting in form.cleaned_data.keys():
                 request.settings[setting] = form.cleaned_data[setting]
+            cache.delete('settings')
             request.messages.set_flash(Message(_('Configuration has been changed.')), 'success', 'admin_settings')
             return redirect(reverse('admin_settings', kwargs={
                                                        'group_id': active_group.pk,

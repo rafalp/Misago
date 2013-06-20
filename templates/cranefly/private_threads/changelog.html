@@ -58,7 +58,7 @@
               {% trans chars=edit.change|abs %}Removed one character from post.{% pluralize %}Removed {{ chars }} characters from post.{% endtrans %}
               {%- else -%}
               {% trans %}No change in message's length.{% endtrans %}
-              {%- endif %}{% endif %}{% if edit.thread_name_old %} {% trans old=edit.thread_name_old, new=edit.thread_name_new %}Changed thread name from "{{ old }}" to "{{ new }}".{% endtrans %}{% endif %}{% if edit.thread_name_old %} {% trans old=edit.thread_name_old, new=edit.thread_name_new %}Renamed thread from "{{ old }}" to "{{ new }}".{% endtrans %}{% endif %}</a>
+              {%- endif %}{% endif %}{% if edit.thread_name_old %} {% trans old=edit.thread_name_old, new=edit.thread_name_new %}Changed thread name from "{{ old }}" to "{{ new }}".{% endtrans %}{% endif %}</a>
               <span class="change-details">
                 {% trans user=edit_user(edit), date=edit.date|reldate|low %}By {{ user }} {{ date }}{% endtrans %}
               </span>

@@ -1,0 +1,21 @@
+{% extends "cranefly/layout.html" %}
+{% import "cranefly/macros.html" as macros with context %}
+{% import "_forms.html" as forms with context %}
+
+{% block title %}{{ macros.page_title(title=_('Search Community')) }}{% endblock %}
+
+{% block container %}
+<div class="page-header header-primary header-search">
+  <div class="container">
+    <h1>{% trans %}Search{% endtrans %} <form action="{{ search_route|url() }}" class="form-inline" method="post">
+       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+       {{ forms.input_text(form.fields.search_query, width=6) }}
+       <button type="submit" class="btn btn-primary">{% trans %}Search{% endtrans %}</button>
+    </form></h1>
+  </div>
+</div>
+
+<div class="container container-primary">
+  {% block action %}{% endblock %}
+</div>
+{% endblock %}

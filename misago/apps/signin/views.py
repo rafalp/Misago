@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
@@ -106,4 +107,11 @@ def signout(request):
     request.messages.set_flash(Message(_("You have been signed out.")), 'info', 'security')
     if request.firewall.admin:
         return redirect(reverse(site.get_admin_index()))
+    else:
+        ranks_online = cache.get('ranks_online', 'nada')
+        if ranks_online != 'nada':
+            for rank in ranks_online:
+                if rank['id'] == user.rank_id:
+                    cache.delete('ranks_online')
+                    break
     return redirect(reverse('index'))

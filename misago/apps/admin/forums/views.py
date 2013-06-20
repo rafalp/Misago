@@ -1,13 +1,16 @@
 import copy
-from django.core.urlresolvers import reverse as django_reverse
+from urlparse import urlparse
+from django.core.urlresolvers import resolve, reverse as django_reverse
 from django.db.models import Q
+from django.http import Http404
+from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from mptt.forms import TreeNodeChoiceField
 from misago.admin import site
 from misago.apps.admin.widgets import *
 from misago.models import Forum
 from misago.utils.strings import slugify
-from misago.apps.admin.forums.forms import CategoryForm, ForumForm, RedirectForm, DeleteForm
+from misago.apps.admin.forums.forms import NewNodeForm, CategoryForm, ForumForm, RedirectForm, DeleteForm
 
 def reverse(route, target=None):
     if target:
@@ -26,8 +29,8 @@ class List(ListWidget):
                )
     nothing_checked_message = _('You have to select at least one forum.')
     actions = (
-               ('resync', _("Resynchronise forums")),
-               ('prune', _("Prune forums"), _("Are you sure you want to delete all content from selected forums?")),
+               ('resync_fast', _("Resynchronize forums (fast)")),
+               ('resync', _("Resynchronize forums")),
                )
     empty_message = _('No forums are currently defined.')
 
@@ -61,125 +64,142 @@ class List(ListWidget):
                 self.action('remove', _("Delete Redirect"), reverse('admin_forums_delete', item)),
                 )
 
+    def action_resync_fast(self, items, checked):
+        for forum in items:
+            if forum.pk in checked:
+                forum.sync()
+                forum.save(force_update=True)
+        return Message(_('Selected forums have been resynchronized successfully.'), 'success'), reverse('admin_forums')
+
     def action_resync(self, items, checked):
-        return Message(_('Selected forums have been resynchronised successfully.'), 'success'), reverse('admin_forums')
+        clean_checked = []
+        for item in items:
+            if item.pk in checked and item.type == 'forum':
+                clean_checked.append(item.pk)
+        if not clean_checked:
+            return Message(_('Only forums can be resynchronized.'), 'error'), reverse('admin_forums')
+        self.request.session['sync_forums'] = clean_checked
+        return Message('Meh', 'success'), django_reverse('admin_forums_resync')
 
-    def action_prune(self, items, checked):
-        return Message(_('Selected forums have been pruned successfully.'), 'success'), reverse('admin_forums')
+
+def resync_forums(request, forum=0, progress=0):
+    progress = int(progress)
+    forums = request.session.get('sync_forums')
+    if not forums:
+        request.messages.set_flash(Message(_('No forums to resynchronize.')), 'info', 'forums')
+        return redirect(reverse('admin_forums'))
+    try:
+        if not forum:
+            forum = request.session['sync_forums'].pop()
+        forum = Forum.objects.get(id=forum)
+    except Forum.DoesNotExist:
+        del request.session['sync_forums']
+        request.messages.set_flash(Message(_('Forum for resynchronization does not exist.')), 'error', 'forums')
+        return redirect(reverse('admin_forums'))
+
+    # Sync 50 threads
+    threads_total = forum.thread_set.count()
+    for thread in forum.thread_set.all()[progress:(progress+1)]:
+        thread.sync()
+        thread.save(force_update=True)
+        progress += 1
+
+    if not threads_total:
+        return redirect(django_reverse('admin_forums_resync'))
+
+    # Render Progress
+    response = request.theme.render_to_response('processing.html', {
+            'task_name': _('Resynchronizing Forums'),
+            'target_name': forum.name,
+            'message': _('Resynchronized %(progress)s from %(total)s threads') % {'progress': progress, 'total': threads_total},
+            'progress': progress * 100 / threads_total,
+            'cancel_url': reverse('admin_forums'),
+        }, context_instance=RequestContext(request));
+
+    # Redirect where to?
+    if progress >= threads_total:
+        forum.sync()
+        forum.save(force_update=True)
+        response['refresh'] = '2;url=%s' % django_reverse('admin_forums_resync')
+    else:
+        response['refresh'] = '2;url=%s' % django_reverse('admin_forums_resync', kwargs={'forum': forum.pk, 'progress': progress})
+    return response
 
 
-class NewCategory(FormWidget):
+class NewNode(FormWidget):
     admin = site.get_action('forums')
-    id = 'new_category'
+    id = 'new'
     fallback = 'admin_forums'
-    form = CategoryForm
-    submit_button = _("Save Category")
+    form = NewNodeForm
+    submit_button = _("Save Node")
 
     def get_new_url(self, model):
-        return reverse('admin_forums_new_category')
+        return reverse('admin_forums_new')
 
     def get_edit_url(self, model):
         return reverse('admin_forums_edit', model)
+
+    def get_initial_data(self, model):
+        print 'CALL!'
+        if not self.request.session.get('forums_admin_preffs'):
+            print 'NO PATTERN!'
+            return {}
+
+        ref = self.request.META.get('HTTP_REFERER')
+        if ref:
+            parsed = urlparse(self.request.META.get('HTTP_REFERER'));
+            try:
+                link = resolve(parsed.path)
+                if not link.url_name == 'admin_forums_new':
+                    return {}
+            except Http404:
+                return {}
+        try:
+            init = self.request.session.get('forums_admin_preffs')
+            del self.request.session['forums_admin_preffs']
+            return {
+                'parent': Forum.objects.get(id=init['parent']),
+                'perms': Forum.objects.get(id=init['perms']) if init['perms'] else None,
+                'role': init['role'],
+            }
+        except (KeyError, Forum.DoesNotExist):
+            return {}
 
     def submit_form(self, form, target):
         new_forum = Forum(
                           name=form.cleaned_data['name'],
                           slug=slugify(form.cleaned_data['name']),
-                          type='category',
+                          type=form.cleaned_data['role'],
                           attrs=form.cleaned_data['attrs'],
-                          show_details=form.cleaned_data['show_details'],
                           style=form.cleaned_data['style'],
-                          closed=form.cleaned_data['closed'],
                           )
         new_forum.set_description(form.cleaned_data['description'])
+
+        if form.cleaned_data['role'] == 'redirect':
+            new_forum.redirect = form.cleaned_data['redirect']
+        else:
+            new_forum.closed = form.cleaned_data['closed']
+            new_forum.show_details = form.cleaned_data['show_details']
+
         new_forum.insert_at(form.cleaned_data['parent'], position='last-child', save=True)
         Forum.objects.populate_tree(True)
 
         if form.cleaned_data['perms']:
             new_forum.copy_permissions(form.cleaned_data['perms'])
-            self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
+            self.request.monitor.increase('acl_version')
 
-        return new_forum, Message(_('New Category has been created.'), 'success')
+        self.request.session['forums_admin_preffs'] = {
+            'parent': form.cleaned_data['parent'].pk,
+            'perms': form.cleaned_data['perms'].pk if form.cleaned_data['perms'] else None,
+            'role': form.cleaned_data['role'],
+        }
 
-
-class NewForum(FormWidget):
-    admin = site.get_action('forums')
-    id = 'new_forum'
-    fallback = 'admin_forums'
-    form = ForumForm
-    submit_button = _("Save Forum")
-
-    def get_new_url(self, model):
-        return reverse('admin_forums_new_forum')
-
-    def get_edit_url(self, model):
-        return reverse('admin_forums_edit', model)
-
-    def submit_form(self, form, target):
-        new_forum = Forum(
-                          name=form.cleaned_data['name'],
-                          slug=slugify(form.cleaned_data['name']),
-                          type='forum',
-                          attrs=form.cleaned_data['attrs'],
-                          show_details=form.cleaned_data['show_details'],
-                          style=form.cleaned_data['style'],
-                          closed=form.cleaned_data['closed'],
-                          prune_start=form.cleaned_data['prune_start'],
-                          prune_last=form.cleaned_data['prune_last'],
-                          )
-        new_forum.set_description(form.cleaned_data['description'])
-        new_forum.insert_at(form.cleaned_data['parent'], position='last-child', save=True)
-        Forum.objects.populate_tree(True)
-
-        if form.cleaned_data['perms']:
-            new_forum.copy_permissions(form.cleaned_data['perms'])
-            self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
-
-        return new_forum, Message(_('New Forum has been created.'), 'success')
-
-    def __call__(self, request):
-        if self.admin.model.objects.get(special='root').get_descendants().count() == 0:
-            request.messages.set_flash(Message(_("You have to create at least one category before you will be able to create forums.")), 'error', self.admin.id)
-            return redirect(self.get_fallback_url())
-        return super(NewForum, self).__call__(request)
-
-
-class NewRedirect(FormWidget):
-    admin = site.get_action('forums')
-    id = 'new_redirect'
-    fallback = 'admin_forums'
-    form = RedirectForm
-    submit_button = _("Save Forum")
-
-    def get_new_url(self, model):
-        return reverse('admin_forums_new_redirect')
-
-    def get_edit_url(self, model):
-        return reverse('admin_forums_edit', model)
-
-    def submit_form(self, form, target):
-        new_forum = Forum(
-                          name=form.cleaned_data['name'],
-                          slug=slugify(form.cleaned_data['name']),
-                          redirect=form.cleaned_data['redirect'],
-                          style=form.cleaned_data['style'],
-                          type='redirect',
-                          )
-        new_forum.set_description(form.cleaned_data['description'])
-        new_forum.insert_at(form.cleaned_data['parent'], position='last-child', save=True)
-        Forum.objects.populate_tree(True)
-
-        if form.cleaned_data['perms']:
-            new_forum.copy_permissions(form.cleaned_data['perms'])
-            self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
-
-        return new_forum, Message(_('New Redirect has been created.'), 'success')
-
-    def __call__(self, request):
-        if self.admin.model.objects.get(special='root').get_descendants().count() == 0:
-            request.messages.set_flash(Message(_("You have to create at least one category before you will be able to create redirects.")), 'error', self.admin.id)
-            return redirect(self.get_fallback_url())
-        return super(NewRedirect, self).__call__(request)
+        if form.cleaned_data['role'] == 'category':
+            return new_forum, Message(_('New Category has been created.'), 'success')
+        if form.cleaned_data['role'] == 'forum':
+            return new_forum, Message(_('New Forum has been created.'), 'success')
+        if form.cleaned_data['role'] == 'redirect':
+            return new_forum, Message(_('New Redirect has been created.'), 'success')
 
 
 class Up(ButtonWidget):
@@ -239,6 +259,7 @@ class Edit(FormWidget):
         form_inst = super(Edit, self).get_form_instance(form, target, initial, post)
         valid_targets = Forum.objects.get(special='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
         form_inst.fields['parent'] = TreeNodeChoiceField(queryset=valid_targets, level_indicator=u'- - ')
+        form_inst.target_forum = target
         return form_inst
 
     def get_initial_data(self, model):
@@ -259,6 +280,7 @@ class Edit(FormWidget):
         if model.type == 'forum':
             initial['prune_start'] = model.prune_start
             initial['prune_last'] = model.prune_last
+            initial['pruned_archive'] = model.pruned_archive
 
         return initial
 
@@ -277,10 +299,11 @@ class Edit(FormWidget):
         if target.type == 'forum':
             target.prune_start = form.cleaned_data['prune_start']
             target.prune_last = form.cleaned_data['prune_last']
+            target.pruned_archive = form.cleaned_data['pruned_archive']
 
         if form.cleaned_data['parent'].pk != target.parent.pk:
             target.move_to(form.cleaned_data['parent'], 'last-child')
-            self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
+            self.request.monitor.increase('acl_version')
 
         target.save(force_update=True)
         Forum.objects.populate_tree(True)
@@ -289,7 +312,10 @@ class Edit(FormWidget):
             target.copy_permissions(form.cleaned_data['perms'])
 
         if form.cleaned_data['parent'].pk != target.parent.pk or form.cleaned_data['perms']:
-            self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
+            self.request.monitor.increase('acl_version')
+
+        if self.original_name != target.name:
+            target.sync_name()
 
         return target, Message(_('Changes in forum "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
 
@@ -344,5 +370,5 @@ class Delete(FormWidget):
                 Forum.objects.get(id=child.pk).delete()
         Forum.objects.get(id=target.pk).delete()
         Forum.objects.populate_tree(True)
-        self.request.monitor['acl_version'] = int(self.request.monitor['acl_version']) + 1
+        self.request.monitor.increase('acl_version')
         return target, Message(_('Forum "%(name)s" has been deleted.') % {'name': self.original_name}, 'success')

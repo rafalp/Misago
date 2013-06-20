@@ -1,0 +1,63 @@
+// Search forum
+// ------------------------
+
+.search-resume {
+  .muted {
+    color: lighten(@gray, 15%);
+
+    a {
+      color: @textColor;
+    }
+  }
+}
+
+.search-results {
+  .results-list {
+    .result {
+      border-bottom: 1px solid darken(@bodyBackground, 5%);
+      margin-bottom: (@baseLineHeight / 2);
+      padding-bottom: (@baseLineHeight / 2);
+
+      h3 {
+        margin: 0px;
+
+        line-height: @baseLineHeight;
+
+        a:link, a:visited {
+          color: @gray;
+          font-weight: normal;
+          font-size: @baseFontSize * 1.3;
+          text-decoration: underline;
+        }
+
+        a:hover, a:active {
+          color: @textColor;
+        }
+      }
+
+      .post-extra {
+        margin: 0px;
+
+        color: @grayLight;
+        font-size: @baseFontSize * 0.8;
+        line-height: @baseLineHeight;
+
+        a {
+          color: @textColor;
+        }
+      }
+
+      .post-preview {
+        margin: 0px;
+
+        color: @textColor;
+        font-size: @baseFontSize * 1.1;
+        line-height: @baseLineHeight;
+
+        strong {
+          color: @red;
+        }
+      }
+    }
+  }
+}

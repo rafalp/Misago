@@ -1,7 +1,7 @@
 // Markdown output
 // -------------------------
 
-.markdown {
+.markdown, .markdown article {
   margin: 0px;
   overflow: auto;
 
@@ -11,22 +11,26 @@
 
   &>:last-child {
     margin-bottom: 0px;
+
+    img:last-child {
+      margin-bottom: 0px;
+    }
   }
 
   h1 {
-    font-size: @baseFontSize * 2;
-  }
-
-  h2 {
     font-size: @baseFontSize * 1.7;
   }
 
-  h3 {
+  h2 {
     font-size: @baseFontSize * 1.5;
   }
 
-  h4 {
+  h3 {
     font-size: @baseFontSize * 1.2;
+  }
+
+  h4 {
+    font-size: @baseFontSize;
   }
 
   hr {
@@ -36,38 +40,25 @@
   }
 
   blockquote {
-    background-color: darken(@postBackground, 1%);
-    border: 1px solid darken(@postBackground, 6%);
-    border-radius: @baseBorderRadius;
-    padding: @baseFontSize;
+    border-left-color: darken(@grayLighter, 5%);
+    padding: (@baseFontSize / 3) @baseFontSize;
 
-    &>h3:first-child {
-      margin: 0px;
-      margin-bottom: @baseLineHeight / 2;
-      padding: 0px;
+    header {
+      padding-bottom: (@baseLineHeight / 2);
 
-      font-size: @baseFontSize;
+      font-size: @baseFontSize * 1.1;
+      font-weight: bold;
       line-height: @baseLineHeight;
     }
 
-    &>:first-child {
-      margin-top: 0px;
-    }
-
-    &>:last-child {
-      margin-bottom: 0px;
-    }
-
     p {
-      margin: 0 0 @baseLineHeight / 2;
-      font-size: @fontSizeSmall;
+      margin: 0 0 (@baseLineHeight / 2);
+
+      font-size: @baseFontSize;
     }
 
     blockquote {
-      background-color: @postBackground;
-      border: 1px solid darken(@postBackground, 5%);
-      border-radius: @baseBorderRadius;
-      padding: @baseFontSize;
+      .opacity(85);
     }
   }
 
@@ -93,68 +84,9 @@
   }
 
   img {
+    background-color: @white;
     border-radius: @baseBorderRadius;
-    box-shadow: 0px 0px 4px @gray;
     margin: (@baseLineHeight / 2) 0px;
-  }
-
-  .md-img {
-    overflow: auto;
-
-    .md-img-span {
-      margin: (@baseLineHeight / 2) 0px;
-      float: none;
-
-      .md-img-wrap {
-        background-color: @grayLighter;
-        border: 1px solid @white;
-        border-radius: @baseBorderRadius + 1px;
-        box-shadow: 0px 0px 2px @grayLight;
-        margin: 3px;
-
-        .md-img-bg {
-          background-color: @white;
-          border-radius: @baseBorderRadius;
-          padding: (@baseLineHeight / 2);
-          
-          text-align: center;
-
-          img {
-            border-radius: @baseBorderRadius;
-            box-shadow: none;
-          }
-
-          .md-img-error {
-            background: url('../img/img_broken.jpg');
-            border-radius: @baseBorderRadius;
-            padding: (@baseLineHeight * 2.5) 0px;
-
-            span {
-              background-color: @grayDark;
-              border-radius: @borderRadiusLarge;
-              .opacity(80);
-              padding: (@baseFontSize / 2) @baseFontSize;
-              margin: 0px auto;
-
-              color: @white;
-              text-shadow: 0px 1px 0px @black;
-            }
-          }
-        }
-
-        .md-img-label {
-          display: block;
-          padding: (@baseFontSize / 2) @baseFontSize;
-
-          color: @grayDark;
-
-          &:hover, &:active {
-            color: @textColor;
-            text-decoration: none;
-          }
-        }
-      }
-    }
   }
 
   // Blocks margins
@@ -168,6 +100,58 @@
 
     &>:last-child {
       margin-bottom: 0px;
+    }
+  }
+
+  // Emoticons
+  .emoji {
+    background: none;
+    border-radius: 0px;
+    margin: 0px;
+    vertical-align: middle;
+  }
+
+  h1 {
+    .emoji {
+      width: (@baseFontSize * 1.7) + 4px;
+      height: (@baseFontSize * 1.7) + 4px;
+    }
+  }
+
+  h2 {
+    .emoji {
+      width: (@baseFontSize * 1.5) + 4px;
+      height: (@baseFontSize * 1.5) + 4px;
+    }
+  }
+
+  h3 {
+    .emoji {
+      width: (@baseFontSize * 1.2) + 4px;
+      height: (@baseFontSize * 1.2) + 4px;
+    }
+  }
+
+  h4 {
+    .emoji {
+      width: @baseFontSize + 4px;
+      height: @baseFontSize + 4px;
+    }
+  }
+
+  p {
+    .emoji {
+      width: @baseFontSize + 4px;
+      height: @baseFontSize + 4px;
+    }
+  }
+
+  blockquote {
+    p {
+      .emoji {
+        width: @fontSizeSmall + 2px;
+        height: @fontSizeSmall + 2px;
+      }
     }
   }
 }

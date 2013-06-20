@@ -1,7 +1,12 @@
 from django.utils import timezone
 from misago.models import Forum, Thread, Post 
-from misago.utils.fixtures import load_monitor_fixture
+from misago.utils.fixtures import load_monitor_fixture, update_monitor_fixture
 from misago.utils.strings import slugify
+
+monitor_fixture = {
+                   'threads': (1, 'int'),
+                   'posts': (1, 'int'),
+                  }
 
 def load():
     Forum(special='private_threads', name='private', slug='private', type='forum').insert_at(None, save=True)
@@ -33,6 +38,7 @@ def load():
                                post='Welcome to Misago!',
                                post_preparsed='Welcome to Misago!',
                                date=now,
+                               current_date=now,
                                )
     thread.start_post = post
     thread.start_poster_name = 'MisagoProject'
@@ -50,4 +56,8 @@ def load():
     forum.last_poster_slug = thread.last_poster_slug
     forum.save(force_update=True)
 
-    load_monitor_fixture({'threads': 1, 'posts': 1})
+    load_monitor_fixture(monitor_fixture)
+
+
+def update():
+    update_monitor_fixture(monitor_fixture)

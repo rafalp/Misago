@@ -120,4 +120,5 @@ def sign_user_in(request, user):
                         )
     user.save(force_update=True)
     request.session.set_user(user)
-    request.session.set_hidden(user.hide_activity > 0)
+    if not request.firewall.admin:
+        request.onlines.sign_in()

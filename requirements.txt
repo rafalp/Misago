@@ -1,5 +1,6 @@
 django
 django-debug-toolbar
+django-haystack
 django-mptt
 coffin
 jinja2
@@ -10,3 +11,4 @@ pytz
 recaptcha-client
 South
 Unidecode
+whoosh

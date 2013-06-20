@@ -12,9 +12,6 @@ class SessionMiddleware(object):
             request.session = HumanSession(request)
             request.user = request.session.get_user()
 
-            if request.user.is_authenticated():
-                request.session.set_hidden(request.user.hide_activity > 0)
-
     def process_response(self, request, response):
         try:
             # Sync last visit date
@@ -24,6 +21,7 @@ class SessionMiddleware(object):
                     request.session['visit_sync'] = timezone.now()
                     request.user.last_date = timezone.now()
                     request.user.save(force_update=True)
+            request.session.match()
             request.session.save()
         except AttributeError:
             pass

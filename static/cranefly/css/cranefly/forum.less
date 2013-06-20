@@ -9,19 +9,22 @@
   .box-shadow(0px 0px 0px 3px @categoryShadow);
   margin-bottom: @baseLineHeight;
 
-  table {
-    margin: 0px;
+  .header {
+    background-color: @categoryHeader;
+    border: 1px solid @categoryBorder;
+    border-radius: @borderRadiusSmall @borderRadiusSmall 0px 0px;
+    margin: -1px;
+    margin-bottom: 0px;
+    padding: (@fontSizeSmall / 3) (@fontSizeSmall - 2px);
 
-    caption {
-      background-color: @categoryHeader;
-      border: 1px solid @categoryBorder;
-      border-radius: @borderRadiusSmall @borderRadiusSmall 0px 0px;
-      margin: -1px;
-      padding: (@fontSizeSmall / 3) (@fontSizeSmall - 2px);
+    h2 {
+      margin: 0px;
+      padding: 0px;
 
       color: @grayDark;
       font-size: @fontSizeSmall;
       font-weight: bold;
+      line-height: @baseLineHeight;
       text-align: left;
 
       small {
@@ -31,21 +34,28 @@
         font-size: @fontSizeSmall;
       }
     }
-    
-    td {
-      padding: ((@fontSizeLarge / 2) + 6px) (@fontSizeSmall - 2px);
-      padding-bottom: (@fontSizeLarge / 2) + 7px;
+  }
+
+  .forum {
+    border-bottom: 1px solid @categoryBorder;
+    height: 21px;
+    overflow: visible;
+    padding: ((@fontSizeLarge / 2) + 6px) (@fontSizeSmall - 2px);
+
+    &.last {
+      border-bottom: none;
     }
 
     .forum-icon {
-      padding-right: (@fontSizeSmall / 2) - 3px;
-      width: 1%;
+      float: left;
 
       .forum-icon-wrap {
         background-color: @itemOldColor;
         border: 1px solid darken(@itemOldColor, 10%);
         border-radius: @baseBorderRadius;
-        padding: (@forumIconSize - 1px) @forumIconSize;
+        padding: ((@forumIconSize - 22px) / 2) ((@forumIconSize - 16px) / 2);
+        position: relative;
+        bottom: (@forumIconSize - @baseLineHeight) / 2;
 
         &.forum-icon-new {
           background-color: @itemNewColor;
@@ -58,8 +68,10 @@
         }
       }
     }
-    
+
     .forum-main {
+      margin-left: 34px;
+
       h3 {
         float: left;
         margin: 0px;
@@ -77,6 +89,17 @@
       .dropdown {
         float: right;
         right: @baseFontSize;
+
+        .subforum {
+          &:link, &:visited {
+            color: @grayLight;
+            font-weight: bold;
+          }
+
+          &:hover, &:active {
+            color: @textColor;
+          }
+        }
 
         .dropdown-toggle {
           padding: 4px 8px;
@@ -222,46 +245,52 @@
   }
 
   &.forum-subforums-important {
-    caption {
+    .header {
       background-color: @red;
       border: 1px solid darken(@red, 10%);
 
-      color: @white;
-      text-shadow: 0px 1px 0px darken(@red, 25%);
+      h2 {
+        color: @white;
+        text-shadow: 0px 1px 0px darken(@red, 25%);
 
-      small {
-        color: darken(@red, 40%);
-        text-shadow: none;
+        small {
+          color: darken(@red, 40%);
+          text-shadow: none;
+        }
       }
     }
   }
 
   &.forum-subforums-inverse {
-    caption {
+    .header {
       background-color: @grayDark;
       border: 1px solid darken(@grayDark, 10%);
 
-      color: @grayLighter;
-      text-shadow: 0px 1px 0px darken(@black, 25%);
+      h2 {
+        color: @grayLighter;
+        text-shadow: 0px 1px 0px darken(@black, 25%);
 
-      small {
-        color: lighten(@grayLight, 10%);
-        text-shadow: none;
+        small {
+          color: lighten(@grayLight, 10%);
+          text-shadow: none;
+        }
       }
     }
   }
 
   &.forum-subforums-info {
-    caption {
+    .header {
       background-color: @bluePale;
       border: 1px solid darken(@bluePale, 10%);
 
-      color: @white;
-      text-shadow: 0px 1px 0px darken(@bluePale, 25%);
+      h2 {
+        color: @white;
+        text-shadow: 0px 1px 0px darken(@bluePale, 25%);
 
-      small {
-        color: darken(@bluePale, 25%);
-        text-shadow: none;
+        small {
+          color: darken(@bluePale, 25%);
+          text-shadow: none;
+        }
       }
     }
   }
@@ -275,123 +304,231 @@
   .box-shadow(0px 0px 0px 3px @categoryShadow);
   margin-bottom: @baseLineHeight;
 
-  table {
-    margin: 0px;
+  .header {
+    background-color: @categoryHeader;
+    border: 1px solid @categoryBorder;
+    border-radius: @borderRadiusSmall @borderRadiusSmall 0px 0px;
+    margin: -1px;
+    margin-bottom: 0px;
+    padding-bottom: 1px;
+    overflow: auto;
 
-    th {
-      background-color: @bodyBackground;
-      border-bottom: 1px solid @grayLighter;
-      padding: @paddingSmall;
+    color: @grayLight;
+    font-weight: bold;
+    font-size: @fontSizeSmall;
 
-      color: @grayLight;
-      font-size: @fontSizeSmall;
-    }
-
-    td {
-      vertical-align: middle;
-
-      &.threads-list-empty {
-        padding: @paddingLarge;
-
-        font-size: @fontSizeLarge;
-        text-align: center;
+    .row-fluid {
+      &>div {
+        min-height: auto;
+        padding: @paddingSmall;
       }
 
+      .thread-replies {
+        float: left;
+        width: 106px;
+      }
+
+      .thread-last {
+        float: left;
+      }
+    }
+
+    .check-cell {
+      label {
+        margin: 0px;
+      }
+    }
+  }
+
+  .thread-row {
+    border-bottom: 1px solid @categoryBorder;
+    height: 38px;
+    overflow: hidden;
+    padding: (@fontSizeSmall - 2px) 0px;
+
+    .row-fluid {
+      &>div {
+        min-height: auto;
+        padding: @paddingSmall;
+        padding-bottom: 0px;
+      }
+    }
+
+    &.thread-last {
+      border-bottom: none;
+
+      &>div {
+        padding-bottom: 1px;
+      }
+    }
+
+    .thread-icon {
+      background-color: @itemOldColor;
+      border: 1px solid darken(@itemOldColor, 10%);
+      .border-radius(@baseBorderRadius);
+      display: block;
+      float: left;
+      margin: -2px 0px;
+      margin-left: -1px;
+      padding: 1px 4px;
+
+      &:hover, &:active {
+        .opacity(100);
+      }
+
+      i {
+        background-image: url("@{iconWhiteSpritePath}");
+      }
+    }
+
+    &.thread-new {
       .thread-icon {
-        &:link, &:active, &:visited, &:hover {
-          background-color: @itemOldColor;
-          border: 1px solid darken(@itemOldColor, 15%);
-          border-radius: @baseBorderRadius;
-          margin-right: @baseFontSize / 2;
-          padding: 3px 4px;
-
-          &.thread-new {
-            background-color: @itemNewColor;
-            border: 1px solid darken(@itemNewColor, 15%);
-          }
-        }
-
-        i {
-          background-image: url("@{iconWhiteSpritePath}");
-        }
+        background-color: @itemNewColor;
+        border: 1px solid darken(@itemNewColor, 10%);
       }
 
       .thread-name {
+        color: @textColor !important;
+      }
+    }
+
+    &.threads-list-empty {
+      height: auto;
+      padding: @paddingLarge;
+
+      font-size: @fontSizeLarge;
+      text-align: center;
+    }
+
+    .thread-name {
+      margin-left: 10px;
+
+      color: lighten(@textColor, 17%);
+      font-size: @baseFontSize + 2px;
+      font-weight: bold;
+    }
+
+    .thread-details, .thread-last-reply {
+      color: @grayLight;
+      line-height: @baseFontSize;
+
+      a:link, a:visited {
         color: @textColor;
-        font-weight: bold;
-      }
-
-      .thread-details, .thread-last-reply {
-        color: @grayLight;
-
-        a:link, a:visited {
-          color: @textColor;
-        }
-      }
-
-      .thread-details {
-        font-size: @fontSizeMini;
-      }
-
-      .thread-flags {
-        float: right;
-        margin: 0px;
-        .opacity(80);
-        padding: 0px;
-
-        li {
-          margin-left: 3px;
-          float: left;
-        }
-      }
-
-      .thread-rating {
-        background-color: @grayLighter;
-        border-radius: @baseBorderRadius;
-        padding: 4px;
-
-        color: @grayLight;
-        font-size: @fontSizeLarge;
-        font-weight: bold;
-        text-align: center;
-
-        &.thread-rating-negative, &.thread-rating-positive {
-          color: @white;
-        }
-
-        &.thread-rating-negative {
-          background-color: @red;
-        }
-
-        &.thread-rating-positive {
-          background-color: @green;
-        }
       }
     }
 
-    th, td {
-      &.check-cell {
-        width: 1%;
-        text-align: center;
-        vertical-align: middle;
+    .thread-details {
+      margin-left: 34px;
 
-        .checkbox {
+      font-size: @fontSizeMini;
+    }
+
+    .thread-flags {
+      float: right;
+      margin: 0px;
+      position: relative;
+      right: -30px;
+      top: 5px;
+      padding: 0px;
+
+      li {
+        .border-radius(@baseBorderRadius);
+        display: block;
+        float: left;
+        margin-left: 3px;
+        padding: 2px 5px;
+
+        &.flag-reported {
+          background-color: @flagReported;
+        }
+
+        &.flag-notreviewed {
+          background-color: @flagReviewed;
+        }
+
+        &.flag-announcement {
+          background-color: @flagAnnouncement;
+        }
+
+        &.flag-sticky {
+          background-color: @flagSticky;
+        }
+
+        &.flag-deleted {
+          background-color: @flagDeleted;
+        }
+
+        &.flag-closed {
+          background-color: @flagClosed;
+        }
+      }
+
+      i {
+        background-image: url("@{iconWhiteSpritePath}");
+      }
+    }
+
+    .thread-activity {
+      border-left: 1px dotted darken(@categoryBackground, 12%);
+      position: relative;
+      bottom: 3px;
+
+      .thread-last-avatar {
+        float: left;
+
+        img {
+          .border-radius(@baseBorderRadius);
           margin: 0px;
-          padding: 0px;
-
-          input {
-            margin: 0px;
-            padding: 0px;
-            position: relative;
-            top: 3px;
-          }
+          margin-right: @baseFontSize;
+          width: 40px;
+          height: 40px;
         }
       }
-    }
 
-    th.check-cell {
-      input{
-        right: 2px;
+      .thread-replies {
+        float: left;
+        margin-top: -1px;
+        margin-right: @baseFontSize;
+
+        color: @grayLight;
+        font-size: @fontSizeSmall;
+
+        .lead {
+          font-size: @baseFontSize;
+          font-weight: bold;
+          line-height: @baseLineHeight;
+        }
+
+        a:link, a:active, a:visited, a:hover {
+          color: @gray;
+        }
+      }
+
+      .thread-last-reply {
+        border-left: 1px dotted darken(@categoryBackground, 12%);
+        padding-left: @baseFontSize;
+
+      }
+
+      .thread-select {
+        background-color: darken(@categoryBackground, 5%);
+        display: block;
+        float: right;
+        margin: -12px -11px;
+        margin-left: 0px;
+        width: 29px;
+        height: 61px;
+
+        &:hover, &:focus, &:active {
+          background-color: @linkColor;
+        }
+
+        input {
+          margin: 0px;
+          position: relative;
+          right: 2px;
+          top: 26px;
+        }
       }
     }
   }

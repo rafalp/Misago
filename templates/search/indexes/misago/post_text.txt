@@ -1,0 +1,3 @@
+{{ object.thread.name }}
+{{ object.user.username }}
+{{ object.post_clean }}

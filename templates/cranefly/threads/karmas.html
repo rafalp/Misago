@@ -4,9 +4,7 @@
 {% block title %}{{ macros.page_title(title=(_("Post #%(post)s Votes") % {'post': post.pk}),parent=thread.name) }}{% endblock %}
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
-{% for parent in parents %}
-<li><a href="{{ parent.type|url(forum=parent.pk, slug=parent.slug) }}">{{ parent.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-{% endfor %}
+{{ macros.parents_list(parents) }}
 <li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li class="active">{% trans post=post.pk %}Post #{{ post }} Votes{% endtrans %}
 {%- endblock %}
@@ -61,11 +59,11 @@
 
     <hr>
 
-    <div class="post-hates">
+    <div class="post-dislikes">
       <h2>{% trans count=downvotes|length, votes=downvotes|length|intcomma -%}
-        One hate
+        One dislike
         {%- pluralize -%}
-        {{ votes }} hates
+        {{ votes }} dislikes
         {%- endtrans %}</h2>
       {% if downvotes %}
       <table class="table table-striped">
@@ -86,7 +84,7 @@
         </tbody>
       </table>
       {% else %}
-      <p class="lead">{% trans %}Nobody hated this post.{% endtrans %}</p>
+      <p class="lead">{% trans %}Nobody disliked this post.{% endtrans %}</p>
       {% endif %}
     </div>
   </div>

@@ -3,7 +3,7 @@ import markdown
 from markdown.inlinepatterns import SimpleTagPattern
 
 # Global vars
-STRIKETHROUGH_RE = r'~~(.+?)~~'
+STRIKETHROUGH_RE = r'(~{2})(.+?)\2'
 
 class StrikethroughExtension(markdown.Extension):
     def extendMarkdown(self, md):

@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.utils.importlib import import_module
 from coffin.shortcuts import render_to_response
 from coffin.template import dict_from_django_context
 from coffin.template.loader import get_template, select_template, render_to_string
@@ -10,8 +11,56 @@ if not hasattr(safestring, '__html__'):
     safestring.SafeUnicode.__html__ = lambda self: unicode(self)
 
 class Theme(object):
+    middlewares = ()
+
     def __init__(self, theme):
         self.set_theme(theme);
+        self._mutex = None
+
+        if not self.middlewares:
+            self.load_middlewares(settings.TEMPLATE_MIDDLEWARES)
+
+    def load_middlewares(self, middlewares):
+        for extension in middlewares:
+            module = '.'.join(extension.split('.')[:-1])
+            extension = extension.split('.')[-1]
+            module = import_module(module)
+            middleware = getattr(module, extension)
+            self.middlewares += (middleware(), )
+
+    def merge_contexts(self, dictionary=None, context_instance=None):
+        dictionary = dictionary or {}
+        if context_instance:
+            context_instance.update(dictionary)
+        else:
+            context_instance = dictionary
+        return context_instance
+
+    def process_context(self, templates, context):
+        if self._mutex:
+            return context
+        self._mutex = True
+
+        for middleware in self.middlewares:
+            try:
+                new_context = middleware.process_context(self, templates, context)
+                if new_context:
+                    context = new_context
+            except AttributeError:
+                pass
+
+        self._mutex = None
+        return context
+
+    def process_template(self, templates, context):
+        for middleware in self.middlewares:
+            try:
+                new_templates = middleware.process_template(self, templates, context)
+                if new_templates:
+                    return new_templates
+            except AttributeError:
+                pass
+        return templates
 
     def set_theme(self, theme):
         if theme not in settings.INSTALLED_THEMES:
@@ -26,7 +75,8 @@ class Theme(object):
     def get_theme(self):
         return self._theme
 
-    def prefix_templates(self, templates):
+    def prefix_templates(self, templates, dictionary=None):
+        templates = self.process_template(templates, dictionary)
         if isinstance(templates, str):
             return ('%s/%s' % (self._theme, templates), templates)
         else:
@@ -36,16 +86,19 @@ class Theme(object):
             prefixed += templates
             return prefixed
 
-    def render_to_string(self, templates, *args, **kwargs):
-        templates = self.prefix_templates(templates)
-        return render_to_string(templates, *args, **kwargs)
+    def render_to_string(self, templates, dictionary=None, context_instance=None):
+        dictionary = self.process_context(templates, self.merge_contexts(dictionary, context_instance))
+        templates = self.prefix_templates(templates, dictionary)
+        return render_to_string(templates, dictionary)
 
-    def render_to_response(self, templates, *args, **kwargs):
-        templates = self.prefix_templates(templates)
-        return render_to_response(templates, *args, **kwargs)
+    def render_to_response(self, templates, dictionary=None, context_instance=None,
+                       mimetype=None):
+        dictionary = self.process_context(templates, self.merge_contexts(dictionary, context_instance))
+        templates = self.prefix_templates(templates, dictionary)
+        return render_to_response(templates, dictionary=dictionary, mimetype=mimetype)
 
     def macro(self, templates, macro, dictionary={}, context_instance=None):
-        templates = self.prefix_templates(templates)
+        templates = self.prefix_templates(templates, dictionary)
         template = select_template(templates)
         if context_instance:
             context_instance.update(dictionary)

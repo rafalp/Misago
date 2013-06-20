@@ -55,7 +55,7 @@ class UserManager(models.Manager):
         # Get first rank
         try:
             from misago.models import Rank
-            default_rank = Rank.objects.filter(special=0).order_by('order')[0]
+            default_rank = Rank.objects.filter(special=0).order_by('-order')[0]
         except IndexError:
             default_rank = None
 
@@ -98,12 +98,12 @@ class UserManager(models.Manager):
 
         # Update forum stats
         if activation == 0:
-            monitor['users'] = int(monitor['users']) + 1
+            monitor.increase('users')
             monitor['last_user'] = new_user.pk
             monitor['last_user_name'] = new_user.username
             monitor['last_user_slug'] = new_user.username_slug
         else:
-            monitor['users_inactive'] = int(monitor['users_inactive']) + 1
+            monitor.increase('users_inactive')
 
         # Return new user
         return new_user
@@ -358,11 +358,10 @@ class User(models.Model):
         self.password_date = tz_util.now()
         self.password = make_password(raw_password.strip())
 
-    def set_last_visit(self, ip, agent, hidden=False):
+    def set_last_visit(self, ip, agent):
         self.last_date = tz_util.now()
         self.last_ip = ip
         self.last_agent = agent
-        self.last_hide = hidden
 
     def check_password(self, raw_password, mobile=False):
         """
@@ -418,6 +417,8 @@ class User(models.Model):
         return True
 
     def get_roles(self):
+        if self.rank:
+            return self.roles.all() | self.rank.roles.all()
         return self.roles.all()
 
     def make_acl_key(self, force=False):
@@ -425,12 +426,18 @@ class User(models.Model):
             return self.acl_key
         roles_ids = []
         for role in self.roles.all():
-            roles_ids.append(str(role.pk))
-        self.acl_key = 'acl_%s' % hashlib.md5('_'.join(roles_ids)).hexdigest()[0:8]
+            roles_ids.append(role.pk)
+        for role in self.rank.roles.all():
+            if not role.pk in roles_ids:
+                roles_ids.append(role.pk)
+        roles_ids.sort()
+        self.acl_key = 'acl_%s' % hashlib.md5('_'.join(str(x) for x in roles_ids)).hexdigest()[0:8]
+        self.save(update_fields=('acl_key',))
         return self.acl_key
 
     def acl(self, request):
         try:
+            self.make_acl_key()
             acl = cache.get(self.acl_key)
             if acl.version != request.monitor.acl_version:
                 raise InvalidCacheBackendError()
@@ -488,10 +495,10 @@ class User(models.Model):
         else:
             recipient = self.email
 
-        # Build and send message
+        # Build message and add it to queue
         email = EmailMultiAlternatives(subject, templates[0].render(context), settings.EMAIL_HOST_USER, [recipient])
         email.attach_alternative(templates[1].render(context), "text/html")
-        email.send()
+        request.mails_queue.append(email)
 
     def get_activation(self):
         activations = ['none', 'user', 'admin', 'credentials']
@@ -553,7 +560,7 @@ class Crawler(Guest):
         self.username = username
 
     def is_anonymous(self):
-        return True
+        return False
 
     def is_authenticated(self):
         return False

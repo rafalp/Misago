@@ -1,4 +1,7 @@
 from itertools import chain
+from django.core.urlresolvers import reverse
+from django.http import Http404
+from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from misago.apps.threadtype.list import ThreadsListBaseView, ThreadsListModeration
 from misago.models import Forum, Thread
@@ -12,7 +15,7 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
 
     def threads_queryset(self):
         announcements = self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set).filter(weight=2).order_by('-pk')
-        threads = self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set).filter(weight__lt=2).order_by('-last')
+        threads = self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set).filter(weight__lt=2).order_by('-weight', '-last')
 
         # Dont display threads by ignored users (unless they are important)
         if self.request.user.is_authenticated():
@@ -30,7 +33,11 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
     def fetch_threads(self):
         qs_announcements, qs_threads = self.threads_queryset()
         self.count = qs_threads.count()
-        self.pagination = make_pagination(self.kwargs.get('page', 0), self.count, self.request.settings.threads_per_page)
+
+        try:
+            self.pagination = make_pagination(self.kwargs.get('page', 0), self.count, self.request.settings.threads_per_page)
+        except Http404:
+            return self.threads_list_redirect()
 
         tracker_forum = ThreadsTracker(self.request, self.forum)
         for thread in list(chain(qs_announcements, qs_threads[self.pagination['start']:self.pagination['stop']])):
@@ -56,10 +63,10 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
                 actions.append(('open', _('Open threads')))
                 actions.append(('close', _('Close threads')))
             if acl['can_delete_threads']:
-                actions.append(('undelete', _('Undelete threads')))
-                actions.append(('soft', _('Soft delete threads')))
+                actions.append(('undelete', _('Restore threads')))
+                actions.append(('soft', _('Hide threads')))
             if acl['can_delete_threads'] == 2:
-                actions.append(('hard', _('Hard delete threads')))
+                actions.append(('hard', _('Delete threads')))
         except KeyError:
             pass
         return actions

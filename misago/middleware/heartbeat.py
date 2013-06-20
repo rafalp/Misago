@@ -3,6 +3,6 @@ from django.http import HttpResponse
 
 class HeartbeatMiddleware(object):
     def process_request(self, request):
-        request.heartbeat = settings.HEARTBEAT_PATH and settings.HEARTBEAT_PATH == request.path
+        request.heartbeat = settings.HEARTBEAT_PATH and settings.HEARTBEAT_PATH == request.path[1:]
         if request.heartbeat:
             return HttpResponse('BATTLECRUISER OPERATIONAL')

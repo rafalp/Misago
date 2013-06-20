@@ -2,7 +2,6 @@ from django.template import RequestContext
 from misago.models import Session
 
 def home(request):
-    print 'BAZONGA!'
     return request.theme.render_to_response('home.html', {
         'users': request.monitor['users'],
         'users_inactive': request.monitor['users_inactive'],

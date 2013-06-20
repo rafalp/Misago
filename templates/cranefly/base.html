@@ -1,6 +1,6 @@
 {% from "cranefly/macros.html" import page_title -%}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
   <head>
     <meta charset="utf-8">
     <title>{% block title %}{{ page_title() }}{% endblock %}</title>
@@ -15,7 +15,11 @@
   	<script src="{{ STATIC_URL }}cranefly/js/bootstrap.min.js"></script>
     <script type="text/javascript">
       var l_img_broken_msg = "{{ _('Image could not be loaded.') }}";
+      $(function() {
+        $('#fancy-user-nav').show();
+      });
     </script>
   	<script src="{{ STATIC_URL }}cranefly/js/cranefly.js"></script>{% block javascripts %}{% endblock %}
+    {{ hook_append_extra|safe }}
   </body>
 </html>

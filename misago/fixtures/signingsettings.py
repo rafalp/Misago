@@ -37,6 +37,23 @@ settings_fixture = (
                 'name':         _('Allow "Remember Me" tokens refreshing'),
                 'description':  _('Set this setting to off if you want to force your users to periodically update their "Remember Me" tokens by signing in. If this option is on, Tokens are updated when they are used to open new session.'),
             }),
+            ('online_counting', {
+                'value':        "real",
+                'type':         "string",
+                'input':        "choice",
+                'extra':        {'choices': [('no', _("Don't count users online")), ('snap', _("Periodically count and cache onlines")), ('real', _("Real time"))]},
+                'separator':    _("Online Counting"),
+                'name':         _("Count and display number of users online on board index."),
+                'description':  _("Online counter helps members tell how active other members are at the moment. Large forums should use periodical counting that saves resources but is not accurate while small ones can use real time counting that offers complete accuracy without putting much stress on sessions table."),
+            }),
+            ('online_counting_frequency', {
+                'value':        300,
+                'type':         "integer",
+                'input':        "text",
+                'extra':        {'min': 1},
+                'name':         _("Cache expiration"),
+                'description':  _('If you are using cache to count number of users online, here you can enter number of seconds after which cache is marked as expired and refreshed with new data.'),
+            }),
         ),
     }),
 )

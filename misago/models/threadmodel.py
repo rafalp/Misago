@@ -1,7 +1,7 @@
 from datetime import timedelta
 from django.conf import settings
 from django.db import models
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_save, pre_delete
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.signals import (delete_user_content, merge_thread, move_forum_content,
@@ -57,7 +57,6 @@ class Thread(models.Model):
     replies_reported = models.PositiveIntegerField(default=0)
     replies_moderated = models.PositiveIntegerField(default=0)
     replies_deleted = models.PositiveIntegerField(default=0)
-    merges = models.PositiveIntegerField(default=0)
     score = models.PositiveIntegerField(default=30)
     upvotes = models.PositiveIntegerField(default=0)
     downvotes = models.PositiveIntegerField(default=0)
@@ -74,6 +73,7 @@ class Thread(models.Model):
     last_poster_slug = models.SlugField(max_length=255, null=True, blank=True)
     last_poster_style = models.CharField(max_length=255, null=True, blank=True)
     participants = models.ManyToManyField('User', related_name='private_thread_set')
+    report_for = models.ForeignKey('Post', related_name='report_set', null=True, blank=True, on_delete=models.SET_NULL)
     moderated = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     closed = models.BooleanField(default=False)
@@ -85,8 +85,54 @@ class Thread(models.Model):
     class Meta:
         app_label = 'misago'
 
+    def delete(self, *args, **kwargs):
+        """
+        FUGLY HAX for weird stuff that happens with
+        relations on model deletion in MySQL
+        """
+        if self.replies_reported:
+            clear_reports = [post.pk for post in self.post_set.filter(reported=True)]
+            if clear_reports:
+                Thread.objects.filter(report_for__in=clear_reports).update(report_for=None)
+        return super(Thread, self).delete(*args, **kwargs)
+
     def get_date(self):
         return self.start
+
+    def set_checkpoints(self, show_all, posts, stop=None):
+        qs = self.checkpoint_set.filter(date__gte=posts[0].date)
+        if not show_all:
+            qs = qs.filter(deleted=False)
+        if stop:
+            qs = qs.filter(date__lte=stop)
+        checkpoints = [i for i in qs]
+
+        i_max = len(posts) - 1
+        for i, post in enumerate(posts):
+            post.checkpoints_visible = []
+            for c in checkpoints:
+                if c.date >= post.date and (i == i_max or c.date < posts[i+1].date):
+                    post.checkpoints_visible.append(c)
+
+    def set_checkpoint(self, request, action, user=None, forum=None):
+        if request.user.is_authenticated():
+            self.checkpoint_set.create(
+                                       forum=self.forum,
+                                       thread=self,
+                                       action=action,
+                                       user=request.user,
+                                       user_name=request.user.username,
+                                       user_slug=request.user.username_slug,
+                                       date=timezone.now(),
+                                       ip=request.session.get_ip(request),
+                                       agent=request.META.get('HTTP_USER_AGENT'),
+                                       target_user=user,
+                                       target_user_name=(user.username if user else None),
+                                       target_user_slug=(user.username_slug if user else None),
+                                       old_forum=forum,
+                                       old_forum_name=(forum.name if forum else None),
+                                       old_forum_slug=(forum.slug if forum else None),
+                                       )
 
     def new_start_post(self, post):
         self.start = post.date
@@ -110,8 +156,8 @@ class Thread(models.Model):
         move_thread.send(sender=self, move_to=move_to)
         self.forum = move_to
 
-    def merge_with(self, thread, merge):
-        merge_thread.send(sender=self, new_thread=thread, merge=merge)
+    def merge_with(self, thread):
+        merge_thread.send(sender=self, new_thread=thread)
 
     def sync(self):
         # Counters
@@ -122,7 +168,7 @@ class Thread(models.Model):
         self.replies_moderated = self.post_set.filter(moderated=True).count()
         self.replies_deleted = self.post_set.filter(deleted=True).count()
         # First post
-        start_post = self.post_set.order_by('merge', 'id')[0:][0]
+        start_post = self.post_set.order_by('id')[0:][0]
         self.start = start_post.date
         self.start_post = start_post
         self.start_poster = start_post.user
@@ -133,7 +179,7 @@ class Thread(models.Model):
         self.downvotes = start_post.downvotes
         # Last visible post
         if self.replies > 0:
-            last_post = self.post_set.order_by('-merge', '-id').filter(moderated=False)[0:][0]
+            last_post = self.post_set.order_by('-id').filter(moderated=False)[0:][0]
         else:
             last_post = start_post
         self.last = last_post.date
@@ -145,14 +191,14 @@ class Thread(models.Model):
         # Flags
         self.moderated = start_post.moderated
         self.deleted = start_post.deleted
-        self.merges = last_post.merge
         
     def email_watchers(self, request, thread_type, post):
         from misago.acl.builder import acl
         from misago.acl.exceptions import ACLError403, ACLError404
         from misago.models import ThreadRead, WatchedThread
 
-        for watch in WatchedThread.objects.filter(thread=self).filter(email=True).filter(last_read__gte=self.previous_last.date):
+        notified = []
+        for watch in WatchedThread.objects.filter(thread=self).filter(last_read__gte=self.previous_last.date):
             user = watch.user
             if user.pk != request.user.pk:
                 try:
@@ -161,14 +207,17 @@ class Thread(models.Model):
                     user_acl.threads.allow_thread_view(user, self)
                     user_acl.threads.allow_post_view(user, self, post)
                     if not user.is_ignoring(request.user):
-                        user.email_user(
-                                        request,
-                                        '%s_reply_notification' % thread_type,
-                                        _('New reply in thread "%(thread)s"') % {'thread': self.name},
-                                        {'author': request.user, 'post': post, 'thread': self}
-                                        )
+                        if watch.email:
+                            user.email_user(
+                                            request,
+                                            '%s_reply_notification' % thread_type,
+                                            _('New reply in thread "%(thread)s"') % {'thread': self.name},
+                                            {'author': request.user, 'post': post, 'thread': self}
+                                            )
+                        notified.append(user)
                 except (ACLError403, ACLError404):
                     pass
+        return notified
 
 
 def rename_user_handler(sender, **kwargs):
@@ -182,6 +231,34 @@ def rename_user_handler(sender, **kwargs):
                                                      )
 
 rename_user.connect(rename_user_handler, dispatch_uid="rename_user_threads")
+
+
+def report_update_handler(sender, **kwargs):
+    if sender == Thread:
+        thread = kwargs.get('instance')
+        if thread.weight < 2 and thread.report_for_id:
+            reported_post = thread.report_for
+            if reported_post.reported:
+                reported_post.reported = False
+                reported_post.save(force_update=True)
+                reported_post.thread.replies_reported -= 1
+                reported_post.thread.save(force_update=True)
+
+pre_save.connect(report_update_handler, dispatch_uid="sync_post_reports_on_update")
+
+
+def report_delete_handler(sender, **kwargs):
+    if sender == Thread:
+        thread = kwargs.get('instance')
+        if thread.report_for_id:
+            reported_post = thread.report_for
+            if reported_post.reported:
+                reported_post.reported = False
+                reported_post.save(force_update=True)
+                reported_post.thread.replies_reported -= 1
+                reported_post.thread.save(force_update=True)
+
+pre_delete.connect(report_delete_handler, dispatch_uid="sync_post_reports_on_delete")
 
 
 def delete_user_content_handler(sender, **kwargs):

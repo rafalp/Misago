@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.core.cache import cache
 from django.utils import timezone
 from misago.models import MonitorItem
@@ -13,7 +14,7 @@ class Monitor(object):
         if not self._items:
             self._items = {}
             for i in MonitorItem.objects.all():
-                self._items[i.id] = [i.value, i.updated]
+                self._items[i.id] = [i.value, i.updated, i.type]
             cache.set('monitor', self._items)
 
     def __contains__(self, key):
@@ -24,13 +25,25 @@ class Monitor(object):
 
     def __setitem__(self, key, value):
         self._items[key][0] = value
+        self._items[key][1] = timezone.now()
         cache.set('monitor', self._items)
-        sync_item = MonitorItem(id=key, value=value, updated=timezone.now())
+        sync_item = MonitorItem(
+                                id=key,
+                                value=value,
+                                type=self._items[key][2],
+                                updated=timezone.now()
+                                )
         sync_item.save(force_update=True)
         return value
 
     def __delitem__(self, key):
         pass
+
+    def increase(self, key, i=1):
+        self[key] = self[key] + i
+
+    def decrease(self, key, i=1):
+        self[key] = self[key] - i
 
     def get(self, key, default=None):
         if not key in self._items:
@@ -41,6 +54,9 @@ class Monitor(object):
         if key in self._items:
             return self._items[key][1]
         return None
+
+    def expired(self, key, seconds=5):
+        return self._items[key][1] < (timezone.now() - timedelta(seconds=seconds))
 
     def has_key(self, key):
         return key in self._items

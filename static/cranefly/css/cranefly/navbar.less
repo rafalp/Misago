@@ -37,9 +37,14 @@
 
       color: @textColor;
 
-      input {
+      &.search-disabled {
+        .opacity(60);
+      }
+
+      input, input:disabled {
         border: none;
         .box-shadow(none);
+        background: none;
         margin: 0px;
       }
 
@@ -128,11 +133,162 @@
 
             img {
               border-radius: @baseBorderRadius;
-              margin-right: 4px;
+              margin-right: 6px;
               width: 32px;
               height: 32px;
               position: relative;
               bottom: 1px;
+            }
+          }
+        }
+      }
+    }
+
+    .navbar-compact {
+      display: none;
+      
+      li {
+        &.user-profile {
+          &>a {
+            &:link, &:visited {
+              .border-radius(0);
+              margin-top: 0px;
+              padding: @baseFontSize;
+              padding-top: 10px;
+              padding-bottom: 8px;
+
+              img {
+                margin-right: 0px;
+                margin-left: 6px;
+              }
+
+              .caret-border {
+                background-color: @bodyBackground;
+                border: 1px solid @navbarBorder;
+                .border-radius(2px);
+                margin-left: 8px;
+                padding: 0px 4px;
+
+                .caret {
+                  margin: 0px;
+                  padding: 0px;
+                  position: relative;
+                  top: 13px;
+                }
+              }
+            }
+
+            &:hover, &:active {
+              background-color: @bodyBackground;
+
+              .caret-border {
+                border-color: @grayLight;
+              }
+            }
+          }
+
+          &.open .dropdown-toggle {
+            &:link, &:visited, &:hover, &:focus {
+              background-color: @bodyBackground;
+
+              .caret-border {
+                background: @red;
+                border-color: @red;
+
+                .caret {
+                  border-top-color: @white;
+                }
+              }
+            }
+          }
+
+          .dropdown-menu {
+            border: none;
+            .border-radius(2px);
+            border-top: 4px solid @red;
+            .box-shadow(0px 3px 4px @grayLight);
+            margin: 0px;
+            margin-top: -8px;
+            margin-right: 1px;
+            padding: 4px 0px;
+            width: 270px;
+
+            &:before {
+              display: none;
+            }
+
+            &:after {
+              border-bottom: 6px solid @red;
+              margin-top: -3px;
+              margin-right: 11px;
+            }
+
+            &>li {
+              margin: 0px;
+              padding: 0px;
+
+              .label {
+                float: right;
+                margin: 0px;
+                margin-top: 2px;
+              }
+
+              a, .btn-link {
+                .border-radius(0);
+                clear: none;
+                display: block;
+                float: none;
+                margin: 0px;
+                padding: 6px 12px;
+
+                color: @textColor;
+                font-weight: normal;
+                text-align: left;
+                
+                i {
+                  .opacity(100);
+                }
+
+                &:link, &:active, &:visited, &:hover {
+                  .label {
+                    background-color: @red;
+                    float: right;
+
+                    color: @white;
+                    text-shadow: 0px 1px 0px darken(@red, 20%);
+                  }
+                }
+              }
+
+              a:link, a:visited {
+                .opacity(80);
+              }
+
+              a:hover {
+                background-color: @gray;
+                .opacity(100);
+
+                color: @white;
+              }
+
+              .btn-link {
+                background: none;
+                border: none;
+                width: 100%;
+
+                &:hover, &:active {
+                  background: @red;
+                  .opacity(100);
+
+                  color: @white;
+                  text-shadow: 0px 1px 0px darken(@red, 20%);
+                }
+
+                i {
+                  position: relative;
+                  top: 0px;
+                }
+              }
             }
           }
         }

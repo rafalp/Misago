@@ -5,7 +5,7 @@ from misago.validators import validate_sluggable
 
 class PolicyForm(Form):
     name = forms.CharField(max_length=255, validators=[validate_sluggable(
-                                                                          _("Policy name must be sluggable."),
+                                                                          _("Policy name must contain alphanumeric characters."),
                                                                           _("Policy name is too long.")
                                                                           )])
     email = forms.CharField(max_length=255, required=False)

@@ -1,11 +1,14 @@
 from django import forms
 from django.conf import settings
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from misago.apps.threadtype.mixins import ValidateThreadNameMixin, ValidatePostLengthMixin
+from misago.apps.threadtype.mixins import (FloodProtectionMixin,
+                                           ValidateThreadNameMixin,
+                                           ValidatePostLengthMixin)
 from misago.forms import Form
 from misago.validators import validate_sluggable
 
-class PostingForm(Form, ValidatePostLengthMixin):
+class PostingForm(FloodProtectionMixin, Form, ValidatePostLengthMixin):
     include_thread_weight = True
     include_close_thread = True
     post = forms.CharField(widget=forms.Textarea)
@@ -20,7 +23,7 @@ class PostingForm(Form, ValidatePostLengthMixin):
                        [
                         None,
                         [
-                         ('post', {'label': _("Post Content")}),
+                         ('post', {'label': _("Message Body")}),
                          ]
                         ]
                        ]

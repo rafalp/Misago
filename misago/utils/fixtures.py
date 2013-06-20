@@ -104,6 +104,23 @@ def load_monitor_fixture(fixture):
     for id in fixture.keys():
         item = MonitorItem.objects.create(
                                           id=id,
-                                          value=fixture[id],
+                                          value=fixture[id][0],
+                                          type=fixture[id][1],
                                           updated=timezone.now()
                                           )
+
+
+def update_monitor_fixture(fixture):
+    for id in fixture.keys():
+        try:
+            item = MonitorItem.objects.get(id=id)
+            item.type = fixture[id][1]
+            item.updated = timezone.now()
+            item.save(force_update=True)
+        except MonitorItem.DoesNotExist:
+            MonitorItem.objects.create(
+                                       id=id,
+                                       value=fixture[id][0],
+                                       type=fixture[id][1],
+                                       updated=timezone.now()
+                                       )

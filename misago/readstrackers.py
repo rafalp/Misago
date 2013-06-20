@@ -67,12 +67,12 @@ class ThreadsTracker(object):
             except KeyError:
                 self.need_create = thread
 
-    def unread_count(self, queryset):
+    def unread_count(self, queryset=None):
         try:
             return self.unread_threads
         except AttributeError:
             self.unread_threads = 0
-            if not queryset:
+            if queryset == None:
                 queryset = self.default_queryset()
             for thread in queryset.filter(last__gte=self.record.cleared):
                 if not self.is_read(thread):
@@ -81,7 +81,7 @@ class ThreadsTracker(object):
 
     def sync(self, queryset=None):
         now = timezone.now()
-        if not queryset:
+        if queryset == None:
             queryset = self.default_queryset()
 
         if self.need_create:

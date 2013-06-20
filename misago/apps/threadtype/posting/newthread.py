@@ -33,7 +33,7 @@ class NewThreadBaseView(PostingBaseView):
                                             )
 
         # Create our post
-        self.md, post_preparsed = post_markdown(self.request, form.cleaned_data['post'])
+        self.md, post_preparsed = post_markdown(form.cleaned_data['post'])
         self.post = Post.objects.create(
                                         forum=self.forum,
                                         thread=self.thread,
@@ -44,6 +44,7 @@ class NewThreadBaseView(PostingBaseView):
                                         post=form.cleaned_data['post'],
                                         post_preparsed=post_preparsed,
                                         date=now,
+                                        current_date=now,
                                         moderated=moderation,
                                         )
 
@@ -62,8 +63,8 @@ class NewThreadBaseView(PostingBaseView):
 
         # Update forum monitor
         if not moderation:
-            self.request.monitor['threads'] = int(self.request.monitor['threads']) + 1
-            self.request.monitor['posts'] = int(self.request.monitor['posts']) + 1
+            self.request.monitor.increase('threads')
+            self.request.monitor.increase('posts')
             self.forum.threads += 1
             self.forum.posts += 1
             self.forum.new_last_thread(self.thread)

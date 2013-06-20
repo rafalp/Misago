@@ -38,6 +38,8 @@ def load():
                         'can_delete_posts': 2,
                         'can_delete_polls': 2,
                         'can_delete_attachments': True,
+                        'can_see_deleted_checkpoints': True,
+                        'can_delete_checkpoints': 2,
                        }
     role.save(force_insert=True)
 
