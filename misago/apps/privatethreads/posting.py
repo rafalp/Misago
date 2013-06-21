@@ -60,7 +60,7 @@ class NewReplyView(NewReplyBaseView, TypeMixin):
 
     def set_context(self):
         super(NewReplyView, self).set_context()
-        if not (self.request.acl.private_threads.is_mod() or self.thread.participants.count() < 2):
+        if not (self.request.acl.private_threads.is_mod() or self.thread.participants.count() > 1):
             raise ACLError403(_("This thread needs to have more than one participant to allow new replies."))
 
     def after_form(self, form):
