@@ -1,27 +1,24 @@
-from misago.decorators import block_crawlers
 from misago.models import Post
-from misago.apps.errors import error404
-from misago.apps.search.views import do_search, results
+from misago.acl.exceptions import ACLError404
+from misago.apps.search.views import SearchBaseView, ResultsBaseView
 
-def allow_search(f):
-    def decorator(*args, **kwargs):
-        request = args[0]
-        if not (request.acl.private_threads.can_participate()
-                and request.settings['enable_private_threads']):
-            return error404()
-        return f(*args, **kwargs)
-    return decorator
+class SearchPrivateThreadsMixin(object):
+    search_route = 'private_threads_search'
+    results_route = 'private_threads_results'
 
+    def check_acl(self):
+        if not (self.request.acl.private_threads.can_participate()
+                and self.request.settings['enable_private_threads']):
+            raise ACLError404()
 
-@block_crawlers
-@allow_search
-def search_private_threads(request):
-    threads = [t.pk for t in request.user.private_thread_set.all()]
-    queryset = Post.objects.filter(thread_id__in=threads)
-    return do_search(request, queryset, 'private_threads')
+    def queryset(self):
+        threads = [t.pk for t in self.request.user.private_thread_set.all()]
+        return Post.objects.filter(thread_id__in=threads)
 
 
-@block_crawlers
-@allow_search
-def show_private_threads_results(request, page=0):
-    return results(request, page, 'private_threads')
+class SearchView(SearchPrivateThreadsMixin, SearchBaseView):
+    pass
+
+
+class ResultsView(SearchPrivateThreadsMixin, ResultsBaseView):
+    pass

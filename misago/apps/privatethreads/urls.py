@@ -38,7 +38,7 @@ urlpatterns = patterns('misago.apps.privatethreads',
     url(r'^(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<post>\d+)/changelog/(?P<change>\d+)/$', 'changelog.ChangelogDiffView', name="private_thread_changelog_diff"),
     url(r'^(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<post>\d+)/changelog/(?P<change>\d+)/revert/$', 'changelog.ChangelogRevertView', name="private_thread_changelog_revert"),
     # Extra search routes
-    url(r'^search/$', 'search.search_private_threads', name="private_threads_search"),
-    url(r'^search/results/$', 'search.show_private_threads_results', name="private_threads_results"),
-    url(r'^search/results/(?P<page>[1-9]([0-9]+)?)/$', 'search.show_private_threads_results', name="private_threads_results"),
+    url(r'^search/$', 'search.SearchView', name="private_threads_search"),
+    url(r'^search/results/$', 'search.SearchView', name="private_threads_results"),
+    url(r'^search/results/(?P<page>[1-9]([0-9]+)?)/$', 'search.ResultsView', name="private_threads_results"),
 )
