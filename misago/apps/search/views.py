@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
-from haystack.query import RelatedSearchQuerySet
+from haystack.query import SearchQuerySet, RelatedSearchQuerySet
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.decorators import block_crawlers
 from misago.forms import FormFields
@@ -31,15 +31,17 @@ class ViewBase(object):
         return QuickSearchForm
 
     def render_to_response(self, template, form, context):
-        context.update({
-                        'form': FormFields(form),
-                        'search_route': self.search_route,
-                        'results_route': self.results_route,
-                        'search_advanced': self.advanced_route,
-                        'disable_search': True,
-                        })
+        tpl_dict = {
+                    'form': FormFields(form),
+                    'search_route': self.search_route,
+                    'results_route': self.results_route,
+                    'search_advanced': self.advanced_route,
+                    'suggestion': None,
+                    'disable_search': True,
+                    }
+        tpl_dict.update(context)
         return self.request.theme.render_to_response('search/%s.html' % template,
-                                                     context,
+                                                     tpl_dict,
                                                      context_instance=RequestContext(self.request))
 
     def __new__(cls, request, **kwargs):
@@ -86,21 +88,35 @@ class SearchBaseView(ViewBase):
                     self.request.POST = self.request.POST.copy()
                     self.request.POST['username'] = form.target
                     return users_list(self.request)
-                sqs = RelatedSearchQuerySet().auto_query(form.cleaned_data['search_query']).order_by('-id').load_all()
-                sqs = sqs.load_all_queryset(Post, self.queryset().filter(deleted=False).filter(moderated=False).select_related('thread', 'forum', 'user'))[:60]
 
+                sqs = self.filter_queryset(SearchQuerySet().auto_query(form.cleaned_data['search_query'])).load_all()[:60]
+                suggestion = SearchQuerySet().spelling_suggestion(form.cleaned_data['search_query'])
+                
                 if self.request.user.is_authenticated():
                     self.request.user.last_search = timezone.now()
                     self.request.user.save(force_update=True)
                 if self.request.user.is_anonymous():
                     self.request.session['last_search'] = timezone.now()
-
+                
                 if not sqs:
-                    raise SearchException(_("Search returned no results. Change search query and try again."))
+                    raise SearchException(_("Search returned no results. Change search query and try again."), suggestion)
+
+                if (suggestion.lower() == form.cleaned_data['search_query'].lower()
+                        or suggestion.lower() in form.cleaned_data['search_query'].lower()):
+                    suggestion = None
+
+                if suggestion:
+                    new_sqs = self.filter_queryset(SearchQuerySet().auto_query(form.cleaned_data['search_query'])).load_all()[:60]
+                    sqs_len = len(sqs)
+                    new_len = len(new_sqs)
+                    if not new_len or new_len < sqs_len * 0.8:
+                        suggestion = None # We are assuming suggestion is wrong
+
                 self.request.session[self.results_route] = {
-                                                               'search_query': form.cleaned_data['search_query'],
-                                                               'search_results': [p.object for p in sqs],
-                                                               }
+                                                            'search_query': form.cleaned_data['search_query'],
+                                                            'search_suggestion': suggestion,
+                                                            'search_results': [p.object for p in sqs],
+                                                            }
                 return redirect(reverse(self.results_route))
             else:
                 if 'search_query' in form.errors:
@@ -108,7 +124,7 @@ class SearchBaseView(ViewBase):
                 raise SearchException(form.errors['__all__'][0])
         except SearchException as e:
             return self.render_to_response('error', form,  
-                                           {'message': unicode(e)})
+                                           {'message': unicode(e), 'suggestion': unicode(e.suggestion)})
 
 
 class ResultsBaseView(ViewBase):
@@ -130,6 +146,7 @@ class ResultsBaseView(ViewBase):
         return self.render_to_response('results', form,  
                                        {
                                         'search_query': result['search_query'],
+                                        'suggestion': result['search_suggestion'],
                                         'results': items[pagination['start']:pagination['stop']],
                                         'items_total': items_total,
                                         'pagination': pagination,

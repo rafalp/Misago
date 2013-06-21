@@ -11,9 +11,9 @@ class SearchPrivateThreadsMixin(object):
                 and self.request.settings['enable_private_threads']):
             raise ACLError404()
 
-    def queryset(self):
+    def filter_queryset(self, sqs):
         threads = [t.pk for t in self.request.user.private_thread_set.all()]
-        return Post.objects.filter(thread_id__in=threads)
+        return sqs.filter(thread_id__in=threads)
 
 
 class SearchView(SearchPrivateThreadsMixin, SearchBaseView):

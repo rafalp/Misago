@@ -10,8 +10,8 @@ class SearchReportsMixin(object):
         if not self.request.acl.reports.can_handle():
             raise ACLError404()
 
-    def queryset(self):
-        return Post.objects.filter(forum=Forum.objects.special_pk('reports'))
+    def filter_queryset(self, sqs):
+        return sqs.filter(forum=Forum.objects.special_pk('reports'))
 
 
 class SearchView(SearchReportsMixin, SearchBaseView):

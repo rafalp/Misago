@@ -24,5 +24,8 @@ class PostIndex(indexes.SearchIndex, indexes.Indexable):
             return False
         return True
 
+    def read_queryset(self, using=None):
+        return Post.objects.all().select_related('forum', 'thread', 'user')
+
     def index_queryset(self, using=None):
-        return self.get_model().objects.all()
+        return self.get_model().objects.all().select_related('thread')

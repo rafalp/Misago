@@ -57,6 +57,7 @@ HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine', # Misago uses Whoosh by default
         'PATH': 'searchindex',
+        'INCLUDE_SPELLING': True,
     },
 }
 
