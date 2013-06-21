@@ -12,6 +12,7 @@ from misago.apps.threadtype.thread.forms import QuickReplyForm
 
 class PostingBaseView(ViewBase):
     allow_quick_reply = False
+    block_flood_requests = True
 
     def form_initial_data(self):
         return {}
@@ -110,6 +111,7 @@ class PostingBaseView(ViewBase):
             self._set_context()
             self.check_forum_type()
             self._check_permissions()
+            request.block_flood_requests = self.block_flood_requests
             if request.method == 'POST':
                 # Create correct form instance
                 if self.allow_quick_reply and 'quick_reply' in request.POST:
@@ -120,7 +122,6 @@ class PostingBaseView(ViewBase):
                         form = self.form_type(request.POST, request.FILE, request=request, forum=self.forum, thread=self.thread)
                     except AttributeError:
                         form = self.form_type(request.POST, request=request, forum=self.forum, thread=self.thread)
-                
                 # Handle specific submit
                 if 'preview' in request.POST:
                     form.empty_errors()

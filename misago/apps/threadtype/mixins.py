@@ -6,7 +6,7 @@ from misago.utils.strings import slugify
 class FloodProtectionMixin(object):
     def clean(self):
         cleaned_data = super(FloodProtectionMixin, self).clean()
-        if self.request.user.last_post:
+        if self.request.block_flood_requests and self.request.user.last_post:
             diff = timezone.now() - self.request.user.last_post
             diff = diff.seconds + (diff.days * 86400)
             flood_limit = 35

@@ -7,6 +7,7 @@ from misago.utils.strings import slugify
 class EditThreadBaseView(PostingBaseView):
     action = 'edit_thread'
     form_type = EditThreadForm
+    block_flood_requests = False
 
     def set_context(self):
         self.set_thread_context()
