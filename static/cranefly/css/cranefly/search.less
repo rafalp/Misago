@@ -1,6 +1,35 @@
 // Search forum
 // ------------------------
 
+.search-suggestion {
+  overflow: auto;
+
+  p, form {
+    float: left;
+  }
+
+  .lead {
+    color: lighten(@gray, 15%);
+  }
+
+  form {
+    .btn-link {
+      margin-top: 1px;
+
+      color: @bluePale;
+      font-size: @baseFontSize * 1.5;
+      font-style: italic;
+      font-weight: 200;
+      text-decoration: underline;
+
+      &:hover, &:active {
+        color: @bluePale;
+        text-decoration: underline !important;
+      }
+    }
+  }
+}
+
 .search-resume {
   .muted {
     color: lighten(@gray, 15%);

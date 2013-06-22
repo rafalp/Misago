@@ -33,6 +33,7 @@ class Post(models.Model):
     edit_user = models.ForeignKey('User', related_name='+', null=True, blank=True, on_delete=models.SET_NULL)
     edit_user_name = models.CharField(max_length=255, null=True, blank=True)
     edit_user_slug = models.SlugField(max_length=255, null=True, blank=True)
+    delete_date = models.DateTimeField(null=True, blank=True)
     reported = models.BooleanField(default=False, db_index=True)
     moderated = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
@@ -44,6 +45,11 @@ class Post(models.Model):
 
     class Meta:
         app_label = 'misago'
+
+    def save(self, *args, **kwargs):
+        self.current_date = timezone.now()
+        return super(Post, self).save(*args, **kwargs)
+
 
     def delete(self, *args, **kwargs):
         """
@@ -112,6 +118,7 @@ class Post(models.Model):
 def rename_user_handler(sender, **kwargs):
     Post.objects.filter(user=sender).update(
                                             user_name=sender.username,
+                                            current_date=timezone.now(),
                                             )
     Post.objects.filter(edit_user=sender).update(
                                                  edit_user_name=sender.username,

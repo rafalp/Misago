@@ -13,5 +13,5 @@
 {% endblock %}
 
 {% macro style_query(query) -%}
-<a href="{{ ('%s_results'|format(search_route))|url }}">{{ query }}</a>
+<a href="{{ results_route|url }}">{{ query }}</a>
 {%- endmacro %}

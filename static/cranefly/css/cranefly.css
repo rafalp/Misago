@@ -1219,6 +1219,9 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{opacity:0.9;filter:alpha(opa
 .reports-list .thread-name .report-id{color:#999999 !important;}
 .reports-list .thread-name,.reports-list .thread-details{margin-left:0px !important;}
 .reports-list .thread-icon{display:none !important;float:none;}
+.search-suggestion{overflow:auto;}.search-suggestion p,.search-suggestion form{float:left;}
+.search-suggestion .lead{color:#7b7b7b;}
+.search-suggestion form .btn-link{margin-top:1px;color:#3c85a3;font-size:21px;font-style:italic;font-weight:200;text-decoration:underline;}.search-suggestion form .btn-link:hover,.search-suggestion form .btn-link:active{color:#3c85a3;text-decoration:underline !important;}
 .search-resume .muted{color:#7b7b7b;}.search-resume .muted a{color:#333333;}
 .search-results .results-list .result{border-bottom:1px solid #eeeeee;margin-bottom:10px;padding-bottom:10px;}.search-results .results-list .result h3{margin:0px;line-height:20px;}.search-results .results-list .result h3 a:link,.search-results .results-list .result h3 a:visited{color:#555555;font-weight:normal;font-size:18.2px;text-decoration:underline;}
 .search-results .results-list .result h3 a:hover,.search-results .results-list .result h3 a:active{color:#333333;}

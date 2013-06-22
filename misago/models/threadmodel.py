@@ -159,6 +159,9 @@ class Thread(models.Model):
     def merge_with(self, thread):
         merge_thread.send(sender=self, new_thread=thread)
 
+    def update_current_dates(self):
+        self.post_set.update(current_date=timezone.now())
+
     def sync(self):
         # Counters
         self.replies = self.post_set.filter(moderated=False).count() - 1
