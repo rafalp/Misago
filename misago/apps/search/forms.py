@@ -46,7 +46,7 @@ class QuickSearchForm(Form):
                 if wait_for < 5:
                     raise forms.ValidationError(_("You can't perform one search so quickly after another. Please wait a moment and try again."))
                 else:
-                    raise forms.ValidationError(ungettext(
+                    raise forms.ValidationError(ungettext_lazy(
                             "You can't perform one search so quickly after another. Please wait %(seconds)d second and try again.",
                             "You can't perform one search so quickly after another. Please wait %(seconds)d seconds and try again.",
                         wait_for) % {
@@ -65,7 +65,7 @@ class QuickSearchForm(Form):
                 if wait_for < 5:
                     raise forms.ValidationError(_("You can't perform one search so quickly after another. Please wait a moment and try again."))
                 else:
-                    raise forms.ValidationError(ungettext(
+                    raise forms.ValidationError(ungettext_lazy(
                             "You can't perform one search so quickly after another. Please wait %(seconds)d second and try again.",
                             "You can't perform one search so quickly after another. Please wait %(seconds)d seconds and try again.",
                         wait_for) % {

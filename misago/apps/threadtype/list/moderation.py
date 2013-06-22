@@ -28,6 +28,7 @@ class ThreadsListModeration(object):
                 thread.start_post.moderated = False
                 thread.start_post.save(force_update=True)
                 thread.set_checkpoint(self.request, 'accepted')
+                thread.update_current_dates()
                 # Sync user
                 if thread.last_post.user:
                     thread.start_post.user.threads += 1
@@ -102,6 +103,7 @@ class ThreadsListModeration(object):
                     thread.move_to(new_forum)
                     thread.save(force_update=True)
                     thread.set_checkpoint(self.request, 'moved', forum=self.forum)
+                    thread.update_current_dates()
                 new_forum.sync()
                 new_forum.save(force_update=True)
                 self.forum.sync()
@@ -146,6 +148,7 @@ class ThreadsListModeration(object):
                 Thread.objects.filter(id__in=merged).delete()
                 new_thread.sync()
                 new_thread.save(force_update=True)
+                new_thread.update_current_dates()
                 self.forum.sync()
                 self.forum.save(force_update=True)
                 if form.cleaned_data['new_forum'].pk != self.forum.pk:
@@ -226,6 +229,7 @@ class ThreadsListModeration(object):
                 thread.sync()
                 thread.save(force_update=True)
                 thread.set_checkpoint(self.request, 'undeleted')
+                thread.update_current_dates()
         if undeleted:
             self.forum.sync()
             self.forum.save(force_update=True)
@@ -247,6 +251,7 @@ class ThreadsListModeration(object):
                 thread.sync()
                 thread.save(force_update=True)
                 thread.set_checkpoint(self.request, 'deleted')
+                thread.update_current_dates()
         if deleted:
             self.forum.sync()
             self.forum.save(force_update=True)

@@ -41,7 +41,6 @@ class PostsModeration(object):
             post.merge_with(new_post)
             post.delete()
         md, new_post.post_preparsed = post_markdown(new_post.post)
-        new_post.current_date = timezone.now()
         new_post.save(force_update=True)
         self.thread.sync()
         self.thread.save(force_update=True)
@@ -140,21 +139,6 @@ class PostsModeration(object):
                                                       },
                                                      context_instance=RequestContext(self.request));
 
-    def post_action_undelete(self, ids):
-        undeleted = []
-        for post in self.posts:
-            if post.pk in ids and post.deleted:
-                undeleted.append(post.pk)
-        if undeleted:
-            self.thread.post_set.filter(id__in=undeleted).update(deleted=False)
-            self.thread.sync()
-            self.thread.save(force_update=True)
-            self.forum.sync()
-            self.forum.save(force_update=True)
-            self.request.messages.set_flash(Message(_('Selected posts have been restored.')), 'success', 'threads')
-        else:
-            self.request.messages.set_flash(Message(_('No posts were restored.')), 'info', 'threads')
-
     def post_action_protect(self, ids):
         protected = 0
         for post in self.posts:
@@ -177,6 +161,21 @@ class PostsModeration(object):
         else:
             self.request.messages.set_flash(Message(_('No posts were unprotected.')), 'info', 'threads')
 
+    def post_action_undelete(self, ids):
+        undeleted = []
+        for post in self.posts:
+            if post.pk in ids and post.deleted:
+                undeleted.append(post.pk)
+        if undeleted:
+            self.thread.post_set.filter(id__in=undeleted).update(deleted=False, current_date=timezone.now())
+            self.thread.sync()
+            self.thread.save(force_update=True)
+            self.forum.sync()
+            self.forum.save(force_update=True)
+            self.request.messages.set_flash(Message(_('Selected posts have been restored.')), 'success', 'threads')
+        else:
+            self.request.messages.set_flash(Message(_('No posts were restored.')), 'info', 'threads')
+
     def post_action_soft(self, ids):
         deleted = []
         for post in self.posts:
@@ -185,7 +184,7 @@ class PostsModeration(object):
                     raise forms.ValidationError(_("You cannot delete first post of thread using this action. If you want to delete thread, use thread moderation instead."))
                 deleted.append(post.pk)
         if deleted:
-            self.thread.post_set.filter(id__in=deleted).update(deleted=True, current_date=timezone.now())
+            self.thread.post_set.filter(id__in=deleted).update(deleted=True, current_date=timezone.now(), delete_date=timezone.now())
             self.thread.sync()
             self.thread.save(force_update=True)
             self.forum.sync()

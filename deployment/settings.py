@@ -55,7 +55,9 @@ CACHES = {
 # http://django-haystack.readthedocs.org/en/latest/tutorial.html#modify-your-settings-py
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.whoosh_backend.',
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine', # Misago uses Whoosh by default
+        'PATH': 'searchindex',
+        'INCLUDE_SPELLING': True,
     },
 }
 

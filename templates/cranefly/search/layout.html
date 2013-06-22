@@ -16,6 +16,16 @@
 </div>
 
 <div class="container container-primary">
+  {% if suggestion %}
+  <div class="search-suggestion">
+    <p class="lead muted">{% trans %}Did you mean:{% endtrans %}</p>
+    <form action="{{ search_route|url() }}" class="inline-form" method="post">
+      <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+      <input type="hidden" name="search_query" value="{{ suggestion }}">
+      <button type="submit" class="btn btn-link">{{ suggestion }}</button>
+    </form>
+  </div>
+  {% endif %}
   {% block action %}{% endblock %}
 </div>
 {% endblock %}

@@ -13,7 +13,7 @@ from django.db import models
 from django.template import RequestContext
 from django.utils import timezone as tz_util
 from django.utils.translation import ugettext_lazy as _
-from misago.acl.builder import build_acl
+from misago.acl.builder import acl
 from misago.signals import delete_user_content, rename_user, sync_user_profile
 from misago.utils.avatars import avatar_size
 from misago.utils.strings import random_string, slugify
@@ -436,16 +436,7 @@ class User(models.Model):
         return self.acl_key
 
     def acl(self, request):
-        try:
-            self.make_acl_key()
-            acl = cache.get(self.acl_key)
-            if acl.version != request.monitor.acl_version:
-                raise InvalidCacheBackendError()
-        except AttributeError, InvalidCacheBackendError:
-            # build acl cache
-            acl = build_acl(request, self.get_roles())
-            cache.set(self.acl_key, acl, 2592000)
-        return acl
+        return acl(request, self)
 
     def get_avatar(self, size=None):
         image_size = avatar_size(size) if size else None

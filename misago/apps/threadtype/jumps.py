@@ -317,7 +317,6 @@ Member @%(reporter)s has reported following post by @%(reported)s:
                                              post=reason_post,
                                              post_preparsed=reason_post_preparsed,
                                              date=now,
-                                             current_date=now,
                                              )
 
                 report.start_post = reason

@@ -3,7 +3,7 @@ from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.forms import Form, ForumChoiceField
-from misago.models import Thread
+from misago.models import Forum, Thread
 from misago.validators import validate_sluggable
 from misago.apps.threadtype.mixins import ValidateThreadNameMixin
 
@@ -59,6 +59,8 @@ class MovePostsForm(Form, ValidateThreadNameMixin):
         try:
             thread_url = thread_url[len(settings.BOARD_ADDRESS):]
             match = resolve(thread_url)
+            if match.url_name[0:len(self.type_prefix)] != self.type_prefix:
+                raise forms.ValidationError(_("This is not a correct thread URL."))
             thread = Thread.objects.get(pk=match.kwargs['thread'])
             self.request.acl.threads.allow_thread_view(self.request.user, thread)
             if thread.pk == self.thread.pk:
