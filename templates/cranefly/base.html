@@ -15,9 +15,6 @@
   	<script src="{{ STATIC_URL }}cranefly/js/bootstrap.min.js"></script>
     <script type="text/javascript">
       var l_img_broken_msg = "{{ _('Image could not be loaded.') }}";
-      $(function() {
-        $('#fancy-user-nav').show();
-      });
     </script>
   	<script src="{{ STATIC_URL }}cranefly/js/cranefly.js"></script>{% block javascripts %}{% endblock %}
     {{ hook_append_extra|safe }}

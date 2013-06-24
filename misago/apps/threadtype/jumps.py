@@ -353,11 +353,11 @@ class ShowPostReportBaseView(JumpView):
         @block_guest
         def view(request):
             if not self.post.reported:
-                return error404()
+                return error404(request)
             reports = Forum.objects.special_model('reports')
             self.request.acl.forums.allow_forum_view(reports)
             report = self.post.live_report()
             if not report:
-                return error404()
+                return error404(request)
             return redirect(reverse('report', kwargs={'thread': report.pk, 'slug': report.slug}))
         return view(self.request)
