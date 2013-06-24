@@ -74,7 +74,7 @@ def graph(request, model, date_start, date_end, precision):
     """
     if date_start == date_end:
         # Bad dates
-        raise error404()
+        raise error404(RequestContext)
 
     # Turn stuff into datetime's
     date_start = datetime.strptime(date_start, '%Y-%m-%d')
@@ -98,7 +98,7 @@ def graph(request, model, date_start, date_end, precision):
 
     if not model in models_map or check_dates(date_start, date_end, precision):
         # Bad model name or graph data!
-        raise error404()
+        raise error404(request)
 
     form = GenerateStatisticsForm(
                                   provider_choices=statistics_providers,

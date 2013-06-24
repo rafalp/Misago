@@ -38,8 +38,4 @@ urlpatterns = patterns('misago.apps.threads',
     url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<post>\d+)/changelog/$', 'changelog.ChangelogView', name="thread_changelog"),
     url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<post>\d+)/changelog/(?P<change>\d+)/$', 'changelog.ChangelogDiffView', name="thread_changelog_diff"),
     url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<post>\d+)/changelog/(?P<change>\d+)/revert/$', 'changelog.ChangelogRevertView', name="thread_changelog_revert"),
-    # Searching
-    url(r'^search/$', 'search.SearchView', name="search"),
-    url(r'^search/results/$', 'search.ResultsView', name="search_results"),
-    url(r'^search/results/(?P<page>[1-9]([0-9]+)?)/$', 'search.ResultsView', name="search_results"),
 )

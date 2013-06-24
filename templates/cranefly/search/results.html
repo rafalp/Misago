@@ -40,8 +40,8 @@
 <div class="pagination">
   <ul>
     <li class="count">{{ macros.pager_label(pagination) }}</li>
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ ('%s_results'|format(search_route))|url(page=pagination['prev']) }}{% else %}{{ ('%s_results'|format(search_route))|url() }}{% endif %}" class="tooltip-top" title="{% trans %}Newer Posts{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{{ ('%s_results'|format(search_route))|url(page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Older Posts{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'search_results' page=pagination['prev'] %}{% else %}{% url 'search_results' %}{% endif %}" class="tooltip-top" title="{% trans %}Newer Posts{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{% url 'search_results' page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Older Posts{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
   </ul>
 </div>
 {% endif %}

@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
+from haystack.inputs import AutoQuery
 from haystack.query import SearchQuerySet, RelatedSearchQuerySet
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.decorators import block_crawlers
@@ -15,33 +16,56 @@ from misago.apps.errors import error403, error404
 from misago.apps.profiles.views import list as users_list
 from misago.apps.search.forms import QuickSearchForm
 
-
 class ViewBase(object):
     search_route = 'search'
-    results_route = 'search_results'
-    advanced_route = None
 
     def check_acl(self):
         pass
 
-    def queryset(self):
-        pass
+    def make_query(self, search_query):
+        sqs = SearchQuerySet()
+        if self.request.POST.get('search_thread_titles'):
+            sqs = sqs.filter(thread_name=AutoQuery(search_query))
+        else:
+            sqs = sqs.auto_query(search_query)
 
-    def search_form_type(self):
-        return QuickSearchForm
+        if self.request.POST.get('search_in') == 'private':
+            if not (self.request.acl.private_threads.can_participate()
+                    and self.request.settings['enable_private_threads']):
+                raise ACLError404()
+            sqs = sqs.filter(thread__in=[t.pk for t in self.request.user.private_thread_set.all()])
+        elif self.request.POST.get('search_in') == 'reports':
+            if not self.request.acl.reports.can_handle():
+                raise ACLError404()
+            sqs = sqs.filter(forum=Forum.objects.special_pk('reports'))
+        elif self.request.POST.get('search_in') == 'thread':
+            try:
+                thread_id = int(self.request.POST.get('search_thread'))
+                thread_clean = Thread.objects.get(id=thread_id)
+                if not thread_clean.forum_id in Forum.objects.readable_forums(self.request.acl, True):
+                    raise ACLError404()
+                self.thread_clean = thread_clean
+                sqs = sqs.filter(thread=thread_clean.pk)
+            except (TypeError, Thread.DoesNotExist):
+                raise ACLError404()
+        else:
+            sqs = sqs.filter(forum__in=Forum.objects.readable_forums(self.request.acl))
+
+        if self.request.POST.get('search_author'):
+            sqs = sqs.filter(author__exact=self.request.POST.get('search_author'))
+
+        return sqs
 
     def render_to_response(self, template, form, context):
-        tpl_dict = {
-                    'form': FormFields(form),
-                    'search_route': self.search_route,
-                    'results_route': self.results_route,
-                    'search_advanced': self.advanced_route,
-                    'suggestion': None,
-                    'disable_search': True,
-                    }
-        tpl_dict.update(context)
+        for i in ('search_query', 'search_in', 'search_author', 'search_thread_titles'):
+            if self.request.POST.get(i):
+                context[i] = self.request.POST.get(i)
+        try:
+            context['search_thread'] = self.thread_clean
+        except AttributeError:
+            pass
         return self.request.theme.render_to_response('search/%s.html' % template,
-                                                     tpl_dict,
+                                                     context,
                                                      context_instance=RequestContext(self.request))
 
     def __new__(cls, request, **kwargs):
@@ -63,18 +87,18 @@ class ViewBase(object):
             return error404(request, unicode(e))
 
 
-class SearchBaseView(ViewBase):
+class QuickSearchView(ViewBase):
     def call(self, **kwargs):
-        form_type = self.search_form_type()
+        form_type = QuickSearchForm
         if self.request.method != "POST":
-            form = self.search_form_type()(request=self.request)
+            form = QuickSearchForm(request=self.request)
             return self.render_to_response('home', form,  
                                            {
                                             'search_result': self.request.session.get(self.results_route),
                                            })
         
         try:
-            form = self.search_form_type()(self.request.POST, request=self.request)
+            form = QuickSearchForm(self.request.POST, request=self.request)
             if form.is_valid():
                 if form.mode == 'forum':
                     jump_to = Forum.objects.forum_by_name(form.target, self.request.acl)
@@ -89,49 +113,43 @@ class SearchBaseView(ViewBase):
                     self.request.POST['username'] = form.target
                     return users_list(self.request)
 
-                sqs = self.filter_queryset(SearchQuerySet().auto_query(form.cleaned_data['search_query'])).load_all()[:60]
-                suggestion = SearchQuerySet().spelling_suggestion(form.cleaned_data['search_query'])
-                
+                sqs = self.make_query(form.cleaned_data['search_query']).load_all()[:60]
+
                 if self.request.user.is_authenticated():
                     self.request.user.last_search = timezone.now()
                     self.request.user.save(force_update=True)
                 if self.request.user.is_anonymous():
                     self.request.session['last_search'] = timezone.now()
-                
+
                 if not sqs:
-                    raise SearchException(_("Search returned no results. Change search query and try again."), suggestion)
+                    raise SearchException(_("Search returned no results. Change search query and try again."))
 
-                if (suggestion.lower() == form.cleaned_data['search_query'].lower()
-                        or suggestion.lower() in form.cleaned_data['search_query'].lower()):
-                    suggestion = None
-
-                if suggestion:
-                    new_sqs = self.filter_queryset(SearchQuerySet().auto_query(form.cleaned_data['search_query'])).load_all()[:60]
-                    sqs_len = len(sqs)
-                    new_len = len(new_sqs)
-                    if not new_len or new_len < sqs_len * 0.8:
-                        suggestion = None # We are assuming suggestion is wrong
-
-                self.request.session[self.results_route] = {
-                                                            'search_query': form.cleaned_data['search_query'],
-                                                            'search_suggestion': suggestion,
-                                                            'search_results': [p.object for p in sqs],
-                                                            }
-                return redirect(reverse(self.results_route))
+                self.request.session['search_results'] = {
+                                                          'search_query': form.cleaned_data['search_query'],
+                                                          'search_in': self.request.POST.get('search_in'),
+                                                          'search_author': self.request.POST.get('search_author'),
+                                                          'search_thread_titles': self.request.POST.get('search_thread_titles'),
+                                                          'search_results': [p.object for p in sqs],
+                                                          }
+                try:
+                    self.request.session['search_results']['search_thread'] = self.thread_clean
+                except AttributeError:
+                    pass
+                return redirect(reverse('search_results'))
             else:
                 if 'search_query' in form.errors:
                     raise SearchException(form.errors['search_query'][0])
                 raise SearchException(form.errors['__all__'][0])
         except SearchException as e:
-            return self.render_to_response('error', form,  
-                                           {'message': unicode(e), 'suggestion': unicode(e.suggestion)})
+            return self.render_to_response('error', form,
+                                           {'message': unicode(e)})
 
 
-class ResultsBaseView(ViewBase):
+class SearchResultsView(ViewBase):
     def call(self, **kwargs):
-        result = self.request.session.get(self.results_route)
+        result = self.request.session.get('search_results')
         if not result:
-            form = self.search_form_type()(request=self.request)
+            form = QuickSearchForm(request=self.request)
             return self.render_to_response('error', form,  
                                            {'message': _("No search results were found.")})
 
@@ -140,13 +158,16 @@ class ResultsBaseView(ViewBase):
         try:
             pagination = make_pagination(kwargs.get('page', 0), items_total, 12)
         except Http404:
-            return redirect(reverse(self.search_route))
+            return redirect(reverse('search_results'))
 
-        form = self.search_form_type()(request=self.request, initial={'search_query': result['search_query']})
+        form = QuickSearchForm(request=self.request, initial={'search_query': result['search_query']})
         return self.render_to_response('results', form,  
                                        {
                                         'search_query': result['search_query'],
-                                        'suggestion': result['search_suggestion'],
+                                        'search_in': result.get('search_in'),
+                                        'search_author': result.get('search_author'),
+                                        'search_thread_titles': result.get('search_thread_titles'),
+                                        'search_thread': result.get('search_thread'),
                                         'results': items[pagination['start']:pagination['stop']],
                                         'items_total': items_total,
                                         'pagination': pagination,

@@ -25,6 +25,23 @@ $(function () {
   $('.dropdown-clickable').on('click', function (e) {
     e.stopPropagation()
   });
+
+  // Fancy user nav activation
+  $('#fancy-user-nav').show();
+
+  // Search form extension
+  var nav_search_form = $('#navbar-search');
+  $('#search-field').hover(function() {
+    nav_search_form.addClass('open');
+  });
+
+  $('html').click(function() {
+    nav_search_form.removeClass('open');
+  });
+
+  nav_search_form.click(function(event) {
+    event.stopPropagation();
+  });
   
   // Checkbox Group Master
   $('input.checkbox-master').live('click', function(){
