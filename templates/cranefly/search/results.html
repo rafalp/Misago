@@ -6,13 +6,22 @@
 {% block action %}
   <div class="search-results">
     {% if results %}
-    <h2>{% trans results=results|length|intcomma %}Search has returned one result{% pluralize %}Search has returned {{ results }} results:{% endtrans %}</h2>
+    <h2>{% trans count=results|length, results=results|length|intcomma %}Search has returned one result:{% pluralize %}Search has returned {{ results }} results:{% endtrans %}</h2>
     <div class="results-list">
       {% for result in results %}
       <div class="result">
-        <h3><a href="{{ result.forum.thread_link('find')|url(thread=result.thread_id, slug=result.thread.slug, post=result.pk) }}">{{ result.thread.name }}</a></h3>
-        <p class="post-extra">{% trans forum=forum(result.forum), user=username(result), date=result.date|reltimesince|low %}In {{ forum }} by {{ user }} {{ date }}{% endtrans %}</p>
-        <p class="post-preview">{{ result.post_clean|highlight(search_query, 320)|safe }}</p>
+        <div class="result-avatar">
+          {% if result.user_id %}
+          <a href="{% url 'user' user=result.user.pk, username=result.user.username_slug %}"><img src="{{ result.user.get_avatar(70) }}" alt=""></a>
+          {% else %}
+          <img src="{{ macros.avatar_guest(80) }}" alt="{{ resut.user_name }}">
+          {% endif %}
+        </div>
+        <div class="result-content">
+          <h3><a href="{{ result.forum.thread_link('find')|url(thread=result.thread_id, slug=result.thread.slug, post=result.pk) }}">{{ result.thread.name }}</a></h3>
+          <p class="post-preview">{{ result.post_clean|highlight(search_query, 320)|safe }}</p>
+          <p class="post-extra">{% trans forum=forum(result.forum), user=username(result), date=result.date|reltimesince|low %}In {{ forum }} by {{ user }} {{ date }}{% endtrans %}</p>
+        </div>
       </div>
       {% endfor %}
     </div>

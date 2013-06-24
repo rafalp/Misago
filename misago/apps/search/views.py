@@ -92,10 +92,8 @@ class QuickSearchView(ViewBase):
         form_type = QuickSearchForm
         if self.request.method != "POST":
             form = QuickSearchForm(request=self.request)
-            return self.render_to_response('home', form,  
-                                           {
-                                            'search_result': self.request.session.get(self.results_route),
-                                           })
+            return self.render_to_response('home', form,
+                                           {'search_result': self.request.session.get('search_results')})
         
         try:
             form = QuickSearchForm(self.request.POST, request=self.request)
