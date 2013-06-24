@@ -46,29 +46,6 @@
     font-weight: normal;
   }
 
-  &.header-search {
-    h1 {
-      float: left;
-
-      form {
-        float: right;
-        margin: 0px;
-
-        input {
-          margin-left: @baseFontSize * 1.5;
-          .box-shadow(0px 0px 0px 3px darken(@bodyBackground, 5%));
-
-          font-size: @fontSizeLarge;
-
-          &:focus, &:active {
-            border-color: lighten(@linkColor, 25%);
-            .box-shadow(0px 0px 0px 3px lighten(@linkColor, 45%));
-          }
-        }
-      }
-    }  
-  }
-
   .header-stats {
     overflow: visible;
     margin-bottom: 0px;
