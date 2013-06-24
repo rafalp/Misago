@@ -4,7 +4,8 @@ from django.utils.translation import ungettext_lazy, ugettext_lazy as _
 from misago.forms import Form
 
 class QuickSearchForm(Form):
-    search_query = forms.CharField(max_length=255)
+    search_query = forms.CharField(max_length=255,
+                                   error_messages={'required': _("You have to enter search query.")})
 
     def clean_search_query(self):
         data = self.cleaned_data['search_query']
