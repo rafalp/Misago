@@ -4,8 +4,8 @@
 {% block action %}
 {% if search_result %}
 <div class="search-resume">
-  <p class="lead muted">{% trans search_query=style_query(search_result.search_query) %}Your search for "{{ search_query }}" is still available.{% endtrans %}</p>
-  <p class="lead muted">{% trans %}To discard it and start new search, enter phrases you want to find in text field above and press search button.{% endtrans %}</p>
+  <p class="lead muted">{% trans search_query=style_query(search_result.search_query) %}Your search results for query "{{ search_query }}" are still available.{% endtrans %}</p>
+  <p class="lead muted">{% trans %}To discard it and start new search, simply perform new search using form above.{% endtrans %}</p>
 </div>
 {% else %}
 <p class="lead">{% trans %}To search forums, enter phrases you want to find in text field above and press search button.{% endtrans %}</p>
@@ -13,5 +13,5 @@
 {% endblock %}
 
 {% macro style_query(query) -%}
-<a href="{{ results_route|url }}">{{ query }}</a>
+<a href="{% url 'search_results' %}">{{ query }}</a>
 {%- endmacro %}
