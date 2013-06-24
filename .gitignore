@@ -172,6 +172,7 @@ coffin/**
 debug_toolbar/**
 dev/**
 django/**
+django_jinja/**
 haystack/**
 jinja2/**
 markdown/**

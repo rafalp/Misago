@@ -73,8 +73,8 @@ STATICFILES_FINDERS = (
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
+    'django_jinja.loaders.AppLoader',
+    'django_jinja.loaders.FileSystemLoader',
 )
 
 # Context processors
@@ -177,7 +177,7 @@ ROOT_URLCONF = 'misago.urls'
 INSTALLED_APPS = (
     # Applications that have no dependencies first!
     'south', # Database schema building and updating
-    'coffin', # Jinja2 integration
+    'django_jinja', # Jinja2 integration
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'mptt', # Modified Pre-order Tree Transversal - allows us to nest forums 
