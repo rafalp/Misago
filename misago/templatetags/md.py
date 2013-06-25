@@ -1,5 +1,5 @@
 from markdown import markdown
-from coffin.template import Library
+from django_jinja.library import Library
 from django.conf import settings
 import misago.markdown
 

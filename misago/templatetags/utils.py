@@ -1,11 +1,11 @@
-from coffin.template import Library
+from django_jinja.library import Library
 from haystack.utils import Highlighter
 from misago.utils.strings import short_string
 
 register = Library()
 
 
-@register.object(name='intersect')
+@register.global_function(name='intersect')
 def intersect(list_a, list_b):
     for i in list_a:
         if i in list_b:

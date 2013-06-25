@@ -7,7 +7,7 @@
 {% if monitor.users_inactive|int > 0 %}
 <div class="alert alert-info alert-form">
   <div class="alert-icon"><span><i class="icon-info-sign icon-white"></i></span></div>
-  <p><a href="{% url 'admin_users_inactive' %}">{%- trans count=monitor.users_inactive|int, total=monitor.users_inactive|int|intcomma -%}
+  <p><a href="{{ url('admin_users_inactive') }}">{%- trans count=monitor.users_inactive|int, total=monitor.users_inactive|int|intcomma -%}
   There is one inactive user.
   {%- pluralize -%}
   There are {{ total }} inactive users.
@@ -26,7 +26,7 @@
 {% block table_row scoped %}
   <td class="avatar-small"><img src="{{ item.get_avatar(28) }}" class="avatar-small" alt=""></td>
   <td class="lead-cell">
-  	<strong><a href="{% url 'user' username=item.username_slug, user=item.pk %}">{{ item.username }}</a></strong> <span class="muted">{{ item.email }}</span>{% if item.activation > 0 %} <span class="label tooltip-top" title="{% if item.activation == 1 -%}
+  	<strong><a href="{{ url('user', username=item.username_slug, user=item.pk) }}">{{ item.username }}</a></strong> <span class="muted">{{ item.email }}</span>{% if item.activation > 0 %} <span class="label tooltip-top" title="{% if item.activation == 1 -%}
   	{% trans %}This user has not yet validated his e-mail address.{% endtrans %}
   	{%- else -%}
   	{% trans %}This user is awaiting admin approval.{% endtrans %}

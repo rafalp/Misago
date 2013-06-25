@@ -11,8 +11,8 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {{ macros.parents_list(parents) }}
-<li><a href="{{ forum.type|url(forum=forum.pk, slug=forum.slug) }}">{{ forum.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-{% if thread %}<li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>{% endif %}
+<li><a href="{{ url(forum.type, forum=forum.pk, slug=forum.slug) }}">{{ forum.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+{% if thread %}<li><a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>{% endif %}
 <li class="active">{{ get_title() }}
 {%- endblock %}
 
@@ -116,17 +116,17 @@
 
 {% macro get_action() -%}
 {% if action == 'new_thread' -%}
-{% url 'thread_start' forum=forum.pk, slug=forum.slug %}
+{{ url('thread_start', forum=forum.pk, slug=forum.slug) }}
 {%- elif action == 'edit_thread' -%}
-{% url 'thread_edit' thread=thread.pk, slug=thread.slug %}
+{{ url('thread_edit', thread=thread.pk, slug=thread.slug) }}
 {%- elif action in 'new_reply' -%}
 {%- if quote -%}
-{% url 'thread_reply' thread=thread.pk, slug=thread.slug, quote=quote.pk %}
+{{ url('thread_reply', thread=thread.pk, slug=thread.slug, quote=quote.pk) }}
 {%- else -%}
-{% url 'thread_reply' thread=thread.pk, slug=thread.slug %}
+{{ url('thread_reply', thread=thread.pk, slug=thread.slug) }}
 {%- endif -%}
 {%- elif action == 'edit_reply' -%}
-{% url 'post_edit' thread=thread.pk, slug=thread.slug, post=post.pk %}
+{{ url('post_edit', thread=thread.pk, slug=thread.slug, post=post.pk) }}
 {%- endif %}
 {%- endmacro %}
 
@@ -147,8 +147,8 @@
 {% macro get_info() -%}
 {% if action == 'edit_reply' -%}
     {% if post.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
-    <li><i class="icon-time"></i> <a href="{% url 'thread_find' thread=thread.pk, slug=thread.slug, post=post.pk %}">{{ post.date|reltimesince }}</a></li>
-    <li><i class="icon-user"></i> {% if post.user %}<a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
+    <li><i class="icon-time"></i> <a href="{{ url('thread_find', thread=thread.pk, slug=thread.slug, post=post.pk) }}">{{ post.date|reltimesince }}</a></li>
+    <li><i class="icon-user"></i> {% if post.user %}<a href="{{ url('user', user=post.user.pk, username=post.user.username_slug) }}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
     <li><i class="icon-pencil"></i> {% if post.edits > 0 -%}
       {% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}
     {%- else -%}
@@ -157,11 +157,11 @@
 {%- else -%}
     {% if thread.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
     {% if action == 'edit_thread' %}
-    <li><i class="icon-time"></i> <a href="{% url 'thread_find' thread=thread.pk, slug=thread.slug, post=thread.start_post_id %}">{{ thread.start|reltimesince }}</a></li>
+    <li><i class="icon-time"></i> <a href="{{ url('thread_find', thread=thread.pk, slug=thread.slug, post=thread.start_post_id) }}">{{ thread.start|reltimesince }}</a></li>
     {% else %}
-    <li><i class="icon-time"></i> <a href="{% url 'thread_new' thread=thread.pk, slug=thread.slug %}">{{ thread.last|reltimesince }}</a></li>
+    <li><i class="icon-time"></i> <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}">{{ thread.last|reltimesince }}</a></li>
     {% endif %}
-    <li><i class="icon-user"></i> {% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}</li>
+    <li><i class="icon-user"></i> {% if thread.start_poster_id %}<a href="{{ url('user', user=thread.start_poster_id, username=thread.start_poster_slug) }}">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}</li>
     <li><i class="icon-comment"></i> {% if thread.replies > 0 -%}
       {% trans count=thread.replies, replies=thread.replies|intcomma %}One reply{% pluralize %}{{ replies }} replies{% endtrans %}
     {%- else -%}

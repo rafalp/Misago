@@ -29,8 +29,8 @@
         {% for user in row %}
         <td class="span3 user-cell">
           {% if user %}
-          <a href="{% url 'user' username=user.username_slug, user=user.pk %}" class="user-avatar"><img src="{{ user.get_avatar(36) }}" alt=""></a>
-          <a href="{% url 'user' username=user.username_slug, user=user.pk %}" class="user-name">{{ user.username }}</a>
+          <a href="{{ url('user', username=user.username_slug, user=user.pk) }}" class="user-avatar"><img src="{{ user.get_avatar(36) }}" alt=""></a>
+          <a href="{{ url('user', username=user.username_slug, user=user.pk) }}" class="user-name">{{ user.username }}</a>
           {% else %}
           &nbsp;
           {% endif %}
@@ -50,8 +50,8 @@
 <div class="pagination">
   <ul>
     <li class="count">{{ macros.pager_label(pagination) }}</li>
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'user_follows' user=profile.id, username=profile.username_slug, page=pagination['prev'] %}{% else %}{% url 'user_follows' user=profile.id, username=profile.username_slug %}{% endif %}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{% url 'user_follows' user=profile.id, username=profile.username_slug, page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ url('user_follows', user=profile.id, username=profile.username_slug, page=pagination['prev']) }}{% else %}{{ url('user_follows', user=profile.id, username=profile.username_slug) }}{% endif %}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{{ url('user_follows', user=profile.id, username=profile.username_slug, page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
   </ul>
 </div>
 {% endif %}

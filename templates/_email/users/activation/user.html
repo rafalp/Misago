@@ -5,8 +5,8 @@
 
 <p {{ style_p|safe }}>{% trans %}We require our members to prove validity of e-mail address used during registration. To prove that you are owner of e-mail address used to create this account, click the link below:{% endtrans %}</p>
 <p {{ style_p|safe }}>{% trans %}To activate your account, click the link below:{% endtrans %}</p>
-<a href="{{ board_address }}{% url 'activate' username=user.username_slug, user=user.id, token=user.token %}" {{ style_button|safe }}>{% trans %}Activate my account!{% endtrans %}</a>
+<a href="{{ board_address }}{{ url('activate', username=user.username_slug, user=user.id, token=user.token) }}" {{ style_button|safe }}>{% trans %}Activate my account!{% endtrans %}</a>
 
 <p {{ style_p|safe }}>{% trans %}If the above link is not clickable, copy and paste this link into your web browser's address bar:{% endtrans %}</p>
-<a href="{{ board_address }}{% url 'activate' username=user.username_slug, user=user.id, token=user.token %}" {{ style_link|safe }}>{{ board_address }}{% url 'activate' username=user.username_slug, user=user.id, token=user.token %}</a>
+<a href="{{ board_address }}{{ url('activate', username=user.username_slug, user=user.id, token=user.token) }}" {{ style_link|safe }}>{{ board_address }}{{ url('activate', username=user.username_slug, user=user.id, token=user.token) }}</a>
 {% endblock %}

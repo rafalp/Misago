@@ -19,11 +19,11 @@
 <div class="content-list user-threads">
   {% for item in items %}
   <div class="media">
-    <a href="{% url 'user' user=profile.pk, username=profile.username_slug %}" class="pull-left">
+    <a href="{{ url('user', user=profile.pk, username=profile.username_slug) }}" class="pull-left">
       <img class="media-object" src="{{ profile.get_avatar(52) }}">
     </a>
     <div class="media-body">
-      <a href="{% url 'thread' thread=item.pk, slug=item.slug %}" class="post-preview">{{ item.start_post.post_preparsed|markdown_short(300) }}</a>
+      <a href="{{ url('thread', thread=item.pk, slug=item.slug) }}" class="post-preview">{{ item.start_post.post_preparsed|markdown_short(300) }}</a>
       <div class="media-footer">{% trans thread=thread(item), forum=forum(item.forum), date=item.start|reltimesince|low %}Thread {{ thread }} posted in {{ forum }} {{ date }}{% endtrans %}</div>
     </div>
   </div>
@@ -39,18 +39,18 @@
 <div class="pagination">
   <ul>
     <li class="count">{{ macros.pager_label(pagination) }}</li>
-    {%- if pagination['prev'] > 1 %}<li><a href="{% url 'user_threads' user=profile.id, username=profile.username_slug %}" class="tooltip-top" title="{% trans %}Lastest Posts{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}Latest{% endtrans %}</a></li>{% endif -%}
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'user_threads' user=profile.id, username=profile.username_slug, page=pagination['prev'] %}{% else %}{% url 'user_threads' user=profile.id, username=profile.username_slug %}{% endif %}" class="tooltip-top" title="{% trans %}Newer Posts{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{% url 'user_threads' user=profile.id, username=profile.username_slug, page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Older Posts{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 1 %}<li><a href="{{ url('user_threads', user=profile.id, username=profile.username_slug) }}" class="tooltip-top" title="{% trans %}Lastest Posts{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}Latest{% endtrans %}</a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ url('user_threads', user=profile.id, username=profile.username_slug, page=pagination['prev']) }}{% else %}{{ url('user_threads', user=profile.id, username=profile.username_slug) }}{% endif %}" class="tooltip-top" title="{% trans %}Newer Posts{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{{ url('user_threads', user=profile.id, username=profile.username_slug, page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Older Posts{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
   </ul>
 </div>
 {% endif %}
 {%- endmacro %}
 
 {% macro thread(item) -%}
-<a href="{% url 'thread' thread=item.pk, slug=item.slug %}">{{ item.name }}</a>
+<a href="{{ url('thread', thread=item.pk, slug=item.slug) }}">{{ item.name }}</a>
 {%- endmacro %}
 
 {% macro forum(forum) -%}
-<a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}">{{ forum.name }}</a>
+<a href="{{ url('forum', forum=forum.pk, slug=forum.slug) }}">{{ forum.name }}</a>
 {%- endmacro %}

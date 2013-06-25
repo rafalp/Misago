@@ -5,7 +5,7 @@
 {% block action %}<div class="row">
   <div class="span8 offset2">
   	<h2>{% trans %}New Report{% endtrans %}</h2>
-    <form action="{% url 'admin_stats' %}" class="form-vertical" method="post">
+    <form action="{{ url('admin_stats') }}" class="form-vertical" method="post">
       <div class="form-container">
         {{ form_theme.form_widget(form, width=8) }}
       </div>

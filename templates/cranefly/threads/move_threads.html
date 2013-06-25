@@ -6,7 +6,7 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {{ macros.parents_list(parents) }}
-<li><a href="{{ forum.type|url(forum=forum.pk, slug=forum.slug) }}">{{ forum.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{{ url(forum.type, forum=forum.pk, slug=forum.slug) }}">{{ forum.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li class="active">{% trans %}Move Threads{% endtrans %}
 {%- endblock %}
 
@@ -36,7 +36,7 @@
         </div>
         {% endif %}
 
-        <form action="{% url 'forum' forum=forum.pk, slug=forum.slug %}" method="post">
+        <form action="{{ url('forum', forum=forum.pk, slug=forum.slug) }}" method="post">
           <input type="hidden" name="origin" value="move_form">
           <input type="hidden" name="list_action" value="move">
           {% for thread in threads -%}
@@ -47,7 +47,7 @@
           </div>
           <div class="form-actions">
             <button type="submit" class="btn btn-primary">{% trans %}Move Threads{% endtrans %}</button>
-            <a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
+            <a href="{{ url('forum', forum=forum.pk, slug=forum.slug) }}" class="btn">{% trans %}Cancel{% endtrans %}</a>
           </div>
         </form>
 

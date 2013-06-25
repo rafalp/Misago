@@ -17,13 +17,13 @@
   </div>
   {% endif %}
 
-  <form action="{% url 'usercp_options' %}" method="post">
+  <form action="{{ url('usercp_options') }}" method="post">
     <div class="form-fields">
       {{ form_theme.form_widget(form, width=9) }}
     </div>
     <div class="form-actions">
       <button name="save" type="submit" class="btn btn-primary">{% trans %}Change Options{% endtrans %}</button>
-      <a href="{% url 'usercp' %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
+      <a href="{{ url('usercp') }}" class="btn">{% trans %}Cancel{% endtrans %}</a>
     </div>
   </form>
   

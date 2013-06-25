@@ -47,7 +47,7 @@ itemprop="breadcrumb"
 
 {% macro parents_list(forums) -%}
 {% for forum in forums %}
-<li><a href="{% if loop.first %}{% url 'index' %}#{{ forum.slug }}{% else %}{{ forum.type|url(forum=forum.pk, slug=forum.slug) }}{% endif %}">{{ forum.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{% if loop.first %}{{ url('index') }}#{{ forum.slug }}{% else %}{{ url(forum.type, forum=forum.pk, slug=forum.slug) }}{% endif %}">{{ forum.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {% endfor %}
 {%- endmacro %}
 

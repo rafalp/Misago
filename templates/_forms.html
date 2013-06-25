@@ -115,7 +115,7 @@
 </label>
 {%- endmacro -%}
 {%- macro make_tos() -%}
-<a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{% url 'tos' %}{% endif %}">{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Terms of Service{% endtrans %}{% endif %}</a>
+<a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{{ url('tos') }}{% endif %}">{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Terms of Service{% endtrans %}{% endif %}</a>
 {%- endmacro -%}
 
 {# Date input #}

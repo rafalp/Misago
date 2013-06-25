@@ -6,9 +6,9 @@
   <div class="navbar navbar-header navbar-static-top">
     <div class="navbar-inner">
       <div class="container">
-        <a href="{% url 'index' %}" class="brand">{% if settings.board_header %}{{ settings.board_header }}{% else %}{{ settings.board_name }}{% endif %}</a>
+        <a href="{{ url('index') }}" class="brand">{% if settings.board_header %}{{ settings.board_header }}{% else %}{{ settings.board_name }}{% endif %}</a>
         {% if acl.search.can_search() and not user.is_crawler() %}
-        <form action="{% url 'search' %}" method="post" class="navbar-form pull-left">
+        <form action="{{ url('search') }}" method="post" class="navbar-form pull-left">
           <div class="navbar-search-form">
             <div id="navbar-search" class="navbar-search-border">
               <div class="navbar-search-text">
@@ -59,15 +59,15 @@
         </form>
         {% endif %}
         <ul class="nav navbar-blocks pull-left">
-          <li><a href="{% url 'index' %}" title="{% trans %}Forum Home{% endtrans %}" class="tooltip-bottom"><i class="icon-th-list"></i></a></li>
+          <li><a href="{{ url('index') }}" title="{% trans %}Forum Home{% endtrans %}" class="tooltip-bottom"><i class="icon-th-list"></i></a></li>
           {{ hook_primary_menu_prepend|safe }}
-          <li><a href="{% url 'popular_threads' %}" title="{% trans %}Popular Threads{% endtrans %}" class="hot tooltip-bottom"><i class="icon-fire"></i></a></li>
-          <li><a href="{% url 'new_threads' %}" title="{% trans %}New Threads{% endtrans %}" class="fresh tooltip-bottom"><i class="icon-leaf"></i></a></li>{% if not user.crawler %}
+          <li><a href="{{ url('popular_threads') }}" title="{% trans %}Popular Threads{% endtrans %}" class="hot tooltip-bottom"><i class="icon-fire"></i></a></li>
+          <li><a href="{{ url('new_threads') }}" title="{% trans %}New Threads{% endtrans %}" class="fresh tooltip-bottom"><i class="icon-leaf"></i></a></li>{% if not user.crawler %}
           {% if 1==2 and acl.search.can_search() and not user.is_crawler() %}
-          <li><a href="{% url 'search' %}" title="{% trans %}Search Forums{% endtrans %}" class="tooltip-bottom"><i class="icon-search"></i></a></li>{% endif %}
+          <li><a href="{{ url('search') }}" title="{% trans %}Search Forums{% endtrans %}" class="tooltip-bottom"><i class="icon-search"></i></a></li>{% endif %}
           {% endif %}
-          <li><a href="{% url 'users' %}" title="{% trans %}Browse Users{% endtrans %}" class="tooltip-bottom"><i class="icon-user"></i></a></li>
-          {% if settings.tos_url or settings.tos_content %}<li><a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{% url 'tos' %}{% endif %}" title="{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Forum Terms of Service{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-certificate"></i></a></li>{% endif %}
+          <li><a href="{{ url('users') }}" title="{% trans %}Browse Users{% endtrans %}" class="tooltip-bottom"><i class="icon-user"></i></a></li>
+          {% if settings.tos_url or settings.tos_content %}<li><a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{{ url('tos') }}{% endif %}" title="{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Forum Terms of Service{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-certificate"></i></a></li>{% endif %}
           {{ hook_primary_menu_append|safe }}
         </ul>
         {% if not user.is_crawler() %}
@@ -75,60 +75,60 @@
         <ul id="fancy-user-nav" class="nav navbar-blocks navbar-compact pull-right">
           {{ hook_user_menu_important_prepend|safe }}
           {% if acl.reports.can_handle() and monitor.reported_posts %}
-          <li><a href="{% url 'reports' %}" title="{% trans %}There are unresolved reports!{% endtrans %}" class="tooltip-bottom"><i class="icon-fire"></i><span class="label label-important">{{ monitor.reported_posts }}</span></a></li>
+          <li><a href="{{ url('reports') }}" title="{% trans %}There are unresolved reports!{% endtrans %}" class="tooltip-bottom"><i class="icon-fire"></i><span class="label label-important">{{ monitor.reported_posts }}</span></a></li>
           {% endif %}
           {% if user.alerts %}
-          <li><a href="{% url 'alerts' %}" title="{% trans %}You have new notifications!{% endtrans %}" class="tooltip-bottom"><i class="icon-asterisk"></i><span class="label label-important">{{ user.alerts }}</span></a></li>
+          <li><a href="{{ url('alerts') }}" title="{% trans %}You have new notifications!{% endtrans %}" class="tooltip-bottom"><i class="icon-asterisk"></i><span class="label label-important">{{ user.alerts }}</span></a></li>
           {% endif %}
           {% if settings.enable_private_threads and acl.private_threads.can_participate() and user.unread_pds %}
-          <li><a href="{% url 'private_threads' %}" title="{% trans %}There are unread Private Threads!{% endtrans %}" class="tooltip-bottom"><i class="icon-inbox"></i><span class="label label-important">{{ user.unread_pds }}</span></a></li>
+          <li><a href="{{ url('private_threads') }}" title="{% trans %}There are unread Private Threads!{% endtrans %}" class="tooltip-bottom"><i class="icon-inbox"></i><span class="label label-important">{{ user.unread_pds }}</span></a></li>
           {% endif %}
           {{ hook_user_menu_important_append|safe }}
           <li class="user-profile dropdown">
-            <a href="{% url 'user' user=user.id, username=user.username_slug %}" class="dropdown-toggle" data-toggle="dropdown"><div>{{ user.username }} <img src="{{ user.get_avatar(28) }}" alt=""><span class="caret-border"><b class="caret"></b></span></div></a>
+            <a href="{{ url('user', user=user.id, username=user.username_slug) }}" class="dropdown-toggle" data-toggle="dropdown"><div>{{ user.username }} <img src="{{ user.get_avatar(28) }}" alt=""><span class="caret-border"><b class="caret"></b></span></div></a>
             <ul class="dropdown-menu">
-              <li><a href="{% url 'user' user=user.id, username=user.username_slug %}"><i class="icon-user"></i> {% trans %}Your profile{% endtrans %}</a></li>
-              <li><a href="{% url 'usercp' %}"><i class="icon-cog"></i> {% trans %}Change options{% endtrans %}</a></li>
+              <li><a href="{{ url('user', user=user.id, username=user.username_slug) }}"><i class="icon-user"></i> {% trans %}Your profile{% endtrans %}</a></li>
+              <li><a href="{{ url('usercp') }}"><i class="icon-cog"></i> {% trans %}Change options{% endtrans %}</a></li>
               <li role="presentation" class="divider"></li>
               {% if acl.reports.can_handle() %}
-              <li><a href="{% url 'reports' %}">{% if monitor.reported_posts %}<span class="label">{{ monitor.reported_posts }}</span>{% endif %}<i class="icon-fire"></i> {% trans %}Reported Posts{% endtrans %}</a></li>
+              <li><a href="{{ url('reports') }}">{% if monitor.reported_posts %}<span class="label">{{ monitor.reported_posts }}</span>{% endif %}<i class="icon-fire"></i> {% trans %}Reported Posts{% endtrans %}</a></li>
               {% endif %}
-              <li><a href="{% url 'alerts' %}">{% if user.alerts %}<span class="label">{{ user.alerts }}</span>{% endif %}<i class="icon-asterisk"></i> {% trans %}Notifications{% endtrans %}</a></li>
+              <li><a href="{{ url('alerts') }}">{% if user.alerts %}<span class="label">{{ user.alerts }}</span>{% endif %}<i class="icon-asterisk"></i> {% trans %}Notifications{% endtrans %}</a></li>
               {{ hook_user_menu_dropdown_prepend|safe }}
               {% if settings.enable_private_threads and acl.private_threads.can_participate() %}
-              <li><a href="{% url 'private_threads' %}">{% if user.unread_pds %}<span class="label">{{ user.unread_pds }}</span>{% endif %}<i class="icon-inbox"></i> {% trans %}Private Threads{% endtrans %}</a></li>
+              <li><a href="{{ url('private_threads') }}">{% if user.unread_pds %}<span class="label">{{ user.unread_pds }}</span>{% endif %}<i class="icon-inbox"></i> {% trans %}Private Threads{% endtrans %}</a></li>
               {% endif %}
-              <li><a href="{% url 'newsfeed' %}"><i class="icon-signal"></i> {% trans %}News Feed{% endtrans %}</a></li>
-              <li><a href="{% url 'watched_threads' %}"><i class="icon-bookmark"></i> {% trans %}Watched Threads{% endtrans %}</a></li>
+              <li><a href="{{ url('newsfeed') }}"><i class="icon-signal"></i> {% trans %}News Feed{% endtrans %}</a></li>
+              <li><a href="{{ url('watched_threads') }}"><i class="icon-bookmark"></i> {% trans %}Watched Threads{% endtrans %}</a></li>
               {{ hook_user_menu_dropdown_prepend|safe }}
               <li role="presentation" class="divider"></li>
-              <li><form action="{% url 'sign_out' %}" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><button type="submit" class="btn btn-link danger"><i class="icon-off"></i> {% trans %}Sign out{% endtrans %}</button></form></li>
+              <li><form action="{{ url('sign_out') }}" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><button type="submit" class="btn btn-link danger"><i class="icon-off"></i> {% trans %}Sign out{% endtrans %}</button></form></li>
             </ul>
           </li>
         </ul>
         <noscript>
           <ul class="nav navbar-blocks pull-right">
             {{ hook_user_menu_prepend|safe }}
-            <li><a href="{% url 'alerts' %}" title="{% if user.alerts %}{% trans %}You have new notifications!{% endtrans %}{% else %}{% trans %}Your Notifications{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-asterisk"></i>{% if user.alerts %}<span class="label label-important">{{ user.alerts }}</span>{% endif %}</a></li>
+            <li><a href="{{ url('alerts') }}" title="{% if user.alerts %}{% trans %}You have new notifications!{% endtrans %}{% else %}{% trans %}Your Notifications{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-asterisk"></i>{% if user.alerts %}<span class="label label-important">{{ user.alerts }}</span>{% endif %}</a></li>
             {% if acl.reports.can_handle() %}
-            <li><a href="{% url 'reports' %}" title="{% if monitor.reported_posts %}{% trans %}There are unresolved reports!{% endtrans %}{% else %}{% trans %}Reports{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-fire"></i>{% if monitor.reported_posts %}<span class="label label-important">{{ monitor.reported_posts }}</span>{% endif %}</a></li>
+            <li><a href="{{ url('reports') }}" title="{% if monitor.reported_posts %}{% trans %}There are unresolved reports!{% endtrans %}{% else %}{% trans %}Reports{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-fire"></i>{% if monitor.reported_posts %}<span class="label label-important">{{ monitor.reported_posts }}</span>{% endif %}</a></li>
             {% endif %}
             {% if settings.enable_private_threads and acl.private_threads.can_participate() %}
-            <li><a href="{% url 'private_threads' %}" title="{% if user.unread_pds %}{% trans %}There are unread Private Threads!{% endtrans %}{% else %}{% trans %}Your Private Threads{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-inbox"></i>{% if user.unread_pds %}<span class="label label-important">{{ user.unread_pds }}</span>{% endif %}</a></li>
+            <li><a href="{{ url('private_threads') }}" title="{% if user.unread_pds %}{% trans %}There are unread Private Threads!{% endtrans %}{% else %}{% trans %}Your Private Threads{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-inbox"></i>{% if user.unread_pds %}<span class="label label-important">{{ user.unread_pds }}</span>{% endif %}</a></li>
             {% endif %}
-            <li><a href="{% url 'newsfeed' %}" title="{% trans %}Your News Feed{% endtrans %}" class="tooltip-bottom"><i class="icon-signal"></i></a></li>
-            <li><a href="{% url 'watched_threads' %}" title="{% trans %}Threads you are watching{% endtrans %}" class="tooltip-bottom"><i class="icon-bookmark"></i></a></li>
-            <li><a href="{% url 'usercp' %}" title="{% trans %}Edit your profile options{% endtrans %}" class="tooltip-bottom"><i class="icon-cog"></i></a></li>
+            <li><a href="{{ url('newsfeed') }}" title="{% trans %}Your News Feed{% endtrans %}" class="tooltip-bottom"><i class="icon-signal"></i></a></li>
+            <li><a href="{{ url('watched_threads') }}" title="{% trans %}Threads you are watching{% endtrans %}" class="tooltip-bottom"><i class="icon-bookmark"></i></a></li>
+            <li><a href="{{ url('usercp') }}" title="{% trans %}Edit your profile options{% endtrans %}" class="tooltip-bottom"><i class="icon-cog"></i></a></li>
             {{ hook_user_menu_append|safe }}
-            <li class="user-profile"><a href="{% url 'user' user=user.id, username=user.username_slug %}" title="{% trans %}Go to your profile{% endtrans %}" class="tooltip-bottom"><div><img src="{{ user.get_avatar(28) }}" alt=""> {{ user.username }}</div></a></li>
-            <li><form action="{% url 'sign_out' %}" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><button type="submit" title="{% trans %}Sign Out and browse as guest{% endtrans %}" class="btn btn-link danger tooltip-bottom"><i class="icon-off"></i></button></form></li>
+            <li class="user-profile"><a href="{{ url('user', user=user.id, username=user.username_slug) }}" title="{% trans %}Go to your profile{% endtrans %}" class="tooltip-bottom"><div><img src="{{ user.get_avatar(28) }}" alt=""> {{ user.username }}</div></a></li>
+            <li><form action="{{ url('sign_out') }}" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><button type="submit" title="{% trans %}Sign Out and browse as guest{% endtrans %}" class="btn btn-link danger tooltip-bottom"><i class="icon-off"></i></button></form></li>
           </ul>
         </noscript>
         {% else %}
         <ul class="nav navbar-user-nav pull-right">
           {{ hook_guest_menu_prepend|safe }}
-          <li><a href="{% url 'sign_in' %}" title="{% trans %}Sign In to Your Account{% endtrans %}" class="tooltip-bottom btn btn-danger"><i class="icon-check"></i> {% trans %}Sign In{% endtrans %}</a></li>{% if settings.account_activation != 'block' %}
-          <li><a href="{% url 'register' %}" title="{% trans %}Register new account{% endtrans %}" class="tooltip-bottom btn btn-inverse"><i class="icon-edit"></i> {% trans %}Register{% endtrans %}</a></li>{% endif %}
+          <li><a href="{{ url('sign_in') }}" title="{% trans %}Sign In to Your Account{% endtrans %}" class="tooltip-bottom btn btn-danger"><i class="icon-check"></i> {% trans %}Sign In{% endtrans %}</a></li>{% if settings.account_activation != 'block' %}
+          <li><a href="{{ url('register') }}" title="{% trans %}Register new account{% endtrans %}" class="tooltip-bottom btn btn-inverse"><i class="icon-edit"></i> {% trans %}Register{% endtrans %}</a></li>{% endif %}
           {{ hook_guest_menu_append|safe }}
         </ul>
         {% endif %}
@@ -151,9 +151,9 @@
 <footer>
   <div class="container">
     <ul class="breadcrumb">
-      {% block breadcrumb %}<li class="first"><a href="{% url 'index' %}">{{ settings.board_name }}</a>{% endblock %}</li>
+      {% block breadcrumb %}<li class="first"><a href="{{ url('index') }}">{{ settings.board_name }}</a>{% endblock %}</li>
       {{ hook_foot_menu_prepend|safe }}
-      <li class="pull-right"><i class="icon-move"></i> <a href="{% url 'forum_map' %}">{% trans %}Forum Map{% endtrans %}</a></li>
+      <li class="pull-right"><i class="icon-move"></i> <a href="{{ url('forum_map') }}">{% trans %}Forum Map{% endtrans %}</a></li>
       {{ hook_foot_menu_append|safe }}
     </ul>
     <hr>

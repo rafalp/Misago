@@ -6,7 +6,7 @@
 {% block table_row scoped %}
   <td>
   	<strong class="lead{% if not item.user %} muted{% endif %}">{% if item.user -%}
-  	<a href="{% url 'user' username=item.user.username_slug, user=item.user.id %}">{{ item.user.username }}</a>
+  	<a href="{{ url('user', username=item.user.username_slug, user=item.user.id) }}">{{ item.user.username }}</a>
   	{%- elif item.crawler -%}
   	{{ item.crawler }}
   	{%- else -%}

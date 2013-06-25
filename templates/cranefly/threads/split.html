@@ -6,7 +6,7 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {{ macros.parents_list(parents) }}
-<li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li class="active">{% trans %}Split Thread{% endtrans %}
 {%- endblock %}
 
@@ -36,7 +36,7 @@
         </div>
         {% endif %}
 
-        <form action="{% url 'thread' thread=thread.pk, slug=thread.slug %}" method="post">
+        <form action="{{ url('thread', thread=thread.pk, slug=thread.slug) }}" method="post">
           <input type="hidden" name="origin" value="posts_form">
           <input type="hidden" name="list_action" value="split">
           <input type="hidden" name="do" value="split">
@@ -48,7 +48,7 @@
           </div>
           <div class="form-actions">
             <button type="submit" class="btn btn-primary">{% trans %}Split Thread{% endtrans %}</button>
-            <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
+            <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}" class="btn">{% trans %}Cancel{% endtrans %}</a>
           </div>
         </form>
 

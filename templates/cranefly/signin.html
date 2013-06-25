@@ -19,10 +19,10 @@
           {{ macros.draw_message_icon(message) }}
           <p><strong>{{ message.message }}</strong></p>
           {% if bad_password %}
-          <p><a href="{% url 'forgot_password' %}">{% trans %}Click here if you forgot your sign in credentials.{% endtrans %}</a></p>
+          <p><a href="{{ url('forgot_password') }}">{% trans %}Click here if you forgot your sign in credentials.{% endtrans %}</a></p>
           {% endif %}
           {% if not_active %}
-          <p><a href="{% url 'send_activation' %}">{% trans %}Click here if you didn't receive activation e-mail.{% endtrans %}</a></p>
+          <p><a href="{{ url('send_activation') }}">{% trans %}Click here if you didn't receive activation e-mail.{% endtrans %}</a></p>
           {% endif %}
           {% if banned_account.reason_user %}
           {{ banned_account.reason_user|markdown|safe }}
@@ -34,7 +34,7 @@
       </div>
       {% endif %}
 
-      <form class="form-horizontal" action="{% url 'sign_in' %}" method="post">
+      <form class="form-horizontal" action="{{ url('sign_in') }}" method="post">
         <div class="form-fields">
           {{ form_theme.form_widget(form, horizontal=true, width=6) }}
         </div>
@@ -44,10 +44,10 @@
 
             <h2>{% trans %}Problems Signing In?{% endtrans %}</h2>
             <ul class="unstyled">
-              <li><a href="{% url 'forgot_password' %}"><i class="icon-refresh"></i> {% trans %}I don't remember my password{% endtrans %}</a></li>
-              <li><a href="{% url 'send_activation' %}"><i class="icon-envelope"></i> {% trans %}I haven't received activation e-mail{% endtrans %}</a></li>
+              <li><a href="{{ url('forgot_password') }}"><i class="icon-refresh"></i> {% trans %}I don't remember my password{% endtrans %}</a></li>
+              <li><a href="{{ url('send_activation') }}"><i class="icon-envelope"></i> {% trans %}I haven't received activation e-mail{% endtrans %}</a></li>
               {% if settings.account_activation != 'block' %}
-              <li><a href="{% url 'register' %}"><i class="icon-edit"></i> {% trans %}I don't have account{% endtrans %}</a></li>
+              <li><a href="{{ url('register') }}"><i class="icon-edit"></i> {% trans %}I don't have account{% endtrans %}</a></li>
               {% endif %}
             </ul>
 

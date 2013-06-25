@@ -53,7 +53,7 @@
     {{ draw_tree(branch ~ 'l') }}
     {%- else -%}
     {{ draw_tree(branch ~ 't') }}
-    {%- endif %}{% endif %} <a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3>
+    {%- endif %}{% endif %} <a href="{{ url(forum.type, slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3>
   </div>
   {% for subforum in forum.subforums %}
     {% if depth %}

@@ -5,7 +5,7 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {{ macros.parents_list(parents) }}
-<li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li class="active">{% trans post=post.pk %}Post #{{ post }} Votes{% endtrans %}
 {%- endblock %}
 
@@ -18,8 +18,8 @@
     </ul>
     <h1>{% trans post=post.pk %}Post #{{ post }} Votes{% endtrans %} <small>{{ thread.name }}</small></h1>
     <ul class="unstyled header-stats">
-      <li><i class="icon-time"></i> <a href="{% url 'thread_find' thread=thread.pk, slug=thread.slug, post=post.pk %}">{{ post.date|reltimesince }}</a></li>
-      <li><i class="icon-user"></i> {% if post.user %}<a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
+      <li><i class="icon-time"></i> <a href="{{ url('thread_find', thread=thread.pk, slug=thread.slug, post=post.pk) }}">{{ post.date|reltimesince }}</a></li>
+      <li><i class="icon-user"></i> {% if post.user %}<a href="{{ url('user', user=post.user.pk, username=post.user.username_slug) }}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
       <li><i class="icon-thumbs-up"></i> {{ post.upvotes }}</li>
       <li><i class="icon-thumbs-down"></i> {{ post.downvotes }}</li>
     </ul>
@@ -112,5 +112,5 @@
 {% endblock %}
 
 {% macro vote_details(vote, icon) %}
-{% if vote.user_id %}<a href="{% url 'user' user=vote.user_id, username=vote.user_slug %}" class="vote-user vote-{{ vote.pk }}"><span class="vote-icon"><i class="icon-{{ icon }}"></i></span> {{ vote.user_name }}</a>{% else %}<span class="vote-user vote-{{ vote.pk }}"><span class="vote-icon"><i class="icon-{{ icon }}"></i></span> {{ vote.user_name }}</span>{% endif %}
+{% if vote.user_id %}<a href="{{ url('user', user=vote.user_id, username=vote.user_slug) }}" class="vote-user vote-{{ vote.pk }}"><span class="vote-icon"><i class="icon-{{ icon }}"></i></span> {{ vote.user_name }}</a>{% else %}<span class="vote-user vote-{{ vote.pk }}"><span class="vote-icon"><i class="icon-{{ icon }}"></i></span> {{ vote.user_name }}</span>{% endif %}
 {% endmacro %}

@@ -17,7 +17,7 @@
   </div>
   {% endif %}
 
-  <form action="{% url 'usercp_username' %}" method="post">
+  <form action="{{ url('usercp_username') }}" method="post">
     <div class="form-fields">
       {% if changes_left == 0 %}
       {% do form.fields['username']['attrs'].update({'disabled': 'disabled'}) %}

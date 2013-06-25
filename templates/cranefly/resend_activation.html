@@ -19,7 +19,7 @@
       </div>
       {% endif %}
 
-      <form action="{% url 'send_activation' %}" method="post">
+      <form action="{{ url('send_activation') }}" method="post">
         <div class="form-fields">
           {{ form_theme.form_widget(form, width=6) }}
         </div>

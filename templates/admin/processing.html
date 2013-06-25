@@ -9,7 +9,7 @@
 {% block header %}<strong>{{ target_name }}</strong>{% endblock %}
       
 {% block content %}
-          <form class="form-vertical" action="{{ admin_index|url() }}" method="post">
+          <form class="form-vertical" action="{{ url(admin_index) }}" method="post">
           	<div class="form-container">
           	  <p class="lead">{{ task_name }}...</p>
               <div class="progress progress-striped active">

@@ -100,6 +100,9 @@ JINJA2_EXTENSIONS = (
     'jinja2.ext.do',
 )
 
+# Turn autoescape on
+JINJA2_AUTOESCAPE = True
+
 # List of application middlewares
 MIDDLEWARE_CLASSES = (
     'misago.middleware.stopwatch.StopwatchMiddleware',
@@ -180,9 +183,9 @@ ROOT_URLCONF = 'misago.urls'
 INSTALLED_APPS = (
     # Applications that have no dependencies first!
     'south', # Database schema building and updating
-    'django_jinja', # Jinja2 integration
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django_jinja', # Jinja2 integration
     'mptt', # Modified Pre-order Tree Transversal - allows us to nest forums 
     'haystack', # Search engines bridge
     'debug_toolbar', # Debug toolbar'

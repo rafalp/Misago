@@ -10,8 +10,8 @@
     <h1>{% trans %}Threads you are watching{% endtrans %}</h1>
 
     <ul class="nav nav-tabs header-tabs">
-      <li class="{% if not new %}active{% endif %}"><a href="{% url 'watched_threads' %}">{% trans %}All Threads{% endtrans %}</a></li>
-      <li class="{% if new %}active{% endif %}"><a href="{% url 'watched_threads_new' %}">{% trans %}Unread Threads{% endtrans %}</a></li>
+      <li class="{% if not new %}active{% endif %}"><a href="{{ url('watched_threads') }}">{% trans %}All Threads{% endtrans %}</a></li>
+      <li class="{% if new %}active{% endif %}"><a href="{{ url('watched_threads_new') }}">{% trans %}Unread Threads{% endtrans %}</a></li>
     </ul>
   </div>
 </div>
@@ -57,7 +57,7 @@
           {% if settings.avatars_on_threads_list %}
           <div class="thread-last-avatar">
             {% if thread.last_poster_id %}
-            <a href="{% url 'user' user=thread.last_poster.pk, username=thread.last_poster.username_slug %}"><img src="{{ thread.last_poster.get_avatar(40) }}" alt=""></a>
+            <a href="{{ url('user', user=thread.last_poster.pk, username=thread.last_poster.username_slug) }}"><img src="{{ thread.last_poster.get_avatar(40) }}" alt=""></a>
             {% else %}
             <img src="{{ macros.avatar_guest(40) }}" alt="" class="user-avatar">
             {% endif %}
@@ -161,7 +161,7 @@ thread
 {%- endmacro %}
 
 {% macro thread_starter(thread) -%}
-{% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}" class="user-link">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}
+{% if thread.start_poster_id %}<a href="{{ url('user', user=thread.start_poster_id, username=thread.start_poster_slug) }}" class="user-link">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}
 {%- endmacro %}
 
 {% macro thread_forum(thread) -%}
@@ -169,7 +169,7 @@ thread
 {%- endmacro %}
 
 {% macro thread_reply(thread) -%}
-{% if thread.last_poster_id %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}" class="user-link">{{ thread.last_poster_name }}</a>{% else %}{{ thread.last_poster_name }}{% endif %}
+{% if thread.last_poster_id %}<a href="{{ url('user', user=thread.last_poster_id, username=thread.last_poster_slug) }}" class="user-link">{{ thread.last_poster_name }}</a>{% else %}{{ thread.last_poster_name }}{% endif %}
 {%- endmacro %}
 
 {% macro pager() -%}
@@ -178,13 +178,13 @@ thread
   <ul>
     <li class="count">{{ macros.pager_label(pagination) }}</li>
     {% if new %}
-    {%- if pagination['prev'] > 1 %}<li><a href="{% url 'watched_threads_new' %}" class="tooltip-top" title="{% trans %}Latest Threads{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}Latest{% endtrans %}</a></li>{% endif -%}
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'watched_threads_new' page=pagination['prev'] %}{% else %}{% url 'watched_threads_new' %}{% endif %}" class="tooltip-top" title="{% trans %}Newer Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{% url 'watched_threads_new' page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 1 %}<li><a href="{{ url('watched_threads_new') }}" class="tooltip-top" title="{% trans %}Latest Threads{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}Latest{% endtrans %}</a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ url('watched_threads_new', page=pagination['prev']) }}{% else %}{{ url('watched_threads_new') }}{% endif %}" class="tooltip-top" title="{% trans %}Newer Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{{ url('watched_threads_new', page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
     {% else %}
-    {%- if pagination['prev'] > 1 %}<li><a href="{% url 'watched_threads' %}" class="tooltip-top" title="{% trans %}Latest Threads{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}Latest{% endtrans %}</a></li>{% endif -%}
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'watched_threads' page=pagination['prev'] %}{% else %}{% url 'watched_threads' %}{% endif %}" class="tooltip-top" title="{% trans %}Newer Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{% url 'watched_threads' page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 1 %}<li><a href="{{ url('watched_threads') }}" class="tooltip-top" title="{% trans %}Latest Threads{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}Latest{% endtrans %}</a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ url('watched_threads', page=pagination['prev']) }}{% else %}{{ url('watched_threads') }}{% endif %}" class="tooltip-top" title="{% trans %}Newer Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{{ url('watched_threads', page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
     {% endif %}
   </ul>
 </div>
@@ -197,9 +197,9 @@ thread
 {%- else -%}
   {%- if loop.first and loop.last -%}
     {%- if new -%}
-      {%- if pagination['prev'] > 1 %}{% url 'watched_threads_new' page=pagination['prev'] %}{% else %}{% url 'watched_threads_new' %}{% endif %}
+      {%- if pagination['prev'] > 1 %}{{ url('watched_threads_new', page=pagination['prev']) }}{% else %}{{ url('watched_threads_new') }}{% endif %}
     {%- else -%}
-      {%- if pagination['prev'] > 1 %}{% url 'watched_threads' page=pagination['prev'] %}{% else %}{% url 'watched_threads' %}{% endif %}
+      {%- if pagination['prev'] > 1 %}{{ url('watched_threads', page=pagination['prev']) }}{% else %}{{ url('watched_threads') }}{% endif %}
     {%- endif -%}#watch-{{ settings.threads_per_page }}
   {%- else -%}
     {{ request_path }}#watch-{{ loop.index }}

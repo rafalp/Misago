@@ -65,12 +65,12 @@
           </ul>
           {% endif %}
           
-          <a href="{% url 'report' thread=thread.pk, slug=thread.slug %}" class="thread-name"><span class="report-id">#{{ thread.pk }}</span> {{ thread.name }}</a>
+          <a href="{{ url('report', thread=thread.pk, slug=thread.slug) }}" class="thread-name"><span class="report-id">#{{ thread.pk }}</span> {{ thread.name }}</a>
           
           {% if thread.is_read %}
-          <a href="{% url 'report_new' thread=thread.pk, slug=thread.slug %}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last comment{% endtrans %}"><i class="icon-asterisk"></i></a>
+          <a href="{{ url('report_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last comment{% endtrans %}"><i class="icon-asterisk"></i></a>
           {% else %}
-          <a href="{% url 'report_new' thread=thread.pk, slug=thread.slug %}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread comment{% endtrans %}"><i class="icon-fire"></i></a>
+          <a href="{{ url('report_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread comment{% endtrans %}"><i class="icon-fire"></i></a>
           {% endif %}
 
           <div class="thread-details">
@@ -128,11 +128,11 @@
 {%- endmacro %}
 
 {% macro thread_starter(thread) -%}
-{% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}" class="user-link">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}
+{% if thread.start_poster_id %}<a href="{{ url('user', user=thread.start_poster_id, username=thread.start_poster_slug) }}" class="user-link">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}
 {%- endmacro %}
 
 {% macro thread_reply(thread) -%}
-{% if thread.last_poster_id %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}" class="user-link">{{ thread.last_poster_name }}</a>{% else %}{{ thread.last_poster_name }}{% endif %}
+{% if thread.last_poster_id %}<a href="{{ url('user', user=thread.last_poster_id, username=thread.last_poster_slug) }}" class="user-link">{{ thread.last_poster_name }}</a>{% else %}{{ thread.last_poster_name }}{% endif %}
 {%- endmacro %}
 
 {% macro report_forum(thread) -%}
@@ -144,9 +144,9 @@
 <div class="pagination pull-left">
   <ul>
     <li class="count">{{ macros.pager_label(pagination) }}</li>
-    {%- if pagination['prev'] > 1 %}<li><a href="{% url 'forum' slug=forum.slug, forum=forum.id %}" class="tooltip-top" title="{% trans %}First Page{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}First{% endtrans %}</a></li>{% endif -%}
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'forum' slug=forum.slug, forum=forum.id, page=pagination['prev'] %}{% else %}{% url 'forum' slug=forum.slug, forum=forum.id %}{% endif %}" class="tooltip-top" title="{% trans %}Newest Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{% url 'forum' slug=forum.slug, forum=forum.id, page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 1 %}<li><a href="{{ url('forum', slug=forum.slug, forum=forum.id) }}" class="tooltip-top" title="{% trans %}First Page{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}First{% endtrans %}</a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ url('forum', slug=forum.slug, forum=forum.id, page=pagination['prev']) }}{% else %}{{ url('forum', slug=forum.slug, forum=forum.id) }}{% endif %}" class="tooltip-top" title="{% trans %}Newest Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{{ url('forum', slug=forum.slug, forum=forum.id, page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
   </ul>
 </div>
 {% endif %}

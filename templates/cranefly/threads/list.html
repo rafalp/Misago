@@ -39,16 +39,16 @@
         <div class="forum-icon-wrap{% if subforum.type == 'redirect' %} forum-icon-redirect{% elif not subforum.is_read %} forum-icon-new{% endif %}"><i class="icon-{% if subforum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %} icon-white"></i></div>
       </div>
       <div id="forum-{{ subforum.id }}" class="forum-main">
-        <h3 class="forum-title{% if not subforum.is_read %} forum-title-new{% endif %}"><a href="{{ subforum.type|url(slug=subforum.slug, forum=subforum.id) }}">{{ subforum.name }}</a></h3>
+        <h3 class="forum-title{% if not subforum.is_read %} forum-title-new{% endif %}"><a href="{{ url(subforum.type, slug=subforum.slug, forum=subforum.id) }}">{{ subforum.name }}</a></h3>
         {% if subforum.show_details %}
         <div class="forum-details">
           {% if subforum.type != 'redirect' %}
           {% if acl.forums.can_browse(subforum) and (acl.threads.can_read_threads(subforum) == 2 or (acl.threads.can_read_threads(subforum) == 1 and subforum.last_poster_id == user.pk)) %}
           {% if subforum.last_thread_id -%}
           <div class="thread-name">
-            <a href="{% url 'thread_new' thread=subforum.last_thread_id, slug=subforum.last_thread_slug %}"{% if subforum.last_thread_name|length > 34 %} class="tooltip-top" title="{{ subforum.last_thread_name }}"{% endif %}>{{ subforum.last_thread_name|short_string(34) }}</a>
+            <a href="{{ url('thread_new', thread=subforum.last_thread_id, slug=subforum.last_thread_slug) }}"{% if subforum.last_thread_name|length > 34 %} class="tooltip-top" title="{{ subforum.last_thread_name }}"{% endif %}>{{ subforum.last_thread_name|short_string(34) }}</a>
           </div>
-          <div class="muted">{% if subforum.last_poster_id %}<a href="{% url 'user' user=subforum.last_poster_id, username=subforum.last_poster_slug %}" class="last-poster">{{ subforum.last_poster_name }}</a>{% else %}<span class="last-poster">{{ subforum.last_poster_name }}</span>{% endif %} - {{ subforum.last_thread_date|reltimesince }}</div>
+          <div class="muted">{% if subforum.last_poster_id %}<a href="{{ url('user', user=subforum.last_poster_id, username=subforum.last_poster_slug) }}" class="last-poster">{{ subforum.last_poster_name }}</a>{% else %}<span class="last-poster">{{ subforum.last_poster_name }}</span>{% endif %} - {{ subforum.last_thread_date|reltimesince }}</div>
           {%- else -%}
           <em>{% trans %}This forum is empty{% endtrans %}</em>
           {%- endif %}
@@ -57,7 +57,7 @@
           {%- endif %}
           {%- else -%}
           <div class="thread-name">
-            <a href="{% url 'redirect' slug=subforum.slug, forum=subforum.id %}">{{ subforum.redirect_domain() }}</a>
+            <a href="{{ url('redirect', slug=subforum.slug, forum=subforum.id) }}">{{ subforum.redirect_domain() }}</a>
           </div>
           <div class="muted">{% trans count=subforum.redirects, clicks=macros.wrap(subforum.redirects|intcomma, 'span', 'class="last-poster"') %}{{ clicks }} click{% pluralize %}{{ clicks }} clicks{% endtrans %}</div>
           {%- endif %}
@@ -66,18 +66,18 @@
         {% if subforum.subforums %}
         <div class="dropdown">
           {% if subforum.subforums|length > 1 %}
-          <a href="{{ subforum.type|url(slug=subforum.slug, forum=subforum.id) }}#subforums" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-chevron-down"></i> {% trans %}Subforums{% endtrans %}</a>
+          <a href="{{ url(subforum.type, slug=subforum.slug, forum=subforum.id) }}#subforums" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-chevron-down"></i> {% trans %}Subforums{% endtrans %}</a>
           <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
             <div class="dropdown-shadow">
               <ul>
                 {% for subsubforum in subforum.subforums %}
-                <li><a href="{{ subsubforum.type|url(slug=subsubforum.slug, forum=subsubforum.id) }}"><i class="icon-{% if subsubforum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %}"></i> {{ subsubforum.name }}</a></li>
+                <li><a href="{{ url(subsubforum.type, slug=subsubforum.slug, forum=subsubforum.id) }}"><i class="icon-{% if subsubforum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %}"></i> {{ subsubforum.name }}</a></li>
                 {% endfor %}
               </ul>
             </div>
           </div>
           {% else %}
-          <a href="{{ subforum.subforums[0].type|url(slug=subforum.subforums[0].slug, forum=subforum.subforums[0].id) }}" class="subforum tooltip-top" title="{% trans subforum=subforum.subforums[0].name %}Go to the {{ subforum }} subforum{% endtrans %}">{{ subforum.subforums[0].name|short_string(16) }}</a>
+          <a href="{{ url(subforum.subforums[0].type, slug=subforum.subforums[0].slug, forum=subforum.subforums[0].id) }}" class="subforum tooltip-top" title="{% trans subforum=subforum.subforums[0].name %}Go to the {{ subforum }} subforum{% endtrans %}">{{ subforum.subforums[0].name|short_string(16) }}</a>
           {% endif %}
         </div>
         {% endif%}
@@ -107,7 +107,7 @@
   <div class="forum-threads-extra extra-top">
     {{ pager() }}
     {% if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
-    <a href="{% url 'thread_start' forum=forum.pk, slug=forum.slug %}" class="btn btn-inverse pull-right"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a>
+    <a href="{{ url('thread_start', forum=forum.pk, slug=forum.slug) }}" class="btn btn-inverse pull-right"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a>
     {% endif %}
   </div>
 
@@ -130,14 +130,14 @@
       <div class="row-fluid">
         <div class="span7">
           {% if thread.is_read %}
-          <a href="{% url 'thread_new' thread=thread.pk, slug=thread.slug %}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}"><i class="icon-asterisk"></i></a>
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}"><i class="icon-asterisk"></i></a>
           {% else %}
-          <a href="{% url 'thread_new' thread=thread.pk, slug=thread.slug %}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}"><i class="icon-fire"></i></a>
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}"><i class="icon-fire"></i></a>
           {% endif %}
 
           {{ macros.thread_flags(thread) }}
           
-          <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="thread-name">{{ thread.name }}</a>
+          <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}" class="thread-name">{{ thread.name }}</a>
           
           <div class="thread-details">
             {% trans user=thread_starter(thread), start=thread.start|reldate|low %}by {{ user }}, {{ start }}{% endtrans %}
@@ -149,7 +149,7 @@
           {% if settings.avatars_on_threads_list %}
           <div class="thread-last-avatar">
             {% if thread.last_poster_id %}
-            <a href="{% url 'user' user=thread.last_poster.pk, username=thread.last_poster.username_slug %}"><img src="{{ thread.last_poster.get_avatar(40) }}" alt=""></a>
+            <a href="{{ url('user', user=thread.last_poster.pk, username=thread.last_poster.username_slug) }}"><img src="{{ thread.last_poster.get_avatar(40) }}" alt=""></a>
             {% else %}
             <img src="{{ macros.avatar_guest(40) }}" alt="" class="user-avatar">
             {% endif %}
@@ -187,9 +187,9 @@
   <div class="forum-threads-extra">
     {{ pager() }}
     {% if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
-    <a href="{% url 'thread_start' forum=forum.pk, slug=forum.slug %}" class="btn btn-inverse pull-right"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a>
+    <a href="{{ url('thread_start', forum=forum.pk, slug=forum.slug) }}" class="btn btn-inverse pull-right"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a>
     {% elif not user.is_authenticated() and not user.is_crawler() %}
-    <p class="lead threads-signin-message"><a href="{% url 'sign_in' %}">{% trans %}Sign in or register to start threads.{% endtrans %}</a></p>
+    <p class="lead threads-signin-message"><a href="{{ url('sign_in') }}">{% trans %}Sign in or register to start threads.{% endtrans %}</a></p>
     {% endif %}
   </div>
 
@@ -214,7 +214,7 @@
 {%- endmacro %}
 
 {% macro forum_thread(forum) -%}
-<a href="{% url 'thread_new' thread=forum.last_thread_id, slug=forum.last_thread_slug %}">{{ forum.last_thread_name }}</a>
+<a href="{{ url('thread_new', thread=forum.last_thread_id, slug=forum.last_thread_slug) }}">{{ forum.last_thread_name }}</a>
 {%- endmacro %}
 
 {% macro redirect_stats(forum) -%}
@@ -238,11 +238,11 @@
 {%- endmacro %}
 
 {% macro thread_starter(thread) -%}
-{% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}" class="user-link">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}
+{% if thread.start_poster_id %}<a href="{{ url('user', user=thread.start_poster_id, username=thread.start_poster_slug) }}" class="user-link">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}
 {%- endmacro %}
 
 {% macro thread_reply(thread) -%}
-{% if thread.last_poster_id %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}" class="user-link">{{ thread.last_poster_name }}</a>{% else %}{{ thread.last_poster_name }}{% endif %}
+{% if thread.last_poster_id %}<a href="{{ url('user', user=thread.last_poster_id, username=thread.last_poster_slug) }}" class="user-link">{{ thread.last_poster_name }}</a>{% else %}{{ thread.last_poster_name }}{% endif %}
 {%- endmacro %}
 
 {% macro pager() %}
@@ -250,9 +250,9 @@
 <div class="pagination pull-left">
   <ul>
     <li class="count">{{ macros.pager_label(pagination) }}</li>
-    {%- if pagination['prev'] > 1 %}<li><a href="{% url 'forum' slug=forum.slug, forum=forum.id %}" class="tooltip-top" title="{% trans %}First Page{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}First{% endtrans %}</a></li>{% endif -%}
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'forum' slug=forum.slug, forum=forum.id, page=pagination['prev'] %}{% else %}{% url 'forum' slug=forum.slug, forum=forum.id %}{% endif %}" class="tooltip-top" title="{% trans %}Newest Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{% url 'forum' slug=forum.slug, forum=forum.id, page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 1 %}<li><a href="{{ url('forum', slug=forum.slug, forum=forum.id) }}" class="tooltip-top" title="{% trans %}First Page{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}First{% endtrans %}</a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ url('forum', slug=forum.slug, forum=forum.id, page=pagination['prev']) }}{% else %}{{ url('forum', slug=forum.slug, forum=forum.id) }}{% endif %}" class="tooltip-top" title="{% trans %}Newest Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{{ url('forum', slug=forum.slug, forum=forum.id, page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
   </ul>
 </div>
 {% endif %}

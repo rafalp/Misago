@@ -7,14 +7,14 @@
 {% block action %}
 <div class="form-container usercp-avatar-crop">
 
-  <form action="{% if after_upload %}{% url 'usercp_avatar_upload_crop' %}{% else %}{% url 'usercp_avatar_crop' %}{% endif %}" method="post">
+  <form action="{% if after_upload %}{{ url('usercp_avatar_upload_crop') }}{% else %}{{ url('usercp_avatar_crop') }}{% endif %}" method="post">
 
     <div class="form-header">
       <div class="avatar-crop-preview">
         <img src="{{ MEDIA_URL }}{{ source }}" id="preview" alt="{% trans %}Avatar Preview{% endtrans %}" class="jcrop-preview" />
       </div>
       <h1>{% trans %}Crop Avatar{% endtrans %} <small>{% trans %}Change your Avatar{% endtrans %}</small></h1>
-      <a href="{% url 'usercp_avatar' %}" class="btn btn-inverse pull-right">{% trans %}Cancel{% endtrans %}</a>
+      <a href="{{ url('usercp_avatar') }}" class="btn btn-inverse pull-right">{% trans %}Cancel{% endtrans %}</a>
       <button name="save" type="submit" class="btn btn-danger pull-right">{% trans %}Crop Avatar{% endtrans %}</button>
     </div>
 

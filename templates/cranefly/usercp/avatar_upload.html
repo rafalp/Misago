@@ -17,12 +17,12 @@
   </div>
   {% endif %}
 
-  <form action="{% url 'usercp_avatar_upload' %}" method="post" enctype="multipart/form-data">
+  <form action="{{ url('usercp_avatar_upload') }}" method="post" enctype="multipart/form-data">
     <input type="hidden" id="js_check" name="js_check" value="0">
     {{ form_theme.form_widget(form, width=9) }}
     <div class="form-actions">
       <button name="save" type="submit" class="btn btn-primary">{% trans %}Upload Avatar{% endtrans %}</button>
-      <a href="{% url 'usercp_avatar' %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
+      <a href="{{ url('usercp_avatar') }}" class="btn">{% trans %}Cancel{% endtrans %}</a>
     </div>
   </form>
   

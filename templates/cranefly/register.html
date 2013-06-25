@@ -19,7 +19,7 @@
       </div>
       {% endif %}
 
-      <form action="{% url 'register' %}" method="post">
+      <form action="{{ url('register') }}" method="post">
         <div class="form-fields">
           {{ form_theme.form_widget(form, width=8) }}
         </div>

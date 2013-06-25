@@ -14,7 +14,7 @@
 {% if monitor.users_inactive|int > 0 %}
 <div class="alert alert-info alert-form">
   <div class="alert-icon"><span><i class="icon-info-sign icon-white"></i></span></div>
-  <p><a href="{% url 'admin_users_inactive' %}">{%- trans count=monitor.users_inactive|int, total=monitor.users_inactive|int|intcomma -%}
+  <p><a href="{{ url('admin_users_inactive') }}">{%- trans count=monitor.users_inactive|int, total=monitor.users_inactive|int|intcomma -%}
   There is one inactive user.
   {%- pluralize -%}
   There are {{ total }} inactive users.
@@ -35,7 +35,7 @@ One Administrator Online
         {% for session in admins %}    	
         <tr>
           <td>
-              <a href="{% url 'user' username=session.user.username_slug, user=session.user.pk %}"><img src="{{ session.user.get_avatar(22) }}" class="avatar" alt=""> <strong>{{ session.user.username }}</strong></a>
+              <a href="{{ url('user', username=session.user.username_slug, user=session.user.pk) }}"><img src="{{ session.user.get_avatar(22) }}" class="avatar" alt=""> <strong>{{ session.user.username }}</strong></a>
               <div class="muted" style="float: right;">{% trans start=session.start|timesince, ip=session.ip %}started {{ start }} ago from {{ ip }}{% endtrans %} <span class="info-popover tooltip-top" title="{% trans last=session.last|timesince %}Last click was {{ last }} ago{% endtrans %}"><i class="icon-time"></i></span></div>
           </td>
         </tr>{% endfor %}

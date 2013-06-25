@@ -6,5 +6,5 @@
 {% trans username=user.username %}{{ username }}, you are receiving this message because you have requested new activation e-mail.{% endtrans %}
 
 {% trans %}To activate your account, click the link below:{% endtrans %}
-{{ board_address }}{% url 'activate' username=user.username_slug, user=user.id, token=user.token %}
+{{ board_address }}{{ url('activate', username=user.username_slug, user=user.id, token=user.token) }}
 {% endblock %}
