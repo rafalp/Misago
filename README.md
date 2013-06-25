@@ -22,7 +22,7 @@ Dependencies
 * [Django](http://djangoproject.com)
 * [Django Debug Toolbar](https://github.com/django-debug-toolbar/django-debug-toolbar)
 * [Django-MPTT](https://github.com/django-mptt/django-mptt)
-* [Coffin](https://github.com/coffin/coffin)
+* [Django-Jina](https://github.com/niwibe/django-jinja)
 * [Django Haystack 2](http://haystacksearch.org/)
 * [Jinja2](https://github.com/mitsuhiko/jinja2)
 * [Markdown](http://pypi.python.org/pypi/Markdown)

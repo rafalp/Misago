@@ -1,8 +1,8 @@
 django
 django-debug-toolbar
 django-haystack
+django-jinja
 django-mptt
-coffin
 jinja2
 markdown
 path.py
