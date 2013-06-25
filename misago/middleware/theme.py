@@ -1,7 +1,7 @@
 from urlparse import urlparse
 from django.conf import settings
 from django.core.cache import cache
-from misago.template import activate_theme
+from misago.template.theme import activate_theme, active_theme
 
 class ThemeMiddleware(object):
     def process_request(self, request):

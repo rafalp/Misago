@@ -2,6 +2,7 @@ from datetime import timedelta
 from django.core.cache import cache
 from django.template import RequestContext
 from django.utils import timezone
+from misago.shortcuts import render_to_response
 from misago.models import Forum, Post, Rank, Session, Thread
 from misago.readstrackers import ForumsTracker
 
@@ -70,20 +71,20 @@ def index(request):
     Forum.objects.ignored_users(request.user, forums_list)
     
     # Render page
-    return request.theme.render_to_response('index.html',
-                                            {
-                                             'forums_list': forums_list,
-                                             'ranks_online': ranks_list,
-                                             'users_online': users_online,
-                                             'popular_threads': popular_threads,
-                                             'hook_above_forum_home': u'',
-                                             'hook_below_forum_home': u'',
-                                             'hook_above_home_forums_list': u'',
-                                             'hook_below_home_forums_list': u'',
-                                             'hook_above_home_sidepanel': u'',
-                                             'hook_after_home_sidepanel_ranks_online': u'',
-                                             'hook_after_home_sidepanel_popular_threads': u'',
-                                             'hook_after_home_sidepanel_forum_stats': u'',
-                                             'hook_below_home_sidepanel': u'',
-                                             },
-                                            context_instance=RequestContext(request));
+    return render_to_response('index.html',
+                              {
+                               'forums_list': forums_list,
+                               'ranks_online': ranks_list,
+                               'users_online': users_online,
+                               'popular_threads': popular_threads,
+                               'hook_above_forum_home': u'',
+                               'hook_below_forum_home': u'',
+                               'hook_above_home_forums_list': u'',
+                               'hook_below_home_forums_list': u'',
+                               'hook_above_home_sidepanel': u'',
+                               'hook_after_home_sidepanel_ranks_online': u'',
+                               'hook_after_home_sidepanel_popular_threads': u'',
+                               'hook_after_home_sidepanel_forum_stats': u'',
+                               'hook_below_home_sidepanel': u'',
+                               },
+                              context_instance=RequestContext(request));
