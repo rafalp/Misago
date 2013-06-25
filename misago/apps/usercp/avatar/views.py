@@ -11,6 +11,7 @@ from misago.apps.errors import error404
 from misago.decorators import block_guest
 from misago.forms import FormLayout
 from misago.messages import Message
+from misago.shortcuts import render_to_response
 from misago.utils.strings import random_string
 from misago.utils.avatars import resizeimage
 from misago.apps.usercp.template import RequestContext
@@ -20,10 +21,9 @@ def avatar_view(f):
     def decorator(*args, **kwargs):
         request = args[0]
         if request.user.avatar_ban:
-            return request.theme.render_to_response('usercp/avatar_banned.html',
-                                                    context_instance=RequestContext(request, {
-                                                     'tab': 'avatar',
-                                                     }));
+            return render_to_response('usercp/avatar_banned.html',
+                                      context_instance=RequestContext(request, {
+                                          'tab': 'avatar'}));
         return f(*args, **kwargs)
     return decorator
 
@@ -32,11 +32,10 @@ def avatar_view(f):
 @avatar_view
 def avatar(request):
     message = request.messages.get_message('usercp_avatar')
-    return request.theme.render_to_response('usercp/avatar.html',
-                                            context_instance=RequestContext(request, {
-                                             'message': message,
-                                             'tab': 'avatar',
-                                             }));
+    return render_to_response('usercp/avatar.html',
+                              context_instance=RequestContext(request, {
+                                  'message': message,
+                                  'tab': 'avatar'}));
 
 
 @block_guest
@@ -94,12 +93,11 @@ def gallery(request):
         else:
             message = Message(_("Request authorisation is invalid."), 'error')
 
-    return request.theme.render_to_response('usercp/avatar_gallery.html',
-                                            context_instance=RequestContext(request, {
-                                             'message': message,
-                                             'galleries': galleries,
-                                             'tab': 'avatar',
-                                             }));
+    return render_to_response('usercp/avatar_gallery.html',
+                              context_instance=RequestContext(request, {
+                                  'message': message,
+                                  'galleries': galleries,
+                                  'tab': 'avatar'}));
 
 
 @block_guest
@@ -162,12 +160,11 @@ def upload(request):
     else:
         form = UploadAvatarForm(request=request)
 
-    return request.theme.render_to_response('usercp/avatar_upload.html',
-                                            context_instance=RequestContext(request, {
-                                             'message': message,
-                                             'form': FormLayout(form),
-                                             'tab': 'avatar',
-                                             }));
+    return render_to_response('usercp/avatar_upload.html',
+                              context_instance=RequestContext(request, {
+                                  'message': message,
+                                  'form': FormLayout(form),
+                                  'tab': 'avatar'}));
 
 
 @block_guest
@@ -223,11 +220,10 @@ def crop(request, upload=False):
             message = Message(_("Request authorisation is invalid."), 'error')
 
 
-    return request.theme.render_to_response('usercp/avatar_crop.html',
-                                            context_instance=RequestContext(request, {
-                                             'message': message,
-                                             'after_upload': upload,
-                                             'avatar_size': settings.AVATAR_SIZES[0],
-                                             'source': 'avatars/%s' % (request.user.avatar_temp if upload else request.user.avatar_original),
-                                             'tab': 'avatar',
-                                             }));
+    return render_to_response('usercp/avatar_crop.html',
+                              context_instance=RequestContext(request, {
+                                  'message': message,
+                                  'after_upload': upload,
+                                  'avatar_size': settings.AVATAR_SIZES[0],
+                                  'source': 'avatars/%s' % (request.user.avatar_temp if upload else request.user.avatar_original),
+                                  'tab': 'avatar'}));

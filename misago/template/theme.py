@@ -19,6 +19,10 @@ def activate_theme(theme):
     _thread_local.misago_template_mutex = False
 
 
+def reset_theme():
+    _thread_local.misago_theme = settings.INSTALLED_THEMES[0];
+
+
 def active_theme():
     try:
         return _thread_local.misago_theme

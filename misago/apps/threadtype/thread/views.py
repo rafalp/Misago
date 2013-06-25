@@ -13,6 +13,7 @@ from misago.markdown import emojis
 from misago.messages import Message
 from misago.models import Forum, Thread, Post, Karma, WatchedThread
 from misago.readstrackers import ThreadsTracker
+from misago.shortcuts import render_to_response
 from misago.utils.pagination import make_pagination
 from misago.apps.threadtype.base import ViewBase
 from misago.apps.threadtype.thread.forms import QuickReplyForm
@@ -206,22 +207,22 @@ class ThreadBaseView(ViewBase):
         # Merge proxy into forum
         self.forum.closed = self.proxy.closed
 
-        return request.theme.render_to_response('%ss/thread.html' % self.type_prefix,
-                                                self.template_vars({
-                                                 'type_prefix': self.type_prefix,
-                                                 'message': self.message,
-                                                 'forum': self.forum,
-                                                 'parents': self.parents,
-                                                 'thread': self.thread,
-                                                 'is_read': self.tracker.is_read(self.thread),
-                                                 'count': self.count,
-                                                 'posts': self.posts,
-                                                 'ignored_posts': self.ignored,
-                                                 'watcher': self.watcher,
-                                                 'pagination': self.pagination,
-                                                 'emojis': emojis(),
-                                                 'quick_reply': FormFields(QuickReplyForm(request=request)).fields,
-                                                 'thread_form': FormFields(self.thread_form).fields if self.thread_form else None,
-                                                 'posts_form': FormFields(self.posts_form).fields if self.posts_form else None,
-                                                 }),
-                                                context_instance=RequestContext(request));
+        return render_to_response('%ss/thread.html' % self.type_prefix,
+                                  self.template_vars({
+                                      'type_prefix': self.type_prefix,
+                                      'message': self.message,
+                                      'forum': self.forum,
+                                      'parents': self.parents,
+                                      'thread': self.thread,
+                                      'is_read': self.tracker.is_read(self.thread),
+                                      'count': self.count,
+                                      'posts': self.posts,
+                                      'ignored_posts': self.ignored,
+                                      'watcher': self.watcher,
+                                      'pagination': self.pagination,
+                                      'emojis': emojis(),
+                                      'quick_reply': FormFields(QuickReplyForm(request=request)).fields,
+                                      'thread_form': FormFields(self.thread_form).fields if self.thread_form else None,
+                                      'posts_form': FormFields(self.posts_form).fields if self.posts_form else None,
+                                      }),
+                                  context_instance=RequestContext(request));

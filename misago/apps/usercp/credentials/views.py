@@ -6,6 +6,7 @@ from misago.apps.errors import error404
 from misago.decorators import block_guest
 from misago.forms import FormLayout
 from misago.messages import Message
+from misago.shortcuts import render_to_response
 from misago.utils.strings import random_string
 from misago.apps.usercp.template import RequestContext
 from misago.apps.usercp.credentials.forms import CredentialsChangeForm
@@ -39,12 +40,11 @@ def credentials(request):
     else:
         form = CredentialsChangeForm(request=request)
 
-    return request.theme.render_to_response('usercp/credentials.html',
-                                            context_instance=RequestContext(request, {
-                                             'message': message,
-                                             'form': FormLayout(form),
-                                             'tab': 'credentials',
-                                             }));
+    return render_to_response('usercp/credentials.html',
+                              context_instance=RequestContext(request, {
+                                  'message': message,
+                                  'form': FormLayout(form),
+                                  'tab': 'credentials'}));
 
 
 @block_guest

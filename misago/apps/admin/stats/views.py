@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 from misago.forms import FormLayout
 from misago.messages import Message
+from misago.shortcuts import render_to_response
 from misago.apps.admin.stats.forms import GenerateStatisticsForm
 from misago.apps.errors import error404
 
@@ -30,8 +31,8 @@ def form(request):
         Something went FUBAR - Misago ships with some stats providers out of box
         If those providers cant be found, this means Misago filesystem is corrupted
         """
-        return request.theme.render_to_response('stats/not_available.html',
-                                                context_instance=RequestContext(request));
+        return render_to_response('stats/not_available.html',
+                                  context_instance=RequestContext(request));
 
     message = None
     if request.method == 'POST':
@@ -62,10 +63,12 @@ def form(request):
     else:
         form = GenerateStatisticsForm(provider_choices=statistics_providers, request=request)
 
-    return request.theme.render_to_response('stats/form.html', {
-                                            'form': FormLayout(form),
-                                            'message': message,
-                                            }, context_instance=RequestContext(request));
+    return render_to_response('stats/form.html',
+                              {
+                              'form': FormLayout(form),
+                              'message': message,
+                              },
+                              context_instance=RequestContext(request));
 
 
 def graph(request, model, date_start, date_end, precision):
@@ -93,8 +96,8 @@ def graph(request, model, date_start, date_end, precision):
 
     if not statistics_providers:
         # Like before, q.q on lack of models
-        return request.theme.render_to_response('stats/not_available.html',
-                                                context_instance=RequestContext(request));
+        return render_to_response('stats/not_available.html',
+                                  context_instance=RequestContext(request));
 
     if not model in models_map or check_dates(date_start, date_end, precision):
         # Bad model name or graph data!
@@ -104,12 +107,14 @@ def graph(request, model, date_start, date_end, precision):
                                   provider_choices=statistics_providers,
                                   request=request,
                                   initial={'provider_model': model, 'date_start': date_start, 'date_end': date_end, 'stats_precision': precision})
-    return request.theme.render_to_response('stats/graph.html', {
-                                            'title': models_map[model].statistics_name,
-                                            'graph': build_graph(models_map[model], date_start, date_end, precision),
-                                            'form': FormLayout(form),
-                                            'message': request.messages.get_message('admin_stats'),
-                                            }, context_instance=RequestContext(request));
+    return render_to_response('stats/graph.html',
+                              {
+                              'title': models_map[model].statistics_name,
+                              'graph': build_graph(models_map[model], date_start, date_end, precision),
+                              'form': FormLayout(form),
+                              'message': request.messages.get_message('admin_stats'),
+                              },
+                              context_instance=RequestContext(request));
 
 
 def check_dates(date_start, date_end, precision):

@@ -12,6 +12,7 @@ from misago.auth import AuthException, auth_admin, auth_forum, sign_user_in
 from misago.decorators import (block_authenticated, block_banned, block_crawlers,
                             block_guest, block_jammed, check_csrf)
 from misago.models import SignInAttempt, Token
+from misago.shortcuts import render_to_response
 from misago.utils.strings import random_string
 from misago.apps.signin.forms import SignInForm
 
@@ -86,16 +87,16 @@ def signin(request):
                           show_remember_me=not request.firewall.admin and request.settings['remember_me_allow'],
                           request=request
                           )
-    return request.theme.render_to_response('signin.html',
-                                            {
-                                             'message': message,
-                                             'bad_password': bad_password,
-                                             'banned_account': banned_account,
-                                             'not_active': not_active,
-                                             'form': FormLayout(form),
-                                             'hide_signin': True,
-                                             },
-                                            context_instance=RequestContext(request));
+    return render_to_response('signin.html',
+                              {
+                              'message': message,
+                              'bad_password': bad_password,
+                              'banned_account': banned_account,
+                              'not_active': not_active,
+                              'form': FormLayout(form),
+                              'hide_signin': True,
+                              },
+                              context_instance=RequestContext(request));
 
 
 @block_crawlers

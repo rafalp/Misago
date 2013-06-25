@@ -9,6 +9,7 @@ from misago.decorators import block_guest
 from misago.forms import Form, FormLayout, FormFields
 from misago.messages import Message
 from misago.models import Forum, WatchedThread
+from misago.shortcuts import render_to_response
 from misago.utils.pagination import make_pagination
 
 @block_guest
@@ -40,12 +41,12 @@ def watched_threads(request, page=0, new=False):
         threads.append(thread.thread)
             
     # Display page
-    return request.theme.render_to_response('watched.html',
-                                            {
-                                             'items_total': count,
-                                             'pagination': pagination,
-                                             'new': new,
-                                             'threads': threads,
-                                             'message': request.messages.get_message('threads'),
-                                             },
-                                            context_instance=RequestContext(request))
+    return render_to_response('watched.html',
+                              {
+                              'items_total': count,
+                              'pagination': pagination,
+                              'new': new,
+                              'threads': threads,
+                              'message': request.messages.get_message('threads'),
+                              },
+                              context_instance=RequestContext(request))

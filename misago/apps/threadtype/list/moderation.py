@@ -5,6 +5,7 @@ from django.utils.translation import ugettext as _
 from misago.forms import FormLayout
 from misago.messages import Message
 from misago.models import Forum, Thread, Post
+from misago.shortcuts import render_to_response
 from misago.apps.threadtype.list.forms import MoveThreadsForm, MergeThreadsForm
 from misago.utils.strings import slugify
 
@@ -113,16 +114,16 @@ class ThreadsListModeration(object):
             self.message = Message(form.non_field_errors()[0], 'error')
         else:
             form = MoveThreadsForm(request=self.request, forum=self.forum)
-        return self.request.theme.render_to_response('%ss/move_threads.html' % self.type_prefix,
-                                                     {
-                                                      'type_prefix': self.type_prefix,
-                                                      'message': self.message,
-                                                      'forum': self.forum,
-                                                      'parents': self.parents,
-                                                      'threads': threads,
-                                                      'form': FormLayout(form),
-                                                      },
-                                                     context_instance=RequestContext(self.request));
+        return render_to_response('%ss/move_threads.html' % self.type_prefix,
+                                  {
+                                  'type_prefix': self.type_prefix,
+                                  'message': self.message,
+                                  'forum': self.forum,
+                                  'parents': self.parents,
+                                  'threads': threads,
+                                  'form': FormLayout(form),
+                                  },
+                                  context_instance=RequestContext(self.request));
 
     def action_merge(self, ids):
         if len(ids) < 2:
@@ -169,17 +170,17 @@ class ThreadsListModeration(object):
             else:
                 lookback = thread.last_post_id
 
-        return self.request.theme.render_to_response(('%ss/merge.html' % self.type_prefix),
-                                                     {
-                                                      'type_prefix': self.type_prefix,
-                                                      'message': self.message,
-                                                      'warning': warning,
-                                                      'forum': self.forum,
-                                                      'parents': self.parents,
-                                                      'threads': threads,
-                                                      'form': FormLayout(form),
-                                                      },
-                                                     context_instance=RequestContext(self.request));
+        return render_to_response('%ss/merge.html' % self.type_prefix,
+                                  {
+                                  'type_prefix': self.type_prefix,
+                                  'message': self.message,
+                                  'warning': warning,
+                                  'forum': self.forum,
+                                  'parents': self.parents,
+                                  'threads': threads,
+                                  'form': FormLayout(form),
+                                  },
+                                  context_instance=RequestContext(self.request));
 
     def action_open(self, ids):
         if self._action_open(ids):

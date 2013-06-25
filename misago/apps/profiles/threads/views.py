@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from misago.apps.profiles.decorators import profile_view
 from misago.apps.profiles.template import RequestContext
 from misago.models import Forum
+from misago.shortcuts import render_to_response
 from misago.utils.pagination import make_pagination
 
 @profile_view('user_threads')
@@ -15,11 +16,11 @@ def threads(request, user, page=0):
     except Http404:
         return redirect(reverse('user_threads', kwargs={'user': user.id, 'username': user.username_slug}))
     
-    return request.theme.render_to_response('profiles/threads.html',
-                                            context_instance=RequestContext(request, {
-                                             'profile': user,
-                                             'tab': 'threads',
-                                             'items_total': count,
-                                             'items': queryset[pagination['start']:pagination['stop']],
-                                             'pagination': pagination,
-                                             }));
+    return render_to_response('profiles/threads.html',
+                              context_instance=RequestContext(request, {
+                                  'profile': user,
+                                  'tab': 'threads',
+                                  'items_total': count,
+                                  'items': queryset[pagination['start']:pagination['stop']],
+                                  'pagination': pagination,
+                                  }));

@@ -11,6 +11,7 @@ from misago.decorators import block_crawlers
 from misago.forms import FormFields
 from misago.models import Forum, Thread, Post, User
 from misago.search import SearchException
+from misago.shortcuts import render_to_response
 from misago.utils.pagination import make_pagination
 from misago.apps.errors import error403, error404
 from misago.apps.profiles.views import list as users_list
@@ -64,9 +65,9 @@ class ViewBase(object):
             context['search_thread'] = self.thread_clean
         except AttributeError:
             pass
-        return self.request.theme.render_to_response('search/%s.html' % template,
-                                                     context,
-                                                     context_instance=RequestContext(self.request))
+        return render_to_response('search/%s.html' % template,
+                                  context,
+                                  context_instance=RequestContext(self.request))
 
     def __new__(cls, request, **kwargs):
         obj = super(ViewBase, cls).__new__(cls)

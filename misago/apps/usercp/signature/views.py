@@ -6,6 +6,7 @@ from misago.decorators import block_guest
 from misago.forms import FormLayout
 from misago.markdown import signature_markdown
 from misago.messages import Message
+from misago.shortcuts import render_to_response
 from misago.apps.usercp.template import RequestContext
 from misago.apps.usercp.signature.forms import SignatureForm
 
@@ -15,10 +16,9 @@ def signature(request):
     if not request.acl.usercp.can_use_signature():
         return error403(request)
     if request.user.signature_ban:
-        return request.theme.render_to_response('usercp/signature_banned.html',
-                                                context_instance=RequestContext(request, {
-                                                 'tab': 'signature',
-                                                 }));
+        return render_to_response('usercp/signature_banned.html',
+                                  context_instance=RequestContext(request, {
+                                      'tab': 'signature'}));
 
     siggy_text = ''
     message = request.messages.get_message('usercp_signature')
@@ -39,9 +39,8 @@ def signature(request):
     else:
         form = SignatureForm(request=request, initial={'signature': request.user.signature})
 
-    return request.theme.render_to_response('usercp/signature.html',
-                                            context_instance=RequestContext(request, {
-                                             'message': message,
-                                             'tab': 'signature',
-                                             'form': FormLayout(form),
-                                             }));
+    return render_to_response('usercp/signature.html',
+                              context_instance=RequestContext(request, {
+                                  'message': message,
+                                  'tab': 'signature',
+                                  'form': FormLayout(form)}));

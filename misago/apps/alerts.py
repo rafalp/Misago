@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.utils.timezone import localtime
 from django.utils.translation import ugettext as _
 from misago.decorators import block_guest
+from misago.shortcuts import render_to_response
 
 @block_guest
 def alerts(request):
@@ -48,9 +49,9 @@ def alerts(request):
     request.user.alerts = 0
     request.user.alerts_date = now
     request.user.save(force_update=True)
-    return request.theme.render_to_response('alerts.html',
-                                            {
-                                             'new_alerts': new_alerts,
-                                             'alerts': alerts,
-                                             },
-                                            context_instance=RequestContext(request))
+    return render_to_response('alerts.html',
+                              {
+                              'new_alerts': new_alerts,
+                              'alerts': alerts,
+                              },
+                              context_instance=RequestContext(request))

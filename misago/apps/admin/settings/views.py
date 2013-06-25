@@ -7,6 +7,7 @@ from misago.forms import Form, FormLayout, FormFields
 from misago.messages import Message
 from misago.search import SearchQuery, SearchException
 from misago.models import SettingsGroup, Setting
+from misago.shortcuts import render_to_response
 from misago.apps.errors import error404
 from misago.apps.admin.settings.forms import SearchForm
 
@@ -59,16 +60,16 @@ def settings(request, group_id=None, group_slug=None):
         form = SettingsGroupForm(request=request)
 
     # Display settings group form      
-    return request.theme.render_to_response('settings/settings.html',
-                                            {
-                                            'message': message,
-                                            'groups': settings_groups,
-                                            'active_group': active_group,
-                                            'search_form': FormFields(SearchForm(request=request)),
-                                            'form': FormLayout(form),
-                                            'raw_form': form,
-                                            },
-                                            context_instance=RequestContext(request));
+    return render_to_response('settings/settings.html',
+                              {
+                              'message': message,
+                              'groups': settings_groups,
+                              'active_group': active_group,
+                              'search_form': FormFields(SearchForm(request=request)),
+                              'form': FormLayout(form),
+                              'raw_form': form,
+                              },
+                              context_instance=RequestContext(request));
 
 
 def settings_search(request):
@@ -105,12 +106,12 @@ def settings_search(request):
             raise SearchException(_('Search query is invalid.'))
     except SearchException as e:
         message = Message(unicode(e), 'error')
-    return request.theme.render_to_response('settings/search_results.html',
-                                    {
-                                    'message': message,
-                                    'groups': settings_groups,
-                                    'active_group': None,
-                                    'found_settings': found_settings,
-                                    'search_form': FormFields(form),
-                                    },
-                                    context_instance=RequestContext(request));
+    return render_to_response('settings/search_results.html',
+                              {
+                              'message': message,
+                              'groups': settings_groups,
+                              'active_group': None,
+                              'found_settings': found_settings,
+                              'search_form': FormFields(form),
+                              },
+                              context_instance=RequestContext(request));

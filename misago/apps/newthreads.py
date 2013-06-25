@@ -5,6 +5,7 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
 from misago.models import Forum, Thread
+from misago.shortcuts import render_to_response
 from misago.utils.pagination import make_pagination
 
 def new_threads(request, page=0):
@@ -19,10 +20,10 @@ def new_threads(request, page=0):
     if request.settings['avatars_on_threads_list']:
         queryset = queryset.prefetch_related('start_poster', 'last_poster')
 
-    return request.theme.render_to_response('new_threads.html',
-                                            {
-                                             'items_total': items_total,
-                                             'threads': Thread.objects.with_reads(queryset, request.user),
-                                             'pagination': pagination,
-                                             },
-                                            context_instance=RequestContext(request));
+    return render_to_response('new_threads.html',
+                              {
+                              'items_total': items_total,
+                              'threads': Thread.objects.with_reads(queryset, request.user),
+                              'pagination': pagination,
+                              },
+                              context_instance=RequestContext(request));

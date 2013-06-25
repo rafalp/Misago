@@ -9,6 +9,7 @@ from mptt.forms import TreeNodeChoiceField
 from misago.admin import site
 from misago.apps.admin.widgets import *
 from misago.models import Forum
+from misago.shortcuts import render_to_response
 from misago.utils.strings import slugify
 from misago.apps.admin.forums.forms import NewNodeForm, CategoryForm, ForumForm, RedirectForm, DeleteForm
 
@@ -108,13 +109,15 @@ def resync_forums(request, forum=0, progress=0):
         return redirect(django_reverse('admin_forums_resync'))
 
     # Render Progress
-    response = request.theme.render_to_response('processing.html', {
-            'task_name': _('Resynchronizing Forums'),
-            'target_name': forum.name,
-            'message': _('Resynchronized %(progress)s from %(total)s threads') % {'progress': progress, 'total': threads_total},
-            'progress': progress * 100 / threads_total,
-            'cancel_url': reverse('admin_forums'),
-        }, context_instance=RequestContext(request));
+    response = render_to_response('processing.html',
+                                  {
+                                   'task_name': _('Resynchronizing Forums'),
+                                   'target_name': forum.name,
+                                   'message': _('Resynchronized %(progress)s from %(total)s threads') % {'progress': progress, 'total': threads_total},
+                                   'progress': progress * 100 / threads_total,
+                                   'cancel_url': reverse('admin_forums'),
+                                   },
+                                  context_instance=RequestContext(request));
 
     # Redirect where to?
     if progress >= threads_total:

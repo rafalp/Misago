@@ -6,7 +6,7 @@ from misago.decorators import block_authenticated, block_banned, block_crawlers,
 from misago.forms import FormLayout
 from misago.messages import Message
 from misago.models import Ban, User
-from misago.utils.views import redirect_message
+from misago.shortcuts import redirect_message, render_to_response
 from misago.apps.activation.forms import UserSendActivationMailForm
 
 @block_crawlers
@@ -40,12 +40,12 @@ def form(request):
             message = Message(form.non_field_errors()[0], 'error')
     else:
         form = UserSendActivationMailForm(request=request)
-    return request.theme.render_to_response('resend_activation.html',
-                                            {
-                                             'message': message,
-                                             'form': FormLayout(form),
-                                            },
-                                            context_instance=RequestContext(request));
+    return render_to_response('resend_activation.html',
+                              {
+                               'message': message,
+                               'form': FormLayout(form),
+                              },
+                              context_instance=RequestContext(request));
 
 
 @block_banned

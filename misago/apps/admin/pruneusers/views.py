@@ -5,6 +5,7 @@ from misago.admin import site
 from misago.apps.admin.widgets import *
 from misago.forms import Form
 from misago.models import PruningPolicy, User
+from misago.shortcuts import render_to_response
 from misago.apps.admin.pruneusers.forms import PolicyForm
 
 def reverse(route, target=None):
@@ -195,18 +196,18 @@ class Apply(FormWidget):
             else:
                 message = Message(_("Request authorization is invalid. Please resubmit your form."), 'error')
 
-        return request.theme.render_to_response(self.get_template(),
-                                                {
-                                                 'admin': self.admin,
-                                                 'action': self,
-                                                 'request': request,
-                                                 'url': self.get_url(model),
-                                                 'fallback': self.get_fallback_url(),
-                                                 'messages': request.messages.get_messages(self.admin.id),
-                                                 'message': message,
-                                                 'tabbed': self.tabbed,
-                                                 'total_users': total_users,
-                                                 'target': self.get_target_name(original_model),
-                                                 'target_model': original_model,
-                                                },
-                                                context_instance=RequestContext(request));
+        return render_to_response(self.get_template(),
+                                  {
+                                  'admin': self.admin,
+                                  'action': self,
+                                  'request': request,
+                                  'url': self.get_url(model),
+                                  'fallback': self.get_fallback_url(),
+                                  'messages': request.messages.get_messages(self.admin.id),
+                                  'message': message,
+                                  'tabbed': self.tabbed,
+                                  'total_users': total_users,
+                                  'target': self.get_target_name(original_model),
+                                  'target_model': original_model,
+                                  },
+                                  context_instance=RequestContext(request));

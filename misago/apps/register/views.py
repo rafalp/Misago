@@ -8,6 +8,7 @@ from misago.decorators import block_authenticated, block_banned, block_crawlers,
 from misago.forms import FormLayout
 from misago.messages import Message
 from misago.models import SignInAttempt, User
+from misago.shortcuts import render_to_response
 from misago.utils.views import redirect_message
 from misago.apps.register.forms import UserRegisterForm
 
@@ -75,10 +76,10 @@ def form(request):
                 return redirect(reverse('register'))
     else:
         form = UserRegisterForm(request=request)
-    return request.theme.render_to_response('register.html',
-                                            {
-                                             'message': message,
-                                             'form': FormLayout(form),
-                                             'hide_signin': True, 
-                                            },
-                                            context_instance=RequestContext(request));
+    return render_to_response('register.html',
+                              {
+                              'message': message,
+                              'form': FormLayout(form),
+                              'hide_signin': True, 
+                              },
+                              context_instance=RequestContext(request));

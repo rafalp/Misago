@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 from misago.admin import site
 from misago.apps.admin.widgets import *
 from misago.models import Newsletter, User
+from misago.shortcuts import render_to_response
 from misago.apps.admin.newsletters.forms import NewsletterForm, SearchNewslettersForm
 
 def reverse(route, target=None):
@@ -185,13 +186,15 @@ def send(request, target, token):
             return redirect(reverse('admin_newsletters'))
 
         # Render Progress
-        response = request.theme.render_to_response('processing.html', {
-                'task_name': _('Sending Newsletter'),
-                'target_name': newsletter.name,
-                'message': _('Sent to %(progress)s from %(total)s users') % {'progress': newsletter.progress, 'total': recipients_total},
-                'progress': newsletter.progress * 100 / recipients_total,
-                'cancel_url': reverse('admin_newsletters'),
-            }, context_instance=RequestContext(request));
+        response = render_to_response('processing.html',
+                                      {
+                                      'task_name': _('Sending Newsletter'),
+                                      'target_name': newsletter.name,
+                                      'message': _('Sent to %(progress)s from %(total)s users') % {'progress': newsletter.progress, 'total': recipients_total},
+                                      'progress': newsletter.progress * 100 / recipients_total,
+                                      'cancel_url': reverse('admin_newsletters'),
+                                      },
+                                      context_instance=RequestContext(request));
         response['refresh'] = '2;url=%s' % reverse('admin_newsletters_send', newsletter)
         return response
     except Newsletter.DoesNotExist:

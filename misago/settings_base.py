@@ -77,6 +77,9 @@ TEMPLATE_LOADERS = (
     'django_jinja.loaders.FileSystemLoader',
 )
 
+# Template extensions that will cause Jinja2 to be used
+DEFAULT_JINJA2_TEMPLATE_EXTENSION = ('.html', '.txt')
+
 # Context processors
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.debug',

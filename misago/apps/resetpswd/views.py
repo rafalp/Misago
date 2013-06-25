@@ -5,6 +5,7 @@ from misago.decorators import block_authenticated, block_banned, block_crawlers,
 from misago.forms import FormLayout
 from misago.messages import Message
 from misago.models import Ban, Session, Token, User
+from misago.shortcuts import render_to_response
 from misago.utils.strings import random_string
 from misago.utils.views import redirect_message
 from misago.apps.resetpswd.forms import UserResetPasswordForm
@@ -41,12 +42,12 @@ def form(request):
             message = Message(form.non_field_errors()[0], 'error')
     else:
         form = UserResetPasswordForm(request=request)
-    return request.theme.render_to_response('reset_password.html',
-                                            {
-                                             'message': message,
-                                             'form': FormLayout(form),
-                                            },
-                                            context_instance=RequestContext(request));
+    return render_to_response('reset_password.html',
+                              {
+                              'message': message,
+                              'form': FormLayout(form),
+                              },
+                              context_instance=RequestContext(request));
 
 
 @block_banned

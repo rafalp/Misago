@@ -14,12 +14,3 @@ def json_response(request, json=None, status=200, message=None):
     json.update({'code': status, 'message': unicode(message)})
     response = json_dumps(json, sort_keys=True,  ensure_ascii=False)
     return HttpResponse(response, content_type='application/json', status=status)
-
-
-def ajax_response(request, template=None, macro=None, vars=None, json=None, status=200, message=None):
-    html = ''
-    vars = vars or {}    
-    json = json or {}
-    if macro:
-        html = request.theme.macro(template, macro, vars, context_instance=RequestContext(request));
-    return json_response(request, json.update({'html': html}), status, message)

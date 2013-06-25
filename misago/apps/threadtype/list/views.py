@@ -10,6 +10,7 @@ from misago.forms import Form, FormFields
 from misago.messages import Message
 from misago.models import Forum, Thread, Post
 from misago.readstrackers import ForumsTracker
+from misago.shortcuts import render_to_response
 from misago.apps.threadtype.base import ViewBase
 
 class ThreadsListBaseView(ViewBase):
@@ -117,15 +118,15 @@ class ThreadsListBaseView(ViewBase):
         # Merge proxy into forum
         self.forum.closed = self.proxy.closed
 
-        return request.theme.render_to_response('%ss/%s.html' % (self.type_prefix, self.template),
-                                                self.template_vars({
-                                                 'type_prefix': self.type_prefix,
-                                                 'message': self.message,
-                                                 'forum': self.forum,
-                                                 'parents': self.parents,
-                                                 'count': self.count,
-                                                 'list_form': FormFields(self.form).fields if self.form else None,
-                                                 'threads': self.threads,
-                                                 'pagination': self.pagination,
-                                                 }),
-                                                context_instance=RequestContext(request));
+        return render_to_response('%ss/%s.html' % (self.type_prefix, self.template),
+                                  self.template_vars({
+                                      'type_prefix': self.type_prefix,
+                                      'message': self.message,
+                                      'forum': self.forum,
+                                      'parents': self.parents,
+                                      'count': self.count,
+                                      'list_form': FormFields(self.form).fields if self.form else None,
+                                      'threads': self.threads,
+                                      'pagination': self.pagination,
+                                      }),
+                                  context_instance=RequestContext(request));

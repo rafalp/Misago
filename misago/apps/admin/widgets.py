@@ -9,6 +9,7 @@ from jinja2 import TemplateNotFound
 import math
 from misago.forms import Form, FormLayout, FormFields, FormFieldsets
 from misago.messages import Message
+from misago.shortcuts import render_to_response
 from misago.utils.pagination import make_pagination
 
 """
@@ -352,25 +353,25 @@ class ListWidget(BaseWidget):
             items_total = items_shown
 
         # Render list
-        return request.theme.render_to_response(self.get_template(),
-                                                self.add_template_variables({
-                                                 'admin': self.admin,
-                                                 'action': self,
-                                                 'request': request,
-                                                 'url': self.get_url(),
-                                                 'messages_log': request.messages.get_messages(self.admin.id),
-                                                 'message': message,
-                                                 'sorting': self.sortables,
-                                                 'sorting_method': sorting_method,
-                                                 'pagination': paginating_method,
-                                                 'list_form': FormLayout(list_form) if list_form else None,
-                                                 'search_form': FormLayout(search_form) if search_form else None,
-                                                 'table_form': FormFields(table_form).fields if table_form else None,
-                                                 'items': items,
-                                                 'items_total': items_total,
-                                                 'items_shown': items_shown,
-                                                }),
-                                                context_instance=RequestContext(request));
+        return render_to_response(self.get_template(),
+                                  self.add_template_variables({
+                                   'admin': self.admin,
+                                   'action': self,
+                                   'request': request,
+                                   'url': self.get_url(),
+                                   'messages_log': request.messages.get_messages(self.admin.id),
+                                   'message': message,
+                                   'sorting': self.sortables,
+                                   'sorting_method': sorting_method,
+                                   'pagination': paginating_method,
+                                   'list_form': FormLayout(list_form) if list_form else None,
+                                   'search_form': FormLayout(search_form) if search_form else None,
+                                   'table_form': FormFields(table_form).fields if table_form else None,
+                                   'items': items,
+                                   'items_total': items_total,
+                                   'items_shown': items_shown,
+                                  }),
+                                  context_instance=RequestContext(request));
 
 
 class FormWidget(BaseWidget):
@@ -461,21 +462,21 @@ class FormWidget(BaseWidget):
             form = self.get_form_instance(FormType, model, self.get_initial_data(model))
 
         # Render form
-        return request.theme.render_to_response(self.get_template(),
-                                                self.add_template_variables({
-                                                 'admin': self.admin,
-                                                 'action': self,
-                                                 'request': request,
-                                                 'url': self.get_url(model),
-                                                 'fallback': self.get_fallback_url(),
-                                                 'messages_log': request.messages.get_messages(self.admin.id),
-                                                 'message': message,
-                                                 'tabbed': self.tabbed,
-                                                 'target': self.get_target_name(original_model),
-                                                 'target_model': original_model,
-                                                 'form': FormLayout(form, self.get_layout(form, target)),
-                                                }),
-                                                context_instance=RequestContext(request));
+        return render_to_response(self.get_template(),
+                                  self.add_template_variables({
+                                   'admin': self.admin,
+                                   'action': self,
+                                   'request': request,
+                                   'url': self.get_url(model),
+                                   'fallback': self.get_fallback_url(),
+                                   'messages_log': request.messages.get_messages(self.admin.id),
+                                   'message': message,
+                                   'tabbed': self.tabbed,
+                                   'target': self.get_target_name(original_model),
+                                   'target_model': original_model,
+                                   'form': FormLayout(form, self.get_layout(form, target)),
+                                  }),
+                                  context_instance=RequestContext(request));
 
 
 class ButtonWidget(BaseWidget):

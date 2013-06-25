@@ -6,6 +6,7 @@ from misago.forms import FormLayout
 from misago.markdown import emojis, post_markdown
 from misago.messages import Message
 from misago.models import Forum, Thread, Post, WatchedThread
+from misago.shortcuts import render_to_response
 from misago.utils.translation import ugettext_lazy
 from misago.apps.threadtype.base import ViewBase
 from misago.apps.threadtype.thread.forms import QuickReplyForm
@@ -147,18 +148,18 @@ class PostingBaseView(ViewBase):
         except ACLError404 as e:
             return error404(request, unicode(e))
 
-        return request.theme.render_to_response(('%ss/posting.html' % self.type_prefix),
-                                                self.template_vars({
-                                                 'type_prefix': self.type_prefix,
-                                                 'action': self.action,
-                                                 'message': self.message,
-                                                 'forum': self.forum,
-                                                 'thread': self.thread,
-                                                 'quote': self.quote,
-                                                 'post': self.post,
-                                                 'parents': self.parents,
-                                                 'preview': post_preview,
-                                                 'form': FormLayout(form),
-                                                 'emojis': emojis(),
-                                                 }),
-                                                context_instance=RequestContext(request));
+        return render_to_response('%ss/posting.html' % self.type_prefix,
+                                  self.template_vars({
+                                      'type_prefix': self.type_prefix,
+                                      'action': self.action,
+                                      'message': self.message,
+                                      'forum': self.forum,
+                                      'thread': self.thread,
+                                      'quote': self.quote,
+                                      'post': self.post,
+                                      'parents': self.parents,
+                                      'preview': post_preview,
+                                      'form': FormLayout(form),
+                                      'emojis': emojis(),
+                                      }),
+                                  context_instance=RequestContext(request));

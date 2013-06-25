@@ -2,6 +2,7 @@ from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from misago.forms import Form, FormLayout
 from misago.messages import Message
+from misago.shortcuts import render_to_response
 from misago.apps.threadtype.list.forms import MoveThreadsForm
 
 class ThreadModeration(object):
@@ -72,16 +73,16 @@ class ThreadModeration(object):
             message = Message(form.non_field_errors()[0], 'error')
         else:
             form = MoveThreadsForm(request=self.request, forum=self.forum)
-        return self.request.theme.render_to_response('%ss/move_thread.html' % self.type_prefix,
-                                                     {
-                                                      'type_prefix': self.type_prefix,
-                                                      'message': message,
-                                                      'forum': self.forum,
-                                                      'parents': self.parents,
-                                                      'thread': self.thread,
-                                                      'form': FormLayout(form),
-                                                      },
-                                                     context_instance=RequestContext(self.request));
+        return render_to_response('%ss/move_thread.html' % self.type_prefix,
+                                  {
+                                  'type_prefix': self.type_prefix,
+                                  'message': message,
+                                  'forum': self.forum,
+                                  'parents': self.parents,
+                                  'thread': self.thread,
+                                  'form': FormLayout(form),
+                                  },
+                                  context_instance=RequestContext(self.request));
 
     def thread_action_open(self):
         self.thread.closed = False

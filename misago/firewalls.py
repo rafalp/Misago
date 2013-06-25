@@ -2,6 +2,7 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import ADMIN_PATH
 from misago.messages import Message
+from misago.template.theme import reset_theme
 from misago.apps.errors import error403, error404
 from misago.apps.signin.views import signin
 
@@ -26,7 +27,7 @@ class FirewallAdmin(FirewallForum):
     def process_view(self, request, callback, callback_args, callback_kwargs):
         # Block all crawlers with 403
         if request.user.is_crawler():
-            request.theme.reset_theme()
+            reset_theme()
             return error403(request)
         else:
             # If we are not authenticated or not admin, force us to sign in right way

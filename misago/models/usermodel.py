@@ -15,6 +15,7 @@ from django.utils import timezone as tz_util
 from django.utils.translation import ugettext_lazy as _
 from misago.acl.builder import acl
 from misago.signals import delete_user_content, rename_user, sync_user_profile
+from misago.template.loader import render_to_string
 from misago.utils.avatars import avatar_size
 from misago.utils.strings import random_string, slugify
 from misago.validators import validate_username, validate_password, validate_email
@@ -475,10 +476,14 @@ class User(models.Model):
         return ''
 
     def email_user(self, request, template, subject, context={}):
-        templates = request.theme.get_email_templates(template)
         context = RequestContext(request, context)
         context['author'] = context['user']
         context['user'] = self
+
+        email_html = render_to_string('_email/%s.html' % template,
+                                      context_instance=context)
+        email_text = render_to_string('_email/%s.txt' % template,
+                                      context_instance=context)
 
         # Set message recipient
         if settings.DEBUG and settings.CATCH_ALL_EMAIL_ADDRESS:
@@ -487,8 +492,8 @@ class User(models.Model):
             recipient = self.email
 
         # Build message and add it to queue
-        email = EmailMultiAlternatives(subject, templates[0].render(context), settings.EMAIL_HOST_USER, [recipient])
-        email.attach_alternative(templates[1].render(context), "text/html")
+        email = EmailMultiAlternatives(subject, email_text, settings.EMAIL_HOST_USER, [recipient])
+        email.attach_alternative(email_html, "text/html")
         request.mails_queue.append(email)
 
     def get_activation(self):

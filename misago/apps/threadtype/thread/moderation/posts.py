@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 from misago.forms import FormLayout
 from misago.markdown import post_markdown
 from misago.messages import Message
+from misago.shortcuts import render_to_response
 from misago.utils.strings import slugify
 from misago.apps.threadtype.thread.moderation.forms import SplitThreadForm, MovePostsForm
 
@@ -88,17 +89,17 @@ class PostsModeration(object):
                                                                   'thread_name': _('[Split] %s') % self.thread.name,
                                                                   'thread_forum': self.forum,
                                                                   })
-        return self.request.theme.render_to_response('%ss/split.html' % self.type_prefix,
-                                                     {
-                                                      'type_prefix': self.type_prefix,
-                                                      'message': message,
-                                                      'forum': self.forum,
-                                                      'parents': self.parents,
-                                                      'thread': self.thread,
-                                                      'posts': ids,
-                                                      'form': FormLayout(form),
-                                                      },
-                                                     context_instance=RequestContext(self.request));
+        return render_to_response('%ss/split.html' % self.type_prefix,
+                                  {
+                                  'type_prefix': self.type_prefix,
+                                  'message': message,
+                                  'forum': self.forum,
+                                  'parents': self.parents,
+                                  'thread': self.thread,
+                                  'posts': ids,
+                                  'form': FormLayout(form),
+                                  },
+                                  context_instance=RequestContext(self.request));
 
     def post_action_move(self, ids):
         message = None
@@ -127,17 +128,17 @@ class PostsModeration(object):
             message = Message(form.non_field_errors()[0], 'error')
         else:
             form = MovePostsForm(request=self.request)
-        return self.request.theme.render_to_response('%ss/move_posts.html' % self.type_prefix,
-                                                     {
-                                                      'type_prefix': self.type_prefix,
-                                                      'message': message,
-                                                      'forum': self.forum,
-                                                      'parents': self.parents,
-                                                      'thread': self.thread,
-                                                      'posts': ids,
-                                                      'form': FormLayout(form),
-                                                      },
-                                                     context_instance=RequestContext(self.request));
+        return render_to_response('%ss/move_posts.html' % self.type_prefix,
+                                  {
+                                  'type_prefix': self.type_prefix,
+                                  'message': message,
+                                  'forum': self.forum,
+                                  'parents': self.parents,
+                                  'thread': self.thread,
+                                  'posts': ids,
+                                  'form': FormLayout(form),
+                                  },
+                                  context_instance=RequestContext(self.request));
 
     def post_action_protect(self, ids):
         protected = 0
