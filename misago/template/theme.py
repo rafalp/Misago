@@ -14,7 +14,7 @@ def activate_theme(theme):
         raise ValueError('"%s" is not correct theme name.' % theme)
     if theme[0] == '_':
         raise ValueError('"%s" is a template package, not a theme.' % theme[1:])
-    print _thread_local.__dict__.keys()
+    
     _thread_local.misago_theme = theme;
     _thread_local.misago_template_mutex = False
 

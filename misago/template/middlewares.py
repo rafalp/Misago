@@ -35,7 +35,6 @@ def process_context(templates, dictionary=None, context_instance=None):
     """
     Put template context trough template middlewares
     """
-    print _thread_local.__dict__.keys()
     if _thread_local.misago_template_mutex:
         return context
     _thread_local.misago_template_mutex = True
