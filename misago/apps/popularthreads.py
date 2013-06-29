@@ -4,6 +4,7 @@ from django.http import Http404
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
+from misago.conf import settings
 from misago.models import Forum, Thread
 from misago.shortcuts import render_to_response
 from misago.utils.pagination import make_pagination
@@ -17,7 +18,7 @@ def popular_threads(request, page=0):
         return redirect(reverse('popular_threads'))
 
     queryset = queryset.order_by('-score', '-last').prefetch_related('forum')[pagination['start']:pagination['stop']];
-    if request.settings['avatars_on_threads_list']:
+    if settings.avatars_on_threads_list:
         queryset = queryset.prefetch_related('start_poster', 'last_poster')
 
     return render_to_response('popular_threads.html',

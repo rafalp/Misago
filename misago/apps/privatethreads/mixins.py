@@ -1,13 +1,14 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
+from misago.conf import settings
 from misago.acl.exceptions import ACLError404
 
 class TypeMixin(object):
     type_prefix = 'private_thread'
 
     def type_available(self):
-        return self.request.settings['enable_private_threads']
+        return settings.enable_private_threads
 
     def check_permissions(self):
         try:

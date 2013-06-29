@@ -4,6 +4,7 @@ from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 from misago.auth import sign_user_in
+from misago.conf import settings
 from misago.decorators import block_authenticated, block_banned, block_crawlers, block_jammed
 from misago.forms import FormLayout
 from misago.messages import Message
@@ -17,7 +18,7 @@ from misago.apps.register.forms import UserRegisterForm
 @block_authenticated
 @block_jammed
 def form(request):
-    if request.settings['account_activation'] == 'block':
+    if settings.account_activation == 'block':
        return redirect_message(request, Message(_("We are sorry but we don't allow new members registrations at this time.")), 'info')
     
     message = None
@@ -25,9 +26,9 @@ def form(request):
         form = UserRegisterForm(request.POST, request=request)
         if form.is_valid():
             need_activation = 0
-            if request.settings['account_activation'] == 'user':
+            if settings.account_activation == 'user':
                 need_activation = User.ACTIVATION_USER
-            if request.settings['account_activation'] == 'admin':
+            if settings.account_activation == 'admin':
                 need_activation = User.ACTIVATION_ADMIN
                 
             new_user = User.objects.create_user(
@@ -68,10 +69,10 @@ def form(request):
             return redirect(reverse('index'))
         else:
             message = Message(form.non_field_errors()[0], 'error')
-            if request.settings['registrations_jams']:
+            if settings.registrations_jams:
                 SignInAttempt.objects.register_attempt(request.session.get_ip(request))
             # Have we jammed our account?
-            if SignInAttempt.objects.is_jammed(request.settings, request.session.get_ip(request)):
+            if SignInAttempt.objects.is_jammed(request.session.get_ip(request)):
                 request.jam.expires = timezone.now()
                 return redirect(reverse('register'))
     else:

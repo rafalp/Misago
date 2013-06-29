@@ -1,6 +1,5 @@
 from hashlib import md5
 from datetime import timedelta
-from django.conf import settings
 from django.contrib.sessions.backends.base import SessionBase, CreateError
 from django.db import IntegrityError
 from django.db.models.loading import cache as model_cache
@@ -8,6 +7,7 @@ from django.utils import timezone
 from django.utils.crypto import salted_hmac
 from django.utils.encoding import force_unicode
 from misago.auth import auth_remember, AuthException
+from misago.conf import settings
 from misago.models import Session, Token, Guest, User
 from misago.utils.strings import random_string
 
@@ -156,7 +156,7 @@ class HumanSession(MisagoSession):
                                                     admin=request.firewall.admin
                                                     )
             # IP invalid
-            if request.settings.sessions_validate_ip and self._session_rk.ip != self._ip:
+            if settings.sessions_validate_ip and self._session_rk.ip != self._ip:
                 raise IncorrectSessionException()
             
             # Session expired

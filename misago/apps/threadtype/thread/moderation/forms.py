@@ -2,6 +2,7 @@ from django import forms
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 from misago.acl.exceptions import ACLError403, ACLError404
+from misago.conf import settings
 from misago.forms import Form, ForumChoiceField
 from misago.models import Forum, Thread
 from misago.validators import validate_sluggable
@@ -19,7 +20,7 @@ class SplitThreadForm(Form, ValidateThreadNameMixin):
                         ],
                        ]
 
-        self.fields['thread_name'] = forms.CharField(max_length=self.request.settings['thread_name_max'],
+        self.fields['thread_name'] = forms.CharField(max_length=settings.thread_name_max,
                                                      validators=[validate_sluggable(_("Thread name must contain at least one alpha-numeric character."),
                                                                                     _("Thread name is too long. Try shorter name.")
                                                                                     )])

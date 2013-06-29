@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ungettext, ugettext as _
+from misago.conf import settings
 from misago.forms import Form, FormLayout, FormFields
 from misago.messages import Message
 from misago.search import SearchQuery, SearchException
@@ -47,7 +48,7 @@ def settings(request, group_id=None, group_slug=None):
         form = SettingsGroupForm(request.POST, request=request)
         if form.is_valid():
             for setting in form.cleaned_data.keys():
-                request.settings[setting] = form.cleaned_data[setting]
+                settings[setting] = form.cleaned_data[setting]
             cache.delete('settings')
             request.messages.set_flash(Message(_('Configuration has been changed.')), 'success', 'admin_settings')
             return redirect(reverse('admin_settings', kwargs={

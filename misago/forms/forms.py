@@ -1,6 +1,7 @@
 from recaptcha.client.captcha import submit as recaptcha_submit
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from misago.conf import settings
 
 class Form(forms.Form):
     """
@@ -27,17 +28,17 @@ class Form(forms.Form):
 
         # Kill captcha fields
         try:
-            if self.request.settings['bots_registration'] != 'recaptcha' or self.request.session.get('captcha_passed'):
+            if settings.bots_registration != 'recaptcha' or self.request.session.get('captcha_passed'):
                 del self.fields['recaptcha']
         except KeyError:
             pass
         try:
-            if self.request.settings['bots_registration'] != 'qa' or self.request.session.get('captcha_passed'):
+            if settings.bots_registration != 'qa' or self.request.session.get('captcha_passed'):
                 del self.fields['captcha_qa']
             else:
                 # Make sure we have any questions loaded
-                self.fields['captcha_qa'].label = self.request.settings['qa_test']
-                self.fields['captcha_qa'].help_text = self.request.settings['qa_test_help']
+                self.fields['captcha_qa'].label = settings.qa_test
+                self.fields['captcha_qa'].help_text = settings.qa_test_help
         except KeyError:
             pass
 
@@ -90,7 +91,7 @@ class Form(forms.Form):
         response = recaptcha_submit(
                                     self.request.POST.get('recaptcha_challenge_field'),
                                     self.request.POST.get('recaptcha_response_field'),
-                                    self.request.settings['recaptcha_private'],
+                                    settings.recaptcha_private,
                                     self.request.session.get_ip(self.request)
                                     ).is_valid
         if not response:
@@ -103,7 +104,7 @@ class Form(forms.Form):
         Test QA Captcha, scream if it went wrong
         """
 
-        if not unicode(self.cleaned_data['captcha_qa']).lower() in (name.lower() for name in unicode(self.request.settings['qa_test_answers']).splitlines()):
+        if not unicode(self.cleaned_data['captcha_qa']).lower() in (name.lower() for name in unicode(settings.qa_test_answers).splitlines()):
             raise forms.ValidationError(_("The answer you entered is incorrect."))
         self.request.session['captcha_passed'] = True
         return self.cleaned_data['captcha_qa']

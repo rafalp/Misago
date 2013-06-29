@@ -1,4 +1,4 @@
-from django.conf import settings
+from misago.conf import settings, SafeSettings
 from misago import __version__
 from misago.admin import site
 from misago.models import Forum
@@ -28,7 +28,7 @@ def common(request):
             'messages' : request.messages.messages,
             'monitor': request.monitor,
             'request_path': request.get_full_path(),
-            'settings': request.settings,
+            'settings': SafeSettings(),
             'stopwatch': request.stopwatch.time(),
             'user': request.user,
             'version': __version__,

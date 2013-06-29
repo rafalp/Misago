@@ -1,6 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from misago.conf import settings
 from misago.forms import Form, QACaptchaField, ReCaptchaField
 from misago.models import User
 from misago.utils.timezones import tzlist
@@ -28,7 +29,7 @@ class UserRegisterForm(Form):
         self.layout = [
                       (
                        None,
-                       [('username', {'label': _('Username'), 'help_text': _("Your displayed username. Between %(min)s and %(max)s characters, only letters and digits are allowed.") % {'min': self.request.settings['username_length_min'], 'max': self.request.settings['username_length_max']},'attrs': {'placeholder': _("Enter your desired username")}})]
+                       [('username', {'label': _('Username'), 'help_text': _("Your displayed username. Between %(min)s and %(max)s characters, only letters and digits are allowed.") % {'min': settings.username_length_min, 'max': settings.username_length_max},'attrs': {'placeholder': _("Enter your desired username")}})]
                        ),
                       (
                        None,
@@ -45,12 +46,12 @@ class UserRegisterForm(Form):
                        ),
                       ]
         
-        if not self.request.settings['tos_url'] and not self.request.settings['tos_content']:
+        if not settings.tos_url and not settings.tos_content:
             del self.fields['accept_tos']
             del self.layout[3]
         
     def clean_username(self):
-        validate_username(self.cleaned_data['username'], self.request.settings)
+        validate_username(self.cleaned_data['username'], settings)
         new_user = User.objects.get_blank_user()
         new_user.set_username(self.cleaned_data['username'])
         try:
@@ -69,7 +70,7 @@ class UserRegisterForm(Form):
         return self.cleaned_data['email']
         
     def clean_password(self):
-        validate_password(self.cleaned_data['password'], self.request.settings)
+        validate_password(self.cleaned_data['password'], settings)
         new_user = User.objects.get_blank_user()
         new_user.set_password(self.cleaned_data['password'])
         try:

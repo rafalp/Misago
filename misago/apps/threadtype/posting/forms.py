@@ -1,10 +1,10 @@
 from django import forms
-from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.apps.threadtype.mixins import (FloodProtectionMixin,
                                            ValidateThreadNameMixin,
                                            ValidatePostLengthMixin)
+from misago.conf import settings
 from misago.forms import Form
 from misago.validators import validate_sluggable
 
@@ -77,7 +77,7 @@ class NewThreadForm(PostingForm, ValidateThreadNameMixin):
     def finalize_form(self):
         super(NewThreadForm, self).finalize_form()
         self.layout[0][1].append(('thread_name', {'label': _("Thread Name")}))
-        self.fields['thread_name'] = forms.CharField(max_length=self.request.settings['thread_name_max'],
+        self.fields['thread_name'] = forms.CharField(max_length=settings.thread_name_max,
                                                      validators=[validate_sluggable(_("Thread name must contain at least one alpha-numeric character."),
                                                                                     _("Thread name is too long. Try shorter name."))])
 

@@ -1,8 +1,8 @@
 from PIL import Image
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django import forms
+from misago.conf import settings
 from misago.forms import Form, YesNoSwitch
 from misago.models import Rank, Role, User
 from misago.validators import validate_username, validate_password, validate_email
@@ -80,7 +80,7 @@ class UserForm(Form):
 
     def clean_username(self):
         org_username = self.user.username
-        validate_username(self.cleaned_data['username'], self.request.settings)
+        validate_username(self.cleaned_data['username'], settings)
         self.user.set_username(self.cleaned_data['username'])
         try:
             self.user.full_clean()
@@ -99,7 +99,7 @@ class UserForm(Form):
 
     def clean_new_password(self):
         if self.cleaned_data['new_password']:
-            validate_password(self.cleaned_data['new_password'], self.request.settings)
+            validate_password(self.cleaned_data['new_password'], settings)
             self.user.set_password(self.cleaned_data['new_password'])
             try:
                 self.user.full_clean()
@@ -157,7 +157,7 @@ class NewUserForm(Form):
         super(NewUserForm, self).__init__(*args, **kwargs)
 
     def clean_username(self):
-        validate_username(self.cleaned_data['username'], self.request.settings)
+        validate_username(self.cleaned_data['username'], settings)
         new_user = User.objects.get_blank_user()
         new_user.set_username(self.cleaned_data['username'])
         try:
@@ -182,7 +182,7 @@ class NewUserForm(Form):
             new_user.full_clean()
         except ValidationError as e:
             new_user.is_password_valid(e)
-        validate_password(self.cleaned_data['password'],  self.request.settings)
+        validate_password(self.cleaned_data['password'], settings)
         return self.cleaned_data['password']
 
 

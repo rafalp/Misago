@@ -1,7 +1,7 @@
 import re
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ungettext, ugettext_lazy as _
+from misago.conf import settings
 from misago.models import Ban
 from misago.utils.strings import slugify
 
@@ -18,25 +18,25 @@ class validate_sluggable(object):
             raise ValidationError(self.error_long)
 
 
-def validate_username(value, db_settings):
+def validate_username(value):
     value = unicode(value).strip()
 
-    if len(value) < db_settings['username_length_min']:
+    if len(value) < settings.username_length_min:
         raise ValidationError(ungettext(
             'Username must be at least one character long.',
             'Username must be at least %(count)d characters long.',
-            db_settings['username_length_min']
+            settings.username_length_min
         ) % {
-            'count': db_settings['username_length_min'],
+            'count': settings.username_length_min,
         })
 
-    if len(value) > db_settings['username_length_max']:
+    if len(value) > settings.username_length_max:
         raise ValidationError(ungettext(
             'Username cannot be longer than one characters.',
             'Username cannot be longer than %(count)d characters.',
-            db_settings['username_length_max']
+            settings.username_length_max
         ) % {
-            'count': db_settings['username_length_max'],
+            'count': settings.username_length_max,
         })
 
     if settings.UNICODE_USERNAMES:
@@ -50,19 +50,19 @@ def validate_username(value, db_settings):
         raise ValidationError(_("This username is forbidden."))
 
 
-def validate_password(value, db_settings):
+def validate_password(value):
     value = unicode(value).strip()
 
-    if len(value) < db_settings['password_length']:
+    if len(value) < settings.password_length:
         raise ValidationError(ungettext(
             'Correct password has to be at least one character long.',
             'Correct password has to be at least %(count)d characters long.',
-            db_settings['password_length']
+            settings.password_length
         ) % {
-            'count': db_settings['password_length'],
+            'count': settings.password_length,
         })
 
-    for test in db_settings['password_complexity']:
+    for test in settings.password_complexity:
         if test in ('case', 'digits', 'special'):
             if not re.search('[a-zA-Z]', value):
                 raise ValidationError(_("Password must contain alphabetical characters."))

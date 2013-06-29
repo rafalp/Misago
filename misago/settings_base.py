@@ -109,7 +109,6 @@ MIDDLEWARE_CLASSES = (
     'misago.middleware.heartbeat.HeartbeatMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'misago.middleware.cookiejar.CookieJarMiddleware',
-    'misago.middleware.settings.SettingsMiddleware',
     'misago.middleware.monitor.MonitorMiddleware',
     'misago.middleware.theme.ThemeMiddleware',
     'misago.middleware.firewalls.FirewallMiddleware',

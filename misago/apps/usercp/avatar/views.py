@@ -1,13 +1,13 @@
 from path import path
 from PIL import Image
 from zipfile import is_zipfile
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.encoding import smart_str
 from django.utils.translation import ugettext as _
 from misago.apps.errors import error404
+from misago.conf import settings
 from misago.decorators import block_guest
 from misago.forms import FormLayout
 from misago.messages import Message
@@ -41,7 +41,7 @@ def avatar(request):
 @block_guest
 @avatar_view
 def gravatar(request):
-    if not 'gravatar' in request.settings.avatars_types:
+    if not 'gravatar' in settings.avatars_types:
         return error404(request)
     if request.user.avatar_type != 'gravatar':
         if request.csrf.request_secure(request):
@@ -57,7 +57,7 @@ def gravatar(request):
 @block_guest
 @avatar_view
 def gallery(request):
-    if not 'gallery' in request.settings.avatars_types:
+    if not 'gallery' in settings.avatars_types:
         return error404(request)
 
     allowed_avatars = []
@@ -103,7 +103,7 @@ def gallery(request):
 @block_guest
 @avatar_view
 def upload(request):
-    if not 'upload' in request.settings.avatars_types:
+    if not 'upload' in settings.avatars_types:
         return error404(request)
     message = request.messages.get_message('usercp_avatar')
     if request.method == 'POST':
@@ -153,7 +153,7 @@ def upload(request):
                 return redirect(reverse('usercp_avatar'))
             except ValidationError:
                 request.user.delete_avatar()
-                request.user.default_avatar(request.settings)
+                request.user.default_avatar()
                 message = Message(_("Only gif, jpeg and png files are allowed for member avatars."), 'error')
         else:
             message = Message(form.non_field_errors()[0], 'error')
@@ -170,7 +170,7 @@ def upload(request):
 @block_guest
 @avatar_view
 def crop(request, upload=False):
-    if upload and (not request.user.avatar_temp or not 'upload' in request.settings.avatars_types):
+    if upload and (not request.user.avatar_temp or not 'upload' in settings.avatars_types):
         return error404(request)
 
     if not upload and request.user.avatar_type != 'upload':

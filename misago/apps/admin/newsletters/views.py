@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.core.urlresolvers import reverse as django_reverse
 from django.db.models import Q
 from django.shortcuts import redirect
@@ -6,6 +5,7 @@ from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from misago.admin import site
 from misago.apps.admin.widgets import *
+from misago.conf import settings
 from misago.models import Newsletter, User
 from misago.shortcuts import render_to_response
 from misago.apps.admin.newsletters.forms import NewsletterForm, SearchNewslettersForm
@@ -163,7 +163,7 @@ def send(request, target, token):
 
         for user in recipients.all()[newsletter.progress:(newsletter.progress + newsletter.step_size)]:
             tokens = {
-              '{{ board_name }}': request.settings.board_name,
+              '{{ board_name }}': settings.board_name,
               '{{ username }}': user.username,
               '{{ user_url }}': django_reverse('user', kwargs={'username': user.username_slug, 'user': user.pk}),
               '{{ board_url }}': settings.BOARD_ADDRESS,

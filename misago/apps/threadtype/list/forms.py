@@ -1,5 +1,6 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from misago.conf import settings
 from misago.forms import Form, ForumChoiceField
 from misago.models import Forum
 from misago.validators import validate_sluggable
@@ -41,7 +42,7 @@ class MergeThreadsForm(Form, ValidateThreadNameMixin):
     def finalize_form(self):
         self.fields['new_forum'] = ForumChoiceField(queryset=Forum.objects.get(special='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']), initial=self.threads[0].forum)
         self.fields['thread_name'] = forms.CharField(
-                                                     max_length=self.request.settings['thread_name_max'],
+                                                     max_length=settings.thread_name_max,
                                                      initial=self.threads[-1].name,
                                                      validators=[validate_sluggable(
                                                                                     _("Thread name must contain at least one alpha-numeric character."),

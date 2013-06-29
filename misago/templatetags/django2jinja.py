@@ -3,7 +3,6 @@ import urllib
 from django.contrib.humanize.templatetags.humanize import (intcomma as intcomma_func,
                                                            intword as intword_func)
 from django_jinja.library import Library
-from django.conf import settings
 from misago.utils.strings import slugify
 
 register = Library()

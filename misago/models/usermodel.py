@@ -3,7 +3,6 @@ from datetime import timedelta
 import math
 from random import choice
 from path import path
-from django.conf import settings
 from django.contrib.auth.hashers import (
     check_password, make_password, is_password_usable, UNUSABLE_PASSWORD)
 from django.core.cache import cache, InvalidCacheBackendError
@@ -14,6 +13,7 @@ from django.template import RequestContext
 from django.utils import timezone as tz_util
 from django.utils.translation import ugettext_lazy as _
 from misago.acl.builder import acl
+from misago.conf import settings
 from misago.signals import delete_user_content, rename_user, sync_user_profile
 from misago.template.loader import render_to_string
 from misago.utils.avatars import avatar_size
@@ -44,14 +44,7 @@ class UserManager(models.Manager):
         if activation > 0:
             token = random_string(12)
 
-        try:
-            db_settings = request.settings
-        except AttributeError:
-            from misago.dbsettings import DBSettings
-            db_settings = DBSettings()
-
-        if timezone == False:
-            timezone = db_settings['default_timezone']
+        timezone = timezone or settings.default_timezone
 
         # Get first rank
         try:
@@ -70,17 +63,17 @@ class UserManager(models.Manager):
                         token=token,
                         timezone=timezone,
                         rank=default_rank,
-                        subscribe_start=db_settings['subscribe_start'],
-                        subscribe_reply=db_settings['subscribe_reply'],
+                        subscribe_start=settings.subscribe_start,
+                        subscribe_reply=settings.subscribe_reply,
                         )
 
-        validate_username(username, db_settings)
-        validate_password(password, db_settings)
+        validate_username(username, settings)
+        validate_password(password, settings)
         new_user.set_username(username)
         new_user.set_email(email)
         new_user.set_password(password)
         new_user.full_clean()
-        new_user.default_avatar(db_settings)
+        new_user.default_avatar()
         new_user.save(force_insert=True)
 
         # Set user roles?
@@ -232,8 +225,8 @@ class User(models.Model):
         self.avatar_type = 'gallery'
         self.avatar_image = '/'.join(path(choice(avatars_list)).splitall()[-2:])
 
-    def default_avatar(self, db_settings):
-        if db_settings['default_avatar'] == 'gallery':
+    def default_avatar(self):
+        if settings.default_avatar == 'gallery':
             try:
                 avatars_list = []
                 try:

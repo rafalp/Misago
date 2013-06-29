@@ -1,6 +1,7 @@
 from UserDict import IterableUserDict
 from recaptcha.client.captcha import displayhtml
 from django.utils import formats
+from misago.conf import settings
 
 class FormLayout(object):
     """
@@ -117,8 +118,8 @@ class FormFields(object):
             if widget_name == 'ReCaptchaWidget':
                 blueprint['widget'] = 'recaptcha'
                 blueprint['attrs'] = {'html': displayhtml(
-                                                          form.request.settings['recaptcha_public'],
-                                                          form.request.settings['recaptcha_ssl'],
+                                                          settings.recaptcha_public,
+                                                          settings.recaptcha_ssl,
                                                           bound_field.field.api_error,
                                                           )}
 

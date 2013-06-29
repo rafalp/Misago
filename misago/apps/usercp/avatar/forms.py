@@ -1,8 +1,8 @@
 from PIL import Image
 from django import forms
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from misago.conf import settings
 from misago.forms import Form
 
 class UploadAvatarForm(Form):
@@ -21,11 +21,11 @@ class UploadAvatarForm(Form):
     def clean_avatar_upload(self):
         image = self.cleaned_data.get('avatar_upload', False)
         if image:
-            if image._size > self.request.settings.upload_limit * 1024:
-                if self.request.settings.upload_limit > 1024:
-                    limit = '%s Mb' % "{:10.2f}".format(float(self.request.settings.upload_limit / 1024.0))
+            if image._size > settings.upload_limit * 1024:
+                if settings.upload_limit > 1024:
+                    limit = '%s Mb' % "{:10.2f}".format(float(settings.upload_limit / 1024.0))
                 else:
-                    limit = '%s Kb' % self.request.settings.upload_limit
+                    limit = '%s Kb' % settings.upload_limit
                 raise ValidationError(_("Avatar image cannot be larger than %(limit)s.") % {'limit': limit})
         else:
             raise ValidationError(_("Couldn't read uploaded image"))

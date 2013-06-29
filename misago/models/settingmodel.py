@@ -3,7 +3,6 @@ from django import forms
 from django.core import validators
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from misago.forms import YesNoSwitch
 from misago.utils.timezones import tzlist
 try:
     import cPickle as pickle
@@ -13,7 +12,7 @@ except ImportError:
 class Setting(models.Model):
     setting = models.CharField(max_length=255, primary_key=True)
     group = models.ForeignKey('SettingsGroup', to_field='key')
-    value = models.TextField(null=True, blank=True)
+    _value = models.TextField(db_column='value', null=True, blank=True)
     value_default = models.TextField(null=True, blank=True)
     normalize_to = models.CharField(max_length=255)
     field = models.CharField(max_length=255)
@@ -29,33 +28,37 @@ class Setting(models.Model):
     def get_extra(self):
         return pickle.loads(base64.decodestring(self.extra))
 
-    def get_value(self):
+    @property
+    def value(self):
         if self.normalize_to == 'array':
-            return self.value.split(',')
+            return self._value.split(',')
         if self.normalize_to == 'integer':
-            return int(self.value)
+            return int(self._value)
         if self.normalize_to == 'float':
-            return float(self.value)
+            return float(self._value)
         if self.normalize_to == 'boolean':
-            return self.value == "1"
-        return self.value
+            return self._value == "1"
+        return self._value
 
-    def set_value(self, value):
+    @value.setter
+    def value(self, value):
         if self.normalize_to == 'array':
-            self.value = ','.join(value)
+            self._value = ','.join(value)
         elif self.normalize_to == 'integer':
-            self.value = int(value)
+            self._value = int(value)
         elif self.normalize_to == 'float':
-            self.value = float(value)
+            self._value = float(value)
         elif self.normalize_to == 'boolean':
-            self.value = 1 if value else 0
+            self._value = 1 if value else 0
         else:
-            self.value = value
-        if not self.value and self.value_default:
-            self.value = self.value_default
-        return self.value
+            self._value = value
+        if not self._value and self.value_default:
+            self._value = self.value_default
+        return self._value
 
     def get_field(self):
+        from misago.forms import YesNoSwitch
+        
         extra = self.get_extra()
 
         # Set validators

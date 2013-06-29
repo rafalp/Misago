@@ -1,10 +1,10 @@
-from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
+from misago.conf import settings
 from misago.decorators import block_guest, check_csrf
 from misago.markdown import post_markdown
 from misago.messages import Message
@@ -211,13 +211,13 @@ class UpvotePostBaseView(JumpView):
                 request.user.karma_given_p += 1
                 if self.post.user_id:
                     self.post.user.karma_p += 1
-                    self.post.user.score += request.settings['score_reward_karma_positive']
+                    self.post.user.score += settings.score_reward_karma_positive
             else:
                 self.post.downvotes += 1
                 request.user.karma_given_n += 1
                 if self.post.user_id:
                     self.post.user.karma_n += 1
-                    self.post.user.score -= request.settings['score_reward_karma_negative']
+                    self.post.user.score -= settings.score_reward_karma_negative
             self.post.save(force_update=True)
             request.user.save(force_update=True)
             if self.post.user_id:

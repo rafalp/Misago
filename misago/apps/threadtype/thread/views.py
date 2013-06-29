@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
+from misago.conf import settings
 from misago.forms import Form, FormLayout, FormFields
 from misago.markdown import emojis
 from misago.messages import Message
@@ -43,12 +44,12 @@ class ThreadBaseView(ViewBase):
         self.posts = self.posts.order_by('id')
 
         try:
-            self.pagination = make_pagination(self.kwargs.get('page', 0), self.count, self.request.settings.posts_per_page)
+            self.pagination = make_pagination(self.kwargs.get('page', 0), self.count, settings.posts_per_page)
         except Http404:
             return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))
 
         checkpoints_range = None
-        if self.request.settings.posts_per_page < self.count:
+        if settings.posts_per_page < self.count:
             self.posts = self.posts[self.pagination['start']:self.pagination['stop'] + 1]
             posts_len = len(self.posts)
             checkpoints_range = self.posts[posts_len - 1].date

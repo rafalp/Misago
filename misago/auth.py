@@ -1,7 +1,7 @@
 from datetime import timedelta
-from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from misago.conf import settings
 from misago.models import Ban, SignInAttempt, Token, User
 
 """
@@ -70,7 +70,7 @@ def auth_remember(request, ip):
     """
     if request.firewall.admin:
         raise AuthException()
-    if SignInAttempt.objects.is_jammed(request.settings, ip):
+    if SignInAttempt.objects.is_jammed(ip):
         raise AuthException()
     cookie_token = settings.COOKIES_PREFIX + 'TOKEN'
     try:
@@ -85,12 +85,12 @@ def auth_remember(request, ip):
             raise AuthException()
 
         # See if token is not expired
-        token_expires = timezone.now() - timedelta(days=request.settings['remember_me_lifetime'])
-        if request.settings['remember_me_extensible'] and token_rk.accessed < token_expires:
+        token_expires = timezone.now() - timedelta(days=settings.remember_me_lifetime)
+        if settings.remember_me_extensible and token_rk.accessed < token_expires:
             # Token expired because it's last use is smaller than expiration date
             raise AuthException()
 
-        if not request.settings['remember_me_extensible'] and token_rk.created < token_expires:
+        if not settings.remember_me_extensible and token_rk.created < token_expires:
             # Token expired because it was created before expiration date
             raise AuthException()
 

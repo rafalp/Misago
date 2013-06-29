@@ -1,9 +1,9 @@
-from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import redirect
 from django.template import RequestContext
 from misago.apps.errors import error403, error404
+from misago.conf import settings
 from misago.forms import FormFields
 from misago.messages import Message
 from misago.models import Rank, User
@@ -81,7 +81,7 @@ def list(request, slug=None, page=0):
             users = User.objects.filter(rank=active_rank)
             items_total = users.count()
             try:
-                pagination = make_pagination(page, items_total, request.settings['profiles_per_list'])
+                pagination = make_pagination(page, items_total, settings.profiles_per_list)
             except Http404:
                 if not default_rank and active_rank:
                     return redirect(reverse('users', kwargs={'slug': active_rank.slug}))

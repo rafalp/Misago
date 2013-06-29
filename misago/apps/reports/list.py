@@ -5,6 +5,7 @@ from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from misago.apps.threadtype.list import ThreadsListBaseView, ThreadsListModeration
+from misago.conf import settings
 from misago.messages import Message
 from misago.models import Forum, Thread, Post
 from misago.readstrackers import ThreadsTracker
@@ -20,7 +21,7 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
         threads = self.forum.thread_set.filter(weight__lt=2).prefetch_related('report_for').order_by('-weight', '-last')
 
         # Add in first and last poster
-        if self.request.settings.avatars_on_threads_list:
+        if settings.avatars_on_threads_list:
             announcements = announcements.prefetch_related('start_poster', 'last_poster')
             threads = threads.prefetch_related('start_poster', 'last_poster')
 
@@ -31,7 +32,7 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
         self.count = qs_threads.count()
 
         try:
-            self.pagination = make_pagination(self.kwargs.get('page', 0), self.count, self.request.settings.threads_per_page)
+            self.pagination = make_pagination(self.kwargs.get('page', 0), self.count, settings.threads_per_page)
         except Http404:
             return self.threads_list_redirect()
 

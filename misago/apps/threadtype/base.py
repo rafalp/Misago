@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import redirect
+from misago.conf import settings
 from misago.models import Forum, Thread, Post
 from misago.utils.pagination import page_number
 
@@ -51,7 +52,7 @@ class ViewBase(object):
     def redirect_to_post(self, post, type_prefix=None):
         type_prefix = type_prefix or self.type_prefix
         queryset = self.request.acl.threads.filter_posts(self.request, self.thread, self.thread.post_set)
-        page = page_number(queryset.filter(id__lte=post.pk).count(), queryset.count(), self.request.settings.posts_per_page)
+        page = page_number(queryset.filter(id__lte=post.pk).count(), queryset.count(), settings.posts_per_page)
         if page > 1:
             return redirect(reverse(type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'page': page}) + ('#post-%s' % post.pk))
         return redirect(reverse(type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % post.pk))

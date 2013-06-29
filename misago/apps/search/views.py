@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 from haystack.inputs import AutoQuery
 from haystack.query import SearchQuerySet, RelatedSearchQuerySet
 from misago.acl.exceptions import ACLError403, ACLError404
+from misago.conf import settings
 from misago.decorators import block_crawlers
 from misago.forms import FormFields
 from misago.models import Forum, Thread, Post, User
@@ -32,7 +33,7 @@ class ViewBase(object):
 
         if self.request.POST.get('search_in') == 'private':
             if not (self.request.acl.private_threads.can_participate()
-                    and self.request.settings['enable_private_threads']):
+                    and settings.enable_private_threads):
                 raise ACLError404()
             sqs = sqs.filter(thread__in=[t.pk for t in self.request.user.private_thread_set.all()])
         elif self.request.POST.get('search_in') == 'reports':

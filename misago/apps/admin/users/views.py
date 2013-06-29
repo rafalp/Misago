@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from misago.admin import site
 from misago.apps.admin.widgets import *
+from misago.conf import settings
 from misago.markdown import signature_markdown
 from misago.models import Forum, User
 from misago.utils.strings import random_string
@@ -160,7 +161,7 @@ class List(ListWidget):
     def action_remove_locks(self, items, checked):
         for user in items:
             if user.pk in checked:
-                user.default_avatar(self.request.settings)
+                user.default_avatar()
                 user.avatar_ban = False
                 user.signature_ban = False
                 user.save(force_update=True)
@@ -245,7 +246,7 @@ class New(FormWidget):
                                             form.cleaned_data['username'],
                                             form.cleaned_data['email'],
                                             form.cleaned_data['password'],
-                                            self.request.settings['default_timezone'],
+                                            settings.default_timezone,
                                             self.request.META['REMOTE_ADDR'],
                                             no_roles=True,
                                             request=self.request,
@@ -326,7 +327,7 @@ class Edit(FormWidget):
             if form.cleaned_data['avatar_ban']:
                 target.lock_avatar()
             else:
-                target.default_avatar(self.request.settings)
+                target.default_avatar()
         target.avatar_ban = form.cleaned_data['avatar_ban']
 
         # Set custom avatar
