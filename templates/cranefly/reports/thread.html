@@ -198,15 +198,15 @@
               <form action="{{ request_path }}" class="form-inline" method="post">
                 <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
                 <input type="hidden" name="origin" value="thread_form">
-                <input type="hidden" name="thread_action" value="normal">
-                <button type="submit" class="btn btn-link btn-resolve tooltip-top" title="{% trans %}Set this report as bogus{% endtrans %}"><i class="icon-ok"></i> {% trans %}Resolved{% endtrans %}</button>
+                <input type="hidden" name="thread_action" value="sticky">
+                <button type="submit" class="btn btn-link btn-bogus tooltip-top" title="{% trans %}Set this report as resolved{% endtrans %}"><i class="icon-remove"></i> {% trans %}Bogus{% endtrans %}</button>
               </form>
               {% elif thread.weight != 0 %}
               <form action="{{ request_path }}" class="form-inline" method="post">
                 <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
                 <input type="hidden" name="origin" value="thread_form">
-                <input type="hidden" name="thread_action" value="sticky">
-                <button type="submit" class="btn btn-link btn-bogus tooltip-top" title="{% trans %}Set this report as resolved{% endtrans %}"><i class="icon-remove"></i> {% trans %}Bogus{% endtrans %}</button>
+                <input type="hidden" name="thread_action" value="normal">
+                <button type="submit" class="btn btn-link btn-resolve tooltip-top" title="{% trans %}Set this report as bogus{% endtrans %}"><i class="icon-ok"></i> {% trans %}Resolved{% endtrans %}</button>
               </form>
               {% endif %}
             </div>

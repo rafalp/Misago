@@ -82,7 +82,7 @@ class ThreadsListBaseView(ViewBase):
                     self.message = Message(_("You have to select at least one thread."), 'error')
             else:
                 if 'list_action' in self.form.errors:
-                    self.message = Message(_("Action requested is incorrect."), 'error')
+                    self.message = Message(_("Requested action is incorrect."), 'error')
                 else:
                     self.message = Message(form.non_field_errors()[0], 'error')
         else:

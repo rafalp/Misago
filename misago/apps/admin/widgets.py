@@ -335,12 +335,12 @@ class ListWidget(BaseWidget):
                             request.messages.set_flash(message, message.type, self.admin.id)
                             return redirect(redirect_url)
                     except AttributeError:
-                        message = Message(_("Action requested is incorrect."))
+                        message = Message(_("Requested action is incorrect."))
                 else:
                     if 'list_items' in list_form.errors:
                         message = Message(self.nothing_checked_message)
                     elif 'list_action' in list_form.errors:
-                        message = Message(_("Action requested is incorrect."))
+                        message = Message(_("Requested action is incorrect."))
                     else:
                         message = Message(list_form.non_field_errors()[0])
                 message.type = 'error'
