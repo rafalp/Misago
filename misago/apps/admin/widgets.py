@@ -117,7 +117,7 @@ class ListWidget(BaseWidget):
         return {
                 'icon': icon,
                 'name': name,
-                'url': url,
+                'link': url,
                 'post': post,
                 'prompt': prompt,
                 }
@@ -358,7 +358,7 @@ class ListWidget(BaseWidget):
                                    'admin': self.admin,
                                    'action': self,
                                    'request': request,
-                                   'url': self.get_url(),
+                                   'link': self.get_url(),
                                    'messages_log': request.messages.get_messages(self.admin.id),
                                    'message': message,
                                    'sorting': self.sortables,
@@ -467,7 +467,7 @@ class FormWidget(BaseWidget):
                                    'admin': self.admin,
                                    'action': self,
                                    'request': request,
-                                   'url': self.get_url(model),
+                                   'link': self.get_url(model),
                                    'fallback': self.get_fallback_url(),
                                    'messages_log': request.messages.get_messages(self.admin.id),
                                    'message': message,
