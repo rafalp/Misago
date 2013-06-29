@@ -124,6 +124,7 @@ class WatchThreadBaseView(JumpView):
                 watcher.user = request.user
                 watcher.forum = self.forum
                 watcher.thread = self.thread
+                watcher.starter_id = self.thread.start_poster_id
                 watcher.last_read = timezone.now()
             self.update_watcher(request, watcher)
             if watcher.pk:

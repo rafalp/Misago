@@ -90,6 +90,7 @@ class PostingBaseView(ViewBase):
                                            user=self.request.user,
                                            forum=self.forum,
                                            thread=self.thread,
+                                           starter_id=self.thread.start_poster_id,
                                            last_read=timezone.now(),
                                            email=(self.request.user.subscribe_start == 2),
                                            )

@@ -44,14 +44,33 @@ class ViewBase(object):
             try:
                 thread_id = int(self.request.POST.get('search_thread'))
                 thread_clean = Thread.objects.get(id=thread_id)
-                if not thread_clean.forum_id in Forum.objects.readable_forums(self.request.acl, True):
-                    raise ACLError404()
+
+                readable_forums = Forum.objects.readable_forums(self.request.acl, True)
+                starter_readable_forums = Forum.objects.starter_readable_forums(self.request.acl)
+                if not thread_clean.forum_id in readable_forums:
+                    if not (thread_clean.forum_id in starter_readable_forums
+                            and thread_clean.start_poster_id
+                            and thread_clean.start_poster_id == self.request.user.id):
+                        raise ACLError404()
                 self.thread_clean = thread_clean
                 sqs = sqs.filter(thread=thread_clean.pk)
             except (TypeError, Thread.DoesNotExist):
                 raise ACLError404()
         else:
-            sqs = sqs.filter(forum__in=Forum.objects.readable_forums(self.request.acl))
+            readable_forums = Forum.objects.readable_forums(self.request.acl)
+            starter_readable_forums = Forum.objects.starter_readable_forums(self.request.acl)
+            if not readable_forums and not readable_forums:
+                return error403(request, _("You cannot search any forums."))
+
+            if readable_forums and starter_readable_forums:
+                sqs = sqs.filter(forum__in=starter_readable_forums, thread_starter=self.request.user.id)
+                sqs = sqs.filter_or(forum__in=readable_forums)
+            elif starter_readable_forums:
+                if not self.request.user.is_authenticated():
+                    return error403(request, _("You cannot search any forums."))
+                sqs = sqs.filter(forum__in=starter_readable_forums, thread_starter=self.request.user.id)
+            else:
+                sqs = sqs.filter(forum__in=readable_forums)
 
         if self.request.POST.get('search_author'):
             sqs = sqs.filter(author__exact=self.request.POST.get('search_author'))

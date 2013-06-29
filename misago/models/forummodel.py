@@ -133,9 +133,20 @@ class ForumManager(TreeManager):
         for pk, forum in self.forums_tree.items():
             if ((include_special or not forum.special) and 
                     acl.forums.can_browse(forum.pk) and
-                    acl.threads.acl[forum.pk]['can_read_threads']):
+                    acl.threads.acl[forum.pk]['can_read_threads'] == 2):
                 readable.append(forum.pk)
         return readable
+
+    def starter_readable_forums(self, acl):
+        self.populate_tree()
+        readable = []
+        for pk, forum in self.forums_tree.items():
+            if (not forum.special and 
+                    acl.forums.can_browse(forum.pk) and
+                    acl.threads.acl[forum.pk]['can_read_threads'] == 1):
+                readable.append(forum.pk)
+        return readable
+
 
     def forum_by_name(self, forum, acl):
         forums = self.readable_forums(acl, True)

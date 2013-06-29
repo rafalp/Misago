@@ -1,10 +1,11 @@
 from django import forms
 from django.core.urlresolvers import reverse
-from django.db.models import F
+from django.db.models import Q, F
 from django.http import Http404
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
+from misago.apps.errors import error403
 from misago.conf import settings
 from misago.decorators import block_guest
 from misago.forms import Form, FormLayout, FormFields
@@ -17,9 +18,23 @@ from misago.utils.pagination import make_pagination
 def watched_threads(request, page=0, new=False):
     # Find mode and fetch threads
     readable_forums = Forum.objects.readable_forums(request.acl, True)
-    if not settings.enable_private_threads:
-        readable_forums.remove(Forum.objects.special_pk('private_threads'))
-    queryset = WatchedThread.objects.filter(user=request.user).filter(forum_id__in=readable_forums).select_related('thread').filter(thread__moderated=False).filter(thread__deleted=False)
+    starter_readable_forums = Forum.objects.starter_readable_forums(request.acl)
+
+    if not readable_forums and not readable_forums:
+        return error403(request, _("%(username), you cannot read any forums.") % {'username': request.user.username})
+
+    private_threads_pk = Forum.objects.special_pk('private_threads')
+    if not settings.enable_private_threads and private_threads_pk in readable_forums:
+        readable_forums.remove(private_threads_pk)
+
+    queryset = WatchedThread.objects.filter(user=request.user).filter(thread__moderated=False).filter(thread__deleted=False).select_related('thread')
+    if starter_readable_forums and readable_forums:
+        queryset = queryset.filter(Q(forum_id__in=readable_forums) | Q(forum_id__in=starter_readable_forums, starter_id=request.user.pk))
+    elif starter_readable_forums:
+        queryset = queryset.filter(starter_id__in=request.user.pk).filter(forum_id__in=starter_readable_forums)
+    else:
+        queryset = queryset.filter(forum_id__in=readable_forums)
+
     if settings.avatars_on_threads_list:
         queryset = queryset.prefetch_related('thread__last_poster')
     if new:
