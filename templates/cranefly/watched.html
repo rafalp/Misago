@@ -142,15 +142,16 @@
 {% endblock %}
 
 
-{% macro thread_url(thread, route='') -%}{% filter url(thread=thread.pk, slug=thread.slug) %}{% filter trim %}
+{% macro thread_url(thread, route='') -%}
+{%- if route %}{% set route = '_'~route %}{% endif %}
 {% if thread.forum_id == private_threads.pk -%}
-private_thread
+{{ url('private_thread' ~ route, thread=thread.pk, slug=thread.slug) }}
 {%- elif thread.forum_id == reports.pk -%}
-report
+{{ url('report' ~ route, thread=thread.pk, slug=thread.slug) }}
 {%- else -%}
-thread
-{%- endif -%}{%- if route %}_{{ route }}{% endif %}{% endfilter %}{% endfilter %}
-{%- endmacro%}
+{{ url('thread' ~ route, thread=thread.pk, slug=thread.slug) }}
+{%- endif -%}
+{%- endmacro %}
 
 {% macro replies(thread_replies) -%}
 {% trans count=thread_replies, replies=('<strong>' ~ (thread_replies|intcomma) ~ '</strong>')|safe -%}
