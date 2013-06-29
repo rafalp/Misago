@@ -35,9 +35,9 @@ def process_context(templates, dictionary=None, context_instance=None):
     """
     Put template context trough template middlewares
     """
-    if _thread_local.misago_template_mutex:
+    if _thread_local.template_mutex:
         return context
-    _thread_local.misago_template_mutex = True
+    _thread_local.template_mutex = True
 
     for middleware in _middlewares:
         try:
@@ -47,7 +47,7 @@ def process_context(templates, dictionary=None, context_instance=None):
         except AttributeError:
             pass
 
-    _thread_local.misago_template_mutex = None
+    _thread_local.template_mutex = None
     return context
 
 
