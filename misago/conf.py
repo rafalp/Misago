@@ -1,7 +1,7 @@
-from threading import local
 from django.conf import settings as dj_settings
 from django.core.cache import cache
 from misago.models import Setting
+from misago.thread import local
 
 _local_thread = local()
 
