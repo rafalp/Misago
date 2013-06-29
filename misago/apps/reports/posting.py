@@ -9,9 +9,9 @@ from misago.apps.reports.forms import EditThreadForm, NewReplyForm, EditReplyFor
 
 class SetStateCheckpointMixin(object):
     def post_form(self, form):
-        self.thread.original_weight = self.thread_weight
+        self.thread.original_weight = self.thread.weight
         super(SetStateCheckpointMixin, self).post_form(form)
-        if self.thread.original_weight != self.thread_weight:
+        if self.thread.original_weight != self.thread.weight:
             if self.thread.original_weight == 2:
                 self.request.monitor.decrease('reported_posts')
             if self.thread.weight == 1:
