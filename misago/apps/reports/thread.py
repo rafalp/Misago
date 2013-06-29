@@ -5,6 +5,10 @@ from misago.models import Forum, Thread
 from misago.apps.reports.mixins import TypeMixin
 
 class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
+    def fetch_thread(self):
+        super(ThreadView, self).fetch_thread()
+        self.thread.original_weight = self.thread.weight
+
     def posts_actions(self):
         acl = self.request.acl.threads.get_role(self.thread.forum_id)
         actions = []
@@ -40,16 +44,24 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
 
     def after_thread_action_sticky(self):
         self.thread.set_checkpoint(self.request, 'resolved')
+        if self.thread.original_weight == 2:
+            self.request.monitor.decrease('reported_posts')
         self.request.messages.set_flash(Message(_('Report has been set as resolved.')), 'success', 'threads')
 
     def after_thread_action_normal(self):
         self.thread.set_checkpoint(self.request, 'bogus')
+        if self.thread.original_weight == 2:
+            self.request.monitor.decrease('reported_posts')
         self.request.messages.set_flash(Message(_('Report has been set as bogus.')), 'success', 'threads')
 
     def after_thread_action_undelete(self):
+        if self.thread.original_weight == 2:
+            self.request.monitor.increase('reported_posts')
         self.request.messages.set_flash(Message(_('Report has been restored.')), 'success', 'threads')
 
     def after_thread_action_soft(self):
+        if self.thread.original_weight == 2:
+            self.request.monitor.decrease('reported_posts')
         self.request.messages.set_flash(Message(_('Report has been hidden.')), 'success', 'threads')
 
     def after_thread_action_hard(self):
