@@ -14,6 +14,7 @@ from django.utils import timezone as tz_util
 from django.utils.translation import ugettext_lazy as _
 from misago.acl.builder import acl
 from misago.conf import settings
+from misago.monitor import monitor, UpdatingMonitor
 from misago.signals import delete_user_content, rename_user, sync_user_profile
 from misago.template.loader import render_to_string
 from misago.utils.avatars import avatar_size
@@ -31,13 +32,14 @@ class UserManager(models.Manager):
                         )
         return blank_user
 
-    def resync_monitor(self, monitor):
-        monitor['users'] = self.filter(activation=0).count()
-        monitor['users_inactive'] = self.filter(activation__gt=0).count()
-        last_user = self.filter(activation=0).latest('id')
-        monitor['last_user'] = last_user.pk
-        monitor['last_user_name'] = last_user.username
-        monitor['last_user_slug'] = last_user.username_slug
+    def resync_monitor(self):
+        with UpdatingMonitor() as cm:
+            monitor.users = self.filter(activation=0).count()
+            monitor.users_inactive = self.filter(activation__gt=0).count()
+            last_user = self.filter(activation=0).latest('id')
+            monitor.last_user = last_user.pk
+            monitor.last_user_name = last_user.username
+            monitor.last_user_slug = last_user.username_slug
 
     def create_user(self, username, email, password, timezone=False, ip='127.0.0.1', agent='', no_roles=False, activation=0, request=False):
         token = ''
@@ -83,21 +85,15 @@ class UserManager(models.Manager):
             new_user.make_acl_key()
             new_user.save(force_update=True)
 
-        # Load monitor
-        try:
-            monitor = request.monitor
-        except AttributeError:
-            from misago.monitor import Monitor
-            monitor = Monitor()
-
         # Update forum stats
-        if activation == 0:
-            monitor.increase('users')
-            monitor['last_user'] = new_user.pk
-            monitor['last_user_name'] = new_user.username
-            monitor['last_user_slug'] = new_user.username_slug
-        else:
-            monitor.increase('users_inactive')
+        with UpdatingMonitor() as cm:
+            if activation == 0:
+                monitor.increase('users')
+                monitor.last_user = new_user.pk
+                monitor.last_user_name = new_user.username
+                monitor.last_user_slug = new_user.username_slug
+            else:
+                monitor.increase('users_inactive')
 
         # Return new user
         return new_user

@@ -2,14 +2,14 @@ from datetime import timedelta
 from django.core.cache import cache
 from django.utils import timezone
 from misago.models import Session
+from misago.monitor import monitor, UpdatingMonitor
 
 class MembersOnline(object):
-    def __init__(self, mode, monitor, frequency=180):
-        self.monitor = monitor
+    def __init__(self, mode, frequency=180):
         self.frequency = frequency
         self._mode = mode
-        self._members = int(monitor['online_members'])
-        self._all = int(monitor['online_all'])
+        self._members = int(monitor.online_members)
+        self._all = int(monitor.online_all)
         self._om = self._members
         self._oa = self._all
         if (self._mode != 'no' or monitor.expired('online_all', frequency) or
@@ -42,10 +42,11 @@ class MembersOnline(object):
 
     def sync(self):
         if self._mode == 'snap':
-            if self._members != self._om:
-                self.monitor['online_members'] = self._members
-            if self._all != self._oa:
-                self.monitor['online_all'] = self._all
+            with UpdatingMonitor() as cm:
+                if self._members != self._om:
+                    monitor.online_members = self._members
+                if self._all != self._oa:
+                    monitor.online_all = self._all
 
     def stats(self, request):
         stat = {

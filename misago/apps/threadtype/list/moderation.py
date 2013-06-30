@@ -5,6 +5,7 @@ from django.utils.translation import ugettext as _
 from misago.forms import FormLayout
 from misago.messages import Message
 from misago.models import Forum, Thread, Post
+from misago.monitor import monitor, UpdatingMonitor
 from misago.shortcuts import render_to_response
 from misago.apps.threadtype.list.forms import MoveThreadsForm, MergeThreadsForm
 from misago.utils.strings import slugify
@@ -36,8 +37,9 @@ class ThreadsListModeration(object):
                     thread.start_post.user.posts += 1
                     users.append(thread.start_post.user)
         if accepted:
-            self.request.monitor['threads'] = int(self.request.monitor['threads']) + accepted
-            self.request.monitor['posts'] = int(self.request.monitor['posts']) + accepted
+            with UpdatingMonitor() as cm:
+                monitor.threads = int(monitor.threads) + accepted
+                monitor.posts = int(monitor.posts) + accepted
             self.forum.sync()
             self.forum.save(force_update=True)
             for user in users:

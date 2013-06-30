@@ -7,6 +7,7 @@ from misago.admin import site
 from misago.apps.admin.widgets import *
 from misago.forms import Form, YesNoSwitch
 from misago.models import Forum, ForumRole, Role
+from misago.monitor import monitor, UpdatingMonitor
 from misago.utils.strings import slugify
 from misago.apps.admin.roles.forms import RoleForm
 
@@ -110,7 +111,8 @@ class Edit(FormWidget):
         if self.request.user.is_god():
             target.protected = form.cleaned_data['protected']
         target.save(force_update=True)
-        self.request.monitor.increase('acl_version')
+        with UpdatingMonitor() as cm:
+            monitor.increase('acl_version')
         return target, Message(_('Changes in role "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
 
 
@@ -226,7 +228,8 @@ class ACL(FormWidget):
             raw_acl[perm] = form.cleaned_data[perm]
         target.permissions = raw_acl
         target.save(force_update=True)
-        self.request.monitor.increase('acl_version')
+        with UpdatingMonitor() as cm:
+            monitor.increase('acl_version')
         
         return target, Message(_('Role "%(name)s" permissions have been changed.') % {'name': self.original_name}, 'success')
 

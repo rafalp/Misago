@@ -189,7 +189,7 @@ class Apply(FormWidget):
                                                                  '%(deleted)d users have been deleted.',
                                                                  deleted
                                                                  ) % {'deleted': deleted}), 'success', self.admin.id)
-                    User.objects.resync_monitor(request.monitor)
+                    User.objects.resync_monitor()
                 else:
                     request.messages.set_flash(Message(_("No users have been deleted.")), 'info', self.admin.id)
                 return redirect(reverse('admin_prune_users'))

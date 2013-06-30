@@ -2,6 +2,7 @@ from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from misago.forms import Form, FormLayout
 from misago.messages import Message
+from misago.monitor import monitor, UpdatingMonitor
 from misago.shortcuts import render_to_response
 from misago.apps.threadtype.list.forms import MoveThreadsForm
 
@@ -23,8 +24,9 @@ class ThreadModeration(object):
         self.forum.sync()
         self.forum.save(force_update=True)
         # Update monitor
-        self.request.monitor.increase('threads')
-        self.request.monitor.increase('posts', self.thread.replies + 1)
+        with UpdatingMonitor() as cm:
+            monitor.increase('threads')
+            monitor.increase('posts', self.thread.replies + 1)
         # After
         self.after_thread_action_accept()
 
@@ -115,8 +117,9 @@ class ThreadModeration(object):
         self.forum.sync()
         self.forum.save(force_update=True)
         # Update monitor
-        self.request.monitor.increase('threads')
-        self.request.monitor.increase('posts', self.thread.replies + 1)
+        with UpdatingMonitor() as cm:
+            monitor.increase('threads')
+            monitor.increase('posts', self.thread.replies + 1)
         self.after_thread_action_undelete()
 
     def after_thread_action_undelete(self):
@@ -135,8 +138,9 @@ class ThreadModeration(object):
         self.forum.sync()
         self.forum.save(force_update=True)
         # Update monitor
-        self.request.monitor.decrease('threads')
-        self.request.monitor.decrease('posts', self.thread.replies + 1)
+        with UpdatingMonitor() as cm:
+            monitor.decrease('threads')
+            monitor.decrease('posts', self.thread.replies + 1)
         self.after_thread_action_soft()
 
     def after_thread_action_soft(self):
@@ -149,8 +153,9 @@ class ThreadModeration(object):
         self.forum.sync()
         self.forum.save(force_update=True)
         # Update monitor
-        self.request.monitor.decrease('threads')
-        self.request.monitor.decrease('posts', self.thread.replies + 1)
+        with UpdatingMonitor() as cm:
+            monitor.decrease('threads')
+            monitor.decrease('posts', self.thread.replies + 1)
         self.after_thread_action_hard()
         return self.threads_list_redirect()
 

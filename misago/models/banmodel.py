@@ -2,6 +2,7 @@ import re
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
+from misago.monitor import monitor
 
 BAN_NAME_EMAIL = 0
 BAN_NAME = 1
@@ -58,9 +59,9 @@ class BanCache(object):
         self.version = 0
 
     def check_for_updates(self, request):
-        if (self.version < request.monitor['bans_version']
-            or (self.expires != None and self.expires < timezone.now())):
-            self.version = request.monitor['bans_version']
+        if (self.version < monitor.bans_version
+                or (self.expires != None and self.expires < timezone.now())):
+            self.version = monitor.bans_version
 
             # Check Ban
             if request.user.is_authenticated():

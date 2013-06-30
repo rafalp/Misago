@@ -4,6 +4,7 @@ from django.utils.translation import ugettext as _
 from misago.apps.threadtype.posting import EditThreadBaseView, NewReplyBaseView, EditReplyBaseView
 from misago.messages import Message
 from misago.models import Forum, Thread, Post
+from misago.monitor import monitor, UpdatingMonitor
 from misago.apps.reports.mixins import TypeMixin
 from misago.apps.reports.forms import EditThreadForm, NewReplyForm, EditReplyForm
 
@@ -13,7 +14,8 @@ class SetStateCheckpointMixin(object):
         super(SetStateCheckpointMixin, self).post_form(form)
         if self.thread.original_weight != self.thread.weight:
             if self.thread.original_weight == 2:
-                self.request.monitor.decrease('reported_posts')
+                with UpdatingMonitor() as cm:
+                    monitor.decrease('reported_posts')
             if self.thread.weight == 1:
                 self.thread.set_checkpoint(self.request, 'resolved')
             if self.thread.weight == 0:

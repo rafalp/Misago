@@ -9,6 +9,7 @@ from misago.decorators import block_guest, check_csrf
 from misago.markdown import post_markdown
 from misago.messages import Message
 from misago.models import Forum, Checkpoint, Thread, Post, Karma, WatchedThread
+from misago.monitor import monitor, UpdatingMonitor
 from misago.readstrackers import ThreadsTracker
 from misago.utils.strings import short_string, slugify
 from misago.utils.views import json_response
@@ -331,7 +332,8 @@ Member @%(reporter)s has reported following post by @%(reported)s:
                 self.post.save(force_update=True)
                 self.thread.replies_reported += 1
                 self.thread.save(force_update=True)
-                request.monitor.increase('reported_posts')
+                with UpdatingMonitor() as cm:
+                    monitor.increase('reported_posts')
                 made_report = True
 
             if made_report:

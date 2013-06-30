@@ -6,6 +6,7 @@ from misago.admin import site
 from misago.apps.admin.widgets import *
 from misago.forms import Form, YesNoSwitch
 from misago.models import ForumRole
+from misago.monitor import monitor, UpdatingMonitor
 from misago.utils.strings import slugify
 from misago.apps.admin.forumroles.forms import ForumRoleForm
 
@@ -40,7 +41,8 @@ class List(ListWidget):
                 )
 
     def action_delete(self, items, checked):
-        self.request.monitor.increase('acl_version')
+        with UpdatingMonitor() as cm:
+            monitor.increase('acl_version')
         Role.objects.filter(id__in=checked).delete()
         return Message(_('Selected forum roles have been deleted successfully.'), 'success'), reverse('admin_roles_forums')
 
@@ -127,7 +129,8 @@ class ACL(FormWidget):
             raw_acl[perm] = form.cleaned_data[perm]
         target.permissions = raw_acl
         target.save(force_update=True)
-        self.request.monitor.increase('acl_version')
+        with UpdatingMonitor() as cm:
+            monitor.increase('acl_version')
 
         return target, Message(_('Forum Role "%(name)s" permissions have been changed.') % {'name': self.original_name}, 'success')
 
@@ -140,5 +143,6 @@ class Delete(ButtonWidget):
 
     def action(self, target):
         target.delete()
-        self.request.monitor.increase('acl_version')
+        with UpdatingMonitor() as cm:
+            monitor.increase('acl_version')
         return Message(_('Forum Role "%(name)s" has been deleted.') % {'name': _(target.name)}, 'success'), False

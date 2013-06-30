@@ -65,7 +65,7 @@ def form(request):
                                     {'password': form.cleaned_data['password']}
                                     )
             
-            User.objects.resync_monitor(request.monitor)
+            User.objects.resync_monitor()
             return redirect(reverse('index'))
         else:
             message = Message(form.non_field_errors()[0], 'error')

@@ -4,6 +4,7 @@ from django.utils.translation import ugettext as _
 from misago.conf import settings
 from misago.markdown import post_markdown
 from misago.models import Post
+from misago.monitor import monitor, UpdatingMonitor
 from misago.utils.datesformats import date
 from misago.utils.translation import ugettext_lazy
 from misago.apps.threadtype.posting.base import PostingBaseView
@@ -79,7 +80,8 @@ class NewReplyBaseView(PostingBaseView):
 
         # Update forum and monitor
         if not moderation and not merged:
-            self.request.monitor.increase('posts')
+            with UpdatingMonitor() as cm:
+                monitor.increase('posts')
             self.forum.posts += 1
             self.forum.new_last_thread(self.thread)
             self.forum.save(force_update=True)

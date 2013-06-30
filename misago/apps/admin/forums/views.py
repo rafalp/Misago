@@ -9,6 +9,7 @@ from mptt.forms import TreeNodeChoiceField
 from misago.admin import site
 from misago.apps.admin.widgets import *
 from misago.models import Forum
+from misago.monitor import monitor, UpdatingMonitor
 from misago.shortcuts import render_to_response
 from misago.utils.strings import slugify
 from misago.apps.admin.forums.forms import NewNodeForm, CategoryForm, ForumForm, RedirectForm, DeleteForm
@@ -189,7 +190,8 @@ class NewNode(FormWidget):
 
         if form.cleaned_data['perms']:
             new_forum.copy_permissions(form.cleaned_data['perms'])
-            self.request.monitor.increase('acl_version')
+            with UpdatingMonitor() as cm:
+                monitor.increase('acl_version')
 
         self.request.session['forums_admin_preffs'] = {
             'parent': form.cleaned_data['parent'].pk,
@@ -304,19 +306,20 @@ class Edit(FormWidget):
             target.prune_last = form.cleaned_data['prune_last']
             target.pruned_archive = form.cleaned_data['pruned_archive']
 
-        if form.cleaned_data['parent'].pk != target.parent.pk:
-            target.move_to(form.cleaned_data['parent'], 'last-child')
-            self.request.monitor.increase('acl_version')
-
         target.save(force_update=True)
         Forum.objects.populate_tree(True)
 
         if form.cleaned_data['perms']:
             target.copy_permissions(form.cleaned_data['perms'])
 
-        if form.cleaned_data['parent'].pk != target.parent.pk or form.cleaned_data['perms']:
-            self.request.monitor.increase('acl_version')
+        with UpdatingMonitor() as cm:
+            if form.cleaned_data['parent'].pk != target.parent.pk:
+                target.move_to(form.cleaned_data['parent'], 'last-child')
+                monitor.increase('acl_version')
 
+            if form.cleaned_data['parent'].pk != target.parent.pk or form.cleaned_data['perms']:
+                monitor.increase('acl_version')
+                
         if self.original_name != target.name:
             target.sync_name()
 
@@ -373,5 +376,6 @@ class Delete(FormWidget):
                 Forum.objects.get(id=child.pk).delete()
         Forum.objects.get(id=target.pk).delete()
         Forum.objects.populate_tree(True)
-        self.request.monitor.increase('acl_version')
+        with UpdatingMonitor() as cm:
+            monitor.increase('acl_version')
         return target, Message(_('Forum "%(name)s" has been deleted.') % {'name': self.original_name}, 'success')

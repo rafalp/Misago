@@ -2,6 +2,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.conf import settings
 from misago.messages import Message
+from misago.monitor import monitor, UpdatingMonitor
 from misago.onlines import MembersOnline
 
 def set_timezone(new_tz):
@@ -23,7 +24,7 @@ class UserMiddleware(object):
         else:
             set_timezone(settings.default_timezone)
             request.session.rank = None
-        request.onlines = MembersOnline(settings.online_counting, request.monitor, settings.online_counting_frequency)
+        request.onlines = MembersOnline(settings.online_counting, settings.online_counting_frequency)
 
     def process_response(self, request, response):
         try:

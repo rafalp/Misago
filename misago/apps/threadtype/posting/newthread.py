@@ -5,6 +5,7 @@ from misago.apps.threadtype.posting.forms import NewThreadForm
 from misago.conf import settings
 from misago.markdown import post_markdown
 from misago.models import Forum, Thread, Post
+from misago.monitor import monitor, UpdatingMonitor
 from misago.utils.strings import slugify
 
 class NewThreadBaseView(PostingBaseView):
@@ -63,8 +64,9 @@ class NewThreadBaseView(PostingBaseView):
 
         # Update forum monitor
         if not moderation:
-            self.request.monitor.increase('threads')
-            self.request.monitor.increase('posts')
+            with UpdatingMonitor() as cm:
+                monitor.increase('threads')
+                monitor.increase('posts')
             self.forum.threads += 1
             self.forum.posts += 1
             self.forum.new_last_thread(self.thread)

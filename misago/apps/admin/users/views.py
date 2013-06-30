@@ -7,6 +7,7 @@ from misago.apps.admin.widgets import *
 from misago.conf import settings
 from misago.markdown import signature_markdown
 from misago.models import Forum, User
+from misago.monitor import monitor, UpdatingMonitor
 from misago.utils.strings import random_string
 from misago.apps.admin.users.forms import UserForm, NewUserForm, SearchUsersForm
 
@@ -94,7 +95,8 @@ class List(ListWidget):
     def action_activate(self, items, checked):
         for user in items:
             if user.pk in checked and user.activation > 0:
-                self.request.monitor.decrease('users_inactive')
+                with UpdatingMonitor() as cm:
+                    monitor.decrease('users_inactive')
                 user.activation = user.ACTIVATION_NONE
                 user.save(force_update=True)
                 user.email_user(
@@ -209,7 +211,7 @@ class List(ListWidget):
             forum.sync()
             forum.save(force_update=True)
         
-        User.objects.resync_monitor(self.request.monitor)
+        User.objects.resync_monitor()
         return Message(_('Selected users and their content have been deleted successfully.'), 'success'), reverse('admin_users')
 
     def action_delete(self, items, checked):
@@ -224,7 +226,7 @@ class List(ListWidget):
             if user.pk in checked:
                 user.delete()
 
-        User.objects.resync_monitor(self.request.monitor)
+        User.objects.resync_monitor()
         return Message(_('Selected users have been deleted successfully.'), 'success'), reverse('admin_users')
 
 
@@ -361,7 +363,7 @@ class Delete(ButtonWidget):
         if target.is_protected():
             return Message(_('You cannot delete protected member.'), 'error'), False
         target.delete()
-        User.objects.resync_monitor(self.request.monitor)
+        User.objects.resync_monitor()
         return Message(_('User "%(name)s" has been deleted.') % {'name': target.username}, 'success'), False
 
 

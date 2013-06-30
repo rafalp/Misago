@@ -1,7 +1,8 @@
-from misago.conf import settings, SafeSettings
 from misago import __version__
 from misago.admin import site
+from misago.conf import settings, SafeSettings
 from misago.models import Forum
+from misago.monitor import monitor
 
 def common(request):
     context = {
@@ -26,7 +27,7 @@ def common(request):
             'acl': request.acl,
             'board_address': settings.BOARD_ADDRESS,
             'messages' : request.messages.messages,
-            'monitor': request.monitor,
+            'monitor': monitor,
             'request_path': request.get_full_path(),
             'settings': SafeSettings(),
             'stopwatch': request.stopwatch.time(),

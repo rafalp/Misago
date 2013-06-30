@@ -3,7 +3,7 @@ from django.core.cache import cache
 from misago.models import Setting
 from misago.thread import local
 
-_local_thread = local()
+_thread_local = local()
 
 def load_settings():
     settings = cache.get('settings', {})
@@ -42,7 +42,7 @@ class MisagoSettings(object):
         return self.setting(key)
 
     def __contains__(self, key):
-        return key in self.settings
+        return key in self.settings()
 
     def __getitem__(self, key):
         return self.setting(key)
@@ -53,11 +53,11 @@ class MisagoSettings(object):
         setting.save(force_update=True)
 
 
-settings = MisagoSettings(_local_thread, True)
+settings = MisagoSettings(_thread_local, True)
 
 
 def SafeSettings(): 
     """
     Safe settings factory for MisagoSettings
     """
-    return MisagoSettings(_local_thread, False)
+    return MisagoSettings(_thread_local, False)

@@ -8,6 +8,7 @@ from misago.apps.threadtype.list import ThreadsListBaseView, ThreadsListModerati
 from misago.conf import settings
 from misago.messages import Message
 from misago.models import Forum, Thread, Post
+from misago.monitor import monitor, UpdatingMonitor
 from misago.readstrackers import ThreadsTracker
 from misago.utils.pagination import make_pagination
 from misago.apps.reports.mixins import TypeMixin
@@ -48,8 +49,9 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
                 thread.report_forum = Forum.objects.forums_tree.get(thread.report_for.forum_id)
             self.threads.append(thread)
 
-        if int(self.request.monitor['reported_posts']) != unresolved_count:
-            self.request.monitor['reported_posts'] = unresolved_count
+        if int(monitor.reported_posts) != unresolved_count:
+            with UpdatingMonitor() as cm:
+                monitor.reported_posts = unresolved_count
 
     def threads_actions(self):
         acl = self.request.acl.threads.get_role(self.forum)
