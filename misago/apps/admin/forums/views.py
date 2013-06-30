@@ -116,7 +116,7 @@ def resync_forums(request, forum=0, progress=0):
                                    'target_name': forum.name,
                                    'message': _('Resynchronized %(progress)s from %(total)s threads') % {'progress': progress, 'total': threads_total},
                                    'progress': progress * 100 / threads_total,
-                                   'cancel_url': reverse('admin_forums'),
+                                   'cancel_link': reverse('admin_forums'),
                                    },
                                   context_instance=RequestContext(request));
 
@@ -137,10 +137,10 @@ class NewNode(FormWidget):
     form = NewNodeForm
     submit_button = _("Save Node")
 
-    def get_new_url(self, model):
+    def get_new_link(self, model):
         return reverse('admin_forums_new')
 
-    def get_edit_url(self, model):
+    def get_edit_link(self, model):
         return reverse('admin_forums_edit', model)
 
     def get_initial_data(self, model):
@@ -245,11 +245,11 @@ class Edit(FormWidget):
     notfound_message = _('Requested Forum could not be found.')
     submit_fallback = True
 
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_forums_edit', model)
 
-    def get_edit_url(self, model):
-        return self.get_url(model)
+    def get_edit_link(self, model):
+        return self.get_link(model)
 
     def get_form(self, target):
         if target.type == 'category':
@@ -337,7 +337,7 @@ class Delete(FormWidget):
     notfound_message = _('Requested Forum could not be found.')
     submit_fallback = True
 
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_forums_delete', model)
 
     def get_form(self, target):

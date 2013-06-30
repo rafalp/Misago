@@ -73,10 +73,10 @@ class New(FormWidget):
     form = RankForm
     submit_button = _("Save Rank")
 
-    def get_new_url(self, model):
+    def get_new_link(self, model):
         return reverse('admin_ranks_new')
 
-    def get_edit_url(self, model):
+    def get_edit_link(self, model):
         return reverse('admin_ranks_edit', model)
 
     def submit_form(self, form, target):
@@ -111,11 +111,11 @@ class Edit(FormWidget):
     translate_target_name = True
     submit_fallback = True
 
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_ranks_edit', model)
 
-    def get_edit_url(self, model):
-        return self.get_url(model)
+    def get_edit_link(self, model):
+        return self.get_link(model)
 
     def get_initial_data(self, model):
         return {

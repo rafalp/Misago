@@ -53,10 +53,10 @@ class New(FormWidget):
     form = PolicyForm
     submit_button = _("Save Policy")
 
-    def get_new_url(self, model):
+    def get_new_link(self, model):
         return reverse('admin_prune_users_new')
 
-    def get_edit_url(self, model):
+    def get_edit_link(self, model):
         return reverse('admin_prune_users_edit', model)
 
     def submit_form(self, form, target):
@@ -90,11 +90,11 @@ class Edit(FormWidget):
     notfound_message = _('Requested pruning policy could not be found.')
     submit_fallback = True
 
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_prune_users_edit', model)
 
-    def get_edit_url(self, model):
-        return self.get_url(model)
+    def get_edit_link(self, model):
+        return self.get_link(model)
 
     def get_initial_data(self, model):
         return {
@@ -149,7 +149,7 @@ class Apply(FormWidget):
     submit_fallback = True
     template = 'apply'
 
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_prune_users_apply', model)
 
     def __call__(self, request, target=None, slug=None):
@@ -161,7 +161,7 @@ class Apply(FormWidget):
             model = self.get_and_validate_target(target)
             self.original_name = self.get_target_name(model)
             if not model:
-                return redirect(self.get_fallback_url())
+                return redirect(self.get_fallback_link())
         original_model = model
 
         # Set filter
@@ -201,8 +201,8 @@ class Apply(FormWidget):
                                   'admin': self.admin,
                                   'action': self,
                                   'request': request,
-                                  'url': self.get_url(model),
-                                  'fallback': self.get_fallback_url(),
+                                  'url': self.get_link(model),
+                                  'fallback': self.get_fallback_link(),
                                   'messages': request.messages.get_messages(self.admin.id),
                                   'message': message,
                                   'tabbed': self.tabbed,

@@ -77,7 +77,7 @@ class Setting(models.Model):
         # Yes-no
         if self.field == 'yesno':
             return forms.BooleanField(
-                                   initial=self.get_value(),
+                                   initial=self.value,
                                    label=_(self.name),
                                    help_text=_(self.description) if self.description else None,
                                    required=False,
@@ -87,7 +87,7 @@ class Setting(models.Model):
         # Multi-list
         if self.field == 'mlist':
             return forms.MultipleChoiceField(
-                                     initial=self.get_value(),
+                                     initial=self.value,
                                      label=_(self.name),
                                      help_text=_(self.description) if self.description else None,
                                      widget=forms.CheckboxSelectMultiple,
@@ -102,7 +102,7 @@ class Setting(models.Model):
             if extra['choices'] == '#TZ#':
                 extra['choices'] = tzlist()
             return forms.ChoiceField(
-                                     initial=self.get_value(),
+                                     initial=self.value,
                                      label=_(self.name),
                                      help_text=_(self.description) if self.description else None,
                                      widget=forms.RadioSelect if self.field == 'choice' else forms.Select,
@@ -114,7 +114,7 @@ class Setting(models.Model):
         # Textarea
         if self.field == 'textarea':
             return forms.CharField(
-                                   initial=self.get_value(),
+                                   initial=self.value,
                                    label=_(self.name),
                                    help_text=_(self.description) if self.description else None,
                                    validators=field_validators,
@@ -131,7 +131,7 @@ class Setting(models.Model):
 
         # Make text-input
         return default_input(
-                             initial=self.get_value(),
+                             initial=self.value,
                              label=_(self.name),
                              help_text=_(self.description) if self.description else None,
                              validators=field_validators,

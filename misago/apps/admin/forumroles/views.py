@@ -54,10 +54,10 @@ class New(FormWidget):
     form = ForumRoleForm
     submit_button = _("Save Role")
 
-    def get_new_url(self, model):
+    def get_new_link(self, model):
         return reverse('admin_roles_forums_new')
 
-    def get_edit_url(self, model):
+    def get_edit_link(self, model):
         return reverse('admin_roles_forums_edit', model)
 
     def submit_form(self, form, target):
@@ -78,11 +78,11 @@ class Edit(FormWidget):
     notfound_message = _('Requested Forum Role could not be found.')
     submit_fallback = True
 
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_roles_forums_edit', model)
 
-    def get_edit_url(self, model):
-        return self.get_url(model)
+    def get_edit_link(self, model):
+        return self.get_link(model)
 
     def get_initial_data(self, model):
         return {
@@ -109,11 +109,11 @@ class ACL(FormWidget):
         self.form = build_forum_form(self.request, target)
         return self.form
 
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_roles_forums_acl', model)
 
-    def get_edit_url(self, model):
-        return self.get_url(model)
+    def get_edit_link(self, model):
+        return self.get_link(model)
 
     def get_initial_data(self, model):
         raw_acl = model.permissions

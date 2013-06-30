@@ -237,10 +237,10 @@ class New(FormWidget):
     form = NewUserForm
     submit_button = _("Save User")
 
-    def get_new_url(self, model):
+    def get_new_link(self, model):
         return reverse('admin_users_new')
 
-    def get_edit_url(self, model):
+    def get_edit_link(self, model):
         return reverse('admin_users_edit', model)
 
     def submit_form(self, form, target):
@@ -280,11 +280,11 @@ class Edit(FormWidget):
             return form(model, self.request.POST, request=self.request, initial=self.get_initial_data(model))
         return form(model, request=self.request, initial=self.get_initial_data(model))
 
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_users_edit', model)
 
-    def get_edit_url(self, model):
-        return self.get_url(model)
+    def get_edit_link(self, model):
+        return self.get_link(model)
 
     def get_initial_data(self, model):
         return {

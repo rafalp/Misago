@@ -74,10 +74,10 @@ class New(FormWidget):
     form = BanForm
     submit_button = _("Set Ban")
 
-    def get_new_url(self, model):
+    def get_new_link(self, model):
         return reverse('admin_bans_new')
 
-    def get_edit_url(self, model):
+    def get_edit_link(self, model):
         return reverse('admin_bans_edit', model)
 
     def submit_form(self, form, target):
@@ -107,11 +107,11 @@ class Edit(FormWidget):
     notfound_message = _('Requested Ban could not be found.')
     submit_fallback = True
 
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_bans_edit', model)
 
-    def get_edit_url(self, model):
-        return self.get_url(model)
+    def get_edit_link(self, model):
+        return self.get_link(model)
 
     def get_initial_data(self, model):
         return {

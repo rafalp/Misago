@@ -37,7 +37,7 @@ class BaseWidget(object):
     def get_token(self, token):
         return '%s_%s_%s' % (self.id, token, str('%s.%s' % (self.admin.id, self.admin.model.__name__)))
 
-    def get_url(self):
+    def get_link(self):
         return reverse(self.admin.get_action_attr(self.id, 'route'))
 
     def get_name(self):
@@ -56,7 +56,7 @@ class BaseWidget(object):
     def add_template_variables(self, variables):
         return variables
 
-    def get_fallback_url(self):
+    def get_fallback_link(self):
         return reverse(self.fallback)
 
     def get_target(self, model):
@@ -206,7 +206,7 @@ class ListWidget(BaseWidget):
     def sort_items(self, page_items, sorting_method):
         return page_items.order_by(sorting_method[2])
 
-    def get_pagination_url(self, page):
+    def get_pagination_link(self, page):
         return reverse(self.admin.get_action_attr(self.id, 'route'), kwargs={'page': page})
 
     def get_pagination(self, total, page):
@@ -241,7 +241,7 @@ class ListWidget(BaseWidget):
         try:
             paginating_method = self.get_pagination(items_total, page)
         except Http404:
-            return redirect(self.get_url())
+            return redirect(self.get_link())
 
         # List items
         items = self.get_items()
@@ -287,7 +287,7 @@ class ListWidget(BaseWidget):
                             message = Message(_("No search criteria have been defined."))
                         else:
                             request.session[self.get_token('filter')] = search_criteria
-                            return redirect(self.get_url())
+                            return redirect(self.get_link())
                     else:
                         message = Message(_("Search form contains errors."))
                     message.type = 'error'
@@ -298,7 +298,7 @@ class ListWidget(BaseWidget):
                 if request.POST.get('origin') == 'clear' and self.is_filtering and request.csrf.request_secure(request):
                     request.session[self.get_token('filter')] = None
                     request.messages.set_flash(Message(_("Search criteria have been cleared.")), 'info', self.admin.id)
-                    return redirect(self.get_url())
+                    return redirect(self.get_link())
             else:
                 if self.is_filtering:
                     search_form = SearchForm(request=request, initial=request.session.get(self.get_token('filter')))
@@ -312,10 +312,10 @@ class ListWidget(BaseWidget):
             if request.method == 'POST' and request.POST.get('origin') == 'table':
                 table_form = TableForm(request.POST, request=request)
                 if table_form.is_valid():
-                    message, redirect_url = self.table_action(items, table_form.cleaned_data)
-                    if redirect_url:
+                    message, redirect_link = self.table_action(items, table_form.cleaned_data)
+                    if redirect_link:
                         request.messages.set_flash(message, message.type, self.admin.id)
-                        return redirect(redirect_url)
+                        return redirect(redirect_link)
                 else:
                     message = Message(table_form.non_field_errors()[0], 'error')
             else:
@@ -330,10 +330,10 @@ class ListWidget(BaseWidget):
                 if list_form.is_valid():
                     try:
                         form_action = getattr(self, 'action_' + list_form.cleaned_data['list_action'])
-                        message, redirect_url = form_action(items, [int(x) for x in list_form.cleaned_data['list_items']])
-                        if redirect_url:
+                        message, redirect_link = form_action(items, [int(x) for x in list_form.cleaned_data['list_items']])
+                        if redirect_link:
                             request.messages.set_flash(message, message.type, self.admin.id)
-                            return redirect(redirect_url)
+                            return redirect(redirect_link)
                     except AttributeError:
                         message = Message(_("Requested action is incorrect."))
                 else:
@@ -358,7 +358,7 @@ class ListWidget(BaseWidget):
                                    'admin': self.admin,
                                    'action': self,
                                    'request': request,
-                                   'link': self.get_url(),
+                                   'link': self.get_link(),
                                    'messages_log': request.messages.get_messages(self.admin.id),
                                    'message': message,
                                    'sorting': self.sortables,
@@ -388,7 +388,7 @@ class FormWidget(BaseWidget):
     original_name = None
     submit_fallback = False
 
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse(self.admin.get_action_attr(self.id, 'route'))
 
     def get_form(self, target):
@@ -422,7 +422,7 @@ class FormWidget(BaseWidget):
             model = self.get_and_validate_target(target)
             self.original_name = self.get_target_name(model)
             if not model:
-                return redirect(self.get_fallback_url())
+                return redirect(self.get_fallback_link())
         original_model = model
 
         # Get form type to instantiate
@@ -439,21 +439,21 @@ class FormWidget(BaseWidget):
                         request.messages.set_flash(message, message.type, self.admin.id)
                         # Redirect back to right page
                         try:
-                            if 'save_new' in request.POST and self.get_new_url:
-                                return redirect(self.get_new_url(model))
+                            if 'save_new' in request.POST and self.get_new_link:
+                                return redirect(self.get_new_link(model))
                         except AttributeError:
                             pass
                         try:
-                            if 'save_edit' in request.POST and self.get_edit_url:
-                                return redirect(self.get_edit_url(model))
+                            if 'save_edit' in request.POST and self.get_edit_link:
+                                return redirect(self.get_edit_link(model))
                         except AttributeError:
                             pass
                         try:
-                            if self.get_submit_url:
-                                return redirect(self.get_submit_url(model))
+                            if self.get_submit_link:
+                                return redirect(self.get_submit_link(model))
                         except AttributeError:
                             pass
-                        return redirect(self.get_fallback_url())
+                        return redirect(self.get_fallback_link())
                 except ValidationError as e:
                     message = Message(e.messages[0], 'error')
             else:
@@ -467,8 +467,8 @@ class FormWidget(BaseWidget):
                                    'admin': self.admin,
                                    'action': self,
                                    'request': request,
-                                   'link': self.get_url(model),
-                                   'fallback': self.get_fallback_url(),
+                                   'link': self.get_link(model),
+                                   'fallback': self.get_fallback_link(),
                                    'messages_log': request.messages.get_messages(self.admin.id),
                                    'message': message,
                                    'tabbed': self.tabbed,
@@ -496,20 +496,20 @@ class ButtonWidget(BaseWidget):
         if target:
             model = self.get_and_validate_target(target)
             if not model:
-                return redirect(self.get_fallback_url())
+                return redirect(self.get_fallback_link())
         original_model = model
 
         # Crash if this is invalid request
         if not request.csrf.request_secure(request):
             request.messages.set_flash(Message(_("Action authorization is invalid.")), 'error', self.admin.id)
-            return redirect(self.get_fallback_url())
+            return redirect(self.get_fallback_link())
 
         # Do something
         message, url = self.action(model)
         request.messages.set_flash(message, message.type, self.admin.id)
         if url:
             return redirect(url)
-        return redirect(self.get_fallback_url())
+        return redirect(self.get_fallback_link())
 
     def action(self, target):
         """

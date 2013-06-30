@@ -68,10 +68,10 @@ class New(FormWidget):
     submit_button = _("Save Newsletter")
     tabbed = True
 
-    def get_new_url(self, model):
+    def get_new_link(self, model):
         return reverse('admin_newsletters_new')
 
-    def get_edit_url(self, model):
+    def get_edit_link(self, model):
         return reverse('admin_newsletters_edit', model)
 
     def submit_form(self, form, target):
@@ -102,11 +102,11 @@ class Edit(FormWidget):
     submit_fallback = True
     tabbed = True
 
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_newsletters_edit', model)
 
-    def get_edit_url(self, model):
-        return self.get_url(model)
+    def get_edit_link(self, model):
+        return self.get_link(model)
 
     def get_initial_data(self, model):
         return {
@@ -165,8 +165,8 @@ def send(request, target, token):
             tokens = {
               '{{ board_name }}': settings.board_name,
               '{{ username }}': user.username,
-              '{{ user_url }}': django_reverse('user', kwargs={'username': user.username_slug, 'user': user.pk}),
-              '{{ board_url }}': settings.BOARD_ADDRESS,
+              '{{ user_link }}': django_reverse('user', kwargs={'username': user.username_slug, 'user': user.pk}),
+              '{{ board_link }}': settings.BOARD_ADDRESS,
             }
             subject = newsletter.parse_name(tokens)
             user.email_user(request, 'users/newsletter', subject, {
@@ -192,7 +192,7 @@ def send(request, target, token):
                                       'target_name': newsletter.name,
                                       'message': _('Sent to %(progress)s from %(total)s users') % {'progress': newsletter.progress, 'total': recipients_total},
                                       'progress': newsletter.progress * 100 / recipients_total,
-                                      'cancel_url': reverse('admin_newsletters'),
+                                      'cancel_link': reverse('admin_newsletters'),
                                       },
                                       context_instance=RequestContext(request));
         response['refresh'] = '2;url=%s' % reverse('admin_newsletters_send', newsletter)

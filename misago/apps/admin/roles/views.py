@@ -63,10 +63,10 @@ class New(FormWidget):
     form = RoleForm
     submit_button = _("Save Role")
         
-    def get_new_url(self, model):
+    def get_new_link(self, model):
         return reverse('admin_roles_new')
     
-    def get_edit_url(self, model):
+    def get_edit_link(self, model):
         return reverse('admin_roles_edit', model)
     
     def submit_form(self, form, target):
@@ -88,11 +88,11 @@ class Edit(FormWidget):
     notfound_message = _('Requested Role could not be found.')
     submit_fallback = True
     
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_roles_edit', model)
     
-    def get_edit_url(self, model):
-        return self.get_url(model)
+    def get_edit_link(self, model):
+        return self.get_link(model)
     
     def get_initial_data(self, model):
         if self.request.user.is_god():
@@ -125,7 +125,7 @@ class Forums(ListWidget):
     empty_message = _('No forums are currently defined.')
     template = 'forums'
     
-    def get_url(self):
+    def get_link(self):
         return reverse('admin_roles_masks', self.role) 
     
     def get_items(self):
@@ -167,7 +167,7 @@ class Forums(ListWidget):
         role_perms['forums'] = perms
         self.role.permissions = role_perms
         self.role.save(force_update=True)
-        return Message(_('Forum permissions have been saved.'), 'success'), self.get_url()
+        return Message(_('Forum permissions have been saved.'), 'success'), self.get_link()
         
     def __call__(self, request, slug, target):
         self.request = request
@@ -201,11 +201,11 @@ class ACL(FormWidget):
         self.form = build_form(self.request, target)
         return self.form
     
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_roles_acl', model)
     
-    def get_edit_url(self, model):
-        return self.get_url(model)
+    def get_edit_link(self, model):
+        return self.get_link(model)
     
     def get_initial_data(self, model):
         raw_acl = model.permissions
