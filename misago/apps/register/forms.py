@@ -51,7 +51,7 @@ class UserRegisterForm(Form):
             del self.layout[3]
         
     def clean_username(self):
-        validate_username(self.cleaned_data['username'], settings)
+        validate_username(self.cleaned_data['username'])
         new_user = User.objects.get_blank_user()
         new_user.set_username(self.cleaned_data['username'])
         try:
@@ -70,7 +70,7 @@ class UserRegisterForm(Form):
         return self.cleaned_data['email']
         
     def clean_password(self):
-        validate_password(self.cleaned_data['password'], settings)
+        validate_password(self.cleaned_data['password'])
         new_user = User.objects.get_blank_user()
         new_user.set_password(self.cleaned_data['password'])
         try:

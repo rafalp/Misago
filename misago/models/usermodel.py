@@ -69,8 +69,8 @@ class UserManager(models.Manager):
                         subscribe_reply=settings.subscribe_reply,
                         )
 
-        validate_username(username, settings)
-        validate_password(password, settings)
+        validate_username(username)
+        validate_password(password)
         new_user.set_username(username)
         new_user.set_email(email)
         new_user.set_password(password)
