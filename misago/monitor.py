@@ -15,6 +15,10 @@ def load_monitor():
     return monitor
 
 
+def refresh_monitor():
+    _thread_local.monitor = load_monitor()
+
+
 class Monitor(object):
     def __init__(self, local):
         self.thread = local

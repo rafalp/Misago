@@ -2,7 +2,7 @@ from datetime import timedelta
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from misago.models import Forum, Thread, Post
-from misago.monitor import Monitor
+from misago.monitor import monitor, UpdatingMonitor
 
 class Command(BaseCommand):
     """
@@ -38,7 +38,8 @@ class Command(BaseCommand):
         for forum in sync_forums:
             forum.sync()
             forum.save(force_update=True)
-        monitor = Monitor()
-        monitor['threads'] = Thread.objects.count()
-        monitor['posts'] = Post.objects.count()
+
+        with UpdatingMonitor() as cm:
+            monitor.threads = Thread.objects.count()
+            monitor.posts = Post.objects.count()
         self.stdout.write('Forums were pruned.\n')
