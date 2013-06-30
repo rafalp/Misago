@@ -31,7 +31,7 @@ $(function () {
 
   // Search form extension
   var nav_search_form = $('#navbar-search');
-  $('#search-field').hover(function() {
+  nav_search_form.click(function() {
     nav_search_form.addClass('open');
   });
 

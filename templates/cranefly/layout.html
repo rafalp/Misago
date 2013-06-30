@@ -18,6 +18,7 @@
                 {% elif search_thread is defined %}
                 <input type="hidden" name="search_thread" value="{{ search_thread.pk }}">
                 {% endif %}
+                <i class="icon-search"></i>
                 <input type="text" id="search-field" name="search_query" placeholder="{% trans %}Search...{% endtrans %}"{% if search_query is defined and search_query %} value="{{ search_query }}"{% endif %}>
               </div>
               <div class="extra">
