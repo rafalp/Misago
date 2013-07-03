@@ -93,42 +93,11 @@ $(function() {
     var textarea_id = $(textarea).attr('id');
     
     // Do we have emojis?
-    if (1==2 && ed_emojis.length > 1) {
-      var mode = 0;
-      var open = -1;
-
-      $(textarea).focusout(function() {
-        mode = 0;
-        open = -1;
-      });
-
-      $(textarea).keyup(function() {
-        text = $(textarea).val();
-        cursor = getSelection(textarea_id).start;
-        if (cursor > 0) {
-          // Read typed character and previous character
-          input = text.substring(cursor - 1, cursor);
-          if (cursor > 1) {
-            pre = text.substring(cursor - 2, cursor - 1);
-          } else {
-            pre = '';
-          }
-
-          // Act accordingly to current mode
-          if (mode == 0) {
-            if (input == ':' && !pre.match(/^[A-Za-z0-9]+$/i)) {
-              // Test passed, mode 1 engaged!
-              mode = 1;
-              open = cursor;
-            }
-          } else if (mode == 1) {
-            // Inside emoji mode, we are helping user enter emoji input
-            if (cursor > open && !input.match(/^(\+|\-|[_A-Za-z0-9])+$/i)) {
-              // Emoji fail
-              mode = 0;
-            }
-          }
-        }
+    if (ed_emojis.length > 1) {
+      textarea.atwho({
+        at: ":",
+        tpl: ed_emoji_tpl,
+        data: ed_emojis_list
       });
     }
 
