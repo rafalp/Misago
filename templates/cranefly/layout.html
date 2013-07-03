@@ -28,10 +28,10 @@
                     <select name="search_in">
                       <option value="forums"{% if not search_in is defined or search_in == 'forums' %} selected="selected"{% endif %}>Forums</option>
                       {% if settings.enable_private_threads and acl.private_threads.can_participate()%}
-                      <option value="private"{% if search_in == 'private' %} selected="selected"{% endif %}>Private threads</option>
+                      <option value="private"{% if search_in == 'private' %} selected="selected"{% endif %}>{% trans %}Private threads{% endtrans %}</option>
                       {% endif %}
                       {% if acl.reports.can_handle() %}
-                      <option value="reports"{% if search_in == 'reports' %} selected="selected"{% endif %}>Reports</option>
+                      <option value="reports"{% if search_in == 'reports' %} selected="selected"{% endif %}>{% trans %}Reports{% endtrans %}</option>
                       {% endif %}
                       {% if thread is defined %}
                       <option value="thread"{% if search_in == 'thread' %} selected="selected"{% endif %}>{% trans %}This thread{% endtrans %}</option>
