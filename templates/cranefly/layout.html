@@ -42,7 +42,7 @@
                   </div>
                   <div class="control">
                     <label>{% trans %}Author name{% endtrans %}:</label>
-                    <input type="text" name="search_author" placeholder="User name..."{% if search_author is defined and search_author %} value="{{ search_author }}"{% endif %}>
+                    <input type="text" name="search_author" placeholder="{% trans %}User name...{% endtrans %}"{% if search_author is defined and search_author %} value="{{ search_author }}"{% endif %}>
                   </div>
                   <div class="control">
                     <label class="checkbox">
