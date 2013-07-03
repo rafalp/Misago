@@ -19,11 +19,11 @@ class UserManagerCreateUserTestCase(TestCase):
                 raise AssertionError("User A was not saved in database!")
 
         refresh_monitor()
-        self.assertEqual(int(monitor.users), 1)
-        self.assertEqual(int(monitor.users_inactive), 0)
-        self.assertEqual(int(monitor.last_user), user_a.pk)
-        self.assertEqual(monitor.last_user_name, user_a.username)
-        self.assertEqual(monitor.last_user_slug, user_a.username_slug)
+        self.assertEqual(int(monitor['users']), 1)
+        self.assertEqual(int(monitor['users_inactive']), 0)
+        self.assertEqual(int(monitor['last_user']), user_a.pk)
+        self.assertEqual(monitor['last_user_name'], user_a.username)
+        self.assertEqual(monitor['last_user_slug'], user_a.username_slug)
 
         with UpdatingMonitor() as cm:
             user_b = User.objects.create_user('InactiveTest', 'lemsm@sp.com', '123pass', activation=User.ACTIVATION_USER)
@@ -35,11 +35,11 @@ class UserManagerCreateUserTestCase(TestCase):
                 raise AssertionError("User B was not saved in database!")
 
         refresh_monitor()
-        self.assertEqual(int(monitor.users), 1)
-        self.assertEqual(int(monitor.users_inactive), 1)
-        self.assertEqual(int(monitor.last_user), user_a.pk)
-        self.assertEqual(monitor.last_user_name, user_a.username)
-        self.assertEqual(monitor.last_user_slug, user_a.username_slug)
+        self.assertEqual(int(monitor['users']), 1)
+        self.assertEqual(int(monitor['users_inactive']), 1)
+        self.assertEqual(int(monitor['last_user']), user_a.pk)
+        self.assertEqual(monitor['last_user_name'], user_a.username)
+        self.assertEqual(monitor['last_user_slug'], user_a.username_slug)
 
         with UpdatingMonitor() as cm:
             try:
@@ -49,11 +49,11 @@ class UserManagerCreateUserTestCase(TestCase):
                 pass
 
         refresh_monitor()
-        self.assertEqual(int(monitor.users), 1)
-        self.assertEqual(int(monitor.users_inactive), 1)
-        self.assertEqual(int(monitor.last_user), user_a.pk)
-        self.assertEqual(monitor.last_user_name, user_a.username)
-        self.assertEqual(monitor.last_user_slug, user_a.username_slug)
+        self.assertEqual(int(monitor['users']), 1)
+        self.assertEqual(int(monitor['users_inactive']), 1)
+        self.assertEqual(int(monitor['last_user']), user_a.pk)
+        self.assertEqual(monitor['last_user_name'], user_a.username)
+        self.assertEqual(monitor['last_user_slug'], user_a.username_slug)
 
         with UpdatingMonitor() as cm:
             try:
@@ -63,8 +63,8 @@ class UserManagerCreateUserTestCase(TestCase):
                 pass
 
         refresh_monitor()
-        self.assertEqual(int(monitor.users), 1)
-        self.assertEqual(int(monitor.users_inactive), 1)
-        self.assertEqual(int(monitor.last_user), user_a.pk)
-        self.assertEqual(monitor.last_user_name, user_a.username)
-        self.assertEqual(monitor.last_user_slug, user_a.username_slug)
+        self.assertEqual(int(monitor['users']), 1)
+        self.assertEqual(int(monitor['users_inactive']), 1)
+        self.assertEqual(int(monitor['last_user']), user_a.pk)
+        self.assertEqual(monitor['last_user_name'], user_a.username)
+        self.assertEqual(monitor['last_user_slug'], user_a.username_slug)

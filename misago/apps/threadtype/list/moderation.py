@@ -38,8 +38,8 @@ class ThreadsListModeration(object):
                     users.append(thread.start_post.user)
         if accepted:
             with UpdatingMonitor() as cm:
-                monitor.threads = int(monitor.threads) + accepted
-                monitor.posts = int(monitor.posts) + accepted
+                monitor.increase('threads', accepted)
+                monitor.increase('posts', accepted)
             self.forum.sync()
             self.forum.save(force_update=True)
             for user in users:

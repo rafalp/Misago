@@ -242,10 +242,14 @@
                   <a href="{{ url('private_post_report_show', thread=thread.pk, slug=thread.slug, post=post.pk) }}">{% trans %}Show report{% endtrans %}</a>
                   {% endif %}
                   {% if acl.reports.can_report() %}
+                  {% if post.reported_by(user) %}
+                  <a href="{{ url('private_post_report', thread=thread.pk, slug=thread.slug, post=post.pk) }}" class="tooltip-top" title="{% trans %}You have already reported this post.{% endtrans %}" disabled="disabled">{% trans %}Reported{% endtrans %}</a>
+                  {% else %}
                   <form action="{{ url('private_post_report', thread=thread.pk, slug=thread.slug, post=post.pk) }}" class="form-inline form-report" method="post" autocomplete="off">
                     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
                     <button type="submit" class="btn btn-link btn-report tooltip-top" title="{% trans %}Bring this post to moderator attention.{% endtrans %}">{% trans %}Report{% endtrans %}</button>
                   </form>
+                  {% endif %}
                   {% endif %}
                   {% if acl.threads.can_edit_thread(user, forum, thread, post) and thread.start_post_id == post.pk %}
                   <a href="{{ url('private_thread_edit', thread=thread.pk, slug=thread.slug) }}" class="post-edit">{% trans %}Edit{% endtrans %}</a>

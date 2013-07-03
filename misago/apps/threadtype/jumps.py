@@ -268,6 +268,8 @@ class ReportPostBaseView(JumpView):
                         report.checkpoint_set.get(user=request.user, action="reported")
                     except Checkpoint.DoesNotExist:
                         report.set_checkpoint(self.request, 'reported', user)
+                        self.post.add_reporter(self.request.user)
+                        self.post.save(force_update=True)
                     made_report = True
 
             if not report:
@@ -329,6 +331,7 @@ Member @%(reporter)s has reported following post by @%(reported)s:
                     reason.mentions.add(m)
 
                 self.post.reported = True
+                self.post.add_reporter(self.request.user)
                 self.post.save(force_update=True)
                 self.thread.replies_reported += 1
                 self.thread.save(force_update=True)

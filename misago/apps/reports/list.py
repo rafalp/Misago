@@ -49,9 +49,9 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
                 thread.report_forum = Forum.objects.forums_tree.get(thread.report_for.forum_id)
             self.threads.append(thread)
 
-        if int(monitor.reported_posts) != unresolved_count:
+        if monitor['reported_posts'] != unresolved_count:
             with UpdatingMonitor() as cm:
-                monitor.reported_posts = unresolved_count
+                monitor['reported_posts'] = unresolved_count
 
     def threads_actions(self):
         acl = self.request.acl.threads.get_role(self.forum)
@@ -83,7 +83,9 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
                     reported_threads.append(thread.report_for.thread_id)
         if reported_threads:
             Thread.objects.filter(id__in=reported_threads).update(replies_reported=F('replies_reported') - 1)
-            Post.objects.filter(id__in=reported_posts).update(reported=False)
+            Post.objects.filter(id__in=reported_posts).update(reported=False, reports=None)
+            with UpdatingMonitor() as cm:
+                monitor.decrease('reported_posts', len(reported_threads))
 
     def action_sticky(self, ids):
         if self._action_sticky(ids):

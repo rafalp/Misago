@@ -35,6 +35,7 @@ class Post(models.Model):
     edit_user_slug = models.SlugField(max_length=255, null=True, blank=True)
     delete_date = models.DateTimeField(null=True, blank=True)
     reported = models.BooleanField(default=False, db_index=True)
+    reports = models.CharField(max_length=255, null=True, blank=True)
     moderated = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     protected = models.BooleanField(default=False)
@@ -113,6 +114,19 @@ class Post(models.Model):
             return self.report_set.filter(weight=2)[0]
         except IndexError:
             return None
+
+    def add_reporter(self, user):
+        if not self.reports:
+            self.reports = ','
+        self.reports += '%s,' % user.pk
+
+    def reported_by(self, user):
+        if not self.reports:
+            return False
+        try:
+            return ',%s,' % user.pk in self.reports
+        except AttributeError:
+            return ',%s,' % user in self.reports
 
 
 def rename_user_handler(sender, **kwargs):

@@ -59,9 +59,9 @@ class BanCache(object):
         self.version = 0
 
     def check_for_updates(self, request):
-        if (self.version < monitor.bans_version
+        if (self.version < monitor['bans_version']
                 or (self.expires != None and self.expires < timezone.now())):
-            self.version = monitor.bans_version
+            self.version = monitor['bans_version']
 
             # Check Ban
             if request.user.is_authenticated():

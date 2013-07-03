@@ -20,15 +20,12 @@ def refresh_monitor():
 
 
 class Monitor(object):
-    def __init__(self, local):
-        self.thread = local
-
     def monitor(self):
         try:
-            return self.thread.monitor
+            return _thread_local.monitor
         except AttributeError:
-            self.thread.monitor = load_monitor()
-            return self.thread.monitor
+            _thread_local.monitor = load_monitor()
+            return _thread_local.monitor
 
     def entry(self, key):
         try:
@@ -39,28 +36,25 @@ class Monitor(object):
     def __contains__(self, key):
         return key in self.monitor()
 
-    def __getattr__(self, key):
-        return self.entry(key)[0]
-
     def __getitem__(self, key):
         return self.entry(key)[0]
 
     def __setitem__(self, key, value):
-        self.thread.monitor_update.append((key, value))
+        _thread_local.monitor_update.append((key, value))
         return value
 
     def increase(self, key, i=1):
-        self.thread.monitor_update.append((key, self[key] + i))
+        _thread_local.monitor_update.append((key, self[key] + i))
 
     def decrease(self, key, i=1):
-        self.thread.monitor_update.append((key, self[key] - i))
+        _thread_local.monitor_update.append((key, self[key] - i))
 
     def get(self, key, default=None):
         if not key in self.monitor():
             return default
         return self.entry(key)[0]
 
-    def get_updated(self, key):
+    def updated(self, key):
         if key in self.monitor():
             return self.entry(key)[1]
         return None
@@ -103,4 +97,4 @@ class UpdatingMonitor(object):
             _thread_local.monitor_update = None
 
 
-monitor = Monitor(_thread_local)
+monitor = Monitor()

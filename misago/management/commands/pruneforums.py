@@ -40,6 +40,6 @@ class Command(BaseCommand):
             forum.save(force_update=True)
 
         with UpdatingMonitor() as cm:
-            monitor.threads = Thread.objects.count()
-            monitor.posts = Post.objects.count()
+            monitor['threads'] = Thread.objects.count()
+            monitor['posts'] = Post.objects.count()
         self.stdout.write('Forums were pruned.\n')

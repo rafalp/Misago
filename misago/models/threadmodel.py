@@ -243,6 +243,7 @@ def report_update_handler(sender, **kwargs):
             reported_post = thread.report_for
             if reported_post.reported:
                 reported_post.reported = False
+                reported_post.reports = None
                 reported_post.save(force_update=True)
                 reported_post.thread.replies_reported -= 1
                 reported_post.thread.save(force_update=True)
@@ -257,6 +258,7 @@ def report_delete_handler(sender, **kwargs):
             reported_post = thread.report_for
             if reported_post.reported:
                 reported_post.reported = False
+                reported_post.reports = None
                 reported_post.save(force_update=True)
                 reported_post.thread.replies_reported -= 1
                 reported_post.thread.save(force_update=True)

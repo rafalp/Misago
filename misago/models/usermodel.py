@@ -34,12 +34,12 @@ class UserManager(models.Manager):
 
     def resync_monitor(self):
         with UpdatingMonitor() as cm:
-            monitor.users = self.filter(activation=0).count()
-            monitor.users_inactive = self.filter(activation__gt=0).count()
+            monitor['users'] = self.filter(activation=0).count()
+            monitor['users_inactive'] = self.filter(activation__gt=0).count()
             last_user = self.filter(activation=0).latest('id')
-            monitor.last_user = last_user.pk
-            monitor.last_user_name = last_user.username
-            monitor.last_user_slug = last_user.username_slug
+            monitor['last_user'] = last_user.pk
+            monitor['last_user_name'] = last_user.username
+            monitor['last_user_slug'] = last_user.username_slug
 
     def create_user(self, username, email, password, timezone=False, ip='127.0.0.1', agent='', no_roles=False, activation=0, request=False):
         token = ''
@@ -89,9 +89,9 @@ class UserManager(models.Manager):
         with UpdatingMonitor() as cm:
             if activation == 0:
                 monitor.increase('users')
-                monitor.last_user = new_user.pk
-                monitor.last_user_name = new_user.username
-                monitor.last_user_slug = new_user.username_slug
+                monitor['last_user'] = new_user.pk
+                monitor['last_user_name'] = new_user.username
+                monitor['last_user_slug'] = new_user.username_slug
             else:
                 monitor.increase('users_inactive')
 
