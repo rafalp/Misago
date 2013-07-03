@@ -59,14 +59,14 @@ class SortList(object):
 Admin site section
 """
 class AdminSiteItem(object):
-    def __init__(self, id, name, icon, target=None, route=None, help=None, after=None):
+    def __init__(self, id, name, icon, target=None, link=None, help=None, after=None):
         self.id = id
         self.name = name
         self.help = help
         self.after = after
         self.icon = icon
         self.target = target
-        self.route = route
+        self.link = link
         self.sorted = False
 
 
@@ -106,16 +106,16 @@ class AdminSection(AdminSiteItem):
         self.last = None
         super(AdminSection, self).__init__(**kwargs)
 
-    def get_routes(self):
-        routes = []
+    def get_links(self):
+        links = []
         first_action = True
         for action in self.actions:
             if first_action:
-                routes += patterns('', url('^', include(action.urlpatterns)))
+                links += patterns('', url('^', include(action.urlpatterns)))
                 first_action = False
             else:
-                routes += patterns('', url(('^%s/' % action.id), include(action.urlpatterns)))
-        return routes
+                links += patterns('', url(('^%s/' % action.id), include(action.urlpatterns)))
+        return links
 
     def is_active(self, full_path):
         action_path = '/%s%s/' % (ADMIN_PATH, self.id)
@@ -128,7 +128,7 @@ Admin site class that knows ACP structure
 """
 class AdminSite(object):
     actions_index = {}
-    routes = []
+    links = []
     sections = []
     sections_index = {}
 
@@ -136,9 +136,8 @@ class AdminSite(object):
         """
         Build admin site structure
         """
-        # Return discovered admin routes, so we dont repeat ourself
-        if self.routes:
-            return self.routes
+        if self.links:
+            return self.links
 
         # Found actions
         actions = []
@@ -207,12 +206,12 @@ class AdminSite(object):
         first_section = True
         for section in self.sections:
             if first_section:
-                self.routes += patterns('', url('^', include(section.get_routes())))
+                self.links += patterns('', url('^', include(section.get_links())))
                 first_section = False
             else:
-                self.routes += patterns('', url(('^%s/' % section.id), include(section.get_routes())))
+                self.links += patterns('', url(('^%s/' % section.id), include(section.get_links())))
         
-        return self.routes
+        return self.links
 
     def get_action(self, action):
         """
@@ -222,9 +221,9 @@ class AdminSite(object):
 
     def get_admin_index(self):
         """
-        Return admin index route - first action of first section
+        Return admin index link - first action of first section
         """
-        return self.sections[0].actions[0].route
+        return self.sections[0].actions[0].link
 
     def get_admin_navigation(self, request):
         """
@@ -242,7 +241,7 @@ class AdminSite(object):
                              'is_active': is_active,
                              'name': section.name,
                              'icon': section.icon,
-                             'route': section.actions[0].route
+                             'link': section.actions[0].link
                              })
             if is_active:
                 active_section = section
@@ -260,7 +259,7 @@ class AdminSite(object):
                              'name': action.name,
                              'icon': action.icon,
                              'help': action.help,
-                             'route': action.route
+                             'link': action.link
                              })
             if is_active:
                 active_action = action

@@ -7,7 +7,7 @@
     <div class="container">
       <a class="brand" href="{{ url(admin_index) }}">Misago <span>{{ version }}</span></a>
       <ul class="nav">{% for section in sections %}
-      	<li{% if section.is_active and not exception_response %} class="active"{% endif %}><a href="{{ url(section.route) }}"><i class="icon-{{ section.icon }}"></i> {{ section.name }}</a></li>{% endfor %}
+      	<li{% if section.is_active and not exception_response %} class="active"{% endif %}><a href="{{ url(section.link) }}"><i class="icon-{{ section.icon }}"></i> {{ section.name }}</a></li>{% endfor %}
       </ul>
       <form class="navbar-form user-signout pull-right" action="{{ url('admin_sign_out') }}" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><button type="submit" class="btn btn-link"><i class="icon-off"></i> {% trans %}Sign Out{% endtrans %}</button></form>
       <ul class="nav pull-right">
@@ -23,7 +23,7 @@
   <div class="navbar-inner">
     <div class="container">
       <ul class="nav">{% for action in actions %}
-      	<li{% if action.is_active %} class="active"{% elif action.help %} class="tooltip-bottom" title="{{ action.help }}"{% endif %}><a href="{{ url(action.route) }}"><i class="icon-{{ action.icon }}"></i> {{ action.name }}</a></li>{% endfor %}
+      	<li{% if action.is_active %} class="active"{% elif action.help %} class="tooltip-bottom" title="{{ action.help }}"{% endif %}><a href="{{ url(action.link) }}"><i class="icon-{{ action.icon }}"></i> {{ action.name }}</a></li>{% endfor %}
       </ul>
     </div>
   </div>

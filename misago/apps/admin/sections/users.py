@@ -16,16 +16,16 @@ ADMIN_ACTIONS = (
                           'id': 'list',
                           'name': _("Browse Users"),
                           'help': _("Browse all registered user accounts"),
-                          'route': 'admin_users'
+                          'link': 'admin_users'
                           },
                          {
                           'id': 'new',
                           'name': _("Add User"),
                           'help': _("Create new user account"),
-                          'route': 'admin_users_new'
+                          'link': 'admin_users_new'
                           },
                          ],
-                route='admin_users',
+                link='admin_users',
                 urlpatterns=patterns('misago.apps.admin.users.views',
                          url(r'^$', 'List', name='admin_users'),
                          url(r'^(?P<page>[1-9]([0-9]+)?)/$', 'List', name='admin_users'),
@@ -47,16 +47,16 @@ ADMIN_ACTIONS = (
                           'id': 'list',
                           'name': _("Browse Ranks"),
                           'help': _("Browse all existing ranks"),
-                          'route': 'admin_ranks'
+                          'link': 'admin_ranks'
                           },
                          {
                           'id': 'new',
                           'name': _("Add Rank"),
                           'help': _("Create new rank"),
-                          'route': 'admin_ranks_new'
+                          'link': 'admin_ranks_new'
                           },
                          ],
-                route='admin_ranks',
+                link='admin_ranks',
                 urlpatterns=patterns('misago.apps.admin.ranks.views',
                          url(r'^$', 'List', name='admin_ranks'),
                          url(r'^new/$', 'New', name='admin_ranks_new'),
@@ -76,16 +76,16 @@ ADMIN_ACTIONS = (
                           'id': 'list',
                           'name': _("Browse Bans"),
                           'help': _("Browse all existing bans"),
-                          'route': 'admin_bans'
+                          'link': 'admin_bans'
                           },
                          {
                           'id': 'new',
                           'name': _("Set Ban"),
                           'help': _("Set new Ban"),
-                          'route': 'admin_bans_new'
+                          'link': 'admin_bans_new'
                           },
                          ],
-                route='admin_bans',
+                link='admin_bans',
                 urlpatterns=patterns('misago.apps.admin.bans.views',
                          url(r'^$', 'List', name='admin_bans'),
                          url(r'^(?P<page>[1-9]([0-9]+)?)/$', 'List', name='admin_bans'),
@@ -106,16 +106,16 @@ ADMIN_ACTIONS = (
                           'id': 'list',
                           'name': _("Pruning Policies"),
                           'help': _("Browse all existing pruning policies"),
-                          'route': 'admin_prune_users'
+                          'link': 'admin_prune_users'
                           },
                          {
                           'id': 'new',
                           'name': _("Set New Policy"),
                           'help': _("Set new pruning policy"),
-                          'route': 'admin_prune_users_new'
+                          'link': 'admin_prune_users_new'
                           },
                          ],
-                route='admin_prune_users',
+                link='admin_prune_users',
                 urlpatterns=patterns('misago.apps.admin.pruneusers.views',
                          url(r'^$', 'List', name='admin_prune_users'),
                          url(r'^new/$', 'New', name='admin_prune_users_new'),
@@ -136,16 +136,16 @@ ADMIN_ACTIONS = (
                           'id': 'list',
                           'name': _("Browse Newsletters"),
                           'help': _("Browse all existing Newsletters"),
-                          'route': 'admin_newsletters'
+                          'link': 'admin_newsletters'
                           },
                          {
                           'id': 'new',
                           'name': _("New Newsletter"),
                           'help': _("Create new Newsletter"),
-                          'route': 'admin_newsletters_new'
+                          'link': 'admin_newsletters_new'
                           },
                          ],
-                route='admin_newsletters',
+                link='admin_newsletters',
                 urlpatterns=patterns('misago.apps.admin.newsletters.views',
                          url(r'^$', 'List', name='admin_newsletters'),
                          url(r'^(?P<page>[1-9]([0-9]+)?)/$', 'List', name='admin_newsletters'),

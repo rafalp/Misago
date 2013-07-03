@@ -12,7 +12,7 @@
 <div class="page-header{% if admin.actions|length > 1 %} tabs-header{% endif %}">
   <h1>{{ admin.name }}{% if admin.help %} <small>{{ admin.help }}</small>{% endif %}</h1>
   {% if admin.actions|length > 1 %}<ul class="nav nav-tabs">{% for item in admin.actions %}
-  	<li{% if action.id == item.id %} class="active"{% endif %}><a href="{{ url(item.route) }}"{% if action.id != item.id and item.help %} class="tooltip-bottom" title="{{ item.help }}"{% endif %}>{{ item.name }}</a></li>{% endfor %}
+  	<li{% if action.id == item.id %} class="active"{% endif %}><a href="{{ url(item.link) }}"{% if action.id != item.id and item.help %} class="tooltip-bottom" title="{{ item.help }}"{% endif %}>{{ item.name }}</a></li>{% endfor %}
   </ul>{% endif %}
 </div>
 {% if admin.actions[0].id != action.id -%}

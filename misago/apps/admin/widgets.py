@@ -38,7 +38,7 @@ class BaseWidget(object):
         return '%s_%s_%s' % (self.id, token, str('%s.%s' % (self.admin.id, self.admin.model.__name__)))
 
     def get_link(self):
-        return reverse(self.admin.get_action_attr(self.id, 'route'))
+        return reverse(self.admin.get_action_attr(self.id, 'link'))
 
     def get_name(self):
         return self.admin.get_action_attr(self.id, 'name')
@@ -207,7 +207,7 @@ class ListWidget(BaseWidget):
         return page_items.order_by(sorting_method[2])
 
     def get_pagination_link(self, page):
-        return reverse(self.admin.get_action_attr(self.id, 'route'), kwargs={'page': page})
+        return reverse(self.admin.get_action_attr(self.id, 'link'), kwargs={'page': page})
 
     def get_pagination(self, total, page):
         if not self.pagination or total < 0:
@@ -389,7 +389,7 @@ class FormWidget(BaseWidget):
     submit_fallback = False
 
     def get_link(self, model):
-        return reverse(self.admin.get_action_attr(self.id, 'route'))
+        return reverse(self.admin.get_action_attr(self.id, 'link'))
 
     def get_form(self, target):
         return self.form
