@@ -34,7 +34,13 @@
       ed_lang_enter_image_url = "{% trans %}Enter image address{% endtrans %}";
       ed_lang_enter_image_label = "{% trans %}Enter image label{% endtrans %}";
       ed_emojis = ['{{ ("', '".join(emojis))|safe }}'];
+      ed_emoji_tpl = "<li data-value='${key}'><img src='{{ STATIC_URL }}emojis/${name}.png' height='20' width='20'/> ${name} </li>";
+      ed_emojis_list = $.map(ed_emojis, function(value, i) {
+        return {'id':i, 'key':value+":", 'name':value};
+      });
     });
   </script>
+  <script src="{{ STATIC_URL }}cranefly/js/jquery.caret.js"></script>
+  <script src="{{ STATIC_URL }}cranefly/js/jquery.atwho.js"></script>
   <script src="{{ STATIC_URL }}cranefly/js/editor.js"></script>
 {% endmacro %}

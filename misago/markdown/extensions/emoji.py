@@ -170,7 +170,6 @@ EMOJIS = (
     'wrench', 'x', 'yellow_heart', 'yen', 'yum', 'zap', 'zero', 'zzz',
 )
 
-
 class EmojiPattern(SubstituteTagPattern):
     def __init__ (self, emo):
         super(SubstituteTagPattern, self).__init__(r':%s:' % emo, '')

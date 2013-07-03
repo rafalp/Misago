@@ -27,7 +27,7 @@ class ViewBase(object):
     def make_query(self, search_query):
         sqs = SearchQuerySet()
         if self.request.POST.get('search_thread_titles'):
-            sqs = sqs.filter(thread_name=AutoQuery(search_query))
+            sqs = sqs.filter(thread_name=AutoQuery(search_query), start_post=1)
         else:
             sqs = sqs.auto_query(search_query)
 
