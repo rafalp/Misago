@@ -38,13 +38,13 @@ class MisagoSettings(object):
         except AttributeError:
             raise Exception(u"Requested setting \"%s\" could not be found." % key)
 
-    def __getattr__(self, key):
-        return self.setting(key)
-
     def __contains__(self, key):
         return key in self.settings()
 
     def __getitem__(self, key):
+        return self.setting(key)
+    
+    def __getattr__(self, key):
         return self.setting(key)
 
     def __setitem__(self, key, value):
