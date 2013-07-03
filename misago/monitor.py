@@ -39,6 +39,9 @@ class Monitor(object):
     def __getitem__(self, key):
         return self.entry(key)[0]
 
+    def __getattr__(self, key):
+        return self.entry(key)[0]
+
     def __setitem__(self, key, value):
         _thread_local.monitor_update.append((key, value))
         return value
