@@ -2,7 +2,7 @@
 {% import "_forms.html" as form_theme with context %}
 
 {% block action_body %}
-<form action="{{ url }}" method="post">
+<form action="{{ link }}" method="post">
   {{ form_theme.form_hidden_widget(form) }}
   {% for fieldset in form.fieldsets %}
   <table class="table table-striped">

@@ -1,7 +1,7 @@
 {% extends "admin/admin/layout.html" %}
 
 {% block action_body %}
-<form action="{{ url }}" method="post">
+<form action="{{ link }}" method="post">
   <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
   <p class="lead">
   	{% trans %}Users to be deleted{% endtrans %}: <strong>{{ total_users|intcomma }}</strong>

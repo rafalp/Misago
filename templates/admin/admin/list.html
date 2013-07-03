@@ -12,9 +12,9 @@
       <th{{ th_class(column, sorting, sorting_method) }}>
       {%- if column[0] in sorting %}<a href="
       {%- if column[0] == sorting_method[0]-%}
-      {% if sorting_method[1] %}{{ url ~ query(sort=column[0],dir=0) }}{% else %}{{ url ~ query(sort=column[0],dir=1) }}{% endif %}
+      {% if sorting_method[1] %}{{ link ~ query(sort=column[0],dir=0) }}{% else %}{{ link ~ query(sort=column[0],dir=1) }}{% endif %}
       {%- else -%}
-      {{ url ~ query(sort=column[0],dir=sorting[column[0]]) }}
+      {{ link ~ query(sort=column[0],dir=sorting[column[0]]) }}
       {%- endif %}">{{ column[1] }}</a>{% else %}{{ column[1] }}{% endif %}</th>{% endfor %}{% endblock %}
       {% if not action.hide_actions%}<th>{% trans %}Actions{% endtrans %}</th>{% endif -%}
       {% if list_form %}<th class="check-cell"><label class="checkbox"><input type="checkbox" class="checkbox-master"></label></th>{% endif -%}
@@ -30,12 +30,12 @@
       	<ul class="list-actions">
       	  {% for action in item_actions %}
       	  <li>{% if action.post -%}
-      	  <form action="{{ action.url }}" method="post"{% if action.prompt %} class="confirm" data-jsconfirm="{{ action.prompt }}"{% endif %}>
+      	  <form action="{{ action.link }}" method="post"{% if action.prompt %} class="confirm" data-jsconfirm="{{ action.prompt }}"{% endif %}>
             <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
       	    <button type="submit" class="tooltip-top" title="{{ action.name }}"><i class="icon-{{ action.icon }}"></i></button>
       	  </form>
       	  {%- else -%}
-      	  <a href="{{ action.url }}" class="tooltip-top{% if action.prompt %} confirm{% endif %}"{% if action.prompt %} data-jsconfirm="{{ action.prompt }}"{% endif %} title="{{ action.name }}"><i class="icon-{{ action.icon }}"></i></a>
+      	  <a href="{{ action.link }}" class="tooltip-top{% if action.prompt %} confirm{% endif %}"{% if action.prompt %} data-jsconfirm="{{ action.prompt }}"{% endif %} title="{{ action.name }}"><i class="icon-{{ action.icon }}"></i></a>
       	  {%- endif %}</li>
       	  {% endfor %}
       	</ul>
@@ -49,7 +49,7 @@
 </table>
 <div class="form-actions table-footer">
   {% if table_form %}
-  <form id="table_form" class="form-inline table-actions-right pull-left" action="{{ url }}" method="POST">
+  <form id="table_form" class="form-inline table-actions-right pull-left" action="{{ link }}" method="POST">
     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
     <input type="hidden" name="origin" value="table">
     <button type="submit" class="btn btn-primary">{{ action.table_form_button }}</button>
@@ -68,7 +68,7 @@
 Showing {{ shown }} of {{ total }} items
 {%- endtrans %}</div>{% endif %}
   {% if list_form -%}
-  <form id="list_form" class="form-inline pull-right" action="{{ url }}" method="POST">
+  <form id="list_form" class="form-inline pull-right" action="{{ link }}" method="POST">
     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
     <input type="hidden" name="origin" value="list">
     {{ form_theme.input_select(list_form.fields['list_action'],width=3) }}
@@ -86,7 +86,7 @@ Showing {{ shown }} of {{ total }} items
   </div>
   <div class="span3 side-search">
   	<h4>{% if search_form.fieldsets[0].legend %}{{ search_form.fieldsets[0].legend }}{% else %}{% trans %}Search Items{% endtrans %}{% endif %}</h4>
-    <form id="search_form" action="{{ url }}" method="post">
+    <form id="search_form" action="{{ link }}" method="post">
       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
       <input type="hidden" name="origin" value="search">
       {% for field in search_form.fieldsets[0].fields %}
@@ -101,7 +101,7 @@ Showing {{ shown }} of {{ total }} items
     </div>
   </div>
 </div>{% if action.is_filtering %}
-<form id="search_clear" class="form-inline" action="{{ url }}" method="post">
+<form id="search_clear" class="form-inline" action="{{ link }}" method="post">
   <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
   <input type="hidden" name="origin" value="clear">
 </form>{% endif %}{% endif -%}
