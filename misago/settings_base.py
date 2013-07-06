@@ -105,7 +105,6 @@ JINJA2_AUTOESCAPE = True
 
 # List of application middlewares
 MIDDLEWARE_CLASSES = (
-    'misago.middleware.threading.ThreadMiddleware',
     'misago.middleware.stopwatch.StopwatchMiddleware',
     'misago.middleware.heartbeat.HeartbeatMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
