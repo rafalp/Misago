@@ -73,7 +73,7 @@ class ThreadBaseView(ViewBase):
 
         self.thread.add_checkpoints_to_posts(self.request.acl.threads.can_see_all_checkpoints(self.forum),
                                              self.posts,
-                                             (self.posts.date if self.pagination['page'] > 1 else None),
+                                             (self.posts[0].date if self.pagination['page'] > 1 else None),
                                              checkpoints_boundary)
 
         last_post = self.posts[len(self.posts) - 1]
