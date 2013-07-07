@@ -53,8 +53,7 @@ def signature_markdown(acl, text):
 
 
 def post_markdown(text):
-    md = markdown.Markdown(
-                           safe_mode='escape',
+    md = markdown.Markdown(safe_mode='escape',
                            output_format=settings.OUTPUT_FORMAT,
                            extensions=['nl2br', 'fenced_code'])
 

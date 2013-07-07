@@ -10,7 +10,10 @@ register = Library()
 def parse_markdown(value, format=None):
     if not format:
         format = settings.OUTPUT_FORMAT
-    return markdown(value, safe_mode='escape', output_format=format).strip()
+    return markdown(value,
+                    safe_mode='escape',
+                    output_format=format,
+                    extensions=['nl2br', 'fenced_code']).strip()
 
 
 @register.filter(name='markdown_short')
