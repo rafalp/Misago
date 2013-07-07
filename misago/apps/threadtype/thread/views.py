@@ -48,11 +48,11 @@ class ThreadBaseView(ViewBase):
         except Http404:
             return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))
 
-        checkpoints_range = None
+        checkpoints_boundary = None
         if settings.posts_per_page < self.count:
             self.posts = self.posts[self.pagination['start']:self.pagination['stop'] + 1]
             posts_len = len(self.posts)
-            checkpoints_range = self.posts[posts_len - 1].date
+            checkpoints_boundary = self.posts[posts_len - 1].date
             self.posts = self.posts[0:(posts_len - 2)]
 
         self.read_date = self.tracker.read_date(self.thread)
@@ -71,8 +71,10 @@ class ThreadBaseView(ViewBase):
             if post.ignored:
                 self.ignored = True
 
-        self.thread.set_checkpoints(self.request.acl.threads.can_see_all_checkpoints(self.forum),
-                                    self.posts, checkpoints_range)
+        self.thread.add_checkpoints_to_posts(self.request.acl.threads.can_see_all_checkpoints(self.forum),
+                                             self.posts,
+                                             (self.posts.date if self.pagination['page'] > 1 else None),
+                                             checkpoints_boundary)
 
         last_post = self.posts[len(self.posts) - 1]
 

@@ -99,19 +99,22 @@ class Thread(models.Model):
     def get_date(self):
         return self.start
 
-    def set_checkpoints(self, show_all, posts, stop=None):
-        qs = self.checkpoint_set.filter(date__gte=posts[0].date)
-        if not show_all:
-            qs = qs.filter(deleted=False)
+    def add_checkpoints_to_posts(self, show_all, posts, start=None, stop=None):
+        qs = self.checkpoint_set.all()
+        if start:
+            qs = qs.filter(date__gte=start)
         if stop:
             qs = qs.filter(date__lte=stop)
+        if not show_all:
+            qs = qs.filter(deleted=False)
         checkpoints = [i for i in qs]
 
         i_max = len(posts) - 1
         for i, post in enumerate(posts):
             post.checkpoints_visible = []
             for c in checkpoints:
-                if c.date >= post.date and (i == i_max or c.date < posts[i+1].date):
+                if ((i == 0 and c.date <= post.date)
+                        or (c.date >= post.date and (i == i_max or c.date < posts[i+1].date))):
                     post.checkpoints_visible.append(c)
 
     def set_checkpoint(self, request, action, user=None, forum=None):
