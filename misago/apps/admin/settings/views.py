@@ -48,7 +48,6 @@ def settings(request, group_id=None, group_slug=None):
         form = SettingsGroupForm(request.POST, request=request)
         if form.is_valid():
             for setting in form.cleaned_data.keys():
-                print 'SET: %s' % setting
                 misago_settings[setting] = form.cleaned_data[setting]
             cache.delete('settings')
             request.messages.set_flash(Message(_('Configuration has been changed.')), 'success', 'admin_settings')
