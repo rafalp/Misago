@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models import Sum
 from django.utils.translation import ugettext_lazy as _
 from misago.signals import delete_forum_content, move_forum_content, rename_forum, rename_user
 
@@ -319,8 +320,11 @@ class Forum(MPTTModel):
             pass
 
     def sync(self):
-        self.threads = self.thread_set.filter(moderated=False).filter(deleted=False).count()
-        self.posts = self.post_set.filter(moderated=False).count()
+        threads_qs = self.thread_set.filter(moderated=False).filter(deleted=False)
+        self.posts = self.threads = threads_qs.count()
+        replies = threads_qs.aggregate(Sum('replies'))
+        if replies['replies__sum']:
+            self.posts += replies['replies__sum']
         self.sync_last()
 
     def prune(self):
