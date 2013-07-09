@@ -40,7 +40,7 @@
         border: 1px solid darken(@navbarBorder, 10%);
         .border-radius(@baseBorderRadius);
         position: absolute;
-        z-index: 2;
+        z-index: @zindexFixedNavbar;
 
         .navbar-search-text {
           border: 1px solid darken(@navbarBorder, 10%);
@@ -297,7 +297,7 @@
             width: 270px;
 
             &:before {
-              display: none;
+              margin-right: 11px;
             }
 
             &:after {
