@@ -173,6 +173,7 @@ debug_toolbar/**
 dev/**
 django/**
 django_jinja/**
+floppyforms/**
 haystack/**
 jinja2/**
 markdown/**
