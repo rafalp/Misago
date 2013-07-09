@@ -1,5 +1,5 @@
 {% extends "admin/layout_compact.html" %}
-{% import "_forms.html" as form_theme with context %}
+{% import "cranefly/forms.html" as form_theme with context %}
 {% from "admin/macros.html" import page_title, draw_message_icon %}
 
 {% block title %}{{ page_title(title=_('Sign In')) }}{% endblock %}
@@ -15,7 +15,9 @@
           {% endif %}
           <form class="form-vertical" action="{{ url(admin_index) }}" method="post">
           	<div class="form-container">
-              {{ form_theme.form_widget(form, width=4) }}
+              {{ form_theme.hidden_fields(form) }}
+              {{ form_theme.row(form.user_email, width=4) }}
+              {{ form_theme.row(form.user_password, width=4) }}
             </div>
             <div class="form-actions">
               <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> {% trans %}Sign In{% endtrans %}</button>
