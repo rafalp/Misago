@@ -1,22 +1,15 @@
 from PIL import Image
-from django import forms
+import floppyforms as forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from misago.conf import settings
 from misago.forms import Form
 
 class UploadAvatarForm(Form):
-    avatar_upload = forms.ImageField(error_messages={'invalid_image': _("Uploaded file is not correct image.")})
+    avatar_upload = forms.ImageField(label= _("Upload Image File"),
+                                     help_text= _("Select image file on your computer you wish to use as forum avatar. You will be able to crop image after upload. Animations will be stripped."),
+                                     error_messages={'invalid_image': _("Uploaded file is not correct image.")})
     error_source = 'avatar_upload'
-
-    layout = [
-              [
-               None,
-               [
-                ('avatar_upload', {'label': _("Upload Image File"), 'help_text': _("Select image file on your computer you wish to use as forum avatar. You will be able to crop image after upload. Animations will be stripped.")}),
-                ],
-               ],
-              ]
 
     def clean_avatar_upload(self):
         image = self.cleaned_data.get('avatar_upload', False)

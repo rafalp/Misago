@@ -9,7 +9,6 @@ from django.utils.translation import ugettext as _
 from misago.apps.errors import error404
 from misago.conf import settings
 from misago.decorators import block_guest
-from misago.forms import FormLayout
 from misago.messages import Message
 from misago.shortcuts import render_to_response
 from misago.utils.strings import random_string
@@ -163,7 +162,7 @@ def upload(request):
     return render_to_response('usercp/avatar_upload.html',
                               context_instance=RequestContext(request, {
                                   'message': message,
-                                  'form': FormLayout(form),
+                                  'form': form,
                                   'tab': 'avatar'}));
 
 

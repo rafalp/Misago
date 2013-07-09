@@ -1,23 +1,28 @@
 {# Forms macros for rendering forms and fields and stuff in templates. #}
 
-{% macro hiddens(form) -%}
+{% macro hidden_fields(form) -%}
   <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
   {% for field in form.hidden_fields() %}
   <input type="hidden" name="{{ field.html_name }}" value="{{ field.value() }}">
   {% endfor %}
 {%- endmacro %}
 
-{% macro row(_field, label=None, help_text=None, width=12, attrs=None) -%}
+{% macro row(_field, label=None, help_text=None, width=9, attrs=None) -%}
   <div id="{{ field.html_name }}-control-group" class="control-group{% if _field.errors %} error{% endif %}">
     <label class="control-label" for="id_{{ field.html_name }}">{% if label %}{{ label }}{% elif _field.label %}{{ _field.label }}{% else %}{{ _field.html_name }}{% endif %}</label>
     <div class="controls">
+      {% if attrs == None %}{% set attrs = {} %}{% endif %}
       {% if _field.field.widget.__class__.__name__ == 'CheckboxInput' %}
         <label class="checkbox">
           {{ field(_field, width=width, attrs=attrs)|trim }}
+          {% if 'inline' in attrs %}
+          {{ attrs.inline }}
+          {% else %}
           {% if help_text %}
           {{ help_text }}
           {% elif _field.help_text %}
           {{ _field.help_text }}
+          {% endif %}
           {% endif %}
         </label>
       {% else %}
@@ -26,7 +31,7 @@
         {% for error in _field.errors %}
         <p class="help-block" style="font-weight: bold;">{{ error }}</p>
         {% endfor %}
-        {% if _field.field.widget.__class__.__name__ != 'CheckboxInput' %}
+        {% if 'inline' in attrs or _field.field.widget.__class__.__name__ != 'CheckboxInput' %}
         {% if help_text %}
         <p class="help-block">{{ help_text }}</p>
         {% elif _field.help_text %}
@@ -37,13 +42,20 @@
   </div>
 {%- endmacro %}
 
-{% macro field(_field, attrs=None, width=8) -%}
+{% macro field(_field, attrs=None, width=9) -%}
 {% set widget = _field.field.widget.__class__.__name__ %}
 {% set context = _field.field.widget.get_context(_field.html_name, _field.value(), attrs=attrs) %}
 {% if not 'class' in context['attrs'] and not widget == 'CheckboxInput' %}
 {% do context['attrs'].update({'class': ('span' ~ width)}) %}
 {% endif %}
+{% if 'inline' in context.attrs %}{% do context.attrs.pop('inline') %}{% endif %}
+{% if widget == 'Textarea' %}
+{{ _textarea(_field, context) }}
+{% elif widget == 'Select' %}
+{{ _select(_field, context) }}
+{% else %}
 {{ _input(_field, context) }}
+{% endif %}
 {%- endmacro %}
 
 {% macro attributes(attrs) -%}
@@ -55,7 +67,23 @@
 {%- endmacro %}
 
 {% macro _textarea(_field, context) -%}
+<textarea id="id_{{ context.name }}" name="{{ context.name }}" {{ attributes(context.attrs)|trim }}>{% if 'value' in context and context.value|length > 0 %}{{ context.value }}{% endif %}</textarea>
 {%- endmacro %}
 
 {% macro _select(_field, context) -%}
+<select id="id_{{ context.name }}" name="{{ context.name }}" {{ attributes(context.attrs)|trim }}>
+  {% if context['optgroups']|length > 1 %}
+  {% for optgroup in context['optgroups'] %}
+  <optgroup label="{{ optgroup[0] }}">
+    {% for option in optgroup[1] %}
+    <option value="{{ option[0] }}"{% if 'value' in context and option[0] in context.value %} selected="selected"{% endif %}>{{ option[1] }}</option>
+    {% endfor %}
+  </optgroup>
+  {% endfor %}
+  {% else %}
+  {% for option in context['optgroups'][0][1] %}
+  <option value="{{ option[0] }}"{% if 'value' in context and option[0] in context.value %} selected="selected"{% endif %}>{{ option[1] }}</option>
+  {% endfor %}
+  {% endif %}
+</select>
 {%- endmacro %}

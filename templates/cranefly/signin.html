@@ -36,8 +36,7 @@
 
       <form class="form-horizontal" action="{{ url('sign_in') }}" method="post">
         <div class="form-fields">
-          {{ form_theme.hiddens(form) }}
-          {# form_theme.form_widget(form, horizontal=true, width=6) #}
+          {{ form_theme.hidden_fields(form) }}
           {{ form_theme.row(form.user_email, attrs={'class': 'span4', 'placeholder': _("Enter your e-mail")}) }}
           {{ form_theme.row(form.user_password, attrs={'class': 'span4', 'placeholder': _("Enter your password")}) }}
           {% if 'user_remember_me' in form.fields %}

@@ -1,21 +1,14 @@
-from django import forms
+import floppyforms as forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from misago.forms import Form
 from misago.validators import validate_username
 
 class UsernameChangeForm(Form):
-    username = forms.CharField(max_length=255)
+    username = forms.CharField(label=_("Change Username to"),
+                               help_text=_("Enter new desired username."),
+                               max_length=255)
     error_source = 'username'
-
-    layout = [
-              [
-               None,
-               [
-                ('username', {'label': _("Change Username to"), 'help_text': _("Enter new desired username.")}),
-                ],
-               ],
-              ]
 
     def clean_username(self):
         org_username = self.request.user.username

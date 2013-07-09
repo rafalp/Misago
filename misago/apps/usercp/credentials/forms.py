@@ -1,5 +1,5 @@
 import hashlib
-from django import forms
+import floppyforms as forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from misago.forms import Form
@@ -7,20 +7,15 @@ from misago.models import User
 from misago.validators import validate_password, validate_email
 
 class CredentialsChangeForm(Form):
-    new_email = forms.EmailField(max_length=255, required=False)
-    new_password = forms.CharField(max_length=255, widget=forms.PasswordInput, required=False)
-    current_password = forms.CharField(max_length=255, widget=forms.PasswordInput)
-
-    layout = [
-              (
-               None,
-               [
-                ('new_email', {'label': _('New E-mail'), 'help_text': _("Enter new e-mail address or leave this field empty if you want only to change your password.")}),
-                ('new_password', {'label': _('New Password'), 'help_text': _("Enter new password or leave this empty if you only want to change your e-mail address.")}),
-                ('current_password', {'label': _('Current Password'), 'help_text': _("Confirm changes by entering your current password.")})
-                ]
-               ),
-              ]
+    new_email = forms.EmailField(label=_('New E-mail'),
+                                 help_text=_("Enter new e-mail address or leave this field empty if you want only to change your password."),
+                                 max_length=255, required=False)
+    new_password = forms.CharField(label=_('New Password'),
+                                   help_text=_("Enter new password or leave this empty if you only want to change your e-mail address."),
+                                   max_length=255, widget=forms.PasswordInput, required=False)
+    current_password = forms.CharField(label= _('Current Password'),
+                                       help_text=_("Confirm changes by entering your current password."),
+                                       max_length=255, widget=forms.PasswordInput)
 
     def clean_new_email(self):
         if self.cleaned_data['new_email']:

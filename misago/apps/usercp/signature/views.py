@@ -3,7 +3,6 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from misago.apps.errors import error403, error404
 from misago.decorators import block_guest
-from misago.forms import FormLayout
 from misago.markdown import signature_markdown
 from misago.messages import Message
 from misago.shortcuts import render_to_response
@@ -43,4 +42,4 @@ def signature(request):
                               context_instance=RequestContext(request, {
                                   'message': message,
                                   'tab': 'signature',
-                                  'form': FormLayout(form)}));
+                                  'form': form}));

@@ -2,7 +2,6 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from misago.decorators import block_guest
-from misago.forms import FormLayout
 from misago.messages import Message
 from misago.shortcuts import render_to_response
 from misago.apps.usercp.options.forms import UserForumOptionsForm
@@ -38,4 +37,4 @@ def options(request):
                               context_instance=RequestContext(request, {
                                   'message': message,
                                   'tab': 'options',
-                                  'form': FormLayout(form)}));
+                                  'form': form}));

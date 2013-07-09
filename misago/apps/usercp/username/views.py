@@ -6,7 +6,6 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 from misago.apps.errors import error404
 from misago.decorators import block_guest
-from misago.forms import FormLayout
 from misago.messages import Message
 from misago.models import Alert, User, UsernameChange
 from misago.shortcuts import render_to_response
@@ -65,7 +64,7 @@ def username(request):
                               context_instance=RequestContext(request, {
                                   'message': message,
                                   'changes_left': changes_left,
-                                  'form': FormLayout(form),
+                                  'form': form,
                                   'next_change': next_change,
                                   'changes_history': request.user.namechanges.order_by('-date')[:10],
                                   'tab': 'username'}));
