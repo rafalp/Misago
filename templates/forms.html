@@ -8,8 +8,8 @@
 {%- endmacro %}
 
 {% macro row(_field, label=None, help_text=None, width=9, attrs=None) -%}
-  <div id="{{ field.html_name }}-control-group" class="control-group{% if _field.errors %} error{% endif %}">
-    <label class="control-label" for="id_{{ field.html_name }}">{% if label %}{{ label }}{% elif _field.label %}{{ _field.label }}{% else %}{{ _field.html_name }}{% endif %}</label>
+  <div id="{{ _field.html_name }}-control-group" class="control-group{% if _field.errors %} error{% endif %}">
+    <label class="control-label" for="id_{{ _field.html_name }}">{% if label %}{{ label }}{% elif _field.label %}{{ _field.label }}{% else %}{{ _field.html_name }}{% endif %}</label>
     <div class="controls">
       {% if attrs == None %}{% set attrs = {} %}{% endif %}
       {% if _field.field.widget.__class__.__name__ == 'CheckboxInput' %}
@@ -42,6 +42,15 @@
   </div>
 {%- endmacro %}
 
+{% macro captcha(form, width=9) -%}
+{% if 'recaptcha' in form.fields %}
+{{ row(form.recaptcha) }}
+{% endif %}
+{% if 'captcha_qa' in form.fields %}
+{{ row(form.captcha_qa, width=width) }}
+{% endif %}
+{%- endmacro %}
+
 {% macro field(_field, attrs=None, width=9) -%}
 {% set widget = _field.field.widget.__class__.__name__ %}
 {% set context = _field.field.widget.get_context(_field.html_name, _field.value(), attrs=attrs) %}
@@ -53,6 +62,8 @@
 {{ _textarea(_field, context) }}
 {% elif widget == 'Select' %}
 {{ _select(_field, context) }}
+{% elif widget == 'ReCaptchaWidget' %}
+{{ _field.field.widget.render()|safe }}
 {% else %}
 {{ _input(_field, context) }}
 {% endif %}

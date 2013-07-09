@@ -6,7 +6,6 @@ from django.utils.translation import ugettext as _
 from misago.auth import sign_user_in
 from misago.conf import settings
 from misago.decorators import block_authenticated, block_banned, block_crawlers, block_jammed
-from misago.forms import FormLayout
 from misago.messages import Message
 from misago.models import SignInAttempt, User
 from misago.shortcuts import render_to_response
@@ -80,7 +79,7 @@ def form(request):
     return render_to_response('register.html',
                               {
                               'message': message,
-                              'form': FormLayout(form),
+                              'form': form,
                               'hide_signin': True, 
                               },
                               context_instance=RequestContext(request));

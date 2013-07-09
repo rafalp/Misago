@@ -21,8 +21,10 @@ class ForumChoiceField(TreeNodeChoiceField):
 class ReCaptchaField(fields.CharField):
     widget = ReCaptchaWidget
     api_error = None
-    def __init__(self, label=_("Verification Code"), *args, **kwargs):
-        kwargs['label'], kwargs['required'] = label, False
+    def __init__(self, *args, **kwargs):
+        kwargs['label'] = _("Verification Code")
+        kwargs['help_text'] = _("Enter the code from image into the text field.")
+        kwargs['required'] = False
         super(ReCaptchaField, self).__init__(*args, **kwargs)
 
 

@@ -2,7 +2,6 @@ from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from misago.apps.errors import error404, error_banned
 from misago.decorators import block_authenticated, block_banned, block_crawlers, block_jammed
-from misago.forms import FormLayout
 from misago.messages import Message
 from misago.models import Ban, Session, Token, User
 from misago.shortcuts import render_to_response
@@ -45,7 +44,7 @@ def form(request):
     return render_to_response('reset_password.html',
                               {
                               'message': message,
-                              'form': FormLayout(form),
+                              'form': form,
                               },
                               context_instance=RequestContext(request));
 

@@ -1,4 +1,4 @@
-from django import forms
+import floppyforms as forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from misago.conf import settings
@@ -26,6 +26,7 @@ class UserRegisterForm(Form):
                        }]
       
     def finalize_form(self):
+        raise NotImplementedError("TODO: Finish #114 in front-end!")
         self.layout = [
                       (
                        None,

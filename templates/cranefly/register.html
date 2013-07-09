@@ -1,5 +1,5 @@
 {% extends "cranefly/layout.html" %}
-{% import "_forms.html" as form_theme with context %}
+{% import "cranefly/forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{{ macros.page_title(title=_('Register new account')) }}{% endblock %}
@@ -20,6 +20,7 @@
       {% endif %}
 
       <form action="{{ url('register') }}" method="post">
+        {{ form_theme.hidden_fields(form) }}
         <div class="form-fields">
           {{ form_theme.form_widget(form, width=8) }}
         </div>

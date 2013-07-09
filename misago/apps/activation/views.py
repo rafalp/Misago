@@ -3,7 +3,6 @@ from django.utils.translation import ugettext as _
 from misago.apps.errors import error404, error_banned
 from misago.auth import sign_user_in
 from misago.decorators import block_authenticated, block_banned, block_crawlers, block_jammed
-from misago.forms import FormLayout
 from misago.messages import Message
 from misago.models import Ban, User
 from misago.shortcuts import redirect_message, render_to_response
@@ -43,7 +42,7 @@ def form(request):
     return render_to_response('resend_activation.html',
                               {
                                'message': message,
-                               'form': FormLayout(form),
+                               'form': form,
                               },
                               context_instance=RequestContext(request));
 
