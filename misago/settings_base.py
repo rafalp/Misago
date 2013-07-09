@@ -185,6 +185,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django_jinja', # Jinja2 integration
+    'floppyforms', # Better forms
     'mptt', # Modified Pre-order Tree Transversal - allows us to nest forums 
     'haystack', # Search engines bridge
     'debug_toolbar', # Debug toolbar'

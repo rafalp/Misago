@@ -1,5 +1,6 @@
 django
 django-debug-toolbar
+django-floppyforms
 django-haystack
 django-jinja
 django-mptt
