@@ -5,7 +5,6 @@ from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 from misago.admin import site
-from misago.forms import FormLayout
 from misago.messages import Message
 import misago.auth as auth
 from misago.auth import AuthException, auth_admin, auth_forum, sign_user_in
@@ -94,7 +93,7 @@ def signin(request):
                               'bad_password': bad_password,
                               'banned_account': banned_account,
                               'not_active': not_active,
-                              'form': FormLayout(form),
+                              'form': form,
                               'hide_signin': True,
                               },
                               context_instance=RequestContext(request));

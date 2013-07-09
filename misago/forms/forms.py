@@ -1,5 +1,5 @@
 from recaptcha.client.captcha import submit as recaptcha_submit
-from django import forms
+import floppyforms as forms
 from django.utils.translation import ugettext_lazy as _
 from misago.conf import settings
 
