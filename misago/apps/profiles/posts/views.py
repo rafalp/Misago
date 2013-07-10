@@ -12,7 +12,7 @@ from misago.utils.pagination import make_pagination
 
 @profile_view('user_posts')
 def posts(request, user, page=0):
-    queryset = user.post_set.filter(forum_id__in=Forum.objects.readable_forums(request.acl)).filter(deleted=False).filter(moderated=False).select_related('thread', 'forum').order_by('-id')
+    queryset = user.post_set.filter(forum_id__in=Forum.objects.readable_forums(request.acl)).filter(deleted=False).filter(moderated=False)
     count = queryset.count()
     try:
         pagination = make_pagination(page, count, 12)
@@ -23,7 +23,7 @@ def posts(request, user, page=0):
     graph = cache.get(cache_key, 'nada')
     if graph == 'nada':
         if user.posts:
-            graph = user.timeline(user.post_set.filter(date__gte=timezone.now()-timedelta(days=100)))
+            graph = user.timeline(queryset.filter(date__gte=timezone.now()-timedelta(days=100)))
         else:
             graph = [0 for x in range(100)]
         cache.set(cache_key, graph, 14400)
@@ -35,6 +35,6 @@ def posts(request, user, page=0):
                                   'graph_max': max(graph),
                                   'graph': (str(i) for i in graph),
                                   'items_total': count,
-                                  'items': queryset[pagination['start']:pagination['stop']],
+                                  'items': queryset.select_related('thread', 'forum').order_by('-id')[pagination['start']:pagination['stop']],
                                   'pagination': pagination,
                                   }));
