@@ -6,6 +6,9 @@
 
 {% block tab %}
 <div class="stat-header">
+  <div class="help-text">
+    {% trans user=profile.username %}Graph presents {{ user }}'s posting activity from last 100 days.{% endtrans %}
+  </div>
   <div id="user-graph"></div>
   <h2>{% if items_total -%}
       {%- trans count=items_total, total=items_total|intcomma, username=profile.username -%}
