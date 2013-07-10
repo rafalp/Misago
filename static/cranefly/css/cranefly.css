@@ -1082,7 +1082,7 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{opacity:0.9;filter:alpha(opa
 .user-profile hr{border:none;border-top:1px solid #eeeeee;margin:14px 0px;}
 .user-profile .stat-header{border-bottom:1px solid #e2e2e2;margin-bottom:14px;}.user-profile .stat-header .user-graph{height:40px;}.user-profile .stat-header .user-graph svg{position:relative;left:1px;height:100%;width:100%;}
 .user-profile .stat-header .help-text{float:right;margin-bottom:-20px;position:relative;top:47.9px;color:#999999;font-size:11.9px;}
-.user-profile .stat-header h2{margin-top:-48px;text-shadow:0px 0px 3px #fbfbfb;}
+.user-profile .stat-header h2{margin-top:-54px;position:relative;top:5px;text-shadow:0px 0px 3px #fbfbfb;}
 .user-profile .user-details .label{font-size:14px;}
 .user-profile .user-list .user-cell{overflow:auto;}.user-profile .user-list .user-cell .user-avatar{float:left;}.user-profile .user-list .user-cell .user-avatar img{border-radius:3px;width:36px;height:36px;}
 .user-profile .user-list .user-cell .user-name:link,.user-profile .user-list .user-cell .user-name:active,.user-profile .user-list .user-cell .user-name:visited,.user-profile .user-list .user-cell .user-name:hover{display:block;margin:0px;margin-left:43px;margin-top:9.1px;color:#333333;font-size:23.8px;}
