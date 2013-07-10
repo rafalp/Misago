@@ -43,7 +43,7 @@
           </fieldset>
           {% if form.has_captcha %}
           <fieldset{% if 'accept_tos' not in form.fields %} class="last"{% endif %}>
-            {{ form_theme(form, 8) }}
+            {{ form_theme.captcha(form, 8) }}
           </fieldset>
           {% endif %}
           {% if 'accept_tos' in form.fields %}
