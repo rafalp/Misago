@@ -12,6 +12,11 @@
   padding: @baseLineHeight;
   padding-top: @baseLineHeight * -0.75;
 
+  &.container-horizontal {
+    margin: 0px ((@baseLineHeight * -2) - 1px);
+    margin-bottom: @baseLineHeight;
+  }
+
   .form-header {
   	border-bottom: 1px solid darken(@bodyBackground, 8%);
   	margin-top: @baseLineHeight * -1;
@@ -107,4 +112,14 @@
 // Only v-resize textareas
 textarea {
   resize: vertical;
+}
+
+// Responsiveness haxxord
+@media (min-width: 1200px) {
+  .form-container {
+    &.container-horizontal {
+      margin: 0px ((@baseLineHeight * -1) - 1px);
+      margin-bottom: @baseLineHeight;
+    }
+  }
 }

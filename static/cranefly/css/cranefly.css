@@ -925,7 +925,8 @@ footer .breadcrumb li.active{color:#555555;}
 .messages-list .alert-success{text-shadow:0px 1px 0px #2e572e;}
 .messages-list .alert-warning{text-shadow:0px 1px 0px #ae510e;}
 .messages-list .alert-error{text-shadow:0px 1px 0px #742c23;}
-.form-container{background:#ffffff;border:1px solid #e7e7e7;border-radius:3px;margin:0px -21px;margin-bottom:20px;padding:20px;padding-top:-15px;}.form-container .form-header{border-bottom:1px solid #e7e7e7;margin-top:-20px;margin-bottom:20px;padding:10px 0px;}.form-container .form-header h1{margin:0px;padding:0px;font-size:17.5px;}.form-container .form-header h1 small{font-size:13.125px;font-weight:bold;}
+.form-container{background:#ffffff;border:1px solid #e7e7e7;border-radius:3px;margin:0px -21px;margin-bottom:20px;padding:20px;padding-top:-15px;}.form-container.container-horizontal{margin:0px -41px;margin-bottom:20px;}
+.form-container .form-header{border-bottom:1px solid #e7e7e7;margin-top:-20px;margin-bottom:20px;padding:10px 0px;}.form-container .form-header h1{margin:0px;padding:0px;font-size:17.5px;}.form-container .form-header h1 small{font-size:13.125px;font-weight:bold;}
 .form-container .form-header .btn{margin-left:14px;position:relative;bottom:30px;}
 .form-container .form-preview{background-color:#fbfbfb;border:1px solid #e7e7e7;border-radius:3px;margin-bottom:20px;padding:20px;}
 .form-container form{margin:0px;}.form-container form fieldset{border-top:1px solid #e7e7e7;padding-top:10px;}.form-container form fieldset legend{margin-bottom:-10px;color:#999999;font-size:14px;font-weight:bold;}.form-container form fieldset legend div{margin-bottom:-10px;}
@@ -935,7 +936,7 @@ footer .breadcrumb li.active{color:#555555;}
 .form-container form.form-horizontal .form-actions{padding-left:200px;}
 .form-container .form-actions{border-radius:0px 0px 3px 3px;margin:-20px;margin-top:10px;}.form-container .form-actions .form-actions-protip{margin-left:14px;color:#555555;font-weight:bold;}
 textarea{resize:vertical;}
-.btn{background:none;background-color:#fbfbfb;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;font-weight:bold;}.btn i{opacity:0.6;filter:alpha(opacity=60);position:relative;bottom:1px;}
+@media (min-width:1200px){.form-container.container-horizontal{margin:0px -21px;margin-bottom:20px;}}.btn{background:none;background-color:#fbfbfb;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;font-weight:bold;}.btn i{opacity:0.6;filter:alpha(opacity=60);position:relative;bottom:1px;}
 .btn:hover,.btn:active{background-color:#ffffff;border-color:#a6a6a6;}.btn:hover i,.btn:active i{opacity:0.9;filter:alpha(opacity=90);}
 .btn.btn-primary{background-color:#3c85a3;border-color:#357690;text-shadow:0px 1px 0px #27576b;}.btn.btn-primary:hover:enabled,.btn.btn-primary:active:enabled{background-color:#268eb9;border-color:#217ea4;}
 .btn.btn-primary i{background-image:url("../img/glyphicons-halflings-white.png");}
