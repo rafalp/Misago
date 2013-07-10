@@ -42,6 +42,10 @@ class Form(forms.Form):
         except KeyError:
             pass
 
+    @property
+    def has_captcha(self):
+        return 'recaptcha' in self.fields or 'captcha_qa' in self.fields
+
     def ensure_finalization(self):
         if not self.form_finalized:
             self.form_finalized = True

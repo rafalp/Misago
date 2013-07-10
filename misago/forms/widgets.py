@@ -10,3 +10,7 @@ class ReCaptchaWidget(forms.TextInput):
 
 class YesNoSwitch(forms.CheckboxInput):
     pass
+
+
+class ForumTOS(forms.CheckboxInput):
+    pass

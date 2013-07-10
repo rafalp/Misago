@@ -12,7 +12,8 @@
     <label class="control-label" for="id_{{ _field.html_name }}">{% if label %}{{ label }}{% elif _field.label %}{{ _field.label }}{% else %}{{ _field.html_name }}{% endif %}</label>
     <div class="controls">
       {% if attrs == None %}{% set attrs = {} %}{% endif %}
-      {% if _field.field.widget.__class__.__name__ == 'CheckboxInput' %}
+      {% if _field.field.widget.__class__.__name__ == 'ForumTOS' %}{% do attrs.update({'inline': make_tos_label()}) %}{% endif %}
+      {% if _field.field.widget.__class__.__name__ in ('CheckboxInput', 'ForumTOS') %}
         <label class="checkbox">
           {{ field(_field, width=width, attrs=attrs)|trim }}
           {% if 'inline' in attrs %}
@@ -27,19 +28,56 @@
         </label>
       {% else %}
         {{ field(_field, width=width, attrs=attrs)|trim }}
-        {% endif %}
-        {% for error in _field.errors %}
-        <p class="help-block" style="font-weight: bold;">{{ error }}</p>
-        {% endfor %}
-        {% if 'inline' in attrs or _field.field.widget.__class__.__name__ != 'CheckboxInput' %}
-        {% if help_text %}
-        <p class="help-block">{{ help_text }}</p>
-        {% elif _field.help_text %}
-        <p class="help-block">{{ _field.help_text }}</p>
-        {% endif %}
+      {% endif %}
+      {% for error in _field.errors %}
+      <p class="help-block" style="font-weight: bold;">{{ error }}</p>
+      {% endfor %}
+      {% if 'inline' in attrs or _field.field.widget.__class__.__name__ not in ('CheckboxInput', 'ForumTOS') %}
+      {% if help_text %}
+      <p class="help-block">{{ help_text }}</p>
+      {% elif _field.help_text %}
+      <p class="help-block">{{ _field.help_text }}</p>
+      {% endif %}
       {% endif %}
     </div>
   </div>
+{%- endmacro %}
+
+{% macro repeat(form, fields, label=None, help_text=None, attrs=None) -%}
+  <div id="{{ fields[0].html_name }}-control-group" class="control-group{% if fields[0].errors or fields[1].errors or (fields[0].name ~ '_' ~ fields[1].name) in form.errors %} error{% endif %}">
+    <label class="control-label" for="id_{{ fields[0].html_name }}">{% if label %}{{ label }}{% elif fields[0].label %}{{ fields[0].label }}{% else %}{{ fields[0].html_name }}{% endif %}</label>
+    <div class="controls controls-nested">
+      {% if attrs == None %}{% set attrs = ({}, {}) %}{% endif %}
+      <div class="row">
+        <div{% if 'class' in attrs[0] %} class="{{ attrs[0].class }}"{% endif %}>{{ field(fields[0], attrs=attrs[0]) }}</div>
+        <div{% if 'class' in attrs[1] %} class="{{ attrs[1].class }}"{% endif %}>{{ field(fields[1], attrs=attrs[1]) }}</div>
+      </div>
+      {% for error in form.errors[(fields[0].name ~ '_' ~ fields[1].name)] %}
+      <p class="help-block" style="font-weight: bold;">{{ error }}</p>
+      {% endfor %}
+      {% for error in fields[0].errors %}
+      <p class="help-block" style="font-weight: bold;">{{ error }}</p>
+      {% endfor %}
+      {% for error in fields[1].errors %}
+      {% if not error in fields[0].errors %}
+      <p class="help-block" style="font-weight: bold;">{{ error }}</p>
+      {% endif %}
+      {% endfor %}
+      {% if help_text %}
+      <p class="help-block">{{ help_text }}</p>
+      {% elif fields[0].help_text %}
+      <p class="help-block">{{ fields[0].help_text }}</p>
+      {% endif %}
+    </div>
+  </div>
+{%- endmacro %}
+
+{% macro make_tos_label() -%}
+{% trans forum_tos=make_tos_link()|safe %}I have read and accept this forums {{forum_tos}}.{% endtrans %}
+{%- endmacro %}
+
+{% macro make_tos_link() -%}
+<a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{{ url('tos') }}{% endif %}">{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Terms of Service{% endtrans %}{% endif %}</a>
 {%- endmacro %}
 
 {% macro captcha(form, width=9) -%}
@@ -54,7 +92,7 @@
 {% macro field(_field, attrs=None, width=9) -%}
 {% set widget = _field.field.widget.__class__.__name__ %}
 {% set context = _field.field.widget.get_context(_field.html_name, _field.value(), attrs=attrs) %}
-{% if not 'class' in context['attrs'] and not widget == 'CheckboxInput' %}
+{% if not 'class' in context['attrs'] and widget not in ('CheckboxInput', 'ForumTOS') %}
 {% do context['attrs'].update({'class': ('span' ~ width)}) %}
 {% endif %}
 {% if 'inline' in context.attrs %}{% do context.attrs.pop('inline') %}{% endif %}
@@ -74,7 +112,7 @@
 {%- endmacro %}
 
 {% macro _input(_field, context) -%}
-<input type="{{ context.type }}" id="id_{{ context.name }}" name="{{ context.name }}" {{ attributes(context.attrs)|trim }}{% if 'value' in context and context.value|length > 0 %} value="{{ context.value }}"{% endif %}>
+<input type="{{ context.type }}" id="id_{{ context.name }}" name="{{ context.name }}" {{ attributes(context.attrs)|trim }}{% if context.type != 'password' and 'value' in context and context.value|length > 0 %} value="{{ context.value }}"{% endif %}>
 {%- endmacro %}
 
 {% macro _textarea(_field, context) -%}
