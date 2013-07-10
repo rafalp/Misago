@@ -77,3 +77,33 @@
   </div>
 </div>
 {% endblock %}
+
+{% macro draw_graph() %}
+    <script src="{{ STATIC_URL }}cranefly/js/d3.min.js"></script>
+    <script type="text/javascript">
+      var data = [{{ (',').join(graph) }}];
+      var max = {{ graph_max }};
+
+      var barWidth = 8;
+      var width = (barWidth + 2) * data.length;
+      var height = 40;
+
+      // add the canvas to the DOM
+      var barDemo = d3.select("#user-graph")
+        .append("svg")
+        .attr("preserveAspectRatio", 'none')
+        .attr("viewBox", "0 0 " + width + " " + height);
+
+      barDemo.selectAll("rect")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("shape-rendering", 'crispEdges')
+        .attr("x", function(datum, index) { return (2 + barWidth) * index; })
+        .attr("y", function(datum) { return height - ((datum / max) * height) - 2; })
+        .attr("height", function(datum) { return ((datum / max) * (height)) + 2; })
+        .attr("width", barWidth)
+        .attr("fill", "#DDD");
+
+    </script>
+{% endmacro %}

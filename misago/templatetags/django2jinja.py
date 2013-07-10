@@ -1,7 +1,5 @@
 import math
 import urllib
-from django.contrib.humanize.templatetags.humanize import (intcomma as intcomma_func,
-                                                           intword as intword_func)
 from django_jinja.library import Library
 from misago.utils.strings import slugify
 
@@ -33,13 +31,3 @@ def low(value):
 @register.filter(name="slugify")
 def slugify_function(format_string):
     return slugify(format_string)
-
-
-@register.filter(name="intcomma")
-def intcomma(val, use_l10n=True):
-    return intcomma_func(val, use_l10n)
-
-
-@register.filter(name="intword")
-def intword(val):
-    return intword_func(val)

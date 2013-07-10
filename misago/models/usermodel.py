@@ -509,6 +509,24 @@ class User(models.Model):
             return True
         return False
 
+    def timeline(self, qs, length=100):
+        posts = {}
+        now = tz_util.now()
+        for item in qs.iterator():
+            diff = (now - item.timeline_date).days
+            try:
+                posts[diff] += 1
+            except KeyError:
+                posts[diff] = 1
+
+        graph = []
+        for i in reversed(range(100)):
+            try:
+                graph.append(posts[i])
+            except KeyError:
+                graph.append(0)
+        return graph
+
 
 class Guest(object):
     """

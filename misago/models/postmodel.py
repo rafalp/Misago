@@ -47,10 +47,13 @@ class Post(models.Model):
     class Meta:
         app_label = 'misago'
 
+    @property
+    def timeline_date(self):
+        return self.date
+
     def save(self, *args, **kwargs):
         self.current_date = timezone.now()
         return super(Post, self).save(*args, **kwargs)
-
 
     def delete(self, *args, **kwargs):
         """

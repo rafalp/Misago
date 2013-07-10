@@ -85,6 +85,10 @@ class Thread(models.Model):
     class Meta:
         app_label = 'misago'
 
+    @property
+    def timeline_date(self):
+        return self.start
+
     def delete(self, *args, **kwargs):
         """
         FUGLY HAX for weird stuff that happens with

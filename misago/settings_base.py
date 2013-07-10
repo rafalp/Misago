@@ -100,9 +100,6 @@ JINJA2_EXTENSIONS = (
     'jinja2.ext.do',
 )
 
-# Turn autoescape on
-JINJA2_AUTOESCAPE = True
-
 # List of application middlewares
 MIDDLEWARE_CLASSES = (
     'misago.middleware.thread.ThreadMiddleware',
@@ -185,6 +182,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django_jinja', # Jinja2 integration
+    'django_jinja.contrib.humanize', # Some Django filters    
     'floppyforms', # Better forms
     'mptt', # Modified Pre-order Tree Transversal - allows us to nest forums 
     'haystack', # Search engines bridge

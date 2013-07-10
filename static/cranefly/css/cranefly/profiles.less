@@ -54,6 +54,26 @@
     margin: @baseFontSize 0px;
   }
 
+  .stat-header {
+    border-bottom: 1px solid darken(@bodyBackground, 10%);
+    margin-bottom: @baseFontSize;
+
+    .user-graph {
+      height: 40px;
+
+      svg {
+        position: relative;
+        left: 1px;
+        height: 100%;
+        width: 100%;
+      }
+    }
+
+    h2 {
+      margin-top: (40px + @baseFontSize) * -1;
+    }
+  }
+
   .user-details {
     .label {
       font-size: @baseFontSize;

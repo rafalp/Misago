@@ -5,15 +5,18 @@
 {% block title %}{{ macros.page_title(_('Posts'), profile.username) }}{% endblock %}
 
 {% block tab %}
-<h2>{% if items_total -%}
-    {%- trans count=items_total, total=items_total|intcomma, username=profile.username -%}
-    {{ username }} has one post
-    {%- pluralize -%}
-    {{ username }} has {{ total }} posts
-    {%- endtrans -%}
-    {%- else -%}
-    {% trans username=profile.username %}{{ username }} has no posts{% endtrans %}
-    {%- endif %}</h2>
+<div class="stat-header">
+  <div id="user-graph"></div>
+  <h2>{% if items_total -%}
+      {%- trans count=items_total, total=items_total|intcomma, username=profile.username -%}
+      {{ username }} has one post
+      {%- pluralize -%}
+      {{ username }} has {{ total }} posts
+      {%- endtrans -%}
+      {%- else -%}
+      {% trans username=profile.username %}{{ username }} has no posts{% endtrans %}
+      {%- endif %}</h2>
+</div>
 
 {% if items_total %}
 <div class="content-list user-posts">
@@ -58,3 +61,7 @@
 {% macro forum(forum) -%}
 <a href="{{ url('forum', forum=forum.pk, slug=forum.slug) }}">{{ forum.name }}</a>
 {%- endmacro %}
+
+{% block javascripts %}
+{{ draw_graph() }}
+{% endblock %}
