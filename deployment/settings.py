@@ -169,7 +169,7 @@ if SECRET_KEY == 'yaobeifl1a6hf&3)^uc#^vlu1ud7xp^+*c5zoq*tf)fvs#*o$#':
 
 # Disable Jinja2 for django debug toolbar templates
 if DEBUG:
-    DEFAULT_JINJA2_TEMPLATE_INTERCEPT_RE = r"^(?!debug_toolbar/).*"
+    DEFAULT_JINJA2_TEMPLATE_INTERCEPT_RE = r"(?!debug_toolbar/).*"
 
 # Override config if we are in tests
 if 'test' in sys.argv:
