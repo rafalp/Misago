@@ -12,4 +12,4 @@ pytz
 recaptcha-client
 South
 Unidecode
-whoosh
+whoosh<2.5
