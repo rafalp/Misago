@@ -16,6 +16,9 @@ BOARD_ADDRESS = 'http://somewhere.com'
 ADMIN_PATH = 'admincp'
 
 # System admins
+# Enter every god admin using following pattern:
+# ('John', 'john@example.com'),
+# Note trailing separator!
 ADMINS = ()
 
 # Secret key is used by Django and Misago in hashes generation
