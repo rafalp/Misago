@@ -82,7 +82,11 @@
     <script src="{{ STATIC_URL }}cranefly/js/d3.min.js"></script>
     <script type="text/javascript">
       var data = [{{ (',').join(graph) }}];
+      {% if graph_max %}
       var max = {{ graph_max }};
+      {% else %}
+      var max = 1;
+      {% endif %}
 
       var barWidth = 8;
       var width = (barWidth + 2) * data.length;
@@ -91,6 +95,8 @@
       // add the canvas to the DOM
       var barDemo = d3.select("#user-graph")
         .append("svg")
+        .attr("width", "100%")
+        .attr("height", 40)
         .attr("preserveAspectRatio", 'none')
         .attr("viewBox", "0 0 " + width + " " + height);
 
