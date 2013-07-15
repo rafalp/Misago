@@ -2,7 +2,6 @@ from django.template import RequestContext
 from django.utils import timezone
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
-from misago.forms import FormLayout
 from misago.markdown import emojis, post_markdown
 from misago.messages import Message
 from misago.models import Forum, Thread, Post, WatchedThread
@@ -160,7 +159,7 @@ class PostingBaseView(ViewBase):
                                       'post': self.post,
                                       'parents': self.parents,
                                       'preview': post_preview,
-                                      'form': FormLayout(form),
+                                      'form': form,
                                       'emojis': emojis(),
                                       }),
                                   context_instance=RequestContext(request));

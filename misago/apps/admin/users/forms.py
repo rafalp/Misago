@@ -1,7 +1,7 @@
 from PIL import Image
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from django import forms
+import floppyforms as forms
 from misago.conf import settings
 from misago.forms import Form, YesNoSwitch
 from misago.models import Rank, Role, User

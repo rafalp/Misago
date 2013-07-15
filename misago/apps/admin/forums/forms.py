@@ -1,5 +1,5 @@
 from django.utils.translation import ugettext_lazy as _
-from django import forms
+import floppyforms as forms
 from mptt.forms import TreeNodeChoiceField
 from misago.forms import Form, YesNoSwitch
 from misago.models import Forum

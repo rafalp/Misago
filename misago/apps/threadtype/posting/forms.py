@@ -1,4 +1,4 @@
-from django import forms
+import floppyforms as forms
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.apps.threadtype.mixins import (FloodProtectionMixin,
@@ -11,7 +11,7 @@ from misago.validators import validate_sluggable
 class PostingForm(FloodProtectionMixin, Form, ValidatePostLengthMixin):
     include_thread_weight = True
     include_close_thread = True
-    post = forms.CharField(widget=forms.Textarea)
+    post = forms.CharField(label=_("Message Body"), widget=forms.Textarea)
 
     def __init__(self, data=None, file=None, request=None, forum=None, thread=None, *args, **kwargs):
         self.forum = forum
@@ -19,15 +19,6 @@ class PostingForm(FloodProtectionMixin, Form, ValidatePostLengthMixin):
         super(PostingForm, self).__init__(data, file, request=request, *args, **kwargs)
 
     def finalize_form(self):
-        self.layout = [
-                       [
-                        None,
-                        [
-                         ('post', {'label': _("Message Body")}),
-                         ]
-                        ]
-                       ]
-
         # Can we change threads states?
         if self.include_thread_weight and (self.request.acl.threads.can_pin_threads(self.forum) and
             (not self.thread or self.request.acl.threads.can_pin_threads(self.forum) >= self.thread.weight)):
@@ -37,7 +28,6 @@ class PostingForm(FloodProtectionMixin, Form, ValidatePostLengthMixin):
             thread_weight.append((1, _("Sticky")))
             thread_weight.append((0, _("Standard")))
             if thread_weight:
-                self.layout[0][1].append(('thread_weight', {'label': _("Thread Importance")}))
                 try:
                     current_weight = self.thread.weight
                 except AttributeError:
@@ -51,10 +41,6 @@ class PostingForm(FloodProtectionMixin, Form, ValidatePostLengthMixin):
         # Can we lock threads?
         if self.include_close_thread and self.request.acl.threads.can_close(self.forum):
             self.fields['close_thread'] = forms.BooleanField(required=False)
-            if self.thread and self.thread.closed:
-                self.layout[0][1].append(('close_thread', {'inline': _("Open Thread")}))
-            else:
-                self.layout[0][1].append(('close_thread', {'inline': _("Close Thread")}))
 
         # Give inheritor chance to set custom fields
         try:

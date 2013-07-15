@@ -1,5 +1,5 @@
 import base64
-from django import forms
+import floppyforms as forms
 from django.core import validators
 from django.db import models
 from django.utils.translation import ugettext_lazy as _

@@ -1,5 +1,5 @@
 {% extends "cranefly/layout.html" %}
-{% import "_forms.html" as form_theme with context %}
+{% import "forms.html" as form_theme with context %}
 {% import "cranefly/editor.html" as editor with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
@@ -59,7 +59,7 @@
           <form action="{{ get_action() }}" method="post">
             <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
             {% if 'thread_name' in form.fields %}
-            {{ form_theme.row_widget(form.fields.thread_name, width=8) }}
+            {{ form_theme.row(form.thread_name, attrs={'class': 'span8'}) }}
             {% endif %}
             {% if action == 'new_thread' and 'invite_users' in form.fields %}
             {{ form_theme.row_widget(form.fields.invite_users, width=8) }}
@@ -72,10 +72,10 @@
             {% if 'edit_reason' in form.fields or (action == 'new_reply' and 'invite_users' in form.fields) %}
             <hr>
             {% if action == 'new_reply' and 'invite_users' in form.fields %}
-            {{ form_theme.row_widget(form.fields.invite_users, width=8) }}
+            {{ form_theme.row(form.invite_users, attrs={'class': 'span8', 'placeholder': _("user1, user2, user3...")}) }}
             {% endif %}
             {% if 'edit_reason' in form.fields %}
-            {{ form_theme.row_widget(form.fields.edit_reason, width=8) }}
+            {{ form_theme.row(form.edit_reason, attrs={'class': 'span8'}) }}
             {% endif %}
 
             <div class="form-actions">

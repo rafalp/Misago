@@ -1,4 +1,4 @@
-from django import forms
+import floppyforms as forms
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _

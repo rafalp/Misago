@@ -1,6 +1,6 @@
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
-from django import forms
+import floppyforms as forms
 from misago.forms import Form, YesNoSwitch
 from misago.models import Role
 from misago.validators import validate_sluggable

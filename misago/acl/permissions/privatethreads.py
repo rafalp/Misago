@@ -1,5 +1,5 @@
 from django.utils.translation import ugettext_lazy as _
-from django import forms
+import floppyforms as forms
 from misago.acl.builder import BaseACL
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.forms import YesNoSwitch

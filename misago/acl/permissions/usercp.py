@@ -1,5 +1,5 @@
 from datetime import timedelta
-from django import forms
+import floppyforms as forms
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from misago.acl.builder import BaseACL

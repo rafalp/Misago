@@ -1,4 +1,4 @@
-from django import forms
+import floppyforms as forms
 from django.utils.translation import ugettext_lazy as _
 from misago.forms import Form
 

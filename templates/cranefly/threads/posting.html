@@ -1,5 +1,5 @@
 {% extends "cranefly/layout.html" %}
-{% import "_forms.html" as form_theme with context %}
+{% import "forms.html" as form_theme with context %}
 {% import "cranefly/editor.html" as editor with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
@@ -60,7 +60,7 @@
           <form action="{{ get_action() }}" method="post">
             <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
             {% if 'thread_name' in form.fields %}
-            {{ form_theme.row_widget(form.fields.thread_name, width=8) }}
+            {{ form_theme.row(form.thread_name, attrs={'class': 'span8'}) }}
             <hr>
             <h4>{% trans %}Message Body{% endtrans %}</h4>
             {% endif %}
@@ -68,7 +68,7 @@
             {% if intersect(form.fields, ('edit_reason', 'thread_weight', 'close_thread')) %}
             <hr>
             {% if 'edit_reason' in form.fields %}
-            {{ form_theme.row_widget(form.fields.edit_reason, width=8) }}
+            {{ form_theme.row(form.edit_reason, attrs={'class': 'span8'}) }}
             {% endif %}
 
             {% if intersect(form.fields, ('thread_weight', 'close_thread')) %}
@@ -76,10 +76,17 @@
               <label class="control-label">{% trans %}Thread Status{% endtrans %}:</label>
               <div class="controls">
                 {% if 'thread_weight' in form.fields %}
-                {{ form_theme.input_radio_select(form.fields.thread_weight, width=8) }}
+                {{ form_theme.field(form.thread_weight, attrs={'class': 'span8'}) }}
                 {% endif %}
                 {% if 'close_thread' in form.fields %}
-                {{ form_theme.input_checkbox(form.fields.close_thread, width=8) }}
+                <label class="checkbox">
+                  {{ form_theme.field(form.close_thread) }}
+                  {% if thread.closed %}
+                  {% trans %}Open thread{% endtrans %}
+                  {% else %}
+                  {% trans %}Close thread{% endtrans %}
+                  {% endif %}
+                </label>
                 {% endif %}
               </div>
             </div>

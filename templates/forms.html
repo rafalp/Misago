@@ -97,6 +97,8 @@
 {{ _textarea(_field, context) }}
 {% elif widget == 'Select' %}
 {{ _select(_field, context) }}
+{% elif widget == 'RadioSelect' %}
+{{ _radio_select(_field, context) }}
 {% elif widget == 'ReCaptchaWidget' %}
 {{ _field.field.widget.render()|safe }}
 {% else %}
@@ -132,4 +134,13 @@
   {% endfor %}
   {% endif %}
 </select>
+{%- endmacro %}
+
+{% macro _radio_select(_field, context) -%}
+{% for option in context['optgroups'][0][1] %}
+<label class="radio">
+  <input type="radio" name="{{ context.name }}" id="id_{{ context.name }}_{{ option[0] }}" value="{{ option[0] }}"{% if 'value' in context and option[0] in context.value %} checked="checked"{% endif %}>
+  {{ option[1] }}
+</label>
+{% endfor %}
 {%- endmacro %}

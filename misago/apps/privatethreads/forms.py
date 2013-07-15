@@ -1,4 +1,4 @@
-from django import forms
+import floppyforms as forms
 from django.utils.translation import ugettext_lazy as _
 from misago.apps.threadtype.posting.forms import (NewThreadForm as NewThreadBaseForm,
                                                   EditThreadForm as EditThreadBaseForm,
@@ -10,8 +10,9 @@ from misago.utils.strings import slugify
 
 class InviteUsersMixin(object):
     def type_fields(self):
-        self.layout[0][1].append(('invite_users', {'label': _("Invite members to thread"), 'attrs': {'placeholder': _("user1, user2, user3...")}}))
-        self.fields['invite_users'] = forms.CharField(max_length=255, required=False)
+        self.fields['invite_users'] = forms.CharField(label=_("Invite members to thread"),
+                                                      max_length=255,
+                                                      required=False)
 
     def clean_invite_users(self):
         self.invite_users = []
