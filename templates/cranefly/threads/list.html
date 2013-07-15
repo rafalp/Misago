@@ -1,5 +1,5 @@
 {% extends "cranefly/layout.html" %}
-{% import "_forms.html" as form_theme with context %}
+{% import "forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{{ macros.page_title(title=forum.name,page=pagination['page']) }}{% endblock %}
@@ -177,7 +177,7 @@
     <div class="threads-actions">
       <form id="threads_form" class="form-inline pull-right" action="{{ request_path }}" method="POST">
         <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-        {{ form_theme.input_select(list_form['list_action'],width=3) }}
+        {{ form_theme.field(list_form.list_action, attrs={'class': 'span3'}) }}
         <button type="submit" class="btn btn-danger">{% trans %}Go{% endtrans %}</button>
       </form>
     </div>

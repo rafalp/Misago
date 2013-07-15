@@ -1,4 +1,4 @@
-from django import forms
+import floppyforms as forms
 from django.core.urlresolvers import reverse
 from django.forms import ValidationError
 from django.shortcuts import redirect
@@ -6,7 +6,7 @@ from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
-from misago.forms import Form, FormFields
+from misago.forms import Form
 from misago.messages import Message
 from misago.models import Forum, Thread, Post
 from misago.readstrackers import ForumsTracker
@@ -125,7 +125,7 @@ class ThreadsListBaseView(ViewBase):
                                       'forum': self.forum,
                                       'parents': self.parents,
                                       'count': self.count,
-                                      'list_form': FormFields(self.form).fields if self.form else None,
+                                      'list_form': self.form or None,
                                       'threads': self.threads,
                                       'pagination': self.pagination,
                                       }),
