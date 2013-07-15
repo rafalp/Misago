@@ -1,5 +1,5 @@
 {% extends "admin/admin/layout.html" %}
-{% import "_forms.html" as form_theme with context %}
+{% import "forms.html" as form_theme with context %}
 
 {% block action_body %}
 {%- if search_form %}
@@ -71,7 +71,7 @@ Showing {{ shown }} of {{ total }} items
   <form id="list_form" class="form-inline pull-right" action="{{ link }}" method="POST">
     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
     <input type="hidden" name="origin" value="list">
-    {{ form_theme.input_select(list_form.fields['list_action'],width=3) }}
+    {{ form_theme.field(list_form.list_action, attrs={'class': 'span3'}) }}
     <button type="submit" class="btn btn-primary">{% trans %}Go{% endtrans %}</button>
   </form>
 {%- endif %}
@@ -85,13 +85,12 @@ Showing {{ shown }} of {{ total }} items
 {%- if search_form %}
   </div>
   <div class="span3 side-search">
-  	<h4>{% if search_form.fieldsets[0].legend %}{{ search_form.fieldsets[0].legend }}{% else %}{% trans %}Search Items{% endtrans %}{% endif %}</h4>
+  	<h4>{% if search_form.search_name %}{{ search_form.search_name }}{% else %}{% trans %}Search Items{% endtrans %}{% endif %}</h4>
     <form id="search_form" action="{{ link }}" method="post">
       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
       <input type="hidden" name="origin" value="search">
-      {% for field in search_form.fieldsets[0].fields %}
-      {{ form_theme.row_widget(field, width=3) }}
-      {% endfor %}
+      {% block search_form %}
+      {% endblock %}
     </form>
     <div class="form-actions">
       <div class="row">

@@ -1,6 +1,6 @@
 {% extends "admin/layout.html" %}
 {% from "admin/macros.html" import page_title, draw_message %}
-{% import "_forms.html" as form_theme with context %}
+{% import "forms.html" as form_theme with context %}
 
 {% block title %}{% if admin.actions[0].id != action.id and action.name -%}
 {% if target %}{{ page_title(parent=action.name, title=target) }}{% else %}{{ page_title(title=action.name) }}{% endif %}

@@ -22,3 +22,19 @@
   	{{ item.last|date("TIME_FORMAT") }}
   </td>
 {% endblock %}
+
+{% block search_form scoped %}
+{{ form_theme.row(search_form.ip_address, attrs={
+                                                 'class': 'span3',
+                                                 'placeholder': _("IP begins with..."),
+                                                }) }}
+{{ form_theme.row(search_form.username, attrs={
+                                               'class': 'span3',
+                                               'placeholder': _("Username begings with..."),
+                                              }) }}
+{{ form_theme.row(search_form.useragent, attrs={
+                                               'class': 'span3',
+                                               'placeholder': _("User Agent contains..."),
+                                              }) }}
+{{ form_theme.row(search_form.type, attrs={'class': 'span3'}) }}
+{% endblock %}

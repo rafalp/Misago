@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 from jinja2 import TemplateNotFound
 import math
-from misago.forms import Form, FormLayout, FormFields, FormFieldsets
+from misago.forms import Form
 from misago.messages import Message
 from misago.shortcuts import render_to_response
 from misago.utils.pagination import make_pagination
@@ -364,9 +364,9 @@ class ListWidget(BaseWidget):
                                    'sorting': self.sortables,
                                    'sorting_method': sorting_method,
                                    'pagination': paginating_method,
-                                   'list_form': FormLayout(list_form) if list_form else None,
-                                   'search_form': FormLayout(search_form) if search_form else None,
-                                   'table_form': FormFields(table_form).fields if table_form else None,
+                                   'list_form': list_form or None,
+                                   'search_form': search_form or None,
+                                   'table_form': table_form or None,
                                    'items': items,
                                    'items_total': items_total,
                                    'items_shown': items_shown,
@@ -474,7 +474,7 @@ class FormWidget(BaseWidget):
                                    'tabbed': self.tabbed,
                                    'target': self.get_target_name(original_model),
                                    'target_model': original_model,
-                                   'form': FormLayout(form, self.get_layout(form, target)),
+                                   'form': form,
                                   }),
                                   context_instance=RequestContext(request));
 

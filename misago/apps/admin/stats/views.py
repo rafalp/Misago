@@ -6,7 +6,6 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
-from misago.forms import FormLayout
 from misago.messages import Message
 from misago.shortcuts import render_to_response
 from misago.apps.admin.stats.forms import GenerateStatisticsForm
@@ -65,7 +64,7 @@ def form(request):
 
     return render_to_response('stats/form.html',
                               {
-                              'form': FormLayout(form),
+                              'form': form,
                               'message': message,
                               },
                               context_instance=RequestContext(request));
@@ -111,7 +110,7 @@ def graph(request, model, date_start, date_end, precision):
                               {
                               'title': models_map[model].statistics_name,
                               'graph': build_graph(models_map[model], date_start, date_end, precision),
-                              'form': FormLayout(form),
+                              'form': form,
                               'message': request.messages.get_message('admin_stats'),
                               },
                               context_instance=RequestContext(request));
