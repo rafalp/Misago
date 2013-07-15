@@ -1,4 +1,4 @@
-from django import forms
+import floppyforms as forms
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 from misago.acl.exceptions import ACLError403, ACLError404
@@ -10,21 +10,13 @@ from misago.apps.threadtype.mixins import ValidateThreadNameMixin
 
 class SplitThreadForm(Form, ValidateThreadNameMixin):
     def finalize_form(self):
-        self.layout = [
-                       [
-                        None,
-                        [
-                         ('thread_name', {'label': _("New Thread Name")}),
-                         ('thread_forum', {'label': _("New Thread Forum")}),
-                         ],
-                        ],
-                       ]
-
-        self.fields['thread_name'] = forms.CharField(max_length=settings.thread_name_max,
+        self.fields['thread_name'] = forms.CharField(label=_("New Thread Name"),
+                                                     max_length=settings.thread_name_max,
                                                      validators=[validate_sluggable(_("Thread name must contain at least one alpha-numeric character."),
                                                                                     _("Thread name is too long. Try shorter name.")
                                                                                     )])
-        self.fields['thread_forum'] = ForumChoiceField(queryset=Forum.objects.get(special='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']))
+        self.fields['thread_forum'] = ForumChoiceField(label=_("New Thread Forum"),
+                                                       queryset=Forum.objects.get(special='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']))
 
     def clean_thread_forum(self):
         new_forum = self.cleaned_data['thread_forum']
@@ -42,16 +34,8 @@ class MovePostsForm(Form, ValidateThreadNameMixin):
         super(MovePostsForm, self).__init__(data, request=request, *args, **kwargs)
 
     def finalize_form(self):
-        self.layout = [
-                       [
-                        None,
-                        [
-                         ('thread_url', {'label': _("New Thread Link"), 'help_text': _("To select new thread, simply copy and paste here its link.")}),
-                         ],
-                        ],
-                       ]
-
-        self.fields['thread_url'] = forms.CharField()
+        self.fields['thread_url'] = forms.CharField(label=_("New Thread Link"),
+                                                    help_text=_("To select new thread, simply copy and paste here its link."))
 
     def clean_thread_url(self):
         from django.core.urlresolvers import resolve

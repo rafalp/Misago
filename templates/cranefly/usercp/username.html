@@ -21,9 +21,9 @@
     {{ form_theme.hidden_fields(form) }}
     <div class="form-fields">
       {% if changes_left == 0 %}
-      {{ form_theme.row(form.username, attrs={'disabled': 'disabled'}) }}
+      {{ form_theme.row(form.username, attrs={'class': 'span9', 'disabled': 'disabled'}) }}
       {% else %}
-      {{ form_theme.row(form.username) }}
+      {{ form_theme.row(form.username, attrs={'class': 'span9'}) }}
       {% endif %}
     </div>
     <div class="form-actions">

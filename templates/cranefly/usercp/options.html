@@ -20,21 +20,20 @@
   <form action="{{ url('usercp_options') }}" method="post">
     {{ form_theme.hidden_fields(form) }}
     <div class="form-fields">
-      {# form_theme.form_widget(form, width=9) #}
       <fieldset>
         <legend>{% trans %}Privacy{% endtrans %}</legend>
-        {{ form_theme.row(form.hide_activity) }}
-        {{ form_theme.row(form.allow_pds) }}
+        {{ form_theme.row(form.hide_activity, attrs={'class': 'span9'}) }}
+        {{ form_theme.row(form.allow_pds, attrs={'class': 'span9'}) }}
       </fieldset>
       <fieldset>
         <legend>{% trans %}Forum Options{% endtrans %}</legend>
-        {{ form_theme.row(form.timezone) }}
-        {{ form_theme.row(form.newsletters, attrs={'inline': _("Yes, I want to subscribe forum newsletter.")}) }}
+        {{ form_theme.row(form.timezone, attrs={'class': 'span9'}) }}
+        {{ form_theme.row(form.newsletters, attrs={'class': 'span9', 'inline': _("Yes, I want to subscribe forum newsletter.")}) }}
       </fieldset>
       <fieldset>
         <legend>{% trans %}Watching Threads{% endtrans %}</legend>
-        {{ form_theme.row(form.subscribe_start) }}
-        {{ form_theme.row(form.subscribe_reply) }}
+        {{ form_theme.row(form.subscribe_start, attrs={'class': 'span9'}) }}
+        {{ form_theme.row(form.subscribe_reply, attrs={'class': 'span9'}) }}
       </fieldset>
     </div>
     <div class="form-actions">

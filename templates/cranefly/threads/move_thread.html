@@ -45,9 +45,10 @@
           <input type="hidden" name="list_items" value="{{ thread.pk }}">
           {% endfor %}
           <div class="form-fields">
-            {{ form_theme.row(form.username, attrs={'class': 'span6'}) }}
-            {% do form.fieldsets[0]['fields'][0].update({'label': _("Move Thread To"), 'help_text': _("Select forum you want to move this thread to.")}) %}
-            {{ form_theme.form_widget(form, width=6) }}
+            {{ form_theme.row(form.new_forum,
+                              label=_("Move thread to"),
+                              help_text=_("Select forum you want to move this thread to."),
+                              attrs={'class': 'span6'}) }}
           </div>
           <div class="form-actions">
             <button type="submit" class="btn btn-primary">{% trans %}Move Thread{% endtrans %}</button>

@@ -7,7 +7,7 @@
   {% endfor %}
 {%- endmacro %}
 
-{% macro row(_field, label=None, help_text=None, width=9, attrs=None) -%}
+{% macro row(_field, label=None, help_text=None, attrs=None) -%}
   <div id="{{ _field.html_name }}-control-group" class="control-group{% if _field.errors %} error{% endif %}">
     <label class="control-label" for="id_{{ _field.html_name }}">{% if label %}{{ label }}{% elif _field.label %}{{ _field.label }}{% else %}{{ _field.html_name }}{% endif %}</label>
     <div class="controls">
@@ -15,7 +15,7 @@
       {% if _field.field.widget.__class__.__name__ == 'ForumTOS' %}{% do attrs.update({'inline': make_tos_label()}) %}{% endif %}
       {% if _field.field.widget.__class__.__name__ in ('CheckboxInput', 'ForumTOS') %}
         <label class="checkbox">
-          {{ field(_field, width=width, attrs=attrs)|trim }}
+          {{ field(_field, attrs=attrs)|trim }}
           {% if 'inline' in attrs %}
           {{ attrs.inline }}
           {% else %}
@@ -27,7 +27,7 @@
           {% endif %}
         </label>
       {% else %}
-        {{ field(_field, width=width, attrs=attrs)|trim }}
+        {{ field(_field, attrs=attrs)|trim }}
       {% endif %}
       {% for error in _field.errors %}
       <p class="help-block" style="font-weight: bold;">{{ error }}</p>
@@ -80,21 +80,18 @@
 <a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{{ url('tos') }}{% endif %}">{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Terms of Service{% endtrans %}{% endif %}</a>
 {%- endmacro %}
 
-{% macro captcha(form, width=9) -%}
+{% macro captcha(form, attrs=None) -%}
 {% if 'recaptcha' in form.fields %}
 {{ row(form.recaptcha) }}
 {% endif %}
 {% if 'captcha_qa' in form.fields %}
-{{ row(form.captcha_qa, width=width) }}
+{{ row(form.captcha_qa, attrs=attrs) }}
 {% endif %}
 {%- endmacro %}
 
-{% macro field(_field, attrs=None, width=9) -%}
+{% macro field(_field, attrs=None) -%}
 {% set widget = _field.field.widget.__class__.__name__ %}
 {% set context = _field.field.widget.get_context(_field.html_name, _field.value(), attrs=attrs) %}
-{% if not 'class' in context['attrs'] and widget not in ('CheckboxInput', 'ForumTOS') %}
-{% do context['attrs'].update({'class': ('span' ~ width)}) %}
-{% endif %}
 {% if 'inline' in context.attrs %}{% do context.attrs.pop('inline') %}{% endif %}
 {% if widget == 'Textarea' %}
 {{ _textarea(_field, context) }}

@@ -1,10 +1,9 @@
 from django.core.urlresolvers import reverse
-from django import forms
+import floppyforms as forms
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
-from misago.forms import FormLayout
 from misago.markdown import post_markdown
 from misago.messages import Message
 from misago.shortcuts import render_to_response
@@ -97,7 +96,7 @@ class PostsModeration(object):
                                   'parents': self.parents,
                                   'thread': self.thread,
                                   'posts': ids,
-                                  'form': FormLayout(form),
+                                  'form': form,
                                   },
                                   context_instance=RequestContext(self.request));
 
@@ -136,7 +135,7 @@ class PostsModeration(object):
                                   'parents': self.parents,
                                   'thread': self.thread,
                                   'posts': ids,
-                                  'form': FormLayout(form),
+                                  'form': form,
                                   },
                                   context_instance=RequestContext(self.request));
 

@@ -20,7 +20,7 @@
   <form action="{{ url('usercp_avatar_upload') }}" method="post" enctype="multipart/form-data">
     {{ form_theme.hidden_fields(form) }}
     <input type="hidden" id="js_check" name="js_check" value="0">
-    {{ form_theme.row(form.avatar_upload) }}
+    {{ form_theme.row(form.avatar_upload, attrs={'class': 'span9'}) }}
     <div class="form-actions">
       <button name="save" type="submit" class="btn btn-primary">{% trans %}Upload Avatar{% endtrans %}</button>
       <a href="{{ url('usercp_avatar') }}" class="btn">{% trans %}Cancel{% endtrans %}</a>

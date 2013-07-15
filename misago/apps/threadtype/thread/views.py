@@ -1,4 +1,4 @@
-from django import forms
+import floppyforms as forms
 from django.core.urlresolvers import reverse
 from django.forms import ValidationError
 from django.http import Http404
@@ -9,7 +9,7 @@ from django.utils.translation import ugettext as _
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
 from misago.conf import settings
-from misago.forms import Form, FormLayout, FormFields
+from misago.forms import Form
 from misago.markdown import emojis
 from misago.messages import Message
 from misago.models import Forum, Thread, Post, Karma, WatchedThread
@@ -224,8 +224,8 @@ class ThreadBaseView(ViewBase):
                                       'watcher': self.watcher,
                                       'pagination': self.pagination,
                                       'emojis': emojis(),
-                                      'quick_reply': FormFields(QuickReplyForm(request=request)).fields,
-                                      'thread_form': FormFields(self.thread_form).fields if self.thread_form else None,
-                                      'posts_form': FormFields(self.posts_form).fields if self.posts_form else None,
+                                      'quick_reply': QuickReplyForm(request=request),
+                                      'thread_form': self.thread_form or None,
+                                      'posts_form': self.posts_form or None,
                                       }),
                                   context_instance=RequestContext(request));

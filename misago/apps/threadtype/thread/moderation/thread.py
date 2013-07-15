@@ -1,6 +1,6 @@
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
-from misago.forms import Form, FormLayout
+from misago.forms import Form
 from misago.messages import Message
 from misago.monitor import monitor, UpdatingMonitor
 from misago.shortcuts import render_to_response
@@ -82,7 +82,7 @@ class ThreadModeration(object):
                                   'forum': self.forum,
                                   'parents': self.parents,
                                   'thread': self.thread,
-                                  'form': FormLayout(form),
+                                  'form': form,
                                   },
                                   context_instance=RequestContext(self.request));
 

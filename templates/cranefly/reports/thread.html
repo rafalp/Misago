@@ -1,5 +1,5 @@
 {% extends "cranefly/layout.html" %}
-{% import "_forms.html" as form_theme with context %}
+{% import "forms.html" as form_theme with context %}
 {% import "cranefly/editor.html" as editor with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
@@ -327,14 +327,14 @@
     <form id="thread_form" class="form-inline pull-left" action="{{ request_path }}" method="POST">
       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
       <input type="hidden" name="origin" value="thread_form">
-      {{ form_theme.input_select(thread_form['thread_action'],width=3) }}
+      {{ form_theme.field(thread_form.thread_action, attrs={'class': 'span3'}) }}
       <button type="submit" class="btn btn-danger">{% trans %}Go{% endtrans %}</button>
     </form>
-    {% if posts_form%}
+    {% if posts_form %}
     <form id="posts_form" class="form-inline pull-right" action="{{ request_path }}" method="POST">
       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
       <input type="hidden" name="origin" value="posts_form">
-      {{ form_theme.input_select(posts_form['list_action'],width=3) }}
+      {{ form_theme.field(posts_form.list_action, attrs={'class': 'span3'}) }}
       <button type="submit" class="btn btn-danger">{% trans %}Go{% endtrans %}</button>
     </form>
     {% endif %}

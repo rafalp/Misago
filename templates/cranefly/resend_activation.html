@@ -23,7 +23,7 @@
         {{ form_theme.hidden_fields(form) }}
         <div class="form-fields">
           {{ form_theme.row(form.email, attrs={'class': 'span6', 'placeholder': _("Enter your e-mail address.")}) }}
-          {{ form_theme.captcha(form, width=6) }}
+          {{ form_theme.captcha(form, attrs={'class': 'span6'}) }}
         </div>
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">{% trans %}Request new E-mail{% endtrans %}</button>
