@@ -1,6 +1,6 @@
 from mptt.forms import TreeNodeChoiceField
 from recaptcha.client.captcha import API_SSL_SERVER, API_SERVER, VERIFY_SERVER
-from floppyforms import fields
+from floppyforms import fields, widgets
 from django.utils.html import conditional_escape, mark_safe
 from django.utils.translation import ugettext_lazy as _
 from misago.forms.widgets import ReCaptchaWidget
@@ -9,6 +9,8 @@ class ForumChoiceField(TreeNodeChoiceField):
     """
     Custom forum choice field
     """
+    widget = widgets.Select
+
     def __init__(self, *args, **kwargs):
         kwargs['level_indicator'] = u'- - '
         super(ForumChoiceField, self).__init__(*args, **kwargs)
@@ -21,6 +23,7 @@ class ForumChoiceField(TreeNodeChoiceField):
 class ReCaptchaField(fields.CharField):
     widget = ReCaptchaWidget
     api_error = None
+
     def __init__(self, *args, **kwargs):
         kwargs['label'] = _("Verification Code")
         kwargs['help_text'] = _("Enter the code from image into the text field.")

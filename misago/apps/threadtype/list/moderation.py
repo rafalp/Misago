@@ -2,7 +2,6 @@ from django.forms import ValidationError
 from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
-from misago.forms import FormLayout
 from misago.messages import Message
 from misago.models import Forum, Thread, Post
 from misago.monitor import monitor, UpdatingMonitor
@@ -123,7 +122,7 @@ class ThreadsListModeration(object):
                                   'forum': self.forum,
                                   'parents': self.parents,
                                   'threads': threads,
-                                  'form': FormLayout(form),
+                                  'form': form,
                                   },
                                   context_instance=RequestContext(self.request));
 
@@ -180,7 +179,7 @@ class ThreadsListModeration(object):
                                   'forum': self.forum,
                                   'parents': self.parents,
                                   'threads': threads,
-                                  'form': FormLayout(form),
+                                  'form': form,
                                   },
                                   context_instance=RequestContext(self.request));
 

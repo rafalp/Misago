@@ -1,5 +1,5 @@
 {% extends "cranefly/layout.html" %}
-{% import "_forms.html" as form_theme with context %}
+{% import "forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{{ macros.page_title(title=_("Merge Threads"),parent=forum.name) }}{% endblock %}
@@ -42,13 +42,15 @@
         {% endif %}
 
         <form action="{{ url('forum', forum=forum.pk, slug=forum.slug) }}" method="post">
+          {{ form_theme.hidden_fields(form) }}
           <input type="hidden" name="origin" value="merge_form">
           <input type="hidden" name="list_action" value="merge">
           {% for thread in threads -%}
           <input type="hidden" name="list_items" value="{{ thread.pk }}">
           {% endfor %}
           <div class="form-fields">
-            {{ form_theme.form_widget(form, width=6) }}
+            {{ form_theme.row(form.thread_name, attrs={'class': 'span6'}) }}
+            {{ form_theme.row(form.new_forum, attrs={'class': 'span6'}) }}
           </div>
           <div class="form-actions">
             <button type="submit" class="btn btn-primary">{% trans %}Merge Threads{% endtrans %}</button>
