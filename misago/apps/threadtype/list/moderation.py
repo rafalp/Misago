@@ -163,13 +163,13 @@ class ThreadsListModeration(object):
             form = MergeThreadsForm(request=self.request, threads=threads)
 
         warning = None
-        lookback = threads[0].last_post_id
-        for thread in threads[1:]:
-            if thread.start_post_id < lookback:
+        lookback = threads[-1]
+        for thread in reversed(threads[:-1]):
+            if thread.start_post_id < lookback.last_post_id:
                 warning = Message(_("Warning: Posting times in one or more of threads that you are going to merge are overlapping. This may result in disturbed flow of merged thread."), 'warning')
                 break
             else:
-                lookback = thread.last_post_id
+                lookback = thread
 
         return render_to_response('%ss/merge.html' % self.type_prefix,
                                   {
