@@ -109,7 +109,7 @@
 {%- endmacro %}
 
 {% macro _input(_field, context) -%}
-<input type="{{ context.type }}" id="id_{{ context.name }}" name="{{ context.name }}" {{ attributes(context.attrs)|trim }}{% if context.type != 'password' and 'value' in context and context.value|length > 0 %} value="{{ context.value }}"{% endif %}>
+<input type="{{ context.type }}" id="id_{{ context.name }}" name="{{ context.name }}" {{ attributes(context.attrs)|trim }}{% if context.type != 'password' and 'value' in context and context.value is not none %} value="{{ context.value }}"{% endif %}>
 {%- endmacro %}
 
 {% macro _textarea(_field, context) -%}

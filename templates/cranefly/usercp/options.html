@@ -28,7 +28,7 @@
       <fieldset>
         <legend>{% trans %}Forum Options{% endtrans %}</legend>
         {{ form_theme.row(form.timezone, attrs={'class': 'span9'}) }}
-        {{ form_theme.row(form.newsletters, attrs={'class': 'span9', 'inline': _("Yes, I want to subscribe forum newsletter.")}) }}
+        {{ form_theme.row(form.newsletters, attrs={'inline': _("Yes, I want to subscribe forum newsletter.")}) }}
       </fieldset>
       <fieldset>
         <legend>{% trans %}Watching Threads{% endtrans %}</legend>
