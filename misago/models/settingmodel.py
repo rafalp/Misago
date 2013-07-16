@@ -122,18 +122,27 @@ class Setting(models.Model):
                                    widget=forms.Textarea
                                    )
 
+        kwargs = {
+                  'initial': self.value,
+                  'label': _(self.name),
+                  'help_text': _(self.description) if self.description else None,
+                  'validators': field_validators,
+                  'required': False,
+                 }
+
         # Default input
         default_input = forms.CharField
         if self.normalize_to == 'integer':
             default_input = forms.IntegerField
+
         if self.normalize_to == 'float':
             default_input = forms.FloatField
 
+        if self.normalize_to in ('integer', 'float'):
+            if 'max' in extra:
+                kwargs['max_value'] = extra['max']
+            if 'min' in extra:
+                kwargs['min_value'] = extra['min']
+
         # Make text-input
-        return default_input(
-                             initial=self.value,
-                             label=_(self.name),
-                             help_text=_(self.description) if self.description else None,
-                             validators=field_validators,
-                             required=False,
-                             )
+        return default_input(**kwargs)

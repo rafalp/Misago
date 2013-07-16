@@ -28,11 +28,20 @@
   	{{ draw_message(message, 'alert-form') }}
   	{% endif %}
     {% if active_group.description %}
-  	<p>{{ _(active_group.description) }}</p>{% endif %}
+    <p>{{ _(active_group.description) }}</p>{% endif %}
     <form class="form-vertical" action="{{ url('admin_settings', group_id=active_group.id, group_slug=active_group.key) }}" method="post">
       <div class="form-container">
-        {% for field in form %}
-        {{ form_theme.row(field, attrs={'class': 'span9'}) }}
+        {% for fieldset in form %}
+        <fieldset>
+          {% if fieldset.name %}<legend>{{ fieldset.name }}</legend>{% endif %}
+          {% for field in fieldset %}
+          {% if field.field.widget.__class__.__name__ in ('CheckboxInput', 'YesNoSwitch') %}
+          {{ form_theme.row(field) }}
+          {% else %}
+          {{ form_theme.row(field, attrs={'class': 'span9'}) }}
+          {% endif %}
+          {% endfor %}
+        </fieldset>
         {% endfor %}
       </div>
       <div class="form-actions">

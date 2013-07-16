@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ungettext, ugettext as _
 from misago.conf import settings as misago_settings
-from misago.forms import Form
+from misago.forms import Form, FormIterator
 from misago.messages import Message
 from misago.search import SearchQuery, SearchException
 from misago.models import SettingsGroup, Setting
@@ -30,16 +30,16 @@ def settings(request, group_id=None, group_slug=None):
     # Load selected group settings and turn them into form
     group_settings = Setting.objects.filter(group=active_group).order_by('position')
     last_fieldset = (None, [])
-    group_form = {'layout': []}
+    group_form = {'fieldsets': []}
     for setting in group_settings:
         # New field subgroup?
         if setting.separator and last_fieldset[0] != setting.separator:
             if last_fieldset[0]:
-                group_form['layout'].append(last_fieldset)
+                group_form['fieldsets'].append(last_fieldset)
             last_fieldset = (_(setting.separator), [])
         last_fieldset[1].append(setting.pk)
         group_form[setting.pk] = setting.get_field()
-    group_form['layout'].append(last_fieldset)
+    group_form['fieldsets'].append(last_fieldset)
     SettingsGroupForm = type('SettingsGroupForm', (Form,), group_form)
 
     #Submit form
@@ -67,7 +67,7 @@ def settings(request, group_id=None, group_slug=None):
                               'groups': settings_groups,
                               'active_group': active_group,
                               'search_form': SearchForm(request=request),
-                              'form': form,
+                              'form': FormIterator(form),
                               'raw_form': form,
                               },
                               context_instance=RequestContext(request));
@@ -113,6 +113,6 @@ def settings_search(request):
                               'groups': settings_groups,
                               'active_group': None,
                               'found_settings': found_settings,
-                              'search_form': FormFields(form),
+                              'search_form': form,
                               },
                               context_instance=RequestContext(request));

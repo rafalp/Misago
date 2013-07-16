@@ -95,10 +95,14 @@
 {% if 'inline' in context.attrs %}{% do context.attrs.pop('inline') %}{% endif %}
 {% if widget == 'Textarea' %}
 {{ _textarea(_field, context) }}
+{% elif widget == 'YesNoSwitch' %}
+{{ _yesno(_field, context) }}
 {% elif widget == 'Select' %}
 {{ _select(_field, context) }}
 {% elif widget == 'RadioSelect' %}
 {{ _radio_select(_field, context) }}
+{% elif widget == 'CheckboxSelectMultiple' %}
+{{ _checkbox_select(_field, context) }}
 {% elif widget == 'ReCaptchaWidget' %}
 {{ _field.field.widget.render()|safe }}
 {% else %}
@@ -116,6 +120,12 @@
 
 {% macro _textarea(_field, context) -%}
 <textarea id="id_{{ context.name }}" name="{{ context.name }}" {{ attributes(context.attrs)|trim }}>{% if 'value' in context and context.value|length > 0 %}{{ context.value }}{% endif %}</textarea>
+{%- endmacro %}
+
+{% macro _yesno(_field, context) -%}
+<div id="id_{{ context.name }}_div" class="yes-no-switch{% if 'class' in context.attrs %} {{ context.attrs.class }}{% endif %}">
+  {{ _input(_field, context) }}
+</div>
 {%- endmacro %}
 
 {% macro _select(_field, context) -%}
@@ -137,10 +147,23 @@
 {%- endmacro %}
 
 {% macro _radio_select(_field, context) -%}
-{% for option in context['optgroups'][0][1] %}
-<label class="radio">
-  <input type="radio" name="{{ context.name }}" id="id_{{ context.name }}_{{ option[0] }}" value="{{ option[0] }}"{% if 'value' in context and option[0] in context.value %} checked="checked"{% endif %}>
-  {{ option[1] }}
-</label>
-{% endfor %}
+<div class="radio-group">
+  {% for option in context['optgroups'][0][1] %}
+  <label class="radio">
+    <input type="radio" name="{{ context.name }}" id="id_{{ context.name }}_{{ option[0] }}" value="{{ option[0] }}"{% if 'value' in context and option[0] in context.value %} checked="checked"{% endif %}>
+    {{ option[1] }}
+  </label>
+  {% endfor %}
+</div>
 {%- endmacro %}
+
+{% macro _checkbox_select(_field, context) %}
+<div class="select-multiple">
+{% for option in context['optgroups'][0][1] %}
+  <label class="checkbox">
+    <input type="checkbox" name="{{ context.name }}" id="id_{{ context.name }}_{{ option[0] }}" value="{{ option[0] }}"{% if 'value' in context and option[0] in context.value %} checked="checked"{% endif %}>
+    {{ option[1] }}
+  </label>
+  {% endfor %}
+</div>
+{% endmacro %}
