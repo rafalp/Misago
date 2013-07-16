@@ -1,5 +1,5 @@
 {% extends "cranefly/layout.html" %}
-{% import "_forms.html" as form_theme with context %}
+{% import "forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{% if in_search -%}
@@ -23,7 +23,7 @@
       <li class="pull-right">
         <form action="{{ url('users') }}" class="form-inline" method="post">
           <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-          {{ form_theme.field_widget(search_form.username, width=2, attrs={'placeholder': lang_find_user()}) }}
+          {{ form_theme.field(search_form.username, attrs={'class': 'span2', 'placeholder': lang_find_user()}) }}
           <button type="submit" class="btn btn-icon"><i class="icon-search"></i></button>
         </form>
       </li>

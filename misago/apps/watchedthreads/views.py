@@ -1,4 +1,3 @@
-import floppyforms as forms
 from django.core.urlresolvers import reverse
 from django.db.models import Q, F
 from django.http import Http404
@@ -8,7 +7,6 @@ from django.utils.translation import ugettext as _
 from misago.apps.errors import error403
 from misago.conf import settings
 from misago.decorators import block_guest
-from misago.forms import Form, FormLayout, FormFields
 from misago.messages import Message
 from misago.models import Forum, WatchedThread
 from misago.shortcuts import render_to_response

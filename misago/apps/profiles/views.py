@@ -4,7 +4,6 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from misago.apps.errors import error403, error404
 from misago.conf import settings
-from misago.forms import FormFields
 from misago.messages import Message
 from misago.models import Rank, User
 from misago.shortcuts import render_to_response
@@ -93,7 +92,7 @@ def list(request, slug=None, page=0):
     return render_to_response('profiles/list.html',
                               {
                               'message': message,
-                              'search_form': FormFields(search_form).fields,
+                              'search_form': search_form,
                               'in_search': in_search,
                               'active_rank': active_rank,
                               'default_rank': default_rank,

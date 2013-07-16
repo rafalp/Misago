@@ -9,7 +9,6 @@ from haystack.query import SearchQuerySet, RelatedSearchQuerySet
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.conf import settings
 from misago.decorators import block_crawlers
-from misago.forms import FormFields
 from misago.models import Forum, Thread, Post, User
 from misago.search import SearchException
 from misago.shortcuts import render_to_response
