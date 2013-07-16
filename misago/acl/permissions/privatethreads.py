@@ -7,32 +7,35 @@ from misago.models import Forum
 
 def make_form(request, role, form):
     if role.special != 'guest':
-        form.base_fields['can_use_private_threads'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['can_start_private_threads'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['can_upload_attachments_in_private_threads'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['private_thread_attachment_size'] = forms.IntegerField(min_value=0, initial=100, required=False)
-        form.base_fields['private_thread_attachments_limit'] = forms.IntegerField(min_value=0, initial=3, required=False)
-        form.base_fields['can_invite_ignoring'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['private_threads_mod'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['can_delete_checkpoints'] = forms.TypedChoiceField(choices=(
-                                                                                     (0, _("No")),
-                                                                                     (1, _("Yes, soft-delete")),
-                                                                                     (2, _("Yes, hard-delete")),
+        form.base_fields['can_use_private_threads'] = forms.BooleanField(label=_("Can participate in private threads"),
+                                                                         widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['can_start_private_threads'] = forms.BooleanField(label=_("Can start private threads"),
+                                                                           widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['can_upload_attachments_in_private_threads'] = forms.BooleanField(label=_("Can upload files in attachments"),
+                                                                                           widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['private_thread_attachment_size'] = forms.IntegerField(label=_("Max. size of single attachment (in KB)"),
+                                                                                min_value=0, initial=100, required=False)
+        form.base_fields['private_thread_attachments_limit'] = forms.IntegerField(label=_("Max. number of attachments per post"),
+                                                                                  min_value=0, initial=3, required=False)
+        form.base_fields['can_invite_ignoring'] = forms.BooleanField(label=_("Can invite users that ignore him"),
+                                                                     widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['private_threads_mod'] = forms.BooleanField(label=_("Can moderate threads"),
+                                                                     help_text=_("Makes user with this role Private Threads moderator capable of closing, deleting and editing all private threads he participates in at will."),
+                                                                     widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['can_delete_checkpoints'] = forms.TypedChoiceField(label=_("Can delete checkpoints"),
+                                                                            choices=(
+                                                                                      (0, _("No")),
+                                                                                      (1, _("Yes, soft-delete")),
+                                                                                      (2, _("Yes, hard-delete")),
                                                                                      ), coerce=int)
 
-        form.layout.append((
-                            _("Private Threads"),
-                            (
-                             ('can_use_private_threads', {'label': _("Can participate in private threads")}),
-                             ('can_start_private_threads', {'label': _("Can start private threads")}),
-                             ('can_upload_attachments_in_private_threads', {'label': _("Can upload files in attachments")}),
-                             ('private_thread_attachment_size', {'label': _("Max. size of single attachment (in KB)")}),
-                             ('private_thread_attachments_limit', {'label': _("Max. number of attachments per post")}),
-                             ('can_invite_ignoring', {'label': _("Can invite users that ignore him")}),
-                             ('private_threads_mod', {'label': _("Can moderate threads"), 'help_text': _("Makes user with this role Private Threads moderator capable of closing, deleting and editing all private threads he participates in at will.")}),
-                             ('can_delete_checkpoints', {'label': _("Can delete checkpoints")}),
-                             ),
-                            ))
+        form.fieldset.append((
+                              _("Private Threads"),
+                              ('can_use_private_threads', 'can_start_private_threads',
+                               'can_upload_attachments_in_private_threads', 'private_thread_attachment_size',
+                               'private_thread_attachments_limit', 'can_invite_ignoring',
+                               'private_threads_mod', 'can_delete_checkpoints')
+                             ))
 
 
 class PrivateThreadsACL(BaseACL):

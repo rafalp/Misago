@@ -1,3 +1,4 @@
+import math
 import floppyforms as forms
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
@@ -6,7 +7,6 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 from jinja2 import TemplateNotFound
-import math
 from misago.forms import Form
 from misago.messages import Message
 from misago.shortcuts import render_to_response

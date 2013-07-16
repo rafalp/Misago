@@ -7,139 +7,139 @@ from misago.acl.exceptions import ACLError403, ACLError404
 from misago.forms import YesNoSwitch
 
 def make_forum_form(request, role, form):
-    form.base_fields['can_read_threads'] = forms.TypedChoiceField(choices=(
-                                                                  (0, _("No")),
-                                                                  (1, _("Yes, owned")),
-                                                                  (2, _("Yes, all")),
-                                                                  ), coerce=int)
-    form.base_fields['can_start_threads'] = forms.TypedChoiceField(choices=(
-                                                                   (0, _("No")),
-                                                                   (1, _("Yes, with moderation")),
-                                                                   (2, _("Yes")),
-                                                                   ), coerce=int)
-    form.base_fields['can_edit_own_threads'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_soft_delete_own_threads'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_write_posts'] = forms.TypedChoiceField(choices=(
-                                                                 (0, _("No")),
-                                                                 (1, _("Yes, with moderation")),
-                                                                 (2, _("Yes")),
-                                                                 ), coerce=int)
-    form.base_fields['can_edit_own_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_soft_delete_own_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_upvote_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_downvote_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_see_posts_scores'] = forms.TypedChoiceField(choices=(
-                                                                      (0, _("No")),
-                                                                      (1, _("Yes, final score")),
-                                                                      (2, _("Yes, both up and down-votes")),
-                                                                      ), coerce=int)
-    form.base_fields['can_see_votes'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_make_polls'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_vote_in_polls'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_see_poll_votes'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_see_attachments'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_upload_attachments'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_download_attachments'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['attachment_size'] = forms.IntegerField(min_value=0, initial=100)
-    form.base_fields['attachment_limit'] = forms.IntegerField(min_value=0, initial=3)
-    form.base_fields['can_approve'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_edit_labels'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_see_changelog'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_pin_threads'] = forms.TypedChoiceField(choices=(
+    form.base_fields['can_read_threads'] = forms.TypedChoiceField(label=_("Can read threads"),
+                                                                  choices=(
+                                                                           (0, _("No")),
+                                                                           (1, _("Yes, owned")),
+                                                                           (2, _("Yes, all")),
+                                                                           ), coerce=int)
+    form.base_fields['can_start_threads'] = forms.TypedChoiceField(label=_("Can start new threads"),
+                                                                   choices=(
+                                                                            (0, _("No")),
+                                                                            (1, _("Yes, with moderation")),
+                                                                            (2, _("Yes")),
+                                                                            ), coerce=int)
+    form.base_fields['can_edit_own_threads'] = forms.BooleanField(label=_("Can edit own threads"),
+                                                                  widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_soft_delete_own_threads'] = forms.BooleanField(label=_("Can soft-delete own threads"),
+                                                                         widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_write_posts'] = forms.TypedChoiceField(label=_("Can write posts"),
+                                                                 choices=(
+                                                                          (0, _("No")),
+                                                                          (1, _("Yes, with moderation")),
+                                                                          (2, _("Yes")),
+                                                                          ), coerce=int)
+    form.base_fields['can_edit_own_posts'] = forms.BooleanField(label=_("Can edit own posts"),
+                                                                widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_soft_delete_own_posts'] = forms.BooleanField(label=_("Can soft-delete own posts"),
+                                                                       widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_upvote_posts'] = forms.BooleanField(label=_("Can upvote posts"),
+                                                              widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_downvote_posts'] = forms.BooleanField(label=_("Can downvote posts"),
+                                                                widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_see_posts_scores'] = forms.TypedChoiceField(label=_("Can see post score"),
+                                                                      choices=(
+                                                                               (0, _("No")),
+                                                                               (1, _("Yes, final score")),
+                                                                               (2, _("Yes, both up and down-votes")),
+                                                                               ), coerce=int)
+    form.base_fields['can_see_votes'] = forms.BooleanField(label=_("Can see who voted on post"),
+                                                           widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_make_polls'] = forms.BooleanField(label=_("Can make polls"),
+                                                            widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_vote_in_polls'] = forms.BooleanField(label=_("Can vote in polls"),
+                                                               widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_see_poll_votes'] = forms.BooleanField(label=_("Can see who voted in poll"),
+                                                                widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_see_attachments'] = forms.BooleanField(label=_("Can see attachments"),
+                                                                 widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_upload_attachments'] = forms.BooleanField(label=_("Can upload attachments"),
+                                                                    widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_download_attachments'] = forms.BooleanField(label=_("Can download attachments"),
+                                                                      widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['attachment_size'] = forms.IntegerField(label=_("Max size of single attachment (in Kb)"),
+                                                             help_text=_("Enter zero for no limit."),
+                                                             min_value=0, initial=100)
+    form.base_fields['attachment_limit'] = forms.IntegerField(label=_("Max number of attachments per post"),
+                                                              help_text=_("Enter zero for no limit."),
+                                                              min_value=0, initial=3)
+    form.base_fields['can_approve'] = forms.BooleanField(label=_("Can accept threads and posts"),
+                                                         widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_edit_labels'] = forms.BooleanField(label=_("Can edit thread labels"),
+                                                             widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_see_changelog'] = forms.BooleanField(label=_("Can see edits history"),
+                                                               widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_pin_threads'] = forms.TypedChoiceField(label=_("Can change threads weight"),
+                                                                 choices=(
                                                                           (0, _("No")),
                                                                           (1, _("Yes, to stickies")),
                                                                           (2, _("Yes, to announcements")),
                                                                           ), coerce=int)
-    form.base_fields['can_edit_threads_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_move_threads_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_close_threads'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_protect_posts'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_delete_threads'] = forms.TypedChoiceField(choices=(
+    form.base_fields['can_edit_threads_posts'] = forms.BooleanField(label=_("Can edit threads and posts"),
+                                                                    widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_move_threads_posts'] = forms.BooleanField(label=_("Can move, merge and split threads and posts"),
+                                                                    widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_close_threads'] = forms.BooleanField(label=_("Can close threads"),
+                                                               widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_protect_posts'] = forms.BooleanField(label=_("Can protect posts"),
+                                                               help_text=_("Protected posts cannot be changed by their owners."),
+                                                               widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_delete_threads'] = forms.TypedChoiceField(label=_("Can delete threads"),
+                                                                    choices=(
                                                                              (0, _("No")),
                                                                              (1, _("Yes, soft-delete")),
                                                                              (2, _("Yes, hard-delete")),
                                                                              ), coerce=int)
-    form.base_fields['can_delete_posts'] = forms.TypedChoiceField(choices=(
+    form.base_fields['can_delete_posts'] = forms.TypedChoiceField(label=_("Can delete posts"),
+                                                                  choices=(
                                                                            (0, _("No")),
                                                                            (1, _("Yes, soft-delete")),
                                                                            (2, _("Yes, hard-delete")),
                                                                            ), coerce=int)
-    form.base_fields['can_delete_polls'] = forms.TypedChoiceField(choices=(
+    form.base_fields['can_delete_polls'] = forms.TypedChoiceField(label=_("Can delete polls"),
+                                                                  choices=(
                                                                            (0, _("No")),
                                                                            (1, _("Yes, soft-delete")),
                                                                            (2, _("Yes, hard-delete")),
                                                                            ), coerce=int)
-    form.base_fields['can_delete_attachments'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_delete_checkpoints'] = forms.TypedChoiceField(choices=(
+    form.base_fields['can_delete_attachments'] = forms.BooleanField(label=_("Can delete attachments"),
+                                                                    widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_delete_checkpoints'] = forms.TypedChoiceField(label=_("Can delete checkpoints"),
+                                                                        choices=(
                                                                                  (0, _("No")),
                                                                                  (1, _("Yes, soft-delete")),
                                                                                  (2, _("Yes, hard-delete")),
                                                                                  ), coerce=int)
-    form.base_fields['can_see_deleted_checkpoints'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_see_deleted_checkpoints'] = forms.BooleanField(label=_("Can see deleted checkpoints"),
+                                                                         widget=YesNoSwitch, initial=False, required=False)
 
-    form.layout.append((
-                        _("Threads"),
-                        (
-                         ('can_read_threads', {'label': _("Can read threads")}),
-                         ('can_start_threads', {'label': _("Can start new threads")}),
-                         ('can_edit_own_threads', {'label': _("Can edit own threads")}),
-                         ('can_soft_delete_own_threads', {'label': _("Can soft-delete own threads")}),
-                        ),
-                       ),)
-    form.layout.append((
-                        _("Posts"),
-                        (
-                         ('can_write_posts', {'label': _("Can write posts")}),
-                         ('can_edit_own_posts', {'label': _("Can edit own posts")}),
-                         ('can_soft_delete_own_posts', {'label': _("Can soft-delete own posts")}),
-                        ),
-                       ),)
-    form.layout.append((
-                        _("Karma"),
-                        (
-                         ('can_upvote_posts', {'label': _("Can upvote posts")}),
-                         ('can_downvote_posts', {'label': _("Can downvote posts")}),
-                         ('can_see_posts_scores', {'label': _("Can see post score")}),
-                         ('can_see_votes', {'label': _("Can see who voted on post")}),
-                        ),
-                       ),)
-    form.layout.append((
-                        _("Polls"),
-                        (
-                         ('can_make_polls', {'label': _("Can make polls")}),
-                         ('can_vote_in_polls', {'label': _("Can vote in polls")}),
-                         ('can_see_poll_votes', {'label': _("Can see who voted in poll")}),
-                        ),
-                       ),)
-    form.layout.append((
-                        _("Attachments"),
-                        (
-                         ('can_see_attachments', {'label': _("Can see attachments")}),
-                         ('can_upload_attachments', {'label': _("Can upload attachments")}),
-                         ('can_download_attachments', {'label': _("Can download attachments")}),
-                         ('attachment_size', {'label': _("Max size of single attachment (in Kb)"), 'help_text': _("Enter zero for no limit.")}),
-                         ('attachment_limit', {'label': _("Max number of attachments per post"), 'help_text': _("Enter zero for no limit.")}),
-                        ),
-                       ),)
-    form.layout.append((
-                        _("Moderation"),
-                        (
-                         ('can_approve', {'label': _("Can accept threads and posts")}),
-                         ('can_edit_labels', {'label': _("Can edit thread labels")}),
-                         ('can_see_changelog', {'label': _("Can see edits history")}),
-                         ('can_pin_threads', {'label': _("Can change threads weight")}),
-                         ('can_edit_threads_posts', {'label': _("Can edit threads and posts")}),
-                         ('can_move_threads_posts', {'label': _("Can move, merge and split threads and posts")}),
-                         ('can_close_threads', {'label': _("Can close threads")}),
-                         ('can_protect_posts', {'label': _("Can protect posts"), 'help_text': _("Protected posts cannot be changed by their owners.")}),
-                         ('can_delete_threads', {'label': _("Can delete threads")}),
-                         ('can_delete_posts', {'label': _("Can delete posts")}),
-                         ('can_delete_polls', {'label': _("Can delete polls")}),
-                         ('can_delete_attachments', {'label': _("Can delete attachments")}),
-                         ('can_delete_checkpoints', {'label': _("Can delete checkpoints")}),
-                         ('can_see_deleted_checkpoints', {'label': _("Can see deleted checkpoints")}),
-                        ),
-                       ),)
+    form.fieldsets.append((
+                           _("Threads"),
+                           ('can_read_threads', 'can_start_threads', 'can_edit_own_threads', 'can_soft_delete_own_threads')
+                          ))
+    form.fieldsets.append((
+                           _("Posts"),
+                           ('can_write_posts', 'can_edit_own_posts', 'can_soft_delete_own_posts')
+                          ))
+    form.fieldsets.append((
+                           _("Karma"),
+                           ('can_upvote_posts', 'can_downvote_posts', 'can_see_posts_scores', 'can_see_votes')
+                          ))
+    form.fieldsets.append((
+                           _("Polls"),
+                           ('can_make_polls', 'can_vote_in_polls', 'can_see_poll_votes')
+                          ))
+    form.fieldsets.append((
+                           _("Attachments"),
+                           ('can_see_attachments', 'can_upload_attachments',
+                            'can_download_attachments', 'attachment_size', 'attachment_limit')
+                          ))
+    form.fieldsets.append((
+                           _("Moderation"),
+                           ('can_approve', 'can_edit_labels', 'can_see_changelog', 'can_pin_threads', 'can_edit_threads_posts',
+                            'can_move_threads_posts', 'can_close_threads', 'can_protect_posts', 'can_delete_threads',
+                            'can_delete_posts', 'can_delete_polls', 'can_delete_attachments', 'can_delete_checkpoints', 'can_see_deleted_checkpoints')
+                          ))
 
 
 class ThreadsACL(BaseACL):

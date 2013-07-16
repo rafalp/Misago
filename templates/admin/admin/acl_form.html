@@ -3,23 +3,23 @@
 
 {% block action_body %}
 <form action="{{ link }}" method="post">
-  {{ form_theme.form_hidden_widget(form) }}
-  {% for fieldset in form.fieldsets %}
+  {{ form_theme.hidden_fields(form) }}
+  {% for fieldset in form.iterator() %}
   <table class="table table-striped">
     <thead>
       <tr>
-        <th class="lead">{{ fieldset.legend }}</th>
+        <th class="lead">{{ fieldset.name }}</th>
         <th>{% trans %}Permission{% endtrans %}</th>
       </tr>
     </thead>
     <tbody>
-      {% for field in fieldset.fields %}
+      {% for field in fieldset %}
       <tr>
         <td>
           <strong>{{ field.label }}</strong>{% if field.help_text %}<div class="muted">{{ field.help_text }}</div>{% endif %}
         </td>
-        <td class="span4">
-          {{ form_theme.field_widget(field, width=4) }}
+        <td class="span8">
+          {{ form_theme.field(field, attrs={'class': 'span6'}) }}
         </td>
       </tr>
       {% endfor %}

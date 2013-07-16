@@ -1,12 +1,19 @@
 from django.conf import settings
 from django.core.cache import cache, InvalidCacheBackendError
 from django.utils.importlib import import_module
-from misago.forms import Form
+from misago.forms import Form, FormIterator
 from misago.models import Forum, ForumRole
 from misago.monitor import monitor
 
+class ACLFormBase(Form):
+    fieldsets = []
+
+    def iterator(self):
+        return FormIterator(self)
+
+
 def build_form(request, role):
-    form_type = type('ACLForm', (Form,), dict(layout=[]))
+    form_type = type('ACLForm', (ACLFormBase,), {})
     for provider in settings.PERMISSION_PROVIDERS:
         app_module = import_module(provider)
         try:
@@ -17,7 +24,7 @@ def build_form(request, role):
 
 
 def build_forum_form(request, role):
-    form_type = type('ACLForm', (Form,), dict(layout=[]))
+    form_type = type('ACLForm', (ACLFormBase,), {})
     for provider in settings.PERMISSION_PROVIDERS:
         app_module = import_module(provider)
         try:

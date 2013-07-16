@@ -7,24 +7,23 @@ from misago.models import Forum
 
 def make_form(request, role, form):
     if role.special != 'guest':
-        form.base_fields['can_report_content'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['can_handle_reports'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['can_mod_reports_discussions'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['can_delete_reports'] = forms.TypedChoiceField(choices=(
-                                                                                 (0, _("No")),
-                                                                                 (1, _("Yes, soft-delete")),
-                                                                                 (2, _("Yes, hard-delete")),
+        form.base_fields['can_report_content'] = forms.BooleanField(label=_("Can report content"),
+                                                                    widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['can_handle_reports'] = forms.BooleanField(label=_("Can handle reports"),
+                                                                    widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['can_mod_reports_discussions'] = forms.BooleanField(label=_("Can moderate reports discussions"),
+                                                                             widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['can_delete_reports'] = forms.TypedChoiceField(label=_("Can delete reports"),
+                                                                        choices=(
+                                                                                  (0, _("No")),
+                                                                                  (1, _("Yes, soft-delete")),
+                                                                                  (2, _("Yes, hard-delete")),
                                                                                  ), coerce=int)
 
-        form.layout.append((
-                            _("Reporting Content"),
-                            (
-                             ('can_report_content', {'label': _("Can report content")}),
-                             ('can_handle_reports', {'label': _("Can handle reports")}),
-                             ('can_mod_reports_discussions', {'label': _("Can moderate reports discussions")}),
-                             ('can_delete_reports', {'label': _("Can delete reports")}),
-                             ),
-                            ))
+        form.fieldset.append((
+                              _("Reporting Content"),
+                              ('can_report_content', 'can_handle_reports', 'can_mod_reports_discussions', 'can_delete_reports')
+                             ))
 
 
 class ReportsACL(BaseACL):

@@ -5,20 +5,19 @@ from misago.acl.exceptions import ACLError404
 from misago.forms import YesNoSwitch
 
 def make_form(request, role, form):
-    form.base_fields['can_search_users'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_see_users_emails'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_see_users_trails'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_see_hidden_users'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_search_users'] = forms.BooleanField(label=_("Can search user profiles"),
+                                                              widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_see_users_emails'] = forms.BooleanField(label=_("Can see members e-mail's"),
+                                                                  widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_see_users_trails'] = forms.BooleanField(label=_("Can see members ip's and user-agents"),
+                                                                  widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_see_hidden_users'] = forms.BooleanField(label=_("Can see mebers that hide their presence"),
+                                                                  widget=YesNoSwitch, initial=False, required=False)
     
-    form.layout.append((
-                        _("User Profiles"),
-                        (
-                         ('can_search_users', {'label': _("Can search user profiles")}),
-                         ('can_see_users_emails', {'label': _("Can see members e-mail's")}),
-                         ('can_see_users_trails', {'label': _("Can see members ip's and user-agents")}),
-                         ('can_see_hidden_users', {'label': _("Can see mebers that hide their presence")}),
-                         ),
-                        ))
+    form.fieldsets.append((
+                           _("User Profiles"),
+                           ('can_search_users', 'can_see_users_emails', 'can_see_users_trails', 'can_see_hidden_users')
+                          ))
 
 
 class UsersACL(BaseACL):

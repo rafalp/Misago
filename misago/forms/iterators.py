@@ -17,6 +17,7 @@ class FormIterator(object):
                                     self.fieldsets[self._index][0],
                                     self.fieldsets[self._index][1])
         except IndexError:
+            self._index = -1
             raise StopIteration()
 
 

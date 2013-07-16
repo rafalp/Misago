@@ -1,12 +1,12 @@
 {% extends "admin/admin/list.html" %}
 {% from "admin/macros.html" import page_title %}
-{% import "_forms.html" as form_theme with context %}
+{% import "forms.html" as form_theme with context %}
 
 {% block title %}{{ page_title(parent=_(action.role.name), title=_("Role Forum Permissions")) }}{% endblock %}
 
 {% block table_head scoped %}
   <th>{% trans %}Forum{% endtrans %}</th>
-  <th class="span3">{% trans %}Role{% endtrans %}</th>
+  <th class="span8">{% trans %}Role{% endtrans %}</th>
 {% endblock %}
 
 {% block table_row scoped %}
@@ -14,7 +14,7 @@
   	<i class="icon-{{ forum_icon(item.type) }}"></i> <strong>{{ item.name }}</strong>
   </td>
   <td>
-  	{{ form_theme.field_widget(table_form['forum_' + item.pk|string], attrs={'form': 'table_form'}, width=3) }}
+  	{{ form_theme.field(table_form['forum_' + item.pk|string], attrs={'class': 'span6', 'form': 'table_form'}) }}
   </td>
 {% endblock %}
 

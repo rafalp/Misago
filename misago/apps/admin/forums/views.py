@@ -1,4 +1,5 @@
 import copy
+import floppyforms as forms
 from urlparse import urlparse
 from django.core.urlresolvers import resolve, reverse as django_reverse
 from django.db.models import Q
@@ -263,7 +264,14 @@ class Edit(FormWidget):
     def get_form_instance(self, form, target, initial, post=False):
         form_inst = super(Edit, self).get_form_instance(form, target, initial, post)
         valid_targets = Forum.objects.get(special='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
-        form_inst.fields['parent'] = TreeNodeChoiceField(queryset=valid_targets, level_indicator=u'- - ')
+        if target.role == 'category':
+            label = _("Category Parent")
+        if target.role == 'forum':
+            label = _("Forum Parent")
+        if target.role == 'redirect':
+            label = _("Redirect Parent")
+        form_inst.fields['parent'] = TreeNodeChoiceField(label=label, widget=forms.Select,
+                                                         queryset=valid_targets, level_indicator=u'- - ')
         form_inst.target_forum = target
         return form_inst
 
@@ -355,7 +363,8 @@ class Delete(FormWidget):
         if target.type != 'forum':
             del form_inst.fields['contents']
         valid_targets = Forum.objects.get(special='root').get_descendants().exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
-        form_inst.fields['subforums'] = TreeNodeChoiceField(queryset=valid_targets, required=False, empty_label=_("Remove with forum"), level_indicator=u'- - ')
+        form_inst.fields['subforums'] = TreeNodeChoiceField(label=_("Move subforums to"), widget=forms.Select,
+                                                            queryset=valid_targets, required=False, empty_label=_("Remove with forum"), level_indicator=u'- - ')
         return form_inst
 
     def submit_form(self, form, target):

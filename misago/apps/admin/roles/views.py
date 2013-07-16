@@ -70,9 +70,7 @@ class New(FormWidget):
         return reverse('admin_roles_edit', model)
     
     def submit_form(self, form, target):
-        new_role = Role(
-                      name = form.cleaned_data['name'],
-                     )
+        new_role = Role(name=form.cleaned_data['name'])
         new_role.save(force_insert=True)
         return new_role, Message(_('New Role has been created.'), 'success')    
     

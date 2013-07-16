@@ -1,0 +1,20 @@
+{% extends "admin/admin/form.html" %}
+{% import "forms.html" as form_theme with context %}
+
+{% block form %}
+<fieldset>
+  <legend>{% trans %}Basic Options{% endtrans %}</legend>
+</fieldset>
+{% if 'prune_start' in form.fields %}
+<fieldset>
+  <legend>{% trans %}Prune Forums{% endtrans %}</legend>
+</fieldset>
+{% endif %}
+<fieldset>
+  <legend>{% trans %}Display Options{% endtrans %}</legend>
+</fieldset>
+{{ form_theme.row(form.name, attrs={'class': 'span12'}) }}
+{% if 'protected' in form.fields %}
+{{ form_theme.row(form.protected) }}
+{% endif %}
+{% endblock %}
