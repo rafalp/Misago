@@ -145,9 +145,7 @@ class NewNode(FormWidget):
         return reverse('admin_forums_edit', model)
 
     def get_initial_data(self, model):
-        print 'CALL!'
         if not self.request.session.get('forums_admin_preffs'):
-            print 'NO PATTERN!'
             return {}
 
         ref = self.request.META.get('HTTP_REFERER')
@@ -264,14 +262,14 @@ class Edit(FormWidget):
     def get_form_instance(self, form, target, initial, post=False):
         form_inst = super(Edit, self).get_form_instance(form, target, initial, post)
         valid_targets = Forum.objects.get(special='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
-        if target.role == 'category':
+        if target.type == 'category':
             label = _("Category Parent")
-        if target.role == 'forum':
+        if target.type == 'forum':
             label = _("Forum Parent")
-        if target.role == 'redirect':
+        if target.type == 'redirect':
             label = _("Redirect Parent")
-        form_inst.fields['parent'] = TreeNodeChoiceField(label=label, widget=forms.Select,
-                                                         queryset=valid_targets, level_indicator=u'- - ')
+        form_inst.add_field('parent', TreeNodeChoiceField(label=label, widget=forms.Select,
+                                                          queryset=valid_targets, level_indicator=u'- - '))
         form_inst.target_forum = target
         return form_inst
 
@@ -363,8 +361,8 @@ class Delete(FormWidget):
         if target.type != 'forum':
             del form_inst.fields['contents']
         valid_targets = Forum.objects.get(special='root').get_descendants().exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
-        form_inst.fields['subforums'] = TreeNodeChoiceField(label=_("Move subforums to"), widget=forms.Select,
-                                                            queryset=valid_targets, required=False, empty_label=_("Remove with forum"), level_indicator=u'- - ')
+        form_inst.add_field('subforums', TreeNodeChoiceField(label=_("Move subforums to"), widget=forms.Select,
+                                                             queryset=valid_targets, required=False, empty_label=_("Remove with forum"), level_indicator=u'- - '))
         return form_inst
 
     def submit_form(self, form, target):

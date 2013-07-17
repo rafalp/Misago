@@ -1,3 +1,4 @@
+from django.forms.forms import BoundField
 from recaptcha.client.captcha import submit as recaptcha_submit
 import floppyforms as forms
 from django.utils.translation import ugettext_lazy as _
@@ -50,6 +51,11 @@ class Form(forms.Form):
         if not self.form_finalized:
             self.form_finalized = True
             self.finalize_form()
+
+    def add_field(self, name, field):
+        bound = BoundField(self, field, name)
+        self.__dict__[name] = bound
+        self.fields[name] = field
 
     def finalize_form(self):
         pass

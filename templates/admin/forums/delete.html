@@ -1,4 +1,10 @@
 {% extends "admin/admin/form.html" %}
+{% import "forms.html" as form_theme with context %}
+
+{% block form %}
+{{ form_theme.row(form.contents, attrs={'class': 'span12'}) }}
+{{ form_theme.row(form.subforums, attrs={'class': 'span12'}) }}
+{% endblock %}
 
 {% block form_submit %}
 <button name="save" type="submit" class="btn btn-danger">{% trans %}Delete Forum{% endtrans %}</button>

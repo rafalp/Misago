@@ -72,10 +72,10 @@ class NewNodeForm(Form, CleanAttrsMixin):
              )
 
     def finalize_form(self):
-        self.fields['parent'] = TreeNodeChoiceField(label=_("Node Parent"), widget=forms.Select,
-                                                    queryset=Forum.objects.get(special='root').get_descendants(include_self=True), level_indicator=u'- - ')
-        self.fields['perms'] = TreeNodeChoiceField(label=_("Copy Permissions from"), widget=forms.Select,
-                                                   queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions"))
+        self.add_field('parent', TreeNodeChoiceField(label=_("Node Parent"), widget=forms.Select,
+                                                     queryset=Forum.objects.get(special='root').get_descendants(include_self=True), level_indicator=u'- - '))
+        self.add_field('perms', TreeNodeChoiceField(label=_("Copy Permissions from"), widget=forms.Select,
+                                                    queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions")))
 
     def clean(self):
         cleaned_data = super(NewNodeForm, self).clean()
@@ -133,8 +133,8 @@ class CategoryForm(Form, CleanAttrsMixin):
              )
 
     def finalize_form(self):
-        self.fields['perms'] = TreeNodeChoiceField(label=_("Copy Permissions from"), widget=forms.Select,
-                                                   queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions"))
+        self.add_field('perms', TreeNodeChoiceField(label=_("Copy Permissions from"), widget=forms.Select,
+                                                    queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions")))
 
 
 class ForumForm(Form, CleanAttrsMixin):
@@ -196,11 +196,11 @@ class ForumForm(Form, CleanAttrsMixin):
               )
 
     def finalize_form(self):
-        self.fields['perms'] = TreeNodeChoiceField(label=_("Copy Permissions from"), widget=forms.Select,
-                                                   queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions"))
-        self.fields['pruned_archive'] = TreeNodeChoiceField(label=_("Archive pruned threads?"),
-                                                            help_text=_('If you want, you can archive pruned threads in other forum instead of deleting them.'),
-                                                            widget=forms.Select, queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't archive pruned threads"))
+        self.add_field('perms', TreeNodeChoiceField(label=_("Copy Permissions from"), widget=forms.Select,
+                                                    queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions")))
+        self.add_field('pruned_archive', TreeNodeChoiceField(label=_("Archive pruned threads?"),
+                                                             help_text=_('If you want, you can archive pruned threads in other forum instead of deleting them.'),
+                                                             widget=forms.Select, queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't archive pruned threads")))
 
     def clean_pruned_archive(self):
         data = self.cleaned_data['pruned_archive']
@@ -241,8 +241,8 @@ class RedirectForm(Form, CleanAttrsMixin):
               )
 
     def finalize_form(self):
-        self.fields['perms'] = TreeNodeChoiceField(label=_("Copy Permissions from"), widget=forms.Select,
-                                                   queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions"))
+        self.add_field('perms', TreeNodeChoiceField(label=_("Copy Permissions from"), widget=forms.Select,
+                                                    queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions")))
 
 
 class DeleteForm(Form):
@@ -251,10 +251,10 @@ class DeleteForm(Form):
         super(DeleteForm, self).__init__(*args, **kwargs)
 
     def finalize_form(self):
-        self.fields['contents'] = TreeNodeChoiceField(label=_("Move threads to"),
-                                                      widget=forms.Select, queryset=Forum.objects.get(special='root').get_descendants(), required=False, empty_label=_("Remove with forum"), level_indicator=u'- - ')
-        self.fields['subforums'] = TreeNodeChoiceField(label=_("Move subforums to"), widget=forms.Select,
-                                                       queryset=Forum.objects.get(special='root').get_descendants(), required=False, empty_label=_("Remove with forum"), level_indicator=u'- - ')
+        self.add_field('contents', TreeNodeChoiceField(label=_("Move threads to"),
+                                                       widget=forms.Select, queryset=Forum.objects.get(special='root').get_descendants(), required=False, empty_label=_("Remove with forum"), level_indicator=u'- - '))
+        self.add_field('subforums', TreeNodeChoiceField(label=_("Move subforums to"), widget=forms.Select,
+                                                        queryset=Forum.objects.get(special='root').get_descendants(), required=False, empty_label=_("Remove with forum"), level_indicator=u'- - '))
 
     def clean_contents(self):
         data = self.cleaned_data['contents']

@@ -4,17 +4,34 @@
 {% block form %}
 <fieldset>
   <legend>{% trans %}Basic Options{% endtrans %}</legend>
+	{{ form_theme.row(form.parent, attrs={'class': 'span12'}) }}
+	{{ form_theme.row(form.perms, attrs={'class': 'span12'}) }}
+	{% if 'role' in form.fields %}
+  {{ form_theme.row(form.role, attrs={'class': 'span12'}) }}
+  {% endif %}
+  {{ form_theme.row(form.name, attrs={'class': 'span12'}) }}
+  {{ form_theme.row(form.description, attrs={'class': 'span12', 'rows': 3}) }}
+  {% if 'redirect' in form.fields %}
+  {{ form_theme.row(form.redirect, attrs={'class': 'span12'}) }}
+  {% endif %}
+  {% if 'closed' in form.fields %}
+  {{ form_theme.row(form.closed) }}
+  {% endif %}
 </fieldset>
 {% if 'prune_start' in form.fields %}
 <fieldset>
   <legend>{% trans %}Prune Forums{% endtrans %}</legend>
+  {{ form_theme.row(form.prune_start, attrs={'class': 'span12'}) }}
+  {{ form_theme.row(form.prune_last, attrs={'class': 'span12'}) }}
+  {{ form_theme.row(form.pruned_archive, attrs={'class': 'span12'}) }}
 </fieldset>
 {% endif %}
 <fieldset>
   <legend>{% trans %}Display Options{% endtrans %}</legend>
+  {% if 'attrs' in form.fields %}
+  {{ form_theme.row(form.attrs, attrs={'class': 'span12'}) }}
+  {{ form_theme.row(form.show_details) }}
+  {% endif %}
+  {{ form_theme.row(form.style, attrs={'class': 'span12'}) }}
 </fieldset>
-{{ form_theme.row(form.name, attrs={'class': 'span12'}) }}
-{% if 'protected' in form.fields %}
-{{ form_theme.row(form.protected) }}
-{% endif %}
 {% endblock %}

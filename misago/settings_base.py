@@ -182,7 +182,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django_jinja', # Jinja2 integration
-    'django_jinja.contrib.humanize', # Some Django filters    
+    'django_jinja.contrib.humanize', # Some Django filters
     'floppyforms', # Better forms
     'mptt', # Modified Pre-order Tree Transversal - allows us to nest forums 
     'haystack', # Search engines bridge
