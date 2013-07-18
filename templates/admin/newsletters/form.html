@@ -1,0 +1,17 @@
+{% extends "admin/admin/form.html" %}
+{% import "forms.html" as form_theme with context %}
+
+{% block form %}
+<fieldset>
+  <legend>{% trans %}Newsletter Options{% endtrans %}</legend>
+  {{ form_theme.row(form.name, attrs={'class': 'span12'}) }}
+  {{ form_theme.row(form.step_size, attrs={'class': 'span12'}) }}
+  {{ form_theme.row(form.ranks, attrs={'class': 'span12'}) }}
+  {{ form_theme.row(form.ignore_subscriptions) }}
+</fieldset>
+<fieldset>
+  <legend>{% trans %}Message{% endtrans %}</legend>
+  {{ form_theme.row(form.content_html, attrs={'class': 'span12', 'rows': 10}) }}
+  {{ form_theme.row(form.content_plain, attrs={'class': 'span12', 'rows': 10}) }}
+</fieldset>
+{% endblock %}
