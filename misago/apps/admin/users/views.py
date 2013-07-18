@@ -210,7 +210,7 @@ class List(ListWidget):
         for forum in Forum.objects.all():
             forum.sync()
             forum.save(force_update=True)
-        
+
         User.objects.resync_monitor()
         return Message(_('Selected users and their content have been deleted successfully.'), 'success'), reverse('admin_users')
 
@@ -235,6 +235,7 @@ class New(FormWidget):
     id = 'new'
     fallback = 'admin_users'
     form = NewUserForm
+    template = 'new'
     submit_button = _("Save User")
 
     def get_new_link(self, model):
@@ -270,7 +271,6 @@ class Edit(FormWidget):
     name = _("Edit User")
     fallback = 'admin_users'
     form = UserForm
-    tabbed = True
     target_name = 'username'
     notfound_message = _('Requested User could not be found.')
     submit_fallback = True

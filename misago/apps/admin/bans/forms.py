@@ -24,23 +24,6 @@ class BanForm(Form):
     expires = forms.DateField(label=_("Ban Expiration"),
     						  help_text=_("If you want to, you can set this ban's expiration date by entering it here using YYYY-MM-DD format. Otherwhise you can leave this field empty making this ban permanent."),
     						  required=False)
-    layout = (
-               (
-                 _("Ban Details"),
-                 (
-                  ('nested', (('test', {'label': _("Ban Rule"), 'help_text': _("Select ban type from list and define rule by entering it in text field. If you want to ban specific user, enter here either his Username or E-mail address. If you want to define blanket ban, you can use wildcard (\"*\"). For example to forbid all members from using name suggesting that member is an admin, you can set ban that forbids \"Admin*\" as username."), 'width': 25}),
-                  ('ban', {'width': 75}))),
-                  ('expires', {'label': _("Ban Expiration"), 'help_text': _("If you want to, you can set this ban's expiration date by entering it here using YYYY-MM-DD format. Otherwhise you can leave this field empty making this ban permanent.")}),
-                 ),
-                ),
-                (
-                 _("Ban Message"),
-                 (
-                  ('reason_user', {'label': _("User-visible Ban Message"), 'help_text': _("Optional Ban message that will be displayed to banned members.")}),
-                  ('reason_admin', {'label': _("Team-visible Ban Message"), 'help_text': _("Optional Ban message that will be displayed to forum team members.")}),
-                 ),
-                ),
-               )
 
 
 class SearchBansForm(Form):

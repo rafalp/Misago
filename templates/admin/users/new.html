@@ -1,0 +1,17 @@
+{% extends "admin/admin/form.html" %}
+{% import "forms.html" as form_theme with context %}
+
+{% block form %}
+<fieldset>
+  <legend>{% trans %}Basic Account Settings{% endtrans %}</legend>
+  {{ form_theme.row(form.username, attrs={'class': 'span12'}) }}
+  {{ form_theme.row(form.title, attrs={'class': 'span12'}) }}
+  {{ form_theme.row(form.rank, attrs={'class': 'span12'}) }}
+  {{ form_theme.row(form.roles, attrs={'class': 'span12'}) }}
+</fieldset>
+<fieldset>
+  <legend>{% trans %}Sign-in Credentials{% endtrans %}</legend>
+  {{ form_theme.row(form.email, attrs={'class': 'span12'}) }}
+  {{ form_theme.row(form.password, attrs={'class': 'span12'}) }}
+</fieldset>
+{% endblock %}

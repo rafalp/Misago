@@ -33,3 +33,11 @@
 	{{ item.join_date|date("DATETIME_FORMAT") }}
   </td>
 {% endblock%}
+
+{% block search_form %}
+{{ form_theme.row(search_form.username, attrs={'class': 'span3', 'placeholder': _("Username contains...")}) }}
+{{ form_theme.row(search_form.email, attrs={'class': 'span3', 'placeholder': _("E-mail address contains...")}) }}
+{{ form_theme.row(search_form.activation, attrs={'class': 'span3'}) }}
+{{ form_theme.row(search_form.rank, attrs={'class': 'span3'}) }}
+{{ form_theme.row(search_form.role, attrs={'class': 'span3'}) }}
+{% endblock %}
