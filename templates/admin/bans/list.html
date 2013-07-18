@@ -1,4 +1,5 @@
 {% extends "admin/admin/list.html" %}
+{% import "forms.html" as form_theme with context %}
 
 {% block table_row scoped %}
   <td class="lead-cell">
@@ -11,4 +12,10 @@
   <td>
   	{% if item.expires %}{{ item.expires|date }}{% else %}<em>{% trans %}Permanent{% endtrans %}</em>{% endif %}
   </td>
+{% endblock %}
+
+{% block search_form %}
+{{ form_theme.row(search_form.ban, attrs={'class': 'span3'}) }}
+{{ form_theme.row(search_form.reason, attrs={'class': 'span3'}) }}
+{{ form_theme.row(search_form.test, attrs={'class': 'span3'}) }}
 {% endblock %}
