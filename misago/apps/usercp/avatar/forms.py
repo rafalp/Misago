@@ -1,7 +1,7 @@
 from PIL import Image
-import floppyforms as forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+import floppyforms as forms
 from misago.conf import settings
 from misago.forms import Form
 

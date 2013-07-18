@@ -1,9 +1,9 @@
-import floppyforms as forms
 from django.core.urlresolvers import reverse
 from django.forms import ValidationError
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
+import floppyforms as forms
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
 from misago.forms import Form

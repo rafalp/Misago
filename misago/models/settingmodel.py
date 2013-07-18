@@ -1,8 +1,8 @@
 import base64
-import floppyforms as forms
 from django.core import validators
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+import floppyforms as forms
 from misago.utils.timezones import tzlist
 try:
     import cPickle as pickle
@@ -58,7 +58,7 @@ class Setting(models.Model):
 
     def get_field(self):
         from misago.forms import YesNoSwitch
-        
+
         extra = self.get_extra()
 
         # Set validators

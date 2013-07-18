@@ -1,11 +1,11 @@
 import math
-import floppyforms as forms
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
+import floppyforms as forms
 from jinja2 import TemplateNotFound
 from misago.forms import Form
 from misago.messages import Message
@@ -347,7 +347,7 @@ class ListWidget(BaseWidget):
             else:
                 list_form = ListForm(request=request)
 
-        # Little hax to keep counters correct 
+        # Little hax to keep counters correct
         items_shown = len(items)
         if items_total < items_shown:
             items_total = items_shown
@@ -515,6 +515,6 @@ class ButtonWidget(BaseWidget):
         """
         Action to be executed when button is pressed
         Define custom one in your Admin action.
-        It should return response and message objects 
+        It should return response and message objects
         """
         pass

@@ -1,5 +1,5 @@
-import floppyforms as forms
 from django.utils.translation import ugettext_lazy as _
+import floppyforms as forms
 from misago.forms import Form
 
 class SignInForm(Form):

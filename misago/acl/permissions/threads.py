@@ -1,7 +1,7 @@
-import floppyforms as forms
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
+import floppyforms as forms
 from misago.acl.builder import BaseACL
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.forms import YesNoSwitch
@@ -443,7 +443,7 @@ class ThreadsACL(BaseACL):
             if post.protected and not forum_role['can_protect_posts'] and not forum_role['can_delete_threads']:
                 raise ACLError403(_("This post is protected, you cannot delete it."))
             if not (forum_role['can_delete_threads'] == 2 or
-                    (not delete and (forum_role['can_delete_threads'] == 1 or 
+                    (not delete and (forum_role['can_delete_threads'] == 1 or
                     (thread.start_poster_id == user.pk and forum_role['can_soft_delete_own_threads'])))):
                 raise ACLError403(_("You don't have permission to delete this thread."))
             if thread.deleted and not delete:
@@ -479,7 +479,7 @@ class ThreadsACL(BaseACL):
             if post.protected and not forum_role['can_protect_posts'] and not forum_role['can_delete_posts']:
                 raise ACLError403(_("This post is protected, you cannot delete it."))
             if not (forum_role['can_delete_posts'] == 2 or
-                    (not delete and (forum_role['can_delete_posts'] == 1 or 
+                    (not delete and (forum_role['can_delete_posts'] == 1 or
                     (post.user_id == user.pk and forum_role['can_soft_delete_own_posts'])))):
                 raise ACLError403(_("You don't have permission to delete this post."))
             if post.deleted and not delete:
@@ -508,28 +508,28 @@ class ThreadsACL(BaseACL):
                 raise ACLError404()
         except KeyError:
             raise ACLError404()
-        
+
     def can_upvote_posts(self, forum):
         try:
             forum_role = self.acl[forum.pk]
             return forum_role['can_upvote_posts']
         except KeyError:
             return False
-        
+
     def can_downvote_posts(self, forum):
         try:
             forum_role = self.acl[forum.pk]
             return forum_role['can_downvote_posts']
         except KeyError:
             return False
-        
+
     def can_see_post_score(self, forum):
         try:
             forum_role = self.acl[forum.pk]
             return forum_role['can_see_posts_scores']
         except KeyError:
             return False
-        
+
     def can_see_post_votes(self, forum):
         try:
             forum_role = self.acl[forum.pk]
@@ -552,7 +552,7 @@ class ThreadsACL(BaseACL):
                 raise ACLError403(_("You cannot downvote posts in this forum."))
         except KeyError:
             raise ACLError403(_("You cannot downvote posts in this forum."))
-        
+
     def allow_post_votes_view(self, forum):
         try:
             forum_role = self.acl[forum.pk]

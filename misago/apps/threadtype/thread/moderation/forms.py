@@ -1,6 +1,6 @@
-import floppyforms as forms
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
+import floppyforms as forms
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.conf import settings
 from misago.forms import Form, ForumChoiceField

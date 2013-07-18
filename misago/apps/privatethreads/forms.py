@@ -1,5 +1,5 @@
-import floppyforms as forms
 from django.utils.translation import ugettext_lazy as _
+import floppyforms as forms
 from misago.apps.threadtype.posting.forms import (NewThreadForm as NewThreadBaseForm,
                                                   EditThreadForm as EditThreadBaseForm,
                                                   NewReplyForm as NewReplyBaseForm,

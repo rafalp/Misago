@@ -1,7 +1,7 @@
 from datetime import timedelta
-import floppyforms as forms
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+import floppyforms as forms
 from misago.acl.builder import BaseACL
 from misago.forms import YesNoSwitch
 
@@ -19,7 +19,7 @@ def make_form(request, role, form):
                                                                        widget=YesNoSwitch, initial=False, required=False)
         form.base_fields['allow_signature_images'] = forms.BooleanField(label=_("Can put images in signature"),
                                                                         widget=YesNoSwitch, initial=False, required=False)
-        
+
         form.fieldset.append((
                               _("Profile Settings"),
                               ('name_changes_allowed', 'changes_expire', 'can_use_signature', 'allow_signature_links', 'allow_signature_images')

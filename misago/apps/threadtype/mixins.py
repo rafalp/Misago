@@ -1,6 +1,6 @@
-import floppyforms as forms
 from django.utils import timezone
 from django.utils.translation import ungettext_lazy, ugettext_lazy as _
+import floppyforms as forms
 from misago.conf import settings
 from misago.utils.strings import slugify
 

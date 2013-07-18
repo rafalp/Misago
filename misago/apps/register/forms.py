@@ -1,6 +1,6 @@
-import floppyforms as forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+import floppyforms as forms
 from misago.conf import settings
 from misago.forms import Form, QACaptchaField, ReCaptchaField, ForumTOS
 from misago.models import User
@@ -24,19 +24,19 @@ class UserRegisterForm(Form):
     accept_tos = forms.BooleanField(label=_("Forum Terms of Service"),
                                     required=True, widget=ForumTOS,
                                     error_messages={'required': _("Acceptation of board ToS is mandatory for membership.")})
-    
+
     validate_repeats = (('email', 'email_rep'), ('password', 'password_rep'))
     repeats_errors = [{
-                       'different': _("Entered addresses do not match."), 
+                       'different': _("Entered addresses do not match."),
                        },
                       {
                        'different': _("Entered passwords do not match."),
                        }]
-      
-    def finalize_form(self):        
+
+    def finalize_form(self):
         if not settings.tos_url and not settings.tos_content:
             del self.fields['accept_tos']
-        
+
     def clean_username(self):
         validate_username(self.cleaned_data['username'])
         new_user = User.objects.get_blank_user()
@@ -46,7 +46,7 @@ class UserRegisterForm(Form):
         except ValidationError as e:
             new_user.is_username_valid(e)
         return self.cleaned_data['username']
-        
+
     def clean_email(self):
         new_user = User.objects.get_blank_user()
         new_user.set_email(self.cleaned_data['email'])
@@ -55,7 +55,7 @@ class UserRegisterForm(Form):
         except ValidationError as e:
             new_user.is_email_valid(e)
         return self.cleaned_data['email']
-        
+
     def clean_password(self):
         validate_password(self.cleaned_data['password'])
         new_user = User.objects.get_blank_user()

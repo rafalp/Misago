@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse as django_reverse
-import floppyforms as forms
 from django.utils.translation import ugettext as _
+import floppyforms as forms
 from misago.admin import site
 from misago.apps.admin.widgets import *
 from misago.forms import Form
@@ -93,7 +93,7 @@ class New(FormWidget):
                         on_index=form.cleaned_data['on_index'],
                         order=(last_rank.order + 1 if last_rank else 0),
                         criteria=form.cleaned_data['criteria']
-                        )  
+                        )
         new_rank.save(force_insert=True)
         for role in form.cleaned_data['roles']:
             new_rank.roles.add(role)

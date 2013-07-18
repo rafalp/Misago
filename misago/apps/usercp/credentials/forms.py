@@ -1,7 +1,7 @@
 import hashlib
-import floppyforms as forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+import floppyforms as forms
 from misago.forms import Form
 from misago.models import User
 from misago.validators import validate_password, validate_email

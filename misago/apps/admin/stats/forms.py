@@ -1,7 +1,7 @@
 from datetime import timedelta
-import floppyforms as forms
 from django.utils import timezone as tz
 from django.utils.translation import ugettext_lazy as _
+import floppyforms as forms
 from misago.forms import Form
 
 class GenerateStatisticsForm(Form):

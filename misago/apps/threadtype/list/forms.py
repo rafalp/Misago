@@ -1,5 +1,5 @@
-import floppyforms as forms
 from django.utils.translation import ugettext_lazy as _
+import floppyforms as forms
 from misago.conf import settings
 from misago.forms import Form, ForumChoiceField
 from misago.models import Forum

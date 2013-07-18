@@ -1,4 +1,3 @@
-import floppyforms as forms
 from django.core.urlresolvers import reverse
 from django.forms import ValidationError
 from django.http import Http404
@@ -6,6 +5,7 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
+import floppyforms as forms
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
 from misago.conf import settings
@@ -40,7 +40,7 @@ class ThreadBaseView(ViewBase):
     def fetch_posts(self):
         self.count = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).count()
         self.posts = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).prefetch_related('user', 'user__rank')
-        
+
         self.posts = self.posts.order_by('id')
 
         try:
@@ -147,7 +147,7 @@ class ThreadBaseView(ViewBase):
             return
         form_fields['list_items'] = forms.MultipleChoiceField(choices=list_choices, widget=forms.CheckboxSelectMultiple)
         self.posts_form = type('PostsViewForm', (Form,), form_fields)
-    
+
     def handle_posts_form(self):
         if self.request.method == 'POST' and self.request.POST.get('origin') == 'posts_form':
             self.posts_form = self.posts_form(self.request.POST, request=self.request)

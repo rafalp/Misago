@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse as django_reverse
-import floppyforms as forms
 from django.utils.translation import ungettext, ugettext as _
+import floppyforms as forms
 from misago.admin import site
 from misago.apps.admin.widgets import *
 from misago.forms import Form

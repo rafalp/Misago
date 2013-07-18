@@ -1,11 +1,11 @@
 import copy
-import floppyforms as forms
 from urlparse import urlparse
 from django.core.urlresolvers import resolve, reverse as django_reverse
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
+import floppyforms as forms
 from mptt.forms import TreeNodeChoiceField
 from misago.admin import site
 from misago.apps.admin.widgets import *
@@ -325,7 +325,7 @@ class Edit(FormWidget):
 
             if form.cleaned_data['parent'].pk != target.parent.pk or form.cleaned_data['perms']:
                 monitor.increase('acl_version')
-                
+
         if self.original_name != target.name:
             target.sync_name()
 

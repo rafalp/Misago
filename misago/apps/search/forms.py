@@ -1,6 +1,6 @@
-import floppyforms as forms
 from django.utils import timezone
 from django.utils.translation import ungettext_lazy, ugettext_lazy as _
+import floppyforms as forms
 from misago.forms import Form
 
 class QuickSearchForm(Form):
@@ -57,7 +57,7 @@ class QuickSearchForm(Form):
     def check_flood_guest(self):
         if not self.request.session.matched:
             raise forms.ValidationError(_("Search requires enabled cookies in order to work."))
-        
+
         if self.request.session.get('last_search'):
             diff = timezone.now() - self.request.session.get('last_search')
             diff = diff.seconds + (diff.days * 86400)

@@ -1,5 +1,5 @@
-import floppyforms as forms
 from recaptcha.client.captcha import displayhtml
+import floppyforms as forms
 from misago.conf import settings
 
 class ReCaptchaWidget(forms.TextInput):
