@@ -27,7 +27,7 @@ class EditThreadView(EditThreadBaseView, TypeMixin):
 class NewReplyView(NewReplyBaseView, TypeMixin):
     def response(self):
         if self.post.moderated:
-            messages.success(self.request, _("Your reply has been posted. It will be hidden from other members until moderator reviews it.")), 'threads_%s' % self.post.pk)
+            messages.success(self.request, _("Your reply has been posted. It will be hidden from other members until moderator reviews it."), 'threads_%s' % self.post.pk)
         else:
             messages.success(self.request, _("Your reply has been posted."), 'threads_%s' % self.post.pk)
         return self.redirect_to_post(self.post)

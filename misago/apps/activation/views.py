@@ -67,10 +67,10 @@ def activate(request, username="", user="0", token=""):
             return redirect_message(request, messages.INFO, _("%(username)s, your account is already active.") % {'username': user.username})
 
         if user.activation == User.ACTIVATION_ADMIN:
-            return redirect_message(request, messages.INFO, Message(_("%(username)s, only board administrator can activate your account.") % {'username': user.username})
+            return redirect_message(request, messages.INFO, _("%(username)s, only board administrator can activate your account.") % {'username': user.username})
 
         if not token or not user.token or user.token != token:
-            return redirect_message(request, messages.ERROR, Message(_("%(username)s, your activation link is invalid. Try again or request new activation e-mail.") % {'username': user.username})
+            return redirect_message(request, messages.ERROR, _("%(username)s, your activation link is invalid. Try again or request new activation e-mail.") % {'username': user.username})
 
         # Activate and sign in our member
         user.activation = User.ACTIVATION_NONE
