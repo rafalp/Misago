@@ -47,7 +47,7 @@ def form(request):
                 date_start = date_temp
             # Assert that dates are correct
             if date_end == date_start:
-                message = Message(_('Start and end date are same'), level='error')
+                message = Message(_('Start and end date are same'), 'error')
             elif check_dates(date_start, date_end, form.cleaned_data['stats_precision']):
                 message = check_dates(date_start, date_end, form.cleaned_data['stats_precision'])
             else:

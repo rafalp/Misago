@@ -1,7 +1,6 @@
 from django.utils.translation import ugettext as _
 from misago import messages
 from misago.apps.threadtype.thread import ThreadBaseView, ThreadModeration, PostsModeration
-from misago.messages import Message
 from misago.models import Forum, Thread
 from misago.monitor import monitor, UpdatingMonitor
 from misago.apps.reports.mixins import TypeMixin

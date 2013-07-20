@@ -7,7 +7,6 @@ from django.utils.translation import ugettext as _
 from misago.apps.errors import error403
 from misago.conf import settings
 from misago.decorators import block_guest
-from misago.messages import Message
 from misago.models import Forum, WatchedThread
 from misago.shortcuts import render_to_response
 from misago.utils.pagination import make_pagination
@@ -51,9 +50,9 @@ def watched_threads(request, page=0, new=False):
     threads = []
     for thread in queryset:
         thread.thread.send_email = thread.email
-        thread.thread.is_read = thread.thread.last <= thread.last_read             
+        thread.thread.is_read = thread.thread.last <= thread.last_read
         threads.append(thread.thread)
-            
+
     # Display page
     return render_to_response('watched.html',
                               {

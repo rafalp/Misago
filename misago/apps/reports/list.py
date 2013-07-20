@@ -7,7 +7,6 @@ from django.utils.translation import ugettext as _
 from misago import messages
 from misago.apps.threadtype.list import ThreadsListBaseView, ThreadsListModeration
 from misago.conf import settings
-from misago.messages import Message
 from misago.models import Forum, Thread, Post
 from misago.monitor import monitor, UpdatingMonitor
 from misago.readstrackers import ThreadsTracker

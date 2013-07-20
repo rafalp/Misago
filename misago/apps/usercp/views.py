@@ -5,7 +5,6 @@ from misago import messages
 from misago.apps.errors import error404
 from misago.apps.profiles.decorators import user_view
 from misago.decorators import block_guest, check_csrf
-from misago.messages import Message
 from misago.models import User
 from misago.utils.translation import ugettext_lazy
 

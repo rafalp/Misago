@@ -5,7 +5,6 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 from misago import messages
 from misago.decorators import block_guest, check_csrf
-from misago.messages import Message
 from misago.models import ForumRead, ThreadRead
 
 @block_guest

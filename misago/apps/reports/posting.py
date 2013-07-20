@@ -3,7 +3,6 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from misago import messages
 from misago.apps.threadtype.posting import EditThreadBaseView, NewReplyBaseView, EditReplyBaseView
-from misago.messages import Message
 from misago.models import Forum, Thread, Post
 from misago.monitor import monitor, UpdatingMonitor
 from misago.apps.reports.mixins import TypeMixin

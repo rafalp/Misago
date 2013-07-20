@@ -7,7 +7,6 @@ from misago import messages
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
 from misago.markdown import post_markdown
-from misago.messages import Message
 from misago.models import Forum, Thread, Post, Change
 from misago.shortcuts import render_to_response
 from misago.utils.datesformats import reldate

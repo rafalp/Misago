@@ -8,7 +8,6 @@ from misago.apps.errors import error403, error404
 from misago.conf import settings
 from misago.decorators import block_guest, check_csrf
 from misago.markdown import post_markdown
-from misago.messages import Message
 from misago.models import Forum, Checkpoint, Thread, Post, Karma, WatchedThread
 from misago.monitor import monitor, UpdatingMonitor
 from misago.readstrackers import ThreadsTracker

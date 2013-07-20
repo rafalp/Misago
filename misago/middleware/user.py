@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from misago import messages
 from misago.conf import settings
-from misago.messages import Message
 from misago.monitor import monitor, UpdatingMonitor
 from misago.onlines import MembersOnline
 
@@ -20,7 +20,7 @@ class UserMiddleware(object):
             request.session.rank = request.user.rank_id
             set_timezone(request.user.timezone)
             if request.session.remember_me:
-                request.messages.set_message(Message(_("Welcome back, %(username)s! We've signed you in automatically for your convenience.") % {'username': request.user.username}), 'info')
+                request.messages.set_message(_("Welcome back, %(username)s! We've signed you in automatically for your convenience.") % {'username': request.user.username})
         else:
             set_timezone(settings.default_timezone)
             request.session.rank = None
