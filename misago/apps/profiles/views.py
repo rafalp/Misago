@@ -71,9 +71,9 @@ def list(request, slug=None, page=0):
                     users = users.select_related(*settings.PROFILE_EXTENSIONS_PRELOAD)
                 users = users.filter(username_slug__startswith=username).order_by('username_slug')[:10]
         elif search_form.non_field_errors()[0] == 'form_contains_errors':
-            message = Message(_("To search users you have to enter username in search field."), 'error')
+            message = Message(_("To search users you have to enter username in search field."), messages.ERROR)
         else:
-            message = Message(search_form.non_field_errors()[0], 'error')
+            message = Message(search_form.non_field_errors()[0], messages.ERROR)
     else:
         search_form = QuickFindUserForm(request=request)
         if active_rank:

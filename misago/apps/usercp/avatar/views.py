@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.encoding import smart_str
 from django.utils.translation import ugettext as _
-form misago import messages
+from misago import messages
 from misago.apps.errors import error404
 from misago.conf import settings
 from misago.decorators import block_guest
@@ -89,9 +89,9 @@ def gallery(request):
                 request.user.save(force_update=True)
                 messages.success(request, _("Your avatar has been changed to one from gallery."), 'usercp_avatar')
                 return redirect(reverse('usercp_avatar'))
-            message = Message(_("Selected Avatar is incorrect."), 'error')
+            message = Message(_("Selected Avatar is incorrect."), messages.ERROR)
         else:
-            message = Message(_("Request authorisation is invalid."), 'error')
+            message = Message(_("Request authorisation is invalid."), messages.ERROR)
 
     return render_to_response('usercp/avatar_gallery.html',
                               context_instance=RequestContext(request, {
@@ -154,9 +154,9 @@ def upload(request):
             except ValidationError:
                 request.user.delete_avatar()
                 request.user.default_avatar()
-                message = Message(_("Only gif, jpeg and png files are allowed for member avatars."), 'error')
+                message = Message(_("Only gif, jpeg and png files are allowed for member avatars."), messages.ERROR)
         else:
-            message = Message(form.non_field_errors()[0], 'error')
+            message = Message(form.non_field_errors()[0], messages.ERROR)
     else:
         form = UploadAvatarForm(request=request)
 
@@ -215,9 +215,9 @@ def crop(request, upload=False):
                 messages.success(request, _("Your avatar has been cropped."), 'usercp_avatar')
                 return redirect(reverse('usercp_avatar'))
             except Exception:
-                message = Message(_("Form contains errors."), 'error')
+                message = Message(_("Form contains errors."), messages.ERROR)
         else:
-            message = Message(_("Request authorisation is invalid."), 'error')
+            message = Message(_("Request authorisation is invalid."), messages.ERROR)
 
 
     return render_to_response('usercp/avatar_crop.html',

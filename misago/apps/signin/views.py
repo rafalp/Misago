@@ -68,7 +68,7 @@ def signin(request):
                 messages.success(request, _("Welcome back, %(username)s!") % {'username': user.username}, 'security')
                 return redirect(success_redirect)
             except AuthException as e:
-                message = Message(e.error, 'error')
+                message = Message(e.error, messages.ERROR)
                 bad_password = e.password
                 banned_account = e.ban
                 not_active = e.activation
@@ -82,7 +82,7 @@ def signin(request):
                         request.jam.expires = timezone.now()
                         return redirect(reverse('sign_in'))
         else:
-            message = Message(form.non_field_errors()[0], 'error')
+            message = Message(form.non_field_errors()[0], messages.ERROR)
     else:
         form = SignInForm(
                           show_remember_me=not request.firewall.admin and settings.remember_me_allow,

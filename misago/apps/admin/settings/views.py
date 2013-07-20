@@ -57,7 +57,7 @@ def settings(request, group_id=None, group_slug=None):
                                                        'group_slug': active_group.key,
                                                        }))
         else:
-            message = Message(form.non_field_errors()[0], 'error')
+            message = Message(form.non_field_errors()[0], messages.ERROR)
     else:
         form = SettingsGroupForm(request=request)
 
@@ -99,7 +99,7 @@ def settings_search(request):
                                                 '%(count)d settings that match search criteria have been found.',
                                                 len(found_settings)) % {
                                                     'count': len(found_settings),
-                                                }, 'success')
+                                                }, messages.SUCCESS)
                 else:
                     raise SearchException(_('No settings that match search criteria have been found.'))
             else:
@@ -107,7 +107,7 @@ def settings_search(request):
         else:
             raise SearchException(_('Search query is invalid.'))
     except SearchException as e:
-        message = Message(unicode(e), 'error')
+        message = Message(unicode(e), messages.ERROR)
     return render_to_response('settings/search_results.html',
                               {
                               'message': message,

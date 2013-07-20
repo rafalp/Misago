@@ -58,7 +58,7 @@ class List(ListWidget):
 
     def action_delete(self, items, checked):
         Newsletter.objects.filter(id__in=checked).delete()
-        return Message(_('Selected newsletters have been deleted successfully.'), 'success'), reverse('admin_newsletters')
+        return Message(_('Selected newsletters have been deleted successfully.'), messages.SUCCESS), reverse('admin_newsletters')
 
 
 class New(FormWidget):
@@ -89,7 +89,7 @@ class New(FormWidget):
         for rank in form.cleaned_data['ranks']:
             new_newsletter.ranks.add(rank)
 
-        return new_newsletter, Message(_('New Newsletter has been created.'), 'success')
+        return new_newsletter, Message(_('New Newsletter has been created.'), messages.SUCCESS)
 
 
 class Edit(FormWidget):
@@ -132,7 +132,7 @@ class Edit(FormWidget):
             target.ranks.add(rank)
 
         target.save(force_update=True)
-        return target, Message(_('Changes in newsletter "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
+        return target, Message(_('Changes in newsletter "%(name)s" have been saved.') % {'name': self.original_name}, messages.SUCCESS)
 
 
 class Delete(ButtonWidget):
@@ -143,7 +143,7 @@ class Delete(ButtonWidget):
 
     def action(self, target):
         target.delete()
-        return Message(_('Newsletter "%(name)s"" has been deleted.') % {'name': target.name}, 'success'), False
+        return Message(_('Newsletter "%(name)s"" has been deleted.') % {'name': target.name}, messages.SUCCESS), False
 
 
 def send(request, target, token):

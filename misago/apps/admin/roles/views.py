@@ -47,14 +47,14 @@ class List(ListWidget):
         for item in items:
             if item.pk in checked:
                 if item.special:
-                    return Message(_('You cannot delete system roles.'), 'error'), reverse('admin_roles')
+                    return Message(_('You cannot delete system roles.'), messages.ERROR), reverse('admin_roles')
                 if item.protected and not self.request.user.is_god():
-                    return Message(_('You cannot delete protected roles.'), 'error'), reverse('admin_roles')
+                    return Message(_('You cannot delete protected roles.'), messages.ERROR), reverse('admin_roles')
                 if item.user_set.count() > 0:
-                    return Message(_('You cannot delete roles that are assigned to users.'), 'error'), reverse('admin_roles')
+                    return Message(_('You cannot delete roles that are assigned to users.'), messages.ERROR), reverse('admin_roles')
 
         Role.objects.filter(id__in=checked).delete()
-        return Message(_('Selected roles have been deleted successfully.'), 'success'), reverse('admin_roles')
+        return Message(_('Selected roles have been deleted successfully.'), messages.SUCCESS), reverse('admin_roles')
 
 
 class New(FormWidget):
@@ -73,7 +73,7 @@ class New(FormWidget):
     def submit_form(self, form, target):
         new_role = Role(name=form.cleaned_data['name'])
         new_role.save(force_insert=True)
-        return new_role, Message(_('New Role has been created.'), 'success')
+        return new_role, Message(_('New Role has been created.'), messages.SUCCESS)
 
 
 class Edit(FormWidget):
@@ -112,7 +112,7 @@ class Edit(FormWidget):
         target.save(force_update=True)
         with UpdatingMonitor() as cm:
             monitor.increase('acl_version')
-        return target, Message(_('Changes in role "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
+        return target, Message(_('Changes in role "%(name)s" have been saved.') % {'name': self.original_name}, messages.SUCCESS)
 
 
 class Forums(ListWidget):
@@ -166,7 +166,7 @@ class Forums(ListWidget):
         role_perms['forums'] = perms
         self.role.permissions = role_perms
         self.role.save(force_update=True)
-        return Message(_('Forum permissions have been saved.'), 'success'), self.get_link()
+        return Message(_('Forum permissions have been saved.'), messages.SUCCESS), self.get_link()
 
     def __call__(self, request, slug, target):
         self.request = request
@@ -230,7 +230,7 @@ class ACL(FormWidget):
         with UpdatingMonitor() as cm:
             monitor.increase('acl_version')
 
-        return target, Message(_('Role "%(name)s" permissions have been changed.') % {'name': self.original_name}, 'success')
+        return target, Message(_('Role "%(name)s" permissions have been changed.') % {'name': self.original_name}, messages.SUCCESS)
 
 
 class Delete(ButtonWidget):
@@ -241,11 +241,11 @@ class Delete(ButtonWidget):
 
     def action(self, target):
         if target.special:
-            return Message(_('You cannot delete system roles.'), 'error'), reverse('admin_roles')
+            return Message(_('You cannot delete system roles.'), messages.ERROR), reverse('admin_roles')
         if target.protected and not self.request.user.is_god():
-            return Message(_('This role is protected.'), 'error'), reverse('admin_roles')
+            return Message(_('This role is protected.'), messages.ERROR), reverse('admin_roles')
         if target.user_set.count() > 0:
-            return Message(_('This role is assigned to one or more users.'), 'error'), reverse('admin_roles')
+            return Message(_('This role is assigned to one or more users.'), messages.ERROR), reverse('admin_roles')
 
         target.delete()
-        return Message(_('Role "%(name)s" has been deleted.') % {'name': _(target.name)}, 'success'), False
+        return Message(_('Role "%(name)s" has been deleted.') % {'name': _(target.name)}, messages.SUCCESS), False

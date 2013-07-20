@@ -35,7 +35,7 @@ def signature(request):
             messages.success(request, _("Your signature has been changed."), 'usercp_signature')
             return redirect(reverse('usercp_signature'))
         else:
-            message = Message(form.non_field_errors()[0], 'error')
+            message = Message(form.non_field_errors()[0], messages.ERROR)
     else:
         form = SignatureForm(request=request, initial={'signature': request.user.signature})
 

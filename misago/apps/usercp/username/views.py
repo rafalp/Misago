@@ -30,7 +30,7 @@ def username(request):
     message = request.messages.get_message('usercp_username')
     if request.method == 'POST':
         if not changes_left:
-            message = Message(_("You have exceeded the maximum number of name changes."), 'error')
+            message = Message(_("You have exceeded the maximum number of name changes."), messages.ERROR)
             form = UsernameChangeForm(request=request)
         else:
             org_username = request.user.username
@@ -57,7 +57,7 @@ def username(request):
                     User.objects.filter(id__in=alerted_users).update(alerts=F('alerts') + 1)
                 # Hop back
                 return redirect(reverse('usercp_username'))
-            message = Message(form.non_field_errors()[0], 'error')
+            message = Message(form.non_field_errors()[0], messages.ERROR)
     else:
         form = UsernameChangeForm(request=request)
 

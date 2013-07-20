@@ -36,7 +36,7 @@ def credentials(request):
             else:
                 messages.success(request, _("We have sent e-mail message to your e-mail address with link you have to click to confirm change of your sign-in credentials. This link will be valid only for duration of this session, do not sign out until you confirm change!"), 'usercp_credentials')
             return redirect(reverse('usercp_credentials'))
-        message = Message(form.non_field_errors()[0], 'error')
+        message = Message(form.non_field_errors()[0], messages.ERROR)
     else:
         form = CredentialsChangeForm(request=request)
 

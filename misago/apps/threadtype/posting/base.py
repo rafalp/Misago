@@ -1,5 +1,6 @@
 from django.template import RequestContext
 from django.utils import timezone
+from misago import messages
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
 from misago.markdown import emojis, post_markdown
@@ -138,7 +139,7 @@ class PostingBaseView(ViewBase):
                         self.notify_users()
                         return self.response()
                     else:
-                        self.message = Message(form.non_field_errors()[0], 'error')
+                        self.message = Message(form.non_field_errors()[0], messages.ERROR)
             else:
                 form = self.form_type(request=request, forum=self.forum, thread=self.thread, initial=self.form_initial_data())
         except (Forum.DoesNotExist, Thread.DoesNotExist, Post.DoesNotExist):

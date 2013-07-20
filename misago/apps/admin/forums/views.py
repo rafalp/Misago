@@ -73,7 +73,7 @@ class List(ListWidget):
             if forum.pk in checked:
                 forum.sync()
                 forum.save(force_update=True)
-        return Message(_('Selected forums have been resynchronized successfully.'), 'success'), reverse('admin_forums')
+        return Message(_('Selected forums have been resynchronized successfully.'), messages.SUCCESS), reverse('admin_forums')
 
     def action_resync(self, items, checked):
         clean_checked = []
@@ -81,9 +81,9 @@ class List(ListWidget):
             if item.pk in checked and item.type == 'forum':
                 clean_checked.append(item.pk)
         if not clean_checked:
-            return Message(_('Only forums can be resynchronized.'), 'error'), reverse('admin_forums')
+            return Message(_('Only forums can be resynchronized.'), messages.ERROR), reverse('admin_forums')
         self.request.session['sync_forums'] = clean_checked
-        return Message('Meh', 'success'), django_reverse('admin_forums_resync')
+        return Message('Meh', messages.SUCCESS), django_reverse('admin_forums_resync')
 
 
 def resync_forums(request, forum=0, progress=0):
@@ -200,11 +200,11 @@ class NewNode(FormWidget):
         }
 
         if form.cleaned_data['role'] == 'category':
-            return new_forum, Message(_('New Category has been created.'), 'success')
+            return new_forum, Message(_('New Category has been created.'), messages.SUCCESS)
         if form.cleaned_data['role'] == 'forum':
-            return new_forum, Message(_('New Forum has been created.'), 'success')
+            return new_forum, Message(_('New Forum has been created.'), messages.SUCCESS)
         if form.cleaned_data['role'] == 'redirect':
-            return new_forum, Message(_('New Redirect has been created.'), 'success')
+            return new_forum, Message(_('New Redirect has been created.'), messages.SUCCESS)
 
 
 class Up(ButtonWidget):
@@ -217,8 +217,8 @@ class Up(ButtonWidget):
         previous_sibling = target.get_previous_sibling()
         if previous_sibling:
             target.move_to(previous_sibling, 'left')
-            return Message(_('Forum "%(name)s" has been moved up.') % {'name': target.name}, 'success'), False
-        return Message(_('Forum "%(name)s" is first child of its parent node and cannot be moved up.') % {'name': target.name}, 'info'), False
+            return Message(_('Forum "%(name)s" has been moved up.') % {'name': target.name}, messages.SUCCESS), False
+        return Message(_('Forum "%(name)s" is first child of its parent node and cannot be moved up.') % {'name': target.name}), False
 
 
 class Down(ButtonWidget):
@@ -231,8 +231,8 @@ class Down(ButtonWidget):
         next_sibling = target.get_next_sibling()
         if next_sibling:
             target.move_to(next_sibling, 'right')
-            return Message(_('Forum "%(name)s" has been moved down.') % {'name': target.name}, 'success'), False
-        return Message(_('Forum "%(name)s" is last child of its parent node and cannot be moved down.') % {'name': target.name}, 'info'), False
+            return Message(_('Forum "%(name)s" has been moved down.') % {'name': target.name}, messages.SUCCESS), False
+        return Message(_('Forum "%(name)s" is last child of its parent node and cannot be moved down.') % {'name': target.name}), False
 
 
 class Edit(FormWidget):
@@ -330,7 +330,7 @@ class Edit(FormWidget):
         if self.original_name != target.name:
             target.sync_name()
 
-        return target, Message(_('Changes in forum "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
+        return target, Message(_('Changes in forum "%(name)s" have been saved.') % {'name': self.original_name}, messages.SUCCESS)
 
 
 class Delete(FormWidget):
@@ -386,4 +386,4 @@ class Delete(FormWidget):
         Forum.objects.populate_tree(True)
         with UpdatingMonitor() as cm:
             monitor.increase('acl_version')
-        return target, Message(_('Forum "%(name)s" has been deleted.') % {'name': self.original_name}, 'success')
+        return target, Message(_('Forum "%(name)s" has been deleted.') % {'name': self.original_name}, messages.SUCCESS)

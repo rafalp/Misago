@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
 import floppyforms as forms
+from misago import messages
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
 from misago.forms import Form
@@ -77,14 +78,14 @@ class ThreadsListBaseView(ViewBase):
                             return response
                         return redirect(self.request.path)
                     except forms.ValidationError as e:
-                        self.message = Message(e.messages[0], 'error')
+                        self.message = Message(e.messages[0], messages.ERROR)
                 else:
-                    self.message = Message(_("You have to select at least one thread."), 'error')
+                    self.message = Message(_("You have to select at least one thread."), messages.ERROR)
             else:
                 if 'list_action' in self.form.errors:
-                    self.message = Message(_("Requested action is incorrect."), 'error')
+                    self.message = Message(_("Requested action is incorrect."), messages.ERROR)
                 else:
-                    self.message = Message(self.form.non_field_errors()[0], 'error')
+                    self.message = Message(self.form.non_field_errors()[0], messages.ERROR)
         else:
             self.form = self.form(request=self.request)
 

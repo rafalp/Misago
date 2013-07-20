@@ -37,7 +37,7 @@ def form(request):
 
             return redirect_message(request, messages.INFO, _("%(username)s, new password request confirmation has been sent to %(email)s.") % {'username': user.username, 'email': user.email})
         else:
-            message = Message(form.non_field_errors()[0], 'error')
+            message = Message(form.non_field_errors()[0], messages.ERROR)
     else:
         form = UserResetPasswordForm(request=request)
     return render_to_response('reset_password.html',

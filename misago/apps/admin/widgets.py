@@ -318,7 +318,7 @@ class ListWidget(BaseWidget):
                         messages.add_message(request, message.type, message, self.admin.id)
                         return redirect(redirect_link)
                 else:
-                    message = Message(table_form.non_field_errors()[0], 'error')
+                    message = Message(table_form.non_field_errors()[0], messages.ERROR)
             else:
                 table_form = TableForm(request=request)
 
@@ -456,9 +456,9 @@ class FormWidget(BaseWidget):
                             pass
                         return redirect(self.get_fallback_link())
                 except ValidationError as e:
-                    message = Message(e.messages[0], 'error')
+                    message = Message(e.messages[0], messages.ERROR)
             else:
-                message = Message(form.non_field_errors()[0], 'error')
+                message = Message(form.non_field_errors()[0], messages.ERROR)
         else:
             form = self.get_form_instance(FormType, model, self.get_initial_data(model))
 

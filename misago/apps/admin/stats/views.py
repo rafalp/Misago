@@ -16,7 +16,6 @@ def form(request):
     """
     Allow admins to generate fancy statistic graphs for different models
     """
-    statistics_providers = []
     models_map = {}
     for model in models.get_models():
         try:
@@ -47,7 +46,7 @@ def form(request):
                 date_start = date_temp
             # Assert that dates are correct
             if date_end == date_start:
-                message = Message(_('Start and end date are same'), 'error')
+                message = Message(_('Start and end date are same'), messages.ERROR)
             elif check_dates(date_start, date_end, form.cleaned_data['stats_precision']):
                 message = check_dates(date_start, date_end, form.cleaned_data['stats_precision'])
             else:
@@ -59,7 +58,7 @@ def form(request):
                                                        'precision': form.cleaned_data['stats_precision']
                                                         }))
         else:
-            message = Message(form.non_field_errors()[0], 'error')
+            message = Message(form.non_field_errors()[0], messages.ERROR)
     else:
         form = GenerateStatisticsForm(provider_choices=statistics_providers, request=request)
 
@@ -125,12 +124,12 @@ def check_dates(date_start, date_end, precision):
         or (precision == 'week' and date_diff / 604800 > 60)
         or (precision == 'month' and date_diff / 2592000 > 60)
         or (precision == 'year' and date_diff / 31536000 > 60)):
-        return Message(_('Too many many items to display on graph.'), 'error')
+        return Message(_('Too many many items to display on graph.'), messages.ERROR)
     elif ((precision == 'day' and date_diff / 86400 < 1)
           or (precision == 'week' and date_diff / 604800 < 1)
           or (precision == 'month' and date_diff / 2592000 < 1)
           or (precision == 'year' and date_diff / 31536000 < 1)):
-        return Message(_('Too few items to display on graph'), 'error')
+        return Message(_('Too few items to display on graph'), messages.ERROR)
     return None
 
 

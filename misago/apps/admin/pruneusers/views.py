@@ -42,10 +42,10 @@ class List(ListWidget):
 
     def action_delete(self, items, checked):
         if not self.request.user.is_god():
-            return Message(_('Only system administrators can delete pruning policies.'), 'error'), reverse('admin_prune_users')
+            return Message(_('Only system administrators can delete pruning policies.'), messages.ERROR), reverse('admin_prune_users')
 
         PruningPolicy.objects.filter(id__in=checked).delete()
-        return Message(_('Selected pruning policies have been deleted successfully.'), 'success'), reverse('admin_prune_users')
+        return Message(_('Selected pruning policies have been deleted successfully.'), messages.SUCCESS), reverse('admin_prune_users')
 
 
 class New(FormWidget):
@@ -72,7 +72,7 @@ class New(FormWidget):
         new_policy.clean()
         new_policy.save(force_insert=True)
 
-        return new_policy, Message(_('New Pruning Policy has been created.'), 'success')
+        return new_policy, Message(_('New Pruning Policy has been created.'), messages.SUCCESS)
 
     def __call__(self, request, *args, **kwargs):
         if not request.user.is_god():
@@ -116,7 +116,7 @@ class Edit(FormWidget):
         target.clean()
         target.save(force_update=True)
 
-        return target, Message(_('Changes in policy "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
+        return target, Message(_('Changes in policy "%(name)s" have been saved.') % {'name': self.original_name}, messages.SUCCESS)
 
     def __call__(self, request, *args, **kwargs):
         if not request.user.is_god():
@@ -134,10 +134,10 @@ class Delete(ButtonWidget):
 
     def action(self, target):
         if not self.request.user.is_god():
-            return Message(_('Only system administrators can delete pruning policies.'), 'error'), False
+            return Message(_('Only system administrators can delete pruning policies.'), messages.ERROR), False
 
         target.delete()
-        return Message(_('Pruning policy "%(name)s" has been deleted.') % {'name': target.name}, 'success'), False
+        return Message(_('Pruning policy "%(name)s" has been deleted.') % {'name': target.name}, messages.SUCCESS), False
 
 
 class Apply(FormWidget):
@@ -196,7 +196,7 @@ class Apply(FormWidget):
                     messages.info(request, _("No users have been deleted."), self.admin.id)
                 return redirect(reverse('admin_prune_users'))
             else:
-                message = Message(_("Request authorization is invalid. Please resubmit your form."), 'error')
+                message = Message(_("Request authorization is invalid. Please resubmit your form."), messages.ERROR)
 
         return render_to_response(self.get_template(),
                                   {

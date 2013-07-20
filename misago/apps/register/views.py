@@ -67,7 +67,7 @@ def form(request):
             User.objects.resync_monitor()
             return redirect(reverse('index'))
         else:
-            message = Message(form.non_field_errors()[0], 'error')
+            message = Message(form.non_field_errors()[0], messages.ERROR)
             if settings.registrations_jams:
                 SignInAttempt.objects.register_attempt(request.session.get_ip(request))
             # Have we jammed our account?

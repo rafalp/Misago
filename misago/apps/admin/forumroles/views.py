@@ -1,6 +1,7 @@
 import copy
 from django.core.urlresolvers import reverse as django_reverse
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.acl.builder import build_forum_form
 from misago.admin import site
 from misago.apps.admin.widgets import *
@@ -44,7 +45,7 @@ class List(ListWidget):
         with UpdatingMonitor() as cm:
             monitor.increase('acl_version')
         Role.objects.filter(id__in=checked).delete()
-        return Message(_('Selected forum roles have been deleted successfully.'), 'success'), reverse('admin_roles_forums')
+        return Message(_('Selected forum roles have been deleted successfully.'), messages.SUCCESS), reverse('admin_roles_forums')
 
 
 class New(FormWidget):
@@ -65,7 +66,7 @@ class New(FormWidget):
                       name=form.cleaned_data['name'],
                      )
         new_role.save(force_insert=True)
-        return new_role, Message(_('New Forum Role has been created.'), 'success')
+        return new_role, Message(_('New Forum Role has been created.'), messages.SUCCESS)
 
 
 class Edit(FormWidget):
@@ -92,7 +93,7 @@ class Edit(FormWidget):
     def submit_form(self, form, target):
         target.name = form.cleaned_data['name']
         target.save(force_update=True)
-        return target, Message(_('Changes in forum role "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
+        return target, Message(_('Changes in forum role "%(name)s" have been saved.') % {'name': self.original_name}, messages.SUCCESS)
 
 
 class ACL(FormWidget):
@@ -132,7 +133,7 @@ class ACL(FormWidget):
         with UpdatingMonitor() as cm:
             monitor.increase('acl_version')
 
-        return target, Message(_('Forum Role "%(name)s" permissions have been changed.') % {'name': self.original_name}, 'success')
+        return target, Message(_('Forum Role "%(name)s" permissions have been changed.') % {'name': self.original_name}, messages.SUCCESS)
 
 
 class Delete(ButtonWidget):
@@ -145,4 +146,4 @@ class Delete(ButtonWidget):
         target.delete()
         with UpdatingMonitor() as cm:
             monitor.increase('acl_version')
-        return Message(_('Forum Role "%(name)s" has been deleted.') % {'name': _(target.name)}, 'success'), False
+        return Message(_('Forum Role "%(name)s" has been deleted.') % {'name': _(target.name)}, messages.SUCCESS), False

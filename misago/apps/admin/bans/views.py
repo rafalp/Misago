@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse as django_reverse
 from django.db.models import Q
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.admin import site
 from misago.apps.admin.widgets import *
 from misago.messages import Message
@@ -61,7 +62,7 @@ class List(ListWidget):
         Ban.objects.filter(id__in=checked).delete()
         with UpdatingMonitor() as cm:
             monitor.increase('bans_version')
-        return Message(_('Selected bans have been lifted successfully.'), 'success'), reverse('admin_bans')
+        return Message(_('Selected bans have been lifted successfully.'), messages.SUCCESS), reverse('admin_bans')
 
 
 class New(FormWidget):
@@ -91,7 +92,7 @@ class New(FormWidget):
         new_ban.save(force_insert=True)
         with UpdatingMonitor() as cm:
             monitor.increase('bans_version')
-        return new_ban, Message(_('New Ban has been set.'), 'success')
+        return new_ban, Message(_('New Ban has been set.'), messages.SUCCESS)
 
 
 class Edit(FormWidget):
@@ -131,7 +132,7 @@ class Edit(FormWidget):
         target.save(force_update=True)
         with UpdatingMonitor() as cm:
             monitor.increase('bans_version')
-        return target, Message(_('Changes in ban have been saved.'), 'success')
+        return target, Message(_('Changes in ban have been saved.'), messages.SUCCESS)
 
 
 class Delete(ButtonWidget):
@@ -148,10 +149,10 @@ class Delete(ButtonWidget):
         with UpdatingMonitor() as cm:
             monitor.increase('bans_version')
         if target.test == 0:
-            return Message(_('E-mail and username Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, 'success'), False
+            return Message(_('E-mail and username Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, messages.SUCCESS), False
         if target.test == 1:
-            return Message(_('Username Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, 'success'), False
+            return Message(_('Username Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, messages.SUCCESS), False
         if target.test == 2:
-            return Message(_('E-mail Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, 'success'), False
+            return Message(_('E-mail Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, messages.SUCCESS), False
         if target.test == 3:
-            return Message(_('IP Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, 'success'), False
+            return Message(_('IP Ban "%(ban)s" has been lifted.') % {'ban': target.ban}, messages.SUCCESS), False

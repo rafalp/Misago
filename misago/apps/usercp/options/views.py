@@ -23,7 +23,7 @@ def options(request):
             request.user.save(force_update=True)
             messages.success(request, _("Forum options have been changed."), 'usercp_options')
             return redirect(reverse('usercp'))
-        message = Message(form.non_field_errors()[0], 'error')
+        message = Message(form.non_field_errors()[0], messages.ERROR)
     else:
         form = UserForumOptionsForm(request=request, initial={
                                                              'newsletters': request.user.receive_newsletters,

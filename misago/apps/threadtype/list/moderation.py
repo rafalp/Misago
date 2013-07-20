@@ -113,7 +113,7 @@ class ThreadsListModeration(object):
                 self.forum.save(force_update=True)
                 messages.success(self.request, _('Selected threads have been moved to "%(forum)s".') % {'forum': new_forum.name}, 'threads')
                 return None
-            self.message = Message(form.non_field_errors()[0], 'error')
+            self.message = Message(form.non_field_errors()[0], messages.ERROR)
         else:
             form = MoveThreadsForm(request=self.request, forum=self.forum)
         return render_to_response('%ss/move_threads.html' % self.type_prefix,
@@ -159,7 +159,7 @@ class ThreadsListModeration(object):
                     form.cleaned_data['new_forum'].save(force_update=True)
                 messages.success(self.request, _('Selected threads have been merged into new one.'), 'threads')
                 return None
-            self.message = Message(form.non_field_errors()[0], 'error')
+            self.message = Message(form.non_field_errors()[0], messages.ERROR)
         else:
             form = MergeThreadsForm(request=self.request, threads=threads)
 
