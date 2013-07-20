@@ -1,3 +1,8 @@
+INFO = 'info'
+SUCCESS = 'success'
+WARNING = 'warning'
+ERROR = 'error'
+
 class Messages(object):
     def __init__(self, session):
         self.session = session
@@ -9,8 +14,8 @@ class Messages(object):
         message.owner = owner
         self.messages.append(message)
 
-    def set_flash(self, message, type='info', owner=None):
-        self.set_message(message, type, owner)
+    def set_flash(self, message, level='info', owner=None):
+        self.set_message(message, level, owner)
         self.session['messages_list'].append(message)
 
     def get_message(self, owner=None):
@@ -33,7 +38,27 @@ class Messages(object):
 
 
 class Message(object):
-    def __init__(self, message=None, type='info', owner=None):
-        self.type = type
+    def __init__(self, message=None, level='info', owner=None):
+        self.level = level
         self.message = message
         self.owner = owner
+
+
+def add_message(request, level, message, owner=None):
+    request.messages.set_message(message, level=level, owner=owner)
+
+
+def info(request, message, owner=None):
+    request.messages.set_message(message, level=INFO, owner=owner)
+
+
+def success(request, message, owner=None):
+    request.messages.set_message(message, level=SUCCESS, owner=owner)
+
+
+def warning(request, message, owner=None):
+    request.messages.set_message(message, level=WARNING, owner=owner)
+
+
+def error(request, message, owner=None):
+    request.messages.set_message(message, level=ERROR, owner=owner)
