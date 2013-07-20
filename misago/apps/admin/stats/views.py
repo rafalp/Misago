@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.messages import Message
 from misago.shortcuts import render_to_response
 from misago.apps.admin.stats.forms import GenerateStatisticsForm
@@ -46,11 +47,11 @@ def form(request):
                 date_start = date_temp
             # Assert that dates are correct
             if date_end == date_start:
-                message = Message(_('Start and end date are same'), type='error')
+                message = Message(_('Start and end date are same'), level='error')
             elif check_dates(date_start, date_end, form.cleaned_data['stats_precision']):
                 message = check_dates(date_start, date_end, form.cleaned_data['stats_precision'])
             else:
-                request.messages.set_flash(Message(_('Statistical report has been created.')), 'success', 'admin_stats')
+                messages.success(request, _('Statistical report has been created.'), 'admin_stats')
                 return redirect(reverse('admin_stats_graph', kwargs={
                                                        'model': form.cleaned_data['provider_model'],
                                                        'date_start': date_start.strftime('%Y-%m-%d'),

@@ -1,9 +1,11 @@
 from django.core.urlresolvers import reverse as django_reverse
 from django.utils.translation import ungettext, ugettext as _
 import floppyforms as forms
+from misago import messages
 from misago.admin import site
 from misago.apps.admin.widgets import *
 from misago.forms import Form
+from misago.messages import Message
 from misago.models import PruningPolicy, User
 from misago.shortcuts import render_to_response
 from misago.apps.admin.pruneusers.forms import PolicyForm
@@ -74,7 +76,7 @@ class New(FormWidget):
 
     def __call__(self, request, *args, **kwargs):
         if not request.user.is_god():
-            request.messages.set_flash(Message(_('Only system administrators can set new pruning policies.')), 'error', self.admin.id)
+            messages.error(request, _('Only system administrators can set new pruning policies.'), self.admin.id)
             return redirect(reverse('admin_prune_users'))
 
         return super(New, self).__call__(request, *args, **kwargs)
@@ -118,7 +120,7 @@ class Edit(FormWidget):
 
     def __call__(self, request, *args, **kwargs):
         if not request.user.is_god():
-            request.messages.set_flash(Message(_('Only system administrators can edit pruning policies.')), 'error', self.admin.id)
+            messages.error(request, _('Only system administrators can edit pruning policies.'), self.admin.id)
             return redirect(reverse('admin_prune_users'))
 
         return super(Edit, self).__call__(request, *args, **kwargs)
@@ -170,7 +172,7 @@ class Apply(FormWidget):
         total_users = total_users.count()
 
         if not total_users:
-            request.messages.set_flash(Message(_('Policy "%(name)s" does not apply to any users.') % {'name': model.name}), 'error', self.admin.id)
+            messages.error(request, _('Policy "%(name)s" does not apply to any users.') % {'name': model.name}, self.admin.id)
             return redirect(reverse('admin_prune_users'))
 
         message = None
@@ -179,19 +181,19 @@ class Apply(FormWidget):
             if request.csrf.request_secure(request):
                 for user in users.iterator():
                     if user.is_protected():
-                        request.messages.set_flash(Message(_('User "%(name)s" is protected and was not deleted.') % {'name': user.username}), 'info', self.admin.id)
+                        messages.info(request, _('User "%(name)s" is protected and was not deleted.') % {'name': user.username}, self.admin.id)
                     else:
                         user.delete()
                         deleted += 1
                 if deleted:
-                    request.messages.set_flash(Message(ungettext(
-                                                                 'One user has been deleted.',
-                                                                 '%(deleted)d users have been deleted.',
-                                                                 deleted
-                                                                 ) % {'deleted': deleted}), 'success', self.admin.id)
+                    messages.success(request, ungettext(
+                                                        'One user has been deleted.',
+                                                        '%(deleted)d users have been deleted.',
+                                                        deleted
+                                                        ) % {'deleted': deleted}, self.admin.id)
                     User.objects.resync_monitor()
                 else:
-                    request.messages.set_flash(Message(_("No users have been deleted.")), 'info', self.admin.id)
+                    messages.info(request, _("No users have been deleted."), self.admin.id)
                 return redirect(reverse('admin_prune_users'))
             else:
                 message = Message(_("Request authorization is invalid. Please resubmit your form."), 'error')
@@ -203,7 +205,7 @@ class Apply(FormWidget):
                                   'request': request,
                                   'url': self.get_link(model),
                                   'fallback': self.get_fallback_link(),
-                                  'messages': request.messages.get_messages(self.admin.id),
+                                  'messages': messages.get_messages(request, self.admin.id),
                                   'message': message,
                                   'tabbed': self.tabbed,
                                   'total_users': total_users,

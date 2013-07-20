@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 import floppyforms as forms
 from mptt.forms import TreeNodeChoiceField
+from misago import messages
 from misago.admin import site
 from misago.apps.admin.widgets import *
 from misago.models import Forum
@@ -89,7 +90,7 @@ def resync_forums(request, forum=0, progress=0):
     progress = int(progress)
     forums = request.session.get('sync_forums')
     if not forums:
-        request.messages.set_flash(Message(_('No forums to resynchronize.')), 'info', 'forums')
+        messages.info(request, _('No forums to resynchronize.'), 'forums')
         return redirect(reverse('admin_forums'))
     try:
         if not forum:
@@ -97,7 +98,7 @@ def resync_forums(request, forum=0, progress=0):
         forum = Forum.objects.get(id=forum)
     except Forum.DoesNotExist:
         del request.session['sync_forums']
-        request.messages.set_flash(Message(_('Forum for resynchronization does not exist.')), 'error', 'forums')
+        messages.error(request, _('Forum for resynchronization does not exist.'), 'forums')
         return redirect(reverse('admin_forums'))
 
     # Sync 50 threads

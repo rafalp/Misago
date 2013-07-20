@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.apps.errors import error404
 from misago.decorators import block_guest
 from misago.messages import Message
@@ -31,9 +32,9 @@ def credentials(request):
                                                   }
             if form.cleaned_data['new_email']:
                 request.user.email = form.cleaned_data['new_email']
-                request.messages.set_flash(Message(_("We have sent e-mail message to your new e-mail address with link you have to click to confirm change of your sign-in credentials. This link will be valid only for duration of this session, do not sign out until you confirm change!")), 'success', 'usercp_credentials')
+                messages.success(request, _("We have sent e-mail message to your new e-mail address with link you have to click to confirm change of your sign-in credentials. This link will be valid only for duration of this session, do not sign out until you confirm change!"), 'usercp_credentials')
             else:
-                request.messages.set_flash(Message(_("We have sent e-mail message to your e-mail address with link you have to click to confirm change of your sign-in credentials. This link will be valid only for duration of this session, do not sign out until you confirm change!")), 'success', 'usercp_credentials')
+                messages.success(request, _("We have sent e-mail message to your e-mail address with link you have to click to confirm change of your sign-in credentials. This link will be valid only for duration of this session, do not sign out until you confirm change!"), 'usercp_credentials')
             return redirect(reverse('usercp_credentials'))
         message = Message(form.non_field_errors()[0], 'error')
     else:
@@ -62,10 +63,10 @@ def activate(request, token):
         request.user.save(force_update=True)
         request.user.sessions.exclude(id=request.session.id).delete()
         request.user.signin_tokens.all().delete()
-        request.messages.set_flash(Message(_("%(username)s, your Sign-In credentials have been changed.") % {'username': request.user.username}), 'success', 'security')
+        messages.success(request, _("%(username)s, your Sign-In credentials have been changed.") % {'username': request.user.username}, 'security')
         request.session.sign_out(request)
         del request.session['new_credentials']
         return redirect(reverse('sign_in'))
     except ValidationError:
-        request.messages.set_flash(Message(_("Your new credentials have been invalidated. Please try again.")), 'error', 'usercp_credentials')
+        messages.error(request, _("Your new credentials have been invalidated. Please try again."), 'usercp_credentials')
         return redirect(reverse('usercp_credentials'))

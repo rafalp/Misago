@@ -7,6 +7,7 @@ from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 import floppyforms as forms
 from jinja2 import TemplateNotFound
+from misago import messages
 from misago.forms import Form
 from misago.messages import Message
 from misago.shortcuts import render_to_response
@@ -76,9 +77,9 @@ class BaseWidget(object):
             self.get_target(model)
             return model
         except self.admin.model.DoesNotExist:
-            self.request.messages.set_flash(Message(self.notfound_message), 'error', self.admin.id)
+            messages.error(self.request, self.notfound_message, self.admin.id)
         except ValueError as e:
-            self.request.messages.set_flash(Message(e.args[0]), 'error', self.admin.id)
+            messages.error(self.request, e.args[0], self.admin.id)
         return None
 
 
@@ -297,7 +298,7 @@ class ListWidget(BaseWidget):
                 # Kill search
                 if request.POST.get('origin') == 'clear' and self.is_filtering and request.csrf.request_secure(request):
                     request.session[self.get_token('filter')] = None
-                    request.messages.set_flash(Message(_("Search criteria have been cleared.")), 'info', self.admin.id)
+                    messages.info(request, _("Search criteria have been cleared."), self.admin.id)
                     return redirect(self.get_link())
             else:
                 if self.is_filtering:
@@ -314,7 +315,7 @@ class ListWidget(BaseWidget):
                 if table_form.is_valid():
                     message, redirect_link = self.table_action(items, table_form.cleaned_data)
                     if redirect_link:
-                        request.messages.set_flash(message, message.type, self.admin.id)
+                        messages.add_message(request, message.type, message, self.admin.id)
                         return redirect(redirect_link)
                 else:
                     message = Message(table_form.non_field_errors()[0], 'error')
@@ -332,7 +333,7 @@ class ListWidget(BaseWidget):
                         form_action = getattr(self, 'action_' + list_form.cleaned_data['list_action'])
                         message, redirect_link = form_action(items, [int(x) for x in list_form.cleaned_data['list_items']])
                         if redirect_link:
-                            request.messages.set_flash(message, message.type, self.admin.id)
+                            messages.add_message(request, message, message.type, self.admin.id)
                             return redirect(redirect_link)
                     except AttributeError:
                         message = Message(_("Requested action is incorrect."))
@@ -436,7 +437,7 @@ class FormWidget(BaseWidget):
                 try:
                     model, message = self.submit_form(form, model)
                     if message.type != 'error':
-                        request.messages.set_flash(message, message.type, self.admin.id)
+                        messages.add_message(request, message, message.type, self.admin.id)
                         # Redirect back to right page
                         try:
                             if 'save_new' in request.POST and self.get_new_link:
@@ -501,12 +502,12 @@ class ButtonWidget(BaseWidget):
 
         # Crash if this is invalid request
         if not request.csrf.request_secure(request):
-            request.messages.set_flash(Message(_("Action authorization is invalid.")), 'error', self.admin.id)
+            messages.error(request, _("Action authorization is invalid."), self.admin.id)
             return redirect(self.get_fallback_link())
 
         # Do something
         message, url = self.action(model)
-        request.messages.set_flash(message, message.type, self.admin.id)
+        messages.add_message(request, message, message.type, self.admin.id)
         if url:
             return redirect(url)
         return redirect(self.get_fallback_link())

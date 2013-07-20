@@ -4,6 +4,7 @@ from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 import floppyforms as forms
+from misago import messages
 from misago.markdown import post_markdown
 from misago.messages import Message
 from misago.shortcuts import render_to_response
@@ -20,9 +21,9 @@ class PostsModeration(object):
             self.thread.post_set.filter(id__in=ids).update(moderated=False)
             self.thread.sync()
             self.thread.save(force_update=True)
-            self.request.messages.set_flash(Message(_('Selected posts have been accepted and made visible to other members.')), 'success', 'threads')
+            messages.success(self.request, _('Selected posts have been accepted and made visible to other members.'), 'threads')
         else:
-            self.request.messages.set_flash(Message(_('No posts were accepted.')), 'info', 'threads')
+            messages.info(self.request, _('No posts were accepted.'), 'threads')
 
     def post_action_merge(self, ids):
         users = []
@@ -46,7 +47,7 @@ class PostsModeration(object):
         self.thread.save(force_update=True)
         self.forum.sync()
         self.forum.save(force_update=True)
-        self.request.messages.set_flash(Message(_('Selected posts have been merged into one message.')), 'success', 'threads')
+        messages.success(self.request, _('Selected posts have been merged into one message.'), 'threads')
 
     def post_action_split(self, ids):
         for id in ids:
@@ -80,7 +81,7 @@ class PostsModeration(object):
                 if new_thread.forum != self.forum:
                     new_thread.forum.sync()
                     new_thread.forum.save(force_update=True)
-                self.request.messages.set_flash(Message(_("Selected posts have been split to new thread.")), 'success', 'threads')
+                messages.success(self.request, _("Selected posts have been split to new thread."), 'threads')
                 return redirect(reverse(self.type_prefix, kwargs={'thread': new_thread.pk, 'slug': new_thread.slug}))
             message = Message(form.non_field_errors()[0], 'error')
         else:
@@ -122,7 +123,7 @@ class PostsModeration(object):
                 if self.forum.pk != thread.forum.pk:
                     self.forum.sync()
                     self.forum.save(force_update=True)
-                self.request.messages.set_flash(Message(_("Selected posts have been moved to new thread.")), 'success', 'threads')
+                messages.success(self.request, _("Selected posts have been moved to new thread."), 'threads')
                 return redirect(reverse(self.type_prefix, kwargs={'thread': thread.pk, 'slug': thread.slug}))
             message = Message(form.non_field_errors()[0], 'error')
         else:
@@ -146,9 +147,9 @@ class PostsModeration(object):
                 protected += 1
         if protected:
             self.thread.post_set.filter(id__in=ids).update(protected=True)
-            self.request.messages.set_flash(Message(_('Selected posts have been protected from edition.')), 'success', 'threads')
+            messages.success(self.request, _('Selected posts have been protected from edition.'), 'threads')
         else:
-            self.request.messages.set_flash(Message(_('No posts were protected.')), 'info', 'threads')
+            messages.info(self.request, _('No posts were protected.'), 'threads')
 
     def post_action_unprotect(self, ids):
         unprotected = 0
@@ -157,9 +158,9 @@ class PostsModeration(object):
                 unprotected += 1
         if unprotected:
             self.thread.post_set.filter(id__in=ids).update(protected=False)
-            self.request.messages.set_flash(Message(_('Protection from editions has been removed from selected posts.')), 'success', 'threads')
+            messages.success(self.request, _('Protection from editions has been removed from selected posts.'), 'threads')
         else:
-            self.request.messages.set_flash(Message(_('No posts were unprotected.')), 'info', 'threads')
+            messages.info(self.request, _('No posts were unprotected.'), 'threads')
 
     def post_action_undelete(self, ids):
         undeleted = []
@@ -172,9 +173,9 @@ class PostsModeration(object):
             self.thread.save(force_update=True)
             self.forum.sync()
             self.forum.save(force_update=True)
-            self.request.messages.set_flash(Message(_('Selected posts have been restored.')), 'success', 'threads')
+            messages.success(self.request, _('Selected posts have been restored.'), 'threads')
         else:
-            self.request.messages.set_flash(Message(_('No posts were restored.')), 'info', 'threads')
+            messages.info(self.request, _('No posts were restored.'), 'threads')
 
     def post_action_soft(self, ids):
         deleted = []
@@ -189,9 +190,9 @@ class PostsModeration(object):
             self.thread.save(force_update=True)
             self.forum.sync()
             self.forum.save(force_update=True)
-            self.request.messages.set_flash(Message(_('Selected posts have been hidden.')), 'success', 'threads')
+            messages.success(self.request, _('Selected posts have been hidden.'), 'threads')
         else:
-            self.request.messages.set_flash(Message(_('No posts were hidden.')), 'info', 'threads')
+            messages.info(self.request, _('No posts were hidden.'), 'threads')
 
     def post_action_hard(self, ids):
         deleted = []
@@ -208,6 +209,6 @@ class PostsModeration(object):
             self.thread.save(force_update=True)
             self.forum.sync()
             self.forum.save(force_update=True)
-            self.request.messages.set_flash(Message(_('Selected posts have been deleted.')), 'success', 'threads')
+            messages.success(self.request, _('Selected posts have been deleted.'), 'threads')
         else:
-            self.request.messages.set_flash(Message(_('No posts were deleted.')), 'info', 'threads')
+            messages.info(self.request, _('No posts were deleted.'), 'threads')

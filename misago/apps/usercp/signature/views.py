@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.apps.errors import error403, error404
 from misago.decorators import block_guest
 from misago.markdown import signature_markdown
@@ -31,7 +32,7 @@ def signature(request):
             else:
                 request.user.signature_preparsed = None
             request.user.save(force_update=True)
-            request.messages.set_flash(Message(_("Your signature has been changed.")), 'success', 'usercp_signature')
+            messages.success(request, _("Your signature has been changed."), 'usercp_signature')
             return redirect(reverse('usercp_signature'))
         else:
             message = Message(form.non_field_errors()[0], 'error')

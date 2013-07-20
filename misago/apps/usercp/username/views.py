@@ -4,6 +4,7 @@ from django.db.models import F
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.apps.errors import error404
 from misago.decorators import block_guest
 from misago.messages import Message
@@ -39,7 +40,7 @@ def username(request):
                 request.user.save(force_update=True)
                 request.user.sync_username()
                 request.user.namechanges.create(date=timezone.now(), old_username=org_username)
-                request.messages.set_flash(Message(_("Your username has been changed.")), 'success', 'usercp_username')
+                messages.success(request, _("Your username has been changed."), 'usercp_username')
                 # Alert followers of namechange
                 alert_time = timezone.now()
                 bulk_alerts = []

@@ -5,10 +5,10 @@
 {% block title %}{{ page_title(title=_('Sign In')) }}{% endblock %}
 
 {% block header %}<strong>Misago</strong> {% trans %}Board Administration{% endtrans %}{% endblock %}
-      
+
 {% block content %}
           {% if message %}
-          <div class="alert alert-{{ message.type }} block-alert">
+          <div class="alert alert-{{ message.level }} block-alert">
             {{ draw_message_icon(message) }}
 	        <p><strong>{{ message.message }}</strong></p>
           </div>

@@ -3,9 +3,10 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.template import RequestContext
+from misago import messages
 
-def redirect_message(request, message, type='info', owner=None):
-    request.messages.set_flash(message, type, owner)
+def redirect_message(request, level, message, owner=None):
+    messages.add_message(request, level, message, owner)
     return redirect(reverse('index'))
 
 

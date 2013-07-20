@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.admin import site
 from misago.apps.admin.widgets import *
 from misago.conf import settings
@@ -158,7 +159,7 @@ def send(request, target, token):
 
         recipients_total = recipients.count()
         if recipients_total < 1:
-            request.messages.set_flash(Message(_('No recipients for newsletter "%(newsletter)s" could be found.') % {'newsletter': newsletter.name}), 'error', 'newsletters')
+            messages.error(request, _('No recipients for newsletter "%(newsletter)s" could be found.') % {'newsletter': newsletter.name}, 'newsletters')
             return redirect(reverse('admin_newsletters'))
 
         for user in recipients.all()[newsletter.progress:(newsletter.progress + newsletter.step_size)]:
@@ -182,7 +183,7 @@ def send(request, target, token):
         if newsletter.progress >= recipients_total:
             newsletter.progress = 0
             newsletter.save(force_update=True)
-            request.messages.set_flash(Message(_('Newsletter "%(newsletter)s" has been sent.') % {'newsletter': newsletter.name}), 'success', 'newsletters')
+            messages.success(request, _('Newsletter "%(newsletter)s" has been sent.') % {'newsletter': newsletter.name}, 'newsletters')
             return redirect(reverse('admin_newsletters'))
 
         # Render Progress
@@ -198,5 +199,5 @@ def send(request, target, token):
         response['refresh'] = '2;url=%s' % reverse('admin_newsletters_send', newsletter)
         return response
     except Newsletter.DoesNotExist:
-        request.messages.set_flash(Message(_('Requested Newsletter could not be found.')), 'error', 'newsletters')
+        messages.error(request, _('Requested Newsletter could not be found.'), 'newsletters')
         return redirect(reverse('admin_newsletters'))

@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.encoding import smart_str
 from django.utils.translation import ugettext as _
+form misago import messages
 from misago.apps.errors import error404
 from misago.conf import settings
 from misago.decorators import block_guest
@@ -47,9 +48,9 @@ def gravatar(request):
             request.user.delete_avatar()
             request.user.avatar_type = 'gravatar'
             request.user.save(force_update=True)
-            request.messages.set_flash(Message(_("Your avatar has been changed to Gravatar.")), 'success', 'usercp_avatar')
+            messages.success(request, _("Your avatar has been changed to Gravatar."), 'usercp_avatar')
         else:
-            request.messages.set_flash(Message(_("Request authorisation is invalid.")), 'error', 'usercp_avatar')
+            messages.error(request, _("Request authorisation is invalid."), 'usercp_avatar')
     return redirect(reverse('usercp_avatar'))
 
 
@@ -74,7 +75,7 @@ def gallery(request):
             allowed_avatars += gallery['avatars']
 
     if not allowed_avatars:
-        request.messages.set_flash(Message(_("No avatar galleries are available at the moment.")), 'info', 'usercp_avatar')
+        messages.info(request, _("No avatar galleries are available at the moment."), 'usercp_avatar')
         return redirect(reverse('usercp_avatar'))
 
     message = request.messages.get_message('usercp_avatar')
@@ -86,7 +87,7 @@ def gallery(request):
                 request.user.avatar_type = 'gallery'
                 request.user.avatar_image = new_avatar
                 request.user.save(force_update=True)
-                request.messages.set_flash(Message(_("Your avatar has been changed to one from gallery.")), 'success', 'usercp_avatar')
+                messages.success(request, _("Your avatar has been changed to one from gallery."), 'usercp_avatar')
                 return redirect(reverse('usercp_avatar'))
             message = Message(_("Selected Avatar is incorrect."), 'error')
         else:
@@ -122,7 +123,7 @@ def upload(request):
             try:
                 if is_zipfile(image_path):
                     # Composite file upload
-                    raise ValidationError()                 
+                    raise ValidationError()
                 image = Image.open(image_path)
                 if not image.format in ['GIF', 'PNG', 'JPEG']:
                     raise ValidationError()
@@ -148,7 +149,7 @@ def upload(request):
                 request.user.avatar_image = image_name
                 request.user.save(force_update=True)
                 # Set message and adios!
-                request.messages.set_flash(Message(_("Your avatar has changed.")), 'success', 'usercp_avatar')
+                messages.success(request, _("Your avatar has changed."), 'usercp_avatar')
                 return redirect(reverse('usercp_avatar'))
             except ValidationError:
                 request.user.delete_avatar()
@@ -173,7 +174,7 @@ def crop(request, upload=False):
         return error404(request)
 
     if not upload and request.user.avatar_type != 'upload':
-        request.messages.set_flash(Message(_("Crop Avatar option is avaiable only when you use uploaded image as your avatar.")), 'error', 'usercp_avatar')
+        messages.error(request, _("Crop Avatar option is avaiable only when you use uploaded image as your avatar."), 'usercp_avatar')
         return redirect(reverse('usercp_avatar'))
 
     message = request.messages.get_message('usercp_avatar')
@@ -211,7 +212,7 @@ def crop(request, upload=False):
                 request.user.delete_avatar_temp()
                 request.user.avatar_image = image_name
                 request.user.save(force_update=True)
-                request.messages.set_flash(Message(_("Your avatar has been cropped.")), 'success', 'usercp_avatar')
+                messages.success(request, _("Your avatar has been cropped."), 'usercp_avatar')
                 return redirect(reverse('usercp_avatar'))
             except Exception:
                 message = Message(_("Form contains errors."), 'error')

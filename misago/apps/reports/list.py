@@ -4,6 +4,7 @@ from django.db.models import F
 from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.apps.threadtype.list import ThreadsListBaseView, ThreadsListModeration
 from misago.conf import settings
 from misago.messages import Message
@@ -90,32 +91,32 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
     def action_sticky(self, ids):
         if self._action_sticky(ids):
             self.mass_resolve(ids)
-            self.request.messages.set_flash(Message(_('Selected reports were set as resolved.')), 'success', 'threads')
+            messages.success(self.request, _('Selected reports were set as resolved.'), 'threads')
         else:
-            self.request.messages.set_flash(Message(_('No reports were set as resolved.')), 'info', 'threads')
+            messages.info(self.request, _('No reports were set as resolved.'), 'threads')
 
     def action_normal(self, ids):
         if self._action_normal(ids):
             self.mass_resolve(ids)
-            self.request.messages.set_flash(Message(_('Selected reports were set as bogus.')), 'success', 'threads')
+            messages.success(self.request, _('Selected reports were set as bogus.'), 'threads')
         else:
-            self.request.messages.set_flash(Message(_('No reports were set as bogus.')), 'info', 'threads')
+            messages.info(self.request, _('No reports were set as bogus.'), 'threads')
 
     def action_undelete(self, ids):
         if self._action_undelete(ids):
-            self.request.messages.set_flash(Message(_('Selected reports have been restored.')), 'success', 'threads')
+            messages.success(self.request, _('Selected reports have been restored.'), 'threads')
         else:
-            self.request.messages.set_flash(Message(_('No reports were restored.')), 'info', 'threads')
+            messages.info(self.request, _('No reports were restored.'), 'threads')
 
     def action_soft(self, ids):
         if self._action_soft(ids):
             self.mass_resolve(ids)
-            self.request.messages.set_flash(Message(_('Selected reports have been hidden.')), 'success', 'threads')
+            messages.success(self.request, _('Selected reports have been hidden.'), 'threads')
         else:
-            self.request.messages.set_flash(Message(_('No reports were hidden.')), 'info', 'threads')
+            messages.info(self.request, _('No reports were hidden.'), 'threads')
 
     def action_hard(self, ids):
         if self._action_hard(ids):
-            self.request.messages.set_flash(Message(_('Selected reports have been deleted.')), 'success', 'threads')
+            messages.success(self.request, _('Selected reports have been deleted.'), 'threads')
         else:
-            self.request.messages.set_flash(Message(_('No reports were deleted.')), 'info', 'threads')
+            messages.info(self.request, _('No reports were deleted.'), 'threads')

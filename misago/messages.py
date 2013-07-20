@@ -9,14 +9,17 @@ class Messages(object):
         self.messages = session.get('messages_list', [])
         self.session['messages_list'] = []
 
-    def set_message(self, message, type='info', owner=None):
-        message.type = type
-        message.owner = owner
-        self.messages.append(message)
+    def set_message(self, message, level='info', owner=None):
+        msg = Message(message)
+        msg.level = level
+        msg.owner = owner
+        self.messages.append(msg)
+        return msg
 
     def set_flash(self, message, level='info', owner=None):
-        self.set_message(message, level, owner)
-        self.session['messages_list'].append(message)
+        msg = self.set_message(message, level, owner)
+        self.session['messages_list'].append(msg)
+        return msg
 
     def get_message(self, owner=None):
         for index, message in enumerate(self.messages):
@@ -43,9 +46,16 @@ class Message(object):
         self.message = message
         self.owner = owner
 
+    def __unicode__(self):
+        return self.message
+
+
+def get_messages(request, owner=None):
+    return request.messages.get_messages(owner)
+
 
 def add_message(request, level, message, owner=None):
-    request.messages.set_message(message, level=level, owner=owner)
+    request.messages.set_flash(unicode(message), level=level, owner=owner)
 
 
 def info(request, message, owner=None):

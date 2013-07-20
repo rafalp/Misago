@@ -20,16 +20,16 @@
 
 {# Render single message #}
 {% macro draw_message(message, class='') %}
-  <div class="alert alert-{{ message.type }}{% if class %} {{ class }}{% endif %}">
+  <div class="alert alert-{{ message.level }}{% if class %} {{ class }}{% endif %}">
   	{{ draw_message_icon(message) }} <p><strong>{{ message.message }}</strong></p>
   </div>
 {%- endmacro %}
 
 {# Render icon #}
 {% macro draw_message_icon(message) -%}
-  	<div class="alert-icon"><span><i class="icon-{% if message.type == 'error' -%}remove
-  		{%- elif message.type == 'success' -%}ok
-  		{%- elif message.type == 'info' -%}info-sign
+  	<div class="alert-icon"><span><i class="icon-{% if message.level == 'error' -%}remove
+  		{%- elif message.level == 'success' -%}ok
+  		{%- elif message.level == 'info' -%}info-sign
   		{%- else -%}warning-sign
   		{%- endif %} icon-white"></i></span></div>
 {%- endmacro %}

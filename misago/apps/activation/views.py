@@ -3,6 +3,7 @@ from django.utils.translation import ugettext as _
 from misago.apps.errors import error404, error_banned
 from misago.auth import sign_user_in
 from misago.decorators import block_authenticated, block_banned, block_crawlers, block_jammed
+from misago import messages
 from misago.messages import Message
 from misago.models import Ban, User
 from misago.shortcuts import redirect_message, render_to_response
@@ -24,19 +25,19 @@ def form(request):
                 return error_banned(request, user, user_ban)
 
             if user.activation == User.ACTIVATION_NONE:
-                return redirect_message(request, Message(_("%(username)s, your account is already active.") % {'username': user.username}), 'info')
+                return redirect_message(request, messages.INFO, _("%(username)s, your account is already active.") % {'username': user.username})
 
             if user.activation == User.ACTIVATION_ADMIN:
-                return redirect_message(request, Message(_("%(username)s, only board administrator can activate your account.") % {'username': user.username}), 'info')
+                return redirect_message(request, messages.INFO, _("%(username)s, only board administrator can activate your account.") % {'username': user.username})
 
             user.email_user(
                             request,
                             'users/activation/resend',
                             _("Account Activation"),
                             )
-            return redirect_message(request, Message(_("%(username)s, e-mail containing new activation link has been sent to %(email)s.") % {'username': user.username, 'email': user.email}), 'success')
+            return redirect_message(request, messages.SUCCESS, _("%(username)s, e-mail containing new activation link has been sent to %(email)s.") % {'username': user.username, 'email': user.email})
         else:
-            message = Message(form.non_field_errors()[0], 'error')
+            message = Message(form.non_field_errors()[0], messages.ERROR)
     else:
         form = UserSendActivationMailForm(request=request)
     return render_to_response('resend_activation.html',
@@ -63,13 +64,13 @@ def activate(request, username="", user="0", token=""):
             return error_banned(request, user, user_ban)
 
         if user.activation == User.ACTIVATION_NONE:
-            return redirect_message(request, Message(_("%(username)s, your account is already active.") % {'username': user.username}), 'info')
+            return redirect_message(request, messages.INFO, _("%(username)s, your account is already active.") % {'username': user.username})
 
         if user.activation == User.ACTIVATION_ADMIN:
-            return redirect_message(request, Message(_("%(username)s, only board administrator can activate your account.") % {'username': user.username}), 'info')
+            return redirect_message(request, messages.INFO, Message(_("%(username)s, only board administrator can activate your account.") % {'username': user.username})
 
         if not token or not user.token or user.token != token:
-            return redirect_message(request, Message(_("%(username)s, your activation link is invalid. Try again or request new activation e-mail.") % {'username': user.username}), 'error')
+            return redirect_message(request, messages.ERROR, Message(_("%(username)s, your activation link is invalid. Try again or request new activation e-mail.") % {'username': user.username})
 
         # Activate and sign in our member
         user.activation = User.ACTIVATION_NONE
@@ -79,8 +80,8 @@ def activate(request, username="", user="0", token=""):
         User.objects.resync_monitor()
 
         if current_activation == User.ACTIVATION_CREDENTIALS:
-            return redirect_message(request, Message(_("%(username)s, your account has been successfully reactivated after change of sign-in credentials.") % {'username': user.username}), 'success')
+            return redirect_message(request, messages.SUCCESS, _("%(username)s, your account has been successfully reactivated after change of sign-in credentials.") % {'username': user.username})
         else:
-            return redirect_message(request, Message(_("%(username)s, your account has been successfully activated. Welcome aboard!") % {'username': user.username}), 'success')
+            return redirect_message(request, messages.SUCCESS, _("%(username)s, your account has been successfully activated. Welcome aboard!") % {'username': user.username})
     except User.DoesNotExist:
         return error404(request)

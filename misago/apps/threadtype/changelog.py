@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
 from misago.markdown import post_markdown
@@ -105,7 +106,7 @@ class ChangelogRevertBaseView(ChangelogDiffBaseView):
     def dispatch(self, request, **kwargs):
         if ((not self.change.thread_name_old or self.thread.name == self.change.thread_name_old)
             and (self.change.post_content == self.post.post)):
-            request.messages.set_flash(Message(_("No changes to revert.")), 'error', 'changelog')
+            messages.error(request, _("No changes to revert."), 'changelog')
             return redirect(reverse('%s_changelog_diff' % self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'post': self.post.pk, 'change': self.change.pk}))
 
         if self.change.thread_name_old and self.change.thread_name_old != self.thread.name:
@@ -123,5 +124,5 @@ class ChangelogRevertBaseView(ChangelogDiffBaseView):
             md, self.post.post_preparsed = post_markdown(self.change.post_content)
             self.post.save(force_update=True)
 
-        request.messages.set_flash(Message(_("Post has been reverted to state from %(date)s.") % {'date': reldate(self.change.date).lower()}), 'success', 'threads_%s' % self.post.pk)
+        messages.success(request, _("Post has been reverted to state from %(date)s.") % {'date': reldate(self.change.date).lower()}, 'threads_%s' % self.post.pk)
         return self.redirect_to_post(self.post)

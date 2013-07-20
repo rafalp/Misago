@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.admin import site
 from misago.messages import Message
 import misago.auth as auth
@@ -64,7 +65,7 @@ def signin(request):
                     remember_me.save()
                 if remember_me_token:
                     request.cookiejar.set('TOKEN', remember_me_token, True)
-                request.messages.set_flash(Message(_("Welcome back, %(username)s!") % {'username': user.username}), 'success', 'security')
+                messages.success(request, _("Welcome back, %(username)s!") % {'username': user.username}, 'security')
                 return redirect(success_redirect)
             except AuthException as e:
                 message = Message(e.error, 'error')
@@ -105,7 +106,7 @@ def signin(request):
 def signout(request):
     user = request.user
     request.session.sign_out(request)
-    request.messages.set_flash(Message(_("You have been signed out.")), 'info', 'security')
+    messages.info(request, _("You have been signed out."), 'security')
     if request.firewall.admin:
         return redirect(reverse(site.get_admin_index()))
     else:

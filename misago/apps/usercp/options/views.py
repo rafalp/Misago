@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.decorators import block_guest
 from misago.messages import Message
 from misago.shortcuts import render_to_response
@@ -20,7 +21,7 @@ def options(request):
             request.user.subscribe_start = form.cleaned_data['subscribe_start']
             request.user.subscribe_reply = form.cleaned_data['subscribe_reply']
             request.user.save(force_update=True)
-            request.messages.set_flash(Message(_("Forum options have been changed.")), 'success', 'usercp_options')
+            messages.success(request, _("Forum options have been changed."), 'usercp_options')
             return redirect(reverse('usercp'))
         message = Message(form.non_field_errors()[0], 'error')
     else:

@@ -6,10 +6,10 @@ from django.utils.translation import ugettext as _
 from misago.auth import sign_user_in
 from misago.conf import settings
 from misago.decorators import block_authenticated, block_banned, block_crawlers, block_jammed
+from misago import messages
 from misago.messages import Message
 from misago.models import SignInAttempt, User
-from misago.shortcuts import render_to_response
-from misago.utils.views import redirect_message
+from misago.shortcuts import redirect_message, render_to_response
 from misago.apps.register.forms import UserRegisterForm
 
 @block_crawlers
@@ -18,8 +18,8 @@ from misago.apps.register.forms import UserRegisterForm
 @block_jammed
 def form(request):
     if settings.account_activation == 'block':
-       return redirect_message(request, Message(_("We are sorry but we don't allow new members registrations at this time.")), 'info')
-    
+       return redirect_message(request, messages.INFO, _("We are sorry but we don't allow new members registrations at this time."))
+
     message = None
     if request.method == 'POST':
         form = UserRegisterForm(request.POST, request=request)
@@ -29,7 +29,7 @@ def form(request):
                 need_activation = User.ACTIVATION_USER
             if settings.account_activation == 'admin':
                 need_activation = User.ACTIVATION_ADMIN
-                
+
             new_user = User.objects.create_user(
                                                 form.cleaned_data['username'],
                                                 form.cleaned_data['email'],
@@ -39,31 +39,31 @@ def form(request):
                                                 activation=need_activation,
                                                 request=request
                                                 )
-                        
+
             if need_activation == User.ACTIVATION_NONE:
                 # Sign in user
                 sign_user_in(request, new_user)
-                request.messages.set_flash(Message(_("Welcome aboard, %(username)s! Your account has been registered successfully.") % {'username': new_user.username}), 'success')
-                
+                messages.success(request, _("Welcome aboard, %(username)s! Your account has been registered successfully.") % {'username': new_user.username})
+
             if need_activation == User.ACTIVATION_USER:
                 # Mail user activation e-mail
-                request.messages.set_flash(Message(_("%(username)s, your account has been registered, but you will have to activate it before you will be able to sign-in. We have sent you an e-mail with activation link.") % {'username': new_user.username}), 'info')
+                messages.info(request, _("%(username)s, your account has been registered, but you will have to activate it before you will be able to sign-in. We have sent you an e-mail with activation link.") % {'username': new_user.username})
                 new_user.email_user(
                                     request,
                                     'users/activation/user',
                                     _("Welcome aboard, %(username)s!") % {'username': new_user.username},
                                     )
-                
+
             if need_activation == User.ACTIVATION_ADMIN:
                 # Require admin activation
-                request.messages.set_flash(Message(_("%(username)s, Your account has been registered, but you won't be able to sign in until board administrator accepts it. We'll notify when this happens. Thank you for your patience!") % {'username': new_user.username}), 'info')
+                messages.info(request, _("%(username)s, Your account has been registered, but you won't be able to sign in until board administrator accepts it. We'll notify when this happens. Thank you for your patience!") % {'username': new_user.username})
                 new_user.email_user(
                                     request,
                                     'users/activation/admin',
                                     _("Welcome aboard, %(username)s!") % {'username': new_user.username},
                                     {'password': form.cleaned_data['password']}
                                     )
-            
+
             User.objects.resync_monitor()
             return redirect(reverse('index'))
         else:
@@ -80,6 +80,6 @@ def form(request):
                               {
                               'message': message,
                               'form': form,
-                              'hide_signin': True, 
+                              'hide_signin': True,
                               },
                               context_instance=RequestContext(request));

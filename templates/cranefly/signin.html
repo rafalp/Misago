@@ -3,7 +3,7 @@
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{{ macros.page_title(title=_('Sign In')) }}{% endblock %}
-     
+
 {% block content %}
 <div class="row">
   <div class="span6 offset3">
@@ -15,7 +15,7 @@
 
       {% if message %}
       <div class="messages-list">
-        <div class="alert alert-{{ message.type }}">
+        <div class="alert alert-{{ message.level }}">
           {{ macros.draw_message_icon(message) }}
           <p><strong>{{ message.message }}</strong></p>
           {% if bad_password %}

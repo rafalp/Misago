@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
 from misago.conf import settings
@@ -102,7 +103,7 @@ class ShowHiddenRepliesBaseView(JumpView):
             ignored_exclusions = request.session.get('unignore_threads', [])
             ignored_exclusions.append(self.thread.pk)
             request.session['unignore_threads'] = ignored_exclusions
-            request.messages.set_flash(Message(_('Replies made to this thread by members on your ignore list have been revealed.')), 'success', 'threads')
+            messages.success(request, _('Replies made to this thread by members on your ignore list have been revealed.'), 'threads')
             return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))
         return view(self.request)
 
@@ -112,7 +113,7 @@ class WatchThreadBaseView(JumpView):
         return redirect(self.request.POST.get('retreat', reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug})))
 
     def update_watcher(self, request, watcher):
-        request.messages.set_flash(Message(_('This thread has been added to your watched threads list.')), 'success', 'threads')
+        messages.success(request, _('This thread has been added to your watched threads list.'), 'threads')
 
     def make_jump(self):
         @block_guest
@@ -140,9 +141,9 @@ class WatchEmailThreadBaseView(WatchThreadBaseView):
     def update_watcher(self, request, watcher):
         watcher.email = True
         if watcher.pk:
-            request.messages.set_flash(Message(_('You will now receive e-mail with notification when somebody replies to this thread.')), 'success', 'threads')
+            messages.success(request, _('You will now receive e-mail with notification when somebody replies to this thread.'), 'threads')
         else:
-            request.messages.set_flash(Message(_('This thread has been added to your watched threads list. You will also receive e-mail with notification when somebody replies to it.')), 'success', 'threads')
+            messages.success(request, _('This thread has been added to your watched threads list. You will also receive e-mail with notification when somebody replies to it.'), 'threads')
 
 
 class UnwatchThreadBaseView(WatchThreadBaseView):
@@ -150,15 +151,15 @@ class UnwatchThreadBaseView(WatchThreadBaseView):
         watcher.deleted = True
         watcher.delete()
         if watcher.email:
-            request.messages.set_flash(Message(_('This thread has been removed from your watched threads list. You will no longer receive e-mails with notifications when somebody replies to it.')), 'success', 'threads')
+            messages.success(request, _('This thread has been removed from your watched threads list. You will no longer receive e-mails with notifications when somebody replies to it.'), 'threads')
         else:
-            request.messages.set_flash(Message(_('This thread has been removed from your watched threads list.')), 'success', 'threads')
+            messages.success(request, _('This thread has been removed from your watched threads list.'), 'threads')
 
 
 class UnwatchEmailThreadBaseView(WatchThreadBaseView):
     def update_watcher(self, request, watcher):
         watcher.email = False
-        request.messages.set_flash(Message(_('You will no longer receive e-mails with notifications when somebody replies to this thread.')), 'success', 'threads')
+        messages.success(request, _('You will no longer receive e-mails with notifications when somebody replies to this thread.'), 'threads')
 
 
 class UpvotePostBaseView(JumpView):
@@ -231,13 +232,13 @@ class UpvotePostBaseView(JumpView):
                                                'score_downvotes': self.post.downvotes,
                                                'user_vote': vote.score,
                                               })
-            request.messages.set_flash(Message(_('Your vote has been saved.')), 'success', 'threads_%s' % self.post.pk)
+            messages.success(request, _('Your vote has been saved.'), 'threads_%s' % self.post.pk)
             return self.redirect_to_post(self.post)
         return view(self.request)
-    
+
     def check_acl(self, request):
         request.acl.threads.allow_post_upvote(self.forum)
-    
+
     def make_vote(self, request, vote):
         vote.score = 1
 
@@ -245,7 +246,7 @@ class UpvotePostBaseView(JumpView):
 class DownvotePostBaseView(UpvotePostBaseView):
     def check_acl(self, request):
         request.acl.threads.allow_post_downvote(self.forum)
-    
+
     def make_vote(self, request, vote):
         vote.score = -1
 
@@ -342,11 +343,11 @@ Member @%(reporter)s has reported following post by @%(reported)s:
             if made_report:
                 if request.is_ajax():
                     return json_response(request, message=_("Selected post has been reported and will receive moderator attention. Thank you."))
-                self.request.messages.set_flash(Message(_("Selected post has been reported and will receive moderator attention. Thank you.")), 'info', 'threads_%s' % self.post.pk)
+                messages.info(request, _("Selected post has been reported and will receive moderator attention. Thank you."), 'threads_%s' % self.post.pk)
             else:
                 if request.is_ajax():
                     return json_response(request, message=_("You have already reported this post. One of moderators will handle it as soon as it is possible. Thank you for your patience."))
-                self.request.messages.set_flash(Message(_("You have already reported this post. One of moderators will handle it as soon as it is possible. Thank you for your patience.")), 'info', 'threads_%s' % self.post.pk)
+                messages.info(request, _("You have already reported this post. One of moderators will handle it as soon as it is possible. Thank you for your patience."), 'threads_%s' % self.post.pk)
 
             return self.redirect_to_post(self.post)
         return view(self.request)
