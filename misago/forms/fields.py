@@ -1,8 +1,7 @@
-from mptt.forms import TreeNodeChoiceField
-from recaptcha.client.captcha import API_SSL_SERVER, API_SERVER, VERIFY_SERVER
-from floppyforms import fields, widgets
 from django.utils.html import conditional_escape, mark_safe
 from django.utils.translation import ugettext_lazy as _
+from floppyforms import fields, widgets
+from mptt.forms import TreeNodeChoiceField
 from misago.forms.widgets import ReCaptchaWidget
 
 class ForumChoiceField(TreeNodeChoiceField):
