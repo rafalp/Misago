@@ -41,7 +41,8 @@ class NewReplyBaseView(PostingBaseView):
         if (settings.post_merge_time
                 and merge_diff < (settings.post_merge_time * 60)
                 and self.thread.last_poster_id == self.request.user.id
-                and self.thread.last_post.moderated == moderation):
+                and self.thread.last_post.moderated == moderation
+                and (not self.thread.last_post.deleted or self.thread.last_post_id == self.thread.start_post_id)):
             merged = True
             self.post = self.thread.last_post
             self.post.date = now
@@ -85,7 +86,7 @@ class NewReplyBaseView(PostingBaseView):
             self.forum.posts += 1
             self.forum.new_last_thread(self.thread)
             self.forum.save(force_update=True)
-        
+
         # Reward user for posting new reply?
         if not moderation and not merged and (not self.request.user.last_post
                 or self.request.user.last_post < timezone.now() - timedelta(seconds=settings.score_reward_new_post_cooldown)):
