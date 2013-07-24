@@ -7,9 +7,10 @@
     {% endfor %}
   </div>
   {% endif %}
+  {% set context = field.field.widget.get_context(field.html_name, field.value()) %}
   <div class="editor-input">
     <div>
-      <textarea name="{{ field.html_name }}" id="{{ field.html_id }}" rows="{{ rows }}"{% if placeholder %} placeholder="{{ placeholder }}"{% endif %}>{% if field.has_value %}{{ field.value }}{% endif %}</textarea>
+      <textarea name="{{ context.name }}" id="id_{{ context.name }}" rows="{{ rows }}"{% if placeholder %} placeholder="{{ placeholder }}"{% endif %}>{% if 'value' in context %}{{ context.value }}{% endif %}</textarea>
     </div>
   </div>
   <div class="editor-actions">
