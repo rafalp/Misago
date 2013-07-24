@@ -54,21 +54,25 @@ def get_messages(request, owner=None):
     return request.messages.get_messages(owner)
 
 
+def get_message(request, owner=None):
+    return request.messages.get_message(owner)
+
+
 def add_message(request, level, message, owner=None):
     request.messages.set_flash(unicode(message), level=level, owner=owner)
 
 
 def info(request, message, owner=None):
-    request.messages.set_message(message, level=INFO, owner=owner)
+    add_message(request, INFO, message, owner=owner)
 
 
 def success(request, message, owner=None):
-    request.messages.set_message(message, level=SUCCESS, owner=owner)
+    add_message(request, SUCCESS, message, owner=owner)
 
 
 def warning(request, message, owner=None):
-    request.messages.set_message(message, level=WARNING, owner=owner)
+    add_message(request, WARNING, message, owner=owner)
 
 
 def error(request, message, owner=None):
-    request.messages.set_message(message, level=ERROR, owner=owner)
+    add_message(request, ERROR, message, owner=owner)

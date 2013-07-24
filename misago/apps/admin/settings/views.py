@@ -44,7 +44,7 @@ def settings(request, group_id=None, group_slug=None):
     SettingsGroupForm = type('SettingsGroupForm', (Form,), group_form)
 
     #Submit form
-    message = request.messages.get_message('admin_settings')
+    message = messages.get_message(request, 'admin_settings')
     if request.method == 'POST':
         form = SettingsGroupForm(request.POST, request=request)
         if form.is_valid():

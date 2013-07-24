@@ -30,6 +30,7 @@
     {% if active_group.description %}
     <p>{{ _(active_group.description) }}</p>{% endif %}
     <form class="form-vertical" action="{{ url('admin_settings', group_id=active_group.id, group_slug=active_group.key) }}" method="post">
+      <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
       <div class="form-container">
         {% for fieldset in form %}
         <fieldset>
