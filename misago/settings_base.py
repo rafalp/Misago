@@ -27,6 +27,9 @@ AVATAR_SIZES = (125, 100, 80, 60, 40, 24)
 # Allow usernames to contain diacritics
 UNICODE_USERNAMES = True
 
+# Default anti-flood delay (seconds)
+FLOOD_DELAY = 35
+
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
@@ -184,7 +187,7 @@ INSTALLED_APPS = (
     'django_jinja', # Jinja2 integration
     'django_jinja.contrib.humanize', # Some Django filters
     'floppyforms', # Better forms
-    'mptt', # Modified Pre-order Tree Transversal - allows us to nest forums 
+    'mptt', # Modified Pre-order Tree Transversal - allows us to nest forums
     'haystack', # Search engines bridge
     'debug_toolbar', # Debug toolbar'
     'misago', # Misago Forum App
