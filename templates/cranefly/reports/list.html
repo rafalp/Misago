@@ -65,7 +65,7 @@
           </ul>
           {% endif %}
 
-          <a href="{{ url('report', thread=thread.pk, slug=thread.slug) }}" class="thread-name"><span class="report-id">#{{ thread.pk }}</span> {{ thread.name|short_string(75) }}</a>
+          <a href="{{ url('report', thread=thread.pk, slug=thread.slug) }}" class="thread-name{% if thread.name|length > 70 %} tooltip-top" title="{{ thread.name }}{% endif %}"><span class="report-id">#{{ thread.pk }}</span> {{ thread.name|short_string(70) }}</a>
 
           {% if thread.is_read %}
           <a href="{{ url('report_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last comment{% endtrans %}"><i class="icon-asterisk"></i></a>

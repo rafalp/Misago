@@ -137,7 +137,7 @@
 
           {{ macros.thread_flags(thread) }}
 
-          <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}" class="thread-name">{{ thread.name|short_string(75) }}</a>
+          <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}" class="thread-name{% if thread.name|length > 70 %} tooltip-top" title="{{ thread.name }}{% endif %}">{{ thread.name|short_string(70) }}</a>
 
           <div class="thread-details">
             {% trans user=thread_starter(thread), start=thread.start|reldate|low %}by {{ user }}, {{ start }}{% endtrans %}
