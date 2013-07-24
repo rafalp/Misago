@@ -41,7 +41,7 @@
 
   <div class="thread-buttons">
     {{ pager() }}
-    {% if user.is_authenticated() %}    
+    {% if user.is_authenticated() %}
     {% if acl.threads.can_reply(forum, thread) %}
     <a href="{{ url('thread_reply', thread=thread.pk, slug=thread.slug) }}" class="btn btn-inverse pull-right"><i class="icon-pencil"></i> {% trans %}Reply{% endtrans %}</a>
     {% endif %}

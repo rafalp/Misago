@@ -32,15 +32,15 @@ class PostingForm(FloodProtectionMixin, Form, ValidatePostLengthMixin):
                     current_weight = self.thread.weight
                 except AttributeError:
                     current_weight = 0
-                self.fields['thread_weight'] = forms.TypedChoiceField(widget=forms.RadioSelect,
-                                                                      choices=thread_weight,
-                                                                      required=False,
-                                                                      coerce=int,
-                                                                      initial=current_weight)
+                self.add_field('thread_weight', forms.TypedChoiceField(widget=forms.RadioSelect,
+                                                                       choices=thread_weight,
+                                                                       required=False,
+                                                                       coerce=int,
+                                                                       initial=current_weight))
 
         # Can we lock threads?
         if self.include_close_thread and self.request.acl.threads.can_close(self.forum):
-            self.fields['close_thread'] = forms.BooleanField(required=False)
+            self.add_field('close_thread', forms.BooleanField(required=False))
 
         # Give inheritor chance to set custom fields
         try:
@@ -62,17 +62,19 @@ class PostingForm(FloodProtectionMixin, Form, ValidatePostLengthMixin):
 class NewThreadForm(PostingForm, ValidateThreadNameMixin):
     def finalize_form(self):
         super(NewThreadForm, self).finalize_form()
-        self.layout[0][1].append(('thread_name', {'label': _("Thread Name")}))
-        self.fields['thread_name'] = forms.CharField(max_length=settings.thread_name_max,
-                                                     validators=[validate_sluggable(_("Thread name must contain at least one alpha-numeric character."),
-                                                                                    _("Thread name is too long. Try shorter name."))])
+        self.add_field('thread_name', forms.CharField(label=_("Thread Name"),
+                                                      max_length=settings.thread_name_max,
+                                                      validators=[validate_sluggable(_("Thread name must contain at least one alpha-numeric character."),
+                                                                                     _("Thread name is too long. Try shorter name."))]))
 
 
 class EditThreadForm(NewThreadForm, ValidateThreadNameMixin):
     def finalize_form(self):
         super(EditThreadForm, self).finalize_form()
-        self.fields['edit_reason'] = forms.CharField(max_length=255, required=False, help_text=_("Optional reason for editing this thread."))
-        self.layout[0][1].append(('edit_reason', {'label': _("Edit Reason")}))
+        self.add_field('edit_reason', forms.CharField(label=_("Edit Reason"),
+                                                      help_text=_("Optional reason for editing this thread."),
+                                                      max_length=255,
+                                                      required=False))
 
 
 class NewReplyForm(PostingForm):
@@ -82,5 +84,7 @@ class NewReplyForm(PostingForm):
 class EditReplyForm(PostingForm):
     def finalize_form(self):
         super(EditReplyForm, self).finalize_form()
-        self.fields['edit_reason'] = forms.CharField(max_length=255, required=False, help_text=_("Optional reason for editing this reply."))
-        self.layout[0][1].append(('edit_reason', {'label': _("Edit Reason")}))
+        self.add_field('edit_reason', forms.CharField(label=_("Edit Reason"),
+                                                      help_text=_("Optional reason for editing this reply."),
+                                                      max_length=255,
+                                                      required=False))

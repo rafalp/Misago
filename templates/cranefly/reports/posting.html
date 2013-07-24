@@ -64,7 +64,7 @@
             <hr>
             <h4>{% trans %}Message Body{% endtrans %}</h4>
             {% endif %}
-            {{ editor.editor(form.fields.post, get_button(), rows=8, extra=get_extra()) }}
+            {{ editor.editor(form.post, get_button(), rows=8, extra=get_extra()) }}
             {% if intersect(form.fields, ('edit_reason', 'thread_weight')) %}
             <hr>
             {% if 'edit_reason' in form.fields %}
