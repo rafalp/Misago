@@ -10,6 +10,6 @@ path.py
 Pillow
 pytz
 recaptcha-client
-South
+South>=8.1
 Unidecode
 whoosh<2.5
