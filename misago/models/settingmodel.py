@@ -64,14 +64,14 @@ class Setting(models.Model):
         # Set validators
         field_validators = []
         if 'min' in extra:
-            if self.normalize_to == 'string' or self.normalize_to == 'array':
+            if self.normalize_to in ('string', 'array'):
                 field_validators.append(validators.MinLengthValidator(extra['min']))
-            if self.normalize_to == 'integer' or self.normalize_to == 'float':
+            if self.normalize_to in ('integer', 'float'):
                 field_validators.append(validators.MinValueValidator(extra['min']))
         if 'max' in extra:
-            if self.normalize_to == 'string' or self.normalize_to == 'array':
+            if self.normalize_to in ('string', 'array'):
                 field_validators.append(validators.MaxLengthValidator(extra['max']))
-            if self.normalize_to == 'integer' or self.normalize_to == 'float':
+            if self.normalize_to in ('integer', 'float'):
                 field_validators.append(validators.MaxValueValidator(extra['max']))
 
         # Yes-no
@@ -137,12 +137,6 @@ class Setting(models.Model):
 
         if self.normalize_to == 'float':
             default_input = forms.FloatField
-
-        if self.normalize_to in ('integer', 'float'):
-            if 'max' in extra:
-                kwargs['max_value'] = extra['max']
-            if 'min' in extra:
-                kwargs['min_value'] = extra['min']
 
         # Make text-input
         return default_input(**kwargs)
