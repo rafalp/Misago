@@ -64,9 +64,9 @@
             <li class="flag-deleted"><i class="icon-trash tooltip-top" title="{% trans %}This thread is deleted{% endtrans %}"></i></li>
           </ul>
           {% endif %}
-          
-          <a href="{{ url('report', thread=thread.pk, slug=thread.slug) }}" class="thread-name"><span class="report-id">#{{ thread.pk }}</span> {{ thread.name }}</a>
-          
+
+          <a href="{{ url('report', thread=thread.pk, slug=thread.slug) }}" class="thread-name"><span class="report-id">#{{ thread.pk }}</span> {{ thread.name|short_string(75) }}</a>
+
           {% if thread.is_read %}
           <a href="{{ url('report_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last comment{% endtrans %}"><i class="icon-asterisk"></i></a>
           {% else %}

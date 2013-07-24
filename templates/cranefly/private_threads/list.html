@@ -58,7 +58,7 @@
           <a href="{{ url('private_thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}"><i class="icon-fire"></i></a>
           {% endif %}
 
-          <a href="{{ url('private_thread', thread=thread.pk, slug=thread.slug) }}" class="thread-name">{{ thread.name }}</a>
+          <a href="{{ url('private_thread', thread=thread.pk, slug=thread.slug) }}" class="thread-name">{{ thread.name|short_string(75) }}</a>
 
           {{ macros.thread_flags(thread) }}
 
@@ -96,7 +96,7 @@
       {% trans %}You are not participating in any private discussions.{% endtrans %}
     </div>
     {% endfor %}
-    
+
     {% if list_form %}
     <div class="threads-actions">
       <form id="threads_form" class="form-inline pull-right" action="{{ request_path }}" method="POST">

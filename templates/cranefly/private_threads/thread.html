@@ -7,7 +7,7 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li><a href="{{ url('private_threads') }}">{% trans %}Private Threads{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-<li class="active">{{ thread.name }}
+<li class="active">{{ thread.name|short_string(35) }}
 {%- endblock %}
 
 {% block container %}
@@ -50,7 +50,7 @@
     <div class="span9">
 
       <div class="thread-buttons">
-        {{ pager() }} 
+        {{ pager() }}
         {% if acl.threads.can_reply(forum, thread) and (acl.private_threads.is_mod() or participants|length > 1) %}
         <a href="{{ url('private_thread_reply', thread=thread.pk, slug=thread.slug) }}" class="btn btn-inverse pull-right"><i class="icon-pencil"></i> {% trans %}Reply{% endtrans %}</a>
         {% endif %}
@@ -234,7 +234,7 @@
                 {% endif %}
               </div>
               <div class="post-footer">{% filter trim %}
-                <div class="post-actions">              
+                <div class="post-actions">
                   {% if acl.users.can_see_users_trails() -%}
                   <a href="{{ url('private_post_info', thread=thread.pk, slug=thread.slug, post=post.pk) }}" class="post-trail">{% trans %}Info{% endtrans %}</a>
                   {% endif %}

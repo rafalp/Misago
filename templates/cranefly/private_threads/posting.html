@@ -11,7 +11,7 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li><a href="{{ url('private_threads') }}">{% trans %}Private Threads{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-{% if thread %}<li><a href="{{ url('private_thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>{% endif %}
+{% if thread %}<li><a href="{{ url('private_thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name|short_string(35) }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>{% endif %}
 <li class="active">{{ get_title() }}
 {%- endblock %}
 
@@ -22,7 +22,7 @@
     <ul class="breadcrumb">
       {{ self.breadcrumb() }}</li>
     </ul>
-    <h1>{{ get_title() }} <small>{% if thread %}{{ thread.name }}{% else %}{% trans %}Private Threads{% endtrans %}{% endif %}</small></h1>
+    <h1>{{ get_title() }} <small>{% if thread %}{{ thread.name|short_string(35) }}{% else %}{% trans %}Private Threads{% endtrans %}{% endif %}</small></h1>
     {% if thread %}
     <ul class="unstyled header-stats">
       {{ get_info() }}
