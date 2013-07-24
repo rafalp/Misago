@@ -50,11 +50,13 @@ class ThreadBaseView(ViewBase):
             return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))
 
         checkpoints_boundary = None
-        if settings.posts_per_page < self.count:
+
+        if self.pagination['total'] > 1:
             self.posts = self.posts[self.pagination['start']:self.pagination['stop'] + 1]
             posts_len = len(self.posts)
-            checkpoints_boundary = self.posts[posts_len - 1].date
-            self.posts = self.posts[0:(posts_len - 2)]
+            if self.pagination['page'] < self.pagination['total']:
+                checkpoints_boundary = self.posts[posts_len - 1].date
+                self.posts = self.posts[0:(posts_len - 1)]
 
         self.read_date = self.tracker.read_date(self.thread)
 
