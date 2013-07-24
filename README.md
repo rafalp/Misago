@@ -16,6 +16,16 @@ The secondary goal is making Misago a viable foundation for building and maintai
 Finally, while Misago is built using Django, it's not a "Django application" and it won't integrate with existing Django projects. This is the result of a design decision to use custom users/session/auth/permissions functionality instead of native Django applications - however, in the future Misago will provide a web API allowing you to add Misago-powered features to your website and/or application.
 
 
+Requirements
+------------
+
+* Shell access to your server
+* Task sheduler (eg. CronTab)
+* Python __2.7__
+* MySQL/Postgres/Oracle Database
+* Pillow Imaging Library for Python
+
+
 Dependencies
 ------------
 

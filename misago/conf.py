@@ -43,7 +43,7 @@ class MisagoSettings(object):
 
     def __getitem__(self, key):
         return self.setting(key)
-    
+
     def __getattr__(self, key):
         return self.setting(key)
 
@@ -56,7 +56,7 @@ class MisagoSettings(object):
 settings = MisagoSettings(_thread_local, True)
 
 
-def SafeSettings(): 
+def SafeSettings():
     """
     Safe settings factory for MisagoSettings
     """
