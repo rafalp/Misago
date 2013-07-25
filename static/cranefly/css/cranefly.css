@@ -1080,7 +1080,7 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{opacity:.9;filter:alpha(opac
 .user-profile .user-profile-header .header-avatar{border-radius:3px;float:left;width:80px;height:80px;margin-top:-8px}
 .user-profile .user-profile-header .header-side{margin-left:94px}.user-profile .user-profile-header .header-side h1{margin-left:6.666666666666667px}
 .user-profile hr{border:none;border-top:1px solid #eee;margin:14px 0}
-.user-profile .stat-header{border-bottom:1px solid #e2e2e2;margin-bottom:14px}.user-profile .stat-header .user-graph{height:40px}.user-profile .stat-header .user-graph svg{position:relative;left:1px;height:100%;width:100%}
+.user-profile .stat-header{border-bottom:1px solid #e2e2e2;margin-bottom:14px}.user-profile .stat-header .user-graph{height:40px;overflow:hidden}.user-profile .stat-header .user-graph svg{position:relative;left:1px;height:40px;width:100%}
 .user-profile .stat-header .help-text{float:right;margin-bottom:-20px;position:relative;top:47.9px;color:#999;font-size:11.9px}
 .user-profile .stat-header h2{margin-top:-54px;position:relative;top:4px;text-shadow:0 0 3px #fbfbfb}
 .user-profile .user-details .label{font-size:14px}
