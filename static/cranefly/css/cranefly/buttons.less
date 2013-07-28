@@ -7,9 +7,8 @@
   .box-shadow(none);
 
   font-weight: bold;
-  
+
   i {
-    .opacity(60);
     position: relative;
     bottom: 1px;
   }
@@ -17,10 +16,8 @@
   &:hover, &:active {
     background-color: @white;
     border-color: lighten(@grayLight, 5%);
-  
-    i {
-      .opacity(90);
-    }
+
+  	color: @grayDark;
   }
 
   &.btn-primary {
@@ -34,10 +31,6 @@
         background-color: saturate(@bluePale, 20%);
         border-color: darken(saturate(@bluePale, 20%), 5%);
       }
-    }
-
-    i {
-      background-image: url("@{iconWhiteSpritePath}");
     }
   }
 
@@ -53,10 +46,6 @@
         border-color: darken(desaturate(@bluePale, 10%), 5%);
       }
     }
-
-    i {
-      background-image: url("@{iconWhiteSpritePath}");
-    }
   }
 
   &.btn-success {
@@ -70,10 +59,6 @@
         background-color: @green;
         border-color: darken(@green, 5%);
       }
-    }
-
-    i {
-      background-image: url("@{iconWhiteSpritePath}");
     }
   }
 
@@ -89,10 +74,6 @@
         border-color: darken(@orange, 5%);
       }
     }
-
-    i {
-      background-image: url("@{iconWhiteSpritePath}");
-    }
   }
 
   &.btn-danger {
@@ -106,10 +87,6 @@
         background-color: saturate(@red, 20%);
         border-color: darken(saturate(@red, 20%), 5%);
       }
-    }
-
-    i {
-      background-image: url("@{iconWhiteSpritePath}");
     }
   }
 
@@ -125,10 +102,6 @@
         border-color: darken(@textColor, 10%);
       }
     }
-
-    i {
-      background-image: url("@{iconWhiteSpritePath}");
-    }
   }
 
   &.btn-link {
@@ -141,16 +114,9 @@
     &:hover, &:active, &:focus {
       &:enabled {
         .opacity(90);
-        
+
         text-decoration: none;
       }
-    }
-  }
-
-
-  &.btn-primary, &.btn-info, &.btn-success, &.btn-warning, &.btn-danger, &.btn-inverse, &.btn-link {
-    i {
-      .opacity(100);
     }
   }
 }

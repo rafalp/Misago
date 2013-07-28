@@ -24,7 +24,7 @@
 
         span {
           color: @navbarMottoColor;
-        } 
+        }
       }
     }
 
@@ -122,6 +122,8 @@
 
             .btn {
               margin: 0px;
+
+              color: @white;
             }
 
             a:link, a:visited {
@@ -154,14 +156,14 @@
 
         a:link, a:visited, .btn-link {
           background-color: lighten(@navbarBackground, 2%);
-          border: 1px solid darken(@navbarBorder, 2%);
+          border: 1px solid @navbarBorder;
           border-radius: @baseBorderRadius;
-          padding: 5px 8px;
+          padding: 5px 0px;
           margin-top: ((@navbarHeight - @baseLineHeight) / 2) - 6;
+          min-width: 30px;
 
-          i {
-            .opacity(70);
-          }
+          color: @gray;
+          text-align: center;
 
           .label {
             background-color: @red;
@@ -177,30 +179,31 @@
           background-color: @linkColor;
           border-color: darken(@linkColor, 10%);
 
+          color: @white;
+          text-shadow: 0px 1px 1px darken(@linkColor, 10%);
+
           &.danger {
             background-color: @red;
-            border-color: darken(@red, 10%);
+          	border-color: darken(@red, 10%);
+          	text-shadow: 0px 1px 1px darken(@red, 10%);
           }
 
           &.hot {
             background-color: @orange;
-            border-color: darken(@orange, 10%);
+          	border-color: darken(@orange, 10%);
+          	text-shadow: 0px 1px 1px darken(@orange, 10%);
           }
 
           &.fresh {
             background-color: @green;
-            border-color: darken(@green, 10%);
-          }
-
-          i {
-            background-image: url("@{iconWhiteSpritePath}");
-            .opacity(100);
+          	border-color: darken(@green, 10%);
+          	text-shadow: 0px 1px 1px darken(@green, 10%);
           }
 
           .label {
-            background-color: @grayLighter;
+            background-color: @white;
 
-            color: @textColor;
+            color: @linkColor;
           }
         }
 
@@ -211,6 +214,7 @@
             margin-right: 8px;
             margin-top: 5px;
 
+            color: @grayDarker;
             font-weight: bold;
             text-shadow: none;
 
@@ -229,7 +233,7 @@
 
     .navbar-compact {
       display: none;
-      
+
       li {
         &.user-profile {
           &>a {
@@ -278,9 +282,8 @@
                 background: @red;
                 border-color: @red;
 
-                .caret {
-                  border-top-color: @white;
-                }
+                color: @white;
+                text-shadow: 0px 1px 1px darken(@red, 10%);
               }
             }
           }
@@ -327,9 +330,9 @@
                 color: @textColor;
                 font-weight: normal;
                 text-align: left;
-                
+
                 i {
-                  .opacity(100);
+                	margin-right: 12px;
                 }
 
                 &:link, &:active, &:visited, &:hover {
@@ -341,10 +344,6 @@
                     text-shadow: 0px 1px 0px darken(@red, 20%);
                   }
                 }
-              }
-
-              a:link, a:visited {
-                .opacity(80);
               }
 
               a:hover {
