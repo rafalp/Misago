@@ -55,9 +55,9 @@ class MembersOnline(object):
                }
 
         if not request.user.is_crawler():
-            if not stat['members'] and request.user.is_authenticated():
+            if request.user.is_authenticated() and request.session.started:
                 stat['members'] += 1
                 stat['all'] += 1
             if not stat['all']:
-                stat['all'] += 1        
+                stat['all'] += 1
         return stat
