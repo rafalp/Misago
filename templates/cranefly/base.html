@@ -6,6 +6,9 @@
     <title>{% block title %}{{ page_title() }}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">{% block meta %}{% endblock %}
     <link href="{{ STATIC_URL }}cranefly/css/cranefly.css" rel="stylesheet">{% block stylesheets %}{% endblock %}
+    <!--[if IE 7]>
+    <link rel="stylesheet" href="{{ STATIC_URL }}cranefly/css/font-awesome-ie7.min.css">
+    <![endif]-->
     <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico">
   </head>
   <body itemscope itemtype="http://schema.org/WebPage"{% block body_class %}{% endblock %}>
