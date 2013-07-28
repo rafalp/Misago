@@ -31,7 +31,7 @@
         width: 100%;
 
         font-family: @monoFontFamily;
-      } 
+      }
     }
   }
 
@@ -46,6 +46,7 @@
 
     .editor-tools {
       margin: 0px;
+      margin-right: @editorPadding;
 
       li {
         float: left;
@@ -56,6 +57,10 @@
           padding-right: 7px;
         }
       }
+    }
+
+    .editor-help {
+    	line-height: @baseLineHeight + @editorPadding;
     }
   }
 }

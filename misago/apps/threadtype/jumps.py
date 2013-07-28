@@ -188,15 +188,15 @@ class UpvotePostBaseView(JumpView):
                         self.post.user.karma_n -= 1
             except Karma.DoesNotExist:
                 vote = Karma()
-            vote.forum = self.forum
-            vote.thread = self.thread
-            vote.post = self.post
-            vote.user = request.user
-            vote.user_name = request.user.username
-            vote.user_slug = request.user.username_slug
-            vote.date = timezone.now()
-            vote.ip = request.session.get_ip(request)
-            vote.agent = request.META.get('HTTP_USER_AGENT')
+                vote.forum = self.forum
+                vote.thread = self.thread
+                vote.post = self.post
+                vote.user = request.user
+                vote.user_name = request.user.username
+                vote.user_slug = request.user.username_slug
+                vote.date = timezone.now()
+                vote.ip = request.session.get_ip(request)
+                vote.agent = request.META.get('HTTP_USER_AGENT')
             self.make_vote(request, vote)
             if vote.pk:
                 vote.save(force_update=True)
