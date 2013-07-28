@@ -8,11 +8,6 @@
 
   font-weight: bold;
 
-  i {
-    position: relative;
-    bottom: 1px;
-  }
-
   &:hover, &:active {
     background-color: @white;
     border-color: lighten(@grayLight, 5%);
@@ -24,9 +19,12 @@
     background-color: @bluePale;
     border-color: darken(@bluePale, 5%);
 
+		color: fadeOut(@white, 15%);
     text-shadow: 0px 1px 0px darken(@bluePale, 15%);
 
     &:hover, &:active {
+    	color: @white;
+
       &:enabled {
         background-color: saturate(@bluePale, 20%);
         border-color: darken(saturate(@bluePale, 20%), 5%);
@@ -38,9 +36,12 @@
     background-color: desaturate(@bluePale, 25%);
     border-color: darken(desaturate(@bluePale, 25%), 5%);
 
+		color: fadeOut(@white, 15%);
     text-shadow: 0px 1px 0px darken(desaturate(@bluePale, 25%), 15%);
 
     &:hover, &:active {
+    	color: @white;
+
       &:enabled {
         background-color: desaturate(@bluePale, 10%);
         border-color: darken(desaturate(@bluePale, 10%), 5%);
@@ -52,9 +53,12 @@
     background-color: desaturate(@green, 15%);
     border-color: darken(desaturate(@green, 15%), 5%);
 
+		color: fadeOut(@white, 15%);
     text-shadow: 0px 1px 0px darken(@green, 15%);
 
     &:hover, &:active {
+    	color: @white;
+
       &:enabled {
         background-color: @green;
         border-color: darken(@green, 5%);
@@ -66,9 +70,12 @@
     background-color: desaturate(@orange, 15%);
     border-color: darken(desaturate(@orange, 15%), 5%);
 
+		color: fadeOut(@white, 15%);
     text-shadow: 0px 1px 0px darken(@orange, 15%);
 
     &:hover, &:active {
+    	color: @white;
+
       &:enabled {
         background-color: @orange;
         border-color: darken(@orange, 5%);
@@ -80,9 +87,12 @@
     background-color: @red;
     border-color: darken(@red, 5%);
 
+		color: fadeOut(@white, 15%);
     text-shadow: 0px 1px 0px darken(@red, 15%);
 
     &:hover, &:active {
+    	color: @white;
+
       &:enabled {
         background-color: saturate(@red, 20%);
         border-color: darken(saturate(@red, 20%), 5%);
@@ -94,9 +104,12 @@
     background-color: @textColor;
     border-color: darken(@textColor, 5%);
 
+		color: fadeOut(@white, 15%);
     text-shadow: 0px 1px 0px darken(@textColor, 15%);
 
     &:hover, &:active {
+    	color: @white;
+
       &:enabled {
         background-color: darken(@textColor, 5%);
         border-color: darken(@textColor, 10%);
@@ -112,6 +125,8 @@
     color: @textColor;
 
     &:hover, &:active, &:focus {
+    	color: @white;
+
       &:enabled {
         .opacity(90);
 

@@ -6,7 +6,7 @@
 {% block meta %}{% if settings.board_index_meta %}
     <meta name="description" content="{{ settings.board_index_meta }}">
 {%- endif %}{%- endblock %}
-      
+
 {% block content %}
 {{ hook_above_forum_home|safe }}
 <div class="row">
@@ -21,8 +21,8 @@
         </div>
         {% for forum in category.subforums %}
         <div class="forum{% if loop.last %} last{% endif %}">
-          <div class="forum-icon">
-            <div class="forum-icon-wrap{% if forum.type == 'redirect' %} forum-icon-redirect{% elif not forum.is_read %} forum-icon-new{% endif %}"><i class="icon-{% if forum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %} icon-white"></i></div>
+          <div class="forum-icon{% if forum.type == 'redirect' %} forum-icon-redirect{% elif not forum.is_read %} forum-icon-new{% endif %}">
+            <i class="icon-{% if forum.type == 'redirect' %}link{% elif not forum.is_read %}comment{% else %}comment-alt{% endif %}"></i>
           </div>
           <div id="forum-{{ forum.id }}" class="forum-main">
             <h3 class="forum-title{% if not forum.is_read %} forum-title-new{% endif %}"><a href="{{ url(forum.type, slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3>
@@ -57,7 +57,7 @@
                 <div class="dropdown-shadow">
                   <ul>
                     {% for subforum in forum.subforums %}
-                    <li><a href="{{ url(subforum.type, slug=subforum.slug, forum=subforum.id) }}"><i class="icon-{% if subforum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %}"></i> {{ subforum.name }}</a></li>
+                    <li><a href="{{ url(subforum.type, slug=subforum.slug, forum=subforum.id) }}"><i class="icon-{% if subforum.type == 'redirect' %}circle-arrow-right{% else %}comments{% endif %}"></i> {{ subforum.name }}</a></li>
                     {% endfor %}
                   </ul>
                 </div>

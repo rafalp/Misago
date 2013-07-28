@@ -320,8 +320,11 @@
 
     .row-fluid {
       &>div {
-        min-height: auto;
+        margin-bottom: 0px;
+        min-height: 1px;
         padding: @paddingSmall;
+        padding-top: 2px;
+        padding-bottom: 2px;
       }
 
       .thread-replies {
@@ -335,6 +338,8 @@
     }
 
     .check-cell {
+    	padding: 0px;
+
       label {
         margin: 0px;
       }
@@ -364,28 +369,23 @@
     }
 
     .thread-icon {
-      background-color: @itemOldColor;
-      border: 1px solid darken(@itemOldColor, 10%);
-      .border-radius(@baseBorderRadius);
       display: block;
       float: left;
-      margin: -2px 0px;
-      margin-left: -1px;
-      padding: 1px 4px;
+      position: relative;
+      bottom: 2px;
+
+      color: @grayLight;
+      font-size: @threadIconSize;
 
       &:hover, &:active {
-        .opacity(100);
-      }
-
-      i {
-        background-image: url("@{iconWhiteSpritePath}");
+      	color: @grayLight;
+      	text-decoration: none;
       }
     }
 
     &.thread-new {
       .thread-icon {
-        background-color: @itemNewColor;
-        border: 1px solid darken(@itemNewColor, 10%);
+        color: @itemNewColor;
       }
 
       .thread-name {
@@ -419,7 +419,7 @@
     }
 
     .thread-details {
-      margin-left: 34px;
+      margin-left: @threadIconSize + 7px;
 
       font-size: @fontSizeMini;
     }

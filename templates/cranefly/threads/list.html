@@ -36,7 +36,7 @@
     {% for subforum in forum.subforums %}
     <div class="forum{% if loop.last %} last{% endif %}">
       <div class="forum-icon">
-        <div class="forum-icon-wrap{% if subforum.type == 'redirect' %} forum-icon-redirect{% elif not subforum.is_read %} forum-icon-new{% endif %}"><i class="icon-{% if subforum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %} icon-white"></i></div>
+        <div class="forum-icon-wrap{% if subforum.type == 'redirect' %} forum-icon-redirect{% elif not subforum.is_read %} forum-icon-new{% endif %}"><i class="icon-{% if subforum.type == 'redirect' %}circle-arrow-right{% else %}comments{% endif %}"></i></div>
       </div>
       <div id="forum-{{ subforum.id }}" class="forum-main">
         <h3 class="forum-title{% if not subforum.is_read %} forum-title-new{% endif %}"><a href="{{ url(subforum.type, slug=subforum.slug, forum=subforum.id) }}">{{ subforum.name }}</a></h3>
@@ -71,7 +71,7 @@
             <div class="dropdown-shadow">
               <ul>
                 {% for subsubforum in subforum.subforums %}
-                <li><a href="{{ url(subsubforum.type, slug=subsubforum.slug, forum=subsubforum.id) }}"><i class="icon-{% if subsubforum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %}"></i> {{ subsubforum.name }}</a></li>
+                <li><a href="{{ url(subsubforum.type, slug=subsubforum.slug, forum=subsubforum.id) }}"><i class="icon-{% if subsubforum.type == 'redirect' %}circle-arrow-right{% else %}comments{% endif %}"></i> {{ subsubforum.name }}</a></li>
                 {% endfor %}
               </ul>
             </div>
@@ -130,9 +130,9 @@
       <div class="row-fluid">
         <div class="span7">
           {% if thread.is_read %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}"><i class="icon-asterisk"></i></a>
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}"><i class="icon-circle-blank"></i></a>
           {% else %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}"><i class="icon-fire"></i></a>
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}"><i class="icon-circle"></i></a>
           {% endif %}
 
           {{ macros.thread_flags(thread) }}
