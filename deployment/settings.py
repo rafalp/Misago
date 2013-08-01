@@ -130,8 +130,12 @@ EMAIL_HOST_PASSWORD = ''
 # Use TLS encryption
 EMAIL_USE_TLS = False
 
-# E-mail subject prefix added to emails for staff
-EMAIL_SUBJECT_PREFIX = '[Misago]'
+# Screamer Configuration
+# Screamer is special feature that sends email to users listed under ADMINS when application
+# erros. First setting is origin of error emails, while second is message title prefix that
+# makes messages easier to spot in your inbox
+SERVER_EMAIL = 'root@localhost'
+EMAIL_SUBJECT_PREFIX = '[Misago Screamer]'
 
 # Catch-all e-mail address
 # If DEBUG_MODE is on, all emails will be sent to this address instead of real recipient.
