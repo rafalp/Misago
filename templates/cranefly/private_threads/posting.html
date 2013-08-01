@@ -62,7 +62,7 @@
             {{ form_theme.row(form.thread_name, attrs={'class': 'span8'}) }}
             {% endif %}
             {% if action == 'new_thread' and 'invite_users' in form.fields %}
-            {{ form_theme.row_widget(form.fields.invite_users, width=8) }}
+            {{ form_theme.row(form.fields.invite_users, width=8) }}
             {% endif %}
             {% if 'thread_name' in form.fields or (action == 'new_thread' and 'invite_users' in form.fields) %}
             <hr>
