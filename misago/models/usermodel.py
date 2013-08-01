@@ -390,7 +390,7 @@ class User(models.Model):
             return self.ignores.filter(id=user.pk).count() > 0
         except AttributeError:
             return self.ignores.filter(id=user).count() > 0
-        
+
     def ignored_users(self):
         return [item['id'] for item in self.ignores.values('id')]
 
@@ -480,8 +480,14 @@ class User(models.Model):
         else:
             recipient = self.email
 
+        # Set message author
+        if settings.board_name:
+            sender = '%s <%s>' % (settings.board_name.replace("<", "(").replace(">", ")"), settings.EMAIL_HOST_USER)
+        else:
+            sender = settings.EMAIL_HOST_USER
+
         # Build message and add it to queue
-        email = EmailMultiAlternatives(subject, email_text, settings.EMAIL_HOST_USER, [recipient])
+        email = EmailMultiAlternatives(subject, email_text, sender, [recipient])
         email.attach_alternative(email_html, "text/html")
         request.mails_queue.append(email)
 
