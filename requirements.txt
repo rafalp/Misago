@@ -1,4 +1,4 @@
-django
+django==1.5.1
 django-debug-toolbar
 django-floppyforms
 django-haystack
@@ -10,6 +10,6 @@ path.py
 Pillow
 pytz
 recaptcha-client
-South>=0.8
+South==0.8.1
 Unidecode
 whoosh<2.5
