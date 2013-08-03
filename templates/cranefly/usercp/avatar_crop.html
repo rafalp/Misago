@@ -1,5 +1,4 @@
 {% extends "cranefly/usercp/layout.html" %}
-{% import "_forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{{ macros.page_title(title=_('Crop Avatar')) }}{% endblock %}
@@ -33,7 +32,7 @@
     <div class="avatar-crop-target"><img src="{{ MEDIA_URL }}{{ source }}" id="target" alt="{% trans %}Uploaded Image{% endtrans %}"></div>
 
   </form>
-  
+
 </div>
 {% endblock %}
 
@@ -72,7 +71,7 @@
           {
             var rx = {{ avatar_size }} / c.w;
             var ry = {{ avatar_size }} / c.h;
-            
+
             $(crop_w).val(c.w);
             $(crop_x).val(c.x);
             $(crop_y).val(c.y);
