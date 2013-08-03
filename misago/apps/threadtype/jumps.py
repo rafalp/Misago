@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+from django.db import transaction
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.translation import ugettext as _
@@ -8,7 +9,7 @@ from misago.apps.errors import error403, error404
 from misago.conf import settings
 from misago.decorators import block_guest, check_csrf
 from misago.markdown import post_markdown
-from misago.models import Forum, Checkpoint, Thread, Post, Karma, WatchedThread
+from misago.models import Forum, Checkpoint, Thread, Post, Karma, User, WatchedThread
 from misago.monitor import monitor, UpdatingMonitor
 from misago.readstrackers import ThreadsTracker
 from misago.utils.strings import short_string, slugify
@@ -165,10 +166,12 @@ class UpvotePostBaseView(JumpView):
     def make_jump(self):
         @block_guest
         @check_csrf
+        @transaction.commit_on_success
         def view(request):
             if self.post.user_id == request.user.id:
                 return error404(request)
             self.check_acl(request)
+            user = User.objects.block_user(request.user)
             try:
                 vote = Karma.objects.get(user=request.user, post=self.post)
                 if self.thread.start_post_id == self.post.pk:
@@ -178,12 +181,12 @@ class UpvotePostBaseView(JumpView):
                         self.thread.downvotes -= 1
                 if vote.score > 0:
                     self.post.upvotes -= 1
-                    request.user.karma_given_p -= 1
+                    user.karma_given_p -= 1
                     if self.post.user_id:
                         self.post.user.karma_p -= 1
                 else:
                     self.post.downvotes -= 1
-                    request.user.karma_given_n -= 1
+                    user.karma_given_n -= 1
                     if self.post.user_id:
                         self.post.user.karma_n -= 1
             except Karma.DoesNotExist:
@@ -198,10 +201,7 @@ class UpvotePostBaseView(JumpView):
                 vote.ip = request.session.get_ip(request)
                 vote.agent = request.META.get('HTTP_USER_AGENT')
             self.make_vote(request, vote)
-            if vote.pk:
-                vote.save(force_update=True)
-            else:
-                vote.save(force_insert=True)
+            vote.save()
             if self.thread.start_post_id == self.post.pk:
                 if vote.score > 0:
                     self.thread.upvotes += 1
@@ -210,20 +210,21 @@ class UpvotePostBaseView(JumpView):
                 self.thread.save(force_update=True)
             if vote.score > 0:
                 self.post.upvotes += 1
-                request.user.karma_given_p += 1
+                user.karma_given_p += 1
                 if self.post.user_id:
                     self.post.user.karma_p += 1
                     self.post.user.score += settings.score_reward_karma_positive
             else:
                 self.post.downvotes += 1
-                request.user.karma_given_n += 1
+                user.karma_given_n += 1
                 if self.post.user_id:
                     self.post.user.karma_n += 1
                     self.post.user.score -= settings.score_reward_karma_negative
             self.post.save(force_update=True)
-            request.user.save(force_update=True)
+            user.last_vote = timezone.now()
             if self.post.user_id:
                 self.post.user.save(force_update=True)
+            user.save(force_update=True)
             if request.is_ajax():
                 return json_response(request, {
                                                'score_total': self.post.upvotes - self.post.downvotes,

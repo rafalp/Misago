@@ -104,6 +104,9 @@ class UserManager(models.Manager):
     def filter_stats(self, start, end):
         return self.filter(join_date__gte=start).filter(join_date__lte=end)
 
+    def block_user(self, user):
+        return User.objects.select_for_update().get(id=user.id)
+
 
 class User(models.Model):
     """
@@ -150,6 +153,7 @@ class User(models.Model):
     ignores = models.ManyToManyField('self', related_name='ignores_set', symmetrical=False)
     title = models.CharField(max_length=255, null=True, blank=True)
     last_post = models.DateTimeField(null=True, blank=True)
+    last_vote = models.DateTimeField(null=True, blank=True)
     last_search = models.DateTimeField(null=True, blank=True)
     alerts = models.PositiveIntegerField(default=0)
     alerts_date = models.DateTimeField(null=True, blank=True)
