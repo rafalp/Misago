@@ -29,12 +29,12 @@
 <div class="container container-primary">
   <div class="post-votes-list">
     <div class="post-likes">
-      <h2>{% trans count=upvotes|length, votes=upvotes|length|intcomma -%}
+      {% if upvotes %}
+      <h2 class="text-success"><i class="icon-thumbs-up-alt"></i> {% trans count=upvotes|length, votes=upvotes|length|intcomma -%}
         One like
         {%- pluralize -%}
         {{ votes }} likes
         {%- endtrans %}</h2>
-      {% if upvotes %}
       <table class="table table-striped">
         <tbody>
           {% for row in upvotes|batch(4, '') %}
@@ -42,7 +42,7 @@
             {% for vote in row %}
             <td class="span3">
               {% if vote %}
-              {{ vote_details(vote, 'thumbs-up') }}
+              {{ vote_details(vote) }}
               {% else %}
               &nbsp;
               {% endif %}
@@ -53,19 +53,19 @@
         </tbody>
       </table>
       {% else %}
-      <p class="lead">{% trans %}Nobody liked this post.{% endtrans %}</p>
+      <p class="lead"><i class="icon-meh"></i> {% trans %}Nobody liked this post.{% endtrans %}</p>
       {% endif %}
     </div>
 
     <hr>
 
     <div class="post-dislikes">
-      <h2>{% trans count=downvotes|length, votes=downvotes|length|intcomma -%}
+      {% if downvotes %}
+      <h2 class="text-error"><i class="icon-thumbs-down-alt"></i> {% trans count=downvotes|length, votes=downvotes|length|intcomma -%}
         One dislike
         {%- pluralize -%}
         {{ votes }} dislikes
         {%- endtrans %}</h2>
-      {% if downvotes %}
       <table class="table table-striped">
         <tbody>
           {% for row in downvotes|batch(4, '') %}
@@ -73,7 +73,7 @@
             {% for vote in row %}
             <td class="span3">
               {% if vote %}
-              {{ vote_details(vote, 'thumbs-down') }}
+              {{ vote_details(vote) }}
               {% else %}
               &nbsp;
               {% endif %}
@@ -84,7 +84,7 @@
         </tbody>
       </table>
       {% else %}
-      <p class="lead">{% trans %}Nobody disliked this post.{% endtrans %}</p>
+      <p class="lead"><i class="icon-smile"></i> {% trans %}Nobody disliked this post.{% endtrans %}</p>
       {% endif %}
     </div>
   </div>
@@ -111,6 +111,10 @@
   </script>
 {% endblock %}
 
-{% macro vote_details(vote, icon) %}
-{% if vote.user_id %}<a href="{{ url('user', user=vote.user_id, username=vote.user_slug) }}" class="vote-user vote-{{ vote.pk }}"><span class="vote-icon"><i class="icon-{{ icon }}"></i></span> {{ vote.user_name }}</a>{% else %}<span class="vote-user vote-{{ vote.pk }}"><span class="vote-icon"><i class="icon-{{ icon }}"></i></span> {{ vote.user_name }}</span>{% endif %}
+{% macro vote_details(vote) %}
+{% if vote.user_id %}
+<a href="{{ url('user', user=vote.user_id, username=vote.user_slug) }}" class="vote-user vote-{{ vote.pk }}">{{ vote.user_name }}</a>
+{% else %}
+<span class="vote-user vote-{{ vote.pk }}">{{ vote.user_name }}</span>
+{% endif %}
 {% endmacro %}

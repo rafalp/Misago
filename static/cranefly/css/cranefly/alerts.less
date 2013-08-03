@@ -6,22 +6,12 @@
     vertical-align: middle;
 
     &.alert-icon {
-      .label {
-        background-color: @gray;
-        border: 1px solid darken(@gray, 15%);
-        border-radius: @baseBorderRadius;
-        padding: 4px;
-        padding-top: 3px;
+    	color: @itemOldColor;
+    	font-size: @fontSizeLarge;
 
-        i {
-          background-image: url("@{iconWhiteSpritePath}");
-        }
-
-        &.label-warning {
-          background-color: @red;
-          border: 1px solid darken(@red, 15%);
-        }
-      }
+    	&.alert-new {
+    		color: @itemNewColor;
+    	}
     }
 
     &.alert-message {

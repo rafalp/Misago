@@ -39,9 +39,9 @@
       <div class="row-fluid">
         <div class="span7">
           {% if thread.is_read %}
-          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}"><i class="icon-asterisk"></i></a>
+          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}"><i class="icon-circle-blank"></i></a>
           {% else %}
-          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}"><i class="icon-fire"></i></a>
+          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}"><i class="icon-circle"></i></a>
           {% endif %}
 
           {{ macros.thread_flags(thread) }}

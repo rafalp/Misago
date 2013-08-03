@@ -27,15 +27,15 @@
       <div class="row-fluid">
         <div class="span7">
           {% if thread.is_read %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}"><i class="icon-asterisk"></i></a>
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}"><i class="icon-circle-blank"></i></a>
           {% else %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}"><i class="icon-fire"></i></a>
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}"><i class="icon-circle"></i></a>
           {% endif %}
 
           {{ macros.thread_flags(thread) }}
 
           <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}" class="thread-name">{{ thread.name }}</a>
-          
+
           <div class="thread-details">
             {% trans user=thread_starter(thread), forum=thread_forum(thread), start=thread.start|reltimesince|low %}by {{ user }} in {{ forum }} {{ start }}{% endtrans %}
           </div>

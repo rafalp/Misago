@@ -55,7 +55,13 @@ You have {{ alerts }} new alerts
     <tbody>
       {% for alert in alerts %}
       <tr>
-        <td class="alert-icon"><span class="label {% if alert.new %} label-warning{% endif %} tooltip-top" title="{% if alert.new %}{% trans %}New notification{% endtrans %}{% else %}{% trans %}Old notification{% endtrans %}{% endif %}"><i class="icon-fire"></i></label></td>
+        <td class="alert-icon{% if alert.new %} alert-new{% endif %}">
+          {% if alert.new %}
+          <i class="icon-star tooltip-top" title="{% trans %}New notification{% endtrans %}"></i>
+          {% else %}
+          <i class="icon-star-empty tooltip-top" title="{% trans %}Old notification{% endtrans %}"></i>
+          {% endif %}
+        </td>
         <td class="alert-message">{{ (_(alert.message) % alert.vars())|safe }}</td>
         <td class="alert-date">{{ alert.date|reltimesince }}</td>
       </tr>

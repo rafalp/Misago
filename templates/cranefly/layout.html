@@ -76,13 +76,13 @@
         <ul id="fancy-user-nav" class="nav navbar-blocks navbar-compact pull-right">
           {{ hook_user_menu_important_prepend|safe }}
           {% if acl.reports.can_handle() and monitor.reported_posts %}
-          <li><a href="{{ url('reports') }}" title="{% trans %}There are unresolved reports!{% endtrans %}" class="tooltip-bottom"><i class="icon-fire"></i><span class="label label-important">{{ monitor.reported_posts }}</span></a></li>
+          <li><a href="{{ url('reports') }}" title="{% trans %}There are unresolved reports!{% endtrans %}" class="tooltip-bottom fluid"><i class="icon-fire"></i><span class="label label-important">{{ monitor.reported_posts }}</span></a></li>
           {% endif %}
           {% if user.alerts %}
-          <li><a href="{{ url('alerts') }}" title="{% trans %}You have new notifications!{% endtrans %}" class="tooltip-bottom"><i class="icon-asterisk"></i><span class="label label-important">{{ user.alerts }}</span></a></li>
+          <li><a href="{{ url('alerts') }}" title="{% trans %}You have new notifications!{% endtrans %}" class="tooltip-bottom fluif"><i class="icon-asterisk"></i><span class="label label-important">{{ user.alerts }}</span></a></li>
           {% endif %}
           {% if settings.enable_private_threads and acl.private_threads.can_participate() and user.unread_pds %}
-          <li><a href="{{ url('private_threads') }}" title="{% trans %}There are unread Private Threads!{% endtrans %}" class="tooltip-bottom"><i class="icon-inbox"></i><span class="label label-important">{{ user.unread_pds }}</span></a></li>
+          <li><a href="{{ url('private_threads') }}" title="{% trans %}There are unread Private Threads!{% endtrans %}" class="tooltip-bottom fluid"><i class="icon-inbox"></i><span class="label label-important">{{ user.unread_pds }}</span></a></li>
           {% endif %}
           {{ hook_user_menu_important_append|safe }}
           <li class="user-profile dropdown">
@@ -110,12 +110,12 @@
         <noscript>
           <ul class="nav navbar-blocks pull-right">
             {{ hook_user_menu_prepend|safe }}
-            <li><a href="{{ url('alerts') }}" title="{% if user.alerts %}{% trans %}You have new notifications!{% endtrans %}{% else %}{% trans %}Your Notifications{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-asterisk"></i>{% if user.alerts %}<span class="label label-important">{{ user.alerts }}</span>{% endif %}</a></li>
+            <li><a href="{{ url('alerts') }}" title="{% if user.alerts %}{% trans %}You have new notifications!{% endtrans %}{% else %}{% trans %}Your Notifications{% endtrans %}{% endif %}" class="tooltip-bottom fluid"><i class="icon-asterisk"></i>{% if user.alerts %}<span class="label label-important">{{ user.alerts }}</span>{% endif %}</a></li>
             {% if acl.reports.can_handle() %}
-            <li><a href="{{ url('reports') }}" title="{% if monitor.reported_posts %}{% trans %}There are unresolved reports!{% endtrans %}{% else %}{% trans %}Reports{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-fire"></i>{% if monitor.reported_posts %}<span class="label label-important">{{ monitor.reported_posts }}</span>{% endif %}</a></li>
+            <li><a href="{{ url('reports') }}" title="{% if monitor.reported_posts %}{% trans %}There are unresolved reports!{% endtrans %}{% else %}{% trans %}Reports{% endtrans %}{% endif %}" class="tooltip-bottom fluid"><i class="icon-fire"></i>{% if monitor.reported_posts %}<span class="label label-important">{{ monitor.reported_posts }}</span>{% endif %}</a></li>
             {% endif %}
             {% if settings.enable_private_threads and acl.private_threads.can_participate() %}
-            <li><a href="{{ url('private_threads') }}" title="{% if user.unread_pds %}{% trans %}There are unread Private Threads!{% endtrans %}{% else %}{% trans %}Your Private Threads{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-inbox"></i>{% if user.unread_pds %}<span class="label label-important">{{ user.unread_pds }}</span>{% endif %}</a></li>
+            <li><a href="{{ url('private_threads') }}" title="{% if user.unread_pds %}{% trans %}There are unread Private Threads!{% endtrans %}{% else %}{% trans %}Your Private Threads{% endtrans %}{% endif %}" class="tooltip-bottom fluid"><i class="icon-inbox"></i>{% if user.unread_pds %}<span class="label label-important">{{ user.unread_pds }}</span>{% endif %}</a></li>
             {% endif %}
             <li><a href="{{ url('newsfeed') }}" title="{% trans %}Your News Feed{% endtrans %}" class="tooltip-bottom"><i class="icon-signal"></i></a></li>
             <li><a href="{{ url('watched_threads') }}" title="{% trans %}Threads you are watching{% endtrans %}" class="tooltip-bottom"><i class="icon-bookmark"></i></a></li>
@@ -128,8 +128,8 @@
         {% else %}
         <ul class="nav navbar-user-nav pull-right">
           {{ hook_guest_menu_prepend|safe }}
-          <li><a href="{{ url('sign_in') }}" title="{% trans %}Sign In to Your Account{% endtrans %}" class="tooltip-bottom btn btn-danger"><i class="icon-check"></i> {% trans %}Sign In{% endtrans %}</a></li>{% if settings.account_activation != 'block' %}
-          <li><a href="{{ url('register') }}" title="{% trans %}Register new account{% endtrans %}" class="tooltip-bottom btn btn-inverse"><i class="icon-edit"></i> {% trans %}Register{% endtrans %}</a></li>{% endif %}
+          <li><a href="{{ url('sign_in') }}" title="{% trans %}Sign In to Your Account{% endtrans %}" class="tooltip-bottom btn btn-danger">{% trans %}Sign In{% endtrans %}</a></li>{% if settings.account_activation != 'block' %}
+          <li><a href="{{ url('register') }}" title="{% trans %}Register new account{% endtrans %}" class="tooltip-bottom btn btn-inverse">{% trans %}Register{% endtrans %}</a></li>{% endif %}
           {{ hook_guest_menu_append|safe }}
         </ul>
         {% endif %}

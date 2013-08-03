@@ -165,9 +165,13 @@
           color: @gray;
           text-align: center;
 
+          &.fluid {
+          	padding: 5px 8px;
+          }
+
           .label {
             background-color: @red;
-            margin-left: 4px;
+            margin-left: @baseFontSize / 2;
             padding-left: 6px;
             padding-right: 5px;
             position: relative;
