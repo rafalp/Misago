@@ -9,16 +9,24 @@ from misago.readstrackers import ForumsTracker
 
 def index(request):
     # Threads ranking
-    popular_threads = []
-    if settings.thread_ranking_size > 0:
-        popular_threads = cache.get('thread_ranking_%s' % request.user.make_acl_key(), 'nada')
-        if popular_threads == 'nada':
-            popular_threads = []
-            for thread in Thread.objects.filter(moderated=False).filter(deleted=False).filter(forum__in=Forum.objects.readable_forums(request.acl)).prefetch_related('forum').order_by('-score', '-last')[:settings.thread_ranking_size]:
+    threads_ranking = []
+    if settings.thread_ranking_type != 'none':
+        cache_token = 'thread_ranking_%s_%s' % (settings.thread_ranking_type, request.user.make_acl_key())
+        threads_ranking = cache.get(cache_token, 'nada')
+        if threads_ranking == 'nada':
+            threads_ranking = []
+            ranking_queryset = Thread.objects.filter(moderated=False).filter(deleted=False).filter(forum__in=Forum.objects.readable_forums(request.acl)).prefetch_related('forum')
+            if settings.thread_ranking_type == 'popular':
+                ranking_queryset = ranking_queryset.order_by('-score', '-last')
+            if settings.thread_ranking_type == 'last':
+                ranking_queryset = ranking_queryset.order_by('-last')
+            if settings.thread_ranking_type == 'start':
+                ranking_queryset = ranking_queryset.order_by('-start')
+            for thread in ranking_queryset[:settings.thread_ranking_size]:
                 thread.forum_name = thread.forum.name
                 thread.forum_slug = thread.forum.slug
-                popular_threads.append(thread)
-            cache.set('thread_ranking_%s' % request.user.make_acl_key(), popular_threads, 60 * settings.thread_ranking_refresh)
+                threads_ranking.append(thread)
+            cache.set(cache_token, threads_ranking, 60 * settings.thread_ranking_refresh)
 
     # Users online
     users_online = request.onlines.stats(request)
@@ -67,17 +75,17 @@ def index(request):
     # Load reads tracker and build forums list
     reads_tracker = ForumsTracker(request.user)
     forums_list = Forum.objects.treelist(request.acl.forums, tracker=reads_tracker)
-    
+
     # Whitelist ignored members
     Forum.objects.ignored_users(request.user, forums_list)
-    
+
     # Render page
     return render_to_response('index.html',
                               {
                                'forums_list': forums_list,
                                'ranks_online': ranks_list,
                                'users_online': users_online,
-                               'popular_threads': popular_threads,
+                               'threads_ranking': threads_ranking,
                                'hook_above_forum_home': u'',
                                'hook_below_forum_home': u'',
                                'hook_above_home_forums_list': u'',

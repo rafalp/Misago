@@ -118,11 +118,19 @@
 
     {{ hook_after_home_sidepanel_ranks_online|safe }}
 
-    {% if popular_threads %}
+    {% if threads_ranking %}
     <div class="index-popular-threads">
-      <h4>{% trans %}Popular Threads{% endtrans %}</h4>
+      <h4>
+        {% if settings.thread_ranking_type == 'popular' %}
+        {% trans %}Popular Threads{% endtrans %}
+        {% elif settings.thread_ranking_type == 'last' %}
+        {% trans %}Latest Replies{% endtrans %}
+        {% elif settings.thread_ranking_type == 'start' %}
+        {% trans %}Newest Threads{% endtrans %}
+        {% endif %}
+      </h4>
       <ul class="unstyled">
-        {% for thread in popular_threads %}
+        {% for thread in threads_ranking %}
         <li>
           <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}" class="index-popular-thread{% if thread.name|length > 42 %} tooltip-top{% endif %}"{% if thread.name|length > 42 %} title="{{ thread.name }}"{% endif %}>{{ thread.name|short_string(42) }}</a>
           <div class="muted"><a href="{{ url('forum', forum=thread.forum_id, slug=thread.forum_slug) }}">{{ thread.forum_name }}</a> - {{ thread.last|reltimesince }}</div>
