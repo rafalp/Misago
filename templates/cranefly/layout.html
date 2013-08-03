@@ -79,7 +79,7 @@
           <li><a href="{{ url('reports') }}" title="{% trans %}There are unresolved reports!{% endtrans %}" class="tooltip-bottom fluid"><i class="icon-fire"></i><span class="label label-important">{{ monitor.reported_posts }}</span></a></li>
           {% endif %}
           {% if user.alerts %}
-          <li><a href="{{ url('alerts') }}" title="{% trans %}You have new notifications!{% endtrans %}" class="tooltip-bottom fluif"><i class="icon-asterisk"></i><span class="label label-important">{{ user.alerts }}</span></a></li>
+          <li><a href="{{ url('alerts') }}" title="{% trans %}You have new notifications!{% endtrans %}" class="tooltip-bottom fluid"><i class="icon-asterisk"></i><span class="label label-important">{{ user.alerts }}</span></a></li>
           {% endif %}
           {% if settings.enable_private_threads and acl.private_threads.can_participate() and user.unread_pds %}
           <li><a href="{{ url('private_threads') }}" title="{% trans %}There are unread Private Threads!{% endtrans %}" class="tooltip-bottom fluid"><i class="icon-inbox"></i><span class="label label-important">{{ user.unread_pds }}</span></a></li>
