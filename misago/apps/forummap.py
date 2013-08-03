@@ -4,5 +4,8 @@ from misago.shortcuts import render_to_response
 
 def forum_map(request):
     return render_to_response('forum_map.html',
-                              {'forums': Forum.objects.treelist(request.acl.forums),},
+                              {
+                               'forums': Forum.objects.treelist(request.acl.forums,
+                                                                Forum.objects.special_model('root'))
+                              },
                               context_instance=RequestContext(request));
