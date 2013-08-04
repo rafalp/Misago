@@ -120,15 +120,13 @@
   &.btn-link {
     background: none;
     border: none;
-    .opacity(70);
 
-    color: @textColor;
+    color: @grayLight;
 
     &:hover, &:active, &:focus {
-      .opacity(100);
+    	color: @textColor;
 
       &:enabled {
-
         text-decoration: none;
       }
     }
@@ -137,8 +135,6 @@
 
 a.btn-link {
   &:hover, &:active, &:focus {
-    .opacity(90);
-
     color: @textColor;
     text-decoration: none;
   }
