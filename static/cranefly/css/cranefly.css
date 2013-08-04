@@ -774,7 +774,7 @@ footer .container .credits p{margin-bottom:0;color:#555;font-size:90%}footer .co
 footer .breadcrumb{background:none;border:none;margin:0;padding:0;font-weight:bold;text-shadow:none}footer .breadcrumb li{text-shadow:none}footer .breadcrumb li a:link,footer .breadcrumb li a:active,footer .breadcrumb li a:visited,footer .breadcrumb li a:hover{color:#333}
 footer .breadcrumb li .divider{color:#999}
 footer .breadcrumb li.active{color:#555}
-.messages-list .alert-icon{float:left}
+.messages-list .alert-icon{float:left;color:#fff !important;font-size:17.5px}
 .messages-list p{margin:0;margin-left:28px;color:#fff}
 .messages-list a:link,.messages-list a:visited{opacity:.85;filter:alpha(opacity=85);color:#fff;font-size:120%;text-decoration:underline}
 .messages-list a:active,.messages-list a:hover{opacity:1;filter:alpha(opacity=100)}
