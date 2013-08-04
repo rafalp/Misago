@@ -14,9 +14,19 @@
   }
 
   a:link, a:visited {
-    .opacity(90);
-
-    color: @textColor;
+    color: @grayLight;
     font-weight: bold;
+
+    i {
+    	display: inline-block;
+    	width: 16px;
+
+    	text-align: center;
+    }
+  }
+
+  a:hover, a:active {
+    color: @textColor;
+    text-decoration: none;
   }
 }

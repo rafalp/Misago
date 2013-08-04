@@ -67,7 +67,7 @@
           {% if 1==2 and acl.search.can_search() and not user.is_crawler() %}
           <li><a href="{{ url('search') }}" title="{% trans %}Search Forums{% endtrans %}" class="tooltip-bottom"><i class="icon-search"></i></a></li>{% endif %}
           {% endif %}
-          <li><a href="{{ url('users') }}" title="{% trans %}Browse Users{% endtrans %}" class="tooltip-bottom"><i class="icon-user"></i></a></li>
+          <li><a href="{{ url('users') }}" title="{% trans %}Browse Users{% endtrans %}" class="tooltip-bottom"><i class="icon-group"></i></a></li>
           {% if settings.tos_url or settings.tos_content %}<li><a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{{ url('tos') }}{% endif %}" title="{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Forum Terms of Service{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-certificate"></i></a></li>{% endif %}
           {{ hook_primary_menu_append|safe }}
         </ul>
@@ -76,7 +76,7 @@
         <ul id="fancy-user-nav" class="nav navbar-blocks navbar-compact pull-right">
           {{ hook_user_menu_important_prepend|safe }}
           {% if acl.reports.can_handle() and monitor.reported_posts %}
-          <li><a href="{{ url('reports') }}" title="{% trans %}There are unresolved reports!{% endtrans %}" class="tooltip-bottom fluid"><i class="icon-fire"></i><span class="label label-important">{{ monitor.reported_posts }}</span></a></li>
+          <li><a href="{{ url('reports') }}" title="{% trans %}There are unresolved reports!{% endtrans %}" class="tooltip-bottom fluid"><i class="icon-warning-sign"></i><span class="label label-important">{{ monitor.reported_posts }}</span></a></li>
           {% endif %}
           {% if user.alerts %}
           <li><a href="{{ url('alerts') }}" title="{% trans %}You have new notifications!{% endtrans %}" class="tooltip-bottom fluid"><i class="icon-asterisk"></i><span class="label label-important">{{ user.alerts }}</span></a></li>
@@ -92,7 +92,7 @@
               <li><a href="{{ url('usercp') }}"><i class="icon-cog"></i> {% trans %}Change options{% endtrans %}</a></li>
               <li role="presentation" class="divider"></li>
               {% if acl.reports.can_handle() %}
-              <li><a href="{{ url('reports') }}">{% if monitor.reported_posts %}<span class="label">{{ monitor.reported_posts }}</span>{% endif %}<i class="icon-fire"></i> {% trans %}Reported Posts{% endtrans %}</a></li>
+              <li><a href="{{ url('reports') }}">{% if monitor.reported_posts %}<span class="label">{{ monitor.reported_posts }}</span>{% endif %}<i class="icon-warning-sign"></i> {% trans %}Reported Posts{% endtrans %}</a></li>
               {% endif %}
               <li><a href="{{ url('alerts') }}">{% if user.alerts %}<span class="label">{{ user.alerts }}</span>{% endif %}<i class="icon-asterisk"></i> {% trans %}Notifications{% endtrans %}</a></li>
               {{ hook_user_menu_dropdown_prepend|safe }}
@@ -110,10 +110,10 @@
         <noscript>
           <ul class="nav navbar-blocks pull-right">
             {{ hook_user_menu_prepend|safe }}
-            <li><a href="{{ url('alerts') }}" title="{% if user.alerts %}{% trans %}You have new notifications!{% endtrans %}{% else %}{% trans %}Your Notifications{% endtrans %}{% endif %}" class="tooltip-bottom fluid"><i class="icon-asterisk"></i>{% if user.alerts %}<span class="label label-important">{{ user.alerts }}</span>{% endif %}</a></li>
             {% if acl.reports.can_handle() %}
-            <li><a href="{{ url('reports') }}" title="{% if monitor.reported_posts %}{% trans %}There are unresolved reports!{% endtrans %}{% else %}{% trans %}Reports{% endtrans %}{% endif %}" class="tooltip-bottom fluid"><i class="icon-fire"></i>{% if monitor.reported_posts %}<span class="label label-important">{{ monitor.reported_posts }}</span>{% endif %}</a></li>
+            <li><a href="{{ url('reports') }}" title="{% if monitor.reported_posts %}{% trans %}There are unresolved reports!{% endtrans %}{% else %}{% trans %}Reports{% endtrans %}{% endif %}" class="tooltip-bottom fluid"><i class="icon-warning-sign"></i>{% if monitor.reported_posts %}<span class="label label-important">{{ monitor.reported_posts }}</span>{% endif %}</a></li>
             {% endif %}
+            <li><a href="{{ url('alerts') }}" title="{% if user.alerts %}{% trans %}You have new notifications!{% endtrans %}{% else %}{% trans %}Your Notifications{% endtrans %}{% endif %}" class="tooltip-bottom fluid"><i class="icon-asterisk"></i>{% if user.alerts %}<span class="label label-important">{{ user.alerts }}</span>{% endif %}</a></li>
             {% if settings.enable_private_threads and acl.private_threads.can_participate() %}
             <li><a href="{{ url('private_threads') }}" title="{% if user.unread_pds %}{% trans %}There are unread Private Threads!{% endtrans %}{% else %}{% trans %}Your Private Threads{% endtrans %}{% endif %}" class="tooltip-bottom fluid"><i class="icon-inbox"></i>{% if user.unread_pds %}<span class="label label-important">{{ user.unread_pds }}</span>{% endif %}</a></li>
             {% endif %}
@@ -154,7 +154,7 @@
     <ul class="breadcrumb">
       {% block breadcrumb %}<li class="first"><a href="{{ url('index') }}">{{ settings.board_name }}</a>{% endblock %}</li>
       {{ hook_foot_menu_prepend|safe }}
-      <li class="pull-right"><i class="icon-move"></i> <a href="{{ url('forum_map') }}">{% trans %}Forum Map{% endtrans %}</a></li>
+      <li class="pull-right"><i class="icon-sitemap"></i> <a href="{{ url('forum_map') }}">{% trans %}Forum Map{% endtrans %}</a></li>
       {{ hook_foot_menu_append|safe }}
     </ul>
     <hr>

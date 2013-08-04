@@ -28,7 +28,7 @@
       <fieldset>
         <legend>{% trans %}Forum Options{% endtrans %}</legend>
         {{ form_theme.row(form.timezone, attrs={'class': 'span9'}) }}
-        {{ form_theme.row(form.newsletters, attrs={'inline': _("Yes, I want to subscribe forum newsletter.")}) }}
+        {{ form_theme.row(form.newsletters, attrs={'inline': lang_newsletters_subscribe()}) }}
       </fieldset>
       <fieldset>
         <legend>{% trans %}Watching Threads{% endtrans %}</legend>
@@ -41,6 +41,9 @@
       <a href="{{ url('usercp') }}" class="btn">{% trans %}Cancel{% endtrans %}</a>
     </div>
   </form>
-  
+
 </div>
 {% endblock %}
+
+{# Language strings macros #}
+{% macro lang_newsletters_subscribe() -%}{% trans %}Yes, I want to subscribe forum newsletter.{% endtrans %}{%- endmacro %}

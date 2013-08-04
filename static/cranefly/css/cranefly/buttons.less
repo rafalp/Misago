@@ -12,18 +12,18 @@
     background-color: @white;
     border-color: lighten(@grayLight, 5%);
 
-  	color: @grayDark;
+    color: @grayDark;
   }
 
   &.btn-primary {
     background-color: @bluePale;
     border-color: darken(@bluePale, 5%);
 
-		color: fadeOut(@white, 15%);
+    color: fadeOut(@white, 15%);
     text-shadow: 0px 1px 0px darken(@bluePale, 15%);
 
     &:hover, &:active {
-    	color: @white;
+      color: @white;
 
       &:enabled {
         background-color: saturate(@bluePale, 20%);
@@ -36,11 +36,11 @@
     background-color: desaturate(@bluePale, 25%);
     border-color: darken(desaturate(@bluePale, 25%), 5%);
 
-		color: fadeOut(@white, 15%);
+    color: fadeOut(@white, 15%);
     text-shadow: 0px 1px 0px darken(desaturate(@bluePale, 25%), 15%);
 
     &:hover, &:active {
-    	color: @white;
+      color: @white;
 
       &:enabled {
         background-color: desaturate(@bluePale, 10%);
@@ -53,11 +53,11 @@
     background-color: desaturate(@green, 15%);
     border-color: darken(desaturate(@green, 15%), 5%);
 
-		color: fadeOut(@white, 15%);
+    color: fadeOut(@white, 15%);
     text-shadow: 0px 1px 0px darken(@green, 15%);
 
     &:hover, &:active {
-    	color: @white;
+      color: @white;
 
       &:enabled {
         background-color: @green;
@@ -70,11 +70,11 @@
     background-color: desaturate(@orange, 15%);
     border-color: darken(desaturate(@orange, 15%), 5%);
 
-		color: fadeOut(@white, 15%);
+    color: fadeOut(@white, 15%);
     text-shadow: 0px 1px 0px darken(@orange, 15%);
 
     &:hover, &:active {
-    	color: @white;
+      color: @white;
 
       &:enabled {
         background-color: @orange;
@@ -87,11 +87,11 @@
     background-color: @red;
     border-color: darken(@red, 5%);
 
-		color: fadeOut(@white, 15%);
+    color: fadeOut(@white, 15%);
     text-shadow: 0px 1px 0px darken(@red, 15%);
 
     &:hover, &:active {
-    	color: @white;
+      color: @white;
 
       &:enabled {
         background-color: saturate(@red, 20%);
@@ -104,11 +104,11 @@
     background-color: @textColor;
     border-color: darken(@textColor, 5%);
 
-		color: fadeOut(@white, 15%);
+    color: fadeOut(@white, 15%);
     text-shadow: 0px 1px 0px darken(@textColor, 15%);
 
     &:hover, &:active {
-    	color: @white;
+      color: @white;
 
       &:enabled {
         background-color: darken(@textColor, 5%);
@@ -125,10 +125,9 @@
     color: @textColor;
 
     &:hover, &:active, &:focus {
-    	color: @white;
+      .opacity(100);
 
       &:enabled {
-        .opacity(90);
 
         text-decoration: none;
       }
