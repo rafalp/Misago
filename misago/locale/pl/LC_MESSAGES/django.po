@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Misago PL\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-07 15:54+0000\n"
-"PO-Revision-Date: 2013-08-07 17:56+0100\n"
+"POT-Creation-Date: 2013-08-07 22:36+0000\n"
+"PO-Revision-Date: 2013-08-08 00:49+0100\n"
 "Last-Translator: l0ud <loudpl@gmail.com>\n"
 "Language-Team: FxDev <loudpl@gmail.com>\n"
 "Language: PL\n"
@@ -6396,6 +6396,14 @@ msgstr "Starsze powiadomienia"
 msgid "Image could not be loaded."
 msgstr "Nie udało się wczytać obrazka."
 
+#: templates/cranefly/base.html:21
+msgid "Click to play media"
+msgstr "Kliknij, aby odtworzyć"
+
+#: templates/cranefly/base.html:22
+msgid "uploaded by {author}"
+msgstr "umieszczony przez {author}"
+
 #: templates/cranefly/category.html:47 templates/cranefly/index.html:39
 #: templates/cranefly/threads/list.html:53
 msgid "This forum is empty"
@@ -8386,6 +8394,10 @@ msgstr "Tak, chcę subskrybować newsletter tego forum."
 #: templates/cranefly/usercp/signature_banned.html:10
 msgid "Edit your Signature"
 msgstr "Zmodyfikuj swoją sygnaturkę"
+
+#: templates/cranefly/usercp/signature.html:45
+msgid "Save Signature"
+msgstr "Zapisz sygnaturkę"
 
 #: templates/cranefly/usercp/signature_banned.html:14
 #, python-format
