@@ -12,8 +12,8 @@ class MembersOnline(object):
         self._all = monitor['online_all']
         self._om = self._members
         self._oa = self._all
-        if (self._mode != 'no' or monitor.expired('online_all', frequency) or
-                monitor.expired('online_members', frequency)):
+        if (self._mode != 'no' and (self._mode == 'real' or monitor.expired('online_all', frequency)
+                or monitor.expired('online_members', frequency))):
             self.count_sessions()
 
     def count_sessions(self):
@@ -55,9 +55,9 @@ class MembersOnline(object):
                }
 
         if not request.user.is_crawler():
-            if request.user.is_authenticated() and request.session.started:
+            if request.user.is_authenticated() and not stat['members']:
                 stat['members'] += 1
                 stat['all'] += 1
-            if not stat['all']:
+            if not request.user.is_authenticated() and not stat['all']:
                 stat['all'] += 1
         return stat
