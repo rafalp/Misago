@@ -212,6 +212,13 @@
         }
 
         &.user-profile {
+        	&>a {
+	          &:link, &:visited, &:hover, &:active {
+	          	color: @gray !important;
+							font-size: @fontSizeLarge;
+						}
+        	}
+
           a:link, a:visited, a:hover, a:active {
             background: none;
             border: none;
@@ -259,6 +266,8 @@
                 .border-radius(@baseBorderRadius);
                 margin-left: 8px;
                 padding: 0px 4px;
+
+								font-size: @baseFontSize;
 
                 .caret {
                   margin: 0px;
