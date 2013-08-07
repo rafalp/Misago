@@ -37,8 +37,8 @@
       <form class="form-horizontal" action="{{ url('sign_in') }}" method="post">
         <div class="form-fields">
           {{ form_theme.hidden_fields(form) }}
-          {{ form_theme.row(form.user_email, attrs={'class': 'span4', 'placeholder': _("Enter your e-mail")}) }}
-          {{ form_theme.row(form.user_password, attrs={'class': 'span4', 'placeholder': _("Enter your password")}) }}
+          {{ form_theme.row(form.user_email, attrs={'class': 'span4', 'placeholder': lang_singnin_enter_email()}) }}
+          {{ form_theme.row(form.user_password, attrs={'class': 'span4', 'placeholder':lang_singnin_enter_password()}) }}
           {% if 'user_remember_me' in form.fields %}
           {{ form_theme.row(form.user_remember_me) }}
           {% endif %}
@@ -64,3 +64,7 @@
   </div>
 </div>
 {% endblock %}
+
+{# Language strings macros #}
+{% macro lang_singnin_enter_email() -%}{% trans %}Enter your e-mail{% endtrans %}{%- endmacro %}
+{% macro lang_singnin_enter_password() -%}{% trans %}Enter your password{% endtrans %}{%- endmacro %}
