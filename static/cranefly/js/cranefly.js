@@ -167,12 +167,20 @@ function youtube_player(element, media_url, startfrom) {
     player_url = 'http://www.youtube.com/embed/' + media_url + '?autoplay=1';
   }
 
-  var media_element = $('<div><div class="media-border"><div class="media-thumbnail" style="background: url(\'http://img.youtube.com/vi/' + media_url + '/0.jpg\');"><a href="' + $.trim($(element).text()) + '" data-playerurl="' + player_url + '"><i class="icon-youtube-sign"></i>' + l_play_media_msg + '</a></div></div></div>');
-  $(media_element).find('.media-thumbnail a').click(function() {
+  var media_element = $('<div><div class="media-border"><div class="media-thumbnail" style="background: url(\'http://img.youtube.com/vi/' + media_url + '/0.jpg\');"><a href="' + $.trim($(element).text()) + '" class="play-link" data-playerurl="' + player_url + '"><i class="icon-youtube-sign"></i><strong>' + l_play_media_msg + '</strong></a></div></div></div>');
+  $(media_element).find('.play-link').click(function() {
     $(this).parent().replaceWith('<iframe width="480" height="360" src="' + $(this).data('playerurl') + '" frameborder="0" allowfullscreen></iframe>');
     return false;
   });
   $(element).replaceWith(media_element);
+  $.getJSON("https://gdata.youtube.com/feeds/api/videos/" + media_url + "?v=2&alt=json",
+            function(data, textStatus, jqXHR) {
+              var movie_title = data.entry.title.$t;
+              var movie_author = data.entry.author['0'].name.$t
+              $(media_element).find('.play-link').addClass('movie-title');
+              $(media_element).find('.play-link strong').text(movie_title);
+              $(media_element).find('.play-link').append(l_play_media_author.replace('{author}', movie_author));
+            });
   return true;
 }
 

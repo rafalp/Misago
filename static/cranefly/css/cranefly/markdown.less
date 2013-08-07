@@ -97,7 +97,7 @@
     margin: (@baseLineHeight / 2) 0px;
 
     iframe {
-    	margin: 0px;
+    	margin: -2px 0px;
     }
 
     .media-thumbnail {
@@ -119,6 +119,7 @@
 
 	    	&:hover, &:active {
 	    		color: @white;
+	    		text-decoration: none;
 	    		text-shadow: 0px 0px 5px @grayLighter,
 	    								 0px 1px 1px @black;
 	    	}
@@ -130,6 +131,17 @@
 	    		font-size: @baseFontSize * 6;
 	    		text-decoration: none;
 	    	}
+
+		  	&.movie-title {
+		  		margin-top: 120px - @baseFontSize - 2px;
+
+		    	strong {
+		    		display: block;
+		    		margin-top: 6px;
+
+		    		font-size: @fontSizeLarge;
+		    	}
+		  	}
     	}
     }
   }
