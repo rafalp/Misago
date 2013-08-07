@@ -90,6 +90,46 @@
     margin: (@baseLineHeight / 2) 0px;
   }
 
+  .media-border {
+    border-radius: @baseBorderRadius;
+  	display: inline-block;
+  	overflow: hidden;
+    margin: (@baseLineHeight / 2) 0px;
+
+    .media-thumbnail {
+    	width: 480px;
+    	height: 360px;
+
+    	text-align: center;
+
+    	a {
+    		background-color: fadeOut(@black, 20%);
+    		border-radius: @fontSizeSmall;
+    		display: inline-block;
+    		margin-top: 120px;
+    		padding: @paddingLarge;
+
+	    	color: @grayLighter;
+	    	text-align: center;
+	    	text-shadow: 0px 1px 1px @black;
+
+	    	&:hover, &:active {
+	    		color: @white;
+	    		text-shadow: 0px 0px 5px @grayLighter,
+	    								 0px 1px 1px @black;
+	    	}
+
+	    	.icon-youtube-sign {
+	    		display: block;
+	    		clear: both;
+
+	    		font-size: @baseFontSize * 6;
+	    		text-decoration: none;
+	    	}
+    	}
+    }
+  }
+
   // Blocks margins
   pre, blockquote, iframe {
     margin-top: @baseLineHeight;
