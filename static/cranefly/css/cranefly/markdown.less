@@ -42,6 +42,7 @@
   blockquote {
     border-left-color: darken(@grayLighter, 5%);
     padding: (@baseFontSize / 3) @baseFontSize;
+    margin: @baseLineHeight / 2;
 
     header {
       padding-bottom: (@baseLineHeight / 2);
@@ -64,10 +65,10 @@
 
   code {
     background-color: @grayDark;
-    border: none;
+    border-color: @black;
 
     color: @grayLighter;
-    font-size: @baseFontSize;
+    text-shadow: 0px 1px 0px @black;
   }
 
   pre {
@@ -94,12 +95,14 @@
     margin-top: @baseLineHeight;
     margin-bottom: @baseLineHeight;
 
-    &>:first-child {
-      margin-top: 0px;
-    }
+    article{
+      &>:first-child {
+        margin-top: 0px;
+      }
 
-    &>:last-child {
-      margin-bottom: 0px;
+      &>:last-child {
+        margin-bottom: 0px;
+      }
     }
   }
 

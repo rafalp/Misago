@@ -4,7 +4,7 @@ $(function () {
   $('.tooltip-bottom').tooltip({placement: 'bottom', container: 'body'})
   $('.tooltip-left').tooltip({placement: 'left', container: 'body'})
   $('.tooltip-right').tooltip({placement: 'right', container: 'body'})
-  
+
   // Register popovers
   $('.popover-top').popover({placement: 'top'})
   $('.popover-bottom').popover({placement: 'bottom'})
@@ -17,10 +17,10 @@ $(function () {
       e.preventDefault();
     }
   });
-  
+
   // Start all dropdowns
   $('.dropdown-toggle').dropdown()
-  
+
   // Dont hide clickable dropdowns
   $('.dropdown-clickable').on('click', function (e) {
     e.stopPropagation()
@@ -42,7 +42,7 @@ $(function () {
   nav_search_form.click(function(event) {
     event.stopPropagation();
   });
-  
+
   // Checkbox Group Master
   $('input.checkbox-master').live('click', function(){
     if($(this).is(':checked')){
@@ -53,27 +53,27 @@ $(function () {
       $('input.checkbox-member').removeAttr('checked');
     }
   });
-  
+
   // Checkbox Group Member
   $('input.checkbox-member').live('click', function(){
     if(!$(this).is(':checked')){
       $('input.checkbox-master').removeAttr('checked');
     }
   });
-  
+
   // Check Confirmation on links
   $('a.confirm').live('click', function(){
     var decision = confirm(jQuery.data(this, 'jsconfirm'));
     return decision
   });
-  
+
   // Check Confirmation on forms
   $('form.confirm').live('submit', function(){
     data = $(this).data();
     var decision = confirm(data.jsconfirm);
     return decision
   });
-  
+
   // Show go back link?
   if (document.referrer
       && document.referrer.indexOf(location.protocol + "//" + location.host) === 0
@@ -142,9 +142,9 @@ function link2player(link_href) {
     if (media_seconds) { media_url[2] += (media_seconds[1] - 0); }
     return '<iframe width="480" height="360" src="http://www.youtube.com/embed/' + media_url[1] + '?start=' + media_url[2] + '" frameborder="0" allowfullscreen></iframe>';
   }
-  
+
   // Youtube embed
-  var re = /youtu.be\/((\w|-)+)/;
+  var re = /youtu.be\/(([A-Za-z0-9]|-)+)/;
   if (re.test(link_href)) {
     media_url = link_href.match(re);
     return '<iframe width="480" height="360" src="http://www.youtube.com/embed/' + media_url[1] + '" frameborder="0" allowfullscreen></iframe>';
@@ -175,7 +175,7 @@ $(function() {
           $(action_parent).find('.post-score-total').addClass('post-score-good');
         } else if (data.score_total < 0) {
           $(action_parent).find('.post-score-total').addClass('post-score-bad');
-        } 
+        }
         if (data.score_upvotes > 0) {
           $(action_parent).find('.post-score-upvotes').addClass('post-score-good');
         }
@@ -213,7 +213,7 @@ $(function() {
     var button = $(this).find('button');
     $(this).submit(function() {
       var form = this;
-      $.post(form.action, {'_csrf_token': csrf_token}, "json").done(function(data, textStatus, jqXHR) {        
+      $.post(form.action, {'_csrf_token': csrf_token}, "json").done(function(data, textStatus, jqXHR) {
         $(button).text(l_post_reported);
         $(button).tooltip('destroy');
         $(button).attr("title", data.message);

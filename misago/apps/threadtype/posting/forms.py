@@ -16,6 +16,10 @@ class PostingForm(FloodProtectionMixin, Form, ValidatePostLengthMixin):
     def __init__(self, data=None, file=None, request=None, forum=None, thread=None, *args, **kwargs):
         self.forum = forum
         self.thread = thread
+        if data and thread:
+            data = data.copy()
+            if not 'thread_weight' in data:
+                data['thread_weight'] = thread.weight
         super(PostingForm, self).__init__(data, file, request=request, *args, **kwargs)
 
     def finalize_form(self):
