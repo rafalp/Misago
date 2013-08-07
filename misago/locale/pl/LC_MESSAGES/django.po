@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Misago PL\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-04 16:49+0000\n"
-"PO-Revision-Date: 2013-08-04 18:50+0100\n"
+"POT-Creation-Date: 2013-08-07 15:54+0000\n"
+"PO-Revision-Date: 2013-08-07 17:56+0100\n"
 "Last-Translator: l0ud <loudpl@gmail.com>\n"
 "Language-Team: FxDev <loudpl@gmail.com>\n"
 "Language: PL\n"
@@ -3890,7 +3890,7 @@ msgstr[2] ""
 "%(seconds)d sekund."
 
 #: apps/threadtype/mixins.py:33 apps/threadtype/list/forms.py:46
-#: apps/threadtype/posting/forms.py:67
+#: apps/threadtype/posting/forms.py:71
 #: apps/threadtype/thread/moderation/forms.py:15
 #, python-format
 msgid "Thread name must contain at least one alpha-numeric character."
@@ -3942,7 +3942,7 @@ msgstr "Forum dla tematu"
 msgid "Select forum you want to put new thread in."
 msgstr "Wybierz forum, w którym ma zostać umieszczony wynikowy temat."
 
-#: apps/threadtype/list/forms.py:41 apps/threadtype/posting/forms.py:65
+#: apps/threadtype/list/forms.py:41 apps/threadtype/posting/forms.py:69
 msgid "Thread Name"
 msgstr "Nazwa tematu"
 
@@ -3950,7 +3950,7 @@ msgstr "Nazwa tematu"
 msgid "Name of new thread that will be created as result of merge."
 msgstr "Nazwa nowego tematu, który powstanie w wyniku połączenia zaznaczonych."
 
-#: apps/threadtype/list/forms.py:47 apps/threadtype/posting/forms.py:68
+#: apps/threadtype/list/forms.py:47 apps/threadtype/posting/forms.py:72
 #: apps/threadtype/thread/moderation/forms.py:16
 msgid "Thread name is too long. Try shorter name."
 msgstr "Nazwa tematu jest zbyt długa. Spróbuj ją skrócić."
@@ -4072,27 +4072,27 @@ msgstr "%(username)s odpowiedział na twój post w temacie %(thread)s"
 msgid "Message Body"
 msgstr "Treść wiadomości"
 
-#: apps/threadtype/posting/forms.py:27
+#: apps/threadtype/posting/forms.py:31
 msgid "Announcement"
 msgstr "Ogłoszenie"
 
-#: apps/threadtype/posting/forms.py:28
+#: apps/threadtype/posting/forms.py:32
 msgid "Sticky"
 msgstr "Przypięty"
 
-#: apps/threadtype/posting/forms.py:29
+#: apps/threadtype/posting/forms.py:33
 msgid "Standard"
 msgstr "Standardowy"
 
-#: apps/threadtype/posting/forms.py:74 apps/threadtype/posting/forms.py:87
+#: apps/threadtype/posting/forms.py:78 apps/threadtype/posting/forms.py:91
 msgid "Edit Reason"
 msgstr "Powód edycji"
 
-#: apps/threadtype/posting/forms.py:75
+#: apps/threadtype/posting/forms.py:79
 msgid "Optional reason for editing this thread."
 msgstr "Opcjonalny powód edycji tego tematu."
 
-#: apps/threadtype/posting/forms.py:88
+#: apps/threadtype/posting/forms.py:92
 msgid "Optional reason for editing this reply."
 msgstr "Opcjonalny powód edycji tej odpowiedzi."
 
@@ -5597,16 +5597,16 @@ msgstr "Musisz uzupełnić wszystkie pola."
 msgid "Entered values differ from each other."
 msgstr "Wprowadzone wartości różnią się."
 
-#: markdown/factory.py:84
+#: markdown/factory.py:81
 #, python-format
 msgid "Posted by %(user)s"
 msgstr "%(user)s napisał/a"
 
-#: markdown/factory.py:86
+#: markdown/factory.py:83
 msgid "Quote"
 msgstr "Cytat"
 
-#: markdown/factory.py:87
+#: markdown/factory.py:84
 msgid "Posted image"
 msgstr "Załączony obrazek"
 
@@ -6895,6 +6895,14 @@ msgstr "Nie odebrałem e-maila aktywacyjnego"
 msgid "I don't have account"
 msgstr "Nie posiadam jeszcze konta"
 
+#: templates/cranefly/signin.html:69
+msgid "Enter your e-mail"
+msgstr "Wprowadź swój adres e-mail"
+
+#: templates/cranefly/signin.html:70
+msgid "Enter your password"
+msgstr "Wprowadź swoje hasło"
+
 #: templates/cranefly/watched.html:13
 msgid "All Threads"
 msgstr "Wszystkie tematy"
@@ -7222,8 +7230,8 @@ msgstr "Zamknięty"
 
 #: templates/cranefly/private_threads/posting.html:170
 #: templates/cranefly/threads/posting.html:184
-msgid "Post Thread"
-msgstr "Załóż temat"
+msgid "Start Thread"
+msgstr "Rozpocznij temat"
 
 #: templates/cranefly/private_threads/posting.html:172
 #: templates/cranefly/threads/posting.html:186
@@ -8504,339 +8512,343 @@ msgstr ""
 
 #: utils/timezones.py:7
 msgid "(UTC-13:00) Samoa"
-msgstr ""
+msgstr "(UTC-13:00) Niezależne Państwo Samoa"
 
 #: utils/timezones.py:7
 msgid "(UTC-14:00) Samoa"
-msgstr ""
+msgstr "(UTC-14:00) Niezależne Państwo Samoa"
 
 #: utils/timezones.py:8
 msgid "(UTC-11:00) Midway Islands, American Samoa"
-msgstr ""
+msgstr "(UTC-11:00) Midway, Terytorium Samoa Amerykańskiego"
 
 #: utils/timezones.py:9
 msgid "(UTC-10:00) Cook Islands, Hawaii, Society Islands"
-msgstr ""
+msgstr "(UTC-10:00) Wyspy Cooka, Hawaje,  Wyspy Towarzystwa"
 
 #: utils/timezones.py:10
 msgid "(UTC-10:00) Aleutian Islands"
-msgstr ""
+msgstr "(UTC-10:00) Wyspy Aleuckie"
 
 #: utils/timezones.py:10
 msgid "(UTC-09:00) Aleutian Islands"
-msgstr ""
+msgstr "(UTC-09:00) Wyspy Aleuckie"
 
 #: utils/timezones.py:11
 msgid "(UTC-09:30) Marquesas Islands"
-msgstr ""
+msgstr "(UTC-09:30) Markizy"
 
 #: utils/timezones.py:12
 msgid "(UTC-09:00) Gambier Islands"
-msgstr ""
+msgstr "(UTC-09:00) Wyspy Gambiera"
 
 #: utils/timezones.py:13
 msgid "(UTC-09:00) Alaska Standard Time"
-msgstr ""
+msgstr "(UTC-09:00) Standardowy czas alaskański"
 
 #: utils/timezones.py:13
 msgid "(UTC-08:00) Alaska Daylight Time"
-msgstr ""
+msgstr "(UTC-08:00) Letni czas alaskański"
 
 #: utils/timezones.py:14
 msgid "(UTC-08:00) Pitcairn Islands"
-msgstr ""
+msgstr "(UTC-08:00) Wyspy Pitcairn"
 
 #: utils/timezones.py:15
 msgid "(UTC-08:00) Pacific Time (Canada and US)"
-msgstr ""
+msgstr "(UTC-08:00) Czas pacyficzny (Kanada i Stany Zjednoczone)"
 
 #: utils/timezones.py:15
 msgid "(UTC-07:00) Pacific Time (Canada and US)"
-msgstr ""
+msgstr "(UTC-07:00) Czas pacyficzny (Kanada i Stany Zjednoczone)"
 
 #: utils/timezones.py:16
 msgid "(UTC-08:00) Baja California"
-msgstr ""
+msgstr "(UTC-08:00) Kalifornia Dolna"
 
 #: utils/timezones.py:16
 msgid "(UTC-07:00) Baja California"
-msgstr ""
+msgstr "(UTC-07:00) Kalifornia Dolna"
 
 #: utils/timezones.py:17
 msgid "(UTC-07:00) Mountain Standard Time (No DST)"
-msgstr ""
+msgstr "(UTC-07:00) Czas górski (bez czasu letniego)"
 
 #: utils/timezones.py:18
 msgid "(UTC-07:00) Sonora"
-msgstr ""
+msgstr "(UTC-07:00) Sonora"
 
 #: utils/timezones.py:19
 msgid "(UTC-07:00) Mountain Standard Time"
-msgstr ""
+msgstr "(UTC-07:00) Czas górski"
 
 #: utils/timezones.py:19
 msgid "(UTC-06:00) Mountain Summer Time"
-msgstr ""
+msgstr "(UTC-07:00) Czas górski"
 
 #: utils/timezones.py:20
 msgid "(UTC-07:00) Baja California Sur, Chihuahua, Nayarit, Sinaloa"
-msgstr ""
+msgstr "(UTC-07:00) Kalifornia Dolna Południowa, Chihuahua, Nayarit, Sinaloa"
 
 #: utils/timezones.py:20
 msgid "(UTC-06:00) Baja California Sur, Chihuahua, Nayarit, Sinaloa"
-msgstr ""
+msgstr "(UTC-06:00) Kalifornia Dolna Południowa, Chihuahua, Nayarit, Sinaloa"
 
 #: utils/timezones.py:21
 msgid "(UTC-06:00) Costa Rica, El Salvador, Galapagos, Guatemala, Managua"
 msgstr ""
+"(UTC-06:00) Kostaryka, El Salvador, Wyspy Galápagos, Gwatemala, Managua"
 
 #: utils/timezones.py:22
 msgid "(UTC-06:00) Central Standard Time"
-msgstr ""
+msgstr "(UTC-06:00) Czas centralny standardowy"
 
 #: utils/timezones.py:22
 msgid "(UTC-05:00) Central Daylight Time"
-msgstr ""
+msgstr "(UTC-05:00) Czas centralny letni"
 
 #: utils/timezones.py:23
 msgid "(UTC-06:00) Mexican Central Zone"
-msgstr ""
+msgstr "(UTC-06:00) Meksykańska strefa centralna"
 
 #: utils/timezones.py:23
 msgid "(UTC-05:00) Mexican Central Zone"
-msgstr ""
+msgstr "(UTC-05:00) Meksykańska strefa centralna"
 
 #: utils/timezones.py:24
 msgid "(UTC-05:00) Bogota, Cayman, Guayaquil, Jamaica, Lima, Panama"
-msgstr ""
+msgstr "(UTC-05:00) Bogota, Kajmany, Guayaquil, Jamajka, Lima, Panama"
 
 #: utils/timezones.py:25
 msgid "(UTC-05:00) Eastern Standard Time"
-msgstr ""
+msgstr "(UTC-05:00) Czas wschodni standardowy"
 
 #: utils/timezones.py:25
 msgid "(UTC-04:00) Eastern Daylight Time"
-msgstr ""
+msgstr "(UTC-04:00) Czas wschodni letni"
 
 #: utils/timezones.py:26
 msgid "(UTC-04:30) Caracas"
-msgstr ""
+msgstr "(UTC-04:30) Caracas"
 
 #: utils/timezones.py:27
 msgid "(UTC-04:00) Barbados, Dominica, Puerto Rico, Santo Domingo"
-msgstr ""
+msgstr "(UTC-04:00) Barbados, Dominika, Portoryko, Santo Domingo"
 
 #: utils/timezones.py:28
 msgid "(UTC-04:00) Bermuda, Campo Grande, Goose Bay, Santiago, Thule"
-msgstr ""
+msgstr "(UTC-04:00) Bermudy, Campo Grande, Goose Bay, Santiago, Thule"
 
 #: utils/timezones.py:28
 msgid "(UTC-03:00) Bermuda, Campo Grande, Goose Bay, Santiago, Thule"
-msgstr ""
+msgstr "(UTC-03:00) Bermudy, Campo Grande, Goose Bay, Santiago, Thule"
 
 #: utils/timezones.py:29
 msgid "(UTC-03:30) Newfoundland Time"
-msgstr ""
+msgstr "(UTC-03:30) Czas nowofundlandzki"
 
 #: utils/timezones.py:30
 msgid "(UTC-03:00) San Juan, San Luis, Santa Cruz"
-msgstr ""
+msgstr "(UTC-03:00) San Juan, San Luis, Santa Cruz"
 
 #: utils/timezones.py:31
 msgid "(UTC-03:00) Buenos Aires, Godthab, Sao Paulo, Montevideo"
-msgstr ""
+msgstr "(UTC-03:00) Buenos Aires, Nuuk, Sao Paulo, Montevideo"
 
 #: utils/timezones.py:31
 msgid "(UTC-02:00) Buenos Aires, Godthab, Sao Paulo, Montevideo"
-msgstr ""
+msgstr "(UTC-02:00) Buenos Aires, Nuuk, Sao Paulo, Montevideo"
 
 #: utils/timezones.py:32
 msgid "(UTC-02:00) Atlantic islands"
-msgstr ""
+msgstr "(UTC-02:00) Wyspy Oceanu Atlantyckiego"
 
 #: utils/timezones.py:33
 msgid "(UTC-01:00) Cape Verde Time"
-msgstr ""
+msgstr "(UTC-01:00) Czas Cabo Verde"
 
 #: utils/timezones.py:34
 msgid "(UTC-01:00) Azores, Scoresbysund"
-msgstr ""
+msgstr "(UTC-01:00) Azory, Scoresbysund"
 
 #: utils/timezones.py:34
 msgid "(UTC) Azores, Scoresbysund"
-msgstr ""
+msgstr "(UTC) Azory, Scoresbysund"
 
 #: utils/timezones.py:35
 msgid "(UTC) Coordinated Universal Time"
-msgstr ""
+msgstr "(UTC) Uniwersalny czas koordynowany"
 
 #: utils/timezones.py:36
 msgid "(UTC) Dakar, Rabat"
-msgstr ""
+msgstr "(UTC) Dakar, Rabat"
 
 #: utils/timezones.py:37
 msgid "(UTC) Western European Time"
-msgstr ""
+msgstr "(UTC) Czas zachodnioeuropejski"
 
 #: utils/timezones.py:37
 msgid "(UTC+01:00) Western European Summer Time"
-msgstr ""
+msgstr "(UTC+01:00) Czas zachodnioeuropejski letni"
 
 #: utils/timezones.py:38
 msgid "(UTC+01:00) West Africa Time"
-msgstr ""
+msgstr "(UTC+01:00) Czas zachodnioafrykański"
 
 #: utils/timezones.py:39
 msgid "(UTC+01:00) Central European Time"
-msgstr ""
+msgstr "(UTC+01:00) Czas środkowoeuropejski"
 
 #: utils/timezones.py:39
 msgid "(UTC+02:00) Central European Summer Time"
-msgstr ""
+msgstr "(UTC+02:00) Czas środkowoeuropejski letni"
 
 #: utils/timezones.py:40
 msgid "(UTC+02:00) Central Africa Time"
-msgstr ""
+msgstr "(UTC+02:00) Czas środkowoafrykański"
 
 #: utils/timezones.py:41
 msgid "(UTC+02:00) Eastern European Time"
-msgstr ""
+msgstr "(UTC+02:00) Czas wschodnioeuropejski"
 
 #: utils/timezones.py:41
 msgid "(UTC+03:00) Eastern European Summer Time"
-msgstr ""
+msgstr "(UTC+03:00) Czas wschodnioeuropejski letni"
 
 #: utils/timezones.py:42
 msgid "(UTC+03:00) East Africa Time"
-msgstr ""
+msgstr "(UTC+03:00) Czas wschodnioafrykański"
 
 #: utils/timezones.py:43
 msgid "(UTC+03:00) Further-eastern European Time"
-msgstr ""
+msgstr "(UTC+03:00) Czas Kaliningradu"
 
 #: utils/timezones.py:44
-msgid "(UTC+3:30) Iran Time"
-msgstr ""
+msgid "(UTC+03:30) Iran Time"
+msgstr "(UTC+3:30) Iran"
 
 #: utils/timezones.py:44
-msgid "(UTC+4:30) Iran Time"
-msgstr ""
+msgid "(UTC+04:30) Iran Time"
+msgstr "(UTC+4:30) Iran"
 
 #: utils/timezones.py:45
-msgid "(UTC+4:00) Moscow Standard Time, Georgian Time"
-msgstr ""
+msgid "(UTC+04:00) Moscow Standard Time, Georgia Standard Time"
+msgstr "(UTC+04:00) Czas moskiewski, Gruzja"
 
 #: utils/timezones.py:46
 msgid "(UTC+04:00) United Arab Emirates Standard Time"
-msgstr ""
+msgstr "(UTC+04:00) Zjednoczone Emiraty Arabskie"
 
 #: utils/timezones.py:47
 msgid "(UTC+05:00) Baku, Yerevan"
-msgstr ""
+msgstr "(UTC+05:00) Baku,  Erywań"
 
 #: utils/timezones.py:47
 msgid "(UTC+06:00) Baku, Yerevan"
-msgstr ""
+msgstr "(UTC+06:00) Baku,  Erywań"
 
 #: utils/timezones.py:48
 msgid "(UTC+04:30) Afghanistan Standard Time"
-msgstr ""
+msgstr "(UTC+04:30) Afganistan"
 
 #: utils/timezones.py:49
 msgid "(UTC+05:00) Ashgabat, Dushanbe, Karachi, Maldives, Tashkent"
-msgstr ""
+msgstr "(UTC+05:00) Aszchabad, Duszanbe, Karaczi, Malediwy, Taszkent"
 
 #: utils/timezones.py:50
 msgid "(UTC+05:30) Colombo, Kolkata"
-msgstr ""
+msgstr "(UTC+05:30) Kolombo, Kolkata"
 
 #: utils/timezones.py:51
 msgid "(UTC+05:45) Kathmandu"
-msgstr ""
+msgstr "(UTC+05:45) Katmandu"
 
 #: utils/timezones.py:52
 msgid "(UTC+06:00) Astana, Bishkek, Dhaka, Thimphu, Yekaterinburg"
-msgstr ""
+msgstr "(UTC+06:00) Astana, Biszkek, Dhaka, Thimphu, Jekaterynburg"
 
 #: utils/timezones.py:53
 msgid "(UTC+06:30) Yangon, Cocos Islands"
-msgstr ""
+msgstr "(UTC+06:30) Rangun, Wyspy Kokosowe"
 
 #: utils/timezones.py:54
 msgid "(UTC+07:00) Bangkok, Ho Chi Minh, Jakarta, Novosibirsk"
-msgstr ""
+msgstr "(UTC+07:00) Bangkok, Ho Chi Minh, Dżakarta, Nowosybirsk"
 
 #: utils/timezones.py:55
 msgid "(UTC+08:00) Beijing, Hong Kong, Kuala Lumpur, Singapore, Taipei"
-msgstr ""
+msgstr "(UTC+08:00) Pekin, Hong Kong, Kuala Lumpur, Singapur, Tajpej"
 
 #: utils/timezones.py:56
 msgid "(UTC+08:00) Australian Western Standard Time"
-msgstr ""
+msgstr "(UTC+08:00) Australia - czas zachodni"
 
 #: utils/timezones.py:57
 msgid "(UTC+08:45) Eucla Area"
-msgstr ""
+msgstr "(UTC+08:45) Eucla"
 
 #: utils/timezones.py:58
 msgid "(UTC+09:00) Tokyo, Seoul, Irkutsk, Pyongyang"
-msgstr ""
+msgstr "(UTC+09:00) Tokio, Seul, Irkuck, Pjongjang"
 
 #: utils/timezones.py:59 utils/timezones.py:60
 msgid "(UTC+09:30) Australian Central Standard Time"
-msgstr ""
+msgstr "(UTC+09:30) Australia - czas centralny"
 
 #: utils/timezones.py:61
 msgid "(UTC+10:00) Australian Eastern Standard Time"
-msgstr ""
+msgstr "(UTC+10:00) Australia - czas wschodni standardowy"
 
 #: utils/timezones.py:61
 msgid "(UTC+11:00) Australian Eastern Summer Time"
-msgstr ""
+msgstr "(UTC+11:00) Australia - czas wschodni letni"
 
 #: utils/timezones.py:62
 msgid "(UTC+10:30) Lord Howe Island"
-msgstr ""
+msgstr "(UTC+10:30) Lord Howe"
 
 #: utils/timezones.py:62
 msgid "(UTC+11:00) Lord Howe Island"
-msgstr ""
+msgstr "(UTC+11:00) Lord Howe"
 
 #: utils/timezones.py:63
 msgid "(UTC+11:00) Guadalcanal, Honiara, Noumea, Vladivostok"
-msgstr ""
+msgstr "(UTC+11:00) Guadalcanal, Honiara, Noumea, Władywostok"
 
 #: utils/timezones.py:64
 msgid "(UTC+11:30) Norfolk Island"
-msgstr ""
+msgstr "(UTC+11:30) Wyspa Norfolk"
 
 #: utils/timezones.py:65
 msgid "(UTC+12:00) Kamchatka, Marshall Islands"
-msgstr ""
+msgstr "(UTC+12:00) Kamczatka, Wyspy Marshalla"
 
 #: utils/timezones.py:66
 msgid "(UTC+12:00) Auckland, Fiji"
-msgstr ""
+msgstr "(UTC+12:00) Auckland, Fidżi"
 
 #: utils/timezones.py:66
 msgid "(UTC+13:00) Auckland, Fiji"
-msgstr ""
+msgstr "(UTC+13:00) Auckland, Fidżi"
 
 #: utils/timezones.py:67
 msgid "(UTC+12:45) Chatham Islands"
-msgstr ""
+msgstr "(UTC+12:45) Wyspy Chatham"
 
 #: utils/timezones.py:67
 msgid "(UTC+13:45) Chatham Islands"
-msgstr ""
+msgstr "(UTC+13:45) Wyspy Chatham"
 
 #: utils/timezones.py:68
 msgid "(UTC+13:00) Phoenix Islands"
-msgstr ""
+msgstr "(UTC+13:00) Wyspy Feniks"
 
 #: utils/timezones.py:69
 msgid "(UTC+14:00) Nuku'alofa"
-msgstr ""
+msgstr "(UTC+14:00) Nuku'alofa"
+
+#~ msgid "Post Thread"
+#~ msgstr "Załóż temat"
 
 #~ msgid "Enter your e-mail address."
 #~ msgstr "Wpisz swój adres e-mail."
@@ -8892,14 +8904,8 @@ msgstr ""
 #~ msgid "Enter your desired username"
 #~ msgstr "Wprowadź pożądaną nazwę użytkownika"
 
-#~ msgid "Enter your e-mail"
-#~ msgstr "Wprowadź swój adres e-mail"
-
 #~ msgid "Repeat your e-mail"
 #~ msgstr "Powtórz swój adres e-mail"
-
-#~ msgid "Enter your password"
-#~ msgstr "Wprowadź swoje hasło"
 
 #~ msgid "Repeat your password"
 #~ msgstr "Powtórz swoje hasło"
