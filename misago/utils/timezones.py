@@ -42,7 +42,7 @@ raw_tz = (
     ('Asia/Qatar', _('(UTC+03:00) East Africa Time')),
     ('Europe/Minsk', _('(UTC+03:00) Further-eastern European Time')),
     ('Asia/Tehran', _('(UTC+03:30) Iran Time'), _('(UTC+04:30) Iran Time')),
-    ('Europe/Moscow', _('(UTC+04:00) Moscow Standard Time, Georgian Time')),
+    ('Europe/Moscow', _('(UTC+04:00) Moscow Standard Time, Georgia Standard Time')),
     ('Asia/Dubai', _('(UTC+04:00) United Arab Emirates Standard Time')),
     ('Asia/Baku', _('(UTC+05:00) Baku, Yerevan'), _('(UTC+06:00) Baku, Yerevan')),
     ('Asia/Kabul', _('(UTC+04:30) Afghanistan Standard Time')),
