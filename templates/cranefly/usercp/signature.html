@@ -27,7 +27,7 @@
 
   <form action="{{ url('usercp_signature') }}" method="post">
     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-    {{ editor.editor(form.signature, _('Save Signature'),
+    {{ editor.editor(form.signature, lang_save_signature(),
       hide_links=(not acl.usercp.allow_signature_links()),
       hide_images=(not acl.usercp.allow_signature_images()),
       hide_hr=True) }}
@@ -40,3 +40,6 @@
 {{ super() }}
   {{ editor.js() }}
 {% endblock %}
+
+{# Language strings macros #}
+{% macro lang_save_signature() -%}{% trans %}Save Signature{% endtrans %}{%- endmacro %}
