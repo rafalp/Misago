@@ -116,7 +116,6 @@ function link2player(element, link_href) {
   if (re.test(link_href)) {
     media_url = link_href.match(re);
     return youtube_player(element, media_url[1]);
-    return '<iframe width="480" height="360" src="http://www.youtube.com/embed/' + media_url[1] + '" frameborder="0" allowfullscreen></iframe>';
   }
 
   // Youtube feature=embed
@@ -124,7 +123,6 @@ function link2player(element, link_href) {
   if (re.test(link_href)) {
     media_url = link_href.match(re);
     return youtube_player(element, media_url[1]);
-    return '<iframe width="480" height="360" src="http://www.youtube.com/embed/' + media_url[1] + '" frameborder="0" allowfullscreen></iframe>';
   }
 
   // Youtube embed with start time
@@ -137,7 +135,6 @@ function link2player(element, link_href) {
     if (media_minutes) { media_url[2] += (media_minutes[1] - 0) * 60; }
     if (media_seconds) { media_url[2] += (media_seconds[1] - 0); }
     return youtube_player(element, media_url[1], media_url[2]);
-    return '<iframe width="480" height="360" src="http://www.youtube.com/embed/' + media_url[1] + '?start=' + media_url[2] + '" frameborder="0" allowfullscreen></iframe>';
   }
 
   // Youtube embed
@@ -145,7 +142,6 @@ function link2player(element, link_href) {
   if (re.test(link_href)) {
     media_url = link_href.match(re);
     return youtube_player(element, media_url[1]);
-    return '<iframe width="480" height="360" src="http://www.youtube.com/embed/' + media_url[1] + '" frameborder="0" allowfullscreen></iframe>';
   }
 
   // Vimeo link
@@ -160,20 +156,22 @@ function link2player(element, link_href) {
 }
 
 // Youtube player
-function youtube_player(element, media_url, startfrom) {
+function youtube_player(element, movie_id, startfrom) {
   if (typeof startfrom != 'undefined') {
-    player_url = 'http://www.youtube.com/embed/' + media_url + '?start=' + startfrom + '&amp;autoplay=1';
+    player_url = 'http://www.youtube.com/embed/' + movie_id + '?start=' + startfrom + '&amp;autoplay=1';
   } else {
-    player_url = 'http://www.youtube.com/embed/' + media_url + '?autoplay=1';
+    player_url = 'http://www.youtube.com/embed/' + movie_id + '?autoplay=1';
   }
 
-  var media_element = $('<div><div class="media-border"><div class="media-thumbnail" style="background: url(\'http://img.youtube.com/vi/' + media_url + '/0.jpg\');"><a href="' + $.trim($(element).text()) + '" class="play-link" data-playerurl="' + player_url + '"><i class="icon-youtube-sign"></i><strong>' + l_play_media_msg + '</strong></a></div></div></div>');
+  // Replace link with fancy image
+  var media_element = $('<div><div class="media-border youtube-player" data-movieid="' + movie_id + '"><div class="media-thumbnail" style="background-image: url(\'http://img.youtube.com/vi/' + movie_id + '/sddefault.jpg\');"><a href="' + $.trim($(element).text()) + '" class="play-link" data-playerurl="' + player_url + '"><i class="icon-youtube-sign"></i><strong>' + l_play_media_msg + '</strong></a></div></div></div>');
   $(media_element).find('.play-link').click(function() {
-    $(this).parent().replaceWith('<iframe width="480" height="360" src="' + $(this).data('playerurl') + '" frameborder="0" allowfullscreen></iframe>');
+    $(this).parent().replaceWith('<iframe width="853" height="480" src="' + $(this).data('playerurl') + '" frameborder="0" allowfullscreen></iframe>');
     return false;
   });
   $(element).replaceWith(media_element);
-  $.getJSON("https://gdata.youtube.com/feeds/api/videos/" + media_url + "?v=2&alt=json",
+  // Fetch title and author name
+  $.getJSON("https://gdata.youtube.com/feeds/api/videos/" + movie_id + "?v=2&alt=json",
             function(data, textStatus, jqXHR) {
               var movie_title = data.entry.title.$t;
               var movie_author = data.entry.author['0'].name.$t

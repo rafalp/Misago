@@ -91,18 +91,23 @@
   }
 
   .media-border {
-    border-radius: @baseBorderRadius;
+    box-shadow: 0px 0px 4px @gray;
   	display: inline-block;
   	overflow: hidden;
     margin: (@baseLineHeight / 2) 0px;
 
     iframe {
-    	margin: -2px 0px;
+    	margin: 0px;
+    	margin-bottom: -5px;
     }
 
     .media-thumbnail {
-    	width: 480px;
-    	height: 360px;
+    	background-color: @black;
+    	background-position: center center;
+    	background-repeat: no-repeat;
+    	background-size: cover;
+    	width: 853px;
+    	height: 480px;
 
     	text-align: center;
 
@@ -110,8 +115,8 @@
     		background-color: fadeOut(@black, 20%);
     		border-radius: @fontSizeSmall;
     		display: inline-block;
-    		margin-top: 120px;
-    		padding: @paddingLarge;
+    		margin-top: 159px;
+    		padding: @baseFontSize (@baseFontSize * 1.5);
 
 	    	color: @grayLighter;
 	    	text-align: center;
@@ -128,12 +133,12 @@
 	    		display: block;
 	    		clear: both;
 
-	    		font-size: @baseFontSize * 6;
+	    		font-size: @baseFontSize * 8;
 	    		text-decoration: none;
 	    	}
 
 		  	&.movie-title {
-		  		margin-top: 120px - @baseFontSize - 2px;
+		  		margin-top: 164px - @baseFontSize - 4px;
 
 		    	strong {
 		    		display: block;
