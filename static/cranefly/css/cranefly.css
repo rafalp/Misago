@@ -785,7 +785,7 @@ footer .breadcrumb li.active{color:#555}
 .form-container{background:#fff;border:1px solid #e7e7e7;border-radius:3px;margin:0 -21px;margin-bottom:20px;padding:20px;padding-top:-15px}.form-container.container-horizontal{margin:0 -41px;margin-bottom:20px}
 .form-container .form-header{border-bottom:1px solid #e7e7e7;margin-top:-20px;margin-bottom:20px;padding:10px 0}.form-container .form-header h1{margin:0;padding:0;font-size:21px}.form-container .form-header h1 small{font-size:13.125px;font-weight:bold}
 .form-container .form-header .btn{margin-left:14px;position:relative;bottom:30px}
-.form-container .form-preview{background-color:#fbfbfb;border:1px solid #e7e7e7;border-radius:3px;margin-bottom:20px;padding:20px}
+.form-container .form-preview{background-color:#fbfbfb;border:1px solid #e7e7e7;border-radius:3px;margin-bottom:20px;overflow:auto;padding:20px}
 .form-container form{margin:0}.form-container form fieldset{padding-top:0}.form-container form fieldset legend{border:none;padding:0;color:#999;font-size:19.599999999999998px;font-weight:bold}
 .form-container form fieldset.first{border-top:none;padding-top:0}
 .form-container form .control-label{font-weight:bold}
