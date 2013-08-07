@@ -17,7 +17,7 @@ class MembersOnline(object):
             self.count_sessions()
 
     def count_sessions(self):
-        queryset = Session.objects.filter(matched=True).filter(crawler__isnull=True).filter(last__gte=timezone.now() - timedelta(seconds=self.frequency))
+        queryset = Session.objects.filter(crawler__isnull=True).filter(last__gte=timezone.now() - timedelta(seconds=self.frequency))
         self._all = queryset.count()
         self._members = queryset.filter(user__isnull=False).count()
         cache.delete_many(['team_users_online', 'ranks_online'])
