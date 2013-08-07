@@ -164,20 +164,30 @@ function youtube_player(element, movie_id, startfrom) {
   }
 
   // Replace link with fancy image
-  var media_element = $('<div><div class="media-border youtube-player" data-movieid="' + movie_id + '"><div class="media-thumbnail" style="background-image: url(\'http://img.youtube.com/vi/' + movie_id + '/sddefault.jpg\');"><a href="' + $.trim($(element).text()) + '" class="play-link" data-playerurl="' + player_url + '"><i class="icon-youtube-sign"></i><strong>' + l_play_media_msg + '</strong></a></div></div></div>');
+  var media_element = $('<div><div class="media-border youtube-player" data-movieid="' + movie_id + '"><div class="media-thumbnail" style="background-image: url(\'http://img.youtube.com/vi/' + movie_id + '/0.jpg\');"><a href="' + $.trim($(element).text()) + '" class="play-link" data-playerurl="' + player_url + '"><i class="icon-youtube-sign"></i><strong>' + l_play_media_msg + '</strong></a></div></div></div>');
   $(media_element).find('.play-link').click(function() {
     $(this).parent().replaceWith('<iframe width="853" height="480" src="' + $(this).data('playerurl') + '" frameborder="0" allowfullscreen></iframe>');
     return false;
   });
   $(element).replaceWith(media_element);
-  // Fetch title and author name
+  // Fetch title, author name and thumbnail
   $.getJSON("https://gdata.youtube.com/feeds/api/videos/" + movie_id + "?v=2&alt=json",
             function(data, textStatus, jqXHR) {
+              // Movie details
               var movie_title = data.entry.title.$t;
               var movie_author = data.entry.author['0'].name.$t
               $(media_element).find('.play-link').addClass('movie-title');
               $(media_element).find('.play-link strong').text(movie_title);
               $(media_element).find('.play-link').append(l_play_media_author.replace('{author}', movie_author));
+              // Movie thumbnail
+              var thumb = {height: 90, url: 'http://img.youtube.com/vi/' + movie_id + '/0.jpg'};
+              console.log(data.entry['media$group']['media$thumbnail']);
+              $(data.entry['media$group']['media$thumbnail']).each(function(key, yt_image) {
+                if (thumb.height < yt_image.height) {
+                  thumb = yt_image;
+                }
+              });
+              $(media_element).find('.media-thumbnail').css('background-image', "url('" + thumb.url + "')");
             });
   return true;
 }
