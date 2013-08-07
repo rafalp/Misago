@@ -32,7 +32,11 @@ def index(request):
     users_online = request.onlines.stats(request)
 
     # Ranks online
-    ranks_list = cache.get('ranks_online', 'nada')
+    if settings.online_counting != 'real':
+        ranks_list = cache.get('ranks_online', 'nada')
+    else:
+        ranks_list = 'nada'
+
     if ranks_list == 'nada':
         ranks_dict = {}
         ranks_list = []
@@ -61,10 +65,10 @@ def index(request):
                     ranks_dict[request.user.rank_id]['online'].append(request.user)
                     ranks_dict[request.user.rank_id]['pks'].append(request.user.pk)
                     users_list.append(request.user.pk)
-            cache.set('team_users_online', users_list, settings.online_counting_frequency)
             del ranks_dict
             del users_list
-        cache.set('ranks_online', ranks_list, settings.online_counting_frequency)
+        if settings.online_counting != 'real':
+            cache.set('ranks_online', ranks_list, settings.online_counting_frequency)
     elif request.user.is_authenticated():
         for rank in ranks_list:
             if rank['id'] == request.user.rank_id and not request.user.pk in rank['pks']:
