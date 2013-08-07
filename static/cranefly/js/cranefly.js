@@ -167,9 +167,9 @@ function youtube_player(element, media_url, startfrom) {
     player_url = 'http://www.youtube.com/embed/' + media_url + '?autoplay=1';
   }
 
-  var media_element = $('<div class="media-border"><div class="media-thumbnail" style="background: url(\'http://img.youtube.com/vi/' + media_url + '/0.jpg\');"><a href="' + $.trim($(element).text()) + '"><i class="icon-youtube-sign"></i>' + l_play_media_msg + '</a></div></div>');
-  media_element.find('.media-thumbnail a').click(function() {
-    $(this).parent().replaceWith('<iframe width="480" height="360" src="' + player_url + '" frameborder="0" allowfullscreen></iframe>');
+  var media_element = $('<div class="media-border"><div class="media-thumbnail" style="background: url(\'http://img.youtube.com/vi/' + media_url + '/0.jpg\');"><a href="' + $.trim($(element).text()) + '" data-playerurl="' + player_url + '"><i class="icon-youtube-sign"></i>' + l_play_media_msg + '</a></div></div>');
+  $(media_element).find('.media-thumbnail a').click(function() {
+    $(this).parent().replaceWith('<iframe width="480" height="360" src="' + $(this).data('playerurl') + '" frameborder="0" allowfullscreen></iframe>');
     return false;
   });
   $(element).replaceWith(media_element);

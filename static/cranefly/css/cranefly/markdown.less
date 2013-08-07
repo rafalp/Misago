@@ -3,7 +3,7 @@
 
 .markdown, .markdown article {
   margin: 0px;
-  overflow: auto;
+  overflow: visible;
 
   &>:first-child {
     margin-top: 0px;
@@ -95,6 +95,11 @@
   	display: inline-block;
   	overflow: hidden;
     margin: (@baseLineHeight / 2) 0px;
+    clear: both;
+
+    iframe {
+    	margin: 0px;
+    }
 
     .media-thumbnail {
     	width: 480px;
