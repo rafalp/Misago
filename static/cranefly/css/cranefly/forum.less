@@ -298,6 +298,156 @@
   }
 }
 
+// New threads list
+.forum-threads-list-new {
+  background-color: @categoryBackground;
+  border: 1px solid @categoryBorder;
+  border-radius: @borderRadiusSmall;
+  .box-shadow(0px 0px 0px 3px @categoryShadow);
+  margin-bottom: @baseLineHeight;
+
+  .threads-list-empty {
+  	padding: (@baseFontSize * 2) 0px;
+
+  	color: @grayLight;
+  	font-size: @fontSizeLarge * 1.5;
+  	text-align: center;
+  }
+
+  &>ul {
+  	list-style: none;
+  	margin: 0px;
+
+  	&>li {
+    	border-bottom: 1px solid @categoryBorder;
+			padding: (@fontSizeSmall - 2px) 0px;
+			overflow: auto;
+
+			.thread-icon {
+				float: left;
+				width: @threadIconSize + @fontSizeLarge;
+
+				color: @itemOldColor;
+				font-size: @threadIconSize;
+				text-align: center;
+				text-decoration: none;
+			}
+
+			.thread-body {
+				margin-left: @threadIconSize + @fontSizeLarge;
+
+				&.checkbox-margin {
+					margin-right: 32px;
+				}
+
+				.thread-title {
+					display: block;
+
+					a:link, a:active, a:visited, a:hover {
+						color: @gray;
+						font-size: @fontSizeLarge;
+					}
+
+					.thread-flags {
+						display: inline-block;
+	  				list-style: none;
+						margin: 0px;
+						padding: 0px;
+						position: relative;
+						top: 4px;
+						left: -4px;
+
+						li {
+							float: left;
+							margin-left: @baseFontSize / 2;
+						}
+					}
+				}
+
+				.thread-details {
+					float: left;
+  				list-style: none;
+					margin: 0px;
+					padding: 0px;
+
+					li {
+						float: left;
+						margin-right: @baseFontSize / 2;
+
+						color: @grayLight;
+						font-size: @fontSizeSmall;
+
+						a:link, a:visited {
+							color: @gray;
+						}
+
+						a:hover, a:active {
+							color: @textColor;
+						}
+					}
+				}
+			}
+
+			.thread-select {
+				float: right;
+				width: 30px;
+
+				label {
+					border-radius: @baseBorderRadius;
+					display: inline-block;
+					padding-right: 3px;
+					padding-bottom: 4px;
+
+					&:hover {
+						background-color: @grayLighter;
+					}
+
+					&:active {
+						background-color: @red;
+					}
+
+					input {
+						margin-top: 6px;
+						position: relative;
+						left: 6px;
+					}
+				}
+			}
+
+			&.thread-new {
+				.thread-icon {
+					color: @itemNewColor;
+				}
+
+				.thread-title {
+					&:link, &:active, &:visited, &:hover {
+						color: @textColor;
+					}
+				}
+			}
+  	}
+
+  	&>li:last-child {
+  		border-bottom: none;
+  	}
+  }
+
+  .threads-actions {
+    background-color: @bodyBackground;
+    border-top: 1px solid @categoryBorder;
+    border-radius: 0px 0px @borderRadiusSmall @borderRadiusSmall;
+    overflow: auto;
+    padding: 4px;
+
+    color: @grayLight;
+    font-size: @fontSizeSmall;
+
+    form {
+      margin-bottom: 0px;
+    }
+  }
+}
+
 // Threads list
 .forum-threads-list {
   background-color: @categoryBackground;

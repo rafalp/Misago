@@ -111,6 +111,81 @@
     {% endif %}
   </div>
 
+  <div class="forum-threads-list-new">
+    {% if threads %}
+    <ul>
+      {% for thread in threads %}
+      <li{% if not thread.is_read %} class="thread-new"{% endif %}>
+        <div class="thread-icon">
+          {% if thread.is_read %}
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}">
+          {% else %}
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}">
+          {% endif %}
+            {% if thread.weight == 2%}
+            <i class="icon-star{% if thread.is_read %}-empty{% endif %}"></i>
+            {% elif thread.weight == 1 %}
+            <i class="icon-bookmark{% if thread.is_read %}-empty{% endif %}"></i>
+            {% else %}
+            <i class="icon-circle{% if thread.is_read %}-blank{% endif %}"></i>
+            {% endif %}
+          </a>
+        </div>
+        {% if user.is_authenticated() and list_form %}
+        <div class="thread-select">
+          <label class="checkbox"><input form="threads_form" name="{{ list_form['list_items']['html_name'] }}" type="checkbox" class="checkbox-member" value="{{ thread.pk }}"{% if list_form['list_items']['has_value'] and ('' ~ thread.pk) in list_form['list_items']['value'] %} checked="checked"{% endif %}></label>
+        </div>
+        {% endif %}
+        <div class="thread-body{% if user.is_authenticated() and list_form %} checkbox-margin{% endif %}">
+          <div class="thread-title">
+            <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a>
+            <ul class="thread-flags">
+              {% if thread.replies_reported and ((forum is defined and acl.threads.can_mod_posts(forum)) or acl.threads.can_mod_posts(thread.forum)) %}
+              <li><span class="label label-warning tooltip-bottom" title="{% trans %}This thread has reported replies{% endtrans %}">{% trans %}Reported{% endtrans %}</span></li>
+              {% endif %}
+              {% if thread.replies_moderated %}
+              <li><span class="label label-info tooltip-bottom" title="{% trans %}This thread has unreviewed replies{% endtrans %}">{% trans %}Unreviewed{% endtrans %}</span></li>
+              {% endif %}
+              {% if thread.moderated  %}
+              <li><span class="label tooltip-bottom" title="{% trans %}This thread awaits review{% endtrans %}">{% trans %}Hidden{% endtrans %}</span></li>
+              {% endif %}
+              {% if thread.closed %}
+              <li><span class="label label-important tooltip-bottom" title="{% trans %}This thread is closed{% endtrans %}">{% trans %}Closed{% endtrans %}</span></li>
+              {% endif %}
+              {% if thread.deleted %}
+              <li><span class="label label-inverse tooltip-bottom" title="{% trans %}This thread is deleted{% endtrans %}">{% trans %}Deleted{% endtrans %}</span></li>
+              {% endif %}
+            </ul>
+          </div>
+          <ul class="thread-details">
+            <li>{% trans user=thread_starter(thread), start=thread.start|reldate|low %}Started by {{ user }}, {{ start }}{% endtrans %}</li>
+            <li><i class="icon-comments-alt"></i> {% trans count=thread.replies, replies=thread.replies|intcomma, user=thread_reply(thread), last=thread.last|reldate|low -%}
+              {{ replies }} reply, by {{ user }} {{ last }}
+              {%- pluralize -%}
+              {{ replies }} replies, last by {{ user }} {{ last }}
+              {%- endtrans %}</li>
+          </ul>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% if user.is_authenticated() and list_form %}
+    <div class="threads-actions">
+      <form id="threads_form" class="form-inline pull-right" action="{{ request_path }}" method="POST">
+        <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+        {{ form_theme.field(list_form.list_action, attrs={'class': 'span3'}) }}
+        <button type="submit" class="btn btn-danger">{% trans %}Go{% endtrans %}</button>
+      </form>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="threads-list-empty">
+      {% trans %}There are no threads in this forum.{% endtrans %}
+    </div>
+    {% endif %}
+  </div>
+
+  {# START OLD THREADS
   <div class="forum-threads-list">
     <div class="header">
       <div class="row-fluid">
@@ -137,7 +212,7 @@
 
           {{ macros.thread_flags(thread) }}
 
-          <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}" class="thread-name{% if thread.name|length > 70 %} tooltip-top" title="{{ thread.name }}{% endif %}">{{ thread.name|short_string(70) }}</a>
+          <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}" class="thread-name{% if thread.name|length > 70 %} tooltip-top" title="{{ thread.name }}{% endif %}">{{ thread.name }}</a>
 
           <div class="thread-details">
             {% trans user=thread_starter(thread), start=thread.start|reldate|low %}by {{ user }}, {{ start }}{% endtrans %}
@@ -183,6 +258,7 @@
     </div>
     {% endif %}
   </div>
+  END OLD THREADS #}
 
   <div class="forum-threads-extra">
     {{ pager() }}
