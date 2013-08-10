@@ -1,3 +1,4 @@
+import re
 import markdown
 from markdown.inlinepatterns import SubstituteTagPattern
 from markdown.util import etree
@@ -172,7 +173,7 @@ EMOJIS = (
 
 class EmojiPattern(SubstituteTagPattern):
     def __init__ (self, emo):
-        super(SubstituteTagPattern, self).__init__(r':%s:' % emo, '')
+        super(SubstituteTagPattern, self).__init__(r':%s:' % re.escape(emo), '')
         self.emo = emo
 
     def handleMatch (self, m):
