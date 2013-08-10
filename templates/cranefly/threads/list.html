@@ -117,19 +117,31 @@
       {% for thread in threads %}
       <li{% if not thread.is_read %} class="thread-new"{% endif %}>
         <div class="thread-icon">
+          {% if thread.weight == 2 %}
+          {% if thread.is_read %}
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Announcement, click to see last post{% endtrans %}">
+          {% else %}
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Announcement, click to see first unread post{% endtrans %}">
+          {% endif %}
+            <i class="icon-star{% if thread.is_read %}-empty{% endif %}"></i>
+          </a>
+          {% elif thread.weight == 1 %}
+          {% if thread.is_read %}
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Pinned, click to see last post{% endtrans %}">
+          {% else %}
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Pinned, click to see first unread post{% endtrans %}">
+          {% endif %}
+            <i class="icon-bookmark{% if thread.is_read %}-empty{% endif %}"></i>
+          </a>
+          {% else %}
           {% if thread.is_read %}
           <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}">
           {% else %}
           <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}">
           {% endif %}
-            {% if thread.weight == 2%}
-            <i class="icon-star{% if thread.is_read %}-empty{% endif %}"></i>
-            {% elif thread.weight == 1 %}
-            <i class="icon-bookmark{% if thread.is_read %}-empty{% endif %}"></i>
-            {% else %}
             <i class="icon-circle{% if thread.is_read %}-blank{% endif %}"></i>
-            {% endif %}
           </a>
+          {% endif %}
         </div>
         {% if user.is_authenticated() and list_form %}
         <div class="thread-select">

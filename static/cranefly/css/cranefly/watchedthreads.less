@@ -2,14 +2,10 @@
 // -------------------------
 
 .watched-threads {
-  .thread-last-reply {
-    border-left: none !important;
-    padding-left: 0px !important;
-  }
-
-  .thread-options {
+  .thread-actions {
     float: right;
     overflow: auto;
+    padding: 0px @baseFontSize;
     position: relative;
     top: 8px;
 
@@ -22,9 +18,17 @@
 
       .btn {
         float: right;
-        padding: 3px 5px;
-        padding-bottom: 0px;
+        padding: 4px 10px;
         margin-left: @baseFontSize + 2px;
+
+        text-align: center;
+
+        i {
+        	margin-right: 6px;
+
+        	font-size: @fontSizeLarge;
+        	text-align: center;
+        }
       }
     }
   }
