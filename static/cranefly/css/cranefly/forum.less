@@ -331,17 +331,18 @@
 				font-size: @threadIconSize;
 				text-align: center;
 				text-decoration: none;
+				margin-bottom: -1px;
 			}
 
 			.thread-body {
+				margin: ((@fontSizeSmall - 2px) * -1) 0px;
 				margin-left: @threadIconSize + @fontSizeLarge;
-
-				&.checkbox-margin {
-					margin-right: 32px;
-				}
+				padding: (@fontSizeSmall - 2px) 0px;
 
 				.thread-title {
 					display: block;
+					position: relative;
+					top: 1px;
 
 					a:link, a:active, a:visited, a:hover {
 						color: @gray;
@@ -349,7 +350,7 @@
 					}
 
 					.thread-flags {
-						display: inline-block;
+						display: none;
 	  				list-style: none;
 						margin: 0px;
 						padding: 0px;
@@ -360,6 +361,139 @@
 						li {
 							float: left;
 							margin-left: @baseFontSize / 2;
+						}
+					}
+				}
+
+				.thread-activity {
+					float: right;
+					list-style: none;
+					margin: 0px;
+					margin-top: (@fontSizeSmall - 2px) * -1;
+					padding: 6px 0px;
+					padding-right: 8px;
+					overflow: auto;
+					position: relative;
+					top: 2px;
+					z-index: 2;
+
+					li {
+						float: left;
+						margin: 0px;
+						margin-left: 8px;
+						padding: 0px;
+
+						&.thread-flag {
+							color: @grayLight;
+							font-size: 26px;
+
+							&.thread-moderated {
+								&:hover {
+									color: @purple;
+								}
+							}
+
+							&.thread-closed {
+								&:hover {
+									color: @red;
+								}
+							}
+
+							&.thread-deleted {
+								&:hover {
+									color: @grayDark;
+								}
+							}
+						}
+
+						&.thread-replies,
+						&.thread-replies-reported,
+						&.thread-replies-moderated {
+							position: relative;
+							top: 2px;
+
+							color: @gray;
+							font-size: @fontSizeLarge;
+							font-weight: bold;
+						}
+
+						&.thread-replies-reported {
+							color: @red;
+						}
+
+						&.thread-replies-moderated {
+							color: @purple;
+						}
+
+						&.thread-replies {
+							&.thread-replies-new {
+								color: @itemNewColor;
+							}
+						}
+
+						&.thread-replies {
+							position: relative;
+							top: 2px;
+
+							color: @gray;
+							font-size: @fontSizeLarge;
+							font-weight: bold;
+
+							&.thread-replies-new {
+								color: @itemNewColor;
+							}
+						}
+
+						&.thread-last-reply {
+							position: relative;
+							top: 2px;
+
+							a:link, a:visited {
+								color: @grayLight;
+								font-size: @fontSizeLarge;
+								font-weight: bold;
+							}
+
+							a:hover, a:active {
+								color: @textColor;
+							}
+						}
+
+						&.thread-author, &.thread-poster {
+							.user-avatar {
+								border-radius: @baseBorderRadius;
+								width: 24px;
+								height: 24px;
+							}
+						}
+
+						&.thread-author {}
+
+						&.thread-poster {}
+
+						&.thread-select {
+							label {
+								border-radius: @baseBorderRadius;
+								display: inline-block;
+								margin: 0px;
+								margin-bottom: -5px;
+								padding-right: 3px;
+								padding-bottom: 4px;
+
+								&:hover {
+									background-color: @grayLighter;
+								}
+
+								&:active {
+									background-color: @red;
+								}
+
+								input {
+									margin-top: 6px;
+									position: relative;
+									left: 6px;
+								}
+							}
 						}
 					}
 				}
@@ -384,32 +518,6 @@
 						a:hover, a:active {
 							color: @textColor;
 						}
-					}
-				}
-			}
-
-			.thread-select {
-				float: right;
-				width: 30px;
-
-				label {
-					border-radius: @baseBorderRadius;
-					display: inline-block;
-					padding-right: 3px;
-					padding-bottom: 4px;
-
-					&:hover {
-						background-color: @grayLighter;
-					}
-
-					&:active {
-						background-color: @red;
-					}
-
-					input {
-						margin-top: 6px;
-						position: relative;
-						left: 6px;
 					}
 				}
 			}

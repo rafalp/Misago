@@ -143,12 +143,63 @@
           </a>
           {% endif %}
         </div>
-        {% if user.is_authenticated() and list_form %}
-        <div class="thread-select">
-          <label class="checkbox"><input form="threads_form" name="{{ list_form['list_items']['html_name'] }}" type="checkbox" class="checkbox-member" value="{{ thread.pk }}"{% if list_form['list_items']['has_value'] and ('' ~ thread.pk) in list_form['list_items']['value'] %} checked="checked"{% endif %}></label>
-        </div>
-        {% endif %}
-        <div class="thread-body{% if user.is_authenticated() and list_form %} checkbox-margin{% endif %}">
+        <div class="thread-body">
+          <ul class="thread-activity">
+            {% if thread.replies_reported %}
+            <li class="thread-replies-reported tooltip-top" title="{% trans %}Reported replies{% endtrans %}">
+              {{ thread.replies_reported|intcomma }}
+            </li>
+            {% endif %}
+            {% if thread.replies_moderated %}
+            <li class="thread-replies-moderated tooltip-top" title="{% trans %}Unreviewed replies{% endtrans %}">
+              {{ thread.replies_moderated|intcomma }}
+            </li>
+            {% endif %}
+            {% if thread.replies %}
+            <li class="thread-replies{% if not thread.is_read%} thread-replies-new{% endif %} tooltip-top" title="{% trans %}Replies{% endtrans %}">
+              {{ thread.replies|intcomma }}
+            </li>
+            {% endif %}
+            <li class="thread-last-reply tooltip-top" title="{% trans last=thread.last|reldate %}Last post {{ last }}{% endtrans %}">
+              <a href="{{ url('thread_last', thread=thread.pk, slug=thread.slug) }}">{{ thread.last|relcompact }}</a>
+            </li>
+            <li class="thread-author tooltip-top" title="{% if thread.start_poster_name != thread.last_poster_name %}{% trans username=thread.start_poster_name %}Thread by {{ username }}{% endtrans %}{% else %}{% trans username=thread.start_poster_name %}Thread and last post by {{ username }}{% endtrans %}{% endif %}">
+              {% if thread.start_poster_id %}
+              <a href="{{ url('user', user=thread.start_poster_id, username=thread.start_poster_name) }}">{% if settings.avatars_on_threads_list %}<img src="{{ thread.start_poster.get_avatar(18) }}" alt="{{ thread.start_poster_name }}" class="user-avatar">{% else %}{{ thread.start_poster_name }}{% endif %}</a>
+              {% else %}
+              {% if settings.avatars_on_threads_list %}<img src="{{ macros.avatar_guest(24) }}" alt="{{ thread.start_poster_name }}" class="user-avatar">{% else %}{{ thread.start_poster_name }}{% endif %}
+              {% endif %}
+            </li>
+            {% if thread.start_poster_name != thread.last_poster_name %}
+            <li class="thread-poster tooltip-top" title="{% trans username=thread.last_poster_name %}Last reply by {{ username }}{% endtrans %}">
+              {% if thread.last_poster_id %}
+              <a href="{{ url('user', user=thread.last_poster_id, username=thread.last_poster_name) }}">{% if settings.avatars_on_threads_list %}<img src="{{ thread.last_poster.get_avatar(18) }}" alt="{{ thread.last_poster_name }}" class="user-avatar">{% else %}{{ thread.last_poster_name }}{% endif %}</a>
+              {% else %}
+              {% if settings.avatars_on_threads_list %}<img src="{{ macros.avatar_guest(24) }}" alt="{{ thread.last_poster_name }}" class="user-avatar">{% else %}{{ thread.last_poster_name }}{% endif %}
+              {% endif %}
+            </li>
+            {% endif %}
+            {% if thread.moderated %}
+            <li class="thread-flag thread-moderated tooltip-top" title="{% trans %}This thread awaits review{% endtrans %}">
+              <i class="icon-remove-circle"></i>
+            </li>
+            {% endif %}
+            {% if thread.closed %}
+            <li class="thread-flag thread-closed tooltip-top" title="{% trans %}This thread is closed{% endtrans %}">
+              <i class="icon-remove-circle"></i>
+            </li>
+            {% endif %}
+            {% if thread.deleted %}
+            <li class="thread-flag thread-deleted tooltip-top" title="{% trans %}This thread is deleted{% endtrans %}">
+              <i class="icon-trash"></i>
+            </li>
+            {% endif %}
+            {% if user.is_authenticated() and list_form %}
+            <li class="thread-select">
+              <label class="checkbox"><input form="threads_form" name="{{ list_form['list_items']['html_name'] }}" type="checkbox" class="checkbox-member" value="{{ thread.pk }}"{% if list_form['list_items']['has_value'] and ('' ~ thread.pk) in list_form['list_items']['value'] %} checked="checked"{% endif %}></label>
+            </li>
+            {% endif %}
+          </ul>
           <div class="thread-title">
             <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a>
             <ul class="thread-flags">
@@ -169,14 +220,6 @@
               {% endif %}
             </ul>
           </div>
-          <ul class="thread-details">
-            <li>{% trans user=thread_starter(thread), start=thread.start|reldate|low %}Started by {{ user }}, {{ start }}{% endtrans %}</li>
-            <li><i class="icon-comments-alt"></i> {% trans count=thread.replies, replies=thread.replies|intcomma, user=thread_reply(thread), last=thread.last|reldate|low -%}
-              {{ replies }} reply, by {{ user }} {{ last }}
-              {%- pluralize -%}
-              {{ replies }} replies, last by {{ user }} {{ last }}
-              {%- endtrans %}</li>
-          </ul>
         </div>
       </li>
       {% endfor %}
