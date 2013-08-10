@@ -8,6 +8,10 @@
 
   font-weight: bold;
 
+  i {
+  	margin-right: 6px;
+  }
+
   &:hover, &:active {
     background-color: @white;
     border-color: lighten(@grayLight, 5%);
@@ -130,6 +134,18 @@
         text-decoration: none;
       }
     }
+  }
+
+  &.btn-icon {
+  	padding-left: 0px;
+  	padding-right: 0px;
+  	width: 32px;
+
+  	text-align: center;
+
+  	i {
+  		margin: 0px;
+  	}
   }
 }
 
