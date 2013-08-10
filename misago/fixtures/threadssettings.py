@@ -25,7 +25,7 @@ settings_fixture = (
                 'description':  _('Maximum allowed thread name length.'),
             }),
             ('threads_per_page', {
-                'value':        40,
+                'value':        25,
                 'type':         "integer",
                 'input':        "text",
                 'extra':        {'min': 5},
@@ -33,7 +33,7 @@ settings_fixture = (
                 'description':  _("Number of threads displayed on page in forum view."),
             }),
             ('avatars_on_threads_list', {
-                'value':        False,
+                'value':        True,
                 'type':         "boolean",
                 'input':        "yesno",
                 'name':         _("Display avatars on threads list"),
