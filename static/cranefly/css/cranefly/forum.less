@@ -383,29 +383,6 @@
 						margin-left: 8px;
 						padding: 0px;
 
-						&.thread-flag {
-							color: @grayLight;
-							font-size: 26px;
-
-							&.thread-moderated {
-								&:hover {
-									color: @purple;
-								}
-							}
-
-							&.thread-closed {
-								&:hover {
-									color: @red;
-								}
-							}
-
-							&.thread-deleted {
-								&:hover {
-									color: @grayDark;
-								}
-							}
-						}
-
 						&.thread-replies,
 						&.thread-replies-reported,
 						&.thread-replies-moderated {
@@ -460,16 +437,55 @@
 						}
 
 						&.thread-author, &.thread-poster {
+							position: relative;
+							top: 2px;
+
+							color: @gray;
+							font-size: @fontSizeLarge;
+							font-weight: bold;
+
 							.user-avatar {
 								border-radius: @baseBorderRadius;
 								width: 24px;
 								height: 24px;
+								position: relative;
+								bottom: 2px;
 							}
 						}
 
-						&.thread-author {}
+						&.thread-author {
+							a:link, a:active, a:visited, a:hover {
+								color: @blue;
+							}
+						}
 
-						&.thread-poster {}
+						&.thread-poster {
+							a:link, a:active, a:visited, a:hover {
+								color: @itemNewColor;
+							}}
+
+						&.thread-flag {
+							color: @grayLight;
+							font-size: 26px;
+
+							&.thread-moderated {
+								&:hover {
+									color: @purple;
+								}
+							}
+
+							&.thread-closed {
+								&:hover {
+									color: @red;
+								}
+							}
+
+							&.thread-deleted {
+								&:hover {
+									color: @grayDark;
+								}
+							}
+						}
 
 						&.thread-select {
 							label {

@@ -163,22 +163,22 @@
             <li class="thread-last-reply tooltip-top" title="{% trans last=thread.last|reldate %}Last post {{ last }}{% endtrans %}">
               <a href="{{ url('thread_last', thread=thread.pk, slug=thread.slug) }}">{{ thread.last|relcompact }}</a>
             </li>
-            <li class="thread-author tooltip-top" title="{% if thread.start_poster_name != thread.last_poster_name %}{% trans username=thread.start_poster_name %}Thread by {{ username }}{% endtrans %}{% else %}{% trans username=thread.start_poster_name %}Thread and last post by {{ username }}{% endtrans %}{% endif %}">
+            {% if thread.start_poster_name != thread.last_poster_name %}
+            <li class="thread-author tooltip-top" title="{% trans username=thread.start_poster_name %}Thread by {{ username }}{% endtrans %}">
               {% if thread.start_poster_id %}
               <a href="{{ url('user', user=thread.start_poster_id, username=thread.start_poster_name) }}">{% if settings.avatars_on_threads_list %}<img src="{{ thread.start_poster.get_avatar(18) }}" alt="{{ thread.start_poster_name }}" class="user-avatar">{% else %}{{ thread.start_poster_name }}{% endif %}</a>
               {% else %}
               {% if settings.avatars_on_threads_list %}<img src="{{ macros.avatar_guest(24) }}" alt="{{ thread.start_poster_name }}" class="user-avatar">{% else %}{{ thread.start_poster_name }}{% endif %}
               {% endif %}
             </li>
-            {% if thread.start_poster_name != thread.last_poster_name %}
-            <li class="thread-poster tooltip-top" title="{% trans username=thread.last_poster_name %}Last reply by {{ username }}{% endtrans %}">
+            {% endif %}
+            <li class="thread-poster tooltip-top" title="{% if thread.start_poster_name != thread.last_poster_name %}{% trans username=thread.last_poster_name %}Last reply by {{ username }}{% endtrans %}{% else %}{% trans username=thread.last_poster_name %}Thread and last post by {{ username }}{% endtrans %}{% endif %}">
               {% if thread.last_poster_id %}
               <a href="{{ url('user', user=thread.last_poster_id, username=thread.last_poster_name) }}">{% if settings.avatars_on_threads_list %}<img src="{{ thread.last_poster.get_avatar(18) }}" alt="{{ thread.last_poster_name }}" class="user-avatar">{% else %}{{ thread.last_poster_name }}{% endif %}</a>
               {% else %}
               {% if settings.avatars_on_threads_list %}<img src="{{ macros.avatar_guest(24) }}" alt="{{ thread.last_poster_name }}" class="user-avatar">{% else %}{{ thread.last_poster_name }}{% endif %}
               {% endif %}
             </li>
-            {% endif %}
             {% if thread.moderated %}
             <li class="thread-flag thread-moderated tooltip-top" title="{% trans %}This thread awaits review{% endtrans %}">
               <i class="icon-remove-circle"></i>
