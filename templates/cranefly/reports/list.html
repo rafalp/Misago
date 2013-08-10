@@ -104,6 +104,7 @@
     {% if list_form %}
     <div class="threads-actions">
       <form id="threads_form" class="form-inline pull-right" action="{{ request_path }}" method="POST">
+        <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
         {{ form_theme.field(list_form.list_action, attrs={'class': 'span3'}) }}
         <button type="submit" class="btn btn-danger">{% trans %}Go{% endtrans %}</button>
       </form>
