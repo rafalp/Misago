@@ -12,4 +12,4 @@ pytz==2013b
 recaptcha-client
 South==0.8.1
 Unidecode
-whoosh<2.5
+whoosh>=2.5
