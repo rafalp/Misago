@@ -1,3 +1,0 @@
-[submodule "vagrant/puppet/modules/python"]
-	path = vagrant/puppet/modules/python
-url=https://github.com/stankevich/puppet-python.git
