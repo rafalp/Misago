@@ -205,3 +205,4 @@ templates/debug_toolbar/**
 
 .vagrant
 database.db
+Icon
