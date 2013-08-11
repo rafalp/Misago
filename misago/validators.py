@@ -11,7 +11,7 @@ class validate_sluggable(object):
         self.error_long = error_long if error_long else _("Value is too long.")
 
     def __call__(self, value):
-        slug = slugify(value)
+        slug = slugify(value.replace('_', '').replace('-', ''))
         if not slug:
             raise ValidationError(self.error_short)
         if len(slug) > 255:
@@ -45,7 +45,7 @@ def validate_username(value):
     else:
         if not re.search('^[^\W_]+$', value):
             raise ValidationError(_("Username can only contain latin alphabet letters and digits."))
-    
+
     if Ban.objects.check_ban(username=value):
         raise ValidationError(_("This username is forbidden."))
 
