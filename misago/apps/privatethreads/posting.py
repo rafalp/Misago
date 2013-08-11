@@ -32,7 +32,7 @@ class NewThreadView(NewThreadBaseView, TypeMixin):
 
     def after_form(self, form):
         self.thread.participants.add(self.request.user)
-        self.invite_users(form.invite_users)
+        self.invite_users(form.users_list)
         self.whitelist_mentions()
         self.force_stats_sync()
 

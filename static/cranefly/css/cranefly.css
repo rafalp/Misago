@@ -803,7 +803,7 @@ textarea{resize:vertical}
 .btn.btn-danger{background-color:#cf402e;border-color:#ba3a29;color:#fff;text-shadow:0 1px 0 #902d20}.btn.btn-danger:hover,.btn.btn-danger:active{color:#fff}.btn.btn-danger:hover:enabled,.btn.btn-danger:active:enabled{background-color:#e82c15;border-color:#d12813}
 .btn.btn-inverse{background-color:#333;border-color:#262626;color:#fff;text-shadow:0 1px 0 #0d0d0d}.btn.btn-inverse:hover,.btn.btn-inverse:active{color:#fff}.btn.btn-inverse:hover:enabled,.btn.btn-inverse:active:enabled{background-color:#262626;border-color:#1a1a1a}
 .btn.btn-link{background:none;border:none;color:#999}.btn.btn-link:hover,.btn.btn-link:active,.btn.btn-link:focus{color:#333}.btn.btn-link:hover:enabled,.btn.btn-link:active:enabled,.btn.btn-link:focus:enabled{text-decoration:none}
-.btn.btn-icon{padding-left:0;padding-right:0;width:32px;text-align:center}.btn.btn-icon i{margin:0}
+.btn.btn-icon{padding-left:0 !important;padding-right:0 !important;width:32px;text-align:center}.btn.btn-icon i{margin:0}
 a.btn-link:hover,a.btn-link:active,a.btn-link:focus{color:#333;text-decoration:none}
 .pagination{margin:0;padding:0}.pagination .count{margin-right:10.5px;padding:4px 0;color:#999}
 .pagination ul{-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}.pagination ul li{float:left;margin:0;margin-right:4.666666666666667px;padding:0}.pagination ul li a:link,.pagination ul li a:visited{background-color:#fff;border:1px solid #f0f0f0;border-radius:3px;padding:3px 7px;color:#999}.pagination ul li a:link i,.pagination ul li a:visited i{opacity:.55;filter:alpha(opacity=55)}
@@ -1073,15 +1073,16 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{color:#333;text-decoration:n
 .thread-quick-reply .editor:after{border-color:transparent;border-right-color:#fff;border-width:10.5px;top:14px;margin-top:0}
 .thread-quick-reply .editor:before{border-color:transparent;border-right-color:#e6e6e6;border-width:11.5px;top:14px;margin-top:-1px}
 .thread-participants h3{margin:0;margin-top:-6px;padding:0;color:#555;font-size:17.5px;font-weight:bold}
-.thread-participants ul{background-color:#fff;border:1px solid #e2e2e2;border-radius:3px;margin:0;margin-bottom:20px;padding:0}.thread-participants ul li{border-bottom:1px dotted #e2e2e2;margin:0;padding:6px 8px;font-weight:bold}.thread-participants ul li img{border-radius:2px;width:24px;height:24px}
-.thread-participants ul li a:link,.thread-participants ul li a:active,.thread-participants ul li a:visited,.thread-participants ul li a:hover{margin:0 4px;color:#333;font-weight:bold}
+.thread-participants ul{background-color:#fff;border:1px solid #e2e2e2;border-radius:3px;margin:0;margin-bottom:20px;padding:0}.thread-participants ul li{border-bottom:1px dotted #e2e2e2;margin:0;padding:6px 8px;font-weight:bold}.thread-participants ul li img{border-radius:2px;width:24px;height:24px;position:relative;bottom:1px}
+.thread-participants ul li a:link,.thread-participants ul li a:active,.thread-participants ul li a:visited,.thread-participants ul li a:hover{margin:0 4px;position:relative;top:2px;color:#333;font-size:17.5px;font-weight:bold}
 .thread-participants ul li:last-child{border-bottom:none}
-.thread-participants ul li form{float:right;margin:0;padding:0}.thread-participants ul li form button{padding-left:5px;padding-right:5px}.thread-participants ul li form button i{position:relative;top:1px}
+.thread-participants ul li form{float:right;margin:0;padding:0}.thread-participants ul li form button{float:left;padding-left:0;padding-right:0;margin-left:12px;width:28px;text-align:center}.thread-participants ul li form button i{margin:0;position:relative;top:1px;font-size:17.5px}
 .thread-participants h4{margin:0;padding:0;color:#555;font-size:16.8px;font-weight:bold}
 .thread-participants .no-participants{margin-bottom:20px}
 .thread-participants .invite-participant{background-color:#fff;border:1px solid #d5d5d5;border-radius:3px;margin-top:6px;padding:1px}.thread-participants .invite-participant form{margin:0;padding:0}.thread-participants .invite-participant form input,.thread-participants .invite-participant form button{border:none;background:none;box-shadow:none}
 .thread-participants .invite-participant form input{width:70%}
-.thread-participants .invite-participant form button{float:right}
+.thread-participants .invite-participant form button{float:right;position:relative;top:2px;left:2px}.thread-participants .invite-participant form button i{margin:0;color:#999;font-size:17.5px}
+.thread-participants .invite-participant form button:hover i,.thread-participants .invite-participant form button:active i{color:#333}
 .post-votes-list .vote-user,.post-votes-list .vote-user:link,.post-votes-list .vote-user:visited{color:#555;font-size:17.5px;font-weight:bold}
 .post-votes-list .vote-user .vote-icon{background-color:#999;border-radius:3px;display:inline-block;padding:2px 3px;position:relative;bottom:1.75px;width:18px;color:#fff;font-size:14px;text-align:center}
 .post-votes-list a.vote-user:hover,.post-votes-list a.vote-user:active{color:#333;text-decoration:none}

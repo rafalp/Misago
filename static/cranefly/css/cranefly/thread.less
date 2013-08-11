@@ -197,7 +197,7 @@
               }
 
               &.post-neutral, &.post-like, &.post-hate {
-                margin-left: (@baseFontSize / 4); 
+                margin-left: (@baseFontSize / 4);
               }
 
               &.post-neutral {
@@ -327,7 +327,7 @@
         }
       }
 
-      &.post-muted {        
+      &.post-muted {
         .user-avatar {
           width: 50px;
           height: 50px;
@@ -549,12 +549,17 @@
         border-radius: @borderRadiusSmall;
         width: 24px;
         height: 24px;
+        position: relative;
+        bottom: 1px;
       }
 
       a:link, a:active, a:visited, a:hover {
         margin: 0px 4px;
+        position: relative;
+        top: 2px;
 
         color: @textColor;
+        font-size: @fontSizeLarge;
         font-weight: bold;
       }
 
@@ -568,12 +573,20 @@
         padding: 0px;
 
         button {
-          padding-left: 5px;
-          padding-right: 5px;
+          float: left;
+          padding-left: 0px;
+          padding-right: 0px;
+          margin-left: 12px;
+          width: 28px;
+
+          text-align: center;
 
           i {
+            margin: 0px;
             position: relative;
             top: 1px;
+
+            font-size: @fontSizeLarge;
           }
         }
       }
@@ -616,6 +629,22 @@
 
       button {
         float: right;
+        position: relative;
+        top: 2px;
+        left: 2px;
+
+        i {
+        	margin: 0px;
+
+        	color: @grayLight;
+          font-size: @fontSizeLarge;
+        }
+
+        &:hover, &:active {
+        	i {
+        	  color: @textColor;
+        	}
+        }
       }
     }
   }
