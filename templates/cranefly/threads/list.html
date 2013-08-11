@@ -202,23 +202,6 @@
           </ul>
           <div class="thread-title">
             <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a>
-            <ul class="thread-flags">
-              {% if thread.replies_reported and ((forum is defined and acl.threads.can_mod_posts(forum)) or acl.threads.can_mod_posts(thread.forum)) %}
-              <li><span class="label label-warning tooltip-bottom" title="{% trans %}This thread has reported replies{% endtrans %}">{% trans %}Reported{% endtrans %}</span></li>
-              {% endif %}
-              {% if thread.replies_moderated %}
-              <li><span class="label label-info tooltip-bottom" title="{% trans %}This thread has unreviewed replies{% endtrans %}">{% trans %}Unreviewed{% endtrans %}</span></li>
-              {% endif %}
-              {% if thread.moderated  %}
-              <li><span class="label tooltip-bottom" title="{% trans %}This thread awaits review{% endtrans %}">{% trans %}Hidden{% endtrans %}</span></li>
-              {% endif %}
-              {% if thread.closed %}
-              <li><span class="label label-important tooltip-bottom" title="{% trans %}This thread is closed{% endtrans %}">{% trans %}Closed{% endtrans %}</span></li>
-              {% endif %}
-              {% if thread.deleted %}
-              <li><span class="label label-inverse tooltip-bottom" title="{% trans %}This thread is deleted{% endtrans %}">{% trans %}Deleted{% endtrans %}</span></li>
-              {% endif %}
-            </ul>
           </div>
         </div>
       </li>
