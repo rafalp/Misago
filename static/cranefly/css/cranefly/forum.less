@@ -325,6 +325,7 @@
 
 			.thread-icon {
 				float: left;
+				height: @threadIconSize;
 				width: @threadIconSize + @fontSizeLarge;
 
 				color: @itemOldColor;
@@ -341,8 +342,6 @@
 
 				.thread-title {
 					display: block;
-					position: relative;
-					top: 1px;
 
 					a:link, a:active, a:visited, a:hover {
 						color: @gray;
@@ -359,7 +358,7 @@
 					padding-right: 8px;
 					overflow: auto;
 					position: relative;
-					top: 2px;
+					top: 1px;
 					z-index: 2;
 
 					li {
