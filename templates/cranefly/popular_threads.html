@@ -95,6 +95,9 @@
               <i class="icon-trash"></i>
             </li>
             {% endif %}
+            <li class="thread-forum tooltip-top" title="{% trans %}Thread Forum{% endtrans %}">
+              <a href="{{ url('forum', forum=thread.forum.pk, slug=thread.forum.slug) }}">{{ thread.forum.name }}</a>
+            </li>
           </ul>
           <div class="thread-title">
             <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a>

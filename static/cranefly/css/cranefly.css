@@ -983,6 +983,7 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{color:#333;text-decoration:n
 .forum-threads-list-new>ul>li .thread-body .thread-activity li.thread-flag{color:#999;font-size:26px}.forum-threads-list-new>ul>li .thread-body .thread-activity li.thread-flag.thread-moderated:hover{color:#7a43b6}
 .forum-threads-list-new>ul>li .thread-body .thread-activity li.thread-flag.thread-closed:hover{color:#cf402e}
 .forum-threads-list-new>ul>li .thread-body .thread-activity li.thread-flag.thread-deleted:hover{color:#333}
+.forum-threads-list-new>ul>li .thread-body .thread-activity li.thread-forum a:link,.forum-threads-list-new>ul>li .thread-body .thread-activity li.thread-forum a:visited{position:relative;top:2px;color:#999;font-size:17.5px;font-weight:bold}
 .forum-threads-list-new>ul>li .thread-body .thread-activity li.thread-select label{border-radius:3px;display:inline-block;margin:0;margin-bottom:-5px;padding-right:3px;padding-bottom:4px}.forum-threads-list-new>ul>li .thread-body .thread-activity li.thread-select label:hover{background-color:#eee}
 .forum-threads-list-new>ul>li .thread-body .thread-activity li.thread-select label:active{background-color:#cf402e}
 .forum-threads-list-new>ul>li .thread-body .thread-activity li.thread-select label input{margin-top:6px;position:relative;left:6px}
