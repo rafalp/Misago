@@ -1,5 +1,10 @@
 $(function () {
   // Register tooltips
+  $('.tooltip-top').tooltip({placement: 'top', container: 'body'})
+  $('.tooltip-bottom').tooltip({placement: 'bottom', container: 'body'})
+  $('.tooltip-left').tooltip({placement: 'left', container: 'body'})
+  $('.tooltip-right').tooltip({placement: 'right', container: 'body'})
+
   $('body').tooltip({placement: 'top', container: 'body', selector: '.tooltip-top'})
   $('body').tooltip({placement: 'bottom', container: 'body', selector: '.tooltip-bottom'})
   $('body').tooltip({placement: 'left', container: 'body', selector: '.tooltip-left'})
