@@ -3,6 +3,18 @@
 
 .midman {
   display: none;
+  overflow: visible;
+
+  .midman-arrow {
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid @black;
+    width: 0;
+    height: 0;
+    margin-top: -10px;
+    position: relative;
+    bottom: @baseLineHeight * 1.5;
+  }
 
   .midman-padding {
     background-color: @midmanBackground;
@@ -27,24 +39,17 @@
       }
     }
 
+    .loaded-content {
+      width: 80%;
+      margin: 0px auto;
+    }
+
     .ajax-error {
       display: none;
 
       color: @red;
       font-size: @fontSizeLarge * 2;
       text-align: center;
-    }
-
-    .ajax-loader {
-      padding-top: 6px;
-
-      font-size: @fontSizeLarge * 1.2;
-      text-align: center;
-
-      img {
-        margin-top: -6px;
-        margin-right: 7px;
-      }
     }
 
     .btn {

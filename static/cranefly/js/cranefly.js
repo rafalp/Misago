@@ -1,9 +1,9 @@
 $(function () {
   // Register tooltips
-  $('.tooltip-top').tooltip({placement: 'top', container: 'body'})
-  $('.tooltip-bottom').tooltip({placement: 'bottom', container: 'body'})
-  $('.tooltip-left').tooltip({placement: 'left', container: 'body'})
-  $('.tooltip-right').tooltip({placement: 'right', container: 'body'})
+  $('body').tooltip({placement: 'top', container: 'body', selector: '.tooltip-top'})
+  $('body').tooltip({placement: 'bottom', container: 'body', selector: '.tooltip-bottom'})
+  $('body').tooltip({placement: 'left', container: 'body', selector: '.tooltip-left'})
+  $('body').tooltip({placement: 'right', container: 'body', selector: '.tooltip-right'})
 
   // Register popovers
   $('.popover-top').popover({placement: 'top'})
@@ -195,8 +195,8 @@ function youtube_player(element, movie_id, startfrom) {
 // Ajax: Reports and Alerts
 $(function() {
   var midman = $('.midman');
-  var animation_speed = 400;
-  var midman_loader = midman.find('.ajax-loader');
+  var animation_speed = 0;
+  var midman_arrow = midman.find('.midman-arrow');
   var midman_error = midman.find('.ajax-error');
   var midman_content = midman.find('.loaded-content');
   var midman_content_id = false;
@@ -216,25 +216,21 @@ $(function() {
     midman_content_id = content_id;
     $(midman_content_id).parent().addClass('active');
 
+    var button_offset = $(midman_content_id).parent().offset();
+    $(midman_arrow).css('left', button_offset.left + ($(midman_content_id).parent().width() / 2) - 10);
+
     if (midman_content_id in midman_cache) {
-      midman_loader.hide();
-      midman_content.show();
       midman_content.html(midman_cache[midman_content_id]);
-      midman.slideDown(animation_speed);
+      midman.show(animation_speed);
       return;
     }
-
-    midman_loader.show();
-    midman_content.hide();
-    midman.slideDown(animation_speed);
 
     midman_request = $.ajax({
       url: $(midman_content_id).attr('href')
     }).done(function(data) {
       midman_cache[midman_content_id] = data.html;
       midman_content.html(data.html);
-      midman_loader.hide();
-      midman_content.slideDown(animation_speed);
+      midman.show(animation_speed);
     });
   }
 
@@ -242,7 +238,7 @@ $(function() {
     if (midman_content_id != false) {
       $(midman_content_id).parent().removeClass('active');
       midman_content_id = false;
-      midman.slideUp(animation_speed);
+      midman.hide(animation_speed);
     }
   }
 
