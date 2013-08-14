@@ -46,15 +46,17 @@
         </div>
         <div class="thread-body">
           <ul class="thread-activity">
-            {% if thread.replies_reported %}
+            {% if user.is_authenticated() %}
+            {% if thread.replies_reported and acl.threads.can_mod_posts(forum) %}
             <li class="thread-replies-reported tooltip-top" title="{% trans %}Reported replies{% endtrans %}">
               {{ thread.replies_reported|intcomma }}
             </li>
             {% endif %}
-            {% if thread.replies_moderated %}
+            {% if thread.replies_moderated and acl.threads.can_approve(forum) %}
             <li class="thread-replies-moderated tooltip-top" title="{% trans %}Unreviewed replies{% endtrans %}">
               {{ thread.replies_moderated|intcomma }}
             </li>
+            {% endif %}
             {% endif %}
             {% if thread.replies %}
             <li class="thread-replies{% if not thread.is_read%} thread-replies-new{% endif %} tooltip-top" title="{% trans %}Replies{% endtrans %}">

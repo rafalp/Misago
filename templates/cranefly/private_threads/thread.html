@@ -541,7 +541,7 @@
     {% if extra %}
     {% if not is_read %}<li><a href="{{ url('private_thread_new', slug=thread.slug, thread=thread.id) }}" class="tooltip-top" title="{% trans %}Go to first unread{% endtrans %}"><i class="icon-star"></i> {% trans %}First Unread{% endtrans %}</a></li>{% endif %}
     {% endif %}
-    {% if thread.replies_reported > 0 and acl.threads.can_mod_posts(thread) %}<li><a href="{{ url('private_thread_reported', slug=thread.slug, thread=thread.id) }}" class="tooltip-top" title="{% trans %}Go to first reported post{% endtrans %}"><i class="icon-fire"></i> {% trans %}First Reported{% endtrans %}</a></li>{% endif %}
+    {% if thread.replies_reported > 0 and acl.threads.can_mod_posts(forum) %}<li><a href="{{ url('private_thread_reported', slug=thread.slug, thread=thread.id) }}" class="tooltip-top" title="{% trans %}Go to first reported post{% endtrans %}"><i class="icon-fire"></i> {% trans %}First Reported{% endtrans %}</a></li>{% endif %}
   </ul>
 </div>
 {% endmacro %}

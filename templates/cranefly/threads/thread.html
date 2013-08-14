@@ -508,7 +508,7 @@
     {% if extra and user.is_authenticated() %}
     {% if not is_read %}<li><a href="{{ url('thread_new', slug=thread.slug, thread=thread.id) }}" class="tooltip-top" title="{% trans %}Go to first unread{% endtrans %}"><i class="icon-star"></i> {% trans %}First Unread{% endtrans %}</a></li>{% endif %}
     {% if thread.replies_moderated > 0 and acl.threads.can_approve(forum) %}<li><a href="{{ url('thread_moderated', slug=thread.slug, thread=thread.id) }}" class="tooltip-top" title="{% trans %}Go to first post awaiting review{% endtrans %}"><i class="icon-eye-close"></i> {% trans %}First Unreviewed{% endtrans %}</a></li>{% endif %}
-    {% if thread.replies_reported > 0 and acl.threads.can_mod_posts(thread) %}<li><a href="{{ url('thread_reported', slug=thread.slug, thread=thread.id) }}" class="tooltip-top" title="{% trans %}Go to first reported post{% endtrans %}"><i class="icon-fire"></i> {% trans %}First Reported{% endtrans %}</a></li>{% endif %}
+    {% if thread.replies_reported > 0 and acl.threads.can_mod_posts(forum) %}<li><a href="{{ url('thread_reported', slug=thread.slug, thread=thread.id) }}" class="tooltip-top" title="{% trans %}Go to first reported post{% endtrans %}"><i class="icon-fire"></i> {% trans %}First Reported{% endtrans %}</a></li>{% endif %}
     {% endif %}
   </ul>
 </div>
