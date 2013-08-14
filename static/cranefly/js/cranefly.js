@@ -192,6 +192,85 @@ function youtube_player(element, movie_id, startfrom) {
   return true;
 }
 
+// Ajax: Reports and Alerts
+$(function() {
+  var midman = $('.midman');
+  var midman_loader = midman.find('.ajax-loader');
+  var midman_error = midman.find('.ajax-error');
+  var midman_content = midman.find('.loaded-content');
+  var midman_content_id = false;
+  var midman_cache = new Array();
+  var midman_request = false;
+
+  function midman_open(content_id) {
+    midman_error.slideUp(200);
+
+    if (midman_content_id != false) {
+      midman_close();
+      if (midman_request != false) {
+        midman_request.abort();
+      }
+    }
+
+    midman_content_id = content_id;
+    $(midman_content_id).parent().addClass('active');
+
+    if (midman_content_id in midman_cache) {
+      midman_loader.hide();
+      midman_content.show();
+      midman_content.html(midman_cache[midman_content_id]);
+      midman.slideDown(200);
+      return;
+    }
+
+    midman_loader.show();
+    midman_content.hide();
+    midman.slideDown(200);
+
+    midman_request = $.ajax({
+      url: $(midman_content_id).attr('href')
+    }).done(function(data) {
+      midman_cache[midman_content_id] = data.html;
+      midman_content.html(data.html);
+      midman_content.slideDown(200);
+      midman_loader.fadeOut(200);
+    });
+  }
+
+  function midman_close() {
+    if (midman_content_id != false) {
+      $(midman_content_id).parent().removeClass('active');
+      midman_content_id = false;
+      midman.slideUp(200);
+    }
+  }
+
+  $('.midman-close').live('click', function() {
+    midman_close()
+  });
+
+  $('.midman form').live('submit', function() {
+    var csrf_token = $(this).find('input[name="_csrf_token"]').val();
+    $.post(this.action, {'_csrf_token': csrf_token}, "json").done(function(data, textStatus, jqXHR) {
+      midman_cache[midman_content_id] = data.html;
+      midman_content.fadeOut(100);
+      midman_content.html(data.html);
+      midman_content.fadeIn(100);
+    });
+    return false;
+  });
+
+  $('.nav-alerts').click(function() {
+    this_content_id = '.nav-alerts';
+    if (midman_content_id == this_content_id) {
+      midman_close(this_content_id)
+    } else {
+      midman_open(this_content_id)
+    }
+    return false;
+  });
+});
+
 // Ajax: Post votes
 $(function() {
   $('.post-rating-actions').each(function() {

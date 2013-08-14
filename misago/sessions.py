@@ -117,7 +117,7 @@ class CrawlerSession(MisagoSession):
                 continue
             except IntegrityError:
                 try:
-                    self._session_rk =  Session.objects.get(id=self._session_key)                    
+                    self._session_rk =  Session.objects.get(id=self._session_key)
                 except Session.DoesNotExist:
                     continue
 
@@ -158,12 +158,12 @@ class HumanSession(MisagoSession):
             # IP invalid
             if settings.sessions_validate_ip and self._session_rk.ip != self._ip:
                 raise IncorrectSessionException()
-            
+
             # Session expired
             if timezone.now() - self._session_rk.last > timedelta(seconds=settings.SESSION_LIFETIME):
                 self.expired = True
                 raise IncorrectSessionException()
-            
+
             # Change session to matched and extract session user
             if self._session_rk.matched:
                 self.matched = True
@@ -182,6 +182,7 @@ class HumanSession(MisagoSession):
                 # Autolog failed
                 self.create(request)
         self.id = self._session_rk.id
+        self.start = self._session_rk.start
 
         # Make cookie live longer
         if request.firewall.admin:

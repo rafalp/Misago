@@ -1,0 +1,60 @@
+// Fancy Ajax "modal" alt
+// -------------------------
+
+.midman {
+	background-color: @midmanBackground;
+	border-bottom: 1px solid lighten(@bodyBackground, 8%);
+	box-shadow: inset 0px 4px 14px @black;
+	display: none;
+	padding: (@baseLineHeight * 1.5) 0px;
+
+	color: @grayLighter;
+	text-shadow: 0px 1px 2px @black;
+
+	a:link, a:visited {
+		color: darken(@white, 10%);
+	}
+
+	a:hover, a:active {
+		color: @white;
+	}
+
+	.table {
+		td {
+			border-color: @gray;
+		}
+	}
+
+	.ajax-error {
+		display: none;
+
+		color: @red;
+		font-size: @fontSizeLarge * 2;
+		text-align: center;
+	}
+
+	.ajax-loader {
+		padding-top: 6px;
+
+		font-size: @fontSizeLarge * 1.2;
+		text-align: center;
+
+		img {
+			margin-top: -6px;
+			margin-right: 7px;
+		}
+	}
+
+	.btn {
+		background-color: @grayLight;
+		border-color: @grayDarker;
+
+		color: @grayLighter !important;
+		text-shadow: 0px 1px 1px @gray;
+
+		&:hover, &:active {
+			color: @textColor !important;
+			text-shadow: 0px 1px 1px @white;
+		}
+	}
+}

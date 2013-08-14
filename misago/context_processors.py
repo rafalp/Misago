@@ -32,6 +32,7 @@ def common(request):
             'settings': SafeSettings(),
             'stopwatch': request.stopwatch.time(),
             'user': request.user,
+            'recent_alerts': request.session.get('recent_alerts'),
             'version': __version__,
             'disable_search': False,
         })
@@ -44,7 +45,7 @@ def common(request):
             'reports': Forum.objects.special_model('reports'),
         })
     except AttributeError as e:
-        pass 
+        pass
     return context
 
 

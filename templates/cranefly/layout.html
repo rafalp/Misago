@@ -76,10 +76,12 @@
         <ul id="fancy-user-nav" class="nav navbar-blocks navbar-compact pull-right">
           {{ hook_user_menu_important_prepend|safe }}
           {% if acl.reports.can_handle() and monitor.reported_posts %}
-          <li><a href="{{ url('reports') }}" title="{% trans %}There are unresolved reports!{% endtrans %}" class="tooltip-bottom fluid"><i class="icon-warning-sign"></i><span class="label label-important">{{ monitor.reported_posts }}</span></a></li>
+          <li><a href="{{ url('reports') }}" title="{% trans %}There are unresolved reports!{% endtrans %}" class="tooltip-bottom nav-reports fluid"><i class="icon-warning-sign"></i><span class="label label-important">{{ monitor.reported_posts }}</span></a></li>
           {% endif %}
           {% if user.alerts %}
-          <li><a href="{{ url('alerts') }}" title="{% trans %}You have new notifications!{% endtrans %}" class="tooltip-bottom fluid"><i class="icon-asterisk"></i><span class="label label-important">{{ user.alerts }}</span></a></li>
+          <li><a href="{{ url('alerts') }}" title="{% trans %}You have new notifications!{% endtrans %}" class="tooltip-bottom nav-alerts fluid"><i class="icon-asterisk"></i><span class="label label-important">{{ user.alerts }}</span></a></li>
+          {% elif recent_alerts %}
+          <li><a href="{{ url('alerts') }}" title="{% trans %}Your Notifications{% endtrans %}" class="tooltip-bottom nav-alerts fluid"><i class="icon-asterisk"></i></a></li>
           {% endif %}
           {% if settings.enable_private_threads and acl.private_threads.can_participate() and user.unread_pds %}
           <li><a href="{{ url('private_threads') }}" title="{% trans %}There are unread Private Threads!{% endtrans %}" class="tooltip-bottom fluid"><i class="icon-inbox"></i><span class="label label-important">{{ user.unread_pds }}</span></a></li>
@@ -111,9 +113,9 @@
           <ul class="nav navbar-blocks pull-right">
             {{ hook_user_menu_prepend|safe }}
             {% if acl.reports.can_handle() %}
-            <li><a href="{{ url('reports') }}" title="{% if monitor.reported_posts %}{% trans %}There are unresolved reports!{% endtrans %}{% else %}{% trans %}Reports{% endtrans %}{% endif %}" class="tooltip-bottom fluid"><i class="icon-warning-sign"></i>{% if monitor.reported_posts %}<span class="label label-important">{{ monitor.reported_posts }}</span>{% endif %}</a></li>
+            <li><a href="{{ url('reports') }}" title="{% if monitor.reported_posts %}{% trans %}There are unresolved reports!{% endtrans %}{% else %}{% trans %}Reports{% endtrans %}{% endif %}" class="tooltip-bottom nav-reports fluid"><i class="icon-warning-sign"></i>{% if monitor.reported_posts %}<span class="label label-important">{{ monitor.reported_posts }}</span>{% endif %}</a></li>
             {% endif %}
-            <li><a href="{{ url('alerts') }}" title="{% if user.alerts %}{% trans %}You have new notifications!{% endtrans %}{% else %}{% trans %}Your Notifications{% endtrans %}{% endif %}" class="tooltip-bottom fluid"><i class="icon-asterisk"></i>{% if user.alerts %}<span class="label label-important">{{ user.alerts }}</span>{% endif %}</a></li>
+            <li><a href="{{ url('alerts') }}" title="{% if user.alerts %}{% trans %}You have new notifications!{% endtrans %}{% else %}{% trans %}Your Notifications{% endtrans %}{% endif %}" class="tooltip-bottom nav-alerts fluid"><i class="icon-asterisk"></i>{% if user.alerts %}<span class="label label-important">{{ user.alerts }}</span>{% endif %}</a></li>
             {% if settings.enable_private_threads and acl.private_threads.can_participate() %}
             <li><a href="{{ url('private_threads') }}" title="{% if user.unread_pds %}{% trans %}There are unread Private Threads!{% endtrans %}{% else %}{% trans %}Your Private Threads{% endtrans %}{% endif %}" class="tooltip-bottom fluid"><i class="icon-inbox"></i>{% if user.unread_pds %}<span class="label label-important">{{ user.unread_pds }}</span>{% endif %}</a></li>
             {% endif %}
@@ -136,6 +138,12 @@
         {% endif %}
       </div>
     </div>
+  </div>
+
+  <div class="midman">
+    <div class="loaded-content"></div>
+    <div class="ajax-loader"><img src="{{ STATIC_URL }}cranefly/img/ajax-loader.gif" alt="{% trans %}Loading...{% endtrans %}">{% trans %}Loading...{% endtrans %}</div>
+    <div class="ajax-error"><i class="icon-remove"></i></div>
   </div>
 
   {% block container %}
