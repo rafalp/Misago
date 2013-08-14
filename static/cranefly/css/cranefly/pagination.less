@@ -3,7 +3,7 @@
 .pagination {
   margin: 0px;
   padding: 0px;
-  
+
   .count {
     margin-right: @baseFontSize * 0.75;
     padding: 4px 0px;
@@ -29,7 +29,9 @@
         color: @grayLight;
 
         i {
-          .opacity(55);
+        	width: 16px;
+
+        	text-align: center;
         }
       }
 
@@ -37,10 +39,6 @@
         border: 1px solid @paginationActiveBackground;
 
         color: @gray;
-
-        i {
-          .opacity(100);
-        }
       }
     }
   }
