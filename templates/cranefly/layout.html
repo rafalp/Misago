@@ -141,9 +141,11 @@
   </div>
 
   <div class="midman">
-    <div class="loaded-content"></div>
-    <div class="ajax-loader"><img src="{{ STATIC_URL }}cranefly/img/ajax-loader.gif" alt="{% trans %}Loading...{% endtrans %}">{% trans %}Loading...{% endtrans %}</div>
-    <div class="ajax-error"><i class="icon-remove"></i></div>
+    <div class="midman-padding">
+      <div class="loaded-content"></div>
+      <div class="ajax-loader"><img src="{{ STATIC_URL }}cranefly/img/ajax-loader.gif" alt="{% trans %}Loading...{% endtrans %}">{% trans %}Loading...{% endtrans %}</div>
+      <div class="ajax-error"><i class="icon-remove"></i></div>
+    </div>
   </div>
 
   {% block container %}

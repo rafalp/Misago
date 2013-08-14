@@ -195,6 +195,7 @@ function youtube_player(element, movie_id, startfrom) {
 // Ajax: Reports and Alerts
 $(function() {
   var midman = $('.midman');
+  var animation_speed = 400;
   var midman_loader = midman.find('.ajax-loader');
   var midman_error = midman.find('.ajax-error');
   var midman_content = midman.find('.loaded-content');
@@ -203,7 +204,7 @@ $(function() {
   var midman_request = false;
 
   function midman_open(content_id) {
-    midman_error.slideUp(200);
+    midman_error.hide();
 
     if (midman_content_id != false) {
       midman_close();
@@ -219,21 +220,21 @@ $(function() {
       midman_loader.hide();
       midman_content.show();
       midman_content.html(midman_cache[midman_content_id]);
-      midman.slideDown(200);
+      midman.slideDown(animation_speed);
       return;
     }
 
     midman_loader.show();
     midman_content.hide();
-    midman.slideDown(200);
+    midman.slideDown(animation_speed);
 
     midman_request = $.ajax({
       url: $(midman_content_id).attr('href')
     }).done(function(data) {
       midman_cache[midman_content_id] = data.html;
       midman_content.html(data.html);
-      midman_content.slideDown(200);
-      midman_loader.fadeOut(200);
+      midman_loader.hide();
+      midman_content.slideDown(animation_speed);
     });
   }
 
@@ -241,7 +242,7 @@ $(function() {
     if (midman_content_id != false) {
       $(midman_content_id).parent().removeClass('active');
       midman_content_id = false;
-      midman.slideUp(200);
+      midman.slideUp(animation_speed);
     }
   }
 
@@ -253,9 +254,7 @@ $(function() {
     var csrf_token = $(this).find('input[name="_csrf_token"]').val();
     $.post(this.action, {'_csrf_token': csrf_token}, "json").done(function(data, textStatus, jqXHR) {
       midman_cache[midman_content_id] = data.html;
-      midman_content.fadeOut(100);
       midman_content.html(data.html);
-      midman_content.fadeIn(100);
     });
     return false;
   });
