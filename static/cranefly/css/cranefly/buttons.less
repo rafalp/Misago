@@ -6,6 +6,7 @@
   background-color: @bodyBackground;
   .box-shadow(none);
 
+  color: @grayLight;
   font-weight: bold;
 
   i {
@@ -112,7 +113,7 @@
     text-shadow: 0px 1px 0px darken(@textColor, 15%);
 
     &:hover, &:active {
-      color: @white;
+    	background-color: lighten(@textColor, 10%);
 
       &:enabled {
         background-color: darken(@textColor, 5%);
