@@ -11,11 +11,11 @@ from misago.template.loader import render_to_string
 
 @block_guest
 def alerts(request):
-    if not request.user.alerts_date:
-        request.user.alerts_date = request.user.join_date
-
     if request.is_ajax():
-        alerts_qs = request.user.alert_set.filter(date__gte=request.session.start).order_by('-id')
+        if request.session.get('recent_alerts'):
+            alerts_qs = request.user.alert_set.filter(date__gte=request.session['recent_alerts']).order_by('-id')
+        else:
+            alerts_qs = ()
         response_html = render_to_string('alerts/modal.html',
                                          {'alerts': alerts_qs},
                                          context_instance=RequestContext(request))
@@ -25,6 +25,9 @@ def alerts(request):
             request.user.save(force_update=True)
         return json_response(request,
                              json={'html': response_html})
+
+    if not request.user.alerts_date:
+        request.user.alerts_date = request.user.join_date
 
     now = localtime(timezone.now())
     yesterday = now - timedelta(days=1)

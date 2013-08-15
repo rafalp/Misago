@@ -18,7 +18,11 @@ class UserMiddleware(object):
     def process_request(self, request):
         if request.user.is_authenticated():
             if request.user.alerts > 0:
-                request.session['recent_alerts'] = True
+                if not request.session.get('recent_alerts':
+                    if not request.user.alerts_date:
+                        request.session['recent_alerts'] = request.user.join_date
+                    else:
+                        request.session['recent_alerts'] = request.user.alerts_date
             request.session.rank = request.user.rank_id
             set_timezone(request.user.timezone)
             if request.session.remember_me:
