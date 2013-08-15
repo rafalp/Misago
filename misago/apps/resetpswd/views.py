@@ -3,6 +3,7 @@ from django.utils.translation import ugettext as _
 from misago.apps.errors import error404, error_banned
 from misago.decorators import block_authenticated, block_banned, block_crawlers, block_jammed
 from misago import messages
+from misago.messages import Message
 from misago.models import Ban, Session, Token, User
 from misago.shortcuts import redirect_message, render_to_response
 from misago.utils.strings import random_string
