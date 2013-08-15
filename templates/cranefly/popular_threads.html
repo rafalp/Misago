@@ -59,7 +59,7 @@
             {% endif %}
             {% endif %}
             {% if thread.replies %}
-            <li class="thread-replies{% if not thread.is_read%} thread-replies-new{% endif %} tooltip-top" title="{% trans %}Replies{% endtrans %}">
+            <li class="thread-replies tooltip-top" title="{% trans %}Replies{% endtrans %}">
               {{ thread.replies|intcomma }}
             </li>
             {% endif %}
