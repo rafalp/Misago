@@ -18,7 +18,7 @@ class UserMiddleware(object):
     def process_request(self, request):
         if request.user.is_authenticated():
             if request.user.alerts > 0:
-                if not request.session.get('recent_alerts':
+                if not request.session.get('recent_alerts'):
                     if not request.user.alerts_date:
                         request.session['recent_alerts'] = request.user.join_date
                     else:
