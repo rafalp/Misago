@@ -22,7 +22,7 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
         if self.request.user.is_authenticated():
             ignored_users = self.request.user.ignored_users()
             if ignored_users:
-                threads = threads.extra(where=["`misago_thread`.`start_poster_id` IS NULL OR `misago_thread`.`start_poster_id` NOT IN (%s)" % ','.join([str(i) for i in ignored_users])])
+                threads = threads.exclude(start_poster_id__in=ignored_users)
 
         # Add in first and last poster
         if settings.avatars_on_threads_list:
