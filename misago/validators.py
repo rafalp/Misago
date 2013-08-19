@@ -11,8 +11,8 @@ class validate_sluggable(object):
         self.error_long = error_long if error_long else _("Value is too long.")
 
     def __call__(self, value):
-        slug = slugify(value.replace('_', '').replace('-', ''))
-        if not slug:
+        slug = slugify(value)
+        if not slug.replace('-', ''):
             raise ValidationError(self.error_short)
         if len(slug) > 255:
             raise ValidationError(self.error_long)
