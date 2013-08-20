@@ -48,13 +48,13 @@
 
     .forum-icon {
       float: left;
-    	position: relative;
-    	bottom: 1px;
+      position: relative;
+      bottom: 1px;
       width: @forumIconSize * 1.5;
 
-    	color: @itemOldColor;
-    	font-size: @forumIconSize;
-    	text-align: center;
+      color: @itemOldColor;
+      font-size: @forumIconSize;
+      text-align: center;
 
       &.forum-icon-new {
         color: @itemNewColor;
@@ -65,8 +65,8 @@
       }
 
       .icon-comment, .icon-comment-alt {
-      	position: relative;
-      	bottom: 3px;
+        position: relative;
+        bottom: 3px;
       }
     }
 
@@ -306,248 +306,252 @@
   margin-bottom: @baseLineHeight;
 
   .threads-list-empty {
-  	padding: (@baseFontSize * 2) 0px;
+    padding: (@baseFontSize * 2) 0px;
 
-  	color: @grayLight;
-  	font-size: @fontSizeLarge * 1.5;
-  	text-align: center;
+    color: @grayLight;
+    font-size: @fontSizeLarge * 1.5;
+    text-align: center;
   }
 
   &>ul {
-  	list-style: none;
-  	margin: 0px;
+    list-style: none;
+    margin: 0px;
 
-  	&>li {
-    	border-bottom: 1px solid @categoryBorder;
-			padding: (@fontSizeSmall - 2px) 0px;
-			overflow: auto;
+    &>li {
+      border-bottom: 1px solid @categoryBorder;
+      padding: (@fontSizeSmall - 2px) 0px;
+      overflow: auto;
 
-			.thread-icon {
-				float: left;
-				margin-bottom: -1px;
-				height: @threadIconSize;
-				width: @threadIconSize + @fontSizeLarge;
+      .thread-icon {
+        float: left;
+        margin-bottom: -1px;
+        height: @threadIconSize;
+        width: @threadIconSize + @fontSizeLarge;
 
-				font-size: @threadIconSize;
-				text-align: center;
+        font-size: @threadIconSize;
+        text-align: center;
 
-				a:link, a:active, a:visited, a:hover{
-					color: @itemOldColor;
-					text-decoration: none;
-				}
-			}
+        a:link, a:active, a:visited, a:hover{
+          color: @itemOldColor;
+          text-decoration: none;
+        }
+      }
 
-			.thread-body {
-				margin: ((@fontSizeSmall - 2px) * -1) 0px;
-				margin-left: @threadIconSize + @fontSizeLarge;
-				padding: (@fontSizeSmall - 2px) 0px;
+      .thread-body {
+        margin: ((@fontSizeSmall - 2px) * -1) 0px;
+        margin-left: @threadIconSize + @fontSizeLarge;
+        padding: (@fontSizeSmall - 2px) 0px;
 
-				.thread-title {
-					display: block;
+        .thread-title {
+          display: block;
 
-					a:link, a:active, a:visited, a:hover {
-						color: @gray;
-						font-size: @fontSizeLarge;
-					}
-				}
+          a:link, a:active, a:visited, a:hover {
+            color: @gray;
+            font-size: @fontSizeLarge;
+          }
+        }
 
-				.thread-activity {
-					float: right;
-					list-style: none;
-					margin: 0px;
-					margin-top: (@fontSizeSmall - 2px) * -1;
-					padding: 6px 0px;
-					padding-right: 8px;
-					overflow: auto;
-					position: relative;
-					top: 1px;
-					z-index: 2;
+        .thread-activity {
+          float: right;
+          list-style: none;
+          margin: 0px;
+          margin-top: (@fontSizeSmall - 2px) * -1;
+          margin-bottom: -6px;
+          padding: 6px 0px;
+          padding-right: 8px;
+          overflow: auto;
+          position: relative;
+          top: 1px;
+          z-index: 2;
 
-					li {
-						float: left;
-						margin: 0px;
-						margin-left: 10px;
-						padding: 0px;
+          li {
+            float: left;
+            margin: 0px;
+            margin-left: 10px;
+            padding: 0px;
 
-						&.thread-replies,
-						&.thread-replies-reported,
-						&.thread-replies-moderated {
-							position: relative;
-							top: 2px;
+            &.thread-replies,
+            &.thread-replies-reported,
+            &.thread-replies-moderated {
+              position: relative;
+              top: 2px;
 
-							color: @gray;
-							font-size: @fontSizeLarge;
-							font-weight: bold;
-						}
+              color: @gray;
+              font-size: @fontSizeLarge;
+              font-weight: bold;
+            }
 
-						&.thread-replies-reported {
-							color: @red;
-						}
+            &.thread-replies-reported {
+              color: @red;
+            }
 
-						&.thread-replies-moderated {
-							color: @purple;
-						}
+            &.thread-replies-moderated {
+              color: @purple;
+            }
 
-						&.thread-replies {
-							position: relative;
-							top: 2px;
+            &.thread-replies {
+              position: relative;
+              top: 2px;
 
-							color: @gray;
-							font-size: @fontSizeLarge;
-							font-weight: bold;
-						}
+              color: @gray;
+              font-size: @fontSizeLarge;
+              font-weight: bold;
+            }
 
-						&.thread-last-reply {
-							position: relative;
-							top: 2px;
+            &.thread-last-reply {
+              position: relative;
+              top: 2px;
 
-							a:link, a:visited {
-								color: @grayLight;
-								font-size: @fontSizeLarge;
-								font-weight: bold;
-							}
+              a:link, a:visited {
+                color: @grayLight;
+                font-size: @fontSizeLarge;
+                font-weight: bold;
+              }
 
-							a:hover, a:active {
-								color: @textColor;
-							}
-						}
+              a:hover, a:active {
+                color: @textColor;
+              }
+            }
 
-						&.thread-author, &.thread-poster {
-							position: relative;
-							top: 2px;
+            &.thread-author, &.thread-poster {
+              position: relative;
+              top: 2px;
 
-							color: @gray;
-							font-size: @fontSizeLarge;
-							font-weight: bold;
+              color: @gray;
+              font-size: @fontSizeLarge;
+              font-weight: bold;
 
-							.user-avatar {
-								border-radius: @baseBorderRadius;
-								width: 24px;
-								height: 24px;
-								position: relative;
-								bottom: 2px;
-							}
-						}
+              .user-avatar {
+                border-radius: @baseBorderRadius;
+                width: 24px;
+                height: 24px;
+                position: relative;
+                bottom: 2px;
+              }
+            }
 
-						&.thread-author {
-							a:link, a:active, a:visited, a:hover {
-								color: @blue;
-							}
-						}
+            &.thread-author {
+              a:link, a:active, a:visited, a:hover {
+                color: @blue;
+              }
+            }
 
-						&.thread-poster {
-							a:link, a:active, a:visited, a:hover {
-								color: @itemNewColor;
-							}}
+            &.thread-poster {
+              a:link, a:active, a:visited, a:hover {
+                color: @itemNewColor;
+              }
+            }
 
-						&.thread-flag {
-							color: @grayLight;
-							font-size: 26px;
+            &.thread-flag {
+              margin-bottom: -6px;
 
-							&.thread-moderated {
-								&:hover {
-									color: @purple;
-								}
-							}
+              color: @grayLight;
+              font-size: 26px;
 
-							&.thread-closed {
-								&:hover {
-									color: @red;
-								}
-							}
+              &.thread-moderated {
+                &:hover {
+                  color: @purple;
+                }
+              }
 
-							&.thread-deleted {
-								&:hover {
-									color: @grayDark;
-								}
-							}
-						}
+              &.thread-closed {
+                &:hover {
+                  color: @red;
+                }
+              }
 
-						&.thread-forum {
-							margin-left: @baseFontSize;
+              &.thread-deleted {
+                &:hover {
+                  color: @grayDark;
+                }
+              }
+            }
 
-							a:link, a:visited {
-								position: relative;
-								top: 2px;
+            &.thread-forum {
+              margin-left: @baseFontSize;
 
-								color: @grayLight;
-								font-size: @fontSizeLarge;
-							}
+              a:link, a:visited {
+                position: relative;
+                top: 2px;
 
-							a:hover, a:active {
-								color: @textColor;
-							}
-						}
+                color: @grayLight;
+                font-size: @fontSizeLarge;
+              }
 
-						&.thread-select {
-							label {
-								border-radius: @baseBorderRadius;
-								display: inline-block;
-								margin: 0px;
-								margin-bottom: -5px;
-								padding-right: 3px;
-								padding-bottom: 4px;
+              a:hover, a:active {
+                color: @textColor;
+              }
+            }
 
-								&:hover {
-									background-color: @grayLighter;
-								}
+            &.thread-select {
+              label {
+                border-radius: @baseBorderRadius;
+                display: inline-block;
+                margin: 0px;
+                margin-bottom: -5px;
+                padding-right: 3px;
+                padding-bottom: 4px;
 
-								&:active {
-									background-color: @red;
-								}
+                &:hover {
+                  background-color: @grayLighter;
+                }
 
-								input {
-									margin-top: 6px;
-									position: relative;
-									left: 6px;
-								}
-							}
-						}
-					}
-				}
+                &:active {
+                  background-color: @red;
+                }
 
-				.thread-details {
-					float: left;
-  				list-style: none;
-					margin: 0px;
-					padding: 0px;
+                input {
+                  margin-top: 6px;
+                  position: relative;
+                  left: 6px;
+                }
+              }
+            }
+          }
+        }
 
-					li {
-						float: left;
-						margin-right: @baseFontSize / 2;
+        .thread-details {
+          float: left;
+          list-style: none;
+          margin: 0px;
+          padding: 0px;
 
-						color: @grayLight;
-						font-size: @fontSizeSmall;
+          li {
+            float: left;
+            margin-right: @baseFontSize / 2;
 
-						a:link, a:visited {
-							color: @gray;
-						}
+            color: @grayLight;
+            font-size: @fontSizeSmall;
 
-						a:hover, a:active {
-							color: @textColor;
-						}
-					}
-				}
-			}
+            a:link, a:visited {
+              color: @gray;
+            }
 
-			&.thread-new {
-				.thread-icon {
-					a:link, a:active, a:visited, a:hover {
-						color: @itemNewColor;
-					}
-				}
+            a:hover, a:active {
+              color: @textColor;
+            }
+          }
+        }
+      }
 
-				.thread-title {
-					&:link, &:active, &:visited, &:hover {
-						color: @textColor;
-					}
-				}
-			}
-  	}
+      &.thread-new {
+        .thread-icon {
+          a:link, a:active, a:visited, a:hover {
+            color: @itemNewColor;
+          }
+        }
 
-  	&>li:last-child {
-  		border-bottom: none;
-  	}
+        .thread-title {
+          &:link, &:active, &:visited, &:hover {
+            color: @textColor;
+          }
+        }
+      }
+    }
+
+    &>li:last-child {
+      border-bottom: none;
+    }
   }
 
   .threads-actions {
