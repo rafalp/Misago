@@ -6,7 +6,7 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {{ macros.parents_list(parents) }}
-<li><a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name|short_string(35) }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name|short_string(42) }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li class="active">{% trans %}Split Thread{% endtrans %}
 {%- endblock %}
 
@@ -17,7 +17,7 @@
     <ul class="breadcrumb">
       {{ self.breadcrumb() }}</li>
     </ul>
-    <h1>{% trans %}Split Thread{% endtrans %} <small>{{ thread.name }}</small></h1>
+    <h1>{% trans %}Split Thread{% endtrans %} <small>{{ thread.name|short_string(42) }}</small></h1>
   </div>
 </div>
 

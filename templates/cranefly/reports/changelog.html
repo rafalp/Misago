@@ -5,7 +5,7 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li><a href="{{ url('reports') }}">{% trans %}Reported Posts{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-<li><a href="{{ url('report', thread=thread.pk, slug=thread.slug) }}">{{ thread.name|short_string(35) }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{{ url('report', thread=thread.pk, slug=thread.slug) }}">{{ thread.name|short_string(42) }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li class="active">{% trans post=post.pk %}Post #{{ post }} Changelog{% endtrans %}
 {%- endblock %}
 
@@ -16,7 +16,7 @@
     <ul class="breadcrumb">
       {{ self.breadcrumb() }}</li>
     </ul>
-    <h1>{% trans post=post.pk %}Post #{{ post }} Changelog{% endtrans %} <small>{{ thread.name|short_string(35) }}</small></h1>
+    <h1>{% trans post=post.pk %}Post #{{ post }} Changelog{% endtrans %} <small>{{ thread.name|short_string(42) }}</small></h1>
     <ul class="unstyled header-stats">
       <li><i class="icon-time"></i> <a href="{{ url('report_find', thread=thread.pk, slug=thread.slug, post=post.pk) }}">{{ post.date|reltimesince }}</a></li>
       <li><i class="icon-user"></i> {% if post.user %}<a href="{{ url('user', user=post.user.pk, username=post.user.username_slug) }}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>

@@ -7,7 +7,7 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li><a href="{{ url('reports') }}">{% trans %}Reported Posts{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-<li><a href="{{ url('report', thread=thread.pk, slug=thread.slug) }}">{{ thread.name|short_string(35) }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{{ url('report', thread=thread.pk, slug=thread.slug) }}">{{ thread.name|short_string(42) }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li class="active">{{ get_title() }}
 {%- endblock %}
 
@@ -18,7 +18,7 @@
     <ul class="breadcrumb">
       {{ self.breadcrumb() }}</li>
     </ul>
-    <h1>{{ get_title() }} <small>{{ thread.name|short_string(35) }}</small></h1>
+    <h1>{{ get_title() }} <small>{{ thread.name|short_string(42) }}</small></h1>
     <ul class="unstyled header-stats">
       <li><i class="icon-tag"></i> {% if thread.weight == 2 -%}
         {% trans %}Open{% endtrans %}

@@ -7,7 +7,7 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li><a href="{{ url('reports') }}">{% trans %}Reported Posts{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-<li class="active">{{ thread.name|short_string(35) }}
+<li class="active">{{ thread.name|short_string(42) }}
 {%- endblock %}
 
 {% block container %}

@@ -111,7 +111,7 @@
     {% endif %}
   </div>
 
-  <div class="forum-threads-list-new">
+  <div class="forum-threads-list">
     {% if threads %}
     <ul>
       {% for thread in threads %}
@@ -119,25 +119,25 @@
         <div class="thread-icon">
           {% if thread.weight == 2 %}
           {% if thread.is_read %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Announcement, click to see last post{% endtrans %}">
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-last tooltip-top" title="{% trans %}Announcement, click to see last post{% endtrans %}">
           {% else %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Announcement, click to see first unread post{% endtrans %}">
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-new tooltip-top" title="{% trans %}Announcement, click to see first unread post{% endtrans %}">
           {% endif %}
             <i class="icon-star{% if thread.is_read %}-empty{% endif %}"></i>
           </a>
           {% elif thread.weight == 1 %}
           {% if thread.is_read %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Pinned, click to see last post{% endtrans %}">
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-last tooltip-top" title="{% trans %}Pinned, click to see last post{% endtrans %}">
           {% else %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Pinned, click to see first unread post{% endtrans %}">
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-new tooltip-top" title="{% trans %}Pinned, click to see first unread post{% endtrans %}">
           {% endif %}
             <i class="icon-bookmark{% if thread.is_read %}-empty{% endif %}"></i>
           </a>
           {% else %}
           {% if thread.is_read %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}">
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}">
           {% else %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}">
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}">
           {% endif %}
             <i class="icon-circle{% if thread.is_read %}-blank{% endif %}"></i>
           </a>
@@ -213,6 +213,7 @@
     <div class="threads-actions">
       <form id="threads_form" class="form-inline pull-right" action="{{ request_path }}" method="POST">
         <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+        {% set list_form_context = list_form.list_action.field.widget.get_context(list_form.list_action.html_name, list_form.list_action.value()) %}
         {% if list_form_context['optgroups'][0][1]|length > 1 %}
         {{ form_theme.field(list_form.list_action, attrs={'class': 'span3'}) }}
         <button type="submit" class="btn btn-danger">{% trans %}Go{% endtrans %}</button>
@@ -272,22 +273,6 @@
 
 {% macro fancy_number(number, delta) -%}
 <strong{% if delta < number %} class="stat-increment"{% endif %}>{{ number|intcomma }}</strong>
-{%- endmacro %}
-
-{% macro replies(thread_replies) -%}
-{% trans count=thread_replies, replies=thread_replies|intcomma -%}
-{{ replies }} reply
-{%- pluralize -%}
-{{ replies }} replies
-{%- endtrans %}
-{%- endmacro %}
-
-{% macro thread_starter(thread) -%}
-{% if thread.start_poster_id %}<a href="{{ url('user', user=thread.start_poster_id, username=thread.start_poster_slug) }}" class="user-link">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}
-{%- endmacro %}
-
-{% macro thread_reply(thread) -%}
-{% if thread.last_poster_id %}<a href="{{ url('user', user=thread.last_poster_id, username=thread.last_poster_slug) }}" class="user-link">{{ thread.last_poster_name }}</a>{% else %}{{ thread.last_poster_name }}{% endif %}
 {%- endmacro %}
 
 {% macro pager() %}

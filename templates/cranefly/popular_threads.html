@@ -13,32 +13,32 @@
 
 <div class="container container-primary">
   {% if threads %}
-  <div class="forum-threads-list-new">
+  <div class="forum-threads-list">
     <ul>
       {% for thread in threads %}
       <li{% if not thread.is_read %} class="thread-new"{% endif %}>
         <div class="thread-icon">
           {% if thread.weight == 2 %}
           {% if thread.is_read %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Announcement, click to see last post{% endtrans %}">
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-last tooltip-top" title="{% trans %}Announcement, click to see last post{% endtrans %}">
           {% else %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Announcement, click to see first unread post{% endtrans %}">
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-new tooltip-top" title="{% trans %}Announcement, click to see first unread post{% endtrans %}">
           {% endif %}
             <i class="icon-star{% if thread.is_read %}-empty{% endif %}"></i>
           </a>
           {% elif thread.weight == 1 %}
           {% if thread.is_read %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Pinned, click to see last post{% endtrans %}">
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-last tooltip-top" title="{% trans %}Pinned, click to see last post{% endtrans %}">
           {% else %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Pinned, click to see first unread post{% endtrans %}">
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-new tooltip-top" title="{% trans %}Pinned, click to see first unread post{% endtrans %}">
           {% endif %}
             <i class="icon-bookmark{% if thread.is_read %}-empty{% endif %}"></i>
           </a>
           {% else %}
           {% if thread.is_read %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}">
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}">
           {% else %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}">
+          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}">
           {% endif %}
             <i class="icon-circle{% if thread.is_read %}-blank{% endif %}"></i>
           </a>
@@ -47,12 +47,12 @@
         <div class="thread-body">
           <ul class="thread-activity">
             {% if user.is_authenticated() %}
-            {% if thread.replies_reported and acl.threads.can_mod_posts(forum) %}
+            {% if thread.replies_reported and acl.threads.can_mod_posts(thread.forum) %}
             <li class="thread-replies-reported tooltip-top" title="{% trans %}Reported replies{% endtrans %}">
               {{ thread.replies_reported|intcomma }}
             </li>
             {% endif %}
-            {% if thread.replies_moderated and acl.threads.can_approve(forum) %}
+            {% if thread.replies_moderated and acl.threads.can_approve(thread.forum) %}
             <li class="thread-replies-moderated tooltip-top" title="{% trans %}Unreviewed replies{% endtrans %}">
               {{ thread.replies_moderated|intcomma }}
             </li>

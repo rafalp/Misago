@@ -2,49 +2,70 @@
 // ------------------------
 
 .reports-list {
-  .thread-label {
-    overflow: visible;
+  .report-icon {
+    padding-right: @fontSizeLarge;
+    position: relative;
+    bottom: 1px;
+    width: 200px !important;
 
-    .report-label {
-      .border-radius(3px);
-      float: right;
-      padding: 3px 8px;
-      position: relative;
-      right: -32px;
-      bottom: 2px;
+    text-align: right !important;
 
-      color: @white;
-      font-weight: bold;
+    a:link, a:active, a:visited, a:hover {
+      font-size: @fontSizeLarge;
+    }
 
-      &.report-open {
-        background-color: @orange;
-        text-shadow: 0px 1px 0px darken(@orange, 20%);
+    .report-open {
+      &:link, &:active, &:visited, &:hover {
+        color: @red;
+      }
+    }
+
+    .report-resolved {
+      &:link, &:active, &:visited, &:hover {
+        color: @green;
+      }
+    }
+  }
+
+  .thread-new {
+    .report-icon {
+      a:link, a:active, a:visited, a:hover {
+        border-radius: 3px;
+        margin: -2px -6px;
+        padding: 2px 6px;
+
+        color: @white !important;
+      }
+    }
+
+    .report-open {
+      &:link, &:visited {
+        background-color: @red;
       }
 
-      &.report-resolved {
+      &:active, &:hover {
+        background-color: darken(@red, 15%);
+      }
+    }
+
+    .report-resolved {
+      &:link, &:visited {
         background-color: @green;
-        text-shadow: 0px 1px 0px darken(@green, 20%);
       }
 
-      &.report-bogus {
-        background-color: @gray;
-        text-shadow: 0px 1px 0px darken(@gray, 20%);
+      &:active, &:hover {
+        background-color: darken(@green, 15%);
       }
     }
-  }
 
-  .thread-name {
-    .report-id {
-      color: @grayLight !important;
+    .report-bogus {
+      &:link, &:visited {
+        background-color: @grayDarker;
+      }
+
+      &:active, &:hover {
+        background-color: @grayDark;
+      }
     }
-  }
-
-  .thread-name, .thread-details {
-    margin-left: 0px !important;
-  }
-
-  .thread-icon {
-    display: none !important;
-    float: none;
   }
 }

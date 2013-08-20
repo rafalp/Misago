@@ -34,16 +34,16 @@
     {% endif %}
   </div>
 
-  <div class="forum-threads-list-new">
+  <div class="forum-threads-list">
     {% if threads %}
     <ul>
       {% for thread in threads %}
       <li{% if not thread.is_read %} class="thread-new"{% endif %}>
         <div class="thread-icon">
           {% if thread.is_read %}
-          <a href="{{ url('private_thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}">
+          <a href="{{ url('private_thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}">
           {% else %}
-          <a href="{{ url('private_thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}">
+          <a href="{{ url('private_thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}">
           {% endif %}
             <i class="icon-circle{% if thread.is_read %}-blank{% endif %}"></i>
           </a>
@@ -53,11 +53,6 @@
             {% if thread.replies_reported and acl.threads.can_mod_posts(forum) %}
             <li class="thread-replies-reported tooltip-top" title="{% trans %}Reported replies{% endtrans %}">
               {{ thread.replies_reported|intcomma }}
-            </li>
-            {% endif %}
-            {% if thread.replies_moderated and acl.threads.can_approve(forum) %}
-            <li class="thread-replies-moderated tooltip-top" title="{% trans %}Unreviewed replies{% endtrans %}">
-              {{ thread.replies_moderated|intcomma }}
             </li>
             {% endif %}
             {% if thread.replies %}
@@ -84,11 +79,6 @@
               {% if settings.avatars_on_threads_list %}<img src="{{ macros.avatar_guest(24) }}" alt="{{ thread.last_poster_name }}" class="user-avatar">{% else %}{{ thread.last_poster_name }}{% endif %}
               {% endif %}
             </li>
-            {% if thread.moderated %}
-            <li class="thread-flag thread-moderated tooltip-top" title="{% trans %}This thread awaits review{% endtrans %}">
-              <i class="icon-remove-circle"></i>
-            </li>
-            {% endif %}
             {% if thread.closed %}
             <li class="thread-flag thread-closed tooltip-top" title="{% trans %}This thread is closed{% endtrans %}">
               <i class="icon-remove-circle"></i>
@@ -143,23 +133,6 @@
 
 </div>
 {% endblock %}
-
-
-{% macro replies(thread_replies) -%}
-{% trans count=thread_replies, replies=thread_replies|intcomma -%}
-{{ replies }} reply
-{%- pluralize -%}
-{{ replies }} replies
-{%- endtrans %}
-{%- endmacro %}
-
-{% macro thread_starter(thread) -%}
-{% if thread.start_poster_id %}<a href="{{ url('user', user=thread.start_poster_id, username=thread.start_poster_slug) }}" class="user-link">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}
-{%- endmacro %}
-
-{% macro thread_reply(thread) -%}
-{% if thread.last_poster_id %}<a href="{{ url('user', user=thread.last_poster_id, username=thread.last_poster_slug) }}" class="user-link">{{ thread.last_poster_name }}</a>{% else %}{{ thread.last_poster_name }}{% endif %}
-{%- endmacro %}
 
 {% macro pager() %}
 {% if pagination['total'] > 0 %}

@@ -25,32 +25,32 @@
 
   {% if threads %}
   {{ pager() }}
-  <div class="forum-threads-list-new watched-threads">
+  <div class="forum-threads-list watched-threads">
     <ul>
       {% for thread in threads %}
       <li id="watch-{{ loop.index }}"{% if not thread.is_read %} class="thread-new"{% endif %}>
         <div class="thread-icon">
           {% if thread.weight == 2 %}
           {% if thread.is_read %}
-          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Announcement, click to see last post{% endtrans %}">
+          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon-last tooltip-top" title="{% trans %}Announcement, click to see last post{% endtrans %}">
           {% else %}
-          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Announcement, click to see first unread post{% endtrans %}">
+          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon-new tooltip-top" title="{% trans %}Announcement, click to see first unread post{% endtrans %}">
           {% endif %}
             <i class="icon-star{% if thread.is_read %}-empty{% endif %}"></i>
           </a>
           {% elif thread.weight == 1 %}
           {% if thread.is_read %}
-          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Pinned, click to see last post{% endtrans %}">
+          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon-last tooltip-top" title="{% trans %}Pinned, click to see last post{% endtrans %}">
           {% else %}
-          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Pinned, click to see first unread post{% endtrans %}">
+          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon-new tooltip-top" title="{% trans %}Pinned, click to see first unread post{% endtrans %}">
           {% endif %}
             <i class="icon-bookmark{% if thread.is_read %}-empty{% endif %}"></i>
           </a>
           {% else %}
           {% if thread.is_read %}
-          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}">
+          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}">
           {% else %}
-          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}">
+          <a href="{{ thread_url(thread, 'new') }}" class="thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}">
           {% endif %}
             <i class="icon-circle{% if thread.is_read %}-blank{% endif %}"></i>
           </a>

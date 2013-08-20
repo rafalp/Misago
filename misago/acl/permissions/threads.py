@@ -175,7 +175,7 @@ class ThreadsACL(BaseACL):
 
     def filter_threads(self, request, forum, queryset):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if not forum_role['can_approve']:
                 if request.user.is_authenticated():
                     queryset = queryset.filter(Q(moderated=False) | Q(start_poster=request.user))
@@ -206,14 +206,14 @@ class ThreadsACL(BaseACL):
 
     def can_read_threads(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             return forum_role['can_read_threads']
         except KeyError:
             return False
 
     def can_start_threads(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if forum_role['can_read_threads'] == 0 or forum_role['can_start_threads'] == 0:
                 return False
             if forum.closed and forum_role['can_close_threads'] == 0:
@@ -224,7 +224,7 @@ class ThreadsACL(BaseACL):
 
     def allow_new_threads(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if forum_role['can_read_threads'] == 0 or forum_role['can_start_threads'] == 0:
                 raise ACLError403(_("You don't have permission to start new threads in this forum."))
             if forum.closed and forum_role['can_close_threads'] == 0:
@@ -234,7 +234,7 @@ class ThreadsACL(BaseACL):
 
     def can_edit_thread(self, user, forum, thread, post):
         try:
-            forum_role = self.acl[thread.forum_id]
+            forum_role = self.get_role(forum)
             if forum_role['can_close_threads'] == 0 and (forum.closed or thread.closed):
                 return False
             if forum_role['can_edit_threads_posts']:
@@ -247,7 +247,7 @@ class ThreadsACL(BaseACL):
 
     def allow_thread_edit(self, user, forum, thread, post):
         try:
-            forum_role = self.acl[thread.forum_id]
+            forum_role = self.get_role(forum)
             if thread.deleted or post.deleted:
                 self.allow_deleted_post_view(forum)
             if not forum_role['can_close_threads']:
@@ -267,7 +267,7 @@ class ThreadsACL(BaseACL):
 
     def can_reply(self, forum, thread):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if forum_role['can_write_posts'] == 0:
                 return False
             if (forum.closed or thread.closed) and forum_role['can_close_threads'] == 0:
@@ -278,7 +278,7 @@ class ThreadsACL(BaseACL):
 
     def allow_reply(self, forum, thread):
         try:
-            forum_role = self.acl[thread.forum.pk]
+            forum_role = self.get_role(forum)
             if forum_role['can_write_posts'] == 0:
                 raise ACLError403(_("You don't have permission to write replies in this forum."))
             if forum_role['can_close_threads'] == 0:
@@ -291,7 +291,7 @@ class ThreadsACL(BaseACL):
 
     def can_edit_reply(self, user, forum, thread, post):
         try:
-            forum_role = self.acl[thread.forum_id]
+            forum_role = self.get_role(forum)
             if forum_role['can_close_threads'] == 0 and (forum.closed or thread.closed):
                 return False
             if forum_role['can_edit_threads_posts']:
@@ -304,7 +304,7 @@ class ThreadsACL(BaseACL):
 
     def allow_reply_edit(self, user, forum, thread, post):
         try:
-            forum_role = self.acl[thread.forum_id]
+            forum_role = self.get_role(forum)
             if thread.deleted or post.deleted:
                 self.allow_deleted_post_view(forum)
             if not forum_role['can_close_threads']:
@@ -324,14 +324,14 @@ class ThreadsACL(BaseACL):
 
     def can_see_changelog(self, user, forum, post):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             return forum_role['can_see_changelog'] or user.pk == post.user_id
         except KeyError:
             return False
 
     def allow_changelog_view(self, user, forum, post):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if post.thread.deleted or post.deleted:
                 self.allow_deleted_post_view(forum)
             if not (forum_role['can_see_changelog'] or user.pk == post.user_id):
@@ -341,7 +341,7 @@ class ThreadsACL(BaseACL):
 
     def can_make_revert(self, forum, thread):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if not forum_role['can_close_threads'] and (forum.closed or thread.closed):
                 return False
             return forum_role['can_edit_threads_posts']
@@ -350,7 +350,7 @@ class ThreadsACL(BaseACL):
 
     def allow_revert(self, forum, thread):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if not forum_role['can_close_threads']:
                 if forum.closed:
                     raise ACLError403(_("You can't make reverts in closed forums."))
@@ -363,7 +363,7 @@ class ThreadsACL(BaseACL):
 
     def can_mod_threads(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             return (
                     forum_role['can_approve']
                     or forum_role['can_pin_threads']
@@ -376,7 +376,7 @@ class ThreadsACL(BaseACL):
 
     def can_mod_posts(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             return (
                     forum_role['can_edit_threads_posts']
                     or forum_role['can_move_threads_posts']
@@ -389,35 +389,35 @@ class ThreadsACL(BaseACL):
 
     def can_approve(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             return forum_role['can_approve']
         except KeyError:
             return False
 
     def can_close(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             return forum_role['can_close_threads']
         except KeyError:
             return False
 
     def can_protect(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             return forum_role['can_protect_posts']
         except KeyError:
             return False
 
     def can_pin_threads(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             return forum_role['can_pin_threads']
         except KeyError:
             return False
 
     def can_delete_thread(self, user, forum, thread, post):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if post.pk != thread.start_post_id:
                 return False
             if not forum_role['can_close_threads'] and (forum.closed or thread.closed):
@@ -434,7 +434,7 @@ class ThreadsACL(BaseACL):
 
     def allow_delete_thread(self, user, forum, thread, post, delete=False):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if not forum_role['can_close_threads']:
                 if forum.closed:
                     raise ACLError403(_("You don't have permission to delete threads in closed forum."))
@@ -453,7 +453,7 @@ class ThreadsACL(BaseACL):
 
     def can_delete_post(self, user, forum, thread, post):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if post.pk == thread.start_post_id:
                 return False
             if not forum_role['can_close_threads'] and (forum.closed or thread.closed):
@@ -470,7 +470,7 @@ class ThreadsACL(BaseACL):
 
     def allow_delete_post(self, user, forum, thread, post, delete=False):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if not forum_role['can_close_threads']:
                 if forum.closed:
                     raise ACLError403(_("You don't have permission to delete posts in closed forum."))
@@ -489,21 +489,21 @@ class ThreadsACL(BaseACL):
 
     def can_see_deleted_threads(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             return forum_role['can_delete_threads']
         except KeyError:
             return False
 
     def can_see_deleted_posts(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             return forum_role['can_delete_posts']
         except KeyError:
             return False
 
     def allow_deleted_post_view(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if not forum_role['can_delete_posts']:
                 raise ACLError404()
         except KeyError:
@@ -511,35 +511,35 @@ class ThreadsACL(BaseACL):
 
     def can_upvote_posts(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             return forum_role['can_upvote_posts']
         except KeyError:
             return False
 
     def can_downvote_posts(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             return forum_role['can_downvote_posts']
         except KeyError:
             return False
 
     def can_see_post_score(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             return forum_role['can_see_posts_scores']
         except KeyError:
             return False
 
     def can_see_post_votes(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             return forum_role['can_see_votes']
         except KeyError:
             return False
 
     def allow_post_upvote(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if not forum_role['can_upvote_posts']:
                 raise ACLError403(_("You cannot upvote posts in this forum."))
         except KeyError:
@@ -547,7 +547,7 @@ class ThreadsACL(BaseACL):
 
     def allow_post_downvote(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if not forum_role['can_downvote_posts']:
                 raise ACLError403(_("You cannot downvote posts in this forum."))
         except KeyError:
@@ -555,7 +555,7 @@ class ThreadsACL(BaseACL):
 
     def allow_post_votes_view(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if not forum_role['can_see_votes']:
                 raise ACLError403(_("You don't have permission to see who voted on this post."))
         except KeyError:
@@ -563,20 +563,22 @@ class ThreadsACL(BaseACL):
 
     def can_see_all_checkpoints(self, forum):
         try:
-            return self.acl[forum.pk]['can_see_deleted_checkpoints']
+            forum_role = self.get_role(forum)
+            return forum_role['can_see_deleted_checkpoints']
         except KeyError:
             raise False
 
     def can_delete_checkpoint(self, forum):
         try:
-            return self.acl[forum.pk]['can_delete_checkpoints']
+            forum_role = self.get_role(forum)
+            return forum_role['can_delete_checkpoints']
         except KeyError:
             raise False
 
     def allow_checkpoint_view(self, forum, checkpoint):
         if checkpoint.deleted:
             try:
-                forum_role = self.acl[forum.pk]
+                forum_role = self.get_role(forum)
                 if not forum_role['can_see_deleted_checkpoints']:
                     raise ACLError403(_("Selected checkpoint could not be found."))
             except KeyError:
@@ -584,7 +586,7 @@ class ThreadsACL(BaseACL):
 
     def allow_checkpoint_hide(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if not forum_role['can_delete_checkpoints']:
                 raise ACLError403(_("You cannot hide checkpoints!"))
         except KeyError:
@@ -592,7 +594,7 @@ class ThreadsACL(BaseACL):
 
     def allow_checkpoint_delete(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if forum_role['can_delete_checkpoints'] != 2:
                 raise ACLError403(_("You cannot delete checkpoints!"))
         except KeyError:
@@ -600,7 +602,7 @@ class ThreadsACL(BaseACL):
 
     def allow_checkpoint_show(self, forum):
         try:
-            forum_role = self.acl[forum.pk]
+            forum_role = self.get_role(forum)
             if not forum_role['can_delete_checkpoints']:
                 raise ACLError403(_("You cannot show checkpoints!"))
         except KeyError:
