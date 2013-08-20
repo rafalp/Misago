@@ -12,8 +12,10 @@ from misago.utils.pagination import make_pagination
 def popular_threads(request, page=0):
     queryset = Thread.objects.filter(forum_id__in=Forum.objects.readable_forums(request.acl)).filter(deleted=False).filter(moderated=False)
     items_total = queryset.count();
+    if items_total > (settings.threads_per_page * 3):
+        items_total = settings.threads_per_page * 3
     try:
-        pagination = make_pagination(page, items_total, 30)
+        pagination = make_pagination(page, items_total, settings.threads_per_page)
     except Http404:
         return redirect(reverse('popular_threads'))
 
