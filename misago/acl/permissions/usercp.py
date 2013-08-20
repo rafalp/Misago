@@ -20,10 +20,10 @@ def make_form(request, role, form):
         form.base_fields['allow_signature_images'] = forms.BooleanField(label=_("Can put images in signature"),
                                                                         widget=YesNoSwitch, initial=False, required=False)
 
-        form.fieldset.append((
-                              _("Profile Settings"),
-                              ('name_changes_allowed', 'changes_expire', 'can_use_signature', 'allow_signature_links', 'allow_signature_images')
-                             ))
+        form.fieldsets.append((
+                               _("Profile Settings"),
+                               ('name_changes_allowed', 'changes_expire', 'can_use_signature', 'allow_signature_links', 'allow_signature_images')
+                              ))
 
 
 class UserCPACL(BaseACL):

@@ -29,13 +29,13 @@ def make_form(request, role, form):
                                                                                       (2, _("Yes, hard-delete")),
                                                                                      ), coerce=int)
 
-        form.fieldset.append((
-                              _("Private Threads"),
-                              ('can_use_private_threads', 'can_start_private_threads',
-                               'can_upload_attachments_in_private_threads', 'private_thread_attachment_size',
-                               'private_thread_attachments_limit', 'can_invite_ignoring',
-                               'private_threads_mod', 'can_delete_checkpoints')
-                             ))
+        form.fieldsets.append((
+                               _("Private Threads"),
+                               ('can_use_private_threads', 'can_start_private_threads',
+                                'can_upload_attachments_in_private_threads', 'private_thread_attachment_size',
+                                'private_thread_attachments_limit', 'can_invite_ignoring',
+                                'private_threads_mod', 'can_delete_checkpoints')
+                              ))
 
 
 class PrivateThreadsACL(BaseACL):
@@ -45,10 +45,10 @@ class PrivateThreadsACL(BaseACL):
 
     def can_participate(self):
         return self.acl['can_use_private_threads']
-        
+
     def can_invite_ignoring(self):
         return self.acl['can_invite_ignoring']
-        
+
     def is_mod(self):
         return self.acl['private_threads_mod']
 

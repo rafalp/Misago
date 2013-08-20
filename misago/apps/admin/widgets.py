@@ -291,7 +291,7 @@ class ListWidget(BaseWidget):
                             return redirect(self.get_link())
                     else:
                         message = Message(_("Search form contains errors."))
-                    message.type = 'error'
+                    message.level = messages.ERROR
                 else:
                     search_form = SearchForm(request=request)
 
@@ -315,7 +315,7 @@ class ListWidget(BaseWidget):
                 if table_form.is_valid():
                     message, redirect_link = self.table_action(items, table_form.cleaned_data)
                     if redirect_link:
-                        messages.add_message(request, message.type, message, self.admin.id)
+                        messages.add_message(request, message.level, message, self.admin.id)
                         return redirect(redirect_link)
                 else:
                     message = Message(table_form.non_field_errors()[0], messages.ERROR)
@@ -333,7 +333,7 @@ class ListWidget(BaseWidget):
                         form_action = getattr(self, 'action_' + list_form.cleaned_data['list_action'])
                         message, redirect_link = form_action(items, [int(x) for x in list_form.cleaned_data['list_items']])
                         if redirect_link:
-                            messages.add_message(request, message, message.type, self.admin.id)
+                            messages.add_message(request, message.level, message, self.admin.id)
                             return redirect(redirect_link)
                     except AttributeError:
                         message = Message(_("Requested action is incorrect."))
@@ -344,7 +344,7 @@ class ListWidget(BaseWidget):
                         message = Message(_("Requested action is incorrect."))
                     else:
                         message = Message(list_form.non_field_errors()[0])
-                message.type = 'error'
+                message.level = messages.ERROR
             else:
                 list_form = ListForm(request=request)
 
@@ -436,8 +436,8 @@ class FormWidget(BaseWidget):
             if form.is_valid():
                 try:
                     model, message = self.submit_form(form, model)
-                    if message.type != 'error':
-                        messages.add_message(request, message, message.type, self.admin.id)
+                    if message.level != messages.ERROR:
+                        messages.add_message(request, message.level, message, self.admin.id)
                         # Redirect back to right page
                         try:
                             if 'save_new' in request.POST and self.get_new_link:
@@ -507,7 +507,7 @@ class ButtonWidget(BaseWidget):
 
         # Do something
         message, url = self.action(model)
-        messages.add_message(request, message, message.type, self.admin.id)
+        messages.add_message(request, message.level, message, self.admin.id)
         if url:
             return redirect(url)
         return redirect(self.get_fallback_link())

@@ -20,10 +20,10 @@ def make_form(request, role, form):
                                                                                   (2, _("Yes, hard-delete")),
                                                                                  ), coerce=int)
 
-        form.fieldset.append((
-                              _("Reporting Content"),
-                              ('can_report_content', 'can_handle_reports', 'can_mod_reports_discussions', 'can_delete_reports')
-                             ))
+        form.fieldsets.append((
+                               _("Reporting Content"),
+                               ('can_report_content', 'can_handle_reports', 'can_mod_reports_discussions', 'can_delete_reports')
+                              ))
 
 
 class ReportsACL(BaseACL):
@@ -36,10 +36,10 @@ class ReportsACL(BaseACL):
 
     def can_handle(self):
         return self.acl['can_handle_reports']
-        
+
     def is_mod(self):
         return self.acl['can_mod_reports_discussions']
-        
+
     def can_delete(self):
         return self.acl['can_delete_reports']
 

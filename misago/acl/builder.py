@@ -6,14 +6,12 @@ from misago.models import Forum, ForumRole
 from misago.monitor import monitor
 
 class ACLFormBase(Form):
-    fieldsets = []
-
     def iterator(self):
         return FormIterator(self)
 
 
 def build_form(request, role):
-    form_type = type('ACLForm', (ACLFormBase,), {})
+    form_type = type('ACLFormFinal', (ACLFormBase,), {'fieldsets': []})
     for provider in settings.PERMISSION_PROVIDERS:
         app_module = import_module(provider)
         try:
@@ -24,7 +22,8 @@ def build_form(request, role):
 
 
 def build_forum_form(request, role):
-    form_type = type('ACLForm', (ACLFormBase,), {})
+    print dir(ACLFormBase)
+    form_type = type('ACLFormForumFinal', (ACLFormBase,), {'fieldsets': []})
     for provider in settings.PERMISSION_PROVIDERS:
         app_module = import_module(provider)
         try:

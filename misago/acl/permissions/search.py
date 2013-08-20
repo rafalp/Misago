@@ -10,10 +10,10 @@ def make_form(request, role, form):
                                                              help_text=_("Forum search can be resources intensive operation, and so its usually good idea to limit frequency of searches by requiring members to wait certain number of seconds before they can perform next search. Enter 0 to disable this requirement."),
                                                              initial=25, min_value=0)
 
-    form.fieldset.append((
-                          _("Searching"),
-                          ('can_search_forums', 'search_cooldown')
-                         ))
+    form.fieldsets.append((
+                           _("Searching"),
+                           ('can_search_forums', 'search_cooldown')
+                          ))
 
 
 class SearchACL(BaseACL):
