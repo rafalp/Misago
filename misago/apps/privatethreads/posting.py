@@ -65,7 +65,7 @@ class NewReplyView(NewReplyBaseView, TypeMixin):
 
     def after_form(self, form):
         try:
-            self.invite_users(form.invite_users)
+            self.invite_users(form.users_list)
         except AttributeError:
             pass
         self.whitelist_mentions()
