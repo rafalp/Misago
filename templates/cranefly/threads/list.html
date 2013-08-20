@@ -213,8 +213,13 @@
     <div class="threads-actions">
       <form id="threads_form" class="form-inline pull-right" action="{{ request_path }}" method="POST">
         <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+        {% if list_form_context['optgroups'][0][1]|length > 1 %}
         {{ form_theme.field(list_form.list_action, attrs={'class': 'span3'}) }}
         <button type="submit" class="btn btn-danger">{% trans %}Go{% endtrans %}</button>
+        {% else %}
+        <input type="hidden" name="{{ list_form_context.name }}" value="{{ list_form_context['optgroups'][0][1][0][0] }}">
+        <button type="submit" class="btn btn-danger">{{ list_form_context['optgroups'][0][1][0][1] }}</button>
+        {% endif %}
       </form>
     </div>
     {% endif %}
