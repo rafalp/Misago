@@ -59,7 +59,7 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
                         thread.delete()
                     # Nope, see if we removed ourselves
                     else:
-                        self.thread.set_checkpoint(self.request, 'left')
+                        thread.set_checkpoint(self.request, 'left')
                 except User.DoesNotExist:
                     pass
         if left:
