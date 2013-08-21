@@ -842,7 +842,7 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{color:#333;text-decoration:n
 .markdown .media-border .media-thumbnail a.movie-title,.markdown article .media-border .media-thumbnail a.movie-title{margin-top:146px}.markdown .media-border .media-thumbnail a.movie-title strong,.markdown article .media-border .media-thumbnail a.movie-title strong{display:block;margin-top:6px;font-size:17.5px}
 .markdown pre,.markdown article pre,.markdown blockquote,.markdown article blockquote,.markdown iframe,.markdown article iframe{margin-top:20px;margin-bottom:20px}.markdown pre article>:first-child,.markdown article pre article>:first-child,.markdown blockquote article>:first-child,.markdown article blockquote article>:first-child,.markdown iframe article>:first-child,.markdown article iframe article>:first-child{margin-top:0}
 .markdown pre article>:last-child,.markdown article pre article>:last-child,.markdown blockquote article>:last-child,.markdown article blockquote article>:last-child,.markdown iframe article>:last-child,.markdown article iframe article>:last-child{margin-bottom:0}
-.markdown .emoji,.markdown article .emoji{background:none;border-radius:0;margin:0;vertical-align:middle}
+.markdown .emoji,.markdown article .emoji{border-radius:0;margin:0;vertical-align:top}
 .markdown h1 .emoji,.markdown article h1 .emoji{width:27.8px;height:27.8px}
 .markdown h2 .emoji,.markdown article h2 .emoji{width:25px;height:25px}
 .markdown h3 .emoji,.markdown article h3 .emoji{width:20.8px;height:20.8px}
