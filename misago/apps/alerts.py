@@ -16,13 +16,15 @@ def alerts(request):
             alerts_qs = request.user.alert_set.filter(date__gte=request.session['recent_alerts']).order_by('-id')
         else:
             alerts_qs = ()
-        response_html = render_to_string('alerts/modal.html',
-                                         {'alerts': alerts_qs},
-                                         context_instance=RequestContext(request))
-        if request.user.alerts_date:
+
+        if request.user.alerts:
             request.user.alerts = 0
             request.user.alerts_date = timezone.now()
             request.user.save(force_update=True)
+
+        response_html = render_to_string('alerts/modal.html',
+                                         {'alerts': alerts_qs},
+                                         context_instance=RequestContext(request))
         return json_response(request,
                              json={'html': response_html})
 
