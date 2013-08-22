@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from misago.conf import settings
 from misago.acl.exceptions import ACLError404
+from misago.utils.translation import ugettext_lazy
 
 class TypeMixin(object):
     type_prefix = 'private_thread'
@@ -24,12 +25,17 @@ class TypeMixin(object):
             if not user in self.thread.participants.all():
                 self.thread.participants.add(user)
                 user.email_user(self.request, 'private_thread_invite', _("You've been invited to private thread \"%(thread)s\" by %(user)s") % {'thread': self.thread.name, 'user': self.request.user.username}, {'author': self.request.user, 'thread': self.thread})
+                alert = user.alert(ugettext_lazy("%(username)s has invited you to the %(thread)s private thread").message)
+                alert.profile('username', self.request.user)
+                alert.post('thread', self.type_prefix, self.thread, self.post)
+                alert.save_all()
+                self.post.mentions.add(user)
                 if self.action == 'new_reply':
                     self.thread.set_checkpoint(self.request, 'invited', user)
 
     def force_stats_sync(self):
         self.thread.participants.exclude(id=self.request.user.id).update(sync_pds=True)
-                
+
     def whitelist_mentions(self):
         try:
             if self.md.mentions:
