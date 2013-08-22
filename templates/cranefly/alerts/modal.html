@@ -9,8 +9,8 @@
     <tbody>
       {% for alert in alerts %}
       <tr>
-        <td class="alert-icon{% if alert.date > user.alerts_date %} alert-new{% endif %}">
-          {% if alert.date > user.alerts_date %}
+        <td class="alert-icon{% if not user.alerts_date or alert.date > user.alerts_date %} alert-new{% endif %}">
+          {% if not user.alerts_date or alert.date > user.alerts_date %}
           <i class="icon-star tooltip-top" title="{% trans %}New notification{% endtrans %}"></i>
           {% else %}
           <i class="icon-star-empty tooltip-top" title="{% trans %}Old notification{% endtrans %}"></i>
