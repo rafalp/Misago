@@ -16,9 +16,9 @@
             <div id="navbar-search" class="navbar-search-border">
               <div class="navbar-search-text">
                 <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-                {% if thread is defined %}
+                {% if thread is defined and thread %}
                 <input type="hidden" name="search_thread" value="{{ thread.pk }}">
-                {% elif search_thread is defined %}
+                {% elif search_thread is defined and search_thread %}
                 <input type="hidden" name="search_thread" value="{{ search_thread.pk }}">
                 {% endif %}
                 <i class="icon-search"></i>
@@ -29,16 +29,16 @@
                   <div class="control">
                     <label>{% trans %}Search in{% endtrans %}:</label>
                     <select name="search_in">
-                      <option value="forums"{% if not search_in is defined or search_in == 'forums' %} selected="selected"{% endif %}>{% trans %}Forums{% endtrans%}</option>
+                      <option value="threads"{% if not search_in is defined or search_in == 'threads' %} selected="selected"{% endif %}>{% trans %}Forums{% endtrans%}</option>
                       {% if settings.enable_private_threads and acl.private_threads.can_participate()%}
-                      <option value="private"{% if search_in == 'private' %} selected="selected"{% endif %}>{% trans %}Private Threads{% endtrans %}</option>
+                      <option value="private_threads"{% if search_in == 'private_threads' %} selected="selected"{% endif %}>{% trans %}Private Threads{% endtrans %}</option>
                       {% endif %}
                       {% if acl.reports.can_handle() %}
                       <option value="reports"{% if search_in == 'reports' %} selected="selected"{% endif %}>{% trans %}Reports{% endtrans %}</option>
                       {% endif %}
-                      {% if thread is defined %}
+                      {% if thread is defined and thread %}
                       <option value="thread"{% if search_in == 'thread' %} selected="selected"{% endif %}>{% trans %}This thread{% endtrans %}</option>
-                      {% elif search_thread is defined %}
+                      {% elif search_thread is defined and search_thread %}
                       <option value="thread"{% if search_in == 'thread' %} selected="selected"{% endif %}>{% trans thread=search_thread.name %}In thread "{{ thread }}"{% endtrans %}</option>
                       {% endif %}
                     </select>
@@ -55,7 +55,7 @@
                 </div>
                 <div class="form-actions">
                   <button type="submit" class="btn btn-primary"><i class="icon-search"></i> {% trans %}Search{% endtrans%}</button>
-                  {#<a href="#">{% trans %}Advanced Search{% endtrans %}</a>#}
+                  {#<a href="{{ url('search') }}">{% trans %}Advanced Search{% endtrans %}</a>#}
                 </div>
               </div>
             </div>

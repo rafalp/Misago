@@ -9,7 +9,11 @@ class ViewBase(object):
     def __new__(cls, request, **kwargs):
         obj = super(ViewBase, cls).__new__(cls)
         return obj(request, **kwargs)
-        
+
+    @property
+    def search_in(self):
+        return '%ss' % self.type_prefix
+
     def _type_available(self):
         try:
             if not self.type_available():
@@ -59,6 +63,13 @@ class ViewBase(object):
 
     def template_vars(self, context):
         return context
+
+    def _template_vars(self, context):
+        context.update({
+                        'type_prefix': self.type_prefix,
+                        'search_in': self.search_in,
+                       })
+        return self.template_vars(context)
 
     def retreat_redirect(self):
         if self.request.POST.get('retreat'):

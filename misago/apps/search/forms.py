@@ -4,8 +4,7 @@ import floppyforms as forms
 from misago.forms import Form
 
 class QuickSearchForm(Form):
-    search_query = forms.CharField(max_length=255,
-                                   error_messages={'required': _("You have to enter search query.")})
+    search_query = forms.CharField(max_length=255, required=False)
 
     def clean_search_query(self):
         data = self.cleaned_data['search_query']

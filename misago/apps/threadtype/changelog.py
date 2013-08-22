@@ -53,13 +53,12 @@ class ChangelogBaseView(ViewBase):
 class ChangelogChangesBaseView(ChangelogBaseView):
     def dispatch(self, request, **kwargs):
         return render_to_response('%ss/changelog.html' % self.type_prefix,
-                                  self.template_vars({
-                                      'type_prefix': self.type_prefix,
-                                      'forum': self.forum,
-                                      'parents': self.parents,
-                                      'thread': self.thread,
-                                      'post': self.post,
-                                      'edits': self.post.change_set.prefetch_related('user').order_by('-id')
+                                  self._template_vars({
+                                        'forum': self.forum,
+                                        'parents': self.parents,
+                                        'thread': self.thread,
+                                        'post': self.post,
+                                        'edits': self.post.change_set.prefetch_related('user').order_by('-id')
                                       }),
                                   context_instance=RequestContext(request))
 
@@ -80,18 +79,17 @@ class ChangelogDiffBaseView(ChangelogBaseView):
             prev = None
         self.forum.closed = self.proxy.closed
         return render_to_response('%ss/changelog_diff.html' % self.type_prefix,
-                                  self.template_vars({
-                                      'type_prefix': self.type_prefix,
-                                      'forum': self.forum,
-                                      'parents': self.parents,
-                                      'thread': self.thread,
-                                      'post': self.post,
-                                      'change': self.change,
-                                      'next': next,
-                                      'prev': prev,
-                                      'message': request.messages.get_message('changelog'),
-                                      'l': 1,
-                                      'diff': difflib.ndiff(self.change.post_content.splitlines(), self.post.post.splitlines()),
+                                  self._template_vars({
+                                        'forum': self.forum,
+                                        'parents': self.parents,
+                                        'thread': self.thread,
+                                        'post': self.post,
+                                        'change': self.change,
+                                        'next': next,
+                                        'prev': prev,
+                                        'message': request.messages.get_message('changelog'),
+                                        'l': 1,
+                                        'diff': difflib.ndiff(self.change.post_content.splitlines(), self.post.post.splitlines()),
                                       }),
                                   context_instance=RequestContext(request))
 

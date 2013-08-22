@@ -120,14 +120,13 @@ class ThreadsListBaseView(ViewBase):
         self.forum.closed = self.proxy.closed
 
         return render_to_response('%ss/%s.html' % (self.type_prefix, self.template),
-                                  self.template_vars({
-                                      'type_prefix': self.type_prefix,
-                                      'message': self.message,
-                                      'forum': self.forum,
-                                      'parents': self.parents,
-                                      'count': self.count,
-                                      'list_form': self.form or None,
-                                      'threads': self.threads,
-                                      'pagination': self.pagination,
+                                  self._template_vars({
+                                        'message': self.message,
+                                        'forum': self.forum,
+                                        'parents': self.parents,
+                                        'count': self.count,
+                                        'list_form': self.form or None,
+                                        'threads': self.threads,
+                                        'pagination': self.pagination,
                                       }),
                                   context_instance=RequestContext(request));

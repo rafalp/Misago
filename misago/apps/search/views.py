@@ -30,7 +30,7 @@ class ViewBase(object):
         else:
             sqs = sqs.auto_query(search_query)
 
-        if self.request.POST.get('search_in') == 'private':
+        if self.request.POST.get('search_in') == 'private_threads':
             if not (self.request.acl.private_threads.can_participate()
                     and settings.enable_private_threads):
                 raise ACLError404()
@@ -114,7 +114,7 @@ class QuickSearchView(ViewBase):
             form = QuickSearchForm(request=self.request)
             return self.render_to_response('home', form,
                                            {'search_result': self.request.session.get('search_results')})
-        
+
         try:
             form = QuickSearchForm(self.request.POST, request=self.request)
             if form.is_valid():
@@ -168,7 +168,7 @@ class SearchResultsView(ViewBase):
         result = self.request.session.get('search_results')
         if not result:
             form = QuickSearchForm(request=self.request)
-            return self.render_to_response('error', form,  
+            return self.render_to_response('error', form,
                                            {'message': _("No search results were found.")})
 
         items = result['search_results']
@@ -179,7 +179,7 @@ class SearchResultsView(ViewBase):
             return redirect(reverse('search_results'))
 
         form = QuickSearchForm(request=self.request, initial={'search_query': result['search_query']})
-        return self.render_to_response('results', form,  
+        return self.render_to_response('results', form,
                                        {
                                         'search_query': result['search_query'],
                                         'search_in': result.get('search_in'),

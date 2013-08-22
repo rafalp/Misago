@@ -46,12 +46,11 @@ class DetailsBaseView(ExtraBaseView):
 
     def response(self):
         return render_to_response('%ss/details.html' % self.type_prefix,
-                                  self.template_vars({
-                                      'type_prefix': self.type_prefix,
-                                      'forum': self.forum,
-                                      'parents': self.parents,
-                                      'thread': self.thread,
-                                      'post': self.post,
+                                  self._template_vars({
+                                        'forum': self.forum,
+                                        'parents': self.parents,
+                                        'thread': self.thread,
+                                        'post': self.post,
                                       }),
                                   context_instance=RequestContext(self.request))
 
@@ -62,13 +61,12 @@ class KarmaVotesBaseView(ExtraBaseView):
 
     def response(self):
         return render_to_response('%ss/karmas.html' % self.type_prefix,
-                                  self.template_vars({
-                                      'type_prefix': self.type_prefix,
-                                      'forum': self.forum,
-                                      'parents': self.parents,
-                                      'thread': self.thread,
-                                      'post': self.post,
-                                      'upvotes': self.post.karma_set.filter(score=1),
-                                      'downvotes': self.post.karma_set.filter(score=-1),
+                                  self._template_vars({
+                                        'forum': self.forum,
+                                        'parents': self.parents,
+                                        'thread': self.thread,
+                                        'post': self.post,
+                                        'upvotes': self.post.karma_set.filter(score=1),
+                                        'downvotes': self.post.karma_set.filter(score=-1),
                                       }),
                                   context_instance=RequestContext(self.request))
