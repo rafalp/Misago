@@ -59,7 +59,11 @@ class MisagoSession(SessionBase):
         return False
 
     def get_ip(self, request):
-        return request.META.get('HTTP_X_FORWARDED_FOR', '') or request.META.get('REMOTE_ADDR')
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            return x_forwarded_for.split(',')[-1].strip()
+        else:
+            return request.META.get('REMOTE_ADDR')
 
     def set_user(self, user=None):
         pass
