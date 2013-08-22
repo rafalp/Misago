@@ -810,7 +810,7 @@ textarea{resize:vertical}
 .btn.btn-icon{padding-left:0 !important;padding-right:0 !important;width:32px;text-align:center}.btn.btn-icon i{margin:0}
 a.btn-link:hover,a.btn-link:active,a.btn-link:focus{color:#333;text-decoration:none}
 .pagination{margin:0;padding:0}.pagination .count{margin-right:10.5px;padding:4px 0;color:#999}
-.pagination ul{-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}.pagination ul li{float:left;margin:0;margin-right:4.666666666666667px;padding:0}.pagination ul li a:link,.pagination ul li a:visited{background-color:#fff;border:1px solid #f0f0f0;border-radius:3px;padding:3px 7px;color:#999}.pagination ul li a:link i,.pagination ul li a:visited i{width:16px;text-align:center}
+.pagination ul{-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}.pagination ul li{float:left;margin:0;margin-right:4.666666666666667px;padding:0}.pagination ul li a:link,.pagination ul li a:visited{background-color:#fff;border:1px solid #f0f0f0;border-radius:3px;padding:3px 7px;color:#999}.pagination ul li a:link i,.pagination ul li a:visited i{display:inline-block;width:12px;text-align:center}
 .pagination ul li a:active,.pagination ul li a:hover{border:1px solid #999;color:#555}
 .editor{background-color:#fff;border:1px solid #e6e6e6;border-radius:3px}.editor .editor-error{padding:10.5px;padding-bottom:0;margin-bottom:-10.5px}.editor .editor-error .help-block{color:#cf402e;font-weight:bold}
 .editor .editor-input{padding:10.5px}.editor .editor-input>div{margin-right:2px}.editor .editor-input>div textarea{border:none;box-shadow:none;margin:-10.5px;padding:10.5px;width:100%;font-family:Monaco,Menlo,Consolas,"Courier New",monospace}
