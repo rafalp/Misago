@@ -124,6 +124,7 @@ class User(models.Model):
     avatar_image = models.CharField(max_length=255, null=True, blank=True)
     avatar_original = models.CharField(max_length=255, null=True, blank=True)
     avatar_temp = models.CharField(max_length=255, null=True, blank=True)
+    _avatar_crop = models.CharField(max_length=255, null=True, blank=True, db_column='avatar_crop')
     signature = models.TextField(null=True, blank=True)
     signature_preparsed = models.TextField(null=True, blank=True)
     join_date = models.DateTimeField()
@@ -431,6 +432,14 @@ class User(models.Model):
 
     def acl(self, request):
         return acl(request, self)
+
+    @property
+    def avatar_crop(self):
+        return [int(float(x)) for x in self._avatar_crop.split(',')] if self._avatar_crop else (0, 0, 100, 100)
+
+    @avatar_crop.setter
+    def avatar_crop(self, value):
+        self._avatar_crop = ','.join(value)
 
     def get_avatar(self, size=None):
         image_size = avatar_size(size) if size else None

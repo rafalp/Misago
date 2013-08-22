@@ -211,6 +211,7 @@ def crop(request, upload=False):
                     source.save(image_path + request.user.avatar_original)
                 request.user.delete_avatar_temp()
                 request.user.avatar_image = image_name
+                request.user.avatar_crop = [str(float(request.POST[x])) for x in ('crop_x', 'crop_y', 'crop_w')]
                 request.user.save(force_update=True)
                 messages.success(request, _("Your avatar has been cropped."), 'usercp_avatar')
                 return redirect(reverse('usercp_avatar'))
@@ -225,5 +226,6 @@ def crop(request, upload=False):
                                   'message': message,
                                   'after_upload': upload,
                                   'avatar_size': settings.AVATAR_SIZES[0],
+                                  'avatar_crop': request.user.avatar_crop if not upload else None,
                                   'source': 'avatars/%s' % (request.user.avatar_temp if upload else request.user.avatar_original),
                                   'tab': 'avatar'}));

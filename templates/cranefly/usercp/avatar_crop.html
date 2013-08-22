@@ -54,7 +54,11 @@
           onSelect: updatePreview,
           aspectRatio: 1,
           minSize: [50, 50],
-          setSelect: [ 0, 0, {{ avatar_size }}, {{ avatar_size }} ],
+          {% if avatar_crop -%}
+          setSelect: [{{ avatar_crop[0] }}, {{ avatar_crop[1] }}, {{ avatar_crop[0] + avatar_crop[2] }}, {{ avatar_crop[1] + avatar_crop[2] }}]
+          {%- else -%}
+          setSelect: [0, 0, {{ avatar_size }}, {{ avatar_size }}],
+          {%- endif %}
         },function(){
           // Use the API to get the real image size
           var bounds = this.getBounds();
