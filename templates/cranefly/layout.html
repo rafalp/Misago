@@ -2,6 +2,9 @@
 {% from "cranefly/macros.html" import messages_list %}
 
 {% block body %}
+<div id="ajax-loader" class="progress progress-striped active ajax-in-progress">
+  <div class="bar bar-danger" style="width: 100%;"></div>
+</div>
 <div id="wrap">
   <div class="navbar navbar-header navbar-static-top">
     <div class="navbar-inner">

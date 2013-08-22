@@ -31,6 +31,17 @@ $(function () {
     e.stopPropagation()
   });
 
+  // Ajax Loader
+  var ajax_loader = $('#ajax-loader');
+  $("body").on({
+    ajaxStart: function() {
+      ajax_loader.fadeIn();
+    },
+    ajaxStop: function() {
+      ajax_loader.fadeOut();
+    }
+  });
+
   // Fancy user nav activation
   $('#fancy-user-nav').show();
 
