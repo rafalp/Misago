@@ -24,6 +24,11 @@ OUTPUT_FORMAT = 'html5'
 # Remember to run "genavatars" command when you change this setting!
 AVATAR_SIZES = (125, 100, 80, 60, 40, 24)
 
+# Default Gravatar
+# See for explanation: https://gravatar.com/site/implement/images/
+# Leave empty for classic blue "G" av
+GRAVATAR_DEFAULT = ''
+
 # Allow usernames to contain diacritics
 UNICODE_USERNAMES = True
 

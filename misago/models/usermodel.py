@@ -448,7 +448,15 @@ class User(models.Model):
         # No avatar found, get gravatar
         if not image_size:
             image_size = settings.AVATAR_SIZES[0]
-        return 'http://www.gravatar.com/avatar/%s?s=%s' % (hashlib.md5(self.email).hexdigest(), image_size)
+
+        # Decide on default gravatar
+        gravatar_default = ''
+        if (settings.GRAVATAR_DEFAULT
+                and not '&' in settings.GRAVATAR_DEFAULT
+                and not '?' in settings.GRAVATAR_DEFAULT):
+            gravatar_default = '&d=%s' % settings.GRAVATAR_DEFAULT
+
+        return 'http://www.gravatar.com/avatar/%s?s=%s%s' % (hashlib.md5(self.email).hexdigest(), image_size, gravatar_default)
 
     def get_ranking(self):
         if not self.ranking:
