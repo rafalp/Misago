@@ -76,7 +76,7 @@ class PostingBaseView(ViewBase):
             except KeyError:
                 pass
             if post_mentions:
-                notified_users += [x for x in post_mentions.itervalues()]
+                notified_users += [x for x in post_mentions.values()]
                 self.post.notify_mentioned(self.request, self.type_prefix, post_mentions)
                 self.post.save(force_update=True)
         self.email_watchers(notified_users)
