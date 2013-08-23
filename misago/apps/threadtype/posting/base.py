@@ -55,7 +55,7 @@ class PostingBaseView(ViewBase):
 
     def notify_users(self):
         try:
-            post_mentions = self.md
+            post_mentions = self.md.mentions
         except AttributeError:
             post_mentions = False
 
