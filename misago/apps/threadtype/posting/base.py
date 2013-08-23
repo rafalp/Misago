@@ -55,17 +55,17 @@ class PostingBaseView(ViewBase):
 
     def notify_users(self):
         try:
-            post_content = self.md
+            post_mentions = self.md
         except AttributeError:
-            post_content = False
+            post_mentions = False
 
         notified_users = []
 
-        if post_content:
+        if post_mentions:
             try:
                 if (self.quote and self.quote.user_id and
-                        self.quote.user.username_slug in post_content.mentions):
-                    del post_content.mentions[self.quote.user.username_slug]
+                        self.quote.user.username_slug in post_mentions):
+                    del post_mentions[self.quote.user.username_slug]
                     if not self.quote.user in self.post.mentions.all():
                         notified_users.append(self.quote.user)
                         self.post.mentions.add(self.quote.user)
@@ -75,9 +75,9 @@ class PostingBaseView(ViewBase):
                         alert.save_all()
             except KeyError:
                 pass
-            if post_content.mentions:
-                notified_users += [x for x in post_content.mentions.itervalues()]
-                self.post.notify_mentioned(self.request, self.type_prefix, post_content.mentions)
+            if post_mentions:
+                notified_users += [x for x in post_mentions.itervalues()]
+                self.post.notify_mentioned(self.request, self.type_prefix, post_mentions)
                 self.post.save(force_update=True)
         self.email_watchers(notified_users)
 

@@ -40,10 +40,9 @@ class TypeMixin(object):
         try:
             if self.md.mentions:
                 participants = self.thread.participants.all()
-                mentioned = self.post.mentions.all()
-                for user in self.md.mentions:
-                    if user not in participants and user not in mentioned:
-                        self.post.mentioned.add(user)
+                for slug, user in self.md.mentions.items():
+                    if user not in participants:
+                        del self.md.mentions[slug]
         except AttributeError:
             pass
 
