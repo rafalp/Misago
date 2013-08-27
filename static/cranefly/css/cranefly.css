@@ -834,7 +834,6 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{color:#333;text-decoration:n
 .markdown blockquote,.markdown article blockquote{border-left-color:#e1e1e1;padding:4.666666666666667px 14px;margin:10px}.markdown blockquote header,.markdown article blockquote header{padding-bottom:10px;font-size:15.400000000000002px;font-weight:bold;line-height:20px}
 .markdown blockquote p,.markdown article blockquote p{margin:0 0 10px;font-size:14px}
 .markdown blockquote blockquote,.markdown article blockquote blockquote{opacity:.85;filter:alpha(opacity=85)}
-.markdown code,.markdown article code{background-color:#333;border-color:#000;color:#eee;text-shadow:0 1px 0 #000}
 .markdown pre,.markdown article pre{background-color:#222;padding:7px 14px}.markdown pre code,.markdown article pre code{background:none;border:none;color:#eee;font-size:11.9px}
 .markdown img,.markdown article img{background-color:#fff;border-radius:3px;margin:10px 0}
 .markdown .media-border,.markdown article .media-border{box-shadow:0 0 4px #555;display:inline-block;overflow:hidden;margin:10px 0}.markdown .media-border iframe,.markdown article .media-border iframe{margin:0;margin-bottom:-5px}
