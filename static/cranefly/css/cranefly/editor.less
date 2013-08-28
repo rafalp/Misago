@@ -121,7 +121,7 @@
   bottom:0;
 
   &>div {
-    background: @white;
+    background: darken(@white, 3%);
     position:absolute;
     top:0;
     left:0;
@@ -134,6 +134,7 @@
       position: relative;
 
       textarea {
+        background: none;
         border: none;
         border-radius: 0;
         box-shadow: none;
@@ -141,13 +142,14 @@
         margin: 0 auto;
         margin-top: 2%;
         padding: 0px @fontSizeLarge;
+        resize: none;
         width: 90%;
         height: 91%;
 
-        color: @textColor;
+        color: @gray;
         font-family: @monoFontFamily;
-        font-size: @baseFontSize * 2;
-        line-height: @baseLineHeight * 2;
+        font-size: @baseFontSize * 1.5;
+        line-height: @baseLineHeight * 1.5;
       }
 
       .overlay-options {
@@ -155,7 +157,7 @@
         border-radius: 6px;
         position: absolute;
         top: 4%;
-        right: @fontSizeLarge - 10px;
+        right: @fontSizeLarge - 26px;
 
         ul {
           margin: 0px;
