@@ -613,7 +613,7 @@ button.btn.btn-mini,input[type="submit"].btn.btn-mini{*padding-top:1px;*padding-
 .modal-footer .btn+.btn{margin-left:5px;margin-bottom:0}
 .modal-footer .btn-group .btn+.btn{margin-left:-1px}
 .modal-footer .btn-block+.btn-block{margin-left:0}
-.tooltip{position:absolute;z-index:1030;display:block;visibility:visible;font-size:11px;line-height:1.4;opacity:0;filter:alpha(opacity=0)}.tooltip.in{opacity:.8;filter:alpha(opacity=80)}
+.tooltip{position:absolute;z-index:1039;display:block;visibility:visible;font-size:11px;line-height:1.4;opacity:0;filter:alpha(opacity=0)}.tooltip.in{opacity:.8;filter:alpha(opacity=80)}
 .tooltip.top{margin-top:-3px;padding:5px 0}
 .tooltip.right{margin-left:3px;padding:0 5px}
 .tooltip.bottom{margin-top:3px;padding:5px 0}
@@ -813,11 +813,16 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{color:#333;text-decoration:n
 .pagination ul{-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}.pagination ul li{float:left;margin:0;margin-right:4.666666666666667px;padding:0}.pagination ul li a:link,.pagination ul li a:visited{background-color:#fff;border:1px solid #f0f0f0;border-radius:3px;padding:3px 7px;color:#999}.pagination ul li a:link i,.pagination ul li a:visited i{display:inline-block;width:12px;text-align:center}
 .pagination ul li a:active,.pagination ul li a:hover{border:1px solid #999;color:#555}
 .editor{background-color:#fff;border:1px solid #e6e6e6;border-radius:3px}.editor .editor-error{padding:10.5px;padding-bottom:0;margin-bottom:-10.5px}.editor .editor-error .help-block{color:#cf402e;font-weight:bold}
-.editor .editor-input{padding:10.5px}.editor .editor-input>div{margin-right:2px}.editor .editor-input>div textarea{border:none;box-shadow:none;margin:-10.5px;padding:10.5px;width:100%;font-family:Monaco,Menlo,Consolas,"Courier New",monospace}
+.editor .editor-input{padding:10.5px}.editor .editor-input>div{margin-right:22px;position:relative}.editor .editor-input>div textarea{border:none;box-shadow:none;margin:-10.5px;padding:10.5px;padding-right:32px;width:100%;font-family:Monaco,Menlo,Consolas,"Courier New",monospace}
+.editor .editor-input>div .editor-zen-on{display:none;position:absolute;top:-4px;right:-26px;padding-left:8px}.editor .editor-input>div .editor-zen-on a{border-radius:4px;display:block;opacity:.5;filter:alpha(opacity=50);padding:2px 0;padding-bottom:3px;width:29px;color:#333;font-size:24px;text-align:center}.editor .editor-input>div .editor-zen-on a:hover,.editor .editor-input>div .editor-zen-on a:active{box-shadow:0 0 3px #999;text-decoration:none}
 .editor .editor-actions{border-top:1px solid #e6e6e6;overflow:auto;padding:10.5px}.editor .editor-actions>.btn{margin-left:14px}
-.editor .editor-actions .editor-tools{margin:0;margin-right:10.5px}.editor .editor-actions .editor-tools li{float:left;margin-right:10.5px}.editor .editor-actions .editor-tools li .btn{padding-left:7px;padding-right:7px;width:14px;text-align:center}
+.editor .editor-actions .editor-tools{margin:0;margin-right:10.5px}.editor .editor-actions .editor-tools li{float:left;margin-right:10.5px}.editor .editor-actions .editor-tools li .btn{display:block;padding-left:0;padding-right:0;width:28px;text-align:center}.editor .editor-actions .editor-tools li .btn i{margin:0}
 .editor .editor-actions .editor-help{line-height:30.5px}
 .form-container .editor{border-color:#ccc}.form-container .editor .editor-actions{border-top-color:#ccc}
+.zen-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0}.zen-overlay>div{background:#fff;position:absolute;top:0;left:0;right:0;bottom:0;z-index:1035}.zen-overlay>div .container{height:100%;position:relative}.zen-overlay>div .container textarea{border:none;border-radius:0;box-shadow:none;display:block;margin:0 auto;margin-top:2%;padding:0 17.5px;width:90%;height:91%;color:#333;font-family:Monaco,Menlo,Consolas,"Courier New",monospace;font-size:28px;line-height:40px}
+.zen-overlay>div .container .overlay-options{background-color:#222;border-radius:6px;position:absolute;top:4%;right:7.5px}.zen-overlay>div .container .overlay-options ul{margin:0;padding:4px;list-style:none}.zen-overlay>div .container .overlay-options ul li{margin:4px;padding:0}.zen-overlay>div .container .overlay-options ul li a{border-radius:3px;display:block;padding:6px 0;width:32px;color:#999;font-size:17.5px;text-align:center}.zen-overlay>div .container .overlay-options ul li a:hover{color:#fff;text-decoration:none}
+.zen-overlay>div .container .overlay-options ul li a:active{background-color:#eee;color:#333}
+.zen-overlay>div .container .overlay-options ul li hr{border-color:#333;border-bottom:none;margin:0}
 .error-page{text-align:center}.error-page .error-color{color:#cf402e}
 .error-page .error-ban-reason{border:1px solid #cf402e;border-radius:3px;background-color:#fbeeed;background-image:repeating-linear-gradient(45deg, transparent, transparent 5px, #fdf6f5 5px, #fdf6f5 10px);-webkit-box-shadow:0 0 0 3px #e38b80;-moz-box-shadow:0 0 0 3px #e38b80;box-shadow:0 0 0 3px #e38b80;padding:11px 19px;text-align:left}.error-page .error-ban-reason :last-child{margin-bottom:0;padding-bottom:0}
 .error-page .error-ban-expires{color:#cf402e;font-weight:bold}

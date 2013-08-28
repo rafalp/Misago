@@ -1,5 +1,5 @@
-{% macro editor(field, submit_button, placeholder=None, rows=4, hide_links=False, hide_images=False, hide_hr=False, extra=None) %}
-<div class="editor">
+{% macro editor(field, submit_button, placeholder=None, rows=4, hide_links=False, hide_images=False, hide_hr=False, zen=False, extra=None) %}
+<div class="editor editor-editable">
   {% if field.errors %}
   <div class="editor-error">
     {% for error in field.errors %}
@@ -11,19 +11,46 @@
   <div class="editor-input">
     <div>
       <textarea name="{{ context.name }}" id="id_{{ context.name }}" rows="{{ rows }}"{% if placeholder %} placeholder="{{ placeholder }}"{% endif %}>{% if 'value' in context %}{{ context.value }}{% endif %}</textarea>
+      {% if zen %}
+      <div class="editor-zen-on tooltip-left" title="{% trans %}Click to enter Zen mode{% endtrans %}">
+        <a href="#"><i class="icon-expand-alt"></i></a>
+      </div>
+      {% endif %}
     </div>
   </div>
   <div class="editor-actions">
     <ul class="editor-tools unstyled pull-left">
       <li><a href="#" class="tooltip-top btn editor-bold" title="{% trans %}Bold{% endtrans %}"><i class="icon-bold"></i></a></li>
       <li><a href="#" class="tooltip-top btn editor-emphasis" title="{% trans %}Emphasis{% endtrans %}"><i class="icon-italic"></i></a></li>
-      {% if not hide_links %}<li class="divider"><a href="#" class="tooltip-top btn editor-link" title="{% trans %}Insert Link{% endtrans %}"><i class="icon-share-alt"></i></a></li>{% endif %}
-      {% if not hide_images %}<li{% if hide_links %} class="divider"{% endif %}><a href="#" class="tooltip-top btn editor-image" title="{% trans %}Insert Image{% endtrans %}"><i class="icon-picture"></i></a></li>{% endif %}
-      {% if not hide_hr %}<li class="divider"><a href="#" class="tooltip-top btn editor-hr" title="{% trans %}Insert Horizontal Line{% endtrans %}"><i class="icon-minus"></i></a></li>{% endif %}
+      {% if not hide_links %}<li><a href="#" class="tooltip-top btn editor-link" title="{% trans %}Insert Link{% endtrans %}"><i class="icon-share-alt"></i></a></li>{% endif %}
+      {% if not hide_images %}<li><a href="#" class="tooltip-top btn editor-image" title="{% trans %}Insert Image{% endtrans %}"><i class="icon-picture"></i></a></li>{% endif %}
+      {% if not hide_hr %}<li><a href="#" class="tooltip-top btn editor-hr" title="{% trans %}Insert Horizontal Line{% endtrans %}"><i class="icon-minus"></i></a></li>{% endif %}
     </ul>
     <a href="{{ url('help_md') }}" class="editor-help" target="_blank">{% trans %}Formatting Help{% endtrans %}</a>
     <button name="save" type="submit" class="btn btn-primary pull-right">{{ submit_button }}</button>
     {% if extra %}{{ extra }}{% endif %}
+  </div>
+</div>
+{% endmacro %}
+
+{% macro zen() %}
+<div class="zen-overlay editor-editable">
+  <div>
+    <div class="container">
+      <textarea id="overlay-textarea" name="overlay-textarea" placeholder="{% trans %}Message Body{% endtrans %}"></textarea>
+      <div class="overlay-options">
+        <ul>
+          <li><a href="#" class="tooltip-left editor-bold" title="{% trans %}Bold{% endtrans %}"><i class="icon-bold"></i></a></li>
+          <li><a href="#" class="tooltip-left editor-emphasis" title="{% trans %}Emphasis{% endtrans %}"><i class="icon-italic"></i></a></li>
+          <li><a href="#" class="tooltip-left editor-link" title="{% trans %}Insert Link{% endtrans %}"><i class="icon-share-alt"></i></a></li>
+          <li><a href="#" class="tooltip-left editor-image" title="{% trans %}Insert Image{% endtrans %}"><i class="icon-picture"></i></a></li>
+          <li><a href="#" class="tooltip-left editor-hr" title="{% trans %}Insert Horizontal Line{% endtrans %}"><i class="icon-minus"></i></a></li>
+          <li><a href="{{ url('help_md') }}" class="tooltip-left" title="{% trans %}Formatting Helpt{% endtrans %}" target="_blank"><i class="icon-info"></i></a></li>
+          <li><hr></li>
+          <li class="editor-zen-off tooltip-left" title="{% trans %}Leave Zen mode{% endtrans %}"><a href="#"><i class="icon-off"></i></a></li>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
 {% endmacro %}

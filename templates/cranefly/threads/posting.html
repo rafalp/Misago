@@ -64,7 +64,7 @@
             <hr>
             <h4>{% trans %}Message Body{% endtrans %}</h4>
             {% endif %}
-            {{ editor.editor(form.post, get_button(), rows=8, extra=get_extra()) }}
+            {{ editor.editor(form.post, get_button(), rows=8, zen=True, extra=get_extra()) }}
             {% if intersect(form.fields, ('edit_reason', 'thread_weight', 'close_thread')) %}
             <hr>
             {% if 'edit_reason' in form.fields %}
@@ -110,7 +110,9 @@
 <link href="{{ STATIC_URL }}cranefly/highlight/styles/monokai.css" rel="stylesheet">
 {% endblock %}
 
-{% block javascripts %}{{ super() }}
+{% block javascripts %}
+  {{ editor.zen() }}
+  {{ super() }}
   <script src="{{ STATIC_URL }}cranefly/highlight/highlight.pack.js"></script>
   <script type="text/javascript">
     hljs.tabReplace = '    ';

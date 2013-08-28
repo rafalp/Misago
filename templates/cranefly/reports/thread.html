@@ -351,7 +351,7 @@
       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
       <input type="hidden" name="quick_reply" value="1">
       <img src="{{ user.get_avatar(100) }}" alt="{% trans %}Your Avatar{% endtrans %}" class="user-avatar">
-      {{ editor.editor(quick_reply.post, _('Post Comment'), extra=editor_extra()) }}
+      {{ editor.editor(quick_reply.post, _('Post Comment'), zen=True, extra=editor_extra()) }}
     </form>
   </div>
 
@@ -362,7 +362,9 @@
 <link href="{{ STATIC_URL }}cranefly/highlight/styles/monokai.css" rel="stylesheet">
 {% endblock %}
 
-{% block javascripts -%}{{ super() }}
+{% block javascripts -%}
+  {{ editor.zen() }}
+  {{ super() }}
   <script src="{{ STATIC_URL }}cranefly/highlight/highlight.pack.js"></script>
   <script type="text/javascript">
     hljs.tabReplace = '    ';

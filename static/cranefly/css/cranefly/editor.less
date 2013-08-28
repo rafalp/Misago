@@ -21,16 +21,45 @@
     padding: @editorPadding;
 
     &>div {
-      margin-right: 2px;
+      margin-right: 22px;
+      position: relative;
 
       textarea {
         border: none;
         box-shadow: none;
         margin: @editorPadding * -1;
         padding: @editorPadding;
+        padding-right: 32px;
         width: 100%;
 
         font-family: @monoFontFamily;
+      }
+
+      .editor-zen-on {
+        display: none;
+        position: absolute;
+        top: -4px;
+        right: -26px;
+        padding-left: 8px;
+
+        a {
+          border-radius: 4px;
+          display: block;
+          .opacity(50);
+          padding: 2px 0px;
+          padding-bottom: 3px;
+          width: 29px;
+
+          color: @textColor;
+          font-size: 24px;
+          text-align: center;
+
+          &:hover, &:active {
+            box-shadow: 0px 0px 3px @grayLight;
+
+            text-decoration: none;
+          }
+        }
       }
     }
   }
@@ -53,17 +82,22 @@
         margin-right: @editorPadding;
 
         .btn {
-          padding-left: 7px;
-          padding-right: 7px;
-        	width: 14px;
+          display: block;
+          padding-left: 0px;
+          padding-right: 0px;
+          width: 28px;
 
-        	text-align: center;
+          text-align: center;
+
+          i {
+            margin: 0px;
+          }
         }
       }
     }
 
     .editor-help {
-    	line-height: @baseLineHeight + @editorPadding;
+      line-height: @baseLineHeight + @editorPadding;
     }
   }
 }
@@ -74,6 +108,94 @@
 
     .editor-actions {
       border-top-color: darken(@editorBackground, 20%);
+    }
+  }
+}
+
+.zen-overlay {
+  display: none;
+  position: fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+
+  &>div {
+    background: @white;
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index: @zindexZenWriting;
+
+    .container {
+      height: 100%;
+      position: relative;
+
+      textarea {
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        display: block;
+        margin: 0 auto;
+        margin-top: 2%;
+        padding: 0px @fontSizeLarge;
+        width: 90%;
+        height: 91%;
+
+        color: @textColor;
+        font-family: @monoFontFamily;
+        font-size: @baseFontSize * 2;
+        line-height: @baseLineHeight * 2;
+      }
+
+      .overlay-options {
+        background-color: @grayDarker;
+        border-radius: 6px;
+        position: absolute;
+        top: 4%;
+        right: @fontSizeLarge - 10px;
+
+        ul {
+          margin: 0px;
+          padding: 4px;
+          list-style: none;
+
+          li {
+            margin: 4px;
+            padding: 0px;
+
+            a {
+              border-radius: 3px;
+              display: block;
+              padding: 6px 0px;
+              width: 32px;
+
+              color: @grayLight;
+              font-size: @fontSizeLarge;
+              text-align: center;
+
+              &:hover {
+                color: @white;
+                text-decoration: none;
+              }
+
+              &:active {
+                background-color: @grayLighter;
+
+                color: @textColor;
+              }
+            }
+
+            hr {
+              border-color: @grayDark;
+              border-bottom: none;
+              margin: 0px;
+            }
+          }
+        }
+      }
     }
   }
 }
