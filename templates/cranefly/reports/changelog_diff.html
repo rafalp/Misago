@@ -5,7 +5,7 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li><a href="{{ url('reports') }}">{% trans %}Reported Posts{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-<li><a href="{{ url('report', thread=thread.pk, slug=thread.slug) }}">{{ thread.name|short_string(42) }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{{ url('report', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li><a href="{{ url('report_changelog', thread=thread.pk, slug=thread.slug, post=post.pk) }}">{% trans post=post.pk %}Post #{{ post }} Changelog{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li class="active">{% trans date=change.date|reltimesince|low %}Edit from {{ date }}{% endtrans %}
 {%- endblock %}

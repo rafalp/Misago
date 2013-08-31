@@ -6,7 +6,7 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {{ macros.parents_list(parents) }}
-<li><a href="{{ url(forum.type, forum=forum.pk, slug=forum.slug) }}">{{ forum.name|short_string(42) }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{{ url(forum.type, forum=forum.pk, slug=forum.slug) }}">{{ forum.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li class="active">{% trans %}Merge Threads{% endtrans %}
 {%- endblock %}
 

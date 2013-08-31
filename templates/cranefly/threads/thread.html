@@ -7,7 +7,7 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {{ macros.parents_list(parents) }}
-<li class="active">{{ thread.name|short_string(42) }}
+<li class="active">{{ thread.name }}
 {%- endblock %}
 
 {% block container %}
