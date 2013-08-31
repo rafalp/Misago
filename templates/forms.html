@@ -99,10 +99,10 @@
 {{ _yesno(_field, context) }}
 {% elif widget == 'Select' %}
 {{ _select(_field, context) }}
-{% elif widget == 'SelectDateWidget' %}
-{{ _select_date(_field, context) }}
 {% elif widget == 'RadioSelect' %}
 {{ _radio_select(_field, context) }}
+{% elif widget == 'SelectMultiple' %}
+{{ _select_multiple(_field, context) }}
 {% elif widget == 'CheckboxSelectMultiple' %}
 {{ _checkbox_select(_field, context) }}
 {% elif widget == 'ReCaptchaWidget' %}
@@ -148,10 +148,6 @@
 </select>
 {%- endmacro %}
 
-{% macro _select_date(_field, context) -%}
-{{ context }}
-{%- endmacro %}
-
 {% macro _radio_select(_field, context) -%}
 <div class="radio-group">
   {% for option in context['optgroups'][0][1] %}
@@ -161,6 +157,24 @@
   </label>
   {% endfor %}
 </div>
+{%- endmacro %}
+
+{% macro _select_multiple(_field, context) -%}
+<select id="id_{{ context.name }}" name="{{ context.name }}" {{ attributes(context.attrs)|trim }}>
+  {% if context['optgroups']|length > 1 %}
+  {% for optgroup in context['optgroups'] %}
+  <optgroup label="{{ optgroup[0] }}">
+    {% for option in optgroup[1] %}
+    <option value="{{ option[0] }}"{% if 'value' in context and option[0] in context.value %} selected="selected"{% endif %}>{{ option[1] }}</option>
+    {% endfor %}
+  </optgroup>
+  {% endfor %}
+  {% else %}
+  {% for option in context['optgroups'][0][1] %}
+  <option value="{{ option[0] }}"{% if 'value' in context and option[0] in context.value %} selected="selected"{% endif %}>{{ option[1] }}</option>
+  {% endfor %}
+  {% endif %}
+</select>
 {%- endmacro %}
 
 {% macro _checkbox_select(_field, context) %}
