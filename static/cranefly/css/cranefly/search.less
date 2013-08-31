@@ -31,16 +31,40 @@
 }
 
 .search-resume {
-  .muted {
-    color: lighten(@gray, 15%);
+	a:link, a:visited {
+		color: @grayLight;
 
-    a {
-      color: @textColor;
-    }
-  }
+		strong {
+			color: @gray;
+		}
+	}
+
+	a:hover, a:active {
+		color: @gray;
+
+		strong {
+			color: @textColor;
+		}
+	}
 }
 
 .search-results {
+	h2 {
+		margin-bottom: @baseLineHeight * 1.5;
+
+		color: @grayLight;
+		font-weight: normal;
+
+		strong {
+			color: @textColor;
+		}
+
+		.btn {
+			position: relative;
+			top: 6px;
+		}
+	}
+
   .results-list {
     .result {
       border-bottom: 1px solid darken(@bodyBackground, 5%);

@@ -1,0 +1,37 @@
+{% extends "cranefly/search/layout.html" %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block action %}
+<div class="row">
+  <div class="span8 offset2">
+    {% if search_result and search_result.search_route == search_route %}
+    <div class="search-resume">
+      <p class="lead"><a href="{{ url('search_results') }}">{% trans search_query=style_query(search_result.search_query) %}Your search results for query "{{ search_query }}" are still available.{% endtrans %}</a></p>
+    </div>
+    {% endif %}
+    {% block form %}{% endblock %}
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ super() }}
+<script src="{{ STATIC_URL }}cranefly/js/bootstrap-datepicker.js"></script>
+<script type="text/javascript">
+  $(function () {
+    $('.form-datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        language: '{{ LANGUAGE_CODE|replace('_', '-') }}'
+    });
+  });
+</script>
+{% endblock %}
+
+
+{% macro style_query(query) -%}
+<strong>{{ query }}</strong>
+{%- endmacro %}
+
+{% macro lang_search_thread_titles() -%}
+{% trans %}Search only in threads titles.{% endtrans %}
+{%- endmacro %}

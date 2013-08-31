@@ -11,12 +11,12 @@
       <div class="container">
         <a href="{{ url('index') }}" class="brand">{% if settings.board_header %}{{ settings.board_header }}{% else %}{{ settings.board_name }}{% endif %}</a>
         {% if acl.search.can_search() and not user.is_crawler() %}
-        <form action="{{ url('search') }}" method="post" class="navbar-form pull-left">
+        <form action="{{ url('search_quick') }}" method="post" class="navbar-form pull-left">
           <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
           {% if thread is defined and thread %}
-          <input type="hidden" name="search_thread" value="{{ thread.pk }}">
+          <input type="hidden" name="search_thread" value="{{ request_path }}">
           {% elif search_thread is defined and search_thread %}
-          <input type="hidden" name="search_thread" value="{{ search_thread.pk }}">
+          <input type="hidden" name="search_thread" value="{{ request_path }}">
           {% endif %}
           <div class="navbar-search-form">
             <div id="navbar-search" class="navbar-search-border">
@@ -29,7 +29,7 @@
                   <div class="control">
                     <label>{% trans %}Search in{% endtrans %}:</label>
                     <select name="search_in">
-                      <option value="threads"{% if not search_in is defined or search_in == 'threads' %} selected="selected"{% endif %}>{% trans %}Forums{% endtrans%}</option>
+                      <option value="forums"{% if not search_in is defined or search_in == 'threads' %} selected="selected"{% endif %}>{% trans %}Forums{% endtrans%}</option>
                       {% if settings.enable_private_threads and acl.private_threads.can_participate()%}
                       <option value="private_threads"{% if search_in == 'private_threads' %} selected="selected"{% endif %}>{% trans %}Private Threads{% endtrans %}</option>
                       {% endif %}
@@ -55,7 +55,7 @@
                 </div>
                 <div class="form-actions">
                   <button type="submit" class="btn btn-primary"><i class="icon-search"></i> {% trans %}Search{% endtrans%}</button>
-                  <a href="{{ url('search') }}">{% trans %}Advanced Search{% endtrans %}</a>
+                  <a href="{{ url('search_forums') }}">{% trans %}Advanced Search{% endtrans %}</a>
                 </div>
               </div>
             </div>
@@ -68,7 +68,7 @@
           <li><a href="{{ url('popular_threads') }}" title="{% trans %}Popular Threads{% endtrans %}" class="hot tooltip-bottom"><i class="icon-fire"></i></a></li>
           <li><a href="{{ url('new_threads') }}" title="{% trans %}New Threads{% endtrans %}" class="fresh tooltip-bottom"><i class="icon-leaf"></i></a></li>{% if not user.crawler %}
           {% if acl.search.can_search() and not user.is_crawler() %}
-          <li><a href="{{ url('search') }}" title="{% trans %}Search Forums{% endtrans %}" class="tooltip-bottom"><i class="icon-search"></i></a></li>{% endif %}
+          <li><a href="{{ url('search_forums') }}" title="{% trans %}Search Forums{% endtrans %}" class="tooltip-bottom"><i class="icon-search"></i></a></li>{% endif %}
           {% endif %}
           <li><a href="{{ url('users') }}" title="{% trans %}Browse Users{% endtrans %}" class="tooltip-bottom"><i class="icon-group"></i></a></li>
           {% if settings.tos_url or settings.tos_content %}<li><a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{{ url('tos') }}{% endif %}" title="{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Forum Terms of Service{% endtrans %}{% endif %}" class="tooltip-bottom"><i class="icon-certificate"></i></a></li>{% endif %}

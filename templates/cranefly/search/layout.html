@@ -8,6 +8,21 @@
 <div class="page-header header-primary header-search">
   <div class="container">
     <h1>{% trans %}Search Community{% endtrans %}</h1>
+    <ul class="nav nav-tabs header-tabs">
+      <li{% if search_route == 'search_forums' %} class="active"{% endif %}>
+        <a href="{{ url('search_forums') }}">{% trans %}Search Forums{% endtrans %}</a>
+      </li>
+      {% if acl.private_threads.can_participate() %}
+      <li{% if search_route == 'search_private_threads' %} class="active"{% endif %}>
+        <a href="{{ url('search_private_threads') }}">{% trans %}Search Private Threads{% endtrans %}</a>
+      </li>
+      {% endif %}
+      {% if acl.reports.can_handle() %}
+      <li{% if search_route == 'search_reports' %} class="active"{% endif %}>
+        <a href="{{ url('search_reports') }}">{% trans %}Search Reports{% endtrans %}</a>
+      </li>
+      {% endif %}
+    </ul>
   </div>
 </div>
 

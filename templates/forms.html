@@ -99,6 +99,8 @@
 {{ _yesno(_field, context) }}
 {% elif widget == 'Select' %}
 {{ _select(_field, context) }}
+{% elif widget == 'SelectDateWidget' %}
+{{ _select_date(_field, context) }}
 {% elif widget == 'RadioSelect' %}
 {{ _radio_select(_field, context) }}
 {% elif widget == 'CheckboxSelectMultiple' %}
@@ -144,6 +146,10 @@
   {% endfor %}
   {% endif %}
 </select>
+{%- endmacro %}
+
+{% macro _select_date(_field, context) -%}
+{{ context }}
 {%- endmacro %}
 
 {% macro _radio_select(_field, context) -%}

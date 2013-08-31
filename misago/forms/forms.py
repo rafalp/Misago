@@ -66,24 +66,12 @@ class Form(forms.Form):
         """
         self.ensure_finalization()
         self.data = self.data.copy()
-        for key, field in self.fields.iteritems():
-            try:
-                if field.__class__.__name__ in ['ModelChoiceField', 'TreeForeignKey'] and self.data[key]:
-                    self.data[key] = int(self.data[key])
-                elif field.__class__.__name__ == 'ModelMultipleChoiceField':
-                    self.data.setlist(key, [int(x) for x in self.data.getlist(key, [])])
-                elif field.__class__.__name__ not in ['DateField', 'DateTimeField']:
-                    if not key in self.dont_strip:
-                        if field.__class__.__name__ in ['MultipleChoiceField', 'TypedMultipleChoiceField']:
-                            self.data.setlist(key, [x.strip() for x in self.data.getlist(key, [])])
-                        else:
-                            self.data[key] = self.data[key].strip()
-                    if field.__class__.__name__ in ['MultipleChoiceField', 'TypedMultipleChoiceField']:
-                        self.data.setlist(key, [x.replace("\r\n", '') for x in self.data.getlist(key, [])])
-                    elif not field.widget.__class__.__name__ in ['Textarea']:
-                        self.data[key] = self.data[key].replace("\r\n", '')
-            except (KeyError, AttributeError):
-                pass
+        for name, field in self.fields.iteritems():
+            if field.__class__ == forms.CharField:
+                try:
+                    self.data[name] = self.data[name].strip()
+                except KeyError:
+                    pass
         super(Form, self).full_clean()
 
     def clean(self):
