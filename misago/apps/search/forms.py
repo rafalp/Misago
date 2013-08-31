@@ -84,7 +84,7 @@ class ForumsSearchForm(AdvancedSearchForm):
         self.add_field('search_forums', ForumMultipleChoiceField(label=_("Search Forums"),
                                                                  help_text=_("If you want, you can limit search to specified forums."),
                                                                  queryset=Forum.objects.get(special='root').get_descendants().filter(pk__in=self.request.acl.forums.acl['can_browse']),
-                                                                 required=False))
+                                                                 required=False, empty_label=None))
         self.add_field('search_forums_childs', forms.BooleanField(label=_("Include Children Forums"), required=False))
 
 
