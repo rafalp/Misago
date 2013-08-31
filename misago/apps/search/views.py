@@ -10,7 +10,7 @@ from misago.acl.exceptions import ACLError403, ACLError404
 from misago.conf import settings
 from misago.decorators import block_crawlers
 from misago.models import Forum, Thread, Post, User
-from misago.search import SearchException
+from misago.search import SearchException, MisagoSearchQuerySet
 from misago.shortcuts import render_to_response
 from misago.utils.pagination import make_pagination
 from misago.apps.errors import error403, error404
@@ -24,57 +24,29 @@ class ViewBase(object):
         pass
 
     def make_query(self, search_query):
-        sqs = SearchQuerySet()
-        if self.request.POST.get('search_thread_titles'):
-            sqs = sqs.filter(thread_name=AutoQuery(search_query), start_post=1)
-        else:
-            sqs = sqs.auto_query(search_query)
+        try:
+            sqs = MisagoSearchQuerySet(self.request.user, self.request.acl)
 
-        if self.request.POST.get('search_in') == 'private_threads':
-            if not (self.request.acl.private_threads.can_participate()
-                    and settings.enable_private_threads):
-                raise ACLError404()
-            sqs = sqs.filter(thread__in=[t.pk for t in self.request.user.private_thread_set.all()])
-        elif self.request.POST.get('search_in') == 'reports':
-            if not self.request.acl.reports.can_handle():
-                raise ACLError404()
-            sqs = sqs.filter(forum=Forum.objects.special_pk('reports'))
-        elif self.request.POST.get('search_in') == 'thread':
-            try:
+            if self.request.POST.get('search_in') == 'thread':
                 thread_id = int(self.request.POST.get('search_thread'))
-                thread_clean = Thread.objects.get(id=thread_id)
-
-                readable_forums = Forum.objects.readable_forums(self.request.acl, True)
-                starter_readable_forums = Forum.objects.starter_readable_forums(self.request.acl)
-                if not thread_clean.forum_id in readable_forums:
-                    if not (thread_clean.forum_id in starter_readable_forums
-                            and thread_clean.start_poster_id
-                            and thread_clean.start_poster_id == self.request.user.id):
-                        raise ACLError404()
-                self.thread_clean = thread_clean
-                sqs = sqs.filter(thread=thread_clean.pk)
-            except (TypeError, Thread.DoesNotExist):
-                raise ACLError404()
-        else:
-            readable_forums = Forum.objects.readable_forums(self.request.acl)
-            starter_readable_forums = Forum.objects.starter_readable_forums(self.request.acl)
-            if not readable_forums and not readable_forums:
-                return error403(request, _("You cannot search any forums."))
-
-            if readable_forums and starter_readable_forums:
-                sqs = sqs.filter(forum__in=starter_readable_forums, thread_starter=self.request.user.id)
-                sqs = sqs.filter_or(forum__in=readable_forums)
-            elif starter_readable_forums:
-                if not self.request.user.is_authenticated():
-                    return error403(request, _("You cannot search any forums."))
-                sqs = sqs.filter(forum__in=starter_readable_forums, thread_starter=self.request.user.id)
+                sqs.search_in(Thread.objects.get(id=thread_id))
+            elif self.request.POST.get('search_in') == 'private_threads':
+                sqs.search_in(Forum.objects.special_model('private_threads'))
+            elif self.request.POST.get('search_in') == 'reports':
+                sqs.search_in(Forum.objects.special_model('reports'))
             else:
-                sqs = sqs.filter(forum__in=readable_forums)
+                sqs.search_in(Forum.objects.special_model('root'))
 
-        if self.request.POST.get('search_author'):
-            sqs = sqs.filter(author__exact=self.request.POST.get('search_author'))
+            if self.request.POST.get('search_thread_titles'):
+                sqs.search_thread_name(search_query)
+            else:
+                sqs.search_content(search_query)
 
-        return sqs
+            if self.request.POST.get('search_author'):
+                sqs.search_user_name(search_query)
+            return sqs
+        except Thread.DoesNotExist:
+            raise ACLError404()
 
     def render_to_response(self, template, form, context):
         for i in ('search_query', 'search_in', 'search_author', 'search_thread_titles'):
@@ -131,7 +103,15 @@ class QuickSearchView(ViewBase):
                     self.request.POST['username'] = form.target
                     return users_list(self.request)
 
-                sqs = self.make_query(form.cleaned_data['search_query']).load_all()[:60]
+                sqs = self.make_query(form.cleaned_data['search_query']).query.load_all()[:120]
+                results = []
+                for p in sqs:
+                    post = p.object
+                    try:
+                        self.request.acl.threads.allow_post_view(self.request.user, post.thread, post)
+                        results.append(post)
+                    except ACLError404:
+                        pass
 
                 if self.request.user.is_authenticated():
                     self.request.user.last_search = timezone.now()
@@ -139,7 +119,7 @@ class QuickSearchView(ViewBase):
                 if self.request.user.is_anonymous():
                     self.request.session['last_search'] = timezone.now()
 
-                if not sqs:
+                if not results:
                     raise SearchException(_("Search returned no results. Change search query and try again."))
 
                 self.request.session['search_results'] = {
@@ -147,7 +127,7 @@ class QuickSearchView(ViewBase):
                                                           'search_in': self.request.POST.get('search_in'),
                                                           'search_author': self.request.POST.get('search_author'),
                                                           'search_thread_titles': self.request.POST.get('search_thread_titles'),
-                                                          'search_results': [p.object for p in sqs],
+                                                          'search_results': results,
                                                           }
                 try:
                     self.request.session['search_results']['search_thread'] = self.thread_clean
