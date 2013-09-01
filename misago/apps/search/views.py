@@ -94,6 +94,10 @@ class ViewBase(object):
                                   context_instance=RequestContext(self.request))
 
     def draw_form(self, request):
+        if self.search_route == 'search_quick':
+            self.search_route = 'search_forums'
+            self.search_form = ForumsSearchForm
+
         search_form_data = self.request.session.get('search_form_data')
         if search_form_data and search_form_data['form'] == self.search_route:
             form = self.search_form(request=self.request, initial=search_form_data['data'])
@@ -123,17 +127,17 @@ class ViewBase(object):
                         self.search_route = 'search_forums'
                         self.search_form = ForumsSearchForm
                 except (Http404, KeyError, Thread.DoesNotExist):
-                    raise ACLError404()
-            elif self.request.POST.get('search_in') in ('forums', 'private_threads', 'reports'):
-                if self.request.POST.get('search_in') == 'forums':
                     self.search_route = 'search_forums'
                     self.search_form = ForumsSearchForm
-                elif self.request.POST.get('search_in') == 'private_threads':
-                    self.search_route = 'search_private_threads'
-                    self.search_form = PrivateThreadsSearchForm
-                elif self.request.POST.get('search_in') == 'reports':
-                    self.search_route = 'search_reports'
-                    self.search_form = ReportsSearchForm
+            elif self.request.POST.get('search_in') == 'private_threads':
+                self.search_route = 'search_private_threads'
+                self.search_form = PrivateThreadsSearchForm
+            elif self.request.POST.get('search_in') == 'reports':
+                self.search_route = 'search_reports'
+                self.search_form = ReportsSearchForm
+            else:
+                self.search_route = 'search_forums'
+                self.search_form = ForumsSearchForm
 
         form = self.search_form(self.request.POST, request=self.request)
         try:
