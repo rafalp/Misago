@@ -95,8 +95,7 @@ class ViewBase(object):
 
     def draw_form(self, request):
         if self.search_route == 'search_quick':
-            self.search_route = 'search_forums'
-            self.search_form = ForumsSearchForm
+            return redirect('search_forums')
 
         search_form_data = self.request.session.get('search_form_data')
         if search_form_data and search_form_data['form'] == self.search_route:
