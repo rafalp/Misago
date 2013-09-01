@@ -9,6 +9,9 @@ from misago.models.forumrolemodel import ForumRole
 from misago.models.karmamodel import Karma
 from misago.models.monitoritemmodel import MonitorItem
 from misago.models.newslettermodel import Newsletter
+from misago.models.pollmodel import Poll
+from misago.models.polloptionmodel import PollOption
+from misago.models.pollvotemodel import PollVote
 from misago.models.postmodel import Post
 from misago.models.pruningpolicymodel import PruningPolicy
 from misago.models.rankmodel import Rank

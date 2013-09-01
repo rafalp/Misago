@@ -65,13 +65,24 @@
             <h4>{% trans %}Message Body{% endtrans %}</h4>
             {% endif %}
             {{ editor.editor(form.post, get_button(), rows=8, zen=True, extra=get_extra()) }}
-            {% if intersect(form.fields, ('edit_reason', 'thread_weight', 'close_thread')) %}
-            <hr>
+
             {% if 'edit_reason' in form.fields %}
             {{ form_theme.row(form.edit_reason, attrs={'class': 'span8'}) }}
             {% endif %}
 
+            {% if 'poll_question' in form.fields %}
+            <hr>
+            <h4>{% trans %}Create Poll{% endtrans %}</h4>
+            {{ form_theme.row(form.poll_question, attrs={'class': 'span8'}) }}
+            {{ form_theme.row(form.poll_choices, attrs={'class': 'span8', 'rows': 4}) }}
+            {{ form_theme.row(form.poll_max_choices, attrs={'class': 'span8'}) }}
+            {{ form_theme.row(form.poll_length, attrs={'class': 'span8'}) }}
+            {{ form_theme.row(form.poll_public, attrs={'inline': lang_poll_public()}) }}
+            {{ form_theme.row(form.poll_changing_votes, attrs={'inline': lang_poll_changing_votes()}) }}
+            {% endif %}
+
             {% if intersect(form.fields, ('thread_weight', 'close_thread')) %}
+            <hr>
             <div class="control-group">
               <label class="control-label">{% trans %}Thread Status{% endtrans %}:</label>
               <div class="controls">
@@ -96,7 +107,6 @@
               <button type="submit" class="btn btn-primary">{{ get_button() }}</button>
               <button id="editor-preview" name="preview" type="submit" class="btn">{% trans %}Preview{% endtrans %}</button>
             </div>
-            {% endif %}
           </form>
 
         </div>
@@ -195,3 +205,13 @@
 {% macro get_extra() %}
   <button id="editor-preview" name="preview" type="submit" class="btn pull-right">{% trans %}Preview{% endtrans %}</button>
 {% endmacro %}
+
+
+{% macro lang_poll_public() -%}
+{% trans %}Make voting in this poll public.{% endtrans %}
+{%- endmacro %}
+
+
+{% macro lang_poll_changing_votes() -%}
+{% trans %}Allow users to change their votes.{% endtrans %}
+{%- endmacro %}

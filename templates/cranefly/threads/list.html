@@ -181,6 +181,11 @@
               {% if settings.avatars_on_threads_list %}<img src="{{ macros.avatar_guest(24) }}" alt="{{ thread.last_poster_name }}" class="user-avatar">{% else %}{{ thread.last_poster_name }}{% endif %}
               {% endif %}
             </li>
+            {% if thread.has_poll %}
+            <li class="thread-flag thread-poll tooltip-top" title="{% trans %}This thread is poll{% endtrans %}">
+              <i class="icon-bar-chart"></i>
+            </li>
+            {% endif %}
             {% if thread.moderated %}
             <li class="thread-flag thread-moderated tooltip-top" title="{% trans %}This thread awaits review{% endtrans %}">
               <i class="icon-remove-circle"></i>

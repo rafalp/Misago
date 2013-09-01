@@ -1,9 +1,26 @@
 from django.utils.translation import ugettext as _
 from misago.apps.threadtype.thread import ThreadBaseView, ThreadModeration, PostsModeration
 from misago.models import Forum, Thread
+from misago.apps.threads.forms import PollVoteForm
 from misago.apps.threads.mixins import TypeMixin
 
 class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
+    def template_vars(self, context):
+        context['poll'] = None
+        context['poll_form'] = None
+        if self.thread.has_poll:
+            context['poll'] = self.thread.poll
+            self.thread.poll.option_set.all()
+            if self.request.user.is_authenticated():
+                self.thread.poll.user_votes = self.request.user.pollvote_set.filter(poll=self.thread.poll)
+                if (not self.thread.closed
+                        and not self.thread.deleted
+                        and self.request.acl.threads.can_vote_in_polls(self.forum)
+                        and not self.thread.poll.over
+                        and (self.thread.poll.vote_changing or not self.thread.poll.user_votes)):
+                    context['poll_form'] = PollVoteForm(poll=self.thread.poll)
+        return super(ThreadView, self).template_vars(context)
+
     def posts_actions(self):
         acl = self.request.acl.threads.get_role(self.thread.forum_id)
         actions = []

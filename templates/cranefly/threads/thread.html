@@ -39,6 +39,27 @@
   </div>
   {% endif %}
 
+  {% if thread.has_poll %}
+  <div class="thread-poll">
+    <h2>{{ thread.poll.question }}</h2>
+      {% for choice in thread.poll.option_set.all() %}
+      <div style="background: #{{ colorhex(loop.index0) }}">{{ choice.name }}</div>
+      {% endfor %}
+    {% if poll_form %}
+    <form action="" method="post">
+      {{ form_theme.field(poll_form.options) }}
+    </form>
+    {% else %}
+    <ul>
+      {% for choice in thread.poll.option_set.all() %}
+      <li><div style="background: #{{ colorhex(loop.index0) }}">{{ choice.name }}</div></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    <div id="thread-poll-graph"></div>
+  </div>
+  {% endif %}
+
   <div class="thread-buttons">
     {{ pager() }}
     {% if user.is_authenticated() %}
@@ -488,6 +509,27 @@
   </script>
   {% if user.is_authenticated() and acl.threads.can_reply(forum, thread) %}
   {{ editor.js() }}
+  {% endif %}
+  {% if thread.has_poll %}
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+    google.load("visualization", "1", {packages:["corechart"]});
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ["{{ thread.poll.question }}", "{% trans %}Votes{% endtrans %}"]
+        {% for option in thread.poll.option_set.all() %}
+        , ["{{ option.name }}", {{ option.votes}}]
+        {% endfor %}
+      ]);
+
+      var options = {
+      };
+
+      var chart = new google.visualization.PieChart(document.getElementById('thread-poll-graph'));
+      chart.draw(data, options);
+    }
+  </script>
   {% endif %}
 {%- endblock %}
 

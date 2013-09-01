@@ -39,7 +39,7 @@ class ThreadManager(models.Manager):
         if user.is_authenticated():
             for read in ThreadRead.objects.filter(user=user).filter(thread__in=threads_dict.keys()):
                 try:
-                    threads_dict[read.thread_id].is_read = (threads_dict[read.thread_id].last <= cutoff or 
+                    threads_dict[read.thread_id].is_read = (threads_dict[read.thread_id].last <= cutoff or
                                                             threads_dict[read.thread_id].last <= read.updated or
                                                             threads_dict[read.thread_id].last <= forum_reads[read.forum_id])
                 except KeyError:
@@ -74,6 +74,7 @@ class Thread(models.Model):
     last_poster_style = models.CharField(max_length=255, null=True, blank=True)
     participants = models.ManyToManyField('User', related_name='private_thread_set')
     report_for = models.ForeignKey('Post', related_name='report_set', null=True, blank=True, on_delete=models.SET_NULL)
+    has_poll = models.BooleanField(default=False)
     moderated = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     closed = models.BooleanField(default=False)
@@ -201,7 +202,7 @@ class Thread(models.Model):
         # Flags
         self.moderated = start_post.moderated
         self.deleted = start_post.deleted
-        
+
     def email_watchers(self, request, thread_type, post):
         from misago.acl.builder import acl
         from misago.acl.exceptions import ACLError403, ACLError404

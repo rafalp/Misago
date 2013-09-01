@@ -1008,6 +1008,7 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{color:#333;text-decoration:n
 .forum-threads-list .threads-actions{background-color:#fbfbfb;border-top:1px solid #d5d5d5;border-radius:0 0 2px 2px;overflow:auto;padding:4px;color:#999;font-size:11.9px}.forum-threads-list .threads-actions form{margin-bottom:0}
 .forum-threads-extra{overflow:auto}.forum-threads-extra.extra-top{margin-bottom:20px}
 .forum-threads-extra .threads-signin-message{float:right}.forum-threads-extra .threads-signin-message a:link,.forum-threads-extra .threads-signin-message a:visited{color:#333}
+.thread-poll{background-color:#fff;border:1px solid #d5d5d5;border-radius:2px;-webkit-box-shadow:0 0 0 3px #eee;-moz-box-shadow:0 0 0 3px #eee;box-shadow:0 0 0 3px #eee;margin-bottom:20px;padding:20px}
 .thread-buttons{overflow:auto}.thread-buttons .pull-right{margin-left:14px}
 .thread-buttons .thread-signin-message{float:right}.thread-buttons .thread-signin-message a:link,.thread-buttons .thread-signin-message a:visited{color:#333}
 .thread-body .post-wrapper .post-body{margin-bottom:20px;overflow:auto}.thread-body .post-wrapper .post-body .user-avatar{border-radius:5px;float:left;width:100px;height:100px}

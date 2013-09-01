@@ -561,6 +561,20 @@ class ThreadsACL(BaseACL):
         except KeyError:
             raise ACLError403(_("You don't have permission to see who voted on this post."))
 
+    def can_make_polls(self, forum):
+        try:
+            forum_role = self.get_role(forum)
+            return forum_role['can_make_polls']
+        except KeyError:
+            return False
+
+    def can_vote_in_polls(self, forum):
+        try:
+            forum_role = self.get_role(forum)
+            return forum_role['can_vote_in_polls']
+        except KeyError:
+            return False
+
     def can_see_all_checkpoints(self, forum):
         try:
             forum_role = self.get_role(forum)
