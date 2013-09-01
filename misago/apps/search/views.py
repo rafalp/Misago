@@ -31,9 +31,9 @@ class ViewBase(object):
         try:
             sqs = MisagoSearchQuerySet(self.request.user, self.request.acl)
             if self.search_route == 'search_private_threads':
-                sqs.in_forums([Forum.objects.special_pk('private_threads')])
+                sqs.allow_forum_search(Forum.objects.special_model('private_threads'))
             elif self.search_route == 'search_reports':
-                sqs.in_forums([Forum.objects.special_pk('reports')])
+                sqs.allow_forum_search(Forum.objects.special_model('reports'))
             else:
                 if search_data.get('search_forums'):
                     if search_data.get('search_forums_childs'):

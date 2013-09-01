@@ -7,7 +7,7 @@
   <div class="search-results">
     {% if results %}
     <h2>
-      {% trans count=results|length, results=results|length|intcomma, query=query_string(search_query) %}Search for "{{ query }}" has returned one result:{% pluralize %}Search for "{{ query }}" has returned {{ results }} results:{% endtrans %}
+      {% trans count=items_total, results=items_total|intcomma, query=query_string(search_query) %}Search for "{{ query }}" has returned one result:{% pluralize %}Search for "{{ query }}" has returned {{ results }} results:{% endtrans %}
       <a href="{{ url(search_route) }}" class="btn btn-inverse pull-right"><i class="icon-search"></i> {% trans %}New Search{% endtrans %}</a>
     </h2>
     <div class="results-list">
@@ -41,7 +41,7 @@
 {%- endmacro %}
 
 {% macro forum(forum) -%}
-<a href="{{ url('forum', forum=forum.pk, slug=forum.slug) }}" class="forum-link">{{ forum.name }}</a>
+<a href="{{ url('forum', forum=forum.pk, slug=forum.slug) }}" class="forum-link">{{ forum }}</a>
 {%- endmacro %}
 
 {% macro username(post) -%}

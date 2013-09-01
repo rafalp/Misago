@@ -3,10 +3,11 @@ from django.utils.translation import ungettext_lazy, ugettext_lazy as _
 import floppyforms as forms
 from misago.forms import Form, ForumMultipleChoiceField
 from misago.models import Forum
+from misago.utils.strings import slugify
 
 class SearchFormBase(Form):
     search_query = forms.CharField(label=_("Search Phrases"), max_length=255)
-    search_thread_titles = forms.BooleanField(label=_("Search Thread Titles"), required=False)
+    search_thread_titles = forms.BooleanField(label=_("Limit Search to Thread Titles"), required=False)
     search_thread = forms.CharField(label=_("Thread Name or Link"),
                                     help_text=_("Limit search to specified thread by entering it's name or link here."),
                                     max_length=255,
@@ -18,8 +19,25 @@ class SearchFormBase(Form):
 
     def clean_search_query(self):
         data = self.cleaned_data['search_query']
-        if len(data) < 3:
-            raise forms.ValidationError(_("Search query should be at least 3 characters long."))
+        slug = slugify(data)
+        if len(slug) < 3:
+            raise forms.ValidationError(_("Search query has to contain at least 3 alpha-numerical characters."))
+        return data
+
+    def clean_search_thread(self):
+        data = self.cleaned_data['search_thread']
+        if data:
+            slug = slugify(data)
+            if len(slug) < 3:
+                raise forms.ValidationError(_("Thread name/link has to contain at least 3 alpha-numerical characters."))
+        return data
+
+    def clean_search_author(self):
+        data = self.cleaned_data['search_author']
+        if data:
+            slug = slugify(data)
+            if len(slug) < 3:
+                raise forms.ValidationError(_("Author name has to contain at least 3 alpha-numerical characters."))
         return data
 
     def clean(self):

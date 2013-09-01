@@ -139,7 +139,7 @@ class MisagoSearchQuerySet(object):
             if thread.pk in self._threads:
                 self._threads = [thread.pk]
             else:
-                raise ACLError404()
+                self._threads = [-1]
         self._threads = [thread.pk]
 
     def search_content(self, query):
