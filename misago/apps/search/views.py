@@ -21,9 +21,6 @@ from misago.apps.search.forms import (QuickSearchForm, ForumsSearchForm,
                                       PrivateThreadsSearchForm, ReportsSearchForm)
 
 class ViewBase(object):
-    search_route = 'search'
-    search_form = None
-
     def check_acl(self):
         pass
 
@@ -141,7 +138,7 @@ class ViewBase(object):
         form = self.search_form(self.request.POST, request=self.request)
         try:
             if form.is_valid():
-                sqs = self.make_query(form.cleaned_data).query.load_all()[:120]
+                sqs = self.make_query(form.cleaned_data).query.load_all().order_by('-date')[:120]
                 results = []
                 search_weight = form.cleaned_data.get('search_weight')
                 for p in sqs:
@@ -195,6 +192,8 @@ class ViewBase(object):
         return obj(request, **kwargs)
 
     def __call__(self, request, **kwargs):
+        self.search_route = self.default_search_route
+        self.search_form = self.default_search_form
         try:
             self.request = request
             if request.user.is_crawler():
@@ -212,18 +211,18 @@ class ViewBase(object):
 
 
 class QuickSearchView(ViewBase):
-    search_route = 'search_quick'
-    search_form = QuickSearchForm
+    default_search_route = 'search_quick'
+    default_search_form = QuickSearchForm
 
 
 class SearchForumsView(ViewBase):
-    search_route = 'search_forums'
-    search_form = ForumsSearchForm
+    default_search_route = 'search_forums'
+    default_search_form = ForumsSearchForm
 
 
 class SearchPrivateThreadsView(ViewBase):
-    search_route = 'search_private_threads'
-    search_form = PrivateThreadsSearchForm
+    default_search_route = 'search_private_threads'
+    default_search_form = PrivateThreadsSearchForm
 
     def check_acl(self):
         if not self.request.acl.private_threads.can_participate():
@@ -231,8 +230,8 @@ class SearchPrivateThreadsView(ViewBase):
 
 
 class SearchReportsView(ViewBase):
-    search_route = 'search_reports'
-    search_form = ReportsSearchForm
+    default_search_route = 'search_reports'
+    default_search_form = ReportsSearchForm
 
     def check_acl(self):
         if not self.request.acl.reports.can_handle():
@@ -277,7 +276,7 @@ class SearchResultsView(object):
                                    'search_author': result.get('search_author'),
                                    'search_thread_titles': result.get('search_thread_titles'),
                                    'search_thread': result.get('search_thread'),
-                                   'results': Post.objects.filter(id__in=items).select_related('forum', 'thread', 'user')[pagination['start']:pagination['stop']],
+                                   'results': Post.objects.filter(id__in=items).select_related('forum', 'thread', 'user').order_by('-pk')[pagination['start']:pagination['stop']],
                                    'items_total': items_total,
                                    'pagination': pagination,
                                   },
