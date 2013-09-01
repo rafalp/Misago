@@ -22,5 +22,4 @@ def make_short(string, length=16):
 def highlight_result(text, query, length=500):
     hl = Highlighter(query, html_tag='strong', max_length=length)
     hl = hl.highlight(text)
-
     return hl
