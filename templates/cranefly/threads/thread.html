@@ -40,10 +40,40 @@
   {% endif %}
 
   {% if thread.has_poll %}
+  <div id="color_demo" style="background: #FFF; padding: 32px; overflow: auto;">
+    <h1>Random Colors</h1>
+    {% for i in range(12) %}
+    <div style="background-color: #{{ color_spin('049cdb', loop.index0 * 265) }}; margin: 4px; width:24px; height: 24px; border-radius: 3px; float: left;"></div>
+    {% endfor %}
+    <hr style="clear: both; border: none;">
+    {% for i in range(12) %}
+    <div style="background-color: #{{ color_lighten(color_spin('049cdb', loop.index0 * 265), 12, loop.index, 90) }}; margin: 4px; width:24px; height: 24px; border-radius: 3px; float: left;"></div>
+    {% endfor %}
+    <h1>Desaturate Colors</h1>
+    {% for i in range(32) %}
+    <div style="background-color: #{{ color_desaturate('049cdb', 32, loop.index) }}; margin: 4px; width:24px; height: 24px; border-radius: 3px; float: left;"></div>
+    {% endfor %}
+    <h1>Lighten Colors</h1>
+    {% for i in range(32) %}
+    <div style="background-color: #{{ color_lighten('049cdb', 32, loop.index) }}; margin: 4px; width:24px; height: 24px; border-radius: 3px; float: left;"></div>
+    {% endfor %}
+    <hr style="clear: both; border: none;">
+    {% for i in range(32) %}
+    <div style="background-color: #{{ color_desaturate(color_lighten('049cdb', 32, loop.index), 32, loop.index) }}; margin: 4px; width:24px; height: 24px; border-radius: 3px; float: left;"></div>
+    {% endfor %}
+    <h1>Darken Colors</h1>
+    {% for i in range(32) %}
+    <div style="background-color: #{{ color_darken('049cdb', 32, loop.index) }}; margin: 4px; width:24px; height: 24px; border-radius: 3px; float: left;"></div>
+    {% endfor %}
+    <hr style="clear: both; border: none;">
+    {% for i in range(32) %}
+    <div style="background-color: #{{ color_desaturate(color_darken('049cdb', 32, loop.index), 32, loop.index) }}; margin: 4px; width:24px; height: 24px; border-radius: 3px; float: left;"></div>
+    {% endfor %}
+  </div>
   <div class="thread-poll">
     <h2>{{ thread.poll.question }}</h2>
       {% for choice in thread.poll.option_set.all() %}
-      <div style="background: #{{ colorhex(loop.index0) }}">{{ choice.name }}</div>
+      <li><span style="background-color: #{{ color_desaturate(color_lighten('cf402e', loop.length, loop.index, 80), loop.length, loop.index, 20) }}; font-weight: bold; display: inline-block; width:18px; height: 18px; border-radius: 3px;"></span> {{ choice.name }}</li>
       {% endfor %}
     {% if poll_form %}
     <form action="" method="post">
@@ -52,7 +82,7 @@
     {% else %}
     <ul>
       {% for choice in thread.poll.option_set.all() %}
-      <li><div style="background: #{{ colorhex(loop.index0) }}">{{ choice.name }}</div></li>
+      <li><div style="background: #{{ spin_color('FF0000', 240 * loop.index0) }}">{{ choice.name }}</div></li>
       {% endfor %}
     </ul>
     {% endif %}
