@@ -1008,9 +1008,11 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{color:#333;text-decoration:n
 .forum-threads-list .threads-actions{background-color:#fbfbfb;border-top:1px solid #d5d5d5;border-radius:0 0 2px 2px;overflow:auto;padding:4px;color:#999;font-size:11.9px}.forum-threads-list .threads-actions form{margin-bottom:0}
 .forum-threads-extra{overflow:auto}.forum-threads-extra.extra-top{margin-bottom:20px}
 .forum-threads-extra .threads-signin-message{float:right}.forum-threads-extra .threads-signin-message a:link,.forum-threads-extra .threads-signin-message a:visited{color:#333}
-.thread-poll{background-color:#fff;border:1px solid #d5d5d5;border-radius:2px;-webkit-box-shadow:0 0 0 3px #eee;-moz-box-shadow:0 0 0 3px #eee;box-shadow:0 0 0 3px #eee;margin-bottom:20px;padding:20px}
 .thread-buttons{overflow:auto}.thread-buttons .pull-right{margin-left:14px}
 .thread-buttons .thread-signin-message{float:right}.thread-buttons .thread-signin-message a:link,.thread-buttons .thread-signin-message a:visited{color:#333}
+.thread-poll-body{background-color:#fff;border:1px solid #d5d5d5;border-radius:2px;-webkit-box-shadow:0 0 0 3px #eee;-moz-box-shadow:0 0 0 3px #eee;box-shadow:0 0 0 3px #eee;margin-bottom:20px;padding:10px 20px}.thread-poll-body h2{margin-bottom:20px}
+.thread-poll-body .poll-options dd{padding-top:2px}.thread-poll-body .poll-options dd .progress{background:none;border:1px solid #d5d5d5;border-radius:10px;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;height:auto;margin:0;padding:2px}.thread-poll-body .poll-options dd .progress .bar{border-radius:5px;height:10px;min-width:10px}
+.thread-poll-body .poll-options dd .option-details{padding-left:6px;color:#999;font-size:11.9px}
 .thread-body .post-wrapper .post-body{margin-bottom:20px;overflow:auto}.thread-body .post-wrapper .post-body .user-avatar{border-radius:5px;float:left;width:100px;height:100px}
 .thread-body .post-wrapper .post-body .post-content{background-color:#fff;border:1px solid #e7e7e7;border-radius:5px;margin-left:121px;min-height:100px;position:relative}.thread-body .post-wrapper .post-body .post-content:after,.thread-body .post-wrapper .post-body .post-content:before{right:100%;border:solid transparent;content:"";height:0;width:0;position:absolute;pointer-events:none}
 .thread-body .post-wrapper .post-body .post-content:after{border-color:transparent;border-right-color:#fff;border-width:10.5px;top:14px;margin-top:0}

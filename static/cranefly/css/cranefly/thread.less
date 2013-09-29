@@ -1,15 +1,6 @@
 // Thread view
 // -------------------------
 
-.thread-poll {
-  background-color: @categoryBackground;
-  border: 1px solid @categoryBorder;
-  border-radius: @borderRadiusSmall;
-  .box-shadow(0px 0px 0px 3px @categoryShadow);
-  margin-bottom: @baseLineHeight;
-  padding: @baseLineHeight;
-}
-
 .thread-buttons {
   overflow: auto;
 
@@ -24,6 +15,53 @@
       color: @textColor;
     }
   }
+}
+
+.thread-poll-body {
+  background-color: @categoryBackground;
+  border: 1px solid @categoryBorder;
+  border-radius: @borderRadiusSmall;
+  .box-shadow(0px 0px 0px 3px @categoryShadow);
+  margin-bottom: @baseLineHeight;
+  padding: (@baseLineHeight / 2) @baseLineHeight;
+
+  h2 {
+  	margin-bottom: @baseLineHeight;
+  }
+
+	.poll-options {
+		dd {
+			padding-top: 2px;
+
+		  .progress {
+		  	background: none;
+		  	border: 1px solid darken(@bodyBackground, 15%);
+		  	border-radius: 10px;
+		  	.box-shadow(none);
+		  	height: auto;
+		  	margin: 0px;
+		  	padding: 2px;
+
+		  	.bar {
+		  		border-radius: 5px;
+		  		height: 10px;
+
+		  		min-width: 10px;
+		  	}
+		  }
+
+		  .option-details {
+		  	padding-left: 6px;
+
+		  	color: @grayLight;
+		  	font-size: @fontSizeSmall;
+		  }
+		}
+	}
+
+	.poll-footer {
+
+	}
 }
 
 // Thread body styles

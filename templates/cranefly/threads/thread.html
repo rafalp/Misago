@@ -40,53 +40,39 @@
   {% endif %}
 
   {% if thread.has_poll %}
-  <div id="color_demo" style="background: #FFF; padding: 32px; overflow: auto;">
-    <h1>Random Colors</h1>
-    {% for i in range(12) %}
-    <div style="background-color: #{{ color_spin('049cdb', loop.index0 * 265) }}; margin: 4px; width:24px; height: 24px; border-radius: 3px; float: left;"></div>
-    {% endfor %}
-    <hr style="clear: both; border: none;">
-    {% for i in range(12) %}
-    <div style="background-color: #{{ color_lighten(color_spin('049cdb', loop.index0 * 265), 12, loop.index, 90) }}; margin: 4px; width:24px; height: 24px; border-radius: 3px; float: left;"></div>
-    {% endfor %}
-    <h1>Desaturate Colors</h1>
-    {% for i in range(32) %}
-    <div style="background-color: #{{ color_desaturate('049cdb', 32, loop.index) }}; margin: 4px; width:24px; height: 24px; border-radius: 3px; float: left;"></div>
-    {% endfor %}
-    <h1>Lighten Colors</h1>
-    {% for i in range(32) %}
-    <div style="background-color: #{{ color_lighten('049cdb', 32, loop.index) }}; margin: 4px; width:24px; height: 24px; border-radius: 3px; float: left;"></div>
-    {% endfor %}
-    <hr style="clear: both; border: none;">
-    {% for i in range(32) %}
-    <div style="background-color: #{{ color_desaturate(color_lighten('049cdb', 32, loop.index), 32, loop.index) }}; margin: 4px; width:24px; height: 24px; border-radius: 3px; float: left;"></div>
-    {% endfor %}
-    <h1>Darken Colors</h1>
-    {% for i in range(32) %}
-    <div style="background-color: #{{ color_darken('049cdb', 32, loop.index) }}; margin: 4px; width:24px; height: 24px; border-radius: 3px; float: left;"></div>
-    {% endfor %}
-    <hr style="clear: both; border: none;">
-    {% for i in range(32) %}
-    <div style="background-color: #{{ color_desaturate(color_darken('049cdb', 32, loop.index), 32, loop.index) }}; margin: 4px; width:24px; height: 24px; border-radius: 3px; float: left;"></div>
-    {% endfor %}
-  </div>
-  <div class="thread-poll">
-    <h2>{{ thread.poll.question }}</h2>
-      {% for choice in thread.poll.option_set.all() %}
-      <li><span style="background-color: #{{ color_desaturate(color_lighten('cf402e', loop.length, loop.index, 80), loop.length, loop.index, 20) }}; font-weight: bold; display: inline-block; width:18px; height: 18px; border-radius: 3px;"></span> {{ choice.name }}</li>
-      {% endfor %}
+  <div class="thread-poll-body" id="poll">
+    <h2 class="text-center">{{ thread.poll.question }}</h2>
     {% if poll_form %}
     <form action="" method="post">
-      {{ form_theme.field(poll_form.options) }}
-    </form>
-    {% else %}
-    <ul>
-      {% for choice in thread.poll.option_set.all() %}
-      <li><div style="background: #{{ spin_color('FF0000', 240 * loop.index0) }}">{{ choice.name }}</div></li>
-      {% endfor %}
-    </ul>
     {% endif %}
-    <div id="thread-poll-graph"></div>
+    <div class="poll-options">
+      <dl class="dl-horizontal">
+        {% for choice in thread.poll.option_set.all() %}
+        <dt>{{ choice.name }}</dt>
+        <dd>
+          <div class="progress">
+            <div class="bar" style="width: {% if poll.votes %}1{% else %}{{ (5 * loop.index0) }}{% endif %}%; background: #{{ color_desaturate(color_spin('049cdb', loop.index0 * 265), loop.length, loop.index/3, 20) }};"></div>
+          </div>
+          <p class="option-details">321 votes, {{ 5 * loop.index0 }}% of all</p>
+        </dd>
+        {% endfor %}
+      </dl>
+    </div>
+    {% if poll_form %}
+    {#{{ form_theme.field(poll_form.options) }}#}
+    </form>
+    {% endif %}
+    <div class="pool-footer">
+      {% if thread.closed or thread.deleted %}
+      <p class="poll-footer">{% trans %}Poll has been closed.{% endtrans %}</p>
+      {% elif thread.poll.over %}
+      <p class="poll-footer">{% trans end=thread.poll.end_date|date %}Poll ended on {{ end }}{% endtrans %}</p>
+      {% elif thread.poll.length %}
+      <p class="poll-footer">{% trans end=thread.poll.end_date|date %}Poll ends on {{ end }}{% endtrans %}</p>
+      {% else %}
+      <p class="poll-footer">{% trans %}Poll by{% endtrans %}</p>
+      {% endif %}
+    </div>
   </div>
   {% endif %}
 
@@ -539,27 +525,6 @@
   </script>
   {% if user.is_authenticated() and acl.threads.can_reply(forum, thread) %}
   {{ editor.js() }}
-  {% endif %}
-  {% if thread.has_poll %}
-  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-  <script type="text/javascript">
-    google.load("visualization", "1", {packages:["corechart"]});
-    google.setOnLoadCallback(drawChart);
-    function drawChart() {
-      var data = google.visualization.arrayToDataTable([
-        ["{{ thread.poll.question }}", "{% trans %}Votes{% endtrans %}"]
-        {% for option in thread.poll.option_set.all() %}
-        , ["{{ option.name }}", {{ option.votes}}]
-        {% endfor %}
-      ]);
-
-      var options = {
-      };
-
-      var chart = new google.visualization.PieChart(document.getElementById('thread-poll-graph'));
-      chart.draw(data, options);
-    }
-  </script>
   {% endif %}
 {%- endblock %}
 
