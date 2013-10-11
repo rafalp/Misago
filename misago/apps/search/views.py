@@ -145,14 +145,15 @@ class ViewBase(object):
                 results = []
                 search_weight = form.cleaned_data.get('search_weight')
                 for p in sqs:
-                    post = p.object
-                    if search_weight and post.thread.weight not in search_weight:
-                        continue
-                    try:
-                        self.request.acl.threads.allow_post_view(self.request.user, post.thread, post)
-                        results.append(post.pk)
-                    except ACLError404:
-                        pass
+                    if p:
+                        post = p.object
+                        if search_weight and post.thread.weight not in search_weight:
+                            continue
+                        try:
+                            self.request.acl.threads.allow_post_view(self.request.user, post.thread, post)
+                            results.append(post.pk)
+                        except ACLError404:
+                            pass
 
                 if self.request.user.is_authenticated():
                     self.request.user.last_search = timezone.now()
