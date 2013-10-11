@@ -97,8 +97,8 @@ class PollVoteForm(Form):
 
     def finalize_form(self):
         choices = []
-        for choice in self.poll.option_set.all():
-            choices.append((choice.pk, choice.name))
+        for choice in self.poll.choices_cache:
+            choices.append((choice['pk'], choice['name']))
         if self.poll.max_choices > 1:
             self.add_field('options',
                            forms.TypedMultipleChoiceField(choices=choices, coerce=int,

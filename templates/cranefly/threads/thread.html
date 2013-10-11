@@ -39,40 +39,78 @@
   </div>
   {% endif %}
 
-  {% if thread.has_poll %}
+  {% if poll %}
   <div class="thread-poll-body" id="poll">
-    <h2 class="text-center">{{ thread.poll.question }}</h2>
-    {% if poll_form %}
-    <form action="" method="post">
-    {% endif %}
-    <div class="poll-options">
-      <dl class="dl-horizontal">
-        {% for choice in thread.poll.option_set.all() %}
-        <dt>{{ choice.name }}</dt>
-        <dd>
-          <div class="progress">
-            <div class="bar" style="width: {% if poll.votes %}1{% else %}{{ (5 * loop.index0) }}{% endif %}%; background: #{{ color_desaturate(color_spin('049cdb', loop.index0 * 265), loop.length, loop.index/3, 20) }};"></div>
-          </div>
-          <p class="option-details">321 votes, {{ 5 * loop.index0 }}% of all</p>
-        </dd>
-        {% endfor %}
-      </dl>
+    {% if poll.message %}
+    <div class="messages-list">
+      {{ macros.draw_message(poll.message) }}
     </div>
+    {% endif %}
+    <h2 class="text-center">{{ poll.question }}</h2>
     {% if poll_form %}
-    {#{{ form_theme.field(poll_form.options) }}#}
+    <form action="{{ url('thread_poll_vote', slug=thread.slug, thread=thread.pk) }}" method="post">
+      <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+      <input type="hidden" name="retreat" value="{{ request_path }}">
+      {% endif %}
+      <div class="poll-options">
+        {% if poll_form and not poll.user_votes %}
+        <ul class="unstyled options-form">
+          {% for choice in poll.choices_cache %}
+          <li>
+            <label class="radio">
+              <input type="radio" name="options" id="id_options_{{ choice.pk }}" value="{{ choice.pk }}">
+              {{ choice.name }}
+            </label>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <dl class="dl-horizontal">
+          {% for choice in poll.choices_cache %}
+          <dt>{{ choice.name }}</dt>
+          <dd>
+            <div class="progress">
+              <div class="bar" style="width: {% if poll.votes %}{{ (choice.votes * 100 / poll.votes)|int }}{% else %}1{% endif %}%; background: #{{ color_desaturate(color_spin('049cdb', loop.index0 * 265), loop.length, loop.index/3, 20) }};"></div>
+            </div>
+            <p class="option-details">
+              {% if choice.pk in poll.user_votes %}<strong>{% trans %}Your vote{% endtrans %}</strong>{% endif %}
+              {% trans count=choice.votes, votes=choice.votes, percent=(choice.votes * 100 / poll.votes)|int -%}
+              {{ votes }} vote, {{ percent }}% of all
+              {%- pluralize -%}
+              {{ votes }} votes, {{ percent }}% of all
+              {%- endtrans %}
+            </p>
+          </dd>
+          {% endfor %}
+        </dl>
+        {% endif %}
+      </div>
+      <div class="poll-footer">
+        {% if poll_form %}
+        <button type="submit" class="btn btn-primary">{% trans %}Vote{% endtrans %}</button>
+        {% if not poll.user_votes %}
+        <button type="submit" name="empty_vote" class="btn btn-inverse">{% trans %}Results{% endtrans %}</button>
+        {% endif %}
+        {% endif %}
+        {% if poll.public %}
+        <a href="" class="btn">{% trans %}Show voters{% endtrans %}</a>
+        {% endif %}
+        <p>
+          {% if poll.public %}
+          <strong>{% trans %}Voting is public.{% endtrans %}</strong>
+          {% endif %}
+          {% if thread.closed or thread.deleted %}
+          {% trans %}Poll has been closed.{% endtrans %}
+          {% elif thread.poll.over %}
+          {% trans end=poll.end_date|date %}Poll ended on {{ end }}{% endtrans %}
+          {% elif thread.poll.length %}
+          {% trans end=poll.end_date|date %}Poll ends on {{ end }}{% endtrans %}
+          {% endif %}
+        </p>
+      </div>
+    {% if poll_form %}
     </form>
     {% endif %}
-    <div class="pool-footer">
-      {% if thread.closed or thread.deleted %}
-      <p class="poll-footer">{% trans %}Poll has been closed.{% endtrans %}</p>
-      {% elif thread.poll.over %}
-      <p class="poll-footer">{% trans end=thread.poll.end_date|date %}Poll ended on {{ end }}{% endtrans %}</p>
-      {% elif thread.poll.length %}
-      <p class="poll-footer">{% trans end=thread.poll.end_date|date %}Poll ends on {{ end }}{% endtrans %}</p>
-      {% else %}
-      <p class="poll-footer">{% trans %}Poll by{% endtrans %}</p>
-      {% endif %}
-    </div>
   </div>
   {% endif %}
 

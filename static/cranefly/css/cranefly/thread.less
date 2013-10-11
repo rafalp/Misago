@@ -26,42 +26,78 @@
   padding: (@baseLineHeight / 2) @baseLineHeight;
 
   h2 {
-  	margin-bottom: @baseLineHeight;
+    margin-bottom: @baseLineHeight;
   }
 
-	.poll-options {
-		dd {
-			padding-top: 2px;
+  form {
+    margin: 0px;
+    padding: 0px;
+  }
 
-		  .progress {
-		  	background: none;
-		  	border: 1px solid darken(@bodyBackground, 15%);
-		  	border-radius: 10px;
-		  	.box-shadow(none);
-		  	height: auto;
-		  	margin: 0px;
-		  	padding: 2px;
+  .options-form {
+    margin-left: @horizontalComponentOffset;
 
-		  	.bar {
-		  		border-radius: 5px;
-		  		height: 10px;
+    label {
+      font-size: @fontSizeLarge;
+    }
+  }
 
-		  		min-width: 10px;
-		  	}
-		  }
+  .poll-options {
+    dd {
+      padding-top: 2px;
 
-		  .option-details {
-		  	padding-left: 6px;
+      .progress {
+        background: none;
+        border: 1px solid darken(@bodyBackground, 15%);
+        border-radius: 10px;
+        .box-shadow(none);
+        height: auto;
+        margin: 0px;
+        padding: 2px;
 
-		  	color: @grayLight;
-		  	font-size: @fontSizeSmall;
-		  }
-		}
-	}
+        .bar {
+          border-radius: 5px;
+          height: 10px;
 
-	.poll-footer {
+          min-width: 10px;
+        }
+      }
 
-	}
+      .option-details {
+        padding-left: 6px;
+
+        color: @grayLight;
+        font-size: @fontSizeSmall;
+
+        strong {
+          padding-right: @fontSizeSmall;
+
+          color: @bluePale;
+          font-weight: normal;
+        }
+      }
+    }
+  }
+
+  .poll-footer {
+    overflow: auto;
+    margin-top: @baseLineHeight * -0.5;
+    margin-bottom: @baseLineHeight * 0.5;
+    margin-left: @horizontalComponentOffset;
+
+    .btn, p {
+      float: left;
+      margin-right: @baseFontSize / 2;
+    }
+
+    p {
+      margin-left: @baseFontSize / 2;
+      position: relative;
+      top: @baseLineHeight / 3;
+
+      color: @grayLight;
+    }
+  }
 }
 
 // Thread body styles
@@ -468,13 +504,13 @@
         }
 
         i {
-        	margin-right: 2px;
-        	position: relative;
-        	top: 2px;
-        	width: @fontSizeLarge;
+          margin-right: 2px;
+          position: relative;
+          top: 2px;
+          width: @fontSizeLarge;
 
-        	font-size: @fontSizeLarge;
-        	text-align: center;
+          font-size: @fontSizeLarge;
+          text-align: center;
         }
 
         form {
@@ -687,16 +723,16 @@
         left: 2px;
 
         i {
-        	margin: 0px;
+          margin: 0px;
 
-        	color: @grayLight;
+          color: @grayLight;
           font-size: @fontSizeLarge;
         }
 
         &:hover, &:active {
-        	i {
-        	  color: @textColor;
-        	}
+          i {
+            color: @textColor;
+          }
         }
       }
     }

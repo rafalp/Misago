@@ -568,12 +568,33 @@ class ThreadsACL(BaseACL):
         except KeyError:
             return False
 
-    def can_vote_in_polls(self, forum):
+    def can_vote_in_polls(self, forum, thread, poll):
         try:
             forum_role = self.get_role(forum)
-            return forum_role['can_vote_in_polls']
+            return (forum_role['can_vote_in_polls']
+                    and not forum.closed
+                    and not thread.closed
+                    and not thread.deleted
+                    and not poll.over
+                    and (poll.vote_changing or not poll.user_votes))
         except KeyError:
             return False
+
+    def allow_vote_in_polls(self, forum, thread, poll):
+        try:
+            forum_role = self.get_role(forum)
+            if not forum_role['can_vote_in_polls']:
+                raise ACLError403(_("You don't have permission to vote polls."))
+            if poll.over:
+                raise ACLError403(_("This poll has ended."))
+            if forum.closed or thread.closed:
+                raise ACLError403(_("This poll has been closed."))
+            if thread.deleted:
+                raise ACLError403(_("This poll's thread has been deleted."))
+            if poll.user_votes and not poll.vote_changing:
+                raise ACLError403(_("You have already voted in this poll."))
+        except KeyError:
+            raise ACLError403(_("You don't have permission to vote in this poll."))
 
     def can_see_all_checkpoints(self, forum):
         try:

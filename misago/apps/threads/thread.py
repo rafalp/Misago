@@ -10,14 +10,10 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
         context['poll_form'] = None
         if self.thread.has_poll:
             context['poll'] = self.thread.poll
-            self.thread.poll.option_set.all()
+            self.thread.poll.message = self.request.messages.get_message('poll_%s' % self.thread.poll.pk)
             if self.request.user.is_authenticated():
-                self.thread.poll.user_votes = self.request.user.pollvote_set.filter(poll=self.thread.poll)
-                if (not self.thread.closed
-                        and not self.thread.deleted
-                        and self.request.acl.threads.can_vote_in_polls(self.forum)
-                        and not self.thread.poll.over
-                        and (self.thread.poll.vote_changing or not self.thread.poll.user_votes)):
+                self.thread.poll.user_votes = [x.option_id for x in self.request.user.pollvote_set.filter(poll=self.thread.poll)]
+                if self.request.acl.threads.can_vote_in_polls(self.forum, self.thread, self.thread.poll):
                     context['poll_form'] = PollVoteForm(poll=self.thread.poll)
         return super(ThreadView, self).template_vars(context)
 

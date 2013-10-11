@@ -35,21 +35,52 @@ class Poll(models.Model):
 
     @property
     def choices_cache(self):
-        if self._cache:
+        try:
             return self._cache
+        except AttributeError:
+            pass
 
         try:
             self._cache = pickle.loads(base64.decodestring(self._choices_cache))
         except Exception:
-            self._cache = {}
+            self._cache = []
 
         return self._cache
 
     @choices_cache.setter
     def choices_cache(self, choices):
-        choices_cache = {'order': [], 'choices': {}}
+        choices_cache = []
         for choice in choices:
-            choices_cache['order'].append(choice.pk)
-            choices_cache['choices'][choice.pk] = choice
+            choices_cache.append({
+                'id': choice.pk,
+                'pk': choice.pk,
+                'name': choice.name,
+                'votes': choice.votes
+            })
         self._cache = choices_cache
         self._choices_cache = base64.encodestring(pickle.dumps(choices_cache, pickle.HIGHEST_PROTOCOL))
+
+    def retract_vote(self, votes):
+        pass
+
+    def make_vote(self, request, options):
+        try:
+            len(options)
+        except TypeError:
+            options = (options, )
+
+        for option in self.option_set.all():
+            if option.pk in options:
+                self.votes += 1
+                option.votes += 1
+                option.save()
+                self.vote_set.create(
+                                     forum_id=self.forum_id,
+                                     thread_id=self.thread_id,
+                                     option=option,
+                                     user=request.user,
+                                     date=timezone.now(),
+                                     ip=request.session.get_ip(request),
+                                     agent=request.META.get('HTTP_USER_AGENT'),
+                                     )
+        self.choices_cache = [x for x in self.option_set.all()]

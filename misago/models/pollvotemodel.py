@@ -1,7 +1,7 @@
 from django.db import models
 
 class PollVote(models.Model):
-    poll = models.ForeignKey('Poll')
+    poll = models.ForeignKey('Poll', related_name="vote_set")
     forum = models.ForeignKey('Forum')
     thread = models.ForeignKey('Thread')
     option = models.ForeignKey('PollOption')
