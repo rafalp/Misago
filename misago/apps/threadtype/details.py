@@ -7,6 +7,10 @@ from misago.apps.threadtype.base import ViewBase
 
 class ExtraBaseView(ViewBase):
     def fetch_target(self):
+        self.fetch_thread()
+        self.fetch_post()
+
+    def fetch_thread(self):
         self.thread = Thread.objects.get(pk=self.kwargs.get('thread'))
         self.forum = self.thread.forum
         self.proxy = Forum.objects.parents_aware_forum(self.forum)
@@ -15,6 +19,8 @@ class ExtraBaseView(ViewBase):
         if self.forum.level:
             self.parents = Forum.objects.forum_parents(self.forum.pk, True)
         self.check_forum_type()
+
+    def fetch_post(self):
         self.post = Post.objects.select_related('user').get(pk=self.kwargs.get('post'), thread=self.thread.pk)
         self.post.thread = self.thread
         self.request.acl.threads.allow_post_view(self.request.user, self.thread, self.post)

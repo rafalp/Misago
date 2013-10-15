@@ -74,7 +74,7 @@
             </div>
             <p class="option-details">
               {% if choice.pk in poll.user_votes %}<strong>{% trans %}Your vote{% endtrans %}</strong>{% endif %}
-              {% trans count=choice.votes, votes=choice.votes, percent=(choice.votes * 100 / poll.votes)|int -%}
+              {% trans count=choice.votes, votes=choice.votes, percent=((choice.votes * 100 / poll.votes) if poll.votes else 0)|int -%}
               {{ votes }} vote, {{ percent }}% of all
               {%- pluralize -%}
               {{ votes }} votes, {{ percent }}% of all
@@ -92,8 +92,8 @@
         <button type="submit" name="empty_vote" class="btn btn-inverse">{% trans %}Results{% endtrans %}</button>
         {% endif %}
         {% endif %}
-        {% if poll.public %}
-        <a href="" class="btn">{% trans %}Show voters{% endtrans %}</a>
+        {% if poll.public or acl.threads.can_see_polls_votes(forum) %}
+        <a href="{{ url('thread_poll_details', slug=thread.slug, thread=thread.pk) }}" class="btn">{% trans %}Show voters{% endtrans %}</a>
         {% endif %}
         <p>
           {% if poll.public %}

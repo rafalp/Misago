@@ -18,6 +18,8 @@ class NewThreadView(NewThreadBaseView, TypeMixin):
         poll = Poll(forum=self.forum,
                     thread=self.thread,
                     user=self.request.user,
+                    user_name=self.request.username,
+                    user_slug=self.request.user_slug,
                     start_date=timezone.now(),
                     length=form.cleaned_data['poll_length'],
                     question=form.cleaned_data['poll_question'],

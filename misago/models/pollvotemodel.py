@@ -6,6 +6,8 @@ class PollVote(models.Model):
     thread = models.ForeignKey('Thread')
     option = models.ForeignKey('PollOption')
     user = models.ForeignKey('User', null=True, blank=True, on_delete=models.SET_NULL)
+    user_name = models.CharField(max_length=255, null=True, blank=True)
+    user_slug = models.SlugField(max_length=255, null=True, blank=True)
     date = models.DateTimeField()
     ip = models.GenericIPAddressField()
     agent = models.CharField(max_length=255)

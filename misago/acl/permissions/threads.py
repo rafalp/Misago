@@ -596,6 +596,21 @@ class ThreadsACL(BaseACL):
         except KeyError:
             raise ACLError403(_("You don't have permission to vote in this poll."))
 
+    def can_see_poll_votes(self, forum, poll):
+        try:
+            forum_role = self.get_role(forum)
+            return forum_role['can_see_poll_votes'] or poll.public
+        except KeyError:
+            return False
+
+    def allow_see_poll_votes(self, forum, poll):
+        try:
+            forum_role = self.get_role(forum)
+            if not forum_role['can_see_poll_votes'] and not poll.public:
+                raise ACLError403(_("You don't have permission to see votes in this poll."))
+        except KeyError:
+            raise ACLError403(_("You don't have permission to see votes in this poll."))
+
     def can_see_all_checkpoints(self, forum):
         try:
             forum_role = self.get_role(forum)

@@ -1077,6 +1077,9 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{color:#333;text-decoration:n
 .thread-participants .invite-participant form input{width:70%}
 .thread-participants .invite-participant form button{float:right;position:relative;top:2px;left:2px}.thread-participants .invite-participant form button i{margin:0;color:#999;font-size:17.5px}
 .thread-participants .invite-participant form button:hover i,.thread-participants .invite-participant form button:active i{color:#333}
+.poll-votes-list h2{margin-bottom:0;font-size:17.5px}.poll-votes-list h2 small{font-size:14px}.poll-votes-list h2 small strong{color:#3c85a3;font-weight:normal}
+.poll-votes-list .vote-user,.poll-votes-list .vote-user:link,.poll-votes-list .vote-user:visited{color:#555;font-size:17.5px;font-weight:bold}
+.poll-votes-list a.vote-user:hover,.poll-votes-list a.vote-user:active{color:#333;text-decoration:none}
 .post-votes-list .vote-user,.post-votes-list .vote-user:link,.post-votes-list .vote-user:visited{color:#555;font-size:17.5px;font-weight:bold}
 .post-votes-list .vote-user .vote-icon{background-color:#999;border-radius:3px;display:inline-block;padding:2px 3px;position:relative;bottom:1.75px;width:18px;color:#fff;font-size:14px;text-align:center}
 .post-votes-list a.vote-user:hover,.post-votes-list a.vote-user:active{color:#333;text-decoration:none}

@@ -11,6 +11,8 @@ class Poll(models.Model):
     forum = models.ForeignKey('Forum')
     thread = models.OneToOneField('Thread', primary_key=True)
     user = models.ForeignKey('User', null=True, blank=True, on_delete=models.SET_NULL)
+    user_name = models.CharField(max_length=255, null=True, blank=True)
+    user_slug = models.SlugField(max_length=255, null=True, blank=True)
     start_date = models.DateTimeField()
     length = models.PositiveIntegerField(default=0)
     question = models.CharField(max_length=255)
@@ -79,6 +81,8 @@ class Poll(models.Model):
                                      thread_id=self.thread_id,
                                      option=option,
                                      user=request.user,
+                                     user_name=request.user.username,
+                                     user_slug=request.user.slug,
                                      date=timezone.now(),
                                      ip=request.session.get_ip(request),
                                      agent=request.META.get('HTTP_USER_AGENT'),
