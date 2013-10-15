@@ -49,8 +49,6 @@ def make_forum_form(request, role, form):
                                                             widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_vote_in_polls'] = forms.BooleanField(label=_("Can vote in polls"),
                                                                widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_see_poll_votes'] = forms.BooleanField(label=_("Can see who voted in poll"),
-                                                                widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_see_attachments'] = forms.BooleanField(label=_("Can see attachments"),
                                                                  widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_upload_attachments'] = forms.BooleanField(label=_("Can upload attachments"),
@@ -96,6 +94,8 @@ def make_forum_form(request, role, form):
                                                                            (1, _("Yes, soft-delete")),
                                                                            (2, _("Yes, hard-delete")),
                                                                            ), coerce=int)
+    form.base_fields['can_see_poll_votes'] = forms.BooleanField(label=_("Can always see who voted in poll"),
+                                                                widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_delete_polls'] = forms.TypedChoiceField(label=_("Can delete polls"),
                                                                   choices=(
                                                                            (0, _("No")),
