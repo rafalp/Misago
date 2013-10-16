@@ -27,13 +27,13 @@ class PollVotesView(ExtraBaseView, TypeMixin):
         self.request.acl.threads.allow_see_poll_votes(self.forum, self.poll)
 
     def response(self):
-        options = self.poll.option_set.all()
+        options = self.poll.option_set.all().order_by('-votes')
         options_dict = {}
         for option in options:
             option.votes_list = []
             options_dict[option.pk] = option
 
-        for vote in self.poll.vote_set.iterator():
+        for vote in self.poll.vote_set.filter(option__isnull=False).iterator():
             options_dict[vote.option_id].votes_list.append(vote)
 
         return render_to_response('threads/poll_votes.html',

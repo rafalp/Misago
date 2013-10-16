@@ -46,7 +46,7 @@
       {{ macros.draw_message(poll.message) }}
     </div>
     {% endif %}
-    <h2 class="text-center">{{ poll.question }}</h2>
+    <h2>{% trans question=poll.question %}Poll: {{ question }}{% endtrans %}</h2>
     {% if poll_form %}
     <form action="{{ url('thread_poll_vote', slug=thread.slug, thread=thread.pk) }}" method="post">
       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
@@ -54,16 +54,14 @@
       {% endif %}
       <div class="poll-options">
         {% if poll_form and not poll.user_votes %}
-        <ul class="unstyled options-form">
-          {% for choice in poll.choices_cache %}
-          <li>
-            <label class="radio">
-              <input type="radio" name="options" id="id_options_{{ choice.pk }}" value="{{ choice.pk }}">
-              {{ choice.name }}
-            </label>
-          </li>
-          {% endfor %}
-        </ul>
+        <div class="options-form">
+          {{ form_theme.field(poll_form.options) }}
+          <p class="poll-voting-help">{% trans choices=poll.max_choices -%}
+            You can vote on one option.
+          {%- pluralize -%}
+            You can vote on {{ choices }} options.
+          {%- endtrans %}{% if poll.public %} {% trans %}Your votes will be public.{% endtrans %}{% endif %}</p>
+        </div>
         {% else %}
         <dl class="dl-horizontal">
           {% for choice in poll.choices_cache %}
@@ -87,18 +85,21 @@
       </div>
       <div class="poll-footer">
         {% if poll_form %}
-        <button type="submit" class="btn btn-primary">{% trans %}Vote{% endtrans %}</button>
-        {% if not poll.user_votes %}
-        <button type="submit" name="empty_vote" class="btn btn-inverse">{% trans %}Results{% endtrans %}</button>
+        {% if poll.user_votes and (not poll.user_votes[0] or poll.vote_changing) %}
+        {% if poll.user_votes[0] %}
+        <button type="submit" name="change_vote" class="btn btn-primary">{% trans %}Change vote{% endtrans %}</button>
+        {% else %}
+        <button type="submit" name="show_options" class="btn btn-primary">{% trans %}Voting Options{% endtrans %}</button>
+        {% endif %}
+        {% else %}
+        <button type="submit" class="btn btn-primary">{% trans %}Make Vote{% endtrans %}</button>
+        <button type="submit" name="show_results" class="btn btn-inverse">{% trans %}Results{% endtrans %}</button>
         {% endif %}
         {% endif %}
         {% if poll.public or acl.threads.can_see_polls_votes(forum) %}
         <a href="{{ url('thread_poll_details', slug=thread.slug, thread=thread.pk) }}" class="btn">{% trans %}Show voters{% endtrans %}</a>
         {% endif %}
         <p>
-          {% if poll.public %}
-          <strong>{% trans %}Voting is public.{% endtrans %}</strong>
-          {% endif %}
           {% if thread.closed or thread.deleted %}
           {% trans %}Poll has been closed.{% endtrans %}
           {% elif thread.poll.over %}

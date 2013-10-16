@@ -35,6 +35,9 @@ class Poll(models.Model):
             return False
         return timezone.now() > self.end_date
 
+    def make_choices_cache(self):
+        self.choices_cache = [x for x in self.option_set.all()]
+
     @property
     def choices_cache(self):
         try:
@@ -62,10 +65,23 @@ class Poll(models.Model):
         self._cache = choices_cache
         self._choices_cache = base64.encodestring(pickle.dumps(choices_cache, pickle.HIGHEST_PROTOCOL))
 
-    def retract_vote(self, votes):
-        pass
+    def retract_votes(self, votes):
+        options = self.option_set.all()
+        options_dict = {}
+        for option in options:
+            options_dict[option.pk] = option
 
-    def make_vote(self, request, options):
+        for vote in votes:
+            if vote.option_id in options_dict:
+                self.votes -= 1
+                options_dict[vote.option_id].votes -= 1
+        self.vote_set.filter(id__in=[x.pk for x in votes]).delete()
+
+        for option in options:
+            option.save()
+        self.choices_cache = options
+
+    def make_vote(self, request, options=None):
         try:
             len(options)
         except TypeError:
@@ -82,9 +98,21 @@ class Poll(models.Model):
                                      option=option,
                                      user=request.user,
                                      user_name=request.user.username,
-                                     user_slug=request.user.slug,
+                                     user_slug=request.user.username_slug,
                                      date=timezone.now(),
                                      ip=request.session.get_ip(request),
                                      agent=request.META.get('HTTP_USER_AGENT'),
                                      )
-        self.choices_cache = [x for x in self.option_set.all()]
+        self.make_choices_cache()
+
+    def make_empty_vote(self, request):
+        self.vote_set.create(
+                             forum_id=self.forum_id,
+                             thread_id=self.thread_id,
+                             user=request.user,
+                             user_name=request.user.username,
+                             user_slug=request.user.username_slug,
+                             date=timezone.now(),
+                             ip=request.session.get_ip(request),
+                             agent=request.META.get('HTTP_USER_AGENT'),
+                             )

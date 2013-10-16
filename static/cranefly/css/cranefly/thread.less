@@ -26,6 +26,7 @@
   padding: (@baseLineHeight / 2) @baseLineHeight;
 
   h2 {
+    margin-left: @horizontalComponentOffset;
     margin-bottom: @baseLineHeight;
   }
 
@@ -36,9 +37,16 @@
 
   .options-form {
     margin-left: @horizontalComponentOffset;
+    margin-bottom: @baseLineHeight;
 
     label {
+    	padding: 2px 0px;
+
       font-size: @fontSizeLarge;
+    }
+
+    .poll-voting-help {
+      color: @grayLight;
     }
   }
 

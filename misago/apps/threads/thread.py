@@ -6,6 +6,10 @@ from misago.apps.threads.mixins import TypeMixin
 
 class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
     def template_vars(self, context):
+        self.add_poll(context)
+        return super(ThreadView, self).template_vars(context)
+
+    def add_poll(self, context):
         context['poll'] = None
         context['poll_form'] = None
         if self.thread.has_poll:
@@ -15,7 +19,6 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
                 self.thread.poll.user_votes = [x.option_id for x in self.request.user.pollvote_set.filter(poll=self.thread.poll)]
                 if self.request.acl.threads.can_vote_in_polls(self.forum, self.thread, self.thread.poll):
                     context['poll_form'] = PollVoteForm(poll=self.thread.poll)
-        return super(ThreadView, self).template_vars(context)
 
     def posts_actions(self):
         acl = self.request.acl.threads.get_role(self.thread.forum_id)

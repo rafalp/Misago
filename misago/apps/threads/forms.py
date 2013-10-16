@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext, ugettext_lazy as _
 import floppyforms as forms
 from misago.apps.threadtype.posting.forms import NewThreadForm as NewThreadFormBase
 from misago.forms import Form
@@ -101,9 +101,22 @@ class PollVoteForm(Form):
             choices.append((choice['pk'], choice['name']))
         if self.poll.max_choices > 1:
             self.add_field('options',
-                           forms.TypedMultipleChoiceField(choices=choices, coerce=int,
+                           forms.TypedMultipleChoiceField(choices=choices, coerce=int, required=False,
                                                           widget=forms.CheckboxSelectMultiple))
         else:
             self.add_field('options',
-                           forms.TypedChoiceField(choices=choices, coerce=int,
+                           forms.TypedChoiceField(choices=choices, coerce=int, required=False,
                                                   widget=forms.RadioSelect))
+
+    def clean_options(self):
+        data = self.cleaned_data['options']
+        try:
+            if not data:
+                raise forms.ValidationError(_("You have to make selection."))
+            if len(data) > self.poll.max_choices:
+                raise forms.ValidationError(ungettext("You cannot select more than one option.",
+                                                      "You cannot select more than %(limit)s options.",
+                                                      self.poll.max_choices) % {'limit': self.poll.max_choices})
+        except TypeError:
+            pass
+        return data
