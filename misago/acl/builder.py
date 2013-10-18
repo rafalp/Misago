@@ -22,14 +22,14 @@ def build_form(request, role):
 
 
 def build_forum_form(request, role):
-    print dir(ACLFormBase)
     form_type = type('ACLFormForumFinal', (ACLFormBase,), {'fieldsets': []})
     for provider in settings.PERMISSION_PROVIDERS:
         app_module = import_module(provider)
         try:
             app_module.make_forum_form(request, role, form_type)
-        except AttributeError:
-            pass
+        except AttributeError as e:
+            if not 'make_forum_form' in unicode(e):
+                raise e
     return form_type
 
 

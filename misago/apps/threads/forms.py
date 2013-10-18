@@ -1,36 +1,60 @@
 from django.utils.translation import ungettext, ugettext_lazy as _
 import floppyforms as forms
-from misago.apps.threadtype.posting.forms import NewThreadForm as NewThreadFormBase
+from misago.apps.threadtype.posting.forms import NewThreadForm as NewThreadFormBase, EditThreadForm as EditThreadFormBase
 from misago.forms import Form
 from misago.validators import validate_sluggable
 
-class NewThreadForm(NewThreadFormBase):
-    def type_fields(self):
-        if self.request.acl.threads.can_make_polls(self.forum):
-            self.add_field('poll_question',
-                           forms.CharField(label=_("Poll Question"),
-                                           required=False))
-            self.add_field('poll_choices',
-                           forms.CharField(label=_("Poll Choices"),
-                                           help_text=_("Enter options poll members will vote on, every one in new line."),
-                                           required=False,
-                                           widget=forms.Textarea))
-            self.add_field('poll_max_choices',
-                           forms.IntegerField(label=_("Choices Per User"),
-                                              help_text=_("Select on how many options individual user will be able to vote on."),
-                                              min_value=1,
-                                              initial=1))
-            self.add_field('poll_length',
-                           forms.IntegerField(label=_("Poll Length"),
-                                              help_text=_("Number of days since poll creations users will be allowed to vote in poll. Enter zero for permanent poll."),
-                                              min_value=0,
-                                              initial=0))
-            self.add_field('poll_public',
-                           forms.BooleanField(label=_("Public Voting"),
-                                              required=False))
-            self.add_field('poll_changing_votes',
-                           forms.BooleanField(label=_("Allow Changing Votes"),
-                                              required=False))
+
+class PollFormMixin(object):
+    def create_poll_form(self):
+        self.add_field('poll_question',
+                       forms.CharField(label=_("Poll Question"),
+                                       required=False))
+        self.add_field('poll_choices',
+                       forms.CharField(label=_("Poll Choices"),
+                                       help_text=_("Enter options poll members will vote on, every one in new line."),
+                                       required=False,
+                                       widget=forms.Textarea))
+        self.add_field('poll_max_choices',
+                       forms.IntegerField(label=_("Choices Per User"),
+                                          help_text=_("Select on how many options individual user will be able to vote on."),
+                                          min_value=1,
+                                          initial=1))
+        self.add_field('poll_length',
+                       forms.IntegerField(label=_("Poll Length"),
+                                          help_text=_("Number of days since poll creations users will be allowed to vote in poll. Enter zero for permanent poll."),
+                                          min_value=0,
+                                          initial=0))
+        self.add_field('poll_public',
+                       forms.BooleanField(label=_("Public Voting"),
+                                          required=False))
+        self.add_field('poll_changing_votes',
+                       forms.BooleanField(label=_("Allow Changing Votes"),
+                                          required=False))
+
+    def edit_poll_form(self):
+        self.add_field('poll_question',
+                       forms.CharField(label=_("Poll Question"),
+                                       initial=self.poll.question))
+        self.add_field('poll_choices',
+                       forms.CharField(label=_("New Choices"),
+                                       help_text=_("If you want, you can add new options to poll. Enter every option in new line."),
+                                       required=False,
+                                       widget=forms.Textarea))
+        self.add_field('poll_max_choices',
+                       forms.IntegerField(label=_("Choices Per User"),
+                                          help_text=_("Select on how many options individual user will be able to vote on."),
+                                          min_value=1,
+                                          initial=1))
+        self.add_field('poll_length',
+                       forms.IntegerField(label=_("Poll Length"),
+                                          help_text=_("Number of days since poll creations users will be allowed to vote in poll. Enter zero for permanent poll."),
+                                          min_value=0,
+                                          initial=0))
+
+        self.add_field('poll_changing_votes',
+                       forms.BooleanField(label=_("Allow Changing Votes"),
+                                          required=False))
 
     def clean_poll_question(self):
         data = self.cleaned_data['poll_question'].strip()
@@ -77,7 +101,7 @@ class NewThreadForm(NewThreadFormBase):
             raise forms.ValidationError(_("Poll length cannot be longer than 300 days."))
         return data
 
-    def clean(self):
+    def clean_poll(self, data):
         data = super(NewThreadForm, self).clean()
         try:
             if bool(data['poll_question']) != bool(self.clean_choices):
@@ -87,6 +111,38 @@ class NewThreadForm(NewThreadFormBase):
                     raise forms.ValidationError(_("You have to define poll question."))
         except KeyError:
             pass
+        return data
+
+
+class NewThreadForm(NewThreadFormBase, PollFormMixin):
+    def type_fields(self):
+        if self.request.acl.threads.can_make_polls(self.forum):
+            self.create_poll_form()
+
+    def clean(self):
+        data = super(NewThreadForm, self).clean()
+        data = self.clean_poll(data)
+        return data
+
+
+class EditThreadForm(EditThreadFormBase, PollFormMixin):
+    def type_fields(self):
+        self.poll = self.thread.poll
+        if self.poll:
+            if self.request.acl.threads.can_edit_poll(self.forum, self.poll):
+                self.edit_poll_form()
+        else:
+            if self.request.acl.threads.can_make_polls(self.forum):
+                self.create_poll_form()
+
+        if self.poll and self.request.acl.threads.can_delete_poll(self.forum, self.poll):
+            self.add_field('poll_delete',
+                           forms.BooleanField(label=_("Delete poll"),
+                                              required=False))
+
+    def clean(self):
+        data = super(EditThreadForm, self).clean()
+        data = self.clean_poll(data)
         return data
 
 

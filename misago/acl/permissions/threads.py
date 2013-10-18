@@ -1,5 +1,7 @@
+from datetime import timedelta
 from django.db import models
 from django.db.models import Q
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 import floppyforms as forms
 from misago.acl.builder import BaseACL
@@ -96,11 +98,13 @@ def make_forum_form(request, role, form):
                                                                            ), coerce=int)
     form.base_fields['can_see_poll_votes'] = forms.BooleanField(label=_("Can always see who voted in poll"),
                                                                 widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_edit_polls'] = forms.IntegerField(label=_("Time for poll edition"), min_value=0, initial=15,
+                                                            help_text=_("Enter number of minutes after poll has been started for which member (or moderator) will be able to edit poll or 0 to always allow edition of unfinished polls. If you enter zero, users will always be able to change (and possibly maniputale) unfinished polls. This permission has also effect on user's permission to delete poll."))
     form.base_fields['can_delete_polls'] = forms.TypedChoiceField(label=_("Can delete polls"),
                                                                   choices=(
                                                                            (0, _("No")),
-                                                                           (1, _("Yes, soft-delete")),
-                                                                           (2, _("Yes, hard-delete")),
+                                                                           (1, _("Yes, within allowed time")),
+                                                                           (2, _("Yes, always")),
                                                                            ), coerce=int)
     form.base_fields['can_delete_attachments'] = forms.BooleanField(label=_("Can delete attachments"),
                                                                     widget=YesNoSwitch, initial=False, required=False)
@@ -127,7 +131,7 @@ def make_forum_form(request, role, form):
                           ))
     form.fieldsets.append((
                            _("Polls"),
-                           ('can_make_polls', 'can_vote_in_polls', 'can_see_poll_votes')
+                           ('can_make_polls', 'can_vote_in_polls', 'can_see_poll_votes', 'can_edit_polls', 'can_delete_polls')
                           ))
     form.fieldsets.append((
                            _("Attachments"),
@@ -138,7 +142,7 @@ def make_forum_form(request, role, form):
                            _("Moderation"),
                            ('can_approve', 'can_edit_labels', 'can_see_changelog', 'can_pin_threads', 'can_edit_threads_posts',
                             'can_move_threads_posts', 'can_close_threads', 'can_protect_posts', 'can_delete_threads',
-                            'can_delete_posts', 'can_delete_polls', 'can_delete_attachments', 'can_delete_checkpoints', 'can_see_deleted_checkpoints')
+                            'can_delete_posts', 'can_delete_attachments', 'can_delete_checkpoints', 'can_see_deleted_checkpoints')
                           ))
 
 
@@ -611,6 +615,34 @@ class ThreadsACL(BaseACL):
         except KeyError:
             raise ACLError403(_("You don't have permission to see votes in this poll."))
 
+    def can_edit_poll(self, forum, poll):
+        try:
+            if poll.over:
+                return False
+            forum_role = self.get_role(forum)
+            if forum_role['can_edit_polls'] == 0:
+                return True
+            edition_expires = poll.start_date + timedelta(minutes=forum_role['can_edit_polls'])
+            return timezone.now() <= edition_expires
+        except KeyError:
+            return False
+
+    def can_delete_poll(self, forum, poll):
+        try:
+            forum_role = self.get_role(forum)
+            if not forum_role['can_delete_polls']:
+                return False
+            if forum_role['can_edit_threads_posts']:
+                return True
+            if poll.over:
+                return False
+            if forum_role['can_delete_polls'] == 1:
+                edition_expires = poll.start_date + timedelta(minutes=forum_role['can_edit_polls'])
+                return timezone.now() <= edition_expires
+            return True
+        except KeyError:
+            return False
+
     def can_see_all_checkpoints(self, forum):
         try:
             forum_role = self.get_role(forum)
@@ -692,6 +724,7 @@ def build_forums(acl, perms, forums, forum_roles):
                      'can_delete_threads': 0,
                      'can_delete_posts': 0,
                      'can_see_poll_votes': False,
+                     'can_edit_polls': 15,
                      'can_delete_polls': 0,
                      'can_delete_attachments': False,
                      'can_see_deleted_checkpoints': False,
@@ -703,7 +736,10 @@ def build_forums(acl, perms, forums, forum_roles):
                 role = forum_roles[perm['forums'][forum.pk]]
                 for p in forum_role:
                     try:
-                        if p in ['attachment_size', 'attachment_limit'] and role[p] == 0:
+                        if p  == 'can_edit_polls':
+                            if role[p] < forum_role[p]:
+                                forum_role[p] = role[p]
+                        elif p in ['attachment_size', 'attachment_limit'] and role[p] == 0:
                             forum_role[p] = 0
                         elif role[p] > forum_role[p]:
                             forum_role[p] = role[p]

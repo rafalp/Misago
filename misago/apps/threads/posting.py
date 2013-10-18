@@ -3,18 +3,14 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 from misago import messages
-from misago.apps.threads.forms import NewThreadForm
+from misago.apps.threads.forms import NewThreadForm, EditThreadForm
 from misago.apps.threadtype.posting import NewThreadBaseView, EditThreadBaseView, NewReplyBaseView, EditReplyBaseView
 from misago.models import Forum, Thread, Post, Poll, PollOption
 from misago.apps.threads.mixins import TypeMixin
 
-class NewThreadView(NewThreadBaseView, TypeMixin):
-    form_type = NewThreadForm
 
-    def set_forum_context(self):
-        self.forum = Forum.objects.get(pk=self.kwargs.get('forum'), type='forum')
-
-    def after_form(self, form):
+class PollFormMixin(object):
+    def create_poll(self, form):
         poll = Poll(forum=self.forum,
                     thread=self.thread,
                     user=self.request.user,
@@ -44,6 +40,23 @@ class NewThreadView(NewThreadBaseView, TypeMixin):
         self.thread.has_poll = True
         self.thread.save()
 
+    def update_poll(self, form):
+        pass
+
+    def delete_poll(self):
+        self.thread.poll.delete()
+
+
+class NewThreadView(NewThreadBaseView, TypeMixin, PollFormMixin):
+    form_type = NewThreadForm
+
+    def set_forum_context(self):
+        self.forum = Forum.objects.get(pk=self.kwargs.get('forum'), type='forum')
+
+    def after_form(self, form):
+        if form.cleaned_data.get('poll_question'):
+            self.create_poll(form)
+
     def response(self):
         if self.post.moderated:
             messages.success(self.request, _("New thread has been posted. It will be hidden from other members until moderator reviews it."), 'threads')
@@ -53,7 +66,17 @@ class NewThreadView(NewThreadBaseView, TypeMixin):
 
 
 class EditThreadView(EditThreadBaseView, TypeMixin):
-    form_type = NewThreadForm
+    form_type = EditThreadForm
+
+    def after_form(self, form):
+        if self.thread.poll:
+            if form.cleaned_data.get('poll_delete'):
+                self.delete_poll()
+                self.thread.save()
+            else:
+                self.update_poll(form)
+        elif form.cleaned_data.get('poll_question'):
+            self.create_poll(form)
 
     def response(self):
         messages.success(self.request, _("Your thread has been edited."), 'threads_%s' % self.post.pk)

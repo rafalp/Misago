@@ -70,15 +70,22 @@
             {{ form_theme.row(form.edit_reason, attrs={'class': 'span8'}) }}
             {% endif %}
 
-            {% if 'poll_question' in form.fields %}
+            {% if 'poll_question' in form.fields or 'poll_delete' in form.fields %}
             <hr>
-            <h4>{% trans %}Create Poll{% endtrans %}</h4>
+            <h4>{% if thread and thread.poll %}{% trans %}Edit Poll{% endtrans %}{% else %}{% trans %}Create Poll{% endtrans %}{% endif %}</h4>
+            {% if 'poll_question' in form.fields %}
             {{ form_theme.row(form.poll_question, attrs={'class': 'span8'}) }}
             {{ form_theme.row(form.poll_choices, attrs={'class': 'span8', 'rows': 4}) }}
             {{ form_theme.row(form.poll_max_choices, attrs={'class': 'span8'}) }}
             {{ form_theme.row(form.poll_length, attrs={'class': 'span8'}) }}
+            {% if 'poll_public' in form.fields %}
             {{ form_theme.row(form.poll_public, attrs={'inline': lang_poll_public()}) }}
+            {% endif %}
             {{ form_theme.row(form.poll_changing_votes, attrs={'inline': lang_poll_changing_votes()}) }}
+            {% endif %}
+            {% if 'poll_delete' in form.fields %}
+            {{ form_theme.row(form.poll_delete, attrs={'inline': lang_poll_delete()}) }}
+            {% endif %}
             {% endif %}
 
             {% if intersect(form.fields, ('thread_weight', 'close_thread')) %}
@@ -214,4 +221,8 @@
 
 {% macro lang_poll_changing_votes() -%}
 {% trans %}Allow users to change their votes.{% endtrans %}
+{%- endmacro %}
+
+{% macro lang_poll_delete() -%}
+{% trans %}Delete this poll from thread.{% endtrans %}
 {%- endmacro %}
