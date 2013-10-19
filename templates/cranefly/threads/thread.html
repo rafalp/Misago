@@ -57,9 +57,9 @@
         <div class="options-form">
           {{ form_theme.field(poll_form.options) }}
           <p class="poll-voting-help">{% trans choices=poll.max_choices -%}
-            You can vote on one option.
+            You can vote for one option.
           {%- pluralize -%}
-            You can vote on {{ choices }} options.
+            You can vote for {{ choices }} options.
           {%- endtrans %}{% if poll.public %} {% trans %}Your votes will be public.{% endtrans %}{% endif %}</p>
         </div>
         {% else %}
