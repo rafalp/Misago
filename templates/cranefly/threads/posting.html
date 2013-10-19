@@ -75,6 +75,19 @@
             <h4>{% if thread and thread.poll %}{% trans %}Edit Poll{% endtrans %}{% else %}{% trans %}Create Poll{% endtrans %}{% endif %}</h4>
             {% if 'poll_question' in form.fields %}
             {{ form_theme.row(form.poll_question, attrs={'class': 'span8'}) }}
+            {% if thread and thread.poll %}
+            <div class="control-group">
+              <label class="control-label">{% trans %}Edit Poll Choices{% endtrans %}:</label>
+              <div class="controls">
+                {% for option in thread.poll.option_set.all() %}
+                <div>
+                  <input type="text" name="poll_current_choices[{{ option.pk }}]" value="{{ option.name }}" class="span8">
+                </div>
+                {% endfor %}
+              </div>
+              <p class="help-block">{% trans %}To delete existing choice, empty its text input.{% endtrans %}</p>
+            </div>
+            {% endif %}
             {{ form_theme.row(form.poll_choices, attrs={'class': 'span8', 'rows': 4}) }}
             {{ form_theme.row(form.poll_max_choices, attrs={'class': 'span8'}) }}
             {{ form_theme.row(form.poll_length, attrs={'class': 'span8'}) }}

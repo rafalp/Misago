@@ -9,7 +9,7 @@ except ImportError:
 
 class Poll(models.Model):
     forum = models.ForeignKey('Forum')
-    thread = models.OneToOneField('Thread', primary_key=True)
+    thread = models.OneToOneField('Thread', primary_key=True, related_name='poll_of')
     user = models.ForeignKey('User', null=True, blank=True, on_delete=models.SET_NULL)
     user_name = models.CharField(max_length=255, null=True, blank=True)
     user_slug = models.SlugField(max_length=255, null=True, blank=True)

@@ -41,7 +41,31 @@ class PollFormMixin(object):
         self.thread.save()
 
     def update_poll(self, form):
-        pass
+        poll = self.thread.poll
+        poll.question = form.cleaned_data['poll_question']
+        poll.max_choices = form.cleaned_data['poll_max_choices']
+        poll.length = form.cleaned_data['poll_length']
+        poll.vote_changing = form.cleaned_data['poll_changing_votes']
+        self.update_poll_choices(poll, form)
+        poll.save()
+
+    def update_poll_choices(self, poll, form):
+        choices = []
+        for option in form.changed_choices:
+            option.save()
+            choices.append(option)
+        for option in form.deleted_choices:
+            poll.votes -= option.votes
+            option.delete()
+        for name in set(form.clean_choices) - set([x.name for x in form.changed_choices]):
+            option = PollOption.objects.create(
+                                               poll=poll,
+                                               forum=self.forum,
+                                               thread=self.thread,
+                                               name=name,
+                                               )
+            choices.append(option)
+        poll.choices_cache = choices
 
     def delete_poll(self):
         self.thread.poll.delete()
@@ -65,7 +89,7 @@ class NewThreadView(NewThreadBaseView, TypeMixin, PollFormMixin):
         return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % self.post.pk))
 
 
-class EditThreadView(EditThreadBaseView, TypeMixin):
+class EditThreadView(EditThreadBaseView, TypeMixin, PollFormMixin):
     form_type = EditThreadForm
 
     def after_form(self, form):

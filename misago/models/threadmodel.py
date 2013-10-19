@@ -90,6 +90,13 @@ class Thread(models.Model):
     def timeline_date(self):
         return self.start
 
+    @property
+    def poll(self):
+        if self.has_poll:
+            return self.poll_of
+        else:
+            return None
+
     def delete(self, *args, **kwargs):
         """
         FUGLY HAX for weird stuff that happens with

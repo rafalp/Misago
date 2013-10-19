@@ -106,6 +106,8 @@
           {% trans end=poll.end_date|date %}Poll ended on {{ end }}{% endtrans %}
           {% elif thread.poll.length %}
           {% trans end=poll.end_date|date %}Poll ends on {{ end }}{% endtrans %}
+          {% else %}
+          {% trans %}Permanent poll.{% endtrans %}
           {% endif %}
         </p>
       </div>

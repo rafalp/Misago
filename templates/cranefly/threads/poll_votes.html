@@ -27,6 +27,8 @@
       <li><i class="icon-calendar"></i> {% trans end=poll.end_date|date %}Poll ended on {{ end }}{% endtrans %}</li>
       {% elif thread.poll.length %}
       <li><i class="icon-calendar"></i> {% trans end=poll.end_date|date %}Poll ends on {{ end }}{% endtrans %}</li>
+      {% else %}
+      <li><i class="icon-lock"></i> {% trans %}Permanent poll.{% endtrans %}</li>
       {% endif %}
     </ul>
   </div>
