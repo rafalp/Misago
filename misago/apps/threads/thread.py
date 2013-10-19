@@ -18,7 +18,7 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
             if self.request.user.is_authenticated():
                 self.thread.poll.user_votes = [x.option_id for x in self.request.user.pollvote_set.filter(poll=self.thread.poll)]
                 if self.request.acl.threads.can_vote_in_polls(self.forum, self.thread, self.thread.poll):
-                    context['poll_form'] = PollVoteForm(poll=self.thread.poll)
+                    context['poll_form'] = PollVoteForm(request=self.request, poll=self.thread.poll)
 
     def posts_actions(self):
         acl = self.request.acl.threads.get_role(self.thread.forum_id)
