@@ -149,10 +149,31 @@ class ThreadsListModeration(object):
                 for thread in reversed(threads):
                     merged.append(thread.pk)
                     thread.merge_with(new_thread)
-                Thread.objects.filter(id__in=merged).delete()
+
                 new_thread.sync()
                 new_thread.save(force_update=True)
                 new_thread.update_current_dates()
+
+                poll_action = form.cleaned_data.get('final_poll', 'no')
+                if poll_action == 'no':
+                    for thread in threads:
+                        if thread.has_poll:
+                            thread.poll.move_to(forum=new_thread.forum, thread=new_thread)
+                            new_thread.has_poll = True
+                            new_thread.save(force_update=True)
+                            break
+                else:
+                    if poll_action > 0:
+                        for thread in threads:
+                            if thread.pk == poll_action:
+                                thread.poll.move_to(forum=new_thread.forum, thread=new_thread)
+                                new_thread.has_poll = True
+                                new_thread.save(force_update=True)
+                                break
+
+                for thread in Thread.objects.filter(id__in=merged):
+                    thread.delete()
+
                 self.forum.sync()
                 self.forum.save(force_update=True)
                 if form.cleaned_data['new_forum'].pk != self.forum.pk:

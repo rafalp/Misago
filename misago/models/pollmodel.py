@@ -6,6 +6,9 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
+from misago.signals import (delete_user_content, merge_thread,
+                            move_forum_content, move_thread,
+                            rename_user)
 
 class Poll(models.Model):
     forum = models.ForeignKey('Forum')
@@ -24,6 +27,18 @@ class Poll(models.Model):
 
     class Meta:
         app_label = 'misago'
+
+    def move_to(self, forum=None, thread=None):
+        kwargs = {}
+        if forum:
+            self.forum = forum
+            kwargs['forum'] = forum
+        if thread:
+            self.thread = thread
+            kwargs['thread'] = thread
+        self.vote_set.all().update(**kwargs)
+        self.option_set.all().update(**kwargs)
+        self.save()
 
     @property
     def end_date(self):
@@ -116,3 +131,31 @@ class Poll(models.Model):
                              ip=request.session.get_ip(request),
                              agent=request.META.get('HTTP_USER_AGENT'),
                              )
+
+
+def rename_user_handler(sender, **kwargs):
+    Poll.objects.filter(user=sender).update(
+                                            user_name=sender.username,
+                                            user_slug=sender.username_slug,
+                                            )
+
+rename_user.connect(rename_user_handler, dispatch_uid="rename_user_poll")
+
+
+def delete_user_content_handler(sender, **kwargs):
+    for poll in Poll.objects.filter(user=sender).iterator():
+        poll.delete()
+
+delete_user_content.connect(delete_user_content_handler, dispatch_uid="delete_user_polls")
+
+
+def move_forum_content_handler(sender, **kwargs):
+    Poll.objects.filter(forum=sender).update(forum=kwargs['move_to'])
+
+move_forum_content.connect(move_forum_content_handler, dispatch_uid="move_forum_polls")
+
+
+def move_thread_handler(sender, **kwargs):
+    Poll.objects.filter(thread=sender).update(forum=kwargs['move_to'])
+
+move_thread.connect(move_thread_handler, dispatch_uid="move_thread_polls")

@@ -76,8 +76,8 @@ class PollFormMixin(object):
             for choice in data.splitlines():
                 choice = choice.strip()
                 if not choice in self.clean_choices:
-                    if len(choice) < 3:
-                        raise forms.ValidationError(_("Poll choices should be at least three characters long."))
+                    if len(choice) < 2:
+                        raise forms.ValidationError(_("Poll choices should be at least two characters long."))
                     if len(choice) > 250:
                         raise forms.ValidationError(_("Poll choices should be no longer than 250 characters."))
                     self.clean_choices.append(choice)

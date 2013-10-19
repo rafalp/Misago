@@ -50,6 +50,9 @@
           {% endfor %}
           <div class="form-fields">
             {{ form_theme.row(form.thread_name, attrs={'class': 'span6'}) }}
+            {% if 'final_poll' in form.fields %}
+            {{ form_theme.row(form.final_poll, attrs={'class': 'span6'}) }}
+            {% endif %}
             {{ form_theme.row(form.new_forum, attrs={'class': 'span6'}) }}
           </div>
           <div class="form-actions">
