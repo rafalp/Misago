@@ -88,7 +88,7 @@
           'title': '<strong>{{ vote.date|reldate }}</strong>',
           'content': '{% trans ip=vote.ip %}From {{ ip }}{% endtrans %}'
           {% else %}
-          'content': '<strong>{{ vote.ip }}</strong>'
+          'content': '<strong>{{ vote.date|reldate }}</strong>'
           {% endif %}
         });
         {% endfor %}
