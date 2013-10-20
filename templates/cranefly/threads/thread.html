@@ -87,7 +87,7 @@
         {% if poll_form %}
         {% if poll.user_votes and (not poll.user_votes[0] or poll.vote_changing) %}
         {% if poll.user_votes[0] %}
-        <button type="submit" name="change_vote" class="btn btn-primary">{% trans %}Change vote{% endtrans %}</button>
+        <button type="submit" name="change_vote" class="btn btn-primary">{% trans %}Change Vote{% endtrans %}</button>
         {% else %}
         <button type="submit" name="show_options" class="btn btn-primary">{% trans %}Voting Options{% endtrans %}</button>
         {% endif %}
@@ -97,9 +97,12 @@
         {% endif %}
         {% endif %}
         {% if poll.public or acl.threads.can_see_polls_votes(forum) %}
-        <a href="{{ url('thread_poll_details', slug=thread.slug, thread=thread.pk) }}" class="btn">{% trans %}Show voters{% endtrans %}</a>
+        <a href="{{ url('thread_poll_details', slug=thread.slug, thread=thread.pk) }}" class="btn">{% trans %}Participants{% endtrans %}</a>
         {% endif %}
         <p>
+          {% if poll.public %}
+          <strong>{% trans %}Voting is public.{% endtrans %}</strong>
+          {% endif %}
           {% if thread.closed or thread.deleted %}
           {% trans %}Poll has been closed.{% endtrans %}
           {% elif thread.poll.over %}

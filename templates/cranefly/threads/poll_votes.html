@@ -1,12 +1,12 @@
 {% extends "cranefly/layout.html" %}
 {% import "cranefly/macros.html" as macros with context %}
 
-{% block title %}{{ macros.page_title(title=_("Poll Votes"),parent=thread.name) }}{% endblock %}
+{% block title %}{{ macros.page_title(title=_("Poll Participants"),parent=thread.name) }}{% endblock %}
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {{ macros.parents_list(parents) }}
 <li><a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-<li class="active">{% trans %}Poll Votes{% endtrans %}
+<li class="active">{% trans %}Poll Participants{% endtrans %}
 {%- endblock %}
 
 {% block container %}
@@ -64,7 +64,7 @@
           </tbody>
         </table>
         {% else %}
-        <p class="lead">{% trans %}Nobody voted on this option.{% endtrans %}</p>
+        <p class="lead">{% trans %}Nobody voted for this option.{% endtrans %}</p>
         {% endif %}
     </div>
     {% if not loop.last %}
