@@ -41,7 +41,7 @@ class MergeThreadsForm(Form, ValidateThreadNameMixin):
 
         if len(choices) > 2:
             self.add_field('final_poll', forms.TypedChoiceField(label=_("Final Poll"),
-                                                                help_text=_("More than one of threads that you are going to merge has poll. Select poll that will be used in merged thread of delete all polls."),
+                                                                help_text=_("More than one of threads that you are going to merge has poll. Select poll that will be used in merged thread or delete all polls."),
                                                                 choices=choices,
                                                                 coerce=int,
                                                                 initial=choices[1][0]))
