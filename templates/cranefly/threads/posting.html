@@ -60,7 +60,18 @@
           <form action="{{ get_action() }}" method="post">
             <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
             {% if 'thread_name' in form.fields %}
+            {% if 'thread_prefix' in form.fields %}
+            <div class="row">
+              <div class="span6">
+              {{ form_theme.row(form.thread_name, attrs={'class': 'span6'}) }}
+              </div>
+              <div class="span2">
+              {{ form_theme.row(form.thread_prefix, attrs={'class': 'span2'}) }}
+              </div>
+            </div>
+            {% else %}
             {{ form_theme.row(form.thread_name, attrs={'class': 'span8'}) }}
+            {% endif %}
             <hr>
             <h4>{% trans %}Message Body{% endtrans %}</h4>
             {% endif %}

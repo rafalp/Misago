@@ -2,6 +2,7 @@ from django.utils.translation import ungettext, ugettext_lazy as _
 import floppyforms as forms
 from misago.apps.threadtype.posting.forms import NewThreadForm as NewThreadFormBase, EditThreadForm as EditThreadFormBase
 from misago.forms import Form
+from misago.models import ThreadPrefix
 from misago.validators import validate_sluggable
 
 class PollFormMixin(object):
@@ -140,11 +141,24 @@ class PollFormMixin(object):
         return data
 
 
-class NewThreadForm(NewThreadFormBase, PollFormMixin):
+class ThreadPrefixMixin(object):
+    def create_prefix_form(self):
+        self.prefixes = ThreadPrefix.objects.forum_prefixes(self.forum)
+        if self.prefixes:
+            self.add_field('thread_prefix',
+                           forms.TypedChoiceField(label=_("Thread Prefix"),
+                                                  choices=[(0, _("No prefix"))] + [(p.pk, _(p.name)) for p in self.prefixes.values()],
+                                                  coerce=int, required=False, empty_value=0))
+
+
+class NewThreadForm(NewThreadFormBase, PollFormMixin, ThreadPrefixMixin):
     def type_fields(self):
         self.poll = None
         if self.request.acl.threads.can_make_polls(self.forum):
             self.create_poll_form()
+
+        if self.request.acl.threads.can_change_prefix(self.forum):
+            self.create_prefix_form()
 
     def clean(self):
         data = super(NewThreadForm, self).clean()
@@ -152,7 +166,7 @@ class NewThreadForm(NewThreadFormBase, PollFormMixin):
         return data
 
 
-class EditThreadForm(EditThreadFormBase, PollFormMixin):
+class EditThreadForm(EditThreadFormBase, PollFormMixin, ThreadPrefixMixin):
     def type_fields(self):
         self.poll = self.thread.poll
 
@@ -167,6 +181,9 @@ class EditThreadForm(EditThreadFormBase, PollFormMixin):
             self.add_field('poll_delete',
                            forms.BooleanField(label=_("Delete poll"),
                                               required=False))
+
+        if self.request.acl.threads.can_change_prefix(self.forum):
+            self.create_prefix_form()
 
     def clean(self):
         data = super(EditThreadForm, self).clean()

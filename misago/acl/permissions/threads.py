@@ -65,7 +65,7 @@ def make_forum_form(request, role, form):
                                                               min_value=0, initial=3)
     form.base_fields['can_approve'] = forms.BooleanField(label=_("Can accept threads and posts"),
                                                          widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_edit_prefixes'] = forms.BooleanField(label=_("Can edit thread prefixes"),
+    form.base_fields['can_change_prefixes'] = forms.BooleanField(label=_("Can change threads prefixes"),
                                                              widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_see_changelog'] = forms.BooleanField(label=_("Can see edits history"),
                                                                widget=YesNoSwitch, initial=False, required=False)
@@ -140,7 +140,7 @@ def make_forum_form(request, role, form):
                           ))
     form.fieldsets.append((
                            _("Moderation"),
-                           ('can_approve', 'can_edit_prefixes', 'can_see_changelog', 'can_pin_threads', 'can_edit_threads_posts',
+                           ('can_approve', 'can_change_prefixes', 'can_see_changelog', 'can_pin_threads', 'can_edit_threads_posts',
                             'can_move_threads_posts', 'can_close_threads', 'can_protect_posts', 'can_delete_threads',
                             'can_delete_posts', 'can_delete_attachments', 'can_delete_checkpoints', 'can_see_deleted_checkpoints')
                           ))
@@ -325,6 +325,13 @@ class ThreadsACL(BaseACL):
                     raise ACLError403(_("This reply is protected, you cannot edit it."))
         except KeyError:
             raise ACLError403(_("You don't have permission to edit replies in this forum."))
+
+    def can_change_prefix(self, forum):
+        try:
+            forum_role = self.get_role(forum)
+            return forum_role['can_change_prefixes']
+        except KeyError:
+            return False
 
     def can_see_changelog(self, user, forum, post):
         try:
@@ -714,7 +721,7 @@ def build_forums(acl, perms, forums, forum_roles):
                      'attachment_size': 100,
                      'attachment_limit': 3,
                      'can_approve': False,
-                     'can_edit_prefixes': False,
+                     'can_change_prefixes': False,
                      'can_see_changelog': False,
                      'can_pin_threads': 0,
                      'can_edit_threads_posts': False,

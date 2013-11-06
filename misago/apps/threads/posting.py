@@ -71,7 +71,15 @@ class PollFormMixin(object):
         self.thread.poll.delete()
 
 
-class NewThreadView(NewThreadBaseView, TypeMixin, PollFormMixin):
+class PrefixFormMixin(object):
+    def set_prefix(self, form):
+        if form.cleaned_data['thread_prefix']:
+            self.thread.prefix_id = form.cleaned_data['thread_prefix']
+        else:
+            self.thread.prefix = None
+        self.thread.save()
+
+class NewThreadView(NewThreadBaseView, TypeMixin, PollFormMixin, PrefixFormMixin):
     form_type = NewThreadForm
 
     def set_forum_context(self):
@@ -81,6 +89,9 @@ class NewThreadView(NewThreadBaseView, TypeMixin, PollFormMixin):
         if form.cleaned_data.get('poll_question'):
             self.create_poll(form)
 
+        if form.cleaned_data.get('thread_prefix') != None:
+            self.set_prefix(form)
+
     def response(self):
         if self.post.moderated:
             messages.success(self.request, _("New thread has been posted. It will be hidden from other members until moderator reviews it."), 'threads')
@@ -89,7 +100,7 @@ class NewThreadView(NewThreadBaseView, TypeMixin, PollFormMixin):
         return redirect(reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % self.post.pk))
 
 
-class EditThreadView(EditThreadBaseView, TypeMixin, PollFormMixin):
+class EditThreadView(EditThreadBaseView, TypeMixin, PollFormMixin, PrefixFormMixin):
     form_type = EditThreadForm
 
     def after_form(self, form):
@@ -101,6 +112,9 @@ class EditThreadView(EditThreadBaseView, TypeMixin, PollFormMixin):
                 self.update_poll(form)
         elif form.cleaned_data.get('poll_question'):
             self.create_poll(form)
+
+        if form.cleaned_data.get('thread_prefix') != None:
+            self.set_prefix(form)
 
     def response(self):
         messages.success(self.request, _("Your thread has been edited."), 'threads_%s' % self.post.pk)
