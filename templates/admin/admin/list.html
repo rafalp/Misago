@@ -43,7 +43,7 @@
       	<em>{% trans %}Not available{% endtrans %}</em>
       	{%- endif %}
       </td>{% endif %}
-      {% if list_form %}<td class="check-cell"><label class="checkbox"><input form="list_form" name="{{ list_form.fields['list_items']['html_name'] }}" type="checkbox" class="checkbox-member" value="{{ item.pk }}"{% if list_form.fields['list_items']['has_value'] and item.pk in list_form.fields['list_items']['value'] %} checked="checked"{% endif %}></label></td>{% endif %}
+      {% if list_form %}<td class="check-cell"><label class="checkbox"><input form="list_form" name="list_items" type="checkbox" class="checkbox-member" value="{{ item.pk }}"{% if list_form.fields['list_items']['has_value'] and item.pk in list_form.fields['list_items']['value'] %} checked="checked"{% endif %}></label></td>{% endif %}
     </tr>{% endfor %}
   </tbody>
 </table>
