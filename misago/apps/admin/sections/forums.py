@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import AdminAction
-from misago.models import Forum
+from misago.models import Forum, ThreadPrefix
 
 ADMIN_ACTIONS = (
     AdminAction(
@@ -43,10 +43,28 @@ ADMIN_ACTIONS = (
                 name=_("Thread Prefixes"),
                 help=_("Thread Prefix allow you to group and classify threads together within forums."),
                 icon='tags',
-                link='admin_forums_prefixes',
-                urlpatterns=patterns('misago.apps.admin.index',
-                        url(r'^$', 'todo', name='admin_forums_prefixes'),
-                    ),
+                model=ThreadPrefix,
+                actions=[
+                         {
+                          'id': 'list',
+                          'name': _("Prefixes List"),
+                          'help': _("All existing prefixes"),
+                          'link': 'admin_threads_prefixes'
+                          },
+                         {
+                          'id': 'new',
+                          'name': _("Add Prefix"),
+                          'help': _("Create new threads prefix"),
+                          'link': 'admin_threads_prefixes_new'
+                          },
+                         ],
+                link='admin_threads_prefixes',
+                urlpatterns=patterns('misago.apps.admin.prefixes.views',
+                         url(r'^$', 'List', name='admin_threads_prefixes'),
+                         url(r'^new/$', 'New', name='admin_threads_prefixes_new'),
+                         url(r'^edit/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Edit', name='admin_threads_prefixes_edit'),
+                         url(r'^delete/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Delete', name='admin_threads_prefixes_delete'),
+                     ),
                 ),
     AdminAction(
                 section='forums',

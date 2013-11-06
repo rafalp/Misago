@@ -311,6 +311,11 @@
     color: @grayLight;
     font-size: @fontSizeLarge * 1.5;
     text-align: center;
+
+    .thread-prefix {
+      position: relative;
+      bottom: 5px;
+    }
   }
 
   &>ul {
@@ -588,6 +593,114 @@
 
     a:link, a:visited {
       color: @textColor;
+    }
+  }
+}
+
+.form-prefix {
+  margin: 0px;
+  padding: 0px;
+
+  .btn {
+    background-color: lighten(@gray, 50%);
+    border-color: lighten(@gray, 30%);
+    .opacity(90);
+
+    color: @gray;
+    text-shadow: none;
+
+    &.btn-active {
+      background-color: @gray;
+      border-color: darken(@gray, 20%);
+
+      color: @white;
+      text-shadow: 0px 1px 1px darken(@gray, 20%);
+    }
+
+    &.btn-cancel {
+      background-color: @white;
+      border-color: darken(@white, 30%);
+
+      &:hover, &:active {
+        background-color: @gray;
+        border-color: darken(@gray, 20%);
+
+        color: @white;
+        text-shadow: 0px 1px 1px darken(@gray, 20%);
+      }
+    }
+
+    &.btn-success {
+      &, &:hover, &:active {
+        background-color: lighten(@green, 40%);
+        border-color: lighten(@green, 20%);
+
+        color: @green;
+      }
+
+      &.btn-active {
+        background-color: @green;
+        border-color: darken(@green, 20%);
+
+        color: @white;
+        text-shadow: 0px 1px 1px darken(@green, 20%);
+      }
+    }
+
+    &.btn-info {
+      &, &:hover, &:active {
+        background-color: lighten(@blue, 40%);
+        border-color: lighten(@blue, 20%);
+
+        color: @blue;
+      }
+
+      &.btn-active {
+        background-color: @blue;
+        border-color: darken(@blue, 20%);
+
+        color: @white;
+        text-shadow: 0px 1px 1px darken(@blue, 20%);
+      }
+    }
+
+    &.btn-warning {
+      &, &:hover, &:active {
+        background-color: lighten(@orange, 40%);
+        border-color: lighten(@orange, 20%);
+
+        color: @orange;
+      }
+
+      &.btn-active {
+        background-color: @orange;
+        border-color: darken(@orange, 20%);
+
+        color: @white;
+        text-shadow: 0px 1px 1px darken(@orange, 20%);
+      }
+    }
+
+    &.btn-danger {
+      &, &:hover, &:active {
+        background-color: lighten(@red, 40%);
+        border-color: lighten(@red, 20%);
+
+        color: @red;
+      }
+
+      &.btn-active {
+        background-color: @red;
+        border-color: darken(@red, 20%);
+
+        color: @white;
+        text-shadow: 0px 1px 1px darken(@red, 20%);
+      }
+    }
+
+    &.btn-active, &:hover, &:active {
+      .box-shadow(none);
+      .opacity(100);
     }
   }
 }

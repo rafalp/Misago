@@ -231,7 +231,11 @@
     {% endif %}
     {% else %}
     <div class="threads-list-empty">
+      {% if active_prefix %}
+      {% trans prefix=draw_prefix(active_prefix) %}There are no threads prefixed with {{ prefix }} in this forum.{% endtrans %}
+      {% else %}
       {% trans %}There are no threads in this forum.{% endtrans %}
+      {% endif %}
     </div>
     {% endif %}
   </div>
@@ -288,10 +292,34 @@
     {%- if pagination['prev'] > 1 %}<li><a href="{{ url('forum', slug=forum.slug, forum=forum.id) }}" class="tooltip-top" title="{% trans %}First Page{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}First{% endtrans %}</a></li>{% endif -%}
     {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ url('forum', slug=forum.slug, forum=forum.id, page=pagination['prev']) }}{% else %}{{ url('forum', slug=forum.slug, forum=forum.id) }}{% endif %}" class="tooltip-top" title="{% trans %}Newest Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
     {%- if pagination['next'] > 0 %}<li><a href="{{ url('forum', slug=forum.slug, forum=forum.id, page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {% if prefixes and active_prefix %}
+    <li>
+      <form class="form-prefix" action="{{ url('forum_switch_prefix', slug=forum.slug, forum=forum.id) }}" method="POST">
+        <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+        <input type="hidden" name="retreat" value="{{ request_path }}">
+        <input type="hidden" name="switch_prefix" value="0">
+        <button type="submit" class="btn btn-cancel">{% trans %}All Threads{% endtrans %}</button>
+      </form>
+    </li>
+    {% endif %}
+    {% for prefix in prefixes.values() %}
+    <li>
+      <form class="form-prefix" action="{{ url('forum_switch_prefix', slug=forum.slug, forum=forum.id) }}" method="POST">
+        <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+        <input type="hidden" name="retreat" value="{{ request_path }}">
+        <input type="hidden" name="switch_prefix" value="{% if active_prefix == prefix %}0{% else %}{{ prefix.pk }}{% endif %}">
+        <button type="submit" class="btn{% if prefix.style %} btn-{{ prefix.style }}{% endif %}{% if active_prefix == prefix %} btn-active{% endif %}">{{ _(prefix.name) }}</button>
+      </form>
+    </li>
+    {% endfor %}
   </ul>
 </div>
 {% endif %}
 {% endmacro %}
+
+{% macro draw_prefix(prefix) -%}
+<span class="label{% if prefix.style %} label-{{ prefix.style }}{% endif %} thread-prefix">{{ _(prefix.name) }}</span>
+{%- endmacro %}
 
 {% block javascripts -%}{{ super() }}
   <script type="text/javascript">

@@ -3,9 +3,13 @@ from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
+from misago import messages
+from misago.acl.exceptions import ACLError403, ACLError404
+from misago.apps.errors import error403, error404
 from misago.apps.threadtype.list import ThreadsListBaseView, ThreadsListModeration
 from misago.conf import settings
-from misago.models import Forum, Thread
+from misago.decorators import check_csrf
+from misago.models import Forum, Thread, ThreadPrefix
 from misago.readstrackers import ThreadsTracker
 from misago.utils.pagination import make_pagination
 from misago.apps.threads.mixins import TypeMixin
@@ -14,9 +18,23 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
     def fetch_forum(self):
         self.forum = Forum.objects.get(pk=self.kwargs.get('forum'), type='forum')
 
+        self.prefixes = ThreadPrefix.objects.forum_prefixes(self.forum)
+        self.active_prefix = self.request.session.get('forum_prefix_%s' % self.forum.pk)
+
+        if self.active_prefix and self.active_prefix.pk not in self.prefixes:
+            self.active_prefix = None
+
+    def template_vars(self, context):
+        context['prefixes'] = self.prefixes
+        context['active_prefix'] = self.active_prefix
+        return context
+
     def threads_queryset(self):
         announcements = self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set).filter(weight=2).order_by('-pk')
         threads = self.request.acl.threads.filter_threads(self.request, self.forum, self.forum.thread_set).filter(weight__lt=2).order_by('-weight', '-last')
+
+        if self.active_prefix:
+            threads = threads.filter(prefix=self.active_prefix)
 
         # Dont display threads by ignored users (unless they are important)
         if self.request.user.is_authenticated():
@@ -71,3 +89,44 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
         except KeyError:
             pass
         return actions
+
+
+class ForumSwitchThreadPrefix(ThreadsListView):
+    def __call__(self, request, **kwargs):
+        self.request = request
+        self.kwargs = kwargs
+        self.pagination = {}
+        self.parents = []
+        self.threads = []
+        self.message = request.messages.get_message('threads')
+        try:
+            self._type_available()
+            self._fetch_forum()
+            return self.change_prefix()
+        except (Forum.DoesNotExist, Thread.DoesNotExist):
+            return error404(request)
+        except ACLError403 as e:
+            return error403(request, unicode(e))
+        except ACLError404 as e:
+            return error404(request, unicode(e))
+
+    def change_prefix(self):
+        @check_csrf
+        def view(request):
+            session_key = 'forum_prefix_%s' % self.forum.pk
+            try:
+                new_prefix = int(self.request.POST.get('switch_prefix', 0))
+            except ValueError:
+                new_prefix = 0
+
+            if self.prefixes and new_prefix in self.prefixes:
+                self.request.session[session_key] = self.prefixes[new_prefix]
+                messages.info(self.request, _('Displaying only threads that are prefixed with "%(prefix)s".') % {'prefix': _(self.prefixes[new_prefix].name)}, 'threads')
+            else:
+                self.request.session[session_key] = None
+                messages.info(self.request, _("Displaying all threads."), 'threads')
+
+            if 'retreat' in self.request.POST:
+                return redirect(self.request.POST.get('retreat'))
+            return self.threads_list_redirect()
+        return view(self.request)

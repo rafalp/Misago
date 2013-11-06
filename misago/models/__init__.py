@@ -21,6 +21,7 @@ from misago.models.settingmodel import Setting
 from misago.models.settingsgroupmodel import SettingsGroup
 from misago.models.signinattemptmodel import SignInAttempt
 from misago.models.threadmodel import Thread
+from misago.models.threadprefixmodel import ThreadPrefix
 from misago.models.threadreadmodel import ThreadRead
 from misago.models.tokenmodel import Token
 from misago.models.usermodel import User, Guest, Crawler

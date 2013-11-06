@@ -1,5 +1,4 @@
 import urlparse
-import threading
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 from django.conf import settings
@@ -9,8 +8,9 @@ from django.db import models
 from django.db.models import Sum
 from django.utils.translation import ugettext_lazy as _
 from misago.signals import delete_forum_content, move_forum_content, rename_forum, rename_user
+from misago.thread import local
 
-_thread_local = threading.local()
+_thread_local = local()
 
 class ForumManager(TreeManager):
     @property
@@ -116,7 +116,7 @@ class ForumManager(TreeManager):
                         parents[forum.parent_id].last_poster_slug = forum.last_poster_slug
                         parents[forum.parent_id].last_poster_style = forum.last_poster_style
         return forums_list
-    
+
     def ignored_users(self, user, forums):
         check_ids = []
         for forum in forums:
@@ -132,7 +132,7 @@ class ForumManager(TreeManager):
         self.populate_tree()
         readable = []
         for pk, forum in self.forums_tree.items():
-            if ((include_special or not forum.special) and 
+            if ((include_special or not forum.special) and
                     acl.forums.can_browse(forum.pk) and
                     acl.threads.acl[forum.pk]['can_read_threads'] == 2):
                 readable.append(forum.pk)
@@ -142,7 +142,7 @@ class ForumManager(TreeManager):
         self.populate_tree()
         readable = []
         for pk, forum in self.forums_tree.items():
-            if (not forum.special and 
+            if (not forum.special and
                     acl.forums.can_browse(forum.pk) and
                     acl.threads.acl[forum.pk]['can_read_threads'] == 1):
                 readable.append(forum.pk)
@@ -200,11 +200,11 @@ class Forum(MPTTModel):
 
     class Meta:
         app_label = 'misago'
-    
+
     def save(self, *args, **kwargs):
         super(Forum, self).save(*args, **kwargs)
         cache.delete('forums_tree')
-    
+
     def delete(self, *args, **kwargs):
         delete_forum_content.send(sender=self)
         super(Forum, self).delete(*args, **kwargs)
