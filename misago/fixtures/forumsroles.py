@@ -29,7 +29,7 @@ def load():
                         'attachment_size': 5000,
                         'attachment_limit': 15,
                         'can_approve': True,
-                        'can_edit_labels': True,
+                        'can_edit_prefixes': True,
                         'can_see_changelog': True,
                         'can_pin_threads': 2,
                         'can_edit_threads_posts': True,

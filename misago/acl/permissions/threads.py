@@ -65,7 +65,7 @@ def make_forum_form(request, role, form):
                                                               min_value=0, initial=3)
     form.base_fields['can_approve'] = forms.BooleanField(label=_("Can accept threads and posts"),
                                                          widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_edit_labels'] = forms.BooleanField(label=_("Can edit thread labels"),
+    form.base_fields['can_edit_prefixes'] = forms.BooleanField(label=_("Can edit thread prefixes"),
                                                              widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_see_changelog'] = forms.BooleanField(label=_("Can see edits history"),
                                                                widget=YesNoSwitch, initial=False, required=False)
@@ -140,7 +140,7 @@ def make_forum_form(request, role, form):
                           ))
     form.fieldsets.append((
                            _("Moderation"),
-                           ('can_approve', 'can_edit_labels', 'can_see_changelog', 'can_pin_threads', 'can_edit_threads_posts',
+                           ('can_approve', 'can_edit_prefixes', 'can_see_changelog', 'can_pin_threads', 'can_edit_threads_posts',
                             'can_move_threads_posts', 'can_close_threads', 'can_protect_posts', 'can_delete_threads',
                             'can_delete_posts', 'can_delete_attachments', 'can_delete_checkpoints', 'can_see_deleted_checkpoints')
                           ))
@@ -714,7 +714,7 @@ def build_forums(acl, perms, forums, forum_roles):
                      'attachment_size': 100,
                      'attachment_limit': 3,
                      'can_approve': False,
-                     'can_edit_labels': False,
+                     'can_edit_prefixes': False,
                      'can_see_changelog': False,
                      'can_pin_threads': 0,
                      'can_edit_threads_posts': False,

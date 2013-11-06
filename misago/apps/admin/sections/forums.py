@@ -39,13 +39,13 @@ ADMIN_ACTIONS = (
                 ),
     AdminAction(
                 section='forums',
-                id='labels',
-                name=_("Thread Labels"),
-                help=_("Thread Labels allow you to group threads together within forums."),
+                id='prefixes',
+                name=_("Thread Prefixes"),
+                help=_("Thread Prefix allow you to group and classify threads together within forums."),
                 icon='tags',
-                link='admin_forums_labels',
+                link='admin_forums_prefixes',
                 urlpatterns=patterns('misago.apps.admin.index',
-                        url(r'^$', 'todo', name='admin_forums_labels'),
+                        url(r'^$', 'todo', name='admin_forums_prefixes'),
                     ),
                 ),
     AdminAction(
