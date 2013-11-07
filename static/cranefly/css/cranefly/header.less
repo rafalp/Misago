@@ -28,7 +28,7 @@
       }
 
       .divider {
-      	color: @grayLight
+        color: @grayLight
       }
     }
   }
@@ -48,6 +48,12 @@
     li {
       float: left;
       margin-right: @baseFontSize;
+
+      .thread-prefix {
+        margin-left: 2px;
+        position: relative;
+        bottom: 1px;
+      }
 
       &>a {
         color: @grayLight;
@@ -152,10 +158,10 @@
           }
 
           &:visited, &:hover {
-				    background-color: @white;
-				    border-color: lighten(@grayLight, 5%);
+            background-color: @white;
+            border-color: lighten(@grayLight, 5%);
 
-				    color: @grayDark;
+            color: @grayDark;
           }
         }
       }

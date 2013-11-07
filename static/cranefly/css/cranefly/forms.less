@@ -18,22 +18,22 @@
   }
 
   .form-header {
-  	border-bottom: 1px solid darken(@bodyBackground, 8%);
-  	margin-top: @baseLineHeight * -1;
-  	margin-bottom: @baseLineHeight;
-  	padding: (@baseLineHeight / 2) 0px;
+    border-bottom: 1px solid darken(@bodyBackground, 8%);
+    margin-top: @baseLineHeight * -1;
+    margin-bottom: @baseLineHeight;
+    padding: (@baseLineHeight / 2) 0px;
 
-  	h1 {
-  	  margin: 0px;
-  	  padding: 0px;
+    h1 {
+      margin: 0px;
+      padding: 0px;
 
-  	  font-size: @fontSizeLarge * 1.2;
+      font-size: @fontSizeLarge * 1.2;
 
       small {
         font-size: @fontSizeLarge * 0.75;
         font-weight: bold;
       }
-  	}
+    }
 
     .btn {
       margin-left: @baseFontSize;
@@ -51,11 +51,15 @@
     padding: @baseLineHeight;
   }
 
-  form {
-  	margin: 0px;
+  .row {
+    margin-bottom: -15px;
+  }
 
-  	fieldset {
-  	  padding-top: 0px;
+  form {
+    margin: 0px;
+
+    fieldset {
+      padding-top: 0px;
 
       legend {
         border: none;
@@ -66,36 +70,36 @@
         font-weight: bold;
       }
 
-  	  &.first {
-  	  	border-top: none;
-  	  	padding-top: 0px;
-  	  }
-  	}
+      &.first {
+        border-top: none;
+        padding-top: 0px;
+      }
+    }
 
-  	.control-label {
-  	  font-weight: bold;
-  	}
+    .control-label {
+      font-weight: bold;
+    }
 
-  	&.form-horizontal {
-  		fieldset {
-  			&.last {
-  		    .control-group:last-child {
-  		  		margin-bottom: 0px;
-  		  		padding-bottom: 0px;
-  		    }
-  		  }
-  		}
+    &.form-horizontal {
+      fieldset {
+        &.last {
+          .control-group:last-child {
+            margin-bottom: 0px;
+            padding-bottom: 0px;
+          }
+        }
+      }
 
-		  .form-actions {
-	      padding-left: @horizontalComponentOffset + @baseLineHeight;
-		  }
-	  }
+      .form-actions {
+        padding-left: @horizontalComponentOffset + @baseLineHeight;
+      }
+    }
   }
 
   .form-actions {
-		border-radius: 0px 0px @baseBorderRadius @baseBorderRadius;
-		margin: (@baseLineHeight * -1);
-		margin-top: @baseLineHeight * 0.5;
+    border-radius: 0px 0px @baseBorderRadius @baseBorderRadius;
+    margin: (@baseLineHeight * -1);
+    margin-top: @baseLineHeight * 0.5;
 
     .form-actions-protip {
       margin-left: @baseFontSize;

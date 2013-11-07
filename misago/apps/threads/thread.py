@@ -1,11 +1,15 @@
 from django.utils.translation import ugettext as _
 from misago.apps.threadtype.thread import ThreadBaseView, ThreadModeration, PostsModeration
-from misago.models import Forum, Thread
+from misago.models import Forum, Thread, ThreadPrefix
 from misago.apps.threads.forms import PollVoteForm
 from misago.apps.threads.mixins import TypeMixin
 
 class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
     def template_vars(self, context):
+        prefixes = ThreadPrefix.objects.forum_prefixes(self.forum)
+        if self.thread.prefix_id in prefixes:
+            context['prefix'] = prefixes[self.thread.prefix_id]
+
         self.add_poll(context)
         return super(ThreadView, self).template_vars(context)
 

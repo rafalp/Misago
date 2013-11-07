@@ -208,7 +208,7 @@
             {% endif %}
           </ul>
           <div class="thread-title">
-            <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a>
+            {% if thread.prefix_id %}{{ draw_prefix(prefixes[thread.prefix_id]) }} {% endif %}<a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a>
           </div>
         </div>
       </li>
