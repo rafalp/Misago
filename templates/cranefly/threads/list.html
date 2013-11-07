@@ -105,7 +105,7 @@
   {% endif %}
 
   <div class="forum-threads-extra extra-top">
-    {{ pager() }}
+    {{ pager(True) }}
     {% if user.is_authenticated() and acl.threads.can_start_threads(forum) %}
     <a href="{{ url('thread_start', forum=forum.pk, slug=forum.slug) }}" class="btn btn-inverse pull-right"><i class="icon-plus"></i> {% trans %}New Thread{% endtrans %}</a>
     {% endif %}
@@ -284,7 +284,7 @@
 <strong{% if delta < number %} class="stat-increment"{% endif %}>{{ number|intcomma }}</strong>
 {%- endmacro %}
 
-{% macro pager() %}
+{% macro pager(first=False) %}
 {% if pagination['total'] > 0 %}
 <div class="pagination pull-left">
   <ul>
@@ -292,13 +292,17 @@
     {%- if pagination['prev'] > 1 %}<li><a href="{{ url('forum', slug=forum.slug, forum=forum.id) }}" class="tooltip-top" title="{% trans %}First Page{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}First{% endtrans %}</a></li>{% endif -%}
     {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ url('forum', slug=forum.slug, forum=forum.id, page=pagination['prev']) }}{% else %}{{ url('forum', slug=forum.slug, forum=forum.id) }}{% endif %}" class="tooltip-top" title="{% trans %}Newest Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
     {%- if pagination['next'] > 0 %}<li><a href="{{ url('forum', slug=forum.slug, forum=forum.id, page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {% if first%}
+    {% if prefixes %}
+    <li class="separator">{% trans %}Show Threads:{% endtrans %}</li>
+    {% endif %}
     {% if prefixes and active_prefix %}
     <li>
       <form class="form-prefix" action="{{ url('forum_switch_prefix', slug=forum.slug, forum=forum.id) }}" method="POST">
         <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
         <input type="hidden" name="retreat" value="{{ request_path }}">
         <input type="hidden" name="switch_prefix" value="0">
-        <button type="submit" class="btn btn-cancel">{% trans %}All Threads{% endtrans %}</button>
+        <button type="submit" class="btn btn-cancel">{% trans %}All{% endtrans %}</button>
       </form>
     </li>
     {% endif %}
@@ -312,6 +316,7 @@
       </form>
     </li>
     {% endfor %}
+    {% endif %}
   </ul>
 </div>
 {% endif %}
