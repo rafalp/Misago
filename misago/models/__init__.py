@@ -1,4 +1,5 @@
 from misago.models.alertmodel import Alert
+from misago.models.attachmenttypemodel import AttachmentType
 from misago.models.banmodel import Ban, BanCache
 from misago.models.changemodel import Change
 from misago.models.checkpointmodel import Checkpoint
