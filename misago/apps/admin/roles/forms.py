@@ -13,7 +13,7 @@ class RoleForm(Form):
     protected = forms.BooleanField(label=_("Protect this Role"),
                                    help_text=_("Only system administrators can edit or assign protected roles."),
                                    widget=YesNoSwitch,required=False)
-    
+
     def finalize_form(self):
         if not self.request.user.is_god():
             del self.fields['protected']
