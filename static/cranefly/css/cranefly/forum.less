@@ -350,6 +350,7 @@
         padding: (@fontSizeSmall - 2px) 0px;
 
         .thread-prefix {
+          margin-right: @baseFontSize / 2;
           position: relative;
           bottom: 2px;
         }
@@ -611,10 +612,15 @@
   .btn {
     background-color: lighten(@gray, 50%);
     border-color: lighten(@gray, 30%);
+    margin: 0px 2px;
+    padding: 2px 8px;
+    position: relative;
+    top: 1px;
     .opacity(90);
     outline: none;
 
     color: @gray;
+    font-size: @baseFontSize;
     text-shadow: none;
 
     &.btn-active {
@@ -677,7 +683,7 @@
         background-color: lighten(@orange, 40%);
         border-color: lighten(@orange, 20%);
 
-        color: @orange;
+        color: darken(@orange, 5%);
       }
 
       &.btn-active {

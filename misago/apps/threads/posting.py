@@ -79,6 +79,7 @@ class PrefixFormMixin(object):
             self.thread.prefix = None
         self.thread.save()
 
+
 class NewThreadView(NewThreadBaseView, TypeMixin, PollFormMixin, PrefixFormMixin):
     form_type = NewThreadForm
 
