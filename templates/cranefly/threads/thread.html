@@ -435,6 +435,10 @@
           <i class="icon-trash"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} restored this thread {{ date }}{% endtrans %}
           {%- elif checkpoint.action == 'moved' and acl.forums.can_see(checkpoint.old_forum_id) -%}
           <i class="icon-arrow-right"></i> {% trans user=checkpoint_user(checkpoint), forum=checkpoint_forum(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} moved this thread from {{ forum }} {{ date }}{% endtrans %}
+          {%- elif checkpoint.action == 'changed_prefix' -%}
+          <i class="icon-tag"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low, prefix=_(checkpoint.extra) %}{{ user }} changed this thread's prefix to "{{ prefix }}" {{ date }}{% endtrans %}
+          {%- elif checkpoint.action == 'removed_prefix' -%}
+          <i class="icon-tag"></i> {% trans user=checkpoint_user(checkpoint), date=checkpoint.date|reltimesince|low %}{{ user }} removed this thread's prefix {{ date }}{% endtrans %}
           {%- endif -%}
           {% if user.is_authenticated() %}
           {% if acl.threads.can_delete_checkpoint(forum) %}

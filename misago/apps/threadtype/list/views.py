@@ -71,9 +71,16 @@ class ThreadsListBaseView(ViewBase):
                                     thread.last_post = post
                                 if thread.start_post_id == post.pk or thread.last_post_id == post.pk:
                                     break
-                    form_action = getattr(self, 'action_' + self.form.cleaned_data['list_action'])
+
+                    action_call = 'action_' + self.form.cleaned_data['list_action']
+                    action_extra_args = []
+                    if ':' in action_call:
+                        action_extra_args = action_call[action_call.index(':') + 1:].split(',')
+                        action_call = action_call[:action_call.index(':')]
+
+                    form_action = getattr(self, action_call)
                     try:
-                        response = form_action(checked_items)
+                        response = form_action(checked_items, *action_extra_args)
                         if response:
                             return response
                         return redirect(self.request.path)

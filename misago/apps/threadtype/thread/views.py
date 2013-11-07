@@ -115,9 +115,14 @@ class ThreadBaseView(ViewBase):
         if self.request.method == 'POST' and self.request.POST.get('origin') == 'thread_form':
             self.thread_form = self.thread_form(self.request.POST, request=self.request)
             if self.thread_form.is_valid():
-                form_action = getattr(self, 'thread_action_' + self.thread_form.cleaned_data['thread_action'])
+                action_call = 'thread_action_' + self.thread_form.cleaned_data['thread_action']
+                action_extra_args = []
+                if ':' in action_call:
+                    action_extra_args = action_call[action_call.index(':') + 1:].split(',')
+                    action_call = action_call[:action_call.index(':')]
+                form_action = getattr(self, action_call)
                 try:
-                    response = form_action()
+                    response = form_action(*action_extra_args)
                     if response:
                         return response
                     return redirect(self.request.path)

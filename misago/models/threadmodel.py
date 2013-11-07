@@ -130,12 +130,13 @@ class Thread(models.Model):
                         or (c.date >= post.date and (i == i_max or c.date < posts[i+1].date))):
                     post.checkpoints_visible.append(c)
 
-    def set_checkpoint(self, request, action, user=None, forum=None):
+    def set_checkpoint(self, request, action, user=None, forum=None, extra=None):
         if request.user.is_authenticated():
             self.checkpoint_set.create(
                                        forum=self.forum,
                                        thread=self,
                                        action=action,
+                                       extra=extra,
                                        user=request.user,
                                        user_name=request.user.username,
                                        user_slug=request.user.username_slug,

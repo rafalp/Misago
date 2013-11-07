@@ -6,6 +6,7 @@ class Checkpoint(models.Model):
     forum = models.ForeignKey('Forum')
     thread = models.ForeignKey('Thread')
     action = models.CharField(max_length=255)
+    extra = models.CharField(max_length=255, null=True, blank=True)
     user = models.ForeignKey('User', null=True, blank=True, on_delete=models.SET_NULL)
     user_name = models.CharField(max_length=255)
     user_slug = models.CharField(max_length=255)

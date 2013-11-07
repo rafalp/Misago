@@ -1,4 +1,5 @@
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.apps.threadtype.thread import ThreadBaseView, ThreadModeration, PostsModeration
 from misago.models import Forum, Thread, ThreadPrefix
 from misago.apps.threads.forms import PollVoteForm
@@ -53,6 +54,13 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
         try:
             if acl['can_approve'] and self.thread.moderated:
                 actions.append(('accept', _('Accept this thread')))
+            if acl['can_change_prefixes']:
+                self.prefixes = ThreadPrefix.objects.forum_prefixes(self.forum)
+                if self.thread.prefix_id:
+                    actions.append(('prefix:0', _('Remove prefix')))
+                for prefix in self.prefixes.values():
+                    if prefix.pk != self.thread.prefix_id:
+                        actions.append(('prefix:%s' % prefix.pk, _('Change prefix to: %(prefix)s') % {'prefix': _(prefix.name)}))
             if acl['can_pin_threads'] == 2 and self.thread.weight < 2:
                 actions.append(('annouce', _('Change this thread to announcement')))
             if acl['can_pin_threads'] > 0 and self.thread.weight != 1:
@@ -79,3 +87,27 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
         except KeyError:
             pass
         return actions
+
+    def thread_action_prefix(self, prefix):
+        try:
+            prefix = int(prefix)
+        except TypeError:
+            prefix = 0
+        prefix = prefix or None
+
+        if prefix:
+            self._thread_action_set_prefix(self.prefixes[prefix])
+            messages.success(self.request, _('Threads prefix has been changed to "%(name)s".') % {'name': _(self.prefixes[prefix].name)}, 'threads')
+        else:
+            self._thread_action_remove_prefix()
+            messages.success(self.request, _('Thread prefix has been removed.'), 'threads')
+
+    def _thread_action_set_prefix(self, prefix):
+        self.thread.prefix_id = prefix.pk
+        thread.set_checkpoint(self.request, 'changed_prefix', self.request.user, self.forum, extra=prefix.name)
+        self.thread.save(force_update=True)
+
+    def _thread_action_remove_prefix(self):
+        self.thread.prefix_id = None
+        thread.set_checkpoint(self.request, 'removed_prefix', self.request.user, self.forum)
+        self.thread.save(force_update=True)

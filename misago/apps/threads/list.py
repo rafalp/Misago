@@ -69,6 +69,10 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
         try:
             if acl['can_approve']:
                 actions.append(('accept', _('Accept threads')))
+            if acl['can_change_prefixes']:
+                actions.append(('prefix:0', _('Remove prefix')))
+                for prefix in self.prefixes.values():
+                    actions.append(('prefix:%s' % prefix.pk, _('Change prefix to: %(prefix)s') % {'prefix': _(prefix.name)}))
             if acl['can_pin_threads'] == 2:
                 actions.append(('annouce', _('Change to announcements')))
             if acl['can_pin_threads'] > 0:
@@ -89,6 +93,45 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
         except KeyError:
             pass
         return actions
+
+    def action_prefix(self, ids, prefix):
+        prefixes = self.prefixes
+        try:
+            prefix = int(prefix)
+        except TypeError:
+            prefix = 0
+        prefix = prefix or None
+
+        if prefix:
+            if self._action_set_prefix(ids, prefixes[prefix]):
+                messages.success(self.request, _('Selected threads prefix has been changed to "%(name)s".') % {'name': _(prefixes[prefix].name)}, 'threads')
+            else:
+                messages.info(self.request, _('No threads prefix was changed.'), 'threads')
+        else:
+            if self._action_remove_prefix(ids):
+                messages.success(self.request, _('Selected threads prefix has been removed.'), 'threads')
+            else:
+                messages.info(self.request, _('No threads prefixes were removed.'), 'threads')
+
+    def _action_set_prefix(self, ids, prefix):
+        changed = []
+        for thread in self.threads:
+            if thread.pk in ids and prefix.pk != thread.prefix_id:
+                changed.append(thread.pk)
+                thread.prefix = prefix
+                thread.set_checkpoint(self.request, 'changed_prefix', self.request.user, self.forum, extra=prefix.name)
+                thread.save(force_update=True)
+        return changed
+
+    def _action_remove_prefix(self, ids):
+        changed = []
+        for thread in self.threads:
+            if thread.pk in ids and not thread.prefix_id:
+                changed.append(thread.pk)
+                thread.prefix_id = None
+                thread.set_checkpoint(self.request, 'removed_prefix', self.request.user, self.forum)
+                thread.save(force_update=True)
+        return changed
 
 
 class ForumSwitchThreadPrefix(ThreadsListView):
