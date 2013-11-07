@@ -14,7 +14,6 @@ class PrefixForm(Form):
     style = forms.CharField(label=_("Prefix CSS Class"),
                             help_text=_("CSS class that will be used to style this thread prefix."),
                             max_length=255, required=False)
-
     forums = ForumMultipleChoiceField(label=_("Prefix Forums"),
                                       help_text=_("Select forums in which this prefix will be available."),
                                       level_indicator=u'- - ',
