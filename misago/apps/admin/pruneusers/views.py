@@ -167,9 +167,8 @@ class Apply(FormWidget):
         original_model = model
 
         # Set filter
-        users = model.get_model()
-        total_users = users
-        total_users = total_users.count()
+        users = model.make_queryset()
+        total_users = users.count()
 
         if not total_users:
             messages.error(request, _('Policy "%(name)s" does not apply to any users.') % {'name': model.name}, self.admin.id)
@@ -203,7 +202,7 @@ class Apply(FormWidget):
                                   'admin': self.admin,
                                   'action': self,
                                   'request': request,
-                                  'url': self.get_link(model),
+                                  'link': self.get_link(model),
                                   'fallback': self.get_fallback_link(),
                                   'messages': messages.get_messages(request, self.admin.id),
                                   'message': message,
