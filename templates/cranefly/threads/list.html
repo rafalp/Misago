@@ -309,17 +309,17 @@
 {% if prefixes %}
 <div class="prefix-select pull-left">
   <ul>
-    <li class="selection-title">{% trans %}Show Threads:{% endtrans %}</li>
-    {% if active_prefix %}
-    <li>
-      <a href="{{ url('forum', slug=forum.slug, forum=forum.id) }}" class="label label-cancel">{% trans %}All threads{% endtrans %}</a>
-    </li>
-    {% endif %}
+    <li class="selection-title">{% trans %}Filter Threads:{% endtrans %}</li>
     {% for prefix in prefixes.values() %}
     <li>
       <a href="{{ url('forum_prefixed', slug=forum.slug, forum=forum.id, prefix=prefix.slug) }}" class="label{% if prefix.style %} label-{{ prefix.style }}{% endif %}{% if active_prefix == prefix %} label-active{% endif %}">{{ _(prefix.name) }}</a>
     </li>
     {% endfor %}
+    {% if active_prefix %}
+    <li>
+      <a href="{{ url('forum', slug=forum.slug, forum=forum.id) }}" class="label label-cancel"><i class="icon-remove-sign"></i> {% trans %}Cancel{% endtrans %}</a>
+    </li>
+    {% endif %}
   </ul>
 </div>
 {% endif %}
