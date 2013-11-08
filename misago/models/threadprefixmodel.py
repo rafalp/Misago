@@ -12,12 +12,15 @@ class ThreadPrefixManager(models.Manager):
         cache.delete('threads_prefixes')
 
     def make_cache(self):
-        raw_prefixes = cache.get('threads_prefixes', 'nada')
-        if raw_prefixes == 'nada':
-            raw_prefixes = [p for p in ThreadPrefix.objects.prefetch_related().order_by('name')]
-            cache.set('threads_prefixes', raw_prefixes, None)
+        prefixes = cache.get('threads_prefixes', 'nada')
+        if prefixes == 'nada':
+            prefixes = []
+            for prefix in ThreadPrefix.objects.order_by('name').iterator():
+                prefix.forums_pks = [f.pk for f in prefix.forums.iterator()]
+                prefixes.append(prefix)
+            cache.set('threads_prefixes', prefixes, None)
         dict_result = SortedDict()
-        for prefix in raw_prefixes:
+        for prefix in prefixes:
             dict_result[prefix.pk] = prefix
         return dict_result
 
@@ -31,7 +34,7 @@ class ThreadPrefixManager(models.Manager):
     def forum_prefixes(self, forum):
         forum_prefixes = []
         for prefix in self.all_prefixes().values():
-            if forum in prefix.forums.all():
+            if forum.pk in prefix.forums_pks:
                 forum_prefixes.append((prefix.pk, prefix))
         return SortedDict(forum_prefixes)
 
