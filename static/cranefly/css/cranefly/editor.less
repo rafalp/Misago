@@ -65,6 +65,35 @@
     }
   }
 
+  .editor-upload {
+    border-top: 1px solid darken(@editorBackground, 10%);
+    overflow: auto;
+    padding: @editorPadding;
+  }
+
+  .editor-attachments {
+    margin: 0px;
+
+    li {
+      border-top: 1px solid darken(@editorBackground, 6%);
+      overflow: auto;
+      padding: @editorPadding;
+
+      img {
+        background-size: cover;
+        border-radius: 3px;
+        margin-right: 6px;
+        height: 32px;
+        width: 32px;
+      }
+
+      .attachment-name {
+        color: @textColor;
+        font-weight: bold;
+      }
+    }
+  }
+
   .editor-actions {
     border-top: 1px solid darken(@editorBackground, 10%);
     overflow: auto;

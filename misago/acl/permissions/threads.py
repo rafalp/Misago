@@ -650,19 +650,44 @@ class ThreadsACL(BaseACL):
         except KeyError:
             return False
 
+    def can_upload_attachments(self, forum):
+        try:
+            forum_role = self.get_role(forum)
+            return forum_role['can_upload_attachments']
+        except KeyError:
+            return False
+
+    def allow_upload_attachments(self, forum):
+        if not self.can_upload_attachments(forum):
+            raise ACLError403(_("You don't have permission to upload files in this forum."))
+
+    def attachment_size_limit(self, forum):
+        try:
+            forum_role = self.get_role(forum)
+            return forum_role['attachment_size']
+        except KeyError:
+            return -1
+
+    def attachments_limit(self, forum):
+        try:
+            forum_role = self.get_role(forum)
+            return forum_role['attachment_limit']
+        except KeyError:
+            return -1
+
     def can_see_all_checkpoints(self, forum):
         try:
             forum_role = self.get_role(forum)
             return forum_role['can_see_deleted_checkpoints']
         except KeyError:
-            raise False
+            return False
 
     def can_delete_checkpoint(self, forum):
         try:
             forum_role = self.get_role(forum)
             return forum_role['can_delete_checkpoints']
         except KeyError:
-            raise False
+            return False
 
     def allow_checkpoint_view(self, forum, checkpoint):
         if checkpoint.deleted:

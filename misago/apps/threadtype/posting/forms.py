@@ -46,6 +46,9 @@ class PostingForm(FloodProtectionMixin, Form, ValidatePostLengthMixin):
         if self.include_close_thread and self.request.acl.threads.can_close(self.forum):
             self.add_field('close_thread', forms.BooleanField(required=False))
 
+        if self.request.acl.threads.can_upload_attachments(self.forum):
+            self.add_field('new_file', forms.FileField(required=False))
+
         # Give inheritor chance to set custom fields
         try:
             self.type_fields()

@@ -35,6 +35,12 @@ UNICODE_USERNAMES = True
 # Default anti-flood delay (seconds)
 FLOOD_DELAY = 35
 
+# Orphan attachments limit
+# Attachment is considered orphan if its not assigned to any post
+# It's possible to spam orphans via repeately opening new reply form and uploading files, those limits
+# act as countermeasure to such form of attack
+ORPHAN_ATTACHMENTS_LIMIT = 32
+
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True

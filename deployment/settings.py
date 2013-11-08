@@ -85,7 +85,7 @@ TIME_ZONE = 'UTC'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en_US'
 
-# Absolute filesystem path to the directory that will hold user-uploaded files.
+# Absolute filesystem path to the directory that will hold publicly available media uploaded by users.
 # Always use forward slashes, even on Windows.
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = '/vagrant/media/'
@@ -94,6 +94,11 @@ MEDIA_ROOT = '/vagrant/media/'
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = '/media/'
+
+# Absolute filesystem path to the directory that will hold post attachments.
+# Always use forward slashes, even on Windows.
+# Example: "/home/media/media.lawrence.com/attachments/"
+ATTACHMENTS_ROOT = '/vagrant/attachments/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files

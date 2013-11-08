@@ -1,11 +1,13 @@
 from django.template import RequestContext
 from django.utils import timezone
+from django.utils.translation import ugettext as _
+from floppyforms import ValidationError
 from misago import messages
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
 from misago.markdown import emojis, post_markdown
 from misago.messages import Message
-from misago.models import Forum, Thread, Post, WatchedThread
+from misago.models import Attachment, AttachmentType, Forum, Thread, Post, WatchedThread
 from misago.shortcuts import render_to_response
 from misago.utils.translation import ugettext_lazy
 from misago.apps.threadtype.base import ViewBase
@@ -95,6 +97,100 @@ class PostingBaseView(ViewBase):
                                            email=(self.request.user.subscribe_start == 2),
                                            )
 
+    def make_attachments_token(self):
+        forum_pk = self.forum.pk
+        try:
+            thread_pk = self.thread.id
+        except AttributeError:
+            thread_pk = 0
+        try:
+            post_pk = self.post.id
+        except AttributeError:
+            post_pk = 0
+
+        self.attachments_token = 'attachments_%s_%s_%s_%s' % (self.request.user.pk, forum_pk, thread_pk, post_pk)
+
+    def session_attachments_queryset(self):
+        self.make_attachments_token()
+        session_pks = self.request.session.get(self.attachments_token, 'nada')
+        if session_pks == 'nada':
+            session_pks = [a.pk for a in Attachment.objects.filter(session=self.attachments_token).iterator()]
+            self.request.session[self.attachments_token] = session_pks
+
+        self.session_attachments = session_pks
+        return Attachment.objects.filter(id__in=session_pks).iterator()
+
+    def fetch_attachments(self):
+        self.attachments = []
+        self.user_attachments = 0
+
+        for attachment in self.session_attachments_queryset():
+            self.attachments.append(attachment)
+            if attachment.user_id == self.request.user.pk:
+                self.user_attachments += 1
+
+    def _upload_file(self, uploaded_file):
+        try:
+            self.request.acl.threads.allow_upload_attachments(self.forum)
+            attachments_limit = self.request.acl.threads.attachments_limit(self.forum)
+            if attachments_limit != 0 and self.user_attachments >= attachments_limit:
+                raise ACLError403(_("You can't attach any more files to this form."))
+
+            if not uploaded_file:
+                raise ValidationError(_("You have to upload file."))
+
+            Attachment.objects.allow_more_orphans()
+
+            attachment_type = AttachmentType.objects.find_type(uploaded_file.name)
+            if not attachment_type:
+                raise ValidationError(_("This is not an allowed file type."))
+            attachment_type.allow_file_upload(self.request.user,
+                                              self.request.acl.threads.attachment_size_limit(self.forum),
+                                              uploaded_file.size)
+
+            new_attachment = Attachment()
+            new_attachment.session = self.attachments_token
+            new_attachment.filetype = attachment_type
+            new_attachment.user = self.request.user
+            new_attachment.user_name = self.request.user.username
+            new_attachment.ip = self.request.session.get_ip(self.request)
+            new_attachment.agent = self.request.META.get('HTTP_USER_AGENT')
+            new_attachment.use_file(uploaded_file)
+            new_attachment.save(force_insert=True)
+
+            self.session_attachments.append(new_attachment.pk)
+            self.request.session[self.attachments_token] = self.session_attachments
+            self.attachments.append(new_attachment)
+            self.message = Message(_('File "%(filename)s" has been attached successfully.') % {'filename': new_attachment.name})
+        except ACLError403 as e:
+            self.message = Message(unicode(e), messages.ERROR)
+        except ValidationError as e:
+            self.message = Message(unicode(e.messages[0]), messages.ERROR)
+
+    def remove_attachment(self, attachment_pk):
+        try:
+            index = None
+            attachment = None
+            for index, attachment in enumerate(self.attachments):
+                if attachment.pk == attachment_pk:
+                    break
+            else:
+                raise ValidationError(_('Requested attachment could not be found.'))
+            deleted_pks = self.request.session.get('delete_%s' % self.attachments_token, [])
+            deleted_pks.append(attachment_pk)
+            del(self.attachments[index])
+            self.message = Message(_('File "%(filename)s" has been removed.') % {'filename': attachment.name})
+        except ACLError403 as e:
+            self.message = Message(unicode(e), messages.ERROR)
+        except ValidationError as e:
+            self.message = Message(unicode(e.messages[0]), messages.ERROR)
+
+    def validate_attachments(self, form):
+        return True
+
+    def finalize_attachments(self):
+        pass
+
     def __call__(self, request, **kwargs):
         self.request = request
         self.kwargs = kwargs
@@ -114,6 +210,7 @@ class PostingBaseView(ViewBase):
             self.check_forum_type()
             self._check_permissions()
             request.block_flood_requests = self.block_flood_requests
+            self.fetch_attachments()
             if request.method == 'POST':
                 # Create correct form instance
                 if self.allow_quick_reply and 'quick_reply' in request.POST:
@@ -121,21 +218,35 @@ class PostingBaseView(ViewBase):
                 if not form or 'preview' in request.POST or not form.is_valid():
                     # Override "quick reply" form with full one
                     try:
-                        form = self.form_type(request.POST, request.FILE, request=request, forum=self.forum, thread=self.thread)
+                        form = self.form_type(request.POST, request.FILES, request=request, forum=self.forum, thread=self.thread)
                     except AttributeError:
                         form = self.form_type(request.POST, request=request, forum=self.forum, thread=self.thread)
                 # Handle specific submit
-                if 'preview' in request.POST:
+                if list(set(request.POST.keys()) - set(('preview', 'upload', 'remove_attachment'))):
                     form.empty_errors()
                     if form['post'].value():
                         md, post_preview = post_markdown(form['post'].value())
                     else:
                         md, post_preview = None, None
+                    if 'upload' in request.POST:
+                        uploaded_file = None
+                        try:
+                            uploaded_file = form['new_file'].value()
+                        except KeyError:
+                            pass
+                        if uploaded_file:
+                            self._upload_file(uploaded_file)
+                    if 'remove_attachment' in request.POST:
+                        try:
+                            self.remove_attachment(int(request.POST.get('remove_attachment')))
+                        except ValueError:
+                            self.message = Message(_("Requested attachment could not be found."), messages.ERROR)
                 else:
-                    if form.is_valid():
+                    if form.is_valid() and validate_attachments(form):
                         self.post_form(form)
                         self.watch_thread()
                         self.after_form(form)
+                        self.finalize_attachments()
                         self.notify_users()
                         return self.response()
                     else:
@@ -152,6 +263,8 @@ class PostingBaseView(ViewBase):
         return render_to_response('%ss/posting.html' % self.type_prefix,
                                   self._template_vars({
                                         'action': self.action,
+                                        'attachments': self.attachments,
+                                        'attachments_number': self.user_attachments,
                                         'message': self.message,
                                         'forum': self.forum,
                                         'thread': self.thread,

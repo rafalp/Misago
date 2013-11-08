@@ -828,6 +828,9 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{color:#333;text-decoration:n
 .editor{background-color:#fff;border:1px solid #e6e6e6;border-radius:3px;margin-bottom:20px}.editor .editor-error{padding:10.5px;padding-bottom:0;margin-bottom:-10.5px}.editor .editor-error .help-block{color:#cf402e;font-weight:bold}
 .editor .editor-input{padding:10.5px}.editor .editor-input>div{margin-right:22px;position:relative}.editor .editor-input>div textarea{border:none;box-shadow:none;margin:-10.5px;padding:10.5px;padding-right:32px;width:100%;font-family:Monaco,Menlo,Consolas,"Courier New",monospace}
 .editor .editor-input>div .editor-zen-on{display:none;position:absolute;top:-4px;right:-26px;padding-left:8px}.editor .editor-input>div .editor-zen-on a{border-radius:4px;display:block;opacity:.5;filter:alpha(opacity=50);padding:2px 0;padding-bottom:3px;width:29px;color:#333;font-size:24px;text-align:center}.editor .editor-input>div .editor-zen-on a:hover,.editor .editor-input>div .editor-zen-on a:active{box-shadow:0 0 3px #999;text-decoration:none}
+.editor .editor-upload{border-top:1px solid #e6e6e6;overflow:auto;padding:10.5px}
+.editor .editor-attachments{margin:0}.editor .editor-attachments li{border-top:1px solid #f0f0f0;overflow:auto;padding:10.5px}.editor .editor-attachments li img{background-size:cover;border-radius:3px;margin-right:6px;height:32px;width:32px}
+.editor .editor-attachments li .attachment-name{color:#333;font-weight:bold}
 .editor .editor-actions{border-top:1px solid #e6e6e6;overflow:auto;padding:10.5px}.editor .editor-actions>.btn{margin-left:14px}
 .editor .editor-actions .editor-tools{margin:0;margin-right:10.5px}.editor .editor-actions .editor-tools li{float:left;margin-right:10.5px}.editor .editor-actions .editor-tools li .btn{display:block;padding-left:0;padding-right:0;width:28px;text-align:center}.editor .editor-actions .editor-tools li .btn i{margin:0}
 .editor .editor-actions .editor-help{line-height:30.5px}

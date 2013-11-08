@@ -30,6 +30,7 @@
     <button name="save" type="submit" class="btn btn-primary pull-right">{{ submit_button }}</button>
     {% if extra %}{{ extra }}{% endif %}
   </div>
+  {{ attachments_editor() }}
 </div>
 {% endmacro %}
 
@@ -53,6 +54,28 @@
     </div>
   </div>
 </div>
+{% endmacro %}
+
+{% macro attachments_editor() %}
+{% if acl.threads.can_upload_attachments(forum) %}
+<div class="editor-upload">
+  <input type="file" name="new_file">
+  <button name="upload" type="submit" class="btn pull-right">{% trans %}Attach File{% endtrans %}</button>
+</div>
+{% endif %}
+{% if attachments %}
+<ul class="unstyled editor-attachments">
+  {% for attachment in attachments %}
+  <li>
+    {% if attachment.is_image %}
+    <a href="{{ url('attachments_server', attachment=attachment.pk) }}"><img src="{{ url('attachments_thumbs_server', attachment=attachment.pk) }}" alt=""></a>
+    {% endif %}
+    <strong class="attachment-name">{{ attachment.name }}</strong>
+    <button name="remove_attachment" value="{{ attachment.pk }}" type="submit" class="btn pull-right">{% trans %}Remove{% endtrans %}</button>
+  </li>
+  {% endfor %}
+</ul>
+  {% endif %}
 {% endmacro %}
 
 {% macro js() %}

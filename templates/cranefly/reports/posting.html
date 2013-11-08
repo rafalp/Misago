@@ -57,7 +57,7 @@
           </div>
           {% endif %}
 
-          <form action="{{ get_action() }}" method="post">
+          <form action="{{ get_action() }}" method="post"{% if acl.threads.can_upload_attachments(forum) %} enctype="multipart/form-data"{% endif %}>
             <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
             {% if 'thread_name' in form.fields %}
             {{ form_theme.row(form.thread_name, attrs={'class': 'span8'}) }}
