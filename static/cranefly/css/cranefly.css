@@ -1022,7 +1022,7 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{color:#333;text-decoration:n
 .forum-threads-list .threads-actions{background-color:#fbfbfb;border-top:1px solid #d5d5d5;border-radius:0 0 2px 2px;overflow:auto;padding:4px;color:#999;font-size:11.9px}.forum-threads-list .threads-actions form{margin-bottom:0}
 .forum-threads-extra{overflow:auto}.forum-threads-extra.extra-top{margin-bottom:20px}
 .forum-threads-extra .threads-signin-message{float:right}.forum-threads-extra .threads-signin-message a:link,.forum-threads-extra .threads-signin-message a:visited{color:#333}
-.prefix-select{margin:0;margin-top:1px;padding:0}.prefix-select ul{overflow:auto}.prefix-select ul li{float:left;list-style:none;margin:0;padding:4px 0}
+.prefix-select{margin:0;margin-left:14px;padding:0}.prefix-select ul{margin:0;overflow:auto}.prefix-select ul li{float:left;list-style:none;margin:0;padding:4px 0}
 .prefix-select .selection-title{margin-right:5.95px;padding:4px 0;color:#555;font-weight:bold}
 .prefix-select .label{margin:0 4px;bottom:0;opacity:.9;filter:alpha(opacity=90);outline:none;padding:4px 6px;position:relative;bottom:1px;font-size:14px;font-weight:normal}.prefix-select .label.label-cancel{background-color:#fbfbfb;border:1px solid #999;margin-top:-1px;color:#555;text-shadow:none}.prefix-select .label.label-cancel:hover,.prefix-select .label.label-cancel:active{border:1px solid #999;color:#333}
 .prefix-select .label.label-success,.prefix-select .label.label-success:hover,.prefix-select .label.label-success:active{background-color:#dff1df;border-color:#86cb86;color:#46a546;text-shadow:none}
