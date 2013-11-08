@@ -29,12 +29,6 @@ class List(ListWidget):
                ('delete', _("Delete selected prefixes"), _("Are you sure you want to delete selected prefixes?")),
                )
 
-    def table_action(self, page_items, cleaned_data):
-        for item in page_items:
-            item.order = cleaned_data['pos_' + str(item.pk)]
-            item.save(force_update=True)
-        return Message(_('Prefixes order has been changed'), messages.SUCCESS), reverse('admin_threads_prefixes')
-
     def sort_items(self, page_items, sorting_method):
         return page_items.order_by('name')
 
