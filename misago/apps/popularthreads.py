@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
 from misago.conf import settings
-from misago.models import Forum, Thread
+from misago.models import Forum, Thread, ThreadPrefix
 from misago.shortcuts import render_to_response
 from misago.utils.pagination import make_pagination
 
@@ -27,6 +27,7 @@ def popular_threads(request, page=0):
                               {
                               'items_total': items_total,
                               'threads': Thread.objects.with_reads(queryset, request.user),
+                              'prefixes': ThreadPrefix.objects.all_prefixes(),
                               'pagination': pagination,
                               },
                               context_instance=RequestContext(request));

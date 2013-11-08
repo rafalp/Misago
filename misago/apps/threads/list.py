@@ -19,10 +19,14 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
         self.forum = Forum.objects.get(pk=self.kwargs.get('forum'), type='forum')
 
         self.prefixes = ThreadPrefix.objects.forum_prefixes(self.forum)
-        self.active_prefix = self.request.session.get('forum_prefix_%s' % self.forum.pk)
-
-        if self.active_prefix and self.active_prefix.pk not in self.prefixes:
-            self.active_prefix = None
+        self.active_prefix = self.kwargs.get('prefix', None)
+        if self.active_prefix:
+            for prefix in self.prefixes.values():
+                if self.active_prefix == prefix.slug:
+                    self.active_prefix = prefix
+                    break
+            else:
+                raise ACLError404()
 
     def template_vars(self, context):
         context['prefixes'] = self.prefixes
@@ -132,44 +136,3 @@ class ThreadsListView(ThreadsListBaseView, ThreadsListModeration, TypeMixin):
                 thread.set_checkpoint(self.request, 'removed_prefix', self.request.user, self.forum)
                 thread.save(force_update=True)
         return changed
-
-
-class ForumSwitchThreadPrefix(ThreadsListView):
-    def __call__(self, request, **kwargs):
-        self.request = request
-        self.kwargs = kwargs
-        self.pagination = {}
-        self.parents = []
-        self.threads = []
-        self.message = request.messages.get_message('threads')
-        try:
-            self._type_available()
-            self._fetch_forum()
-            return self.change_prefix()
-        except (Forum.DoesNotExist, Thread.DoesNotExist):
-            return error404(request)
-        except ACLError403 as e:
-            return error403(request, unicode(e))
-        except ACLError404 as e:
-            return error404(request, unicode(e))
-
-    def change_prefix(self):
-        @check_csrf
-        def view(request):
-            session_key = 'forum_prefix_%s' % self.forum.pk
-            try:
-                new_prefix = int(self.request.POST.get('switch_prefix', 0))
-            except ValueError:
-                new_prefix = 0
-
-            if self.prefixes and new_prefix in self.prefixes:
-                self.request.session[session_key] = self.prefixes[new_prefix]
-                messages.info(self.request, _('Displaying only threads that are prefixed with "%(prefix)s".') % {'prefix': _(self.prefixes[new_prefix].name)}, 'threads')
-            else:
-                self.request.session[session_key] = None
-                messages.info(self.request, _("Displaying all threads."), 'threads')
-
-            if 'retreat' in self.request.POST:
-                return redirect(self.request.POST.get('retreat'))
-            return self.threads_list_redirect()
-        return view(self.request)

@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 from misago.apps.errors import error403
 from misago.conf import settings
 from misago.decorators import block_guest
-from misago.models import Forum, WatchedThread
+from misago.models import Forum, WatchedThread, ThreadPrefix
 from misago.shortcuts import render_to_response
 from misago.utils.pagination import make_pagination
 
@@ -60,6 +60,7 @@ def watched_threads(request, page=0, new=False):
                               'pagination': pagination,
                               'new': new,
                               'threads': threads,
+                              'prefixes': ThreadPrefix.objects.all_prefixes(),
                               'message': request.messages.get_message('threads'),
                               },
                               context_instance=RequestContext(request))

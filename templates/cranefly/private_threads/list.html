@@ -96,7 +96,7 @@
             {% endif %}
           </ul>
           <div class="thread-title">
-            <a href="{{ url('private_thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a>
+            <a href="{{ url('private_thread', thread=thread.pk, slug=thread.slug) }}" class="thread-link">{{ thread.name }}</a>
           </div>
         </div>
       </li>

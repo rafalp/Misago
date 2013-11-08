@@ -19,7 +19,7 @@
     </ul>
     <h1>{{ thread.name }}</h1>
     <ul class="unstyled header-stats">
-      {% if prefix %}<li><i class="icon-tag"></i> <span class="label{% if prefix.style %} label-{{ prefix.style }}{% endif %} thread-prefix">{{ _(prefix.name) }}</span></li>{% endif %}
+      {% if prefix %}<li><i class="icon-tag"></i> <a href="{{ url('forum_prefixed', forum=forum.pk, slug=forum.slug, prefix=prefix.slug) }}" class="label{% if prefix.style %} label-{{ prefix.style }}{% endif %} thread-prefix">{{ _(prefix.name) }}</a></li>{% endif %}
       {% if thread.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
       <li><i class="icon-time"></i> {{ thread.last|reltimesince }}</li>
       <li><i class="icon-user"></i> {% if thread.start_poster_id %}<a href="{{ url('user', user=thread.start_poster_id, username=thread.start_poster_slug) }}">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}</li>

@@ -11,13 +11,6 @@ class ThreadPrefixManager(models.Manager):
     def flush_cache(self):
         cache.delete('threads_prefixes')
 
-    def get_cache(self):
-        try:
-            return _thread_local.misago_thread_prefixes
-        except AttributeError:
-            _thread_local.misago_thread_prefixes = self.make_cache()
-        return _thread_local.misago_thread_prefixes
-
     def make_cache(self):
         raw_prefixes = cache.get('threads_prefixes', 'nada')
         if raw_prefixes == 'nada':
@@ -28,9 +21,16 @@ class ThreadPrefixManager(models.Manager):
             dict_result[prefix.pk] = prefix
         return dict_result
 
+    def all_prefixes(self):
+        try:
+            return _thread_local.misago_thread_prefixes
+        except AttributeError:
+            _thread_local.misago_thread_prefixes = self.make_cache()
+        return _thread_local.misago_thread_prefixes
+
     def forum_prefixes(self, forum):
         forum_prefixes = []
-        for prefix in self.get_cache().values():
+        for prefix in self.all_prefixes().values():
             if forum in prefix.forums.all():
                 forum_prefixes.append((prefix.pk, prefix))
         return SortedDict(forum_prefixes)

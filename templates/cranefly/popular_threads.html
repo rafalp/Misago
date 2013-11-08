@@ -102,7 +102,8 @@
             </li>
           </ul>
           <div class="thread-title">
-            <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a>
+            {% if thread.prefix_id %}{{ draw_prefix(thread.forum, prefixes[thread.prefix_id]) }}{% endif %}
+            <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}" class="thread-link">{{ thread.name }}</a>
           </div>
         </div>
       </li>
@@ -127,4 +128,8 @@
   </ul>
 </div>
 {% endif %}
+{%- endmacro %}
+
+{% macro draw_prefix(forum, prefix) -%}
+<a href="{{ url('forum_prefixed', slug=forum.slug, forum=forum.id, prefix=prefix.slug) }}" class="label{% if prefix.style %} label-{{ prefix.style }}{% endif %} thread-prefix thread-prefix-active">{{ _(prefix.name) }}</a>
 {%- endmacro %}
