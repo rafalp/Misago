@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import AdminAction
-from misago.models import Forum, ThreadPrefix
+from misago.models import Forum, ThreadPrefix, AttachmentType
 
 ADMIN_ACTIONS = (
     AdminAction(
@@ -94,9 +94,27 @@ ADMIN_ACTIONS = (
                 name=_("Attachments"),
                 help=_("Manage allowed attachment types."),
                 icon='download-alt',
-                link='admin_forums_attachments',
-                urlpatterns=patterns('misago.apps.admin.index',
-                        url(r'^$', 'todo', name='admin_forums_attachments'),
-                    ),
+                model=AttachmentType,
+                actions=[
+                         {
+                          'id': 'list',
+                          'name': _("Attachment Types List"),
+                          'help': _("All allowed attachment types."),
+                          'link': 'admin_attachments_types'
+                          },
+                         {
+                          'id': 'new',
+                          'name': _("Add Attachment Type"),
+                          'help': _("Create new allowed attachment type"),
+                          'link': 'admin_attachments_types_new'
+                          },
+                         ],
+                link='admin_attachments_types',
+                urlpatterns=patterns('misago.apps.admin.attachmenttypes.views',
+                         url(r'^$', 'List', name='admin_attachments_types'),
+                         url(r'^new/$', 'New', name='admin_attachments_types_new'),
+                         url(r'^edit/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Edit', name='admin_attachments_types_edit'),
+                         url(r'^delete/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Delete', name='admin_attachments_types_delete'),
+                     ),
                 ),
 )

@@ -15,10 +15,10 @@ class AttachmentTypeForm(Form):
                                  max_length=255)
     size_limit = forms.IntegerField(label=_("Hard File Size Limit"),
                                     help_text=_("In addition to role-based single uploaded file size limit you can set additional limit for all future attachments of this type. To set limit, enter number of kilobytes, otherwhise enter 0. If limit is defined, forum will use lower limit (this one or role one) during validation of uploaded file, unless uploader has no single uploaded file size limit, which is when uploaded file size validation is not performed."),
-                                    min_value=0)
-    roles = forms.ModelMultipleChoiceField(label=_("Allowed roles"),
+                                    min_value=0, initial=0)
+    roles = forms.ModelMultipleChoiceField(label=_("Restrict to certain roles"), required=None,
                                            help_text=_("You can restrict uploading files of this type to users with certain roles by selecting them in above list."),
-                                           queryset=Role.objects.order_by('name'), required=None)
+                                           queryset=Role.objects.order_by('name'), widget=forms.CheckboxSelectMultiple)
 
     def clean_extension(self, extension):
         extension = extension.strip().lower()
