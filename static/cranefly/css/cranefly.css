@@ -1023,15 +1023,15 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{color:#333;text-decoration:n
 .forum-threads-extra{overflow:auto}.forum-threads-extra.extra-top{margin-bottom:20px}
 .forum-threads-extra .threads-signin-message{float:right}.forum-threads-extra .threads-signin-message a:link,.forum-threads-extra .threads-signin-message a:visited{color:#333}
 .prefix-select{margin:0;padding:0}.prefix-select ul{overflow:auto}.prefix-select ul li{float:left;list-style:none;margin:0;padding:4px 0}
-.prefix-select .selection-title{padding:4px 0;color:#555;font-weight:bold}
-.prefix-select .label{margin:0 4px;position:relative;bottom:0;opacity:.9;filter:alpha(opacity=90);outline:none}.prefix-select .label.label-cancel{background-color:#fbfbfb;color:#555}.prefix-select .label.label-cancel:hover,.prefix-select .label.label-cancel:active{color:#333}
-.prefix-select .label.label-success,.prefix-select .label.label-success:hover,.prefix-select .label.label-success:active{background-color:#cdeacd;border-color:#86cb86;color:#46a546;text-shadow:none}
+.prefix-select .selection-title{margin-right:5.95px;padding:4px 0;color:#555;font-weight:bold}
+.prefix-select .label{margin:0 4px;bottom:0;opacity:.9;filter:alpha(opacity=90);outline:none;padding:4px 6px;position:relative;bottom:1px;font-size:14px;font-weight:normal}.prefix-select .label.label-cancel{background-color:#fbfbfb;border:1px solid #999;margin-top:-1px;color:#555}.prefix-select .label.label-cancel:hover,.prefix-select .label.label-cancel:active{border:1px solid #999;color:#333}
+.prefix-select .label.label-success,.prefix-select .label.label-success:hover,.prefix-select .label.label-success:active{background-color:#f1f9f1;border-color:#86cb86;color:#46a546;text-shadow:none}
 .prefix-select .label.label-success.label-active{background-color:#46a546;border-color:#285d28;color:#fff;text-shadow:0 -1px 0 #285d28}
-.prefix-select .label.label-info,.prefix-select .label.label-info:hover,.prefix-select .label.label-info:active{background-color:#ade6fe;border-color:#49c7fc;color:#049cdb;text-shadow:none}
+.prefix-select .label.label-info,.prefix-select .label.label-info:hover,.prefix-select .label.label-info:active{background-color:#c7eefe;border-color:#49c7fc;color:#049cdb;text-shadow:none}
 .prefix-select .label.label-info.label-active{background-color:#049cdb;border-color:#025577;color:#fff;text-shadow:0 -1px 0 #025577}
-.prefix-select .label.label-warning,.prefix-select .label.label-warning:hover,.prefix-select .label.label-warning:active{background-color:#fee9cc;border-color:#fbbf69;color:#f89406;text-shadow:none}
+.prefix-select .label.label-warning,.prefix-select .label.label-warning:hover,.prefix-select .label.label-warning:active{background-color:#fef4e5;border-color:#fbbf69;color:#f89406;text-shadow:none}
 .prefix-select .label.label-warning.label-active{background-color:#f89406;border-color:#945904;color:#fff;text-shadow:0 -1px 0 #945904}
-.prefix-select .label.label-important,.prefix-select .label.label-important:hover,.prefix-select .label.label-important:active{background-color:#f5d7d4;border-color:#e38b80;color:#cf402e;text-shadow:none}
+.prefix-select .label.label-important,.prefix-select .label.label-important:hover,.prefix-select .label.label-important:active{background-color:#faeae8;border-color:#e38b80;color:#cf402e;text-shadow:none}
 .prefix-select .label.label-important.label-active{background-color:#cf402e;border-color:#7c261b;color:#fff;text-shadow:0 -1px 0 #7c261b}
 .prefix-select .label.label-inverse,.prefix-select .label.label-inverse:hover,.prefix-select .label.label-inverse:active{background-color:#999;border-color:#666;color:#333;text-shadow:none}
 .prefix-select .label.label-inverse.label-active{background-color:#333;border-color:#000;color:#fff;text-shadow:0 -1px 0 #000}

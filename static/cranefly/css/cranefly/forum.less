@@ -623,6 +623,7 @@
   }
 
   .selection-title {
+  	margin-right: @fontSizeSmall / 2;
     padding: 4px 0px;
 
     color: @gray;
@@ -635,20 +636,30 @@
     bottom: 0px;
     .opacity(90);
     outline: none;
+    padding: 4px 6px;
+    position: relative;
+    bottom: 1px;
+
+    font-size: @baseFontSize;
+    font-weight: normal;
 
     &.label-cancel {
       background-color: @bodyBackground;
+    	border: 1px solid @grayLight;
+    	margin-top: -1px;
 
       color: @gray;
 
       &:hover, &:active {
+    		border: 1px solid @grayLight;
+
         color: @textColor;
       }
     }
 
     &.label-success {
       &, &:hover, &:active {
-        background-color: lighten(@successText, 40%);
+        background-color: lighten(@successText, 50%);
         border-color: lighten(@successText, 20%);
 
         color: @successText;
@@ -666,7 +677,7 @@
 
     &.label-info {
       &, &:hover, &:active {
-        background-color: lighten(@infoText, 40%);
+        background-color: lighten(@infoText, 45%);
         border-color: lighten(@infoText, 20%);
 
         color: @infoText;
@@ -684,7 +695,7 @@
 
     &.label-warning {
       &, &:hover, &:active {
-        background-color: lighten(@orange, 40%);
+        background-color: lighten(@orange, 45%);
         border-color: lighten(@orange, 20%);
 
         color: @orange;
@@ -702,7 +713,7 @@
 
     &.label-important {
       &, &:hover, &:active {
-        background-color: lighten(@errorText, 40%);
+        background-color: lighten(@errorText, 45%);
         border-color: lighten(@errorText, 20%);
 
         color: @errorText;
