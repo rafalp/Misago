@@ -16,6 +16,7 @@ class AttachmentManager(models.Manager):
 
 
 class Attachment(models.Model):
+    hash_id = models.CharField(max_length=8, db_index=True)
     filetype = models.ForeignKey('AttachmentType')
     forum = models.ForeignKey('Forum', null=True, blank=True, on_delete=models.SET_NULL)
     thread = models.ForeignKey('Thread', null=True, blank=True, on_delete=models.SET_NULL)
@@ -118,3 +119,9 @@ class Attachment(models.Model):
             image.save(self.thumb_path)
         except IOError:
             pass
+
+    def generate_hash_id(self, seed):
+        unique_hash = seed
+        for i in xrange(100):
+            unique_hash = hashlib.sha256('%s:%s' % (settings.SECRET_KEY, unique_hash)).hexdigest()
+        self.hash_id = unique_hash[:8]

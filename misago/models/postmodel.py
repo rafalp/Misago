@@ -89,9 +89,6 @@ class Post(models.Model):
         for attachment in new_attachments:
             attachment = copy.copy(attachment)
             attachment_user_pk = attachment.user_id
-            attachment_filetype_pk = attachment.filetype_id
-            attachment.filetype = None
-            attachment.filetype_id = attachment_filetype_pk
             attachment.user = None
             attachment.user_id = attachment_user_pk
             attachment.forum = None

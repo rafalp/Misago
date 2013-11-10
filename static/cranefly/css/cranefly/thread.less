@@ -234,6 +234,80 @@
             padding: @baseFontSize;
           }
 
+          .post-attachments {
+            margin: 0px @baseFontSize;
+
+            h3 {
+              border-bottom: 1px dotted darken(@postBackground, 25%);
+              margin: 0px;
+              padding: 0px;
+
+              color: @grayLight;
+              font-size: @baseFontSize;
+              line-height: @baseLineHeight;
+            }
+
+            hr {
+              background: none;
+              border-top: 1px dotted darken(@postBackground, 15%) !important;
+              margin: 0px;
+              padding: 0px;
+            }
+
+            .post-attachment {
+              padding: (@baseLineHeight / 2) 0px;
+
+              .attachment-image {
+                float: left;
+
+                i {
+                  display: block;
+                  height: 40px;
+                  width: 40px;
+
+                  color: @grayLight;
+                  font-size: 42px;
+                  text-align: center;
+                }
+
+                img {
+                  background-size: cover;
+                  border-radius: 3px;
+                  height: 40px;
+                  width: 40px;
+                }
+              }
+
+              .attachment-body {
+                margin-left: 52px;
+
+                h4 {
+                  margin: 0px;
+                  padding: 0px;
+
+                  font-size: @baseFontSize;
+                }
+
+                .attachment-details {
+                  color: @grayLight;
+                  font-size: @fontSizeSmall;
+
+                  a:link, a:visited {
+                    color: @gray;
+                  }
+
+                  a:hover, a:active {
+                    color: @grayDarker;
+                  }
+
+                  .attachment-removed-message {
+                    color: @red;
+                  }
+                }
+              }
+            }
+          }
+
           .post-signature {
             border-top: 1px dotted darken(@postBackground, 25%);
             .opacity(60);

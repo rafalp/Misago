@@ -7,7 +7,7 @@ from misago.shortcuts import render_to_response
 
 def server(self, attachment, thumb=False):
     try:
-        attachment = Attachment.objects.select_related('forum', 'thread', 'user').get(id=attachment)
+        attachment = Attachment.objects.select_related('forum', 'thread', 'user').get(hash_id=attachment)
         if thumb:
             response = StreamingHttpResponse(open(attachment.thumb_path), content_type=attachment.content_type)
         else:

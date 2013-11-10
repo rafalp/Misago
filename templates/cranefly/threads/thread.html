@@ -286,11 +286,56 @@
             </div>
           </div>
           <div class="post-message">
+
             <div class="markdown js-extra">
               <article>
                 {{ post.post_preparsed|markdown_final|safe }}
               </article>
             </div>
+
+            {% if post.has_attachments and acl.threads.can_download_attachments(user, forum, post) %}
+            <div class="post-attachments">
+              <h3>{% trans %}Attached files{% endtrans %}</h3>
+              {% for row in post.attachments|batch(2) %}
+              {% if not loop.first %}
+              <hr>
+              {% endif %}
+              <div class="row-fluid">
+                {% for attachment in row %}
+                <div class="span6">
+                  <div class="post-attachment">
+                    <div class="attachment-image">
+                      <a href="{{ url('attachments_server', attachment=attachment.hash_id) }}">
+                        {% if attachment.is_image %}
+                        <img src="{{ url('attachments_thumbs_server', attachment=attachment.hash_id) }}" alt="">
+                        {% else %}
+                        <i class="icon-file"></i>
+                        {% endif %}
+                      </a>
+                    </div>
+                    <div class="attachment-body">
+                      <h4><a href="{{ url('attachments_server', attachment=attachment.hash_id) }}">{{ attachment.name }}</a></h4>
+                      <div class="attachment-details">
+                        {% if attachment.user_id %}
+                        <a href="{{ url('user', user=attachment.user_id, username=attachment.user_name_slug) }}">{{ attachment.user_name }}</a>,
+                        {% else %}
+                        {{ attachment.user_name }},
+                        {% endif %}
+                        {% if acl.users.can_see_users_trails() %}
+                        <abbr title="{{ attachment.agent }}">{{ attachment.ip }}</abbr>,
+                        {% endif %}
+                        {{ attachment.date|date }},
+                        {{ _(attachment.filetype.name) }}, {{ attachment.size|filesize }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+
             {% if post.user.signature %}
             <div class="post-signature">
               <div class="markdown">
@@ -298,6 +343,7 @@
               </div>
             </div>
             {% endif %}
+
           </div>
           <div class="post-footer">{% filter trim %}
             {% if acl.threads.can_see_post_score(forum) %}

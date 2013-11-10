@@ -158,6 +158,7 @@ class PostingBaseView(ViewBase):
                                               uploaded_file.size)
 
             new_attachment = Attachment()
+            new_attachment.generate_hash_id(self.attachments_token)
             new_attachment.session = self.attachments_token
             new_attachment.filetype = attachment_type
             new_attachment.user = self.request.user
@@ -226,13 +227,14 @@ class PostingBaseView(ViewBase):
             if attachment.pk in self.attachments_removed:
                 attachment.delete()
             else:
+                post_attachments.append(attachment)
                 attachment.forum = self.forum
                 attachment.thread = self.thread
                 attachment.post = self.post
                 attachment.session = self.attachments_token
                 attachment.save()
 
-        if post_attachments:
+        if self.post.has_attachments or post_attachments:
             self.post.attachments = post_attachments
             self.post.save(force_update=True)
 

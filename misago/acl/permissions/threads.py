@@ -661,6 +661,19 @@ class ThreadsACL(BaseACL):
         if not self.can_upload_attachments(forum):
             raise ACLError403(_("You don't have permission to upload files in this forum."))
 
+    def can_download_attachments(self, user, forum, post):
+        try:
+            if user.is_authenticated() and user.id == post.user_id:
+                return True
+            forum_role = self.get_role(forum)
+            return forum_role['can_download_attachments']
+        except KeyError:
+            return False
+
+    def allow_attachment_download(self, user, forum, post):
+        if not self.can_download_attachments(user, forum, post):
+            raise ACLError403(_("You don't have permission to download this attachment."))
+
     def attachment_size_limit(self, forum):
         try:
             forum_role = self.get_role(forum)
@@ -677,7 +690,7 @@ class ThreadsACL(BaseACL):
 
     def can_delete_attachment(self, user, forum, attachment):
         if user.pk == attachment.pk:
-            return True
+            return None
         try:
             forum_role = self.get_role(forum)
             return forum_role['can_delete_attachments']
@@ -686,7 +699,7 @@ class ThreadsACL(BaseACL):
 
     def allow_attachment_delete(self, user, forum, attachment):
         if user.pk == attachment.pk:
-            return True
+            return None
         try:
             forum_role = self.get_role(forum)
             if not forum_role['can_delete_attachments']:
