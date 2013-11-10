@@ -51,9 +51,10 @@ class PostingForm(FloodProtectionMixin, Form, ValidatePostLengthMixin):
 
         # Give inheritor chance to set custom fields
         try:
-            self.type_fields()
+            type_fields_call = self.type_fields
         except AttributeError:
-            pass
+            type_fields_call = None
+        type_fields_call()
 
     def clean_thread_weight(self):
         data = self.cleaned_data['thread_weight']

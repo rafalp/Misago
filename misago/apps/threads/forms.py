@@ -148,7 +148,7 @@ class ThreadPrefixMixin(object):
             self.add_field('thread_prefix',
                            forms.TypedChoiceField(label=_("Thread Prefix"),
                                                   choices=[(0, _("No prefix"))] + [(p.pk, _(p.name)) for p in self.prefixes.values()],
-                                                  coerce=int, required=False, empty_value=0, initial=self.thread.prefix_id))
+                                                  coerce=int, required=False, empty_value=0, initial=self.thread.prefix_id if self.thread else None))
 
 
 class NewThreadForm(NewThreadFormBase, PollFormMixin, ThreadPrefixMixin):
