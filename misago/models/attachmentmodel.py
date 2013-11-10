@@ -50,7 +50,15 @@ class Attachment(models.Model):
                 thumb_path.unlink()
         except Exception:
             pass
+
         super(Attachment, self).delete(*args, **kwargs)
+
+    def delete_from_post(self):
+        if self.post_id:
+            self.post.attachments = [attachment
+                                     for attachment in self.post.attachments
+                                     if attachment.pk != self.pk]
+            self.post.save(force_update=True)
 
     @property
     def is_image(self):

@@ -1,5 +1,6 @@
 0 3 * * * python $HOME/misago/manage.py clearalerts
 0 3 * * * python $HOME/misago/manage.py clearattempts
+0 3 * * * python $HOME/misago/manage.py pruneattachments
 0 */4 * * * python $HOME/misago/manage.py clearsessions
 20 3 * * * python $HOME/misago/manage.py cleartokens
 15 3 * * * python $HOME/misago/manage.py cleartracker
