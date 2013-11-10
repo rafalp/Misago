@@ -51,8 +51,6 @@ def make_forum_form(request, role, form):
                                                             widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_vote_in_polls'] = forms.BooleanField(label=_("Can vote in polls"),
                                                                widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_see_attachments'] = forms.BooleanField(label=_("Can see attachments"),
-                                                                 widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_upload_attachments'] = forms.BooleanField(label=_("Can upload attachments"),
                                                                     widget=YesNoSwitch, initial=False, required=False)
     form.base_fields['can_download_attachments'] = forms.BooleanField(label=_("Can download attachments"),
@@ -135,8 +133,8 @@ def make_forum_form(request, role, form):
                           ))
     form.fieldsets.append((
                            _("Attachments"),
-                           ('can_see_attachments', 'can_upload_attachments',
-                            'can_download_attachments', 'attachment_size', 'attachment_limit')
+                           ('can_upload_attachments', 'can_download_attachments',
+                            'attachment_size', 'attachment_limit')
                           ))
     form.fieldsets.append((
                            _("Moderation"),
@@ -772,7 +770,6 @@ def build_forums(acl, perms, forums, forum_roles):
                      'can_see_votes': False,
                      'can_make_polls': False,
                      'can_vote_in_polls': False,
-                     'can_see_attachments': False,
                      'can_upload_attachments': False,
                      'can_download_attachments': False,
                      'attachment_size': 100,

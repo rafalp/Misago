@@ -91,10 +91,9 @@ def cleanup(acl, perms, forums):
                               'can_make_polls': False,
                               'can_vote_in_polls': False,
                               'can_see_poll_votes': False,
-                              'can_see_attachments': True,
                               'can_upload_attachments': False,
                               'can_download_attachments': True,
-                              'attachment_size': 100,
+                              'attachment_size': 300,
                               'attachment_limit': 3,
                               'can_approve': False,
                               'can_edit_labels': False,
@@ -124,9 +123,11 @@ def cleanup(acl, perms, forums):
                 acl.threads.acl[forum]['can_upload_attachments'] = True
             if perm['can_download_attachments_in_private_threads']:
                 acl.threads.acl[forum]['can_download_attachments'] = True
-            if perm['private_thread_attachment_size']:
+            if (perm['private_thread_attachment_size'] > acl.threads.acl[forum]['attachment_size']
+                    and acl.threads.acl[forum]['attachment_size'] != 0):
                 acl.threads.acl[forum]['attachment_size'] = perm['private_thread_attachment_size']
-            if perm['private_thread_attachments_limit']:
+            if (perm['private_thread_attachments_limit'] > acl.threads.acl[forum]['attachment_limit']
+                    and acl.threads.acl[forum]['attachment_limit'] != 0):
                 acl.threads.acl[forum]['attachment_limit'] = perm['private_thread_attachments_limit']
             if perm['can_invite_ignoring']:
                 acl.threads.acl[forum]['can_invite_ignoring'] = True

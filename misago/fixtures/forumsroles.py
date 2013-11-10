@@ -23,11 +23,10 @@ def load():
                         'can_see_poll_votes': True,
                         'can_edit_polls': 0,
                         'can_delete_polls': 2,
-                        'can_see_attachments': True,
                         'can_upload_attachments': True,
                         'can_download_attachments': True,
                         'attachment_size': 5000,
-                        'attachment_limit': 15,
+                        'attachment_limit': 12,
                         'can_approve': True,
                         'can_change_prefixes': True,
                         'can_see_changelog': True,
@@ -64,8 +63,8 @@ def load():
                         'can_delete_polls': 1,
                         'can_upload_attachments': True,
                         'can_download_attachments': True,
-                        'attachment_size': 100,
-                        'attachment_limit': 3,
+                        'attachment_size': 500,
+                        'attachment_limit': 4,
                        }
     role.save(force_insert=True)
 

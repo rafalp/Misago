@@ -32,7 +32,7 @@ def load():
                         'forums': {3: 1, 5: 1, 6: 1},
                        }
     role.save(force_insert=True)
-    
+
     role = Role(name=_("Moderator").message, _special='mod', protected=True)
     role.permissions = {
                         'name_changes_allowed': 3,
@@ -49,8 +49,8 @@ def load():
                         'can_use_private_threads': True,
                         'can_start_private_threads': True,
                         'can_upload_attachments_in_private_threads': True,
-                        'private_thread_attachment_size': 0,
-                        'private_thread_attachments_limit': 0,
+                        'private_thread_attachment_size': 500,
+                        'private_thread_attachments_limit': 4,
                         'can_invite_ignoring': True,
                         'private_threads_mod': True,
                         'can_delete_checkpoints': 1,
@@ -59,7 +59,7 @@ def load():
                         'forums': {3: 1, 5: 1, 6: 1},
                        }
     role.save(force_insert=True)
-    
+
     role = Role(name=_("Registered").message, _special='registered')
     role.permissions = {
                         'name_changes_allowed': 2,
@@ -71,14 +71,14 @@ def load():
                         'can_start_private_threads': True,
                         'can_upload_attachments_in_private_threads': False,
                         'private_thread_attachment_size': 100,
-                        'private_thread_attachments_limit': 30,
+                        'private_thread_attachments_limit': 3,
                         'can_invite_ignoring': False,
                         'private_threads_mod': False,
                         'can_report_content': True,
                         'forums': {4: 3, 5: 3, 6: 3},
                        }
     role.save(force_insert=True)
-    
+
     role = Role(name=_("Guest").message, _special='guest')
     role.permissions = {
                         'can_search_forums': True,
