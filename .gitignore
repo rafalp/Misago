@@ -176,7 +176,6 @@ django_jinja/**
 floppyforms/**
 haystack/**
 jinja2/**
-attachments/**
 markdown/**
 mptt/**
 pytz/**
@@ -184,6 +183,9 @@ recaptcha/**
 south/**
 whoosh/**
 custom/**
+attachments/**
+!attachments/404.png
+!attachments/403.png
 searchindex/**
 static/avatars/protoss
 static/avatars/terran
