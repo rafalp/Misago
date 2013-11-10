@@ -54,7 +54,8 @@ class PostingForm(FloodProtectionMixin, Form, ValidatePostLengthMixin):
             type_fields_call = self.type_fields
         except AttributeError:
             type_fields_call = None
-        type_fields_call()
+        if type_fields_call:
+            type_fields_call()
 
     def clean_thread_weight(self):
         data = self.cleaned_data['thread_weight']
