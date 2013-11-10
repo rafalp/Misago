@@ -11,8 +11,10 @@ def make_form(request, role, form):
                                                                          widget=YesNoSwitch, initial=False, required=False)
         form.base_fields['can_start_private_threads'] = forms.BooleanField(label=_("Can start private threads"),
                                                                            widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['can_upload_attachments_in_private_threads'] = forms.BooleanField(label=_("Can upload files in attachments"),
+        form.base_fields['can_upload_attachments_in_private_threads'] = forms.BooleanField(label=_("Can upload attachments"),
                                                                                            widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['can_download_attachments_in_private_threads'] = forms.BooleanField(label=_("Can download attachments"),
+                                                                                             widget=YesNoSwitch, initial=False, required=False)
         form.base_fields['private_thread_attachment_size'] = forms.IntegerField(label=_("Max. size of single attachment (in KB)"),
                                                                                 min_value=0, initial=100, required=False)
         form.base_fields['private_thread_attachments_limit'] = forms.IntegerField(label=_("Max. number of attachments per post"),
@@ -32,8 +34,8 @@ def make_form(request, role, form):
         form.fieldsets.append((
                                _("Private Threads"),
                                ('can_use_private_threads', 'can_start_private_threads',
-                                'can_upload_attachments_in_private_threads', 'private_thread_attachment_size',
-                                'private_thread_attachments_limit', 'can_invite_ignoring',
+                                'can_upload_attachments_in_private_threads', 'can_download_attachments_in_private_threads',
+                                'private_thread_attachment_size', 'private_thread_attachments_limit', 'can_invite_ignoring',
                                 'private_threads_mod', 'can_delete_checkpoints')
                               ))
 
@@ -58,6 +60,7 @@ def build(acl, roles):
     acl.private_threads.acl['can_use_private_threads'] = False
     acl.private_threads.acl['can_start_private_threads'] = False
     acl.private_threads.acl['can_upload_attachments_in_private_threads'] = False
+    acl.private_threads.acl['can_download_attachments_in_private_threads'] = False
     acl.private_threads.acl['private_thread_attachment_size'] = False
     acl.private_threads.acl['private_thread_attachments_limit'] = False
     acl.private_threads.acl['can_invite_ignoring'] = False
@@ -119,10 +122,12 @@ def cleanup(acl, perms, forums):
                 acl.threads.acl[forum]['can_start_threads'] = 2
             if perm['can_upload_attachments_in_private_threads']:
                 acl.threads.acl[forum]['can_upload_attachments'] = True
+            if perm['can_download_attachments_in_private_threads']:
+                acl.threads.acl[forum]['can_download_attachments'] = True
             if perm['private_thread_attachment_size']:
-                acl.threads.acl[forum]['attachment_size'] = True
+                acl.threads.acl[forum]['attachment_size'] = perm['private_thread_attachment_size']
             if perm['private_thread_attachments_limit']:
-                acl.threads.acl[forum]['attachment_limit'] = True
+                acl.threads.acl[forum]['attachment_limit'] = perm['private_thread_attachments_limit']
             if perm['can_invite_ignoring']:
                 acl.threads.acl[forum]['can_invite_ignoring'] = True
             if perm['private_threads_mod']:
