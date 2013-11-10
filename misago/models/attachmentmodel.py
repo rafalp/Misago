@@ -71,11 +71,18 @@ class Attachment(models.Model):
         return path(unicode(self.file_path).replace('.', '_thumb.'))
 
     def use_file(self, uploaded_file):
-        self.name = uploaded_file.name
+        self.name = self.clean_name(uploaded_file.name)
         self.content_type = uploaded_file.content_type
         self.size = uploaded_file.size
 
         self.store_file(uploaded_file)
+
+    def clean_name(self, filename):
+        for char in '=[]()<>\\/"\'':
+            filename = filename.replace(char, '')
+        if len(filename) > 100:
+            filename = filename[-100:]
+        return filename
 
     def store_file(self, uploaded_file):
         datenow = date.today()

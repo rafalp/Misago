@@ -675,6 +675,25 @@ class ThreadsACL(BaseACL):
         except KeyError:
             return -1
 
+    def can_delete_attachment(self, user, forum, attachment):
+        if user.pk == attachment.pk:
+            return True
+        try:
+            forum_role = self.get_role(forum)
+            return forum_role['can_delete_attachments']
+        except KeyError:
+            return False
+
+    def allow_attachment_delete(self, user, forum, attachment):
+        if user.pk == attachment.pk:
+            return True
+        try:
+            forum_role = self.get_role(forum)
+            if not forum_role['can_delete_attachments']:
+                raise ACLError403(_("You don't have permission to remove this attachment."))
+        except KeyError:
+            raise ACLError403(_("You don't have permission to remove this attachment."))
+
     def can_see_all_checkpoints(self, forum):
         try:
             forum_role = self.get_role(forum)

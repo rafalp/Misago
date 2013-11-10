@@ -79,17 +79,82 @@
       overflow: auto;
       padding: @editorPadding;
 
-      img {
-        background-size: cover;
-        border-radius: 3px;
-        margin-right: 6px;
-        height: 32px;
-        width: 32px;
+      .attachment-image {
+        float: left;
+
+        i {
+          display: block;
+          height: 40px;
+          width: 40px;
+
+          color: @grayLight;
+          font-size: 42px;
+          text-align: center;
+        }
+
+        img {
+          background-size: cover;
+          border-radius: 3px;
+          height: 40px;
+          width: 40px;
+        }
       }
 
-      .attachment-name {
-        color: @textColor;
-        font-weight: bold;
+      .attachment-body {
+        margin-left: 52px;
+
+        h4 {
+          margin: 0px;
+          padding: 0px;
+
+          font-size: @baseFontSize;
+        }
+
+        .attachment-details {
+          color: @grayLight;
+          font-size: @fontSizeSmall;
+
+          a:link, a:visited {
+            color: @gray;
+          }
+
+          a:hover, a:active {
+            color: @grayDarker;
+          }
+
+          .attachment-removed-message {
+            color: @red;
+          }
+        }
+      }
+
+      .attachment-actions {
+        float: right;
+        margin-top: 3px;
+
+        .btn {
+          margin-left: 8px;
+
+          &.btn-insert {
+            color: lighten(@linkColor, 20%);
+
+            &:hover, &:active {
+              color: @linkColor;
+            }
+          }
+
+          &.btn-remove {
+            color: lighten(@red, 20%);
+
+            &:hover, &:active {
+              color: @red;
+            }
+          }
+        }
+      }
+
+      &.attachment-removed {
+        .opacity(70);
       }
     }
   }

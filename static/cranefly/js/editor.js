@@ -197,4 +197,9 @@ $(function() {
     overlay.hide();
     return false;
   });
+
+  $('.editor-insert-attachment').click(function() {
+    var insertion_code = $(this).data('attachment-md');
+    makeReplace(textareaId(this), insertion_code);
+  });
 });

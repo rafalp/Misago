@@ -109,24 +109,33 @@ class PostingBaseView(ViewBase):
             post_pk = 0
 
         self.attachments_token = 'attachments_%s_%s_%s_%s' % (self.request.user.pk, forum_pk, thread_pk, post_pk)
+        self.attachments_removed_token = 'removed_%s' % self.attachments_token
 
     def session_attachments_queryset(self):
-        self.make_attachments_token()
         session_pks = self.request.session.get(self.attachments_token, 'nada')
         if session_pks == 'nada':
             session_pks = [a.pk for a in Attachment.objects.filter(session=self.attachments_token).iterator()]
             self.request.session[self.attachments_token] = session_pks
 
         self.session_attachments = session_pks
-        return Attachment.objects.filter(id__in=session_pks).iterator()
+        return Attachment.objects.filter(id__in=session_pks).order_by('-id').iterator()
+
+    def fetch_removed_attachments(self):
+        self.attachments_removed = self.request.session.get(self.attachments_removed_token, 'nada')
+        if self.attachments_removed == 'nada':
+            self.attachments_removed = []
+            self.request.session[self.attachments_removed_token] = []
 
     def fetch_attachments(self):
         self.attachments = []
         self.user_attachments = 0
 
+        self.attachments_removed = []
+        self.fetch_removed_attachments()
+
         for attachment in self.session_attachments_queryset():
             self.attachments.append(attachment)
-            if attachment.user_id == self.request.user.pk:
+            if attachment.user_id == self.request.user.pk and not attachment.pk in self.attachments_removed:
                 self.user_attachments += 1
 
     def _upload_file(self, uploaded_file):
@@ -153,6 +162,7 @@ class PostingBaseView(ViewBase):
             new_attachment.filetype = attachment_type
             new_attachment.user = self.request.user
             new_attachment.user_name = self.request.user.username
+            new_attachment.user_name_slug = self.request.user.username_slug
             new_attachment.ip = self.request.session.get_ip(self.request)
             new_attachment.agent = self.request.META.get('HTTP_USER_AGENT')
             new_attachment.use_file(uploaded_file)
@@ -160,7 +170,7 @@ class PostingBaseView(ViewBase):
 
             self.session_attachments.append(new_attachment.pk)
             self.request.session[self.attachments_token] = self.session_attachments
-            self.attachments.append(new_attachment)
+            self.attachments.insert(0, new_attachment)
             self.message = Message(_('File "%(filename)s" has been attached successfully.') % {'filename': new_attachment.name})
         except ACLError403 as e:
             self.message = Message(unicode(e), messages.ERROR)
@@ -176,20 +186,55 @@ class PostingBaseView(ViewBase):
                     break
             else:
                 raise ValidationError(_('Requested attachment could not be found.'))
-            deleted_pks = self.request.session.get('delete_%s' % self.attachments_token, [])
-            deleted_pks.append(attachment_pk)
-            del(self.attachments[index])
-            self.message = Message(_('File "%(filename)s" has been removed.') % {'filename': attachment.name})
+            self.request.acl.threads.allow_attachment_delete(self.request.user, self.forum, attachment)
+
+            if not attachment.pk in self.attachments_removed:
+                self.attachments_removed.append(attachment.pk)
+                self.request.session[self.attachments_removed_token] = self.attachments_removed
+                self.message = Message(_('File "%(filename)s" has been removed.') % {'filename': attachment.name})
         except ACLError403 as e:
             self.message = Message(unicode(e), messages.ERROR)
         except ValidationError as e:
             self.message = Message(unicode(e.messages[0]), messages.ERROR)
 
-    def validate_attachments(self, form):
-        return True
+    def restore_attachment(self, attachment_pk):
+        try:
+            index = None
+            attachment = None
+            for index, attachment in enumerate(self.attachments):
+                if attachment.pk == attachment_pk:
+                    break
+            else:
+                raise ValidationError(_('Requested attachment could not be found.'))
+
+            if attachment.pk in self.attachments_removed:
+                self.attachments_removed.remove(attachment.pk)
+                self.request.session[self.attachments_removed_token] = self.attachments_removed
+                self.message = Message(_('File "%(filename)s" has been restored.') % {'filename': attachment.name})
+        except ACLError403 as e:
+            self.message = Message(unicode(e), messages.ERROR)
+        except ValidationError as e:
+            self.message = Message(unicode(e.messages[0]), messages.ERROR)
 
     def finalize_attachments(self):
-        pass
+        del self.request.session[self.attachments_token]
+        del self.request.session[self.attachments_removed_token]
+        self.make_attachments_token()
+
+        post_attachments = []
+        for attachment in self.attachments:
+            if attachment.pk in self.attachments_removed:
+                attachment.delete()
+            else:
+                attachment.forum = self.forum
+                attachment.thread = self.thread
+                attachment.post = self.post
+                attachment.session = self.attachments_token
+                attachment.save()
+
+        if post_attachments:
+            self.post.attachments = post_attachments
+            self.post.save(force_update=True)
 
     def __call__(self, request, **kwargs):
         self.request = request
@@ -210,6 +255,7 @@ class PostingBaseView(ViewBase):
             self.check_forum_type()
             self._check_permissions()
             request.block_flood_requests = self.block_flood_requests
+            self.make_attachments_token()
             self.fetch_attachments()
             if request.method == 'POST':
                 # Create correct form instance
@@ -222,27 +268,30 @@ class PostingBaseView(ViewBase):
                     except AttributeError:
                         form = self.form_type(request.POST, request=request, forum=self.forum, thread=self.thread)
                 # Handle specific submit
-                if list(set(request.POST.keys()) - set(('preview', 'upload', 'remove_attachment'))):
+                if list(set(request.POST.keys()) & set(('preview', 'upload', 'remove_attachment', 'restore_attachment'))):
                     form.empty_errors()
                     if form['post'].value():
                         md, post_preview = post_markdown(form['post'].value())
                     else:
                         md, post_preview = None, None
                     if 'upload' in request.POST:
-                        uploaded_file = None
                         try:
                             uploaded_file = form['new_file'].value()
                         except KeyError:
-                            pass
-                        if uploaded_file:
-                            self._upload_file(uploaded_file)
+                            uploaded_file = None
+                        self._upload_file(uploaded_file)
                     if 'remove_attachment' in request.POST:
                         try:
                             self.remove_attachment(int(request.POST.get('remove_attachment')))
                         except ValueError:
                             self.message = Message(_("Requested attachment could not be found."), messages.ERROR)
+                    if 'restore_attachment' in request.POST:
+                        try:
+                            self.restore_attachment(int(request.POST.get('restore_attachment')))
+                        except ValueError:
+                            self.message = Message(_("Requested attachment could not be found."), messages.ERROR)
                 else:
-                    if form.is_valid() and validate_attachments(form):
+                    if form.is_valid():
                         self.post_form(form)
                         self.watch_thread()
                         self.after_form(form)
@@ -264,6 +313,8 @@ class PostingBaseView(ViewBase):
                                   self._template_vars({
                                         'action': self.action,
                                         'attachments': self.attachments,
+                                        'attachments_types': AttachmentType.objects.all_types(),
+                                        'attachments_removed': self.attachments_removed,
                                         'attachments_number': self.user_attachments,
                                         'message': self.message,
                                         'forum': self.forum,

@@ -19,6 +19,17 @@ def make_short(string, length=16):
     return short_string(string, length)
 
 
+@register.filter(name='filesize')
+def format_filesize(size):
+    try:
+        for u in ('B','KB','MB','GB','TB'):
+            if size < 1024.0:
+                return "%3.1f %s" % (size, u)
+            size /= 1024.0
+    except ValueError:
+        return '0 B'
+
+
 @register.filter(name='highlight')
 def highlight_result(text, query, length=500):
     hl = Highlighter(query, html_tag='strong', max_length=length)

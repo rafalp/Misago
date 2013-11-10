@@ -829,8 +829,15 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{color:#333;text-decoration:n
 .editor .editor-input{padding:10.5px}.editor .editor-input>div{margin-right:22px;position:relative}.editor .editor-input>div textarea{border:none;box-shadow:none;margin:-10.5px;padding:10.5px;padding-right:32px;width:100%;font-family:Monaco,Menlo,Consolas,"Courier New",monospace}
 .editor .editor-input>div .editor-zen-on{display:none;position:absolute;top:-4px;right:-26px;padding-left:8px}.editor .editor-input>div .editor-zen-on a{border-radius:4px;display:block;opacity:.5;filter:alpha(opacity=50);padding:2px 0;padding-bottom:3px;width:29px;color:#333;font-size:24px;text-align:center}.editor .editor-input>div .editor-zen-on a:hover,.editor .editor-input>div .editor-zen-on a:active{box-shadow:0 0 3px #999;text-decoration:none}
 .editor .editor-upload{border-top:1px solid #e6e6e6;overflow:auto;padding:10.5px}
-.editor .editor-attachments{margin:0}.editor .editor-attachments li{border-top:1px solid #f0f0f0;overflow:auto;padding:10.5px}.editor .editor-attachments li img{background-size:cover;border-radius:3px;margin-right:6px;height:32px;width:32px}
-.editor .editor-attachments li .attachment-name{color:#333;font-weight:bold}
+.editor .editor-attachments{margin:0}.editor .editor-attachments li{border-top:1px solid #f0f0f0;overflow:auto;padding:10.5px}.editor .editor-attachments li .attachment-image{float:left}.editor .editor-attachments li .attachment-image i{display:block;height:40px;width:40px;color:#999;font-size:42px;text-align:center}
+.editor .editor-attachments li .attachment-image img{background-size:cover;border-radius:3px;height:40px;width:40px}
+.editor .editor-attachments li .attachment-body{margin-left:52px}.editor .editor-attachments li .attachment-body h4{margin:0;padding:0;font-size:14px}
+.editor .editor-attachments li .attachment-body .attachment-details{color:#999;font-size:11.9px}.editor .editor-attachments li .attachment-body .attachment-details a:link,.editor .editor-attachments li .attachment-body .attachment-details a:visited{color:#555}
+.editor .editor-attachments li .attachment-body .attachment-details a:hover,.editor .editor-attachments li .attachment-body .attachment-details a:active{color:#222}
+.editor .editor-attachments li .attachment-body .attachment-details .attachment-removed-message{color:#cf402e}
+.editor .editor-attachments li .attachment-actions{float:right;margin-top:3px}.editor .editor-attachments li .attachment-actions .btn{margin-left:8px}.editor .editor-attachments li .attachment-actions .btn.btn-insert{color:#3bf}.editor .editor-attachments li .attachment-actions .btn.btn-insert:hover,.editor .editor-attachments li .attachment-actions .btn.btn-insert:active{color:#08c}
+.editor .editor-attachments li .attachment-actions .btn.btn-remove{color:#e38b80}.editor .editor-attachments li .attachment-actions .btn.btn-remove:hover,.editor .editor-attachments li .attachment-actions .btn.btn-remove:active{color:#cf402e}
+.editor .editor-attachments li.attachment-removed{opacity:.7;filter:alpha(opacity=70)}
 .editor .editor-actions{border-top:1px solid #e6e6e6;overflow:auto;padding:10.5px}.editor .editor-actions>.btn{margin-left:14px}
 .editor .editor-actions .editor-tools{margin:0;margin-right:10.5px}.editor .editor-actions .editor-tools li{float:left;margin-right:10.5px}.editor .editor-actions .editor-tools li .btn{display:block;padding-left:0;padding-right:0;width:28px;text-align:center}.editor .editor-actions .editor-tools li .btn i{margin:0}
 .editor .editor-actions .editor-help{line-height:30.5px}

@@ -66,7 +66,7 @@ local.properties
 **/*.dotCover
 
 ## TODO: If you have NuGet Package Restore enabled, uncomment this
-#**/packages/ 
+#**/packages/
 
 # Visual C++ cache files
 ipch/
@@ -82,7 +82,7 @@ ipch/
 # ReSharper is a .NET coding add-in
 _ReSharper*
 
-# Installshield output folder 
+# Installshield output folder
 [Ee]xpress
 
 # DocProject is a documentation generator add-in
@@ -123,7 +123,7 @@ UpgradeLog*.XML
 ############
 
 # Windows image file caches
-Thumbs.db 
+Thumbs.db
 
 # Folder config file
 Desktop.ini
@@ -176,6 +176,7 @@ django_jinja/**
 floppyforms/**
 haystack/**
 jinja2/**
+attachments/**
 markdown/**
 mptt/**
 pytz/**
@@ -205,4 +206,5 @@ templates/debug_toolbar/**
 
 .vagrant
 database.db
-Icon
+Icon
+

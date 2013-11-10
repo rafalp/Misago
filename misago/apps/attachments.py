@@ -13,6 +13,8 @@ def server(self, attachment, thumb=False):
         else:
             response = StreamingHttpResponse(open(attachment.file_path), content_type=attachment.content_type)
             response['Cache-Control'] = 'no-cache'
+        if not attachment.is_image:
+            response['Content-Disposition'] = 'attachment;filename="%s"' % attachment.name
         return response
     except Attachment.DoesNotExist:
         pass

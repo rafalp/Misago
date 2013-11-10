@@ -13,3 +13,9 @@ def load():
         extensions='rar,zip,7z,tar.gz',
         size_limit=0,
     )
+
+    AttachmentType.objects.create(
+        name=_('Documents').message,
+        extensions='pdf,txt,doc,docx,xls,xlsx,xlsm,xlsb',
+        size_limit=0,
+    )

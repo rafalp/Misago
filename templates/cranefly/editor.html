@@ -66,12 +66,33 @@
 {% if attachments %}
 <ul class="unstyled editor-attachments">
   {% for attachment in attachments %}
-  <li>
-    {% if attachment.is_image %}
-    <a href="{{ url('attachments_server', attachment=attachment.pk) }}"><img src="{{ url('attachments_thumbs_server', attachment=attachment.pk) }}" alt=""></a>
-    {% endif %}
-    <strong class="attachment-name">{{ attachment.name }}</strong>
-    <button name="remove_attachment" value="{{ attachment.pk }}" type="submit" class="btn pull-right">{% trans %}Remove{% endtrans %}</button>
+  <li{% if attachment.pk in attachments_removed %} class="attachment-removed"{% endif %}>
+    <div class="attachment-image">
+      <a href="{{ url('attachments_server', attachment=attachment.pk) }}">
+        {% if attachment.is_image %}
+        <img src="{{ url('attachments_thumbs_server', attachment=attachment.pk) }}" alt="">
+        {% else %}
+        <i class="icon-file"></i>
+        {% endif %}
+      </a>
+    </div>
+    <div class="attachment-actions">
+      {% if attachment.pk in attachments_removed %}
+      <button name="restore_attachment" value="{{ attachment.pk }}" type="submit" class="btn pull-right"><i class="icon-plus"></i> {% trans %}Restore{% endtrans %}</button>
+      {% else %}
+      <button type="button" class="btn btn-insert pull-right editor-insert-attachment" data-attachment-md="{% if attachment.is_image %}[![{{ attachment.name }}]({{ url('attachments_thumbs_server', attachment=attachment.pk) }})]({{ url('attachments_server', attachment=attachment.pk) }}){% else %}[{{ attachment.name }}]({{ url('attachments_server', attachment=attachment.pk) }}){% endif %}"><i class="icon-share"></i> {% trans %}Insert{% endtrans %}</button>
+      {% if acl.threads.can_delete_attachment(user, forum, attachment) %}
+      <button name="remove_attachment" value="{{ attachment.pk }}" type="submit" class="btn btn-remove pull-right"><i class="icon-remove"></i> {% trans %}Remove{% endtrans %}</button>
+      {% endif %}
+      {% endif %}
+    </div>
+    <div class="attachment-body">
+      <h4>{{ attachment.name }}</h4>
+      <div class="attachment-details">
+        {% if attachment.pk in attachments_removed %}<strong class="attachment-removed-message">{% trans %}Removed{% endtrans %}</strong>{% endif %}
+        {% if attachment.user_id %}<a href="{{ url('user', user=attachment.user_id, username=attachment.user_name_slug) }}">{{ attachment.user_name }}</a>{% else %}{{ attachment.user_name }}{% endif %}, {{ attachment.date|date }}, {{ _(attachments_types[attachment.filetype_id].name) }}, {{ attachment.size|filesize }}
+      </div>
+    </div>
   </li>
   {% endfor %}
 </ul>

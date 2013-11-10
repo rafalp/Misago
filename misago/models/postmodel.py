@@ -1,3 +1,4 @@
+import copy
 from django.db import models
 from django.db.models import F
 from django.db.models.signals import pre_save, pre_delete
@@ -8,6 +9,11 @@ from misago.signals import (delete_user_content, merge_post, merge_thread,
                             move_forum_content, move_post, move_thread,
                             rename_user, sync_user_profile)
 from misago.utils.translation import ugettext_lazy
+import base64
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 
 class PostManager(models.Manager):
     def filter_stats(self, start, end):
@@ -39,6 +45,8 @@ class Post(models.Model):
     moderated = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     protected = models.BooleanField(default=False)
+    has_attachments = models.BooleanField(default=False)
+    _attachments = models.TextField(db_column='attachments', null=True, blank=True)
 
     objects = PostManager()
 
@@ -46,6 +54,52 @@ class Post(models.Model):
 
     class Meta:
         app_label = 'misago'
+
+    @property
+    def attachments(self):
+        if not self.has_attachments:
+            return []
+
+        try:
+            return self._attachments_cache
+        except AttributeError:
+            pass
+
+        try:
+            self._attachments_cache = pickle.loads(base64.decodestring(self._attachments))
+        except Exception:
+            self._attachments_cache = []
+        return self._attachments_cache
+
+
+    @attachments.setter
+    def attachments(self, new_attachments):
+        if new_attachments:
+            self._update_attachments_store(new_attachments)
+        else:
+            self._empty_attachments_store()
+
+    def _empty_attachments_store(self):
+        self.has_attachments = False
+        self._attachments = None
+
+    def _update_attachments_store(self, new_attachments):
+        self.has_attachments = True
+        clean_attachments = []
+        for attachment in new_attachments:
+            attachment = copy.copy(attachment)
+            attachment_user_pk = attachment.user_id
+            attachment_filetype_pk = attachment.filetype_id
+            attachment.filetype = None
+            attachment.filetype_id = attachment_filetype_pk
+            attachment.user = None
+            attachment.user_id = attachment_user_pk
+            attachment.forum = None
+            attachment.thread = None
+            attachment.post = None
+
+            clean_attachments.append(attachment)
+        self._attachments = base64.encodestring(pickle.dumps(clean_attachments, pickle.HIGHEST_PROTOCOL))
 
     @property
     def timeline_date(self):
@@ -83,7 +137,7 @@ class Post(models.Model):
         move_post.send(sender=self, move_to=thread)
         self.thread = thread
         self.forum = thread.forum
-        
+
     def merge_with(self, post):
         post.post = '%s\n- - -\n%s' % (post.post, self.post)
         merge_post.send(sender=self, new_post=post)
@@ -91,12 +145,12 @@ class Post(models.Model):
     def notify_mentioned(self, request, thread_type, users):
         from misago.acl.builder import acl
         from misago.acl.exceptions import ACLError403, ACLError404
-        
+
         mentioned = self.mentions.all()
         for slug, user in users.items():
             if user.pk != request.user.pk and user not in mentioned:
                 self.mentions.add(user)
-                try:                    
+                try:
                     acl = acl(request, user)
                     acl.forums.allow_forum_view(self.forum)
                     acl.threads.allow_thread_view(user, self.thread)
