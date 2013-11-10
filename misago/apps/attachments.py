@@ -11,7 +11,8 @@ from misago.shortcuts import render_to_response
 def server(request, attachment, thumb=False):
     try:
         attachment = Attachment.objects.select_related('forum', 'thread', 'post', 'user').get(hash_id=attachment)
-        request.acl.forums.allow_forum_view(attachment.forum)
+        if attachment.forum:
+            request.acl.forums.allow_forum_view(attachment.forum)
         if attachment.thread:
             request.acl.threads.allow_thread_view(request.user, attachment.thread)
             if attachment.forum.special == 'private_threads':
