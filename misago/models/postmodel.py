@@ -151,10 +151,10 @@ class Post(models.Model):
             if user.pk != request.user.pk and user not in mentioned:
                 self.mentions.add(user)
                 try:
-                    acl = build_acl(request, user)
-                    acl.forums.allow_forum_view(self.forum)
-                    acl.threads.allow_thread_view(user, self.thread)
-                    acl.threads.allow_post_view(user, self.thread, self)
+                    user_acl = build_acl(request, user)
+                    user_acl.forums.allow_forum_view(self.forum)
+                    user_acl.threads.allow_thread_view(user, self.thread)
+                    user_acl.threads.allow_post_view(user, self.thread, self)
                     if not user.is_ignoring(request.user):
                         alert = user.alert(ugettext_lazy("%(username)s has mentioned you in his reply in thread %(thread)s").message)
                         alert.profile('username', request.user)
