@@ -22,7 +22,7 @@ class ThreadManager(models.Manager):
 
         if user.is_authenticated() and user.join_date > cutoff:
             cutoff = user.join_date
-            for row in ForumRead.objects.filter(user=user).values('forum_id', 'cleared'):
+            for row in ForumRead.objects.filter(user=user).values('forum_id', 'cleared').iterator():
                 forum_reads[row['forum_id']] = row['cleared']
 
         for thread in queryset:
@@ -37,7 +37,7 @@ class ThreadManager(models.Manager):
             threads_dict[thread.pk] = thread
 
         if user.is_authenticated():
-            for read in ThreadRead.objects.filter(user=user).filter(thread__in=threads_dict.keys()):
+            for read in ThreadRead.objects.filter(user=user).filter(thread__in=threads_dict.keys()).iterator():
                 try:
                     threads_dict[read.thread_id].is_read = (threads_dict[read.thread_id].last <= cutoff or
                                                             threads_dict[read.thread_id].last <= read.updated or
@@ -104,7 +104,7 @@ class Thread(models.Model):
         relations on model deletion in MySQL
         """
         if self.replies_reported:
-            clear_reports = [post.pk for post in self.post_set.filter(reported=True)]
+            clear_reports = [post.pk for post in self.post_set.filter(reported=True).iterator()]
             if clear_reports:
                 Thread.objects.filter(report_for__in=clear_reports).update(report_for=None)
         return super(Thread, self).delete(*args, **kwargs)

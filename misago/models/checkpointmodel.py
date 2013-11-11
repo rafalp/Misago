@@ -27,9 +27,9 @@ class Checkpoint(models.Model):
 
 def rename_forum_handler(sender, **kwargs):
     Checkpoint.objects.filter(old_forum=sender).update(
-                                                  old_forum_name=sender.name,
-                                                  old_forum_slug=sender.slug,
-                                                  )
+                                                       old_forum_name=sender.name,
+                                                       old_forum_slug=sender.slug,
+                                                       )
 
 rename_forum.connect(rename_forum_handler, dispatch_uid="rename_forum_checkpoints")
 

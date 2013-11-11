@@ -209,7 +209,7 @@ def delete_user_content_handler(sender, **kwargs):
 
     sender.post_set.all().delete()
 
-    for thread in Thread.objects.filter(id__in=threads):
+    for thread in Thread.objects.filter(id__in=threads).iterator():
         thread.sync()
         thread.save(force_update=True)
 

@@ -84,7 +84,7 @@ class ForumManager(TreeManager):
         else:
             queryset = Forum.objects.filter(pk__in=acl.known_forums).order_by('lft')
 
-        for forum in queryset:
+        for forum in queryset.iterator():
             forum.subforums = []
             forum.is_read = False
             if tracker:
