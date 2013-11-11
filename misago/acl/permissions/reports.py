@@ -133,7 +133,7 @@ def cleanup(acl, perms, forums):
                 acl.threads.acl[forum]['can_delete_attachments'] = True
                 acl.threads.acl[forum]['can_delete_checkpoints'] = 2
                 acl.threads.acl[forum]['can_see_deleted_checkpoints'] = True
-            if perm['can_delete_reports'] > acl.threads.acl[forum]['can_delete_threads']:
-                acl.threads.acl[forum]['can_delete_threads'] = perm['can_delete_reports']
+            if perm['can_delete_reports']:
+                acl.threads.acl[forum]['can_delete_threads'] = 2
         except KeyError:
             pass
