@@ -98,20 +98,15 @@ class PostingBaseView(ViewBase):
                                            )
 
     def make_attachments_token(self):
-        forum_pk = self.forum.pk
-        try:
-            thread_pk = self.thread.id
-        except AttributeError:
-            thread_pk = 0
-        try:
-            post_pk = self.post.id
-        except AttributeError:
-            post_pk = 0
-
-        if post_pk:
-            self.attachments_token = 'attachments_0_%s_%s_%s' % (forum_pk, thread_pk, post_pk)
+        if self.post_id:
+            self.attachments_token = 'attachments_%s' % self.post_id
         else:
-            self.attachments_token = 'attachments_%s_%s_%s_%s' % (self.request.user.pk, forum_pk, thread_pk, post_pk)
+            forum_pk = self.forum.pk
+            try:
+                thread_pk = self.thread.id
+            except AttributeError:
+                thread_pk = 0
+            self.attachments_token = 'attachments_%s_%s_%s' % (self.request.user.pk, forum_pk, thread_pk)
         self.attachments_removed_token = 'removed_%s' % self.attachments_token
 
     def session_attachments_queryset(self):
