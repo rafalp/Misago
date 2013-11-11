@@ -121,10 +121,10 @@ def cleanup(acl, perms, forums):
                 acl.threads.acl[forum]['can_upload_attachments'] = True
             if perm['can_download_report_attachments']:
                 acl.threads.acl[forum]['can_download_attachments'] = True
-            if (perm['report_attachment_size'] > acl.threads.acl[forum]['report_attachment_size']
+            if (perm['report_attachment_size'] > acl.threads.acl[forum]['attachment_size']
                     and acl.threads.acl[forum]['attachment_size'] != 0):
                 acl.threads.acl[forum]['attachment_size'] = perm['report_attachment_size']
-            if (perm['report_attachment_limit'] > acl.threads.acl[forum]['report_attachment_limit']
+            if (perm['report_attachment_limit'] > acl.threads.acl[forum]['attachment_limit']
                     and acl.threads.acl[forum]['attachment_limit'] != 0):
                 acl.threads.acl[forum]['attachment_limit'] = perm['report_attachment_limit']
             if perm['can_mod_reports_discussions']:
@@ -133,7 +133,7 @@ def cleanup(acl, perms, forums):
                 acl.threads.acl[forum]['can_delete_attachments'] = True
                 acl.threads.acl[forum]['can_delete_checkpoints'] = 2
                 acl.threads.acl[forum]['can_see_deleted_checkpoints'] = True
-            if perm['can_delete_reports']:
-                acl.threads.acl[forum]['can_delete_threads'] = 2
+            if perm['can_delete_reports'] > acl.threads.acl[forum]['can_delete_threads']:
+                acl.threads.acl[forum]['can_delete_threads'] = perm['can_delete_reports']
         except KeyError:
             pass
