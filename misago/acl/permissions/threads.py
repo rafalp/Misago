@@ -688,7 +688,7 @@ class ThreadsACL(BaseACL):
 
     def can_delete_attachment(self, user, forum, attachment):
         if user.pk == attachment.pk:
-            return None
+            return True
         try:
             forum_role = self.get_role(forum)
             return forum_role['can_delete_attachments']
