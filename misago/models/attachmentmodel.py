@@ -8,6 +8,10 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from floppyforms import ValidationError
+from misago.signals import (delete_user_content, merge_post, merge_thread,
+                            move_forum_content, move_post, move_thread,
+                            rename_user, sync_user_profile)
+
 
 class AttachmentManager(models.Manager):
     def allow_more_orphans(self):
@@ -125,3 +129,51 @@ class Attachment(models.Model):
         for i in xrange(100):
             unique_hash = hashlib.sha256('%s:%s' % (settings.SECRET_KEY, unique_hash)).hexdigest()
         self.hash_id = unique_hash[:8]
+
+
+def rename_user_handler(sender, **kwargs):
+    sender.attachment_set.update(
+                                 user_name=sender.username,
+                                 user_name_slug=sender.username_slug,
+                                )
+
+rename_user.connect(rename_user_handler, dispatch_uid="rename_user_attachments")
+
+
+def delete_user_content_handler(sender, **kwargs):
+    for attachment in sender.attachment_set.iterator():
+        if attachment.post_id:
+            attachment.delete_from_post()
+        attachment.delete()
+
+delete_user_content.connect(delete_user_content_handler, dispatch_uid="delete_user_attachments")
+
+
+def move_forum_content_handler(sender, **kwargs):
+    sender.attachment_set.update(forum=kwargs['move_to'])
+
+move_forum_content.connect(move_forum_content_handler, dispatch_uid="move_forum_attachments")
+
+
+def move_thread_handler(sender, **kwargs):
+    sender.attachment_set.update(forum=kwargs['move_to'])
+
+move_thread.connect(move_thread_handler, dispatch_uid="move_thread_attachments")
+
+
+def move_post_handler(sender, **kwargs):
+    sender.attachment_set.update(forum=kwargs['move_to'].forum, thread=kwargs['move_to'])
+
+move_post.connect(move_thread_handler, dispatch_uid="move_post_attachments")
+
+
+def merge_thread_handler(sender, **kwargs):
+    sender.attachment_set.update(thread=kwargs['new_thread'])
+
+merge_thread.connect(merge_thread_handler, dispatch_uid="merge_threads_attachments")
+
+
+def merge_post_handler(sender, **kwargs):
+    sender.attachment_set.update(post=kwargs['new_post'], session=('attachments_%s' % kwargs['new_post'].pk))
+
+merge_thread.connect(merge_thread_handler, dispatch_uid="merge_posts_attachments")

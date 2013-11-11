@@ -42,6 +42,7 @@ class PostsModeration(object):
             post.merge_with(new_post)
             post.delete()
         md, new_post.post_preparsed = post_markdown(new_post.post)
+        new_post.sync_attachments()
         new_post.save(force_update=True)
         self.thread.sync()
         self.thread.save(force_update=True)
