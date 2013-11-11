@@ -108,7 +108,10 @@ class PostingBaseView(ViewBase):
         except AttributeError:
             post_pk = 0
 
-        self.attachments_token = 'attachments_%s_%s_%s_%s' % (self.request.user.pk, forum_pk, thread_pk, post_pk)
+        if post_pk:
+            self.attachments_token = 'attachments_0_%s_%s_%s' % (forum_pk, thread_pk, post_pk)
+        else:
+            self.attachments_token = 'attachments_%s_%s_%s_%s' % (self.request.user.pk, forum_pk, thread_pk, post_pk)
         self.attachments_removed_token = 'removed_%s' % self.attachments_token
 
     def session_attachments_queryset(self):
