@@ -98,8 +98,8 @@ class PostingBaseView(ViewBase):
                                            )
 
     def make_attachments_token(self):
-        if self.post_id:
-            self.attachments_token = 'attachments_%s' % self.post_id
+        if self.post:
+            self.attachments_token = 'attachments_%s' % self.post.pk
         else:
             forum_pk = self.forum.pk
             try:
