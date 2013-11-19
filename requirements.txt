@@ -1,4 +1,4 @@
-django==1.5.2
+django<1.6
 django-debug-toolbar
 django-floppyforms
 django-haystack
