@@ -236,7 +236,7 @@ class AdminSite(object):
 
         # Loop sections, build list of sections and find active section
         for section in self.sections:
-            is_active = section.is_active(request.path)
+            is_active = section.is_active(request.path_info)
             sections.append({
                              'is_active': is_active,
                              'name': section.name,
@@ -253,7 +253,7 @@ class AdminSite(object):
 
         # Loop active section actions
         for action in active_section.actions:
-            is_active = action.is_active(request.path, active_section.id if active_section != self.sections[0] else None)
+            is_active = action.is_active(request.path_info, active_section.id if active_section != self.sections[0] else None)
             actions.append({
                              'is_active': is_active,
                              'name': action.name,
