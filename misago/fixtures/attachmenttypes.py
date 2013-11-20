@@ -15,7 +15,7 @@ def load():
     )
 
     AttachmentType.objects.create(
-        name=_('Documents').message,
+        name=_('Document').message,
         extensions='pdf,txt,doc,docx,xls,xlsx,xlsm,xlsb',
         size_limit=0,
     )
