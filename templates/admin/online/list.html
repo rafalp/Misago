@@ -26,15 +26,29 @@
 {% block search_form %}
 {{ form_theme.row(search_form.ip_address, attrs={
                                                  'class': 'span3',
-                                                 'placeholder': _("IP begins with..."),
+                                                 'placeholder': lang_ip_begins_with(),
                                                 }) }}
 {{ form_theme.row(search_form.username, attrs={
                                                'class': 'span3',
-                                               'placeholder': _("Username begings with..."),
+                                               'placeholder': lang_username_begins_with(),
                                               }) }}
 {{ form_theme.row(search_form.useragent, attrs={
                                                'class': 'span3',
-                                               'placeholder': _("User Agent contains..."),
+                                               'placeholder': lang_user_agent_contains(),
                                               }) }}
 {{ form_theme.row(search_form.type, attrs={'class': 'span3'}) }}
 {% endblock %}
+
+
+{# Translation strings #}
+{% macro lang_ip_begins_with() -%}
+{% trans %}IP begins with...{% endtrans %}
+{%- endmacro %}
+
+{% macro lang_username_begins_with() -%}
+{% trans %}Username begins with...{% endtrans %}
+{%- endmacro %}
+
+{% macro lang_user_agent_contains() -%}
+{% trans %}User-Agent contains...{% endtrans %}
+{%- endmacro %}

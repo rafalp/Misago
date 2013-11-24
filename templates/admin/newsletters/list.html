@@ -10,12 +10,22 @@
 {% block search_form %}
 {{ form_theme.row(search_form.name, attrs={
                                            'class': 'span3',
-                                           'placeholder': _("Name contains..."),
+                                           'placeholder': lang_name_contains(),
                                           }) }}
 {{ form_theme.row(search_form.contains, attrs={
                                                'class': 'span3',
-                                               'placeholder': _("Message contains..."),
+                                               'placeholder': lang_message_contains(),
                                               }) }}
 {{ form_theme.row(search_form.type, attrs={'class': 'span3'}) }}
 {{ form_theme.row(search_form.rank, attrs={'class': 'span3'}) }}
 {% endblock %}
+
+
+{# Translation strings #}
+{% macro lang_name_contains() -%}
+{% trans %}Name contains...{% endtrans %}
+{%- endmacro %}
+
+{% macro lang_message_contains() -%}
+{% trans %}Message contains...{% endtrans %}
+{%- endmacro %}

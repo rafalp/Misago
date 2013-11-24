@@ -35,9 +35,19 @@
 {% endblock%}
 
 {% block search_form %}
-{{ form_theme.row(search_form.username, attrs={'class': 'span3', 'placeholder': _("Username contains...")}) }}
-{{ form_theme.row(search_form.email, attrs={'class': 'span3', 'placeholder': _("E-mail address contains...")}) }}
+{{ form_theme.row(search_form.username, attrs={'class': 'span3', 'placeholder': lang_username_contains()}) }}
+{{ form_theme.row(search_form.email, attrs={'class': 'span3', 'placeholder': lang_email_address_contains()}) }}
 {{ form_theme.row(search_form.activation, attrs={'class': 'span3'}) }}
 {{ form_theme.row(search_form.rank, attrs={'class': 'span3'}) }}
 {{ form_theme.row(search_form.role, attrs={'class': 'span3'}) }}
 {% endblock %}
+
+
+{# Translation strings #}
+{% macro lang_username_contains() -%}
+{% trans %}Username contains...{% endtrans %}
+{%- endmacro %}
+
+{% macro lang_email_address_contains() -%}
+{% trans %}E-mail address contains...{% endtrans %}
+{%- endmacro %}

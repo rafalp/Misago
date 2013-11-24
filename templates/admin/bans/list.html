@@ -15,7 +15,22 @@
 {% endblock %}
 
 {% block search_form %}
-{{ form_theme.row(search_form.ban, attrs={'class': 'span3'}) }}
-{{ form_theme.row(search_form.reason, attrs={'class': 'span3'}) }}
-{{ form_theme.row(search_form.test, attrs={'class': 'span3'}) }}
+{{ form_theme.row(search_form.ban, attrs={
+                                          'class': 'span3',
+                                          'placeholder': lang_ban_contains(),
+                                         }) }}
+{{ form_theme.row(search_form.reason, attrs={
+                                             'class': 'span3',
+                                             'placeholder': lang_ban_reason_contains(),
+                                            }) }}
+{{ form_theme.row(search_form.test, attrs={'class': 'span3',}) }}
 {% endblock %}
+
+{# Translation strings #}
+{% macro lang_ban_contains() -%}
+{% trans %}Ban contains...{% endtrans %}
+{%- endmacro %}
+
+{% macro lang_ban_reason_contains() -%}
+{% trans %}Ban reason contains...{% endtrans %}
+{%- endmacro %}
