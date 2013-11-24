@@ -1,5 +1,4 @@
 {% extends "cranefly/usercp/layout.html" %}
-{% import "_forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{{ macros.page_title(title=_('Crop Avatar')) }}{% endblock %}
@@ -7,14 +6,14 @@
 {% block action %}
 <div class="form-container usercp-avatar-crop">
 
-  <form action="{% if after_upload %}{% url 'usercp_avatar_upload_crop' %}{% else %}{% url 'usercp_avatar_crop' %}{% endif %}" method="post">
+  <form action="{% if after_upload %}{{ url('usercp_avatar_upload_crop') }}{% else %}{{ url('usercp_avatar_crop') }}{% endif %}" method="post">
 
     <div class="form-header">
       <div class="avatar-crop-preview">
         <img src="{{ MEDIA_URL }}{{ source }}" id="preview" alt="{% trans %}Avatar Preview{% endtrans %}" class="jcrop-preview" />
       </div>
       <h1>{% trans %}Crop Avatar{% endtrans %} <small>{% trans %}Change your Avatar{% endtrans %}</small></h1>
-      <a href="{% url 'usercp_avatar' %}" class="btn btn-inverse pull-right">{% trans %}Cancel{% endtrans %}</a>
+      <a href="{{ url('usercp_avatar') }}" class="btn btn-inverse pull-right">{% trans %}Cancel{% endtrans %}</a>
       <button name="save" type="submit" class="btn btn-danger pull-right">{% trans %}Crop Avatar{% endtrans %}</button>
     </div>
 
@@ -33,7 +32,7 @@
     <div class="avatar-crop-target"><img src="{{ MEDIA_URL }}{{ source }}" id="target" alt="{% trans %}Uploaded Image{% endtrans %}"></div>
 
   </form>
-  
+
 </div>
 {% endblock %}
 
@@ -55,7 +54,11 @@
           onSelect: updatePreview,
           aspectRatio: 1,
           minSize: [50, 50],
-          setSelect: [ 0, 0, {{ avatar_size }}, {{ avatar_size }} ],
+          {% if avatar_crop -%}
+          setSelect: [{{ avatar_crop[0] }}, {{ avatar_crop[1] }}, {{ avatar_crop[0] + avatar_crop[2] }}, {{ avatar_crop[1] + avatar_crop[2] }}]
+          {%- else -%}
+          setSelect: [0, 0, {{ avatar_size }}, {{ avatar_size }}],
+          {%- endif %}
         },function(){
           // Use the API to get the real image size
           var bounds = this.getBounds();
@@ -72,7 +75,7 @@
           {
             var rx = {{ avatar_size }} / c.w;
             var ry = {{ avatar_size }} / c.h;
-            
+
             $(crop_w).val(c.w);
             $(crop_x).val(c.x);
             $(crop_y).val(c.y);

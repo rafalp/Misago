@@ -6,8 +6,9 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
-from misago.forms import FormLayout
+from misago import messages
 from misago.messages import Message
+from misago.shortcuts import render_to_response
 from misago.apps.admin.stats.forms import GenerateStatisticsForm
 from misago.apps.errors import error404
 
@@ -15,7 +16,6 @@ def form(request):
     """
     Allow admins to generate fancy statistic graphs for different models
     """
-    statistics_providers = []
     models_map = {}
     for model in models.get_models():
         try:
@@ -30,8 +30,8 @@ def form(request):
         Something went FUBAR - Misago ships with some stats providers out of box
         If those providers cant be found, this means Misago filesystem is corrupted
         """
-        return request.theme.render_to_response('stats/not_available.html',
-                                                context_instance=RequestContext(request));
+        return render_to_response('stats/not_available.html',
+                                  context_instance=RequestContext(request));
 
     message = None
     if request.method == 'POST':
@@ -46,11 +46,11 @@ def form(request):
                 date_start = date_temp
             # Assert that dates are correct
             if date_end == date_start:
-                message = Message(_('Start and end date are same'), type='error')
+                message = Message(_('Start and end date are same'), messages.ERROR)
             elif check_dates(date_start, date_end, form.cleaned_data['stats_precision']):
                 message = check_dates(date_start, date_end, form.cleaned_data['stats_precision'])
             else:
-                request.messages.set_flash(Message(_('Statistical report has been created.')), 'success', 'admin_stats')
+                messages.success(request, _('Statistical report has been created.'), 'admin_stats')
                 return redirect(reverse('admin_stats_graph', kwargs={
                                                        'model': form.cleaned_data['provider_model'],
                                                        'date_start': date_start.strftime('%Y-%m-%d'),
@@ -58,14 +58,16 @@ def form(request):
                                                        'precision': form.cleaned_data['stats_precision']
                                                         }))
         else:
-            message = Message(form.non_field_errors()[0], 'error')
+            message = Message(form.non_field_errors()[0], messages.ERROR)
     else:
         form = GenerateStatisticsForm(provider_choices=statistics_providers, request=request)
 
-    return request.theme.render_to_response('stats/form.html', {
-                                            'form': FormLayout(form),
-                                            'message': message,
-                                            }, context_instance=RequestContext(request));
+    return render_to_response('stats/form.html',
+                              {
+                              'form': form,
+                              'message': message,
+                              },
+                              context_instance=RequestContext(request));
 
 
 def graph(request, model, date_start, date_end, precision):
@@ -93,8 +95,8 @@ def graph(request, model, date_start, date_end, precision):
 
     if not statistics_providers:
         # Like before, q.q on lack of models
-        return request.theme.render_to_response('stats/not_available.html',
-                                                context_instance=RequestContext(request));
+        return render_to_response('stats/not_available.html',
+                                  context_instance=RequestContext(request));
 
     if not model in models_map or check_dates(date_start, date_end, precision):
         # Bad model name or graph data!
@@ -104,12 +106,14 @@ def graph(request, model, date_start, date_end, precision):
                                   provider_choices=statistics_providers,
                                   request=request,
                                   initial={'provider_model': model, 'date_start': date_start, 'date_end': date_end, 'stats_precision': precision})
-    return request.theme.render_to_response('stats/graph.html', {
-                                            'title': models_map[model].statistics_name,
-                                            'graph': build_graph(models_map[model], date_start, date_end, precision),
-                                            'form': FormLayout(form),
-                                            'message': request.messages.get_message('admin_stats'),
-                                            }, context_instance=RequestContext(request));
+    return render_to_response('stats/graph.html',
+                              {
+                              'title': models_map[model].statistics_name,
+                              'graph': build_graph(models_map[model], date_start, date_end, precision),
+                              'form': form,
+                              'message': request.messages.get_message('admin_stats'),
+                              },
+                              context_instance=RequestContext(request));
 
 
 def check_dates(date_start, date_end, precision):
@@ -120,12 +124,12 @@ def check_dates(date_start, date_end, precision):
         or (precision == 'week' and date_diff / 604800 > 60)
         or (precision == 'month' and date_diff / 2592000 > 60)
         or (precision == 'year' and date_diff / 31536000 > 60)):
-        return Message(_('Too many many items to display on graph.'), 'error')
+        return Message(_('Too many many items to display on graph.'), messages.ERROR)
     elif ((precision == 'day' and date_diff / 86400 < 1)
           or (precision == 'week' and date_diff / 604800 < 1)
           or (precision == 'month' and date_diff / 2592000 < 1)
           or (precision == 'year' and date_diff / 31536000 < 1)):
-        return Message(_('Too few items to display on graph'), 'error')
+        return Message(_('Too few items to display on graph'), messages.ERROR)
     return None
 
 

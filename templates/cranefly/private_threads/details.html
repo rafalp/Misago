@@ -4,8 +4,8 @@
 {% block title %}{{ macros.page_title(title=(_("Post #%(post)s Info") % {'post': post.pk}),parent=thread.name) }}{% endblock %}
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
-<li><a href="{% url 'private_threads' %}">{% trans %}Private Threads{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-<li><a href="{% url 'private_thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{{ url('private_threads') }}">{% trans %}Private Threads{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{{ url('private_thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li class="active">{% trans post=post.pk %}Post #{{ post }} Info{% endtrans %}
 {%- endblock %}
 
@@ -16,10 +16,10 @@
     <ul class="breadcrumb">
       {{ self.breadcrumb() }}</li>
     </ul>
-    <h1>{% trans post=post.pk %}Post #{{ post }} Info{% endtrans %} <small>{{ thread.name }}</small></h1>
+    <h1>{% trans post=post.pk %}Post #{{ post }} Info{% endtrans %} <small>{{ thread.name|short_string(42) }}</small></h1>
     <ul class="unstyled header-stats">
-      <li><i class="icon-time"></i> <a href="{% url 'private_thread_find' thread=thread.pk, slug=thread.slug, post=post.pk %}">{{ post.date|reltimesince }}</a></li>
-      <li><i class="icon-user"></i> {% if post.user %}<a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
+      <li><i class="icon-time"></i> <a href="{{ url('private_thread_find', thread=thread.pk, slug=thread.slug, post=post.pk) }}">{{ post.date|reltimesince }}</a></li>
+      <li><i class="icon-user"></i> {% if post.user %}<a href="{{ url('user', user=post.user.pk, username=post.user.username_slug) }}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
       <li><i class="icon-pencil"></i> {% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}</li>
       {% if post.protected %}<li><i class="icon-lock"></i> {% trans %}Protected{% endtrans %}</li>{% endif %}
     </ul>

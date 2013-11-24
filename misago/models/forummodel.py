@@ -1,28 +1,29 @@
 import urlparse
-import threading
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 from django.conf import settings
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models import Sum
 from django.utils.translation import ugettext_lazy as _
 from misago.signals import delete_forum_content, move_forum_content, rename_forum, rename_user
+from misago.thread import local
 
-thread_local = threading.local()
+_thread_local = local()
 
 class ForumManager(TreeManager):
     @property
     def forums_tree(self):
         try:
-            return thread_local.misago_forums_tree
+            return _thread_local.misago_forums_tree
         except AttributeError:
-            thread_local.misago_forums_tree = None
-        return thread_local.misago_forums_tree
+            _thread_local.misago_forums_tree = None
+        return _thread_local.misago_forums_tree
 
     @forums_tree.setter
     def forums_tree(self, value):
-        thread_local.misago_forums_tree = value
+        _thread_local.misago_forums_tree = value
 
     def special_pk(self, name):
         self.populate_tree()
@@ -83,7 +84,7 @@ class ForumManager(TreeManager):
         else:
             queryset = Forum.objects.filter(pk__in=acl.known_forums).order_by('lft')
 
-        for forum in queryset:
+        for forum in queryset.iterator():
             forum.subforums = []
             forum.is_read = False
             if tracker:
@@ -115,7 +116,7 @@ class ForumManager(TreeManager):
                         parents[forum.parent_id].last_poster_slug = forum.last_poster_slug
                         parents[forum.parent_id].last_poster_style = forum.last_poster_style
         return forums_list
-    
+
     def ignored_users(self, user, forums):
         check_ids = []
         for forum in forums:
@@ -131,11 +132,22 @@ class ForumManager(TreeManager):
         self.populate_tree()
         readable = []
         for pk, forum in self.forums_tree.items():
-            if ((include_special or not forum.special) and 
+            if ((include_special or not forum.special) and
                     acl.forums.can_browse(forum.pk) and
-                    acl.threads.acl[forum.pk]['can_read_threads']):
+                    acl.threads.acl[forum.pk]['can_read_threads'] == 2):
                 readable.append(forum.pk)
         return readable
+
+    def starter_readable_forums(self, acl):
+        self.populate_tree()
+        readable = []
+        for pk, forum in self.forums_tree.items():
+            if (not forum.special and
+                    acl.forums.can_browse(forum.pk) and
+                    acl.threads.acl[forum.pk]['can_read_threads'] == 1):
+                readable.append(forum.pk)
+        return readable
+
 
     def forum_by_name(self, forum, acl):
         forums = self.readable_forums(acl, True)
@@ -188,11 +200,11 @@ class Forum(MPTTModel):
 
     class Meta:
         app_label = 'misago'
-    
+
     def save(self, *args, **kwargs):
         super(Forum, self).save(*args, **kwargs)
         cache.delete('forums_tree')
-    
+
     def delete(self, *args, **kwargs):
         delete_forum_content.send(sender=self)
         super(Forum, self).delete(*args, **kwargs)
@@ -308,8 +320,11 @@ class Forum(MPTTModel):
             pass
 
     def sync(self):
-        self.threads = self.thread_set.filter(moderated=False).filter(deleted=False).count()
-        self.posts = self.post_set.filter(moderated=False).count()
+        threads_qs = self.thread_set.filter(moderated=False).filter(deleted=False)
+        self.posts = self.threads = threads_qs.count()
+        replies = threads_qs.aggregate(Sum('replies'))
+        if replies['replies__sum']:
+            self.posts += replies['replies__sum']
         self.sync_last()
 
     def prune(self):

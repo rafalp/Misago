@@ -1,13 +1,14 @@
 from hashlib import md5
 from datetime import timedelta
-from django.conf import settings
 from django.contrib.sessions.backends.base import SessionBase, CreateError
 from django.db import IntegrityError
 from django.db.models.loading import cache as model_cache
 from django.utils import timezone
 from django.utils.crypto import salted_hmac
 from django.utils.encoding import force_unicode
+from django.utils.module_loading import import_by_path
 from misago.auth import auth_remember, AuthException
+from misago.conf import settings
 from misago.models import Session, Token, Guest, User
 from misago.utils.strings import random_string
 
@@ -59,7 +60,11 @@ class MisagoSession(SessionBase):
         return False
 
     def get_ip(self, request):
-        return request.META.get('HTTP_X_FORWARDED_FOR', '') or request.META.get('REMOTE_ADDR')
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            return x_forwarded_for.split(',')[-1].strip()
+        else:
+            return request.META.get('REMOTE_ADDR')
 
     def set_user(self, user=None):
         pass
@@ -87,6 +92,7 @@ class CrawlerSession(MisagoSession):
     Crawler Session controller
     """
     def __init__(self, request):
+        self.serializer = import_by_path(settings.SESSION_SERIALIZER)
         self.matched = True
         self.started = False
         self.team = False
@@ -117,7 +123,7 @@ class CrawlerSession(MisagoSession):
                 continue
             except IntegrityError:
                 try:
-                    self._session_rk =  Session.objects.get(id=self._session_key)                    
+                    self._session_rk =  Session.objects.get(id=self._session_key)
                 except Session.DoesNotExist:
                     continue
 
@@ -130,6 +136,7 @@ class HumanSession(MisagoSession):
     Human Session controller
     """
     def __init__(self, request):
+        self.serializer = import_by_path(settings.SESSION_SERIALIZER)
         self.started = False
         self.matched = False
         self.expired = False
@@ -156,14 +163,14 @@ class HumanSession(MisagoSession):
                                                     admin=request.firewall.admin
                                                     )
             # IP invalid
-            if request.settings.sessions_validate_ip and self._session_rk.ip != self._ip:
+            if settings.sessions_validate_ip and self._session_rk.ip != self._ip:
                 raise IncorrectSessionException()
-            
+
             # Session expired
             if timezone.now() - self._session_rk.last > timedelta(seconds=settings.SESSION_LIFETIME):
                 self.expired = True
                 raise IncorrectSessionException()
-            
+
             # Change session to matched and extract session user
             if self._session_rk.matched:
                 self.matched = True
@@ -182,6 +189,7 @@ class HumanSession(MisagoSession):
                 # Autolog failed
                 self.create(request)
         self.id = self._session_rk.id
+        self.start = self._session_rk.start
 
         # Make cookie live longer
         if request.firewall.admin:

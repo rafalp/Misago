@@ -1,11 +1,13 @@
 import copy
 from django.core.urlresolvers import reverse as django_reverse
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.acl.builder import build_forum_form
 from misago.admin import site
 from misago.apps.admin.widgets import *
 from misago.forms import Form, YesNoSwitch
 from misago.models import ForumRole
+from misago.monitor import monitor, UpdatingMonitor
 from misago.utils.strings import slugify
 from misago.apps.admin.forumroles.forms import ForumRoleForm
 
@@ -40,9 +42,10 @@ class List(ListWidget):
                 )
 
     def action_delete(self, items, checked):
-        self.request.monitor.increase('acl_version')
+        with UpdatingMonitor() as cm:
+            monitor.increase('acl_version')
         Role.objects.filter(id__in=checked).delete()
-        return Message(_('Selected forum roles have been deleted successfully.'), 'success'), reverse('admin_roles_forums')
+        return Message(_('Selected forum roles have been deleted successfully.'), messages.SUCCESS), reverse('admin_roles_forums')
 
 
 class New(FormWidget):
@@ -52,10 +55,10 @@ class New(FormWidget):
     form = ForumRoleForm
     submit_button = _("Save Role")
 
-    def get_new_url(self, model):
+    def get_new_link(self, model):
         return reverse('admin_roles_forums_new')
 
-    def get_edit_url(self, model):
+    def get_edit_link(self, model):
         return reverse('admin_roles_forums_edit', model)
 
     def submit_form(self, form, target):
@@ -63,7 +66,7 @@ class New(FormWidget):
                       name=form.cleaned_data['name'],
                      )
         new_role.save(force_insert=True)
-        return new_role, Message(_('New Forum Role has been created.'), 'success')
+        return new_role, Message(_('New Forum Role has been created.'), messages.SUCCESS)
 
 
 class Edit(FormWidget):
@@ -76,11 +79,11 @@ class Edit(FormWidget):
     notfound_message = _('Requested Forum Role could not be found.')
     submit_fallback = True
 
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_roles_forums_edit', model)
 
-    def get_edit_url(self, model):
-        return self.get_url(model)
+    def get_edit_link(self, model):
+        return self.get_link(model)
 
     def get_initial_data(self, model):
         return {
@@ -90,7 +93,7 @@ class Edit(FormWidget):
     def submit_form(self, form, target):
         target.name = form.cleaned_data['name']
         target.save(force_update=True)
-        return target, Message(_('Changes in forum role "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
+        return target, Message(_('Changes in forum role "%(name)s" have been saved.') % {'name': self.original_name}, messages.SUCCESS)
 
 
 class ACL(FormWidget):
@@ -107,11 +110,11 @@ class ACL(FormWidget):
         self.form = build_forum_form(self.request, target)
         return self.form
 
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_roles_forums_acl', model)
 
-    def get_edit_url(self, model):
-        return self.get_url(model)
+    def get_edit_link(self, model):
+        return self.get_link(model)
 
     def get_initial_data(self, model):
         raw_acl = model.permissions
@@ -127,9 +130,10 @@ class ACL(FormWidget):
             raw_acl[perm] = form.cleaned_data[perm]
         target.permissions = raw_acl
         target.save(force_update=True)
-        self.request.monitor.increase('acl_version')
+        with UpdatingMonitor() as cm:
+            monitor.increase('acl_version')
 
-        return target, Message(_('Forum Role "%(name)s" permissions have been changed.') % {'name': self.original_name}, 'success')
+        return target, Message(_('Forum Role "%(name)s" permissions have been changed.') % {'name': self.original_name}, messages.SUCCESS)
 
 
 class Delete(ButtonWidget):
@@ -140,5 +144,6 @@ class Delete(ButtonWidget):
 
     def action(self, target):
         target.delete()
-        self.request.monitor.increase('acl_version')
-        return Message(_('Forum Role "%(name)s" has been deleted.') % {'name': _(target.name)}, 'success'), False
+        with UpdatingMonitor() as cm:
+            monitor.increase('acl_version')
+        return Message(_('Forum Role "%(name)s" has been deleted.') % {'name': _(target.name)}, messages.SUCCESS), False

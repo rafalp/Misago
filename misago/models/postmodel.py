@@ -1,3 +1,4 @@
+import copy
 from django.db import models
 from django.db.models import F
 from django.db.models.signals import pre_save, pre_delete
@@ -8,6 +9,11 @@ from misago.signals import (delete_user_content, merge_post, merge_thread,
                             move_forum_content, move_post, move_thread,
                             rename_user, sync_user_profile)
 from misago.utils.translation import ugettext_lazy
+import base64
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 
 class PostManager(models.Manager):
     def filter_stats(self, start, end):
@@ -35,9 +41,12 @@ class Post(models.Model):
     edit_user_slug = models.SlugField(max_length=255, null=True, blank=True)
     delete_date = models.DateTimeField(null=True, blank=True)
     reported = models.BooleanField(default=False, db_index=True)
+    reports = models.CharField(max_length=255, null=True, blank=True)
     moderated = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     protected = models.BooleanField(default=False)
+    has_attachments = models.BooleanField(default=False)
+    _attachments = models.TextField(db_column='attachments', null=True, blank=True)
 
     objects = PostManager()
 
@@ -46,10 +55,59 @@ class Post(models.Model):
     class Meta:
         app_label = 'misago'
 
+    @property
+    def attachments(self):
+        if not self.has_attachments:
+            return []
+
+        try:
+            return self._attachments_cache
+        except AttributeError:
+            pass
+
+        try:
+            self._attachments_cache = pickle.loads(base64.decodestring(self._attachments))
+        except Exception:
+            self._attachments_cache = []
+        return self._attachments_cache
+
+
+    @attachments.setter
+    def attachments(self, new_attachments):
+        if new_attachments:
+            self._update_attachments_store(new_attachments)
+        else:
+            self._empty_attachments_store()
+
+    def _empty_attachments_store(self):
+        self.has_attachments = False
+        self._attachments = None
+
+    def _update_attachments_store(self, new_attachments):
+        self.has_attachments = True
+        clean_attachments = []
+        for attachment in new_attachments:
+            attachment = copy.copy(attachment)
+            attachment_user_pk = attachment.user_id
+            attachment.user = None
+            attachment.user_id = attachment_user_pk
+            attachment.forum = None
+            attachment.thread = None
+            attachment.post = None
+
+            clean_attachments.append(attachment)
+        self._attachments = base64.encodestring(pickle.dumps(clean_attachments, pickle.HIGHEST_PROTOCOL))
+
+    def sync_attachments(self):
+        self.attachments = self.attachment_set
+
+    @property
+    def timeline_date(self):
+        return self.date
+
     def save(self, *args, **kwargs):
         self.current_date = timezone.now()
         return super(Post, self).save(*args, **kwargs)
-
 
     def delete(self, *args, **kwargs):
         """
@@ -79,24 +137,24 @@ class Post(models.Model):
         move_post.send(sender=self, move_to=thread)
         self.thread = thread
         self.forum = thread.forum
-        
+
     def merge_with(self, post):
         post.post = '%s\n- - -\n%s' % (post.post, self.post)
         merge_post.send(sender=self, new_post=post)
 
     def notify_mentioned(self, request, thread_type, users):
-        from misago.acl.builder import acl
+        from misago.acl.builder import acl as build_acl
         from misago.acl.exceptions import ACLError403, ACLError404
-        
+
         mentioned = self.mentions.all()
         for slug, user in users.items():
             if user.pk != request.user.pk and user not in mentioned:
                 self.mentions.add(user)
-                try:                    
-                    acl = acl(request, user)
-                    acl.forums.allow_forum_view(self.forum)
-                    acl.threads.allow_thread_view(user, self.thread)
-                    acl.threads.allow_post_view(user, self.thread, self)
+                try:
+                    user_acl = build_acl(request, user)
+                    user_acl.forums.allow_forum_view(self.forum)
+                    user_acl.threads.allow_thread_view(user, self.thread)
+                    user_acl.threads.allow_post_view(user, self.thread, self)
                     if not user.is_ignoring(request.user):
                         alert = user.alert(ugettext_lazy("%(username)s has mentioned you in his reply in thread %(thread)s").message)
                         alert.profile('username', request.user)
@@ -113,6 +171,19 @@ class Post(models.Model):
             return self.report_set.filter(weight=2)[0]
         except IndexError:
             return None
+
+    def add_reporter(self, user):
+        if not self.reports:
+            self.reports = ','
+        self.reports += '%s,' % user.pk
+
+    def reported_by(self, user):
+        if not self.reports:
+            return False
+        try:
+            return ',%s,' % user.pk in self.reports
+        except AttributeError:
+            return ',%s,' % user in self.reports
 
 
 def rename_user_handler(sender, **kwargs):
@@ -138,7 +209,7 @@ def delete_user_content_handler(sender, **kwargs):
 
     sender.post_set.all().delete()
 
-    for thread in Thread.objects.filter(id__in=threads):
+    for thread in Thread.objects.filter(id__in=threads).iterator():
         thread.sync()
         thread.save(force_update=True)
 

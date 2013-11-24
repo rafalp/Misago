@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse as django_reverse
-from django import forms
 from django.utils.translation import ugettext as _
+import floppyforms as forms
+from misago import messages
 from misago.admin import site
 from misago.apps.admin.widgets import *
 from misago.forms import Form
@@ -50,7 +51,7 @@ class List(ListWidget):
         for item in page_items:
             item.order = cleaned_data['pos_' + str(item.pk)]
             item.save(force_update=True)
-        return Message(_('Ranks order has been changed'), 'success'), reverse('admin_ranks')
+        return Message(_('Ranks order has been changed'), messages.SUCCESS), reverse('admin_ranks')
 
     def sort_items(self, page_items, sorting_method):
         return page_items.order_by('order')
@@ -63,7 +64,7 @@ class List(ListWidget):
 
     def action_delete(self, items, checked):
         Rank.objects.filter(id__in=checked).delete()
-        return Message(_('Selected ranks have been deleted successfully.'), 'success'), reverse('admin_ranks')
+        return Message(_('Selected ranks have been deleted successfully.'), messages.SUCCESS), reverse('admin_ranks')
 
 
 class New(FormWidget):
@@ -73,10 +74,10 @@ class New(FormWidget):
     form = RankForm
     submit_button = _("Save Rank")
 
-    def get_new_url(self, model):
+    def get_new_link(self, model):
         return reverse('admin_ranks_new')
 
-    def get_edit_url(self, model):
+    def get_edit_link(self, model):
         return reverse('admin_ranks_edit', model)
 
     def submit_form(self, form, target):
@@ -93,11 +94,11 @@ class New(FormWidget):
                         on_index=form.cleaned_data['on_index'],
                         order=(last_rank.order + 1 if last_rank else 0),
                         criteria=form.cleaned_data['criteria']
-                        )  
+                        )
         new_rank.save(force_insert=True)
         for role in form.cleaned_data['roles']:
             new_rank.roles.add(role)
-        return new_rank, Message(_('New Rank has been created.'), 'success')
+        return new_rank, Message(_('New Rank has been created.'), messages.SUCCESS)
 
 
 class Edit(FormWidget):
@@ -111,11 +112,11 @@ class Edit(FormWidget):
     translate_target_name = True
     submit_fallback = True
 
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_ranks_edit', model)
 
-    def get_edit_url(self, model):
-        return self.get_url(model)
+    def get_edit_link(self, model):
+        return self.get_link(model)
 
     def get_initial_data(self, model):
         return {
@@ -151,7 +152,7 @@ class Edit(FormWidget):
 
         target.user_set.update(acl_key=None)
 
-        return target, Message(_('Changes in rank "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
+        return target, Message(_('Changes in rank "%(name)s" have been saved.') % {'name': self.original_name}, messages.SUCCESS)
 
 
 class Delete(ButtonWidget):
@@ -162,4 +163,4 @@ class Delete(ButtonWidget):
 
     def action(self, target):
         target.delete()
-        return Message(_('Rank "%(name)s" has been deleted.') % {'name': _(target.name)}, 'success'), False
+        return Message(_('Rank "%(name)s" has been deleted.') % {'name': _(target.name)}, messages.SUCCESS), False

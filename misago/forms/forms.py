@@ -1,6 +1,8 @@
 from recaptcha.client.captcha import submit as recaptcha_submit
-from django import forms
+from django.forms.forms import BoundField
 from django.utils.translation import ugettext_lazy as _
+import floppyforms as forms
+from misago.conf import settings
 
 class Form(forms.Form):
     """
@@ -27,24 +29,33 @@ class Form(forms.Form):
 
         # Kill captcha fields
         try:
-            if self.request.settings['bots_registration'] != 'recaptcha' or self.request.session.get('captcha_passed'):
+            if settings.bots_registration != 'recaptcha' or self.request.session.get('captcha_passed'):
                 del self.fields['recaptcha']
         except KeyError:
             pass
         try:
-            if self.request.settings['bots_registration'] != 'qa' or self.request.session.get('captcha_passed'):
+            if settings.bots_registration != 'qa' or self.request.session.get('captcha_passed'):
                 del self.fields['captcha_qa']
             else:
                 # Make sure we have any questions loaded
-                self.fields['captcha_qa'].label = self.request.settings['qa_test']
-                self.fields['captcha_qa'].help_text = self.request.settings['qa_test_help']
+                self.fields['captcha_qa'].label = settings.qa_test
+                self.fields['captcha_qa'].help_text = settings.qa_test_help
         except KeyError:
             pass
+
+    @property
+    def has_captcha(self):
+        return 'recaptcha' in self.fields or 'captcha_qa' in self.fields
 
     def ensure_finalization(self):
         if not self.form_finalized:
             self.form_finalized = True
             self.finalize_form()
+
+    def add_field(self, name, field):
+        bound = BoundField(self, field, name)
+        self.__dict__[name] = bound
+        self.fields[name] = field
 
     def finalize_form(self):
         pass
@@ -55,24 +66,12 @@ class Form(forms.Form):
         """
         self.ensure_finalization()
         self.data = self.data.copy()
-        for key, field in self.fields.iteritems():
-            try:
-                if field.__class__.__name__ in ['ModelChoiceField', 'TreeForeignKey'] and self.data[key]:
-                    self.data[key] = int(self.data[key])
-                elif field.__class__.__name__ == 'ModelMultipleChoiceField':
-                    self.data.setlist(key, [int(x) for x in self.data.getlist(key, [])])
-                elif field.__class__.__name__ not in ['DateField', 'DateTimeField']:
-                    if not key in self.dont_strip:
-                        if field.__class__.__name__ in ['MultipleChoiceField', 'TypedMultipleChoiceField']:
-                            self.data.setlist(key, [x.strip() for x in self.data.getlist(key, [])])
-                        else:
-                            self.data[key] = self.data[key].strip()
-                    if field.__class__.__name__ in ['MultipleChoiceField', 'TypedMultipleChoiceField']:
-                        self.data.setlist(key, [x.replace("\r\n", '') for x in self.data.getlist(key, [])])
-                    elif not field.widget.__class__.__name__ in ['Textarea']:
-                        self.data[key] = self.data[key].replace("\r\n", '')
-            except (KeyError, AttributeError):
-                pass
+        for name, field in self.fields.iteritems():
+            if field.__class__ == forms.CharField:
+                try:
+                    self.data[name] = self.data[name].strip()
+                except KeyError:
+                    pass
         super(Form, self).full_clean()
 
     def clean(self):
@@ -90,7 +89,7 @@ class Form(forms.Form):
         response = recaptcha_submit(
                                     self.request.POST.get('recaptcha_challenge_field'),
                                     self.request.POST.get('recaptcha_response_field'),
-                                    self.request.settings['recaptcha_private'],
+                                    settings.recaptcha_private,
                                     self.request.session.get_ip(self.request)
                                     ).is_valid
         if not response:
@@ -103,7 +102,7 @@ class Form(forms.Form):
         Test QA Captcha, scream if it went wrong
         """
 
-        if not unicode(self.cleaned_data['captcha_qa']).lower() in (name.lower() for name in unicode(self.request.settings['qa_test_answers']).splitlines()):
+        if not unicode(self.cleaned_data['captcha_qa']).lower() in (name.lower() for name in unicode(settings.qa_test_answers).splitlines()):
             raise forms.ValidationError(_("The answer you entered is incorrect."))
         self.request.session['captcha_passed'] = True
         return self.cleaned_data['captcha_qa']
@@ -156,7 +155,7 @@ class Form(forms.Form):
                 field_error, self.errors[self.error_source] = self.errors[self.error_source][0], []
                 raise forms.ValidationError(field_error)
             raise forms.ValidationError(_("Form contains errors."))
-        
+
     def empty_errors(self):
         for i in self.errors:
             self.errors[i] = []

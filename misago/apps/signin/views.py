@@ -4,14 +4,16 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.admin import site
-from misago.forms import FormLayout
 from misago.messages import Message
 import misago.auth as auth
 from misago.auth import AuthException, auth_admin, auth_forum, sign_user_in
+from misago.conf import settings
 from misago.decorators import (block_authenticated, block_banned, block_crawlers,
                             block_guest, block_jammed, check_csrf)
 from misago.models import SignInAttempt, Token
+from misago.shortcuts import render_to_response
 from misago.utils.strings import random_string
 from misago.apps.signin.forms import SignInForm
 
@@ -28,7 +30,7 @@ def signin(request):
     if request.method == 'POST':
         form = SignInForm(
                           request.POST,
-                          show_remember_me=not request.firewall.admin and request.settings['remember_me_allow'],
+                          show_remember_me=not request.firewall.admin and settings.remember_me_allow,
                           request=request
                           )
 
@@ -52,7 +54,7 @@ def signin(request):
                 sign_user_in(request, user)
                 remember_me_token = False
 
-                if not request.firewall.admin and request.settings['remember_me_allow'] and form.cleaned_data['user_remember_me']:
+                if not request.firewall.admin and settings.remember_me_allow and form.cleaned_data['user_remember_me']:
                     remember_me_token = random_string(42)
                     remember_me = Token(
                                         id=remember_me_token,
@@ -63,10 +65,10 @@ def signin(request):
                     remember_me.save()
                 if remember_me_token:
                     request.cookiejar.set('TOKEN', remember_me_token, True)
-                request.messages.set_flash(Message(_("Welcome back, %(username)s!") % {'username': user.username}), 'success', 'security')
+                messages.success(request, _("Welcome back, %(username)s!") % {'username': user.username}, 'security')
                 return redirect(success_redirect)
             except AuthException as e:
-                message = Message(e.error, 'error')
+                message = Message(e.error, messages.ERROR)
                 bad_password = e.password
                 banned_account = e.ban
                 not_active = e.activation
@@ -76,26 +78,26 @@ def signin(request):
                     SignInAttempt.objects.register_attempt(request.session.get_ip(request))
 
                     # Have we jammed our account?
-                    if SignInAttempt.objects.is_jammed(request.settings, request.session.get_ip(request)):
+                    if SignInAttempt.objects.is_jammed(request.session.get_ip(request)):
                         request.jam.expires = timezone.now()
                         return redirect(reverse('sign_in'))
         else:
-            message = Message(form.non_field_errors()[0], 'error')
+            message = Message(form.non_field_errors()[0], messages.ERROR)
     else:
         form = SignInForm(
-                          show_remember_me=not request.firewall.admin and request.settings['remember_me_allow'],
+                          show_remember_me=not request.firewall.admin and settings.remember_me_allow,
                           request=request
                           )
-    return request.theme.render_to_response('signin.html',
-                                            {
-                                             'message': message,
-                                             'bad_password': bad_password,
-                                             'banned_account': banned_account,
-                                             'not_active': not_active,
-                                             'form': FormLayout(form),
-                                             'hide_signin': True,
-                                             },
-                                            context_instance=RequestContext(request));
+    return render_to_response('signin.html',
+                              {
+                              'message': message,
+                              'bad_password': bad_password,
+                              'banned_account': banned_account,
+                              'not_active': not_active,
+                              'form': form,
+                              'hide_signin': True,
+                              },
+                              context_instance=RequestContext(request));
 
 
 @block_crawlers
@@ -104,7 +106,7 @@ def signin(request):
 def signout(request):
     user = request.user
     request.session.sign_out(request)
-    request.messages.set_flash(Message(_("You have been signed out.")), 'info', 'security')
+    messages.info(request, _("You have been signed out."), 'security')
     if request.firewall.admin:
         return redirect(reverse(site.get_admin_index()))
     else:

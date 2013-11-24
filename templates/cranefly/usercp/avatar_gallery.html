@@ -21,7 +21,7 @@
     {% if loop.index0 > 0 and gallery.avatars %}<hr>{% endif %}
     <div class="usercp-avatar-gallery">
       {% for avatar in gallery.avatars %}
-      <form action="{% url 'usercp_avatar_gallery' %}" class="usercp-avatar-select-form" method="post">
+      <form action="{{ url('usercp_avatar_gallery') }}" class="usercp-avatar-select-form" method="post">
         <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
         <input type="hidden" name="avatar_image" value="{{ avatar }}">
         <button type="submit" class="btn btn-link usercp-btn-avatar">

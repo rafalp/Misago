@@ -1,0 +1,189 @@
+{# Forms macros for rendering forms and fields and stuff in templates. #}
+
+{% macro hidden_fields(form) -%}
+  <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+  {% for field in form.hidden_fields() %}
+  <input type="hidden" name="{{ field.html_name }}" value="{{ field.value() }}">
+  {% endfor %}
+{%- endmacro %}
+
+{% macro row(_field, label=None, help_text=None, attrs=None) -%}
+  <div id="{{ _field.html_name }}-control-group" class="control-group{% if _field.errors %} error{% endif %}">
+    <label class="control-label" for="id_{{ _field.html_name }}">{% if label %}{{ label }}{% elif _field.label %}{{ _field.label }}{% else %}{{ _field.html_name }}{% endif %}</label>
+    <div class="controls">
+      {% if attrs == None %}{% set attrs = {} %}{% endif %}
+      {% if _field.field.widget.__class__.__name__ == 'ForumTOS' %}{% do attrs.update({'inline': make_tos_label()}) %}{% endif %}
+      {% if _field.field.widget.__class__.__name__ in ('CheckboxInput', 'ForumTOS') %}
+        <label class="checkbox">
+          {{ field(_field, attrs=attrs)|trim }}
+          {% if 'inline' in attrs %}
+          {{ attrs.inline }}
+          {% else %}
+          {% if help_text %}
+          {{ help_text }}
+          {% elif _field.help_text %}
+          {{ _field.help_text }}
+          {% endif %}
+          {% endif %}
+        </label>
+      {% else %}
+        {{ field(_field, attrs=attrs)|trim }}
+      {% endif %}
+      {% for error in _field.errors %}
+      <p class="help-block" style="font-weight: bold;">{{ error }}</p>
+      {% endfor %}
+      {% if 'inline' in attrs or _field.field.widget.__class__.__name__ not in ('CheckboxInput', 'ForumTOS') %}
+      {% if help_text %}
+      <p class="help-block">{{ help_text }}</p>
+      {% elif _field.help_text %}
+      <p class="help-block">{{ _field.help_text }}</p>
+      {% endif %}
+      {% endif %}
+    </div>
+  </div>
+{%- endmacro %}
+
+{% macro repeat(form, fields, label=None, help_text=None, attrs=None) -%}
+  <div id="{{ fields[0].html_name }}-control-group" class="control-group{% if fields[0].errors or fields[1].errors or (fields[0].name ~ '_' ~ fields[1].name) in form.errors %} error{% endif %}">
+    <label class="control-label" for="id_{{ fields[0].html_name }}">{% if label %}{{ label }}{% elif fields[0].label %}{{ fields[0].label }}{% else %}{{ fields[0].html_name }}{% endif %}</label>
+    <div class="controls controls-nested">
+      {% if attrs == None %}{% set attrs = ({}, {}) %}{% endif %}
+      <div class="row">
+        <div{% if 'class' in attrs[0] %} class="{{ attrs[0].class }}"{% endif %}>{{ field(fields[0], attrs=attrs[0]) }}</div>
+        <div{% if 'class' in attrs[1] %} class="{{ attrs[1].class }}"{% endif %}>{{ field(fields[1], attrs=attrs[1]) }}</div>
+      </div>
+      {% for error in form.errors[(fields[0].name ~ '_' ~ fields[1].name)] %}
+      <p class="help-block" style="font-weight: bold;">{{ error }}</p>
+      {% endfor %}
+      {% for error in fields[0].errors %}
+      <p class="help-block" style="font-weight: bold;">{{ error }}</p>
+      {% endfor %}
+      {% for error in fields[1].errors %}
+      {% if not error in fields[0].errors %}
+      <p class="help-block" style="font-weight: bold;">{{ error }}</p>
+      {% endif %}
+      {% endfor %}
+      {% if help_text %}
+      <p class="help-block">{{ help_text }}</p>
+      {% elif fields[0].help_text %}
+      <p class="help-block">{{ fields[0].help_text }}</p>
+      {% endif %}
+    </div>
+  </div>
+{%- endmacro %}
+
+{% macro make_tos_label() -%}
+{% trans forum_tos=make_tos_link()|safe %}I have read and accept this forums {{forum_tos}}.{% endtrans %}
+{%- endmacro %}
+
+{% macro make_tos_link() -%}
+<a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{{ url('tos') }}{% endif %}">{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Terms of Service{% endtrans %}{% endif %}</a>
+{%- endmacro %}
+
+{% macro captcha(form, attrs=None) -%}
+{% if 'recaptcha' in form.fields %}
+{{ row(form.recaptcha) }}
+{% endif %}
+{% if 'captcha_qa' in form.fields %}
+{{ row(form.captcha_qa, attrs=attrs) }}
+{% endif %}
+{%- endmacro %}
+
+{% macro field(_field, attrs=None) -%}
+{% set widget = _field.field.widget.__class__.__name__ %}
+{% set context = _field.field.widget.get_context(_field.html_name, _field.value(), attrs=attrs) %}
+{% if 'inline' in context.attrs %}{% do context.attrs.pop('inline') %}{% endif %}
+{% if widget == 'Textarea' %}
+{{ _textarea(_field, context) }}
+{% elif widget == 'YesNoSwitch' %}
+{{ _yesno(_field, context) }}
+{% elif widget == 'Select' %}
+{{ _select(_field, context) }}
+{% elif widget == 'RadioSelect' %}
+{{ _radio_select(_field, context) }}
+{% elif widget == 'SelectMultiple' %}
+{{ _select_multiple(_field, context) }}
+{% elif widget == 'CheckboxSelectMultiple' %}
+{{ _checkbox_select(_field, context) }}
+{% elif widget == 'ReCaptchaWidget' %}
+{{ _field.field.widget.render()|safe }}
+{% else %}
+{{ _input(_field, context) }}
+{% endif %}
+{%- endmacro %}
+
+{% macro attributes(attrs) -%}
+{% for name, value in attrs.items() %} {{ name }}{% if value != True %}="{{ value }}"{% endif %}{% endfor %}
+{%- endmacro %}
+
+{% macro _input(_field, context) -%}
+<input type="{{ context.type }}" id="id_{{ context.name }}" name="{{ context.name }}" {{ attributes(context.attrs)|trim }}{% if context.type != 'password' and 'value' in context and context.value is not none %} value="{{ context.value }}"{% endif %}>
+{%- endmacro %}
+
+{% macro _textarea(_field, context) -%}
+<textarea id="id_{{ context.name }}" name="{{ context.name }}" {{ attributes(context.attrs)|trim }}>{% if 'value' in context and context.value|length > 0 %}{{ context.value }}{% endif %}</textarea>
+{%- endmacro %}
+
+{% macro _yesno(_field, context) -%}
+<div id="id_{{ context.name }}_div" class="yes-no-switch{% if 'class' in context.attrs %} {{ context.attrs.class }}{% endif %}">
+  {{ _input(_field, context) }}
+</div>
+{%- endmacro %}
+
+{% macro _select(_field, context) -%}
+<select id="id_{{ context.name }}" name="{{ context.name }}" {{ attributes(context.attrs)|trim }}>
+  {% if context['optgroups']|length > 1 %}
+  {% for optgroup in context['optgroups'] %}
+  <optgroup label="{{ optgroup[0] }}">
+    {% for option in optgroup[1] %}
+    <option value="{{ option[0] }}"{% if 'value' in context and option[0] in context.value %} selected="selected"{% endif %}>{{ option[1] }}</option>
+    {% endfor %}
+  </optgroup>
+  {% endfor %}
+  {% else %}
+  {% for option in context['optgroups'][0][1] %}
+  <option value="{{ option[0] }}"{% if 'value' in context and option[0] in context.value %} selected="selected"{% endif %}>{{ option[1] }}</option>
+  {% endfor %}
+  {% endif %}
+</select>
+{%- endmacro %}
+
+{% macro _radio_select(_field, context) -%}
+<div class="radio-group">
+  {% for option in context['optgroups'][0][1] %}
+  <label class="radio">
+    <input type="radio" name="{{ context.name }}" id="id_{{ context.name }}_{{ option[0] }}" value="{{ option[0] }}"{% if 'value' in context and option[0] in context.value %} checked="checked"{% endif %}>
+    {{ option[1] }}
+  </label>
+  {% endfor %}
+</div>
+{%- endmacro %}
+
+{% macro _select_multiple(_field, context) -%}
+<select id="id_{{ context.name }}" name="{{ context.name }}" {{ attributes(context.attrs)|trim }}>
+  {% if context['optgroups']|length > 1 %}
+  {% for optgroup in context['optgroups'] %}
+  <optgroup label="{{ optgroup[0] }}">
+    {% for option in optgroup[1] %}
+    <option value="{{ option[0] }}"{% if 'value' in context and option[0] in context.value %} selected="selected"{% endif %}>{{ option[1] }}</option>
+    {% endfor %}
+  </optgroup>
+  {% endfor %}
+  {% else %}
+  {% for option in context['optgroups'][0][1] %}
+  <option value="{{ option[0] }}"{% if 'value' in context and option[0] in context.value %} selected="selected"{% endif %}>{{ option[1] }}</option>
+  {% endfor %}
+  {% endif %}
+</select>
+{%- endmacro %}
+
+{% macro _checkbox_select(_field, context) %}
+<div class="select-multiple">
+{% for option in context['optgroups'][0][1] %}
+  <label class="checkbox">
+    <input type="checkbox" name="{{ context.name }}" id="id_{{ context.name }}_{{ option[0] }}" value="{{ option[0] }}"{% if 'value' in context and option[0] in context.value %} checked="checked"{% endif %}>
+    {{ option[1] }}
+  </label>
+  {% endfor %}
+</div>
+{% endmacro %}

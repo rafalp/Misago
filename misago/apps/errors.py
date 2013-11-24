@@ -1,6 +1,6 @@
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
-from misago.utils.views import json_response
+from misago.shortcuts import render_to_response, json_response
 
 def error_not_implemented(request, *args, **kwargs):
     """Generic "NOT IMPLEMENTED!" Error"""
@@ -17,13 +17,13 @@ def error_view(request, error, message=None):
             if error == 403:
                 message = _("You don't have permission to see requested page.")
         return json_response(request, status=error, message=message)
-    response = request.theme.render_to_response(('error%s.html' % error),
-                                                {
-                                                 'message': message,
-                                                 'hide_signin': True,
-                                                 'exception_response': True,
-                                                 },
-                                                context_instance=RequestContext(request));
+    response = render_to_response(('error%s.html' % error),
+                                  {
+                                  'message': message,
+                                  'hide_signin': True,
+                                  'exception_response': True,
+                                  },
+                                  context_instance=RequestContext(request));
     response.status_code = error
     return response
 
@@ -41,13 +41,13 @@ def error_banned(request, user=None, ban=None):
         ban = request.ban
     if request.is_ajax():
         return json_response(request, status=403, message=_("You are banned."))
-    response = request.theme.render_to_response('error403_banned.html',
-                                                {
-                                                 'banned_user': user,
-                                                 'ban': ban,
-                                                 'hide_signin': True,
-                                                 'exception_response': True,
-                                                 },
-                                                context_instance=RequestContext(request));
+    response = render_to_response('error403_banned.html',
+                                  {
+                                  'banned_user': user,
+                                  'ban': ban,
+                                  'hide_signin': True,
+                                  'exception_response': True,
+                                  },
+                                  context_instance=RequestContext(request));
     response.status_code = 403
     return response

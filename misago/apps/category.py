@@ -2,6 +2,7 @@ from django.template import RequestContext
 from misago.apps.errors import error403, error404
 from misago.models import Forum
 from misago.readstrackers import ForumsTracker
+from misago.shortcuts import render_to_response
 
 def category(request, forum, slug):
     if not request.acl.forums.can_see(forum):
@@ -14,9 +15,9 @@ def category(request, forum, slug):
         return error404(request)
 
     forum.subforums = Forum.objects.treelist(request.acl.forums, forum, tracker=ForumsTracker(request.user))
-    return request.theme.render_to_response('category.html',
-                                            {
-                                             'category': forum,
-                                             'parents': Forum.objects.forum_parents(forum.pk),
-                                             },
-                                            context_instance=RequestContext(request));
+    return render_to_response('category.html',
+                              {
+                              'category': forum,
+                              'parents': Forum.objects.forum_parents(forum.pk),
+                              },
+                              context_instance=RequestContext(request));

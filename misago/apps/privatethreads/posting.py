@@ -1,9 +1,9 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.threadtype.posting import NewThreadBaseView, EditThreadBaseView, NewReplyBaseView, EditReplyBaseView
-from misago.messages import Message
 from misago.models import Forum, Thread, Post, User
 from misago.apps.privatethreads.forms import (NewThreadForm, EditThreadForm,
                                               NewReplyForm, EditReplyForm)
@@ -32,15 +32,15 @@ class NewThreadView(NewThreadBaseView, TypeMixin):
 
     def after_form(self, form):
         self.thread.participants.add(self.request.user)
-        self.invite_users(form.invite_users)
+        self.invite_users(form.users_list)
         self.whitelist_mentions()
         self.force_stats_sync()
 
     def response(self):
         if self.post.moderated:
-            self.request.messages.set_flash(Message(_("New thread has been posted. It will be hidden from other members until moderator reviews it.")), 'success', 'threads')
+            messages.success(self.request, _("New thread has been posted. It will be hidden from other members until moderator reviews it."), 'threads')
         else:
-            self.request.messages.set_flash(Message(_("New thread has been posted.")), 'success', 'threads')
+            messages.success(self.request, _("New thread has been posted."), 'threads')
         return redirect(reverse('private_thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % self.post.pk))
 
 
@@ -49,9 +49,9 @@ class EditThreadView(EditThreadBaseView, TypeMixin):
 
     def after_form(self, form):
         self.whitelist_mentions()
-    
+
     def response(self):
-        self.request.messages.set_flash(Message(_("Your thread has been edited.")), 'success', 'threads_%s' % self.post.pk)
+        messages.success(self.request, _("Your thread has been edited."), 'threads_%s' % self.post.pk)
         return redirect(reverse('private_thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % self.post.pk))
 
 
@@ -65,7 +65,7 @@ class NewReplyView(NewReplyBaseView, TypeMixin):
 
     def after_form(self, form):
         try:
-            self.invite_users(form.invite_users)
+            self.invite_users(form.users_list)
         except AttributeError:
             pass
         self.whitelist_mentions()
@@ -73,9 +73,9 @@ class NewReplyView(NewReplyBaseView, TypeMixin):
 
     def response(self):
         if self.post.moderated:
-            self.request.messages.set_flash(Message(_("Your reply has been posted. It will be hidden from other members until moderator reviews it.")), 'success', 'threads_%s' % self.post.pk)
+            messages.success(self.request, _("Your reply has been posted. It will be hidden from other members until moderator reviews it."), 'threads_%s' % self.post.pk)
         else:
-            self.request.messages.set_flash(Message(_("Your reply has been posted.")), 'success', 'threads_%s' % self.post.pk)
+            messages.success(self.request, _("Your reply has been posted."), 'threads_%s' % self.post.pk)
         return self.redirect_to_post(self.post)
 
 
@@ -86,5 +86,5 @@ class EditReplyView(EditReplyBaseView, TypeMixin):
         self.whitelist_mentions()
 
     def response(self):
-        self.request.messages.set_flash(Message(_("Your reply has been changed.")), 'success', 'threads_%s' % self.post.pk)
+        messages.success(self.request, _("Your reply has been changed."), 'threads_%s' % self.post.pk)
         return self.redirect_to_post(self.post)

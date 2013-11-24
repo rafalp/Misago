@@ -1,10 +1,13 @@
 from django.core.urlresolvers import reverse as django_reverse
-from django import forms
 from django.utils.translation import ungettext, ugettext as _
+import floppyforms as forms
+from misago import messages
 from misago.admin import site
 from misago.apps.admin.widgets import *
 from misago.forms import Form
+from misago.messages import Message
 from misago.models import PruningPolicy, User
+from misago.shortcuts import render_to_response
 from misago.apps.admin.pruneusers.forms import PolicyForm
 
 def reverse(route, target=None):
@@ -39,10 +42,10 @@ class List(ListWidget):
 
     def action_delete(self, items, checked):
         if not self.request.user.is_god():
-            return Message(_('Only system administrators can delete pruning policies.'), 'error'), reverse('admin_prune_users')
+            return Message(_('Only system administrators can delete pruning policies.'), messages.ERROR), reverse('admin_prune_users')
 
         PruningPolicy.objects.filter(id__in=checked).delete()
-        return Message(_('Selected pruning policies have been deleted successfully.'), 'success'), reverse('admin_prune_users')
+        return Message(_('Selected pruning policies have been deleted successfully.'), messages.SUCCESS), reverse('admin_prune_users')
 
 
 class New(FormWidget):
@@ -52,10 +55,10 @@ class New(FormWidget):
     form = PolicyForm
     submit_button = _("Save Policy")
 
-    def get_new_url(self, model):
+    def get_new_link(self, model):
         return reverse('admin_prune_users_new')
 
-    def get_edit_url(self, model):
+    def get_edit_link(self, model):
         return reverse('admin_prune_users_edit', model)
 
     def submit_form(self, form, target):
@@ -69,11 +72,11 @@ class New(FormWidget):
         new_policy.clean()
         new_policy.save(force_insert=True)
 
-        return new_policy, Message(_('New Pruning Policy has been created.'), 'success')
+        return new_policy, Message(_('New Pruning Policy has been created.'), messages.SUCCESS)
 
     def __call__(self, request, *args, **kwargs):
         if not request.user.is_god():
-            request.messages.set_flash(Message(_('Only system administrators can set new pruning policies.')), 'error', self.admin.id)
+            messages.error(request, _('Only system administrators can set new pruning policies.'), self.admin.id)
             return redirect(reverse('admin_prune_users'))
 
         return super(New, self).__call__(request, *args, **kwargs)
@@ -89,11 +92,11 @@ class Edit(FormWidget):
     notfound_message = _('Requested pruning policy could not be found.')
     submit_fallback = True
 
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_prune_users_edit', model)
 
-    def get_edit_url(self, model):
-        return self.get_url(model)
+    def get_edit_link(self, model):
+        return self.get_link(model)
 
     def get_initial_data(self, model):
         return {
@@ -113,11 +116,11 @@ class Edit(FormWidget):
         target.clean()
         target.save(force_update=True)
 
-        return target, Message(_('Changes in policy "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
+        return target, Message(_('Changes in policy "%(name)s" have been saved.') % {'name': self.original_name}, messages.SUCCESS)
 
     def __call__(self, request, *args, **kwargs):
         if not request.user.is_god():
-            request.messages.set_flash(Message(_('Only system administrators can edit pruning policies.')), 'error', self.admin.id)
+            messages.error(request, _('Only system administrators can edit pruning policies.'), self.admin.id)
             return redirect(reverse('admin_prune_users'))
 
         return super(Edit, self).__call__(request, *args, **kwargs)
@@ -131,10 +134,10 @@ class Delete(ButtonWidget):
 
     def action(self, target):
         if not self.request.user.is_god():
-            return Message(_('Only system administrators can delete pruning policies.'), 'error'), False
+            return Message(_('Only system administrators can delete pruning policies.'), messages.ERROR), False
 
         target.delete()
-        return Message(_('Pruning policy "%(name)s" has been deleted.') % {'name': target.name}, 'success'), False
+        return Message(_('Pruning policy "%(name)s" has been deleted.') % {'name': target.name}, messages.SUCCESS), False
 
 
 class Apply(FormWidget):
@@ -148,7 +151,7 @@ class Apply(FormWidget):
     submit_fallback = True
     template = 'apply'
 
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_prune_users_apply', model)
 
     def __call__(self, request, target=None, slug=None):
@@ -160,16 +163,15 @@ class Apply(FormWidget):
             model = self.get_and_validate_target(target)
             self.original_name = self.get_target_name(model)
             if not model:
-                return redirect(self.get_fallback_url())
+                return redirect(self.get_fallback_link())
         original_model = model
 
         # Set filter
-        users = model.get_model()
-        total_users = users
-        total_users = total_users.count()
+        users = model.make_queryset()
+        total_users = users.count()
 
         if not total_users:
-            request.messages.set_flash(Message(_('Policy "%(name)s" does not apply to any users.') % {'name': model.name}), 'error', self.admin.id)
+            messages.error(request, _('Policy "%(name)s" does not apply to any users.') % {'name': model.name}, self.admin.id)
             return redirect(reverse('admin_prune_users'))
 
         message = None
@@ -178,35 +180,35 @@ class Apply(FormWidget):
             if request.csrf.request_secure(request):
                 for user in users.iterator():
                     if user.is_protected():
-                        request.messages.set_flash(Message(_('User "%(name)s" is protected and was not deleted.') % {'name': user.username}), 'info', self.admin.id)
+                        messages.info(request, _('User "%(name)s" is protected and was not deleted.') % {'name': user.username}, self.admin.id)
                     else:
                         user.delete()
                         deleted += 1
                 if deleted:
-                    request.messages.set_flash(Message(ungettext(
-                                                                 'One user has been deleted.',
-                                                                 '%(deleted)d users have been deleted.',
-                                                                 deleted
-                                                                 ) % {'deleted': deleted}), 'success', self.admin.id)
-                    User.objects.resync_monitor(request.monitor)
+                    messages.success(request, ungettext(
+                                                        'One user has been deleted.',
+                                                        '%(deleted)d users have been deleted.',
+                                                        deleted
+                                                        ) % {'deleted': deleted}, self.admin.id)
+                    User.objects.resync_monitor()
                 else:
-                    request.messages.set_flash(Message(_("No users have been deleted.")), 'info', self.admin.id)
+                    messages.info(request, _("No users have been deleted."), self.admin.id)
                 return redirect(reverse('admin_prune_users'))
             else:
-                message = Message(_("Request authorization is invalid. Please resubmit your form."), 'error')
+                message = Message(_("Request authorization is invalid. Please resubmit your form."), messages.ERROR)
 
-        return request.theme.render_to_response(self.get_template(),
-                                                {
-                                                 'admin': self.admin,
-                                                 'action': self,
-                                                 'request': request,
-                                                 'url': self.get_url(model),
-                                                 'fallback': self.get_fallback_url(),
-                                                 'messages': request.messages.get_messages(self.admin.id),
-                                                 'message': message,
-                                                 'tabbed': self.tabbed,
-                                                 'total_users': total_users,
-                                                 'target': self.get_target_name(original_model),
-                                                 'target_model': original_model,
-                                                },
-                                                context_instance=RequestContext(request));
+        return render_to_response(self.get_template(),
+                                  {
+                                  'admin': self.admin,
+                                  'action': self,
+                                  'request': request,
+                                  'link': self.get_link(model),
+                                  'fallback': self.get_fallback_link(),
+                                  'messages': messages.get_messages(request, self.admin.id),
+                                  'message': message,
+                                  'tabbed': self.tabbed,
+                                  'total_users': total_users,
+                                  'target': self.get_target_name(original_model),
+                                  'target_model': original_model,
+                                  },
+                                  context_instance=RequestContext(request));

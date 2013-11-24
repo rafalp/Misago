@@ -1,7 +1,5 @@
 {% extends "admin/admin/list.html" %}
-{% load i18n %}
-{% load l10n %}
-{% load url from future %}
+{% import "forms.html" as form_theme with context %}
 
 {% block table_row scoped %}
   <td class="lead-cell">
@@ -15,3 +13,24 @@
   	{% if item.expires %}{{ item.expires|date }}{% else %}<em>{% trans %}Permanent{% endtrans %}</em>{% endif %}
   </td>
 {% endblock %}
+
+{% block search_form %}
+{{ form_theme.row(search_form.ban, attrs={
+                                          'class': 'span3',
+                                          'placeholder': lang_ban_contains(),
+                                         }) }}
+{{ form_theme.row(search_form.reason, attrs={
+                                             'class': 'span3',
+                                             'placeholder': lang_ban_reason_contains(),
+                                            }) }}
+{{ form_theme.row(search_form.test, attrs={'class': 'span3',}) }}
+{% endblock %}
+
+{# Translation strings #}
+{% macro lang_ban_contains() -%}
+{% trans %}Ban contains...{% endtrans %}
+{%- endmacro %}
+
+{% macro lang_ban_reason_contains() -%}
+{% trans %}Ban reason contains...{% endtrans %}
+{%- endmacro %}

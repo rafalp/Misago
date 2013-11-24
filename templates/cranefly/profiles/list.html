@@ -1,5 +1,5 @@
 {% extends "cranefly/layout.html" %}
-{% import "_forms.html" as form_theme with context %}
+{% import "forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{% if in_search -%}
@@ -17,13 +17,13 @@
     <h1>{% trans %}Users List{% endtrans %} <small>{% trans %}Browse notable user groups or find specific user{% endtrans %}</small></h1>
     <ul class="nav nav-tabs header-tabs">
       {% for rank in ranks %}
-      <li{% if active_rank.id == rank.id %} class="active"{% endif %}><a href="{% if loop.first %}{% url 'users' %}{% else %}{% url 'users' slug=rank.slug %}{% endif %}">{{ _(rank.name) }}</a></li>
+      <li{% if active_rank.id == rank.id %} class="active"{% endif %}><a href="{% if loop.first %}{{ url('users') }}{% else %}{{ url('users', slug=rank.slug) }}{% endif %}">{{ _(rank.name) }}</a></li>
       {% endfor %}
       {% if acl.users.can_search_users() and not user.is_crawler() %}
       <li class="pull-right">
-        <form action="{% url 'users' %}" class="form-inline" method="post">
+        <form action="{{ url('users') }}" class="form-inline" method="post">
           <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-          {{ form_theme.field_widget(search_form.username, width=2, attrs={'placeholder': lang_find_user()}) }}
+          {{ form_theme.field(search_form.username, attrs={'class': 'span2', 'placeholder': lang_find_user()}) }}
           <button type="submit" class="btn btn-icon"><i class="icon-search"></i></button>
         </form>
       </li>
@@ -62,8 +62,8 @@
           {% for user in row %}
           <td class="span3 user-cell{% if user and user.get_style() %} user-cell-{{ user.get_style() }}{% endif %}">
             {% if user %}
-            <a href="{% url 'user' username=user.username_slug, user=user.pk %}" class="user-avatar"><img src="{{ user.get_avatar(36) }}" alt=""></a>
-            <a href="{% url 'user' username=user.username_slug, user=user.pk %}" class="user-name">{{ user.username }}</a>
+            <a href="{{ url('user', username=user.username_slug, user=user.pk) }}" class="user-avatar"><img src="{{ user.get_avatar(36) }}" alt=""></a>
+            <a href="{{ url('user', username=user.username_slug, user=user.pk) }}" class="user-name">{{ user.username }}</a>
             {% else %}
             &nbsp;
             {% endif %}
@@ -94,16 +94,16 @@
 <div class="pagination">
   <ul>
     <li class="count">{{ macros.pager_label(pagination) }}</li>
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'users' page=pagination['prev'] %}{% else %}{% url 'users' %}{% endif %}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{% url 'users' page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ url('users', page=pagination['prev']) }}{% else %}{{ url('users') }}{% endif %}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{{ url('users', page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
   </ul>
 </div>
 {% else %}
 <div class="pagination">
   <ul>
     <li class="count">{{ macros.pager_label(pagination) }}</li>
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'users' slug=active_rank.slug, page=pagination['prev'] %}{% else %}{% url 'users' slug=active_rank.slug %}{% endif %}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{% url 'users' slug=active_rank.slug, page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ url('users', slug=active_rank.slug, page=pagination['prev']) }}{% else %}{{ url('users', slug=active_rank.slug) }}{% endif %}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{{ url('users', slug=active_rank.slug, page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
   </ul>
 </div>
 {% endif %}

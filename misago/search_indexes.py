@@ -5,8 +5,10 @@ class PostIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     forum = indexes.IntegerField(model_attr='forum_id')
     thread = indexes.IntegerField(model_attr='thread_id')
-    thread_name = indexes.CharField(model_attr='thread')
-    user = indexes.CharField(model_attr='user_name')
+    thread_name = indexes.CharField()
+    start_post = indexes.IntegerField()
+    thread_starter = indexes.IntegerField(default=0)
+    username = indexes.CharField(model_attr='user_name')
     date = indexes.DateTimeField(model_attr='date')
 
     def get_model(self):
@@ -15,12 +17,18 @@ class PostIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_thread_name(self, obj):
         return obj.thread.name
 
+    def prepare_start_post(self, obj):
+        return 1 if obj.thread.start_post_id == obj.pk else 0
+
+    def prepare_thread_starter(self, obj):
+        return obj.thread.start_poster_id or 0
+
     def get_updated_field(self):
         return 'current_date'
 
     def should_update(self, instance, **kwargs):
         if (instance.deleted or instance.moderated
-                or instance.thread.deletedor or instance.thread.moderated):
+                or instance.thread.deleted or instance.thread.moderated):
             self.remove_object(instance, **kwargs)
             return False
         return True

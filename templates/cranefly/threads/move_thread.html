@@ -1,12 +1,12 @@
 {% extends "cranefly/layout.html" %}
-{% import "_forms.html" as form_theme with context %}
+{% import "forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
-{% block title %}{{ macros.page_title(title=_("Move Threads"),parent=forum.name) }}{% endblock %}
+{% block title %}{{ macros.page_title(title=_("Move Thread"),parent=forum.name) }}{% endblock %}
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {{ macros.parents_list(parents) }}
-<li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li class="active">{% trans %}Move Thread{% endtrans %}
 {%- endblock %}
 
@@ -17,7 +17,7 @@
     <ul class="breadcrumb">
       {{ self.breadcrumb() }}</li>
     </ul>
-    <h1>{% trans %}Move Thread{% endtrans %} <small>{{ thread.name }}</small></h1>
+    <h1>{% trans %}Move Thread{% endtrans %} <small>{{ thread.name|short_string(42) }}</small></h1>
   </div>
 </div>
 
@@ -36,7 +36,8 @@
         </div>
         {% endif %}
 
-        <form action="{% url 'thread' thread=thread.pk, slug=thread.slug %}" method="post">
+        <form action="{{ url('thread', thread=thread.pk, slug=thread.slug) }}" method="post">
+          {{ form_theme.hidden_fields(form) }}
           <input type="hidden" name="origin" value="thread_form">
           <input type="hidden" name="thread_action" value="move">
           <input type="hidden" name="do" value="move">
@@ -44,12 +45,14 @@
           <input type="hidden" name="list_items" value="{{ thread.pk }}">
           {% endfor %}
           <div class="form-fields">
-            {% do form.fieldsets[0]['fields'][0].update({'label': _("Move Thread To"), 'help_text': _("Select forum you want to move this thread to.")}) %}
-            {{ form_theme.form_widget(form, width=6) }}
+            {{ form_theme.row(form.new_forum,
+                              label=_("Move thread to"),
+                              help_text=_("Select forum you want to move this thread to."),
+                              attrs={'class': 'span6'}) }}
           </div>
           <div class="form-actions">
             <button type="submit" class="btn btn-primary">{% trans %}Move Thread{% endtrans %}</button>
-            <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
+            <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}" class="btn">{% trans %}Cancel{% endtrans %}</a>
           </div>
         </form>
 

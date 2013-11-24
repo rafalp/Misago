@@ -1,24 +1,27 @@
 {% extends "cranefly/search/layout.html" %}
 {% import "cranefly/macros.html" as macros with context %}
 
-{% block title %}{{ macros.page_title(title=_("Results"),parent=_('Search Community')) }}{% endblock %}
+{% block title %}{{ macros.page_title(title=_("Search Results"),parent=_('Search Community')) }}{% endblock %}
 
 {% block action %}
   <div class="search-results">
     {% if results %}
-    <h2>{% trans count=results|length, results=results|length|intcomma %}Search has returned one result:{% pluralize %}Search has returned {{ results }} results:{% endtrans %}</h2>
+    <h2>
+      {% trans count=items_total, results=items_total|intcomma, query=query_string(search_query) %}Search for "{{ query }}" has returned one result:{% pluralize %}Search for "{{ query }}" has returned {{ results }} results:{% endtrans %}
+      <a href="{{ url(search_route) }}" class="btn btn-inverse pull-right"><i class="icon-search"></i> {% trans %}New Search{% endtrans %}</a>
+    </h2>
     <div class="results-list">
       {% for result in results %}
       <div class="result">
         <div class="result-avatar">
           {% if result.user_id %}
-          <a href="{% url 'user' user=result.user.pk, username=result.user.username_slug %}"><img src="{{ result.user.get_avatar(70) }}" alt=""></a>
+          <a href="{{ url('user', user=result.user.pk, username=result.user.username_slug) }}"><img src="{{ result.user.get_avatar(70) }}" alt=""></a>
           {% else %}
-          <img src="{{ macros.avatar_guest(80) }}" alt="{{ resut.user_name }}">
+          <img src="{{ macros.avatar_guest(80) }}" alt="{{ result.user_name }}">
           {% endif %}
         </div>
         <div class="result-content">
-          <h3><a href="{{ result.forum.thread_link('find')|url(thread=result.thread_id, slug=result.thread.slug, post=result.pk) }}">{{ result.thread.name }}</a></h3>
+          <h3><a href="{{ url(result.forum.thread_link('find'), thread=result.thread_id, slug=result.thread.slug, post=result.pk) }}">{{ result.thread.name }}</a></h3>
           <p class="post-preview">{{ result.post_clean|highlight(search_query, 320)|safe }}</p>
           <p class="post-extra">{% trans forum=forum(result.forum), user=username(result), date=result.date|reltimesince|low %}In {{ forum }} by {{ user }} {{ date }}{% endtrans %}</p>
         </div>
@@ -32,13 +35,18 @@
   </div>
 {% endblock %}
 
+
+{% macro query_string(query) -%}
+<strong>{{ query }}</strong>
+{%- endmacro %}
+
 {% macro forum(forum) -%}
-<a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}" class="forum-link">{{ forum.name }}</a>
+<a href="{{ url('forum', forum=forum.pk, slug=forum.slug) }}" class="forum-link">{{ forum }}</a>
 {%- endmacro %}
 
 {% macro username(post) -%}
 {% if post.user_id -%}
-<a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}" class="user-link">{{ post.user.username }}</a>
+<a href="{{ url('user', user=post.user.pk, username=post.user.username_slug) }}" class="user-link">{{ post.user.username }}</a>
 {%- else -%}
 {{ post.user_name }}
 {%- endif %}
@@ -49,8 +57,8 @@
 <div class="pagination">
   <ul>
     <li class="count">{{ macros.pager_label(pagination) }}</li>
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'search_results' page=pagination['prev'] %}{% else %}{% url 'search_results' %}{% endif %}" class="tooltip-top" title="{% trans %}Newer Posts{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{% url 'search_results' page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Older Posts{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ url('search_results', page=pagination['prev']) }}{% else %}{{ url('search_results') }}{% endif %}" class="tooltip-top" title="{% trans %}Newer Posts{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{{ url('search_results', page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Older Posts{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
   </ul>
 </div>
 {% endif %}

@@ -1,0 +1,39 @@
+{% extends "cranefly/search/search_form.html" %}
+{% import "forms.html" as form_theme with context %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=_('Search Private Threads'), parent=_("Search Community")) }}{% endblock %}
+
+{% block form %}
+<div class="form-container">
+
+  <div class="form-header">
+    <h1>{% trans %}Search Private Threads{% endtrans %}</h1>
+  </div>
+
+  {% if message %}
+  <div class="messages-list">
+    {{ macros.draw_message(message) }}
+  </div>
+  {% endif %}
+
+  <form action="{{ url(search_route) }}" method="post">
+    {{ form_theme.hidden_fields(form) }}
+    <div class="form-fields">
+      <fieldset class="first last">
+        {{ form_theme.row(form.search_query, attrs={'class': 'span8'}) }}
+        {{ form_theme.row(form.search_thread_titles, attrs={'inline': lang_search_thread_titles()}) }}
+        {{ form_theme.row(form.search_thread, attrs={'class': 'span8'}) }}
+        {{ form_theme.row(form.search_author, attrs={'class': 'span8'}) }}
+        <hr>
+        {{ form_theme.row(form.search_before, attrs={'class': 'span8 form-datepicker'}) }}
+        {{ form_theme.row(form.search_after, attrs={'class': 'span8 form-datepicker'}) }}
+      </fieldset>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">{% trans %}Search{% endtrans %}</button>
+    </div>
+  </form>
+
+</div>
+{% endblock %}

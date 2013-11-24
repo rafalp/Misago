@@ -1,5 +1,5 @@
 {% extends "cranefly/layout.html" %}
-{% import "_forms.html" as form_theme with context %}
+{% import "forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{{ macros.page_title(title=_('Register new account')) }}{% endblock %}
@@ -19,9 +19,38 @@
       </div>
       {% endif %}
 
-      <form action="{% url 'register' %}" method="post">
+      <form action="{{ url('register') }}" method="post">
+        {{ form_theme.hidden_fields(form) }}
         <div class="form-fields">
-          {{ form_theme.form_widget(form, width=8) }}
+          <fieldset class="first">
+            {{ form_theme.row(form.username, attrs={'class': 'span8'}) }}
+          </fieldset>
+          <fieldset>
+            {{ form_theme.repeat(form,
+                                 (form.email, form.email_rep),
+                                 attrs=(
+                                        {'placeholder': _("Enter your e-mail"), 'class': 'span4'},
+                                        {'placeholder': _("Repeat your e-mail"), 'class': 'span4'}
+                                       )) }}
+          </fieldset>
+          <fieldset>
+            {{ form_theme.repeat(form,
+                                 (form.password, form.password_rep),
+                                 attrs=(
+                                        {'placeholder': _("Enter your password"), 'class': 'span4'},
+                                        {'placeholder': _("Repeat your password"), 'class': 'span4'}
+                                       )) }}
+          </fieldset>
+          {% if form.has_captcha %}
+          <fieldset{% if 'accept_tos' not in form.fields %} class="last"{% endif %}>
+            {{ form_theme.captcha(form, attrs={'class': 'span8'}) }}
+          </fieldset>
+          {% endif %}
+          {% if 'accept_tos' in form.fields %}
+          <fieldset class="last">
+            {{ form_theme.row(form.accept_tos) }}
+          </fieldset>
+          {% endif %}
         </div>
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">{% trans %}Register account{% endtrans %}</button>

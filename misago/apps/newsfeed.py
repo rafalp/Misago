@@ -1,6 +1,7 @@
 from django.template import RequestContext
 from misago.decorators import block_guest
 from misago.models import Forum, Post
+from misago.shortcuts import render_to_response
 
 @block_guest
 def newsfeed(request):
@@ -14,9 +15,9 @@ def newsfeed(request):
         queryset = queryset.filter(user_id__in=follows)
         queryset = queryset.prefetch_related('thread', 'forum', 'user').order_by('-id')
         queryset = queryset[:18]
-    return request.theme.render_to_response('newsfeed.html',
-                                            {
-                                             'follows': follows,
-                                             'posts': queryset,
-                                             },
-                                            context_instance=RequestContext(request))
+    return render_to_response('newsfeed.html',
+                              {
+                              'follows': follows,
+                              'posts': queryset,
+                              },
+                              context_instance=RequestContext(request))

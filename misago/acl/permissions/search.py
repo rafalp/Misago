@@ -1,17 +1,19 @@
 from django.utils.translation import ugettext_lazy as _
-from django import forms
+import floppyforms as forms
 from misago.acl.builder import BaseACL
 from misago.forms import YesNoSwitch
 
 def make_form(request, role, form):
-    form.base_fields['can_search_forums'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['search_cooldown'] = forms.IntegerField(initial=25, min_value=0)
-    form.layout.append((_("Searching"),
-                        (
-                         ('can_search_forums', {'label': _("Can search community")}),
-                         ('search_cooldown', {'label': _("Minimum delay between searches"), 'help_text': _("Forum search can be resources intensive operation, and so its usually good idea to limit frequency of searches by requiring members to wait certain number of seconds before they can perform next search. Enter 0 to disable this requirement.")}),
-                         )
-                        ))
+    form.base_fields['can_search_forums'] = forms.BooleanField(label=_("Can search community"),
+                                                               widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['search_cooldown'] = forms.IntegerField(label=_("Minimum delay between searches"),
+                                                             help_text=_("Forum search can be resources intensive operation, and so its usually good idea to limit frequency of searches by requiring members to wait certain number of seconds before they can perform next search. Enter 0 to disable this requirement."),
+                                                             initial=25, min_value=0)
+
+    form.fieldsets.append((
+                           _("Searching"),
+                           ('can_search_forums', 'search_cooldown')
+                          ))
 
 
 class SearchACL(BaseACL):

@@ -20,16 +20,16 @@
 
 {# Render single message #}
 {% macro draw_message(message, class='') %}
-  <div class="alert alert-{{ message.type }}{% if class %} {{ class }}{% endif %}">
+  <div class="alert alert-{{ message.level }}{% if class %} {{ class }}{% endif %}">
   	{{ draw_message_icon(message) }} <p><strong>{{ message.message }}</strong></p>
   </div>
 {%- endmacro %}
 
 {# Render icon #}
 {% macro draw_message_icon(message) -%}
-  	<div class="alert-icon"><span><i class="icon-{% if message.type == 'error' -%}remove
-  		{%- elif message.type == 'success' -%}ok
-  		{%- elif message.type == 'info' -%}info-sign
+  	<div class="alert-icon"><span><i class="icon-{% if message.level == 'error' -%}remove
+  		{%- elif message.level == 'success' -%}ok
+  		{%- elif message.level == 'info' -%}info-sign
   		{%- else -%}warning-sign
   		{%- endif %} icon-white"></i></span></div>
 {%- endmacro %}
@@ -47,36 +47,10 @@ itemprop="breadcrumb"
 
 {% macro parents_list(forums) -%}
 {% for forum in forums %}
-<li><a href="{% if loop.first %}{% url 'index' %}#{{ forum.slug }}{% else %}{{ forum.type|url(forum=forum.pk, slug=forum.slug) }}{% endif %}">{{ forum.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{% if loop.first %}{{ url('index') }}#{{ forum.slug }}{% else %}{{ url(forum.type, forum=forum.pk, slug=forum.slug) }}{% endif %}">{{ forum.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {% endfor %}
 {%- endmacro %}
 
 {% macro wrap(item, wrap, extra='') -%}
 <{{ wrap }}{% if extra %} {{ extra|safe }}{% endif %}>{{ item }}</{{ wrap }}>
-{%- endmacro %}
-
-{% macro thread_flags(thread) -%}
-<ul class="unstyled thread-flags">
-  {% if thread.replies_reported and ((forum is defined and acl.threads.can_mod_posts(forum)) or acl.threads.can_mod_posts(thread.forum)) %}
-  <li class="flag-reported"><i class="icon-warning-sign tooltip-top" title="{% trans %}This thread has reported replies{% endtrans %}"></i></li>
-  {% endif %}
-  {% if thread.replies_moderated %}
-  <li class="flag-notreviewed"><i class="icon-question-sign tooltip-top" title="{% trans %}This thread has unreviewed replies{% endtrans %}"></i></li>
-  {% endif %}
-  {% if thread.weight == 2 %}
-  <li class="flag-announcement"><i class="icon-star tooltip-top" title="{% trans %}This thread is an annoucement{% endtrans %}"></i></li>
-  {% endif %}
-  {% if thread.weight == 1 %}
-  <li class="flag-sticky"><i class="icon-star-empty tooltip-top" title="{% trans %}This thread is sticky{% endtrans %}"></i></li>
-  {% endif %}
-  {% if thread.moderated  %}
-  <li class="flag-notreviewed"><i class="icon-eye-close tooltip-top" title="{% trans %}This thread awaits review{% endtrans %}"></i></li>
-  {% endif %}
-  {% if thread.deleted %}
-  <li class="flag-deleted"><i class="icon-trash tooltip-top" title="{% trans %}This thread is deleted{% endtrans %}"></i></li>
-  {% endif %}
-  {% if thread.closed %}
-  <li class="flag-closed"><i class="icon-lock tooltip-top" title="{% trans %}This thread is closed{% endtrans %}"></i></li>
-  {% endif %}
-</ul>
 {%- endmacro %}

@@ -172,6 +172,8 @@ coffin/**
 debug_toolbar/**
 dev/**
 django/**
+django_jinja/**
+floppyforms/**
 haystack/**
 jinja2/**
 markdown/**
@@ -181,6 +183,9 @@ recaptcha/**
 south/**
 whoosh/**
 custom/**
+attachments/**
+!attachments/404.png
+!attachments/403.png
 searchindex/**
 static/avatars/protoss
 static/avatars/terran
@@ -203,4 +208,5 @@ templates/debug_toolbar/**
 
 .vagrant
 database.db
-Icon
+Icon
+

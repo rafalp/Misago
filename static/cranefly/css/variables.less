@@ -82,9 +82,12 @@
 
 // State icons styles
 // -------------------------
-@itemOldColor:                      @gray;
+@itemOldColor:                      darken(@grayLighter, 10%);
 @itemNewColor:                      @red;
-@itemMovedColor:                    lighten(@purple, 10%);
+@itemMovedColor:                    lighten(@green, 10%);
+
+@forumIconSize:                     24px;
+@threadIconSize:                    22px;
 
 // Thread flags colors
 // -------------------------
@@ -101,8 +104,6 @@
 @categoryBorder:                    darken(@bodyBackground, 15%);
 @categoryHeader:                    @bodyBackground;
 @categoryShadow:                    darken(@bodyBackground, 5%);
-
-@forumIconSize:                     24px;
 
 // Posts
 // -------------------------
@@ -170,6 +171,10 @@
 @dropdownLinkBackgroundActive:  @linkColor;
 @dropdownLinkBackgroundHover:   @dropdownLinkBackgroundActive;
 
+// Ajax Loader
+// -------------------------
+@loaderHeight:                  6px;
+@loaderColor:                   @red;
 
 
 // COMPONENT VARIABLES
@@ -182,10 +187,12 @@
 // Try to avoid customizing these :)
 @zindexDropdown:          1000;
 @zindexPopover:           1010;
-@zindexTooltip:           1030;
 @zindexFixedNavbar:       1030;
+@zindexZenWriting:        1035;
+@zindexTooltip:           1039;
 @zindexModalBackdrop:     1040;
 @zindexModal:             1050;
+@zindexLoader:            1060;
 
 
 // Sprite icons path
@@ -226,13 +233,13 @@
 
 @navbarText:                      #777;
 @navbarLinkColor:                 #777;
-@navbarLinkColorHover:            @grayDark;
+@navbarLinkColorHover:            @textColor;
 @navbarLinkColorActive:           @gray;
-@navbarLinkBackgroundHover:       transparent;
+@navbarLinkBackgroundHover:       darken(@navbarBackground, 5%);
 @navbarLinkBackgroundActive:      darken(@navbarBackground, 5%);
 
 @navbarLogoImage:                 "../img/logo.png";
-@navbarLogoWidth:                 20px;
+@navbarLogoWidth:                 24px;
 @navbarBrandColor:                desaturate(@red, 10%);
 @navbarMottoColor:                darken(@navbarBackground, 20%);
 
@@ -257,6 +264,10 @@
 
 @navbarSearchWidth:               300px;
 @navbarSearchPadding:             8px;
+
+// Midman
+// -------------------------
+@midmanBackground: @grayDarker;
 
 // Footer
 // -------------------------

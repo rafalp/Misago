@@ -15,12 +15,12 @@
   {% if forums %}
   <div class="row">
     <div class="span6">
-      {% for category in forums %}{% if loop.index0 is odd and category.subforums %}
+      {% for category in forums %}{% if loop.index is odd and category.subforums %}
       {{ draw_category(category) }}
       {% endif %}{% endfor %}
     </div>
     <div class="span6">
-      {% for category in forums %}{% if loop.index0 is even and category.subforums %}
+      {% for category in forums %}{% if loop.index is even and category.subforums %}
       {{ draw_category(category) }}
       {% endif %}{% endfor %}
     </div>
@@ -53,7 +53,7 @@
     {{ draw_tree(branch ~ 'l') }}
     {%- else -%}
     {{ draw_tree(branch ~ 't') }}
-    {%- endif %}{% endif %} <a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3>
+    {%- endif %}{% endif %} <a href="{{ url(forum.type, slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3>
   </div>
   {% for subforum in forum.subforums %}
     {% if depth %}

@@ -5,6 +5,7 @@ class WatchedThread(models.Model):
     user = models.ForeignKey('User')
     forum = models.ForeignKey('Forum')
     thread = models.ForeignKey('Thread')
+    starter = models.ForeignKey('User', blank=True, null=True, related_name='+')
     last_read = models.DateTimeField()
     email = models.BooleanField(default=False)
     deleted = False

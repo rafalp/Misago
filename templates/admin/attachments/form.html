@@ -1,0 +1,9 @@
+{% extends "admin/admin/form.html" %}
+{% import "forms.html" as form_theme with context %}
+
+{% block form %}
+{{ form_theme.row(form.name, attrs={'class': 'span12'}) }}
+{{ form_theme.row(form.extensions, attrs={'class': 'span12'}) }}
+{{ form_theme.row(form.size_limit, attrs={'class': 'span12'}) }}
+{{ form_theme.row(form.roles, attrs={'class': 'span12'}) }}
+{% endblock %}

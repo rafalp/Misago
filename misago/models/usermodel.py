@@ -3,7 +3,6 @@ from datetime import timedelta
 import math
 from random import choice
 from path import path
-from django.conf import settings
 from django.contrib.auth.hashers import (
     check_password, make_password, is_password_usable, UNUSABLE_PASSWORD)
 from django.core.cache import cache, InvalidCacheBackendError
@@ -14,7 +13,10 @@ from django.template import RequestContext
 from django.utils import timezone as tz_util
 from django.utils.translation import ugettext_lazy as _
 from misago.acl.builder import acl
+from misago.conf import settings
+from misago.monitor import monitor, UpdatingMonitor
 from misago.signals import delete_user_content, rename_user, sync_user_profile
+from misago.template.loader import render_to_string
 from misago.utils.avatars import avatar_size
 from misago.utils.strings import random_string, slugify
 from misago.validators import validate_username, validate_password, validate_email
@@ -30,27 +32,21 @@ class UserManager(models.Manager):
                         )
         return blank_user
 
-    def resync_monitor(self, monitor):
-        monitor['users'] = self.filter(activation=0).count()
-        monitor['users_inactive'] = self.filter(activation__gt=0).count()
-        last_user = self.filter(activation=0).latest('id')
-        monitor['last_user'] = last_user.pk
-        monitor['last_user_name'] = last_user.username
-        monitor['last_user_slug'] = last_user.username_slug
+    def resync_monitor(self):
+        with UpdatingMonitor() as cm:
+            monitor['users'] = self.filter(activation=0).count()
+            monitor['users_inactive'] = self.filter(activation__gt=0).count()
+            last_user = self.filter(activation=0).latest('id')
+            monitor['last_user'] = last_user.pk
+            monitor['last_user_name'] = last_user.username
+            monitor['last_user_slug'] = last_user.username_slug
 
     def create_user(self, username, email, password, timezone=False, ip='127.0.0.1', agent='', no_roles=False, activation=0, request=False):
         token = ''
         if activation > 0:
             token = random_string(12)
 
-        try:
-            db_settings = request.settings
-        except AttributeError:
-            from misago.dbsettings import DBSettings
-            db_settings = DBSettings()
-
-        if timezone == False:
-            timezone = db_settings['default_timezone']
+        timezone = timezone or settings.default_timezone
 
         # Get first rank
         try:
@@ -69,17 +65,17 @@ class UserManager(models.Manager):
                         token=token,
                         timezone=timezone,
                         rank=default_rank,
-                        subscribe_start=db_settings['subscribe_start'],
-                        subscribe_reply=db_settings['subscribe_reply'],
+                        subscribe_start=settings.subscribe_start,
+                        subscribe_reply=settings.subscribe_reply,
                         )
 
-        validate_username(username, db_settings)
-        validate_password(password, db_settings)
+        validate_username(username)
+        validate_password(password)
         new_user.set_username(username)
         new_user.set_email(email)
         new_user.set_password(password)
         new_user.full_clean()
-        new_user.default_avatar(db_settings)
+        new_user.default_avatar()
         new_user.save(force_insert=True)
 
         # Set user roles?
@@ -89,21 +85,15 @@ class UserManager(models.Manager):
             new_user.make_acl_key()
             new_user.save(force_update=True)
 
-        # Load monitor
-        try:
-            monitor = request.monitor
-        except AttributeError:
-            from misago.monitor import Monitor
-            monitor = Monitor()
-
         # Update forum stats
-        if activation == 0:
-            monitor.increase('users')
-            monitor['last_user'] = new_user.pk
-            monitor['last_user_name'] = new_user.username
-            monitor['last_user_slug'] = new_user.username_slug
-        else:
-            monitor.increase('users_inactive')
+        with UpdatingMonitor() as cm:
+            if activation == 0:
+                monitor.increase('users')
+                monitor['last_user'] = new_user.pk
+                monitor['last_user_name'] = new_user.username
+                monitor['last_user_slug'] = new_user.username_slug
+            else:
+                monitor.increase('users_inactive')
 
         # Return new user
         return new_user
@@ -113,6 +103,9 @@ class UserManager(models.Manager):
 
     def filter_stats(self, start, end):
         return self.filter(join_date__gte=start).filter(join_date__lte=end)
+
+    def block_user(self, user):
+        return User.objects.select_for_update().get(id=user.id)
 
 
 class User(models.Model):
@@ -131,6 +124,7 @@ class User(models.Model):
     avatar_image = models.CharField(max_length=255, null=True, blank=True)
     avatar_original = models.CharField(max_length=255, null=True, blank=True)
     avatar_temp = models.CharField(max_length=255, null=True, blank=True)
+    _avatar_crop = models.CharField(max_length=255, null=True, blank=True, db_column='avatar_crop')
     signature = models.TextField(null=True, blank=True)
     signature_preparsed = models.TextField(null=True, blank=True)
     join_date = models.DateTimeField()
@@ -160,6 +154,7 @@ class User(models.Model):
     ignores = models.ManyToManyField('self', related_name='ignores_set', symmetrical=False)
     title = models.CharField(max_length=255, null=True, blank=True)
     last_post = models.DateTimeField(null=True, blank=True)
+    last_vote = models.DateTimeField(null=True, blank=True)
     last_search = models.DateTimeField(null=True, blank=True)
     alerts = models.PositiveIntegerField(default=0)
     alerts_date = models.DateTimeField(null=True, blank=True)
@@ -231,8 +226,8 @@ class User(models.Model):
         self.avatar_type = 'gallery'
         self.avatar_image = '/'.join(path(choice(avatars_list)).splitall()[-2:])
 
-    def default_avatar(self, db_settings):
-        if db_settings['default_avatar'] == 'gallery':
+    def default_avatar(self):
+        if settings.default_avatar == 'gallery':
             try:
                 avatars_list = []
                 try:
@@ -400,7 +395,7 @@ class User(models.Model):
             return self.ignores.filter(id=user.pk).count() > 0
         except AttributeError:
             return self.ignores.filter(id=user).count() > 0
-        
+
     def ignored_users(self):
         return [item['id'] for item in self.ignores.values('id')]
 
@@ -438,6 +433,14 @@ class User(models.Model):
     def acl(self, request):
         return acl(request, self)
 
+    @property
+    def avatar_crop(self):
+        return [int(float(x)) for x in self._avatar_crop.split(',')] if self._avatar_crop else (0, 0, 100, 100)
+
+    @avatar_crop.setter
+    def avatar_crop(self, value):
+        self._avatar_crop = ','.join(value)
+
     def get_avatar(self, size=None):
         image_size = avatar_size(size) if size else None
 
@@ -454,7 +457,15 @@ class User(models.Model):
         # No avatar found, get gravatar
         if not image_size:
             image_size = settings.AVATAR_SIZES[0]
-        return 'http://www.gravatar.com/avatar/%s?s=%s' % (hashlib.md5(self.email).hexdigest(), image_size)
+
+        # Decide on default gravatar
+        gravatar_default = ''
+        if (settings.GRAVATAR_DEFAULT
+                and not '&' in settings.GRAVATAR_DEFAULT
+                and not '?' in settings.GRAVATAR_DEFAULT):
+            gravatar_default = '&d=%s' % settings.GRAVATAR_DEFAULT
+
+        return 'http://www.gravatar.com/avatar/%s?s=%s%s' % (hashlib.md5(self.email).hexdigest(), image_size, gravatar_default)
 
     def get_ranking(self):
         if not self.ranking:
@@ -475,10 +486,14 @@ class User(models.Model):
         return ''
 
     def email_user(self, request, template, subject, context={}):
-        templates = request.theme.get_email_templates(template)
         context = RequestContext(request, context)
         context['author'] = context['user']
         context['user'] = self
+
+        email_html = render_to_string('_email/%s.html' % template,
+                                      context_instance=context)
+        email_text = render_to_string('_email/%s.txt' % template,
+                                      context_instance=context)
 
         # Set message recipient
         if settings.DEBUG and settings.CATCH_ALL_EMAIL_ADDRESS:
@@ -486,9 +501,15 @@ class User(models.Model):
         else:
             recipient = self.email
 
+        # Set message author
+        if settings.board_name:
+            sender = '%s <%s>' % (settings.board_name.replace("<", "(").replace(">", ")"), settings.EMAIL_HOST_USER)
+        else:
+            sender = settings.EMAIL_HOST_USER
+
         # Build message and add it to queue
-        email = EmailMultiAlternatives(subject, templates[0].render(context), settings.EMAIL_HOST_USER, [recipient])
-        email.attach_alternative(templates[1].render(context), "text/html")
+        email = EmailMultiAlternatives(subject, email_text, sender, [recipient])
+        email.attach_alternative(email_html, "text/html")
         request.mails_queue.append(email)
 
     def get_activation(self):
@@ -514,6 +535,24 @@ class User(models.Model):
             self.last_sync = tz_util.now()
             return True
         return False
+
+    def timeline(self, qs, length=100):
+        posts = {}
+        now = tz_util.now()
+        for item in qs.iterator():
+            diff = (now - item.timeline_date).days
+            try:
+                posts[diff] += 1
+            except KeyError:
+                posts[diff] = 1
+
+        graph = []
+        for i in reversed(range(100)):
+            try:
+                graph.append(posts[i])
+            except KeyError:
+                graph.append(0)
+        return graph
 
 
 class Guest(object):

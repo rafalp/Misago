@@ -1,14 +1,16 @@
-from django import forms
+import math
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
+import floppyforms as forms
 from jinja2 import TemplateNotFound
-import math
-from misago.forms import Form, FormLayout, FormFields, FormFieldsets
+from misago import messages
+from misago.forms import Form
 from misago.messages import Message
+from misago.shortcuts import render_to_response
 from misago.utils.pagination import make_pagination
 
 """
@@ -36,8 +38,8 @@ class BaseWidget(object):
     def get_token(self, token):
         return '%s_%s_%s' % (self.id, token, str('%s.%s' % (self.admin.id, self.admin.model.__name__)))
 
-    def get_url(self):
-        return reverse(self.admin.get_action_attr(self.id, 'route'))
+    def get_link(self):
+        return reverse(self.admin.get_action_attr(self.id, 'link'))
 
     def get_name(self):
         return self.admin.get_action_attr(self.id, 'name')
@@ -55,7 +57,7 @@ class BaseWidget(object):
     def add_template_variables(self, variables):
         return variables
 
-    def get_fallback_url(self):
+    def get_fallback_link(self):
         return reverse(self.fallback)
 
     def get_target(self, model):
@@ -75,9 +77,9 @@ class BaseWidget(object):
             self.get_target(model)
             return model
         except self.admin.model.DoesNotExist:
-            self.request.messages.set_flash(Message(self.notfound_message), 'error', self.admin.id)
+            messages.error(self.request, self.notfound_message, self.admin.id)
         except ValueError as e:
-            self.request.messages.set_flash(Message(e.args[0]), 'error', self.admin.id)
+            messages.error(self.request, e.args[0], self.admin.id)
         return None
 
 
@@ -116,7 +118,7 @@ class ListWidget(BaseWidget):
         return {
                 'icon': icon,
                 'name': name,
-                'url': url,
+                'link': url,
                 'post': post,
                 'prompt': prompt,
                 }
@@ -205,8 +207,8 @@ class ListWidget(BaseWidget):
     def sort_items(self, page_items, sorting_method):
         return page_items.order_by(sorting_method[2])
 
-    def get_pagination_url(self, page):
-        return reverse(self.admin.get_action_attr(self.id, 'route'), kwargs={'page': page})
+    def get_pagination_link(self, page):
+        return reverse(self.admin.get_action_attr(self.id, 'link'), kwargs={'page': page})
 
     def get_pagination(self, total, page):
         if not self.pagination or total < 0:
@@ -240,7 +242,7 @@ class ListWidget(BaseWidget):
         try:
             paginating_method = self.get_pagination(items_total, page)
         except Http404:
-            return redirect(self.get_url())
+            return redirect(self.get_link())
 
         # List items
         items = self.get_items()
@@ -286,18 +288,18 @@ class ListWidget(BaseWidget):
                             message = Message(_("No search criteria have been defined."))
                         else:
                             request.session[self.get_token('filter')] = search_criteria
-                            return redirect(self.get_url())
+                            return redirect(self.get_link())
                     else:
                         message = Message(_("Search form contains errors."))
-                    message.type = 'error'
+                    message.level = messages.ERROR
                 else:
                     search_form = SearchForm(request=request)
 
                 # Kill search
                 if request.POST.get('origin') == 'clear' and self.is_filtering and request.csrf.request_secure(request):
                     request.session[self.get_token('filter')] = None
-                    request.messages.set_flash(Message(_("Search criteria have been cleared.")), 'info', self.admin.id)
-                    return redirect(self.get_url())
+                    messages.info(request, _("Search criteria have been cleared."), self.admin.id)
+                    return redirect(self.get_link())
             else:
                 if self.is_filtering:
                     search_form = SearchForm(request=request, initial=request.session.get(self.get_token('filter')))
@@ -311,12 +313,12 @@ class ListWidget(BaseWidget):
             if request.method == 'POST' and request.POST.get('origin') == 'table':
                 table_form = TableForm(request.POST, request=request)
                 if table_form.is_valid():
-                    message, redirect_url = self.table_action(items, table_form.cleaned_data)
-                    if redirect_url:
-                        request.messages.set_flash(message, message.type, self.admin.id)
-                        return redirect(redirect_url)
+                    message, redirect_link = self.table_action(items, table_form.cleaned_data)
+                    if redirect_link:
+                        messages.add_message(request, message.level, message, self.admin.id)
+                        return redirect(redirect_link)
                 else:
-                    message = Message(table_form.non_field_errors()[0], 'error')
+                    message = Message(table_form.non_field_errors()[0], messages.ERROR)
             else:
                 table_form = TableForm(request=request)
 
@@ -329,48 +331,48 @@ class ListWidget(BaseWidget):
                 if list_form.is_valid():
                     try:
                         form_action = getattr(self, 'action_' + list_form.cleaned_data['list_action'])
-                        message, redirect_url = form_action(items, [int(x) for x in list_form.cleaned_data['list_items']])
-                        if redirect_url:
-                            request.messages.set_flash(message, message.type, self.admin.id)
-                            return redirect(redirect_url)
+                        message, redirect_link = form_action(items, [int(x) for x in list_form.cleaned_data['list_items']])
+                        if redirect_link:
+                            messages.add_message(request, message.level, message, self.admin.id)
+                            return redirect(redirect_link)
                     except AttributeError:
-                        message = Message(_("Action requested is incorrect."))
+                        message = Message(_("Requested action is incorrect."))
                 else:
                     if 'list_items' in list_form.errors:
                         message = Message(self.nothing_checked_message)
                     elif 'list_action' in list_form.errors:
-                        message = Message(_("Action requested is incorrect."))
+                        message = Message(_("Requested action is incorrect."))
                     else:
                         message = Message(list_form.non_field_errors()[0])
-                message.type = 'error'
+                message.level = messages.ERROR
             else:
                 list_form = ListForm(request=request)
 
-        # Little hax to keep counters correct 
+        # Little hax to keep counters correct
         items_shown = len(items)
         if items_total < items_shown:
             items_total = items_shown
 
         # Render list
-        return request.theme.render_to_response(self.get_template(),
-                                                self.add_template_variables({
-                                                 'admin': self.admin,
-                                                 'action': self,
-                                                 'request': request,
-                                                 'url': self.get_url(),
-                                                 'messages_log': request.messages.get_messages(self.admin.id),
-                                                 'message': message,
-                                                 'sorting': self.sortables,
-                                                 'sorting_method': sorting_method,
-                                                 'pagination': paginating_method,
-                                                 'list_form': FormLayout(list_form) if list_form else None,
-                                                 'search_form': FormLayout(search_form) if search_form else None,
-                                                 'table_form': FormFields(table_form).fields if table_form else None,
-                                                 'items': items,
-                                                 'items_total': items_total,
-                                                 'items_shown': items_shown,
-                                                }),
-                                                context_instance=RequestContext(request));
+        return render_to_response(self.get_template(),
+                                  self.add_template_variables({
+                                   'admin': self.admin,
+                                   'action': self,
+                                   'request': request,
+                                   'link': self.get_link(),
+                                   'messages_log': messages.get_messages(request, self.admin.id),
+                                   'message': message,
+                                   'sorting': self.sortables,
+                                   'sorting_method': sorting_method,
+                                   'pagination': paginating_method,
+                                   'list_form': list_form or None,
+                                   'search_form': search_form or None,
+                                   'table_form': table_form or None,
+                                   'items': items,
+                                   'items_total': items_total,
+                                   'items_shown': items_shown,
+                                  }),
+                                  context_instance=RequestContext(request));
 
 
 class FormWidget(BaseWidget):
@@ -387,8 +389,8 @@ class FormWidget(BaseWidget):
     original_name = None
     submit_fallback = False
 
-    def get_url(self, model):
-        return reverse(self.admin.get_action_attr(self.id, 'route'))
+    def get_link(self, model):
+        return reverse(self.admin.get_action_attr(self.id, 'link'))
 
     def get_form(self, target):
         return self.form
@@ -421,7 +423,7 @@ class FormWidget(BaseWidget):
             model = self.get_and_validate_target(target)
             self.original_name = self.get_target_name(model)
             if not model:
-                return redirect(self.get_fallback_url())
+                return redirect(self.get_fallback_link())
         original_model = model
 
         # Get form type to instantiate
@@ -434,48 +436,48 @@ class FormWidget(BaseWidget):
             if form.is_valid():
                 try:
                     model, message = self.submit_form(form, model)
-                    if message.type != 'error':
-                        request.messages.set_flash(message, message.type, self.admin.id)
+                    if message.level != messages.ERROR:
+                        messages.add_message(request, message.level, message, self.admin.id)
                         # Redirect back to right page
                         try:
-                            if 'save_new' in request.POST and self.get_new_url:
-                                return redirect(self.get_new_url(model))
+                            if 'save_new' in request.POST and self.get_new_link:
+                                return redirect(self.get_new_link(model))
                         except AttributeError:
                             pass
                         try:
-                            if 'save_edit' in request.POST and self.get_edit_url:
-                                return redirect(self.get_edit_url(model))
+                            if 'save_edit' in request.POST and self.get_edit_link:
+                                return redirect(self.get_edit_link(model))
                         except AttributeError:
                             pass
                         try:
-                            if self.get_submit_url:
-                                return redirect(self.get_submit_url(model))
+                            if self.get_submit_link:
+                                return redirect(self.get_submit_link(model))
                         except AttributeError:
                             pass
-                        return redirect(self.get_fallback_url())
+                        return redirect(self.get_fallback_link())
                 except ValidationError as e:
-                    message = Message(e.messages[0], 'error')
+                    message = Message(e.messages[0], messages.ERROR)
             else:
-                message = Message(form.non_field_errors()[0], 'error')
+                message = Message(form.non_field_errors()[0], messages.ERROR)
         else:
             form = self.get_form_instance(FormType, model, self.get_initial_data(model))
 
         # Render form
-        return request.theme.render_to_response(self.get_template(),
-                                                self.add_template_variables({
-                                                 'admin': self.admin,
-                                                 'action': self,
-                                                 'request': request,
-                                                 'url': self.get_url(model),
-                                                 'fallback': self.get_fallback_url(),
-                                                 'messages_log': request.messages.get_messages(self.admin.id),
-                                                 'message': message,
-                                                 'tabbed': self.tabbed,
-                                                 'target': self.get_target_name(original_model),
-                                                 'target_model': original_model,
-                                                 'form': FormLayout(form, self.get_layout(form, target)),
-                                                }),
-                                                context_instance=RequestContext(request));
+        return render_to_response(self.get_template(),
+                                  self.add_template_variables({
+                                   'admin': self.admin,
+                                   'action': self,
+                                   'request': request,
+                                   'link': self.get_link(model),
+                                   'fallback': self.get_fallback_link(),
+                                   'messages_log': messages.get_messages(request, self.admin.id),
+                                   'message': message,
+                                   'tabbed': self.tabbed,
+                                   'target': self.get_target_name(original_model),
+                                   'target_model': original_model,
+                                   'form': form,
+                                  }),
+                                  context_instance=RequestContext(request));
 
 
 class ButtonWidget(BaseWidget):
@@ -495,25 +497,25 @@ class ButtonWidget(BaseWidget):
         if target:
             model = self.get_and_validate_target(target)
             if not model:
-                return redirect(self.get_fallback_url())
+                return redirect(self.get_fallback_link())
         original_model = model
 
         # Crash if this is invalid request
         if not request.csrf.request_secure(request):
-            request.messages.set_flash(Message(_("Action authorization is invalid.")), 'error', self.admin.id)
-            return redirect(self.get_fallback_url())
+            messages.error(request, _("Action authorization is invalid."), self.admin.id)
+            return redirect(self.get_fallback_link())
 
         # Do something
         message, url = self.action(model)
-        request.messages.set_flash(message, message.type, self.admin.id)
+        messages.add_message(request, message.level, message, self.admin.id)
         if url:
             return redirect(url)
-        return redirect(self.get_fallback_url())
+        return redirect(self.get_fallback_link())
 
     def action(self, target):
         """
         Action to be executed when button is pressed
         Define custom one in your Admin action.
-        It should return response and message objects 
+        It should return response and message objects
         """
         pass
