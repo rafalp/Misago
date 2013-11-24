@@ -15,6 +15,10 @@ The secondary goal is making Misago a viable foundation for building and maintai
 
 Finally, while Misago is built using Django, it's not a "Django application" and it won't integrate with existing Django projects. This is the result of a design decision to use custom users/session/auth/permissions functionality instead of native Django applications - however, in the future Misago will provide a web API allowing you to add Misago-powered features to your website and/or application.
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> parent of 0dee3f6... Resolve conflicts
 Requirements
 ------------
 
@@ -24,21 +28,19 @@ Requirements
 * MySQL/Postgres/Oracle Database
 * Pillow Imaging Library for Python
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> parent of 0dee3f6... Resolve conflicts
 Dependencies
 ------------
 
 * [Django](http://djangoproject.com)
 * [Django Debug Toolbar](https://github.com/django-debug-toolbar/django-debug-toolbar)
-<<<<<<< HEAD
 * [Django-floppyforms](https://github.com/brutasse/django-floppyforms)
 * [Django Haystack 2](http://haystacksearch.org/)
 * [Django-Jina](https://github.com/niwibe/django-jinja)
 * [Django-MPTT](https://github.com/django-mptt/django-mptt)
-=======
-* [Django-MPTT](https://github.com/django-mptt/django-mptt)
-* [Coffin](https://github.com/coffin/coffin)
-* [Django Haystack 2](http://haystacksearch.org/)
->>>>>>> master
 * [Jinja2](https://github.com/mitsuhiko/jinja2)
 * [Markdown](http://pypi.python.org/pypi/Markdown)
 * [path](http://pypi.python.org/pypi/path.py)
@@ -95,8 +97,12 @@ After you set low-level configuration of Misago ([`deployment/settings.py`](depl
   Creates the DB structure for Misago and populates it with default data
 * `adduser [--admin] <username> <email> <password>`
   Adds a new user to the database.
+<<<<<<< HEAD
 
 Make sure to do something like `adduser Admin admin@example.com password --admin` to add an admin user when you first setup your forums.
+=======
+  Make sure to do something like `adduser Admin admin@example.com password --admin` to add an admin user when you first setup your forums.
+>>>>>>> parent of 0dee3f6... Resolve conflicts
 
 Misago stands on shoulders of Django and Django documentation covers deployment of apps extensively: https://docs.djangoproject.com/en/dev/howto/deployment/
 
@@ -110,7 +116,10 @@ Updating
 
 You can use the `updatemisago` command to update your forums database to latest version _unless_ you are updating from `0.1` which is incompatibile with `0.2` and later releases.
 
+<<<<<<< HEAD
 Support for migrations from `0.1` has been dropped with `0.3` release.
+=======
+>>>>>>> parent of 0dee3f6... Resolve conflicts
 
 Contributing
 ------------
@@ -133,8 +142,16 @@ https://twitter.com/RafalPiton
 Copyright and license
 ---------------------
 
+<<<<<<< HEAD
 __Misago__ - Copyright © 2013 [Rafał Pitoń](http://github.com/ralfp)
 This program comes with ABSOLUTELY NO WARRANTY.
 
 This is free software and you are welcome to redistribute it under the conditions described in the license.
 For the complete license, refer to [LICENSE.md](LICENSE.md)
+=======
+> __Misago__ - Copyright © 2013 [Rafał Pitoń](http://github.com/ralfp)
+> This program comes with ABSOLUTELY NO WARRANTY.
+> This is free software and you are welcome to redistribute it under the conditions described in the license.
+>
+> For the complete license, refer to [LICENSE.md](LICENSE.md)
+>>>>>>> parent of 0dee3f6... Resolve conflicts
