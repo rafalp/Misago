@@ -10,7 +10,7 @@ ADMIN_ACTIONS = (
                 name=_("Home"),
                 help=_("Your forums right now"),
                 icon='home',
-                link='admin_home',
+                route='admin_home',
                 urlpatterns=patterns('misago.apps.admin.index',
                         url(r'^$', 'index', name='admin_home'),
                     ),
@@ -21,7 +21,7 @@ ADMIN_ACTIONS = (
                 name=_("Stats"),
                 help=_("Create Statistics Reports"),
                 icon='signal',
-                link='admin_stats',
+                route='admin_stats',
                 urlpatterns=patterns('misago.apps.admin.stats.views',
                         url(r'^$', 'form', name='admin_stats'),
                         url(r'^(?P<model>[a-z0-9]+)/(?P<date_start>[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])/(?P<date_end>[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])/(?P<precision>\w+)$', 'graph', name='admin_stats_graph'),
@@ -39,10 +39,10 @@ ADMIN_ACTIONS = (
                           'id': 'list',
                           'name': _("Browse Users"),
                           'help': _("Browse all registered user accounts"),
-                          'link': 'admin_online'
+                          'route': 'admin_online'
                           },
                          ],
-                link='admin_online',
+                route='admin_online',
                 urlpatterns=patterns('misago.apps.admin.online.views',
                         url(r'^$', 'List', name='admin_online'),
                         url(r'^(?P<page>[1-9]([0-9]+)?)/$', 'List', name='admin_online'),
@@ -60,10 +60,10 @@ ADMIN_ACTIONS = (
                           'id': 'list',
                           'name': _("Forum Team Members"),
                           'help': _("List of all forum team members"),
-                          'link': 'admin_team'
+                          'route': 'admin_team'
                           },
                          ],
-                link='admin_team',
+                route='admin_team',
                 urlpatterns=patterns('misago.apps.admin.team',
                         url(r'^$', 'List', name='admin_team'),
                     ),

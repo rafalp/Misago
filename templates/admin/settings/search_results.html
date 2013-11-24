@@ -1,4 +1,6 @@
 {% extends "admin/settings/settings.html" %}
+{% load i18n %}
+{% load url from future %}
 {% from "admin/macros.html" import page_title, draw_message %}
 
 {% block title %}{{ page_title(title=_('Search Results'), parent=_('Settings')) }}{% endblock %}
@@ -9,7 +11,7 @@
 {% for setting in found_settings %}
 <h4>{{ _(setting.name) }} <small>{{ _(setting.group.name) }}</small></h4>
 {%- if setting.description %}<p>{{ _(setting.description) }}</p>{% endif -%}
-<a href="{{ url('admin_settings', group_id=setting.group.id, group_slug=setting.group.key) }}#id_{{ setting.pk }}">{% trans %}Go to this setting{% endtrans %}</a>
+<a href="{% url 'admin_settings' group_id=setting.group.id, group_slug=setting.group.key %}#id_{{ setting.pk }}">{% trans %}Go to this setting{% endtrans %}</a>
 <hr>
 {% endfor %}
 {% endblock %}

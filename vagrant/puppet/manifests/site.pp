@@ -8,15 +8,12 @@ class site
   $password = "password"
 
   class { "python":
-    version    => "system",
-    pip        => true,
-    dev        => true,
-    virtualenv => false,
-    gunicorn   => false
+    version => "system",
+    dev     => true
   } ->
 
   python::requirements { "/vagrant/requirements.txt":
-    owner      => "root"
+    virtualenv => "system"
   } ->
 
   exec { "startmisago":

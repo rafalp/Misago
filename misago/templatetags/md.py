@@ -1,5 +1,5 @@
 from markdown import markdown
-from django_jinja.library import Library
+from coffin.template import Library
 from django.conf import settings
 import misago.markdown
 
@@ -10,10 +10,7 @@ register = Library()
 def parse_markdown(value, format=None):
     if not format:
         format = settings.OUTPUT_FORMAT
-    return markdown(value,
-                    safe_mode='escape',
-                    output_format=format,
-                    extensions=['nl2br', 'fenced_code']).strip()
+    return markdown(value, safe_mode='escape', output_format=format).strip()
 
 
 @register.filter(name='markdown_short')

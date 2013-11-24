@@ -2,10 +2,8 @@ from datetime import timedelta
 from django.utils import timezone
 from misago.apps.threadtype.posting.base import PostingBaseView
 from misago.apps.threadtype.posting.forms import NewThreadForm
-from misago.conf import settings
 from misago.markdown import post_markdown
 from misago.models import Forum, Thread, Post
-from misago.monitor import monitor, UpdatingMonitor
 from misago.utils.strings import slugify
 
 class NewThreadBaseView(PostingBaseView):
@@ -31,7 +29,7 @@ class NewThreadBaseView(PostingBaseView):
                                             start=now,
                                             last=now,
                                             moderated=moderation,
-                                            score=settings.thread_ranking_initial_score,
+                                            score=self.request.settings['thread_ranking_initial_score'],
                                             )
 
         # Create our post
@@ -46,6 +44,7 @@ class NewThreadBaseView(PostingBaseView):
                                         post=form.cleaned_data['post'],
                                         post_preparsed=post_preparsed,
                                         date=now,
+                                        current_date=now,
                                         moderated=moderation,
                                         )
 
@@ -64,9 +63,8 @@ class NewThreadBaseView(PostingBaseView):
 
         # Update forum monitor
         if not moderation:
-            with UpdatingMonitor() as cm:
-                monitor.increase('threads')
-                monitor.increase('posts')
+            self.request.monitor.increase('threads')
+            self.request.monitor.increase('posts')
             self.forum.threads += 1
             self.forum.posts += 1
             self.forum.new_last_thread(self.thread)
@@ -74,8 +72,8 @@ class NewThreadBaseView(PostingBaseView):
 
         # Reward user for posting new thread?
         if not moderation and (not self.request.user.last_post
-                or self.request.user.last_post < timezone.now() - timedelta(seconds=settings.score_reward_new_post_cooldown)):
-            self.request.user.score += settings.score_reward_new_thread
+                or self.request.user.last_post < timezone.now() - timedelta(seconds=self.request.settings['score_reward_new_post_cooldown'])):
+            self.request.user.score += self.request.settings['score_reward_new_thread']
 
         # Update user
         if not moderation:

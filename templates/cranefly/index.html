@@ -2,11 +2,11 @@
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{% if settings.board_index_title %}{{ settings.board_index_title }}{% else %}{{ settings.board_name }}{% endif %}{% endblock %}
-
+     
 {% block meta %}{% if settings.board_index_meta %}
     <meta name="description" content="{{ settings.board_index_meta }}">
 {%- endif %}{%- endblock %}
-
+      
 {% block content %}
 {{ hook_above_forum_home|safe }}
 <div class="row">
@@ -21,20 +21,20 @@
         </div>
         {% for forum in category.subforums %}
         <div class="forum{% if loop.last %} last{% endif %}">
-          <div class="forum-icon{% if forum.type == 'redirect' %} forum-icon-redirect{% elif not forum.is_read %} forum-icon-new{% endif %}">
-            <i class="icon-{% if forum.type == 'redirect' %}link{% elif not forum.is_read %}comment{% else %}comment-alt{% endif %}"></i>
+          <div class="forum-icon">
+            <div class="forum-icon-wrap{% if forum.type == 'redirect' %} forum-icon-redirect{% elif not forum.is_read %} forum-icon-new{% endif %}"><i class="icon-{% if forum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %} icon-white"></i></div>
           </div>
           <div id="forum-{{ forum.id }}" class="forum-main">
-            <h3 class="forum-title{% if not forum.is_read %} forum-title-new{% endif %}"><a href="{{ url(forum.type, slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3>
+            <h3 class="forum-title{% if not forum.is_read %} forum-title-new{% endif %}"><a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3>
             {% if forum.show_details %}
             <div class="forum-details">
               {% if forum.type != 'redirect' %}
               {% if acl.forums.can_browse(forum) and (acl.threads.can_read_threads(forum) == 2 or (acl.threads.can_read_threads(forum) == 1 and forum.last_poster_id == user.pk)) %}
               {% if forum.last_thread_id -%}
               <div class="thread-name">
-                <a href="{{ url('thread_new', thread=forum.last_thread_id, slug=forum.last_thread_slug) }}"{% if forum.last_thread_name|length > 34 %} class="tooltip-top" title="{{ forum.last_thread_name }}"{% endif %}>{{ forum.last_thread_name|short_string(34) }}</a>
+                <a href="{% url 'thread_new' thread=forum.last_thread_id, slug=forum.last_thread_slug %}"{% if forum.last_thread_name|length > 34 %} class="tooltip-top" title="{{ forum.last_thread_name }}"{% endif %}>{{ forum.last_thread_name|short_string(34) }}</a>
               </div>
-              <div class="muted">{% if forum.last_poster_id %}<a href="{{ url('user', user=forum.last_poster_id, username=forum.last_poster_slug) }}" class="last-poster">{{ forum.last_poster_name }}</a>{% else %}<span class="last-poster">{{ forum.last_poster_name }}</span>{% endif %} - {{ forum.last_thread_date|reltimesince }}</div>
+              <div class="muted">{% if forum.last_poster_id %}<a href="{% url 'user' user=forum.last_poster_id, username=forum.last_poster_slug %}" class="last-poster">{{ forum.last_poster_name }}</a>{% else %}<span class="last-poster">{{ forum.last_poster_name }}</span>{% endif %} - {{ forum.last_thread_date|reltimesince }}</div>
               {%- else -%}
               <em>{% trans %}This forum is empty{% endtrans %}</em>
               {%- endif %}
@@ -43,7 +43,7 @@
               {%- endif %}
               {%- else -%}
               <div class="thread-name">
-                <a href="{{ url('redirect', slug=forum.slug, forum=forum.id) }}">{{ forum.redirect_domain() }}</a>
+                <a href="{% url 'redirect' slug=forum.slug, forum=forum.id %}">{{ forum.redirect_domain() }}</a>
               </div>
               <div class="muted">{% trans count=forum.redirects, clicks=macros.wrap(forum.redirects|intcomma, 'span', 'class="last-poster"') %}{{ clicks }} click{% pluralize %}{{ clicks }} clicks{% endtrans %}</div>
               {%- endif %}
@@ -52,18 +52,18 @@
             {% if forum.subforums %}
             <div class="dropdown">
               {% if forum.subforums|length > 1 %}
-              <a href="{{ url(forum.type, slug=forum.slug, forum=forum.id) }}#subforums" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-chevron-down"></i> {% trans %}Subforums{% endtrans %}</a>
+              <a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}#subforums" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-chevron-down"></i> {% trans %}Subforums{% endtrans %}</a>
               <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                 <div class="dropdown-shadow">
                   <ul>
                     {% for subforum in forum.subforums %}
-                    <li><a href="{{ url(subforum.type, slug=subforum.slug, forum=subforum.id) }}"><i class="icon-{% if subforum.type == 'redirect' %}circle-arrow-right{% else %}comments{% endif %}"></i> {{ subforum.name }}</a></li>
+                    <li><a href="{{ subforum.type|url(slug=subforum.slug, forum=subforum.id) }}"><i class="icon-{% if subforum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %}"></i> {{ subforum.name }}</a></li>
                     {% endfor %}
                   </ul>
                 </div>
               </div>
               {% else %}
-              <a href="{{ url(forum.subforums[0].type, slug=forum.subforums[0].slug, forum=forum.subforums[0].id) }}" class="subforum tooltip-top" title="{% trans forum=forum.subforums[0].name %}Go to the {{ forum }} subforum{% endtrans %}">{{ forum.subforums[0].name|short_string(16) }}</a>
+              <a href="{{ forum.subforums[0].type|url(slug=forum.subforums[0].slug, forum=forum.subforums[0].id) }}" class="subforum tooltip-top" title="{% trans forum=forum.subforums[0].name %}Go to the {{ forum }} subforum{% endtrans %}">{{ forum.subforums[0].name|short_string(16) }}</a>
               {% endif %}
             </div>
             {% endif%}
@@ -82,10 +82,7 @@
         </div>
         {% endfor %}
       </div>
-      {% endif %}
-      {% else %}
-      <p class="lead">{% trans %}Looks like no forums have been set yet, or you don't have permission to see any.{% endtrans %}</p>
-      {% endfor %}
+      {% endif %}{% endfor %}
 
       {{ hook_below_home_forums_list|safe }}
     </div>
@@ -98,15 +95,15 @@
     <div class="index-ranks-list">
       {% for rank in ranks_online %}{% if rank.online %}
       <div class="inder-rank{% if rank.style %} index-rank-{{ rank.style }}{% endif %}">
-        <h3>{% if rank.slug %}<a href="{{ url('users', slug=rank.slug) }}">{% endif %}{% trans rank_name=_(rank.name) %}{{ rank_name }} Online{% endtrans %}{% if rank.slug %}</a>{% endif %}</h3>
+        <h3>{% if rank.slug %}<a href="{% url 'users' slug=rank.slug %}">{% endif %}{% trans rank_name=_(rank.name) %}{{ rank_name }} Online{% endtrans %}{% if rank.slug %}</a>{% endif %}</h3>
         <ul class="unstyled">
           {% for online in rank.online %}
           <li>
             <img src="{{ online.get_avatar(24) }}" alt="" class="avatar-small">
-            <a href="{{ url('user', username=online.username_slug, user=online.pk) }}" class="user-name">{{ online.username }}</a>
+            <a href="{% url 'user' username=online.username_slug, user=online.pk %}" class="user-name">{{ online.username }}</a>
             {% if rank.title or online.title %}
             {% if rank.slug -%}
-            <a href="{{ url('users', slug=rank.slug) }}" class="label">{% if online.title %}{{ online.title }}{% else %}{{ _(rank.title) }}{% endif %}</a>
+            <a href="{% url 'users' slug=rank.slug %}" class="label">{% if online.title %}{{ online.title }}{% else %}{{ _(rank.title) }}{% endif %}</a>
             {%- else -%}
             <span class="label">{% if online.title %}{{ online.title }}{% else %}{{ _(rank.title) }}{% endif %}</span>
             {% endif %}
@@ -121,22 +118,14 @@
 
     {{ hook_after_home_sidepanel_ranks_online|safe }}
 
-    {% if threads_ranking %}
+    {% if popular_threads %}
     <div class="index-popular-threads">
-      <h4>
-        {% if settings.thread_ranking_type == 'popular' %}
-        {% trans %}Popular Threads{% endtrans %}
-        {% elif settings.thread_ranking_type == 'last' %}
-        {% trans %}Latest Replies{% endtrans %}
-        {% elif settings.thread_ranking_type == 'start' %}
-        {% trans %}Newest Threads{% endtrans %}
-        {% endif %}
-      </h4>
+      <h4>{% trans %}Popular Threads{% endtrans %}</h4>
       <ul class="unstyled">
-        {% for thread in threads_ranking %}
+        {% for thread in popular_threads %}
         <li>
-          <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}" class="index-popular-thread{% if thread.name|length > 42 %} tooltip-top{% endif %}"{% if thread.name|length > 42 %} title="{{ thread.name }}"{% endif %}>{{ thread.name|short_string(42) }}</a>
-          <div class="muted"><a href="{{ url('forum', forum=thread.forum_id, slug=thread.forum_slug) }}">{{ thread.forum_name }}</a> - {{ thread.last|reltimesince }}</div>
+          <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="index-popular-thread{% if thread.name|length > 42 %} tooltip-top{% endif %}"{% if thread.name|length > 42 %} title="{{ thread.name }}"{% endif %}>{{ thread.name|short_string(42) }}</a>
+          <div class="muted"><a href="{% url 'forum' forum=thread.forum_id, slug=thread.forum_slug %}">{{ thread.forum_name }}</a> - {{ thread.last|reltimesince }}</div>
         </li>
         {% endfor %}
       </ul>
@@ -154,7 +143,7 @@
           <span class="tooltip-top" title="{% trans %}Threads{% endtrans %}"><i class="icon-th-list"></i> {{ monitor.threads|int|intcomma }}</span>
         </li>
         <li>
-          <span class="tooltip-top" title="{% trans %}Members{% endtrans %}"><i class="icon-group"></i> {{ monitor.users|int|intcomma }}</span>
+          <span class="tooltip-top" title="{% trans %}Members{% endtrans %}"><i class="icon-user"></i> {{ monitor.users|int|intcomma }}</span>
         </li>
         {% if settings.online_counting != 'no' %}
         <li>
@@ -167,7 +156,7 @@
     {{ hook_after_home_sidepanel_forum_stats|safe }}
 
     {% if user.is_authenticated() %}
-    <form action="{{ url('read_all') }}" method="post" class="index-forums-read-all">
+    <form action="{% url 'read_all' %}" method="post" class="index-forums-read-all">
       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
       <button type="submit" class="btn btn-link"><i class="icon-ok"></i> {% trans %}Mark forums read{% endtrans %}</button>
     </form>

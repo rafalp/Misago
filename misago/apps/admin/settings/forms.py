@@ -1,4 +1,4 @@
-import floppyforms as forms
+from django import forms
 from misago.forms import Form
 
 class SearchForm(Form):

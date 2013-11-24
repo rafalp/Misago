@@ -5,14 +5,10 @@ from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
-import floppyforms as forms
 from mptt.forms import TreeNodeChoiceField
-from misago import messages
 from misago.admin import site
 from misago.apps.admin.widgets import *
 from misago.models import Forum
-from misago.monitor import monitor, UpdatingMonitor
-from misago.shortcuts import render_to_response
 from misago.utils.strings import slugify
 from misago.apps.admin.forums.forms import NewNodeForm, CategoryForm, ForumForm, RedirectForm, DeleteForm
 
@@ -73,7 +69,7 @@ class List(ListWidget):
             if forum.pk in checked:
                 forum.sync()
                 forum.save(force_update=True)
-        return Message(_('Selected forums have been resynchronized successfully.'), messages.SUCCESS), reverse('admin_forums')
+        return Message(_('Selected forums have been resynchronized successfully.'), 'success'), reverse('admin_forums')
 
     def action_resync(self, items, checked):
         clean_checked = []
@@ -81,16 +77,16 @@ class List(ListWidget):
             if item.pk in checked and item.type == 'forum':
                 clean_checked.append(item.pk)
         if not clean_checked:
-            return Message(_('Only forums can be resynchronized.'), messages.ERROR), reverse('admin_forums')
+            return Message(_('Only forums can be resynchronized.'), 'error'), reverse('admin_forums')
         self.request.session['sync_forums'] = clean_checked
-        return Message('Meh', messages.SUCCESS), django_reverse('admin_forums_resync')
+        return Message('Meh', 'success'), django_reverse('admin_forums_resync')
 
 
 def resync_forums(request, forum=0, progress=0):
     progress = int(progress)
     forums = request.session.get('sync_forums')
     if not forums:
-        messages.info(request, _('No forums to resynchronize.'), 'forums')
+        request.messages.set_flash(Message(_('No forums to resynchronize.')), 'info', 'forums')
         return redirect(reverse('admin_forums'))
     try:
         if not forum:
@@ -98,7 +94,7 @@ def resync_forums(request, forum=0, progress=0):
         forum = Forum.objects.get(id=forum)
     except Forum.DoesNotExist:
         del request.session['sync_forums']
-        messages.error(request, _('Forum for resynchronization does not exist.'), 'forums')
+        request.messages.set_flash(Message(_('Forum for resynchronization does not exist.')), 'error', 'forums')
         return redirect(reverse('admin_forums'))
 
     # Sync 50 threads
@@ -112,15 +108,13 @@ def resync_forums(request, forum=0, progress=0):
         return redirect(django_reverse('admin_forums_resync'))
 
     # Render Progress
-    response = render_to_response('processing.html',
-                                  {
-                                   'task_name': _('Resynchronizing Forums'),
-                                   'target_name': forum.name,
-                                   'message': _('Resynchronized %(progress)s from %(total)s threads') % {'progress': progress, 'total': threads_total},
-                                   'progress': progress * 100 / threads_total,
-                                   'cancel_link': reverse('admin_forums'),
-                                   },
-                                  context_instance=RequestContext(request));
+    response = request.theme.render_to_response('processing.html', {
+            'task_name': _('Resynchronizing Forums'),
+            'target_name': forum.name,
+            'message': _('Resynchronized %(progress)s from %(total)s threads') % {'progress': progress, 'total': threads_total},
+            'progress': progress * 100 / threads_total,
+            'cancel_url': reverse('admin_forums'),
+        }, context_instance=RequestContext(request));
 
     # Redirect where to?
     if progress >= threads_total:
@@ -139,14 +133,16 @@ class NewNode(FormWidget):
     form = NewNodeForm
     submit_button = _("Save Node")
 
-    def get_new_link(self, model):
+    def get_new_url(self, model):
         return reverse('admin_forums_new')
 
-    def get_edit_link(self, model):
+    def get_edit_url(self, model):
         return reverse('admin_forums_edit', model)
 
     def get_initial_data(self, model):
+        print 'CALL!'
         if not self.request.session.get('forums_admin_preffs'):
+            print 'NO PATTERN!'
             return {}
 
         ref = self.request.META.get('HTTP_REFERER')
@@ -190,8 +186,7 @@ class NewNode(FormWidget):
 
         if form.cleaned_data['perms']:
             new_forum.copy_permissions(form.cleaned_data['perms'])
-            with UpdatingMonitor() as cm:
-                monitor.increase('acl_version')
+            self.request.monitor.increase('acl_version')
 
         self.request.session['forums_admin_preffs'] = {
             'parent': form.cleaned_data['parent'].pk,
@@ -200,11 +195,11 @@ class NewNode(FormWidget):
         }
 
         if form.cleaned_data['role'] == 'category':
-            return new_forum, Message(_('New Category has been created.'), messages.SUCCESS)
+            return new_forum, Message(_('New Category has been created.'), 'success')
         if form.cleaned_data['role'] == 'forum':
-            return new_forum, Message(_('New Forum has been created.'), messages.SUCCESS)
+            return new_forum, Message(_('New Forum has been created.'), 'success')
         if form.cleaned_data['role'] == 'redirect':
-            return new_forum, Message(_('New Redirect has been created.'), messages.SUCCESS)
+            return new_forum, Message(_('New Redirect has been created.'), 'success')
 
 
 class Up(ButtonWidget):
@@ -217,8 +212,8 @@ class Up(ButtonWidget):
         previous_sibling = target.get_previous_sibling()
         if previous_sibling:
             target.move_to(previous_sibling, 'left')
-            return Message(_('Forum "%(name)s" has been moved up.') % {'name': target.name}, messages.SUCCESS), False
-        return Message(_('Forum "%(name)s" is first child of its parent node and cannot be moved up.') % {'name': target.name}), False
+            return Message(_('Forum "%(name)s" has been moved up.') % {'name': target.name}, 'success'), False
+        return Message(_('Forum "%(name)s" is first child of its parent node and cannot be moved up.') % {'name': target.name}, 'info'), False
 
 
 class Down(ButtonWidget):
@@ -231,8 +226,8 @@ class Down(ButtonWidget):
         next_sibling = target.get_next_sibling()
         if next_sibling:
             target.move_to(next_sibling, 'right')
-            return Message(_('Forum "%(name)s" has been moved down.') % {'name': target.name}, messages.SUCCESS), False
-        return Message(_('Forum "%(name)s" is last child of its parent node and cannot be moved down.') % {'name': target.name}), False
+            return Message(_('Forum "%(name)s" has been moved down.') % {'name': target.name}, 'success'), False
+        return Message(_('Forum "%(name)s" is last child of its parent node and cannot be moved down.') % {'name': target.name}, 'info'), False
 
 
 class Edit(FormWidget):
@@ -245,11 +240,11 @@ class Edit(FormWidget):
     notfound_message = _('Requested Forum could not be found.')
     submit_fallback = True
 
-    def get_link(self, model):
+    def get_url(self, model):
         return reverse('admin_forums_edit', model)
 
-    def get_edit_link(self, model):
-        return self.get_link(model)
+    def get_edit_url(self, model):
+        return self.get_url(model)
 
     def get_form(self, target):
         if target.type == 'category':
@@ -263,14 +258,7 @@ class Edit(FormWidget):
     def get_form_instance(self, form, target, initial, post=False):
         form_inst = super(Edit, self).get_form_instance(form, target, initial, post)
         valid_targets = Forum.objects.get(special='root').get_descendants(include_self=target.type == 'category').exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
-        if target.type == 'category':
-            label = _("Category Parent")
-        if target.type == 'forum':
-            label = _("Forum Parent")
-        if target.type == 'redirect':
-            label = _("Redirect Parent")
-        form_inst.add_field('parent', TreeNodeChoiceField(label=label, widget=forms.Select,
-                                                          queryset=valid_targets, level_indicator=u'- - '))
+        form_inst.fields['parent'] = TreeNodeChoiceField(queryset=valid_targets, level_indicator=u'- - ')
         form_inst.target_forum = target
         return form_inst
 
@@ -313,24 +301,23 @@ class Edit(FormWidget):
             target.prune_last = form.cleaned_data['prune_last']
             target.pruned_archive = form.cleaned_data['pruned_archive']
 
+        if form.cleaned_data['parent'].pk != target.parent.pk:
+            target.move_to(form.cleaned_data['parent'], 'last-child')
+            self.request.monitor.increase('acl_version')
+
         target.save(force_update=True)
         Forum.objects.populate_tree(True)
 
         if form.cleaned_data['perms']:
             target.copy_permissions(form.cleaned_data['perms'])
 
-        with UpdatingMonitor() as cm:
-            if form.cleaned_data['parent'].pk != target.parent.pk:
-                target.move_to(form.cleaned_data['parent'], 'last-child')
-                monitor.increase('acl_version')
-
-            if form.cleaned_data['parent'].pk != target.parent.pk or form.cleaned_data['perms']:
-                monitor.increase('acl_version')
+        if form.cleaned_data['parent'].pk != target.parent.pk or form.cleaned_data['perms']:
+            self.request.monitor.increase('acl_version')
 
         if self.original_name != target.name:
             target.sync_name()
 
-        return target, Message(_('Changes in forum "%(name)s" have been saved.') % {'name': self.original_name}, messages.SUCCESS)
+        return target, Message(_('Changes in forum "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
 
 
 class Delete(FormWidget):
@@ -344,7 +331,7 @@ class Delete(FormWidget):
     notfound_message = _('Requested Forum could not be found.')
     submit_fallback = True
 
-    def get_link(self, model):
+    def get_url(self, model):
         return reverse('admin_forums_delete', model)
 
     def get_form(self, target):
@@ -362,8 +349,7 @@ class Delete(FormWidget):
         if target.type != 'forum':
             del form_inst.fields['contents']
         valid_targets = Forum.objects.get(special='root').get_descendants().exclude(Q(lft__gte=target.lft) & Q(rght__lte=target.rght))
-        form_inst.add_field('subforums', TreeNodeChoiceField(label=_("Move subforums to"), widget=forms.Select,
-                                                             queryset=valid_targets, required=False, empty_label=_("Remove with forum"), level_indicator=u'- - '))
+        form_inst.fields['subforums'] = TreeNodeChoiceField(queryset=valid_targets, required=False, empty_label=_("Remove with forum"), level_indicator=u'- - ')
         return form_inst
 
     def submit_form(self, form, target):
@@ -384,6 +370,5 @@ class Delete(FormWidget):
                 Forum.objects.get(id=child.pk).delete()
         Forum.objects.get(id=target.pk).delete()
         Forum.objects.populate_tree(True)
-        with UpdatingMonitor() as cm:
-            monitor.increase('acl_version')
-        return target, Message(_('Forum "%(name)s" has been deleted.') % {'name': self.original_name}, messages.SUCCESS)
+        self.request.monitor.increase('acl_version')
+        return target, Message(_('Forum "%(name)s" has been deleted.') % {'name': self.original_name}, 'success')

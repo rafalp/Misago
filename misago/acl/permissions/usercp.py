@@ -1,29 +1,27 @@
 from datetime import timedelta
+from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-import floppyforms as forms
 from misago.acl.builder import BaseACL
 from misago.forms import YesNoSwitch
 
 def make_form(request, role, form):
     if role.special != 'guest':
-        form.base_fields['name_changes_allowed'] = forms.IntegerField(label=_("Allowed Username changes number"),
-                                                                      help_text=_("Enter zero to don't allow users with this role to change their names."),
-                                                                      min_value=0, initial=1)
-        form.base_fields['changes_expire'] = forms.IntegerField(label=_("Don't count username changes older than"),
-                                                                help_text=_("Number of days since name change that makes that change no longer count to limit. For example, if you enter 7 days and set changes limit 3, users with this rank will not be able to make more than three changes in duration of 7 days. Enter zero to make all changes count."),
-                                                                min_value=0, initial=0)
-        form.base_fields['can_use_signature'] = forms.BooleanField(label=_("Can have signature"),
-                                                                   widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['allow_signature_links'] = forms.BooleanField(label=_("Can put links in signature"),
-                                                                       widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['allow_signature_images'] = forms.BooleanField(label=_("Can put images in signature"),
-                                                                        widget=YesNoSwitch, initial=False, required=False)
-
-        form.fieldsets.append((
-                               _("Profile Settings"),
-                               ('name_changes_allowed', 'changes_expire', 'can_use_signature', 'allow_signature_links', 'allow_signature_images')
-                              ))
+        form.base_fields['name_changes_allowed'] = forms.IntegerField(min_value=0, initial=1)
+        form.base_fields['changes_expire'] = forms.IntegerField(min_value=0, initial=0)
+        form.base_fields['can_use_signature'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['allow_signature_links'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['allow_signature_images'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
+        form.layout.append((
+                            _("Profile Settings"),
+                            (
+                             ('name_changes_allowed', {'label': _("Allowed Username changes number"), 'help_text': _("Enter zero to don't allow users with this role to change their names.")}),
+                             ('changes_expire', {'label': _("Don't count username changes older than"), 'help_text': _("Number of days since name change that makes that change no longer count to limit. For example, if you enter 7 days and set changes limit 3, users with this rank will not be able to make more than three changes in duration of 7 days. Enter zero to make all changes count.")}),
+                             ('can_use_signature', {'label': _("Can have signature")}),
+                             ('allow_signature_links', {'label': _("Can put links in signature")}),
+                             ('allow_signature_images', {'label': _("Can put images in signature")}),
+                             ),
+                            ))
 
 
 class UserCPACL(BaseACL):

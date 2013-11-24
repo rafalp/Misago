@@ -1,3 +1,4 @@
+from django import forms
 from django.core.urlresolvers import reverse
 from django.forms import ValidationError
 from django.http import Http404
@@ -5,17 +6,13 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
-import floppyforms as forms
-from misago import messages
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
-from misago.conf import settings
-from misago.forms import Form
+from misago.forms import Form, FormLayout, FormFields
 from misago.markdown import emojis
 from misago.messages import Message
 from misago.models import Forum, Thread, Post, Karma, WatchedThread
 from misago.readstrackers import ThreadsTracker
-from misago.shortcuts import render_to_response
 from misago.utils.pagination import make_pagination
 from misago.apps.threadtype.base import ViewBase
 from misago.apps.threadtype.thread.forms import QuickReplyForm
@@ -41,22 +38,20 @@ class ThreadBaseView(ViewBase):
     def fetch_posts(self):
         self.count = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).count()
         self.posts = self.request.acl.threads.filter_posts(self.request, self.thread, Post.objects.filter(thread=self.thread)).prefetch_related('user', 'user__rank')
-
+        
         self.posts = self.posts.order_by('id')
 
         try:
-            self.pagination = make_pagination(self.kwargs.get('page', 0), self.count, settings.posts_per_page)
+            self.pagination = make_pagination(self.kwargs.get('page', 0), self.count, self.request.settings.posts_per_page)
         except Http404:
             return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))
 
-        checkpoints_boundary = None
-
-        if self.pagination['total'] > 1:
+        checkpoints_range = None
+        if self.request.settings.posts_per_page < self.count:
             self.posts = self.posts[self.pagination['start']:self.pagination['stop'] + 1]
             posts_len = len(self.posts)
-            if self.pagination['page'] < self.pagination['total']:
-                checkpoints_boundary = self.posts[posts_len - 1].date
-                self.posts = self.posts[0:(posts_len - 1)]
+            checkpoints_range = self.posts[posts_len - 1].date
+            self.posts = self.posts[0:(posts_len - 2)]
 
         self.read_date = self.tracker.read_date(self.thread)
 
@@ -74,10 +69,8 @@ class ThreadBaseView(ViewBase):
             if post.ignored:
                 self.ignored = True
 
-        self.thread.add_checkpoints_to_posts(self.request.acl.threads.can_see_all_checkpoints(self.forum),
-                                             self.posts,
-                                             (self.posts[0].date if self.pagination['page'] > 1 else None),
-                                             checkpoints_boundary)
+        self.thread.set_checkpoints(self.request.acl.threads.can_see_all_checkpoints(self.forum),
+                                    self.posts, checkpoints_range)
 
         last_post = self.posts[len(self.posts) - 1]
 
@@ -115,24 +108,19 @@ class ThreadBaseView(ViewBase):
         if self.request.method == 'POST' and self.request.POST.get('origin') == 'thread_form':
             self.thread_form = self.thread_form(self.request.POST, request=self.request)
             if self.thread_form.is_valid():
-                action_call = 'thread_action_' + self.thread_form.cleaned_data['thread_action']
-                action_extra_args = []
-                if ':' in action_call:
-                    action_extra_args = action_call[action_call.index(':') + 1:].split(',')
-                    action_call = action_call[:action_call.index(':')]
-                form_action = getattr(self, action_call)
+                form_action = getattr(self, 'thread_action_' + self.thread_form.cleaned_data['thread_action'])
                 try:
-                    response = form_action(*action_extra_args)
+                    response = form_action()
                     if response:
                         return response
                     return redirect(self.request.path)
                 except forms.ValidationError as e:
-                    self.message = Message(e.messages[0], messages.ERROR)
+                    self.message = Message(e.messages[0], 'error')
             else:
                 if 'thread_action' in self.thread_form.errors:
-                    self.message = Message(_("Requested action is incorrect."), messages.ERROR)
+                    self.message = Message(_("Action requested is incorrect."), 'error')
                 else:
-                    self.message = Message(form.non_field_errors()[0], messages.ERROR)
+                    self.message = Message(form.non_field_errors()[0], 'error')
         else:
             self.thread_form = self.thread_form(request=self.request)
 
@@ -155,7 +143,7 @@ class ThreadBaseView(ViewBase):
             return
         form_fields['list_items'] = forms.MultipleChoiceField(choices=list_choices, widget=forms.CheckboxSelectMultiple)
         self.posts_form = type('PostsViewForm', (Form,), form_fields)
-
+    
     def handle_posts_form(self):
         if self.request.method == 'POST' and self.request.POST.get('origin') == 'posts_form':
             self.posts_form = self.posts_form(self.request.POST, request=self.request)
@@ -172,14 +160,14 @@ class ThreadBaseView(ViewBase):
                             return response
                         return redirect(self.request.path)
                     except forms.ValidationError as e:
-                        self.message = Message(e.messages[0], messages.ERROR)
+                        self.message = Message(e.messages[0], 'error')
                 else:
-                    self.message = Message(_("You have to select at least one post."), messages.ERROR)
+                    self.message = Message(_("You have to select at least one post."), 'error')
             else:
                 if 'list_action' in self.posts_form.errors:
-                    self.message = Message(_("Requested action is incorrect."), messages.ERROR)
+                    self.message = Message(_("Action requested is incorrect."), 'error')
                 else:
-                    self.message = Message(posts_form.non_field_errors()[0], messages.ERROR)
+                    self.message = Message(posts_form.non_field_errors()[0], 'error')
         else:
             self.posts_form = self.posts_form(request=self.request)
 
@@ -218,21 +206,22 @@ class ThreadBaseView(ViewBase):
         # Merge proxy into forum
         self.forum.closed = self.proxy.closed
 
-        return render_to_response('%ss/thread.html' % self.type_prefix,
-                                  self._template_vars({
-                                        'message': self.message,
-                                        'forum': self.forum,
-                                        'parents': self.parents,
-                                        'thread': self.thread,
-                                        'is_read': self.tracker.is_read(self.thread),
-                                        'count': self.count,
-                                        'posts': self.posts,
-                                        'ignored_posts': self.ignored,
-                                        'watcher': self.watcher,
-                                        'pagination': self.pagination,
-                                        'emojis': emojis(),
-                                        'quick_reply': QuickReplyForm(request=request),
-                                        'thread_form': self.thread_form or None,
-                                        'posts_form': self.posts_form or None,
-                                      }),
-                                  context_instance=RequestContext(request));
+        return request.theme.render_to_response('%ss/thread.html' % self.type_prefix,
+                                                self.template_vars({
+                                                 'type_prefix': self.type_prefix,
+                                                 'message': self.message,
+                                                 'forum': self.forum,
+                                                 'parents': self.parents,
+                                                 'thread': self.thread,
+                                                 'is_read': self.tracker.is_read(self.thread),
+                                                 'count': self.count,
+                                                 'posts': self.posts,
+                                                 'ignored_posts': self.ignored,
+                                                 'watcher': self.watcher,
+                                                 'pagination': self.pagination,
+                                                 'emojis': emojis(),
+                                                 'quick_reply': FormFields(QuickReplyForm(request=request)).fields,
+                                                 'thread_form': FormFields(self.thread_form).fields if self.thread_form else None,
+                                                 'posts_form': FormFields(self.posts_form).fields if self.posts_form else None,
+                                                 }),
+                                                context_instance=RequestContext(request));

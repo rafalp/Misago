@@ -48,12 +48,13 @@ def signature_markdown(acl, text):
     del md.parser.blockprocessors['hr']
     del md.parser.blockprocessors['olist']
     del md.parser.blockprocessors['ulist']
-
+    
     return md.convert(text)
 
 
 def post_markdown(text):
-    md = markdown.Markdown(safe_mode='escape',
+    md = markdown.Markdown(
+                           safe_mode='escape',
                            output_format=settings.OUTPUT_FORMAT,
                            extensions=['nl2br', 'fenced_code'])
 
@@ -72,6 +73,9 @@ def post_markdown(text):
 
 
 def tidy_markdown(md, text):
+    text = text.replace('<p><h3><quotetitle>', '<article><header><quotetitle>')
+    text = text.replace('</quotetitle></h3></p>', '</quotetitle></header></article>')
+    text = text.replace('</quotetitle></h3><br>\r\n', '</quotetitle></header></article>\r\n<p>')
     text = text.replace('\r\n<p></p>', '')
     return md, text
 

@@ -1,30 +1,9 @@
 from django.utils.translation import ugettext as _
-from misago import messages
 from misago.apps.threadtype.thread import ThreadBaseView, ThreadModeration, PostsModeration
-from misago.models import Forum, Thread, ThreadPrefix
-from misago.apps.threads.forms import PollVoteForm
+from misago.models import Forum, Thread
 from misago.apps.threads.mixins import TypeMixin
 
 class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
-    def template_vars(self, context):
-        prefixes = ThreadPrefix.objects.forum_prefixes(self.forum)
-        if self.thread.prefix_id in prefixes:
-            context['prefix'] = prefixes[self.thread.prefix_id]
-
-        self.add_poll(context)
-        return super(ThreadView, self).template_vars(context)
-
-    def add_poll(self, context):
-        context['poll'] = None
-        context['poll_form'] = None
-        if self.thread.has_poll:
-            context['poll'] = self.thread.poll
-            self.thread.poll.message = self.request.messages.get_message('poll_%s' % self.thread.poll.pk)
-            if self.request.user.is_authenticated():
-                self.thread.poll.user_votes = [x.option_id for x in self.request.user.pollvote_set.filter(poll=self.thread.poll)]
-                if self.request.acl.threads.can_vote_in_polls(self.forum, self.thread, self.thread.poll):
-                    context['poll_form'] = PollVoteForm(request=self.request, poll=self.thread.poll)
-
     def posts_actions(self):
         acl = self.request.acl.threads.get_role(self.thread.forum_id)
         actions = []
@@ -54,13 +33,6 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
         try:
             if acl['can_approve'] and self.thread.moderated:
                 actions.append(('accept', _('Accept this thread')))
-            if acl['can_change_prefixes']:
-                self.prefixes = ThreadPrefix.objects.forum_prefixes(self.forum)
-                if self.thread.prefix_id:
-                    actions.append(('prefix:0', _('Remove prefix')))
-                for prefix in self.prefixes.values():
-                    if prefix.pk != self.thread.prefix_id:
-                        actions.append(('prefix:%s' % prefix.pk, _('Change prefix to: %(prefix)s') % {'prefix': _(prefix.name)}))
             if acl['can_pin_threads'] == 2 and self.thread.weight < 2:
                 actions.append(('annouce', _('Change this thread to announcement')))
             if acl['can_pin_threads'] > 0 and self.thread.weight != 1:
@@ -87,27 +59,3 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
         except KeyError:
             pass
         return actions
-
-    def thread_action_prefix(self, prefix):
-        try:
-            prefix = int(prefix)
-        except TypeError:
-            prefix = 0
-        prefix = prefix or None
-
-        if prefix:
-            self._thread_action_set_prefix(self.prefixes[prefix])
-            messages.success(self.request, _('Threads prefix has been changed to "%(name)s".') % {'name': _(self.prefixes[prefix].name)}, 'threads')
-        else:
-            self._thread_action_remove_prefix()
-            messages.success(self.request, _('Thread prefix has been removed.'), 'threads')
-
-    def _thread_action_set_prefix(self, prefix):
-        self.thread.prefix_id = prefix.pk
-        thread.set_checkpoint(self.request, 'changed_prefix', self.request.user, self.forum, extra=prefix.name)
-        self.thread.save(force_update=True)
-
-    def _thread_action_remove_prefix(self):
-        self.thread.prefix_id = None
-        thread.set_checkpoint(self.request, 'removed_prefix', self.request.user, self.forum)
-        self.thread.save(force_update=True)

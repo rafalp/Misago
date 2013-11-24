@@ -2,7 +2,7 @@ from datetime import timedelta
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from misago.models import Forum, Thread, Post
-from misago.monitor import monitor, UpdatingMonitor
+from misago.monitor import Monitor
 
 class Command(BaseCommand):
     """
@@ -11,19 +11,19 @@ class Command(BaseCommand):
     help = 'Updates Popular Threads ranking'
     def handle(self, *args, **options):
         sync_forums = []
-        for forum in Forum.objects.iterator():
+        for forum in Forum.objects.all():
             archive = forum.pruned_archive
             deleted = 0
             if forum.prune_start:
-                for thread in forum.thread_set.filter(weight=0).filter(start__lte=timezone.now() - timedelta(days=forum.prune_start)).iterator():
+                for thread in forum.thread_set.filter(weight=0).filter(start__lte=timezone.now() - timedelta(days=forum.prune_start)):
                     if archive:
                         thread.move_to(archive)
                         thread.save(force_update=True)
                     else:
-                        thread.delete()
+                        thread.delete()                        
                     deleted += 1
             if forum.prune_last:
-                for thread in forum.thread_set.filter(weight=0).filter(last__lte=timezone.now() - timedelta(days=forum.prune_last)).iterator():
+                for thread in forum.thread_set.filter(weight=0).filter(last__lte=timezone.now() - timedelta(days=forum.prune_last)):
                     if archive:
                         thread.move_to(archive)
                         thread.save(force_update=True)
@@ -38,8 +38,7 @@ class Command(BaseCommand):
         for forum in sync_forums:
             forum.sync()
             forum.save(force_update=True)
-
-        with UpdatingMonitor() as cm:
-            monitor['threads'] = Thread.objects.count()
-            monitor['posts'] = Post.objects.count()
+        monitor = Monitor()
+        monitor['threads'] = Thread.objects.count()
+        monitor['posts'] = Post.objects.count()
         self.stdout.write('Forums were pruned.\n')

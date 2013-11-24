@@ -1,13 +1,12 @@
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import redirect
 from django.template import RequestContext
-from django.utils.translation import ugettext as _
 from misago.apps.errors import error403, error404
-from misago.conf import settings
-from misago import messages
+from misago.forms import FormFields
+from misago.messages import Message
 from misago.models import Rank, User
-from misago.shortcuts import render_to_response
 from misago.utils.strings import slugify
 from misago.utils.pagination import make_pagination
 from misago.apps.profiles.forms import QuickFindUserForm
@@ -71,17 +70,17 @@ def list(request, slug=None, page=0):
                 if settings.PROFILE_EXTENSIONS_PRELOAD:
                     users = users.select_related(*settings.PROFILE_EXTENSIONS_PRELOAD)
                 users = users.filter(username_slug__startswith=username).order_by('username_slug')[:10]
-        elif 'username' in search_form.errors:
-            message = messages.Message(_("To search users you have to enter username in search field."), messages.ERROR)
+        elif search_form.non_field_errors()[0] == 'form_contains_errors':
+            message = Message(_("To search users you have to enter username in search field."), 'error')
         else:
-            message = messages.Message(search_form.non_field_errors()[0], messages.ERROR)
+            message = Message(search_form.non_field_errors()[0], 'error')
     else:
         search_form = QuickFindUserForm(request=request)
         if active_rank:
             users = User.objects.filter(rank=active_rank)
             items_total = users.count()
             try:
-                pagination = make_pagination(page, items_total, settings.profiles_per_list)
+                pagination = make_pagination(page, items_total, request.settings['profiles_per_list'])
             except Http404:
                 if not default_rank and active_rank:
                     return redirect(reverse('users', kwargs={'slug': active_rank.slug}))
@@ -90,16 +89,16 @@ def list(request, slug=None, page=0):
                 users = users.select_related(*settings.PROFILE_EXTENSIONS_PRELOAD)
             users = users.order_by('username_slug')[pagination['start']:pagination['stop']]
 
-    return render_to_response('profiles/list.html',
-                              {
-                              'message': message,
-                              'search_form': search_form,
-                              'in_search': in_search,
-                              'active_rank': active_rank,
-                              'default_rank': default_rank,
-                              'items_total': items_total,
-                              'ranks': ranks,
-                              'users': users,
-                              'pagination': pagination,
-                              },
-                              context_instance=RequestContext(request));
+    return request.theme.render_to_response('profiles/list.html',
+                                        {
+                                         'message': message,
+                                         'search_form': FormFields(search_form).fields,
+                                         'in_search': in_search,
+                                         'active_rank': active_rank,
+                                         'default_rank': default_rank,
+                                         'items_total': items_total,
+                                         'ranks': ranks,
+                                         'users': users,
+                                         'pagination': pagination,
+                                        },
+                                        context_instance=RequestContext(request));

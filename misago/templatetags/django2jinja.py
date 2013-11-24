@@ -1,17 +1,18 @@
 import math
 import urllib
-from django_jinja.library import Library
+from coffin.template import Library
+from django.conf import settings
 from misago.utils.strings import slugify
 
 register = Library()
 
 
-@register.global_function(name='widthratio')
+@register.object(name='widthratio')
 def widthratio(min=0, max=100, range=100):
     return int(math.ceil(float(float(min) / float(max) * int(range))))
 
 
-@register.global_function(name='query')
+@register.object(name='query')
 def query_string(**kwargs):
     query = urllib.urlencode(kwargs)
     return '?%s' % (query if kwargs else '')

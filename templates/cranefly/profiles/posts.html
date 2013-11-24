@@ -1,34 +1,29 @@
 {% extends "cranefly/profiles/profile.html" %}
+{% import "_forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{{ macros.page_title(_('Posts'), profile.username) }}{% endblock %}
 
 {% block tab %}
-<div class="stat-header">
-  <div class="help-text">
-    {% trans user=profile.username %}Graph presents {{ user }}'s posting activity from last 100 days.{% endtrans %}
-  </div>
-  <div id="user-graph"></div>
-  <h2>{% if items_total -%}
-      {%- trans count=items_total, total=items_total|intcomma, username=profile.username -%}
-      {{ username }} has one post
-      {%- pluralize -%}
-      {{ username }} has {{ total }} posts
-      {%- endtrans -%}
-      {%- else -%}
-      {% trans username=profile.username %}{{ username }} has no posts{% endtrans %}
-      {%- endif %}</h2>
-</div>
+<h2>{% if items_total -%}
+    {%- trans count=items_total, total=items_total|intcomma, username=profile.username -%}
+    {{ username }} has one post
+    {%- pluralize -%}
+    {{ username }} has {{ total }} posts
+    {%- endtrans -%}
+    {%- else -%}
+    {% trans username=profile.username %}{{ username }} has no posts{% endtrans %}
+    {%- endif %}</h2>
 
 {% if items_total %}
 <div class="content-list user-posts">
   {% for item in items %}
   <div class="media">
-    <a href="{{ url('user', user=profile.pk, username=profile.username_slug) }}" class="pull-left">
+    <a href="{% url 'user' user=profile.pk, username=profile.username_slug %}" class="pull-left">
       <img class="media-object" src="{{ profile.get_avatar(52) }}">
     </a>
     <div class="media-body">
-      <a href="{{ url('thread_find', thread=item.thread.pk, slug=item.thread.slug, post=item.pk) }}" class="post-preview">{{ item.post_preparsed|markdown_short(300) }}</a>
+      <a href="{% url 'thread_find' thread=item.thread.pk, slug=item.thread.slug, post=item.pk %}" class="post-preview">{{ item.post_preparsed|markdown_short(300) }}</a>
       <div class="media-footer">{% if item.thread.start_post_id == item.pk -%}
       {% trans thread=thread(item), forum=forum(item.forum), date=item.date|reltimesince|low %}Thread {{ thread }} posted in {{ forum }} {{ date }}{% endtrans %}
       {%- else -%}
@@ -48,22 +43,18 @@
 <div class="pagination">
   <ul>
     <li class="count">{{ macros.pager_label(pagination) }}</li>
-    {%- if pagination['prev'] > 1 %}<li><a href="{{ url('user_posts', user=profile.id, username=profile.username_slug) }}" class="tooltip-top" title="{% trans %}Lastest Posts{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}Latest{% endtrans %}</a></li>{% endif -%}
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ url('user_posts', user=profile.id, username=profile.username_slug, page=pagination['prev']) }}{% else %}{{ url('user_posts', user=profile.id, username=profile.username_slug) }}{% endif %}" class="tooltip-top" title="{% trans %}Newer Posts{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{{ url('user_posts', user=profile.id, username=profile.username_slug, page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Older Posts{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 1 %}<li><a href="{% url 'user_posts' user=profile.id, username=profile.username_slug %}" class="tooltip-top" title="{% trans %}Lastest Posts{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}Latest{% endtrans %}</a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'user_posts' user=profile.id, username=profile.username_slug, page=pagination['prev'] %}{% else %}{% url 'user_posts' user=profile.id, username=profile.username_slug %}{% endif %}" class="tooltip-top" title="{% trans %}Newer Posts{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{% url 'user_posts' user=profile.id, username=profile.username_slug, page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Older Posts{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
   </ul>
 </div>
 {% endif %}
 {%- endmacro %}
 
 {% macro thread(item) -%}
-<a href="{{ url('thread_find', thread=item.thread.pk, slug=item.thread.slug, post=item.pk) }}">{{ item.thread.name }}</a>
+<a href="{% url 'thread_find' thread=item.thread.pk, slug=item.thread.slug, post=item.pk %}">{{ item.thread.name }}</a>
 {%- endmacro %}
 
 {% macro forum(forum) -%}
-<a href="{{ url('forum', forum=forum.pk, slug=forum.slug) }}">{{ forum.name }}</a>
+<a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}">{{ forum.name }}</a>
 {%- endmacro %}
-
-{% block javascripts %}
-{{ draw_graph() }}
-{% endblock %}

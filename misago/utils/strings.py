@@ -10,7 +10,7 @@ def slugify(string):
     string = unicode(string)
     if use_unidecode:
         string = unidecode(string)
-    return django_slugify(string.replace('_', ' '))
+    return django_slugify(string)
 
 
 def random_string(length):

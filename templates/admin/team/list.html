@@ -1,4 +1,7 @@
 {% extends "admin/admin/list.html" %}
+{% load i18n %}
+{% load l10n %}
+{% load url from future %}
 
 {% block action_body scoped %}
 <table class="table table-striped table-users">
@@ -11,7 +14,7 @@
     <tr>
       {% for user in items %} 
       <td class="colspan6">
-          <a href="{{ url('user', username=user.username_slug, user=user.pk) }}"><img src="{{ user.get_avatar(42) }}" class="avatar" alt=""> <strong>{{ user.username }}</strong></a>
+          <a href="{% url 'user' username=user.username_slug, user=user.pk %}"><img src="{{ user.get_avatar(42) }}" class="avatar" alt=""> <strong>{{ user.username }}</strong></a>
       </td>{% if loop.last and loop.index is odd %}
       <td class="span6">
       	&nbsp;

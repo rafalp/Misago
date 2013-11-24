@@ -1,10 +1,7 @@
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
-from misago import messages
-from misago.forms import Form
+from misago.forms import Form, FormLayout
 from misago.messages import Message
-from misago.monitor import monitor, UpdatingMonitor
-from misago.shortcuts import render_to_response
 from misago.apps.threadtype.list.forms import MoveThreadsForm
 
 class ThreadModeration(object):
@@ -25,14 +22,13 @@ class ThreadModeration(object):
         self.forum.sync()
         self.forum.save(force_update=True)
         # Update monitor
-        with UpdatingMonitor() as cm:
-            monitor.increase('threads')
-            monitor.increase('posts', self.thread.replies + 1)
+        self.request.monitor.increase('threads')
+        self.request.monitor.increase('posts', self.thread.replies + 1)
         # After
         self.after_thread_action_accept()
 
     def after_thread_action_accept(self):
-        messages.success(self.request, _('Thread has been marked as reviewed and made visible to other members.'), 'threads')
+        self.request.messages.set_flash(Message(_('Thread has been marked as reviewed and made visible to other members.')), 'success', 'threads')
 
     def thread_action_annouce(self):
         self.thread.weight = 2
@@ -40,15 +36,15 @@ class ThreadModeration(object):
         self.after_thread_action_annouce()
 
     def after_thread_action_annouce(self):
-        messages.success(self.request, _('Thread has been turned into announcement.'), 'threads')
+        self.request.messages.set_flash(Message(_('Thread has been turned into announcement.')), 'success', 'threads')
 
     def thread_action_sticky(self):
         self.thread.weight = 1
         self.thread.save(force_update=True)
         self.after_thread_action_sticky()
-
+    
     def after_thread_action_sticky(self):
-        messages.success(self.request, _('Thread has been turned into sticky.'), 'threads')
+        self.request.messages.set_flash(Message(_('Thread has been turned into sticky.')), 'success', 'threads')
 
     def thread_action_normal(self):
         self.thread.weight = 0
@@ -56,7 +52,7 @@ class ThreadModeration(object):
         self.after_thread_action_normal()
 
     def after_thread_action_normal(self):
-        messages.success(self.request, _('Thread weight has been changed to normal.'), 'threads')
+        self.request.messages.set_flash(Message(_('Thread weight has been changed to normal.')), 'success', 'threads')
 
     def thread_action_move(self):
         message = None
@@ -71,21 +67,21 @@ class ThreadModeration(object):
                 self.forum.save(force_update=True)
                 new_forum.sync()
                 new_forum.save(force_update=True)
-                messages.success(self.request, _('Thread has been moved to "%(forum)s".') % {'forum': new_forum.name}, 'threads')
+                self.request.messages.set_flash(Message(_('Thread has been moved to "%(forum)s".') % {'forum': new_forum.name}), 'success', 'threads')
                 return None
-            message = Message(form.non_field_errors()[0], messages.ERROR)
+            message = Message(form.non_field_errors()[0], 'error')
         else:
             form = MoveThreadsForm(request=self.request, forum=self.forum)
-        return render_to_response('%ss/move_thread.html' % self.type_prefix,
-                                  {
-                                  'type_prefix': self.type_prefix,
-                                  'message': message,
-                                  'forum': self.forum,
-                                  'parents': self.parents,
-                                  'thread': self.thread,
-                                  'form': form,
-                                  },
-                                  context_instance=RequestContext(self.request));
+        return self.request.theme.render_to_response('%ss/move_thread.html' % self.type_prefix,
+                                                     {
+                                                      'type_prefix': self.type_prefix,
+                                                      'message': message,
+                                                      'forum': self.forum,
+                                                      'parents': self.parents,
+                                                      'thread': self.thread,
+                                                      'form': FormLayout(form),
+                                                      },
+                                                     context_instance=RequestContext(self.request));
 
     def thread_action_open(self):
         self.thread.closed = False
@@ -94,7 +90,7 @@ class ThreadModeration(object):
         self.after_thread_action_open()
 
     def after_thread_action_open(self):
-        messages.success(self.request, _('Thread has been opened.'), 'threads')
+        self.request.messages.set_flash(Message(_('Thread has been opened.')), 'success', 'threads')
 
     def thread_action_close(self):
         self.thread.closed = True
@@ -103,7 +99,7 @@ class ThreadModeration(object):
         self.after_thread_action_close()
 
     def after_thread_action_close(self):
-        messages.success(self.request, _('Thread has been closed.'), 'threads')
+        self.request.messages.set_flash(Message(_('Thread has been closed.')), 'success', 'threads')
 
     def thread_action_undelete(self):
         # Update first post in thread
@@ -118,13 +114,12 @@ class ThreadModeration(object):
         self.forum.sync()
         self.forum.save(force_update=True)
         # Update monitor
-        with UpdatingMonitor() as cm:
-            monitor.increase('threads')
-            monitor.increase('posts', self.thread.replies + 1)
+        self.request.monitor.increase('threads')
+        self.request.monitor.increase('posts', self.thread.replies + 1)
         self.after_thread_action_undelete()
 
     def after_thread_action_undelete(self):
-        messages.success(self.request, _('Thread has been restored.'), 'threads')
+        self.request.messages.set_flash(Message(_('Thread has been restored.')), 'success', 'threads')
 
     def thread_action_soft(self):
         # Update first post in thread
@@ -139,13 +134,12 @@ class ThreadModeration(object):
         self.forum.sync()
         self.forum.save(force_update=True)
         # Update monitor
-        with UpdatingMonitor() as cm:
-            monitor.decrease('threads')
-            monitor.decrease('posts', self.thread.replies + 1)
+        self.request.monitor.decrease('threads')
+        self.request.monitor.decrease('posts', self.thread.replies + 1)
         self.after_thread_action_soft()
 
     def after_thread_action_soft(self):
-        messages.success(self.request, _('Thread has been hidden.'), 'threads')
+        self.request.messages.set_flash(Message(_('Thread has been hidden.')), 'success', 'threads')
 
     def thread_action_hard(self):
         # Delete thread
@@ -154,11 +148,10 @@ class ThreadModeration(object):
         self.forum.sync()
         self.forum.save(force_update=True)
         # Update monitor
-        with UpdatingMonitor() as cm:
-            monitor.decrease('threads')
-            monitor.decrease('posts', self.thread.replies + 1)
+        self.request.monitor.decrease('threads')
+        self.request.monitor.decrease('posts', self.thread.replies + 1)
         self.after_thread_action_hard()
         return self.threads_list_redirect()
 
     def after_thread_action_hard(self):
-        messages.success(self.request, _('Thread "%(thread)s" has been deleted.') % {'thread': self.thread.name}, 'threads')
+        self.request.messages.set_flash(Message(_('Thread "%(thread)s" has been deleted.') % {'thread': self.thread.name}), 'success', 'threads')

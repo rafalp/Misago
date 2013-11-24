@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.db.models import F
-from misago.conf import settings
+from misago.dbsettings import DBSettings
 from misago.models import Thread
 
 class Command(BaseCommand):
@@ -9,8 +9,9 @@ class Command(BaseCommand):
     """
     help = 'Updates Popular Threads ranking'
     def handle(self, *args, **options):
-        if settings.thread_ranking_inflation > 0:
-            inflation = float(100 - settings.thread_ranking_inflation) / 100
+        settings = DBSettings()
+        if settings['thread_ranking_inflation'] > 0:
+            inflation = float(100 - settings['thread_ranking_inflation']) / 100
             Thread.objects.all().update(score=F('score') * inflation)
             self.stdout.write('Thread ranking has been updated.\n')
         else:

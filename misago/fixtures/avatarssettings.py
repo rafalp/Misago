@@ -8,7 +8,7 @@ settings_fixture = (
          'description': _("Those settings allow you to control your users avatars."),
          'settings': (
             ('avatars_types', {
-                'value':        ('gravatar', 'gallery'),
+                'value':        ['gravatar', 'gallery'],
                 'type':         "array",
                 'input':        "mlist",
                 'extra':        {'choices': [('gravatar', _("Gravatar")), ('upload', _("Uploaded Avatar")), ('gallery', _("Avatars Gallery"))]},

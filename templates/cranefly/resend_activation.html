@@ -1,5 +1,5 @@
 {% extends "cranefly/layout.html" %}
-{% import "forms.html" as form_theme with context %}
+{% import "_forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{{ macros.page_title(title=_('Request new Activation E-mail')) }}{% endblock %}
@@ -19,11 +19,9 @@
       </div>
       {% endif %}
 
-      <form action="{{ url('send_activation') }}" method="post">
-        {{ form_theme.hidden_fields(form) }}
+      <form action="{% url 'send_activation' %}" method="post">
         <div class="form-fields">
-          {{ form_theme.row(form.email, attrs={'class': 'span6', 'placeholder': _("Enter your e-mail address.")}) }}
-          {{ form_theme.captcha(form, attrs={'class': 'span6'}) }}
+          {{ form_theme.form_widget(form, width=6) }}
         </div>
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">{% trans %}Request new E-mail{% endtrans %}</button>

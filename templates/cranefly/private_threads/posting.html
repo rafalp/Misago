@@ -1,5 +1,5 @@
 {% extends "cranefly/layout.html" %}
-{% import "forms.html" as form_theme with context %}
+{% import "_forms.html" as form_theme with context %}
 {% import "cranefly/editor.html" as editor with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
@@ -10,8 +10,8 @@
 {%- endif %}{% endblock %}
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
-<li><a href="{{ url('private_threads') }}">{% trans %}Private Threads{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
-{% if thread %}<li><a href="{{ url('private_thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>{% endif %}
+<li><a href="{% url 'private_threads' %}">{% trans %}Private Threads{% endtrans %}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+{% if thread %}<li><a href="{% url 'private_thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>{% endif %}
 <li class="active">{{ get_title() }}
 {%- endblock %}
 
@@ -22,7 +22,7 @@
     <ul class="breadcrumb">
       {{ self.breadcrumb() }}</li>
     </ul>
-    <h1>{{ get_title() }} <small>{% if thread %}{{ thread.name|short_string(42) }}{% else %}{% trans %}Private Threads{% endtrans %}{% endif %}</small></h1>
+    <h1>{{ get_title() }} <small>{% if thread %}{{ thread.name }}{% else %}{% trans %}Private Threads{% endtrans %}{% endif %}</small></h1>
     {% if thread %}
     <ul class="unstyled header-stats">
       {{ get_info() }}
@@ -56,26 +56,26 @@
           </div>
           {% endif %}
 
-          <form action="{{ get_action() }}" method="post"{% if acl.threads.can_upload_attachments(forum) %} enctype="multipart/form-data"{% endif %}>
+          <form action="{{ get_action() }}" method="post">
             <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
             {% if 'thread_name' in form.fields %}
-            {{ form_theme.row(form.thread_name, attrs={'class': 'span8'}) }}
+            {{ form_theme.row_widget(form.fields.thread_name, width=8) }}
             {% endif %}
             {% if action == 'new_thread' and 'invite_users' in form.fields %}
-            {{ form_theme.row(form.invite_users, attrs={'class': 'span8', 'placeholder': _("User1, User2, User3...")}) }}
+            {{ form_theme.row_widget(form.fields.invite_users, width=8) }}
             {% endif %}
             {% if 'thread_name' in form.fields or (action == 'new_thread' and 'invite_users' in form.fields) %}
             <hr>
             <h4>{% trans %}Message Body{% endtrans %}</h4>
             {% endif %}
-            {{ editor.editor(form.post, get_button(), rows=8, zen=True, extra=get_extra()) }}
+            {{ editor.editor(form.fields.post, get_button(), rows=8, extra=get_extra()) }}
             {% if 'edit_reason' in form.fields or (action == 'new_reply' and 'invite_users' in form.fields) %}
             <hr>
             {% if action == 'new_reply' and 'invite_users' in form.fields %}
-            {{ form_theme.row(form.invite_users, attrs={'class': 'span8', 'placeholder': _("user1, user2, user3...")}) }}
+            {{ form_theme.row_widget(form.fields.invite_users, width=8) }}
             {% endif %}
             {% if 'edit_reason' in form.fields %}
-            {{ form_theme.row(form.edit_reason, attrs={'class': 'span8'}) }}
+            {{ form_theme.row_widget(form.fields.edit_reason, width=8) }}
             {% endif %}
 
             <div class="form-actions">
@@ -96,9 +96,7 @@
 <link href="{{ STATIC_URL }}cranefly/highlight/styles/monokai.css" rel="stylesheet">
 {% endblock %}
 
-{% block javascripts %}
-  {{ editor.zen() }}
-  {{ super() }}
+{% block javascripts %}{{ super() }}
   <script src="{{ STATIC_URL }}cranefly/highlight/highlight.pack.js"></script>
   <script type="text/javascript">
     hljs.tabReplace = '    ';
@@ -111,17 +109,17 @@
 
 {% macro get_action() -%}
 {% if action == 'new_thread' -%}
-{{ url('private_thread_start') }}
+{% url 'private_thread_start' %}
 {%- elif action == 'edit_thread' -%}
-{{ url('private_thread_edit', thread=thread.pk, slug=thread.slug) }}
+{% url 'private_thread_edit' thread=thread.pk, slug=thread.slug %}
 {%- elif action in 'new_reply' -%}
 {%- if quote -%}
-{{ url('private_thread_reply', thread=thread.pk, slug=thread.slug, quote=quote.pk) }}
+{% url 'private_thread_reply' thread=thread.pk, slug=thread.slug, quote=quote.pk %}
 {%- else -%}
-{{ url('private_thread_reply', thread=thread.pk, slug=thread.slug) }}
+{% url 'private_thread_reply' thread=thread.pk, slug=thread.slug %}
 {%- endif -%}
 {%- elif action == 'edit_reply' -%}
-{{ url('private_post_edit', thread=thread.pk, slug=thread.slug, post=post.pk) }}
+{% url 'private_post_edit' thread=thread.pk, slug=thread.slug, post=post.pk %}
 {%- endif %}
 {%- endmacro %}
 
@@ -142,8 +140,8 @@
 {% macro get_info() -%}
 {% if action == 'edit_reply' -%}
     {% if post.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
-    <li><i class="icon-time"></i> <a href="{{ url('private_thread_find', thread=thread.pk, slug=thread.slug, post=post.pk) }}">{{ post.date|reltimesince }}</a></li>
-    <li><i class="icon-user"></i> {% if post.user %}<a href="{{ url('user', user=post.user.pk, username=post.user.username_slug) }}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
+    <li><i class="icon-time"></i> <a href="{% url 'private_thread_find' thread=thread.pk, slug=thread.slug, post=post.pk %}">{{ post.date|reltimesince }}</a></li>
+    <li><i class="icon-user"></i> {% if post.user %}<a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
     <li><i class="icon-pencil"></i> {% if post.edits > 0 -%}
       {% trans edits=post.edits %}One edit{% pluralize %}{{ edits }} edits{% endtrans %}
     {%- else -%}
@@ -152,11 +150,11 @@
 {%- else -%}
     {% if thread.moderated %}<li><i class="icon-eye-close"></i> {% trans %}Not Reviewed{% endtrans %}</li>{% endif %}
     {% if action == 'edit_thread' %}
-    <li><i class="icon-time"></i> <a href="{{ url('private_thread_find', thread=thread.pk, slug=thread.slug, post=thread.start_post_id) }}">{{ thread.start|reltimesince }}</a></li>
+    <li><i class="icon-time"></i> <a href="{% url 'private_thread_find' thread=thread.pk, slug=thread.slug, post=thread.start_post_id %}">{{ thread.start|reltimesince }}</a></li>
     {% else %}
-    <li><i class="icon-time"></i> <a href="{{ url('private_thread_new', thread=thread.pk, slug=thread.slug) }}">{{ thread.last|reltimesince }}</a></li>
+    <li><i class="icon-time"></i> <a href="{% url 'private_thread_new' thread=thread.pk, slug=thread.slug %}">{{ thread.last|reltimesince }}</a></li>
     {% endif %}
-    <li><i class="icon-user"></i> {% if thread.start_poster_id %}<a href="{{ url('user', user=thread.start_poster_id, username=thread.start_poster_slug) }}">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}</li>
+    <li><i class="icon-user"></i> {% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}</li>
     <li><i class="icon-comment"></i> {% if thread.replies > 0 -%}
       {% trans count=thread.replies, replies=thread.replies|intcomma %}One reply{% pluralize %}{{ replies }} replies{% endtrans %}
     {%- else -%}
@@ -169,7 +167,7 @@
 
 {% macro get_button() -%}
 {% if action == 'new_thread' -%}
-{% trans %}Start Thread{% endtrans %}
+{% trans %}Post Thread{% endtrans %}
 {%- elif action == 'new_reply' -%}
 {% trans %}Post Reply{% endtrans %}
 {%- else -%}

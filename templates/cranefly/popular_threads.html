@@ -14,122 +14,91 @@
 <div class="container container-primary">
   {% if threads %}
   <div class="forum-threads-list">
-    <ul>
-      {% for thread in threads %}
-      <li{% if not thread.is_read %} class="thread-new"{% endif %}>
-        <div class="thread-icon">
-          {% if thread.weight == 2 %}
-          {% if thread.is_read %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-last tooltip-top" title="{% trans %}Announcement, click to see last post{% endtrans %}">
-          {% else %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-new tooltip-top" title="{% trans %}Announcement, click to see first unread post{% endtrans %}">
-          {% endif %}
-            <i class="icon-star{% if thread.is_read %}-empty{% endif %}"></i>
-          </a>
-          {% elif thread.weight == 1 %}
-          {% if thread.is_read %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-last tooltip-top" title="{% trans %}Pinned, click to see last post{% endtrans %}">
-          {% else %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-new tooltip-top" title="{% trans %}Pinned, click to see first unread post{% endtrans %}">
-          {% endif %}
-            <i class="icon-bookmark{% if thread.is_read %}-empty{% endif %}"></i>
-          </a>
-          {% else %}
-          {% if thread.is_read %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}">
-          {% else %}
-          <a href="{{ url('thread_new', thread=thread.pk, slug=thread.slug) }}" class="thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}">
-          {% endif %}
-            <i class="icon-circle{% if thread.is_read %}-blank{% endif %}"></i>
-          </a>
-          {% endif %}
+    <div class="header">
+      <div class="row-fluid">
+        <div class="span7">{% trans %}Thread{% endtrans %}</div>
+        <div class="span5 thread-activity">
+          <div class="thread-replies">{% trans %}Activity{% endtrans %}</div>
         </div>
-        <div class="thread-body">
-          <ul class="thread-activity">
-            {% if user.is_authenticated() %}
-            {% if thread.replies_reported and acl.threads.can_mod_posts(thread.forum) %}
-            <li class="thread-replies-reported tooltip-top" title="{% trans %}Reported replies{% endtrans %}">
-              {{ thread.replies_reported|intcomma }}
-            </li>
-            {% endif %}
-            {% if thread.replies_moderated and acl.threads.can_approve(thread.forum) %}
-            <li class="thread-replies-moderated tooltip-top" title="{% trans %}Unreviewed replies{% endtrans %}">
-              {{ thread.replies_moderated|intcomma }}
-            </li>
-            {% endif %}
-            {% endif %}
-            {% if thread.replies %}
-            <li class="thread-replies tooltip-top" title="{% trans %}Replies{% endtrans %}">
-              {{ thread.replies|intcomma }}
-            </li>
-            {% endif %}
-            <li class="thread-last-reply tooltip-top" title="{% trans last=thread.last|reldate %}Last post {{ last }}{% endtrans %}">
-              <a href="{{ url('thread_last', thread=thread.pk, slug=thread.slug) }}">{{ thread.last|relcompact }}</a>
-            </li>
-            {% if thread.start_poster_name != thread.last_poster_name %}
-            <li class="thread-author tooltip-top" title="{% trans username=thread.start_poster_name %}Thread by {{ username }}{% endtrans %}">
-              {% if thread.start_poster_id %}
-              <a href="{{ url('user', user=thread.start_poster_id, username=thread.start_poster_name) }}">{% if settings.avatars_on_threads_list %}<img src="{{ thread.start_poster.get_avatar(18) }}" alt="{{ thread.start_poster_name }}" class="user-avatar">{% else %}{{ thread.start_poster_name }}{% endif %}</a>
-              {% else %}
-              {% if settings.avatars_on_threads_list %}<img src="{{ macros.avatar_guest(24) }}" alt="{{ thread.start_poster_name }}" class="user-avatar">{% else %}{{ thread.start_poster_name }}{% endif %}
-              {% endif %}
-            </li>
-            {% endif %}
-            <li class="thread-poster tooltip-top" title="{% if thread.start_poster_name != thread.last_poster_name %}{% trans username=thread.last_poster_name %}Last reply by {{ username }}{% endtrans %}{% else %}{% trans username=thread.last_poster_name %}Thread and last post by {{ username }}{% endtrans %}{% endif %}">
-              {% if thread.last_poster_id %}
-              <a href="{{ url('user', user=thread.last_poster_id, username=thread.last_poster_name) }}">{% if settings.avatars_on_threads_list %}<img src="{{ thread.last_poster.get_avatar(18) }}" alt="{{ thread.last_poster_name }}" class="user-avatar">{% else %}{{ thread.last_poster_name }}{% endif %}</a>
-              {% else %}
-              {% if settings.avatars_on_threads_list %}<img src="{{ macros.avatar_guest(24) }}" alt="{{ thread.last_poster_name }}" class="user-avatar">{% else %}{{ thread.last_poster_name }}{% endif %}
-              {% endif %}
-            </li>
-            {% if thread.moderated %}
-            <li class="thread-flag thread-moderated tooltip-top" title="{% trans %}This thread awaits review{% endtrans %}">
-              <i class="icon-remove-circle"></i>
-            </li>
-            {% endif %}
-            {% if thread.closed %}
-            <li class="thread-flag thread-closed tooltip-top" title="{% trans %}This thread is closed{% endtrans %}">
-              <i class="icon-remove-circle"></i>
-            </li>
-            {% endif %}
-            {% if thread.deleted %}
-            <li class="thread-flag thread-deleted tooltip-top" title="{% trans %}This thread is deleted{% endtrans %}">
-              <i class="icon-trash"></i>
-            </li>
-            {% endif %}
-            <li class="thread-forum tooltip-top" title="{% trans %}Thread Forum{% endtrans %}">
-              <a href="{{ url('forum', forum=thread.forum.pk, slug=thread.forum.slug) }}">{{ thread.forum.name }}</a>
-            </li>
-          </ul>
-          <div class="thread-title">
-            {% if thread.prefix_id %}{{ draw_prefix(thread.forum, prefixes[thread.prefix_id]) }}{% endif %}
-            <a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}" class="thread-link">{{ thread.name }}</a>
+      </div>
+    </div>
+    {% for thread in threads %}
+    <div class="thread-row{% if not thread.is_read %} thread-new{% endif %}{% if loop.last %} thread-last{% endif %}">
+      <div class="row-fluid">
+        <div class="span7">
+          {% if thread.is_read %}
+          <a href="{% url 'thread_new' thread=thread.pk, slug=thread.slug %}" class="thread-icon thread-icon-last tooltip-top" title="{% trans %}Click to see last post{% endtrans %}"><i class="icon-asterisk"></i></a>
+          {% else %}
+          <a href="{% url 'thread_new' thread=thread.pk, slug=thread.slug %}" class="thread-icon thread-icon-new tooltip-top" title="{% trans %}Click to see first unread post{% endtrans %}"><i class="icon-fire"></i></a>
+          {% endif %}
+
+          {{ macros.thread_flags(thread) }}
+
+          <a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}" class="thread-name">{{ thread.name }}</a>
+          
+          <div class="thread-details">
+            {% trans user=thread_starter(thread), forum=thread_forum(thread), start=thread.start|reltimesince|low %}by {{ user }} in {{ forum }} {{ start }}{% endtrans %}
           </div>
+
         </div>
-      </li>
-      {% endfor %}
-    </ul>
+        <div class="span5 thread-activity">
+
+          {% if settings.avatars_on_threads_list %}
+          <div class="thread-last-avatar">
+            {% if thread.last_poster_id %}
+            <a href="{% url 'user' user=thread.last_poster.pk, username=thread.last_poster.username_slug %}"><img src="{{ thread.last_poster.get_avatar(40) }}" alt=""></a>
+            {% else %}
+            <img src="{{ macros.avatar_guest(40) }}" alt="" class="user-avatar">
+            {% endif %}
+          </div>
+          {% endif %}
+
+          <div class="thread-replies">
+            <strong class="lead">{{ thread_reply(thread) }}, {{ thread.last|reldate|low }}</strong><br>
+            {{ replies(thread.replies) }}, <span{% if (thread.upvotes-thread.downvotes) > 0 %} class="text-success"{% elif (thread.upvotes-thread.downvotes) < 0 %} class="text-error"{% endif %}><strong>{% if (thread.upvotes-thread.downvotes) > 0 %}+{% elif (thread.upvotes-thread.downvotes) < 0 %}-{% endif %}</strong>{% trans rating=(thread.upvotes-thread.downvotes)|abs|intcomma %}{{ rating }} thread rating{% endtrans %}</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    {% endfor %}
   </div>
   {{ pager() }}
   {% else %}
-  <p class="lead">{% trans %}Looks like there are no threads... yet!{% endtrans %}</p>
+  <p class="lead">{% trans %}Looks like there are no popular threads... yet!{% endtrans %}</p>
   {% endif %}
 </div>
 {% endblock %}
 
+
+{% macro replies(thread_replies) -%}
+{% trans count=thread_replies, replies=thread_replies|intcomma -%}
+{{ replies }} reply
+{%- pluralize -%}
+{{ replies }} replies
+{%- endtrans %}
+{%- endmacro %}
+
+{% macro thread_starter(thread) -%}
+{% if thread.start_poster_id %}<a href="{% url 'user' user=thread.start_poster_id, username=thread.start_poster_slug %}" class="user-link">{{ thread.start_poster_name }}</a>{% else %}{{ thread.start_poster_name }}{% endif %}
+{%- endmacro %}
+
+{% macro thread_forum(thread) -%}
+<a href="{% url 'forum' forum=thread.forum_id, slug=thread.forum.slug %}" class="forum-link">{{ thread.forum.name }}</a>
+{%- endmacro %}
+
+{% macro thread_reply(thread) -%}
+{% if thread.last_poster_id %}<a href="{% url 'user' user=thread.last_poster_id, username=thread.last_poster_slug %}" class="user-link">{{ thread.last_poster_name }}</a>{% else %}{{ thread.last_poster_name }}{% endif %}
+{%- endmacro %}
 
 {% macro pager() -%}
 {% if items_total > 0 and pagination['total'] > 1 %}
 <div class="pagination">
   <ul>
     <li class="count">{{ macros.pager_label(pagination) }}</li>
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ url('popular_threads', page=pagination['prev']) }}{% else %}{{ url('popular_threads') }}{% endif %}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{{ url('popular_threads', page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{% url 'popular_threads' page=pagination['prev'] %}{% else %}{% url 'popular_threads' %}{% endif %}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{% url 'popular_threads' page=pagination['next'] %}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
   </ul>
 </div>
 {% endif %}
-{%- endmacro %}
-
-{% macro draw_prefix(forum, prefix) -%}
-<a href="{{ url('forum_prefixed', slug=forum.slug, forum=forum.id, prefix=prefix.slug) }}" class="label{% if prefix.style %} label-{{ prefix.style }}{% endif %} thread-prefix thread-prefix-active">{{ _(prefix.name) }}</a>
 {%- endmacro %}

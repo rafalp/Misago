@@ -5,7 +5,7 @@
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {{ macros.parents_list(parents) }}
-<li><a href="{{ url('thread', thread=thread.pk, slug=thread.slug) }}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{% url 'thread' thread=thread.pk, slug=thread.slug %}">{{ thread.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li class="active">{% trans post=post.pk %}Post #{{ post }} Votes{% endtrans %}
 {%- endblock %}
 
@@ -16,10 +16,10 @@
     <ul class="breadcrumb">
       {{ self.breadcrumb() }}</li>
     </ul>
-    <h1>{% trans post=post.pk %}Post #{{ post }} Votes{% endtrans %} <small>{{ thread.name|short_string(42) }}</small></h1>
+    <h1>{% trans post=post.pk %}Post #{{ post }} Votes{% endtrans %} <small>{{ thread.name }}</small></h1>
     <ul class="unstyled header-stats">
-      <li><i class="icon-time"></i> <a href="{{ url('thread_find', thread=thread.pk, slug=thread.slug, post=post.pk) }}">{{ post.date|reltimesince }}</a></li>
-      <li><i class="icon-user"></i> {% if post.user %}<a href="{{ url('user', user=post.user.pk, username=post.user.username_slug) }}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
+      <li><i class="icon-time"></i> <a href="{% url 'thread_find' thread=thread.pk, slug=thread.slug, post=post.pk %}">{{ post.date|reltimesince }}</a></li>
+      <li><i class="icon-user"></i> {% if post.user %}<a href="{% url 'user' user=post.user.pk, username=post.user.username_slug %}">{{ post.user.username }}</a>{% else %}{{ post.user_name }}{% endif %}</li>
       <li><i class="icon-thumbs-up"></i> {{ post.upvotes }}</li>
       <li><i class="icon-thumbs-down"></i> {{ post.downvotes }}</li>
     </ul>
@@ -29,12 +29,12 @@
 <div class="container container-primary">
   <div class="post-votes-list">
     <div class="post-likes">
-      {% if upvotes %}
-      <h2 class="text-success"><i class="icon-thumbs-up-alt"></i> {% trans count=upvotes|length, votes=upvotes|length|intcomma -%}
+      <h2>{% trans count=upvotes|length, votes=upvotes|length|intcomma -%}
         One like
         {%- pluralize -%}
         {{ votes }} likes
         {%- endtrans %}</h2>
+      {% if upvotes %}
       <table class="table table-striped">
         <tbody>
           {% for row in upvotes|batch(4, '') %}
@@ -42,7 +42,7 @@
             {% for vote in row %}
             <td class="span3">
               {% if vote %}
-              {{ vote_details(vote) }}
+              {{ vote_details(vote, 'thumbs-up') }}
               {% else %}
               &nbsp;
               {% endif %}
@@ -53,19 +53,19 @@
         </tbody>
       </table>
       {% else %}
-      <p class="lead"><i class="icon-meh"></i> {% trans %}Nobody liked this post.{% endtrans %}</p>
+      <p class="lead">{% trans %}Nobody liked this post.{% endtrans %}</p>
       {% endif %}
     </div>
 
     <hr>
 
     <div class="post-dislikes">
-      {% if downvotes %}
-      <h2 class="text-error"><i class="icon-thumbs-down-alt"></i> {% trans count=downvotes|length, votes=downvotes|length|intcomma -%}
+      <h2>{% trans count=downvotes|length, votes=downvotes|length|intcomma -%}
         One dislike
         {%- pluralize -%}
         {{ votes }} dislikes
         {%- endtrans %}</h2>
+      {% if downvotes %}
       <table class="table table-striped">
         <tbody>
           {% for row in downvotes|batch(4, '') %}
@@ -73,7 +73,7 @@
             {% for vote in row %}
             <td class="span3">
               {% if vote %}
-              {{ vote_details(vote) }}
+              {{ vote_details(vote, 'thumbs-down') }}
               {% else %}
               &nbsp;
               {% endif %}
@@ -84,7 +84,7 @@
         </tbody>
       </table>
       {% else %}
-      <p class="lead"><i class="icon-smile"></i> {% trans %}Nobody disliked this post.{% endtrans %}</p>
+      <p class="lead">{% trans %}Nobody disliked this post.{% endtrans %}</p>
       {% endif %}
     </div>
   </div>
@@ -103,7 +103,7 @@
         'title': '<strong>{{ vote.date|reldate }}</strong>',
         'content': '{% trans ip=vote.ip %}From {{ ip }}{% endtrans %}'
         {% else %}
-        'content': '<strong>{{ vote.data|reldate }}</strong>'
+        'content': '<strong>{{ vote.ip }}</strong>'
         {% endif %}
       });
       {% endfor %}
@@ -111,10 +111,6 @@
   </script>
 {% endblock %}
 
-{% macro vote_details(vote) %}
-{% if vote.user_id %}
-<a href="{{ url('user', user=vote.user_id, username=vote.user_slug) }}" class="vote-user vote-{{ vote.pk }}">{{ vote.user_name }}</a>
-{% else %}
-<span class="vote-user vote-{{ vote.pk }}">{{ vote.user_name }}</span>
-{% endif %}
+{% macro vote_details(vote, icon) %}
+{% if vote.user_id %}<a href="{% url 'user' user=vote.user_id, username=vote.user_slug %}" class="vote-user vote-{{ vote.pk }}"><span class="vote-icon"><i class="icon-{{ icon }}"></i></span> {{ vote.user_name }}</a>{% else %}<span class="vote-user vote-{{ vote.pk }}"><span class="vote-icon"><i class="icon-{{ icon }}"></i></span> {{ vote.user_name }}</span>{% endif %}
 {% endmacro %}

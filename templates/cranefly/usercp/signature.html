@@ -1,4 +1,5 @@
 {% extends "cranefly/usercp/layout.html" %}
+{% import "_forms.html" as form_theme with context %}
 {% import "cranefly/editor.html" as editor with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
@@ -25,14 +26,14 @@
   </div>
   {% endif %}
 
-  <form action="{{ url('usercp_signature') }}" method="post">
+  <form action="{% url 'usercp_signature' %}" method="post">
     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-    {{ editor.editor(form.signature, lang_save_signature(),
+    {{ editor.editor(form.fields.signature, _('Save Signature'),
       hide_links=(not acl.usercp.allow_signature_links()),
       hide_images=(not acl.usercp.allow_signature_images()),
       hide_hr=True) }}
   </form>
-
+  
 </div>
 {% endblock %}
 
@@ -40,6 +41,3 @@
 {{ super() }}
   {{ editor.js() }}
 {% endblock %}
-
-{# Language strings macros #}
-{% macro lang_save_signature() -%}{% trans %}Save Signature{% endtrans %}{%- endmacro %}

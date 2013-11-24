@@ -6,7 +6,6 @@ from misago.markdown import post_markdown
 class EditReplyBaseView(PostingBaseView):
     action = 'edit_reply'
     form_type = EditReplyForm
-    block_flood_requests = False
 
     def set_context(self):
         self.set_thread_context()

@@ -1,4 +1,5 @@
 {% extends "cranefly/profiles/profile.html" %}
+{% import "_forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{{ macros.page_title(lang_member_details(), profile.username) }}{% endblock %}
@@ -7,7 +8,7 @@
 <div class="user-details">
   <div class="row">
     <div class="span6">
-
+    	
       <table class="table table-striped">
         <thead>
           <tr>
@@ -49,7 +50,7 @@
           </tr>
         </tbody>
       </table>
-
+    	
       <table class="table table-striped">
         <thead>
           <tr>
@@ -85,10 +86,10 @@
           </tr>
         </tbody>
       </table>
-
+      
     </div>
     <div class="span6">
-
+    	
       <table class="table table-striped">
         <thead>
           <tr>
@@ -137,7 +138,7 @@
           </tr>
         </tbody>
       </table>
-
+    	
       <table class="table table-striped">
         <thead>
           <tr>
@@ -165,10 +166,10 @@
           </tr>
         </tbody>
       </table>
-
+      
     </div>
   </div>
-
+      
   {% if acl.users.can_see_users_trails() %}
   <hr>
   <div class="row">
@@ -201,10 +202,10 @@
           </tr>
         </tbody>
       </table>
-
+      
     </div>
     <div class="span6">
-
+        
       <table class="table table-striped">
         <thead>
           <tr>
@@ -232,7 +233,7 @@
           </tr>
         </tbody>
       </table>
-
+      
     </div>
   </div>
 </div>

@@ -1,31 +1,11 @@
 {% extends "admin/admin/list.html" %}
-{% import "forms.html" as form_theme with context %}
+{% load i18n %}
+{% load l10n %}
+{% load url from future %}
+{% import "_forms.html" as form_theme with context %}
 
 {% block table_row scoped %}
   <td class="lead-cell">
   	<strong>{{ item.name }}</strong>{% if item.ignore_subscriptions %} <span class="label label-important">{% trans %}Ignoring Subscriptions{% endtrans %}</span>{% endif %}
   </td>
 {% endblock%}
-
-{% block search_form %}
-{{ form_theme.row(search_form.name, attrs={
-                                           'class': 'span3',
-                                           'placeholder': lang_name_contains(),
-                                          }) }}
-{{ form_theme.row(search_form.contains, attrs={
-                                               'class': 'span3',
-                                               'placeholder': lang_message_contains(),
-                                              }) }}
-{{ form_theme.row(search_form.type, attrs={'class': 'span3'}) }}
-{{ form_theme.row(search_form.rank, attrs={'class': 'span3'}) }}
-{% endblock %}
-
-
-{# Translation strings #}
-{% macro lang_name_contains() -%}
-{% trans %}Name contains...{% endtrans %}
-{%- endmacro %}
-
-{% macro lang_message_contains() -%}
-{% trans %}Message contains...{% endtrans %}
-{%- endmacro %}

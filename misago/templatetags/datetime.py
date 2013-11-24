@@ -1,4 +1,4 @@
-from django_jinja.library import Library
+from coffin.template import Library
 from misago.utils.datesformats import date, reldate, reltimesince, compact, relcompact
 
 register = Library()

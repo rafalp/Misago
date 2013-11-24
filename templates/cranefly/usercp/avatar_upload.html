@@ -1,5 +1,5 @@
 {% extends "cranefly/usercp/layout.html" %}
-{% import "forms.html" as form_theme with context %}
+{% import "_forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{{ macros.page_title(title=_('Upload Avatar')) }}{% endblock %}
@@ -17,13 +17,12 @@
   </div>
   {% endif %}
 
-  <form action="{{ url('usercp_avatar_upload') }}" method="post" enctype="multipart/form-data">
-    {{ form_theme.hidden_fields(form) }}
+  <form action="{% url 'usercp_avatar_upload' %}" method="post" enctype="multipart/form-data">
     <input type="hidden" id="js_check" name="js_check" value="0">
-    {{ form_theme.row(form.avatar_upload, attrs={'class': 'span9'}) }}
+    {{ form_theme.form_widget(form, width=9) }}
     <div class="form-actions">
       <button name="save" type="submit" class="btn btn-primary">{% trans %}Upload Avatar{% endtrans %}</button>
-      <a href="{{ url('usercp_avatar') }}" class="btn">{% trans %}Cancel{% endtrans %}</a>
+      <a href="{% url 'usercp_avatar' %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
     </div>
   </form>
   

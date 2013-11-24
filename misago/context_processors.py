@@ -1,8 +1,7 @@
+from django.conf import settings
 from misago import __version__
 from misago.admin import site
-from misago.conf import settings, SafeSettings
 from misago.models import Forum
-from misago.monitor import monitor
 
 def common(request):
     context = {
@@ -27,12 +26,11 @@ def common(request):
             'acl': request.acl,
             'board_address': settings.BOARD_ADDRESS,
             'messages' : request.messages.messages,
-            'monitor': monitor,
+            'monitor': request.monitor,
             'request_path': request.get_full_path(),
-            'settings': SafeSettings(),
+            'settings': request.settings,
             'stopwatch': request.stopwatch.time(),
             'user': request.user,
-            'recent_alerts': request.session.get('recent_alerts'),
             'version': __version__,
             'disable_search': False,
         })
@@ -45,7 +43,7 @@ def common(request):
             'reports': Forum.objects.special_model('reports'),
         })
     except AttributeError as e:
-        pass
+        pass 
     return context
 
 

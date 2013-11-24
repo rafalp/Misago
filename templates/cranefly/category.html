@@ -29,20 +29,20 @@
   <div id="subforums" class="category-forums-list{% if category.style %} category-forums-{{ category.style }}{% endif %}">
     {% for forum in category.subforums %}
     <div class="forum{% if loop.last %} last{% endif %}">
-      <div class="forum-icon{% if forum.type == 'redirect' %} forum-icon-redirect{% elif not forum.is_read %} forum-icon-new{% endif %}">
-        <i class="icon-{% if forum.type == 'redirect' %}link{% elif not forum.is_read %}comment{% else %}comment-alt{% endif %}"></i>
+      <div class="forum-icon">
+        <div class="forum-icon-wrap{% if forum.type == 'redirect' %} forum-icon-redirect{% elif not forum.is_read %} forum-icon-new{% endif %}"><i class="icon-{% if forum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %} icon-white"></i></div>
       </div>
       <div id="forum-{{ forum.id }}" class="forum-main">
-        <h3 class="forum-title{% if not forum.is_read %} forum-title-new{% endif %}"><a href="{{ url(forum.type, slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3>
+        <h3 class="forum-title{% if not forum.is_read %} forum-title-new{% endif %}"><a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}">{{ forum.name }}</a></h3>
         {% if forum.show_details %}
         <div class="forum-details">
           {% if forum.type != 'redirect' %}
           {% if acl.forums.can_browse(forum) and (acl.threads.can_read_threads(forum) == 2 or (acl.threads.can_read_threads(forum) == 1 and forum.last_poster_id == user.pk)) %}
           {% if forum.last_thread_id -%}
           <div class="thread-name">
-            <a href="{{ url('thread_new', thread=forum.last_thread_id, slug=forum.last_thread_slug) }}"{% if forum.last_thread_name|length > 34 %} class="tooltip-top" title="{{ forum.last_thread_name }}"{% endif %}>{{ forum.last_thread_name|short_string(34) }}</a>
+            <a href="{% url 'thread_new' thread=forum.last_thread_id, slug=forum.last_thread_slug %}"{% if forum.last_thread_name|length > 34 %} class="tooltip-top" title="{{ forum.last_thread_name }}"{% endif %}>{{ forum.last_thread_name|short_string(34) }}</a>
           </div>
-          <div class="muted">{% if forum.last_poster_id %}<a href="{{ url('user', user=forum.last_poster_id, username=forum.last_poster_slug) }}" class="last-poster">{{ forum.last_poster_name }}</a>{% else %}<span class="last-poster">{{ forum.last_poster_name }}</span>{% endif %} - {{ forum.last_thread_date|reltimesince }}</div>
+          <div class="muted">{% if forum.last_poster_id %}<a href="{% url 'user' user=forum.last_poster_id, username=forum.last_poster_slug %}" class="last-poster">{{ forum.last_poster_name }}</a>{% else %}<span class="last-poster">{{ forum.last_poster_name }}</span>{% endif %} - {{ forum.last_thread_date|reltimesince }}</div>
           {%- else -%}
           <em>{% trans %}This forum is empty{% endtrans %}</em>
           {%- endif %}
@@ -51,7 +51,7 @@
           {%- endif %}
           {%- else -%}
           <div class="thread-name">
-            <a href="{{ url('redirect', slug=forum.slug, forum=forum.id) }}">{{ forum.redirect_domain() }}</a>
+            <a href="{% url 'redirect' slug=forum.slug, forum=forum.id %}">{{ forum.redirect_domain() }}</a>
           </div>
           <div class="muted">{% trans count=forum.redirects, clicks=macros.wrap(forum.redirects|intcomma, 'span', 'class="last-poster"') %}{{ clicks }} click{% pluralize %}{{ clicks }} clicks{% endtrans %}</div>
           {%- endif %}
@@ -60,18 +60,18 @@
         {% if forum.subforums %}
         <div class="dropdown">
           {% if forum.subforums|length > 1 %}
-          <a href="{{ url(forum.type, slug=forum.slug, forum=forum.id) }}#subforums" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-chevron-down"></i> {% trans %}Subforums{% endtrans %}</a>
+          <a href="{{ forum.type|url(slug=forum.slug, forum=forum.id) }}#subforums" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-chevron-down"></i> {% trans %}Subforums{% endtrans %}</a>
           <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
             <div class="dropdown-shadow">
               <ul>
                 {% for subforum in forum.subforums %}
-                <li><a href="{{ url(subforum.type, slug=subforum.slug, forum=subforum.id) }}"><i class="icon-{% if subforum.type == 'redirect' %}circle-arrow-right{% else %}comments{% endif %}"></i> {{ subforum.name }}</a></li>
+                <li><a href="{{ subforum.type|url(slug=subforum.slug, forum=subforum.id) }}"><i class="icon-{% if subforum.type == 'redirect' %}circle-arrow-right{% else %}comment{% endif %}"></i> {{ subforum.name }}</a></li>
                 {% endfor %}
               </ul>
             </div>
           </div>
           {% else %}
-          <a href="{{ url(forum.subforums[0].type, slug=forum.subforums[0].slug, forum=forum.subforums[0].id) }}" class="subforum tooltip-top" title="{% trans forum=forum.subforums[0].name %}Go to the {{ forum }} subforum{% endtrans %}">{{ forum.subforums[0].name|short_string(16) }}</a>
+          <a href="{{ forum.subforums[0].type|url(slug=forum.subforums[0].slug, forum=forum.subforums[0].id) }}" class="subforum tooltip-top" title="{% trans forum=forum.subforums[0].name %}Go to the {{ forum }} subforum{% endtrans %}">{{ forum.subforums[0].name|short_string(16) }}</a>
           {% endif %}
         </div>
         {% endif%}

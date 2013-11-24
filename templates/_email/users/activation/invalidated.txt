@@ -6,5 +6,5 @@
 {% trans username=user.username %}{{ username }}, you are receiving this message because board administrator has requested you to revalidate your e-mail address.{% endtrans %}
 
 {% trans %}To reactivate your account click the link below:{% endtrans %}
-{{ board_address }}{{ url('activate', username=user.username_slug, user=user.id, token=user.token) }}
+{{ board_address }}{% url 'activate' username=user.username_slug, user=user.id, token=user.token %}
 {% endblock %}

@@ -16,7 +16,7 @@ class PruningPolicy(models.Model):
         app_label = 'misago'
 
     def clean(self):
-        if not (self.email or self.posts or self.registered or self.last_visit):
+        if not (self.email and self.posts and self.registered and self.last_visit):
             raise ValidationError(_("Pruning policy must have at least one pruning criteria set to be valid."))
 
     def make_queryset(self):

@@ -8,5 +8,5 @@
 {% trans %}Your new password:{% endtrans %} {{ password }}
 
 {% trans %}You can sign in to your account using new password by following this link:{% endtrans %}
-{{ board_address }}{{ url('sign_in') }}
+{{ board_address }}{% url 'sign_in' %}
 {% endblock %}

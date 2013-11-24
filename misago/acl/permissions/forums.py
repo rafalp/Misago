@@ -1,18 +1,19 @@
 from django.utils.translation import ugettext_lazy as _
-import floppyforms as forms
+from django import forms
 from misago.acl.builder import BaseACL
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.forms import YesNoSwitch
 
 def make_forum_form(request, role, form):
-    form.base_fields['can_see_forum'] = forms.BooleanField(label=_("Can see forum"),
-                                                           widget=YesNoSwitch, initial=False, required=False)
-    form.base_fields['can_see_forum_contents'] = forms.BooleanField(label=_("Can see forum contents"),
-                                                                    widget=YesNoSwitch, initial=False, required=False)
-    form.fieldsets.append((
-                           _("Forums Permissions"),
-                           ('can_see_forum', 'can_see_forum_contents'),
-                          ))
+    form.base_fields['can_see_forum'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
+    form.base_fields['can_see_forum_contents'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
+    form.layout.append((
+                        _("Forums Permissions"),
+                        (
+                         ('can_see_forum', {'label': _("Can see forum")}),
+                         ('can_see_forum_contents', {'label': _("Can see forum contents")}),
+                         ),
+                        ))
 
 
 class ForumsACL(BaseACL):

@@ -7,7 +7,7 @@
     <ul class="nav nav-pills usercp-tabs">
       <li class="nav-header">{% trans %}Your Control Panel{% endtrans %}</li>
       {% for link in tabs %}
-      <li{% if link.active %} class="active"{% endif %}><a href="{{ url(link.route) }}">{{ link.name }}</a></li>
+      <li{% if link.active %} class="active"{% endif %}><a href="{{ link.route|url }}">{{ link.name }}</a></li>
       {% endfor %}
     </ul>
 

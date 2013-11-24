@@ -1,0 +1,17 @@
+{% extends "admin/admin/layout.html" %}
+{% load i18n %}
+{% load l10n %}
+{% load url from future %}
+
+{% block action_body %}
+<form action="{{ url }}" method="post">
+  <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+  <p class="lead">
+  	{% trans %}Users to be deleted{% endtrans %}: <strong>{{ total_users|intcomma }}</strong>
+  </p>
+  <div class="form-actions">
+  	<button name="save" type="submit" class="btn btn-danger">{% trans %}Apply Policy{% endtrans %}</button>
+  	<a href="{{ fallback }}" class="btn">{% trans %}Cancel{% endtrans %}</a>
+  </div>
+</form>
+{% endblock %}

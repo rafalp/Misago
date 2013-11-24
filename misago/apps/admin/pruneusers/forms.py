@@ -1,27 +1,17 @@
 from django.utils.translation import ugettext_lazy as _
-import floppyforms as forms
+from django import forms
 from misago.forms import Form
 from misago.validators import validate_sluggable
 
 class PolicyForm(Form):
-    name = forms.CharField(label=_("Policy Name"),
-                           help_text=_("Short, descriptive name of this pruning policy."),
-                           max_length=255, validators=[validate_sluggable(
+    name = forms.CharField(max_length=255, validators=[validate_sluggable(
                                                                           _("Policy name must contain alphanumeric characters."),
                                                                           _("Policy name is too long.")
                                                                           )])
-    email = forms.CharField(label=_("Member E-mail Address ends with"),
-                            help_text=_("If you want to, you can enter more than one e-mail suffix by separating them with comma."),
-                            max_length=255, required=False)
-    posts = forms.IntegerField(label=_("Member has no more posts than"),
-                               help_text=_("Maximum number of posts member is allowed to have to fall under policy. For example if you enter in 10 posts and make this only criteria, every user that has less than 10 posts will be deleted. Enter zero to dont use this criteria"),
-                               min_value=0, initial=0)
-    registered = forms.IntegerField(label=_("User is member for no more than"),
-                                    help_text=_("Maximal number of days user is member for. For exmaple if you enter in 15 days and make this only criteria, every user who is member for less than 15 days will be deleted. Enter zero to dont use this criteria."),
-                                    min_value=0, initial=0)
-    last_visit = forms.IntegerField(label=_("User last visit was before"),
-                                    help_text=_("Maximal allowed inactivity period in days. For example if you enter in 300 days and make this only criteria for deleting users, every member who did not signed into forums in last 300 days will be deleted. Enter zero to dont use this criteria."),
-                                    min_value=0, initial=0)
+    email = forms.CharField(max_length=255, required=False)
+    posts = forms.IntegerField(min_value=0, initial=0)
+    registered = forms.IntegerField(min_value=0, initial=0)
+    last_visit = forms.IntegerField(min_value=0, initial=0)
 
     layout = (
               (

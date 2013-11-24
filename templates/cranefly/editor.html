@@ -1,5 +1,5 @@
-{% macro editor(field, submit_button, placeholder=None, rows=4, hide_links=False, hide_images=False, hide_hr=False, zen=False, extra=None) %}
-<div class="editor editor-editable">
+{% macro editor(field, submit_button, placeholder=None, rows=4, hide_links=False, hide_images=False, hide_hr=False, extra=None) %}
+<div class="editor">
   {% if field.errors %}
   <div class="editor-error">
     {% for error in field.errors %}
@@ -7,104 +7,23 @@
     {% endfor %}
   </div>
   {% endif %}
-  {% set context = field.field.widget.get_context(field.html_name, field.value()) %}
   <div class="editor-input">
     <div>
-      <textarea name="{{ context.name }}" id="id_{{ context.name }}" rows="{{ rows }}"{% if placeholder %} placeholder="{{ placeholder }}"{% endif %}>{% if 'value' in context %}{{ context.value }}{% endif %}</textarea>
-      {% if zen %}
-      <div class="editor-zen-on tooltip-left" title="{% trans %}Click to enter Zen mode{% endtrans %}">
-        <a href="#"><i class="icon-expand-alt"></i></a>
-      </div>
-      {% endif %}
+      <textarea name="{{ field.html_name }}" id="{{ field.html_id }}" rows="{{ rows }}"{% if placeholder %} placeholder="{{ placeholder }}"{% endif %}>{% if field.has_value %}{{ field.value }}{% endif %}</textarea>
     </div>
   </div>
   <div class="editor-actions">
     <ul class="editor-tools unstyled pull-left">
       <li><a href="#" class="tooltip-top btn editor-bold" title="{% trans %}Bold{% endtrans %}"><i class="icon-bold"></i></a></li>
       <li><a href="#" class="tooltip-top btn editor-emphasis" title="{% trans %}Emphasis{% endtrans %}"><i class="icon-italic"></i></a></li>
-      {% if not hide_links %}<li><a href="#" class="tooltip-top btn editor-link" title="{% trans %}Insert Link{% endtrans %}"><i class="icon-share-alt"></i></a></li>{% endif %}
-      {% if not hide_images %}<li><a href="#" class="tooltip-top btn editor-image" title="{% trans %}Insert Image{% endtrans %}"><i class="icon-picture"></i></a></li>{% endif %}
-      {% if not hide_hr %}<li><a href="#" class="tooltip-top btn editor-hr" title="{% trans %}Insert Horizontal Line{% endtrans %}"><i class="icon-minus"></i></a></li>{% endif %}
+      {% if not hide_links %}<li class="divider"><a href="#" class="tooltip-top btn editor-link" title="{% trans %}Insert Link{% endtrans %}"><i class="icon-share-alt"></i></a></li>{% endif %}
+      {% if not hide_images %}<li{% if hide_links %} class="divider"{% endif %}><a href="#" class="tooltip-top btn editor-image" title="{% trans %}Insert Image{% endtrans %}"><i class="icon-picture"></i></a></li>{% endif %}
+      {% if not hide_hr %}<li class="divider"><a href="#" class="tooltip-top btn editor-hr" title="{% trans %}Insert Horizontal Line{% endtrans %}"><i class="icon-minus"></i></a></li>{% endif %}
     </ul>
-    <a href="{{ url('help_md') }}" class="editor-help" target="_blank">{% trans %}Formatting Help{% endtrans %}</a>
     <button name="save" type="submit" class="btn btn-primary pull-right">{{ submit_button }}</button>
     {% if extra %}{{ extra }}{% endif %}
   </div>
-  {{ attachments_editor() }}
 </div>
-{% endmacro %}
-
-{% macro zen() %}
-<div class="zen-overlay editor-editable">
-  <div>
-    <div class="container">
-      <textarea id="overlay-textarea" name="overlay-textarea" placeholder="{% trans %}Message Body{% endtrans %}"></textarea>
-      <div class="overlay-options">
-        <ul>
-          <li><a href="#" class="tooltip-left editor-bold" title="{% trans %}Bold{% endtrans %}"><i class="icon-bold"></i></a></li>
-          <li><a href="#" class="tooltip-left editor-emphasis" title="{% trans %}Emphasis{% endtrans %}"><i class="icon-italic"></i></a></li>
-          <li><a href="#" class="tooltip-left editor-link" title="{% trans %}Insert Link{% endtrans %}"><i class="icon-share-alt"></i></a></li>
-          <li><a href="#" class="tooltip-left editor-image" title="{% trans %}Insert Image{% endtrans %}"><i class="icon-picture"></i></a></li>
-          <li><a href="#" class="tooltip-left editor-hr" title="{% trans %}Insert Horizontal Line{% endtrans %}"><i class="icon-minus"></i></a></li>
-          <li><a href="{{ url('help_md') }}" class="tooltip-left" title="{% trans %}Formatting Help{% endtrans %}" target="_blank"><i class="icon-info"></i></a></li>
-          <li><hr></li>
-          <li class="editor-zen-off tooltip-left" title="{% trans %}Leave Zen mode{% endtrans %}"><a href="#"><i class="icon-off"></i></a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-{% endmacro %}
-
-{% macro attachments_editor() %}
-{% if acl.threads.can_upload_attachments(forum) %}
-<div class="editor-upload">
-  <input type="file" name="new_file">
-  <button name="upload" type="submit" class="btn pull-right">{% trans %}Attach File{% endtrans %}</button>
-</div>
-{% endif %}
-{% if attachments %}
-<ul class="unstyled editor-attachments">
-  {% for attachment in attachments %}
-  <li{% if attachment.pk in attachments_removed %} class="attachment-removed"{% endif %}>
-    <div class="attachment-image">
-      <a href="{{ url('attachments_server', attachment=attachment.hash_id) }}">
-        {% if attachment.is_image %}
-        <img src="{{ url('attachments_thumbs_server', attachment=attachment.hash_id) }}" alt="">
-        {% else %}
-        <i class="icon-file"></i>
-        {% endif %}
-      </a>
-    </div>
-    <div class="attachment-actions">
-      {% if attachment.pk in attachments_removed %}
-      <button name="restore_attachment" value="{{ attachment.pk }}" type="submit" class="btn pull-right"><i class="icon-plus"></i> {% trans %}Restore{% endtrans %}</button>
-      {% else %}
-      <button type="button" class="btn btn-insert pull-right editor-insert-attachment" data-attachment-md="{% if attachment.is_image %}[![{{ attachment.name }}]({{ url('attachments_thumbs_server', attachment=attachment.hash_id) }})]({{ url('attachments_server', attachment=attachment.hash_id) }}){% else %}[{{ attachment.name }}]({{ url('attachments_server', attachment=attachment.hash_id) }}){% endif %}"><i class="icon-share"></i> {% trans %}Insert{% endtrans %}</button>
-      {% if acl.threads.can_delete_attachment(user, forum, attachment) %}
-      <button name="remove_attachment" value="{{ attachment.pk }}" type="submit" class="btn btn-remove pull-right"><i class="icon-remove"></i> {% trans %}Remove{% endtrans %}</button>
-      {% endif %}
-      {% endif %}
-    </div>
-    <div class="attachment-body">
-      <h4>{% if attachment.pk in attachments_removed %}<span class="attachment-removed-message"><i class="icon-remove"></i> {% trans %}Removed:{% endtrans %}</span> {% endif %}{{ attachment.name }}</h4>
-      <div class="attachment-details">
-        {% if attachment.user_id %}
-        <a href="{{ url('user', user=attachment.user_id, username=attachment.user_name_slug) }}">{{ attachment.user_name }}</a>,
-        {% else %}
-        {{ attachment.user_name }},
-        {% endif %}
-        {% if acl.users.can_see_users_trails() %}
-        <abbr title="{{ attachment.agent }}">{{ attachment.ip }}</abbr>,
-        {% endif %}
-        {{ attachment.date|date }},
-        {{ _(attachments_types[attachment.filetype_id].name) }}, {{ attachment.size|filesize }}
-      </div>
-    </div>
-  </li>
-  {% endfor %}
-</ul>
-  {% endif %}
 {% endmacro %}
 
 {% macro js() %}
@@ -115,13 +34,7 @@
       ed_lang_enter_image_url = "{% trans %}Enter image address{% endtrans %}";
       ed_lang_enter_image_label = "{% trans %}Enter image label{% endtrans %}";
       ed_emojis = ['{{ ("', '".join(emojis))|safe }}'];
-      ed_emoji_tpl = "<li data-value='${key}'><img src='{{ STATIC_URL }}emojis/${name}.png' height='20' width='20'/> ${name} </li>";
-      ed_emojis_list = $.map(ed_emojis, function(value, i) {
-        return {'id':i, 'key':value+":", 'name':value};
-      });
     });
   </script>
-  <script src="{{ STATIC_URL }}cranefly/js/jquery.caret.js"></script>
-  <script src="{{ STATIC_URL }}cranefly/js/jquery.atwho.js"></script>
   <script src="{{ STATIC_URL }}cranefly/js/editor.js"></script>
 {% endmacro %}

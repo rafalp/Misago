@@ -16,16 +16,16 @@ ADMIN_ACTIONS = (
                           'id': 'list',
                           'name': _("Browse Roles"),
                           'help': _("Browse all existing roles"),
-                          'link': 'admin_roles'
+                          'route': 'admin_roles'
                           },
                          {
                           'id': 'new',
                           'name': _("Add Role"),
                           'help': _("Create new role"),
-                          'link': 'admin_roles_new'
+                          'route': 'admin_roles_new'
                           },
                          ],
-                link='admin_roles',
+                route='admin_roles',
                 urlpatterns=patterns('misago.apps.admin.roles.views',
                          url(r'^$', 'List', name='admin_roles'),
                          url(r'^new/$', 'New', name='admin_roles_new'),
@@ -47,16 +47,16 @@ ADMIN_ACTIONS = (
                           'id': 'list',
                           'name': _("Browse Roles"),
                           'help': _("Browse all existing roles"),
-                          'link': 'admin_roles_forums'
+                          'route': 'admin_roles_forums'
                           },
                          {
                           'id': 'new',
                           'name': _("Add Role"),
                           'help': _("Create new role"),
-                          'link': 'admin_roles_forums_new'
+                          'route': 'admin_roles_forums_new'
                           },
                          ],
-                link='admin_roles_forums',
+                route='admin_roles_forums',
                 urlpatterns=patterns('misago.apps.admin.forumroles.views',
                          url(r'^$', 'List', name='admin_roles_forums'),
                          url(r'^new/$', 'New', name='admin_roles_forums_new'),

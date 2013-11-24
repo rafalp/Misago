@@ -1,5 +1,8 @@
 {% extends "admin/admin/layout.html" %}
-{% import "forms.html" as form_theme with context %}
+{% load i18n %}
+{% load l10n %}
+{% load url from future %}
+{% import "_forms.html" as form_theme with context %}
 
 {% block action_body %}
 {%- if search_form %}
@@ -12,9 +15,9 @@
       <th{{ th_class(column, sorting, sorting_method) }}>
       {%- if column[0] in sorting %}<a href="
       {%- if column[0] == sorting_method[0]-%}
-      {% if sorting_method[1] %}{{ link ~ query(sort=column[0],dir=0) }}{% else %}{{ link ~ query(sort=column[0],dir=1) }}{% endif %}
+      {% if sorting_method[1] %}{{ url ~ query(sort=column[0],dir=0) }}{% else %}{{ url ~ query(sort=column[0],dir=1) }}{% endif %}
       {%- else -%}
-      {{ link ~ query(sort=column[0],dir=sorting[column[0]]) }}
+      {{ url ~ query(sort=column[0],dir=sorting[column[0]]) }}
       {%- endif %}">{{ column[1] }}</a>{% else %}{{ column[1] }}{% endif %}</th>{% endfor %}{% endblock %}
       {% if not action.hide_actions%}<th>{% trans %}Actions{% endtrans %}</th>{% endif -%}
       {% if list_form %}<th class="check-cell"><label class="checkbox"><input type="checkbox" class="checkbox-master"></label></th>{% endif -%}
@@ -30,12 +33,12 @@
       	<ul class="list-actions">
       	  {% for action in item_actions %}
       	  <li>{% if action.post -%}
-      	  <form action="{{ action.link }}" method="post"{% if action.prompt %} class="confirm" data-jsconfirm="{{ action.prompt }}"{% endif %}>
+      	  <form action="{{ action.url }}" method="post"{% if action.prompt %} class="confirm" data-jsconfirm="{{ action.prompt }}"{% endif %}>
             <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
       	    <button type="submit" class="tooltip-top" title="{{ action.name }}"><i class="icon-{{ action.icon }}"></i></button>
       	  </form>
       	  {%- else -%}
-      	  <a href="{{ action.link }}" class="tooltip-top{% if action.prompt %} confirm{% endif %}"{% if action.prompt %} data-jsconfirm="{{ action.prompt }}"{% endif %} title="{{ action.name }}"><i class="icon-{{ action.icon }}"></i></a>
+      	  <a href="{{ action.url }}" class="tooltip-top{% if action.prompt %} confirm{% endif %}"{% if action.prompt %} data-jsconfirm="{{ action.prompt }}"{% endif %} title="{{ action.name }}"><i class="icon-{{ action.icon }}"></i></a>
       	  {%- endif %}</li>
       	  {% endfor %}
       	</ul>
@@ -43,13 +46,13 @@
       	<em>{% trans %}Not available{% endtrans %}</em>
       	{%- endif %}
       </td>{% endif %}
-      {% if list_form %}<td class="check-cell"><label class="checkbox"><input form="list_form" name="list_items" type="checkbox" class="checkbox-member" value="{{ item.pk }}"{% if list_form.fields['list_items']['has_value'] and item.pk in list_form.fields['list_items']['value'] %} checked="checked"{% endif %}></label></td>{% endif %}
+      {% if list_form %}<td class="check-cell"><label class="checkbox"><input form="list_form" name="{{ list_form.fields['list_items']['html_name'] }}" type="checkbox" class="checkbox-member" value="{{ item.pk }}"{% if list_form.fields['list_items']['has_value'] and item.pk in list_form.fields['list_items']['value'] %} checked="checked"{% endif %}></label></td>{% endif %}
     </tr>{% endfor %}
   </tbody>
 </table>
 <div class="form-actions table-footer">
   {% if table_form %}
-  <form id="table_form" class="form-inline table-actions-right pull-left" action="{{ link }}" method="POST">
+  <form id="table_form" class="form-inline table-actions-right pull-left" action="{{ url }}" method="POST">
     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
     <input type="hidden" name="origin" value="table">
     <button type="submit" class="btn btn-primary">{{ action.table_form_button }}</button>
@@ -57,8 +60,8 @@
   {% endif %}
   {% if pagination and (pagination['prev'] > 0 or pagination['next'] > 0) %}
   <ul class="pager pull-left">
-    {%- if pagination['prev'] > 0 %}<li><a href="{{ action.get_pagination_link(pagination['prev']) }}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{{ action.get_pagination_link(pagination['next']) }}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{{ action.get_pagination_url(pagination['prev']) }}" class="tooltip-top" title="{% trans %}Previous Page{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{{ action.get_pagination_url(pagination['next']) }}" class="tooltip-top" title="{% trans %}Next Page{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
   </ul>
   <div class="table-count pull-left">{%- trans current_page=pagination['page'], pages=pagination['total'] -%}
   Page {{ current_page }} of {{ pages }}
@@ -68,10 +71,10 @@
 Showing {{ shown }} of {{ total }} items
 {%- endtrans %}</div>{% endif %}
   {% if list_form -%}
-  <form id="list_form" class="form-inline pull-right" action="{{ link }}" method="POST">
+  <form id="list_form" class="form-inline pull-right" action="{{ url }}" method="POST">
     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
     <input type="hidden" name="origin" value="list">
-    {{ form_theme.field(list_form.list_action, attrs={'class': 'span3'}) }}
+    {{ form_theme.input_select(list_form.fields['list_action'],width=3) }}
     <button type="submit" class="btn btn-primary">{% trans %}Go{% endtrans %}</button>
   </form>
 {%- endif %}
@@ -85,12 +88,13 @@ Showing {{ shown }} of {{ total }} items
 {%- if search_form %}
   </div>
   <div class="span3 side-search">
-  	<h4>{% if search_form.search_name %}{{ search_form.search_name }}{% else %}{% trans %}Search Items{% endtrans %}{% endif %}</h4>
-    <form id="search_form" action="{{ link }}" method="post">
+  	<h4>{% if search_form.fieldsets[0].legend %}{{ search_form.fieldsets[0].legend }}{% else %}{% trans %}Search Items{% endtrans %}{% endif %}</h4>
+    <form id="search_form" action="{{ url }}" method="post">
       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
       <input type="hidden" name="origin" value="search">
-      {% block search_form %}
-      {% endblock %}
+      {% for field in search_form.fieldsets[0].fields %}
+      {{ form_theme.row_widget(field, width=3) }}
+      {% endfor %}
     </form>
     <div class="form-actions">
       <div class="row">
@@ -100,7 +104,7 @@ Showing {{ shown }} of {{ total }} items
     </div>
   </div>
 </div>{% if action.is_filtering %}
-<form id="search_clear" class="form-inline" action="{{ link }}" method="post">
+<form id="search_clear" class="form-inline" action="{{ url }}" method="post">
   <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
   <input type="hidden" name="origin" value="clear">
 </form>{% endif %}{% endif -%}

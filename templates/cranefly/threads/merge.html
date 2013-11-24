@@ -1,12 +1,12 @@
 {% extends "cranefly/layout.html" %}
-{% import "forms.html" as form_theme with context %}
+{% import "_forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{{ macros.page_title(title=_("Merge Threads"),parent=forum.name) }}{% endblock %}
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {{ macros.parents_list(parents) }}
-<li><a href="{{ url(forum.type, forum=forum.pk, slug=forum.slug) }}">{{ forum.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
+<li><a href="{{ forum.type|url(forum=forum.pk, slug=forum.slug) }}">{{ forum.name }}</a> <span class="divider"><i class="icon-chevron-right"></i></span></li>
 <li class="active">{% trans %}Merge Threads{% endtrans %}
 {%- endblock %}
 
@@ -17,7 +17,7 @@
     <ul class="breadcrumb">
       {{ self.breadcrumb() }}</li>
     </ul>
-    <h1>{% trans %}Merge Threads{% endtrans %} <small>{{ forum.name|short_string(42) }}</small></h1>
+    <h1>{% trans %}Merge Threads{% endtrans %} <small>{{ forum.name }}</small></h1>
   </div>
 </div>
 
@@ -41,23 +41,18 @@
         </div>
         {% endif %}
 
-        <form action="{{ url('forum', forum=forum.pk, slug=forum.slug) }}" method="post">
-          {{ form_theme.hidden_fields(form) }}
+        <form action="{% url 'forum' forum=forum.pk, slug=forum.slug %}" method="post">
           <input type="hidden" name="origin" value="merge_form">
           <input type="hidden" name="list_action" value="merge">
           {% for thread in threads -%}
           <input type="hidden" name="list_items" value="{{ thread.pk }}">
           {% endfor %}
           <div class="form-fields">
-            {{ form_theme.row(form.thread_name, attrs={'class': 'span6'}) }}
-            {% if 'final_poll' in form.fields %}
-            {{ form_theme.row(form.final_poll, attrs={'class': 'span6'}) }}
-            {% endif %}
-            {{ form_theme.row(form.new_forum, attrs={'class': 'span6'}) }}
+            {{ form_theme.form_widget(form, width=6) }}
           </div>
           <div class="form-actions">
             <button type="submit" class="btn btn-primary">{% trans %}Merge Threads{% endtrans %}</button>
-            <a href="{{ url('forum', forum=forum.pk, slug=forum.slug) }}" class="btn">{% trans %}Cancel{% endtrans %}</a>
+            <a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
           </div>
         </form>
 

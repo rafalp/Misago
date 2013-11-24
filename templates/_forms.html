@@ -1,0 +1,214 @@
+{# Render whole form macro #}
+{%- macro form_widget(form, horizontal=false, width=12) -%}
+<fieldset class="first{% if form.fieldsets|length == 0 %} last{% endif %}">
+  {{ form_hidden_widget(form) }}
+  {% for fieldset in form.fieldsets %}{% if fieldset.legend %}
+  <legend><div>{{ fieldset.legend }}{% if fieldset.help %} <span>{{ fieldset.help }}</span>{% endif %}</div></legend>{% endif %}
+  {% for field in fieldset.fields %}
+    {{ row_widget(field, horizontal=horizontal, width=width) }}
+  {% endfor %}
+</fieldset>{% if not fieldset.last %}
+<fieldset{% if loop.revindex0 == 1 %} class="last"{% endif %}>{% endif %}{% endfor %}
+{%- endmacro -%}
+
+{# Render hidden fields macro #}
+{%- macro form_hidden_widget(form) -%}
+  <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">{% for field in form.hidden %}
+  <input type="hidden" name="{{ field.id }}" value="{{ field.value }}">{% endfor %}
+{%- endmacro -%}
+
+{# Render form row macro #}
+{%- macro row_widget(field, horizontal=false, width=12) -%}
+  <div class="control-group{% if field.errors %} error{% endif %}">{% if field.label %}
+    <label class="control-label" for="{{ field.html_id }}">{{ field.label }}:</label>{% endif %}{% if field.nested %}
+    <div class="controls controls-nested">
+    	<div class="row">
+      {% for subfield in field.nested %}                    	
+    	  <div class="span{{ widthratio(subfield.width, 100, width) }}">{{ field_widget(subfield, horizontal=horizontal, width=width, nested=true) }}</div>
+      {% endfor %}
+      </div>{% for error in field.errors %}
+      <p class="help-block" style="font-weight: bold;">{{ error }}</p>{% endfor %}{% if field.help_text %}
+      <p class="help-block">{{ field.help_text }}</p>{% endif %}
+    </div>{% else %}
+    <div class="controls">
+      {{ field_widget(field, horizontal=horizontal, width=width) }}{% for error in field.errors %}
+      <p class="help-block" style="font-weight: bold;">{{ error }}</p>{% endfor %}{% if field.help_text %}
+      <p class="help-block">{{ field.help_text }}</p>{% endif %}
+    </div>{% endif %}
+  </div>
+{%- endmacro -%}
+
+{# Render form field macro #}
+{%- macro field_widget(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
+
+{%- if field.widget == "checkbox" -%}
+{{ input_checkbox(field, attrs=attrs, classes=[], horizontal=horizontal, width=width, nested=nested) }}
+{%- endif -%}
+
+{%- if field.widget == "date" -%}
+{{ input_date(field, attrs=attrs, classes=[], horizontal=horizontal, width=width, nested=nested) }}
+{%- endif %}
+
+{%- if field.widget == "file_clearable" -%}
+{{ input_file_clearable(field, attrs=attrs, classes=[], horizontal=horizontal, width=width, nested=nested) }}
+{%- endif -%}
+
+{%- if field.widget == "forumTos" -%}
+{{ input_forum_tos(field, attrs=attrs, classes=[], horizontal=horizontal, width=width, nested=nested) }}
+{%- endif -%}
+
+{%- if field.widget == "recaptcha" -%}
+{{ input_recaptcha(field, attrs=attrs, classes=[], horizontal=horizontal, width=width, nested=nested) }}
+{%- endif -%}
+
+{%- if field.widget == "radio_select" -%}
+{{ input_radio_select(field, attrs=attrs, classes=[], horizontal=horizontal, width=width, nested=nested) }}
+{%- endif -%}
+
+{%- if field.widget == "select" -%}
+{{ input_select(field, attrs=attrs, classes=[], horizontal=horizontal, width=width, nested=nested) }}
+{%- endif -%}
+
+{%- if field.widget == "checkbox_select_multiple" -%}
+{{ input_checkbox_select_multiple(field, attrs=attrs, classes=[], horizontal=horizontal, width=width, nested=nested) }}
+{%- endif -%}
+
+{%- if field.widget == "text" -%}
+{{ input_text(field, attrs=attrs, classes=[], horizontal=horizontal, width=width, nested=nested) }}
+{%- endif -%}
+
+{%- if field.widget == "textarea" -%}
+{{ input_textarea(field, attrs=attrs, classes=[], horizontal=horizontal, width=width, nested=nested) }}
+{%- endif -%}
+
+{%- if field.widget == "yes_no_switch" -%}
+{{ input_yes_no_switch(field, attrs=attrs, classes=[], horizontal=horizontal, width=width, nested=nested) }}
+{%- endif %}
+{%- endmacro -%}
+
+
+{# Render form field attributes macro #}
+{%- macro field_attrs(attrs={}, extras=[]) -%}
+{% for attribute in attrs %} {{ attribute }}="{{ attrs[attribute] }}"{% endfor %}{% for extra in extras %} {{ extra }}{% endfor %}
+{%- endmacro -%}
+
+
+{# Render form field class attribute macro #}
+{%- macro field_classes(classes=[]) -%}
+{% if classes %} class="{% for class in classes %}{% if not loop.first %} {% endif %}{{ class }}{% endfor %}"{% endif %}
+{%- endmacro -%}
+
+
+{# Checkbox input #}
+{%- macro input_checkbox(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
+<label class="checkbox">
+  <input type="checkbox" name="{{ field.html_name }}" id="{{ field.html_id }}" value="1"{% if field.value %} checked="checked"{% endif %}>
+  {% if field.inline is defined %}{{ field.inline }}{% else %}{{ field.label }}{% endif %}
+</label>
+{%- endmacro -%}
+
+{# Forum Terms of Service input #}
+{%- macro input_forum_tos(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
+<label class="checkbox">
+  <input type="checkbox" name="{{ field.html_name }}" id="{{ field.html_id }}" value="1"{% if field.value %} checked="checked"{% endif %}>
+  {% trans forum_tos=make_tos()|safe %}I have read and accept this forums {{forum_tos}}.{% endtrans %}
+</label>
+{%- endmacro -%}
+{%- macro make_tos() -%}
+<a href="{% if settings.tos_url %}{{ settings.tos_url }}{% else %}{% url 'tos' %}{% endif %}">{% if settings.tos_title %}{{ settings.tos_title }}{% else %}{% trans %}Terms of Service{% endtrans %}{% endif %}</a>
+{%- endmacro -%}
+
+{# Date input #}
+{%- macro input_date(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
+{%- do field.attrs.update(attrs) -%}
+{%- if horizontal -%}
+  {%- do classes.append('span' ~ (widthratio(field.width, 100, width) - 2)) -%}
+{%- else -%}
+  {%- do classes.append('span' ~ widthratio(field.width, 100, width)) -%}
+{%- endif -%}
+<input type="text"{{ field_attrs(field.attrs) }}{{ field_classes(classes) }}{% if field.has_value %} value="{{ field.value }}"{% endif %}>
+{%- endmacro -%}
+
+{# Multiple Checkbox input #}
+{%- macro input_checkbox_select_multiple(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
+{%- do field.attrs.update(attrs) -%}
+{%- do classes.append('select-multiple') -%}
+<div{{ field_classes(classes) }}>{% for choice in field.choices %}
+  <label class="checkbox">
+    <input type="checkbox" name="{{ field.html_name }}" id="{{ field.html_id }}_{{ choice[0] }}" value="{{ choice[0] }}"{% if field.value and choice[0] in field.value %} checked="checked"{% endif %}>
+    {{ choice[1] }}
+  </label>{% endfor %}
+</div>
+{%- endmacro -%}
+
+
+{# File Upload input #}
+{%- macro input_file_clearable(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
+<input type="file" name="{{ field.html_name }}" id="{{ field.html_id }}" > 
+{%- endmacro -%}
+
+
+{# Recaptcha input #}
+{%- macro input_recaptcha(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
+{{ field.attrs.html|safe }}
+{%- endmacro -%}
+
+
+{# RadioSelect input #}
+{%- macro input_radio_select(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
+{%- do field.attrs.update(attrs) -%}
+{%- do classes.append('radio-group') -%}
+<div{{ field_classes(classes) }}>{% for choice in field.choices %}
+  <label class="radio">
+    <input type="radio" name="{{ field.html_name }}" id="{{ field.html_id }}{{ choice[0] }}" value="{{ choice[0] }}"{% if field.value == choice[0] %} checked="checked"{% endif %}>
+    {{ choice[1] }}
+  </label>{% endfor %}
+</div>
+{%- endmacro -%}
+
+
+{# Select input #}
+{%- macro input_select(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
+{%- do field.attrs.update(attrs) -%}
+{%- if horizontal %}
+  {%- do classes.append('span' ~ (widthratio(field.width, 100, width) - 2)) -%}
+{%- else -%}
+  {%- do classes.append('span' ~ widthratio(field.width, 100, width)) -%}
+{%- endif -%}
+<select{{ field_attrs(field.attrs) }}{{ field_classes(classes) }}>{% for choice in field.choices %}
+  <option value="{{ choice[0] }}"{% if field.value == choice[0] %} selected="selected"{% endif %}>{{ choice[1] }}</option>{% endfor %}
+</select>
+{%- endmacro -%}
+
+
+{# Text/password input #}
+{%- macro input_text(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
+{%- do field.attrs.update(attrs) -%}
+{%- if horizontal -%}
+  {%- do classes.append('span' ~ (widthratio(field.width, 100, width) - 2)) -%}
+{%- else -%}
+  {%- do classes.append('span' ~ widthratio(field.width, 100, width)) -%}
+{%- endif -%}
+<input{{ field_attrs(field.attrs) }}{{ field_classes(classes) }}{% if field.attrs.type != 'password' and field.has_value %} value="{{ field.value }}"{% endif %}>
+{%- endmacro -%}
+
+
+{# Textarea input #}
+{%- macro input_textarea(field, attrs={'rows': 4}, classes=[], horizontal=false, width=12, nested=false) -%}
+{%- do field.attrs.update(attrs) -%}
+{%- if horizontal -%}
+  {%- do classes.append('span' ~ (widthratio(field.width, 100, width) - 2)) -%}
+{%- else -%}
+  {%- do classes.append('span' ~ widthratio(field.width, 100, width)) -%}
+{%- endif -%}
+<textarea{{ field_attrs(field.attrs) }}{{ field_classes(classes) }}>{% if field.has_value %}{{ field.value }}{% endif %}</textarea>
+{%- endmacro -%}
+
+{# YesNoSwitch input #}
+{%- macro input_yes_no_switch(field, attrs={}, classes=[], horizontal=false, width=12, nested=false) -%}
+{%- do field.attrs.update(attrs) -%}
+{%- do classes.append('yes-no-switch') -%}
+<div{{ field_classes(classes) }} id="{{ field.html_id }}_div">
+  <input name="{{ field.html_name }}" id="{{ field.html_id }}" type="checkbox" value="1"{% if field.value %} checked="checked"{% endif %}>
+</div>
+{%- endmacro -%}

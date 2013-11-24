@@ -1,6 +1,5 @@
 from datetime import timedelta
 from django.utils import timezone
-from misago.conf import settings
 from misago.models import SignInAttempt
 
 class JamCache(object):
@@ -10,8 +9,8 @@ class JamCache(object):
     
     def check_for_updates(self, request):
         if self.expires < timezone.now():
-            self.jammed = SignInAttempt.objects.is_jammed(request.session.get_ip(request))
-            self.expires = timezone.now() + timedelta(minutes=settings.jams_lifetime)
+            self.jammed = SignInAttempt.objects.is_jammed(request.settings, request.session.get_ip(request))
+            self.expires = timezone.now() + timedelta(minutes=request.settings['jams_lifetime'])
             return True
         return False
 

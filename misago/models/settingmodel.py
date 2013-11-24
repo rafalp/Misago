@@ -1,8 +1,9 @@
 import base64
+from django import forms
 from django.core import validators
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-import floppyforms as forms
+from misago.forms import YesNoSwitch
 from misago.utils.timezones import tzlist
 try:
     import cPickle as pickle
@@ -12,7 +13,7 @@ except ImportError:
 class Setting(models.Model):
     setting = models.CharField(max_length=255, primary_key=True)
     group = models.ForeignKey('SettingsGroup', to_field='key')
-    _value = models.TextField(db_column='value', null=True, blank=True)
+    value = models.TextField(null=True, blank=True)
     value_default = models.TextField(null=True, blank=True)
     normalize_to = models.CharField(max_length=255)
     field = models.CharField(max_length=255)
@@ -28,56 +29,52 @@ class Setting(models.Model):
     def get_extra(self):
         return pickle.loads(base64.decodestring(self.extra))
 
-    @property
-    def value(self):
+    def get_value(self):
         if self.normalize_to == 'array':
-            return self._value.split(',')
+            return self.value.split(',')
         if self.normalize_to == 'integer':
-            return int(self._value)
+            return int(self.value)
         if self.normalize_to == 'float':
-            return float(self._value)
+            return float(self.value)
         if self.normalize_to == 'boolean':
-            return self._value == "1"
-        return self._value
+            return self.value == "1"
+        return self.value
 
-    @value.setter
-    def value(self, value):
+    def set_value(self, value):
         if self.normalize_to == 'array':
-            self._value = ','.join(value)
+            self.value = ','.join(value)
         elif self.normalize_to == 'integer':
-            self._value = int(value)
+            self.value = int(value)
         elif self.normalize_to == 'float':
-            self._value = float(value)
+            self.value = float(value)
         elif self.normalize_to == 'boolean':
-            self._value = 1 if value else 0
+            self.value = 1 if value else 0
         else:
-            self._value = value
-        if not self._value and self.value_default:
-            self._value = self.value_default
-        return self._value
+            self.value = value
+        if not self.value and self.value_default:
+            self.value = self.value_default
+        return self.value
 
     def get_field(self):
-        from misago.forms import YesNoSwitch
-
         extra = self.get_extra()
 
         # Set validators
         field_validators = []
         if 'min' in extra:
-            if self.normalize_to in ('string', 'array'):
+            if self.normalize_to == 'string' or self.normalize_to == 'array':
                 field_validators.append(validators.MinLengthValidator(extra['min']))
-            if self.normalize_to in ('integer', 'float'):
+            if self.normalize_to == 'integer' or self.normalize_to == 'float':
                 field_validators.append(validators.MinValueValidator(extra['min']))
         if 'max' in extra:
-            if self.normalize_to in ('string', 'array'):
+            if self.normalize_to == 'string' or self.normalize_to == 'array':
                 field_validators.append(validators.MaxLengthValidator(extra['max']))
-            if self.normalize_to in ('integer', 'float'):
+            if self.normalize_to == 'integer' or self.normalize_to == 'float':
                 field_validators.append(validators.MaxValueValidator(extra['max']))
 
         # Yes-no
         if self.field == 'yesno':
             return forms.BooleanField(
-                                   initial=self.value,
+                                   initial=self.get_value(),
                                    label=_(self.name),
                                    help_text=_(self.description) if self.description else None,
                                    required=False,
@@ -87,7 +84,7 @@ class Setting(models.Model):
         # Multi-list
         if self.field == 'mlist':
             return forms.MultipleChoiceField(
-                                     initial=self.value,
+                                     initial=self.get_value(),
                                      label=_(self.name),
                                      help_text=_(self.description) if self.description else None,
                                      widget=forms.CheckboxSelectMultiple,
@@ -102,7 +99,7 @@ class Setting(models.Model):
             if extra['choices'] == '#TZ#':
                 extra['choices'] = tzlist()
             return forms.ChoiceField(
-                                     initial=self.value,
+                                     initial=self.get_value(),
                                      label=_(self.name),
                                      help_text=_(self.description) if self.description else None,
                                      widget=forms.RadioSelect if self.field == 'choice' else forms.Select,
@@ -114,7 +111,7 @@ class Setting(models.Model):
         # Textarea
         if self.field == 'textarea':
             return forms.CharField(
-                                   initial=self.value,
+                                   initial=self.get_value(),
                                    label=_(self.name),
                                    help_text=_(self.description) if self.description else None,
                                    validators=field_validators,
@@ -122,21 +119,18 @@ class Setting(models.Model):
                                    widget=forms.Textarea
                                    )
 
-        kwargs = {
-                  'initial': self.value,
-                  'label': _(self.name),
-                  'help_text': _(self.description) if self.description else None,
-                  'validators': field_validators,
-                  'required': False,
-                 }
-
         # Default input
         default_input = forms.CharField
         if self.normalize_to == 'integer':
             default_input = forms.IntegerField
-
         if self.normalize_to == 'float':
             default_input = forms.FloatField
 
         # Make text-input
-        return default_input(**kwargs)
+        return default_input(
+                             initial=self.get_value(),
+                             label=_(self.name),
+                             help_text=_(self.description) if self.description else None,
+                             validators=field_validators,
+                             required=False,
+                             )

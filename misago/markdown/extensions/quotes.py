@@ -43,27 +43,16 @@ class QuoteTitlesPreprocessor(markdown.preprocessors.Preprocessor):
 
 class QuoteTitlesPostprocessor(markdown.postprocessors.Postprocessor):
     def run(self, text):
-        text = text.replace('&lt;%s:quotetitle&gt;' % self.markdown.mi_token, '<quotetitle>')
-        text = text.replace('&lt;/%s:quotetitle&gt;' % self.markdown.mi_token, '</quotetitle>')
+        text = text.replace('&lt;%s:quotetitle&gt;' % self.markdown.mi_token, '<h3><quotetitle>')
+        text = text.replace('&lt;/%s:quotetitle&gt;' % self.markdown.mi_token, '</quotetitle></h3>')
         lines = text.splitlines()
         clean = []
         for l, line in enumerate(lines):
             clean.append(line)
             try:
                 if line == '<blockquote>':
-                    if lines[l + 1][0:15] != '<p><quotetitle>':
-                        clean.append('<header><quotesingletitle></header>')
-                        clean.append('<article>')
-                if line == '</blockquote>':
-                    clean[-1] = '</article>'
-                    clean.append('</blockquote>')
-                if line.strip()[0:15] == '<p><quotetitle>':
-                    line = line.strip()
-                    header = line[3:-4]
-                    clean[-1] = '<header>%s</header>' % header
-                    clean.append('<article>')
-                    if line[-4:] != '</p>':
-                        clean.append('<p>')
+                    if lines[l + 1][0:7] != '<p><h3>':
+                        clean.append('<h3><quotesingletitle></h3>')
             except IndexError:
                 pass
-        return '\r\n'.join(clean).replace('<p>\r\n', '<p>')
+        return '\r\n'.join(clean)

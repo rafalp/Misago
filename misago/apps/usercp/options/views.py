@@ -1,10 +1,9 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
-from misago import messages
 from misago.decorators import block_guest
+from misago.forms import FormLayout
 from misago.messages import Message
-from misago.shortcuts import render_to_response
 from misago.apps.usercp.options.forms import UserForumOptionsForm
 from misago.apps.usercp.template import RequestContext
 
@@ -21,9 +20,9 @@ def options(request):
             request.user.subscribe_start = form.cleaned_data['subscribe_start']
             request.user.subscribe_reply = form.cleaned_data['subscribe_reply']
             request.user.save(force_update=True)
-            messages.success(request, _("Forum options have been changed."), 'usercp_options')
+            request.messages.set_flash(Message(_("Forum options have been changed.")), 'success', 'usercp_options')
             return redirect(reverse('usercp'))
-        message = Message(form.non_field_errors()[0], messages.ERROR)
+        message = Message(form.non_field_errors()[0], 'error')
     else:
         form = UserForumOptionsForm(request=request, initial={
                                                              'newsletters': request.user.receive_newsletters,
@@ -34,8 +33,9 @@ def options(request):
                                                              'subscribe_reply': request.user.subscribe_reply,
                                                              })
 
-    return render_to_response('usercp/options.html',
-                              context_instance=RequestContext(request, {
-                                  'message': message,
-                                  'tab': 'options',
-                                  'form': form}));
+    return request.theme.render_to_response('usercp/options.html',
+                                            context_instance=RequestContext(request, {
+                                             'message': message,
+                                             'tab': 'options',
+                                             'form': FormLayout(form)
+                                             }));

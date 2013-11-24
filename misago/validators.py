@@ -1,7 +1,7 @@
 import re
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ungettext, ugettext_lazy as _
-from misago.conf import settings
 from misago.models import Ban
 from misago.utils.strings import slugify
 
@@ -12,31 +12,31 @@ class validate_sluggable(object):
 
     def __call__(self, value):
         slug = slugify(value)
-        if not slug.replace('-', ''):
+        if not slug:
             raise ValidationError(self.error_short)
         if len(slug) > 255:
             raise ValidationError(self.error_long)
 
 
-def validate_username(value):
+def validate_username(value, db_settings):
     value = unicode(value).strip()
 
-    if len(value) < settings.username_length_min:
+    if len(value) < db_settings['username_length_min']:
         raise ValidationError(ungettext(
             'Username must be at least one character long.',
             'Username must be at least %(count)d characters long.',
-            settings.username_length_min
+            db_settings['username_length_min']
         ) % {
-            'count': settings.username_length_min,
+            'count': db_settings['username_length_min'],
         })
 
-    if len(value) > settings.username_length_max:
+    if len(value) > db_settings['username_length_max']:
         raise ValidationError(ungettext(
             'Username cannot be longer than one characters.',
             'Username cannot be longer than %(count)d characters.',
-            settings.username_length_max
+            db_settings['username_length_max']
         ) % {
-            'count': settings.username_length_max,
+            'count': db_settings['username_length_max'],
         })
 
     if settings.UNICODE_USERNAMES:
@@ -45,24 +45,24 @@ def validate_username(value):
     else:
         if not re.search('^[^\W_]+$', value):
             raise ValidationError(_("Username can only contain latin alphabet letters and digits."))
-
+    
     if Ban.objects.check_ban(username=value):
         raise ValidationError(_("This username is forbidden."))
 
 
-def validate_password(value):
+def validate_password(value, db_settings):
     value = unicode(value).strip()
 
-    if len(value) < settings.password_length:
+    if len(value) < db_settings['password_length']:
         raise ValidationError(ungettext(
             'Correct password has to be at least one character long.',
             'Correct password has to be at least %(count)d characters long.',
-            settings.password_length
+            db_settings['password_length']
         ) % {
-            'count': settings.password_length,
+            'count': db_settings['password_length'],
         })
 
-    for test in settings.password_complexity:
+    for test in db_settings['password_complexity']:
         if test in ('case', 'digits', 'special'):
             if not re.search('[a-zA-Z]', value):
                 raise ValidationError(_("Password must contain alphabetical characters."))

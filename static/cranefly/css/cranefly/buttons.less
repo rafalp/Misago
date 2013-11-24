@@ -6,228 +6,134 @@
   background-color: @bodyBackground;
   .box-shadow(none);
 
-<<<<<<< HEAD
-  color: @grayLight;
-  font-weight: bold;
-
-  i {
-  	margin-right: 6px;
-=======
   font-weight: bold;
   
   i {
     .opacity(60);
     position: relative;
     bottom: 1px;
->>>>>>> master
   }
 
   &:hover, &:active {
     background-color: @white;
     border-color: lighten(@grayLight, 5%);
-<<<<<<< HEAD
-
-    color: @grayDark;
-=======
   
     i {
       .opacity(90);
     }
->>>>>>> master
   }
 
   &.btn-primary {
     background-color: @bluePale;
     border-color: darken(@bluePale, 5%);
 
-<<<<<<< HEAD
-    color: @white;
     text-shadow: 0px 1px 0px darken(@bluePale, 15%);
 
     &:hover, &:active {
-      color: @white;
-
-=======
-    text-shadow: 0px 1px 0px darken(@bluePale, 15%);
-
-    &:hover, &:active {
->>>>>>> master
       &:enabled {
         background-color: saturate(@bluePale, 20%);
         border-color: darken(saturate(@bluePale, 20%), 5%);
       }
     }
-<<<<<<< HEAD
-=======
 
     i {
       background-image: url("@{iconWhiteSpritePath}");
     }
->>>>>>> master
   }
 
   &.btn-info {
     background-color: desaturate(@bluePale, 25%);
     border-color: darken(desaturate(@bluePale, 25%), 5%);
 
-<<<<<<< HEAD
-    color: @white;
     text-shadow: 0px 1px 0px darken(desaturate(@bluePale, 25%), 15%);
 
     &:hover, &:active {
-      color: @white;
-
-=======
-    text-shadow: 0px 1px 0px darken(desaturate(@bluePale, 25%), 15%);
-
-    &:hover, &:active {
->>>>>>> master
       &:enabled {
         background-color: desaturate(@bluePale, 10%);
         border-color: darken(desaturate(@bluePale, 10%), 5%);
       }
     }
-<<<<<<< HEAD
-=======
 
     i {
       background-image: url("@{iconWhiteSpritePath}");
     }
->>>>>>> master
   }
 
   &.btn-success {
     background-color: desaturate(@green, 15%);
     border-color: darken(desaturate(@green, 15%), 5%);
 
-<<<<<<< HEAD
-    color: @white;
     text-shadow: 0px 1px 0px darken(@green, 15%);
 
     &:hover, &:active {
-      color: @white;
-
-=======
-    text-shadow: 0px 1px 0px darken(@green, 15%);
-
-    &:hover, &:active {
->>>>>>> master
       &:enabled {
         background-color: @green;
         border-color: darken(@green, 5%);
       }
     }
-<<<<<<< HEAD
-=======
 
     i {
       background-image: url("@{iconWhiteSpritePath}");
     }
->>>>>>> master
   }
 
   &.btn-warning {
     background-color: desaturate(@orange, 15%);
     border-color: darken(desaturate(@orange, 15%), 5%);
 
-<<<<<<< HEAD
-    color: @white;
     text-shadow: 0px 1px 0px darken(@orange, 15%);
 
     &:hover, &:active {
-      color: @white;
-
-=======
-    text-shadow: 0px 1px 0px darken(@orange, 15%);
-
-    &:hover, &:active {
->>>>>>> master
       &:enabled {
         background-color: @orange;
         border-color: darken(@orange, 5%);
       }
     }
-<<<<<<< HEAD
-=======
 
     i {
       background-image: url("@{iconWhiteSpritePath}");
     }
->>>>>>> master
   }
 
   &.btn-danger {
     background-color: @red;
     border-color: darken(@red, 5%);
 
-<<<<<<< HEAD
-    color: @white;
     text-shadow: 0px 1px 0px darken(@red, 15%);
 
     &:hover, &:active {
-      color: @white;
-
-=======
-    text-shadow: 0px 1px 0px darken(@red, 15%);
-
-    &:hover, &:active {
->>>>>>> master
       &:enabled {
         background-color: saturate(@red, 20%);
         border-color: darken(saturate(@red, 20%), 5%);
       }
     }
-<<<<<<< HEAD
-=======
 
     i {
       background-image: url("@{iconWhiteSpritePath}");
     }
->>>>>>> master
   }
 
   &.btn-inverse {
     background-color: @textColor;
     border-color: darken(@textColor, 5%);
 
-<<<<<<< HEAD
-    color: @white;
     text-shadow: 0px 1px 0px darken(@textColor, 15%);
 
     &:hover, &:active {
-    	background-color: lighten(@textColor, 10%);
-
-=======
-    text-shadow: 0px 1px 0px darken(@textColor, 15%);
-
-    &:hover, &:active {
->>>>>>> master
       &:enabled {
         background-color: darken(@textColor, 5%);
         border-color: darken(@textColor, 10%);
       }
     }
-<<<<<<< HEAD
-=======
 
     i {
       background-image: url("@{iconWhiteSpritePath}");
     }
->>>>>>> master
   }
 
   &.btn-link {
     background: none;
     border: none;
-<<<<<<< HEAD
-
-    color: @grayLight;
-
-    &:hover, &:active, &:focus {
-    	color: @textColor;
-
-      &:enabled {
-=======
     .opacity(70);
 
     color: @textColor;
@@ -236,40 +142,23 @@
       &:enabled {
         .opacity(90);
         
->>>>>>> master
         text-decoration: none;
       }
     }
   }
 
-<<<<<<< HEAD
-  &.btn-icon {
-  	padding-left: 0px !important;
-  	padding-right: 0px !important;
-  	width: 32px;
-
-  	text-align: center;
-
-  	i {
-  		margin: 0px;
-  	}
-=======
 
   &.btn-primary, &.btn-info, &.btn-success, &.btn-warning, &.btn-danger, &.btn-inverse, &.btn-link {
     i {
       .opacity(100);
     }
->>>>>>> master
   }
 }
 
 a.btn-link {
   &:hover, &:active, &:focus {
-<<<<<<< HEAD
-=======
     .opacity(90);
 
->>>>>>> master
     color: @textColor;
     text-decoration: none;
   }

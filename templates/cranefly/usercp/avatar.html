@@ -27,10 +27,10 @@
         {%- endif %}</h1>
       </div>
       <ul class="unstyled">
-        {% if 'gravatar' in settings.avatars_types and user.avatar_type != 'gravatar' %}<li><form action="{{ url('usercp_avatar_gravatar') }}" method="post" class="form-button"><button type="submit" class="btn btn-link"><i class="icon-share"></i> {% trans %}Use Gravatar{% endtrans %}</button><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"></form></li>{% endif %}
-        {% if 'gallery' in settings.avatars_types %}<li><a href="{{ url('usercp_avatar_gallery') }}" class="btn btn-link"><i class="icon-th"></i> {% trans %}Pick Avatar from Gallery{% endtrans %}</a></li>{% endif %}
-        {% if user.avatar_type == 'upload' %}<li id="crop-js" style="display: none;"><a href="{{ url('usercp_avatar_crop') }}" class="btn btn-link"><i class="icon-fullscreen"></i> {% trans %}Crop Your Avatar{% endtrans %}</a></li>{% endif %}
-        {% if 'upload' in settings.avatars_types %}<li><a href="{{ url('usercp_avatar_upload') }}" class="btn btn-link"><i class="icon-picture"></i> {% trans %}Upload Avatar{% endtrans %}</a></li>{% endif %}
+        {% if 'gravatar' in settings.avatars_types and user.avatar_type != 'gravatar' %}<li><form action="{% url 'usercp_avatar_gravatar' %}" method="post" class="form-button"><button type="submit" class="btn btn-link"><i class="icon-share"></i> {% trans %}Use Gravatar{% endtrans %}</button><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"></form></li>{% endif %}
+        {% if 'gallery' in settings.avatars_types %}<li><a href="{% url 'usercp_avatar_gallery' %}" class="btn btn-link"><i class="icon-th"></i> {% trans %}Pick Avatar from Gallery{% endtrans %}</a></li>{% endif %}
+        {% if user.avatar_type == 'upload' %}<li id="crop-js" style="display: none;"><a href="{% url 'usercp_avatar_crop' %}" class="btn btn-link"><i class="icon-fullscreen"></i> {% trans %}Crop Your Avatar{% endtrans %}</a></li>{% endif %}
+        {% if 'upload' in settings.avatars_types %}<li><a href="{% url 'usercp_avatar_upload' %}" class="btn btn-link"><i class="icon-picture"></i> {% trans %}Upload Avatar{% endtrans %}</a></li>{% endif %}
       </ul>
     </div>
   </div>

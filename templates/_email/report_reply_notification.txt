@@ -6,5 +6,5 @@
 {% trans username=user.username, author=author.username, thread=thread.name %}{{ username }}, you are receiving this message because {{ author }} has replied to report "{{ thread }}" that you are watching.{% endtrans %}
 
 {% trans %}To go to this reply follow the link below:{% endtrans %}
-{{ board_address }}{{ url('report_find', thread=thread.pk, slug=thread.slug, post=post.pk) }}
+{{ board_address }}{% url 'report_find' thread=thread.pk, slug=thread.slug, post=post.pk %}
 {% endblock %}

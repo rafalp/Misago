@@ -1,12 +1,11 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
-from misago import messages
 from misago.apps.errors import error403, error404
 from misago.decorators import block_guest
+from misago.forms import FormLayout
 from misago.markdown import signature_markdown
 from misago.messages import Message
-from misago.shortcuts import render_to_response
 from misago.apps.usercp.template import RequestContext
 from misago.apps.usercp.signature.forms import SignatureForm
 
@@ -16,9 +15,10 @@ def signature(request):
     if not request.acl.usercp.can_use_signature():
         return error403(request)
     if request.user.signature_ban:
-        return render_to_response('usercp/signature_banned.html',
-                                  context_instance=RequestContext(request, {
-                                      'tab': 'signature'}));
+        return request.theme.render_to_response('usercp/signature_banned.html',
+                                                context_instance=RequestContext(request, {
+                                                 'tab': 'signature',
+                                                 }));
 
     siggy_text = ''
     message = request.messages.get_message('usercp_signature')
@@ -32,15 +32,16 @@ def signature(request):
             else:
                 request.user.signature_preparsed = None
             request.user.save(force_update=True)
-            messages.success(request, _("Your signature has been changed."), 'usercp_signature')
+            request.messages.set_flash(Message(_("Your signature has been changed.")), 'success', 'usercp_signature')
             return redirect(reverse('usercp_signature'))
         else:
-            message = Message(form.non_field_errors()[0], messages.ERROR)
+            message = Message(form.non_field_errors()[0], 'error')
     else:
         form = SignatureForm(request=request, initial={'signature': request.user.signature})
 
-    return render_to_response('usercp/signature.html',
-                              context_instance=RequestContext(request, {
-                                  'message': message,
-                                  'tab': 'signature',
-                                  'form': form}));
+    return request.theme.render_to_response('usercp/signature.html',
+                                            context_instance=RequestContext(request, {
+                                             'message': message,
+                                             'tab': 'signature',
+                                             'form': FormLayout(form),
+                                             }));

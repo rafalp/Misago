@@ -1,6 +1,4 @@
 from misago.models.alertmodel import Alert
-from misago.models.attachmentmodel import Attachment
-from misago.models.attachmenttypemodel import AttachmentType
 from misago.models.banmodel import Ban, BanCache
 from misago.models.changemodel import Change
 from misago.models.checkpointmodel import Checkpoint
@@ -11,9 +9,6 @@ from misago.models.forumrolemodel import ForumRole
 from misago.models.karmamodel import Karma
 from misago.models.monitoritemmodel import MonitorItem
 from misago.models.newslettermodel import Newsletter
-from misago.models.pollmodel import Poll
-from misago.models.polloptionmodel import PollOption
-from misago.models.pollvotemodel import PollVote
 from misago.models.postmodel import Post
 from misago.models.pruningpolicymodel import PruningPolicy
 from misago.models.rankmodel import Rank
@@ -23,7 +18,6 @@ from misago.models.settingmodel import Setting
 from misago.models.settingsgroupmodel import SettingsGroup
 from misago.models.signinattemptmodel import SignInAttempt
 from misago.models.threadmodel import Thread
-from misago.models.threadprefixmodel import ThreadPrefix
 from misago.models.threadreadmodel import ThreadRead
 from misago.models.tokenmodel import Token
 from misago.models.usermodel import User, Guest, Crawler

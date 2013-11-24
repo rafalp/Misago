@@ -6,7 +6,6 @@ class Checkpoint(models.Model):
     forum = models.ForeignKey('Forum')
     thread = models.ForeignKey('Thread')
     action = models.CharField(max_length=255)
-    extra = models.CharField(max_length=255, null=True, blank=True)
     user = models.ForeignKey('User', null=True, blank=True, on_delete=models.SET_NULL)
     user_name = models.CharField(max_length=255)
     user_slug = models.CharField(max_length=255)
@@ -27,9 +26,9 @@ class Checkpoint(models.Model):
 
 def rename_forum_handler(sender, **kwargs):
     Checkpoint.objects.filter(old_forum=sender).update(
-                                                       old_forum_name=sender.name,
-                                                       old_forum_slug=sender.slug,
-                                                       )
+                                                  old_forum_name=sender.name,
+                                                  old_forum_slug=sender.slug,
+                                                  )
 
 rename_forum.connect(rename_forum_handler, dispatch_uid="rename_forum_checkpoints")
 

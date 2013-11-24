@@ -1,5 +1,6 @@
 from HTMLParser import HTMLParser
 from urlparse import urlparse
+from django.conf import settings
 from misago.utils.strings import random_string
 
 class RemoveHTMLParser(HTMLParser):

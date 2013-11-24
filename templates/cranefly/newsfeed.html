@@ -17,11 +17,11 @@
   <div class="news-feed">
     {% for item in posts %}
     <div class="media">
-      <a href="{{ url('user', user=item.user.pk, username=item.user.username_slug) }}" class="pull-left">
+      <a href="{% url 'user' user=item.user.pk, username=item.user.username_slug %}" class="pull-left">
         <img class="media-object" src="{{ item.user.get_avatar(52) }}">
       </a>
       <div class="media-body">
-        <a href="{{ url('thread_find', thread=item.thread.pk, slug=item.thread.slug, post=item.pk) }}" class="post-preview">{{ item.post_preparsed|markdown_short(300) }}</a>
+        <a href="{% url 'thread_find' thread=item.thread.pk, slug=item.thread.slug, post=item.pk %}" class="post-preview">{{ item.post_preparsed|markdown_short(300) }}</a>
         <div class="media-footer">{% if item.thread.start_post_id == item.pk -%}
         {% trans thread=thread(item), forum=forum(item.forum), user=username(item.user), date=item.date|reltimesince|low %}Thread {{ thread }} posted in {{ forum }} by {{ user }} {{ date }}{% endtrans %}
         {%- else -%}
@@ -42,13 +42,13 @@
 {% endblock %}
 
 {% macro thread(item) -%}
-<a href="{{ url('thread_find', thread=item.thread.pk, slug=item.thread.slug, post=item.pk) }}" class="thread-link">{{ item.thread.name }}</a>
+<a href="{% url 'thread_find' thread=item.thread.pk, slug=item.thread.slug, post=item.pk %}" class="thread-link">{{ item.thread.name }}</a>
 {%- endmacro %}
 
 {% macro forum(forum) -%}
-<a href="{{ url('forum', forum=forum.pk, slug=forum.slug) }}" class="forum-link">{{ forum.name }}</a>
+<a href="{% url 'forum' forum=forum.pk, slug=forum.slug %}" class="forum-link">{{ forum.name }}</a>
 {%- endmacro %}
 
 {% macro username(user) -%}
-<a href="{{ url('user', user=user.pk, username=user.username_slug) }}" class="user-link">{{ user.username }}</a>
+<a href="{% url 'user' user=user.pk, username=user.username_slug %}" class="user-link">{{ user.username }}</a>
 {%- endmacro %}

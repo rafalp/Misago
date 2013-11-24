@@ -5,7 +5,7 @@ from django.db.models.signals import pre_save, pre_delete
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.signals import (delete_user_content, merge_thread, move_forum_content,
-                            move_thread, rename_user, sync_user_profile, remove_thread_prefix)
+                            move_thread, rename_user, sync_user_profile)
 from misago.utils.strings import slugify
 
 class ThreadManager(models.Manager):
@@ -22,7 +22,7 @@ class ThreadManager(models.Manager):
 
         if user.is_authenticated() and user.join_date > cutoff:
             cutoff = user.join_date
-            for row in ForumRead.objects.filter(user=user).values('forum_id', 'cleared').iterator():
+            for row in ForumRead.objects.filter(user=user).values('forum_id', 'cleared'):
                 forum_reads[row['forum_id']] = row['cleared']
 
         for thread in queryset:
@@ -37,9 +37,9 @@ class ThreadManager(models.Manager):
             threads_dict[thread.pk] = thread
 
         if user.is_authenticated():
-            for read in ThreadRead.objects.filter(user=user).filter(thread__in=threads_dict.keys()).iterator():
+            for read in ThreadRead.objects.filter(user=user).filter(thread__in=threads_dict.keys()):
                 try:
-                    threads_dict[read.thread_id].is_read = (threads_dict[read.thread_id].last <= cutoff or
+                    threads_dict[read.thread_id].is_read = (threads_dict[read.thread_id].last <= cutoff or 
                                                             threads_dict[read.thread_id].last <= read.updated or
                                                             threads_dict[read.thread_id].last <= forum_reads[read.forum_id])
                 except KeyError:
@@ -51,7 +51,6 @@ class ThreadManager(models.Manager):
 class Thread(models.Model):
     forum = models.ForeignKey('Forum')
     weight = models.PositiveIntegerField(default=0)
-    prefix = models.ForeignKey('ThreadPrefix', null=True, blank=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
     replies = models.PositiveIntegerField(default=0)
@@ -75,7 +74,6 @@ class Thread(models.Model):
     last_poster_style = models.CharField(max_length=255, null=True, blank=True)
     participants = models.ManyToManyField('User', related_name='private_thread_set')
     report_for = models.ForeignKey('Post', related_name='report_set', null=True, blank=True, on_delete=models.SET_NULL)
-    has_poll = models.BooleanField(default=False)
     moderated = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     closed = models.BooleanField(default=False)
@@ -87,24 +85,13 @@ class Thread(models.Model):
     class Meta:
         app_label = 'misago'
 
-    @property
-    def timeline_date(self):
-        return self.start
-
-    @property
-    def poll(self):
-        if self.has_poll:
-            return self.poll_of
-        else:
-            return None
-
     def delete(self, *args, **kwargs):
         """
         FUGLY HAX for weird stuff that happens with
         relations on model deletion in MySQL
         """
         if self.replies_reported:
-            clear_reports = [post.pk for post in self.post_set.filter(reported=True).iterator()]
+            clear_reports = [post.pk for post in self.post_set.filter(reported=True)]
             if clear_reports:
                 Thread.objects.filter(report_for__in=clear_reports).update(report_for=None)
         return super(Thread, self).delete(*args, **kwargs)
@@ -112,31 +99,27 @@ class Thread(models.Model):
     def get_date(self):
         return self.start
 
-    def add_checkpoints_to_posts(self, show_all, posts, start=None, stop=None):
-        qs = self.checkpoint_set.all()
-        if start:
-            qs = qs.filter(date__gte=start)
-        if stop:
-            qs = qs.filter(date__lte=stop)
+    def set_checkpoints(self, show_all, posts, stop=None):
+        qs = self.checkpoint_set.filter(date__gte=posts[0].date)
         if not show_all:
             qs = qs.filter(deleted=False)
+        if stop:
+            qs = qs.filter(date__lte=stop)
         checkpoints = [i for i in qs]
 
         i_max = len(posts) - 1
         for i, post in enumerate(posts):
             post.checkpoints_visible = []
             for c in checkpoints:
-                if ((i == 0 and c.date <= post.date)
-                        or (c.date >= post.date and (i == i_max or c.date < posts[i+1].date))):
+                if c.date >= post.date and (i == i_max or c.date < posts[i+1].date):
                     post.checkpoints_visible.append(c)
 
-    def set_checkpoint(self, request, action, user=None, forum=None, extra=None):
+    def set_checkpoint(self, request, action, user=None, forum=None):
         if request.user.is_authenticated():
             self.checkpoint_set.create(
                                        forum=self.forum,
                                        thread=self,
                                        action=action,
-                                       extra=extra,
                                        user=request.user,
                                        user_name=request.user.username,
                                        user_slug=request.user.username_slug,
@@ -176,9 +159,6 @@ class Thread(models.Model):
     def merge_with(self, thread):
         merge_thread.send(sender=self, new_thread=thread)
 
-    def update_current_dates(self):
-        self.post_set.update(current_date=timezone.now())
-
     def sync(self):
         # Counters
         self.replies = self.post_set.filter(moderated=False).count() - 1
@@ -211,7 +191,7 @@ class Thread(models.Model):
         # Flags
         self.moderated = start_post.moderated
         self.deleted = start_post.deleted
-
+        
     def email_watchers(self, request, thread_type, post):
         from misago.acl.builder import acl
         from misago.acl.exceptions import ACLError403, ACLError404
@@ -260,7 +240,6 @@ def report_update_handler(sender, **kwargs):
             reported_post = thread.report_for
             if reported_post.reported:
                 reported_post.reported = False
-                reported_post.reports = None
                 reported_post.save(force_update=True)
                 reported_post.thread.replies_reported -= 1
                 reported_post.thread.save(force_update=True)
@@ -275,7 +254,6 @@ def report_delete_handler(sender, **kwargs):
             reported_post = thread.report_for
             if reported_post.reported:
                 reported_post.reported = False
-                reported_post.reports = None
                 reported_post.save(force_update=True)
                 reported_post.thread.replies_reported -= 1
                 reported_post.thread.save(force_update=True)

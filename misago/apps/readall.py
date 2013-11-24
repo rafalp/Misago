@@ -3,8 +3,8 @@ from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils import timezone
 from django.utils.translation import ugettext as _
-from misago import messages
 from misago.decorators import block_guest, check_csrf
+from misago.messages import Message
 from misago.models import ForumRead, ThreadRead
 
 @block_guest
@@ -19,5 +19,5 @@ def read_all(request):
         bulk.append(new_record)
     if bulk:
         ForumRead.objects.bulk_create(bulk)
-    messages.success(request, _("All forums have been marked as read."))
+    request.messages.set_flash(Message(_("All forums have been marked as read.")), 'success')
     return redirect(reverse('index'))

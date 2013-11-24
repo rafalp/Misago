@@ -1,23 +1,56 @@
 {% extends "admin/admin/layout.html" %}
-{% import "forms.html" as form_theme with context %}
+{% load i18n %}
+{% load l10n %}
+{% load url from future %}
+{% import "_forms.html" as form_theme with context %}
 
 {% block action_body %}
-<form action="{{ link }}" method="post">
-  {{ form_theme.hidden_fields(form) }}
-  {% block form %}{% endblock %}
+<form action="{{ url }}" method="post">
+  {% if tabbed %}
+  {{ form_theme.form_hidden_widget(form) }}
+  <ul class="nav nav-tabs" id="form-tabs">{% for fieldset in form.fieldsets %}
+    <li{% if loop.first %} class="active"{% endif%}><a href="#form-tab-{{ loop.index }}" data-toggle="tab">{{ fieldset.legend }}</a></li>{% endfor %}
+  </ul>
+  <div class="tab-content">
+    {% for fieldset in form.fieldsets %}
+    <div class="tab-pane{% if loop.first %} active{% endif%}" id="form-tab-{{ loop.index }}">
+      <fieldset>
+        <legend>{{ fieldset.legend }}</legend>{% for field in fieldset.fields %}
+          {{ form_theme.row_widget(field) }}{% endfor %}
+      </fieldset>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  {{ form_theme.form_widget(form) }}
+  {% endif %}
   <div class="form-actions">
   	{% block form_actions %}
   	{% block form_submit %}
   	<button name="save" type="submit" class="btn btn-primary">{{ action.submit_button }}</button>
   	{% endblock %}
-  	{% if action.get_edit_link -%}
+  	{% if action.get_edit_url -%}
   	<button name="save_edit" type="submit" class="btn btn-warning">{% trans %}Save and Edit{% endtrans %}</button>
   	{%- endif %}
-  	{% if action.get_new_link -%}
+  	{% if action.get_new_url -%}
   	<button name="save_new" type="submit" class="btn btn-success">{% trans %}Save and Add Another{% endtrans %}</button>
   	{%- endif %}
   	{% if fallback %}<a href="{{ fallback }}" class="btn">{% trans %}Cancel{% endtrans %}</a>{% endif %}
   	{% endblock %}
   </div>
 </form>
+{% endblock %}
+
+{% block javascripts %}
+{{ super() }}
+{% if tabbed %}
+    <script>
+      $(function () {
+        $('#form-tabs a').click(function (e) {
+          e.preventDefault();
+          $(this).tab('show');
+        });
+      });
+    </script>
+{% endif %}
 {% endblock %}

@@ -1,17 +1,15 @@
+from django import forms
 from django.core.urlresolvers import reverse
 from django.forms import ValidationError
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
-import floppyforms as forms
-from misago import messages
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
-from misago.forms import Form
+from misago.forms import Form, FormFields
 from misago.messages import Message
 from misago.models import Forum, Thread, Post
 from misago.readstrackers import ForumsTracker
-from misago.shortcuts import render_to_response
 from misago.apps.threadtype.base import ViewBase
 
 class ThreadsListBaseView(ViewBase):
@@ -71,28 +69,21 @@ class ThreadsListBaseView(ViewBase):
                                     thread.last_post = post
                                 if thread.start_post_id == post.pk or thread.last_post_id == post.pk:
                                     break
-
-                    action_call = 'action_' + self.form.cleaned_data['list_action']
-                    action_extra_args = []
-                    if ':' in action_call:
-                        action_extra_args = action_call[action_call.index(':') + 1:].split(',')
-                        action_call = action_call[:action_call.index(':')]
-
-                    form_action = getattr(self, action_call)
+                    form_action = getattr(self, 'action_' + self.form.cleaned_data['list_action'])
                     try:
-                        response = form_action(checked_items, *action_extra_args)
+                        response = form_action(checked_items)
                         if response:
                             return response
                         return redirect(self.request.path)
                     except forms.ValidationError as e:
-                        self.message = Message(e.messages[0], messages.ERROR)
+                        self.message = Message(e.messages[0], 'error')
                 else:
-                    self.message = Message(_("You have to select at least one thread."), messages.ERROR)
+                    self.message = Message(_("You have to select at least one thread."), 'error')
             else:
                 if 'list_action' in self.form.errors:
-                    self.message = Message(_("Requested action is incorrect."), messages.ERROR)
+                    self.message = Message(_("Action requested is incorrect."), 'error')
                 else:
-                    self.message = Message(self.form.non_field_errors()[0], messages.ERROR)
+                    self.message = Message(form.non_field_errors()[0], 'error')
         else:
             self.form = self.form(request=self.request)
 
@@ -126,14 +117,15 @@ class ThreadsListBaseView(ViewBase):
         # Merge proxy into forum
         self.forum.closed = self.proxy.closed
 
-        return render_to_response('%ss/%s.html' % (self.type_prefix, self.template),
-                                  self._template_vars({
-                                        'message': self.message,
-                                        'forum': self.forum,
-                                        'parents': self.parents,
-                                        'count': self.count,
-                                        'list_form': self.form or None,
-                                        'threads': self.threads,
-                                        'pagination': self.pagination,
-                                      }),
-                                  context_instance=RequestContext(request));
+        return request.theme.render_to_response('%ss/%s.html' % (self.type_prefix, self.template),
+                                                self.template_vars({
+                                                 'type_prefix': self.type_prefix,
+                                                 'message': self.message,
+                                                 'forum': self.forum,
+                                                 'parents': self.parents,
+                                                 'count': self.count,
+                                                 'list_form': FormFields(self.form).fields if self.form else None,
+                                                 'threads': self.threads,
+                                                 'pagination': self.pagination,
+                                                 }),
+                                                context_instance=RequestContext(request));

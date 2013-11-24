@@ -1,16 +1,14 @@
+from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.db import transaction
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.translation import ugettext as _
-from misago import messages
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
-from misago.conf import settings
 from misago.decorators import block_guest, check_csrf
 from misago.markdown import post_markdown
-from misago.models import Forum, Checkpoint, Thread, Post, Karma, User, WatchedThread
-from misago.monitor import monitor, UpdatingMonitor
+from misago.messages import Message
+from misago.models import Forum, Checkpoint, Thread, Post, Karma, WatchedThread
 from misago.readstrackers import ThreadsTracker
 from misago.utils.strings import short_string, slugify
 from misago.utils.views import json_response
@@ -103,7 +101,7 @@ class ShowHiddenRepliesBaseView(JumpView):
             ignored_exclusions = request.session.get('unignore_threads', [])
             ignored_exclusions.append(self.thread.pk)
             request.session['unignore_threads'] = ignored_exclusions
-            messages.success(request, _('Replies made to this thread by members on your ignore list have been revealed.'), 'threads')
+            request.messages.set_flash(Message(_('Replies made to this thread by members on your ignore list have been revealed.')), 'success', 'threads')
             return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))
         return view(self.request)
 
@@ -113,7 +111,7 @@ class WatchThreadBaseView(JumpView):
         return redirect(self.request.POST.get('retreat', reverse('thread', kwargs={'thread': self.thread.pk, 'slug': self.thread.slug})))
 
     def update_watcher(self, request, watcher):
-        messages.success(request, _('This thread has been added to your watched threads list.'), 'threads')
+        request.messages.set_flash(Message(_('This thread has been added to your watched threads list.')), 'success', 'threads')
 
     def make_jump(self):
         @block_guest
@@ -126,7 +124,6 @@ class WatchThreadBaseView(JumpView):
                 watcher.user = request.user
                 watcher.forum = self.forum
                 watcher.thread = self.thread
-                watcher.starter_id = self.thread.start_poster_id
                 watcher.last_read = timezone.now()
             self.update_watcher(request, watcher)
             if watcher.pk:
@@ -141,9 +138,9 @@ class WatchEmailThreadBaseView(WatchThreadBaseView):
     def update_watcher(self, request, watcher):
         watcher.email = True
         if watcher.pk:
-            messages.success(request, _('You will now receive e-mail with notification when somebody replies to this thread.'), 'threads')
+            request.messages.set_flash(Message(_('You will now receive e-mail with notification when somebody replies to this thread.')), 'success', 'threads')
         else:
-            messages.success(request, _('This thread has been added to your watched threads list. You will also receive e-mail with notification when somebody replies to it.'), 'threads')
+            request.messages.set_flash(Message(_('This thread has been added to your watched threads list. You will also receive e-mail with notification when somebody replies to it.')), 'success', 'threads')
 
 
 class UnwatchThreadBaseView(WatchThreadBaseView):
@@ -151,27 +148,25 @@ class UnwatchThreadBaseView(WatchThreadBaseView):
         watcher.deleted = True
         watcher.delete()
         if watcher.email:
-            messages.success(request, _('This thread has been removed from your watched threads list. You will no longer receive e-mails with notifications when somebody replies to it.'), 'threads')
+            request.messages.set_flash(Message(_('This thread has been removed from your watched threads list. You will no longer receive e-mails with notifications when somebody replies to it.')), 'success', 'threads')
         else:
-            messages.success(request, _('This thread has been removed from your watched threads list.'), 'threads')
+            request.messages.set_flash(Message(_('This thread has been removed from your watched threads list.')), 'success', 'threads')
 
 
 class UnwatchEmailThreadBaseView(WatchThreadBaseView):
     def update_watcher(self, request, watcher):
         watcher.email = False
-        messages.success(request, _('You will no longer receive e-mails with notifications when somebody replies to this thread.'), 'threads')
+        request.messages.set_flash(Message(_('You will no longer receive e-mails with notifications when somebody replies to this thread.')), 'success', 'threads')
 
 
 class UpvotePostBaseView(JumpView):
     def make_jump(self):
         @block_guest
         @check_csrf
-        @transaction.commit_on_success
         def view(request):
             if self.post.user_id == request.user.id:
                 return error404(request)
             self.check_acl(request)
-            user = User.objects.block_user(request.user)
             try:
                 vote = Karma.objects.get(user=request.user, post=self.post)
                 if self.thread.start_post_id == self.post.pk:
@@ -181,27 +176,30 @@ class UpvotePostBaseView(JumpView):
                         self.thread.downvotes -= 1
                 if vote.score > 0:
                     self.post.upvotes -= 1
-                    user.karma_given_p -= 1
+                    request.user.karma_given_p -= 1
                     if self.post.user_id:
                         self.post.user.karma_p -= 1
                 else:
                     self.post.downvotes -= 1
-                    user.karma_given_n -= 1
+                    request.user.karma_given_n -= 1
                     if self.post.user_id:
                         self.post.user.karma_n -= 1
             except Karma.DoesNotExist:
                 vote = Karma()
-                vote.forum = self.forum
-                vote.thread = self.thread
-                vote.post = self.post
-                vote.user = request.user
-                vote.user_name = request.user.username
-                vote.user_slug = request.user.username_slug
-                vote.date = timezone.now()
-                vote.ip = request.session.get_ip(request)
-                vote.agent = request.META.get('HTTP_USER_AGENT')
+            vote.forum = self.forum
+            vote.thread = self.thread
+            vote.post = self.post
+            vote.user = request.user
+            vote.user_name = request.user.username
+            vote.user_slug = request.user.username_slug
+            vote.date = timezone.now()
+            vote.ip = request.session.get_ip(request)
+            vote.agent = request.META.get('HTTP_USER_AGENT')
             self.make_vote(request, vote)
-            vote.save()
+            if vote.pk:
+                vote.save(force_update=True)
+            else:
+                vote.save(force_insert=True)
             if self.thread.start_post_id == self.post.pk:
                 if vote.score > 0:
                     self.thread.upvotes += 1
@@ -210,21 +208,20 @@ class UpvotePostBaseView(JumpView):
                 self.thread.save(force_update=True)
             if vote.score > 0:
                 self.post.upvotes += 1
-                user.karma_given_p += 1
+                request.user.karma_given_p += 1
                 if self.post.user_id:
                     self.post.user.karma_p += 1
-                    self.post.user.score += settings.score_reward_karma_positive
+                    self.post.user.score += request.settings['score_reward_karma_positive']
             else:
                 self.post.downvotes += 1
-                user.karma_given_n += 1
+                request.user.karma_given_n += 1
                 if self.post.user_id:
                     self.post.user.karma_n += 1
-                    self.post.user.score -= settings.score_reward_karma_negative
+                    self.post.user.score -= request.settings['score_reward_karma_negative']
             self.post.save(force_update=True)
-            user.last_vote = timezone.now()
+            request.user.save(force_update=True)
             if self.post.user_id:
                 self.post.user.save(force_update=True)
-            user.save(force_update=True)
             if request.is_ajax():
                 return json_response(request, {
                                                'score_total': self.post.upvotes - self.post.downvotes,
@@ -232,13 +229,13 @@ class UpvotePostBaseView(JumpView):
                                                'score_downvotes': self.post.downvotes,
                                                'user_vote': vote.score,
                                               })
-            messages.success(request, _('Your vote has been saved.'), 'threads_%s' % self.post.pk)
+            request.messages.set_flash(Message(_('Your vote has been saved.')), 'success', 'threads_%s' % self.post.pk)
             return self.redirect_to_post(self.post)
         return view(self.request)
-
+    
     def check_acl(self, request):
         request.acl.threads.allow_post_upvote(self.forum)
-
+    
     def make_vote(self, request, vote):
         vote.score = 1
 
@@ -246,7 +243,7 @@ class UpvotePostBaseView(JumpView):
 class DownvotePostBaseView(UpvotePostBaseView):
     def check_acl(self, request):
         request.acl.threads.allow_post_downvote(self.forum)
-
+    
     def make_vote(self, request, vote):
         vote.score = -1
 
@@ -269,8 +266,6 @@ class ReportPostBaseView(JumpView):
                         report.checkpoint_set.get(user=request.user, action="reported")
                     except Checkpoint.DoesNotExist:
                         report.set_checkpoint(self.request, 'reported', user)
-                        self.post.add_reporter(self.request.user)
-                        self.post.save(force_update=True)
                     made_report = True
 
             if not report:
@@ -322,6 +317,7 @@ Member @%(reporter)s has reported following post by @%(reported)s:
                                              post=reason_post,
                                              post_preparsed=reason_post_preparsed,
                                              date=now,
+                                             current_date=now,
                                              )
 
                 report.start_post = reason
@@ -332,22 +328,20 @@ Member @%(reporter)s has reported following post by @%(reported)s:
                     reason.mentions.add(m)
 
                 self.post.reported = True
-                self.post.add_reporter(self.request.user)
                 self.post.save(force_update=True)
                 self.thread.replies_reported += 1
                 self.thread.save(force_update=True)
-                with UpdatingMonitor() as cm:
-                    monitor.increase('reported_posts')
+                request.monitor.increase('reported_posts')
                 made_report = True
 
             if made_report:
                 if request.is_ajax():
                     return json_response(request, message=_("Selected post has been reported and will receive moderator attention. Thank you."))
-                messages.info(request, _("Selected post has been reported and will receive moderator attention. Thank you."), 'threads_%s' % self.post.pk)
+                self.request.messages.set_flash(Message(_("Selected post has been reported and will receive moderator attention. Thank you.")), 'info', 'threads_%s' % self.post.pk)
             else:
                 if request.is_ajax():
                     return json_response(request, message=_("You have already reported this post. One of moderators will handle it as soon as it is possible. Thank you for your patience."))
-                messages.info(request, _("You have already reported this post. One of moderators will handle it as soon as it is possible. Thank you for your patience."), 'threads_%s' % self.post.pk)
+                self.request.messages.set_flash(Message(_("You have already reported this post. One of moderators will handle it as soon as it is possible. Thank you for your patience.")), 'info', 'threads_%s' % self.post.pk)
 
             return self.redirect_to_post(self.post)
         return view(self.request)
@@ -360,11 +354,11 @@ class ShowPostReportBaseView(JumpView):
         @block_guest
         def view(request):
             if not self.post.reported:
-                return error404(request)
+                return error404()
             reports = Forum.objects.special_model('reports')
             self.request.acl.forums.allow_forum_view(reports)
             report = self.post.live_report()
             if not report:
-                return error404(request)
+                return error404()
             return redirect(reverse('report', kwargs={'thread': report.pk, 'slug': report.slug}))
         return view(self.request)

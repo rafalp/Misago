@@ -1,27 +1,25 @@
 {% extends "admin/layout_compact.html" %}
-{% import "forms.html" as form_theme with context %}
+{% import "_forms.html" as form_theme with context %}
 {% from "admin/macros.html" import page_title, draw_message_icon %}
 
 {% block title %}{{ page_title(title=_('Sign In')) }}{% endblock %}
 
 {% block header %}<strong>Misago</strong> {% trans %}Board Administration{% endtrans %}{% endblock %}
-
+      
 {% block content %}
           {% if message %}
-          <div class="alert alert-{{ message.level }} block-alert">
+          <div class="alert alert-{{ message.type }} block-alert">
             {{ draw_message_icon(message) }}
 	        <p><strong>{{ message.message }}</strong></p>
           </div>
           {% endif %}
-          <form class="form-vertical" action="{{ url(admin_index) }}" method="post">
+          <form class="form-vertical" action="{{ admin_index|url() }}" method="post">
           	<div class="form-container">
-              {{ form_theme.hidden_fields(form) }}
-              {{ form_theme.row(form.user_email, attrs={'class': 'span4'}) }}
-              {{ form_theme.row(form.user_password, attrs={'class': 'span4'}) }}
+              {{ form_theme.form_widget(form, width=4) }}
             </div>
             <div class="form-actions">
               <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> {% trans %}Sign In{% endtrans %}</button>
-              <a href="{{ url('index') }}" class="btn pull-right"><i class="icon-home"></i> {% trans %}Return to Forums{% endtrans %}</a>
+              <a href="{% url 'index' %}" class="btn pull-right"><i class="icon-home"></i> {% trans %}Return to Forums{% endtrans %}</a>
             </div>
           </form>
 {% endblock %}

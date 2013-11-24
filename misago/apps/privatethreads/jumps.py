@@ -1,5 +1,4 @@
 from django.utils.translation import ugettext as _
-from misago import messages
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.threadtype.jumps import *
 from misago.models import User
@@ -54,30 +53,30 @@ class InviteUserView(JumpView, TypeMixin):
     def make_jump(self):
         username = slugify(self.request.POST.get('username', '').strip())
         if not username:
-            messages.error(self.request, _('You have to enter name of user you want to invite to thread.'), 'threads')
+            self.request.messages.set_flash(Message(_('You have to enter name of user you want to invite to thread.')), 'error', 'threads')
             return self.retreat_redirect()
         try:
             user = User.objects.get(username_slug=username)
             acl = user.acl(self.request)
             if user in self.thread.participants.all():
                 if user.pk == self.request.user.pk:
-                    messages.error(self.request, _('You cannot add yourself to this thread.'), 'threads')
+                    self.request.messages.set_flash(Message(_('You cannot add yourself to this thread.')), 'error', 'threads')
                 else:
-                    messages.info(self.request, _('%(user)s is already participating in this thread.') % {'user': user.username}, 'threads')
+                    self.request.messages.set_flash(Message(_('%(user)s is already participating in this thread.') % {'user': user.username}), 'info', 'threads')
             elif not acl.private_threads.can_participate():
-                messages.info(self.request, _('%(user)s cannot participate in private threads.') % {'user': user.username}, 'threads')
+                    self.request.messages.set_flash(Message(_('%(user)s cannot participate in private threads.') % {'user': user.username}), 'info', 'threads')
             elif (not self.request.acl.private_threads.can_invite_ignoring() and
                     not user.allow_pd_invite(self.request.user)):
-                messages.info(self.request, _('%(user)s restricts who can invite him to private threads.') % {'user': user.username}, 'threads')
+                self.request.messages.set_flash(Message(_('%(user)s restricts who can invite him to private threads.') % {'user': user.username}), 'info', 'threads')
             else:
                 self.thread.participants.add(user)
                 user.sync_pds = True
                 user.save(force_update=True)
                 user.email_user(self.request, 'private_thread_invite', _("You've been invited to private thread \"%(thread)s\" by %(user)s") % {'thread': self.thread.name, 'user': self.request.user.username}, {'author': self.request.user, 'thread': self.thread})
                 self.thread.set_checkpoint(self.request, 'invited', user)
-                messages.success(self.request, _('%(user)s has been added to this thread.') % {'user': user.username}, 'threads')
+                self.request.messages.set_flash(Message(_('%(user)s has been added to this thread.') % {'user': user.username}), 'success', 'threads')
         except User.DoesNotExist:
-            messages.error(self.request, _('User with requested username could not be found.'), 'threads')
+            self.request.messages.set_flash(Message(_('User with requested username could not be found.')), 'error', 'threads')
         return self.retreat_redirect()
 
 
@@ -98,19 +97,19 @@ class RemoveUserView(JumpView, TypeMixin):
             # If there are no more participants in thread, remove it
             if self.thread.participants.count() == 0:
                 self.thread.delete()
-                messages.info(self.request, _('Thread has been deleted because last participant left it.'), 'threads')
+                self.request.messages.set_flash(Message(_('Thread has been deleted because last participant left it.')), 'info', 'threads')
                 return self.threads_list_redirect()
             # Nope, see if we removed ourselves
             if user.pk == self.request.user.pk:
                 self.thread.set_checkpoint(self.request, 'left')
-                messages.info(self.request, _('You have left the "%(thread)s" thread.') % {'thread': self.thread.name}, 'threads')
+                self.request.messages.set_flash(Message(_('You have left the "%(thread)s" thread.') % {'thread': self.thread.name}), 'info', 'threads')
                 return self.threads_list_redirect()
             # Nope, somebody else removed user
             user.sync_pds = True
             user.save(force_update=True)
             self.thread.set_checkpoint(self.request, 'removed', user)
-            messages.info(self.request, _('Selected participant was removed from thread.'), 'threads')
+            self.request.messages.set_flash(Message(_('Selected participant was removed from thread.')), 'info', 'threads')
             return self.retreat_redirect()
         except User.DoesNotExist:
-            messages.error(self.request, _('Requested thread participant does not exist.'), 'threads')
+            self.request.messages.set_flash(Message(_('Requested thread participant does not exist.')), 'error', 'threads')
             return self.retreat_redirect()

@@ -3,12 +3,11 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
-from misago import messages
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
 from misago.markdown import post_markdown
+from misago.messages import Message
 from misago.models import Forum, Thread, Post, Change
-from misago.shortcuts import render_to_response
 from misago.utils.datesformats import reldate
 from misago.utils.strings import slugify
 from misago.apps.threadtype.base import ViewBase
@@ -52,15 +51,16 @@ class ChangelogBaseView(ViewBase):
 
 class ChangelogChangesBaseView(ChangelogBaseView):
     def dispatch(self, request, **kwargs):
-        return render_to_response('%ss/changelog.html' % self.type_prefix,
-                                  self._template_vars({
-                                        'forum': self.forum,
-                                        'parents': self.parents,
-                                        'thread': self.thread,
-                                        'post': self.post,
-                                        'edits': self.post.change_set.prefetch_related('user').order_by('-id')
-                                      }),
-                                  context_instance=RequestContext(request))
+        return request.theme.render_to_response('%ss/changelog.html' % self.type_prefix,
+                                                self.template_vars({
+                                                 'type_prefix': self.type_prefix,
+                                                 'forum': self.forum,
+                                                 'parents': self.parents,
+                                                 'thread': self.thread,
+                                                 'post': self.post,
+                                                 'edits': self.post.change_set.prefetch_related('user').order_by('-id')
+                                                 }),
+                                                context_instance=RequestContext(request))
 
 
 class ChangelogDiffBaseView(ChangelogBaseView):
@@ -78,20 +78,21 @@ class ChangelogDiffBaseView(ChangelogBaseView):
         except IndexError:
             prev = None
         self.forum.closed = self.proxy.closed
-        return render_to_response('%ss/changelog_diff.html' % self.type_prefix,
-                                  self._template_vars({
-                                        'forum': self.forum,
-                                        'parents': self.parents,
-                                        'thread': self.thread,
-                                        'post': self.post,
-                                        'change': self.change,
-                                        'next': next,
-                                        'prev': prev,
-                                        'message': request.messages.get_message('changelog'),
-                                        'l': 1,
-                                        'diff': difflib.ndiff(self.change.post_content.splitlines(), self.post.post.splitlines()),
-                                      }),
-                                  context_instance=RequestContext(request))
+        return request.theme.render_to_response('%ss/changelog_diff.html' % self.type_prefix,
+                                                self.template_vars({
+                                                 'type_prefix': self.type_prefix,
+                                                 'forum': self.forum,
+                                                 'parents': self.parents,
+                                                 'thread': self.thread,
+                                                 'post': self.post,
+                                                 'change': self.change,
+                                                 'next': next,
+                                                 'prev': prev,
+                                                 'message': request.messages.get_message('changelog'),
+                                                 'l': 1,
+                                                 'diff': difflib.ndiff(self.change.post_content.splitlines(), self.post.post.splitlines()),
+                                                 }),
+                                                context_instance=RequestContext(request))
 
 
 class ChangelogRevertBaseView(ChangelogDiffBaseView):
@@ -103,7 +104,7 @@ class ChangelogRevertBaseView(ChangelogDiffBaseView):
     def dispatch(self, request, **kwargs):
         if ((not self.change.thread_name_old or self.thread.name == self.change.thread_name_old)
             and (self.change.post_content == self.post.post)):
-            messages.error(request, _("No changes to revert."), 'changelog')
+            request.messages.set_flash(Message(_("No changes to revert.")), 'error', 'changelog')
             return redirect(reverse('%s_changelog_diff' % self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'post': self.post.pk, 'change': self.change.pk}))
 
         if self.change.thread_name_old and self.change.thread_name_old != self.thread.name:
@@ -121,5 +122,5 @@ class ChangelogRevertBaseView(ChangelogDiffBaseView):
             md, self.post.post_preparsed = post_markdown(self.change.post_content)
             self.post.save(force_update=True)
 
-        messages.success(request, _("Post has been reverted to state from %(date)s.") % {'date': reldate(self.change.date).lower()}, 'threads_%s' % self.post.pk)
+        request.messages.set_flash(Message(_("Post has been reverted to state from %(date)s.") % {'date': reldate(self.change.date).lower()}), 'success', 'threads_%s' % self.post.pk)
         return self.redirect_to_post(self.post)

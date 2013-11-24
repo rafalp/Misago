@@ -7,8 +7,8 @@
   {{ password }}
 </div>
 <p {{ style_p|safe }}>{% trans %}You can sign in to your account using new password by following this link:{% endtrans %}</p>
-<a href="{{ board_address }}{{ url('sign_in') }}" {{ style_button|safe }}>{% trans %}Sign In{% endtrans %}</a>
+<a href="{{ board_address }}{% url 'sign_in' %}" {{ style_button|safe }}>{% trans %}Sign In{% endtrans %}</a>
 
 <p {{ style_p|safe }}>{% trans %}If the above link is not clickable, copy and paste this link into your web browser's address bar:{% endtrans %}</p>
-<a href="{{ board_address }}{{ url('sign_in') }}" {{ style_link|safe }}>{{ board_address }}{{ url('sign_in') }}</a>
+<a href="{{ board_address }}{% url 'sign_in' %}" {{ style_link|safe }}>{{ board_address }}{% url 'sign_in' %}</a>
 {% endblock %}

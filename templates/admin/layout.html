@@ -1,17 +1,19 @@
 {% extends "admin/base.html" %}
+{% load i18n %}
+{% load url from future %}
 {% from "admin/macros.html" import messages_list %}
 
 {% block body %}
 <div id="page-top" class="navbar navbar-static-top navbar-sections">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="{{ url(admin_index) }}">Misago <span>{{ version }}</span></a>
+      <a class="brand" href="{{ admin_index|url() }}">Misago <span>{{ version }}</span></a>
       <ul class="nav">{% for section in sections %}
-      	<li{% if section.is_active and not exception_response %} class="active"{% endif %}><a href="{{ url(section.link) }}"><i class="icon-{{ section.icon }}"></i> {{ section.name }}</a></li>{% endfor %}
+      	<li{% if section.is_active and not exception_response %} class="active"{% endif %}><a href="{{ section.route|url() }}"><i class="icon-{{ section.icon }}"></i> {{ section.name }}</a></li>{% endfor %}
       </ul>
-      <form class="navbar-form user-signout pull-right" action="{{ url('admin_sign_out') }}" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><button type="submit" class="btn btn-link"><i class="icon-off"></i> {% trans %}Sign Out{% endtrans %}</button></form>
+      <form class="navbar-form user-signout pull-right" action="{% url 'admin_sign_out' %}" method="post"><input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}"><button type="submit" class="btn btn-link"><i class="icon-off"></i> {% trans %}Sign Out{% endtrans %}</button></form>
       <ul class="nav pull-right">
-      	<li><a href="{{ url('index') }}"><i class="icon-home"></i> {% trans %}Forums Index{% endtrans %}</a></li>
+      	<li><a href="{% url 'index' %}"><i class="icon-home"></i> {% trans %}Forums Index{% endtrans %}</a></li>
       </ul>
       <div class="user-profile pull-right">
         <img src="{{ user.get_avatar(28) }}" class="avatar-small" alt=""> {{ user.username }}
@@ -23,7 +25,7 @@
   <div class="navbar-inner">
     <div class="container">
       <ul class="nav">{% for action in actions %}
-      	<li{% if action.is_active %} class="active"{% elif action.help %} class="tooltip-bottom" title="{{ action.help }}"{% endif %}><a href="{{ url(action.link) }}"><i class="icon-{{ action.icon }}"></i> {{ action.name }}</a></li>{% endfor %}
+      	<li{% if action.is_active %} class="active"{% elif action.help %} class="tooltip-bottom" title="{{ action.help }}"{% endif %}><a href="{{ action.route|url() }}"><i class="icon-{{ action.icon }}"></i> {{ action.name }}</a></li>{% endfor %}
       </ul>
     </div>
   </div>

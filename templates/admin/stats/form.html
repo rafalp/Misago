@@ -1,20 +1,13 @@
 {% extends "admin/stats/layout.html" %}
-{% import "forms.html" as form_theme with context %}
+{% load i18n %}
+{% import "_forms.html" as form_theme with context %}
 
 {% block action %}<div class="row">
   <div class="span8 offset2">
   	<h2>{% trans %}New Report{% endtrans %}</h2>
-    <form action="{{ url('admin_stats') }}" class="form-vertical" method="post">
-      {{ form_theme.hidden_fields(form) }}
+    <form action="{% url 'admin_stats' %}" class="form-vertical" method="post">
       <div class="form-container">
-        {{ form_theme.row(form.provider_model, attrs={'class': 'span8'}) }}
-        {{ form_theme.repeat(form,
-                             (form.date_start, form.date_end),
-                             attrs=(
-                                    {'placeholder': _("Start Date: YYYY-MM-DD"), 'class': 'span4'},
-                                    {'placeholder': _("End Date: YYYY-MM-DD"), 'class': 'span4'}
-                                   )) }}
-        {{ form_theme.row(form.stats_precision, attrs={'class': 'span8'}) }}
+        {{ form_theme.form_widget(form, width=8) }}
       </div>
       <div class="form-actions">
         <button type="submit" class="btn btn-primary">{% trans %}Generate Report{% endtrans %}</button>

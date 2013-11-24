@@ -59,14 +59,14 @@ class SortList(object):
 Admin site section
 """
 class AdminSiteItem(object):
-    def __init__(self, id, name, icon, target=None, link=None, help=None, after=None):
+    def __init__(self, id, name, icon, target=None, route=None, help=None, after=None):
         self.id = id
         self.name = name
         self.help = help
         self.after = after
         self.icon = icon
         self.target = target
-        self.link = link
+        self.route = route
         self.sorted = False
 
 
@@ -106,16 +106,16 @@ class AdminSection(AdminSiteItem):
         self.last = None
         super(AdminSection, self).__init__(**kwargs)
 
-    def get_links(self):
-        links = []
+    def get_routes(self):
+        routes = []
         first_action = True
         for action in self.actions:
             if first_action:
-                links += patterns('', url('^', include(action.urlpatterns)))
+                routes += patterns('', url('^', include(action.urlpatterns)))
                 first_action = False
             else:
-                links += patterns('', url(('^%s/' % action.id), include(action.urlpatterns)))
-        return links
+                routes += patterns('', url(('^%s/' % action.id), include(action.urlpatterns)))
+        return routes
 
     def is_active(self, full_path):
         action_path = '/%s%s/' % (ADMIN_PATH, self.id)
@@ -128,7 +128,7 @@ Admin site class that knows ACP structure
 """
 class AdminSite(object):
     actions_index = {}
-    links = []
+    routes = []
     sections = []
     sections_index = {}
 
@@ -136,8 +136,9 @@ class AdminSite(object):
         """
         Build admin site structure
         """
-        if self.links:
-            return self.links
+        # Return discovered admin routes, so we dont repeat ourself
+        if self.routes:
+            return self.routes
 
         # Found actions
         actions = []
@@ -206,12 +207,12 @@ class AdminSite(object):
         first_section = True
         for section in self.sections:
             if first_section:
-                self.links += patterns('', url('^', include(section.get_links())))
+                self.routes += patterns('', url('^', include(section.get_routes())))
                 first_section = False
             else:
-                self.links += patterns('', url(('^%s/' % section.id), include(section.get_links())))
+                self.routes += patterns('', url(('^%s/' % section.id), include(section.get_routes())))
         
-        return self.links
+        return self.routes
 
     def get_action(self, action):
         """
@@ -221,9 +222,9 @@ class AdminSite(object):
 
     def get_admin_index(self):
         """
-        Return admin index link - first action of first section
+        Return admin index route - first action of first section
         """
-        return self.sections[0].actions[0].link
+        return self.sections[0].actions[0].route
 
     def get_admin_navigation(self, request):
         """
@@ -236,12 +237,12 @@ class AdminSite(object):
 
         # Loop sections, build list of sections and find active section
         for section in self.sections:
-            is_active = section.is_active(request.path_info)
+            is_active = section.is_active(request.path)
             sections.append({
                              'is_active': is_active,
                              'name': section.name,
                              'icon': section.icon,
-                             'link': section.actions[0].link
+                             'route': section.actions[0].route
                              })
             if is_active:
                 active_section = section
@@ -253,13 +254,13 @@ class AdminSite(object):
 
         # Loop active section actions
         for action in active_section.actions:
-            is_active = action.is_active(request.path_info, active_section.id if active_section != self.sections[0] else None)
+            is_active = action.is_active(request.path, active_section.id if active_section != self.sections[0] else None)
             actions.append({
                              'is_active': is_active,
                              'name': action.name,
                              'icon': action.icon,
                              'help': action.help,
-                             'link': action.link
+                             'route': action.route
                              })
             if is_active:
                 active_action = action

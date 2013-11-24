@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import F
-from misago.conf import settings
+from misago.dbsettings import DBSettings
 from misago.models import Rank, User
 
 class Command(BaseCommand):
@@ -29,8 +29,9 @@ class Command(BaseCommand):
                 defaulted_ranks = True
 
         # Inflate scores
-        if settings.ranking_inflation:
-            inflation = float(100 - settings.ranking_inflation) / 100
+        settings = DBSettings()
+        if settings['ranking_inflation']:
+            inflation = float(100 - settings['ranking_inflation']) / 100
             User.objects.all().update(acl_key=None, score=F('score') * inflation, ranking=0)
         else:
             User.objects.all().update(acl_key=None)

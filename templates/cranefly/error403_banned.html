@@ -33,7 +33,7 @@
     <p class="error-ban-expires">{% trans ban_expires=ban.expires|date %}Your ban will expire on {{ ban_expires }}{% endtrans %}</p>
     {% endif %}
     <div class="error-protips">
-      <a href="{{ url('index') }}"><i class="icon-home icon-white"></i> {% trans %}Return to board index{% endtrans %}</a>
+      <a href="{% url 'index' %}"><i class="icon-home icon-white"></i> {% trans %}Return to board index{% endtrans %}</a>
     </div>
   </div>
 </div>

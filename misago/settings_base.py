@@ -24,22 +24,8 @@ OUTPUT_FORMAT = 'html5'
 # Remember to run "genavatars" command when you change this setting!
 AVATAR_SIZES = (125, 100, 80, 60, 40, 24)
 
-# Default Gravatar
-# See for explanation: https://gravatar.com/site/implement/images/
-# Leave empty for classic blue "G" av
-GRAVATAR_DEFAULT = ''
-
 # Allow usernames to contain diacritics
 UNICODE_USERNAMES = True
-
-# Default anti-flood delay (seconds)
-FLOOD_DELAY = 35
-
-# Orphan attachments limit
-# Attachment is considered orphan if its not assigned to any post
-# It's possible to spam orphans via repeately opening new reply form and uploading files, those limits
-# act as countermeasure to such form of attack
-ORPHAN_ATTACHMENTS_LIMIT = 32
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -87,12 +73,9 @@ STATICFILES_FINDERS = (
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    'django_jinja.loaders.AppLoader',
-    'django_jinja.loaders.FileSystemLoader',
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
 )
-
-# Template extensions that will cause Jinja2 to be used
-DEFAULT_JINJA2_TEMPLATE_EXTENSION = ('.html', '.txt')
 
 # Context processors
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -116,11 +99,12 @@ JINJA2_EXTENSIONS = (
 
 # List of application middlewares
 MIDDLEWARE_CLASSES = (
-    'misago.middleware.thread.ThreadMiddleware',
     'misago.middleware.stopwatch.StopwatchMiddleware',
     'misago.middleware.heartbeat.HeartbeatMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'misago.middleware.cookiejar.CookieJarMiddleware',
+    'misago.middleware.settings.SettingsMiddleware',
+    'misago.middleware.monitor.MonitorMiddleware',
     'misago.middleware.theme.ThemeMiddleware',
     'misago.middleware.firewalls.FirewallMiddleware',
     'misago.middleware.crawlers.DetectCrawlerMiddleware',
@@ -193,12 +177,10 @@ ROOT_URLCONF = 'misago.urls'
 INSTALLED_APPS = (
     # Applications that have no dependencies first!
     'south', # Database schema building and updating
+    'coffin', # Jinja2 integration
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'django_jinja', # Jinja2 integration
-    'django_jinja.contrib._humanize', # Some Django filters
-    'floppyforms', # Better forms
-    'mptt', # Modified Pre-order Tree Transversal - allows us to nest forums
+    'mptt', # Modified Pre-order Tree Transversal - allows us to nest forums 
     'haystack', # Search engines bridge
     'debug_toolbar', # Debug toolbar'
     'misago', # Misago Forum App
@@ -235,9 +217,6 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
-
-# Use oldchool serializer
-SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

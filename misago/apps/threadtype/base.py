@@ -1,7 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import redirect
-from misago.conf import settings
 from misago.models import Forum, Thread, Post
 from misago.utils.pagination import page_number
 
@@ -9,11 +8,7 @@ class ViewBase(object):
     def __new__(cls, request, **kwargs):
         obj = super(ViewBase, cls).__new__(cls)
         return obj(request, **kwargs)
-
-    @property
-    def search_in(self):
-        return '%ss' % self.type_prefix
-
+        
     def _type_available(self):
         try:
             if not self.type_available():
@@ -56,20 +51,13 @@ class ViewBase(object):
     def redirect_to_post(self, post, type_prefix=None):
         type_prefix = type_prefix or self.type_prefix
         queryset = self.request.acl.threads.filter_posts(self.request, self.thread, self.thread.post_set)
-        page = page_number(queryset.filter(id__lte=post.pk).count(), queryset.count(), settings.posts_per_page)
+        page = page_number(queryset.filter(id__lte=post.pk).count(), queryset.count(), self.request.settings.posts_per_page)
         if page > 1:
             return redirect(reverse(type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'page': page}) + ('#post-%s' % post.pk))
         return redirect(reverse(type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}) + ('#post-%s' % post.pk))
 
     def template_vars(self, context):
         return context
-
-    def _template_vars(self, context):
-        context.update({
-                        'type_prefix': self.type_prefix,
-                        'search_in': self.search_in,
-                       })
-        return self.template_vars(context)
 
     def retreat_redirect(self):
         if self.request.POST.get('retreat'):

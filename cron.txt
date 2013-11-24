@@ -1,6 +1,5 @@
 0 3 * * * python $HOME/misago/manage.py clearalerts
 0 3 * * * python $HOME/misago/manage.py clearattempts
-0 3 * * * python $HOME/misago/manage.py pruneattachments
 0 */4 * * * python $HOME/misago/manage.py clearsessions
 20 3 * * * python $HOME/misago/manage.py cleartokens
 15 3 * * * python $HOME/misago/manage.py cleartracker
@@ -10,6 +9,6 @@
 10 3 * * * python $HOME/misago/manage.py updateranking
 25 3 * * * python $HOME/misago/manage.py updatethreadranking
 */30 * * * * python $HOME/misago/manage.py countreports
-0 */2 * * * python $HOME/misago/manage.py update_index --age=3
+* */2 * * * python $HOME/misago/manage.py update_index --age=2
 # Uncomment next line for heartbeat cron
 #*/3 * * * * python $HOME/misago/heartbeat.py deployment.settings --log=heartbeats.txt

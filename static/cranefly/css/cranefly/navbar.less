@@ -24,135 +24,36 @@
 
         span {
           color: @navbarMottoColor;
-<<<<<<< HEAD
-        }
-=======
         } 
->>>>>>> master
       }
     }
 
     .navbar-search-form {
-      height: 30px;
-      width: @navbarSearchWidth + @baseFontSize;
+      background-color: @white;
+      border: 1px solid @navbarBorder;
+      border-radius: @baseBorderRadius;
       margin-top: ((@navbarHeight - @baseLineHeight) / 2) - 6px;
-      overflow: visible;
-      position: relative;
+      padding: 1px 0px;
 
-      .navbar-search-border {
-        background-color: @white;
-        border: 1px solid darken(@navbarBorder, 10%);
-        .border-radius(@baseBorderRadius);
-        position: absolute;
-<<<<<<< HEAD
-        z-index: @zindexFixedNavbar;
-=======
-        z-index: 2;
->>>>>>> master
+      color: @textColor;
 
-        .navbar-search-text {
-          border: 1px solid darken(@navbarBorder, 10%);
-          border-radius: @baseBorderRadius;
-          margin: -1px;
-          padding: 1px 0px;
+      &.search-disabled {
+        .opacity(60);
+      }
 
-          color: @textColor;
+      input, input:disabled {
+        border: none;
+        .box-shadow(none);
+        background: none;
+        margin: 0px;
+      }
 
-          &>input {
-            border: none;
-            .box-shadow(none);
-            background: none;
-            margin: 0px;
-            width: @navbarSearchWidth;
-          }
-<<<<<<< HEAD
+      button {
+        margin: 0px;
+        .opacity(30);
 
-          .icon-search {
-            float: right;
-            .opacity(50);
-            margin-bottom: (@baseLineHeight * -1);
-            margin-right: 8px;
-            position: relative;
-            bottom: (@baseLineHeight * -1) + @baseFontSize;
-          }
-=======
->>>>>>> master
-        }
-
-        &:hover, &.open {
-          .box-shadow(0px 0px 3px fadeout(@gray, 30%));
-
-          .navbar-search-text {
-            border-color: lighten(@blue, 20%);
-            margin-bottom: 0px;
-          }
-
-          .extra {
-            display: block;
-          }
-        }
-
-        &>.extra {
-          background: @white;
-          border-radius: @baseBorderRadius;
-          display: none;
-
-          .extra-form {
-            padding: 0px @navbarSearchPadding;
-
-            .control {
-              margin: (@navbarSearchPadding * 1.5) 0px;
-
-              label {
-                color: @gray;
-                font-weight: bold;
-              }
-
-              select {
-                margin: 0px;
-                width: 100%;
-              }
-
-              input[type="text"] {
-                margin: 0px;
-                width: (@navbarSearchWidth - (@navbarSearchPadding * 2) - 2px);
-              }
-
-              .checkbox {
-                margin-bottom: -3px;
-              }
-            }
-          }
-
-          .form-actions {
-            border-radius: 0px 0px (@baseBorderRadius - 1);
-            margin: 0px;
-            margin-top: (@baseFontSize / 2);
-            margin-bottom: 0px;
-            padding: @navbarSearchPadding;
-
-            .btn {
-              margin: 0px;
-<<<<<<< HEAD
-
-              color: @white;
-=======
->>>>>>> master
-            }
-
-            a:link, a:visited {
-              margin-left: (@baseFontSize / 2);
-              position: relative;
-              top: 1px;
-
-              color: @grayLight;
-              font-weight: bold;
-            }
-
-            a:active, a:hover {
-              color: @textColor;
-            }
-          }
+        &:hover, &:active {
+          .opacity(80);
         }
       }
     }
@@ -160,38 +61,14 @@
     .navbar-blocks {
       margin-left: 6px;
 
-<<<<<<< HEAD
-      &>li {
-=======
       li {
         margin-left: 6px;
 
->>>>>>> master
         form {
           margin: 0px;
           padding: 0px;
         }
 
-<<<<<<< HEAD
-        &>a:link, &>a:visited, &>.btn-link {
-          min-width: 20px;
-
-          font-size: @fontSizeLarge;
-          text-align: center;
-
-          .label {
-            background-color: @red;
-            margin-left: @baseFontSize / 2;
-            padding-left: 6px;
-            padding-right: 5px;
-            padding-bottom: 3px;
-            position: relative;
-            bottom: 1px;
-
-            color: @white;
-            font-size: @baseFontSize;
-            text-shadow: 0px -1px 1px darken(@red, 20%);
-=======
         a:link, a:visited, .btn-link {
           background-color: lighten(@navbarBackground, 2%);
           border: 1px solid darken(@navbarBorder, 2%);
@@ -210,24 +87,10 @@
             padding-right: 5px;
             position: relative;
             bottom: 1px;
->>>>>>> master
           }
         }
 
         a:hover, a:active, .btn-link:hover, .btn-link:active {
-<<<<<<< HEAD
-        	text-shadow: 0px 0px 3px @white;
-        }
-
-        &.user-profile {
-        	&>a {
-	          &:link, &:visited, &:hover, &:active {
-	          	color: @gray !important;
-							font-size: @fontSizeLarge;
-						}
-        	}
-
-=======
           background-color: @linkColor;
           border-color: darken(@linkColor, 10%);
 
@@ -259,17 +122,12 @@
         }
 
         &.user-profile {
->>>>>>> master
           a:link, a:visited, a:hover, a:active {
             background: none;
             border: none;
             margin-right: 8px;
             margin-top: 5px;
 
-<<<<<<< HEAD
-            color: @grayDarker;
-=======
->>>>>>> master
             font-weight: bold;
             text-shadow: none;
 
@@ -288,11 +146,7 @@
 
     .navbar-compact {
       display: none;
-<<<<<<< HEAD
-
-=======
       
->>>>>>> master
       li {
         &.user-profile {
           &>a {
@@ -311,15 +165,10 @@
               .caret-border {
                 background-color: @bodyBackground;
                 border: 1px solid @navbarBorder;
-                .border-radius(@baseBorderRadius);
+                .border-radius(2px);
                 margin-left: 8px;
                 padding: 0px 4px;
 
-<<<<<<< HEAD
-								font-size: @baseFontSize;
-
-=======
->>>>>>> master
                 .caret {
                   margin: 0px;
                   padding: 0px;
@@ -346,40 +195,31 @@
                 background: @red;
                 border-color: @red;
 
-<<<<<<< HEAD
-                color: @white;
-                text-shadow: 0px 1px 1px darken(@red, 10%);
-=======
                 .caret {
                   border-top-color: @white;
                 }
->>>>>>> master
               }
             }
           }
 
           .dropdown-menu {
             border: none;
-            border: 1px solid darken(@navbarBorder, 10%);
-            .border-radius(@baseBorderRadius);
-            .box-shadow(0px 4px 3px fadeout(@gray, 30%));
+            .border-radius(2px);
+            border-top: 4px solid @red;
+            .box-shadow(0px 3px 4px @grayLight);
             margin: 0px;
-            margin-top: -6px;
-            margin-right: 0px;
+            margin-top: -8px;
+            margin-right: 1px;
             padding: 4px 0px;
             width: 270px;
 
             &:before {
-<<<<<<< HEAD
-              margin-right: 11px;
-=======
               display: none;
->>>>>>> master
             }
 
             &:after {
-              border-bottom: 6px solid @white;
-              margin-top: 0px;
+              border-bottom: 6px solid @red;
+              margin-top: -3px;
               margin-right: 11px;
             }
 
@@ -404,19 +244,9 @@
                 color: @textColor;
                 font-weight: normal;
                 text-align: left;
-<<<<<<< HEAD
-
-                i {
-                	display: inline-block;
-                	margin-right: 8px;
-                	width: 16px;
-
-                	text-align: center;
-=======
                 
                 i {
                   .opacity(100);
->>>>>>> master
                 }
 
                 &:link, &:active, &:visited, &:hover {
@@ -430,13 +260,10 @@
                 }
               }
 
-<<<<<<< HEAD
-=======
               a:link, a:visited {
                 .opacity(80);
               }
 
->>>>>>> master
               a:hover {
                 background-color: @gray;
                 .opacity(100);
@@ -447,18 +274,11 @@
               .btn-link {
                 background: none;
                 border: none;
-<<<<<<< HEAD
-                .opacity(100);
-=======
->>>>>>> master
                 width: 100%;
 
                 &:hover, &:active {
                   background: @red;
-<<<<<<< HEAD
-=======
                   .opacity(100);
->>>>>>> master
 
                   color: @white;
                   text-shadow: 0px 1px 0px darken(@red, 20%);
