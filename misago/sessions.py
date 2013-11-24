@@ -6,6 +6,7 @@ from django.db.models.loading import cache as model_cache
 from django.utils import timezone
 from django.utils.crypto import salted_hmac
 from django.utils.encoding import force_unicode
+from django.utils.module_loading import import_by_path
 from misago.auth import auth_remember, AuthException
 from misago.conf import settings
 from misago.models import Session, Token, Guest, User
@@ -101,6 +102,7 @@ class CrawlerSession(MisagoSession):
             self._session_key = self._session_rk.id
         except Session.DoesNotExist:
             self.create(request)
+        self.serializer = import_by_path(settings.SESSION_SERIALIZER)
 
     def create(self, request):
         self._session_rk = Session(
@@ -193,6 +195,7 @@ class HumanSession(MisagoSession):
             request.cookiejar.set('ASID', self._session_rk.id)
         else:
             request.cookiejar.set('SID', self._session_rk.id)
+        self.serializer = import_by_path(settings.SESSION_SERIALIZER)
 
     def create(self, request, user=None):
         self._user = user
