@@ -82,7 +82,10 @@
         </div>
         {% endfor %}
       </div>
-      {% endif %}{% endfor %}
+      {% endif %}
+      {% else %}
+      <p class="lead">{% trans %}Looks like no forums have been set yet, or you don't have permission to see any.{% endtrans %}</p>
+      {% endfor %}
 
       {{ hook_below_home_forums_list|safe }}
     </div>
