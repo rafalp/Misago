@@ -4,12 +4,16 @@ $(function () {
   $('.tooltip-bottom').tooltip({placement: 'bottom', container: 'body'})
   $('.tooltip-left').tooltip({placement: 'left', container: 'body'})
   $('.tooltip-right').tooltip({placement: 'right', container: 'body'})
+<<<<<<< HEAD
 
   $('body').tooltip({placement: 'top', container: 'body', selector: '.tooltip-top'})
   $('body').tooltip({placement: 'bottom', container: 'body', selector: '.tooltip-bottom'})
   $('body').tooltip({placement: 'left', container: 'body', selector: '.tooltip-left'})
   $('body').tooltip({placement: 'right', container: 'body', selector: '.tooltip-right'})
 
+=======
+  
+>>>>>>> master
   // Register popovers
   $('.popover-top').popover({placement: 'top'})
   $('.popover-bottom').popover({placement: 'bottom'})
@@ -22,15 +26,23 @@ $(function () {
       e.preventDefault();
     }
   });
+<<<<<<< HEAD
 
   // Start all dropdowns
   $('.dropdown-toggle').dropdown()
 
+=======
+  
+  // Start all dropdowns
+  $('.dropdown-toggle').dropdown()
+  
+>>>>>>> master
   // Dont hide clickable dropdowns
   $('.dropdown-clickable').on('click', function (e) {
     e.stopPropagation()
   });
 
+<<<<<<< HEAD
   // Ajax Loader
   var ajax_loader = $('#ajax-loader');
   $("body").on({
@@ -42,12 +54,18 @@ $(function () {
     }
   });
 
+=======
+>>>>>>> master
   // Fancy user nav activation
   $('#fancy-user-nav').show();
 
   // Search form extension
   var nav_search_form = $('#navbar-search');
+<<<<<<< HEAD
   nav_search_form.click(function() {
+=======
+  $('#search-field').hover(function() {
+>>>>>>> master
     nav_search_form.addClass('open');
   });
 
@@ -58,7 +76,11 @@ $(function () {
   nav_search_form.click(function(event) {
     event.stopPropagation();
   });
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> master
   // Checkbox Group Master
   $('input.checkbox-master').live('click', function(){
     if($(this).is(':checked')){
@@ -69,27 +91,43 @@ $(function () {
       $('input.checkbox-member').removeAttr('checked');
     }
   });
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> master
   // Checkbox Group Member
   $('input.checkbox-member').live('click', function(){
     if(!$(this).is(':checked')){
       $('input.checkbox-master').removeAttr('checked');
     }
   });
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> master
   // Check Confirmation on links
   $('a.confirm').live('click', function(){
     var decision = confirm(jQuery.data(this, 'jsconfirm'));
     return decision
   });
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> master
   // Check Confirmation on forms
   $('form.confirm').live('submit', function(){
     data = $(this).data();
     var decision = confirm(data.jsconfirm);
     return decision
   });
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> master
   // Show go back link?
   if (document.referrer
       && document.referrer.indexOf(location.protocol + "//" + location.host) === 0
@@ -118,27 +156,50 @@ function EnhancePostsMD() {
     // Automagically turn links into players
     var players = new Array();
     $('.markdown.js-extra').each(function() {
+<<<<<<< HEAD
       $(this).find('a').each(function() {
         link2player(this, $.trim($(this).text()));
+=======
+      var post_players = 0;
+      $(this).find('a').each(function() {
+        match = link2player($.trim($(this).text()));
+        if (match && $.inArray(match, players) == -1 && players.length < 16 && post_players < 4) {
+          players.push(match);
+          post_players ++;
+          $(this).replaceWith(match);
+        }
+>>>>>>> master
       });
     });
   });
 }
 
 // Turn link to player
+<<<<<<< HEAD
 function link2player(element, link_href) {
+=======
+function link2player(link_href) {
+>>>>>>> master
   // Youtube link
   var re = /watch\?v=((\w|-)+)/;
   if (re.test(link_href)) {
     media_url = link_href.match(re);
+<<<<<<< HEAD
     return youtube_player(element, media_url[1]);
+=======
+    return '<iframe width="480" height="360" src="http://www.youtube.com/embed/' + media_url[1] + '" frameborder="0" allowfullscreen></iframe>';
+>>>>>>> master
   }
 
   // Youtube feature=embed
   var re = /watch\?feature=player_embedded&v=((\w|-)+)/;
   if (re.test(link_href)) {
     media_url = link_href.match(re);
+<<<<<<< HEAD
     return youtube_player(element, media_url[1]);
+=======
+    return '<iframe width="480" height="360" src="http://www.youtube.com/embed/' + media_url[1] + '" frameborder="0" allowfullscreen></iframe>';
+>>>>>>> master
   }
 
   // Youtube embed with start time
@@ -150,6 +211,7 @@ function link2player(element, link_href) {
     media_url[2] = 0;
     if (media_minutes) { media_url[2] += (media_minutes[1] - 0) * 60; }
     if (media_seconds) { media_url[2] += (media_seconds[1] - 0); }
+<<<<<<< HEAD
     return youtube_player(element, media_url[1], media_url[2]);
   }
 
@@ -158,19 +220,34 @@ function link2player(element, link_href) {
   if (re.test(link_href)) {
     media_url = link_href.match(re);
     return youtube_player(element, media_url[1]);
+=======
+    return '<iframe width="480" height="360" src="http://www.youtube.com/embed/' + media_url[1] + '?start=' + media_url[2] + '" frameborder="0" allowfullscreen></iframe>';
+  }
+  
+  // Youtube embed
+  var re = /youtu.be\/((\w|-)+)/;
+  if (re.test(link_href)) {
+    media_url = link_href.match(re);
+    return '<iframe width="480" height="360" src="http://www.youtube.com/embed/' + media_url[1] + '" frameborder="0" allowfullscreen></iframe>';
+>>>>>>> master
   }
 
   // Vimeo link
   var re = /vimeo.com\/([0-9]+)/;
   if (re.test(link_href)) {
     media_url = link_href.match(re);
+<<<<<<< HEAD
     return $(element).replaceWith('<iframe src="http://player.vimeo.com/video/' + media_url[1] + '?color=CF402E" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
+=======
+    return '<iframe src="http://player.vimeo.com/video/' + media_url[1] + '?color=CF402E" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
+>>>>>>> master
   }
 
   // No link
   return false;
 }
 
+<<<<<<< HEAD
 // Youtube player
 function youtube_player(element, movie_id, startfrom) {
   if (typeof startfrom != 'undefined') {
@@ -282,6 +359,8 @@ $(function() {
   });
 });
 
+=======
+>>>>>>> master
 // Ajax: Post votes
 $(function() {
   $('.post-rating-actions').each(function() {
@@ -296,7 +375,11 @@ $(function() {
           $(action_parent).find('.post-score-total').addClass('post-score-good');
         } else if (data.score_total < 0) {
           $(action_parent).find('.post-score-total').addClass('post-score-bad');
+<<<<<<< HEAD
         }
+=======
+        } 
+>>>>>>> master
         if (data.score_upvotes > 0) {
           $(action_parent).find('.post-score-upvotes').addClass('post-score-good');
         }
@@ -334,7 +417,11 @@ $(function() {
     var button = $(this).find('button');
     $(this).submit(function() {
       var form = this;
+<<<<<<< HEAD
       $.post(form.action, {'_csrf_token': csrf_token}, "json").done(function(data, textStatus, jqXHR) {
+=======
+      $.post(form.action, {'_csrf_token': csrf_token}, "json").done(function(data, textStatus, jqXHR) {        
+>>>>>>> master
         $(button).text(l_post_reported);
         $(button).tooltip('destroy');
         $(button).attr("title", data.message);

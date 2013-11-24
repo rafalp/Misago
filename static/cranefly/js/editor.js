@@ -1,5 +1,9 @@
 // Basic editor functions
+<<<<<<< HEAD
 function storeCaret(ftext) {
+=======
+function storeCaret(ftext) {    
+>>>>>>> master
   if (ftext.createTextRange) {
     ftext.caretPos = document.selection.createRange().duplicate();
   }
@@ -86,6 +90,7 @@ function extractor(query) {
 
 // Small and nice editor functionality
 $(function() {
+<<<<<<< HEAD
   function textarea(ev) {
     return $(ev).parents('.editor-editable').find('textarea');
   }
@@ -201,5 +206,120 @@ $(function() {
   $('.editor-insert-attachment').click(function() {
     var insertion_code = $(this).data('attachment-md');
     makeReplace(textareaId(this), insertion_code);
+=======
+  $('.editor-tools').fadeIn(600);
+  $('.editor').each(function() {
+    // Get textarea stuff
+    var textarea = $(this).find('textarea');
+    var textarea_id = $(textarea).attr('id');
+    
+    // Do we have emojis?
+    if (1==2 && ed_emojis.length > 1) {
+      var mode = 0;
+      var open = -1;
+
+      $(textarea).focusout(function() {
+        mode = 0;
+        open = -1;
+      });
+
+      $(textarea).keyup(function() {
+        text = $(textarea).val();
+        cursor = getSelection(textarea_id).start;
+        if (cursor > 0) {
+          // Read typed character and previous character
+          input = text.substring(cursor - 1, cursor);
+          if (cursor > 1) {
+            pre = text.substring(cursor - 2, cursor - 1);
+          } else {
+            pre = '';
+          }
+
+          // Act accordingly to current mode
+          if (mode == 0) {
+            if (input == ':' && !pre.match(/^[A-Za-z0-9]+$/i)) {
+              // Test passed, mode 1 engaged!
+              mode = 1;
+              open = cursor;
+            }
+          } else if (mode == 1) {
+            // Inside emoji mode, we are helping user enter emoji input
+            if (cursor > open && !input.match(/^(\+|\-|[_A-Za-z0-9])+$/i)) {
+              // Emoji fail
+              mode = 0;
+            }
+          }
+        }
+      });
+    }
+
+    // Handle buttons
+    $('.editor-bold').click(function() {
+      makeWrap(textarea_id, '**', '**');
+      return false;
+    });
+    
+    $('.editor-emphasis').click(function() {
+      makeWrap(textarea_id, '*', '*');
+      return false;
+    });
+    
+    $('.editor-link').click(function() {
+      var selection = $.trim(getSelectionText(textarea_id));
+      if (is_url(selection)) {
+        var link_url = $.trim(prompt(ed_lang_enter_link_url, selection));
+        selection = false;
+      } else {
+        var link_url = $.trim(prompt(ed_lang_enter_link_url));
+      }
+
+      if (is_url(link_url)) {
+        if (selection) {
+          var link_label = $.trim(prompt(ed_lang_enter_link_label, selection));
+        } else {
+          var link_label = $.trim(prompt(ed_lang_enter_link_label));
+        }
+
+        if (link_label.length > 0) {
+          makeReplace(textarea_id, '[' + link_label + '](' + link_url + ')');
+        } else {
+          makeReplace(textarea_id, '<' + link_url + '>');
+        }
+      }
+
+      return false;
+    });
+    
+    $('.editor-image').click(function() {
+      var selection = $.trim(getSelectionText(textarea_id));
+      if (is_url(selection)) {
+        var image_url = $.trim(prompt(ed_lang_enter_image_url, selection));
+        selection = false;
+      } else {
+        var image_url = $.trim(prompt(ed_lang_enter_image_url));
+      }
+
+      if (is_url(image_url)) {
+        if (selection) {
+          var image_label = $.trim(prompt(ed_lang_enter_image_label, selection));
+        } else {
+          var image_label = $.trim(prompt(ed_lang_enter_image_label));
+        }
+
+        if (image_label.length > 0) {
+          makeReplace(textarea_id, '![' + image_label + '](' + image_url + ')');
+        } else {
+          makeReplace(textarea_id, '!(' + image_url + ')');
+        }
+      }
+
+      return false;
+    });
+    
+    $('.editor-hr').click(function() {
+      makeReplace(textarea_id, '\r\n\r\n- - - - -\r\n\r\n');
+      return false;
+    });
+>>>>>>> master
   });
 });

@@ -48,6 +48,7 @@
 
     .forum-icon {
       float: left;
+<<<<<<< HEAD
       position: relative;
       bottom: 1px;
       width: @forumIconSize * 1.5;
@@ -67,11 +68,35 @@
       .icon-comment, .icon-comment-alt {
         position: relative;
         bottom: 3px;
+=======
+
+      .forum-icon-wrap {
+        background-color: @itemOldColor;
+        border: 1px solid darken(@itemOldColor, 10%);
+        border-radius: @baseBorderRadius;
+        padding: ((@forumIconSize - 22px) / 2) ((@forumIconSize - 16px) / 2);
+        position: relative;
+        bottom: (@forumIconSize - @baseLineHeight) / 2;
+
+        &.forum-icon-new {
+          background-color: @itemNewColor;
+          border: 1px solid darken(@itemNewColor, 10%);
+        }
+
+        &.forum-icon-redirect {
+          background-color: @itemMovedColor;
+          border: 1px solid darken(@itemMovedColor, 10%);
+        }
+>>>>>>> master
       }
     }
 
     .forum-main {
+<<<<<<< HEAD
       margin-left: (@forumIconSize * 1.5) + (@fontSizeSmall - 2px);
+=======
+      margin-left: 34px;
+>>>>>>> master
 
       h3 {
         float: left;
@@ -129,7 +154,10 @@
           background: none;
           border: none;
           box-shadow: none;
+<<<<<<< HEAD
           z-index: 2;
+=======
+>>>>>>> master
 
           .dropdown-shadow{
             border-radius: @baseBorderRadius;
@@ -298,6 +326,10 @@
   }
 }
 
+<<<<<<< HEAD
+=======
+// Threads list
+>>>>>>> master
 .forum-threads-list {
   background-color: @categoryBackground;
   border: 1px solid @categoryBorder;
@@ -305,6 +337,7 @@
   .box-shadow(0px 0px 0px 3px @categoryShadow);
   margin-bottom: @baseLineHeight;
 
+<<<<<<< HEAD
   .threads-list-empty {
     padding: (@baseFontSize * 2) 0px;
 
@@ -573,6 +606,235 @@
     &>li:last-child {
       border-bottom: none;
     }
+=======
+  .header {
+    background-color: @categoryHeader;
+    border: 1px solid @categoryBorder;
+    border-radius: @borderRadiusSmall @borderRadiusSmall 0px 0px;
+    margin: -1px;
+    margin-bottom: 0px;
+    padding-bottom: 1px;
+    overflow: auto;
+
+    color: @grayLight;
+    font-weight: bold;
+    font-size: @fontSizeSmall;
+
+    .row-fluid {
+      &>div {
+        min-height: auto;
+        padding: @paddingSmall;
+      }
+
+      .thread-replies {
+        float: left;
+        width: 106px;
+      }
+
+      .thread-last {
+        float: left;
+      }
+    }
+
+    .check-cell {
+      label {
+        margin: 0px;
+      }
+    }
+  }
+
+  .thread-row {
+    border-bottom: 1px solid @categoryBorder;
+    height: 38px;
+    overflow: hidden;
+    padding: (@fontSizeSmall - 2px) 0px;
+
+    .row-fluid {
+      &>div {
+        min-height: auto;
+        padding: @paddingSmall;
+        padding-bottom: 0px;
+      }
+    }
+
+    &.thread-last {
+      border-bottom: none;
+
+      &>div {
+        padding-bottom: 1px;
+      }
+    }
+
+    .thread-icon {
+      background-color: @itemOldColor;
+      border: 1px solid darken(@itemOldColor, 10%);
+      .border-radius(@baseBorderRadius);
+      display: block;
+      float: left;
+      margin: -2px 0px;
+      margin-left: -1px;
+      padding: 1px 4px;
+
+      &:hover, &:active {
+        .opacity(100);
+      }
+
+      i {
+        background-image: url("@{iconWhiteSpritePath}");
+      }
+    }
+
+    &.thread-new {
+      .thread-icon {
+        background-color: @itemNewColor;
+        border: 1px solid darken(@itemNewColor, 10%);
+      }
+
+      .thread-name {
+        color: @textColor !important;
+      }
+    }
+
+    &.threads-list-empty {
+      height: auto;
+      padding: @paddingLarge;
+
+      font-size: @fontSizeLarge;
+      text-align: center;
+    }
+
+    .thread-name {
+      margin-left: 10px;
+
+      color: lighten(@textColor, 17%);
+      font-size: @baseFontSize + 2px;
+      font-weight: bold;
+    }
+
+    .thread-details, .thread-last-reply {
+      color: @grayLight;
+      line-height: @baseFontSize;
+
+      a:link, a:visited {
+        color: @textColor;
+      }
+    }
+
+    .thread-details {
+      margin-left: 34px;
+
+      font-size: @fontSizeMini;
+    }
+
+    .thread-flags {
+      float: right;
+      margin: 0px;
+      position: relative;
+      right: -30px;
+      top: 5px;
+      padding: 0px;
+
+      li {
+        .border-radius(@baseBorderRadius);
+        display: block;
+        float: left;
+        margin-left: 3px;
+        padding: 2px 5px;
+
+        &.flag-reported {
+          background-color: @flagReported;
+        }
+
+        &.flag-notreviewed {
+          background-color: @flagReviewed;
+        }
+
+        &.flag-announcement {
+          background-color: @flagAnnouncement;
+        }
+
+        &.flag-sticky {
+          background-color: @flagSticky;
+        }
+
+        &.flag-deleted {
+          background-color: @flagDeleted;
+        }
+
+        &.flag-closed {
+          background-color: @flagClosed;
+        }
+      }
+
+      i {
+        background-image: url("@{iconWhiteSpritePath}");
+      }
+    }
+
+    .thread-activity {
+      border-left: 1px dotted darken(@categoryBackground, 12%);
+      position: relative;
+      bottom: 3px;
+
+      .thread-last-avatar {
+        float: left;
+
+        img {
+          .border-radius(@baseBorderRadius);
+          margin: 0px;
+          margin-right: @baseFontSize;
+          width: 40px;
+          height: 40px;
+        }
+      }
+
+      .thread-replies {
+        float: left;
+        margin-top: -1px;
+        margin-right: @baseFontSize;
+
+        color: @grayLight;
+        font-size: @fontSizeSmall;
+
+        .lead {
+          font-size: @baseFontSize;
+          font-weight: bold;
+          line-height: @baseLineHeight;
+        }
+
+        a:link, a:active, a:visited, a:hover {
+          color: @gray;
+        }
+      }
+
+      .thread-last-reply {
+        border-left: 1px dotted darken(@categoryBackground, 12%);
+        padding-left: @baseFontSize;
+
+      }
+
+      .thread-select {
+        background-color: darken(@categoryBackground, 5%);
+        display: block;
+        float: right;
+        margin: -12px -11px;
+        margin-left: 0px;
+        width: 29px;
+        height: 61px;
+
+        &:hover, &:focus, &:active {
+          background-color: @linkColor;
+        }
+
+        input {
+          margin: 0px;
+          position: relative;
+          right: 2px;
+          top: 26px;
+        }
+      }
+    }
+>>>>>>> master
   }
 
   .threads-actions {
@@ -605,6 +867,7 @@
       color: @textColor;
     }
   }
+<<<<<<< HEAD
 }
 
 .prefix-select {
@@ -753,4 +1016,6 @@
       .opacity(100);
     }
   }
+=======
+>>>>>>> master
 }
