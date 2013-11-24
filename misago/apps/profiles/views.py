@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import redirect
 from django.template import RequestContext
+from django.utils.translation import ugettext as _
 from misago.apps.errors import error403, error404
 from misago.conf import settings
 from misago import messages
@@ -70,7 +71,7 @@ def list(request, slug=None, page=0):
                 if settings.PROFILE_EXTENSIONS_PRELOAD:
                     users = users.select_related(*settings.PROFILE_EXTENSIONS_PRELOAD)
                 users = users.filter(username_slug__startswith=username).order_by('username_slug')[:10]
-        elif search_form.non_field_errors()[0] == 'form_contains_errors':
+        elif 'username' in search_form.errors:
             message = messages.Message(_("To search users you have to enter username in search field."), messages.ERROR)
         else:
             message = messages.Message(search_form.non_field_errors()[0], messages.ERROR)
