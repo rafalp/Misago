@@ -16,11 +16,7 @@ BOARD_ADDRESS = 'http://somewhere.com'
 ADMIN_PATH = 'admincp'
 
 # System admins
-<<<<<<< HEAD
 # Enter every god admin using following pattern:
-=======
-# Enter every admin using following pattern:
->>>>>>> master
 # ('John', 'john@example.com'),
 # Note trailing separator!
 ADMINS = ()
@@ -89,11 +85,7 @@ TIME_ZONE = 'UTC'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en_US'
 
-<<<<<<< HEAD
 # Absolute filesystem path to the directory that will hold publicly available media uploaded by users.
-=======
-# Absolute filesystem path to the directory that will hold user-uploaded files.
->>>>>>> master
 # Always use forward slashes, even on Windows.
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = '/vagrant/media/'
@@ -103,14 +95,11 @@ MEDIA_ROOT = '/vagrant/media/'
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = '/media/'
 
-<<<<<<< HEAD
 # Absolute filesystem path to the directory that will hold post attachments.
 # Always use forward slashes, even on Windows.
 # Example: "/home/media/media.lawrence.com/attachments/"
 ATTACHMENTS_ROOT = '/vagrant/attachments/'
 
-=======
->>>>>>> master
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # Always use forward slashes, even on Windows.
@@ -146,17 +135,12 @@ EMAIL_HOST_PASSWORD = ''
 # Use TLS encryption
 EMAIL_USE_TLS = False
 
-<<<<<<< HEAD
 # Screamer Configuration
 # Screamer is special feature that sends email to users listed under ADMINS when application
 # erros. First setting is origin of error emails, while second is message title prefix that
 # makes messages easier to spot in your inbox
 SERVER_EMAIL = 'root@localhost'
 EMAIL_SUBJECT_PREFIX = '[Misago Screamer]'
-=======
-# E-mail subject prefix added to emails for staff
-EMAIL_SUBJECT_PREFIX = '[Misago]'
->>>>>>> master
 
 # Catch-all e-mail address
 # If DEBUG_MODE is on, all emails will be sent to this address instead of real recipient.
@@ -192,13 +176,10 @@ WSGI_APPLICATION = 'deployment.wsgi.application'
 if SECRET_KEY == 'yaobeifl1a6hf&3)^uc#^vlu1ud7xp^+*c5zoq*tf)fvs#*o$#':
     SECRET_KEY = ''
 
-<<<<<<< HEAD
 # Disable Jinja2 for django debug toolbar templates
 if DEBUG:
     DEFAULT_JINJA2_TEMPLATE_INTERCEPT_RE = r"(?!debug_toolbar/).*"
 
-=======
->>>>>>> master
 # Override config if we are in tests
 if 'test' in sys.argv:
     if not SECRET_KEY:

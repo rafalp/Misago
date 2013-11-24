@@ -1,31 +1,15 @@
-<<<<<<< HEAD
 django<1.6
 django-debug-toolbar
 django-floppyforms
 django-haystack
 django-jinja
 django-mptt<0.6
-=======
-django
-django-debug-toolbar
-django-haystack
-django-mptt
-coffin
->>>>>>> master
 jinja2
 markdown
 path.py
 Pillow
-<<<<<<< HEAD
 pytz==2013b
 recaptcha-client
 South<0.9
 Unidecode
 whoosh<2.6
-=======
-pytz
-recaptcha-client
-South
-Unidecode
-whoosh<2.5
->>>>>>> master
