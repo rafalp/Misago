@@ -92,7 +92,6 @@ class CrawlerSession(MisagoSession):
     Crawler Session controller
     """
     def __init__(self, request):
-        self.serializer = import_by_path(settings.SESSION_SERIALIZER)
         self.matched = True
         self.started = False
         self.team = False
@@ -103,6 +102,7 @@ class CrawlerSession(MisagoSession):
             self._session_key = self._session_rk.id
         except Session.DoesNotExist:
             self.create(request)
+        self.serializer = import_by_path(settings.SESSION_SERIALIZER)
 
     def create(self, request):
         self._session_rk = Session(
@@ -136,7 +136,6 @@ class HumanSession(MisagoSession):
     Human Session controller
     """
     def __init__(self, request):
-        self.serializer = import_by_path(settings.SESSION_SERIALIZER)
         self.started = False
         self.matched = False
         self.expired = False
@@ -196,6 +195,7 @@ class HumanSession(MisagoSession):
             request.cookiejar.set('ASID', self._session_rk.id)
         else:
             request.cookiejar.set('SID', self._session_rk.id)
+        self.serializer = import_by_path(settings.SESSION_SERIALIZER)
 
     def create(self, request, user=None):
         self._user = user
