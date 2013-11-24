@@ -1,4 +1,4 @@
-from django import forms
+import floppyforms as forms
 from misago.forms import Form
 
 class QuickFindUserForm(Form):

@@ -1,5 +1,5 @@
 from django.utils.translation import ugettext_lazy as _
-from django import forms
+import floppyforms as forms
 from misago.acl.builder import BaseACL
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.forms import YesNoSwitch
@@ -7,45 +7,50 @@ from misago.models import Forum
 
 def make_form(request, role, form):
     if role.special != 'guest':
-        form.base_fields['can_use_private_threads'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['can_start_private_threads'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['can_upload_attachments_in_private_threads'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['private_thread_attachment_size'] = forms.IntegerField(min_value=0, initial=100, required=False)
-        form.base_fields['private_thread_attachments_limit'] = forms.IntegerField(min_value=0, initial=3, required=False)
-        form.base_fields['can_invite_ignoring'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['private_threads_mod'] = forms.BooleanField(widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['can_delete_checkpoints'] = forms.TypedChoiceField(choices=(
-                                                                                     (0, _("No")),
-                                                                                     (1, _("Yes, soft-delete")),
-                                                                                     (2, _("Yes, hard-delete")),
+        form.base_fields['can_use_private_threads'] = forms.BooleanField(label=_("Can participate in private threads"),
+                                                                         widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['can_start_private_threads'] = forms.BooleanField(label=_("Can start private threads"),
+                                                                           widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['can_upload_attachments_in_private_threads'] = forms.BooleanField(label=_("Can upload attachments"),
+                                                                                           widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['can_download_attachments_in_private_threads'] = forms.BooleanField(label=_("Can download attachments"),
+                                                                                             widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['private_thread_attachment_size'] = forms.IntegerField(label=_("Max. size of single attachment (in KB)"),
+                                                                                min_value=0, initial=100, required=False)
+        form.base_fields['private_thread_attachments_limit'] = forms.IntegerField(label=_("Max. number of attachments per post"),
+                                                                                  min_value=0, initial=3, required=False)
+        form.base_fields['can_invite_ignoring'] = forms.BooleanField(label=_("Can invite users that ignore him"),
+                                                                     widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['private_threads_mod'] = forms.BooleanField(label=_("Can moderate threads"),
+                                                                     help_text=_("Makes user with this role Private Threads moderator capable of closing, deleting and editing all private threads he participates in at will."),
+                                                                     widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['can_delete_checkpoints'] = forms.TypedChoiceField(label=_("Can delete checkpoints"),
+                                                                            choices=(
+                                                                                      (0, _("No")),
+                                                                                      (1, _("Yes, soft-delete")),
+                                                                                      (2, _("Yes, hard-delete")),
                                                                                      ), coerce=int)
 
-        form.layout.append((
-                            _("Private Threads"),
-                            (
-                             ('can_use_private_threads', {'label': _("Can participate in private threads")}),
-                             ('can_start_private_threads', {'label': _("Can start private threads")}),
-                             ('can_upload_attachments_in_private_threads', {'label': _("Can upload files in attachments")}),
-                             ('private_thread_attachment_size', {'label': _("Max. size of single attachment (in KB)")}),
-                             ('private_thread_attachments_limit', {'label': _("Max. number of attachments per post")}),
-                             ('can_invite_ignoring', {'label': _("Can invite users that ignore him")}),
-                             ('private_threads_mod', {'label': _("Can moderate threads"), 'help_text': _("Makes user with this role Private Threads moderator capable of closing, deleting and editing all private threads he participates in at will.")}),
-                             ('can_delete_checkpoints', {'label': _("Can delete checkpoints")}),
-                             ),
-                            ))
+        form.fieldsets.append((
+                               _("Private Threads"),
+                               ('can_use_private_threads', 'can_start_private_threads',
+                                'can_upload_attachments_in_private_threads', 'can_download_attachments_in_private_threads',
+                                'private_thread_attachment_size', 'private_thread_attachments_limit', 'can_invite_ignoring',
+                                'private_threads_mod', 'can_delete_checkpoints')
+                              ))
 
 
 class PrivateThreadsACL(BaseACL):
+    def can_participate(self):
+        return self.acl['can_use_private_threads']
+
     def can_start(self):
         return (self.acl['can_use_private_threads'] and
                 self.acl['can_start_private_threads'])
 
-    def can_participate(self):
-        return self.acl['can_use_private_threads']
-        
     def can_invite_ignoring(self):
         return self.acl['can_invite_ignoring']
-        
+
     def is_mod(self):
         return self.acl['private_threads_mod']
 
@@ -55,6 +60,7 @@ def build(acl, roles):
     acl.private_threads.acl['can_use_private_threads'] = False
     acl.private_threads.acl['can_start_private_threads'] = False
     acl.private_threads.acl['can_upload_attachments_in_private_threads'] = False
+    acl.private_threads.acl['can_download_attachments_in_private_threads'] = False
     acl.private_threads.acl['private_thread_attachment_size'] = False
     acl.private_threads.acl['private_thread_attachments_limit'] = False
     acl.private_threads.acl['can_invite_ignoring'] = False
@@ -85,10 +91,9 @@ def cleanup(acl, perms, forums):
                               'can_make_polls': False,
                               'can_vote_in_polls': False,
                               'can_see_poll_votes': False,
-                              'can_see_attachments': True,
                               'can_upload_attachments': False,
                               'can_download_attachments': True,
-                              'attachment_size': 100,
+                              'attachment_size': 300,
                               'attachment_limit': 3,
                               'can_approve': False,
                               'can_edit_labels': False,
@@ -116,10 +121,14 @@ def cleanup(acl, perms, forums):
                 acl.threads.acl[forum]['can_start_threads'] = 2
             if perm['can_upload_attachments_in_private_threads']:
                 acl.threads.acl[forum]['can_upload_attachments'] = True
-            if perm['private_thread_attachment_size']:
-                acl.threads.acl[forum]['attachment_size'] = True
-            if perm['private_thread_attachments_limit']:
-                acl.threads.acl[forum]['attachment_limit'] = True
+            if perm['can_download_attachments_in_private_threads']:
+                acl.threads.acl[forum]['can_download_attachments'] = True
+            if (perm['private_thread_attachment_size'] > acl.threads.acl[forum]['attachment_size']
+                    and acl.threads.acl[forum]['attachment_size'] != 0):
+                acl.threads.acl[forum]['attachment_size'] = perm['private_thread_attachment_size']
+            if (perm['private_thread_attachments_limit'] > acl.threads.acl[forum]['attachment_limit']
+                    and acl.threads.acl[forum]['attachment_limit'] != 0):
+                acl.threads.acl[forum]['attachment_limit'] = perm['private_thread_attachments_limit']
             if perm['can_invite_ignoring']:
                 acl.threads.acl[forum]['can_invite_ignoring'] = True
             if perm['private_threads_mod']:

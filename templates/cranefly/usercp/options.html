@@ -1,5 +1,5 @@
 {% extends "cranefly/usercp/layout.html" %}
-{% import "_forms.html" as form_theme with context %}
+{% import "forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{{ macros.page_title(title=_('Change Forum Options')) }}{% endblock %}
@@ -17,15 +17,33 @@
   </div>
   {% endif %}
 
-  <form action="{% url 'usercp_options' %}" method="post">
+  <form action="{{ url('usercp_options') }}" method="post">
+    {{ form_theme.hidden_fields(form) }}
     <div class="form-fields">
-      {{ form_theme.form_widget(form, width=9) }}
+      <fieldset>
+        <legend>{% trans %}Privacy{% endtrans %}</legend>
+        {{ form_theme.row(form.hide_activity, attrs={'class': 'span9'}) }}
+        {{ form_theme.row(form.allow_pds, attrs={'class': 'span9'}) }}
+      </fieldset>
+      <fieldset>
+        <legend>{% trans %}Forum Options{% endtrans %}</legend>
+        {{ form_theme.row(form.timezone, attrs={'class': 'span9'}) }}
+        {{ form_theme.row(form.newsletters, attrs={'inline': lang_newsletters_subscribe()}) }}
+      </fieldset>
+      <fieldset>
+        <legend>{% trans %}Watching Threads{% endtrans %}</legend>
+        {{ form_theme.row(form.subscribe_start, attrs={'class': 'span9'}) }}
+        {{ form_theme.row(form.subscribe_reply, attrs={'class': 'span9'}) }}
+      </fieldset>
     </div>
     <div class="form-actions">
       <button name="save" type="submit" class="btn btn-primary">{% trans %}Change Options{% endtrans %}</button>
-      <a href="{% url 'usercp' %}" class="btn">{% trans %}Cancel{% endtrans %}</a>
+      <a href="{{ url('usercp') }}" class="btn">{% trans %}Cancel{% endtrans %}</a>
     </div>
   </form>
-  
+
 </div>
 {% endblock %}
+
+{# Language strings macros #}
+{% macro lang_newsletters_subscribe() -%}{% trans %}Yes, I want to subscribe forum newsletter.{% endtrans %}{%- endmacro %}

@@ -17,6 +17,100 @@
   }
 }
 
+<<<<<<< HEAD
+.thread-poll-body {
+  background-color: @categoryBackground;
+  border: 1px solid @categoryBorder;
+  border-radius: @borderRadiusSmall;
+  .box-shadow(0px 0px 0px 3px @categoryShadow);
+  margin-bottom: @baseLineHeight;
+  padding: (@baseLineHeight / 2) @baseLineHeight;
+
+  h2 {
+    margin-left: @horizontalComponentOffset;
+    margin-bottom: @baseLineHeight;
+  }
+
+  form {
+    margin: 0px;
+    padding: 0px;
+  }
+
+  .options-form {
+    margin-left: @horizontalComponentOffset;
+    margin-bottom: @baseLineHeight;
+
+    label {
+      padding: 2px 0px;
+
+      font-size: @fontSizeLarge;
+    }
+
+    .poll-voting-help {
+      color: @grayLight;
+    }
+  }
+
+  .poll-options {
+    dd {
+      padding-top: 2px;
+
+      .progress {
+        background: none;
+        border: 1px solid darken(@bodyBackground, 15%);
+        border-radius: 10px;
+        .box-shadow(none);
+        height: auto;
+        margin: 0px;
+        padding: 2px;
+
+        .bar {
+          border-radius: 5px;
+          height: 10px;
+
+          min-width: 10px;
+        }
+      }
+
+      .option-details {
+        padding-left: 6px;
+
+        color: @grayLight;
+        font-size: @fontSizeSmall;
+
+        strong {
+          padding-right: @fontSizeSmall;
+
+          color: @bluePale;
+          font-weight: normal;
+        }
+      }
+    }
+  }
+
+  .poll-footer {
+    overflow: auto;
+    margin-top: @baseLineHeight * -0.5;
+    margin-bottom: @baseLineHeight * 0.5;
+    margin-left: @horizontalComponentOffset;
+
+    .btn, p {
+      float: left;
+      margin-right: @baseFontSize / 2;
+    }
+
+    p {
+      margin-left: @baseFontSize / 2;
+      position: relative;
+      top: @baseLineHeight / 3;
+
+      color: @grayLight;
+    }
+  }
+}
+
+=======
+>>>>>>> master
 // Thread body styles
 .thread-body {
   .post-wrapper {
@@ -60,8 +154,13 @@
         &:before {
            border-color: transparent;
            border-right-color: @postBorder;
+<<<<<<< HEAD
+           border-width: @fontSizeMini + 2;
+           top: @baseFontSize - 1;
+=======
            border-width: @fontSizeMini + 1;
            top: @baseFontSize;
+>>>>>>> master
            margin-top: (@baseFontSize * -1) + @baseFontSize - 1px;
         }
 
@@ -143,6 +242,83 @@
             padding: @baseFontSize;
           }
 
+<<<<<<< HEAD
+          .post-attachments {
+            margin: 0px @baseFontSize;
+
+            h3 {
+              border-bottom: 1px dotted darken(@postBackground, 25%);
+              margin: 0px;
+              padding: 0px;
+
+              color: @grayLight;
+              font-size: @baseFontSize;
+              line-height: @baseLineHeight;
+            }
+
+            hr {
+              background: none;
+              border-top: 1px dotted darken(@postBackground, 15%) !important;
+              margin: 0px;
+              padding: 0px;
+            }
+
+            .post-attachment {
+              padding: (@baseLineHeight / 2) 0px;
+
+              .attachment-image {
+                float: left;
+
+                i {
+                  display: block;
+                  height: 40px;
+                  width: 40px;
+
+                  color: @grayLight;
+                  font-size: 42px;
+                  text-align: center;
+                }
+
+                img {
+                  background-size: cover;
+                  border-radius: 3px;
+                  height: 40px;
+                  width: 40px;
+                }
+              }
+
+              .attachment-body {
+                margin-left: 52px;
+
+                h4 {
+                  margin: 0px;
+                  padding: 0px;
+
+                  font-size: @baseFontSize;
+                }
+
+                .attachment-details {
+                  color: @grayLight;
+                  font-size: @fontSizeSmall;
+
+                  a:link, a:visited {
+                    color: @gray;
+                  }
+
+                  a:hover, a:active {
+                    color: @grayDarker;
+                  }
+
+                  .attachment-removed-message {
+                    color: @red;
+                  }
+                }
+              }
+            }
+          }
+
+=======
+>>>>>>> master
           .post-signature {
             border-top: 1px dotted darken(@postBackground, 25%);
             .opacity(60);
@@ -197,7 +373,11 @@
               }
 
               &.post-neutral, &.post-like, &.post-hate {
+<<<<<<< HEAD
+                margin-left: (@baseFontSize / 4);
+=======
                 margin-left: (@baseFontSize / 4); 
+>>>>>>> master
               }
 
               &.post-neutral {
@@ -327,7 +507,11 @@
         }
       }
 
+<<<<<<< HEAD
+      &.post-muted {
+=======
       &.post-muted {        
+>>>>>>> master
         .user-avatar {
           width: 50px;
           height: 50px;
@@ -421,7 +605,17 @@
         }
 
         i {
+<<<<<<< HEAD
+          margin-right: 2px;
+          position: relative;
+          top: 2px;
+          width: @fontSizeLarge;
+
+          font-size: @fontSizeLarge;
+          text-align: center;
+=======
           .opacity(43);
+>>>>>>> master
         }
 
         form {
@@ -511,8 +705,13 @@
     &:before {
        border-color: transparent;
        border-right-color: darken(@editorBackground, 10%);
+<<<<<<< HEAD
+       border-width: @fontSizeMini + 2;
+       top: @baseFontSize - 1;
+=======
        border-width: @fontSizeMini + 1;
        top: @baseFontSize;
+>>>>>>> master
        margin-top: (@baseFontSize * -1) + @baseFontSize - 1px;
     }
   }
@@ -549,12 +748,25 @@
         border-radius: @borderRadiusSmall;
         width: 24px;
         height: 24px;
+<<<<<<< HEAD
+        position: relative;
+        bottom: 1px;
+=======
+>>>>>>> master
       }
 
       a:link, a:active, a:visited, a:hover {
         margin: 0px 4px;
+<<<<<<< HEAD
+        position: relative;
+        top: 2px;
 
         color: @textColor;
+        font-size: @fontSizeLarge;
+=======
+
+        color: @textColor;
+>>>>>>> master
         font-weight: bold;
       }
 
@@ -568,12 +780,29 @@
         padding: 0px;
 
         button {
+<<<<<<< HEAD
+          float: left;
+          padding-left: 0px;
+          padding-right: 0px;
+          margin-left: 12px;
+          width: 28px;
+
+          text-align: center;
+
+          i {
+            margin: 0px;
+            position: relative;
+            top: 1px;
+
+            font-size: @fontSizeLarge;
+=======
           padding-left: 5px;
           padding-right: 5px;
 
           i {
             position: relative;
             top: 1px;
+>>>>>>> master
           }
         }
       }
@@ -616,6 +845,25 @@
 
       button {
         float: right;
+<<<<<<< HEAD
+        position: relative;
+        top: 2px;
+        left: 2px;
+
+        i {
+          margin: 0px;
+
+          color: @grayLight;
+          font-size: @fontSizeLarge;
+        }
+
+        &:hover, &:active {
+          i {
+            color: @textColor;
+          }
+        }
+=======
+>>>>>>> master
       }
     }
   }

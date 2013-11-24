@@ -48,6 +48,27 @@
 
     .forum-icon {
       float: left;
+<<<<<<< HEAD
+      position: relative;
+      bottom: 1px;
+      width: @forumIconSize * 1.5;
+
+      color: @itemOldColor;
+      font-size: @forumIconSize;
+      text-align: center;
+
+      &.forum-icon-new {
+        color: @itemNewColor;
+      }
+
+      &.forum-icon-redirect {
+        color: @itemMovedColor;
+      }
+
+      .icon-comment, .icon-comment-alt {
+        position: relative;
+        bottom: 3px;
+=======
 
       .forum-icon-wrap {
         background-color: @itemOldColor;
@@ -66,11 +87,16 @@
           background-color: @itemMovedColor;
           border: 1px solid darken(@itemMovedColor, 10%);
         }
+>>>>>>> master
       }
     }
 
     .forum-main {
+<<<<<<< HEAD
+      margin-left: (@forumIconSize * 1.5) + (@fontSizeSmall - 2px);
+=======
       margin-left: 34px;
+>>>>>>> master
 
       h3 {
         float: left;
@@ -128,6 +154,10 @@
           background: none;
           border: none;
           box-shadow: none;
+<<<<<<< HEAD
+          z-index: 2;
+=======
+>>>>>>> master
 
           .dropdown-shadow{
             border-radius: @baseBorderRadius;
@@ -296,7 +326,10 @@
   }
 }
 
+<<<<<<< HEAD
+=======
 // Threads list
+>>>>>>> master
 .forum-threads-list {
   background-color: @categoryBackground;
   border: 1px solid @categoryBorder;
@@ -304,6 +337,276 @@
   .box-shadow(0px 0px 0px 3px @categoryShadow);
   margin-bottom: @baseLineHeight;
 
+<<<<<<< HEAD
+  .threads-list-empty {
+    padding: (@baseFontSize * 2) 0px;
+
+    color: @grayLight;
+    font-size: @fontSizeLarge * 1.5;
+    text-align: center;
+
+    .thread-prefix {
+      position: relative;
+      bottom: 5px;
+    }
+  }
+
+  &>ul {
+    list-style: none;
+    margin: 0px;
+
+    &>li {
+      border-bottom: 1px solid @categoryBorder;
+      padding: (@fontSizeSmall - 2px) 0px;
+      overflow: auto;
+
+      .thread-icon {
+        float: left;
+        margin-bottom: -2px;
+        position: relative;
+        bottom: 1px;
+        height: @threadIconSize;
+        width: @threadIconSize + @fontSizeLarge;
+
+        font-size: @threadIconSize;
+        text-align: center;
+
+        a:link, a:active, a:visited, a:hover{
+          color: @itemOldColor;
+          text-decoration: none;
+        }
+      }
+
+      .thread-body {
+        margin: ((@fontSizeSmall - 2px) * -1) 0px;
+        margin-left: @threadIconSize + @fontSizeLarge;
+        padding: (@fontSizeSmall - 2px) 0px;
+
+        .thread-prefix {
+          margin-right: @baseFontSize / 2;
+          position: relative;
+          bottom: 2px;
+        }
+
+        .thread-title {
+          display: block;
+
+          .thread-link {
+            &:link, &:active, &:visited, &:hover {
+              color: @gray;
+              font-size: @fontSizeLarge;
+            }
+          }
+        }
+
+        .thread-activity {
+          float: right;
+          list-style: none;
+          margin: 0px;
+          margin-top: (@fontSizeSmall - 2px) * -1;
+          margin-bottom: -6px;
+          padding: 6px 0px;
+          padding-right: 8px;
+          overflow: auto;
+          position: relative;
+          top: 1px;
+          z-index: 2;
+
+          li {
+            float: left;
+            margin: 0px;
+            margin-left: 10px;
+            padding: 0px;
+
+            &.thread-replies,
+            &.thread-replies-reported,
+            &.thread-replies-moderated {
+              position: relative;
+              top: 2px;
+
+              color: @gray;
+              font-size: @fontSizeLarge;
+              font-weight: bold;
+            }
+
+            &.thread-replies-reported {
+              color: @red;
+            }
+
+            &.thread-replies-moderated {
+              color: @purple;
+            }
+
+            &.thread-replies {
+              position: relative;
+              top: 2px;
+
+              color: @gray;
+              font-size: @fontSizeLarge;
+              font-weight: bold;
+            }
+
+            &.thread-last-reply {
+              position: relative;
+              top: 2px;
+
+              a:link, a:visited {
+                color: @grayLight;
+                font-size: @fontSizeLarge;
+                font-weight: bold;
+              }
+
+              a:hover, a:active {
+                color: @textColor;
+              }
+            }
+
+            &.thread-author, &.thread-poster {
+              position: relative;
+              top: 2px;
+
+              color: @gray;
+              font-size: @fontSizeLarge;
+              font-weight: bold;
+
+              .user-avatar {
+                border-radius: @baseBorderRadius;
+                width: 24px;
+                height: 24px;
+                position: relative;
+                bottom: 2px;
+              }
+            }
+
+            &.thread-author {
+              a:link, a:active, a:visited, a:hover {
+                color: @blue;
+              }
+            }
+
+            &.thread-poster {
+              a:link, a:active, a:visited, a:hover {
+                color: @itemNewColor;
+              }
+            }
+
+            &.thread-flag {
+              margin-bottom: -6px;
+
+              color: @grayLight;
+              font-size: 26px;
+
+              &.thread-poll {
+                &:hover {
+                  color: @green;
+                }
+              }
+
+              &.thread-moderated {
+                &:hover {
+                  color: @purple;
+                }
+              }
+
+              &.thread-closed {
+                &:hover {
+                  color: @red;
+                }
+              }
+
+              &.thread-deleted {
+                &:hover {
+                  color: @grayDark;
+                }
+              }
+            }
+
+            &.thread-forum {
+              margin-left: @baseFontSize;
+
+              a:link, a:visited {
+                position: relative;
+                top: 2px;
+
+                color: @grayLight;
+                font-size: @fontSizeLarge;
+              }
+
+              a:hover, a:active {
+                color: @textColor;
+              }
+            }
+
+            &.thread-select {
+              label {
+                border-radius: @baseBorderRadius;
+                display: inline-block;
+                margin: 0px;
+                margin-bottom: -5px;
+                padding-right: 3px;
+                padding-bottom: 4px;
+
+                &:hover {
+                  background-color: @grayLighter;
+                }
+
+                &:active {
+                  background-color: @red;
+                }
+
+                input {
+                  margin-top: 6px;
+                  position: relative;
+                  left: 6px;
+                }
+              }
+            }
+          }
+        }
+
+        .thread-details {
+          float: left;
+          list-style: none;
+          margin: 0px;
+          padding: 0px;
+
+          li {
+            float: left;
+            margin-right: @baseFontSize / 2;
+
+            color: @grayLight;
+            font-size: @fontSizeSmall;
+
+            a:link, a:visited {
+              color: @gray;
+            }
+
+            a:hover, a:active {
+              color: @textColor;
+            }
+          }
+        }
+      }
+
+      &.thread-new {
+        .thread-icon {
+          a:link, a:active, a:visited, a:hover {
+            color: @itemNewColor;
+          }
+        }
+
+        .thread-title {
+          &:link, &:active, &:visited, &:hover {
+            color: @textColor;
+          }
+        }
+      }
+    }
+
+    &>li:last-child {
+      border-bottom: none;
+    }
+=======
   .header {
     background-color: @categoryHeader;
     border: 1px solid @categoryBorder;
@@ -531,6 +834,7 @@
         }
       }
     }
+>>>>>>> master
   }
 
   .threads-actions {
@@ -563,4 +867,155 @@
       color: @textColor;
     }
   }
+<<<<<<< HEAD
+}
+
+.prefix-select {
+  margin: 0px;
+  margin-left: @baseFontSize;
+  padding: 0px;
+
+  ul {
+  	margin: 0px;
+    overflow: auto;
+
+    li {
+      float: left;
+      list-style: none;
+      margin: 0px;
+      padding: 4px 0px;
+    }
+  }
+
+  .selection-title {
+  	margin-right: @fontSizeSmall / 2;
+    padding: 4px 0px;
+
+    color: @gray;
+    font-weight: bold;
+  }
+
+  .label {
+    margin: 0px 4px;
+    position: relative;
+    bottom: 0px;
+    .opacity(90);
+    outline: none;
+    padding: 4px 6px;
+
+    font-size: @baseFontSize;
+    font-weight: normal;
+
+    &.label-cancel {
+      background-color: @bodyBackground;
+    	border: 1px solid @grayLight;
+    	margin-top: -1px;
+
+      color: @gray;
+      text-shadow: none;
+
+      &:hover, &:active {
+    		border: 1px solid @grayLight;
+
+        color: @textColor;
+      }
+    }
+
+    &.label-success {
+      &, &:hover, &:active {
+        background-color: lighten(@successText, 45%);
+        border-color: lighten(@successText, 20%);
+
+        color: @successText;
+        text-shadow: none;
+      }
+
+      &.label-active {
+        background-color: @successText;
+        border-color: darken(@successText, 20%);
+
+        color: @white;
+        text-shadow: 0px -1px 0px darken(@successText, 20%);
+      }
+    }
+
+    &.label-info {
+      &, &:hover, &:active {
+        background-color: lighten(@infoText, 45%);
+        border-color: lighten(@infoText, 20%);
+
+        color: @infoText;
+        text-shadow: none;
+      }
+
+      &.label-active {
+        background-color: @infoText;
+        border-color: darken(@infoText, 20%);
+
+        color: @white;
+        text-shadow: 0px -1px 0px darken(@infoText, 20%);
+      }
+    }
+
+    &.label-warning {
+      &, &:hover, &:active {
+        background-color: lighten(@orange, 42%);
+        border-color: lighten(@orange, 20%);
+
+        color: @orange;
+        text-shadow: none;
+      }
+
+      &.label-active {
+        background-color: @orange;
+        border-color: darken(@orange, 20%);
+
+        color: @white;
+        text-shadow: 0px -1px 0px darken(@orange, 20%);
+      }
+    }
+
+    &.label-important {
+      &, &:hover, &:active {
+        background-color: lighten(@errorText, 45%);
+        border-color: lighten(@errorText, 20%);
+
+        color: @errorText;
+        text-shadow: none;
+      }
+
+      &.label-active {
+        background-color: @errorText;
+        border-color: darken(@errorText, 20%);
+
+        color: @white;
+        text-shadow: 0px -1px 0px darken(@errorText, 20%);
+      }
+    }
+
+    &.label-inverse {
+      &, &:hover, &:active {
+        background-color: lighten(@grayDark, 40%);
+        border-color: lighten(@grayDark, 20%);
+
+        color: @grayDark;
+        text-shadow: none;
+      }
+
+      &.label-active {
+        background-color: @grayDark;
+        border-color: darken(@grayDark, 20%);
+
+        color: @white;
+        text-shadow: 0px -1px 0px darken(@grayDark, 20%);
+      }
+    }
+
+    &.btn-active, &:hover, &:active {
+      .box-shadow(none);
+      .opacity(100);
+    }
+  }
+=======
+>>>>>>> master
 }

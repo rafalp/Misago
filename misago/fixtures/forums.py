@@ -38,7 +38,6 @@ def load():
                                post='Welcome to Misago!',
                                post_preparsed='Welcome to Misago!',
                                date=now,
-                               current_date=now,
                                )
     thread.start_post = post
     thread.start_poster_name = 'MisagoProject'

@@ -1,5 +1,5 @@
 from django.utils.translation import ugettext_lazy as _
-from django import forms
+import floppyforms as forms
 from mptt.forms import TreeNodeChoiceField
 from misago.forms import Form, YesNoSwitch
 from misago.models import Forum
@@ -19,21 +19,34 @@ class CleanAttrsMixin(object):
 class NewNodeForm(Form, CleanAttrsMixin):
     parent = False
     perms = False
-    role = forms.ChoiceField(choices=(
+    role = forms.ChoiceField(label=_("Node Type"),
+                             help_text=_("Each Node has specific role in forums tree. This role cannot be changed after node is created."),
+                             choices=(
                                       ('category', _("Category")),
                                       ('forum', _("Forum")),
                                       ('redirect', _("Redirection")),
                                       ))
-    name = forms.CharField(max_length=255, validators=[validate_sluggable(
+    name = forms.CharField(label=_("Node Name"),
+                           max_length=255, validators=[validate_sluggable(
                                                                           _("Category name must contain alphanumeric characters."),
                                                                           _("Category name is too long.")
                                                                           )])
-    redirect = forms.URLField(max_length=255, required=False)
-    description = forms.CharField(widget=forms.Textarea, required=False)
-    closed = forms.BooleanField(widget=YesNoSwitch, required=False)
-    attrs = forms.CharField(max_length=255, required=False)
-    show_details = forms.BooleanField(widget=YesNoSwitch, required=False, initial=True)
-    style = forms.CharField(max_length=255, required=False)
+    redirect = forms.URLField(label=_("Redirect URL"),
+                              help_text=_("Redirection nodes require you to specify URL they will redirect users to upon click."),
+                              max_length=255, required=False)
+    description = forms.CharField(label=_("Node Description"),
+                                  widget=forms.Textarea, required=False)
+    closed = forms.BooleanField(label=_("Closed Node"),
+                                widget=YesNoSwitch, required=False)
+    attrs = forms.CharField(label=_("Node Style"),
+                            help_text=_('You can add custom CSS classess to this node, to change way it looks on board index.'),
+                            max_length=255, required=False)
+    show_details = forms.BooleanField(label=_("Node Style"),
+                                      help_text=_('You can add custom CSS classess to this node, to change way it looks on board index.'),
+                                      widget=YesNoSwitch, required=False, initial=True)
+    style = forms.CharField(label=_("Node Style"),
+                            help_text=_('You can add custom CSS classess to this node, to change way it looks on board index.'),
+                            max_length=255, required=False)
 
     layout = (
               (
@@ -59,8 +72,10 @@ class NewNodeForm(Form, CleanAttrsMixin):
              )
 
     def finalize_form(self):
-        self.fields['parent'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(include_self=True), level_indicator=u'- - ')
-        self.fields['perms'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions"))
+        self.add_field('parent', TreeNodeChoiceField(label=_("Node Parent"), widget=forms.Select,
+                                                     queryset=Forum.objects.get(special='root').get_descendants(include_self=True), level_indicator=u'- - '))
+        self.add_field('perms', TreeNodeChoiceField(label=_("Copy Permissions from"), widget=forms.Select,
+                                                    queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions")))
 
     def clean(self):
         cleaned_data = super(NewNodeForm, self).clean()
@@ -74,19 +89,27 @@ class NewNodeForm(Form, CleanAttrsMixin):
         return cleaned_data
 
 
-
 class CategoryForm(Form, CleanAttrsMixin):
     parent = False
     perms = False
-    name = forms.CharField(max_length=255, validators=[validate_sluggable(
+    name = forms.CharField(label=_("Category Name"),
+                           max_length=255, validators=[validate_sluggable(
                                                                           _("Category name must contain alphanumeric characters."),
                                                                           _("Category name is too long.")
                                                                           )])
-    description = forms.CharField(widget=forms.Textarea, required=False)
-    closed = forms.BooleanField(widget=YesNoSwitch, required=False)
-    style = forms.CharField(max_length=255, required=False)
-    attrs = forms.CharField(max_length=255, required=False)
-    show_details = forms.BooleanField(widget=YesNoSwitch, required=False, initial=True)
+    description = forms.CharField(label=_("Category Description"),
+                                  widget=forms.Textarea, required=False)
+    closed = forms.BooleanField(label=_("Closed Category"),
+                                widget=YesNoSwitch, required=False)
+    style = forms.CharField(label=_("Category Style"),
+                            help_text=_('You can add custom CSS classess to this category, to change way it looks on board index.'),
+                            max_length=255, required=False)
+    attrs = forms.CharField(label=_("Category Attributes"),
+                            help_text=_('Custom templates can check categories for predefined attributes that will change way they are rendered.'),
+                            max_length=255, required=False)
+    show_details = forms.BooleanField(label=_("Show Subforums Details"),
+                                      help_text=_('Allows you to prevent this category subforums from displaying statistics, last post data, etc. ect. on forums lists.'),
+                                      widget=YesNoSwitch, required=False, initial=True)
 
     layout = (
               (
@@ -110,24 +133,38 @@ class CategoryForm(Form, CleanAttrsMixin):
              )
 
     def finalize_form(self):
-        self.fields['perms'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions"))
+        self.add_field('perms', TreeNodeChoiceField(label=_("Copy Permissions from"), widget=forms.Select,
+                                                    queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions")))
 
 
 class ForumForm(Form, CleanAttrsMixin):
     parent = False
     perms = False
     pruned_archive = False
-    name = forms.CharField(max_length=255, validators=[validate_sluggable(
+    name = forms.CharField(label=_("Forum Name"),
+                           max_length=255, validators=[validate_sluggable(
                                                                           _("Forum name must contain alphanumeric characters."),
                                                                           _("Forum name is too long.")
                                                                           )])
-    description = forms.CharField(widget=forms.Textarea, required=False)
-    closed = forms.BooleanField(widget=YesNoSwitch, required=False)
-    style = forms.CharField(max_length=255, required=False)
-    prune_start = forms.IntegerField(min_value=0, initial=0)
-    prune_last = forms.IntegerField(min_value=0, initial=0)
-    attrs = forms.CharField(max_length=255, required=False)
-    show_details = forms.BooleanField(widget=YesNoSwitch, required=False, initial=True)
+    description = forms.CharField(label=_("Forum Description"),
+                                  widget=forms.Textarea, required=False)
+    closed = forms.BooleanField(label=_("Closed Forum"),
+                                widget=YesNoSwitch, required=False)
+    style = forms.CharField(label=_("Forum Style"),
+                            help_text=_('You can add custom CSS classess to this forum to change way it looks on forums lists.'),
+                            max_length=255, required=False)
+    prune_start = forms.IntegerField(label=_("Delete threads with first post older than"),
+                                     help_text=_('Enter number of days since thread start after which thread will be deleted or zero to don\'t delete threads.'),
+                                     min_value=0, initial=0)
+    prune_last = forms.IntegerField(label=_("Delete threads with last post older than"),
+                                    help_text=_('Enter number of days since since last reply in thread after which thread will be deleted or zero to don\'t delete threads.'),
+                                    min_value=0, initial=0)
+    attrs = forms.CharField(label=_("Forum Attributes"),
+                            help_text=_('Custom templates can check forums for predefined attributes that will change way subforums lists are rendered.'),
+                            max_length=255, required=False)
+    show_details = forms.BooleanField(label=_("Show Subforums Details"),
+                                      help_text=_("Allows you to prevent this forum's subforums from displaying statistics, last post data, etc. ect. on subforums list."),
+                                      widget=YesNoSwitch, required=False, initial=True)
 
     layout = (
               (
@@ -159,8 +196,11 @@ class ForumForm(Form, CleanAttrsMixin):
               )
 
     def finalize_form(self):
-        self.fields['perms'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions"))
-        self.fields['pruned_archive'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't archive pruned threads"))
+        self.add_field('perms', TreeNodeChoiceField(label=_("Copy Permissions from"), widget=forms.Select,
+                                                    queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions")))
+        self.add_field('pruned_archive', TreeNodeChoiceField(label=_("Archive pruned threads?"),
+                                                             help_text=_('If you want, you can archive pruned threads in other forum instead of deleting them.'),
+                                                             widget=forms.Select, queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't archive pruned threads")))
 
     def clean_pruned_archive(self):
         data = self.cleaned_data['pruned_archive']
@@ -201,27 +241,20 @@ class RedirectForm(Form, CleanAttrsMixin):
               )
 
     def finalize_form(self):
-        self.fields['perms'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions"))
+        self.add_field('perms', TreeNodeChoiceField(label=_("Copy Permissions from"), widget=forms.Select,
+                                                    queryset=Forum.objects.get(special='root').get_descendants(), level_indicator=u'- - ', required=False, empty_label=_("Don't copy permissions")))
 
 
 class DeleteForm(Form):
-    layout = (
-              (
-               _("Delete Options"),
-               (
-                ('contents', {'label': _("Move threads to")}),
-                ('subforums', {'label': _("Move subforums to")}),
-                ),
-               ),
-              )
-
     def __init__(self, *args, **kwargs):
         self.forum = kwargs.pop('forum')
         super(DeleteForm, self).__init__(*args, **kwargs)
 
     def finalize_form(self):
-        self.fields['contents'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(), required=False, empty_label=_("Remove with forum"), level_indicator=u'- - ')
-        self.fields['subforums'] = TreeNodeChoiceField(queryset=Forum.objects.get(special='root').get_descendants(), required=False, empty_label=_("Remove with forum"), level_indicator=u'- - ')
+        self.add_field('contents', TreeNodeChoiceField(label=_("Move threads to"),
+                                                       widget=forms.Select, queryset=Forum.objects.get(special='root').get_descendants(), required=False, empty_label=_("Remove with forum"), level_indicator=u'- - '))
+        self.add_field('subforums', TreeNodeChoiceField(label=_("Move subforums to"), widget=forms.Select,
+                                                        queryset=Forum.objects.get(special='root').get_descendants(), required=False, empty_label=_("Remove with forum"), level_indicator=u'- - '))
 
     def clean_contents(self):
         data = self.cleaned_data['contents']

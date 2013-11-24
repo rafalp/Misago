@@ -9,15 +9,15 @@ class ForumRead(models.Model):
     forum = models.ForeignKey('Forum')
     updated = models.DateTimeField()
     cleared = models.DateTimeField()
-    
+
     class Meta:
         app_label = 'misago'
 
     def get_threads(self):
         from misago.models import ThreadRead
-        
+
         threads = {}
-        for thread in ThreadRead.objects.filter(user_id=self.user_id, forum_id=self.forum_id, updated__gte=(timezone.now() - timedelta(days=settings.READS_TRACKER_LENGTH))):
+        for thread in ThreadRead.objects.filter(user_id=self.user_id, forum_id=self.forum_id, updated__gte=(timezone.now() - timedelta(days=settings.READS_TRACKER_LENGTH))).iterator():
             threads[thread.thread_id] = thread
         return threads
 

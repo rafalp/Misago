@@ -1,0 +1,16 @@
+{% extends "admin/admin/form.html" %}
+{% import "forms.html" as form_theme with context %}
+
+{% block form %}
+<fieldset>
+  <legend>{% trans %}Basic Policy Options{% endtrans %}</legend>
+  {{ form_theme.row(form.name, attrs={'class': 'span12'}) }}
+</fieldset>
+<fieldset>
+  <legend>{% trans %}Pruning Policy Criteria{% endtrans %}</legend>
+  {{ form_theme.row(form.email, attrs={'class': 'span12'}) }}
+  {{ form_theme.row(form.posts, attrs={'class': 'span12'}) }}
+  {{ form_theme.row(form.registered, attrs={'class': 'span12'}) }}
+  {{ form_theme.row(form.last_visit, attrs={'class': 'span12'}) }}
+</fieldset>
+{% endblock %}

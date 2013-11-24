@@ -1,5 +1,9 @@
 // Basic editor functions
+<<<<<<< HEAD
+function storeCaret(ftext) {
+=======
 function storeCaret(ftext) {    
+>>>>>>> master
   if (ftext.createTextRange) {
     ftext.caretPos = document.selection.createRange().duplicate();
   }
@@ -86,6 +90,123 @@ function extractor(query) {
 
 // Small and nice editor functionality
 $(function() {
+<<<<<<< HEAD
+  function textarea(ev) {
+    return $(ev).parents('.editor-editable').find('textarea');
+  }
+
+  function textareaId(ev) {
+    return textarea(ev).attr('id');
+  }
+
+  $('.editor-tools').fadeIn(600);
+  $('.editor-zen-on').css('display', 'block');
+  $('.editor-editable').each(function() {
+    // Do we have emojis?
+    if (ed_emojis.length > 1) {
+      $(this).find('textarea').atwho({
+        at: ":",
+        tpl: ed_emoji_tpl,
+        data: ed_emojis_list
+      });
+    }
+  });
+
+  // Handle buttons
+  $('.editor-zen-on a').click(function() {
+    var overlay = $('.zen-overlay');
+    var overlay_textarea = overlay.find('textarea');
+    overlay_textarea.val(textarea(this).val());
+    overlay_textarea.data('org', '#' + textareaId(this));
+    overlay_textarea.data('pos', $('body').scrollTop());
+    overlay.show();
+    $('#wrap').hide();
+    return false;
+  });
+
+  $('.editor-bold').click(function() {
+    makeWrap(textareaId(this), '**', '**');
+    return false;
+  });
+
+  $('.editor-emphasis').click(function() {
+    makeWrap(textareaId(this), '*', '*');
+    return false;
+  });
+
+  $('.editor-link').click(function() {
+    var selection = $.trim(getSelectionText(textareaId(this)));
+    if (is_url(selection)) {
+      var link_url = $.trim(prompt(ed_lang_enter_link_url, selection));
+      selection = false;
+    } else {
+      var link_url = $.trim(prompt(ed_lang_enter_link_url));
+    }
+
+    if (is_url(link_url)) {
+      if (selection) {
+        var link_label = $.trim(prompt(ed_lang_enter_link_label, selection));
+      } else {
+        var link_label = $.trim(prompt(ed_lang_enter_link_label));
+      }
+
+      if (link_label.length > 0) {
+        makeReplace(textareaId(this), '[' + link_label + '](' + link_url + ')');
+      } else {
+        makeReplace(textareaId(this), '<' + link_url + '>');
+      }
+    }
+
+    return false;
+  });
+
+  $('.editor-image').click(function() {
+    var selection = $.trim(getSelectionText(textareaId(this)));
+    if (is_url(selection)) {
+      var image_url = $.trim(prompt(ed_lang_enter_image_url, selection));
+      selection = false;
+    } else {
+      var image_url = $.trim(prompt(ed_lang_enter_image_url));
+    }
+
+    if (is_url(image_url)) {
+      if (selection) {
+        var image_label = $.trim(prompt(ed_lang_enter_image_label, selection));
+      } else {
+        var image_label = $.trim(prompt(ed_lang_enter_image_label));
+      }
+
+      if (image_label.length > 0) {
+        makeReplace(textareaId(this), '![' + image_label + '](' + image_url + ')');
+      } else {
+        makeReplace(textareaId(this), '!(' + image_url + ')');
+      }
+    }
+
+    return false;
+  });
+
+  $('.editor-hr').click(function() {
+    makeReplace(textareaId(this), '\r\n\r\n- - - - -\r\n\r\n');
+    return false;
+  });
+
+  $('.editor-zen-off a').click(function() {
+    var overlay = $('.zen-overlay');
+    var overlay_textarea = overlay.find('textarea');
+    var scrooltop = overlay.find('textarea').data('pos');
+
+    $(overlay.find('textarea').data('org')).val(overlay.find('textarea').val());
+    $('#wrap').show();
+    $('html, body').scrollTop(scrooltop);
+    overlay.hide();
+    return false;
+  });
+
+  $('.editor-insert-attachment').click(function() {
+    var insertion_code = $(this).data('attachment-md');
+    makeReplace(textareaId(this), insertion_code);
+=======
   $('.editor-tools').fadeIn(600);
   $('.editor').each(function() {
     // Get textarea stuff
@@ -199,5 +320,6 @@ $(function() {
       makeReplace(textarea_id, '\r\n\r\n- - - - -\r\n\r\n');
       return false;
     });
+>>>>>>> master
   });
 });

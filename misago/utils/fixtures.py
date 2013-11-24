@@ -56,7 +56,7 @@ def load_settings_group_fixture(group, fixture):
         model_setting = Setting(
                                 setting=setting[0],
                                 group=model_group,
-                                value=value,
+                                _value=value,
                                 value_default=value_default,
                                 normalize_to=setting[1].get('type'),
                                 field=setting[1].get('input'),

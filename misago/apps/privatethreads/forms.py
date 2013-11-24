@@ -1,5 +1,5 @@
-from django import forms
 from django.utils.translation import ugettext_lazy as _
+import floppyforms as forms
 from misago.apps.threadtype.posting.forms import (NewThreadForm as NewThreadBaseForm,
                                                   EditThreadForm as EditThreadBaseForm,
                                                   NewReplyForm as NewReplyBaseForm,
@@ -10,11 +10,12 @@ from misago.utils.strings import slugify
 
 class InviteUsersMixin(object):
     def type_fields(self):
-        self.layout[0][1].append(('invite_users', {'label': _("Invite members to thread"), 'attrs': {'placeholder': _("user1, user2, user3...")}}))
-        self.fields['invite_users'] = forms.CharField(max_length=255, required=False)
+        self.add_field('invite_users', forms.CharField(label=_("Invite members to thread"),
+                                                       max_length=255,
+                                                       required=False))
 
     def clean_invite_users(self):
-        self.invite_users = []
+        self.users_list = []
         usernames = []
         slugs = [self.request.user.username_slug]
         for username in self.cleaned_data['invite_users'].split(','):
@@ -30,7 +31,7 @@ class InviteUsersMixin(object):
                     if (not self.request.acl.private_threads.can_invite_ignoring() and
                             not user.allow_pd_invite(self.request.user)):
                         raise forms.ValidationError(_('%(user)s restricts who can invite him to private threads.') % {'user': user.username})
-                    self.invite_users.append(user)
+                    self.users_list.append(user)
                 except User.DoesNotExist:
                     raise forms.ValidationError(_('User "%(username)s" could not be found.') % {'username': username})
             if len(usernames) > 8:

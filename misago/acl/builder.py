@@ -1,11 +1,17 @@
 from django.conf import settings
 from django.core.cache import cache, InvalidCacheBackendError
 from django.utils.importlib import import_module
-from misago.forms import Form
+from misago.forms import Form, FormIterator
 from misago.models import Forum, ForumRole
+from misago.monitor import monitor
+
+class ACLFormBase(Form):
+    def iterator(self):
+        return FormIterator(self)
+
 
 def build_form(request, role):
-    form_type = type('ACLForm', (Form,), dict(layout=[]))
+    form_type = type('ACLFormFinal', (ACLFormBase,), {'fieldsets': []})
     for provider in settings.PERMISSION_PROVIDERS:
         app_module = import_module(provider)
         try:
@@ -16,13 +22,14 @@ def build_form(request, role):
 
 
 def build_forum_form(request, role):
-    form_type = type('ACLForm', (Form,), dict(layout=[]))
+    form_type = type('ACLFormForumFinal', (ACLFormBase,), {'fieldsets': []})
     for provider in settings.PERMISSION_PROVIDERS:
         app_module = import_module(provider)
         try:
             app_module.make_forum_form(request, role, form_type)
-        except AttributeError:
-            pass
+        except AttributeError as e:
+            if not 'make_forum_form' in unicode(e):
+                raise e
     return form_type
 
 
@@ -50,16 +57,16 @@ def acl(request, user):
     acl_key = user.make_acl_key()
     try:
         user_acl = cache.get(acl_key)
-        if user_acl.version != request.monitor['acl_version']:
+        if user_acl.version != monitor['acl_version']:
             raise InvalidCacheBackendError()
     except (AttributeError, InvalidCacheBackendError):
-        user_acl = build_acl(request, request.user.get_roles())
+        user_acl = build_acl(request, user.get_roles())
         cache.set(acl_key, user_acl, 2592000)
     return user_acl
 
 
 def build_acl(request, roles):
-    new_acl = ACL(request.monitor['acl_version'])
+    new_acl = ACL(monitor['acl_version'])
     forums = Forum.objects.get(special='root').get_descendants().order_by('lft')
     perms = []
     forum_roles = {}

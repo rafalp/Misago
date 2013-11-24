@@ -2,9 +2,9 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.acl.exceptions import ACLError403, ACLError404
 from misago.apps.errors import error403, error404
-from misago.messages import Message
 from misago.models import Forum, Thread, Post, Checkpoint
 from misago.apps.threadtype.base import ViewBase
 
@@ -62,7 +62,7 @@ class DeleteThreadBaseView(DeleteHideBaseView):
         self.forum.save(force_update=True)
 
     def message(self):
-        self.request.messages.set_flash(Message(_('Thread "%(thread)s" has been deleted.') % {'thread': self.thread.name}), 'success', 'threads')
+        messages.success(self.request, _('Thread "%(thread)s" has been deleted.') % {'thread': self.thread.name}, 'threads')
 
     def response(self):
         return self.threads_list_redirect()
@@ -88,7 +88,7 @@ class HideThreadBaseView(DeleteHideBaseView):
         self.forum.save(force_update=True)
 
     def message(self):
-        self.request.messages.set_flash(Message(_('Thread "%(thread)s" has been deleted.') % {'thread': self.thread.name}), 'success', 'threads')
+        messages.success(self.request, _('Thread "%(thread)s" has been deleted.') % {'thread': self.thread.name}, 'threads')
 
     def response(self):
         if self.request.acl.threads.can_see_deleted_threads(self.thread.forum):
@@ -114,7 +114,7 @@ class ShowThreadBaseView(DeleteHideBaseView):
         self.forum.save(force_update=True)
 
     def message(self):
-        self.request.messages.set_flash(Message(_('Thread "%(thread)s" has been restored.') % {'thread': self.thread.name}), 'success', 'threads')
+        messages.success(self.request, _('Thread "%(thread)s" has been restored.') % {'thread': self.thread.name}, 'threads')
 
     def response(self):
         if self.request.acl.threads.can_see_deleted_threads(self.thread.forum):
@@ -135,7 +135,7 @@ class DeleteReplyBaseView(DeleteHideBaseView):
         self.forum.save(force_update=True)
 
     def message(self):
-        self.request.messages.set_flash(Message(_("Selected reply has been deleted.")), 'success', 'threads')
+        messages.success(self.request, _("Selected reply has been deleted."), 'threads')
 
     def response(self):
         return redirect(reverse(self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug}))
@@ -150,7 +150,7 @@ class HideReplyBaseView(DeleteHideBaseView):
             raise ACLError403(_("Somebody has already replied to this post, you cannot delete it."))
 
     def delete(self):
-        self.post.current_date = timezone.now()
+        self.post.delete_date = timezone.now()
         self.post.deleted = True
         self.post.save(force_update=True)
         self.thread.sync()
@@ -159,7 +159,7 @@ class HideReplyBaseView(DeleteHideBaseView):
         self.forum.save(force_update=True)
 
     def message(self):
-        self.request.messages.set_flash(Message(_("Selected reply has been deleted.")), 'success', 'threads_%s' % self.post.pk)
+        messages.success(self.request, _("Selected reply has been deleted."), 'threads_%s' % self.post.pk)
 
     def response(self):
         return self.redirect_to_post(self.post)
@@ -182,7 +182,7 @@ class ShowReplyBaseView(DeleteHideBaseView):
         self.forum.save(force_update=True)
 
     def message(self):
-        self.request.messages.set_flash(Message(_("Selected reply has been restored.")), 'success', 'threads_%s' % self.post.pk)
+        messages.success(self.request, _("Selected reply has been restored."), 'threads_%s' % self.post.pk)
 
     def response(self):
         return self.redirect_to_post(self.post)
@@ -196,7 +196,7 @@ class DeleteCheckpointBaseView(DeleteHideBaseView):
         self.checkpoint.delete()
 
     def message(self):
-        self.request.messages.set_flash(Message(_("Selected checkpoint has been deleted.")), 'success', 'threads')
+        messages.success(self.request, _("Selected checkpoint has been deleted."), 'threads')
 
     def response(self):
         if 'retreat' in self.request.POST:
@@ -215,7 +215,7 @@ class HideCheckpointBaseView(DeleteCheckpointBaseView):
         self.checkpoint.save(force_update=True)
 
     def message(self):
-        self.request.messages.set_flash(Message(_("Selected checkpoint has been hidden.")), 'success', 'threads')
+        messages.success(self.request, _("Selected checkpoint has been hidden."), 'threads')
 
 
 class ShowCheckpointBaseView(DeleteCheckpointBaseView):
@@ -229,4 +229,4 @@ class ShowCheckpointBaseView(DeleteCheckpointBaseView):
         self.checkpoint.save(force_update=True)
 
     def message(self):
-        self.request.messages.set_flash(Message(_("Selected checkpoint has been restored.")), 'success', 'threads')
+        messages.success(self.request, _("Selected checkpoint has been restored."), 'threads')

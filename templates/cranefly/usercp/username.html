@@ -1,5 +1,5 @@
 {% extends "cranefly/usercp/layout.html" %}
-{% import "_forms.html" as form_theme with context %}
+{% import "forms.html" as form_theme with context %}
 {% import "cranefly/macros.html" as macros with context %}
 
 {% block title %}{{ macros.page_title(title=_('Change your Username')) }}{% endblock %}
@@ -17,12 +17,14 @@
   </div>
   {% endif %}
 
-  <form action="{% url 'usercp_username' %}" method="post">
+  <form action="{{ url('usercp_username') }}" method="post">
+    {{ form_theme.hidden_fields(form) }}
     <div class="form-fields">
       {% if changes_left == 0 %}
-      {% do form.fields['username']['attrs'].update({'disabled': 'disabled'}) %}
+      {{ form_theme.row(form.username, attrs={'class': 'span9', 'disabled': 'disabled'}) }}
+      {% else %}
+      {{ form_theme.row(form.username, attrs={'class': 'span9'}) }}
       {% endif %}
-      {{ form_theme.form_widget(form, width=9) }}
     </div>
     <div class="form-actions">
       <button name="save" type="submit" class="btn btn-primary"{% if changes_left == 0 %} disabled="disabled"{% endif %}>{% trans %}Change Name{% endtrans %}</button>

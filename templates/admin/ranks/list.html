@@ -1,8 +1,5 @@
 {% extends "admin/admin/list.html" %}
-{% load i18n %}
-{% load l10n %}
-{% load url from future %}
-{% import "_forms.html" as form_theme with context %}
+{% import "forms.html" as form_theme with context %}
 
 {% block table_head scoped %}
   {{ super() }}
@@ -14,6 +11,6 @@
   	<strong>{{ _(item.name) }}</strong>{% if item.special %} <span class="label label-info">{% trans %}Special{% endtrans %}</span>{% endif %}{% if item.as_tab %} <span class="label label-inverse">{% trans %}Tab{% endtrans %}</span>{% endif %}{% if item.on_index %} <span class="label label-orange">{% trans %}On Index{% endtrans %}</span>{% endif %}
   </td>
   <td class="span2">
-  	{{ form_theme.field_widget(table_form['pos_' + item.pk|string], attrs={'form': 'table_form'}, width=2) }}
+  	{{ form_theme.field(table_form['pos_' + item.pk|string], attrs={'form': 'table_form', 'class': 'span2'}) }}
   </td>
 {% endblock%}

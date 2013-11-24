@@ -6,6 +6,13 @@
     <title>{% block title %}{{ page_title() }}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">{% block meta %}{% endblock %}
     <link href="{{ STATIC_URL }}cranefly/css/cranefly.css" rel="stylesheet">{% block stylesheets %}{% endblock %}
+    <!--[if IE 7]>
+    <link rel="stylesheet" href="{{ STATIC_URL }}cranefly/css/font-awesome-ie7.min.css">
+    <![endif]-->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ STATIC_URL }}apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ STATIC_URL }}apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ STATIC_URL }}apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="{{ STATIC_URL }}apple-touch-icon-57-precomposed.png">
     <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico">
   </head>
   <body itemscope itemtype="http://schema.org/WebPage"{% block body_class %}{% endblock %}>
@@ -15,9 +22,8 @@
   	<script src="{{ STATIC_URL }}cranefly/js/bootstrap.min.js"></script>
     <script type="text/javascript">
       var l_img_broken_msg = "{{ _('Image could not be loaded.') }}";
-      $(function() {
-        $('#fancy-user-nav').show();
-      });
+      var l_play_media_msg = "{{ _('Click to play media') }}";
+      var l_play_media_author = "{{ _('uploaded by {author}') }}";
     </script>
   	<script src="{{ STATIC_URL }}cranefly/js/cranefly.js"></script>{% block javascripts %}{% endblock %}
     {{ hook_append_extra|safe }}

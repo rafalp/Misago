@@ -1,12 +1,14 @@
-from django.conf import settings
 from django.core.urlresolvers import reverse as django_reverse
 from django.db.models import Q
 from django.shortcuts import redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
+from misago import messages
 from misago.admin import site
 from misago.apps.admin.widgets import *
+from misago.conf import settings
 from misago.models import Newsletter, User
+from misago.shortcuts import render_to_response
 from misago.apps.admin.newsletters.forms import NewsletterForm, SearchNewslettersForm
 
 def reverse(route, target=None):
@@ -56,7 +58,7 @@ class List(ListWidget):
 
     def action_delete(self, items, checked):
         Newsletter.objects.filter(id__in=checked).delete()
-        return Message(_('Selected newsletters have been deleted successfully.'), 'success'), reverse('admin_newsletters')
+        return Message(_('Selected newsletters have been deleted successfully.'), messages.SUCCESS), reverse('admin_newsletters')
 
 
 class New(FormWidget):
@@ -67,10 +69,10 @@ class New(FormWidget):
     submit_button = _("Save Newsletter")
     tabbed = True
 
-    def get_new_url(self, model):
+    def get_new_link(self, model):
         return reverse('admin_newsletters_new')
 
-    def get_edit_url(self, model):
+    def get_edit_link(self, model):
         return reverse('admin_newsletters_edit', model)
 
     def submit_form(self, form, target):
@@ -87,7 +89,7 @@ class New(FormWidget):
         for rank in form.cleaned_data['ranks']:
             new_newsletter.ranks.add(rank)
 
-        return new_newsletter, Message(_('New Newsletter has been created.'), 'success')
+        return new_newsletter, Message(_('New Newsletter has been created.'), messages.SUCCESS)
 
 
 class Edit(FormWidget):
@@ -101,11 +103,11 @@ class Edit(FormWidget):
     submit_fallback = True
     tabbed = True
 
-    def get_url(self, model):
+    def get_link(self, model):
         return reverse('admin_newsletters_edit', model)
 
-    def get_edit_url(self, model):
-        return self.get_url(model)
+    def get_edit_link(self, model):
+        return self.get_link(model)
 
     def get_initial_data(self, model):
         return {
@@ -130,7 +132,7 @@ class Edit(FormWidget):
             target.ranks.add(rank)
 
         target.save(force_update=True)
-        return target, Message(_('Changes in newsletter "%(name)s" have been saved.') % {'name': self.original_name}, 'success')
+        return target, Message(_('Changes in newsletter "%(name)s" have been saved.') % {'name': self.original_name}, messages.SUCCESS)
 
 
 class Delete(ButtonWidget):
@@ -141,7 +143,7 @@ class Delete(ButtonWidget):
 
     def action(self, target):
         target.delete()
-        return Message(_('Newsletter "%(name)s"" has been deleted.') % {'name': target.name}, 'success'), False
+        return Message(_('Newsletter "%(name)s"" has been deleted.') % {'name': target.name}, messages.SUCCESS), False
 
 
 def send(request, target, token):
@@ -157,15 +159,15 @@ def send(request, target, token):
 
         recipients_total = recipients.count()
         if recipients_total < 1:
-            request.messages.set_flash(Message(_('No recipients for newsletter "%(newsletter)s" could be found.') % {'newsletter': newsletter.name}), 'error', 'newsletters')
+            messages.error(request, _('No recipients for newsletter "%(newsletter)s" could be found.') % {'newsletter': newsletter.name}, 'newsletters')
             return redirect(reverse('admin_newsletters'))
 
         for user in recipients.all()[newsletter.progress:(newsletter.progress + newsletter.step_size)]:
             tokens = {
-              '{{ board_name }}': request.settings.board_name,
+              '{{ board_name }}': settings.board_name,
               '{{ username }}': user.username,
-              '{{ user_url }}': django_reverse('user', kwargs={'username': user.username_slug, 'user': user.pk}),
-              '{{ board_url }}': settings.BOARD_ADDRESS,
+              '{{ user_link }}': django_reverse('user', kwargs={'username': user.username_slug, 'user': user.pk}),
+              '{{ board_link }}': settings.BOARD_ADDRESS,
             }
             subject = newsletter.parse_name(tokens)
             user.email_user(request, 'users/newsletter', subject, {
@@ -181,19 +183,21 @@ def send(request, target, token):
         if newsletter.progress >= recipients_total:
             newsletter.progress = 0
             newsletter.save(force_update=True)
-            request.messages.set_flash(Message(_('Newsletter "%(newsletter)s" has been sent.') % {'newsletter': newsletter.name}), 'success', 'newsletters')
+            messages.success(request, _('Newsletter "%(newsletter)s" has been sent.') % {'newsletter': newsletter.name}, 'newsletters')
             return redirect(reverse('admin_newsletters'))
 
         # Render Progress
-        response = request.theme.render_to_response('processing.html', {
-                'task_name': _('Sending Newsletter'),
-                'target_name': newsletter.name,
-                'message': _('Sent to %(progress)s from %(total)s users') % {'progress': newsletter.progress, 'total': recipients_total},
-                'progress': newsletter.progress * 100 / recipients_total,
-                'cancel_url': reverse('admin_newsletters'),
-            }, context_instance=RequestContext(request));
+        response = render_to_response('processing.html',
+                                      {
+                                      'task_name': _('Sending Newsletter'),
+                                      'target_name': newsletter.name,
+                                      'message': _('Sent to %(progress)s from %(total)s users') % {'progress': newsletter.progress, 'total': recipients_total},
+                                      'progress': newsletter.progress * 100 / recipients_total,
+                                      'cancel_link': reverse('admin_newsletters'),
+                                      },
+                                      context_instance=RequestContext(request));
         response['refresh'] = '2;url=%s' % reverse('admin_newsletters_send', newsletter)
         return response
     except Newsletter.DoesNotExist:
-        request.messages.set_flash(Message(_('Requested Newsletter could not be found.')), 'error', 'newsletters')
+        messages.error(request, _('Requested Newsletter could not be found.'), 'newsletters')
         return redirect(reverse('admin_newsletters'))

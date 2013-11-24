@@ -1,8 +1,10 @@
 from datetime import timedelta
 from django.utils import timezone
 from django.utils.translation import ugettext as _
+from misago.conf import settings
 from misago.markdown import post_markdown
 from misago.models import Post
+from misago.monitor import monitor, UpdatingMonitor
 from misago.utils.datesformats import date
 from misago.utils.translation import ugettext_lazy
 from misago.apps.threadtype.posting.base import PostingBaseView
@@ -36,14 +38,14 @@ class NewReplyBaseView(PostingBaseView):
         # Count merge diff and see if we are merging
         merge_diff = (now - self.thread.last)
         merge_diff = (merge_diff.days * 86400) + merge_diff.seconds
-        if (self.request.settings.post_merge_time
-                and merge_diff < (self.request.settings.post_merge_time * 60)
+        if (settings.post_merge_time
+                and merge_diff < (settings.post_merge_time * 60)
                 and self.thread.last_poster_id == self.request.user.id
-                and self.thread.last_post.moderated == moderation):
+                and self.thread.last_post.moderated == moderation
+                and (not self.thread.last_post.deleted or self.thread.last_post_id == self.thread.start_post_id)):
             merged = True
             self.post = self.thread.last_post
             self.post.date = now
-            self.post.current_date = now
             self.post.post = '%s\n\n%s' % (self.post.post, form.cleaned_data['post'])
             self.md, self.post.post_preparsed = post_markdown(self.post.post)
             self.post.save(force_update=True)
@@ -60,7 +62,6 @@ class NewReplyBaseView(PostingBaseView):
                                             post=form.cleaned_data['post'],
                                             post_preparsed=post_preparsed,
                                             date=now,
-                                            current_date=now,
                                             moderated=moderation,
                                         )
 
@@ -76,19 +77,20 @@ class NewReplyBaseView(PostingBaseView):
 
             # Increase thread score
             if self.thread.last_poster_id != self.request.user.pk:
-                self.thread.score += self.request.settings['thread_ranking_reply_score']
+                self.thread.score += settings.thread_ranking_reply_score
 
         # Update forum and monitor
         if not moderation and not merged:
-            self.request.monitor.increase('posts')
+            with UpdatingMonitor() as cm:
+                monitor.increase('posts')
             self.forum.posts += 1
             self.forum.new_last_thread(self.thread)
             self.forum.save(force_update=True)
-        
+
         # Reward user for posting new reply?
         if not moderation and not merged and (not self.request.user.last_post
-                or self.request.user.last_post < timezone.now() - timedelta(seconds=self.request.settings['score_reward_new_post_cooldown'])):
-            self.request.user.score += self.request.settings['score_reward_new_post']
+                or self.request.user.last_post < timezone.now() - timedelta(seconds=settings.score_reward_new_post_cooldown)):
+            self.request.user.score += settings.score_reward_new_post
 
         # Update user
         if not moderation and not merged:
@@ -101,9 +103,9 @@ class NewReplyBaseView(PostingBaseView):
             self.thread.weight = form.cleaned_data['thread_weight']
 
         # Set "closed" checkpoint, either due to thread limit or posters wish
-        if (self.request.settings.thread_length > 0
+        if (settings.thread_length > 0
                 and not merged and not moderation and not self.thread.closed
-                and self.thread.replies >= self.request.settings.thread_length):
+                and self.thread.replies >= settings.thread_length):
             self.thread.closed = True
             self.thread.set_checkpoint(self.request, 'limit')
         elif 'close_thread' in form.cleaned_data and form.cleaned_data['close_thread']:

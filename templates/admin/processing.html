@@ -1,15 +1,12 @@
 {% extends "admin/layout_compact.html" %}
-{% load i18n %}
-{% load url from future %}
-{% import "_forms.html" as form_theme with context %}
 {% from "admin/macros.html" import page_title, draw_message_icon %}
 
 {% block title %}{{ page_title(title=target_name,parent=task_name) }}{% endblock %}
 
 {% block header %}<strong>{{ target_name }}</strong>{% endblock %}
-      
+
 {% block content %}
-          <form class="form-vertical" action="{{ admin_index|url() }}" method="post">
+          <form class="form-vertical" action="{{ url(admin_index) }}" method="post">
           	<div class="form-container">
           	  <p class="lead">{{ task_name }}...</p>
               <div class="progress progress-striped active">
@@ -18,7 +15,7 @@
           	  <p>{{ message }}</p>
             </div>
             <div class="form-actions">
-              <a href="{{ cancel_url }}" class="btn pull-right"><i class="icon-home"></i> {% trans %}Cancel Task{% endtrans %}</a>
+              <a href="{{ cancel_link }}" class="btn pull-right"><i class="icon-home"></i> {% trans %}Cancel Task{% endtrans %}</a>
             </div>
           </form>
 {% endblock %}

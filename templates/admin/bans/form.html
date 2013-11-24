@@ -1,0 +1,20 @@
+{% extends "admin/admin/form.html" %}
+{% import "forms.html" as form_theme with context %}
+
+{% block form %}
+<fieldset>
+  <legend>{% trans %}Ban Details{% endtrans %}</legend>
+  {{ form_theme.repeat(form,
+                       (form.test, form.ban),
+                       attrs=(
+                              {'class': 'span4'},
+                              {'class': 'span8'}
+                             )) }}
+  {{ form_theme.row(form.expires, attrs={'class': 'span12', 'placeholder': 'YYYY-MM-DD'}) }}
+</fieldset>
+<fieldset>
+  <legend>{% trans %}Ban Message{% endtrans %}</legend>
+  {{ form_theme.row(form.reason_user, attrs={'class': 'span12', 'rows': 3}) }}
+  {{ form_theme.row(form.reason_admin, attrs={'class': 'span12', 'rows': 3}) }}
+</fieldset>
+{% endblock %}
