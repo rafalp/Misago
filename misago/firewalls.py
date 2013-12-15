@@ -33,7 +33,7 @@ class FirewallAdmin(FirewallForum):
             # If we are not authenticated or not admin, force us to sign in right way
             if not request.user.is_authenticated():
                 return signin(request)
-            elif not request.user.is_god() and not request.acl.special.is_admin():
+            elif not request.user.is_god() and not request.acl.acp.is_admin():
                 request.messages.set_message(_("Your account does not have admin privileges"), messages.ERROR, 'security')
                 return signin(request)
             return None
