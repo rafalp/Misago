@@ -2,8 +2,13 @@
 ACL Exceptions thrown by Misago actions
 """
 
-class ACLError403(Exception):
+class ACLErrror(Exception):
     pass
 
-class ACLError404(Exception):
+
+class ACLError403(ACLErrror):
+    pass
+
+
+class ACLError404(ACLErrror):
     pass

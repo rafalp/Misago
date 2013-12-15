@@ -4,7 +4,7 @@ class CSRFProtection(object):
     def __init__(self, csrf_token):
         self.csrf_id = '_csrf_token'
         self.csrf_token = csrf_token
-        
+
     def request_secure(self, request):
         return request.method == 'POST' and request.POST.get(self.csrf_id) == self.csrf_token
 
@@ -19,5 +19,5 @@ class CSRFMiddleware(object):
         else:
             csrf_token = random_string(16);
             request.session['csrf_token'] = csrf_token
-        
+
         request.csrf = CSRFProtection(csrf_token)

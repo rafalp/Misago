@@ -53,6 +53,7 @@
 {%- endmacro %}
 
 {% block javascripts %}
+{{ super() }}
 {{ draw_graph() }}
 {% endblock %}
 

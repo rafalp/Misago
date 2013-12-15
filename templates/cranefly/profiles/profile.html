@@ -66,6 +66,14 @@
               <a href="{{ url('private_thread_start_with', username=profile.username_slug, user=profile.pk) }}" class="btn btn-icon tooltip-top" title="{% trans user=profile.username %}Start private thread with {{ user }}{% endtrans %}"><i class="icon-envelope"></i></a>
             </li>
             {% endif %}
+            <li class="pull-right">
+              <form class="form-inline form-destroy-user" action="{{ url('destroy_user', username=profile.username_slug, user=profile.pk) }}" method="post">
+                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                <button type="submit" class="btn btn-icon tooltip-top" title="{% trans user=profile.username %}Destroy {{ user }}'s user account, deleting it, its threads and soft-deleting it's replies in other threads.{% endtrans %}">
+                  <i class="icon-remove"></i>
+                </button>
+              </form>
+            </li>
             {% endif %}
           </ul>
         </div>
@@ -113,3 +121,13 @@
 
     </script>
 {% endmacro %}
+
+{% block javascripts %}
+{{ super() }}
+    <script type="text/javascript">
+      $('.form-destroy-user').submit(function() {
+        var decision = confirm("{% trans %}Are you sure you want to destroy this member's account? This action is not reversible!{% endtrans %}");
+        return decision;
+      });
+    </script>
+{% endblock %}
