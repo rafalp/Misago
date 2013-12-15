@@ -11,7 +11,7 @@ def make_form(request, role, form):
         form.base_fields['can_use_acp'] = forms.BooleanField(label=_("Can use Admin Control Panel"),
                                                              help_text=_("Change this permission to yes to grant admin access for users with this role."),
                                                              widget=YesNoSwitch, initial=False, required=False)
-        
+
         form.fieldsets.append((
                                _("Special Access"),
                                ('can_use_mcp', 'can_use_acp')
