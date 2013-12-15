@@ -30,6 +30,8 @@ def load():
                         'can_mod_reports_discussions': True,
                         'can_delete_reports': True,
                         'forums': {3: 1, 5: 1, 6: 1},
+                        'can_destroy_user_newer_than': 14,
+                        'can_destroy_users_with_less_posts_than': 10,
                        }
     role.save(force_insert=True)
 
@@ -57,6 +59,8 @@ def load():
                         'can_report_content': True,
                         'can_handle_reports': True,
                         'forums': {3: 1, 5: 1, 6: 1},
+                        'can_destroy_user_newer_than': 5,
+                        'can_destroy_users_with_less_posts_than': 10,
                        }
     role.save(force_insert=True)
 
