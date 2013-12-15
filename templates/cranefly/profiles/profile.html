@@ -66,6 +66,7 @@
               <a href="{{ url('private_thread_start_with', username=profile.username_slug, user=profile.pk) }}" class="btn btn-icon tooltip-top" title="{% trans user=profile.username %}Start private thread with {{ user }}{% endtrans %}"><i class="icon-envelope"></i></a>
             </li>
             {% endif %}
+            {% if acl.destroy_users.can_destroy_user(profile) %}
             <li class="pull-right">
               <form class="form-inline form-destroy-user" action="{{ url('destroy_user', username=profile.username_slug, user=profile.pk) }}" method="post">
                 <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
@@ -74,6 +75,7 @@
                 </button>
               </form>
             </li>
+            {% endif %}
             {% endif %}
           </ul>
         </div>
