@@ -422,9 +422,10 @@ class User(models.Model):
         roles_ids = []
         for role in self.roles.all():
             roles_ids.append(role.pk)
-        for role in self.rank.roles.all():
-            if not role.pk in roles_ids:
-                roles_ids.append(role.pk)
+        if self.rank:
+            for role in self.rank.roles.all():
+                if not role.pk in roles_ids:
+                    roles_ids.append(role.pk)
         roles_ids.sort()
         self.acl_key = 'acl_%s' % hashlib.md5('_'.join(str(x) for x in roles_ids)).hexdigest()[0:8]
         self.save(update_fields=('acl_key',))
