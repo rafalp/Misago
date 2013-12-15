@@ -18,7 +18,7 @@ def destroy_user(request, user, username):
         return error403(request, _("You can't destroy your own account."))
 
     try:
-        request.acl.destroyusers.allow_destroy_user(user)
+        request.acl.destroy_users.allow_destroy_user(user)
     except ACLError403 as e:
         return error403(request, unicode(e))
 

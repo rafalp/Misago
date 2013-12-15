@@ -48,17 +48,17 @@ class DestroyUserACL(BaseACL):
 
 
 def build(acl, roles):
-    acl.destroyusers = DestroyUserACL()
-    acl.destroyusers.acl['can_destroy_user_older_than'] = 0
-    acl.destroyusers.acl['can_destroy_user_with_more_posts_than'] = 0
+    acl.destroy_users = DestroyUserACL()
+    acl.destroy_users.acl['can_destroy_user_older_than'] = 0
+    acl.destroy_users.acl['can_destroy_user_with_more_posts_than'] = 0
 
     for role in roles:
         try:
             if (role['can_destroy_user_older_than']
-                    and role['can_destroy_user_older_than'] > acl.destroyusers.acl['can_destroy_user_older_than']):
-                acl.destroyusers.acl['can_destroy_user_older_than'] = role['can_destroy_user_older_than']
+                    and role['can_destroy_user_older_than'] > acl.destroy_users.acl['can_destroy_user_older_than']):
+                acl.destroy_users.acl['can_destroy_user_older_than'] = role['can_destroy_user_older_than']
             if (role['can_destroy_user_with_more_posts_than']
-                    and role['can_destroy_user_with_more_posts_than'] > acl.destroyusers.acl['can_destroy_user_with_more_posts_than']):
-                acl.destroyusers.acl['can_destroy_user_with_more_posts_than'] = role['can_destroy_user_with_more_posts_than']
+                    and role['can_destroy_user_with_more_posts_than'] > acl.destroy_users.acl['can_destroy_user_with_more_posts_than']):
+                acl.destroy_users.acl['can_destroy_user_with_more_posts_than'] = role['can_destroy_user_with_more_posts_than']
         except KeyError:
             pass
