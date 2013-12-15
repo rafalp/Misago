@@ -720,7 +720,8 @@ a.label:hover,a.label:focus,a.badge:hover,a.badge:focus{color:#fff;text-decorati
 .header-primary .header-tabs{border-bottom:0;margin:0;margin-top:-10px;position:relative;top:9px}.header-primary .header-tabs li a:link,.header-primary .header-tabs li a:visited{background:none;border:none;border-radius:0;margin-bottom:4px;padding:6.666666666666667px 10px;color:#888;font-weight:bold}
 .header-primary .header-tabs li a:hover,.header-primary .header-tabs li a:active,.header-primary .header-tabs li a a:focus{background:none;border-bottom:4px solid #555;margin-bottom:0;color:#555}
 .header-primary .header-tabs li.active a:link,.header-primary .header-tabs li.active a:visited,.header-primary .header-tabs li.active a:hover,.header-primary .header-tabs li.active a:active{background:none;border-bottom:4px solid #cf402e;margin-bottom:0;color:#333}
-.header-primary .header-tabs li .form-inline{margin:0;margin-left:14px;margin-bottom:7px}.header-primary .header-tabs li .form-inline .btn-icon{padding-left:7px;padding-right:7px}
+.header-primary .header-tabs li.pull-right{margin-left:14px}
+.header-primary .header-tabs li .form-inline{margin:0;margin-bottom:7px}.header-primary .header-tabs li .form-inline .btn-icon{padding-left:7px;padding-right:7px}
 .header-primary .header-tabs li .form-inline i{position:relative;top:0}
 .header-primary .header-tabs li a.btn{border:1px solid #ccc;*border:0;border-radius:3px;margin:0;padding:4px 12px}.header-primary .header-tabs li a.btn i{position:relative;top:0}
 .header-primary .header-tabs li a.btn:visited,.header-primary .header-tabs li a.btn:hover{background-color:#fff;border-color:#a6a6a6;color:#333}
