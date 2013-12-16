@@ -15,13 +15,13 @@ def make_form(request, role, form):
                               ))
 
 
-class SpecialACL(BaseACL):
+class ACPAccessACL(BaseACL):
     def is_admin(self):
         return self.acl['can_use_acp']
 
 
 def build(acl, roles):
-    acl.acp = SpecialACL()
+    acl.acp = ACPAccessACL()
     acl.acp.acl['can_use_acp'] = False
 
     for role in roles:
