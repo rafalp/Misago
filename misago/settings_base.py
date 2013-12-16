@@ -146,7 +146,7 @@ PERMISSION_PROVIDERS = (
     'misago.acl.permissions.privatethreads',
     'misago.acl.permissions.reports',
     'misago.acl.permissions.destroyusers',
-    'misago.acl.permissions.acp',
+    'misago.acl.permissions.acpaccess',
 )
 
 # List of UserCP extensions
