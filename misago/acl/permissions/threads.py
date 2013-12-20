@@ -175,6 +175,11 @@ class ThreadsACL(BaseACL):
         if post.deleted and not (forum_role['can_delete_posts'] or (user.is_authenticated() and user == post.user)):
             raise ACLError404()
 
+    def allow_post_jump(self, user, thread, post):
+        forum_role = self.acl[thread.forum_id]
+        if post.moderated and not (forum_role['can_approve'] or (user.is_authenticated() and user == post.user)):
+            raise ACLError404()
+
     def filter_threads(self, request, forum, queryset):
         try:
             forum_role = self.get_role(forum)

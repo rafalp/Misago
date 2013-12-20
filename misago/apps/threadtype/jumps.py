@@ -25,7 +25,7 @@ class JumpView(ViewBase):
 
     def fetch_post(self, post):
         self.post = self.thread.post_set.get(pk=post)
-        self.request.acl.threads.allow_post_view(self.request.user, self.thread, self.post)
+        self.request.acl.threads.allow_post_jump(self.request.user, self.thread, self.post)
 
     def make_jump(self):
         raise NotImplementedError('JumpView cannot be called directly.')
