@@ -145,6 +145,7 @@ PERMISSION_PROVIDERS = (
     'misago.acl.permissions.threads',
     'misago.acl.permissions.privatethreads',
     'misago.acl.permissions.reports',
+    'misago.acl.permissions.warnings',
     'misago.acl.permissions.destroyusers',
     'misago.acl.permissions.acpaccess',
 )
