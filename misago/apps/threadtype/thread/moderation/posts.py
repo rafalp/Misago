@@ -169,7 +169,14 @@ class PostsModeration(object):
             if post.pk in ids and post.deleted:
                 undeleted.append(post.pk)
         if undeleted:
-            self.thread.post_set.filter(id__in=undeleted).update(deleted=False, current_date=timezone.now())
+            update_kwargs = {
+                'deleted': False,
+                'current_date': timezone.now(),
+                'edit_user': self.request.user,
+                'edit_user_name': self.request.user.username,
+                'edit_user_slug': self.request.user.username_slug,
+            }
+            self.thread.post_set.filter(id__in=undeleted).update(**update_kwargs)
             self.thread.sync()
             self.thread.save(force_update=True)
             self.forum.sync()
@@ -186,7 +193,15 @@ class PostsModeration(object):
                     raise forms.ValidationError(_("You cannot delete first post of thread using this action. If you want to delete thread, use thread moderation instead."))
                 deleted.append(post.pk)
         if deleted:
-            self.thread.post_set.filter(id__in=deleted).update(deleted=True, current_date=timezone.now(), delete_date=timezone.now())
+            update_kwargs = {
+                'deleted': True,
+                'current_date': timezone.now(),
+                'delete_date': timezone.now(),
+                'edit_user': self.request.user,
+                'edit_user_name': self.request.user.username,
+                'edit_user_slug': self.request.user.username_slug,
+            }
+            self.thread.post_set.filter(id__in=deleted).update(**update_kwargs)
             self.thread.sync()
             self.thread.save(force_update=True)
             self.forum.sync()

@@ -251,6 +251,9 @@ class ThreadsListModeration(object):
             if thread.pk in ids and thread.deleted:
                 undeleted.append(thread.pk)
                 thread.start_post.deleted = False
+                thread.start_post.edit_user = self.request.user
+                thread.start_post.edit_user_name = self.request.user.username
+                thread.start_post.edit_user_slug = self.request.user.username_slug
                 thread.start_post.save(force_update=True)
                 thread.sync()
                 thread.save(force_update=True)
@@ -273,6 +276,9 @@ class ThreadsListModeration(object):
             if thread.pk in ids and not thread.deleted:
                 deleted.append(thread.pk)
                 thread.start_post.deleted = True
+                thread.start_post.edit_user = self.request.user
+                thread.start_post.edit_user_name = self.request.user.username
+                thread.start_post.edit_user_slug = self.request.user.username_slug
                 thread.start_post.save(force_update=True)
                 thread.sync()
                 thread.save(force_update=True)
