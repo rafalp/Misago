@@ -28,4 +28,5 @@ from misago.models.threadreadmodel import ThreadRead
 from misago.models.tokenmodel import Token
 from misago.models.usermodel import User, Guest, Crawler
 from misago.models.usernamechangemodel import UsernameChange
+from misago.models.warnmodel import Warn
 from misago.models.watchedthreadmodel import WatchedThread
