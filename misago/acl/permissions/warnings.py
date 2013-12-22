@@ -7,10 +7,13 @@ def make_form(request, role, form):
     if role.special != 'guest':
         form.base_fields['can_warn_members'] = forms.BooleanField(label=_("Can warn members"),
                                                                   widget=YesNoSwitch, initial=False, required=False)
+        form.base_fields['can_see_other_members_warns'] = forms.BooleanField(label=_("Can see other members warnings"),
+                                                                             widget=YesNoSwitch, initial=False, required=False)
+
 
         form.fieldsets.append((
                                _("Warning Members"),
-                               ('can_warn_members',)
+                               ('can_warn_members', 'can_see_other_members_warns',)
                               ))
 
 
@@ -22,10 +25,13 @@ class WarningsACL(BaseACL):
 def build(acl, roles):
     acl.warnings = WarningsACL()
     acl.warnings.acl['can_warn_members'] = False
+    acl.warnings.acl['can_see_other_members_warns'] = False
 
     for role in roles:
         try:
             if role['can_warn_members']:
                 acl.warnings.acl['can_warn_members'] = True
+            if role['can_see_other_members_warns']:
+                acl.warnings.acl['can_see_other_members_warns'] = True
         except KeyError:
             pass
