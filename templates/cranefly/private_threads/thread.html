@@ -181,11 +181,7 @@
                 <label class="checkbox post-checkbox"><input form="posts_form" name="{{ posts_form['list_items']['html_name'] }}" type="checkbox" class="checkbox-member" value="{{ post.pk }}"{% if posts_form['list_items']['has_value'] and ('' ~ post.pk) in posts_form['list_items']['value'] %} checked="checked"{% endif %}></label>
                 {% endif %}
 
-                <a href="{% if pagination['page'] > 1 -%}
-                {{ url('private_thread', thread=thread.pk, slug=thread.slug, page=pagination['page']) }}
-                {%- else -%}
-                {{ url('private_thread', thread=thread.pk, slug=thread.slug) }}
-                {%- endif %}#post-{{ post.pk }}" class="post-perma tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
+                <a href="{{ url('private_thread_find', thread=thread.pk, slug=thread.slug, post=post.pk) }}" class="post-perma tooltip-left" title="{% trans %}Direct link to this post{% endtrans %}">#{{ pagination['start'] + loop.index }}</a>
 
                 <div class="post-extra">
                   {% if post.protected and acl.threads.can_protect(forum) %}
@@ -281,6 +277,14 @@
               </div>
               <div class="post-footer">{% filter trim %}
                 <div class="post-actions">
+                  {% if user.pk != post.user_id and post.user_id and acl.warnings.can_warn_members() %}
+                  <form action="{{ url('post_report', thread=thread.pk, slug=thread.slug, post=post.pk) }}" class="form-inline form-report" method="post" autocomplete="off">
+                    <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                    <input type="hidden" name="retreat" value="{{ request_path }}">
+                    <input type="hidden" name="reason" value="{% trans message=url('private_thread_find', thread=thread.pk, slug=thread.slug, post=post.pk), thread=thread.name %}Your message {{ message }} in thread "{{ thread }}" was found to violate community guidelines.{% endtrans %}">
+                    <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Warn user for this post.{% endtrans %}">{% trans %}Warn{% endtrans %}</button>
+                  </form>
+                  {% endif %}
                   {% if acl.users.can_see_users_trails() -%}
                   <a href="{{ url('private_post_info', thread=thread.pk, slug=thread.slug, post=post.pk) }}" class="post-trail">{% trans %}Info{% endtrans %}</a>
                   {% endif %}

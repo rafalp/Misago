@@ -386,6 +386,14 @@
 
             {% if user.is_authenticated() %}
             <div class="post-actions">
+              {% if user.pk != post.user_id and post.user_id and acl.warnings.can_warn_members() %}
+              <form action="{{ url('post_report', thread=thread.pk, slug=thread.slug, post=post.pk) }}" class="form-inline form-report" method="post" autocomplete="off">
+                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                <input type="hidden" name="retreat" value="{{ request_path }}">
+                <input type="hidden" name="reason" value="{% trans message=url('thread_find', thread=thread.pk, slug=thread.slug, post=post.pk), thread=thread.name %}Your message {{ message }} in thread "{{ thread }}" was found to violate community guidelines.{% endtrans %}">
+                <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Warn user for this post.{% endtrans %}">{% trans %}Warn{% endtrans %}</button>
+              </form>
+              {% endif %}
               {% if acl.users.can_see_users_trails() -%}
               <a href="{{ url('post_info', thread=thread.pk, slug=thread.slug, post=post.pk) }}" class="post-trail">{% trans %}Info{% endtrans %}</a>
               {% endif %}
