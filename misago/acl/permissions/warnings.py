@@ -21,6 +21,11 @@ class WarningsACL(BaseACL):
     def can_warn_members(self):
         return self.acl['can_warn_members']
 
+    def can_see_member_warns(self, user, other_user):
+        if user.pk == other_user.pk:
+            return Ture
+        return self.acl['can_see_other_members_warns']
+
 
 def build(acl, roles):
     acl.warnings = WarningsACL()
