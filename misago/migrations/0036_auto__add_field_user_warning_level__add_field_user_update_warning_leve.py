@@ -13,8 +13,8 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.PositiveIntegerField')(default=0),
                       keep_default=False)
 
-        # Adding field 'User.update_warning_level_on'
-        db.add_column(u'misago_user', 'update_warning_level_on',
+        # Adding field 'User.warning_level_update_on'
+        db.add_column(u'misago_user', 'warning_level_update_on',
                       self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True),
                       keep_default=False)
 
@@ -23,8 +23,8 @@ class Migration(SchemaMigration):
         # Deleting field 'User.warning_level'
         db.delete_column(u'misago_user', 'warning_level')
 
-        # Deleting field 'User.update_warning_level_on'
-        db.delete_column(u'misago_user', 'update_warning_level_on')
+        # Deleting field 'User.warning_level_update_on'
+        db.delete_column(u'misago_user', 'warning_level_update_on')
 
 
     models = {
@@ -461,7 +461,7 @@ class Migration(SchemaMigration):
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'token': ('django.db.models.fields.CharField', [], {'max_length': '12', 'null': 'True', 'blank': 'True'}),
             'unread_pds': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'update_warning_level_on': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'warning_level_update_on': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'username': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'username_slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '255'}),
             'votes': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),

@@ -174,7 +174,7 @@ class User(models.Model):
     is_team = models.BooleanField(default=False)
     acl_key = models.CharField(max_length=12, null=True, blank=True)
     warning_level = models.PositiveIntegerField(default=0)
-    update_warning_level_on = models.DateTimeField(null=True, blank=True)
+    warning_level_update_on = models.DateTimeField(null=True, blank=True)
 
     objects = UserManager()
 
