@@ -1,4 +1,5 @@
 from django.db import models
+from misago.signals import rename_user
 
 class Warn(models.Model):
     user = models.ForeignKey('User')
@@ -15,3 +16,12 @@ class Warn(models.Model):
 
     class Meta:
         app_label = 'misago'
+
+
+def rename_user_handler(sender, **kwargs):
+    Warn.objects.filter(giver=sender).update(
+                                             giver_name=sender.username,
+                                             giver_slug=sender.username_slug,
+                                             )
+
+rename_user.connect(rename_user_handler, dispatch_uid="rename_user_warnings")
