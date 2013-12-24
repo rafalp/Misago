@@ -1,0 +1,16 @@
+{% extends "admin/admin/form.html" %}
+{% import "forms.html" as form_theme with context %}
+
+{% block form %}
+<fieldset>
+  <legend>{% trans %}Basic Warning Level Options{% endtrans %}</legend>
+  {{ form_theme.row(form.name, attrs={'class': 'span12'}) }}
+  {{ form_theme.row(form.description, attrs={'class': 'span12', 'rows': 3}) }}
+  {{ form_theme.row(form.expires_after_minutes, attrs={'class': 'span12'}) }}
+</fieldset>
+<fieldset>
+  <legend>{% trans %}Restrictions{% endtrans %}</legend>
+  {{ form_theme.row(form.inhibit_posting_replies, attrs={'class': 'span12'}) }}
+  {{ form_theme.row(form.inhibit_posting_threads, attrs={'class': 'span12'}) }}
+</fieldset>
+{% endblock %}

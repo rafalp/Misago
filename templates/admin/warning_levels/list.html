@@ -1,0 +1,17 @@
+{% extends "admin/admin/list.html" %}
+{% import "forms.html" as form_theme with context %}
+
+{% block table_head scoped %}
+  {{ super() }}
+  <th>{% trans %}Warning Level{% endtrans %}</th>
+{% endblock %}
+
+{% block table_row scoped %}
+  <td>
+    <strong>{{ item.name }}</strong>
+    {% if item.description %}<div class="muted">{{ item.description }}</div>{% endif %}
+  </td>
+  <td class="span2">
+    {{ form_theme.field(table_form['pos_' + item.pk|string], attrs={'form': 'table_form', 'class': 'span2'}) }}
+  </td>
+{% endblock%}
