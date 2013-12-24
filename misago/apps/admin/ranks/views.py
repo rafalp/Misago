@@ -82,7 +82,12 @@ class New(FormWidget):
 
     def submit_form(self, form, target):
         position = 0
-        last_rank = Rank.objects.latest('order')
+        last_rank = Rank.objects.order_by('-order')[:1]
+        if last_rank:
+            new_last_order = last_rank[0].order + 1
+        else:
+            new_last_order = 0
+
         new_rank = Rank(
                         name=form.cleaned_data['name'],
                         slug=slugify(form.cleaned_data['name']),
@@ -92,7 +97,7 @@ class New(FormWidget):
                         special=form.cleaned_data['special'],
                         as_tab=form.cleaned_data['as_tab'],
                         on_index=form.cleaned_data['on_index'],
-                        order=(last_rank.order + 1 if last_rank else 0),
+                        order=new_last_order,
                         criteria=form.cleaned_data['criteria']
                         )
         new_rank.save(force_insert=True)
