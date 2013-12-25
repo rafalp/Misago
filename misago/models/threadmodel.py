@@ -213,7 +213,6 @@ class Thread(models.Model):
         self.deleted = start_post.deleted
 
     def email_watchers(self, request, thread_type, post):
-        from misago.acl.builder import acl
         from misago.acl.exceptions import ACLError403, ACLError404
         from misago.models import ThreadRead, WatchedThread
 
@@ -222,7 +221,7 @@ class Thread(models.Model):
             user = watch.user
             if user.pk != request.user.pk:
                 try:
-                    user_acl = acl(request, user)
+                    user_acl = user.acl()
                     user_acl.forums.allow_forum_view(self.forum)
                     user_acl.threads.allow_thread_view(user, self)
                     user_acl.threads.allow_post_view(user, self, post)

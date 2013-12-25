@@ -433,8 +433,8 @@ class User(models.Model):
         self.save(update_fields=('acl_key',))
         return self.acl_key
 
-    def acl(self, request):
-        return acl(request, self)
+    def acl(self):
+        return acl(self)
 
     @property
     def avatar_crop(self):
