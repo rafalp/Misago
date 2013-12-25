@@ -1,6 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 import floppyforms as forms
 from misago.acl.builder import BaseACL
+from misago.acl.exceptions import ACLError403, ACLError404
 from misago.forms import YesNoSwitch
 
 def make_form(request, role, form):
@@ -33,13 +34,32 @@ def make_form(request, role, form):
 
 
 class WarningsACL(BaseACL):
+    def allow_warning_members(self):
+        if not self.acl['can_warn_members']:
+            raise ACLError403(_("You can't warn other members."))
+
     def can_warn_members(self):
-        return self.acl['can_warn_members']
+        try:
+            self.allow_member_warn()
+            return True
+        except ACLError403:
+            return False
 
     def can_see_member_warns(self, user, other_user):
         if user.pk == other_user.pk:
             return Ture
         return self.acl['can_see_other_members_warns']
+
+    def allow_warning(self):
+        if not self.acl['can_be_warned']:
+            raise ACLError403(_("This member can't be warned."))
+
+    def can_be_warned(self):
+        try:
+            self.allow_warning()
+            return True
+        except ACLError403:
+            return False
 
 
 def build(acl, roles):
