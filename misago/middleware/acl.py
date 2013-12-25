@@ -2,7 +2,7 @@ from misago.acl.builder import acl
 
 class ACLMiddleware(object):
     def process_request(self, request):
-        request.acl = request.user.acl()
+        request.acl = acl(request.user)
 
         if (request.user.is_authenticated() and
             (request.acl.team or request.user.is_god()) != request.user.is_team):
