@@ -78,7 +78,7 @@
             {% endif %}
             {% if acl.warnings.can_warn_members() %}
             <li class="pull-right">
-              <form class="form-inline form-destroy-user" action="{{ url('destroy_user', username=profile.username_slug, user=profile.pk) }}" method="post">
+              <form class="form-inline" action="{{ url('warn_user', user=profile.pk, slug=profile.username_slug) }}" method="post">
                 <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
                 <input type="hidden" name="retreat" value="{{ request_path }}">
                 <input type="hidden" name="reason" value="{% trans %}Your profile contents were found to violate community guidelines.{% endtrans %}">

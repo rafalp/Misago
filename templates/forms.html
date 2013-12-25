@@ -9,7 +9,7 @@
 
 {% macro row(_field, label=None, help_text=None, attrs=None) -%}
   <div id="{{ _field.html_name }}-control-group" class="control-group{% if _field.errors %} error{% endif %}">
-    <label class="control-label" for="id_{{ _field.html_name }}">{% if label %}{{ label }}{% elif _field.label %}{{ _field.label }}{% else %}{{ _field.html_name }}{% endif %}</label>
+    <label class="control-label" for="id_{{ _field.html_name }}">{% if label %}{{ label }}{% elif _field.label %}{{ _field.label }}{% else %}{{ _field.html_name }}{% endif %}:</label>
     <div class="controls">
       {% if attrs == None %}{% set attrs = {} %}{% endif %}
       {% if _field.field.widget.__class__.__name__ == 'ForumTOS' %}{% do attrs.update({'inline': make_tos_label()}) %}{% endif %}

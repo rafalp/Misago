@@ -40,7 +40,7 @@ class WarningsACL(BaseACL):
 
     def can_warn_members(self):
         try:
-            self.allow_member_warn()
+            self.allow_warning_members()
             return True
         except ACLError403:
             return False
@@ -66,9 +66,9 @@ def build(acl, roles):
     acl.warnings = WarningsACL()
     acl.warnings.acl['can_warn_members'] = False
     acl.warnings.acl['can_see_other_members_warns'] = False
-    acl.warnings.acl['can_be_warned'] = False
-    acl.warnings.acl['can_cancel_warnings'] = 0
-    acl.warnings.acl['can_cancel_warnings_newer_than'] = 0
+    acl.warnings.acl['can_be_warned'] = True
+    acl.warnings.acl['can_cancel_warnings'] = 1
+    acl.warnings.acl['can_cancel_warnings_newer_than'] = 5
     acl.warnings.acl['can_delete_warnings'] = False
 
     for role in roles:

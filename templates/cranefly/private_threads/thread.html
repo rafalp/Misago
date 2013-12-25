@@ -278,10 +278,10 @@
               <div class="post-footer">{% filter trim %}
                 <div class="post-actions">
                   {% if user.pk != post.user_id and post.user_id and acl.warnings.can_warn_members() %}
-                  <form action="{{ url('post_report', thread=thread.pk, slug=thread.slug, post=post.pk) }}" class="form-inline form-report" method="post" autocomplete="off">
+                  <form action="{{ url('warn_user', user=post.user.pk, slug=post.user.username_slug) }}" class="form-inline" method="post" autocomplete="off">
                     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
                     <input type="hidden" name="retreat" value="{{ request_path }}">
-                    <input type="hidden" name="reason" value="{% trans message=url('private_thread_find', thread=thread.pk, slug=thread.slug, post=post.pk), thread=thread.name %}Your message {{ message }} in thread "{{ thread }}" was found to violate community guidelines.{% endtrans %}">
+                    <input type="hidden" name="reason" value="{% trans message=url('private_thread_find', thread=thread.pk, slug=thread.slug, post=post.pk), thread=thread.name %}Your message {{ message }} in thread &quot;{{ thread }}&quot; was found to violate community guidelines.{% endtrans %}">
                     <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Warn user for this post.{% endtrans %}">{% trans %}Warn{% endtrans %}</button>
                   </form>
                   {% endif %}

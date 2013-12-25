@@ -539,6 +539,41 @@ class User(models.Model):
             return True
         return False
 
+    def is_warning_level_expired(self):
+        if self.warning_level and self.warning_level_update_on:
+            return timezone.now() > self.warning_level_update_on
+        return False
+
+    def update_warning_level(self):
+        if self.is_warning_level_expired():
+            self.warning_level -= 1
+            self.warning_level_update_on = None
+
+        warning_level_model = None
+        if self.warning_level:
+            from misago.models import WarnLevel
+            warning_level_model = WarnLevel.objects.get_level(
+                self.warning_level)
+            if (warning_level_model
+                    and warning_level_model.expires_after_minutes):
+                self.warning_level_update_on = timezone.now()
+                self.warning_level_update_on += timedelta(
+                    minutes=warning_level_model.expires_after_minutes)
+        self.save(force_update=True)
+
+    def get_warning_level(self):
+        if self.warning_level:
+            from misago.models import WarnLevel
+            return WarnLevel.objects.get_level(
+                self.warning_level)
+        else:
+            return None
+
+    def get_current_warning_level(self):
+        if self.is_warning_level_expired():
+            self.update_warning_level()
+        return self.get_warning_level()
+
     def timeline(self, qs, length=100):
         posts = {}
         now = tz_util.now()
