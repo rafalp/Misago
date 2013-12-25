@@ -1,5 +1,5 @@
 from django_jinja.library import Library
-from misago.utils.datesformats import date, reldate, reltimesince, compact, relcompact
+from misago.utils.datesformats import date, reldate, reltimesince, compact, relcompact, timeamount
 
 register = Library()
 
@@ -27,3 +27,7 @@ def compact_filter(val):
 @register.filter(name='relcompact')
 def relcompact_filter(val):
     return relcompact(val)
+
+@register.filter(name='timeamount')
+def timeamount_filter(val, unit='minutes'):
+    return timeamount(val, unit)
