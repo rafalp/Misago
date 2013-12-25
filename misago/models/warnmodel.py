@@ -10,8 +10,7 @@ class Warn(models.Model):
     date = models.DateTimeField()
     ip = models.GenericIPAddressField()
     agent = models.CharField(max_length=255)
-    reason_user = models.TextField()
-    reason_team = models.TextField(null=True, blank=True)
+    reason = models.TextField(null=True, blank=True)
     canceled = models.BooleanField(default=False)
 
     class Meta:
