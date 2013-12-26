@@ -101,8 +101,8 @@ class New(FormWidget):
                               description=form.cleaned_data['description'],
                               warning_level=new_warning_level,
                               expires_after_minutes=form.cleaned_data['expires_after_minutes'],
-                              inhibit_posting_replies=form.cleaned_data['inhibit_posting_replies'],
-                              inhibit_posting_threads=form.cleaned_data['inhibit_posting_threads']
+                              restrict_posting_replies=form.cleaned_data['restrict_posting_replies'],
+                              restrict_posting_threads=form.cleaned_data['restrict_posting_threads']
                               )
         new_level.save(force_insert=True)
         return new_level, Message(_('New warning level has been defined.'), messages.SUCCESS)
@@ -130,8 +130,8 @@ class Edit(FormWidget):
                 'name': model.name,
                 'description': model.description,
                 'expires_after_minutes': model.expires_after_minutes,
-                'inhibit_posting_replies': model.inhibit_posting_replies,
-                'inhibit_posting_threads': model.inhibit_posting_threads,
+                'restrict_posting_replies': model.restrict_posting_replies,
+                'restrict_posting_threads': model.restrict_posting_threads,
                 }
 
     def submit_form(self, form, target):
@@ -139,8 +139,8 @@ class Edit(FormWidget):
         target.slug = slugify(form.cleaned_data['name'])
         target.description = form.cleaned_data['description']
         target.expires_after_minutes = form.cleaned_data['expires_after_minutes']
-        target.inhibit_posting_replies = form.cleaned_data['inhibit_posting_replies']
-        target.inhibit_posting_threads = form.cleaned_data['inhibit_posting_threads']
+        target.restrict_posting_replies = form.cleaned_data['restrict_posting_replies']
+        target.restrict_posting_threads = form.cleaned_data['restrict_posting_threads']
         target.save(force_update=True)
 
         return target, Message(_('Changes in warning level "%(name)s" have been saved.') % {'name': self.original_name}, messages.SUCCESS)

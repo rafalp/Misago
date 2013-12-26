@@ -16,17 +16,19 @@ class WarnLevelForm(Form):
     expires_after_minutes = forms.IntegerField(label=_("Warning Level Expiration"),
                                                help_text=_("Enter number of minutes since this warning level was imposed on member until it's reduced and lower level is imposed, or 0 to make this warning level permanent."),
                                                initial=0, min_value=0)
-    inhibit_posting_replies = forms.TypedChoiceField(label=_("Restrict Replies Posting"),
-                                                     choices=(
-                                                        (0, _("No restrictions")),
-                                                        (1, _("Review by moderator")),
-                                                        (2, _("Disallowed")),
-                                                     ),
-                                                     coerce=int, initial=0)
-    inhibit_posting_threads = forms.TypedChoiceField(label=_("Restrict Threads Posting"),
-                                                     choices=(
-                                                        (0, _("No restrictions")),
-                                                        (1, _("Review by moderator")),
-                                                        (2, _("Disallowed")),
-                                                     ),
-                                                     coerce=int, initial=0)
+    restrict_posting_replies = forms.TypedChoiceField(
+        label=_("Restrict Replies Posting"),
+        choices=(
+           (WarnLevel.RESTRICT_NO, _("No restrictions")),
+           (WarnLevel.RESTRICT_MODERATOR_REVIEW, _("Review by moderator")),
+           (WarnLevel.RESTRICT_DISALLOW, _("Disallowed")),
+        ),
+        coerce=int, initial=0)
+    restrict_posting_threads = forms.TypedChoiceField(
+        label=_("Restrict Threads Posting"),
+        choices=(
+           (WarnLevel.RESTRICT_NO, _("No restrictions")),
+           (WarnLevel.RESTRICT_MODERATOR_REVIEW, _("Review by moderator")),
+           (WarnLevel.RESTRICT_DISALLOW, _("Disallowed")),
+        ),
+        coerce=int, initial=0)
