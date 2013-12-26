@@ -11,6 +11,7 @@ class Warn(models.Model):
     ip = models.GenericIPAddressField()
     agent = models.CharField(max_length=255)
     reason = models.TextField(null=True, blank=True)
+    reason_preparsed = models.TextField(null=True, blank=True)
     canceled = models.BooleanField(default=False)
 
     class Meta:

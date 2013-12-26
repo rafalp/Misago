@@ -22,6 +22,26 @@ def remove_unsupported(md):
     del md.inlinePatterns['short_reference']
 
 
+def basic_markdown(text):
+    md = markdown.Markdown(
+                           safe_mode='escape',
+                           output_format=settings.OUTPUT_FORMAT,
+                           extensions=['nl2br'])
+    remove_unsupported(md)
+    cleanlinks = CleanLinksExtension()
+    cleanlinks.extendMarkdown(md)
+
+    del md.parser.blockprocessors['hashheader']
+    del md.parser.blockprocessors['setextheader']
+    del md.parser.blockprocessors['code']
+    del md.parser.blockprocessors['quote']
+    del md.parser.blockprocessors['hr']
+    del md.parser.blockprocessors['olist']
+    del md.parser.blockprocessors['ulist']
+
+    return md.convert(text)
+
+
 def signature_markdown(acl, text):
     md = markdown.Markdown(
                            safe_mode='escape',
