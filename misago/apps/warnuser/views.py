@@ -9,6 +9,7 @@ from misago.acl.exceptions import ACLError403
 from misago.apps.errors import error403, error404
 from misago.apps.warnuser.forms import WarnMemberForm
 from misago.decorators import block_guest, check_csrf
+from misago.markdown.factory import basic_markdown
 from misago.models import User, Warn, WarnLevel
 from misago.shortcuts import render_to_response
 
@@ -59,6 +60,10 @@ def warn_user(request, user, slug):
                 user.warning_level_update_on = None
             user.save(force_update=True)
 
+            reason_preparsed = None
+            if form.cleaned_data['reason']:
+                reason_preparsed = basic_markdown(form.cleaned_data['reason'])
+
             Warn.objects.create(
                 user=user,
                 giver=request.user,
@@ -68,6 +73,7 @@ def warn_user(request, user, slug):
                 ip=request.session.get_ip(request),
                 agent=request.META.get('HTTP_USER_AGENT'),
                 reason=form.cleaned_data['reason'],
+                reason_preparsed=reason_preparsed,
                 )
 
             messages.success(request,
