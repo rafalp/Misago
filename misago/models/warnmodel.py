@@ -15,8 +15,8 @@ class Warn(models.Model):
     canceled = models.BooleanField(default=False)
     canceler = models.ForeignKey('User', null=True, blank=True,
         on_delete=models.SET_NULL, related_name="warnings_canceled_set")
-    canceler_name = models.CharField(max_length=255)
-    canceler_slug = models.SlugField(max_length=255)
+    canceler_name = models.CharField(max_length=255, null=True, blank=True)
+    canceler_slug = models.SlugField(max_length=255, null=True, blank=True)
 
     class Meta:
         app_label = 'misago'
