@@ -165,6 +165,7 @@ PROFILE_EXTENSIONS = (
     'misago.apps.profiles.threads',
     'misago.apps.profiles.follows',
     'misago.apps.profiles.followers',
+    'misago.apps.profiles.warnings',
     'misago.apps.profiles.details',
 )
 

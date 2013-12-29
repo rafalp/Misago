@@ -44,9 +44,9 @@
 <div class="pagination">
   <ul>
     <li class="count">{{ macros.pager_label(pagination) }}</li>
-    {%- if pagination['prev'] > 1 %}<li><a href="{{ url('user_threads', user=profile.id, username=profile.username_slug) }}" class="tooltip-top" title="{% trans %}Lastest Posts{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}Latest{% endtrans %}</a></li>{% endif -%}
-    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ url('user_threads', user=profile.id, username=profile.username_slug, page=pagination['prev']) }}{% else %}{{ url('user_threads', user=profile.id, username=profile.username_slug) }}{% endif %}" class="tooltip-top" title="{% trans %}Newer Posts{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
-    {%- if pagination['next'] > 0 %}<li><a href="{{ url('user_threads', user=profile.id, username=profile.username_slug, page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Older Posts{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+    {%- if pagination['prev'] > 1 %}<li><a href="{{ url('user_threads', user=profile.id, username=profile.username_slug) }}" class="tooltip-top" title="{% trans %}Lastest Threads{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}Latest{% endtrans %}</a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ url('user_threads', user=profile.id, username=profile.username_slug, page=pagination['prev']) }}{% else %}{{ url('user_threads', user=profile.id, username=profile.username_slug) }}{% endif %}" class="tooltip-top" title="{% trans %}Newer Threads{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{{ url('user_threads', user=profile.id, username=profile.username_slug, page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Older Threads{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
   </ul>
 </div>
 {% endif %}

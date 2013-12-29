@@ -2,7 +2,7 @@ from django.db import models
 from misago.signals import rename_user
 
 class Warn(models.Model):
-    user = models.ForeignKey('User')
+    user = models.ForeignKey('User', related_name="warning_set")
     giver = models.ForeignKey('User', null=True, blank=True,
         on_delete=models.SET_NULL, related_name="warnings_given_set")
     giver_name = models.CharField(max_length=255)

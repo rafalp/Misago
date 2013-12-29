@@ -46,8 +46,11 @@ class WarningsACL(BaseACL):
             return False
 
     def can_see_member_warns(self, user, other_user):
-        if user.pk == other_user.pk:
-            return Ture
+        try:
+            if user.pk == other_user.pk:
+                return True
+        except AttributeError:
+            pass
         return self.acl['can_see_other_members_warns']
 
     def allow_warning(self):
