@@ -65,7 +65,7 @@ def warn_user(request, user, slug):
             if form.cleaned_data['reason']:
                 reason_preparsed = basic_markdown(form.cleaned_data['reason'])
 
-            Warn.objects.create(
+            warning = Warn.objects.create(
                 user=user,
                 giver=request.user,
                 giver_name=request.user.username,
@@ -74,10 +74,9 @@ def warn_user(request, user, slug):
                 ip=request.session.get_ip(request),
                 agent=request.META.get('HTTP_USER_AGENT'),
                 reason=form.cleaned_data['reason'],
-                reason_preparsed=reason_preparsed,
-                )
+                reason_preparsed=reason_preparsed)
 
-            alerts.you_have_been_warned(request.user, user)
+            alerts.you_have_been_warned(request.user, user, warning)
             messages.success(request,
                 _("%(user)s warning level has been increased.") % {
                     'user': user.username})
