@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 from misago import messages
 from misago.acl.exceptions import ACLError403
 from misago.apps.errors import error403, error404
+from misago.apps.warnuser import alerts
 from misago.apps.warnuser.forms import WarnMemberForm
 from misago.decorators import block_guest, check_csrf
 from misago.markdown.factory import basic_markdown
@@ -76,6 +77,7 @@ def warn_user(request, user, slug):
                 reason_preparsed=reason_preparsed,
                 )
 
+            alerts.you_have_been_warned(request.user, user)
             messages.success(request,
                 _("%(user)s warning level has been increased.") % {
                     'user': user.username})
