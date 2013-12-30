@@ -1,5 +1,5 @@
 django<1.6
-django-debug-toolbar
+django-debug-toolbar==1
 django-floppyforms
 django-haystack
 django-jinja
