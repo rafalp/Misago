@@ -34,6 +34,7 @@ class ViewBase(object):
             else:
                 if search_data.get('search_forums'):
                     if search_data.get('search_forums_childs'):
+                        Forum.objects.populate_tree()
                         forums_tree = Forum.objects.forums_tree
                         readable_forums = Forum.objects.readable_forums(self.request.acl)
 
