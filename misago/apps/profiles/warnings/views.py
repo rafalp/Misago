@@ -6,7 +6,6 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from misago.apps.profiles.decorators import profile_view
 from misago.apps.profiles.template import RequestContext
-from misago.models import Forum
 from misago.shortcuts import render_to_response
 from misago.utils.pagination import make_pagination
 
@@ -24,6 +23,7 @@ def warnings(request, user, page=0):
                                   'profile': user,
                                   'tab': 'warnings',
                                   'items_total': count,
+                                  'warning_level': user.get_current_warning_level(),
                                   'items': queryset.order_by('-id')[pagination['start']:pagination['stop']],
                                   'pagination': pagination,
                                   }));

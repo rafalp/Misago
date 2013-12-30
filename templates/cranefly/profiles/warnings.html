@@ -4,20 +4,28 @@
 {% block title %}{{ macros.page_title(_('Warnings'), profile.username) }}{% endblock %}
 
 {% block tab %}
-<div class="stat-header">
-  <h2>{% if items_total -%}
-      {%- trans count=items_total, total=items_total|intcomma, username=profile.username -%}
-      {{ username }} received one warning
-      {%- pluralize -%}
-      {{ username }} received {{ total }} warnings
-      {%- endtrans -%}
-      {%- else -%}
-      {% trans username=profile.username %}{{ username }} received no warnings{% endtrans %}
-      {%- endif %}</h2>
+<h2>{% if items_total -%}
+    {%- trans count=items_total, total=items_total|intcomma, username=profile.username -%}
+    {{ username }} received one warning
+    {%- pluralize -%}
+    {{ username }} received {{ total }} warnings
+    {%- endtrans -%}
+    {%- else -%}
+    {% trans username=profile.username %}{{ username }} received no warnings{% endtrans %}
+    {%- endif %}</h2>
+
+{% if warning_level %}
+<div class="warning-level">
+  EVULZ!
 </div>
+{% else %}
+<div class="warning-level">
+  NOPE!
+</div>
+{% endif %}
 
 {% if items_total %}
-<div class="content-list user-threads">
+<div class="content-list user-warnings">
   {% for item in items %}
   {{ item.reason }}
   <hr>
