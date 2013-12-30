@@ -541,25 +541,26 @@ class User(models.Model):
 
     def is_warning_level_expired(self):
         if self.warning_level and self.warning_level_update_on:
-            return timezone.now() > self.warning_level_update_on
+            return tz_util.now() > self.warning_level_update_on
         return False
 
-    def update_warning_level(self):
-        if self.is_warning_level_expired():
-            self.warning_level -= 1
-            self.warning_level_update_on = None
+    def update_expired_warning_level(self):
+        self.warning_level -= 1
 
-        warning_level_model = None
-        if self.warning_level:
+        try:
             from misago.models import WarnLevel
-            warning_level_model = WarnLevel.objects.get_level(
-                self.warning_level)
-            if (warning_level_model
-                    and warning_level_model.expires_after_minutes):
-                self.warning_level_update_on = timezone.now()
-                self.warning_level_update_on += timedelta(
+            warning_levels = WarnLevel.objects.get_levels()
+            new_warning_level = warning_levels[self.warning_level]
+            if new_warning_level.expires_after_minutes:
+                self.warning_level_update_on -= timedelta(
                     minutes=warning_level_model.expires_after_minutes)
-        self.save(force_update=True)
+            else:
+                self.warning_level_update_on = None
+        except KeyError:
+            # Break expiration chain so infinite loop won't happen
+            # This should only happen if your warning level is 0, but
+            # will also keep app responsive if data corruption happens
+            self.warning_level_update_on = None
 
     def get_warning_level(self):
         if self.warning_level:
@@ -571,7 +572,10 @@ class User(models.Model):
 
     def get_current_warning_level(self):
         if self.is_warning_level_expired():
-            self.update_warning_level()
+            while self.update_expired_warning_level():
+                self.update_warning_level()
+            self.save(force_update=True)
+
         return self.get_warning_level()
 
     def timeline(self, qs, length=100):
