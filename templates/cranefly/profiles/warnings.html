@@ -4,6 +4,28 @@
 {% block title %}{{ macros.page_title(_('Warnings'), profile.username) }}{% endblock %}
 
 {% block tab %}
+{% if warning_level %}
+<div class="warning-level warning-active">
+  <h3>{{ warning_level.name }}</h3>
+  {% if warning_level.description %}
+  <p class="lead">{{ warning_level.description }}</p>
+  {% endif %}
+  {% if profile.warning_level_update_on %}
+  <p class="warning-expiration">{% trans expires=format_warning_expiration(profile.warning_level_update_on|reldate) %}This warning level will expire {{ expires }}.{% endtrans %}</p>
+  {% else %}
+  <p class="warning-expiration">{% trans %}This warning level will not expire and will have to be decreased manually by forum team member.{% endtrans %}</p>
+  {% endif %}
+</div>
+{% else %}
+<div class="warning-level warning-clean">
+  {% if user.is_authenticated() and user.pk == profile.pk %}
+  <p class="lead"><i class="icon-ok"></i> {% trans username=profile.username %}{{ username }}, your account has no warning level set. Good job!{% endtrans %}</p>
+  {% else %}
+  <p class="lead"><i class="icon-ok"></i> {% trans username=profile.username %}{{ username }}'s account has no warning level set.{% endtrans %}</p>
+  {% endif %}
+</div>
+{% endif %}
+
 <h2>{% if items_total -%}
     {%- trans count=items_total, total=items_total|intcomma, username=profile.username -%}
     {{ username }} received one warning
@@ -13,16 +35,6 @@
     {%- else -%}
     {% trans username=profile.username %}{{ username }} received no warnings{% endtrans %}
     {%- endif %}</h2>
-
-{% if warning_level %}
-<div class="warning-level">
-  EVULZ!
-</div>
-{% else %}
-<div class="warning-level">
-  NOPE!
-</div>
-{% endif %}
 
 {% if items_total %}
 <div class="content-list user-warnings">
@@ -34,6 +46,11 @@
 </div>
 {% endif %}
 {% endblock %}
+
+
+{% macro format_warning_expiration(expires) %}
+<strong>{{ expires }}</strong>
+{% endmacro %}
 
 {% macro pager() -%}
 {% if pagination['total'] > 1 %}

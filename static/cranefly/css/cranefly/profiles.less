@@ -65,7 +65,7 @@
       svg {
         position: relative;
         left: 1px;
-      	height: 40px;
+        height: 40px;
         width: 100%;
       }
     }
@@ -119,6 +119,59 @@
           color: @textColor;
           font-size: @baseFontSize * 1.7;
         }
+      }
+    }
+  }
+
+  .warning-level {
+    border: 1px solid @gray;
+    border-radius: @borderRadiusLarge;
+    margin-bottom: @baseLineHeight;
+    padding: (@baseFontSize / 2) @baseFontSize;
+    overflow: auto;
+
+    h3, .lead {
+      margin: 0px;
+    }
+
+    &.warning-active {
+      border-color: @red;
+
+      color: @red;
+
+      h3 {
+        font-size: @fontSizeLarge * 1.2;
+      }
+
+      .lead {
+        font-size: @fontSizeLarge;
+      }
+
+      .warning-expiration {
+        clear: both;
+        margin-top: @baseLineHeight / 2;
+        padding: 0px;
+
+        font-size: @fontSizeSmall;
+      }
+    }
+
+    &.warning-clean {
+      border-color: @green;
+
+      color: @green;
+
+      h3 {
+        float: left;
+        margin: 0px;
+        margin-right: @baseFontSize;
+        padding: (@baseFontSize / 5) @baseFontSize;
+      }
+
+      .lead {
+        float: left;
+        margin: 0px;
+        padding: (@baseFontSize / 2) 0px;
       }
     }
   }
