@@ -39,7 +39,21 @@
 {% if items_total %}
 <div class="content-list user-warnings">
   {% for item in items %}
-  {{ item.reason }}
+  <div class="media">
+    <a href="{{ url('user', user=profile.pk, username=profile.username_slug) }}" class="pull-left">
+      <img class="media-object" src="{{ profile.get_avatar(52) }}">
+    </a>
+    <div class="media-body">
+      {% if item.reason %}
+      {{ item.reason_preparsed|safe }}
+      {% else %}
+      <em>{% trans %}No warning reason was provided by warning giver.{% endtrans %}</em>
+      {% endif %}
+      <div class="media-footer">
+        {% trans user=warning_giver(item), date=item.gived_on|reltimesince|low %}Given by {{ user }} {{ date }}{% endtrans %}
+      </div>
+    </div>
+  </div>
   <hr>
   {% endfor %}
   {{ pager() }}
@@ -51,6 +65,14 @@
 {% macro format_warning_expiration(expires) %}
 <strong>{{ expires }}</strong>
 {% endmacro %}
+
+{% macro warning_giver(item) -%}
+{% if item.giver_id %}
+<a href="{{ url('user', user=item.giver_id, username=item.giver_slug) }}">{{ item.giver_username }}</a>
+{% else %}
+<strong>{{ item.giver_username }}</strong>
+{% endif %}
+{%- endmacro %}
 
 {% macro pager() -%}
 {% if pagination['total'] > 1 %}
