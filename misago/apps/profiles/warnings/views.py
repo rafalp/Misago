@@ -11,6 +11,8 @@ from misago.utils.pagination import make_pagination
 
 @profile_view('user_warnings')
 def warnings(request, user, page=0):
+    request.acl.warnings.allow_member_warns_view(request.user, user)
+
     queryset = user.warning_set
     count = queryset.count()
     try:

@@ -3,7 +3,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from misago.acl.exceptions import ACLError403, ACLError404
-from misago.apps.errors import error404
+from misago.apps.errors import error403, error404
 from misago.models import User
 from misago.utils.strings import slugify
 
@@ -27,7 +27,7 @@ def profile_view(fallback='user'):
             except ACLError404:
                 return error404(request)
             except ACLError403 as e:
-                return error404(request, e.message)
+                return error403(request, e.message)
         return wraps(f)(inner_decorator)
     return outer_decorator
 

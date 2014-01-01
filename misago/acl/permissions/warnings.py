@@ -45,13 +45,21 @@ class WarningsACL(BaseACL):
         except ACLError403:
             return False
 
-    def can_see_member_warns(self, user, other_user):
+    def allow_member_warns_view(self, user, other_user):
         try:
             if user.pk == other_user.pk:
-                return True
+                return
         except AttributeError:
             pass
-        return self.acl['can_see_other_members_warns']
+        if not self.acl['can_see_other_members_warns']:
+            raise ACLError403(_("You don't have permission to see this member warnings."))
+
+    def can_see_member_warns(self, user, other_user):
+        try:
+            self.allow_member_warns_view(user, other_user)
+            return True
+        except ACLError403:
+            return False
 
     def allow_warning(self):
         if not self.acl['can_be_warned']:
