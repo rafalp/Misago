@@ -281,7 +281,7 @@
                   <form action="{{ url('warn_user', user=post.user.pk, slug=post.user.username_slug) }}" class="form-inline" method="post" autocomplete="off">
                     <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
                     <input type="hidden" name="retreat" value="{{ request_path }}">
-                    <input type="hidden" name="reason" value="{% trans message=url('private_thread_find', thread=thread.pk, slug=thread.slug, post=post.pk), thread=thread.name %}Your message {{ message }} in thread &quot;{{ thread }}&quot; was found to violate community guidelines.{% endtrans %}">
+                    <input type="hidden" name="reason" value="{% trans message=board_address ~ url('private_thread_find', thread=thread.pk, slug=thread.slug, post=post.pk), thread=thread.name %}Your message in private thread &quot;[{{ thread }}]({{ message }})&quot; was found to violate community guidelines.{% endtrans %}">
                     <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Warn user for this post.{% endtrans %}">{% trans %}Warn{% endtrans %}</button>
                   </form>
                   {% endif %}
