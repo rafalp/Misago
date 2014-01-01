@@ -67,14 +67,14 @@ def warn_user(request, user, slug):
 
             warning = Warn.objects.create(
                 user=user,
-                giver=request.user,
-                giver_name=request.user.username,
-                giver_slug=request.user.username_slug,
-                date=timezone.now(),
-                ip=request.session.get_ip(request),
-                agent=request.META.get('HTTP_USER_AGENT'),
                 reason=form.cleaned_data['reason'],
-                reason_preparsed=reason_preparsed)
+                reason_preparsed=reason_preparsed,
+                given_on=timezone.now(),
+                giver=request.user,
+                giver_username=request.user.username,
+                giver_slug=request.user.username_slug,
+                giver_ip=request.session.get_ip(request),
+                giver_agent=request.META.get('HTTP_USER_AGENT'))
 
             alerts.you_have_been_warned(request.user, user, warning)
             messages.success(request,
