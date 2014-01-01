@@ -6,12 +6,12 @@
 {% block tab %}
 {% if warning_level %}
 <div class="warning-level warning-active">
-  <h3>{{ warning_level.name }}</h3>
+  <h3><i class="icon-warning-sign"></i> {{ warning_level.name }}</h3>
   {% if warning_level.description %}
   <p class="lead">{{ warning_level.description }}</p>
   {% endif %}
   {% if profile.warning_level_update_on %}
-  <p class="warning-expiration">{% trans expires=format_warning_expiration(profile.warning_level_update_on|reldate) %}This warning level will expire {{ expires }}.{% endtrans %}</p>
+  <p class="warning-expiration">{% trans expires=format_warning_expiration(profile.warning_level_update_on|reldate|lower) %}This warning level will expire {{ expires }}.{% endtrans %}</p>
   {% else %}
   <p class="warning-expiration">{% trans %}This warning level will not expire and will have to be decreased manually by forum team member.{% endtrans %}</p>
   {% endif %}
