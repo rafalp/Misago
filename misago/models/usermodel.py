@@ -553,7 +553,7 @@ class User(models.Model):
             new_warning_level = warning_levels[self.warning_level]
             if new_warning_level.expires_after_minutes:
                 self.warning_level_update_on -= timedelta(
-                    minutes=warning_level_model.expires_after_minutes)
+                    minutes=new_warning_level.expires_after_minutes)
             else:
                 self.warning_level_update_on = None
         except KeyError:
