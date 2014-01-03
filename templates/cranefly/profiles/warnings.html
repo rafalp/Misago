@@ -40,17 +40,36 @@
 <div class="content-list user-warnings">
   {% for item in items %}
   <div class="media">
-    <a href="{{ url('user', user=profile.pk, username=profile.username_slug) }}" class="pull-left">
-      <img class="media-object" src="{{ profile.get_avatar(52) }}">
-    </a>
+    <div class="pull-left">
+      <div class="warning-icon ">
+        {% if item.canceled %}
+        <i class="icon-remove warning-canceled tooltip-top" title="{% trans %}This warning has been canceled.{% endtrans %}"></i>
+        {% else %}
+        <i class="icon-warning-sign warning-active"></i>
+        {% endif %}
+      </div>
+    </div>
     <div class="media-body">
       {% if item.reason %}
-      {{ item.reason_preparsed|safe }}
+      <div class="warning-reason">
+        {{ item.reason_preparsed|safe }}
+      </div>
       {% else %}
       <em>{% trans %}No warning reason was provided by warning giver.{% endtrans %}</em>
       {% endif %}
       <div class="media-footer">
-        {% trans user=warning_giver(item), date=item.gived_on|reltimesince|low %}Given by {{ user }} {{ date }}{% endtrans %}
+        {% if acl.users.can_see_users_trails() %}
+        {% trans user=warning_giver(item), date=item.given_on|reltimesince|low, ip=item.giver_ip %}Given by {{ user }} {{ date }} from ip {{ ip }}.{% endtrans %}
+        {% else %}
+        {% trans user=warning_giver(item), date=item.given_on|reltimesince|low %}Given by {{ user }} {{ date }}.{% endtrans %}
+        {% endif %}
+        {% if item.canceled %}
+          {% if acl.users.can_see_users_trails() %}
+          {% trans user=warning_canceler(item), date=item.canceled_on|reltimesince|low, ip=item.canceler_ip %}Canceled by {{ user }} {{ date }} from ip {{ ip }}.{% endtrans %}
+          {% else %}
+          {% trans user=warning_canceler(item), date=item.canceled_on|reltimesince|low %}Canceled by {{ user }} {{ date }}.{% endtrans %}
+          {% endif %}
+        {% endif %}
       </div>
     </div>
   </div>
@@ -71,6 +90,14 @@
 <a href="{{ url('user', user=item.giver_id, username=item.giver_slug) }}">{{ item.giver_username }}</a>
 {% else %}
 <strong>{{ item.giver_username }}</strong>
+{% endif %}
+{%- endmacro %}
+
+{% macro warning_canceler(item) -%}
+{% if item.canceler_id %}
+<a href="{{ url('user', user=item.canceler_id, username=item.canceler_slug) }}">{{ item.canceler_username }}</a>
+{% else %}
+<strong>{{ item.canceler_username }}</strong>
 {% endif %}
 {%- endmacro %}
 

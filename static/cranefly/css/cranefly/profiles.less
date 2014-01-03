@@ -215,7 +215,42 @@
     }
 
     &.user-warnings {
+      .media {
+        margin-bottom: -6px;
 
+        .warning-icon {
+          width: 60px;
+
+          font-size: @fontSizeLarge * 2;
+          text-align: center;
+
+          .warning-active {
+            margin-bottom: -3px;
+            position: relative;
+            top: 3px;
+
+            color: @red;
+          }
+
+          .warning-canceled {
+            margin-bottom: 0px;
+            position: relative;
+            bottom: 5px;
+
+            color: @grayLight;
+            font-size: @fontSizeLarge * 2.5;
+          }
+        }
+
+        .media-body {
+          .warning-reason {
+            &>:last-child {
+              margin-bottom: 0px;
+              padding-bottom: 0px;
+            }
+          }
+        }
+      }
     }
   }
 }
