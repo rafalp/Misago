@@ -31,7 +31,7 @@ Dependencies
 * [Django Debug Toolbar](https://github.com/django-debug-toolbar/django-debug-toolbar)
 * [Django-floppyforms](https://github.com/brutasse/django-floppyforms)
 * [Django Haystack 2](http://haystacksearch.org/)
-* [Django-Jina](https://github.com/niwibe/django-jinja)
+* [Django-Jinja](https://github.com/niwibe/django-jinja)
 * [Django-MPTT](https://github.com/django-mptt/django-mptt)
 * [Jinja2](https://github.com/mitsuhiko/jinja2)
 * [Markdown](http://pypi.python.org/pypi/Markdown)
