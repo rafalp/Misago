@@ -224,12 +224,19 @@
           font-size: @fontSizeLarge * 2;
           text-align: center;
 
-          .warning-active {
+          .warning-active, .warning-expired {
             margin-bottom: -3px;
             position: relative;
             top: 3px;
+          }
 
+          .warning-active {
             color: @red;
+          }
+
+          .warning-expired {
+            color: @grayLight;
+
           }
 
           .warning-canceled {

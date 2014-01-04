@@ -44,8 +44,10 @@
       <div class="warning-icon ">
         {% if item.canceled %}
         <i class="icon-remove warning-canceled tooltip-top" title="{% trans %}This warning has been canceled.{% endtrans %}"></i>
+        {% elif warnings_tracker.is_warning_expired(item) %}
+        <i class="icon-warning-sign warning-expired tooltip-top" title="{% trans %}This warning has expired.{% endtrans %}"></i>
         {% else %}
-        <i class="icon-warning-sign warning-active"></i>
+        <i class="icon-warning-sign warning-active tooltip-top" title="{% trans %}This warning is in effect.{% endtrans %}"></i>
         {% endif %}
       </div>
     </div>
