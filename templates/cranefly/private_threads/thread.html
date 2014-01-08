@@ -489,7 +489,7 @@
 
         <h4>{% trans %}Invite User{% endtrans %}</h4>
         <div class="invite-participant">
-          <form class="form-inline" action="{{ url('private_thread_invite_user', thread=thread.pk, slug=thread.slug) }}" method="post">
+          <form class="form-inline" action="{{ url('private_thread_invite_user', thread=thread.pk, slug=thread.slug) }}"{% if acl.threads.can_upload_attachments(forum) %} enctype="multipart/form-data"{% endif %} method="post">
             <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
             <input type="hidden" name="retreat" value="{{ request_path }}">
             {{ form_theme.field(invite_form.username, attrs={'class': 'span2', 'placeholder': lang_user_to_invite()}) }}

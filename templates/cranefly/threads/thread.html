@@ -558,7 +558,7 @@
 
   {% if user.is_authenticated() and acl.threads.can_reply(forum, thread) %}
   <div class="thread-quick-reply">
-    <form action="{{ url('thread_reply', thread=thread.pk, slug=thread.slug) }}" method="post">
+    <form action="{{ url('thread_reply', thread=thread.pk, slug=thread.slug) }}"{% if acl.threads.can_upload_attachments(forum) %} enctype="multipart/form-data"{% endif %} method="post">
       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
       <input type="hidden" name="quick_reply" value="1">
       <img src="{{ user.get_avatar(100) }}" alt="{% trans %}Your Avatar{% endtrans %}" class="user-avatar">
