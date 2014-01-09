@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 import floppyforms as forms
 from misago.acl.builder import BaseACL
@@ -10,13 +11,13 @@ def make_form(request, role, form):
                                                                   widget=YesNoSwitch, initial=False, required=False)
         form.base_fields['can_see_other_members_warns'] = forms.BooleanField(label=_("Can see other members warnings"),
                                                                              widget=YesNoSwitch, initial=False, required=False)
-        form.base_fields['can_cancel_warnings'] = forms.BooleanField(label=_("Can cancel warnings"),
-                                                                     widget=forms.Select, initial=0, coerce=int,
-                                                                     choices=(
-                                                                        (0, _("No")),
-                                                                        (1, _("If is warning giver")),
-                                                                        (2, _("Yes, all warnings")),
-                                                                     ))
+        form.base_fields['can_cancel_warnings'] = forms.TypedChoiceField(label=_("Can cancel warnings"),
+                                                                         widget=forms.Select, initial=0, coerce=int,
+                                                                         choices=(
+                                                                            (0, _("No")),
+                                                                            (1, _("If is warning giver")),
+                                                                            (2, _("Yes, all warnings")),
+                                                                         ))
         form.base_fields['can_cancel_warnings_newer_than'] = forms.IntegerField(label=_("Maximum age of warning that can be canceled (in minutes)"),
                                                                                 help_text=_("Enter zero to disable this limitation."),
                                                                                 min_value=0, initial=15)
@@ -68,6 +69,46 @@ class WarningsACL(BaseACL):
     def can_be_warned(self):
         try:
             self.allow_warning()
+            return True
+        except ACLError403:
+            return False
+
+    def allow_cancel_warning(self, user, warning):
+        if not self.acl['can_cancel_warnings']:
+            raise ACLError403(_("You can't cancel warnings."))
+
+        if warning.canceled:
+            raise ACLError403(_("This warning is already canceled."))
+
+        try:
+            if (self.acl['can_cancel_warnings'] == 1 and
+                    user.id != warning.giver_id):
+                raise ACLError403(_("You can't cancel other moderators warnings."))
+        except AttributeError:
+            pass
+
+        warning_age = timezone.now() - warning.given_on
+        warning_age = warning_age.seconds + warning_age.days * 86400
+        warning_age /= 60
+
+        if (self.acl['can_cancel_warnings_newer_than'] > 0 and
+                self.acl['can_cancel_warnings_newer_than'] < warning_age):
+            raise ACLError403(_("This warning can no longer be canceled."))
+
+    def can_cancel_warning(self, user, warning):
+        try:
+            self.allow_cancel_warning(user, warning)
+            return True
+        except ACLError403:
+            return False
+
+    def allow_delete_warning(self):
+        if not self.acl['can_delete_warnings']:
+            raise ACLError403(_("You can't delete user warnings."))
+
+    def can_delete_warnings(self):
+        try:
+            self.allow_delete_warning()
             return True
         except ACLError403:
             return False
