@@ -52,14 +52,20 @@
       </div>
     </div>
     <div class="media-body">
-      {% if item.reason %}
       <div class="warning-reason">
+        {% if item.reason %}
         {{ item.reason_preparsed|safe }}
+        {% else %}
+        <em>{% trans %}No warning reason was provided by warning giver.{% endtrans %}</em>
+        {% endif %}
       </div>
-      {% else %}
-      <em>{% trans %}No warning reason was provided by warning giver.{% endtrans %}</em>
-      {% endif %}
       <div class="media-footer">
+        {% if acl.warnings.can_cancel_warning(user, item) and not warnings_tracker.is_warning_expired(item) %}
+        CANCEL
+        {% endif %}
+        {% if acl.warnings.can_delete_warnings() %}
+        DELETE
+        {% endif %}
         {% if acl.users.can_see_users_trails() %}
         {% trans user=warning_giver(item), date=item.given_on|reltimesince|low, ip=item.giver_ip %}Given by {{ user }} {{ date }} from ip {{ ip }}.{% endtrans %}
         {% else %}
