@@ -6,17 +6,7 @@
 Welcome to Misago's documentation!
 ==================================
 
-Contents:
+This documentation is only placeholder.
 
-.. toctree::
-   :maxdepth: 2
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+Real documentation is being writen on "cleanup" branch as progress is made in Misago's refactoring.
 
