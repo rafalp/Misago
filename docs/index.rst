@@ -1,22 +1,25 @@
-.. Misago documentation master file, created by
-   sphinx-quickstart on Fri Jan 10 02:31:11 2014.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+====================
+Misago Documentation
+====================
 
-Welcome to Misago's documentation!
-==================================
+Welcome to Misago documentation!
 
-Contents:
+.. warning::
+   Works on documentation only recently have begun and are currently focused exclusively on developer oriented subjects.
 
-.. toctree::
-   :maxdepth: 2
+Setup and Maintenance
+=====================
+
+(Documents about low level configuration (settings.py), available cron tasks, filestytem, installing, updating)
 
 
+Customising Appearance
+======================
 
-Indices and tables
-==================
+Changing templates and assets (images, js, css), using pipeline, templates reference and coding guidelines for templates, css i js
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
+Writing New Code
+================
+
+Coding guidelines for python files, links to Django doc's explaining their features, Misago API's and hooks references
