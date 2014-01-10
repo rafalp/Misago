@@ -1,2 +1,0 @@
-{% if object.pk == object.thread.start_post_id %}{{ object.thread.name }}{% endif %}
-{{ object.post_clean }}

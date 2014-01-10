@@ -1,1 +1,0 @@
-from django.template import RequestContext

@@ -1,7 +1,0 @@
-{% extends "admin/admin/list.html" %}
-
-{% block table_row scoped %}
-  <td class="lead-cell">
-  	<strong>{{ _(item.theme) }}</strong> <span class="muted">{{ ', '.join(item.useragents.splitlines()) }}</span>
-  </td>
-{% endblock%}
