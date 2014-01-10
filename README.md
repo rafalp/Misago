@@ -7,6 +7,10 @@ Misago aims to be complete, featured and modern forum solution that has no fear 
 
 If you can run Python apps on your hosting and you are looking for modern solution using latest paradigms in web development, or you are Django developer and forum is going to be core component of your next project then Misago is option for you!
 
+Homepage: <http://misago-project.org/>
+Documentation: <http://misago.readthedocs.org/en/latest/>
+Code & BugTracker: <https://github.com/rafalp/Misago/>
+
 
 Installing and updating
 -----------------------
@@ -19,9 +23,9 @@ If you want to give Misago a spin, feel free to play with one of [previous relea
 Contributing
 ------------
 
-Misago is an open source project. You are free to submit pull requests use the issue tracker to report bugs as well as propose improvements and/or new features.
+Misago is an open source project. Submit pull requests and bug reports issue tracker to report bugs are welcome!
 
-Finally, you can participate in discussion on the [project forums](http://misago-project.org). Your feedback means much to the project so please do share your thoughts!
+For feature or support requests as well as general feedback please use our [project forums](http://misago-project.org) insteads. Your feedback means much to the project so please do share your thoughts!
 
 
 Authors
