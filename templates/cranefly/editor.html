@@ -57,7 +57,7 @@
 {% endmacro %}
 
 {% macro attachments_editor() %}
-{% if acl.threads.can_upload_attachments(forum) %}
+{% if forum and acl.threads.can_upload_attachments(forum) %}
 <div class="editor-upload">
   <input type="file" name="new_file">
   <button name="upload" type="submit" class="btn pull-right">{% trans %}Attach File{% endtrans %}</button>
