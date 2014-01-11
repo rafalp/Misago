@@ -158,9 +158,9 @@ class HideReplyBaseView(DeleteHideBaseView):
     def delete(self):
         self.post.delete_date = timezone.now()
         self.post.deleted = True
-        self.thread.start_post.edit_user = self.request.user
-        self.thread.start_post.edit_user_name = self.request.user.username
-        self.thread.start_post.edit_user_slug = self.request.user.username_slug
+        self.post.edit_user = self.request.user
+        self.post.edit_user_name = self.request.user.username
+        self.post.edit_user_slug = self.request.user.username_slug
         self.post.save(force_update=True)
         self.thread.sync()
         self.thread.save(force_update=True)
@@ -184,9 +184,9 @@ class ShowReplyBaseView(DeleteHideBaseView):
 
     def delete(self):
         self.post.deleted = False
-        self.thread.start_post.edit_user = self.request.user
-        self.thread.start_post.edit_user_name = self.request.user.username
-        self.thread.start_post.edit_user_slug = self.request.user.username_slug
+        self.post.edit_user = self.request.user
+        self.post.edit_user_name = self.request.user.username
+        self.post.edit_user_slug = self.request.user.username_slug
         self.post.save(force_update=True)
         self.thread.sync()
         self.thread.save(force_update=True)
