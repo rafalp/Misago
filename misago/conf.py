@@ -1,6 +1,5 @@
 from django.conf import settings as dj_settings
 from django.core.cache import cache
-from misago.models import Setting
 from misago.thread import local
 
 _thread_local = local()
@@ -8,6 +7,7 @@ _thread_local = local()
 def load_settings():
     settings = cache.get('settings', {})
     if not settings:
+        from misago.models import Setting
         for i in Setting.objects.all():
             settings[i.pk] = i.value
         cache.set('settings', settings)
