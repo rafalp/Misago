@@ -43,7 +43,7 @@
     <div class="pull-left">
       <div class="warning-icon ">
         {% if item.canceled %}
-        <i class="icon-remove warning-canceled tooltip-top" title="{% trans %}This warning has been canceled.{% endtrans %}"></i>
+        <i class="icon-ban warning-canceled tooltip-top" title="{% trans %}This warning has been canceled.{% endtrans %}"></i>
         {% elif warnings_tracker.is_warning_expired(item) %}
         <i class="icon-warning-sign warning-expired tooltip-top" title="{% trans %}This warning has expired.{% endtrans %}"></i>
         {% else %}
@@ -61,11 +61,16 @@
       </div>
       <div class="media-footer">
         {% if acl.warnings.can_cancel_warning(user, item) and not warnings_tracker.is_warning_expired(item) %}
-        CANCEL
+        <form>
+          <button type="submit" class="btn btn-small"><i class="icon-ban"></i> {% trans %}Cancel{% endtrans %}</button>
+        </form>
         {% endif %}
         {% if acl.warnings.can_delete_warnings() %}
-        DELETE
+        <form>
+          <button type="submit" class="btn btn-small"><i class="icon-remove"></i> {% trans %}Delete{% endtrans %}</button>
+        </form>
         {% endif %}
+        <p>
         {% if acl.users.can_see_users_trails() %}
         {% trans user=warning_giver(item), date=item.given_on|reltimesince|low, ip=item.giver_ip %}Given by {{ user }} {{ date }} from ip {{ ip }}.{% endtrans %}
         {% else %}
@@ -78,6 +83,7 @@
           {% trans user=warning_canceler(item), date=item.canceled_on|reltimesince|low %}Canceled by {{ user }} {{ date }}.{% endtrans %}
           {% endif %}
         {% endif %}
+        </p>
       </div>
     </div>
   </div>

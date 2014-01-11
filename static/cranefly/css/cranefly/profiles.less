@@ -251,11 +251,31 @@
 
         .media-body {
           .warning-reason {
+            &>:first-child {
+              margin-top: 0px;
+              padding-top: 0px;
+            }
+
             &>:last-child {
               margin-bottom: 0px;
               padding-bottom: 0px;
             }
           }
+        }
+
+        .media-footer {
+        	overflow: auto;
+
+        	form, p {
+        		float: left;
+        		margin: 0px;
+        	}
+
+        	form {
+        		padding: 0px;
+        		margin-top: -3px;
+        		margin-right: @baseFontSize;
+        	}
         }
       }
     }
