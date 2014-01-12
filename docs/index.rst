@@ -36,3 +36,8 @@ Developers
 
 1. Changing Appearance
 2. Writing Extensions
+
+.. toctree::
+   :maxdepth: 1
+
+   dev
