@@ -37,10 +37,10 @@ Deployment
 
 Deployment is a process in which you get your site running and reachable by your users.
 
-Misago is de facto Django with extra features added. This means deployment of Misago should be largery same to deployment of other Django-based solutions. Django documentation `already describes <https://docs.djangoproject.com/en/1.6/howto/deployment/>`_ supported deployment methods, and while on dedicated and VPS options deployment method depends largery on your choice and employed software stack, shared servers may differ greatly by the way how Django should be deployed. If thats the case, make sure you consult your ISP documentation and/or ask its rep for details about supported deployment method.
+Misago is de facto Django with extra features added. This means deployment of Misago should be largery same to deployment of other Django-based solutions. Django documentation `already covers <https://docs.djangoproject.com/en/1.6/howto/deployment/>`_ supported deployment methods, and while on dedicated and VPS options deployment method depends largery on your choice and employed software stack, shared servers may differ greatly by the way how Django should be deployed. If thats the case, make sure you consult your ISP documentation and/or ask its rep for details about supported deployment method.
 
 .. note::
-   If you are deploying it on your own dedicated or virtual server, you may take interest in `the Gunicorn <http://http://gunicorn.org/>`_ that makes it easier to maintain Python deployments.
+   If you are deploying Misago on your own dedicated or virtual server, you may want to take interest in `the Gunicorn <http://gunicorn.org/>`_ that makes it easier to maintain Python deployments.
 
 
 Updating to new version
