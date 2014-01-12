@@ -18,7 +18,7 @@ System Administrators are users with direct access to server resources and servi
 .. toctree::
    :maxdepth: 1
 
-   sysadmins
+   setup_maintenance
 
 
 Users
