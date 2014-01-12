@@ -40,4 +40,4 @@ Developers
 .. toctree::
    :maxdepth: 1
 
-   dev
+   extending/index
