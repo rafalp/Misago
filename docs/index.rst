@@ -1,5 +1,5 @@
 ====================
-Misago Documentation
+Overview
 ====================
 
 Welcome to Misago documentation!
@@ -34,10 +34,22 @@ This part of documentation is aimed at users who interact with Misago by the gra
 Developers
 ==========
 
-1. Changing Appearance
-2. Writing Extensions
+Misago is being developed with customizability and extensibility on mind and offers many features for those looking into modifying its look and feel, extending its featurebase or changing behaviour of core features.
 
-.. toctree::
-   :maxdepth: 1
+And if this isn't enough for you, Misago itself stands on shoulders of `Django <https://www.djangoproject.com/>`_, powerful and battle-tested web framework with great documentation and rich ecosystem of additional modules (named "apps"). This means Misago is not "just forum solution". Its also complete framework you may use to build your entire site around, writing your own Django apps or installing and adapting one of thousands ready apps freely available in the internet.
 
-   extending/index
+
+Customizing Appearance
+----------------------
+
+
+
+
+Writing Extensions
+------------------
+
+
+Understanding Internals
+-----------------------
+
+
