@@ -512,7 +512,8 @@
   {{ super() }}
   <script src="{{ STATIC_URL }}cranefly/highlight/highlight.pack.js"></script>
   <script type="text/javascript">
-    var l_post_reported = "{{ _('Reported!') }}";
+    var l_report_sure = "{% trans %}Are you sure you want to bring this message to moderator attention?{% endtrans %}";
+    var l_post_reported = "{% trans %}Reported!{% endtrans %}";
     hljs.tabReplace = '    ';
     hljs.initHighlightingOnLoad();
     EnhancePostsMD();

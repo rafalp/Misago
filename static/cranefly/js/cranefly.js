@@ -333,6 +333,11 @@ $(function() {
     var csrf_token = $(this).find('input[name="_csrf_token"]').val();
     var button = $(this).find('button');
     $(this).submit(function() {
+      var decision = confirm(l_report_sure);
+      if (!decision) {
+        return false;
+      }
+
       var form = this;
       $.post(form.action, {'_csrf_token': csrf_token}, "json").done(function(data, textStatus, jqXHR) {
         $(button).text(l_post_reported);
