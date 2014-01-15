@@ -1,4 +1,4 @@
-{% macro editor(field, submit_button, placeholder=None, rows=4, hide_links=False, hide_images=False, hide_hr=False, zen=False, extra=None) %}
+{% macro editor(field, submit_button, placeholder=None, rows=4, hide_links=False, hide_images=False, hide_hr=False, hide_attachments=False, zen=False, extra=None) %}
 <div class="editor editor-editable">
   {% if field.errors %}
   <div class="editor-error">
@@ -30,7 +30,9 @@
     <button name="save" type="submit" class="btn btn-primary pull-right">{{ submit_button }}</button>
     {% if extra %}{{ extra }}{% endif %}
   </div>
+  {% if not hide_attachments %}
   {{ attachments_editor() }}
+  {% endif %}
 </div>
 {% endmacro %}
 
