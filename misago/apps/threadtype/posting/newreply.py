@@ -137,7 +137,7 @@ class NewReplyBaseView(PostingBaseView):
                 alert.post('thread', self.type_prefix, self.thread, self.post)
                 alert.save_all()
 
-    def watch_thread(Self):
+    def watch_thread(self):
         if self.request.user.subscribe_reply:
             self.start_watching_thread(
                 self.request.user.subscribe_reply == 2)
