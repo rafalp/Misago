@@ -506,9 +506,9 @@ class User(models.Model):
 
         # Set message author
         if settings.board_name:
-            sender = '%s <%s>' % (settings.board_name.replace("<", "(").replace(">", ")"), settings.EMAIL_HOST_USER)
+            sender = '%s <%s>' % (settings.board_name.replace("<", "(").replace(">", ")"), settings.DEFAULT_FROM_EMAIL)
         else:
-            sender = settings.EMAIL_HOST_USER
+            sender = settings.DEFAULT_FROM_EMAIL
 
         # Build message and add it to queue
         email = EmailMultiAlternatives(subject, email_text, sender, [recipient])
