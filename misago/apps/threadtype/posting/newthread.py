@@ -83,3 +83,8 @@ class NewThreadBaseView(PostingBaseView):
             self.request.user.posts += 1
         self.request.user.last_post = now
         self.request.user.save(force_update=True)
+
+    def watch_thread(Self):
+        if self.request.user.subscribe_start:
+            self.start_watching_thread(
+                self.request.user.subscribe_start == 2)

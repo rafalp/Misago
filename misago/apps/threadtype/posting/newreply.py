@@ -136,3 +136,8 @@ class NewReplyBaseView(PostingBaseView):
                 alert.profile('username', self.request.user)
                 alert.post('thread', self.type_prefix, self.thread, self.post)
                 alert.save_all()
+
+    def watch_thread(Self):
+        if self.request.user.subscribe_reply:
+            self.start_watching_thread(
+                self.request.user.subscribe_reply == 2)
