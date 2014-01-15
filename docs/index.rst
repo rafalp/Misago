@@ -59,3 +59,8 @@ Misago extensions are called "apps". Each "app" can be either single feature lik
 To offer such level of extensibility many parts of Misago (and Django too!) were designed as simple and lightweight frameworks to which that you can add (or remove) features.
 
 Following references cover everything you want to know about writing your own apps for Misago. From them you will learn what coding style, conventions and best practices you should follow when writing your code. Next you will be shown how to add your own pages and models to Misago and what features are available for you in doing so. Finally all available frameworks will be presented with explanation what they are used for and how you can add your features to them.
+
+.. toctree::
+   :maxdepth: 1
+
+   coding_style
