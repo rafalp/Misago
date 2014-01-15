@@ -993,8 +993,8 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{color:#333;text-decoration:n
 .user-profile .content-list.user-warnings .media .warning-icon .warning-canceled{margin-bottom:0;position:relative;bottom:5px;color:#999;font-size:43.75px}
 .user-profile .content-list.user-warnings .media .media-body .warning-reason>:first-child{margin-top:0;padding-top:0}
 .user-profile .content-list.user-warnings .media .media-body .warning-reason>:last-child{margin-bottom:0;padding-bottom:0}
-.user-profile .content-list.user-warnings .media .media-footer{overflow:auto}.user-profile .content-list.user-warnings .media .media-footer form,.user-profile .content-list.user-warnings .media .media-footer p{float:left;margin:0}
-.user-profile .content-list.user-warnings .media .media-footer form{padding:0;margin-top:-3px;margin-right:14px}
+.user-profile .content-list.user-warnings .media .media-footer form,.user-profile .content-list.user-warnings .media .media-footer p{float:left;margin:0}
+.user-profile .content-list.user-warnings .media .media-footer form{padding:0;margin-right:14px}
 .forum-subforums-list{background-color:#fff;border:1px solid #d5d5d5;border-radius:2px;-webkit-box-shadow:0 0 0 3px #eee;-moz-box-shadow:0 0 0 3px #eee;box-shadow:0 0 0 3px #eee;margin-bottom:20px}.forum-subforums-list .header{background-color:#fbfbfb;border:1px solid #d5d5d5;border-radius:2px 2px 0 0;margin:-1px;margin-bottom:0;padding:3.966666666666667px 9.9px}.forum-subforums-list .header h2{margin:0;padding:0;color:#333;font-size:11.9px;font-weight:bold;line-height:20px;text-align:left}.forum-subforums-list .header h2 small{margin-left:7px;color:#999;font-size:11.9px}
 .forum-subforums-list .forum{border-bottom:1px solid #d5d5d5;height:21px;overflow:visible;padding:14.75px 9.9px}.forum-subforums-list .forum.last{border-bottom:none}
 .forum-subforums-list .forum .forum-icon{float:left;position:relative;bottom:1px;width:36px;color:#d5d5d5;font-size:24px;text-align:center}.forum-subforums-list .forum .forum-icon.forum-icon-new{color:#cf402e}

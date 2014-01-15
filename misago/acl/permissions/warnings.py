@@ -73,12 +73,15 @@ class WarningsACL(BaseACL):
         except ACLError403:
             return False
 
-    def allow_cancel_warning(self, user, warning):
+    def allow_cancel_warning(self, user, owner, warning):
         if not self.acl['can_cancel_warnings']:
             raise ACLError403(_("You can't cancel warnings."))
 
         if warning.canceled:
             raise ACLError403(_("This warning is already canceled."))
+
+        if not owner.is_warning_active(warning):
+            raise ACLError403(_("This warning is no longer in effect."))
 
         try:
             if (self.acl['can_cancel_warnings'] == 1 and
@@ -95,9 +98,9 @@ class WarningsACL(BaseACL):
                 self.acl['can_cancel_warnings_newer_than'] < warning_age):
             raise ACLError403(_("This warning can no longer be canceled."))
 
-    def can_cancel_warning(self, user, warning):
+    def can_cancel_warning(self, user, owner, warning):
         try:
-            self.allow_cancel_warning(user, warning)
+            self.allow_cancel_warning(user, owner, warning)
             return True
         except ACLError403:
             return False

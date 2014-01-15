@@ -13,6 +13,7 @@ from django.template import RequestContext
 from django.utils import timezone as tz_util
 from django.utils.translation import ugettext_lazy as _
 from misago.acl.builder import acl
+from misago.apps.profiles.warnings.warningstracker import WarningsTracker
 from misago.conf import settings
 from misago.monitor import monitor, UpdatingMonitor
 from misago.signals import delete_user_content, rename_user, sync_user_profile
@@ -577,6 +578,16 @@ class User(models.Model):
             self.save(force_update=True)
 
         return self.get_warning_level()
+
+    def is_warning_active(self, warning):
+        warning_level = self.get_warning_level()
+        warnings_tracker = WarningsTracker(warning_level)
+
+        for db_warning in self.warning_set.order_by('-pk').iterator():
+            if warnings_tracker.is_warning_active(db_warning):
+                if warning.pk == db_warning.pk:
+                    return True
+        return False
 
     def timeline(self, qs, length=100):
         posts = {}

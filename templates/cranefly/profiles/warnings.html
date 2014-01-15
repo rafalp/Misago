@@ -60,14 +60,16 @@
         {% endif %}
       </div>
       <div class="media-footer">
-        {% if acl.warnings.can_cancel_warning(user, item) and not warnings_tracker.is_warning_expired(item) %}
-        <form>
-          <button type="submit" class="btn btn-small"><i class="icon-ban"></i> {% trans %}Cancel{% endtrans %}</button>
+        {% if acl.warnings.can_cancel_warning(user, profile, item) and not warnings_tracker.is_warning_expired(item) %}
+        <form action="{{ url('user_warnings_cancel', user=profile.pk, username=profile.username_slug, warning=item.pk) }}" method="post">
+          <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+          <button type="submit" class="btn btn-mini"><i class="icon-ban"></i> {% trans %}Cancel{% endtrans %}</button>
         </form>
         {% endif %}
         {% if acl.warnings.can_delete_warnings() %}
-        <form>
-          <button type="submit" class="btn btn-small"><i class="icon-remove"></i> {% trans %}Delete{% endtrans %}</button>
+        <form action="{{ url('user_warnings_delete', user=profile.pk, username=profile.username_slug, warning=item.pk) }}" method="post">
+          <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+          <button type="submit" class="btn btn-mini"><i class="icon-remove"></i> {% trans %}Delete{% endtrans %}</button>
         </form>
         {% endif %}
         <p>
