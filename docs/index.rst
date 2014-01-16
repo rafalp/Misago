@@ -4,12 +4,14 @@ Overview
 
 Welcome to Misago documentation!
 
-Misago is featured internet forum solution developed in accordance with current practices and trends in web development.
+Misago is featured internet forum solution developed in accordance with practices and trends currently used in web software development.
 
-Like in any full stack solution, different users interact with Misago on different levels. The aim of this documentation is to provide refence and explanation of features available for them, allowing them to complete their taks better and more effectively.
+Like in any full stack solution, Misago provides different levels of interaction that allow for fullfilling different use cases. People who come to your site to talk with each other and exchange their opinions and knowledge will most likely asociate Misago with what they see in their browsers, while developers that are developing site around Misago will focus on its code, API's and implementations details.
+
+The goal of Misago documentation is to provide refence and explanation of features available on each layers of the stack.
 
 .. warning::
-   Work on documentation has only just begun and currently all efford is focused exclusively on developer oriented subjects.
+   Documentation is currently in early Work in Progress state. New documents are added as features they cover are implemented, with exception of "Users" part of documentation which will be worked on once Misago reaches beta testing stage.
 
 
 System Administrators
@@ -38,7 +40,7 @@ Developers
 
 Misago is being developed with customizability and extensibility on mind and offers many features for those looking into modifying its look and feel, extending its featurebase or changing behaviour of core features.
 
-And if this isn't enough for you, Misago itself stands on shoulders of `Django <https://www.djangoproject.com/>`_, powerful and battle-tested web framework with great documentation and rich ecosystem of additional modules (named "apps"). This means Misago is not "just forum solution". Its also complete framework you may use to build your entire site around, writing your own Django apps or installing and adapting one of thousands ready apps freely available in the internet.
+And if this isn't enough for you, Misago itself stands on shoulders of `Django <https://www.djangoproject.com/>`_, powerful and battle-tested web framework with great documentation and rich ecosystem of additional modules (named "apps"). This means Misago is not "just forum solution". Its also complete framework you may use to build your entire site around, writing your own Django apps or `installing and adapting one of thousands ready apps freely available in the internet <http://djangopackages.com/>`_.
 
 No matter what you are trying to accomplish, Misago has you covered.
 
