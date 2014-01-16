@@ -579,9 +579,17 @@ class User(models.Model):
 
         return self.get_warning_level()
 
+    def expire_current_warning(self):
+        self.warning_level_update_on = tz_util.now() - timedelta(minutes=1)
+
+    def decrease_warning_level(self):
+        if self.get_current_warning_level():
+            self.expire_current_warning()
+            self.save(force_update=True)
+
     def is_warning_active(self, warning):
         warning_level = self.get_warning_level()
-        warnings_tracker = WarningsTracker(warning_level)
+        warnings_tracker = WarningsTracker(self.warning_level)
 
         for db_warning in self.warning_set.order_by('-pk').iterator():
             if warnings_tracker.is_warning_active(db_warning):

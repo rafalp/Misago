@@ -987,10 +987,10 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{color:#333;text-decoration:n
 .user-profile .content-list .media{overflow:auto}.user-profile .content-list .media .media-object{border-radius:3px;width:52px;height:52px}
 .user-profile .content-list .media .media-body{margin-left:66px}.user-profile .content-list .media .media-body .post-preview:link,.user-profile .content-list .media .media-body .post-preview:active,.user-profile .content-list .media .media-body .post-preview:visited,.user-profile .content-list .media .media-body .post-preview:hover{display:block;margin-top:7px;color:#333;font-size:16.8px;text-decoration:none}
 .user-profile .content-list .media .media-body .media-footer{margin:0;color:#999;font-size:10.5px;font-weight:normal}.user-profile .content-list .media .media-body .media-footer a{color:#555}
-.user-profile .content-list.user-warnings .media{margin-bottom:-6px}.user-profile .content-list.user-warnings .media .warning-icon{width:60px;font-size:35px;text-align:center}.user-profile .content-list.user-warnings .media .warning-icon .warning-active,.user-profile .content-list.user-warnings .media .warning-icon .warning-expired{margin-bottom:-3px;position:relative;top:3px}
+.user-profile .content-list.user-warnings .media{margin-bottom:-6px}.user-profile .content-list.user-warnings .media .warning-icon{width:60px;font-size:35px;text-align:center}.user-profile .content-list.user-warnings .media .warning-icon .warning-active,.user-profile .content-list.user-warnings .media .warning-icon .warning-expired,.user-profile .content-list.user-warnings .media .warning-icon .warning-canceled{margin-bottom:-3px;position:relative;top:3px}
 .user-profile .content-list.user-warnings .media .warning-icon .warning-active{color:#cf402e}
 .user-profile .content-list.user-warnings .media .warning-icon .warning-expired{color:#999}
-.user-profile .content-list.user-warnings .media .warning-icon .warning-canceled{margin-bottom:0;position:relative;bottom:5px;color:#999;font-size:43.75px}
+.user-profile .content-list.user-warnings .media .warning-icon .warning-canceled{color:#999}
 .user-profile .content-list.user-warnings .media .media-body .warning-reason>:first-child{margin-top:0;padding-top:0}
 .user-profile .content-list.user-warnings .media .media-body .warning-reason>:last-child{margin-bottom:0;padding-bottom:0}
 .user-profile .content-list.user-warnings .media .media-footer form,.user-profile .content-list.user-warnings .media .media-footer p{float:left;margin:0}

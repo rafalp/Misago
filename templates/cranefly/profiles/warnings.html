@@ -43,7 +43,7 @@
     <div class="pull-left">
       <div class="warning-icon ">
         {% if item.canceled %}
-        <i class="icon-ban warning-canceled tooltip-top" title="{% trans %}This warning has been canceled.{% endtrans %}"></i>
+        <i class="icon-ban-circle warning-canceled tooltip-top" title="{% trans %}This warning has been canceled.{% endtrans %}"></i>
         {% elif warnings_tracker.is_warning_expired(item) %}
         <i class="icon-warning-sign warning-expired tooltip-top" title="{% trans %}This warning has expired.{% endtrans %}"></i>
         {% else %}
@@ -63,7 +63,7 @@
         {% if acl.warnings.can_cancel_warning(user, profile, item) and not warnings_tracker.is_warning_expired(item) %}
         <form action="{{ url('user_warnings_cancel', user=profile.pk, username=profile.username_slug, warning=item.pk) }}" method="post">
           <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
-          <button type="submit" class="btn btn-mini"><i class="icon-ban"></i> {% trans %}Cancel{% endtrans %}</button>
+          <button type="submit" class="btn btn-mini"><i class="icon-ban-circle"></i> {% trans %}Cancel{% endtrans %}</button>
         </form>
         {% endif %}
         {% if acl.warnings.can_delete_warnings() %}
