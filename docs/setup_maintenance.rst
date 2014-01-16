@@ -10,6 +10,7 @@ Installing Misago
 
 Misago installation is three step process. First you compare your server's specification to check if will be able to run Misago. Next you setup Misago and all extra services required for it to function like e-mails, database and automatic maintenance jobs. Finally you get your site running and accessible for your users.
 
+
 Requirements
 ------------
 
