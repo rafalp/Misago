@@ -85,6 +85,6 @@ After you have opened right directory, you should see list of directories and ht
 This means that some exploring will be needed, but Misago is not going to leave you on your own here. Debug mode makes Misago expose lots of inside information to help developers understand whats happening under the hood. After you enable it, Misago will wrap every rendered template in HTML comments pointing you to source files you have to look at.
 
 .. warning::
-   Never EVER EVER run your site with DEBUG = True in anything that is being run in production. Something sooner or later will go wrong, and when it goes, this will make Misago happily expose confidential details about your site's configuration in hopes that it willbe helpful.
+   Never EVER EVER run your site with DEBUG = True in production. Sooner or later something will go wrong, and when it does, this will make Misago happily expose confidential details about your site's configuration in hopes that it will be helpful to those who shouldn't see it.
 
    Because implementation details of Misago features are freely available on internet and safety of some of those depends on their configuration remaining secret, this will open your site for many different attacks.
