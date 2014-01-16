@@ -65,7 +65,7 @@ In addition to views and forms definitions, those files can also contain helper 
 View Arguments
 --------------
 
-As convention, declare view arguments in same order parameters are declared in view's links patterns.
+As convention, declare view arguments in same order as parameters are declared in view's links patterns.
 
 Templates
 =========
