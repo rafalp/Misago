@@ -12,8 +12,8 @@ Those documents should give you solid knowledge of coding style and conventions 
 In addition to those guidelines, Misago defines set of additional convetions and good practices that will help you write better and easier code:
 
 
-Writing Models
-==============
+Models
+======
 
 Fields Order
 ------------
@@ -39,6 +39,18 @@ True/False Fields
 For extra clarity prefix fields representing true/false states of model with "is". "is_deleted" is better than "deleted".
 
 
+URLConfs
+========
+
+Link names should correspond to views and patterns whenever possible. This means that link pointing to "user_warnings" view should be named "user_warnings" and should match "user/rafalp-1/warnings/". This makes associating patterns, links and views easy for those trying to understand your code.
+
+Avoid temptation to prefix links with app names. Good link name should point at correct app without that. If there's name collision, you should rethink your views because there's chance you are either repeating yourself or planned your app structure incorrectly.
+
+Links pointing at classes instead of functions should use lowercase letters and undersores. This means that link pointing at "ForumThreads" should be named "forum_threads".
+
+If link parameters correspond to model fields, name them after those. If your link contains model's pk and slug, name those parameters pk and slug. If link contains parameter that represents foreign key or pk of other model, don't suffix it with "_id" or "_pk". For example link to edit reply in thread can define parameters "pk" and "slug" that are used to fetch thread from database and additional "reply" parameter that will be used to identify reply in thread's reply_set.
+
+
 Views and Forms
 ===============
 
@@ -54,19 +66,6 @@ View Arguments
 --------------
 
 As convention, declare view arguments in same order parameters are declared in view's links patterns.
-
-
-URLConfs
-========
-
-Link names should correspond to views and patterns whenever possible. This means that link pointing to "user_warnings" view should be named "user_warnings" and should match "user/rafalp-1/warnings/". This makes associating patterns, links and views easy for those trying to understand your code.
-
-Avoid temptation to prefix links with app names. Good link name should point at correct app without that. If there's name collision, you should rethink your views because there's chance you are either repeating yourself or planned your app structure incorrectly.
-
-Links pointing at classes instead of functions should use lowercase letters and undersores. This means that link pointing at "ForumThreads" should be named "forum_threads".
-
-If link parameters correspond to model fields, name them after those. If your link contains model's pk and slug, name those parameters pk and slug. If link contains parameter that represents foreign key or pk of other model, don't suffix it with "_id" or "_pk". For example link to edit reply in thread can define parameters "pk" and "slug" that are used to fetch thread from database and additional "reply" parameter that will be used to identify reply in thread's reply_set.
-
 
 Templates
 =========
