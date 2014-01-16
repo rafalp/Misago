@@ -39,9 +39,24 @@ True/False Fields
 For extra clarity prefix fields representing true/false states of model with "is". "is_deleted" is better than "deleted".
 
 
-Writing Views
-=============
+Views and Forms
+===============
 
+Code Organization
+-----------------
+
+Depending on number of views in your app, you may have single "views.py" file (AKA python module), or "views" directory (AKA python package). While both approaches are perfectly valid, you should preffer first one and only switch to latter when your views module becomes too big. Same practice applies for "forms.py". Split it only when file becomes to big to be easily navigate.
+
+In addition to views and forms definitions, those files can also contain helper functions and attributes. Your views may perform same logic that you may want to move to single decorator or mixin in order to DRY your code while your forms may define factories or dynamic default values. However file contents should always follow "what it says on the tin" rule. If your views module defines forms or has nothing else but mixins or decorators that are imported by other modules, it shouldn't be named "views".
+
+.. note::
+   This rule is not specific just for views and forms files or even for python language ans is widely considered as good practice in majority of programming languages out there.
+
+
+View Arguments
+--------------
+
+Todo:
 - view arguments
 - maybe arguments order
 - templates
