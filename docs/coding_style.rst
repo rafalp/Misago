@@ -73,3 +73,18 @@ Templates
 .. note::
    There is no silver bullet approach to how you should name or organize templates in your apps. Instead in this chapter will explain convention used by Misago.
 
+
+If you are looking for template file, first you should pick correct directory to search in. Misago groups templates by special "spaces" they belong to. This means "misago" directory has three additional directories:
+
+- admin
+- emails
+- forum
+
+After you have opened right directory, you should see list of directories and html files. See which directory or file name relates most to the page you are looking to modify. Directories are used to group related templates together and may either represent part of site (like user control panel) or single view that was split into few building blocks to remove complexity from templates (like thread view that includes additional templates).
+
+This means that some exploring will be needed, but Misago is not going to leave you on your own here. Debug mode makes Misago expose lots of inside information to help developers understand whats happening under the hood. After you enable it, Misago will wrap every rendered template in HTML comments pointing you to source files you have to look at.
+
+.. warning::
+   Never EVER EVER run your site with DEBUG = True in anything that is being run in production. Because something sooner or later will go wrong, and when it goes, Misago will happily expose your confidential configuration details in hopes that it will help developer find and fix the issue.
+
+   Because implementation details of Misago features are freely available and documented and safety of some of those depends on their configuration remain secret, this will open your site for many different attacks.
