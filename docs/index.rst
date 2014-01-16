@@ -52,13 +52,13 @@ Misago appearance is product of many different technologies acting together to p
 
 On server side powerful, performant and extensible template engine named `Jinja2 <http://jinja.pocoo.org/>`_ turns template files into final html that is displayed in browser while asset pipeline compiles, merges and optimizes less, css and javascript files making your browser load faster and relieving you from burden of compressing and optimizing them yourself.
 
-On browder side Misago comes with it's own UI framework that uses `Bootstrap <http://getbootstrap.com>`_, `jQuery <http://jquery.org>`_ as well Glyphicons and `Font Awesome <http://fontawesome.io>`_ as it's foundations that allows you to provide smooth, pleasant and modern experience to your site's users.
+On browser side Misago comes with it's own UI framework that uses `Bootstrap <http://getbootstrap.com>`_, `jQuery <http://jquery.org>`_ as well Glyphicons and `Font Awesome <http://fontawesome.io>`_ as it's foundations that allows you to provide smooth, pleasant and modern experience to your site's users.
 
 
 Writing Extensions
 ------------------
 
-Misago extensions are called "apps". Each "app" can be either single feature like, say, extra user profile tab, or entire set of many features working together to add whole new part to your site, like user blogs or galleries or portal.
+Misago extensions are called "apps". Each "app" can be either single feature like extra user profile tab or entire set of many features working together to add whole new part to your site like user blogs or galleries or file downloads.
 
 To offer such level of extensibility many parts of Misago (and Django too!) were designed as simple and lightweight frameworks to which that you can add (or remove) features.
 
