@@ -74,7 +74,7 @@ Templates
    There is no silver bullet approach to how you should name or organize templates in your apps. Instead in this chapter will explain convention used by Misago.
 
 
-If you are looking for template file, first you should pick correct directory to search in. Misago groups templates by special "spaces" they belong to. This means "misago" directory has three additional directories:
+If you are looking for template file, first you should pick correct directory to search in. Misago groups templates by special "spaces" they belong to. This means "misago" directory has three subdirectories:
 
 - admin
 - emails
