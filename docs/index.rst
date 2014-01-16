@@ -4,7 +4,9 @@ Overview
 
 Welcome to Misago documentation!
 
-Misago is internet forum solution with many features aimed at different kinds of users. The aim of this documentation is to provide refence and explanation of features available for them, allowing them to complete their taks better and more effectively.
+Misago is featured internet forum solution developed in accordance with current practices and trends in web development.
+
+Like in any full stack solution, different users interact with Misago on different levels. The aim of this documentation is to provide refence and explanation of features available for them, allowing them to complete their taks better and more effectively.
 
 .. warning::
    Work on documentation has only just begun and currently all efford is focused exclusively on developer oriented subjects.
