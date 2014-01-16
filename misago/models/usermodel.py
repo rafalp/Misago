@@ -579,12 +579,9 @@ class User(models.Model):
 
         return self.get_warning_level()
 
-    def expire_current_warning(self):
-        self.warning_level_update_on = tz_util.now() - timedelta(minutes=1)
-
     def decrease_warning_level(self):
+        raise NotImplementedError("Not finished!")
         if self.get_current_warning_level():
-            self.expire_current_warning()
             self.save(force_update=True)
 
     def is_warning_active(self, warning):
