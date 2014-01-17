@@ -8,23 +8,64 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'Warn'
+        db.create_table(u'misago_warn', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='warning_set', to=orm['misago.User'])),
+            ('reason', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('reason_preparsed', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('given_on', self.gf('django.db.models.fields.DateTimeField')()),
+            ('giver', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='warnings_given_set', null=True, on_delete=models.SET_NULL, to=orm['misago.User'])),
+            ('giver_username', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('giver_slug', self.gf('django.db.models.fields.SlugField')(max_length=255)),
+            ('giver_ip', self.gf('django.db.models.fields.GenericIPAddressField')(max_length=39)),
+            ('giver_agent', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('canceled', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('canceled_on', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
+            ('canceler', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='warnings_canceled_set', null=True, on_delete=models.SET_NULL, to=orm['misago.User'])),
+            ('canceler_username', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
+            ('canceler_slug', self.gf('django.db.models.fields.SlugField')(max_length=255, null=True, blank=True)),
+            ('canceler_ip', self.gf('django.db.models.fields.GenericIPAddressField')(max_length=39, null=True, blank=True)),
+            ('canceler_agent', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
+        ))
+        db.send_create_signal('misago', ['Warn'])
+
         # Adding model 'WarnLevel'
         db.create_table(u'misago_warnlevel', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('slug', self.gf('django.db.models.fields.SlugField')(max_length=255)),
             ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('warning_level', self.gf('django.db.models.fields.PositiveIntegerField')(default=1)),
+            ('warning_level', self.gf('django.db.models.fields.PositiveIntegerField')(default=1, db_index=True)),
             ('expires_after_minutes', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
-            ('inhibit_posting_threads', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
-            ('inhibit_posting_replies', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+            ('restrict_posting_replies', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+            ('restrict_posting_threads', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
         ))
         db.send_create_signal('misago', ['WarnLevel'])
 
+        # Adding field 'User.warning_level'
+        db.add_column(u'misago_user', 'warning_level',
+                      self.gf('django.db.models.fields.PositiveIntegerField')(default=0),
+                      keep_default=False)
+
+        # Adding field 'User.warning_level_update_on'
+        db.add_column(u'misago_user', 'warning_level_update_on',
+                      self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True),
+                      keep_default=False)
+
 
     def backwards(self, orm):
+        # Deleting model 'Warn'
+        db.delete_table(u'misago_warn')
+
         # Deleting model 'WarnLevel'
         db.delete_table(u'misago_warnlevel')
+
+        # Deleting field 'User.warning_level'
+        db.delete_column(u'misago_user', 'warning_level')
+
+        # Deleting field 'User.warning_level_update_on'
+        db.delete_column(u'misago_user', 'warning_level_update_on')
 
 
     models = {
@@ -476,28 +517,34 @@ class Migration(SchemaMigration):
         },
         'misago.warn': {
             'Meta': {'object_name': 'Warn'},
-            'agent': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'canceled': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'date': ('django.db.models.fields.DateTimeField', [], {}),
+            'canceled_on': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'canceler': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'warnings_canceled_set'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['misago.User']"}),
+            'canceler_agent': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
+            'canceler_ip': ('django.db.models.fields.GenericIPAddressField', [], {'max_length': '39', 'null': 'True', 'blank': 'True'}),
+            'canceler_slug': ('django.db.models.fields.SlugField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
+            'canceler_username': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
+            'given_on': ('django.db.models.fields.DateTimeField', [], {}),
             'giver': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'warnings_given_set'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['misago.User']"}),
-            'giver_name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'giver_agent': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'giver_ip': ('django.db.models.fields.GenericIPAddressField', [], {'max_length': '39'}),
             'giver_slug': ('django.db.models.fields.SlugField', [], {'max_length': '255'}),
+            'giver_username': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'ip': ('django.db.models.fields.GenericIPAddressField', [], {'max_length': '39'}),
-            'reason_team': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'reason_user': ('django.db.models.fields.TextField', [], {}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['misago.User']"})
+            'reason': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'reason_preparsed': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'warning_set'", 'to': "orm['misago.User']"})
         },
         'misago.warnlevel': {
             'Meta': {'object_name': 'WarnLevel'},
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'expires_after_minutes': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'inhibit_posting_replies': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'inhibit_posting_threads': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'restrict_posting_replies': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
+            'restrict_posting_threads': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length': '255'}),
-            'warning_level': ('django.db.models.fields.PositiveIntegerField', [], {'default': '1'})
+            'warning_level': ('django.db.models.fields.PositiveIntegerField', [], {'default': '1', 'db_index': 'True'})
         },
         'misago.watchedthread': {
             'Meta': {'object_name': 'WatchedThread'},
