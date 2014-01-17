@@ -6,7 +6,7 @@
 Welcome to Misago's documentation!
 ==================================
 
-This documentation is only placeholder.
+Real documentation is being writen on "future" branch as progress is made in Misago's codebase cleanup.
 
-Real documentation is being writen on "cleanup" branch as progress is made in Misago's refactoring.
+This documentation can be read on `ReadTheDocs <http://misago.readthedocs.org>`_.
 
