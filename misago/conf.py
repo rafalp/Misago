@@ -29,11 +29,14 @@ class MisagoSettings(object):
     def setting(self, key):
         try:
             try:
-                return self.settings()[key]
-            except KeyError:
                 if self.is_safe:
                     return getattr(dj_settings, key)
                 else:
+                    raise AttributeError()
+            except AttributeError:
+                try:
+                    return self.settings()[key]
+                except KeyError:
                     raise AttributeError()
         except AttributeError:
             raise Exception(u"Requested setting \"%s\" could not be found." % key)

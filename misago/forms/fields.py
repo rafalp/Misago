@@ -30,6 +30,7 @@ class ForumMultipleChoiceField(TreeNodeMultipleChoiceField):
         level = getattr(obj, obj._mptt_meta.level_attr)
         return mark_safe(conditional_escape(self.level_indicator) * (level - 1))
 
+
 class ReCaptchaField(fields.CharField):
     widget = ReCaptchaWidget
     api_error = None

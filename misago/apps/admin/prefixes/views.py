@@ -57,6 +57,9 @@ class New(FormWidget):
     def get_edit_link(self, model):
         return reverse('admin_threads_prefixes_edit', model)
 
+    def get_form(self, target):
+        return self.form()
+
     def submit_form(self, form, target):
         new_prefix = ThreadPrefix(
                                   name=form.cleaned_data['name'],
@@ -92,6 +95,9 @@ class Edit(FormWidget):
                 'style': model.style,
                 'forums': model.forums.all(),
                 }
+
+    def get_form(self, target):
+        return self.form()
 
     def submit_form(self, form, target):
         target.name = form.cleaned_data['name']
