@@ -35,8 +35,8 @@ class UserRegisterForm(Form):
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)
         help_text_formats = {
-                             'min': settings_lazy.username_length_min,
-                             'max': settings_lazy.username_length_max,
+                             'min': settings.username_length_min,
+                             'max': settings.username_length_max,
                             }
         self.fields['username'].help_text = _(
             "Your displayed username. Between %(min)s and %(max)s characters, only letters and digits are allowed.") % help_text_formats
