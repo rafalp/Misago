@@ -20,8 +20,12 @@ class NewThreadBaseView(PostingBaseView):
 
     def post_form(self, form):
         now = timezone.now()
-        moderation = (not self.request.acl.threads.acl[self.forum.pk]['can_approve']
-                      and self.request.acl.threads.acl[self.forum.pk]['can_start_threads'] == 1)
+
+        if self.force_moderation():
+            moderation = True
+        else:
+            moderation = (not self.request.acl.threads.acl[self.forum.pk]['can_approve']
+                          and self.request.acl.threads.acl[self.forum.pk]['can_start_threads'] == 1)
 
         # Create empty thread
         self.thread = Thread.objects.create(

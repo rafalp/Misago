@@ -29,8 +29,12 @@ class NewReplyBaseView(PostingBaseView):
 
     def post_form(self, form):
         now = timezone.now()
-        moderation = (not self.request.acl.threads.acl[self.forum.pk]['can_approve']
-                      and self.request.acl.threads.acl[self.forum.pk]['can_start_threads'] == 1)
+
+        if self.force_moderation():
+            moderation = True
+        else:
+            moderation = (not self.request.acl.threads.acl[self.forum.pk]['can_approve']
+                          and self.request.acl.threads.acl[self.forum.pk]['can_start_threads'] == 1)
 
         self.thread.previous_last = self.thread.last_post
         self.md, post_preparsed = post_markdown(form.cleaned_data['post'])

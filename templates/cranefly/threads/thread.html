@@ -556,7 +556,7 @@
     {% endif %}
   </div>
 
-  {% if user.is_authenticated() and acl.threads.can_reply(forum, thread) %}
+  {% if user.is_authenticated() and acl.threads.can_reply(forum, thread) and not user.warning_level_disallows_writing_replies %}
   <div class="thread-quick-reply">
     <form action="{{ url('thread_reply', thread=thread.pk, slug=thread.slug) }}"{% if acl.threads.can_upload_attachments(forum) %} enctype="multipart/form-data"{% endif %} method="post">
       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
@@ -627,7 +627,7 @@
     });
     {% endif %}
   </script>
-  {% if user.is_authenticated() and acl.threads.can_reply(forum, thread) %}
+  {% if user.is_authenticated() and acl.threads.can_reply(forum, thread) and not user.warning_level_disallows_writing_replies %}
   {{ editor.js() }}
   {% endif %}
 {%- endblock %}

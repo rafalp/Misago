@@ -3,9 +3,10 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 from misago import messages
+from misago.acl.exceptions import ACLError403
 from misago.apps.threads.forms import NewThreadForm, EditThreadForm
 from misago.apps.threadtype.posting import NewThreadBaseView, EditThreadBaseView, NewReplyBaseView, EditReplyBaseView
-from misago.models import Forum, Thread, Post, Poll, PollOption
+from misago.models import Forum, Thread, Post, Poll, PollOption, WarnLevel
 from misago.apps.threads.mixins import TypeMixin
 
 
@@ -86,6 +87,13 @@ class NewThreadView(NewThreadBaseView, TypeMixin, PollFormMixin, PrefixFormMixin
     def set_forum_context(self):
         self.forum = Forum.objects.get(pk=self.kwargs.get('forum'), type='forum')
 
+    def check_permissions(self):
+        if self.request.user.warning_level_disallows_writing_threads:
+            raise ACLError403(_("You can't start new threads due to your warning level."))
+
+    def force_moderation(self):
+        return self.request.user.warning_level_moderate_new_threads
+
     def after_form(self, form):
         if form.cleaned_data.get('poll_question'):
             self.create_poll(form)
@@ -123,6 +131,13 @@ class EditThreadView(EditThreadBaseView, TypeMixin, PollFormMixin, PrefixFormMix
 
 
 class NewReplyView(NewReplyBaseView, TypeMixin):
+    def check_permissions(self):
+        if self.request.user.warning_level_disallows_writing_replies:
+            raise ACLError403(_("You can't reply to threads due to your warning level."))
+
+    def force_moderation(self):
+        return self.request.user.warning_level_moderate_new_replies
+
     def response(self):
         if self.post.moderated:
             messages.success(self.request, _("Your reply has been posted. It will be hidden from other members until moderator reviews it."), 'threads_%s' % self.post.pk)

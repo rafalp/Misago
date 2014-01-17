@@ -25,6 +25,9 @@ class PostingBaseView(ViewBase):
         if self.forum.level:
             self.parents = Forum.objects.forum_parents(self.forum.pk)
 
+    def force_moderation(self):
+        return False
+
     def record_edit(self, form, old_name, old_post):
         self.post.edits += 1
         self.post.edit_user = self.request.user

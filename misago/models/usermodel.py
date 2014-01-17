@@ -616,6 +616,42 @@ class User(models.Model):
                     return True
         return False
 
+    @property
+    def warning_level_moderate_new_threads(self):
+        warning_level = self.get_current_warning_level()
+        if warning_level:
+            restriction_level = warning_level.restrict_posting_threads
+            return restriction_level == warning_level.RESTRICT_MODERATOR_REVIEW
+        else:
+            return False
+
+    @property
+    def warning_level_disallows_writing_threads(self):
+        warning_level = self.get_current_warning_level()
+        if warning_level:
+            restriction_level = warning_level.restrict_posting_threads
+            return restriction_level == warning_level.RESTRICT_DISALLOW
+        else:
+            return False
+
+    @property
+    def warning_level_moderate_new_replies(self):
+        warning_level = self.get_current_warning_level()
+        if warning_level:
+            restriction_level = warning_level.restrict_posting_replies
+            return restriction_level == warning_level.RESTRICT_MODERATOR_REVIEW
+        else:
+            return False
+
+    @property
+    def warning_level_disallows_writing_replies(self):
+        warning_level = self.get_current_warning_level()
+        if warning_level:
+            restriction_level = warning_level.restrict_posting_replies
+            return restriction_level == warning_level.RESTRICT_DISALLOW
+        else:
+            return False
+
     def timeline(self, qs, length=100):
         posts = {}
         now = tz_util.now()
