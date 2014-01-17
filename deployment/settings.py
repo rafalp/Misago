@@ -135,6 +135,9 @@ EMAIL_HOST_PASSWORD = ''
 # Use TLS encryption
 EMAIL_USE_TLS = False
 
+# This address is used in "from" field of emails sent by site
+DEFAULT_FROM_EMAIL = ''
+
 # Screamer Configuration
 # Screamer is special feature that sends email to users listed under ADMINS when application
 # erros. First setting is origin of error emails, while second is message title prefix that
