@@ -31,6 +31,12 @@ def load():
                         'forums': {3: 1, 5: 1, 6: 1},
                         'can_destroy_user_newer_than': 14,
                         'can_destroy_users_with_less_posts_than': 10,
+                        'can_warn_members': True,
+                        'can_see_other_members_warns': True,
+                        'can_cancel_warnings': 2,
+                        'can_cancel_warnings_newer_than': 0,
+                        'can_delete_warnings': True,
+                        'can_be_warned': False,
                        }
     role.save(force_insert=True)
 
@@ -59,6 +65,12 @@ def load():
                         'forums': {3: 1, 5: 1, 6: 1},
                         'can_destroy_user_newer_than': 5,
                         'can_destroy_users_with_less_posts_than': 10,
+                        'can_warn_members': True,
+                        'can_see_other_members_warns': True,
+                        'can_cancel_warnings': 1,
+                        'can_cancel_warnings_newer_than': 30,
+                        'can_delete_warnings': False,
+                        'can_be_warned': False,
                        }
     role.save(force_insert=True)
 
