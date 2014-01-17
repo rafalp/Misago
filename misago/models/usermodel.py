@@ -13,6 +13,7 @@ from django.template import RequestContext
 from django.utils import timezone as tz_util
 from django.utils.translation import ugettext_lazy as _
 from misago.acl.builder import acl
+from misago.apps.profiles.warnings.warningstracker import WarningsTracker
 from misago.conf import settings
 from misago.monitor import monitor, UpdatingMonitor
 from misago.signals import delete_user_content, rename_user, sync_user_profile
@@ -99,7 +100,7 @@ class UserManager(models.Manager):
         return new_user
 
     def get_by_email(self, email):
-        return self.get(email_hash=hashlib.md5(email).hexdigest())
+        return self.get(email_hash=hashlib.md5(email.lower()).hexdigest())
 
     def filter_stats(self, start, end):
         return self.filter(join_date__gte=start).filter(join_date__lte=end)
@@ -173,6 +174,8 @@ class User(models.Model):
     roles = models.ManyToManyField('Role')
     is_team = models.BooleanField(default=False)
     acl_key = models.CharField(max_length=12, null=True, blank=True)
+    warning_level = models.PositiveIntegerField(default=0)
+    warning_level_update_on = models.DateTimeField(null=True, blank=True)
 
     objects = UserManager()
 
@@ -431,8 +434,8 @@ class User(models.Model):
         self.save(update_fields=('acl_key',))
         return self.acl_key
 
-    def acl(self, request):
-        return acl(request, self)
+    def acl(self):
+        return acl(self)
 
     @property
     def avatar_crop(self):
@@ -504,9 +507,9 @@ class User(models.Model):
 
         # Set message author
         if settings.board_name:
-            sender = '%s <%s>' % (settings.board_name.replace("<", "(").replace(">", ")"), settings.EMAIL_HOST_USER)
+            sender = '%s <%s>' % (settings.board_name.replace("<", "(").replace(">", ")"), settings.DEFAULT_FROM_EMAIL)
         else:
-            sender = settings.EMAIL_HOST_USER
+            sender = settings.DEFAULT_FROM_EMAIL
 
         # Build message and add it to queue
         email = EmailMultiAlternatives(subject, email_text, sender, [recipient])
@@ -536,6 +539,118 @@ class User(models.Model):
             self.last_sync = tz_util.now()
             return True
         return False
+
+    def is_warning_level_expired(self):
+        if self.warning_level and self.warning_level_update_on:
+            return tz_util.now() > self.warning_level_update_on
+        return False
+
+    def update_expired_warning_level(self):
+        self.warning_level -= 1
+
+        try:
+            from misago.models import WarnLevel
+            warning_levels = WarnLevel.objects.get_levels()
+            new_warning_level = warning_levels[self.warning_level]
+            if new_warning_level.expires_after_minutes:
+                self.warning_level_update_on -= timedelta(
+                    minutes=new_warning_level.expires_after_minutes)
+            else:
+                self.warning_level_update_on = None
+        except KeyError:
+            # Break expiration chain so infinite loop won't happen
+            # This should only happen if your warning level is 0, but
+            # will also keep app responsive if data corruption happens
+            self.warning_level_update_on = None
+
+    def get_warning_level(self):
+        if self.warning_level:
+            from misago.models import WarnLevel
+            return WarnLevel.objects.get_level(
+                self.warning_level)
+        else:
+            return None
+
+    def get_current_warning_level(self):
+        if self.is_warning_level_expired():
+            while self.update_expired_warning_level():
+                self.update_warning_level()
+            self.save(force_update=True)
+
+        return self.get_warning_level()
+
+    def get_latest_activte_warning(self):
+        return self.warning_set.filter(canceled=False).order_by('-id')[:1][0]
+
+    def freeze_warning_level(self):
+        self.warning_level_update_on = tz_util.now() + timedelta(days=1)
+
+    def set_warning_level_update_date(self, warning, warning_level):
+        if warning_level.expires_after_minutes:
+            self.warning_level_update_on = warning.given_on + timedelta(
+                minutes=warning_level.expires_after_minutes)
+        else:
+            self.warning_level_update_on = None
+
+    def decrease_warning_level(self):
+        if self.get_current_warning_level():
+            self.warning_level -= 1
+            if self.warning_level:
+                self.freeze_warning_level()
+                latest_warning = self.get_latest_activte_warning()
+                new_warning_level = self.get_current_warning_level()
+                self.set_warning_level_update_date(
+                    latest_warning, new_warning_level)
+                self.get_current_warning_level()
+            else:
+                self.warning_level_update_on = None
+            self.save(force_update=True)
+
+    def is_warning_active(self, warning):
+        warning_level = self.get_warning_level()
+        warnings_tracker = WarningsTracker(self.warning_level)
+
+        for db_warning in self.warning_set.order_by('-pk').iterator():
+            if warnings_tracker.is_warning_active(db_warning):
+                if warning.pk == db_warning.pk:
+                    return True
+        return False
+
+    @property
+    def warning_level_moderate_new_threads(self):
+        warning_level = self.get_current_warning_level()
+        if warning_level:
+            restriction_level = warning_level.restrict_posting_threads
+            return restriction_level == warning_level.RESTRICT_MODERATOR_REVIEW
+        else:
+            return False
+
+    @property
+    def warning_level_disallows_writing_threads(self):
+        warning_level = self.get_current_warning_level()
+        if warning_level:
+            restriction_level = warning_level.restrict_posting_threads
+            return restriction_level == warning_level.RESTRICT_DISALLOW
+        else:
+            return False
+
+    @property
+    def warning_level_moderate_new_replies(self):
+        warning_level = self.get_current_warning_level()
+        if warning_level:
+            restriction_level = warning_level.restrict_posting_replies
+            return restriction_level == warning_level.RESTRICT_MODERATOR_REVIEW
+        else:
+            return False
+
+    @property
+    def warning_level_disallows_writing_replies(self):
+        warning_level = self.get_current_warning_level()
+        if warning_level:
+            restriction_level = warning_level.restrict_posting_replies
+            return restriction_level == warning_level.RESTRICT_DISALLOW
+        else:
+            return False
 
     def timeline(self, qs, length=100):
         posts = {}

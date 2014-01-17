@@ -1,6 +1,5 @@
 from django.conf import settings as dj_settings
 from django.core.cache import cache
-from misago.models import Setting
 from misago.thread import local
 
 _thread_local = local()
@@ -8,6 +7,7 @@ _thread_local = local()
 def load_settings():
     settings = cache.get('settings', {})
     if not settings:
+        from misago.models import Setting
         for i in Setting.objects.all():
             settings[i.pk] = i.value
         cache.set('settings', settings)
@@ -29,11 +29,14 @@ class MisagoSettings(object):
     def setting(self, key):
         try:
             try:
-                return self.settings()[key]
-            except KeyError:
                 if self.is_safe:
                     return getattr(dj_settings, key)
                 else:
+                    raise AttributeError()
+            except AttributeError:
+                try:
+                    return self.settings()[key]
+                except KeyError:
                     raise AttributeError()
         except AttributeError:
             raise Exception(u"Requested setting \"%s\" could not be found." % key)

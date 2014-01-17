@@ -1,0 +1,85 @@
+{% extends "cranefly/layout.html" %}
+{% import "forms.html" as form_theme with context %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=warned_user.username, parent=_('Warn User')) }}{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="span6 offset3">
+    <div class="form-container container-horizontal">
+
+      <div class="form-header">
+        <h1>{% trans user=warned_user.username %}Warn User: {{ user }}{% endtrans %}</h1>
+      </div>
+
+      <form action="{{ url('warn_user', user=warned_user.pk, slug=warned_user.username_slug) }}" method="post">
+        <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+        <input type="hidden" name="origin" value="warning-form">
+        {% if retreat %}
+        <input type="hidden" name="retreat" value="{{ retreat }}">
+        {% endif %}
+        <div class="form-fields">
+
+          <fieldset>
+            {{ form_theme.row(form.reason, attrs={'class': 'span6', 'rows': 4}) }}
+          </fieldset>
+
+          <hr>
+
+          <h4>{% trans next_level_name=wrap_level_name(next_warning_level) %}Next Warning Level: {{ next_level_name }}{% endtrans %}</h4>
+          {% if next_warning_level.description %}
+          <p>{{ next_warning_level.description }}</p>
+          {% endif %}
+
+          <table class="table">
+            <tr>
+              <th class="text-right">{% trans %}Expires After:{% endtrans %}</th>
+              <td>{{ level_restriction_expires(next_warning_level.expires_after_minutes) }}</td>
+            </tr>
+            <tr>
+              <th class="text-right">{% trans %}Posting Replies Restriction:{% endtrans %}</th>
+              <td>{{ level_restriction_legend(next_warning_level.restrict_posting_replies) }}</td>
+            </tr>
+            <tr>
+              <th class="text-right">{% trans %}Posting Threads Restriction:{% endtrans %}</th>
+              <td>{{ level_restriction_legend(next_warning_level.restrict_posting_threads) }}</td>
+            </tr>
+          </table>
+
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">{% trans %}Warn User{% endtrans %}</button>
+          {% if retreat %}
+          <a href="{{ retreat }}" class="btn">{% trans %}Cancel{% endtrans %}</a>
+          {% endif %}
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{# Macros #}
+{% macro wrap_level_name(warning_level) -%}
+<strong>{{ warning_level.name }}</strong>
+{%- endmacro %}
+
+{% macro level_restriction_expires(level_expires) -%}
+<span class="icon-clock"></span> {% if level_expires > 0 %}
+{{ level_expires|timeamount|capfirst }}
+{% else %}
+{% trans %}Never{% endtrans %}
+{% endif %}
+{%- endmacro %}
+
+{% macro level_restriction_legend(restriction) -%}
+{% if restriction == 0 %}
+<div class="text-success"><span class="icon-ok"></span> {% trans %}No{% endtrans %}</div>
+{% elif restriction == 1 %}
+<div class="text-info"><span class="icon-eye-open"></span> {% trans %}Moderator Review{% endtrans %}</div>
+{% elif restriction == 2 %}
+<div class="text-error"><span class="icon-remove"></span> {% trans %}Forbidden{% endtrans %}</div>
+{% endif %}
+{%- endmacro %}

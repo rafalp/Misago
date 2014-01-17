@@ -53,19 +53,19 @@ class ACL(object):
                 yield self.__dict__[attr]
 
 
-def acl(request, user):
+def acl(user):
     acl_key = user.make_acl_key()
     try:
         user_acl = cache.get(acl_key)
         if user_acl.version != monitor['acl_version']:
             raise InvalidCacheBackendError()
     except (AttributeError, InvalidCacheBackendError):
-        user_acl = build_acl(request, user.get_roles())
+        user_acl = build_acl(user.get_roles())
         cache.set(acl_key, user_acl, 2592000)
     return user_acl
 
 
-def build_acl(request, roles):
+def build_acl(roles):
     new_acl = ACL(monitor['acl_version'])
     forums = Forum.objects.get(special='root').get_descendants().order_by('lft')
     perms = []

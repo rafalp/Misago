@@ -1,0 +1,26 @@
+{% extends "cranefly/layout.html" %}
+{% import "forms.html" as form_theme with context %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(title=warned_user.username, parent=_('Warn User')) }}{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="span6 offset3">
+    <div class="form-container container-horizontal">
+
+      <div class="form-header">
+        <h1>{% trans user=warned_user.username %}Warn User: {{ user }}{% endtrans %}</h1>
+      </div>
+
+      <div class="form-fields">
+        <p>{% trans %}This user warning level is already at maximum and can not be increased any further.{% endtrans %}</p>
+        {% if retreat %}
+        <p><a href="{{ retreat }}">{% trans %}Go Back{% endtrans %}</a></p>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -30,7 +30,8 @@
     {{ editor.editor(form.signature, lang_save_signature(),
       hide_links=(not acl.usercp.allow_signature_links()),
       hide_images=(not acl.usercp.allow_signature_images()),
-      hide_hr=True) }}
+      hide_hr=True,
+      hide_attachments=True,) }}
   </form>
 
 </div>

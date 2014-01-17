@@ -108,6 +108,9 @@ class ThreadModeration(object):
     def thread_action_undelete(self):
         # Update first post in thread
         self.thread.start_post.deleted = False
+        self.thread.start_post.edit_user = self.request.user
+        self.thread.start_post.edit_user_name = self.request.user.username
+        self.thread.start_post.edit_user_slug = self.request.user.username_slug
         self.thread.start_post.save(force_update=True)
         # Update thread
         self.thread.sync()
@@ -129,6 +132,9 @@ class ThreadModeration(object):
     def thread_action_soft(self):
         # Update first post in thread
         self.thread.start_post.deleted = True
+        self.thread.start_post.edit_user = self.request.user
+        self.thread.start_post.edit_user_name = self.request.user.username
+        self.thread.start_post.edit_user_slug = self.request.user.username_slug
         self.thread.start_post.save(force_update=True)
         # Update thread
         self.thread.sync()

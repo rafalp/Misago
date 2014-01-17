@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import AdminAction
-from misago.models import Ban, Newsletter, PruningPolicy, Rank, User
+from misago.models import Ban, Newsletter, PruningPolicy, Rank, User, WarnLevel
 
 ADMIN_ACTIONS = (
     AdminAction(
@@ -62,6 +62,35 @@ ADMIN_ACTIONS = (
                          url(r'^new/$', 'New', name='admin_ranks_new'),
                          url(r'^edit/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Edit', name='admin_ranks_edit'),
                          url(r'^delete/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Delete', name='admin_ranks_delete'),
+                     ),
+                ),
+    AdminAction(
+                section='users',
+                id='warning_levels',
+                name=_("Warning Levels"),
+                help=_("Define penalties for different warning levels."),
+                icon='exclamation-sign',
+                model=WarnLevel,
+                actions=[
+                         {
+                          'id': 'list',
+                          'name': _("Browse Warning Levels"),
+                          'help': _("Browse all existing warning levels"),
+                          'link': 'admin_warning_levels'
+                          },
+                         {
+                          'id': 'new',
+                          'name': _("Set New Warning Level"),
+                          'help': None,
+                          'link': 'admin_warning_levels_new'
+                          },
+                         ],
+                link='admin_warning_levels',
+                urlpatterns=patterns('misago.apps.admin.warninglevels.views',
+                         url(r'^$', 'List', name='admin_warning_levels'),
+                         url(r'^new/$', 'New', name='admin_warning_levels_new'),
+                         url(r'^edit/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Edit', name='admin_warning_levels_edit'),
+                         url(r'^delete/(?P<slug>([a-z0-9]|-)+)-(?P<target>\d+)/$', 'Delete', name='admin_warning_levels_delete'),
                      ),
                 ),
     AdminAction(

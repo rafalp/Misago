@@ -77,7 +77,7 @@ def auth_remember(request, ip):
         cookie_token = request.COOKIES[cookie_token]
         if len(cookie_token) != 42:
             raise AuthException()
-            
+
         try:
             token_rk = Token.objects.select_related().get(pk=cookie_token)
         except Token.DoesNotExist:
@@ -108,7 +108,7 @@ def auth_admin(request, email, password):
     Admin auth - check ACP permissions
     """
     user = get_user(email, password, True)
-    if not user.is_god() and not user.acl(request).special.is_admin():
+    if not user.is_god() and not user.acl().acp.is_admin():
         raise AuthException(NOT_ADMIN, _("Your account does not have admin privileges."))
     return user;
 

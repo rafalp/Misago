@@ -22,6 +22,7 @@ urlpatterns = patterns('misago.apps',
     url(r'^popular/(?P<page>[1-9]([0-9]+)?)/$', 'popularthreads.popular_threads', name="popular_threads"),
     url(r'^new/$', 'newthreads.new_threads', name="new_threads"),
     url(r'^new/(?P<page>[1-9]([0-9]+)?)/$', 'newthreads.new_threads', name="new_threads"),
+    url(r'^warn-user/(?P<slug>\w+)-(?P<user>\d+)/', 'warnuser.views.warn_user', name="warn_user"),
 )
 
 urlpatterns += patterns('',

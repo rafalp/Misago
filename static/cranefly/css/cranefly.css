@@ -978,9 +978,23 @@ a.btn-link:hover,a.btn-link:active,a.btn-link:focus{color:#333;text-decoration:n
 .user-profile .user-details .label{font-size:14px}
 .user-profile .user-list .user-cell{overflow:auto}.user-profile .user-list .user-cell .user-avatar{float:left}.user-profile .user-list .user-cell .user-avatar img{border-radius:3px;width:36px;height:36px}
 .user-profile .user-list .user-cell .user-name:link,.user-profile .user-list .user-cell .user-name:active,.user-profile .user-list .user-cell .user-name:visited,.user-profile .user-list .user-cell .user-name:hover{display:block;margin:0;margin-left:43px;margin-top:9.1px;color:#333;font-size:23.8px}
+.user-profile .warning-level{border:1px solid #555;border-radius:5px;margin-bottom:20px;padding:7px 14px;overflow:auto}.user-profile .warning-level h3,.user-profile .warning-level .lead{margin:0}
+.user-profile .warning-level.warning-active{border-color:#cf402e;color:#cf402e}.user-profile .warning-level.warning-active h3{font-size:21px}
+.user-profile .warning-level.warning-active .lead{font-size:17.5px}
+.user-profile .warning-level.warning-active .warning-expiration{clear:both;margin-top:10px;padding:0;font-size:11.9px}
+.user-profile .warning-level.warning-clean{border-color:#46a546;color:#46a546}.user-profile .warning-level.warning-clean h3{float:left;margin:0;margin-right:14px;padding:2.8px 14px}
+.user-profile .warning-level.warning-clean .lead{float:left;margin:0;padding:7px 0}
 .user-profile .content-list .media{overflow:auto}.user-profile .content-list .media .media-object{border-radius:3px;width:52px;height:52px}
 .user-profile .content-list .media .media-body{margin-left:66px}.user-profile .content-list .media .media-body .post-preview:link,.user-profile .content-list .media .media-body .post-preview:active,.user-profile .content-list .media .media-body .post-preview:visited,.user-profile .content-list .media .media-body .post-preview:hover{display:block;margin-top:7px;color:#333;font-size:16.8px;text-decoration:none}
 .user-profile .content-list .media .media-body .media-footer{margin:0;color:#999;font-size:10.5px;font-weight:normal}.user-profile .content-list .media .media-body .media-footer a{color:#555}
+.user-profile .content-list.user-warnings .media{margin-bottom:-6px}.user-profile .content-list.user-warnings .media .warning-icon{width:60px;font-size:35px;text-align:center}.user-profile .content-list.user-warnings .media .warning-icon .warning-active,.user-profile .content-list.user-warnings .media .warning-icon .warning-expired,.user-profile .content-list.user-warnings .media .warning-icon .warning-canceled{margin-bottom:-3px;position:relative;top:3px}
+.user-profile .content-list.user-warnings .media .warning-icon .warning-active{color:#cf402e}
+.user-profile .content-list.user-warnings .media .warning-icon .warning-expired{color:#999}
+.user-profile .content-list.user-warnings .media .warning-icon .warning-canceled{color:#999}
+.user-profile .content-list.user-warnings .media .media-body .warning-reason>:first-child{margin-top:0;padding-top:0}
+.user-profile .content-list.user-warnings .media .media-body .warning-reason>:last-child{margin-bottom:0;padding-bottom:0}
+.user-profile .content-list.user-warnings .media .media-footer form,.user-profile .content-list.user-warnings .media .media-footer p{float:left;margin:0}
+.user-profile .content-list.user-warnings .media .media-footer form{padding:0;margin-right:14px}
 .forum-subforums-list{background-color:#fff;border:1px solid #d5d5d5;border-radius:2px;-webkit-box-shadow:0 0 0 3px #eee;-moz-box-shadow:0 0 0 3px #eee;box-shadow:0 0 0 3px #eee;margin-bottom:20px}.forum-subforums-list .header{background-color:#fbfbfb;border:1px solid #d5d5d5;border-radius:2px 2px 0 0;margin:-1px;margin-bottom:0;padding:3.966666666666667px 9.9px}.forum-subforums-list .header h2{margin:0;padding:0;color:#333;font-size:11.9px;font-weight:bold;line-height:20px;text-align:left}.forum-subforums-list .header h2 small{margin-left:7px;color:#999;font-size:11.9px}
 .forum-subforums-list .forum{border-bottom:1px solid #d5d5d5;height:21px;overflow:visible;padding:14.75px 9.9px}.forum-subforums-list .forum.last{border-bottom:none}
 .forum-subforums-list .forum .forum-icon{float:left;position:relative;bottom:1px;width:36px;color:#d5d5d5;font-size:24px;text-align:center}.forum-subforums-list .forum .forum-icon.forum-icon-new{color:#cf402e}

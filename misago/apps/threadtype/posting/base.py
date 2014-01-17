@@ -25,6 +25,9 @@ class PostingBaseView(ViewBase):
         if self.forum.level:
             self.parents = Forum.objects.forum_parents(self.forum.pk)
 
+    def force_moderation(self):
+        return False
+
     def record_edit(self, form, old_name, old_post):
         self.post.edits += 1
         self.post.edit_user = self.request.user
@@ -84,18 +87,20 @@ class PostingBaseView(ViewBase):
         self.email_watchers(notified_users)
 
     def watch_thread(self):
-        if self.request.user.subscribe_start:
-            try:
-                WatchedThread.objects.get(user=self.request.user, thread=self.thread)
-            except WatchedThread.DoesNotExist:
-                WatchedThread.objects.create(
-                                           user=self.request.user,
-                                           forum=self.forum,
-                                           thread=self.thread,
-                                           starter_id=self.thread.start_poster_id,
-                                           last_read=timezone.now(),
-                                           email=(self.request.user.subscribe_start == 2),
-                                           )
+        pass
+
+    def start_watching_thread(self, email_notifications=False):
+        try:
+            WatchedThread.objects.get(user=self.request.user, thread=self.thread)
+        except WatchedThread.DoesNotExist:
+            WatchedThread.objects.create(
+                                       user=self.request.user,
+                                       forum=self.forum,
+                                       thread=self.thread,
+                                       starter_id=self.thread.start_poster_id,
+                                       last_read=timezone.now(),
+                                       email=email_notifications,
+                                       )
 
     def make_attachments_token(self):
         if self.post:

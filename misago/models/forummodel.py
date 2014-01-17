@@ -35,8 +35,8 @@ class ForumManager(TreeManager):
 
     def populate_tree(self, force=False):
         if not self.forums_tree:
-            self.forums_tree = cache.get('forums_tree')
-        if not self.forums_tree or force:
+            self.forums_tree = cache.get('forums_tree', 'nada')
+        if self.forums_tree == 'nada' or force:
             self.forums_tree = {}
             for forum in Forum.objects.order_by('lft'):
                 self.forums_tree[forum.pk] = forum

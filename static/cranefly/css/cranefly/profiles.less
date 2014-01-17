@@ -65,7 +65,7 @@
       svg {
         position: relative;
         left: 1px;
-      	height: 40px;
+        height: 40px;
         width: 100%;
       }
     }
@@ -123,6 +123,59 @@
     }
   }
 
+  .warning-level {
+    border: 1px solid @gray;
+    border-radius: @borderRadiusLarge;
+    margin-bottom: @baseLineHeight;
+    padding: (@baseFontSize / 2) @baseFontSize;
+    overflow: auto;
+
+    h3, .lead {
+      margin: 0px;
+    }
+
+    &.warning-active {
+      border-color: @red;
+
+      color: @red;
+
+      h3 {
+        font-size: @fontSizeLarge * 1.2;
+      }
+
+      .lead {
+        font-size: @fontSizeLarge;
+      }
+
+      .warning-expiration {
+        clear: both;
+        margin-top: @baseLineHeight / 2;
+        padding: 0px;
+
+        font-size: @fontSizeSmall;
+      }
+    }
+
+    &.warning-clean {
+      border-color: @green;
+
+      color: @green;
+
+      h3 {
+        float: left;
+        margin: 0px;
+        margin-right: @baseFontSize;
+        padding: (@baseFontSize / 5) @baseFontSize;
+      }
+
+      .lead {
+        float: left;
+        margin: 0px;
+        padding: (@baseFontSize / 2) 0px;
+      }
+    }
+  }
+
   .content-list {
     .media {
       overflow: auto;
@@ -156,6 +209,63 @@
 
           a {
             color: @gray;
+          }
+        }
+      }
+    }
+
+    &.user-warnings {
+      .media {
+        margin-bottom: -6px;
+
+        .warning-icon {
+          width: 60px;
+
+          font-size: @fontSizeLarge * 2;
+          text-align: center;
+
+          .warning-active, .warning-expired, .warning-canceled {
+            margin-bottom: -3px;
+            position: relative;
+            top: 3px;
+          }
+
+          .warning-active {
+            color: @red;
+          }
+
+          .warning-expired {
+            color: @grayLight;
+          }
+
+          .warning-canceled {
+            color: @grayLight;
+          }
+        }
+
+        .media-body {
+          .warning-reason {
+            &>:first-child {
+              margin-top: 0px;
+              padding-top: 0px;
+            }
+
+            &>:last-child {
+              margin-bottom: 0px;
+              padding-bottom: 0px;
+            }
+          }
+        }
+
+        .media-footer {
+          form, p {
+            float: left;
+            margin: 0px;
+          }
+
+          form {
+            padding: 0px;
+            margin-right: @baseFontSize;
           }
         }
       }

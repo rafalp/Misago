@@ -1,8 +1,8 @@
-from debug_toolbar.panels import DebugPanel
+from debug_toolbar.panels import Panel
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 
-class MisagoACLDebugPanel(DebugPanel):
+class MisagoACLDebugPanel(Panel):
     name = 'MisagoACL'
     has_content = True
 

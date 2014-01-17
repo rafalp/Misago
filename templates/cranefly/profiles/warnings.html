@@ -1,0 +1,147 @@
+{% extends "cranefly/profiles/profile.html" %}
+{% import "cranefly/macros.html" as macros with context %}
+
+{% block title %}{{ macros.page_title(_('Warnings'), profile.username) }}{% endblock %}
+
+{% block tab %}
+{% if warning_level %}
+<div class="warning-level warning-active">
+  <h3><i class="icon-warning-sign"></i> {{ warning_level.name }}</h3>
+  {% if warning_level.description %}
+  <p class="lead">{{ warning_level.description }}</p>
+  {% endif %}
+  {% if profile.warning_level_update_on %}
+  <p class="warning-expiration">{% trans expires=format_warning_expiration(profile.warning_level_update_on|reldate|lower) %}This warning level will expire {{ expires }}.{% endtrans %}</p>
+  {% else %}
+  <p class="warning-expiration">{% trans %}This warning level will not expire and will have to be decreased manually by forum team member.{% endtrans %}</p>
+  {% endif %}
+</div>
+{% else %}
+<div class="warning-level warning-clean">
+  {% if user.is_authenticated() and user.pk == profile.pk %}
+  <p class="lead"><i class="icon-ok"></i> {% trans username=profile.username %}{{ username }}, your account has no warning level set. Good job!{% endtrans %}</p>
+  {% else %}
+  <p class="lead"><i class="icon-ok"></i> {% trans username=profile.username %}{{ username }}'s account has no warning level set.{% endtrans %}</p>
+  {% endif %}
+</div>
+{% endif %}
+
+<h2>{% if items_total -%}
+    {%- trans count=items_total, total=items_total|intcomma, username=profile.username -%}
+    {{ username }} received one warning
+    {%- pluralize -%}
+    {{ username }} received {{ total }} warnings
+    {%- endtrans -%}
+    {%- else -%}
+    {% trans username=profile.username %}{{ username }} received no warnings{% endtrans %}
+    {%- endif %}</h2>
+
+{% if items_total %}
+<div class="content-list user-warnings">
+  {% for item in items %}
+  <div class="media">
+    <div class="pull-left">
+      <div class="warning-icon ">
+        {% if item.canceled %}
+        <i class="icon-ban-circle warning-canceled tooltip-top" title="{% trans %}This warning has been canceled.{% endtrans %}"></i>
+        {% elif warnings_tracker.is_warning_expired(item) %}
+        <i class="icon-warning-sign warning-expired tooltip-top" title="{% trans %}This warning has expired.{% endtrans %}"></i>
+        {% else %}
+        <i class="icon-warning-sign warning-active tooltip-top" title="{% trans %}This warning is in effect.{% endtrans %}"></i>
+        {% endif %}
+      </div>
+    </div>
+    <div class="media-body">
+      <div class="warning-reason">
+        {% if item.reason %}
+        {{ item.reason_preparsed|safe }}
+        {% else %}
+        <em>{% trans %}No warning reason was provided by warning giver.{% endtrans %}</em>
+        {% endif %}
+      </div>
+      <div class="media-footer">
+        {% if acl.warnings.can_cancel_warning(user, profile, item) and not warnings_tracker.is_warning_expired(item) %}
+        <form action="{{ url('user_warnings_cancel', user=profile.pk, username=profile.username_slug, warning=item.pk) }}" class="confirm-cancel" method="post">
+          <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+          <button type="submit" class="btn btn-mini"><i class="icon-ban-circle"></i> {% trans %}Cancel{% endtrans %}</button>
+        </form>
+        {% endif %}
+        {% if acl.warnings.can_delete_warnings() %}
+        <form action="{{ url('user_warnings_delete', user=profile.pk, username=profile.username_slug, warning=item.pk) }}" class="confirm-delete" method="post">
+          <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+          <button type="submit" class="btn btn-mini"><i class="icon-remove"></i> {% trans %}Delete{% endtrans %}</button>
+        </form>
+        {% endif %}
+        <p>
+        {% if acl.users.can_see_users_trails() %}
+        {% trans user=warning_giver(item), date=item.given_on|reltimesince|low, ip=item.giver_ip %}Given by {{ user }} {{ date }} from ip {{ ip }}.{% endtrans %}
+        {% else %}
+        {% trans user=warning_giver(item), date=item.given_on|reltimesince|low %}Given by {{ user }} {{ date }}.{% endtrans %}
+        {% endif %}
+        {% if item.canceled %}
+          {% if acl.users.can_see_users_trails() %}
+          {% trans user=warning_canceler(item), date=item.canceled_on|reltimesince|low, ip=item.canceler_ip %}Canceled by {{ user }} {{ date }} from ip {{ ip }}.{% endtrans %}
+          {% else %}
+          {% trans user=warning_canceler(item), date=item.canceled_on|reltimesince|low %}Canceled by {{ user }} {{ date }}.{% endtrans %}
+          {% endif %}
+        {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+  <hr>
+  {% endfor %}
+  {{ pager() }}
+</div>
+{% endif %}
+{% endblock %}
+
+
+{% block javascripts -%}{{ super() }}
+<script type="text/javascript">
+  $(function() {
+    $('.confirm-cancel').submit(function() {
+      var decision = confirm("{% trans %}Are you sure you want to cancel this warning?{% endtrans %}");
+      return decision;
+    });
+    $('.confirm-delete').submit(function() {
+      var decision = confirm("{% trans %}Are you sure you want to delete this warning?{% endtrans %}");
+      return decision;
+    });
+  });
+</script>
+{%- endblock %}
+
+
+{% macro format_warning_expiration(expires) %}
+<strong>{{ expires }}</strong>
+{% endmacro %}
+
+{% macro warning_giver(item) -%}
+{% if item.giver_id %}
+<a href="{{ url('user', user=item.giver_id, username=item.giver_slug) }}">{{ item.giver_username }}</a>
+{% else %}
+<strong>{{ item.giver_username }}</strong>
+{% endif %}
+{%- endmacro %}
+
+{% macro warning_canceler(item) -%}
+{% if item.canceler_id %}
+<a href="{{ url('user', user=item.canceler_id, username=item.canceler_slug) }}">{{ item.canceler_username }}</a>
+{% else %}
+<strong>{{ item.canceler_username }}</strong>
+{% endif %}
+{%- endmacro %}
+
+{% macro pager() -%}
+{% if pagination['total'] > 1 %}
+<div class="pagination">
+  <ul>
+    <li class="count">{{ macros.pager_label(pagination) }}</li>
+    {%- if pagination['prev'] > 1 %}<li><a href="{{ url('user_warnings', user=profile.id, username=profile.username_slug) }}" class="tooltip-top" title="{% trans %}Lastest Warnings{% endtrans %}"><i class="icon-chevron-left"></i> {% trans %}Latest{% endtrans %}</a></li>{% endif -%}
+    {%- if pagination['prev'] > 0 %}<li><a href="{%- if pagination['prev'] > 1 %}{{ url('user_warnings', user=profile.id, username=profile.username_slug, page=pagination['prev']) }}{% else %}{{ url('user_warnings', user=profile.id, username=profile.username_slug) }}{% endif %}" class="tooltip-top" title="{% trans %}Newer Warnings{% endtrans %}"><i class="icon-chevron-left"></i></a></li>{% endif -%}
+    {%- if pagination['next'] > 0 %}<li><a href="{{ url('user_warnings', user=profile.id, username=profile.username_slug, page=pagination['next']) }}" class="tooltip-top" title="{% trans %}Older Warnings{% endtrans %}"><i class="icon-chevron-right"></i></a></li>{% endif -%}
+  </ul>
+</div>
+{% endif %}
+{%- endmacro %}

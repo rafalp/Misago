@@ -386,6 +386,14 @@
 
             {% if user.is_authenticated() %}
             <div class="post-actions">
+              {% if user.pk != post.user_id and post.user_id and acl.warnings.can_warn_members() %}
+              <form action="{{ url('warn_user', user=post.user.pk, slug=post.user.username_slug) }}" class="form-inline" method="post" autocomplete="off">
+                <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
+                <input type="hidden" name="retreat" value="{{ request_path }}">
+                <input type="hidden" name="reason" value="{% trans message=board_address ~ url('thread_find', thread=thread.pk, slug=thread.slug, post=post.pk), thread=thread.name %}Your message in thread &quot;[{{ thread }}]({{ message }})&quot; was found to violate community guidelines.{% endtrans %}">
+                <button type="submit" class="btn btn-link tooltip-top" title="{% trans %}Warn user for this post.{% endtrans %}">{% trans %}Warn{% endtrans %}</button>
+              </form>
+              {% endif %}
               {% if acl.users.can_see_users_trails() -%}
               <a href="{{ url('post_info', thread=thread.pk, slug=thread.slug, post=post.pk) }}" class="post-trail">{% trans %}Info{% endtrans %}</a>
               {% endif %}
@@ -548,9 +556,9 @@
     {% endif %}
   </div>
 
-  {% if user.is_authenticated() and acl.threads.can_reply(forum, thread) %}
+  {% if user.is_authenticated() and acl.threads.can_reply(forum, thread) and not user.warning_level_disallows_writing_replies %}
   <div class="thread-quick-reply">
-    <form action="{{ url('thread_reply', thread=thread.pk, slug=thread.slug) }}" method="post">
+    <form action="{{ url('thread_reply', thread=thread.pk, slug=thread.slug) }}"{% if acl.threads.can_upload_attachments(forum) %} enctype="multipart/form-data"{% endif %} method="post">
       <input type="hidden" name="{{ csrf_id }}" value="{{ csrf_token }}">
       <input type="hidden" name="quick_reply" value="1">
       <img src="{{ user.get_avatar(100) }}" alt="{% trans %}Your Avatar{% endtrans %}" class="user-avatar">
@@ -571,7 +579,8 @@
   {{ super() }}
   <script src="{{ STATIC_URL }}cranefly/highlight/highlight.pack.js"></script>
   <script type="text/javascript">
-    var l_post_reported = "{{ _('Reported!') }}";
+    var l_report_sure = "{% trans %}Are you sure you want to bring this message to moderator attention?{% endtrans %}";
+    var l_post_reported = "{% trans %}Reported!{% endtrans %}";
     hljs.tabReplace = '    ';
     hljs.initHighlightingOnLoad();
     EnhancePostsMD();
@@ -618,7 +627,7 @@
     });
     {% endif %}
   </script>
-  {% if user.is_authenticated() and acl.threads.can_reply(forum, thread) %}
+  {% if user.is_authenticated() and acl.threads.can_reply(forum, thread) and not user.warning_level_disallows_writing_replies %}
   {{ editor.js() }}
   {% endif %}
 {%- endblock %}

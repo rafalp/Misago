@@ -164,7 +164,7 @@ function link2player(element, link_href) {
   var re = /vimeo.com\/([0-9]+)/;
   if (re.test(link_href)) {
     media_url = link_href.match(re);
-    return $(element).replaceWith('<iframe src="http://player.vimeo.com/video/' + media_url[1] + '?color=CF402E" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
+    return $(element).replaceWith('<iframe src="//player.vimeo.com/video/' + media_url[1] + '?color=CF402E" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
   }
 
   // No link
@@ -174,20 +174,20 @@ function link2player(element, link_href) {
 // Youtube player
 function youtube_player(element, movie_id, startfrom) {
   if (typeof startfrom != 'undefined') {
-    player_url = 'http://www.youtube.com/embed/' + movie_id + '?start=' + startfrom + '&amp;autoplay=1';
+    player_url = '//www.youtube.com/embed/' + movie_id + '?start=' + startfrom + '&amp;autoplay=1';
   } else {
-    player_url = 'http://www.youtube.com/embed/' + movie_id + '?autoplay=1';
+    player_url = '//www.youtube.com/embed/' + movie_id + '?autoplay=1';
   }
 
   // Replace link with fancy image
-  var media_element = $('<div><div class="media-border youtube-player" data-movieid="' + movie_id + '"><div class="media-thumbnail" style="background-image: url(\'http://img.youtube.com/vi/' + movie_id + '/0.jpg\');"><a href="' + $.trim($(element).text()) + '" class="play-link" data-playerurl="' + player_url + '"><i class="icon-youtube-sign"></i><strong>' + l_play_media_msg + '</strong></a></div></div></div>');
+  var media_element = $('<div><div class="media-border youtube-player" data-movieid="' + movie_id + '"><div class="media-thumbnail" style="background-image: url(\'//img.youtube.com/vi/' + movie_id + '/0.jpg\');"><a href="' + $.trim($(element).text()) + '" class="play-link" data-playerurl="' + player_url + '"><i class="icon-youtube-sign"></i><strong>' + l_play_media_msg + '</strong></a></div></div></div>');
   $(media_element).find('.play-link').click(function() {
     $(this).parent().replaceWith('<iframe width="853" height="480" src="' + $(this).data('playerurl') + '" frameborder="0" allowfullscreen></iframe>');
     return false;
   });
   $(element).replaceWith(media_element);
   // Fetch title, author name and thumbnail
-  $.getJSON("https://gdata.youtube.com/feeds/api/videos/" + movie_id + "?v=2&alt=json",
+  $.getJSON("//gdata.youtube.com/feeds/api/videos/" + movie_id + "?v=2&alt=json",
             function(data, textStatus, jqXHR) {
               // Movie details
               var movie_title = data.entry.title.$t;
@@ -196,7 +196,7 @@ function youtube_player(element, movie_id, startfrom) {
               $(media_element).find('.play-link strong').text(movie_title);
               $(media_element).find('.play-link').append(l_play_media_author.replace('{author}', movie_author));
               // Movie thumbnail
-              var thumb = {height: 90, url: 'http://img.youtube.com/vi/' + movie_id + '/0.jpg'};
+              var thumb = {height: 90, url: '//img.youtube.com/vi/' + movie_id + '/0.jpg'};
               console.log(data.entry['media$group']['media$thumbnail']);
               $(data.entry['media$group']['media$thumbnail']).each(function(key, yt_image) {
                 if (thumb.height < yt_image.height) {
@@ -333,6 +333,11 @@ $(function() {
     var csrf_token = $(this).find('input[name="_csrf_token"]').val();
     var button = $(this).find('button');
     $(this).submit(function() {
+      var decision = confirm(l_report_sure);
+      if (!decision) {
+        return false;
+      }
+
       var form = this;
       $.post(form.action, {'_csrf_token': csrf_token}, "json").done(function(data, textStatus, jqXHR) {
         $(button).text(l_post_reported);

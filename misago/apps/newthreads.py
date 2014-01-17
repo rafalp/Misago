@@ -1,5 +1,4 @@
 from datetime import timedelta
-from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import redirect
 from django.template import RequestContext
@@ -17,7 +16,7 @@ def new_threads(request, page=0):
     try:
         pagination = make_pagination(page, items_total, settings.threads_per_page)
     except Http404:
-        return redirect(reverse('new_threads'))
+        return redirect('new_threads')
 
     queryset = queryset.order_by('-start').prefetch_related('forum')[pagination['start']:pagination['stop']];
     if settings.avatars_on_threads_list:

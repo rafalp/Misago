@@ -14,7 +14,7 @@ class EditThreadBaseView(PostingBaseView):
         self.post = self.thread.start_post
         self.request.acl.threads.allow_post_view(self.request.user, self.thread, self.post)
         self.request.acl.threads.allow_thread_edit(self.request.user, self.proxy, self.thread, self.post)
-        
+
     def form_initial_data(self):
         return {
                 'thread_name': self.thread.name,

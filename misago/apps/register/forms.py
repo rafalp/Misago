@@ -9,7 +9,6 @@ from misago.validators import validate_username, validate_password, validate_ema
 
 class UserRegisterForm(Form):
     username = forms.CharField(label=_('Username'),
-                               help_text=_("Your displayed username. Between %(min)s and %(max)s characters, only letters and digits are allowed.") % {'min': settings.username_length_min, 'max': settings.username_length_max},
                                max_length=15)
     email = forms.EmailField(label=_('E-mail address'),
                              help_text=_("Working e-mail inbox is required to maintain control over your forum account."),
@@ -32,6 +31,15 @@ class UserRegisterForm(Form):
                       {
                        'different': _("Entered passwords do not match."),
                        }]
+
+    def __init__(self, *args, **kwargs):
+        super(UserRegisterForm, self).__init__(*args, **kwargs)
+        help_text_formats = {
+                             'min': settings_lazy.username_length_min,
+                             'max': settings_lazy.username_length_max,
+                            }
+        self.fields['username'].help_text = _(
+            "Your displayed username. Between %(min)s and %(max)s characters, only letters and digits are allowed.") % help_text_formats
 
     def finalize_form(self):
         if not settings.tos_url and not settings.tos_content:
