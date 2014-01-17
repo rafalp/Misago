@@ -8,4 +8,6 @@ def you_have_been_warned(giver, receiver, warning):
 
 
 def your_warn_has_been_canceled(canceler, receiver):
-    pass
+    alert = receiver.alert(ugettext_lazy("%(username)s has lowered your warning level.").message)
+    alert.profile('username', canceler)
+    alert.save_all()

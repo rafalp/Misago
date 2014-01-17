@@ -10,6 +10,7 @@ from misago.apps.errors import error404
 from misago.apps.profiles.decorators import profile_view
 from misago.apps.profiles.template import RequestContext
 from misago.apps.profiles.warnings.warningstracker import WarningsTracker
+from misago.apps.warnuser import alerts
 from misago.decorators import block_guest, check_csrf
 from misago.models import Warn
 from misago.shortcuts import render_to_response
@@ -69,6 +70,7 @@ def cancel_warning(request, user, warning):
     warning.canceler_agent = request.META.get('HTTP_USER_AGENT')
     warning.save(force_update=True)
 
+    alerts.your_warn_has_been_canceled(request.user, user)
     messages.success(request, _("Selected warning has been canceled."))
 
 
@@ -80,6 +82,7 @@ def delete_warning(request, user, warning):
     request.acl.warnings.allow_delete_warning()
 
     if user.is_warning_active(warning):
+        alerts.your_warn_has_been_canceled(request.user, user)
         user.decrease_warning_level()
     warning.delete()
 
