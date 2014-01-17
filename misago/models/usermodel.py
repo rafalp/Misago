@@ -579,9 +579,31 @@ class User(models.Model):
 
         return self.get_warning_level()
 
+    def get_latest_activte_warning(self):
+        return self.warning_set.filter(canceled=False).order_by('-id')[:1][0]
+
+    def freeze_warning_level(self):
+        self.warning_level_update_on = tz_util.now() + timedelta(days=1)
+
+    def set_warning_level_update_date(self, warning, warning_level):
+        if warning_level.expires_after_minutes:
+            self.warning_level_update_on = warning.given_on + timedelta(
+                minutes=warning_level.expires_after_minutes)
+        else:
+            self.warning_level_update_on = None
+
     def decrease_warning_level(self):
-        raise NotImplementedError("Not finished!")
         if self.get_current_warning_level():
+            self.warning_level -= 1
+            if self.warning_level:
+                self.freeze_warning_level()
+                latest_warning = self.get_latest_activte_warning()
+                new_warning_level = self.get_current_warning_level()
+                self.set_warning_level_update_date(
+                    latest_warning, new_warning_level)
+                self.get_current_warning_level()
+            else:
+                self.warning_level_update_on = None
             self.save(force_update=True)
 
     def is_warning_active(self, warning):
