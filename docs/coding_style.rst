@@ -65,7 +65,8 @@ In addition to views and forms definitions, those files can also contain helper 
 View Arguments
 --------------
 
-As convention, declare view arguments in same order as parameters are declared in view's links patterns.
+As convention, declare view arguments in order they are being used in view's code. This means pk before slug, because view has to get model from database before it validates its slug.
+
 
 Templates
 =========
