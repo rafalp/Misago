@@ -26,7 +26,7 @@ class InviteUsersMixin(object):
                 usernames.append(username)
                 try:
                     user = User.objects.get(username_slug=slug)
-                    if not user.acl(self.request).private_threads.can_participate():
+                    if not user.acl().private_threads.can_participate():
                         raise forms.ValidationError(_('%(user)s cannot participate in private threads.') % {'user': user.username})
                     if (not self.request.acl.private_threads.can_invite_ignoring() and
                             not user.allow_pd_invite(self.request.user)):

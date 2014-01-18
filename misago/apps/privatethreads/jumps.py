@@ -58,7 +58,7 @@ class InviteUserView(JumpView, TypeMixin):
             return self.retreat_redirect()
         try:
             user = User.objects.get(username_slug=username)
-            acl = user.acl(self.request)
+            acl = user.acl()
             if user in self.thread.participants.all():
                 if user.pk == self.request.user.pk:
                     messages.error(self.request, _('You cannot add yourself to this thread.'), 'threads')

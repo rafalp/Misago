@@ -19,7 +19,7 @@ class NewThreadView(NewThreadBaseView, TypeMixin):
         if self.kwargs.get('user'):
             try:
                 user = User.objects.get(id=self.kwargs.get('user'))
-                acl = user.acl(self.request)
+                acl = user.acl()
                 if not acl.private_threads.can_participate():
                     raise ACLError403(_("This member can not participate in private threads."))
                 if (not self.request.acl.private_threads.can_invite_ignoring() and

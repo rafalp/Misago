@@ -41,7 +41,7 @@ class TypeMixin(object):
             if self.md.mentions:
                 participants = self.thread.participants.all()
                 for slug, user in self.md.mentions.items():
-                    user_acl = user.acl(self.request)
+                    user_acl = user.acl()
                     if not (user in participants or (user_acl.private_threads.can_participate() and user_acl.private_threads.is_mod() and self.thread.replies_reported > 0)):
                         del self.md.mentions[slug]
         except AttributeError:
