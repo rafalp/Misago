@@ -30,7 +30,7 @@ AVATAR_SIZES = (125, 100, 80, 60, 40, 24)
 GRAVATAR_DEFAULT = ''
 
 # Allow usernames to contain diacritics
-UNICODE_USERNAMES = True
+UNICODE_USERNAMES = False
 
 # Default anti-flood delay (seconds)
 FLOOD_DELAY = 35
