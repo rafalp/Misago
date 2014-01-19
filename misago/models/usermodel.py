@@ -317,7 +317,7 @@ class User(models.Model):
 
     def set_username(self, username):
         self.username = username.strip()
-        self.username_slug = slugify(username)
+        self.username_slug = slugify(username).replace('-', '')
 
     def sync_username(self):
         rename_user.send(sender=self)
