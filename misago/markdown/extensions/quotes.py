@@ -3,7 +3,7 @@ import markdown
 from markdown.util import etree
 
 # Global vars
-QUOTE_AUTHOR_RE = re.compile(r'^(?P<arrows>(>|\s)+)?@(?P<username>(\w|\d)+)$')
+QUOTE_AUTHOR_RE = re.compile(r'^(?P<arrows>(>|\s)+)?@(?P<username>\w+)$', re.UNICODE)
 
 class QuoteTitlesExtension(markdown.Extension):
     def extendMarkdown(self, md):

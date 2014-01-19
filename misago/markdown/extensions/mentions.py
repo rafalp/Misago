@@ -6,7 +6,7 @@ from misago.models import User
 from misago.utils.strings import slugify
 
 # Global vars
-MENTION_RE = re.compile(r'([^\w]?)@(?P<username>(\w)+)', re.UNICODE)
+MENTION_RE = re.compile(r'([^\w]?)@(?P<username>\w+)', re.UNICODE)
 
 
 class MentionsExtension(markdown.Extension):
@@ -28,7 +28,7 @@ class MentionsPreprocessor(markdown.preprocessors.Preprocessor):
 
     def run(self, lines):
         def mention(match):
-            slug = slugify(match.group(0)[1:])
+            slug = slugify(match.group(0)[1:]).replace('-', '')
             if slug in self.md.mentions:
                 user = self.md.mentions[slug]
                 return '%s[@%s](%s)' % (match.group(1), user.username, reverse('user', kwargs={
