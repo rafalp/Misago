@@ -61,7 +61,7 @@ Link Parameters
 
 Links pointing at classes instead of functions should use lowercase letters and undersores. This means that link pointing at "ForumThreads" should be named "forum_threads".
 
-If link parameters represent model fields, name them using model_field scheme. This means that if your link contains UserWarn's id and slug, name those parameters user_warn_id and user_warn_slug in your link and view. In rare cases you may want link parameters point at two instances of same model. If this is the case add use more descriptive prefix instead of one from model name (ergo "quoted_p").
+If link parameters represent model fields, name them using model_field scheme. This means that if your link contains UserWarn's id and slug, name those parameters user_warn_id and user_warn_slug in your link and view. In rare cases you may want link parameters point at two instances of same model. If this is the case add use more descriptive prefix instead of one from model name (ergo "quoted_post").
 
 
 Views and Forms
