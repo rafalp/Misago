@@ -1,7 +1,29 @@
 """
 Misago default settings
 
-You are strongly advised to import this file at the top of your project's settings.py
+This fille sets everything Misago needs to run.
+
+If you want to add custom app, middleware or path, please update setting vallue
+defined in this file instead of copying setting from here to your settings.py.
+
+Yes:
+
+#yourproject/settings.py
+INSTALLED_APPS += (
+    'myawesomeapp',
+)
+
+No:
+
+#yourproject/settings.py
+INSTALLED_APPS = (
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'misago.core',
+    'misago.conf',
+    ...
+    'myawesomeapp',
+)
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
