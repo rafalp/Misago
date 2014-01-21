@@ -4,7 +4,7 @@ Misago Exceptions
 
 In addition to exceptions defined by `Django <https://docs.djangoproject.com/en/dev/ref/exceptions/>`_ and standard Python exceptions, Misago raises its own exceptions.
 
-All Misago exceptions can be found in :py:mod:`misago.core.exceptions`.
+All Misago exceptions can be found in :py:mod:`misago.core.exceptions` module.
 
 
 PermissionDenied
