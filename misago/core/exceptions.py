@@ -2,6 +2,9 @@ from django.core.exceptions import PermissionDenied as DjPermissionDenied
 from django.http import Http404 as DjHttp404
 
 
+__all__ = ["PermissionDenied", "Http404", "OutdatedUrl"]
+
+
 class PermissionDenied(DjPermissionDenied):
     """The user did not have permission to do that"""
     pass
