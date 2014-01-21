@@ -1,5 +1,4 @@
-Misago
-======
+# Misago [![Build Status](https://travis-ci.org/rafalp/Misago.png?branch=future)](https://travis-ci.org/rafalp/Misago)
 
 **Branch Status: _Not Functional_**
 
