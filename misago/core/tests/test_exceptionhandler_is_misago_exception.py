@@ -10,7 +10,6 @@ DJANGO_EXCEPTIONS = (
     DjHttp404,
 )
 
-
 PYTHON_EXCEPTIONS = (
     TypeError,
     ValueError,
@@ -25,7 +24,7 @@ class ExceptionHandlerIsMisagoExceptionTestCase(TestCase):
                          len(misago_exceptions.__all__))
 
     def test_misago_exceptions_detection(self):
-        """Misago exception handler correctly identifies Misago exceptions"""
+        """Misago exception handler recognizes Misago exceptions"""
         for exception in exceptionhandler.MISAGO_EXCEPTIONS:
             try:
                 raise exception()
@@ -33,7 +32,7 @@ class ExceptionHandlerIsMisagoExceptionTestCase(TestCase):
                 self.assertTrue(exceptionhandler.is_misago_exception(e))
 
     def test_django_exceptions_detection(self):
-        """Misago exception handler correctly identifies Django exceptions"""
+        """Misago exception handler fails to recognize Django exceptions"""
         for exception in DJANGO_EXCEPTIONS:
             try:
                 raise exception()
@@ -41,7 +40,7 @@ class ExceptionHandlerIsMisagoExceptionTestCase(TestCase):
                 self.assertFalse(exceptionhandler.is_misago_exception(e))
 
     def test_python_exceptions_detection(self):
-        """Misago exception handler correctly identifies Python exceptions"""
+        """Misago exception handler fails to recognize Python exceptions"""
         for exception in PYTHON_EXCEPTIONS:
             try:
                 raise exception()
