@@ -1,8 +1,6 @@
 ====================
-Overview
-====================
-
 Welcome to Misago documentation!
+====================
 
 Misago is featured internet forum solution developed in accordance with practices and trends currently used in web software development.
 
