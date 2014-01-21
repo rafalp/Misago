@@ -66,4 +66,4 @@ Following references cover everything you want to know about writing your own ap
    :maxdepth: 1
 
    coding_style
-   exceptions
+   views_errors
