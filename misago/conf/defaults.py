@@ -35,15 +35,15 @@ MIDDLEWARE_CLASSES = (
 # Register Misago directories
 
 LOCALE_PATHS = (
-    os.path.join(MISAGO_BASE_DIR, '../locale'),
+    os.path.join(MISAGO_BASE_DIR, 'locale'),
 )
 
 STATICFILES_DIRS = (
-    os.path.join(MISAGO_BASE_DIR, '../static'),
+    os.path.join(MISAGO_BASE_DIR, 'static'),
 )
 
 TEMPLATE_DIRS = (
-    os.path.join(MISAGO_BASE_DIR, '../templates'),
+    os.path.join(MISAGO_BASE_DIR, 'templates'),
 )
 
 
