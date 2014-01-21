@@ -175,6 +175,7 @@ django/**
 django_jinja/**
 docs/_build/**
 floppyforms/**
+futuredep/**
 haystack/**
 jinja2/**
 markdown/**
@@ -197,6 +198,7 @@ static/avatars/custom.gif
 unidecode/**
 yaml/**
 dev-manage.py
+future-manage.py
 path.py
 !templates/debug_toolbar/panels/acl.html
 static/emojis/**
