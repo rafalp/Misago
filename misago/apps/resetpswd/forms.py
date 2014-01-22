@@ -14,9 +14,9 @@ class UserResetPasswordForm(Form):
     error_source = 'email'
 
     def clean_email(self):
+        data = self.cleaned_data['email']
         try:
-            self.found_user = User.objects.get_by_email(
-                self.cleaned_data['email'])
+            self.found_user = User.objects.get_by_email(data)
         except User.DoesNotExist:
             raise ValidationError(_("There is no user with such e-mail address."))
-        return email
+        return data
