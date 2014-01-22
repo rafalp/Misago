@@ -47,7 +47,8 @@ def warn_user(request, user, slug):
                                   },
                                   context_instance=RequestContext(request))
 
-    form = WarnMemberForm(initial={'reason': request.POST.get('reason')})
+    form = WarnMemberForm(
+        initial={'reason': request.POST.get('reason')}, request=request)
     if ('origin' in request.POST
             and request.POST.get('origin') == 'warning-form'):
         form = WarnMemberForm(request.POST, request=request)
