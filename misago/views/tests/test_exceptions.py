@@ -18,7 +18,9 @@ INVALID_EXCEPTIONS = (
 
 class IsMisagoExceptionTests(TestCase):
     def test_is_misago_exception_true_for_handled_exceptions(self):
-        """exceptionhandler.is_misago_exception recognizes handled exceptions"""
+        """
+        exceptionhandler.is_misago_exception recognizes handled exceptions
+        """
         for exception in exceptionhandler.HANDLED_EXCEPTIONS:
             try:
                 raise exception()
@@ -26,7 +28,10 @@ class IsMisagoExceptionTests(TestCase):
                 self.assertTrue(exceptionhandler.is_misago_exception(e))
 
     def test_is_misago_exception_false_for_not_handled_exceptions(self):
-        """Misago exception handler fails to recognize other exceptions"""
+        """
+        exceptionhandler.is_misago_exception fails to recognize other
+        exceptions
+        """
         for exception in INVALID_EXCEPTIONS:
             try:
                 raise exception()
@@ -47,7 +52,7 @@ class GetExceptionHandlerTests(TestCase):
                 exceptionhandler.get_exception_handler(exception())
             except ValueError:
                 self.fail(
-                    "%s has no exception handler defined " % exception.__name__)
+                    "%s has no exception handler defined" % exception.__name__)
 
 
 class HandleHttp404ExceptionTests(TestCase):
@@ -56,7 +61,7 @@ class HandleHttp404ExceptionTests(TestCase):
         self.exception = Http404(self.exception_message)
         self.request = RequestFactory().get('/')
 
-    def test_get_exception_handler(self):
+    def test_get_handle_http404_exception(self):
         """get_exception_handler returns correct Http404 exception handler"""
         found_handler = exceptionhandler.get_exception_handler(self.exception)
         self.assertEqual(
@@ -66,7 +71,7 @@ class HandleHttp404ExceptionTests(TestCase):
         self.assertIn(self.exception_message, response.content)
         self.assertEqual(response.status_code, 404)
 
-    def test_handle_misago_exception(self):
+    def test_handle_http404_exception(self):
         """handle_misago_exception handles Http404 exception correctly"""
         response = exceptionhandler.handle_misago_exception(
             self.request, self.exception)
@@ -79,7 +84,7 @@ class HandleOutdatedSlugExceptionTests(TestCase):
         self.exception = OutdatedSlug()
         self.request = RequestFactory().get('/')
 
-    def test_get_exception_handler(self):
+    def test_get_handle_outdated_slug_exception(self):
         """
         get_exception_handler returns correct OutdatedSlug exception handler
         """
@@ -90,7 +95,7 @@ class HandleOutdatedSlugExceptionTests(TestCase):
         response = found_handler(self.request, self.exception)
         self.assertEqual(response.status_code, 301)
 
-    def test_handle_misago_exception(self):
+    def test_handle_outdated_slug_exception(self):
         """
         handle_misago_exception handles OutdatedSlug exception correctly
         """
@@ -105,9 +110,10 @@ class HandlePermissionDeniedExceptionTests(TestCase):
         self.exception = PermissionDenied(self.exception_message)
         self.request = RequestFactory().get('/')
 
-    def test_get_exception_handler(self):
+    def test_get_handle_permission_denied_exception(self):
         """
-        get_exception_handler returns correct PermissionDenied exception handler
+        get_exception_handler returns correct PermissionDenied exception
+        handler
         """
         found_handler = exceptionhandler.get_exception_handler(self.exception)
         self.assertEqual(
@@ -117,7 +123,7 @@ class HandlePermissionDeniedExceptionTests(TestCase):
         self.assertIn(self.exception_message, response.content)
         self.assertEqual(response.status_code, 403)
 
-    def test_handle_misago_exception(self):
+    def test_handle_permission_denied_exception(self):
         """
         handle_misago_exception handles PermissionDenied exception correctly
         """
