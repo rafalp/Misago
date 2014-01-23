@@ -19,8 +19,7 @@ def _get_exception_message(exception):
 
 
 def handle_http404_exception(request, exception):
-    return errorpages.page_not_found(request,
-                                     _get_exception_message(exception))
+    return errorpages.page_not_found(request)
 
 
 def handle_outdated_slug_exception(request, exception):

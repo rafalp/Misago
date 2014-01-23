@@ -57,8 +57,7 @@ class GetExceptionHandlerTests(TestCase):
 
 class HandleHttp404ExceptionTests(TestCase):
     def setUp(self):
-        self.exception_message = "Text page could not be found"
-        self.exception = Http404(self.exception_message)
+        self.exception = Http404()
         self.request = RequestFactory().get('/')
 
     def test_get_handle_http404_exception(self):
@@ -68,14 +67,12 @@ class HandleHttp404ExceptionTests(TestCase):
             found_handler, exceptionhandler.handle_http404_exception)
 
         response = found_handler(self.request, self.exception)
-        self.assertIn(self.exception_message, response.content)
         self.assertEqual(response.status_code, 404)
 
     def test_handle_http404_exception(self):
         """handle_misago_exception handles Http404 exception correctly"""
         response = exceptionhandler.handle_misago_exception(
             self.request, self.exception)
-        self.assertIn(self.exception_message, response.content)
         self.assertEqual(response.status_code, 404)
 
 

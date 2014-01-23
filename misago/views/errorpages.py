@@ -13,8 +13,8 @@ def permission_denied(request, message=None):
     return _error_page(request, 403, message)
 
 
-def page_not_found(request, message=None):
-    return _error_page(request, 404, message)
+def page_not_found(request):
+    return _error_page(request, 404)
 
 
 """
