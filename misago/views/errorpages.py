@@ -17,9 +17,7 @@ def page_not_found(request):
     return _error_page(request, 404)
 
 
-"""
-Decorators for custom error page handlers
-"""
+# Decorators for custom error page handlers
 from misago.views.utils import is_request_to_misago
 
 
