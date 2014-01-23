@@ -1,7 +1,7 @@
 Misago
 ======
 [![Build Status](https://travis-ci.org/rafalp/Misago.png?branch=future)](https://travis-ci.org/rafalp/Misago)
-[![Coverage Status](https://coveralls.io/repos/rafalp/Misago/badge.png?branch=future)](https://coveralls.io/r/rafalp/Misago)
+[![Coverage Status](https://coveralls.io/repos/rafalp/Misago/badge.png?branch=future)](https://coveralls.io/r/rafalp/Misago?branch=future)
 [![Code Health](https://landscape.io/github/rafalp/Misago/future/landscape.png)](https://landscape.io/github/rafalp/Misago/future)
 
 **Branch Status: _Not Functional_**
