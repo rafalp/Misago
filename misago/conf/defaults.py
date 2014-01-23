@@ -29,7 +29,6 @@ INSTALLED_APPS = (
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 MISAGO_BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-print
 
 
 # Application definition
@@ -52,7 +51,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'misago.views.exceptions.middleware.MisagoExceptionHandlerMiddleware',
+    'misago.views.middleware.MisagoExceptionHandlerMiddleware',
 )
 
 # Register Misago directories
