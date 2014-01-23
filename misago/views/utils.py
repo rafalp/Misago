@@ -1,7 +1,8 @@
 from django.core.urlresolvers import reverse
 
 
-def _compare_path_under_to_forum_index(request):
+def _is_request_path_under_misago(request):
+    # We are assuming that forum_index link is root of all Misago links
     forum_index = reverse('forum_index')
     path_info = request.path_info
 
@@ -11,10 +12,8 @@ def _compare_path_under_to_forum_index(request):
 
 
 def is_request_to_misago(request):
-    """Is request directed at Misago instead of... say, CMS app?"""
     try:
         return request._request_to_misago
     except AttributeError:
-        request._request_to_misago = _compare_path_under_to_forum_index(request)
+        request._request_to_misago = _is_request_path_under_misago(request)
         return request._request_to_misago
-
