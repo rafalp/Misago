@@ -6,5 +6,4 @@ install:
   - pip install coveralls
 script:
   - coverage run --source=misago testrunner.py test
-after_success:
   - coveralls
