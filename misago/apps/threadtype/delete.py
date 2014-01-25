@@ -91,7 +91,7 @@ class HideThreadBaseView(DeleteHideBaseView):
         self.forum.save(force_update=True)
 
     def message(self):
-        messages.success(self.request, _('Thread "%(thread)s" has been deleted.') % {'thread': self.thread.name}, 'threads')
+        messages.success(self.request, _('Thread "%(thread)s" has been hidden.') % {'thread': self.thread.name}, 'threads')
 
     def response(self):
         if self.request.acl.threads.can_see_deleted_threads(self.thread.forum):
@@ -153,7 +153,7 @@ class HideReplyBaseView(DeleteHideBaseView):
                                                    self.thread, self.post)
         acl = self.request.acl.threads.get_role(self.thread.forum_id)
         if not acl['can_delete_posts'] and self.thread.post_set.filter(id__gt=self.post.pk).count() > 0:
-            raise ACLError403(_("Somebody has already replied to this post, you cannot delete it."))
+            raise ACLError403(_("Somebody has already replied to this post, you cannot hide it."))
 
     def delete(self):
         self.post.delete_date = timezone.now()
@@ -168,7 +168,7 @@ class HideReplyBaseView(DeleteHideBaseView):
         self.forum.save(force_update=True)
 
     def message(self):
-        messages.success(self.request, _("Selected reply has been deleted."), 'threads_%s' % self.post.pk)
+        messages.success(self.request, _("Selected reply has been hidden."), 'threads_%s' % self.post.pk)
 
     def response(self):
         return self.redirect_to_post(self.post)
