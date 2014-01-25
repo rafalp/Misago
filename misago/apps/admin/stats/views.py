@@ -16,6 +16,7 @@ def form(request):
     """
     Allow admins to generate fancy statistic graphs for different models
     """
+    statistics_providers = []
     models_map = {}
     for model in models.get_models():
         try:

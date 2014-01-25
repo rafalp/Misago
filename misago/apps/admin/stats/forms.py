@@ -10,7 +10,7 @@ class GenerateStatisticsForm(Form):
     date_start = forms.DateField(label=_('Time Period'),
                                  help_text=_('Enter start and end date for time period you want to take data from to use in graph.'),
                                  initial=tz.now() - timedelta(days=7))
-    date_end = forms.DateField(initial=tz.now())
+    date_end = forms.DateField(initial=tz.now() + timedelta(days=1))
     stats_precision = forms.ChoiceField(label=_('Graph Precision'),
                                         choices=(('day', _('For each day')), ('week', _('For each week')), ('month', _('For each month')), ('year', _('For each year'))))
 
