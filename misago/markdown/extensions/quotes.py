@@ -20,9 +20,23 @@ class QuoteTitlesPreprocessor(markdown.preprocessors.Preprocessor):
     def __init__(self, md):
         markdown.preprocessors.Preprocessor.__init__(self, md)
 
+    def find_quote_depth(self, line):
+        depth = 0
+        try:
+            while line[0] == '>':
+                depth += 1
+                line = line[1:].strip()
+        except IndexError:
+            pass
+        return depth
+
     def run(self, lines):
         clean = []
+        quote_dept = 0
         for l, line in enumerate(lines):
+            if quote_dept > self.find_quote_depth(line):
+                clean.append("")
+            quote_dept = self.find_quote_depth(line)
             try:
                 if line.strip():
                     at_match = QUOTE_AUTHOR_RE.match(line.strip())
@@ -38,6 +52,7 @@ class QuoteTitlesPreprocessor(markdown.preprocessors.Preprocessor):
                     clean.append(line)
             except IndexError:
                 clean.append(line)
+        print clean
         return clean
 
 
