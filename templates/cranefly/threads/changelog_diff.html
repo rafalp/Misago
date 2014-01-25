@@ -84,7 +84,7 @@
 
 
 {% macro pager() %}
-{% if prev or prev %}
+{% if prev or next %}
 <div class="pagination pull-left">
   <ul>
     {% if prev %}<li><a href="{{ url('thread_changelog_diff', thread=thread.pk, slug=thread.slug, post=post.pk, change=prev.pk) }}"><i class="icon-chevron-left"></i> {{ prev.date|reldate }}</a></li>{% endif %}

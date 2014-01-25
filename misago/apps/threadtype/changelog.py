@@ -2,6 +2,7 @@ import difflib
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.template import RequestContext
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 from misago import messages
 from misago.acl.exceptions import ACLError403, ACLError404
@@ -71,13 +72,17 @@ class ChangelogDiffBaseView(ChangelogBaseView):
     def dispatch(self, request, **kwargs):
         try:
             next = self.post.change_set.filter(id__gt=self.change.pk)[:1][0]
+            compare_to = next.post_content
         except IndexError:
             next = None
+            compare_to = self.post.post
         try:
             prev = self.post.change_set.filter(id__lt=self.change.pk).order_by('-id')[:1][0]
         except IndexError:
             prev = None
+		
         self.forum.closed = self.proxy.closed
+        
         return render_to_response('%ss/changelog_diff.html' % self.type_prefix,
                                   self._template_vars({
                                         'forum': self.forum,
@@ -89,7 +94,7 @@ class ChangelogDiffBaseView(ChangelogBaseView):
                                         'prev': prev,
                                         'message': request.messages.get_message('changelog'),
                                         'l': 1,
-                                        'diff': difflib.ndiff(self.change.post_content.splitlines(), self.post.post.splitlines()),
+                                        'diff': difflib.ndiff(self.change.post_content.splitlines(), compare_to.splitlines()),
                                       }),
                                   context_instance=RequestContext(request))
 
@@ -105,6 +110,29 @@ class ChangelogRevertBaseView(ChangelogDiffBaseView):
             and (self.change.post_content == self.post.post)):
             messages.error(request, _("No changes to revert."), 'changelog')
             return redirect(reverse('%s_changelog_diff' % self.type_prefix, kwargs={'thread': self.thread.pk, 'slug': self.thread.slug, 'post': self.post.pk, 'change': self.change.pk}))
+        
+        self.post.edits += 1
+        self.post.edit_user = self.request.user
+        self.post.edit_user_name = self.request.user.username
+        self.post.edit_user_slug = self.request.user.username_slug
+        
+        self.post.change_set.create(
+                                    forum=self.forum,
+                                    thread=self.thread,
+                                    post=self.post,
+                                    user=request.user,
+                                    user_name=request.user.username,
+                                    user_slug=request.user.username_slug,
+                                    date=timezone.now(),
+                                    ip=request.session.get_ip(self.request),
+                                    agent=request.META.get('HTTP_USER_AGENT'),
+                                    reason=_("Reverted to the state before %(date)s.") % {'date': reldate(self.change.date).lower()},
+                                    size=len(self.change.post_content),
+                                    change=len(self.change.post_content) - len(self.post.post),
+                                    thread_name_old=self.thread.name if self.change.thread_name_old != self.thread.name and self.change.thread_name_old != None else None,
+                                    thread_name_new=self.change.thread_name_old if self.change.thread_name_old != self.thread.name else None,
+                                    post_content=self.post.post,
+                                    )
 
         if self.change.thread_name_old and self.change.thread_name_old != self.thread.name:
             self.thread.name = self.change.thread_name_old
@@ -119,7 +147,8 @@ class ChangelogRevertBaseView(ChangelogDiffBaseView):
         if self.change.post_content != self.post.post:
             self.post.post = self.change.post_content
             md, self.post.post_preparsed = post_markdown(self.change.post_content)
-            self.post.save(force_update=True)
 
-        messages.success(request, _("Post has been reverted to state from %(date)s.") % {'date': reldate(self.change.date).lower()}, 'threads_%s' % self.post.pk)
+        self.post.save(force_update=True)
+        
+        messages.success(request, _("Post has been reverted to the state before %(date)s.") % {'date': reldate(self.change.date).lower()}, 'threads_%s' % self.post.pk)
         return self.redirect_to_post(self.post)
