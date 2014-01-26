@@ -95,7 +95,7 @@ def reltimesince(val, arg=""):
                     "Hour and %(minutes)s ago",
                     "%(hours)s hours and %(minutes)s ago",
                 hours) % {'hours': hours, 'minutes': ungettext(
-                        "%(minutes)s minute",
+                        "minute",
                         "%(minutes)s minutes",
                     minutes) % {'minutes': minutes}}
 
