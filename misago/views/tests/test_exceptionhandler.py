@@ -45,7 +45,7 @@ class GetExceptionHandlerTests(TestCase):
         self.assertEqual(len(exceptionhandler.HANDLED_EXCEPTIONS),
                          len(exceptionhandler.EXCEPTION_HANDLERS))
 
-    def test_get_exception_handler(self):
+    def test_get_exception_handler_for_handled_exceptions(self):
         """Exception handler has correct handler for every Misago exception"""
         for exception in exceptionhandler.HANDLED_EXCEPTIONS:
             try:
@@ -53,6 +53,16 @@ class GetExceptionHandlerTests(TestCase):
             except ValueError:
                 self.fail(
                     "%s has no exception handler defined" % exception.__name__)
+
+    def test_get_exception_handler_for_non_handled_exceptio(self):
+        """Exception handler has no handler for non-supported exception"""
+        for exception in INVALID_EXCEPTIONS:
+            try:
+                exceptionhandler.get_exception_handler(exception())
+                self.fail("%s has exception handler, but it "
+                          "shouldn't" % exception.__name__)
+            except ValueError:
+                pass
 
 
 class HandleHttp404ExceptionTests(TestCase):
