@@ -9,7 +9,7 @@
   	{%- else -%}
   	{% trans %}Guest{% endtrans %}
   	{%- endif %}</strong> <strong class="muted">{{ item.ip }}</strong> {% if item.user -%}
-  	<span class="label label-success">{% trans %}Registered Member{% endtrans %}</span>{% if item.hitten %} <span class="label label-info">{% trans %}Hidden{% endtrans %}</span>{% endif %}
+  	<span class="label label-success">{% trans %}Registered Member{% endtrans %}</span>{% if item.hidden %} <span class="label label-info">{% trans %}Hidden{% endtrans %}</span>{% endif %}
   	{%- elif item.crawler -%}
   	<span class="label label-inverse">{% trans %}Crawler{% endtrans %}</span>
   	{%- endif %}
