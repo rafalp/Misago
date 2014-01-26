@@ -51,6 +51,7 @@ class MisagoSettings(object):
         return self.setting(key)
 
     def __setitem__(self, key, value):
+        from misago.models import Setting
         setting = Setting.objects.get(pk=key)
         setting.value = value
         setting.save(force_update=True)

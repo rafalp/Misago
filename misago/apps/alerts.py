@@ -84,7 +84,11 @@ def clear_recent(request):
     if not request.is_ajax() or not request.method == 'POST':
         return error404(request)
 
-    del request.session['recent_alerts']
+    try:
+        del request.session['recent_alerts']
+    except KeyError:
+        pass
+
     response_html = render_to_string('alerts/cleared.html',
                                      context_instance=RequestContext(request))
     return json_response(request,

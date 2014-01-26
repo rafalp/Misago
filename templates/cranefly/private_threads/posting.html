@@ -62,7 +62,7 @@
             {{ form_theme.row(form.thread_name, attrs={'class': 'span8'}) }}
             {% endif %}
             {% if action == 'new_thread' and 'invite_users' in form.fields %}
-            {{ form_theme.row(form.invite_users, attrs={'class': 'span8', 'placeholder': _("User1, User2, User3...")}) }}
+            {{ form_theme.row(form.invite_users, attrs={'class': 'span8', 'placeholder': lang_user1_user2_user3()}) }}
             {% endif %}
             {% if 'thread_name' in form.fields or (action == 'new_thread' and 'invite_users' in form.fields) %}
             <hr>
@@ -72,7 +72,7 @@
             {% if 'edit_reason' in form.fields or (action == 'new_reply' and 'invite_users' in form.fields) %}
             <hr>
             {% if action == 'new_reply' and 'invite_users' in form.fields %}
-            {{ form_theme.row(form.invite_users, attrs={'class': 'span8', 'placeholder': _("user1, user2, user3...")}) }}
+            {{ form_theme.row(form.invite_users, attrs={'class': 'span8', 'placeholder': lang_user1_user2_user3()}) }}
             {% endif %}
             {% if 'edit_reason' in form.fields %}
             {{ form_theme.row(form.edit_reason, attrs={'class': 'span8'}) }}
@@ -109,6 +109,13 @@
 {% endblock %}
 
 
+{# Language strings macros #}
+{% macro lang_user1_user2_user3() -%}
+{% trans %}user1, user2, user3...{% endtrans %}
+{%- endmacro %}
+
+
+{# Template Macros #}
 {% macro get_action() -%}
 {% if action == 'new_thread' -%}
 {{ url('private_thread_start') }}

@@ -319,7 +319,7 @@ class Edit(FormWidget):
         # Do signature mumbo-jumbo
         if form.cleaned_data['signature']:
             target.signature = form.cleaned_data['signature']
-            target.signature_preparsed = signature_markdown(target.acl(self.request),
+            target.signature_preparsed = signature_markdown(target.acl(),
                                                             form.cleaned_data['signature'])
         else:
             target.signature = None
