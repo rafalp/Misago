@@ -268,8 +268,8 @@ class ReportPostBaseView(JumpView):
                     try:
                         report.checkpoint_set.get(user=request.user, action="reported")
                     except Checkpoint.DoesNotExist:
-                        report.set_checkpoint(self.request, 'reported', user)
-                        self.post.add_reporter(self.request.user)
+                        report.set_checkpoint(request, 'reported', request.useruser)
+                        self.post.add_reporter(request.user)
                         self.post.save(force_update=True)
                     made_report = True
 
