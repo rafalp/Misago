@@ -29,16 +29,16 @@
             {{ form_theme.repeat(form,
                                  (form.email, form.email_rep),
                                  attrs=(
-                                        {'placeholder': _("Enter your e-mail"), 'class': 'span4'},
-                                        {'placeholder': _("Repeat your e-mail"), 'class': 'span4'}
+                                        {'placeholder': lang_enter_your_email(), 'class': 'span4'},
+                                        {'placeholder': lang_repeat_your_email(), 'class': 'span4'}
                                        )) }}
           </fieldset>
           <fieldset>
             {{ form_theme.repeat(form,
                                  (form.password, form.password_rep),
                                  attrs=(
-                                        {'placeholder': _("Enter your password"), 'class': 'span4'},
-                                        {'placeholder': _("Repeat your password"), 'class': 'span4'}
+                                        {'placeholder': lang_enter_your_password(), 'class': 'span4'},
+                                        {'placeholder': lang_repeat_your_password(), 'class': 'span4'}
                                        )) }}
           </fieldset>
           {% if form.has_captcha %}
