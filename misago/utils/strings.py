@@ -1,15 +1,11 @@
+from unidecode import unidecode
 from django.template.defaultfilters import slugify as django_slugify
 from django.utils import crypto
-try:
-    from unidecode import unidecode
-    use_unidecode = True
-except ImportError:
-    use_unidecode = False
+
 
 def slugify(string):
     string = unicode(string)
-    if use_unidecode:
-        string = unidecode(string)
+    string = unidecode(string)
     return django_slugify(string.replace('_', ' '))
 
 

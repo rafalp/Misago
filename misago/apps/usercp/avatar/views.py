@@ -1,10 +1,10 @@
 from path import path
 from PIL import Image
+from unidecode import unidecode
 from zipfile import is_zipfile
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
-from django.utils.encoding import smart_str
 from django.utils.translation import ugettext as _
 from misago import messages
 from misago.apps.errors import error404
@@ -16,6 +16,7 @@ from misago.utils.strings import random_string
 from misago.utils.avatars import resizeimage
 from misago.apps.usercp.template import RequestContext
 from misago.apps.usercp.avatar.forms import UploadAvatarForm
+
 
 def avatar_view(f):
     def decorator(*args, **kwargs):
@@ -111,7 +112,7 @@ def upload(request):
         if form.is_valid():
             request.user.delete_avatar_temp()
             image = form.cleaned_data['avatar_upload']
-            image_name, image_extension = path(smart_str(image.name.lower())).splitext()
+            image_name, image_extension = path(unidecode(image.name.lower())).splitext()
             image_name = '%s_tmp_%s%s' % (request.user.pk, random_string(8), image_extension)
             image_path = settings.MEDIA_ROOT + 'avatars/' + image_name
             request.user.avatar_temp = image_name
