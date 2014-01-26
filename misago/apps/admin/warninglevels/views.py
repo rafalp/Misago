@@ -51,6 +51,7 @@ class List(ListWidget):
         for item in page_items:
             item.warning_level = cleaned_data['pos_' + str(item.pk)]
             item.save(force_update=True)
+        WarnLevel.objects.flush_cache()
         return Message(_('Warning levels have been changed'), messages.SUCCESS), reverse('admin_warning_levels')
 
     def sort_items(self, page_items, sorting_method):
@@ -71,6 +72,7 @@ class List(ListWidget):
                 level.warning_level = levels_counter
                 level.save(force_update=True)
             levels_counter += 1
+        WarnLevel.objects.flush_cache()
 
         return Message(_('Selected warning levels have been deleted successfully.'), messages.SUCCESS), reverse('admin_warning_levels')
 
@@ -105,6 +107,7 @@ class New(FormWidget):
                               restrict_posting_threads=form.cleaned_data['restrict_posting_threads']
                               )
         new_level.save(force_insert=True)
+        WarnLevel.objects.flush_cache()
         return new_level, Message(_('New warning level has been defined.'), messages.SUCCESS)
 
 
@@ -142,6 +145,7 @@ class Edit(FormWidget):
         target.restrict_posting_replies = form.cleaned_data['restrict_posting_replies']
         target.restrict_posting_threads = form.cleaned_data['restrict_posting_threads']
         target.save(force_update=True)
+        WarnLevel.objects.flush_cache()
 
         return target, Message(_('Changes in warning level "%(name)s" have been saved.') % {'name': self.original_name}, messages.SUCCESS)
 
@@ -161,5 +165,6 @@ class Delete(ButtonWidget):
                 level.warning_level = levels_counter
                 level.save(force_update=True)
             levels_counter += 1
+        WarnLevel.objects.flush_cache()
 
         return Message(_('Warning level "%(name)s" has been deleted.') % {'name': _(target.name)}, messages.SUCCESS), False

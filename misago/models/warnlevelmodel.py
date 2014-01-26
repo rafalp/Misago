@@ -6,6 +6,9 @@ from misago.thread import local
 _thread_local = local()
 
 class WarnLevelManager(models.Manager):
+    def flush_cache(self):
+        cache.delete('warning_levels')
+
     def get_levels(self):
         try:
             return _thread_local._misago_warning_levels

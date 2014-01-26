@@ -57,6 +57,7 @@ class New(FormWidget):
         new_type.save(force_insert=True)
         for role in form.cleaned_data['roles']:
             new_type.roles.add(roles)
+        AttachmentType.objects.flush_cache()
         return new_type, Message(_('New attachments type has been created.'), messages.SUCCESS)
 
 
@@ -92,6 +93,7 @@ class Edit(FormWidget):
         target.save(force_update=True)
 
         target.update_roles(form.cleaned_data['roles'])
+        AttachmentType.objects.flush_cache()
 
         return target, Message(_('Changes in type "%(name)s" have been saved.') % {'name': self.original_name}, messages.SUCCESS)
 
@@ -138,6 +140,7 @@ class Delete(FormWidget):
                 else:
                     messages.info(request, _("Attachment type has been deleted."), self.admin.id)
                 model.delete()
+                AttachmentType.objects.flush_cache()
                 return redirect(reverse('admin_attachments_types'))
             else:
                 message = Message(_("Request authorization is invalid. Please resubmit your form."), messages.ERROR)
