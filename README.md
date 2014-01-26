@@ -23,12 +23,22 @@ Branch *future* is used for project's codebase cleanup and is not functional at 
 If you want to give Misago a spin, feel free to play with one of [previous releases](https://github.com/rafalp/Misago/releases).
 
 
+Bug reports and feature requests
+--------------------------------
+
+If you have found bug, please report it on [issue tracker](https://github.com/rafalp/Misago/issues).
+
+For feature or support requests as well as general feedback please use our [project forums](http://misago-project.org) instead. Your feedback means much to the project so please do share your thoughts!
+
+
 Contributing
 ------------
 
-Misago is an open source project. Submit pull requests and bug reports issue tracker to report bugs are welcome!
+Pull requests are always welcome.
 
-For feature or support requests as well as general feedback please use our [project forums](http://misago-project.org) insteads. Your feedback means much to the project so please do share your thoughts!
+If you have fixed spelling mistake, wrote new tests or fixed a bug, feel free to open pull request.
+
+If you want to take care of one of issues, please announce your intent in issue discussion on github before you start working, so situations when more than one person work on solving same issue can be avoided.
 
 
 Authors
