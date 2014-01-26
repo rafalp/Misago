@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Misago PL\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-25 18:00+0000\n"
-"PO-Revision-Date: 2014-01-25 22:56+0100\n"
+"POT-Creation-Date: 2014-01-26 11:29+0000\n"
+"PO-Revision-Date: 2014-01-26 14:29+0100\n"
 "Last-Translator: l0ud <loudpl@gmail.com>\n"
 "Language-Team: FxDev <loudpl@gmail.com>\n"
 "Language: PL\n"
@@ -1073,7 +1073,7 @@ msgid "Requested action is incorrect."
 msgstr "Żądana akcja jest niepoprawna."
 
 #: .\apps\admin\widgets.py:383
-#: .\templates\cranefly\private_threads\posting.html.py:176
+#: .\templates\cranefly\private_threads\posting.html.py:183
 #: .\templates\cranefly\reports\posting.html.py:172
 #: .\templates\cranefly\threads\posting.html.py:231
 msgid "Save Changes"
@@ -5269,36 +5269,36 @@ msgstr "Nie udało się odczytać przesłanego obrazka"
 msgid "Change Avatar"
 msgstr "Zmiana awatara"
 
-#: .\apps\usercp\avatar\views.py:51
+#: .\apps\usercp\avatar\views.py:52
 msgid "Your avatar has been changed to Gravatar."
 msgstr "Użyto obrazka z Gravatara."
 
-#: .\apps\usercp\avatar\views.py:53 .\apps\usercp\avatar\views.py:94
-#: .\apps\usercp\avatar\views.py:221
+#: .\apps\usercp\avatar\views.py:54 .\apps\usercp\avatar\views.py:95
+#: .\apps\usercp\avatar\views.py:222
 msgid "Request authorisation is invalid."
 msgstr "Autoryzacja żądania jest nieprawidłowa."
 
-#: .\apps\usercp\avatar\views.py:78
+#: .\apps\usercp\avatar\views.py:79
 msgid "No avatar galleries are available at the moment."
 msgstr "Niestety nie ma aktualnie dostępnych żadnych galerii awatarów."
 
-#: .\apps\usercp\avatar\views.py:90
+#: .\apps\usercp\avatar\views.py:91
 msgid "Your avatar has been changed to one from gallery."
 msgstr "Ustawiono awatar z galerii."
 
-#: .\apps\usercp\avatar\views.py:92
+#: .\apps\usercp\avatar\views.py:93
 msgid "Selected Avatar is incorrect."
 msgstr "Wskazany awatar jest niepoprawny."
 
-#: .\apps\usercp\avatar\views.py:152
+#: .\apps\usercp\avatar\views.py:153
 msgid "Your avatar has changed."
 msgstr "Twój awatar został zmieniony."
 
-#: .\apps\usercp\avatar\views.py:157
+#: .\apps\usercp\avatar\views.py:158
 msgid "Only gif, jpeg and png files are allowed for member avatars."
 msgstr "Dozwolone rozszerzenia to png, jpeg oraz gif."
 
-#: .\apps\usercp\avatar\views.py:177
+#: .\apps\usercp\avatar\views.py:178
 msgid ""
 "Crop Avatar option is avaiable only when you use uploaded image as your "
 "avatar."
@@ -5306,11 +5306,11 @@ msgstr ""
 "Opcja przycinania awatara jest dostępna tylko w przypadku przesyłania "
 "obrazka z komputera."
 
-#: .\apps\usercp\avatar\views.py:216
+#: .\apps\usercp\avatar\views.py:217
 msgid "Your avatar has been cropped."
 msgstr "Twój awatar został przycięty."
 
-#: .\apps\usercp\avatar\views.py:219 .\forms\forms.py:157
+#: .\apps\usercp\avatar\views.py:220 .\forms\forms.py:157
 msgid "Form contains errors."
 msgstr "Formularz zawiera błędy."
 
@@ -8015,6 +8015,24 @@ msgstr ""
 msgid "Register account"
 msgstr "Rejestracja nowego konta"
 
+#: .\templates\cranefly\register.html.py:68
+#: .\templates\cranefly\signin.html.py:70
+msgid "Enter your e-mail"
+msgstr "Wprowadź swój adres e-mail"
+
+#: .\templates\cranefly\register.html.py:72
+msgid "Repeat your e-mail"
+msgstr "Powtórz swój adres e-mail"
+
+#: .\templates\cranefly\register.html.py:76
+#: .\templates\cranefly\signin.html.py:74
+msgid "Enter your password"
+msgstr "Wprowadź swoje hasło"
+
+#: .\templates\cranefly\register.html.py:80
+msgid "Repeat your password"
+msgstr "Powtórz swoje hasło"
+
 #: .\templates\cranefly\resend_activation.html.py:13
 msgid "Request new Activation E-mail"
 msgstr "Ponowne wysyłanie e-maila aktywacyjnego"
@@ -8022,6 +8040,11 @@ msgstr "Ponowne wysyłanie e-maila aktywacyjnego"
 #: .\templates\cranefly\resend_activation.html.py:29
 msgid "Request new E-mail"
 msgstr "Wyślij e-mail jeszcze raz"
+
+#: .\templates\cranefly\resend_activation.html.py:41
+#: .\templates\cranefly\reset_password.html.py:41
+msgid "Enter your e-mail address"
+msgstr "Wprowadź swój adres e-mail"
 
 #: .\templates\cranefly\reset_password.html.py:13
 msgid "Request New Password"
@@ -8054,14 +8077,6 @@ msgstr "Nie odebrałem e-maila aktywacyjnego"
 #: .\templates\cranefly\signin.html.py:55
 msgid "I don't have account"
 msgstr "Nie posiadam jeszcze konta"
-
-#: .\templates\cranefly\signin.html.py:69
-msgid "Enter your e-mail"
-msgstr "Wprowadź swój adres e-mail"
-
-#: .\templates\cranefly\signin.html.py:70
-msgid "Enter your password"
-msgstr "Wprowadź swoje hasło"
 
 #: .\templates\cranefly\watched.html.py:13
 msgid "All Threads"
@@ -8105,7 +8120,7 @@ msgstr[1] "%(replies)s odpowiedzi, ostatnia od %(user)s %(last)s"
 msgstr[2] "%(replies)s odpowiedzi, ostatnia od %(user)s %(last)s"
 
 #: .\templates\cranefly\watched.html.py:83
-#: .\templates\cranefly\private_threads\posting.html.py:163
+#: .\templates\cranefly\private_threads\posting.html.py:170
 #: .\templates\cranefly\private_threads\thread.html.py:28
 #: .\templates\cranefly\threads\posting.html.py:218
 #: .\templates\cranefly\threads\thread.html.py:29
@@ -8234,7 +8249,7 @@ msgstr "Historia zmian posta #%(post)s"
 
 #: .\templates\cranefly\private_threads\changelog.html.py:23
 #: .\templates\cranefly\private_threads\details.html.py:23
-#: .\templates\cranefly\private_threads\posting.html.py:148
+#: .\templates\cranefly\private_threads\posting.html.py:155
 #: .\templates\cranefly\private_threads\thread.html.py:101
 #: .\templates\cranefly\private_threads\thread.html.py:103
 #: .\templates\cranefly\private_threads\thread.html.py:174
@@ -8414,7 +8429,7 @@ msgstr ""
 "nieodwracalna!"
 
 #: .\templates\cranefly\private_threads\posting.html.py:83
-#: .\templates\cranefly\private_threads\posting.html.py:182
+#: .\templates\cranefly\private_threads\posting.html.py:189
 #: .\templates\cranefly\reports\posting.html.py:85
 #: .\templates\cranefly\reports\posting.html.py:178
 #: .\templates\cranefly\threads\posting.html.py:139
@@ -8422,28 +8437,32 @@ msgstr ""
 msgid "Preview"
 msgstr "Podgląd"
 
-#: .\templates\cranefly\private_threads\posting.html.py:131
+#: .\templates\cranefly\private_threads\posting.html.py:114
+msgid "user1, user2, user3..."
+msgstr "użytkownik1, użytkownik2, użytkownik3..."
+
+#: .\templates\cranefly\private_threads\posting.html.py:138
 #: .\templates\cranefly\threads\posting.html.py:186
 msgid "Post New Thread"
 msgstr "Nowy temat"
 
-#: .\templates\cranefly\private_threads\posting.html.py:133
+#: .\templates\cranefly\private_threads\posting.html.py:140
 #: .\templates\cranefly\threads\posting.html.py:188
 msgid "Edit Thread"
 msgstr "Modyfikacja tematu"
 
-#: .\templates\cranefly\private_threads\posting.html.py:135
+#: .\templates\cranefly\private_threads\posting.html.py:142
 #: .\templates\cranefly\threads\posting.html.py:190
 msgid "Post New Reply"
 msgstr "Nowa odpowiedź"
 
-#: .\templates\cranefly\private_threads\posting.html.py:137
+#: .\templates\cranefly\private_threads\posting.html.py:144
 #: .\templates\cranefly\threads\posting.html.py:192
 msgid "Edit Reply"
 msgstr "Edycja odpowiedzi"
 
-#: .\templates\cranefly\private_threads\posting.html.py:144
-#: .\templates\cranefly\private_threads\posting.html.py:153
+#: .\templates\cranefly\private_threads\posting.html.py:151
+#: .\templates\cranefly\private_threads\posting.html.py:160
 #: .\templates\cranefly\private_threads\thread.html.py:22
 #: .\templates\cranefly\threads\posting.html.py:199
 #: .\templates\cranefly\threads\posting.html.py:208
@@ -8451,13 +8470,13 @@ msgstr "Edycja odpowiedzi"
 msgid "Not Reviewed"
 msgstr "Oczekuje na akceptację"
 
-#: .\templates\cranefly\private_threads\posting.html.py:150
+#: .\templates\cranefly\private_threads\posting.html.py:157
 #: .\templates\cranefly\reports\posting.html.py:149
 #: .\templates\cranefly\threads\posting.html.py:205
 msgid "First edit"
 msgstr "Pierwsza edycja"
 
-#: .\templates\cranefly\private_threads\posting.html.py:161
+#: .\templates\cranefly\private_threads\posting.html.py:168
 #: .\templates\cranefly\private_threads\thread.html.py:26
 #: .\templates\cranefly\threads\posting.html.py:216
 #: .\templates\cranefly\threads\thread.html.py:27
@@ -8468,7 +8487,7 @@ msgstr[0] "Jedna odpowiedź"
 msgstr[1] "%(replies)s odpowiedzi"
 msgstr[2] "%(replies)s odpowiedzi"
 
-#: .\templates\cranefly\private_threads\posting.html.py:166
+#: .\templates\cranefly\private_threads\posting.html.py:173
 #: .\templates\cranefly\private_threads\thread.html.py:30
 #: .\templates\cranefly\reports\posting.html.py:164
 #: .\templates\cranefly\threads\posting.html.py:221
@@ -8476,12 +8495,12 @@ msgstr[2] "%(replies)s odpowiedzi"
 msgid "Locked"
 msgstr "Zamknięty"
 
-#: .\templates\cranefly\private_threads\posting.html.py:172
+#: .\templates\cranefly\private_threads\posting.html.py:179
 #: .\templates\cranefly\threads\posting.html.py:227
 msgid "Start Thread"
 msgstr "Rozpocznij temat"
 
-#: .\templates\cranefly\private_threads\posting.html.py:174
+#: .\templates\cranefly\private_threads\posting.html.py:181
 #: .\templates\cranefly\threads\posting.html.py:229
 msgid "Post Reply"
 msgstr "Wyślij odpowiedź"
@@ -10068,11 +10087,11 @@ msgstr[0] "Godzinę i %(minutes)s temu"
 msgstr[1] "%(hours)s godziny i %(minutes)s temu"
 msgstr[2] "%(hours)s godzin i %(minutes)s temu"
 
-#: .\utils\datesformats.py:98
+#: .\utils\datesformats.py:98 .\utils\datesformats.py:178
 #, python-format
-msgid "%(minutes)s minute"
+msgid "minute"
 msgid_plural "%(minutes)s minutes"
-msgstr[0] "%(minutes)s minutę"
+msgstr[0] "minuta"
 msgstr[1] "%(minutes)s minuty"
 msgstr[2] "%(minutes)s minut"
 
@@ -10101,7 +10120,7 @@ msgid "%(hour)sh"
 msgstr "%(hour)sh"
 
 #: .\utils\datesformats.py:162
-#, fuzzy, python-format
+#, python-format
 msgid "day"
 msgid_plural "%(days)s days"
 msgstr[0] "dzień"
@@ -10109,23 +10128,15 @@ msgstr[1] "%(days)s dni"
 msgstr[2] "%(days)s dni"
 
 #: .\utils\datesformats.py:170
-#, fuzzy, python-format
+#, python-format
 msgid "hour"
 msgid_plural "%(hours)s hours"
 msgstr[0] "godzinę"
 msgstr[1] "%(hours)s godziny"
 msgstr[2] "%(hours)s godzin"
 
-#: .\utils\datesformats.py:178
-#, fuzzy, python-format
-msgid "minute"
-msgid_plural "%(minutes)s minutes"
-msgstr[0] "minuta"
-msgstr[1] "%(minutes)s minuty"
-msgstr[2] "%(minutes)s minut"
-
 #: .\utils\datesformats.py:184
-#, fuzzy, python-format
+#, python-format
 msgid "second"
 msgid_plural "%(seconds)s seconds"
 msgstr[0] "sekundę"
@@ -10474,6 +10485,12 @@ msgstr "(UTC+13:00) Wyspy Feniks"
 msgid "(UTC+14:00) Nuku'alofa"
 msgstr "(UTC+14:00) Nuku'alofa"
 
+#~ msgid "%(minutes)s minute"
+#~ msgid_plural "%(minutes)s minutes"
+#~ msgstr[0] "%(minutes)s minutę"
+#~ msgstr[1] "%(minutes)s minuty"
+#~ msgstr[2] "%(minutes)s minut"
+
 #~ msgid "Can use Moderator Control Panel"
 #~ msgstr "Może używać panelu moderatora (MCP)"
 
@@ -10584,9 +10601,6 @@ msgstr "(UTC+14:00) Nuku'alofa"
 #~ msgid "Post Thread"
 #~ msgstr "Załóż temat"
 
-#~ msgid "Enter your e-mail address."
-#~ msgstr "Wpisz swój adres e-mail."
-
 #~ msgid "Search Bans"
 #~ msgstr "Wyszukiwanie banów"
 
@@ -10608,17 +10622,8 @@ msgstr "(UTC+14:00) Nuku'alofa"
 #~ msgid "End Date: YYYY-MM-DD"
 #~ msgstr "Data końcowa: YYYY-MM-DD (rok, miesiąc, dzień)"
 
-#~ msgid "user1, user2, user3..."
-#~ msgstr "Użytkownik1, użytkownik2, użytkownik3..."
-
 #~ msgid "Enter your desired username"
 #~ msgstr "Wprowadź pożądaną nazwę użytkownika"
-
-#~ msgid "Repeat your e-mail"
-#~ msgstr "Powtórz swój adres e-mail"
-
-#~ msgid "Repeat your password"
-#~ msgstr "Powtórz swoje hasło"
 
 #~ msgid "Thread Importance"
 #~ msgstr "Istotnośc tematu"
