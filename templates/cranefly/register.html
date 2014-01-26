@@ -61,3 +61,21 @@
   </div>
 </div>
 {% endblock %}
+
+
+{# Translation Strings #}
+{% macro lang_enter_your_email() -%}
+{% trans %}Enter your e-mail{% endtrans %}
+{%- endmacro %}
+
+{% macro lang_repeat_your_email() -%}
+{% trans %}Repeat your e-mail{% endtrans %}
+{%- endmacro %}
+
+{% macro lang_enter_your_password() -%}
+{% trans %}Enter your password{% endtrans %}
+{%- endmacro %}
+
+{% macro lang_repeat_your_password() -%}
+{% trans %}Repeat your password{% endtrans %}
+{%- endmacro %}
