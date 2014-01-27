@@ -3,7 +3,7 @@ import os
 from setuptools import setup
 from misago import __version__ as version
 
-README = open(os.path.join(os.path.dirname(__file__), 'README.md')).read()
+README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
 with open("requirements.txt", "r") as f:
     REQUIREMENTS = [x.strip() for x in f.readlines()]
