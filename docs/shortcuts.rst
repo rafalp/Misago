@@ -16,7 +16,7 @@ This function compares model instance's "slug" attribute against user-friendly s
 
 Example of view that first fetches object form database and then makes sure user or spider that reaches page has been let known of up-to-date link:
 
-
+::
     from misago.views.shortcuts import check_object_slug, get_object_or_404
     from myapp.models import Cake
 
