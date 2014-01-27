@@ -15,9 +15,8 @@ get
 
 .. function:: get(key[, default=None])
 
-Get value for key from thread store or default value if key is undefined.
+Get value for key from thread store or default value if key is undefined::
 
-::
     >>> from misago.core import threadstore
 	>>> get('peach')
 	None

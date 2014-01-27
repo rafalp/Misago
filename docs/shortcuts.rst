@@ -14,9 +14,9 @@ check_object_slug
 
 This function compares model instance's "slug" attribute against user-friendly slug that was passed as link parameter. If model's slug attribute is different this function, :py:class:`misago.views.OutdatedSlug` is raised. This exception is then captured by Misago's exception handler which makes Misago return permanent (http 301) redirect to client with valid link.
 
-Example of view that first fetches object form database and then makes sure user or spider that reaches page has been let known of up-to-date link:
+Example of view that first fetches object form database and then makes sure user or spider that reaches page has been let known of up-to-date link::
 
-::
+
     from misago.views.shortcuts import check_object_slug, get_object_or_404
     from myapp.models import Cake
 
