@@ -1,3 +1,4 @@
+from django.shortcuts import *
 from misago.views.exceptions import OutdatedSlug
 
 
