@@ -15,10 +15,10 @@ get
 Get value for key from thread store or default value if key is undefined::
 
     >>> from misago.core import threadstore
-    >>> get('peach')
+    >>> threadstore.get('peach')
     None
 
-    >>> get('peach', 'no peach!')
+    >>> threadstore.get('peach', 'no peach!')
     'no peach!'
 
 
