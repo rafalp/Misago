@@ -4,9 +4,6 @@ Misago Thread Store
 
 Thread store is simple memory-based cache some Misago features use to maintain state for request duration.
 
-.. warning::
-   :py:mod:`misago.core.threadstore` is considered part of internals and generally should be avoided unless
-
 It offers subset of standard cache API:
 
 
