@@ -1,0 +1,6 @@
+include LICENSE.md
+include README.md
+include requirements.txt
+recursive-include docs *
+recursive-exclude docs/build *
+recursive-include misago *
