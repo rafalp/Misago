@@ -15,11 +15,11 @@ get
 Get value for key from thread store or default value if key is undefined::
 
     >>> from misago.core import threadstore
-	>>> get('peach')
-	None
+    >>> get('peach')
+    None
 
-	>>> get('peach', 'no peach!')
-	'no peach!'
+    >>> get('peach', 'no peach!')
+    'no peach!'
 
 
 get() never raises an exception for non-existant value which is why you should avoid storing "None" values and use custom default values to spot non-existant keys.
