@@ -9,8 +9,9 @@ def get(key, default=None):
 
 
 def set(key, value):
-    return _thread_local.__dict__[key] = value
+    _thread_local.__dict__[key] = value
+    return _thread_local.__dict__[key]
 
 
 def clear():
-    _thread_local.__dict__ = {}
+    _thread_local.__dict__.clear()
