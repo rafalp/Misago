@@ -2,7 +2,7 @@ from misago.views import exceptionhandler
 from misago.views.utils import is_request_to_misago
 
 
-class MisagoExceptionHandlerMiddleware(object):
+class ExceptionHandlerMiddleware(object):
     def process_exception(self, request, exception):
         request_is_to_misago = is_request_to_misago(request)
         misago_can_handle_exception = exceptionhandler.is_misago_exception(

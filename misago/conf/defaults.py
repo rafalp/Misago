@@ -51,7 +51,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'misago.views.middleware.MisagoExceptionHandlerMiddleware',
+    'misago.core.middleware.ThreadStoreMiddleware',
+    'misago.views.middleware.ExceptionHandlerMiddleware',
 )
 
 # Register Misago directories

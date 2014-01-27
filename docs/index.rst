@@ -69,3 +69,4 @@ Following references cover everything you want to know about writing your own ap
    shortcuts
    views_errors
    cache_buster
+   thread_store
