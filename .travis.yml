@@ -6,5 +6,5 @@ install:
   - misago-start.py testproject
   - pip install coveralls
 script:
-  - coverage run --source=misago manage.py test
+  - coverage run --source=misago testproject/manage.py test
   - coveralls
