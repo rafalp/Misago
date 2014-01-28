@@ -5,8 +5,9 @@ from misago import __version__ as version
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
-with open("requirements.txt", "r") as f:
+with open(os.path.join(os.path.dirname(__file__), 'misago/project_template/requirements.txt'), "r") as f:
     REQUIREMENTS = [x.strip() for x in f.readlines()]
+
 
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
@@ -24,6 +25,10 @@ setup(
     author=u'Rafał Pitoń',
     author_email='kontakt@rpiton.com',
     install_requires=REQUIREMENTS,
+    scripts=['misago/bin/misago-start.py'],
+    entry_points={'console_scripts': [
+        'misago-start = misago.bin.misago-start.start_misago_project',
+    ]},
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Environment :: Web Environment',

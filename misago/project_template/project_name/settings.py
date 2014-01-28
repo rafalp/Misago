@@ -1,11 +1,11 @@
 """
-Django settings for testproject project.
+Misago settings for {{ project_name }} project.
 
 For more information on this file, see
-https://docs.djangoproject.com/en/1.6/topics/settings/
+https://docs.djangoproject.com/en/{{ docs_version }}/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.6/ref/settings/
+https://docs.djangoproject.com/en/{{ docs_version }}/ref/settings/
 """
 
 # Import Misago defaults for overriding
@@ -18,10 +18,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/{{ docs_version }}/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'wxl2=un5q24b&*2&6#&+j)$ou5j&k*sfhjoho1888ths^mq82c'
+SECRET_KEY = '{{ secret_key }}'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -33,13 +33,13 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-ROOT_URLCONF = 'testproject.urls'
+ROOT_URLCONF = '{{ project_name }}.urls'
 
-WSGI_APPLICATION = 'testproject.wsgi.application'
+WSGI_APPLICATION = '{{ project_name }}.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
+# https://docs.djangoproject.com/en/{{ docs_version }}/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -50,14 +50,12 @@ DATABASES = {
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.6/topics/i18n/
+# https://docs.djangoproject.com/en/{{ docs_version }}/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
+# https://docs.djangoproject.com/en/{{ docs_version }}/howto/static-files/
 
 STATIC_URL = '/static/'

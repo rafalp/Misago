@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'misago.core',
     'misago.conf',
+    'misago.views',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -77,3 +78,5 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+TIME_ZONE = 'UTC'
