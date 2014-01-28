@@ -30,7 +30,7 @@ def start_misago_project():
 
     MISAGO_PROJECT_TEMPLATE = os.path.join(os.path.dirname(__file__),
                                            'misago/project_template')
-    argv = [sys.args[0], 'startproject', project_name,
+    argv = [sys.argv[0], 'startproject', project_name,
             '--template=%s' % MISAGO_PROJECT_TEMPLATE]
     management.execute_from_command_line(argv)
 
