@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 from misago import __version__ as version
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
@@ -13,6 +13,10 @@ with open(os.path.join(os.path.dirname(__file__), 'misago/project_template/requi
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 
+EXCLUDE_FROM_PACKAGES = ['misago.project_template',
+                         'misago.bin']
+
+
 setup(
     name='Misago',
     version=version,
@@ -23,7 +27,7 @@ setup(
     author=u'Rafał Pitoń',
     author_email='kontakt@rpiton.com',
     install_requires=REQUIREMENTS,
-    packages=['misago'],
+    packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
     scripts=['misago/bin/misago-start.py'],
     entry_points={'console_scripts': [
