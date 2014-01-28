@@ -14,17 +14,17 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 
 setup(
-    name='misago',
+    name='Misago',
     version=version,
-    packages=['misago'],
-    include_package_data=True,
     license='GNU General Public License v2 (GPLv2)',
-    description='Misago is be complete, featured and modern forum solution.',
+    description='Misago is complete, featured and modern forum solution.',
     long_description=README,
     url='http://www.misago-project.org/',
     author=u'Rafał Pitoń',
     author_email='kontakt@rpiton.com',
     install_requires=REQUIREMENTS,
+    packages=['misago'],
+    include_package_data=True,
     scripts=['misago/bin/misago-start.py'],
     entry_points={'console_scripts': [
         'misago-start = misago.core.setup:start_misago_project',
