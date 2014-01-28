@@ -2,10 +2,9 @@ language: python
 python:
   - "2.7"
 install:
-  - pip install -r requirements.txt --use-mirrors
-  - pip install coveralls
-script:
   - python setup.py install
   - misago-start.py testproject
+  - pip install coveralls
+script:
   - coverage run --source=misago manage.py test
   - coveralls
