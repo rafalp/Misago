@@ -33,6 +33,7 @@ setup(
     entry_points={'console_scripts': [
         'misago-start = misago.core.setup:start_misago_project',
     ]},
+    test_suite="runtests.runtests",
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Environment :: Web Environment',

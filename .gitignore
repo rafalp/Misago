@@ -45,6 +45,9 @@ coverage.xml
 *.log
 *.pot
 
+# Misago test runner project
+testproject/
+
 # Sphinx documentation
 docs/_build/
 

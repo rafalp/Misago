@@ -4,6 +4,11 @@ from optparse import OptionParser
 from django.core import management
 
 
+def get_misago_project_template():
+    misago_path = os.path.dirname(os.path.dirname(__file__))
+    return os.path.join(misago_path, 'project_template')
+
+
 def start_misago_project():
     parser = OptionParser(usage="usage: %prog project_name")
     (options, args) = parser.parse_args()
@@ -26,9 +31,7 @@ def start_misago_project():
                      "Python module and cannot be used as a project "
                      "name. Please try another name." % project_name)
 
-    misago_base_dir = os.path.dirname(os.path.dirname(__file__))
-    project_template_path = os.path.join(misago_base_dir, 'project_template')
-
     argv = ['start-misago.py', 'startproject', project_name,
-            '--template=%s' % project_template_path]
+            '--template=%s' % get_misago_project_template()]
+
     management.execute_from_command_line(argv)
