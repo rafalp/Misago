@@ -1,5 +1,4 @@
 import os
-import sys
 from optparse import OptionParser
 from django.core import management
 
@@ -18,7 +17,6 @@ def start_misago_project():
     project_name = args[0]
     if project_name.startswith("-"):
         parser.error("project_name cannot start with '-'")
-
 
     # Ensure the given directory name doesn't clash with an existing
     # Python package/module.

@@ -39,4 +39,3 @@ class CheckObjectSlugTests(TestCase):
             check_object_slug(model, "wrong-slug")
         except OutdatedSlug as e:
             self.assertEqual(model, e.args[0])
-

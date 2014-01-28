@@ -1,5 +1,7 @@
 def runtests():
-    import atexit, os, shutil, sys
+    import os
+    import shutil
+    import sys
 
     test_runner_path = os.path.dirname(__file__)
     project_template_path = os.path.join(
