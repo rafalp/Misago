@@ -27,7 +27,7 @@ setup(
     install_requires=REQUIREMENTS,
     scripts=['misago/bin/misago-start.py'],
     entry_points={'console_scripts': [
-        'misago-start = misago.bin.misago-start:start_misago_project',
+        'misago-start = misago.core.setup:start_misago_project',
     ]},
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
