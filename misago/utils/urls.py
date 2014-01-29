@@ -22,3 +22,10 @@ def clean_inner(string):
     if parsed.fragment:
         href += '#%s' % parsed.fragment
     return html_escape(href)
+
+
+def clean_outer(string):
+    parsed = urlparse(string.strip())
+    if not parsed.scheme:
+        return 'http://%s' % string
+    return string

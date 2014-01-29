@@ -1,6 +1,6 @@
 import markdown
 from markdown.util import etree
-from misago.utils.urls import is_url, is_inner, clean_inner
+from misago.utils.urls import is_url, is_inner, clean_inner, clean_outer
 
 class CleanLinksExtension(markdown.Extension):
     def extendMarkdown(self, md):
@@ -21,17 +21,20 @@ class CleanLinksTreeprocessor(markdown.treeprocessors.Treeprocessor):
             if is_inner(node.get('href')):
                 node.set('href', clean_inner(node.get('href')))
             else:
+                node.set('href', clean_outer(node.get('href')))
                 node.set('rel', 'nofollow')
+
         if node.tag == 'img':
             if is_inner(node.get('src')):
                 node.set('src', '%s' % clean_inner(node.get('src')))
-
+            else:
+                node.set('src', '%s' % clean_outer(node.get('src')))
         try:
             if self.inurl and node.text and is_url(node.text) and is_inner(node.text):
                 node.text = clean_inner(node.text)[1:]
         except TypeError:
             pass
-            
+
         for i in node:
             self.walk_tree(i)
         self.inurl = False
