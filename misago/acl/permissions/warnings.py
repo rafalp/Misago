@@ -132,8 +132,8 @@ def build(acl, roles):
                 acl.warnings.acl['can_warn_members'] = True
             if role['can_see_other_members_warns']:
                 acl.warnings.acl['can_see_other_members_warns'] = True
-            if role['can_be_warned']:
-                acl.warnings.acl['can_be_warned'] = True
+            if not role['can_be_warned']:
+                acl.warnings.acl['can_be_warned'] = False
             if role['can_cancel_warnings'] > acl.warnings.acl['can_cancel_warnings']:
                 acl.warnings.acl['can_cancel_warnings'] = role['can_cancel_warnings']
             if (role['can_cancel_warnings_newer_than'] == 0
