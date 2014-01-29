@@ -51,22 +51,19 @@ class PollFormMixin(object):
         poll.save()
 
     def update_poll_choices(self, poll, form):
-        choices = []
         for option in form.changed_choices:
-            option.save()
-            choices.append(option)
+            option.save(force_update=True)
         for option in form.deleted_choices:
             poll.votes -= option.votes
             option.delete()
-        for name in set(form.clean_choices) - set([x.name for x in form.changed_choices]):
+        for name in form.new_choices:
             option = PollOption.objects.create(
                                                poll=poll,
                                                forum=self.forum,
                                                thread=self.thread,
                                                name=name,
                                                )
-            choices.append(option)
-        poll.choices_cache = choices
+        poll.choices_cache = [x for x in poll.option_set.all()]
 
     def delete_poll(self):
         self.thread.poll.delete()
@@ -113,7 +110,7 @@ class EditThreadView(EditThreadBaseView, TypeMixin, PollFormMixin, PrefixFormMix
     form_type = EditThreadForm
 
     def after_form(self, form):
-        if self.thread.poll:
+        if self.thread.poll and self.request.acl.threads.can_edit_poll(self.forum, self.thread.poll):
             if form.cleaned_data.get('poll_delete'):
                 self.delete_poll()
                 self.thread.save()

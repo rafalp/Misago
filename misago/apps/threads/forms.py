@@ -68,6 +68,7 @@ class PollFormMixin(object):
 
     def clean_poll_choices(self):
         self.clean_choices = []
+        self.new_choices = []
         data = self.cleaned_data['poll_choices']
 
         if self.poll:
@@ -82,6 +83,7 @@ class PollFormMixin(object):
                     if len(choice) > 250:
                         raise forms.ValidationError(_("Poll choices should be no longer than 250 characters."))
                     self.clean_choices.append(choice)
+                    self.new_choices.append(choice)
             if len(self.clean_choices) < 2:
                 raise forms.ValidationError(_("Poll needs at least two choices."))
             if len(self.clean_choices) > 10:
