@@ -79,8 +79,8 @@ class FirstModeratedBaseView(JumpView):
             raise ACLError404()
         try:
             return self.redirect_to_post(
-                self.thread.post_set.get(moderated=True))
-        except Post.DoesNotExist:
+                self.thread.post_set.filter(moderated=True)[:1][0])
+        except IndexError:
             return error404(self.request)
 
 
@@ -90,7 +90,7 @@ class FirstReportedBaseView(JumpView):
             raise ACLError404()
         try:
             return self.redirect_to_post(
-                self.thread.post_set.get(reported=True))
+                self.thread.post_set.filter(reported=True)[:1][0])
         except Post.DoesNotExist:
             return error404(self.request)
 
