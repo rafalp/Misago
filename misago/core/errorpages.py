@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 def _error_page(request, code, message=None):
     response = render(request,
-                      'misago/front/%s.html' % code,
+                      'misago/%s.html' % code,
                       {'message': message})
     response.status_code = code
     return response

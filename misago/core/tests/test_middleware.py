@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.test import TestCase
 from django.test.client import RequestFactory
-from misago.views.middleware import ExceptionHandlerMiddleware
+from misago.core.middleware.exceptionhandler import ExceptionHandlerMiddleware
 
 
 class ExceptionHandlerMiddlewareTests(TestCase):

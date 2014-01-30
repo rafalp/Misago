@@ -1,5 +1,5 @@
 from django.shortcuts import *
-from misago.views.exceptions import OutdatedSlug
+from misago.core.exceptions import OutdatedSlug
 
 
 def check_object_slug(model, slug):

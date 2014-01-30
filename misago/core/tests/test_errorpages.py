@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from misago.views import errorpages
+from misago.core import errorpages
 
 
 class ErrorPageViewsTests(TestCase):

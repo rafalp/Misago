@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import RequestFactory
-from misago.views.utils import is_request_to_misago
+from misago.core.utils import is_request_to_misago
 
 
 VALID_PATHS = (

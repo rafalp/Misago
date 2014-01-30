@@ -3,8 +3,8 @@ from django.core import exceptions as django_exceptions
 from django.core.exceptions import PermissionDenied
 from django.test import TestCase
 from django.test.client import RequestFactory
-from misago.views.exceptions import OutdatedSlug
-from misago.views import exceptionhandler
+from misago.core.exceptions import OutdatedSlug
+from misago.core import exceptionhandler
 
 
 INVALID_EXCEPTIONS = (

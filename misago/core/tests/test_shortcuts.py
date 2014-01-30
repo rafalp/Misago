@@ -1,5 +1,5 @@
 from django.test import TestCase
-from misago.views.shortcuts import check_object_slug, OutdatedSlug
+from misago.core.shortcuts import check_object_slug, OutdatedSlug
 
 
 class MockModel(object):
