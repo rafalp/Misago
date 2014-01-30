@@ -26,9 +26,21 @@ If you can run Python apps on your hosting and you are looking for modern soluti
 Installing and updating
 -----------------------
 
-Branch *future* is used for project's codebase cleanup and is not functional at the time of this writing.
+Please note that branch *future* is used for project's codebase cleanup and is not functional at the time of this writing. If you want to give Misago a spin, feel free to play with one of `previous releases <https://github.com/rafalp/Misago/releases>`_.
 
-If you want to give Misago a spin, feel free to play with one of `previous releases <https://github.com/rafalp/Misago/releases>`_.
+To install Misago setup and activate virtual environment and then fire following commands::
+
+    python setup.py install
+    misago-start.py testforum
+
+Those commands will install Misago in your virtual environment and make pre-configured Misago site for you named "testforum" using "misago-start.py" script available successfull installation.
+
+Now cd test forum and fire runserver command using manage.py::
+
+    cd testforum
+    python manage.py runserver
+
+If server starts, you should be able to visit 127.0.0.1:8000 in your browser and see simple placeholder response from Misago, however as work on this branch is underway revisions may frequently introduce changes that will break runserver.
 
 
 Bug reports and feature requests

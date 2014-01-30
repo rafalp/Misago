@@ -31,6 +31,31 @@ Speaking of shared servers, ability to download, compile and run software from i
 Setup
 -----
 
+To install Misago setup and activate virtual environment for your site and then fire following command::
+
+    python setup.py install
+
+This will install Misago in your virtual environment and make "misago-start.py" script available for you to use to create pre-configured Misago site.
+
+Now decide on your site's "name". This name will be used for python module that will contain your configuration files. This means it should be only latin lowercase letters and (optionally) digits and underscore sign ("_"). Good idea is to use your domain name as source for project namespace, for example turning "misago-forum.org" into "misagoforumorg".
+
+Once you've decided on your name, create your site configuration module. In example we assume your site will be named "misagoforumorg"::
+
+	misago-start.py misagoforumorg
+
+This will create directory "misagoforumorg" in your working directory. Inside you will find "manage.py" file that you can use to run administrative commands Misago provides as well as access its python shell which is usefull for quick and dirty administration work. In addition to this file you will find "cron.txt" that contains example crontab configuration for automating maintenance tasks on your site and "requirements.txt" that you can use as reference of versions of libraries Misago relies on to run. In addition to those, you will find one more "misagoforumorg" here, containing python module with configuration files for your site. We will get to it in a minute, but before that lets spend few more moments in our current location.
+
+This directory has special purpose. It serves as "container" for your customizations for Misago. If you want to install extension or plugin that has no "setup.py" of its own or use custom styles or templates on your site, you will put them there, making them easily accessible for your Misago installation.
+
+Now let's go deeper, into "misagoforumorg". By default this directory will contain four files: "__init__.py", thats special file that tells python this directory is python package, "settings.py" that contains all low-level settings of your site, "urls.py" that tells your forum about links on your site and finally "wsgi.py", thats special file servers use to understand and talk with your application. Unless you are building entire site around your forum, you can ignore "urls.py".
+
+Now open "settings.py" in your code editor of choice and give a look in values listed here. Each value is accompanied by commentary explaining its purpose. See if any tuning is needed, then save your changes and leave editor.
+
+Now move back to directory with manage.py and fire "runserver" command on it::
+
+    python manage.py runserver
+
+If server starts, you should be able to visit 127.0.0.1:8000 in your browser and see simple placeholder response from Misago, however as work on project is underway revisions may frequently introduce changes that will break runserver.
 
 
 Deployment
