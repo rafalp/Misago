@@ -52,7 +52,7 @@ Let's go deeper. Change your current directory to "misagoforumorg". By default t
 Open "settings.py" in your code editor of choice and give a look in values listed here. Each value is accompanied by commentary explaining its purpose. See if any tuning is needed, then save your changes and leave editor.
 
 .. note::
-   To simplify setup process, by default "settings.py" file contains only most basic settings that are needed for your site to run, with everything else being set for you automatically at the beginning of first file.
+   To simplify setup process, by default "settings.py" file contains only most basic settings that are needed for your site to run, with everything else being set for you automatically at the beginning of file.
 
 Move back to directory with manage.py and use it to fire "runserver" command::
 
