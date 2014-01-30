@@ -1,7 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
-from misago.views import errorpages
-from misago.views.exceptions import OutdatedSlug
+from misago.core import errorpages
+from misago.core.exceptions import OutdatedSlug
 
 
 HANDLED_EXCEPTIONS = (Http404, OutdatedSlug, PermissionDenied,)

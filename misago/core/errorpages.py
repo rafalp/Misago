@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from misago.core.utils import is_request_to_misago
 
 
 def _error_page(request, code, message=None):
@@ -18,9 +19,6 @@ def page_not_found(request):
 
 
 # Decorators for custom error page handlers
-from misago.views.utils import is_request_to_misago
-
-
 def shared_403_exception_handler(f):
     def page_decorator(request, *args, **kwargs):
         if is_request_to_misago(request):

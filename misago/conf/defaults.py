@@ -42,7 +42,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'misago.core',
     'misago.conf',
-    'misago.views',
 )
 
 MIDDLEWARE_CLASSES = (

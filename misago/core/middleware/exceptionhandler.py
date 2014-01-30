@@ -1,5 +1,5 @@
-from misago.views import exceptionhandler
-from misago.views.utils import is_request_to_misago
+from misago.core import exceptionhandler
+from misago.core.utils import is_request_to_misago
 
 
 class ExceptionHandlerMiddleware(object):
