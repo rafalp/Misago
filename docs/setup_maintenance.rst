@@ -47,11 +47,14 @@ This will create directory "misagoforumorg" in your working directory. Inside yo
 
 This directory has special purpose. It serves as "container" for your customizations for Misago. If you want to install extension or plugin that has no "setup.py" of its own or use custom styles or templates on your site, you will put them there, making them easily accessible for your Misago installation.
 
-Now let's go deeper, into "misagoforumorg". By default this directory will contain four files: "__init__.py", thats special file that tells python this directory is python package, "settings.py" that contains all low-level settings of your site, "urls.py" that tells your forum about links on your site and finally "wsgi.py", thats special file servers use to understand and talk with your application. Unless you are building entire site around your forum, you can ignore "urls.py".
+Let's go deeper. Change your current directory to "misagoforumorg". By default this directory will contain four files: "__init__.py", thats special file that tells python this directory is python package, "settings.py" that contains all low-level settings of your site, "urls.py" that tells your forum about links on your site and finally "wsgi.py", thats special file servers use to understand and talk with your application. Unless you are building entire site around your forum, you can ignore "urls.py".
 
-Now open "settings.py" in your code editor of choice and give a look in values listed here. Each value is accompanied by commentary explaining its purpose. See if any tuning is needed, then save your changes and leave editor.
+Open "settings.py" in your code editor of choice and give a look in values listed here. Each value is accompanied by commentary explaining its purpose. See if any tuning is needed, then save your changes and leave editor.
 
-Now move back to directory with manage.py and fire "runserver" command on it::
+.. note::
+   To simplify setup process, by default "settings.py" file contains only most basic settings that are needed for your site to run, with everything else being set for you automatically at the beginning of first file.
+
+Move back to directory with manage.py and use it to fire "runserver" command::
 
     python manage.py runserver
 
