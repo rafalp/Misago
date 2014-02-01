@@ -2,7 +2,7 @@ from floppyforms import *
 from floppyforms import Form as BaseForm, ModelForm as BaseModelForm
 
 
-class AutoStripInputMixin(object):
+class AutoStripWhitespacesMixin(object):
     autostrip_exclude = None
 
     def full_clean(self):
@@ -17,9 +17,9 @@ class AutoStripInputMixin(object):
         return super(AutoStripInputMixin, self).full_clean()
 
 
-class Form(AutoStripInputMixin, BaseForm):
+class Form(AutoStripWhitespacesMixin, BaseForm):
     pass
 
 
-class ModelForm(AutoStripInputMixin, BaseModelForm):
+class ModelForm(AutoStripWhitespacesMixin, BaseModelForm):
     pass
