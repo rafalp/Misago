@@ -10,7 +10,7 @@ class ExceptionHandlerMiddlewareTests(TestCase):
         self.request = RequestFactory().get(reverse('forum_index'))
 
     def test_middleware_returns_response_for_supported_exception(self):
-        "Middleware returns HttpResponse for supported exception"
+        """Middleware returns HttpResponse for supported exception"""
         exception = Http404()
         middleware = ExceptionHandlerMiddleware()
 

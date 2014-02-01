@@ -31,7 +31,7 @@ class ThreadStoreMiddlewareTests(TestCase):
         self.request = RequestFactory().get(reverse('forum_index'))
 
     def test_middleware_clears_store_on_response_exception(self):
-        "Middleware cleared store on response"
+        """Middleware cleared store on response"""
 
         threadstore.set('any_chesse', 'Nope')
         middleware = ThreadStoreMiddleware()
