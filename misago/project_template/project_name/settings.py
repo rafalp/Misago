@@ -20,22 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/{{ docs_version }}/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '{{ secret_key }}'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
-
-
-# Application definition
-
-ROOT_URLCONF = '{{ project_name }}.urls'
-
-WSGI_APPLICATION = '{{ project_name }}.wsgi.application'
 
 
 # Database
@@ -49,13 +39,56 @@ DATABASES = {
 }
 
 
-# Internationalization
+# Cache
+# https://docs.djangoproject.com/en/{{ docs_version }}/ref/settings/#caches
+
+CACHES = {{
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.DummyCache',
+    }
+}
+
+
+# Site language
 # https://docs.djangoproject.com/en/{{ docs_version }}/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
 
-# Static files (CSS, JavaScript, Images)
+# Path used to access static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/{{ docs_version }}/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Path used to access uploaded media (Avatars and Profile Backgrounds, ect.)
+# This is NOT path used to serve posts attachments.
+# https://docs.djangoproject.com/en/{{ docs_version }}/howto/static-files/
+MEDIA_URL = '/media/'
+
+
+# Automatically setup default paths to media and attachments directories
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+ATTACHMENTS_ROOT = os.path.join(BASE_DIR, 'attachments')
+
+
+# Automatically setup default paths for static and template directories
+# You can use those directories to easily customize and add your own
+# assets and templates to your site
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'theme/static'),
+) + STATICFILES_DIRS
+
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR, 'theme/templates'),
+) + TEMPLATE_DIRS
+
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = '{{ secret_key }}'
+
+
+# Application definition
+# Don't edit those settings unless you know what you are doing
+ROOT_URLCONF = '{{ project_name }}.urls'
+WSGI_APPLICATION = '{{ project_name }}.wsgi.application'

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import patterns, include, url
 
 from django.contrib import admin
@@ -10,6 +11,11 @@ urlpatterns = patterns('',
 )
 
 
+# Serve static and media files in development
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
 # Error Handlers
 # Misago needs those handlers to deal with errors raised by it's middlewares
 # If you replace those handlers with custom ones, make sure you decorate them
@@ -17,8 +23,3 @@ urlpatterns = patterns('',
 # decorators that are defined in misago.views.errorpages module!
 handler403 = 'misago.views.errorpages.permission_denied'
 handler404 = 'misago.views.errorpages.page_not_found'
-
-
-# Serve static files in development
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-urlpatterns += staticfiles_urlpatterns()
