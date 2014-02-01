@@ -9,7 +9,7 @@ Using Forms in Misago
 
 
 Misago wraps standard forms library that comes with Django with two extra layers layers of abstraction. First one is `Django-floppyforms <http://django-floppyforms.readthedocs.org/en/latest/>`_ app that allows to use templates to display forms.
- Thanks to this feature, it's possible to render correct markup that `Bootstrap <getbootstrap.com/css/#forms>`_ requires with minimal amount of efford.
+Thanks to this feature, it's possible to render correct markup that `Bootstrap <getbootstrap.com/css/#forms>`_ requires with minimal amount of efford.
 
 
 Misago Forms Module
