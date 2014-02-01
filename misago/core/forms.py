@@ -1,4 +1,5 @@
-import floppyforms as forms
+from floppyforms import *
+from floppyforms import Form as BaseForm, ModelForm as BaseModelForm
 
 
 class AutoStripInputMixin(object):
@@ -16,9 +17,9 @@ class AutoStripInputMixin(object):
         return super(AutoStripInputMixin, self).full_clean()
 
 
-class Form(AutoStripInputMixin, forms.Form):
+class Form(AutoStripInputMixin, forms.BaseForm):
     pass
 
 
-class ModelForm(AutoStripInputMixin, forms.ModelForm):
+class ModelForm(AutoStripInputMixin, forms.BaseModelForm):
     pass
