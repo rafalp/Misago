@@ -49,11 +49,7 @@ class GetExceptionHandlerTests(TestCase):
     def test_get_exception_handler_for_handled_exceptions(self):
         """Exception handler has correct handler for every Misago exception"""
         for exception in exceptionhandler.HANDLED_EXCEPTIONS:
-            try:
-                exceptionhandler.get_exception_handler(exception())
-            except ValueError:
-                self.fail(
-                    "%s has no exception handler defined" % exception.__name__)
+            exceptionhandler.get_exception_handler(exception())
 
     def test_get_exception_handler_for_non_handled_exceptio(self):
         """Exception handler has no handler for non-supported exception"""
