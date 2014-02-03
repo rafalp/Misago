@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.core import exceptions as django_exceptions
 from django.core.exceptions import PermissionDenied
@@ -68,7 +69,7 @@ class GetExceptionHandlerTests(TestCase):
 class HandleHttp404ExceptionTests(TestCase):
     def setUp(self):
         self.exception = Http404()
-        self.request = RequestFactory().get('/')
+        self.request = RequestFactory().get(reverse('forum_index'))
 
     def test_get_handle_http404_exception(self):
         """get_exception_handler returns correct Http404 exception handler"""
@@ -89,7 +90,7 @@ class HandleHttp404ExceptionTests(TestCase):
 class HandleOutdatedSlugExceptionTests(TestCase):
     def setUp(self):
         self.exception = OutdatedSlug()
-        self.request = RequestFactory().get('/')
+        self.request = RequestFactory().get(reverse('forum_index'))
 
     def test_get_handle_outdated_slug_exception(self):
         """
@@ -115,7 +116,7 @@ class HandlePermissionDeniedExceptionTests(TestCase):
     def setUp(self):
         self.exception_message = "Page access not allowed"
         self.exception = PermissionDenied(self.exception_message)
-        self.request = RequestFactory().get('/')
+        self.request = RequestFactory().get(reverse('forum_index'))
 
     def test_get_handle_permission_denied_exception(self):
         """

@@ -14,7 +14,7 @@ class AutoStripWhitespacesMixin(object):
                     self.data[name] = self.data[name].strip()
                 except KeyError:
                     pass
-        return super(AutoStripInputMixin, self).full_clean()
+        return super(AutoStripWhitespacesMixin, self).full_clean()
 
 
 class Form(AutoStripWhitespacesMixin, BaseForm):
