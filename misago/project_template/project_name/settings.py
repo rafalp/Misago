@@ -42,7 +42,7 @@ DATABASES = {
 # Cache
 # https://docs.djangoproject.com/en/{{ docs_version }}/ref/settings/#caches
 
-CACHES = {{
+CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.DummyCache',
     }
