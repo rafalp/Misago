@@ -10,7 +10,7 @@ misago.core.context_processors.site_address
 
 :py:func:`misago.core.context_processors.site_address`
 
-This function adds `SITE_ADDRESS` value to template context that you can use to build absolue links in your templates::
+This function adds ``SITE_ADDRESS`` value to template context that you can use to build absolue links in your templates::
 
     # Will become "http://mysite.com/"
     {{ SITE_ADDRESS }}{% url 'forum_index' %}
