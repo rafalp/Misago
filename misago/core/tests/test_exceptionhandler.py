@@ -139,3 +139,18 @@ class HandlePermissionDeniedExceptionTests(TestCase):
             self.request, self.exception)
         self.assertIn(self.exception_message, response.content)
         self.assertEqual(response.status_code, 403)
+
+
+class GetExceptionMessageTests(TestCase):
+    def test_get_exception_message(self):
+        """_get_exception_message returns message for exception with one"""
+        message = "Fish's name Eric"
+        exception = Http404(message)
+        self.assertEqual(exceptionhandler._get_exception_message(exception),
+                         message)
+
+    def test_get_no exception_message(self):
+        """_get_exception_message returns None for exception without one"""
+        exception = Http404()
+        self.assertEqual(exceptionhandler._get_exception_message(exception),
+                         None)
