@@ -13,11 +13,7 @@ class CheckObjectSlugTests(TestCase):
         check_object_slug doesn't raise OutdatedSlug when slugs match
         """
         model = MockModel("test-slug")
-
-        try:
-            check_object_slug(model, "test-slug")
-        except OutdatedSlug:
-            self.fail("check_object_slug raised OutdatedSlug for valid slugs")
+        check_object_slug(model, "test-slug")
 
     def test_is_outdated_slug_exception_raised_for_invalid_slug(self):
         """
