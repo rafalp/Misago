@@ -14,7 +14,7 @@ Customizing Appearance
 
 Misago appearance is product of many different technologies acting together to produce final result that you and your users see in their browsers.
 
-On server side powerful, performant and extensible template engine named `Jinja2 <http://jinja.pocoo.org/>`_ turns template files into final html that is displayed in browser while asset pipeline compiles, merges and optimizes less, css and javascript files making your browser load faster and relieving you from burden of compressing and optimizing them yourself.
+On server side simple and easy to learn but powerful `Django template engine <https://docs.djangoproject.com/en/dev/ref/templates/>`_ turns template files into final html that is displayed in browser while asset pipeline compiles, merges and optimizes less, css and javascript files making your browser load faster and relieving you from burden of compressing and optimizing them yourself.
 
 On browser side Misago comes with it's own UI framework that uses `Bootstrap <http://getbootstrap.com>`_, `jQuery <http://jquery.org>`_ as well Glyphicons and `Font Awesome <http://fontawesome.io>`_ as it's foundations that allows you to provide smooth, pleasant and modern experience to your site's users.
 
@@ -37,3 +37,4 @@ Following references cover everything you want to know about writing your own ap
    cache_buster
    thread_store
    forms
+   context_processors

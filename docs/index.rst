@@ -26,3 +26,4 @@ Table of Contents
    developers/cache_buster
    developers/thread_store
    developers/forms
+   developers/context_processors
