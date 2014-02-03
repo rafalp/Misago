@@ -58,12 +58,8 @@ class GetExceptionHandlerTests(TestCase):
     def test_get_exception_handler_for_non_handled_exceptio(self):
         """Exception handler has no handler for non-supported exception"""
         for exception in INVALID_EXCEPTIONS:
-            try:
+            with self.assertRaises(ValueError):
                 exceptionhandler.get_exception_handler(exception())
-                self.fail("%s has exception handler, but it "
-                          "shouldn't" % exception.__name__)
-            except ValueError:
-                pass
 
 
 class HandleHttp404ExceptionTests(TestCase):
@@ -149,7 +145,7 @@ class GetExceptionMessageTests(TestCase):
         self.assertEqual(exceptionhandler._get_exception_message(exception),
                          message)
 
-    def test_get_no exception_message(self):
+    def test_get_no_exception_message(self):
         """_get_exception_message returns None for exception without one"""
         exception = Http404()
         self.assertEqual(exceptionhandler._get_exception_message(exception),
