@@ -14,7 +14,8 @@ def runtests():
         settings_path = os.path.join(test_project_path, "settings.py")
         with open(settings_path, "r") as py_file:
             settings_file = py_file.read().replace("{{ project_name }}",
-                                                   "testproject")
+                                              "testproject")
+
         with open(settings_path, "w") as py_file:
             py_file.write(settings_file)
 
