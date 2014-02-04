@@ -4,6 +4,7 @@ from django.test.client import RequestFactory
 from misago.core.testproject.views import (mock_custom_403_error_page,
                                            mock_custom_404_error_page)
 
+
 class ErrorPageViewsTests(TestCase):
     urls = 'misago.core.testproject.urls'
 
