@@ -43,22 +43,20 @@ Now cd test forum and fire runserver command using manage.py::
 If server starts, you should be able to visit 127.0.0.1:8000 in your browser and see simple placeholder response from Misago, however as work on this branch is underway revisions may frequently introduce changes that will break runserver.
 
 
-Bug reports and feature requests
---------------------------------
+Bug reports, features and feedback
+----------------------------------
 
 If you have found bug, please report it on `issue tracker <https://github.com/rafalp/Misago/issues>`_.
 
-For feature or support requests as well as general feedback please use our zproject forums <http://misago-project.org>`_ instead. Your feedback means much to the project so please do share your thoughts!
+For feature or support requests as well as general feedback please use `official forum <http://misago-project.org>`_ instead. Your feedback means much to the project so please do share your thoughts!
 
 
 Contributing
 ------------
 
-Pull requests are always welcome.
-
 If you have fixed spelling mistake, wrote new tests or fixed a bug, feel free to open pull request.
 
-If you want to take care of one of issues, please announce your intent in issue discussion on github before you start working, so situations when more than one person work on solving same issue can be avoided.
+Many issues are open for takes. If you've found one you feel you could take care of, please announce your intent in issue discussion before you start working. That way situations when more than one person works on solving same issue can be avoided.
 
 
 Authors
