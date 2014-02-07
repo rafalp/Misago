@@ -20,7 +20,7 @@ class IsRequestToMisagoTests(TestCase):
         """
         is_request_to_misago correctly detects requests directed at Misago
         """
-        misago_prefix = reverse('forum_index')
+        misago_prefix = reverse('misago:index')
 
         for path in VALID_PATHS:
             request = RequestFactory().get('/')

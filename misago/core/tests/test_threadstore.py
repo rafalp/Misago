@@ -28,7 +28,7 @@ class ThreadStoreTests(TestCase):
 
 class ThreadStoreMiddlewareTests(TestCase):
     def setUp(self):
-        self.request = RequestFactory().get(reverse('forum_index'))
+        self.request = RequestFactory().get(reverse('misago:index'))
 
     def test_middleware_clears_store_on_response_exception(self):
         """Middleware cleared store on response"""

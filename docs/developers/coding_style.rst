@@ -53,15 +53,17 @@ Link names should correspond to views and patterns whenever possible. This means
    There are many approaches to this "problem" but preffered one is to use more descriptive name instead. Ask yourself what your view shows to the user and use this name instead. This means "threads_list" instead of "forum" or "user_profile" instead of "user".
 
 
-Avoid temptation to prefix links with app names. Good link name should point at revelant app without that. If there's name collision, you should rethink your views because there's chance you are either repeating yourself or planned your app structure incorrectly.
-
-
 Link Parameters
 ---------------
 
 Links pointing at classes instead of functions should use lowercase letters and undersores. This means that link pointing at "ForumThreads" should be named "forum_threads".
 
-If link parameters represent model fields, name them using model_field scheme. This means that if your link contains UserWarn's id and slug, name those parameters user_warn_id and user_warn_slug in your link and view. In rare cases you may want link parameters point at two instances of same model. If this is the case add use more descriptive prefix instead of one from model name (ergo "quoted_post").
+If link parameters represent model fields, name them using model_field scheme. This means that if your link contains UserWarn's id and slug, name those parameters userwarn_id and userwarn_slug in your link and view.
+
+.. note::
+   Notice that paramerter for this model is `userwarn_slug`, not `user_warn_slug`. This is important because when model slug validation fails, Misago error handler seeks for lowercase class name in link parameters.
+
+In rare cases you may want link parameters point at two instances of same model. If this is the case add use more descriptive prefix instead of one from model name (ergo "quoted_post").
 
 
 Views and Forms

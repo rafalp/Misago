@@ -7,7 +7,7 @@ from misago.core.middleware.exceptionhandler import ExceptionHandlerMiddleware
 
 class ExceptionHandlerMiddlewareTests(TestCase):
     def setUp(self):
-        self.request = RequestFactory().get(reverse('forum_index'))
+        self.request = RequestFactory().get(reverse('misago:index'))
 
     def test_middleware_returns_response_for_supported_exception(self):
         """Middleware returns HttpResponse for supported exception"""

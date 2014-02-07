@@ -23,7 +23,7 @@ class CustomErrorPagesTests(TestCase):
     urls = 'misago.core.testproject.urlswitherrorhandlers'
 
     def setUp(self):
-        self.misago_request = RequestFactory().get(reverse('forum_index'))
+        self.misago_request = RequestFactory().get(reverse('misago:index'))
         self.site_request = RequestFactory().get(reverse('raise_403'))
 
     def test_shared_403_decorator(self):

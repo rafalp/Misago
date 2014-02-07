@@ -58,9 +58,9 @@ class CacheBusterController(object):
 
     def invalidate_cache(self, cache):
         from misago.core.models import CacheVersion
+        self.cache[cache] += 1
         CacheVersion.objects.filter(cache=cache).update(
             version=models.F('version') + 1)
-        self.cache[cache] += 1
         default_cache.delete(CACHE_KEY)
 
     def invalidate_all(self):
