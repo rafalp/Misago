@@ -17,7 +17,7 @@ Views Exceptions
 ================
 
 
-While Misago raises plenty of exceptions, only four are allowed to reach views. Two of those are django's ``Http404`` and ``PermissionDenied`` exceptions. In addition to those, Misago defines its own two exceptions that act as "messages" for it's error handler that link user clicked to get to view is not up-to-date and could use 301 request to make sure bookmarks and crawlers get clean link.
+While Misago raises plenty of exceptions, only four are allowed to leave views. Two of those are django's ``Http404`` and ``PermissionDenied`` exceptions. In addition to those, Misago defines its own two exceptions that act as "messages" for it's error handler that link user clicked to get to view is not up-to-date and could use 301 request to make sure bookmarks and crawlers get clean link.
 
 .. note::
    You should never raise those exceptions yourself. If you want to redirect user to certain page, return proper redirect response instead.

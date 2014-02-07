@@ -12,7 +12,7 @@ paginate
 
 .. function:: paginate(object_list, page, per_page, orphans=0, allow_empty_first_page=True)
 
-This function is a factory that validates received data and returns `Django's Page <https://docs.djangoproject.com/en/dev/topics/pagination/#page-objects>`_ object. In adition it also translates ``EmptyPage`` errors into ``Http404`` errors and validated is first page number was explictly defined in url parameter, or not.
+This function is a factory that validates received data and returns `Django's Page <https://docs.djangoproject.com/en/dev/topics/pagination/#page-objects>`_ object. In adition it also translates ``EmptyPage`` errors into ``Http404`` errors and validates if first page number was explictly defined in url parameter or not.
 
 ``paginate`` function has certain requirements on handling views that use it. Firstly, views with pagination should have two links instead of one::
 
