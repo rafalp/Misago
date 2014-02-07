@@ -7,6 +7,31 @@ Just like `Django <https://docs.djangoproject.com/en/dev/topics/http/shortcuts/>
 This module lives in :py:mod:`misago.views.shortcuts` and in addition to Misago-native shortcut functions, it imports whole of :py:mod:`django.shortcuts`, so you don't have to import it separately in your views.
 
 
+paginate
+-------------
+
+.. function:: paginate(object_list, page, per_page, orphans=0, allow_empty_first_page=True)
+
+This function is a factory that validates received data and returns `Django's Page <https://docs.djangoproject.com/en/dev/topics/pagination/#page-objects>`_ object. In adition it also translates ``EmptyPage`` errors into ``Http404`` errors and validated is first page number was explictly defined in url parameter, or not.
+
+``paginate`` function has certain requirements on handling views that use it. Firstly, views with pagination should have two links instead of one::
+
+    # inside blog.urls.py
+    urlpatterns += patterns('blog.views',
+        url(r'^/$', 'index', name='index'),
+        url(r'^/(?P<page>[1-9][0-9]*)/$', 'index', name='index'),
+    )
+
+    # inside blog.views.py
+    def index(request, page=None):
+    	# your view that calls paginate()
+
+.. warning::
+   Giving ``page`` argument default value of 1 will make ``paginate`` function assume that first page was reached via link with explicit first page number and cause redirect loop.
+
+   Error handler expects link parameter that contains current page number to be named "page". Otherwise it will fail to create new link and raise ``KeyError``.
+
+
 validate_slug
 -------------
 

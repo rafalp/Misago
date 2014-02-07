@@ -1,9 +1,5 @@
-from django.http import Http404
 from django.core import exceptions as django_exceptions
-from django.core.exceptions import PermissionDenied
 from django.test import TestCase
-from django.test.client import RequestFactory
-from misago.core.exceptions import OutdatedSlug
 from misago.core import exceptionhandler
 
 

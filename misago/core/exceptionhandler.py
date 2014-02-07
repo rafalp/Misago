@@ -2,14 +2,27 @@ from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponsePermanentRedirect
 from misago.core import errorpages
-from misago.core.exceptions import OutdatedSlug
+from misago.core.exceptions import ExplicitFirstPage, OutdatedSlug
 
 
-HANDLED_EXCEPTIONS = (Http404, OutdatedSlug, PermissionDenied,)
+HANDLED_EXCEPTIONS = (ExplicitFirstPage, Http404,
+                      OutdatedSlug, PermissionDenied,)
 
 
 def is_misago_exception(exception):
     return exception.__class__ in HANDLED_EXCEPTIONS
+
+
+def handle_explicit_first_page_exception(request, exception):
+    matched_url = request.resolver_match.url_name
+    if request.resolver_match.namespace:
+        matched_url = '%s:%s' % (request.resolver_match, matched_url)
+
+    url_kwargs = request.resolver_match.kwargs
+    del url_kwargs['page']
+
+    new_url = reverse(matched_url, kwargs=url_kwargs)
+    return HttpResponsePermanentRedirect(new_url)
 
 
 def handle_http404_exception(request, exception):
@@ -41,6 +54,7 @@ def handle_permission_denied_exception(request, exception):
 
 EXCEPTION_HANDLERS = (
     (Http404, handle_http404_exception),
+    (ExplicitFirstPage, handle_explicit_first_page_exception),
     (OutdatedSlug, handle_outdated_slug_exception),
     (PermissionDenied, handle_permission_denied_exception),
 )

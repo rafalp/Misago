@@ -13,16 +13,33 @@ To solve this problem you would have to write custom error views and handlers th
 Misago views too have to solve this problem and this reason is why error handling boilerplate is part of framework.
 
 
-OutdatedUrl
-===========
+Views Exceptions
+================
 
-:py:class:`misago.core.exceptions.OutdatedUrl`
 
-OutdatedUrl exception is special "message" that tells Misago to return `permanent <http://en.wikipedia.org/wiki/HTTP_301>`_ redirection as response instead of intended view.
+While Misago raises plenty of exceptions, only four are allowed to reach views. Two of those are django's ``Http404`` and ``PermissionDenied`` exceptions. In addition to those, Misago defines its own two exceptions that act as "messages" for it's error handler that link user clicked to get to view is not up-to-date and could use 301 request to make sure bookmarks and crawlers get clean link.
 
-This exception is raised by view utility that compares link's "slug" part against one from database. If check fails OutdatedUrl exception is raised with parameter name and valid slug as message that Misago's exception handler then uses to construct redirection response to valid link.
+.. note::
+   You should never raise those exceptions yourself. If you want to redirect user to certain page, return proper redirect response instead.
 
-You should never raise this exception yourself, instead always return proper redirect response from your code.
+
+ExplicitFirstPage
+-----------------
+
+:py:class:`misago.core.exceptions.ExplicitFirstPage`
+
+This exception is raised by :py:func:`misago.core.shortcuts.paginate` helper function that creates pagination for given data, page number and configuration. If first page is explicit ("eg. somewhere/1/") instead implicit ("somewhere/"), this exception is raised for error handler to return redirect to link with implicit first page.
+
+.. warning::
+   This is reason why Misago views pass this function ``None`` as page number when no page was passed through link.
+
+
+OutdatedSlug
+------------
+
+:py:class:`misago.core.exceptions.OutdatedSlug`
+
+This exception is raised by :py:func:`misago.core.shortcuts.validate_slug` helper function that compares link's "slug" part against one from database. If check fails OutdatedSlug exception is raised with parameter name and valid slug as message that Misago's exception handler then uses to construct redirection response to valid link.
 
 
 Exception Handler
