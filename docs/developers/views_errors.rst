@@ -17,7 +17,7 @@ Views Exceptions
 ================
 
 
-While Misago raises plenty of exceptions, only four are allowed to leave views. Two of those are django's ``Http404`` and ``PermissionDenied`` exceptions. In addition to those, Misago defines its own two exceptions that act as "messages" for it's error handler that link user clicked to get to view is not up-to-date and could use 301 request to make sure bookmarks and crawlers get clean link.
+While Misago raises plenty of exceptions, only four are allowed to leave views. Two of those are django's ``Http404`` and ``PermissionDenied`` exceptions. Misago defines its own two exceptions that act as "messages" for it's own error handler that link user followed to reach view is not up-to-date and could use 301 redirect to make sure bookmarks and crawlers get current link.
 
 .. note::
    You should never raise those exceptions yourself. If you want to redirect user to certain page, return proper redirect response instead.
@@ -28,7 +28,7 @@ ExplicitFirstPage
 
 :py:class:`misago.core.exceptions.ExplicitFirstPage`
 
-This exception is raised by :py:func:`misago.core.shortcuts.paginate` helper function that creates pagination for given data, page number and configuration. If first page is explicit ("eg. somewhere/1/") instead implicit ("somewhere/"), this exception is raised for error handler to return redirect to link with implicit first page.
+This exception is raised by :py:func:`misago.core.shortcuts.paginate` helper function that creates pagination for given data, page number and configuration. If first page is explicit ("user-blog/1/") instead implicit ("user-blog/"), this exception is raised for error handler to return redirect to link with implicit first page.
 
 .. warning::
    This is reason why Misago views pass this function ``None`` as page number when no page was passed through link.
