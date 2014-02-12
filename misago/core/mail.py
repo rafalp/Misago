@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.core import mail as djmail
 from django.template import RequestContext
 from django.template.loader import render_to_string
