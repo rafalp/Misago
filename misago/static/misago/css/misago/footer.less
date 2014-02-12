@@ -1,17 +1,21 @@
 //
-// Misago Footer
+// Forum Footer
 // --------------------------------------------------
 
-@misago-branding-size: @font-size-large * 2;
+// Misago Branding, don't edit please
+
+@misago-branding-size: @font-size-large * 1.2;
 
 .misago-branding {
   a {
     display: inline-block;
-    .transition(opacity 0.5s);
+    margin-top: @line-height-computed * 1.5;
+    .transition(opacity 0.4s);
 
     color: @text-color;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: @misago-branding-size;
+    text-align: center;
 
     .brand-border {
       background: @text-color;
@@ -38,8 +42,10 @@
     }
 
     .subscript {
-      font-size: @misago-branding-size * 0.33;
-      line-height: @misago-branding-size * 0.33;
+      display: block;
+
+      font-size: @misago-branding-size * 0.6;
+      line-height: @misago-branding-size * 0.6;
     }
 
     &, &:link, &:visited {

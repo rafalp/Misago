@@ -487,7 +487,7 @@ cite {
   text-align: justify;
 }
 .text-muted {
-  color: #999999;
+  color: #95a5a6;
 }
 .text-primary {
   color: #428bca;
@@ -3936,11 +3936,11 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   border-color: #e7e7e7;
 }
 .navbar-default .navbar-brand {
-  color: #777777;
+  color: #2c3e50;
 }
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
-  color: #5e5e5e;
+  color: #2c3e50;
   background-color: transparent;
 }
 .navbar-default .navbar-text {
@@ -5820,22 +5820,24 @@ td.visible-print {
 }
 .misago-branding a {
   display: inline-block;
-  -webkit-transition: opacity 0.5s;
-  transition: opacity 0.5s;
+  margin-top: 30px;
+  -webkit-transition: opacity 0.4s;
+  transition: opacity 0.4s;
   color: #2c3e50;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 36px;
+  font-size: 21.6px;
+  text-align: center;
 }
 .misago-branding a .brand-border {
   background: #2c3e50;
-  border-radius: 5.4px;
+  border-radius: 3.24px;
   display: inline-block;
-  margin-right: 3.6px;
+  margin-right: 2.16px;
   position: relative;
-  top: 6.48px;
+  top: 3.888px;
   overflow: hidden;
-  width: 39px;
-  height: 39px;
+  width: 24.6px;
+  height: 24.6px;
 }
 .misago-branding a .brand-border > span {
   display: inline-block;
@@ -5846,12 +5848,13 @@ td.visible-print {
   -ms-transform: rotate(-45deg);
   transform: rotate(-45deg);
   color: #fcfcfc;
-  font-size: 43.2px;
+  font-size: 25.92px;
   font-weight: bold;
 }
 .misago-branding a .subscript {
-  font-size: 11.88px;
-  line-height: 11.88px;
+  display: block;
+  font-size: 12.96px;
+  line-height: 12.96px;
 }
 .misago-branding a,
 .misago-branding a:link,
@@ -5864,4 +5867,7 @@ td.visible-print {
   opacity: 1;
   filter: alpha(opacity=100);
   text-decoration: none;
+}
+.navbar-default .navbar-brand {
+  font-size: 32.4px;
 }
