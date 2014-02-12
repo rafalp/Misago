@@ -25,18 +25,12 @@ def mail_user(request, recipient, subject, template, context=None):
     message.send()
 
 
-def mail_users(request, recipients, subject, template, context=None, batch=None):
-    batch = batch or settings.MISAGO_MAILER_BATCH_SIZE
+def mail_users(request, recipients, subject, template, context=None):
     messages = []
 
     for recipient in recipients:
         messages.append(
             _build_mail(request, recipient, subject, template, context))
-
-        if batch and len(messages) >= batch:
-            connection = djmail.get_connection()
-            connection.send_messages(messages)
-            messages = []
 
     if messages:
         connection = djmail.get_connection()

@@ -94,6 +94,7 @@ USE_TZ = True
 TIME_ZONE = 'UTC'
 
 
-# Misago Mailer
+# How many e-mails should be sent in single step.
+# This is used for conserving memory usage when mailing many users at same time
 
-MISAGO_MAILER_BATCH_SIZE = 30
+MISAGO_MAILER_BATCH_SIZE = 20
