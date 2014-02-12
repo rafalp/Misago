@@ -1,6 +1,7 @@
 from datetime import date
 from time import time
 import hashlib
+import uuid
 from path import path
 from PIL import Image
 from django.conf import settings
@@ -125,9 +126,8 @@ class Attachment(models.Model):
             pass
 
     def generate_hash_id(self, seed):
-        unique_hash = seed
-        for i in xrange(100):
-            unique_hash = hashlib.sha256('%s:%s' % (settings.SECRET_KEY, unique_hash)).hexdigest()
+        hash_seed = '%s:%s' % (uuid.uuid4(), seed)
+        unique_hash = hashlib.sha256(hash_seed).hexdigest()
         self.hash_id = unique_hash[:8]
 
 
