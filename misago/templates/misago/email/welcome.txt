@@ -1,0 +1,9 @@
+{% extends "misago/emails/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{% trans "Welcome aboard!" %}{% endblock %}
+
+{% block content %}
+{% trans "Hello, you are receiving this message because we are liking you!" %}
+{% endblock content %}
