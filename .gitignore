@@ -52,7 +52,7 @@ coverage.xml
 docs/_build/
 
 # Compiled assets
-misago/static/style.css
+misago/static/misago/css/style.css
 
 # Local develop stuff
 dev/
