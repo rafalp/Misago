@@ -23,7 +23,8 @@ Table of Contents
    developers/coding_style
    developers/shortcuts
    developers/views_errors
-   developers/cache_buster
-   developers/thread_store
    developers/forms
    developers/context_processors
+   developers/mails
+   developers/cache_buster
+   developers/thread_store
