@@ -31,6 +31,37 @@ import os
 MISAGO_BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
+# Assets Pipeline
+
+PIPELINE_CSS = {
+    'misago': {
+        'source_filenames': (
+          'misago/css/style.less',
+        ),
+        'output_filename': 'misago.css',
+    },
+}
+
+PIPELINE_JS = {
+    'misago': {
+        'source_filenames': (
+          'misago/js/jquery.js',
+          'misago/js/bootstrap.js',
+        ),
+        'output_filename': 'misago.js',
+    }
+}
+
+STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
+
+PIPELINE_COMPILERS = (
+  'pipeline.compilers.less.LessCompiler',
+)
+
+PIPELINE_CSS_COMPRESSOR = 'pipeline.compressors.yuglify.YuglifyCompressor'
+PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.yuglify.YuglifyCompressor'
+
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -41,6 +72,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
+    'pipeline',
     'floppyforms',
     'misago.core',
     'misago.conf',
