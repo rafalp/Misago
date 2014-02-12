@@ -41,14 +41,15 @@
     }
 
     .subscript {
-      display: block;
+      display: inline-block;
+      position: relative;
+      bottom: (@misago-branding-size  - (@misago-branding-size * 0.6)) / 2;
 
       font-size: @misago-branding-size * 0.6;
-      line-height: @misago-branding-size * 0.6;
     }
 
     &, &:link, &:visited {
-      .opacity(0.5);
+      .opacity(0.4);
     }
 
     &:active, &:hover {
