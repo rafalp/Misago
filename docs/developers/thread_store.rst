@@ -10,7 +10,7 @@ Thread store lives in :py:mod:`misago.core.threadstore` and offers subset of sta
 get
 ---
 
-.. function:: get(key[, default=None])
+.. function:: get(key, default=None)
 
 Get value for key from thread store or default value if key is undefined::
 
