@@ -56,3 +56,4 @@ dev/
 dev-manage.py
 futuredep/
 future-manage.py
+db.sqlite3
