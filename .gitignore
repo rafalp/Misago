@@ -51,6 +51,9 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+# Compiled assets
+misago/static/style.css
+
 # Local develop stuff
 dev/
 dev-manage.py

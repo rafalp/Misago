@@ -1,0 +1,55 @@
+//
+// Misago Footer
+// --------------------------------------------------
+
+@misago-branding-size: @font-size-large * 2;
+
+.misago-branding {
+  a {
+    display: inline-block;
+    .transition(opacity 0.5s);
+
+    color: @text-color;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: @misago-branding-size;
+
+    .brand-border {
+      background: @text-color;
+      border-radius: @misago-branding-size * 0.15;
+      display: inline-block;
+      margin-right: @misago-branding-size * 0.1;
+      position: relative;
+      top: @misago-branding-size * 0.18;
+      overflow: hidden;
+      width: @misago-branding-size + 3px;
+      height: @misago-branding-size + 3px;
+
+      &>span {
+        display: inline-block;
+        position: absolute;
+        bottom: -20%;
+        right: -18%;
+        .rotate(-45deg);
+
+        color: @body-bg;
+        font-size: @misago-branding-size * 1.2;
+        font-weight: bold;
+      }
+    }
+
+    .subscript {
+      font-size: @misago-branding-size * 0.33;
+      line-height: @misago-branding-size * 0.33;
+    }
+
+    &, &:link, &:visited {
+      .opacity(0.5);
+    }
+
+    &:active, &:hover {
+      .opacity(1);
+
+      text-decoration: none;
+    }
+  }
+}
