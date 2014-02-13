@@ -3,7 +3,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 
 
-def _build_mail(request, recipient, subject, template, context=None):
+def build_mail(request, recipient, subject, template, context=None):
     context = context or {}
     context['sender'] = request.user
     context['recipient'] = recipient
@@ -20,7 +20,7 @@ def _build_mail(request, recipient, subject, template, context=None):
 
 
 def mail_user(request, recipient, subject, template, context=None):
-    message = _build_mail(request, recipient, subject, template, context)
+    message = build_mail(request, recipient, subject, template, context)
     message.send()
 
 
@@ -29,7 +29,7 @@ def mail_users(request, recipients, subject, template, context=None):
 
     for recipient in recipients:
         messages.append(
-            _build_mail(request, recipient, subject, template, context))
+            build_mail(request, recipient, subject, template, context))
 
     if messages:
         connection = djmail.get_connection()
