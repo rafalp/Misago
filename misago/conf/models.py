@@ -39,11 +39,11 @@ def dehydrate_int(wet_value):
 
 
 def hydrate_list(dry_value):
-    return int(dry_value)
+    return dry_value.split(',')
 
 
 def dehydrate_list(wet_value):
-    return unicode(wet_value)
+    return ','.join(wet_value)
 
 
 VALUE_HYDRATORS = {
