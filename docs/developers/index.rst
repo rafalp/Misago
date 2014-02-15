@@ -37,5 +37,6 @@ Following references cover everything you want to know about writing your own ap
    forms
    context_processors
    mails
+   cache
    cache_buster
    thread_store

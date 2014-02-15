@@ -26,5 +26,6 @@ Table of Contents
    developers/forms
    developers/context_processors
    developers/mails
+   developers/cache
    developers/cache_buster
    developers/thread_store
