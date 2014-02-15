@@ -72,6 +72,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
+    'south',
     'pipeline',
     'floppyforms',
     'misago.core',
