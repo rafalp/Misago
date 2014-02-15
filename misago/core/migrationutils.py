@@ -1,5 +1,6 @@
 from django.utils import translation
-from misago.core.cache import cache
+from misago.core.cache import cache as default_cache
+from misago.core.cachebuster import CACHE_KEY
 
 
 def ugettext_lazy(string):
@@ -26,4 +27,4 @@ def cachebuster_unregister_cache(orm, cache):
 
 
 def prune_cachebuster_cache():
-    default_cache.clear()
+    default_cache.delete(CACHE_KEY)
