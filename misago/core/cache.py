@@ -1,10 +1,11 @@
-from django.core.cache import InvalidCacheBackendError, get_cache
+from django.core.cache import (InvalidCacheBackendError, get_cache,
+                               cache as default_cache)
 
 
 try:
     cache = get_cache('misago')
 except InvalidCacheBackendError:
-    cache = get_cache('default')
+    cache = default_cache
 
 
 try:

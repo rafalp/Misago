@@ -26,5 +26,5 @@ def cachebuster_unregister_cache(orm, cache):
         raise ValueError('Cache "%s" is not registered' % cache)
 
 
-def prune_cachebuster_cache():
+def delete_cachebuster_cache():
     default_cache.delete(CACHE_KEY)

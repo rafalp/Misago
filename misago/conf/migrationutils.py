@@ -1,11 +1,22 @@
-from misago.conf import CACHE_KEY
+from importlib import import_module
+from misago.conf.dbsettings import CACHE_KEY
 from misago.core.cache import cache as default_cache
 
 
-def get_custom_settings_values(orm, group_key):
+def migration_models(migration, this_migration=None):
+    module_name = 'misago.conf.migrations.%s' % migration
+    migration_module = import_module(module_name)
+    conf_models = migration_module.Migration.models
+
+    if this_migration:
+        conf_models.update(this_migration)
+    return conf_models
+
+
+def get_custom_settings_values(orm, group):
     custom_settings_values = {}
 
-    for setting in orm.Setting.objects.filter(group_id=group_key).iterator():
+    for setting in group.setting_set.iterator():
         custom_settings_values[setting.setting] = setting.value
 
     return custom_settings_values
@@ -13,9 +24,9 @@ def get_custom_settings_values(orm, group_key):
 
 def get_group(orm, group_key):
     try:
-        return orm.SettingsGroup.objects.get(key=group_key)
-    except orm.SettingsGroup.DoesNotExist:
-        return orm.SettingsGroup()
+        return orm['conf.SettingsGroup'].objects.get(key=group_key)
+    except orm['conf.SettingsGroup'].DoesNotExist:
+        return orm['conf.SettingsGroup']()
 
 
 def migrate_settings_group(orm, group_fixture, old_group_key=None):
@@ -24,11 +35,14 @@ def migrate_settings_group(orm, group_fixture, old_group_key=None):
     # Fetch settings group
 
     if old_group_key:
-        custom_settings_values = get_custom_settings_values(orm, old_group_key)
         group = get_group(orm, old_group_key)
+        custom_settings_values = get_custom_settings_values(orm, group)
     else:
-        custom_settings_values = get_custom_settings_values(orm, group_key)
         group = get_group(orm, group_key)
+        if group.pk:
+            custom_settings_values = get_custom_settings_values(orm, group)
+        else:
+            custom_settings_values = {}
 
 
     # Update group's attributes
@@ -49,16 +63,16 @@ def migrate_settings_group(orm, group_fixture, old_group_key=None):
         setting['order'] = order
 
         try:
-            value = custom_settings_values[seting['setting']]
+            value = custom_settings_values[setting['setting']]
         except KeyError:
-            value = setting.pop('value')
+            value = setting.pop('value', None)
         field_extra = setting.pop('field_extra', None)
 
-        setting = orm.Setting(**setting)
+        setting = orm['conf.Setting'](**setting)
         setting.value = value
         setting.field_extra = field_extra
         setting.save()
 
 
-def clear_settings_cache():
+def delete_settings_cache():
     default_cache.delete(CACHE_KEY)
