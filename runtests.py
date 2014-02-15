@@ -20,5 +20,6 @@ def runtests():
             py_file.write(settings_file)
 
     os.environ["DJANGO_SETTINGS_MODULE"] = "testproject.settings"
-    from django.core.management.commands import test
+
+    from south.management.commands import test
     sys.exit(test.Command().execute(verbosity=1))
