@@ -3,7 +3,7 @@ from misago.conf.dbsettings import CACHE_KEY
 from misago.core.cache import cache as default_cache
 
 
-def migration_models(migration, this_migration=None):
+def with_conf_models(migration, this_migration=None):
     module_name = 'misago.conf.migrations.%s' % migration
     migration_module = import_module(module_name)
     conf_models = migration_module.Migration.models

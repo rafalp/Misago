@@ -1,3 +1,4 @@
+from importlib import import_module
 from django.utils import translation
 from misago.core.cache import cache as default_cache
 from misago.core.cachebuster import CACHE_KEY
@@ -12,6 +13,16 @@ def ugettext_lazy(string):
     t = translation.ugettext_lazy(string)
     t.message = string
     return t
+
+
+def with_core_models(migration, this_migration=None):
+    module_name = 'misago.core.migrations.%s' % migration
+    migration_module = import_module(module_name)
+    core_models = migration_module.Migration.models
+
+    if this_migration:
+        core_models.update(this_migration)
+    return core_models
 
 
 def cachebuster_register_cache(orm, cache):

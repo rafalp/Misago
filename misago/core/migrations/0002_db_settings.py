@@ -3,7 +3,7 @@ from south.utils import datetime_utils as datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
-from misago.conf.migrationutils import migration_models, migrate_settings_group
+from misago.conf.migrationutils import with_conf_models, migrate_settings_group
 from misago.core.migrationutils import ugettext_lazy as _
 
 
@@ -54,11 +54,11 @@ class Migration(DataMigration):
     def backwards(self, orm):
         "Write your backwards methods here."
 
-    models = migration_models('0001_initial')
+    models = with_conf_models('0001_initial')
 
     complete_apps = ['core']
     symmetrical = True
 
     depends_on = (
-        ("misago.conf", "0001_initial"),
+        ("conf", "0001_initial"),
     )
