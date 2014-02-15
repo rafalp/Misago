@@ -33,7 +33,8 @@ class Setting(models.Model):
 
     @value.setter
     def value(self, new_value):
-        return hydrators.dehydrate_value(self.python_type, self.new_value)
+        self.dry_value = hydrators.dehydrate_value(self.python_type, new_value)
+        return self.dry_value
 
     @property
     def has_custom_value(self):
