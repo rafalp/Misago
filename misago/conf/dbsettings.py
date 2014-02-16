@@ -41,7 +41,7 @@ class DBSettings(object):
             if self._settings[setting]['is_lazy']:
                 return Setting.objects.get(setting=setting).value
             else:
-                raise AttributeError("Setting %s is not lazy" % setting)
+                raise ValueError("Setting %s is not lazy" % setting)
         except (KeyError, Setting.DoesNotExist):
             raise AttributeError("Setting %s is undefined" % setting)
 
