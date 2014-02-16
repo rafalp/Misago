@@ -1,6 +1,5 @@
 from django.db.models import F
 from misago.core import threadstore
-from misago.core.cache import cache as default_cache
 
 
 CACHE_KEY = 'misago_cachebuster'
@@ -13,6 +12,7 @@ class CacheBusterController(object):
 
     def unregister_cache(self, cache):
         from misago.core.models import CacheVersion
+
         try:
             cache = CacheVersion.objects.get(cache=cache)
             cache.delete()
@@ -31,6 +31,8 @@ class CacheBusterController(object):
         return data
 
     def read_cache(self):
+        from misago.core.cache import cache as default_cache
+
         data = default_cache.get(CACHE_KEY, 'nada')
         if data == 'nada':
             data = self.read_db()
@@ -39,6 +41,7 @@ class CacheBusterController(object):
 
     def read_db(self):
         from misago.core.models import CacheVersion
+
         data = {}
         for cache_version in CacheVersion.objects.iterator():
             data[cache_version.cache] = cache_version.version
@@ -57,14 +60,18 @@ class CacheBusterController(object):
             raise ValueError('Cache "%s" is not registered' % cache)
 
     def invalidate_cache(self, cache):
+        from misago.core.cache import cache as default_cache
         from misago.core.models import CacheVersion
+
         self.cache[cache] += 1
         CacheVersion.objects.filter(cache=cache).update(
             version=F('version') + 1)
         default_cache.delete(CACHE_KEY)
 
     def invalidate_all(self):
+        from misago.core.cache import cache as default_cache
         from misago.core.models import CacheVersion
+
         CacheVersion.objects.update(version=F('version') + 1)
         default_cache.delete(CACHE_KEY)
 
