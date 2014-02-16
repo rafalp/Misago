@@ -38,21 +38,21 @@ class DBConfMigrationUtilsTests(TestCase):
             'description': "Those are test settings.",
             'settings': (
                 {
-                'setting': 'fish_name',
-                'name': "Fish's name",
-                'value': "Eric",
-                'field_extra': {
-                       'min_length': 2,
-                       'max_length': 255
-                    },
+                    'setting': 'fish_name',
+                    'name': "Fish's name",
+                    'value': "Eric",
+                    'field_extra': {
+                           'min_length': 2,
+                           'max_length': 255
+                        },
                 },
                 {
-                'setting': 'fish_license_no',
-                'name': "Fish's license number",
-                'default_value': '123-456',
-                'field_extra': {
-                        'max_length': 255
-                    },
+                    'setting': 'fish_license_no',
+                    'name': "Fish's license number",
+                    'default_value': '123-456',
+                    'field_extra': {
+                            'max_length': 255
+                        },
                 },
             )
         }
@@ -84,24 +84,24 @@ class DBConfMigrationUtilsTests(TestCase):
             'name': "New test settings",
             'description': "Those are updated test settings.",
             'settings': (
-                            {
-                            'setting': 'fish_new_name',
-                            'name': "Fish's new name",
-                            'value': "Eric",
-                            'field_extra': {
-                                           'min_length': 2,
-                                           'max_length': 255
-                                           },
-                            },
-                            {
-                            'setting': 'fish_new_license_no',
-                            'name': "Fish's changed license number",
-                            'default_value': '123-456',
-                            'field_extra': {
-                                           'max_length': 255
-                                           },
-                            },
-                        )
+                {
+                    'setting': 'fish_new_name',
+                    'name': "Fish's new name",
+                    'value': "Eric",
+                    'field_extra': {
+                            'min_length': 2,
+                            'max_length': 255
+                        },
+                },
+                {
+                    'setting': 'fish_new_license_no',
+                    'name': "Fish's changed license number",
+                    'default_value': '123-456',
+                    'field_extra': {
+                            'max_length': 255
+                        },
+                },
+            )
         }
 
         migrationutils.migrate_settings_group(

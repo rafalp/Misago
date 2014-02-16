@@ -49,7 +49,7 @@ class Migration(DataMigration):
                     },
                 )
             },
-            )
+        )
 
 
     def backwards(self, orm):
