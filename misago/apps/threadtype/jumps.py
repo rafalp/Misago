@@ -128,11 +128,13 @@ class WatchThreadBaseView(JumpView):
                 watcher.thread = self.thread
                 watcher.starter_id = self.thread.start_poster_id
                 watcher.last_read = timezone.now()
+            watcher.deleted = False
             self.update_watcher(request, watcher)
-            if watcher.pk:
-                watcher.save(force_update=True)
-            else:
-                watcher.save(force_insert=True)
+            if not watcher.deleted:
+                if watcher.pk:
+                    watcher.save(force_update=True)
+                else:
+                    watcher.save(force_insert=True)
             return self.get_retreat()
         return view(self.request)
 
@@ -149,7 +151,8 @@ class WatchEmailThreadBaseView(WatchThreadBaseView):
 class UnwatchThreadBaseView(WatchThreadBaseView):
     def update_watcher(self, request, watcher):
         watcher.deleted = True
-        watcher.delete()
+        if watcher.pk:
+            watcher.delete()
         if watcher.email:
             messages.success(request, _('This thread has been removed from your watched threads list. You will no longer receive e-mails with notifications when somebody replies to it.'), 'threads')
         else:
