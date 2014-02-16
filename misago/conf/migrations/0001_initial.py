@@ -28,9 +28,9 @@ class Migration(SchemaMigration):
             ('order', self.gf('django.db.models.fields.IntegerField')(default=0, db_index=True)),
             ('dry_value', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('default_value', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('python_type', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('python_type', self.gf('django.db.models.fields.CharField')(default='string', max_length=255)),
             ('is_lazy', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('form_field', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('form_field', self.gf('django.db.models.fields.CharField')(default='text', max_length=255)),
             ('pickled_field_extra', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
         ))
         db.send_create_signal(u'conf', ['Setting'])
@@ -50,7 +50,7 @@ class Migration(SchemaMigration):
             'default_value': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'dry_value': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'form_field': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'form_field': ('django.db.models.fields.CharField', [], {'default': "'text'", 'max_length': '255'}),
             'group': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['conf.SettingsGroup']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_lazy': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -58,7 +58,7 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'order': ('django.db.models.fields.IntegerField', [], {'default': '0', 'db_index': 'True'}),
             'pickled_field_extra': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'python_type': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'python_type': ('django.db.models.fields.CharField', [], {'default': "'string'", 'max_length': '255'}),
             'setting': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'})
         },
         u'conf.settingsgroup': {

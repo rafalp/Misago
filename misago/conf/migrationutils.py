@@ -1,6 +1,12 @@
+import base64
 from importlib import import_module
 from misago.conf.dbsettings import CACHE_KEY
+from misago.conf.hydrators import dehydrate_value
 from misago.core.cache import cache as default_cache
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 
 
 def with_conf_models(migration, this_migration=None):
@@ -59,21 +65,26 @@ def migrate_settings_group(orm, group_fixture, old_group_key=None):
 
     group.setting_set.all().delete()
 
-    for order, setting in enumerate(group_fixture['settings']):
-        setting['group'] = group
-        setting['order'] = order
+    for order, setting_fixture in enumerate(group_fixture['settings']):
+        setting_fixture['group'] = group
+        setting_fixture['order'] = order
 
         try:
-            value = custom_settings_values[setting['setting']]
+            value = custom_settings_values[setting_fixture['setting']]
         except KeyError:
-            value = setting.pop('value', None)
-        field_extra = setting.pop('field_extra', None)
+            value = setting_fixture.pop('value', None)
+        finally:
+            setting_fixture.pop('value', None)
 
-        setting = orm['conf.Setting'](**setting)
-        setting.value = value
-        setting.field_extra = field_extra
+        field_extra = setting_fixture.pop('field_extra', None)
+
+        setting = orm['conf.Setting'](**setting_fixture)
+        setting.dry_value = dehydrate_value(setting.python_type, value)
+        if field_extra:
+            pickled_extra = pickle.dumps(field_extra, pickle.HIGHEST_PROTOCOL)
+            setting.pickled_field_extra = base64.encodestring(pickled_extra)
+
         setting.save()
-
 
 def delete_settings_cache():
     default_cache.delete(CACHE_KEY)

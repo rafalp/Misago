@@ -42,7 +42,7 @@ class Setting(models.Model):
             self.dry_value = hydrators.dehydrate_value(self.python_type,
                                                        new_value)
         else:
-            self.dry_value = self.default_value
+            self.dry_value = None
         return self.value
 
     @property
