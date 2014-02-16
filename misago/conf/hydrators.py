@@ -1,5 +1,5 @@
 def hydrate_string(dry_value):
-    return dry_value
+    return unicode(dry_value) if dry_value else ''
 
 
 def dehydrate_string(wet_value):
