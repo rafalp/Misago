@@ -82,3 +82,6 @@ class CacheBusterUtilsTests(TestCase):
         with self.assertRaises(CacheVersion.DoesNotExist):
             CacheVersion.objects.get(cache=cache_name)
 
+        with self.assertRaises(ValueError):
+            migrationutils.cachebuster_unregister_cache(self.orm, cache_name)
+
