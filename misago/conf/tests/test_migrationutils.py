@@ -9,12 +9,9 @@ class MigrationUtilsTests(TestCase):
         models = {
             u'core.cacheversion': {
                 'Meta': {'object_name': 'CacheVersion'},
-                'cache': ('django.db.models.fields.CharField',
-                          [], {'max_length': '128'}),
-                u'id': ('django.db.models.fields.AutoField',
-                        [], {'primary_key': 'True'}),
-                'version': ('django.db.models.fields.PositiveIntegerField',
-                            [], {'default': '0'})
+                'cache': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
+                u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+                'version': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'})
             }
         }
 

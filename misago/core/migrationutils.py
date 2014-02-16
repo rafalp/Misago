@@ -26,14 +26,14 @@ def with_core_models(migration, this_migration=None):
 
 
 def cachebuster_register_cache(orm, cache):
-    orm.CacheVersion.objects.create(cache=cache)
+    orm['core.CacheVersion'].objects.create(cache=cache)
 
 
 def cachebuster_unregister_cache(orm, cache):
     try:
-        cache = orm.CacheVersion.objects.get(cache=cache)
+        cache = orm['core.CacheVersion'].objects.get(cache=cache)
         cache.delete()
-    except orm.CacheVersion.DoesNotExist:
+    except orm['core.CacheVersion'].DoesNotExist:
         raise ValueError('Cache "%s" is not registered' % cache)
 
 
