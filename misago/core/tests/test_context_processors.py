@@ -17,12 +17,12 @@ class MockRequest(object):
 class SiteAddressTests(TestCase):
     def test_site_address_for_http(self):
         """Correct SITE_ADDRESS set for HTTP request"""
-        HttpsSomewhereCom = MockRequest(False, 'somewhere.com')
-        self.assertEqual(context_processors.site_address(HttpsSomewhereCom),
+        http_somewhere_com = MockRequest(False, 'somewhere.com')
+        self.assertEqual(context_processors.site_address(http_somewhere_com),
                          {'SITE_ADDRESS': 'http://somewhere.com'})
 
     def test_site_address_for_https(self):
         """Correct SITE_ADDRESS set for HTTPS request"""
-        HttpsSomewhereCom = MockRequest(True, 'somewhere.com')
-        self.assertEqual(context_processors.site_address(HttpsSomewhereCom),
+        https_somewhere_com = MockRequest(True, 'somewhere.com')
+        self.assertEqual(context_processors.site_address(https_somewhere_com),
                          {'SITE_ADDRESS': 'https://somewhere.com'})
