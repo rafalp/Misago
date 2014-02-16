@@ -8,8 +8,6 @@ class SettingsGateway(object):
             return getattr(dj_settings, name)
         except AttributeError:
             return getattr(db_settings, name)
-        except AttributeError:
-            raise AttributeError("Setting %s is undefined" % name)
 
 
 settings = SettingsGateway()
