@@ -83,8 +83,8 @@ class GatewaySettingsTests(TestCase):
         self.assertTrue(gateway.lazy_fish_name == True)
         self.assertTrue(db_settings.lazy_fish_name == True)
 
-        self.assertTrue(gateway.lazy_empty_setting == False)
-        self.assertTrue(db_settings.lazy_empty_setting == False)
+        self.assertTrue(gateway.lazy_empty_setting == None)
+        self.assertTrue(db_settings.lazy_empty_setting == None)
         db_settings.get_lazy_setting('lazy_fish_name')
         with self.assertRaises(ValueError):
             db_settings.get_lazy_setting('fish_name')
