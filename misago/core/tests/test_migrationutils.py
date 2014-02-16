@@ -32,7 +32,7 @@ class CacheBusterUtilsTests(TestCase):
                 'default_value': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
                 'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
                 'dry_value': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-                'form_field': ('django.db.models.fields.CharField',[], {'max_length': '255'}),
+                'form_field': ('django.db.models.fields.CharField', [], {'max_length': '255', 'default': u"text"}),
                 'group': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['conf.SettingsGroup']"}),
                 u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
                 'is_lazy': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -40,7 +40,7 @@ class CacheBusterUtilsTests(TestCase):
                 'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
                 'order': ('django.db.models.fields.IntegerField', [], {'default': '0', 'db_index': 'True'}),
                 'pickled_field_extra': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-                'python_type': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+                'python_type': ('django.db.models.fields.CharField', [], {'max_length': '255', 'default': u"string"}),
                 'setting': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'})
             },
             u'conf.settingsgroup': {
