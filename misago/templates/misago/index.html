@@ -1,6 +1,18 @@
 {% extends "misago/base.html" %}
 
 
+{% block title %}
+{% if misago_settings.forum_index_title %}
+{{ misago_settings.forum_index_title }}
+{% else %}
+{{ misago_settings.forum_name }}
+{% endif %}
+{% endblock title %}
+
+
+{% block meta_description %}{{ misago_settings.forum_index_meta_description }}{% endblock meta_description %}
+
+
 {% block content %}
 {% include "misago/jumbotron_indexonly.html" %}
 
