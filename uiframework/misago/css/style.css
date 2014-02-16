@@ -5940,7 +5940,8 @@ button.close {
 /* On big displays */
 @media (min-width: 768px) {
   .navbar-nav-user .user-toggle {
-    color: #2c3e50;
+    padding-left: 0px;
+    padding-right: 0px;
   }
   .navbar-nav-user .user-toggle img {
     float: right;
@@ -5961,7 +5962,7 @@ button.close {
     height: 0;
     position: absolute;
     pointer-events: none;
-    right: 26px;
+    right: 10px;
     top: -11px;
     width: 0;
   }
