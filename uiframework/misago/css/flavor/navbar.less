@@ -6,4 +6,50 @@
   .navbar-brand {
     font-size: @font-size-large * 1.6;
   }
+
+  .navbar-nav-user {
+    .user-toggle {
+      overflow: auto;
+
+      img {
+        border-radius: @border-radius-base;
+        height: 32px;
+      }
+    }
+  }
+}
+
+/* On big displays */
+@media (min-width: @screen-sm-min) {
+  .navbar-nav-user {
+    .user-toggle {
+      color: @text-color;
+
+      img {
+        float: right;
+        height: 32px;
+        margin: -6px 0px;
+        margin-left: 8px;
+      }
+    }
+
+    .dropdown-menu {
+      border: none;
+      border-radius: @border-radius-base !important;
+      box-shadow: 0px 0px 0px 6px @dropdown-shadow;
+
+      &:after {
+        border: solid transparent;
+        border-bottom-color: @dropdown-bg;
+        border-width: 6px;
+        content: "";
+        height: 0;
+        position: absolute;
+        pointer-events: none;
+        right: 26px;
+        top: -11px;
+        width: 0;
+      }
+    }
+  }
 }

@@ -47,6 +47,12 @@
 @navbar-primary-link-active-bg:            @brand-primary;
 @navbar-primary-link-active-border:        @brand-primary;
 
+@navbar-default-link-color:                #7f8c8d;
+@navbar-default-link-hover-color:          @brand-primary;
+@navbar-default-link-hover-bg:             transparent;
+@navbar-default-link-active-color:         @brand-primary;
+@navbar-default-link-active-bg:            transparent;
+
 // Sign in button
 @btn-signin-color:                 lighten(desaturate(@brand-primary, 45%), 5%);
 @btn-signin-bg:                    transparent;
@@ -73,8 +79,26 @@
 @btn-register-active-bg:             darken(#d35400, 5%);
 @btn-register-active-border:         darken(#d35400, 5%);
 
-
 // Navbar brand label
-
 @navbar-default-brand-color:               @text-color;
 @navbar-default-brand-hover-color:         @text-color;
+
+
+//== Dropdowns
+//
+//## Custom navbar flavor
+
+//** Dropdown link text color.
+@dropdown-link-color:            lighten(@text-color, 10%);
+//** Hover color for dropdown links.
+@dropdown-link-hover-color:      @body-bg;
+//** Hover background for dropdown links.
+@dropdown-link-hover-bg:         @brand-primary;
+
+//** Active dropdown menu item text color.
+@dropdown-link-active-color:     @body-bg;
+//** Active dropdown menu item background color.
+@dropdown-link-active-bg:        #34495e;
+
+//** Open dropdown shadow color.
+@dropdown-shadow:                fadeOut(#333, 50%);
