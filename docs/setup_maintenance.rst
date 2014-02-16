@@ -54,11 +54,16 @@ Open "settings.py" in your code editor of choice and give a look in values liste
 .. note::
    To simplify setup process, by default "settings.py" file contains only most basic settings that are needed for your site to run, with everything else being set for you automatically at the beginning of file.
 
-Move back to directory with manage.py and use it to fire "runserver" command::
+Move back to directory with manage.py and use it to initialize Misago database by firing following following commands::
+
+    python manage.py syncdb
+    python manage.py migrate
+
+Finally, start development server using "runserver" command::
 
     python manage.py runserver
 
-If server starts, you should be able to visit 127.0.0.1:8000 in your browser and see simple placeholder response from Misago, however as work on project is underway revisions may frequently introduce changes that will break runserver.
+If server starts, you should be able to visit 127.0.0.1:8000 in your browser and see forum index, however as work on project is underway revisions may frequently introduce changes that will break runserver.
 
 
 Deployment

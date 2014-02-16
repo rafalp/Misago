@@ -35,10 +35,16 @@ To install Misago setup and activate virtual environment and then fire following
 
 Those commands will install Misago in your virtual environment and make pre-configured Misago site for you named "testforum" using "misago-start.py" script available successfull installation.
 
-Now cd test forum and fire runserver command using manage.py::
+Now cd test forum and initialize database by using syncdb and migrate commands using manage.py::
 
     cd testforum
+    python manage.py syncdb
+    python manage.py migrate
+
+Finally start development server using runserver command::
+
     python manage.py runserver
+
 
 If server starts, you should be able to visit 127.0.0.1:8000 in your browser and see simple placeholder response from Misago, however as work on this branch is underway revisions may frequently introduce changes that will break runserver.
 
