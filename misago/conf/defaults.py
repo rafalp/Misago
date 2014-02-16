@@ -99,6 +99,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
     'misago.core.context_processors.site_address',
+    'misago.conf.context_processors.settings',
 )
 
 # Register Misago directories
