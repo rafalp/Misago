@@ -32,6 +32,7 @@ MISAGO_BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
 # Assets Pipeline
+# See http://django-pipeline.readthedocs.org/en/latest/configuration.html
 
 PIPELINE_CSS = {
     'misago': {

@@ -24,6 +24,7 @@ Table of Contents
    developers/shortcuts
    developers/views_errors
    developers/forms
+   developers/settings
    developers/context_processors
    developers/mails
    developers/cache
