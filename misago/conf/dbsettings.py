@@ -35,6 +35,8 @@ class DBSettings(object):
         return data
 
     def get_lazy_setting(self, setting):
+        from misago.conf.models import Setting
+
         try:
             if self._settings[setting]['is_lazy']:
                 return Setting.objects.get(setting=setting).value
@@ -42,7 +44,6 @@ class DBSettings(object):
                 raise AttributeError("Setting %s is not lazy" % setting)
         except (KeyError, Setting.DoesNotExist):
             raise AttributeError("Setting %s is undefined" % setting)
-
 
     def __getattr__(self, attr):
         try:

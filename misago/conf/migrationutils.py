@@ -86,5 +86,6 @@ def migrate_settings_group(orm, group_fixture, old_group_key=None):
 
         setting.save()
 
+
 def delete_settings_cache():
     default_cache.delete(CACHE_KEY)

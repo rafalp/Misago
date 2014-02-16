@@ -37,7 +37,7 @@ MISAGO_BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 PIPELINE_CSS = {
     'misago': {
         'source_filenames': (
-          'misago/css/style.less',
+            'misago/css/style.less',
         ),
         'output_filename': 'misago.css',
     },
@@ -46,8 +46,8 @@ PIPELINE_CSS = {
 PIPELINE_JS = {
     'misago': {
         'source_filenames': (
-          'misago/js/jquery.js',
-          'misago/js/bootstrap.js',
+            'misago/js/jquery.js',
+            'misago/js/bootstrap.js',
         ),
         'output_filename': 'misago.js',
     }
@@ -56,7 +56,7 @@ PIPELINE_JS = {
 STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
 
 PIPELINE_COMPILERS = (
-  'pipeline.compilers.less.LessCompiler',
+    'pipeline.compilers.less.LessCompiler',
 )
 
 PIPELINE_CSS_COMPRESSOR = 'pipeline.compressors.yuglify.YuglifyCompressor'

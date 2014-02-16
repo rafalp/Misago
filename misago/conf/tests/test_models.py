@@ -13,7 +13,6 @@ class SettingModelTests(TestCase):
         self.assertEqual(setting_model.value,
                          ['Arthur', 'Lancelot', 'Patsy'])
 
-
         setting_model = Setting(python_type='list',
                                 default_value='Arthur,Patsy')
         self.assertEqual(setting_model.value,

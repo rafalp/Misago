@@ -14,41 +14,42 @@ class Migration(DataMigration):
         migrate_settings_group(
             orm,
             {
-            'key': 'basic',
-            'name': _("Basic forum settings"),
-            'description': _("Those settings control most basic properties of "
-                             "your forum like it's name or description."),
-            'settings': (
-                            {
-                            'setting': 'forum_name',
-                            'name': _("Forum name"),
-                            'value': "Misago",
-                            'field_extra': {
-                                           'min_length': 2,
-                                           'max_length': 255
-                                           },
-                            },
-                            {
-                            'setting': 'forum_index_title',
-                            'name': _("Forum index title"),
-                            'description': _("You may set custon title on "
-                                             "forum index by typing it here."),
-                            'legend': _("Forum index"),
-                            'field_extra': {
-                                           'max_length': 255
-                                           },
-                            },
-                            {
-                            'setting': 'forum_index_meta_description',
-                            'name': _("Forum index Meta Description"),
-                            'description': _("Short description of your forum "
-                                             "for internet crawlers."),
-                            'field_extra': {
-                                           'max_length': 255
-                                           },
-                            },
-                        )
-            })
+                'key': 'basic',
+                'name': _("Basic forum settings"),
+                'description': _("Those settings control most basic properties of "
+                                 "your forum like it's name or description."),
+                'settings': (
+                    {
+                        'setting': 'forum_name',
+                        'name': _("Forum name"),
+                        'value': "Misago",
+                        'field_extra': {
+                            'min_length': 2,
+                            'max_length': 255
+                        },
+                    },
+                    {
+                        'setting': 'forum_index_title',
+                        'name': _("Forum index title"),
+                        'description': _("You may set custon title on "
+                                         "forum index by typing it here."),
+                        'legend': _("Forum index"),
+                        'field_extra': {
+                            'max_length': 255
+                        },
+                    },
+                    {
+                        'setting': 'forum_index_meta_description',
+                        'name': _("Forum index Meta Description"),
+                        'description': _("Short description of your forum "
+                                         "for internet crawlers."),
+                        'field_extra': {
+                            'max_length': 255
+                        },
+                    },
+                )
+            },
+            )
 
 
     def backwards(self, orm):

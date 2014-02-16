@@ -16,7 +16,7 @@ def runtests():
             settings_file = py_file.read().replace("{{ project_name }}",
                                                    "testproject")
             settings_file = settings_file.replace("{{ secret_key }}",
-                                                   "t3stpr0j3ct")
+                                                  "t3stpr0j3ct")
 
         with open(settings_path, "w") as py_file:
             py_file.write(settings_file)

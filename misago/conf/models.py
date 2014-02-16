@@ -38,7 +38,7 @@ class Setting(models.Model):
 
     @value.setter
     def value(self, new_value):
-        if new_value != None:
+        if new_value is not None:
             self.dry_value = hydrators.dehydrate_value(self.python_type,
                                                        new_value)
         else:
