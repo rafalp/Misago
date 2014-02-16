@@ -14,7 +14,7 @@ Misago splits its settings into two groups:
 Both types of settings can accessed as attributes of ``misago.conf.settings`` object and high level settings can be also accessed from your templates as attributes of ``misago_settings`` context value.
 
 .. note::
-   Not all high level settings values are available at all times. Some settings, named lazy settings, can be checked to see if they have value defined, but require you to use special ``get_lazy_setting(setting)`` function to actually load it's value.
+   Not all high level settings values are available at all times. Some settings ("lazy settings"), are evaluated to ``True`` or ``None`` immediately upon load. This means while they can be checked to see if they have value or not, but require you to use special ``get_lazy_setting(setting)`` getter to actually obtain their real value.
 
 
 Misago Settings Reference
