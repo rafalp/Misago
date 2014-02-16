@@ -100,7 +100,7 @@ class UserManager(models.Manager):
         return new_user
 
     def get_by_email(self, email):
-        return self.get(email_hash=hashlib.md5(email.lower()).hexdigest())
+        return self.get(email_hash=hashlib.md5(email.lower().encode('utf-8')).hexdigest())
 
     def filter_stats(self, start, end):
         return self.filter(join_date__gte=start).filter(join_date__lte=end)
@@ -350,7 +350,7 @@ class User(models.Model):
 
     def set_email(self, email):
         self.email = email.strip().lower()
-        self.email_hash = hashlib.md5(self.email).hexdigest()
+        self.email_hash = hashlib.md5(self.email.encode('utf-8')).hexdigest()
 
     def set_password(self, raw_password):
         self.password_date = tz_util.now()
@@ -469,7 +469,7 @@ class User(models.Model):
                 and not '?' in settings.GRAVATAR_DEFAULT):
             gravatar_default = '&d=%s' % settings.GRAVATAR_DEFAULT
 
-        return 'http://www.gravatar.com/avatar/%s?s=%s%s' % (hashlib.md5(self.email).hexdigest(), image_size, gravatar_default)
+        return 'http://www.gravatar.com/avatar/%s?s=%s%s' % (hashlib.md5(self.email.encode('utf-8')).hexdigest(), image_size, gravatar_default)
 
     def get_ranking(self):
         if not self.ranking:

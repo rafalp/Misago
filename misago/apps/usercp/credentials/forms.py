@@ -19,7 +19,7 @@ class CredentialsChangeForm(Form):
 
     def clean_new_email(self):
         if self.cleaned_data['new_email']:
-            new_hash = hashlib.md5(self.cleaned_data['new_email'].lower()).hexdigest()
+            new_hash = hashlib.md5(self.cleaned_data['new_email'].lower().encode('utf-8')).hexdigest()
             if new_hash == self.request.user.email_hash:
                 raise ValidationError(_("New e-mail is same as your current e-mail."))
             try:
