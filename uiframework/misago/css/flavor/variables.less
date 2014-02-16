@@ -7,7 +7,7 @@
 //
 //## Basic colors for use in this flavor
 
-@brand-primary:         #428bca;
+@brand-primary:         #3498db;
 @brand-success:         #5cb85c;
 @brand-info:            #5bc0de;
 @brand-warning:         #f0ad4e;
@@ -31,10 +31,47 @@
 //
 //## Custom navbar flavor
 
-
-@navbar-default-color:             #bdc3c7;
+// Navbar Colors
+@navbar-default-color:             #2c3e50;
 @navbar-default-bg:                #ecf0f1;
 @navbar-default-border:            darken(@navbar-default-bg, 7%);
+
+// Navbar links
+@navbar-primary-link-color:                #7f8c8d;
+@navbar-primary-link-bg:                   @navbar-default-bg;
+@navbar-primary-link-border:               @navbar-default-border;
+@navbar-primary-link-hover-color:          @brand-primary;
+@navbar-primary-link-hover-bg:             @navbar-default-bg;
+@navbar-primary-link-hover-border:         @brand-primary;
+@navbar-primary-link-active-color:         @body-bg;
+@navbar-primary-link-active-bg:            @brand-primary;
+@navbar-primary-link-active-border:        @brand-primary;
+
+// Sign in button
+@btn-signin-color:                 lighten(desaturate(@brand-primary, 45%), 5%);
+@btn-signin-bg:                    transparent;
+@btn-signin-border:                lighten(desaturate(@brand-primary, 45%), 10%);
+
+@btn-signin-hover-color:           @body-bg;
+@btn-signin-hover-bg:              @brand-primary;
+@btn-signin-hover-border:          @brand-primary;
+
+@btn-signin-active-color:          @body-bg;
+@btn-signin-active-bg:             @text-color;
+@btn-signin-active-border:         @text-color;
+
+// Register button
+@btn-register-color:                 #e67e22;
+@btn-register-bg:                    transparent;
+@btn-register-border:                #e67e22;
+
+@btn-register-hover-color:           @body-bg;
+@btn-register-hover-bg:              #e67e22;
+@btn-register-hover-border:          #e67e22;
+
+@btn-register-active-color:          @body-bg;
+@btn-register-active-bg:             darken(#d35400, 5%);
+@btn-register-active-border:         darken(#d35400, 5%);
 
 
 // Navbar brand label

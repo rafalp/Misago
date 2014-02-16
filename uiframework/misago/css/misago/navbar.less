@@ -2,5 +2,115 @@
 // Forum Navbar
 // --------------------------------------------------
 
+
+/* Navbar Guest Buttons */
 .navbar-default {
+  .btn-sign-in, .btn-register {
+    .navbar-vertical-align(@input-height-base + 2);
+  }
+
+  .btn-sign-in {
+    &, &:link, &:visited {
+      background-color: @btn-signin-bg;
+      border-color: @btn-signin-border;
+
+      color: @btn-signin-color;
+    }
+
+    &:hover {
+      background-color: @btn-signin-hover-bg;
+      border-color: @btn-signin-hover-border;
+
+      color: @btn-signin-hover-color;
+    }
+
+    &:active, &:focus {
+      background-color: @btn-signin-active-bg;
+      border-color: @btn-signin-active-border;
+
+      color: @btn-signin-active-color;
+    }
+  }
+
+  .btn-register {
+    &, &:link, &:visited {
+      background-color: @btn-register-bg;
+      border-color: @btn-register-border;
+
+      color: @btn-register-color;
+    }
+
+    &:hover {
+      background-color: @btn-register-hover-bg;
+      border-color: @btn-register-hover-border;
+
+      color: @btn-register-hover-color;
+    }
+
+    &:active, &:focus {
+      background-color: @btn-register-active-bg;
+      border-color: @btn-register-active-border;
+
+      color: @btn-register-active-color;
+    }
+  }
+}
+
+/* Responsiveness */
+@media (min-width: @screen-sm-min) {
+  .navbar-guest-buttons {
+    margin-left: @line-height-computed * 2;
+  }
+}
+
+
+/* Navbar Nav */
+.navbar-nav-primary {
+  li {
+    a {
+      font-size: @font-size-large;
+    }
+  }
+}
+
+/* Responsiveness */
+@media (min-width: @screen-sm-min) {
+  ul.navbar-nav-primary {
+    &>li {
+      &>a {
+        border-radius: @border-radius-base;
+        margin-top: 7px;
+        margin-left: 4px;
+        padding: 6px 0px;
+        width: 36px;
+
+        text-align: center;
+
+        .item-label {
+          display: none;
+        }
+
+        &:link, &:visited {
+          background: @navbar-primary-link-bg !important;
+          border: 2px solid @navbar-primary-link-border !important;
+
+          color: @navbar-primary-link-color !important;
+        }
+
+        &:hover {
+          background: @navbar-primary-link-hover-bg !important;
+          border: 2px solid @navbar-primary-link-hover-border !important;
+
+          color: @navbar-primary-link-hover-color !important;
+        }
+
+        &:active {
+          background: @navbar-primary-link-active-bg !important;
+          border: 2px solid @navbar-primary-link-active-border !important;
+
+          color: @navbar-primary-link-active-color !important;
+        }
+      }
+    }
+  }
 }
