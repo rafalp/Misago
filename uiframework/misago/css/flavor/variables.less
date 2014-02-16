@@ -1,0 +1,43 @@
+//
+// Flavor Variables
+// --------------------------------------------------
+
+
+//== Colors
+//
+//## Basic colors for use in this flavor
+
+@brand-primary:         #428bca;
+@brand-success:         #5cb85c;
+@brand-info:            #5bc0de;
+@brand-warning:         #f0ad4e;
+@brand-danger:          #d9534f;
+
+//** Background color for `<body>`.
+@body-bg:               darken(#fff, 1%);
+//** Global text color on `<body>`.
+@text-color:            #2c3e50;
+
+//** Global textual link color.
+@link-color:            @brand-primary;
+//** Link hover color set via `darken()` function.
+@link-hover-color:      darken(@link-color, 15%);
+
+//** Text muted color
+@text-muted:            #95a5a6;
+
+
+//== Navbar
+//
+//## Custom navbar flavor
+
+
+@navbar-default-color:             #bdc3c7;
+@navbar-default-bg:                #ecf0f1;
+@navbar-default-border:            darken(@navbar-default-bg, 7%);
+
+
+// Navbar brand label
+
+@navbar-default-brand-color:               @text-color;
+@navbar-default-brand-hover-color:         @text-color;
