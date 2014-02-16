@@ -17,7 +17,8 @@ def get_custom_settings_values(orm, group):
     custom_settings_values = {}
 
     for setting in group.setting_set.iterator():
-        custom_settings_values[setting.setting] = setting.value
+        if setting.has_custom_value:
+            custom_settings_values[setting.setting] = setting.value
 
     return custom_settings_values
 

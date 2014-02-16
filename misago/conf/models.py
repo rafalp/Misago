@@ -29,16 +29,25 @@ class Setting(models.Model):
 
     @property
     def value(self):
-        return hydrators.hydrate_value(self.python_type, self.dry_value)
+        if not self.dry_value and self.default_value:
+            return hydrators.hydrate_value(self.python_type,
+                                           self.default_value)
+        else:
+            return hydrators.hydrate_value(self.python_type,
+                                           self.dry_value)
 
     @value.setter
     def value(self, new_value):
-        self.dry_value = hydrators.dehydrate_value(self.python_type, new_value)
-        return self.dry_value
+        if new_value != None:
+            self.dry_value = hydrators.dehydrate_value(self.python_type,
+                                                       new_value)
+        else:
+            self.dry_value = self.default_value
+        return self.value
 
     @property
     def has_custom_value(self):
-        return self.default_value and self.dry_value != self.default_value
+        return self.dry_value and self.dry_value != self.default_value
 
     @property
     def field_extra(self):
@@ -49,5 +58,6 @@ class Setting(models.Model):
 
     @field_extra.setter
     def field_extra(self, new_extra):
-        pickled_extra = pickle.dumps(choices_cache, pickle.HIGHEST_PROTOCOL)
-        self.pickled_field_extra = base64.encodestring(pickled_extra)
+        if new_extra:
+            pickled_extra = pickle.dumps(new_extra, pickle.HIGHEST_PROTOCOL)
+            self.pickled_field_extra = base64.encodestring(pickled_extra)
