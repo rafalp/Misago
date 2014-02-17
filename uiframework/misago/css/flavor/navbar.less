@@ -2,7 +2,7 @@
 // Forum Navbar
 // --------------------------------------------------
 
-.navbar-default {
+.navbar {
   .navbar-brand {
     font-size: @font-size-large * 1.6;
   }
@@ -14,6 +14,102 @@
       img {
         border-radius: @border-radius-base;
         height: 32px;
+      }
+    }
+  }
+}
+
+/* Navbar small dropdowns */
+@media (max-width: @screen-sm-min) {
+  .navbar {
+    .dropdown-menu {
+      li {
+        form {
+          button {
+            padding: 3px 25px;
+          }
+        }
+
+        a, &:link, &:visited, &:hover, &:active {
+          .badge {
+            background-color: @brand-danger;
+
+            color: @dropdown-bg;
+          }
+        }
+      }
+    }
+  }
+
+  .navbar-default {
+    .dropdown-menu {
+      li {
+        form {
+          button {
+            color: @navbar-default-link-color;
+
+            &:hover {
+              background: none;
+
+              color: @navbar-default-link-hover-color;
+            }
+
+            &:active, &:focus {
+              background: none;
+
+              color: @navbar-default-link-active-color;
+            }
+          }
+        }
+      }
+    }
+
+    .dropdown.open {
+      background: darken(@navbar-default-bg, 3%);
+      border-bottom: 2px solid darken(@navbar-default-bg, 6%);
+
+      .dropdown-toggle {
+        &:link, &:active, &:visited, &:hover {
+          background: darken(@navbar-default-bg, 6%);
+        }
+      }
+
+      .dropdown-menu {
+        li.divider {
+          background-color: darken(@navbar-default-bg, 9%);
+        }
+      }
+    }
+  }
+
+  .navbar-inverse {
+    .dropdown-menu {
+      button {
+        color: @navbar-inverse-link-color;
+
+        &:hover {
+          background: none;
+
+          color: @navbar-inverse-link-hover-color;
+        }
+
+        &:active, &:focus {
+          background: none;
+
+          color: @navbar-inverse-link-active-color;
+        }
+      }
+    }
+
+    .dropdown.open {
+      background: lighten(@navbar-inverse-bg, 3%);
+      border-left: 2px solid lighten(@navbar-inverse-bg, 6%);
+      border-bottom: 2px solid lighten(@navbar-inverse-bg, 6%);
+
+      .dropdown-menu {
+        li.divider {
+          background-color: lighten(@navbar-inverse-bg, 9%);
+        }
       }
     }
   }

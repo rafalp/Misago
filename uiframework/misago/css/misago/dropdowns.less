@@ -4,6 +4,24 @@
 
 /* On all displays*/
 .dropdown-menu {
+  border: none;
+  border-radius: @border-radius-base !important;
+  box-shadow: 0px 0px 0px 6px @dropdown-shadow;
+  margin-top: 8px;
+
+  &:after {
+    border: solid transparent;
+    border-bottom-color: @dropdown-bg;
+    border-width: 6px;
+    content: "";
+    height: 0;
+    position: absolute;
+    pointer-events: none;
+    left: 10px;
+    top: -11px;
+    width: 0;
+  }
+
   li {
     /* Buttons */
     button {
@@ -14,6 +32,7 @@
 
       color: @dropdown-link-color;
       text-align: left;
+      white-space: nowrap;
 
       &:hover {
         background-color: @dropdown-link-hover-bg;
@@ -39,7 +58,7 @@
     }
 
     /* Badges */
-    a, button {
+    a {
       .badge {
         border-radius: @border-radius-small;
         position: relative;
@@ -65,11 +84,40 @@
   }
 }
 
+
+.pull-right {
+  .dropdown-menu:after {
+    left: auto;
+    right: 10px;
+  }
+}
+
+
 /* On big displays */
 @media (min-width: @screen-sm-min) {
   .dropdown-menu {
-    border: none;
-    border-radius: @border-radius-base !important;
-    box-shadow: 0px 0px 0px 6px @dropdown-shadow;
+    li {
+      button {
+        background: none;
+        border: none;
+        padding: 3px 20px;
+        width: 100%;
+
+        color: @dropdown-link-color;
+        text-align: left;
+
+        &:hover {
+          background-color: @dropdown-link-hover-bg;
+
+          color: @dropdown-link-hover-color;
+        }
+
+        &:active, &:focus {
+          background-color: @dropdown-link-active-bg;
+
+          color: @dropdown-link-active-color;
+        }
+      }
+    }
   }
 }

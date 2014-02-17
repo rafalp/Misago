@@ -3826,6 +3826,10 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   .navbar-right {
     float: right !important;
   }
+  .navbar-right .dropdown-menu:after {
+    left: auto;
+    right: 10px;
+  }
 }
 .navbar-form {
   margin-left: -15px;
@@ -5774,6 +5778,24 @@ button.close {
   }
 }
 /* On all displays*/
+.dropdown-menu {
+  border: none;
+  border-radius: 4px !important;
+  box-shadow: 0px 0px 0px 6px rgba(51, 51, 51, 0.5);
+  margin-top: 8px;
+}
+.dropdown-menu:after {
+  border: solid transparent;
+  border-bottom-color: #ffffff;
+  border-width: 6px;
+  content: "";
+  height: 0;
+  position: absolute;
+  pointer-events: none;
+  left: 10px;
+  top: -11px;
+  width: 0;
+}
 .dropdown-menu li {
   /* Buttons */
   /* Icons */
@@ -5786,9 +5808,11 @@ button.close {
   width: 100%;
   color: #3e5771;
   text-align: left;
+  white-space: nowrap;
 }
 .dropdown-menu li button:hover {
-  color: #3498db;
+  background-color: #3498db;
+  color: #fcfcfc;
 }
 .dropdown-menu li button:active,
 .dropdown-menu li button:focus {
@@ -5803,32 +5827,34 @@ button.close {
   width: 16px;
   text-align: center;
 }
-.dropdown-menu li a .badge,
-.dropdown-menu li button .badge {
+.dropdown-menu li a .badge {
   border-radius: 3px;
   position: relative;
   top: 1px;
 }
 .dropdown-menu li a:link .badge,
-.dropdown-menu li button:link .badge,
-.dropdown-menu li a:visited .badge,
-.dropdown-menu li button:visited .badge {
+.dropdown-menu li a:visited .badge {
   background-color: #d9534f;
   color: #ffffff;
 }
 .dropdown-menu li a:hover .badge,
-.dropdown-menu li button:hover .badge,
-.dropdown-menu li a:active .badge,
-.dropdown-menu li button:active .badge {
+.dropdown-menu li a:active .badge {
   background-color: #ffffff;
   color: #d9534f;
 }
+.pull-right .dropdown-menu:after {
+  left: auto;
+  right: 10px;
+}
 /* On big displays */
 @media (min-width: 768px) {
-  .dropdown-menu {
+  .dropdown-menu li button {
+    background: none;
     border: none;
-    border-radius: 4px !important;
-    box-shadow: 0px 0px 0px 6px rgba(51, 51, 51, 0.5);
+    padding: 3px 20px;
+    width: 100%;
+    color: #3e5771;
+    text-align: left;
   }
   .dropdown-menu li button:hover {
     background-color: #3498db;
@@ -5987,6 +6013,7 @@ button.close {
   filter: alpha(opacity=100);
   text-decoration: none;
 }
+.btn,
 .btn:link,
 .btn:active,
 .btn:visited,
@@ -5994,15 +6021,74 @@ button.close {
 .btn:focus {
   border-width: 2px;
 }
-.navbar-default .navbar-brand {
+.navbar .navbar-brand {
   font-size: 28.8px;
 }
-.navbar-default .navbar-nav-user .user-toggle {
+.navbar .navbar-nav-user .user-toggle {
   overflow: auto;
 }
-.navbar-default .navbar-nav-user .user-toggle img {
+.navbar .navbar-nav-user .user-toggle img {
   border-radius: 4px;
   height: 32px;
+}
+/* Navbar small dropdowns */
+@media (max-width: 768px) {
+  .navbar .dropdown-menu li form button {
+    padding: 3px 25px;
+  }
+  .navbar .dropdown-menu li a .badge,
+  .navbar .dropdown-menu li:link .badge,
+  .navbar .dropdown-menu li:visited .badge,
+  .navbar .dropdown-menu li:hover .badge,
+  .navbar .dropdown-menu li:active .badge {
+    background-color: #d9534f;
+    color: #ffffff;
+  }
+  .navbar-default .dropdown-menu li form button {
+    color: #7f8c8d;
+  }
+  .navbar-default .dropdown-menu li form button:hover {
+    background: none;
+    color: #3498db;
+  }
+  .navbar-default .dropdown-menu li form button:active,
+  .navbar-default .dropdown-menu li form button:focus {
+    background: none;
+    color: #3498db;
+  }
+  .navbar-default .dropdown.open {
+    background: #e3e9eb;
+    border-bottom: 2px solid #dae2e4;
+  }
+  .navbar-default .dropdown.open .dropdown-toggle:link,
+  .navbar-default .dropdown.open .dropdown-toggle:active,
+  .navbar-default .dropdown.open .dropdown-toggle:visited,
+  .navbar-default .dropdown.open .dropdown-toggle:hover {
+    background: #dae2e4;
+  }
+  .navbar-default .dropdown.open .dropdown-menu li.divider {
+    background-color: #d2dbde;
+  }
+  .navbar-inverse .dropdown-menu button {
+    color: #999999;
+  }
+  .navbar-inverse .dropdown-menu button:hover {
+    background: none;
+    color: #ffffff;
+  }
+  .navbar-inverse .dropdown-menu button:active,
+  .navbar-inverse .dropdown-menu button:focus {
+    background: none;
+    color: #ffffff;
+  }
+  .navbar-inverse .dropdown.open {
+    background: #2a2a2a;
+    border-left: 2px solid #313131;
+    border-bottom: 2px solid #313131;
+  }
+  .navbar-inverse .dropdown.open .dropdown-menu li.divider {
+    background-color: #393939;
+  }
 }
 /* On big displays */
 @media (min-width: 768px) {
