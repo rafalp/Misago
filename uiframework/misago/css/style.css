@@ -5953,6 +5953,7 @@ button.close {
     border: none;
     border-radius: 4px !important;
     box-shadow: 0px 0px 0px 6px rgba(51, 51, 51, 0.5);
+    width: 256px;
   }
   .navbar-nav-user .dropdown-menu:after {
     border: solid transparent;
@@ -5965,6 +5966,27 @@ button.close {
     right: 10px;
     top: -11px;
     width: 0;
+  }
+  .navbar-nav-user .dropdown-menu a .glyphicon,
+  .navbar-nav-user .dropdown-menu a .fa {
+    display: inline-block;
+    width: 16px;
+    text-align: center;
+  }
+  .navbar-nav-user .dropdown-menu a .badge {
+    border-radius: 3px;
+    position: relative;
+    top: 1px;
+  }
+  .navbar-nav-user .dropdown-menu a:link .badge,
+  .navbar-nav-user .dropdown-menu a:visited .badge {
+    background-color: #d9534f;
+    color: #ffffff;
+  }
+  .navbar-nav-user .dropdown-menu a:hover .badge,
+  .navbar-nav-user .dropdown-menu a:active .badge {
+    background-color: #ffffff;
+    color: #d9534f;
   }
 }
 .jumbotron {

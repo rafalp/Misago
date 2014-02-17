@@ -38,6 +38,7 @@
       border: none;
       border-radius: @border-radius-base !important;
       box-shadow: 0px 0px 0px 6px @dropdown-shadow;
+      width: 256px;
 
       &:after {
         border: solid transparent;
@@ -50,6 +51,37 @@
         right: 10px;
         top: -11px;
         width: 0;
+      }
+
+      a {
+        .glyphicon, .fa {
+          display: inline-block;
+          width: 16px;
+
+          text-align: center;
+        }
+
+        .badge {
+          border-radius: @border-radius-small;
+          position: relative;
+          top: 1px;
+        }
+
+        &:link, &:visited {
+          .badge {
+            background-color: @brand-danger;
+
+            color: @dropdown-bg;
+          }
+        }
+
+        &:hover, &:active {
+          .badge {
+            background-color: @dropdown-bg;
+
+            color: @brand-danger;
+          }
+        }
       }
     }
   }
