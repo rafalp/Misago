@@ -1,0 +1,75 @@
+//
+// Dropdown menus
+// --------------------------------------------------
+
+/* On all displays*/
+.dropdown-menu {
+  li {
+    /* Buttons */
+    button {
+      background: none;
+      border: none;
+      padding: 3px 20px;
+      width: 100%;
+
+      color: @dropdown-link-color;
+      text-align: left;
+
+      &:hover {
+        background-color: @dropdown-link-hover-bg;
+
+        color: @dropdown-link-hover-color;
+      }
+
+      &:active, &:focus {
+        background-color: @dropdown-link-active-bg;
+
+        color: @dropdown-link-active-color;
+      }
+    }
+
+    /* Icons */
+    a, button {
+      .glyphicon, .fa {
+        display: inline-block;
+        width: 16px;
+
+        text-align: center;
+      }
+    }
+
+    /* Badges */
+    a, button {
+      .badge {
+        border-radius: @border-radius-small;
+        position: relative;
+        top: 1px;
+      }
+
+      &:link, &:visited {
+        .badge {
+          background-color: @brand-danger;
+
+          color: @dropdown-bg;
+        }
+      }
+
+      &:hover, &:active {
+        .badge {
+          background-color: @dropdown-bg;
+
+          color: @brand-danger;
+        }
+      }
+    }
+  }
+}
+
+/* On big displays */
+@media (min-width: @screen-sm-min) {
+  .dropdown-menu {
+    border: none;
+    border-radius: @border-radius-base !important;
+    box-shadow: 0px 0px 0px 6px @dropdown-shadow;
+  }
+}

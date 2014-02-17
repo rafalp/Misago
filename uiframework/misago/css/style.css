@@ -5773,6 +5773,73 @@ button.close {
     display: none !important;
   }
 }
+/* On all displays*/
+.dropdown-menu li {
+  /* Buttons */
+  /* Icons */
+  /* Badges */
+}
+.dropdown-menu li button {
+  background: none;
+  border: none;
+  padding: 3px 20px;
+  width: 100%;
+  color: #3e5771;
+  text-align: left;
+}
+.dropdown-menu li button:hover {
+  color: #3498db;
+}
+.dropdown-menu li button:active,
+.dropdown-menu li button:focus {
+  background-color: #34495e;
+  color: #fcfcfc;
+}
+.dropdown-menu li a .glyphicon,
+.dropdown-menu li button .glyphicon,
+.dropdown-menu li a .fa,
+.dropdown-menu li button .fa {
+  display: inline-block;
+  width: 16px;
+  text-align: center;
+}
+.dropdown-menu li a .badge,
+.dropdown-menu li button .badge {
+  border-radius: 3px;
+  position: relative;
+  top: 1px;
+}
+.dropdown-menu li a:link .badge,
+.dropdown-menu li button:link .badge,
+.dropdown-menu li a:visited .badge,
+.dropdown-menu li button:visited .badge {
+  background-color: #d9534f;
+  color: #ffffff;
+}
+.dropdown-menu li a:hover .badge,
+.dropdown-menu li button:hover .badge,
+.dropdown-menu li a:active .badge,
+.dropdown-menu li button:active .badge {
+  background-color: #ffffff;
+  color: #d9534f;
+}
+/* On big displays */
+@media (min-width: 768px) {
+  .dropdown-menu {
+    border: none;
+    border-radius: 4px !important;
+    box-shadow: 0px 0px 0px 6px rgba(51, 51, 51, 0.5);
+  }
+  .dropdown-menu li button:hover {
+    background-color: #3498db;
+    color: #fcfcfc;
+  }
+  .dropdown-menu li button:active,
+  .dropdown-menu li button:focus {
+    background-color: #34495e;
+    color: #fcfcfc;
+  }
+}
 /* Navbar Guest Buttons */
 .navbar-default .btn-sign-in,
 .navbar-default .btn-register {
@@ -5950,10 +6017,7 @@ button.close {
     margin-left: 8px;
   }
   .navbar-nav-user .dropdown-menu {
-    border: none;
-    border-radius: 4px !important;
-    box-shadow: 0px 0px 0px 6px rgba(51, 51, 51, 0.5);
-    width: 256px;
+    min-width: 256px;
   }
   .navbar-nav-user .dropdown-menu:after {
     border: solid transparent;
@@ -5966,27 +6030,6 @@ button.close {
     right: 10px;
     top: -11px;
     width: 0;
-  }
-  .navbar-nav-user .dropdown-menu a .glyphicon,
-  .navbar-nav-user .dropdown-menu a .fa {
-    display: inline-block;
-    width: 16px;
-    text-align: center;
-  }
-  .navbar-nav-user .dropdown-menu a .badge {
-    border-radius: 3px;
-    position: relative;
-    top: 1px;
-  }
-  .navbar-nav-user .dropdown-menu a:link .badge,
-  .navbar-nav-user .dropdown-menu a:visited .badge {
-    background-color: #d9534f;
-    color: #ffffff;
-  }
-  .navbar-nav-user .dropdown-menu a:hover .badge,
-  .navbar-nav-user .dropdown-menu a:active .badge {
-    background-color: #ffffff;
-    color: #d9534f;
   }
 }
 .jumbotron {
