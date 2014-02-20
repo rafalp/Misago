@@ -5842,11 +5842,12 @@ button.close {
   background-color: #ffffff;
   color: #d9534f;
 }
+/* Move arrow to right on pull-right dropdowns */
 .pull-right .dropdown-menu:after {
   left: auto;
   right: 10px;
 }
-/* On big displays */
+/* Big displays */
 @media (min-width: 768px) {
   .dropdown-menu li button {
     background: none;
@@ -5871,6 +5872,31 @@ button.close {
 }
 .navbar-nav-primary li a {
   font-size: 18px;
+}
+.navbar-nav-primary li a .badge {
+  border-radius: 4px;
+  position: relative;
+  bottom: 2px;
+}
+.navbar-nav-primary li a:hover .badge,
+.navbar-nav-primary li a:active .badge {
+  background-color: #3498db;
+}
+.navbar-nav-primary li a.new:hover,
+.navbar-nav-primary li a.new:active {
+  color: #2ecc71;
+}
+.navbar-nav-primary li a.new:hover .badge,
+.navbar-nav-primary li a.new:active .badge {
+  background-color: #2ecc71;
+}
+.navbar-nav-primary li a.important:hover,
+.navbar-nav-primary li a.important:active {
+  color: #ea6153;
+}
+.navbar-nav-primary li a.important:hover .badge,
+.navbar-nav-primary li a.important:active .badge {
+  background-color: #ea6153;
 }
 /* Big displays */
 @media (min-width: 768px) {
@@ -5902,10 +5928,7 @@ button.close {
     width: auto;
   }
   .navbar-nav-primary > li > a.badged .badge {
-    border-radius: 4px;
     margin-bottom: -2px;
-    position: relative;
-    bottom: 2px;
   }
   .navbar-nav-primary > li > a:link,
   .navbar-nav-primary > li > a:visited {
@@ -6101,14 +6124,15 @@ button.close {
   }
   /* Color badges in red and white */
   .navbar .dropdown-menu li a .badge,
-  .navbar .dropdown-menu li:link .badge,
-  .navbar .dropdown-menu li:visited .badge,
-  .navbar .dropdown-menu li:hover .badge,
-  .navbar .dropdown-menu li:active .badge {
+  .navbar .dropdown-menu li a:link .badge,
+  .navbar .dropdown-menu li a:visited .badge,
+  .navbar .dropdown-menu li a:hover .badge,
+  .navbar .dropdown-menu li a:active .badge {
     background-color: #d9534f;
+    border-radius: 4px;
     color: #ffffff;
   }
-  /* Dropdown look */
+  /* Dropdown links and buttons */
   .navbar .dropdown-menu li form button {
     color: #7f8c8d;
   }
@@ -6120,19 +6144,6 @@ button.close {
   .navbar .dropdown-menu li form button:focus {
     background: none;
     color: #3498db;
-  }
-  .navbar .dropdown.open {
-    background: #f0f0f0;
-    border-bottom: 2px solid #e9e9e9;
-  }
-  .navbar .dropdown.open .dropdown-toggle:link,
-  .navbar .dropdown.open .dropdown-toggle:active,
-  .navbar .dropdown.open .dropdown-toggle:visited,
-  .navbar .dropdown.open .dropdown-toggle:hover {
-    background: #e9e9e9;
-  }
-  .navbar .dropdown.open .dropdown-menu li.divider {
-    background-color: #e1e1e1;
   }
   .navbar-inverse .dropdown-menu button {
     color: #999999;
@@ -6146,9 +6157,22 @@ button.close {
     background: none;
     color: #ffffff;
   }
+  /* Make open dropdowns differ*/
+  .navbar .dropdown.open {
+    background: #f0f0f0;
+    border-bottom: 2px solid #e9e9e9;
+  }
+  .navbar .dropdown.open .dropdown-toggle:link,
+  .navbar .dropdown.open .dropdown-toggle:active,
+  .navbar .dropdown.open .dropdown-toggle:visited,
+  .navbar .dropdown.open .dropdown-toggle:hover {
+    background: #e9e9e9;
+  }
+  .navbar .dropdown.open .dropdown-menu li.divider {
+    background-color: #e1e1e1;
+  }
   .navbar-inverse .dropdown.open {
     background: #2a2a2a;
-    border-left: 2px solid #313131;
     border-bottom: 2px solid #313131;
   }
   .navbar-inverse .dropdown.open .dropdown-menu li.divider {

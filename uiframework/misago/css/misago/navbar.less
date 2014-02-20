@@ -18,6 +18,38 @@
   li {
     a {
       font-size: @font-size-large;
+
+      .badge {
+        border-radius: @border-radius-base;
+        position: relative;
+        bottom: 2px;
+      }
+
+      &:hover, &:active {
+        .badge {
+          background-color: @link-color;
+        }
+      }
+
+      &.new {
+        &:hover, &:active {
+          color: @navbar-new-link-hover-color;
+
+          .badge {
+            background-color: @navbar-new-link-hover-color;
+          }
+        }
+      }
+
+      &.important {
+        &:hover, &:active {
+          color: @navbar-important-link-hover-color;
+
+          .badge {
+            background-color: @navbar-important-link-hover-color;
+          }
+        }
+      }
     }
   }
 }
@@ -50,10 +82,7 @@
           width: auto;
 
           .badge {
-            border-radius: @border-radius-base;
             margin-bottom: -2px;
-            position: relative;
-            bottom: 2px;
           }
         }
 
@@ -338,18 +367,21 @@
   .navbar {
     .dropdown-menu {
       li {
-        a, &:link, &:visited, &:hover, &:active {
-          .badge {
-            background-color: @brand-danger;
+        a {
+          &, &:link, &:visited, &:hover, &:active {
+            .badge {
+              background-color: @brand-danger;
+              border-radius: @border-radius-base;
 
-            color: @dropdown-bg;
+              color: @dropdown-bg;
+            }
           }
         }
       }
     }
   }
 
-  /* Dropdown look */
+  /* Dropdown links and buttons */
   .navbar {
     .dropdown-menu {
       li {
@@ -369,23 +401,6 @@
               color: @navbar-default-link-active-color;
             }
           }
-        }
-      }
-    }
-
-    .dropdown.open {
-      background: darken(@navbar-default-bg, 3%);
-      border-bottom: 2px solid darken(@navbar-default-bg, 6%);
-
-      .dropdown-toggle {
-        &:link, &:active, &:visited, &:hover {
-          background: darken(@navbar-default-bg, 6%);
-        }
-      }
-
-      .dropdown-menu {
-        li.divider {
-          background-color: darken(@navbar-default-bg, 9%);
         }
       }
     }
@@ -409,10 +424,31 @@
         }
       }
     }
+  }
 
+  /* Make open dropdowns differ*/
+  .navbar {
+    .dropdown.open {
+      background: darken(@navbar-default-bg, 3%);
+      border-bottom: 2px solid darken(@navbar-default-bg, 6%);
+
+      .dropdown-toggle {
+        &:link, &:active, &:visited, &:hover {
+          background: darken(@navbar-default-bg, 6%);
+        }
+      }
+
+      .dropdown-menu {
+        li.divider {
+          background-color: darken(@navbar-default-bg, 9%);
+        }
+      }
+    }
+  }
+
+  .navbar-inverse {
     .dropdown.open {
       background: lighten(@navbar-inverse-bg, 3%);
-      border-left: 2px solid lighten(@navbar-inverse-bg, 6%);
       border-bottom: 2px solid lighten(@navbar-inverse-bg, 6%);
 
       .dropdown-menu {
