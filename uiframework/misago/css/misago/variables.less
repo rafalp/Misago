@@ -1,10 +1,138 @@
 //
-// Variables
+// Misago Variables
 // --------------------------------------------------
+
+
+//== Colors
+//
+//## Basic colors for use in this flavor
+
+@brand-primary:         #3498db;
+@brand-success:         #5cb85c;
+@brand-info:            #5bc0de;
+@brand-warning:         #f0ad4e;
+@brand-danger:          #d9534f;
+
+//** Background color for `<body>`.
+@body-bg:               darken(#fff, 1%);
+//** Global text color on `<body>`.
+@text-color:            #2c3e50;
+
+//** Global textual link color.
+@link-color:            @brand-primary;
+//** Link hover color set via `darken()` function.
+@link-hover-color:      darken(@link-color, 15%);
+
+//** Text muted color
+@text-muted:            #95a5a6;
+
+
+//== Navbar
+//
+//## Navbar style
+
+// Navbar brand
+@navbar-brand-size:                        @font-size-large * 1.6;
+
+@navbar-default-brand-color:               @text-color;
+@navbar-default-brand-hover-color:         @text-color;
+
+
+// Navbar icon-based menu
+@navbar-primary-link-color:                #7f8c8d;
+@navbar-primary-link-bg:                   @navbar-default-bg;
+@navbar-primary-link-border:               @navbar-default-border;
+@navbar-primary-link-hover-color:          @brand-primary;
+@navbar-primary-link-hover-bg:             @navbar-default-bg;
+@navbar-primary-link-hover-border:         @brand-primary;
+@navbar-primary-link-active-color:         @body-bg;
+@navbar-primary-link-active-bg:            @brand-primary;
+@navbar-primary-link-active-border:        @brand-primary;
+
+
+// Same as above, but important items
+@navbar-important-link-color:                desaturate(#ea6153, 20%);
+@navbar-important-link-bg:                   @navbar-default-bg;
+@navbar-important-link-border:               desaturate(lighten(#ea6153, 10%), 20%);
+@navbar-important-link-hover-color:          #ea6153;
+@navbar-important-link-hover-bg:             @navbar-default-bg;
+@navbar-important-link-hover-border:         #ea6153;
+@navbar-important-link-active-color:         @body-bg;
+@navbar-important-link-active-bg:            #ea6153;
+@navbar-important-link-active-border:        #ea6153;
+
+
+// Same as above, but new items
+@navbar-new-link-color:                desaturate(#2ecc71, 20%);
+@navbar-new-link-bg:                   @navbar-default-bg;
+@navbar-new-link-border:               desaturate(lighten(#2ecc71, 10%), 20%);
+@navbar-new-link-hover-color:          #2ecc71;
+@navbar-new-link-hover-bg:             @navbar-default-bg;
+@navbar-new-link-hover-border:         #2ecc71;
+@navbar-new-link-active-color:         @body-bg;
+@navbar-new-link-active-bg:            #2ecc71;
+@navbar-new-link-active-border:        #2ecc71;
+
+
+// Only User  dropdown switch uses those clases
+@navbar-default-link-color:                #7f8c8d;
+@navbar-default-link-hover-color:          @brand-primary;
+@navbar-default-link-hover-bg:             transparent;
+@navbar-default-link-active-color:         @brand-primary;
+@navbar-default-link-active-bg:            transparent;
+
+
+// Guest Sign in button
+@btn-signin-color:                 lighten(desaturate(@brand-primary, 45%), 5%);
+@btn-signin-bg:                    transparent;
+@btn-signin-border:                lighten(desaturate(@brand-primary, 45%), 10%);
+
+@btn-signin-hover-color:           @brand-primary;
+@btn-signin-hover-bg:              transparent;
+@btn-signin-hover-border:          @brand-primary;
+
+@btn-signin-active-color:          @body-bg;
+@btn-signin-active-bg:             @text-color;
+@btn-signin-active-border:         @text-color;
+
+
+// Guest Register button
+@btn-register-color:                 @body-bg;
+@btn-register-bg:                    #2ecc71;
+@btn-register-border:                #2ecc71;
+
+@btn-register-hover-color:           @body-bg;
+@btn-register-hover-bg:              lighten(@btn-register-bg, 15%);
+@btn-register-hover-border:          lighten(@btn-register-border, 15%);
+
+@btn-register-active-color:          @body-bg;
+@btn-register-active-bg:             darken(@btn-register-bg, 5%);
+@btn-register-active-border:         darken(@btn-register-border, 5%);
+
+
+//== Dropdowns
+//
+//## Misago dropdowns flavor
+
+//** Dropdown link text color.
+@dropdown-link-color:            lighten(@text-color, 10%);
+//** Hover color for dropdown links.
+@dropdown-link-hover-color:      @body-bg;
+//** Hover background for dropdown links.
+@dropdown-link-hover-bg:         @brand-primary;
+
+//** Active dropdown menu item text color.
+@dropdown-link-active-color:     @body-bg;
+//** Active dropdown menu item background color.
+@dropdown-link-active-bg:        #34495e;
+
+
+//** Open dropdown shadow color.
+@dropdown-shadow:                fadeOut(#333, 50%);
 
 
 //== Misago Branding
 //
-//## Default branding size
+//## Size of Misago's branding in footer
 
-@misago-branding-size:    @font-size-large * 1.5;
+@misago-branding-size:            @font-size-large * 1.6;

@@ -3,16 +3,265 @@
 // --------------------------------------------------
 
 
-/* Navbar Guest Buttons */
-.navbar-default {
-  .btn-sign-in, .btn-register {
+// Brand
+// --------------------------------------------------
+.navbar {
+  .navbar-brand {
+    font-size: @navbar-brand-size;
+  }
+}
+
+
+// Primary menu
+// --------------------------------------------------
+.navbar-nav-primary {
+  li {
+    a {
+      font-size: @font-size-large;
+    }
+  }
+}
+
+/* Big displays */
+@media (min-width: @screen-sm-min) {
+  .navbar-nav-primary {
     .navbar-vertical-align(@input-height-base + 2);
+
+    &>li {
+      /* Some space between icons */
+      margin-left: 4px;
+
+      &>a {
+        /* Make button blocky */
+        border-radius: @border-radius-base;
+        padding: 6px 0px;
+        width: 36px;
+
+        text-align: center;
+
+        /* Hide item labels on big displays */
+        .item-label {
+          display: none;
+        }
+
+        /* Links with badges displaying items counts */
+        &.badged {
+          padding: 6px 8px;
+          width: auto;
+
+          .badge {
+            border-radius: @border-radius-base;
+            margin-bottom: -2px;
+            position: relative;
+            bottom: 2px;
+          }
+        }
+
+        /* Primary styles */
+        &:link, &:visited {
+          background: @navbar-primary-link-bg !important;
+          border: 2px solid @navbar-primary-link-border !important;
+
+          color: @navbar-primary-link-color !important;
+
+          .badge {
+            background-color: @navbar-primary-link-color;
+
+            color: @navbar-primary-link-bg;
+          }
+        }
+
+        &:hover {
+          background: @navbar-primary-link-hover-bg !important;
+          border: 2px solid @navbar-primary-link-hover-border !important;
+
+          color: @navbar-primary-link-hover-color !important;
+
+          .badge {
+            background-color: @navbar-primary-link-hover-color;
+
+            color: @navbar-primary-link-hover-bg;
+          }
+        }
+
+        &:active {
+          background: @navbar-primary-link-active-bg !important;
+          border: 2px solid @navbar-primary-link-active-border !important;
+
+          color: @navbar-primary-link-active-color !important;
+
+          .badge {
+            background-color: @navbar-primary-link-active-color;
+
+            color: @navbar-primary-link-active-bg;
+          }
+        }
+
+        /* Important links styles */
+        &.important {
+          background-color: @navbar-important-link-bg;
+          border-color: @navbar-important-link-border;
+
+          color: @navbar-important-link-color;
+
+          &:link, &:visited {
+            background: @navbar-important-link-bg !important;
+            border: 2px solid @navbar-important-link-border !important;
+
+            color: @navbar-important-link-color !important;
+
+            .badge {
+              background-color: @navbar-important-link-color;
+
+              color: @navbar-important-link-bg;
+            }
+          }
+
+          &:hover {
+            background: @navbar-important-link-hover-bg !important;
+            border: 2px solid @navbar-important-link-hover-border !important;
+
+            color: @navbar-important-link-hover-color !important;
+
+            .badge {
+              background-color: @navbar-important-link-hover-color;
+
+              color: @navbar-important-link-hover-bg;
+            }
+          }
+
+          &:active {
+            background: @navbar-important-link-active-bg !important;
+            border: 2px solid @navbar-important-link-active-border !important;
+
+            color: @navbar-important-link-active-color !important;
+
+            .badge {
+              background-color: @navbar-important-link-active-color;
+
+              color: @navbar-important-link-active-bg;
+            }
+          }
+        }
+
+        /* "New" links styles */
+        &.new {
+          background-color: @navbar-new-link-bg;
+          border-color: @navbar-new-link-border;
+
+          color: @navbar-new-link-color;
+
+          &:link, &:visited {
+            background: @navbar-new-link-bg !important;
+            border: 2px solid @navbar-new-link-border !important;
+
+            color: @navbar-new-link-color !important;
+
+            .badge {
+              background-color: @navbar-new-link-color;
+
+              color: @navbar-new-link-bg;
+            }
+          }
+
+          &:hover {
+            background: @navbar-new-link-hover-bg !important;
+            border: 2px solid @navbar-new-link-hover-border !important;
+
+            color: @navbar-new-link-hover-color !important;
+
+            .badge {
+              background-color: @navbar-new-link-hover-color;
+
+              color: @navbar-new-link-hover-bg;
+            }
+          }
+
+          &:active {
+            background: @navbar-new-link-active-bg !important;
+            border: 2px solid @navbar-new-link-active-border !important;
+
+            color: @navbar-new-link-active-color !important;
+
+            .badge {
+              background-color: @navbar-new-link-active-color;
+
+              color: @navbar-new-link-active-bg;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+// User menu
+// --------------------------------------------------
+.navbar-nav-user {
+  &>li {
+    &>a.user-toggle {
+      overflow: auto;
+
+      font-size: @font-size-large;
+
+      img {
+        border-radius: @border-radius-base;
+        height: 32px;
+      }
+    }
+  }
+}
+
+/* Big displays */
+@media (min-width: @screen-sm-min) {
+  /* Put some distance between user menu and primary nav */
+  .navbar-nav-user {
+    margin-left: @line-height-computed * 2;
   }
 
+  /* Change way switch and dropdown appears */
+  .navbar-nav-user {
+    .user-toggle {
+      padding-left: 0px;
+      padding-right: 0px;
+
+      img {
+        float: right;
+        height: 32px;
+        margin: -6px 0px;
+        margin-left: 8px;
+      }
+    }
+
+    .dropdown-menu {
+      min-width: 256px;
+
+      &:after {
+        border: solid transparent;
+        border-bottom-color: @dropdown-bg;
+        border-width: 6px;
+        content: "";
+        height: 0;
+        position: absolute;
+        pointer-events: none;
+        right: 10px;
+        top: -11px;
+        width: 0;
+      }
+    }
+  }
+}
+
+
+// Guest buttons
+// --------------------------------------------------
+.navbar-nav-guest {
   .btn-sign-in {
     &, &:link, &:visited {
       background-color: @btn-signin-bg;
       border-color: @btn-signin-border;
+      box-shadow: 0px 0px 0px 1px @btn-signin-border;
 
       color: @btn-signin-color;
     }
@@ -20,6 +269,7 @@
     &:hover {
       background-color: @btn-signin-hover-bg;
       border-color: @btn-signin-hover-border;
+      box-shadow: 0px 0px 0px 1px @btn-signin-hover-border;
 
       color: @btn-signin-hover-color;
     }
@@ -27,6 +277,7 @@
     &:active, &:focus {
       background-color: @btn-signin-active-bg;
       border-color: @btn-signin-active-border;
+      box-shadow: 0px 0px 0px 1px @btn-signin-active-border;
 
       color: @btn-signin-active-color;
     }
@@ -36,6 +287,7 @@
     &, &:link, &:visited {
       background-color: @btn-register-bg;
       border-color: @btn-register-border;
+      box-shadow: 0px 0px 0px 1px @btn-register-border;
 
       color: @btn-register-color;
     }
@@ -43,6 +295,7 @@
     &:hover {
       background-color: @btn-register-hover-bg;
       border-color: @btn-register-hover-border;
+      box-shadow: 0px 0px 0px 1px @btn-register-hover-border;
 
       color: @btn-register-hover-color;
     }
@@ -50,91 +303,123 @@
     &:active, &:focus {
       background-color: @btn-register-active-bg;
       border-color: @btn-register-active-border;
+      box-shadow: 0px 0px 0px 1px @btn-register-active-border;
 
       color: @btn-register-active-color;
     }
   }
 }
 
-/* Responsiveness */
+/* On big displays put some distance between guest nav and other nav */
 @media (min-width: @screen-sm-min) {
-  .navbar-guest-buttons {
+  .navbar-nav-guest {
     margin-left: @line-height-computed * 2;
   }
 }
 
 
-/* Navbar Primary Nav */
-.navbar-nav-primary {
-  li {
-    a {
-      font-size: @font-size-large;
+// Small displays dropdowns
+// --------------------------------------------------
+@media (max-width: @screen-sm-min) {
+  /* Make buttons size equal to that of links */
+  .navbar {
+    .dropdown-menu {
+      li {
+        form {
+          button {
+            padding: 3px 25px;
+          }
+        }
+      }
     }
   }
-}
 
-/* Responsiveness */
-@media (min-width: @screen-sm-min) {
-  ul.navbar-nav-user {
-    &>li {
+  /* Color badges in red and white */
+  .navbar {
+    .dropdown-menu {
+      li {
+        a, &:link, &:visited, &:hover, &:active {
+          .badge {
+            background-color: @brand-danger;
+
+            color: @dropdown-bg;
+          }
+        }
       }
+    }
   }
 
-  ul.navbar-nav-primary {
-    margin-top: 7px;
+  /* Dropdown look */
+  .navbar {
+    .dropdown-menu {
+      li {
+        form {
+          button {
+            color: @navbar-default-link-color;
 
-    &>li {
-      margin-left: 4px;
+            &:hover {
+              background: none;
 
-      &>a {
-        border-radius: @border-radius-base;
-        padding: 6px 0px;
-        width: 36px;
+              color: @navbar-default-link-hover-color;
+            }
 
-        text-align: center;
+            &:active, &:focus {
+              background: none;
 
-        .item-label {
-          display: none;
+              color: @navbar-default-link-active-color;
+            }
+          }
         }
+      }
+    }
 
-        &:link, &:visited {
-          background: @navbar-primary-link-bg !important;
-          border: 2px solid @navbar-primary-link-border !important;
+    .dropdown.open {
+      background: darken(@navbar-default-bg, 3%);
+      border-bottom: 2px solid darken(@navbar-default-bg, 6%);
 
-          color: @navbar-primary-link-color !important;
+      .dropdown-toggle {
+        &:link, &:active, &:visited, &:hover {
+          background: darken(@navbar-default-bg, 6%);
         }
+      }
+
+      .dropdown-menu {
+        li.divider {
+          background-color: darken(@navbar-default-bg, 9%);
+        }
+      }
+    }
+  }
+
+  .navbar-inverse {
+    .dropdown-menu {
+      button {
+        color: @navbar-inverse-link-color;
 
         &:hover {
-          background: @navbar-primary-link-hover-bg !important;
-          border: 2px solid @navbar-primary-link-hover-border !important;
+          background: none;
 
-          color: @navbar-primary-link-hover-color !important;
+          color: @navbar-inverse-link-hover-color;
         }
 
-        &:active {
-          background: @navbar-primary-link-active-bg !important;
-          border: 2px solid @navbar-primary-link-active-border !important;
+        &:active, &:focus {
+          background: none;
 
-          color: @navbar-primary-link-active-color !important;
+          color: @navbar-inverse-link-active-color;
         }
       }
     }
-  }
-}
 
+    .dropdown.open {
+      background: lighten(@navbar-inverse-bg, 3%);
+      border-left: 2px solid lighten(@navbar-inverse-bg, 6%);
+      border-bottom: 2px solid lighten(@navbar-inverse-bg, 6%);
 
-/* Navbar User Nav */
-.navbar-nav-user {
-  &>li {
-    &>a {
-      font-size: @font-size-large;
+      .dropdown-menu {
+        li.divider {
+          background-color: lighten(@navbar-inverse-bg, 9%);
+        }
+      }
     }
-  }
-}
-
-/* Responsiveness */
-@media (min-width: @screen-sm-min) {
-  .navbar-nav-user {
-    margin-left: @line-height-computed * 2;
   }
 }
