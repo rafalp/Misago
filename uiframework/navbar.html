@@ -135,6 +135,10 @@
 
         <h1>Misago UI: Kitchen Sink Navbar Template</h1>
 
+        <button type="button" class="demo-all btn btn-default">Kitchen sink</button>
+        <button type="button" class="demo-registered btn btn-success">Registered</button>
+        <button type="button" class="demo-guest btn btn-danger">Guest</button>
+
     </div><!-- /.container -->
 
 
@@ -144,5 +148,30 @@
     <script src="./misago/js/jquery.js"></script>
     <script src="./misago/js/bootstrap.js"></script>
     <script src="./misago/js/misago.js"></script>
+
+    <!-- Demo custom JavaScript
+    ================================================== -->
+    <script type="text/javascript">
+      $(function() {
+        $('.demo-all').click(function() {
+          $('.badged').show();
+          $('.navbar-nav-user').show();
+          $('.navbar-nav-guest').show();
+        });
+
+        $('.demo-registered').click(function() {
+          $('.badged').show();
+          $('.navbar-nav-user').show();
+          $('.navbar-nav-guest').hide();
+
+        });
+
+        $('.demo-guest').click(function() {
+          $('.badged').hide();
+          $('.navbar-nav-user').hide();
+          $('.navbar-nav-guest').show();
+        });
+      });
+    </script>
   </body>
 </html>
