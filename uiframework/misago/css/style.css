@@ -492,7 +492,7 @@ cite {
   text-align: justify;
 }
 .text-muted {
-  color: #95a5a6;
+  color: #969696;
 }
 .text-primary {
   color: #3498db;
@@ -4105,10 +4105,10 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   color: #ffffff;
 }
 .breadcrumb {
-  padding: 8px 15px;
+  padding: 8px 0px;
   margin-bottom: 20px;
   list-style: none;
-  background-color: #f5f5f5;
+  background-color: transparent;
   border-radius: 4px;
 }
 .breadcrumb > li {
@@ -4117,10 +4117,10 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .breadcrumb > li + li:before {
   content: "/\00a0";
   padding: 0 5px;
-  color: #cccccc;
+  color: #969696;
 }
 .breadcrumb > .active {
-  color: #999999;
+  color: #2c3e50;
 }
 .pagination {
   display: inline-block;
@@ -6202,17 +6202,49 @@ button.close {
 .page-header {
   margin-top: -20px;
 }
-.page-header > .container > .page-actions {
+.page-header > .container .breadcrumb {
+  margin-bottom: -22px;
+  color: #969696;
+  font-size: 12px;
+}
+.page-header > .container .breadcrumb > li + li:before {
+  /* Tinysh hack to remove BS3's style */
+  display: none;
+}
+.page-header > .container .breadcrumb > li a:link,
+.page-header > .container .breadcrumb > li a:visited {
+  color: #969696;
+}
+.page-header > .container .breadcrumb > li a:hover,
+.page-header > .container .breadcrumb > li a:active {
+  color: #2c3e50;
+}
+.page-header > .container .breadcrumb > li span {
+  margin: 0px 4px 0px 6px;
+}
+.page-header > .container .page-actions {
   float: right;
   margin-top: -47px;
 }
-.page-header > .container > .page-actions .dropdown-menu {
+.page-header > .container .page-actions .dropdown-menu {
   left: auto;
   right: 0px;
 }
-.page-header > .container > .page-actions .dropdown-menu:after {
+.page-header > .container .page-actions .dropdown-menu:after {
   left: auto;
   right: 10px;
+}
+.page-header > .container .page-details {
+  color: #969696;
+}
+.page-header > .container .page-details a:link,
+.page-header > .container .page-details a:visited {
+  color: #969696;
+}
+.page-header > .container .page-details a:active,
+.page-header > .container .page-details a:hover {
+  color: #3498db;
+  text-decoration: none;
 }
 .page-pills {
   border-bottom: 1px solid #ebebeb;

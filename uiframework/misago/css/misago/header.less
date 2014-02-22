@@ -3,11 +3,62 @@
 // --------------------------------------------------
 
 
+// Generic spacing and stuff
+//
+//##
+
+
+// Breadcrumb
+//
+//##
+
+
+// Actions
+//
+//##
+
+
+// Details
+//
+//##
+
+
+// Pills
+//
+//##
+
+// FUNCTIONALS
 .page-header {
   margin-top: @line-height-computed * -1;
 
   &>.container {
-    &>.page-actions {
+    .breadcrumb {
+      margin-bottom: (@line-height-computed * @headings-line-height) * -1;
+
+      color: @breadcrumb-color;
+      font-size: @font-size-small;
+
+      &>li {
+        + li:before {
+          /* Tinysh hack to remove BS3's style */
+          display: none;
+        }
+
+        a:link, a:visited {
+          color: @breadcrumb-color;
+        }
+
+        a:hover, a:active {
+          color: @breadcrumb-active-color;
+        }
+
+        span {
+          margin: 0px 4px 0px 6px;
+        }
+      }
+    }
+
+    .page-actions {
       float: right;
       margin-top: (@line-height-computed * @headings-line-height) * -1 - (@line-height-computed * 1.5) + @padding-base-vertical - 1;
 
@@ -22,8 +73,17 @@
       }
     }
 
-    &>.page-details {
+    .page-details {
+      color: @text-muted;
 
+      a:link, a:visited {
+        color: @text-muted;
+      }
+
+      a:active, a:hover {
+        color: @link-muted-hover-color;
+        text-decoration: none;
+      }
     }
   }
 }

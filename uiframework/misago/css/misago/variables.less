@@ -26,7 +26,10 @@
 @link-hover-color:      darken(@link-color, 15%);
 
 // Text muted color
-@text-muted:            #95a5a6;
+@text-muted:            darken(@body-bg, 40%);
+
+@link-muted-color:            darken(@body-bg, 65%);
+@link-muted-hover-color:      @link-color;
 
 
 //== Navbar
@@ -162,3 +165,15 @@
 //== Page header
 @page-header-border-color:       darken(@body-bg, 7%);
 @page-pills-padding:             @padding-base-vertical @line-height-computed;
+
+
+//== Breadcrumbs
+//
+//##
+
+@breadcrumb-padding-vertical:   8px;
+@breadcrumb-padding-horizontal: 0px;
+
+@breadcrumb-bg:                 transparent;
+@breadcrumb-color:              darken(@body-bg, 40%);
+@breadcrumb-active-color:       @text-color;
