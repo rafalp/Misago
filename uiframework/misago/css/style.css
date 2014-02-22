@@ -386,7 +386,7 @@ h6 .small,
 .h6 .small {
   font-weight: normal;
   line-height: 1;
-  color: #999999;
+  color: #b0b0b0;
 }
 h1,
 .h1,
@@ -5870,12 +5870,12 @@ button.close {
 .nav > li > a:link,
 .nav > li > a:visited {
   background-color: transparent;
-  color: #95a5a6;
+  color: #a3a3a3;
 }
 .nav > li > a:hover,
 .nav > li > a:active {
   background-color: transparent;
-  color: #2c3e50;
+  color: #3498db;
 }
 .nav > li.active > a:link,
 .nav > li.active > a:active,

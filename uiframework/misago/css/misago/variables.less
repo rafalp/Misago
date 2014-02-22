@@ -18,6 +18,9 @@
 // Global text color on `<body>`.
 @text-color:            #2c3e50;
 
+// Headings color
+@headings-small-color:  darken(@body-bg, 30%);
+
 // Global textual link color.
 @link-color:            @brand-primary;
 @link-hover-color:      darken(@link-color, 15%);
@@ -142,10 +145,10 @@
 //##
 
 // Shared navs styles
-@nav-link-color:                            #95a5a6;
+@nav-link-color:                            darken(@body-bg, 35%);
 @nav-link-bg:                               transparent;
 
-@nav-link-hover-color:                      @text-color;
+@nav-link-hover-color:                      @brand-primary;
 @nav-link-hover-bg:                         transparent;
 
 @nav-link-active-color:                     @body-bg;
