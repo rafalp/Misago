@@ -1,0 +1,28 @@
+//
+// Page Header
+// --------------------------------------------------
+
+
+.page-header {
+  margin-top: @line-height-computed * -1;
+
+  &>.container {
+    &>.page-header-actions {
+      float: right;
+      margin-top: (@line-height-computed * @headings-line-height) * -1 - (@line-height-computed * 1.5) + @padding-base-vertical - 1;
+
+      .dropdown-menu {
+        left: auto;
+        right: 0px;
+
+        &:after {
+          left: auto;
+          right: 10px;
+        }
+      }
+    }
+    &>.btn-group {
+      margin-top: (@line-height-computed * @headings-line-height) * -1 - (@line-height-computed * 1.5) + @padding-base-vertical - 1;
+    }
+  }
+}
