@@ -13,17 +13,16 @@
 @brand-warning:         #f0ad4e;
 @brand-danger:          #d9534f;
 
-//** Background color for `<body>`.
+// Background color for `<body>`.
 @body-bg:               darken(#fff, 1%);
-//** Global text color on `<body>`.
+// Global text color on `<body>`.
 @text-color:            #2c3e50;
 
-//** Global textual link color.
+// Global textual link color.
 @link-color:            @brand-primary;
-//** Link hover color set via `darken()` function.
 @link-hover-color:      darken(@link-color, 15%);
 
-//** Text muted color
+// Text muted color
 @text-muted:            #95a5a6;
 
 
@@ -114,20 +113,20 @@
 //
 //## Misago dropdowns flavor
 
-//** Dropdown link text color.
+// Dropdown link text color.
 @dropdown-link-color:            lighten(@text-color, 10%);
-//** Hover color for dropdown links.
+// Hover color for dropdown links.
 @dropdown-link-hover-color:      @body-bg;
-//** Hover background for dropdown links.
+// Hover background for dropdown links.
 @dropdown-link-hover-bg:         @brand-primary;
 
-//** Active dropdown menu item text color.
+// Active dropdown menu item text color.
 @dropdown-link-active-color:     @body-bg;
-//** Active dropdown menu item background color.
+// Active dropdown menu item background color.
 @dropdown-link-active-bg:        #34495e;
 
 
-//** Open dropdown shadow color.
+// Open dropdown shadow color.
 @dropdown-shadow:                fadeOut(#333, 50%);
 
 
@@ -135,4 +134,28 @@
 //
 //## Size of Misago's branding in footer
 
-@misago-branding-size:            @font-size-large * 1.6;
+@misago-branding-size:           @font-size-large * 1.6;
+
+
+//== Navs
+//
+//##
+
+// Shared navs styles
+@nav-link-color:                            #95a5a6;
+@nav-link-bg:                               transparent;
+
+@nav-link-hover-color:                      @text-color;
+@nav-link-hover-bg:                         transparent;
+
+@nav-link-active-color:                     @body-bg;
+@nav-link-active-bg:                        @brand-primary;
+
+// Pills
+@nav-pills-border-radius:                   @line-height-computed;
+@nav-pills-active-link-hover-bg:            @component-active-bg;
+@nav-pills-active-link-hover-color:         @component-active-color;
+
+//== Page header
+@page-header-border-color:       darken(@body-bg, 7%);
+@page-pills-padding:             @padding-base-vertical @line-height-computed;

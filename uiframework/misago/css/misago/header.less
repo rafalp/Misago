@@ -7,7 +7,7 @@
   margin-top: @line-height-computed * -1;
 
   &>.container {
-    &>.page-header-actions {
+    &>.page-actions {
       float: right;
       margin-top: (@line-height-computed * @headings-line-height) * -1 - (@line-height-computed * 1.5) + @padding-base-vertical - 1;
 
@@ -21,8 +21,23 @@
         }
       }
     }
-    &>.btn-group {
-      margin-top: (@line-height-computed * @headings-line-height) * -1 - (@line-height-computed * 1.5) + @padding-base-vertical - 1;
+
+    &>.page-details {
+
+    }
+  }
+}
+
+.page-pills {
+  border-bottom: 1px solid @page-header-border-color;
+  margin: @line-height-computed * -1 0px @line-height-computed;
+  padding: (@line-height-computed / 2) 0px;
+
+  .nav-pills {
+    margin: 0px;
+
+    a {
+      padding: @page-pills-padding;
     }
   }
 }
