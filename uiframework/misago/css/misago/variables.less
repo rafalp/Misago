@@ -7,22 +7,23 @@
 //
 //## Basic colors for use in this flavor
 
-@brand-primary:         #3498db;
-@brand-success:         #5cb85c;
+@brand-primary:         #e74c3c;
+@brand-secondary:       #3498db;
+@brand-success:         #2ecc71;
 @brand-info:            #5bc0de;
 @brand-warning:         #f0ad4e;
-@brand-danger:          #d9534f;
+@brand-danger:          #e74c3c;
 
 // Background color for `<body>`.
 @body-bg:               darken(#fff, 1%);
 // Global text color on `<body>`.
-@text-color:            #2c3e50;
+@text-color:            #333;
 
 // Headings color
 @headings-small-color:  darken(@body-bg, 30%);
 
 // Global textual link color.
-@link-color:            @brand-primary;
+@link-color:            @brand-secondary;
 @link-hover-color:      darken(@link-color, 15%);
 
 // Text muted color
@@ -39,20 +40,20 @@
 // Navbar brand
 @navbar-brand-size:                        @font-size-large * 1.6;
 
-@navbar-default-brand-color:               @text-color;
-@navbar-default-brand-hover-color:         @text-color;
+@navbar-default-brand-color:               desaturate(@brand-primary, 15%);
+@navbar-default-brand-hover-color:         @navbar-default-brand-color;
 
 
 // Navbar icon-based menu
-@navbar-primary-link-color:                #7f8c8d;
+@navbar-primary-link-color:                @gray-light;
 @navbar-primary-link-bg:                   @navbar-default-bg;
 @navbar-primary-link-border:               @navbar-default-border;
-@navbar-primary-link-hover-color:          @brand-primary;
+@navbar-primary-link-hover-color:          @gray;
 @navbar-primary-link-hover-bg:             @navbar-default-bg;
-@navbar-primary-link-hover-border:         @brand-primary;
+@navbar-primary-link-hover-border:         @brand-secondary;
 @navbar-primary-link-active-color:         @body-bg;
-@navbar-primary-link-active-bg:            @brand-primary;
-@navbar-primary-link-active-border:        @brand-primary;
+@navbar-primary-link-active-bg:            @brand-secondary;
+@navbar-primary-link-active-border:        @brand-secondary;
 
 
 // Same as above, but important items
@@ -79,40 +80,40 @@
 @navbar-new-link-active-border:        #2ecc71;
 
 
-// Only User  dropdown switch uses those clases
-@navbar-default-link-color:                #7f8c8d;
-@navbar-default-link-hover-color:          @brand-primary;
+// Only User dropdown switch uses those colors
+@navbar-default-link-color:                @text-color;
+@navbar-default-link-hover-color:          @brand-secondary;
 @navbar-default-link-hover-bg:             transparent;
 @navbar-default-link-active-color:         @brand-primary;
 @navbar-default-link-active-bg:            transparent;
 
 
 // Guest Sign in button
-@btn-signin-color:                 lighten(desaturate(@brand-primary, 45%), 5%);
+@btn-signin-color:                 lighten(desaturate(@brand-secondary, 35%), 5%);
 @btn-signin-bg:                    transparent;
-@btn-signin-border:                lighten(desaturate(@brand-primary, 45%), 10%);
+@btn-signin-border:                lighten(desaturate(@brand-secondary, 35%), 10%);
 
-@btn-signin-hover-color:           @brand-primary;
+@btn-signin-hover-color:           @brand-secondary;
 @btn-signin-hover-bg:              transparent;
-@btn-signin-hover-border:          @brand-primary;
+@btn-signin-hover-border:          @brand-secondary;
 
 @btn-signin-active-color:          @body-bg;
-@btn-signin-active-bg:             @text-color;
-@btn-signin-active-border:         @text-color;
+@btn-signin-active-bg:             darken(@brand-secondary, 15%);
+@btn-signin-active-border:         @btn-signin-active-bg;
 
 
 // Guest Register button
 @btn-register-color:                 @body-bg;
-@btn-register-bg:                    #2ecc71;
-@btn-register-border:                #2ecc71;
+@btn-register-bg:                    desaturate(@brand-primary, 15%);
+@btn-register-border:                @btn-register-bg;
 
 @btn-register-hover-color:           @body-bg;
-@btn-register-hover-bg:              lighten(@btn-register-bg, 15%);
-@btn-register-hover-border:          lighten(@btn-register-border, 15%);
+@btn-register-hover-bg:              @brand-primary;
+@btn-register-hover-border:          @btn-register-hover-bg;
 
 @btn-register-active-color:          @body-bg;
-@btn-register-active-bg:             darken(@btn-register-bg, 5%);
-@btn-register-active-border:         darken(@btn-register-border, 5%);
+@btn-register-active-bg:             darken(@btn-register-bg, 15%);
+@btn-register-active-border:         @btn-register-active-bg;
 
 
 //== Dropdowns
@@ -124,12 +125,12 @@
 // Hover color for dropdown links.
 @dropdown-link-hover-color:      @body-bg;
 // Hover background for dropdown links.
-@dropdown-link-hover-bg:         @brand-primary;
+@dropdown-link-hover-bg:         @gray;
 
 // Active dropdown menu item text color.
 @dropdown-link-active-color:     @body-bg;
 // Active dropdown menu item background color.
-@dropdown-link-active-bg:        #34495e;
+@dropdown-link-active-bg:        @brand-primary;
 
 
 // Open dropdown shadow color.
@@ -151,7 +152,7 @@
 @nav-link-color:                            darken(@body-bg, 35%);
 @nav-link-bg:                               transparent;
 
-@nav-link-hover-color:                      @brand-primary;
+@nav-link-hover-color:                      @brand-secondary;
 @nav-link-hover-bg:                         transparent;
 
 @nav-link-active-color:                     @body-bg;
@@ -176,4 +177,44 @@
 
 @breadcrumb-bg:                 transparent;
 @breadcrumb-color:              darken(@body-bg, 40%);
-@breadcrumb-active-color:       @text-color;
+@breadcrumb-active-color:       @brand-secondary;
+
+
+//== Buttons
+//
+//## For each of Bootstrap's buttons, define text, background and border color.
+
+@btn-font-weight:                normal;
+
+
+@btn-default-color:              #888;
+@btn-default-bg:                 @body-bg;
+@btn-default-border:             #ddd;
+
+@btn-default-hover-color:        @text-color;
+@btn-default-hover-bg:           @body-bg;
+@btn-default-hover-border:       #ccc;
+
+@btn-default-active-color:       @text-color;
+@btn-default-active-bg:          @body-bg;
+@btn-default-active-border:      #666;
+
+@btn-primary-color:              #fff;
+@btn-primary-bg:                 @brand-secondary;
+@btn-primary-border:             @btn-primary-bg;
+
+@btn-success-color:              #fff;
+@btn-success-bg:                 @brand-success;
+@btn-success-border:             @btn-success-bg;
+
+@btn-info-color:                 #fff;
+@btn-info-bg:                    @brand-info;
+@btn-info-border:                @btn-info-bg;
+
+@btn-warning-color:              #fff;
+@btn-warning-bg:                 @brand-warning;
+@btn-warning-border:             @btn-warning-bg;
+
+@btn-danger-color:               #fff;
+@btn-danger-bg:                  @brand-danger;
+@btn-danger-border:              @btn-danger-bg;

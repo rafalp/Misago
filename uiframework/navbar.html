@@ -135,9 +135,9 @@
 
         <h1>Misago UI: Kitchen Sink Navbar Template</h1>
 
-        <button type="button" class="demo-all btn btn-default">Kitchen sink</button>
-        <button type="button" class="demo-registered btn btn-success">Registered</button>
-        <button type="button" class="demo-guest btn btn-danger">Guest</button>
+        <a href="#" class="demo-all btn btn-primary">Kitchen sink</a>
+        <a href="#" class="demo-registered btn btn-default">Registered</a>
+        <a href="#" class="demo-guest btn btn-default">Guest</a>
 
     </div><!-- /.container -->
 
@@ -157,19 +157,21 @@
           $('.badged').show();
           $('.navbar-nav-user').show();
           $('.navbar-nav-guest').show();
+          return true;
         });
 
         $('.demo-registered').click(function() {
           $('.badged').show();
           $('.navbar-nav-user').show();
           $('.navbar-nav-guest').hide();
-
+          return true;
         });
 
         $('.demo-guest').click(function() {
           $('.badged').hide();
           $('.navbar-nav-user').hide();
           $('.navbar-nav-guest').show();
+          return true;
         });
       });
     </script>

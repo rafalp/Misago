@@ -81,7 +81,7 @@
       }
 
       a:active, a:hover {
-        color: @link-muted-hover-color;
+        color: @text-color;
         text-decoration: none;
       }
     }
@@ -96,8 +96,20 @@
   .nav-pills {
     margin: 0px;
 
-    a {
-      padding: @page-pills-padding;
+    &>li {
+      &>a {
+        padding: @page-pills-padding;
+
+        &:hover, &:active {
+          text-decoration: underline;
+        }
+      }
+
+      &.active {
+        a:hover, a:active {
+          text-decoration: none;
+        }
+      }
     }
   }
 }

@@ -1,0 +1,73 @@
+//
+// Forum Buttons
+// --------------------------------------------------
+
+.misago-button-flavour(@btn-color, @btn-bg, @btn-border) {
+    background: @btn-bg;
+    border-color: @btn-border;
+    box-shadow: inset 0px 0px 0px 1px @btn-border;
+
+    color: @btn-color;
+
+    &:hover {
+      background: lighten(@btn-bg, 10%);
+      border-color: lighten(@btn-border, 10%);
+      box-shadow: inset 0px 0px 0px 1px lighten(@btn-border, 10%);
+
+      color: @btn-color;
+    }
+
+    &:active, &:focus {
+      background: darken(@btn-bg, 15%);
+      border-color: darken(@btn-border, 15%);
+      box-shadow: inset 0px 0px 0px 1px darken(@btn-border, 15%);
+      outline: none;
+
+      color: @btn-color;
+    }
+}
+
+.btn {
+  &.btn-default {
+    box-shadow: inset 0px 0px 0px 1px @btn-default-border;
+
+    color: @btn-default-color;
+
+    &:hover {
+      background: @btn-default-hover-bg;
+      border-color: @btn-default-hover-border;
+      box-shadow: inset 0px 0px 0px 1px @btn-default-hover-border;
+
+      color: @btn-default-hover-color;
+    }
+
+    &:active, &:focus {
+      background: @btn-default-active-bg;
+      border-color: @btn-default-active-border;
+      box-shadow: inset 0px 0px 0px 1px @btn-default-active-border;
+      outline: none;
+
+      color: @btn-default-active-color;
+    }
+  }
+
+  &.btn-primary {
+    .misago-button-flavour(@btn-primary-color, @btn-primary-bg, @btn-primary-border);
+  }
+
+  &.btn-info {
+    .misago-button-flavour(@btn-info-color, @btn-info-bg, @btn-info-border);
+  }
+
+  &.btn-success {
+    .misago-button-flavour(@btn-success-color, @btn-success-bg, @btn-success-border);
+  }
+
+  &.btn-warning {
+    .misago-button-flavour(@btn-warning-color, @btn-warning-bg, @btn-warning-border);
+  }
+
+  &.btn-danger {
+    .misago-button-flavour(@btn-danger-color, @btn-danger-bg, @btn-danger-border);
+  }
+}
