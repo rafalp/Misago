@@ -6078,7 +6078,7 @@ button.close {
   }
   .navbar-nav-primary > li > a:hover {
     background: #f8f8f8 !important;
-    border: 2px solid #3498db !important;
+    border: 2px solid #555555 !important;
     color: #555555 !important;
   }
   .navbar-nav-primary > li > a:hover .badge {
