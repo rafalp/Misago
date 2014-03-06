@@ -8,6 +8,10 @@
 //**
 .navbar {
   .navbar-brand {
+    .navbar-vertical-align(@navbar-height - (@navbar-brand-size - @font-size-large) / 2 + 1);
+    position: relative;
+    bottom: 1px;
+
     font-size: @navbar-brand-size;
   }
 }
@@ -59,7 +63,7 @@
 /* Big displays */
 @media (min-width: @screen-sm-min) {
   .navbar-nav-primary {
-    .navbar-vertical-align(@input-height-base + 2);
+    .navbar-vertical-align(@font-size-large + 12px);
 
     &>li {
       /* Some space between icons */
@@ -91,7 +95,7 @@
         /* Primary styles */
         &:link, &:visited {
           background: @navbar-primary-link-bg !important;
-          border: 2px solid @navbar-primary-link-border !important;
+          border: 1px solid @navbar-primary-link-border !important;
 
           color: @navbar-primary-link-color !important;
 
@@ -104,7 +108,7 @@
 
         &:hover {
           background: @navbar-primary-link-hover-bg !important;
-          border: 2px solid @navbar-primary-link-hover-border !important;
+          border: 1px solid @navbar-primary-link-hover-border !important;
 
           color: @navbar-primary-link-hover-color !important;
 
@@ -117,7 +121,7 @@
 
         &:active {
           background: @navbar-primary-link-active-bg !important;
-          border: 2px solid @navbar-primary-link-active-border !important;
+          border: 1px solid @navbar-primary-link-active-border !important;
 
           color: @navbar-primary-link-active-color !important;
 
@@ -137,7 +141,7 @@
 
           &:link, &:visited {
             background: @navbar-important-link-bg !important;
-            border: 2px solid @navbar-important-link-border !important;
+            border: 1px solid @navbar-important-link-border !important;
 
             color: @navbar-important-link-color !important;
 
@@ -150,7 +154,7 @@
 
           &:hover {
             background: @navbar-important-link-hover-bg !important;
-            border: 2px solid @navbar-important-link-hover-border !important;
+            border: 1px solid @navbar-important-link-hover-border !important;
 
             color: @navbar-important-link-hover-color !important;
 
@@ -163,7 +167,7 @@
 
           &:active {
             background: @navbar-important-link-active-bg !important;
-            border: 2px solid @navbar-important-link-active-border !important;
+            border: 1px solid @navbar-important-link-active-border !important;
 
             color: @navbar-important-link-active-color !important;
 
@@ -184,7 +188,7 @@
 
           &:link, &:visited {
             background: @navbar-new-link-bg !important;
-            border: 2px solid @navbar-new-link-border !important;
+            border: 1px solid @navbar-new-link-border !important;
 
             color: @navbar-new-link-color !important;
 
@@ -197,7 +201,7 @@
 
           &:hover {
             background: @navbar-new-link-hover-bg !important;
-            border: 2px solid @navbar-new-link-hover-border !important;
+            border: 1px solid @navbar-new-link-hover-border !important;
 
             color: @navbar-new-link-hover-color !important;
 
@@ -210,7 +214,7 @@
 
           &:active {
             background: @navbar-new-link-active-bg !important;
-            border: 2px solid @navbar-new-link-active-border !important;
+            border: 1px solid @navbar-new-link-active-border !important;
 
             color: @navbar-new-link-active-color !important;
 
@@ -241,6 +245,42 @@
         border-radius: @border-radius-base;
         height: 32px;
       }
+
+      .caret-border {
+        background: @navbar-user-link-caret-bg;
+        border-radius: @border-radius-small;
+        border: 1px solid @navbar-user-link-caret-border;
+        padding: 0px 5px;
+        padding-bottom: 1px;
+
+        color: @navbar-user-link-caret-color;
+
+        .caret{
+          display: block;
+          border-top: @caret-width-base * 1.25 solid;
+          border-right: @caret-width-base * 1.25 solid transparent;
+          border-left: @caret-width-base * 1.25 solid transparent;
+          margin: 0px;
+        }
+      }
+
+      &:hover {
+        .caret-border {
+          background: @navbar-user-link-caret-hover-bg;
+          border: 1px solid @navbar-user-link-caret-hover-border;
+
+          color: @navbar-user-link-caret-hover-color;
+        }
+      }
+
+      &:active, &:focus {
+        .caret-border {
+          background: @navbar-user-link-caret-active-bg;
+          border: 1px solid @navbar-user-link-caret-active-border;
+
+          color: @navbar-user-link-caret-active-color;
+        }
+      }
     }
   }
 }
@@ -254,24 +294,54 @@
 
   /* Change way switch and dropdown appears */
   .navbar-nav-user {
-    .user-toggle {
+    .dropdown-toggle.user-toggle {
+      padding-top: ((@navbar-height - @font-size-large) / 2) + 1px;
       padding-left: 0px;
       padding-right: 0px;
 
       img {
         float: right;
-        height: 32px;
-        margin: -6px 0px;
+        height: @navbar-height - @font-size-base + 1px;
+        margin: (@font-size-base / 2 * -1) 0px;
+        margin-bottom: (@font-size-base / 2 * -1) - 1px;
         margin-left: 8px;
+        position: relative;
+        bottom: 1px;
+      }
+
+      .caret-border {
+        float: right;
+        margin-top: 2px;
+        margin-left: 6px;
+        padding: 5px 2px;
+
+        .caret{
+          margin: 0px;
+          margin-bottom: -1px;
+        }
       }
 
       &:link, &:visited {
-        color: @navbar-default-link-color;
+        color: @navbar-user-name-color;
+      }
+
+      &:hover {
+        color: @navbar-user-name-hover-color;
+      }
+
+      &:active, &:focus {
+        color: @navbar-user-name-active-color;
+      }
+
+      &, &:visited, &:hover, &:active, &:focus {
+        background: transparent;
       }
     }
 
     .dropdown-menu {
       min-width: 256px;
+      right: -8px;
+      top: @navbar-height + 1px;
 
       &:after {
         border: solid transparent;
@@ -286,6 +356,16 @@
         width: 0;
       }
     }
+
+    &>li.open {
+      .dropdown-toggle.user-toggle {
+        &, &:visited, &:hover, &:active, &:focus {
+          background: transparent;
+
+          color: @navbar-user-name-active-color;
+        }
+      }
+    }
   }
 }
 
@@ -294,11 +374,14 @@
 //
 //**
 .navbar-nav-guest {
+  .navbar-vertical-align(@font-size-large + 12px);
+
   .btn-sign-in {
+    margin: 0px;
+
     &, &:link, &:visited {
       background-color: @btn-signin-bg;
       border-color: @btn-signin-border;
-      box-shadow: 0px 0px 0px 1px @btn-signin-border;
 
       color: @btn-signin-color;
     }
@@ -306,7 +389,7 @@
     &:hover {
       background-color: @btn-signin-hover-bg;
       border-color: @btn-signin-hover-border;
-      box-shadow: 0px 0px 0px 1px @btn-signin-hover-border;
+      box-shadow: none;
 
       color: @btn-signin-hover-color;
     }
@@ -314,17 +397,18 @@
     &:active, &:focus {
       background-color: @btn-signin-active-bg;
       border-color: @btn-signin-active-border;
-      box-shadow: 0px 0px 0px 1px @btn-signin-active-border;
+      box-shadow: none;
 
       color: @btn-signin-active-color;
     }
   }
 
   .btn-register {
+    margin: 0px;
+
     &, &:link, &:visited {
       background-color: @btn-register-bg;
       border-color: @btn-register-border;
-      box-shadow: 0px 0px 0px 1px @btn-register-border;
 
       color: @btn-register-color;
     }
@@ -332,7 +416,7 @@
     &:hover {
       background-color: @btn-register-hover-bg;
       border-color: @btn-register-hover-border;
-      box-shadow: 0px 0px 0px 1px @btn-register-hover-border;
+      box-shadow: none;
 
       color: @btn-register-hover-color;
     }
@@ -340,7 +424,7 @@
     &:active, &:focus {
       background-color: @btn-register-active-bg;
       border-color: @btn-register-active-border;
-      box-shadow: 0px 0px 0px 1px @btn-register-active-border;
+      box-shadow: none;
 
       color: @btn-register-active-color;
     }
@@ -359,6 +443,15 @@
 //
 //**
 @media (max-width: @screen-sm-min) {
+  /* Hide carets */
+  .navbar {
+    .dropdown-menu {
+      &:after {
+        display: none;
+      }
+    }
+  }
+
   /* Make buttons size equal to that of links */
   .navbar {
     .dropdown-menu {

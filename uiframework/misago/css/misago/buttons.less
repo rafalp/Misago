@@ -5,14 +5,14 @@
 .misago-button-flavour(@btn-color, @btn-bg, @btn-border) {
     background: @btn-bg;
     border-color: @btn-border;
-    box-shadow: inset 0px 0px 0px 1px @btn-border;
+    box-shadow: none;
 
     color: @btn-color;
 
     &:hover {
       background: lighten(@btn-bg, 10%);
       border-color: lighten(@btn-border, 10%);
-      box-shadow: inset 0px 0px 0px 1px lighten(@btn-border, 10%);
+      box-shadow: none;
 
       color: @btn-color;
     }
@@ -20,7 +20,7 @@
     &:active, &:focus {
       background: darken(@btn-bg, 15%);
       border-color: darken(@btn-border, 15%);
-      box-shadow: inset 0px 0px 0px 1px darken(@btn-border, 15%);
+      box-shadow: none;
       outline: none;
 
       color: @btn-color;
@@ -29,14 +29,12 @@
 
 .btn {
   &.btn-default {
-    box-shadow: inset 0px 0px 0px 1px @btn-default-border;
-
     color: @btn-default-color;
 
     &:hover {
       background: @btn-default-hover-bg;
       border-color: @btn-default-hover-border;
-      box-shadow: inset 0px 0px 0px 1px @btn-default-hover-border;
+      box-shadow: none;
 
       color: @btn-default-hover-color;
     }
@@ -44,7 +42,7 @@
     &:active, &:focus {
       background: @btn-default-active-bg;
       border-color: @btn-default-active-border;
-      box-shadow: inset 0px 0px 0px 1px @btn-default-active-border;
+      box-shadow: none;
       outline: none;
 
       color: @btn-default-active-color;

@@ -47,13 +47,13 @@
 // Navbar icon-based menu
 @navbar-primary-link-color:                @gray-light;
 @navbar-primary-link-bg:                   @navbar-default-bg;
-@navbar-primary-link-border:               @navbar-default-border;
+@navbar-primary-link-border:               darken(@navbar-default-border, 3%);
 @navbar-primary-link-hover-color:          @gray;
 @navbar-primary-link-hover-bg:             @navbar-default-bg;
-@navbar-primary-link-hover-border:         @brand-secondary;
+@navbar-primary-link-hover-border:         @gray-light;
 @navbar-primary-link-active-color:         @body-bg;
-@navbar-primary-link-active-bg:            @brand-secondary;
-@navbar-primary-link-active-border:        @brand-secondary;
+@navbar-primary-link-active-bg:            lighten(@gray-light, 5%);
+@navbar-primary-link-active-border:        lighten(@gray-light, 5%);
 
 
 // Same as above, but important items
@@ -81,37 +81,45 @@
 
 
 // Only User dropdown switch uses those colors
-@navbar-default-link-color:                @text-color;
-@navbar-default-link-hover-color:          @brand-secondary;
-@navbar-default-link-hover-bg:             transparent;
-@navbar-default-link-active-color:         @brand-primary;
-@navbar-default-link-active-bg:            transparent;
+@navbar-user-name-color:                @gray;
+@navbar-user-name-hover-color:          @navbar-user-name-color;
+@navbar-user-name-active-color:         @navbar-user-name-color;
+
+@navbar-user-link-caret-color:              darken(@navbar-default-border, 25%);
+@navbar-user-link-caret-bg:                 #fff;
+@navbar-user-link-caret-border:             darken(@navbar-default-border, 3%);
+@navbar-user-link-caret-hover-color:        darken(@navbar-default-border, 40%);
+@navbar-user-link-caret-hover-bg:           #fff;
+@navbar-user-link-caret-hover-border:       darken(@navbar-default-border, 15%);
+@navbar-user-link-caret-active-color:       #fff;
+@navbar-user-link-caret-active-bg:          @brand-primary;
+@navbar-user-link-caret-active-border:      @brand-primary;
 
 
 // Guest Sign in button
-@btn-signin-color:                 lighten(desaturate(@brand-secondary, 35%), 5%);
-@btn-signin-bg:                    transparent;
-@btn-signin-border:                lighten(desaturate(@brand-secondary, 35%), 10%);
+@btn-signin-color:                 #fff;
+@btn-signin-bg:                    desaturate(@brand-secondary, 50%);
+@btn-signin-border:                @btn-signin-bg;
 
-@btn-signin-hover-color:           @brand-secondary;
-@btn-signin-hover-bg:              transparent;
-@btn-signin-hover-border:          @brand-secondary;
+@btn-signin-hover-color:           #fff;
+@btn-signin-hover-bg:              lighten(@btn-signin-bg, 10%);
+@btn-signin-hover-border:          @btn-signin-hover-bg;
 
-@btn-signin-active-color:          @body-bg;
-@btn-signin-active-bg:             darken(@brand-secondary, 15%);
+@btn-signin-active-color:          #fff;
+@btn-signin-active-bg:             darken(@btn-signin-bg, 15%);
 @btn-signin-active-border:         @btn-signin-active-bg;
 
 
 // Guest Register button
-@btn-register-color:                 @body-bg;
+@btn-register-color:                 #fff;
 @btn-register-bg:                    desaturate(@brand-primary, 15%);
 @btn-register-border:                @btn-register-bg;
 
-@btn-register-hover-color:           @body-bg;
+@btn-register-hover-color:           #fff;
 @btn-register-hover-bg:              @brand-primary;
 @btn-register-hover-border:          @btn-register-hover-bg;
 
-@btn-register-active-color:          @body-bg;
+@btn-register-active-color:          #fff;
 @btn-register-active-bg:             darken(@btn-register-bg, 15%);
 @btn-register-active-border:         @btn-register-active-bg;
 
@@ -152,14 +160,13 @@
 @nav-link-color:                            darken(@body-bg, 35%);
 @nav-link-bg:                               transparent;
 
-@nav-link-hover-color:                      @brand-secondary;
+@nav-link-hover-color:                      @text-color;
 @nav-link-hover-bg:                         transparent;
 
 @nav-link-active-color:                     @body-bg;
-@nav-link-active-bg:                        @brand-primary;
+@nav-link-active-bg:                        @brand-secondary;
 
 // Pills
-@nav-pills-border-radius:                   @line-height-computed;
 @nav-pills-active-link-hover-bg:            @component-active-bg;
 @nav-pills-active-link-hover-color:         @component-active-color;
 
@@ -177,7 +184,7 @@
 
 @breadcrumb-bg:                 transparent;
 @breadcrumb-color:              darken(@body-bg, 40%);
-@breadcrumb-active-color:       @brand-secondary;
+@breadcrumb-active-color:       @text-color;
 
 
 //== Buttons
@@ -192,12 +199,12 @@
 @btn-default-border:             #ddd;
 
 @btn-default-hover-color:        @text-color;
-@btn-default-hover-bg:           @body-bg;
-@btn-default-hover-border:       #ccc;
+@btn-default-hover-bg:           darken(@body-bg, 2%);
+@btn-default-hover-border:       #999;
 
 @btn-default-active-color:       @text-color;
-@btn-default-active-bg:          @body-bg;
-@btn-default-active-border:      #666;
+@btn-default-active-bg:          darken(@body-bg, 6%);
+@btn-default-active-border:      #999;
 
 @btn-primary-color:              #fff;
 @btn-primary-bg:                 @brand-secondary;
@@ -208,7 +215,7 @@
 @btn-success-border:             @btn-success-bg;
 
 @btn-info-color:                 #fff;
-@btn-info-bg:                    @brand-info;
+@btn-info-bg:                    desaturate(@brand-secondary, 50%);
 @btn-info-border:                @btn-info-bg;
 
 @btn-warning-color:              #fff;
