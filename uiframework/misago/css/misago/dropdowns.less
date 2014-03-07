@@ -96,7 +96,26 @@
 /* Big displays */
 @media (min-width: @screen-sm-min) {
   .dropdown-menu {
-    li {
+    min-width: 300px;
+
+    .dropdown-title {
+      background-color: #ecf0f1;
+      border-radius: @border-radius-base @border-radius-base 0px 0px;
+      margin-top: -5px;
+      margin-bottom: 5px;
+      padding: @padding-base-vertical @padding-base-horizontal;
+
+      .badge {
+        background-color: @brand-danger;
+        border-radius: @border-radius-small;
+      }
+    }
+
+    &>li {
+      .badge {
+        margin-left: @line-height-computed / 2;
+      }
+
       button {
         background: none;
         border: none;

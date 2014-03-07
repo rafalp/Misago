@@ -7,8 +7,7 @@
 //
 //## Basic colors for use in this flavor
 
-@brand-primary:         #e74c3c;
-@brand-secondary:       #3498db;
+@brand-primary:         #3498db;
 @brand-success:         #2ecc71;
 @brand-info:            #5bc0de;
 @brand-warning:         #f0ad4e;
@@ -17,13 +16,13 @@
 // Background color for `<body>`.
 @body-bg:               darken(#fff, 1%);
 // Global text color on `<body>`.
-@text-color:            #333;
+@text-color:            #2c3e50;
 
 // Headings color
 @headings-small-color:  darken(@body-bg, 30%);
 
 // Global textual link color.
-@link-color:            @brand-secondary;
+@link-color:            @brand-primary;
 @link-hover-color:      darken(@link-color, 15%);
 
 // Text muted color
@@ -37,47 +36,22 @@
 //
 //## Navbar style
 
+@navbar-default-bg:                lighten(#bdc3c7, 18%);
+@navbar-default-border:            darken(@navbar-default-bg, 6.5%);
+
+
 // Navbar brand
 @navbar-brand-size:                        @font-size-large * 1.6;
 
-@navbar-default-brand-color:               desaturate(@brand-primary, 15%);
+@navbar-default-brand-color:               @text-color;
 @navbar-default-brand-hover-color:         @navbar-default-brand-color;
 
 
 // Navbar icon-based menu
-@navbar-primary-link-color:                @gray-light;
-@navbar-primary-link-bg:                   @navbar-default-bg;
-@navbar-primary-link-border:               darken(@navbar-default-border, 3%);
-@navbar-primary-link-hover-color:          @gray;
-@navbar-primary-link-hover-bg:             @navbar-default-bg;
-@navbar-primary-link-hover-border:         @gray-light;
-@navbar-primary-link-active-color:         @body-bg;
-@navbar-primary-link-active-bg:            lighten(@gray-light, 5%);
-@navbar-primary-link-active-border:        lighten(@gray-light, 5%);
-
-
-// Same as above, but important items
-@navbar-important-link-color:                desaturate(#ea6153, 20%);
-@navbar-important-link-bg:                   @navbar-default-bg;
-@navbar-important-link-border:               desaturate(lighten(#ea6153, 10%), 20%);
-@navbar-important-link-hover-color:          #ea6153;
-@navbar-important-link-hover-bg:             @navbar-default-bg;
-@navbar-important-link-hover-border:         #ea6153;
-@navbar-important-link-active-color:         @body-bg;
-@navbar-important-link-active-bg:            #ea6153;
-@navbar-important-link-active-border:        #ea6153;
-
-
-// Same as above, but new items
-@navbar-new-link-color:                desaturate(#2ecc71, 20%);
-@navbar-new-link-bg:                   @navbar-default-bg;
-@navbar-new-link-border:               desaturate(lighten(#2ecc71, 10%), 20%);
-@navbar-new-link-hover-color:          #2ecc71;
-@navbar-new-link-hover-bg:             @navbar-default-bg;
-@navbar-new-link-hover-border:         #2ecc71;
-@navbar-new-link-active-color:         @body-bg;
-@navbar-new-link-active-bg:            #2ecc71;
-@navbar-new-link-active-border:        #2ecc71;
+@navbar-icon-size:                      @navbar-height / 2;
+@navbar-icon-link-color:                fadeOut(#7f8c8d, 50%);
+@navbar-icon-link-hover-color:          #7f8c8d;
+@navbar-icon-link-active-color:         #34495e;
 
 
 // Only User dropdown switch uses those colors
@@ -85,43 +59,21 @@
 @navbar-user-name-hover-color:          @navbar-user-name-color;
 @navbar-user-name-active-color:         @navbar-user-name-color;
 
-@navbar-user-link-caret-color:              darken(@navbar-default-border, 25%);
-@navbar-user-link-caret-bg:                 #fff;
-@navbar-user-link-caret-border:             darken(@navbar-default-border, 3%);
-@navbar-user-link-caret-hover-color:        darken(@navbar-default-border, 40%);
-@navbar-user-link-caret-hover-bg:           #fff;
-@navbar-user-link-caret-hover-border:       darken(@navbar-default-border, 15%);
-@navbar-user-link-caret-active-color:       #fff;
-@navbar-user-link-caret-active-bg:          @brand-primary;
-@navbar-user-link-caret-active-border:      @brand-primary;
+@navbar-user-caret-color:              darken(@navbar-default-bg, 20%);
+@navbar-user-caret-hover-color:        darken(@navbar-default-bg, 40%);
+@navbar-user-caret-active-color:       @text-color;
 
 
 // Guest Sign in button
-@btn-signin-color:                 #fff;
-@btn-signin-bg:                    desaturate(@brand-secondary, 50%);
-@btn-signin-border:                @btn-signin-bg;
-
-@btn-signin-hover-color:           #fff;
-@btn-signin-hover-bg:              lighten(@btn-signin-bg, 10%);
-@btn-signin-hover-border:          @btn-signin-hover-bg;
-
-@btn-signin-active-color:          #fff;
-@btn-signin-active-bg:             darken(@btn-signin-bg, 15%);
-@btn-signin-active-border:         @btn-signin-active-bg;
+@btn-signin-color:                 darken(@body-bg, 50%);
+@btn-signin-bg:                    @body-bg;
+@btn-signin-border:                darken(@btn-signin-bg, 15%);
 
 
 // Guest Register button
 @btn-register-color:                 #fff;
-@btn-register-bg:                    desaturate(@brand-primary, 15%);
-@btn-register-border:                @btn-register-bg;
-
-@btn-register-hover-color:           #fff;
-@btn-register-hover-bg:              @brand-primary;
-@btn-register-hover-border:          @btn-register-hover-bg;
-
-@btn-register-active-color:          #fff;
-@btn-register-active-bg:             darken(@btn-register-bg, 15%);
-@btn-register-active-border:         @btn-register-active-bg;
+@btn-register-bg:                    desaturate(@brand-danger, 15%);
+@btn-register-border:                darken(@btn-register-bg, 15%);
 
 
 //== Dropdowns
@@ -133,7 +85,7 @@
 // Hover color for dropdown links.
 @dropdown-link-hover-color:      @body-bg;
 // Hover background for dropdown links.
-@dropdown-link-hover-bg:         @gray;
+@dropdown-link-hover-bg:         @brand-primary;
 
 // Active dropdown menu item text color.
 @dropdown-link-active-color:     @body-bg;
@@ -164,7 +116,7 @@
 @nav-link-hover-bg:                         transparent;
 
 @nav-link-active-color:                     @body-bg;
-@nav-link-active-bg:                        @brand-secondary;
+@nav-link-active-bg:                        @brand-primary;
 
 // Pills
 @nav-pills-active-link-hover-bg:            @component-active-bg;
@@ -194,9 +146,9 @@
 @btn-font-weight:                normal;
 
 
-@btn-default-color:              #888;
-@btn-default-bg:                 @body-bg;
-@btn-default-border:             #ddd;
+@btn-default-color:              #777;
+@btn-default-bg:                 darken(@body-bg, 5%);
+@btn-default-border:             darken(@btn-default-bg, 10%);
 
 @btn-default-hover-color:        @text-color;
 @btn-default-hover-bg:           darken(@body-bg, 2%);
@@ -207,21 +159,17 @@
 @btn-default-active-border:      #999;
 
 @btn-primary-color:              #fff;
-@btn-primary-bg:                 @brand-secondary;
-@btn-primary-border:             @btn-primary-bg;
+@btn-primary-bg:                 @brand-primary;
+@btn-primary-border:             darken(@btn-primary-bg, 15%);
 
 @btn-success-color:              #fff;
 @btn-success-bg:                 @brand-success;
-@btn-success-border:             @btn-success-bg;
-
-@btn-info-color:                 #fff;
-@btn-info-bg:                    desaturate(@brand-secondary, 50%);
-@btn-info-border:                @btn-info-bg;
+@btn-success-border:             darken(@btn-success-bg, 15%);
 
 @btn-warning-color:              #fff;
 @btn-warning-bg:                 @brand-warning;
-@btn-warning-border:             @btn-warning-bg;
+@btn-warning-border:             darken(@btn-warning-bg, 15%);
 
 @btn-danger-color:               #fff;
 @btn-danger-bg:                  @brand-danger;
-@btn-danger-border:              @btn-danger-bg;
+@btn-danger-border:              darken(@btn-danger-bg, 15%);

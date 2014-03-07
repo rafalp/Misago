@@ -3,50 +3,38 @@
 // --------------------------------------------------
 
 .misago-button-flavour(@btn-color, @btn-bg, @btn-border) {
-    background: @btn-bg;
-    border-color: @btn-border;
-    box-shadow: none;
+  background: @btn-bg;
+  border-color: @btn-bg;
+  box-shadow: 0px 2px 0px @btn-border;
+
+  color: @btn-color;
+
+  &:hover {
+    background: darken(@btn-bg, 10%);
+    border-color: darken(@btn-bg, 10%);
+    box-shadow: 0px 2px 0px darken(@btn-border, 10%);
 
     color: @btn-color;
+  }
 
-    &:hover {
-      background: lighten(@btn-bg, 10%);
-      border-color: lighten(@btn-border, 10%);
-      box-shadow: none;
+  &:active, &:focus {
+    background: darken(@btn-bg, 15%);
+    border-color: darken(@btn-bg, 15%);
+    box-shadow: none;
+    position: relative;
+    top: 2px;
 
-      color: @btn-color;
-    }
+    color: darken(@btn-color, 10%);
+  }
 
-    &:active, &:focus {
-      background: darken(@btn-bg, 15%);
-      border-color: darken(@btn-border, 15%);
-      box-shadow: none;
-      outline: none;
+  .mi-caret {
 
-      color: @btn-color;
-    }
+  }
 }
 
 .btn {
   &.btn-default {
-    color: @btn-default-color;
-
-    &:hover {
-      background: @btn-default-hover-bg;
-      border-color: @btn-default-hover-border;
-      box-shadow: none;
-
-      color: @btn-default-hover-color;
-    }
-
-    &:active, &:focus {
-      background: @btn-default-active-bg;
-      border-color: @btn-default-active-border;
-      box-shadow: none;
-      outline: none;
-
-      color: @btn-default-active-color;
-    }
+    .misago-button-flavour(@btn-default-color, @btn-default-bg, @btn-default-border);
   }
 
   &.btn-primary {

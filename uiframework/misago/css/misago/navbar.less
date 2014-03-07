@@ -3,6 +3,14 @@
 // --------------------------------------------------
 
 
+//== Navbar
+//
+//**
+.navbar {
+  border: none;
+}
+
+
 //== Brand
 //
 //**
@@ -21,61 +29,42 @@
 //
 //**
 .navbar-nav-primary {
-  li {
-    a {
+  &>li {
+    &>a {
       font-size: @font-size-large;
 
-      .badge {
+      &>.badge {
+        background-color: darken(@brand-danger, 10%);
         border-radius: @border-radius-base;
-        position: relative;
-        bottom: 2px;
-      }
-
-      &:hover, &:active {
-        .badge {
-          background-color: @link-color;
-        }
-      }
-
-      &.new {
-        &:hover, &:active {
-          color: @navbar-new-link-hover-color;
-
-          .badge {
-            background-color: @navbar-new-link-hover-color;
-          }
-        }
-      }
-
-      &.important {
-        &:hover, &:active {
-          color: @navbar-important-link-hover-color;
-
-          .badge {
-            background-color: @navbar-important-link-hover-color;
-          }
-        }
+        padding: 2px 3px;
+        padding-left: 4px;
       }
     }
   }
 }
 
+
 /* Big displays */
 @media (min-width: @screen-sm-min) {
   .navbar-nav-primary {
-    .navbar-vertical-align(@font-size-large + 12px);
+    .navbar-vertical-align(@navbar-icon-size * .7);
+    margin-bottom: 0px;
 
     &>li {
       /* Some space between icons */
-      margin-left: 4px;
+      margin-left: 6px;
 
       &>a {
         /* Make button blocky */
-        border-radius: @border-radius-base;
-        padding: 6px 0px;
-        width: 36px;
+        margin: 0px;
+        padding: 0px 6px;
+        background-color: #fff;
+        width: @navbar-icon-size * 1.5;
 
-        text-align: center;
+        &>.glyphicon, &>.fa{
+          font-size: @navbar-icon-size;
+          text-align: center;
+        }
 
         /* Hide item labels on big displays */
         .item-label {
@@ -84,145 +73,35 @@
 
         /* Links with badges displaying items counts */
         &.badged {
-          padding: 6px 8px;
           width: auto;
+        }
 
-          .badge {
-            margin-bottom: -2px;
-          }
+        &>.badge {
+          position: absolute;
+          left: 18px;
+          top: -6px;
         }
 
         /* Primary styles */
         &:link, &:visited {
-          background: @navbar-primary-link-bg !important;
-          border: 1px solid @navbar-primary-link-border !important;
-
-          color: @navbar-primary-link-color !important;
-
-          .badge {
-            background-color: @navbar-primary-link-color;
-
-            color: @navbar-primary-link-bg;
-          }
+          color: @navbar-icon-link-color !important;
         }
 
         &:hover {
-          background: @navbar-primary-link-hover-bg !important;
-          border: 1px solid @navbar-primary-link-hover-border !important;
-
-          color: @navbar-primary-link-hover-color !important;
-
-          .badge {
-            background-color: @navbar-primary-link-hover-color;
-
-            color: @navbar-primary-link-hover-bg;
-          }
+          color: @navbar-icon-link-hover-color !important;
         }
 
         &:active {
-          background: @navbar-primary-link-active-bg !important;
-          border: 1px solid @navbar-primary-link-active-border !important;
-
-          color: @navbar-primary-link-active-color !important;
-
-          .badge {
-            background-color: @navbar-primary-link-active-color;
-
-            color: @navbar-primary-link-active-bg;
-          }
+          color: @navbar-icon-link-active-color !important;
         }
+      }
 
-        /* Important links styles */
-        &.important {
-          background-color: @navbar-important-link-bg;
-          border-color: @navbar-important-link-border;
+      &.open {
+        &>a {
+          &:link, &:active, &:visited, &:hover {
+            background: none !important;
 
-          color: @navbar-important-link-color;
-
-          &:link, &:visited {
-            background: @navbar-important-link-bg !important;
-            border: 1px solid @navbar-important-link-border !important;
-
-            color: @navbar-important-link-color !important;
-
-            .badge {
-              background-color: @navbar-important-link-color;
-
-              color: @navbar-important-link-bg;
-            }
-          }
-
-          &:hover {
-            background: @navbar-important-link-hover-bg !important;
-            border: 1px solid @navbar-important-link-hover-border !important;
-
-            color: @navbar-important-link-hover-color !important;
-
-            .badge {
-              background-color: @navbar-important-link-hover-color;
-
-              color: @navbar-important-link-hover-bg;
-            }
-          }
-
-          &:active {
-            background: @navbar-important-link-active-bg !important;
-            border: 1px solid @navbar-important-link-active-border !important;
-
-            color: @navbar-important-link-active-color !important;
-
-            .badge {
-              background-color: @navbar-important-link-active-color;
-
-              color: @navbar-important-link-active-bg;
-            }
-          }
-        }
-
-        /* "New" links styles */
-        &.new {
-          background-color: @navbar-new-link-bg;
-          border-color: @navbar-new-link-border;
-
-          color: @navbar-new-link-color;
-
-          &:link, &:visited {
-            background: @navbar-new-link-bg !important;
-            border: 1px solid @navbar-new-link-border !important;
-
-            color: @navbar-new-link-color !important;
-
-            .badge {
-              background-color: @navbar-new-link-color;
-
-              color: @navbar-new-link-bg;
-            }
-          }
-
-          &:hover {
-            background: @navbar-new-link-hover-bg !important;
-            border: 1px solid @navbar-new-link-hover-border !important;
-
-            color: @navbar-new-link-hover-color !important;
-
-            .badge {
-              background-color: @navbar-new-link-hover-color;
-
-              color: @navbar-new-link-hover-bg;
-            }
-          }
-
-          &:active {
-            background: @navbar-new-link-active-bg !important;
-            border: 1px solid @navbar-new-link-active-border !important;
-
-            color: @navbar-new-link-active-color !important;
-
-            .badge {
-              background-color: @navbar-new-link-active-color;
-
-              color: @navbar-new-link-active-bg;
-            }
+            color: @navbar-icon-link-active-color !important;
           }
         }
       }
@@ -246,39 +125,23 @@
         height: 32px;
       }
 
-      .caret-border {
-        background: @navbar-user-link-caret-bg;
-        border-radius: @border-radius-small;
-        border: 1px solid @navbar-user-link-caret-border;
-        padding: 0px 5px;
-        padding-bottom: 1px;
+      .misago-caret {
+        position: relative;
+        top: 2px;
+        margin-right: 6px;
 
-        color: @navbar-user-link-caret-color;
-
-        .caret{
-          display: block;
-          border-top: @caret-width-base * 1.25 solid;
-          border-right: @caret-width-base * 1.25 solid transparent;
-          border-left: @caret-width-base * 1.25 solid transparent;
-          margin: 0px;
-        }
+        color: @navbar-user-caret-color;
       }
 
       &:hover {
-        .caret-border {
-          background: @navbar-user-link-caret-hover-bg;
-          border: 1px solid @navbar-user-link-caret-hover-border;
-
-          color: @navbar-user-link-caret-hover-color;
+        .misago-caret {
+          color: @navbar-user-caret-hover-color;
         }
       }
 
       &:active, &:focus {
-        .caret-border {
-          background: @navbar-user-link-caret-active-bg;
-          border: 1px solid @navbar-user-link-caret-active-border;
-
-          color: @navbar-user-link-caret-active-color;
+        .misago-caret {
+          color: @navbar-user-caret-active-color;
         }
       }
     }
@@ -307,16 +170,12 @@
         margin-left: 8px;
       }
 
-      .caret-border {
+      .misago-caret {
         float: right;
-        margin-top: 2px;
-        margin-left: 6px;
-        padding: 5px 2px;
+        margin: 0px;
+        margin-left: 8px;
 
-        .caret{
-          margin: 0px;
-          margin-bottom: -1px;
-        }
+        font-size: @font-size-small;
       }
 
       &:link, &:visited {
@@ -338,20 +197,12 @@
 
     .dropdown-menu {
       min-width: 256px;
+      top: @navbar-height;
       right: -8px;
-      top: @navbar-height + 1px;
 
       &:after {
-        border: solid transparent;
-        border-bottom-color: @dropdown-bg;
-        border-width: 6px;
-        content: "";
-        height: 0;
-        position: absolute;
-        pointer-events: none;
-        right: 10px;
+        right: 7px;
         top: -11px;
-        width: 0;
       }
     }
 
@@ -376,70 +227,28 @@
 
   .btn-sign-in {
     margin: 0px;
-
-    &, &:link, &:visited {
-      background-color: @btn-signin-bg;
-      border-color: @btn-signin-border;
-
-      color: @btn-signin-color;
-    }
-
-    &:hover {
-      background-color: @btn-signin-hover-bg;
-      border-color: @btn-signin-hover-border;
-      box-shadow: none;
-
-      color: @btn-signin-hover-color;
-    }
-
-    &:active, &:focus {
-      background-color: @btn-signin-active-bg;
-      border-color: @btn-signin-active-border;
-      box-shadow: none;
-
-      color: @btn-signin-active-color;
-    }
+    .misago-button-flavour(@btn-signin-color, @btn-signin-bg, @btn-signin-border);
   }
 
   .btn-register {
     margin: 0px;
-
-    &, &:link, &:visited {
-      background-color: @btn-register-bg;
-      border-color: @btn-register-border;
-
-      color: @btn-register-color;
-    }
-
-    &:hover {
-      background-color: @btn-register-hover-bg;
-      border-color: @btn-register-hover-border;
-      box-shadow: none;
-
-      color: @btn-register-hover-color;
-    }
-
-    &:active, &:focus {
-      background-color: @btn-register-active-bg;
-      border-color: @btn-register-active-border;
-      box-shadow: none;
-
-      color: @btn-register-active-color;
-    }
+    .misago-button-flavour(@btn-register-color, @btn-register-bg, @btn-register-border);
   }
 }
 
 /* On big displays put some distance between guest nav and other nav */
 @media (min-width: @screen-sm-min) {
   .navbar-nav-guest {
-    margin-left: @line-height-computed * 2;
+    margin-left: @line-height-computed;
   }
 }
 
 
-//== Small displays dropdowns
+//== Navbar dropdowns
 //
 //**
+
+/* Small displays */
 @media (max-width: @screen-sm-min) {
   /* Hide carets */
   .navbar {
@@ -557,5 +366,12 @@
         }
       }
     }
+  }
+}
+
+/* Big displays */
+@media (min-width: @screen-sm-min) {
+  .dropdown-menu {
+    top: @navbar-height - @line-height-computed + 4px;
   }
 }
