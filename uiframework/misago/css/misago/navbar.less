@@ -259,6 +259,40 @@
     }
   }
 
+  /* Dropdown title */
+  .navbar-default {
+    .dropdown-menu {
+      .dropdown-title {
+        margin-top: -5px;
+        margin-bottom: 5px;
+        padding: @padding-base-vertical @padding-base-horizontal;
+
+        .badge {
+          background-color: darken(@brand-danger, 10%);
+          border-radius: @border-radius-small;
+
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  .navbar-default {
+    .dropdown-menu {
+      .dropdown-title {
+        background-color: darken(@navbar-default-bg, 15%);
+      }
+    }
+  }
+
+  .navbar-inverse {
+    .dropdown-menu {
+      .dropdown-title {
+        background-color: lighten(@navbar-inverse-bg, 15%);
+      }
+    }
+  }
+
   /* Make buttons size equal to that of links */
   .navbar {
     .dropdown-menu {

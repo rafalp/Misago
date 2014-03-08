@@ -6,31 +6,16 @@
 // Generic spacing and stuff
 //
 //##
+.page-header {
+  margin-top: @line-height-computed * -1;
+
+}
 
 
 // Breadcrumb
 //
 //##
-
-
-// Actions
-//
-//##
-
-
-// Details
-//
-//##
-
-
-// Pills
-//
-//##
-
-// FUNCTIONALS
 .page-header {
-  margin-top: @line-height-computed * -1;
-
   &>.container {
     .breadcrumb {
       margin-bottom: (@line-height-computed * @headings-line-height) * -1;
@@ -57,7 +42,15 @@
         }
       }
     }
+  }
+}
 
+
+// Actions
+//
+//##
+.page-header {
+  &>.container {
     .page-actions {
       float: right;
       margin-top: (@line-height-computed * @headings-line-height) * -1 - (@line-height-computed * 1.5) + @padding-base-vertical - 1;
@@ -72,8 +65,32 @@
         }
       }
     }
+  }
+}
 
+/* Small displays */
+@media (max-width: @screen-sm-min) {
+  .page-header {
+    &>.container {
+      .page-actions {
+        clear: both;
+        float: none;
+        margin-top: @line-height-computed;
+      }
+    }
+  }
+}
+
+
+// Details
+//
+//##
+.page-header {
+  &>.container {
     .page-details {
+      display: block;
+      clear: both;
+
       color: @text-muted;
 
       a:link, a:visited {
@@ -88,6 +105,21 @@
   }
 }
 
+/* Small displays */
+@media (max-width: @screen-sm-min) {
+  .page-header {
+    &>.container {
+      .page-details {
+        margin-top: @line-height-computed;
+      }
+    }
+  }
+}
+
+
+// Pills
+//
+//##
 .page-pills {
   border-bottom: 1px solid @page-header-border-color;
   margin: @line-height-computed * -1 0px @line-height-computed;
@@ -99,6 +131,30 @@
     &>li {
       &>a {
         padding: @page-pills-padding;
+
+        font-size: @font-size-large;
+
+        &>.badge {
+          border-radius: @border-radius-small;
+          position: relative;
+          bottom: 3px;
+        }
+
+        &:hover {
+          &>.badge {
+            background-color: @nav-link-hover-color;
+          }
+        }
+      }
+
+      &.active {
+        &>a {
+          &:link, &:active, &:visited, &:hover {
+            &>.badge {
+              background-color: @nav-link-active-color;
+            }
+          }
+        }
       }
     }
   }
