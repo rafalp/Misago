@@ -1,0 +1,85 @@
+//
+// Form page
+// --------------------------------------------------
+
+
+//== Form container
+//
+//**
+.form-panel {
+  background: @form-panel-bg;
+  border: 1px solid @form-panel-border;
+  border-radius: @border-radius-large;
+  box-shadow: 0px 0px 0px 3px @form-panel-shadow;
+
+  form {
+    margin: 0px;
+    padding: 0px;
+  }
+}
+
+
+//== Form header
+//
+//**
+.form-panel {
+  .form-header {
+    padding: @form-panel-padding;
+
+    h1, h2 {
+      margin: 0px;
+    }
+
+    h1 {
+      font-size: @font-size-large * 1.6;
+    }
+
+    h2 {
+      font-size: @font-size-large * 1.2;
+    }
+
+    p {
+      margin: (@line-height-computed / 2) 0px 0px 0px;
+    }
+  }
+}
+
+
+//== Form body
+//
+//**
+.form-panel {
+  .form-body {
+    fieldset {
+      margin: 0px;
+      padding-bottom: @form-panel-padding-vertical;
+
+      legend {
+        border-top: 1px solid @form-panel-border;
+        border-bottom: 0px;
+        padding: @form-panel-padding;
+        padding-bottom: 0px;
+      }
+
+      .form-group {
+        margin-left: @form-panel-padding-horizontal;
+        margin-right: @form-panel-padding-horizontal;
+      }
+
+      .help-block {
+        color: @field-help-block-color;
+      }
+    }
+  }
+}
+
+
+//== Form footer
+//
+//**
+.form-panel {
+  .form-footer {
+    border-top: 1px solid @form-panel-border;
+    padding: @form-panel-padding;
+  }
+}

@@ -116,7 +116,7 @@
 @nav-pills-active-link-hover-color:         @component-active-color;
 
 //== Page header
-@page-header-border-color:       darken(@body-bg, 7%);
+@page-header-border-color:       darken(@body-bg, 9%);
 @page-pills-padding:             @padding-small-vertical @padding-small-horizontal;
 
 
@@ -130,6 +130,16 @@
 @breadcrumb-bg:                 transparent;
 @breadcrumb-color:              darken(@body-bg, 40%);
 @breadcrumb-active-color:       @text-color;
+
+
+//== Page footer
+//
+//## For each of Bootstrap's buttons, define text, background and border color.
+
+@footer-color:                   darken(@body-bg, 35%);
+
+// Size of Misago's branding in footer
+@misago-branding-size:           @font-size-large * 1.6;
 
 
 //== Buttons
@@ -168,11 +178,23 @@
 @btn-danger-border:              darken(@btn-danger-bg, 15%);
 
 
-//== Page footer
+//== Forms
 //
-//## For each of Bootstrap's buttons, define text, background and border color.
+@legend-color:                          darken(@body-bg, 40%);
+@field-help-block-color:                darken(@body-bg, 50%);
 
-@footer-color:                   darken(@body-bg, 35%);
+//## Misago wraps forms into panels
+@form-panel-bg:                         #fff;
+@form-panel-border:                     darken(@body-bg, 15%);
+@form-panel-shadow:                     darken(@body-bg, 5%);
+@form-panel-padding-vertical:           (@padding-large-vertical * 1.5);
+@form-panel-padding-horizontal:         @padding-large-horizontal;
+@form-panel-padding:                    @form-panel-padding-vertical @form-panel-padding-horizontal;
 
-// Size of Misago's branding in footer
-@misago-branding-size:           @font-size-large * 1.6;
+
+//== Miscellaneous
+//
+//##
+
+//** Horizontal line color.
+@hr-border:                   darken(@body-bg, 10%);
