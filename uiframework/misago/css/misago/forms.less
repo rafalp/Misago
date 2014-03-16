@@ -59,6 +59,8 @@
         border-bottom: 0px;
         padding: @form-panel-padding;
         padding-bottom: 0px;
+
+        font-size: @font-size-large;
       }
 
       .form-group {
@@ -81,5 +83,32 @@
   .form-footer {
     border-top: 1px solid @form-panel-border;
     padding: @form-panel-padding;
+
+    &>.row>div {
+      padding: 0px @padding-base-horizontal * 2;
+    }
+
+    a.extra, p.extra {
+      margin-top: @line-height-computed;
+    }
+
+    div.extra {
+      margin-top: @line-height-computed + @form-panel-padding-horizontal / 2;
+    }
+  }
+}
+
+
+/* Big displays */
+@media (min-width: @screen-sm-min) {
+  .form-panel {
+    .form-footer {
+      p.extra {
+        display: inline-block;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        margin-left: @padding-base-horizontal;
+      }
+    }
   }
 }
