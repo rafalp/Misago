@@ -41,10 +41,12 @@
   .navbar-nav-primary {
     .navbar-vertical-align(@navbar-icon-size * 1.2);
     margin-bottom: 0px;
+    padding-right: @navbar-padding-horizontal;
 
     &>li {
-      /* Some space between icons */
-      margin-left: 8px;
+      margin: 0px;
+      margin-left: @navbar-padding-horizontal / 2;
+      padding: 0px;
 
       &>a {
         /* Make button blocky */
@@ -68,7 +70,6 @@
         }
 
         &>.badge {
-          float: right;
           position: absolute;
           right: -6px;
           top: -4px;
@@ -162,7 +163,8 @@
 @media (min-width: @screen-sm-min) {
   /* Put some distance between user menu and primary nav */
   .navbar-nav-user {
-    margin-left: @line-height-computed * 2;
+    padding-right: @navbar-padding-horizontal;
+    margin-left: @navbar-padding-horizontal * 2;
   }
 
   /* Change way switch and dropdown appears */
@@ -250,7 +252,8 @@
 /* On big displays put some distance between guest nav and other nav */
 @media (min-width: @screen-sm-min) {
   .navbar-nav-guest {
-    margin-left: @line-height-computed;
+    padding-right: @navbar-padding-horizontal;
+    margin-left: @navbar-padding-horizontal;
   }
 }
 
