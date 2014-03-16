@@ -108,6 +108,14 @@
         }
       }
     }
+
+    .dropdown-menu {
+      top: @navbar-height - (@navbar-icon-size / 2) - 1px;
+
+      &:after {
+        right: @navbar-icon-size / 2;
+      }
+    }
   }
 }
 
@@ -199,8 +207,9 @@
 
     .dropdown-menu {
       min-width: 256px;
-      top: @navbar-height;
       right: -8px;
+      top: auto;
+      bottom: auto;
 
       &:after {
         right: 7px;
@@ -402,12 +411,5 @@
         }
       }
     }
-  }
-}
-
-/* Big displays */
-@media (min-width: @screen-sm-min) {
-  .dropdown-menu {
-    top: @navbar-height - @line-height-computed + 4px;
   }
 }
