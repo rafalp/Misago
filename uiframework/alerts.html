@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Misago UI: Alerts Template</title>
+
+    <!-- Custom styles for this template -->
+    <link href="./misago/css/style.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-default navbar-static-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Misago UI</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <div class="navbar-nav-guest navbar-right">
+            <a href="#" class="btn btn-sign-in navbar-btn">Sign in</a>
+            <a href="#" class="btn btn-register navbar-btn">Register</a>
+          </div>
+          <ul class="nav navbar-nav navbar-nav-primary navbar-right">
+            <li>
+              <a href="#" class="tooltip-bottom" title="Forum index">
+                <span class="fa fa-th-list"></span>
+                <span class="item-label">Forum index</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="tooltip-bottom" title="Users">
+                <span class="fa fa-users"></span>
+                <span class="item-label">Users</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="tooltip-bottom" title="Search forums">
+                <span class="fa fa-search"></span>
+                <span class="item-label">Search forums</span>
+              </a>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="container">
+
+        <h1>Form Page</h1>
+
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="misago-alerts">
+        <div>
+          <p class="alert alert-success">
+            <span class="alert-icon fa fa-check-circle"></span> <strong>Well done!</strong> You successfully read this important alert message.
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ok</button>
+          </p>
+        </div>
+        <div>
+          <p class="alert alert-info">
+            <span class="alert-icon fa fa-question-circle"></span> <strong>Heads up!</strong> This alert needs your attention, but it's not super important.
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ok</button>
+          </p>
+        </div>
+        <div>
+          <p class="alert alert-warning">
+            <span class="alert-icon fa fa-exclamation-triangle"></span> <strong>Warning!</strong> Better check yourself, you're not looking too good.
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ok</button>
+          </p>
+        </div>
+        <div>
+          <p class="alert alert-danger">
+            <span class="alert-icon fa fa-times-circle"></span> <strong>Oh snap!</strong> Change a few things up and try submitting again.
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ok</button>
+          </p>
+        </div>
+      </div>
+
+      <div class="form-panel">
+        <form class="form-horizontal" role="form">
+
+          <div class="form-header">
+            <h1>Sign In</h1>
+          </div>
+
+          <div class="form-body no-fieldsets">
+            <div class="form-group">
+              <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+              <div class="col-sm-10">
+                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+              <div class="col-sm-10">
+                <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-footer">
+            <div class="row">
+              <div class="col-sm-10 col-sm-offset-2">
+                <button class="btn btn-primary">Save Changes</button>
+                <button class="btn btn-default">Cancel</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </form>
+    </div>
+
+    <div class="container">
+
+        <hr>
+
+        <h1>Misago UI: Alerts Template</h1>
+
+        <p>Example alerts displayed by Misago. Misago alerts are bootstrap alerts contained within div with <code>.misago-alerts</code> class. To make alerts stick to top, add <code>.alerts-fixed</code> class to container.</p>
+
+
+        <a href="#" class="demo-static btn btn-primary">Static</a>
+
+        <a href="#" class="demo-fixed btn btn-success">Fixed</a>
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./misago/js/jquery.js"></script>
+    <script src="./misago/js/bootstrap.js"></script>
+    <script src="./misago/js/misago.js"></script>
+
+    <!-- Demo custom JavaScript
+    ================================================== -->
+    <script type="text/javascript">
+      $(function() {
+        $('.demo-static').click(function() {
+          $('.misago-alerts').removeClass('alerts-fixed');
+          return true;
+        });
+
+        $('.demo-fixed').click(function() {
+          $('.misago-alerts').addClass('alerts-fixed');
+          return true;
+        });
+      });
+    </script>
+
+  </body>
+</html>

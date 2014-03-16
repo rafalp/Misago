@@ -50,7 +50,7 @@
 //**
 .form-panel {
   .form-body {
-    fieldset {
+    fieldset, &.no-fieldsets {
       margin: 0px;
       padding-bottom: @form-panel-padding-vertical;
 
@@ -70,7 +70,15 @@
 
       .help-block {
         color: @field-help-block-color;
+        margin-bottom: 0px;
+        padding-bottom: 0px;
       }
+    }
+
+    &.no-fieldsets {
+      border-top: 1px solid @form-panel-border;
+      padding: @form-panel-padding;
+      padding-top: @line-height-computed + @form-panel-padding-vertical;
     }
   }
 }
@@ -81,6 +89,8 @@
 //**
 .form-panel {
   .form-footer {
+    background-color: @form-panel-footer-bg;
+    border-radius: 0px 0px (@border-radius-large - 1px) (@border-radius-large - 1px);
     border-top: 1px solid @form-panel-border;
     padding: @form-panel-padding;
 
@@ -97,7 +107,7 @@
     }
 
     div.extra {
-      margin-top: @line-height-computed + @form-panel-padding-horizontal / 2;
+      margin-top: @line-height-computed + @form-panel-padding-vertical / 2;
     }
   }
 }
