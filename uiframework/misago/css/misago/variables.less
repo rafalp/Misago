@@ -48,10 +48,16 @@
 
 
 // Navbar icon-based menu
-@navbar-icon-size:                      @navbar-height / 2;
-@navbar-icon-link-color:                fadeOut(#7f8c8d, 50%);
+@navbar-icon-size:                      @navbar-height / 2.5;
+@navbar-icon-link-bg:                   lighten(@navbar-default-bg, 5%);
+@navbar-icon-link-border:               darken(@navbar-icon-link-bg, 15%);
+@navbar-icon-link-color:                fadeOut(#7f8c8d, 30%);
+@navbar-icon-link-hover-bg:             lighten(@navbar-default-bg, 3%);
+@navbar-icon-link-hover-border:         darken(@navbar-icon-link-bg, 25%);
 @navbar-icon-link-hover-color:          #7f8c8d;
-@navbar-icon-link-active-color:         #34495e;
+@navbar-icon-link-active-bg:            #34495e;
+@navbar-icon-link-active-border:        darken(@navbar-default-bg, 15%);
+@navbar-icon-link-active-color:         #ecf0f1;
 
 
 // Only User dropdown switch uses those colors

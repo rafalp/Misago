@@ -3,14 +3,6 @@
 // --------------------------------------------------
 
 
-//== Navbar
-//
-//**
-.navbar {
-  border: none;
-}
-
-
 //== Brand
 //
 //**
@@ -47,19 +39,23 @@
 /* Big displays */
 @media (min-width: @screen-sm-min) {
   .navbar-nav-primary {
-    .navbar-vertical-align(@navbar-icon-size * .7);
+    .navbar-vertical-align(@navbar-icon-size * 1.2);
     margin-bottom: 0px;
 
     &>li {
       /* Some space between icons */
-      margin-left: 6px;
+      margin-left: 8px;
 
       &>a {
         /* Make button blocky */
+        border-radius: @border-radius-base;
         margin: 0px;
-        padding: 0px 6px;
-        background-color: #fff;
+        padding: 0px;
+        padding-top: 6px;
+        height: @navbar-icon-size * 1.5;
         width: @navbar-icon-size * 1.5;
+
+        text-align: center;
 
         &>.glyphicon, &>.fa{
           font-size: @navbar-icon-size;
@@ -71,27 +67,32 @@
           display: none;
         }
 
-        /* Links with badges displaying items counts */
-        &.badged {
-          width: auto;
-        }
-
         &>.badge {
+          float: right;
           position: absolute;
-          left: 18px;
-          top: -6px;
+          right: -6px;
+          top: -4px;
         }
 
         /* Primary styles */
         &:link, &:visited {
+          background-color: @navbar-icon-link-bg;
+          box-shadow: 0px 2px 0px @navbar-icon-link-border;
+
           color: @navbar-icon-link-color !important;
         }
 
         &:hover {
+          background-color: @navbar-icon-link-hover-bg !important;
+
           color: @navbar-icon-link-hover-color !important;
+          box-shadow: 0px 1px 0px @navbar-icon-link-hover-border;
         }
 
         &:active {
+          background-color: @navbar-icon-link-active-bg !important;
+          box-shadow: none;
+
           color: @navbar-icon-link-active-color !important;
         }
       }
@@ -99,7 +100,8 @@
       &.open {
         &>a {
           &:link, &:active, &:visited, &:hover {
-            background: none !important;
+            background-color: @navbar-icon-link-active-bg !important;
+            box-shadow: none;
 
             color: @navbar-icon-link-active-color !important;
           }
