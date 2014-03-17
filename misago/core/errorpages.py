@@ -18,6 +18,12 @@ def page_not_found(request):
     return _error_page(request, 404)
 
 
+def csrf_failure(request, reason=""):
+    response = render(request, 'misago/csrf_failure.html')
+    response.status_code = 403
+    return response
+
+
 # Decorators for custom error page handlers
 def shared_403_exception_handler(f):
     def page_decorator(request, *args, **kwargs):

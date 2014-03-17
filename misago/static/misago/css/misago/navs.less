@@ -1,0 +1,32 @@
+//
+// Navs
+// --------------------------------------------------
+
+
+.nav {
+  &>li {
+    &>a {
+      &:link, &:visited {
+        background-color: @nav-link-bg;
+
+        color: @nav-link-color;
+      }
+
+      &:hover, &:active {
+        background-color: @nav-link-hover-bg;
+
+        color: @nav-link-hover-color;
+      }
+    }
+
+    &.active {
+      &>a {
+        &:link, &:active, &:hover, &:visited {
+          background-color: @nav-link-active-bg;
+
+          color: @nav-link-active-color;
+        }
+      }
+    }
+  }
+}

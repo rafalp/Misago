@@ -2,19 +2,36 @@
 // Forum Footer
 // --------------------------------------------------
 
-// Misago Branding, don't edit please
+
+//== Footer container
+//
+//**
+.main-footer {
+  margin-top: @line-height-computed * 1.5;
+  margin-bottom: @line-height-computed * 1.5;
+
+  text-align: center;
+}
 
 
+//== Custom footer message
+//
+//**
+.custom-footer {
+  color: @footer-color;
+}
+
+
+//== Misago branding
+//
+//**
 .misago-branding {
   a {
     display: inline-block;
-    margin-top: @line-height-computed * 1.5;
-    .transition(opacity 0.4s);
 
     color: @text-color;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: @misago-branding-size;
-    text-align: center;
 
     .brand-border {
       background: @text-color;
@@ -43,7 +60,7 @@
     .subscript {
       display: inline-block;
       position: relative;
-      bottom: (@misago-branding-size  - (@misago-branding-size * 0.6)) / 2;
+      bottom: (@misago-branding-size  - (@misago-branding-size * 0.6)) / 2 - 1px;
 
       font-size: @misago-branding-size * 0.6;
     }

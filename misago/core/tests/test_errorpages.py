@@ -1,8 +1,18 @@
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+from django.test import Client, TestCase
 from django.test.client import RequestFactory
 from misago.core.testproject.views import (mock_custom_403_error_page,
                                            mock_custom_404_error_page)
+
+
+class CSRFErrorViewTests(TestCase):
+    def test_csrf_failure(self):
+        """csrf_failure error page has no show-stoppers"""
+        csrf_client = Client(enforce_csrf_checks=True)
+        response = csrf_client.post(reverse('misago:index'),
+                                    data={'eric': 'fish'})
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("Request blocked", response.content)
 
 
 class ErrorPageViewsTests(TestCase):
@@ -12,11 +22,13 @@ class ErrorPageViewsTests(TestCase):
         """permission_denied error page has no show-stoppers"""
         response = self.client.get(reverse('raise_misago_403'))
         self.assertEqual(response.status_code, 403)
+        self.assertIn("Page not available", response.content)
 
     def test_page_not_found_returns_404(self):
         """page_not_found error page has no show-stoppers"""
         response = self.client.get(reverse('raise_misago_404'))
         self.assertEqual(response.status_code, 404)
+        self.assertIn("Page not found", response.content)
 
 
 class CustomErrorPagesTests(TestCase):

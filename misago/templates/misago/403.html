@@ -1,6 +1,28 @@
-<h1>Misago Error 403</h1>
-{% if message %}
-<p>{{ message }}</p>
-{% else %}
-<p>Request not allowed.</p>
-{% endif %}
+{% extends "misago/base.html" %}
+
+{% load i18n %}
+
+
+{% block title %}{% trans "Page not available" %} | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+<div class="container">
+
+  <div class="error-message">
+
+    <div class="error-icon">
+      <span class="fa fa-ban"></span>
+    </div>
+
+    <h1>{% trans "Requested page is not available." %}</h1>
+    {% if message %}
+    <p>{{ message }}</p>
+    {% else %}
+    <p>{% trans "You don't have permission to access this page." %}</p>
+    {% endif %}
+
+  </div>
+
+</div>
+{% endblock content %}

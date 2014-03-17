@@ -1,10 +1,236 @@
 //
-// Variables
+// Misago Variables
 // --------------------------------------------------
 
 
-//== Misago Branding
+//== Colors
 //
-//## Default branding size
+//## Basic colors for use in this flavor
 
-@misago-branding-size:    @font-size-large * 1.5;
+@brand-primary:         #3498db;
+@brand-success:         #2ecc71;
+@brand-info:            #5bc0de;
+@brand-warning:         #f0ad4e;
+@brand-danger:          #e74c3c;
+
+// Background color for `<body>`.
+@body-bg:               darken(#fff, 1%);
+// Global text color on `<body>`.
+@text-color:            #2c3e50;
+
+// Headings color
+@headings-small-color:  darken(@body-bg, 30%);
+
+// Global textual link color.
+@link-color:            @brand-primary;
+@link-hover-color:      darken(@link-color, 15%);
+
+// Text muted color
+@text-muted:            darken(@body-bg, 40%);
+
+@link-muted-color:            darken(@body-bg, 65%);
+@link-muted-hover-color:      @link-color;
+
+
+//== Navbar
+//
+//## Navbar style
+
+@navbar-default-bg:                lighten(#bdc3c7, 18%);
+@navbar-default-border:            darken(@navbar-default-bg, 6.5%);
+
+
+// Navbar brand
+@navbar-brand-size:                        @font-size-large * 1.6;
+
+@navbar-default-brand-color:               @text-color;
+@navbar-default-brand-hover-color:         @navbar-default-brand-color;
+
+
+// Navbar icon-based menu
+@navbar-icon-size:                      @navbar-height / 2.5;
+@navbar-icon-link-bg:                   transparent;
+@navbar-icon-link-border:               transparent;
+@navbar-icon-link-color:                #7f8c8d;
+
+@navbar-icon-link-hover-bg:             darken(#bdc3c7, 7%);
+@navbar-icon-link-hover-border:         transparent;
+@navbar-icon-link-hover-color:          #fff;
+
+@navbar-icon-link-active-bg:            #7f8c8d;
+@navbar-icon-link-active-border:        transparent;
+@navbar-icon-link-active-color:         #fff;
+
+
+// Only User dropdown switch uses those colors
+@navbar-user-name-color:                @gray;
+@navbar-user-name-hover-color:          @navbar-user-name-color;
+@navbar-user-name-active-color:         @navbar-user-name-color;
+
+@navbar-user-caret-color:              darken(@navbar-default-bg, 20%);
+@navbar-user-caret-hover-color:        darken(@navbar-default-bg, 40%);
+@navbar-user-caret-active-color:       @text-color;
+
+
+// Guest Sign in button
+@btn-signin-color:                 darken(@body-bg, 50%);
+@btn-signin-bg:                    @body-bg;
+@btn-signin-border:                darken(@btn-signin-bg, 15%);
+
+
+// Guest Register button
+@btn-register-color:                 #fff;
+@btn-register-bg:                    desaturate(@brand-danger, 15%);
+@btn-register-border:                darken(@btn-register-bg, 15%);
+
+
+//== Dropdowns
+//
+//## Misago dropdowns flavor
+
+// Dropdown link text color.
+@dropdown-link-color:            lighten(@text-color, 10%);
+// Hover color for dropdown links.
+@dropdown-link-hover-color:      @body-bg;
+// Hover background for dropdown links.
+@dropdown-link-hover-bg:         @brand-primary;
+
+// Active dropdown menu item text color.
+@dropdown-link-active-color:     @body-bg;
+// Active dropdown menu item background color.
+@dropdown-link-active-bg:        @brand-primary;
+
+
+// Open dropdown shadow color.
+@dropdown-shadow:                fadeOut(#333, 50%);
+
+
+//== Navs
+//
+//##
+
+// Shared navs styles
+@nav-link-color:                            darken(@body-bg, 35%);
+@nav-link-bg:                               transparent;
+
+@nav-link-hover-color:                      @text-color;
+@nav-link-hover-bg:                         darken(@body-bg, 5%);
+
+@nav-link-active-color:                     @body-bg;
+@nav-link-active-bg:                        @brand-primary;
+
+// Pills
+@nav-pills-active-link-hover-bg:            @component-active-bg;
+@nav-pills-active-link-hover-color:         @component-active-color;
+
+//== Page header
+@page-header-border-color:       darken(@body-bg, 9%);
+@page-pills-padding:             @padding-small-vertical @padding-small-horizontal;
+
+
+//== Breadcrumbs
+//
+//##
+
+@breadcrumb-padding-vertical:   8px;
+@breadcrumb-padding-horizontal: 0px;
+
+@breadcrumb-bg:                 transparent;
+@breadcrumb-color:              darken(@body-bg, 40%);
+@breadcrumb-active-color:       @text-color;
+
+
+//== Page footer
+//
+//## For each of Bootstrap's buttons, define text, background and border color.
+
+@footer-color:                   darken(@body-bg, 35%);
+
+// Size of Misago's branding in footer
+@misago-branding-size:           @font-size-large * 1.6;
+
+
+//== Buttons
+//
+//## For each of Bootstrap's buttons, define text, background and border color.
+
+@btn-font-weight:                normal;
+
+
+@btn-default-color:              #777;
+@btn-default-bg:                 darken(@body-bg, 5%);
+@btn-default-border:             darken(@btn-default-bg, 10%);
+
+@btn-default-hover-color:        @text-color;
+@btn-default-hover-bg:           darken(@body-bg, 2%);
+@btn-default-hover-border:       #999;
+
+@btn-default-active-color:       @text-color;
+@btn-default-active-bg:          darken(@body-bg, 6%);
+@btn-default-active-border:      #999;
+
+@btn-primary-color:              #fff;
+@btn-primary-bg:                 @brand-primary;
+@btn-primary-border:             darken(@btn-primary-bg, 15%);
+
+@btn-success-color:              #fff;
+@btn-success-bg:                 @brand-success;
+@btn-success-border:             darken(@btn-success-bg, 15%);
+
+@btn-warning-color:              #fff;
+@btn-warning-bg:                 @brand-warning;
+@btn-warning-border:             darken(@btn-warning-bg, 15%);
+
+@btn-danger-color:               #fff;
+@btn-danger-bg:                  @brand-danger;
+@btn-danger-border:              darken(@btn-danger-bg, 15%);
+
+
+//== Forms
+//
+@legend-color:                          darken(@body-bg, 40%);
+@field-help-block-color:                darken(@body-bg, 50%);
+
+//## Misago wraps forms into panels
+@form-panel-bg:                         #fff;
+@form-panel-border:                     darken(@body-bg, 15%);
+@form-panel-shadow:                     darken(@body-bg, 5%);
+@form-panel-footer-bg:                  darken(@body-bg, 1%);
+@form-panel-padding-vertical:           (@padding-large-vertical * 1.5);
+@form-panel-padding-horizontal:         @padding-large-horizontal;
+@form-panel-padding:                    @form-panel-padding-vertical @form-panel-padding-horizontal;
+
+
+//== Error panel
+//
+//##
+@error-panel-bg:                   darken(@body-bg, 1%);
+@error-panel-border:               darken(@body-bg, 15%);
+@error-panel-shadow:               darken(@body-bg, 5%);
+
+//== Miscellaneous
+//
+//##
+
+//** Horizontal line color.
+@hr-border:                   darken(@body-bg, 10%);
+
+
+//== Alerts
+//
+//## Define alert colors, border radius, and padding.
+
+@alert-padding:               12px;
+@alert-border-radius:         @border-radius-large;
+
+@alert-success-bg:            #27ae60;
+@alert-success-text:          #fff;
+
+@alert-info-bg:               #2980b9;
+@alert-info-text:             #fff;
+
+@alert-warning-bg:            #e67e22;
+@alert-warning-text:          #fff;
+
+@alert-danger-bg:             #c0392b;
+@alert-danger-text:           #fff;

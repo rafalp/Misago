@@ -1,2 +1,24 @@
-<h1>Misago Error 404</h1>
-<p>Page not found.</p>
+{% extends "misago/base.html" %}
+
+{% load i18n %}
+
+
+{% block title %}{% trans "Page not found" %} | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+<div class="container">
+
+  <div class="error-message">
+
+    <div class="error-icon">
+      <span class="fa fa-compass"></span>
+    </div>
+
+    <h1>{% trans "Requested page could not be found." %}</h1>
+    <p>{% trans "Clicked link was incorrect or the page was moved or deleted." %}</p>
+
+  </div>
+
+</div>
+{% endblock content %}

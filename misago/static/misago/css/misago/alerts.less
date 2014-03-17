@@ -1,0 +1,90 @@
+//
+// Alerts
+// --------------------------------------------------
+
+
+.misago-alert-close(@text, @bg) {
+  background-color: darken(@bg, 25%);
+  .opacity(1);
+
+  color: fadeOut(@text, 10%);
+
+  &:hover {
+    background-color: darken(@bg, 15%);
+
+    color: @text;
+  }
+
+  &:active, &:focus {
+    background-color: @text;
+    outline: none;
+
+    color: darken(@bg, 15%);
+  }
+}
+
+
+.misago-alerts {
+  text-align: center;
+
+  .alert {
+    border: none;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+
+    .alert-icon {
+      margin: -@alert-padding 0px;
+      margin-right: @alert-padding / 2;
+      position: relative;
+      top: @font-size-large / 4;
+
+      font-size: @font-size-large * 1.5;
+    }
+
+    .close {
+      border-radius: @border-radius-small;
+      float: none;
+      margin-left: @alert-padding;
+      padding: 6px 8px;
+
+      font-size: @font-size-small;
+      text-shadow: none;
+    }
+
+    &.alert-success {
+      .close {
+        .misago-alert-close(@alert-success-text, @alert-success-bg);
+      }
+    }
+
+    &.alert-info {
+      .close {
+        .misago-alert-close(@alert-info-text, @alert-info-bg);
+      }
+    }
+
+    &.alert-warning {
+      .close {
+        .misago-alert-close(@alert-warning-text, @alert-warning-bg);
+      }
+    }
+
+    &.alert-danger {
+      .close {
+        .misago-alert-close(@alert-danger-text, @alert-danger-bg);
+      }
+    }
+  }
+
+  &.alerts-fixed {
+    position: fixed;
+    top: @line-height-computed;
+    width: 100%;
+    z-index: @zindex-modal + 1;
+
+    .alert {
+      box-shadow: 0px 0px 0px 6px fadeOut(#000, 85%);
+    }
+  }
+}

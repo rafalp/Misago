@@ -129,6 +129,10 @@ USE_TZ = True
 TIME_ZONE = 'UTC'
 
 
+# Use Misago's CSRF Failure Page
+CSRF_FAILURE_VIEW = 'misago.core.errorpages.csrf_failure'
+
+
 # How many e-mails should be sent in single step.
 # This is used for conserving memory usage when mailing many users at same time
 
