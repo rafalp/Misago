@@ -11,7 +11,7 @@ from misago.users.utils import hash_email
 class UserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
         if not email:
-            raise ValueError(_('User must have an email address.'))
+            raise ValueError(_("User must have an email address."))
 
         now = timezone.now()
         user = self.model(is_staff=False, is_active=True, is_superuser=False,
