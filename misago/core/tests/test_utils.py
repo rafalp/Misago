@@ -48,6 +48,7 @@ class SlugifyTests(TestCase):
             (u'J0n', u'j0n'),
             (u'An###ne', u'anne'),
             (u'S**t', u'st'),
+            (u'Łók', u'lok'),
         )
 
         for original, slug in test_cases:

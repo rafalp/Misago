@@ -78,6 +78,7 @@ INSTALLED_APPS = (
     'floppyforms',
     'misago.core',
     'misago.conf',
+    'misago.users',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -129,8 +130,12 @@ USE_TZ = True
 TIME_ZONE = 'UTC'
 
 
-# Use Misago's CSRF Failure Page
+# Use Misago CSRF Failure Page
 CSRF_FAILURE_VIEW = 'misago.core.errorpages.csrf_failure'
+
+
+# Use Misago user model
+AUTH_USER_MODEL = 'users.User'
 
 
 # How many e-mails should be sent in single step.
