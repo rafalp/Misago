@@ -1,4 +1,6 @@
+from unidecode import unidecode
 from django.core.urlresolvers import reverse
+from django.template.defaultfilters import slugify as django_slugify
 
 
 def _is_request_path_under_misago(request):
@@ -17,3 +19,9 @@ def is_request_to_misago(request):
     except AttributeError:
         request._request_to_misago = _is_request_path_under_misago(request)
         return request._request_to_misago
+
+
+def slugify(string):
+    string = unicode(string)
+    string = unidecode(string)
+    return django_slugify(string.replace('_', ' '))
