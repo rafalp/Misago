@@ -8,7 +8,7 @@ Thread store lives in :py:mod:`misago.core.threadstore` and offers subset of sta
 
 
 get
----
+===
 
 .. function:: get(key, default=None)
 
@@ -26,7 +26,7 @@ get() never raises an exception for non-existant value which is why you should a
 
 
 set
----
+===
 
 .. function:: set(key, value)
 
@@ -34,7 +34,7 @@ Set value for a key on thread store. This value will then be stored until you ov
 
 
 clear
------
+=====
 
 .. function:: clear()
 
