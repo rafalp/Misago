@@ -41,3 +41,5 @@ Following references cover everything you want to know about writing your own ap
    cache
    cache_buster
    thread_store
+   validators
+   auth

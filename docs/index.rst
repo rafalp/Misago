@@ -30,3 +30,5 @@ Table of Contents
    developers/cache
    developers/cache_buster
    developers/thread_store
+   developers/validators
+   developers/auth
