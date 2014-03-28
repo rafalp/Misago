@@ -14,8 +14,8 @@ class UserManager(BaseUserManager):
             raise ValueError(_("User must have an email address."))
 
         now = timezone.now()
-        user = self.model(is_staff=False, is_active=True, is_superuser=False,
-                          last_login=now, joined_on=now, **extra_fields)
+        user = self.model(is_staff=False, is_superuser=False, last_login=now,
+                          joined_on=now, **extra_fields)
 
         user.set_username(username)
         user.set_email(email)
@@ -26,14 +26,19 @@ class UserManager(BaseUserManager):
     def create_superuser(self, username, email, password):
         user = self.create_user(username, email, password=password)
         user.is_staff = True
-        user.is_active = True
         user.is_superuser = True
         user.save(using=self._db)
         return user
 
+    def get_by_username(self, username):
+        return self.get(username_slug=slugify(username))
+
+    def get_by_email(self, email):
+        return self.get(email_hash=hash_email(email))
+
     def get_by_username_or_email(self, login):
         queryset = models.Q(username_slug=slugify(login))
-        queryset = queryset | models.Q(email_hash=hash_email(new_email))
+        queryset = queryset | models.Q(email_hash=hash_email(login))
         return self.get(queryset)
 
 

@@ -16,8 +16,8 @@ class Migration(DataMigration):
             {
                 'key': 'basic',
                 'name': _("Basic forum settings"),
-                'description': _("Those settings control most basic properties of "
-                                 "your forum like it's name or description."),
+                'description': _("Those settings control most basic properties "
+                                 "of your forum like it's name or description."),
                 'settings': (
                     {
                         'setting': 'forum_name',
