@@ -3,7 +3,7 @@ from south.utils import datetime_utils as datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
-from misago.conf.migrationutils import with_conf_models, migrate_settings_group
+from misago.conf.migrationutils import migrate_settings_group, with_conf_models
 from misago.core.migrationutils import ugettext_lazy as _
 
 
@@ -137,7 +137,7 @@ class Migration(DataMigration):
                         'field_extra': {
                             'choices': (
                                 ('no', _("Don't watch")),
-                                ('watch', _("Put on watched threads list")),
+                                ('', _("Put on watched threads list")),
                                 ('watch_email', _("Put on watched threads "
                                                   "list and e-mail user when "
                                                   "somebody replies")),
@@ -152,7 +152,7 @@ class Migration(DataMigration):
                         'field_extra': {
                             'choices': (
                                 ('no', _("Don't watch")),
-                                ('watch', _("Put on watched threads list")),
+                                ('', _("Put on watched threads list")),
                                 ('watch_email', _("Put on watched threads "
                                                   "list and e-mail user when "
                                                   "somebody replies")),

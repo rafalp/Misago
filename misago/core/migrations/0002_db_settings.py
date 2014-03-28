@@ -3,7 +3,7 @@ from south.utils import datetime_utils as datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
-from misago.conf.migrationutils import with_conf_models, migrate_settings_group
+from misago.conf.migrationutils import migrate_settings_group, with_conf_models
 from misago.core.migrationutils import ugettext_lazy as _
 
 
