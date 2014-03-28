@@ -4,7 +4,6 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.core.utils import slugify
-from misago.core.validators import validate_sluggable
 from misago.users.utils import hash_email
 
 

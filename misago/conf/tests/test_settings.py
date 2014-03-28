@@ -48,8 +48,8 @@ class GatewaySettingsTests(TestCase):
                     'name': "Fish's name",
                     'value': "Greedy Eric",
                     'field_extra': {
-                           'min_length': 2,
-                           'max_length': 255
+                            'min_length': 2,
+                            'max_length': 255
                         },
                     'is_lazy': False
                 },
@@ -58,8 +58,8 @@ class GatewaySettingsTests(TestCase):
                     'name': "Fish's name",
                     'value': "Lazy Eric",
                     'field_extra': {
-                           'min_length': 2,
-                           'max_length': 255
+                            'min_length': 2,
+                            'max_length': 255
                         },
                     'is_lazy': True
                 },
@@ -67,8 +67,8 @@ class GatewaySettingsTests(TestCase):
                     'setting': 'lazy_empty_setting',
                     'name': "Fish's name",
                     'field_extra': {
-                           'min_length': 2,
-                           'max_length': 255
+                            'min_length': 2,
+                            'max_length': 255
                         },
                     'is_lazy': True
                 },
@@ -80,11 +80,11 @@ class GatewaySettingsTests(TestCase):
         self.assertTrue(gateway.lazy_fish_name)
         self.assertTrue(db_settings.lazy_fish_name)
 
-        self.assertTrue(gateway.lazy_fish_name == True)
-        self.assertTrue(db_settings.lazy_fish_name == True)
+        self.assertTrue(gateway.lazy_fish_name)
+        self.assertTrue(db_settings.lazy_fish_name)
 
-        self.assertTrue(gateway.lazy_empty_setting == None)
-        self.assertTrue(db_settings.lazy_empty_setting == None)
+        self.assertTrue(gateway.lazy_empty_setting is None)
+        self.assertTrue(db_settings.lazy_empty_setting is None)
         db_settings.get_lazy_setting('lazy_fish_name')
         with self.assertRaises(ValueError):
             db_settings.get_lazy_setting('fish_name')

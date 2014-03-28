@@ -51,14 +51,12 @@ def migrate_settings_group(orm, group_fixture, old_group_key=None):
         else:
             custom_settings_values = {}
 
-
     # Update group's attributes
 
     group.key = group_fixture['key']
     group.name = group_fixture['name']
     group.description = group_fixture.get('description')
     group.save()
-
 
     # Delete groups settings and make new ones
     # Its easier to create news ones and then assign them old values
