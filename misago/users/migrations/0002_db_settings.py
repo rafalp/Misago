@@ -85,7 +85,7 @@ class Migration(DataMigration):
                         'field_extra': {
                             'choices': (
                                 ('case', _("Require mixed Case")),
-                                ('digits', _("Require digits")),
+                                ('alphanumerics', _("Require alphanumeric characters")),
                                 ('special', _("Require special characters"))
                             ),
                         },
@@ -118,7 +118,7 @@ class Migration(DataMigration):
                         },
                     },
                     {
-                        'setting': 'upload_limit',
+                        'setting': 'avatar_upload_limit',
                         'name': _("Maximum size of uploaded avatar"),
                         'description': _("Enter maximum allowed file size "
                                          "(in KB) for avatar uploads"),
@@ -132,30 +132,30 @@ class Migration(DataMigration):
                         'setting': 'subscribe_start',
                         'name': _("Subscribe to started threads"),
                         'legend': _("Default subscriptions settings"),
-                        'python_type': 'int',
-                        'value': 2,
+                        'value': 'watch_email',
                         'form_field': 'select',
                         'field_extra': {
                             'choices': (
-                                (0, _("Don't watch")),
-                                (1, _("Put on watched threads list")),
-                                (2, _("Put on watched threads list and "
-                                      "e-mail user when somebody replies")),
+                                ('no', _("Don't watch")),
+                                ('watch', _("Put on watched threads list")),
+                                ('watch_email', _("Put on watched threads "
+                                                  "list and e-mail user when "
+                                                  "somebody replies")),
                             ),
                         },
                     },
                     {
                         'setting': 'subscribe_reply',
                         'name': _("Subscribe to replied threads"),
-                        'python_type': 'int',
-                        'value': 2,
+                        'value': 'watch_email',
                         'form_field': 'select',
                         'field_extra': {
                             'choices': (
-                                (0, _("Don't watch")),
-                                (1, _("Put on watched threads list")),
-                                (2, _("Put on watched threads list and "
-                                      "e-mail user when somebody replies")),
+                                ('no', _("Don't watch")),
+                                ('watch', _("Put on watched threads list")),
+                                ('watch_email', _("Put on watched threads "
+                                                  "list and e-mail user when "
+                                                  "somebody replies")),
                             ),
                         },
                     },
