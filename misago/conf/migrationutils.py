@@ -3,6 +3,7 @@ from importlib import import_module
 from misago.conf.dbsettings import CACHE_KEY
 from misago.conf.hydrators import dehydrate_value
 from misago.core.cache import cache as default_cache
+from misago.core.migrationutils import original_message
 try:
     import cPickle as pickle
 except ImportError:
@@ -54,8 +55,8 @@ def migrate_settings_group(orm, group_fixture, old_group_key=None):
     # Update group's attributes
 
     group.key = group_fixture['key']
-    group.name = group_fixture['name']
-    group.description = group_fixture.get('description')
+    group.name = original_message(group_fixture['name'])
+    group.description = original_message(group_fixture.get('description'))
     group.save()
 
     # Delete groups settings and make new ones
@@ -66,6 +67,20 @@ def migrate_settings_group(orm, group_fixture, old_group_key=None):
     for order, setting_fixture in enumerate(group_fixture['settings']):
         setting_fixture['group'] = group
         setting_fixture['order'] = order
+
+        setting_fixture['name'] = original_message(setting_fixture['name'])
+        setting_fixture['description'] = original_message(
+            setting_fixture.get('description'))
+
+        if (setting_fixture.get('field_extra') and
+                setting_fixture.get('field_extra').get('choices')):
+            untranslated_choices = setting_fixture['field_extra']['choices']
+            translated_choices = []
+            if untranslated_choices != '#TZ#':
+                for value, name in untranslated_choices:
+                    translated_choices.append((value, original_message(name)))
+            setting_fixture['field_extra']['choices'] = tuple(
+                translated_choices)
 
         try:
             value = custom_settings_values[setting_fixture['setting']]

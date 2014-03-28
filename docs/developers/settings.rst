@@ -52,10 +52,43 @@ Each dict in ``settings`` tuple should define following keys:
 * **field_extra** - dict that defines extra attributes of form field. For "select", "radio" and "checkbox" fields this dict should contain "choices" key with tuple of tuples that will be used for choices in input. For "string" settings you can define "min_length" and "max_length" extra specifying minmal and maximal lenght of entered text. For integer settings you can specify minimal and maximal range in which value should fall by "min_value" and "max_value".
 
 
+.. note::
+   If you wish to make your names and messages translateable, you should use ``ugettext_lazy`` function provided by Misago instead of Django one. This function is defined in ``misago.core.migrationutils`` module and differs from Django one by the fact that it preserves untranslated message on its ``message`` attribute.
+
+   For your convience ``migrate_settings_group`` triess to switch translation messages with their "message" attribute when it writes to database and thus making their translation to new languages in future possible.
+
+
 with_conf_models
 ----------------
 
+.. function:: with_conf_models(migration, this_migration=None)
 
+South migrations define special ``models`` attribute that holds dict representing structure of database at time of migration execution. This dict will by default contain only your apps models. To add settings models that ``migrate_settings_group`` requires to work, you have to use ``with_conf_models`` function. This function accepts two arguments:
+
+* **migration** - name of migration in ``misago.conf`` app containing models definitions current for the time of your data migration.
+* **this_migration** - dict with model definitions for this migration.
+
+In addition to this, make sure that your migration ``depends_on`` attribute defines dependency on migration from ``misago.conf`` app::
+
+    class Migration(DataMigration):
+
+    	# Migration code...
+
+        models = with_conf_models('0001_initial', {
+        	# This migration models
+        })
+
+        depends_on = (
+            ("conf", "0001_initial"),
+        )
+
+
+delete_settings_cache
+---------------------
+
+.. function:: delete_settings_cache()
+
+If you have used ``migrate_settings_group`` function in your migration, make sure to call ``delete_settings_cache`` at its end to flush settings caches.
 
 
 Misago Settings Reference
@@ -80,7 +113,7 @@ avatars_types
 
 List of avatar sources available to users:
 
-* **gravatar** -Gravatar.
+* **gravatar** - Gravatar.
 * **upload** - avatar uploads.
 * **gallery** - predefined gallery.
 

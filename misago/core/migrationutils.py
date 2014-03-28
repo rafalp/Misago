@@ -15,6 +15,13 @@ def ugettext_lazy(string):
     return t
 
 
+def original_message(string):
+    try:
+        return unicode(string.message)
+    except AttributeError:
+        return unicode(string)
+
+
 def with_core_models(migration, this_migration=None):
     module_name = 'misago.core.migrations.%s' % migration
     migration_module = import_module(module_name)
