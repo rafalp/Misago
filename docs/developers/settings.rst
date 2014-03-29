@@ -48,6 +48,8 @@ Each dict in ``settings`` tuple should define following keys:
 * **legend** - optional string indicating that before displaying this setting in form, new fieldset should be opened and this value should be used in its legend element.
 * **python_type** - optional string defining type of setting's value. Can be either "string", "int", "bool" or "list". If omitted "string" is used by default.
 * **value** - list, integer or string with default value for this setting.
+* **default_value** - if your setting should always have value, specify there fallabck value used if no user-defined value is available.
+* **is_lazy** - if setting value may too large to be always loaded into memory, you may make setting lazily loaded by defining this key with ``True`` value assigned.
 * **form_field** - What form field should be used to change this setting. Can be either "text", "textarea", "select", "radio", "yesno" or "checkbox". If not defined, "text" is used. "checkbox" should be used exclusively for multiple choices list.
 * **field_extra** - dict that defines extra attributes of form field. For "select", "radio" and "checkbox" fields this dict should contain "choices" key with tuple of tuples that will be used for choices in input. For "string" settings you can define "min_length" and "max_length" extra specifying minmal and maximal lenght of entered text. For integer settings you can specify minimal and maximal range in which value should fall by "min_value" and "max_value".
 

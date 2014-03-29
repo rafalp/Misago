@@ -93,6 +93,11 @@ def migrate_settings_group(orm, group_fixture, old_group_key=None):
 
         setting = orm['conf.Setting'](**setting_fixture)
         setting.dry_value = dehydrate_value(setting.python_type, value)
+
+        if setting_fixture.get("default_value"):
+            setting.default_value = dehydrate_value(
+                setting.python_type, setting_fixture.get("default_value"))
+
         if field_extra:
             pickled_extra = pickle.dumps(field_extra, pickle.HIGHEST_PROTOCOL)
             setting.pickled_field_extra = base64.encodestring(pickled_extra)
