@@ -72,10 +72,10 @@ In addition to this, make sure that your migration ``depends_on`` attribute defi
 
     class Migration(DataMigration):
 
-    	# Migration code...
+        # Migration code...
 
         models = with_conf_models('0001_initial', {
-        	# This migration models
+            # This migration models
         })
 
         depends_on = (
