@@ -18,6 +18,16 @@ class LazyTranslationStringTests(TestCase):
         self.assertEqual(unicode(string), 'Inhaltstyp')
 
 
+class OriginalMessageTests(TestCase):
+    def test_original_message(self):
+        """original_message returns untranslated message for misago messages"""
+        string = migrationutils.ugettext_lazy('content type')
+
+        self.assertEqual(migrationutils.original_message(string),
+                         string.message)
+        self.assertEqual("Lorem ipsum", "Lorem ipsum")
+
+
 class CacheBusterUtilsTests(TestCase):
     def setUp(self):
         self.orm = {
