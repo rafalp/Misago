@@ -30,6 +30,10 @@ pip-delete-this-directory.txt
 nosetests.xml
 coverage.xml
 
+# Flake8 reports
+report.txt
+flake8.txt
+
 # Translations
 *.mo
 
