@@ -1,4 +1,4 @@
-from django.shortcuts import *
+from django.shortcuts import *  # noqa
 
 
 def paginate(object_list, page, per_page, orphans=0,

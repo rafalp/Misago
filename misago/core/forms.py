@@ -1,4 +1,4 @@
-from floppyforms import *
+from floppyforms import *  # noqa
 from floppyforms import Form as BaseForm, ModelForm as BaseModelForm
 
 

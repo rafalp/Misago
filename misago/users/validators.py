@@ -96,6 +96,8 @@ def _validate_password_case(value):
 
 
 ALPHANUMERICS_RE = re.compile('[\W_]+', re.UNICODE)
+
+
 def _validate_password_special(value):
     alphanumerics_len = len(ALPHANUMERICS_RE.sub('', value))
 

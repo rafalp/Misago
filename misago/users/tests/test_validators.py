@@ -5,7 +5,6 @@ from django.test import TestCase
 from misago.conf import settings
 from misago.users.validators import (validate_email, validate_email_available,
                                      validate_password,
-                                     validate_password_complexity,
                                      validate_password_length,
                                      _validate_password_alphanumerics,
                                      _validate_password_case,
