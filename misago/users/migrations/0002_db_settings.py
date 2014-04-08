@@ -70,7 +70,7 @@ class Migration(DataMigration):
                         'name': _("Minimum user password length"),
                         'legend': _("Passwords"),
                         'python_type': 'int',
-                        'value': 3,
+                        'value': 5,
                         'field_extra': {
                             'min_value': 2,
                             'max_value': 255,
