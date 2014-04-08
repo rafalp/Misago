@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
                                         UserManager as BaseUserManager)
 from django.db import models
@@ -5,12 +6,21 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.core.utils import slugify
 from misago.users.utils import hash_email
+from misago.users.validators import (validate_email, validate_password,
+                                     validate_username)
 
 
 class UserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
         if not email:
             raise ValueError(_("User must have an email address."))
+
+        try:
+            validate_username(username)
+            validate_email(email)
+            validate_password(password)
+        except ValidationError as e:
+            raise ValueError(unicode(e))
 
         now = timezone.now()
         user = self.model(is_staff=False, is_superuser=False, last_login=now,
