@@ -1,8 +1,11 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 
+# Setup Django admin to work with Misago auth
 from django.contrib import admin
+from misago.users.forms.auth import AdminAuthenticationForm
 admin.autodiscover()
+admin.site.login_form = AdminAuthenticationForm
 
 urlpatterns = patterns('',
     url(r'^', include('misago.urls', namespace='misago')),
