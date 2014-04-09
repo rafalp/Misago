@@ -3,7 +3,7 @@ from floppyforms import Form as BaseForm, ModelForm as BaseModelForm
 
 
 class AutoStripWhitespacesMixin(object):
-    autostrip_exclude = None
+    autostrip_exclude = []
 
     def full_clean(self):
         self.data = self.data.copy()
