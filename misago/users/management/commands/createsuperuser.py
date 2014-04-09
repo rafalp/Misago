@@ -13,6 +13,7 @@ from django.utils.six.moves import input
 from misago.users.validators import (validate_email, validate_username,
                                      validate_password)
 
+
 class NotRunningInTTYException(Exception):
     pass
 
@@ -32,9 +33,9 @@ class Command(BaseCommand):
                 help='Specifies the username for the superuser.'),
             make_option('--noinput', action='store_false', dest='interactive', default=True,
                 help=('Tells Miago to NOT prompt the user for input of any kind. '
-                    'You must use --username with --noinput, along with an option for '
-                    'any other required field. Superusers created with --noinput will '
-                    ' not be able to log in until they\'re given a valid password.')),
+                      'You must use --username with --noinput, along with an option for '
+                      'any other required field. Superusers created with --noinput will '
+                      ' not be able to log in until they\'re given a valid password.')),
             make_option('--database', action='store', dest='database',
                 default=DEFAULT_DB_ALIAS, help='Specifies the database to use. Default is "default".'),
         )
