@@ -134,8 +134,12 @@ TIME_ZONE = 'UTC'
 CSRF_FAILURE_VIEW = 'misago.core.errorpages.csrf_failure'
 
 
-# Use Misago user model
+# Use Misago authentication
 AUTH_USER_MODEL = 'users.User'
+
+AUTHENTICATION_BACKENDS = (
+    'misago.users.authbackends.MisagoBackend',
+)
 
 
 # How many e-mails should be sent in single step.
