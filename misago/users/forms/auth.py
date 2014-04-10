@@ -40,9 +40,14 @@ class AuthenticationForm(forms.Form, BaseAuthenticationForm):
 class AdminAuthenticationForm(AuthenticationForm):
     required_css_class = 'required'
 
+    def __init__(self, *args, **kwargs):
+        self.error_messages.update({
+            'not_staff': _("Your account does not have admin privileges.")
+            })
+
     def confirm_login_allowed(self, user):
-        if not user.is_active or not user.is_staff:
+        if not user.is_staff:
             raise forms.ValidationError(
-                self.error_messages['invalid_login'],
-                code='invalid_login',
+                self.error_messages['not_staff'],
+                code='not_staff',
             )

@@ -14,6 +14,8 @@ class UserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
         if not email:
             raise ValueError(_("User must have an email address."))
+        if not password:
+            raise ValueError(_("User must have a password."))
 
         validate_username(username)
         validate_email(email)
