@@ -49,6 +49,7 @@ class Command(BaseCommand):
         email = options.get('email')
         password = options.get('password')
         interactive = options.get('interactive')
+        verbosity = int(options.get('verbosity', 1))
 
         # Validate initial inputs
         if username is not None:
@@ -78,7 +79,7 @@ class Command(BaseCommand):
         if not interactive:
             if username and email and password:
                 # Call User manager's create_superuser using our wrapper
-                self.create_superuser(username, email, password)
+                self.create_superuser(username, email, password, verbosity)
         else:
             try:
                 if hasattr(self.stdin, 'isatty') and not self.stdin.isatty():
@@ -117,7 +118,7 @@ class Command(BaseCommand):
                         self.stderr.write(e.messages[0])
 
                 # Call User manager's create_superuser using our wrapper
-                self.create_superuser(username, email, password)
+                self.create_superuser(username, email, password, verbosity)
 
             except KeyboardInterrupt:
                 self.stderr.write("\nOperation cancelled.")
@@ -129,13 +130,14 @@ class Command(BaseCommand):
                     "to create one manually."
                 )
 
-    def create_superuser(self, username, email, password):
+    def create_superuser(self, username, email, password, verbosity):
         try:
             User = get_user_model()
             user = User.objects.create_superuser(username, email, password)
 
-            message = "Superuser #%(pk)s has been created successfully."
-            self.stdout.write(message % {'pk': user.pk})
+            if verbosity >= 1:
+                message = "Superuser #%(pk)s has been created successfully."
+                self.stdout.write(message % {'pk': user.pk})
         except ValidationError as e:
             self.stderr.write(e.messages[0])
         except IntegrityError as e:

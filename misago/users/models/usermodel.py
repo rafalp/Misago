@@ -15,12 +15,9 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError(_("User must have an email address."))
 
-        try:
-            validate_username(username)
-            validate_email(email)
-            validate_password(password)
-        except ValidationError as e:
-            raise ValueError(unicode(e))
+        validate_username(username)
+        validate_email(email)
+        validate_password(password)
 
         now = timezone.now()
         user = self.model(is_staff=False, is_superuser=False, last_login=now,
@@ -36,7 +33,7 @@ class UserManager(BaseUserManager):
         user = self.create_user(username, email, password=password)
         user.is_staff = True
         user.is_superuser = True
-        user.save(using=self._db)
+        user.save(update_fields=['is_staff', 'is_superuser'], using=self._db)
         return user
 
     def get_by_username(self, username):
