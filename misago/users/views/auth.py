@@ -19,4 +19,4 @@ def login(request):
 @csrf_protect
 @never_cache
 def logout(request):
-    raise NotImplementedError()
+    return redirect('misago:index')
