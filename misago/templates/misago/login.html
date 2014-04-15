@@ -8,6 +8,53 @@
 
 {% block content %}
 <div class="container">
-  Hello world, I'm placeholder signin page!
+
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+
+      <div class="form-panel">
+        <form method="POST" role="form">
+          {% csrf_token %}
+
+          <div class="form-header">
+            <h1>{% trans "Sign in" %}</h1>
+          </div>
+
+          <div class="form-body no-fieldsets">
+
+            <div class="form-group">
+              <label for="inputEmail3" class="control-label">Email</label>
+              <div class="control-input">
+                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputPassword3" class="control-label">Password</label>
+              <div class="control-input">
+                <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+              </div>
+            </div>
+
+          </div>
+
+          <div class="form-footer">
+            <button class="btn btn-primary">{% trans "Sign in" %}</button>
+
+            <div class="extra">
+              <h4>Need help?</h4>
+              <ul class="list-unstyled">
+                <li><a href="#">I don't remember my password</a></li>
+                <li><a href="#">My account is inactive</a></li>
+                <li><a href="#">I don't have account</a></li>
+              </ul>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 {% endblock content %}
