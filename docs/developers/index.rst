@@ -35,6 +35,7 @@ Following references cover everything you want to know about writing your own ap
    shortcuts
    views_errors
    forms
+   decorators
    settings
    context_processors
    mails
