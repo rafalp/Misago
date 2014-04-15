@@ -1,5 +1,6 @@
 from django.shortcuts import render
 
+
 def require_POST(f):
     def decorator(request, *args, **kwargs):
         if not request.method == 'POST':
