@@ -1,6 +1,6 @@
-=================
-Misago Validators
-=================
+==========
+Validators
+==========
 
 Misago apps implement plenty of validators, some of which are considered public API. Those validators are per convention contained within ``validators`` module of their respective apps.
 
@@ -38,7 +38,7 @@ Function that takes email address and runs content, availability and ban check v
 validate_email_banned
 ---------------------
 
-:py:class:`misago.users.validators.validate_email_banned`
+:py:function:`misago.users.validators.validate_email_banned`
 
 Function that accepts email string as its only argument and raises Validation error if it's banned.
 
@@ -54,7 +54,7 @@ Callable instance of :py:class:`django.core.validators.EmailValidator` that chec
 validate_password
 -----------------
 
-:py:class:`misago.users.validators.validate_password`
+:py:function:`misago.users.validators.validate_password`
 
 Function that takes plaintext password and runs length and complexity validation in this order via calling dedicated validators.
 
@@ -62,7 +62,7 @@ Function that takes plaintext password and runs length and complexity validation
 validate_password_complexity
 ----------------------------
 
-:py:class:`misago.users.validators.validate_password_complexity`
+:py:function:`misago.users.validators.validate_password_complexity`
 
 Validates password complexity against tests specified in ``password_complexity`` setting.
 
@@ -70,7 +70,7 @@ Validates password complexity against tests specified in ``password_complexity``
 validate_password_length
 ------------------------
 
-:py:class:`misago.users.validators.validate_password_length`
+:py:function:`misago.users.validators.validate_password_length`
 
 Validates password length and raises ValidationError if specified plaintext password is shorter than ``password_length_min``.
 
@@ -78,7 +78,7 @@ Validates password length and raises ValidationError if specified plaintext pass
 validate_username
 -----------------
 
-:py:class:`misago.users.validators.validate_username`
+:py:function:`misago.users.validators.validate_username`
 
 Function that takes username and runs content, length, availability and ban check validation in this order via calling dedicated validators.
 
@@ -86,7 +86,7 @@ Function that takes username and runs content, length, availability and ban chec
 validate_username_available
 ---------------------------
 
-:py:class:`misago.users.validators.validate_username_available`
+:py:function:`misago.users.validators.validate_username_available`
 
 Function that accepts username string as its only argument and raises ValidationError if it's already taken.
 
@@ -94,7 +94,7 @@ Function that accepts username string as its only argument and raises Validation
 validate_username_banned
 ------------------------
 
-:py:class:`misago.users.validators.validate_username_banned`
+:py:function:`misago.users.validators.validate_username_banned`
 
 Function that accepts username string as its only argument and raises Validation error if it's banned.
 
@@ -102,7 +102,7 @@ Function that accepts username string as its only argument and raises Validation
 validate_username_content
 -------------------------
 
-:py:class:`misago.users.validators.validate_username_content`
+:py:function:`misago.users.validators.validate_username_content`
 
 Function that accepts username string as its only argument and raises Validation error if username contains disallowed characters (eg. those that are not matched by ``[0-9a-z]+`` regex).
 
@@ -110,6 +110,6 @@ Function that accepts username string as its only argument and raises Validation
 validate_username_length
 ------------------------
 
-:py:class:`misago.users.validators.validate_username_length`
+:py:function:`misago.users.validators.validate_username_length`
 
 Function that accepts username string as its only argument and raises Validation error if it's shorter than ``username_length_min`` setting or longer than ``username_length_max`` setting.

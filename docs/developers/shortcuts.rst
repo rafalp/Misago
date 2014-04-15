@@ -1,6 +1,6 @@
-=========================
-Misago Shortcut Functions
-=========================
+==================
+Shortcut Functions
+==================
 
 Just like `Django <https://docs.djangoproject.com/en/dev/topics/http/shortcuts/>`_, Misago defines shortcuts module that reduce some procedures to single functions.
 

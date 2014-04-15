@@ -1,6 +1,6 @@
-========================
-Views Errors Boilerplate
-========================
+==================
+Errors Boilerplate
+==================
 
 Modern forum software is busy place where access content is decided by many factors. This means that your users may frequently be trying to follow links that has been outdated, deleted or simply restricted and each of those scenarios must be handled by your views.
 

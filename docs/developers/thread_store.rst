@@ -1,6 +1,6 @@
-===================
-Misago Thread Store
-===================
+============
+Thread Store
+============
 
 Thread store is simple memory-based cache some Misago features use to maintain state for request duration.
 
