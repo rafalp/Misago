@@ -17,7 +17,7 @@
       {% if user.is_authenticated %}
       {% else %}
       <div class="navbar-nav-guest navbar-right">
-        <a href="#" class="btn btn-sign-in navbar-btn">{% trans "Sign in" %}</a>
+        <a href="{% url 'misago:login' %}" class="btn btn-sign-in navbar-btn">{% trans "Sign in" %}</a>
         <a href="#" class="btn btn-register navbar-btn">{% trans "Register" %}</a>
       </div>
       {% endif %}

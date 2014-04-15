@@ -4,7 +4,7 @@ from misago.core.utils import is_request_to_misago
 
 def _error_page(request, code, message=None):
     response = render(request,
-                      'misago/%s.html' % code,
+                      'misago/errorpages/%s.html' % code,
                       {'message': message})
     response.status_code = code
     return response

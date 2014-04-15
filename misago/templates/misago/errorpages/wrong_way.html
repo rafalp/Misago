@@ -1,0 +1,24 @@
+{% extends "misago/base.html" %}
+
+{% load i18n %}
+
+
+{% block title %}{% trans "Wrong way" %} | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+<div class="container">
+
+  <div class="error-message">
+
+    <div class="error-icon">
+      <span class="fa fa-road"></span>
+    </div>
+
+    <h1>{% trans "Page reached in wrong way." %}</h1>
+    <p>{% trans "This page should be reached via form submission or pressing button." %}</p>
+
+  </div>
+
+</div>
+{% endblock content %}
