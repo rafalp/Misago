@@ -6,6 +6,9 @@
 {% block title %}{% trans "Page not available" %} | {{ block.super }}{% endblock %}
 
 
+{% block meta_description %}{% if message %}{{ message }}{% else %}{% trans "You don't have permission to access this page." %}{% endif %}{% endblock meta_description %}
+
+
 {% block content %}
 <div class="container">
 
