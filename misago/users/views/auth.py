@@ -40,7 +40,7 @@ def logout(request):
     message = _("%(username)s, you have been signed out.")
     messages.info(
         request, message % {'username': request.user.username})
-    auth_logout(request)
+    auth.logout(request)
     return redirect('misago:index')
 
 
