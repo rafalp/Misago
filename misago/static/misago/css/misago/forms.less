@@ -52,13 +52,14 @@
   .form-body {
     fieldset, &.no-fieldsets {
       margin: 0px;
-      padding-bottom: @form-panel-padding-vertical;
+      padding-bottom: @line-height-computed * .25;
 
       legend {
         border-top: 1px solid @form-panel-border;
         border-bottom: 0px;
         padding: @form-panel-padding;
         padding-bottom: 0px;
+        margin-bottom: @line-height-computed * .6;
 
         font-size: @font-size-large;
       }
@@ -77,8 +78,9 @@
 
     &.no-fieldsets {
       border-top: 1px solid @form-panel-border;
-      padding: @form-panel-padding;
-      padding-top: @line-height-computed + @form-panel-padding-vertical;
+      padding: 0px;
+      padding-top: @line-height-computed;
+      padding-bottom: @line-height-computed * .25;
     }
   }
 }
