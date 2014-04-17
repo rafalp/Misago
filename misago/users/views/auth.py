@@ -39,7 +39,7 @@ def login(request):
 def logout(request):
     message = _("%(username)s, you have been signed out.")
     messages.info(
-        request, message % {'username': form.user_cache.username})
+        request, message % {'username': request.user.username})
     auth_logout(request)
     return redirect('misago:index')
 

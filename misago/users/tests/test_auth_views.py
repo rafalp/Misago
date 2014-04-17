@@ -11,7 +11,7 @@ class LoginViewTests(TestCase):
     def test_view_post_returns_200(self):
         """login view returns 200 on POST"""
         response = self.client.post(
-            reverse('misago:login')
+            reverse('misago:login'),
             data={'username': 'nope', 'password': 'nope'})
 
         self.assertEqual(response.status_code, 200)
@@ -24,7 +24,7 @@ class LoginViewTests(TestCase):
         User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
         response = self.client.post(
-            reverse('misago:login')
+            reverse('misago:login'),
             data={'username': 'Bob', 'password': 'Pass.123'})
 
         self.assertEqual(response.status_code, 301)
