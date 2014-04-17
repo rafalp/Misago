@@ -141,8 +141,12 @@ AUTHENTICATION_BACKENDS = (
     'misago.users.authbackends.MisagoBackend',
 )
 
-
 # How many e-mails should be sent in single step.
 # This is used for conserving memory usage when mailing many users at same time
 
 MISAGO_MAILER_BATCH_SIZE = 20
+
+# Auth paths
+LOGIN_REDIRECT_URL = 'misago:index'
+LOGIN_URL = 'misago:login'
+LOGOUT_URL = 'misago:logout'
