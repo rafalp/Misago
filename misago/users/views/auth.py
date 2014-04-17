@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.cache import never_cache
@@ -18,7 +19,7 @@ def login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            pass
+            request.session.pop('login_ban', None)
 
     return render(request, 'misago/login.html', {'form': form})
 
@@ -29,3 +30,13 @@ def login(request):
 @never_cache
 def logout(request):
     return redirect('misago:index')
+
+
+@never_cache
+def login_banned(request):
+    try:
+        ban = request.session.['login_ban']
+    except KeyError:
+        Http404()
+
+    return render(request, 'misago/errorpages/banned.html', {'ban': ban})

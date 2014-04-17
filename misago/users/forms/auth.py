@@ -19,7 +19,8 @@ class AuthenticationForm(forms.Form, BaseAuthenticationForm):
 
     error_messages = {
         'empty_data': _("You have to fill out both fields."),
-        'invalid_login': _("Your login or password is incorrect. Please try again."),
+        'invalid_login': _("Your login or password is incorrect. "
+                           "Please try again."),
         'inactive': _("This account is inactive."),
     }
 
@@ -44,6 +45,10 @@ class AuthenticationForm(forms.Form, BaseAuthenticationForm):
             )
 
         return self.cleaned_data
+
+    def confirm_login_allowed(self, user):
+        # TODO: CHECK ACTIVATION AND BANS
+        pass
 
 
 class AdminAuthenticationForm(AuthenticationForm):
