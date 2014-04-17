@@ -22,14 +22,20 @@
 
           <div class="form-body no-fieldsets">
 
+            {% for error in form.non_field_errors %}
+            <p class="lead text-center text-danger">
+              {{ error }}
+            </p>
+            {% endfor %}
+
             <div class="form-group">
               <div class="control-input">
-                <input type="email" class="form-control input-lg" placeholder="{% trans "Username or e-mail" %}">
+                <input type="text" name="username" class="form-control input-lg" placeholder="{% trans "Username or e-mail" %}" {% if form.username.value %}value="{{ form.username.value }}"{% endif %}>
               </div>
             </div>
             <div class="form-group">
               <div class="control-input">
-                <input type="password" class="form-control input-lg" placeholder="{% trans "Password" %}">
+                <input type="password" name="password" class="form-control input-lg" placeholder="{% trans "Password" %}">
               </div>
             </div>
 

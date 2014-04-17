@@ -11,10 +11,14 @@ class AuthenticationForm(forms.Form, BaseAuthenticationForm):
     Base class for authenticating users, Floppy-forms and
     Misago login field comliant
     """
-    username = forms.CharField(label=_("Username or e-mail"), max_length=254)
-    password = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
+    username = forms.CharField(label=_("Username or e-mail"),
+                               required=False,
+                               max_length=254)
+    password = forms.CharField(label=_("Password"), required=False,
+                               widget=forms.PasswordInput)
 
     error_messages = {
+        'empty_data': _("You have to fill out both fields."),
         'invalid_login': _("Your login or password is incorrect. Please try again."),
         'inactive': _("This account is inactive."),
     }
@@ -33,6 +37,11 @@ class AuthenticationForm(forms.Form, BaseAuthenticationForm):
                 )
             else:
                 self.confirm_login_allowed(self.user_cache)
+        else:
+            raise ValidationError(
+                self.error_messages['empty_data'],
+                code='empty_data',
+            )
 
         return self.cleaned_data
 
@@ -44,6 +53,8 @@ class AdminAuthenticationForm(AuthenticationForm):
         self.error_messages.update({
             'not_staff': _("Your account does not have admin privileges.")
             })
+
+        super(AdminAuthenticationForm, self).__init__(*args, **kwargs)
 
     def confirm_login_allowed(self, user):
         if not user.is_staff:
