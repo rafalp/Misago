@@ -23,9 +23,11 @@
           <div class="form-body no-fieldsets">
 
             {% for error in form.non_field_errors %}
-            <p class="lead text-center text-danger">
-              {{ error }}
-            </p>
+            <div class="misago-alerts">
+              <p class="alert alert-danger lead">
+                {{ error }}
+              </p>
+            </div>
             {% endfor %}
 
             <div class="form-group">
