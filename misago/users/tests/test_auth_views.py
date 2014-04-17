@@ -16,7 +16,7 @@ class LoginViewTests(TestCase):
             data={'username': 'nope', 'password': 'nope'})
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn(response.content, "Your login or password is incorrect.")
+        self.assertIn("Your login or password is incorrect.", response.content)
 
     def test_view_post_creds_returns_200(self):
         """login view returns 200 on POST with signin credentials"""
@@ -28,4 +28,4 @@ class LoginViewTests(TestCase):
             reverse('misago:login'),
             data={'username': 'Bob', 'password': 'Pass.123'})
 
-        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.status_code, 302)
