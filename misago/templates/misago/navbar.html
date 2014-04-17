@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load misago_avatars %}
 <nav class="navbar navbar-default navbar-static-top" role="navigation">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -15,7 +16,53 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse">
       {% if user.is_authenticated %}
-      BLAM UR AUTHENTICATED
+      <ul class="nav navbar-nav navbar-nav-user navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle user-toggle" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-chevron-down"></span>
+            <img src="{{ user|avatar:30 }}" alt="{% trans "Your avatar" %}">
+            {{ user.username }}
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="#">
+                <span class="fa fa-plane"></span>
+                Action
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <span class="badge pull-right">42</span>
+                <span class="fa fa-plane"></span>
+                Another action
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <span class="fa fa-plane"></span>
+                Something else here
+              </a>
+            </li>
+            <li class="divider"></li>
+            <li>
+              <a href="#">
+                <span class="fa fa-plane"></span>
+                Separated link
+              </a>
+            </li>
+            <li class="divider"></li>
+            <li>
+              <form action="{% url LOGOUT_URL %}" method="POST">
+                {% csrf_token %}
+                <button>
+                  <span class="fa fa-power-off"></span>
+                  {% trans "Sign out" %}
+                </button>
+              </form>
+            </li>
+          </ul>
+        </li>
+      </ul>
       {% else %}
       <div class="navbar-nav-guest navbar-right">
         <a href="{% url LOGIN_URL %}" class="btn btn-sign-in navbar-btn">{% trans "Sign in" %}</a>
