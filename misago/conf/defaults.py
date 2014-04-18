@@ -150,3 +150,8 @@ MISAGO_MAILER_BATCH_SIZE = 20
 LOGIN_REDIRECT_URL = 'misago:index'
 LOGIN_URL = 'misago:login'
 LOGOUT_URL = 'misago:logout'
+
+# Misago Admin Path
+# Omit starting and trailing slashes
+# To disable Misago admin, empty this value
+MISAGO_ADMIN_PATH = 'admincp'
