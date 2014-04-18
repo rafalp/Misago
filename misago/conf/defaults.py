@@ -90,6 +90,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'misago.core.middleware.threadstore.ThreadStoreMiddleware',
     'misago.core.middleware.exceptionhandler.ExceptionHandlerMiddleware',
+    'misago.admin.middleware.AdminAuthMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -155,3 +156,9 @@ LOGOUT_URL = 'misago:logout'
 # Omit starting and trailing slashes
 # To disable Misago admin, empty this value
 MISAGO_ADMIN_PATH = 'admincp'
+
+# Admin urls namespaces that Misago's AdminAuthMiddleware should protect
+MISAGO_ADMIN_NAMESPACES = (
+    'admin',
+    'misago:admin',
+)
