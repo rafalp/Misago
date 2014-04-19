@@ -36,52 +36,11 @@
 //
 //## Navbar style
 
-@navbar-default-bg:                lighten(#bdc3c7, 18%);
-@navbar-default-border:            darken(@navbar-default-bg, 6.5%);
+@navbar-default-bg:                darken(@body-bg, 10%);
+@navbar-default-link-color:        fadeOut(@text-color, 80%);
 
-
-// Navbar brand
-@navbar-brand-size:                        @font-size-large * 1.6;
-
-@navbar-default-brand-color:               @text-color;
-@navbar-default-brand-hover-color:         @navbar-default-brand-color;
-
-
-// Navbar icon-based menu
-@navbar-icon-size:                      @navbar-height / 2.5;
-@navbar-icon-link-bg:                   transparent;
-@navbar-icon-link-border:               transparent;
-@navbar-icon-link-color:                #7f8c8d;
-
-@navbar-icon-link-hover-bg:             darken(#bdc3c7, 7%);
-@navbar-icon-link-hover-border:         transparent;
-@navbar-icon-link-hover-color:          #fff;
-
-@navbar-icon-link-active-bg:            #7f8c8d;
-@navbar-icon-link-active-border:        transparent;
-@navbar-icon-link-active-color:         #fff;
-
-
-// Only User dropdown switch uses those colors
-@navbar-user-name-color:                @gray;
-@navbar-user-name-hover-color:          @navbar-user-name-color;
-@navbar-user-name-active-color:         @navbar-user-name-color;
-
-@navbar-user-caret-color:              darken(@navbar-default-bg, 20%);
-@navbar-user-caret-hover-color:        darken(@navbar-default-bg, 40%);
-@navbar-user-caret-active-color:       @text-color;
-
-
-// Guest Sign in button
-@btn-signin-color:                 darken(@body-bg, 50%);
-@btn-signin-bg:                    @body-bg;
-@btn-signin-border:                darken(@btn-signin-bg, 15%);
-
-
-// Guest Register button
-@btn-register-color:                 #fff;
-@btn-register-bg:                    desaturate(@brand-danger, 15%);
-@btn-register-border:                darken(@btn-register-bg, 15%);
+@navbar-inverse-bg:                darken(@body-bg, 5%);
+@navbar-border:                    darken(@body-bg, 15%);
 
 
 //== Dropdowns
@@ -126,18 +85,6 @@
 //== Page header
 @page-header-border-color:       darken(@body-bg, 9%);
 @page-pills-padding:             @padding-small-vertical @padding-small-horizontal;
-
-
-//== Breadcrumbs
-//
-//##
-
-@breadcrumb-padding-vertical:   8px;
-@breadcrumb-padding-horizontal: 0px;
-
-@breadcrumb-bg:                 transparent;
-@breadcrumb-color:              darken(@body-bg, 40%);
-@breadcrumb-active-color:       @text-color;
 
 
 //== Page footer
