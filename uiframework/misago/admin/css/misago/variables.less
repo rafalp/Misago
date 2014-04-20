@@ -36,11 +36,21 @@
 //
 //## Navbar style
 
-@navbar-default-bg:                darken(@body-bg, 10%);
-@navbar-default-link-color:        fadeOut(@text-color, 80%);
+@navbar-inverse-bg:                        darken(@body-bg, 5%);
+@navbar-inverse-link-color:                darken(@navbar-inverse-bg, 30%);
+@navbar-inverse-link-hover-color:          darken(@navbar-inverse-bg, 60%);
+@navbar-inverse-link-hover-bg:             transparent;
+@navbar-inverse-link-active-color:         darken(@navbar-inverse-bg, 70%);
+@navbar-inverse-link-active-bg:            @navbar-inverse-bg;
 
-@navbar-inverse-bg:                darken(@body-bg, 5%);
-@navbar-border:                    darken(@body-bg, 15%);
+@navbar-default-bg:                        darken(@body-bg, 80%);
+@navbar-default-link-color:                #ccc;
+@navbar-default-link-hover-color:          #fff;
+@navbar-default-link-hover-bg:             lighten(@navbar-default-bg, 5%);
+@navbar-default-link-active-color:         darken(@navbar-inverse-bg, 70%);
+@navbar-default-link-active-bg:            @navbar-inverse-bg;
+
+@navbar-border:                            3px solid darken(@body-bg, 15%);
 
 
 //== Dropdowns
@@ -67,20 +77,6 @@
 //== Navs
 //
 //##
-
-// Shared navs styles
-@nav-link-color:                            darken(@body-bg, 35%);
-@nav-link-bg:                               transparent;
-
-@nav-link-hover-color:                      @text-color;
-@nav-link-hover-bg:                         darken(@body-bg, 5%);
-
-@nav-link-active-color:                     @body-bg;
-@nav-link-active-bg:                        @brand-primary;
-
-// Pills
-@nav-pills-active-link-hover-bg:            @component-active-bg;
-@nav-pills-active-link-hover-color:         @component-active-color;
 
 //== Page header
 @page-header-border-color:       darken(@body-bg, 9%);
