@@ -7,29 +7,34 @@
 //
 //## Basic colors for use in this flavor
 
-@brand-primary:         #3498db;
+@brand-primary:         #c0392b;
+@brand-secondary:       #3498db;
 @brand-success:         #2ecc71;
 @brand-info:            #5bc0de;
 @brand-warning:         #f0ad4e;
 @brand-danger:          #e74c3c;
 
 // Background color for `<body>`.
-@body-bg:               darken(#fff, 1%);
+@body-bg:               darken(#fff, 2%);
 // Global text color on `<body>`.
-@text-color:            #222;
+@text-color:            #444;
 
 // Headings color
 @headings-small-color:  darken(@body-bg, 30%);
 
 // Global textual link color.
-@link-color:            @brand-primary;
+@link-color:            @brand-secondary;
 @link-hover-color:      darken(@link-color, 15%);
 
 // Text muted color
 @text-muted:            darken(@body-bg, 40%);
 
-@link-muted-color:            darken(@body-bg, 65%);
-@link-muted-hover-color:      @link-color;
+@link-muted-color:            @gray;
+@link-muted-hover-color:      @gray-darker;
+
+// Components
+@component-active-bg:         @brand-secondary;
+@component-active-color:      #fff;
 
 
 //== Navbar
@@ -60,14 +65,14 @@
 // Dropdown link text color.
 @dropdown-link-color:            lighten(@text-color, 10%);
 // Hover color for dropdown links.
-@dropdown-link-hover-color:      @body-bg;
+@dropdown-link-hover-color:      #fff;
 // Hover background for dropdown links.
-@dropdown-link-hover-bg:         @brand-primary;
+@dropdown-link-hover-bg:         #666;
 
 // Active dropdown menu item text color.
-@dropdown-link-active-color:     @body-bg;
+@dropdown-link-active-color:     #fff;
 // Active dropdown menu item background color.
-@dropdown-link-active-bg:        @brand-primary;
+@dropdown-link-active-bg:        #333;
 
 
 // Open dropdown shadow color.
@@ -78,9 +83,47 @@
 //
 //##
 
+//=== Shared nav styles
+@nav-link-hover-bg:                         transparent;
+
+@nav-link-color:                            @gray-light;
+@nav-link-hover-color:                      @text-color;
+
+//== Tabs
+@nav-tabs-padding:                          10px 12px;
+@nav-tabs-border-color:                     #ddd;
+
+@nav-tabs-link-hover-border-color:          darken(@nav-tabs-border-color, 40%);
+@nav-tabs-link-active-border-color:         @brand-secondary;
+
+@nav-tabs-active-link-hover-bg:             transparent;
+@nav-tabs-active-link-hover-color:          @text-color;
+@nav-tabs-active-link-hover-border-color:   @brand-primary;
+
+@nav-tabs-justified-link-border-color:            #ddd;
+@nav-tabs-justified-active-link-border-color:     @body-bg;
+
+//== Pills
+@nav-pills-padding:                         8px 10px;
+@nav-pills-border-radius:                   @border-radius-base;
+@nav-pills-active-link-hover-bg:            #666;
+@nav-pills-active-link-hover-color:         #fff;
+
 //== Page header
 @page-header-border-color:       darken(@body-bg, 9%);
 @page-pills-padding:             @padding-small-vertical @padding-small-horizontal;
+
+
+//== Breadcrumbs
+//
+//##
+
+@breadcrumb-padding-vertical:   8px;
+@breadcrumb-padding-horizontal: 0px;
+
+@breadcrumb-bg:                 transparent;
+@breadcrumb-color:              darken(@body-bg, 40%);
+@breadcrumb-active-color:       @text-color;
 
 
 //== Page footer
@@ -113,7 +156,7 @@
 @btn-default-active-border:      #999;
 
 @btn-primary-color:              #fff;
-@btn-primary-bg:                 @brand-primary;
+@btn-primary-bg:                 @brand-secondary;
 @btn-primary-border:             darken(@btn-primary-bg, 15%);
 
 @btn-success-color:              #fff;
