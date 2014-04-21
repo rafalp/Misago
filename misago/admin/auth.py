@@ -8,7 +8,8 @@ def make_user_admin_token(user):
 
 
 def login(request, user):
-    pass
+    request.session['misago_admin_token'] = make_user_admin_token(user)
+    dj_auth.login(request, user)
 
 
 def logout(request):
@@ -16,7 +17,7 @@ def logout(request):
 
 
 def is_admin_session(request):
-    if request.user.is_anonymous:
+    if request.user.is_anonymous():
         return False
 
     if not (request.user.is_staff and request.user.is_superuser):

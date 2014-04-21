@@ -7,7 +7,6 @@
 //
 //##
 .page-header {
-	border-bottom-width: 2px;
   margin-top: @line-height-computed * -1;
 }
 
@@ -118,7 +117,7 @@
 }
 
 
-// Pills
+// Pills and Tabs
 //
 //##
 .page-pills {
@@ -128,35 +127,16 @@
 
   .nav-pills {
     margin: 0px;
+  }
+}
 
-    &>li {
-      &>a {
-        padding: @page-pills-padding;
+.page-tabs {
+  border-bottom: 2px solid @page-header-border-color;
+  margin: @line-height-computed * -1 0px @line-height-computed;
+  padding: 0px;
 
-        font-size: @font-size-large;
-
-        &>.badge {
-          border-radius: @border-radius-small;
-          position: relative;
-          bottom: 3px;
-        }
-
-        &:hover {
-          &>.badge {
-            background-color: @nav-link-hover-color;
-          }
-        }
-      }
-
-      &.active {
-        &>a {
-          &:link, &:active, &:visited, &:hover {
-            &>.badge {
-              background-color: @nav-link-active-color;
-            }
-          }
-        }
-      }
-    }
+  .nav-tabs {
+    margin: 0px;
+    margin-bottom: -2px;
   }
 }

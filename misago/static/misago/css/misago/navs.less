@@ -3,30 +3,117 @@
 // --------------------------------------------------
 
 
-.nav {
+/* Tabs */
+.nav-tabs {
+  border-bottom-width: 2px;
+
   &>li {
     &>a {
-      &:link, &:visited {
-        background-color: @nav-link-bg;
+      &:link, &:active, &:visited {
+        border: none;
+        border-radius: 0px;
+        margin-bottom: 1px;
+        padding: @nav-tabs-padding;
 
         color: @nav-link-color;
       }
 
-      &:hover, &:active {
-        background-color: @nav-link-hover-bg;
+      &:hover {
+        border: none;
+        border-bottom: 2px solid @nav-tabs-link-hover-border-color;
+        margin-bottom: -2px;
+        padding: @nav-tabs-padding;
 
         color: @nav-link-hover-color;
       }
-    }
 
-    &.active {
-      &>a {
-        &:link, &:active, &:hover, &:visited {
-          background-color: @nav-link-active-bg;
-
-          color: @nav-link-active-color;
-        }
+      &:active {
+        border-bottom-color: @nav-tabs-link-active-border-color
       }
+    }
+  }
+
+  &>li.active {
+    &>a {
+      &:link, &:active, a:hover, &:visited {
+        border: none;
+        border-radius: 0px;
+        border-bottom: 2px solid @nav-tabs-active-link-hover-border-color;
+        margin-bottom: -2px;
+        padding: @nav-link-padding;
+
+        color: @nav-tabs-active-link-hover-color;
+        cursor: pointer;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+
+/* Pills */
+.nav-pills {
+  &>li {
+    &>a {
+      &:link, &:active, &:visited {
+        padding: @nav-pills-padding;
+
+        color: @nav-link-color;
+      }
+
+      &:hover {
+        color: @nav-link-hover-color;
+      }
+
+      &:active {
+      }
+    }
+  }
+
+  &>li.active {
+    &>a {
+      &:link, &:active, a:hover, &:visited {
+        background: @nav-pills-active-link-hover-bg;
+
+        color: @nav-pills-active-link-hover-color;
+      }
+    }
+  }
+}
+
+
+/* Badges */
+.nav-pills, .nav-tabs {
+  &>li {
+    .badge {
+      padding: 2px 3px;
+      padding-top: 3px;
+      padding-right: 4px;
+      position: relative;
+      bottom: 1px;
+    }
+  }
+}
+
+/* Label */
+.nav-pills, .nav-tabs {
+  &>li {
+    .label {
+      padding: 2px 3px;
+      padding-top: 1px;
+      padding-right: 4px;
+      position: relative;
+      bottom: 1px;
+    }
+  }
+}
+
+.nav-pills {
+  &>li.active {
+    .label-default, .badge {
+      background-color: @component-active-color;
+
+      color: @nav-pills-active-link-hover-bg;
     }
   }
 }

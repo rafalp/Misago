@@ -13,14 +13,20 @@ from misago.users.forms.auth import AdminAuthenticationForm
 @csrf_protect
 @never_cache
 def login(request):
-    url_namespace = request.resolver_match.namespace
+    if request.admin_namespace == 'misago:admin':
+        target = 'misago'
+    elif request.admin_namespace == 'admin':
+        target = 'django'
+    else:
+        target = 'unknown'
+
     form = AdminAuthenticationForm(request)
 
     if request.method == 'POST':
         form = AdminAuthenticationForm(request, data=request.POST)
         if form.is_valid():
             auth.login(request, form.user_cache)
-            return redirect('%s:index' % url_namespace)
+            return redirect('%s:index' % request.admin_namespace)
 
     return render(request, 'misago/admin/login.html',
-                  {'form': form, 'namespace': url_namespace})
+                  {'form': form, 'target': target})

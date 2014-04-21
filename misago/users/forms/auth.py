@@ -19,8 +19,7 @@ class AuthenticationForm(forms.Form, BaseAuthenticationForm):
 
     error_messages = {
         'empty_data': _("You have to fill out both fields."),
-        'invalid_login': _("Your login or password is incorrect. "
-                           "Please try again."),
+        'invalid_login': _("Your login or password is incorrect."),
         'inactive': _("This account is inactive."),
     }
 

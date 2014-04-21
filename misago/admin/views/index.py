@@ -1,2 +1,5 @@
+from misago.admin.views import render
+
+
 def admin_index(request):
-    raise NotImplementedError("ADMIN INDEX NOT IMPLEMENTED!")
+    return render(request, 'misago/admin/index.html')

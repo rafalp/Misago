@@ -1,20 +1,17 @@
-{% load compressed %}
-{% load i18n %}
-{% load staticfiles %}
+{% load compressed i18n staticfiles %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}{{ misago_settings.forum_name }}{% endblock %}</title>
-    <meta name="description" content="{% block meta_description %}{% endblock %}">
+    <title>{% block title %}{% trans "Misago Administration" %}{% endblock %}</title>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    {% compressed_css 'misago' %}
+    {% compressed_css 'misago_admin' %}
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{% static 'apple-touch-icon-144-precomposed.png' %}">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static 'apple-touch-icon-114-precomposed.png' %}">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{% static 'apple-touch-icon-72-precomposed.png' %}">
@@ -23,17 +20,7 @@
   </head>
   <body>
 
-    {% include "misago/navbar.html" %}
-    {% include "misago/jumbotron.html" %}
-    {% include "misago/messages.html" %}
-
-    {% block content %}{% endblock %}
-
-    {% include "misago/footer.html" %}
-
-    {# We include JavaScript at the end of page body so it loads faster #}
-    {% compressed_js 'misago' %}
-    {% block extra_scripts %}{% endblock %}
+    {% block body %}{% endblock %}
 
   </body>
 </html>

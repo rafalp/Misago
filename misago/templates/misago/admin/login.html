@@ -1,4 +1,67 @@
-{% load i18n%}
+{% extends "misago/admin/base_thin.html" %}
+{% load i18n %}
+
+
+{% block title %}{% trans "Log in" %} | {% if target == "django" %}{% trans "Django Admin" %}{% else %}{% trans "Misago Admin" %}{% endif %}{% endblock %}
+
+
+{% block body %}
+<div class="login-form site-wrapper">
+  <div class="site-wrapper-inner">
+    <div class="cover-container">
+
+      <div class="inner cover">
+        <div class="form-panel">
+          <form method="POST" role="form">
+            {% csrf_token %}
+
+            <div class="form-header">
+              {% if target == "misago" %}
+              <h1>{% trans "Misago Administration" %}</h1>
+              {% elif target == "django" %}
+              <h1>{% trans "Django Administration" %}</h1>
+              {% else %}
+              <h1>{% trans "Administration" %}</h1>
+              {% endif %}
+            </div>
+
+            <div class="form-body no-fieldsets">
+
+              {% for error in form.non_field_errors %}
+              <div class="misago-alerts">
+                <p class="alert alert-danger lead">
+                  {{ error }}
+                  <br>{% trans "Please try again." %}
+                </p>
+              </div>
+              {% endfor %}
+
+              <div class="form-group">
+                <div class="control-input">
+                  <input type="text" name="username" class="form-control input-lg" placeholder="{% trans "Username or e-mail" %}" {% if form.username.value %}value="{{ form.username.value }}"{% endif %}>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="control-input">
+                  <input type="password" name="password" class="form-control input-lg" placeholder="{% trans "Password" %}">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="control-input">
+                  <button class="btn btn-primary btn-block btn-lg">{% trans "Sign in" %}</button>
+                </div>
+              </div>
+
+            </div>
+
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 
 {% if namespace == "misago:admin" %}
@@ -6,3 +69,4 @@
 {% else %}
 {% trans "Django Admin" %}
 {% endif %}
+{% endblock body %}

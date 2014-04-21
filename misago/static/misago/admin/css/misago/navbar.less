@@ -1,0 +1,62 @@
+//
+// Forum Navbar
+// --------------------------------------------------
+
+.navbars-container {
+  border-bottom: @navbar-border;
+
+  .navbar {
+    border-bottom: none;
+    margin-bottom: 0px;
+
+    .navbar-brand {
+      background: url('../img/mred.png');
+      background-color: #fff;
+      background-size: cover;
+      background-repeat: no-repeat;
+      border-radius: 3px;
+      width: @navbar-height - 12;
+      height: @navbar-height - 12;
+      margin-top: 6px;
+    }
+  }
+}
+
+
+/* Big displays */
+@media (min-width: @screen-sm-min) {
+  .navbars-container {
+    .navbar-brand {
+      margin-left: @line-height-computed / 2;
+      margin-right: @line-height-computed / 2;
+    }
+
+    /* Bolden active links */
+    .navbar {
+      li.active {
+        a {
+          font-weight: bold;
+        }
+      }
+    }
+
+    /* Put fancy blue bar under active link */
+    .navbar:last-child {
+      li.active {
+        a:link, a:active, a:visited, a:hover {
+          border-bottom: 3px solid @brand-primary;
+          margin-bottom: -3px;
+        }
+      }
+    }
+
+    .navbar-inverse {
+      li {
+        a:hover {
+          border-bottom: 3px solid fadeOut(@navbar-inverse-link-active-color, 50%);
+          margin-bottom: -3px;
+        }
+      }
+    }
+  }
+}

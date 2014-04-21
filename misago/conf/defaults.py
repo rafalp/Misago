@@ -41,6 +41,12 @@ PIPELINE_CSS = {
         ),
         'output_filename': 'misago.css',
     },
+    'misago_admin': {
+        'source_filenames': (
+            'misago/admin/css/style.less',
+        ),
+        'output_filename': 'misago_admin.css',
+    },
 }
 
 PIPELINE_JS = {
@@ -50,7 +56,14 @@ PIPELINE_JS = {
             'misago/js/bootstrap.js',
         ),
         'output_filename': 'misago.js',
-    }
+    },
+    'misago_admin': {
+        'source_filenames': (
+            'misago/adminjs/jquery.js',
+            'misago/adminjs/bootstrap.js',
+        ),
+        'output_filename': 'misago_admin.js',
+    },
 }
 
 STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'

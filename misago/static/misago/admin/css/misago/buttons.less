@@ -1,0 +1,62 @@
+//
+// Forum Buttons
+// --------------------------------------------------
+
+.misago-button-flavour(@btn-color, @btn-bg, @btn-border) {
+  background: @btn-bg;
+  border-color: @btn-bg;
+  box-shadow: 0px 2px 0px @btn-border;
+
+  color: @btn-color;
+
+  &:hover {
+    background: darken(@btn-bg, 10%);
+    border-color: darken(@btn-bg, 10%);
+    box-shadow: 0px 2px 0px darken(@btn-border, 10%);
+
+    color: @btn-color;
+  }
+
+  &.active, &:active, &:focus {
+    background: darken(@btn-bg, 15%);
+    border-color: darken(@btn-bg, 15%);
+    box-shadow: none;
+    position: relative;
+    top: 2px;
+
+    color: darken(@btn-color, 10%);
+  }
+
+  .glyphicon-chevron-down {
+    position: relative;
+    top: 2px;
+
+    font-size: @font-size-small;
+  }
+}
+
+.btn {
+  &.btn-default {
+    .misago-button-flavour(@btn-default-color, @btn-default-bg, @btn-default-border);
+  }
+
+  &.btn-primary {
+    .misago-button-flavour(@btn-primary-color, @btn-primary-bg, @btn-primary-border);
+  }
+
+  &.btn-info {
+    .misago-button-flavour(@btn-info-color, @btn-info-bg, @btn-info-border);
+  }
+
+  &.btn-success {
+    .misago-button-flavour(@btn-success-color, @btn-success-bg, @btn-success-border);
+  }
+
+  &.btn-warning {
+    .misago-button-flavour(@btn-warning-color, @btn-warning-bg, @btn-warning-border);
+  }
+
+  &.btn-danger {
+    .misago-button-flavour(@btn-danger-color, @btn-danger-bg, @btn-danger-border);
+  }
+}
