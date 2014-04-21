@@ -34,7 +34,10 @@
       color: @dropdown-link-color;
       text-align: left;
       white-space: nowrap;
+    }
 
+    /* Colors */
+    a, button {
       &:hover {
         background-color: @dropdown-link-hover-bg;
 
@@ -43,6 +46,7 @@
 
       &:active, &:focus {
         background-color: @dropdown-link-active-bg;
+        outline: none;
 
         color: @dropdown-link-active-color;
       }
@@ -74,11 +78,19 @@
         }
       }
 
-      &:hover, &:active {
+      &:hover {
         .badge {
           background-color: @dropdown-bg;
 
-          color: @brand-danger;
+          color: @dropdown-link-hover-bg;
+        }
+      }
+
+      &:active {
+        .badge {
+          background-color: @dropdown-bg;
+
+          color: @dropdown-link-active-bg;
         }
       }
     }
