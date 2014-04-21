@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.shortcuts import render as dj_render
+from misago.admin import site
 
 
 def get_admin_namespace(requested_namespace):
@@ -12,5 +13,9 @@ def get_admin_namespace(requested_namespace):
 
 def render(request, template, context=None):
     context = context or {}
+
+    context.update({
+            'admin_sections': site.children('misago:admin'),
+        })
 
     return dj_render(request, template, context)

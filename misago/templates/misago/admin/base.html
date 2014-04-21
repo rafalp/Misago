@@ -3,6 +3,19 @@
 
 
 {% block body %}
+<h1>Sections:</h1>
+<ul>
+  {% for node in admin_sections %}
+  <li>
+    <a href="{% url node.link %}">
+      <span class="{{ node.icon }}"></span>
+      {{ node.name }}
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+
+
 {% block content %}{% endblock %}
 
 {# We include JavaScript at the end of page body so it loads faster #}
