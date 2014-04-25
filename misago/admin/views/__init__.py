@@ -15,7 +15,7 @@ def render(request, template, context=None):
     context = context or {}
 
     context.update({
-            'admin_sections': site.children('misago:admin'),
+            'navigation': site.visible_branches(request),
         })
 
     return dj_render(request, template, context)

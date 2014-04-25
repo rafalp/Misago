@@ -3,17 +3,21 @@
 
 
 {% block body %}
-<h1>Sections:</h1>
+<h1>Nodes:</h1>
+{% for level in navigation %}
+<hr>
+<h2>Level {{ forloop.counter }}</h2>
 <ul>
-  {% for node in admin_sections %}
+  {% for node in level %}
   <li>
-    <a href="{% url node.link %}">
+    <a href="{{ node.link }}">
       <span class="{{ node.icon }}"></span>
-      {{ node.name }}
+      {{ node.name }} {% if node.is_active %}(*){% endif %}
     </a>
   </li>
   {% endfor %}
 </ul>
+{% endfor %}
 
 
 {% block content %}{% endblock %}

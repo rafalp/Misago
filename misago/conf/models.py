@@ -69,6 +69,30 @@ from django.utils.translation import ugettext_lazy as _
 admin_site.add_node(
     parent='misago:admin',
     link='misago:admin:index',
+    icon='fa fa-home',
+    name=_("Home"),
+    )
+
+admin_site.add_node(
+    parent='misago:admin',
+    link='misago:admin:settings',
     icon='fa fa-gears',
     name=_("Settings"),
+    )
+
+admin_site.add_node(
+    parent='misago:admin',
+    namespace='users',
+    after='misago:admin:settings',
+    link='misago:admin:users:accounts:list',
+    icon='fa fa-user',
+    name=_("Users"),
+    )
+
+admin_site.add_node(
+    parent='misago:admin:users',
+    namespace='accounts',
+    link='misago:admin:users:accounts:list',
+    icon='fa fa-user',
+    name=_("Accounts"),
     )
