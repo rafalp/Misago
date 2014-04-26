@@ -6433,6 +6433,13 @@ body {
 .login-form .inner {
   padding: 30px;
 }
+.login-form .form-admin-logo {
+  text-align: center;
+}
+.login-form .form-admin-logo img {
+  max-width: 90%;
+  margin-bottom: 20px;
+}
 .login-form .form-panel {
   background: #f7f7f7;
   border: none;
@@ -6455,8 +6462,11 @@ body {
   .login-form .site-wrapper-inner .cover-container {
     width: 100%;
   }
-  .login-form .site-wrapper-inner .cover-container .form-panel {
-    margin: 0px auto;
+  .login-form .site-wrapper-inner .cover-container .inner {
     max-width: 420px;
+    margin: 0px auto;
+  }
+  .login-form .site-wrapper-inner .cover-container .inner .form-panel {
+    margin: 0px;
   }
 }
