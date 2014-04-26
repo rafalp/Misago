@@ -6164,13 +6164,28 @@ body {
 }
 .navbars-container .navbar .navbar-brand {
   background: url('../img/mred.png');
-  background-color: #fff;
   background-size: cover;
   background-repeat: no-repeat;
-  border-radius: 3px;
+  border-radius: 4px;
   width: 38px;
   height: 38px;
   margin-top: 6px;
+}
+.navbars-container .navbar .fa,
+.navbars-container .navbar .glyphicon {
+  position: relative;
+  bottom: -2px;
+  font-size: 18px;
+}
+.navbars-container .navbar .user-nav .navbar-text {
+  color: #e6e6e6;
+}
+.navbars-container .navbar .user-nav img {
+  border-radius: 4px;
+  height: 26px;
+  margin: -6px 0px;
+  position: relative;
+  bottom: 1px;
 }
 /* Big displays */
 @media (min-width: 768px) {
@@ -6179,8 +6194,9 @@ body {
     /* Put fancy blue bar under active link */
   }
   .navbars-container .navbar-brand {
-    margin-left: 10px;
-    margin-right: 10px;
+    position: relative;
+    left: 20px;
+    margin-right: 30px;
   }
   .navbars-container .navbar li.active a {
     font-weight: bold;
@@ -6208,27 +6224,19 @@ body {
 .page-header h1 {
   margin: 0px;
   padding: 0px;
+  overflow: auto;
   font-size: 27px;
 }
-.page-header > .container .page-actions {
-  float: right;
-  margin-top: -47px;
+.page-header h1 .main,
+.page-header h1 .sub {
+  float: left;
 }
-.page-header > .container .page-actions .dropdown-menu {
-  left: auto;
-  right: 0px;
+.page-header h1 .main a {
+  color: #444444;
 }
-.page-header > .container .page-actions .dropdown-menu:after {
-  left: auto;
-  right: 12px;
-}
-/* Small displays */
-@media (max-width: 768px) {
-  .page-header > .container .page-actions {
-    clear: both;
-    float: none;
-    margin-top: 20px;
-  }
+.page-header h1 .sub {
+  margin-left: 10px;
+  color: #848484;
 }
 .main-footer {
   margin-top: 30px;

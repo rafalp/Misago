@@ -1,5 +1,5 @@
 //
-// Forum Navbar
+// Admin Navbar
 // --------------------------------------------------
 
 .navbars-container {
@@ -11,13 +11,33 @@
 
     .navbar-brand {
       background: url('../img/mred.png');
-      background-color: #fff;
       background-size: cover;
       background-repeat: no-repeat;
-      border-radius: 3px;
+      border-radius: 4px;
       width: @navbar-height - 12;
       height: @navbar-height - 12;
       margin-top: 6px;
+    }
+
+    .fa, .glyphicon {
+      position: relative;
+      bottom: (@font-size-base - @font-size-large) / 2;
+
+      font-size: @font-size-large;
+    }
+
+    .user-nav {
+      .navbar-text {
+        color: darken(#fff, 10%);
+      }
+
+      img {
+        border-radius: @border-radius-base;
+        height: 26px;
+        margin: -6px 0px;
+        position: relative;
+        bottom: 1px;
+      }
     }
   }
 }
@@ -27,8 +47,9 @@
 @media (min-width: @screen-sm-min) {
   .navbars-container {
     .navbar-brand {
-      margin-left: @line-height-computed / 2;
-      margin-right: @line-height-computed / 2;
+      position: relative;
+      left: @line-height-computed;
+      margin-right: @line-height-computed * 1.5;
     }
 
     /* Bolden active links */
