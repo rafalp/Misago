@@ -6,7 +6,6 @@ from django.contrib.auth import get_user_model
 from misago.conf import settings
 
 
-ALPHANUMERICS_RE = re.compile('[\W_]+', re.UNICODE)
 USERNAME_RE = re.compile(r'^[0-9a-z]+$', re.IGNORECASE)
 
 
@@ -32,46 +31,7 @@ def validate_email(value):
     validate_email_banned(value)
 
 
-def _validate_password_alphanumerics(value):
-    digits_len = len(filter(type(value).isdigit, value))
-
-    if not digits_len or digits_len == len(value):
-        raise ValidationError(
-            _("Password must contain digits in addition to other characters."))
-
-
-def _validate_password_case(value):
-    for char in value:
-        if char != char.lower():
-            break
-    else:
-        raise ValidationError(
-            _("Password must contain characters with different cases."))
-
-
-
-def _validate_password_special(value):
-    alphanumerics_len = len(ALPHANUMERICS_RE.sub('', value))
-
-    if not alphanumerics_len or alphanumerics_len == len(value):
-        raise ValidationError(
-            _("Password must contain special signs "
-              "in addition to other characters."))
-
-
-PASSWORD_COMPLEXITY_RULES = {
-    'alphanumerics': _validate_password_alphanumerics,
-    'case': _validate_password_case,
-    'special': _validate_password_special,
-}
-
-
-def validate_password_complexity(value):
-    for test in settings.password_complexity:
-        PASSWORD_COMPLEXITY_RULES[test](value)
-
-
-def validate_password_length(value):
+def validate_password(value):
     if len(value) < settings.password_length_min:
         message = ungettext(
             'Valid password must be at least one character long.',
@@ -79,12 +39,6 @@ def validate_password_length(value):
             settings.password_length_min)
         message = message % {'length': settings.password_length_min}
         raise ValidationError(message)
-
-
-def validate_password(value):
-    """shortcut function that does complete validation of password"""
-    validate_password_length(value)
-    validate_password_complexity(value)
 
 
 def validate_username_available(value):

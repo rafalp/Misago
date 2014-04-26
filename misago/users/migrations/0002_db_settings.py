@@ -77,20 +77,6 @@ class Migration(DataMigration):
                         },
                     },
                     {
-                        'setting': 'password_complexity',
-                        'name': _("Complexity"),
-                        'python_type': 'list',
-                        'value': [],
-                        'form_field': 'checkbox',
-                        'field_extra': {
-                            'choices': (
-                                ('case', _("Require mixed Case")),
-                                ('alphanumerics', _("Require alphanumeric characters")),
-                                ('special', _("Require special characters"))
-                            ),
-                        },
-                    },
-                    {
                         'setting': 'avatars_types',
                         'name': _("Available avatar types"),
                         'legend': _("Avatars"),

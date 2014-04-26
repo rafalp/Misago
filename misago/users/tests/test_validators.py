@@ -5,10 +5,6 @@ from django.test import TestCase
 from misago.conf import settings
 from misago.users.validators import (validate_email, validate_email_available,
                                      validate_password,
-                                     validate_password_length,
-                                     _validate_password_alphanumerics,
-                                     _validate_password_case,
-                                     _validate_password_special,
                                      validate_username,
                                      validate_username_available,
                                      validate_username_content,
@@ -41,46 +37,14 @@ class ValidateEmailTests(TestCase):
 
 
 class ValidatePasswordTests(TestCase):
-    def test_validate_password(self):
-        """validate_password has no crashes"""
-        validate_password('Bobbins.1')
-        with self.assertRaises(ValidationError):
-            validate_password('b')
-
-
-class ValidatePasswordLengthTests(TestCase):
     def test_valid_password(self):
-        """validate_password_length allows valid password"""
-        validate_password_length('A' * (settings.password_length_min + 1))
+        """validate_password allows valid password"""
+        validate_password('A' * (settings.password_length_min + 1))
 
     def test_invalid_name(self):
-        """validate_password_length disallows invalid password"""
+        """validate_password disallows invalid password"""
         with self.assertRaises(ValidationError):
-            validate_password_length('A' * (settings.password_length_min - 1))
-
-
-class ValidatePasswordComplexityRules(TestCase):
-    def test_validate_password_alphanumerics(self):
-        """_validate_password_alphanumerics enforces complexity correctly"""
-        _validate_password_alphanumerics('abc123')
-        with self.assertRaises(ValidationError):
-            _validate_password_alphanumerics('abc')
-        with self.assertRaises(ValidationError):
-            _validate_password_alphanumerics('123')
-
-    def test_validate_password_case(self):
-        """_validate_password_case enforces complexity correctly"""
-        _validate_password_case('AbC')
-        with self.assertRaises(ValidationError):
-            _validate_password_case('abc')
-        with self.assertRaises(ValidationError):
-            _validate_password_case('--')
-
-    def test_validate_password_special(self):
-        """_validate_password_special enforces complexity correctly"""
-        _validate_password_special(u'łoł12 3&(#@$')
-        with self.assertRaises(ValidationError):
-            _validate_password_special('A')
+            validate_password('A' * (settings.password_length_min - 1))
 
 
 class ValidateUsernameTests(TestCase):
