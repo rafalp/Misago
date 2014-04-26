@@ -13,16 +13,7 @@ def make_user_admin_token(user):
     return md5(formula).hexdigest()
 
 
-def login(request, user):
-    request.session[KEY_TOKEN] = make_user_admin_token(user)
-    request.session[KEY_UPDATED] = int(time())
-    dj_auth.login(request, user)
-
-
-def logout(request):
-    pass
-
-
+# Admin session state controls
 def is_admin_session(request):
     if request.user.is_anonymous():
         return False
@@ -41,5 +32,32 @@ def is_admin_session(request):
     return True
 
 
+def start_admin_session(request, user):
+    request.session[KEY_TOKEN] = make_user_admin_token(user)
+    request.session[KEY_UPDATED] = int(time())
+
+
 def update_admin_session(request):
     request.session[KEY_UPDATED] = int(time())
+
+
+def close_admin_session(request):
+    request.session.pop(KEY_TOKEN, None)
+    request.session.pop(KEY_UPDATED, None)
+
+
+# Login/logout wrappers for django auth used in sign in/out views
+def login(request, user):
+    start_admin_session(request, user)
+    dj_auth.login(request, user)
+
+
+def logout(request):
+    close_admin_session(request)
+    dj_auth.logout(request)
+
+
+# Register signal for logout to make sure eventual admin session is closed
+def django_logout_handler(sender, **kwargs):
+    close_admin_session(kwargs['request'])
+dj_auth.signals.user_logged_out.connect(django_logout_handler)
