@@ -175,3 +175,7 @@ MISAGO_ADMIN_NAMESPACES = (
     'admin',
     'misago:admin',
 )
+
+# How long (in seconds) since previous request to admin namespace should
+# admin session last.
+MISAGO_ADMIN_SESSION_EXPIRATION = 3600
