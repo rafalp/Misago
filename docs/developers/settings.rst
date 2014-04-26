@@ -156,6 +156,26 @@ forum_index_title
 Forum index title. Can be empty string if not set, in which case ``forum_name`` should be used instead.
 
 
+MISAGO_ADMIN_NAMESPACES
+-----------------------
+
+Link namespaces that are administrator-only areas that require additional security from Misago. Users will have to re-authenticate themselves to access those namespaces, even if they are already signed in your frontend. In addition they will be requested to reauthenticated if they were inactive in those namespaces for certain time.
+
+Defautly ``misago:admin`` and ``admin`` namespaces are specified, putting both Misago and Django default admin interfaces under extended security mechanics.
+
+
+MISAGO_ADMIN_PATH
+-----------------
+
+Path prefix for Misago administration backend. Defautly "admincp", but you may set it to empty string if you with to disable your forum administration backend.
+
+
+MISAGO_ADMIN_SESSION_EXPIRATION
+-------------------------------
+
+Maximum allowed lenght of inactivity period between two requests to admin namespaces. If its exceeded, user will be asked to sign in again to admin backed before being allowed to continue activities.
+
+
 MISAGO_MAILER_BATCH_SIZE
 ------------------------
 
