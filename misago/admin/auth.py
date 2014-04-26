@@ -26,7 +26,7 @@ def is_admin_session(request):
         return False
 
     updated = request.session.get(KEY_UPDATED, 0)
-    if updated < time() - settings.MISAGO_ADMIN_SESSION_EXPIRATION:
+    if updated < time() - (settings.MISAGO_ADMIN_SESSION_EXPIRATION * 60):
         return False
 
     return True
