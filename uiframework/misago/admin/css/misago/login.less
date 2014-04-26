@@ -22,6 +22,15 @@
     padding: 30px;
   }
 
+  .form-admin-logo {
+    text-align: center;
+
+    img {
+      max-width: 90%;
+      margin-bottom: @line-height-computed;
+    }
+  }
+
   .form-panel {
     background: darken(@body-bg, 1%);
     border: none;
@@ -50,9 +59,13 @@
       .cover-container {
         width: 100%;
 
-        .form-panel {
-          margin: 0px auto;
+        .inner {
           max-width: 420px;
+          margin: 0px auto;
+
+          .form-panel {
+            margin: 0px;
+          }
         }
       }
     }

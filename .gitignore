@@ -19,6 +19,10 @@ var/
 .installed.cfg
 *.egg
 
+# OS stuff
+.DS_Store
+thumbs.db
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
