@@ -36,6 +36,21 @@
           </p>
         </div>
         {% endfor %}
+        {% for message in messages %}
+        <div class="misago-alerts">
+          {% if 'success' in message.tags %}
+          <p class="alert alert-success lead">
+          {% elif 'warning' in message.tags %}
+          <p class="alert alert-warning lead">
+          {% elif 'error' in message.tags %}
+          <p class="alert alert-danger lead">
+          {% else %}
+          <p class="alert alert-info lead">
+          {% endif %}
+            {{ message }}
+          </p>
+        </div>
+        {% endfor %}
 
         <div class="form-group">
           <div class="control-input">
