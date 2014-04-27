@@ -1,0 +1,43 @@
+{% load i18n %}
+<!-- Log out modal -->
+<div class="modal fade" id="logout-modal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="logoutModalLabel">{% trans "Log out?" %}</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="col-md-6">
+
+            <form action="{% url 'misago:admin:logout' %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary btn-block">
+                <span class="fa fa-lock"></span>
+                {% trans "Log out from admin" %}
+              </button>
+            </form>
+
+          </div>
+          <div class="col-md-6">
+
+            <form action="{% url 'misago:logout' %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-block">
+                <span class="fa fa-power-off"></span>
+                {% trans "Log out completely" %}
+              </button>
+            </form>
+
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default btn-lg btn-block" data-dismiss="modal">{% trans "Cancel" %}</button>
+      </div>
+    </div>
+  </div>
+</div>

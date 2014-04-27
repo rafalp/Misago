@@ -1,0 +1,49 @@
+{% load i18n misago_avatars %}
+<div class="navbars-container">
+  <div class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'misago:index' %}"></a>
+      <ul class="nav navbar-nav">
+        {% for node in sections %}
+        <li{% if node.is_active %} class="active"{% endif %}>
+          <a href="{{ node.link }}">
+            <span class="{{ node.icon }}"></span>
+            {{ node.name }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="user-nav pull-right">
+        <p class="navbar-text">
+          <img src="{{ user|avatar:30 }}" alt="{% trans "Your avatar" %}">
+          {{ user.username }}
+        </p>
+        <ul class="nav navbar-nav">
+          <li>
+          </li>
+          <li>
+            <a href="#" data-toggle="modal" data-target="#logout-modal">
+              <span class="fa fa-power-off"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% if actions %}
+  <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+    <div class="container">
+      <ul class="nav navbar-nav">
+        {% for node in actions %}
+        <li{% if node.is_active %} class="active"{% endif %}>
+          <a href="{{ node.link }}">
+            <span class="{{ node.icon }}"></span>
+            {{ node.name }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+</div>

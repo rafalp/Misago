@@ -6,71 +6,58 @@
 
 
 {% block body %}
-<div class="login-form site-wrapper">
-  <div class="site-wrapper-inner">
-    <div class="cover-container">
-      <div class="inner cover">
+<div class="login-form">
 
-        {% if target == "misago" %}
-        <div class="form-admin-logo">
-          <img src="{% static 'misago/admin/img/misago.png' %}" alt="Misago">
+  {% if target == "misago" %}
+  <div class="form-admin-logo">
+    <img src="{% static 'misago/admin/img/misago.png' %}" alt="Misago">
+  </div>
+  {% elif target == "django" %}
+  <div class="form-admin-logo">
+    <img src="{% static 'misago/admin/img/django.png' %}" alt="Django">
+  </div>
+  {% endif  %}
+
+  <div class="form-panel">
+    <form method="POST" role="form">
+      {% csrf_token %}
+
+      <div class="form-header">
+        <h1>{% trans "Administration" %}</h1>
+      </div>
+
+      <div class="form-body no-fieldsets">
+
+        {% for error in form.non_field_errors %}
+        <div class="misago-alerts">
+          <p class="alert alert-danger lead">
+            {{ error }}
+            <br>{% trans "Please try again." %}
+          </p>
         </div>
-        {% elif target == "django" %}
-        <div class="form-admin-logo">
-          <img src="{% static 'misago/admin/img/django.png' %}" alt="Django">
+        {% endfor %}
+
+        <div class="form-group">
+          <div class="control-input">
+            <input type="text" name="username" class="form-control input-lg" placeholder="{% trans "Username or e-mail" %}" {% if form.username.value %}value="{{ form.username.value }}"{% endif %}>
+          </div>
         </div>
-        {% endif  %}
-
-        <div class="form-panel">
-          <form method="POST" role="form">
-            {% csrf_token %}
-
-            <div class="form-header">
-              <h1>{% trans "Administration" %}</h1>
-            </div>
-
-            <div class="form-body no-fieldsets">
-
-              {% for error in form.non_field_errors %}
-              <div class="misago-alerts">
-                <p class="alert alert-danger lead">
-                  {{ error }}
-                  <br>{% trans "Please try again." %}
-                </p>
-              </div>
-              {% endfor %}
-
-              <div class="form-group">
-                <div class="control-input">
-                  <input type="text" name="username" class="form-control input-lg" placeholder="{% trans "Username or e-mail" %}" {% if form.username.value %}value="{{ form.username.value }}"{% endif %}>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="control-input">
-                  <input type="password" name="password" class="form-control input-lg" placeholder="{% trans "Password" %}">
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="control-input">
-                  <button class="btn btn-primary btn-block btn-lg">{% trans "Sign in" %}</button>
-                </div>
-              </div>
-
-            </div>
-
-
-          </form>
+        <div class="form-group">
+          <div class="control-input">
+            <input type="password" name="password" class="form-control input-lg" placeholder="{% trans "Password" %}">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="control-input">
+            <button class="btn btn-primary btn-block btn-lg">{% trans "Sign in" %}</button>
+          </div>
         </div>
 
       </div>
-    </div>
+
+
+    </form>
   </div>
+
 </div>
-
-
-{% if namespace == "misago:admin" %}
-{% trans "Misago Admin" %}
-{% else %}
-{% trans "Django Admin" %}
-{% endif %}
 {% endblock body %}

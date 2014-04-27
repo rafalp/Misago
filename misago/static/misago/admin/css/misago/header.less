@@ -14,43 +14,25 @@
   h1 {
   	margin: 0px;
   	padding: 0px;
+  	overflow: auto;
 
   	font-size: @font-size-large * 1.5;
+
+  	.main, .sub {
+  		float: left;
+  	}
+
+  	.main {
+  		a {
+  			color: @text-color;
+  		}
+  	}
+
+  	.sub {
+  		margin-left: @line-height-computed / 2;
+
+  		color: lighten(@text-color, 25%);
+  	}
   }
 }
 
-
-// Actions
-//
-//##
-.page-header {
-  &>.container {
-    .page-actions {
-      float: right;
-      margin-top: (@line-height-computed * @headings-line-height) * -1 - (@line-height-computed * 1.5) + @padding-base-vertical - 1;
-
-      .dropdown-menu {
-        left: auto;
-        right: 0px;
-
-        &:after {
-          left: auto;
-          right: 12px;
-        }
-      }
-    }
-  }
-}
-
-/* Small displays */
-@media (max-width: @screen-sm-min) {
-  .page-header {
-    &>.container {
-      .page-actions {
-        clear: both;
-        float: none;
-        margin-top: @line-height-computed;
-      }
-    }
-  }
-}

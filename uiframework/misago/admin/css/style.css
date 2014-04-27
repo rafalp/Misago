@@ -5904,6 +5904,7 @@ body {
   background: #c7c7c7;
   border-color: #c7c7c7;
   box-shadow: none;
+  outline: none;
   position: relative;
   top: 2px;
   color: #5e5e5e;
@@ -5931,6 +5932,7 @@ body {
   background: #1d6fa5;
   border-color: #1d6fa5;
   box-shadow: none;
+  outline: none;
   position: relative;
   top: 2px;
   color: #e6e6e6;
@@ -5958,6 +5960,7 @@ body {
   background: #28a1c5;
   border-color: #28a1c5;
   box-shadow: none;
+  outline: none;
   position: relative;
   top: 2px;
   color: #e6e6e6;
@@ -5985,6 +5988,7 @@ body {
   background: #208e4e;
   border-color: #208e4e;
   box-shadow: none;
+  outline: none;
   position: relative;
   top: 2px;
   color: #e6e6e6;
@@ -6012,6 +6016,7 @@ body {
   background: #df8a13;
   border-color: #df8a13;
   box-shadow: none;
+  outline: none;
   position: relative;
   top: 2px;
   color: #e6e6e6;
@@ -6039,6 +6044,7 @@ body {
   background: #bf2718;
   border-color: #bf2718;
   box-shadow: none;
+  outline: none;
   position: relative;
   top: 2px;
   color: #e6e6e6;
@@ -6425,28 +6431,14 @@ body {
   }
 }
 .login-form {
-  display: table;
-  width: 100%;
-  height: 100%;
-  min-height: 100%;
-}
-.login-form .site-wrapper-inner {
-  display: table-cell;
-  vertical-align: top;
-}
-.login-form .cover-container {
-  margin-right: auto;
-  margin-left: auto;
-}
-.login-form .inner {
-  padding: 30px;
+  padding: 20px;
 }
 .login-form .form-admin-logo {
+  margin-bottom: 20px;
   text-align: center;
 }
 .login-form .form-admin-logo img {
-  max-width: 90%;
-  margin-bottom: 20px;
+  width: 60%;
 }
 .login-form .form-panel {
   background: #f7f7f7;
@@ -6464,17 +6456,27 @@ body {
 }
 /* Big displays */
 @media (min-width: 768px) {
-  .login-form .site-wrapper-inner {
-    vertical-align: middle;
-  }
-  .login-form .site-wrapper-inner .cover-container {
-    width: 100%;
-  }
-  .login-form .site-wrapper-inner .cover-container .inner {
+  .login-form {
     max-width: 420px;
-    margin: 0px auto;
+    margin: 30px auto;
   }
-  .login-form .site-wrapper-inner .cover-container .inner .form-panel {
+  .login-form .form-panel {
     margin: 0px;
   }
+}
+#logout-modal .modal-body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+#logout-modal .modal-body .btn {
+  padding: 20px 6.66666667px;
+  font-size: 18px;
+}
+#logout-modal .modal-body .btn span {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 46.8px;
+}
+#logout-modal .modal-footer {
+  margin-top: 0px;
 }

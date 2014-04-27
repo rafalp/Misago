@@ -1,8 +1,8 @@
 from hashlib import md5
 from time import time
 from django.conf import settings
-from django.contrib import auth as dj_auth
-
+from django.contrib import auth as dj_auth, messages
+from django.utils.translation import ugettext as _
 
 KEY_TOKEN = 'misago_admin_session_token'
 KEY_UPDATED = 'misago_admin_session_updated'
@@ -27,6 +27,9 @@ def is_admin_session(request):
 
     updated = request.session.get(KEY_UPDATED, 0)
     if updated < time() - (settings.MISAGO_ADMIN_SESSION_EXPIRATION * 60):
+        if updated:
+            request.session.pop(KEY_UPDATED, None)
+            messages.info(request, _("Your admin session has expired."))
         return False
 
     return True

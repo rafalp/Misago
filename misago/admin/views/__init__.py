@@ -14,8 +14,23 @@ def get_admin_namespace(requested_namespace):
 def render(request, template, context=None):
     context = context or {}
 
+    navigation = site.visible_branches(request)
+    sections = navigation[0]
+
+    try:
+        actions = navigation[1]
+    except IndexError:
+        actions = []
+
+    try:
+        pages = navigation[2]
+    except IndexError:
+        pages = []
+
     context.update({
-            'navigation': site.visible_branches(request),
+            'sections': sections,
+            'actions': actions,
+            'pages': pages
         })
 
     return dj_render(request, template, context)
