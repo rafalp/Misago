@@ -3,7 +3,9 @@
 
 
 {% block body %}
+{% include "misago/admin/messages.html" %}
 {% include "misago/admin/navbar.html" %}
+
 <h1>Nodes:</h1>
 {% for level in navigation %}
 <hr>
@@ -25,5 +27,7 @@
 
 {% include "misago/admin/logout.html" %}
 
+{# We include JavaScript at the end of page body so it loads faster #}
+{% compressed_js 'misago' %}
 {% block extra_scripts %}{% endblock %}
 {% endblock %}

@@ -20,11 +20,7 @@
   </head>
   <body>
 
-    {% include "misago/admin/messages.html" %}
-
     {% block body %}{% endblock %}
 
-    {# We include JavaScript at the end of page body so it renders faster #}
-    {% compressed_js 'misago' %}
   </body>
 </html>
