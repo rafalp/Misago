@@ -25,7 +25,5 @@
 
 {% include "misago/admin/logout.html" %}
 
-{# We include JavaScript at the end of page body so it loads faster #}
-{% compressed_js 'misago' %}
 {% block extra_scripts %}{% endblock %}
 {% endblock %}
