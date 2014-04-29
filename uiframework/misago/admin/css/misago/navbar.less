@@ -14,9 +14,9 @@
       background-size: cover;
       background-repeat: no-repeat;
       border-radius: 4px;
-      width: @navbar-height - 12;
-      height: @navbar-height - 12;
-      margin-top: 6px;
+      width: @navbar-height - 16;
+      height: @navbar-height - 16;
+      margin-top: 8px;
     }
 
     .fa, .glyphicon {
@@ -28,7 +28,7 @@
 
     .user-nav {
       .navbar-text {
-        color: darken(#fff, 10%);
+        color: @text-color;
       }
 
       img {
@@ -37,6 +37,35 @@
         margin: -6px 0px;
         position: relative;
         bottom: 1px;
+      }
+
+      .logout {
+        &:link, &:visited {
+          background-color: @navbar-default-bg;
+          border-radius: @border-radius-base;
+          display: inline-block;
+          margin: -8px 0px;
+          margin-right: 8px;
+          margin-left: @line-height-computed / 2;
+          padding-top: 5px;
+          width: 31px;
+          height: 31px;
+
+          color: @navbar-default-link-color;
+          text-align: center;
+        }
+
+        &:hover {
+          background-color: @navbar-default-link-color;
+
+          color: @navbar-default-bg;
+        }
+
+        &:active {
+          background-color: @body-bg;
+
+          color: @navbar-default-bg;
+        }
       }
     }
   }
