@@ -3933,27 +3933,27 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   }
 }
 .navbar-default {
-  background-color: #2e2e2e;
-  border-color: #1d1d1d;
+  background-color: #e0e0e0;
+  border-color: #d0d0d0;
 }
 .navbar-default .navbar-brand {
-  color: #cccccc;
+  color: #7a7a7a;
 }
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
-  color: #b3b3b3;
+  color: #616161;
   background-color: transparent;
 }
 .navbar-default .navbar-text {
   color: #777777;
 }
 .navbar-default .navbar-nav > li > a {
-  color: #cccccc;
+  color: #7a7a7a;
 }
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
-  color: #ffffff;
-  background-color: #3b3b3b;
+  color: #474747;
+  background-color: #d9d9d9;
 }
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
@@ -3979,7 +3979,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navbar-default .navbar-collapse,
 .navbar-default .navbar-form {
-  border-color: #1d1d1d;
+  border-color: #d0d0d0;
 }
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav > .open > a:hover,
@@ -3989,12 +3989,12 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 @media (max-width: 767px) {
   .navbar-default .navbar-nav .open .dropdown-menu > li > a {
-    color: #cccccc;
+    color: #7a7a7a;
   }
   .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
   .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
-    color: #ffffff;
-    background-color: #3b3b3b;
+    color: #474747;
+    background-color: #d9d9d9;
   }
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
@@ -4010,10 +4010,10 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   }
 }
 .navbar-default .navbar-link {
-  color: #cccccc;
+  color: #7a7a7a;
 }
 .navbar-default .navbar-link:hover {
-  color: #ffffff;
+  color: #474747;
 }
 .navbar-inverse {
   background-color: #ededed;
@@ -6162,7 +6162,7 @@ body {
   }
 }
 .navbars-container {
-  border-bottom: 3px solid #d4d4d4;
+  border-bottom: 3px solid #c7c7c7;
 }
 .navbars-container .navbar {
   border-bottom: none;
@@ -6173,9 +6173,9 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   border-radius: 4px;
-  width: 38px;
-  height: 38px;
-  margin-top: 6px;
+  width: 34px;
+  height: 34px;
+  margin-top: 8px;
 }
 .navbars-container .navbar .fa,
 .navbars-container .navbar .glyphicon {
@@ -6184,7 +6184,7 @@ body {
   font-size: 18px;
 }
 .navbars-container .navbar .user-nav .navbar-text {
-  color: #e6e6e6;
+  color: #444444;
 }
 .navbars-container .navbar .user-nav img {
   border-radius: 4px;
@@ -6192,6 +6192,28 @@ body {
   margin: -6px 0px;
   position: relative;
   bottom: 1px;
+}
+.navbars-container .navbar .user-nav .logout:link,
+.navbars-container .navbar .user-nav .logout:visited {
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  display: inline-block;
+  margin: -8px 0px;
+  margin-right: 8px;
+  margin-left: 10px;
+  padding-top: 5px;
+  width: 31px;
+  height: 31px;
+  color: #7a7a7a;
+  text-align: center;
+}
+.navbars-container .navbar .user-nav .logout:hover {
+  background-color: #7a7a7a;
+  color: #e0e0e0;
+}
+.navbars-container .navbar .user-nav .logout:active {
+  background-color: #fafafa;
+  color: #e0e0e0;
 }
 /* Big displays */
 @media (min-width: 768px) {
@@ -6230,7 +6252,7 @@ body {
 .page-header h1 {
   margin: 0px;
   padding: 0px;
-  overflow: auto;
+  overflow: visible;
   font-size: 27px;
 }
 .page-header h1 .main,
@@ -6244,13 +6266,10 @@ body {
   margin-left: 10px;
   color: #848484;
 }
-.main-footer {
+.admin-footer {
   margin-top: 30px;
   margin-bottom: 30px;
   text-align: center;
-}
-.custom-footer {
-  color: #a1a1a1;
 }
 .misago-branding a {
   display: inline-block;
@@ -6259,7 +6278,7 @@ body {
   font-size: 28.8px;
 }
 .misago-branding a .brand-border {
-  background: #444444;
+  background: #c0392b;
   border-radius: 4.32px;
   display: inline-block;
   margin-right: 2.88px;

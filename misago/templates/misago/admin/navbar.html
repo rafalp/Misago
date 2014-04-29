@@ -17,16 +17,10 @@
         <p class="navbar-text">
           <img src="{{ user|avatar:30 }}" alt="{% trans "Your avatar" %}">
           {{ user.username }}
+          <a href="#" class="logout" data-toggle="modal" data-target="#logout-modal">
+            <span class="fa fa-power-off"></span>
+          </a>
         </p>
-        <ul class="nav navbar-nav">
-          <li>
-          </li>
-          <li>
-            <a href="#" data-toggle="modal" data-target="#logout-modal">
-              <span class="fa fa-power-off"></span>
-            </a>
-          </li>
-        </ul>
       </div>
     </div>
   </div>

@@ -6,24 +6,16 @@
 {% include "misago/admin/messages.html" %}
 {% include "misago/admin/navbar.html" %}
 
-<h1>Nodes:</h1>
-{% for level in navigation %}
-<hr>
-<h2>Level {{ forloop.counter }}</h2>
-<ul>
-  {% for node in level %}
-  <li>
-    <a href="{{ node.link }}">
-      <span class="{{ node.icon }}"></span>
-      {{ node.name }} {% if node.is_active %}(*){% endif %}
-    </a>
-  </li>
-  {% endfor %}
-</ul>
-{% endfor %}
-
-
 {% block content %}{% endblock %}
+
+<footer class="admin-footer">
+  <div class="misago-branding text-center">
+    <a href="http://misago-project.org">
+      <span class="subscript">powered by</span>
+      <span class="brand-border"><span>m</span></span>isago
+    </a>
+  </div>
+</footer>
 
 {% include "misago/admin/logout.html" %}
 
