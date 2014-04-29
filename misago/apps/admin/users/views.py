@@ -316,6 +316,14 @@ class Edit(FormWidget):
         if target.username != self.original_name:
             target.sync_username()
 
+        # Change email?
+        if form.cleaned_data.get('email'):
+            target.set_email(form.cleaned_data.get('email'))
+
+        # Change password?
+        if form.cleaned_data.get('new_password'):
+            target.set_password(form.cleaned_data.get('new_password'))
+
         # Do signature mumbo-jumbo
         if form.cleaned_data['signature']:
             target.signature = form.cleaned_data['signature']

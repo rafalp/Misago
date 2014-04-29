@@ -11,8 +11,12 @@
 </fieldset>
 <fieldset>
   <legend>{% trans %}Sign-in Credentials{% endtrans %}</legend>
+  {% if 'email' in form.fields %}
   {{ form_theme.row(form.email, attrs={'class': 'span12'}) }}
   {{ form_theme.row(form.new_password, attrs={'class': 'span12'}) }}
+  {% else %}
+  <p>{% trans %}This user account belongs to system administrator. It's sign in credentials can be changed only by other sysadmins.{% endtrans %}</p>
+  {% endif %}
 </fieldset>
 <fieldset>
   <legend>{% trans %}User Avatar{% endtrans %}</legend>
