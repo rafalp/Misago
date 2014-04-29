@@ -35,10 +35,12 @@ Updates last activity timestamp on admin session.
 Closes current admin session, degrading it to "casual" session and keeps user signed in.
 
 
-.. function:: login(request, user)
+Testing Admin views using test client
+-------------------------------------
 
-Signs user in just like Django :py:func:`django.contrib.auth.login` does and then promotes session to admin session.
+To test protected admin views from within your test cases, you have to open valid admin session for test client. Misago provides :py:func:`misago.admin.testutils.admin_login` function for this purpose.
 
-.. function:: logout(request)
 
-Signs user out just like Django :py:func:`django.contrib.auth.logout` does and terminates admin session.
+.. function:: misago.admin.testutils.admin_login(client, username, password)
+
+This function will make provided test client instance use valid admin session during test requests. Note that internally this function makes POST request to ``misago:admin:index`` link that should result with admin login form for unauthenticated users.

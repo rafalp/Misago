@@ -5,7 +5,7 @@ from misago.admin import site
 
 def get_admin_namespace(requested_namespace):
     for namespace in settings.MISAGO_ADMIN_NAMESPACES:
-        if requested_namespace[:len(namespace)] == namespace:
+        if requested_namespace.startswith(namespace):
             return namespace
     else:
         return None

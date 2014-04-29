@@ -49,18 +49,23 @@ def close_admin_session(request):
     request.session.pop(KEY_UPDATED, None)
 
 
-# Login/logout wrappers for django auth used in sign in/out views
-def login(request, user):
-    start_admin_session(request, user)
-    dj_auth.login(request, user)
-
-
-def logout(request):
-    close_admin_session(request)
-    dj_auth.logout(request)
+# Login/logout exposed
+login = dj_auth.login
+logout = dj_auth.logout
 
 
 # Register signal for logout to make sure eventual admin session is closed
+def django_login_handler(sender, **kwargs):
+    request, user = kwargs['request'], kwargs['user']
+    try:
+        admin_namespace = request.admin_namespace
+    except AttributeError:
+        admin_namespace = False
+    if admin_namespace and user.is_staff:
+        start_admin_session(request, user)
+dj_auth.signals.user_logged_in.connect(django_login_handler)
+
+
 def django_logout_handler(sender, **kwargs):
     close_admin_session(kwargs['request'])
 dj_auth.signals.user_logged_out.connect(django_logout_handler)
