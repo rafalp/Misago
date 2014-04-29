@@ -6266,13 +6266,10 @@ body {
   margin-left: 10px;
   color: #848484;
 }
-.main-footer {
+.admin-footer {
   margin-top: 30px;
   margin-bottom: 30px;
   text-align: center;
-}
-.custom-footer {
-  color: #a1a1a1;
 }
 .misago-branding a {
   display: inline-block;
@@ -6281,7 +6278,7 @@ body {
   font-size: 28.8px;
 }
 .misago-branding a .brand-border {
-  background: #444444;
+  background: #c0392b;
   border-radius: 4.32px;
   display: inline-block;
   margin-right: 2.88px;
