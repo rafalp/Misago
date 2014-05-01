@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, NoReverseMatch
 from django.shortcuts import render as dj_render
 from misago.admin import site
 from misago.admin.auth import is_admin_session, update_admin_session
@@ -8,9 +8,12 @@ from misago.admin.views.auth import login
 
 def get_protected_namespace(request):
     for namespace in settings.MISAGO_ADMIN_NAMESPACES:
-        admin_path = reverse('%s:index' % namespace)
-        if request.path.startswith(admin_path):
-            return namespace
+        try:
+            admin_path = reverse('%s:index' % namespace)
+            if request.path.startswith(admin_path):
+                return namespace
+        except NoReverseMatch:
+            pass
     else:
         return None
 
