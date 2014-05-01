@@ -1,11 +1,15 @@
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.shortcuts import render as dj_render
 from misago.admin import site
+from misago.admin.auth import is_admin_session, update_admin_session
+from misago.admin.views.auth import login
 
 
-def get_admin_namespace(requested_namespace):
+def get_protected_namespace(request):
     for namespace in settings.MISAGO_ADMIN_NAMESPACES:
-        if requested_namespace.startswith(namespace):
+        admin_path = reverse('%s:index' % namespace)
+        if request.path.startswith(admin_path):
             return namespace
     else:
         return None
@@ -34,3 +38,20 @@ def render(request, template, context=None):
         })
 
     return dj_render(request, template, context)
+
+
+# Decorator for views
+def protected_admin_view(f):
+    def decorator(request, *args, **kwargs):
+        protected_view = get_protected_namespace(request)
+        if protected_view:
+            if is_admin_session(request):
+                update_admin_session(request)
+                return f(request, *args, **kwargs)
+            else:
+                request.admin_namespace = protected_view
+                return login(request)
+        else:
+            return f(request, *args, **kwargs)
+
+    return decorator

@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib import auth as dj_auth, messages
 from django.utils.translation import ugettext as _
 
+
 KEY_TOKEN = 'misago_admin_session_token'
 KEY_UPDATED = 'misago_admin_session_updated'
 
