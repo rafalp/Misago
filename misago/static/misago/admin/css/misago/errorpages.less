@@ -7,9 +7,7 @@
   text-align: center;
 
   .error-icon {
-    margin: (@line-height-computed * -0.5) 0px;
-    .opacity(0.5);
-
+    color: @brand-warning;
     font-size: @font-size-large * 4;
   }
 
@@ -28,23 +26,42 @@
 /* Big displays */
 @media (min-width: @screen-sm-min) {
   .error-message {
-    background: @error-panel-bg;
-    border: 1px solid @error-panel-border;
-    border-radius: @border-radius-large;
-    box-shadow: 0px 0px 0px 3px @error-panel-shadow;
-    margin: (@line-height-computed * 2) auto;
-    padding: @line-height-computed;
-    width: @screen-sm-min * 0.8;
+    margin: (@line-height-computed * 3) 0px;
 
     .error-icon {
       margin: @line-height-computed 0px;
-      .opacity(0.5);
 
       font-size: @font-size-large * 6;
     }
 
     h1 {
       margin-top: 0px;
+    }
+  }
+}
+
+
+/* Outside ACP */
+.login-form {
+  .error-message {
+    h1 {
+      font-size: @font-size-large * 1.2;
+    }
+
+    p {
+      margin: 0px;
+
+      font-size: @font-size-base;
+    }
+  }
+}
+
+
+/* Big displays */
+@media (min-width: @screen-sm-min) {
+  .login-form {
+    .error-message {
+      margin: @line-height-computed;
     }
   }
 }

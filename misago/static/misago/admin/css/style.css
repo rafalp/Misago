@@ -6322,9 +6322,7 @@ body {
   text-align: center;
 }
 .error-message .error-icon {
-  margin: -10px 0px;
-  opacity: 0.5;
-  filter: alpha(opacity=50);
+  color: #f0ad4e;
   font-size: 72px;
 }
 .error-message h1 {
@@ -6337,22 +6335,27 @@ body {
 /* Big displays */
 @media (min-width: 768px) {
   .error-message {
-    background: #f7f7f7;
-    border: 1px solid #d4d4d4;
-    border-radius: 6px;
-    box-shadow: 0px 0px 0px 3px #ededed;
-    margin: 40px auto;
-    padding: 20px;
-    width: 614.4px;
+    margin: 60px 0px;
   }
   .error-message .error-icon {
     margin: 20px 0px;
-    opacity: 0.5;
-    filter: alpha(opacity=50);
     font-size: 108px;
   }
   .error-message h1 {
     margin-top: 0px;
+  }
+}
+/* Outside ACP */
+.login-form .error-message h1 {
+  font-size: 21.6px;
+}
+.login-form .error-message p {
+  margin: 0px;
+  font-size: 14px;
+}
+@media (min-width: 768px) {
+  .login-form .error-message {
+    margin: 20px;
   }
 }
 .form-panel {
