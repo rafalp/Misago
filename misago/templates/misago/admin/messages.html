@@ -1,14 +1,14 @@
 {% load i18n %}
 {% if messages %}
-<div class="misago-alerts alerts-fixed">
+<div class="misago-alerts">
   {% for message in messages %}
   <div>
     {% if 'info' in message.tags %}
     <p class="alert alert-info">
-      <span class="alert-icon fa fa-check-circle"></span>
+      <span class="alert-icon fa fa-info-circle"></span>
     {% elif 'success' in message.tags %}
     <p class="alert alert-success">
-      <span class="alert-icon fa fa-question-circle"></span>
+      <span class="alert-icon fa fa-check-circle"></span>
     {% elif 'warning' in message.tags %}
     <p class="alert alert-warning">
       <span class="alert-icon fa fa-exclamation-triangle"></span>
@@ -17,7 +17,6 @@
       <span class="alert-icon fa fa-times-circle"></span>
     {% endif %}
       {{ message }}
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">{% trans "Ok!" %}</button>
     </p>
   </div>
   {% endfor %}
