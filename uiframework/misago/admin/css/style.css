@@ -5786,105 +5786,18 @@ body {
 }
 .misago-alerts .alert {
   border: none;
-  display: inline-block;
-  margin-left: auto;
-  margin-right: auto;
+  border-bottom: 6px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0;
+  margin-bottom: 0px;
+  padding: 16px 0px;
+  font-size: 18px;
 }
 .misago-alerts .alert .alert-icon {
   margin: -12px 0px;
   margin-right: 6px;
   position: relative;
   top: 4.5px;
-  font-size: 27px;
-}
-.misago-alerts .alert .close {
-  border-radius: 3px;
-  float: none;
-  margin-left: 12px;
-  padding: 6px 8px;
-  font-size: 12px;
-  text-shadow: none;
-}
-.misago-alerts .alert.alert-success .close {
-  background-color: #27ae60;
-  box-shadow: 0px 0px 0px 2px rgba(255, 255, 255, 0.75);
-  opacity: 1;
-  filter: alpha(opacity=100);
-  color: rgba(255, 255, 255, 0.9);
-}
-.misago-alerts .alert.alert-success .close:hover {
-  background-color: #ffffff;
-  box-shadow: 0px 0px 0px 2px #ffffff;
-  color: #061c10;
-}
-.misago-alerts .alert.alert-success .close:active,
-.misago-alerts .alert.alert-success .close:focus {
-  background-color: #19703e;
-  outline: none;
-  color: #ffffff;
-}
-.misago-alerts .alert.alert-info .close {
-  background-color: #2980b9;
-  box-shadow: 0px 0px 0px 2px rgba(255, 255, 255, 0.75);
-  opacity: 1;
-  filter: alpha(opacity=100);
-  color: rgba(255, 255, 255, 0.9);
-}
-.misago-alerts .alert.alert-info .close:hover {
-  background-color: #ffffff;
-  box-shadow: 0px 0px 0px 2px #ffffff;
-  color: #091b27;
-}
-.misago-alerts .alert.alert-info .close:active,
-.misago-alerts .alert.alert-info .close:focus {
-  background-color: #1b557a;
-  outline: none;
-  color: #ffffff;
-}
-.misago-alerts .alert.alert-warning .close {
-  background-color: #e67e22;
-  box-shadow: 0px 0px 0px 2px rgba(255, 255, 255, 0.75);
-  opacity: 1;
-  filter: alpha(opacity=100);
-  color: rgba(255, 255, 255, 0.9);
-}
-.misago-alerts .alert.alert-warning .close:hover {
-  background-color: #ffffff;
-  box-shadow: 0px 0px 0px 2px #ffffff;
-  color: #4d2909;
-}
-.misago-alerts .alert.alert-warning .close:active,
-.misago-alerts .alert.alert-warning .close:focus {
-  background-color: #a85913;
-  outline: none;
-  color: #ffffff;
-}
-.misago-alerts .alert.alert-danger .close {
-  background-color: #c0392b;
-  box-shadow: 0px 0px 0px 2px rgba(255, 255, 255, 0.75);
-  opacity: 1;
-  filter: alpha(opacity=100);
-  color: rgba(255, 255, 255, 0.9);
-}
-.misago-alerts .alert.alert-danger .close:hover {
-  background-color: #ffffff;
-  box-shadow: 0px 0px 0px 2px #ffffff;
-  color: #2e0e0a;
-}
-.misago-alerts .alert.alert-danger .close:active,
-.misago-alerts .alert.alert-danger .close:focus {
-  background-color: #81261d;
-  outline: none;
-  color: #ffffff;
-}
-.misago-alerts.alerts-fixed {
-  position: fixed;
-  top: 40px;
-  width: 100%;
-  z-index: 1051;
-}
-.misago-alerts.alerts-fixed .alert {
-  box-shadow: 0px 0px 0px 6px rgba(0, 0, 0, 0.15);
+  font-size: 32.4px;
 }
 .btn.btn-default {
   background: #ededed;
@@ -6161,6 +6074,29 @@ body {
     color: #ffffff;
   }
 }
+.table-panel {
+  border: 1px solid #d4d4d4;
+  border-radius: 4px;
+  box-shadow: 0px 0px 0px 3px #ededed;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+.table-panel table {
+  margin: 0px;
+}
+.table-panel table tr th {
+  background: #ededed;
+  border: none;
+  padding: 5px 8px;
+  color: #555555;
+  font-size: 12px;
+}
+.table-panel table tr th:first-child {
+  border-radius: 3px 0px 0px 0px;
+}
+.table-panel table tr th:last-child {
+  border-radius: 0px 3px 0px 0px;
+}
 .navbars-container {
   border-bottom: 3px solid #c7c7c7;
 }
@@ -6322,9 +6258,7 @@ body {
   text-align: center;
 }
 .error-message .error-icon {
-  margin: -10px 0px;
-  opacity: 0.5;
-  filter: alpha(opacity=50);
+  color: #f0ad4e;
   font-size: 72px;
 }
 .error-message h1 {
@@ -6337,22 +6271,28 @@ body {
 /* Big displays */
 @media (min-width: 768px) {
   .error-message {
-    background: #f7f7f7;
-    border: 1px solid #d4d4d4;
-    border-radius: 6px;
-    box-shadow: 0px 0px 0px 3px #ededed;
-    margin: 40px auto;
-    padding: 20px;
-    width: 614.4px;
+    margin: 60px 0px;
   }
   .error-message .error-icon {
     margin: 20px 0px;
-    opacity: 0.5;
-    filter: alpha(opacity=50);
     font-size: 108px;
   }
   .error-message h1 {
     margin-top: 0px;
+  }
+}
+/* Outside ACP */
+.login-form .error-message h1 {
+  font-size: 21.6px;
+}
+.login-form .error-message p {
+  margin: 0px;
+  font-size: 14px;
+}
+/* Big displays */
+@media (min-width: 768px) {
+  .login-form .error-message {
+    margin: 20px;
   }
 }
 .form-panel {
