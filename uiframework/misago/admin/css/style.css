@@ -6073,6 +6073,10 @@ body {
     color: #ffffff;
   }
 }
+/* Sorting menu */
+.sorting-menu > li {
+  padding: 6px 12px;
+}
 .pager {
   margin: 0px;
   padding-bottom: 2px;
