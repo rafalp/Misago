@@ -6074,8 +6074,48 @@ body {
     color: #ffffff;
   }
 }
+.pager {
+  margin: 0px;
+  padding-bottom: 2px;
+}
+.pager > li.page {
+  padding-right: 6.66666667px;
+}
+.pager > li a,
+.pager > li a:link,
+.pager > li a:visited {
+  background-color: #ededed;
+  border-color: #ededed;
+  border-radius: 4px;
+  box-shadow: 0px 2px 0px 0px #d4d4d4;
+  padding: 6px 9px;
+  color: #777777;
+}
+.pager > li a:hover {
+  background-color: #d4d4d4;
+  border-color: #d4d4d4;
+  box-shadow: 0px 2px 0px 0px #bababa;
+  color: #777777;
+}
+.pager > li a:active,
+.pager > li a:focus {
+  background-color: #c7c7c7;
+  border-color: #c7c7c7;
+  box-shadow: none;
+  position: relative;
+  top: 2px;
+  color: #5e5e5e;
+}
 .table-actions {
   margin-bottom: 20px;
+  padding: 2px 0px;
+  overflow: auto;
+}
+.table-actions > .pull-left {
+  margin-right: 10px;
+}
+.table-actions > .pull-right {
+  margin-left: 10px;
 }
 .table-panel {
   border: 1px solid #d4d4d4;
@@ -6208,6 +6248,14 @@ body {
 .page-header .page-actions {
   float: right;
   margin: -4px 0px;
+}
+.page-header .page-actions .dropdown-menu {
+  left: auto;
+  right: 0px;
+}
+.page-header .page-actions .dropdown-menu:after {
+  left: auto;
+  right: 12px;
 }
 .admin-footer {
   margin-top: 30px;
