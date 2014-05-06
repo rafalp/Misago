@@ -8,7 +8,25 @@ $(function() {
 
 
 // Tables
-$(function() {
+function tableMassActions(label_none, label_selected) {
+  var $controller = $('.mass-controller');
+
+  function enableController(selected_no) {
+      $controller.removeClass('btn-default');
+      $controller.addClass('btn-primary');
+
+      var fin_label = label_selected.replace(0, selected_no)
+      $controller.html('<span class="fa fa-gears"></span> ' + fin_label);
+      $controller.prop("disabled", false);
+  }
+
+  function disableController() {
+      $controller.removeClass('btn-primary');
+      $controller.addClass('btn-default');
+      $controller.html('<span class="fa fa-exclamation-circle"></span> ' + label_none);
+      $controller.prop("disabled", true);
+  }
+
   $('.table tr').each(function() {
     var $row = $(this);
     var $checkbox = $row.find('input[type=checkbox]');
@@ -32,7 +50,22 @@ $(function() {
         $(this).parent().find('input').prop("checked", false);
         $row.removeClass('active');
       }
+
+      var selected_no = $('.table tr.active').length
+      if (selected_no > 0) {
+        enableController(selected_no);
+      } else {
+        disableController();
+      }
       return false;
     });
+
+    var selected_no = $('.table tr.active').length
+    if (selected_no > 0) {
+      enableController(selected_no);
+    } else {
+      $controller.html('<span class="fa fa-exclamation-circle"></span> ' + label_none);
+      $controller.prop("disabled", true);
+    }
   });
-});
+}

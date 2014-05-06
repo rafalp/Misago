@@ -187,28 +187,44 @@
           <span class="glyphicon glyphicon-ok"></span> Filters
         </a>
 
-        <a href="#" class="btn btn-primary pull-right">
-          <span class="fa fa-gears"></span>
-          Selected: 123
-        </a>
+        <div class="btn-group pull-right">
+          <button type="button" class="btn btn-default dropdown-toggle mass-controller" data-toggle="dropdown">
+            <span class="fa fa-gears"></span>
+            With selected
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <li>
+              <a href="#">
+                <span class="fa fa-sort-numeric-desc"></span>
+                Newest
+              </a>
+              <a href="#">
+                <span class="fa fa-sort-numeric-asc"></span>
+                Oldest
+              </a>
+              <a href="#">
+                <span class="fa fa-sort-numeric-desc"></span>
+                Most posts
+              </a>
+              <a href="#">
+                <span class="fa fa-sort-numeric-asc"></span>
+                Least posts
+              </a>
+            </li>
+          </ul>
+        </div>
 
       </div><!-- /.table-actions -->
 
       <div class="table-panel">
         <table class="table">
           <tr>
-            <th>&nbsp;</th>
             <th>Lorem</th>
             <th>Ipsum</th>
             <th style="width: 136px;">Dolor</th>
-            <th colspan="3">&nbsp;</th>
+            <th colspan="4">&nbsp;</th>
           </tr>
           <tr>
-            <td class="row-select">
-              <label>
-                <input type="checkbox" checked>
-              </label>
-            </td>
             <td class="lead">Lorem</td>
             <td>Ipsum</td>
             <td>
@@ -255,13 +271,13 @@
                 <span class="fa fa-times"></span>
               </button>
             </td>
-          </tr>
-          <tr>
             <td class="row-select">
               <label>
-                <input type="checkbox" checked>
+                <input type="checkbox">
               </label>
             </td>
+          </tr>
+          <tr>
             <td class="lead">Lorem</td>
             <td>Ipsum</td>
             <td>
@@ -308,13 +324,13 @@
                 <span class="fa fa-times"></span>
               </button>
             </td>
-          </tr>
-          <tr>
             <td class="row-select">
               <label>
-                <input type="checkbox" checked>
+                <input type="checkbox">
               </label>
             </td>
+          </tr>
+          <tr>
             <td class="lead">Lorem</td>
             <td>Ipsum</td>
             <td>
@@ -361,13 +377,13 @@
                 <span class="fa fa-times"></span>
               </button>
             </td>
-          </tr>
-          <tr>
             <td class="row-select">
               <label>
-                <input type="checkbox" checked>
+                <input type="checkbox">
               </label>
             </td>
+          </tr>
+          <tr>
             <td class="lead">Lorem</td>
             <td>Ipsum</td>
             <td>
@@ -414,13 +430,13 @@
                 <span class="fa fa-times"></span>
               </button>
             </td>
-          </tr>
-          <tr>
             <td class="row-select">
               <label>
-                <input type="checkbox" checked>
+                <input type="checkbox">
               </label>
             </td>
+          </tr>
+          <tr>
             <td class="lead">Lorem</td>
             <td>Ipsum</td>
             <td>
@@ -467,13 +483,13 @@
                 <span class="fa fa-times"></span>
               </button>
             </td>
-          </tr>
-          <tr>
             <td class="row-select">
               <label>
-                <input type="checkbox" checked>
+                <input type="checkbox">
               </label>
             </td>
+          </tr>
+          <tr>
             <td class="lead">Lorem</td>
             <td>Ipsum</td>
             <td>
@@ -519,6 +535,11 @@
               <button type="button" class="btn btn-danger tooltip-top" title="Activate">
                 <span class="fa fa-times"></span>
               </button>
+            </td>
+            <td class="row-select">
+              <label>
+                <input type="checkbox">
+              </label>
             </td>
           </tr>
         </table>
@@ -607,6 +628,11 @@
     <script src="../misago/admin/js/jquery.js"></script>
     <script src="../misago/admin/js/bootstrap.js"></script>
     <script src="../misago/admin/js/misago.js"></script>
+    <script>
+      $(function (){
+        tableMassActions("Select items", "Selected: 0");
+      });
+    </script>
 
   </body>
 </html>
