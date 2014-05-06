@@ -6183,6 +6183,7 @@ body {
 .page-header {
   border-bottom-width: 1px;
   margin: 0px;
+  margin-bottom: 20px;
   padding: 20px 0px;
 }
 .page-header h1 {
@@ -6201,6 +6202,10 @@ body {
 .page-header h1 .sub {
   margin-left: 10px;
   color: #848484;
+}
+.page-header .page-actions {
+  float: right;
+  margin: -4px 0px;
 }
 .admin-footer {
   margin-top: 30px;

@@ -7,32 +7,38 @@
 //
 //##
 .page-header {
-	border-bottom-width: 1px;
+  border-bottom-width: 1px;
   margin: 0px;
+  margin-bottom: @line-height-computed;
   padding: @line-height-computed 0px;
 
   h1 {
-  	margin: 0px;
-  	padding: 0px;
-  	overflow: visible;
+    margin: 0px;
+    padding: 0px;
+    overflow: visible;
 
-  	font-size: @font-size-large * 1.5;
+    font-size: @font-size-large * 1.5;
 
-  	.main, .sub {
-  		float: left;
-  	}
+    .main, .sub {
+      float: left;
+    }
 
-  	.main {
-  		a {
-  			color: @text-color;
-  		}
-  	}
+    .main {
+      a {
+        color: @text-color;
+      }
+    }
 
-  	.sub {
-  		margin-left: @line-height-computed / 2;
+    .sub {
+      margin-left: @line-height-computed / 2;
 
-  		color: lighten(@text-color, 25%);
-  	}
+      color: lighten(@text-color, 25%);
+    }
+  }
+
+  .page-actions {
+    float: right;
+    margin: -4px 0px;
   }
 }
 
