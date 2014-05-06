@@ -6074,12 +6074,14 @@ body {
     color: #ffffff;
   }
 }
+.table-actions {
+  margin-bottom: 20px;
+}
 .table-panel {
   border: 1px solid #d4d4d4;
   border-radius: 4px;
   box-shadow: 0px 0px 0px 3px #ededed;
   margin-bottom: 20px;
-  margin-top: 20px;
 }
 .table-panel table {
   margin: 0px;
