@@ -6125,6 +6125,9 @@ body {
 .table-panel table.table {
   margin: 0px;
 }
+.table-panel table.table tr.active td {
+  background-color: rgba(240, 173, 78, 0.05);
+}
 .table-panel table.table tr th {
   background: #ededed;
   border: none;
@@ -6139,7 +6142,13 @@ body {
   border-radius: 0px 3px 0px 0px;
 }
 .table-panel table.table tr td {
+  background-color: #fff;
   vertical-align: middle;
+}
+.table-panel table.table tr td img {
+  border-radius: 4px;
+  max-width: 30px;
+  max-height: 30px;
 }
 .table-panel table.table tr td.row-action {
   width: 1%;
@@ -6156,6 +6165,41 @@ body {
 .table-panel table.table tr td.row-action .dropdown-toggle > span {
   position: relative;
   bottom: 1px;
+}
+.table-panel table.table tr td.row-select {
+  width: 1%;
+}
+.table-panel table.table tr td.row-select label {
+  padding: 0px;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+}
+.table-panel table.table tr td.row-select label input {
+  width: 12px;
+  height: 12px;
+}
+.table-panel table.table tr td.row-select label.ninja-label {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+.table-panel table.table tr td.row-select a {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+.table-panel table.table tr td.row-select a span {
+  color: #a6a6a6;
+  font-size: 24px;
+}
+.table-panel table.table tr td.row-select a.active span {
+  color: #2ecc71;
 }
 .navbars-container {
   border-bottom: 3px solid #c7c7c7;

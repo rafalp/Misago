@@ -26,6 +26,12 @@
     margin: 0px;
 
     tr {
+      &.active {
+        td {
+          background-color: fadeOut(@brand-warning, 95%);
+        }
+      }
+
       th {
         background: @table-header-bg;
         border: none;
@@ -44,6 +50,7 @@
       }
 
       td {
+        background-color: #fff;
         vertical-align: middle;
 
         img {
@@ -66,6 +73,51 @@
             &>span {
               position: relative;
               bottom: 1px;
+            }
+          }
+        }
+
+        &.row-select {
+          width: 1%;
+
+          label {
+            padding: 0px;
+            width: 24px;
+            height: 24px;
+
+            text-align: center;
+
+            input {
+              width: 12px;
+              height: 12px;
+            }
+
+            &.ninja-label {
+                border: 0;
+                clip: rect(0 0 0 0);
+                height: 1px;
+                margin: -1px;
+                overflow: hidden;
+                padding: 0;
+                position: absolute;
+                width: 1px;
+            }
+          }
+
+          a {
+            display: block;
+            width: 24px;
+            height: 24px;
+
+            span {
+              color: lighten(@gray-light, 5%);
+              font-size: 24px;
+            }
+
+            &.active {
+              span {
+                color: @brand-success;
+              }
             }
           }
         }
