@@ -33,7 +33,6 @@
 
       color: @dropdown-link-color;
       text-align: left;
-      white-space: nowrap;
 
       &:hover {
         background-color: @dropdown-link-hover-bg;
@@ -97,8 +96,6 @@
 /* Big displays */
 @media (min-width: @screen-sm-min) {
   .dropdown-menu {
-    min-width: 300px;
-
     .dropdown-title {
       background-color: #ecf0f1;
       border-radius: @border-radius-base @border-radius-base 0px 0px;
@@ -117,14 +114,18 @@
         margin-left: @line-height-computed / 2;
       }
 
+      a {
+        white-space: nowrap;
+      }
+
       button {
         background: none;
         border: none;
         padding: 3px 20px;
-        width: 100%;
 
         color: @dropdown-link-color;
         text-align: left;
+        white-space: nowrap;
 
         &:hover {
           background-color: @dropdown-link-hover-bg;

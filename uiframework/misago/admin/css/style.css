@@ -5998,7 +5998,6 @@ body {
   width: 100%;
   color: #5e5e5e;
   text-align: left;
-  white-space: nowrap;
 }
 .dropdown-menu li button:hover {
   background-color: #666666;
@@ -6039,9 +6038,6 @@ body {
 }
 /* Big displays */
 @media (min-width: 768px) {
-  .dropdown-menu {
-    min-width: 300px;
-  }
   .dropdown-menu .dropdown-title {
     background-color: #ecf0f1;
     border-radius: 4px 4px 0px 0px;
@@ -6056,13 +6052,16 @@ body {
   .dropdown-menu > li .badge {
     margin-left: 10px;
   }
+  .dropdown-menu > li a {
+    white-space: nowrap;
+  }
   .dropdown-menu > li button {
     background: none;
     border: none;
     padding: 3px 20px;
-    width: 100%;
     color: #5e5e5e;
     text-align: left;
+    white-space: nowrap;
   }
   .dropdown-menu > li button:hover {
     background-color: #666666;
@@ -6108,8 +6107,8 @@ body {
 }
 .table-actions {
   margin-bottom: 20px;
-  padding: 2px 0px;
-  overflow: auto;
+  height: 36px;
+  overflow: visible;
 }
 .table-actions > .pull-left {
   margin-right: 10px;
