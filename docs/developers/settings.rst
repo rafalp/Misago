@@ -14,7 +14,7 @@ Misago splits its settings into two groups:
 Both types of settings can accessed as attributes of ``misago.conf.settings`` object and high level settings can be also accessed from your templates as attributes of ``misago_settings`` context value.
 
 .. note::
-   Not all high level settings values are available at all times. Some settings ("lazy settings"), are evaluated to ``True`` or ``None`` immediately upon load. This means while they can be checked to see if they have value or not, but require you to use special ``get_lazy_setting(setting)`` getter to actually obtain their real value.
+   Not all high level settings values are available at all times. Some settings ("lazy settings"), are evaluated to ``True`` or ``None`` immediately upon load. This means that they can be checked to see if they have value or not, but require you to use special ``get_lazy_setting(setting)`` getter to obtain their real value.
 
 
 Defining Custom DB Settings
@@ -201,7 +201,7 @@ Minimal required length of new user passwords.
 subscribe_reply
 ---------------
 
-Default value for automaticall subscription to replied threads prefference for new user accounts. Its value represents one of those settings:
+Default value for automatic subscription to replied threads prefference for new user accounts. Its value represents one of those settings:
 
 * **no** - don't watch.
 * **watch** - put on watched threads list.
@@ -211,7 +211,7 @@ Default value for automaticall subscription to replied threads prefference for n
 subscribe_start
 ---------------
 
-Default value for automaticall subscription to started threads prefference for new user accounts. Allows for same values as ``subscribe_reply``.
+Default value for automatic subscription to started threads prefference for new user accounts. Allows for same values as ``subscribe_reply``.
 
 
 username_length_max
@@ -224,3 +224,11 @@ username_length_min
 -------------------
 
 Minimal allowed username length.
+
+
+Django Settings Reference
+=========================
+
+Django defines plenty of configuration options that control behaviour of different features that Misago relies on.
+
+Those are documented and available in Django documentation: `Settings <https://docs.djangoproject.com/en/1.6/ref/settings/>`_
