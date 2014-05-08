@@ -6263,6 +6263,36 @@ body {
 .table-panel table.table tr td.row-select a.active span {
   color: #2ecc71;
 }
+.list-panel {
+  border-radius: 4px;
+  box-shadow: 0px 0px 0px 3px #ededed;
+  margin-bottom: 20px;
+}
+.list-panel .list-group {
+  margin: 0px;
+}
+.list-panel .list-group .list-group-item h4,
+.list-panel .list-group .list-group-item:link h4,
+.list-panel .list-group .list-group-item:visited h4 {
+  color: #444444;
+}
+.list-panel .list-group .list-group-item p,
+.list-panel .list-group .list-group-item:link p,
+.list-panel .list-group .list-group-item:visited p {
+  color: #999999;
+}
+.list-panel .list-group .list-group-item:active,
+.list-panel .list-group .list-group-item:hover {
+  background: #fff;
+  box-shadow: inset 0px 0px 0px 1px #3498db;
+}
+.list-panel .list-group .list-group-item:active h4,
+.list-panel .list-group .list-group-item:hover h4 {
+  color: #444444;
+}
+.list-panel .list-group .list-group-item:active {
+  box-shadow: inset 0px 0px 0px 1px #c0392b;
+}
 .navbars-container {
   border-bottom: 3px solid #c7c7c7;
 }

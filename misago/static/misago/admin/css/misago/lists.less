@@ -1,0 +1,39 @@
+//
+// List group
+// --------------------------------------------------
+
+
+.list-panel {
+  border-radius: @border-radius-base;
+  box-shadow: 0px 0px 0px 3px @table-panel-shadow;
+  margin-bottom: @line-height-computed;
+
+  .list-group {
+    margin: 0px;
+
+    .list-group-item {
+      &, &:link, &:visited {
+        h4 {
+          color: @text-color;
+        }
+
+        p {
+          color: @gray-light;
+        }
+      }
+
+      &:active, &:hover {
+        background: #fff;
+        box-shadow: inset 0px 0px 0px 1px @brand-secondary;
+
+        h4 {
+          color: @text-color;
+        }
+      }
+
+      &:active {
+        box-shadow: inset 0px 0px 0px 1px @brand-primary;
+      }
+    }
+  }
+}

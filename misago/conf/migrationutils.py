@@ -56,7 +56,8 @@ def migrate_settings_group(orm, group_fixture, old_group_key=None):
 
     group.key = group_fixture['key']
     group.name = original_message(group_fixture['name'])
-    group.description = original_message(group_fixture.get('description'))
+    if group_fixture.get('description'):
+        group.description = original_message(group_fixture.get('description'))
     group.save()
 
     # Delete groups settings and make new ones
@@ -69,8 +70,9 @@ def migrate_settings_group(orm, group_fixture, old_group_key=None):
         setting_fixture['order'] = order
 
         setting_fixture['name'] = original_message(setting_fixture['name'])
-        setting_fixture['description'] = original_message(
-            setting_fixture.get('description'))
+        if setting_fixture.get('description'):
+            setting_fixture['description'] = original_message(
+                setting_fixture.get('description'))
 
         if (setting_fixture.get('field_extra') and
                 setting_fixture.get('field_extra').get('choices')):

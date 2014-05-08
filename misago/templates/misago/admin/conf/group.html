@@ -1,0 +1,22 @@
+{% extends "misago/admin/conf/index.html" %}
+{% load i18n %}
+
+
+{% block title %}{% trans active_group.name %} | {{ block.super }}{% endblock %}
+
+
+{% block header %}
+  <div class="main">
+    <span class="fa fa-cogs">
+    <a href="{% url 'misago:admin:settings:index' %}">{% trans "Settings" %}</a>
+  </div>
+  <div class="sub">
+    <span class="fa fa-chevron-right"></span>
+    {% trans active_group.name %}
+  </div>
+{% endblock header%}
+
+
+{% block action %}
+  TODO: GROUP VIEW
+{% endblock action %}

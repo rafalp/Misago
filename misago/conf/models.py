@@ -8,10 +8,27 @@ except ImportError:
     import pickle
 
 
+class SettingsGroupsManager(models.Manager):
+    def ordered_alphabetically(self):
+        from django.utils.translation import ugettext as _
+
+        groups_dict = {}
+
+        for group in self.all():
+            groups_dict[_(group.name)] = group
+
+        ordered_groups = []
+        for key in groups_dict.keys():
+            ordered_groups.append(groups_dict[key])
+        return ordered_groups
+
+
 class SettingsGroup(models.Model):
     key = models.CharField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
+
+    objects = SettingsGroupsManager()
 
 
 class Setting(models.Model):
