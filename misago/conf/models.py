@@ -75,24 +75,7 @@ admin_site.add_node(
 
 admin_site.add_node(
     parent='misago:admin',
-    link='misago:admin:settings',
+    link='misago:admin:settings:index',
     icon='fa fa-gears',
     name=_("Settings"),
-    )
-
-admin_site.add_node(
-    parent='misago:admin',
-    namespace='users',
-    after='misago:admin:settings',
-    link='misago:admin:users:accounts:list',
-    icon='fa fa-user',
-    name=_("Users"),
-    )
-
-admin_site.add_node(
-    parent='misago:admin:users',
-    namespace='accounts',
-    link='misago:admin:users:accounts:list',
-    icon='fa fa-user',
-    name=_("Accounts"),
     )

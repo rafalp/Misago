@@ -22,6 +22,7 @@ Table of Contents
    developers/index
    developers/coding_style
    developers/shortcuts
+   developers/admin_actions
    developers/views_errors
    developers/forms
    developers/decorators

@@ -33,6 +33,7 @@ Following references cover everything you want to know about writing your own ap
 
    coding_style
    shortcuts
+   admin_actions
    views_errors
    forms
    decorators

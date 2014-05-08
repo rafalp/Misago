@@ -1,5 +1,7 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
+from django.core.exceptions import ImproperlyConfigured
+from django.utils.module_loading import import_by_path
 
 
 urlpatterns = patterns('misago.admin.views',
@@ -8,8 +10,26 @@ urlpatterns = patterns('misago.admin.views',
     # at Misago Admin and will be checked by Misago Admin Middleware
     url(r'^$', 'index.admin_index', name='index'),
     url(r'^logout/$', 'auth.logout', name='logout'),
-    url(r'^settings/$', 'index.admin_index', name='settings'),
 )
+
+
+def discover_admin_urls():
+    SEARCH_PATTERNS = (
+        '%s.urls.adminurlpatterns',
+        '%s.urls.admin.urlpatterns',
+        '%s.adminurls.urlpatterns',
+        )
+    admin_patterns = []
+
+    for app in settings.INSTALLED_APPS:
+        for pattern in SEARCH_PATTERNS:
+            try:
+                admin_patterns += import_by_path(pattern % app)
+                continue
+            except ImproperlyConfigured:
+                pass
+
+    return admin_patterns
 
 
 """
