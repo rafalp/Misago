@@ -6085,47 +6085,47 @@ body {
   background-color: #f7f7f7;
   border-radius: 0px 0px 6px 6px;
 }
-.sidenav li a,
-.sidenav li a:link,
-.sidenav li a:visited {
+.nav-side li a,
+.nav-side li a:link,
+.nav-side li a:visited {
   border-bottom: 1px solid #eeeeee;
   padding: 6px 6.6px;
   color: #999999;
 }
-.sidenav li a .fa,
-.sidenav li a:link .fa,
-.sidenav li a:visited .fa,
-.sidenav li a .glyphicon,
-.sidenav li a:link .glyphicon,
-.sidenav li a:visited .glyphicon {
+.nav-side li a .fa,
+.nav-side li a:link .fa,
+.nav-side li a:visited .fa,
+.nav-side li a .glyphicon,
+.nav-side li a:link .glyphicon,
+.nav-side li a:visited .glyphicon {
   margin-left: -8px;
   width: 30px;
   text-align: center;
 }
-.sidenav li a:hover {
+.nav-side li a:hover {
   color: #444444;
 }
-.sidenav li a:active {
+.nav-side li a:active {
   color: #c0392b;
 }
-.sidenav li:last-child a {
+.nav-side li:last-child a {
   border-bottom: none;
 }
-.sidenav li.active a,
-.sidenav li.active a:link,
-.sidenav li.active a:visited,
-.sidenav li.active a:active,
-.sidenav li.active a:hover {
+.nav-side li.active a,
+.nav-side li.active a:link,
+.nav-side li.active a:visited,
+.nav-side li.active a:active,
+.nav-side li.active a:hover {
   background: #333333;
   border: none;
   border-radius: 4px;
   color: #fff;
 }
-.sidenav li.active a:after,
-.sidenav li.active a:link:after,
-.sidenav li.active a:visited:after,
-.sidenav li.active a:active:after,
-.sidenav li.active a:hover:after {
+.nav-side li.active a:after,
+.nav-side li.active a:link:after,
+.nav-side li.active a:visited:after,
+.nav-side li.active a:active:after,
+.nav-side li.active a:hover:after {
   float: right;
   content: '';
   width: 0;
