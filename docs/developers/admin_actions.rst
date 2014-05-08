@@ -33,4 +33,31 @@ Depending on structure of your app and your tastes, you can define your admin pa
 * as **urlpatterns** variable in **yourapp.urls.admin** module
 * as **urlpatterns** variable in **yourapp.adminurls** module
 
-Each of those is checked, but only first one to be found is used.
+Each of those is checked, in this order. First one to be found is included in urlconf.
+
+
+Registering urls in navigation
+------------------------------
+
+Your urls have to be discoverable by your users. Easiest way is to do this is to display primary link to your admin in admin site navigation.
+
+This navigation is controlled by instance of the :py:class:`misago.admin.hierarchy.AdminHierarchyBuilder` class available under ``misago.admin.site`` path. This class has plenty of functions, but it's public api consists of one method:
+
+
+.. function:: add_node(parent='misago:admin', after=None, before=None,
+                 namespace=None, link=None, name=None, icon=None)
+
+
+This method accepts following named arguments:
+
+* **parent** - Name of parent namespace under which this action link is displayed.
+* **after** - Link before which one this one should be displayed.
+* **before** - Link after which one this one should be displayed.
+* **namespace** - This link namespace.
+* **link** - Link name.
+* **name** - Link title.
+* **icon** - Link icon (both `Glyphicons <http://getbootstrap.com/components/#glyphicons>`_ and `Font Awesome <http://fontawesome.io/icons/>`_ are supported).
+
+Only last three arguments are required. ``after`` and ``before`` arguments are exclusive. If you specify both, this will result in an error.
+
+Misago Admin supports three levels of hierarchy. Each level should corelate to new namespace nested under ``misago:admin``. Depending on complexity of your app's admin, it can define links that are one level deep, or three levels deep.
