@@ -6,6 +6,9 @@ from misago.admin.auth import is_admin_session, update_admin_session
 from misago.admin.views.auth import login
 
 
+__ALL__ = ['get_protected_namespace', 'render', 'protected_admin_view']
+
+
 def get_protected_namespace(request):
     for namespace in settings.MISAGO_ADMIN_NAMESPACES:
         try:

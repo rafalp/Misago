@@ -121,10 +121,7 @@ class AdminHierarchyBuilder(object):
                         node_added = parent.add_node(node_obj)
 
                     if node_added:
-                        if node['namespace']:
-                            namespace = '%s:%s' % (node['parent'], node['namespace'])
-                        else:
-                            namespace = node['parent']
+                        namespace = node_obj.namespace
 
                         if namespace not in nodes_dict:
                             nodes_dict[namespace] = node_obj

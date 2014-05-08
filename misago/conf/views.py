@@ -1,2 +1,6 @@
+from django.shortcuts import redirect
+from misago.admin.views import render
+
+
 def index(request):
-    raise Exception('WSUP, ADMIN SETTINGS GROUPZ!')
+    return render(request, 'misago/admin/conf/index.html')

@@ -1,0 +1,17 @@
+{% extends "misago/admin/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{% trans "Settings" %} | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1>
+      <span class="fa fa-cogs">
+      {% trans "Settings" %}
+    </h1>
+  </div>
+</div>
+{% endblock content %}
