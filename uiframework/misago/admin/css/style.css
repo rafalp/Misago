@@ -6073,6 +6073,56 @@ body {
     color: #ffffff;
   }
 }
+.sidenav li a,
+.sidenav li a:link,
+.sidenav li a:visited {
+  border-bottom: 1px solid #eeeeee;
+  padding: 6px 6.6px;
+  color: #999999;
+}
+.sidenav li a .fa,
+.sidenav li a:link .fa,
+.sidenav li a:visited .fa,
+.sidenav li a .glyphicon,
+.sidenav li a:link .glyphicon,
+.sidenav li a:visited .glyphicon {
+  margin-left: -8px;
+  width: 30px;
+  text-align: center;
+}
+.sidenav li a:hover {
+  color: #444444;
+}
+.sidenav li a:active {
+  color: #c0392b;
+}
+.sidenav li:last-child a {
+  border-bottom: none;
+}
+.sidenav li.active a,
+.sidenav li.active a:link,
+.sidenav li.active a:visited,
+.sidenav li.active a:active,
+.sidenav li.active a:hover {
+  background: #333333;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+}
+.sidenav li.active a:after,
+.sidenav li.active a:link:after,
+.sidenav li.active a:visited:after,
+.sidenav li.active a:active:after,
+.sidenav li.active a:hover:after {
+  float: right;
+  content: '';
+  width: 0;
+  height: 0;
+  margin-top: 6px;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 4px solid #fff;
+}
 .pager {
   margin: 0px;
   padding-bottom: 2px;
@@ -6281,9 +6331,6 @@ body {
     margin-bottom: -3px;
   }
 }
-.jumbotron {
-  margin-top: -20px;
-}
 .page-header {
   border-bottom-width: 1px;
   margin: 0px;
@@ -6352,12 +6399,6 @@ body {
   color: #fafafa;
   font-size: 34.56px;
   font-weight: bold;
-}
-.misago-branding a .subscript {
-  display: inline-block;
-  position: relative;
-  bottom: 4.76px;
-  font-size: 17.28px;
 }
 .misago-branding a,
 .misago-branding a:link,

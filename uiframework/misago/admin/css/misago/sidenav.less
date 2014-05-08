@@ -1,0 +1,60 @@
+//
+// Sidenav
+// --------------------------------------------------
+
+.sidenav {
+  li {
+    a {
+      &, &:link, &:visited {
+        border-bottom: 1px solid @gray-lighter;
+        padding: @padding-base-vertical (@padding-base-vertical * 1.1);
+
+        color: @gray-light;
+
+        .fa, .glyphicon {
+          margin-left: -8px;
+          width: 30px;
+
+          text-align: center;
+        }
+      }
+
+      &:hover {
+        color: @text-color;
+      }
+
+      &:active {
+        color: @brand-primary;
+      }
+    }
+
+    &:last-child {
+      a {
+        border-bottom: none;
+      }
+    }
+
+    &.active {
+      a {
+        &, &:link, &:visited, &:active, &:hover {
+          background: @gray-dark;
+          border: none;
+          border-radius: @border-radius-base;
+
+          color: #fff;
+
+          &:after {
+            float: right;
+            content: '';
+            width: 0;
+            height: 0;
+            margin-top: 6px;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+            border-left: 4px solid #fff;
+          }
+        }
+      }
+    }
+  }
+}
