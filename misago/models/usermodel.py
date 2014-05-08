@@ -3,8 +3,7 @@ from datetime import timedelta
 import math
 from random import choice
 from path import path
-from django.contrib.auth.hashers import (
-    check_password, make_password, is_password_usable, UNUSABLE_PASSWORD)
+from django.contrib.auth.hashers import check_password, make_password
 from django.core.cache import cache, InvalidCacheBackendError
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
