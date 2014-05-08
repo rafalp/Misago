@@ -6281,6 +6281,7 @@ button.close {
 .nav-side li a:link .badge,
 .nav-side li a:visited .badge {
   background: transparent;
+  border-radius: 3px;
   float: right;
   margin-top: 1px;
   color: #444444;
