@@ -6231,6 +6231,43 @@ button.close {
   background: #666666;
   color: #ffffff;
 }
+/* Sidenav */
+.nav-side li a,
+.nav-side li a:link,
+.nav-side li a:visited {
+  border-bottom: 1px solid #eeeeee;
+  padding: 6px 10px;
+  color: #999999;
+}
+.nav-side li a .fa,
+.nav-side li a:link .fa,
+.nav-side li a:visited .fa,
+.nav-side li a .glyphicon,
+.nav-side li a:link .glyphicon,
+.nav-side li a:visited .glyphicon {
+  margin-left: -8px;
+  width: 30px;
+  text-align: center;
+}
+.nav-side li a:hover {
+  color: #444444;
+}
+.nav-side li a:active {
+  color: #c0392b;
+}
+.nav-side li:last-child a {
+  border-bottom: none;
+}
+.nav-side li.active a,
+.nav-side li.active a:link,
+.nav-side li.active a:visited,
+.nav-side li.active a:active,
+.nav-side li.active a:hover {
+  background: #333333;
+  border: none;
+  border-radius: 4px;
+  color: #ffffff;
+}
 /* Badges */
 .nav-pills > li .badge,
 .nav-tabs > li .badge {
@@ -6239,6 +6276,22 @@ button.close {
   padding-right: 4px;
   position: relative;
   bottom: 1px;
+}
+.nav-side li a .badge,
+.nav-side li a:link .badge,
+.nav-side li a:visited .badge {
+  background: transparent;
+  float: right;
+  margin-top: 1px;
+  color: #444444;
+}
+.nav-side li.active a .badge,
+.nav-side li.active a:link .badge,
+.nav-side li.active a:visited .badge,
+.nav-side li.active a:active .badge,
+.nav-side li.active a:hover .badge {
+  background: #ffffff;
+  color: #333333;
 }
 /* Label */
 .nav-pills > li .label,

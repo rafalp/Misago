@@ -82,6 +82,54 @@
 }
 
 
+/* Sidenav */
+.nav-side {
+  li {
+    a {
+      &, &:link, &:visited {
+        border-bottom: 1px solid @nav-side-border;
+        padding: @nav-side-padding;
+
+        color: @nav-side-color;
+
+        .fa, .glyphicon {
+          margin-left: -8px;
+          width: 30px;
+
+          text-align: center;
+        }
+      }
+
+      &:hover {
+        color: @nav-side-hover-color;
+      }
+
+      &:active {
+        color: @nav-side-active-color;
+      }
+    }
+
+    &:last-child {
+      a {
+        border-bottom: none;
+      }
+    }
+
+    &.active {
+      a {
+        &, &:link, &:visited, &:active, &:hover {
+          background: @nav-side-active-bg;
+          border: none;
+          border-radius: @border-radius-base;
+
+          color: @nav-side-active-text-color;
+        }
+      }
+    }
+  }
+}
+
+
 /* Badges */
 .nav-pills, .nav-tabs {
   &>li {
@@ -94,6 +142,35 @@
     }
   }
 }
+
+.nav-side {
+  li {
+    a {
+      &, &:link, &:visited {
+        .badge {
+          background: transparent;
+          float: right;
+          margin-top: 1px;
+
+          color: @text-color;
+        }
+      }
+    }
+
+    &.active {
+      a {
+        &, &:link, &:visited, &:active, &:hover {
+          .badge {
+            background: @nav-side-active-text-color;
+
+            color: @nav-side-active-bg;
+          }
+        }
+      }
+    }
+  }
+}
+
 
 /* Label */
 .nav-pills, .nav-tabs {
