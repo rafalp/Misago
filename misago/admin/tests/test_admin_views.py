@@ -5,17 +5,37 @@ from misago.admin.testutils import admin_login
 from misago.admin.views import get_protected_namespace
 
 
-class AdminIndexViewTests(TestCase):
-    def test_view_returns_200(self):
-        """admin index view returns 200"""
-        User = get_user_model()
-        User.objects.create_superuser('Bob', 'bob@test.com', 'Pass.123')
-        admin_login(self.client, 'Bob', 'Pass.123')
+class FakeRequest(object):
+    def __init__(self, path):
+        self.path = path
 
-        response = self.client.get(reverse('misago:admin:index'))
 
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('Bob', response.content)
+class AdminProtectedNamespaceTexts(TestCase):
+    def test_valid_cases(self):
+        """get_protected_namespace returns true for protected links"""
+        links_prefix = reverse('misago:admin:index')
+        TEST_CASES = (
+            '',
+            'somewhere/',
+            'ejksajdlksajldjskajdlksajlkdas',
+        )
+
+        for case in TEST_CASES:
+            request = FakeRequest(links_prefix + case)
+            self.assertEqual(get_protected_namespace(request), 'misago:admin')
+
+
+    def test_invalid_cases(self):
+        """get_protected_namespace returns none for other links"""
+        TEST_CASES = (
+            '/',
+            '/somewhere/',
+            '/ejksajdlksajldjskajdlksajlkdas',
+        )
+
+        for case in TEST_CASES:
+            request = FakeRequest(case)
+            self.assertEqual(get_protected_namespace(request), None)
 
 
 class AdminLoginViewTests(TestCase):
@@ -52,34 +72,48 @@ class AdminLoginViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
 
 
-class FakeRequest(object):
-    def __init__(self, path):
-        self.path = path
+class AdminLogoutTests(TestCase):
+    def setUp(self):
+        User = get_user_model()
+        self.admin = User.objects.create_superuser(
+            'Bob', 'bob@test.com', 'Pass.123')
+        admin_login(self.client, 'Bob', 'Pass.123')
+
+    def test_admin_logout(self):
+        """admin logout logged from admin only"""
+        response = self.client.post(reverse('misago:admin:logout'))
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(reverse('misago:admin:index'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Your admin session has been closed.", response.content)
+
+        response = self.client.get(reverse('misago:index'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.admin.username, response.content)
+
+    def test_complete_logout(self):
+        """complete logout logged from both admin and site"""
+        response = self.client.post(reverse('misago:logout'))
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(reverse('misago:admin:index'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Sign in", response.content)
+
+        response = self.client.get(reverse('misago:index'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Sign in", response.content)
 
 
-class AdminProtectedNamespaceTexts(TestCase):
-    def test_valid_cases(self):
-        """get_protected_namespace returns true for protected links"""
-        links_prefix = reverse('misago:admin:index')
-        TEST_CASES = (
-            '',
-            'somewhere/',
-            'ejksajdlksajldjskajdlksajlkdas',
-        )
+class AdminIndexViewTests(TestCase):
+    def test_view_returns_200(self):
+        """admin index view returns 200"""
+        User = get_user_model()
+        User.objects.create_superuser('Bob', 'bob@test.com', 'Pass.123')
+        admin_login(self.client, 'Bob', 'Pass.123')
 
-        for case in TEST_CASES:
-            request = FakeRequest(links_prefix + case)
-            self.assertEqual(get_protected_namespace(request), 'misago:admin')
+        response = self.client.get(reverse('misago:admin:index'))
 
-
-    def test_invalid_cases(self):
-        """get_protected_namespace returns none for other links"""
-        TEST_CASES = (
-            '/',
-            '/somewhere/',
-            '/ejksajdlksajldjskajdlksajlkdas',
-        )
-
-        for case in TEST_CASES:
-            request = FakeRequest(case)
-            self.assertEqual(get_protected_namespace(request), None)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Bob', response.content)
