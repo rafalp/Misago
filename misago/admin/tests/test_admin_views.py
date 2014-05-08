@@ -10,7 +10,7 @@ class FakeRequest(object):
         self.path = path
 
 
-class AdminProtectedNamespaceTexts(TestCase):
+class AdminProtectedNamespaceTests(TestCase):
     def test_valid_cases(self):
         """get_protected_namespace returns true for protected links"""
         links_prefix = reverse('misago:admin:index')
