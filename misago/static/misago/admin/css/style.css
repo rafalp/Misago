@@ -5998,7 +5998,6 @@ body {
   width: 100%;
   color: #5e5e5e;
   text-align: left;
-  white-space: nowrap;
 }
 .dropdown-menu li button:hover {
   background-color: #666666;
@@ -6039,9 +6038,6 @@ body {
 }
 /* Big displays */
 @media (min-width: 768px) {
-  .dropdown-menu {
-    min-width: 300px;
-  }
   .dropdown-menu .dropdown-title {
     background-color: #ecf0f1;
     border-radius: 4px 4px 0px 0px;
@@ -6056,13 +6052,16 @@ body {
   .dropdown-menu > li .badge {
     margin-left: 10px;
   }
+  .dropdown-menu > li a {
+    white-space: nowrap;
+  }
   .dropdown-menu > li button {
     background: none;
     border: none;
     padding: 3px 20px;
-    width: 100%;
     color: #5e5e5e;
     text-align: left;
+    white-space: nowrap;
   }
   .dropdown-menu > li button:hover {
     background-color: #666666;
@@ -6073,6 +6072,196 @@ body {
     background-color: #333333;
     color: #ffffff;
   }
+}
+.modal .modal-dialog {
+  border-radius: 6px;
+  box-shadow: 0px 0px 0px 6px rgba(51, 51, 51, 0.5);
+}
+.modal .modal-dialog .modal-content .modal-header {
+  background-color: #fafafa;
+  border-radius: 6px 6px 0px 0px;
+}
+.modal .modal-dialog .modal-content .modal-footer {
+  background-color: #f7f7f7;
+  border-radius: 0px 0px 6px 6px;
+}
+.nav-side li a,
+.nav-side li a:link,
+.nav-side li a:visited {
+  border-bottom: 1px solid #eeeeee;
+  padding: 6px 6.6px;
+  color: #999999;
+}
+.nav-side li a .fa,
+.nav-side li a:link .fa,
+.nav-side li a:visited .fa,
+.nav-side li a .glyphicon,
+.nav-side li a:link .glyphicon,
+.nav-side li a:visited .glyphicon {
+  margin-left: -8px;
+  width: 30px;
+  text-align: center;
+}
+.nav-side li a:hover {
+  color: #444444;
+}
+.nav-side li a:active {
+  color: #c0392b;
+}
+.nav-side li:last-child a {
+  border-bottom: none;
+}
+.nav-side li.active a,
+.nav-side li.active a:link,
+.nav-side li.active a:visited,
+.nav-side li.active a:active,
+.nav-side li.active a:hover {
+  background: #333333;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+}
+.nav-side li.active a:after,
+.nav-side li.active a:link:after,
+.nav-side li.active a:visited:after,
+.nav-side li.active a:active:after,
+.nav-side li.active a:hover:after {
+  float: right;
+  content: '';
+  width: 0;
+  height: 0;
+  margin-top: 6px;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 4px solid #fff;
+}
+.pager {
+  margin: 0px;
+  padding-bottom: 2px;
+}
+.pager > li.page {
+  padding-right: 6.66666667px;
+}
+.pager > li a,
+.pager > li a:link,
+.pager > li a:visited {
+  background-color: #ededed;
+  border-color: #ededed;
+  border-radius: 4px;
+  box-shadow: 0px 2px 0px 0px #d4d4d4;
+  padding: 6px 9px;
+  color: #777777;
+}
+.pager > li a:hover {
+  background-color: #d4d4d4;
+  border-color: #d4d4d4;
+  box-shadow: 0px 2px 0px 0px #bababa;
+  color: #777777;
+}
+.pager > li a:active,
+.pager > li a:focus {
+  background-color: #c7c7c7;
+  border-color: #c7c7c7;
+  box-shadow: none;
+  position: relative;
+  top: 2px;
+  color: #5e5e5e;
+}
+.table-actions {
+  margin-bottom: 20px;
+  height: 36px;
+  overflow: visible;
+}
+.table-actions > .pull-left {
+  margin-right: 10px;
+}
+.table-actions > .pull-right {
+  margin-left: 10px;
+}
+.table-panel {
+  border: 1px solid #d4d4d4;
+  border-radius: 4px;
+  box-shadow: 0px 0px 0px 3px #ededed;
+  margin-bottom: 20px;
+}
+.table-panel table.table {
+  margin: 0px;
+}
+.table-panel table.table tr.active td {
+  background-color: rgba(240, 173, 78, 0.05);
+}
+.table-panel table.table tr th {
+  background: #ededed;
+  border: none;
+  padding: 5px 8px;
+  color: #555555;
+  font-size: 12px;
+}
+.table-panel table.table tr th:first-child {
+  border-radius: 3px 0px 0px 0px;
+}
+.table-panel table.table tr th:last-child {
+  border-radius: 0px 3px 0px 0px;
+}
+.table-panel table.table tr td {
+  background-color: #fff;
+  vertical-align: middle;
+}
+.table-panel table.table tr td img {
+  border-radius: 4px;
+  max-width: 30px;
+  max-height: 30px;
+}
+.table-panel table.table tr td.row-action {
+  width: 1%;
+}
+.table-panel table.table tr td.row-action > .btn,
+.table-panel table.table tr td.row-action .dropdown-toggle {
+  padding: 0px;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  text-align: center;
+}
+.table-panel table.table tr td.row-action > .btn > span,
+.table-panel table.table tr td.row-action .dropdown-toggle > span {
+  position: relative;
+  bottom: 1px;
+}
+.table-panel table.table tr td.row-select {
+  width: 1%;
+}
+.table-panel table.table tr td.row-select label {
+  padding: 0px;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+}
+.table-panel table.table tr td.row-select label input {
+  width: 12px;
+  height: 12px;
+}
+.table-panel table.table tr td.row-select label.ninja-label {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+.table-panel table.table tr td.row-select a {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+.table-panel table.table tr td.row-select a span {
+  color: #a6a6a6;
+  font-size: 24px;
+}
+.table-panel table.table tr td.row-select a.active span {
+  color: #2ecc71;
 }
 .navbars-container {
   border-bottom: 3px solid #c7c7c7;
@@ -6154,12 +6343,10 @@ body {
     margin-bottom: -3px;
   }
 }
-.jumbotron {
-  margin-top: -20px;
-}
 .page-header {
   border-bottom-width: 1px;
   margin: 0px;
+  margin-bottom: 20px;
   padding: 20px 0px;
 }
 .page-header h1 {
@@ -6178,6 +6365,18 @@ body {
 .page-header h1 .sub {
   margin-left: 10px;
   color: #848484;
+}
+.page-header .page-actions {
+  float: right;
+  margin: -4px 0px;
+}
+.page-header .page-actions .dropdown-menu {
+  left: auto;
+  right: 0px;
+}
+.page-header .page-actions .dropdown-menu:after {
+  left: auto;
+  right: 12px;
 }
 .admin-footer {
   margin-top: 30px;
@@ -6212,12 +6411,6 @@ body {
   color: #fafafa;
   font-size: 34.56px;
   font-weight: bold;
-}
-.misago-branding a .subscript {
-  display: inline-block;
-  position: relative;
-  bottom: 4.76px;
-  font-size: 17.28px;
 }
 .misago-branding a,
 .misago-branding a:link,
@@ -6389,6 +6582,12 @@ body {
 }
 .login-form .form-panel .form-body {
   border: none;
+}
+.login-form .form-panel .form-body .alert {
+  border: none;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  padding: 6px 12px;
 }
 /* Big displays */
 @media (min-width: 768px) {

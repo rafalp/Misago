@@ -140,9 +140,19 @@
 @nav-pills-active-link-hover-bg:            #666;
 @nav-pills-active-link-hover-color:         #fff;
 
+//==Sidenav
+@nav-side-border:                           @gray-lighter;
+@nav-side-padding:                          6px 10px;
+
+@nav-side-color:                            @gray-light;
+@nav-side-hover-color:                      @text-color;
+@nav-side-active-color:                     @brand-primary;
+
+@nav-side-active-bg:                        @gray-dark;
+@nav-side-active-text-color:                #fff;
+
 //== Page header
 @page-header-border-color:       darken(@body-bg, 9%);
-@page-pills-padding:             @padding-small-vertical @padding-small-horizontal;
 
 
 //== Breadcrumbs
@@ -225,13 +235,6 @@
 @error-panel-border:               darken(@body-bg, 15%);
 @error-panel-shadow:               darken(@body-bg, 5%);
 
-//== Miscellaneous
-//
-//##
-
-//** Horizontal line color.
-@hr-border:                   darken(@body-bg, 10%);
-
 
 //== Alerts
 //
@@ -251,3 +254,27 @@
 
 @alert-danger-bg:             #c0392b;
 @alert-danger-text:           #fff;
+
+
+//== Modals
+//
+//##
+
+@modal-title-color:                  @gray;
+
+@modal-header-bg-color:              darken(@body-bg, 1%);
+@modal-header-border-color:          darken(@modal-header-bg-color, 5%);
+
+@modal-footer-bg-color:              darken(@body-bg, 2%);
+@modal-footer-border-color:          darken(@modal-footer-bg-color, 5%);
+
+
+//== Miscellaneous
+//
+//##
+
+//** Horizontal line color.
+@hr-border:                   darken(@body-bg, 10%);
+
+//** Badge radius
+@badge-border-radius:         @border-radius-small;

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from misago.admin.auth import is_admin_session, update_admin_session
 from misago.admin.views import get_protected_namespace, protected_admin_view
 
@@ -6,13 +6,16 @@ from misago.admin.views import get_protected_namespace, protected_admin_view
 # Magic error page used by admin
 @protected_admin_view
 def _error_page(request, code, message=None):
-    template_pattern = 'misago/admin/errorpages/%s.html' % code
+    if is_admin_session(request):
+        template_pattern = 'misago/admin/errorpages/%s.html' % code
 
-    response = render(request,
-                      template_pattern,
-                      {'message': message})
-    response.status_code = code
-    return response
+        response = render(request,
+                          template_pattern,
+                          {'message': message})
+        response.status_code = code
+        return response
+    else:
+        return redirect('misago:admin:index')
 
 
 def admin_error_page(f):

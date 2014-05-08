@@ -1,0 +1,127 @@
+//
+// Tables
+// --------------------------------------------------
+
+.table-actions {
+  margin-bottom: @line-height-computed;
+  height: 36px;
+  overflow: visible;
+
+  &>.pull-left {
+    margin-right: @line-height-computed / 2;
+  }
+
+  &>.pull-right {
+    margin-left: @line-height-computed / 2;
+  }
+}
+
+.table-panel {
+  border: 1px solid @table-panel-border;
+  border-radius: @border-radius-base;
+  box-shadow: 0px 0px 0px 3px @table-panel-shadow;
+  margin-bottom: @line-height-computed;
+
+  table.table {
+    margin: 0px;
+
+    tr {
+      &.active {
+        td {
+          background-color: fadeOut(@brand-warning, 95%);
+        }
+      }
+
+      th {
+        background: @table-header-bg;
+        border: none;
+        padding: @table-condensed-cell-padding @table-cell-padding;
+
+        color: @table-header-color;
+        font-size: @font-size-small;
+
+        &:first-child {
+          border-radius: (@border-radius-base - 1) 0px 0px 0px;
+        }
+
+        &:last-child {
+          border-radius: 0px (@border-radius-base - 1) 0px 0px;
+        }
+      }
+
+      td {
+        background-color: #fff;
+        vertical-align: middle;
+
+        img {
+          border-radius: @border-radius-base;
+          max-width: 30px;
+          max-height: 30px;
+        }
+
+        &.row-action {
+          width: 1%;
+
+          &>.btn, .dropdown-toggle {
+            padding: 0px;
+            width: 30px;
+            height: 30px;
+
+            font-size: @font-size-large;
+            text-align: center;
+
+            &>span {
+              position: relative;
+              bottom: 1px;
+            }
+          }
+        }
+
+        &.row-select {
+          width: 1%;
+
+          label {
+            padding: 0px;
+            width: 24px;
+            height: 24px;
+
+            text-align: center;
+
+            input {
+              width: 12px;
+              height: 12px;
+            }
+
+            &.ninja-label {
+                border: 0;
+                clip: rect(0 0 0 0);
+                height: 1px;
+                margin: -1px;
+                overflow: hidden;
+                padding: 0;
+                position: absolute;
+                width: 1px;
+            }
+          }
+
+          a {
+            display: block;
+            width: 24px;
+            height: 24px;
+
+            span {
+              color: lighten(@gray-light, 5%);
+              font-size: 24px;
+            }
+
+            &.active {
+              span {
+                color: @brand-success;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
