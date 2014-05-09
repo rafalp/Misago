@@ -61,7 +61,9 @@ PIPELINE_JS = {
         'source_filenames': (
             'misago/admin/js/jquery.js',
             'misago/admin/js/bootstrap.js',
-            'misago/admin/js/misago.js',
+            'misago/admin/js/misago-tooltips.js',
+            'misago/admin/js/misago-tables.js',
+            'misago/admin/js/misago-yesnoswitch.js',
         ),
         'output_filename': 'misago_admin.js',
     },

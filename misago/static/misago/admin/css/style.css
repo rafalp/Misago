@@ -6293,6 +6293,30 @@ body {
 .list-panel .list-group .list-group-item:active {
   box-shadow: inset 0px 0px 0px 1px #c0392b;
 }
+.ninja-switch {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+}
+.yes-no-switch .btn-yes {
+  margin-right: 1px;
+}
+.yes-no-switch .btn-yes,
+.yes-no-switch .btn-no {
+  width: 56px;
+  font-weight: bold;
+  text-align: center;
+}
+.yes-no-switch .btn-yes.active.btn-yes,
+.yes-no-switch .btn-no.active.btn-yes {
+  background: #208e4e;
+  color: #ffffff;
+}
+.yes-no-switch .btn-yes.active.btn-no,
+.yes-no-switch .btn-no.active.btn-no {
+  background: #bf2718;
+  color: #ffffff;
+}
 .navbars-container {
   border-bottom: 3px solid #c7c7c7;
 }
@@ -6543,13 +6567,21 @@ body {
 .form-panel .form-body fieldset .control-checkboxselect label.checkbox,
 .form-panel .form-body.no-fieldsets .control-checkboxselect label.checkbox,
 .form-panel .form-body fieldset .control-radioselect label.checkbox,
-.form-panel .form-body.no-fieldsets .control-radioselect label.checkbox {
+.form-panel .form-body.no-fieldsets .control-radioselect label.checkbox,
+.form-panel .form-body fieldset .control-checkboxselect label.radio,
+.form-panel .form-body.no-fieldsets .control-checkboxselect label.radio,
+.form-panel .form-body fieldset .control-radioselect label.radio,
+.form-panel .form-body.no-fieldsets .control-radioselect label.radio {
   font-weight: normal;
 }
 .form-panel .form-body fieldset .control-checkboxselect label.checkbox:first-child,
 .form-panel .form-body.no-fieldsets .control-checkboxselect label.checkbox:first-child,
 .form-panel .form-body fieldset .control-radioselect label.checkbox:first-child,
-.form-panel .form-body.no-fieldsets .control-radioselect label.checkbox:first-child {
+.form-panel .form-body.no-fieldsets .control-radioselect label.checkbox:first-child,
+.form-panel .form-body fieldset .control-checkboxselect label.radio:first-child,
+.form-panel .form-body.no-fieldsets .control-checkboxselect label.radio:first-child,
+.form-panel .form-body fieldset .control-radioselect label.radio:first-child,
+.form-panel .form-body.no-fieldsets .control-radioselect label.radio:first-child {
   margin-top: 0px;
 }
 .form-panel .form-body fieldset .help-block,

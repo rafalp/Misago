@@ -1,5 +1,17 @@
+from django.utils.translation import ugettext_lazy as _
 from django.forms import *  # noqa
 from django.forms import Form as BaseForm, ModelForm as BaseModelForm
+
+
+def YesNoSwitch(**kwargs):
+    if 'initial' not in kwargs:
+        kwargs['initial'] = 0
+
+    return TypedChoiceField(
+        coerce=int,
+        choices=((1, _("Yes")), (0, _("No"))),
+        widget=RadioSelect(attrs={'class': 'yesno-switch'}),
+        **kwargs)
 
 
 class AutoStripWhitespacesMixin(object):

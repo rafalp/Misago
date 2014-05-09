@@ -102,9 +102,7 @@ def create_textarea(setting, kwargs, extra):
 
 
 def create_yesno(setting, kwargs, extra):
-    kwargs['widget'] = forms.RadioSelect()
-    kwargs['choices'] = ((0, _('No')), (1, _('Yes')))
-    return forms.TypedChoiceField(coerce='int', **kwargs)
+    return forms.YesNoSwitch()
 
 
 FIELD_STYPES = {
