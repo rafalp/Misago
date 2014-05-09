@@ -6,7 +6,7 @@ from optparse import make_option
 import sys
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.db import DEFAULT_DB_ALIAS, IntegrityError
 from django.utils.encoding import force_str
 from django.utils.six.moves import input
@@ -26,18 +26,23 @@ class Command(BaseCommand):
 
         self.option_list = BaseCommand.option_list + (
             make_option('--username', dest='username', default=None,
-                help='Specifies the username for the superuser.'),
+                        help='Specifies the username for the superuser.'),
             make_option('--email', dest='email', default=None,
-                help='Specifies the username for the superuser.'),
+                        help='Specifies the username for the superuser.'),
             make_option('--password', dest='password', default=None,
-                help='Specifies the username for the superuser.'),
-            make_option('--noinput', action='store_false', dest='interactive', default=True,
-                help=('Tells Miago to NOT prompt the user for input of any kind. '
-                      'You must use --username with --noinput, along with an option for '
-                      'any other required field. Superusers created with --noinput will '
-                      ' not be able to log in until they\'re given a valid password.')),
+                        help='Specifies the username for the superuser.'),
+            make_option('--noinput', action='store_false', dest='interactive',
+                        default=True,
+                        help=('Tells Miago to NOT prompt the user for input '
+                              'of any kind. You must use --username with '
+                              '--noinput, along with an option for any other '
+                              'required field. Superusers created with '
+                              '--noinput will  not be able to log in until '
+                              'they\'re given a valid password.')),
             make_option('--database', action='store', dest='database',
-                default=DEFAULT_DB_ALIAS, help='Specifies the database to use. Default is "default".'),
+                        default=DEFAULT_DB_ALIAS,
+                        help=('Specifies the database to use. '
+                              'Default is "default".')),
         )
 
     def execute(self, *args, **options):

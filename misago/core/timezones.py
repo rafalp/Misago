@@ -1,5 +1,4 @@
 import datetime
-from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 import pytz
 
@@ -86,6 +85,6 @@ def choices():
             else:
                 ready_list.append((tz[0], tz[1]))
         else:
-           ready_list.append(tz)
+            ready_list.append(tz)
 
     return tuple(ready_list)

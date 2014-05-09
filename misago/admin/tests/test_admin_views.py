@@ -24,7 +24,6 @@ class AdminProtectedNamespaceTests(TestCase):
             request = FakeRequest(links_prefix + case)
             self.assertEqual(get_protected_namespace(request), 'misago:admin')
 
-
     def test_invalid_cases(self):
         """get_protected_namespace returns none for other links"""
         TEST_CASES = (

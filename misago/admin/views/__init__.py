@@ -37,11 +37,7 @@ def render(request, template, context=None):
     except IndexError:
         pages = []
 
-    context.update({
-            'sections': sections,
-            'actions': actions,
-            'pages': pages
-        })
+    context.update({'sections': sections, 'actions': actions, 'pages': pages})
 
     return dj_render(request, template, context)
 

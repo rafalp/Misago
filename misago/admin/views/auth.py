@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.http import Http404
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext as _
 from django.views.decorators.debug import sensitive_post_parameters

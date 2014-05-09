@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.test import Client, TestCase
-from misago.users.decorators import deny_authenticated, deny_guests
+from django.test import TestCase
 
 
 class DenyAuthenticatedTests(TestCase):

@@ -26,7 +26,8 @@ class Node(object):
     def children_as_dicts(self):
         childrens = []
         for children in self._children:
-            childrens.append({
+            childrens.append(
+                {
                     'link': reverse(children.link),
                     'namespace': self.namespace,
                     'name': children.name,
@@ -101,7 +102,7 @@ class AdminHierarchyBuilder(object):
             iterations += 1
             if iterations > 512:
                 message = ("Misago Admin hierarchy is invalid or too complex "
-                          "to resolve. Nodes left: %s" % self.nodes_record)
+                           "to resolve. Nodes left: %s" % self.nodes_record)
                 raise ValueError(message)
 
             for index, node in enumerate(self.nodes_record):
@@ -140,7 +141,8 @@ class AdminHierarchyBuilder(object):
         if after and before:
             raise ValueError("You cannot use both after and before kwargs.")
 
-        self.nodes_record.append({
+        self.nodes_record.append(
+            {
                 'parent': parent,
                 'namespace': namespace,
                 'after': after,

@@ -1,5 +1,5 @@
 from django.test import TestCase
-from misago.admin.hierarchy import  Node
+from misago.admin.hierarchy import Node
 
 
 class NodeTests(TestCase):

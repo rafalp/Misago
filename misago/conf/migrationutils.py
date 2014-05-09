@@ -37,6 +37,47 @@ def get_group(orm, group_key):
         return orm['conf.SettingsGroup']()
 
 
+def migrate_setting(orm, group, setting_fixture, order, value):
+    setting_fixture['group'] = group
+    setting_fixture['order'] = order
+
+    setting_fixture['name'] = original_message(setting_fixture['name'])
+    if setting_fixture.get('description'):
+        setting_fixture['description'] = original_message(
+            setting_fixture.get('description'))
+
+    if (setting_fixture.get('field_extra') and
+            setting_fixture.get('field_extra').get('choices')):
+        untranslated_choices = setting_fixture['field_extra']['choices']
+        if untranslated_choices == '#TZ#':
+            setting_fixture['field_extra']['choices'] = '#TZ#'
+        else:
+            translated_choices = []
+            for value, name in untranslated_choices:
+                translated_choices.append((value, original_message(name)))
+            setting_fixture['field_extra']['choices'] = tuple(
+                translated_choices)
+
+    if not value:
+        value = setting_fixture.pop('value', None)
+    setting_fixture.pop('value', None)
+
+    field_extra = setting_fixture.pop('field_extra', None)
+
+    setting = orm['conf.Setting'](**setting_fixture)
+    setting.dry_value = dehydrate_value(setting.python_type, value)
+
+    if setting_fixture.get("default_value"):
+        setting.default_value = dehydrate_value(
+            setting.python_type, setting_fixture.get("default_value"))
+
+    if field_extra:
+        pickled_extra = pickle.dumps(field_extra, pickle.HIGHEST_PROTOCOL)
+        setting.pickled_field_extra = base64.encodestring(pickled_extra)
+
+    setting.save()
+
+
 def migrate_settings_group(orm, group_fixture, old_group_key=None):
     group_key = group_fixture['key']
 
@@ -66,47 +107,8 @@ def migrate_settings_group(orm, group_fixture, old_group_key=None):
     group.setting_set.all().delete()
 
     for order, setting_fixture in enumerate(group_fixture['settings']):
-        setting_fixture['group'] = group
-        setting_fixture['order'] = order
-
-        setting_fixture['name'] = original_message(setting_fixture['name'])
-        if setting_fixture.get('description'):
-            setting_fixture['description'] = original_message(
-                setting_fixture.get('description'))
-
-        if (setting_fixture.get('field_extra') and
-                setting_fixture.get('field_extra').get('choices')):
-            untranslated_choices = setting_fixture['field_extra']['choices']
-            if untranslated_choices == '#TZ#':
-                setting_fixture['field_extra']['choices'] = '#TZ#'
-            else:
-                translated_choices = []
-                for value, name in untranslated_choices:
-                    translated_choices.append((value, original_message(name)))
-                setting_fixture['field_extra']['choices'] = tuple(
-                    translated_choices)
-
-        try:
-            value = custom_settings_values[setting_fixture['setting']]
-        except KeyError:
-            value = setting_fixture.pop('value', None)
-        finally:
-            setting_fixture.pop('value', None)
-
-        field_extra = setting_fixture.pop('field_extra', None)
-
-        setting = orm['conf.Setting'](**setting_fixture)
-        setting.dry_value = dehydrate_value(setting.python_type, value)
-
-        if setting_fixture.get("default_value"):
-            setting.default_value = dehydrate_value(
-                setting.python_type, setting_fixture.get("default_value"))
-
-        if field_extra:
-            pickled_extra = pickle.dumps(field_extra, pickle.HIGHEST_PROTOCOL)
-            setting.pickled_field_extra = base64.encodestring(pickled_extra)
-
-        setting.save()
+        migrate_setting(orm, group, setting_fixture, order,
+                        custom_settings_values.pop(setting_fixture['name']))
 
 
 def delete_settings_cache():

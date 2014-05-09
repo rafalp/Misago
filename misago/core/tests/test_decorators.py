@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.test import Client, TestCase
-from misago.core.decorators import require_POST
+from django.test import TestCase
 
 
 class RequirePostTests(TestCase):

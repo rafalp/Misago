@@ -146,7 +146,7 @@ def ChangeSettingsForm(data=None, group=None):
     fieldset_fields = False
     for setting in group.setting_set.order_by('order'):
         if setting.legend and setting.legend != fieldset_legend:
-            if fieldset_fields != False:
+            if fieldset_fields:
                 fieldsets.append(
                     {'legend': fieldset_legend, 'form': fieldset_form(data)})
             fieldset_legend = setting.legend

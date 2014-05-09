@@ -17,9 +17,9 @@ class UserManagerTests(TestCase):
 
     def test_create_user_twice(self):
         """create_user is raising validation error for duplicate users"""
-        user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+        User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
         with self.assertRaises(ValidationError):
-            user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+            User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
     def test_create_superuser(self):
         """create_superuser created new user account successfully"""
