@@ -60,6 +60,7 @@ flake8.txt
 docs/_build/
 
 # Compiled assets
+misago/static/misago/admin/css/style.css
 misago/static/misago/css/style.css
 
 # Local develop stuff
