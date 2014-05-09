@@ -89,6 +89,7 @@ class Migration(DataMigration):
                                 ('upload', _("Uploaded avatar")),
                                 ('gallery', _("Avatars gallery"))
                             ),
+                            'min': 1,
                         },
                     },
                     {
