@@ -41,6 +41,10 @@ class AdminSettingsViewsTests(TestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn(group.name, response.content)
 
+            values = {}
             for setting in group.setting_set.all():
+                values[setting.setting] = setting.dry_value
                 self.assertIn(setting.name, response.content)
 
+            post_response = self.client.post(group_link, data=values)
+            self.assertEqual(post_response.status_code, 302)
