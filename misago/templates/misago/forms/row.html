@@ -1,0 +1,29 @@
+{% load floppyforms %}
+
+{% block row %}
+<div class="form-group {% if field.errors %}has-error has-feedback{% endif %}">
+  {% block label %}
+  <label for="{{ field.html_id }}">{{ field.label }}</label>
+  {% endblock label %}
+  {% block field %}
+    {% block widget %}
+    {% formfield field using "misago/forms/field.html" %}
+    {% endblock widget %}
+    {% block errors %}
+    {% if field.errors %}
+    <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+    <div style="font-weight: bold;">
+      {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endblock errors %}
+    {% block helptext %}
+    {% if field.help_text %}
+    <p class="help-block">{{ field.help_text }}</p>
+    {% endif %}
+    {% endblock helptext %}
+  {% endblock field %}
+</div>
+{% endblock row %}
