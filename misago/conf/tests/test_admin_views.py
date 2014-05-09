@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from misago.admin.testutils import admin_login
-from misago.admin.views import get_protected_namespace
 from misago.conf.models import SettingsGroup
 
 
