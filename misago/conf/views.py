@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from misago.admin.views import render as mi_render
+from misago.conf.forms import ChangeSettingsForm
 from misago.conf.models import SettingsGroup, Setting
 
 
@@ -27,5 +28,21 @@ def group(request, group_key):
         messages.error(request, _("Settings group could not be found."))
         return redirect('misago:admin:settings:index')
 
-    return render(request, 'misago/admin/conf/group.html',
-                  {'active_group': active_group})
+    fieldsets = ChangeSettingsForm(group=active_group)
+    if request.method == 'POST':
+        fieldsets = ChangeSettingsForm(request.POST, group=active_group)
+        valid_fieldsets = len(True for form in fieldsets if form.is_valid())
+        if len(fieldsets) == valid_fieldsets:
+            pass
+
+    use_single_form_template = (len(fieldsets) == 1 and
+                                not fieldsets[0]['legend'])
+
+    return render(
+        request,
+        'misago/admin/conf/group.html',
+        {
+            'active_group': active_group,
+            'fieldsets': fieldsets,
+            'use_single_form_template': use_single_form_template,
+        })

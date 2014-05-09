@@ -1,5 +1,5 @@
 {% extends "misago/admin/conf/index.html" %}
-{% load i18n %}
+{% load floppyforms i18n %}
 
 
 {% block title %}{% trans active_group.name %} | {{ block.super }}{% endblock %}
@@ -18,5 +18,45 @@
 
 
 {% block action %}
-  TODO: GROUP VIEW
+<div class="form-panel">
+  <form role="form" method="post">
+    {% csrf_token %}
+
+    <div class="form-header">
+      <h1>{% trans active_group.name %}</h1>
+      {% if active_group.description %}
+      <p>{% trans active_group.description %}</p>
+      {% endif %}
+    </div>
+
+    {% if use_single_form_template %}
+    <div class="form-body no-fieldsets">
+      {% for field in fieldsets.0.form %}
+      {% formrow field using "misago/forms/row.html" %}
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="form-body">
+      {% for fieldset in fieldsets %}
+      <fieldset>
+        {% if fieldset.legend %}
+        <legend>{% trans fieldset.legend %}</legend>
+        {% endif %}
+
+        {% for field in fieldset.form %}
+        {% formrow field using "misago/forms/row.html" %}
+        {% endfor %}
+
+      </fieldset>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="form-footer">
+      <button class="btn btn-primary">{% trans "Change settings" %}</button>
+      <a href="{% url 'misago:admin:settings:index' %}" class="btn btn-default">{% trans "Cancel" %}</a>
+    </div>
+
+  </form>
+</div>
 {% endblock action %}
