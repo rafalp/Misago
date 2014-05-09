@@ -46,4 +46,6 @@ class AdminSettingsViewsTests(TestCase):
                 self.assertIn(setting.name, response.content)
 
             post_response = self.client.post(group_link, data=values)
+            if post_response.status_code != 302:
+                raise Exception(post_response.content)
             self.assertEqual(post_response.status_code, 302)

@@ -37,7 +37,7 @@ def get_group(orm, group_key):
         return orm['conf.SettingsGroup']()
 
 
-def migrate_setting(orm, group, setting_fixture, order, value):
+def migrate_setting(orm, group, setting_fixture, order, old_value):
     setting_fixture['group'] = group
     setting_fixture['order'] = order
 
@@ -53,13 +53,15 @@ def migrate_setting(orm, group, setting_fixture, order, value):
             setting_fixture['field_extra']['choices'] = '#TZ#'
         else:
             translated_choices = []
-            for value, name in untranslated_choices:
-                translated_choices.append((value, original_message(name)))
+            for val, name in untranslated_choices:
+                translated_choices.append((val, original_message(name)))
             setting_fixture['field_extra']['choices'] = tuple(
                 translated_choices)
 
-    if not value:
+    if old_value is None:
         value = setting_fixture.pop('value', None)
+    else:
+        value = old_value
     setting_fixture.pop('value', None)
 
     field_extra = setting_fixture.pop('field_extra', None)
@@ -107,8 +109,8 @@ def migrate_settings_group(orm, group_fixture, old_group_key=None):
     group.setting_set.all().delete()
 
     for order, setting_fixture in enumerate(group_fixture['settings']):
-        migrate_setting(orm, group, setting_fixture, order,
-                        custom_settings_values.pop(setting_fixture['name']))
+        old_value = custom_settings_values.pop(setting_fixture['name'], None)
+        migrate_setting(orm, group, setting_fixture, order, old_value)
 
 
 def delete_settings_cache():
