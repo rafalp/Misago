@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from misago.admin.views import render as mi_render
+from misago.conf import db_settings
 from misago.conf.forms import ChangeSettingsForm
 from misago.conf.models import SettingsGroup, Setting
 
@@ -31,9 +32,21 @@ def group(request, group_key):
     fieldsets = ChangeSettingsForm(group=active_group)
     if request.method == 'POST':
         fieldsets = ChangeSettingsForm(request.POST, group=active_group)
-        valid_fieldsets = len(True for form in fieldsets if form.is_valid())
+        valid_fieldsets = len([True for fieldset in fieldsets if
+                               fieldset['form'].is_valid()])
         if len(fieldsets) == valid_fieldsets:
-            pass
+            new_values = {}
+            for fieldset in fieldsets:
+                new_values.update(fieldset['form'].cleaned_data)
+
+            for setting, dry_value in new_values.items():
+                Setting.objects.change_setting(setting, dry_value=dry_value)
+
+            db_settings.flush_cache()
+
+            messages.success(request,
+                             _('Changes in settings have been saved!'))
+            return redirect('misago:admin:settings:group', group_key=group_key)
 
     use_single_form_template = (len(fieldsets) == 1 and
                                 not fieldsets[0]['legend'])

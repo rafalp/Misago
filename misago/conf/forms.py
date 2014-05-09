@@ -15,11 +15,14 @@ def basic_kwargs(setting):
 
     return kwargs
 
+
 def create_text(setting, kwargs, extra):
     kwargs.update(extra)
     if setting.python_type == 'int':
         return forms.IntegerField(**kwargs)
     else:
+        if extra.get('min_length', 0) == 0:
+            kwargs['required'] = False
         return forms.CharField(**kwargs)
 
 

@@ -45,6 +45,10 @@ class DBSettings(object):
         except (KeyError, Setting.DoesNotExist):
             raise AttributeError("Setting %s is undefined" % setting)
 
+    def flush_cache(self):
+        from misago.core.cache import cache
+        cache.delete(CACHE_KEY)
+
     def __getattr__(self, attr):
         try:
             return self._settings[attr]['value']
