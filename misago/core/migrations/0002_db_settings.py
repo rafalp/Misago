@@ -22,6 +22,7 @@ class Migration(DataMigration):
                     {
                         'setting': 'forum_name',
                         'name': _("Forum name"),
+                        'legend': _("General"),
                         'value': "Misago",
                         'field_extra': {
                             'min_length': 2,
