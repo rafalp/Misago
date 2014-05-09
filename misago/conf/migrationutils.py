@@ -77,12 +77,14 @@ def migrate_settings_group(orm, group_fixture, old_group_key=None):
         if (setting_fixture.get('field_extra') and
                 setting_fixture.get('field_extra').get('choices')):
             untranslated_choices = setting_fixture['field_extra']['choices']
-            translated_choices = []
-            if untranslated_choices != '#TZ#':
+            if untranslated_choices == '#TZ#':
+                setting_fixture['field_extra']['choices'] = '#TZ#'
+            else:
+                translated_choices = []
                 for value, name in untranslated_choices:
                     translated_choices.append((value, original_message(name)))
-            setting_fixture['field_extra']['choices'] = tuple(
-                translated_choices)
+                setting_fixture['field_extra']['choices'] = tuple(
+                    translated_choices)
 
         try:
             value = custom_settings_values[setting_fixture['setting']]
