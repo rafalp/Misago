@@ -20,3 +20,25 @@ class MisagoFormsTests(TestCase):
         form = MockForm({'dontstripme': u' Ni! '})
         form.full_clean()
         self.assertEqual(form.cleaned_data['dontstripme'], ' Ni! ')
+
+
+class YesNoForm(forms.Form):
+    test_field = forms.YesNoSwitch(label='Hello!')
+
+
+class YesNoSwitchTests(TestCase):
+    def test_valid_inputs(self):
+        """YesNoSwitch returns valid values for valid input"""
+        form = YesNoForm({'test_field': u'1'})
+        form.full_clean()
+        self.assertTrue(form.cleaned_data['test_field'])
+
+        form = YesNoForm({'test_field': u'0'})
+        form.full_clean()
+        self.assertTrue(not form.cleaned_data['test_field'])
+
+    def test_dontstripme_input_is_ignored(self):
+        """YesNoSwitch returns valid values for invalid input"""
+        form = YesNoForm({'test_field': u'221'})
+        form.full_clean()
+        self.assertTrue(form.cleaned_data.get('test_field') is None)
