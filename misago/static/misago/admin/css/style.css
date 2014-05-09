@@ -6540,11 +6540,30 @@ body {
   margin-left: 16px;
   margin-right: 16px;
 }
+.form-panel .form-body fieldset .control-checkboxselect label.checkbox,
+.form-panel .form-body.no-fieldsets .control-checkboxselect label.checkbox,
+.form-panel .form-body fieldset .control-radioselect label.checkbox,
+.form-panel .form-body.no-fieldsets .control-radioselect label.checkbox {
+  font-weight: normal;
+}
+.form-panel .form-body fieldset .control-checkboxselect label.checkbox:first-child,
+.form-panel .form-body.no-fieldsets .control-checkboxselect label.checkbox:first-child,
+.form-panel .form-body fieldset .control-radioselect label.checkbox:first-child,
+.form-panel .form-body.no-fieldsets .control-radioselect label.checkbox:first-child {
+  margin-top: 0px;
+}
 .form-panel .form-body fieldset .help-block,
 .form-panel .form-body.no-fieldsets .help-block {
   color: #7a7a7a;
   margin-bottom: 0px;
   padding-bottom: 0px;
+}
+.form-panel .form-body fieldset .control-errors,
+.form-panel .form-body.no-fieldsets .control-errors,
+.form-panel .form-body fieldset .control-errors .help-block,
+.form-panel .form-body.no-fieldsets .control-errors .help-block {
+  color: #a94442;
+  font-weight: bold;
 }
 .form-panel .form-body.no-fieldsets {
   border-top: 1px solid #d4d4d4;
