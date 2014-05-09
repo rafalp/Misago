@@ -1,5 +1,5 @@
-from floppyforms import *  # noqa
-from floppyforms import Form as BaseForm, ModelForm as BaseModelForm
+from django.forms import *  # noqa
+from django.forms import Form as BaseForm, ModelForm as BaseModelForm
 
 
 class AutoStripWhitespacesMixin(object):

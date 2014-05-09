@@ -89,7 +89,7 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'south',
     'pipeline',
-    'floppyforms',
+    'crispy_forms',
     'misago.core',
     'misago.conf',
     'misago.users',
@@ -180,3 +180,7 @@ MISAGO_ADMIN_NAMESPACES = (
 # How long (in minutes) since previous request to admin namespace should
 # admin session last.
 MISAGO_ADMIN_SESSION_EXPIRATION = 60
+
+
+# Default forms templates
+CRISPY_TEMPLATE_PACK = 'bootstrap3'

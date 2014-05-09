@@ -1,5 +1,5 @@
 {% extends "misago/admin/conf/index.html" %}
-{% load floppyforms i18n %}
+{% load crispy_forms_filters i18n %}
 
 
 {% block title %}{% trans active_group.name %} | {{ block.super }}{% endblock %}
@@ -32,7 +32,7 @@
     {% if use_single_form_template %}
     <div class="form-body no-fieldsets">
       {% for field in fieldsets.0.form %}
-      {% formrow field using "misago/forms/row.html" %}
+      {{ field|as_crispy_field }}
       {% endfor %}
     </div>
     {% else %}
@@ -44,7 +44,7 @@
         {% endif %}
 
         {% for field in fieldset.form %}
-        {% formrow field using "misago/forms/row.html" %}
+        {{ field|as_crispy_field }}
         {% endfor %}
 
       </fieldset>
