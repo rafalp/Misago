@@ -42,7 +42,7 @@ class AdminSettingsViewsTests(TestCase):
 
             values = {}
             for setting in group.setting_set.all():
-                values[setting.setting] = setting.dry_value
+                values[setting.setting] = setting.value
                 self.assertIn(setting.name, response.content)
 
             post_response = self.client.post(group_link, data=values)
