@@ -16,6 +16,34 @@ def basic_kwargs(setting):
     return kwargs
 
 
+def create_checkbox(setting, kwargs, extra):
+    kwargs = basic_kwargs(setting)
+    kwargs['widget'] = forms.CheckboxSelectMultiple()
+    kwargs['choices'] = extra.get('choices', [])
+
+    if setting.python_type == 'int':
+        return forms.TypedMultipleChoiceField(coerce='int', **kwargs)
+    else:
+        return forms.MultipleChoiceField(**kwargs)
+
+
+def create_choice(setting, kwargs, extra):
+    kwargs = basic_kwargs(setting)
+    if setting.form_field == 'choice':
+        kwargs['widget'] = forms.RadioSelect()
+    else:
+        kwargs['widget'] = forms.Select()
+    kwargs['choices'] = extra.get('choices', [])
+
+    if kwargs['choices'] == '#tz#':
+        pass
+
+    if setting.python_type == 'int':
+        return forms.TypedChoiceField(coerce='int', **kwargs)
+    else:
+        return forms.ChoiceField(**kwargs)
+
+
 def create_text(setting, kwargs, extra):
     kwargs.update(extra)
     if setting.python_type == 'int':
@@ -28,36 +56,30 @@ def create_text(setting, kwargs, extra):
 
 def create_textarea(setting, kwargs, extra):
     kwargs = basic_kwargs(setting)
-    return forms.CharField(**kwargs)
+    widget_kwargs = {}
+    if extra.get('min_length', 0) == 0:
+        kwargs['required'] = False
+    if extra.get('rows', 0):
+        widget_kwargs['attrs'] = {'rows': extra.pop('rows')}
 
-
-def create_select(setting, kwargs, extra):
-    kwargs = basic_kwargs(setting)
-    return forms.CharField(**kwargs)
-
-
-def create_radio(setting, kwargs, extra):
-    kwargs = basic_kwargs(setting)
+    kwargs['widget'] = forms.Textarea(**widget_kwargs)
     return forms.CharField(**kwargs)
 
 
 def create_yesno(setting, kwargs, extra):
     kwargs = basic_kwargs(setting)
-    return forms.CharField(**kwargs)
-
-
-def create_checkbox(setting, kwargs, extra):
-    kwargs = basic_kwargs(setting)
-    return forms.CharField(**kwargs)
+    kwargs['widget'] = forms.RadioSelect()
+    kwargs['choices'] = ((0, _('No')), (1, _('Yes')))
+    return forms.TypedChoiceField(coerce='int', **kwargs)
 
 
 FIELD_STYPES = {
+    'checkbox': create_checkbox,
+    'radio': create_choice,
+    'select': create_choice,
     'text': create_text,
     'textarea': create_textarea,
-    'select': create_select,
-    'radio': create_radio,
     'yesno': create_yesno,
-    'checkbox': create_checkbox,
 }
 
 
