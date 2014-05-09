@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext_lazy as _, ungettext_lazy
+from django.utils.translation import ugettext as _, ungettext
 from misago.core import forms, timezones
 
 
@@ -7,26 +7,26 @@ __ALL__ = ['ChangeSettingsForm']
 
 class ValidateChoicesNum(object):
     def __init__(self, min_choices=0, max_choices=0):
-        self.min_choices = min_choices,
+        self.min_choices = min_choices
         self.max_choices = max_choices
 
     def __call__(self, data):
         data_len = len(data)
 
         if self.min_choices and self.min_choices > data_len:
-            message = ungettext_lazy(
+            message = ungettext(
                 'You have to select at least one option.',
-                'You have to select at least %(min_choices)d options.',
+                'You have to select at least %(choices)d options.',
                 self.min_choices)
-            message = message % {'min_choices': self.min_choices}
+            message = message % {'choices': self.min_choices}
             raise forms.ValidationError(message)
 
         if self.max_choices and self.max_choices < data_len:
-            message = ungettext_lazy(
+            message = ungettext(
                 'You cannot select more than one option.',
-                'You cannot select more than %(max_choices)d options.',
+                'You cannot select more than %(choices)d options.',
                 self.max_choices)
-            message = message % {'max_choices': self.max_choices}
+            message = message % {'choices': self.max_choices}
             raise forms.ValidationError(message)
 
         return data
@@ -57,8 +57,8 @@ def create_checkbox(setting, kwargs, extra):
     kwargs['choices'] = extra.get('choices', [])
 
     if extra.get('min') or extra.get('max'):
-        kwargs['validators'] = [ValidateChoicesNum(extra.get('min', 0),
-                                                   extra.get('max', 0))]
+        kwargs['validators'] = [ValidateChoicesNum(extra.pop('min', 0),
+                                                   extra.pop('max', 0))]
 
     if setting.python_type == 'int':
         return forms.TypedMultipleChoiceField(coerce='int', **kwargs)
