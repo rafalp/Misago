@@ -69,10 +69,27 @@
         margin-right: @form-panel-padding-horizontal;
       }
 
+      .control-checkboxselect, .control-radioselect {
+        label.checkbox, label.radio {
+          font-weight: normal;
+
+          &:first-child {
+            margin-top: 0px;
+          }
+        }
+      }
+
       .help-block {
         color: @field-help-block-color;
         margin-bottom: 0px;
         padding-bottom: 0px;
+      }
+
+      .control-errors {
+        &, & .help-block {
+          color: @state-danger-text;
+          font-weight: bold;
+        }
       }
     }
 
