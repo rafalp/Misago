@@ -122,7 +122,7 @@ class AdminHierarchyBuilder(object):
                         node_added = parent.add_node(node_obj)
 
                     if node_added:
-                        namespace = node_obj.namespace
+                        namespace = node.get('namespace') or node_obj.namespace
 
                         if namespace not in nodes_dict:
                             nodes_dict[namespace] = node_obj

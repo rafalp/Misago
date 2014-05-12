@@ -1,15 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.test import TestCase
-from misago.admin.testutils import admin_login
+from misago.admin.testutils import AdminTestCase
 from misago.conf.models import SettingsGroup
 
 
-class AdminSettingsViewsTests(TestCase):
-    def setUp(self):
-        User = get_user_model()
-        User.objects.create_superuser('Bob', 'bob@test.com', 'Pass.123')
-        admin_login(self.client, 'Bob', 'Pass.123')
+class AdminSettingsViewsTests(AdminTestCase):
 
     def test_link_registered(self):
         """admin index view contains settings link"""

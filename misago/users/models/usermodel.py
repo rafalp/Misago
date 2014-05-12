@@ -3,6 +3,7 @@ from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from misago.admin import site
 from misago.core.utils import slugify
 from misago.users.utils import hash_email
 from misago.users.validators import (validate_email, validate_password,
@@ -100,3 +101,21 @@ class User(AbstractBaseUser, PermissionsMixin):
     def set_email(self, new_email):
         self.email = UserManager.normalize_email(new_email)
         self.email_hash = hash_email(new_email)
+
+
+"""register model in misago admin"""
+site.add_node(
+    parent='misago:admin',
+    after='misago:admin:index',
+    namespace='misago:admin:users',
+    link='misago:admin:users:accounts:index',
+    name=_("Users"),
+    icon='fa fa-users')
+
+
+site.add_node(
+    parent='misago:admin:users',
+    namespace='misago:admin:users:accounts',
+    link='misago:admin:users:accounts:index',
+    name=_("User Accounts"),
+    icon='fa fa-users')

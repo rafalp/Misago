@@ -30,23 +30,3 @@ def discover_admin_urls():
                 pass
 
     return admin_patterns
-
-
-"""
-TEST PATTERNS FOR GOD OF TEST PATTERNS
-"""
-
-userpatterns = patterns('misago.admin.views',
-    # top lel at users fake views
-    url(r'^$', 'index.admin_index', name='list'),
-)
-
-
-newpatterns = patterns('',
-    url(r'^', include(userpatterns, namespace='accounts')),
-)
-
-
-urlpatterns += patterns('',
-    url(r'^users/', include(newpatterns, namespace='users')),
-)

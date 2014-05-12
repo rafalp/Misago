@@ -39,6 +39,12 @@ def render(request, template, context=None):
 
     context.update({'sections': sections, 'actions': actions, 'pages': pages})
 
+    context['active_link'] = None
+    for item in navigation[-1]:
+        if item['is_active']:
+            context['active_link'] = item
+            break
+
     return dj_render(request, template, context)
 
 
