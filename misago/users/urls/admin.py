@@ -4,6 +4,7 @@ from misago.users.views.useradmin import UsersList
 
 action_urlpatterns = patterns('',
     url(r'^$', UsersList.as_view(), name='index'),
+    url(r'^(?P<page>\d+)/$', UsersList.as_view(), name='index'),
 )
 
 

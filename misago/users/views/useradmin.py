@@ -3,6 +3,7 @@ from misago.admin.views import generic
 
 
 class UserAdmin(generic.AdminBaseMixin):
+    root_link = 'misago:admin:users:accounts:index'
     template_dir = 'misago/admin/users'
 
     def get_model(self):
