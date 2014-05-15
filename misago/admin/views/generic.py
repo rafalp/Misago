@@ -77,6 +77,7 @@ class ItemsList(AdminView):
                                          self.items_per_page,
                                          allow_empty_first_page=True)
         context['page'] = context['paginator'].page(page)
+        context['items'] = context['page'].object_list
 
     def filter_items(self, request, context):
         pass
