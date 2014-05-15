@@ -68,7 +68,7 @@ class ItemsList(AdminView):
             page = int(page)
             if page == 1:
                 raise ExplicitFirstPage()
-            else:
+            elif page == 0:
                 page = 1
         except ValueError:
             page_no = 1

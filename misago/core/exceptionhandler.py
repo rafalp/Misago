@@ -16,7 +16,7 @@ def is_misago_exception(exception):
 def handle_explicit_first_page_exception(request, exception):
     matched_url = request.resolver_match.url_name
     if request.resolver_match.namespace:
-        matched_url = '%s:%s' % (request.resolver_match, matched_url)
+        matched_url = '%s:%s' % (request.resolver_match.namespace, matched_url)
 
     url_kwargs = request.resolver_match.kwargs
     del url_kwargs['page']
