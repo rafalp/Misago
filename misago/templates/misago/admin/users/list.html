@@ -1,14 +1,18 @@
 {% extends "misago/admin/generic/list.html" %}
-{% load i18n%}
+{% load i18n misago_avatars %}
 
 
 {% block table-header %}
+<th style="width: 1%;">&nbsp;</th>
 <th>{% trans "User" %}</th>
-<th>{% trans "E-mail" %}</th>
+<th style="width: 120px;">{% trans "E-mail" %}</th>
 {% endblock table-header %}
 
 
 {% block table-row %}
+<td>
+  <img src="{{ item|avatar:30 }}" alt="{% trans "Avatar" %}">
+</td>
 <td class="lead">
   {{ item.username }}
 </td>
