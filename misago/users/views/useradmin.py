@@ -10,4 +10,4 @@ class UserAdmin(generic.AdminBaseMixin):
 
 
 class UsersList(UserAdmin, generic.ItemsList):
-    pass
+    items_per_page = 20

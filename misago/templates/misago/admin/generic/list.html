@@ -1,4 +1,5 @@
 {% extends "misago/admin/generic/base.html" %}
+{% load i18n %}
 
 
 {% block title %}
@@ -7,6 +8,14 @@
 
 
 {% block view %}
+<div class="table-actions">
+
+  {% if paginator %}
+  {% include "misago/admin/generic/paginator.html" %}
+  {% endif%}
+
+</div><!-- /.table-actions -->
+
 <div class="table-panel">
   <table class="table">
     <tr>
@@ -76,4 +85,10 @@
     {% endfor %}
   </table>
 </div><!-- /.table-panel -->
+
+{% if paginator %}
+<div class="table-actions">
+  {% include "misago/admin/generic/paginator.html" %}
+</div><!-- /.table-actions -->
+{% endif %}
 {% endblock view %}
