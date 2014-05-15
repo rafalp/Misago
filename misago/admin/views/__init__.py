@@ -21,7 +21,7 @@ def get_protected_namespace(request):
         return None
 
 
-def render(request, template, context=None):
+def render(request, template, context=None, error_page=False):
     context = context or {}
 
     navigation = site.visible_branches(request)
@@ -39,11 +39,18 @@ def render(request, template, context=None):
 
     context.update({'sections': sections, 'actions': actions, 'pages': pages})
 
-    context['active_link'] = None
-    for item in navigation[-1]:
-        if item['is_active']:
-            context['active_link'] = item
-            break
+    if error_page:
+        # admittedly haxy solution for displaying navs on error pages
+        context['actions'] = []
+        context['pages'] = []
+        for item in navigation[0]:
+            item['is_active'] = False
+    else:
+        context['active_link'] = None
+        for item in navigation[-1]:
+            if item['is_active']:
+                context['active_link'] = item
+                break
 
     return dj_render(request, template, context)
 

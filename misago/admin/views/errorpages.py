@@ -1,6 +1,7 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from misago.admin.auth import is_admin_session, update_admin_session
-from misago.admin.views import get_protected_namespace, protected_admin_view
+from misago.admin.views import (render, get_protected_namespace,
+                                protected_admin_view)
 
 
 # Magic error page used by admin
@@ -11,7 +12,8 @@ def _error_page(request, code, message=None):
 
         response = render(request,
                           template_pattern,
-                          {'message': message})
+                          {'message': message},
+                          error_page=True)
         response.status_code = code
         return response
     else:
@@ -33,7 +35,8 @@ def _csrf_failure(request, reason=""):
     if is_admin_session(request):
         update_admin_session(request)
         response = render(
-            request, 'misago/admin/errorpages/csrf_failure_authenticated.html')
+            request, 'misago/admin/errorpages/csrf_failure_authenticated.html',
+            error_page=True)
     else:
         response = render(request, 'misago/admin/errorpages/csrf_failure.html')
 
