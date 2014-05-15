@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.utils.translation import ugettext_lazy as _
 from misago.admin.views import generic
 
 
@@ -12,3 +13,9 @@ class UserAdmin(generic.AdminBaseMixin):
 
 class UsersList(UserAdmin, generic.ItemsList):
     items_per_page = 20
+    ordering = (
+        (_("Newest first"), '-joined_on'),
+        (_("Oldest first"), 'joined_on'),
+        (_("A to z"), 'username'),
+        (_("Z to a"), '-username'),
+        )

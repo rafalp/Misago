@@ -14,6 +14,30 @@
   {% include "misago/admin/generic/paginator.html" %}
   {% endif%}
 
+  {% if order_by %}
+  <div class="btn-group pull-left">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+      {% trans "Sorting:"%} <span class="fa fa-sort-numeric-{{ order.type }}"></span> <strong>{{ order.name }}</strong>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li class="dropdown-title">
+        {% trans "Change sorting to:" %}
+      </li>
+      {% for order in order_by %}
+      <li>
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" name="order_by" value="{{ order.order_by }}">
+            <span class="fa fa-sort-numeric-{{ order.type }}"></span>
+            {{ order.name }}
+          </button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
 </div><!-- /.table-actions -->
 
 <div class="table-panel">

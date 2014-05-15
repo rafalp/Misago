@@ -28,7 +28,7 @@
     button {
       background: none;
       border: none;
-      padding: 3px 20px;
+      padding: 3px 10px;
       width: 100%;
 
       color: @dropdown-link-color;
@@ -98,10 +98,13 @@
   .dropdown-menu {
     .dropdown-title {
       background-color: #ecf0f1;
+      border-bottom: 1px solid darken(#ecf0f1, 5%);
       border-radius: @border-radius-base @border-radius-base 0px 0px;
       margin-top: -5px;
       margin-bottom: 5px;
       padding: @padding-base-vertical @padding-base-horizontal;
+
+      font-weight: bold;
 
       .badge {
         background-color: darken(@brand-danger, 10%);
@@ -119,12 +122,6 @@
       }
 
       button {
-        background: none;
-        border: none;
-        padding: 3px 20px;
-
-        color: @dropdown-link-color;
-        text-align: left;
         white-space: nowrap;
 
         &:hover {

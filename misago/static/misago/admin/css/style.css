@@ -5994,7 +5994,7 @@ body {
 .dropdown-menu li button {
   background: none;
   border: none;
-  padding: 3px 20px;
+  padding: 3px 10px;
   width: 100%;
   color: #5e5e5e;
   text-align: left;
@@ -6040,10 +6040,12 @@ body {
 @media (min-width: 768px) {
   .dropdown-menu .dropdown-title {
     background-color: #ecf0f1;
+    border-bottom: 1px solid #dde4e6;
     border-radius: 4px 4px 0px 0px;
     margin-top: -5px;
     margin-bottom: 5px;
     padding: 6px 12px;
+    font-weight: bold;
   }
   .dropdown-menu .dropdown-title .badge {
     background-color: #d62c1a;
@@ -6056,11 +6058,6 @@ body {
     white-space: nowrap;
   }
   .dropdown-menu > li button {
-    background: none;
-    border: none;
-    padding: 3px 20px;
-    color: #5e5e5e;
-    text-align: left;
     white-space: nowrap;
   }
   .dropdown-menu > li button:hover {
