@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
-from misago.admin.urls import discover_admin_urls
 
 
 urlpatterns = patterns('misago.core.views',
@@ -22,8 +21,6 @@ if settings.MISAGO_ADMIN_PATH:
     adminpatterns = patterns('',
         url(r'^', include('misago.admin.urls')),
     )
-
-    adminpatterns += discover_admin_urls()
 
     admin_prefix = r'^%s/' % settings.MISAGO_ADMIN_PATH
     urlpatterns += patterns('',

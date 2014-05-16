@@ -1,7 +1,8 @@
+import importlib
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.module_loading import import_by_path
+from misago.admin import site
 
 
 urlpatterns = patterns('misago.admin.views',
@@ -13,20 +14,22 @@ urlpatterns = patterns('misago.admin.views',
 )
 
 
-def discover_admin_urls():
+# Magic voodoo for initializing admin patterns lazily
+def initialize_admin_urls():
     SEARCH_PATTERNS = (
-        '%s.urls.adminurlpatterns',
-        '%s.urls.admin.urlpatterns',
-        '%s.adminurls.urlpatterns',
+        '%s.adminurls',
+        '%s.urls.admin',
         )
-    admin_patterns = []
 
     for app in settings.INSTALLED_APPS:
         for pattern in SEARCH_PATTERNS:
             try:
-                admin_patterns += import_by_path(pattern % app)
+                importlib.import_module(pattern % app)
                 continue
-            except ImproperlyConfigured:
+            except ImportError:
                 pass
 
-    return admin_patterns
+
+# Register discovered patterns
+initialize_admin_urls()
+urlpatterns += site.urlpatterns()

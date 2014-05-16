@@ -1,1 +1,1 @@
-from misago.admin.hierarchy import site  # noqa
+from misago.admin.hierarchy import site, urlpatterns  # noqa
