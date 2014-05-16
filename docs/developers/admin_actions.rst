@@ -24,16 +24,35 @@ Misago Admin Site is just an hierarchy of links defined in apps and registered w
 Registering urls under ``misago:admin`` namespace
 -------------------------------------------------
 
-Your admin views will live under ``misago:admin`` namespace, which means they should be defined in special manner. Similiarly to Django, Misago uses small discovery routine which finds patterns belonging to its admin namespace.
+Your admin links will live under ``misago:admin`` namespace, which means they have to be registered in it beforehand. Similiarly to Django, Misago uses small discovery routine which discovers modules that are expected to register their urls in admin.
 
 
-Depending on structure of your app and your tastes, you can define your admin patterns in one of three ways:
+Depending on structure of your app and your tastes, this module can be one of following:
 
-* as **adminurlpatterns** variable in **yourapp.urls** module
-* as **urlpatterns** variable in **yourapp.urls.admin** module
-* as **urlpatterns** variable in **yourapp.adminurls** module
+* yourapp.adminurls module
+* yourapp.urls.admin module
 
-Each of those is checked, in this order. First one to be found is included in urlconf.
+Each of those is checked, in this order. First one to be found is included in urlconf. Once file is found, code within it its executed with assumption that it will register namespaces and patters in Misago admin.
+
+Admin links are stored within instance of special object :py:class:`misago.admin.urlpatterns.URLPatterns` avaialable under ``misago.admin.urlpatterns``. This object exposes two methods as public api:
+
+
+.. function:: namespace(path, namespace, parent=None)
+
+Registers new namespace in admin links hierarchy.
+
+* **path** - Path prefix for links within this namespace. For example ``r'^users/'``.
+* **namespace** - Non-prefixed (eg. without ``misago:admin`` part) namespace name.
+* **parent** - Optional. Name of parent namespace (eg. ``users:accounts``).
+
+
+.. function:: patterns(namespace, *urlpatterns)
+
+Registers urlpatterns under defined namespace. Expects first argument to be name of namespace that defined links belong to (eg. ``users:accounts``). Every next argument is expected to be valid Django link created with ``url`` function from :py:mod:`django.conf.urls` module.
+
+
+..note::
+  ''misago:admin'' prefix of namespaces is implicit. Do not prefix namespaces passed as arguments to those functions with it.
 
 
 Registering urls in navigation
