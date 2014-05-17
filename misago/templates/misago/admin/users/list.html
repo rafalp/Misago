@@ -6,6 +6,7 @@
 <th style="width: 1%;">&nbsp;</th>
 <th>{% trans "User" %}</th>
 <th style="width: 120px;">{% trans "E-mail" %}</th>
+<th>&nbsp;</th>
 {% endblock table-header %}
 
 
@@ -15,14 +16,14 @@
 </td>
 <td class="lead">
   {{ item.username }}
+  {% if item.is_superuser %}
+  <span class="fa fa-star text-primary tooltip-top" title="{% trans "Super Administrator" %}"></span>
+  {% elif item.is_staff %}
+  <span class="fa fa-star-o text-primary tooltip-top" title="{% trans "Administrator" %}"></span>
+  {% endif %}
 </td>
 <td>
   <a href="mailto:{{ item.email }}">{{ item.email }}</a>
-</td>
-<td class="row-action">
-  <button type="button" class="btn btn-success tooltip-top" title="Activate">
-    <span class="fa fa-check"></span>
-  </button>
 </td>
 <td class="row-action">
   <div class="btn-group pull-right">
@@ -50,11 +51,6 @@
       </li>
     </ul>
   </div>
-</td>
-<td class="row-action">
-  <button type="button" class="btn btn-danger tooltip-top" title="Activate">
-    <span class="fa fa-times"></span>
-  </button>
 </td>
 <td class="row-select">
   <label>
