@@ -132,7 +132,7 @@ class ItemsList(AdminView):
             else:
                 context['order_by'].append(order_as_dict)
 
-        if not current_ordering:
+        if not context['order']:
             current_ordering = context['order_by'].pop(0)
             context['order'] = current_ordering
             context['items'] = context['items'].order_by(
@@ -162,14 +162,18 @@ class ItemsList(AdminView):
         return self.render(request, context)
 
 
-class FormView(AdminView):
+class ItemView(AdminView):
+    pass
+
+
+class FormView(ItemView):
     template = 'form.html'
 
     def dispatch(self, request, *args, **kwargs):
         pass
 
 
-class ButtonView(AdminView):
+class ButtonView(ItemView):
     def get(self, request, *args, **kwargs):
         pass
 
