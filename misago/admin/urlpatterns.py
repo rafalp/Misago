@@ -23,18 +23,18 @@ class URLPatterns(object):
     def get_child_patterns(self, parent):
         prefix = '%s:' % parent if parent else ''
 
-        urlpatterns = self.namespace_patterns.get(parent, [])
+        namespace_urlpatterns = self.namespace_patterns.get(parent, [])
         for namespace in self._namespaces:
             if namespace['parent'] == parent:
                 prefixed_namespace = prefix + namespace['namespace']
                 urlpatterns = self.get_child_patterns(prefixed_namespace)
                 included_patterns = include(urlpatterns,
                                             namespace=namespace['namespace'])
-                urlpatterns += patterns('',
+                namespace_urlpatterns += patterns('',
                     url(namespace['path'], included_patterns)
                 )
 
-        return urlpatterns
+        return namespace_urlpatterns
 
     def sum_registered_patters(self):
         all_patterns = {}
