@@ -70,3 +70,6 @@ class URLPatterns(object):
             self._namespaces = []
             self._patterns = []
             return self._urlpatterns
+
+
+urlpatterns = URLPatterns()

@@ -2,7 +2,7 @@ import importlib
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.core.exceptions import ImproperlyConfigured
-from misago.admin import site
+from misago.admin import urlpatterns as admin_urlpatterns
 
 
 urlpatterns = patterns('misago.admin.views',
@@ -32,4 +32,4 @@ def initialize_admin_urls():
 
 # Register discovered patterns
 initialize_admin_urls()
-urlpatterns += site.urlpatterns()
+urlpatterns += admin_urlpatterns()

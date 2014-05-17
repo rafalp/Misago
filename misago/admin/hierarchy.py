@@ -1,5 +1,4 @@
 from django.core.urlresolvers import reverse
-from misago.admin.urlpatterns import URLPatterns
 
 
 class Node(object):
@@ -94,7 +93,6 @@ class AdminHierarchyBuilder(object):
     def __init__(self):
         self.nodes_record = []
         self.nodes_dict = {}
-        self.urlpatterns = URLPatterns()
 
     def build_nodes_dict(self):
         nodes_dict = {'misago:admin': Node(link='misago:admin:index')}
@@ -190,4 +188,3 @@ class AdminHierarchyBuilder(object):
 
 
 site = AdminHierarchyBuilder()
-urlpatterns = site.urlpatterns
