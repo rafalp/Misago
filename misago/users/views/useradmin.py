@@ -14,8 +14,8 @@ class UserAdmin(generic.AdminBaseMixin):
 class UsersList(UserAdmin, generic.ItemsList):
     items_per_page = 20
     ordering = (
-        (_("From newest"), '-joined_on'),
-        (_("From oldest"), 'joined_on'),
+        (_("From newest"), '-id'),
+        (_("From oldest"), 'id'),
         (_("A to z"), 'username'),
         (_("Z to a"), '-username'),
         )
