@@ -12,3 +12,10 @@
   {{ item.name }}
 </td>
 {% endblock %}
+
+
+{% block emptylist %}
+<td>
+  <p>{% trans "No ranks are currently defined." %}</p>
+</td>
+{% endblock emptylist %}

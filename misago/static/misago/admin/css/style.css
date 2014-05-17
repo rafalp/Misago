@@ -6187,18 +6187,31 @@ body {
 .table-panel table.table tr.active td {
   background-color: rgba(240, 173, 78, 0.05);
 }
+.table-panel table.table tr.message-row td {
+  padding: 20px;
+}
+.table-panel table.table tr.message-row td p {
+  margin: 0px;
+  font-size: 18px;
+}
+.table-panel table.table tr:first-child > :first-child {
+  border-top-left-radius: 3px;
+}
+.table-panel table.table tr:first-child > :last-child {
+  border-top-right-radius: 3px;
+}
+.table-panel table.table tr:last-child > :first-child {
+  border-bottom-left-radius: 3px;
+}
+.table-panel table.table tr:last-child > :last-child {
+  border-bottom-right-radius: 3px;
+}
 .table-panel table.table tr th {
   background: #ededed;
   border: none;
   padding: 5px 8px;
   color: #555555;
   font-size: 12px;
-}
-.table-panel table.table tr th:first-child {
-  border-radius: 3px 0px 0px 0px;
-}
-.table-panel table.table tr th:last-child {
-  border-radius: 0px 3px 0px 0px;
 }
 .table-panel table.table tr td {
   background-color: #fff;
