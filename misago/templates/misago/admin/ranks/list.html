@@ -1,0 +1,14 @@
+{% extends "misago/admin/generic/list.html" %}
+{% load i18n %}
+
+
+{% block table-header %}
+<th style="width: 1%;">&nbsp;</th>
+{% endblock table-header %}
+
+
+{% block table-row %}
+<td class="lead">
+  {{ item.name }}
+</td>
+{% endblock %}

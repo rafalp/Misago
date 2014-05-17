@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
+from misago.admin import site
 from misago.core.utils import slugify
 
 
@@ -24,3 +26,12 @@ class Rank(models.Model):
     def set_name(self, name):
         self.name = name
         self.slug = slugify(name)
+
+
+"""register model in misago admin"""
+site.add_node(
+    parent='misago:admin:users',
+    namespace='misago:admin:users:ranks',
+    link='misago:admin:users:ranks:index',
+    name=_("Ranks"),
+    icon='fa fa-graduation-cap')
