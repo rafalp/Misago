@@ -112,7 +112,6 @@ site.add_node(
     name=_("Users"),
     icon='fa fa-users')
 
-
 site.add_node(
     parent='misago:admin:users',
     namespace='misago:admin:users:accounts',
