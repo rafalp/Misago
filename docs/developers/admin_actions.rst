@@ -26,6 +26,8 @@ Registering urls under ``misago:admin`` namespace
 
 Your admin links will live under ``misago:admin`` namespace, which means they have to be registered in it beforehand. Similiarly to Django, Misago uses small discovery routine which discovers modules that are expected to register their urls in admin.
 
+.. warning::
+   Presented solution is only temporary. Starting with Django 1.7, you will have to make decision where to locate code that will register your links in Misago admin and call it within your app ``apps.py`` initializer.
 
 Depending on structure of your app and your tastes, this module can be one of following:
 
