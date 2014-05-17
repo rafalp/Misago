@@ -29,7 +29,7 @@ class Node(object):
             childrens.append(
                 {
                     'link': reverse(children.link),
-                    'namespace': self.namespace,
+                    'namespace': children.namespace,
                     'name': children.name,
                     'icon': children.icon,
                 })
@@ -166,23 +166,16 @@ class AdminHierarchyBuilder(object):
                     branches.append(children)
                 node = node.parent
 
+
+        namespace = request.resolver_match.namespaces
+
         branches.reverse()
-
-        # Lowest level branch, active link
-        for node in branches[0]:
-            node['is_active'] = node['link'] in request.path
-
-        # Other levels branches
-        for branch in branches[1:]:
+        for depth, branch in enumerate(branches):
+            depth_namespace = namespace[2:3 + depth]
             for node in branch:
-                active = node['namespace'] in request.resolver_match.namespace
-                node['is_active'] = active
+                node_namespace = node['namespace'].split(':')[2:3 + depth]
+                node['is_active'] = depth_namespace == node_namespace
 
-        # Hack for index link
-        full_url_name = '%s:%s' % (request.resolver_match.namespace,
-                                   request.resolver_match.url_name)
-        if full_url_name != 'misago:admin:index':
-            branches[0][0]['is_active'] = False
 
         return branches
 
