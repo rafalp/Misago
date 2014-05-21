@@ -28,6 +28,12 @@ class EditRank(RankAdmin, generic.FormView):
 
 
 class DeleteRank(RankAdmin, generic.ButtonView):
+    def check_permissions(self, request, target):
+        if not target.user_set.exists():
+            message = _('Rank "%s" is assigned to users and '
+                        'can\'t be deleted.')
+            return message % unicode(target.name)
+
     def button_action(self, request, target=None):
         target.delete()
         message = _('Rank "%s" has been deleted.') % unicode(target.name)
