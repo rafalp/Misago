@@ -5,6 +5,11 @@ from misago.admin import site
 from misago.core.utils import slugify
 
 
+class RankManager(models.Manager):
+    def default(self):
+        return self.get(is_default=True)
+
+
 class Rank(models.Model):
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
@@ -16,6 +21,8 @@ class Rank(models.Model):
     is_on_index = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
     #roles = models.ManyToManyField('Role')
+
+    objects = RankManager()
 
     class Meta:
         app_label = 'users'
@@ -58,4 +65,5 @@ site.add_node(
     namespace='misago:admin:users:ranks',
     link='misago:admin:users:ranks:index',
     name=_("Ranks"),
+    after='misago:admin:users:accounts:index',
     icon='fa fa-graduation-cap')

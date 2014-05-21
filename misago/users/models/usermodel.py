@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import site
 from misago.core.utils import slugify
+from misago.users.models import Rank
 from misago.users.utils import hash_email
 from misago.users.validators import (validate_email, validate_password,
                                      validate_username)
@@ -28,6 +29,10 @@ class UserManager(BaseUserManager):
         user.set_username(username)
         user.set_email(email)
         user.set_password(password)
+
+        if not 'rank' in extra_fields:
+            user.rank = Rank.objects.default()
+
         user.save(using=self._db)
         return user
 

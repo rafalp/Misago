@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
 from misago.conf.migrationutils import migrate_settings_group, with_conf_models
 from misago.core.migrationutils import ugettext_lazy as _
@@ -151,7 +151,7 @@ class Migration(SchemaMigration):
     def backwards(self, orm):
         pass
 
-    models = {
+    models = with_conf_models('0001_initial', {
         u'auth.group': {
             'Meta': {'object_name': 'Group'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -201,7 +201,9 @@ class Migration(SchemaMigration):
             'username': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
             'username_slug': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
         }
-    }
+    })
+
+    no_dry_run = True
 
     complete_apps = ['users']
 
