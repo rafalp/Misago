@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import site
@@ -8,6 +8,12 @@ from misago.core.utils import slugify
 class RankManager(models.Manager):
     def default(self):
         return self.get(is_default=True)
+
+    def make_rank_default(self, rank):
+        with transaction.atomic():
+            self.filter(is_default=True).update(is_default=False)
+            rank.is_default = True
+            rank.save(update_fields=['is_default'])
 
 
 class Rank(models.Model):

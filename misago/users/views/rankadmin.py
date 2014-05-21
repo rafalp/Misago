@@ -54,3 +54,14 @@ class MoveDownRank(RankAdmin, generic.ButtonView):
             target.save(update_fields=['order'])
             message = _('Rank "%s" has been moved down.') % unicode(target.name)
             messages.success(request, message)
+
+
+class DefaultRank(RankAdmin, generic.ButtonView):
+    def check_permissions(self, request, target):
+        if target.is_default:
+            return _('Rank "%s" is already default.') % unicode(target.name)
+
+    def button_action(self, request, target=None):
+        Rank.objects.make_rank_default(target)
+        message = _('Rank "%s" has been made default.')
+        messages.success(request, message % unicode(target.name))
