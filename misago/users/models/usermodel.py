@@ -69,6 +69,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, db_index=True)
     email_hash = models.CharField(max_length=32, unique=True)
     joined_on = models.DateTimeField(_('joined on'), default=timezone.now)
+    rank = models.ForeignKey('users.Rank', on_delete=models.PROTECT)
     is_staff = models.BooleanField(
         _('staff status'), default=False, db_index=True,
         help_text=_('Designates whether the user can log into admin sites.'))
