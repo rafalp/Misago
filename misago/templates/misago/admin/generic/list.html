@@ -8,6 +8,7 @@
 
 
 {% block view %}
+{% if paginator or order_by %}
 <div class="table-actions">
 
   {% if paginator %}
@@ -17,7 +18,7 @@
   {% if order_by %}
   <div class="btn-group pull-left">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-      {% trans "Sorting:"%} <span class="fa fa-sort-numeric-{{ order.type }}"></span> <strong>{{ order.name }}</strong>
+      {% trans "Sorting:" %} <span class="fa fa-sort-numeric-{{ order.type }}"></span> <strong>{{ order.name }}</strong>
     </button>
     <ul class="dropdown-menu" role="menu">
       <li class="dropdown-title">
@@ -39,15 +40,12 @@
   {% endif %}
 
 </div><!-- /.table-actions -->
+{% endif %}
 
 <div class="table-panel">
   <table class="table">
     <tr>
       {% block table-header %}
-      <th>Lorem</th>
-      <th>Ipsum</th>
-      <th style="width: 136px;">Dolor</th>
-      <th colspan="4">&nbsp;</th>
       {% endblock table-header %}
     </tr>
     {% for item in items %}

@@ -52,16 +52,21 @@ class AdminView(View):
         matched_url = request.resolver_match.url_name
         return '%s:%s' % (request.resolver_match.namespace, matched_url)
 
+    def process_context(self, request, context):
+        return context
+
     def render(self, request, context=None):
         context = context or {}
 
         context['root_link'] = self.root_link
         context['current_link'] = self.current_link(request)
 
+        self.process_context(request, context)
+
         return render(request, self.final_template(), context)
 
 
-class ItemsList(AdminView):
+class ListView(AdminView):
     """
     Admin items list view
 
@@ -162,20 +167,81 @@ class ItemsList(AdminView):
         return self.render(request, context)
 
 
-class ItemView(AdminView):
-    pass
+class TargetedView(AdminView):
+    def check_permissions(self, request, target=None):
+        pass
 
+    def get_target(self, kwargs):
+        if len(kwargs):
+            return self.get_model().objects.get(pk=kwargs[kwargs.keys()[0]])
+        else:
+            return self.get_model()()
 
-class FormView(ItemView):
-    template = 'form.html'
+    def get_target_or_none(self, request, kwargs):
+        try:
+            return self.get_target(kwargs)
+        except self.get_model().DoesNotExist:
+            return None
 
     def dispatch(self, request, *args, **kwargs):
+        target = self.get_target_or_none(request, kwargs)
+        if not target:
+            messages.error(request, self.message_404)
+            return redirect(self.root_link)
+
+        error = self.check_permissions(request, target)
+        if error:
+            messages.error(request, error)
+            return redirect(self.root_link)
+
+        return self.real_dispatch(request, target)
+
+    def real_dispatch(self, request, target=None):
         pass
 
 
-class ButtonView(ItemView):
-    def get(self, request, *args, **kwargs):
-        pass
+class FormView(TargetedView):
+    form = None
+    template = 'form.html'
+    message_submit = None
 
-    def post(self, request, *args, **kwargs):
-        pass
+    def create_form(self, request, target=None):
+        return self.form
+
+    def initialize_form(self, FormType, request, target=None):
+        if request.method == 'POST':
+            return self.form(request.POST, request.FILES, instance=target)
+        else:
+            return self.form(instance=target)
+
+    def handle_form(self, form, request):
+        form.instance.save()
+        if self.message_submit:
+            message = self.message_submit % unicode(form.instance)
+            messages.success(request, message)
+
+    def real_dispatch(self, request, target=None):
+        FormType = self.create_form(request, target)
+        form = self.initialize_form(FormType, request, target)
+
+        if form.is_valid():
+            self.handle_form(form, request)
+
+            if 'stay' in request.POST:
+                return redirect(request.path)
+            else:
+                return redirect(self.root_link)
+
+        return self.render(request, {'form': form, 'target': target})
+
+
+class ButtonView(TargetedView):
+    def real_dispatch(self, request, target=None):
+        if request.method == 'POST':
+            new_response = self.button_action(request, target)
+            if new_response:
+                return new_response
+        return redirect(self.root_link)
+
+    def button_action(self, request, target=None):
+        raise NotImplementedError("You have to define custom button_action.")

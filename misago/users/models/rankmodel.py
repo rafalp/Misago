@@ -19,13 +19,37 @@ class Rank(models.Model):
 
     class Meta:
         app_label = 'users'
+        get_latest_by = 'order'
 
     def __unicode__(self):
         return unicode(_(self.name))
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.set_order()
+        return super(Rank, self).save(*args, **kwargs)
+
     def set_name(self, name):
         self.name = name
         self.slug = slugify(name)
+
+    def set_order(self):
+        try:
+            self.order = Rank.objects.latest('order').order + 1
+        except Rank.DoesNotExist:
+            self.order = 0
+
+    def next(self):
+        try:
+            return Rank.objects.filter(order__gt=self.order).earliest('order')
+        except Rank.DoesNotExist:
+            return None
+
+    def prev(self):
+        try:
+            return Rank.objects.filter(order__lt=self.order).latest('order')
+        except Rank.DoesNotExist:
+            return None
 
 
 """register model in misago admin"""

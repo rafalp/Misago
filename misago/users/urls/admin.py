@@ -1,7 +1,8 @@
 from django.conf.urls import url
 from misago.admin import urlpatterns
 from misago.users.views.useradmin import UsersList
-from misago.users.views.rankadmin import RanksList
+from misago.users.views.rankadmin import (RanksList, NewRank, EditRank,
+                                          DeleteRank, MoveUpRank, MoveDownRank)
 
 
 # Users section
@@ -20,4 +21,9 @@ urlpatterns.patterns('users:accounts',
 urlpatterns.namespace(r'^ranks/', 'ranks', 'users')
 urlpatterns.patterns('users:ranks',
     url(r'^$', RanksList.as_view(), name='index'),
+    url(r'^new/$', NewRank.as_view(), name='new'),
+    url(r'^edit/(?P<rank_id>\d+)/$', EditRank.as_view(), name='edit'),
+    url(r'^move/up/(?P<rank_id>\d+)/$', MoveUpRank.as_view(), name='up'),
+    url(r'^move/down/(?P<rank_id>\d+)/$', MoveDownRank.as_view(), name='down'),
+    url(r'^delete/(?P<rank_id>\d+)/$', DeleteRank.as_view(), name='delete'),
 )

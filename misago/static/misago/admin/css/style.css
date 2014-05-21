@@ -6225,7 +6225,8 @@ body {
 .table-panel table.table tr td.row-action {
   width: 1%;
 }
-.table-panel table.table tr td.row-action > .btn,
+.table-panel table.table tr td.row-action .btn,
+.table-panel table.table tr td.row-action > form .btn,
 .table-panel table.table tr td.row-action .dropdown-toggle {
   padding: 0px;
   width: 30px;
@@ -6233,7 +6234,8 @@ body {
   font-size: 18px;
   text-align: center;
 }
-.table-panel table.table tr td.row-action > .btn > span,
+.table-panel table.table tr td.row-action .btn > span,
+.table-panel table.table tr td.row-action > form .btn > span,
 .table-panel table.table tr td.row-action .dropdown-toggle > span {
   position: relative;
   bottom: 1px;
@@ -6649,6 +6651,15 @@ body {
     margin-bottom: 0px;
     margin-left: 12px;
   }
+}
+textarea {
+  resize: vertical;
+}
+.checkbox label {
+  font-weight: bold;
+}
+.checkbox label .help-block {
+  font-weight: normal;
 }
 .login-form {
   padding: 20px;

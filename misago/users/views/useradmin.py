@@ -11,7 +11,7 @@ class UserAdmin(generic.AdminBaseMixin):
         return get_user_model()
 
 
-class UsersList(UserAdmin, generic.ItemsList):
+class UsersList(UserAdmin, generic.ListView):
     items_per_page = 20
     ordering = (
         (_("From newest"), '-id'),

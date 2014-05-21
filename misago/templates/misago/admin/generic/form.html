@@ -1,1 +1,46 @@
 {% extends "misago/admin/generic/base.html" %}
+{% load i18n %}
+
+
+{% block page-header %}
+{{ block.super }}
+<div class="sub">
+  <span class="fa fa-chevron-right"></span>
+  {% block page-target %}{% endblock page-target %}
+</div>
+{% endblock page-header %}
+
+
+{% block view %}
+<div class="row">
+  <div class="col-xs-12 col-md-8 col-md-offset-2">
+
+    <div class="form-panel">
+      <form role="form" method="post">
+        {% csrf_token %}
+
+        <div class="form-header">
+          {% block form-header %}{% endblock %}
+        </div>
+
+        {% block form-body %}{% endblock %}
+
+        <div class="form-footer">
+          {% block form-footer %}
+          {% if target and target.pk %}
+          <button class="btn btn-primary">{% trans "Save changes" %}</button>
+          <button class="btn btn-success" name="stay" value="1">{% trans "Save and keep editing" %}</button>
+          {% else %}
+          <button class="btn btn-primary">{% trans "Save" %}</button>
+          <button class="btn btn-success" name="stay" value="1">{% trans "Save and add another" %}</button>
+          {% endif %}
+          {% endblock %}
+          <a href="{% url root_link %}" class="btn btn-default">{% trans "Cancel" %}</a>
+        </div>
+
+      </form>
+    </div><!-- /.form-panel -->
+
+  </div>
+</div>
+{% endblock view %}
