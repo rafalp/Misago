@@ -1,7 +1,7 @@
 {% extends "cranefly/layout.html" %}
 {% import "cranefly/macros.html" as macros with context %}
 
-{% block title %}{{ macros.page_title(title=(_("Post #%(post)s Changelog") % {'post': post.pk}),parent=thread.name) }}{% endblock %}
+{% block title %}{{ macros.page_title(title=(_("Post #%(post)s Changelog", post=post.pk)),parent=thread.name) }}{% endblock %}
 
 {% block breadcrumb %}{{ super() }} <span class="divider"><i class="icon-chevron-right"></i></span></li>
 {{ macros.parents_list(parents) }}
