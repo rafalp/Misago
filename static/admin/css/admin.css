@@ -277,7 +277,7 @@ table{max-width:100%;background-color:transparent;border-collapse:collapse;borde
 .table-bordered caption+thead tr:first-child th:last-child,.table-bordered caption+tbody tr:first-child td:last-child,.table-bordered colgroup+thead tr:first-child th:last-child,.table-bordered colgroup+tbody tr:first-child td:last-child{-webkit-border-top-right-radius:4px;border-top-right-radius:4px;-moz-border-radius-topleft:4px;}
 .table-striped tbody tr:nth-child(odd) td,.table-striped tbody tr:nth-child(odd) th{background-color:#f7f7f7;}
 .table-hover tbody tr:hover td,.table-hover tbody tr:hover th{background-color:#f2f2f2;}
-table [class*=span],.row-fluid table [class*=span]{display:table-cell;float:none;margin-left:0;}
+table [class*=span],.row-fluid table [class*=span]{float:none;margin-left:0;}
 .table .span1{float:none;width:44px;margin-left:0;}
 .table .span2{float:none;width:124px;margin-left:0;}
 .table .span3{float:none;width:204px;margin-left:0;}
