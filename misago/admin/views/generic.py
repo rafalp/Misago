@@ -15,31 +15,34 @@ class AdminBaseMixin(object):
     Takes following attributes:
 
     Model = Model instance
-    message_404 = string used in "requested item not found" messages
     root_link = name of link leading to root action (eg. list of all items
-    template_dir = directory with templates
+    templates_dir = directory with templates
+    message_404 = string used in "requested item not found" messages
     """
     Model = None
-    message_404 = None
     root_link = None
-    template_dir = None
+    templates_dir = None
+    message_404 = None
 
     def get_model(self):
+        """
+        Basic method for retrieving Model, used in cases such as User model.
+        """
         return self.Model
 
 
 class AdminView(View):
     def final_template(self):
-        return '%s/%s' % (self.template_dir, self.template)
+        return '%s/%s' % (self.templates_dir, self.template)
 
     def get_target(self, target):
+        """
+        get_target is called by view to fetch item from DB
+        """
         Model = self.get_model()
         return Model.objects.get(id=target)
 
     def _get_target(self, request, kwargs):
-        """
-        get_target is called by view to fetch item from DB
-        """
         Model = self.get_model()
 
         try:
@@ -53,6 +56,9 @@ class AdminView(View):
         return '%s:%s' % (request.resolver_match.namespace, matched_url)
 
     def process_context(self, request, context):
+        """
+        Simple hook for extending and manipulating template context.
+        """
         return context
 
     def render(self, request, context=None):
@@ -61,7 +67,7 @@ class AdminView(View):
         context['root_link'] = self.root_link
         context['current_link'] = self.current_link(request)
 
-        self.process_context(request, context)
+        context = self.process_context(request, context)
 
         return render(request, self.final_template(), context)
 
@@ -112,9 +118,9 @@ class ListView(AdminView):
         return 'misago_admin_%s_order_by' % self.root_link
 
     def set_ordering(self, request, new_order):
-        for order in self.ordering:
-            if order[1] == new_order:
-                request.session[self.ordering_session_key()] = order[1]
+        for order_by, name in self.ordering:
+            if order_by == new_order:
+                request.session[self.ordering_session_key()] = order_by
                 return redirect(self.current_link(request))
         else:
             messages.error(request, _("New sorting method is incorrect."))
@@ -123,14 +129,14 @@ class ListView(AdminView):
     def order_items(self, request, context):
         current_ordering = request.session.get(self.ordering_session_key())
 
-        for order in self.ordering:
+        for order_by, name in self.ordering:
             order_as_dict = {
-                'name': order[0],
-                'order_by': order[1],
-                'type': 'desc' if order[1][0] == '-' else 'asc',
+                'order_by': order_by,
+                'type': 'desc' if order_by[0] == '-' else 'asc',
+                'name': name,
             }
 
-            if order[1] == current_ordering:
+            if order_by == current_ordering:
                 context['order'] = order_as_dict
                 context['items'] = context['items'].order_by(
                     order_as_dict['order_by'])

@@ -7,16 +7,14 @@ from misago.users.forms.admin import RankForm
 
 class RankAdmin(generic.AdminBaseMixin):
     root_link = 'misago:admin:users:ranks:index'
-    template_dir = 'misago/admin/ranks'
+    Model = Rank
+    templates_dir = 'misago/admin/ranks'
     message_404 = _("Requested rank does not exist.")
     form = RankForm
 
-    def get_model(self):
-        return Rank
-
 
 class RanksList(RankAdmin, generic.ListView):
-    ordering = ((None, 'order'),)
+    ordering = (('order', None),)
 
 
 class NewRank(RankAdmin, generic.FormView):

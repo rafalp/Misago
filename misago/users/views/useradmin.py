@@ -5,7 +5,7 @@ from misago.admin.views import generic
 
 class UserAdmin(generic.AdminBaseMixin):
     root_link = 'misago:admin:users:accounts:index'
-    template_dir = 'misago/admin/users'
+    templates_dir = 'misago/admin/users'
 
     def get_model(self):
         return get_user_model()
@@ -14,8 +14,8 @@ class UserAdmin(generic.AdminBaseMixin):
 class UsersList(UserAdmin, generic.ListView):
     items_per_page = 20
     ordering = (
-        (_("From newest"), '-id'),
-        (_("From oldest"), 'id'),
-        (_("A to z"), 'username'),
-        (_("Z to a"), '-username'),
+        ('-id', _("From newest")),
+        ('id', _("From oldest")),
+        ('username', _("A to z")),
+        ('-username', _("Z to a")),
         )
