@@ -8,9 +8,9 @@ from misago.users.forms.admin import RankForm
 class RankAdmin(generic.AdminBaseMixin):
     root_link = 'misago:admin:users:ranks:index'
     Model = Rank
+    Form = RankForm
     templates_dir = 'misago/admin/ranks'
     message_404 = _("Requested rank does not exist.")
-    form = RankForm
 
 
 class RanksList(RankAdmin, generic.ListView):
