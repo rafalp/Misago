@@ -25,7 +25,7 @@ Workflow with those classes is fast and easy to master. First, you define your o
 Next you define your own views inheriting from your mixin and base views. Misago provides basic views for each of most common scenarios in admin:
 
 * **ListView** - For items lists. Supports pagination, sorting, filtering and mass actions.
-* **FormView** and ``ModelFormView`` - For displaying and handling forms submissions.
+* **FormView** and **ModelFormView** - For displaying and handling forms submissions.
 * **ButtonView** - For handling state-changing button presses like "delete item" actions.
 
 
@@ -79,12 +79,12 @@ Base class for forms views.
 Returns form type that will be used to create form instance. By default returns value of ``Form`` property.
 
 
-.. function:: initialize_form(self, FormType, request):
+.. function:: initialize_form(self, FormType, request)
 
 Initializes either bound or unbound form using request and ``FormType`` provided.
 
 
-.. function:: handle_form(self, form, request):
+.. function:: handle_form(self, form, request)
 
 If form validated successfully, this method is called to perform action. Here you should place code that will read data from form, perform actions on models and set result message. Optionally you may return ``HttpResponse`` from this function. If nothing is returned, view returns redirect to ``root_link``.
 
@@ -131,9 +131,9 @@ Function expected return valid model instance or None. If None is returned, this
 
 .. function:: get_target(self, kwargs)
 
-Called by ``get_target_or_none`` function documented above.
+Called by ``get_target_or_none``.
 
-If ``kwargs`` len is 1, its assumed to be value of searched models pk value. This makes function call model manager ``get()`` method to fetch model instance from database. Otherwhise "empty" instance is created and returned instead. Eventual ``DoesNotExist`` errors are handled by ``get_target_or_none``.
+If ``kwargs`` len is 1, its assumed to be value of seeked model pk value. This makes function call model manager ``get()`` method to fetch model instance from database. Otherwhise "empty" instance is created and returned instead. Eventual ``DoesNotExist`` errors are handled by ``get_target_or_none``.
 
 
 .. function:: check_permissions(self, request, target)
