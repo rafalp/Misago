@@ -6137,6 +6137,8 @@ body {
   padding-bottom: 2px;
 }
 .pager > li.page {
+  display: block;
+  padding: 7px 0px;
   padding-right: 6.66666667px;
 }
 .pager > li a,
