@@ -48,6 +48,17 @@ class Migration(DataMigration):
                             'max_length': 255
                         },
                     },
+                    {
+                        'setting': 'email_footer',
+                        'name': _("E-mails footer"),
+                        'description': _("Optional short message included "
+                                         "at the end of e-mails sent by "
+                                         "forum"),
+                        'legend': _("Forum e-mails"),
+                        'field_extra': {
+                            'max_length': 255
+                        },
+                    },
                 )
             },
         )

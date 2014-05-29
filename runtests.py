@@ -13,10 +13,16 @@ def runtests():
 
         settings_path = os.path.join(test_project_path, "settings.py")
         with open(settings_path, "r") as py_file:
-            settings_file = py_file.read().replace("{{ project_name }}",
+            settings_file = py_file.read()
+
+            # Do some configuration magic
+            settings_file = settings_file.replace("{{ project_name }}",
                                                    "testproject")
             settings_file = settings_file.replace("{{ secret_key }}",
                                                   "t3stpr0j3ct")
+            settings_file += """
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+"""
 
         with open(settings_path, "w") as py_file:
             py_file.write(settings_file)

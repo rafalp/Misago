@@ -3,4 +3,7 @@ def site_address(request):
         address_template = 'https://%s'
     else:
         address_template = 'http://%s'
-    return {'SITE_ADDRESS': address_template % request.get_host()}
+    return {
+        'SITE_HOST': request.get_host(),
+        'SITE_ADDRESS': address_template % request.get_host()
+    }

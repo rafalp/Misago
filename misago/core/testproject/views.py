@@ -1,8 +1,32 @@
+from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponse
-from misago.core import errorpages
+from misago.core import errorpages, mail
 from misago.core.shortcuts import paginate, validate_slug
 from misago.core.testproject.models import Model
+
+
+def test_mail_user(request):
+    User = get_user_model()
+
+    test_user = User.objects.all().first()
+    mail.mail_user(request,
+                   test_user,
+                   "Misago Test Mail",
+                   "misago/emails/base")
+
+    return HttpResponse("Mailed user!")
+
+
+def test_mail_users(request):
+    User = get_user_model()
+
+    mail.mail_users(request,
+                    User.objects.iterator(),
+                    "Misago Test Spam",
+                    "misago/emails/base")
+
+    return HttpResponse("Mailed users!")
 
 
 def test_pagination(request, page=None):
