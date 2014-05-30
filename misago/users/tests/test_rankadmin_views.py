@@ -15,12 +15,10 @@ class RankAdminViewsTests(AdminTestCase):
 
     def test_list_view(self):
         """ranks list view returns 200"""
-        response = self.client.get(
-            reverse('misago:admin:users:ranks:index'))
+        response = self.client.get(reverse('misago:admin:users:ranks:index'))
 
         self.assertEqual(response.status_code, 200)
         self.assertIn('Team', response.content)
-
 
     def test_new_view(self):
         """new rank view has no showstoppers"""
@@ -44,8 +42,7 @@ class RankAdminViewsTests(AdminTestCase):
             })
         self.assertEqual(response.status_code, 302)
 
-        response = self.client.get(
-            reverse('misago:admin:users:ranks:index'))
+        response = self.client.get(reverse('misago:admin:users:ranks:index'))
         self.assertEqual(response.status_code, 200)
         self.assertIn('Test Rank', response.content)
         self.assertIn('Test Title', response.content)
@@ -78,8 +75,8 @@ class RankAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:ranks:edit',
                     kwargs={'rank_id': test_rank.pk}))
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Test Rank', response.content)
-        self.assertIn('Test Title', response.content)
+        self.assertIn(test_rank.name, response.content)
+        self.assertIn(test_rank.title, response.content)
 
         response = self.client.post(
             reverse('misago:admin:users:ranks:edit',
@@ -90,12 +87,13 @@ class RankAdminViewsTests(AdminTestCase):
             })
         self.assertEqual(response.status_code, 302)
 
-        response = self.client.get(
-            reverse('misago:admin:users:ranks:index'))
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('Top Lel', response.content)
-
         test_rank = Rank.objects.get(slug='top-lel')
+        response = self.client.get(reverse('misago:admin:users:ranks:index'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_rank.name, response.content)
+        self.assertTrue('Test Rank' not in test_rank.roles.all())
+        self.assertTrue('Test Title' not in test_rank.roles.all())
+
         self.assertIn(test_role_b, test_rank.roles.all())
         self.assertTrue(test_role_a not in test_rank.roles.all())
         self.assertTrue(test_role_c not in test_rank.roles.all())
@@ -191,7 +189,9 @@ class RankAdminViewsTests(AdminTestCase):
                     kwargs={'rank_id': test_rank.pk}))
         self.assertEqual(response.status_code, 302)
 
-        response = self.client.get(
-            reverse('misago:admin:users:ranks:index'))
+        self.client.get(reverse('misago:admin:users:ranks:index'))
+        response = self.client.get(reverse('misago:admin:users:ranks:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('Top Lel' not in response.content)
+
+        self.assertTrue(test_rank.name not in response.content)
+        self.assertTrue(test_rank.title not in response.content)

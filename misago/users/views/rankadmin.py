@@ -36,7 +36,11 @@ class EditRank(RankAdmin, generic.ModelFormView):
 
 class DeleteRank(RankAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
-        if not target.user_set.exists():
+        if target.is_default:
+            message = _('Rank "%s" is default rank and '
+                        'can\'t be deleted.')
+            return message % unicode(target.name)
+        if target.user_set.exists():
             message = _('Rank "%s" is assigned to users and '
                         'can\'t be deleted.')
             return message % unicode(target.name)

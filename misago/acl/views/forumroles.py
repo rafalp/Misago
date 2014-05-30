@@ -26,12 +26,6 @@ class EditForumRole(ForumRoleAdmin, generic.ModelFormView):
 
 
 class DeleteForumRole(ForumRoleAdmin, generic.ButtonView):
-    def check_permissions(self, request, target):
-        if not target.user_set.exists():
-            message = _('Role "%s" is assigned to forums and '
-                        'can\'t be deleted.')
-            return message % unicode(target.name)
-
     def button_action(self, request, target):
         target.delete()
         message = _('Role "%s" has been deleted.') % unicode(target.name)

@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext as _
 from misago.admin import site
+from misago.acl import cachebuster
 import base64
 try:
     import cPickle as pickle
@@ -14,6 +15,15 @@ class Role(models.Model):
 
     def __unicode__(self):
         return unicode(_(self.name))
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            cachebuster.invalidate()
+        return super(Role, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        cachebuster.invalidate()
+        return super(Role, self).delete(*args, **kwargs)
 
     @property
     def permissions(self):
@@ -40,6 +50,15 @@ class ForumRole(models.Model):
 
     def __unicode__(self):
         return unicode(_(self.name))
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            cachebuster.invalidate()
+        return super(ForumRole, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        cachebuster.invalidate()
+        return super(ForumRole, self).delete(*args, **kwargs)
 
     @property
     def permissions(self):
