@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse
 from misago.admin.testutils import AdminTestCase
+from misago.acl.models import Role
 from misago.users.models import Rank
 
 
@@ -23,6 +24,10 @@ class RankAdminViewsTests(AdminTestCase):
 
     def test_new_view(self):
         """new rank view has no showstoppers"""
+        test_role_a = Role.objects.create(name='Test Role A')
+        test_role_b = Role.objects.create(name='Test Role B')
+        test_role_c = Role.objects.create(name='Test Role C')
+
         response = self.client.get(
             reverse('misago:admin:users:ranks:new'))
         self.assertEqual(response.status_code, 200)
@@ -35,6 +40,7 @@ class RankAdminViewsTests(AdminTestCase):
                 'title': 'Test Title',
                 'style': 'test',
                 'is_tab': '1',
+                'roles': [test_role_a.pk, test_role_c.pk],
             })
         self.assertEqual(response.status_code, 302)
 
@@ -44,9 +50,17 @@ class RankAdminViewsTests(AdminTestCase):
         self.assertIn('Test Rank', response.content)
         self.assertIn('Test Title', response.content)
 
+        test_rank = Rank.objects.get(slug='test-rank')
+        self.assertIn(test_role_a, test_rank.roles.all())
+        self.assertIn(test_role_c, test_rank.roles.all())
+        self.assertTrue(test_role_b not in test_rank.roles.all())
 
     def test_edit_view(self):
         """edit rank view has no showstoppers"""
+        test_role_a = Role.objects.create(name='Test Role A')
+        test_role_b = Role.objects.create(name='Test Role B')
+        test_role_c = Role.objects.create(name='Test Role C')
+
         self.client.post(
             reverse('misago:admin:users:ranks:new'),
             data={
@@ -55,6 +69,7 @@ class RankAdminViewsTests(AdminTestCase):
                 'title': 'Test Title',
                 'style': 'test',
                 'is_tab': '1',
+                'roles': [test_role_a.pk, test_role_c.pk],
             })
 
         test_rank = Rank.objects.get(slug='test-rank')
@@ -69,13 +84,21 @@ class RankAdminViewsTests(AdminTestCase):
         response = self.client.post(
             reverse('misago:admin:users:ranks:edit',
                     kwargs={'rank_id': test_rank.pk}),
-            data={'name': 'Top Lel'})
+            data={
+                'name': 'Top Lel',
+                'roles': [test_role_b.pk],
+            })
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(
             reverse('misago:admin:users:ranks:index'))
         self.assertEqual(response.status_code, 200)
         self.assertIn('Top Lel', response.content)
+
+        test_rank = Rank.objects.get(slug='top-lel')
+        self.assertIn(test_role_b, test_rank.roles.all())
+        self.assertTrue(test_role_a not in test_rank.roles.all())
+        self.assertTrue(test_role_c not in test_rank.roles.all())
 
     def test_default_view(self):
         """default rank view has no showstoppers"""
