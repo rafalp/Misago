@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
+from django.db import transaction
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import View
@@ -179,7 +180,8 @@ class TargetedView(AdminView):
 
     def get_target(self, kwargs):
         if len(kwargs) == 1:
-            return self.get_model().objects.get(pk=kwargs[kwargs.keys()[0]])
+            select_for_update = self.get_model().objects.select_for_update()
+            return select_for_update.get(pk=kwargs[kwargs.keys()[0]])
         else:
             return self.get_model()()
 
@@ -190,17 +192,18 @@ class TargetedView(AdminView):
             return None
 
     def dispatch(self, request, *args, **kwargs):
-        target = self.get_target_or_none(request, kwargs)
-        if not target:
-            messages.error(request, self.message_404)
-            return redirect(self.root_link)
+        with transaction.atomic():
+            target = self.get_target_or_none(request, kwargs)
+            if not target:
+                messages.error(request, self.message_404)
+                return redirect(self.root_link)
 
-        error = self.check_permissions(request, target)
-        if error:
-            messages.error(request, error)
-            return redirect(self.root_link)
+            error = self.check_permissions(request, target)
+            if error:
+                messages.error(request, error)
+                return redirect(self.root_link)
 
-        return self.real_dispatch(request, target)
+            return self.real_dispatch(request, target)
 
     def real_dispatch(self, request, target):
         pass
@@ -252,6 +255,12 @@ class ModelFormView(FormView):
             return FormType(request.POST, request.FILES, instance=target)
         else:
             return FormType(instance=target)
+
+    def transaction_pre_save(self, form, request, target):
+        pass
+
+    def transaction_after_save(self, form, request, target):
+        pass
 
     def handle_form(self, form, request, target):
         form.instance.save()

@@ -1,6 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from misago.core import forms
 from misago.core.validators import validate_sluggable
+from misago.acl.models import Role
 from misago.users.models import Rank
 
 
@@ -19,8 +20,12 @@ class RankForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'rows': 3}),
         help_text=_("Optional description explaining function or status of "
                     "members distincted with this rank."))
+    roles = forms.ModelMultipleChoiceField(
+        label=_("User roles"), queryset=Role.objects.order_by('name'),
+        required=False,  widget=forms.CheckboxSelectMultiple,
+        help_text=_('Rank can give users with it additional roles.'))
     style = forms.CharField(
-        label=_("CSS Class"), required=False,
+        label=_("CSS class"), required=False,
         help_text=_("Optional css class added to content belonging to this "
                     "rank owner."))
     is_tab = forms.BooleanField(
@@ -37,7 +42,13 @@ class RankForm(forms.ModelForm):
     class Meta:
         model = Rank
         fields = [
-            'name', 'description', 'style', 'title', 'is_tab', 'is_on_index'
+            'name',
+            'description',
+            'style',
+            'title',
+            'roles',
+            'is_tab',
+            'is_on_index',
         ]
 
     def clean_name(self):

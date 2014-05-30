@@ -42,6 +42,12 @@
 
   </fieldset>
   <fieldset>
+    <legend>{% trans "Permissions" %}</legend>
+
+    {{ form.roles|as_crispy_field }}
+
+  </fieldset>
+  <fieldset>
     <legend>{% trans "Display and visibility" %}</legend>
 
     {{ form.style|as_crispy_field }}

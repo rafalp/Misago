@@ -12,6 +12,15 @@ class RankAdmin(generic.AdminBaseMixin):
     templates_dir = 'misago/admin/ranks'
     message_404 = _("Requested rank does not exist.")
 
+    def update_roles(self, target, roles):
+        target.roles.clear()
+        if roles:
+            target.roles.add(*roles)
+
+    def handle_form(self, form, request, target):
+        super(RankAdmin, self).handle_form(form, request, target)
+        self.update_roles(target, form.cleaned_data['roles'])
+
 
 class RanksList(RankAdmin, generic.ListView):
     ordering = (('order', None),)

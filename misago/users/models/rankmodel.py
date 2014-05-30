@@ -1,6 +1,7 @@
 from django.db import models, transaction
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import site
+from misago.acl import cachebuster
 from misago.core.utils import slugify
 
 
@@ -19,13 +20,13 @@ class Rank(models.Model):
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
-    style = models.CharField(max_length=255, null=True, blank=True)
     title = models.CharField(max_length=255, null=True, blank=True)
+    roles = models.ManyToManyField('acl.Role', null=True, blank=True)
+    style = models.CharField(max_length=255, null=True, blank=True)
     is_default = models.BooleanField(default=False)
     is_tab = models.BooleanField(default=False)
     is_on_index = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
-    #roles = models.ManyToManyField('Role')
 
     objects = RankManager()
 
@@ -39,7 +40,13 @@ class Rank(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.set_order()
+        else:
+            cachebuster.invalidate()
         return super(Rank, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        cachebuster.invalidate()
+        return super(Rank, self).delete(*args, **kwargs)
 
     def set_name(self, name):
         self.name = name
