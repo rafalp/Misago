@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext as _
+from misago.admin import site
 import base64
 try:
     import cPickle as pickle
@@ -57,3 +58,27 @@ class ForumRole(models.Model):
         self.permissions_cache = permissions
         self.pickled_permissions = base64.encodestring(
             pickle.dumps(permissions, pickle.HIGHEST_PROTOCOL))
+
+
+"""register models in misago admin"""
+site.add_node(
+    parent='misago:admin',
+    after='misago:admin:users:accounts:index',
+    namespace='misago:admin:permissions',
+    link='misago:admin:permissions:users:index',
+    name=_("Permissions"),
+    icon='fa fa-adjust')
+
+site.add_node(
+    parent='misago:admin:permissions',
+    namespace='misago:admin:permissions:users',
+    link='misago:admin:permissions:users:index',
+    name=_("User Roles"),
+    icon='fa fa-th-large')
+
+site.add_node(
+    parent='misago:admin:permissions',
+    namespace='misago:admin:permissions:forums',
+    link='misago:admin:permissions:forums:index',
+    name=_("Forum Roles"),
+    icon='fa fa-list')

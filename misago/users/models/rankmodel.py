@@ -1,6 +1,5 @@
 from django.db import models, transaction
 from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ugettext_lazy as _
 from misago.admin import site
 from misago.core.utils import slugify
 

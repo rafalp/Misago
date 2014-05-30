@@ -1,0 +1,40 @@
+{% extends "misago/admin/generic/form.html" %}
+{% load crispy_forms_filters i18n %}
+
+
+{% block title %}
+{% if target.pk %}
+{% trans target.name %}
+{% else %}
+{% trans "New role" %}
+{% endif %} | {{ active_link.name }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block page-target %}
+{% if target.pk %}
+{% trans target.name %}
+{% else %}
+{% trans "New role" %}
+{% endif %}
+{% endblock page-target %}
+
+
+{% block form-header %}
+<h1>
+  {% if target.pk %}
+  {% trans target.name %}
+  {% else %}
+  {% trans "New role" %}
+  {% endif %}
+</h1>
+{% endblock %}
+
+
+{% block form-body %}
+<div class="form-body no-fieldsets">
+
+  {{ form.name|as_crispy_field }}
+
+</div>
+{% endblock form-body %}

@@ -14,22 +14,10 @@ urlpatterns = patterns('misago.admin.views',
 )
 
 
-# Magic voodoo for initializing admin patterns lazily
-def initialize_admin_urls():
-    SEARCH_PATTERNS = (
-        '%s.adminurls',
-        '%s.urls.admin',
-        )
-
-    for app in settings.INSTALLED_APPS:
-        for pattern in SEARCH_PATTERNS:
-            try:
-                importlib.import_module(pattern % app)
-                continue
-            except ImportError:
-                pass
-
+# Import admin urls
+import misago.conf.adminurls
+import misago.acl.adminurls
+import misago.users.urls.admin
 
 # Register discovered patterns
-initialize_admin_urls()
 urlpatterns += admin.urlpatterns()

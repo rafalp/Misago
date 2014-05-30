@@ -6242,6 +6242,11 @@ body {
   position: relative;
   bottom: 1px;
 }
+.table-panel table.table tr td.row-action .btn > span.fa-pencil,
+.table-panel table.table tr td.row-action > form .btn > span.fa-pencil,
+.table-panel table.table tr td.row-action .dropdown-toggle > span.fa-pencil {
+  bottom: -2px;
+}
 .table-panel table.table tr td.row-select {
   width: 1%;
 }

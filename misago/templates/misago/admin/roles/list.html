@@ -1,0 +1,58 @@
+{% extends "misago/admin/generic/list.html" %}
+{% load i18n %}
+
+
+{% block page-actions %}
+<div class="page-actions">
+  <a href="{% url 'misago:admin:permissions:users:new' %}" class="btn btn-success">
+    <span class="fa fa-plus-circle"></span>
+    {% trans "New role" %}
+  </a>
+</div>
+{% endblock %}
+
+
+{% block table-header %}
+<th>{% trans "Rank" %}</th>
+<th style="width: 1%;">&nbsp;</th>
+<th style="width: 1%;">&nbsp;</th>
+{% endblock table-header %}
+
+
+{% block table-row %}
+<td class="lead">
+  {{ item.name }}
+</td>
+<td class="row-action">
+  <a href="{% url 'misago:admin:permissions:users:edit' role_id=item.id %}" class="btn btn-primary tooltip-top" title="{% trans "Edit" %}">
+    <span class="fa fa-pencil"></span>
+  </a>
+</td>
+<td class="row-action">
+  <form action="{% url 'misago:admin:permissions:users:delete' role_id=item.id %}" method="post" class="delete-prompt">
+    <button class="btn btn-danger tooltip-top" title="{% trans "Delete" %}">
+      {% csrf_token %}
+      <span class="fa fa-times"></span>
+    </button>
+  </form>
+</td>
+{% endblock %}
+
+
+{% block emptylist %}
+<td>
+  <p>{% trans "No user roles are currently defined." %}</p>
+</td>
+{% endblock emptylist %}
+
+
+{% block javascripts %}
+<script type="text/javascript">
+  $(function() {
+    $('.delete-prompt').submit(function() {
+      var decision = confirm("{% trans "Are you sure you want to delete this role?" %}");
+      return decision;
+    });
+  });
+</script>
+{% endblock %}
