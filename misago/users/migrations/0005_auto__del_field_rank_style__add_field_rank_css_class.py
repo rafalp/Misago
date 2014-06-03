@@ -3,45 +3,37 @@ from south.utils import datetime_utils as datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
-from misago.core.migrationutils import ugettext_lazy as _
 
 
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        Rank = orm['users.Rank']
+        # Deleting field 'Rank.style'
+        db.delete_column(u'users_rank', 'style')
 
-        Rank.objects.create(
-                            name=_("Forum Team").message,
-                            slug='forum-team',
-                            title=_("Team").message,
-                            css_class='team',
-                            order=0,
-                            is_tab=True,
-                            is_on_index=True,
-                            )
+        # Adding field 'Rank.css_class'
+        db.add_column(u'users_rank', 'css_class',
+                      self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True),
+                      keep_default=False)
 
-        Rank.objects.create(
-                            name=_("Most Valuable Posters").message,
-                            slug='most-valuable-posters',
-                            title=_("MVP").message,
-                            css_class='mvp',
-                            order=1,
-                            is_tab=True,
-                            )
-
-
-        Rank.objects.create(
-                            name=_("Members").message,
-                            slug='members',
-                            is_default=True,
-                            order=2,
-                            )
 
     def backwards(self, orm):
-        pass
+        # Adding field 'Rank.style'
+        db.add_column(u'users_rank', 'style',
+                      self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True),
+                      keep_default=False)
+
+        # Deleting field 'Rank.css_class'
+        db.delete_column(u'users_rank', 'css_class')
+
 
     models = {
+        u'acl.role': {
+            'Meta': {'object_name': 'Role'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'pickled_permissions': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
+        },
         u'auth.group': {
             'Meta': {'object_name': 'Group'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -64,6 +56,7 @@ class Migration(SchemaMigration):
         },
         'users.rank': {
             'Meta': {'object_name': 'Rank'},
+            'css_class': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_default': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -71,8 +64,8 @@ class Migration(SchemaMigration):
             'is_tab': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'order': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'roles': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['acl.Role']", 'null': 'True', 'blank': 'True'}),
             'slug': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'style': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'})
         },
         'users.user': {
@@ -92,7 +85,5 @@ class Migration(SchemaMigration):
             'username_slug': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
         }
     }
-
-    no_dry_run = True
 
     complete_apps = ['users']

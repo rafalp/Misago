@@ -24,7 +24,7 @@ class RankForm(forms.ModelForm):
         label=_("User roles"), queryset=Role.objects.order_by('name'),
         required=False,  widget=forms.CheckboxSelectMultiple,
         help_text=_('Rank can give users with it additional roles.'))
-    style = forms.CharField(
+    css_class = forms.CharField(
         label=_("CSS class"), required=False,
         help_text=_("Optional css class added to content belonging to this "
                     "rank owner."))
@@ -44,7 +44,7 @@ class RankForm(forms.ModelForm):
         fields = [
             'name',
             'description',
-            'style',
+            'css_class',
             'title',
             'roles',
             'is_tab',
