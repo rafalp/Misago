@@ -15,7 +15,7 @@ class Migration(SchemaMigration):
                             name=_("Forum Team").message,
                             slug='forum-team',
                             title=_("Team").message,
-                            css_class='team',
+                            style='team',
                             order=0,
                             is_tab=True,
                             is_on_index=True,
@@ -25,7 +25,7 @@ class Migration(SchemaMigration):
                             name=_("Most Valuable Posters").message,
                             slug='most-valuable-posters',
                             title=_("MVP").message,
-                            css_class='mvp',
+                            style='mvp',
                             order=1,
                             is_tab=True,
                             )
