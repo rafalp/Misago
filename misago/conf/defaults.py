@@ -98,6 +98,7 @@ INSTALLED_APPS = (
     'misago.conf',
     'misago.users',
     'misago.faker',
+    'misago.forums',
 )
 
 MIDDLEWARE_CLASSES = (
