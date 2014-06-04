@@ -63,7 +63,7 @@ def list(request, slug=None, page=0):
                 username = username[0:-2]
             elif len(username) > 4:
                 username = username[0:-1]
-            username = slugify(username.strip())
+            username = slugify(username.strip()).replace('-', '')
 
             # Go for rought match
             if len(username) > 0:

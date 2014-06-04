@@ -52,7 +52,7 @@ class ShowPostReportView(ShowPostReportBaseView, TypeMixin):
 
 class InviteUserView(JumpView, TypeMixin):
     def make_jump(self):
-        username = slugify(self.request.POST.get('username', '').strip())
+        username = slugify(self.request.POST.get('username', '').strip()).replace('-', '')
         if not username:
             messages.error(self.request, _('You have to enter name of user you want to invite to thread.'), 'threads')
             return self.retreat_redirect()
