@@ -19,8 +19,8 @@ def server(request, attachment, thumb=False):
                 if not request.user.is_authenticated():
                     raise ACLError404()
                 can_see_thread_because_reported = (
-                    request.acl.privatethreads.is_mod() and attachment.thread.replies_reported)
-                can_see_thread_because_participates = request.user in thread.participants
+                    request.acl.private_threads.is_mod() and attachment.thread.replies_reported)
+                can_see_thread_because_participates = request.user in attachment.thread.participants.all()
                 if not (can_see_thread_because_reported or can_see_thread_because_participates):
                     raise ACLError404()
             if attachment.post:
