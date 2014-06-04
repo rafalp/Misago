@@ -193,7 +193,7 @@ class Thread(models.Model):
         self.start_post = start_post
         self.start_poster = start_post.user
         self.start_poster_name = start_post.user_name
-        self.start_poster_slug = slugify(start_post.user_name)
+        self.start_poster_slug = slugify(start_post.user_name).replace('-', '')
         self.start_poster_style = start_post.user.rank.style if start_post.user and start_post.user.rank else ''
         self.upvotes = start_post.upvotes
         self.downvotes = start_post.downvotes
@@ -206,7 +206,7 @@ class Thread(models.Model):
         self.last_post = last_post
         self.last_poster = last_post.user
         self.last_poster_name = last_post.user_name
-        self.last_poster_slug = slugify(last_post.user_name)
+        self.last_poster_slug = slugify(last_post.user_name).replace('-', '')
         self.last_poster_style = last_post.user.rank.style if last_post.user and last_post.user.rank else ''
         # Flags
         self.moderated = start_post.moderated
