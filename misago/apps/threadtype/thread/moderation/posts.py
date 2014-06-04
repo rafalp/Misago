@@ -10,6 +10,7 @@ from misago.messages import Message
 from misago.shortcuts import render_to_response
 from misago.utils.strings import slugify
 from misago.apps.threadtype.thread.moderation.forms import SplitThreadForm, MovePostsForm
+from misago.models import Thread
 
 class PostsModeration(object):
     def post_action_accept(self, ids):
