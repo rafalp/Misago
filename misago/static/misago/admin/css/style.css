@@ -6558,6 +6558,32 @@ body {
 .form-panel .form-header p {
   margin: 10px 0px 0px 0px;
 }
+.form-panel .form-errors-block {
+  background-color: #c0392b;
+  border-top: 1px solid #d4d4d4;
+  border-bottom: 6px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0;
+  margin-bottom: 0px;
+  padding: 15px 16px;
+  overflow: auto;
+  color: #ffffff;
+  font-size: 18px;
+  text-shadow: 0px -1px 0px #6d2018;
+}
+.form-panel .form-errors-block .fa {
+  float: right;
+  font-size: 32px;
+}
+.form-panel .form-errors-block ul {
+  float: left;
+  margin-right: 30px;
+  margin-bottom: 0px;
+  padding: 0px;
+}
+.form-panel .form-errors-block ul li {
+  margin: 0px;
+  padding: 4px 0px;
+}
 .form-panel .form-body fieldset,
 .form-panel .form-body.no-fieldsets {
   margin: 0px;

@@ -36,22 +36,6 @@ class AdminView(View):
     def final_template(self):
         return '%s/%s' % (self.templates_dir, self.template)
 
-    def get_target(self, target):
-        """
-        get_target is called by view to fetch item from DB
-        """
-        Model = self.get_model()
-        return Model.objects.get(id=target)
-
-    def _get_target(self, request, kwargs):
-        Model = self.get_model()
-
-        try:
-            return self.get_target(target)
-        except Model.DoesNotExist:
-            messages.error(request, self.message_404)
-            return redirect(self.root_link)
-
     def current_link(self, request):
         matched_url = request.resolver_match.url_name
         return '%s:%s' % (request.resolver_match.namespace, matched_url)

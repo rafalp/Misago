@@ -1,0 +1,68 @@
+{% extends "misago/admin/generic/form.html" %}
+{% load crispy_forms_filters i18n %}
+
+
+{% block title %}
+{% if target.pk %}
+{% trans target.name %}
+{% else %}
+{% trans "New forum" %}
+{% endif %} | {{ active_link.name }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block page-target %}
+{% if target.pk %}
+{% trans target.name %}
+{% else %}
+{% trans "New forum" %}
+{% endif %}
+{% endblock page-target %}
+
+
+{% block form-header %}
+<h1>
+  {% if target.pk %}
+  {% trans target.name %}
+  {% else %}
+  {% trans "New forum" %}
+  {% endif %}
+</h1>
+{% endblock %}
+
+
+{% block form-body %}
+<div class="form-body">
+  <fieldset>
+    <legend>{% trans "Role and position" %}</legend>
+
+    {{ form.new_parent|as_crispy_field }}
+    {{ form.role|as_crispy_field }}
+
+  </fieldset>
+  <fieldset>
+    <legend>{% trans "Display" %}</legend>
+
+    {{ form.name|as_crispy_field }}
+    {{ form.description|as_crispy_field }}
+    {{ form.css_class|as_crispy_field }}
+
+  </fieldset>
+  <fieldset>
+    <legend>{% trans "Behaviour" %}</legend>
+
+    {{ form.copy_permissions|as_crispy_field }}
+    {{ form.redirect_url|as_crispy_field }}
+    {{ form.is_closed|as_crispy_field }}
+
+  </fieldset>
+  <fieldset>
+    <legend>{% trans "Pruning" %}</legend>
+
+    {{ form.prune_started_after|as_crispy_field }}
+    {{ form.prune_replied_after|as_crispy_field }}
+    {{ form.archive_pruned_in|as_crispy_field }}
+
+  </fieldset>
+</div>
+{% endblock form-body %}

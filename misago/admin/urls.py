@@ -17,6 +17,7 @@ urlpatterns = patterns('misago.admin.views',
 # Import admin urls
 import misago.conf.adminurls
 import misago.acl.adminurls
+import misago.forums.urls
 import misago.users.urls.admin
 
 # Register discovered patterns

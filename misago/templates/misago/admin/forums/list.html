@@ -1,0 +1,81 @@
+{% extends "misago/admin/generic/list.html" %}
+{% load i18n %}
+
+
+{% block page-actions %}
+<div class="page-actions">
+  <a href="{% url 'misago:admin:forums:nodes:new' %}" class="btn btn-success">
+    <span class="fa fa-plus-circle"></span>
+    {% trans "New forum" %}
+  </a>
+</div>
+{% endblock %}
+
+
+{% block table-header %}
+<th>{% trans "Forum" %}</th>
+<th>Role</th>
+<th>Left</th>
+<th>Right</th>
+<th>Level</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+{% endblock table-header %}
+
+
+{% block table-row %}
+<td class="lead">
+  {% for i in item.level_range %}
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  {% endfor %}
+  {% if item.role == 'category' %}
+  <span class="fa fa-folder-open tooltip-top" title="{% trans "Category" %}"></span>
+  {% elif item.role == 'forum' %}
+  <span class="fa fa-comments-o tooltip-top" title="{% trans "Forum" %}"></span>
+  {% elif item.role == 'redirect' %}
+  <span class="fa fa-link tooltip-top" title="{% trans "Redirect" %}"></span>
+  {% endif %}
+  {{ item.name }}
+</td>
+<td>{{ item.role }}</td>
+<td>{{ item.lft }}</td>
+<td>{{ item.rght }}</td>
+<td>{{ item.level }}</td>
+<td class="row-action">
+  {% if not item.last %}
+  <form action="{% url 'misago:admin:forums:nodes:down' forum_id=item.id %}" method="post">
+    <button class="btn btn-default tooltip-top" title="{% trans "Move down" %}">
+      {% csrf_token %}
+      <span class="fa fa-chevron-down"></span>
+    </button>
+  </form>
+  {% else %}
+  &nbsp;
+  {% endif %}
+</td>
+<td class="row-action">
+  {% if not item.first %}
+  <form action="{% url 'misago:admin:forums:nodes:up' forum_id=item.id %}" method="post">
+    <button class="btn btn-default tooltip-top" title="{% trans "Move up" %}">
+      {% csrf_token %}
+      <span class="fa fa-chevron-up"></span>
+    </button>
+  </form>
+  {% else %}
+  &nbsp;
+  {% endif %}
+</td>
+<td class="row-action">
+  <a href="{% url 'misago:admin:forums:nodes:edit' forum_id=item.id %}" class="btn btn-primary tooltip-top" title="{% trans "Edit" %}">
+    <span class="fa fa-pencil"></span>
+  </a>
+</td>
+{% endblock %}
+
+
+{% block emptylist %}
+<td colspan="2">
+  <p>{% trans "No forums are currently defined." %}</p>
+</td>
+{% endblock emptylist %}

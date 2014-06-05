@@ -45,6 +45,43 @@
 }
 
 
+//== Form non-field errors
+//
+//**
+.form-panel {
+  .form-errors-block {
+    background-color: @alert-danger-bg;
+    border-top: 1px solid @form-panel-border;
+    border-bottom: 6px solid fadeOut(#000, 85%);
+    border-radius: 0;
+    margin-bottom: 0px;
+    padding: @form-panel-padding;
+    overflow: auto;
+
+    color: @alert-danger-text;
+    font-size: @font-size-large;
+    text-shadow: 0px -1px 0px darken(@alert-danger-bg, 20%);
+
+    .fa {
+      float: right;
+      font-size: 32px;
+    }
+
+    ul {
+      float: left;
+      margin-right: 30px;
+      margin-bottom: 0px;
+      padding: 0px;
+
+      li {
+        margin: 0px;
+        padding: (@line-height-computed / 5) 0px;
+      }
+    }
+  }
+}
+
+
 //== Form body
 //
 //**

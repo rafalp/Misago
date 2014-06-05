@@ -1,9 +1,11 @@
+bleach==1.4
 django==1.6.1
 django-debug-toolbar==1.0.1
 django-crispy-forms==1.4.0
 django-mptt==0.6.1
 django-pipeline==1.3.20
 fake-factory
+markdown==2.4.1
+pytz
 south==0.8.4
 unidecode
-pytz

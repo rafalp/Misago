@@ -92,6 +92,7 @@ INSTALLED_APPS = (
     'south',
     'pipeline',
     'crispy_forms',
+    'mptt',
     'misago.admin',
     'misago.acl',
     'misago.core',
