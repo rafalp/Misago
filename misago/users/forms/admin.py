@@ -54,5 +54,5 @@ class RankForm(forms.ModelForm):
     def clean(self):
         data = super(RankForm, self).clean()
 
-        self.instance.set_name(data.get['name'])
+        self.instance.set_name(data.get('name'))
         return data
