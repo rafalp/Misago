@@ -14,10 +14,6 @@
 
 {% block table-header %}
 <th>{% trans "Forum" %}</th>
-<th>Role</th>
-<th>Left</th>
-<th>Right</th>
-<th>Level</th>
 <th>&nbsp;</th>
 <th>&nbsp;</th>
 <th>&nbsp;</th>
@@ -39,10 +35,6 @@
   {% endif %}
   {{ item.name }}
 </td>
-<td>{{ item.role }}</td>
-<td>{{ item.lft }}</td>
-<td>{{ item.rght }}</td>
-<td>{{ item.level }}</td>
 <td class="row-action">
   {% if not item.last %}
   <form action="{% url 'misago:admin:forums:nodes:down' forum_id=item.id %}" method="post">
