@@ -53,7 +53,12 @@ class DeleteRank(RankAdmin, generic.ButtonView):
 
 class MoveUpRank(RankAdmin, generic.ButtonView):
     def button_action(self, request, target):
-        other_target = target.prev()
+        try:
+            other_target = Rank.objects.filter(order__lt=self.order)
+            other_target = other_target.latest('order')
+        except Rank.DoesNotExist:
+            other_target = None
+
         if other_target:
             other_target.order, target.order = target.order, other_target.order
             other_target.save(update_fields=['order'])
@@ -64,7 +69,12 @@ class MoveUpRank(RankAdmin, generic.ButtonView):
 
 class MoveDownRank(RankAdmin, generic.ButtonView):
     def button_action(self, request, target):
-        other_target = target.next()
+        try:
+            other_target = Rank.objects.filter(order__gt=self.order)
+            other_target = other_target.earliest('order')
+        except Rank.DoesNotExist:
+            other_target = None
+
         if other_target:
             other_target.order, target.order = target.order, other_target.order
             other_target.save(update_fields=['order'])

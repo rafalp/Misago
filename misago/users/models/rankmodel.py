@@ -58,18 +58,6 @@ class Rank(models.Model):
         except Rank.DoesNotExist:
             self.order = 0
 
-    def next(self):
-        try:
-            return Rank.objects.filter(order__gt=self.order).earliest('order')
-        except Rank.DoesNotExist:
-            return None
-
-    def prev(self):
-        try:
-            return Rank.objects.filter(order__lt=self.order).latest('order')
-        except Rank.DoesNotExist:
-            return None
-
 
 """register model in misago admin"""
 site.add_node(

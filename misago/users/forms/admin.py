@@ -16,7 +16,7 @@ class RankForm(forms.ModelForm):
         help_text=_('Optional, singular version of rank name displayed by '
                     'user names. For example "GM" or "Dev".'))
     description = forms.CharField(
-        label=_("Description"), max_length=1024, required=False,
+        label=_("Description"), max_length=2048, required=False,
         widget=forms.Textarea(attrs={'rows': 3}),
         help_text=_("Optional description explaining function or status of "
                     "members distincted with this rank."))
@@ -51,7 +51,8 @@ class RankForm(forms.ModelForm):
             'is_on_index',
         ]
 
-    def clean_name(self):
-        data = self.cleaned_data['name']
-        self.instance.set_name(data)
+    def clean(self):
+        data = super(RankForm, self).clean()
+
+        self.instance.set_name(data.get['name'])
         return data
