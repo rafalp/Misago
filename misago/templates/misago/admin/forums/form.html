@@ -4,7 +4,7 @@
 
 {% block title %}
 {% if target.pk %}
-{% trans target.name %}
+{{ target.name }}
 {% else %}
 {% trans "New forum" %}
 {% endif %} | {{ active_link.name }} | {{ block.super }}
@@ -13,7 +13,7 @@
 
 {% block page-target %}
 {% if target.pk %}
-{% trans target.name %}
+{{ target.name }}
 {% else %}
 {% trans "New forum" %}
 {% endif %}
@@ -23,7 +23,7 @@
 {% block form-header %}
 <h1>
   {% if target.pk %}
-  {% trans target.name %}
+  {{ target.name }}
   {% else %}
   {% trans "New forum" %}
   {% endif %}

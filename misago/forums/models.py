@@ -17,7 +17,7 @@ class ForumManager(TreeManager):
         qs = self.filter(tree_id=1)
         if not include_root:
             qs = self.filter(lft__gt=3)
-        return qs
+        return qs.order_by('lft')
 
 
 class Forum(MPTTModel):
@@ -50,7 +50,7 @@ class Forum(MPTTModel):
 
     def __unicode__(self):
         if self.special_role == 'root_category':
-            return unicode(_('No parent'))
+            return unicode(_('None (will become top level category)'))
         elif self.special_role == 'private_threads':
             return unicode(_('Private Threads'))
         else:
@@ -63,6 +63,9 @@ class Forum(MPTTModel):
     def set_description(self, description):
         self.description = description
         self.description_as_html = subset_markdown(description)
+
+    def has_child(self, child):
+        return child.lft > self.lft and child.rght < self.rght
 
 
 """register model in misago admin"""

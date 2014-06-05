@@ -1,9 +1,11 @@
+import warnings
 from django.contrib import messages
+from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from misago.acl import cachebuster
 from misago.admin.views import generic
 from misago.forums.models import Forum
-from misago.forums.forms import ForumFormFactory
+from misago.forums.forms import ForumFormFactory, DeleteFormFactory
 
 
 class ForumAdmin(generic.AdminBaseMixin):
@@ -21,8 +23,6 @@ class ForumAdmin(generic.AdminBaseMixin):
 
 
 class ForumsList(ForumAdmin, generic.ListView):
-    ordering = (('lft', None),)
-
     def get_queryset(self):
         return Forum.objects.all_forums()
 
@@ -71,8 +71,32 @@ class EditForum(ForumFormMixin, ForumAdmin, generic.ModelFormView):
     message_submit = _('Forum "%s" has been edited.')
 
 
-class EditForum(ForumFormMixin, ForumAdmin, generic.ModelFormView):
+class DeleteForum(ForumAdmin, generic.ModelFormView):
     message_submit = _('Forum "%s" has been deleted.')
+    template = 'delete.html'
+
+    def create_form_type(self, request, target):
+        return DeleteFormFactory(target)
+
+    def handle_form(self, form, request, target):
+        move_children_to = form.cleaned_data.get('move_children_to')
+        if move_children_to:
+            for child in target.get_children():
+                Forum.objects.move_node(child, move_children_to, 'last-child')
+        else:
+            for child in target.get_descendants().order_by('-lft'):
+                child.delete()
+
+        move_threads_to = form.cleaned_data.get('move_threads_to')
+        if move_threads_to:
+            warnings.warn("Not implemented yet! See #354 for details.",
+                          FutureWarning)
+
+        form.instance.delete()
+        cachebuster.invalidate()
+
+        messages.success(request, self.message_submit % target.name)
+        return redirect(self.root_link)
 
 
 class MoveUpForum(ForumAdmin, generic.ButtonView):

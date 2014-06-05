@@ -6575,8 +6575,7 @@ body {
   font-size: 32px;
 }
 .form-panel .form-errors-block ul {
-  float: left;
-  margin-right: 30px;
+  margin-right: 56px;
   margin-bottom: 0px;
   padding: 0px;
 }

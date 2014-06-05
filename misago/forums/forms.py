@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.validators import URLValidator
 from django.utils.html import conditional_escape, mark_safe
 from django.utils.translation import ugettext_lazy as _
 from mptt.forms import TreeNodeChoiceField as TreeNodeChoiceField
@@ -123,7 +122,7 @@ def ForumFormFactory(instance):
         not_siblings = not_siblings | models.Q(rght__gt=instance.rght)
         parent_queryset = parent_queryset.filter(not_siblings)
 
-    return type('TreeNodeChoiceField', (ForumFormBase,), {
+    return type('ForumFormFinal', (ForumFormBase,), {
         'new_parent': ForumChoiceField(
             label=_("Parent forum"),
             queryset=parent_queryset,
@@ -147,3 +146,69 @@ def ForumFormFactory(instance):
             required=False),
         })
 
+
+class DeleteForumFormBase(forms.ModelForm):
+    class Meta:
+        model = Forum
+        fields = []
+
+    def clean(self):
+        data = super(DeleteForumFormBase, self).clean()
+
+        if data.get('move_threads_to'):
+            if data['move_threads_to'].pk == self.instance.pk:
+                message = _("You are trying to move this forum threads to "
+                            "itself.")
+                raise forms.ValidationError(message)
+
+            if data['move_threads_to'].role == 'category':
+                message = _("Threads can't be moved to category.")
+                raise forms.ValidationError(message)
+
+            if data['move_threads_to'].role == 'redirect':
+                message = _("Threads can't be moved to redirect.")
+                raise forms.ValidationError(message)
+
+            moving_to_child = self.instance.has_child(data['move_threads_to'])
+            if moving_to_child and not data.get('move_children_to'):
+                message = _("You are trying to move this forum threads to a "
+                            "child forum that will be deleted together with "
+                            "this forum.")
+                raise forms.ValidationError(message)
+
+        if data.get('move_children_to'):
+            if data['move_children_to'].special_role == 'root_category':
+                for child in self.get_children().iterator():
+                    if child.role != 'category':
+                        message = _("One or more child forums in forum are not "
+                                    "categories and thus cannot be made root "
+                                    "categories.")
+                        raise forms.ValidationError(message)
+
+        return data
+
+
+def DeleteFormFactory(instance):
+    content_queryset = Forum.objects.all_forums().order_by('lft')
+    fields = {
+        'move_threads_to': ForumChoiceField(
+            label=_("Move forum threads to"),
+            queryset=content_queryset,
+            initial=instance.parent,
+            empty_label=_('Delete with forum'),
+            required=False),
+    }
+
+    not_siblings = models.Q(lft__lt=instance.lft)
+    not_siblings = not_siblings | models.Q(rght__gt=instance.rght)
+    children_queryset = Forum.objects.all_forums(True)
+    children_queryset = children_queryset.filter(not_siblings).order_by('lft')
+
+    if children_queryset.exists():
+        fields['move_children_to'] = ForumChoiceField(
+            label=_("Move child forums to"),
+            queryset=children_queryset,
+            empty_label=_('Delete with forum'),
+            required=False)
+
+    return type('DeleteForumFormFilan', (DeleteForumFormBase,), fields)
