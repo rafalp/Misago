@@ -70,6 +70,47 @@ class ForumAdminViewsTests(AdminTestCase):
                     kwargs={'forum_id': private_threads.pk}))
         self.assertEqual(response.status_code, 302)
 
+        response = self.client.get(
+            reverse('misago:admin:forums:nodes:edit',
+                    kwargs={'forum_id': root.pk}))
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.post(
+            reverse('misago:admin:forums:nodes:new'),
+            data={
+                'name': 'Test Category',
+                'description': 'Lorem ipsum dolor met',
+                'new_parent': root.pk,
+                'role': 'category',
+                'prune_started_after': 0,
+                'prune_replied_after': 0,
+            })
+        self.assertEqual(response.status_code, 302)
+        test_category = Forum.objects.all_forums().get(slug='test-category')
+
+        response = self.client.get(
+            reverse('misago:admin:forums:nodes:edit',
+                    kwargs={'forum_id': test_category.pk}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Test Category', response.content)
+
+        response = self.client.post(
+            reverse('misago:admin:forums:nodes:edit',
+                    kwargs={'forum_id': test_category.pk}),
+            data={
+                'name': 'Test Category Edited',
+                'new_parent': root.pk,
+                'role': 'category',
+                'prune_started_after': 0,
+                'prune_replied_after': 0,
+            })
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(reverse('misago:admin:forums:nodes:index'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Test Category Edited', response.content)
+
     def test_move_views(self):
         """move up view has no showstoppers"""
         root = Forum.objects.root_category()

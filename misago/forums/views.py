@@ -16,7 +16,7 @@ class ForumAdmin(generic.AdminBaseMixin):
 
     def get_target(self, kwargs):
         target = super(ForumAdmin, self).get_target(kwargs)
-        if target.pk and target.tree_id != 1:
+        if target.pk and (target.tree_id != 1 or target.special_role):
             raise Forum.DoesNotExist()
         else:
             return target
