@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from misago.acl import cachebuster
 from misago.admin.views import generic
-from misago.forums.models import Forum
+from misago.forums.models import FORUMS_TREE_ID, Forum
 from misago.forums.forms import ForumFormFactory, DeleteFormFactory
 
 
@@ -16,7 +16,11 @@ class ForumAdmin(generic.AdminBaseMixin):
 
     def get_target(self, kwargs):
         target = super(ForumAdmin, self).get_target(kwargs)
-        if target.pk and (target.tree_id != 1 or target.special_role):
+
+        target_is_special = bool(target.special_role)
+        target_not_in_forums_tree = target.tree_id != FORUMS_TREE_ID
+
+        if target.pk and (target_is_special or target_not_in_forums_tree):
             raise Forum.DoesNotExist()
         else:
             return target
@@ -29,15 +33,15 @@ class ForumsList(ForumAdmin, generic.ListView):
     def process_context(self, request, context):
         context['items'] = [f for f in context['items']]
 
-        levels_lists = {}
+        children_lists = {}
 
         for i, item in enumerate(context['items']):
             item.level_range = range(item.level - 1)
             item.first = False
             item.last = False
-            levels_lists.setdefault(item.level, []).append(item)
+            children_lists.setdefault(item.parent_id, []).append(item)
 
-        for level_items in levels_lists.values():
+        for level_items in children_lists.values():
             level_items[0].first = True
             level_items[-1].last = True
 

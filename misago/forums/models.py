@@ -6,6 +6,9 @@ from misago.admin import site
 from misago.core.utils import subset_markdown, slugify
 
 
+FORUMS_TREE_ID = 1
+
+
 class ForumManager(TreeManager):
     def private_threads(self):
         return self.get(special_role='private_threads')
@@ -14,7 +17,7 @@ class ForumManager(TreeManager):
         return self.get(special_role='root_category')
 
     def all_forums(self, include_root=False):
-        qs = self.filter(tree_id=1)
+        qs = self.filter(tree_id=FORUMS_TREE_ID)
         if not include_root:
             qs = self.filter(lft__gt=3)
         return qs.order_by('lft')
