@@ -32,13 +32,11 @@ class ForumFormBase(forms.ModelForm):
     role = forms.ChoiceField(label=_("Type"), choices=FORUM_ROLES)
     name = forms.CharField(
         label=_("Name"),
-        validators=[validate_sluggable()],
-        help_text=_('Short and descriptive name of all users with this rank. '
-                    '"The Team" or "Game Masters" are good examples.'))
+        validators=[validate_sluggable()])
     description = forms.CharField(
         label=_("Description"), max_length=2048, required=False,
         widget=forms.Textarea(attrs={'rows': 3}),
-        help_text=_("Optional description explaining forum's intented "
+        help_text=_("Optional description explaining forum intented "
                     "purpose."))
     redirect_url = forms.URLField(
         label=_("Redirect URL"),
@@ -178,7 +176,7 @@ class DeleteForumFormBase(forms.ModelForm):
 
         if data.get('move_children_to'):
             if data['move_children_to'].special_role == 'root_category':
-                for child in self.get_children().iterator():
+                for child in self.instance.get_children().iterator():
                     if child.role != 'category':
                         message = _("One or more child forums in forum are not "
                                     "categories and thus cannot be made root "
@@ -211,4 +209,4 @@ def DeleteFormFactory(instance):
             empty_label=_('Delete with forum'),
             required=False)
 
-    return type('DeleteForumFormFilan', (DeleteForumFormBase,), fields)
+    return type('DeleteForumFormFinal', (DeleteForumFormBase,), fields)
