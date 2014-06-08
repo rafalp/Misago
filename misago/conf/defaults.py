@@ -126,6 +126,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'misago.conf.context_processors.settings',
 )
 
+MISAGO_PERMISSION_PROVIDERS = (
+    'misago.forums.permissions',
+)
+
 # Register Misago directories
 
 LOCALE_PATHS = (
