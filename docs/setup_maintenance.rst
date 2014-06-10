@@ -19,7 +19,7 @@ Before you start make sure your hosting provider grants you:
 - SSH access to server
 - Python **2.7** (this is important, Python version 3 and older than 2.7 are not supported) and PIP
 - Node.js runtime with LESS
-- Either MySQL or PostgreSQL database
+- PostgreSQL database
 - 60 megabytes of RAM for Misago process
 - A way to direct HTTP traffic from your domain to Misago
 - CronTabs or other task scheduler
