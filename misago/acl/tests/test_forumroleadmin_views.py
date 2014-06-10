@@ -3,6 +3,14 @@ from misago.admin.testutils import AdminTestCase
 from misago.acl.models import ForumRole
 
 
+def fake_data(data_dict):
+    data_dict.update({
+        'can_see_forum': 0,
+        'can_browse_forum': 0,
+    })
+    return data_dict
+
+
 class ForumRoleAdminViewsTests(AdminTestCase):
     def test_link_registered(self):
         """admin nav contains forum roles link"""
@@ -27,9 +35,7 @@ class ForumRoleAdminViewsTests(AdminTestCase):
 
         response = self.client.post(
             reverse('misago:admin:permissions:forums:new'),
-            data={
-                'name': 'Test ForumRole',
-            })
+            data=fake_data({'name': 'Test ForumRole'}))
         self.assertEqual(response.status_code, 302)
 
         test_role = ForumRole.objects.get(name='Test ForumRole')
@@ -42,9 +48,7 @@ class ForumRoleAdminViewsTests(AdminTestCase):
         """edit role view has no showstoppers"""
         self.client.post(
             reverse('misago:admin:permissions:forums:new'),
-            data={
-                'name': 'Test ForumRole',
-            })
+            data=fake_data({'name': 'Test ForumRole'}))
 
         test_role = ForumRole.objects.get(name='Test ForumRole')
 
@@ -57,7 +61,7 @@ class ForumRoleAdminViewsTests(AdminTestCase):
         response = self.client.post(
             reverse('misago:admin:permissions:forums:edit',
                     kwargs={'role_id': test_role.pk}),
-            data={'name': 'Top Lel'})
+            data=fake_data({'name': 'Top Lel'}))
         self.assertEqual(response.status_code, 302)
 
         test_role = ForumRole.objects.get(name='Top Lel')
@@ -70,9 +74,7 @@ class ForumRoleAdminViewsTests(AdminTestCase):
         """delete role view has no showstoppers"""
         self.client.post(
             reverse('misago:admin:permissions:forums:new'),
-            data={
-                'name': 'Test ForumRole',
-            })
+            data=fake_data({'name': 'Test ForumRole'}))
 
         test_role = ForumRole.objects.get(name='Test ForumRole')
         response = self.client.post(

@@ -3,6 +3,23 @@ from misago.admin.testutils import AdminTestCase
 from misago.acl.models import Role
 
 
+def fake_data(data_dict):
+    data_dict.update({
+        'name_changes_allowed': 0,
+        'changes_expire': 0,
+        'can_use_signature': 0,
+        'allow_signature_links': 0,
+        'allow_signature_images': 0,
+        'can_destroy_user_newer_than': 0,
+        'can_destroy_users_with_less_posts_than': 0,
+        'can_search_users': 0,
+        'can_see_users_emails': 0,
+        'can_see_users_ips': 0,
+        'can_see_hidden_users': 0,
+    })
+    return data_dict
+
+
 class RoleAdminViewsTests(AdminTestCase):
     def test_link_registered(self):
         """admin nav contains user roles link"""
@@ -27,9 +44,7 @@ class RoleAdminViewsTests(AdminTestCase):
 
         response = self.client.post(
             reverse('misago:admin:permissions:users:new'),
-            data={
-                'name': 'Test Role',
-            })
+            data=fake_data({'name': 'Test Role'}))
         self.assertEqual(response.status_code, 302)
 
         test_role = Role.objects.get(name='Test Role')
@@ -42,9 +57,7 @@ class RoleAdminViewsTests(AdminTestCase):
         """edit role view has no showstoppers"""
         self.client.post(
             reverse('misago:admin:permissions:users:new'),
-            data={
-                'name': 'Test Role',
-            })
+            data=fake_data({'name': 'Test Role'}))
 
         test_role = Role.objects.get(name='Test Role')
 
@@ -57,7 +70,7 @@ class RoleAdminViewsTests(AdminTestCase):
         response = self.client.post(
             reverse('misago:admin:permissions:users:edit',
                     kwargs={'role_id': test_role.pk}),
-            data={'name': 'Top Lel'})
+            data=fake_data({'name': 'Top Lel'}))
         self.assertEqual(response.status_code, 302)
 
         test_role = Role.objects.get(name='Top Lel')
@@ -70,9 +83,7 @@ class RoleAdminViewsTests(AdminTestCase):
         """delete role view has no showstoppers"""
         self.client.post(
             reverse('misago:admin:permissions:users:new'),
-            data={
-                'name': 'Test Role',
-            })
+            data=fake_data({'name': 'Test Role'}))
 
         test_role = Role.objects.get(name='Test Role')
         response = self.client.post(

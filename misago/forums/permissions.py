@@ -5,7 +5,7 @@ from misago.core import forms
 
 class PermissionsForm(forms.Form):
     legend = _("Destroying user accounts")
-    cam_see_forum = forms.YesNoSwitch(label=_("Can see forum"))
+    can_see_forum = forms.YesNoSwitch(label=_("Can see forum"))
     can_browse_forum = forms.YesNoSwitch(label=_("Can see forum contents"))
 
 

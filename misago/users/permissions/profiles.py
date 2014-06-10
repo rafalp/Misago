@@ -9,11 +9,10 @@ class PermissionsForm(forms.Form):
         label=_("Can search user profiles"))
     can_see_users_emails = forms.YesNoSwitch(
         label=_("Can see members e-mail's"))
-    can_see_users_trails = forms.YesNoSwitch(
-        label=_("Can see members ip's and user-agents"))
+    can_see_users_ips = forms.YesNoSwitch(
+        label=_("Can see members IPs"))
     can_see_hidden_users = forms.YesNoSwitch(
         label=_("Can see members that hide their presence"))
-
 
 
 def change_permissions_form(role):
