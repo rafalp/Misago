@@ -1,6 +1,8 @@
 from django.contrib import messages
+from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from misago.admin.views import generic
+from misago.acl import get_change_permissions_forms
 from misago.acl.models import ForumRole
 from misago.acl.forms import ForumRoleForm
 
@@ -8,7 +10,6 @@ from misago.acl.forms import ForumRoleForm
 class ForumRoleAdmin(generic.AdminBaseMixin):
     root_link = 'misago:admin:permissions:forums:index'
     Model = ForumRole
-    Form = ForumRoleForm
     templates_dir = 'misago/admin/forumroles'
     message_404 = _("Requested role does not exist.")
 
@@ -17,11 +18,52 @@ class ForumRolesList(ForumRoleAdmin, generic.ListView):
     ordering = (('name', None),)
 
 
-class NewForumRole(ForumRoleAdmin, generic.ModelFormView):
+class RoleFormMixin(object):
+    def real_dispatch(self, request, target):
+        role_permissions = target.permissions
+        form = ForumRoleForm(instance=target)
+
+        perms_forms = get_change_permissions_forms(target)
+
+        if request.method == 'POST':
+            perms_forms = [f(request.POST) for f in perms_forms]
+            valid_forms = 0
+            for permissions_form in perms_forms:
+                if permissions_form.is_valid():
+                    valid_forms += 1
+
+            form = ForumRoleForm(request.POST, instance=target)
+            if form.is_valid() and len(perms_forms) == valid_forms:
+                new_permissions = {}
+                for permissions_form in perms_forms:
+                    new_permissions.update(permissions_form.cleaned_data)
+
+                form.instance.permissions = new_permissions
+                form.instance.save()
+
+                messages.success(request, self.message_submit % target.name)
+
+                if 'stay' in request.POST:
+                    return redirect(request.path)
+                else:
+                    return redirect(self.root_link)
+        else:
+            perms_forms = [f(initial=role_permissions) for f in perms_forms]
+
+        return self.render(
+            request,
+            {
+                'form': form,
+                'target': target,
+                'perms_forms': perms_forms,
+            })
+
+
+class NewForumRole(RoleFormMixin, ForumRoleAdmin, generic.ModelFormView):
     message_submit = _('New role "%s" has been saved.')
 
 
-class EditForumRole(ForumRoleAdmin, generic.ModelFormView):
+class EditForumRole(RoleFormMixin, ForumRoleAdmin, generic.ModelFormView):
     message_submit = _('Role "%s" has been changed.')
 
 

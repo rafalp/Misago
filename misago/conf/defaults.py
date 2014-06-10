@@ -127,6 +127,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MISAGO_PERMISSION_PROVIDERS = (
+    'misago.users.permissions.account',
+    'misago.users.permissions.profiles',
+    'misago.users.permissions.destroying',
     'misago.forums.permissions',
 )
 

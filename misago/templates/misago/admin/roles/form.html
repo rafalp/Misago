@@ -1,5 +1,5 @@
 {% extends "misago/admin/generic/form.html" %}
-{% load crispy_forms_filters i18n %}
+{% load crispy_forms_tags i18n %}
 
 
 {% block title %}
@@ -32,9 +32,18 @@
 
 
 {% block form-body %}
-<div class="form-body no-fieldsets">
+<div class="form-body">
 
-  {{ form.name|as_crispy_field }}
+  <fieldset>
+    <legend>{% trans "Basic settings" %}</legend>
+
+    {{ form.name|as_crispy_field }}
+
+  </fieldset>
+
+  {% for form in perms_forms %}
+  {% include "misago/admin/permissions_table.html" %}
+  {% endfor %}
 
 </div>
 {% endblock form-body %}

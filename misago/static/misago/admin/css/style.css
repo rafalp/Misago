@@ -6583,6 +6583,12 @@ body {
   margin: 0px;
   padding: 4px 0px;
 }
+.form-panel .misago-alerts {
+  margin: 0px 15px;
+}
+.form-panel .misago-alerts .alert.lead {
+  font-size: 18px;
+}
 .form-panel .form-body fieldset,
 .form-panel .form-body.no-fieldsets {
   margin: 0px;
@@ -6641,11 +6647,20 @@ body {
   padding-top: 20px;
   padding-bottom: 5px;
 }
-.form-panel .misago-alerts {
-  margin: 0px 15px;
+.form-panel .table-permissions {
+  margin: 0px;
 }
-.form-panel .misago-alerts .alert.lead {
-  font-size: 18px;
+.form-panel .table-permissions tr label {
+  margin: 0px;
+}
+.form-panel .table-permissions tr p,
+.form-panel .table-permissions tr .form-group {
+  margin-bottom: 0px;
+}
+.form-panel .table-permissions tr td:first-child,
+.form-panel .table-permissions tr th:first-child {
+  padding-left: 15px;
+  vertical-align: middle;
 }
 .form-panel .form-footer {
   background-color: #f7f7f7;

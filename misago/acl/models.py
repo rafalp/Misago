@@ -9,9 +9,12 @@ except ImportError:
     import pickle
 
 
-class Role(models.Model):
+class BaseRole(models.Model):
     name = models.CharField(max_length=255)
     pickled_permissions = models.TextField(null=True, blank=True)
+
+    class Meta:
+        abstract = True
 
     def __unicode__(self):
         return unicode(_(self.name))
@@ -19,11 +22,11 @@ class Role(models.Model):
     def save(self, *args, **kwargs):
         if self.pk:
             cachebuster.invalidate()
-        return super(Role, self).save(*args, **kwargs)
+        return super(BaseRole, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         cachebuster.invalidate()
-        return super(Role, self).delete(*args, **kwargs)
+        return super(BaseRole, self).delete(*args, **kwargs)
 
     @property
     def permissions(self):
@@ -44,39 +47,12 @@ class Role(models.Model):
             pickle.dumps(permissions, pickle.HIGHEST_PROTOCOL))
 
 
-class ForumRole(models.Model):
-    name = models.CharField(max_length=255)
-    pickled_permissions = models.TextField(null=True, blank=True)
+class Role(BaseRole):
+    pass
 
-    def __unicode__(self):
-        return unicode(_(self.name))
 
-    def save(self, *args, **kwargs):
-        if self.pk:
-            cachebuster.invalidate()
-        return super(ForumRole, self).save(*args, **kwargs)
-
-    def delete(self, *args, **kwargs):
-        cachebuster.invalidate()
-        return super(ForumRole, self).delete(*args, **kwargs)
-
-    @property
-    def permissions(self):
-        try:
-            return self.permissions_cache
-        except AttributeError:
-            try:
-                self.permissions_cache = pickle.loads(
-                    base64.decodestring(self.pickled_permissions))
-            except Exception:
-                self.permissions_cache = {}
-        return self.permissions_cache
-
-    @permissions.setter
-    def permissions(self, permissions):
-        self.permissions_cache = permissions
-        self.pickled_permissions = base64.encodestring(
-            pickle.dumps(permissions, pickle.HIGHEST_PROTOCOL))
+class ForumRole(BaseRole):
+    pass
 
 
 """register models in misago admin"""

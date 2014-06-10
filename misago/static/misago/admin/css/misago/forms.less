@@ -81,6 +81,20 @@
 }
 
 
+//== Form alerts
+//
+//**
+.form-panel {
+  .misago-alerts {
+    margin: 0px @form-panel-padding-vertical;
+
+    .alert.lead {
+      font-size: @font-size-large;
+    }
+  }
+}
+
+
 //== Form body
 //
 //**
@@ -139,15 +153,26 @@
 }
 
 
-//== Form alerts
+// Form permissions
 //
 //**
 .form-panel {
-  .misago-alerts {
-    margin: 0px @form-panel-padding-vertical;
+  .table-permissions {
+    margin: 0px;
 
-    .alert.lead {
-      font-size: @font-size-large;
+    tr {
+      label {
+        margin: 0px;
+      }
+
+      p, .form-group {
+        margin-bottom: 0px;
+      }
+
+      td:first-child, th:first-child {
+        padding-left: @form-panel-padding-vertical;
+        vertical-align: middle;
+      }
     }
   }
 }
