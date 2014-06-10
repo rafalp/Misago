@@ -7,6 +7,9 @@ Thread store is simple memory-based cache some Misago features use to maintain s
 Thread store lives in :py:mod:`misago.core.threadstore` and offers subset of standard cache API known from Django
 
 
+.. warning::
+   Never use thread store for messaging between parts of your code. Usage of this feature for this is considered bad practice that leads to code with flow that is hard to understand.
+
 get
 ===
 
