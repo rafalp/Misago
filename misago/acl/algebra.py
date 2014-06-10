@@ -1,4 +1,4 @@
-def sum_acls(defaults, *acls, **permissions):
+def sum_acls(defaults, acls, **permissions):
     result_acl = {}
 
     for permission, compare in permissions.items():

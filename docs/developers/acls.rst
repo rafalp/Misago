@@ -37,9 +37,9 @@ This module provides utilities for summing two acls and supports three most comm
 * **greater or zero**: 42 beats 13, zero beats everything
 
 
-.. function:: sum_acls(defaults, *acls, **permissions)
+.. function:: sum_acls(defaults, *cls, **permissions)
 
-This function sums ACLs provided as ``*args`` using callables accepting two arguments defined in kwargs used to compare permission values. Example usage is following::
+This function sums ACLs using callables accepting two arguments defined in kwargs used to compare permission values. Example usage is following::
 
     from misago.acl import algebra
 
@@ -76,7 +76,7 @@ This function sums ACLs provided as ``*args`` using callables accepting two argu
     }
 
     final_acl = algebra.sum_acls(
-        defaults, *user_acls,
+        defaults, user_acls,
         can_see=algebra.greater,
         can_hear=algebra.greater,
         max_speed=algebra.greater,

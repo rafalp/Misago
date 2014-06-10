@@ -68,7 +68,7 @@ class SumACLTests(TestCase):
         }
 
         acl = algebra.sum_acls(
-            defaults, *test_acls,
+            defaults, test_acls,
             can_see=algebra.greater,
             can_hear=algebra.greater,
             max_speed=algebra.greater,
