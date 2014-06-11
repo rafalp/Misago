@@ -3,6 +3,15 @@ from misago.acl.models import Role
 from misago.core import forms
 
 
+DEFAULT_PERMISSIONS = {
+    'name_changes_allowed': 1,
+    'changes_expire': 0,
+    'can_use_signature': True,
+    'allow_signature_links': True,
+    'allow_signature_images': False,
+}
+
+
 class PermissionsForm(forms.Form):
     legend = _("Account settings")
     name_changes_allowed = forms.IntegerField(
@@ -16,9 +25,10 @@ class PermissionsForm(forms.Form):
         initial=0)
     can_use_signature = forms.YesNoSwitch(
         label=_("Can have signature"),
-        initial=False)
+        initial=True)
     allow_signature_links = forms.YesNoSwitch(
-        label=_("Can put links in signature"))
+        label=_("Can put links in signature"),
+        initial=True)
     allow_signature_images = forms.YesNoSwitch(
         label=_("Can put images in signature"))
 

@@ -1,23 +1,11 @@
 from django.core.urlresolvers import reverse
 from misago.admin.testutils import AdminTestCase
 from misago.acl.models import Role
+from misago.acl.testutils import fake_post_data
 
 
 def fake_data(data_dict):
-    data_dict.update({
-        'name_changes_allowed': 0,
-        'changes_expire': 0,
-        'can_use_signature': 0,
-        'allow_signature_links': 0,
-        'allow_signature_images': 0,
-        'can_destroy_user_newer_than': 0,
-        'can_destroy_users_with_less_posts_than': 0,
-        'can_search_users': 0,
-        'can_see_users_emails': 0,
-        'can_see_users_ips': 0,
-        'can_see_hidden_users': 0,
-    })
-    return data_dict
+    return fake_post_data(Role(), data_dict)
 
 
 class RoleAdminViewsTests(AdminTestCase):

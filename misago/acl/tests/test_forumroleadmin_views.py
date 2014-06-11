@@ -1,14 +1,12 @@
 from django.core.urlresolvers import reverse
+from misago.acl import get_change_permissions_forms
 from misago.admin.testutils import AdminTestCase
 from misago.acl.models import ForumRole
+from misago.acl.testutils import fake_post_data
 
 
 def fake_data(data_dict):
-    data_dict.update({
-        'can_see_forum': 0,
-        'can_browse_forum': 0,
-    })
-    return data_dict
+    return fake_post_data(ForumRole(), data_dict)
 
 
 class ForumRoleAdminViewsTests(AdminTestCase):

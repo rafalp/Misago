@@ -26,7 +26,7 @@ class RoleFormMixin(object):
         perms_forms = get_change_permissions_forms(target)
 
         if request.method == 'POST':
-            perms_forms = [f(request.POST) for f in perms_forms]
+            perms_forms = get_change_permissions_forms(target, request.POST)
             valid_forms = 0
             for permissions_form in perms_forms:
                 if permissions_form.is_valid():
@@ -36,7 +36,8 @@ class RoleFormMixin(object):
             if form.is_valid() and len(perms_forms) == valid_forms:
                 new_permissions = {}
                 for permissions_form in perms_forms:
-                    new_permissions.update(permissions_form.cleaned_data)
+                    cleaned_data = permissions_form.cleaned_data
+                    new_permissions[permissions_form.prefix] = cleaned_data
 
                 form.instance.permissions = new_permissions
                 form.instance.save()
@@ -48,7 +49,7 @@ class RoleFormMixin(object):
                 else:
                     return redirect(self.root_link)
         else:
-            perms_forms = [f(initial=role_permissions) for f in perms_forms]
+            perms_forms = get_change_permissions_forms(target)
 
         return self.render(
             request,

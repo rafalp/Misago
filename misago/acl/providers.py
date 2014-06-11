@@ -18,20 +18,50 @@ class PermissionProviders(object):
             self._providers.append((namespace, import_module(namespace)))
             self._providers_dict[namespace] = import_module(namespace)
 
-    def get_change_permissions_forms(self, role):
+    def get_default_permissions(self):
+        default_permissions = {}
+
+        for provider, module in self._providers:
+            try:
+                default_data = module.DEFAULT_PERMISSIONS
+            except AttributeError:
+                message = "'%s' object has no attribute '%s'"
+                raise AttributeError(
+                    message % (provider, 'DEFAULT_PERMISSIONS'))
+
+        default_permissions
+
+
+    def get_change_permissions_forms(self, role, data=None):
         self.initialize_providers()
+        role_permissions = role.permissions
 
         forms = []
         for provider, module in self._providers:
+            try:
+                default_data = module.DEFAULT_PERMISSIONS
+            except AttributeError:
+                message = "'%s' object has no attribute '%s'"
+                raise AttributeError(
+                    message % (provider, 'DEFAULT_PERMISSIONS'))
             try:
                 module.change_permissions_form
             except AttributeError:
                 message = "'%s' object has no attribute '%s'"
                 raise AttributeError(
                     message % (provider, 'change_permissions_form'))
-            forms.append(module.change_permissions_form(role))
 
-        return [f for f in forms if f]
+            FormType = module.change_permissions_form(role)
+
+            if FormType:
+                if data:
+                    forms.append(FormType(data, prefix=provider))
+                else:
+                    initial_data = role_permissions.get(provider, default_data)
+                    forms.append(FormType(initial=initial_data,
+                                          prefix=provider))
+
+        return forms
 
     def build_acl_cache(self, roles):
         self.initialize_providers()

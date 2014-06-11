@@ -1,8 +1,8 @@
 from misago.acl.providers import providers  # noqa
 
 
-def get_change_permissions_forms(role):
-    return providers.get_change_permissions_forms(role)
+def get_change_permissions_forms(role, data=None):
+    return providers.get_change_permissions_forms(role, data)
 
 
 def build_acl_cache(roles):

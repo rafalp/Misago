@@ -3,10 +3,16 @@ from misago.acl.models import ForumRole
 from misago.core import forms
 
 
+DEFAULT_PERMISSIONS = {
+    'can_see': False,
+    'can_browse': False
+}
+
+
 class PermissionsForm(forms.Form):
     legend = _("Destroying user accounts")
-    can_see_forum = forms.YesNoSwitch(label=_("Can see forum"))
-    can_browse_forum = forms.YesNoSwitch(label=_("Can see forum contents"))
+    can_see = forms.YesNoSwitch(label=_("Can see forum"))
+    can_browse = forms.YesNoSwitch(label=_("Can see forum contents"))
 
 
 def change_permissions_form(role):
