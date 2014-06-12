@@ -15,6 +15,9 @@
 {% block table-header %}
 <th style="width: 30%;">{% trans "Rank" %}</th>
 <th>{% trans "Title" %}</th>
+{% for action in extra_actions %}
+<th style="width: 1%;">&nbsp;</th>
+{% endfor %}
 <th style="width: 1%;">&nbsp;</th>
 <th style="width: 1%;">&nbsp;</th>
 <th style="width: 1%;">&nbsp;</th>
@@ -43,6 +46,13 @@
   <i class="text-muted">{% trans "No title set" %}</i>
   {% endif %}
 </td>
+{% for action in extra_actions %}
+<td class="row-action">
+  <a href="{% url action.link rank_id=item.id %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
+    <span class="{{ action.icon }}"></span>
+  </a>
+</td>
+{% endfor %}
 <td class="row-action">
   {% if not item.is_default %}
   <form action="{% url 'misago:admin:users:ranks:default' rank_id=item.id %}" method="post">
@@ -96,7 +106,7 @@
 
 
 {% block emptylist %}
-<td colspan="7">
+<td colspan="{{ 7|add:extra_actions_len }}">
   <p>{% trans "No ranks are currently defined." %}</p>
 </td>
 {% endblock emptylist %}

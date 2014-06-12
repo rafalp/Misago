@@ -74,10 +74,13 @@ class ListView(AdminView):
     items_per_page = 0
     ordering = None
 
-    extra_actions = []
+    extra_actions = None
 
     @classmethod
     def add_item_action(cls, name, icon, link, style=None):
+        if not cls.extra_actions:
+            cls.extra_actions = []
+
         cls.extra_actions.append({
             'name': name,
             'icon': icon,
@@ -146,14 +149,16 @@ class ListView(AdminView):
                 current_ordering['order_by'])
 
     def dispatch(self, request, *args, **kwargs):
+        extra_actions_list = self.extra_actions or []
+
         context = {
             'items': self.get_queryset(),
             'paginator': None,
             'page': None,
             'order_by': [],
             'order': None,
-            'extra_actions': self.extra_actions,
-            'extra_actions_len': len(self.extra_actions),
+            'extra_actions': extra_actions_list,
+            'extra_actions_len': len(extra_actions_list),
         }
 
         if self.ordering:

@@ -14,6 +14,9 @@
 
 {% block table-header %}
 <th>{% trans "Forum" %}</th>
+{% for action in extra_actions %}
+<th style="width: 1%;">&nbsp;</th>
+{% endfor %}
 <th>&nbsp;</th>
 <th>&nbsp;</th>
 <th>&nbsp;</th>
@@ -35,6 +38,13 @@
   {% endif %}
   {{ item.name }}
 </td>
+{% for action in extra_actions %}
+<td class="row-action">
+  <a href="{% url action.link forum_id=item.id %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
+    <span class="{{ action.icon }}"></span>
+  </a>
+</td>
+{% endfor %}
 <td class="row-action">
   {% if not item.last %}
   <form action="{% url 'misago:admin:forums:nodes:down' forum_id=item.id %}" method="post">
@@ -73,7 +83,7 @@
 
 
 {% block emptylist %}
-<td colspan="2">
+<td colspan="{{ 5|add:extra_actions_len }}">
   <p>{% trans "No forums are currently defined." %}</p>
 </td>
 {% endblock emptylist %}
