@@ -51,10 +51,6 @@ class Role(BaseRole):
     pass
 
 
-class ForumRole(BaseRole):
-    pass
-
-
 """register models in misago admin"""
 site.add_node(
     parent='misago:admin',
@@ -70,10 +66,3 @@ site.add_node(
     link='misago:admin:permissions:users:index',
     name=_("User Roles"),
     icon='fa fa-th-large')
-
-site.add_node(
-    parent='misago:admin:permissions',
-    namespace='misago:admin:permissions:forums',
-    link='misago:admin:permissions:forums:index',
-    name=_("Forum Roles"),
-    icon='fa fa-list')

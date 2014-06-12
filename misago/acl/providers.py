@@ -35,22 +35,6 @@ class PermissionProviders(object):
 providers = PermissionProviders()
 
 
-def get_default_permissions():
-    default_permissions = {}
-
-    for provider, module in providers.list():
-        try:
-            default_data = module.DEFAULT_PERMISSIONS
-        except AttributeError:
-            message = "'%s' object has no attribute '%s'"
-            raise AttributeError(
-                message % (provider, 'DEFAULT_PERMISSIONS'))
-
-        default_permissions[provider] = default_data
-
-    return default_permissions
-
-
 def get_change_permissions_forms(role, data=None):
     role_permissions = role.permissions
 

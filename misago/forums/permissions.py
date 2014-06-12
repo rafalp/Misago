@@ -1,6 +1,6 @@
 from django.utils.translation import ugettext_lazy as _
-from misago.acl.models import ForumRole
 from misago.core import forms
+from misago.forums.models import ForumRole
 
 
 DEFAULT_PERMISSIONS = {

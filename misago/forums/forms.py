@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from mptt.forms import TreeNodeChoiceField as TreeNodeChoiceField
 from misago.core import forms
 from misago.core.validators import validate_sluggable
-from misago.forums.models import Forum
+from misago.forums.models import Forum, ForumRole
 
 
 class ForumChoiceField(TreeNodeChoiceField):
@@ -210,3 +210,11 @@ def DeleteFormFactory(instance):
             required=False)
 
     return type('DeleteForumFormFinal', (DeleteForumFormBase,), fields)
+
+
+class ForumRoleForm(forms.ModelForm):
+    name = forms.CharField(label=_("Role name"))
+
+    class Meta:
+        model = ForumRole
+        fields = ['name']

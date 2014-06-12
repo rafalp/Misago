@@ -1,8 +1,8 @@
 from django.core.urlresolvers import reverse
 from misago.acl import get_change_permissions_forms
-from misago.admin.testutils import AdminTestCase
-from misago.acl.models import ForumRole
 from misago.acl.testutils import fake_post_data
+from misago.admin.testutils import AdminTestCase
+from misago.forums.models import ForumRole
 
 
 def fake_data(data_dict):

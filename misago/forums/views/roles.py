@@ -3,25 +3,25 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from misago.admin.views import generic
 from misago.acl import get_change_permissions_forms
-from misago.acl.models import Role
-from misago.acl.forms import RoleForm
+from misago.forums.forms import ForumRoleForm
+from misago.forums.models import ForumRole
 
 
-class RoleAdmin(generic.AdminBaseMixin):
-    root_link = 'misago:admin:permissions:users:index'
-    Model = Role
-    templates_dir = 'misago/admin/roles'
+class ForumRoleAdmin(generic.AdminBaseMixin):
+    root_link = 'misago:admin:permissions:forums:index'
+    Model = ForumRole
+    templates_dir = 'misago/admin/forumroles'
     message_404 = _("Requested role does not exist.")
 
 
-class RolesList(RoleAdmin, generic.ListView):
+class ForumRolesList(ForumRoleAdmin, generic.ListView):
     ordering = (('name', None),)
 
 
 class RoleFormMixin(object):
     def real_dispatch(self, request, target):
         role_permissions = target.permissions
-        form = RoleForm(instance=target)
+        form = ForumRoleForm(instance=target)
 
         perms_forms = get_change_permissions_forms(target)
 
@@ -32,7 +32,7 @@ class RoleFormMixin(object):
                 if permissions_form.is_valid():
                     valid_forms += 1
 
-            form = RoleForm(request.POST, instance=target)
+            form = ForumRoleForm(request.POST, instance=target)
             if form.is_valid() and len(perms_forms) == valid_forms:
                 new_permissions = {}
                 for permissions_form in perms_forms:
@@ -60,15 +60,15 @@ class RoleFormMixin(object):
             })
 
 
-class NewRole(RoleFormMixin, RoleAdmin, generic.ModelFormView):
+class NewForumRole(RoleFormMixin, ForumRoleAdmin, generic.ModelFormView):
     message_submit = _('New role "%s" has been saved.')
 
 
-class EditRole(RoleFormMixin, RoleAdmin, generic.ModelFormView):
+class EditForumRole(RoleFormMixin, ForumRoleAdmin, generic.ModelFormView):
     message_submit = _('Role "%s" has been changed.')
 
 
-class DeleteRole(RoleAdmin, generic.ButtonView):
+class DeleteForumRole(ForumRoleAdmin, generic.ButtonView):
     def button_action(self, request, target):
         target.delete()
         message = _('Role "%s" has been deleted.') % unicode(target.name)

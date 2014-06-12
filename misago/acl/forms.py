@@ -1,6 +1,6 @@
 from django.utils.translation import ugettext_lazy as _
 from misago.core import forms
-from misago.acl.models import Role, ForumRole
+from misago.acl.models import Role
 
 
 class RoleForm(forms.ModelForm):
@@ -10,10 +10,3 @@ class RoleForm(forms.ModelForm):
         model = Role
         fields = ['name']
 
-
-class ForumRoleForm(forms.ModelForm):
-    name = forms.CharField(label=_("Role name"))
-
-    class Meta:
-        model = ForumRole
-        fields = ['name']

@@ -74,6 +74,17 @@ class ListView(AdminView):
     items_per_page = 0
     ordering = None
 
+    extra_actions = []
+
+    @classmethod
+    def add_item_action(cls, name, icon, link, style='default'):
+        cls.extra_actions.append({
+            'name': name,
+            'icon': icon,
+            'link': link,
+            'style': style,
+            })
+
     def get_queryset(self):
         return self.get_model().objects.all()
 

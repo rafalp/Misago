@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
+from misago.acl.models import BaseRole
 from misago.admin import site
 from misago.core.utils import subset_markdown, slugify
 
@@ -71,6 +72,16 @@ class Forum(MPTTModel):
         return child.lft > self.lft and child.rght < self.rght
 
 
+class ForumRole(BaseRole):
+    pass
+
+
+class RoleForumACL(models.Model):
+    role = TreeForeignKey('acl.Role')
+    forum = TreeForeignKey('Forum')
+    forum_role = TreeForeignKey(ForumRole)
+
+
 """register model in misago admin"""
 site.add_node(
     parent='misago:admin',
@@ -86,3 +97,11 @@ site.add_node(
     link='misago:admin:forums:nodes:index',
     name=_("Forums Hierarchy"),
     icon='fa fa-comment')
+
+site.add_node(
+    parent='misago:admin:permissions',
+    namespace='misago:admin:permissions:forums',
+    after='misago:admin:permissions:users:index',
+    link='misago:admin:permissions:forums:index',
+    name=_("Forum Roles"),
+    icon='fa fa-list')
