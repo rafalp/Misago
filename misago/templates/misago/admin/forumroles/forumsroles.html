@@ -1,1 +1,79 @@
-Hello, I am Forums Roles template!
+{% extends "misago/admin/generic/list.html" %}
+{% load crispy_forms_field i18n %}
+
+
+{% block title %}
+{% blocktrans with role=target %}
+{{ role }}: Forum permissions
+{% endblocktrans %} | {{ block.super }}
+{% endblock title%}
+
+
+{% block page-header %}
+{{ block.super }}
+<div class="sub">
+  <span class="fa fa-chevron-right"></span>
+  {% blocktrans with role=target %}
+  {{ role }}: Forum permissions
+  {% endblocktrans %}
+</div>
+{% endblock page-header %}
+
+
+{% block view %}
+<form method="post" role="form">
+  {% csrf_token %}
+  <div class="table-panel">
+    <table class="table">
+      <tr>
+        <th>{% trans "Forum" %}</ht>
+        <th class="col-md-6">{% trans "Permissions" %}</ht>
+      </tr>
+
+      {% for form in forms %}
+      <tr>
+        <td class="lead">
+          {% for i in form.forum.level_range %}
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          {% endfor %}
+          {% if form.forum.role == 'category' %}
+          <span class="fa fa-folder-open tooltip-top" title="{% trans "Category" %}"></span>
+          {% elif form.forum.role == 'forum' %}
+          <span class="fa fa-comments-o tooltip-top" title="{% trans "Forum" %}"></span>
+          {% elif form.forum.role == 'redirect' %}
+          <span class="fa fa-link tooltip-top" title="{% trans "Redirect" %}"></span>
+          {% endif %}
+          {{ form.forum.name }}
+        </td>
+        <td>
+          {% crispy_field form.role %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+    <div class="table-footer">
+      <div class="row">
+        <div class="col-md-offset-6">
+
+          <button class="btn btn-primary">{% trans "Save changes" %}</button>
+          <button class="btn btn-success" name="stay" value="1">{% trans "Save and keep editing" %}</button>
+          <a href="{% url root_link %}" class="btn btn-default btn-cancel">{% trans "Cancel" %}</a>
+
+        </div>
+      </div>
+    </div>
+  </div><!-- /.table-panel -->
+</form>
+{% endblock view %}
+
+
+{% block javascripts %}
+<script type="text/javascript">
+  $(function() {
+    $('.btn-cancel').click(function() {
+      var decision = confirm("{% trans "Are you sure you want to abandon changes?" %}");
+      return decision;
+    });
+  });
+</script>
+{% endblock %}

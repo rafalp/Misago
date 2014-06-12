@@ -218,3 +218,17 @@ class ForumRoleForm(forms.ModelForm):
     class Meta:
         model = ForumRole
         fields = ['name']
+
+
+def RoleForumACLFormFactory(forum, role, roles):
+    attrs = {
+        'forum': forum,
+        'role': forms.ModelChoiceField(
+            label=_("Role"),
+            required=False,
+            queryset=roles,
+            initial=role,
+            empty_label=_("No access"))
+    }
+
+    return type('RoleForumACLForm', (forms.Form,), attrs)

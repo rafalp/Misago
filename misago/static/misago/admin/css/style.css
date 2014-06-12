@@ -6281,6 +6281,19 @@ body {
 .table-panel table.table tr td.row-select a.active span {
   color: #2ecc71;
 }
+.table-panel .table-footer {
+  background-color: #f7f7f7;
+  border-radius: 0px 0px 5px 5px;
+  border-top: 1px solid #d4d4d4;
+  padding: 15px 16px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.table-panel .table-footer > .row {
+  position: relative;
+  left: -2px;
+  margin-left: 8px;
+}
 .list-panel {
   border-radius: 4px;
   box-shadow: 0px 0px 0px 3px #ededed;

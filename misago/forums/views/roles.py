@@ -2,10 +2,10 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from misago.admin.views import generic
-from misago.acl import get_change_permissions_forms
+from misago.acl import cachebuster, get_change_permissions_forms
 from misago.acl.views import RoleAdmin, RolesList
-from misago.forums.forms import ForumRoleForm
-from misago.forums.models import ForumRole
+from misago.forums.forms import ForumRoleForm, RoleForumACLFormFactory
+from misago.forums.models import Forum, ForumRole, RoleForumACL
 
 
 class ForumRoleAdmin(generic.AdminBaseMixin):
@@ -82,6 +82,61 @@ Create forums perms view for perms role and register it in other admin
 class RoleForumsACL(RoleAdmin, generic.ModelFormView):
     templates_dir = 'misago/admin/forumroles'
     template = 'forumsroles.html'
+
+    def real_dispatch(self, request, target):
+        forums = Forum.objects.all_forums()
+        roles = ForumRole.objects.order_by('name')
+
+        if not forums:
+            messages.info(request, _("No forums exist."))
+            return redirect(self.root_link)
+
+        choices = {}
+        for choice in target.forums_acls.select_related('forum_role'):
+            choices[choice.forum_id] = choice.forum_role
+
+        forms = []
+        forms_are_valid = True
+        for forum in forums:
+            forum.level_range = range(forum.level - 1)
+            FormType = RoleForumACLFormFactory(forum,
+                                               choices.get(forum.pk),
+                                               roles)
+
+            if request.method == 'POST':
+                forms.append(FormType(request.POST, prefix=forum.pk))
+                if not forms[-1].is_valid():
+                    forms_are_valid = False
+            else:
+                forms.append(FormType(prefix=forum.pk))
+
+        if request.method == 'POST' and forms_are_valid:
+            target.forums_acls.all().delete()
+            new_permissions = []
+            for form in forms:
+                if form.cleaned_data['role']:
+                    new_permissions.append(
+                        RoleForumACL(role=target,
+                                     forum=form.forum,
+                                     forum_role=form.cleaned_data['role']))
+            if new_permissions:
+                RoleForumACL.objects.bulk_create(new_permissions)
+
+            cachebuster.invalidate()
+
+            message = _("Forum permissions for role %s have been changed.")
+            messages.success(request, message % target)
+            if 'stay' in request.POST:
+                return redirect(request.path)
+            else:
+                return redirect(self.root_link)
+
+        return self.render(
+            request,
+            {
+                'forms': forms,
+                'target': target,
+            })
 
 
 RolesList.add_item_action(

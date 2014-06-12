@@ -77,7 +77,7 @@ class ForumRole(BaseRole):
 
 
 class RoleForumACL(models.Model):
-    role = TreeForeignKey('acl.Role')
+    role = TreeForeignKey('acl.Role', related_name='forums_acls')
     forum = TreeForeignKey('Forum')
     forum_role = TreeForeignKey(ForumRole)
 

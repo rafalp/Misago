@@ -100,7 +100,7 @@
               bottom: -1px;
 
               &.fa-times {
-             		bottom: 1px;
+                bottom: 1px;
               }
 
               &.fa-pencil {
@@ -155,6 +155,21 @@
           }
         }
       }
+    }
+  }
+
+  .table-footer {
+    background-color: @form-panel-footer-bg;
+    border-radius: 0px 0px (@border-radius-large - 1px) (@border-radius-large - 1px);
+    border-top: 1px solid @form-panel-border;
+    padding: @form-panel-padding;
+    padding-left: @table-cell-padding;
+    padding-right: @table-cell-padding;
+
+    &>.row {
+      position: relative;
+      left: -2px;
+      margin-left: @table-cell-padding;
     }
   }
 }
