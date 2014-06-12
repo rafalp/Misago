@@ -11,6 +11,7 @@ except ImportError:
 
 class BaseRole(models.Model):
     name = models.CharField(max_length=255)
+    special_role = models.CharField(max_length=255, null=True, blank=True)
     pickled_permissions = models.TextField(null=True, blank=True)
 
     class Meta:
