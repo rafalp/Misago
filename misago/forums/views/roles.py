@@ -70,6 +70,11 @@ class EditForumRole(RoleFormMixin, ForumRoleAdmin, generic.ModelFormView):
 
 
 class DeleteForumRole(ForumRoleAdmin, generic.ButtonView):
+    def check_permissions(self, request, target):
+        if target.special_role:
+            message = _('Role "%s" is special role and can\'t be deleted.')
+            return message % target.name
+
     def button_action(self, request, target):
         target.delete()
         message = _('Role "%s" has been deleted.') % unicode(target.name)
