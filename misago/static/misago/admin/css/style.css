@@ -6234,6 +6234,11 @@ body {
 .table-panel table.table tr td.row-action > form .btn > span,
 .table-panel table.table tr td.row-action .dropdown-toggle > span {
   position: relative;
+  bottom: -1px;
+}
+.table-panel table.table tr td.row-action .btn > span.fa-times,
+.table-panel table.table tr td.row-action > form .btn > span.fa-times,
+.table-panel table.table tr td.row-action .dropdown-toggle > span.fa-times {
   bottom: 1px;
 }
 .table-panel table.table tr td.row-action .btn > span.fa-pencil,

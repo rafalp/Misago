@@ -77,7 +77,7 @@ class ListView(AdminView):
     extra_actions = []
 
     @classmethod
-    def add_item_action(cls, name, icon, link, style='default'):
+    def add_item_action(cls, name, icon, link, style=None):
         cls.extra_actions.append({
             'name': name,
             'icon': icon,
@@ -152,6 +152,8 @@ class ListView(AdminView):
             'page': None,
             'order_by': [],
             'order': None,
+            'extra_actions': self.extra_actions,
+            'extra_actions_len': len(self.extra_actions),
         }
 
         if self.ordering:

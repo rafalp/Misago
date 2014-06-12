@@ -64,5 +64,5 @@ site.add_node(
     parent='misago:admin:permissions',
     namespace='misago:admin:permissions:users',
     link='misago:admin:permissions:users:index',
-    name=_("User Roles"),
+    name=_("User roles"),
     icon='fa fa-th-large')

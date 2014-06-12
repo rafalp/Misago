@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from misago.admin.views import generic
 from misago.acl import get_change_permissions_forms
+from misago.acl.views import RoleAdmin, RolesList
 from misago.forums.forms import ForumRoleForm
 from misago.forums.models import ForumRole
 
@@ -73,3 +74,17 @@ class DeleteForumRole(ForumRoleAdmin, generic.ButtonView):
         target.delete()
         message = _('Role "%s" has been deleted.') % unicode(target.name)
         messages.success(request, message)
+
+
+"""
+Create forums perms view for perms role and register it in other admin
+"""
+class RoleForumsACL(RoleAdmin, generic.ModelFormView):
+    templates_dir = 'misago/admin/forumroles'
+    template = 'forumsroles.html'
+
+
+RolesList.add_item_action(
+    name=_("Forums permissions"),
+    icon='fa fa-comments-o',
+    link='misago:admin:permissions:users:forums')

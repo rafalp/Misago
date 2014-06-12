@@ -103,5 +103,5 @@ site.add_node(
     namespace='misago:admin:permissions:forums',
     after='misago:admin:permissions:users:index',
     link='misago:admin:permissions:forums:index',
-    name=_("Forum Roles"),
+    name=_("Forum roles"),
     icon='fa fa-list')

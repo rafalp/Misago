@@ -4,7 +4,8 @@ from misago.forums.views.forums import (ForumsList, NewForum, EditForum,
                                         DeleteForum, MoveUpForum,
                                         MoveDownForum)
 from misago.forums.views.roles import (ForumRolesList, NewForumRole,
-                                       EditForumRole, DeleteForumRole)
+                                       EditForumRole, DeleteForumRole,
+                                       RoleForumsACL)
 
 
 # Forums section
@@ -29,4 +30,10 @@ urlpatterns.patterns('permissions:forums',
     url(r'^new/$', NewForumRole.as_view(), name='new'),
     url(r'^edit/(?P<role_id>\d+)/$', EditForumRole.as_view(), name='edit'),
     url(r'^delete/(?P<role_id>\d+)/$', DeleteForumRole.as_view(), name='delete'),
+)
+
+
+# Change Role Forum Permissions
+urlpatterns.patterns('permissions:users',
+    url(r'^forums/(?P<role_id>\d+)/$', RoleForumsACL.as_view(), name='forums'),
 )
