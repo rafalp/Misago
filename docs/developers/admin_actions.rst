@@ -63,6 +63,11 @@ In addition to this, ListView defines following methods that you may be interest
 This function is expected to return queryset of items that will be displayed. If filters, sorting or pagination is defined, this queryset will be sliced and filtered.
 
 
+.. function:: add_item_action(cls, name, icon, link, style=None)
+
+Class method that allows you to add custom links to item actions. Link should be a string with link name, not complete link. It should also accept same kwargs as other item actions links.
+
+
 FormView
 --------
 
@@ -216,3 +221,9 @@ This method accepts following named arguments:
 Only last three arguments are required. ``after`` and ``before`` arguments are exclusive. If you specify both, this will result in an error.
 
 Misago Admin supports three levels of hierarchy. Each level should corelate to new namespace nested under ``misago:admin``. Depending on complexity of your app's admin, it can define links that are one level deep, or three levels deep.
+
+
+Adding actions to items lists
+-----------------------------
+
+Other way to make your views reachable is to include links to them on items lists. To do this, you may use ``add_item_action`` classmethod of ListView class that is documented above.
