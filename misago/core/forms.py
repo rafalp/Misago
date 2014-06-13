@@ -1,6 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from django.forms import *  # noqa
 from django.forms import Form as BaseForm, ModelForm as BaseModelForm
+from crispy_forms.helper import FormHelper
 
 
 TEXT_BASED_FIELDS = (

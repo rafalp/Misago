@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from misago.admin import urlpatterns
-from misago.users.views.useradmin import UsersList
+from misago.users.views.useradmin import UsersList, NewUser, EditUser
 from misago.users.views.rankadmin import (RanksList, NewRank, EditRank,
                                           DeleteRank, MoveUpRank, MoveDownRank,
                                           DefaultRank)
@@ -15,6 +15,8 @@ urlpatterns.namespace(r'^accounts/', 'accounts', 'users')
 urlpatterns.patterns('users:accounts',
     url(r'^$', UsersList.as_view(), name='index'),
     url(r'^(?P<page>\d+)/$', UsersList.as_view(), name='index'),
+    url(r'^new/$', NewUser.as_view(), name='new'),
+    url(r'^edit/(?P<user_id>\d+)/$', EditUser.as_view(), name='edit'),
 )
 
 

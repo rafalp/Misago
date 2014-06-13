@@ -9,6 +9,9 @@ from misago.conf import settings
 USERNAME_RE = re.compile(r'^[0-9a-z]+$', re.IGNORECASE)
 
 
+"""
+Email validators
+"""
 def validate_email_available(value):
     User = get_user_model()
 
@@ -31,16 +34,22 @@ def validate_email(value):
     validate_email_banned(value)
 
 
+"""
+Password validators
+"""
 def validate_password(value):
     if len(value) < settings.password_length_min:
         message = ungettext(
             'Valid password must be at least one character long.',
-            'valid password must be at least %(length)d characters long.',
+            'Valid password must be at least %(length)d characters long.',
             settings.password_length_min)
         message = message % {'length': settings.password_length_min}
         raise ValidationError(message)
 
 
+"""
+Username validators
+"""
 def validate_username_available(value):
     User = get_user_model()
 

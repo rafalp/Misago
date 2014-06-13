@@ -74,10 +74,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, db_index=True)
     email_hash = models.CharField(max_length=32, unique=True)
     joined_on = models.DateTimeField(_('joined on'), default=timezone.now)
-    rank = models.ForeignKey('users.Rank', on_delete=models.PROTECT)
+    rank = models.ForeignKey(
+        'users.Rank', null=True, blank=True, on_delete=models.PROTECT)
+    title = models.CharField(max_length=255, null=True, blank=True)
     is_staff = models.BooleanField(
         _('staff status'), default=False, db_index=True,
         help_text=_('Designates whether the user can log into admin sites.'))
+    roles = models.ManyToManyField('acl.Role')
+    acl_key = models.CharField(max_length=12, null=True, blank=True)
+
     is_active = True
 
     USERNAME_FIELD = 'username_slug'
@@ -87,6 +92,27 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         app_label = 'users'
+
+    @property
+    def staff_level(self):
+        if self.is_superuser:
+            return 2
+        elif self.is_staff:
+            return 1
+        else:
+            return 0
+
+    @staff_level.setter
+    def staff_level(self, new_level):
+        if new_level == 2:
+            self.is_superuser = True
+            self.is_staff = True
+        elif new_level == 1:
+            self.is_superuser = False
+            self.is_staff = True
+        else:
+            self.is_superuser = False
+            self.is_staff = False
 
     def get_username(self):
         """
@@ -107,6 +133,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def set_email(self, new_email):
         self.email = UserManager.normalize_email(new_email)
         self.email_hash = hash_email(new_email)
+
+    def update_acl_token(self):
+        pass
 
 
 """register model in misago admin"""

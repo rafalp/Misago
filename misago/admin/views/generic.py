@@ -258,12 +258,6 @@ class ModelFormView(FormView):
         else:
             return FormType(instance=target)
 
-    def transaction_pre_save(self, form, request, target):
-        pass
-
-    def transaction_after_save(self, form, request, target):
-        pass
-
     def handle_form(self, form, request, target):
         form.instance.save()
         if self.message_submit:

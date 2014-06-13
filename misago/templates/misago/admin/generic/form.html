@@ -16,7 +16,7 @@
   <div class="col-xs-12 col-md-8 col-md-offset-2">
 
     <div class="form-panel">
-      <form role="form" method="post">
+      <form role="form" method="post" {% block form-extra %}{% endblock form-extra%}>
         {% csrf_token %}
 
         <div class="form-header">

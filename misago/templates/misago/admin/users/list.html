@@ -2,6 +2,16 @@
 {% load i18n misago_avatars %}
 
 
+{% block page-actions %}
+<div class="page-actions">
+  <a href="{% url 'misago:admin:users:accounts:new' %}" class="btn btn-success">
+    <span class="fa fa-plus-circle"></span>
+    {% trans "New user" %}
+  </a>
+</div>
+{% endblock %}
+
+
 {% block table-header %}
 <th style="width: 1%;">&nbsp;</th>
 <th>{% trans "User" %}</th>
@@ -27,26 +37,14 @@
 </td>
 <td class="row-action">
   <div class="btn-group pull-right">
-    <button type="button" class="btn btn-default dropdown-toggle tooltip-top" data-toggle="dropdown" title="Item options">
+    <button type="button" class="btn btn-default dropdown-toggle tooltip-top" data-toggle="dropdown" title="{% trans "User options" %}">
       <span class="fa fa-gear"></span>
     </button>
     <ul class="dropdown-menu" role="menu">
       <li>
-        <a href="#">
-          <span class="fa fa-sort-numeric-desc"></span>
-          Newest
-        </a>
-        <a href="#">
-          <span class="fa fa-sort-numeric-asc"></span>
-          Oldest
-        </a>
-        <a href="#">
-          <span class="fa fa-sort-numeric-desc"></span>
-          Most posts
-        </a>
-        <a href="#">
-          <span class="fa fa-sort-numeric-asc"></span>
-          Least posts
+        <a href="{% url 'misago:admin:users:accounts:edit' user_id=item.pk %}">
+          <span class="fa fa-pencil"></span>
+          {% trans "Edit user" %}
         </a>
       </li>
     </ul>

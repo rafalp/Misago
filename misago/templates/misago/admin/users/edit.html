@@ -1,0 +1,56 @@
+{% extends "misago/admin/generic/form.html" %}
+{% load crispy_forms_tags i18n %}
+
+
+{% block title %}
+{{ target.username }} | {{ active_link.name }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block page-target %}
+{{ target.username }}
+{% endblock page-target %}
+
+
+{% block form-header %}
+<h1>
+  {{ target.username }}
+</h1>
+{% endblock %}
+
+
+{% block form-extra %}
+class="form-horizontal"
+{% endblock form-extra%}
+
+{% block form-body %}
+<div class="form-body">
+  <fieldset>
+    <legend>{% trans "Basic account settings" %}</legend>
+
+    {{ form.username|as_crispy_field }}
+
+    {% if 'rank' in form.fields %}
+    {{ form.rank|as_crispy_field }}
+    {% endif %}
+
+    {{ form.title|as_crispy_field }}
+
+    {% if 'roles' in form.fields %}
+    {{ form.roles|as_crispy_field }}
+    {% endif %}
+
+    {% if 'staff_level' in form.fields %}
+    {{ form.staff_level|as_crispy_field }}
+    {% endif %}
+
+  </fieldset>
+  <fieldset>
+    <legend>{% trans "Sign-in credentials" %}</legend>
+
+    {{ form.email|as_crispy_field }}
+    {{ form.new_password|as_crispy_field }}
+
+  </fieldset>
+</div>
+{% endblock form-body %}
