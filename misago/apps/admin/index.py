@@ -8,18 +8,21 @@ from datetime import timedelta
 
 
 def index(request):
+    sessions_expiration = timezone.now() - timedelta(seconds=settings.online_counting_frequency)
+    admin_sessions = Session.objects.filter(user__isnull=False).filter(admin=1)
+    admin_sessions = admin_sessions.filter(last__gte=sessions_expiration)
+    admin_sessions = admin_sessions.order_by('user__username_slug').select_related('user')
+
     return render_to_response('index.html',
                               {
                                   'users': monitor['users'],
                                   'users_inactive': monitor['users_inactive'],
                                   'threads': monitor['threads'],
                                   'posts': monitor['posts'],
-                                  'admins': Session.objects.filter(user__isnull=False).filter(admin=1)
-                              .filter(last__gte=timezone.now() - timedelta(seconds=settings.online_counting_frequency))
-                              .order_by('user__username_slug').select_related('user'),
+                                  'admins': admin_sessions,
                               },
-                              context_instance=RequestContext(request));
+                              context_instance=RequestContext(request))
 
 
 def todo(request, *args, **kwargs):
-    return render_to_response('todo.html', context_instance=RequestContext(request));
+    return render_to_response('todo.html', context_instance=RequestContext(request))

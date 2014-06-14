@@ -44,5 +44,6 @@ class List(ListWidget):
         return items.prefetch_related('user')
 
     def select_items(self, items):
-        return items.filter(matched=1).filter(admin=0).filter(
-            last__gte=timezone.now() - timedelta(seconds=settings.online_counting_frequency))
+        sessions_expiration = timezone.now() - timedelta(seconds=settings.online_counting_frequency)
+
+        return items.filter(matched=1).filter(admin=0).filter(last__gte=sessions_expiration)
