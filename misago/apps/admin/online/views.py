@@ -2,20 +2,24 @@ from django.utils.translation import ugettext as _
 from misago.admin import site
 from misago.apps.admin.widgets import ListWidget
 from misago.apps.admin.online.forms import SearchSessionsForm
+from misago.conf import settings
+from django.utils import timezone
+from datetime import timedelta
+
 
 class List(ListWidget):
     admin = site.get_action('online')
     id = 'list'
     columns = (
-               ('owner', _("Session Owner")),
-               ('start', _("Session Start"), 25),
-               ('last', _("Last Click"), 25),
-               )
+        ('owner', _("Session Owner")),
+        ('start', _("Session Start"), 25),
+        ('last', _("Last Click"), 25),
+    )
     default_sorting = 'start'
     sortables = {
-                 'start': 0,
-                 'last': 0,
-                }
+        'start': 0,
+        'last': 0,
+    }
     hide_actions = True
     pagination = 50
     search_form = SearchSessionsForm
@@ -40,4 +44,5 @@ class List(ListWidget):
         return items.prefetch_related('user')
 
     def select_items(self, items):
-        return items.filter(matched=1).filter(admin=0)
+        return items.filter(matched=1).filter(admin=0).filter(
+            last__gte=timezone.now() - timedelta(seconds=settings.online_counting_frequency))
