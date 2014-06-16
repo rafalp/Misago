@@ -77,9 +77,9 @@ class ForumRole(BaseRole):
 
 
 class RoleForumACL(models.Model):
-    role = TreeForeignKey('acl.Role', related_name='forums_acls')
-    forum = TreeForeignKey('Forum')
-    forum_role = TreeForeignKey(ForumRole)
+    role = models.ForeignKey('acl.Role', related_name='forums_acls')
+    forum = models.ForeignKey('Forum')
+    forum_role = models.ForeignKey(ForumRole)
 
 
 """register model in misago admin"""

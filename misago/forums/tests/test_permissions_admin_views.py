@@ -1,8 +1,9 @@
 from django.core.urlresolvers import reverse
 from misago.acl import get_change_permissions_forms
+from misago.acl.models import Role
 from misago.acl.testutils import fake_post_data
 from misago.admin.testutils import AdminTestCase
-from misago.forums.models import ForumRole
+from misago.forums.models import Forum, ForumRole
 
 
 def fake_data(data_dict):
@@ -85,3 +86,123 @@ class ForumRoleAdminViewsTests(AdminTestCase):
             reverse('misago:admin:permissions:forums:index'))
         self.assertEqual(response.status_code, 200)
         self.assertTrue(test_role.name not in response.content)
+
+    def test_change_role_forums_permissions_view(self):
+        """change role forums perms view"""
+        self.client.post(
+            reverse('misago:admin:permissions:users:new'),
+            data=fake_post_data(Role(), {'name': 'Test ForumRole'}))
+
+        test_role = Role.objects.get(name='Test ForumRole')
+
+        self.assertEqual(Forum.objects.count(), 2)
+        response = self.client.get(
+            reverse('misago:admin:permissions:users:forums',
+                    kwargs={'role_id': test_role.pk}))
+        self.assertEqual(response.status_code, 302)
+
+        """
+        Create forums tree for test cases:
+
+        Category A
+          + Forum B
+        Category C
+          + Forum D
+        """
+        root = Forum.objects.root_category()
+        self.client.post(reverse('misago:admin:forums:nodes:new'),
+                         data={
+                             'name': 'Category A',
+                             'new_parent': root.pk,
+                             'role': 'category',
+                             'prune_started_after': 0,
+                             'prune_replied_after': 0,
+                         })
+        self.client.post(reverse('misago:admin:forums:nodes:new'),
+                         data={
+                             'name': 'Category C',
+                             'new_parent': root.pk,
+                             'role': 'category',
+                             'prune_started_after': 0,
+                             'prune_replied_after': 0,
+                         })
+
+        category_a = Forum.objects.get(slug='category-a')
+        category_c = Forum.objects.get(slug='category-c')
+
+        self.client.post(reverse('misago:admin:forums:nodes:new'),
+                         data={
+                             'name': 'Forum B',
+                             'new_parent': category_a.pk,
+                             'role': 'forum',
+                             'prune_started_after': 0,
+                             'prune_replied_after': 0,
+                         })
+        forum_b = Forum.objects.get(slug='forum-b')
+
+        self.client.post(reverse('misago:admin:forums:nodes:new'),
+                         data={
+                             'name': 'Forum D',
+                             'new_parent': category_c.pk,
+                             'role': 'forum',
+                             'prune_started_after': 0,
+                             'prune_replied_after': 0,
+                         })
+        forum_d = Forum.objects.get(slug='forum-d')
+
+        self.assertEqual(Forum.objects.count(), 6)
+
+        # See if form page is rendered
+        response = self.client.get(
+            reverse('misago:admin:permissions:users:forums',
+                    kwargs={'role_id': test_role.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(category_a.name, response.content)
+        self.assertIn(forum_b.name, response.content)
+        self.assertIn(category_c.name, response.content)
+        self.assertIn(forum_d.name, response.content)
+
+        # Set test roles
+        self.client.post(
+            reverse('misago:admin:permissions:forums:new'),
+            data=fake_data({'name': 'Test Comments'}))
+        role_comments = ForumRole.objects.get(name='Test Comments')
+
+        self.client.post(
+            reverse('misago:admin:permissions:forums:new'),
+            data=fake_data({'name': 'Test Full'}))
+        role_full = ForumRole.objects.get(name='Test Full')
+
+        # See if form contains those roles
+        response = self.client.get(
+            reverse('misago:admin:permissions:users:forums',
+                    kwargs={'role_id': test_role.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(role_comments.name, response.content)
+        self.assertIn(role_full.name, response.content)
+
+        # Assign roles to forums
+        response = self.client.post(
+            reverse('misago:admin:permissions:users:forums',
+                    kwargs={'role_id': test_role.pk}),
+            data={
+                ('%s-role' % category_a.pk): role_comments.pk,
+                ('%s-role' % forum_b.pk): role_comments.pk,
+                ('%s-role' % category_c.pk): role_full.pk,
+                ('%s-role' % forum_d.pk): role_full.pk,
+            })
+        self.assertEqual(response.status_code, 302)
+
+        # Check that roles were assigned
+        self.assertEqual(
+            test_role.forums_acls.get(forum=category_a).forum_role_id,
+            role_comments.pk)
+        self.assertEqual(
+            test_role.forums_acls.get(forum=forum_b).forum_role_id,
+            role_comments.pk)
+        self.assertEqual(
+            test_role.forums_acls.get(forum=category_c).forum_role_id,
+            role_full.pk)
+        self.assertEqual(
+            test_role.forums_acls.get(forum=forum_d).forum_role_id,
+            role_full.pk)
