@@ -89,14 +89,14 @@ site.add_node(
     namespace='misago:admin:forums',
     link='misago:admin:forums:nodes:index',
     name=_("Forums"),
-    icon='fa fa-comment')
+    icon='fa fa-comments')
 
 site.add_node(
     parent='misago:admin:forums',
     namespace='misago:admin:forums:nodes',
     link='misago:admin:forums:nodes:index',
     name=_("Forums Hierarchy"),
-    icon='fa fa-comment')
+    icon='fa fa-sitemap')
 
 site.add_node(
     parent='misago:admin:permissions',
@@ -104,4 +104,4 @@ site.add_node(
     after='misago:admin:permissions:users:index',
     link='misago:admin:permissions:forums:index',
     name=_("Forum roles"),
-    icon='fa fa-list')
+    icon='fa fa-comments-o')
