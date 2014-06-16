@@ -6582,15 +6582,17 @@ body {
   border-bottom: 6px solid rgba(0, 0, 0, 0.15);
   border-radius: 0;
   margin-bottom: 0px;
-  padding: 15px 16px;
+  padding: 7.5px 16px;
   overflow: auto;
   color: #ffffff;
   font-size: 18px;
   text-shadow: 0px -1px 0px #6d2018;
 }
 .form-panel .form-errors-block .fa {
+  position: relative;
+  top: 4px;
   float: right;
-  font-size: 32px;
+  font-size: 26px;
 }
 .form-panel .form-errors-block ul {
   margin-right: 56px;
