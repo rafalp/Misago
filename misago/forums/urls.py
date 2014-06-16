@@ -1,11 +1,11 @@
 from django.conf.urls import url
 from misago.admin import urlpatterns
-from misago.forums.views.forums import (ForumsList, NewForum, EditForum,
-                                        DeleteForum, MoveUpForum,
-                                        MoveDownForum)
-from misago.forums.views.roles import (ForumRolesList, NewForumRole,
-                                       EditForumRole, DeleteForumRole,
-                                       RoleForumsACL)
+from misago.forums.views.forumsadmin import (ForumsList, NewForum, EditForum,
+                                             DeleteForum, MoveUpForum,
+                                             MoveDownForum)
+from misago.forums.views.permsadmin import (ForumRolesList, NewForumRole,
+                                            EditForumRole, DeleteForumRole,
+                                            RoleForumsACL)
 
 
 # Forums section
