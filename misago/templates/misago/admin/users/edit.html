@@ -35,10 +35,7 @@ class="form-horizontal"
     {% endif %}
 
     {{ form.title|as_crispy_field }}
-
-    {% if 'roles' in form.fields %}
     {{ form.roles|as_crispy_field }}
-    {% endif %}
 
     {% if 'staff_level' in form.fields %}
     {{ form.staff_level|as_crispy_field }}

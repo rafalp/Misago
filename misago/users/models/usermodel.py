@@ -1,8 +1,11 @@
 from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
-                                        UserManager as BaseUserManager)
+                                        UserManager as BaseUserManager,
+                                        AnonymousUser as DjangoAnonymousUser)
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from misago.acl import get_user_acl
+from misago.acl.models import Role
 from misago.admin import site
 from misago.core.utils import slugify
 from misago.users.models import Rank
@@ -94,6 +97,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         app_label = 'users'
 
     @property
+    def acl(self):
+        try:
+            return self._acl_cache
+        except AttributeError:
+            self._acl_cache = get_user_acl(self)
+            return self._acl_cache
+
+    @property
     def staff_level(self):
         if self.is_superuser:
             return 2
@@ -134,8 +145,42 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.email = UserManager.normalize_email(new_email)
         self.email_hash = hash_email(new_email)
 
+    def get_roles(self):
+        roles_pks = []
+        roles_dict = {}
+
+        for role in self.role_set.all():
+            roles_pks.append(role.pk)
+            roles_dict[role.pk] = role
+
+        if self.rank:
+            for role in self.rank.role_set.all():
+                if role.pk not in roles_pks:
+                    roles_pks.append(role.pk)
+                    roles_dict[role.pk] = role
+
+        return [roles_dict[r] for r in roles_pks]
+
     def update_acl_token(self):
         pass
+
+
+class AnonymousUser(DjangoAnonymousUser):
+    acl_key = 'anonymous'
+
+    @property
+    def acl(self):
+        try:
+            return self._acl_cache
+        except AttributeError:
+            self._acl_cache = get_user_acl(self)
+            return self._acl_cache
+
+    def get_roles(self):
+        try:
+            return [Role.objects.get(special_role="anonymous")]
+        except Role.DoesNotExist:
+            raise RuntimeError("Anonymous user role not found.")
 
 
 """register model in misago admin"""

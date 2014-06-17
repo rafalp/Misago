@@ -35,7 +35,54 @@ class PermissionProviders(object):
 providers = PermissionProviders()
 
 
+"""
+Module functions for ACLS
+
+Workflow for ACLs in Misago is simple:
+
+First, you get user ACL. You can introspect it directory to find out user
+permissions, or if you have objects, you can use this acl to make those objects
+aware of their ACLs. This gives objects themselves special "acl" attribute with
+properties defined by ACL providers within their "add_acl_to_target"
+"""
+def get_user_acl(user):
+    """
+    Get hydrated ACL for User
+    """
+    pass
+
+
+def _add_acl_to_target(acl, target):
+    """
+    Add valid ACL to single target
+    """
+    for provider, module in providers.list():
+        module.add_acl_to_target(acl, target)
+
+
+def add_acl(acl, target):
+    """
+    Add valid ACL to target (iterable of objects or single object)
+    """
+    targets = []
+
+    try:
+        for item in target:
+            targets.append(item)
+    except TypeError:
+        targets.append(target)
+
+    for target in targets:
+        _add_acl_to_target(acl, target)
+
+
+"""
+Admin utils
+"""
 def get_change_permissions_forms(role, data=None):
+    """
+    Utility function for building forms in admin
+    """
     role_permissions = role.permissions
 
     forms = []
