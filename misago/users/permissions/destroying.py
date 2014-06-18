@@ -22,7 +22,7 @@ class PermissionsForm(forms.Form):
 
 
 def change_permissions_form(role):
-    if role.__class__ == Role:
+    if role.__class__ == Role and role.special_role != 'anonymous':
         return PermissionsForm
     else:
         return None
