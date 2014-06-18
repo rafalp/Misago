@@ -26,7 +26,7 @@ INSTALLED_APPS = (
 )
 """
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# Build paths inside the project like this: os.path.join(MISAGO_BASE_DIR, ...)
 import os
 MISAGO_BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
