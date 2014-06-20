@@ -1,7 +1,7 @@
 from django.db import models, transaction
 from django.utils.translation import ugettext_lazy as _
 from misago.admin import site
-from misago.acl import cachebuster
+from misago.acl import version as acl_version
 from misago.core.utils import slugify
 
 
@@ -41,11 +41,11 @@ class Rank(models.Model):
         if not self.pk:
             self.set_order()
         else:
-            cachebuster.invalidate()
+            acl_version.invalidate()
         return super(Rank, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        cachebuster.invalidate()
+        acl_version.invalidate()
         return super(Rank, self).delete(*args, **kwargs)
 
     def set_name(self, name):

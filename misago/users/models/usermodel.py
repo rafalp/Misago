@@ -163,7 +163,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                     roles_pks.append(role.pk)
                     roles_dict[role.pk] = role
 
-        return [roles_dict[r] for r in roles_pks]
+        return [roles_dict[r] for r in sorted(roles_pks)]
 
     def update_acl_key(self):
         pass

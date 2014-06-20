@@ -127,7 +127,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'misago.conf.context_processors.settings',
 )
 
-MISAGO_PERMISSION_PROVIDERS = (
+MISAGO_ACL_EXTENSIONS = (
     'misago.users.permissions.account',
     'misago.users.permissions.profiles',
     'misago.users.permissions.destroying',

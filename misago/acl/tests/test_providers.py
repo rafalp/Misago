@@ -35,11 +35,11 @@ class PermissionProvidersTests(TestCase):
         providers = PermissionProviders()
         providers_list = providers.list()
 
-        providers_setting = settings.MISAGO_PERMISSION_PROVIDERS
+        providers_setting = settings.MISAGO_ACL_EXTENSIONS
         self.assertEqual(len(providers_list), len(providers_setting))
 
-        for provider, module in providers_list:
-            self.assertTrue(isinstance(provider, basestring))
+        for extension, module in providers_list:
+            self.assertTrue(isinstance(extension, basestring))
             self.assertEqual(type(module), ModuleType)
 
     def test_dict(self):
@@ -47,9 +47,9 @@ class PermissionProvidersTests(TestCase):
         providers = PermissionProviders()
         providers_dict = providers.dict()
 
-        providers_setting = settings.MISAGO_PERMISSION_PROVIDERS
+        providers_setting = settings.MISAGO_ACL_EXTENSIONS
         self.assertEqual(len(providers_dict), len(providers_setting))
 
-        for provider, module in providers_dict.items():
-            self.assertTrue(isinstance(provider, basestring))
+        for extension, module in providers_dict.items():
+            self.assertTrue(isinstance(extension, basestring))
             self.assertEqual(type(module), ModuleType)

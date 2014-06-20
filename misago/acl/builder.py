@@ -7,7 +7,7 @@ def build_acl(roles):
     """
     acl = {}
 
-    for provider, module in providers.list():
-        module.build_acl(acl, roles)
+    for extension, module in providers.list():
+        module.build_acl(acl, roles, extension)
 
     return acl

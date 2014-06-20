@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
+from misago.acl import version as acl_version
 from misago.acl.models import BaseRole
 from misago.admin import site
 from misago.core.utils import subset_markdown, slugify
@@ -60,6 +61,15 @@ class Forum(MPTTModel):
         else:
             return self.name
 
+    def save(self, *args, **kwargs):
+        if self.pk:
+            acl_version.invalidate()
+        return super(Forum, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        acl_version.invalidate()
+        return super(Forum, self).delete(*args, **kwargs)
+
     def set_name(self, name):
         self.name = name
         self.slug = slugify(name)
@@ -80,6 +90,15 @@ class RoleForumACL(models.Model):
     role = models.ForeignKey('acl.Role', related_name='forums_acls')
     forum = models.ForeignKey('Forum')
     forum_role = models.ForeignKey(ForumRole)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            acl_version.invalidate()
+        return super(RoleForumACL, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        acl_version.invalidate()
+        return super(RoleForumACL, self).delete(*args, **kwargs)
 
 
 """register model in misago admin"""

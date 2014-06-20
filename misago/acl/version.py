@@ -14,4 +14,3 @@ def is_valid(version):
 
 def invalidate():
     cb.invalidate(ACL_CACHE_NAME)
-

@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext as _
 from misago.admin import site
-from misago.acl import cachebuster
+from misago.acl import version as acl_version
 import base64
 try:
     import cPickle as pickle
@@ -22,11 +22,11 @@ class BaseRole(models.Model):
 
     def save(self, *args, **kwargs):
         if self.pk:
-            cachebuster.invalidate()
+            acl_version.invalidate()
         return super(BaseRole, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        cachebuster.invalidate()
+        acl_version.invalidate()
         return super(BaseRole, self).delete(*args, **kwargs)
 
     @property

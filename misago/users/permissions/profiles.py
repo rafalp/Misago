@@ -29,5 +29,5 @@ def change_permissions_form(role):
 """
 ACL Builder
 """
-def build_acl(acl, roles):
+def build_acl(acl, roles, key_name):
     pass

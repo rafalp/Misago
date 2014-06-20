@@ -18,7 +18,7 @@ class PermissionProviders(object):
             self._initialized = True
 
     def _import_providers(self):
-        for namespace in settings.MISAGO_PERMISSION_PROVIDERS:
+        for namespace in settings.MISAGO_ACL_EXTENSIONS:
             self._providers.append((namespace, import_module(namespace)))
             self._providers_dict[namespace] = import_module(namespace)
 
