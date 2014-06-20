@@ -55,7 +55,7 @@ Misago checks module for following functions:
 
 .. function:: change_permissions_form(role)
 
-Mandatory. This function is called when change permissions form for role is being build for view. It's expected to return Form type or none, if provider is not recognizing role type (eg. there is no sense in adding profiles visibility permissions to forums role form).
+Required. This function is called when change permissions form for role is being build for view. It's expected to return Form type or none, if provider is not recognizing role type (eg. there is no sense in adding profiles visibility permissions to forums role form).
 
 .. warning::
    Make sure that all fields in your form have initial value, or your form will make tests suite fail because it will be unable to mock POST requests to admin forms correctly.
@@ -63,7 +63,7 @@ Mandatory. This function is called when change permissions form for role is bein
 
 .. function:: build_acl(acl, roles, key_name)
 
-Mandatory. Is used in process of building new ACL. Its supplied dict with incomplete ACL, list of user roles and name of key under which its permissions values are stored in roles ``permissions`` attributes. Its expected to access roles ``permissions`` attributes which are dicts of values coming from permission change forms and update provided ``acl`` dict accordingly.
+Required. Is used in process of building new ACL. Its supplied dict with incomplete ACL, list of user roles and name of key under which its permissions values are stored in roles ``permissions`` attributes. Its expected to access roles ``permissions`` attributes which are dicts of values coming from permission change forms and update provided ``acl`` dict accordingly.
 
 
 .. function:: add_acl_to_target(user, acl, target)
