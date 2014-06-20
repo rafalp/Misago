@@ -2,7 +2,7 @@ import warnings
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
-from misago.acl import cachebuster
+from misago.acl import versions
 from misago.admin.views import generic
 from misago.forums.models import FORUMS_TREE_ID, Forum
 from misago.forums.forms import ForumFormFactory, DeleteFormFactory
