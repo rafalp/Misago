@@ -91,15 +91,6 @@ class RoleForumACL(models.Model):
     forum = models.ForeignKey('Forum')
     forum_role = models.ForeignKey(ForumRole)
 
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            acl_version.invalidate()
-        return super(RoleForumACL, self).save(*args, **kwargs)
-
-    def delete(self, *args, **kwargs):
-        acl_version.invalidate()
-        return super(RoleForumACL, self).delete(*args, **kwargs)
-
 
 """register model in misago admin"""
 site.add_node(

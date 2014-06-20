@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from misago.admin.views import generic
-from misago.acl import cachebuster
+from misago.acl import version as acl_version
 from misago.acl.forms import get_permissions_forms
 from misago.acl.views import RoleAdmin, RolesList
 from misago.forums.forms import ForumRoleForm, RoleForumACLFormFactory
@@ -126,7 +126,7 @@ class RoleForumsACL(RoleAdmin, generic.ModelFormView):
             if new_permissions:
                 RoleForumACL.objects.bulk_create(new_permissions)
 
-            cachebuster.invalidate()
+            acl_version.invalidate()
 
             message = _("Forum permissions for role %s have been changed.")
             messages.success(request, message % target)

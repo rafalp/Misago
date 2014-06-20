@@ -2,7 +2,6 @@ import warnings
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
-from misago.acl import version
 from misago.admin.views import generic
 from misago.forums.models import FORUMS_TREE_ID, Forum
 from misago.forums.forms import ForumFormFactory, DeleteFormFactory
@@ -63,7 +62,6 @@ class ForumFormMixin(object):
                                     position='last-child',
                                     save=True)
 
-        cachebuster.invalidate()
         messages.success(request, self.message_submit % target.name)
 
 
@@ -97,7 +95,6 @@ class DeleteForum(ForumAdmin, generic.ModelFormView):
                           FutureWarning)
 
         form.instance.delete()
-        cachebuster.invalidate()
 
         messages.success(request, self.message_submit % target.name)
         return redirect(self.root_link)
