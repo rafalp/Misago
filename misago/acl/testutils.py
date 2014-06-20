@@ -1,4 +1,4 @@
-from misago.acl import get_change_permissions_forms
+from misago.acl.forms import get_permissions_forms
 
 
 def fake_post_data(target, data_dict):
@@ -7,7 +7,7 @@ def fake_post_data(target, data_dict):
     to receive values. This function populates data dict with default values
     for permissions, making form validation pass
     """
-    for form in get_change_permissions_forms(target):
+    for form in get_permissions_forms(target):
         for field in form:
             if field.value() == True:
                 data_dict[field.html_name] = 1

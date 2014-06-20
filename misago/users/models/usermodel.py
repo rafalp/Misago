@@ -104,6 +104,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             self._acl_cache = get_user_acl(self)
             return self._acl_cache
 
+    @acl.setter
+    def acl(self, value):
+        raise TypeError('Cannot make User instances ACL aware')
+
     @property
     def staff_level(self):
         if self.is_superuser:
@@ -149,19 +153,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         roles_pks = []
         roles_dict = {}
 
-        for role in self.role_set.all():
+        for role in self.roles.all():
             roles_pks.append(role.pk)
             roles_dict[role.pk] = role
 
         if self.rank:
-            for role in self.rank.role_set.all():
+            for role in self.rank.roles.all():
                 if role.pk not in roles_pks:
                     roles_pks.append(role.pk)
                     roles_dict[role.pk] = role
 
         return [roles_dict[r] for r in roles_pks]
 
-    def update_acl_token(self):
+    def update_acl_key(self):
         pass
 
 
@@ -176,11 +180,18 @@ class AnonymousUser(DjangoAnonymousUser):
             self._acl_cache = get_user_acl(self)
             return self._acl_cache
 
+    @acl.setter
+    def acl(self, value):
+        raise TypeError('Cannot make AnonymousUser instances ACL aware')
+
     def get_roles(self):
         try:
             return [Role.objects.get(special_role="anonymous")]
         except Role.DoesNotExist:
             raise RuntimeError("Anonymous user role not found.")
+
+    def update_acl_key(self):
+        raise TypeError("Can't update ACL key on anonymous users")
 
 
 """register model in misago admin"""

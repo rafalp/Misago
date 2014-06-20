@@ -9,6 +9,9 @@ DEFAULT_PERMISSIONS = {
 }
 
 
+"""
+Admin Permissions Form
+"""
 class PermissionsForm(forms.Form):
     legend = _("Forum access")
     can_see = forms.YesNoSwitch(label=_("Can see forum"))
@@ -16,7 +19,14 @@ class PermissionsForm(forms.Form):
 
 
 def change_permissions_form(role):
-    if role.__class__ == ForumRole:
+    if isinstance(role, ForumRole):
         return PermissionsForm
     else:
         return None
+
+
+"""
+ACL Builder
+"""
+def build_acl(acl, roles):
+    pass

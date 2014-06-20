@@ -12,6 +12,9 @@ DEFAULT_PERMISSIONS = {
 }
 
 
+"""
+Admin Permissions Form
+"""
 class PermissionsForm(forms.Form):
     legend = _("Account settings")
     name_changes_allowed = forms.IntegerField(
@@ -34,7 +37,14 @@ class PermissionsForm(forms.Form):
 
 
 def change_permissions_form(role):
-    if role.__class__ == Role:
+    if isinstance(role, Role):
         return PermissionsForm
     else:
         return None
+
+
+"""
+ACL Builder
+"""
+def build_acl(acl, roles):
+    pass

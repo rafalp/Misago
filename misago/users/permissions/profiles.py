@@ -11,6 +11,9 @@ DEFAULT_PERMISSIONS = {
 }
 
 
+"""
+Admin Permissions Form
+"""
 class PermissionsForm(forms.Form):
     legend = _("User profiles")
     can_search_users = forms.YesNoSwitch(
@@ -24,7 +27,14 @@ class PermissionsForm(forms.Form):
 
 
 def change_permissions_form(role):
-    if role.__class__ == Role:
+    if isinstance(role, Role):
         return PermissionsForm
     else:
         return None
+
+
+"""
+ACL Builder
+"""
+def build_acl(acl, roles):
+    pass

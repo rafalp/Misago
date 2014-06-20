@@ -9,6 +9,9 @@ DEFAULT_PERMISSIONS = {
 }
 
 
+"""
+Admin Permissions Form
+"""
 class PermissionsForm(forms.Form):
     legend = _("Destroying user accounts")
     can_destroy_user_newer_than = forms.IntegerField(
@@ -22,7 +25,14 @@ class PermissionsForm(forms.Form):
 
 
 def change_permissions_form(role):
-    if role.__class__ == Role and role.special_role != 'anonymous':
+    if isinstance(role, Role) and role.special_role != 'anonymous':
         return PermissionsForm
     else:
         return None
+
+
+"""
+ACL Builder
+"""
+def build_acl(acl, roles):
+    pass

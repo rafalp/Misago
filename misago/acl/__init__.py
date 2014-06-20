@@ -1,1 +1,1 @@
-from misago.acl.providers import *  # noqa
+from misago.acl.api import *  # noqa

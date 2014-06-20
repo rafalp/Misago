@@ -2,8 +2,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from misago.admin.views import generic
-from misago.acl import get_change_permissions_forms
-from misago.acl.forms import RoleForm
+from misago.acl.forms import RoleForm, get_permissions_forms
 from misago.acl.models import Role
 
 
@@ -23,10 +22,10 @@ class RoleFormMixin(object):
         role_permissions = target.permissions
         form = RoleForm(instance=target)
 
-        perms_forms = get_change_permissions_forms(target)
+        perms_forms = get_permissions_forms(target)
 
         if request.method == 'POST':
-            perms_forms = get_change_permissions_forms(target, request.POST)
+            perms_forms = get_permissions_forms(target, request.POST)
             valid_forms = 0
             for permissions_form in perms_forms:
                 if permissions_form.is_valid():
@@ -48,8 +47,6 @@ class RoleFormMixin(object):
                     return redirect(request.path)
                 else:
                     return redirect(self.root_link)
-        else:
-            perms_forms = get_change_permissions_forms(target)
 
         return self.render(
             request,
