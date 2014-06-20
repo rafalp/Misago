@@ -156,6 +156,12 @@ forum_index_title
 Forum index title. Can be empty string if not set, in which case ``forum_name`` should be used instead.
 
 
+MISAGO_ACL_EXTENSIONS
+---------------------
+
+List of Misago ACL framework extensions.
+
+
 MISAGO_ADMIN_NAMESPACES
 -----------------------
 
