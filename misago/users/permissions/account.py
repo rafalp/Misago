@@ -3,15 +3,6 @@ from misago.acl.models import Role
 from misago.core import forms
 
 
-DEFAULT_PERMISSIONS = {
-    'name_changes_allowed': 1,
-    'changes_expire': 0,
-    'can_use_signature': True,
-    'allow_signature_links': True,
-    'allow_signature_images': False,
-}
-
-
 """
 Admin Permissions Form
 """
@@ -33,7 +24,8 @@ class PermissionsForm(forms.Form):
         label=_("Can put links in signature"),
         initial=True)
     allow_signature_images = forms.YesNoSwitch(
-        label=_("Can put images in signature"))
+        label=_("Can put images in signature"),
+        initial=False)
 
 
 def change_permissions_form(role):

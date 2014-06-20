@@ -3,12 +3,6 @@ from misago.core import forms
 from misago.forums.models import ForumRole
 
 
-DEFAULT_PERMISSIONS = {
-    'can_see': False,
-    'can_browse': False
-}
-
-
 """
 Admin Permissions Form
 """

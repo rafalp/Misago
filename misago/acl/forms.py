@@ -21,12 +21,6 @@ def get_permissions_forms(role, data=None):
     forms = []
     for provider, module in providers.list():
         try:
-            default_data = module.DEFAULT_PERMISSIONS
-        except AttributeError:
-            message = "'%s' object has no attribute '%s'"
-            raise AttributeError(
-                message % (provider, 'DEFAULT_PERMISSIONS'))
-        try:
             module.change_permissions_form
         except AttributeError:
             message = "'%s' object has no attribute '%s'"
@@ -39,8 +33,7 @@ def get_permissions_forms(role, data=None):
             if data:
                 forms.append(FormType(data, prefix=provider))
             else:
-                initial_data = role_permissions.get(provider, default_data)
-                forms.append(FormType(initial=initial_data,
+                forms.append(FormType(initial=role_permissions.get(provider),
                                       prefix=provider))
 
     return forms
