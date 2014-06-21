@@ -21,7 +21,7 @@ class Rank(models.Model):
     slug = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     title = models.CharField(max_length=255, null=True, blank=True)
-    roles = models.ManyToManyField('acl.Role', null=True, blank=True)
+    roles = models.ManyToManyField('misago_acl.Role', null=True, blank=True)
     css_class = models.CharField(max_length=255, null=True, blank=True)
     is_default = models.BooleanField(default=False)
     is_tab = models.BooleanField(default=False)
@@ -31,7 +31,6 @@ class Rank(models.Model):
     objects = RankManager()
 
     class Meta:
-        app_label = 'users'
         get_latest_by = 'order'
 
     def __unicode__(self):

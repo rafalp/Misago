@@ -89,17 +89,16 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
-    'south',
     'pipeline',
     'crispy_forms',
     'mptt',
-    'misago.admin',
-    'misago.acl',
-    'misago.core',
-    'misago.conf',
-    'misago.users',
-    'misago.faker',
-    'misago.forums',
+    'misago.admin.apps.MisagoAdminConfig',
+    'misago.acl.apps.MisagoACLsConfig',
+    'misago.core.apps.MisagoCoreConfig',
+    'misago.conf.apps.MisagoConfConfig',
+    'misago.users.apps.MisagoUsersConfig',
+    'misago.faker.apps.MisagoFakerConfig',
+    'misago.forums.apps.MisagoForumsConfig',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -165,7 +164,7 @@ CSRF_FAILURE_VIEW = 'misago.core.errorpages.csrf_failure'
 
 
 # Use Misago authentication
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'misago_users.User'
 
 AUTHENTICATION_BACKENDS = (
     'misago.users.authbackends.MisagoBackend',

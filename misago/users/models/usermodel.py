@@ -78,12 +78,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     email_hash = models.CharField(max_length=32, unique=True)
     joined_on = models.DateTimeField(_('joined on'), default=timezone.now)
     rank = models.ForeignKey(
-        'users.Rank', null=True, blank=True, on_delete=models.PROTECT)
+        'misago_users.Rank', null=True, blank=True, on_delete=models.PROTECT)
     title = models.CharField(max_length=255, null=True, blank=True)
     is_staff = models.BooleanField(
         _('staff status'), default=False, db_index=True,
         help_text=_('Designates whether the user can log into admin sites.'))
-    roles = models.ManyToManyField('acl.Role')
+    roles = models.ManyToManyField('misago_acl.Role')
     acl_key = models.CharField(max_length=12, null=True, blank=True)
 
     is_active = True
@@ -92,9 +92,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['email']
 
     objects = UserManager()
-
-    class Meta:
-        app_label = 'users'
 
     @property
     def acl(self):

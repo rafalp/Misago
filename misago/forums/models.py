@@ -43,12 +43,11 @@ class Forum(MPTTModel):
     posts_count = models.PositiveIntegerField(default=0)
     prune_started_after = models.PositiveIntegerField(default=0)
     prune_replied_after = models.PositiveIntegerField(default=0)
-    archive_pruned_in = models.ForeignKey(
-        'self',
-        related_name='pruned_archive',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL)
+    archive_pruned_in = models.ForeignKey('self',
+                                          related_name='pruned_archive',
+                                          null=True,
+                                          blank=True,
+                                          on_delete=models.SET_NULL)
     css_class = models.CharField(max_length=255, null=True, blank=True)
 
     objects = ForumManager()
@@ -87,7 +86,7 @@ class ForumRole(BaseRole):
 
 
 class RoleForumACL(models.Model):
-    role = models.ForeignKey('acl.Role', related_name='forums_acls')
+    role = models.ForeignKey('misago_acl.Role', related_name='forums_acls')
     forum = models.ForeignKey('Forum')
     forum_role = models.ForeignKey(ForumRole)
 
