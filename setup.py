@@ -10,6 +10,8 @@ requirements_path = os.path.join(os.path.dirname(__file__),
 with open(requirements_path, "r") as f:
     REQUIREMENTS = [x.strip() for x in f.readlines()]
 
+REQUIREMENTS = REQUIREMENTS[1:]
+
 
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
@@ -29,6 +31,9 @@ setup(
     author=u'Rafał Pitoń',
     author_email='kontakt@rpiton.com',
     install_requires=REQUIREMENTS,
+    dependency_links=[
+        'https://github.com/django/django/archive/stable/1.7.x.zip',
+    ],
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
     scripts=['misago/bin/misago-start.py'],
