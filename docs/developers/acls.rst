@@ -1,8 +1,8 @@
-====
-ACLs
-====
+=====================
+Permissions framework
+=====================
 
-Misago brings its own ACL framework for implementing permissions and this document explains to how to use and extend it with your own permissions.
+Misago brings its own ACL (Access Control Lists) framework for implementing permissions and this document explains to how to use and extend it with your own permissions.
 
 
 Checking permissions
