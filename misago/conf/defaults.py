@@ -83,6 +83,9 @@ PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.yuglify.YuglifyCompressor'
 
 INSTALLED_APPS = (
     'django.contrib.admin',
+    # Keep misago.users above django.contrib.auth
+    # so our management commands take precedence over theirs
+    'misago.users',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -92,13 +95,12 @@ INSTALLED_APPS = (
     'pipeline',
     'crispy_forms',
     'mptt',
-    'misago.admin.apps.MisagoAdminConfig',
-    'misago.acl.apps.MisagoACLsConfig',
-    'misago.core.apps.MisagoCoreConfig',
-    'misago.conf.apps.MisagoConfConfig',
-    'misago.users.apps.MisagoUsersConfig',
-    'misago.faker.apps.MisagoFakerConfig',
-    'misago.forums.apps.MisagoForumsConfig',
+    'misago.admin',
+    'misago.acl',
+    'misago.core',
+    'misago.conf',
+    'misago.faker',
+    'misago.forums',
 )
 
 MIDDLEWARE_CLASSES = (
