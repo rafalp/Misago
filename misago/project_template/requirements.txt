@@ -1,4 +1,4 @@
--e git+https://github.com/django/django.git@stable/1.7.x#egg=django
+git+https://github.com/django/django.git@stable/1.7.x#egg=django
 bleach==1.4
 django-debug-toolbar==1.2.1
 django-crispy-forms==1.4.0
