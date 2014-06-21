@@ -1,74 +1,73 @@
 # -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+import django.db.models.deletion
+import mptt.fields
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'Forum'
-        db.create_table(u'forums_forum', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('parent', self.gf('mptt.fields.TreeForeignKey')(blank=True, related_name='children', null=True, to=orm['forums.Forum'])),
-            ('special_role', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
-            ('role', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(max_length=255)),
-            ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('description_preparsed', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('is_closed', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('redirect_url', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
-            ('redirects_count', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
-            ('threads', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
-            ('threads_count', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
-            ('posts', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
-            ('posts_count', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
-            ('prune_started_after', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
-            ('prune_replied_after', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
-            ('archive_pruned_in', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='pruned_archive', null=True, on_delete=models.SET_NULL, to=orm['forums.Forum'])),
-            ('css_class', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
-            (u'lft', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-            (u'rght', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-            (u'tree_id', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-            (u'level', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-        ))
-        db.send_create_signal(u'forums', ['Forum'])
+    dependencies = [
+        ('misago_acl', '0001_initial'),
+    ]
 
-
-    def backwards(self, orm):
-        # Deleting model 'Forum'
-        db.delete_table(u'forums_forum')
-
-
-    models = {
-        u'forums.forum': {
-            'Meta': {'object_name': 'Forum'},
-            'archive_pruned_in': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'pruned_archive'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['forums.Forum']"}),
-            'css_class': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'description_preparsed': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_closed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            u'level': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            u'lft': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'parent': ('mptt.fields.TreeForeignKey', [], {'blank': 'True', 'related_name': "'children'", 'null': 'True', 'to': u"orm['forums.Forum']"}),
-            'posts': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'posts_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'prune_replied_after': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'prune_started_after': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'redirect_url': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'redirects_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            u'rght': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'role': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '255'}),
-            'special_role': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'threads': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'threads_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            u'tree_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
-        }
-    }
-
-    complete_apps = ['forums']
+    operations = [
+        migrations.CreateModel(
+            name='Forum',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('special_role', models.CharField(max_length=255, null=True, blank=True)),
+                ('role', models.CharField(max_length=255, null=True, blank=True)),
+                ('name', models.CharField(max_length=255)),
+                ('slug', models.SlugField(max_length=255)),
+                ('description', models.TextField(null=True, blank=True)),
+                ('description_as_html', models.TextField(null=True, blank=True)),
+                ('is_closed', models.BooleanField(default=False)),
+                ('redirect_url', models.CharField(max_length=255, null=True, blank=True)),
+                ('redirects_count', models.PositiveIntegerField(default=0)),
+                ('threads', models.PositiveIntegerField(default=0)),
+                ('threads_count', models.PositiveIntegerField(default=0)),
+                ('posts', models.PositiveIntegerField(default=0)),
+                ('posts_count', models.PositiveIntegerField(default=0)),
+                ('prune_started_after', models.PositiveIntegerField(default=0)),
+                ('prune_replied_after', models.PositiveIntegerField(default=0)),
+                ('css_class', models.CharField(max_length=255, null=True, blank=True)),
+                ('lft', models.PositiveIntegerField(editable=False, db_index=True)),
+                ('rght', models.PositiveIntegerField(editable=False, db_index=True)),
+                ('tree_id', models.PositiveIntegerField(editable=False, db_index=True)),
+                ('level', models.PositiveIntegerField(editable=False, db_index=True)),
+                ('archive_pruned_in', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, to_field='id', blank=True, to='misago_forums.Forum', null=True)),
+                ('parent', mptt.fields.TreeForeignKey(to_field='id', blank=True, to='misago_forums.Forum', null=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ForumRole',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=255)),
+                ('special_role', models.CharField(max_length=255, null=True, blank=True)),
+                ('pickled_permissions', models.TextField(null=True, blank=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='RoleForumACL',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('forum', models.ForeignKey(to='misago_forums.Forum', to_field='id')),
+                ('forum_role', models.ForeignKey(to='misago_forums.ForumRole', to_field='id')),
+                ('role', models.ForeignKey(to='misago_acl.Role', to_field='id')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+    ]

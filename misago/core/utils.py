@@ -5,6 +5,15 @@ from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify as django_slugify
 
 
+def slugify(string):
+    string = unicode(string)
+    string = unidecode(string)
+    return django_slugify(string.replace('_', ' '))
+
+
+"""
+Utils for resolving requests destination
+"""
 def _is_request_path_under_misago(request):
     # We are assuming that forum_index link is root of all Misago links
     forum_index = reverse('misago:index')
@@ -23,12 +32,9 @@ def is_request_to_misago(request):
         return request._request_to_misago
 
 
-def slugify(string):
-    string = unicode(string)
-    string = unidecode(string)
-    return django_slugify(string.replace('_', ' '))
-
-
+"""
+MD subset for use for enchancing items descriptions
+"""
 MD_SUBSET_FORBID_SYNTAX = (
     # References are evil
     'reference', 'reference', 'image_reference', 'short_reference',

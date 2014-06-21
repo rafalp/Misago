@@ -1,127 +1,67 @@
 # -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+import django.utils.timezone
+import django.db.models.deletion
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'User'
-        db.create_table(u'users_user', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('password', self.gf('django.db.models.fields.CharField')(max_length=128)),
-            ('last_login', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-            ('is_superuser', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('username', self.gf('django.db.models.fields.CharField')(max_length=30)),
-            ('username_slug', self.gf('django.db.models.fields.CharField')(unique=True, max_length=30)),
-            ('email', self.gf('django.db.models.fields.EmailField')(max_length=255, db_index=True)),
-            ('email_hash', self.gf('django.db.models.fields.CharField')(unique=True, max_length=32)),
-            ('joined_on', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-            ('rank', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.Rank'], on_delete=models.PROTECT)),
-            ('is_staff', self.gf('django.db.models.fields.BooleanField')(default=False, db_index=True)),
-        ))
-        db.send_create_signal('users', ['User'])
+    dependencies = [
+        ('auth', '0002_auto_20140620_2207'),
+        ('misago_acl', '0001_initial'),
+    ]
 
-        # Adding M2M table for field groups on 'User'
-        m2m_table_name = db.shorten_name(u'users_user_groups')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('user', models.ForeignKey(orm['users.user'], null=False)),
-            ('group', models.ForeignKey(orm[u'auth.group'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['user_id', 'group_id'])
-
-        # Adding M2M table for field user_permissions on 'User'
-        m2m_table_name = db.shorten_name(u'users_user_user_permissions')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('user', models.ForeignKey(orm['users.user'], null=False)),
-            ('permission', models.ForeignKey(orm[u'auth.permission'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['user_id', 'permission_id'])
-
-        # Adding model 'Rank'
-        db.create_table(u'users_rank', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('slug', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('style', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
-            ('is_default', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('is_tab', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('is_on_index', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('order', self.gf('django.db.models.fields.IntegerField')(default=0)),
-        ))
-        db.send_create_signal('users', ['Rank'])
-
-
-    def backwards(self, orm):
-        # Deleting model 'User'
-        db.delete_table(u'users_user')
-
-        # Removing M2M table for field groups on 'User'
-        db.delete_table(db.shorten_name(u'users_user_groups'))
-
-        # Removing M2M table for field user_permissions on 'User'
-        db.delete_table(db.shorten_name(u'users_user_user_permissions'))
-
-        # Deleting model 'Rank'
-        db.delete_table(u'users_rank')
-
-
-    models = {
-        u'auth.group': {
-            'Meta': {'object_name': 'Group'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
-        },
-        u'auth.permission': {
-            'Meta': {'ordering': "(u'content_type__app_label', u'content_type__model', u'codename')", 'unique_together': "((u'content_type', u'codename'),)", 'object_name': 'Permission'},
-            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        u'contenttypes.contenttype': {
-            'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
-            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        'users.rank': {
-            'Meta': {'object_name': 'Rank'},
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_default': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_on_index': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_tab': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'order': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'slug': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'style': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'})
-        },
-        'users.user': {
-            'Meta': {'object_name': 'User'},
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '255', 'db_index': 'True'}),
-            'email_hash': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '32'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
-            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'joined_on': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'rank': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['users.Rank']", 'on_delete': 'models.PROTECT'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
-            'username': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'username_slug': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        }
-    }
-
-    complete_apps = ['users']
+    operations = [
+        migrations.CreateModel(
+            name='User',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('password', models.CharField(max_length=128, verbose_name='password')),
+                ('last_login', models.DateTimeField(default=django.utils.timezone.now, verbose_name='last login')),
+                ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
+                ('username', models.CharField(max_length=30)),
+                ('username_slug', models.CharField(unique=True, max_length=30)),
+                ('email', models.EmailField(max_length=255, db_index=True)),
+                ('email_hash', models.CharField(unique=True, max_length=32)),
+                ('joined_on', models.DateTimeField(default=django.utils.timezone.now, verbose_name='joined on')),
+                ('title', models.CharField(max_length=255, null=True, blank=True)),
+                ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into admin sites.', db_index=True, verbose_name='staff status')),
+                ('acl_key', models.CharField(max_length=12, null=True, blank=True)),
+                ('groups', models.ManyToManyField(to='auth.Group', verbose_name='groups', blank=True)),
+                ('roles', models.ManyToManyField(to='misago_acl.Role')),
+                ('user_permissions', models.ManyToManyField(to='auth.Permission', verbose_name='user permissions', blank=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Rank',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=255)),
+                ('slug', models.CharField(max_length=255)),
+                ('description', models.TextField(null=True, blank=True)),
+                ('title', models.CharField(max_length=255, null=True, blank=True)),
+                ('css_class', models.CharField(max_length=255, null=True, blank=True)),
+                ('is_default', models.BooleanField(default=False)),
+                ('is_tab', models.BooleanField(default=False)),
+                ('is_on_index', models.BooleanField(default=False)),
+                ('order', models.IntegerField(default=0)),
+                ('roles', models.ManyToManyField(to='misago_acl.Role', null=True, blank=True)),
+            ],
+            options={
+                'get_latest_by': b'order',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='user',
+            name='rank',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to_field='id', blank=True, to='misago_users.Rank', null=True),
+            preserve_default=True,
+        ),
+    ]

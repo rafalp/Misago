@@ -12,7 +12,7 @@ class PermissionsForm(forms.Form):
         label=_("Allowed username changes number"),
         min_value=0,
         initial=1)
-    changes_expire = forms.IntegerField(
+    name_changes_expire = forms.IntegerField(
         label=_("Don't count username changes older than"),
         help_text=_("Number of days since name change that makes that change no longer count to limit. Enter zero to make all changes count."),
         min_value=0,
@@ -29,7 +29,7 @@ class PermissionsForm(forms.Form):
 
 
 def change_permissions_form(role):
-    if isinstance(role, Role):
+    if isinstance(role, Role) and role.special_role != 'anonymous':
         return PermissionsForm
     else:
         return None

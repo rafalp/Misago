@@ -6,7 +6,7 @@ from misago.core.utils import slugify
 
 
 class RankManager(models.Manager):
-    def default(self):
+    def get_default(self):
         return self.get(is_default=True)
 
     def make_rank_default(self, rank):

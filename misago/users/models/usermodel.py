@@ -1,7 +1,7 @@
 from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
                                         UserManager as BaseUserManager,
                                         AnonymousUser as DjangoAnonymousUser)
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.acl import get_user_acl
@@ -16,35 +16,45 @@ from misago.users.validators import (validate_email, validate_password,
 
 class UserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError(_("User must have an email address."))
-        if not password:
-            raise ValueError(_("User must have a password."))
+        with transaction.atomic():
+            if not email:
+                raise ValueError(_("User must have an email address."))
+            if not password:
+                raise ValueError(_("User must have a password."))
 
-        validate_username(username)
-        validate_email(email)
-        validate_password(password)
+            validate_username(username)
+            validate_email(email)
+            validate_password(password)
 
-        now = timezone.now()
-        user = self.model(is_staff=False, is_superuser=False, last_login=now,
-                          joined_on=now, **extra_fields)
+            now = timezone.now()
+            user = self.model(is_staff=False, is_superuser=False, last_login=now,
+                              joined_on=now, **extra_fields)
 
-        user.set_username(username)
-        user.set_email(email)
-        user.set_password(password)
+            user.set_username(username)
+            user.set_email(email)
+            user.set_password(password)
 
-        if not 'rank' in extra_fields:
-            user.rank = Rank.objects.default()
+            if not 'rank' in extra_fields:
+                user.rank = Rank.objects.get_default()
 
-        user.save(using=self._db)
-        return user
+            user.save(using=self._db)
+
+            authenticated_role = Role.objects.get(special_role='authenticated')
+            if authenticated_role not in user.roles.all():
+                user.roles.add(authenticated_role)
+
+            user.update_acl_key()
+            user.save(update_fields=['acl_key'])
+
+            return user
 
     def create_superuser(self, username, email, password):
-        user = self.create_user(username, email, password=password)
-        user.is_staff = True
-        user.is_superuser = True
-        user.save(update_fields=['is_staff', 'is_superuser'], using=self._db)
-        return user
+        with transaction.atomic():
+            user = self.create_user(username, email, password=password)
+            user.is_staff = True
+            user.is_superuser = True
+            user.save(update_fields=['is_staff', 'is_superuser'], using=self._db)
+            return user
 
     def get_by_username(self, username):
         return self.get(username_slug=slugify(username))
