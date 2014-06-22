@@ -84,7 +84,7 @@ def create_default_roles(apps, schema_editor):
         })
     role.save()
 
-    role = Role(name=_("Spam destroyer"))
+    role = Role(name=_("Spam accounts destroyer"))
     pickle_permissions(role,
         {
             # destroy users perms
