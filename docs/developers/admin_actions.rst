@@ -164,18 +164,25 @@ It's required to return dict that will be then used as one of arguments to call 
 Registering in Misago Admin
 ===========================
 
-Misago Admin Site is just an hierarchy of links defined in apps and registered within ``misago.admin.site`` object.
+Misago Admin Site is just an hierarchy of page, made of two parts: site that contains tree of links relations and ``urlpatterns`` that is included in ``misago:admin`` namespace.
+
+When Misago is started, it scans registered apps for ``admin`` module, just like original Django admin does. If module is found, Misago sees if it defines ``MisagoAdminExtension`` class. If such class is found, its instantiated with no arguments, and two of its methods are called:
+
+
+.. function:: register_urlpatterns(self, urlpatterns)
+
+This function allows apps to register new urlpatterns under ``misago:admin`` namespace.
+
+
+.. function:: register_navigation_nodes(self, site)
+
+This function allows apps to register new links in admin site navigation.
 
 
 Registering urls under ``misago:admin`` namespace
 -------------------------------------------------
 
-Your admin links will live under ``misago:admin`` namespace, which means they have to be registered in it beforehand. Similiarly to Django, Misago uses small discovery routine which discovers modules that are expected to register their urls in admin.
-
-.. warning::
-   Currently only way to register urls in admin site without ingerention into ``misago.admin`` app is to define your patterns in ``models.py`` . Starting with Django 1.7, you will have to make decision where to locate code that will register your links in Misago admin and call it within your app ``apps.py`` initializer.
-
-Admin links are stored within instance of special object :py:class:`misago.admin.urlpatterns.URLPatterns` avaialable under ``misago.admin.urlpatterns``. This object exposes two methods as public api:
+Admin links are stored within instance of special object :py:class:`misago.admin.urlpatterns.URLPatterns` available as ``urlpatterns`` argument passed to ``register_urlpatterns`` method. This object exposes two methods as public api:
 
 
 .. function:: namespace(path, namespace, parent=None)
@@ -199,9 +206,9 @@ Registers urlpatterns under defined namespace. Expects first argument to be name
 Registering urls in navigation
 ------------------------------
 
-Your urls have to be discoverable by your users. Easiest way is to do this is to display primary link to your admin in admin site navigation.
+Your urls have to be discoverable by your users. Easiest way is to do this is to display primary link to your admin action in admin site navigation.
 
-This navigation is controlled by instance of the :py:class:`misago.admin.hierarchy.AdminHierarchyBuilder` class available under ``misago.admin.site`` path. This class has plenty of functions, but it's public api consists of one method:
+This navigation is controlled by instance of the :py:class:`misago.admin.hierarchy.AdminHierarchyBuilder` class available as ``site`` argument passed to ``register_navigation_nodes`` method of your ``MisagoAdminExtension`` class. It has plenty of functions, but it's public api consists of one method:
 
 
 .. function:: add_node(parent='misago:admin', after=None, before=None,

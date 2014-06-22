@@ -6,7 +6,6 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.acl import get_user_acl
 from misago.acl.models import Role
-from misago.admin import site
 from misago.core.utils import slugify
 from misago.users.models import Rank
 from misago.users.utils import hash_email
@@ -199,20 +198,3 @@ class AnonymousUser(DjangoAnonymousUser):
 
     def update_acl_key(self):
         raise TypeError("Can't update ACL key on anonymous users")
-
-
-"""register model in misago admin"""
-site.add_node(
-    parent='misago:admin',
-    after='misago:admin:index',
-    namespace='misago:admin:users',
-    link='misago:admin:users:accounts:index',
-    name=_("Users"),
-    icon='fa fa-users')
-
-site.add_node(
-    parent='misago:admin:users',
-    namespace='misago:admin:users:accounts',
-    link='misago:admin:users:accounts:index',
-    name=_("User Accounts"),
-    icon='fa fa-users')

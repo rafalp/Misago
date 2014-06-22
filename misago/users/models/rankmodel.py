@@ -1,6 +1,4 @@
 from django.db import models, transaction
-from django.utils.translation import ugettext_lazy as _
-from misago.admin import site
 from misago.acl import version as acl_version
 from misago.core.utils import slugify
 
@@ -34,7 +32,7 @@ class Rank(models.Model):
         get_latest_by = 'order'
 
     def __unicode__(self):
-        return unicode(_(self.name))
+        return self.name
 
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -56,13 +54,3 @@ class Rank(models.Model):
             self.order = Rank.objects.latest('order').order + 1
         except Rank.DoesNotExist:
             self.order = 0
-
-
-"""register model in misago admin"""
-site.add_node(
-    parent='misago:admin:users',
-    namespace='misago:admin:users:ranks',
-    link='misago:admin:users:ranks:index',
-    name=_("Ranks"),
-    after='misago:admin:users:accounts:index',
-    icon='fa fa-graduation-cap')

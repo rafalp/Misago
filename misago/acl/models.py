@@ -1,6 +1,4 @@
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from misago.admin import site
 from misago.acl import version as acl_version
 import base64
 try:
@@ -18,7 +16,7 @@ class BaseRole(models.Model):
         abstract = True
 
     def __unicode__(self):
-        return unicode(_(self.name))
+        return self.name
 
     def save(self, *args, **kwargs):
         if self.pk:
@@ -50,20 +48,3 @@ class BaseRole(models.Model):
 
 class Role(BaseRole):
     pass
-
-
-"""register models in misago admin"""
-site.add_node(
-    parent='misago:admin',
-    after='misago:admin:users:accounts:index',
-    namespace='misago:admin:permissions',
-    link='misago:admin:permissions:users:index',
-    name=_("Permissions"),
-    icon='fa fa-adjust')
-
-site.add_node(
-    parent='misago:admin:permissions',
-    namespace='misago:admin:permissions:users',
-    link='misago:admin:permissions:users:index',
-    name=_("User roles"),
-    icon='fa fa-th-large')

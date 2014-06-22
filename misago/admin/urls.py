@@ -1,7 +1,6 @@
 import importlib
 from django.conf import settings
 from django.conf.urls import patterns, include, url
-from django.core.exceptions import ImproperlyConfigured
 from misago import admin
 
 
@@ -14,11 +13,6 @@ urlpatterns = patterns('misago.admin.views',
 )
 
 
-# Import admin urls
-import misago.conf.adminurls
-import misago.acl.adminurls
-import misago.forums.urls
-import misago.users.urls.admin
-
-# Register discovered patterns
+# Discover admin and register patterns
+admin.discover_misago_admin()
 urlpatterns += admin.urlpatterns()

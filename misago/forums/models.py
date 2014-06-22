@@ -4,7 +4,6 @@ from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 from misago.acl import version as acl_version
 from misago.acl.models import BaseRole
-from misago.admin import site
 from misago.core.utils import subset_markdown, slugify
 
 
@@ -89,28 +88,3 @@ class RoleForumACL(models.Model):
     role = models.ForeignKey('misago_acl.Role', related_name='forums_acls')
     forum = models.ForeignKey('Forum')
     forum_role = models.ForeignKey(ForumRole)
-
-
-"""register model in misago admin"""
-site.add_node(
-    parent='misago:admin',
-    before='misago:admin:permissions:users:index',
-    namespace='misago:admin:forums',
-    link='misago:admin:forums:nodes:index',
-    name=_("Forums"),
-    icon='fa fa-comments')
-
-site.add_node(
-    parent='misago:admin:forums',
-    namespace='misago:admin:forums:nodes',
-    link='misago:admin:forums:nodes:index',
-    name=_("Forums Hierarchy"),
-    icon='fa fa-sitemap')
-
-site.add_node(
-    parent='misago:admin:permissions',
-    namespace='misago:admin:permissions:forums',
-    after='misago:admin:permissions:users:index',
-    link='misago:admin:permissions:forums:index',
-    name=_("Forum roles"),
-    icon='fa fa-comments-o')

@@ -1,6 +1,5 @@
 import base64
 from django.db import models
-from misago.admin import site as admin_site
 from misago.conf import hydrators
 try:
     import cPickle as pickle
@@ -94,20 +93,3 @@ class Setting(models.Model):
         if new_extra:
             pickled_extra = pickle.dumps(new_extra, pickle.HIGHEST_PROTOCOL)
             self.pickled_field_extra = base64.encodestring(pickled_extra)
-
-
-from django.utils.translation import ugettext_lazy as _
-
-admin_site.add_node(
-    parent='misago:admin',
-    link='misago:admin:index',
-    icon='fa fa-home',
-    name=_("Home"),
-    )
-
-admin_site.add_node(
-    parent='misago:admin',
-    link='misago:admin:settings:index',
-    icon='fa fa-gears',
-    name=_("Settings"),
-    )
