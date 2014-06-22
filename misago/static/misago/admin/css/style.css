@@ -6443,6 +6443,7 @@ body {
 .page-header h1 .main,
 .page-header h1 .sub {
   float: left;
+  font-weight: normal;
 }
 .page-header h1 .main a {
   color: #444444;
