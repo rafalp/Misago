@@ -32,6 +32,18 @@ class UserBaseForm(forms.ModelForm):
         validate_password(data)
         return data
 
+    def clean_roles(self):
+        data = self.cleaned_data['roles']
+
+        for role in data:
+            if role.special_role == 'authenticated':
+                break
+        else:
+            message = _('All registered members must have "Member" role.')
+            raise forms.ValidationError(message)
+
+        return data
+
 
 class NewUserForm(UserBaseForm):
     new_password = forms.CharField(
@@ -70,14 +82,12 @@ def UserFormFactory(FormType, instance):
             empty_label=_("No rank"))
 
     roles = Role.objects.order_by('name')
-    if roles.exists():
-        extra_fields['roles'] = forms.ModelMultipleChoiceField(
-            label=_("Roles"),
-            help_text=_("Individual roles of this user."),
-            queryset=roles,
-            initial=instance.roles.all() if instance.pk else None,
-            required=False,
-            widget=forms.CheckboxSelectMultiple)
+    extra_fields['roles'] = forms.ModelMultipleChoiceField(
+        label=_("Roles"),
+        help_text=_("Individual roles of this user."),
+        queryset=roles,
+        initial=instance.roles.all() if instance.pk else None,
+        widget=forms.CheckboxSelectMultiple)
 
     return type('UserFormFinal', (FormType,), extra_fields)
 
