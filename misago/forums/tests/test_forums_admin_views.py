@@ -4,8 +4,6 @@ from misago.forums.models import Forum
 
 
 class ForumAdminViewsTests(AdminTestCase):
-    serialized_rollback = True
-
     def test_link_registered(self):
         """admin nav contains forums link"""
         response = self.client.get(reverse('misago:admin:forums:nodes:index'))
@@ -187,8 +185,6 @@ class ForumAdminViewsTests(AdminTestCase):
 
 
 class ForumAdminDeleteViewTests(AdminTestCase):
-    serialized_rollback = True
-
     def setUp(self):
         super(ForumAdminDeleteViewTests, self).setUp()
         self.root = Forum.objects.root_category()

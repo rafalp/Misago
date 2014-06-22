@@ -3,8 +3,6 @@ from misago.acl import algebra
 
 
 class ComparisionsTests(TestCase):
-    serialized_rollback = True
-
     def test_greater(self):
         """greater permission wins test"""
 
@@ -34,8 +32,6 @@ class ComparisionsTests(TestCase):
 
 
 class SumACLTests(TestCase):
-    serialized_rollback = True
-
     def test_sum_acls(self):
         """acls are summed"""
 

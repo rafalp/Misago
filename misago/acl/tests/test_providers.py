@@ -5,8 +5,6 @@ from misago.acl.providers import PermissionProviders
 
 
 class PermissionProvidersTests(TestCase):
-    serialized_rollback = True
-
     def test_initialization(self):
         """providers manager is lazily initialized"""
         providers = PermissionProviders()

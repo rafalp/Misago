@@ -4,8 +4,6 @@ from misago.core.validators import validate_sluggable
 
 
 class ValidateSluggableTests(TestCase):
-    serialized_rollback = True
-
     def test_error_messages_set(self):
         """custom error messages are set and used"""
         error_short = "I'm short custom error!"

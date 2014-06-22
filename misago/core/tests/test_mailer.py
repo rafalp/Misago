@@ -5,7 +5,6 @@ from django.test import TestCase
 
 
 class MisagoFormsTests(TestCase):
-    serialized_rollback = True
     urls = 'misago.core.testproject.urls'
 
     def test_mail_user(self):

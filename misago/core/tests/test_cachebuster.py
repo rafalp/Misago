@@ -5,8 +5,6 @@ from misago.core.models import CacheVersion
 
 
 class CacheBusterTests(TestCase):
-    serialized_rollback = True
-
     def test_register_unregister_cache(self):
         """register and unregister adds/removes cache"""
         test_cache_name = 'eric_the_fish'
@@ -22,8 +20,6 @@ class CacheBusterTests(TestCase):
 
 
 class CacheBusterCacheTests(TestCase):
-    serialized_rollback = True
-
     def setUp(self):
         self.cache_name = 'eric_the_fish'
         cachebuster.register(self.cache_name)

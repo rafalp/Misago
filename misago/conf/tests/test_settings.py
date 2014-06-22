@@ -8,8 +8,6 @@ from misago.conf.models import SettingsGroup, Setting
 
 
 class DBSettingsTests(TestCase):
-    serialized_rollback = True
-
     def tearDown(self):
         threadstore.clear()
 
@@ -22,8 +20,6 @@ class DBSettingsTests(TestCase):
 
 
 class GatewaySettingsTests(TestCase):
-    serialized_rollback = True
-
     def tearDown(self):
         threadstore.clear()
 

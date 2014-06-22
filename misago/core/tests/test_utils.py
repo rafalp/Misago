@@ -17,8 +17,6 @@ INVALID_PATHS = (
 
 
 class IsRequestToMisagoTests(TestCase):
-    serialized_rollback = True
-
     def test_is_request_to_misago(self):
         """
         is_request_to_misago correctly detects requests directed at Misago
@@ -41,8 +39,6 @@ class IsRequestToMisagoTests(TestCase):
 
 
 class SlugifyTests(TestCase):
-    serialized_rollback = True
-
     def test_valid_slugify_output(self):
         """Misago's slugify correcly slugifies string"""
         test_cases = (

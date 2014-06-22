@@ -4,8 +4,6 @@ from misago.users.models import User
 
 
 class UserManagerTests(TestCase):
-    serialized_rollback = True
-
     def test_create_user(self):
         """create_user created new user account successfully"""
         user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
@@ -52,8 +50,6 @@ class UserManagerTests(TestCase):
 
 
 class UserModelTests(TestCase):
-    serialized_rollback = True
-
     def test_set_username(self):
         """set_username sets username and slug on model"""
         user = User()

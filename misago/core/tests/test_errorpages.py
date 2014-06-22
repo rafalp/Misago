@@ -6,8 +6,6 @@ from misago.core.testproject.views import (mock_custom_403_error_page,
 
 
 class CSRFErrorViewTests(TestCase):
-    serialized_rollback = True
-
     def test_csrf_failure(self):
         """csrf_failure error page has no show-stoppers"""
         csrf_client = Client(enforce_csrf_checks=True)
@@ -18,7 +16,6 @@ class CSRFErrorViewTests(TestCase):
 
 
 class ErrorPageViewsTests(TestCase):
-    serialized_rollback = True
     urls = 'misago.core.testproject.urls'
 
     def test_permission_denied_returns_403(self):
@@ -35,7 +32,6 @@ class ErrorPageViewsTests(TestCase):
 
 
 class CustomErrorPagesTests(TestCase):
-    serialized_rollback = True
     urls = 'misago.core.testproject.urlswitherrorhandlers'
 
     def setUp(self):

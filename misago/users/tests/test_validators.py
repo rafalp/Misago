@@ -12,8 +12,6 @@ from misago.users.validators import (validate_email, validate_email_available,
 
 
 class ValidateEmailAvailableTests(TestCase):
-    serialized_rollback = True
-
     def setUp(self):
         User = get_user_model()
         self.test_user = User.objects.create_user('EricTheFish',
@@ -31,8 +29,6 @@ class ValidateEmailAvailableTests(TestCase):
 
 
 class ValidateEmailTests(TestCase):
-    serialized_rollback = True
-
     def test_validate_email(self):
         """validate_email has no crashes"""
         validate_email('bob@boberson.com')
@@ -41,8 +37,6 @@ class ValidateEmailTests(TestCase):
 
 
 class ValidatePasswordTests(TestCase):
-    serialized_rollback = True
-
     def test_valid_password(self):
         """validate_password allows valid password"""
         validate_password('A' * (settings.password_length_min + 1))
@@ -54,8 +48,6 @@ class ValidatePasswordTests(TestCase):
 
 
 class ValidateUsernameTests(TestCase):
-    serialized_rollback = True
-
     def test_validate_username(self):
         """validate_username has no crashes"""
         validate_username('LeBob')
@@ -64,8 +56,6 @@ class ValidateUsernameTests(TestCase):
 
 
 class ValidateUsernameAvailableTests(TestCase):
-    serialized_rollback = True
-
     def setUp(self):
         User = get_user_model()
         self.test_user = User.objects.create_user('EricTheFish',
@@ -83,8 +73,6 @@ class ValidateUsernameAvailableTests(TestCase):
 
 
 class ValidateUsernameContentTests(TestCase):
-    serialized_rollback = True
-
     def test_valid_name(self):
         """validate_username_content allows valid names"""
         validate_username_content('123')
@@ -106,8 +94,6 @@ class ValidateUsernameContentTests(TestCase):
 
 
 class ValidateUsernameLengthTests(TestCase):
-    serialized_rollback = True
-
     def test_valid_name(self):
         """validate_username_length allows valid names"""
         validate_username_length('a' * settings.username_length_min)

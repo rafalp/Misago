@@ -4,8 +4,6 @@ from misago.admin.testutils import AdminTestCase
 
 
 class UserAdminViewsTests(AdminTestCase):
-    serialized_rollback = True
-
     def test_link_registered(self):
         """admin index view contains users link"""
         response = self.client.get(reverse('misago:admin:index'))

@@ -4,8 +4,6 @@ from django.test import TestCase
 
 
 class LoginViewTests(TestCase):
-    serialized_rollback = True
-
     def test_view_get_returns_200(self):
         """login view returns 200 on GET"""
         response = self.client.get(reverse('misago:login'))

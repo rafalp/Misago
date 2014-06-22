@@ -5,8 +5,6 @@ from misago.conf.models import SettingsGroup, Setting
 
 
 class MigrationUtilsTests(TestCase):
-    serialized_rollback = True
-
     def test_with_conf_models(self):
         """with_conf_models builds correct dict of models"""
         models = {
@@ -29,8 +27,6 @@ class MigrationUtilsTests(TestCase):
 
 
 class DBConfMigrationUtilsTests(TestCase):
-    serialized_rollback = True
-
     def setUp(self):
         self.orm = {
             'conf.SettingsGroup': SettingsGroup,

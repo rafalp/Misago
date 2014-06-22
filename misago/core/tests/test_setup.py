@@ -9,8 +9,6 @@ class MockParser(object):
 
 
 class SetupTests(TestCase):
-    serialized_rollback = True
-
     def test_validate_project_name(self):
         """validate_project_name identifies incorrect names correctly"""
         mock_parser = MockParser()

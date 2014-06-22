@@ -6,8 +6,6 @@ from misago.core import threadstore
 
 
 class ThreadStoreTests(TestCase):
-    serialized_rollback = True
-
     def setUp(self):
         threadstore.clear()
 
@@ -29,8 +27,6 @@ class ThreadStoreTests(TestCase):
 
 
 class ThreadStoreMiddlewareTests(TestCase):
-    serialized_rollback = True
-
     def setUp(self):
         self.request = RequestFactory().get(reverse('misago:index'))
 

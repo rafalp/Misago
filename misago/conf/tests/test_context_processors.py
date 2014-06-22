@@ -9,8 +9,6 @@ class MockRequest(object):
 
 
 class ContextProcessorTests(TestCase):
-    serialized_rollback = True
-
     def tearDown(self):
         threadstore.clear()
 

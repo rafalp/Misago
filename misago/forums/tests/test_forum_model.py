@@ -4,8 +4,6 @@ from misago.forums.models import Forum
 
 
 class ForumManagerTests(TestCase):
-    serialized_rollback = True
-
     def test_private_threads(self):
         """private_threads returns private threads forum"""
         forum = Forum.objects.private_threads()

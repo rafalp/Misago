@@ -5,8 +5,6 @@ from misago.core.models import CacheVersion
 
 
 class LazyTranslationStringTests(TestCase):
-    serialized_rollback = True
-
     def setUp(self):
         translation.activate('de')
 
@@ -21,8 +19,6 @@ class LazyTranslationStringTests(TestCase):
 
 
 class OriginalMessageTests(TestCase):
-    serialized_rollback = True
-
     def test_original_message(self):
         """original_message returns untranslated message for misago messages"""
         string = migrationutils.ugettext_lazy('content type')
@@ -33,8 +29,6 @@ class OriginalMessageTests(TestCase):
 
 
 class CacheBusterUtilsTests(TestCase):
-    serialized_rollback = True
-
     def setUp(self):
         self.orm = {
             'core.CacheVersion': CacheVersion,

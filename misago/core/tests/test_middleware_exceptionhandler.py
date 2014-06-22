@@ -6,8 +6,6 @@ from misago.core.middleware.exceptionhandler import ExceptionHandlerMiddleware
 
 
 class ExceptionHandlerMiddlewareTests(TestCase):
-    serialized_rollback = True
-
     def setUp(self):
         self.request = RequestFactory().get(reverse('misago:index'))
 
