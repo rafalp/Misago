@@ -2,11 +2,11 @@ from django.core.urlresolvers import reverse
 
 
 class Node(object):
-    def __init__(self, link=None, name=None, icon=None):
+    def __init__(self, name=None, icon=None, link=None):
         self.parent = None
-        self.link = link
         self.name = name
         self.icon = icon
+        self.link = link
         self._children = []
         self._children_dict = {}
 
@@ -28,10 +28,10 @@ class Node(object):
         for children in self._children:
             childrens.append(
                 {
-                    'link': reverse(children.link),
-                    'namespace': children.namespace,
                     'name': children.name,
                     'icon': children.icon,
+                    'link': reverse(children.link),
+                    'namespace': children.namespace,
                 })
         return childrens
 
@@ -132,8 +132,8 @@ class AdminHierarchyBuilder(object):
 
         return nodes_dict
 
-    def add_node(self, parent='misago:admin', after=None, before=None,
-                 namespace=None, link=None, name=None, icon=None):
+    def add_node(self, name=None, icon=None, parent='misago:admin', after=None,
+                 before=None, namespace=None, link=None):
         if self.nodes_dict:
             raise ValueError("Misago admin site has already been "
                              "initialized. You can't add new nodes to it.")
@@ -143,13 +143,13 @@ class AdminHierarchyBuilder(object):
 
         self.nodes_record.append(
             {
+                'name': name,
+                'icon': icon,
                 'parent': parent,
                 'namespace': namespace,
                 'after': after,
                 'before': before,
                 'link': link,
-                'name': name,
-                'icon': icon,
             })
 
     def visible_branches(self, request):

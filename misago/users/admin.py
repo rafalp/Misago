@@ -33,25 +33,22 @@ class MisagoAdminExtension(object):
         )
 
     def register_navigation_nodes(self, site):
-        site.add_node(
-            parent='misago:admin',
-            after='misago:admin:index',
-            namespace='misago:admin:users',
-            link='misago:admin:users:accounts:index',
-            name=_("Users"),
-            icon='fa fa-users')
+        site.add_node(name=_("Users"),
+                      icon='fa fa-users',
+                      parent='misago:admin',
+                      after='misago:admin:index',
+                      namespace='misago:admin:users',
+                      link='misago:admin:users:accounts:index')
 
-        site.add_node(
-            parent='misago:admin:users',
-            namespace='misago:admin:users:accounts',
-            link='misago:admin:users:accounts:index',
-            name=_("User Accounts"),
-            icon='fa fa-users')
+        site.add_node(name=_("User Accounts"),
+                      icon='fa fa-users',
+                      parent='misago:admin:users',
+                      namespace='misago:admin:users:accounts',
+                      link='misago:admin:users:accounts:index')
 
-        site.add_node(
-            parent='misago:admin:users',
-            namespace='misago:admin:users:ranks',
-            link='misago:admin:users:ranks:index',
-            name=_("Ranks"),
-            after='misago:admin:users:accounts:index',
-            icon='fa fa-graduation-cap')
+        site.add_node(name=_("Ranks"),
+                      icon='fa fa-graduation-cap',
+                      parent='misago:admin:users',
+                      after='misago:admin:users:accounts:index',
+                      namespace='misago:admin:users:ranks',
+                      link='misago:admin:users:ranks:index')

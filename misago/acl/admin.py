@@ -18,17 +18,15 @@ class MisagoAdminExtension(object):
         )
 
     def register_navigation_nodes(self, site):
-        site.add_node(
-            parent='misago:admin',
-            after='misago:admin:users:accounts:index',
-            namespace='misago:admin:permissions',
-            link='misago:admin:permissions:users:index',
-            name=_("Permissions"),
-            icon='fa fa-adjust')
+        site.add_node(name=_("Permissions"),
+                      icon='fa fa-adjust',
+                      parent='misago:admin',
+                      after='misago:admin:users:accounts:index',
+                      namespace='misago:admin:permissions',
+                      link='misago:admin:permissions:users:index')
 
-        site.add_node(
-            parent='misago:admin:permissions',
-            namespace='misago:admin:permissions:users',
-            link='misago:admin:permissions:users:index',
-            name=_("User roles"),
-            icon='fa fa-th-large')
+        site.add_node(name=_("User roles"),
+                      icon='fa fa-th-large',
+                      parent='misago:admin:permissions',
+                      namespace='misago:admin:permissions:users',
+                      link='misago:admin:permissions:users:index')

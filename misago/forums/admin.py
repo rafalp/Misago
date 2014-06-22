@@ -39,26 +39,22 @@ class MisagoAdminExtension(object):
         )
 
     def register_navigation_nodes(self, site):
-        site.add_node(
-            parent='misago:admin',
-            before='misago:admin:permissions:users:index',
-            namespace='misago:admin:forums',
-            link='misago:admin:forums:nodes:index',
-            name=_("Forums"),
-            icon='fa fa-comments')
+        site.add_node(name=_("Forums"),
+                      icon='fa fa-comments',
+                      parent='misago:admin',
+                      before='misago:admin:permissions:users:index',
+                      namespace='misago:admin:forums',
+                      link='misago:admin:forums:nodes:index')
 
-        site.add_node(
-            parent='misago:admin:forums',
-            namespace='misago:admin:forums:nodes',
-            link='misago:admin:forums:nodes:index',
-            name=_("Forums Hierarchy"),
-            icon='fa fa-sitemap')
+        site.add_node(name=_("Forums Hierarchy"),
+                      icon='fa fa-sitemap',
+                      parent='misago:admin:forums',
+                      namespace='misago:admin:forums:nodes',
+                      link='misago:admin:forums:nodes:index')
 
-        site.add_node(
-            parent='misago:admin:permissions',
-            namespace='misago:admin:permissions:forums',
-            after='misago:admin:permissions:users:index',
-            link='misago:admin:permissions:forums:index',
-            name=_("Forum roles"),
-            icon='fa fa-comments-o')
-
+        site.add_node(name=_("Forum roles"),
+                      icon='fa fa-comments-o',
+                      parent='misago:admin:permissions',
+                      after='misago:admin:permissions:users:index',
+                      namespace='misago:admin:permissions:forums',
+                      link='misago:admin:permissions:forums:index')

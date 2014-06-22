@@ -12,8 +12,7 @@ class MisagoAdminExtension(object):
         )
 
     def register_navigation_nodes(self, site):
-        site.add_node(
-            parent='misago:admin',
-            link='misago:admin:settings:index',
-            name=_("Settings"),
-            icon='fa fa-gears')
+        site.add_node(name=_("Settings"),
+                      icon='fa fa-gears',
+                      parent='misago:admin',
+                      link='misago:admin:settings:index')
