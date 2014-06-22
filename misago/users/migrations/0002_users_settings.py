@@ -12,6 +12,7 @@ def create_users_settings_group(apps, schema_editor):
         {
             'key': 'users',
             'name': _("Users"),
+            'description': _("Those settings control user accounts default behaviour and features availability."),
             'settings': (
                 {
                     'setting': 'account_activation',
