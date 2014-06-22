@@ -211,8 +211,7 @@ Your urls have to be discoverable by your users. Easiest way is to do this is to
 This navigation is controlled by instance of the :py:class:`misago.admin.hierarchy.AdminHierarchyBuilder` class available as ``site`` argument passed to ``register_navigation_nodes`` method of your ``MisagoAdminExtension`` class. It has plenty of functions, but it's public api consists of one method:
 
 
-.. function:: add_node(parent='misago:admin', after=None, before=None,
-                 namespace=None, link=None, name=None, icon=None)
+.. function:: add_node(name=None, icon=None, parent='misago:admin', after=None, before=None, namespace=None, link=None)
 
 
 This method accepts following named arguments:
