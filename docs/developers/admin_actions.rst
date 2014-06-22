@@ -8,7 +8,7 @@ Misago Admin vs. Django Admin
 
 Misago brings its own admin site just like Django `does <https://docs.djangoproject.com/en/1.6/#the-admin>`_. This means you have to make a decision which one your app will use for administration.
 
-If you intend to be sole user of your app, Django admin will propably be faster to get going. However if you plan for your app to be available to wider audience, its good for your admin interface to be part of Misago admin site. This will require you to write more code than intended, but will give your users more consistent experience and, in case for some languages, save them of quirkyness that comes with django admin automatic messages.
+If you intend to be sole user of your app, Django admin will propably be faster to get going. However if you plan for your app to be available to wider audience, its good for your admin interface to be part of Misago admin site. This will require you to write more code than in case you've went Django way, but will give your users more consistent experience and, in case for some languages, save them of quirkyness that comes with Django admin automatically created messages.
 
 
 Creating Admin Views
@@ -16,7 +16,7 @@ Creating Admin Views
 
 
 Writing views
-=============
+-------------
 
 Unlike Django, Misago admin is not "automagical". This means you will not get complete admin from nowhere by just creating one file and writing 3 lines of code in it. However Misago provides set of basic classes defined in  in :py:mod:`misago.admin.views.generic` module that can offload most of burden of writing views handling items lists and forms from you.
 
@@ -164,9 +164,9 @@ It's required to return dict that will be then used as one of arguments to call 
 Registering in Misago Admin
 ===========================
 
-Misago Admin Site is just an hierarchy of page, made of two parts: site that contains tree of links relations and ``urlpatterns`` that is included in ``misago:admin`` namespace.
+Misago Admin Site is just an hierarchy of pages, made of two parts: ``site`` that contains tree of links and ``urlpatterns`` that is included in ``misago:admin`` namespace.
 
-When Misago is started, it scans registered apps for ``admin`` module, just like original Django admin does. If module is found, Misago sees if it defines ``MisagoAdminExtension`` class. If such class is found, its instantiated with no arguments, and two of its methods are called:
+When Misago is started, it scans registered apps for ``admin`` module, just like Django admin does. If module is found, Misago checks if it defines ``MisagoAdminExtension`` class. If such class is found, its instantiated with no arguments, and two of its methods are called:
 
 
 .. function:: register_urlpatterns(self, urlpatterns)
