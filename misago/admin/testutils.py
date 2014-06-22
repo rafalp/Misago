@@ -9,6 +9,8 @@ def admin_login(client, username, password):
 
 
 class AdminTestCase(TestCase):
+    serialized_rollback = True
+
     def setUp(self):
         User = get_user_model()
         User.objects.create_superuser('TestAdmin', 'admin@test.com', 'Pass.123')

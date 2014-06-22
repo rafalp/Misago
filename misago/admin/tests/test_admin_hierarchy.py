@@ -3,6 +3,8 @@ from misago.admin.hierarchy import Node
 
 
 class NodeTests(TestCase):
+    serialized_rollback = True
+
     def test_add_node(self):
         """add_node added node"""
         master = Node('misago:index', 'Apples')

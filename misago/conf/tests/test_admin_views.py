@@ -5,6 +5,7 @@ from misago.conf.models import SettingsGroup
 
 
 class AdminSettingsViewsTests(AdminTestCase):
+    serialized_rollback = True
 
     def test_link_registered(self):
         """admin index view contains settings link"""

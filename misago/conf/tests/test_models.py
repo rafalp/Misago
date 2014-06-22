@@ -3,6 +3,8 @@ from misago.conf.models import Setting
 
 
 class SettingModelTests(TestCase):
+    serialized_rollback = True
+
     def test_real_value(self):
         """setting returns real value correctyly"""
         setting_model = Setting(python_type='list', dry_value='')

@@ -4,6 +4,8 @@ from django.test import TestCase
 
 
 class RequirePostTests(TestCase):
+    serialized_rollback = True
+
     def test_require_POST_success(self):
         """require_POST decorator allowed POST request"""
         User = get_user_model()

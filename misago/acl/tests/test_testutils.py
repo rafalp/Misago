@@ -4,6 +4,8 @@ from misago.acl.testutils import fake_post_data
 
 
 class FakeTestDataTests(TestCase):
+    serialized_rollback = True
+
     def test_fake_post_data_for_role(self):
         """fake data was created for Role"""
         test_data = fake_post_data(Role(), {'can_fly': 1})

@@ -13,6 +13,8 @@ INVALID_EXCEPTIONS = (
 
 
 class IsMisagoExceptionTests(TestCase):
+    serialized_rollback = True
+
     def test_is_misago_exception_true_for_handled_exceptions(self):
         """
         exceptionhandler.is_misago_exception recognizes handled exceptions
@@ -36,6 +38,8 @@ class IsMisagoExceptionTests(TestCase):
 
 
 class GetExceptionHandlerTests(TestCase):
+    serialized_rollback = True
+
     def test_exception_handlers_list(self):
         """HANDLED_EXCEPTIONS length matches that of EXCEPTION_HANDLERS"""
         self.assertEqual(len(exceptionhandler.HANDLED_EXCEPTIONS),

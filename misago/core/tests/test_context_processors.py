@@ -15,6 +15,8 @@ class MockRequest(object):
 
 
 class SiteAddressTests(TestCase):
+    serialized_rollback = True
+
     def test_site_address_for_http(self):
         """Correct SITE_ADDRESS set for HTTP request"""
         http_somewhere_com = MockRequest(False, 'somewhere.com')

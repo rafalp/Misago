@@ -4,6 +4,8 @@ from misago.conf.models import Setting
 
 
 class HydratorsTests(TestCase):
+    serialized_rollback = True
+
     def test_hydrate_dehydrate_string(self):
         """string value is correctly hydrated and dehydrated"""
         wet_value = 'Ni!'
@@ -48,6 +50,8 @@ class HydratorsTests(TestCase):
 
 
 class HydratorsModelTests(TestCase):
+    serialized_rollback = True
+
     def test_hydrate_dehydrate_string(self):
         """string value is correctly hydrated and dehydrated in model"""
         setting = Setting(python_type='string')

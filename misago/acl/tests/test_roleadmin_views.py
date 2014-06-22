@@ -9,6 +9,8 @@ def fake_data(data_dict):
 
 
 class RoleAdminViewsTests(AdminTestCase):
+    serialized_rollback = True
+
     def test_link_registered(self):
         """admin nav contains user roles link"""
         response = self.client.get(

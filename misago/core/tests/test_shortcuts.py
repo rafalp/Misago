@@ -3,6 +3,7 @@ from django.test import TestCase
 
 
 class PaginateTests(TestCase):
+    serialized_rollback = True
     urls = 'misago.core.testproject.urls'
 
     def test_valid_page_handling(self):
@@ -32,6 +33,7 @@ class PaginateTests(TestCase):
 
 
 class ValidateSlugTests(TestCase):
+    serialized_rollback = True
     urls = 'misago.core.testproject.urls'
 
     def test_valid_slug_handling(self):

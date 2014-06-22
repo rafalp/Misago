@@ -4,6 +4,8 @@ from django.test import TestCase
 
 
 class DenyAuthenticatedTests(TestCase):
+    serialized_rollback = True
+
     def test_success(self):
         """deny_authenticated decorator allowed guest request"""
         response = self.client.get(reverse('misago:login'))
@@ -20,6 +22,8 @@ class DenyAuthenticatedTests(TestCase):
 
 
 class DenyGuestsTests(TestCase):
+    serialized_rollback = True
+
     def test_success(self):
         """deny_guests decorator allowed authenticated request"""
         User = get_user_model()

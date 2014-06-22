@@ -4,6 +4,8 @@ from misago.users.models import User
 
 
 class CreateSuperUserTests(TestCase):
+    serialized_rollback = True
+
     def test_createsuperuser(self):
         """createsuperuser creates user account in perfect conditions"""
 

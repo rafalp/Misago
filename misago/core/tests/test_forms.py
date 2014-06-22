@@ -9,6 +9,8 @@ class MockForm(forms.Form):
 
 
 class MisagoFormsTests(TestCase):
+    serialized_rollback = True
+
     def test_stripme_input_is_autostripped(self):
         """Automatic strip worked on stripme input"""
         form = MockForm({'stripme': u' Ni! '})
@@ -27,6 +29,8 @@ class YesNoForm(forms.Form):
 
 
 class YesNoSwitchTests(TestCase):
+    serialized_rollback = True
+
     def test_valid_inputs(self):
         """YesNoSwitch returns valid values for valid input"""
         form = YesNoForm({'test_field': u'1'})

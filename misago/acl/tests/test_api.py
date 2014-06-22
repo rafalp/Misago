@@ -4,6 +4,8 @@ from misago.users.models import User, AnonymousUser
 
 
 class GetUserACLTests(TestCase):
+    serialized_rollback = True
+
     def test_get_authenticated_acl(self):
         """get ACL for authenticated user"""
         test_user = User.objects.create_user('Bob', 'bob@bob.com', 'pass123')

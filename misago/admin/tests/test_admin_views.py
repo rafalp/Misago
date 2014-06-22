@@ -11,6 +11,8 @@ class FakeRequest(object):
 
 
 class AdminProtectedNamespaceTests(TestCase):
+    serialized_rollback = True
+
     def test_valid_cases(self):
         """get_protected_namespace returns true for protected links"""
         links_prefix = reverse('misago:admin:index')
@@ -38,6 +40,8 @@ class AdminProtectedNamespaceTests(TestCase):
 
 
 class AdminLoginViewTests(TestCase):
+    serialized_rollback = True
+
     def test_login_returns_200_on_get(self):
         """unauthenticated request to admin index produces login form"""
         response = self.client.get(reverse('misago:admin:index'))
@@ -72,6 +76,8 @@ class AdminLoginViewTests(TestCase):
 
 
 class AdminLogoutTests(TestCase):
+    serialized_rollback = True
+
     def setUp(self):
         User = get_user_model()
         self.admin = User.objects.create_superuser(
@@ -106,6 +112,8 @@ class AdminLogoutTests(TestCase):
 
 
 class AdminIndexViewTests(TestCase):
+    serialized_rollback = True
+
     def test_view_returns_200(self):
         """admin index view returns 200"""
         User = get_user_model()
