@@ -6315,14 +6315,14 @@ body {
 .list-panel .list-group .list-group-item:active,
 .list-panel .list-group .list-group-item:hover {
   background: #fff;
-  box-shadow: inset 0px 0px 0px 1px #3498db;
+  box-shadow: inset 0px 0px 0px 1px #a0cfee;
 }
 .list-panel .list-group .list-group-item:active h4,
 .list-panel .list-group .list-group-item:hover h4 {
   color: #444444;
 }
 .list-panel .list-group .list-group-item:active {
-  box-shadow: inset 0px 0px 0px 1px #c0392b;
+  box-shadow: inset 0px 0px 0px 1px #3498db;
 }
 .ninja-switch {
   position: absolute;

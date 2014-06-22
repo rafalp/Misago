@@ -24,7 +24,7 @@
 
       &:active, &:hover {
         background: #fff;
-        box-shadow: inset 0px 0px 0px 1px @brand-secondary;
+        box-shadow: inset 0px 0px 0px 1px lighten(@brand-secondary, 25%);
 
         h4 {
           color: @text-color;
@@ -32,7 +32,7 @@
       }
 
       &:active {
-        box-shadow: inset 0px 0px 0px 1px @brand-primary;
+        box-shadow: inset 0px 0px 0px 1px @brand-secondary;
       }
     }
   }
