@@ -220,15 +220,29 @@ class ForumRoleForm(forms.ModelForm):
         fields = ['name']
 
 
-def RoleForumACLFormFactory(forum, role, roles):
+def RoleForumACLFormFactory(forum, forum_roles, selected_role):
     attrs = {
         'forum': forum,
         'role': forms.ModelChoiceField(
             label=_("Role"),
             required=False,
-            queryset=roles,
-            initial=role,
+            queryset=forum_roles,
+            initial=selected_role,
             empty_label=_("No access"))
     }
 
     return type('RoleForumACLForm', (forms.Form,), attrs)
+
+
+def ForumRolesACLFormFactory(role, forum_roles, selected_role):
+    attrs = {
+        'role': role,
+        'forum_role': forms.ModelChoiceField(
+            label=_("Role"),
+            required=False,
+            queryset=forum_roles,
+            initial=selected_role,
+            empty_label=_("No access"))
+    }
+
+    return type('ForumRolesACLForm', (forms.Form,), attrs)

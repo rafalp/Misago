@@ -1,0 +1,69 @@
+{% extends "misago/admin/generic/list.html" %}
+{% load crispy_forms_field i18n %}
+
+
+{% block title %}
+{% blocktrans with forum=target %}
+{{ forum }}: Permissions
+{% endblocktrans %} | {{ block.super }}
+{% endblock title%}
+
+
+{% block page-header %}
+{{ block.super }}
+<div class="sub">
+  <span class="fa fa-chevron-right"></span>
+  {% blocktrans with forum=target %}
+  {{ forum }}: Permissions
+  {% endblocktrans %}
+</div>
+{% endblock page-header %}
+
+
+{% block view %}
+<form method="post" role="form">
+  {% csrf_token %}
+  <div class="table-panel">
+    <table class="table">
+      <tr>
+        <th>{% trans "Forum" %}</ht>
+        <th class="col-md-6">{% trans "Permissions" %}</ht>
+      </tr>
+
+      {% for form in forms %}
+      <tr>
+        <td class="lead">
+          {{ form.role.name }}
+        </td>
+        <td>
+          {% crispy_field form.forum_role %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+    <div class="table-footer">
+      <div class="row">
+        <div class="col-md-offset-6">
+
+          <button class="btn btn-primary">{% trans "Save changes" %}</button>
+          <button class="btn btn-success" name="stay" value="1">{% trans "Save and keep editing" %}</button>
+          <a href="{% url root_link %}" class="btn btn-default btn-cancel">{% trans "Cancel" %}</a>
+
+        </div>
+      </div>
+    </div>
+  </div><!-- /.table-panel -->
+</form>
+{% endblock view %}
+
+
+{% block javascripts %}
+<script type="text/javascript">
+  $(function() {
+    $('.btn-cancel').click(function() {
+      var decision = confirm("{% trans "Are you sure you want to abandon changes?" %}");
+      return decision;
+    });
+  });
+</script>
+{% endblock %}

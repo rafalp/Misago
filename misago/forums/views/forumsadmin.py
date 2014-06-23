@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from misago.admin.views import generic
+from misago.acl import version as acl_version
 from misago.forums.models import FORUMS_TREE_ID, Forum
 from misago.forums.forms import ForumFormFactory, DeleteFormFactory
 

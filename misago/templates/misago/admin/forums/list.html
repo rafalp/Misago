@@ -38,13 +38,6 @@
   {% endif %}
   {{ item.name }}
 </td>
-{% for action in extra_actions %}
-<td class="row-action">
-  <a href="{% url action.link forum_id=item.id %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
-    <span class="{{ action.icon }}"></span>
-  </a>
-</td>
-{% endfor %}
 <td class="row-action">
   {% if not item.last %}
   <form action="{% url 'misago:admin:forums:nodes:down' forum_id=item.id %}" method="post">
@@ -69,6 +62,13 @@
   &nbsp;
   {% endif %}
 </td>
+{% for action in extra_actions %}
+<td class="row-action">
+  <a href="{% url action.link forum_id=item.id %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
+    <span class="{{ action.icon }}"></span>
+  </a>
+</td>
+{% endfor %}
 <td class="row-action">
   <a href="{% url 'misago:admin:forums:nodes:edit' forum_id=item.id %}" class="btn btn-primary tooltip-top" title="{% trans "Edit" %}">
     <span class="fa fa-pencil"></span>

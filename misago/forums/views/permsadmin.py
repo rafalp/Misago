@@ -4,8 +4,10 @@ from django.utils.translation import ugettext_lazy as _
 from misago.admin.views import generic
 from misago.acl import version as acl_version
 from misago.acl.forms import get_permissions_forms
+from misago.acl.models import Role
 from misago.acl.views import RoleAdmin, RolesList
 from misago.forums.forms import ForumRoleForm, RoleForumACLFormFactory
+from misago.forums.views.forumsadmin import ForumAdmin, ForumsList
 from misago.forums.models import Forum, ForumRole, RoleForumACL
 
 
@@ -81,11 +83,79 @@ class DeleteForumRole(ForumRoleAdmin, generic.ButtonView):
 
 
 """
+Create forum roles view for assinging roles to forum,
+add link to it in forums list
+"""
+templates_dir = 'misago/admin/forumroles'
+class ForumPermissions(ForumAdmin, generic.ModelFormView):
+    template = 'permissions.html'
+
+    def real_dispatch(self, request, target):
+        forum_roles = ForumRole.objects.order_by('name')
+
+
+        assigned_roles = {}
+        for acl in target.forum_role_set.select_related('forum_role'):
+            assigned_roles[acl.role_id] = acl.forum_role
+
+        forms = []
+        forms_are_valid = True
+        for role in Role.objects.order_by('name'):
+            FormType = ForumRolesACLFormFactory(role,
+                                                forum_roles,
+                                                assigned_roles.get(role.pk))
+
+            if request.method == 'POST':
+                forms.append(FormType(request.POST, prefix=role.pk))
+                if not forms[-1].is_valid():
+                    forms_are_valid = False
+            else:
+                forms.append(FormType(prefix=role.pk))
+
+        if request.method == 'POST' and forms_are_valid:
+            target.forum_role_set.all().delete()
+            new_permissions = []
+            for form in forms:
+                if form.cleaned_data['forum_role']:
+                    new_permissions.append(
+                        RoleForumACL(
+                            role=form.role,
+                            forum=target,
+                            forum_role=form.cleaned_data['forum_role']
+                        ))
+            if new_permissions:
+                RoleForumACL.objects.bulk_create(new_permissions)
+
+            acl_version.invalidate()
+
+            message = _("Forum %s permissions have been changed.")
+            messages.success(request, message % target)
+            if 'stay' in request.POST:
+                return redirect(request.path)
+            else:
+                return redirect(self.root_link)
+
+        return self.render(
+            request,
+            {
+                'forms': forms,
+                'target': target,
+            })
+
+
+ForumsList.add_item_action(
+    name=_("Forum permissions"),
+    icon='fa fa-adjust',
+    link='misago:admin:forums:nodes:permissions',
+    style='success')
+
+
+"""
 Create forums perms view for perms role and register it in other admin
 """
 class RoleForumsACL(RoleAdmin, generic.ModelFormView):
     templates_dir = 'misago/admin/forumroles'
-    template = 'forumsroles.html'
+    template = 'roleforums.html'
 
     def real_dispatch(self, request, target):
         forums = Forum.objects.all_forums()
@@ -104,8 +174,8 @@ class RoleForumsACL(RoleAdmin, generic.ModelFormView):
         for forum in forums:
             forum.level_range = range(forum.level - 1)
             FormType = RoleForumACLFormFactory(forum,
-                                               choices.get(forum.pk),
-                                               roles)
+                                               roles,
+                                               choices.get(forum.pk))
 
             if request.method == 'POST':
                 forms.append(FormType(request.POST, prefix=forum.pk))
@@ -146,4 +216,5 @@ class RoleForumsACL(RoleAdmin, generic.ModelFormView):
 RolesList.add_item_action(
     name=_("Forums permissions"),
     icon='fa fa-comments-o',
-    link='misago:admin:permissions:users:forums')
+    link='misago:admin:permissions:users:forums',
+    style='success')

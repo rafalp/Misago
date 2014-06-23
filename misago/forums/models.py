@@ -86,5 +86,5 @@ class ForumRole(BaseRole):
 
 class RoleForumACL(models.Model):
     role = models.ForeignKey('misago_acl.Role', related_name='forums_acls')
-    forum = models.ForeignKey('Forum')
+    forum = models.ForeignKey('Forum', related_name='forum_role_set')
     forum_role = models.ForeignKey(ForumRole)
