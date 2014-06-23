@@ -2,6 +2,7 @@
 Misago-native rehash of Django's createsuperuser command that
 works with double authentication fields on user model
 """
+from getpass import getpass
 from optparse import make_option
 import sys
 from django.contrib.auth import get_user_model
@@ -112,9 +113,9 @@ class Command(BaseCommand):
 
                 while not password:
                     try:
-                        raw_value = input("Enter password: ").strip()
+                        raw_value = getpass("Enter password: ").strip()
                         validate_password(raw_value)
-                        repeat_raw_value = input("Repeat password: ").strip()
+                        repeat_raw_value = getpass("Repeat password: ").strip()
                         if raw_value != repeat_raw_value:
                             raise ValidationError(
                                 "Entered passwords are different.")
