@@ -6180,27 +6180,12 @@ body {
 .table-panel table.table {
   margin: 0px;
 }
-.table-panel table.table tr.active td {
-  background-color: rgba(240, 173, 78, 0.05);
-}
 .table-panel table.table tr.message-row td {
   padding: 20px;
 }
 .table-panel table.table tr.message-row td p {
   margin: 0px;
   font-size: 18px;
-}
-.table-panel table.table tr:first-child > :first-child {
-  border-top-left-radius: 3px;
-}
-.table-panel table.table tr:first-child > :last-child {
-  border-top-right-radius: 3px;
-}
-.table-panel table.table tr:last-child > :first-child {
-  border-bottom-left-radius: 3px;
-}
-.table-panel table.table tr:last-child > :last-child {
-  border-bottom-right-radius: 3px;
 }
 .table-panel table.table tr th {
   background: #ededed;
@@ -6218,33 +6203,100 @@ body {
   max-width: 30px;
   max-height: 30px;
 }
+.table-panel table.table tr:first-child > :first-child {
+  border-top-left-radius: 3px;
+}
+.table-panel table.table tr:first-child > :last-child {
+  border-top-right-radius: 3px;
+}
+.table-panel table.table tr:last-child > :first-child {
+  border-bottom-left-radius: 3px;
+}
+.table-panel table.table tr:last-child > :last-child {
+  border-bottom-right-radius: 3px;
+}
 .table-panel table.table tr td.row-action {
+  vertical-align: middle;
   width: 1%;
 }
 .table-panel table.table tr td.row-action .btn,
 .table-panel table.table tr td.row-action > form .btn,
 .table-panel table.table tr td.row-action .dropdown-toggle {
-  padding: 0px;
-  width: 30px;
-  height: 30px;
-  font-size: 18px;
-  text-align: center;
-}
-.table-panel table.table tr td.row-action .btn > span,
-.table-panel table.table tr td.row-action > form .btn > span,
-.table-panel table.table tr td.row-action .dropdown-toggle > span {
+  background: none;
+  border-color: transparent;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  padding: 0px 4px;
   position: relative;
-  bottom: -1px;
+  top: 0px;
+  bottom: 0px;
+  color: #999999;
+  font-size: 22.4px;
 }
-.table-panel table.table tr td.row-action .btn > span.fa-times,
-.table-panel table.table tr td.row-action > form .btn > span.fa-times,
-.table-panel table.table tr td.row-action .dropdown-toggle > span.fa-times {
-  bottom: 1px;
+.table-panel table.table tr td.row-action .btn:hover,
+.table-panel table.table tr td.row-action > form .btn:hover,
+.table-panel table.table tr td.row-action .dropdown-toggle:hover {
+  top: 0px;
+  bottom: 0px;
 }
-.table-panel table.table tr td.row-action .btn > span.fa-pencil,
-.table-panel table.table tr td.row-action > form .btn > span.fa-pencil,
-.table-panel table.table tr td.row-action .dropdown-toggle > span.fa-pencil {
-  bottom: -2px;
+.table-panel table.table tr td.row-action .btn:hover.btn-default,
+.table-panel table.table tr td.row-action > form .btn:hover.btn-default,
+.table-panel table.table tr td.row-action .dropdown-toggle:hover.btn-default {
+  color: #555555;
+}
+.table-panel table.table tr td.row-action .btn:hover.btn-primary,
+.table-panel table.table tr td.row-action > form .btn:hover.btn-primary,
+.table-panel table.table tr td.row-action .dropdown-toggle:hover.btn-primary {
+  color: #3498db;
+}
+.table-panel table.table tr td.row-action .btn:hover.btn-danger,
+.table-panel table.table tr td.row-action > form .btn:hover.btn-danger,
+.table-panel table.table tr td.row-action .dropdown-toggle:hover.btn-danger {
+  color: #e74c3c;
+}
+.table-panel table.table tr td.row-action .btn:hover.btn-warning,
+.table-panel table.table tr td.row-action > form .btn:hover.btn-warning,
+.table-panel table.table tr td.row-action .dropdown-toggle:hover.btn-warning {
+  color: #f0ad4e;
+}
+.table-panel table.table tr td.row-action .btn:hover.btn-success,
+.table-panel table.table tr td.row-action > form .btn:hover.btn-success,
+.table-panel table.table tr td.row-action .dropdown-toggle:hover.btn-success {
+  color: #2ecc71;
+}
+.table-panel table.table tr td.row-action .btn:active,
+.table-panel table.table tr td.row-action > form .btn:active,
+.table-panel table.table tr td.row-action .dropdown-toggle:active {
+  top: 0px;
+  bottom: 0px;
+}
+.table-panel table.table tr td.row-action .btn:active.btn-default,
+.table-panel table.table tr td.row-action > form .btn:active.btn-default,
+.table-panel table.table tr td.row-action .dropdown-toggle:active.btn-default {
+  color: #333333;
+}
+.table-panel table.table tr td.row-action .btn:active.btn-primary,
+.table-panel table.table tr td.row-action > form .btn:active.btn-primary,
+.table-panel table.table tr td.row-action .dropdown-toggle:active.btn-primary {
+  color: #196090;
+}
+.table-panel table.table tr td.row-action .btn:active.btn-danger,
+.table-panel table.table tr td.row-action > form .btn:active.btn-danger,
+.table-panel table.table tr td.row-action .dropdown-toggle:active.btn-danger {
+  color: #a82315;
+}
+.table-panel table.table tr td.row-action .btn:active.btn-warning,
+.table-panel table.table tr td.row-action > form .btn:active.btn-warning,
+.table-panel table.table tr td.row-action .dropdown-toggle:active.btn-warning {
+  color: #c77c11;
+}
+.table-panel table.table tr td.row-action .btn:active.btn-success,
+.table-panel table.table tr td.row-action > form .btn:active.btn-success,
+.table-panel table.table tr td.row-action .dropdown-toggle:active.btn-success {
+  color: #1b7943;
+}
+.table-panel table.table tr.active td {
+  background-color: rgba(240, 173, 78, 0.05);
 }
 .table-panel table.table tr td.row-select {
   width: 1%;

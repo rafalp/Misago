@@ -3,6 +3,9 @@
 // --------------------------------------------------
 
 
+//== Table actions
+//
+//**
 .table-actions {
   margin-bottom: @line-height-computed;
   height: 36px;
@@ -17,22 +20,44 @@
   }
 }
 
+
+//== Table panel
+//
+//**
 .table-panel {
   border: 1px solid @table-panel-border;
   border-radius: @border-radius-base;
   box-shadow: 0px 0px 0px 3px @table-panel-shadow;
   margin-bottom: @line-height-computed;
+}
 
+
+//== Panel header
+//
+//**
+.table-panel {
+  .panel-header {
+
+  }
+}
+
+
+//== Panel table
+//
+//**
+.table-panel {
   table.table {
     margin: 0px;
+  }
+}
 
+
+//== Table row
+//
+//**
+.table-panel {
+  table.table {
     tr {
-      &.active {
-        td {
-          background-color: fadeOut(@brand-warning, 95%);
-        }
-      }
-
       &.message-row {
         td {
           padding: @line-height-computed;
@@ -42,6 +67,26 @@
 
             font-size: @font-size-large;
           }
+        }
+      }
+
+      th {
+        background: @table-header-bg;
+        border: none;
+        padding: @table-condensed-cell-padding @table-cell-padding;
+
+        color: @table-header-color;
+        font-size: @font-size-small;
+      }
+
+      td {
+        background-color: #fff;
+        vertical-align: middle;
+
+        img {
+          border-radius: @border-radius-base;
+          max-width: 30px;
+          max-height: 30px;
         }
       }
 
@@ -64,100 +109,154 @@
           border-bottom-right-radius: (@border-radius-base - 1);
         }
       }
+    }
+  }
+}
 
-      th {
-        background: @table-header-bg;
-        border: none;
-        padding: @table-condensed-cell-padding @table-cell-padding;
 
-        color: @table-header-color;
-        font-size: @font-size-small;
-      }
-
-      td {
-        background-color: #fff;
+//== Row action
+//
+//**
+.table-panel {
+  table.table {
+    tr {
+      td.row-action {
         vertical-align: middle;
+        width: 1%;
 
-        img {
-          border-radius: @border-radius-base;
-          max-width: 30px;
-          max-height: 30px;
-        }
+        .btn, &>form .btn, .dropdown-toggle {
+          background: none;
+          border-color: transparent;
+          .box-shadow(none);
+          padding: 0px 4px;
+          position: relative;
+          top: 0px;
+          bottom: 0px;
 
-        &.row-action {
-          width: 1%;
+          color: @gray-light;
+          font-size: @font-size-base * 1.6;
 
-          .btn, &>form .btn, .dropdown-toggle {
-            padding: 0px;
-            width: 30px;
-            height: 30px;
+          &:hover {
+            top: 0px;
+            bottom: 0px;
 
-            font-size: @font-size-large;
-            text-align: center;
-
-            &>span {
-              position: relative;
-              bottom: -1px;
-
-              &.fa-times {
-                bottom: 1px;
-              }
-
-              &.fa-pencil {
-                bottom: -2px;
-              }
-            }
-          }
-        }
-
-        &.row-select {
-          width: 1%;
-
-          label {
-            padding: 0px;
-            width: 24px;
-            height: 24px;
-
-            text-align: center;
-
-            input {
-              width: 12px;
-              height: 12px;
+            &.btn-default {
+              color: @gray;
             }
 
-            &.ninja-label {
-                border: 0;
-                clip: rect(0 0 0 0);
-                height: 1px;
-                margin: -1px;
-                overflow: hidden;
-                padding: 0;
-                position: absolute;
-                width: 1px;
+            &.btn-primary {
+              color: @brand-secondary;
+            }
+
+            &.btn-danger {
+              color: @brand-danger;
+            }
+
+            &.btn-warning {
+              color: @brand-warning;
+            }
+
+            &.btn-success {
+              color: @brand-success;
             }
           }
 
-          a {
-            display: block;
-            width: 24px;
-            height: 24px;
+          &:active {
+            top: 0px;
+            bottom: 0px;
 
-            span {
-              color: lighten(@gray-light, 5%);
-              font-size: 24px;
+            &.btn-default {
+              color: @gray-dark;
             }
 
-            &.active {
-              span {
-                color: @brand-success;
-              }
+            &.btn-primary {
+              color: darken(@brand-secondary, 20%);
+            }
+
+            &.btn-danger {
+              color: darken(@brand-danger, 20%);
+            }
+
+            &.btn-warning {
+              color: darken(@brand-warning, 20%);
+            }
+
+            &.btn-success {
+              color: darken(@brand-success, 20%);
             }
           }
         }
       }
     }
   }
+}
 
+
+//== Row select
+//
+//**
+.table-panel {
+  table.table {
+    tr {
+      &.active {
+        td {
+          background-color: fadeOut(@brand-warning, 95%);
+        }
+      }
+
+      td.row-select {
+        width: 1%;
+
+        label {
+          padding: 0px;
+          width: 24px;
+          height: 24px;
+
+          text-align: center;
+
+          input {
+            width: 12px;
+            height: 12px;
+          }
+
+          &.ninja-label {
+              border: 0;
+              clip: rect(0 0 0 0);
+              height: 1px;
+              margin: -1px;
+              overflow: hidden;
+              padding: 0;
+              position: absolute;
+              width: 1px;
+          }
+        }
+
+        a {
+          display: block;
+          width: 24px;
+          height: 24px;
+
+          span {
+            color: lighten(@gray-light, 5%);
+            font-size: 24px;
+          }
+
+          &.active {
+            span {
+              color: @brand-success;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+//== Table footer
+//
+//**
+.table-panel {
   .table-footer {
     background-color: @form-panel-footer-bg;
     border-radius: 0px 0px (@border-radius-large - 1px) (@border-radius-large - 1px);
@@ -173,3 +272,4 @@
     }
   }
 }
+
