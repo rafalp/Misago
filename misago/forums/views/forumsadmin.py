@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from misago.admin.views import generic
 from misago.acl import version as acl_version
-from misago.forums.models import FORUMS_TREE_ID, Forum
+from misago.forums.models import FORUMS_TREE_ID, Forum, RoleForumACL
 from misago.forums.forms import ForumFormFactory, DeleteFormFactory
 
 
@@ -62,6 +62,22 @@ class ForumFormMixin(object):
             form.instance.insert_at(form.cleaned_data['new_parent'],
                                     position='last-child',
                                     save=True)
+
+        if form.cleaned_data.get('copy_permissions'):
+            form.instance.forum_role_set.all().delete()
+            copy_from = form.cleaned_data['copy_permissions']
+
+            copied_acls = []
+            for acl in copy_from.forum_role_set.all():
+                copied_acls.append(RoleForumACL(
+                    role_id=acl.role_id,
+                    forum=form.instance,
+                    forum_role_id=acl.forum_role_id))
+
+            if copied_acls:
+                RoleForumACL.objects.bulk_create(copied_acls)
+
+            acl_version.invalidate()
 
         messages.success(request, self.message_submit % target.name)
 

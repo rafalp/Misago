@@ -104,7 +104,7 @@ class ForumFormBase(forms.ModelForm):
                 raise forms.ValidationError(message)
 
         if data['role'] == 'redirect':
-            if not data.get('redirect'):
+            if not data.get('redirect_url'):
                 message = _("This forum is redirect, yet you haven't "
                             "specified URL to which it should redirect "
                             "after click.")
@@ -128,8 +128,8 @@ def ForumFormFactory(instance):
             empty_label=None),
         'copy_permissions': ForumChoiceField(
             label=_("Copy permissions"),
-            help_text=_("You can override this forum permissions with "
-                        "permissions of other forum selected here."),
+            help_text=_("You can replace this forum permissions with "
+                        "permissions copied from forum selected here."),
             queryset=Forum.objects.all_forums(),
             empty_label=_("Don't copy permissions"),
             base_level=1,

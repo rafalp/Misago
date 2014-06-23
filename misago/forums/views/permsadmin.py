@@ -6,7 +6,8 @@ from misago.acl import version as acl_version
 from misago.acl.forms import get_permissions_forms
 from misago.acl.models import Role
 from misago.acl.views import RoleAdmin, RolesList
-from misago.forums.forms import ForumRoleForm, RoleForumACLFormFactory
+from misago.forums.forms import (ForumRoleForm, ForumRolesACLFormFactory,
+                                 RoleForumACLFormFactory)
 from misago.forums.views.forumsadmin import ForumAdmin, ForumsList
 from misago.forums.models import Forum, ForumRole, RoleForumACL
 
@@ -88,7 +89,8 @@ add link to it in forums list
 """
 templates_dir = 'misago/admin/forumroles'
 class ForumPermissions(ForumAdmin, generic.ModelFormView):
-    template = 'permissions.html'
+    templates_dir = 'misago/admin/forumroles'
+    template = 'forumroles.html'
 
     def real_dispatch(self, request, target):
         forum_roles = ForumRole.objects.order_by('name')
@@ -151,7 +153,8 @@ ForumsList.add_item_action(
 
 
 """
-Create forums perms view for perms role and register it in other admin
+Create role forums view for assinging forums to role,
+add link to it in user roles list
 """
 class RoleForumsACL(RoleAdmin, generic.ModelFormView):
     templates_dir = 'misago/admin/forumroles'
