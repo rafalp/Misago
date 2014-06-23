@@ -47,7 +47,7 @@ class MisagoAdminExtension(object):
                       namespace='misago:admin:forums',
                       link='misago:admin:forums:nodes:index')
 
-        site.add_node(name=_("Forums Hierarchy"),
+        site.add_node(name=_("Forums hierarchy"),
                       icon='fa fa-sitemap',
                       parent='misago:admin:forums',
                       namespace='misago:admin:forums:nodes',
