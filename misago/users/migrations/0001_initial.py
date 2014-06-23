@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0002_auto_20140620_2207'),
+        ('auth', '0001_initial'),
         ('misago_acl', '0001_initial'),
     ]
 
