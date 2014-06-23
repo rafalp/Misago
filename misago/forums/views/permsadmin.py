@@ -87,7 +87,6 @@ class DeleteForumRole(ForumRoleAdmin, generic.ButtonView):
 Create forum roles view for assinging roles to forum,
 add link to it in forums list
 """
-templates_dir = 'misago/admin/forumroles'
 class ForumPermissions(ForumAdmin, generic.ModelFormView):
     templates_dir = 'misago/admin/forumroles'
     template = 'forumroles.html'
