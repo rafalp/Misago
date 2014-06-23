@@ -33,7 +33,7 @@ def create_default_forums_tree(apps, schema_editor):
 
     category_name = _("First category")
     forum_name = _("First forum")
-    redirect_name = _("Project forums")
+    redirect_name = _("Misago support forum")
     redirect_link = _("http://misago-project.org")
 
     category = Forum.objects.create(
