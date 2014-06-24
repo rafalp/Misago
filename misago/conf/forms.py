@@ -42,6 +42,11 @@ def basic_kwargs(setting, extra):
     if setting.description:
         kwargs['help_text'] = _(setting.description)
 
+    if setting.form_field == 'yesno':
+        # YesNoSwitch is int-base and setting is bool based
+        # this means we need to do quick conversion
+        kwargs['initial'] = 1 if kwargs['initial'] else 0
+
     if kwargs['required']:
         if kwargs.get('help_text'):
             format = {'help_text': kwargs['help_text']}

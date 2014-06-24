@@ -25,17 +25,17 @@ def create_default_roles(apps, schema_editor):
             'misago.users.permissions.account': {
                 'name_changes_allowed': 2,
                 'name_changes_expire': 180,
-                'can_have_signature': False,
-                'allow_signature_links': False,
-                'allow_signature_images': False,
+                'can_have_signature': 0,
+                'allow_signature_links': 0,
+                'allow_signature_images': 0,
             },
 
             # profiles perms
             'misago.users.permissions.profiles': {
-                'can_search_users': True,
-                'can_see_users_emails': False,
-                'can_see_users_ips': False,
-                'can_see_hidden_users': False,
+                'can_search_users': 1,
+                'can_see_users_emails': 0,
+                'can_see_users_ips': 0,
+                'can_see_hidden_users': 0,
             },
 
             # destroy users perms
@@ -53,17 +53,17 @@ def create_default_roles(apps, schema_editor):
             'misago.users.permissions.account': {
                 'name_changes_allowed': 0,
                 'name_changes_expire': 0,
-                'can_have_signature': False,
-                'allow_signature_links': False,
-                'allow_signature_images': False,
+                'can_have_signature': 0,
+                'allow_signature_links': 0,
+                'allow_signature_images': 0,
             },
 
             # profiles perms
             'misago.users.permissions.profiles': {
-                'can_search_users': True,
-                'can_see_users_emails': False,
-                'can_see_users_ips': False,
-                'can_see_hidden_users': False,
+                'can_search_users': 1,
+                'can_see_users_emails': 0,
+                'can_see_users_ips': 0,
+                'can_see_hidden_users': 0,
             },
 
             # destroy users perms
@@ -81,17 +81,17 @@ def create_default_roles(apps, schema_editor):
             'misago.users.permissions.account': {
                 'name_changes_allowed': 5,
                 'name_changes_expire': 14,
-                'can_have_signature': True,
-                'allow_signature_links': True,
-                'allow_signature_images': False,
+                'can_have_signature': 1,
+                'allow_signature_links': 1,
+                'allow_signature_images': 0,
             },
 
             # profiles perms
             'misago.users.permissions.profiles': {
-                'can_search_users': True,
-                'can_see_users_emails': True,
-                'can_see_users_ips': True,
-                'can_see_hidden_users': True,
+                'can_search_users': 1,
+                'can_see_users_emails': 1,
+                'can_see_users_ips': 1,
+                'can_see_hidden_users': 1,
             },
 
             # destroy users perms

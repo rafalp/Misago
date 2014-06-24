@@ -25,8 +25,10 @@ def create_default_forums_roles(apps, schema_editor):
     pickle_permissions(see_only,
         {
             # forums perms
-            'can_see': True,
-            'can_browse': False,
+            'misago.forums.permissions': {
+                'can_see': 1,
+                'can_browse': 0,
+            },
         })
     see_only.save()
 
@@ -34,8 +36,10 @@ def create_default_forums_roles(apps, schema_editor):
     pickle_permissions(read_only,
         {
             # forums perms
-            'can_see': True,
-            'can_browse': True,
+            'misago.forums.permissions': {
+                'can_see': 1,
+                'can_browse': 1,
+            },
         })
     read_only.save()
 
@@ -43,8 +47,10 @@ def create_default_forums_roles(apps, schema_editor):
     pickle_permissions(reply_only,
         {
             # forums perms
-            'can_see': True,
-            'can_browse': True,
+            'misago.forums.permissions': {
+                'can_see': 1,
+                'can_browse': 1,
+            },
         })
     reply_only.save()
 
@@ -52,8 +58,10 @@ def create_default_forums_roles(apps, schema_editor):
     pickle_permissions(standard,
         {
             # forums perms
-            'can_see': True,
-            'can_browse': True,
+            'misago.forums.permissions': {
+                'can_see': 1,
+                'can_browse': 1,
+            },
         })
     standard.save()
 
@@ -62,8 +70,10 @@ def create_default_forums_roles(apps, schema_editor):
     pickle_permissions(standard_with_polls,
         {
             # forums perms
-            'can_see': True,
-            'can_browse': True,
+            'misago.forums.permissions': {
+                'can_see': 1,
+                'can_browse': 1,
+            },
         })
     standard_with_polls.save()
 
@@ -71,8 +81,10 @@ def create_default_forums_roles(apps, schema_editor):
     pickle_permissions(moderator,
         {
             # forums perms
-            'can_see': True,
-            'can_browse': True,
+            'misago.forums.permissions': {
+                'can_see': 1,
+                'can_browse': 1,
+            },
         })
     moderator.save()
 

@@ -49,3 +49,14 @@ ModelForm
 :py:class:`misago.core.forms.ModelForm`
 
 Wrapper for :py:class:`django.forms.ModelForm` that uses AutoStripWhitespacesMixin.
+
+
+YesNoSwitch
+-----------
+
+:py:func:`misago.core.forms.YesNoSwitch`
+
+Thin wrapper around Django's ``TypedChoiceField``. This field renders nice yes/no switch as its input.
+
+.. warning::
+   ``YesNoSwitch`` coerces to ``int``, not to ``bool``! Remember about this when writing code dealing with forms containing this field!

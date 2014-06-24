@@ -13,11 +13,6 @@ def YesNoSwitch(**kwargs):
     if 'initial' not in kwargs:
         kwargs['initial'] = 0
 
-    if kwargs['initial'] == True:
-        kwargs['initial'] = 1
-    if kwargs['initial'] == False:
-        kwargs['initial'] = 0
-
     return TypedChoiceField(
         coerce=int,
         choices=((1, _("Yes")), (0, _("No"))),

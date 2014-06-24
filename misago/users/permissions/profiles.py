@@ -9,9 +9,10 @@ Admin Permissions Form
 """
 class PermissionsForm(forms.Form):
     legend = _("User profiles")
+
     can_search_users = forms.YesNoSwitch(
         label=_("Can search user profiles"),
-        initial=True)
+        initial=1)
     can_see_users_emails = forms.YesNoSwitch(
         label=_("Can see members e-mails"))
     can_see_users_ips = forms.YesNoSwitch(
@@ -32,10 +33,10 @@ ACL Builder
 """
 def build_acl(acl, roles, key_name):
     new_acl = {
-        'can_search_users': False,
-        'can_see_users_emails': False,
-        'can_see_users_ips': False,
-        'can_see_hidden_users': False,
+        'can_search_users': 0,
+        'can_see_users_emails': 0,
+        'can_see_users_ips': 0,
+        'can_see_hidden_users': 0,
     }
     new_acl.update(acl)
 

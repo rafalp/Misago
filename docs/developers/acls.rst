@@ -57,6 +57,9 @@ Misago checks module for following functions:
 
 Required. This function is called when change permissions form for role is being build for view. It's expected to return Form type or none, if provider is not recognizing role type (eg. there is no sense in adding profiles visibility permissions to forums role form).
 
+.. note::
+   Misago provides custom ``YesNoSwitch`` form field that renders nice "Yes/No" switch as input. This field is simple wrapper around ``TypedChoiceField`` that coerces to ``int``. If you use use it for your permissions, make sure your ACL implementation handles their values as ``1`` or ``0``, not as ``True`` or ``False``, or your forms will break!
+
 .. warning::
    Make sure that all fields in your form have initial value, or your form will make tests suite fail because it will be unable to mock POST requests to admin forms correctly.
 
@@ -119,22 +122,22 @@ Example usage is following::
 
     user_acls = [
         {
-            'can_see': False,
-            'can_hear': False,
+            'can_see': 0,
+            'can_hear': 0,
             'max_speed': 10,
             'min_age': 16,
             'speed_limit': 50,
         },
         {
-            'can_see': True,
-            'can_hear': False,
+            'can_see': 1,
+            'can_hear': 0,
             'max_speed': 40,
             'min_age': 20,
             'speed_limit': 0,
         },
         {
-            'can_see': False,
-            'can_hear': True,
+            'can_see': 0,
+            'can_hear': 1,
             'max_speed': 80,
             'min_age': 18,
             'speed_limit': 40,
@@ -142,8 +145,8 @@ Example usage is following::
     ]
 
     defaults = {
-        'can_see': False,
-        'can_hear': False,
+        'can_see': 0,
+        'can_hear': 0,
         'max_speed': 30,
         'min_age': 18,
         'speed_limit': 60,

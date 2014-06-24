@@ -9,6 +9,7 @@ Admin Permissions Form
 """
 class PermissionsForm(forms.Form):
     legend = _("Account settings")
+
     name_changes_allowed = forms.IntegerField(
         label=_("Allowed username changes number"),
         min_value=0,
@@ -19,14 +20,11 @@ class PermissionsForm(forms.Form):
         min_value=0,
         initial=0)
     can_have_signature = forms.YesNoSwitch(
-        label=_("Can have signature"),
-        initial=False)
+        label=_("Can have signature"))
     allow_signature_links = forms.YesNoSwitch(
-        label=_("Can put links in signature"),
-        initial=False)
+        label=_("Can put links in signature"))
     allow_signature_images = forms.YesNoSwitch(
-        label=_("Can put images in signature"),
-        initial=False)
+        label=_("Can put images in signature"))
 
 
 def change_permissions_form(role):
@@ -43,9 +41,9 @@ def build_acl(acl, roles, key_name):
     new_acl = {
         'name_changes_allowed': 0,
         'name_changes_expire': 0,
-        'can_have_signature': False,
-        'allow_signature_links': False,
-        'allow_signature_images': False,
+        'can_have_signature': 0,
+        'allow_signature_links': 0,
+        'allow_signature_images': 0,
     }
     new_acl.update(acl)
 
