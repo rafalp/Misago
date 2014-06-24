@@ -1,3 +1,4 @@
+from hashlib import md5
 from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
                                         UserManager as BaseUserManager,
                                         AnonymousUser as DjangoAnonymousUser)
@@ -50,6 +51,13 @@ class UserManager(BaseUserManager):
     def create_superuser(self, username, email, password):
         with transaction.atomic():
             user = self.create_user(username, email, password=password)
+
+            try:
+                user.rank = Rank.objects.get(name=_("Forum Team"))
+                user.update_acl_key()
+            except Rank.DoesNotExist:
+                pass
+
             user.is_staff = True
             user.is_superuser = True
             user.save(update_fields=['is_staff', 'is_superuser'], using=self._db)
@@ -172,7 +180,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         return [roles_dict[r] for r in sorted(roles_pks)]
 
     def update_acl_key(self):
-        pass
+        roles_pks = [r.pk for r in self.get_roles()]
+        self.acl_key = md5(','.join(roles_pks)).hexdigest()
 
 
 class AnonymousUser(DjangoAnonymousUser):
