@@ -1,3 +1,4 @@
+from urllib import urlencode
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
 from django.db import transaction
@@ -107,49 +108,109 @@ class ListView(AdminView):
         context['page'] = context['paginator'].page(page)
         context['items'] = context['page'].object_list
 
-    def set_filters(self, request):
+    @property
+    def filters_token(self):
+        return '%s:filters' % self.root_link
+
+    def search_form(self, request, context):
         pass
 
-    def filter_items(self, request, context):
-        context['is_filtering'] = False
+    def filter_items(self, context):
+        pass
 
+    @property
     def ordering_session_key(self):
         return 'misago_admin_%s_order_by' % self.root_link
 
-    def set_ordering(self, request, new_order):
-        for order_by, name in self.ordering:
-            if order_by == new_order:
-                request.session[self.ordering_session_key()] = order_by
-                return redirect(self.current_link(request))
+    def get_ordering_from_get(self, request):
+        sort = request.GET.get('sort')
+
+        if request.GET.get('direction') == 'desc':
+            new_ordering = '-%s' % sort
+        elif request.GET.get('direction') == 'asc':
+            new_ordering = sort
         else:
-            messages.error(request, _("New sorting method is incorrect."))
-            raise ValueError()
+            new_ordering = '?nope'
 
-    def order_items(self, request, context):
-        current_ordering = request.session.get(self.ordering_session_key())
+        return self.clean_ordering(new_ordering)
 
+    def get_ordering_from_session(self, request):
+        new_ordering = request.session.get(self.ordering_session_key)
+        return self.clean_ordering(new_ordering)
+
+    def get_default_ordering(self):
+        pass
+
+    def clean_ordering(self, new_ordering):
+        for order_by, name in self.ordering:
+            if order_by == new_ordering:
+                return order_by
+        else:
+            return None
+
+    def get_ordering_methods(self, request):
+        methods = {
+            'GET': self.get_ordering_from_get(request),
+            'session': self.get_ordering_from_session(request),
+            'default': self.get_default_ordering(),
+        }
+
+        if methods['GET'] and methods['GET'] != methods['session']:
+            request.session[self.ordering_session_key] = methods['GET']
+
+        return methods
+
+    def get_ordering_method(self, methods):
+        for method in ('GET', 'session', 'default'):
+            if methods.get(method):
+                return methods.get(method)
+
+    def order_items(self, method, context):
         for order_by, name in self.ordering:
             order_as_dict = {
-                'order_by': order_by,
                 'type': 'desc' if order_by[0] == '-' else 'asc',
+                'order_by': order_by,
                 'name': name,
             }
 
-            if order_by == current_ordering:
+            if order_by == method:
                 context['order'] = order_as_dict
                 context['items'] = context['items'].order_by(
                     order_as_dict['order_by'])
-            else:
+            elif order_as_dict['name']:
+                if order_as_dict['type'] == 'desc':
+                    order_as_dict['order_by'] = order_as_dict['order_by'][1:]
                 context['order_by'].append(order_as_dict)
 
-        if not context['order']:
-            current_ordering = context['order_by'].pop(0)
-            context['order'] = current_ordering
-            context['items'] = context['items'].order_by(
-                current_ordering['order_by'])
+    def make_querystrings(self, request, context):
+        values = {}
+        filter_values = {}
+        order_values = {}
+
+        if context['active_filters']:
+            filter_values = context['active_filters']
+            values.update(filter_values)
+
+        if context['order']:
+            order_values = {
+                'sort': context['order']['order_by'],
+                'direction': context['order']['type'],
+                }
+            values.update(order_values)
+
+        if values:
+            context['querystring'] = '?%s' % urlencode(values)
+        if order_values:
+            context['querystring_order'] = '?%s' % urlencode(order_values)
+        if filter_values:
+            context['querystring_filter'] = '?%s' % urlencode(filter_values)
+
 
     def dispatch(self, request, *args, **kwargs):
+        active_filters = request.session.get(self.filters_token, None)
         extra_actions_list = self.extra_actions or []
+
+        set_querystring = False
 
         context = {
             'items': self.get_queryset(),
@@ -157,21 +218,33 @@ class ListView(AdminView):
             'page': None,
             'order_by': [],
             'order': None,
+            'search_form': None,
+            'active_filters': active_filters,
+            'querystring': '',
+            'querystring_order': '',
+            'querystring_filter': '',
             'extra_actions': extra_actions_list,
             'extra_actions_len': len(extra_actions_list),
         }
 
         if self.ordering:
-            if request.method == 'POST' and 'order_by' in request.POST:
-                try:
-                    return self.set_ordering(request,
-                                             request.POST.get('order_by'))
-                except ValueError:
-                    pass
-            self.order_items(request, context)
+            ordering_methods = self.get_ordering_methods(request)
+            current_method = self.get_ordering_method(ordering_methods)
+            self.order_items(current_method, context)
+
+            if len(self.ordering) > 1 and not ordering_methods.get('GET'):
+                set_querystring = True
+
+        self.search_form(request, context)
+        if active_filters:
+            self.filter_items(context)
 
         if self.items_per_page:
             self.paginate_items(context, kwargs.get('page', 0))
+
+        self.make_querystrings(request, context)
+        if set_querystring:
+            return redirect('%s%s' % (request.path, context['querystring']))
 
         return self.render(request, context)
 

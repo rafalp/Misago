@@ -26,9 +26,10 @@
       </li>
       {% for order in order_by %}
       <li>
-        <form method="post">
-          {% csrf_token %}
-          <button type="submit" name="order_by" value="{{ order.order_by }}">
+        <form action="{{ querystring_filter }}" method="get">
+          <input type="hidden" name="sort" value="{{ order.order_by }}">
+          <input type="hidden" name="direction" value="{{ order.type }}">
+          <button type="submit">
             <span class="fa fa-sort-numeric-{{ order.type }}"></span>
             {{ order.name }}
           </button>
@@ -37,6 +38,9 @@
       {% endfor %}
     </ul>
   </div>
+  {% endif %}
+
+  {% if search_form %}
   {% endif %}
 
 </div><!-- /.table-actions -->

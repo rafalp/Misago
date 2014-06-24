@@ -28,6 +28,10 @@ class UsersList(UserAdmin, generic.ListView):
         ('-username', _("Z to a")),
         )
 
+    def get_queryset(self):
+        qs = super(UsersList, self).get_queryset()
+        return qs.select_related('rank')
+
 
 class NewUser(UserAdmin, generic.ModelFormView):
     Form = NewUserForm

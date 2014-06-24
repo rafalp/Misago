@@ -15,7 +15,9 @@
 {% block table-header %}
 <th style="width: 1%;">&nbsp;</th>
 <th>{% trans "User" %}</th>
-<th style="width: 120px;">{% trans "E-mail" %}</th>
+<th style="width: 150px;">{% trans "E-mail" %}</th>
+<th style="width: 150px;">{% trans "Rank" %}</th>
+<th style="width: 150px;">{% trans "Joined" %}</th>
 <th>&nbsp;</th>
 {% endblock table-header %}
 
@@ -34,6 +36,20 @@
 </td>
 <td>
   <a href="mailto:{{ item.email }}">{{ item.email }}</a>
+</td>
+<td>
+  {% if user.rank %}
+    {% if user.rank.title %}
+      {{ user.rank.title }}
+    {% else %}
+      {{ user.rank.name }}
+    {% endif %}
+  {% endif %}
+</td>
+<td>
+  <abbr class="tooltip-top dynamic time-ago" title="{{ item.joined_on }}" data-timestamp="{{ item.joined_on|date:"c" }}">
+    {{ item.joined_on|date }}
+  </abbr>
 </td>
 <td class="row-action">
   <div class="btn-group pull-right">

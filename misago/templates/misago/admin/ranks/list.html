@@ -13,8 +13,9 @@
 
 
 {% block table-header %}
-<th style="width: 30%;">{% trans "Rank" %}</th>
+<th style="width: 25%;">{% trans "Rank" %}</th>
 <th>{% trans "Title" %}</th>
+<th style="width: 120px;">{% trans "Special" %}</th>
 {% for action in extra_actions %}
 <th style="width: 1%;">&nbsp;</th>
 {% endfor %}
@@ -29,21 +30,23 @@
 {% block table-row %}
 <td class="lead">
   {{ item.name }}
-  {% if item.is_tab %}
-  <div class="fa fa-list text-muted pull-right tooltip-top" title="{% trans "Has page on users list." %}"></div>
-  {% endif %}
-  {% if item.is_on_index %}
-  <div class="fa fa-bookmark text-muted pull-right tooltip-top" title="{% trans "Users online displayed on index." %}"></div>
-  {% endif %}
-  {% if item.is_default %}
-  <div class="fa fa-star text-muted pull-right tooltip-top" title="{% trans "This is default rank assigned to new members." %}"></div>
-  {% endif %}
 </td>
 <td>
   {% if item.title %}
   {% trans item.title %}
   {% else %}
   <i class="text-muted">{% trans "No title set" %}</i>
+  {% endif %}
+</td>
+<td class="lead text-muted">
+  {% if item.is_tab %}
+  <div class="fa fa-list tooltip-top" title="{% trans "Has page on users list." %}"></div>
+  {% endif %}
+  {% if item.is_on_index %}
+  <div class="fa fa-bookmark tooltip-top" title="{% trans "Users online displayed on index." %}"></div>
+  {% endif %}
+  {% if item.is_default %}
+  <div class="fa fa-star tooltip-top" title="{% trans "This is default rank assigned to new members." %}"></div>
   {% endif %}
 </td>
 {% for action in extra_actions %}

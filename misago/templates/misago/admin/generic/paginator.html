@@ -8,13 +8,13 @@
   </li>
   {% if page.has_previous %}
     <li>
-      <a href="{% url root_link %}" class="tooltip-top" title="{% trans "Go to first page" %}">
+      <a href="{% url root_link %}{{ querystring }}" class="tooltip-top" title="{% trans "Go to first page" %}">
         {% trans "First" %}
       </a>
     </li>
     {% if page.number > 2 %}
     <li>
-      <a href="{% url root_link page=page.previous_page_number %}" class="tooltip-top" title="{% trans "Go to previous page" %}">
+      <a href="{% url root_link page=page.previous_page_number %}{{ querystring }}" class="tooltip-top" title="{% trans "Go to previous page" %}">
         <span class="glyphicon glyphicon-chevron-left"></span>
       </a>
     </li>
@@ -23,13 +23,13 @@
   {% if page.has_next %}
     {% if page.next_page_number < paginator.num_pages %}
     <li>
-      <a href="{% url root_link page=page.next_page_number %}" class="tooltip-top" title="{% trans "Go to next page" %}">
+      <a href="{% url root_link page=page.next_page_number %}{{ querystring }}" class="tooltip-top" title="{% trans "Go to next page" %}">
         <span class="glyphicon glyphicon-chevron-right"></span>
       </a>
     </li>
     {% endif %}
     <li>
-      <a href="{% url root_link page=paginator.num_pages %}" class="tooltip-top" title="{% trans "Go to last page" %}">
+      <a href="{% url root_link page=paginator.num_pages %}{{ querystring }}" class="tooltip-top" title="{% trans "Go to last page" %}">
         {% trans "Last" %}
       </a>
     </li>
