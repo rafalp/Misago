@@ -1,61 +1,8 @@
 from urllib import urlencode
-from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
-from django.db import transaction
 from django.shortcuts import redirect
-from django.utils.translation import ugettext_lazy as _
-from django.views.generic import View
 from misago.core.exceptions import ExplicitFirstPage
-from misago.admin import site
-from misago.admin.views import render
-
-
-class AdminBaseMixin(object):
-    """
-    Admin mixin abstraciton used for configuring admin CRUD views.
-
-    Takes following attributes:
-
-    Model = Model instance
-    root_link = name of link leading to root action (eg. list of all items
-    templates_dir = directory with templates
-    message_404 = string used in "requested item not found" messages
-    """
-    Model = None
-    root_link = None
-    templates_dir = None
-    message_404 = None
-
-    def get_model(self):
-        """
-        Basic method for retrieving Model, used in cases such as User model.
-        """
-        return self.Model
-
-
-class AdminView(View):
-    def final_template(self):
-        return '%s/%s' % (self.templates_dir, self.template)
-
-    def current_link(self, request):
-        matched_url = request.resolver_match.url_name
-        return '%s:%s' % (request.resolver_match.namespace, matched_url)
-
-    def process_context(self, request, context):
-        """
-        Simple hook for extending and manipulating template context.
-        """
-        return context
-
-    def render(self, request, context=None):
-        context = context or {}
-
-        context['root_link'] = self.root_link
-        context['current_link'] = self.current_link(request)
-
-        context = self.process_context(request, context)
-
-        return render(request, self.final_template(), context)
+from misago.admin.views.generic.base import AdminView
 
 
 class ListView(AdminView):
@@ -232,7 +179,7 @@ class ListView(AdminView):
             current_method = self.get_ordering_method(ordering_methods)
             self.order_items(current_method, context)
 
-            if len(self.ordering) > 1 and not ordering_methods.get('GET'):
+            if context['order_by'] and not ordering_methods.get('GET'):
                 set_querystring = True
 
         self.search_form(request, context)
@@ -247,119 +194,3 @@ class ListView(AdminView):
             return redirect('%s%s' % (request.path, context['querystring']))
 
         return self.render(request, context)
-
-
-class TargetedView(AdminView):
-    def check_permissions(self, request, target):
-        pass
-
-    def get_target(self, kwargs):
-        if len(kwargs) == 1:
-            select_for_update = self.get_model().objects.select_for_update()
-            return select_for_update.get(pk=kwargs[kwargs.keys()[0]])
-        else:
-            return self.get_model()()
-
-    def get_target_or_none(self, request, kwargs):
-        try:
-            return self.get_target(kwargs)
-        except self.get_model().DoesNotExist:
-            return None
-
-    def dispatch(self, request, *args, **kwargs):
-        with transaction.atomic():
-            target = self.get_target_or_none(request, kwargs)
-            if not target:
-                messages.error(request, self.message_404)
-                return redirect(self.root_link)
-
-            error = self.check_permissions(request, target)
-            if error:
-                messages.error(request, error)
-                return redirect(self.root_link)
-
-            return self.real_dispatch(request, target)
-
-    def real_dispatch(self, request, target):
-        pass
-
-
-class FormView(TargetedView):
-    Form = None
-    template = 'form.html'
-
-    def create_form_type(self, request):
-        return self.Form
-
-    def initialize_form(self, FormType, request):
-        if request.method == 'POST':
-            return FormType(request.POST, request.FILES)
-        else:
-            return FormType()
-
-    def handle_form(self, form, request):
-        raise NotImplementedError(
-            "You have to define your own handle_form method to handle "
-            "form submissions.")
-
-    def real_dispatch(self, request, target):
-        FormType = self.create_form_type(request)
-        form = self.initialize_form(FormType, request)
-
-        if request.method == 'POST' and form.is_valid():
-            response = self.handle_form(form, request)
-
-            if response:
-                return response
-            elif 'stay' in request.POST:
-                return redirect(request.path)
-            else:
-                return redirect(self.root_link)
-
-        return self.render(request, {'form': form})
-
-
-class ModelFormView(FormView):
-    message_submit = None
-
-    def create_form_type(self, request, target):
-        return self.Form
-
-    def initialize_form(self, FormType, request, target):
-        if request.method == 'POST':
-            return FormType(request.POST, request.FILES, instance=target)
-        else:
-            return FormType(instance=target)
-
-    def handle_form(self, form, request, target):
-        form.instance.save()
-        if self.message_submit:
-            messages.success(request, self.message_submit % target.name)
-
-    def real_dispatch(self, request, target):
-        FormType = self.create_form_type(request, target)
-        form = self.initialize_form(FormType, request, target)
-
-        if request.method == 'POST' and form.is_valid():
-            response = self.handle_form(form, request, target)
-
-            if response:
-                return response
-            elif 'stay' in request.POST:
-                return redirect(request.path)
-            else:
-                return redirect(self.root_link)
-
-        return self.render(request, {'form': form, 'target': target})
-
-
-class ButtonView(TargetedView):
-    def real_dispatch(self, request, target):
-        if request.method == 'POST':
-            new_response = self.button_action(request, target)
-            if new_response:
-                return new_response
-        return redirect(self.root_link)
-
-    def button_action(self, request, target):
-        raise NotImplementedError("You have to define custom button_action.")
