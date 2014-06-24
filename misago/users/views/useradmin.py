@@ -49,7 +49,7 @@ class NewUser(UserAdmin, generic.ModelFormView):
         if form.cleaned_data.get('roles'):
             new_user.roles.add(*form.cleaned_data['roles'])
 
-        new_user.update_acl_token()
+        new_user.update_acl_key()
         new_user.save()
 
         messages.success(request, self.message_submit % target.username)
@@ -71,7 +71,7 @@ class EditUser(UserAdmin, generic.ModelFormView):
         if form.cleaned_data.get('roles'):
             form.instance.roles.add(*form.cleaned_data['roles'])
 
-        form.instance.update_acl_token()
+        form.instance.update_acl_key()
         form.instance.save()
 
         messages.success(request, self.message_submit % target.username)

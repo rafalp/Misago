@@ -17,6 +17,10 @@ class UserBaseForm(forms.ModelForm):
     email = forms.EmailField(
         label=_("E-mail address"))
 
+    class Meta:
+        model = get_user_model()
+        fields = ['username', 'email', 'title']
+
     def clean_username(self):
         data = self.cleaned_data['username']
         validate_username(data)
@@ -52,7 +56,7 @@ class NewUserForm(UserBaseForm):
 
     class Meta:
         model = get_user_model()
-        fields = ['username', 'email']
+        fields = ['username', 'email', 'title']
 
 
 class EditUserForm(forms.ModelForm):
@@ -63,6 +67,7 @@ class EditUserForm(forms.ModelForm):
 
     class Meta:
         model = get_user_model()
+        fields = ['username', 'email', 'title']
 
 
 def UserFormFactory(FormType, instance):

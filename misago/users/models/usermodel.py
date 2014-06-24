@@ -180,8 +180,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         return [roles_dict[r] for r in sorted(roles_pks)]
 
     def update_acl_key(self):
-        roles_pks = [r.pk for r in self.get_roles()]
-        self.acl_key = md5(','.join(roles_pks)).hexdigest()
+        roles_pks = [unicode(r.pk) for r in self.get_roles()]
+        self.acl_key = md5(','.join(roles_pks)).hexdigest()[:12]
 
 
 class AnonymousUser(DjangoAnonymousUser):
