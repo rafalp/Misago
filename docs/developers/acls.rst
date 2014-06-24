@@ -63,7 +63,7 @@ Required. This function is called when change permissions form for role is being
 
 .. function:: build_acl(acl, roles, key_name)
 
-Required. Is used in process of building new ACL. Its supplied dict with incomplete ACL, list of user roles and name of key under which its permissions values are stored in roles ``permissions`` attributes. Its expected to access roles ``permissions`` attributes which are dicts of values coming from permission change forms and update provided ``acl`` dict accordingly.
+Required. Is used in process of building new ACL. Its supplied dict with incomplete ACL, list of user roles and name of key under which its permissions values are stored in roles ``permissions`` attributes. Its expected to access roles ``permissions`` attributes which are dicts of values coming from permission change forms and return updated ``acl`` dict.
 
 
 .. function:: add_acl_to_target(user, acl, target)
@@ -109,9 +109,11 @@ This module provides utilities for summing two acls and supports three most comm
 * **greater or zero**: 42 beats 13, zero beats everything
 
 
-.. function:: sum_acls(defaults, *cls, **permissions)
+.. function:: sum_acls(result_acl, acls=None, roles=None, key=None, **permissions)
 
-This function sums ACLs using callables accepting two arguments defined in kwargs used to compare permission values. Example usage is following::
+This function adds ACLs to result_acl using set or rules provided as additional kwargs. Alternatively, it access iterable of roles and extension key.
+
+Example usage is following::
 
     from misago.acl import algebra
 
@@ -148,7 +150,7 @@ This function sums ACLs using callables accepting two arguments defined in kwarg
     }
 
     final_acl = algebra.sum_acls(
-        defaults, user_acls,
+        defaults, acls=user_acls,
         can_see=algebra.greater,
         can_hear=algebra.greater,
         max_speed=algebra.greater,

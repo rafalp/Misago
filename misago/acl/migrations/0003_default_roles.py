@@ -22,21 +22,27 @@ def create_default_roles(apps, schema_editor):
     pickle_permissions(role,
         {
             # account perms
-            'name_changes_allowed': 2,
-            'name_changes_expire': 180,
-            'can_use_signature': False,
-            'allow_signature_links': False,
-            'allow_signature_images': False,
+            'misago.users.permissions.account': {
+                'name_changes_allowed': 2,
+                'name_changes_expire': 180,
+                'can_have_signature': False,
+                'allow_signature_links': False,
+                'allow_signature_images': False,
+            },
 
             # profiles perms
-            'can_search_users': True,
-            'can_see_users_emails': False,
-            'can_see_users_ips': False,
-            'can_see_hidden_users': False,
+            'misago.users.permissions.profiles': {
+                'can_search_users': True,
+                'can_see_users_emails': False,
+                'can_see_users_ips': False,
+                'can_see_hidden_users': False,
+            },
 
             # destroy users perms
-            'can_destroy_user_newer_than': 0,
-            'can_destroy_users_with_less_posts_than': 0,
+            'misago.users.permissions.destroying': {
+                'can_destroy_user_newer_than': 0,
+                'can_destroy_users_with_less_posts_than': 0,
+            },
         })
     role.save()
 
@@ -44,21 +50,27 @@ def create_default_roles(apps, schema_editor):
     pickle_permissions(role,
         {
             # account perms
-            'name_changes_allowed': 0,
-            'name_changes_expire': 0,
-            'can_use_signature': False,
-            'allow_signature_links': False,
-            'allow_signature_images': False,
+            'misago.users.permissions.account': {
+                'name_changes_allowed': 0,
+                'name_changes_expire': 0,
+                'can_have_signature': False,
+                'allow_signature_links': False,
+                'allow_signature_images': False,
+            },
 
             # profiles perms
-            'can_search_users': True,
-            'can_see_users_emails': False,
-            'can_see_users_ips': False,
-            'can_see_hidden_users': False,
+            'misago.users.permissions.profiles': {
+                'can_search_users': True,
+                'can_see_users_emails': False,
+                'can_see_users_ips': False,
+                'can_see_hidden_users': False,
+            },
 
             # destroy users perms
-            'can_destroy_user_newer_than': 0,
-            'can_destroy_users_with_less_posts_than': 0,
+            'misago.users.permissions.destroying': {
+                'can_destroy_user_newer_than': 0,
+                'can_destroy_users_with_less_posts_than': 0,
+            },
         })
     role.save()
 
@@ -66,21 +78,27 @@ def create_default_roles(apps, schema_editor):
     pickle_permissions(role,
         {
             # account perms
-            'name_changes_allowed': 5,
-            'name_changes_expire': 14,
-            'can_use_signature': True,
-            'allow_signature_links': True,
-            'allow_signature_images': False,
+            'misago.users.permissions.account': {
+                'name_changes_allowed': 5,
+                'name_changes_expire': 14,
+                'can_have_signature': True,
+                'allow_signature_links': True,
+                'allow_signature_images': False,
+            },
 
             # profiles perms
-            'can_search_users': True,
-            'can_see_users_emails': True,
-            'can_see_users_ips': True,
-            'can_see_hidden_users': True,
+            'misago.users.permissions.profiles': {
+                'can_search_users': True,
+                'can_see_users_emails': True,
+                'can_see_users_ips': True,
+                'can_see_hidden_users': True,
+            },
 
             # destroy users perms
-            'can_destroy_user_newer_than': 0,
-            'can_destroy_users_with_less_posts_than': 0,
+            'misago.users.permissions.destroying': {
+                'can_destroy_user_newer_than': 0,
+                'can_destroy_users_with_less_posts_than': 0,
+            },
         })
     role.save()
 
@@ -88,8 +106,10 @@ def create_default_roles(apps, schema_editor):
     pickle_permissions(role,
         {
             # destroy users perms
-            'can_destroy_user_newer_than': 2,
-            'can_destroy_users_with_less_posts_than': 20,
+            'misago.users.permissions.destroying': {
+                'can_destroy_user_newer_than': 2,
+                'can_destroy_users_with_less_posts_than': 20,
+            },
         })
     role.save()
 

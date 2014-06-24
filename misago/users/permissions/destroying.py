@@ -1,4 +1,5 @@
 from django.utils.translation import ugettext_lazy as _
+from misago.acl import algebra
 from misago.acl.models import Role
 from misago.core import forms
 
@@ -31,4 +32,14 @@ def change_permissions_form(role):
 ACL Builder
 """
 def build_acl(acl, roles, key_name):
-    pass
+    new_acl = {
+        'can_destroy_user_newer_than': 0,
+        'can_destroy_users_with_less_posts_than': 0,
+    }
+    new_acl.update(acl)
+
+    return algebra.sum_acls(
+            new_acl, roles=roles, key=key_name,
+            can_destroy_user_newer_than=algebra.greater,
+            can_destroy_users_with_less_posts_than=algebra.greater
+            )

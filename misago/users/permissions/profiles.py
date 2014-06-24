@@ -1,4 +1,5 @@
 from django.utils.translation import ugettext_lazy as _
+from misago.acl import algebra
 from misago.acl.models import Role
 from misago.core import forms
 
@@ -30,4 +31,18 @@ def change_permissions_form(role):
 ACL Builder
 """
 def build_acl(acl, roles, key_name):
-    pass
+    new_acl = {
+        'can_search_users': False,
+        'can_see_users_emails': False,
+        'can_see_users_ips': False,
+        'can_see_hidden_users': False,
+    }
+    new_acl.update(acl)
+
+    return algebra.sum_acls(
+            new_acl, roles=roles, key=key_name,
+            can_search_users=algebra.greater,
+            can_see_users_emails=algebra.greater,
+            can_see_users_ips=algebra.greater,
+            can_see_hidden_users=algebra.greater
+            )

@@ -1,11 +1,33 @@
-def sum_acls(defaults, acls, **permissions):
-    result_acl = {}
+def _roles_acls(key_name, roles):
+    acls = []
+    for role in roles:
+        role_permissions = role.permissions.get(key_name)
+        if role_permissions:
+            acls.append(role_permissions)
+    return acls
+
+
+def sum_acls(result_acl, acls=None, roles=None, key=None, **permissions):
+    if bool(roles) != bool(key):
+        if key:
+            raise ValueError(
+                'You have provided "key" but omited "roles" argument')
+        else:
+            raise ValueError(
+                'You have provided "roles" but omited "key" argument')
+
+    if acls and roles:
+        raise ValueError(
+            'You can not provide both "acls" and "roles" arguments')
+
+    if roles:
+        acls = _roles_acls(key, roles)
 
     for permission, compare in permissions.items():
         try:
-            permission_value = defaults[permission]
+            permission_value = result_acl[permission]
         except KeyError:
-            message = 'Default value for permission "%s" is not provided.'
+            message = 'Default value for permission "%s" is not provided'
             raise ValueError(message % permission)
 
         for acl in acls:
