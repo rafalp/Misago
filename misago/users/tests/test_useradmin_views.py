@@ -15,6 +15,8 @@ class UserAdminViewsTests(AdminTestCase):
         """users list view returns 200"""
         response = self.client.get(
             reverse('misago:admin:users:accounts:index'))
+        self.assertEqual(response.status_code, 302)
 
+        response = self.client.get(response['location'])
         self.assertEqual(response.status_code, 200)
         self.assertIn('TestAdmin', response.content)

@@ -55,6 +55,9 @@ class ListView(AdminView):
         context['page'] = context['paginator'].page(page)
         context['items'] = context['page'].object_list
 
+    """
+    Filter list items
+    """
     @property
     def filters_token(self):
         return '%s:filters' % self.root_link
@@ -65,11 +68,14 @@ class ListView(AdminView):
     def filter_items(self, context):
         pass
 
+    """
+    Order list items
+    """
     @property
     def ordering_session_key(self):
         return 'misago_admin_%s_order_by' % self.root_link
 
-    def get_ordering_from_get(self, request):
+    def get_ordering_from_GET(self, request):
         sort = request.GET.get('sort')
 
         if request.GET.get('direction') == 'desc':
@@ -85,9 +91,6 @@ class ListView(AdminView):
         new_ordering = request.session.get(self.ordering_session_key)
         return self.clean_ordering(new_ordering)
 
-    def get_default_ordering(self):
-        pass
-
     def clean_ordering(self, new_ordering):
         for order_by, name in self.ordering:
             if order_by == new_ordering:
@@ -97,9 +100,9 @@ class ListView(AdminView):
 
     def get_ordering_methods(self, request):
         methods = {
-            'GET': self.get_ordering_from_get(request),
+            'GET': self.get_ordering_from_GET(request),
             'session': self.get_ordering_from_session(request),
-            'default': self.get_default_ordering(),
+            'default': self.clean_ordering(self.ordering[0][0]),
         }
 
         if methods['GET'] and methods['GET'] != methods['session']:
@@ -129,6 +132,9 @@ class ListView(AdminView):
                     order_as_dict['order_by'] = order_as_dict['order_by'][1:]
                 context['order_by'].append(order_as_dict)
 
+    """
+    Dispatch response
+    """
     def make_querystrings(self, request, context):
         values = {}
         filter_values = {}
@@ -138,11 +144,16 @@ class ListView(AdminView):
             filter_values = context['active_filters']
             values.update(filter_values)
 
-        if context['order']:
+        if context['order_by']:
             order_values = {
                 'sort': context['order']['order_by'],
                 'direction': context['order']['type'],
                 }
+
+            if order_values['sort'][0] == '-':
+                # We don't start sorting criteria with minus in querystring
+                order_values['sort'] = order_values['sort'][1:]
+
             values.update(order_values)
 
         if values:
@@ -151,7 +162,6 @@ class ListView(AdminView):
             context['querystring_order'] = '?%s' % urlencode(order_values)
         if filter_values:
             context['querystring_filter'] = '?%s' % urlencode(filter_values)
-
 
     def dispatch(self, request, *args, **kwargs):
         active_filters = request.session.get(self.filters_token, None)

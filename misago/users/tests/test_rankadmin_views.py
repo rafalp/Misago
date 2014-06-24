@@ -10,6 +10,7 @@ class RankAdminViewsTests(AdminTestCase):
         response = self.client.get(
             reverse('misago:admin:users:accounts:index'))
 
+        response = self.client.get(response['location'])
         self.assertIn(reverse('misago:admin:users:ranks:index'),
                       response.content)
 
