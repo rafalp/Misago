@@ -94,6 +94,10 @@ class ForumRoleAdminViewsTests(AdminTestCase):
 
         test_role = Role.objects.get(name='Test ForumRole')
 
+        root = Forum.objects.root_category()
+        for descendant in root.get_descendants():
+            descendant.delete()
+
         self.assertEqual(Forum.objects.count(), 2)
         response = self.client.get(
             reverse('misago:admin:permissions:users:forums',

@@ -30,20 +30,7 @@ class ForumManagerTests(TestCase):
                                position='last-child',
                                save=True)
 
-        all_forums = [root, test_forum_a, test_forum_b]
-        no_root = [test_forum_a, test_forum_b]
-
-        self.assertEqual(Forum.objects.all_forums(True).count(),
-                         len(all_forums))
-
-        self.assertEqual(Forum.objects.all_forums().count(),
-                         len(no_root))
-
         all_forums_from_db = [f for f in Forum.objects.all_forums(True)]
-        no_root_from_db = [f for f in Forum.objects.all_forums()]
 
-        self.assertEqual(len(all_forums_from_db),
-                         len(all_forums))
-
-        self.assertEqual(len(no_root),
-                         len(no_root_from_db))
+        self.assertIn(test_forum_a, all_forums_from_db)
+        self.assertIn(test_forum_b, all_forums_from_db)

@@ -5,21 +5,21 @@ from misago.admin.hierarchy import Node
 class NodeTests(TestCase):
     def test_add_node(self):
         """add_node added node"""
-        master = Node('misago:index', 'Apples')
+        master = Node(name='Apples', link='misago:index')
 
-        child = Node('misago:index', 'Oranges')
+        child = Node(name='Oranges', link='misago:index')
         master.add_node(child)
 
         self.assertTrue(child in master.children())
 
     def test_add_node_after(self):
         """add_node added node after specific node"""
-        master = Node('misago:index', 'Apples')
+        master = Node(name='Apples', link='misago:index')
 
-        child = Node('misago:index', 'Oranges')
+        child = Node(name='Oranges', link='misago:index')
         master.add_node(child)
 
-        test = Node('misago:index', 'Potatoes')
+        test = Node(name='Potatoes', link='misago:index')
         master.add_node(test, after='misago:index')
 
         all_nodes = master.children()
@@ -29,12 +29,12 @@ class NodeTests(TestCase):
 
     def test_add_node_before(self):
         """add_node added node  before specific node"""
-        master = Node('misago:index', 'Apples')
+        master = Node(name='Apples', link='misago:index')
 
-        child = Node('misago:index', 'Oranges')
+        child = Node(name='Oranges', link='misago:index')
         master.add_node(child)
 
-        test = Node('misago:index', 'Potatoes')
+        test = Node(name='Potatoes', link='misago:index')
         master.add_node(test, before='misago:index')
 
         all_nodes = master.children()

@@ -16,6 +16,18 @@ class ForumAdminViewsTests(AdminTestCase):
         response = self.client.get(reverse('misago:admin:forums:nodes:index'))
 
         self.assertEqual(response.status_code, 200)
+        self.assertIn('First category', response.content)
+        self.assertIn('First forum', response.content)
+        self.assertIn('Misago support forums', response.content)
+
+        # Now test that empty forums list contains message
+        root = Forum.objects.root_category()
+        for descendant in root.get_descendants():
+            descendant.delete()
+
+        response = self.client.get(reverse('misago:admin:forums:nodes:index'))
+
+        self.assertEqual(response.status_code, 200)
         self.assertIn('No forums', response.content)
 
     def test_new_view(self):
@@ -169,7 +181,7 @@ class ForumAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
         position_a = response.content.find('Category A')
         position_b = response.content.find('Category B')
-        self.assertTrue(position_a < position_b)
+        self.assertTrue(position_a > position_b)
 
         response = self.client.post(
             reverse('misago:admin:forums:nodes:down',
@@ -268,7 +280,7 @@ class ForumAdminDeleteViewTests(AdminTestCase):
                     kwargs={'forum_id': self.subforum_d.pk}),
             data={'move_children_to': '', 'move_threads_to': '',})
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(Forum.objects.all_forums().count(), 5)
+        self.assertEqual(Forum.objects.all_forums().count(), 8)
 
     def test_delete_forum_move_threads(self):
         """forum was deleted and its contents were moved"""
@@ -285,7 +297,7 @@ class ForumAdminDeleteViewTests(AdminTestCase):
                 'move_threads_to': self.subforum_d.pk,
             })
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(Forum.objects.all_forums().count(), 5)
+        self.assertEqual(Forum.objects.all_forums().count(), 8)
 
     def test_delete_all(self):
         """forum and its contents were deleted"""
@@ -299,7 +311,7 @@ class ForumAdminDeleteViewTests(AdminTestCase):
                     kwargs={'forum_id': self.forum_b.pk}),
             data={'move_children_to': self.root.pk, 'move_threads_to': '',})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(Forum.objects.all_forums().count(), 6)
+        self.assertEqual(Forum.objects.all_forums().count(), 9)
 
         response = self.client.post(
             reverse('misago:admin:forums:nodes:delete',
@@ -307,4 +319,4 @@ class ForumAdminDeleteViewTests(AdminTestCase):
             data={'move_children_to': '', 'move_threads_to': '',})
         self.assertEqual(response.status_code, 302)
 
-        self.assertEqual(Forum.objects.all_forums().count(), 3)
+        self.assertEqual(Forum.objects.all_forums().count(), 6)

@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.conf import settings as dj_settings
 from django.test import TestCase
 from misago.core import threadstore
@@ -33,11 +34,6 @@ class GatewaySettingsTests(TestCase):
             gateway.LoremIpsum
 
     def test_setting_lazy(self):
-        orm = {
-            'conf.SettingsGroup': SettingsGroup,
-            'conf.Setting': Setting,
-        }
-
         test_group = {
             'key': 'test_group',
             'name': "Test settings",
@@ -75,7 +71,7 @@ class GatewaySettingsTests(TestCase):
             )
         }
 
-        migrate_settings_group(orm, test_group)
+        migrate_settings_group(apps, test_group)
 
         self.assertTrue(gateway.lazy_fish_name)
         self.assertTrue(db_settings.lazy_fish_name)

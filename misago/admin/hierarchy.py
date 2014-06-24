@@ -107,9 +107,9 @@ class AdminHierarchyBuilder(object):
 
             for index, node in enumerate(self.nodes_record):
                 if node['parent'] in nodes_dict:
-                    node_obj = Node(link=node['link'],
-                                    name=node['name'],
-                                    icon=node['icon'])
+                    node_obj = Node(name=node['name'],
+                                    icon=node['icon'],
+                                    link=node['link'])
 
                     parent = nodes_dict[node['parent']]
                     if node['after']:

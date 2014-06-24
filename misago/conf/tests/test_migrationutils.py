@@ -1,38 +1,12 @@
+from django.apps import apps
 from django.test import TestCase
 from misago.core import threadstore
 from misago.conf import migrationutils
 from misago.conf.models import SettingsGroup, Setting
 
 
-class MigrationUtilsTests(TestCase):
-    def test_with_conf_models(self):
-        """with_conf_models builds correct dict of models"""
-        models = {
-            u'core.cacheversion': {
-                'Meta': {'object_name': 'CacheVersion'},
-                'cache': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-                u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-                'version': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'})
-            }
-        }
-
-        final_models = migrationutils.with_conf_models('0001_initial')
-        self.assertTrue('conf.settingsgroup' in final_models),
-        self.assertTrue('conf.setting' in final_models),
-
-        final_models = migrationutils.with_conf_models('0001_initial', models)
-        self.assertTrue('conf.settingsgroup' in final_models),
-        self.assertTrue('conf.setting' in final_models),
-        self.assertTrue('core.cacheversion' in final_models),
-
-
 class DBConfMigrationUtilsTests(TestCase):
     def setUp(self):
-        self.orm = {
-            'conf.SettingsGroup': SettingsGroup,
-            'conf.Setting': Setting,
-        }
-
         self.test_group = {
             'key': 'test_group',
             'name': "Test settings",
@@ -58,7 +32,7 @@ class DBConfMigrationUtilsTests(TestCase):
             )
         }
 
-        migrationutils.migrate_settings_group(self.orm, self.test_group)
+        migrationutils.migrate_settings_group(apps, self.test_group)
         self.groups_count = SettingsGroup.objects.count()
 
     def tearDown(self):
@@ -66,8 +40,9 @@ class DBConfMigrationUtilsTests(TestCase):
 
     def test_get_custom_group_and_settings(self):
         """tests setup created settings group"""
-        custom_group = migrationutils.get_group(self.orm,
-                                                self.test_group['key'])
+        custom_group = migrationutils.get_group(
+            apps.get_model('misago_conf', 'SettingsGroup'),
+            self.test_group['key'])
 
         self.assertEqual(custom_group.key, self.test_group['key'])
         self.assertEqual(custom_group.name, self.test_group['name'])
@@ -75,7 +50,7 @@ class DBConfMigrationUtilsTests(TestCase):
                          self.test_group['description'])
 
         custom_settings = migrationutils.get_custom_settings_values(
-            self.orm, custom_group)
+            custom_group)
 
         self.assertEqual(custom_settings['fish_name'], 'Eric')
         self.assertTrue('fish_license_no' not in custom_settings)
@@ -109,8 +84,9 @@ class DBConfMigrationUtilsTests(TestCase):
         }
 
         migrationutils.migrate_settings_group(
-            self.orm, new_group, old_group_key=self.test_group['key'])
-        db_group = migrationutils.get_group(self.orm, new_group['key'])
+            apps, new_group, old_group_key=self.test_group['key'])
+        db_group = migrationutils.get_group(
+            apps.get_model('misago_conf', 'SettingsGroup'), new_group['key'])
 
         self.assertEqual(SettingsGroup.objects.count(), self.groups_count)
         self.assertEqual(db_group.key, new_group['key'])

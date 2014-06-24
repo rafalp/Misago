@@ -50,15 +50,13 @@ TEST_NAME = 'travis_ci_test'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'misago',
+        'NAME': 'misago_postgres',
         'USER': '%s',
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
     }
 }
-
-TEST_NAME = 'misagotestdb'
 """ % pwd.getpwuid(os.getuid())[0]
 
         with open(settings_path, "w") as py_file:
