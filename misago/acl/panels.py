@@ -1,0 +1,26 @@
+from django.template.loader import render_to_string
+from django.utils.translation import ugettext_lazy as _
+from debug_toolbar.panels import Panel
+
+
+class MisagoACLPanel(Panel):
+    """
+    Panel that displays current user's ACL
+    """
+    title = _('Misago User ACL')
+    template = 'misago/acl_debug.html'
+
+    @property
+    def nav_subtitle(self):
+        misago_user = self.get_stats().get('misago_user')
+
+        if misago_user.is_authenticated():
+            return misago_user.username
+        else:
+            return _("Anonymous user")
+
+    def process_response(self, request, response):
+        self.record_stats({
+            'misago_user': request.user,
+            'misago_acl': request.user.acl,
+        })
