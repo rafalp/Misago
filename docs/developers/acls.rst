@@ -78,6 +78,7 @@ Value of ``target`` argument has ``acl`` attribute which is dict with incomplete
 
 Misago comes with its own debug page titled "Misago User ACL" that is available from Django Debug Toolbar menu. This page display user roles permissions as well as final ACL assigned to current user.
 
+
 Algebra
 -------
 
