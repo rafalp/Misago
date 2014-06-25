@@ -99,23 +99,18 @@ class ListView(AdminView):
             return None
 
     def get_ordering_methods(self, request):
-        methods = {
+        return {
             'GET': self.get_ordering_from_GET(request),
             'session': self.get_ordering_from_session(request),
             'default': self.clean_ordering(self.ordering[0][0]),
         }
 
-        if methods['GET'] and methods['GET'] != methods['session']:
-            request.session[self.ordering_session_key] = methods['GET']
-
-        return methods
-
-    def get_ordering_method(self, methods):
+    def get_ordering_method_to_use(self, methods):
         for method in ('GET', 'session', 'default'):
             if methods.get(method):
                 return methods.get(method)
 
-    def order_items(self, method, context):
+    def set_ordering_in_context(self, context, method):
         for order_by, name in self.ordering:
             order_as_dict = {
                 'type': 'desc' if order_by[0] == '-' else 'asc',
@@ -133,9 +128,9 @@ class ListView(AdminView):
                 context['order_by'].append(order_as_dict)
 
     """
-    Dispatch response
+    Querystrings builder
     """
-    def make_querystrings(self, request, context):
+    def make_querystrings(self, context):
         values = {}
         filter_values = {}
         order_values = {}
@@ -163,11 +158,14 @@ class ListView(AdminView):
         if filter_values:
             context['querystring_filter'] = '?%s' % urlencode(filter_values)
 
+    """
+    Dispatch response
+    """
     def dispatch(self, request, *args, **kwargs):
         active_filters = request.session.get(self.filters_token, None)
         extra_actions_list = self.extra_actions or []
 
-        set_querystring = False
+        refresh_querystring = False
 
         context = {
             'items': self.get_queryset(),
@@ -186,11 +184,19 @@ class ListView(AdminView):
 
         if self.ordering:
             ordering_methods = self.get_ordering_methods(request)
-            current_method = self.get_ordering_method(ordering_methods)
-            self.order_items(current_method, context)
+            used_method = self.get_ordering_method_to_use(ordering_methods)
+            self.set_ordering_in_context(context, used_method)
 
-            if context['order_by'] and not ordering_methods.get('GET'):
-                set_querystring = True
+            if (ordering_methods['GET'] and
+                    ordering_methods['GET'] != ordering_methods['session']):
+                # Store get method in session for future requests
+                session_key = self.ordering_session_key
+                request.session[session_key] = ordering_methods['GET']
+
+            if context['order_by'] and not ordering_methods['GET']:
+                # Make view redirect to itself with querystring,
+                # So address ball contains copy-friendly link
+                refresh_querystring = True
 
         self.search_form(request, context)
         if active_filters:
@@ -199,8 +205,8 @@ class ListView(AdminView):
         if self.items_per_page:
             self.paginate_items(context, kwargs.get('page', 0))
 
-        self.make_querystrings(request, context)
-        if set_querystring:
+        self.make_querystrings(context)
+        if refresh_querystring:
             return redirect('%s%s' % (request.path, context['querystring']))
 
         return self.render(request, context)
