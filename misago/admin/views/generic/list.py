@@ -1,5 +1,6 @@
 from urllib import urlencode
 from django.core.paginator import Paginator, EmptyPage
+from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from misago.core.exceptions import ExplicitFirstPage
 from misago.admin.views.generic.base import AdminView
@@ -58,15 +59,53 @@ class ListView(AdminView):
     """
     Filter list items
     """
+    SearchForm = None
+
+    def get_search_form(self, request):
+        return self.SearchForm
+
     @property
-    def filters_token(self):
-        return '%s:filters' % self.root_link
+    def filters_session_key(self):
+        return 'misago_admin_%s_filters' % self.root_link
 
-    def search_form(self, request, context):
-        pass
+    def get_filters_from_GET(self, SearchForm, request):
+        form = SearchForm(request.GET)
+        form.is_valid()
+        return self.clean_filtering_data(form.cleaned_data)
 
-    def filter_items(self, context):
-        pass
+    def get_filters_from_session(self, SearchForm, request):
+        session_filters = request.session.get(self.filters_session_key, {})
+        form = SearchForm(session_filters)
+        form.is_valid()
+        return self.clean_filtering_data(form.cleaned_data)
+
+    def clean_filtering_data(self, data):
+        for key, value in data.items():
+            if not value:
+                del data[key]
+        return data
+
+    def get_filtering_methods(self, request):
+        SearchForm = self.get_search_form(request)
+        return {
+            'GET': self.get_filters_from_GET(SearchForm, request),
+            'session': self.get_filters_from_session(SearchForm, request),
+        }
+
+    def get_filtering_method_to_use(self, methods):
+        for method in ('GET', 'session'):
+            if methods.get(method):
+                return methods.get(method)
+        else:
+            return {}
+
+    def apply_filtering_on_context(self, context, active_filters, SearchForm):
+        context['active_filters'] = active_filters
+        context['search_form'] = SearchForm(initial=context['active_filters'])
+
+        if context['active_filters']:
+            context['items'] = context['search_form'].filter_queryset(
+                active_filters, context['items'])
 
     """
     Order list items
@@ -154,15 +193,14 @@ class ListView(AdminView):
         if values:
             context['querystring'] = '?%s' % urlencode(values)
         if order_values:
-            context['querystring_order'] = '?%s' % urlencode(order_values)
+            context['query_order'] = order_values
         if filter_values:
-            context['querystring_filter'] = '?%s' % urlencode(filter_values)
+            context['query_filters'] = filter_values
 
     """
     Dispatch response
     """
     def dispatch(self, request, *args, **kwargs):
-        active_filters = request.session.get(self.filters_token, None)
         extra_actions_list = self.extra_actions or []
 
         refresh_querystring = False
@@ -174,10 +212,10 @@ class ListView(AdminView):
             'order_by': [],
             'order': None,
             'search_form': None,
-            'active_filters': active_filters,
+            'active_filters': {},
             'querystring': '',
-            'querystring_order': '',
-            'querystring_filter': '',
+            'query_order': {},
+            'query_filters': {},
             'extra_actions': extra_actions_list,
             'extra_actions_len': len(extra_actions_list),
         }
@@ -189,7 +227,7 @@ class ListView(AdminView):
 
             if (ordering_methods['GET'] and
                     ordering_methods['GET'] != ordering_methods['session']):
-                # Store get method in session for future requests
+                # Store GET ordering in session for future requests
                 session_key = self.ordering_session_key
                 request.session[session_key] = ordering_methods['GET']
 
@@ -198,14 +236,37 @@ class ListView(AdminView):
                 # So address ball contains copy-friendly link
                 refresh_querystring = True
 
-        self.search_form(request, context)
-        if active_filters:
-            self.filter_items(context)
+        SearchForm = self.get_search_form(request)
+        if SearchForm:
+            filtering_methods = self.get_filtering_methods(request)
+            active_filters = self.get_filtering_method_to_use(filtering_methods)
+            self.apply_filtering_on_context(context, active_filters, SearchForm)
 
-        if self.items_per_page:
-            self.paginate_items(context, kwargs.get('page', 0))
+            if (filtering_methods['GET'] and
+                    filtering_methods['GET'] != filtering_methods['session']):
+                # Store GET filters in session for future requests
+                session_key = self.filters_session_key
+                request.session[session_key] = filtering_methods['GET']
+
+            if request.GET.get('clear_filters'):
+                # Clear filters from querystring
+                request.session.pop(self.filters_session_key, None)
+                context['active_filters'] = {}
+
+            if context['active_filters'] and not filtering_methods['GET']:
+                # Make view redirect to itself with querystring,
+                # So address ball contains copy-friendly link
+                refresh_querystring = True
 
         self.make_querystrings(context)
+
+        if self.items_per_page:
+            try:
+                self.paginate_items(context, kwargs.get('page', 0))
+            except EmptyPage:
+                return redirect(
+                    '%s%s' % (reverse(self.root_link), context['querystring']))
+
         if refresh_querystring:
             return redirect('%s%s' % (request.path, context['querystring']))
 

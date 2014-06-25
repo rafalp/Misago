@@ -1,5 +1,5 @@
 {% extends "misago/admin/generic/list.html" %}
-{% load i18n misago_avatars %}
+{% load crispy_forms_tags i18n misago_avatars %}
 
 
 {% block page-actions %}
@@ -71,4 +71,44 @@
     <input type="checkbox">
   </label>
 </td>
-{% endblock %}
+{% endblock table-row %}
+
+
+{% block emptylist %}
+<td colspan="{{ 3|add:extra_actions_len }}">
+  <p>{% trans "No users matching search criteria have been found." %}</p>
+</td>
+{% endblock emptylist %}
+
+
+{% block modal-title %}
+{% trans "Search users" %}
+{% endblock modal-title %}
+
+
+{% block modal-body %}
+<div class="row">
+  <div class="col-md-6">
+    {{ search_form.username|as_crispy_field }}
+  </div>
+  <div class="col-md-6">
+    {{ search_form.email|as_crispy_field }}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    {{ search_form.rank|as_crispy_field }}
+  </div>
+  <div class="col-md-6">
+    {{ search_form.role|as_crispy_field }}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    {{ search_form.inactive|as_crispy_field }}
+  </div>
+  <div class="col-md-6">
+    {{ search_form.is_staff|as_crispy_field }}
+  </div>
+</div>
+{% endblock modal-body %}

@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from misago.admin.views import generic
 from misago.users.forms.admin import (StaffFlagUserFormFactory, NewUserForm,
-                                      EditUserForm)
+                                      EditUserForm, SearchUsersForm)
 
 
 class UserAdmin(generic.AdminBaseMixin):
@@ -31,11 +31,14 @@ class UsersList(UserAdmin, generic.ListView):
         ('id', _("From oldest")),
         ('username_slug', _("A to z")),
         ('-username_slug', _("Z to a")),
-        )
+    )
 
     def get_queryset(self):
         qs = super(UsersList, self).get_queryset()
         return qs.select_related('rank')
+
+    def get_search_form(self, request):
+        return SearchUsersForm
 
 
 class NewUser(UserAdmin, generic.ModelFormView):

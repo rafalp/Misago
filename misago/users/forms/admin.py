@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
-from misago.core import forms
+from misago.core import forms, threadstore
 from misago.core.validators import validate_sluggable
 from misago.acl.models import Role
 from misago.users.models import Rank
@@ -8,6 +8,9 @@ from misago.users.validators import (validate_username, validate_email,
                                      validate_password)
 
 
+"""
+Users forms
+"""
 class UserBaseForm(forms.ModelForm):
     username = forms.CharField(
         label=_("Username"))
@@ -122,6 +125,87 @@ def StaffFlagUserFormFactory(FormType, instance, add_staff_field):
         return FormType
 
 
+class SearchUsersFormBase(forms.Form):
+    username = forms.CharField(label=_("Username starts with"), required=False)
+    email = forms.CharField(label=_("E-mail starts with"), required=False)
+    #rank = forms.TypedChoiceField(label=_("Rank"),
+    #                              coerce=int,
+    #                              required=False,
+    #                              choices=ranks_list)
+    #role = forms.TypedChoiceField(label=_("Role"),
+    #                              coerce=int,
+    #                              required=False,
+    #                              choices=roles_list)
+    inactive = forms.YesNoSwitch(label=_("Inactive only"))
+    is_staff = forms.YesNoSwitch(label=_("Is administrator"))
+
+    def filter_queryset(self, cleaned_data, queryset):
+        if cleaned_data.get('username'):
+            queryset = queryset.filter(
+                username_slug__startswith=cleaned_data.get('username').lower())
+
+        if cleaned_data.get('email'):
+            queryset = queryset.filter(
+                email__istartswith=cleaned_data.get('email'))
+
+        if cleaned_data.get('rank'):
+            queryset = queryset.filter(
+                rank_id=cleaned_data.get('rank'))
+
+        if cleaned_data.get('role'):
+            queryset = queryset.filter(
+                roles__id=cleaned_data.get('role'))
+
+        if cleaned_data.get('inactive'):
+            pass
+
+        if cleaned_data.get('is_staff'):
+            queryset = queryset.filter(is_staff=True)
+
+        return queryset
+
+
+def SearchUsersForm(*args, **kwargs):
+    """
+    Factory that uses cache for ranks and roles,
+    and makes those ranks and roles typed choice fields that play nice
+    with passing values via GET
+    """
+    ranks_choices = threadstore.get('misago_admin_ranks_choices', 'nada')
+    if ranks_choices == 'nada':
+        ranks_choices = [('', _("All ranks"))]
+        for rank in Rank.objects.order_by('name').iterator():
+            ranks_choices.append((rank.pk, rank.name))
+        threadstore.set('misago_admin_ranks_choices', ranks_choices)
+
+    roles_choices = threadstore.get('misago_admin_roles_choices', 'nada')
+    if roles_choices == 'nada':
+        roles_choices = [('', _("All roles"))]
+        for role in Role.objects.order_by('name').iterator():
+            roles_choices.append((role.pk, role.name))
+        threadstore.set('misago_admin_roles_choices', roles_choices)
+
+
+    extra_fields = {
+        'rank': forms.TypedChoiceField(label=_("Has rank"),
+                                       coerce=int,
+                                       required=False,
+                                       choices=ranks_choices),
+        'role': forms.TypedChoiceField(label=_("Has role"),
+                                       coerce=int,
+                                       required=False,
+                                       choices=roles_choices)
+    }
+
+    FinalForm =  type('SearchUsersFormFinal',
+                      (SearchUsersFormBase,),
+                      extra_fields)
+    return FinalForm(*args, **kwargs)
+
+
+"""
+Ranks form
+"""
 class RankForm(forms.ModelForm):
     name = forms.CharField(
         label=_("Name"),
