@@ -187,7 +187,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Online(models.Model):
-    user = models.OneToOneField(User, primary_key=True, related_name='online')
+    user = models.OneToOneField(User, primary_key=True,
+                                related_name='online_tracker')
     last_click = models.DateTimeField(default=timezone.now)
 
 
