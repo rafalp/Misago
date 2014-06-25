@@ -18,6 +18,10 @@
 <th style="width: 150px;">{% trans "E-mail" %}</th>
 <th style="width: 150px;">{% trans "Rank" %}</th>
 <th style="width: 200px;">{% trans "Joined" %}</th>
+{% for action in extra_actions %}
+<th style="width: 1%;">&nbsp;</th>
+{% endfor %}
+<th>&nbsp;</th>
 <th>&nbsp;</th>
 {% endblock table-header %}
 
@@ -51,6 +55,13 @@
     {{ item.joined_on|date }}
   </abbr>
 </td>
+{% for action in extra_actions %}
+<td class="row-action">
+  <a href="{% url action.link user_id=item.id %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
+    <span class="{{ action.icon }}"></span>
+  </a>
+</td>
+{% endfor %}
 <td class="row-action">
   <div class="btn-group pull-right">
     <button type="button" class="btn btn-default dropdown-toggle tooltip-top" data-toggle="dropdown" title="{% trans "User options" %}">
@@ -75,7 +86,7 @@
 
 
 {% block emptylist %}
-<td colspan="{{ 3|add:extra_actions_len }}">
+<td colspan="{{ 7|add:extra_actions_len }}">
   <p>{% trans "No users matching search criteria have been found." %}</p>
 </td>
 {% endblock emptylist %}
