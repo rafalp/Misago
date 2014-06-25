@@ -1,14 +1,14 @@
 from hashlib import md5
+import re
 from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
                                         UserManager as BaseUserManager,
                                         AnonymousUser as DjangoAnonymousUser)
 from django.db import models, transaction
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from misago.acl import get_user_acl
+from misago.acl import get_user_acl, version as acl_version
 from misago.acl.models import Role
 from misago.core.utils import slugify
-from misago.users.models import Rank
 from misago.users.utils import hash_email
 from misago.users.validators import (validate_email, validate_password,
                                      validate_username)
@@ -94,11 +94,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, db_index=True)
     email_hash = models.CharField(max_length=32, unique=True)
     joined_on = models.DateTimeField(_('joined on'), default=timezone.now)
+    last_active = models.DateTimeField(null=True, blank=True)
     rank = models.ForeignKey(
-        'misago_users.Rank', null=True, blank=True, on_delete=models.PROTECT)
+        'Rank', null=True, blank=True, on_delete=models.PROTECT)
     title = models.CharField(max_length=255, null=True, blank=True)
+    activation_requirement = models.PositiveIntegerField(default=0)
     is_staff = models.BooleanField(
-        _('staff status'), default=False, db_index=True,
+        _('staff status'), default=False,
         help_text=_('Designates whether the user can log into admin sites.'))
     roles = models.ManyToManyField('misago_acl.Role')
     acl_key = models.CharField(max_length=12, null=True, blank=True)
@@ -184,6 +186,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.acl_key = md5(','.join(roles_pks)).hexdigest()[:12]
 
 
+class Online(models.Model):
+    user = models.OneToOneField(User, primary_key=True, related_name='online')
+    last_click = models.DateTimeField(default=timezone.now)
+
+
 class AnonymousUser(DjangoAnonymousUser):
     acl_key = 'anonymous'
 
@@ -207,3 +214,124 @@ class AnonymousUser(DjangoAnonymousUser):
 
     def update_acl_key(self):
         raise TypeError("Can't update ACL key on anonymous users")
+
+
+"""
+Ranks
+"""
+class RankManager(models.Manager):
+    def get_default(self):
+        return self.get(is_default=True)
+
+    def make_rank_default(self, rank):
+        with transaction.atomic():
+            self.filter(is_default=True).update(is_default=False)
+            rank.is_default = True
+            rank.save(update_fields=['is_default'])
+
+
+class Rank(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+    title = models.CharField(max_length=255, null=True, blank=True)
+    roles = models.ManyToManyField('misago_acl.Role', null=True, blank=True)
+    css_class = models.CharField(max_length=255, null=True, blank=True)
+    is_default = models.BooleanField(default=False)
+    is_tab = models.BooleanField(default=False)
+    is_on_index = models.BooleanField(default=False)
+    order = models.IntegerField(default=0)
+
+    objects = RankManager()
+
+    class Meta:
+        get_latest_by = 'order'
+
+    def __unicode__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.set_order()
+        else:
+            acl_version.invalidate()
+        return super(Rank, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        acl_version.invalidate()
+        return super(Rank, self).delete(*args, **kwargs)
+
+    def set_name(self, name):
+        self.name = name
+        self.slug = slugify(name)
+
+    def set_order(self):
+        try:
+            self.order = Rank.objects.latest('order').order + 1
+        except Rank.DoesNotExist:
+            self.order = 0
+
+
+"""
+Bans
+"""
+BAN_NAME = 0
+BAN_EMAIL = 1
+BAN_IP = 2
+
+
+class BansManager(models.Manager):
+    def is_ip_banned(self, ip):
+        return self.check_ban(ip=ip)
+
+    def is_username_banned(self, username):
+        return self.check_ban(username=username)
+
+    def is_email_banned(self, email):
+        return self.check_ban(email=email)
+
+    def check_ban(self, username=None, email=None, ip=None):
+        tests = []
+
+        if username:
+            tests.append(BAN_NAME)
+        if email:
+            tests.append(BAN_EMAIL)
+        if ip:
+            tests.append(BAN_IP)
+
+        queryset = self.filter(is_valid=False)
+        if len(tests) == 1:
+            queryset = queryset.filter(test=tests[0])
+        elif tests:
+            queryset = queryset.filter(test__in=tests)
+
+        for ban in queryset.order_by('-id').iterator():
+            if username and ban.test == BAN_NAME and ban.test_value(username):
+                return ban
+            elif email and ban.test == BAN_EMAIL and ban.test_value(email):
+                return ban
+            elif ip and ban.test == BAN_IP and ban.test_value(ip):
+                return ban
+        return False
+
+
+class Ban(models.Model):
+    test = models.PositiveIntegerField(default=BAN_NAME, db_index=True)
+    banned_value = models.CharField(max_length=255, db_index=True)
+    reason_user = models.TextField(null=True, blank=True)
+    reason_admin = models.TextField(null=True, blank=True)
+    valid_until = models.DateField(null=True, blank=True, db_index=True)
+    is_valid = models.BooleanField(default=False, db_index=True)
+
+    objects = BansManager()
+
+    def test_value(self, value):
+        regex = '^' + re.escape(self.banned_value).replace('\*', '(.*?)') + '$'
+        return re.search(regex, value, flags=re.IGNORECASE)
+
+
+class BanCache(models.Model):
+    user = models.OneToOneField(User, primary_key=True)
+    bans_version = models.PositiveIntegerField(default=0)
+    valid_until = models.DateField(null=True, blank=True)
