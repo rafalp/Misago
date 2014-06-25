@@ -73,7 +73,6 @@ class EditUserForm(forms.ModelForm):
 def UserFormFactory(FormType, instance):
     extra_fields = {}
 
-
     ranks = Rank.objects.order_by('name')
     if ranks.exists():
         extra_fields['rank'] = forms.ModelChoiceField(

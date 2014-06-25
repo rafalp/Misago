@@ -15,8 +15,13 @@ class UserAdmin(generic.AdminBaseMixin):
         return get_user_model()
 
     def create_form_type(self, request, target):
+        if request.user.is_superuser:
+            add_staff_field = request.user.pk != target.id
+        else:
+            add_staff_field = False
+
         return StaffFlagUserFormFactory(
-            self.Form, target, add_staff_field=request.user.is_superuser)
+            self.Form, target, add_staff_field=add_staff_field)
 
 
 class UsersList(UserAdmin, generic.ListView):
