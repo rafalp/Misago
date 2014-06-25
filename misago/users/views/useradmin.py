@@ -24,8 +24,8 @@ class UsersList(UserAdmin, generic.ListView):
     ordering = (
         ('-id', _("From newest")),
         ('id', _("From oldest")),
-        ('username', _("A to z")),
-        ('-username', _("Z to a")),
+        ('username_slug', _("A to z")),
+        ('-username_slug', _("Z to a")),
         )
 
     def get_queryset(self):
