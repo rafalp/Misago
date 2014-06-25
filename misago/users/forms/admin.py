@@ -99,6 +99,11 @@ def UserFormFactory(FormType, instance):
     return type('UserFormFinal', (FormType,), extra_fields)
 
 
+import warnings
+warnings.warn("Admin search inactive users not implemented yet.",
+              FutureWarning)
+
+
 def StaffFlagUserFormFactory(FormType, instance, add_staff_field):
     FormType = UserFormFactory(FormType, instance)
 
@@ -139,28 +144,30 @@ class SearchUsersFormBase(forms.Form):
     inactive = forms.YesNoSwitch(label=_("Inactive only"))
     is_staff = forms.YesNoSwitch(label=_("Is administrator"))
 
-    def filter_queryset(self, cleaned_data, queryset):
-        if cleaned_data.get('username'):
+    def filter_queryset(self, search_criteria, queryset):
+        criteria = search_criteria
+        if criteria.get('username'):
             queryset = queryset.filter(
-                username_slug__startswith=cleaned_data.get('username').lower())
+                username_slug__startswith=criteria.get('username').lower())
 
-        if cleaned_data.get('email'):
+        if criteria.get('email'):
             queryset = queryset.filter(
-                email__istartswith=cleaned_data.get('email'))
+                email__istartswith=criteria.get('email'))
 
-        if cleaned_data.get('rank'):
+        if criteria.get('rank'):
             queryset = queryset.filter(
-                rank_id=cleaned_data.get('rank'))
+                rank_id=criteria.get('rank'))
 
-        if cleaned_data.get('role'):
+        if criteria.get('role'):
             queryset = queryset.filter(
-                roles__id=cleaned_data.get('role'))
+                roles__id=criteria.get('role'))
 
-        if cleaned_data.get('inactive'):
+        if criteria.get('inactive'):
             pass
 
-        if cleaned_data.get('is_staff'):
-            queryset = queryset.filter(is_staff=True)
+
+        if criteria.get('is_staff'):
+            queryset = criteria.filter(is_staff=True)
 
         return queryset
 
