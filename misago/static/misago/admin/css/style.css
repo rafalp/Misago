@@ -6295,6 +6295,12 @@ body {
 .table-panel table.table tr td.row-action .dropdown-toggle:active.btn-success {
   color: #1b7943;
 }
+.table-panel table.table tr td.row-action .dropdown-menu {
+  top: 24px;
+}
+.table-panel table.table tr td.row-action .dropdown-menu:after {
+  right: 9px;
+}
 .table-panel table.table tr.active td {
   background-color: rgba(240, 173, 78, 0.05);
 }
