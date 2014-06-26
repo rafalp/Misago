@@ -59,12 +59,12 @@ Base class for lists if items. Supports following properties:
 * **selection_label** - Label displayed on mass action button if there are items selected. ``0`` will be replaced with number of selected items automatically.
 * **empty_selection_label** - Label displayed on mass action button if there are no items selected.
 
-In addition to this, ListView defines following methods that you may be interested in overloading:
+In addition to this, ListView defines following methods that you may be interested in:
 
 
 .. function:: get_queryset(self)
 
-This function is expected to return queryset of items that will be displayed. If filters, sorting or pagination is defined, this queryset will be sliced and filtered.
+This function is expected to return queryset of items that will be displayed. If filters, sorting or pagination is defined, this queryset will be further sliced and filtered.
 
 
 .. function:: add_item_action(cls, name, icon, link, style=None)
