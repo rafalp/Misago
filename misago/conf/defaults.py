@@ -115,6 +115,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'misago.core.middleware.threadstore.ThreadStoreMiddleware',
     'misago.core.middleware.exceptionhandler.ExceptionHandlerMiddleware',
+    'misago.users.middleware.OnlineTrackerMiddleware',
     'misago.admin.middleware.AdminAuthMiddleware',
 )
 
