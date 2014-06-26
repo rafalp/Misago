@@ -20,7 +20,12 @@ class MisagoACLPanel(Panel):
             return _("Anonymous user")
 
     def process_response(self, request, response):
+        if hasattr(request.user, 'acl'):
+            misago_acl = request.user.acl
+        else:
+            misago_acl = {}
+
         self.record_stats({
             'misago_user': request.user,
-            'misago_acl': request.user.acl,
+            'misago_acl': misago_acl,
         })
