@@ -174,9 +174,11 @@
 
 
 {% block javascripts %}
+{% if mass_actions %}
 <script type="text/javascript">
   $(function() {
     tableMassActions("{{ empty_selection_label }}", "{{ selection_label }}");
   });
 </script>
+{% endif %}
 {% endblock javascripts %}
