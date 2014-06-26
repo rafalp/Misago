@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from misago.core import forms, threadstore
 from misago.core.validators import validate_sluggable
 from misago.acl.models import Role
-from misago.users.models import Rank
+from misago.users.models import BANS_CHOICES, Ban, Rank
 from misago.users.validators import (validate_username, validate_email,
                                      validate_password)
 
@@ -264,3 +264,54 @@ class RankForm(forms.ModelForm):
 
         self.instance.set_name(data.get('name'))
         return data
+
+
+"""
+Bans Form
+"""
+
+class BanForm(forms.ModelForm):
+    test = forms.TypedChoiceField(
+        label=_("Ban type"),
+        coerce=int,
+        choices=BANS_CHOICES)
+    banned_value = forms.CharField(
+        label=_("Banned value"), max_length=250,
+        help_text=_('This value is case-insensitive and accepts asterisk (*) '
+                    'for rought matches. For example, making IP ban for value '
+                    '"83.*" will ban all IP addresses beginning with "83.".'),
+        error_messages={
+            'max_length': _("Banned value can't be longer than 250 characters.")
+        })
+    user_message = forms.CharField(
+        label=_("Optional message for user"), required=False, max_length=1000,
+        widget=forms.Textarea(attrs={'rows': 3}),
+        error_messages={
+            'max_length': _("Message can't be longer than 1000 characters.")
+        })
+    staff_message = forms.CharField(
+        label=_("Optional message for team"), required=False, max_length=1000,
+        widget=forms.Textarea(attrs={'rows': 3}),
+        error_messages={
+            'max_length': _("Message can't be longer than 1000 characters.")
+        })
+    valid_until = forms.DateField(
+        label=_("Optional expiration date for this ban"),
+        required=False, input_formats=['%m-%d-%Y'],
+        widget=forms.DateInput(
+            format='%m-%d-%Y', attrs={'data-date-format': 'MM-DD-YYYY'}),
+        help_text=_('Leave this field empty for this ban to never expire.'))
+
+    class Meta:
+        model = Ban
+        fields = [
+            'test',
+            'banned_value',
+            'user_message',
+            'staff_message',
+            'valid_until',
+        ]
+
+
+class SearchBansForm(object):
+    pass

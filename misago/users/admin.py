@@ -1,9 +1,10 @@
 from django.conf.urls import url
 from django.utils.translation import ugettext_lazy as _
-from misago.users.views.useradmin import UsersList, NewUser, EditUser
+from misago.users.views.bansadmin import BansList, NewBan, EditBan, DeleteBan
 from misago.users.views.rankadmin import (RanksList, NewRank, EditRank,
                                           DeleteRank, MoveUpRank, MoveDownRank,
                                           DefaultRank)
+from misago.users.views.useradmin import UsersList, NewUser, EditUser
 
 
 class MisagoAdminExtension(object):
@@ -32,6 +33,15 @@ class MisagoAdminExtension(object):
             url(r'^delete/(?P<rank_id>\d+)/$', DeleteRank.as_view(), name='delete'),
         )
 
+        # Bans
+        urlpatterns.namespace(r'^bans/', 'bans', 'users')
+        urlpatterns.patterns('users:bans',
+            url(r'^$', BansList.as_view(), name='index'),
+            url(r'^new/$', NewBan.as_view(), name='new'),
+            url(r'^edit/(?P<ban_id>\d+)/$', EditBan.as_view(), name='edit'),
+            url(r'^delete/(?P<ban_id>\d+)/$', DeleteBan.as_view(), name='delete'),
+        )
+
     def register_navigation_nodes(self, site):
         site.add_node(name=_("Users"),
                       icon='fa fa-users',
@@ -52,3 +62,10 @@ class MisagoAdminExtension(object):
                       after='misago:admin:users:accounts:index',
                       namespace='misago:admin:users:ranks',
                       link='misago:admin:users:ranks:index')
+
+        site.add_node(name=_("Bans"),
+                      icon='fa fa-lock',
+                      parent='misago:admin:users',
+                      after='misago:admin:users:ranks:index',
+                      namespace='misago:admin:users:bans',
+                      link='misago:admin:users:bans:index')

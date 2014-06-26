@@ -1,0 +1,87 @@
+{% extends "misago/admin/generic/list.html" %}
+{% load i18n %}
+
+
+{% block page-actions %}
+<div class="page-actions">
+  <a href="{% url 'misago:admin:users:bans:new' %}" class="btn btn-success">
+    <span class="fa fa-plus-circle"></span>
+    {% trans "New ban" %}
+  </a>
+</div>
+{% endblock %}
+
+
+{% block table-header %}
+<th style="width: 25%;">{% trans "Ban" %}</th>
+<th style="width: 160px;">{% trans "Type" %}</th>
+<th>{% trans "Valid until" %}</th>
+{% for action in extra_actions %}
+<th style="width: 1%;">&nbsp;</th>
+{% endfor %}
+<th style="width: 1%;">&nbsp;</th>
+<th style="width: 1%;">&nbsp;</th>
+{% endblock table-header %}
+
+
+{% block table-row %}
+<td class="lead">
+  {{ item.banned_value }}
+</td>
+<td>
+  {{ item.test_name }}
+</td>
+<td>
+  {% if item.valid_until %}
+    {% if item.is_expired %}
+      <span class="text-muted tooltip-top" title="{% trans "This ban has expired." %}">
+        {{ item.valid_until|date }}
+        <span class="fa fa-exclamation text-danger"></span>
+      </span>
+    {% else %}
+      {{ item.valid_until|date }}
+    {% endif %}
+  {% else %}
+  <em>{% trans "permanent" %}</em>
+  {% endif %}
+</td>
+{% for action in extra_actions %}
+<td class="row-action">
+  <a href="{% url action.link ban_id=item.id %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
+    <span class="{{ action.icon }}"></span>
+  </a>
+</td>
+{% endfor %}
+<td class="row-action">
+  <a href="{% url 'misago:admin:users:bans:edit' ban_id=item.id %}" class="btn btn-primary tooltip-top" title="{% trans "Edit" %}">
+    <span class="fa fa-pencil"></span>
+  </a>
+</td>
+<td class="row-action">
+  <form action="{% url 'misago:admin:users:bans:delete' ban_id=item.id %}" method="post" class="delete-prompt">
+    <button class="btn btn-danger tooltip-top" title="{% trans "Remove" %}">
+      {% csrf_token %}
+      <span class="fa fa-times"></span>
+    </button>
+  </form>
+</td>
+{% endblock %}
+
+
+{% block emptylist %}
+<td colspan="{{ 4|add:extra_actions_len }}">
+  <p>{% trans "No bans are currently set." %}</p>
+</td>
+{% endblock emptylist %}
+
+
+{% block javascripts %}
+<script type="text/javascript">
+  $(function() {
+    $('.delete-prompt').submit(function() {
+      var decision = confirm("{% trans "Are you sure you want to remove this ban?" %}");
+      return decision;
+    });
+  });
+</script>
+{% endblock %}

@@ -20,3 +20,14 @@ def deny_guests(f):
         else:
             return f(request, *args, **kwargs)
     return decorator
+
+
+def deny_banned_ips(f):
+    def decorator(request, *args, **kwargs):
+        if request.user.is_anonymous():
+            raise PermissionDenied(
+                _("This page is not available to guests."))
+        else:
+            return f(request, *args, **kwargs)
+    return decorator
+

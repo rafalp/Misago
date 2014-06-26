@@ -1,0 +1,64 @@
+{% extends "misago/admin/generic/form.html" %}
+{% load crispy_forms_filters i18n %}
+
+
+{% block title %}
+{% if target.pk %}
+{% trans target.banned_value %}
+{% else %}
+{% trans "New ban" %}
+{% endif %} | {{ active_link.name }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block page-target %}
+{% if target.pk %}
+{% trans target.banned_value %}
+{% else %}
+{% trans "New ban" %}
+{% endif %}
+{% endblock page-target %}
+
+
+{% block form-header %}
+<h1>
+  {% if target.pk %}
+  {% trans target.banned_value %}
+  {% else %}
+  {% trans "New ban" %}
+  {% endif %}
+</h1>
+{% endblock %}
+
+
+{% block form-body %}
+<div class="form-body">
+  <fieldset>
+    <legend>{% trans "Ban settings" %}</legend>
+
+    {{ form.test|as_crispy_field }}
+    {{ form.banned_value|as_crispy_field }}
+    {{ form.valid_until|as_crispy_field }}
+
+  </fieldset>
+  <fieldset>
+    <legend>{% trans "Messages" %}</legend>
+
+    {{ form.user_message|as_crispy_field }}
+    {{ form.staff_message|as_crispy_field }}
+
+  </fieldset>
+</div>
+{% endblock form-body %}
+
+
+{% block javascripts %}
+<script type="text/javascript">
+  $(function() {
+    $('#id_valid_until').datetimepicker({
+      language: $('html').attr('lang'),
+      pickTime: false
+    });
+  });
+</script>
+{% endblock %}

@@ -281,6 +281,13 @@ BAN_EMAIL = 1
 BAN_IP = 2
 
 
+BANS_CHOICES = (
+    (BAN_NAME, _('Username')),
+    (BAN_EMAIL, _('E-mail address')),
+    (BAN_IP, _('IP Address')),
+)
+
+
 class BansManager(models.Manager):
     def is_ip_banned(self, ip):
         return self.check_ban(ip=ip)
@@ -320,12 +327,27 @@ class BansManager(models.Manager):
 class Ban(models.Model):
     test = models.PositiveIntegerField(default=BAN_NAME, db_index=True)
     banned_value = models.CharField(max_length=255, db_index=True)
-    reason_user = models.TextField(null=True, blank=True)
-    reason_admin = models.TextField(null=True, blank=True)
+    user_message = models.TextField(null=True, blank=True)
+    staff_message = models.TextField(null=True, blank=True)
     valid_until = models.DateField(null=True, blank=True, db_index=True)
     is_valid = models.BooleanField(default=False, db_index=True)
 
     objects = BansManager()
+
+    @property
+    def test_name(self):
+        return BANS_CHOICES[self.test][1]
+
+    @property
+    def name(self):
+        return self.banned_value
+
+    @property
+    def is_expired(self):
+        if self.valid_until:
+            return self.valid_until <= timezone.now().date
+        else:
+            return False
 
     def test_value(self, value):
         regex = '^' + re.escape(self.banned_value).replace('\*', '(.*?)') + '$'

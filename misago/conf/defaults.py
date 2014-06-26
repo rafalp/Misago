@@ -62,6 +62,7 @@ PIPELINE_JS = {
             'misago/admin/js/jquery.js',
             'misago/admin/js/bootstrap.js',
             'misago/admin/js/moment.min.js',
+            'misago/admin/js/bootstrap-datetimepicker.min.js',
             'misago/admin/js/misago-timestamps.js',
             'misago/admin/js/misago-tooltips.js',
             'misago/admin/js/misago-tables.js',
