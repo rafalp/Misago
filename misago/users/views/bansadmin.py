@@ -24,7 +24,22 @@ class BanAdmin(generic.AdminBaseMixin):
 
 
 class BansList(BanAdmin, generic.ListView):
+    items_per_page = 30
     ordering = (('-id', None),)
+    selection_label = _('With bans: 0')
+    empty_selection_label = _('Select bans')
+    mass_actions = (
+        (
+            'delete',
+            _('Remove bans'),
+            _('Are you sure you want to remove those bans?')
+        ),
+    )
+
+    def action_delete(self, request, items):
+        items.delete()
+        cachebuster.invalidate('misago_bans')
+        messages.success(request, _("Selected bans have been removed."))
 
 
 class NewBan(BanAdmin, generic.ModelFormView):

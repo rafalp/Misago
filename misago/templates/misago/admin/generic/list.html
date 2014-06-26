@@ -8,7 +8,7 @@
 
 
 {% block view %}
-{% if paginator or order_by %}
+{% if paginator or order_by or search_form or mass_actions %}
 <div class="table-actions">
 
   {% if paginator %}
@@ -68,6 +68,26 @@
     {% endif %}
   {% endif %}
 
+  {% if mass_actions %}
+  <div class="btn-group pull-right">
+    <form id="mass-action" action="{{ querystring }}" method="post">
+      <button type="button" class="btn btn-default dropdown-toggle mass-controller" data-toggle="dropdown">
+        <span class="fa fa-gears"></span>
+        {% trans "With selected" %}
+      </button>
+      {% csrf_token %}
+      <ul class="dropdown-menu" role="menu">
+        {% for action in mass_actions %}
+        <li>
+          <button type="submit" name="action" value="{{ action.action }}" {% if action.prompt %}data-prompt="{{ action.prompt }}"{% endif %}>
+            {{ action.name }}
+          </button>
+        </li>
+        {% endfor %}
+      </ul>
+    </form>
+  </div>
+  {% endif %}
 
 </div><!-- /.table-actions -->
 {% endif %}
@@ -77,12 +97,22 @@
     <tr>
       {% block table-header %}
       {% endblock table-header %}
+      {% if mass_actions %}
+      <th class="width: 1%;">&nbsp;</th>
+      {% endif %}
     </tr>
 
     {% block table-items %}
     {% for item in items %}
     <tr>
       {% block table-row %}{% endblock table-row %}
+      {% if mass_actions %}
+      <td class="row-select">
+        <label>
+          <input type="checkbox" form="mass-action" name="selected_items" value="{{ item.pk }}" {% if item.pk in selected_items %} checked{% endif %}>
+        </label>
+      </td>
+      {% endif %}
     </tr>
     {% empty %}
     <tr class="message-row">
@@ -141,3 +171,12 @@
 </div>
 {% endif %}
 {% endblock content%}
+
+
+{% block javascripts %}
+<script type="text/javascript">
+  $(function() {
+    tableMassActions("{{ empty_selection_label }}", "{{ selection_label }}");
+  });
+</script>
+{% endblock javascripts %}

@@ -1,6 +1,16 @@
 // Mass-action tables
 function tableMassActions(label_none, label_selected) {
   var $controller = $('.mass-controller');
+  var $form = $controller.parents('form');
+
+  $form.find('.dropdown-menu button').click(function() {
+    if ($(this).data('prompt')) {
+      var prompt = confirm($(this).data('prompt'));
+      return prompt;
+    } else {
+      return true;
+    }
+  });
 
   function enableController(selected_no) {
       $controller.removeClass('btn-default');

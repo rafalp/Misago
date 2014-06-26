@@ -345,7 +345,7 @@ class Ban(models.Model):
     @property
     def is_expired(self):
         if self.valid_until:
-            return self.valid_until <= timezone.now().date
+            return self.valid_until < timezone.now().date
         else:
             return False
 

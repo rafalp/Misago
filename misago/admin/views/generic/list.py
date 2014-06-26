@@ -1,9 +1,16 @@
 from urllib import urlencode
+from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
 from django.core.urlresolvers import reverse
+from django.db import transaction
 from django.shortcuts import redirect
+from django.utils.translation import ugettext_lazy as _
 from misago.core.exceptions import ExplicitFirstPage
 from misago.admin.views.generic.base import AdminView
+
+
+class MassActionError(Exception):
+    pass
 
 
 class ListView(AdminView):
@@ -24,6 +31,17 @@ class ListView(AdminView):
     ordering = None
 
     extra_actions = None
+    mass_actions = None
+
+    selection_label = _('Selected: 0')
+    empty_selection_label = _('Select items')
+
+    @classmethod
+    def add_mass_action(cls, action, name, prompt=None):
+        if not cls.mass_actions:
+            cls.mass_actions = []
+
+        cls.extra_actions.append((action, name, prompt))
 
     @classmethod
     def add_item_action(cls, name, icon, link, style=None):
@@ -167,6 +185,44 @@ class ListView(AdminView):
                 context['order_by'].append(order_as_dict)
 
     """
+    Mass actions
+    """
+    def handle_mass_action(self, request, context):
+        limit = self.items_per_page or 64
+        action = self.select_mass_action(request.POST.get('action'))
+        items = [x for x in request.POST.getlist('selected_items')[:limit]]
+
+        context['selected_items'] = items
+        if not context['selected_items']:
+            raise MassActionError(_("You have to select one or more items."))
+
+        action_queryset = context['items'].filter(pk__in=items)
+        if not action_queryset.exists():
+            raise MassActionError(_("You have to select one or more items."))
+
+        action_callable = getattr(self, 'action_%s' % action)
+        with transaction.atomic():
+            return action_callable(request, action_queryset)
+
+    def select_mass_action(self, action):
+        for definition in self.mass_actions:
+            if definition[0] == action:
+                return action
+        else:
+            raise MassActionError(_("Action is not allowed."))
+
+    def mass_actions_as_dicts(self):
+        dicts = []
+        for definition in self.mass_actions or []:
+            dicts.append({
+                'action': definition[0],
+                'name': definition[1],
+                'prompt': definition[2] if len(definition) == 3 else None,
+                })
+        return dicts
+
+
+    """
     Querystrings builder
     """
     def make_querystrings(self, context):
@@ -201,24 +257,45 @@ class ListView(AdminView):
     Dispatch response
     """
     def dispatch(self, request, *args, **kwargs):
+        mass_actions_list = self.mass_actions_as_dicts()
         extra_actions_list = self.extra_actions or []
 
         refresh_querystring = False
 
         context = {
             'items': self.get_queryset(),
+
             'paginator': None,
             'page': None,
+
             'order_by': [],
             'order': None,
+
             'search_form': None,
             'active_filters': {},
+
             'querystring': '',
             'query_order': {},
             'query_filters': {},
+
+            'selected_items': [],
+            'selection_label': self.selection_label,
+            'empty_selection_label': self.empty_selection_label,
+            'mass_actions': mass_actions_list,
+
             'extra_actions': extra_actions_list,
             'extra_actions_len': len(extra_actions_list),
         }
+
+        if request.method == 'POST' and mass_actions_list:
+            try:
+                response = self.handle_mass_action(request, context)
+                if response:
+                    return response
+                else:
+                    return redirect(request.path)
+            except MassActionError as e:
+                messages.error(request, e.args[0])
 
         if self.ordering:
             ordering_methods = self.get_ordering_methods(request)

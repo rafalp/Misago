@@ -69,13 +69,14 @@
 
 
 {% block emptylist %}
-<td colspan="{{ 4|add:extra_actions_len }}">
+<td colspan="{{ 6|add:extra_actions_len }}">
   <p>{% trans "No bans are currently set." %}</p>
 </td>
 {% endblock emptylist %}
 
 
 {% block javascripts %}
+{{ block.super }}
 <script type="text/javascript">
   $(function() {
     $('.delete-prompt').submit(function() {

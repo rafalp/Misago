@@ -6172,6 +6172,10 @@ body {
 .table-actions > .pull-right {
   margin-left: 10px;
 }
+.table-actions > .pull-right .dropdown-menu {
+  left: auto;
+  right: 0px;
+}
 .table-panel {
   border: 1px solid #d4d4d4;
   border-radius: 4px;
