@@ -55,10 +55,13 @@ Open "settings.py" in your code editor of choice and give a look in values liste
 .. note::
    To simplify setup process, by default "settings.py" file contains only most basic settings that are needed for your site to run, with everything else being set for you automatically at the beginning of file.
 
-Move back to directory with manage.py and use it to initialize Misago database by firing following following commands::
+Move back to directory with manage.py and use it to initialize Misago database by firing migrate::
 
-    python manage.py syncdb
     python manage.py migrate
+
+Next, call createsuperuser command to create super admin in database::
+
+    python manage.py createsuperuser
 
 Finally, start development server using "runserver" command::
 
