@@ -334,6 +334,12 @@ class Ban(models.Model):
 
     objects = BansManager()
 
+    def save(self, *args, **kwargs):
+        self.banned_value = self.banned_value.lower()
+        self.is_valid = not self.is_expired
+
+        return super(Ban, self).save(*args, **kwargs)
+
     @property
     def test_name(self):
         return BANS_CHOICES[self.test][1]
@@ -345,7 +351,7 @@ class Ban(models.Model):
     @property
     def is_expired(self):
         if self.valid_until:
-            return self.valid_until < timezone.now().date
+            return self.valid_until < timezone.now().date()
         else:
             return False
 
