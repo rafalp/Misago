@@ -6,6 +6,7 @@ from django.core.management.base import BaseCommand
 from django.db import IntegrityError
 from misago.users.models import Rank
 
+
 class Command(BaseCommand):
     help = 'Creates plenty of random fakey users for testing purposes'
 
