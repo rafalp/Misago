@@ -1,5 +1,5 @@
 {% extends "misago/admin/generic/list.html" %}
-{% load i18n %}
+{% load crispy_forms_tags i18n %}
 
 
 {% block page-actions %}
@@ -70,7 +70,11 @@
 
 {% block emptylist %}
 <td colspan="{{ 6|add:extra_actions_len }}">
+  {% if active_filters %}
+  <p>{% trans "No bans matching search criteria have been found" %}</p>
+  {% else %}
   <p>{% trans "No bans are currently set." %}</p>
+  {% endif %}
 </td>
 {% endblock emptylist %}
 
@@ -86,3 +90,26 @@
   });
 </script>
 {% endblock %}
+
+
+{% block modal-title %}
+{% trans "Search bans" %}
+{% endblock modal-title %}
+
+
+{% block modal-body %}
+<div class="row">
+  <div class="col-md-6">
+    {{ search_form.test|as_crispy_field }}
+  </div>
+  <div class="col-md-6">
+    {{ search_form.value|as_crispy_field }}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {{ search_form.state|as_crispy_field }}
+  </div>
+</div>
+{% endblock modal-body %}
+

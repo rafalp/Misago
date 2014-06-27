@@ -9,7 +9,7 @@ from misago.users.validators import (validate_username, validate_email,
 
 
 """
-Users forms
+Users
 """
 class UserBaseForm(forms.ModelForm):
     username = forms.CharField(
@@ -165,7 +165,6 @@ class SearchUsersFormBase(forms.Form):
         if criteria.get('inactive'):
             pass
 
-
         if criteria.get('is_staff'):
             queryset = criteria.filter(is_staff=True)
 
@@ -211,7 +210,7 @@ def SearchUsersForm(*args, **kwargs):
 
 
 """
-Ranks form
+Ranks
 """
 class RankForm(forms.ModelForm):
     name = forms.CharField(
@@ -267,7 +266,7 @@ class RankForm(forms.ModelForm):
 
 
 """
-Bans Form
+Bans
 """
 
 class BanForm(forms.ModelForm):
@@ -313,16 +312,50 @@ class BanForm(forms.ModelForm):
         ]
 
 
-class SearchBansForm(object):
-    test = forms.TypedChoiceField(
-        label=_("Ban type"),
-        coerce=int,
-        choices=BANS_CHOICES)
-    banned_value = forms.CharField(
-        label=_("Banned value"), max_length=250,
-        help_text=_('This value is case-insensitive and accepts asterisk (*) '
-                    'for rought matches. For example, making IP ban for value '
-                    '"83.*" will ban all IP addresses beginning with "83.".'),
-        error_messages={
-            'max_length': _("Banned value can't be longer than 250 characters.")
-        })
+SARCH_BANS_CHOICES = (
+    ('', _('All bans')),
+    ('names', _('Usernames')),
+    ('emails', _('E-mails')),
+    ('ips', _('IPs')),
+)
+
+
+class SearchBansForm(forms.Form):
+    test = forms.ChoiceField(
+        label=_("Type"), required=False,
+        choices=SARCH_BANS_CHOICES)
+    value = forms.CharField(
+        label=_("Banned value begins with"),
+        required=False)
+    state = forms.ChoiceField(
+        label=_("State"), required=False,
+        choices=(
+            ('', _('All states')),
+            ('valid', _('Valid bans')),
+            ('expired', _('Expired bans')),
+        ))
+
+    def filter_queryset(self, search_criteria, queryset):
+        criteria = search_criteria
+        if criteria.get('test') == 'names':
+            queryset = queryset.filter(test=0)
+
+        if criteria.get('test') == 'emails':
+            queryset = queryset.filter(test=1)
+
+        if criteria.get('test') == 'ips':
+            queryset = queryset.filter(test=2)
+
+        if criteria.get('value'):
+            queryset = queryset.filter(
+                banned_value__startswith=criteria.get('value').lower())
+
+        if criteria.get('state') == 'valid':
+            queryset = queryset.filter(is_valid=True)
+
+        if criteria.get('state') == 'expired':
+            queryset = queryset.filter(is_valid=False)
+
+        return queryset
+
+
