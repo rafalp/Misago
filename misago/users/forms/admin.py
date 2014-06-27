@@ -268,7 +268,6 @@ class RankForm(forms.ModelForm):
 """
 Bans
 """
-
 class BanForm(forms.ModelForm):
     test = forms.TypedChoiceField(
         label=_("Ban type"),
@@ -357,5 +356,3 @@ class SearchBansForm(forms.Form):
             queryset = queryset.filter(is_valid=False)
 
         return queryset
-
-
