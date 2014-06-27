@@ -367,5 +367,6 @@ class Ban(models.Model):
 
 class BanCache(models.Model):
     user = models.OneToOneField(User, primary_key=True)
+    is_banned = models.BooleanField(default=False)
     bans_version = models.PositiveIntegerField(default=0)
     valid_until = models.DateField(null=True, blank=True)

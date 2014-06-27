@@ -106,6 +106,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('bans_version', models.PositiveIntegerField(default=0)),
                 ('valid_until', models.DateField(null=True, blank=True)),
+                ('is_banned', models.BooleanField(default=False)),
                 ('user', models.OneToOneField(primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
             ],
             options={
