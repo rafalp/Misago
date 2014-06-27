@@ -37,6 +37,7 @@ class MisagoAdminExtension(object):
         urlpatterns.namespace(r'^bans/', 'bans', 'users')
         urlpatterns.patterns('users:bans',
             url(r'^$', BansList.as_view(), name='index'),
+            url(r'^(?P<page>\d+)/$', BansList.as_view(), name='index'),
             url(r'^new/$', NewBan.as_view(), name='new'),
             url(r'^edit/(?P<ban_id>\d+)/$', EditBan.as_view(), name='edit'),
             url(r'^delete/(?P<ban_id>\d+)/$', DeleteBan.as_view(), name='delete'),
