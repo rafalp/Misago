@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.utils.translation import ugettext_lazy as _
-from misago.users.views.bansadmin import BansList, NewBan, EditBan, DeleteBan
+from misago.users.views.banadmin import BansList, NewBan, EditBan, DeleteBan
 from misago.users.views.rankadmin import (RanksList, NewRank, EditRank,
                                           DeleteRank, MoveUpRank, MoveDownRank,
                                           DefaultRank)

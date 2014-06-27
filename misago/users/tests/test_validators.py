@@ -3,10 +3,14 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from misago.conf import settings
-from misago.users.validators import (validate_email, validate_email_available,
+from misago.users.models import Ban, BAN_USERNAME, BAN_EMAIL
+from misago.users.validators import (validate_email,
+                                     validate_email_available,
+                                     validate_email_banned,
                                      validate_password,
                                      validate_username,
                                      validate_username_available,
+                                     validate_username_banned,
                                      validate_username_content,
                                      validate_username_length)
 
@@ -21,12 +25,26 @@ class ValidateEmailAvailableTests(TestCase):
     def test_valid_email(self):
         """validate_email_available allows available emails"""
         validate_email_available('bob@boberson.com')
+        validate_email_available(self.test_user.email, exclude=self.test_user)
 
     def test_invalid_email(self):
         """validate_email_available disallows unvailable emails"""
         with self.assertRaises(ValidationError):
             validate_email_available(self.test_user.email)
 
+
+class ValidateEmailBannedTests(TestCase):
+    def setUp(self):
+        Ban.objects.create(test=BAN_EMAIL, banned_value="ban@test.com")
+
+    def test_unbanned_name(self):
+        """unbanned email passes validation"""
+        validate_email_banned('noban@test.com')
+
+    def test_banned_name(self):
+        """banned email fails validation"""
+        with self.assertRaises(ValidationError):
+            validate_email_banned('ban@test.com')
 
 class ValidateEmailTests(TestCase):
     def test_validate_email(self):
@@ -65,11 +83,27 @@ class ValidateUsernameAvailableTests(TestCase):
     def test_valid_name(self):
         """validate_username_available allows available names"""
         validate_username_available('BobBoberson')
+        validate_username_available(self.test_user.username,
+                                    exclude=self.test_user)
 
     def test_invalid_name(self):
         """validate_username_available disallows unvailable names"""
         with self.assertRaises(ValidationError):
             validate_username_available(self.test_user.username)
+
+
+class ValidateUsernameBannedTests(TestCase):
+    def setUp(self):
+        Ban.objects.create(test=BAN_USERNAME, banned_value="Bob")
+
+    def test_unbanned_name(self):
+        """unbanned name passes validation"""
+        validate_username_banned('Luke')
+
+    def test_banned_name(self):
+        """banned name fails validation"""
+        with self.assertRaises(ValidationError):
+            validate_username_banned('Bob')
 
 
 class ValidateUsernameContentTests(TestCase):

@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import IntegrityError
 from django.utils import timezone
-from misago.users.models import Ban, BAN_NAME, BAN_EMAIL, BAN_IP
+from misago.users.models import Ban, BAN_USERNAME, BAN_EMAIL, BAN_IP
 
 
 def fake_username_ban(fake):
@@ -66,7 +66,7 @@ def fake_ip_ban(fake):
 
 
 def create_fake_test(fake, test_type):
-    if test_type == BAN_NAME:
+    if test_type == BAN_USERNAME:
         return fake_username_ban(fake)
     elif test_type == BAN_EMAIL:
         return fake_email_ban(fake)
@@ -88,7 +88,7 @@ class Command(BaseCommand):
 
         created_count = 0
         for i in xrange(fake_bans_to_create):
-            ban = Ban(test=random.randint(BAN_NAME, BAN_IP))
+            ban = Ban(test=random.randint(BAN_USERNAME, BAN_IP))
             ban.banned_value = create_fake_test(fake, ban.test)
 
             if random.randint(0, 10) == 0:

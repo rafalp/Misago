@@ -276,13 +276,13 @@ class Rank(models.Model):
 """
 Bans
 """
-BAN_NAME = 0
+BAN_USERNAME = 0
 BAN_EMAIL = 1
 BAN_IP = 2
 
 
 BANS_CHOICES = (
-    (BAN_NAME, _('Username')),
+    (BAN_USERNAME, _('Username')),
     (BAN_EMAIL, _('E-mail address')),
     (BAN_IP, _('IP Address')),
 )
@@ -303,7 +303,7 @@ class BansManager(models.Manager):
 
         if username:
             username = username.lower()
-            tests.append(BAN_NAME)
+            tests.append(BAN_USERNAME)
         if email:
             email = email.lower()
             tests.append(BAN_EMAIL)
@@ -317,22 +317,23 @@ class BansManager(models.Manager):
             queryset = queryset.filter(test__in=tests)
 
         for ban in queryset.order_by('-id').iterator():
-            if username and ban.test == BAN_NAME and ban.test_value(username):
+            if (ban.test == BAN_USERNAME and username and
+                    ban.test_value(username)):
                 return ban
-            elif email and ban.test == BAN_EMAIL and ban.test_value(email):
+            elif ban.test == BAN_EMAIL and email and ban.test_value(email):
                 return ban
-            elif ip and ban.test == BAN_IP and ban.test_value(ip):
+            elif ban.test == BAN_IP and ip and ban.test_value(ip):
                 return ban
-        return False
+        return None
 
 
 class Ban(models.Model):
-    test = models.PositiveIntegerField(default=BAN_NAME, db_index=True)
+    test = models.PositiveIntegerField(default=BAN_USERNAME, db_index=True)
     banned_value = models.CharField(max_length=255, db_index=True)
     user_message = models.TextField(null=True, blank=True)
     staff_message = models.TextField(null=True, blank=True)
     valid_until = models.DateField(null=True, blank=True, db_index=True)
-    is_valid = models.BooleanField(default=False, db_index=True)
+    is_valid = models.BooleanField(default=True, db_index=True)
 
     objects = BansManager()
 
@@ -360,7 +361,7 @@ class Ban(models.Model):
     def test_value(self, value):
         if '*' in self.banned_value:
             regex = '^' + re.escape(self.banned_value).replace('\*', '(.*?)') + '$'
-            return re.search(regex, value)
+            return re.search(regex, value) != None
         else:
             return self.banned_value == value
 

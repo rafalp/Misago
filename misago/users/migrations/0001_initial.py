@@ -97,7 +97,7 @@ class Migration(migrations.Migration):
                 ('user_message', models.TextField(null=True, blank=True)),
                 ('staff_message', models.TextField(null=True, blank=True)),
                 ('valid_until', models.DateField(null=True, blank=True, db_index=True)),
-                ('is_valid', models.BooleanField(default=False, db_index=True)),
+                ('is_valid', models.BooleanField(default=True, db_index=True)),
             ],
             bases=(models.Model,),
         ),
