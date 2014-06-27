@@ -15,8 +15,7 @@ class UserBaseForm(forms.ModelForm):
     username = forms.CharField(
         label=_("Username"))
     title = forms.CharField(
-        label=_("Custom title"),
-        required=False)
+        label=_("Custom title"), required=False)
     email = forms.EmailField(
         label=_("E-mail address"))
 
@@ -26,17 +25,18 @@ class UserBaseForm(forms.ModelForm):
 
     def clean_username(self):
         data = self.cleaned_data['username']
-        validate_username(data)
+        validate_username(data, exclude=self.instance)
         return data
 
     def clean_email(self):
         data = self.cleaned_data['email']
-        validate_email(data)
+        validate_email(data, exclude=self.instance)
         return data
 
     def clean_new_password(self):
         data = self.cleaned_data['new_password']
-        validate_password(data)
+        if data:
+            validate_password(data)
         return data
 
     def clean_roles(self):
@@ -54,15 +54,14 @@ class UserBaseForm(forms.ModelForm):
 
 class NewUserForm(UserBaseForm):
     new_password = forms.CharField(
-        label=_("Password"),
-        widget=forms.PasswordInput)
+        label=_("Password"), widget=forms.PasswordInput)
 
     class Meta:
         model = get_user_model()
         fields = ['username', 'email', 'title']
 
 
-class EditUserForm(forms.ModelForm):
+class EditUserForm(UserBaseForm):
     new_password = forms.CharField(
         label=_("Change password to"),
         widget=forms.PasswordInput,
@@ -91,7 +90,8 @@ def UserFormFactory(FormType, instance):
     roles = Role.objects.order_by('name')
     extra_fields['roles'] = forms.ModelMultipleChoiceField(
         label=_("Roles"),
-        help_text=_("Individual roles of this user."),
+        help_text=_('Individual roles of this user. '
+                    'All users have "member" role.'),
         queryset=roles,
         initial=instance.roles.all() if instance.pk else None,
         widget=forms.CheckboxSelectMultiple)
@@ -314,4 +314,15 @@ class BanForm(forms.ModelForm):
 
 
 class SearchBansForm(object):
-    pass
+    test = forms.TypedChoiceField(
+        label=_("Ban type"),
+        coerce=int,
+        choices=BANS_CHOICES)
+    banned_value = forms.CharField(
+        label=_("Banned value"), max_length=250,
+        help_text=_('This value is case-insensitive and accepts asterisk (*) '
+                    'for rought matches. For example, making IP ban for value '
+                    '"83.*" will ban all IP addresses beginning with "83.".'),
+        error_messages={
+            'max_length': _("Banned value can't be longer than 250 characters.")
+        })
