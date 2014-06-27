@@ -26,6 +26,7 @@ class BanAdmin(generic.AdminBaseMixin):
 class BansList(BanAdmin, generic.ListView):
     items_per_page = 30
     ordering = (('-id', None),)
+    #search_form = SearchBansForm
     selection_label = _('With bans: 0')
     empty_selection_label = _('Select bans')
     mass_actions = (

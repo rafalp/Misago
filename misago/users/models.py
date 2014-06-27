@@ -298,7 +298,7 @@ class BansManager(models.Manager):
     def is_email_banned(self, email):
         return self.check_ban(email=email)
 
-    def check_ban(self, username=None, email=None, ip=None):
+    def find_ban(self, username=None, email=None, ip=None):
         tests = []
 
         if username:
@@ -308,7 +308,7 @@ class BansManager(models.Manager):
         if ip:
             tests.append(BAN_IP)
 
-        queryset = self.filter(is_valid=False)
+        queryset = self.filter(is_valid=True)
         if len(tests) == 1:
             queryset = queryset.filter(test=tests[0])
         elif tests:

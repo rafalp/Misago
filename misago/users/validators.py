@@ -12,25 +12,32 @@ USERNAME_RE = re.compile(r'^[0-9a-z]+$', re.IGNORECASE)
 """
 Email validators
 """
-def validate_email_available(value):
+def validate_email_available(value, exclude=None):
     User = get_user_model()
-
     try:
-        User.objects.get_by_email(value)
+        user = User.objects.get_by_email(value)
     except User.DoesNotExist:
         pass
     else:
-        raise ValidationError(_("This e-mail address is not available."))
+        if not exclude or user.pk != exclude.pk:
+            raise ValidationError(_("This e-mail address is not available."))
 
 
 def validate_email_banned(value):
-    """TODO for when bans will be reimplemented from 0.5"""
+    from misago.users.models import Ban
+    email_ban = Ban.objects.find_ban(email=value)
+
+    if email_ban:
+        if email_ban.user_message:
+            raise ValidationError(email_ban.user_message)
+        else:
+            raise ValidationError(_("This e-mail address is not allowed."))
 
 
-def validate_email(value):
+def validate_email(value, exclude=None):
     """shortcut function that does complete validation of email"""
     validate_email_content(value)
-    validate_email_available(value)
+    validate_email_available(value, exclude)
     validate_email_banned(value)
 
 
@@ -50,19 +57,26 @@ def validate_password(value):
 """
 Username validators
 """
-def validate_username_available(value):
+def validate_username_available(value, exclude=None):
     User = get_user_model()
-
     try:
-        User.objects.get_by_username(value)
+        user = User.objects.get_by_username(value)
     except User.DoesNotExist:
         pass
     else:
-        raise ValidationError(_("This username is not available."))
+        if not exclude or user.pk != exclude.pk:
+            raise ValidationError(_("This username is not available."))
 
 
 def validate_username_banned(value):
-    """TODO for when bans will be reimplemented from 0.5"""
+    from misago.users.models import Ban
+    username_ban = Ban.objects.find_ban(username=value)
+
+    if username_ban:
+        if username_ban.user_message:
+            raise ValidationError(username_ban.user_message)
+        else:
+            raise ValidationError(_("This username is not allowed."))
 
 
 def validate_username_content(value):
@@ -89,9 +103,9 @@ def validate_username_length(value):
         raise ValidationError(message)
 
 
-def validate_username(value):
+def validate_username(value, exclude=None):
     """shortcut function that does complete validation of username"""
     validate_username_content(value)
     validate_username_length(value)
-    validate_username_available(value)
+    validate_username_available(value, exclude)
     validate_username_banned(value)
