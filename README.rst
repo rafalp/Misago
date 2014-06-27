@@ -28,7 +28,7 @@ Installing and updating
 
 Please note that branch *future* is used for project's codebase cleanup and is not functional at the time of writing. If you want to give Misago a spin, feel free to play with one of `previous releases <https://github.com/rafalp/Misago/releases>`_.
 
-To install Misago setup and activate virtual environment and then fire following commands::
+To start Misago site, first setup and activate virtual environment for it and then fire following commands::
 
     python setup.py install
     misago-start.py testforum
