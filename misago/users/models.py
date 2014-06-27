@@ -302,8 +302,10 @@ class BansManager(models.Manager):
         tests = []
 
         if username:
+            username = username.lower()
             tests.append(BAN_NAME)
         if email:
+            email = email.lower()
             tests.append(BAN_EMAIL)
         if ip:
             tests.append(BAN_IP)
@@ -356,8 +358,11 @@ class Ban(models.Model):
             return False
 
     def test_value(self, value):
-        regex = '^' + re.escape(self.banned_value).replace('\*', '(.*?)') + '$'
-        return re.search(regex, value, flags=re.IGNORECASE)
+        if '*' in self.banned_value:
+            regex = '^' + re.escape(self.banned_value).replace('\*', '(.*?)') + '$'
+            return re.search(regex, value)
+        else:
+            return self.banned_value == value
 
 
 class BanCache(models.Model):
