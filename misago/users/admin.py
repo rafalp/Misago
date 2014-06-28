@@ -1,10 +1,10 @@
 from django.conf.urls import url
 from django.utils.translation import ugettext_lazy as _
-from misago.users.views.banadmin import BansList, NewBan, EditBan, DeleteBan
-from misago.users.views.rankadmin import (RanksList, NewRank, EditRank,
-                                          DeleteRank, MoveUpRank, MoveDownRank,
-                                          DefaultRank)
-from misago.users.views.useradmin import UsersList, NewUser, EditUser
+from misago.users.views.admin.bans import BansList, NewBan, EditBan, DeleteBan
+from misago.users.views.admin.ranks import (RanksList, NewRank, EditRank,
+                                            DeleteRank, MoveUpRank,
+                                            MoveDownRank, DefaultRank)
+from misago.users.views.admin.users import UsersList, NewUser, EditUser
 
 
 class MisagoAdminExtension(object):
