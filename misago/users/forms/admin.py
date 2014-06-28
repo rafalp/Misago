@@ -3,7 +3,8 @@ from django.utils.translation import ugettext_lazy as _
 from misago.core import forms, threadstore
 from misago.core.validators import validate_sluggable
 from misago.acl.models import Role
-from misago.users.models import BANS_CHOICES, Ban, Rank
+from misago.users.models import (BANS_CHOICES, RESTRICTIONS_CHOICES,
+                                 Ban, Rank, WarningLevel)
 from misago.users.validators import (validate_username, validate_email,
                                      validate_password)
 
@@ -348,3 +349,38 @@ class SearchBansForm(forms.Form):
             queryset = queryset.filter(is_valid=False)
 
         return queryset
+
+
+"""
+Warning levels
+"""
+class WarningLevelForm(forms.ModelForm):
+    name = forms.CharField(label=_("Level name"), max_length=255)
+    description = forms.CharField(
+        label=_("Optional level description"), required=False, max_length=1000,
+        widget=forms.Textarea(attrs={'rows': 3}),
+        error_messages={
+            'max_length': _("Description can't be longer "
+                            "than 1000 characters.")
+        })
+    expires_after_minutes = forms.IntegerField(
+        label=_("Expiration time"), min_value=0,
+        help_text=_("Enter number of minutes since this warning level was "
+                    "imposed on member until it's reduced, or 0 to make "
+                    "this warning level permanent."))
+    restricts_posting_replies = forms.TypedChoicefield(
+        label=_("Restrictions on posting replies"),
+        coerce=int, choices=RESTRICTIONS_CHOICES)
+    restricts_posting_threads = forms.TypedChoicefield(
+        label=_("Restrictions on posting threads"),
+        coerce=int, choices=RESTRICTIONS_CHOICES)
+
+    class Meta:
+        model = WarningLevel
+        fields = [
+            'name',
+            'description',
+            'expires_after_minutes',
+            'restricts_posting_replies',
+            'restricts_posting_threads',
+        ]

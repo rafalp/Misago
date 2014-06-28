@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from misago.acl import get_user_acl, version as acl_version
 from misago.acl.models import Role
+from misago.core.cache import cache
 from misago.core.utils import slugify
 from misago.users.utils import hash_email
 from misago.users.validators import (validate_email, validate_password,
@@ -360,8 +361,8 @@ class Ban(models.Model):
 
     def test_value(self, value):
         if '*' in self.banned_value:
-            regex = '^' + re.escape(self.banned_value).replace('\*', '(.*?)') + '$'
-            return re.search(regex, value) != None
+            regex = re.escape(self.banned_value).replace('\*', '(.*?)')
+            return re.search('^%s$' % regex, value) != None
         else:
             return self.banned_value == value
 
@@ -371,3 +372,37 @@ class BanCache(models.Model):
     is_banned = models.BooleanField(default=False)
     bans_version = models.PositiveIntegerField(default=0)
     valid_until = models.DateField(null=True, blank=True)
+
+
+"""
+Warning level
+"""
+RESTRICT_NO = 0
+RESTRICT_MODERATOR_REVIEW = 1
+RESTRICT_DISALLOW = 2
+
+
+RESTRICTIONS_CHOICES = (
+    (WarnLevel.RESTRICT_NO, _("No restrictions")),
+    (WarnLevel.RESTRICT_MODERATOR_REVIEW, _("Review by moderator")),
+    (WarnLevel.RESTRICT_DISALLOW, _("Disallowed")),
+)
+
+
+class WarningLevel(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+    warning_level = models.PositiveIntegerField(default=1, db_index=True)
+    expires_after_minutes = models.PositiveIntegerField(default=0)
+    restricts_posting_replies = models.PositiveIntegerField(
+        default=RESTRICT_NO)
+    restricts_posting_threads = models.PositiveIntegerField(
+        default=RESTRICT_NO)
+
+    def save(self, *args, **kwargs):
+        super(WarnLevel, self).save(*args, **kwargs)
+        cache.delete('warning_levels')
+
+    def delete(self, *args, **kwargs):
+        super(WarnLevel, self).delete(*args, **kwargs)
+        cache.delete('warning_levels')

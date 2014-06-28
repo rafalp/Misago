@@ -13,11 +13,6 @@ class BanAdmin(generic.AdminBaseMixin):
     templates_dir = 'misago/admin/bans'
     message_404 = _("Requested ban does not exist.")
 
-    def update_roles(self, target, roles):
-        target.roles.clear()
-        if roles:
-            target.roles.add(*roles)
-
     def handle_form(self, form, request, target):
         super(BanAdmin, self).handle_form(form, request, target)
         cachebuster.invalidate('misago_bans')
