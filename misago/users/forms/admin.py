@@ -133,16 +133,8 @@ def StaffFlagUserFormFactory(FormType, instance, add_staff_field):
 class SearchUsersFormBase(forms.Form):
     username = forms.CharField(label=_("Username starts with"), required=False)
     email = forms.CharField(label=_("E-mail starts with"), required=False)
-    #rank = forms.TypedChoiceField(label=_("Rank"),
-    #                              coerce=int,
-    #                              required=False,
-    #                              choices=ranks_list)
-    #role = forms.TypedChoiceField(label=_("Role"),
-    #                              coerce=int,
-    #                              required=False,
-    #                              choices=roles_list)
     inactive = forms.YesNoSwitch(label=_("Inactive only"))
-    is_staff = forms.YesNoSwitch(label=_("Is administrator"))
+    is_staff = forms.YesNoSwitch(label=_("Admins only"))
 
     def filter_queryset(self, search_criteria, queryset):
         criteria = search_criteria
@@ -166,7 +158,7 @@ class SearchUsersFormBase(forms.Form):
             pass
 
         if criteria.get('is_staff'):
-            queryset = criteria.filter(is_staff=True)
+            queryset = queryset.filter(is_staff=True)
 
         return queryset
 
