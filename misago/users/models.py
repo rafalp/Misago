@@ -383,9 +383,9 @@ RESTRICT_DISALLOW = 2
 
 
 RESTRICTIONS_CHOICES = (
-    (WarnLevel.RESTRICT_NO, _("No restrictions")),
-    (WarnLevel.RESTRICT_MODERATOR_REVIEW, _("Review by moderator")),
-    (WarnLevel.RESTRICT_DISALLOW, _("Disallowed")),
+    (RESTRICT_NO, _("No restrictions")),
+    (RESTRICT_MODERATOR_REVIEW, _("Review by moderator")),
+    (RESTRICT_DISALLOW, _("Disallowed")),
 )
 
 
@@ -400,9 +400,9 @@ class WarningLevel(models.Model):
         default=RESTRICT_NO)
 
     def save(self, *args, **kwargs):
-        super(WarnLevel, self).save(*args, **kwargs)
+        super(WarningLevel, self).save(*args, **kwargs)
         cache.delete('warning_levels')
 
     def delete(self, *args, **kwargs):
-        super(WarnLevel, self).delete(*args, **kwargs)
+        super(WarningLevel, self).delete(*args, **kwargs)
         cache.delete('warning_levels')

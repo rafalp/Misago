@@ -368,10 +368,10 @@ class WarningLevelForm(forms.ModelForm):
         help_text=_("Enter number of minutes since this warning level was "
                     "imposed on member until it's reduced, or 0 to make "
                     "this warning level permanent."))
-    restricts_posting_replies = forms.TypedChoicefield(
+    restricts_posting_replies = forms.TypedChoiceField(
         label=_("Restrictions on posting replies"),
         coerce=int, choices=RESTRICTIONS_CHOICES)
-    restricts_posting_threads = forms.TypedChoicefield(
+    restricts_posting_threads = forms.TypedChoiceField(
         label=_("Restrictions on posting threads"),
         coerce=int, choices=RESTRICTIONS_CHOICES)
 
