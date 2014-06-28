@@ -146,6 +146,7 @@
         </h4>
       </div>
       <form method="GET">
+        <input type="hidden" name="set_filters" value="1">
         {% for name, value in query_order.items %}
         <input type="hidden" name="{{ name }}" value="{{ value }}">
         {% endfor %}

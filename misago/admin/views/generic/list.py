@@ -105,10 +105,15 @@ class ListView(AdminView):
 
     def get_filtering_methods(self, request):
         SearchForm = self.get_search_form(request)
-        return {
+        methods = {
             'GET': self.get_filters_from_GET(SearchForm, request),
             'session': self.get_filters_from_session(SearchForm, request),
         }
+
+        if request.GET.get('set_filters'):
+            methods['session'] = {}
+
+        return methods
 
     def get_filtering_method_to_use(self, methods):
         for method in ('GET', 'session'):
@@ -221,7 +226,6 @@ class ListView(AdminView):
                 })
         return dicts
 
-
     """
     Querystrings builder
     """
@@ -329,6 +333,11 @@ class ListView(AdminView):
                 # Clear filters from querystring
                 request.session.pop(self.filters_session_key, None)
                 context['active_filters'] = {}
+            elif request.GET.get('set_filters'):
+                # Force store filters in session
+                session_key = self.filters_session_key
+                request.session[session_key] = context['active_filters']
+                refresh_querystring = True
 
             if context['active_filters'] and not filtering_methods['GET']:
                 # Make view redirect to itself with querystring,
