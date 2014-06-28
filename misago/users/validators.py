@@ -16,11 +16,10 @@ def validate_email_available(value, exclude=None):
     User = get_user_model()
     try:
         user = User.objects.get_by_email(value)
-    except User.DoesNotExist:
-        pass
-    else:
         if not exclude or user.pk != exclude.pk:
             raise ValidationError(_("This e-mail address is not available."))
+    except User.DoesNotExist:
+        pass
 
 
 def validate_email_banned(value):
@@ -61,11 +60,10 @@ def validate_username_available(value, exclude=None):
     User = get_user_model()
     try:
         user = User.objects.get_by_username(value)
-    except User.DoesNotExist:
-        pass
-    else:
         if not exclude or user.pk != exclude.pk:
             raise ValidationError(_("This username is not available."))
+    except User.DoesNotExist:
+        pass
 
 
 def validate_username_banned(value):
