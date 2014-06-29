@@ -92,7 +92,7 @@ def UserFormFactory(FormType, instance):
     extra_fields['roles'] = forms.ModelMultipleChoiceField(
         label=_("Roles"),
         help_text=_('Individual roles of this user. '
-                    'All users have "member" role.'),
+                    'All users must have "member" role.'),
         queryset=roles,
         initial=instance.roles.all() if instance.pk else None,
         widget=forms.CheckboxSelectMultiple)

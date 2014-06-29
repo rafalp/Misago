@@ -42,8 +42,16 @@ def form_row(parser, token):
 class FormRowNode(template.Node):
     def __init__(self, form_field, label_class, field_class):
         self.form_field = template.Variable(form_field)
-        self.label_class = template.Variable(label_class)
-        self.field_class = template.Variable(field_class)
+
+        if label_class:
+            self.label_class = template.Variable(label_class)
+        else:
+            self.label_class = None
+
+        if field_class:
+            self.field_class = template.Variable(field_class)
+        else:
+            self.field_class = None
 
     def render(self, context):
         field = self.form_field.resolve(context)

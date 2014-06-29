@@ -1,5 +1,5 @@
 {% extends "misago/admin/generic/list.html" %}
-{% load crispy_forms_tags i18n misago_avatars %}
+{% load i18n misago_avatars misago_forms %}
 
 
 {% block page-actions %}
@@ -94,26 +94,26 @@
 {% block modal-body %}
 <div class="row">
   <div class="col-md-6">
-    {{ search_form.username|as_crispy_field }}
+    {% form_row search_form.username %}
   </div>
   <div class="col-md-6">
-    {{ search_form.email|as_crispy_field }}
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-6">
-    {{ search_form.rank|as_crispy_field }}
-  </div>
-  <div class="col-md-6">
-    {{ search_form.role|as_crispy_field }}
+    {% form_row search_form.email %}
   </div>
 </div>
 <div class="row">
   <div class="col-md-6">
-    {{ search_form.inactive|as_crispy_field }}
+    {% form_row search_form.rank %}
   </div>
   <div class="col-md-6">
-    {{ search_form.is_staff|as_crispy_field }}
+    {% form_row search_form.role %}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    {% form_row search_form.inactive %}
+  </div>
+  <div class="col-md-6">
+    {% form_row search_form.is_staff %}
   </div>
 </div>
 {% endblock modal-body %}

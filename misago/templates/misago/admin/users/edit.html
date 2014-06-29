@@ -1,5 +1,5 @@
 {% extends "misago/admin/generic/form.html" %}
-{% load crispy_forms_tags i18n %}
+{% load i18n misago_forms %}
 
 
 {% block title %}
@@ -23,31 +23,39 @@
 class="form-horizontal"
 {% endblock form-extra%}
 
+
 {% block form-body %}
 <div class="form-body">
+  {% with label_class="col-md-3" field_class="col-md-9" %}
   <fieldset>
     <legend>{% trans "Basic account settings" %}</legend>
 
-    {{ form.username|as_crispy_field }}
+    {% form_row form.username label_class field_class %}
 
     {% if 'rank' in form.fields %}
-    {{ form.rank|as_crispy_field }}
+    {% form_row form.rank label_class field_class %}
     {% endif %}
 
-    {{ form.title|as_crispy_field }}
-    {{ form.roles|as_crispy_field }}
+    {% form_row form.title label_class field_class %}
+    {% form_row form.roles label_class field_class %}
 
     {% if 'staff_level' in form.fields %}
-    {{ form.staff_level|as_crispy_field }}
+    {% form_row form.staff_level label_class field_class %}
     {% endif %}
 
   </fieldset>
   <fieldset>
     <legend>{% trans "Sign-in credentials" %}</legend>
 
-    {{ form.email|as_crispy_field }}
-    {{ form.new_password|as_crispy_field }}
+    {% form_row form.email label_class field_class %}
+    {% form_row form.new_password label_class field_class %}
 
   </fieldset>
+  {% endwith %}
 </div>
 {% endblock form-body %}
+
+
+{% block form-footer-class %}
+col-md-offset-3
+{% endblock form-footer-class %}
