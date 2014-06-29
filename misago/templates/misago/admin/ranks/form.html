@@ -57,8 +57,8 @@ class="form-horizontal"
     <legend>{% trans "Display and visibility" %}</legend>
 
     {% form_row form.css_class label_class field_class %}
-    {% form_row form.is_tab label_class field_class %}
-    {% form_row form.is_on_index label_class field_class %}
+    {% form_row form.is_tab "col-md-offset-3" field_class %}
+    {% form_row form.is_on_index "col-md-offset-3" field_class %}
 
   </fieldset>
   {% endwith %}
