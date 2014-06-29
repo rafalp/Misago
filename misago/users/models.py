@@ -1,5 +1,6 @@
 from hashlib import md5
 import re
+
 from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
                                         UserManager as BaseUserManager,
                                         AnonymousUser as DjangoAnonymousUser)
@@ -9,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from misago.acl import get_user_acl, version as acl_version
 from misago.acl.models import Role
 from misago.core.cache import cache
-from misago.core.utils import slugify
+from misago.core.utils import time_amount, slugify
 from misago.users.utils import hash_email
 from misago.users.validators import (validate_email, validate_password,
                                      validate_username)
@@ -392,7 +393,7 @@ RESTRICTIONS_CHOICES = (
 class WarningLevel(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
-    warning_level = models.PositiveIntegerField(default=1, db_index=True)
+    level = models.PositiveIntegerField(default=1, db_index=True)
     expires_after_minutes = models.PositiveIntegerField(default=0)
     restricts_posting_replies = models.PositiveIntegerField(
         default=RESTRICT_NO)
@@ -400,9 +401,25 @@ class WarningLevel(models.Model):
         default=RESTRICT_NO)
 
     def save(self, *args, **kwargs):
+        if not self.pk:
+            self.set_level()
+
         super(WarningLevel, self).save(*args, **kwargs)
         cache.delete('warning_levels')
 
     def delete(self, *args, **kwargs):
         super(WarningLevel, self).delete(*args, **kwargs)
         cache.delete('warning_levels')
+
+    @property
+    def length(self):
+        if self.expires_after_minutes:
+            return time_amount(self.expires_after_minutes * 60)
+        else:
+            return _("permanent")
+
+    def set_level(self):
+        try:
+            self.level = WarningLevel.objects.latest('level').level + 1
+        except WarningLevel.DoesNotExist:
+            self.level = 1

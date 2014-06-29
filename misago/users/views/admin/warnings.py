@@ -15,7 +15,7 @@ class WarningsAdmin(generic.AdminBaseMixin):
 
 
 class WarningsList(WarningsAdmin, generic.ListView):
-    pass
+    ordering = (('level', None),)
 
 
 class NewWarning(WarningsAdmin, generic.ModelFormView):
@@ -31,3 +31,37 @@ class DeleteWarning(WarningsAdmin, generic.ButtonView):
         target.delete()
         message = _('Warning level "%s" has been deleted.')
         messages.success(request, message % unicode(target.name))
+
+
+class MoveDownWarning(WarningsAdmin, generic.ButtonView):
+    def button_action(self, request, target):
+        try:
+            other_target = WarningLevel.objects.filter(level__gt=target.level)
+            other_target = other_target.earliest('level')
+        except WarningLevel.DoesNotExist:
+            other_target = None
+
+        if other_target:
+            other_target.level, target.level = target.level, other_target.level
+            other_target.save(update_fields=['level'])
+            target.save(update_fields=['level'])
+            message = _('Warning level "%s" has been moved below "%s".')
+            targets_names = (target.name, other_target.name)
+            messages.success(request, message % targets_names)
+
+
+class MoveUpWarning(WarningsAdmin, generic.ButtonView):
+    def button_action(self, request, target):
+        try:
+            other_target = WarningLevel.objects.filter(level__lt=target.level)
+            other_target = other_target.latest('level')
+        except WarningLevel.DoesNotExist:
+            other_target = None
+
+        if other_target:
+            other_target.level, target.level = target.level, other_target.level
+            other_target.save(update_fields=['level'])
+            target.save(update_fields=['level'])
+            message = _('Warning level "%s" has been moved above "%s".')
+            targets_names = (target.name, other_target.name)
+            messages.success(request, message % targets_names)

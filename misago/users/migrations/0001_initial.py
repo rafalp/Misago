@@ -119,7 +119,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=255)),
                 ('description', models.TextField(null=True, blank=True)),
-                ('warning_level', models.PositiveIntegerField(default=1, db_index=True)),
+                ('level', models.PositiveIntegerField(default=1, db_index=True)),
                 ('expires_after_minutes', models.PositiveIntegerField(default=0)),
                 ('restricts_posting_replies', models.PositiveIntegerField(default=0)),
                 ('restricts_posting_threads', models.PositiveIntegerField(default=0)),

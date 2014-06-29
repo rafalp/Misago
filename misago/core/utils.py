@@ -1,8 +1,11 @@
+from datetime import timedelta
+
 import bleach
 from markdown import Markdown
 from unidecode import unidecode
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify as django_slugify
+from django.utils.translation import ugettext_lazy as _, ungettext_lazy
 
 
 def slugify(string):
@@ -30,6 +33,65 @@ def is_request_to_misago(request):
     except AttributeError:
         request._request_to_misago = _is_request_path_under_misago(request)
         return request._request_to_misago
+
+
+"""
+Utility that humanizes time amount.
+
+Expects number of seconds as first argument
+"""
+def time_amount(value):
+    delta = timedelta(seconds=value)
+
+    units_dict = {
+        'd': delta.days,
+        'h': 0,
+        'm': 0,
+        's': delta.seconds,
+    }
+
+    if units_dict['s'] >= 3600:
+        units_dict['h'] = units_dict['s'] / 3600
+        units_dict['s'] -= units_dict['h'] * 3600
+
+    if units_dict['s'] >= 60:
+        units_dict['m'] = units_dict['s'] / 60
+        units_dict['s'] -= units_dict['m'] * 60
+
+    precisions = []
+
+    if units_dict['d']:
+        string = ungettext_lazy(
+            '%(days)s day', '%(days)s days', units_dict['d'])
+        precisions.append(string % {'days': units_dict['d']})
+
+    if units_dict['h']:
+        string = ungettext_lazy(
+            '%(hours)s hour', '%(hours)s hours', units_dict['h'])
+        precisions.append(string % {'hours': units_dict['h']})
+
+    if units_dict['m']:
+        string = ungettext_lazy(
+            '%(minutes)s minute', '%(minutes)s minutes', units_dict['m'])
+        precisions.append(string % {'minutes': units_dict['m']})
+
+    if units_dict['s']:
+        string = ungettext_lazy(
+            '%(seconds)s second', '%(seconds)s seconds', units_dict['s'])
+        precisions.append(string % {'seconds': units_dict['s']})
+
+    if not precisions:
+        precisions.append(_("0 seconds"))
+
+    if len(precisions) == 1:
+        return precisions[0]
+    else:
+        formats = {
+            'first_part': ', '.join(precisions[:-1]),
+            'and_part': precisions[-1],
+        }
+
+        return _("%(first_part)s and %(and_part)s") % formats
 
 
 """

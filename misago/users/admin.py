@@ -6,7 +6,8 @@ from misago.users.views.admin.ranks import (RanksList, NewRank, EditRank,
                                             MoveUpRank, DefaultRank)
 from misago.users.views.admin.users import UsersList, NewUser, EditUser
 from misago.users.views.admin.warnings import (WarningsList, NewWarning,
-                                               EditWarning, DeleteWarning)
+                                               EditWarning, MoveDownWarning,
+                                               MoveUpWarning, DeleteWarning)
 
 
 class MisagoAdminExtension(object):
@@ -50,8 +51,10 @@ class MisagoAdminExtension(object):
         urlpatterns.patterns('users:warnings',
             url(r'^$', WarningsList.as_view(), name='index'),
             url(r'^new/$', NewWarning.as_view(), name='new'),
-            url(r'^edit/(?P<ban_id>\d+)/$', EditWarning.as_view(), name='edit'),
-            url(r'^delete/(?P<ban_id>\d+)/$', DeleteWarning.as_view(), name='delete'),
+            url(r'^edit/(?P<warning_id>\d+)/$', EditWarning.as_view(), name='edit'),
+            url(r'^move/down/(?P<warning_id>\d+)/$', MoveDownWarning.as_view(), name='down'),
+            url(r'^move/up/(?P<warning_id>\d+)/$', MoveUpWarning.as_view(), name='up'),
+            url(r'^delete/(?P<warning_id>\d+)/$', DeleteWarning.as_view(), name='delete'),
         )
 
     def register_navigation_nodes(self, site):
