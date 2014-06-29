@@ -117,19 +117,6 @@ class DeleteForum(ForumAdmin, generic.ModelFormView):
         return redirect(self.root_link)
 
 
-class MoveUpForum(ForumAdmin, generic.ButtonView):
-    def button_action(self, request, target):
-        try:
-            other_target = target.get_previous_sibling()
-        except Forum.DoesNotExist:
-            other_target = None
-
-        if other_target:
-            Forum.objects.move_node(target, other_target, 'left')
-            message = _('Forum "%s" has been moved up.') % target.name
-            messages.success(request, message)
-
-
 class MoveDownForum(ForumAdmin, generic.ButtonView):
     def button_action(self, request, target):
         try:
@@ -139,5 +126,22 @@ class MoveDownForum(ForumAdmin, generic.ButtonView):
 
         if other_target:
             Forum.objects.move_node(target, other_target, 'right')
-            message = _('Forum "%s" has been moved down.') % target.name
-            messages.success(request, message)
+
+            message = _('Forum "%s" has been moved below "%s".')
+            targets_names = (target.name, other_target.name)
+            messages.success(request, message % targets_names)
+
+
+class MoveUpForum(ForumAdmin, generic.ButtonView):
+    def button_action(self, request, target):
+        try:
+            other_target = target.get_previous_sibling()
+        except Forum.DoesNotExist:
+            other_target = None
+
+        if other_target:
+            Forum.objects.move_node(target, other_target, 'left')
+
+            message = _('Forum "%s" has been moved above "%s".')
+            targets_names = (target.name, other_target.name)
+            messages.success(request, message % targets_names)

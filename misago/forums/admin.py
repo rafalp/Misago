@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.utils.translation import ugettext_lazy as _
 from misago.forums.views.forumsadmin import (ForumsList, NewForum, EditForum,
-                                             MoveUpForum, MoveDownForum,
+                                             MoveDownForum, MoveUpForum,
                                              DeleteForum)
 from misago.forums.views.permsadmin import (ForumRolesList, NewForumRole,
                                             EditForumRole, DeleteForumRole,
@@ -20,8 +20,8 @@ class MisagoAdminExtension(object):
             url(r'^new/$', NewForum.as_view(), name='new'),
             url(r'^edit/(?P<forum_id>\d+)/$', EditForum.as_view(), name='edit'),
             url(r'^permissions/(?P<forum_id>\d+)/$', ForumPermissions.as_view(), name='permissions'),
-            url(r'^move/up/(?P<forum_id>\d+)/$', MoveUpForum.as_view(), name='up'),
             url(r'^move/down/(?P<forum_id>\d+)/$', MoveDownForum.as_view(), name='down'),
+            url(r'^move/up/(?P<forum_id>\d+)/$', MoveUpForum.as_view(), name='up'),
             url(r'^delete/(?P<forum_id>\d+)/$', DeleteForum.as_view(), name='delete'),
         )
 

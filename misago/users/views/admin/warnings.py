@@ -45,6 +45,7 @@ class MoveDownWarning(WarningsAdmin, generic.ButtonView):
             other_target.level, target.level = target.level, other_target.level
             other_target.save(update_fields=['level'])
             target.save(update_fields=['level'])
+
             message = _('Warning level "%s" has been moved below "%s".')
             targets_names = (target.name, other_target.name)
             messages.success(request, message % targets_names)
@@ -62,6 +63,7 @@ class MoveUpWarning(WarningsAdmin, generic.ButtonView):
             other_target.level, target.level = target.level, other_target.level
             other_target.save(update_fields=['level'])
             target.save(update_fields=['level'])
+
             message = _('Warning level "%s" has been moved above "%s".')
             targets_names = (target.name, other_target.name)
             messages.success(request, message % targets_names)

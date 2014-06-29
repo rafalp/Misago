@@ -63,8 +63,10 @@ class MoveDownRank(RankAdmin, generic.ButtonView):
             other_target.order, target.order = target.order, other_target.order
             other_target.save(update_fields=['order'])
             target.save(update_fields=['order'])
-            message = _('Rank "%s" has been moved down.') % unicode(target.name)
-            messages.success(request, message)
+
+            message = _('Rank "%s" has been moved below "%s".')
+            targets_names = (target.name, other_target.name)
+            messages.success(request, message % targets_names)
 
 
 class MoveUpRank(RankAdmin, generic.ButtonView):
@@ -79,8 +81,10 @@ class MoveUpRank(RankAdmin, generic.ButtonView):
             other_target.order, target.order = target.order, other_target.order
             other_target.save(update_fields=['order'])
             target.save(update_fields=['order'])
-            message = _('Rank "%s" has been moved up.') % unicode(target.name)
-            messages.success(request, message)
+
+            message = _('Rank "%s" has been moved above "%s".')
+            targets_names = (target.name, other_target.name)
+            messages.success(request, message % targets_names)
 
 
 class DefaultRank(RankAdmin, generic.ButtonView):
