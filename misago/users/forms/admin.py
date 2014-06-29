@@ -223,7 +223,7 @@ class RankForm(forms.ModelForm):
     roles = forms.ModelMultipleChoiceField(
         label=_("User roles"), queryset=Role.objects.order_by('name'),
         required=False,  widget=forms.CheckboxSelectMultiple,
-        help_text=_('Rank can give users with it additional roles.'))
+        help_text=_('Rank can give additional roles to users with it.'))
     css_class = forms.CharField(
         label=_("CSS class"), required=False,
         help_text=_("Optional css class added to content belonging to this "
@@ -275,19 +275,21 @@ class BanForm(forms.ModelForm):
             'max_length': _("Banned value can't be longer than 250 characters.")
         })
     user_message = forms.CharField(
-        label=_("Optional message for user"), required=False, max_length=1000,
+        label=_("User message"), required=False, max_length=1000,
+        help_text=_("Optional message displayed instead of default one."),
         widget=forms.Textarea(attrs={'rows': 3}),
         error_messages={
             'max_length': _("Message can't be longer than 1000 characters.")
         })
     staff_message = forms.CharField(
-        label=_("Optional message for team"), required=False, max_length=1000,
+        label=_("Team message"), required=False, max_length=1000,
+        help_text=_("Optional ban message for moderators and administrators."),
         widget=forms.Textarea(attrs={'rows': 3}),
         error_messages={
             'max_length': _("Message can't be longer than 1000 characters.")
         })
     valid_until = forms.DateField(
-        label=_("Optional expiration date for this ban"),
+        label=_("Expiration date"),
         required=False, input_formats=['%m-%d-%Y'],
         widget=forms.DateInput(
             format='%m-%d-%Y', attrs={'data-date-format': 'MM-DD-YYYY'}),

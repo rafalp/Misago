@@ -42,21 +42,21 @@ class="form-horizontal"
   <fieldset>
     <legend>{% trans "Name and description" %}</legend>
 
-      {% form_row form.name label_class field_class %}
-      {% form_row form.description label_class field_class %}
+    {% form_row form.name label_class field_class %}
+    {% form_row form.description label_class field_class %}
 
   </fieldset>
   <fieldset>
     <legend>{% trans "Expiration time" %}</legend>
 
-      {% form_row form.expires_after_minutes label_class field_class %}
+    {% form_row form.expires_after_minutes label_class field_class %}
 
   </fieldset>
   <fieldset>
     <legend>{% trans "Restrictions" %}</legend>
 
-      {% form_row form.restricts_posting_replies label_class field_class %}
-      {% form_row form.restricts_posting_threads label_class field_class %}
+    {% form_row form.restricts_posting_replies label_class field_class %}
+    {% form_row form.restricts_posting_threads label_class field_class %}
 
   </fieldset>
   {% endwith %}

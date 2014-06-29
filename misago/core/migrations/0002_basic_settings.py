@@ -27,7 +27,7 @@ def create_basic_settings_group(apps, schema_editor):
                 },
                 {
                     'setting': 'forum_index_title',
-                    'name': _("Forum index title"),
+                    'name': _("Index title"),
                     'description': _("You may set custon title on "
                                      "forum index by typing it here."),
                     'legend': _("Forum index"),
@@ -37,7 +37,7 @@ def create_basic_settings_group(apps, schema_editor):
                 },
                 {
                     'setting': 'forum_index_meta_description',
-                    'name': _("Forum index Meta Description"),
+                    'name': _("Meta Description"),
                     'description': _("Short description of your forum "
                                      "for internet crawlers."),
                     'field_extra': {

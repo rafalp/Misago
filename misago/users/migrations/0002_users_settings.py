@@ -43,7 +43,8 @@ def create_users_settings_group(apps, schema_editor):
                 },
                 {
                     'setting': 'username_length_min',
-                    'name': _("Minimal allowed username length"),
+                    'name': _("Minimum length"),
+                    'description': _("Minimum allowed username length."),
                     'legend': _("User names"),
                     'python_type': 'int',
                     'value': 3,
@@ -54,7 +55,8 @@ def create_users_settings_group(apps, schema_editor):
                 },
                 {
                     'setting': 'username_length_max',
-                    'name': _("Maximal allowed username length"),
+                    'name': _("Maximum length"),
+                    'description': _("Maximum allowed username length."),
                     'python_type': 'int',
                     'value': 14,
                     'field_extra': {
@@ -64,7 +66,8 @@ def create_users_settings_group(apps, schema_editor):
                 },
                 {
                     'setting': 'password_length_min',
-                    'name': _("Minimum user password length"),
+                    'name': _("Minimum length"),
+                    'description': _("Minimum allowed user password length."),
                     'legend': _("Passwords"),
                     'python_type': 'int',
                     'value': 5,
@@ -114,7 +117,7 @@ def create_users_settings_group(apps, schema_editor):
                 },
                 {
                     'setting': 'subscribe_start',
-                    'name': _("Subscribe to started threads"),
+                    'name': _("Started threads"),
                     'legend': _("Default subscriptions settings"),
                     'value': 'watch_email',
                     'form_field': 'select',
@@ -130,7 +133,7 @@ def create_users_settings_group(apps, schema_editor):
                 },
                 {
                     'setting': 'subscribe_reply',
-                    'name': _("Subscribe to replied threads"),
+                    'name': _("Replied threads"),
                     'value': 'watch_email',
                     'form_field': 'select',
                     'field_extra': {
