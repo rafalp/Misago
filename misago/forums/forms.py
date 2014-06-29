@@ -56,13 +56,15 @@ class ForumFormBase(forms.ModelForm):
         help_text=_("Optional CSS class used to customize this forum "
                     "appearance from templates."))
     prune_started_after = forms.IntegerField(
-        label=_("Prune thread if number of days since its creation is "
-                "greater than"), min_value=0,
-        help_text=_("Enter 0 to disable this pruning criteria."))
+        label=_("Thread age"), min_value=0,
+        help_text=_("Prune thread if number of days since its creation is "
+                    "greater than specified. Enter 0 to disable this "
+                    "pruning criteria."))
     prune_replied_after = forms.IntegerField(
-        label=_("Prune thread if number of days since last reply is greater "
-                "than"), min_value=0,
-        help_text=_("Enter 0 to disable this pruning criteria."))
+        label=_("Last reply"), min_value=0,
+        help_text=_("Prune thread if number of days since last reply is "
+                    "greater than specified. Enter 0 to disable this "
+                    "pruning criteria."))
 
     class Meta:
         model = Forum
@@ -135,7 +137,7 @@ def ForumFormFactory(instance):
             base_level=1,
             required=False),
         'archive_pruned_in': ForumChoiceField(
-            label=_("Pruned threads archive"),
+            label=_("Archive"),
             help_text=_("Instead of being deleted, pruned threads can be "
                         "moved to designated forum."),
             queryset=Forum.objects.all_forums(),

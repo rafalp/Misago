@@ -1,5 +1,5 @@
 {% extends "misago/admin/generic/form.html" %}
-{% load crispy_forms_filters i18n %}
+{% load i18n misago_forms %}
 
 
 {% block title %}
@@ -31,38 +31,45 @@
 {% endblock %}
 
 
+{% block form-extra %}
+class="form-horizontal"
+{% endblock form-extra%}
+
+
 {% block form-body %}
 <div class="form-body">
+  {% with label_class="col-md-3" field_class="col-md-9" %}
   <fieldset>
     <legend>{% trans "Role and position" %}</legend>
 
-    {{ form.new_parent|as_crispy_field }}
-    {{ form.role|as_crispy_field }}
+    {% form_row form.new_parent label_class field_class %}
+    {% form_row form.role label_class field_class %}
 
   </fieldset>
   <fieldset>
     <legend>{% trans "Display" %}</legend>
 
-    {{ form.name|as_crispy_field }}
-    {{ form.description|as_crispy_field }}
-    {{ form.css_class|as_crispy_field }}
+    {% form_row form.name label_class field_class %}
+    {% form_row form.description label_class field_class %}
+    {% form_row form.css_class label_class field_class %}
 
   </fieldset>
   <fieldset>
     <legend>{% trans "Behaviour" %}</legend>
 
-    {{ form.copy_permissions|as_crispy_field }}
-    {{ form.redirect_url|as_crispy_field }}
-    {{ form.is_closed|as_crispy_field }}
+    {% form_row form.copy_permissions label_class field_class %}
+    {% form_row form.redirect_url label_class field_class %}
+    {% form_row form.is_closed label_class field_class %}
 
   </fieldset>
   <fieldset>
-    <legend>{% trans "Pruning" %}</legend>
+    <legend>{% trans "Prune threads" %}</legend>
 
-    {{ form.prune_started_after|as_crispy_field }}
-    {{ form.prune_replied_after|as_crispy_field }}
-    {{ form.archive_pruned_in|as_crispy_field }}
+    {% form_row form.prune_started_after label_class field_class %}
+    {% form_row form.prune_replied_after label_class field_class %}
+    {% form_row form.archive_pruned_in label_class field_class %}
 
   </fieldset>
+  {% endwith %}
 </div>
 {% endblock form-body %}
