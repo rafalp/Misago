@@ -43,28 +43,22 @@ class FormRowNode(template.Node):
     def __init__(self, form_field, label_class, field_class):
         self.form_field = template.Variable(form_field)
 
-        if label_class:
+        if label_class and field_class:
             self.label_class = template.Variable(label_class)
-        else:
-            self.label_class = None
-
-        if field_class:
             self.field_class = template.Variable(field_class)
         else:
+            self.label_class = None
             self.field_class = None
 
     def render(self, context):
         field = self.form_field.resolve(context)
 
-        try:
+        if self.label_class and self.field_class:
             label_class = self.label_class.resolve(context)
-        except:
-            label_class = self.label_class
-
-        try:
             field_class = self.field_class.resolve(context)
-        except:
-            field_class = self.field_class
+        else:
+            label_class = None
+            field_class = None
 
         template_pack = crispy_forms_filters.TEMPLATE_PACK
         template = get_template('%s/field.html' % template_pack)

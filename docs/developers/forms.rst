@@ -60,3 +60,27 @@ Thin wrapper around Django's ``TypedChoiceField``. This field renders nice yes/n
 
 .. warning::
    ``YesNoSwitch`` coerces to ``int``, not to ``bool``! Remember about this when writing code dealing with forms containing this field!
+
+
+Template Tags
+=============
+
+Misago defines custom templates extension named ``misago_forms``. This extension contains two template tags for rendering form fields:
+
+
+form_row
+--------
+
+This tag accepts form field as its first argument, and rends field complete with label, help and errors. Accept two extra arguments: label class and field class, allowing you to control size of horizontal forms::
+
+
+    {% load misago_forms %}
+
+    {% form_row form.somefield %}
+    {% form_row form.otherfield 'col-md-3' 'col-md-9' %}
+
+
+form_input
+----------
+
+This tag accepts form field as its only argument, and rends it's input.
