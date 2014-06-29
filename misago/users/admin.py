@@ -2,8 +2,8 @@ from django.conf.urls import url
 from django.utils.translation import ugettext_lazy as _
 from misago.users.views.admin.bans import BansList, NewBan, EditBan, DeleteBan
 from misago.users.views.admin.ranks import (RanksList, NewRank, EditRank,
-                                            DeleteRank, MoveUpRank,
-                                            MoveDownRank, DefaultRank)
+                                            DeleteRank, MoveDownRank,
+                                            MoveUpRank, DefaultRank)
 from misago.users.views.admin.users import UsersList, NewUser, EditUser
 from misago.users.views.admin.warnings import (WarningsList, NewWarning,
                                                EditWarning, DeleteWarning)
@@ -30,8 +30,8 @@ class MisagoAdminExtension(object):
             url(r'^new/$', NewRank.as_view(), name='new'),
             url(r'^edit/(?P<rank_id>\d+)/$', EditRank.as_view(), name='edit'),
             url(r'^default/(?P<rank_id>\d+)/$', DefaultRank.as_view(), name='default'),
-            url(r'^move/up/(?P<rank_id>\d+)/$', MoveUpRank.as_view(), name='up'),
             url(r'^move/down/(?P<rank_id>\d+)/$', MoveDownRank.as_view(), name='down'),
+            url(r'^move/up/(?P<rank_id>\d+)/$', MoveUpRank.as_view(), name='up'),
             url(r'^delete/(?P<rank_id>\d+)/$', DeleteRank.as_view(), name='delete'),
         )
 

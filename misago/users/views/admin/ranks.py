@@ -51,22 +51,6 @@ class DeleteRank(RankAdmin, generic.ButtonView):
         messages.success(request, message)
 
 
-class MoveUpRank(RankAdmin, generic.ButtonView):
-    def button_action(self, request, target):
-        try:
-            other_target = Rank.objects.filter(order__lt=target.order)
-            other_target = other_target.latest('order')
-        except Rank.DoesNotExist:
-            other_target = None
-
-        if other_target:
-            other_target.order, target.order = target.order, other_target.order
-            other_target.save(update_fields=['order'])
-            target.save(update_fields=['order'])
-            message = _('Rank "%s" has been moved up.') % unicode(target.name)
-            messages.success(request, message)
-
-
 class MoveDownRank(RankAdmin, generic.ButtonView):
     def button_action(self, request, target):
         try:
@@ -80,6 +64,22 @@ class MoveDownRank(RankAdmin, generic.ButtonView):
             other_target.save(update_fields=['order'])
             target.save(update_fields=['order'])
             message = _('Rank "%s" has been moved down.') % unicode(target.name)
+            messages.success(request, message)
+
+
+class MoveUpRank(RankAdmin, generic.ButtonView):
+    def button_action(self, request, target):
+        try:
+            other_target = Rank.objects.filter(order__lt=target.order)
+            other_target = other_target.latest('order')
+        except Rank.DoesNotExist:
+            other_target = None
+
+        if other_target:
+            other_target.order, target.order = target.order, other_target.order
+            other_target.save(update_fields=['order'])
+            target.save(update_fields=['order'])
+            message = _('Rank "%s" has been moved up.') % unicode(target.name)
             messages.success(request, message)
 
 
