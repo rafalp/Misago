@@ -357,7 +357,9 @@ Warning levels
 class WarningLevelForm(forms.ModelForm):
     name = forms.CharField(label=_("Level name"), max_length=255)
     description = forms.CharField(
-        label=_("Optional level description"), required=False, max_length=1000,
+        label=_("Description"), required=False, max_length=1000,
+        help_text=_("Optional message description displayed to users with "
+                    "this warning level."),
         widget=forms.Textarea(attrs={'rows': 3}),
         error_messages={
             'max_length': _("Description can't be longer "
@@ -369,10 +371,10 @@ class WarningLevelForm(forms.ModelForm):
                     "imposed on member until it's reduced, or 0 to make "
                     "this warning level permanent."))
     restricts_posting_replies = forms.TypedChoiceField(
-        label=_("Restrictions on posting replies"),
+        label=_("Posting replies"),
         coerce=int, choices=RESTRICTIONS_CHOICES)
     restricts_posting_threads = forms.TypedChoiceField(
-        label=_("Restrictions on posting threads"),
+        label=_("Posting threads"),
         coerce=int, choices=RESTRICTIONS_CHOICES)
 
     class Meta:

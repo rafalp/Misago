@@ -5,6 +5,8 @@ from misago.users.views.admin.ranks import (RanksList, NewRank, EditRank,
                                             DeleteRank, MoveUpRank,
                                             MoveDownRank, DefaultRank)
 from misago.users.views.admin.users import UsersList, NewUser, EditUser
+from misago.users.views.admin.warnings import (WarningsList, NewWarning,
+                                               EditWarning, DeleteWarning)
 
 
 class MisagoAdminExtension(object):
@@ -43,6 +45,15 @@ class MisagoAdminExtension(object):
             url(r'^delete/(?P<ban_id>\d+)/$', DeleteBan.as_view(), name='delete'),
         )
 
+        # Warnings
+        urlpatterns.namespace(r'^warnings/', 'warnings', 'users')
+        urlpatterns.patterns('users:warnings',
+            url(r'^$', WarningsList.as_view(), name='index'),
+            url(r'^new/$', NewWarning.as_view(), name='new'),
+            url(r'^edit/(?P<ban_id>\d+)/$', EditWarning.as_view(), name='edit'),
+            url(r'^delete/(?P<ban_id>\d+)/$', DeleteWarning.as_view(), name='delete'),
+        )
+
     def register_navigation_nodes(self, site):
         site.add_node(name=_("Users"),
                       icon='fa fa-users',
@@ -70,3 +81,10 @@ class MisagoAdminExtension(object):
                       after='misago:admin:users:ranks:index',
                       namespace='misago:admin:users:bans',
                       link='misago:admin:users:bans:index')
+
+        site.add_node(name=_("Warning levels"),
+                      icon='fa fa-exclamation-triangle',
+                      parent='misago:admin:users',
+                      after='misago:admin:users:bans:index',
+                      namespace='misago:admin:users:warnings',
+                      link='misago:admin:users:warnings:index')

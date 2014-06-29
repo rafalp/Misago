@@ -1,21 +1,21 @@
 {% extends "misago/admin/generic/form.html" %}
-{% load crispy_forms_filters i18n %}
+{% load i18n misago_forms %}
 
 
 {% block title %}
 {% if target.pk %}
-{% trans target.banned_value %}
+{% trans target.name %}
 {% else %}
-{% trans "New ban" %}
+{% trans "New warning level" %}
 {% endif %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
 
 {% block page-target %}
 {% if target.pk %}
-{% trans target.banned_value %}
+{% trans target.name %}
 {% else %}
-{% trans "New ban" %}
+{% trans "New warning level" %}
 {% endif %}
 {% endblock page-target %}
 
@@ -23,32 +23,44 @@
 {% block form-header %}
 <h1>
   {% if target.pk %}
-  {% trans target.banned_value %}
+  {% trans target.name %}
   {% else %}
-  {% trans "New ban" %}
+  {% trans "New warning level" %}
   {% endif %}
 </h1>
 {% endblock %}
 
 
+{% block form-extra %}
+class="form-horizontal"
+{% endblock form-extra%}
+
+
 {% block form-body %}
-<div class="form-body">
-  <fieldset>
-    <legend>{% trans "Ban settings" %}</legend>
+{% with label_class="col-md-3" field_class="col-md-9" %}
+  <div class="form-body">
+    <fieldset>
+      <legend>{% trans "Name and description" %}</legend>
 
-    {{ form.test|as_crispy_field }}
-    {{ form.banned_value|as_crispy_field }}
-    {{ form.valid_until|as_crispy_field }}
+        {% form_row form.name label_class field_class %}
+        {% form_row form.description label_class field_class %}
 
-  </fieldset>
-  <fieldset>
-    <legend>{% trans "Messages" %}</legend>
+    </fieldset>
+    <fieldset>
+      <legend>{% trans "Expiration time" %}</legend>
 
-    {{ form.user_message|as_crispy_field }}
-    {{ form.staff_message|as_crispy_field }}
+        {% form_row form.expires_after_minutes label_class field_class %}
 
-  </fieldset>
-</div>
+    </fieldset>
+    <fieldset>
+      <legend>{% trans "Restrictions" %}</legend>
+
+        {% form_row form.restricts_posting_replies label_class field_class %}
+        {% form_row form.restricts_posting_threads label_class field_class %}
+
+    </fieldset>
+  </div>
+{% endwith %}
 {% endblock form-body %}
 
 
