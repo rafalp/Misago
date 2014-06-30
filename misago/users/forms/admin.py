@@ -367,8 +367,8 @@ class WarningLevelForm(forms.ModelForm):
             'max_length': _("Description can't be longer "
                             "than 1000 characters.")
         })
-    expires_after_minutes = forms.IntegerField(
-        label=_("Expiration time"), min_value=0,
+    length_in_minutes = forms.IntegerField(
+        label=_("Length in minutes"), min_value=0,
         help_text=_("Enter number of minutes since this warning level was "
                     "imposed on member until it's reduced, or 0 to make "
                     "this warning level permanent."))
@@ -384,7 +384,7 @@ class WarningLevelForm(forms.ModelForm):
         fields = [
             'name',
             'description',
-            'expires_after_minutes',
+            'length_in_minutes',
             'restricts_posting_replies',
             'restricts_posting_threads',
         ]

@@ -120,7 +120,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('description', models.TextField(null=True, blank=True)),
                 ('level', models.PositiveIntegerField(default=1, db_index=True)),
-                ('expires_after_minutes', models.PositiveIntegerField(default=0)),
+                ('length_in_minutes', models.PositiveIntegerField(default=0)),
                 ('restricts_posting_replies', models.PositiveIntegerField(default=0)),
                 ('restricts_posting_threads', models.PositiveIntegerField(default=0)),
             ],

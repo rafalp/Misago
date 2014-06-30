@@ -394,7 +394,7 @@ class WarningLevel(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     level = models.PositiveIntegerField(default=1, db_index=True)
-    expires_after_minutes = models.PositiveIntegerField(default=0)
+    length_in_minutes = models.PositiveIntegerField(default=0)
     restricts_posting_replies = models.PositiveIntegerField(
         default=RESTRICT_NO)
     restricts_posting_threads = models.PositiveIntegerField(
@@ -413,8 +413,8 @@ class WarningLevel(models.Model):
 
     @property
     def length(self):
-        if self.expires_after_minutes:
-            return time_amount(self.expires_after_minutes * 60)
+        if self.length_in_minutes:
+            return time_amount(self.length_in_minutes * 60)
         else:
             return _("permanent")
 
