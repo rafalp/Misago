@@ -2,7 +2,7 @@
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import RequestFactory
-from misago.core.utils import is_request_to_misago, slugify
+from misago.core.utils import is_request_to_misago, slugify, time_amount
 
 
 VALID_PATHS = (
@@ -53,3 +53,46 @@ class SlugifyTests(TestCase):
 
         for original, slug in test_cases:
             self.assertEqual(slugify(original), slug)
+
+
+class TimeAmountTests(TestCase):
+    def test_single_units(self):
+        """time_amount return correct amount of time for 1 precision"""
+        self.assertEqual(time_amount(1), "1 second")
+        self.assertEqual(time_amount(5), "5 seconds")
+        self.assertEqual(time_amount(35), "35 seconds")
+
+        self.assertEqual(time_amount(60), "1 minute")
+        self.assertEqual(time_amount(120), "2 minutes")
+        self.assertEqual(time_amount(240), "4 minutes")
+
+        self.assertEqual(time_amount(3600), "1 hour")
+        self.assertEqual(time_amount(7200), "2 hours")
+
+        self.assertEqual(time_amount(24 * 3600), "1 day")
+        self.assertEqual(time_amount(5 * 24 * 3600), "5 days")
+
+    def test_double_units(self):
+        """time_amount return correct amount of time for double precision"""
+        self.assertEqual(time_amount(61), "1 minute and 1 second")
+        self.assertEqual(time_amount(90), "1 minute and 30 seconds")
+
+        self.assertEqual(time_amount(121), "2 minutes and 1 second")
+        self.assertEqual(time_amount(150), "2 minutes and 30 seconds")
+
+        self.assertEqual(time_amount(3660), "1 hour and 1 minute")
+        self.assertEqual(time_amount(3720), "1 hour and 2 minutes")
+
+        self.assertEqual(time_amount(24 * 3600 + 1), "1 day and 1 second")
+        self.assertEqual(time_amount(2 * 24 * 3600 + 1), "2 days and 1 second")
+        self.assertEqual(time_amount(2 * 24 * 3600 + 5),
+                         "2 days and 5 seconds")
+
+        self.assertEqual(time_amount(2 * 24 * 3600 + 3 * 3600),
+                         "2 days and 3 hours")
+
+    def test_triple_units(self):
+        """time_amount return correct amount of time for triple precision"""
+        self.assertEqual(time_amount(3661), "1 hour, 1 minute and 1 second")
+        self.assertEqual(time_amount(2 * 3661),
+                         "2 hours, 2 minutes and 2 seconds")
