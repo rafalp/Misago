@@ -1,4 +1,5 @@
 from django.utils.translation import ugettext_lazy as _
+
 from misago.acl import algebra
 from misago.acl.models import Role
 from misago.core import forms

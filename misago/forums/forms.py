@@ -2,8 +2,10 @@ from django.db import models
 from django.utils.html import conditional_escape, mark_safe
 from django.utils.translation import ugettext_lazy as _
 from mptt.forms import TreeNodeChoiceField as TreeNodeChoiceField
+
 from misago.core import forms
 from misago.core.validators import validate_sluggable
+
 from misago.forums.models import Forum, ForumRole
 
 

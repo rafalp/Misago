@@ -1,7 +1,9 @@
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
+
 from misago.admin.views import generic
+
 from misago.acl.forms import RoleForm, get_permissions_forms
 from misago.acl.models import Role
 

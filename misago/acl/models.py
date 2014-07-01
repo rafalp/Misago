@@ -1,10 +1,12 @@
-from django.db import models
-from misago.acl import version as acl_version
 import base64
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
+
+from django.db import models
+
+from misago.acl import version as acl_version
 
 
 class BaseRole(models.Model):

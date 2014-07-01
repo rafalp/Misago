@@ -2,7 +2,9 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
+
 from misago.admin.views import generic
+
 from misago.users.forms.admin import (StaffFlagUserFormFactory, NewUserForm,
                                       EditUserForm, SearchUsersForm)
 

@@ -1,12 +1,14 @@
 import base64
-from importlib import import_module
-from misago.conf.dbsettings import CACHE_KEY
-from misago.conf.hydrators import dehydrate_value
-from misago.core.cache import cache as default_cache
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
+from importlib import import_module
+
+from misago.core.cache import cache as default_cache
+
+from misago.conf.dbsettings import CACHE_KEY
+from misago.conf.hydrators import dehydrate_value
 
 
 def get_group(SettingsGroup, group_key):

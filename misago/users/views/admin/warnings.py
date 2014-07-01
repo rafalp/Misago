@@ -1,7 +1,9 @@
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
+
 from misago.admin.views import generic
 from misago.core import cachebuster
+
 from misago.users.models import WarningLevel
 from misago.users.forms.admin import WarningLevelForm
 

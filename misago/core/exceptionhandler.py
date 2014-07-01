@@ -1,6 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponsePermanentRedirect
+
 from misago.core import errorpages
 from misago.core.exceptions import ExplicitFirstPage, OutdatedSlug
 

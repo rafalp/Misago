@@ -1,10 +1,12 @@
 import base64
-from django.db import models
-from misago.conf import hydrators
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
+
+from django.db import models
+
+from misago.conf import hydrators
 
 
 class SettingsGroupsManager(models.Manager):

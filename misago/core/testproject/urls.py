@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 
+
 urlpatterns = patterns('',
     url(r'^forum/', include('misago.urls', namespace='misago')),
 )

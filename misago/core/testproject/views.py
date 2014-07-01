@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponse
+
 from misago.core import errorpages, mail
 from misago.core.shortcuts import paginate, validate_slug
 from misago.core.testproject.models import Model

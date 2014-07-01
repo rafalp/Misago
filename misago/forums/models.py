@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
+
 from misago.acl import version as acl_version
 from misago.acl.models import BaseRole
 from misago.core.utils import subset_markdown, slugify

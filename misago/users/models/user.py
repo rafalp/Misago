@@ -6,9 +6,11 @@ from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
 from django.db import models, transaction
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+
 from misago.acl import get_user_acl
 from misago.acl.models import Role
 from misago.core.utils import slugify
+
 from misago.users.models.rank import Rank
 from misago.users.utils import hash_email
 from misago.users.validators import (validate_email, validate_password,

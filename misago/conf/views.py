@@ -1,7 +1,9 @@
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
+
 from misago.admin.views import render as mi_render
+
 from misago.conf import db_settings
 from misago.conf.forms import ChangeSettingsForm
 from misago.conf.models import SettingsGroup, Setting

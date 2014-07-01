@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+
 from misago.core.migrationutils import cachebuster_register_cache
 
 

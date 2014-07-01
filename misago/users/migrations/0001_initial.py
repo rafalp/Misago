@@ -5,6 +5,7 @@ from django.db import models, migrations
 import django.utils.timezone
 import django.db.models.deletion
 from django.conf import settings
+
 from misago.core.pgutils import CreatePartialIndex
 
 

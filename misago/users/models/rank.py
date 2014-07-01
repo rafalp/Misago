@@ -1,4 +1,5 @@
 from django.db import models, transaction
+
 from misago.acl import version as acl_version
 from misago.core.cache import cache
 from misago.core.utils import slugify

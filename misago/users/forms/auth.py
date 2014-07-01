@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.forms import (AuthenticationForm as
                                        BaseAuthenticationForm)
 from django.utils.translation import ugettext_lazy as _
+
 from misago.core import forms
 
 

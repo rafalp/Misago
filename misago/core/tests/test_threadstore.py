@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import RequestFactory
+
 from misago.core.middleware.threadstore import ThreadStoreMiddleware
 from misago.core import threadstore
 

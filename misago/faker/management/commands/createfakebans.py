@@ -1,11 +1,12 @@
 import random
 from datetime import timedelta
-from faker import Factory
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import IntegrityError
 from django.utils import timezone
+from faker import Factory
 from misago.users.models import Ban, BAN_USERNAME, BAN_EMAIL, BAN_IP
 
 

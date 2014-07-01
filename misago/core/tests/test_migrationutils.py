@@ -1,5 +1,6 @@
 from django.apps import apps
 from django.test import TestCase
+
 from misago.core import migrationutils
 from misago.core.models import CacheVersion
 

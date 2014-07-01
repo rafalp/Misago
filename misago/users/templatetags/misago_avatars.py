@@ -1,4 +1,5 @@
 import hashlib
+
 from django import template
 
 

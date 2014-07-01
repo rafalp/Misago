@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
 from misago.core.cache import cache
 from misago.core.utils import time_amount
 

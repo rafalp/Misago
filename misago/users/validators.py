@@ -1,8 +1,10 @@
 import re
+
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email as validate_email_content
 from django.utils.translation import ungettext, ugettext_lazy as _
 from django.contrib.auth import get_user_model
+
 from misago.conf import settings
 
 

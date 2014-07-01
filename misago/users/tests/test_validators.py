@@ -2,7 +2,9 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+
 from misago.conf import settings
+
 from misago.users.models import Ban, BAN_USERNAME, BAN_EMAIL
 from misago.users.validators import (validate_email,
                                      validate_email_available,

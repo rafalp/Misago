@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from misago.acl.models import Role
 from misago.acl.testutils import fake_post_data
 

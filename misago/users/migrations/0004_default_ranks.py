@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 from django.utils.translation import ugettext as _
+
 from misago.core.utils import slugify
 
 

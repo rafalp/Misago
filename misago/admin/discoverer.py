@@ -1,5 +1,7 @@
 from importlib import import_module
+
 from django.apps import apps
+
 from misago.admin.hierarchy import site
 from misago.admin.urlpatterns import urlpatterns
 

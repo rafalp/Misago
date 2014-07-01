@@ -6,7 +6,9 @@ from django.utils.translation import ugettext as _
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
+
 from misago.core.decorators import require_POST
+
 from misago.users.decorators import deny_authenticated, deny_guests
 from misago.users.forms.auth import AuthenticationForm
 

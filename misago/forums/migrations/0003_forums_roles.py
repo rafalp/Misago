@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
-from django.utils.translation import ugettext as _
 import base64
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
 
+from django.db import models, migrations
+from django.utils.translation import ugettext as _
 
 def pickle_permissions(role, permissions):
     role.pickled_permissions = base64.encodestring(
