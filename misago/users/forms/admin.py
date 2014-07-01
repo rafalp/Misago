@@ -102,11 +102,6 @@ def UserFormFactory(FormType, instance):
     return type('UserFormFinal', (FormType,), extra_fields)
 
 
-import warnings
-warnings.warn("Admin search inactive users not implemented yet.",
-              FutureWarning)
-
-
 def StaffFlagUserFormFactory(FormType, instance, add_staff_field):
     FormType = UserFormFactory(FormType, instance)
 
@@ -158,7 +153,7 @@ class SearchUsersFormBase(forms.Form):
                 roles__id=criteria.get('role'))
 
         if criteria.get('inactive'):
-            pass
+            queryset = queryset.filter(requires_activation__gt=0)
 
         if criteria.get('is_staff'):
             queryset = queryset.filter(is_staff=True)
