@@ -1,5 +1,4 @@
 from hashlib import md5
-import re
 
 from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
                                         UserManager as BaseUserManager,
@@ -7,13 +6,18 @@ from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
 from django.db import models, transaction
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from misago.acl import get_user_acl, version as acl_version
+from misago.acl import get_user_acl
 from misago.acl.models import Role
-from misago.core.cache import cache
-from misago.core.utils import time_amount, slugify
+from misago.core.utils import slugify
+from misago.users.models.rank import Rank
 from misago.users.utils import hash_email
 from misago.users.validators import (validate_email, validate_password,
                                      validate_username)
+
+
+__all__ = [
+    'AnonymousUser', 'User', 'Online'
+]
 
 
 class UserManager(BaseUserManager):
@@ -217,209 +221,3 @@ class AnonymousUser(DjangoAnonymousUser):
 
     def update_acl_key(self):
         raise TypeError("Can't update ACL key on anonymous users")
-
-
-"""
-Ranks
-"""
-class RankManager(models.Manager):
-    def get_default(self):
-        return self.get(is_default=True)
-
-    def make_rank_default(self, rank):
-        with transaction.atomic():
-            self.filter(is_default=True).update(is_default=False)
-            rank.is_default = True
-            rank.save(update_fields=['is_default'])
-
-
-class Rank(models.Model):
-    name = models.CharField(max_length=255)
-    slug = models.CharField(max_length=255)
-    description = models.TextField(null=True, blank=True)
-    title = models.CharField(max_length=255, null=True, blank=True)
-    roles = models.ManyToManyField('misago_acl.Role', null=True, blank=True)
-    css_class = models.CharField(max_length=255, null=True, blank=True)
-    is_default = models.BooleanField(default=False)
-    is_tab = models.BooleanField(default=False)
-    is_on_index = models.BooleanField(default=False)
-    order = models.IntegerField(default=0)
-
-    objects = RankManager()
-
-    class Meta:
-        get_latest_by = 'order'
-
-    def __unicode__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.set_order()
-        else:
-            acl_version.invalidate()
-        return super(Rank, self).save(*args, **kwargs)
-
-    def delete(self, *args, **kwargs):
-        acl_version.invalidate()
-        return super(Rank, self).delete(*args, **kwargs)
-
-    def set_name(self, name):
-        self.name = name
-        self.slug = slugify(name)
-
-    def set_order(self):
-        try:
-            self.order = Rank.objects.latest('order').order + 1
-        except Rank.DoesNotExist:
-            self.order = 0
-
-
-"""
-Bans
-"""
-BAN_USERNAME = 0
-BAN_EMAIL = 1
-BAN_IP = 2
-
-
-BANS_CHOICES = (
-    (BAN_USERNAME, _('Username')),
-    (BAN_EMAIL, _('E-mail address')),
-    (BAN_IP, _('IP Address')),
-)
-
-
-class BansManager(models.Manager):
-    def is_ip_banned(self, ip):
-        return self.check_ban(ip=ip)
-
-    def is_username_banned(self, username):
-        return self.check_ban(username=username)
-
-    def is_email_banned(self, email):
-        return self.check_ban(email=email)
-
-    def find_ban(self, username=None, email=None, ip=None):
-        tests = []
-
-        if username:
-            username = username.lower()
-            tests.append(BAN_USERNAME)
-        if email:
-            email = email.lower()
-            tests.append(BAN_EMAIL)
-        if ip:
-            tests.append(BAN_IP)
-
-        queryset = self.filter(is_valid=True)
-        if len(tests) == 1:
-            queryset = queryset.filter(test=tests[0])
-        elif tests:
-            queryset = queryset.filter(test__in=tests)
-
-        for ban in queryset.order_by('-id').iterator():
-            if (ban.test == BAN_USERNAME and username and
-                    ban.test_value(username)):
-                return ban
-            elif ban.test == BAN_EMAIL and email and ban.test_value(email):
-                return ban
-            elif ban.test == BAN_IP and ip and ban.test_value(ip):
-                return ban
-        return None
-
-
-class Ban(models.Model):
-    test = models.PositiveIntegerField(default=BAN_USERNAME, db_index=True)
-    banned_value = models.CharField(max_length=255, db_index=True)
-    user_message = models.TextField(null=True, blank=True)
-    staff_message = models.TextField(null=True, blank=True)
-    valid_until = models.DateField(null=True, blank=True, db_index=True)
-    is_valid = models.BooleanField(default=True, db_index=True)
-
-    objects = BansManager()
-
-    def save(self, *args, **kwargs):
-        self.banned_value = self.banned_value.lower()
-        self.is_valid = not self.is_expired
-
-        return super(Ban, self).save(*args, **kwargs)
-
-    @property
-    def test_name(self):
-        return BANS_CHOICES[self.test][1]
-
-    @property
-    def name(self):
-        return self.banned_value
-
-    @property
-    def is_expired(self):
-        if self.valid_until:
-            return self.valid_until < timezone.now().date()
-        else:
-            return False
-
-    def test_value(self, value):
-        if '*' in self.banned_value:
-            regex = re.escape(self.banned_value).replace('\*', '(.*?)')
-            return re.search('^%s$' % regex, value) != None
-        else:
-            return self.banned_value == value
-
-
-class BanCache(models.Model):
-    user = models.OneToOneField(User, primary_key=True)
-    is_banned = models.BooleanField(default=False)
-    bans_version = models.PositiveIntegerField(default=0)
-    valid_until = models.DateField(null=True, blank=True)
-
-
-"""
-Warning level
-"""
-RESTRICT_NO = 0
-RESTRICT_MODERATOR_REVIEW = 1
-RESTRICT_DISALLOW = 2
-
-
-RESTRICTIONS_CHOICES = (
-    (RESTRICT_NO, _("No restrictions")),
-    (RESTRICT_MODERATOR_REVIEW, _("Review by moderator")),
-    (RESTRICT_DISALLOW, _("Disallowed")),
-)
-
-
-class WarningLevel(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField(null=True, blank=True)
-    level = models.PositiveIntegerField(default=1, db_index=True)
-    length_in_minutes = models.PositiveIntegerField(default=0)
-    restricts_posting_replies = models.PositiveIntegerField(
-        default=RESTRICT_NO)
-    restricts_posting_threads = models.PositiveIntegerField(
-        default=RESTRICT_NO)
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.set_level()
-
-        super(WarningLevel, self).save(*args, **kwargs)
-        cache.delete('warning_levels')
-
-    def delete(self, *args, **kwargs):
-        super(WarningLevel, self).delete(*args, **kwargs)
-        cache.delete('warning_levels')
-
-    @property
-    def length(self):
-        if self.length_in_minutes:
-            return time_amount(self.length_in_minutes * 60)
-        else:
-            return _("permanent")
-
-    def set_level(self):
-        try:
-            self.level = WarningLevel.objects.latest('level').level + 1
-        except WarningLevel.DoesNotExist:
-            self.level = 1
