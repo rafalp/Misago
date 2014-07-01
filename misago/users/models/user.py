@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from misago.acl import get_user_acl
 from misago.acl.models import Role
+from misago.conf import settings
 from misago.core.utils import slugify
 
 from misago.users.models.rank import Rank
@@ -22,6 +23,34 @@ __all__ = [
 ]
 
 
+ACTIVATION_REQUIRED_NONE = 0
+ACTIVATION_REQUIRED_EMAIL = 1
+ACTIVATION_REQUIRED_ADMIN = 2
+
+
+PRESENCE_VISIBILITY_ALL = 0
+PRESENCE_VISIBILITY_FOLLOWED = 1
+PRESENCE_VISIBILITY_ALLOWED = 2
+
+PRESENCE_VISIBILITY_CHOICES = (
+    (PRESENCE_VISIBILITY_ALL, _("Everyone")),
+    (PRESENCE_VISIBILITY_FOLLOWED, _("Users I follow")),
+    (PRESENCE_VISIBILITY_ALLOWED, _("Users with permission"))
+)
+
+
+AUTO_SUBSCRIBE_NONE = 0
+AUTO_SUBSCRIBE_WATCH = 1
+AUTO_SUBSCRIBE_WATCH_AND_EMAIL = 2
+
+AUTO_SUBSCRIBE_CHOICES = (
+    (AUTO_SUBSCRIBE_NONE, _("Do nothing.")),
+    (AUTO_SUBSCRIBE_WATCH, _("Add to watched list.")),
+    (AUTO_SUBSCRIBE_WATCH_AND_EMAIL,
+     _("Add to watched list with e-mail notification."))
+)
+
+
 class UserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
         with transaction.atomic():
@@ -33,6 +62,26 @@ class UserManager(BaseUserManager):
             validate_username(username)
             validate_email(email)
             validate_password(password)
+
+            if not 'joined_from_ip' in extra_fields:
+                extra_fields['joined_from_ip'] = '127.0.0.1'
+
+            if not 'timezone' in extra_fields:
+                extra_fields['timezone'] = settings.default_timezone
+
+            WATCH_DICT = {
+                'no': AUTO_SUBSCRIBE_NONE,
+                'watch': AUTO_SUBSCRIBE_WATCH,
+                'watch_email': AUTO_SUBSCRIBE_WATCH_AND_EMAIL,
+            }
+
+            if not 'subscribe_to_started_threads' in extra_fields:
+                new_value = WATCH_DICT[settings.subscribe_start]
+                extra_fields['subscribe_to_started_threads'] = new_value
+
+            if not 'subscribe_to_replied_threads' in extra_fields:
+                new_value = WATCH_DICT[settings.subscribe_reply]
+                extra_fields['subscribe_to_replied_threads'] = new_value
 
             now = timezone.now()
             user = self.model(is_staff=False, is_superuser=False, last_login=now,
@@ -102,18 +151,64 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, db_index=True)
     email_hash = models.CharField(max_length=32, unique=True)
     joined_on = models.DateTimeField(_('joined on'), default=timezone.now)
+    joined_from_ip = models.GenericIPAddressField()
     last_active = models.DateTimeField(null=True, blank=True)
+    last_ip = models.GenericIPAddressField(null=True, blank=True)
+    presence_visibility = models.PositiveIntegerField(
+        default=PRESENCE_VISIBILITY_ALL)
+
+    timezone = models.CharField(max_length=255, default='utc')
+
     rank = models.ForeignKey(
         'Rank', null=True, blank=True, on_delete=models.PROTECT)
     title = models.CharField(max_length=255, null=True, blank=True)
-    activation_requirement = models.PositiveIntegerField(default=0)
+    requires_activation = models.PositiveIntegerField(
+        default=ACTIVATION_REQUIRED_NONE)
     is_staff = models.BooleanField(
         _('staff status'), default=False,
         help_text=_('Designates whether the user can log into admin sites.'))
     roles = models.ManyToManyField('misago_acl.Role')
     acl_key = models.CharField(max_length=12, null=True, blank=True)
 
-    is_active = True
+    is_avatar_banned = models.BooleanField(default=False)
+    avatar_type = models.CharField(max_length=10, null=True, blank=True)
+    avatar_image = models.CharField(max_length=255, null=True, blank=True)
+    avatar_original = models.CharField(max_length=255, null=True, blank=True)
+    avatar_temp = models.CharField(max_length=255, null=True, blank=True)
+    avatar_crop = models.CharField(max_length=255, null=True, blank=True)
+    avatar_ban_user_message = models.TextField(null=True, blank=True)
+    avatar_ban_staff_message = models.TextField(null=True, blank=True)
+
+    is_signature_banned = models.BooleanField(default=False)
+    signature = models.TextField(null=True, blank=True)
+    signature_preparsed = models.TextField(null=True, blank=True)
+    signature_ban_user_message = models.TextField(null=True, blank=True)
+    signature_ban_staff_message = models.TextField(null=True, blank=True)
+
+    warning_level = models.PositiveIntegerField(default=0)
+    warning_level_update_on = models.DateTimeField(null=True, blank=True)
+
+    following = models.PositiveIntegerField(default=0)
+    followers = models.PositiveIntegerField(default=0)
+
+    new_alerts = models.PositiveIntegerField(default=0)
+
+    limit_private_thread_invites = models.PositiveIntegerField(default=0)
+    unread_private_threads = models.PositiveIntegerField(default=0)
+    sync_unred_private_threads = models.BooleanField(default=False)
+
+    subscribe_to_started_threads = models.PositiveIntegerField(
+        default=AUTO_SUBSCRIBE_NONE)
+    subscribe_to_replied_threads = models.PositiveIntegerField(
+        default=AUTO_SUBSCRIBE_NONE)
+
+    threads = models.PositiveIntegerField(default=0)
+    posts = models.PositiveIntegerField(default=0)
+
+    last_post = models.DateTimeField(null=True, blank=True)
+    last_search = models.DateTimeField(null=True, blank=True)
+
+    is_active = True # Django's is_active means "is not deleted"
 
     USERNAME_FIELD = 'username_slug'
     REQUIRED_FIELDS = ['email']
@@ -197,6 +292,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Online(models.Model):
     user = models.OneToOneField(User, primary_key=True,
                                 related_name='online_tracker')
+    current_ip = models.GenericIPAddressField()
     last_click = models.DateTimeField(default=timezone.now)
 
 

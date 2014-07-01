@@ -125,7 +125,7 @@ def create_users_settings_group(apps, schema_editor):
                     'field_extra': {
                         'choices': (
                             ('no', _("Don't watch")),
-                            ('', _("Put on watched threads list")),
+                            ('watch', _("Put on watched threads list")),
                             ('watch_email', _("Put on watched threads "
                                               "list and e-mail user when "
                                               "somebody replies")),
@@ -140,7 +140,7 @@ def create_users_settings_group(apps, schema_editor):
                     'field_extra': {
                         'choices': (
                             ('no', _("Don't watch")),
-                            ('', _("Put on watched threads list")),
+                            ('watch', _("Put on watched threads list")),
                             ('watch_email', _("Put on watched threads "
                                               "list and e-mail user when "
                                               "somebody replies")),

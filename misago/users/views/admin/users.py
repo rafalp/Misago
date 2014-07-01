@@ -55,7 +55,8 @@ class NewUser(UserAdmin, generic.ModelFormView):
             form.cleaned_data['email'],
             form.cleaned_data['new_password'],
             title=form.cleaned_data['title'],
-            rank=form.cleaned_data.get('rank'))
+            rank=form.cleaned_data.get('rank'),
+            joined_from_ip=request._misago_real_ip)
 
         if form.cleaned_data.get('staff_level'):
             new_user.staff_level = form.cleaned_data['staff_level']

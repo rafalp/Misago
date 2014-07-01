@@ -15,6 +15,7 @@ urlpatterns += patterns('',
     url(r'^', include('misago.users.urls')),
 )
 
+
 # Register Misago ACP
 if settings.MISAGO_ADMIN_PATH:
     # Admin patterns recognised by Misago
