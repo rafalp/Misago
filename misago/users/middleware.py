@@ -40,11 +40,11 @@ class OnlineTrackerMiddleware(object):
                     user = tracker.user
                     user.last_active = tracker.last_click
                     user.last_ip = tracker.current_ip
-                    user.save(update_fields=['last_active'])
+                    user.save(update_fields=['last_active', 'last_ip'])
                 else:
                     # Bump user's tracker time
                     tracker.current_ip = request._misago_real_ip
                     tracker.last_click = timezone.now()
-                    tracker.save(update_fields=['last_click'])
+                    tracker.save(update_fields=['last_click', 'current_ip'])
 
         return response
