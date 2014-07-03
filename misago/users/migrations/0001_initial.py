@@ -29,7 +29,6 @@ class Migration(migrations.Migration):
                 ('email_hash', models.CharField(unique=True, max_length=32)),
                 ('joined_on', models.DateTimeField(default=django.utils.timezone.now, verbose_name='joined on')),
                 ('joined_from_ip', models.GenericIPAddressField()),
-                ('last_active', models.DateTimeField(null=True, blank=True)),
                 ('last_ip', models.GenericIPAddressField(null=True, blank=True)),
                 ('presence_visibility', models.PositiveIntegerField(default=0)),
                 ('timezone', models.CharField(max_length=255, default='utc')),

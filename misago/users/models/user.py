@@ -152,7 +152,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     email_hash = models.CharField(max_length=32, unique=True)
     joined_on = models.DateTimeField(_('joined on'), default=timezone.now)
     joined_from_ip = models.GenericIPAddressField()
-    last_active = models.DateTimeField(null=True, blank=True)
     last_ip = models.GenericIPAddressField(null=True, blank=True)
     presence_visibility = models.PositiveIntegerField(
         default=PRESENCE_VISIBILITY_ALL)

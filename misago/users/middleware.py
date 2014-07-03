@@ -38,9 +38,9 @@ class OnlineTrackerMiddleware(object):
                 if request.user.is_anonymous():
                     # User logged off, update his last visit and blam tracker
                     user = tracker.user
-                    user.last_active = tracker.last_click
+                    user.last_login = tracker.last_click
                     user.last_ip = tracker.current_ip
-                    user.save(update_fields=['last_active', 'last_ip'])
+                    user.save(update_fields=['last_login', 'last_ip'])
                 else:
                     # Bump user's tracker time
                     tracker.current_ip = request._misago_real_ip
