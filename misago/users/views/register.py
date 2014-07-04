@@ -7,7 +7,7 @@ def register_decorator(f):
         if settings.account_activation == 'disabled':
             return registrations_off(request)
         else:
-            return register(request)
+            return f(request)
     return decorator
 
 
