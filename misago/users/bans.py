@@ -1,8 +1,6 @@
-from datetime import datetime
+from datetime import date, datetime
 
-from django.utils import timezone
 from misago.core import cachebuster
-
 from misago.users.models import Ban
 
 
@@ -63,7 +61,7 @@ def _get_session_bancache(request):
             """
             Make two timezone unaware dates and compare them
             """
-            if ban_cache.get('valid_until') < timezone.now().date():
+            if ban_cache.get('valid_until') < date.today():
                 return None
         return ban_cache
     except KeyError:
