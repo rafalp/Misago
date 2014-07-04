@@ -21,7 +21,7 @@ BAN_IP = 2
 BANS_CHOICES = (
     (BAN_USERNAME, _('Username')),
     (BAN_EMAIL, _('E-mail address')),
-    (BAN_IP, _('IP Address')),
+    (BAN_IP, _('IP address')),
 )
 
 

@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 
@@ -79,6 +79,15 @@ class EditUser(UserAdmin, generic.ModelFormView):
 
     def handle_form(self, form, request, target):
         form.instance.save()
+
+        if form.cleaned_data.get('new_password'):
+            target.set_password(form.cleaned_data['new_password'])
+
+            if target.pk == request.user.pk:
+                update_session_auth_hash(request, form.user)
+
+        if form.cleaned_data.get('email'):
+            target.set_email(form.cleaned_data['email'])
 
         if form.cleaned_data.get('staff_level'):
             form.instance.staff_level = form.cleaned_data['staff_level']

@@ -6,3 +6,8 @@ urlpatterns = patterns('misago.users.views.auth',
     url(r'^login/banned/$', 'login_banned', name='login_banned'),
     url(r'^logout/$', 'logout', name='logout'),
 )
+
+
+urlpatterns += patterns('misago.users.views.register',
+    url(r'^register/$', 'register', name='register'),
+)

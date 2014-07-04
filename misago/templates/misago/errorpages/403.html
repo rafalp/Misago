@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n %}
+{% load i18n misago_stringutils %}
 
 
 {% block title %}{% trans "Page not available" %} | {{ block.super }}{% endblock %}
@@ -17,11 +17,10 @@
       <span class="fa fa-ban"></span>
     </div>
 
-    <h1>{% trans "Requested page is not available." %}</h1>
     {% if message %}
-    <p>{{ message }}</p>
+    <h1>{{ message|linebreaksbr|linkify }}</h1>
     {% else %}
-    <p>{% trans "You don't have permission to access this page." %}</p>
+    <h1>{% trans "You don't have permission to access this page." %}</h1>
     {% endif %}
 
   </div>
