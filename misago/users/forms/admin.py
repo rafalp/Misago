@@ -302,6 +302,16 @@ class BanForm(forms.ModelForm):
             'valid_until',
         ]
 
+    def clean_banned_value(self):
+        data = self.cleaned_data['banned_value']
+        while '**' in data:
+            data = data.replace('**', '*')
+
+        if data == '*':
+            raise forms.ValidationError(_("Banned value is too vague."))
+
+        return data
+
 
 SARCH_BANS_CHOICES = (
     ('', _('All bans')),
