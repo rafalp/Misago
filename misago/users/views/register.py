@@ -1,11 +1,13 @@
+from django.shortcuts import redirect, render
+
 from misago.conf import settings
 from misago.users.decorators import deny_authenticated, deny_banned_ips
 
 
 def register_decorator(f):
     def decorator(request):
-        if settings.account_activation == 'disabled':
-            return registrations_off(request)
+        if True or settings.account_activation == 'disabled':
+            return registration_disabled(request)
         else:
             return f(request)
     return decorator
@@ -15,8 +17,8 @@ def register_decorator(f):
 @deny_banned_ips
 @register_decorator
 def register(request):
-    pass
+    return render(request, 'misago/register/form.html')
 
 
-def registration_off(request):
-    pass
+def registration_disabled(request):
+    return render(request, 'misago/register/disabled.html')
