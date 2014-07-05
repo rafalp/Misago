@@ -1,4 +1,7 @@
+from django.contrib.auth import logout
 from django.utils import timezone
+
+from misago.users.bans import get_user_ban
 from misago.users.models import AnonymousUser, Online
 
 
@@ -15,6 +18,9 @@ class UserMiddleware(object):
     def process_request(self, request):
         if request.user.is_anonymous():
             request.user = AnonymousUser()
+        else:
+            if get_request_ip_ban(request) or get_user_ban(request.user):
+                logout(request)
 
 
 class OnlineTrackerMiddleware(object):

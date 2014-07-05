@@ -136,6 +136,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BanCache',
             fields=[
+                ('user_message', models.TextField(null=True, blank=True)),
+                ('staff_message', models.TextField(null=True, blank=True)),
                 ('bans_version', models.PositiveIntegerField(default=0)),
                 ('valid_until', models.DateField(null=True, blank=True)),
                 ('is_banned', models.BooleanField(default=False)),

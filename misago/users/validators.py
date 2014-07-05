@@ -6,6 +6,7 @@ from django.utils.translation import ungettext, ugettext_lazy as _
 from django.contrib.auth import get_user_model
 
 from misago.conf import settings
+from misago.users.bans import get_email_ban, get_username_ban
 
 
 USERNAME_RE = re.compile(r'^[0-9a-z]+$', re.IGNORECASE)
@@ -25,12 +26,11 @@ def validate_email_available(value, exclude=None):
 
 
 def validate_email_banned(value):
-    from misago.users.models import Ban
-    email_ban = Ban.objects.find_ban(email=value)
+    ban = get_email_ban(value)
 
-    if email_ban:
-        if email_ban.user_message:
-            raise ValidationError(email_ban.user_message)
+    if ban:
+        if ban.user_message:
+            raise ValidationError(ban.user_message)
         else:
             raise ValidationError(_("This e-mail address is not allowed."))
 
@@ -69,12 +69,11 @@ def validate_username_available(value, exclude=None):
 
 
 def validate_username_banned(value):
-    from misago.users.models import Ban
-    username_ban = Ban.objects.find_ban(username=value)
+    ban = get_username_ban(value)
 
-    if username_ban:
-        if username_ban.user_message:
-            raise ValidationError(username_ban.user_message)
+    if ban:
+        if ban.user_message:
+            raise ValidationError(ban.user_message)
         else:
             raise ValidationError(_("This username is not allowed."))
 

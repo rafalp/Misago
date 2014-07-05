@@ -14,17 +14,20 @@ class BansManagerTests(TestCase):
     def test_find_ban_for_banned_name(self):
         """find_ban finds ban for given username"""
         self.assertTrue(Ban.objects.find_ban(username='Bob') != None)
-        self.assertTrue(Ban.objects.find_ban(username='Jeb') == None)
+        with self.assertRaises(Ban.DoesNotExist):
+            Ban.objects.find_ban(username='Jeb')
 
     def test_find_ban_for_banned_email(self):
         """find_ban finds ban for given email"""
         self.assertTrue(Ban.objects.find_ban(email='bob@test.com') != None)
-        self.assertTrue(Ban.objects.find_ban(email='jeb@test.com') == None)
+        with self.assertRaises(Ban.DoesNotExist):
+            Ban.objects.find_ban(email='jeb@test.com')
 
     def test_find_ban_for_banned_ip(self):
         """find_ban finds ban for given ip"""
         self.assertTrue(Ban.objects.find_ban(ip='127.0.0.1') != None)
-        self.assertTrue(Ban.objects.find_ban(ip='42.0.0.1') == None)
+        with self.assertRaises(Ban.DoesNotExist):
+            Ban.objects.find_ban(ip='42.0.0.1')
 
     def test_find_ban_for_all_bans(self):
         """find_ban finds ban for given values"""
@@ -32,7 +35,8 @@ class BansManagerTests(TestCase):
         self.assertTrue(Ban.objects.find_ban(**valid_kwargs) != None)
 
         invalid_kwargs = {'username': 'bsob', 'ip': '42.51.52.51'}
-        self.assertTrue(Ban.objects.find_ban(**invalid_kwargs) == None)
+        with self.assertRaises(Ban.DoesNotExist):
+            Ban.objects.find_ban(**invalid_kwargs)
 
 
 class BanTests(TestCase):

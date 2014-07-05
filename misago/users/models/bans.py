@@ -1,3 +1,4 @@
+from datetime import date
 import re
 
 from django.conf import settings
@@ -5,6 +6,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
+from misago.core import cachebuster
 from misago.core.utils import time_amount
 
 
@@ -61,7 +63,8 @@ class BansManager(models.Manager):
                 return ban
             elif ban.test == BAN_IP and ip and ban.test_value(ip):
                 return ban
-        return None
+        else:
+            raise Ban.DoesNotExist('no valid ban for values has been found')
 
 
 class Ban(models.Model):
@@ -104,7 +107,19 @@ class Ban(models.Model):
 
 
 class BanCache(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, primary_key=True)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, primary_key=True, related_name='ban_cache')
     is_banned = models.BooleanField(default=False)
     bans_version = models.PositiveIntegerField(default=0)
+    user_message = models.TextField(null=True, blank=True)
+    staff_message = models.TextField(null=True, blank=True)
     valid_until = models.DateField(null=True, blank=True)
+
+    @property
+    def is_valid(self):
+        version_is_valid = cachebuster.is_valid('misago_bans',
+                                                self.bans_version)
+        not_expired = not self.valid_until or self.valid_until < date.today()
+
+        return version_is_valid and not_expired
+

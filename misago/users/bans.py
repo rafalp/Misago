@@ -1,21 +1,91 @@
+
+"""
+API for testing values for bans
+
+Calling this instead of Ban.objects.find_ban is preffered, if you don't want
+to use validate_X_banned validators
+"""
 from datetime import date, datetime
 
 from misago.core import cachebuster
-from misago.users.models import Ban
+from misago.users.models import Ban, BanCache
 
 
-"""
-Utils for checking bans
-"""
 BAN_CACHE_SESSION_KEY = 'misago_ip_check'
 BAN_VERSION_KEY = 'misago_bans'
 
 
-def is_user_banned(user):
-    pass
+def get_username_ban(username):
+    try:
+        return Ban.objects.find_ban(username=username)
+    except Ban.DoesNotExist:
+        return None
 
 
-def is_ip_banned(request):
+def get_email_ban(email):
+    try:
+        return Ban.objects.find_ban(email=email)
+    except Ban.DoesNotExist:
+        return None
+
+
+def get_ip_ban(ip):
+    try:
+        return Ban.objects.find_ban(ip=ip)
+    except Ban.DoesNotExist:
+        return None
+
+
+def get_user_ban(user):
+    """
+    This function checks if user is banned
+
+    When user model is available, this is preffered to calling
+    get_email_ban(user.email) and get_username_ban(user.username)
+    because it sets ban cache on user model
+    """
+    try:
+        ban_cache = user.ban_cache
+        if not ban_cache.is_valid:
+            _set_user_ban_cache(user)
+    except BanCache.DoesNotExist:
+        user.ban_cache = BanCache(user=user)
+        ban_cache = _set_user_ban_cache(user)
+
+    if ban_cache.is_banned:
+        return ban_cache
+    else:
+        return None
+
+
+def _set_user_ban_cache(user):
+    ban_cache = user.ban_cache
+    ban_cache.bans_version = cachebuster.get_version(BAN_VERSION_KEY)
+
+    try:
+        user_ban = Ban.objects.find_ban(username=user.username,
+                                        email=user.email)
+        ban_cache.is_banned = True
+        ban_cache.valid_until = user_ban.valid_until
+        ban_cache.user_message = user_ban.user_message
+        ban_cache.staff_message = user_ban.staff_message
+    except Ban.DoesNotExist:
+        ban_cache.is_banned = False
+        ban_cache.valid_until = None
+        ban_cache.user_message = None
+        ban_cache.staff_message = None
+
+    ban_cache.save()
+    return ban_cache
+
+
+"""
+Utility for checking if request came from banned IP
+
+This check may be performed frequently, which is why there is extra
+boilerplate that caches ban check result in session
+"""
+def get_request_ip_ban(request):
     session_ban_cache = _get_session_bancache(request)
     if session_ban_cache:
         if session_ban_cache['is_banned']:
@@ -23,7 +93,7 @@ def is_ip_banned(request):
         else:
             return False
 
-    found_ban = Ban.objects.find_ban(ip=request._misago_real_ip)
+    found_ban = get_ip_ban(request._misago_real_ip)
 
     ban_cache = request.session[BAN_CACHE_SESSION_KEY] = {
         'version': cachebuster.get_version(BAN_VERSION_KEY),
@@ -46,7 +116,7 @@ def is_ip_banned(request):
     else:
         ban_cache['is_banned'] = False
         request.session[BAN_CACHE_SESSION_KEY] = ban_cache
-        return False
+        return None
 
 
 def _get_session_bancache(request):

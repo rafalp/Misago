@@ -14,8 +14,6 @@ from misago.core.utils import slugify
 
 from misago.users.models.rank import Rank
 from misago.users.utils import hash_email
-from misago.users.validators import (validate_email, validate_password,
-                                     validate_username)
 
 
 __all__ = [
@@ -53,6 +51,9 @@ AUTO_SUBSCRIBE_CHOICES = (
 
 class UserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
+        from misago.users.validators import (validate_email, validate_password,
+                                             validate_username)
+
         with transaction.atomic():
             if not email:
                 raise ValueError(_("User must have an email address."))

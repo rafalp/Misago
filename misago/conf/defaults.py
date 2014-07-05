@@ -116,10 +116,10 @@ MIDDLEWARE_CLASSES = (
     'misago.users.middleware.UserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'misago.core.middleware.threadstore.ThreadStoreMiddleware',
     'misago.core.middleware.exceptionhandler.ExceptionHandlerMiddleware',
     'misago.users.middleware.OnlineTrackerMiddleware',
     'misago.admin.middleware.AdminAuthMiddleware',
+    'misago.core.middleware.threadstore.ThreadStoreMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

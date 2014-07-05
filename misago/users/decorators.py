@@ -2,7 +2,7 @@ from django.core.exceptions import PermissionDenied
 from django.template.defaultfilters import date as format_date
 from django.utils.translation import gettext_lazy as _
 
-from misago.users.bans import is_ip_banned
+from misago.users.bans import get_request_ip_ban
 
 
 def deny_authenticated(f):
@@ -27,7 +27,7 @@ def deny_guests(f):
 
 def deny_banned_ips(f):
     def decorator(request, *args, **kwargs):
-        ban = is_ip_banned(request)
+        ban = get_request_ip_ban(request)
         if ban:
             default_message = _("Your IP address has been banned.")
             ban_message = ban.get('message') or default_message
