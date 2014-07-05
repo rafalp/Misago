@@ -1,7 +1,7 @@
 from django.contrib.auth import logout
 from django.utils import timezone
 
-from misago.users.bans import get_user_ban
+from misago.users.bans import get_request_ip_ban, get_user_ban
 from misago.users.models import AnonymousUser, Online
 
 

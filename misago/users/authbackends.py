@@ -23,6 +23,6 @@ class MisagoBackend(ModelBackend):
         try:
             manager = UserModel._default_manager
             relations = ('online_tracker', 'ban_cache')
-            return manager.select_related(**relations).get(pk=user_id)
+            return manager.select_related(*relations).get(pk=user_id)
         except UserModel.DoesNotExist:
             return None
