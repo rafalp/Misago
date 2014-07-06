@@ -21,6 +21,8 @@
             <h1>{% trans "Register new account" %}</h1>
           </div>
 
+          {% include "misago/form_errors.html" %}
+
           <div class="form-body no-fieldsets">
 
             {% with label_class="col-md-3" field_class="col-md-9" %}
@@ -53,7 +55,7 @@
 
             <div class="form-group">
               <label class="control-label {{ label_class }}" >{% trans "Password strength" %}:</label>
-              <div class="{{ field_class }} form-control-static">
+              <div class="col-md-5 form-control-static">
                 <p class="password-strength"><strong id="password-strength"></strong></p>
                 <div class="progress">
                   <div id="password-bar" class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
