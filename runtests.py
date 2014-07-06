@@ -67,8 +67,13 @@ DATABASES = {
     setup()
     setup_test_environment()
 
+    if __name__ == '__main__':
+        args = sys.argv[1:]
+    else:
+        args = []
+
     from django.core.management.commands import test
-    sys.exit(test.Command().execute(verbosity=1))
+    sys.exit(test.Command().execute(*args, verbosity=1))
 
 
 if __name__ == '__main__':
