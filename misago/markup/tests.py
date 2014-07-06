@@ -41,7 +41,7 @@ Lorem [b]ipsum[/B].
         """block elements are correctly parsed"""
         test_text = """
 Lorem ipsum.
-[hr]
+[hR]
 Dolor met.
 """.strip()
 
