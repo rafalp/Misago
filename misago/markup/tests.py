@@ -36,3 +36,20 @@ Lorem [b]ipsum[/B].
 
         result = parse_text(test_text)
         self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_blocks(self):
+        """block elements are correctly parsed"""
+        test_text = """
+Lorem ipsum.
+[hr]
+Dolor met.
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.</p>
+<hr />
+<p>Dolor met.</p>
+""".strip()
+
+        result = parse_text(test_text)
+        self.assertEqual(expected_result, result['parsed_text'])

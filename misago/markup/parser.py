@@ -1,5 +1,5 @@
 import markdown
-from misago.markup.bbcode import inline
+from misago.markup.bbcode import inline, blocks
 
 
 def parse_text(text, author=None, allow_mentions=True, allow_links=True,
@@ -72,8 +72,10 @@ def md_factory(author=None, allow_mentions=True, allow_links=True,
         del md.inlinePatterns['image_link']
 
     if allow_blocks:
-        # Add [quote], [spoiler], [list] and [code] blocks
-        pass
+        # Add [hr] [quote], [spoiler], [list] and [code] blocks
+        md.parser.blockprocessors.add('bb_hr',
+                                      blocks.BBCodeHRProcessor(md.parser),
+                                      '>hr')
     else:
         # Remove blocks
         del md.parser.blockprocessors['hashheader']
