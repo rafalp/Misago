@@ -15,6 +15,8 @@ urlpatterns += patterns('misago.users.views.register',
 
 urlpatterns += patterns('misago.users.views.api',
     url(r'^api/validate/username/$', 'validate_username', name='api_validate_username'),
+    url(r'^api/validate/username/(?P<user_id>\d+)/$', 'validate_username', name='api_validate_username'),
     url(r'^api/validate/email/$', 'validate_email', name='api_validate_email'),
+    url(r'^api/validate/email/(?P<user_id>\d+)/$', 'validate_email', name='api_validate_email'),
     url(r'^api/validate/password/$', 'validate_password', name='api_validate_password'),
 )
