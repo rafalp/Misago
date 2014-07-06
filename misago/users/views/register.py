@@ -19,6 +19,11 @@ def register_decorator(f):
 @register_decorator
 def register(request):
     form = RegisterForm()
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            pass
+
     return render(request, 'misago/register/form.html', {'form': form,})
 
 
