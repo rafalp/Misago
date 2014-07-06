@@ -36,9 +36,7 @@ Because ACL framework is very flexible, different features can have different wa
 Permissions cache
 -----------------
 
-Construction of User's ACLs can be costful process, especially once you start installing extensions adding new features to your site. Because of this, Misago is not assinging ACLs to Users, but to combinations of roles.
-
-This means that if one User has roles 1, 3 and 4 assigned to account, but no rank, while other User has roles 1 and 4 assigned to account and role 3 assigned to his rank, both will have same ACL. This means that ACL has to be generated once and cached for use by others.
+Construction of User's ACLs can be costful process, especially once you start installing extensions adding new features to your site. Because of this, Misago is not assinging ACLs to Users, but to combinations of roles. This means that each individual uses has own "ACL key", that allows Misago to associate this user roles with valid ACL cache.
 
 ACL's are cached in two places: in remote cache storage, for use between requests, and in thread memory, so you don't have to write your own caches and checks when you are checking multiple users ACL's during single request.
 

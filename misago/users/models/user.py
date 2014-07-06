@@ -274,18 +274,26 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         for role in self.roles.all():
             roles_pks.append(role.pk)
+            role.origin = self
             roles_dict[role.pk] = role
 
         if self.rank:
             for role in self.rank.roles.all():
                 if role.pk not in roles_pks:
+                    role.origin = self.rank
                     roles_pks.append(role.pk)
                     roles_dict[role.pk] = role
 
         return [roles_dict[r] for r in sorted(roles_pks)]
 
     def update_acl_key(self):
-        roles_pks = [unicode(r.pk) for r in self.get_roles()]
+        roles_pks = []
+        for role in self.get_roles():
+            if role.origin == 'self':
+                roles_pks.append('u%s' % role.pk)
+            else:
+                roles_pks.append('%s:%s' % (self.rank.pk, role.pk))
+
         self.acl_key = md5(','.join(roles_pks)).hexdigest()[:12]
 
 
