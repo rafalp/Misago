@@ -7,7 +7,7 @@ from misago.conf import settings
 
 class RegisterDecoratorTests(TestCase):
     def test_register_decorator_calls_valid_view_200(self):
-        """login view returns 200 on GET"""
+        """register decorator calls valid view"""
         settings.override_setting('account_activation', 'disabled')
 
         response = self.client.get(reverse('misago:register'))

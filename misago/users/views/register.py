@@ -15,7 +15,7 @@ def register_decorator(f):
     return decorator
 
 
-@sensitive_post_parameters
+@sensitive_post_parameters("email", "password")
 @deny_authenticated
 @deny_banned_ips
 @register_decorator

@@ -9,7 +9,7 @@ from misago.users import validators
 
 
 def api(f):
-    @sensitive_post_parameters
+    @sensitive_post_parameters("email", "password")
     @ajax_only
     @require_POST
     def decorator(request, *args, **kwargs):
