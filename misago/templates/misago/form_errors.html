@@ -1,0 +1,13 @@
+{% load i18n %}
+{% if form.is_bound and not form.is_valid %}
+<div class="form-errors-block">
+  <span class="fa fa-exclamation-triangle"></span>
+  <ul class="list-unstyled">
+    {% for error in form.non_field_errors %}
+    <li>{{ error }}</li>
+    {% empty %}
+    <li>{% trans "Form has errors." %}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
