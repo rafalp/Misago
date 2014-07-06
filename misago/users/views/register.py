@@ -1,4 +1,5 @@
 from django.shortcuts import redirect, render
+from django.views.decorators.debug import sensitive_post_parameters
 
 from misago.conf import settings
 from misago.users.decorators import deny_authenticated, deny_banned_ips
@@ -14,6 +15,7 @@ def register_decorator(f):
     return decorator
 
 
+@sensitive_post_parameters
 @deny_authenticated
 @deny_banned_ips
 @register_decorator

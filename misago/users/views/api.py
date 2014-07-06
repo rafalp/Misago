@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 from django.utils.translation import ugettext as _
+from django.views.decorators.debug import sensitive_post_parameters
 
 from misago.core.decorators import ajax_only, require_POST
 
@@ -8,6 +9,7 @@ from misago.users import validators
 
 
 def api(f):
+    @sensitive_post_parameters
     @ajax_only
     @require_POST
     def decorator(request, *args, **kwargs):
