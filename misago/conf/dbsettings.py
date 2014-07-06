@@ -7,6 +7,7 @@ CACHE_KEY = 'misago_db_settings'
 class DBSettings(object):
     def __init__(self):
         self._settings = self._read_cache()
+        self._overrides = {}
 
     def _read_cache(self):
         from misago.core.cache import cache
@@ -54,6 +55,16 @@ class DBSettings(object):
             return self._settings[attr]['value']
         except KeyError:
             raise AttributeError("Setting %s is undefined" % attr)
+
+    def override_setting(self, setting, new_value):
+        if not setting in self._overrides:
+            self._overrides[setting] = self._settings[setting]['value']
+        self._settings[setting]['value'] = new_value
+        return new_value
+
+    def reset_settings(self):
+        for setting, original_value in self._overrides.items():
+            self._settings[setting]['value'] = original_value
 
 
 class _DBSettingsGateway(object):
