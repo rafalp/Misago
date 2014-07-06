@@ -47,7 +47,7 @@ Dolor met.
 
         expected_result = """
 <p>Lorem ipsum.</p>
-<hr />
+<hr/>
 <p>Dolor met.</p>
 """.strip()
 

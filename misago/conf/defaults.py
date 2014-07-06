@@ -142,6 +142,9 @@ MISAGO_ACL_EXTENSIONS = (
     'misago.forums.permissions',
 )
 
+MISAGO_MARKUP_EXTENSIONS = ()
+
+
 # Register Misago directories
 
 LOCALE_PATHS = (
