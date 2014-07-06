@@ -188,6 +188,12 @@ MISAGO_MAILER_BATCH_SIZE
 Default maximum size of single mails package that Misago will build before sending mails and creating next package.
 
 
+MISAGO_MARKUP_EXTENSIONS
+------------------------
+
+List of python modules extending Misago markup.
+
+
 password_complexity
 -------------------
 

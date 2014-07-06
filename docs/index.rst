@@ -35,3 +35,4 @@ Table of Contents
    developers/validators
    developers/auth
    developers/acls
+   developers/markup
