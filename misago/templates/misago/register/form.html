@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n %}
+{% load i18n misago_forms staticfiles %}
 
 
 {% block title %}
@@ -9,6 +9,148 @@
 
 {% block content %}
 <div class="container">
-  TODO: User registration form
+
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+
+      <div class="form-panel">
+        <form method="POST" role="form" class="form-horizontal">
+          {% csrf_token %}
+
+          <div class="form-header">
+            <h1>{% trans "Register new account" %}</h1>
+          </div>
+
+          <div class="form-body no-fieldsets">
+
+            {% with label_class="col-md-3" field_class="col-md-9" %}
+            <div class="form-group has-api-validation has-feedback" data-validation-api="{% url 'misago:api_validate_username' %}" data-validation-value="username">
+              <label class="control-label {{ label_class }}" for="{{ form.username.html_id }}">{{ form.username.label }}:</label>
+              <div class="{{ field_class }}">
+                {% form_input form.username %}
+                <span class="fa fa-asterisk form-control-feedback"></span>
+                <p class="help-block hide fade"></p>
+              </div>
+            </div>
+
+            <div class="form-group has-api-validation has-feedback" data-validation-api="{% url 'misago:api_validate_email' %}" data-validation-value="email">
+              <label class="control-label {{ label_class }}" for="{{ form.email.html_id }}">{{ form.email.label }}:</label>
+              <div class="{{ field_class }}">
+                {% form_input form.email %}
+                <span class="fa fa-asterisk form-control-feedback"></span>
+                <p class="help-block hide fade"></p>
+              </div>
+            </div>
+
+            <div class="form-group has-api-validation has-feedback" data-validation-api="{% url 'misago:api_validate_password' %}" data-validation-value="password">
+              <label class="control-label {{ label_class }}" for="{{ form.password.html_id }}">{{ form.password.label }}:</label>
+              <div class="{{ field_class }}">
+                {% form_input form.password %}
+                <span class="fa fa-asterisk form-control-feedback"></span>
+                <p class="help-block hide fade"></p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label {{ label_class }}" >{% trans "Password strength" %}:</label>
+              <div class="{{ field_class }} form-control-static">
+                <p class="password-strength"><strong id="password-strength"></strong></p>
+                <div class="progress">
+                  <div id="password-bar" class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                </div>
+              </div>
+            </div>
+            {% endwith %}
+
+          </div>
+
+          <div class="form-footer">
+            <div class="row">
+              <div class="col-md-9 col-md-offset-3">
+
+                <button class="btn btn-primary">{% trans "Register account" %}</button>
+
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 {% endblock content %}
+
+
+{% block javascripts %}
+{{ block.super }}
+<script type="text/javascript">
+  // API-based validation
+  var csrf_token = $('input[name="csrfmiddlewaretoken"]').val()
+
+  $('.has-api-validation').each(function() {
+    var $control = $(this);
+    var $input = $control.find('input');
+    var $icon = $(this).find('.fa');
+    var $help_block = $(this).find('.help-block');
+
+    var api_url = $(this).data('validation-api');
+    var api_value = $(this).data('validation-value');
+
+    function validate() {
+      var data = {csrfmiddlewaretoken: csrf_token};
+      data[api_value] = $.trim($input.val());
+      $.post(api_url, data, function(data, textStatus, jqXHR) {
+        if (data.has_error) {
+          $control.attr('class', 'form-group has-api-validation has-feedback has-error');
+          $icon.attr('class', 'fa fa-times form-control-feedback');
+        } else {
+          $control.attr('class', 'form-group has-api-validation has-feedback has-success');
+          $icon.attr('class', 'fa fa-check form-control-feedback');
+        }
+
+        $help_block.text(data.message);
+        $help_block.removeClass('hide');
+        $help_block.addClass('in');
+      });
+    }
+
+    if ($.trim($input.val())) {
+      validate();
+    }
+    $input.keyup(validate);
+  });
+
+  // Password strength
+  var zxcvbn_src = "{% static "misago/js/zxcvbn.js" %}";
+  var labels = ["{% trans "Very weak" %}", "{% trans "Weak" %}", "{% trans "Medium" %}", "{% trans "Good" %}", "{% trans "Strong" %}"];
+  var label_styles = ["text-danger", "text-warning", "text-warning", "text-info", "text-success"];
+  var bar_styles = ["", "progress-bar-warning", "progress-bar-warning", "progress-bar-info", "progress-bar-success"];
+
+  function zxcvbn_load_hook() {
+    $(function() {
+      var $bar = $('#password-bar');
+      var $label = $('#password-strength');
+
+      function gradePassStrength() {
+        var username = $('#id_username').val();
+        var email = $('#id_email').val();
+        var password = $('#id_password').val();
+
+        var power = zxcvbn(password, [username, email]).score;
+
+        $label.text(labels[power]);
+        $label.attr('class', label_styles[power]);
+        $bar.css('width', ((power + 1) * 20) + '%');
+        $bar.attr('class', "progress-bar " + bar_styles[power]);
+      }
+
+      gradePassStrength();
+      $('#id_password').keyup(gradePassStrength);
+    });
+  }
+</script>
+<script type="text/javascript" src="{% static "misago/js/zxcvbn-async.js" %}"></script>
+{% endblock javascripts %}

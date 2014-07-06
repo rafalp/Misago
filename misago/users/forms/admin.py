@@ -78,17 +78,13 @@ class EditUserForm(UserBaseForm):
 def UserFormFactory(FormType, instance):
     extra_fields = {}
 
-    ranks = Rank.objects.order_by('name')
-    if ranks.exists():
-        extra_fields['rank'] = forms.ModelChoiceField(
-            label=_("Rank"),
-            help_text=_("Ranks are used to group and distinguish users. "
-                        "They are also used to add permissions to groups of "
-                        "users."),
-            queryset=ranks,
-            initial=instance.rank,
-            required=False,
-            empty_label=_("No rank"))
+    extra_fields['rank'] = forms.ModelChoiceField(
+        label=_("Rank"),
+        help_text=_("Ranks are used to group and distinguish users. "
+                    "They are also used to add permissions to groups of "
+                    "users."),
+        queryset=Rank.objects.order_by('name'),
+        initial=instance.rank)
 
     roles = Role.objects.order_by('name')
     extra_fields['roles'] = forms.ModelMultipleChoiceField(
@@ -193,9 +189,9 @@ def SearchUsersForm(*args, **kwargs):
                                        choices=roles_choices)
     }
 
-    FinalForm =  type('SearchUsersFormFinal',
-                      (SearchUsersFormBase,),
-                      extra_fields)
+    FinalForm = type('SearchUsersFormFinal',
+                     (SearchUsersFormBase,),
+                     extra_fields)
     return FinalForm(*args, **kwargs)
 
 

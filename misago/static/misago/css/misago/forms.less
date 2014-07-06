@@ -45,6 +45,59 @@
 }
 
 
+//== Form non-field errors
+//
+//**
+.form-panel {
+  .form-errors-block {
+    background-color: @alert-danger-bg;
+    border-top: 1px solid @form-panel-border;
+    border-bottom: 6px solid fadeOut(#000, 85%);
+    border-radius: 0;
+    margin-bottom: 0px;
+    padding: (@form-panel-padding-vertical / 2) @form-panel-padding-horizontal;
+    overflow: auto;
+
+    color: @alert-danger-text;
+    font-size: @font-size-large;
+    text-shadow: 0px -1px 0px darken(@alert-danger-bg, 20%);
+
+    .fa {
+      position: relative;
+      top: 4px;
+
+      float: right;
+      font-size: 26px;
+    }
+
+    ul {
+      margin-right: 56px;
+      margin-bottom: 0px;
+      padding: 0px;
+
+      li {
+        margin: 0px;
+        padding: (@line-height-computed / 5) 0px;
+      }
+    }
+  }
+}
+
+
+//== Form alerts
+//
+//**
+.form-panel {
+  .misago-alerts {
+    margin: 0px @form-panel-padding-vertical;
+
+    .alert.lead {
+      font-size: @font-size-large;
+    }
+  }
+}
+
+
 //== Form body
 //
 //**
@@ -103,15 +156,26 @@
 }
 
 
-//== Form alerts
+// Form permissions
 //
 //**
 .form-panel {
-  .misago-alerts {
-    margin: 0px @form-panel-padding-vertical;
+  .table-permissions {
+    margin: 0px;
 
-    .alert.lead {
-      font-size: @font-size-large;
+    tr {
+      label {
+        margin: 0px;
+      }
+
+      p, .form-group {
+        margin-bottom: 0px;
+      }
+
+      td:first-child, th:first-child {
+        padding-left: @form-panel-padding-vertical;
+        vertical-align: middle;
+      }
     }
   }
 }
@@ -159,6 +223,38 @@
         margin-bottom: 0px;
         margin-left: @padding-base-horizontal;
       }
+    }
+  }
+}
+
+
+//== Form fields
+//
+//**
+textarea {
+  resize: vertical;
+}
+
+.checkbox {
+  label {
+    font-weight: bold;
+
+    .help-block {
+      font-weight: normal;
+    }
+  }
+}
+
+.form-control-static {
+  .progress {
+    background-color: @gray-lighter;
+    .box-shadow(none);
+    border-radius: 2px;
+    height: 6px;
+    margin: 0px;
+
+    .progress-bar {
+      .box-shadow(none);
     }
   }
 }
