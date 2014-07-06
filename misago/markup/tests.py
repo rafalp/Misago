@@ -1,5 +1,5 @@
 from django.test import TestCase
-from misago.markup.parser import parse_text
+from misago.markup.parser import parse
 
 
 class ParserTests(TestCase):
@@ -34,7 +34,7 @@ Lorem [b]ipsum[/B].
 <p>Lorem <b>ipsum</b>.</p>
 """.strip()
 
-        result = parse_text(test_text)
+        result = parse(test_text)
         self.assertEqual(expected_result, result['parsed_text'])
 
     def test_blocks(self):
@@ -51,5 +51,5 @@ Dolor met.
 <p>Dolor met.</p>
 """.strip()
 
-        result = parse_text(test_text)
+        result = parse(test_text)
         self.assertEqual(expected_result, result['parsed_text'])

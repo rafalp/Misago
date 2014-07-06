@@ -1,4 +1,4 @@
-from misago.markup.parser import parse_text
+from misago.markup.parser import parse
 
 
 def common(text, author=None, allow_mentions=True):
@@ -12,7 +12,7 @@ def common(text, author=None, allow_mentions=True):
 
     Returns dict object
     """
-    return parse_text(text, author=author, allow_mentions=allow_mentions)
+    return parse(text, author=author, allow_mentions=allow_mentions)
 
 
 def limited(text):
@@ -24,7 +24,7 @@ def limited(text):
 
     Returns parsed text
     """
-    result =  parse_text(text, allow_mentions=False, allow_links=True,
-                         allow_images=False, allow_blocks=False)
+    result =  parse(text, allow_mentions=False, allow_links=True,
+                    allow_images=False, allow_blocks=False)
 
     return result['parsed_text']
