@@ -6,6 +6,9 @@ from misago.conf import settings
 
 
 class RegisterDecoratorTests(TestCase):
+    def tearDown(self):
+        settings.reset_settings()
+
     def test_register_decorator_calls_valid_view_200(self):
         """register decorator calls valid view"""
         settings.override_setting('account_activation', 'disabled')
@@ -20,8 +23,6 @@ class RegisterDecoratorTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('Register new account',
                       response.content)
-
-        settings.reset_settings()
 
 
 class RegisterViewTests(TestCase):
