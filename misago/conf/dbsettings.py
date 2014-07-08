@@ -25,13 +25,13 @@ class DBSettings(object):
         for setting in Setting.objects.iterator():
             if setting.is_lazy:
                 data[setting.setting] = {
-                    'value': True if setting.value else None,
-                    'is_lazy': setting.is_lazy
+                    'value': bool(setting.value),
+                    'is_lazy': setting.is_lazy,
                 }
             else:
                 data[setting.setting] = {
                     'value': setting.value,
-                    'is_lazy': setting.is_lazy
+                    'is_lazy': setting.is_lazy,
                 }
         return data
 
@@ -40,7 +40,11 @@ class DBSettings(object):
 
         try:
             if self._settings[setting]['is_lazy']:
-                return Setting.objects.get(setting=setting).value
+                if not self._settings[setting].get('real_value'):
+                    real_value = Setting.objects.get(setting=setting).value
+                    self._settings[setting]['real_value'] = real_value
+                else:
+                    return self._settings[setting]['real_value']
             else:
                 raise ValueError("Setting %s is not lazy" % setting)
         except (KeyError, Setting.DoesNotExist):
@@ -60,6 +64,7 @@ class DBSettings(object):
         if not setting in self._overrides:
             self._overrides[setting] = self._settings[setting]['value']
         self._settings[setting]['value'] = new_value
+        self._settings[setting]['real_value'] = new_value
         return new_value
 
     def reset_settings(self):
