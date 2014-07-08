@@ -14,65 +14,90 @@
 }
 
 
-//== Custom footer message
+//== Footer menu
 //
 //**
-.custom-footer {
-  color: @footer-color;
-}
+.main-footer {
+  .footer-nav {
+    margin: 0px;
+    overflow: auto;
+    padding: 0px;
 
+    text-align: center;
+
+    li {
+      display: inline-block;
+      padding: @padding-large-vertical @padding-xs-horizontal;
+      padding-bottom: @padding-small-vertical;
+
+      a {
+        &:link, &:visited {
+          color: @footer-link-color;
+          text-decoration: underline;
+        }
+
+        &:hover, &:active {
+          color: @footer-link-hover-color;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
 
 //== Misago branding
 //
 //**
-.misago-branding {
-  a {
-    display: inline-block;
-
-    color: @text-color;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: @misago-branding-size;
-
-    .brand-border {
-      background: @text-color;
-      border-radius: @misago-branding-size * 0.15;
+.main-footer {
+  .misago-branding {
+    a {
       display: inline-block;
-      margin-right: @misago-branding-size * 0.1;
-      position: relative;
-      top: @misago-branding-size * 0.18;
-      overflow: hidden;
-      width: @misago-branding-size + 3px;
-      height: @misago-branding-size + 3px;
 
-      &>span {
+      color: @text-color;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: @misago-branding-size;
+
+      .brand-border {
+        background: @text-color;
+        border-radius: @misago-branding-size * 0.15;
         display: inline-block;
-        position: absolute;
-        bottom: -20%;
-        right: -18%;
-        .rotate(-45deg);
+        margin-right: @misago-branding-size * 0.1;
+        position: relative;
+        top: @misago-branding-size * 0.18;
+        overflow: hidden;
+        width: @misago-branding-size + 3px;
+        height: @misago-branding-size + 3px;
 
-        color: @body-bg;
-        font-size: @misago-branding-size * 1.2;
-        font-weight: bold;
+        &>span {
+          display: inline-block;
+          position: absolute;
+          bottom: -20%;
+          right: -18%;
+          .rotate(-45deg);
+
+          color: @body-bg;
+          font-size: @misago-branding-size * 1.2;
+          font-weight: bold;
+        }
       }
-    }
 
-    .subscript {
-      display: inline-block;
-      position: relative;
-      bottom: (@misago-branding-size  - (@misago-branding-size * 0.6)) / 2 - 1px;
+      .subscript {
+        display: inline-block;
+        position: relative;
+        bottom: (@misago-branding-size  - (@misago-branding-size * 0.6)) / 2 - 1px;
 
-      font-size: @misago-branding-size * 0.6;
-    }
+        font-size: @misago-branding-size * 0.6;
+      }
 
-    &, &:link, &:visited {
-      .opacity(0.4);
-    }
+      &, &:link, &:visited {
+        .opacity(0.4);
+      }
 
-    &:active, &:hover {
-      .opacity(1);
+      &:active, &:hover {
+        .opacity(1);
 
-      text-decoration: none;
+        text-decoration: none;
+      }
     }
   }
 }

@@ -12,6 +12,7 @@ urlpatterns = patterns('misago.core.views',
 
 # Register Misago Apps
 urlpatterns += patterns('',
+    url(r'^', include('misago.legal.urls')),
     url(r'^', include('misago.users.urls')),
 )
 

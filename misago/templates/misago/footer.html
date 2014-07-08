@@ -1,6 +1,20 @@
 <footer class="main-footer">
   <div class="container">
 
+    <ul class="footer-nav">
+      {% if misago_settings.terms_of_service or misago_settings.terms_of_service_link %}
+      <li>
+        <a href="{% url 'misago:terms_of_service' %}">Terms of service</a>
+      </li>
+      {% endif %}
+
+      {% if misago_settings.privacy_policy or misago_settings.privacy_policy_link %}
+      <li>
+        <a href="{% url 'misago:privacy_policy' %}">Privacy policy</a>
+      </li>
+      {% endif %}
+    </ul>
+
     <div class="misago-branding text-center">
       <a href="http://misago-project.org">
         <span class="subscript">powered by</span>
