@@ -25,7 +25,7 @@ class DBSettings(object):
         for setting in Setting.objects.iterator():
             if setting.is_lazy:
                 data[setting.setting] = {
-                    'value': bool(setting.value),
+                    'value': True if setting.value else None,
                     'is_lazy': setting.is_lazy,
                 }
             else:
