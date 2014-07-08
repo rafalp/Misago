@@ -25,7 +25,7 @@ class MarkupPipeline(object):
                 hook.process_result(result, soup)
 
         souped_text = unicode(soup.body).strip()[6:-7]
-        result['parsed_text'] = souped_text
+        result['parsed_text'] = souped_text.strip()
         return result
 
 pipeline = MarkupPipeline()
