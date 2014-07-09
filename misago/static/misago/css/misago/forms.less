@@ -144,6 +144,13 @@
           font-weight: bold;
         }
       }
+
+      .control-success {
+        &, & .help-block {
+          color: @state-success-text;
+          font-weight: bold;
+        }
+      }
     }
 
     &.no-fieldsets {
@@ -251,7 +258,7 @@ textarea {
     .box-shadow(none);
     border-radius: 2px;
     height: 6px;
-    margin: 0px;
+    margin-top: 0px;
 
     .progress-bar {
       .box-shadow(none);

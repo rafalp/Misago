@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n misago_forms staticfiles %}
+{% load i18n misago_capture misago_forms staticfiles %}
 
 
 {% block title %}
@@ -26,32 +26,20 @@
           <div class="form-body no-fieldsets">
 
             {% with label_class="col-md-3" field_class="col-md-9" %}
-            <div class="form-group has-api-validation has-feedback" data-validation-api="{% url 'misago:api_validate_username' %}" data-validation-value="username">
-              <label class="control-label {{ label_class }}" for="{{ form.username.html_id }}">{{ form.username.label }}:</label>
+            {% for field, api_link in form.api_fields %}
+            <div class="form-group has-api-validation has-feedback" data-validation-api="{% url api_link %}" data-validation-value="{{ field.name }}">
+              <label class="control-label {{ label_class }}" for="{{ field.auto_id }}">{{ field.label }}:</label>
               <div class="{{ field_class }}">
-                {% form_input form.username %}
+                {% form_input field %}
                 <span class="fa fa-asterisk form-control-feedback"></span>
-                <p class="help-block hide fade"></p>
+                <div class="control-message hide fade">
+                  <p class="help-block">
+                    <strong></strong>
+                  </p>
+                </div>
               </div>
             </div>
-
-            <div class="form-group has-api-validation has-feedback" data-validation-api="{% url 'misago:api_validate_email' %}" data-validation-value="email">
-              <label class="control-label {{ label_class }}" for="{{ form.email.html_id }}">{{ form.email.label }}:</label>
-              <div class="{{ field_class }}">
-                {% form_input form.email %}
-                <span class="fa fa-asterisk form-control-feedback"></span>
-                <p class="help-block hide fade"></p>
-              </div>
-            </div>
-
-            <div class="form-group has-api-validation has-feedback" data-validation-api="{% url 'misago:api_validate_password' %}" data-validation-value="password">
-              <label class="control-label {{ label_class }}" for="{{ form.password.html_id }}">{{ form.password.label }}:</label>
-              <div class="{{ field_class }}">
-                {% form_input form.password %}
-                <span class="fa fa-asterisk form-control-feedback"></span>
-                <p class="help-block hide fade"></p>
-              </div>
-            </div>
+            {% endfor %}
 
             <div class="form-group">
               <label class="control-label {{ label_class }}" >{% trans "Password strength" %}:</label>
@@ -62,6 +50,28 @@
                 </div>
               </div>
             </div>
+
+            {% if form.has_qa_captcha %}
+            <div class="form-group has-feedback {% if form.qa_answer.errors %}has-error{% endif %}">
+              <label class="control-label {{ label_class }}" for="{{ form.qa_answer.auto_id }}">{{ form.qa_answer.label }}:</label>
+              <div class="{{ field_class }}">
+                {% form_input form.qa_answer %}
+                <span class="fa fa-{% if form.qa_answer.errors %}times{% else%}asterisk{% endif %} form-control-feedback"></span>
+                {% if form.qa_answer.errors %}
+                <div class="control-errors">
+                  {% for error in form.qa_answer.errors %}
+                  <p class="help-block">
+                    <strong>{{ error }}</strong>
+                  </p>
+                  {% endfor %}
+                </div>
+                {% endif %}
+                {% if form.qa_answer.help_text %}
+                <p class="help-block">{{ form.qa_answer.help_text }}</p>
+                {% endif %}
+              </div>
+            </div>
+            {% endif %}
             {% endwith %}
 
           </div>
@@ -71,6 +81,23 @@
               <div class="col-md-9 col-md-offset-3">
 
                 <button class="btn btn-primary">{% trans "Register account" %}</button>
+
+                {% if misago_settings.terms_of_service or misago_settings.terms_of_service_link %}
+                <div class="extra">
+                  {% capture trimmed as tos_link %}
+                  <a href="{% url 'misago:terms_of_service' %}" target="_blank">{% trans 'our terms of service' %}</a>
+                  {% endcapture %}
+                  <p>
+                    <strong>
+                      <span class="fa fa-exclamation-circle"></span>
+                      {% trans "Notice:" %}
+                    </strong>
+                    {% blocktrans trimmed with tos=tos_link|safe %}
+                    By clicking the button above you accept {{ tos }}.
+                    {% endblocktrans %}
+                  </p>
+                </div>
+                {% endif %}
 
               </div>
             </div>
@@ -96,7 +123,7 @@
     var $control = $(this);
     var $input = $control.find('input');
     var $icon = $(this).find('.fa');
-    var $help_block = $(this).find('.help-block');
+    var $control_message = $(this).find('.control-message');
 
     var api_url = $(this).data('validation-api');
     var api_value = $(this).data('validation-value');
@@ -105,23 +132,22 @@
       var data = {csrfmiddlewaretoken: csrf_token};
       data[api_value] = $.trim($input.val());
       $.post(api_url, data, function(data, textStatus, jqXHR) {
+        $control_message.find('strong').text(data.message);
+
         if (data.has_error) {
           $control.attr('class', 'form-group has-api-validation has-feedback has-error');
           $icon.attr('class', 'fa fa-times form-control-feedback');
+          $control_message.attr('class', 'control-errors fade in')
         } else {
           $control.attr('class', 'form-group has-api-validation has-feedback has-success');
           $icon.attr('class', 'fa fa-check form-control-feedback');
+          $control_message.attr('class', 'control-success fade in')
         }
-
-        $help_block.text(data.message);
-        $help_block.removeClass('hide');
-        $help_block.addClass('in');
       });
     }
-
-    if ($.trim($input.val())) {
-      validate();
-    }
+    {% if form.is_bound %}
+    validate();
+    {% endif %}
     $input.keyup(validate);
   });
 
