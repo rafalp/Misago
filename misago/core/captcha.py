@@ -34,14 +34,14 @@ def add_recaptcha_to_form(request):
 Q&A
 """
 def clean_qa_answer(self):
-    answer = self.cleaned_data['qa_answer']
+    answer = self.cleaned_data['qa_answer'].lower()
 
     for predefined_answer in settings.qa_answers.lower().splitlines():
         predefined_answer = predefined_answer.strip().lower()
         if answer == predefined_answer:
             self.has_qa_captcha = False
             mark_session_as_passing(self.session)
-            return answer
+            return self.cleaned_data['qa_answer']
     else:
         raise forms.ValidationError(_("Entered answer is invalid."))
 
