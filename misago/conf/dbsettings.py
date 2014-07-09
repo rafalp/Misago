@@ -43,8 +43,7 @@ class DBSettings(object):
                 if not self._settings[setting].get('real_value'):
                     real_value = Setting.objects.get(setting=setting).value
                     self._settings[setting]['real_value'] = real_value
-                else:
-                    return self._settings[setting]['real_value']
+                return self._settings[setting]['real_value']
             else:
                 raise ValueError("Setting %s is not lazy" % setting)
         except (KeyError, Setting.DoesNotExist):
@@ -70,6 +69,7 @@ class DBSettings(object):
     def reset_settings(self):
         for setting, original_value in self._overrides.items():
             self._settings[setting]['value'] = original_value
+            self._settings[setting].pop('real_value', None)
 
 
 class _DBSettingsGateway(object):
