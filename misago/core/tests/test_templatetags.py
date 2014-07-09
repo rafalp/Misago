@@ -3,6 +3,42 @@ from django.test import TestCase
 from misago.core import forms
 
 
+class CaptureTests(TestCase):
+    def setUp(self):
+        self.context = Context({'unsafe_name': 'The<hr>Html'})
+
+    def test_capture(self):
+        """capture content to variable"""
+        tpl_content = """
+{% load misago_capture %}
+
+{% capture as the_var %}
+{{ unsafe_name }}
+{% endcapture %}
+Hello, <b>{{ the_var|safe }}</b>
+"""
+
+        tpl = Template(tpl_content)
+        render = tpl.render(self.context).strip()
+        self.assertIn('The&lt;hr&gt;Html', render)
+        self.assertNotIn('<b>The&lt;hr&gt;Html</b>', render)
+
+    def test_capture_trimmed(self):
+        """capture trimmed content to variable"""
+        tpl_content = """
+{% load misago_capture %}
+
+{% capture trimmed as the_var %}
+{{ unsafe_name }}
+{% endcapture %}
+Hello, <b>{{ the_var|safe }}</b>
+"""
+
+        tpl = Template(tpl_content)
+        render = tpl.render(self.context).strip()
+        self.assertIn('<b>The&lt;hr&gt;Html</b>', render)
+
+
 class TestForm(forms.Form):
     somefield = forms.CharField(label="Hello!", max_length=255)
 
@@ -89,20 +125,3 @@ class FormRowTests(TestCase):
         with self.assertRaises(TemplateSyntaxError):
             tpl = Template(tpl_content)
             render = tpl.render(self.context).strip()
-
-
-class FormInputTests(TestCase):
-    def setUp(self):
-        self.context = Context({'form': TestForm()})
-
-    def test_form_input(self):
-        """form_imput renders form field"""
-        tpl_content = """
-{% load misago_forms %}
-
-{% form_input form.somefield %}
-"""
-
-        tpl = Template(tpl_content)
-        render = tpl.render(self.context).strip()
-        self.assertIn('id_somefield', render)
