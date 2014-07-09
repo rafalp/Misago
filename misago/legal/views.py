@@ -23,7 +23,7 @@ def get_parsed_content(setting_name):
     else:
         cached_content = {
             'checksum': unparsed_checksum,
-            'parsed': common_flavour(unparsed_content),
+            'parsed': common_flavour(unparsed_content)['parsed_text'],
         }
         cache.set(cache_name, cached_content)
         return cached_content['parsed']
