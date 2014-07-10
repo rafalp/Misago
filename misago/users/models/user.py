@@ -3,6 +3,7 @@ from hashlib import md5
 from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
                                         UserManager as BaseUserManager,
                                         AnonymousUser as DjangoAnonymousUser)
+from django.core.mail import send_mail
 from django.db import models, transaction
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -17,12 +18,17 @@ from misago.users.utils import hash_email
 
 
 __all__ = [
-    'AnonymousUser', 'User', 'Online'
+    'ACTIVATION_REQUIRED_NONE', 'ACTIVATION_REQUIRED_USER',
+    'ACTIVATION_REQUIRED_ADMIN', 'PRESENCE_VISIBILITY_ALL',
+    'PRESENCE_VISIBILITY_FOLLOWED', 'PRESENCE_VISIBILITY_ALLOWED',
+    'PRESENCE_VISIBILITY_CHOICES', 'AUTO_SUBSCRIBE_NONE',
+    'AUTO_SUBSCRIBE_WATCH', 'AUTO_SUBSCRIBE_WATCH_AND_EMAIL',
+    'AUTO_SUBSCRIBE_CHOICES', 'AnonymousUser', 'User', 'Online',
 ]
 
 
 ACTIVATION_REQUIRED_NONE = 0
-ACTIVATION_REQUIRED_EMAIL = 1
+ACTIVATION_REQUIRED_USER = 1
 ACTIVATION_REQUIRED_ADMIN = 2
 
 
@@ -295,6 +301,12 @@ class User(AbstractBaseUser, PermissionsMixin):
                 roles_pks.append('%s:%s' % (self.rank.pk, role.pk))
 
         self.acl_key = md5(','.join(roles_pks)).hexdigest()[:12]
+
+    def email_user(self, subject, message, from_email=None, **kwargs):
+        """
+        Sends an email to this User.
+        """
+        send_mail(subject, message, from_email, [self.email], **kwargs)
 
 
 class Online(models.Model):

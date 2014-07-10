@@ -1,7 +1,7 @@
 {{ misago_settings.forum_name }}
 ================================================
 
-{% block title %}{% endblock %}
+{% block title %}{{ subject }}{% endblock %}
 
 {% block content %}{% endblock content %}
 

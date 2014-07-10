@@ -10,6 +10,7 @@ urlpatterns = patterns('misago.users.views.auth',
 
 urlpatterns += patterns('misago.users.views.register',
     url(r'^register/$', 'register', name='register'),
+    url(r'^register/completed/$', 'registration_completed', name='register_completed'),
 )
 
 

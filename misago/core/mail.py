@@ -7,6 +7,7 @@ def build_mail(request, recipient, subject, template, context=None):
     context = context or {}
     context['sender'] = request.user
     context['recipient'] = recipient
+    context['subject'] = subject
     context = RequestContext(request, context)
 
     message_plain = render_to_string('%s.txt' % template, context)

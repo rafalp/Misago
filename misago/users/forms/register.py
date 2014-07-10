@@ -4,8 +4,6 @@ from misago.users import validators
 
 
 class RegisterForm(forms.Form):
-    captcha_setting = 'captcha_on_registration'
-
     username = forms.CharField(label=_("Username"),
                                validators=[validators.validate_username])
     email = forms.CharField(label=_("Email"),

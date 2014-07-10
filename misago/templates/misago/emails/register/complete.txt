@@ -1,0 +1,10 @@
+{% extends "misago/emails/base.txt" %}
+
+{% block content %}
+{{ username }}, thank you for joining us!
+
+You may now join discussion on our forums. Why not spend a minute or two to have a look around and share your opinions and knowledge with rest of community?
+
+You can always sign in to your account using form below:
+{{ SITE_ADDRESS }}{% url LOGIN_URL %}
+{% endblock content %}

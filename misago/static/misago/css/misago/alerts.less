@@ -19,6 +19,7 @@
 
   &:active, &:focus {
     background-color: darken(@bg, 15%);
+    box-shadow: 0px 0px 0px 2px darken(@bg, 15%);
     outline: none;
 
     color: @text;
@@ -31,9 +32,10 @@
 
   .alert {
     border: none;
-    display: inline-block;
-    margin-left: auto;
-    margin-right: auto;
+    border-bottom: 6px solid fadeOut(#000, 85%);
+    border-radius: 0;
+    margin-bottom: 0px;
+    padding: (@line-height-computed * 0.8) 0px;
 
     .alert-icon {
       margin: -@alert-padding 0px;
@@ -41,7 +43,7 @@
       position: relative;
       top: @font-size-large / 4;
 
-      font-size: @font-size-large * 1.5;
+      font-size: @font-size-base * 1.8;
     }
 
     .close {
@@ -75,33 +77,6 @@
     &.alert-danger {
       .close {
         .misago-alert-close(@alert-danger-text, @alert-danger-bg);
-      }
-    }
-  }
-
-  &.alerts-fixed {
-    position: fixed;
-    top: 0;
-    z-index: @zindex-modal + 1;
-    overflow: visible;
-    width: 100%;
-
-    &>div {
-      width: 100%;
-      overflow: hidden;
-
-      .alert {
-        box-shadow: 0px 0px 0px 6px fadeOut(#000, 85%);
-        border-radius: 0px;
-        display: block;
-        padding: @line-height-computed 0px;
-
-        font-size: @font-size-large;
-
-        .alert-icon {
-          position: relative;
-          top: (@font-size-large - @font-size-base) / 2;
-        }
       }
     }
   }

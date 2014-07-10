@@ -51,6 +51,38 @@
               </div>
             </div>
 
+            {% if form.has_recaptcha %}
+            <div class="form-group {% if form.recaptcha.errors %}has-error{% endif %}">
+              <label class="control-label {{ label_class }}" for="{{ form.recaptcha.auto_id }}">{{ form.recaptcha.label }}:</label>
+              <div class="{{ field_class }}">
+                {{ form.recaptcha_html|safe }}
+                {% if form.recaptcha.errors %}
+                <div class="control-errors">
+                  {% for error in form.recaptcha.errors %}
+                  <p class="help-block">
+                    <strong>{{ error }}</strong>
+                  </p>
+                  {% endfor %}
+                </div>
+                {% endif %}
+                {% if form.recaptcha.help_text %}
+                <p class="help-block">{{ form.recaptcha.help_text }}</p>
+                {% endif %}
+              </div>
+            </div>
+            {% elif form.passed_recaptcha %}
+            <div class="form-group has-success">
+              <label class="control-label {{ label_class }}">{{ form.recaptcha.label }}:</label>
+              <div class="{{ field_class }} form-control-static text-success">
+                <p>
+                  <span class="fa fa-check"></span>
+                  <strong>{% trans "Ok!" %}</strong>
+                  {% trans "Text from image was correct!" %}
+                </p>
+              </div>
+            </div>
+            {% endif %}
+
             {% if form.has_qa_captcha %}
             <div class="form-group has-feedback {% if form.qa_answer.errors %}has-error{% endif %}">
               <label class="control-label {{ label_class }}" for="{{ form.qa_answer.auto_id }}">{{ form.qa_answer.label }}:</label>
@@ -71,7 +103,19 @@
                 {% endif %}
               </div>
             </div>
+            {% elif form.passed_qa_captcha %}
+            <div class="form-group has-success">
+              <label class="control-label {{ label_class }}">{{ form.qa_answer.label }}:</label>
+              <div class="{{ field_class }} form-control-static text-success">
+                <p>
+                  <span class="fa fa-check"></span>
+                  <strong>{% trans "Ok!" %}</strong>
+                  {% trans "Your answer was correct!" %}
+                </p>
+              </div>
+            </div>
             {% endif %}
+
             {% endwith %}
 
           </div>
