@@ -18,3 +18,17 @@ def make(user, token_type):
 
 def is_valid(token, user, token_type):
     return token == make(user, token_type)
+
+
+"""
+Shortcuts for activation token
+"""
+ACTIVATION_TOKEN = 'activation'
+
+
+def make_activation_token(user):
+    return make(user, ACTIVATION_TOKEN)
+
+
+def is_activation_token_valid(token, user):
+    return is_valid(token, user, ACTIVATION_TOKEN)

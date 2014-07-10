@@ -13,6 +13,7 @@ from misago.users.decorators import deny_authenticated, deny_banned_ips
 from misago.users.forms.register import RegisterForm
 from misago.users.models import (ACTIVATION_REQUIRED_USER,
                                  ACTIVATION_REQUIRED_ADMIN)
+from misago.users.tokens import make_activation_token
 
 
 def register_decorator(f):
@@ -51,6 +52,9 @@ def register(request):
                                                 form.cleaned_data['password'],
                                                 **activation_kwargs)
 
+            mail_subject = _("Welcome on %(forum_title)s forums!")
+            mail_subject = mail_subject % {'forum_title': settings.forum_name}
+
             if settings.account_activation == 'none':
                 authenticated_user = authenticate(
                     username=new_user.email,
@@ -61,13 +65,26 @@ def register(request):
                 welcome_message = welcome_message % {'username': new_user.username}
                 messages.success(request, welcome_message)
 
-                subject = _("Welcome on %(forum_title)s forums!")
-                subject = subject % {'forum_title': settings.forum_name}
-                mail_user(request, new_user, subject,
+                mail_user(request, new_user, mail_subject,
                           'misago/emails/register/complete')
 
                 return redirect('misago:index')
             else:
+                activation_token = make_activation_token(new_user)
+
+                method = new_user.requires_activation
+                activation_by_admin = method == ACTIVATION_REQUIRED_ADMIN
+                activation_by_user = method == ACTIVATION_REQUIRED_USER
+
+                mail_user(
+                    request, new_user, mail_subject,
+                    'misago/emails/register/inactive',
+                    {
+                        'activation_token': activation_token,
+                        'activation_by_admin': activation_by_admin,
+                        'activation_by_user': activation_by_user,
+                    })
+
                 request.session['registered_user'] = new_user.pk
                 return redirect('misago:register_completed')
 
