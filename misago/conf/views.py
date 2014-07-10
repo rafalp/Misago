@@ -41,8 +41,9 @@ def group(request, group_key):
             for fieldset in fieldsets:
                 new_values.update(fieldset['form'].cleaned_data)
 
-            for setting, dry_value in new_values.items():
-                Setting.objects.change_setting(setting, dry_value=dry_value)
+            for setting in active_group.setting_set.all():
+                setting.value = new_values[setting.setting]
+                setting.save(update_fields=['dry_value'])
 
             db_settings.flush_cache()
 
