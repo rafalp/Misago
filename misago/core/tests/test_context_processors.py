@@ -23,6 +23,7 @@ class SiteAddressTests(TestCase):
             {
                 'SITE_ADDRESS': 'http://somewhere.com',
                 'SITE_HOST': 'somewhere.com',
+                'SITE_PROTOCOL': 'http',
             })
 
     def test_site_address_for_https(self):
@@ -33,4 +34,5 @@ class SiteAddressTests(TestCase):
             {
                 'SITE_ADDRESS': 'https://somewhere.com',
                 'SITE_HOST': 'somewhere.com',
+                'SITE_PROTOCOL': 'https',
             })
