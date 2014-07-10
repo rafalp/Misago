@@ -6577,8 +6577,9 @@ body {
   text-align: center;
 }
 .error-message .error-icon {
-  color: #f0ad4e;
-  font-size: 72px;
+  opacity: 0.75;
+  filter: alpha(opacity=75);
+  font-size: 144px;
 }
 .error-message h1 {
   font-size: 27px;
@@ -6590,28 +6591,14 @@ body {
 /* Big displays */
 @media (min-width: 768px) {
   .error-message {
-    margin: 60px 0px;
+    margin: 40px 0px;
   }
   .error-message .error-icon {
     margin: 20px 0px;
-    font-size: 108px;
+    font-size: 126px;
   }
   .error-message h1 {
     margin-top: 0px;
-  }
-}
-/* Outside ACP */
-.login-form .error-message h1 {
-  font-size: 21.6px;
-}
-.login-form .error-message p {
-  margin: 0px;
-  font-size: 14px;
-}
-/* Big displays */
-@media (min-width: 768px) {
-  .login-form .error-message {
-    margin: 20px;
   }
 }
 .form-panel {
