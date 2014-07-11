@@ -7,6 +7,10 @@ class site
   $email    = "admin@example.com"
   $password = "password"
 
+  exec { "apt-get update":
+    command => "/usr/bin/apt-get update"
+  } ->
+
   class { "python":
     version    => "system",
     pip        => true,
