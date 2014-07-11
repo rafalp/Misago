@@ -40,7 +40,6 @@ class ActivationViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('Nope!', response.content)
 
-
         self.assertTrue(not mail.outbox)
 
     def test_view_submit_active(self):
