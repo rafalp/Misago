@@ -14,6 +14,8 @@ urlpatterns += patterns('misago.users.views.register',
 
 
 urlpatterns += patterns('misago.users.views.activation',
+    url(r'^activation/request/$', 'request_activation', name="request_activation"),
+    url(r'^activation/sent/$', 'activation_sent', name="activation_sent"),
     url(r'^activation/(?P<user_id>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'activate_by_token', name="activate_by_token"),
 )
 

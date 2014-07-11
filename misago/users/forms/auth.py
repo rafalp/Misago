@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.forms import (AuthenticationForm as
                                        BaseAuthenticationForm)
 from django.template.defaultfilters import date as format_date
@@ -9,7 +9,45 @@ from misago.core import forms
 from misago.users.bans import get_user_ban
 
 
-class AuthenticationForm(forms.Form, BaseAuthenticationForm):
+class MisagoAuthMixin(object):
+    def confirm_user_active(self, user):
+        if user.requires_activation_by_admin:
+            raise ValidationError(
+                self.error_messages['inactive_admin'],
+                code='inactive_admin',
+            )
+
+        if user.requires_activation_by_user:
+            raise ValidationError(
+                self.error_messages['inactive_user'],
+                code='inactive_user',
+            )
+
+    def confirm_user_not_banned(self, user):
+        self.user_ban = get_user_ban(user)
+        if self.user_ban:
+            if self.user_ban.valid_until:
+                if self.user_ban.user_message:
+                    message = _("%(username)s, your account is "
+                                "banned until %(date)s for:")
+                else:
+                    message = _("%(username)s, your account "
+                                "is banned until %(date)s.")
+                date_format = {'date': format_date(self.user_ban.valid_until)}
+                message = message % date_format
+            else:
+                if self.user_ban.user_message:
+                    message = _("%(username)s, your account is banned for:")
+                else:
+                    message = _("%(username)s, your account is banned.")
+
+            raise ValidationError(
+                message % {'username': self.user_cache.username},
+                code='banned',
+            )
+
+
+class AuthenticationForm(MisagoAuthMixin, forms.Form, BaseAuthenticationForm):
     """
     Base class for authenticating users, Floppy-forms and
     Misago login field comliant
@@ -52,39 +90,8 @@ class AuthenticationForm(forms.Form, BaseAuthenticationForm):
         return self.cleaned_data
 
     def confirm_login_allowed(self, user):
-        if user.requires_activation_by_admin:
-            raise ValidationError(
-                self.error_messages['inactive_admin'],
-                code='inactive_admin',
-            )
-
-        if user.requires_activation_by_user:
-            raise ValidationError(
-                self.error_messages['inactive_user'],
-                code='inactive_user',
-            )
-
-        self.user_ban = get_user_ban(user)
-        if self.user_ban:
-            if self.user_ban.valid_until:
-                if self.user_ban.user_message:
-                    message = _("%(username)s, your account is "
-                                "banned until %(date)s for:")
-                else:
-                    message = _("%(username)s, your account "
-                                "is banned until %(date)s.")
-                date_format = {'date': format_date(self.user_ban.valid_until)}
-                message = message % date_format
-            else:
-                if self.user_ban.user_message:
-                    message = _("%(username)s, your account is banned for:")
-                else:
-                    message = _("%(username)s, your account is banned.")
-
-            raise ValidationError(
-                message % {'username': self.user_cache.username},
-                code='banned',
-            )
+        self.confirm_user_active(user)
+        self.confirm_user_not_banned(user)
 
 
 class AdminAuthenticationForm(AuthenticationForm):
@@ -103,3 +110,45 @@ class AdminAuthenticationForm(AuthenticationForm):
                 self.error_messages['not_staff'],
                 code='not_staff',
             )
+
+
+class GetUserForm(MisagoAuthMixin, forms.Form):
+    username = forms.CharField(label=_("Username or e-mail"))
+
+    def clean(self):
+        data = super(GetUserForm, self).clean()
+
+        credential = data.get('username')
+        if not credential or len(credential) > 250:
+            raise forms.ValidationError(_("You have to fill out form."))
+
+        try:
+            User = get_user_model()
+            user =  User.objects.get_by_username_or_email(data['username'])
+            self.user_cache = user
+        except User.DoesNotExist:
+            raise forms.ValidationError(_("User could not be found."))
+
+        self.confirm_allowed(user)
+
+        return data
+
+    def confirm_allowed(self, user):
+        raise NotImplementedError("confirm_allowed method must be defined "
+                                  "by inheriting classes")
+
+
+class ResendActivationForm(GetUserForm):
+    def confirm_allowed(self, user):
+        self.confirm_user_not_banned(user)
+
+        username_format = {'username': user.username}
+
+        if not user.requires_activation:
+            message = _("%(username)s, your account is already active.")
+            raise forms.ValidationError(message % username_format)
+
+        if user.requires_activation_by_admin:
+            message = _("%(username)s, only administrator may activate "
+                        "your account.")
+            raise forms.ValidationError(message % username_format)

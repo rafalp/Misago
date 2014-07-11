@@ -102,7 +102,7 @@ def register_completed(request):
     """
     registered_user_pk = request.session.get('registered_user')
     if not registered_user_pk:
-        raise Http404
+        raise Http404()
 
     registered_user = get_object_or_404(get_user_model().objects,
                                         pk=registered_user_pk)

@@ -19,26 +19,7 @@
             <h1>{% trans "Sign in" %}</h1>
           </div>
 
-          {% for error in form.non_field_errors %}
-          <div class="form-errors-block">
-            <ul class="list-unstyled">
-              <li>
-                {{ error }}
-              </li>
-              {% if form.user_ban and form.user_ban.user_message %}
-              <li>
-                <small>
-                  {{ form.user_ban.user_message|escape|linebreaksbr|urlize }}
-                </small>
-              </li>
-              {% elif form.user_cache.activation_by_user %}
-              <li>
-                <a href="#">{% trans "Click here to activate your account." %}</a>
-              </li>
-              {% endif %}
-            </ul>
-          </div>
-          {% endfor %}
+          {% include "misago/auth_form_errors.html" %}
 
           <div class="form-body no-fieldsets">
 
@@ -66,13 +47,13 @@
     <div class="col-md-4">
 
       <h4>
-        <span class="fa fa-question-circle"></span>
+        <span class="fa fa-fw fa-question-circle"></span>
         {% trans "Solving problems:" %}
       </h4>
       <ul class="list-unstyled signin-help">
         <li>
           <h5>
-            <span class="fa fa-key"></span>
+            <span class="fa fa-fw fa-key"></span>
             {% trans "I don't remember my password." %}
           </h5>
           <a href="#">
@@ -81,16 +62,16 @@
         </li>
         <li>
           <h5>
-            <span class="fa fa-power-off"></span>
+            <span class="fa fa-fw fa-power-off"></span>
             {% trans "My account is inactive." %}
           </h5>
-          <a href="#">
+          <a href="{% url 'misago:request_activation' %}">
             {% trans "Request activation e-mail" %}
           </a>
         </li>
         <li>
           <h5>
-            <span class="fa fa-pencil-square-o"></span>
+            <span class="fa fa-fw fa-pencil-square-o"></span>
             {% trans "I don't have an account." %}
           </h5>
           <a href="{% url 'misago:register' %}">

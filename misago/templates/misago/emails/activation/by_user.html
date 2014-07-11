@@ -1,0 +1,13 @@
+{% extends "misago/emails/base.html" %}
+{% load i18n misago_capture %}
+
+
+{% block content %}
+{% blocktrans trimmed with username=recipient.username %}
+{{ username }}, to activate your account click link below:
+{% endblocktrans %}
+<br>
+<br>
+<a href="{{ SITE_ADDRESS }}{% url 'misago:activate_by_token' user_id=recipient.pk token=activation_token %}">{% trans "Activate my account!" %}</a>
+<br>
+{% endblock content %}

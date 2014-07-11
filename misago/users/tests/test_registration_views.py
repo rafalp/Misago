@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core import mail
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
@@ -51,6 +52,8 @@ class RegisterViewTests(TestCase):
         response = self.client.get(reverse('misago:index'))
         self.assertIn('Bob', response.content)
 
+        self.assertIn('Welcome', mail.outbox[0].subject)
+
     def test_register_view_post_creates_inactive_user(self):
         """register view creates inactive user on POST"""
         settings.override_setting('account_activation', 'user')
@@ -68,6 +71,8 @@ class RegisterViewTests(TestCase):
         user = User.objects.get_by_username('Bob')
         user = User.objects.get_by_email('bob@bob.com')
 
+        self.assertIn('Welcome', mail.outbox[0].subject)
+
     def test_register_view_post_creates_admin_activated_user(self):
         """register view creates admin activated user on POST"""
         settings.override_setting('account_activation', 'admin')
@@ -84,3 +89,5 @@ class RegisterViewTests(TestCase):
         User = get_user_model()
         user = User.objects.get_by_username('Bob')
         user = User.objects.get_by_email('bob@bob.com')
+
+        self.assertIn('Welcome', mail.outbox[0].subject)

@@ -5,10 +5,60 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import ugettext as _
 
 from misago.conf import settings
+from misago.core.mail import mail_user
+
 from misago.users.decorators import deny_authenticated, deny_banned_ips
+from misago.users.forms.auth import ResendActivationForm
 from misago.users.models import ACTIVATION_REQUIRED_NONE
 from misago.users.tokens import (make_activation_token,
                                  is_activation_token_valid)
+
+
+@deny_authenticated
+@deny_banned_ips
+def request_activation(request):
+    form = ResendActivationForm()
+
+    if request.method == 'POST':
+        form = ResendActivationForm(request.POST)
+        if form.is_valid():
+            requesting_user = form.user_cache
+            request.session['activation_sent_to'] = requesting_user.pk
+
+            activation_token = make_activation_token(requesting_user)
+
+            activation_by_admin = requesting_user.requires_activation_by_admin
+            activation_by_user = requesting_user.requires_activation_by_user
+
+            mail_subject = _("Account activation on %(forum_title)s forums")
+            mail_subject = mail_subject % {'forum_title': settings.forum_name}
+
+            mail_user(
+                request, requesting_user, mail_subject,
+                'misago/emails/activation/by_user',
+                {
+                    'activation_token': activation_token,
+                })
+
+            return redirect('misago:activation_sent')
+
+    return render(request, 'misago/activation/request.html',
+                  {'form': form})
+
+
+
+@deny_authenticated
+@deny_banned_ips
+def activation_sent(request):
+    requesting_user_pk = request.session.get('activation_sent_to')
+    if not requesting_user_pk:
+        raise Http404()
+
+    User = get_user_model()
+    requesting_user = get_object_or_404(User.objects, pk=requesting_user_pk)
+
+    return render(request, 'misago/activation/sent.html',
+                  {'requesting_user': requesting_user})
 
 
 class ActivationStopped(Exception):
