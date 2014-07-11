@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, get_user_model, login
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import ugettext as _
+from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
 from misago.conf import settings
@@ -26,6 +27,7 @@ def register_decorator(f):
 
 
 @sensitive_post_parameters("email", "password")
+@never_cache
 @deny_authenticated
 @deny_banned_ips
 @register_decorator
@@ -68,13 +70,12 @@ def register(request):
                 mail_user(request, new_user, mail_subject,
                           'misago/emails/register/complete')
 
-                return redirect('misago:index')
+                return redirect(settings.LOGIN_REDIRECT_URL)
             else:
                 activation_token = make_activation_token(new_user)
 
-                method = new_user.requires_activation
-                activation_by_admin = method == ACTIVATION_REQUIRED_ADMIN
-                activation_by_user = method == ACTIVATION_REQUIRED_USER
+                activation_by_admin = new_user.requires_activation_by_admin
+                activation_by_user = new_user.requires_activation_by_user
 
                 mail_user(
                     request, new_user, mail_subject,
@@ -109,9 +110,8 @@ def register_completed(request):
     if not registered_user.requires_activation:
         return redirect('misago:index')
 
-    activation_method = registered_user.requires_activation
-    activation_by_admin = activation_method == ACTIVATION_REQUIRED_ADMIN
-    activation_by_user = activation_method == ACTIVATION_REQUIRED_USER
+    activation_by_admin = registered_user.requires_activation_by_admin
+    activation_by_user = registered_user.requires_activation_by_user
 
     return render(
         request,
