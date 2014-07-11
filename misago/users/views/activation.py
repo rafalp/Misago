@@ -6,9 +6,7 @@ from django.utils.translation import ugettext as _
 
 from misago.conf import settings
 from misago.users.decorators import deny_authenticated, deny_banned_ips
-from misago.users.models import (ACTIVATION_REQUIRED_NONE,
-                                 ACTIVATION_REQUIRED_USER,
-                                 ACTIVATION_REQUIRED_ADMIN)
+from misago.users.models import ACTIVATION_REQUIRED_NONE
 from misago.users.tokens import (make_activation_token,
                                  is_activation_token_valid)
 
@@ -32,7 +30,7 @@ def activate_by_token(request, user_id, token):
             message = _("%(username)s, your account is already active.")
             message = message % {'username': inactive_user.username}
             raise ActivationStopped(message)
-        if inactive_user.requires_activation == ACTIVATION_REQUIRED_ADMIN:
+        if inactive_user.requires_activation_by_admin:
             message = _("%(username)s, your account can be activated "
                         "only by one ofthe  administrators.")
             message = message % {'username': inactive_user.username}

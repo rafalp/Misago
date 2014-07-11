@@ -234,6 +234,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         raise TypeError('Cannot make User instances ACL aware')
 
     @property
+    def requires_activation_by_admin(self):
+        return self.requires_activation == ACTIVATION_REQUIRED_ADMIN
+
+    @property
+    def requires_activation_by_user(self):
+        return self.requires_activation == ACTIVATION_REQUIRED_USER
+
+    @property
     def staff_level(self):
         if self.is_superuser:
             return 2

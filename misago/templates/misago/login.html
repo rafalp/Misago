@@ -19,16 +19,28 @@
             <h1>{% trans "Sign in" %}</h1>
           </div>
 
-          <div class="form-body no-fieldsets">
-
-            {% for error in form.non_field_errors %}
-            <div class="misago-alerts">
-              <p class="alert alert-danger lead">
+          {% for error in form.non_field_errors %}
+          <div class="form-errors-block">
+            <ul class="list-unstyled">
+              <li>
                 {{ error }}
-                <br>{% trans "Please try again." %}
-              </p>
-            </div>
-            {% endfor %}
+              </li>
+              {% if form.user_ban and form.user_ban.user_message %}
+              <li>
+                <small>
+                  {{ form.user_ban.user_message|escape|linebreaksbr|urlize }}
+                </small>
+              </li>
+              {% elif form.user_cache.activation_by_user %}
+              <li>
+                <a href="#">{% trans "Click here to activate your account." %}</a>
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+          {% endfor %}
+
+          <div class="form-body no-fieldsets">
 
             <div class="form-group">
               <div class="control-input">

@@ -3,9 +3,9 @@ from django.contrib import auth, messages
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext as _
-from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.debug import sensitive_post_parameters
 
 from misago.core.decorators import require_POST
 
@@ -23,12 +23,12 @@ def login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
+
             message = _("Welcome back, %(username)s! You have been "
                         "signed in successfully.")
             messages.success(
                 request, message % {'username': form.user_cache.username})
             auth.login(request, form.user_cache)
-            request.session.pop('login_ban', None)
             return redirect(settings.LOGIN_REDIRECT_URL)
 
     return render(request, 'misago/login.html', {'form': form})
@@ -44,13 +44,3 @@ def logout(request):
         request, message % {'username': request.user.username})
     auth.logout(request)
     return redirect('misago:index')
-
-
-@never_cache
-def login_banned(request):
-    try:
-        ban = request.session['login_ban']
-    except KeyError:
-        Http404()
-
-    return render(request, 'misago/errorpages/banned.html', {'ban': ban})
