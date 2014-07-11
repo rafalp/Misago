@@ -57,19 +57,47 @@
 
           <div class="form-footer">
             <button class="btn btn-primary btn-block">{% trans "Sign in" %}</button>
-
-            <div class="extra">
-              <h4>Need help?</h4>
-              <ul class="list-unstyled">
-                <li><a href="#">I don't remember my password</a></li>
-                <li><a href="#">My account is inactive</a></li>
-                <li><a href="#">I don't have account</a></li>
-              </ul>
-            </div>
           </div>
 
         </form>
       </div>
+
+    </div>
+    <div class="col-md-4">
+
+      <h4>
+        <span class="fa fa-question-circle"></span>
+        {% trans "Solving problems:" %}
+      </h4>
+      <ul class="list-unstyled signin-help">
+        <li>
+          <h5>
+            <span class="fa fa-key"></span>
+            {% trans "I don't remember my password." %}
+          </h5>
+          <a href="#">
+            {% trans "Reset password" %}
+          </a>
+        </li>
+        <li>
+          <h5>
+            <span class="fa fa-power-off"></span>
+            {% trans "My account is inactive." %}
+          </h5>
+          <a href="#">
+            {% trans "Request activation e-mail" %}
+          </a>
+        </li>
+        <li>
+          <h5>
+            <span class="fa fa-pencil-square-o"></span>
+            {% trans "I don't have an account." %}
+          </h5>
+          <a href="{% url 'misago:register' %}">
+            {% trans "Register new account" %}
+          </a>
+        </li>
+      </ul>
 
     </div>
   </div>
