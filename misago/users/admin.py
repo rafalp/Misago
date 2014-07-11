@@ -1,4 +1,7 @@
 from django.conf.urls import url
+from django.conf.urls import url
+from django.contrib import admin as djadmin
+from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 
 from misago.users.views.admin.bans import BansList, NewBan, EditBan, DeleteBan
@@ -9,6 +12,29 @@ from misago.users.views.admin.users import UsersList, NewUser, EditUser
 from misago.users.views.admin.warnings import (WarningsList, NewWarning,
                                                EditWarning, MoveDownWarning,
                                                MoveUpWarning, DeleteWarning)
+
+
+class UserAdmin(djadmin.ModelAdmin):
+    actions = None
+    list_display = ('username', 'email', 'is_staff', 'is_superuser')
+    search_fields = ('username', 'email')
+    list_filter = ('groups', 'is_staff', 'is_superuser')
+    readonly_fields = ('username', 'email', 'is_staff', 'is_superuser')
+    fieldsets = (
+        (_('User data'),
+         {'fields': ('username', 'email', 'is_staff', 'is_superuser')}),
+        (_('Change Django Permissions'),
+         {'fields': ('groups', 'user_permissions')}),
+    )
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+djadmin.site.register(get_user_model(), UserAdmin)
+
 
 
 class MisagoAdminExtension(object):
