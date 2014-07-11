@@ -16,7 +16,7 @@ def make(user, token_type):
     return sha256('+'.join([unicode(s) for s in seeds])).hexdigest()[:12]
 
 
-def is_valid(token, user, token_type):
+def is_valid(user, token_type, token):
     return token == make(user, token_type)
 
 
@@ -30,5 +30,5 @@ def make_activation_token(user):
     return make(user, ACTIVATION_TOKEN)
 
 
-def is_activation_token_valid(token, user):
-    return is_valid(token, user, ACTIVATION_TOKEN)
+def is_activation_token_valid(user, token):
+    return is_valid(user, ACTIVATION_TOKEN, token)

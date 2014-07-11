@@ -31,7 +31,56 @@ class RegisterViewTests(TestCase):
         response = self.client.get(reverse('misago:register'))
         self.assertEqual(response.status_code, 200)
 
-    def test_register_view_post_returns_302(self):
-        """register view creates user on POST"""
-        response = self.client.post(reverse('misago:register'))
-        self.assertEqual(response.status_code, 200)
+    def test_register_view_post_creates_active_user(self):
+        """register view creates active and signed in user on POST"""
+        settings.override_setting('account_activation', 'none')
+
+        response = self.client.post(reverse('misago:register'),
+                                    data={'username': 'Bob',
+                                          'email': 'bob@bob.com',
+                                          'password': 'pass123'})
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(reverse('misago:index'))
+        self.assertIn('Bob', response.content)
+
+        User = get_user_model()
+        user = User.objects.get_by_username('Bob')
+        user = User.objects.get_by_email('bob@bob.com')
+
+        response = self.client.get(reverse('misago:index'))
+        self.assertIn('Bob', response.content)
+
+    def test_register_view_post_creates_inactive_user(self):
+        """register view creates inactive user on POST"""
+        settings.override_setting('account_activation', 'user')
+
+        response = self.client.post(reverse('misago:register'),
+                                    data={'username': 'Bob',
+                                          'email': 'bob@bob.com',
+                                          'password': 'pass123'})
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(reverse('misago:register_completed'))
+        self.assertIn('bob@bob.com', response.content)
+
+        User = get_user_model()
+        user = User.objects.get_by_username('Bob')
+        user = User.objects.get_by_email('bob@bob.com')
+
+    def test_register_view_post_creates_admin_activated_user(self):
+        """register view creates admin activated user on POST"""
+        settings.override_setting('account_activation', 'admin')
+
+        response = self.client.post(reverse('misago:register'),
+                                    data={'username': 'Bob',
+                                          'email': 'bob@bob.com',
+                                          'password': 'pass123'})
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(reverse('misago:register_completed'))
+        self.assertIn('administrator', response.content)
+
+        User = get_user_model()
+        user = User.objects.get_by_username('Bob')
+        user = User.objects.get_by_email('bob@bob.com')

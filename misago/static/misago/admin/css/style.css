@@ -5791,14 +5791,14 @@ body {
   border-radius: 0;
   margin-bottom: 0px;
   padding: 16px 0px;
-  font-size: 18px;
+  font-size: 14px;
 }
 .misago-alerts .alert .alert-icon {
   margin: -12px 0px;
   margin-right: 6px;
   position: relative;
   top: 4.5px;
-  font-size: 32.4px;
+  font-size: 25.2px;
 }
 .btn.btn-default {
   background: #ededed;

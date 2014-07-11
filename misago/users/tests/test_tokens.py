@@ -15,6 +15,6 @@ class TokensTests(TestCase):
         token_a = tokens.make(user_a, 'test')
         token_b = tokens.make(user_b, 'test')
 
-        self.assertTrue(tokens.is_valid(token_a, user_a, 'test'))
-        self.assertTrue(tokens.is_valid(token_b, user_b, 'test'))
+        self.assertTrue(tokens.is_valid(user_a, 'test', token_a))
+        self.assertTrue(tokens.is_valid(user_b, 'test', token_b))
         self.assertTrue(token_a != token_b)

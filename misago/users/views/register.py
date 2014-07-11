@@ -19,7 +19,7 @@ from misago.users.tokens import make_activation_token
 def register_decorator(f):
     def decorator(request):
         if settings.account_activation == 'disabled':
-            return registration_disabled(request)
+            return register_disabled(request)
         else:
             return f(request)
     return decorator
@@ -91,11 +91,11 @@ def register(request):
     return render(request, 'misago/register/form.html', {'form': form, 'testname': 'and<b>rzej'})
 
 
-def registration_disabled(request):
+def register_disabled(request):
     return render(request, 'misago/register/disabled.html')
 
 
-def registration_completed(request):
+def register_completed(request):
     """
     If user needs to activate his account, we display him page with message
     """
