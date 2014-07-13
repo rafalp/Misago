@@ -117,7 +117,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='rank',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to_field='id', blank=True, to='misago_users.Rank', null=True),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to_field='id', to='misago_users.Rank'),
             preserve_default=True,
         ),
         migrations.CreateModel(
