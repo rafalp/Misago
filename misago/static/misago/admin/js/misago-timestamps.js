@@ -25,9 +25,9 @@ $(function() {
       if (moments[timestamp] != undefined) {
         if (moment_now.diff(moments[timestamp].rel_moment, 'hours') <= 6) {
           $(this).text(moments[timestamp].rel_moment.fromNow());
-        } else if (moment_now.diff(moments[timestamp].rel_moment, 'days') < 2) {
+        } else if (moment_now.diff(moments[timestamp].rel_moment, 'days') < 1) {
           $(this).text(moments[timestamp].rel_moment.calendar());
-        } else if (moment_now.diff(moments[timestamp].rel_moment, 'days') <= 7) {
+        } else if (moment_now.diff(moments[timestamp].rel_moment, 'days') < 7) {
           $(this).text(moments[timestamp].rel_moment.format("dddd, " + time_format));
         } else {
           $(this).text(moments[timestamp].original);
