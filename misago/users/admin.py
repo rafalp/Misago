@@ -2,10 +2,7 @@ from django.conf.urls import url
 from django.conf.urls import url
 from django.contrib import admin as djadmin
 from django.contrib.auth import get_user_model
-from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
-
-from misago.acl.models import Role
 
 from misago.users.views.admin.bans import BansList, NewBan, EditBan, DeleteBan
 from misago.users.views.admin.ranks import (RanksList, NewRank, EditRank,
@@ -26,8 +23,6 @@ class UserAdmin(djadmin.ModelAdmin):
     fieldsets = (
         (_('User data'),
          {'fields': ('username', 'email', 'is_staff', 'is_superuser')}),
-        (_('Misago permissions'),
-         {'fields': ('rank', 'roles')}),
         (_('Change Django Permissions'),
          {'fields': ('groups', 'user_permissions')}),
     )
@@ -38,30 +33,8 @@ class UserAdmin(djadmin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-    def save_related(self, request, form, formsets, change):
-        with transaction.atomic():
-            obj = form.instance
-
-            obj.roles.clear()
-            obj.roles.add(*form.cleaned_data['roles'])
-
-            member_role = Role.objects.get(special_role='authenticated')
-            if not member_role.pk in [r.pk for r in form.cleaned_data['roles']]:
-                obj.roles.add(member_role)
-
-            # Update ACL key
-            obj.update_acl_key()
-            obj.save(update_fields=['acl_key'])
-
-            obj.groups.clear()
-            if form.cleaned_data['groups']:
-                obj.groups.add(*form.cleaned_data['groups'])
-
-            obj.user_permissions.clear()
-            if form.cleaned_data['user_permissions']:
-                obj.user_permissions.add(*form.cleaned_data['user_permissions'])
-
 djadmin.site.register(get_user_model(), UserAdmin)
+
 
 
 class MisagoAdminExtension(object):

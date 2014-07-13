@@ -165,16 +165,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     timezone = models.CharField(max_length=255, default='utc')
 
-    rank = models.ForeignKey('Rank', on_delete=models.PROTECT)
+    rank = models.ForeignKey(
+        'Rank', null=True, blank=True, on_delete=models.PROTECT)
     title = models.CharField(max_length=255, null=True, blank=True)
     requires_activation = models.PositiveIntegerField(
         default=ACTIVATION_REQUIRED_NONE)
     is_staff = models.BooleanField(
         _('staff status'), default=False,
         help_text=_('Designates whether the user can log into admin sites.'))
-    roles = models.ManyToManyField(
-        'misago_acl.Role',
-        help_text=_('Users always have "Member" role.'))
+    roles = models.ManyToManyField('misago_acl.Role')
     acl_key = models.CharField(max_length=12, null=True, blank=True)
 
     is_avatar_banned = models.BooleanField(default=False)
