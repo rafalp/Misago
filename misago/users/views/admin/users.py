@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 
+from misago.admin.auth import start_admin_session
 from misago.admin.views import generic
 
 from misago.users.forms.admin import (StaffFlagUserFormFactory, NewUserForm,
@@ -78,13 +79,12 @@ class EditUser(UserAdmin, generic.ModelFormView):
     message_submit = _('User "%s" has been edited.')
 
     def handle_form(self, form, request, target):
-        form.instance.save()
-
         if form.cleaned_data.get('new_password'):
             target.set_password(form.cleaned_data['new_password'])
 
             if target.pk == request.user.pk:
-                update_session_auth_hash(request, form.user)
+                start_admin_session(request, target)
+                update_session_auth_hash(request, target)
 
         if form.cleaned_data.get('email'):
             target.set_email(form.cleaned_data['email'])
