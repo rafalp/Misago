@@ -15,13 +15,15 @@
 {% block table-header %}
 <th style="width: 1%;">&nbsp;</th>
 <th>{% trans "User" %}</th>
-<th style="width: 150px;">{% trans "E-mail" %}</th>
+<th style="width: 1%;">&nbsp;</th>
+<th style="width: 1%;">&nbsp;</th>
+<th style="width: 200px;">{% trans "E-mail" %}</th>
 <th style="width: 150px;">{% trans "Rank" %}</th>
 <th style="width: 200px;">{% trans "Joined" %}</th>
 {% for action in extra_actions %}
 <th style="width: 1%;">&nbsp;</th>
 {% endfor %}
-<th>&nbsp;</th>
+<th style="width: 1%;">&nbsp;</th>
 {% endblock table-header %}
 
 
@@ -29,12 +31,25 @@
 <td>
   <img src="{{ item|avatar:30 }}" alt="{% trans "Avatar" %}">
 </td>
-<td class="lead">
+<td class="lead {% if item.requires_activation %}text-muted{% endif %}">
   {{ item.username }}
+</td>
+<td class="lead text-muted">
+  {% if item.requires_activation_by_admin %}
+  <span class="fa fa-eye tooltip-top" title="{% trans "Requires activation by administrator" %}"></span>
+  {% elif item.requires_activation_by_user %}
+  <span class="fa fa-ticket tooltip-top" title="{% trans "Has to activate account" %}"></span>
+  {% else %}
+  &nbsp;
+  {% endif %}
+</td>
+<td class="lead text-muted">
   {% if item.is_superuser %}
-  <span class="fa fa-star text-primary tooltip-top" title="{% trans "Super Administrator" %}"></span>
+  <span class="fa fa-star tooltip-top" title="{% trans "Super administrator" %}"></span>
   {% elif item.is_staff %}
-  <span class="fa fa-star-o text-primary tooltip-top" title="{% trans "Administrator" %}"></span>
+  <span class="fa fa-star-half-o tooltip-top" title="{% trans "Administrator" %}"></span>
+  {% else %}
+  &nbsp;
   {% endif %}
 </td>
 <td>
@@ -80,7 +95,7 @@
 
 
 {% block emptylist %}
-<td colspan="{{ 7|add:extra_actions_len }}">
+<td colspan="{{ 6|add:extra_actions_len }}">
   <p>{% trans "No users matching search criteria have been found." %}</p>
 </td>
 {% endblock emptylist %}
