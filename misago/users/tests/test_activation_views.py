@@ -4,9 +4,10 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 from misago.users.models import Ban, BAN_USERNAME
+from misago.users.tokens import make_activation_token
 
 
-class ActivationViewTests(TestCase):
+class ActivationViewsTests(TestCase):
     def test_view_get_returns_200(self):
         """request activation view returns 200 on GET"""
         response = self.client.get(reverse('misago:request_activation'))
@@ -54,3 +55,55 @@ class ActivationViewTests(TestCase):
         self.assertIn('already active', response.content)
 
         self.assertTrue(not mail.outbox)
+
+    def test_view_activate_banned(self):
+        """activate banned user shows error"""
+        User = get_user_model()
+        test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123',
+                                             requires_activation=1)
+        Ban.objects.create(test=BAN_USERNAME, banned_value='bob',
+                           user_message='Nope!')
+
+        activation_token = make_activation_token(test_user)
+
+        response = self.client.get(
+            reverse('misago:activate_by_token',
+                    kwargs={'user_id': test_user.pk,
+                            'token': activation_token}))
+        self.assertEqual(response.status_code, 302)
+
+        test_user = User.objects.get(pk=test_user.pk)
+        self.assertEqual(test_user.requires_activation, 1)
+
+    def test_view_activate_active(self):
+        """activate active user shows error"""
+        User = get_user_model()
+        test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+
+        activation_token = make_activation_token(test_user)
+
+        response = self.client.get(
+            reverse('misago:activate_by_token',
+                    kwargs={'user_id': test_user.pk,
+                            'token': activation_token}))
+        self.assertEqual(response.status_code, 302)
+
+        test_user = User.objects.get(pk=test_user.pk)
+        self.assertEqual(test_user.requires_activation, 0)
+
+    def test_view_activate_inactive(self):
+        """activate inactive user passess"""
+        User = get_user_model()
+        test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123',
+                                             requires_activation=1)
+
+        activation_token = make_activation_token(test_user)
+
+        response = self.client.get(
+            reverse('misago:activate_by_token',
+                    kwargs={'user_id': test_user.pk,
+                            'token': activation_token}))
+        self.assertEqual(response.status_code, 302)
+
+        test_user = User.objects.get(pk=test_user.pk)
+        self.assertEqual(test_user.requires_activation, 0)

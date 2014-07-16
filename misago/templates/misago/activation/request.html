@@ -19,26 +19,7 @@
             <h2>{% trans "Request activation e-mail" %}</h2>
           </div>
 
-          {% for error in form.non_field_errors %}
-          <div class="form-errors-block">
-            <ul class="list-unstyled">
-              <li>
-                {{ error }}
-              </li>
-              {% if form.user_ban and form.user_ban.user_message %}
-              <li>
-                <small>
-                  {{ form.user_ban.user_message|escape|linebreaksbr|urlize }}
-                </small>
-              </li>
-              {% elif form.user_cache.activation_by_user %}
-              <li>
-                <a href="#">{% trans "Click here to activate your account." %}</a>
-              </li>
-              {% endif %}
-            </ul>
-          </div>
-          {% endfor %}
+          {% include "misago/auth_form_errors.html" %}
 
           <div class="form-body no-fieldsets">
 

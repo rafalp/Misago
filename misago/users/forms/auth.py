@@ -10,6 +10,15 @@ from misago.users.bans import get_user_ban
 
 
 class MisagoAuthMixin(object):
+    error_messages = {
+        'empty_data': _("You have to fill out both fields."),
+        'invalid_login': _("Your login or password is incorrect."),
+        'inactive_user': _("You have to activate your account before "
+                           "you will be able to sign in."),
+        'inactive_admin': _("Administrator has to activate your account "
+                            "before you will be able to sign in."),
+    }
+
     def confirm_user_active(self, user):
         if user.requires_activation_by_admin:
             raise ValidationError(
@@ -57,15 +66,6 @@ class AuthenticationForm(MisagoAuthMixin, forms.Form, BaseAuthenticationForm):
                                max_length=254)
     password = forms.CharField(label=_("Password"), required=False,
                                widget=forms.PasswordInput)
-
-    error_messages = {
-        'empty_data': _("You have to fill out both fields."),
-        'invalid_login': _("Your login or password is incorrect."),
-        'inactive_user': _("You have to activate your account before "
-                           "you will be able to sign in."),
-        'inactive_admin': _("Administrator has to activate your account "
-                            "before you will be able to sign in."),
-    }
 
     def clean(self):
         username = self.cleaned_data.get('username')
@@ -127,7 +127,7 @@ class GetUserForm(MisagoAuthMixin, forms.Form):
             user =  User.objects.get_by_username_or_email(data['username'])
             self.user_cache = user
         except User.DoesNotExist:
-            raise forms.ValidationError(_("User could not be found."))
+            raise forms.ValidationError(_("Invalid username or e-mail."))
 
         self.confirm_allowed(user)
 
@@ -152,3 +152,17 @@ class ResendActivationForm(GetUserForm):
             message = _("%(username)s, only administrator may activate "
                         "your account.")
             raise forms.ValidationError(message % username_format)
+
+
+class ResetPasswordForm(GetUserForm):
+    error_messages = {
+        'inactive_user': _("You have to activate your account before "
+                           "you will be able to request new password."),
+        'inactive_admin': _("Administrator has to activate your account "
+                            "before you will be able to request "
+                            "new password."),
+    }
+
+    def confirm_allowed(self, user):
+        self.confirm_user_not_banned(user)
+        self.confirm_user_active(user)

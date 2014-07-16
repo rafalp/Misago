@@ -56,8 +56,8 @@
             <span class="fa fa-fw fa-key"></span>
             {% trans "I don't remember my password." %}
           </h5>
-          <a href="#">
-            {% trans "Reset password" %}
+          <a href="{% url 'misago:request_password_reset' %}">
+            {% trans "Change forgotten password" %}
           </a>
         </li>
         <li>

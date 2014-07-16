@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 from misago.conf import settings
 from misago.core.mail import mail_user
 
+from misago.users.bans import get_user_ban
 from misago.users.decorators import deny_authenticated, deny_banned_ips
 from misago.users.forms.auth import ResendActivationForm
 from misago.users.models import ACTIVATION_REQUIRED_NONE
@@ -14,8 +15,15 @@ from misago.users.tokens import (make_activation_token,
                                  is_activation_token_valid)
 
 
-@deny_authenticated
-@deny_banned_ips
+def activation_view(f):
+    @deny_authenticated
+    @deny_banned_ips
+    def decorator(*args, **kwargs):
+        return f(*args, **kwargs)
+    return decorator
+
+
+@activation_view
 def request_activation(request):
     form = ResendActivationForm()
 
@@ -25,20 +33,15 @@ def request_activation(request):
             requesting_user = form.user_cache
             request.session['activation_sent_to'] = requesting_user.pk
 
-            activation_token = make_activation_token(requesting_user)
-
-            activation_by_admin = requesting_user.requires_activation_by_admin
-            activation_by_user = requesting_user.requires_activation_by_user
-
             mail_subject = _("Account activation on %(forum_title)s forums")
             mail_subject = mail_subject % {'forum_title': settings.forum_name}
+
+            activation_token = make_activation_token(requesting_user)
 
             mail_user(
                 request, requesting_user, mail_subject,
                 'misago/emails/activation/by_user',
-                {
-                    'activation_token': activation_token,
-                })
+                {'activation_token': activation_token})
 
             return redirect('misago:activation_sent')
 
@@ -46,9 +49,7 @@ def request_activation(request):
                   {'form': form})
 
 
-
-@deny_authenticated
-@deny_banned_ips
+@activation_view
 def activation_sent(request):
     requesting_user_pk = request.session.get('activation_sent_to')
     if not requesting_user_pk:
@@ -69,8 +70,7 @@ class ActivationError(Exception):
     pass
 
 
-@deny_authenticated
-@deny_banned_ips
+@activation_view
 def activate_by_token(request, user_id, token):
     User = get_user_model()
     inactive_user = get_object_or_404(User.objects, pk=user_id)
@@ -82,9 +82,14 @@ def activate_by_token(request, user_id, token):
             raise ActivationStopped(message)
         if inactive_user.requires_activation_by_admin:
             message = _("%(username)s, your account can be activated "
-                        "only by one ofthe  administrators.")
+                        "only by one of the administrators.")
             message = message % {'username': inactive_user.username}
             raise ActivationStopped(message)
+        if get_user_ban(inactive_user):
+            message = _("%(username)s, your account is banned "
+                        "and can't be activated.")
+            message = message % {'username': inactive_user.username}
+            raise ActivationError(message)
         if not is_activation_token_valid(inactive_user, token):
             message = _("%(username)s, your activation link is invalid. "
                         "Try again or request new activation message.")
@@ -95,7 +100,7 @@ def activate_by_token(request, user_id, token):
         return redirect('misago:index')
     except ActivationError as e:
         messages.error(request, e.args[0])
-        return redirect('misago:index')
+        return redirect('misago:request_activation')
 
     inactive_user.requires_activation = ACTIVATION_REQUIRED_NONE
     inactive_user.save(update_fields=['requires_activation'])

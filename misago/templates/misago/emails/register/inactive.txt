@@ -1,6 +1,7 @@
 {% extends "misago/emails/base.txt" %}
 {% load i18n %}
 
+
 {% block content %}
 {% blocktrans trimmed with username=recipient.username %}
 {{ username }}, thank you for joining us!

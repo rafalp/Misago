@@ -1,0 +1,26 @@
+{% extends "misago/emails/base.html" %}
+{% load i18n misago_capture %}
+
+
+{% block content %}
+{% blocktrans trimmed with username=recipient.username %}
+{{ username }}, your new password is:
+{% endblocktrans %}
+<br>
+<br>
+<div style="background-color: #eee; padding: 8px 0px; font-size: 18px; text-align: center; font-family: Menlo, Monaco, Consolas, monospace">{{ new_password }}</div>
+<br>
+<br>
+{% capture trimmed as login_link %}
+<a href="{{ SITE_ADDRESS }}{% url LOGIN_URL %}">{% trans "this form" %}</a>
+{% endcapture %}
+{% blocktrans trimmed with login_form=login_link|safe %}
+You can now sign in to your account with new password using {{ login_form }}.
+{% endblocktrans %}
+<br>
+<br>
+{% blocktrans trimmed %}
+Please change your password to custom one as soon as you sign in to your account.
+{% endblocktrans %}
+<br>
+{% endblock content %}

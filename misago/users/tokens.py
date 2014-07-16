@@ -60,11 +60,11 @@ def is_valid(user, token_type, token):
         return False
 
     creation_day = int(unobfuscated[8:])
-    return creation_day + 14 >= days_since_epoch()
+    return creation_day + 5 >= days_since_epoch()
 
 
 """
-Shortcuts for activation token
+Convenience functions for activation token
 """
 ACTIVATION_TOKEN = 'activation'
 
@@ -75,3 +75,17 @@ def make_activation_token(user):
 
 def is_activation_token_valid(user, token):
     return is_valid(user, ACTIVATION_TOKEN, token)
+
+
+"""
+Convenience functions for password reset token
+"""
+PASSWORD_RESET_TOKEN = 'reset_password'
+
+
+def make_password_reset_token(user):
+    return make(user, PASSWORD_RESET_TOKEN)
+
+
+def is_password_reset_token_valid(user, token):
+    return is_valid(user, PASSWORD_RESET_TOKEN, token)
