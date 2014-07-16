@@ -6433,8 +6433,14 @@ body {
   bottom: -2px;
   font-size: 18px;
 }
-.navbars-container .navbar .user-nav .navbar-text {
+.navbars-container .navbar .user-nav .navbar-text a:link,
+.navbars-container .navbar .user-nav .navbar-text a:visited,
+.navbars-container .navbar .user-nav .navbar-text a:hover {
   color: #444444;
+  text-decoration: none;
+}
+.navbars-container .navbar .user-nav .navbar-text a:active {
+  color: #3498db;
 }
 .navbars-container .navbar .user-nav img {
   border-radius: 4px;

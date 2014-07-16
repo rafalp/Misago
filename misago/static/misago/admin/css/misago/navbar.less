@@ -29,7 +29,14 @@
 
     .user-nav {
       .navbar-text {
-        color: @text-color;
+        a:link, a:visited, a:hover {
+          color: @text-color;
+          text-decoration: none;
+        }
+
+        a:active {
+          color: @brand-secondary;
+        }
       }
 
       img {
