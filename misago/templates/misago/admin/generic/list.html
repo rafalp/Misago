@@ -79,7 +79,8 @@
       <ul class="dropdown-menu" role="menu">
         {% for action in mass_actions %}
         <li>
-          <button type="submit" name="action" value="{{ action.action }}" {% if action.prompt %}data-prompt="{{ action.prompt }}"{% endif %}>
+          <button type="submit" name="action" value="{{ action.action }}" {% if action.confirmation %}data-confirmation="{{ action.confirmation }}"{% endif %}>
+            <span class="{{ action.icon }}"></span>
             {{ action.name }}
           </button>
         </li>

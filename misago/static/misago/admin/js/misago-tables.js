@@ -4,9 +4,9 @@ function tableMassActions(label_none, label_selected) {
   var $form = $controller.parents('form');
 
   $form.find('.dropdown-menu button').click(function() {
-    if ($(this).data('prompt')) {
-      var prompt = confirm($(this).data('prompt'));
-      return prompt;
+    if ($(this).data('confirmation')) {
+      var confirmation = confirm($(this).data('confirmation'));
+      return confirmation;
     } else {
       return true;
     }

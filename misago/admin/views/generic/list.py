@@ -40,11 +40,15 @@ class ListView(AdminView):
     empty_selection_label = _('Select items')
 
     @classmethod
-    def add_mass_action(cls, action, name, prompt=None):
+    def add_mass_action(cls, action, name, icon, confirmation=None):
         if not cls.mass_actions:
             cls.mass_actions = []
 
-        cls.extra_actions.append((action, name, prompt))
+        cls.extra_actions.append({
+            'action': action,
+            'name': name,
+            'icon': icon,
+            'confirmation': confirmation})
 
     @classmethod
     def add_item_action(cls, name, icon, link, style=None):
@@ -214,20 +218,10 @@ class ListView(AdminView):
 
     def select_mass_action(self, action):
         for definition in self.mass_actions:
-            if definition[0] == action:
+            if definition['action'] == action:
                 return action
         else:
             raise MassActionError(_("Action is not allowed."))
-
-    def mass_actions_as_dicts(self):
-        dicts = []
-        for definition in self.mass_actions or []:
-            dicts.append({
-                'action': definition[0],
-                'name': definition[1],
-                'prompt': definition[2] if len(definition) == 3 else None,
-                })
-        return dicts
 
     """
     Querystrings builder
@@ -264,7 +258,7 @@ class ListView(AdminView):
     Dispatch response
     """
     def dispatch(self, request, *args, **kwargs):
-        mass_actions_list = self.mass_actions_as_dicts()
+        mass_actions_list = self.mass_actions or []
         extra_actions_list = self.extra_actions or []
 
         refresh_querystring = False

@@ -55,7 +55,7 @@ Base class for lists if items. Supports following properties:
 * **items_per_page** - integer controlling number of items displayed on single page. Defaults to 0 which means no pagination
 * **SearchForm** - Form type used to construct form for filtering this list. Either this field or ``get_search_form`` method is required to make list searchable.
 * **ordering** - list of supported sorting methods. List of tuples. Each tuple should countain two items: name of ordering method (eg. "Usernames, descending") and ``order_by`` argument ("-username"). Defaults to none which means queryset will not be ordered. If contains only one element, queryset is ordered, but option for changing ordering method is not displayed.
-* **mass_actions** - tuple of tuples defining list's mass actions. Each tuple should define at least two items: name of ``ListView`` attribute to be called for action, and its button label. Optional third item in tuple will be used for Java Script confirm dialog.
+* **mass_actions** - list of dicts defining list's mass actions. Each dict should have ``action`` key that will be used to identify method to call, ``name`` for displayed name, ``icon`` for icon and optional ``confirmation`` message.
 * **selection_label** - Label displayed on mass action button if there are items selected. ``0`` will be replaced with number of selected items automatically.
 * **empty_selection_label** - Label displayed on mass action button if there are no items selected.
 
@@ -88,12 +88,12 @@ If you decide to make your list searchable, remember that your Form must meet fo
 * Must not define fields that use models for values.
 
 
-If you add custom mass action to view, besides adding new entry to ``mass_actions`` tuple, you have to define custom method following this definition:
+If you add custom mass action to view, besides adding new entry to ``mass_actions`` list, you have to define custom method following this definition:
 
 
-.. function:: action_NAME(self, request, items)
+.. function:: action_ACTION(self, request, items)
 
-``NAME`` will be replaced with action name. Request is ``HttpRequest`` instance used to call view and ``items`` is queryset with items selected for this action. This method should nothing or ``HttpResponse``. If you need to, you can raise ``MassActionError`` with error message as its first argument to interrupt mass action handler.
+``ACTION`` will be replaced with action dict ``action`` value. Request is ``HttpRequest`` instance used to call view and ``items`` is queryset with items selected for this action. This method should nothing or ``HttpResponse``. If you need to, you can raise ``MassActionError`` with error message as its first argument to interrupt mass action handler.
 
 
 FormView
