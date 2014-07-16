@@ -1,4 +1,6 @@
 from django.contrib import messages
+from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 
 from misago.admin.views import generic
@@ -87,6 +89,12 @@ class MoveUpRank(RankAdmin, generic.ButtonView):
             message = _('Rank "%s" has been moved above "%s".')
             targets_names = (target.name, other_target.name)
             messages.success(request, message % targets_names)
+
+
+class RankUsers(RankAdmin, generic.TargetedView):
+    def real_dispatch(self, request, target):
+        redirect_url = reverse('misago:admin:users:accounts:index')
+        return redirect('%s?rank=%s' % (redirect_url, target.pk))
 
 
 class DefaultRank(RankAdmin, generic.ButtonView):

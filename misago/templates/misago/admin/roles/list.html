@@ -19,6 +19,7 @@
 {% endfor %}
 <th style="width: 1%;">&nbsp;</th>
 <th style="width: 1%;">&nbsp;</th>
+<th style="width: 1%;">&nbsp;</th>
 {% endblock table-header %}
 
 
@@ -33,6 +34,11 @@
   </a>
 </td>
 {% endfor %}
+<td class="row-action">
+  <a href="{% url 'misago:admin:permissions:users:users' role_id=item.id %}" class="btn btn-primary tooltip-top" title="{% trans "Users with role" %}">
+    <span class="fa fa-users"></span>
+  </a>
+</td>
 <td class="row-action">
   <a href="{% url 'misago:admin:permissions:users:edit' role_id=item.id %}" class="btn btn-primary tooltip-top" title="{% trans "Edit" %}">
     <span class="fa fa-pencil"></span>
@@ -50,7 +56,7 @@
 
 
 {% block emptylist %}
-<td colspan="{{ 3|add:extra_actions_len }}">
+<td colspan="{{ 4|add:extra_actions_len }}">
   <p>{% trans "No user roles are currently defined." %}</p>
 </td>
 {% endblock emptylist %}

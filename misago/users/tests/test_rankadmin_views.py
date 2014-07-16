@@ -172,6 +172,24 @@ class RankAdminViewsTests(AdminTestCase):
         changed_rank = Rank.objects.get(slug='test-rank')
         self.assertEqual(changed_rank.order, test_rank.order)
 
+    def test_users_view(self):
+        """users with this rank view has no showstoppers"""
+        self.client.post(
+            reverse('misago:admin:users:ranks:new'),
+            data={
+                'name': 'Test Rank',
+                'description': 'Lorem ipsum dolor met',
+                'title': 'Test Title',
+                'style': 'test',
+                'is_tab': '1',
+            })
+
+        test_rank = Rank.objects.get(slug='test-rank')
+
+        response = self.client.get(reverse('misago:admin:users:ranks:users',
+                                           kwargs={'rank_id': test_rank.pk}))
+        self.assertEqual(response.status_code, 302)
+
     def test_delete_view(self):
         """delete rank view has no showstoppers"""
         self.client.post(

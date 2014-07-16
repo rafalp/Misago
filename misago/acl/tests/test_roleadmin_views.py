@@ -69,6 +69,18 @@ class RoleAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_role.name, response.content)
 
+    def test_users_view(self):
+        """users with this role view has no showstoppers"""
+        response = self.client.post(
+            reverse('misago:admin:permissions:users:new'),
+            data=fake_data({'name': 'Test Role'}))
+        test_role = Role.objects.get(name='Test Role')
+
+        response = self.client.get(
+            reverse('misago:admin:permissions:users:users',
+                    kwargs={'role_id': test_role.pk}))
+        self.assertEqual(response.status_code, 302)
+
     def test_delete_view(self):
         """delete role view has no showstoppers"""
         self.client.post(

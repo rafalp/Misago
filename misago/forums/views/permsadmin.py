@@ -215,8 +215,6 @@ class RoleForumsACL(RoleAdmin, generic.ModelFormView):
                 'forms': forms,
                 'target': target,
             })
-
-
 RolesList.add_item_action(
     name=_("Forums permissions"),
     icon='fa fa-comments-o',

@@ -24,6 +24,7 @@
 <th style="width: 1%;">&nbsp;</th>
 <th style="width: 1%;">&nbsp;</th>
 <th style="width: 1%;">&nbsp;</th>
+<th style="width: 1%;">&nbsp;</th>
 {% endblock table-header %}
 
 
@@ -56,6 +57,11 @@
   </a>
 </td>
 {% endfor %}
+<td class="row-action">
+  <a href="{% url 'misago:admin:users:ranks:users' rank_id=item.id %}" class="btn btn-primary tooltip-top" title="{% trans "Users with rank" %}">
+    <span class="fa fa-users"></span>
+  </a>
+</td>
 <td class="row-action">
   {% if not item.is_default %}
   <form action="{% url 'misago:admin:users:ranks:default' rank_id=item.id %}" method="post">
@@ -109,7 +115,7 @@
 
 
 {% block emptylist %}
-<td colspan="{{ 7|add:extra_actions_len }}">
+<td colspan="{{ 8|add:extra_actions_len }}">
   <p>{% trans "No ranks are currently defined." %}</p>
 </td>
 {% endblock emptylist %}

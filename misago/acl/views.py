@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 
@@ -77,3 +78,9 @@ class DeleteRole(RoleAdmin, generic.ButtonView):
         target.delete()
         message = _('Role "%s" has been deleted.') % unicode(target.name)
         messages.success(request, message)
+
+
+class RoleUsers(RoleAdmin, generic.TargetedView):
+    def real_dispatch(self, request, target):
+        redirect_url = reverse('misago:admin:users:accounts:index')
+        return redirect('%s?role=%s' % (redirect_url, target.pk))

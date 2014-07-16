@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from misago.users.views.admin.bans import BansList, NewBan, EditBan, DeleteBan
 from misago.users.views.admin.ranks import (RanksList, NewRank, EditRank,
                                             DeleteRank, MoveDownRank,
-                                            MoveUpRank, DefaultRank)
+                                            MoveUpRank, DefaultRank, RankUsers)
 from misago.users.views.admin.users import UsersList, NewUser, EditUser
 from misago.users.views.admin.warnings import (WarningsList, NewWarning,
                                                EditWarning, MoveDownWarning,
@@ -36,7 +36,6 @@ class UserAdmin(djadmin.ModelAdmin):
 djadmin.site.register(get_user_model(), UserAdmin)
 
 
-
 class MisagoAdminExtension(object):
     def register_urlpatterns(self, urlpatterns):
         # Users section
@@ -60,6 +59,7 @@ class MisagoAdminExtension(object):
             url(r'^default/(?P<rank_id>\d+)/$', DefaultRank.as_view(), name='default'),
             url(r'^move/down/(?P<rank_id>\d+)/$', MoveDownRank.as_view(), name='down'),
             url(r'^move/up/(?P<rank_id>\d+)/$', MoveUpRank.as_view(), name='up'),
+            url(r'^users/(?P<rank_id>\d+)/$', RankUsers.as_view(), name='users'),
             url(r'^delete/(?P<rank_id>\d+)/$', DeleteRank.as_view(), name='delete'),
         )
 
