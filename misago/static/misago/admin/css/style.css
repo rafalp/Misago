@@ -5817,7 +5817,6 @@ body {
   background: #c7c7c7;
   border-color: #c7c7c7;
   box-shadow: none;
-  outline: none;
   position: relative;
   top: 2px;
   color: #5e5e5e;
@@ -5844,7 +5843,6 @@ body {
   background: #1d6fa5;
   border-color: #1d6fa5;
   box-shadow: none;
-  outline: none;
   position: relative;
   top: 2px;
   color: #e6e6e6;
@@ -5871,7 +5869,6 @@ body {
   background: #28a1c5;
   border-color: #28a1c5;
   box-shadow: none;
-  outline: none;
   position: relative;
   top: 2px;
   color: #e6e6e6;
@@ -5898,7 +5895,6 @@ body {
   background: #208e4e;
   border-color: #208e4e;
   box-shadow: none;
-  outline: none;
   position: relative;
   top: 2px;
   color: #e6e6e6;
@@ -5925,7 +5921,6 @@ body {
   background: #df8a13;
   border-color: #df8a13;
   box-shadow: none;
-  outline: none;
   position: relative;
   top: 2px;
   color: #e6e6e6;
@@ -5952,7 +5947,6 @@ body {
   background: #bf2718;
   border-color: #bf2718;
   box-shadow: none;
-  outline: none;
   position: relative;
   top: 2px;
   color: #e6e6e6;
@@ -6171,6 +6165,23 @@ body {
 }
 .table-actions > .pull-right {
   margin-left: 10px;
+}
+.table-actions > .pull-right.master-checkbox {
+  background: none;
+  border-color: transparent;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  padding: 0px 6px;
+  color: #999999;
+  font-size: 24px;
+  line-height: 32px;
+}
+.table-actions > .pull-right.master-checkbox.active,
+.table-actions > .pull-right.master-checkbox:active {
+  top: 0px;
+}
+.table-actions > .pull-right.master-checkbox.active {
+  color: #2ecc71;
 }
 .table-actions > .pull-right .dropdown-menu {
   left: auto;

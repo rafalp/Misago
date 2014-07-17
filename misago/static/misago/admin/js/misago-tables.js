@@ -1,7 +1,13 @@
 // Mass-action tables
 function tableMassActions(label_none, label_selected) {
   var $controller = $('.mass-controller');
+  var $master = $('.master-checkbox');
   var $form = $controller.parents('form');
+
+  var items_num = $('.table tr input[type=checkbox]').length;
+  if (items_num == 0) {
+    $master.prop("disabled", true);
+  }
 
   $form.find('.dropdown-menu button').click(function() {
     if ($(this).data('confirmation')) {
@@ -52,21 +58,66 @@ function tableMassActions(label_none, label_selected) {
         $row.removeClass('active');
       }
 
-      var selected_no = $('.table tr.active').length
+      var selected_no = $('.table tr.active').length;
       if (selected_no > 0) {
         enableController(selected_no);
       } else {
         disableController();
       }
+
+      if (items_num == selected_no) {
+        $master.addClass('active');
+      } else {
+        $master.removeClass('active');
+      }
+
       return false;
     });
+  });
 
-    var selected_no = $('.table tr.active').length
-    if (selected_no > 0) {
-      enableController(selected_no);
+  var selected_no = $('.table tr.active').length;
+  if (selected_no > 0) {
+    enableController(selected_no);
+  } else {
+    $controller.html('<span class="fa fa-exclamation-circle"></span> ' + label_none);
+    $controller.prop("disabled", true);
+  }
+
+  if (items_num == selected_no) {
+    $master.addClass('active');
+  } else {
+    $master.removeClass('active');
+  }
+
+  $master.click(function() {
+    if ($master.hasClass('active')) {
+      $master.removeClass('active');
+      if (items_num > 0) {
+        disableController();
+        $('.table tr input[type=checkbox]').each(function() {
+          var $row = $(this).parents('tr');
+          var $checkbox = $row.find('input[type=checkbox]');
+          var $check = $checkbox.parent().parent().find('a');
+
+          $checkbox.prop("checked", false);
+          $row.removeClass('active');
+          $check.removeClass('active');
+        });
+      }
     } else {
-      $controller.html('<span class="fa fa-exclamation-circle"></span> ' + label_none);
-      $controller.prop("disabled", true);
+      $master.addClass('active');
+      if (items_num > 0) {
+        enableController(items_num);
+        $('.table tr input[type=checkbox]').each(function() {
+          var $row = $(this).parents('tr');
+          var $checkbox = $row.find('input[type=checkbox]');
+          var $check = $checkbox.parent().parent().find('a');
+
+          $checkbox.prop("checked", true);
+          $row.addClass('active');
+          $check.addClass('active');
+        });
+      }
     }
   });
 }

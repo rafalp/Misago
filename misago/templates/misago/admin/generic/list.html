@@ -44,15 +44,15 @@
   {% endif %}
 
   {% if search_form %}
-  <button class="btn btn-{% if active_filters %}success{% else %}default{% endif %} pull-left" data-toggle="modal" data-target="#filter-modal">
-    {% if active_filters %}
-    <span class="fa fa-check"></span>
-    {% trans "Change search" %}
-    {% else %}
-    <span class="fa fa-search"></span>
-    {% trans "Search list" %}
-    {% endif %}
-  </button>
+    <button class="btn btn-{% if active_filters %}success{% else %}default{% endif %} pull-left" data-toggle="modal" data-target="#filter-modal">
+      {% if active_filters %}
+      <span class="fa fa-check"></span>
+      {% trans "Change search" %}
+      {% else %}
+      <span class="fa fa-search"></span>
+      {% trans "Search list" %}
+      {% endif %}
+    </button>
 
     {% if active_filters %}
     <form method="get" class="pull-left">
@@ -69,6 +69,9 @@
   {% endif %}
 
   {% if mass_actions %}
+  <button type="button" class="btn btn-default pull-right master-checkbox">
+    <span class="fa fa-check"></span>
+  </button>
   <div class="btn-group pull-right">
     <form id="mass-action" action="{{ querystring }}" method="post">
       <button type="button" class="btn btn-default dropdown-toggle mass-controller" data-toggle="dropdown">

@@ -18,6 +18,25 @@
   &>.pull-right {
     margin-left: @line-height-computed / 2;
 
+    &.master-checkbox {
+      background: none;
+      border-color: transparent;
+      .box-shadow(none);
+      padding: 0px 6px;
+
+      color: @gray-light;
+      font-size: 24px;
+      line-height: 32px;
+
+      &.active, &:active {
+        top: 0px;
+      }
+
+      &.active {
+        color: @brand-success;
+      }
+    }
+
     .dropdown-menu {
       left: auto;
       right: 0px;
