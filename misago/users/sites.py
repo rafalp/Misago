@@ -42,6 +42,6 @@ class Site(object):
             })
 
 
-usercp_actions = Site('usercp ')
+usercp_actions = Site('usercp')
 users_list_tabs = Site('users list')
 user_profile_tabs = Site('user profile')
