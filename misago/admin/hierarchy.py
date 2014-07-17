@@ -101,9 +101,9 @@ class AdminHierarchyBuilder(object):
         while self.nodes_record:
             iterations += 1
             if iterations > 512:
-                message = ("Misago Admin hierarchy is invalid or too complex "
-                           "to resolve. Nodes left: %s" % self.nodes_record)
-                raise ValueError(message)
+                message = "Misago Admin hierarchy is invalid or too complex "
+                          "to resolve. Nodes left: %s"
+                raise ValueError(message % self.nodes_record)
 
             for index, node in enumerate(self.nodes_record):
                 if node['parent'] in nodes_dict:
@@ -135,8 +135,8 @@ class AdminHierarchyBuilder(object):
     def add_node(self, name=None, icon=None, parent='misago:admin', after=None,
                  before=None, namespace=None, link=None):
         if self.nodes_dict:
-            raise ValueError("Misago admin site has already been "
-                             "initialized. You can't add new nodes to it.")
+            raise RuntimeError("Misago admin site has already been "
+                               "initialized. You can't add new nodes to it.")
 
         if after and before:
             raise ValueError("You cannot use both after and before kwargs.")
