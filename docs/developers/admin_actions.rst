@@ -93,7 +93,7 @@ If you add custom mass action to view, besides adding new entry to ``mass_action
 
 .. function:: action_ACTION(self, request, items)
 
-``ACTION`` will be replaced with action dict ``action`` value. Request is ``HttpRequest`` instance used to call view and ``items`` is queryset with items selected for this action. This method should nothing or ``HttpResponse``. If you need to, you can raise ``MassActionError`` with error message as its first argument to interrupt mass action handler.
+``ACTION`` will be replaced with action dict ``action`` value. Request is ``HttpRequest`` instance used to call view and ``items`` is queryset with items selected for this action. This method should return nothing or ``HttpResponse``. If you need to, you can raise ``MassActionError`` with error message as its first argument to interrupt mass action handler.
 
 
 FormView

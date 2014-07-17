@@ -5,9 +5,12 @@ from django.utils.translation import ugettext_lazy as _
 
 from misago.admin.auth import start_admin_session
 from misago.admin.views import generic
+from misago.conf import settings
+from misago.core.mail import mail_users
 
 from misago.users.forms.admin import (StaffFlagUserFormFactory, NewUserForm,
                                       EditUserForm, SearchUsersForm)
+from misago.users.models import ACTIVATION_REQUIRED_NONE, User
 
 
 class UserAdmin(generic.AdminBaseMixin):
@@ -35,6 +38,15 @@ class UsersList(UserAdmin, generic.ListView):
         ('username_slug', _("A to z")),
         ('-username_slug', _("Z to a")),
     )
+    selection_label = _('With users: 0')
+    empty_selection_label = _('Select users')
+    mass_actions = [
+        {
+            'action': 'activate',
+            'name': _("Activate accounts"),
+            'icon': 'fa fa-check',
+        }
+    ]
 
     def get_queryset(self):
         qs = super(UsersList, self).get_queryset()
@@ -42,6 +54,32 @@ class UsersList(UserAdmin, generic.ListView):
 
     def get_search_form(self, request):
         return SearchUsersForm
+
+    def action_activate(self, request, users):
+        inactive_users = []
+        for user in users:
+            if user.requires_activation:
+                inactive_users.append(user)
+
+        if not inactive_users:
+            message = _("You have to select inactive users.")
+            raise generic.MassActionError(message)
+        else:
+            activated_users_pks = [u.pk for u in inactive_users]
+            queryset = User.objects.filter(pk__in=activated_users_pks)
+            queryset.update(requires_activation=ACTIVATION_REQUIRED_NONE)
+
+            mail_subject = _("Your account on %(forum_title)s "
+                             "forums has been activated")
+            subject_formats = {'forum_title': settings.forum_name}
+            mail_subject = mail_subject % subject_formats
+
+            mail_subject =  mail_subject
+            mail_users(request, inactive_users, mail_subject,
+                       'misago/emails/activation/by_admin')
+
+            message = _("Selected users accounts have been activated.")
+            messages.success(request, message)
 
 
 class NewUser(UserAdmin, generic.ModelFormView):

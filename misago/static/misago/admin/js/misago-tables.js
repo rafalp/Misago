@@ -83,7 +83,7 @@ function tableMassActions(label_none, label_selected) {
     $controller.prop("disabled", true);
   }
 
-  if (items_num == selected_no) {
+  if (items_num > 0 && items_num == selected_no) {
     $master.addClass('active');
   } else {
     $master.removeClass('active');
