@@ -318,6 +318,10 @@ class ListView(AdminView):
         if SearchForm:
             filtering_methods = self.get_filtering_methods(request)
             active_filters = self.get_filtering_method_to_use(filtering_methods)
+            if request.GET.get('clear_filters'):
+                # Clear filters from querystring
+                request.session.pop(self.filters_session_key, None)
+                active_filters = {}
             self.apply_filtering_on_context(context, active_filters, SearchForm)
 
             if (filtering_methods['GET'] and
@@ -325,12 +329,7 @@ class ListView(AdminView):
                 # Store GET filters in session for future requests
                 session_key = self.filters_session_key
                 request.session[session_key] = filtering_methods['GET']
-
-            if request.GET.get('clear_filters'):
-                # Clear filters from querystring
-                request.session.pop(self.filters_session_key, None)
-                context['active_filters'] = {}
-            elif request.GET.get('set_filters'):
+            if request.GET.get('set_filters'):
                 # Force store filters in session
                 session_key = self.filters_session_key
                 request.session[session_key] = context['active_filters']
