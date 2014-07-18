@@ -15,7 +15,7 @@
       </ul>
       <div class="user-nav pull-right">
         <p class="navbar-text">
-          <a href="{% url 'misago:admin:users:accounts:edit' user_id=user.id %}" class="tooltip-bottom" title="{% trans "Administrate your account." %}">
+          <a href="{% url 'misago:admin:users:accounts:edit' user_id=user.id %}" class="tooltip-bottom" title="{% trans "Edit your account" %}">
             <img src="{{ user|avatar:30 }}" alt="{% trans "Your avatar" %}">
             {{ user.username }}
           </a>
