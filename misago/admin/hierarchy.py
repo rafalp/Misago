@@ -139,7 +139,7 @@ class AdminHierarchyBuilder(object):
                                "initialized. You can't add new nodes to it.")
 
         if after and before:
-            raise ValueError("You cannot use both after and before kwargs.")
+            raise ValueError("after and before arguments are exclusive")
 
         self.nodes_record.append(
             {
