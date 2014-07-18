@@ -116,7 +116,14 @@ class EditUser(UserAdmin, generic.ModelFormView):
     template = 'edit.html'
     message_submit = _('User "%s" has been edited.')
 
+    def real_dispatch(self, request, target):
+        target.old_username = target.username
+        return super(EditUser, self).real_dispatch(request, target)
+
     def handle_form(self, form, request, target):
+        target.username = target.old_username
+        target.set_username(form.cleaned_data.get('username'))
+
         if form.cleaned_data.get('new_password'):
             target.set_password(form.cleaned_data['new_password'])
 
