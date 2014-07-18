@@ -42,17 +42,6 @@ For extra clarity prefix fields representing true/false states of model with "is
 URLConfs
 ========
 
-Link Names
-----------
-
-Link names should correspond to views and patterns whenever possible. This means that link pointing to "user_warnings" view should be named "user_warnings" and should match "user/rafalp-1/warnings/". This makes associating patterns, links and views easy for those trying to understand your code.
-
-.. note::
-   Notable exception from this rule are "detail" views. While you may name your view displaying threads in forum "forum", this will force you to name variable with forum model displayed something else and propably longer.
-
-   There are many approaches to this "problem" but preffered one is to use more descriptive name instead. Ask yourself what your view shows to the user and use this name instead. This means "threads_list" instead of "forum" or "user_profile" instead of "user".
-
-
 Link Parameters
 ---------------
 
