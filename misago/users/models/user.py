@@ -14,6 +14,7 @@ from misago.conf import settings
 from misago.core.utils import slugify
 
 from misago.users.models.rank import Rank
+from misago.users.signals import username_changed
 from misago.users.utils import hash_email
 
 
@@ -39,7 +40,7 @@ PRESENCE_VISIBILITY_ALLOWED = 2
 PRESENCE_VISIBILITY_CHOICES = (
     (PRESENCE_VISIBILITY_ALL, _("Everyone")),
     (PRESENCE_VISIBILITY_FOLLOWED, _("Users I follow")),
-    (PRESENCE_VISIBILITY_ALLOWED, _("Users with permission"))
+    (PRESENCE_VISIBILITY_ALLOWED, _("Noone"))
 )
 
 
@@ -275,8 +276,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.username
 
     def set_username(self, new_username):
-        self.username = new_username
-        self.username_slug = slugify(new_username)
+        if new_username != self.username:
+            self.username = new_username
+            self.username_slug = slugify(new_username)
+
+            if self.pk:
+                username_changed.send(sender=self)
 
     def set_email(self, new_email):
         self.email = UserManager.normalize_email(new_email)

@@ -1,0 +1,50 @@
+{% extends "misago/usercp/base.html" %}
+{% load i18n misago_forms %}
+
+
+{% block page %}
+<div class="form-panel">
+  <form method="POST" role="form" class="form-horizontal">
+    {% csrf_token %}
+
+    <div class="form-header">
+      <h2>
+        <span class="{{ active_page.icon }}"></span>
+        {{ active_page.name }}
+      </h2>
+    </div>
+
+    {% include "misago/form_errors.html" %}
+
+    <div class="form-body">
+      {% with label_class="col-md-3" field_class="col-md-9" %}
+      <fieldset>
+        <legend>{% trans "Forum options" %}</legend>
+
+        {% form_row form.presence_visibility label_class field_class %}
+        {% form_row form.timezone label_class field_class %}
+
+      </fieldset>
+      <fieldset>
+        <legend>{% trans "Automatic subscriptions" %}</legend>
+
+        {% form_row form.subscribe_to_started_threads label_class field_class %}
+        {% form_row form.subscribe_to_replied_threads label_class field_class %}
+
+      </fieldset>
+      {% endwith %}
+    </div>
+
+    <div class="form-footer">
+      <div class="row">
+        <div class="col-md-9 col-md-offset-3">
+
+          <button class="btn btn-primary">{% trans "Save changes" %}</button>
+
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>
+{% endblock page %}

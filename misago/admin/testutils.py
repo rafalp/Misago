@@ -11,5 +11,7 @@ def admin_login(client, username, password):
 class AdminTestCase(TestCase):
     def setUp(self):
         User = get_user_model()
-        User.objects.create_superuser('TestAdmin', 'admin@test.com', 'Pass.123')
+        self.test_admin = User.objects.create_superuser('TestAdmin',
+                                                        'admin@test.com',
+                                                        'Pass.123')
         admin_login(self.client, 'TestAdmin', 'Pass.123')

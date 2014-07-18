@@ -23,4 +23,4 @@ class SiteTests(TestCase):
         self.assertEqual(sorted_pages[1]['name'], 'Follows')
         self.assertEqual(sorted_pages[2]['name'], 'Posts')
 
-        self.assertEqual(self.site.get_default_link, 'misago:user_threads')
+        self.assertEqual(self.site.get_default_link(), 'misago:user_threads')

@@ -35,3 +35,11 @@ Default links for Misago sites are available in templates trough following varia
 * **USERCP_URL** - Default link to user control panel site.
 * **USERS_LIST_URL** - Default link to users lists site.
 * **USER_PROFILE_URL** - Default link to user profile site.
+
+
+Adding pages to User Control Panel
+==================================
+
+To add custom page to UserCP, register it on :py:object:`misago.users.sites.usercp` object using ``add_page`` method described above.
+
+After this, write your view(s), making sure they are using :py:object:`misago.users.views.usercp.render` function instead of :py:object:`django.shortcuts.render` to render response, and that your templates are extending ``misago/usercp/base.html`` template, defining custom html in ``page`` block instead of usual ``content``.

@@ -87,7 +87,7 @@ class Site(object):
         url_name = request.resolver_match.url_name
 
         if namespace:
-            active_link = '%s:%s' (namespace, url_name)
+            active_link = '%s:%s' % (namespace, url_name)
         else:
             active_link = url_name
         return active_link

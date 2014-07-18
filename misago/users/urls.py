@@ -35,3 +35,10 @@ urlpatterns += patterns('misago.users.views.api',
     url(r'^api/validate/email/(?P<user_id>\d+)/$', 'validate_email', name='api_validate_email'),
     url(r'^api/validate/password/$', 'validate_password', name='api_validate_password'),
 )
+
+
+urlpatterns += patterns('misago.users.views.usercp',
+    url(r'^usercp/forum-options/$', 'change_forum_options', name="usercp_change_forum_options"),
+    url(r'^usercp/change-username/$', 'change_username', name="usercp_change_username"),
+    url(r'^usercp/change-email-password/$', 'change_email_password', name="usercp_change_email_password"),
+)

@@ -85,19 +85,30 @@
 /* Sidenav */
 .nav-side {
   li {
+    .fa, .glyphicon {
+      margin-left: -8px;
+      width: 30px;
+
+      text-align: center;
+    }
+
+    &.title {
+      h3 {
+        border-bottom: 1px solid @nav-side-border;
+        margin: 0px;
+        padding: @nav-side-padding;
+
+        color: @nav-side-color;
+        font-size: @font-size-large;
+      }
+    }
+
     a {
       &, &:link, &:visited {
         border-bottom: 1px solid @nav-side-border;
         padding: @nav-side-padding;
 
         color: @nav-side-color;
-
-        .fa, .glyphicon {
-          margin-left: -8px;
-          width: 30px;
-
-          text-align: center;
-        }
       }
 
       &:hover {

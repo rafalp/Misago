@@ -7,10 +7,38 @@
 //
 //##
 .page-header {
+  border-bottom-width: 1px;
+  margin: 0px;
   margin-top: @line-height-computed * -1;
+  margin-bottom: @line-height-computed;
+  padding: @line-height-computed 0px;
 
-  h1 {
-    font-size: @font-size-base * 2.3;
+  &>.container {
+    h1 {
+      margin: 0px;
+      padding: 0px;
+      overflow: visible;
+
+      font-size: @font-size-large * 1.5;
+
+      .main, .sub {
+        float: left;
+
+        font-weight: normal;
+      }
+
+      .main {
+        a {
+          color: @text-color;
+        }
+      }
+
+      .sub {
+        margin-left: @line-height-computed / 2;
+
+        color: lighten(@text-color, 25%);
+      }
+    }
   }
 }
 

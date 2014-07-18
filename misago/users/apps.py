@@ -14,9 +14,15 @@ class MisagoUsersConfig(AppConfig):
         self.register_default_user_profile_pages()
 
     def register_default_usercp_pages(self):
-        usercp.add_page(link='misago:index',
-                        name='Not',
-                        icon='fa fa-check')
+        usercp.add_page(link='misago:usercp_change_forum_options',
+                        name=_('Change forum options'),
+                        icon='fa fa-check-square-o')
+        usercp.add_page(link='misago:usercp_change_username',
+                        name=_('Change username'),
+                        icon='fa fa-credit-card')
+        usercp.add_page(link='misago:usercp_change_email_password',
+                        name=_('Change email or password'),
+                        icon='fa fa-ticket')
 
     def register_default_users_list_pages(self):
         users_list.add_page(link='misago:index',

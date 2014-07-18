@@ -15,7 +15,7 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse">
       {% if user.is_authenticated %}
-      {% include 'misago/user_nav.html' %}
+      {% include "misago/user_nav.html" %}
       {% else %}
       <div class="navbar-nav-guest navbar-right">
         <a href="{% url LOGIN_URL %}" class="btn btn-sign-in navbar-btn">{% trans "Sign in" %}</a>
