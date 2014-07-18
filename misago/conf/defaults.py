@@ -136,6 +136,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
     'misago.core.context_processors.site_address',
     'misago.conf.context_processors.settings',
+    'misago.users.context_processors.sites_links',
 )
 
 MISAGO_ACL_EXTENSIONS = (

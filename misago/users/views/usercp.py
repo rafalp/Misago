@@ -1,19 +1,11 @@
 from django.shortcuts import redirect, render as django_render
 
+from misago.users.sites import usercp
+
 
 def render(request, template, context=None):
     context = context or {}
-
-    if 'active_link' not in context:
-        namespace = request.resolver_match.namespace
-        url_name = request.resolver_match.url_name
-
-        if namespace:
-            active_link = '%s:%s' (namespace, url_name)
-        else:
-            active_link = url_name
-        context['active_link'] = active_link
-
+    context['pages'] = usercp.get_pages(request, context['profile'])
     return django_render(request, template, context)
 
 

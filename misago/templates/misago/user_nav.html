@@ -1,0 +1,48 @@
+{% load i18n misago_avatars %}
+<ul class="nav navbar-nav navbar-nav-user navbar-right">
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle user-toggle" data-toggle="dropdown">
+      <span class="glyphicon glyphicon-chevron-down"></span>
+      <img src="{{ user|avatar:30 }}" alt="{% trans "Your avatar" %}">
+      {{ user.username }}
+    </a>
+    <ul class="dropdown-menu">
+      <li>
+        <a href="#">
+          <span class="fa fa-user"></span>
+          {% trans "See your profile" %}
+        </a>
+      </li>
+      <li>
+        <a href="{% url USERCP_URL %}">
+          <span class="fa fa-cog"></span>
+          {% trans "Change options" %}
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <span class="badge pull-right">42</span>
+          <span class="fa fa-plane"></span>
+          Another action
+        </a>
+      </li>
+      <li class="divider"></li>
+      <li>
+        <a href="#">
+          <span class="fa fa-plane"></span>
+          Separated link
+        </a>
+      </li>
+      <li class="divider"></li>
+      <li>
+        <form action="{% url LOGOUT_URL %}" method="POST">
+          {% csrf_token %}
+          <button>
+            <span class="fa fa-power-off"></span>
+            {% trans "Sign out" %}
+          </button>
+        </form>
+      </li>
+    </ul>
+  </li>
+</ul>
