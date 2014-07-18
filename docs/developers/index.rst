@@ -31,19 +31,20 @@ Following references cover everything you want to know about writing your own ap
 .. toctree::
    :maxdepth: 1
 
-   coding_style
-   shortcuts
+   acls
    admin_actions
-   views_errors
-   forms
-   decorators
-   settings
-   context_processors
-   mails
+   auth
    cache
    cache_buster
-   thread_store
-   validators
-   auth
-   acls
+   coding_style
+   context_processors
+   decorators
+   forms
+   mails
    markup
+   settings
+   shortcuts
+   thread_store
+   user_sites
+   validators
+   views_errors

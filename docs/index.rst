@@ -20,19 +20,20 @@ Table of Contents
 
    setup_maintenance
    developers/index
-   developers/coding_style
-   developers/shortcuts
+   developers/acls
    developers/admin_actions
-   developers/views_errors
-   developers/forms
-   developers/decorators
-   developers/settings
-   developers/context_processors
-   developers/mails
+   developers/auth
    developers/cache
    developers/cache_buster
-   developers/thread_store
-   developers/validators
-   developers/auth
-   developers/acls
+   developers/coding_style
+   developers/context_processors
+   developers/decorators
+   developers/forms
+   developers/mails
    developers/markup
+   developers/settings
+   developers/shortcuts
+   developers/thread_store
+   developers/user_sites
+   developers/validators
+   developers/views_errors
