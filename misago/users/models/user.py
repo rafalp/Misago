@@ -24,7 +24,8 @@ __all__ = [
     'PRESENCE_VISIBILITY_FOLLOWED', 'PRESENCE_VISIBILITY_ALLOWED',
     'PRESENCE_VISIBILITY_CHOICES', 'AUTO_SUBSCRIBE_NONE',
     'AUTO_SUBSCRIBE_WATCH', 'AUTO_SUBSCRIBE_WATCH_AND_EMAIL',
-    'AUTO_SUBSCRIBE_CHOICES', 'AnonymousUser', 'User', 'Online',
+    'AUTO_SUBSCRIBE_CHOICES', 'AnonymousUser', 'User', 'UsernameChange',
+    'Online',
 ]
 
 
@@ -277,10 +278,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def set_username(self, new_username):
         if new_username != self.username:
+            old_username = self.username
             self.username = new_username
             self.username_slug = slugify(new_username)
 
             if self.pk:
+                self.namechanges.create(old_username=old_username)
                 username_changed.send(sender=self)
 
     def set_email(self, new_email):
@@ -327,6 +330,15 @@ class Online(models.Model):
                                 related_name='online_tracker')
     current_ip = models.GenericIPAddressField()
     last_click = models.DateTimeField(default=timezone.now)
+
+
+class UsernameChange(models.Model):
+    user = models.ForeignKey(User, related_name='namechanges')
+    changed_on = models.DateTimeField(default=timezone.now)
+    old_username = models.CharField(max_length=255)
+
+    class Meta:
+        get_latest_by = "changed_on"
 
 
 class AnonymousUser(DjangoAnonymousUser):

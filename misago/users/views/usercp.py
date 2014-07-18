@@ -1,10 +1,13 @@
 from django.contrib import messages
+from django.db import transaction
 from django.shortcuts import redirect, render as django_render
 from django.utils.translation import ugettext as _
 
 from misago.users.decorators import deny_guests
-from misago.users.forms.usercp import ChangeForumOptionsForm
+from misago.users.forms.usercp import (ChangeForumOptionsForm,
+                                       ChangeUsernameForm)
 from misago.users.sites import usercp
+from misago.users.namechanges import UsernameChanges
 
 
 def render(request, template, context=None):
@@ -37,8 +40,27 @@ def change_forum_options(request):
 
 
 @deny_guests
+@transaction.atomic()
 def change_username(request):
-    return render(request, 'misago/usercp/change_username.html')
+    namechanges = UsernameChanges(request.user)
+
+    form = ChangeUsernameForm()
+    if request.method == 'POST' and namechanges.left:
+        form = ChangeUsernameForm(request.POST, user=request.user)
+        if form.is_valid():
+            request.user.set_username(form.cleaned_data['new_username'])
+            request.user.save(update_fields=['username', 'username_slug'])
+
+            message = _("Your username has been changed.")
+            messages.success(request, message)
+
+            return redirect('misago:usercp_change_username')
+
+    return render(request, 'misago/usercp/change_username.html', {
+            'form': form,
+            'changes_left': namechanges.left,
+            'next_change_on': namechanges.next_on
+        })
 
 
 @deny_guests

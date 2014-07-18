@@ -1,10 +1,10 @@
 {% extends "misago/usercp/base.html" %}
-{% load i18n %}
+{% load i18n misago_capture misago_forms %}
 
 
 {% block page %}
 <div class="form-panel">
-  <form method="POST" role="form">
+  <form method="POST" role="form" class="form-horizontal">
     {% csrf_token %}
 
     <div class="form-header">
@@ -14,26 +14,47 @@
       </h2>
     </div>
 
+    {% if changes_left %}
     {% include "misago/form_errors.html" %}
-
     <div class="form-body no-fieldsets">
-
-      <div class="form-group">
-        <div class="control-input">
-          <input type="text" name="username" class="form-control input-lg" placeholder="{% trans "Username or e-mail" %}" {% if form.username.value %}value="{{ form.username.value }}"{% endif %}>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="control-input">
-          <input type="password" name="password" class="form-control input-lg" placeholder="{% trans "Password" %}">
-        </div>
-      </div>
-
+      {% form_row form.new_username "col-md-3" "col-md-9" %}
     </div>
-
     <div class="form-footer">
-      <button class="btn btn-primary btn-block">{% trans "Sign in" %}</button>
+      <div class="row">
+        <div class="col-md-9 col-md-offset-3">
+
+          <button class="btn btn-primary">{% trans "Change username" %}</button>
+
+          <p class="extra">
+            {% blocktrans trimmed count changes_left=changes_left %}
+            You have one change left.
+            {% plural %}
+            You have {{ changes_left }} changes left.
+            {% endblocktrans %}
+          </p>
+
+        </div>
+      </div>
     </div>
+    {% else %}
+    <div class="form-body message">
+
+      <p class="lead">{% trans "You have used up available username changes." %}</p>
+      {% if next_change_on %}
+      <p class="lead">
+        {% capture trimmed as moment_date %}
+        <abbr class="tooltip-top dynamic time-ago" title="{{ next_change_on }}" data-timestamp="{{ next_change_on|date:"c" }}">
+          {{ next_change_on|date }}
+        </abbr>
+        {% endcapture %}
+        {% blocktrans trimmed with next_change_date=moment_date|safe %}
+          You will be able to change your username on {{ next_change_date }}.
+        {% endblocktrans %}
+      </p>
+      {% endif %}
+
+    </div>
+    {% endif %}
 
   </form>
 </div>
