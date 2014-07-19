@@ -20,9 +20,7 @@ from misago.users.utils import hash_email
 
 __all__ = [
     'ACTIVATION_REQUIRED_NONE', 'ACTIVATION_REQUIRED_USER',
-    'ACTIVATION_REQUIRED_ADMIN', 'PRESENCE_VISIBILITY_ALL',
-    'PRESENCE_VISIBILITY_FOLLOWED', 'PRESENCE_VISIBILITY_ALLOWED',
-    'PRESENCE_VISIBILITY_CHOICES', 'AUTO_SUBSCRIBE_NONE',
+    'ACTIVATION_REQUIRED_ADMIN', 'AUTO_SUBSCRIBE_NONE',
     'AUTO_SUBSCRIBE_WATCH', 'AUTO_SUBSCRIBE_WATCH_AND_EMAIL',
     'AUTO_SUBSCRIBE_CHOICES', 'AnonymousUser', 'User', 'UsernameChange',
     'Online',
@@ -32,17 +30,6 @@ __all__ = [
 ACTIVATION_REQUIRED_NONE = 0
 ACTIVATION_REQUIRED_USER = 1
 ACTIVATION_REQUIRED_ADMIN = 2
-
-
-PRESENCE_VISIBILITY_ALL = 0
-PRESENCE_VISIBILITY_FOLLOWED = 1
-PRESENCE_VISIBILITY_ALLOWED = 2
-
-PRESENCE_VISIBILITY_CHOICES = (
-    (PRESENCE_VISIBILITY_ALL, _("Everyone")),
-    (PRESENCE_VISIBILITY_FOLLOWED, _("Users I follow")),
-    (PRESENCE_VISIBILITY_ALLOWED, _("Noone"))
-)
 
 
 AUTO_SUBSCRIBE_NONE = 0
@@ -162,8 +149,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     joined_on = models.DateTimeField(_('joined on'), default=timezone.now)
     joined_from_ip = models.GenericIPAddressField()
     last_ip = models.GenericIPAddressField(null=True, blank=True)
-    presence_visibility = models.PositiveIntegerField(
-        default=PRESENCE_VISIBILITY_ALL)
+    is_hiding_presence = models.BooleanField(default=False)
 
     timezone = models.CharField(max_length=255, default='utc')
 

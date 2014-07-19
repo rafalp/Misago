@@ -2,8 +2,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 
 from misago.core import forms, timezones
-from misago.users.models import (PRESENCE_VISIBILITY_CHOICES,
-                                 AUTO_SUBSCRIBE_CHOICES)
+from misago.users.models import AUTO_SUBSCRIBE_CHOICES
 from misago.users.validators import validate_username
 
 
@@ -13,11 +12,10 @@ class ChangeForumOptionsBaseForm(forms.ModelForm):
         help_text=_("If dates and hours displayed by forums are inaccurate, "
                     "you can fix it by adjusting timezone setting."))
 
-    presence_visibility = forms.TypedChoiceField(
-        label=_("Show my presence to"),
-        choices=PRESENCE_VISIBILITY_CHOICES, coerce=int,
-        help_text=_("If you want to, you can limit other members ability to "
-                    "track your presence on forums."))
+    is_hiding_presence = forms.YesNoSwitch(
+        label=_("Hide my presence"),
+        help_text=_("If you hide your presence, only members with permission "
+                    "to see hidden will see when you are online."))
 
     subscribe_to_started_threads = forms.TypedChoiceField(
         label=_("Threads I start"), coerce=int, choices=AUTO_SUBSCRIBE_CHOICES)
@@ -28,7 +26,7 @@ class ChangeForumOptionsBaseForm(forms.ModelForm):
 
     class Meta:
         model = get_user_model()
-        fields = ['timezone', 'presence_visibility',
+        fields = ['timezone', 'is_hiding_presence',
                   'subscribe_to_started_threads',
                   'subscribe_to_replied_threads']
 

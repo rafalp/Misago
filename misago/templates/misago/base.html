@@ -1,4 +1,4 @@
-{% load compressed staticfiles %}
+{% load compressed i18n staticfiles %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
   <head>
@@ -29,7 +29,11 @@
 
     {% include "misago/footer.html" %}
 
-    {# We include JavaScript at the end of page body so it loads faster #}
+    {# We include JavaScript at the end of page body so it renders faster #}
+    <script lang="JavaScript">
+      var lang_yes = "{% trans "Yes" %}";
+      var lang_no = "{% trans "No" %}";
+    </script>
     {% compressed_js 'misago' %}
     {% block javascripts %}{% endblock javascripts %}
 

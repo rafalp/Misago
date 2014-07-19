@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('joined_on', models.DateTimeField(default=django.utils.timezone.now, verbose_name='joined on')),
                 ('joined_from_ip', models.GenericIPAddressField()),
                 ('last_ip', models.GenericIPAddressField(null=True, blank=True)),
-                ('presence_visibility', models.PositiveIntegerField(default=0)),
+                ('is_hiding_presence', models.BooleanField(default=False)),
                 ('timezone', models.CharField(max_length=255, default='utc')),
                 ('title', models.CharField(max_length=255, null=True, blank=True)),
                 ('requires_activation', models.PositiveIntegerField(default=0)),

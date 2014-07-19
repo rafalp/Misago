@@ -1,0 +1,37 @@
+//
+// Custom yes-no switch
+// --------------------------------------------------
+
+
+.ninja-switch {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+}
+
+.yes-no-switch {
+  .btn-yes {
+    margin-right: 1px;
+  }
+
+  .btn-yes, .btn-no {
+    width: 56px;
+
+    font-weight: bold;
+    text-align: center;
+
+    &.active {
+      &.btn-yes {
+        background: @btn-success-border;
+
+        color: @btn-success-color;
+      }
+
+      &.btn-no {
+        background: @btn-danger-border;
+
+        color: @btn-danger-color;
+      }
+    }
+  }
+}

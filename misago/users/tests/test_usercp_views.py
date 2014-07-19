@@ -19,7 +19,7 @@ class ChangeForumOptionsTests(AdminTestCase):
         """POST to usercp change options view returns 302"""
         response = self.client.post(self.view_link, data={
             'timezone': 'Asia/Qatar',
-            'presence_visibility': '2',
+            'is_hiding_presence': '1',
             'subscribe_to_started_threads': '0',
             'subscribe_to_replied_threads': '1',
             })
@@ -28,7 +28,7 @@ class ChangeForumOptionsTests(AdminTestCase):
 
         test_user = get_user_model().objects.get(pk=self.test_admin.pk)
         self.assertEqual(test_user.timezone, 'Asia/Qatar')
-        self.assertEqual(test_user.presence_visibility, 2)
+        self.assertEqual(test_user.is_hiding_presence, 1)
         self.assertEqual(test_user.subscribe_to_started_threads, 0)
         self.assertEqual(test_user.subscribe_to_replied_threads, 1)
 
