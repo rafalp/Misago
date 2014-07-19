@@ -14,7 +14,7 @@ class ForgottenPasswordViewsTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_view_submit(self):
-        """request new password view sends confirmation mail"""
+        """request new password view sends reset link mail"""
         User = get_user_model()
         User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
@@ -24,7 +24,7 @@ class ForgottenPasswordViewsTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
 
-        self.assertIn('password change', mail.outbox[0].subject)
+        self.assertIn('Change Bob password', mail.outbox[0].subject)
 
     def test_view_submit_banned(self):
         """request new password view errors for banned users"""
@@ -67,9 +67,8 @@ class ForgottenPasswordViewsTests(TestCase):
         password_token = make_password_reset_token(test_user)
 
         response = self.client.get(
-            reverse('misago:reset_password_confirm',
-                    kwargs={'user_id': test_user.pk,
-                            'token': password_token}))
+            reverse('misago:reset_password_form',
+                    kwargs={'user_id': test_user.pk, 'token': password_token}))
         self.assertEqual(response.status_code, 302)
 
         test_user = User.objects.get(pk=test_user.pk)
@@ -87,9 +86,8 @@ class ForgottenPasswordViewsTests(TestCase):
         password_token = make_password_reset_token(test_user)
 
         response = self.client.get(
-            reverse('misago:reset_password_confirm',
-                    kwargs={'user_id': test_user.pk,
-                            'token': password_token}))
+            reverse('misago:reset_password_form',
+                    kwargs={'user_id': test_user.pk, 'token': password_token}))
         self.assertEqual(response.status_code, 302)
 
         test_user = User.objects.get(pk=test_user.pk)
@@ -106,12 +104,19 @@ class ForgottenPasswordViewsTests(TestCase):
         password_token = make_password_reset_token(test_user)
 
         response = self.client.get(
-            reverse('misago:reset_password_confirm',
-                    kwargs={'user_id': test_user.pk,
-                            'token': password_token}))
+            reverse('misago:reset_password_form',
+                    kwargs={'user_id': test_user.pk, 'token': password_token}))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Set new password for Bob', response.content)
+
+        test_user = User.objects.get(pk=test_user.pk)
+        self.assertEqual(test_user.password, old_password)
+
+        response = self.client.post(
+            reverse('misago:reset_password_form',
+                    kwargs={'user_id': test_user.pk, 'token': password_token}),
+            data={'new_password': 'loremipsum123'})
         self.assertEqual(response.status_code, 302)
 
         test_user = User.objects.get(pk=test_user.pk)
         self.assertNotEqual(test_user.password, old_password)
-
-        self.assertIn('New password', mail.outbox[0].subject)

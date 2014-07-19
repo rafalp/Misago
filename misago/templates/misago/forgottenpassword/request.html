@@ -21,9 +21,9 @@
 
       <h2>{% trans "Recovering password" %}</h2>
 
-      <p>{% trans "Because user passwords are processed in an irreversible way before being saved to database, it is not possible for us to simply send you your password. Instead your current password can be replaced with new randomly generated password." %}</p>
+      <p>{% trans "Because user passwords are processed in an irreversible way before being saved to database, it is not possible for us to simply send you your password." %}</p>
 
-      <p>{% trans "In order to protect our users from fraudulent password change, you need to first confirm your wish to change password by clicking the confirmation link that will be generated and sent to e-mail address associated with your account." %}</p>
+      <p>{% trans "Instead you will be sent link to form that will let you set new password on your account. This link will expire after you change password or seven days pass." %}</p>
 
     </div>
     <div class="col-md-4">
@@ -33,7 +33,7 @@
           {% csrf_token %}
 
           <div class="form-header">
-            <h3>{% trans "Request confirmation link" %}</h3>
+            <h3>{% trans "Request link" %}</h3>
           </div>
 
           {% include "misago/auth_form_errors.html" %}
@@ -49,7 +49,7 @@
           </div>
 
           <div class="form-footer">
-            <button class="btn btn-primary btn-block">{% trans "Send confirmation link" %}</button>
+            <button class="btn btn-primary btn-block">{% trans "Send link" %}</button>
           </div>
 
         </form>

@@ -10,7 +10,7 @@ from misago.core.mail import mail_user
 
 from misago.users.bans import get_user_ban
 from misago.users.decorators import deny_authenticated, deny_banned_ips
-from misago.users.forms.auth import ResetPasswordForm
+from misago.users.forms.auth import ResetPasswordForm, SetNewPasswordForm
 from misago.users.models import ACTIVATION_REQUIRED_NONE
 from misago.users.tokens import (make_password_reset_token,
                                  is_password_reset_token_valid)
@@ -32,9 +32,9 @@ def request_reset(request):
         form = ResetPasswordForm(request.POST)
         if form.is_valid():
             requesting_user = form.user_cache
-            request.session['confirmation_sent_to'] = requesting_user.pk
+            request.session['reset_password_link_sent_to'] = requesting_user.pk
 
-            mail_subject = _("Confirm %(username)s password change "
+            mail_subject = _("Change %(username)s password "
                              "on %(forum_title)s forums")
             subject_formats = {'username': requesting_user.username,
                                'forum_title': settings.forum_name}
@@ -44,25 +44,25 @@ def request_reset(request):
 
             mail_user(
                 request, requesting_user, mail_subject,
-                'misago/emails/forgottenpassword/confirm',
+                'misago/emails/forgottenpassword/form_link',
                 {'confirmation_token': confirmation_token})
 
-            return redirect('misago:reset_password_confirmation_sent')
+            return redirect('misago:reset_password_link_sent')
 
     return render(request, 'misago/forgottenpassword/request.html',
                   {'form': form})
 
 
 @reset_view
-def confirmation_sent(request):
-    requesting_user_pk = request.session.get('confirmation_sent_to')
+def link_sent(request):
+    requesting_user_pk = request.session.get('reset_password_link_sent_to')
     if not requesting_user_pk:
         raise Http404()
 
     User = get_user_model()
     requesting_user = get_object_or_404(User.objects, pk=requesting_user_pk)
 
-    return render(request, 'misago/forgottenpassword/confirmation_sent.html',
+    return render(request, 'misago/forgottenpassword/link_sent.html',
                   {'requesting_user': requesting_user})
 
 
@@ -76,7 +76,7 @@ class ResetError(Exception):
 
 
 @reset_view
-def reset_password(request, user_id, token):
+def reset_password_form(request, user_id, token):
     User = get_user_model()
     requesting_user = get_object_or_404(User.objects, pk=user_id)
 
@@ -98,8 +98,8 @@ def reset_password(request, user_id, token):
             message = message % {'username': requesting_user.username}
             raise ResetError(message)
         if not is_password_reset_token_valid(requesting_user, token):
-            message = _("%(username)s, your confirmation link is invalid. "
-                        "Try again or request new confirmation message.")
+            message = _("%(username)s, your link is invalid. "
+                        "Try again or request new link.")
             message = message % {'username': requesting_user.username}
             raise ResetError(message)
     except ResetStopped as e:
@@ -109,36 +109,18 @@ def reset_password(request, user_id, token):
         messages.error(request, e.args[0])
         return redirect('misago:request_password_reset')
 
-    fake = Factory.create()
-    new_password = ' '.join([fake.word() for x in xrange(4)])
-    while len(new_password) < settings.password_length_min:
-        new_password = '%s %s' % (new_password, fake.word())
+    form = SetNewPasswordForm()
+    if request.method == 'POST':
+        form = SetNewPasswordForm(request.POST)
+        if form.is_valid():
+            requesting_user.set_password(form.cleaned_data['new_password'])
+            requesting_user.save(update_fields=['password'])
 
-    requesting_user.set_password(new_password)
-    requesting_user.save(update_fields=['password'])
-
-    mail_subject = _("New password on %(forum_title)s forums")
-    mail_subject = mail_subject % {'forum_title': settings.forum_name}
-
-    confirmation_token = make_password_reset_token(requesting_user)
-
-    mail_user(
-        request, requesting_user, mail_subject,
-        'misago/emails/forgottenpassword/new',
-        {'new_password': new_password})
-
-    request.session['password_sent_to'] = requesting_user.pk
-    return redirect('misago:request_password_new_sent')
+            message = _("%(username)s, your password has been changed.")
+            message = message % {'username': requesting_user.username}
+            messages.success(request, message)
+            return redirect(settings.LOGIN_URL)
 
 
-@reset_view
-def new_password_sent(request):
-    requesting_user_pk = request.session.get('password_sent_to')
-    if not requesting_user_pk:
-        raise Http404()
-
-    User = get_user_model()
-    requesting_user = get_object_or_404(User.objects, pk=requesting_user_pk)
-
-    return render(request, 'misago/forgottenpassword/password_sent.html',
-                  {'requesting_user': requesting_user})
+    return render(request, 'misago/forgottenpassword/reset_password_form.html',
+                  {'requesting_user': requesting_user, 'form': form})

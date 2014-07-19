@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from misago.core import forms
 from misago.users.bans import get_user_ban
+from misago.users.validators import validate_password
 
 
 class MisagoAuthMixin(object):
@@ -166,3 +167,19 @@ class ResetPasswordForm(GetUserForm):
     def confirm_allowed(self, user):
         self.confirm_user_not_banned(user)
         self.confirm_user_active(user)
+
+
+class SetNewPasswordForm(MisagoAuthMixin, forms.Form):
+    new_password = forms.CharField(label=_("New password"),
+                                   widget=forms.PasswordInput)
+
+    def clean(self):
+        data = super(SetNewPasswordForm, self).clean()
+
+        new_password = data.get('new_password')
+        if not new_password or len(new_password) > 250:
+            raise forms.ValidationError(_("You have to fill out form."))
+
+        validate_password(new_password)
+
+        return data

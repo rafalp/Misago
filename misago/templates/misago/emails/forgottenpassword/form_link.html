@@ -1,0 +1,18 @@
+{% extends "misago/emails/base.html" %}
+{% load i18n misago_capture %}
+
+
+{% block content %}
+{% blocktrans trimmed with username=recipient.username %}
+{{ username }}, you are receiving this message because you want to change forgotten password for your forum account.
+{% endblocktrans %}
+<br>
+<br>
+{% blocktrans trimmed %}
+To change your account password click the link below:
+{% endblocktrans %}
+<br>
+<br>
+<a href="{{ SITE_ADDRESS }}{% url 'misago:reset_password_form' user_id=recipient.pk token=confirmation_token %}">{% trans "Set new password" %}</a>
+<br>
+{% endblock content %}

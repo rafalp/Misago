@@ -2,7 +2,7 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Change password confirmation sent" %} | {{ block.super }}{% endblock %}
+{% block title %}{% trans "Change password link sent" %} | {{ block.super }}{% endblock %}
 
 
 {% block content %}
@@ -10,7 +10,7 @@
   <div class="container">
     <h1>
       <span class="fa fa-key">
-      {% trans "Change password confirmation sent" %}
+      {% trans "Change password link sent" %}
     </h1>
   </div>
 </div>
@@ -20,7 +20,7 @@
 
     <p class="lead">
       {% blocktrans trimmed with email=requesting_user.email %}
-      We have sent an e-mail to {{ email }} with a link that you have to click to confirm your request for new password.
+      We have sent an e-mail to {{ email }} with a link to form that will let you change your password.
       {% endblocktrans %}
     </p>
 
