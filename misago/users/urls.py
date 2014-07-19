@@ -40,4 +40,5 @@ urlpatterns += patterns('misago.users.views.usercp',
     url(r'^usercp/forum-options/$', 'change_forum_options', name="usercp_change_forum_options"),
     url(r'^usercp/change-username/$', 'change_username', name="usercp_change_username"),
     url(r'^usercp/change-email-password/$', 'change_email_password', name="usercp_change_email_password"),
+    url(r'^usercp/change-email-password/(?P<token>[a-zA-Z0-9]+)/$', 'confirm_email_password_change', name='usercp_confirm_email_password_change'),
 )

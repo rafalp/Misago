@@ -15,17 +15,34 @@ Token is base encoded string containing three values:
 - token checksum for discovering manipulations
 """
 def make(user, token_type):
-    user_hash = make_hash(user, token_type)
-    creation_day = days_since_epoch()
+    user_hash = _make_hash(user, token_type)
+    creation_day = _days_since_epoch()
 
     obfuscated = base64.b64encode('%s%s' % (user_hash, creation_day))
     obfuscated = obfuscated.rstrip('=')
-    checksum = make_checksum(obfuscated)
+    checksum = _make_checksum(obfuscated)
 
     return '%s%s' % (checksum, obfuscated)
 
 
-def make_hash(user, token_type):
+def is_valid(user, token_type, token):
+    checksum = token[:8]
+    obfuscated = token[8:]
+
+    if checksum != _make_checksum(obfuscated):
+        return False
+
+    unobfuscated = base64.b64decode(obfuscated + '=' * (-len(obfuscated) % 4))
+    user_hash = unobfuscated[:8]
+
+    if user_hash != _make_hash(user, token_type):
+        return False
+
+    creation_day = int(unobfuscated[8:])
+    return creation_day + 5 >= _days_since_epoch()
+
+
+def _make_hash(user, token_type):
     seeds = (
         user.pk,
         user.email,
@@ -38,29 +55,12 @@ def make_hash(user, token_type):
     return sha256('+'.join([unicode(s) for s in seeds])).hexdigest()[:8]
 
 
-def days_since_epoch():
+def _days_since_epoch():
     return int(time() / (25 * 3600))
 
 
-def make_checksum(obfuscated):
+def _make_checksum(obfuscated):
     return sha256('%s:%s' % (settings.SECRET_KEY, obfuscated)).hexdigest()[:8]
-
-
-def is_valid(user, token_type, token):
-    checksum = token[:8]
-    obfuscated = token[8:]
-
-    if checksum != make_checksum(obfuscated):
-        return False
-
-    unobfuscated = base64.b64decode(obfuscated + '=' * (-len(obfuscated) % 4))
-    user_hash = unobfuscated[:8]
-
-    if user_hash != make_hash(user, token_type):
-        return False
-
-    creation_day = int(unobfuscated[8:])
-    return creation_day + 5 >= days_since_epoch()
 
 
 """

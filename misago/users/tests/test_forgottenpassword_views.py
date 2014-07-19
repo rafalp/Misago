@@ -96,7 +96,7 @@ class ForgottenPasswordViewsTests(TestCase):
         self.assertTrue(not mail.outbox)
 
     def test_successful_change(self):
-        """change allright user password"""
+        """change user password"""
         User = get_user_model()
         test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
         old_password = test_user.password

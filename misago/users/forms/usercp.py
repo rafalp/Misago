@@ -3,7 +3,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from misago.core import forms, timezones
 from misago.users.models import AUTO_SUBSCRIBE_CHOICES
-from misago.users.validators import validate_username
+from misago.users.validators import (validate_email, validate_password,
+                                     validate_username)
 
 
 class ChangeForumOptionsBaseForm(forms.ModelForm):
@@ -101,9 +102,19 @@ class ChangeEmailPasswordForm(forms.Form):
             raise forms.ValidationError(message)
 
         if not self.user.check_password(current_password):
-            message = _("Entered password is invalid.")
+            raise forms.ValidationError(_("Entered password is invalid."))
+
+        if not (new_email or new_password):
+            message = _("You have to enter new e-mail or password.")
             raise forms.ValidationError(message)
 
-        raise NotImplementedError("change email/pass form is incomplete")
+        if new_email:
+            if new_email.lower() == self.user.email.lower():
+                message = _("New e-mail is same as current one.")
+                raise forms.ValidationError(message)
+            validate_email(new_email)
+
+        if new_password:
+            validate_password(new_password)
 
         return data

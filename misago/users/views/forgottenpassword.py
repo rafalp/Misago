@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import ugettext as _
+from django.views.decorators.debug import sensitive_post_parameters
 
 from misago.conf import settings
 from misago.core.mail import mail_user
@@ -42,10 +43,9 @@ def request_reset(request):
 
             confirmation_token = make_password_reset_token(requesting_user)
 
-            mail_user(
-                request, requesting_user, mail_subject,
-                'misago/emails/change_password_form_link',
-                {'confirmation_token': confirmation_token})
+            mail_user(request, requesting_user, mail_subject,
+                      'misago/emails/change_password_form_link',
+                      {'confirmation_token': confirmation_token})
 
             return redirect('misago:reset_password_link_sent')
 
@@ -66,7 +66,6 @@ def link_sent(request):
                   {'requesting_user': requesting_user})
 
 
-
 class ResetStopped(Exception):
     pass
 
@@ -75,6 +74,7 @@ class ResetError(Exception):
     pass
 
 
+@sensitive_post_parameters()
 @reset_view
 def reset_password_form(request, user_id, token):
     User = get_user_model()
