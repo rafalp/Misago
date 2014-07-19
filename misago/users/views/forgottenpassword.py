@@ -44,7 +44,7 @@ def request_reset(request):
 
             mail_user(
                 request, requesting_user, mail_subject,
-                'misago/emails/forgottenpassword/form_link',
+                'misago/emails/change_password_form_link',
                 {'confirmation_token': confirmation_token})
 
             return redirect('misago:reset_password_link_sent')
