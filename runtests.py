@@ -27,6 +27,12 @@ def runtests():
                                                   "t3stpr0j3ct")
             settings_file += """
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'uniqu3-sn0wf14k3'
+    }
+}
 """
 
         if os.environ.get('TRAVIS'):

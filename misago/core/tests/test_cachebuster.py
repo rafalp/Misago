@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from misago.core import cachebuster
-from misago.core import threadstore
+from misago.core import cachebuster, threadstore
+from misago.core.cache import cache
 from misago.core.models import CacheVersion
 
 
@@ -22,11 +22,11 @@ class CacheBusterTests(TestCase):
 
 class CacheBusterCacheTests(TestCase):
     def setUp(self):
+        cache.clear()
+        threadstore.clear()
+
         self.cache_name = 'eric_the_fish'
         cachebuster.register(self.cache_name)
-
-    def tearDown(self):
-        threadstore.clear()
 
     def test_cache_validation(self):
         """cache correctly validates"""

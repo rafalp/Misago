@@ -3,6 +3,7 @@ from django.conf import settings as dj_settings
 from django.test import TestCase
 
 from misago.core import threadstore
+from misago.core.cache import cache
 
 from misago.conf.gateway import settings as gateway
 from misago.conf.dbsettings import db_settings
@@ -11,9 +12,6 @@ from misago.conf.models import SettingsGroup, Setting
 
 
 class DBSettingsTests(TestCase):
-    def tearDown(self):
-        threadstore.clear()
-
     def test_get_existing_setting(self):
         """forum_name is defined"""
         self.assertEqual(db_settings.forum_name, 'Misago')
@@ -24,6 +22,7 @@ class DBSettingsTests(TestCase):
 
 class GatewaySettingsTests(TestCase):
     def tearDown(self):
+        cache.clear()
         threadstore.clear()
 
     def test_get_existing_setting(self):
