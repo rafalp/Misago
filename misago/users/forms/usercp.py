@@ -69,7 +69,43 @@ class ChangeUsernameForm(forms.Form):
         return data
 
 
-class ChangeEmailPasswordForm(forms.ModelForm):
-    class Meta:
-        model = get_user_model()
-        fields = ['username', 'email', 'title']
+class ChangeEmailPasswordForm(forms.Form):
+    current_password = forms.CharField(
+        label=_("Current password"),
+        max_length=200,
+        required=False,
+        widget=forms.PasswordInput())
+
+    new_email = forms.CharField(
+        label=_("New e-mail"),
+        max_length=200,
+        required=False)
+
+    new_password = forms.CharField(
+        label=_("New password"),
+        max_length=200,
+        required=False,
+        widget=forms.PasswordInput())
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(ChangeEmailPasswordForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        data = super(ChangeEmailPasswordForm, self).clean()
+
+        current_password = data.get('current_password')
+        new_email = data.get('new_email')
+        new_password = data.get('new_password')
+
+        if not data.get('current_password'):
+            message = _("You have to enter your current password.")
+            raise forms.ValidationError(message)
+
+        if not self.user.check_password(current_password):
+            message = _("Entered password is invalid.")
+            raise forms.ValidationError(message)
+
+        raise NotImplementedError("change email/pass form is incomplete")
+
+        return data

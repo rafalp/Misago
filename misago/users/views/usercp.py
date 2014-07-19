@@ -5,7 +5,8 @@ from django.utils.translation import ugettext as _
 
 from misago.users.decorators import deny_guests
 from misago.users.forms.usercp import (ChangeForumOptionsForm,
-                                       ChangeUsernameForm)
+                                       ChangeUsernameForm,
+                                       ChangeEmailPasswordForm)
 from misago.users.sites import usercp
 from misago.users.namechanges import UsernameChanges
 
@@ -65,4 +66,11 @@ def change_username(request):
 
 @deny_guests
 def change_email_password(request):
-    return render(request, 'misago/usercp/change_email_password.html')
+    form = ChangeEmailPasswordForm()
+    if request.method == 'POST':
+        form = ChangeEmailPasswordForm(request.POST, user=request.user)
+        if form.is_valid():
+            pass
+
+    return render(request, 'misago/usercp/change_email_password.html',
+                  {'form': form})
