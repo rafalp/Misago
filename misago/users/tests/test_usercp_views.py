@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 
 from misago.admin.testutils import AdminTestCase
 
+from misago.core import threadstore
+
 
 class ChangeForumOptionsTests(AdminTestCase):
     def setUp(self):
@@ -19,10 +21,10 @@ class ChangeForumOptionsTests(AdminTestCase):
     def test_change_forum_options_post(self):
         """POST to usercp change options view returns 302"""
         response = self.client.post(self.view_link, data={
-            'timezone': 'Asia/Qatar',
-            'is_hiding_presence': '1',
-            'subscribe_to_started_threads': '0',
-            'subscribe_to_replied_threads': '1',
+                'timezone': 'Asia/Qatar',
+                'is_hiding_presence': '1',
+                'subscribe_to_started_threads': '0',
+                'subscribe_to_replied_threads': '1',
             })
 
         self.assertEqual(response.status_code, 302)
@@ -32,6 +34,51 @@ class ChangeForumOptionsTests(AdminTestCase):
         self.assertEqual(test_user.is_hiding_presence, 1)
         self.assertEqual(test_user.subscribe_to_started_threads, 0)
         self.assertEqual(test_user.subscribe_to_replied_threads, 1)
+
+
+class EditSignatureTests(AdminTestCase):
+    def setUp(self):
+        super(EditSignatureTests, self).setUp()
+        self.view_link = reverse('misago:usercp_edit_signature')
+
+    def test_signature_no_permission(self):
+        """edit signature view with no ACL returns 404"""
+        response = self.client.get(self.view_link)
+        self.assertEqual(response.status_code, 404)
+
+    def test_signature_banned(self):
+        """GET to usercp change options view returns 200"""
+        role = self.test_admin.roles.all()[0]
+        permissions = role.permissions
+        account_permissions = permissions['misago.users.permissions.account']
+        account_permissions['can_have_signature'] = 1
+        role.permissions = permissions
+
+        self.test_admin.is_signature_banned = True
+        self.test_admin.signature_ban_user_message = 'Your siggy is banned.'
+        self.test_admin.save()
+
+        response = self.client.get(self.view_link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Your siggy is banned', response.content)
+
+    def test_signature_banned(self):
+        """GET to usercp change options view returns 200"""
+        role = self.test_admin.roles.all()[0]
+        permissions = role.permissions
+        account_permissions = permissions['misago.users.permissions.account']
+        account_permissions['can_have_signature'] = 1
+        role.permissions = permissions
+
+        self.test_admin.is_signature_banned = False
+        self.test_admin.save()
+
+        response = self.client.post(self.view_link,
+            data={'signature': 'Hello siggy!'})
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(self.view_link)
+        self.assertIn('<p>Hello siggy!</p>', response.content)
 
 
 class ChangeUsernameTests(AdminTestCase):
@@ -63,6 +110,8 @@ class ChangeEmailPasswordTests(AdminTestCase):
     def setUp(self):
         super(ChangeEmailPasswordTests, self).setUp()
         self.view_link = reverse('misago:usercp_change_email_password')
+
+        threadstore.clear()
 
     def _link_from_mail(self, mail_body):
         for line in mail.outbox[0].body.splitlines():

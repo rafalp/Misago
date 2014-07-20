@@ -1,6 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
+
+from misago.acl.models import Role
 from misago.admin.testutils import AdminTestCase
+
+from misago.users.models import Rank
 
 
 class UserAdminViewsTests(AdminTestCase):
@@ -52,3 +56,54 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(user_a.username, response.content)
         self.assertFalse(user_b.username in response.content)
+
+    def test_new_view(self):
+        """new user view creates account"""
+        response = self.client.get(
+            reverse('misago:admin:users:accounts:new'))
+        self.assertEqual(response.status_code, 200)
+
+        default_rank = Rank.objects.get_default()
+        authenticated_role = Role.objects.get(special_role='authenticated')
+
+        response = self.client.post(reverse('misago:admin:users:accounts:new'),
+            data={
+                'username': 'Bawww',
+                'rank': unicode(default_rank.pk),
+                'roles': unicode(authenticated_role.pk),
+                'email': 'reg@stered.com',
+                'new_password': 'pass123',
+                'staff_level': '0'
+            })
+        self.assertEqual(response.status_code, 302)
+
+        User = get_user_model()
+        User.objects.get_by_username('Bawww')
+
+    def test_edit_view(self):
+        """edit user view changes account"""
+        User = get_user_model()
+        test_user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_link = reverse('misago:admin:users:accounts:edit',
+                            kwargs={'user_id': test_user.pk})
+
+        response = self.client.get(test_link)
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post(test_link,
+            data={
+                'username': 'Bawww',
+                'rank': unicode(test_user.rank_id),
+                'roles': unicode(test_user.roles.all()[0].pk),
+                'email': 'reg@stered.com',
+                'new_password': 'pass123',
+                'staff_level': '0',
+                'signature': 'Hello world!',
+                'is_signature_banned': '1',
+                'signature_ban_staff_message': 'Staff message',
+                'signature_ban_user_message': 'User message',
+            })
+        self.assertEqual(response.status_code, 302)
+
+        User.objects.get_by_username('Bawww')
+        User.objects.get_by_email('reg@stered.com')
