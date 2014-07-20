@@ -11,6 +11,7 @@ from misago.core.mail import mail_users
 from misago.users.forms.admin import (StaffFlagUserFormFactory, NewUserForm,
                                       EditUserForm, SearchUsersForm)
 from misago.users.models import ACTIVATION_REQUIRED_NONE, User
+from misago.users.signatures import set_user_signature
 
 
 class UserAdmin(generic.AdminBaseMixin):
@@ -139,6 +140,8 @@ class EditUser(UserAdmin, generic.ModelFormView):
 
         if form.cleaned_data.get('roles'):
             form.instance.roles.add(*form.cleaned_data['roles'])
+
+        set_user_signature(target, form.cleaned_data.get('signature'))
 
         form.instance.update_acl_key()
         form.instance.save()

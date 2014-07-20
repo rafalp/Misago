@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, ungettext
 
+from misago.conf import settings
 from misago.core import forms, threadstore
 from misago.core.validators import validate_sluggable
 from misago.acl.models import Role
@@ -70,9 +71,44 @@ class EditUserForm(UserBaseForm):
         widget=forms.PasswordInput,
         required=False)
 
+    signature = forms.CharField(
+        label=_("Signature contents"),
+        widget=forms.Textarea(attrs={'rows': 3}),
+        required=False)
+    is_signature_banned = forms.YesNoSwitch(
+        label=_("Ban editing signature"),
+        help_text=_("Changing this to yes will ban user from "
+                    "making changes to his/her signature."))
+    signature_ban_user_message = forms.CharField(
+        label=_("User ban message"),
+        help_text=_("Optional message for user explaining "
+                    "why he/she is banned form editing signature."),
+        widget=forms.Textarea(attrs={'rows': 3}),
+        required=False)
+    signature_ban_staff_message = forms.CharField(
+        label=_("Staff ban message"),
+        help_text=_("Optional message for forum team members explaining "
+                    "why user is banned form editing signature."),
+        widget=forms.Textarea(attrs={'rows': 3}),
+        required=False)
+
     class Meta:
         model = get_user_model()
-        fields = ['username', 'email', 'title']
+        fields = ['username', 'email', 'title', 'signature',
+                  'is_signature_banned', 'signature_ban_user_message',
+                  'signature_ban_staff_message']
+
+    def clean_signature(self):
+        data = self.cleaned_data['signature']
+
+        length_limit = settings.signature_length_max
+        if len(data) > length_limit:
+            raise forms.ValidationError(ungettext(
+                "Signature can't be longer than %(limit)s character.",
+                "Signature can't be longer than %(limit)s characters.",
+                length_limit) % {'limit': length_limit})
+
+        return data
 
 
 def UserFormFactory(FormType, instance):

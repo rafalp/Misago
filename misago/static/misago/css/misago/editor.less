@@ -1,0 +1,100 @@
+//
+// Misago Editor
+// --------------------------------------------------
+
+
+//== Toolbar
+//
+//**
+.misago-editor {
+  .editor-toolbar {
+    background: @gray-dark;
+    padding: @padding-small-vertical @padding-small-horizontal;
+
+    &>ul {
+      margin: 0px;
+      padding: 0px;
+      overflow: auto;
+
+      &>li {
+        padding: @padding-xs-vertical @padding-xs-horizontal;
+        float: left;
+
+        .btn-default {
+          background-color: transparent;
+          border-color: transparent;
+          .box-shadow(none);
+          padding: 4px 2px;
+
+          color: @gray-lighter;
+          text-shadow: 0px 1px 1px @gray-darker;
+
+          &:hover {
+            background-color: @gray-lighter;
+            border-color: @gray-lighter;
+            top: 0px;
+
+            color: @gray-darker;
+            outline: none;
+            text-shadow: none;
+          }
+
+          &.active, &:active {
+            background-color: @gray-darker;
+            border-color: @gray-darker;
+            top: 0px;
+
+            color: @gray-light;
+            outline: none;
+            text-shadow: none;
+          }
+
+          &:focus {
+            top: 0px;
+            outline: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+//== Textarea
+//
+//**
+.misago-editor {
+  .editor-textarea {
+    textarea {
+      border: 0px;
+      width: 100%;
+      margin: 0px;
+      padding: @padding-large-vertical @padding-large-horizontal;
+
+      font-family: @font-family-monospace;
+      resize: none;
+      outline: none;
+    }
+  }
+}
+
+
+//== Footer
+//
+//**
+.misago-editor {
+  .editor-footer {
+
+  }
+}
+
+
+//== File uploads
+//
+//**
+.misago-editor {
+  .editor-upload {
+    position: fixed;
+    top: -1000px;
+  }
+}

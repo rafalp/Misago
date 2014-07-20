@@ -18,7 +18,7 @@
           {% endif %}
 
           {% if field|is_radioselect %}
-            {% include 'bootstrap3/layout/radioselect.html' %}
+            {% include 'bootstrap3/layout/radioselect.html' with hide_help_text=1 %}
           {% endif %}
 
           {% if not field|is_checkboxselectmultiple and not field|is_radioselect %}

@@ -51,6 +51,15 @@ class="form-horizontal"
     {% form_row form.new_password label_class field_class %}
 
   </fieldset>
+  <fieldset>
+    <legend>{% trans "Signature" %}</legend>
+
+    {% form_row form.signature label_class field_class %}
+    {% form_row form.is_signature_banned label_class field_class %}
+    {% form_row form.signature_ban_user_message label_class field_class %}
+    {% form_row form.signature_ban_staff_message label_class field_class %}
+
+  </fieldset>
   {% endwith %}
 </div>
 {% endblock form-body %}

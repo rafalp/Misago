@@ -14,9 +14,16 @@ class MisagoUsersConfig(AppConfig):
         self.register_default_user_profile_pages()
 
     def register_default_usercp_pages(self):
+        def show_signature_cp(request):
+            return request.user.acl['can_have_signature']
+
         usercp.add_page(link='misago:usercp_change_forum_options',
                         name=_('Change forum options'),
                         icon='fa fa-check-square-o')
+        usercp.add_page(link='misago:usercp_edit_signature',
+                        name=_('Edit your signature'),
+                        icon='fa fa-pencil',
+                        visibility_condition=show_signature_cp)
         usercp.add_page(link='misago:usercp_change_username',
                         name=_('Change username'),
                         icon='fa fa-credit-card')

@@ -10,5 +10,7 @@
         </label>
     {% endfor %}
 
+    {% if not hide_help_text %}
     {% include 'bootstrap3/layout/help_text.html' %}
+    {% endif %}
 </div>

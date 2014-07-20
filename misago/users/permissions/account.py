@@ -17,7 +17,9 @@ class PermissionsForm(forms.Form):
         initial=1)
     name_changes_expire = forms.IntegerField(
         label=_("Don't count username changes older than"),
-        help_text=_("Number of days since name change that makes that change no longer count to limit. Enter zero to make all changes count."),
+        help_text=_("Number of days since name change that makes "
+                    "that change no longer count to limit. Enter "
+                    "zero to make all changes count."),
         min_value=0,
         initial=0)
     can_have_signature = forms.YesNoSwitch(
@@ -26,6 +28,10 @@ class PermissionsForm(forms.Form):
         label=_("Can put links in signature"))
     allow_signature_images = forms.YesNoSwitch(
         label=_("Can put images in signature"))
+    allow_signature_blocks = forms.YesNoSwitch(
+        label=_("Can use text blocks in signature"),
+        help_text=_("Controls whether or not users can put quote, code, "
+                    "spoiler blocks and horizontal lines in signatures."))
 
 
 def change_permissions_form(role):
@@ -45,6 +51,7 @@ def build_acl(acl, roles, key_name):
         'can_have_signature': 0,
         'allow_signature_links': 0,
         'allow_signature_images': 0,
+        'allow_signature_blocks': 0,
     }
     new_acl.update(acl)
 
@@ -54,5 +61,6 @@ def build_acl(acl, roles, key_name):
             name_changes_expire=algebra.lower,
             can_have_signature=algebra.greater,
             allow_signature_links=algebra.greater,
-            allow_signature_images=algebra.greater
+            allow_signature_images=algebra.greater,
+            allow_signature_blocks=algebra.greater
             )

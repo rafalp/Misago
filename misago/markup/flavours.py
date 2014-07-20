@@ -28,3 +28,12 @@ def limited(text):
                    allow_images=False, allow_blocks=False)
 
     return result['parsed_text']
+
+
+def signature(text, owner=None):
+    result = parse(text, allow_mentions=False,
+                   allow_blocks=owner.acl['allow_signature_blocks'],
+                   allow_links=owner.acl['allow_signature_links'],
+                   allow_images=owner.acl['allow_signature_images'])
+
+    return result['parsed_text']

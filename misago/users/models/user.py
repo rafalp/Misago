@@ -15,6 +15,7 @@ from misago.core.utils import slugify
 
 from misago.users.models.rank import Rank
 from misago.users.signals import username_changed
+from misago.users.signatures import is_user_signature_valid
 from misago.users.utils import hash_email
 
 
@@ -175,7 +176,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     is_signature_banned = models.BooleanField(default=False)
     signature = models.TextField(null=True, blank=True)
-    signature_preparsed = models.TextField(null=True, blank=True)
+    signature_parsed = models.TextField(null=True, blank=True)
+    signature_checksum = models.CharField(max_length=64, null=True, blank=True)
     signature_ban_user_message = models.TextField(null=True, blank=True)
     signature_ban_staff_message = models.TextField(null=True, blank=True)
 
@@ -237,6 +239,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             return 1
         else:
             return 0
+
+    @property
+    def has_valid_signature(self):
+        return is_user_signature_valid(self)
 
     @staff_level.setter
     def staff_level(self, new_level):

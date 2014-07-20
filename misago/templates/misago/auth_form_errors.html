@@ -8,7 +8,7 @@
     {% if form.user_ban and form.user_ban.user_message %}
     <li>
       <small>
-        {{ form.user_ban.user_message|escape|linebreaksbr|urlize }}
+        {{ form.user_ban.user_message|escape|urlize|linebreaksbr }}
       </small>
     </li>
     {% elif form.user_cache.activation_by_user %}

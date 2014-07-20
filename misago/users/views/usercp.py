@@ -1,17 +1,21 @@
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.db import IntegrityError, transaction
+from django.http import Http404
 from django.shortcuts import redirect, render as django_render
 from django.utils.translation import ugettext as _
 from django.views.decorators.debug import sensitive_post_parameters
 
 from misago.conf import settings
 from misago.core.mail import mail_user
+from misago.markup import Editor
 
 from misago.users.decorators import deny_guests
 from misago.users.forms.usercp import (ChangeForumOptionsForm,
+                                       EditSignatureForm,
                                        ChangeUsernameForm,
                                        ChangeEmailPasswordForm)
+from misago.users.signatures import set_user_signature
 from misago.users.sites import usercp
 from misago.users.changedcredentials import (cache_new_credentials,
                                              get_new_credentials)
@@ -45,6 +49,35 @@ def change_forum_options(request):
 
     return render(request, 'misago/usercp/change_forum_options.html',
                   {'form': form})
+
+
+@deny_guests
+def edit_signature(request):
+    if not request.user.acl['can_have_signature']:
+        raise Http404()
+
+    form = EditSignatureForm(instance=request.user)
+    if not request.user.is_signature_banned and request.method == 'POST':
+        form = EditSignatureForm(request.POST, instance=request.user)
+        if form.is_valid():
+            set_user_signature(request.user, form.cleaned_data['signature'])
+            request.user.save(update_fields=['signature', 'signature_parsed',
+                                             'signature_checksum'])
+
+            if form.cleaned_data['signature']:
+                messages.success(request, _("Your signature has been edited."))
+            else:
+                message = _("Your signature has been cleared.")
+                messages.success(request, message)
+            return redirect('misago:usercp_edit_signature')
+
+    acl = request.user.acl
+    editor = Editor(form['signature'],
+                    allow_blocks=acl['allow_signature_blocks'],
+                    allow_links=acl['allow_signature_links'],
+                    allow_images=acl['allow_signature_images'])
+    return render(request, 'misago/usercp/edit_signature.html',
+                  {'form': form, 'editor': editor})
 
 
 @deny_guests

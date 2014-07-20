@@ -62,6 +62,13 @@ PIPELINE_JS = {
         ),
         'output_filename': 'misago.js',
     },
+    'misago_editor': {
+        'source_filenames': (
+            'misago/js/jquery.autosize.js',
+            'misago/js/misago-editor.js',
+        ),
+        'output_filename': 'misago-editor.js',
+    },
     'misago_admin': {
         'source_filenames': (
             'misago/admin/js/jquery.js',
@@ -71,7 +78,7 @@ PIPELINE_JS = {
             'misago/admin/js/misago-timestamps.js',
             'misago/admin/js/misago-tooltips.js',
             'misago/admin/js/misago-tables.js',
-            #'misago/admin/js/misago-yesnoswitch.js',
+            'misago/admin/js/misago-yesnoswitch.js',
         ),
         'output_filename': 'misago_admin.js',
     },

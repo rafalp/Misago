@@ -9,11 +9,19 @@ TEXT_BASED_FIELDS = (
 )
 
 
+class YesNoSwitchBase(TypedChoiceField):
+    def prepare_value(self, value):
+        """normalize bools to binary 1/0 so field works on them too"""
+        return 1 if value else 0
+
+
 def YesNoSwitch(**kwargs):
     if 'initial' not in kwargs:
         kwargs['initial'] = 0
 
-    return TypedChoiceField(
+    kwargs['initial'] = 1 if kwargs['initial'] else 0
+
+    return YesNoSwitchBase(
         coerce=int,
         choices=((1, _("Yes")), (0, _("No"))),
         widget=RadioSelect(attrs={'class': 'yesno-switch'}),

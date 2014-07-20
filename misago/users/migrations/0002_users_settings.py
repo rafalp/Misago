@@ -117,6 +117,18 @@ def create_users_settings_group(apps, schema_editor):
                     },
                 },
                 {
+                    'setting': 'signature_length_max',
+                    'name': _("Maximum length"),
+                    'legend': _("Signatures"),
+                    'description': _("Maximum allowed signature length."),
+                    'python_type': 'int',
+                    'value': 1048,
+                    'field_extra': {
+                        'min_value': 256,
+                        'max_value': 10000,
+                    },
+                },
+                {
                     'setting': 'subscribe_start',
                     'name': _("Started threads"),
                     'legend': _("Default subscriptions settings"),

@@ -1,7 +1,9 @@
 from django.contrib.auth import get_user_model
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, ungettext
 
+from misago.conf import settings
 from misago.core import forms, timezones
+
 from misago.users.models import AUTO_SUBSCRIBE_CHOICES
 from misago.users.validators import (validate_email, validate_password,
                                      validate_username)
@@ -42,6 +44,26 @@ def ChangeForumOptionsForm(*args, **kwargs):
                          (ChangeForumOptionsBaseForm,),
                          {'timezone': timezone})
     return FinalFormType(*args, **kwargs)
+
+
+class EditSignatureForm(forms.ModelForm):
+    signature = forms.CharField(label=_("Signature"), required=False)
+
+    class Meta:
+        model = get_user_model()
+        fields = ['signature']
+
+    def clean(self):
+        data = super(EditSignatureForm, self).clean()
+
+        length_limit = settings.signature_length_max
+        if len(data) > length_limit:
+            raise forms.ValidationError(ungettext(
+                "Signature can't be longer than %(limit)s character.",
+                "Signature can't be longer than %(limit)s characters.",
+                length_limit) % {'limit': length_limit})
+
+        return data
 
 
 class ChangeUsernameForm(forms.Form):
