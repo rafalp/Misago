@@ -178,6 +178,18 @@ MISAGO_ADMIN_SESSION_EXPIRATION
 Maximum allowed lenght of inactivity period between two requests to admin namespaces. If its exceeded, user will be asked to sign in again to admin backed before being allowed to continue activities.
 
 
+MISAGO_AVATARS_SIZES
+--------------------
+
+Misago uses avatar cache that prescales avatars to requested sizes. Enter here sizes to which those should be optimized.
+
+
+MISAGO_INITIALS_AVATAR_FUNCTION
+-------------------------------
+
+Function used to create initials avatar for this user. Allows for customization of algorithm used to generate those.
+
+
 MISAGO_MAILER_BATCH_SIZE
 ------------------------
 

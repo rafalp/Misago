@@ -67,9 +67,10 @@ MEDIA_URL = '/media/'
 
 
 # Automatically setup default paths to media and attachments directories
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 ATTACHMENTS_ROOT = os.path.join(BASE_DIR, 'attachments')
+AVATAR_CACHE = os.path.join(BASE_DIR, 'avatar_cache')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 # Automatically setup default paths for static and template directories
