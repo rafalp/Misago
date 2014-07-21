@@ -110,14 +110,10 @@ Preffered way in which new user accounts are activated. Can be either of those:
 * **block** - turn new registrations off.
 
 
-avatars_types
--------------
+allow_custom_avatars
+--------------------
 
-List of avatar sources available to users:
-
-* **gravatar** - Gravatar.
-* **upload** - avatar uploads.
-* **gallery** - predefined gallery.
+Controls if users may set avatars from outside forums.
 
 
 avatar_upload_limit
@@ -129,7 +125,7 @@ Max allowed size of uploaded avatars in kilobytes.
 default_avatar
 --------------
 
-Default avatar assigned to new accounts. Can be either ``gravatar`` or ``gallery`` which will make Misago pick random avatar from gallery instead.
+Default avatar assigned to new accounts. Can be either ``initials`` for randomly generated pic with initials, ``gravatar`` or ``gallery`` which will make Misago pick random avatar from gallery instead.
 
 
 default_timezone
@@ -208,6 +204,12 @@ password_length_min
 -------------------
 
 Minimal required length of new user passwords.
+
+
+signature_length_max
+--------------------
+
+Maximal allowed length of users signatures.
 
 
 subscribe_reply

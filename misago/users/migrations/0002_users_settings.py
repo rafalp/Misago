@@ -78,20 +78,16 @@ def create_users_settings_group(apps, schema_editor):
                     },
                 },
                 {
-                    'setting': 'avatars_types',
-                    'name': _("Available avatar types"),
+                    'setting': 'allow_custom_avatars',
+                    'name': _("Allow custom avatars"),
                     'legend': _("Avatars"),
-                    'python_type': 'list',
-                    'value': ['gravatar', 'upload'],
-                    'form_field': 'checkbox',
-                    'field_extra': {
-                        'choices': (
-                            ('gravatar', _("Gravatar")),
-                            ('upload', _("Uploaded avatar")),
-                            ('gallery', _("Avatars gallery"))
-                        ),
-                        'min': 1,
-                    },
+                    'description': _("Turning this option off will forbid "
+                                     "forum users from using avatars from "
+                                     "outside forums. Good for forums "
+                                     "adressed at young users."),
+                    'python_type': 'bool',
+                    'value': True,
+                    'form_field': 'yesno',
                 },
                 {
                     'setting': 'default_avatar',
@@ -100,6 +96,7 @@ def create_users_settings_group(apps, schema_editor):
                     'form_field': 'select',
                     'field_extra': {
                         'choices': (
+                            ('initials', _("Initials")),
                             ('gravatar', _("Gravatar")),
                             ('gallery', _("Random avatar from gallery")),
                         ),
