@@ -61,7 +61,7 @@ class BanTests(TestCase):
         self.assertTrue(test_ban.test_value('bob'))
         self.assertTrue(test_ban.test_value('bobby'))
 
-    def test_test_value_middle_match(self):
+    def test_test_value_ends_witch(self):
         """ban correctly tests given values"""
         test_ban = Ban(banned_value='*bob')
 
