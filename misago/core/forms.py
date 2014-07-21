@@ -14,6 +14,10 @@ class YesNoSwitchBase(TypedChoiceField):
         """normalize bools to binary 1/0 so field works on them too"""
         return 1 if value else 0
 
+    def clean(self, value):
+        value = 1 if value else 0
+        return super(YesNoSwitchBase, self).clean(value)
+
 
 def YesNoSwitch(**kwargs):
     if 'initial' not in kwargs:

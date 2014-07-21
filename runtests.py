@@ -2,6 +2,9 @@ import os
 import pwd
 import shutil
 import sys
+
+from path import path
+
 from django import setup
 from django.core.management import call_command
 from django.test.utils import setup_test_environment
@@ -15,6 +18,7 @@ def runtests():
     test_project_path = os.path.join(test_runner_path, "testproject")
     if not os.path.exists(test_project_path):
         shutil.copytree(project_template_path, test_project_path)
+        path(os.path.join(os.path.dirname(__file__), 'avatar_cache')).mkdir()
 
         settings_path = os.path.join(test_project_path, "settings.py")
         with open(settings_path, "r") as py_file:
@@ -33,6 +37,7 @@ CACHES = {
         'LOCATION': 'uniqu3-sn0wf14k3'
     }
 }
+MISAGO_AVATARS_SIZES = (2, 1)
 """
 
         if os.environ.get('TRAVIS'):

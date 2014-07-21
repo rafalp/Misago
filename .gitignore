@@ -54,6 +54,7 @@ flake8.txt
 *.pot
 
 # Misago test runner project
+/avatar_cache/
 /testproject/
 
 # Sphinx documentation

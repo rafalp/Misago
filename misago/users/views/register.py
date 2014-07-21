@@ -52,6 +52,7 @@ def register(request):
             new_user = User.objects.create_user(form.cleaned_data['username'],
                                                 form.cleaned_data['email'],
                                                 form.cleaned_data['password'],
+                                                set_default_avatar=True,
                                                 **activation_kwargs)
 
             mail_subject = _("Welcome on %(forum_title)s forums!")

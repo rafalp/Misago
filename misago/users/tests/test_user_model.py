@@ -6,7 +6,8 @@ from misago.users.models import User
 class UserManagerTests(TestCase):
     def test_create_user(self):
         """create_user created new user account successfully"""
-        user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+        user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123',
+                                        set_default_avatar=True)
 
         db_user = User.objects.get(id=user.pk)
 

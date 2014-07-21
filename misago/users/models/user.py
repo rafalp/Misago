@@ -47,7 +47,8 @@ AUTO_SUBSCRIBE_CHOICES = (
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, email, password=None, **extra_fields):
+    def create_user(self, username, email, password=None,
+                    set_default_avatar=False, **extra_fields):
         from misago.users.validators import (validate_email, validate_password,
                                              validate_username)
 
@@ -94,7 +95,8 @@ class UserManager(BaseUserManager):
 
             user.save(using=self._db)
 
-            avatars.set_default_avatar(user)
+            if set_default_avatar:
+                avatars.set_default_avatar(user)
 
             authenticated_role = Role.objects.get(special_role='authenticated')
             if authenticated_role not in user.roles.all():
