@@ -99,8 +99,7 @@ class FormRowTests(TestCase):
 """
 
         with self.assertRaises(TemplateSyntaxError):
-            tpl = Template(tpl_content)
-            render = tpl.render(self.context).strip()
+            Template(tpl_content)
 
     def test_form_row_with_two_args(self):
         """form_row with two args raises exception"""
@@ -111,8 +110,7 @@ class FormRowTests(TestCase):
 """
 
         with self.assertRaises(TemplateSyntaxError):
-            tpl = Template(tpl_content)
-            render = tpl.render(self.context).strip()
+            Template(tpl_content)
 
     def test_form_row_with_four_args(self):
         """form_row with four args raises exception"""
@@ -123,5 +121,4 @@ class FormRowTests(TestCase):
 """
 
         with self.assertRaises(TemplateSyntaxError):
-            tpl = Template(tpl_content)
-            render = tpl.render(self.context).strip()
+            Template(tpl_content)
