@@ -1,6 +1,7 @@
 import hashlib
 
 from django import template
+from django.core.urlresolvers import reverse
 
 
 register = template.Library()
@@ -8,5 +9,5 @@ register = template.Library()
 
 @register.filter(name='avatar')
 def avatar(user, size=200):
-    gravatar_hex = hashlib.md5(user.email).hexdigest()
-    return '//www.gravatar.com/avatar/%s?s=%s' % (gravatar_hex, size)
+    return reverse('misago:user_avatar',
+                   kwargs={'user_id': user.pk, 'size': size})
