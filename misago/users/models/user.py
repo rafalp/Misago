@@ -14,6 +14,7 @@ from misago.conf import settings
 from misago.core.utils import slugify
 
 from misago.users.models.rank import Rank
+from misago.users import avatars
 from misago.users.signals import username_changed
 from misago.users.signatures import is_user_signature_valid
 from misago.users.utils import hash_email
@@ -92,6 +93,8 @@ class UserManager(BaseUserManager):
                 user.rank = Rank.objects.get_default()
 
             user.save(using=self._db)
+
+            avatars.set_default_avatar(user)
 
             authenticated_role = Role.objects.get(special_role='authenticated')
             if authenticated_role not in user.roles.all():
@@ -210,6 +213,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['email']
 
     objects = UserManager()
+
+    def delete(self, *args, **kwargs):
+        avatars.delete_avatar(self)
 
     @property
     def acl(self):

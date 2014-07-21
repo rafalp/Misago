@@ -38,8 +38,15 @@ urlpatterns += patterns('misago.users.views.api',
 
 urlpatterns += patterns('misago.users.views.usercp',
     url(r'^usercp/forum-options/$', 'change_forum_options', name="usercp_change_forum_options"),
+    url(r'^usercp/change-avatar/$', 'change_avatar', name="usercp_change_avatar"),
     url(r'^usercp/edit-signature/$', 'edit_signature', name="usercp_edit_signature"),
     url(r'^usercp/change-username/$', 'change_username', name="usercp_change_username"),
     url(r'^usercp/change-email-password/$', 'change_email_password', name="usercp_change_email_password"),
     url(r'^usercp/change-email-password/(?P<token>[a-zA-Z0-9]+)/$', 'confirm_email_password_change', name='usercp_confirm_email_password_change'),
+)
+
+
+urlpatterns += patterns('misago.users.views.avatarserver',
+    url(r'^user-avatar/(?P<size>\d+)/(?P<user_id>\d+)\.png$', 'serve_avatar', name="user_avatar"),
+
 )

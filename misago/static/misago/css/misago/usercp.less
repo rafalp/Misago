@@ -1,0 +1,31 @@
+//
+// User CP
+// --------------------------------------------------
+
+
+.usercp-avatar-options {
+  ul {
+    li {
+      a, .btn-link {
+        display: inline-block;
+        margin: 0px;
+        padding: 0px;
+
+        line-height: @line-height-computed;
+      }
+
+      a {
+        padding: 1px 0px;
+      }
+    }
+  }
+}
+
+
+/* Big displays */
+@media (min-width: @screen-sm-min) {
+  .usercp-avatar-options {
+    padding-top: @line-height-computed / 2;
+    padding-left: @line-height-computed / 2;
+  }
+}

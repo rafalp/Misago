@@ -10,6 +10,7 @@ from misago.conf import settings
 from misago.core.mail import mail_user
 from misago.markup import Editor
 
+from misago.users import avatars
 from misago.users.decorators import deny_guests
 from misago.users.forms.usercp import (ChangeForumOptionsForm,
                                        EditSignatureForm,
@@ -49,6 +50,26 @@ def change_forum_options(request):
 
     return render(request, 'misago/usercp/change_forum_options.html',
                   {'form': form})
+
+
+@deny_guests
+def change_avatar(request):
+    avatar_size = max(settings.MISAGO_AVATARS_SIZES)
+
+    if request.method == 'POST':
+        if 'download-gravatar' in request.POST:
+            avatars.gravatar.set_avatar(request.user)
+            message = _("Gravatar was downloaded and set as new avatar.")
+            messages.success(request, message)
+        elif 'generate-individual' in request.POST:
+            avatars.user.set_avatar(request.user)
+            message = _("New avatar based on your account was set.")
+            messages.success(request, message)
+        return redirect('misago:usercp_change_avatar')
+
+    return render(request, 'misago/usercp/change_avatar.html', {
+            'avatar_size': avatar_size
+        })
 
 
 @deny_guests

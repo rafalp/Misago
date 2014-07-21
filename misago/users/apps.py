@@ -20,6 +20,9 @@ class MisagoUsersConfig(AppConfig):
         usercp.add_page(link='misago:usercp_change_forum_options',
                         name=_('Change forum options'),
                         icon='fa fa-check-square-o')
+        usercp.add_page(link='misago:usercp_change_avatar',
+                        name=_('Change avatar'),
+                        icon='fa fa-image')
         usercp.add_page(link='misago:usercp_edit_signature',
                         name=_('Edit your signature'),
                         icon='fa fa-pencil',
