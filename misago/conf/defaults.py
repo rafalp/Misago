@@ -223,7 +223,7 @@ MISAGO_ADMIN_SESSION_EXPIRATION = 60
 
 
 # Function used for generating individual avatar for user
-MISAGO_USER_AVATAR_DRAWER = 'misago.users.avatars.user.draw_default'
+MISAGO_DYNAMIC_AVATAR_DRAWER = 'misago.users.avatars.dynamic.draw_default'
 
 # For which sizes avatars should be cached?
 # Keep sizes ordered from greatest to smallest

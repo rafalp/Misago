@@ -61,8 +61,8 @@ def change_avatar(request):
             avatars.gravatar.set_avatar(request.user)
             message = _("Gravatar was downloaded and set as new avatar.")
             messages.success(request, message)
-        elif 'generate-individual' in request.POST:
-            avatars.user.set_avatar(request.user)
+        elif 'set-dynamic' in request.POST:
+            avatars.dynamic.set_avatar(request.user)
             message = _("New avatar based on your account was set.")
             messages.success(request, message)
         return redirect('misago:usercp_change_avatar')

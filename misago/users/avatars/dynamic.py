@@ -11,7 +11,7 @@ from misago.users.avatars import cache
 
 
 def set_avatar(user):
-    name_bits = settings.MISAGO_USER_AVATAR_DRAWER.split('.')
+    name_bits = settings.MISAGO_DYNAMIC_AVATAR_DRAWER.split('.')
 
     drawer_module = '.'.join(name_bits[:-1])
     drawer_module = import_module(drawer_module)
@@ -70,14 +70,14 @@ FONT_FILE = os.path.join(os.path.dirname(__file__), 'font.ttf')
 
 
 def draw_avatar_flavour(user, image):
-    string = string_acronym(user.username)
+    string = user.username[0]
 
     image_size = image.size[0]
-    goal_width = image_size * .7
+    max_string_size = image_size * .8
 
-    size = int(goal_width)
+    size = int(max_string_size)
     font = ImageFont.truetype(FONT_FILE, size=size)
-    while font.getsize(string)[0] > goal_width:
+    while max(font.getsize(string)) > max_string_size:
         size -= 1
         font = ImageFont.truetype(FONT_FILE, size=size)
 
@@ -112,17 +112,3 @@ def string_to_int(string):
     for p, c in enumerate(string.lower()):
         value += p * (CHARS.find(c))
     return value
-
-
-def string_acronym(string):
-    string_len = len(string)
-
-    chars = []
-
-    chars.append(string[0])
-    if string_len > 4:
-        chars.append(string[int(math.floor(string_len / 2.0)) - 1])
-    if string_len > 2:
-        chars.append(string[-1])
-
-    return ''.join(chars)
