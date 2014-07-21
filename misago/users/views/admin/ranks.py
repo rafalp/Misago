@@ -43,15 +43,15 @@ class DeleteRank(RankAdmin, generic.ButtonView):
         if target.is_default:
             message = _('Rank "%s" is default rank and '
                         'can\'t be deleted.')
-            return message % unicode(target.name)
+            return message % target.name
         if target.user_set.exists():
             message = _('Rank "%s" is assigned to users and '
                         'can\'t be deleted.')
-            return message % unicode(target.name)
+            return message % target.name
 
     def button_action(self, request, target):
         target.delete()
-        message = _('Rank "%s" has been deleted.') % unicode(target.name)
+        message = _('Rank "%s" has been deleted.') % target.name
         messages.success(request, message)
 
 
@@ -100,9 +100,9 @@ class RankUsers(RankAdmin, generic.TargetedView):
 class DefaultRank(RankAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         if target.is_default:
-            return _('Rank "%s" is already default.') % unicode(target.name)
+            return _('Rank "%s" is already default.') % target.name
 
     def button_action(self, request, target):
         Rank.objects.make_rank_default(target)
         message = _('Rank "%s" has been made default.')
-        messages.success(request, message % unicode(target.name))
+        messages.success(request, message % target.name)

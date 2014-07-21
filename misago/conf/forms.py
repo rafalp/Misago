@@ -34,13 +34,13 @@ class ValidateChoicesNum(object):
 
 def basic_kwargs(setting, extra):
     kwargs = {
-        'label': _(setting.name),
+        'label': setting.name,
         'initial': setting.value,
         'required': extra.get('min_length') or extra.get('min'),
     }
 
     if setting.description:
-        kwargs['help_text'] = _(setting.description)
+        kwargs['help_text'] = setting.description
 
     if setting.form_field == 'yesno':
         # YesNoSwitch is int-base and setting is bool based
@@ -129,7 +129,7 @@ def setting_field(FormType, setting):
                                field_extra)
 
     if setting.legend:
-        form_field.legend = _(setting.legend)
+        form_field.legend = setting.legend
 
     FormType = type('FormType%s' % setting.pk, (FormType,),
                     {setting.setting: form_field})
