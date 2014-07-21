@@ -196,10 +196,10 @@ MISAGO_AVATARS_SIZES
 Misago uses avatar cache that prescales avatars to requested sizes. Enter here sizes to which those should be optimized.
 
 
-MISAGO_INITIALS_AVATAR_FUNCTION
--------------------------------
+MISAGO_USER_AVATAR_DRAWER
+-------------------------
 
-Function used to create initials avatar for this user. Allows for customization of algorithm used to generate those.
+Function used to create unique avatar for this user. Allows for customization of algorithm used to generate those.
 
 
 MISAGO_MAILER_BATCH_SIZE

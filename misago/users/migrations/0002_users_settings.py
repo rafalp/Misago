@@ -96,7 +96,7 @@ def create_users_settings_group(apps, schema_editor):
                     'form_field': 'select',
                     'field_extra': {
                         'choices': (
-                            ('initials', _("Initials")),
+                            ('user', _("Individual")),
                             ('gravatar', _("Gravatar")),
                             ('gallery', _("Random avatar from gallery")),
                         ),
