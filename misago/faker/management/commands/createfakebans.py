@@ -76,10 +76,17 @@ def create_fake_test(fake, test_type):
 
 
 class Command(BaseCommand):
-    help = 'Creates plenty of random fakey bans for testing purposes'
+    help = 'Creates random fakey bans for testing purposes'
 
     def handle(self, *args, **options):
-        fake_bans_to_create = 100000
+        try:
+            fake_bans_to_create = int(args[0])
+        except IndexError:
+            fake_bans_to_create = 5
+        except ValueError:
+            self.stderr.write("\nOptional argument should be integer.")
+            sys.exit(1)
+
         fake = Factory.create()
 
         message = 'Attempting to create %s fake bans!'

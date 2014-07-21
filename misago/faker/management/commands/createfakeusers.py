@@ -1,4 +1,4 @@
-import random
+import random, sys
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -9,10 +9,17 @@ from misago.users.models import Rank
 
 
 class Command(BaseCommand):
-    help = 'Creates plenty of random fakey users for testing purposes'
+    help = 'Creates random fakey users for testing purposes'
 
     def handle(self, *args, **options):
-        fake_users_to_create = 100000
+        try:
+            fake_users_to_create = int(args[0])
+        except IndexError:
+            fake_users_to_create = 5
+        except ValueError:
+            self.stderr.write("\nOptional argument should be integer.")
+            sys.exit(1)
+
         fake = Factory.create()
         User = get_user_model()
 
@@ -31,7 +38,8 @@ class Command(BaseCommand):
                 }
 
                 User.objects.create_user(fake.first_name(), fake.email(),
-                                         'pass123', **kwargs)
+                                         'pass123', set_default_avatar=True,
+                                         **kwargs)
             except (ValidationError, IntegrityError):
                 pass
             else:
