@@ -117,7 +117,7 @@ class ChangeEmailPasswordTests(AdminTestCase):
         for line in mail.outbox[0].body.splitlines():
             if line.strip().startswith('http://testserver/'):
                 return line.strip()[len('http://testserver'):]
-        return ''
+        raise ValueError("mail body didn't contain link with token")
 
     def test_change_email_password_get(self):
         """GET to usercp change email/pass view returns 200"""
