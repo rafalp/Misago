@@ -178,6 +178,18 @@ MISAGO_ADMIN_SESSION_EXPIRATION
 Maximum allowed lenght of inactivity period between two requests to admin namespaces. If its exceeded, user will be asked to sign in again to admin backed before being allowed to continue activities.
 
 
+MISAGO_ATTACHMENTS_ROOT
+-----------------------
+
+Path to directory that Misago should use to store post attachments. This directory shouldn't be accessible from outside world.
+
+
+MISAGO_AVATAR_CACHE
+-------------------
+
+Path to directory that Misago should use to store cached avatars. This directory shouldn't be accessible from outside world.
+
+
 MISAGO_AVATARS_SIZES
 --------------------
 
@@ -200,6 +212,28 @@ MISAGO_MARKUP_EXTENSIONS
 ------------------------
 
 List of python modules extending Misago markup.
+
+
+MISAGO_SENDFILE_HEADER
+----------------------
+
+If your server provides proxy for serving files from application, like "X-Sendfile", set its header name in this setting.
+
+Leave this setting empty to use Django fallback.
+
+
+MISAGO_SENDFILE_LOCATIONS_PATH
+------------------------------
+
+Some Http servers (like Nginx) allow you to restrict X-Sendfile to certain locations.
+
+Misago supports this feature with this setting, however with limitation to one "root" path. This setting is used for paths defined in ATTACHMENTS_ROOT and AVATAR_CACHE settings.
+
+Rewrite algorithm used by Misago replaces path until last part with value of this setting.
+
+For example, defining ``MISAGO_SENDFILE_LOCATIONS_PATH = 'misago_served_internals'`` will result in following rewrite:
+
+``/home/mysite/www/attachments/13_05/142123.rar`` => ``/misago_served_internals/attachments/13_05/142123.rar``
 
 
 password_complexity
