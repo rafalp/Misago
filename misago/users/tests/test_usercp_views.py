@@ -62,7 +62,7 @@ class EditSignatureTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('Your siggy is banned', response.content)
 
-    def test_signature_banned(self):
+    def test_signature_change(self):
         """GET to usercp change options view returns 200"""
         role = self.test_admin.roles.all()[0]
         permissions = role.permissions
