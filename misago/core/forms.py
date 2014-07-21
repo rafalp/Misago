@@ -12,11 +12,10 @@ TEXT_BASED_FIELDS = (
 class YesNoSwitchBase(TypedChoiceField):
     def prepare_value(self, value):
         """normalize bools to binary 1/0 so field works on them too"""
-        return 1 if value else 0
+        return 1 if value in [True, 'True', 1, '1'] else 0
 
     def clean(self, value):
-        value = 1 if value else 0
-        return super(YesNoSwitchBase, self).clean(value)
+        return self.prepare_value(value)
 
 
 def YesNoSwitch(**kwargs):
