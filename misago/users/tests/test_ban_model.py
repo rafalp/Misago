@@ -59,7 +59,7 @@ class BanTests(TestCase):
         test_ban = Ban(banned_value='b*b')
 
         self.assertTrue(test_ban.test_value('bob'))
-        self.assertTrue(test_ban.test_value('bobby'))
+        self.assertFalse(test_ban.test_value('bobby'))
 
     def test_test_value_ends_witch(self):
         """ban correctly tests given values"""
