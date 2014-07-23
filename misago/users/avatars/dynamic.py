@@ -42,7 +42,9 @@ COLOR_WHEEL_LEN = len(COLOR_WHEEL)
 def draw_avatar_bg(user, image):
     image_size = image.size
 
-    main_color = COLOR_WHEEL[user.pk - COLOR_WHEEL_LEN * (user.pk / COLOR_WHEEL_LEN)]
+    color_index = user.pk - COLOR_WHEEL_LEN * (user.pk / COLOR_WHEEL_LEN)
+    main_color = COLOR_WHEEL[color_index]
+
     rgb = ImageColor.getrgb(main_color)
 
     bg_drawer = ImageDraw.Draw(image)
