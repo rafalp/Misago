@@ -58,7 +58,7 @@ def draw_avatar_bg(user, image):
         for y in xrange(image_steps):
             y_step = float(y + 2) / image_steps
 
-            bit_rgb = (int(c * (1 - (x_step * y_step) / 3)) for c in rgb)
+            bit_rgb = (int(c * (1 - (x_step * y_step) / 5)) for c in rgb)
             bit_pos = (x * step_size, y * step_size)
             bit_size = (x * step_size + step_size, y * step_size + step_size)
             bg_drawer.rectangle([bit_pos, bit_size], tuple(bit_rgb))
@@ -89,7 +89,7 @@ def draw_avatar_flavour(user, image):
 
     text_shadow = Image.new('RGBA', image.size)
     shadow_color = image.getpixel((image_size - 1, image_size - 1))
-    shadow_blur = ImageFilter.GaussianBlur(int(image_size / 10))
+    shadow_blur = ImageFilter.GaussianBlur(int(image_size / 5))
 
     writer = ImageDraw.Draw(text_shadow)
     writer.text(text_pos, string, shadow_color, font=font)
