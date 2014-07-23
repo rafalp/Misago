@@ -10,22 +10,19 @@ SERVED_PATHS = (
 )
 
 
-def send_file(file_path, content_type, attachment=None):
+def make_file_response(file_path, content_type, attachment=None):
     file_size = os.path.getsize(file_path)
 
+    response_args = (file_path, content_type, file_size, attachment)
     if settings.MISAGO_SENDFILE_HEADER:
-        return send_header(file_path, content_type, file_size, attachment)
+        return make_header_response(*response_args)
     else:
-        return send_stream(file_path, content_type, file_size, attachment)
+        return make_stream_response(*response_args)
 
 
-def send_header(file_path, content_type, file_size, attachment=None):
+def make_header_response(file_path, content_type, file_size, attachment=None):
     if settings.MISAGO_SENDFILE_LOCATIONS_PATH:
-        for path in SERVED_PATHS:
-            if file_path.startswith(path):
-                file_path = file_path[len(path):]
-                file_path = '/%s' % settings.MISAGO_SENDFILE_LOCATIONS_PATH
-                break
+        file_path = rewrite_file_path(file_path)
 
     response = HttpResponse()
     response[settings.MISAGO_SENDFILE_HEADER] = file_path
@@ -34,7 +31,16 @@ def send_header(file_path, content_type, file_size, attachment=None):
     return response
 
 
-def send_stream(file_path, content_type, file_size, attachment=None):
+def rewrite_file_path(file_path):
+    for path in SERVED_PATHS:
+        if file_path.startswith(path):
+            suffix = file_path[len(path):]
+            return '/%s%s' % (settings.MISAGO_SENDFILE_LOCATIONS_PATH, suffix)
+    else:
+        raise ValueError("'%s' path is not supported" % file_path)
+
+
+def make_stream_response(file_path, content_type, file_size, attachment=None):
     response = StreamingHttpResponse(open(file_path, 'r'))
 
     response['Content-Type'] = content_type
