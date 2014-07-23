@@ -35,5 +35,6 @@ Table of Contents
    developers/shortcuts
    developers/thread_store
    developers/user_sites
+   developers/writing_templates
    developers/validators
    developers/views_errors

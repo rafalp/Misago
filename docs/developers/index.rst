@@ -46,5 +46,6 @@ Following references cover everything you want to know about writing your own ap
    shortcuts
    thread_store
    user_sites
+   writing_templates
    validators
    views_errors

@@ -47,6 +47,6 @@ urlpatterns += patterns('misago.users.views.usercp',
 
 
 urlpatterns += patterns('misago.users.views.avatarserver',
-    url(r'^user-avatar/(?P<size>\d+)/(?P<user_id>\d+)\.png$', 'serve_avatar', name="user_avatar"),
-
+    url(r'^user-avatar/(?P<size>\d+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar', name="user_avatar"),
+    url(r'^user-avatar/(?P<size>\d+)\.png$', 'serve_blank_avatar', name="blank_avatar"),
 )

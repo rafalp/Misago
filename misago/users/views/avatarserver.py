@@ -6,24 +6,46 @@ from misago.core.fileserver import make_file_response
 from misago.users.avatars import set_default_avatar
 
 
-def serve_avatar(request, user_id, size):
-    avatar_file = get_avatar_file(user_id, size)
-    avatar_path = '%s/%s.png' % (settings.MISAGO_AVATAR_CACHE, avatar_file)
+def serve_user_avatar(request, user_id, size):
+    size = clean_size(size)
+    User = get_user_model()
 
+    if user_id > 0:
+        try:
+            user = User.objects.get(id=user_id)
+            if not user.is_avatar_banned:
+                avatar_file = get_avatar_file(user, size)
+            else:
+                avatar_file = get_blank_avatar_file(size)
+        except User.DoesNotExist:
+            avatar_file = get_blank_avatar_file(size)
+    else:
+        avatar_file = get_blank_avatar_file(size)
+
+    avatar_path = '%s/%s.png' % (settings.MISAGO_AVATAR_CACHE, avatar_file)
     return make_file_response(avatar_path, 'image/png')
 
 
-def get_avatar_file(user_id, size):
+def serve_blank_avatar(request, size):
+    size = clean_size(size)
+    avatar_file = get_blank_avatar_file(size)
+    avatar_path = '%s/%s.png' % (settings.MISAGO_AVATAR_CACHE, avatar_file)
+    return make_file_response(avatar_path, 'image/png')
+
+
+def clean_size(size):
     if not size in settings.MISAGO_AVATARS_SIZES:
+        size = max(settings.MISAGO_AVATARS_SIZES)
         for valid_size in sorted(settings.MISAGO_AVATARS_SIZES, reverse=True):
             if valid_size > size:
                 size = valid_size
+    return size
 
-    User = get_user_model()
-    try:
-        user = User.objects.get(id=user_id)
-        file_formats = (user.joined_on.strftime('%y%m'), user.pk, size)
-        return '%s/%s_%s' % file_formats
-    except User.DoesNotExist:
-        return 'guest_%s' % size
 
+def get_user_avatar_file(user, size):
+    file_formats = (user.joined_on.strftime('%y%m'), user.pk, size)
+    return '%s/%s_%s' % file_formats
+
+
+def get_blank_avatar_file(size):
+    return 'blank/blank_%s' % size
