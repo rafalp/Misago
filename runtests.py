@@ -14,11 +14,14 @@ def runtests():
     test_runner_path = os.path.dirname(__file__)
     project_template_path = os.path.join(
         test_runner_path, 'misago/project_template/project_name')
+    avatars_cache_path = os.path.join(
+        test_runner_path, 'misago/project_template/avatar_cache')
 
     test_project_path = os.path.join(test_runner_path, "testproject")
+    test_project_avatars_path = os.path.join(test_runner_path, "avatar_cache")
     if not os.path.exists(test_project_path):
         shutil.copytree(project_template_path, test_project_path)
-        path(os.path.join(os.path.dirname(__file__), 'avatar_cache')).mkdir()
+        shutil.copytree(avatars_cache_path, test_project_avatars_path)
 
         settings_path = os.path.join(test_project_path, "settings.py")
         with open(settings_path, "r") as py_file:
@@ -37,7 +40,6 @@ CACHES = {
         'LOCATION': 'uniqu3-sn0wf14k3'
     }
 }
-MISAGO_AVATARS_SIZES = (2, 1)
 """
 
         if os.environ.get('TRAVIS'):

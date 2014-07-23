@@ -14,7 +14,7 @@ def serve_user_avatar(request, user_id, size):
         try:
             user = User.objects.get(id=user_id)
             if not user.is_avatar_banned:
-                avatar_file = get_avatar_file(user, size)
+                avatar_file = get_user_avatar_file(user, size)
             else:
                 avatar_file = get_blank_avatar_file(size)
         except User.DoesNotExist:
