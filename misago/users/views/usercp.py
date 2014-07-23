@@ -58,9 +58,17 @@ def change_avatar(request):
 
     if request.method == 'POST':
         if 'download-gravatar' in request.POST:
-            avatars.gravatar.set_avatar(request.user)
-            message = _("Gravatar was downloaded and set as new avatar.")
-            messages.success(request, message)
+            try:
+                avatars.gravatar.set_avatar(request.user)
+                message = _("Gravatar was downloaded and set as new avatar.")
+                messages.success(request, message)
+            except avatars.gravatar.GravatarError:
+                message = _("Failed to connect to Gravatar servers.")
+                messages.info(request, message)
+            except avatars.gravatar.NoGravatarAvailable:
+                message = _("No Gravatar is associated "
+                            "with your e-mail address.")
+                messages.info(request, message)
         elif 'set-dynamic' in request.POST:
             avatars.dynamic.set_avatar(request.user)
             message = _("New avatar based on your account was set.")

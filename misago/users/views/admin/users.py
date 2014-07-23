@@ -135,6 +135,7 @@ class EditUser(UserAdmin, generic.ModelFormView):
 
         if form.cleaned_data.get('email'):
             target.set_email(form.cleaned_data['email'])
+            start_admin_session(request, target)
 
         if form.cleaned_data.get('staff_level'):
             form.instance.staff_level = form.cleaned_data['staff_level']
