@@ -5,6 +5,8 @@ from PIL import Image
 
 from misago.conf import settings
 
+from misago.users.avatars.paths import AVATARS_CACHE
+
 
 def store_avatar(user, image):
     avatar_dir = get_existing_avatars_dir(user)
@@ -34,7 +36,7 @@ def store_new_avatar(user, image):
 
 def get_existing_avatars_dir(user):
     date_dir = unicode(user.joined_on.strftime('%y%m'))
-    avatars_dir = path(os.path.join(settings.MISAGO_AVATAR_CACHE, date_dir))
+    avatars_dir = path(os.path.join(AVATARS_CACHE, date_dir))
 
     if not avatars_dir.exists():
         avatars_dir.mkdir()
