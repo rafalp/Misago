@@ -37,7 +37,6 @@ class FileServerTests(TestCase):
             self.assertTrue(isinstance(response, HttpResponse))
             self.assertEqual(response['X-Test'], __file__)
 
-
     def test_send_stream(self):
         """call to streaming response function returns StreamingHttpResponse"""
         response = fileserver.make_stream_response(__file__, 'text/python', 9)
