@@ -1,5 +1,3 @@
-from datetime import date
-
 from PIL import Image
 
 from django.core.management.base import BaseCommand
@@ -8,10 +6,15 @@ from misago.users.avatars import cache
 from misago.users.avatars.paths import BLANK_AVATAR
 
 
+class FakeDate(object):
+    def strftime(self, format=''):
+        return 'blank'
+
+
 class FakeUser(object):
     pk = 'blank'
     id = 'blank'
-    joined_on = date(2014, 1, 1)
+    joined_on = FakeDate()
 
 
 class Command(BaseCommand):
