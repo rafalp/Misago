@@ -164,14 +164,22 @@
       padding-bottom: @line-height-computed * .25;
     }
 
-    &.message {
+    &.form-markup-preview {
       border-top: 1px solid @form-panel-border;
       padding: @form-panel-padding;
       padding-top: @line-height-computed;
+      padding-bottom: @line-height-computed * .5;
 
       .misago-markdown {
         margin-bottom: @line-height-computed;
       }
+    }
+
+    &.form-text {
+      border-top: 1px solid @form-panel-border;
+      padding: @form-panel-padding;
+      padding-top: @line-height-computed;
+      padding-bottom: 0px;
     }
   }
 }

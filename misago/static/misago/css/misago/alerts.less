@@ -46,12 +46,13 @@
       border-radius: 0;
       margin-bottom: 0px;
       padding: (@line-height-computed * 0.8) 0px;
+      padding-bottom: (@line-height-computed * 0.8) - 4px;
 
       .alert-icon {
         margin: -@alert-padding 0px;
-        margin-right: @alert-padding / 2;
+        margin-right: @alert-padding * .7;
         position: relative;
-        top: @font-size-large / 4;
+        top: ((@font-size-base * 1.8) - @line-height-computed) / 2;
 
         font-size: @font-size-base * 1.8;
       }

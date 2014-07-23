@@ -17,7 +17,7 @@
     {% include "misago/form_errors.html" %}
 
     {% if user.signature %}
-    <div class="form-body message">
+    <div class="form-body form-markup-preview">
       {% if user.has_valid_signature %}
       <article class="misago-markup">
         {{ user.signature_parsed|safe }}
@@ -32,7 +32,7 @@
     {% endif %}
 
     {% if user.is_signature_banned %}
-    <div class="form-body message">
+    <div class="form-body form-text">
       <div class="lead">
         {% if user.signature_ban_user_message %}
         {{ user.signature_ban_user_message|escape|urlize|linebreaks }}
