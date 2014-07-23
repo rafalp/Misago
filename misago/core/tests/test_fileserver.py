@@ -32,12 +32,13 @@ class FileServerTests(TestCase):
     def test_send_header(self):
         """call to header response function returns HttpResponse"""
         with self.settings(MISAGO_SENDFILE_HEADER='X-Test'):
-            response = fileserver.make_header_response(__file__, 'text/python')
+            response = fileserver.make_header_response(
+                __file__, 'text/python', 9)
             self.assertTrue(isinstance(response, HttpResponse))
             self.assertEqual(response['X-Test'], __file__)
 
 
     def test_send_stream(self):
         """call to streaming response function returns StreamingHttpResponse"""
-        response = fileserver.make_stream_response(__file__, 'text/python')
+        response = fileserver.make_stream_response(__file__, 'text/python', 9)
         self.assertTrue(isinstance(response, StreamingHttpResponse))
