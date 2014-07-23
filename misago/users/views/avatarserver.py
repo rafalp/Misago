@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
-from misago.core.fileserver import send_file
+from misago.core.fileserver import make_file_response
 
 from misago.users.avatars import set_default_avatar
 
@@ -10,7 +10,7 @@ def serve_avatar(request, user_id, size):
     avatar_file = get_avatar_file(user_id, size)
     avatar_path = '%s/%s.png' % (settings.MISAGO_AVATAR_CACHE, avatar_file)
 
-    return send_file(avatar_path, 'image/png')
+    return make_file_response(avatar_path, 'image/png')
 
 
 def get_avatar_file(user_id, size):
