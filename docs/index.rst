@@ -33,8 +33,8 @@ Table of Contents
    developers/markup
    developers/settings
    developers/shortcuts
+   developers/template_tags
    developers/thread_store
    developers/user_sites
-   developers/writing_templates
    developers/validators
    developers/views_errors

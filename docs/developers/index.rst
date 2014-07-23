@@ -44,8 +44,8 @@ Following references cover everything you want to know about writing your own ap
    markup
    settings
    shortcuts
+   template_tags
    thread_store
    user_sites
-   writing_templates
    validators
    views_errors

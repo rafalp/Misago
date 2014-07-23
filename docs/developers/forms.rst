@@ -71,7 +71,7 @@ Misago defines custom templates extension named ``misago_forms``. This extension
 form_row
 --------
 
-This tag accepts form field as its first argument, and rends field complete with label, help and errors. Accept two extra arguments: label class and field class, allowing you to control size of horizontal forms::
+This tag takes form field as its first argument and renders field complete with label, help and errors. Accept two extra arguments: label class and field class, allowing you to control size of horizontal forms::
 
 
     {% load misago_forms %}
@@ -83,4 +83,4 @@ This tag accepts form field as its first argument, and rends field complete with
 form_input
 ----------
 
-This tag accepts form field as its only argument, and rends it's input.
+This tag takes form field as its only argument and renders it's input.
