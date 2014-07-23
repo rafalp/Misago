@@ -103,6 +103,21 @@ def create_users_settings_group(apps, schema_editor):
                     },
                 },
                 {
+                    'setting': 'default_gravatar_fallback',
+                    'name': _("Fallback for default gravatar"),
+                    'description': _("Select which avatar to use when user "
+                                     "has no gravatar associated with his "
+                                     "e-mail address."),
+                    'value': 'dynamic',
+                    'form_field': 'select',
+                    'field_extra': {
+                        'choices': (
+                            ('dynamic', _("Individual")),
+                            ('gallery', _("Random avatar from gallery")),
+                        ),
+                    },
+                },
+                {
                     'setting': 'avatar_upload_limit',
                     'name': _("Maximum size of uploaded avatar"),
                     'description': _("Enter maximum allowed file size "
