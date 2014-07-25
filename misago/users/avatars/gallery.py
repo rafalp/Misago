@@ -1,3 +1,5 @@
+import random
+
 from path import path
 from PIL import Image
 
@@ -7,7 +9,7 @@ from misago.users.avatars import cache
 from misago.users.avatars.paths import MEDIA_AVATARS
 
 
-def get_available_galleries():
+def get_available_galleries(include_default=False):
     """
     Returns list of dicts containing 'name' and list of images
 
@@ -17,7 +19,7 @@ def get_available_galleries():
     galleries = []
 
     for directory in path(MEDIA_AVATARS).dirs():
-        if directory[-8:] != '_default':
+        if include_default or directory[-8:] != '_default':
             gallery = {'name': directory.name, 'images': []}
 
             images = directory.files('*.gif')
@@ -52,4 +54,17 @@ def set_avatar(user, gallery_image_path):
 
 
 def set_random_avatar(user):
-    pass
+    galleries = get_available_galleries(include_default=True)
+    if not galleries:
+        raise RuntimeError("no avatar galleries are set")
+
+    avatars_list = []
+
+    for gallery in galleries:
+        if gallery['name'] == '_default':
+            avatars_list = gallery['images']
+            break
+        else:
+            avatars_list += gallery['images']
+
+    set_avatar(user, random.choice(avatars_list))
