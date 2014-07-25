@@ -36,6 +36,53 @@ class ChangeForumOptionsTests(AdminTestCase):
         self.assertEqual(test_user.subscribe_to_replied_threads, 1)
 
 
+class ChangeAvatarTests(AdminTestCase):
+    def setUp(self):
+        super(ChangeAvatarTests, self).setUp()
+        self.view_link = reverse('misago:usercp_change_avatar')
+
+    def test_avatar_get(self):
+        """GET to change avatar returns 200"""
+        response = self.client.get(self.view_link)
+        self.assertEqual(response.status_code, 200)
+
+        self.test_admin.is_avatar_banned = True
+        self.test_admin.avatar_ban_user_message = 'Your avatar is banned.'
+        self.test_admin.save()
+
+        response = self.client.get(self.view_link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Your avatar is banned', response.content)
+
+    def test_set_gravatar(self):
+        """view sets user gravatar"""
+        self.test_admin.set_email('kontakt@rpiton.com')
+        self.test_admin.save()
+
+        response = self.client.post(self.view_link, data={'dl-gravatar': '1'})
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(self.view_link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Gravatar was downloaded', response.content)
+
+        self.test_admin.set_email('test@test.com')
+        self.test_admin.save()
+
+        self.client.post(self.view_link, data={'dl-gravatar': '1'})
+        response = self.client.get(self.view_link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('No Gravatar is associated', response.content)
+
+    def test_set_dynamic(self):
+        """view sets user dynamic avatar"""
+        response = self.client.post(self.view_link, data={'set-dynamic': '1'})
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(self.view_link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('New avatar based', response.content)
+
 class EditSignatureTests(AdminTestCase):
     def setUp(self):
         super(EditSignatureTests, self).setUp()
