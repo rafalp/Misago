@@ -9,19 +9,19 @@ from misago.users.avatars.paths import AVATARS_STORE
 
 
 def store_avatar(user, image):
-    avatar_dir = get_existing_avatars_dir(user)
+    avatars_dir = get_existing_avatars_dir(user)
 
     for size in sorted(settings.MISAGO_AVATARS_SIZES, reverse=True):
         image = image.resize((size, size), Image.ANTIALIAS)
-        image.save('%s/%s_%s.png' % (avatar_dir, user.pk, size), "PNG")
+        image.save('%s/%s_%s.png' % (avatars_dir, user.pk, size), "PNG")
 
 
 def delete_avatar(user):
-    avatar_dir = get_existing_avatars_dir(user)
+    avatars_dir = get_existing_avatars_dir(user)
     suffixes_to_delete = settings.MISAGO_AVATARS_SIZES + ('org', 'tmp')
 
     for size in suffixes_to_delete:
-        avatar_file = path('%s/%s_%s.png' % (avatar_dir, user.pk, size))
+        avatar_file = path('%s/%s_%s.png' % (avatars_dir, user.pk, size))
         if avatar_file.exists():
             avatar_file.remove()
 
