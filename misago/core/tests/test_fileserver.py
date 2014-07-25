@@ -22,7 +22,7 @@ class FileServerTests(TestCase):
     def test_rewrite_file_path(self):
         """file paths are rewritten"""
         with self.settings(MISAGO_SENDFILE_LOCATIONS_PATH='mymisagopath'):
-            test_path = '%s/somefile.png' % settings.MISAGO_AVATAR_CACHE
+            test_path = '%s/somefile.png' % settings.MISAGO_AVATAR_STORE
             rewritten_path = fileserver.rewrite_file_path(test_path)
             self.assertTrue(rewritten_path.startswith('/mymisagopath/'))
 

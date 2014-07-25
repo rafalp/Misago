@@ -6,7 +6,7 @@ from django.http import HttpResponse, StreamingHttpResponse
 
 SERVED_PATHS = (
     settings.MISAGO_ATTACHMENTS_ROOT,
-    settings.MISAGO_AVATAR_CACHE,
+    settings.MISAGO_AVATAR_STORE,
 )
 
 
