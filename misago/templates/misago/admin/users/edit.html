@@ -52,6 +52,14 @@ class="form-horizontal"
 
   </fieldset>
   <fieldset>
+    <legend>{% trans "Avatar" %}</legend>
+
+    {% form_row form.is_avatar_banned label_class field_class %}
+    {% form_row form.avatar_ban_user_message label_class field_class %}
+    {% form_row form.avatar_ban_staff_message label_class field_class %}
+
+  </fieldset>
+  <fieldset>
     <legend>{% trans "Signature" %}</legend>
 
     {% form_row form.signature label_class field_class %}

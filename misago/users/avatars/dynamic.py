@@ -48,7 +48,7 @@ def draw_avatar_bg(user, image):
     rgb = ImageColor.getrgb(main_color)
 
     bg_drawer = ImageDraw.Draw(image)
-    bg_drawer.rectangle([(0, 0), image_size], main_color)
+    bg_drawer.rectangle([(0, 0), image_size], rgb)
 
     image_steps = 4
     step_size = math.ceil(float(image_size[0]) / image_steps)

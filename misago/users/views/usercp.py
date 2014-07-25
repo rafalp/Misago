@@ -56,7 +56,7 @@ def change_forum_options(request):
 def change_avatar(request):
     avatar_size = max(settings.MISAGO_AVATARS_SIZES)
 
-    if request.method == 'POST':
+    if not request.user.is_avatar_banned and request.method == 'POST':
         if 'download-gravatar' in request.POST:
             try:
                 avatars.gravatar.set_avatar(request.user)

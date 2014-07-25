@@ -71,13 +71,31 @@ class EditUserForm(UserBaseForm):
         widget=forms.PasswordInput,
         required=False)
 
+    is_avatar_banned = forms.YesNoSwitch(
+        label=_("Ban avatar changes"),
+        help_text=_("Setting this to yes will ban user from "
+                    "changing his/her avatar, and will reset "
+                    "his/her avatar to procedurally generated one."))
+    avatar_ban_user_message = forms.CharField(
+        label=_("User ban message"),
+        help_text=_("Optional message for user explaining "
+                    "why he/she is banned form changing avatar."),
+        widget=forms.Textarea(attrs={'rows': 3}),
+        required=False)
+    avatar_ban_staff_message = forms.CharField(
+        label=_("Staff ban message"),
+        help_text=_("Optional message for forum team members explaining "
+                    "why user is banned form changing avatar."),
+        widget=forms.Textarea(attrs={'rows': 3}),
+        required=False)
+
     signature = forms.CharField(
         label=_("Signature contents"),
         widget=forms.Textarea(attrs={'rows': 3}),
         required=False)
     is_signature_banned = forms.YesNoSwitch(
         label=_("Ban editing signature"),
-        help_text=_("Changing this to yes will ban user from "
+        help_text=_("Setting this to yes will ban user from "
                     "making changes to his/her signature."))
     signature_ban_user_message = forms.CharField(
         label=_("User ban message"),
@@ -94,9 +112,10 @@ class EditUserForm(UserBaseForm):
 
     class Meta:
         model = get_user_model()
-        fields = ['username', 'email', 'title', 'signature',
-                  'is_signature_banned', 'signature_ban_user_message',
-                  'signature_ban_staff_message']
+        fields = ['username', 'email', 'title', 'is_avatar_banned',
+                  'avatar_ban_user_message', 'avatar_ban_staff_message',
+                  'signature', 'is_signature_banned',
+                  'signature_ban_user_message', 'signature_ban_staff_message']
 
     def clean_signature(self):
         data = self.cleaned_data['signature']

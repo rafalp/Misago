@@ -14,13 +14,23 @@
       </h2>
     </div>
 
-    <div class="form-body message">
+    <div class="form-body form-avatar-home">
 
       <div class="media">
         <span class="pull-left">
           <img class="media-object img-rounded" src="{{ user|avatar:avatar_size }}" width="{{ avatar_size }}" height="{{ avatar_size }}" alt="{% trans "Your current avatar" %}">
         </span>
         <div class="media-body usercp-avatar-options">
+          {% if user.is_avatar_banned %}
+          <h4 class="media-heading">{% trans "Change avatar:" %}</h4>
+          <div class="lead">
+            {% if user.avatar_ban_user_message %}
+            {{ user.avatar_ban_user_message|escape|urlize|linebreaks }}
+            {% else %}
+            <p>{% trans "You have been banned from changing your avatar." %}</p>
+            {% endif %}
+          </div>
+          {% else %}
           <h4 class="media-heading">{% trans "Change avatar:" %}</h4>
 
           <ul class="list-unstyled">
@@ -45,6 +55,7 @@
               </a>
             </li>
           </ul>
+          {% endif %}
 
         </div>
       </div>

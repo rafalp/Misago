@@ -8,6 +8,7 @@ from misago.admin.views import generic
 from misago.conf import settings
 from misago.core.mail import mail_users
 
+from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
 from misago.users.forms.admin import (StaffFlagUserFormFactory, NewUserForm,
                                       EditUserForm, SearchUsersForm)
 from misago.users.models import ACTIVATION_REQUIRED_NONE, User
@@ -136,6 +137,9 @@ class EditUser(UserAdmin, generic.ModelFormView):
         if form.cleaned_data.get('email'):
             target.set_email(form.cleaned_data['email'])
             start_admin_session(request, target)
+
+        if form.cleaned_data.get('is_avatar_banned'):
+            set_dynamic_avatar(target)
 
         if form.cleaned_data.get('staff_level'):
             form.instance.staff_level = form.cleaned_data['staff_level']
