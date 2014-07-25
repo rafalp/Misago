@@ -6,7 +6,7 @@ Misago defines plenty of custom tags and filters for use by template authors.
 
 
 misago_avatars
-=============
+==============
 
 ``avatar`` filter
 -----------------
@@ -22,6 +22,28 @@ Takes one optional argument, image size.
 Returns link to avatar blank avatar that can be used as ``src`` attribute value for ``img``. Should be used when no user pk is avaialable to render avatar, eg. displaying items belonging to deleted users.
 
 Takes one optional argument, image size.
+
+
+misago_batch
+============
+
+There are situations when you want to slice list of items in template into sublists, e.g. when displaying grid of items in HTML it makes more sense to split iteration into two steps: iteration over rows and items in each row.
+
+``misago_batch`` provides two simple and lazy filters that enable you to do this:
+
+
+``batch`` filter
+----------------
+
+Takes one argument, integer individual batch length, then turns big list into list of lists.
+
+
+``batchnonefilled`` filter
+----------------
+
+Works same as ``batch`` filter, but with one difference:
+
+If last batch length is shorter than requested, it fills it with ``None`` to make it requested length.
 
 
 misago_capture

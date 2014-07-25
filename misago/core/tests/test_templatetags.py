@@ -1,6 +1,8 @@
 from django.template import Context, Template, TemplateSyntaxError
 from django.test import TestCase
+
 from misago.core import forms
+from misago.core.templatetags import misago_batch
 
 
 class CaptureTests(TestCase):
@@ -37,6 +39,35 @@ Hello, <b>{{ the_var|safe }}</b>
         tpl = Template(tpl_content)
         render = tpl.render(self.context).strip()
         self.assertIn('<b>The&lt;hr&gt;Html</b>', render)
+
+
+class BatchTests(TestCase):
+    def test_batch(self):
+        """standard batch yields valid results"""
+        batch = 'loremipsum'
+        yields = (
+            ['l', 'o', 'r'],
+            ['e', 'm', 'i'],
+            ['p', 's', 'u'],
+            ['m',],
+        )
+
+        for i, test_yield in enumerate(misago_batch.batch(batch, 3)):
+            self.assertEqual(test_yield, yields[i])
+
+    def test_batchnonefilled(self):
+        """none-filled batch yields valid results"""
+        batch = 'loremipsum'
+        yields = (
+            ['l', 'o', 'r'],
+            ['e', 'm', 'i'],
+            ['p', 's', 'u'],
+            ['m', None, None],
+        )
+
+        for i, test_yield in enumerate(misago_batch.batchnonefilled(batch, 3)):
+            self.assertEqual(test_yield, yields[i])
+
 
 
 class TestForm(forms.Form):
