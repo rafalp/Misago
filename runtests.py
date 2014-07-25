@@ -14,14 +14,18 @@ def runtests():
     test_runner_path = os.path.dirname(__file__)
     project_template_path = os.path.join(
         test_runner_path, 'misago/project_template/project_name')
-    avatars_cache_path = os.path.join(
-        test_runner_path, 'misago/project_template/avatar_cache')
+    avatars_store_path = os.path.join(
+        test_runner_path, 'misago/project_template/avatar_store')
+    media_path = os.path.join(
+        test_runner_path, 'misago/project_template/media')
 
     test_project_path = os.path.join(test_runner_path, "testproject")
-    test_project_avatars_path = os.path.join(test_runner_path, "avatar_cache")
+    test_project_avatars_path = os.path.join(test_runner_path, "avatar_store")
+    test_project_media_path = os.path.join(test_runner_path, "media")
     if not os.path.exists(test_project_path):
         shutil.copytree(project_template_path, test_project_path)
-        shutil.copytree(avatars_cache_path, test_project_avatars_path)
+        shutil.copytree(avatars_store_path, test_project_avatars_path)
+        shutil.copytree(media_path, test_project_media_path)
 
         settings_path = os.path.join(test_project_path, "settings.py")
         with open(settings_path, "r") as py_file:
