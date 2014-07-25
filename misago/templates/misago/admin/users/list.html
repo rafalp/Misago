@@ -24,6 +24,9 @@
 <th style="width: 1%;">&nbsp;</th>
 {% endfor %}
 <th style="width: 1%;">&nbsp;</th>
+<th style="width: 1%;">&nbsp;</th>
+<th style="width: 1%;">&nbsp;</th>
+<th style="width: 1%;">&nbsp;</th>
 {% endblock table-header %}
 
 
@@ -77,25 +80,30 @@
 </td>
 {% endfor %}
 <td class="row-action">
-  <div class="btn-group pull-right">
-    <button type="button" class="btn btn-default dropdown-toggle tooltip-top" data-toggle="dropdown" title="{% trans "User options" %}">
-      <span class="fa fa-gear"></span>
-    </button>
-    <ul class="dropdown-menu" role="menu">
-      <li>
-        <a href="{% url 'misago:admin:users:accounts:edit' user_id=item.pk %}">
-          <span class="fa fa-pencil"></span>
-          {% trans "Edit user" %}
-        </a>
-      </li>
-    </ul>
-  </div>
+  <a href="{% url 'misago:admin:users:accounts:edit' user_id=item.pk %}" class="btn btn-success tooltip-top" title="{% trans "Activate user" %}">
+    <span class="fa fa-check-sign-o"></span>
+  </a>
+</td>
+<td class="row-action">
+  <a href="{% url 'misago:admin:users:accounts:edit' user_id=item.pk %}" class="btn btn-warning tooltip-top" title="{% trans "Ban user" %}">
+    <span class="fa fa-lock"></span>
+  </a>
+</td>
+<td class="row-action">
+  <a href="{% url 'misago:admin:users:accounts:edit' user_id=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Edit user" %}">
+    <span class="fa fa-pencil"></span>
+  </a>
+</td>
+<td class="row-action">
+  <a href="{% url 'misago:admin:users:accounts:edit' user_id=item.pk %}" class="btn btn-danger tooltip-top" title="{% trans "Delete user" %}">
+    <span class="fa fa-times"></span>
+  </a>
 </td>
 {% endblock table-row %}
 
 
 {% block emptylist %}
-<td colspan="{{ 9|add:extra_actions_len }}">
+<td colspan="{{ 12|add:extra_actions_len }}">
   <p>{% trans "No users matching search criteria have been found." %}</p>
 </td>
 {% endblock emptylist %}
