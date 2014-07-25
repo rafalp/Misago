@@ -18,7 +18,7 @@ class UserMiddleware(object):
     def process_request(self, request):
         if request.user.is_anonymous():
             request.user = AnonymousUser()
-        else:
+        elif not request.user.is_superuser:
             if get_request_ip_ban(request) or get_user_ban(request.user):
                 logout(request)
 
