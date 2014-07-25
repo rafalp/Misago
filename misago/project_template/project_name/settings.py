@@ -68,7 +68,7 @@ MEDIA_URL = '/media/'
 
 # Automatically setup default paths to media and attachments directories
 MISAGO_ATTACHMENTS_ROOT = os.path.join(BASE_DIR, 'attachments')
-MISAGO_AVATAR_CACHE = os.path.join(BASE_DIR, 'avatar_cache')
+MISAGO_AVATAR_STORE = os.path.join(BASE_DIR, 'avatar_store')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')

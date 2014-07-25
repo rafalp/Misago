@@ -5,7 +5,7 @@ import requests
 
 from misago.conf import settings
 
-from misago.users.avatars import cache
+from misago.users.avatars import store
 
 
 GRAVATAR_URL = 'http://www.gravatar.com/avatar/%s?s=%s&d=404'
@@ -28,6 +28,6 @@ def set_avatar(user):
                 'gravatar is not available for this e-mail')
 
         image = Image.open(StringIO(r.content))
-        cache.store_new_avatar(user, image)
+        store.store_new_avatar(user, image)
     except requests.exceptions.RequestException:
         raise GravatarError('failed to connect to gravatar servers')

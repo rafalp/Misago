@@ -1,6 +1,6 @@
 from misago.conf import settings
 
-from misago.users.avatars import cache, gravatar, dynamic, gallery, uploaded
+from misago.users.avatars import store, gravatar, dynamic, gallery, uploaded
 
 
 AVATAR_TYPES = ('gravatar', 'dynamic', 'gallery', 'uploaded')
@@ -24,4 +24,4 @@ def set_default_avatar(user):
 
 
 def delete_avatar(user):
-    cache.delete_avatar(user)
+    store.delete_avatar(user)

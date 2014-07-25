@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw, ImageColor, ImageFont, ImageFilter
 
 from misago.conf import settings
 
-from misago.users.avatars import cache
+from misago.users.avatars import store
 
 
 def set_avatar(user):
@@ -18,7 +18,7 @@ def set_avatar(user):
     drawer_function = getattr(drawer_module, name_bits[-1])
 
     image = drawer_function(user)
-    cache.store_new_avatar(user, image)
+    store.store_new_avatar(user, image)
 
 
 """

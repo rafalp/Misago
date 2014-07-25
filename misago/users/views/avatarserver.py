@@ -19,14 +19,14 @@ def serve_user_avatar(request, user_id, size):
     else:
         avatar_file = get_blank_avatar_file(size)
 
-    avatar_path = '%s/%s.png' % (settings.MISAGO_AVATAR_CACHE, avatar_file)
+    avatar_path = '%s/%s.png' % (settings.MISAGO_AVATAR_STORE, avatar_file)
     return make_file_response(avatar_path, 'image/png')
 
 
 def serve_blank_avatar(request, size):
     size = clean_size(size)
     avatar_file = get_blank_avatar_file(size)
-    avatar_path = '%s/%s.png' % (settings.MISAGO_AVATAR_CACHE, avatar_file)
+    avatar_path = '%s/%s.png' % (settings.MISAGO_AVATAR_STORE, avatar_file)
     return make_file_response(avatar_path, 'image/png')
 
 

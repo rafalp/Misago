@@ -5,7 +5,7 @@ from PIL import Image
 
 from django.conf import settings
 
-from misago.users.avatars import cache
+from misago.users.avatars import store
 from misago.users.avatars.paths import MEDIA_AVATARS
 
 
@@ -50,7 +50,7 @@ def is_avatar_from_gallery(image_path):
 
 def set_avatar(user, gallery_image_path):
     image = Image.open(settings.MEDIA_ROOT + gallery_image_path)
-    cache.store_new_avatar(user, image)
+    store.store_new_avatar(user, image)
 
 
 def set_random_avatar(user):
