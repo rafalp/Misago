@@ -16,7 +16,7 @@ SET_DEFAULT_AVATAR = {
 def set_default_avatar(user):
     try:
         SET_DEFAULT_AVATAR[settings.default_avatar](user)
-    except RuntimeException:
+    except RuntimeError:
         SET_DEFAULT_AVATAR[settings.default_gravatar_fallback](user)
 
 

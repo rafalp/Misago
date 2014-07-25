@@ -57,7 +57,7 @@ def change_avatar(request):
     avatar_size = max(settings.MISAGO_AVATARS_SIZES)
 
     if not request.user.is_avatar_banned and request.method == 'POST':
-        if 'download-gravatar' in request.POST:
+        if 'dl-gravatar' in request.POST and settings.allow_custom_avatars:
             try:
                 avatars.gravatar.set_avatar(request.user)
                 message = _("Gravatar was downloaded and set as new avatar.")
@@ -76,8 +76,35 @@ def change_avatar(request):
         return redirect('misago:usercp_change_avatar')
 
     return render(request, 'misago/usercp/change_avatar.html', {
-            'avatar_size': avatar_size
-        })
+        'avatar_size': avatar_size,
+        'galleries_exist': avatars.gallery.galleries_exist()
+    })
+
+
+@deny_guests
+def avatar_galleries(request):
+    if request.user.is_avatar_banned:
+        message = _("You don't have permission to change your avatar.")
+        messages.info(request, message)
+        return redirect('misago:usercp_change_avatar')
+
+    if not avatars.gallery.galleries_exist():
+        messages.info(request, _("No avatars galleries exist."))
+        return redirect('misago:usercp_change_avatar')
+
+    if request.method == 'POST':
+        new_image = request.POST.get('new-image')
+        if new_image:
+            if avatars.gallery.is_avatar_from_gallery(new_image):
+                avatars.gallery.set_avatar(request.user, new_image)
+                messages.success(request, _("Avatar from gallery was set."))
+                return redirect('misago:usercp_change_avatar')
+            else:
+                messages.error(request, _("Incorrect image."))
+
+    return render(request, 'misago/usercp/avatar_galleries.html', {
+        'galleries': avatars.gallery.get_available_galleries()
+    })
 
 
 @deny_guests

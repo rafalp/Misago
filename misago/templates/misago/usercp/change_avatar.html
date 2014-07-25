@@ -34,26 +34,32 @@
           <h4 class="media-heading">{% trans "Change avatar:" %}</h4>
 
           <ul class="list-unstyled">
+            {% if misago_settings.allow_custom_avatars %}
             <li>
-              <button name="download-gravatar" class="btn btn-link">
+              <button name="dl-gravatar" class="btn btn-link">
                 {% trans "Download my Gravatar" %}
               </button>
             </li>
+            {% endif %}
             <li>
               <button name="set-dynamic" class="btn btn-link">
                 {% trans "Generate avatar from my username" %}
               </button>
             </li>
+            {% if misago_settings.allow_custom_avatars %}
             <li>
               <a href="#">
                 {% trans "Upload image from computer" %}
               </a>
             </li>
+            {% endif %}
+            {% if galleries_exist %}
             <li>
-              <a href="#">
+              <a href="{% url 'misago:usercp_avatar_galleries' %}">
                 {% trans "Pick avatar from gallery" %}
               </a>
             </li>
+            {% endif %}
           </ul>
           {% endif %}
 
