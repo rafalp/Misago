@@ -3,7 +3,7 @@
 
 
 {% block title %}
-{% trans "Avatars gallery" %} | {% trans "Change options" %} | {{ block.super }}
+{% trans "Avatars gallery" %}{{ block.super }}
 {% endblock title %}
 
 
@@ -40,6 +40,9 @@
       </fieldset>
       {% endfor %}
 
+    </div>
+    <div class="form-footer">
+      <a href="{% url 'misago:usercp_change_avatar' %}" class="btn btn-default">{% trans "Return" %}</a>
     </div>
   </form>
 </div>

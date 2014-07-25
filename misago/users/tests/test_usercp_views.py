@@ -83,6 +83,34 @@ class ChangeAvatarTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('New avatar based', response.content)
 
+
+class AvatarGalleryTests(AdminTestCase):
+    def setUp(self):
+        super(AvatarGalleryTests, self).setUp()
+        self.view_link = reverse('misago:usercp_avatar_galleries')
+
+    def test_gallery_list(self):
+        """view renders gallery on GET"""
+        response = self.client.get(self.view_link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Select avatar from gallery', response.content)
+
+    def test_gallery_set_avatar(self):
+        """view changes user avatar on post"""
+        response = self.client.post(self.view_link, data={
+            'new-image': 'avatars/Nature/serval.jpg'})
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(reverse('misago:usercp_change_avatar'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Avatar from gallery was set', response.content)
+
+        response = self.client.post(self.view_link, data={
+            'new-image': 'baww.jpg'})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Incorrect image', response.content)
+
+
 class EditSignatureTests(AdminTestCase):
     def setUp(self):
         super(EditSignatureTests, self).setUp()

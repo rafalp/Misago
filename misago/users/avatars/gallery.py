@@ -28,7 +28,10 @@ def get_available_galleries(include_default=False):
             images += directory.files('*.png')
 
             for image in images:
-                gallery['images'].append(image[len(settings.MEDIA_ROOT):])
+                image_path = image[len(settings.MEDIA_ROOT):]
+                if image_path.startswith('/'):
+                    image_path = image_path[1:]
+                gallery['images'].append(image_path)
 
             if gallery['images']:
                 galleries.append(gallery)
@@ -49,7 +52,7 @@ def is_avatar_from_gallery(image_path):
 
 
 def set_avatar(user, gallery_image_path):
-    image = Image.open(settings.MEDIA_ROOT + gallery_image_path)
+    image = Image.open('%s/%s' % (settings.MEDIA_ROOT, gallery_image_path))
     store.store_new_avatar(user, image)
 
 
