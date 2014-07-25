@@ -184,10 +184,10 @@ MISAGO_ATTACHMENTS_ROOT
 Path to directory that Misago should use to store post attachments. This directory shouldn't be accessible from outside world.
 
 
-MISAGO_AVATAR_CACHE
+MISAGO_AVATAR_STORE
 -------------------
 
-Path to directory that Misago should use to store cached avatars. This directory shouldn't be accessible from outside world.
+Path to directory that Misago should use to store user avatars. This directory shouldn't be accessible from outside world.
 
 
 MISAGO_AVATARS_SIZES
