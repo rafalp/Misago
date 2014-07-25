@@ -92,7 +92,7 @@ def create_users_settings_group(apps, schema_editor):
                 {
                     'setting': 'default_avatar',
                     'name': _("Default avatar"),
-                    'value': 'dynamic',
+                    'value': 'gravatar',
                     'form_field': 'select',
                     'field_extra': {
                         'choices': (
