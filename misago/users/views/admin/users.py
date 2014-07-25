@@ -46,7 +46,7 @@ class UsersList(UserAdmin, generic.ListView):
         {
             'action': 'activate',
             'name': _("Activate accounts"),
-            'icon': 'fa fa-check',
+            'icon': 'fa fa-check-square-o',
         },
         {
             'action': 'ban',
