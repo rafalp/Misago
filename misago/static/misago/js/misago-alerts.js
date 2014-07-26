@@ -42,6 +42,10 @@
 
     // Alerts functions
     this.add_alert = function(template, message) {
+      if (message == undefined) {
+        message = this.options.generic_error;
+      }
+
       var $alert = $(template.replace('%message%', message));
       this.$alerts_list.append($alert);
 
