@@ -1,0 +1,60 @@
+{% extends "misago/usercp/base.html" %}
+{% load i18n staticfiles %}
+
+
+{% block title %}
+{% trans "Upload avatar" %}{{ block.super }}
+{% endblock title %}
+
+
+{% block page %}
+<div class="form-panel">
+  <form method="POST" role="form" class="upload-form">
+    {% csrf_token %}
+
+    <div class="form-header">
+      <h2>
+        <span class="fa fa-image"></span>
+        {% trans "Upload avatar" %}
+      </h2>
+    </div>
+
+    <div class="form-body form-avatar-upload">
+      <div id="image-drop" class="drag-drop-area">
+        <span class="fa fa-image"></span>
+        <h3>{% trans "Drag and drop image from your computer" %}</h3>
+        <p>
+          {% blocktrans trimmed with limit=upload_limit|filesizeformat %}
+            Must be jpg, gif or png image file no bigger than {{ limit }}.
+          {%  endblocktrans %}
+        </p>
+      </div>
+    </div>
+
+    <div class="form-footer">
+      <a href="{% url 'misago:usercp_change_avatar' %}" class="btn btn-default">{% trans "Cancel" %}</a>
+    </div>
+  </form>
+</div>
+{% endblock page %}
+
+
+{% block javascripts %}
+<script type="text/javascript" src="{% static "misago/js/dropzone.js" %}" charset="utf-8"></script>
+<script type="text/javascript">
+  $(function() {
+    var csrf_token = $("input[name=csrfmiddlewaretoken]").val();
+    var $droparea = $('#image-drop');
+    $droparea.dropzone({
+      paramName: "new-avatar",
+      clickable: true,
+      headers: {'X-CSRFToken': csrf_token},
+      url: "{% url 'misago:usercp_upload_avatar_handler' %}",
+      error: function(avatar, message, xhr) {
+        console.log(message.message)
+        console.log(xhr)
+      }
+    })
+  });
+</script>
+{% endblock %}

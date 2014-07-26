@@ -48,8 +48,8 @@
             </li>
             {% if misago_settings.allow_custom_avatars %}
             <li>
-              <a href="#">
-                {% trans "Upload image from computer" %}
+              <a href="{% url 'misago:usercp_upload_avatar' %}">
+                {% trans "Upload image from my device" %}
               </a>
             </li>
             {% endif %}

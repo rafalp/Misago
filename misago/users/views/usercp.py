@@ -1,12 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.db import IntegrityError, transaction
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.shortcuts import redirect, render as django_render
 from django.utils.translation import ugettext as _
 from django.views.decorators.debug import sensitive_post_parameters
 
 from misago.conf import settings
+from misago.core.decorators import ajax_only, require_POST
+from misago.core.exceptions import AjaxError
 from misago.core.mail import mail_user
 from misago.markup import Editor
 
@@ -81,13 +83,53 @@ def change_avatar(request):
     })
 
 
+def avatar_not_banned(f):
+    def decorator(request, *args, **kwargs):
+        if request.user.is_avatar_banned:
+            message = _("You don't have permission to change your avatar.")
+            messages.info(request, message)
+            return redirect('misago:usercp_change_avatar')
+        else:
+            return f(request, *args, **kwargs)
+    return decorator
+
+
 @deny_guests
-def avatar_galleries(request):
-    if request.user.is_avatar_banned:
-        message = _("You don't have permission to change your avatar.")
-        messages.info(request, message)
+@avatar_not_banned
+def upload_avatar(request):
+    if not settings.allow_custom_avatars:
+        messages.info(request, _("Avatar uploads are currently disabled."))
         return redirect('misago:usercp_change_avatar')
 
+    upload_limit = settings.avatar_upload_limit * 1024
+    return render(request, 'misago/usercp/upload_avatar.html', {
+        'upload_limit': upload_limit,
+    })
+
+
+@ajax_only
+@deny_guests
+@require_POST
+@avatar_not_banned
+def upload_avatar_handler(request):
+    if not settings.allow_custom_avatars:
+        raise AjaxError(_("Avatar uploads are currently disabled."))
+
+    new_avatar = request.FILES.get('new-avatar');
+    if not new_avatar:
+        raise AjaxError(_("No file was sent."))
+    raise AjaxError(_("Not yet completed!"))
+
+
+@deny_guests
+@avatar_not_banned
+def crop_avatar(request, crop_uploaded_avatar=True):
+    return render(request, 'misago/usercp/crop_avatar.html', {})
+
+
+@deny_guests
+@avatar_not_banned
+def avatar_galleries(request):
     if not avatars.gallery.galleries_exist():
         messages.info(request, _("No avatars galleries exist."))
         return redirect('misago:usercp_change_avatar')

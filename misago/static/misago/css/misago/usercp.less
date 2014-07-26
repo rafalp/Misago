@@ -3,6 +3,9 @@
 // --------------------------------------------------
 
 
+// Avatar CP home
+//
+//==
 .form-avatar-home {
   border-top: 1px solid @form-panel-border;
   padding: @form-panel-padding;
@@ -34,5 +37,38 @@
   .usercp-avatar-options {
     padding-top: @line-height-computed / 2;
     padding-left: @line-height-computed / 2;
+  }
+}
+
+
+// Drag and drop upload
+//
+//==
+.form-avatar-upload {
+  border-top: 1px solid @form-panel-border;
+  padding: @form-panel-padding;
+  padding-top: @line-height-computed;
+  padding-bottom: @line-height-computed;
+
+  .drag-drop-area {
+    border: 6px dashed @gray-light;
+    border-radius: @border-radius-large;
+    display: block;
+    padding: @line-height-computed;
+
+    color: @gray-light;
+    cursor: pointer;
+    text-align: center;
+
+    .fa {
+      font-size: @line-height-computed * 3;
+    }
+
+    &:hover {
+      border-color: @gray;
+
+      color: @gray;
+      text-decoration: none;
+    }
   }
 }
