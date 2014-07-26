@@ -16,7 +16,7 @@ def is_misago_exception(exception):
 
 def handle_ajax_error(request, exception):
     json = {'is_error': 1, 'message': exception.message}
-    return JsonResponse(json, code=exception.code)
+    return JsonResponse(json, status=exception.code)
 
 
 def handle_explicit_first_page_exception(request, exception):
