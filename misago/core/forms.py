@@ -19,11 +19,6 @@ class YesNoSwitchBase(TypedChoiceField):
 
 
 def YesNoSwitch(**kwargs):
-    if 'initial' not in kwargs:
-        kwargs['initial'] = 0
-
-    kwargs['initial'] = 1 if kwargs['initial'] else 0
-
     return YesNoSwitchBase(
         coerce=int,
         choices=((1, _("Yes")), (0, _("No"))),

@@ -107,7 +107,7 @@ def create_textarea(setting, kwargs, extra):
 
 
 def create_yesno(setting, kwargs, extra):
-    return forms.YesNoSwitch()
+    return forms.YesNoSwitch(**kwargs)
 
 
 FIELD_STYPES = {
