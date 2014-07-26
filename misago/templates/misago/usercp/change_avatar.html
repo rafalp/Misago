@@ -47,6 +47,13 @@
               </button>
             </li>
             {% if misago_settings.allow_custom_avatars %}
+            {% if has_source_image %}
+            <li>
+              <a href="{% url 'misago:usercp_crop_avatar' %}">
+                {% trans "Crop my avatar image" %}
+              </a>
+            </li>
+            {% endif %}
             <li>
               <a href="{% url 'misago:usercp_upload_avatar' %}">
                 {% trans "Upload image from my device" %}

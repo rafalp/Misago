@@ -1,5 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
+from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.db import IntegrityError, transaction
 from django.http import Http404, JsonResponse
 from django.shortcuts import redirect, render as django_render
@@ -79,7 +81,8 @@ def change_avatar(request):
 
     return render(request, 'misago/usercp/change_avatar.html', {
         'avatar_size': avatar_size,
-        'galleries_exist': avatars.gallery.galleries_exist()
+        'galleries_exist': avatars.gallery.galleries_exist(),
+        'has_source_image': avatars.uploaded.has_original_avatar(request.user)
     })
 
 
@@ -101,9 +104,11 @@ def upload_avatar(request):
         messages.info(request, _("Avatar uploads are currently disabled."))
         return redirect('misago:usercp_change_avatar')
 
-    upload_limit = settings.avatar_upload_limit * 1024
     return render(request, 'misago/usercp/upload_avatar.html', {
-        'upload_limit': upload_limit,
+        'upload_limit': settings.avatar_upload_limit * 1024,
+        'upload_limit_mb': settings.avatar_upload_limit / 1024.0,
+        'allowed_extensions': avatars.uploaded.ALLOWED_EXTENSIONS,
+        'allowed_mime_types': avatars.uploaded.ALLOWED_MIME_TYPES,
     })
 
 
@@ -118,13 +123,71 @@ def upload_avatar_handler(request):
     new_avatar = request.FILES.get('new-avatar');
     if not new_avatar:
         raise AjaxError(_("No file was sent."))
-    raise AjaxError(_("Not yet completed!"))
+
+    try:
+        avatars.uploaded.handle_uploaded_file(request.user, new_avatar)
+    except ValidationError as e:
+        raise AjaxError(e.args[0])
+
+    return JsonResponse({'is_error': 0, 'message': 'Image has been uploaded.'})
 
 
 @deny_guests
 @avatar_not_banned
-def crop_avatar(request, crop_uploaded_avatar=True):
-    return render(request, 'misago/usercp/crop_avatar.html', {})
+def crop_avatar(request, use_tmp_avatar):
+    if use_tmp_avatar:
+        if not avatars.uploaded.has_temporary_avatar(request.user):
+            messages.error(request, _("Upload image that you want to crop."))
+            return redirect('misago:usercp_change_avatar')
+    else:
+        if not avatars.uploaded.has_original_avatar(request.user):
+            messages.error(request, _("You don't have uploaded image to crop."))
+            return redirect('misago:usercp_change_avatar')
+
+    if use_tmp_avatar:
+        token = avatars.uploaded.avatar_source_token(request.user, 'tmp')
+        avatar_url = reverse('misago:user_avatar_tmp', kwargs={
+            'user_id': request.user.pk, 'token': token
+        })
+    else:
+        token = avatars.uploaded.avatar_source_token(request.user, 'org')
+        avatar_url = reverse('misago:user_avatar_org', kwargs={
+            'user_id': request.user.pk, 'token': token
+        })
+
+    if request.method == 'POST':
+        crop = request.POST.get('crop')
+        try:
+            if use_tmp_avatar:
+                avatars.uploaded.crop_source_image(request.user, 'tmp', crop)
+            else:
+                avatars.uploaded.crop_source_image(request.user, 'org', crop)
+
+            request.user.avatar_crop = crop
+            request.user.save(update_fields=['avatar_crop'])
+
+            if use_tmp_avatar:
+                messages.success(request, _("Uploaded avatar was set."))
+            else:
+                messages.success(request, _("Avatar was cropped."))
+            return redirect('misago:usercp_change_avatar')
+        except ValidationError as e:
+            messages.error(request, e.args[0])
+
+    if not use_tmp_avatar and request.user.avatar_crop:
+        user_crop = request.user.avatar_crop.split(',')
+        current_crop = {
+            'selection_len': user_crop[0],
+            'start_x': user_crop[4],
+            'start_y': user_crop[6],
+        }
+    else:
+        current_crop = None
+
+    return render(request, 'misago/usercp/crop_avatar.html', {
+        'avatar_url': avatar_url,
+        'crop': current_crop
+    })
 
 
 @deny_guests

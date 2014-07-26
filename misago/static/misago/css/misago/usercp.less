@@ -41,6 +41,66 @@
 }
 
 
+// Uploaded avatar preview
+//
+//==
+.form-avatar-preview {
+  overflow: auto;
+
+  .preview-image {
+    border-radius: @border-radius-base;
+    margin-bottom: @line-height-computed;
+    overflow: auto;
+    width: 100%;
+
+    text-align: center;
+
+    img {
+      border-radius: @border-radius-large;
+      width: 90%;
+    }
+  }
+
+  p {
+    text-align: center;
+  }
+
+  .btn {
+    display: block;
+    margin-bottom: @line-height-computed;
+    width: 100%;
+  }
+}
+
+
+@media (min-width: @screen-sm-min) {
+  .form-avatar-preview {
+    .preview-image {
+      float: left;
+      width: auto;
+
+      img {
+        border-radius: @border-radius-base;
+        margin-right: @line-height-computed;
+        max-height: 36px;
+        width: auto;
+      }
+    }
+
+    p {
+      position: relative;
+      top: 4px;
+
+      text-align: left;
+    }
+
+    .btn {
+      width: auto;
+    }
+  }
+}
+
+
 // Drag and drop upload
 //
 //==
@@ -51,10 +111,11 @@
   padding-bottom: @line-height-computed;
 
   .drag-drop-area {
+    background-color: @form-panel-bg;
     border: 6px dashed @gray-light;
     border-radius: @border-radius-large;
     display: block;
-    padding: @line-height-computed;
+    padding: (@line-height-computed * 2) @line-height-computed;
 
     color: @gray-light;
     cursor: pointer;
@@ -62,6 +123,7 @@
 
     .fa {
       font-size: @line-height-computed * 3;
+      margin-bottom: @line-height-computed;
     }
 
     &:hover {
@@ -69,6 +131,28 @@
 
       color: @gray;
       text-decoration: none;
+    }
+  }
+}
+
+
+// Crop avatar
+.form-crop-avatar {
+  border-top: 1px solid @form-panel-border;
+  padding: @form-panel-padding;
+  padding-top: @line-height-computed;
+  padding-bottom: @line-height-computed;
+
+  .crop-form-container {
+    margin-left: auto;
+    margin-right: auto;
+
+    .cropped-image-border {
+      background-color: @form-panel-bg;
+      border-radius: @border-radius-small;
+      .box-shadow(0px 0px 4px @gray);
+      padding: 4px;
+      margin-bottom: @line-height-computed / 2;
     }
   }
 }
