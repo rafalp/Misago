@@ -177,6 +177,7 @@ def crop_avatar(request, use_tmp_avatar):
     if not use_tmp_avatar and request.user.avatar_crop:
         user_crop = request.user.avatar_crop.split(',')
         current_crop = {
+            'image_width': user_crop[0],
             'selection_len': user_crop[3],
             'start_x': user_crop[4],
             'start_y': user_crop[6],
