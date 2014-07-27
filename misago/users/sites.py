@@ -108,7 +108,7 @@ class Site(object):
                 is_visible = page['visibility_condition'](*test_args)
 
             if is_visible:
-                page['is_active'] = page['link'].startswith(active_link)
+                page['is_active'] = active_link.startswith(page['link'])
                 visible_pages.append(page)
         return visible_pages
 
