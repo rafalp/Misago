@@ -58,6 +58,28 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertIn(user_a.username, response.content)
         self.assertFalse(user_b.username in response.content)
 
+    def test_mass_activation(self):
+        """adminview activates multiple users"""
+        User = get_user_model()
+
+        user_pks = []
+        for i in xrange(10):
+            test_user = User.objects.create_user('Bob%s' % i,
+                                                 'bob%s@test.com' % i,
+                                                 'pass123',
+                                                 requires_activation=1)
+            user_pks.append(test_user.pk)
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={'action': 'activate', 'selected_items': user_pks})
+        self.assertEqual(response.status_code, 302)
+
+        inactive_qs = User.objects.filter(id__in=user_pks,
+                                          requires_activation=1)
+        self.assertEqual(inactive_qs.count(), 0)
+        self.assertIn("has been activated", mail.outbox[0].subject)
+
     def test_new_view(self):
         """new user view creates account"""
         response = self.client.get(
