@@ -41,9 +41,13 @@ def validate_dimensions(uploaded_file):
         message = _("Uploaded image should be at "
                     "least 100 pixels tall and wide.")
         raise ValidationError(message)
+    image = Image.open(uploaded_file)
+    if image.size[0] * image.size[1] > 2000 * 3000:
+        message = _("Uploaded image is too big.")
+        raise ValidationError(message)
 
     image_ratio = float(min(image.size)) / float(max(image.size))
-    if image_ratio < 0.15:
+    if image_ratio < 0.25:
         message = _("Uploaded image ratio cannot be greater than 16:9.")
         raise ValidationError(message)
     return image
@@ -78,14 +82,14 @@ def crop_string_to_dict(image, crop):
         crop_list = [int(x) for x in crop.split(',')]
         if len(crop_list) != 8:
             raise ValidationError(message)
-    except TypeError, ValueError:
+    except (TypeError, ValueError):
         raise ValidationError(message)
 
     cropped_size = (crop_list[0], crop_list[1])
 
-    if cropped_size[0] < 10 or cropped_size[0] > image.size[0]:
+    if cropped_size[0] < 10:
         raise ValidationError(message)
-    if cropped_size[1] < 10 or cropped_size[1] > image.size[1]:
+    if cropped_size[1] < 10:
         raise ValidationError(message)
 
     if crop_list[2] != crop_list[3]:
@@ -94,6 +98,13 @@ def crop_string_to_dict(image, crop):
 
     crop_dict['width'] = crop_list[2]
     crop_dict['height'] = crop_list[3]
+
+    if crop_dict['width'] != crop_dict['height']:
+        raise ValidationError(message)
+    if crop_dict['width'] > cropped_size[0]:
+        raise ValidationError(message)
+    if crop_dict['height'] > cropped_size[1]:
+        raise ValidationError(message)
 
     crop_dict['source'] = (crop_list[4], crop_list[6],
                            crop_list[5], crop_list[7])
