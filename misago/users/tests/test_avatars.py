@@ -2,11 +2,12 @@ from path import path
 from PIL import Image
 
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from misago.conf import settings
 
-from misago.users.avatars import store, dynamic, gallery, gravatar
+from misago.users.avatars import store, dynamic, gallery, gravatar, uploaded
 from misago.users.avatars.paths import AVATARS_STORE
 
 
@@ -90,3 +91,56 @@ class AvatarSetterTests(TestCase):
         self.assertNoAvatarIsSet()
         gravatar.set_avatar(self.user)
         self.assertAvatarWasSet()
+
+
+class MockAvatarFile(object):
+    def __init__(self, size=None, name=None, mime=None):
+        self.size = size
+        self.name = name
+        self.content_type = mime
+
+
+class UploadedAvatarTests(TestCase):
+    def test_crop(self):
+        """crop validation and clear"""
+        image = Image.new("RGBA", (200, 200), 0)
+        with self.assertRaises(ValidationError):
+            uploaded.crop_string_to_dict(image, "abc")
+        with self.assertRaises(ValidationError):
+            uploaded.crop_string_to_dict(image, "2,2,4,a")
+        with self.assertRaises(ValidationError):
+            uploaded.crop_string_to_dict(image, "300,300,400,400,0,0,10,10")
+
+        uploaded.crop_string_to_dict(image, "200,200,90,90,0,0,90,90")
+
+    def test_uploaded_image_size_validation(self):
+        """uploaded image size is validated"""
+        image = MockAvatarFile(size=settings.avatar_upload_limit * 2024)
+        with self.assertRaises(ValidationError):
+            uploaded.validate_file_size(image)
+
+        image = MockAvatarFile(size=settings.avatar_upload_limit * 1000)
+        uploaded.validate_file_size(image)
+
+    def test_uploaded_image_extension_validation(self):
+        """uploaded image extension is validated"""
+        for invalid_extension in ('.txt', '.zip', '.py', '.tiff'):
+            with self.assertRaises(ValidationError):
+                image = MockAvatarFile(name='test%s' % invalid_extension)
+                uploaded.validate_extension(image)
+
+        for valid_extension in uploaded.ALLOWED_EXTENSIONS:
+            image = MockAvatarFile(name='test%s' % valid_extension)
+            uploaded.validate_extension(image)
+
+    def test_uploaded_image_mime_validation(self):
+        """uploaded image mime type is validated"""
+        image = MockAvatarFile(mime='fake/mime')
+        with self.assertRaises(ValidationError):
+            uploaded.validate_mime(image)
+
+        for valid_mime in uploaded.ALLOWED_MIME_TYPES:
+            image = MockAvatarFile(mime=valid_mime)
+            uploaded.validate_mime(image)
+
+

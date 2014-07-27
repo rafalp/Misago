@@ -1,10 +1,14 @@
+from path import path
+
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.core.urlresolvers import reverse
 
 from misago.admin.testutils import AdminTestCase
-
+from misago.conf import settings
 from misago.core import threadstore
+
+from misago.users.avatars import store
 
 
 class ChangeForumOptionsTests(AdminTestCase):
@@ -82,6 +86,73 @@ class ChangeAvatarTests(AdminTestCase):
         response = self.client.get(self.view_link)
         self.assertEqual(response.status_code, 200)
         self.assertIn('New avatar based', response.content)
+
+
+class AvatarUploadTests(AdminTestCase):
+    def setUp(self):
+        super(AvatarUploadTests, self).setUp()
+        store.delete_avatar(self.test_admin)
+
+    def tearDown(self):
+        store.delete_avatar(self.test_admin)
+
+    def test_upload_form_view(self):
+        """upload view renders on get"""
+        response = self.client.get(reverse('misago:usercp_upload_avatar'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Upload avatar', response.content)
+
+    def test_upload_view(self):
+        """upload view renders on get"""
+        handler_link = reverse('misago:usercp_upload_avatar_handler')
+
+        response = self.client.get(handler_link)
+        self.assertEqual(response.status_code, 405)
+
+        ajax_header = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
+        response = self.client.post(handler_link,
+                                    data={'baww': 'nope'},
+                                    **ajax_header)
+
+        self.assertEqual(response.status_code, 406)
+        self.assertIn('No file was sent.', response.content)
+
+        with open('%s/%s' % (settings.MEDIA_ROOT, 'misago.png')) as avatar:
+            response = self.client.post(handler_link,
+                                        data={'new-avatar': avatar},
+                                        **ajax_header)
+            self.assertEqual(response.status_code, 200)
+
+            avatar_dir = store.get_existing_avatars_dir(self.test_admin)
+            avatar = path('%s/%s_tmp.png' % (avatar_dir, self.test_admin.pk))
+            self.assertTrue(avatar.exists())
+            self.assertTrue(avatar.isfile())
+
+    def test_crop_view(self):
+        """avatar gets cropped"""
+        with open('%s/%s' % (settings.MEDIA_ROOT, 'misago.png')) as avatar:
+            handler_link = reverse('misago:usercp_upload_avatar_handler')
+            ajax_header = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
+            response = self.client.post(handler_link,
+                                        data={'new-avatar': avatar},
+                                        **ajax_header)
+            self.assertEqual(response.status_code, 200)
+
+            crop_link = reverse('misago:usercp_crop_new_avatar')
+            response = self.client.post(crop_link, data={'crop': '1245'})
+            self.assertEqual(response.status_code, 200)
+
+            test_crop = '619,201,150,150,0,0,150,150'
+            response = self.client.post(crop_link, data={'crop': test_crop})
+            self.assertEqual(response.status_code, 302)
+
+            avatar_dir = store.get_existing_avatars_dir(self.test_admin)
+            avatar = path('%s/%s_tmp.png' % (avatar_dir, self.test_admin.pk))
+            self.assertFalse(avatar.exists())
+
+            avatar = path('%s/%s_org.png' % (avatar_dir, self.test_admin.pk))
+            self.assertTrue(avatar.exists())
+            self.assertTrue(avatar.isfile())
 
 
 class AvatarGalleryTests(AdminTestCase):

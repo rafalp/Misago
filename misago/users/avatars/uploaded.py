@@ -41,7 +41,7 @@ def validate_dimensions(uploaded_file):
         message = _("Uploaded image should be at "
                     "least 100 pixels tall and wide.")
         raise ValidationError(message)
-    image = Image.open(uploaded_file)
+
     if image.size[0] * image.size[1] > 2000 * 3000:
         message = _("Uploaded image is too big.")
         raise ValidationError(message)
