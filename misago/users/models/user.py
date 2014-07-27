@@ -109,7 +109,8 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, username, email, password):
         with transaction.atomic():
-            user = self.create_user(username, email, password=password)
+            user = self.create_user(username, email, password=password,
+                                    set_default_avatar=True)
 
             try:
                 user.rank = Rank.objects.get(name=_("Forum Team"))
