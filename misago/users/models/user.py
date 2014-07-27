@@ -171,10 +171,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     acl_key = models.CharField(max_length=12, null=True, blank=True)
 
     is_avatar_banned = models.BooleanField(default=False)
-    avatar_type = models.CharField(max_length=10, null=True, blank=True)
-    avatar_image = models.CharField(max_length=255, null=True, blank=True)
-    avatar_original = models.CharField(max_length=255, null=True, blank=True)
-    avatar_temp = models.CharField(max_length=255, null=True, blank=True)
     avatar_crop = models.CharField(max_length=255, null=True, blank=True)
     avatar_ban_user_message = models.TextField(null=True, blank=True)
     avatar_ban_staff_message = models.TextField(null=True, blank=True)
