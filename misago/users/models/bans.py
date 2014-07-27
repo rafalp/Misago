@@ -15,6 +15,9 @@ __all__ = [
 ]
 
 
+BAN_CACHEBUSTER = 'misago_bans'
+
+
 BAN_USERNAME = 0
 BAN_EMAIL = 1
 BAN_IP = 2
@@ -36,6 +39,9 @@ class BansManager(models.Manager):
 
     def is_email_banned(self, email):
         return self.check_ban(email=email)
+
+    def invalidate_cache(self):
+        cachebuster.invalidate(BAN_CACHEBUSTER)
 
     def find_ban(self, username=None, email=None, ip=None):
         tests = []
@@ -117,7 +123,7 @@ class BanCache(models.Model):
 
     @property
     def is_valid(self):
-        version_is_valid = cachebuster.is_valid('misago_bans',
+        version_is_valid = cachebuster.is_valid(BAN_CACHEBUSTER,
                                                 self.bans_version)
         not_expired = not self.valid_until or self.valid_until < date.today()
 

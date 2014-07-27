@@ -8,8 +8,7 @@ from misago.users.views.admin.bans import BansList, NewBan, EditBan, DeleteBan
 from misago.users.views.admin.ranks import (RanksList, NewRank, EditRank,
                                             DeleteRank, MoveDownRank,
                                             MoveUpRank, DefaultRank, RankUsers)
-from misago.users.views.admin.users import (UsersList, NewUser, EditUser,
-                                            ActivateUser)
+from misago.users.views.admin.users import UsersList, NewUser, EditUser
 from misago.users.views.admin.warnings import (WarningsList, NewWarning,
                                                EditWarning, MoveDownWarning,
                                                MoveUpWarning, DeleteWarning)
@@ -49,7 +48,6 @@ class MisagoAdminExtension(object):
             url(r'^(?P<page>\d+)/$', UsersList.as_view(), name='index'),
             url(r'^new/$', NewUser.as_view(), name='new'),
             url(r'^edit/(?P<user_id>\d+)/$', EditUser.as_view(), name='edit'),
-            url(r'^activate/(?P<user_id>\d+)/$', ActivateUser.as_view(), name='activate'),
         )
 
         # Ranks

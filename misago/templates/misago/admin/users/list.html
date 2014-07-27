@@ -25,9 +25,6 @@
 <th style="width: 1%;">&nbsp;</th>
 {% endfor %}
 <th style="width: 1%;">&nbsp;</th>
-<th style="width: 1%;">&nbsp;</th>
-<th style="width: 1%;">&nbsp;</th>
-<th style="width: 1%;">&nbsp;</th>
 {% endblock table-header %}
 
 
@@ -84,23 +81,6 @@
 </td>
 {% endfor %}
 <td class="row-action">
-  {% if item.requires_activation %}
-  <form action="{% url 'misago:admin:users:accounts:activate' user_id=item.pk %}" method="post">
-    <button class="btn btn-success tooltip-top" title="{% trans "Activate user" %}">
-      {% csrf_token %}
-      <span class="fa fa-check-square-o"></span>
-    </button>
-  </form>
-  {% else %}
-  &nbsp;
-  {% endif %}
-</td>
-<td class="row-action">
-  <a href="{% url 'misago:admin:users:accounts:edit' user_id=item.pk %}" class="btn btn-warning tooltip-top" title="{% trans "Ban user" %}">
-    <span class="fa fa-lock"></span>
-  </a>
-</td>
-<td class="row-action">
   <a href="{% url 'misago:admin:users:accounts:edit' user_id=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Edit user" %}">
     <span class="fa fa-pencil"></span>
   </a>
@@ -114,7 +94,7 @@
 
 
 {% block emptylist %}
-<td colspan="{{ 13|add:extra_actions_len }}">
+<td colspan="{{ 11|add:extra_actions_len }}">
   <p>{% trans "No users matching search criteria have been found." %}</p>
 </td>
 {% endblock emptylist %}

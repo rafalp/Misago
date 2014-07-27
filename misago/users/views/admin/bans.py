@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
 from misago.admin.views import generic
-from misago.core import cachebuster
 
 from misago.users.models import Ban
 from misago.users.forms.admin import SearchBansForm, BanForm
@@ -17,7 +16,7 @@ class BanAdmin(generic.AdminBaseMixin):
 
     def handle_form(self, form, request, target):
         super(BanAdmin, self).handle_form(form, request, target)
-        cachebuster.invalidate('misago_bans')
+        Ban.objects.invalidate_cache()
 
 
 class BansList(BanAdmin, generic.ListView):
@@ -42,7 +41,7 @@ class BansList(BanAdmin, generic.ListView):
 
     def action_delete(self, request, items):
         items.delete()
-        cachebuster.invalidate('misago_bans')
+        Ban.objects.invalidate_cache()
         messages.success(request, _("Selected bans have been removed."))
 
 
@@ -57,6 +56,6 @@ class EditBan(BanAdmin, generic.ModelFormView):
 class DeleteBan(BanAdmin, generic.ButtonView):
     def button_action(self, request, target):
         target.delete()
-        cachebuster.invalidate('misago_bans')
+        Ban.objects.invalidate_cache()
         message = _('Ban "%s" has been removed.') % unicode(target.name)
         messages.success(request, message)

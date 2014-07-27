@@ -10,8 +10,9 @@ from misago.core.mail import mail_users
 
 from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
 from misago.users.forms.admin import (StaffFlagUserFormFactory, NewUserForm,
-                                      EditUserForm, SearchUsersForm)
-from misago.users.models import ACTIVATION_REQUIRED_NONE, User
+                                      EditUserForm, SearchUsersForm,
+                                      BanUsersForm)
+from misago.users.models import ACTIVATION_REQUIRED_NONE, User, Ban
 from misago.users.signatures import set_user_signature
 
 
@@ -30,16 +31,6 @@ class UserAdmin(generic.AdminBaseMixin):
 
         return StaffFlagUserFormFactory(
             self.Form, target, add_staff_field=add_staff_field)
-
-    def send_activation_mail(self, request, activated_users):
-        mail_subject = _("Your account on %(forum_title)s "
-                             "forums has been activated")
-        subject_formats = {'forum_title': settings.forum_name}
-        mail_subject = mail_subject % subject_formats
-
-        mail_subject = mail_subject
-        mail_users(request, activated_users, mail_subject,
-                   'misago/emails/activation/by_admin')
 
 
 class UsersList(UserAdmin, generic.ListView):
@@ -64,7 +55,6 @@ class UsersList(UserAdmin, generic.ListView):
             'action': 'ban',
             'name': _("Ban users"),
             'icon': 'fa fa-lock',
-            'confirmation': _("Are you sure you want to ban those users?")
         },
         {
             'action': 'delete',
@@ -94,10 +84,48 @@ class UsersList(UserAdmin, generic.ListView):
             queryset = User.objects.filter(pk__in=activated_users_pks)
             queryset.update(requires_activation=ACTIVATION_REQUIRED_NONE)
 
-            self.send_activation_mail(request, queryset)
+            mail_subject = _("Your account on %(forum_title)s "
+                                 "forums has been activated")
+            subject_formats = {'forum_title': settings.forum_name}
+            mail_subject = mail_subject % subject_formats
+
+            mail_subject = mail_subject
+            mail_users(request, inactive_users, mail_subject,
+                       'misago/emails/activation/by_admin')
 
             message = _("Selected users accounts have been activated.")
             messages.success(request, message)
+
+    def action_ban(self, request, users):
+        users = users.order_by('username_slug')
+        for user in users:
+            if user.is_superuser:
+                message = _("%(username)s is super admin and can't be banned.")
+                mesage = message % {'username': user.username}
+                raise generic.MassActionError(mesage)
+
+        form = BanUsersForm()
+        if 'finalize' in request.POST:
+            form = BanUsersForm(request.POST)
+            if form.is_valid():
+                for user in users:
+                    Ban.objects.create(
+                        banned_value=user.username,
+                        user_message=form.cleaned_data.get('user_message'),
+                        staff_message=form.cleaned_data.get('staff_message'),
+                        valid_until=form.cleaned_data.get('valid_until')
+                    )
+
+                Ban.objects.invalidate_cache()
+                message = _("Selected users have been banned.")
+                messages.success(request, message)
+                return None
+
+        return self.render(
+            request, template='misago/admin/users/ban_users.html', context={
+                'users': users,
+                'form': form,
+            })
 
 
 class NewUser(UserAdmin, generic.ModelFormView):
@@ -152,35 +180,21 @@ class EditUser(UserAdmin, generic.ModelFormView):
 
         if form.cleaned_data.get('email'):
             target.set_email(form.cleaned_data['email'])
-            start_admin_session(request, target)
+            if target.pk == request.user.pk:
+                start_admin_session(request, target)
 
         if form.cleaned_data.get('is_avatar_banned'):
             set_dynamic_avatar(target)
 
-        if form.cleaned_data.get('staff_level'):
-            form.instance.staff_level = form.cleaned_data['staff_level']
+        if 'staff_level' in form.cleaned_data:
+            target.staff_level = form.cleaned_data['staff_level']
 
         if form.cleaned_data.get('roles'):
-            form.instance.roles.add(*form.cleaned_data['roles'])
+            target.roles.add(*form.cleaned_data['roles'])
 
         set_user_signature(target, form.cleaned_data.get('signature'))
 
-        form.instance.update_acl_key()
-        form.instance.save()
+        target.update_acl_key()
+        target.save()
 
         messages.success(request, self.message_submit % target.username)
-
-
-class ActivateUser(UserAdmin, generic.ButtonView):
-    def button_action(self, request, target):
-        if target.requires_activation:
-            target.requires_activation=ACTIVATION_REQUIRED_NONE
-            target.save(update_fields=['requires_activation'])
-
-            self.send_activation_mail(request, [target])
-
-            message = _("%(username)s's account has been activated.")
-            messages.success(request, message % {'username': target.username})
-        else:
-            message = _("%(username)s's account is already active.")
-            messages.info(request, message % {'username': target.username})

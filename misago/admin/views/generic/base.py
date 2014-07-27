@@ -16,7 +16,7 @@ class AdminView(View):
         """
         return context
 
-    def render(self, request, context=None):
+    def render(self, request, context=None, template=None):
         context = context or {}
 
         context['root_link'] = self.root_link
@@ -24,4 +24,5 @@ class AdminView(View):
 
         context = self.process_context(request, context)
 
-        return render(request, self.final_template(), context)
+        template = template or self.final_template()
+        return render(request, template, context)

@@ -130,19 +130,3 @@ class UserAdminViewsTests(AdminTestCase):
 
         User.objects.get_by_username('Bawww')
         User.objects.get_by_email('reg@stered.com')
-
-    def test_activate_view(self):
-        """activate user view activates account"""
-        User = get_user_model()
-        test_user = User.objects.create_user('Bob', 'bob@test.com', 'pass123',
-                                             requires_activation=1)
-
-        test_link = reverse('misago:admin:users:accounts:activate',
-                            kwargs={'user_id': test_user.pk})
-        response = self.client.post(test_link)
-        self.assertEqual(response.status_code, 302)
-
-        self.assertIn("has been activated", mail.outbox[0].subject)
-
-        test_user = User.objects.get(pk=test_user.pk)
-        self.assertEqual(test_user.requires_activation, 0)

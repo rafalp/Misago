@@ -250,6 +250,39 @@ def SearchUsersForm(*args, **kwargs):
     return FinalForm(*args, **kwargs)
 
 
+class BanUsersForm(forms.Form):
+    user_message = forms.CharField(
+        label=_("User message"), required=False, max_length=1000,
+        help_text=_("Optional message displayed instead of default one."),
+        widget=forms.Textarea(attrs={'rows': 3}),
+        error_messages={
+            'max_length': _("Message can't be longer than 1000 characters.")
+        })
+    staff_message = forms.CharField(
+        label=_("Team message"), required=False, max_length=1000,
+        help_text=_("Optional ban message for moderators and administrators."),
+        widget=forms.Textarea(attrs={'rows': 3}),
+        error_messages={
+            'max_length': _("Message can't be longer than 1000 characters.")
+        })
+    valid_until = forms.DateField(
+        label=_("Expiration date"),
+        required=False, input_formats=['%m-%d-%Y'],
+        widget=forms.DateInput(
+            format='%m-%d-%Y', attrs={'data-date-format': 'MM-DD-YYYY'}),
+        help_text=_('Leave this field empty for this ban to never expire.'))
+
+    def clean_banned_value(self):
+        data = self.cleaned_data['banned_value']
+        while '**' in data:
+            data = data.replace('**', '*')
+
+        if data == '*':
+            raise forms.ValidationError(_("Banned value is too vague."))
+
+        return data
+
+
 """
 Ranks
 """
