@@ -61,7 +61,7 @@ class Migration(migrations.Migration):
                 ('subscribe_to_started_threads', models.PositiveIntegerField(default=0)),
                 ('subscribe_to_replied_threads', models.PositiveIntegerField(default=0)),
                 ('threads', models.PositiveIntegerField(default=0)),
-                ('posts', models.PositiveIntegerField(default=0)),
+                ('posts', models.PositiveIntegerField(default=0, db_index=True)),
                 ('last_post', models.DateTimeField(null=True, blank=True)),
                 ('last_search', models.DateTimeField(null=True, blank=True)),
             ],

@@ -201,7 +201,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         default=AUTO_SUBSCRIBE_NONE)
 
     threads = models.PositiveIntegerField(default=0)
-    posts = models.PositiveIntegerField(default=0)
+    posts = models.PositiveIntegerField(default=0, db_index=True)
 
     last_post = models.DateTimeField(null=True, blank=True)
     last_search = models.DateTimeField(null=True, blank=True)

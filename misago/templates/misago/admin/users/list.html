@@ -20,6 +20,7 @@
 <th style="width: 200px;">{% trans "E-mail" %}</th>
 <th style="width: 150px;">{% trans "Rank" %}</th>
 <th style="width: 200px;">{% trans "Joined" %}</th>
+<th style="width: 128px;">{% trans "Posts" %}</th>
 {% for action in extra_actions %}
 <th style="width: 1%;">&nbsp;</th>
 {% endfor %}
@@ -32,9 +33,9 @@
 
 {% block table-row %}
 <td>
-  <img src="{{ item|avatar:30 }}" alt="{% trans "Avatar" %}">
+  <img src="{{ item|avatar:24 }}" alt="{% trans "Avatar" %}" width="24" height="24">
 </td>
-<td class="lead {% if item.requires_activation %}text-muted{% endif %}">
+<td class="{% if item.requires_activation %}text-muted{% endif %}">
   {{ item.username }}
 </td>
 <td class="lead text-muted">
@@ -72,6 +73,9 @@
     {{ item.joined_on|date }}
   </abbr>
 </td>
+<td>
+  {{ item.posts }}
+</td>
 {% for action in extra_actions %}
 <td class="row-action">
   <a href="{% url action.link user_id=item.id %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
@@ -80,9 +84,16 @@
 </td>
 {% endfor %}
 <td class="row-action">
-  <a href="{% url 'misago:admin:users:accounts:edit' user_id=item.pk %}" class="btn btn-success tooltip-top" title="{% trans "Activate user" %}">
-    <span class="fa fa-check-square-o"></span>
-  </a>
+  {% if item.requires_activation %}
+  <form action="{% url 'misago:admin:users:accounts:activate' user_id=item.pk %}" method="post">
+    <button class="btn btn-success tooltip-top" title="{% trans "Activate user" %}">
+      {% csrf_token %}
+      <span class="fa fa-check-square-o"></span>
+    </button>
+  </form>
+  {% else %}
+  &nbsp;
+  {% endif %}
 </td>
 <td class="row-action">
   <a href="{% url 'misago:admin:users:accounts:edit' user_id=item.pk %}" class="btn btn-warning tooltip-top" title="{% trans "Ban user" %}">
@@ -103,7 +114,7 @@
 
 
 {% block emptylist %}
-<td colspan="{{ 12|add:extra_actions_len }}">
+<td colspan="{{ 13|add:extra_actions_len }}">
   <p>{% trans "No users matching search criteria have been found." %}</p>
 </td>
 {% endblock emptylist %}

@@ -31,14 +31,26 @@ class UserAdmin(generic.AdminBaseMixin):
         return StaffFlagUserFormFactory(
             self.Form, target, add_staff_field=add_staff_field)
 
+    def send_activation_mail(self, request, activated_users):
+        mail_subject = _("Your account on %(forum_title)s "
+                             "forums has been activated")
+        subject_formats = {'forum_title': settings.forum_name}
+        mail_subject = mail_subject % subject_formats
+
+        mail_subject = mail_subject
+        mail_users(request, activated_users, mail_subject,
+                   'misago/emails/activation/by_admin')
+
 
 class UsersList(UserAdmin, generic.ListView):
-    items_per_page = 20
+    items_per_page = 24
     ordering = (
         ('-id', _("From newest")),
         ('id', _("From oldest")),
         ('username_slug', _("A to z")),
         ('-username_slug', _("Z to a")),
+        ('posts', _("Biggest posters")),
+        ('-posts', _("Smallest posters")),
     )
     selection_label = _('With users: 0')
     empty_selection_label = _('Select users')
@@ -82,14 +94,7 @@ class UsersList(UserAdmin, generic.ListView):
             queryset = User.objects.filter(pk__in=activated_users_pks)
             queryset.update(requires_activation=ACTIVATION_REQUIRED_NONE)
 
-            mail_subject = _("Your account on %(forum_title)s "
-                             "forums has been activated")
-            subject_formats = {'forum_title': settings.forum_name}
-            mail_subject = mail_subject % subject_formats
-
-            mail_subject =  mail_subject
-            mail_users(request, inactive_users, mail_subject,
-                       'misago/emails/activation/by_admin')
+            self.send_activation_mail(request, queryset)
 
             message = _("Selected users accounts have been activated.")
             messages.success(request, message)
@@ -164,3 +169,18 @@ class EditUser(UserAdmin, generic.ModelFormView):
         form.instance.save()
 
         messages.success(request, self.message_submit % target.username)
+
+
+class ActivateUser(UserAdmin, generic.ButtonView):
+    def button_action(self, request, target):
+        if target.requires_activation:
+            target.requires_activation=ACTIVATION_REQUIRED_NONE
+            target.save(update_fields=['requires_activation'])
+
+            self.send_activation_mail(request, [target])
+
+            message = _("%(username)s's account has been activated.")
+            messages.success(request, message % {'username': target.username})
+        else:
+            message = _("%(username)s's account is already active.")
+            messages.info(request, message % {'username': target.username})
