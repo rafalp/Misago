@@ -15,7 +15,7 @@ from misago.core.utils import slugify
 
 from misago.users.models.rank import Rank
 from misago.users import avatars
-from misago.users.signals import username_changed
+from misago.users.signals import delete_user_content, username_changed
 from misago.users.signatures import is_user_signature_valid
 from misago.users.utils import hash_email
 
@@ -214,7 +214,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     def delete(self, *args, **kwargs):
+        if kwargs.pop('delete_content', False):
+            self.delete_content()
         avatars.delete_avatar(self)
+        return super(User, self).delete(*args, **kwargs)
+
+    def delete_content(self):
+        delete_user_content.send(sender=self)
 
     @property
     def acl(self):

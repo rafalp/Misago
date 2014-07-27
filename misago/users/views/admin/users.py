@@ -57,9 +57,17 @@ class UsersList(UserAdmin, generic.ListView):
             'icon': 'fa fa-lock',
         },
         {
-            'action': 'delete',
-            'name': _("Delete users"),
-            'icon': 'fa fa-times',
+            'action': 'delete_accounts',
+            'name': _("Delete accounts"),
+            'icon': 'fa fa-times-circle',
+            'confirmation': _("Are you sure you want to delete those users?"),
+        },
+        {
+            'action': 'delete_all',
+            'name': _("Delete all"),
+            'icon': 'fa fa-eraser',
+            'confirmation': _("Are you sure you want to delete both "
+                              "selected users and their content?"),
         }
     ]
 
@@ -126,6 +134,34 @@ class UsersList(UserAdmin, generic.ListView):
                 'users': users,
                 'form': form,
             })
+
+    def action_delete_accounts(self, request, users):
+        inactive_users = []
+        for user in users:
+            if user.is_staff or user.is_superuser:
+                message = _("%(username)s is admin and can't be deleted.")
+                mesage = message % {'username': user.username}
+                raise generic.MassActionError(mesage)
+
+        for user in users:
+            user.delete()
+
+        message = _("Selected users have been deleted.")
+        messages.success(request, message)
+
+    def action_delete_all(self, request, users):
+        inactive_users = []
+        for user in users:
+            if user.is_staff or user.is_superuser:
+                message = _("%(username)s is admin and can't be deleted.")
+                mesage = message % {'username': user.username}
+                raise generic.MassActionError(mesage)
+
+        for user in users:
+            user.delete(delete_content=True)
+
+        message = _("Selected users have been deleted with their content.")
+        messages.success(request, message)
 
 
 class NewUser(UserAdmin, generic.ModelFormView):

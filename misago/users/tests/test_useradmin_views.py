@@ -59,7 +59,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertFalse(user_b.username in response.content)
 
     def test_mass_activation(self):
-        """adminview activates multiple users"""
+        """users list activates multiple users"""
         User = get_user_model()
 
         user_pks = []
@@ -81,7 +81,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertIn("has been activated", mail.outbox[0].subject)
 
     def test_mass_ban(self):
-        """adminview bans multiple users"""
+        """users list bans multiple users"""
         User = get_user_model()
 
         user_pks = []
@@ -102,6 +102,42 @@ class UserAdminViewsTests(AdminTestCase):
             data={'action': 'ban', 'selected_items': user_pks, 'finalize': ''})
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Ban.objects.count(), 10)
+
+    def test_mass_delete_accounts(self):
+        """users list deletes users"""
+        User = get_user_model()
+
+        user_pks = []
+        for i in xrange(10):
+            test_user = User.objects.create_user('Bob%s' % i,
+                                                 'bob%s@test.com' % i,
+                                                 'pass123',
+                                                 requires_activation=1)
+            user_pks.append(test_user.pk)
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={'action': 'delete_accounts', 'selected_items': user_pks})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(User.objects.count(), 1)
+
+    def test_mass_delete_all(self):
+        """users list deletes users and their content"""
+        User = get_user_model()
+
+        user_pks = []
+        for i in xrange(10):
+            test_user = User.objects.create_user('Bob%s' % i,
+                                                 'bob%s@test.com' % i,
+                                                 'pass123',
+                                                 requires_activation=1)
+            user_pks.append(test_user.pk)
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={'action': 'delete_accounts', 'selected_items': user_pks})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(User.objects.count(), 1)
 
     def test_new_view(self):
         """new user view creates account"""
