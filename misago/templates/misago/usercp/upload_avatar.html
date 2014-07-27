@@ -80,8 +80,12 @@
         $preview.slideDown();
       },
       error: function(avatar, message, xhr) {
-        if (message.message != undefined) {
-          $.misago_alerts().error(message.message);
+        if (xhr != undefined) {
+          if (message.message != undefined) {
+            $.misago_alerts().error(message.message);
+          } else {
+            $.misago_alerts().error("{% trans "Error occured when sending file to server." %}");
+          }
         } else {
           $.misago_alerts().error(message);
         }
