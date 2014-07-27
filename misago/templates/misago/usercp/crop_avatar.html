@@ -26,7 +26,11 @@
         <div class="cropped-image-border">
           <img id="crop-image" src="{{ avatar_url }}" alt="{% trans "Source image" %}">
         </div>
-        <button class="btn btn-primary btn-block">{% trans "Set avatar" %}</button>
+        {% if crop %}
+        <button class="btn btn-primary">{% trans "Save changes" %}</button>
+        {% else %}
+        <button class="btn btn-primary">{% trans "Set avatar" %}</button>
+        {% endif %}
       </div>
 
     </div>

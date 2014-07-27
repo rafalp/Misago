@@ -37,12 +37,14 @@
             {% if misago_settings.allow_custom_avatars %}
             <li>
               <button name="dl-gravatar" class="btn btn-link">
+                <span class="fa fa-image fa-fw"></span>
                 {% trans "Download my Gravatar" %}
               </button>
             </li>
             {% endif %}
             <li>
               <button name="set-dynamic" class="btn btn-link">
+                <span class="fa fa-cog fa-fw"></span>
                 {% trans "Generate avatar from my username" %}
               </button>
             </li>
@@ -50,12 +52,14 @@
             {% if has_source_image %}
             <li>
               <a href="{% url 'misago:usercp_crop_avatar' %}">
-                {% trans "Crop my avatar image" %}
+                <span class="fa fa-arrows-alt fa-fw"></span>
+                {% trans "Crop my avatar" %}
               </a>
             </li>
             {% endif %}
             <li>
               <a href="{% url 'misago:usercp_upload_avatar' %}">
+                <span class="fa fa-upload fa-fw"></span>
                 {% trans "Upload image from my device" %}
               </a>
             </li>
@@ -63,6 +67,7 @@
             {% if galleries_exist %}
             <li>
               <a href="{% url 'misago:usercp_avatar_galleries' %}">
+                <span class="fa fa-image fa-fw"></span>
                 {% trans "Pick avatar from gallery" %}
               </a>
             </li>
