@@ -33,7 +33,7 @@
   <img src="{{ item|avatar:24 }}" alt="{% trans "Avatar" %}" width="24" height="24">
 </td>
 <td class="{% if item.requires_activation %}text-muted{% endif %}">
-  {{ item.username }}
+  <strong>{{ item.username }}</strong>
 </td>
 <td class="lead text-muted">
   {% if item.requires_activation_by_admin %}
@@ -83,11 +83,6 @@
 <td class="row-action">
   <a href="{% url 'misago:admin:users:accounts:edit' user_id=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Edit user" %}">
     <span class="fa fa-pencil"></span>
-  </a>
-</td>
-<td class="row-action">
-  <a href="{% url 'misago:admin:users:accounts:edit' user_id=item.pk %}" class="btn btn-danger tooltip-top" title="{% trans "Delete user" %}">
-    <span class="fa fa-times"></span>
   </a>
 </td>
 {% endblock table-row %}
