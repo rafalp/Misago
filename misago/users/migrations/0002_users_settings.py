@@ -123,7 +123,7 @@ def create_users_settings_group(apps, schema_editor):
                     'description': _("Enter maximum allowed file size "
                                      "(in KB) for avatar uploads"),
                     'python_type': 'int',
-                    'value': 300,
+                    'value': 512,
                     'field_extra': {
                         'min_value': 0,
                     },
