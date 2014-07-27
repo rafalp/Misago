@@ -27,9 +27,9 @@
           <img id="crop-image" src="{{ avatar_url }}" alt="{% trans "Source image" %}">
         </div>
         {% if crop %}
-        <button class="btn btn-primary">{% trans "Save changes" %}</button>
+        <button id="btn-crop" class="btn btn-primary">{% trans "Save changes" %}</button>
         {% else %}
-        <button class="btn btn-primary">{% trans "Set avatar" %}</button>
+        <button id="btn-crop" class="btn btn-primary">{% trans "Set avatar" %}</button>
         {% endif %}
       </div>
 
@@ -83,10 +83,12 @@
       start_y = (height - selection_len) / 2;
       {% endif %}
 
+      var $btn = $('#btn-crop');
       var $input = $('#crop');
       function updateValue(c) {
         var crop = [width, height, c.h, c.w, c.x, c.x2, c.y, c.y2];
         $input.val(crop.join(','));
+        $btn.removeAttr('disabled');
       }
 
       $image.Jcrop({
@@ -96,7 +98,8 @@
         bgOpacity: 0.25,
         setSelect: [start_x, start_y, start_x + selection_len, start_y + selection_len],
         onSelect: updateValue,
-        onChange: updateValue
+        onChange: updateValue,
+        onRelease: function() {$btn.attr('disabled', 'disabled');}
       });
     }
 
