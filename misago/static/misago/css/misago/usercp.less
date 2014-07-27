@@ -20,7 +20,7 @@
           margin: 0px;
           padding: 0px 0px;
 
-          color: @gray-light;
+          color: fadeOut(@text-color, 40);
           line-height: @line-height-computed;
 
           &:hover, &:focus {
@@ -131,12 +131,12 @@
 
   .drag-drop-area {
     background-color: @form-panel-bg;
-    border: 6px dashed @gray-light;
+    border: 6px dashed fadeOut(@text-color, 50);
     border-radius: @border-radius-large;
     display: block;
     padding: (@line-height-computed * 2) @line-height-computed;
 
-    color: @gray-light;
+    color: fadeOut(@text-color, 50);
     cursor: pointer;
     text-align: center;
 
@@ -150,9 +150,9 @@
     }
 
     &:hover {
-      border-color: @gray;
+      border-color: fadeOut(@text-color, 10);
 
-      color: @gray;
+      color: fadeOut(@text-color, 10);
       text-decoration: none;
     }
   }
