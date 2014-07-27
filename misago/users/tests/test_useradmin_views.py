@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from misago.acl.models import Role
 from misago.admin.testutils import AdminTestCase
 
-from misago.users.models import Rank
+from misago.users.models import Ban, Rank
 
 
 class UserAdminViewsTests(AdminTestCase):
@@ -79,6 +79,29 @@ class UserAdminViewsTests(AdminTestCase):
                                           requires_activation=1)
         self.assertEqual(inactive_qs.count(), 0)
         self.assertIn("has been activated", mail.outbox[0].subject)
+
+    def test_mass_ban(self):
+        """adminview bans multiple users"""
+        User = get_user_model()
+
+        user_pks = []
+        for i in xrange(10):
+            test_user = User.objects.create_user('Bob%s' % i,
+                                                 'bob%s@test.com' % i,
+                                                 'pass123',
+                                                 requires_activation=1)
+            user_pks.append(test_user.pk)
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={'action': 'ban', 'selected_items': user_pks})
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={'action': 'ban', 'selected_items': user_pks, 'finalize': ''})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Ban.objects.count(), 10)
 
     def test_new_view(self):
         """new user view creates account"""
