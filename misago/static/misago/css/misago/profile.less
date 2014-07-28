@@ -1,0 +1,60 @@
+//
+// User Profile
+// --------------------------------------------------
+
+
+// Side avatar
+//
+//==
+.user-profile {
+  .profile-side {
+    .user-avatar {
+      background-color: #fff;
+      border-radius: @border-radius-large;
+      .box-shadow(0px 0px 0px 2px darken(@body-bg, 5%));
+      padding: 4px;
+    }
+  }
+}
+
+
+// Side username
+//
+//==
+.user-profile {
+  .profile-side {
+    .user-name {
+      font-size: @font-size-base * 1.8;
+    }
+  }
+}
+
+
+// Side details
+//
+//==
+.user-profile {
+  .profile-side {
+    .user-details {
+      li {
+        padding-bottom: @line-height-computed / 3;
+
+        color: fadeOut(@text-color, 40%);
+        font-size: @font-size-large;
+
+        a:link, a:visited {
+          color: fadeOut(@text-color, 40%);
+        }
+
+        a:hover {
+          color: fadeOut(@text-color, 15%);
+          text-decoration: none;
+        }
+
+        a:active {
+          color: @text-color;
+        }
+      }
+    }
+  }
+}

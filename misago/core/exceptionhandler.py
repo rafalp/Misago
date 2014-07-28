@@ -38,7 +38,7 @@ def handle_http404_exception(request, exception):
 def handle_outdated_slug_exception(request, exception):
     matched_url = request.resolver_match.url_name
     if request.resolver_match.namespace:
-        matched_url = '%s:%s' % (request.resolver_match, matched_url)
+        matched_url = '%s:%s' % (request.resolver_match.namespace, matched_url)
 
     model = exception.args[0]
     model_name = model.__class__.__name__.lower()

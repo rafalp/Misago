@@ -106,6 +106,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'debug_toolbar',
     'pipeline',
     'crispy_forms',
@@ -227,7 +228,7 @@ MISAGO_DYNAMIC_AVATAR_DRAWER = 'misago.users.avatars.dynamic.draw_default'
 
 # For which sizes avatars should be cached?
 # Keep sizes ordered from greatest to smallest
-MISAGO_AVATARS_SIZES = (150, 100, 64, 50, 30, 20)
+MISAGO_AVATARS_SIZES = (400, 200, 150, 100, 64, 50, 30, 20)
 
 
 # X-Sendfile

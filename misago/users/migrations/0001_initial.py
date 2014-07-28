@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('password', models.CharField(max_length=128, verbose_name='password')),
                 ('last_login', models.DateTimeField(default=django.utils.timezone.now, verbose_name='last login')),
                 ('username', models.CharField(max_length=30)),
-                ('username_slug', models.CharField(unique=True, max_length=30)),
+                ('slug', models.CharField(unique=True, max_length=30)),
                 ('email', models.EmailField(max_length=255, db_index=True)),
                 ('email_hash', models.CharField(unique=True, max_length=32)),
                 ('joined_on', models.DateTimeField(default=django.utils.timezone.now, verbose_name='joined on')),

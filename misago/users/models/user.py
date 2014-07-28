@@ -124,13 +124,13 @@ class UserManager(BaseUserManager):
             return user
 
     def get_by_username(self, username):
-        return self.get(username_slug=slugify(username))
+        return self.get(slug=slugify(username))
 
     def get_by_email(self, email):
         return self.get(email_hash=hash_email(email))
 
     def get_by_username_or_email(self, login):
-        queryset = models.Q(username_slug=slugify(login))
+        queryset = models.Q(slug=slugify(login))
         queryset = queryset | models.Q(email_hash=hash_email(login))
         return self.get(queryset)
 
@@ -139,11 +139,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     Note that "username" field is purely for shows.
     When searching users by their names, always use lowercased string
-    and username_slug field instead that is normalized around DB engines
+    and slug field instead that is normalized around DB engines
     differences in case handling.
     """
     username = models.CharField(max_length=30)
-    username_slug = models.CharField(max_length=30, unique=True)
+    slug = models.CharField(max_length=30, unique=True)
     """
     Misago stores user email in two fields:
     "email" holds normalized email address
@@ -208,7 +208,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     is_active = True # Django's is_active means "is not deleted"
 
-    USERNAME_FIELD = 'username_slug'
+    USERNAME_FIELD = 'slug'
     REQUIRED_FIELDS = ['email']
 
     objects = UserManager()
@@ -283,7 +283,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         if new_username != self.username:
             old_username = self.username
             self.username = new_username
-            self.username_slug = slugify(new_username)
+            self.slug = slugify(new_username)
 
             if self.pk:
                 self.namechanges.create(old_username=old_username)

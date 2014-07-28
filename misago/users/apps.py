@@ -40,6 +40,7 @@ class MisagoUsersConfig(AppConfig):
                             icon='fa fa-check')
 
     def register_default_user_profile_pages(self):
-        user_profile.add_page(link='misago:index',
-                              name='Todo',
-                              icon='fa fa-check')
+        user_profile.add_page(link='misago:user_posts',
+                              name=_("Posts"))
+        user_profile.add_page(link='misago:user_threads',
+                              name=_("Threads"))

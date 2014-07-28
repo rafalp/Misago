@@ -1,0 +1,77 @@
+{% extends "misago/base.html" %}
+{% load humanize i18n misago_avatars misago_capture %}
+
+
+{% block title %}
+{{ profile.username }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="container user-profile">
+  <div class="row">
+    <div class="col-md-3 profile-side">
+
+      <div class="user-avatar">
+        {% if authenticateds_profile %}
+        <a href="{% url 'misago:usercp_change_avatar' %}" class="tooltip-top" title="{% trans "Change your avatar" %}">
+          <img src="{{ profile|avatar:400 }}" class="img-rounded img-responsive" alt="{% trans "Avatar" %}">
+        </a>
+        {% else %}
+        <img src="{{ profile|avatar:400 }}" class="img-rounded img-responsive" alt="{% trans "Avatar" %}">
+        {% endif %}
+      </div>
+
+      <h1 class="user-name">{{ profile.username }}</h1>
+
+      <div class="user-details">
+        <ul class="list-unstyled">
+          {% if show_email %}
+          <li class="user-email">
+            <a href="mailto:{{ profile.email }}" class="tooltip-top"title="{% trans "E-mail address" %}">
+              <span class="fa fa-envelope-o fa-fw"></span>
+              {{ profile.email }}
+            </a>
+          </li>
+          {% endif %}
+          <li class="user-active">
+            {% if state.is_banned %}
+              <span class="fa fa-lock fa-fw user-banned"></span>
+              {% if state.banned_until %}
+              {% blocktrans trimmed with ban_date=state.banned_until|date %}
+                Banned until {{ ban_date }}
+              {% endblocktrans %}
+              {% else %}
+              {% trans "Banned" %}
+              {% endif %}
+            {% elif state.is_online %}
+              <span class="fa fa-circle fa-fw user-online"></span>
+              {% trans "Online" %}
+            {% else %}
+              {% capture trimmed as last_seen %}
+              <abbr class="tooltip-top dynamic time-ago" title="{{ state.last_click }}" data-timestamp="{{ state.last_click|date:"c" }}">
+                {{ state.last_click|date }}
+              </abbr>
+              {% endcapture %%}
+              <span class="fa fa-circle-o fa-fw user-offilne"></span>
+              {% blocktrans trimmed with last_seen=last_seen|safe %}
+                Seen {{ last_seen }}
+              {% endblocktrans %}
+            {% endif %}
+          </li>
+          <li class="user-joined-on">
+            <span class="tooltip-top" title="{% trans "Joined on" %}">
+              <span class="fa fa-clock-o fa-fw"></span>
+              {{ profile.joined_on|date }}
+            </span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="col-md-9">
+      {% block page %}{% endblock page %}
+    </div>
+  </div>
+</div>
+{% endblock content %}
