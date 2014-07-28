@@ -4,6 +4,7 @@ from django.shortcuts import redirect, render as django_render
 from misago.core.shortcuts import get_object_or_404, validate_slug
 
 from misago.users import online
+from misago.users.sites import user_profile
 
 
 def profile_view(f):
@@ -19,8 +20,12 @@ def profile_view(f):
     return decorator
 
 
-def render(request, template, context=None):
-    context = context or {}
+def render(request, template, context):
+    context['pages'] = user_profile.get_pages(request, context['profile'])
+    for page in context['pages']:
+        if page['is_active']:
+            context['active_page'] = page
+            break
 
     if request.user.is_authenticated():
         authenticateds_profile = context['profile'].pk == request.user.pk

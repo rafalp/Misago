@@ -8,6 +8,29 @@
 
 
 {% block content %}
+<div class="page-header user-profile-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 col-md-offset-3">
+
+        <ul class="nav nav-tabs">
+          {% for page in pages %}
+          <li{% if page.is_active %} class="active"{% endif %}>
+            <a href="{% url page.link user_slug=profile.slug user_id=profile.pk %}">
+              {{ page.name }}
+              {% if page.badge != None %}
+              <span class="label label-default">{{ page.badge }}</span>
+              {% endif %}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="container user-profile {% if profile.rank.css_class %}profile-{{ profile.rank.css_class }}{% endif %}">
   <div class="row">
     <div class="col-md-3 profile-side">
@@ -30,14 +53,6 @@
 
       <div class="user-details">
         <ul class="list-unstyled">
-          {% if show_email %}
-          <li class="user-email">
-            <a href="mailto:{{ profile.email }}" class="tooltip-top"title="{% trans "E-mail address" %}">
-              <span class="fa fa-envelope-o fa-fw"></span>
-              {{ profile.email }}
-            </a>
-          </li>
-          {% endif %}
           <li class="user-active">
             {% include "misago/profile/state.html" %}
           </li>
@@ -47,6 +62,14 @@
               {{ profile.joined_on|date }}
             </span>
           </li>
+          {% if show_email %}
+          <li class="user-email">
+            <a href="mailto:{{ profile.email }}" class="tooltip-top"title="{% trans "E-mail address" %}">
+              <span class="fa fa-envelope-o fa-fw"></span>
+              {{ profile.email }}
+            </a>
+          </li>
+          {% endif %}
         </ul>
       </div>
 

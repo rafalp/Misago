@@ -64,7 +64,7 @@ class Site(object):
             return True
 
     def add_page(self, link, name, icon=None, after=None, before=None,
-                 visibility_condition=None):
+                 visibility_condition=None, badge=None):
         if self._finalized:
             message = ("%s site was initialized already and no longer "
                        "accepts new pages")
@@ -79,6 +79,7 @@ class Site(object):
             'icon': icon,
             'after': after,
             'before': before,
+            'badge': badge,
             'visibility_condition': visibility_condition,
             })
 
@@ -102,12 +103,16 @@ class Site(object):
         else:
             test_args = (request,)
 
-        for page in self._sorted_list:
+        for _page in self._sorted_list:
+            page = _page.copy()
+
             is_visible = True
             if page['visibility_condition']:
                 is_visible = page['visibility_condition'](*test_args)
 
             if is_visible:
+                if page['badge']:
+                    page['badge'] = page['badge'](*test_args)
                 page['is_active'] = active_link.startswith(page['link'])
                 visible_pages.append(page)
         return visible_pages

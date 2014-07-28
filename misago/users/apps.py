@@ -40,7 +40,14 @@ class MisagoUsersConfig(AppConfig):
                             icon='fa fa-check')
 
     def register_default_user_profile_pages(self):
+        def posts_badge(request, profile):
+            return profile.posts
+        def threads_badge(request, profile):
+            return profile.threads
+
         user_profile.add_page(link='misago:user_posts',
-                              name=_("Posts"))
+                              name=_("Posts"),
+                              badge=posts_badge)
         user_profile.add_page(link='misago:user_threads',
-                              name=_("Threads"))
+                              name=_("Threads"),
+                              badge=threads_badge)

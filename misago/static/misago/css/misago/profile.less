@@ -3,6 +3,46 @@
 // --------------------------------------------------
 
 
+// Profile header
+//
+//==
+.user-profile-header {
+  padding: 0px;
+  padding-top: @line-height-computed;
+  border-bottom-width: 3px;
+
+  .nav-tabs {
+    border-bottom: none;
+
+    font-size: @font-size-large;
+
+    &>li{
+      &>a {
+        .label {
+          background-color: darken(@body-bg, 5%);
+          padding-left: 5px;
+          padding-right: 5px;
+          position: relative;
+          top: -2px;
+
+          color: fadeOut(@text-color, 60%);
+          font-size: @font-size-small;
+        }
+      }
+
+      &.active {
+        &>a {
+          .label {
+            background-color: fadeOut(@text-color, 40%);
+            color: @body-bg;
+          }
+        }
+      }
+    }
+  }
+}
+
+
 // Side avatar
 //
 //==
@@ -13,6 +53,7 @@
       border-radius: @border-radius-large;
       .box-shadow(0px 0px 0px 2px darken(@body-bg, 5%));
       padding: 4px;
+      margin-top: (@line-height-computed * 3.5) * -1;
     }
   }
 }

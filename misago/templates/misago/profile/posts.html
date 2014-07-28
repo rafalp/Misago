@@ -1,6 +1,11 @@
 {% extends "misago/profile/base.html" %}
+{% load i18n %}
 
 
 {% block page %}
-Hello, I am WIP posts list.
+<p class="lead">
+  {% blocktrans trimmed with user=profile.username %}
+  {{ user }} posted no messages, or you can't see them.
+  {% endblocktrans %}
+</p>
 {% endblock page %}
