@@ -8,7 +8,7 @@ from misago.users import online
 
 def profile_view(f):
     def decorator(*args, **kwargs):
-        relations = ('online_tracker', 'ban_cache')
+        relations = ('rank', 'online_tracker', 'ban_cache')
         queryset = get_user_model().objects.select_related(*relations)
         profile = get_object_or_404(queryset, id=kwargs.pop('user_id'))
 

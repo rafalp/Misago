@@ -24,7 +24,14 @@
 .user-profile {
   .profile-side {
     .user-name {
+      margin-bottom: @line-height-computed;
+
       font-size: @font-size-base * 1.8;
+
+      .user-title {
+        display: block;
+        clear: both;
+      }
     }
   }
 }
@@ -55,6 +62,18 @@
           color: @text-color;
         }
       }
+    }
+  }
+}
+
+
+// Flavours
+//
+//==
+.user-profile {
+  &.profile-team {
+    .user-title {
+      color: @brand-primary;
     }
   }
 }

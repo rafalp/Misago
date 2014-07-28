@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load humanize i18n misago_avatars misago_capture %}
+{% load humanize i18n misago_avatars %}
 
 
 {% block title %}
@@ -8,10 +8,9 @@
 
 
 {% block content %}
-<div class="container user-profile">
+<div class="container user-profile {% if profile.rank.css_class %}profile-{{ profile.rank.css_class }}{% endif %}">
   <div class="row">
     <div class="col-md-3 profile-side">
-
       <div class="user-avatar">
         {% if authenticateds_profile %}
         <a href="{% url 'misago:usercp_change_avatar' %}" class="tooltip-top" title="{% trans "Change your avatar" %}">
@@ -22,7 +21,12 @@
         {% endif %}
       </div>
 
-      <h1 class="user-name">{{ profile.username }}</h1>
+      <h1 class="user-name">
+        {{ profile.username }}
+        {% if profile.full_title %}
+        <small class="user-title">{{ profile.full_title }}</small>
+        {% endif %}
+      </h1>
 
       <div class="user-details">
         <ul class="list-unstyled">
@@ -35,29 +39,7 @@
           </li>
           {% endif %}
           <li class="user-active">
-            {% if state.is_banned %}
-              <span class="fa fa-lock fa-fw user-banned"></span>
-              {% if state.banned_until %}
-              {% blocktrans trimmed with ban_date=state.banned_until|date %}
-                Banned until {{ ban_date }}
-              {% endblocktrans %}
-              {% else %}
-              {% trans "Banned" %}
-              {% endif %}
-            {% elif state.is_online %}
-              <span class="fa fa-circle fa-fw user-online"></span>
-              {% trans "Online" %}
-            {% else %}
-              {% capture trimmed as last_seen %}
-              <abbr class="tooltip-top dynamic time-ago" title="{{ state.last_click }}" data-timestamp="{{ state.last_click|date:"c" }}">
-                {{ state.last_click|date }}
-              </abbr>
-              {% endcapture %%}
-              <span class="fa fa-circle-o fa-fw user-offilne"></span>
-              {% blocktrans trimmed with last_seen=last_seen|safe %}
-                Seen {{ last_seen }}
-              {% endblocktrans %}
-            {% endif %}
+            {% include "misago/profile/state.html" %}
           </li>
           <li class="user-joined-on">
             <span class="tooltip-top" title="{% trans "Joined on" %}">

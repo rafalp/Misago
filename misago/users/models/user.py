@@ -235,6 +235,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         raise TypeError('Cannot make User instances ACL aware')
 
     @property
+    def full_title(self):
+        return self.title or self.rank.name
+
+    @property
+    def short_title(self):
+        return self.title or self.rank.title
+
+    @property
     def requires_activation_by_admin(self):
         return self.requires_activation == ACTIVATION_REQUIRED_ADMIN
 
