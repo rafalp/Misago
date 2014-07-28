@@ -252,7 +252,7 @@ def change_username(request):
         form = ChangeUsernameForm(request.POST, user=request.user)
         if form.is_valid():
             request.user.set_username(form.cleaned_data['new_username'])
-            request.user.save(update_fields=['username', 'username_slug'])
+            request.user.save(update_fields=['username', 'slug'])
 
             message = _("Your username has been changed.")
             messages.success(request, message)

@@ -16,7 +16,7 @@ class UsernameChangesTests(TestCase):
         self.assertEqual(test_user.namechanges.count(), 0)
 
         test_user.set_username('Boberson')
-        test_user.save(update_fields=['username', 'username_slug'])
+        test_user.save(update_fields=['username', 'slug'])
 
         namechanges = UsernameChanges(test_user)
         self.assertEqual(namechanges.left, 1)

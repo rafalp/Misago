@@ -12,7 +12,7 @@ class UserManagerTests(TestCase):
         db_user = User.objects.get(id=user.pk)
 
         self.assertEqual(user.username, db_user.username)
-        self.assertEqual(user.username_slug, db_user.username_slug)
+        self.assertEqual(user.slug, db_user.slug)
         self.assertEqual(user.email, db_user.email)
         self.assertEqual(user.email_hash, db_user.email_hash)
 
@@ -57,7 +57,7 @@ class UserModelTests(TestCase):
 
         user.set_username('Boberson')
         self.assertEqual(user.username, 'Boberson')
-        self.assertEqual(user.username_slug, 'boberson')
+        self.assertEqual(user.slug, 'boberson')
 
         self.assertEqual(user.get_username(), 'Boberson')
         self.assertEqual(user.get_full_name(), 'Boberson')

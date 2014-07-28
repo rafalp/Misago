@@ -38,8 +38,8 @@ class UsersList(UserAdmin, generic.ListView):
     ordering = (
         ('-id', _("From newest")),
         ('id', _("From oldest")),
-        ('username_slug', _("A to z")),
-        ('-username_slug', _("Z to a")),
+        ('slug', _("A to z")),
+        ('-slug', _("Z to a")),
         ('posts', _("Biggest posters")),
         ('-posts', _("Smallest posters")),
     )
@@ -105,7 +105,7 @@ class UsersList(UserAdmin, generic.ListView):
             messages.success(request, message)
 
     def action_ban(self, request, users):
-        users = users.order_by('username_slug')
+        users = users.order_by('slug')
         for user in users:
             if user.is_superuser:
                 message = _("%(username)s is super admin and can't be banned.")

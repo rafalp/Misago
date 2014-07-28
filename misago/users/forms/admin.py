@@ -189,7 +189,7 @@ class SearchUsersFormBase(forms.Form):
         criteria = search_criteria
         if criteria.get('username'):
             queryset = queryset.filter(
-                username_slug__startswith=criteria.get('username').lower())
+                slug__startswith=criteria.get('username').lower())
 
         if criteria.get('email'):
             queryset = queryset.filter(

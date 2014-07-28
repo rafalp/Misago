@@ -2,7 +2,7 @@ from PIL import Image
 
 from django.core.management.base import BaseCommand
 
-from misago.users.avatars import cache
+from misago.users.avatars import store
 from misago.users.avatars.paths import BLANK_AVATAR
 
 
@@ -18,8 +18,8 @@ class FakeUser(object):
 
 
 class Command(BaseCommand):
-    help = 'Overwrites cached blank avatar with new one.'
+    help = 'Updates stored blank avatar.'
 
     def handle(self, *args, **options):
-        cache.store_new_avatar(FakeUser, Image.open(BLANK_AVATAR))
-        self.stdout.write('Blank avatar cache was refreshed.')
+        store.store_new_avatar(FakeUser, Image.open(BLANK_AVATAR))
+        self.stdout.write('Blank avatar was updated.')
