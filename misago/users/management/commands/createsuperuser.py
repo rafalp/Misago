@@ -141,7 +141,8 @@ class Command(BaseCommand):
     def create_superuser(self, username, email, password, verbosity):
         try:
             User = get_user_model()
-            user = User.objects.create_superuser(username, email, password)
+            user = User.objects.create_superuser(username, email, password,
+                                                 set_default_avatar=True)
 
             if verbosity >= 1:
                 message = "Superuser #%(pk)s has been created successfully."
