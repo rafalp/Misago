@@ -50,4 +50,5 @@ class UserProfileViewsTests(AdminTestCase):
         response = self.client.get(reverse('misago:user_name_history',
                                            kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Admin changed name to <strong>Rename", response.content)
+        self.assertIn("TestAdmin</strong> changed name to <strong>Renamed",
+                      response.content)
