@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.http import Http404
 from django.shortcuts import redirect, render as django_render
 
 from misago.core.shortcuts import get_object_or_404, paginate, validate_slug
@@ -17,6 +18,18 @@ def profile_view(f):
         kwargs['profile'] = profile
 
         return f(*args, **kwargs)
+    return decorator
+
+
+def profile_view_restricted_visibility(f):
+    @profile_view
+    def decorator(request, *args, **kwargs):
+        pages = user_profile.get_pages(request, kwargs['profile'])
+        for page in pages:
+            if page['is_active']:
+                return f(request, *args, **kwargs)
+        else:
+            raise Http404()
     return decorator
 
 
@@ -57,7 +70,7 @@ def user_threads(request, profile=None, page=0):
     return render(request, 'misago/profile/threads.html', {'profile': profile})
 
 
-@profile_view
+@profile_view_restricted_visibility
 def name_history(request, profile=None, page=0):
     name_changes_sq = profile.namechanges.all().order_by('-id')
     name_changes = paginate(name_changes_sq, page, 24, 6)
