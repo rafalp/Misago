@@ -54,6 +54,8 @@ urlpatterns += patterns('misago.users.views.usercp',
 urlpatterns += patterns('misago.users.views.profile',
     url(r'^user/(?P<user_slug>[a-z0-9]+)-(?P<user_id>\d+)/$', 'user_posts', name="user_posts"),
     url(r'^user/(?P<user_slug>[a-z0-9]+)-(?P<user_id>\d+)/threads/$', 'user_threads', name="user_threads"),
+    url(r'^user/(?P<user_slug>[a-z0-9]+)-(?P<user_id>\d+)/name-history/$', 'name_history', name="user_name_history"),
+    url(r'^user/(?P<user_slug>[a-z0-9]+)-(?P<user_id>\d+)/name-history/(?P<page>\d+)/$', 'name_history', name="user_name_history"),
 )
 
 urlpatterns += patterns('misago.users.views.avatarserver',

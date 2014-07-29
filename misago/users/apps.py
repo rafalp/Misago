@@ -26,7 +26,7 @@ class MisagoUsersConfig(AppConfig):
         usercp.add_page(link='misago:usercp_edit_signature',
                         name=_('Edit your signature'),
                         icon='fa fa-pencil',
-                        visibility_condition=show_signature_cp)
+                        visible_if=show_signature_cp)
         usercp.add_page(link='misago:usercp_change_username',
                         name=_('Change username'),
                         icon='fa fa-credit-card')
@@ -44,6 +44,13 @@ class MisagoUsersConfig(AppConfig):
             return profile.posts
         def threads_badge(request, profile):
             return profile.threads
+        def can_see_names_history(request, profile):
+            if request.user.is_authenticated():
+                is_account_owner = profile.pk == request.user.pk
+                has_permission = request.user.acl['can_see_users_name_history']
+                return is_account_owner or has_permission
+            else:
+                return False
 
         user_profile.add_page(link='misago:user_posts',
                               name=_("Posts"),
@@ -51,3 +58,6 @@ class MisagoUsersConfig(AppConfig):
         user_profile.add_page(link='misago:user_threads',
                               name=_("Threads"),
                               badge=threads_badge)
+        user_profile.add_page(link='misago:user_name_history',
+                              name=_("Name history"),
+                              visible_if=can_see_names_history)

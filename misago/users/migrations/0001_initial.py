@@ -95,11 +95,16 @@ class Migration(migrations.Migration):
             name='UsernameChange',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('changed_by_username', models.CharField(max_length=30)),
+                ('changed_by_slug', models.CharField(max_length=30)),
                 ('changed_on', models.DateTimeField(default=django.utils.timezone.now)),
+                ('new_username', models.CharField(max_length=255)),
                 ('old_username', models.CharField(max_length=255)),
+                ('changed_by', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
             options={
+                'get_latest_by': b'changed_on',
             },
             bases=(models.Model,),
         ),

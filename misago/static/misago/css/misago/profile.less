@@ -14,8 +14,6 @@
   .nav-tabs {
     border-bottom: none;
 
-    font-size: @font-size-large;
-
     &>li{
       &>a {
         .label {
@@ -23,7 +21,7 @@
           padding-left: 5px;
           padding-right: 5px;
           position: relative;
-          top: -2px;
+          top: -1px;
 
           color: fadeOut(@text-color, 60%);
           font-size: @font-size-small;
@@ -115,6 +113,36 @@
   &.profile-team {
     .user-title {
       color: @brand-primary;
+    }
+  }
+}
+
+
+// Username history
+//
+//==
+.user-profile {
+  .username-history {
+    p {
+      margin: 0px;
+      margin-top: 3px;
+
+      img {
+        border-radius: @border-radius-small;
+        margin-top: -1px;
+        margin-right: @line-height-computed / 5;
+        height: 22px;
+        width: 22px;
+      }
+
+      abbr {
+        text-decoration: none;
+        border-bottom: none;
+      }
+    }
+
+    hr {
+      margin: (@line-height-computed / 2) 0px;
     }
   }
 }

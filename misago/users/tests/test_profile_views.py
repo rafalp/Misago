@@ -11,6 +11,14 @@ class UserProfileViewsTests(AdminTestCase):
             'user_id': self.test_admin.pk
         }
 
+    def test_outdated_slugs(self):
+        """user profile view redirects to valid slig"""
+        invalid_kwargs = {'user_slug': 'baww', 'user_id': self.test_admin.pk}
+        response = self.client.get(reverse('misago:user_posts',
+                                           kwargs=invalid_kwargs))
+
+        self.assertEqual(response.status_code, 302)
+
     def test_user_posts_list(self):
         """user profile posts list has no showstoppers"""
         response = self.client.get(reverse('misago:user_posts',

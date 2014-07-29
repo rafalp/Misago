@@ -3,7 +3,7 @@
 
 
 {% block title %}
-{{ profile.username }} | {{ block.super }}
+{{ profile.username }}: {{ active_page.name }} {% if page_number > 1 %}({{ number }}) {% endif %}| {{ block.super }}
 {% endblock title %}
 
 
@@ -26,6 +26,7 @@
           {% endfor %}
         </ul>
 
+        {% comment %}
         <div class="page-actions">
 
           <a href="#" class="btn btn-primary">Primary</a>
@@ -47,6 +48,7 @@
           </div>
 
         </div>
+        {% endcomment %}
 
       </div>
     </div>

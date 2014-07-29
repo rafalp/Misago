@@ -205,7 +205,10 @@ class EditUser(UserAdmin, generic.ModelFormView):
 
     def handle_form(self, form, request, target):
         target.username = target.old_username
-        target.set_username(form.cleaned_data.get('username'))
+
+        if target.username != form.cleaned_data.get('username'):
+            target.set_username(form.cleaned_data.get('username'),
+                                changed_by=request.user)
 
         if form.cleaned_data.get('new_password'):
             target.set_password(form.cleaned_data['new_password'])

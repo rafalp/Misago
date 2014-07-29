@@ -1,0 +1,76 @@
+//
+// Pager
+// --------------------------------------------------
+
+
+// Default pager
+//
+//==
+.pager {
+  margin: 0px;
+  padding-bottom: 2px;
+
+  &>li {
+    &.page {
+      display: inline-block;
+      padding: 7px 0px;
+      padding-right: @line-height-computed / 3;
+    }
+
+    a {
+      &, &:link, &:visited {
+        background-color: @btn-default-bg;
+        border-color: @btn-default-bg;
+        border-radius: @border-radius-base;
+        box-shadow: 0px 2px 0px 0px @btn-default-border;
+        padding: 6px 9px;
+
+        color: @btn-default-color;
+      }
+
+      &:hover {
+        background-color: darken(@btn-default-bg, 10%);
+        border-color: darken(@btn-default-bg, 10%);
+        box-shadow: 0px 2px 0px 0px darken(@btn-default-border, 10%);
+
+        color: @btn-default-color;
+      }
+
+      &:active, &:focus {
+        background-color: darken(@btn-default-bg, 15%);
+        border-color: darken(@btn-default-bg, 15%);
+        box-shadow: none;
+        position: relative;
+        top: 2px;
+
+        color: darken(@btn-default-color, 10%);
+      }
+    }
+  }
+}
+
+
+// Wide pager
+//
+//==
+.pager {
+  &.pager-wide {
+    overflow: auto;
+  }
+}
+
+
+/* Big displays */
+@media (min-width: @screen-sm-min) {
+  .pager {
+    &.pager-wide {
+      .pull-left {
+        margin-right: @line-height-computed / 3;
+      }
+
+      .pull-right {
+        margin-left: @line-height-computed / 3;
+      }
+    }
+  }
+}

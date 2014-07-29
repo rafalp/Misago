@@ -19,7 +19,7 @@ class UsernameChanges(object):
         name_changes_allowed = user.acl['name_changes_allowed']
         name_changes_expire = user.acl['name_changes_expire']
 
-        valid_changes_qs = user.namechanges
+        valid_changes_qs = user.namechanges.filter(changed_by=user)
         if name_changes_expire:
             cutoff = timezone.now() - timedelta(days=name_changes_expire)
             valid_changes_qs = used_changes_qs.filter(changed_on__gte=cutoff)

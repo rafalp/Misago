@@ -16,9 +16,9 @@ Each site is associated to instance of special object, :py:class:`misago.users.s
 
 
 .. function:: add_page(link, name, icon=None, after=None, before=None,
-                 	   visibility_condition=None, badge=None)
+                 	   visible_if=None, badge=None)
 
-Adds page to site. ``after`` and ``before`` arguments should be value of other page ``link``. ``visibility_condition`` argument accepts callable that will be called with args passed to ``get_pages`` function on page render to resolve if link to page should be displayed. ``badge`` argument should be none or callable that will be called to get button badge, like number of posts on tab.
+Adds page to site. ``after`` and ``before`` arguments should be value of other page ``link``. ``visible_if`` argument accepts callable that will be called with args passed to ``get_pages`` function on page render to resolve if link to page should be displayed. ``badge`` argument should be none or callable that will be called to get button badge, like number of posts on tab.
 
 
 .. function:: get_pages(link, request, profile=None)

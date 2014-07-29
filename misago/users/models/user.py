@@ -288,15 +288,24 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.username
 
-    def set_username(self, new_username):
+    def set_username(self, new_username, changed_by=None):
         if new_username != self.username:
             old_username = self.username
             self.username = new_username
             self.slug = slugify(new_username)
 
             if self.pk:
-                self.namechanges.create(old_username=old_username)
+                changed_by = changed_by or self
+                self.record_name_change(
+                    changed_by, new_username, old_username)
                 username_changed.send(sender=self)
+
+    def record_name_change(self, changed_by, new_username, old_username):
+        self.namechanges.create(new_username=new_username,
+                                old_username=old_username,
+                                changed_by=changed_by,
+                                changed_by_username=changed_by.username,
+                                changed_by_slug=changed_by.slug)
 
     def set_email(self, new_email):
         self.email = UserManager.normalize_email(new_email)
@@ -346,11 +355,22 @@ class Online(models.Model):
 
 class UsernameChange(models.Model):
     user = models.ForeignKey(User, related_name='namechanges')
+    changed_by = models.ForeignKey(User, null=True, blank=True,
+                                   related_name='user_renames',
+                                   on_delete=models.SET_NULL)
+    changed_by_username = models.CharField(max_length=30)
+    changed_by_slug = models.CharField(max_length=30)
     changed_on = models.DateTimeField(default=timezone.now)
+    new_username = models.CharField(max_length=255)
     old_username = models.CharField(max_length=255)
 
     class Meta:
         get_latest_by = "changed_on"
+
+    def set_change_author(self, user):
+        self.changed_by = user
+        self.changed_by_username = user.username
+        self.changed_by_slug = user.slug
 
 
 class AnonymousUser(DjangoAnonymousUser):

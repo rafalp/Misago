@@ -34,6 +34,7 @@ def create_default_roles(apps, schema_editor):
             # profiles perms
             'misago.users.permissions.profiles': {
                 'can_search_users': 1,
+                'can_see_users_name_history': 0,
                 'can_see_users_emails': 0,
                 'can_see_users_ips': 0,
                 'can_see_hidden_users': 0,
@@ -62,6 +63,7 @@ def create_default_roles(apps, schema_editor):
             # profiles perms
             'misago.users.permissions.profiles': {
                 'can_search_users': 1,
+                'can_see_users_name_history': 0,
                 'can_see_users_emails': 0,
                 'can_see_users_ips': 0,
                 'can_see_hidden_users': 0,
@@ -90,6 +92,7 @@ def create_default_roles(apps, schema_editor):
             # profiles perms
             'misago.users.permissions.profiles': {
                 'can_search_users': 1,
+                'can_see_users_name_history': 1,
                 'can_see_users_emails': 1,
                 'can_see_users_ips': 1,
                 'can_see_hidden_users': 1,
@@ -103,7 +106,7 @@ def create_default_roles(apps, schema_editor):
         })
     role.save()
 
-    role = Role(name=_("Spam accounts destroyer"))
+    role = Role(name=_("Spammers Deleter"))
     pickle_permissions(role,
         {
             # destroy users perms
