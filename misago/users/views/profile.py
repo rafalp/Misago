@@ -29,6 +29,7 @@ def profile_view_restricted_visibility(f):
             if page['is_active']:
                 return f(request, *args, **kwargs)
         else:
+            # we are trying to display page thats not in nav
             raise Http404()
     return decorator
 
@@ -73,7 +74,7 @@ def user_threads(request, profile=None, page=0):
 @profile_view_restricted_visibility
 def name_history(request, profile=None, page=0):
     name_changes_sq = profile.namechanges.all().order_by('-id')
-    name_changes = paginate(name_changes_sq, page, 24, 6)
+    name_changes = paginate(name_changes_sq, page, 12, 4)
     items_left = name_changes.paginator.count - name_changes.end_index()
 
     return render(request, 'misago/profile/name_history.html', {

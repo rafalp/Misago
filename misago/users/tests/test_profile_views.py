@@ -17,7 +17,7 @@ class UserProfileViewsTests(AdminTestCase):
         response = self.client.get(reverse('misago:user_posts',
                                            kwargs=invalid_kwargs))
 
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 301)
 
     def test_user_posts_list(self):
         """user profile posts list has no showstoppers"""
@@ -34,3 +34,20 @@ class UserProfileViewsTests(AdminTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn('started no threads', response.content)
+
+    def test_user_name_history_list(self):
+        """user name changes history list has no showstoppers"""
+        response = self.client.get(reverse('misago:user_name_history',
+                                           kwargs=self.link_kwargs))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Your username was never changed', response.content)
+
+        self.test_admin.set_username('RenamedAdmin')
+        self.test_admin.save()
+        self.test_admin.set_username('TestAdmin')
+        self.test_admin.save()
+
+        response = self.client.get(reverse('misago:user_name_history',
+                                           kwargs=self.link_kwargs))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Admin changed name to <strong>Rename", response.content)

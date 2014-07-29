@@ -58,6 +58,7 @@ urlpatterns += patterns('misago.users.views.profile',
     url(r'^user/(?P<user_slug>[a-z0-9]+)-(?P<user_id>\d+)/name-history/(?P<page>\d+)/$', 'name_history', name="user_name_history"),
 )
 
+
 urlpatterns += patterns('misago.users.views.avatarserver',
     url(r'^user-avatar/(?P<size>\d+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar', name="user_avatar"),
     url(r'^user-avatar/tmp:(?P<token>[a-zA-Z0-9]+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar_source', name="user_avatar_tmp", kwargs={'type': 'tmp'}),

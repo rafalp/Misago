@@ -6,6 +6,9 @@
 {% if name_changes.object_list %}
 <div class="username-history">
   {% for change in name_changes.object_list %}
+  {% capture trimmed as old_username %}
+    <strong>{{ change.old_username }}</strong>
+  {% endcapture %}
   {% capture trimmed as new_username %}
     <strong>{{ change.new_username }}</strong>
   {% endcapture %}
@@ -25,13 +28,13 @@
         {{ change.changed_by_username }}
         {% endif %}
       {% endcapture %}
-      {% blocktrans trimmed with changed_by=changed_by|safe old_username=change.old_username new_username=new_username|safe %}
+      {% blocktrans trimmed with changed_by=changed_by|safe old_username=old_username|safe new_username=new_username|safe %}
       {{ changed_by }} changed {{ old_username }}'s name to {{ new_username }}
       {% endblocktrans %}
     {% else %}
       <img src="{{ profile.pk|avatar:22 }}" class="tooltip-top" title="{{ profile.username }}">
-      {% blocktrans trimmed with old_username=change.old_username new_username=new_username|safe %}
-      {{ old_username }} changed his name to {{ new_username }}
+      {% blocktrans trimmed with old_username=old_username|safe new_username=new_username|safe %}
+      {{ old_username }} changed name to {{ new_username }}
       {% endblocktrans %}
     {% endif %}
     <abbr class="pull-right text-muted tooltip-top dynamic time-ago" title="{{ change.changed_on }}" data-timestamp="{{ change.changed_on|date:"c" }}">
