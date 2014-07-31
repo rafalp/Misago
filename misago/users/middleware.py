@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth import logout
+from django.contrib.auth.models import AnonymousUser as DjAnonymousUser
 from django.core.urlresolvers import resolve
 from django.utils import timezone
 
@@ -20,6 +21,7 @@ class RealIPMiddleware(object):
 class AvatarServerMiddleware(object):
     def process_request(self, request):
         if request.path.startswith(settings.MISAGO_AVATAR_SERVER_PATH):
+            request.user = DjAnonymousUser()
             resolved_path = resolve(request.path)
             return resolved_path.func(request, **resolved_path.kwargs)
 
