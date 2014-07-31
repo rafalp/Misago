@@ -1,0 +1,126 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+{{ profile.username }}: {{ active_page.name }} {% if page_number > 1 %}({{ number }}) {% endif %}| {{ block.super }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page-header user-profile-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 col-md-offset-3">
+
+        <ul class="nav nav-tabs">
+          {% for page in pages %}
+          <li{% if page.is_active %} class="active"{% endif %}>
+            <a href="{% url page.link user_slug=profile.slug user_id=profile.pk %}">
+              {{ page.name }}
+              {% if page.badge != None %}
+              <span class="label label-default">{{ page.badge }}</span>
+              {% endif %}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+
+        {% if user.is_authenticated %}
+        <div class="page-actions">
+
+          {% if profile.acl_.can_moderate %}
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              {% trans "Moderation" %} <span class="glyphicon glyphicon-chevron-down"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li>
+                <a href="#">
+                  <span class="fa fa-exclamation-triangle"></span>
+                  {% trans "Warn user" %}
+                </a>
+              </li>
+              <li class="divider"></li>
+              <li>
+                <a href="#">
+                  <span class="fa fa-credit-card"></span>
+                  {% trans "Change username" %}
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <span class="fa fa-image"></span>
+                  {% trans "Ban avatar" %}
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <span class="fa fa-pencil"></span>
+                  {% trans "Edit and ban signature" %}
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <span class="fa fa-lock"></span>
+                  {% trans "Ban username" %}
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <span class="fa fa-lock"></span>
+                  {% trans "Ban e-mail address" %}
+                </a>
+              </li>
+              {% if profile.acl_.can_delete %}
+              <li class="divider"></li>
+              <li>
+                <form action="{% url 'misago:delete_user' user_id=profile.pk %}" method="post" class="delete-user-prompt">
+                  {% csrf_token %}
+                  <button type="submit" class="btn">
+                    <span class="fa fa-times-circle"></span>
+                    {% trans "Delete user account and content" %}
+                  </button>
+                </form>
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+          {% endif %}
+
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container user-profile {% if profile.rank.css_class %}profile-{{ profile.rank.css_class }}{% endif %}">
+  <div class="row">
+    <div class="col-md-3 profile-side">
+
+      {% include "misago/profile/side.html" %}
+
+    </div>
+    <div class="col-md-9">
+      {% block page %}{% endblock page %}
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+{% if profile.acl_.can_moderate %}
+<script type="text/javascript">
+  $(function() {
+    {% if profile.acl_.can_delete %}
+    $('.delete-user-prompt').submit(function() {
+      var decision = confirm("{% trans "Are you sure you want to delete this user and all of his/hers all content?" %}");
+      return decision;
+    });
+    {% endif %}
+  });
+</script>
+{% endif %}
+{% endblock javascripts %}
