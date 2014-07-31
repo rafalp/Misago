@@ -1,4 +1,11 @@
+from hashlib import md5
+from time import time
+
+from misago.core import threadstore
+from misago.core.cache import cache
+
 from misago.acl.forms import get_permissions_forms
+from misago.acl.models import Role
 
 
 def fake_post_data(target, data_dict):
@@ -19,5 +26,14 @@ def fake_post_data(target, data_dict):
 
 
 def override_acl(user, new_acl):
-    user.acl
-    user._acl_cache.update(new_acl)
+    """overrides user permissions with specified ones"""
+    test_role = Role(name='Fake')
+    test_role.permissions = new_acl
+    test_role.save()
+
+    user.rank.roles.clear()
+
+    user.roles.clear()
+    user.roles.add(test_role)
+    user.acl_key = md5(unicode(time())).hexdigesT()
+    user.save()
