@@ -184,6 +184,11 @@ MISAGO_ATTACHMENTS_ROOT
 Path to directory that Misago should use to store post attachments. This directory shouldn't be accessible from outside world.
 
 
+MISAGO_AVATAR_SERVER_PATH
+-------------------------
+Url path that that all avatar server urls starts with. If you are running Misago subdirectory, make sure to update it (i.e. valid path for  "http://somesite.com/forums/" is ``/forums/user-avatar``).
+
+
 MISAGO_AVATAR_STORE
 -------------------
 
