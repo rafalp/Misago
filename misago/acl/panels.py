@@ -3,6 +3,11 @@ from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 
 
+class MockUser(object):
+    def is_authenticated(self):
+        return False
+
+
 class MisagoACLPanel(Panel):
     """
     Panel that displays current user's ACL
@@ -20,12 +25,18 @@ class MisagoACLPanel(Panel):
             return _("Anonymous user")
 
     def process_response(self, request, response):
-        if hasattr(request.user, 'acl'):
-            misago_acl = request.user.acl
+        if hasattr(request, 'user'):
+            if  hasattr(request.user, 'acl'):
+                misago_user = request.user
+                misago_acl = request.user.acl
+            else:
+                misago_user = MockUser()
+                misago_acl = {}
         else:
+            misago_user = MockUser()
             misago_acl = {}
 
         self.record_stats({
-            'misago_user': request.user,
+            'misago_user': misago_user,
             'misago_acl': misago_acl,
         })

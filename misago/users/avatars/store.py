@@ -1,3 +1,4 @@
+from hashlib import md5
 import os
 
 from path import path
@@ -19,8 +20,11 @@ def store_avatar(user, image):
 
     normalize_image(image)
     for size in sorted(settings.MISAGO_AVATARS_SIZES, reverse=True):
+        avatar_file = '%s_%s.png' % (user.pk, size)
+        avatar_file = path(os.path.join(avatars_dir, avatar_file))
+
         image = image.resize((size, size), Image.ANTIALIAS)
-        image.save('%s/%s_%s.png' % (avatars_dir, user.pk, size), "PNG")
+        image.save(avatar_file, "PNG")
 
 
 def delete_avatar(user):
@@ -28,15 +32,18 @@ def delete_avatar(user):
     suffixes_to_delete = settings.MISAGO_AVATARS_SIZES + ('org', 'tmp')
 
     for size in suffixes_to_delete:
-        avatar_file = path('%s/%s_%s.png' % (avatars_dir, user.pk, size))
+        avatar_file = '%s_%s.png' % (user.pk, size)
+        avatar_file = path(os.path.join(avatars_dir, avatar_file))
         if avatar_file.exists():
             avatar_file.remove()
 
 
 def store_temporary_avatar(user, image):
     avatars_dir = get_existing_avatars_dir(user)
+    avatar_file = '%s_tmp.png' % user.pk
+
     normalize_image(image)
-    image.save('%s/%s_tmp.png' % (avatars_dir, user.pk), "PNG")
+    image.save(os.path.join(avatars_dir, avatar_file), "PNG")
 
 
 def store_original_avatar(user):
@@ -48,7 +55,8 @@ def store_original_avatar(user):
 
 def avatar_file_path(user, size):
     avatars_dir = get_existing_avatars_dir(user)
-    return path('%s/%s_%s.png' % (avatars_dir, user.pk, size))
+    avatar_file = '%s_%s.png' % (user.pk, size)
+    return path(os.path.join(avatars_dir, avatar_file))
 
 
 def avatar_file_exists(user, size):
@@ -63,10 +71,22 @@ def store_new_avatar(user, image):
     store_avatar(user, image)
 
 
-def get_existing_avatars_dir(user):
-    date_dir = unicode(user.joined_on.strftime('%y%m'))
-    avatars_dir = path(os.path.join(AVATARS_STORE, date_dir))
+def get_avatars_dir_path(user=None):
+    if user:
+        try:
+            user_id = user.pk
+        except AttributeError:
+            user_id = user
 
+        dir_hash = md5(str(user_id)).hexdigest()
+        hash_path = [dir_hash[0], dir_hash[1], dir_hash[2:10]]
+        return path(os.path.join(AVATARS_STORE, *hash_path))
+    else:
+        return path(os.path.join(AVATARS_STORE, 'blank'))
+
+
+def get_existing_avatars_dir(user=None):
+    avatars_dir = get_avatars_dir_path(user)
     if not avatars_dir.exists():
-        avatars_dir.mkdir()
+        avatars_dir.makedirs()
     return avatars_dir

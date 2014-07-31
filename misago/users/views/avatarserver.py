@@ -1,27 +1,39 @@
+import os
+
+from path import path
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
 from misago.core.fileserver import make_file_response
 
-from misago.users.avatars import set_default_avatar
+from misago.users.avatars import store
 from misago.users.avatars.uploaded import avatar_source_token
+
+
+def serve_blank_avatar(request, size):
+    size = clean_size(size)
+    avatar_dir = store.get_avatars_dir_path()
+    avatar_file = get_blank_avatar_file(size)
+    avatar_path = os.path.join(avatar_dir, avatar_file)
+    return make_file_response(avatar_path, 'image/png')
 
 
 def serve_user_avatar(request, user_id, size):
     size = clean_size(size)
-    User = get_user_model()
 
-    if user_id > 0:
-        try:
-            user = User.objects.get(id=user_id)
-            avatar_file = get_user_avatar_file(user, size)
-        except User.DoesNotExist:
-            avatar_file = get_blank_avatar_file(size)
+    if int(user_id) > 0:
+        avatar_dir = store.get_avatars_dir_path(user_id)
+        avatar_file = get_user_avatar_file(user_id, size)
+        avatar_path = os.path.join(avatar_dir, avatar_file)
+
+        if path(avatar_path).exists():
+            avatar_path = os.path.join(avatar_dir, avatar_file)
+            return make_file_response(avatar_path, 'image/png')
+        else:
+            return serve_blank_avatar(request, size)
     else:
-        avatar_file = get_blank_avatar_file(size)
-
-    avatar_path = '%s/%s.png' % (settings.MISAGO_AVATAR_STORE, avatar_file)
-    return make_file_response(avatar_path, 'image/png')
+        return serve_blank_avatar(request, size)
 
 
 def serve_user_avatar_source(request, user_id, token, type):
@@ -32,7 +44,7 @@ def serve_user_avatar_source(request, user_id, token, type):
         try:
             user = User.objects.get(id=user_id)
             if token == avatar_source_token(user, type):
-                avatar_file = get_user_avatar_file(user, type)
+                avatar_file = get_user_avatar_file(user.pk, type)
             else:
                 avatar_file = fallback_avatar
         except User.DoesNotExist:
@@ -40,14 +52,12 @@ def serve_user_avatar_source(request, user_id, token, type):
     else:
         avatar_file = fallback_avatar
 
-    avatar_path = '%s/%s.png' % (settings.MISAGO_AVATAR_STORE, avatar_file)
-    return make_file_response(avatar_path, 'image/png')
+    if avatar_file == fallback_avatar:
+        avatar_dir = store.get_avatars_dir_path()
+    else:
+        avatar_dir = store.get_avatars_dir_path(user_id)
 
-
-def serve_blank_avatar(request, size):
-    size = clean_size(size)
-    avatar_file = get_blank_avatar_file(size)
-    avatar_path = '%s/%s.png' % (settings.MISAGO_AVATAR_STORE, avatar_file)
+    avatar_path = os.path.join(avatar_dir, avatar_file)
     return make_file_response(avatar_path, 'image/png')
 
 
@@ -60,10 +70,9 @@ def clean_size(size):
     return size
 
 
-def get_user_avatar_file(user, size):
-    file_formats = (user.joined_on.strftime('%y%m'), user.pk, size)
-    return '%s/%s_%s' % file_formats
+def get_user_avatar_file(user_id, size):
+    return '%s_%s.png' % (user_id, size)
 
 
 def get_blank_avatar_file(size):
-    return 'blank/blank_%s' % size
+    return 'blank_%s.png' % size

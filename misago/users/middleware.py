@@ -1,8 +1,11 @@
+from django.conf import settings
 from django.contrib.auth import logout
+from django.core.urlresolvers import resolve
 from django.utils import timezone
 
 from misago.users.bans import get_request_ip_ban, get_user_ban
 from misago.users.models import AnonymousUser, Online
+from misago.users.views import avatarserver
 
 
 class RealIPMiddleware(object):
@@ -12,6 +15,13 @@ class RealIPMiddleware(object):
             request._misago_real_ip = x_forwarded_for.split(',')[0]
         else:
             request._misago_real_ip = request.META.get('REMOTE_ADDR')
+
+
+class AvatarServerMiddleware(object):
+    def process_request(self, request):
+        if request.path.startswith(settings.MISAGO_AVATAR_SERVER_PATH):
+            resolved_path = resolve(request.path)
+            return resolved_path.func(request, **resolved_path.kwargs)
 
 
 class UserMiddleware(object):

@@ -1,4 +1,5 @@
-from django.conf.urls import patterns, url
+from django.conf import settings
+from django.conf.urls import include, patterns, url
 
 
 urlpatterns = patterns('misago.users.views.auth',
@@ -59,9 +60,11 @@ urlpatterns += patterns('misago.users.views.profile',
 )
 
 
-urlpatterns += patterns('misago.users.views.avatarserver',
-    url(r'^user-avatar/(?P<size>\d+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar', name="user_avatar"),
-    url(r'^user-avatar/tmp:(?P<token>[a-zA-Z0-9]+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar_source', name="user_avatar_tmp", kwargs={'type': 'tmp'}),
-    url(r'^user-avatar/org:(?P<token>[a-zA-Z0-9]+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar_source', name="user_avatar_org", kwargs={'type': 'org'}),
-    url(r'^user-avatar/(?P<size>\d+)\.png$', 'serve_blank_avatar', name="blank_avatar"),
+urlpatterns += patterns('',
+    url(r'^%s/' % settings.MISAGO_AVATAR_SERVER_PATH[1:], include(patterns('misago.users.views.avatarserver',
+        url(r'(?P<size>\d+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar', name="user_avatar"),
+        url(r'tmp:(?P<token>[a-zA-Z0-9]+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar_source', name="user_avatar_tmp", kwargs={'type': 'tmp'}),
+        url(r'org:(?P<token>[a-zA-Z0-9]+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar_source', name="user_avatar_org", kwargs={'type': 'org'}),
+        url(r'(?P<size>\d+)\.png$', 'serve_blank_avatar', name="blank_avatar"),
+    )))
 )
