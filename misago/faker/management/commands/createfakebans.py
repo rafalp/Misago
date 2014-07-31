@@ -95,7 +95,7 @@ class Command(BaseCommand):
         message = 'Successfully created %s fake bans!'
 
         created_count = 0
-        for i in xrange(fake_bans_to_create):
+        for i in xrange(fake_bans_to_create + 1):
             ban = Ban(test=random.randint(BAN_USERNAME, BAN_IP))
             ban.banned_value = create_fake_test(fake, ban.test)
 
@@ -116,7 +116,7 @@ class Command(BaseCommand):
             ban.save()
 
             created_count += 1
-            if created_count % 100 == 0:
+            if (created_count * 100 / fake_bans_to_create) % 10 == 0:
                 self.stdout.write(message % created_count)
 
-        self.stdout.write(message % Vans.objects.all().count())
+        self.stdout.write(message % created_count)
