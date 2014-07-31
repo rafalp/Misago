@@ -79,7 +79,7 @@ def get_avatars_dir_path(user=None):
             user_id = user
 
         dir_hash = md5(str(user_id)).hexdigest()
-        hash_path = [dir_hash[0], dir_hash[1], dir_hash[2:10]]
+        hash_path = [dir_hash[0:1], dir_hash[2:3]]
         return path(os.path.join(AVATARS_STORE, *hash_path))
     else:
         return path(os.path.join(AVATARS_STORE, 'blank'))
