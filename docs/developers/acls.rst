@@ -77,6 +77,9 @@ Optional. Is called when Misago is trying to make ``target`` aware of its ACLs. 
 
 Value of ``target`` argument has ``acl`` attribute which is dict with incomplete ACL that function can change and update with new keys.
 
+.. note::
+   This will not work for instances of User model, that already reserve ``acl`` attribute for their own acls. Instead add_acl_to_target for User instances will add acl's to `acl_` attribute.
+
 Misago comes with its own debug page titled "Misago User ACL" that is available from Django Debug Toolbar menu. This page display user roles permissions as well as final ACL assigned to current user.
 
 

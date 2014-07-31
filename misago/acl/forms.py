@@ -21,6 +21,7 @@ def get_permissions_forms(role, data=None):
     role_permissions = role.permissions
 
     forms = []
+    print 'ALC Providers: %s' % len(providers.list())
     for extension, module in providers.list():
         try:
             module.change_permissions_form

@@ -154,7 +154,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 MISAGO_ACL_EXTENSIONS = (
     'misago.users.permissions.account',
     'misago.users.permissions.profiles',
-    'misago.users.permissions.destroying',
+    'misago.users.permissions.delete',
     'misago.forums.permissions',
 )
 

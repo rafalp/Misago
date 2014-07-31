@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.http import Http404
 from django.shortcuts import redirect, render as django_render
 
+from misago.acl import add_acl
 from misago.core.shortcuts import get_object_or_404, paginate, validate_slug
 
 from misago.users import online
@@ -9,7 +10,7 @@ from misago.users.sites import user_profile
 
 
 def profile_view(f):
-    def decorator(*args, **kwargs):
+    def decorator(request, *args, **kwargs):
         relations = ('rank', 'online_tracker', 'ban_cache')
         queryset = get_user_model().objects.select_related(*relations)
         profile = get_object_or_404(queryset, id=kwargs.pop('user_id'))
@@ -17,7 +18,9 @@ def profile_view(f):
         validate_slug(profile, kwargs.pop('user_slug'))
         kwargs['profile'] = profile
 
-        return f(*args, **kwargs)
+        add_acl(request.user, profile)
+
+        return f(request, *args, **kwargs)
     return decorator
 
 

@@ -40,10 +40,10 @@ def create_default_roles(apps, schema_editor):
                 'can_see_hidden_users': 0,
             },
 
-            # destroy users perms
-            'misago.users.permissions.destroying': {
-                'can_destroy_user_newer_than': 0,
-                'can_destroy_users_with_less_posts_than': 0,
+            # delete users perms
+            'misago.users.permissions.delete': {
+                'can_delete_users_newer_than': 0,
+                'can_delete_users_with_less_posts_than': 0,
             },
         })
     role.save()
@@ -69,10 +69,10 @@ def create_default_roles(apps, schema_editor):
                 'can_see_hidden_users': 0,
             },
 
-            # destroy users perms
-            'misago.users.permissions.destroying': {
-                'can_destroy_user_newer_than': 0,
-                'can_destroy_users_with_less_posts_than': 0,
+            # delete users perms
+            'misago.users.permissions.delete': {
+                'can_delete_users_newer_than': 0,
+                'can_delete_users_with_less_posts_than': 0,
             },
         })
     role.save()
@@ -98,21 +98,21 @@ def create_default_roles(apps, schema_editor):
                 'can_see_hidden_users': 1,
             },
 
-            # destroy users perms
-            'misago.users.permissions.destroying': {
-                'can_destroy_user_newer_than': 0,
-                'can_destroy_users_with_less_posts_than': 0,
+            # delete users perms
+            'misago.users.permissions.delete': {
+                'can_delete_users_newer_than': 0,
+                'can_delete_users_with_less_posts_than': 0,
             },
         })
     role.save()
 
-    role = Role(name=_("Spammers Deleter"))
+    role = Role(name=_("Delete users"))
     pickle_permissions(role,
         {
-            # destroy users perms
-            'misago.users.permissions.destroying': {
-                'can_destroy_user_newer_than': 2,
-                'can_destroy_users_with_less_posts_than': 20,
+            # delete users perms
+            'misago.users.permissions.delete': {
+                'can_delete_users_newer_than': 3,
+                'can_delete_users_with_less_posts_than': 7,
             },
         })
     role.save()

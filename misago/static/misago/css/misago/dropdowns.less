@@ -28,6 +28,7 @@
     button {
       background: none;
       border: none;
+      border-radius: 0px;
       padding: 3px 20px;
       width: 100%;
 
@@ -56,6 +57,8 @@
     a, button {
       .glyphicon, .fa {
         display: inline-block;
+        margin-left: -10px;
+        margin-right: 4px;
         width: 16px;
 
         text-align: center;
@@ -109,7 +112,13 @@
 /* Big displays */
 @media (min-width: @screen-sm-min) {
   .dropdown-menu {
-    min-width: 300px;
+    &.width-medium {
+      max-width: 200px;
+    }
+
+    &.width-large {
+      max-width: 300px;
+    }
 
     .dropdown-title {
       background-color: #ecf0f1;

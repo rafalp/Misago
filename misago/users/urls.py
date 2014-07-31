@@ -63,6 +63,13 @@ urlpatterns += patterns('',
 
 
 urlpatterns += patterns('',
+    url(r'^mod-user/(?P<user_id>\d+)/', include(patterns('misago.users.views.moderation',
+        url(r'^delete/$', 'delete', name='delete_user'),
+    ))),
+)
+
+
+urlpatterns += patterns('',
     url(r'^user-avatar/', include(patterns('misago.users.views.avatarserver',
         url(r'(?P<size>\d+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar', name="user_avatar"),
         url(r'tmp:(?P<token>[a-zA-Z0-9]+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar_source', name="user_avatar_tmp", kwargs={'type': 'tmp'}),

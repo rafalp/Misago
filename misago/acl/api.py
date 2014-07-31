@@ -1,3 +1,5 @@
+from django.contrib.auth import get_user_model
+
 from misago.core import threadstore
 from misago.core.cache import cache
 
@@ -58,7 +60,10 @@ def _add_acl_to_target(user, target):
     """
     Add valid ACL to single target, helper for add_acl function
     """
-    target.acl = {}
+    if isinstance(target, get_user_model()):
+        target.acl_ = {}
+    else:
+        target.acl = {}
 
     for extension, module in providers.list():
         if hasattr(module, 'add_acl_to_target'):

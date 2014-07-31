@@ -31,7 +31,7 @@ class Command(BaseCommand):
         message = 'Successfully created %s fake user accounts!'
 
         created_count = 0
-        for i in xrange(fake_users_to_create):
+        for i in xrange(fake_users_to_create + 1):
             try:
                 kwargs = {
                     'rank': random.choice(ranks),
@@ -44,7 +44,7 @@ class Command(BaseCommand):
                 pass
             else:
                 created_count += 1
-                if created_count % 100 == 0:
+                if (created_count * 100 / fake_users_to_create) % 10 == 0:
                     self.stdout.write(message % created_count)
 
-        self.stdout.write(message % User.objects.all().count())
+        self.stdout.write(message % created_count)

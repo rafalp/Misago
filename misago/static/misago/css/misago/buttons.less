@@ -2,6 +2,18 @@
 // Forum Buttons
 // --------------------------------------------------
 
+
+.misago-button-active-flavour(@btn-color, @btn-bg, @btn-border) {
+  background: darken(@btn-bg, 15%);
+  border-color: darken(@btn-bg, 15%);
+  box-shadow: none;
+  position: relative;
+  top: 2px;
+
+  color: darken(@btn-color, 10%);
+}
+
+
 .misago-button-flavour(@btn-color, @btn-bg, @btn-border) {
   background: @btn-bg;
   border-color: @btn-bg;
@@ -17,14 +29,8 @@
     color: @btn-color;
   }
 
-  &.active, &:active, &:focus {
-    background: darken(@btn-bg, 15%);
-    border-color: darken(@btn-bg, 15%);
-    box-shadow: none;
-    position: relative;
-    top: 2px;
-
-    color: darken(@btn-color, 10%);
+  &.active, &:active {
+    .misago-button-active-flavour(@btn-color, @btn-bg, @btn-border);
   }
 
   .glyphicon-chevron-down {
@@ -34,6 +40,7 @@
     font-size: @font-size-small;
   }
 }
+
 
 .btn {
   &.btn-default {
@@ -58,5 +65,43 @@
 
   &.btn-danger {
     .misago-button-flavour(@btn-danger-color, @btn-danger-bg, @btn-danger-border);
+  }
+}
+
+.open .dropdown-toggle {
+  &.btn-default {
+    &, &:link, &:visited, &:hover , &:active {
+      .misago-button-active-flavour(@btn-default-color, @btn-default-bg, @btn-default-border);
+    }
+  }
+
+  &.btn-primary {
+    &, &:link, &:visited, &:hover , &:active {
+      .misago-button-active-flavour(@btn-primary-color, @btn-primary-bg, @btn-primary-border);
+    }
+  }
+
+  &.btn-info {
+    &, &:link, &:visited, &:hover , &:active {
+      .misago-button-active-flavour(@btn-info-color, @btn-info-bg, @btn-info-border);
+    }
+  }
+
+  &.btn-success {
+    &, &:link, &:visited, &:hover , &:active {
+      .misago-button-active-flavour(@btn-success-color, @btn-success-bg, @btn-success-border);
+    }
+  }
+
+  &.btn-warning {
+    &, &:link, &:visited, &:hover , &:active {
+      .misago-button-active-flavour(@btn-warning-color, @btn-warning-bg, @btn-warning-border);
+    }
+  }
+
+  &.btn-danger {
+    &, &:link, &:visited, &:hover , &:active {
+      .misago-button-active-flavour(@btn-danger-color, @btn-danger-bg, @btn-danger-border);
+    }
   }
 }
