@@ -54,7 +54,7 @@ urlpatterns += patterns('misago.users.views.usercp',
 
 urlpatterns += patterns('',
     url(r'^user/(?P<user_slug>[a-z0-9]+)-(?P<user_id>\d+)/', include(patterns('misago.users.views.profile',
-        url(r'$', 'user_posts', name="user_posts"),
+        url(r'^$', 'user_posts', name="user_posts"),
         url(r'^threads/$', 'user_threads', name="user_threads"),
         url(r'^name-history/$', 'name_history', name="user_name_history"),
         url(r'^name-history/(?P<page>\d+)/$', 'name_history', name="user_name_history"),
@@ -71,9 +71,9 @@ urlpatterns += patterns('',
 
 urlpatterns += patterns('',
     url(r'^user-avatar/', include(patterns('misago.users.views.avatarserver',
-        url(r'(?P<size>\d+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar', name="user_avatar"),
-        url(r'tmp:(?P<token>[a-zA-Z0-9]+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar_source', name="user_avatar_tmp", kwargs={'type': 'tmp'}),
-        url(r'org:(?P<token>[a-zA-Z0-9]+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar_source', name="user_avatar_org", kwargs={'type': 'org'}),
-        url(r'(?P<size>\d+)\.png$', 'serve_blank_avatar', name="blank_avatar"),
+        url(r'^(?P<size>\d+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar', name="user_avatar"),
+        url(r'^tmp:(?P<token>[a-zA-Z0-9]+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar_source', name="user_avatar_tmp", kwargs={'type': 'tmp'}),
+        url(r'^org:(?P<token>[a-zA-Z0-9]+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar_source', name="user_avatar_org", kwargs={'type': 'org'}),
+        url(r'^(?P<size>\d+)\.png$', 'serve_blank_avatar', name="blank_avatar"),
     )))
 )
