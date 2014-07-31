@@ -16,3 +16,8 @@ def fake_post_data(target, data_dict):
             else:
                 data_dict[field.html_name] = field.value()
     return data_dict
+
+
+def override_acl(user, new_acl):
+    user.acl
+    user._acl_cache.update(new_acl)

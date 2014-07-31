@@ -33,6 +33,6 @@ def user_moderation_view(required_permission=None):
 def delete(request, user):
     user.delete(delete_content=True)
 
-    message = _("User %(username)s account has been deleted with all content.")
+    message = _("User %(username)s has been deleted with all content.")
     messages.success(request, message % {'username': user.username})
     return redirect('misago:index')

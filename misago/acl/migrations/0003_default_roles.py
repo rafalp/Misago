@@ -106,7 +106,7 @@ def create_default_roles(apps, schema_editor):
         })
     role.save()
 
-    role = Role(name=_("Delete users"))
+    role = Role(name=_("Deleting users"))
     pickle_permissions(role,
         {
             # delete users perms

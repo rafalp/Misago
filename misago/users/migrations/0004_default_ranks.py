@@ -27,6 +27,7 @@ def create_default_ranks(apps, schema_editor):
 
     Role = apps.get_model('misago_acl', 'Role')
     team.roles.add(Role.objects.get(name=_("Moderator")))
+    team.roles.add(Role.objects.get(name=_("Deleting users")))
 
 
 class Migration(migrations.Migration):
