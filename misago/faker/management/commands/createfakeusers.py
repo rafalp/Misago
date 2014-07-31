@@ -4,7 +4,10 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import IntegrityError
+
 from faker import Factory
+
+from misago.core.management.progressbar import show_progress
 from misago.users.models import Rank
 
 
@@ -25,13 +28,14 @@ class Command(BaseCommand):
 
         ranks = [r for r in Rank.objects.all()]
 
-        message = 'Attempting to create %s fake user accounts!'
+        message = 'Creating %s fake user accounts...\n'
         self.stdout.write(message % fake_users_to_create)
 
-        message = 'Successfully created %s fake user accounts!'
+        message = '\n\nSuccessfully created %s fake user accounts'
 
         created_count = 0
-        for i in xrange(fake_users_to_create + 1):
+        show_progress(self, created_count, fake_users_to_create)
+        for i in xrange(fake_users_to_create):
             try:
                 kwargs = {
                     'rank': random.choice(ranks),
@@ -44,7 +48,6 @@ class Command(BaseCommand):
                 pass
             else:
                 created_count += 1
-                if (created_count * 100 / fake_users_to_create) % 10 == 0:
-                    self.stdout.write(message % created_count)
+                show_progress(self, created_count, fake_users_to_create)
 
         self.stdout.write(message % created_count)

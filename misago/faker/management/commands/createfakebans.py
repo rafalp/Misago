@@ -6,7 +6,10 @@ from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import IntegrityError
 from django.utils import timezone
+
 from faker import Factory
+
+from misago.core.management.progressbar import show_progress
 from misago.users.models import Ban, BAN_USERNAME, BAN_EMAIL, BAN_IP
 
 
@@ -89,13 +92,14 @@ class Command(BaseCommand):
 
         fake = Factory.create()
 
-        message = 'Attempting to create %s fake bans!'
+        message = 'Creating %s fake bans...\n'
         self.stdout.write(message % fake_bans_to_create)
 
-        message = 'Successfully created %s fake bans!'
+        message = '\n\nSuccessfully created %s fake bans'
 
         created_count = 0
-        for i in xrange(fake_bans_to_create + 1):
+        show_progress(self, created_count, fake_bans_to_create)
+        for i in xrange(fake_bans_to_create):
             ban = Ban(test=random.randint(BAN_USERNAME, BAN_IP))
             ban.banned_value = create_fake_test(fake, ban.test)
 
@@ -116,7 +120,6 @@ class Command(BaseCommand):
             ban.save()
 
             created_count += 1
-            if (created_count * 100 / fake_bans_to_create) % 10 == 0:
-                self.stdout.write(message % created_count)
+            show_progress(self, created_count, fake_bans_to_create)
 
         self.stdout.write(message % created_count)
