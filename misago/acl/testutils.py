@@ -35,5 +35,5 @@ def override_acl(user, new_acl):
 
     user.roles.clear()
     user.roles.add(test_role)
-    user.acl_key = md5(unicode(time())).hexdigesT()
+    user.acl_key = md5(unicode(time())).hexdigest()[:8]
     user.save()
