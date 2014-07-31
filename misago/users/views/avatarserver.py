@@ -75,4 +75,4 @@ def get_user_avatar_file(user_id, size):
 
 
 def get_blank_avatar_file(size):
-    return 'blank_%s.png' % size
+    return '%s.png' % size
