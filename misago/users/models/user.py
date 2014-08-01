@@ -119,9 +119,12 @@ class UserManager(BaseUserManager):
             except Rank.DoesNotExist:
                 pass
 
+
             user.is_staff = True
             user.is_superuser = True
-            user.save(update_fields=['is_staff', 'is_superuser'], using=self._db)
+
+            updated_fields = ('rank', 'acl_key', 'is_staff', 'is_superuser')
+            user.save(update_fields=updated_fields, using=self._db)
             return user
 
     def get_by_username(self, username):
