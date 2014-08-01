@@ -106,6 +106,16 @@ def create_default_roles(apps, schema_editor):
         })
     role.save()
 
+    role = Role(name=_("Renaming users users"))
+    pickle_permissions(role,
+        {
+            # delete users perms
+            'misago.users.permissions.moderation': {
+                'can_rename_users': 1,
+            },
+        })
+    role.save()
+
     role = Role(name=_("Deleting users"))
     pickle_permissions(role,
         {
