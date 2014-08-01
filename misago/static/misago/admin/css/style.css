@@ -6219,6 +6219,11 @@ body {
   max-width: 30px;
   max-height: 30px;
 }
+.table-panel table.table tr td.item-name a:link,
+.table-panel table.table tr td.item-name a:visited {
+  color: #444444;
+  font-weight: bold;
+}
 .table-panel table.table tr:first-child > :first-child {
   border-top-left-radius: 3px;
 }
