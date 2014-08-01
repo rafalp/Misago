@@ -1,11 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.db import transaction
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
 from misago.core.decorators import require_POST
+from misago.core.shortcuts import get_object_or_404, validate_slug
 
 from misago.users.permissions.delete import allow_delete_user
 
@@ -18,6 +19,7 @@ def user_moderation_view(required_permission=None):
             user_id = kwargs.pop('user_id')
 
             kwargs['user'] = get_object_or_404(queryset, id=user_id)
+            validate_slug(kwargs['user'], kwargs.pop('user_slug'))
             add_acl(request.user, kwargs['user'])
 
             if required_permission:
@@ -33,6 +35,6 @@ def user_moderation_view(required_permission=None):
 def delete(request, user):
     user.delete(delete_content=True)
 
-    message = _("User %(username)s has been deleted with all content.")
+    message = _("User %(username)s has been deleted.")
     messages.success(request, message % {'username': user.username})
     return redirect('misago:index')

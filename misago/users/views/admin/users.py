@@ -60,14 +60,16 @@ class UsersList(UserAdmin, generic.ListView):
             'action': 'delete_accounts',
             'name': _("Delete accounts"),
             'icon': 'fa fa-times-circle',
-            'confirmation': _("Are you sure you want to delete those users?"),
+            'confirmation': _("Are you sure you want "
+                              "to delete selected users?"),
         },
         {
             'action': 'delete_all',
             'name': _("Delete all"),
             'icon': 'fa fa-eraser',
-            'confirmation': _("Are you sure you want to delete both "
-                              "selected users and their content?"),
+            'confirmation': _("Are you sure you want to delete selected "
+                              "users? This will also delete all content "
+                              "associated with their accounts."),
         }
     ]
 
@@ -160,7 +162,7 @@ class UsersList(UserAdmin, generic.ListView):
         for user in users:
             user.delete(delete_content=True)
 
-        message = _("Selected users have been deleted with their content.")
+        message = _("Selected users and their content has been deleted.")
         messages.success(request, message)
 
 

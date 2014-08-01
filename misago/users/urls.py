@@ -53,7 +53,7 @@ urlpatterns += patterns('misago.users.views.usercp',
 
 
 urlpatterns += patterns('',
-    url(r'^user/(?P<user_slug>[a-z0-9]+)-(?P<user_id>\d+)/', include(patterns('misago.users.views.profile',
+    url(r'^user/(?P<user_slug>[a-zA-Z0-9]+)-(?P<user_id>\d+)/', include(patterns('misago.users.views.profile',
         url(r'^$', 'user_posts', name="user_posts"),
         url(r'^threads/$', 'user_threads', name="user_threads"),
         url(r'^name-history/$', 'name_history', name="user_name_history"),
@@ -63,7 +63,7 @@ urlpatterns += patterns('',
 
 
 urlpatterns += patterns('',
-    url(r'^mod-user/(?P<user_id>\d+)/', include(patterns('misago.users.views.moderation',
+    url(r'^moderate-user/(?P<user_slug>[a-zA-Z0-9]+)-(?P<user_id>\d+)/', include(patterns('misago.users.views.moderation',
         url(r'^delete/$', 'delete', name='delete_user'),
     ))),
 )
