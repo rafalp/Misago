@@ -1,0 +1,37 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_avatars %}
+
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+
+    <h1>
+      <div class="main">
+        <img src="{{ profile|avatar:20 }}" alt="{% trans "Avatar" %}">
+        <a href="{% url USER_PROFILE_URL user_slug=profile.slug user_id=profile.pk %}">
+          {{ profile.username }}
+        </a>
+      </div>
+      <div class="sub">
+        <span class="fa fa-chevron-right"></span>
+        {% block action-name %}{% endblock action-name %}
+      </div>
+    </h1>
+
+    <div class="page-actions path-fix">
+      {% include "misago/modusers/mod_options.html" %}
+    </div>
+
+  </div>
+</div>
+<div class="container">
+  {% block action-content %}
+  {% endblock action-content %}
+</div>
+{% endblock content %}
+
+
+{% block javascripts %}
+{% include "misago/modusers/mod_js.html" %}
+{% endblock javascripts %}

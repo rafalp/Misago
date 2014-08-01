@@ -8,11 +8,16 @@ from misago.acl import add_acl
 from misago.core.decorators import require_POST
 from misago.core.shortcuts import get_object_or_404, validate_slug
 
+from misago.users.forms.usercp import ChangeUsernameForm
+from misago.users.decorators import deny_guests
+from misago.users.permissions.moderation import allow_rename_user
 from misago.users.permissions.delete import allow_delete_user
+from misago.users.sites import user_profile
 
 
 def user_moderation_view(required_permission=None):
     def wrap(f):
+        @deny_guests
         @transaction.atomic
         def decorator(request, *args, **kwargs):
             queryset = get_user_model().objects
@@ -28,6 +33,27 @@ def user_moderation_view(required_permission=None):
             return f(request, *args, **kwargs)
         return decorator
     return wrap
+
+
+@user_moderation_view(allow_rename_user)
+def rename(request, user):
+    form = ChangeUsernameForm(user=user)
+    if request.method == 'POST':
+        old_username = user.username
+        form = ChangeUsernameForm(request.POST, user=user)
+        if form.is_valid():
+            user.set_username(form.cleaned_data['new_username'],
+                              changed_by=request.user)
+            user.save(update_fields=['username', 'slug'])
+
+            message = _("%(old_username)s's username has been changed.")
+            messages.success(request, message % {'old_username': old_username})
+
+            return redirect(user_profile.get_default_link(),
+                            **{'user_slug': user.slug, 'user_id': user.pk})
+
+    return render(request, 'misago/modusers/rename.html',
+                  {'profile': user, 'form': form})
 
 
 @require_POST

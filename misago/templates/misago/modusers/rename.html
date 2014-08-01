@@ -1,0 +1,48 @@
+{% extends "misago/modusers/base.html" %}
+{% load i18n misago_forms %}
+
+
+{% block title %}
+{{ profile.username }}: {% trans "Change username" %} | {{ block.super }}
+{% endblock title %}
+
+
+{% block action-name %}
+{% trans "Change username" %}
+{% endblock action-name %}
+
+
+{% block action-content %}
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+
+    <div class="form-panel">
+      <form method="POST" role="form" class="form-horizontal">
+        {% csrf_token %}
+
+        <div class="form-header">
+          <h2>
+            {% trans "Change username" %}
+          </h2>
+        </div>
+
+        {% include "misago/form_errors.html" %}
+        <div class="form-body no-fieldsets">
+          {% form_row form.new_username "col-md-4" "col-md-8" %}
+        </div>
+        <div class="form-footer">
+          <div class="row">
+            <div class="col-md-8 col-md-offset-4">
+
+              <button class="btn btn-primary">{% trans "Change username" %}</button>
+
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</div>
+{% endblock action-content %}

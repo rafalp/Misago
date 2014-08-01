@@ -1,0 +1,62 @@
+{% load i18n %}
+
+{% if profile.acl_.can_moderate %}
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    {% trans "Moderation" %} <span class="glyphicon glyphicon-chevron-down"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="#">
+        <span class="fa fa-exclamation-triangle"></span>
+        {% trans "Warn user" %}
+      </a>
+    </li>
+    <li class="divider"></li>
+    {% if profile.acl_.can_rename %}
+    <li>
+      <a href="{% url 'misago:rename_user' user_slug=profile.slug user_id=profile.pk %}">
+        <span class="fa fa-credit-card"></span>
+        {% trans "Change username" %}
+      </a>
+    </li>
+    {% endif %}
+    <li>
+      <a href="#">
+        <span class="fa fa-image"></span>
+        {% trans "Ban avatar" %}
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <span class="fa fa-pencil"></span>
+        {% trans "Edit and ban signature" %}
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <span class="fa fa-lock"></span>
+        {% trans "Ban username" %}
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <span class="fa fa-lock"></span>
+        {% trans "Ban e-mail address" %}
+      </a>
+    </li>
+    {% if profile.acl_.can_delete %}
+    <li class="divider"></li>
+    <li>
+      <form action="{% url 'misago:delete_user' user_slug=profile.slug user_id=profile.pk %}" method="post" class="delete-user-prompt">
+        {% csrf_token %}
+        <button type="submit" class="btn">
+          <span class="fa fa-times-circle"></span>
+          {% trans "Delete user" %}
+        </button>
+      </form>
+    </li>
+    {% endif %}
+  </ul>
+</div>
+{% endif %}

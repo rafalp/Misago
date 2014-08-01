@@ -21,6 +21,13 @@
 
       font-size: @font-size-large * 1.5;
 
+      img {
+        border-radius: @border-radius-base;
+        margin-top: -7px;
+        margin-bottom: -1px;
+        width: 32px;
+      }
+
       .main, .sub {
         float: left;
 
@@ -85,7 +92,15 @@
   &>.container {
     .page-actions {
       float: right;
-      margin-top: (@line-height-computed * @headings-line-height) * -1 - (@line-height-computed * 1.5) + @padding-base-vertical - 1;
+
+      &.path-fix {
+        margin: -2px 0px;
+        margin-bottom: -3px;
+      }
+
+      &.middle-fix {
+        margin-top: (@line-height-computed * @headings-line-height) * -1 - (@line-height-computed * 1.5) + @padding-base-vertical - 1;
+      }
 
       .dropdown-menu {
         left: auto;
