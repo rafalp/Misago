@@ -16,9 +16,9 @@ from misago.markup import Editor
 
 from misago.users import avatars
 from misago.users.decorators import deny_guests
+from misago.users.forms.rename import ChangeUsernameForm
 from misago.users.forms.usercp import (ChangeForumOptionsForm,
                                        EditSignatureForm,
-                                       ChangeUsernameForm,
                                        ChangeEmailPasswordForm)
 from misago.users.signatures import set_user_signature
 from misago.users.sites import usercp
@@ -251,13 +251,16 @@ def change_username(request):
     if request.method == 'POST' and namechanges.left:
         form = ChangeUsernameForm(request.POST, user=request.user)
         if form.is_valid():
-            request.user.set_username(form.cleaned_data['new_username'])
-            request.user.save(update_fields=['username', 'slug'])
+            try:
+                form.change_username(changed_by=request.user)
 
-            message = _("Your username has been changed.")
-            messages.success(request, message)
+                message = _("Your username has been changed.")
+                messages.success(request, message)
 
-            return redirect('misago:usercp_change_username')
+                return redirect('misago:usercp_change_username')
+            except IntegrityError:
+                message = _("Error changing username. Please try again.")
+                messages.error(request, message)
 
     return render(request, 'misago/usercp/change_username.html', {
             'form': form,

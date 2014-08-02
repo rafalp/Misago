@@ -65,6 +65,8 @@ urlpatterns += patterns('',
 urlpatterns += patterns('',
     url(r'^mod-user/(?P<user_slug>[a-zA-Z0-9]+)-(?P<user_id>\d+)/', include(patterns('misago.users.views.moderation',
         url(r'^rename/$', 'rename', name='rename_user'),
+        url(r'^ban-username/$', 'ban_username', name='ban_user_name'),
+        url(r'^ban-email/$', 'ban_email', name='ban_user_email'),
         url(r'^delete/$', 'delete', name='delete_user'),
     ))),
 )

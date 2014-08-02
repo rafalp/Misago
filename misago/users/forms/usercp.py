@@ -5,8 +5,7 @@ from misago.conf import settings
 from misago.core import forms, timezones
 
 from misago.users.models import AUTO_SUBSCRIBE_CHOICES
-from misago.users.validators import (validate_email, validate_password,
-                                     validate_username)
+from misago.users.validators import validate_email, validate_password
 
 
 class ChangeForumOptionsBaseForm(forms.ModelForm):
@@ -62,30 +61,6 @@ class EditSignatureForm(forms.ModelForm):
                 "Signature can't be longer than %(limit)s character.",
                 "Signature can't be longer than %(limit)s characters.",
                 length_limit) % {'limit': length_limit})
-
-        return data
-
-
-class ChangeUsernameForm(forms.Form):
-    new_username = forms.CharField(label=_("New username"), max_length=200,
-                                   required=False)
-
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user', None)
-        super(ChangeUsernameForm, self).__init__(*args, **kwargs)
-
-    def clean(self):
-        data = super(ChangeUsernameForm, self).clean()
-        new_username = data.get('new_username')
-
-        if not new_username:
-            raise forms.ValidationError(_("Enter new username."))
-
-        if new_username == self.user.username:
-            message = _("New username is same as current one.")
-            raise forms.ValidationError(message)
-
-        validate_username(new_username, exclude=self.user)
 
         return data
 

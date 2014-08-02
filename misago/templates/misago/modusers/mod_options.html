@@ -33,18 +33,22 @@
         {% trans "Edit and ban signature" %}
       </a>
     </li>
+    {% if profile.acl_.can_ban_username %}
     <li>
-      <a href="#">
+      <a href="{% url 'misago:ban_user_name' user_slug=profile.slug user_id=profile.pk %}">
         <span class="fa fa-lock"></span>
         {% trans "Ban username" %}
       </a>
     </li>
+    {% endif %}
+    {% if profile.acl_.can_ban_email %}
     <li>
-      <a href="#">
+      <a href="{% url 'misago:ban_user_email' user_slug=profile.slug user_id=profile.pk %}">
         <span class="fa fa-lock"></span>
         {% trans "Ban e-mail address" %}
       </a>
     </li>
+    {% endif %}
     {% if profile.acl_.can_delete %}
     <li class="divider"></li>
     <li>

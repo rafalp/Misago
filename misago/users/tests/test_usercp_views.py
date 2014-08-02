@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.core import mail
 from django.core.urlresolvers import reverse
 
+from misago.acl.testutils import override_acl
 from misago.admin.testutils import AdminTestCase
 from misago.conf import settings
 from misago.core import threadstore
@@ -189,16 +190,22 @@ class EditSignatureTests(AdminTestCase):
 
     def test_signature_no_permission(self):
         """edit signature view with no ACL returns 404"""
+        override_acl(self.test_admin, {
+            'misago.users.permissions.account': {
+                'can_have_signature': 0,
+            }
+        })
+
         response = self.client.get(self.view_link)
         self.assertEqual(response.status_code, 404)
 
     def test_signature_banned(self):
         """GET to usercp change options view returns 200"""
-        role = self.test_admin.roles.all()[0]
-        permissions = role.permissions
-        account_permissions = permissions['misago.users.permissions.account']
-        account_permissions['can_have_signature'] = 1
-        role.permissions = permissions
+        override_acl(self.test_admin, {
+            'misago.users.permissions.account': {
+                'can_have_signature': 1,
+            }
+        })
 
         self.test_admin.is_signature_banned = True
         self.test_admin.signature_ban_user_message = 'Your siggy is banned.'
@@ -210,11 +217,11 @@ class EditSignatureTests(AdminTestCase):
 
     def test_signature_change(self):
         """GET to usercp change options view returns 200"""
-        role = self.test_admin.roles.all()[0]
-        permissions = role.permissions
-        account_permissions = permissions['misago.users.permissions.account']
-        account_permissions['can_have_signature'] = 1
-        role.permissions = permissions
+        override_acl(self.test_admin, {
+            'misago.users.permissions.account': {
+                'can_have_signature': 1,
+            }
+        })
 
         self.test_admin.is_signature_banned = False
         self.test_admin.save()
