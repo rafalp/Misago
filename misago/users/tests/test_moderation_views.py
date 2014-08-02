@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 from misago.acl.testutils import override_acl
 from misago.admin.testutils import AdminTestCase
 
+from misago.users.models import Ban
+
 
 class UserModerationTestCase(AdminTestCase):
     def setUp(self):
@@ -49,6 +51,45 @@ class RenameUserTests(UserModerationTestCase):
         response = self.client.post(reverse('misago:index'))
         self.assertEqual(response.status_code, 200)
         self.assertIn('Bob&#39;s username has been changed.', response.content)
+
+
+class BanUserTests(UserModerationTestCase):
+    def test_no_ban_permission(self):
+        """user with no permission fails to ban other user"""
+        override_acl(self.test_admin, {
+            'misago.users.permissions.moderation': {
+                'can_ban_users': 0,
+            },
+        })
+
+        response = self.client.get(
+            reverse('misago:ban_user', kwargs=self.link_kwargs))
+
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("You can&#39;t ban users.", response.content)
+
+    def test_ban_user(self):
+        """user with permission bans other user"""
+        override_acl(self.test_admin, {
+            'misago.users.permissions.moderation': {
+                'can_ban_users': 1,
+                'max_ban_length': 0,
+            }
+        })
+
+        response = self.client.get(
+            reverse('misago:ban_user', kwargs=self.link_kwargs))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post(
+            reverse('misago:ban_user', kwargs=self.link_kwargs))
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.post(reverse('misago:index'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Bob has been banned.', response.content)
+
+        Ban.objects.get(banned_value=self.test_user.username.lower())
 
 
 class DeleteUserTests(UserModerationTestCase):

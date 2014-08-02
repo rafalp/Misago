@@ -1,20 +1,20 @@
 {% extends "misago/modusers/base.html" %}
-{% load i18n misago_forms %}
+{% load i18n misago_forms staticfiles %}
 
 
 {% block title %}
-{{ profile.username }}: {% trans "Rename user" %} | {{ block.super }}
+{{ profile.username }}: {% trans "Ban user" %} | {{ block.super }}
 {% endblock title %}
 
 
 {% block action-name %}
-{% trans "Rename user" %}
+{% trans "Ban user" %}
 {% endblock action-name %}
 
 
 {% block action-content %}
 <div class="row">
-  <div class="col-md-6 col-md-offset-3">
+  <div class="col-md-8 col-md-offset-2">
 
     <div class="form-panel">
       <form method="POST" role="form" class="form-horizontal">
@@ -23,20 +23,22 @@
         <div class="form-header">
           <h2>
             {% blocktrans trimmed with username=profile.username %}
-            Rename {{ username }}
+            Ban {{ username }}
             {% endblocktrans %}
           </h2>
         </div>
 
         {% include "misago/form_errors.html" %}
         <div class="form-body no-fieldsets">
-          {% form_row form.new_username "col-md-4" "col-md-8" %}
+          {% form_row form.valid_until "col-md-3" "col-md-9" %}
+          {% form_row form.user_message "col-md-3" "col-md-9" %}
+          {% form_row form.staff_message "col-md-3" "col-md-9" %}
         </div>
         <div class="form-footer">
           <div class="row">
-            <div class="col-md-8 col-md-offset-4">
+            <div class="col-md-9 col-md-offset-3">
 
-              <button class="btn btn-primary">{% trans "Rename user" %}</button>
+              <button class="btn btn-primary">{% trans "Ban user" %}</button>
 
               <a href="{% url USER_PROFILE_URL user_slug=profile.slug user_id=profile.pk %}" class="btn btn-default">
                 {% trans "Cancel" %}
@@ -52,3 +54,16 @@
   </div>
 </div>
 {% endblock action-content %}
+
+
+{% block javascripts %}
+<script type="text/javascript" src="{% static 'misago/js/bootstrap-datetimepicker.min.js' %}" charset="utf-8"></script>
+<script type="text/javascript">
+  $(function() {
+    $('#id_valid_until').datetimepicker({
+      language: $('html').attr('lang'),
+      pickTime: false
+    });
+  });
+</script>
+{% endblock javascripts %}

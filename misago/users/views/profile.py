@@ -6,6 +6,7 @@ from misago.acl import add_acl
 from misago.core.shortcuts import get_object_or_404, paginate, validate_slug
 
 from misago.users import online
+from misago.users.bans import get_user_ban
 from misago.users.sites import user_profile
 
 
@@ -85,4 +86,16 @@ def name_history(request, profile=None, page=0):
         'name_changes': name_changes,
         'page_number': name_changes.number,
         'items_left': items_left
+    })
+
+
+@profile_view_restricted_visibility
+def user_ban(request, profile=None):
+    ban = get_user_ban(profile)
+    if not ban:
+        raise Http404()
+
+    return render(request, 'misago/profile/ban_details.html', {
+        'profile': profile,
+        'ban': ban
     })

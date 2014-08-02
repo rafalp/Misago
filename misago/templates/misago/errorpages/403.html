@@ -18,7 +18,7 @@
     </div>
 
     {% if message %}
-    <h1>{{ message|urlize|linebreaksbr }}</h1>
+    <h1>{{ message|escape|urlize|linebreaksbr }}</h1>
     {% else %}
     <h1>{% trans "You don't have permission to access this page." %}</h1>
     {% endif %}

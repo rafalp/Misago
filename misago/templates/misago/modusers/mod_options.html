@@ -17,35 +17,27 @@
     <li>
       <a href="{% url 'misago:rename_user' user_slug=profile.slug user_id=profile.pk %}">
         <span class="fa fa-credit-card"></span>
-        {% trans "Change username" %}
+        {% trans "Rename user" %}
       </a>
     </li>
     {% endif %}
     <li>
       <a href="#">
         <span class="fa fa-image"></span>
-        {% trans "Ban avatar" %}
+        {% trans "Avatar ban" %}
       </a>
     </li>
     <li>
       <a href="#">
         <span class="fa fa-pencil"></span>
-        {% trans "Edit and ban signature" %}
+        {% trans "Signature ban" %}
       </a>
     </li>
-    {% if profile.acl_.can_ban_username %}
+    {% if profile.acl_.can_ban %}
     <li>
-      <a href="{% url 'misago:ban_user_name' user_slug=profile.slug user_id=profile.pk %}">
+      <a href="{% url 'misago:ban_user' user_slug=profile.slug user_id=profile.pk %}">
         <span class="fa fa-lock"></span>
-        {% trans "Ban username" %}
-      </a>
-    </li>
-    {% endif %}
-    {% if profile.acl_.can_ban_email %}
-    <li>
-      <a href="{% url 'misago:ban_user_email' user_slug=profile.slug user_id=profile.pk %}">
-        <span class="fa fa-lock"></span>
-        {% trans "Ban e-mail address" %}
+        {% trans "Ban user" %}
       </a>
     </li>
     {% endif %}

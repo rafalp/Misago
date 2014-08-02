@@ -1,0 +1,48 @@
+{% extends "misago/profile/base.html" %}
+{% load i18n misago_avatars misago_capture %}
+
+
+{% block page %}
+<p class="lead">
+  <span class="fa fa-lock"></span>
+  {% if ban.valid_until %}
+  {% blocktrans trimmed with username=profile.username banned_until=ban.valid_until %}
+  {{ username }} is banned until after {{ banned_until }}.
+  {% endblocktrans %}
+  {% else %}
+  {% blocktrans trimmed with username=profile.username %}
+  {{ username }} is banned permanently.
+  {% endblocktrans %}
+  {% endif %}
+</p>
+
+{% if ban.user_message %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      {% trans "User message" %}
+    </h3>
+  </div>
+  <div class="panel-body">
+
+    {{ ban.user_message|escape|urlize|linebreaksbr }}
+
+  </div>
+</div>
+{% endif %}
+
+{% if ban.staff_message %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      {% trans "Team message" %}
+    </h3>
+  </div>
+  <div class="panel-body">
+
+    {{ ban.staff_message|escape|urlize|linebreaksbr }}
+
+  </div>
+</div>
+{% endif %}
+{% endblock page %}

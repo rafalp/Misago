@@ -253,7 +253,8 @@ def SearchUsersForm(*args, **kwargs):
 class BanUsersForm(forms.Form):
     user_message = forms.CharField(
         label=_("User message"), required=False, max_length=1000,
-        help_text=_("Optional message displayed instead of default one."),
+        help_text=_("Optional message displayed to user "
+                    "instead of default one."),
         widget=forms.Textarea(attrs={'rows': 3}),
         error_messages={
             'max_length': _("Message can't be longer than 1000 characters.")
@@ -266,7 +267,7 @@ class BanUsersForm(forms.Form):
             'max_length': _("Message can't be longer than 1000 characters.")
         })
     valid_until = forms.DateField(
-        label=_("Expiration date"),
+        label=_("Expires after"),
         required=False, input_formats=['%m-%d-%Y'],
         widget=forms.DateInput(
             format='%m-%d-%Y', attrs={'data-date-format': 'MM-DD-YYYY'}),

@@ -9,10 +9,10 @@ from misago.core.decorators import require_POST
 from misago.core.shortcuts import get_object_or_404, validate_slug
 
 from misago.users.forms.rename import ChangeUsernameForm
+from misago.users.forms.modusers import BanForm
 from misago.users.decorators import deny_guests
 from misago.users.permissions.moderation import (allow_rename_user,
-                                                 allow_ban_username,
-                                                 allow_ban_email)
+                                                 allow_ban_user)
 from misago.users.permissions.delete import allow_delete_user
 from misago.users.sites import user_profile
 
@@ -60,47 +60,22 @@ def rename(request, user):
                   {'profile': user, 'form': form})
 
 
-@user_moderation_view(allow_ban_username)
-def ban_username(request, user):
-    form = ChangeUsernameForm(user=user)
+@user_moderation_view(allow_ban_user)
+def ban_user(request, user):
+    form = BanForm(user=user)
     if request.method == 'POST':
-        old_username = user.username
-        form = ChangeUsernameForm(request.POST, user=user)
+        form = BanForm(request.POST, user=user)
         if form.is_valid():
-            user.set_username(form.cleaned_data['new_username'],
-                              changed_by=request.user)
-            user.save(update_fields=['username', 'slug'])
+            form.ban_user()
 
-            message = _("%(old_username)s's username has been changed.")
-            messages.success(request, message % {'old_username': old_username})
+            message = _("%(username)s has been banned.")
+            messages.success(request, message % {'username': user.username})
 
             return redirect(user_profile.get_default_link(),
                             **{'user_slug': user.slug, 'user_id': user.pk})
 
-    return render(request, 'misago/modusers/rename.html',
+    return render(request, 'misago/modusers/ban.html',
                   {'profile': user, 'form': form})
-
-
-@user_moderation_view(allow_ban_email)
-def ban_email(request, user):
-    form = ChangeUsernameForm(user=user)
-    if request.method == 'POST':
-        old_username = user.username
-        form = ChangeUsernameForm(request.POST, user=user)
-        if form.is_valid():
-            user.set_username(form.cleaned_data['new_username'],
-                              changed_by=request.user)
-            user.save(update_fields=['username', 'slug'])
-
-            message = _("%(old_username)s's username has been changed.")
-            messages.success(request, message % {'old_username': old_username})
-
-            return redirect(user_profile.get_default_link(),
-                            **{'user_slug': user.slug, 'user_id': user.pk})
-
-    return render(request, 'misago/modusers/rename.html',
-                  {'profile': user, 'form': form})
-
 
 @require_POST
 @user_moderation_view(allow_delete_user)

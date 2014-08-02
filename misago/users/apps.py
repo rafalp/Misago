@@ -51,6 +51,15 @@ class MisagoUsersConfig(AppConfig):
                 return is_account_owner or has_permission
             else:
                 return False
+        def can_see_ban_details(request, profile):
+            if request.user.is_authenticated():
+                if request.user.acl['can_see_ban_details']:
+                    from misago.users.bans import get_user_ban
+                    return bool(get_user_ban(profile))
+                else:
+                    return False
+            else:
+                return False
 
         user_profile.add_page(link='misago:user_posts',
                               name=_("Posts"),
@@ -61,3 +70,6 @@ class MisagoUsersConfig(AppConfig):
         user_profile.add_page(link='misago:user_name_history',
                               name=_("Name history"),
                               visible_if=can_see_names_history)
+        user_profile.add_page(link='misago:user_ban',
+                              name=_("Ban"),
+                              visible_if=can_see_ban_details)
