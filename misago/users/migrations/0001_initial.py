@@ -144,7 +144,6 @@ class Migration(migrations.Migration):
                 ('staff_message', models.TextField(null=True, blank=True)),
                 ('valid_until', models.DateField(null=True, blank=True, db_index=True)),
                 ('is_valid', models.BooleanField(default=True, db_index=True)),
-                ('ban', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, to='misago_users.Ban', null=True)),
             ],
             bases=(models.Model,),
         ),
@@ -155,6 +154,7 @@ class Migration(migrations.Migration):
                 ('staff_message', models.TextField(null=True, blank=True)),
                 ('bans_version', models.PositiveIntegerField(default=0)),
                 ('valid_until', models.DateField(null=True, blank=True)),
+                ('ban', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, to='misago_users.Ban', null=True)),
                 ('user', models.OneToOneField(primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
             ],
             options={

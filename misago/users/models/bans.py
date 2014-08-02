@@ -133,6 +133,7 @@ class BanCache(models.Model):
     def is_valid(self):
         version_is_valid = cachebuster.is_valid(BAN_CACHEBUSTER,
                                                 self.bans_version)
-        not_expired = not self.valid_until or self.valid_until < date.today()
+        date_today = timezone.now().date()
+        not_expired = not self.valid_until or self.valid_until > date_today
 
         return version_is_valid and not_expired

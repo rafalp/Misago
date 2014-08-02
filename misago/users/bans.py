@@ -50,10 +50,10 @@ def get_user_ban(user):
             _set_user_ban_cache(user)
     except BanCache.DoesNotExist:
         user.ban_cache = BanCache(user=user)
-        ban_cache = _set_user_ban_cache(user)
+        user.ban_cache = _set_user_ban_cache(user)
 
-    if ban_cache.ban:
-        return ban_cache
+    if user.ban_cache.ban:
+        return user.ban_cache
     else:
         return None
 
