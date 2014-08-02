@@ -52,7 +52,7 @@ def get_user_ban(user):
         user.ban_cache = BanCache(user=user)
         ban_cache = _set_user_ban_cache(user)
 
-    if ban_cache.is_banned:
+    if ban_cache.ban:
         return ban_cache
     else:
         return None
@@ -65,12 +65,12 @@ def _set_user_ban_cache(user):
     try:
         user_ban = Ban.objects.find_ban(username=user.username,
                                         email=user.email)
-        ban_cache.is_banned = True
+        ban_cache.ban = user_ban
         ban_cache.valid_until = user_ban.valid_until
         ban_cache.user_message = user_ban.user_message
         ban_cache.staff_message = user_ban.staff_message
     except Ban.DoesNotExist:
-        ban_cache.is_banned = False
+        ban_cache.ban = None
         ban_cache.valid_until = None
         ban_cache.user_message = None
         ban_cache.staff_message = None

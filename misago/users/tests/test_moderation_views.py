@@ -92,6 +92,47 @@ class BanUserTests(UserModerationTestCase):
         Ban.objects.get(banned_value=self.test_user.username.lower())
 
 
+class LiftUserBanTests(UserModerationTestCase):
+    def test_no_lift_ban_permission(self):
+        """user with no permission fails to lift user ban"""
+        override_acl(self.test_admin, {
+            'misago.users.permissions.moderation': {
+                'can_lift_bans': 0,
+                'max_lifted_ban_length': 0,
+            },
+        })
+
+        Ban.objects.create(banned_value=self.test_user.username)
+
+        response = self.client.post(
+            reverse('misago:lift_user_ban', kwargs=self.link_kwargs))
+
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("You can&#39;t lift bans.", response.content)
+
+    def test_lift_user_ban(self):
+        """user with permission lifts other user ban"""
+        override_acl(self.test_admin, {
+            'misago.users.permissions.moderation': {
+                'can_lift_bans': 1,
+                'max_lifted_ban_length': 0,
+            }
+        })
+
+        test_ban = Ban.objects.create(banned_value=self.test_user.username)
+
+        response = self.client.post(
+            reverse('misago:lift_user_ban', kwargs=self.link_kwargs))
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.post(reverse('misago:index'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('ban has been lifted.', response.content)
+
+        test_ban = Ban.objects.get(id=test_ban.pk)
+        self.assertTrue(test_ban.is_expired)
+
+
 class DeleteUserTests(UserModerationTestCase):
     def test_no_delete_permission(self):
         """user with no permission fails to delete other user"""

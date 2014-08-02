@@ -8,11 +8,14 @@ from misago.acl import add_acl
 from misago.core.decorators import require_POST
 from misago.core.shortcuts import get_object_or_404, validate_slug
 
+from misago.users.bans import get_user_ban
+from misago.users.decorators import deny_guests
 from misago.users.forms.rename import ChangeUsernameForm
 from misago.users.forms.modusers import BanForm
-from misago.users.decorators import deny_guests
+from misago.users.models import Ban
 from misago.users.permissions.moderation import (allow_rename_user,
-                                                 allow_ban_user)
+                                                 allow_ban_user,
+                                                 allow_lift_ban)
 from misago.users.permissions.delete import allow_delete_user
 from misago.users.sites import user_profile
 
@@ -76,6 +79,24 @@ def ban_user(request, user):
 
     return render(request, 'misago/modusers/ban.html',
                   {'profile': user, 'form': form})
+
+
+@require_POST
+@user_moderation_view(allow_lift_ban)
+def lift_user_ban(request, user):
+    user_ban = get_user_ban(user).ban
+    user_ban.lift()
+    user_ban.save()
+
+    Ban.objects.invalidate_cache()
+
+    message = _("%(username)s's ban has been lifted.")
+    messages.success(request, message % {'username': user.username})
+
+    return redirect(user_profile.get_default_link(),
+                    **{'user_slug': user.slug, 'user_id': user.pk})
+
+
 
 @require_POST
 @user_moderation_view(allow_delete_user)

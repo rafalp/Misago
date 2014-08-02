@@ -93,6 +93,7 @@ def create_default_roles(apps, schema_editor):
             'misago.users.permissions.profiles': {
                 'can_search_users': 1,
                 'can_see_users_name_history': 1,
+                'can_see_ban_details': 1,
                 'can_see_users_emails': 1,
                 'can_see_users_ips': 1,
                 'can_see_hidden_users': 1,
@@ -106,7 +107,7 @@ def create_default_roles(apps, schema_editor):
         })
     role.save()
 
-    role = Role(name=_("Renaming users users"))
+    role = Role(name=_("Renaming users"))
     pickle_permissions(role,
         {
             # rename users perms
@@ -116,6 +117,23 @@ def create_default_roles(apps, schema_editor):
         })
     role.save()
 
+    role = Role(name=_("Banning users"))
+    pickle_permissions(role,
+        {
+            # ban users perms
+            'misago.users.permissions.profiles': {
+                'can_see_ban_details': 1,
+            },
+
+            'misago.users.permissions.moderation': {
+                'can_ban_users': 1,
+                'max_ban_length': 14,
+                'can_lift_bans': 1,
+                'max_lifted_ban_length': 14,
+            },
+        })
+
+    role.save()
     role = Role(name=_("Deleting users"))
     pickle_permissions(role,
         {

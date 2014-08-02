@@ -3,18 +3,31 @@
 
 
 {% block page %}
-<p class="lead">
-  <span class="fa fa-lock"></span>
-  {% if ban.valid_until %}
-  {% blocktrans trimmed with username=profile.username banned_until=ban.valid_until %}
-  {{ username }} is banned until after {{ banned_until }}.
-  {% endblocktrans %}
-  {% else %}
-  {% blocktrans trimmed with username=profile.username %}
-  {{ username }} is banned permanently.
-  {% endblocktrans %}
+<div>
+  <p class="lead pull-left">
+    <span class="fa fa-lock"></span>
+    {% if ban.valid_until %}
+    {% blocktrans trimmed with username=profile.username banned_until=ban.valid_until %}
+    {{ username }} is banned until after {{ banned_until }}.
+    {% endblocktrans %}
+    {% else %}
+    {% blocktrans trimmed with username=profile.username %}
+    {{ username }} is banned permanently.
+    {% endblocktrans %}
+    {% endif %}
+  </p>
+
+  {% if user.is_authenticated and profile.acl_.can_lift_ban %}
+  <form action="{% url 'misago:lift_user_ban' user_slug=profile.slug user_id=profile.pk %}" method="POST" class="pull-right lift-ban-prompt">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-default">
+      <span class="fa fa-unlock"></span>
+      {% trans "Lift ban" %}
+    </button>
+  </form>
   {% endif %}
-</p>
+</div>
+<div class="clearfix"></div>
 
 {% if ban.user_message %}
 <div class="panel panel-default">
@@ -46,3 +59,17 @@
 </div>
 {% endif %}
 {% endblock page %}
+
+
+{% block javascripts %}
+{% if user.is_authenticated and profile.acl_.can_lift_ban %}
+<script type="text/javascript">
+  $(function() {
+    $('.lift-ban-prompt').submit(function() {
+      var decision = confirm("{% trans "Are you sure you want to lift this ban?" %}");
+      return decision;
+    });
+  });
+</script>
+{% endif %}
+{% endblock javascripts %}

@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 import re
 
 from django.conf import settings
@@ -111,15 +111,23 @@ class Ban(models.Model):
         else:
             return self.banned_value == value
 
+    def lift(self):
+        self.valid_until = (timezone.now() - timedelta(days=1)).date()
+
 
 class BanCache(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, primary_key=True, related_name='ban_cache')
-    is_banned = models.BooleanField(default=False)
+    ban = models.ForeignKey(
+        Ban, null=True, blank=True, on_delete=models.SET_NULL)
     bans_version = models.PositiveIntegerField(default=0)
     user_message = models.TextField(null=True, blank=True)
     staff_message = models.TextField(null=True, blank=True)
     valid_until = models.DateField(null=True, blank=True)
+
+    @property
+    def is_banned(self):
+        return bool(self.ban)
 
     @property
     def is_valid(self):
@@ -128,4 +136,3 @@ class BanCache(models.Model):
         not_expired = not self.valid_until or self.valid_until < date.today()
 
         return version_is_valid and not_expired
-
