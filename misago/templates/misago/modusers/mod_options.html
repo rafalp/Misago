@@ -21,18 +21,22 @@
       </a>
     </li>
     {% endif %}
+    {% if profile.acl_.can_moderate_avatar %}
     <li>
-      <a href="#">
+      <a href="{% url 'misago:moderate_avatar' user_slug=profile.slug user_id=profile.pk %}">
         <span class="fa fa-image"></span>
         {% trans "Avatar ban" %}
       </a>
     </li>
+    {% endif %}
+    {% if profile.acl_.can_moderate_signature %}
     <li>
-      <a href="#">
+      <a href="{% url 'misago:moderate_signature' user_slug=profile.slug user_id=profile.pk %}">
         <span class="fa fa-pencil"></span>
-        {% trans "Signature ban" %}
+        {% trans "Edit signature" %}
       </a>
     </li>
+    {% endif %}
     {% if profile.acl_.can_ban %}
     <li>
       <a href="{% url 'misago:ban_user' user_slug=profile.slug user_id=profile.pk %}">

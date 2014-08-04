@@ -94,7 +94,7 @@ class EditUserForm(UserBaseForm):
         widget=forms.Textarea(attrs={'rows': 3}),
         required=False)
     is_signature_banned = forms.YesNoSwitch(
-        label=_("Ban editing signature"),
+        label=_("Ban signature changes"),
         help_text=_("Setting this to yes will ban user from "
                     "making changes to his/her signature."))
     signature_ban_user_message = forms.CharField(

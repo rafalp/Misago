@@ -53,6 +53,60 @@ class RenameUserTests(UserModerationTestCase):
         self.assertIn('Bob&#39;s username has been changed.', response.content)
 
 
+class ModerateSignatureTests(UserModerationTestCase):
+    def test_no_rename_permission(self):
+        """user with no permission fails to mod other user signature"""
+        override_acl(self.test_admin, {
+            'misago.users.permissions.moderation': {
+                'can_moderate_signatures': 0,
+            },
+        })
+
+        response = self.client.get(
+            reverse('misago:moderate_signature', kwargs=self.link_kwargs))
+
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("You can&#39;t moderate signatures.", response.content)
+
+    def test_rename_user(self):
+        """user with permission renames other user"""
+        override_acl(self.test_admin, {
+            'misago.users.permissions.moderation': {
+                'can_moderate_signatures': 1,
+            }
+        })
+
+        response = self.client.get(
+            reverse('misago:moderate_signature', kwargs=self.link_kwargs))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post(
+            reverse('misago:moderate_signature', kwargs=self.link_kwargs),
+            data={
+                'signature': 'kittens!',
+                'is_signature_banned': '1',
+                'signature_ban_user_message': 'Test us3r message',
+                'signature_ban_staff_message': 'Test st4ff message'
+            })
+        self.assertEqual(response.status_code, 302)
+
+        User = get_user_model()
+        updated_user = User.objects.get(id=self.test_user.pk)
+
+        self.assertTrue(updated_user.is_signature_banned)
+        self.assertEqual(updated_user.signature_parsed, '<p>kittens!</p>')
+        self.assertEqual(updated_user.signature_ban_user_message,
+                         'Test us3r message')
+        self.assertEqual(updated_user.signature_ban_staff_message,
+                         'Test st4ff message')
+
+        response = self.client.get(
+            reverse('misago:moderate_signature', kwargs=self.link_kwargs))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Test us3r message', response.content)
+        self.assertIn('Test st4ff message', response.content)
+
+
 class BanUserTests(UserModerationTestCase):
     def test_no_ban_permission(self):
         """user with no permission fails to ban other user"""
