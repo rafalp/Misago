@@ -181,9 +181,9 @@ class UserAdminViewsTests(AdminTestCase):
                 'new_password': 'pass123',
                 'staff_level': '0',
                 'signature': 'Hello world!',
-                'is_signature_banned': '1',
-                'signature_ban_staff_message': 'Staff message',
-                'signature_ban_user_message': 'User message',
+                'is_signature_locked': '1',
+                'signature_lock_staff_message': 'Staff message',
+                'signature_lock_user_message': 'User message',
             })
         self.assertEqual(response.status_code, 302)
 

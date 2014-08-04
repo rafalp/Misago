@@ -71,19 +71,19 @@ class EditUserForm(UserBaseForm):
         widget=forms.PasswordInput,
         required=False)
 
-    is_avatar_banned = forms.YesNoSwitch(
-        label=_("Ban avatar changes"),
-        help_text=_("Setting this to yes will ban user from "
+    is_avatar_locked = forms.YesNoSwitch(
+        label=_("Lock avatar"),
+        help_text=_("Setting this to yes will stop user from "
                     "changing his/her avatar, and will reset "
                     "his/her avatar to procedurally generated one."))
-    avatar_ban_user_message = forms.CharField(
-        label=_("User ban message"),
+    avatar_lock_user_message = forms.CharField(
+        label=_("User message"),
         help_text=_("Optional message for user explaining "
                     "why he/she is banned form changing avatar."),
         widget=forms.Textarea(attrs={'rows': 3}),
         required=False)
-    avatar_ban_staff_message = forms.CharField(
-        label=_("Staff ban message"),
+    avatar_lock_staff_message = forms.CharField(
+        label=_("Staff message"),
         help_text=_("Optional message for forum team members explaining "
                     "why user is banned form changing avatar."),
         widget=forms.Textarea(attrs={'rows': 3}),
@@ -93,29 +93,37 @@ class EditUserForm(UserBaseForm):
         label=_("Signature contents"),
         widget=forms.Textarea(attrs={'rows': 3}),
         required=False)
-    is_signature_banned = forms.YesNoSwitch(
-        label=_("Ban signature changes"),
-        help_text=_("Setting this to yes will ban user from "
+    is_signature_locked = forms.YesNoSwitch(
+        label=_("Lock signature"),
+        help_text=_("Setting this to yes will stop user from "
                     "making changes to his/her signature."))
-    signature_ban_user_message = forms.CharField(
-        label=_("User ban message"),
-        help_text=_("Optional message for user explaining "
-                    "why he/she is banned form editing signature."),
+    signature_lock_user_message = forms.CharField(
+        label=_("User message"),
+        help_text=_("Optional message to user explaining "
+                    "why his/hers signature is locked."),
         widget=forms.Textarea(attrs={'rows': 3}),
         required=False)
-    signature_ban_staff_message = forms.CharField(
-        label=_("Staff ban message"),
-        help_text=_("Optional message for forum team members explaining "
-                    "why user is banned form editing signature."),
+    signature_lock_staff_message = forms.CharField(
+        label=_("Staff message"),
+        help_text=_("Optional message to team members explaining "
+                    "why user signature is locked."),
         widget=forms.Textarea(attrs={'rows': 3}),
         required=False)
 
     class Meta:
         model = get_user_model()
-        fields = ['username', 'email', 'title', 'is_avatar_banned',
-                  'avatar_ban_user_message', 'avatar_ban_staff_message',
-                  'signature', 'is_signature_banned',
-                  'signature_ban_user_message', 'signature_ban_staff_message']
+        fields = [
+            'username',
+            'email',
+            'title',
+            'is_avatar_locked',
+            'avatar_lock_user_message',
+            'avatar_lock_staff_message',
+            'signature',
+            'is_signature_locked',
+            'signature_lock_user_message',
+            'signature_lock_staff_message'
+        ]
 
     def clean_signature(self):
         data = self.cleaned_data['signature']

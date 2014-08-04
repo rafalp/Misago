@@ -203,6 +203,7 @@ class EditUser(UserAdmin, generic.ModelFormView):
 
     def real_dispatch(self, request, target):
         target.old_username = target.username
+        target.old_is_avatar_locked = target.is_avatar_locked
         return super(EditUser, self).real_dispatch(request, target)
 
     def handle_form(self, form, request, target):
@@ -224,8 +225,9 @@ class EditUser(UserAdmin, generic.ModelFormView):
             if target.pk == request.user.pk:
                 start_admin_session(request, target)
 
-        if form.cleaned_data.get('is_avatar_banned'):
-            set_dynamic_avatar(target)
+        if form.cleaned_data.get('is_avatar_locked'):
+            if not target.old_is_avatar_locked:
+                set_dynamic_avatar(target)
 
         if 'staff_level' in form.cleaned_data:
             target.staff_level = form.cleaned_data['staff_level']

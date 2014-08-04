@@ -60,7 +60,7 @@ def change_forum_options(request):
 def change_avatar(request):
     avatar_size = max(settings.MISAGO_AVATARS_SIZES)
 
-    if not request.user.is_avatar_banned and request.method == 'POST':
+    if not request.user.is_avatar_locked and request.method == 'POST':
         if 'dl-gravatar' in request.POST and settings.allow_custom_avatars:
             try:
                 avatars.gravatar.set_avatar(request.user)
@@ -86,10 +86,10 @@ def change_avatar(request):
     })
 
 
-def avatar_not_banned(f):
+def avatar_not_locked(f):
     def decorator(request, *args, **kwargs):
-        if request.user.is_avatar_banned:
-            message = _("You don't have permission to change your avatar.")
+        if request.user.is_avatar_locked:
+            message = _("Your avatar is locked and can't be changed.")
             messages.info(request, message)
             return redirect('misago:usercp_change_avatar')
         else:
@@ -98,7 +98,7 @@ def avatar_not_banned(f):
 
 
 @deny_guests
-@avatar_not_banned
+@avatar_not_locked
 def upload_avatar(request):
     if not settings.allow_custom_avatars:
         messages.info(request, _("Avatar uploads are currently disabled."))
@@ -115,7 +115,7 @@ def upload_avatar(request):
 @ajax_only
 @deny_guests
 @require_POST
-@avatar_not_banned
+@avatar_not_locked
 def upload_avatar_handler(request):
     if not settings.allow_custom_avatars:
         raise AjaxError(_("Avatar uploads are currently disabled."))
@@ -133,7 +133,7 @@ def upload_avatar_handler(request):
 
 
 @deny_guests
-@avatar_not_banned
+@avatar_not_locked
 def crop_avatar(request, use_tmp_avatar):
     if use_tmp_avatar:
         if not avatars.uploaded.has_temporary_avatar(request.user):
@@ -192,7 +192,7 @@ def crop_avatar(request, use_tmp_avatar):
 
 
 @deny_guests
-@avatar_not_banned
+@avatar_not_locked
 def avatar_galleries(request):
     if not avatars.gallery.galleries_exist():
         messages.info(request, _("No avatars galleries exist."))
@@ -219,7 +219,7 @@ def edit_signature(request):
         raise Http404()
 
     form = EditSignatureForm(instance=request.user)
-    if not request.user.is_signature_banned and request.method == 'POST':
+    if not request.user.is_signature_locked and request.method == 'POST':
         form = EditSignatureForm(request.POST, instance=request.user)
         if form.is_valid():
             set_user_signature(request.user, form.cleaned_data['signature'])

@@ -83,19 +83,19 @@ class ModerateAvatarTests(UserModerationTestCase):
         response = self.client.post(
             reverse('misago:moderate_avatar', kwargs=self.link_kwargs),
             data={
-                'is_avatar_banned': '1',
-                'avatar_ban_user_message': 'Test us3r message',
-                'avatar_ban_staff_message': 'Test st4ff message'
+                'is_avatar_locked': '1',
+                'avatar_lock_user_message': 'Test us3r message',
+                'avatar_lock_staff_message': 'Test st4ff message'
             })
         self.assertEqual(response.status_code, 302)
 
         User = get_user_model()
         updated_user = User.objects.get(id=self.test_user.pk)
 
-        self.assertTrue(updated_user.is_avatar_banned)
-        self.assertEqual(updated_user.avatar_ban_user_message,
+        self.assertTrue(updated_user.is_avatar_locked)
+        self.assertEqual(updated_user.avatar_lock_user_message,
                          'Test us3r message')
-        self.assertEqual(updated_user.avatar_ban_staff_message,
+        self.assertEqual(updated_user.avatar_lock_staff_message,
                          'Test st4ff message')
 
         response = self.client.get(
@@ -136,20 +136,20 @@ class ModerateSignatureTests(UserModerationTestCase):
             reverse('misago:moderate_signature', kwargs=self.link_kwargs),
             data={
                 'signature': 'kittens!',
-                'is_signature_banned': '1',
-                'signature_ban_user_message': 'Test us3r message',
-                'signature_ban_staff_message': 'Test st4ff message'
+                'is_signature_locked': '1',
+                'signature_lock_user_message': 'Test us3r message',
+                'signature_lock_staff_message': 'Test st4ff message'
             })
         self.assertEqual(response.status_code, 302)
 
         User = get_user_model()
         updated_user = User.objects.get(id=self.test_user.pk)
 
-        self.assertTrue(updated_user.is_signature_banned)
+        self.assertTrue(updated_user.is_signature_locked)
         self.assertEqual(updated_user.signature_parsed, '<p>kittens!</p>')
-        self.assertEqual(updated_user.signature_ban_user_message,
+        self.assertEqual(updated_user.signature_lock_user_message,
                          'Test us3r message')
-        self.assertEqual(updated_user.signature_ban_staff_message,
+        self.assertEqual(updated_user.signature_lock_staff_message,
                          'Test st4ff message')
 
         response = self.client.get(

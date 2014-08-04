@@ -53,11 +53,11 @@
           {% editor_body editor %}
 
           <fieldset>
-            <legend>{% trans "Signature ban" %}</legend>
+            <legend>{% trans "Signature lock" %}</legend>
 
-              {% form_row form.is_signature_banned label_class input_class %}
-              {% form_row form.signature_ban_user_message label_class input_class %}
-              {% form_row form.signature_ban_staff_message label_class input_class %}
+              {% form_row form.is_signature_locked label_class input_class %}
+              {% form_row form.signature_lock_user_message label_class input_class %}
+              {% form_row form.signature_lock_staff_message label_class input_class %}
 
           <fieldset>
 
@@ -85,9 +85,9 @@
   </div>
   <div class="col-md-4">
 
-    {% if profile.is_signature_banned %}
+    {% if profile.is_signature_locked %}
     <p class="lead">
-      <span class="fa fa-ban"></span>
+      <span class="fa fa-lock"></span>
       {% trans "Signature is locked" %}
     </p>
     {% else %}
@@ -97,7 +97,7 @@
     </p>
     {% endif %}
 
-    {% if profile.signature_ban_user_message %}
+    {% if profile.signature_lock_user_message %}
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">
@@ -106,13 +106,13 @@
       </div>
       <div class="panel-body">
 
-        {{ profile.signature_ban_user_message|escape|urlize|linebreaksbr }}
+        {{ profile.signature_lock_user_message|escape|urlize|linebreaksbr }}
 
       </div>
     </div>
     {% endif %}
 
-    {% if profile.signature_ban_staff_message %}
+    {% if profile.signature_lock_staff_message %}
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">
@@ -121,7 +121,7 @@
       </div>
       <div class="panel-body">
 
-        {{ profile.signature_ban_staff_message|escape|urlize|linebreaksbr }}
+        {{ profile.signature_lock_staff_message|escape|urlize|linebreaksbr }}
 
       </div>
     </div>

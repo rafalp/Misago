@@ -31,9 +31,9 @@
         {% with label_class="col-md-3" input_class="col-md-9" %}
         <div class="form-body no-fieldsets">
 
-          {% form_row form.is_avatar_banned label_class input_class %}
-          {% form_row form.avatar_ban_user_message label_class input_class %}
-          {% form_row form.avatar_ban_staff_message label_class input_class %}
+          {% form_row form.is_avatar_locked label_class input_class %}
+          {% form_row form.avatar_lock_user_message label_class input_class %}
+          {% form_row form.avatar_lock_staff_message label_class input_class %}
 
         </div>
 
@@ -59,10 +59,10 @@
   </div>
   <div class="col-md-4">
 
-    {% if profile.is_avatar_banned %}
+    {% if profile.is_avatar_locked %}
     <p class="lead">
-      <span class="fa fa-ban"></span>
-      {% trans "Avatar locked" %}
+      <span class="fa fa-lock"></span>
+      {% trans "Avatar is locked" %}
     </p>
     {% else %}
     <p class="lead">
@@ -71,7 +71,7 @@
     </p>
     {% endif %}
 
-    {% if profile.avatar_ban_user_message %}
+    {% if profile.avatar_lock_user_message %}
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">
@@ -80,13 +80,13 @@
       </div>
       <div class="panel-body">
 
-        {{ profile.avatar_ban_user_message|escape|urlize|linebreaksbr }}
+        {{ profile.avatar_lock_user_message|escape|urlize|linebreaksbr }}
 
       </div>
     </div>
     {% endif %}
 
-    {% if profile.avatar_ban_staff_message %}
+    {% if profile.avatar_lock_staff_message %}
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">
@@ -95,7 +95,7 @@
       </div>
       <div class="panel-body">
 
-        {{ profile.avatar_ban_staff_message|escape|urlize|linebreaksbr }}
+        {{ profile.avatar_lock_staff_message|escape|urlize|linebreaksbr }}
 
       </div>
     </div>

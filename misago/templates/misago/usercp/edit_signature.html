@@ -31,13 +31,13 @@
     </div>
     {% endif %}
 
-    {% if user.is_signature_banned %}
+    {% if user.is_signature_locked %}
     <div class="form-body form-text">
       <div class="lead">
-        {% if user.signature_ban_user_message %}
-        {{ user.signature_ban_user_message|escape|urlize|linebreaks }}
+        {% if user.signature_lock_user_message %}
+        {{ user.signature_lock_user_message|escape|urlize|linebreaks }}
         {% else %}
-        <p>{% trans "You have been banned from editing your signature." %}</p>
+        <p>{% trans "Your signature is locked. You can't change it." %}</p>
         {% endif %}
       </div>
     </div>

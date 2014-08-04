@@ -21,13 +21,13 @@
           <img class="media-object img-rounded img-responsive avatar-preview" src="{{ user|avatar:avatar_size }}" width="{{ avatar_size }}" height="{{ avatar_size }}" alt="{% trans "Your current avatar" %}">
         </span>
         <div class="media-body usercp-avatar-options">
-          {% if user.is_avatar_banned %}
+          {% if user.is_avatar_locked %}
           <h4 class="media-heading">{% trans "Change avatar:" %}</h4>
           <div class="lead">
-            {% if user.avatar_ban_user_message %}
-            {{ user.avatar_ban_user_message|escape|urlize|linebreaks }}
+            {% if user.avatar_lock_user_message %}
+            {{ user.avatar_lock_user_message|escape|urlize|linebreaks }}
             {% else %}
-            <p>{% trans "You have been banned from changing your avatar." %}</p>
+            <p>{% trans "Your avatar is locked. You can't change it." %}</p>
             {% endif %}
           </div>
           {% else %}

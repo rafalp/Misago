@@ -175,17 +175,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     roles = models.ManyToManyField('misago_acl.Role')
     acl_key = models.CharField(max_length=12, null=True, blank=True)
 
-    is_avatar_banned = models.BooleanField(default=False)
+    is_avatar_locked = models.BooleanField(default=False)
     avatar_crop = models.CharField(max_length=255, null=True, blank=True)
-    avatar_ban_user_message = models.TextField(null=True, blank=True)
-    avatar_ban_staff_message = models.TextField(null=True, blank=True)
+    avatar_lock_user_message = models.TextField(null=True, blank=True)
+    avatar_lock_staff_message = models.TextField(null=True, blank=True)
 
-    is_signature_banned = models.BooleanField(default=False)
+    is_signature_locked = models.BooleanField(default=False)
     signature = models.TextField(null=True, blank=True)
     signature_parsed = models.TextField(null=True, blank=True)
     signature_checksum = models.CharField(max_length=64, null=True, blank=True)
-    signature_ban_user_message = models.TextField(null=True, blank=True)
-    signature_ban_staff_message = models.TextField(null=True, blank=True)
+    signature_lock_user_message = models.TextField(null=True, blank=True)
+    signature_lock_staff_message = models.TextField(null=True, blank=True)
 
     warning_level = models.PositiveIntegerField(default=0)
     warning_level_update_on = models.DateTimeField(null=True, blank=True)

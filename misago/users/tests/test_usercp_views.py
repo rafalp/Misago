@@ -51,8 +51,10 @@ class ChangeAvatarTests(AdminTestCase):
         response = self.client.get(self.view_link)
         self.assertEqual(response.status_code, 200)
 
-        self.test_admin.is_avatar_banned = True
-        self.test_admin.avatar_ban_user_message = 'Your avatar is banned.'
+    def test_avatar_locked(self):
+        """usercp locked change avatar view returns 200"""
+        self.test_admin.is_avatar_locked = True
+        self.test_admin.avatar_lock_user_message = 'Your avatar is banned.'
         self.test_admin.save()
 
         response = self.client.get(self.view_link)
@@ -199,16 +201,16 @@ class EditSignatureTests(AdminTestCase):
         response = self.client.get(self.view_link)
         self.assertEqual(response.status_code, 404)
 
-    def test_signature_banned(self):
-        """GET to usercp change options view returns 200"""
+    def test_signature_locked(self):
+        """locked edit signature view returns 200"""
         override_acl(self.test_admin, {
             'misago.users.permissions.account': {
                 'can_have_signature': 1,
             }
         })
 
-        self.test_admin.is_signature_banned = True
-        self.test_admin.signature_ban_user_message = 'Your siggy is banned.'
+        self.test_admin.is_signature_locked = True
+        self.test_admin.signature_lock_user_message = 'Your siggy is banned.'
         self.test_admin.save()
 
         response = self.client.get(self.view_link)
@@ -223,7 +225,7 @@ class EditSignatureTests(AdminTestCase):
             }
         })
 
-        self.test_admin.is_signature_banned = False
+        self.test_admin.is_signature_locked = False
         self.test_admin.save()
 
         response = self.client.post(self.view_link,

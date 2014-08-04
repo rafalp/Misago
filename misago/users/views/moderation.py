@@ -71,19 +71,19 @@ def rename(request, user):
 
 @user_moderation_view(allow_moderate_avatar)
 def moderate_avatar(request, user):
-    avatar_banned = user.is_avatar_banned
+    avatar_locked = user.is_avatar_locked
     form = ModerateAvatarForm(instance=user)
 
     if request.method == 'POST':
         form = ModerateAvatarForm(request.POST, instance=user)
         if form.is_valid():
-            if not avatar_banned and form.cleaned_data['is_avatar_banned']:
+            if not avatar_locked and form.cleaned_data['is_avatar_locked']:
                 set_dynamic_avatar(user)
 
             user.save(update_fields=(
-                'is_avatar_banned',
-                'avatar_ban_user_message',
-                'avatar_ban_staff_message'
+                'is_avatar_locked',
+                'avatar_lock_user_message',
+                'avatar_lock_staff_message'
             ))
 
             message = _("%(username)s's avatar has been moderated.")
@@ -110,9 +110,9 @@ def moderate_signature(request, user):
                 'signature',
                 'signature_parsed',
                 'signature_checksum',
-                'is_signature_banned',
-                'signature_ban_user_message',
-                'signature_ban_staff_message'
+                'is_signature_locked',
+                'signature_lock_user_message',
+                'signature_lock_staff_message'
             ))
 
             message = _("%(username)s's signature has been moderated.")
