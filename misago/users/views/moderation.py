@@ -9,7 +9,7 @@ from misago.core.decorators import require_POST
 from misago.core.shortcuts import get_object_or_404, validate_slug
 from misago.markup import Editor
 
-from misago.users import avatars
+from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
 from misago.users.bans import get_user_ban
 from misago.users.decorators import deny_guests
 from misago.users.forms.rename import ChangeUsernameForm
@@ -71,7 +71,28 @@ def rename(request, user):
 
 @user_moderation_view(allow_moderate_avatar)
 def moderate_avatar(request, user):
+    avatar_banned = user.is_avatar_banned
     form = ModerateAvatarForm(instance=user)
+
+    if request.method == 'POST':
+        form = ModerateAvatarForm(request.POST, instance=user)
+        if form.is_valid():
+            if not avatar_banned and form.cleaned_data['is_avatar_banned']:
+                set_dynamic_avatar(user)
+
+            user.save(update_fields=(
+                'is_avatar_banned',
+                'avatar_ban_user_message',
+                'avatar_ban_staff_message'
+            ))
+
+            message = _("%(username)s's avatar has been moderated.")
+            message = message % {'username': user.username}
+            messages.success(request, message)
+
+            if 'stay' not in request.POST:
+                return redirect(user_profile.get_default_link(),
+                                **{'user_slug': user.slug, 'user_id': user.pk})
 
     return render(request, 'misago/modusers/avatar.html',
                   {'profile': user, 'form': form})
@@ -84,17 +105,15 @@ def moderate_signature(request, user):
     if request.method == 'POST':
         form = ModerateSignatureForm(request.POST, instance=user)
         if form.is_valid():
-            changed_fields = (
+            set_user_signature(user, form.cleaned_data['signature'])
+            user.save(update_fields=(
                 'signature',
                 'signature_parsed',
                 'signature_checksum',
                 'is_signature_banned',
                 'signature_ban_user_message',
                 'signature_ban_staff_message'
-            )
-
-            set_user_signature(user, form.cleaned_data['signature'])
-            user.save(update_fields=changed_fields)
+            ))
 
             message = _("%(username)s's signature has been moderated.")
             message = message % {'username': user.username}
