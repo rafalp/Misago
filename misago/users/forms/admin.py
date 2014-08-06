@@ -458,15 +458,6 @@ Warning levels
 """
 class WarningLevelForm(forms.ModelForm):
     name = forms.CharField(label=_("Level name"), max_length=255)
-    description = forms.CharField(
-        label=_("Description"), required=False, max_length=1000,
-        help_text=_("Optional message description displayed to users with "
-                    "this warning level."),
-        widget=forms.Textarea(attrs={'rows': 3}),
-        error_messages={
-            'max_length': _("Description can't be longer "
-                            "than 1000 characters.")
-        })
     length_in_minutes = forms.IntegerField(
         label=_("Length in minutes"), min_value=0,
         help_text=_("Enter number of minutes since this warning level was "
@@ -483,7 +474,6 @@ class WarningLevelForm(forms.ModelForm):
         model = WarningLevel
         fields = [
             'name',
-            'description',
             'length_in_minutes',
             'restricts_posting_replies',
             'restricts_posting_threads',
