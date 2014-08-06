@@ -50,7 +50,7 @@ def draw_avatar_bg(user, image):
     bg_drawer = ImageDraw.Draw(image)
     bg_drawer.rectangle([(0, 0), image_size], rgb)
 
-    image_steps = 4
+    image_steps = 3
     step_size = math.ceil(float(image_size[0]) / image_steps)
     for x in xrange(image_steps):
         x_step = float(x + 2) / image_steps
@@ -75,27 +75,17 @@ def draw_avatar_flavour(user, image):
     string = user.username[0]
 
     image_size = image.size[0]
-    max_string_size = image_size * .8
+    max_string_size = image_size
 
     size = int(max_string_size)
     font = ImageFont.truetype(FONT_FILE, size=size)
-    while max(font.getsize(string)) > max_string_size:
-        size -= 1
-        font = ImageFont.truetype(FONT_FILE, size=size)
+    #while max(font.getsize(string)) > max_string_size:
+    #    size -= 1
+    #    font = ImageFont.truetype(FONT_FILE, size=size)
 
     text_size = font.getsize(string)
     text_pos = ((image_size - text_size[0]) / 2,
                 (image_size - text_size[1]) / 2)
-
-    text_shadow = Image.new('RGBA', image.size)
-    shadow_color = image.getpixel((image_size - 1, image_size - 1))
-    shadow_blur = ImageFilter.GaussianBlur(int(image_size / 5))
-
-    writer = ImageDraw.Draw(text_shadow)
-    writer.text(text_pos, string, shadow_color, font=font)
-    text_shadow = text_shadow.filter(shadow_blur)
-
-    image = Image.alpha_composite(image, text_shadow)
 
     writer = ImageDraw.Draw(image)
     writer.text(text_pos, string, font=font)
