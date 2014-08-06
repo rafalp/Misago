@@ -144,6 +144,8 @@ def delete_warning(request, user, warning):
 
 @user_moderation_view(allow_rename_user)
 def rename(request, user):
+    return_path = moderation_return_path(request, user)
+
     form = ChangeUsernameForm(user=user)
     if request.method == 'POST':
         old_username = user.username
@@ -155,18 +157,19 @@ def rename(request, user):
                 message = message % {'old_username': old_username}
                 messages.success(request, message)
 
-                return redirect(user_profile.get_default_link(),
-                                user_slug=user.slug, user_id=user.pk)
+                return redirect(return_path)
             except IntegrityError:
                 message = _("Error changing username. Please try again.")
                 messages.error(request, message)
 
     return render(request, 'misago/modusers/rename.html',
-                  {'profile': user, 'form': form})
+                  {'profile': user, 'form': form, 'return_path': return_path})
 
 
 @user_moderation_view(allow_moderate_avatar)
 def moderate_avatar(request, user):
+    return_path = moderation_return_path(request, user)
+
     avatar_locked = user.is_avatar_locked
     form = ModerateAvatarForm(instance=user)
 
@@ -187,15 +190,16 @@ def moderate_avatar(request, user):
             messages.success(request, message)
 
             if 'stay' not in request.POST:
-                return redirect(user_profile.get_default_link(),
-                                user_slug=user.slug, user_id=user.pk)
+                return redirect(return_path)
 
     return render(request, 'misago/modusers/avatar.html',
-                  {'profile': user, 'form': form})
+                  {'profile': user, 'form': form, 'return_path': return_path})
 
 
 @user_moderation_view(allow_moderate_signature)
 def moderate_signature(request, user):
+    return_path = moderation_return_path(request, user)
+
     form = ModerateSignatureForm(instance=user)
 
     if request.method == 'POST':
@@ -216,8 +220,7 @@ def moderate_signature(request, user):
             messages.success(request, message)
 
             if 'stay' not in request.POST:
-                return redirect(user_profile.get_default_link(),
-                                user_slug=user.slug, user_id=user.pk)
+                return redirect(return_path)
 
     acl = user.acl
     editor = Editor(form['signature'],
@@ -225,12 +228,18 @@ def moderate_signature(request, user):
                     allow_links=acl['allow_signature_links'],
                     allow_images=acl['allow_signature_images'])
 
-    return render(request, 'misago/modusers/signature.html',
-                  {'profile': user, 'form': form, 'editor': editor})
+    return render(request, 'misago/modusers/signature.html', {
+        'profile': user,
+        'form': form,
+        'editor': editor,
+        'return_path': return_path
+    })
 
 
 @user_moderation_view(allow_ban_user)
 def ban_user(request, user):
+    return_path = moderation_return_path(request, user)
+
     form = BanForm(user=user)
     if request.method == 'POST':
         form = BanForm(request.POST, user=user)
@@ -240,16 +249,17 @@ def ban_user(request, user):
             message = _("%(user)s has been banned.")
             messages.success(request, message % {'user': user.username})
 
-            return redirect(user_profile.get_default_link(),
-                            user_slug=user.slug, user_id=user.pk)
+            return redirect(return_path)
 
     return render(request, 'misago/modusers/ban.html',
-                  {'profile': user, 'form': form})
+                  {'profile': user, 'form': form, 'return_path': return_path})
 
 
 @require_POST
 @user_moderation_view(allow_lift_ban)
 def lift_user_ban(request, user):
+    return_path = moderation_return_path(request, user)
+
     user_ban = get_user_ban(user).ban
     user_ban.lift()
     user_ban.save()
@@ -259,8 +269,7 @@ def lift_user_ban(request, user):
     message = _("%(user)s's ban has been lifted.")
     messages.success(request, message % {'user': user.username})
 
-    return redirect(user_profile.get_default_link(),
-                    user_slug=user.slug, user_id=user.pk)
+    return redirect(return_path)
 
 
 @require_POST

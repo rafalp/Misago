@@ -18,6 +18,7 @@
 
     <div class="form-panel">
       <form method="POST" role="form" class="form-horizontal">
+        <input type="hidden" name="return_path" value="{{ return_path }}">
         {% csrf_token %}
 
         <div class="form-header">
@@ -70,7 +71,7 @@
               <button class="btn btn-primary">{% trans "Save changes" %}</button>
               <button class="btn btn-success" name="stay">{% trans "Save and keep editing" %}</button>
 
-              <a href="{% url USER_PROFILE_URL user_slug=profile.slug user_id=profile.pk %}" class="btn btn-default">
+              <a href="{{ return_path }}" class="btn btn-default">
                 {% trans "Cancel" %}
               </a>
 
