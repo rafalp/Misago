@@ -31,7 +31,6 @@ class WarningsAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:warnings:new'),
             data={
                 'name': 'Test Level',
-                'description': 'Lorem ipsum dolor met',
                 'length_in_minutes': 60,
                 'restricts_posting_replies': '1',
                 'restricts_posting_threads': '1',
@@ -48,7 +47,6 @@ class WarningsAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:warnings:new'),
             data={
                 'name': 'Test Level',
-                'description': 'Lorem ipsum dolor met',
                 'length_in_minutes': 60,
                 'restricts_posting_replies': '1',
                 'restricts_posting_threads': '1',
@@ -61,14 +59,12 @@ class WarningsAdminViewsTests(AdminTestCase):
                     kwargs={'warning_id': test_level.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_level.name, response.content)
-        self.assertIn(test_level.description, response.content)
 
         response = self.client.post(
             reverse('misago:admin:users:warnings:edit',
                     kwargs={'warning_id': test_level.pk}),
             data={
                 'name': 'Edited Level',
-                'description': 'Lorem ipsum dolor met',
                 'length_in_minutes': 5,
                 'restricts_posting_replies': '0',
                 'restricts_posting_threads': '0',
@@ -89,7 +85,6 @@ class WarningsAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:warnings:new'),
             data={
                 'name': 'Level 1',
-                'description': 'Lorem ipsum dolor met',
                 'length_in_minutes': 5,
                 'restricts_posting_replies': '0',
                 'restricts_posting_threads': '0',
@@ -98,7 +93,6 @@ class WarningsAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:warnings:new'),
             data={
                 'name': 'Level 2',
-                'description': 'Lorem ipsum dolor met',
                 'length_in_minutes': 5,
                 'restricts_posting_replies': '0',
                 'restricts_posting_threads': '0',
@@ -123,7 +117,6 @@ class WarningsAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:warnings:new'),
             data={
                 'name': 'Level 1',
-                'description': 'Lorem ipsum dolor met',
                 'length_in_minutes': 5,
                 'restricts_posting_replies': '0',
                 'restricts_posting_threads': '0',
@@ -132,7 +125,6 @@ class WarningsAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:warnings:new'),
             data={
                 'name': 'Level 2',
-                'description': 'Lorem ipsum dolor met',
                 'length_in_minutes': 5,
                 'restricts_posting_replies': '0',
                 'restricts_posting_threads': '0',
@@ -157,7 +149,6 @@ class WarningsAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:warnings:new'),
             data={
                 'name': 'Test Level',
-                'description': 'Lorem ipsum dolor met',
                 'length_in_minutes': 60,
                 'restricts_posting_replies': '1',
                 'restricts_posting_threads': '1',

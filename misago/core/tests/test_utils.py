@@ -3,7 +3,8 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import RequestFactory
 
-from misago.core.utils import is_request_to_misago, slugify, time_amount
+from misago.core.utils import (clean_return_path, is_request_to_misago,
+                               slugify, time_amount)
 
 
 VALID_PATHS = (
@@ -54,6 +55,64 @@ class SlugifyTests(TestCase):
 
         for original, slug in test_cases:
             self.assertEqual(slugify(original), slug)
+
+
+class MockRequest(object):
+    scheme = 'http'
+
+    def __init__(self, method, meta=None, post=None):
+        self.method = method
+        self.META = meta or {}
+        self.POST = post or {}
+
+
+class CleanReturnPathTests(TestCase):
+    def test_get_request(self):
+        """clean_return_path works for GET requests"""
+        bad_request = MockRequest('GET', {
+            'HTTP_REFERER': 'http://cookies.com',
+            'HTTP_HOST': 'misago-project.org'
+        })
+        self.assertIsNone(clean_return_path(bad_request))
+
+        bad_request = MockRequest('GET', {
+            'HTTP_REFERER': 'https://misago-project.org/',
+            'HTTP_HOST': 'misago-project.org/'
+        })
+        self.assertIsNone(clean_return_path(bad_request))
+
+        bad_request = MockRequest('GET', {
+            'HTTP_REFERER': 'https://misago-project.org/',
+            'HTTP_HOST': 'misago-project.org/assadsa/'
+        })
+        self.assertIsNone(clean_return_path(bad_request))
+
+        ok_request = MockRequest('GET', {
+            'HTTP_REFERER': 'http://misago-project.org/',
+            'HTTP_HOST': 'misago-project.org/'
+        })
+        self.assertEqual(clean_return_path(ok_request), '/')
+
+        ok_request = MockRequest('GET', {
+            'HTTP_REFERER': 'http://misago-project.org/',
+            'HTTP_HOST': 'misago-project.org/register/'
+        })
+        self.assertEqual(clean_return_path(ok_request), '/register/')
+
+
+    def test_post_request(self):
+        """clean_return_path works for POST requests"""
+        bad_request = MockRequest('POST', {
+            'HTTP_REFERER': 'http://misago-project.org/',
+            'HTTP_HOST': 'misago-project.org/'
+        }, {'return_path': '/sdasdsa/'})
+        self.assertIsNone(clean_return_path(bad_request))
+
+        ok_request = MockRequest('POST', {
+            'HTTP_REFERER': 'http://misago-project.org/',
+            'HTTP_HOST': 'misago-project.org/'
+        }, {'return_path': '/register/'})
+        self.assertEqual(clean_return_path(ok_request), '/register/')
 
 
 class TimeAmountTests(TestCase):

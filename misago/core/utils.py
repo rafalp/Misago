@@ -20,11 +20,10 @@ def slugify(string):
 Return path utility
 """
 def clean_return_path(request):
-    post_return_path = _get_return_path_from_post(request)
-    if not post_return_path:
-        return _get_return_path_from_referer(request)
+    if request.method == 'POST':
+        return _get_return_path_from_post(request)
     else:
-        return post_return_path
+        return _get_return_path_from_referer(request)
 
 
 def _get_return_path_from_post(request):
@@ -50,7 +49,7 @@ def _get_return_path_from_referer(request):
         referer = referer[len(request.scheme) + 3:]
         if not referer.startswith(request.META['HTTP_HOST']):
             raise ValueError()
-        referer = referer[len(request.META['HTTP_HOST']):]
+        referer = referer[len(request.META['HTTP_HOST'].rstrip('/')):]
         if not referer.startswith('/'):
             raise ValueError()
         resolve(referer)
