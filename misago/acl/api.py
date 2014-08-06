@@ -51,7 +51,7 @@ def add_acl(user, target):
     """
     try:
         for item in target:
-            _add_acl_to_target(user, target)
+            _add_acl_to_target(user, item)
     except TypeError:
         _add_acl_to_target(user, target)
 
@@ -67,4 +67,4 @@ def _add_acl_to_target(user, target):
 
     for extension, module in providers.list():
         if hasattr(module, 'add_acl_to_target'):
-            module.add_acl_to_target(user, user.acl, target)
+            module.add_acl_to_target(user, target)

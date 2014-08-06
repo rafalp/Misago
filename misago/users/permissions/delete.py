@@ -57,7 +57,7 @@ def build_acl(acl, roles, key_name):
 ACL's for targets
 """
 @require_target_type(get_user_model())
-def add_acl_to_target(user, acl, target):
+def add_acl_to_target(user, target):
     target.acl_['can_delete'] = can_delete_user(user, target)
     if target.acl_['can_delete']:
         target.acl_['can_moderate'] = True

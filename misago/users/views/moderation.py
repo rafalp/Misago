@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError, transaction
@@ -7,20 +8,26 @@ from django.utils.translation import ugettext as _
 from misago.acl import add_acl
 from misago.core.decorators import require_POST
 from misago.core.shortcuts import get_object_or_404, validate_slug
+from misago.core.utils import clean_return_path
 from misago.markup import Editor
 
 from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
+from misago.users import warnings
 from misago.users.bans import get_user_ban
 from misago.users.decorators import deny_guests
 from misago.users.forms.rename import ChangeUsernameForm
 from misago.users.forms.modusers import (BanForm, ModerateAvatarForm,
-                                         ModerateSignatureForm)
+                                         ModerateSignatureForm, WarnUserForm)
 from misago.users.models import Ban
 from misago.users.permissions.moderation import (allow_rename_user,
                                                  allow_moderate_avatar,
                                                  allow_moderate_signature,
                                                  allow_ban_user,
                                                  allow_lift_ban)
+from misago.users.permissions.warnings import (allow_warn_user,
+                                               allow_see_warnings,
+                                               allow_cancel_warning,
+                                               allow_delete_warning)
 from misago.users.permissions.delete import allow_delete_user
 from misago.users.signatures import set_user_signature
 from misago.users.sites import user_profile
@@ -46,6 +53,95 @@ def user_moderation_view(required_permission=None):
     return wrap
 
 
+def moderation_return_path(request, user):
+    return_path = clean_return_path(request)
+    if not return_path:
+        return reverse(user_profile.get_default_link(),
+                       kwargs={'user_slug': user.slug, 'user_id': user.pk})
+    return return_path
+
+
+@user_moderation_view(allow_warn_user)
+def warn(request, user, reason=None):
+    return_path = moderation_return_path(request, user)
+
+    if warnings.is_user_warning_level_max(user):
+        message = _("%(username)s has maximum warning "
+                    "level and can't be warned.")
+        message = message % {'username': user.username}
+        messages.info(request, message)
+
+        return redirect(return_path)
+
+    form = WarnUserForm(initial={'reason': reason})
+    if request.method == 'POST':
+        form = WarnUserForm(request.POST)
+        if form.is_valid():
+            warnings.warn_user(request.user, user, form.cleaned_data['reason'])
+
+            message = _("%(username)s has been warned.")
+            message = message % {'username': user.username}
+            messages.success(request, message)
+
+            return redirect(return_path)
+
+    warning_levels = warnings.get_warning_levels()
+    current_level = warning_levels[user.warning_level]
+    next_level = warning_levels[user.warning_level + 1]
+
+    return render(request, 'misago/modusers/warn.html', {
+        'profile': user,
+        'form': form,
+        'return_path': return_path,
+        'current_level': current_level,
+        'next_level': next_level
+    })
+
+
+def warning_moderation_view(required_permission=None):
+    def wrap(f):
+        @deny_guests
+        @transaction.atomic
+        def decorator(request, *args, **kwargs):
+            queryset = kwargs['user'].warnings
+            warning_id = kwargs.pop('warning_id')
+
+            kwargs['warning'] = get_object_or_404(queryset, id=warning_id)
+            add_acl(request.user, kwargs['warning'])
+
+            required_permission(request.user, kwargs['warning'])
+
+            response = f(request, *args, **kwargs)
+
+            if response:
+                return response
+            else:
+                return_path = moderation_return_path(request, kwargs['user'])
+                return redirect(return_path)
+        return decorator
+    return wrap
+
+
+@user_moderation_view(allow_see_warnings)
+@warning_moderation_view(allow_cancel_warning)
+def cancel_warning(request, user, warning):
+    warnings.cancel_warning(request.user, user, warning)
+
+    message = _("%(username)s's warning has been canceled.")
+    message = message % {'username': user.username}
+    messages.success(request, message)
+
+
+@user_moderation_view(allow_see_warnings)
+@warning_moderation_view(allow_delete_warning)
+def delete_warning(request, user, warning):
+    warnings.delete_warning(request.user, user, warning)
+
+    message = _("%(username)s's warning has been deleted.")
+    message = message % {'username': user.username}
+    messages.success(request, message)
+
+
 @user_moderation_view(allow_rename_user)
 def rename(request, user):
     form = ChangeUsernameForm(user=user)
@@ -60,7 +156,7 @@ def rename(request, user):
                 messages.success(request, message)
 
                 return redirect(user_profile.get_default_link(),
-                                **{'user_slug': user.slug, 'user_id': user.pk})
+                                user_slug=user.slug, user_id=user.pk)
             except IntegrityError:
                 message = _("Error changing username. Please try again.")
                 messages.error(request, message)
@@ -92,7 +188,7 @@ def moderate_avatar(request, user):
 
             if 'stay' not in request.POST:
                 return redirect(user_profile.get_default_link(),
-                                **{'user_slug': user.slug, 'user_id': user.pk})
+                                user_slug=user.slug, user_id=user.pk)
 
     return render(request, 'misago/modusers/avatar.html',
                   {'profile': user, 'form': form})
@@ -121,7 +217,7 @@ def moderate_signature(request, user):
 
             if 'stay' not in request.POST:
                 return redirect(user_profile.get_default_link(),
-                                **{'user_slug': user.slug, 'user_id': user.pk})
+                                user_slug=user.slug, user_id=user.pk)
 
     acl = user.acl
     editor = Editor(form['signature'],
@@ -145,7 +241,7 @@ def ban_user(request, user):
             messages.success(request, message % {'username': user.username})
 
             return redirect(user_profile.get_default_link(),
-                            **{'user_slug': user.slug, 'user_id': user.pk})
+                            user_slug=user.slug, user_id=user.pk)
 
     return render(request, 'misago/modusers/ban.html',
                   {'profile': user, 'form': form})
@@ -164,8 +260,7 @@ def lift_user_ban(request, user):
     messages.success(request, message % {'username': user.username})
 
     return redirect(user_profile.get_default_link(),
-                    **{'user_slug': user.slug, 'user_id': user.pk})
-
+                    user_slug=user.slug, user_id=user.pk)
 
 
 @require_POST

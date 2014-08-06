@@ -3,7 +3,9 @@ from datetime import timedelta
 import bleach
 from markdown import Markdown
 from unidecode import unidecode
-from django.core.urlresolvers import reverse
+
+from django.http import Http404
+from django.core.urlresolvers import resolve, reverse
 from django.template.defaultfilters import slugify as django_slugify
 from django.utils.translation import ugettext_lazy as _, ungettext_lazy
 
@@ -12,6 +14,49 @@ def slugify(string):
     string = unicode(string)
     string = unidecode(string)
     return django_slugify(string.replace('_', ' '))
+
+
+"""
+Return path utility
+"""
+def clean_return_path(request):
+    post_return_path = _get_return_path_from_post(request)
+    if not post_return_path:
+        return _get_return_path_from_referer(request)
+    else:
+        return post_return_path
+
+
+def _get_return_path_from_post(request):
+    return_path = request.POST.get('return_path')
+    try:
+        if not return_path:
+            raise ValueError()
+        if not return_path.startswith('/'):
+            raise ValueError()
+        resolve(return_path)
+        return return_path
+    except (Http404, ValueError):
+        return None
+
+
+def _get_return_path_from_referer(request):
+    referer = request.META.get('HTTP_REFERER')
+    try:
+        if not referer:
+            raise ValueError()
+        if not referer.startswith(request.scheme):
+            raise ValueError()
+        referer = referer[len(request.scheme) + 3:]
+        if not referer.startswith(request.META['HTTP_HOST']):
+            raise ValueError()
+        referer = referer[len(request.META['HTTP_HOST']):]
+        if not referer.startswith('/'):
+            raise ValueError()
+        resolve(referer)
+        return referer
+    except (Http404, KeyError, ValueError):
+        return None
 
 
 """

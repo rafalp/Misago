@@ -8,6 +8,8 @@ from misago.core.shortcuts import get_object_or_404, paginate, validate_slug
 from misago.users import online
 from misago.users.bans import get_user_ban
 from misago.users.sites import user_profile
+from misago.users.warnings import (get_warning_levels, get_user_warning_level,
+                                   get_user_warning_obj)
 
 
 def profile_view(f):
@@ -76,9 +78,47 @@ def user_threads(request, profile=None, page=0):
 
 
 @profile_view_restricted_visibility
+def warnings(request, profile=None, page=0):
+    warnings_qs = profile.warnings.order_by('-id')
+    warnings = paginate(warnings_qs, page, 5, 2)
+    items_left = warnings.paginator.count - warnings.end_index()
+
+    add_acl(request.user, warnings.object_list)
+
+    warning_level = get_user_warning_level(profile)
+    warning_level_obj = get_user_warning_obj(profile)
+
+    active_warnings = warning_level - warnings.start_index() + 1
+    for warning in warnings.object_list:
+        if warning.canceled:
+            warning.is_active = False
+        else:
+            warning.is_active = active_warnings > 0
+            active_warnings -= 1
+
+    levels_total = len(get_warning_levels()) - 1
+    if levels_total and warning_level:
+        warning_progress = 100 - warning_level * 100 / levels_total
+    else:
+        warning_progress = 100
+
+    if warning_level:
+        warning_level_obj.level = warning_level
+
+    return render(request, 'misago/profile/warnings.html', {
+        'profile': profile,
+        'warnings': warnings,
+        'warning_level': warning_level_obj,
+        'warning_progress': warning_progress,
+        'page_number': warnings.number,
+        'items_left': items_left
+    })
+
+
+@profile_view_restricted_visibility
 def name_history(request, profile=None, page=0):
-    name_changes_sq = profile.namechanges.all().order_by('-id')
-    name_changes = paginate(name_changes_sq, page, 12, 4)
+    name_changes_qs = profile.namechanges.all().order_by('-id')
+    name_changes = paginate(name_changes_qs, page, 12, 4)
     items_left = name_changes.paginator.count - name_changes.end_index()
 
     return render(request, 'misago/profile/name_history.html', {

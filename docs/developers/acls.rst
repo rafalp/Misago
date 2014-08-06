@@ -67,15 +67,14 @@ Required. This function is called when change permissions form for role is being
 Required. Is used in process of building new ACL. Its supplied dict with incomplete ACL, list of user roles and name of key under which its permissions values are stored in roles ``permissions`` attributes. Its expected to access roles ``permissions`` attributes which are dicts of values coming from permission change forms and return updated ``acl`` dict.
 
 
-.. function:: add_acl_to_target(user, acl, target)
+.. function:: add_acl_to_target(user, target)
 
-Optional. Is called when Misago is trying to make ``target`` aware of its ACLs. Its provided with three arguments:
+Optional. Is called when Misago is trying to make ``target`` aware of its ACLs. Its called with two arguments:
 
 * **user** - user asking to make target aware of its ACL's
-* **acl** - user ACLs
 * **target** - target instance, guaranteed to be an single object, not list or other iterable (like queryset)
 
-Value of ``target`` argument has ``acl`` attribute which is dict with incomplete ACL that function can change and update with new keys.
+``target`` has ``acl`` attribute which is dict with incomplete ACL that function can change and update with new keys.
 
 .. note::
    This will not work for instances of User model, that already reserve ``acl`` attribute for their own acls. Instead add_acl_to_target for User instances will add acl's to `acl_` attribute.

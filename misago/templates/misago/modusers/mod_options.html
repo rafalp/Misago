@@ -6,13 +6,14 @@
     {% trans "Moderation" %} <span class="glyphicon glyphicon-chevron-down"></span>
   </button>
   <ul class="dropdown-menu" role="menu">
+    {% if profile.acl_.can_warn %}
     <li>
-      <a href="#">
+      <a href="{% url 'misago:warn_user' user_slug=profile.slug user_id=profile.pk %}">
         <span class="fa fa-exclamation-triangle"></span>
         {% trans "Warn user" %}
       </a>
     </li>
-    <li class="divider"></li>
+    {% endif %}
     {% if profile.acl_.can_rename %}
     <li>
       <a href="{% url 'misago:rename_user' user_slug=profile.slug user_id=profile.pk %}">

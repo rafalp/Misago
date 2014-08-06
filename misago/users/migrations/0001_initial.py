@@ -176,4 +176,24 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
+        migrations.CreateModel(
+            name='UserWarning',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('reason', models.TextField(null=True, blank=True)),
+                ('given_on', models.DateTimeField(default=django.utils.timezone.now)),
+                ('giver_username', models.CharField(max_length=255)),
+                ('giver_slug', models.CharField(max_length=255)),
+                ('canceled', models.BooleanField(default=False)),
+                ('canceled_on', models.DateTimeField(null=True, blank=True)),
+                ('canceler_username', models.CharField(max_length=255)),
+                ('canceler_slug', models.CharField(max_length=255)),
+                ('canceler', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('giver', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
     ]

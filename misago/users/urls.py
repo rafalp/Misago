@@ -58,6 +58,8 @@ urlpatterns += patterns('',
         url(r'^threads/$', 'user_threads', name="user_threads"),
         url(r'^name-history/$', 'name_history', name="user_name_history"),
         url(r'^name-history/(?P<page>\d+)/$', 'name_history', name="user_name_history"),
+        url(r'^warnings/$', 'warnings', name="user_warnings"),
+        url(r'^warnings/(?P<page>\d+)/$', 'warnings', name="user_warnings"),
         url(r'^ban-details/$', 'user_ban', name="user_ban"),
     )))
 )
@@ -65,6 +67,9 @@ urlpatterns += patterns('',
 
 urlpatterns += patterns('',
     url(r'^mod-user/(?P<user_slug>[a-zA-Z0-9]+)-(?P<user_id>\d+)/', include(patterns('misago.users.views.moderation',
+        url(r'^warn/$', 'warn', name='warn_user'),
+        url(r'^warn/(?P<warning_id>\d+)/cancel/$', 'cancel_warning', name='cancel_warning'),
+        url(r'^warn/(?P<warning_id>\d+)/delete/$', 'delete_warning', name='delete_warning'),
         url(r'^rename/$', 'rename', name='rename_user'),
         url(r'^avatar/$', 'moderate_avatar', name='moderate_avatar'),
         url(r'^signature/$', 'moderate_signature', name='moderate_signature'),

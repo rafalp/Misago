@@ -33,6 +33,7 @@ class UserMiddleware(object):
         elif not request.user.is_superuser:
             if get_request_ip_ban(request) or get_user_ban(request.user):
                 logout(request)
+        request.user.ip = request._misago_real_ip
 
 
 class OnlineTrackerMiddleware(object):

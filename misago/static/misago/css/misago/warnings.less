@@ -1,0 +1,90 @@
+//
+// User Warnings
+// --------------------------------------------------
+
+
+// Warning summary
+//
+//==
+.warning-summary {
+  p.lead {
+    margin-bottom: @line-height-computed / 3;
+  }
+
+  .progress {
+    border-radius: @border-radius-small;
+    height: 8px;
+
+    .progress-bar {
+      .box-shadow(none);
+      height: 8px;
+    }
+  }
+}
+
+
+// Warnings list
+//
+//==
+.warnings-list {
+  .panel-body {
+    p {
+      margin: 0px;
+    }
+  }
+
+  .panel-footer {
+    overflow: auto;
+
+    font-size: @font-size-small;
+
+    ul {
+      margin: 0px;
+
+      li {
+        float: left;
+        margin: 0px;
+
+        .state-valid {
+          color: @brand-danger;
+        }
+
+        .state-canceled {
+          color: @brand-warning;
+        }
+
+        .state-expired {
+          color: fadeOut(@text-color, 40);
+        }
+
+        img {
+          border-radius: @border-radius-base;
+          margin-top: -3px;
+          width: 18px;
+        }
+
+        form {
+          margin: -3px 0px;
+          padding: 0px;
+
+          .btn-default {
+            padding: 2px 5px;
+            .box-shadow(none);
+          }
+        }
+      }
+
+      &.pull-left {
+        li {
+          margin-right: @line-height-computed;
+        }
+      }
+
+      &.pull-right {
+        li {
+          margin-left: @line-height-computed / 2;
+        }
+      }
+    }
+  }
+}

@@ -99,10 +99,35 @@ def create_default_roles(apps, schema_editor):
                 'can_see_hidden_users': 1,
             },
 
+            # warnings perms
+            'misago.users.permissions.warnings': {
+                'can_see_other_users_warnings': 1,
+                'can_warn_users': 1,
+                'can_cancel_warnings': 1,
+                'can_be_warned': 0,
+            },
+
+            # moderation perms
+            'misago.users.permissions.moderation': {
+                'can_warn_users': 1,
+                'can_moderate_avatars': 1,
+                'can_moderate_signatures': 1,
+            },
+
             # delete users perms
             'misago.users.permissions.delete': {
                 'can_delete_users_newer_than': 0,
                 'can_delete_users_with_less_posts_than': 0,
+            },
+        })
+    role.save()
+
+    role = Role(name=_("See warnings"))
+    pickle_permissions(role,
+        {
+            # warnings perms
+            'misago.users.permissions.warnings': {
+                'can_see_other_users_warnings': 1,
             },
         })
     role.save()

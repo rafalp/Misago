@@ -4,88 +4,88 @@
 
 {% block page %}
 {% if name_changes.object_list %}
-<div class="username-history">
-  {% for change in name_changes.object_list %}
-  {% capture trimmed as old_username %}
-    <strong>{{ change.old_username }}</strong>
-  {% endcapture %}
-  {% capture trimmed as new_username %}
-    <strong>{{ change.new_username }}</strong>
-  {% endcapture %}
-  <p>
-    {% if not change.changed_by or change.changed_by_id != profile.pk %}
-      {% if change.changed_by %}
-      <a href="{% url USER_PROFILE_URL user_slug=change.changed_by_slug user_id=change.changed_by_id %}">
-        <img src="{{ change.changed_by_id|avatar:22 }}" class="tooltip-top" title="{{ change.changed_by_username }}">
-      </a>
-      {% else %}
-      <img src="{% blankavatar 22 %}" class="tooltip-top" title="{{ change.changed_by_username }}">
-      {% endif %}
-      {% capture trimmed as changed_by %}
+  <div class="username-history">
+    {% for change in name_changes.object_list %}
+    {% capture trimmed as old_username %}
+      <strong>{{ change.old_username }}</strong>
+    {% endcapture %}
+    {% capture trimmed as new_username %}
+      <strong>{{ change.new_username }}</strong>
+    {% endcapture %}
+    <p>
+      {% if not change.changed_by or change.changed_by_id != profile.pk %}
         {% if change.changed_by %}
-        <a href="{% url USER_PROFILE_URL user_slug=change.changed_by_slug user_id=change.changed_by_id %}">{{ change.changed_by_username }}</a>
+        <a href="{% url USER_PROFILE_URL user_slug=change.changed_by_slug user_id=change.changed_by_id %}">
+          <img src="{{ change.changed_by_id|avatar:22 }}" class="tooltip-top" title="{{ change.changed_by_username }}">
+        </a>
         {% else %}
-        {{ change.changed_by_username }}
+        <img src="{% blankavatar 22 %}" class="tooltip-top" title="{{ change.changed_by_username }}">
         {% endif %}
-      {% endcapture %}
-      {% blocktrans trimmed with changed_by=changed_by|safe old_username=old_username|safe new_username=new_username|safe %}
-      {{ changed_by }} changed {{ old_username }}'s name to {{ new_username }}
-      {% endblocktrans %}
-    {% else %}
-      <img src="{{ profile.pk|avatar:22 }}" class="tooltip-top" title="{{ profile.username }}">
-      {% blocktrans trimmed with old_username=old_username|safe new_username=new_username|safe %}
-      {{ old_username }} changed name to {{ new_username }}
-      {% endblocktrans %}
-    {% endif %}
-    <abbr class="pull-right text-muted tooltip-top dynamic time-ago" title="{{ change.changed_on }}" data-timestamp="{{ change.changed_on|date:"c" }}">
-      {{ change.changed_on|date }}
-    </abbr>
-  </p>
-  <hr>
-  {% endfor%}
-</div>
+        {% capture trimmed as changed_by %}
+          {% if change.changed_by %}
+          <a href="{% url USER_PROFILE_URL user_slug=change.changed_by_slug user_id=change.changed_by_id %}">{{ change.changed_by_username }}</a>
+          {% else %}
+          {{ change.changed_by_username }}
+          {% endif %}
+        {% endcapture %}
+        {% blocktrans trimmed with changed_by=changed_by|safe old_username=old_username|safe new_username=new_username|safe %}
+        {{ changed_by }} changed {{ old_username }}'s name to {{ new_username }}
+        {% endblocktrans %}
+      {% else %}
+        <img src="{{ profile.pk|avatar:22 }}" class="tooltip-top" title="{{ profile.username }}">
+        {% blocktrans trimmed with old_username=old_username|safe new_username=new_username|safe %}
+        {{ old_username }} changed name to {{ new_username }}
+        {% endblocktrans %}
+      {% endif %}
+      <abbr class="pull-right text-muted tooltip-top dynamic time-ago" title="{{ change.changed_on }}" data-timestamp="{{ change.changed_on|date:"c" }}">
+        {{ change.changed_on|date }}
+      </abbr>
+    </p>
+    <hr>
+    {% endfor%}
+  </div>
 
-{% if name_changes.paginator.num_pages > 1 %}
-<ul class="pager pager-wide">
-  {% if name_changes.has_previous %}
-    <li class="pull-left">
-      <a href="{% url 'misago:user_name_history' user_slug=profile.slug user_id=profile.pk %}" class="tooltip-top" title="{% trans "Go to first page" %}">
-        {% trans "Latest" %}
-      </a>
-    </li>
-    {% if name_changes.number > 2 %}
-    <li class="pull-left">
-      <a href="{% url 'misago:user_name_history' user_slug=profile.slug user_id=profile.pk page=name_changes.previous_page_number %}" class="tooltip-top" title="{% trans "Go to previous page" %}">
-        {% trans "Later" %}
-      </a>
+  {% if name_changes.paginator.num_pages > 1 %}
+  <ul class="pager pager-wide">
+    {% if name_changes.has_previous %}
+      <li class="pull-left">
+        <a href="{% url 'misago:user_name_history' user_slug=profile.slug user_id=profile.pk %}" class="tooltip-top" title="{% trans "Go to first page" %}">
+          {% trans "Latest" %}
+        </a>
+      </li>
+      {% if name_changes.number > 2 %}
+      <li class="pull-left">
+        <a href="{% url 'misago:user_name_history' user_slug=profile.slug user_id=profile.pk page=name_changes.previous_page_number %}" class="tooltip-top" title="{% trans "Go to previous page" %}">
+          {% trans "Later" %}
+        </a>
+      </li>
+      {% endif %}
+    {% endif %}
+    {% if name_changes.has_next %}
+      <li class="pull-right">
+        <a href="{% url 'misago:user_name_history' user_slug=profile.slug user_id=profile.pk page=name_changes.paginator.num_pages %}" class="tooltip-top" title="{% trans "Go to last page" %}">
+          {% trans "Oldest" %}
+        </a>
+      </li>
+      {% if name_changes.next_page_number < name_changes.paginator.num_pages %}
+      <li class="pull-right">
+        <a href="{% url 'misago:user_name_history' user_slug=profile.slug user_id=profile.pk page=name_changes.next_page_number %}" class="tooltip-top" title="{% trans "Go to next page" %}">
+          {% trans "Older" %}
+        </a>
+      </li>
+      {% endif %}
+    {% endif %}
+    {% if name_changes.has_next %}
+    <li class="page text-muted">
+      {% blocktrans trimmed count left=items_left %}
+      There is {{ left }} more changes
+      {% plural %}
+      There are {{ left }} more changes
+      {% endblocktrans %}
     </li>
     {% endif %}
+  </ul>
   {% endif %}
-  {% if name_changes.has_next %}
-    <li class="pull-right">
-      <a href="{% url 'misago:user_name_history' user_slug=profile.slug user_id=profile.pk page=name_changes.paginator.num_pages %}" class="tooltip-top" title="{% trans "Go to last page" %}">
-        {% trans "Oldest" %}
-      </a>
-    </li>
-    {% if name_changes.next_page_number < name_changes.paginator.num_pages %}
-    <li class="pull-right">
-      <a href="{% url 'misago:user_name_history' user_slug=profile.slug user_id=profile.pk page=name_changes.next_page_number %}" class="tooltip-top" title="{% trans "Go to next page" %}">
-        {% trans "Older" %}
-      </a>
-    </li>
-    {% endif %}
-  {% endif %}
-  {% if name_changes.has_next %}
-  <li class="page text-muted">
-    {% blocktrans trimmed count left=items_left %}
-    There is {{ left }} more changes
-    {% plural %}
-    There are {{ left }} more changes
-    {% endblocktrans %}
-  </li>
-  {% endif %}
-</ul>
-{% endif %}
 {% else %}
 <p class="lead">
   {% if is_authenticated_user %}

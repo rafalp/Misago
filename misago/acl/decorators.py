@@ -4,9 +4,9 @@ from django.http import Http404
 
 def require_target_type(supported_type):
     def wrap(f):
-        def decorator(user, acl, target):
+        def decorator(user, target):
             if isinstance(target, supported_type):
-                return f(user, acl, target)
+                return f(user, target)
             else:
                 return None
         return decorator

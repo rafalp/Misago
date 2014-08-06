@@ -1,0 +1,229 @@
+{% extends "misago/profile/base.html" %}
+{% load i18n misago_avatars misago_capture %}
+
+
+{% block page %}
+{% if warnings.object_list %}
+  <div class="warning-summary">
+    {% if warning_level %}
+      <p class="lead">
+        <span class="fa fa-exclamation-triangle"></span>
+        {{ warning_level.name }}
+      </p>
+
+      {% if warning_level.has_restrictions %}
+      <p>
+        {% if warning_level.is_replying_disallowed %}
+          {% trans "Replying are forbidden." %}
+        {% elif warning_level.is_replying_moderated %}
+          {% trans "New replies are moderated." %}
+        {% endif %}
+        {% if warning_level.is_starting_threads_disallowed %}
+          {% trans "Starting threads is forbidden." %}
+        {% elif warning_level.is_starting_threads_moderated %}
+          {% trans "New threads are moderated." %}
+        {% endif %}
+        {% if warning_level.length_in_minutes %}
+          {% blocktrans trimmed with length=warning_level.length %}
+          This warning level lasts {{ length }}.
+          {% endblocktrans %}
+        {% endif %}
+      </p>
+      {% endif %}
+    {% else %}
+    <p class="lead">
+      <span class="fa fa-check"></span>
+      {% trans "No warnings are active." %}
+    </p>
+    {% endif %}
+    <div class="progress">
+      <div class="progress-bar progress-bar-{% if warning_progress > 66 %}success{% elif warning_progress > 33 %}warning{% else %}danger{% endif %}" role="progressbar" aria-valuenow="{{ warning_progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ warning_progress }}%;">
+        <span class="sr-only">
+          {% blocktrans trimmed with level=warning_level.level %}
+          Warning level is {{ level }}
+          {% endblocktrans %}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="warnings-list">
+    {% for warning in warnings.object_list %}
+    <div class="panel panel-default">
+      <div class="panel-body">
+
+        {% if warning.reason %}
+        <p>
+          {{ warning.reason|escape|urlize|linebreaks }}
+        </p>
+        {% else %}
+        <p>
+          <em>{% trans "No warning reason was provided." %}</em>
+        </p>
+        {% endif %}
+
+      </div>
+      <div class="panel-footer">
+        <ul class="list-unstyled pull-left">
+          <li>
+            {% if warning.canceled %}
+            <strong class="state-canceled">
+              <span class="fa fa-ban fa-fw"></span>
+              {% trans "Canceled" %}
+            </strong>
+            {% elif warning.is_active %}
+            <strong class="state-valid">
+              <span class="fa fa-exclamation-triangle fa-fw"></span>
+              {% trans "Active" %}
+            </strong>
+            {% else %}
+            <strong class="state-expired">
+              <span class="fa fa-times fa-fw"></span>
+              {% trans "Expired" %}
+            </strong>
+            {% endif %}
+          </li>
+          <li>
+            <span class="glyphicon glyphicon-time"></span>
+            <abbr class="tooltip-top dynamic time-ago" title="{{ warning.given_on }}" data-timestamp="{{ warning.given_on|date:"c" }}">
+              {{ warning.given_on|date }}
+            </abbr>
+          </li>
+          <li>
+            {% if warning.giver_id %}
+            <img src="{{ warning.giver_id|avatar:30 }}" alt="{% trans "Avatar" %}">
+            <strong>{{ warning.giver_username }}</strong>
+            {% else %}
+            <img src="{% blankavatar 30 %}" alt="{% trans "Avatar" %}">
+            <a href="{% url USER_PROFILE_URL user_slug=warning.giver_slug user_id=warning.giver_id %}">
+              {{ warning.giver_username }}
+            </a>
+            {% endif %}
+          </li>
+          {% if warning.canceled %}
+          <li>
+            <span class="fa fa-ban"></span>
+            {% capture trimmed as canceler %}
+            {% if warning.canceler_id %}
+            <strong>{{ warning.canceler_username }}</strong>
+            {% else %}
+            <a href="{% url USER_PROFILE_URL user_slug=warning.canceler_slug user_id=warning.canceler_id %}">
+              {{ warning.canceler_username }}
+            </a>
+            {% endif %}
+            {% endcapture %}
+            {% capture trimmed as canceled %}
+            <abbr class="tooltip-top dynamic time-ago" title="{{ warning.canceled_on }}" data-timestamp="{{ warning.canceled_on|date:"c" }}">
+              {{ warning.canceled_on|date }}
+            </abbr>
+            {% endcapture %}
+            {% blocktrans trimmed with user=canceler|safe canceled=canceled|safe %}
+            Canceled by {{user}} {{ canceled }}.
+            {% endblocktrans %}
+          </li>
+          {% endif %}
+        </ul>
+        {% if warning.acl.can_moderate %}
+        <ul class="list-unstyled pull-right">
+          {% if warning.acl.can_cancel %}
+          <li>
+            <form action="{% url 'misago:cancel_warning' user_slug=profile.slug user_id=profile.pk warning_id=warning.pk %}" method="POST" class="cancel-warning-prompt">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-default btn-sm">
+                {% trans "Cancel" %}
+              </button>
+            </form>
+          </li>
+          {% endif %}
+          {% if warning.acl.can_delete %}
+          <li>
+            <form action="{% url 'misago:delete_warning' user_slug=profile.slug user_id=profile.pk warning_id=warning.pk %}" method="POST" class="delete-warning-prompt">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-default btn-sm">
+                {% trans "Delete" %}
+              </button>
+            </form>
+          </li>
+          {% endif %}
+        </ul>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if warnings.paginator.num_pages > 1 %}
+  <ul class="pager pager-wide">
+    {% if warnings.has_previous %}
+      <li class="pull-left">
+        <a href="{% url 'misago:user_warnings' user_slug=profile.slug user_id=profile.pk %}" class="tooltip-top" title="{% trans "Go to first page" %}">
+          {% trans "Latest" %}
+        </a>
+      </li>
+      {% if warnings.number > 2 %}
+      <li class="pull-left">
+        <a href="{% url 'misago:user_warnings' user_slug=profile.slug user_id=profile.pk page=warnings.previous_page_number %}" class="tooltip-top" title="{% trans "Go to previous page" %}">
+          {% trans "Later" %}
+        </a>
+      </li>
+      {% endif %}
+    {% endif %}
+    {% if warnings.has_next %}
+      <li class="pull-right">
+        <a href="{% url 'misago:user_warnings' user_slug=profile.slug user_id=profile.pk page=warnings.paginator.num_pages %}" class="tooltip-top" title="{% trans "Go to last page" %}">
+          {% trans "Oldest" %}
+        </a>
+      </li>
+      {% if warnings.next_page_number < warnings.paginator.num_pages %}
+      <li class="pull-right">
+        <a href="{% url 'misago:user_warnings' user_slug=profile.slug user_id=profile.pk page=warnings.next_page_number %}" class="tooltip-top" title="{% trans "Go to next page" %}">
+          {% trans "Older" %}
+        </a>
+      </li>
+      {% endif %}
+    {% endif %}
+    {% if warnings.has_next %}
+    <li class="page text-muted">
+      {% blocktrans trimmed count left=items_left %}
+      There is {{ left }} more warning
+      {% plural %}
+      There are {{ left }} more warnings
+      {% endblocktrans %}
+    </li>
+    {% endif %}
+  </ul>
+  {% endif %}
+{% else %}
+<p class="lead">
+  {% if is_authenticated_user %}
+    {% blocktrans trimmed with user=profile.username %}
+    Your have no warnings, {{ user }}.
+    {% endblocktrans %}
+  {% else %}
+    {% blocktrans trimmed with user=profile.username %}
+    {{ user }} has no warnings.
+    {% endblocktrans %}
+  {% endif %}
+</p>
+{% endif %}
+{% endblock page %}
+
+
+{% block javascripts %}
+<script type="text/javascript">
+  $(function() {
+    {% if user.is_authenticated and user.acl.can_cancel_warnings %}
+    $('.cancel-warning-prompt').submit(function() {
+      var decision = confirm("{% trans "Are you sure you want to cancel this warning?" %}");
+      return decision;
+    });
+    {% endif %}
+    {% if user.is_authenticated and user.acl.can_delete_warnings %}
+    $('.delete-warning-prompt').submit(function() {
+      var decision = confirm("{% trans "Are you sure you want to delete this warning?" %}");
+      return decision;
+    });
+    {% endif %}
+  });
+</script>
+{% endblock javascripts %}

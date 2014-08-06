@@ -1,0 +1,123 @@
+{% extends "misago/modusers/base.html" %}
+{% load i18n misago_capture misago_forms %}
+
+
+{% block title %}
+{{ profile.username }}: {% trans "Warn" %} | {{ block.super }}
+{% endblock title %}
+
+
+{% block action-name %}
+{% trans "Warn" %}
+{% endblock action-name %}
+
+
+{% block action-content %}
+<div class="row warning-form">
+  <div class="col-md-8">
+
+    <div class="form-panel">
+      <form method="POST" role="form">
+        {% csrf_token %}
+        <input type="hidden" name="return_path" value="{{ return_path }}">
+
+        <div class="form-header">
+          <h2>
+            {{ form.reason.label }}
+          </h2>
+        </div>
+
+        {% include "misago/form_errors.html" %}
+
+        <div class="form-body">
+          <fieldset>
+            <legend>{{ form.reason.help_text }}</legend>
+
+            <div class="extra-padding">
+              {% form_input form.reason %}
+            </div>
+
+          </fieldset>
+        </div>
+
+        <div class="form-footer">
+
+          <button class="btn btn-primary">{% trans "Warn user" %}</button>
+          <a href="{{ return_path }}" class="btn btn-default">
+            {% trans "Cancel" %}
+          </a>
+
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+  <div class="col-md-4">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          {% trans "Current warning level" %}
+        </h3>
+      </div>
+      <div class="panel-body">
+
+        {% if current_level %}
+          <h4>{{ current_level.name }}</h4>
+
+          {% if current_level.is_replying_disallowed %}
+          <p class="text-error">{% trans "Replying are forbidden." %}</p>
+          {% elif current_level.is_replying_moderated %}
+          <p class="text-danger">{% trans "New replies are moderated." %}</p>
+          {% else %}
+          <p class="test-success">{% trans "No restrictions on posting replies." %}</p>
+          {% endif %}
+
+          {% if current_level.is_starting_threads_disallowed %}
+          <p class="text-error">{% trans "Starting threads is forbidden." %}</p>
+          {% elif current_level.is_starting_threads_moderated %}
+          <p class="text-danger">{% trans "New threads are moderated." %}</p>
+          {% else %}
+          <p class="test-success">{% trans "No restrictions on starting threads." %}</p>
+          {% endif %}
+        {% else %}
+        <h4>{% trans "None" %}</h4>
+        <p>{% trans "No warning level is set." %}</p>
+        {% endif %}
+
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          {% trans "Next level" %}
+        </h3>
+      </div>
+      <div class="panel-body">
+
+        <h4>{{ next_level.name }}</h4>
+
+        {% if next_level.is_replying_disallowed %}
+        <p>{% trans "Replying are forbidden." %}</p>
+        {% elif next_level.is_replying_moderated %}
+        <p>{% trans "New replies are moderated." %}</p>
+        {% else %}
+        <p>{% trans "No restrictions on posting replies." %}</p>
+        {% endif %}
+
+        {% if next_level.is_starting_threads_disallowed %}
+        <p class="text-error">{% trans "Starting threads is forbidden." %}</p>
+        {% elif next_level.is_starting_threads_moderated %}
+        <p class="text-danger">{% trans "New threads are moderated." %}</p>
+        {% else %}
+        <p>{% trans "No restrictions on starting threads." %}</p>
+        {% endif %}
+
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock action-content %}

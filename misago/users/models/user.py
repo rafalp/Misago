@@ -350,15 +350,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Online(models.Model):
-    user = models.OneToOneField(User, primary_key=True,
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, primary_key=True,
                                 related_name='online_tracker')
     current_ip = models.GenericIPAddressField()
     last_click = models.DateTimeField(default=timezone.now)
 
 
 class UsernameChange(models.Model):
-    user = models.ForeignKey(User, related_name='namechanges')
-    changed_by = models.ForeignKey(User, null=True, blank=True,
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             related_name='namechanges')
+    changed_by = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                   null=True, blank=True,
                                    related_name='user_renames',
                                    on_delete=models.SET_NULL)
     changed_by_username = models.CharField(max_length=30)
