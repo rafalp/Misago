@@ -2,6 +2,7 @@ from django.template import Context, Template, TemplateSyntaxError
 from django.test import TestCase
 
 from misago.core import forms
+from misago.core.shortcuts import paginate
 from misago.core.templatetags import misago_batch
 
 
@@ -153,3 +154,30 @@ class FormRowTests(TestCase):
 
         with self.assertRaises(TemplateSyntaxError):
             Template(tpl_content)
+
+
+class MockUser(object):
+    id = 12
+    pk = 12
+    username = "Bob"
+    slug = "bob"
+
+
+class PaginationTests(TestCase):
+    def setUp(self):
+        self.page = paginate(range(500), 11, 20, 5)
+        self.context = Context({
+            'page': self.page,
+            'user': MockUser()
+        })
+
+    def test_pagination(self):
+        """capture content to variable"""
+        tpl_content = """
+{% load misago_pagination %}
+
+{% pagination page "misago/profile/pagination.html" 'misago:user_warnings' user_slug=user.slug user_id=user.pk %}
+"""
+
+        tpl = Template(tpl_content)
+        render = tpl.render(self.context).strip()

@@ -45,47 +45,7 @@
     {% endfor%}
   </div>
 
-  {% if name_changes.paginator.num_pages > 1 %}
-  <ul class="pager pager-wide">
-    {% if name_changes.has_previous %}
-      <li class="pull-left">
-        <a href="{% url 'misago:user_name_history' user_slug=profile.slug user_id=profile.pk %}" class="tooltip-top" title="{% trans "Go to first page" %}">
-          {% trans "Latest" %}
-        </a>
-      </li>
-      {% if name_changes.number > 2 %}
-      <li class="pull-left">
-        <a href="{% url 'misago:user_name_history' user_slug=profile.slug user_id=profile.pk page=name_changes.previous_page_number %}" class="tooltip-top" title="{% trans "Go to previous page" %}">
-          {% trans "Later" %}
-        </a>
-      </li>
-      {% endif %}
-    {% endif %}
-    {% if name_changes.has_next %}
-      <li class="pull-right">
-        <a href="{% url 'misago:user_name_history' user_slug=profile.slug user_id=profile.pk page=name_changes.paginator.num_pages %}" class="tooltip-top" title="{% trans "Go to last page" %}">
-          {% trans "Oldest" %}
-        </a>
-      </li>
-      {% if name_changes.next_page_number < name_changes.paginator.num_pages %}
-      <li class="pull-right">
-        <a href="{% url 'misago:user_name_history' user_slug=profile.slug user_id=profile.pk page=name_changes.next_page_number %}" class="tooltip-top" title="{% trans "Go to next page" %}">
-          {% trans "Older" %}
-        </a>
-      </li>
-      {% endif %}
-    {% endif %}
-    {% if name_changes.has_next %}
-    <li class="page text-muted">
-      {% blocktrans trimmed count left=items_left %}
-      There is {{ left }} more changes
-      {% plural %}
-      There are {{ left }} more changes
-      {% endblocktrans %}
-    </li>
-    {% endif %}
-  </ul>
-  {% endif %}
+  {% pagination name_changes "misago/profile/pagination.html" 'misago:user_name_history' user_slug=profile.slug user_id=profile.pk %}
 {% else %}
 <p class="lead">
   {% if is_authenticated_user %}

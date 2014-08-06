@@ -1,5 +1,5 @@
 {% extends "misago/profile/base.html" %}
-{% load i18n misago_avatars misago_capture %}
+{% load i18n misago_avatars misago_capture misago_pagination %}
 
 
 {% block page %}
@@ -151,48 +151,7 @@
     </div>
     {% endfor %}
   </div>
-
-  {% if warnings.paginator.num_pages > 1 %}
-  <ul class="pager pager-wide">
-    {% if warnings.has_previous %}
-      <li class="pull-left">
-        <a href="{% url 'misago:user_warnings' user_slug=profile.slug user_id=profile.pk %}" class="tooltip-top" title="{% trans "Go to first page" %}">
-          {% trans "Latest" %}
-        </a>
-      </li>
-      {% if warnings.number > 2 %}
-      <li class="pull-left">
-        <a href="{% url 'misago:user_warnings' user_slug=profile.slug user_id=profile.pk page=warnings.previous_page_number %}" class="tooltip-top" title="{% trans "Go to previous page" %}">
-          {% trans "Later" %}
-        </a>
-      </li>
-      {% endif %}
-    {% endif %}
-    {% if warnings.has_next %}
-      <li class="pull-right">
-        <a href="{% url 'misago:user_warnings' user_slug=profile.slug user_id=profile.pk page=warnings.paginator.num_pages %}" class="tooltip-top" title="{% trans "Go to last page" %}">
-          {% trans "Oldest" %}
-        </a>
-      </li>
-      {% if warnings.next_page_number < warnings.paginator.num_pages %}
-      <li class="pull-right">
-        <a href="{% url 'misago:user_warnings' user_slug=profile.slug user_id=profile.pk page=warnings.next_page_number %}" class="tooltip-top" title="{% trans "Go to next page" %}">
-          {% trans "Older" %}
-        </a>
-      </li>
-      {% endif %}
-    {% endif %}
-    {% if warnings.has_next %}
-    <li class="page text-muted">
-      {% blocktrans trimmed count left=items_left %}
-      There is {{ left }} more warning
-      {% plural %}
-      There are {{ left }} more warnings
-      {% endblocktrans %}
-    </li>
-    {% endif %}
-  </ul>
-  {% endif %}
+  {% pagination warnings "misago/profile/pagination.html" 'misago:user_warnings' user_slug=profile.slug user_id=profile.pk %}
 {% else %}
 <p class="lead">
   {% if is_authenticated_user %}
