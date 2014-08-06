@@ -39,7 +39,7 @@ def change_permissions_form(role):
     if isinstance(role, Role) and role.special_role != 'anonymous':
         return PermissionsForm
     else:
-        return Nonef
+        return None
 
 
 """
