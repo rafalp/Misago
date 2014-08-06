@@ -3,8 +3,8 @@
 
 
 {% block content %}
-{% blocktrans trimmed with username=recipient.username %}
-{{ username }}, to activate your account click the below link:
+{% blocktrans trimmed with user=recipient.username %}
+{{ user }}, to activate your account click the below link:
 {% endblocktrans %}
 {{ SITE_ADDRESS }}{% url 'misago:activate_by_token' user_id=recipient.pk token=activation_token %}"
 {% endblock content %}

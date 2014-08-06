@@ -39,7 +39,7 @@ def change_permissions_form(role):
     if isinstance(role, Role) and role.special_role != 'anonymous':
         return PermissionsForm
     else:
-        return None
+        return Nonef
 
 
 """
@@ -116,8 +116,8 @@ def allow_warn_user(user, target):
     if not user.is_superuser and (target.is_staff or target.is_superuser):
         raise PermissionDenied(_("You can't warn administrators."))
     if not target.acl['can_be_warned']:
-        message = _("%(username)s can't be warned.")
-        raise PermissionDenied(message % {'username': target.username})
+        message = _("%(user)s can't be warned.")
+        raise PermissionDenied(message % {'user': target.username})
 can_warn_user = return_boolean(allow_warn_user)
 
 

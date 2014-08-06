@@ -77,23 +77,23 @@ def activate_by_token(request, user_id, token):
 
     try:
         if not inactive_user.requires_activation:
-            message = _("%(username)s, your account is already active.")
-            message = message % {'username': inactive_user.username}
+            message = _("%(user)s, your account is already active.")
+            message = message % {'user': inactive_user.username}
             raise ActivationStopped(message)
         if inactive_user.requires_activation_by_admin:
-            message = _("%(username)s, your account can be activated "
+            message = _("%(user)s, your account can be activated "
                         "only by one of the administrators.")
-            message = message % {'username': inactive_user.username}
+            message = message % {'user': inactive_user.username}
             raise ActivationStopped(message)
         if get_user_ban(inactive_user):
-            message = _("%(username)s, your account is banned "
+            message = _("%(user)s, your account is banned "
                         "and can't be activated.")
-            message = message % {'username': inactive_user.username}
+            message = message % {'user': inactive_user.username}
             raise ActivationError(message)
         if not is_activation_token_valid(inactive_user, token):
-            message = _("%(username)s, your activation link is invalid. "
+            message = _("%(user)s, your activation link is invalid. "
                         "Try again or request new activation message.")
-            message = message % {'username': inactive_user.username}
+            message = message % {'user': inactive_user.username}
             raise ActivationError(message)
     except ActivationStopped as e:
         messages.info(request, e.args[0])
@@ -105,8 +105,8 @@ def activate_by_token(request, user_id, token):
     inactive_user.requires_activation = ACTIVATION_REQUIRED_NONE
     inactive_user.save(update_fields=['requires_activation'])
 
-    message = _("%(username)s, your account has been activated!")
-    message = message % {'username': inactive_user.username}
+    message = _("%(user)s, your account has been activated!")
+    message = message % {'user': inactive_user.username}
     messages.success(request, message)
 
     return redirect(settings.LOGIN_URL)

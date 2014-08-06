@@ -3,8 +3,8 @@
 
 
 {% block content %}
-{% blocktrans trimmed with username=recipient.username %}
-{{ username }}, thank you for joining us!
+{% blocktrans trimmed with user=recipient.username %}
+{{ user }}, thank you for joining us!
 {% endblocktrans %}
 
 {% blocktrans trimmed %}

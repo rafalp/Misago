@@ -297,9 +297,9 @@ def change_email_password(request):
             credentials_token = cache_new_credentials(
                 request.user, new_email, new_password)
 
-            mail_subject = _("Confirm changes to %(username)s account "
+            mail_subject = _("Confirm changes to %(user)s account "
                              "on %(forum_title)s forums")
-            subject_formats = {'username': request.user.username,
+            subject_formats = {'user': request.user.username,
                                'forum_title': settings.forum_name}
             mail_subject = mail_subject % subject_formats
 

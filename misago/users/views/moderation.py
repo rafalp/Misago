@@ -66,9 +66,9 @@ def warn(request, user, reason=None):
     return_path = moderation_return_path(request, user)
 
     if warnings.is_user_warning_level_max(user):
-        message = _("%(username)s has maximum warning "
+        message = _("%(user)s has maximum warning "
                     "level and can't be warned.")
-        message = message % {'username': user.username}
+        message = message % {'user': user.username}
         messages.info(request, message)
 
         return redirect(return_path)
@@ -79,8 +79,8 @@ def warn(request, user, reason=None):
         if form.is_valid():
             warnings.warn_user(request.user, user, form.cleaned_data['reason'])
 
-            message = _("%(username)s has been warned.")
-            message = message % {'username': user.username}
+            message = _("%(user)s has been warned.")
+            message = message % {'user': user.username}
             messages.success(request, message)
 
             return redirect(return_path)
@@ -127,8 +127,8 @@ def warning_moderation_view(required_permission=None):
 def cancel_warning(request, user, warning):
     warnings.cancel_warning(request.user, user, warning)
 
-    message = _("%(username)s's warning has been canceled.")
-    message = message % {'username': user.username}
+    message = _("%(user)s's warning has been canceled.")
+    message = message % {'user': user.username}
     messages.success(request, message)
 
 
@@ -137,8 +137,8 @@ def cancel_warning(request, user, warning):
 def delete_warning(request, user, warning):
     warnings.delete_warning(request.user, user, warning)
 
-    message = _("%(username)s's warning has been deleted.")
-    message = message % {'username': user.username}
+    message = _("%(user)s's warning has been deleted.")
+    message = message % {'user': user.username}
     messages.success(request, message)
 
 
@@ -182,8 +182,8 @@ def moderate_avatar(request, user):
                 'avatar_lock_staff_message'
             ))
 
-            message = _("%(username)s's avatar has been moderated.")
-            message = message % {'username': user.username}
+            message = _("%(user)s's avatar has been moderated.")
+            message = message % {'user': user.username}
             messages.success(request, message)
 
             if 'stay' not in request.POST:
@@ -211,8 +211,8 @@ def moderate_signature(request, user):
                 'signature_lock_staff_message'
             ))
 
-            message = _("%(username)s's signature has been moderated.")
-            message = message % {'username': user.username}
+            message = _("%(user)s's signature has been moderated.")
+            message = message % {'user': user.username}
             messages.success(request, message)
 
             if 'stay' not in request.POST:
@@ -237,8 +237,8 @@ def ban_user(request, user):
         if form.is_valid():
             form.ban_user()
 
-            message = _("%(username)s has been banned.")
-            messages.success(request, message % {'username': user.username})
+            message = _("%(user)s has been banned.")
+            messages.success(request, message % {'user': user.username})
 
             return redirect(user_profile.get_default_link(),
                             user_slug=user.slug, user_id=user.pk)
@@ -256,8 +256,8 @@ def lift_user_ban(request, user):
 
     Ban.objects.invalidate_cache()
 
-    message = _("%(username)s's ban has been lifted.")
-    messages.success(request, message % {'username': user.username})
+    message = _("%(user)s's ban has been lifted.")
+    messages.success(request, message % {'user': user.username})
 
     return redirect(user_profile.get_default_link(),
                     user_slug=user.slug, user_id=user.pk)
@@ -268,6 +268,6 @@ def lift_user_ban(request, user):
 def delete(request, user):
     user.delete(delete_content=True)
 
-    message = _("User %(username)s has been deleted.")
-    messages.success(request, message % {'username': user.username})
+    message = _("User %(user)s has been deleted.")
+    messages.success(request, message % {'user': user.username})
     return redirect('misago:index')

@@ -110,8 +110,8 @@ class UsersList(UserAdmin, generic.ListView):
         users = users.order_by('slug')
         for user in users:
             if user.is_superuser:
-                message = _("%(username)s is super admin and can't be banned.")
-                mesage = message % {'username': user.username}
+                message = _("%(user)s is super admin and can't be banned.")
+                mesage = message % {'user': user.username}
                 raise generic.MassActionError(mesage)
 
         form = BanUsersForm()
@@ -141,8 +141,8 @@ class UsersList(UserAdmin, generic.ListView):
         inactive_users = []
         for user in users:
             if user.is_staff or user.is_superuser:
-                message = _("%(username)s is admin and can't be deleted.")
-                mesage = message % {'username': user.username}
+                message = _("%(user)s is admin and can't be deleted.")
+                mesage = message % {'user': user.username}
                 raise generic.MassActionError(mesage)
 
         for user in users:
@@ -155,8 +155,8 @@ class UsersList(UserAdmin, generic.ListView):
         inactive_users = []
         for user in users:
             if user.is_staff or user.is_superuser:
-                message = _("%(username)s is admin and can't be deleted.")
-                mesage = message % {'username': user.username}
+                message = _("%(user)s is admin and can't be deleted.")
+                mesage = message % {'user': user.username}
                 raise generic.MassActionError(mesage)
 
         for user in users:

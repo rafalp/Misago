@@ -3,8 +3,8 @@
 
 
 {% block content %}
-{% blocktrans trimmed with username=recipient.username %}
-{{ username }}, your account has been activated by forum administrator.
+{% blocktrans trimmed with user=recipient.username %}
+{{ user }}, your account has been activated by forum administrator.
 {% endblocktrans %}
 <br>
 <br>

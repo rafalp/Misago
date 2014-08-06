@@ -35,9 +35,9 @@ def request_reset(request):
             requesting_user = form.user_cache
             request.session['reset_password_link_sent_to'] = requesting_user.pk
 
-            mail_subject = _("Change %(username)s password "
+            mail_subject = _("Change %(user)s password "
                              "on %(forum_title)s forums")
-            subject_formats = {'username': requesting_user.username,
+            subject_formats = {'user': requesting_user.username,
                                'forum_title': settings.forum_name}
             mail_subject = mail_subject % subject_formats
 
@@ -82,25 +82,25 @@ def reset_password_form(request, user_id, token):
 
     try:
         if requesting_user.requires_activation_by_admin:
-            message = _("%(username)s, administrator has to activate your "
+            message = _("%(user)s, administrator has to activate your "
                         "account before you will be able to request "
                         "new password.")
-            message = message % {'username': requesting_user.username}
+            message = message % {'user': requesting_user.username}
             raise ResetStopped(message)
         if requesting_user.requires_activation_by_user:
-            message = _("%(username)s, you have to activate your account "
+            message = _("%(user)s, you have to activate your account "
                         "before you will be able to request new password.")
-            message = message % {'username': requesting_user.username}
+            message = message % {'user': requesting_user.username}
             raise ResetStopped(message)
         if get_user_ban(requesting_user):
-            message = _("%(username)s, your account is banned "
+            message = _("%(user)s, your account is banned "
                         "and it's password can't be changed.")
-            message = message % {'username': requesting_user.username}
+            message = message % {'user': requesting_user.username}
             raise ResetError(message)
         if not is_password_reset_token_valid(requesting_user, token):
-            message = _("%(username)s, your link is invalid. "
+            message = _("%(user)s, your link is invalid. "
                         "Try again or request new link.")
-            message = message % {'username': requesting_user.username}
+            message = message % {'user': requesting_user.username}
             raise ResetError(message)
     except ResetStopped as e:
         messages.info(request, e.args[0])
@@ -116,8 +116,8 @@ def reset_password_form(request, user_id, token):
             requesting_user.set_password(form.cleaned_data['new_password'])
             requesting_user.save(update_fields=['password'])
 
-            message = _("%(username)s, your password has been changed.")
-            message = message % {'username': requesting_user.username}
+            message = _("%(user)s, your password has been changed.")
+            message = message % {'user': requesting_user.username}
             messages.success(request, message)
             return redirect(settings.LOGIN_URL)
 

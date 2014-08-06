@@ -2,8 +2,8 @@
 
 <h4>
 {% if misago_user.is_authenticated %}
-  {% blocktrans with username=misago_user.username %}
-  {{ username }} roles
+  {% blocktrans with user=misago_user.username %}
+  {{ user }} roles
   {% endblocktrans %}
 {% else %}
   {% trans "Anonymous roles" %}

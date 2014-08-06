@@ -31,8 +31,8 @@
         <div class="form-body form-markup-preview">
           {% if not profile.signature %}
           <p class="lead">
-            {% blocktrans trimmed with username=profile.username %}
-            {{ username }} has no signature set.
+            {% blocktrans trimmed with user=profile.username %}
+            {{ user }} has no signature set.
             {% endblocktrans %}
           </p>
           {% elif profile.has_valid_signature %}

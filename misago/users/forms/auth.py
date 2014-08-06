@@ -38,21 +38,21 @@ class MisagoAuthMixin(object):
         if self.user_ban:
             if self.user_ban.valid_until:
                 if self.user_ban.user_message:
-                    message = _("%(username)s, your account is "
+                    message = _("%(user)s, your account is "
                                 "banned until %(date)s for:")
                 else:
-                    message = _("%(username)s, your account "
+                    message = _("%(user)s, your account "
                                 "is banned until %(date)s.")
                 date_format = {'date': format_date(self.user_ban.valid_until)}
                 message = message % date_format
             else:
                 if self.user_ban.user_message:
-                    message = _("%(username)s, your account is banned for:")
+                    message = _("%(user)s, your account is banned for:")
                 else:
-                    message = _("%(username)s, your account is banned.")
+                    message = _("%(user)s, your account is banned.")
 
             raise ValidationError(
-                message % {'username': self.user_cache.username},
+                message % {'user': self.user_cache.username},
                 code='banned',
             )
 
@@ -143,14 +143,14 @@ class ResendActivationForm(GetUserForm):
     def confirm_allowed(self, user):
         self.confirm_user_not_banned(user)
 
-        username_format = {'username': user.username}
+        username_format = {'user': user.username}
 
         if not user.requires_activation:
-            message = _("%(username)s, your account is already active.")
+            message = _("%(user)s, your account is already active.")
             raise forms.ValidationError(message % username_format)
 
         if user.requires_activation_by_admin:
-            message = _("%(username)s, only administrator may activate "
+            message = _("%(user)s, only administrator may activate "
                         "your account.")
             raise forms.ValidationError(message % username_format)
 

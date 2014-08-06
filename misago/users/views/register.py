@@ -64,8 +64,8 @@ def register(request):
                     password=form.cleaned_data['password'])
                 login(request, authenticated_user)
 
-                welcome_message = _("Welcome aboard, %(username)s!")
-                welcome_message = welcome_message % {'username': new_user.username}
+                welcome_message = _("Welcome aboard, %(user)s!")
+                welcome_message = welcome_message % {'user': new_user.username}
                 messages.success(request, welcome_message)
 
                 mail_user(request, new_user, mail_subject,
