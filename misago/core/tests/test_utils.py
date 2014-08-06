@@ -94,8 +94,8 @@ class CleanReturnPathTests(TestCase):
         self.assertEqual(clean_return_path(ok_request), '/')
 
         ok_request = MockRequest('GET', {
-            'HTTP_REFERER': 'http://misago-project.org/',
-            'HTTP_HOST': 'misago-project.org/register/'
+            'HTTP_REFERER': 'http://misago-project.org/register/',
+            'HTTP_HOST': 'misago-project.org/'
         })
         self.assertEqual(clean_return_path(ok_request), '/register/')
 
