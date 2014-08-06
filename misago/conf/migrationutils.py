@@ -1,10 +1,4 @@
-import base64
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
-from importlib import import_module
-
+from misago.core import serializer
 from misago.core.cache import cache as default_cache
 
 from misago.conf.dbsettings import CACHE_KEY
@@ -64,8 +58,7 @@ def migrate_setting(Setting, group, setting_fixture, order, old_value):
             setting.python_type, setting_fixture.get("default_value"))
 
     if field_extra:
-        pickled_extra = pickle.dumps(field_extra, pickle.HIGHEST_PROTOCOL)
-        setting.pickled_field_extra = base64.encodestring(pickled_extra)
+        setting.pickled_field_extra = serializer.dumps(field_extra)
 
     setting.save()
 

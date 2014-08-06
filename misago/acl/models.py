@@ -1,10 +1,6 @@
-import base64
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
-
 from django.db import models
+
+from misago.core import serializer
 
 from misago.acl import version as acl_version
 
@@ -35,8 +31,8 @@ class BaseRole(models.Model):
             return self.permissions_cache
         except AttributeError:
             try:
-                self.permissions_cache = pickle.loads(
-                    base64.decodestring(self.pickled_permissions))
+                self.permissions_cache = serializer.loads(
+                    self.pickled_permissions)
             except Exception:
                 self.permissions_cache = {}
         return self.permissions_cache
@@ -44,8 +40,7 @@ class BaseRole(models.Model):
     @permissions.setter
     def permissions(self, permissions):
         self.permissions_cache = permissions
-        self.pickled_permissions = base64.encodestring(
-            pickle.dumps(permissions, pickle.HIGHEST_PROTOCOL))
+        self.pickled_permissions = serializer.dumps(permissions)
 
 
 class Role(BaseRole):

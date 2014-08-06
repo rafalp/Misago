@@ -1,10 +1,6 @@
-import base64
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
-
 from django.db import models
+
+from misago.core import serializer
 
 from misago.conf import hydrators
 
@@ -86,12 +82,11 @@ class Setting(models.Model):
     @property
     def field_extra(self):
         if self.pickled_field_extra:
-            return pickle.loads(base64.decodestring(self.pickled_field_extra))
+            return serializer.loads(self.pickled_field_extra)
         else:
             return {}
 
     @field_extra.setter
     def field_extra(self, new_extra):
         if new_extra:
-            pickled_extra = pickle.dumps(new_extra, pickle.HIGHEST_PROTOCOL)
-            self.pickled_field_extra = base64.encodestring(pickled_extra)
+            self.pickled_field_extra = serializer.dumps(new_extra)

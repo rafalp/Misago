@@ -1,18 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import base64
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
-
 from django.db import models, migrations
 from django.utils.translation import ugettext as _
 
+from misago.core import serializer
+
+
 def pickle_permissions(role, permissions):
-    role.pickled_permissions = base64.encodestring(
-        pickle.dumps(permissions, pickle.HIGHEST_PROTOCOL))
+    role.pickled_permissions = serializer.dumps(permissions)
 
 
 def create_default_forums_roles(apps, schema_editor):
