@@ -90,7 +90,7 @@ def warnings(request, profile=None, page=0):
 
     active_warnings = warning_level - warnings.start_index() + 1
     for warning in warnings.object_list:
-        if warning.canceled:
+        if warning.is_canceled:
             warning.is_active = False
         else:
             warning.is_active = active_warnings > 0

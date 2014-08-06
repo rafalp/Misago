@@ -159,7 +159,7 @@ class CancelWarningTests(WarningTestCase):
                 'warning_id': warning.pk
             }))
         self.assertEqual(response.status_code, 403)
-        self.assertFalse(self.test_user.warnings.get(id=warning.pk).canceled)
+        self.assertFalse(self.test_user.warnings.get(id=warning.pk).is_canceled)
 
     def test_no_permission_other(self):
         """can't cancel other mod warnings"""
@@ -179,7 +179,7 @@ class CancelWarningTests(WarningTestCase):
                 'warning_id': warning.pk
             }))
         self.assertEqual(response.status_code, 403)
-        self.assertFalse(self.test_user.warnings.get(id=warning.pk).canceled)
+        self.assertFalse(self.test_user.warnings.get(id=warning.pk).is_canceled)
 
         warning = warn_user(self.test_admin, self.test_user)
         response = self.client.post(
@@ -191,7 +191,7 @@ class CancelWarningTests(WarningTestCase):
         self.assertEqual(response.status_code, 302)
 
         warning = self.test_user.warnings.get(id=warning.pk)
-        self.assertTrue(self.test_user.warnings.get(id=warning.pk).canceled)
+        self.assertTrue(self.test_user.warnings.get(id=warning.pk).is_canceled)
 
     def test_cancel_other_and_owned_warnings(self):
         """cancel everyone's warnings"""
@@ -211,7 +211,7 @@ class CancelWarningTests(WarningTestCase):
                 'warning_id': warning.pk
             }))
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(self.test_user.warnings.get(id=warning.pk).canceled)
+        self.assertTrue(self.test_user.warnings.get(id=warning.pk).is_canceled)
 
         warning = warn_user(self.test_admin, self.test_user)
         response = self.client.post(
@@ -221,7 +221,7 @@ class CancelWarningTests(WarningTestCase):
                 'warning_id': warning.pk
             }))
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(self.test_user.warnings.get(id=warning.pk).canceled)
+        self.assertTrue(self.test_user.warnings.get(id=warning.pk).is_canceled)
 
 
 class DeleteWarningTests(WarningTestCase):

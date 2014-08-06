@@ -128,7 +128,7 @@ def allow_cancel_warning(user, target):
         if target.giver_id != user.pk:
             message = _("You can't cancel warnings issued by other users.")
             raise PermissionDenied(message)
-    if target.canceled:
+    if target.is_canceled:
         raise PermissionDenied(_("This warning is already canceled."))
 can_cancel_warning = return_boolean(allow_cancel_warning)
 

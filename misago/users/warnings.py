@@ -17,7 +17,7 @@ def fetch_user_valid_warnings(user):
         return []
 
     # build initial list of valid exceptions
-    queryset = user.warnings.exclude(canceled=True)
+    queryset = user.warnings.exclude(is_canceled=True)
     warnings = [w for w in queryset.order_by('-id')[:max_level]]
 
     if not warnings:

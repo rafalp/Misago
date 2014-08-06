@@ -40,15 +40,9 @@ class="form-horizontal"
 <div class="form-body">
   {% with label_class="col-md-3" field_class="col-md-9" %}
   <fieldset>
-    <legend>{% trans "Name and description" %}</legend>
+    <legend>{% trans "Basic options" %}</legend>
 
     {% form_row form.name label_class field_class %}
-    {% form_row form.description label_class field_class %}
-
-  </fieldset>
-  <fieldset>
-    <legend>{% trans "Expiration time" %}</legend>
-
     {% form_row form.length_in_minutes label_class field_class %}
 
   </fieldset>

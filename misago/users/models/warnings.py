@@ -59,7 +59,6 @@ class WarningLevelManager(models.Manager):
 
 class WarningLevel(models.Model):
     name = models.CharField(max_length=255)
-    description = models.TextField(null=True, blank=True)
     level = models.PositiveIntegerField(default=1, db_index=True)
     length_in_minutes = models.PositiveIntegerField(default=0)
     restricts_posting_replies = models.PositiveIntegerField(
@@ -125,7 +124,7 @@ class UserWarning(models.Model):
                                  related_name="+")
     giver_username = models.CharField(max_length=255)
     giver_slug = models.CharField(max_length=255)
-    canceled = models.BooleanField(default=False)
+    is_canceled = models.BooleanField(default=False)
     canceled_on = models.DateTimeField(null=True, blank=True)
     canceler = models.ForeignKey(settings.AUTH_USER_MODEL,
                                     null=True, blank=True,
@@ -135,14 +134,14 @@ class UserWarning(models.Model):
     canceler_slug = models.CharField(max_length=255)
 
     def cancel(self, canceler):
-        self.canceled = True
+        self.is_canceled = True
         self.canceled_on = timezone.now()
         self.canceler = canceler
         self.canceler_username = canceler.username
         self.canceler_slug = canceler.slug
 
         self.save(update_fields=(
-            'canceled',
+            'is_canceled',
             'canceled_on',
             'canceler',
             'canceler_username',

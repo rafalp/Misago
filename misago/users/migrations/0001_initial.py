@@ -166,7 +166,6 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=255)),
-                ('description', models.TextField(null=True, blank=True)),
                 ('level', models.PositiveIntegerField(default=1, db_index=True)),
                 ('length_in_minutes', models.PositiveIntegerField(default=0)),
                 ('restricts_posting_replies', models.PositiveIntegerField(default=0)),
@@ -184,7 +183,7 @@ class Migration(migrations.Migration):
                 ('given_on', models.DateTimeField(default=django.utils.timezone.now)),
                 ('giver_username', models.CharField(max_length=255)),
                 ('giver_slug', models.CharField(max_length=255)),
-                ('canceled', models.BooleanField(default=False)),
+                ('is_canceled', models.BooleanField(default=False)),
                 ('canceled_on', models.DateTimeField(null=True, blank=True)),
                 ('canceler_username', models.CharField(max_length=255)),
                 ('canceler_slug', models.CharField(max_length=255)),
@@ -195,5 +194,10 @@ class Migration(migrations.Migration):
             options={
             },
             bases=(models.Model,),
+        ),
+        CreatePartialIndex(
+            field='UserWarning.is_canceled',
+            index_name='misago_userwarning_is_canceled_partial',
+            condition='is_canceled = FALSE',
         ),
     ]
