@@ -12,36 +12,41 @@
 
       {% if warning_level.has_restrictions %}
       <ul class="list-unstyled">
-        {% if warning_level.is_replying_disallowed %}
+        {% if warning_level.restricts_posting_replies %}
         <li>
-          <span class="fa fa-times-circle fa-lg fa-fw text-danger"></span>
-          {% trans "Replying are forbidden." %}
-        </li>
-        {% elif warning_level.is_replying_moderated %}
-        <li>
-          <span class="fa fa-exclamation-circle fa-lg fa-fw text-warning"></span>
-          {% trans "New replies are moderated." %}
-        </li>
-        {% endif %}
-        {% if warning_level.is_starting_threads_disallowed %}
-        <li>
-          <span class="fa fa-times-circle fa-lg fa-fw text-danger"></span>
-          {% trans "Starting threads is forbidden." %}
-        </li>
-        {% elif warning_level.is_starting_threads_moderated %}
-        <li>
-          <span class="fa fa-exclamation-circle fa-lg fa-fw text-warning"></span>
-          {% trans "New threads are moderated." %}
+          {% if warning_level.is_replying_disallowed %}
+            <span class="fa fa-times-circle fa-lg fa-fw text-danger"></span>
+            {% trans "Replying are forbidden." %}
+          {% elif warning_level.is_replying_moderated %}
+            <span class="fa fa-exclamation-circle fa-lg fa-fw text-warning"></span>
+            {% trans "New replies are moderated." %}
+          {% endif %}
         </li>
         {% endif %}
-        {% if warning_level.length_in_minutes %}
+        {% if warning_level.restricts_posting_threads %}
         <li>
-          <span class="fa fa-clock-o fa-fw text-success"></span>
-          {% blocktrans trimmed with length=warning_level.length %}
-          This warning level lasts {{ length }}.
-          {% endblocktrans %}
+          {% if warning_level.is_starting_threads_disallowed %}
+            <span class="fa fa-times-circle fa-lg fa-fw text-danger"></span>
+            {% trans "Starting threads is forbidden." %}
+          {% elif warning_level.is_starting_threads_moderated %}
+            <span class="fa fa-exclamation-circle fa-lg fa-fw text-warning"></span>
+            {% trans "New threads are moderated." %}
+          {% endif %}
         </li>
         {% endif %}
+        <li>
+          {% if warning_level.length_in_minutes %}
+            <span class="fa fa-clock-o fa-fw text-success"></span>
+            {% blocktrans trimmed with length=warning_level.length %}
+            This warning level lasts {{ length }}.
+            {% endblocktrans %}
+          {% else %}
+            <span class="fa fa-clock-o fa-fw text-danger"></span>
+            {% blocktrans trimmed %}
+            This warning level is permanent.
+            {% endblocktrans %}
+          {% endif %}
+        </li>
       </ul>
       {% endif %}
     {% else %}
