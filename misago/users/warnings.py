@@ -36,6 +36,8 @@ def fetch_user_valid_warnings(user):
                     level_warnings.append(warning)
             if len(level_warnings) == length:
                 active_warnings = level_warnings[:length]
+            else:
+                break
         else:
             active_warnings = warnings[:length]
     return active_warnings

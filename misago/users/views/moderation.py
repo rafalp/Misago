@@ -152,7 +152,7 @@ def rename(request, user):
         form = ChangeUsernameForm(request.POST, user=user)
         if form.is_valid():
             try:
-                form.change_username(changed_by=user)
+                form.change_username(changed_by=request.user)
                 message = _("%(old_username)s's username has been changed.")
                 message = message % {'old_username': old_username}
                 messages.success(request, message)
