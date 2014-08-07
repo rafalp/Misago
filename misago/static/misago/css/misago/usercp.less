@@ -13,7 +13,7 @@
   padding-bottom: @line-height-computed;
 
   .avatar-preview {
-  	max-width: 200px;
+    max-width: 200px;
   }
 
   .usercp-avatar-options {
@@ -24,25 +24,21 @@
           margin: 0px;
           padding: 0px 0px;
 
-          color: fadeOut(@text-color, 40);
-          line-height: @line-height-computed;
+          color: @state-default;
+          line-height: @line-height-computed * 1.2;
 
           &:hover, &:focus {
-            color: @text-color;
-            text-decoration: none;
+            outline: none;
 
-            .fa {
-              color: @brand-primary
-            }
+            color: @state-hover;
+            text-decoration: none;
           }
 
           &:active {
-            color: @text-color;
-            text-decoration: none;
+            outline: none;
 
-            .fa {
-              color: @brand-primary
-            }
+            color: @state-clicked;
+            text-decoration: none;
           }
         }
 
@@ -135,12 +131,12 @@
 
   .drag-drop-area {
     background-color: @form-panel-bg;
-    border: 6px dashed fadeOut(@text-color, 50);
+    border: 6px dashed @state-default;
     border-radius: @border-radius-large;
     display: block;
     padding: (@line-height-computed * 2) @line-height-computed;
 
-    color: fadeOut(@text-color, 50);
+    color: @state-default;
     cursor: pointer;
     text-align: center;
 
@@ -154,9 +150,16 @@
     }
 
     &:hover {
-      border-color: fadeOut(@text-color, 10);
+      border-color: @state-hover;
 
-      color: fadeOut(@text-color, 10);
+      color: @state-hover;
+      text-decoration: none;
+    }
+
+    &:active {
+      border-color: @state-clicked;
+
+      color: @state-clicked;
       text-decoration: none;
     }
   }
@@ -188,6 +191,25 @@
       display: inline-block;
       margin-left: auto;
       margin-right: auto;
+    }
+  }
+}
+
+
+// Avatar gallery
+//
+//==
+.avatar-gallery {
+  .thumbnail {
+    &:hover, &:focus {
+      border-color: @state-hover;
+      outline: none;
+    }
+
+    &:active {
+      border-color: @state-clicked;
+      outline: none;
+      transition: border 0s;
     }
   }
 }

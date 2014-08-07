@@ -7,36 +7,49 @@
   <div class="warning-summary">
     {% if warning_level %}
       <p class="lead">
-        <span class="fa fa-exclamation-triangle"></span>
         {{ warning_level.name }}
       </p>
 
       {% if warning_level.has_restrictions %}
-      <p>
+      <ul class="list-unstyled">
         {% if warning_level.is_replying_disallowed %}
+        <li>
+          <span class="fa fa-times-circle fa-lg fa-fw text-danger"></span>
           {% trans "Replying are forbidden." %}
+        </li>
         {% elif warning_level.is_replying_moderated %}
+        <li>
+          <span class="fa fa-exclamation-circle fa-lg fa-fw text-warning"></span>
           {% trans "New replies are moderated." %}
+        </li>
         {% endif %}
         {% if warning_level.is_starting_threads_disallowed %}
+        <li>
+          <span class="fa fa-times-circle fa-lg fa-fw text-danger"></span>
           {% trans "Starting threads is forbidden." %}
+        </li>
         {% elif warning_level.is_starting_threads_moderated %}
+        <li>
+          <span class="fa fa-exclamation-circle fa-lg fa-fw text-warning"></span>
           {% trans "New threads are moderated." %}
+        </li>
         {% endif %}
         {% if warning_level.length_in_minutes %}
+        <li>
+          <span class="fa fa-clock-o fa-fw text-success"></span>
           {% blocktrans trimmed with length=warning_level.length %}
           This warning level lasts {{ length }}.
           {% endblocktrans %}
+        </li>
         {% endif %}
-      </p>
+      </ul>
       {% endif %}
     {% else %}
     <p class="lead">
-      <span class="fa fa-check"></span>
       {% trans "No warnings are active." %}
     </p>
     {% endif %}
-    <div class="progress">
+    <div class="progress thin">
       <div class="progress-bar progress-bar-{% if warning_progress > 66 %}success{% elif warning_progress > 33 %}warning{% else %}danger{% endif %}" role="progressbar" aria-valuenow="{{ warning_progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ warning_progress }}%;">
         <span class="sr-only">
           {% blocktrans trimmed with level=warning_level.level %}
@@ -50,7 +63,7 @@
   <div class="warnings-list">
     {% for warning in warnings.object_list %}
     <div class="panel panel-default">
-      <div class="panel-body">
+      <div class="panel-body large">
 
         {% if warning.reason %}
         <p>
@@ -63,8 +76,8 @@
         {% endif %}
 
       </div>
-      <div class="panel-footer">
-        <ul class="list-unstyled pull-left">
+      <div class="panel-footer opaque">
+        <ul class="list-unstyled stats pull-left">
           <li>
             {% if warning.is_canceled %}
             <strong class="state-canceled">
@@ -84,32 +97,27 @@
             {% endif %}
           </li>
           <li>
-            <span class="glyphicon glyphicon-time"></span>
+            {% if warning.giver_id %}
+            <img src="{{ warning.giver_id|avatar:30 }}" alt="{% trans "Avatar" %}">
+            <a href="{% url USER_PROFILE_URL user_slug=warning.giver_slug user_id=warning.giver_id %}">
+              {{ warning.giver_username }}</a>,
+            {% else %}
+            <img src="{% blankavatar 30 %}" alt="{% trans "Avatar" %}">
+            <strong>{{ warning.giver_username }}</strong>,
+            {% endif %}
             <abbr class="tooltip-top dynamic time-ago" title="{{ warning.given_on }}" data-timestamp="{{ warning.given_on|date:"c" }}">
               {{ warning.given_on|date }}
             </abbr>
-          </li>
-          <li>
-            {% if warning.giver_id %}
-            <img src="{{ warning.giver_id|avatar:30 }}" alt="{% trans "Avatar" %}">
-            <strong>{{ warning.giver_username }}</strong>
-            {% else %}
-            <img src="{% blankavatar 30 %}" alt="{% trans "Avatar" %}">
-            <a href="{% url USER_PROFILE_URL user_slug=warning.giver_slug user_id=warning.giver_id %}">
-              {{ warning.giver_username }}
-            </a>
-            {% endif %}
           </li>
           {% if warning.is_canceled %}
           <li>
             <span class="fa fa-ban"></span>
             {% capture trimmed as canceler %}
             {% if warning.canceler_id %}
-            <strong>{{ warning.canceler_username }}</strong>
-            {% else %}
             <a href="{% url USER_PROFILE_URL user_slug=warning.canceler_slug user_id=warning.canceler_id %}">
-              {{ warning.canceler_username }}
-            </a>
+              {{ warning.canceler_username }}</a>
+            {% else %}
+            <strong>{{ warning.canceler_username }}</strong>
             {% endif %}
             {% endcapture %}
             {% capture trimmed as canceled %}
@@ -124,12 +132,12 @@
           {% endif %}
         </ul>
         {% if warning.acl.can_moderate %}
-        <ul class="list-unstyled pull-right">
+        <ul class="list-unstyled actions pull-right">
           {% if warning.acl.can_cancel %}
           <li>
             <form action="{% url 'misago:cancel_warning' user_slug=profile.slug user_id=profile.pk warning_id=warning.pk %}" method="POST" class="cancel-warning-prompt">
               {% csrf_token %}
-              <button type="submit" class="btn btn-default btn-sm">
+              <button type="submit" class="btn btn-default">
                 {% trans "Cancel" %}
               </button>
             </form>
@@ -139,7 +147,7 @@
           <li>
             <form action="{% url 'misago:delete_warning' user_slug=profile.slug user_id=profile.pk warning_id=warning.pk %}" method="POST" class="delete-warning-prompt">
               {% csrf_token %}
-              <button type="submit" class="btn btn-default btn-sm">
+              <button type="submit" class="btn btn-default">
                 {% trans "Delete" %}
               </button>
             </form>

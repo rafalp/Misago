@@ -46,36 +46,26 @@
     </div>
     <div class="col-md-4">
 
-      <h4>
-        <span class="fa fa-fw fa-question-circle"></span>
-        {% trans "Common problems:" %}
-      </h4>
       <ul class="list-unstyled signin-help">
         <li>
-          <h5>
-            <span class="fa fa-fw fa-key"></span>
-            {% trans "I don't remember my password." %}
-          </h5>
+          <h5>{% trans "Common problems:" %}</h5>
+        </li>
+        <li>
           <a href="{% url 'misago:request_password_reset' %}">
-            {% trans "Change forgotten password" %}
+            <span class="fa fa-key fa-fw"></span>
+            {% trans "I don't remember my password." %}
           </a>
         </li>
         <li>
-          <h5>
-            <span class="fa fa-fw fa-power-off"></span>
-            {% trans "My account is inactive." %}
-          </h5>
           <a href="{% url 'misago:request_activation' %}">
-            {% trans "Request activation e-mail" %}
+            <span class="fa fa-power-off fa-fw"></span>
+            {% trans "My account is inactive." %}
           </a>
         </li>
         <li>
-          <h5>
-            <span class="fa fa-fw fa-pencil-square-o"></span>
-            {% trans "I don't have an account." %}
-          </h5>
           <a href="{% url 'misago:register' %}">
-            {% trans "Register new account" %}
+            <span class="fa fa-pencil-square-o fa-fw"></span>
+            {% trans "I don't have an account." %}
           </a>
         </li>
       </ul>

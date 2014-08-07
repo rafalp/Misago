@@ -11,8 +11,9 @@
     &>a {
       &:link, &:active, &:visited {
         border: none;
+        border-bottom: 3px solid transparent;
         border-radius: 0px;
-        margin-bottom: 1px;
+        margin-bottom: -2px;
         padding: @nav-tabs-padding;
 
         color: @nav-link-color;
@@ -23,12 +24,19 @@
         border-bottom: 3px solid @nav-tabs-link-hover-border-color;
         margin-bottom: -2px;
         padding: @nav-tabs-padding;
+        transition-timing-function: ease;
+        transition-duration: 0.3s;
 
         color: @nav-link-hover-color;
       }
 
       &:active {
-        border-bottom-color: @nav-tabs-link-active-border-color;
+        background: @nav-tabs-link-clicked-bg;
+        border-bottom-color: @nav-tabs-link-clicked-border-color;
+        transition-timing-function: ease;
+        transition-duration: 0.1s;
+
+        color: @nav-tabs-link-clicked-color;
       }
     }
   }
@@ -38,11 +46,11 @@
       &:link, &:active, a:hover, &:visited {
         border: none;
         border-radius: 0px;
-        border-bottom: 3px solid @nav-tabs-active-link-hover-border-color;
+        border-bottom: 3px solid @nav-tabs-active-link-border-color;
         margin-bottom: -2px;
         padding: @nav-link-padding;
 
-        color: @nav-tabs-active-link-hover-color;
+        color: @nav-tabs-active-link-color;
         cursor: pointer;
         font-weight: bold;
       }

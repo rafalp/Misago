@@ -9,3 +9,223 @@
 .panel {
   box-shadow: none;
 }
+
+
+// Bodies
+//
+//==
+.panel-body {
+  &.thin {
+    padding-top: @line-height-computed / 6;
+    padding-bottom: 0px;
+  }
+
+  &.large {
+    padding-top: 0px;
+    padding-bottom: 0px;
+
+    font-size: @font-size-large;
+  }
+}
+
+
+// Footers
+//
+//==
+.panel-footer {
+  overflow: auto;
+
+  &>ul {
+    overflow: auto;
+    margin: 0px;
+    padding: 0px;
+
+    &>li {
+      float: left;
+    }
+
+    &.pull-left {
+      &>li {
+        margin-right: @line-height-computed;
+      }
+    }
+
+    &.pull-right {
+      &>li {
+        margin-left: @line-height-computed;
+      }
+    }
+
+    &.stats {
+      &>li {
+        img {
+          border-radius: @border-radius-small;
+          height: 20px;
+        }
+
+        a {
+          color: @state-hover;
+          font-weight: bold;
+        }
+
+        a:hover {
+          color: @state-hover;
+          text-decoration: underline;
+        }
+
+        a:active {
+          color: @state-clicked;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    &.actions {
+      margin: -6px 0px;
+
+      &>li {
+        &>form {
+          margin: 0px;
+          padding: 0px;
+        }
+
+        &>form>.btn, &>.btn {
+          border-color: transparent;
+          background: transparent;
+          .box-shadow(none);
+          position: static;
+          margin: 0px;
+          padding: 5px 7px;
+
+          color: @state-default;
+
+          &:hover {
+            background-color: darken(@panel-footer-bg, 5%);
+            transition-timing-function: ease;
+            transition-duration: 0.5s;
+
+            color: @state-hover;
+          }
+
+          &:active {
+            background-color: darken(@panel-footer-bg, 5%);
+            outline: none;
+            transition-duration: 0.07s;
+
+            color: @state-clicked;
+          }
+
+          .fa {
+            position: relative;
+            bottom: 1px;
+          }
+
+          &.btn-primary {
+            background: transparent;
+
+            color: @state-info-text;
+
+            &:hover {
+              background: fadeOut(@state-info-bg, 90%);
+
+              color: @state-info-text;
+            }
+
+            &:active {
+              background: @state-info-bg;
+
+              color: @state-info-text-contrast;
+            }
+          }
+
+          &.btn-success {
+            background: transparent;
+
+            color: @state-success-text;
+
+            &:hover {
+              background: fadeOut(@state-success-bg, 90%);
+
+              color: @state-success-text;
+            }
+
+            &:active {
+              background: @state-success-bg;
+
+              color: @state-success-text-contrast;
+            }
+          }
+
+          &.btn-warning {
+            background: transparent;
+
+            color: @state-warning-text;
+
+            &:hover {
+              background: fadeOut(@state-warning-bg, 90%);
+
+              color: @state-warning-text;
+            }
+
+            &:active {
+              background: @state-warning-bg;
+
+              color: @state-warning-text-contrast;
+            }
+          }
+
+          &.btn-danger {
+            background: transparent;
+
+            color: @state-danger-text;
+
+            &:hover {
+              background: fadeOut(@state-danger-bg, 90%);
+
+              color: @state-danger-text;
+            }
+
+            &:active {
+              background: @state-danger-bg;
+
+              color: @state-danger-text-contrast;
+            }
+          }
+        }
+      }
+
+      &.pull-left {
+        &>li {
+          margin-right: @line-height-computed / 2;
+        }
+      }
+
+      &.pull-right {
+        &>li {
+          margin-left: @line-height-computed / 2;
+        }
+      }
+    }
+  }
+}
+
+
+// Opacity
+.panel {
+  .opaque {
+    .opacity(0.3);
+    transition-property: opacity;
+    transition-timing-function: ease;
+    transition-duration: 0.3s;
+  }
+
+  &:hover, &:focus {
+    .opaque {
+      .opacity(1);
+
+      transition-property: opacity;
+      transition-timing-function: ease;
+      transition-duration: 0.7s;
+    }
+  }
+}

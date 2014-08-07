@@ -8,7 +8,9 @@
 //**
 .misago-editor {
   .editor-toolbar {
-    background: @gray-dark;
+    background: @form-panel-footer-bg;
+    border: 1px solid @form-panel-border;
+    border-width: 1px 0px;
     padding: @padding-small-vertical @padding-small-horizontal;
 
     &>ul {
@@ -22,29 +24,28 @@
 
         .btn-default {
           background-color: transparent;
-          border-color: transparent;
+          border: 1px solid @form-panel-border;
           .box-shadow(none);
-          padding: 4px 2px;
+          padding: 4px 0px;
+          width: 32px;
 
-          color: @gray-lighter;
-          text-shadow: 0px 1px 1px @gray-darker;
+          color: @state-default;
+          text-align: center;
 
           &:hover {
-            background-color: @gray-lighter;
-            border-color: @gray-lighter;
+            border-color: @state-default;
             top: 0px;
 
-            color: @gray-darker;
+            color: @state-hover;
             outline: none;
             text-shadow: none;
           }
 
           &.active, &:active {
-            background-color: @gray-darker;
-            border-color: @gray-darker;
+            border-color: @state-clicked;
             top: 0px;
 
-            color: @gray-light;
+            color: @state-clicked;
             outline: none;
             text-shadow: none;
           }

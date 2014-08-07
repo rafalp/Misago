@@ -33,11 +33,16 @@
       a {
         &:link, &:visited {
           color: @footer-link-color;
+          text-decoration: none;
+        }
+
+        &:hover {
+          color: @footer-link-hover-color;
           text-decoration: underline;
         }
 
-        &:hover, &:active {
-          color: @footer-link-hover-color;
+        &:active {
+          color: @footer-link-active-color;
           text-decoration: underline;
         }
       }
@@ -94,7 +99,7 @@
       }
 
       &:active, &:hover {
-        .opacity(1);
+        .opacity(0.8);
 
         text-decoration: none;
       }

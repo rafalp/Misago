@@ -237,14 +237,66 @@
 .navbar-nav-guest {
   .navbar-vertical-align(@font-size-large + 12px);
 
-  .btn-sign-in {
+  .btn-sign-in, .btn-register {
     margin: 0px;
-    .misago-button-flavour(@btn-signin-color, @btn-signin-bg, @btn-signin-border);
+
+    &:hover {
+      transition-timing-function: ease;
+      transition-duration: 0.3s;
+     }
+
+    &:active {
+      .box-shadow(none);
+      transition-timing-function: ease;
+      transition-duration: 0.1s;
+    }
+  }
+
+  .btn-sign-in {
+    &, &:visited, &:link {
+      background: @btn-sign-in-bg;
+      border-color: @btn-sign-in-border;
+
+      color: @btn-sign-in-color;
+    }
+
+    &:hover {
+      background: @btn-sign-in-hover-bg;
+      border-color: @btn-sign-in-hover-border;
+
+      color: @btn-sign-in-hover-color;
+
+    }
+
+    &:active {
+      background: @btn-sign-in-active-bg;
+      border-color: @btn-sign-in-active-border;
+
+      color: @btn-sign-in-active-color;
+    }
   }
 
   .btn-register {
-    margin: 0px;
-    .misago-button-flavour(@btn-register-color, @btn-register-bg, @btn-register-border);
+    &, &:visited, &:link {
+      background: @btn-register-bg;
+      border-color: @btn-register-border;
+
+      color: @btn-register-color;
+    }
+
+    &:hover {
+      background: @btn-register-hover-bg;
+      border-color: @btn-register-hover-border;
+
+      color: @btn-register-hover-color;
+    }
+
+    &:active {
+      background: @btn-register-active-bg;
+      border-color: @btn-register-active-border;
+
+      color: @btn-register-active-color;
+    }
   }
 }
 

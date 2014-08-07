@@ -53,7 +53,7 @@
     </div>
 
   </div>
-  <div class="col-md-4">
+  <div class="col-md-4 warning-preview">
 
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -61,29 +61,50 @@
           {% trans "Current warning level" %}
         </h3>
       </div>
-      <div class="panel-body">
+      <div class="panel-body thin">
 
         {% if current_level %}
           <h4>{{ current_level.name }}</h4>
 
           {% if current_level.is_replying_disallowed %}
-          <p class="text-error">{% trans "Replying are forbidden." %}</p>
+          <p>
+            <span class="fa fa-times-circle fa-lg fa-fw text-danger"></span>
+            {% trans "Replying are forbidden." %}
+          </p>
           {% elif current_level.is_replying_moderated %}
-          <p class="text-danger">{% trans "New replies are moderated." %}</p>
+          <p>
+            <span class="fa fa-exclamation-circle fa-lg fa-fw text-warning"></span>
+            {% trans "New replies are moderated." %}
+          </p>
           {% else %}
-          <p class="test-success">{% trans "No restrictions on posting replies." %}</p>
+          <p>
+            <span class="fa fa-check-circle fa-lg fa-fw text-success"></span>
+            {% trans "No restrictions on posting replies." %}
+          </p>
           {% endif %}
 
           {% if current_level.is_starting_threads_disallowed %}
-          <p class="text-error">{% trans "Starting threads is forbidden." %}</p>
+          <p>
+            <span class="fa fa-times-circle fa-lg fa-fw text-danger"></span>
+            {% trans "Starting threads is forbidden." %}
+          </p>
           {% elif current_level.is_starting_threads_moderated %}
-          <p class="text-danger">{% trans "New threads are moderated." %}</p>
+          <p>
+            <span class="fa fa-exclamation-circle fa-lg fa-fw text-warning"></span>
+            {% trans "New threads are moderated." %}
+          </p>
           {% else %}
-          <p class="test-success">{% trans "No restrictions on starting threads." %}</p>
+          <p>
+            <span class="fa fa-check-circle fa-lg fa-fw text-success"></span>
+            {% trans "No restrictions on starting threads." %}
+          </p>
           {% endif %}
         {% else %}
         <h4>{% trans "None" %}</h4>
-        <p>{% trans "No warning level is set." %}</p>
+        <p>
+          <span class="fa fa-check-circle fa-lg fa-fw text-success"></span>
+          {% trans "No warning level is set." %}
+        </p>
         {% endif %}
 
       </div>
@@ -95,24 +116,42 @@
           {% trans "Next level" %}
         </h3>
       </div>
-      <div class="panel-body">
+      <div class="panel-body thin">
 
         <h4>{{ next_level.name }}</h4>
 
         {% if next_level.is_replying_disallowed %}
-        <p>{% trans "Replying are forbidden." %}</p>
+        <p>
+          <span class="fa fa-times-circle fa-lg fa-fw text-danger"></span>
+          {% trans "Replying are forbidden." %}
+        </p>
         {% elif next_level.is_replying_moderated %}
-        <p>{% trans "New replies are moderated." %}</p>
+        <p>
+          <span class="fa fa-exclamation-circle fa-lg fa-fw text-warning"></span>
+          {% trans "New replies are moderated." %}
+        </p>
         {% else %}
-        <p>{% trans "No restrictions on posting replies." %}</p>
+        <p>
+          <span class="fa fa-check-circle fa-lg fa-fw text-success"></span>
+          {% trans "No restrictions on posting replies." %}
+        </p>
         {% endif %}
 
         {% if next_level.is_starting_threads_disallowed %}
-        <p class="text-error">{% trans "Starting threads is forbidden." %}</p>
+        <p>
+          <span class="fa fa-times-circle fa-lg fa-fw text-danger"></span>
+          {% trans "Starting threads is forbidden." %}
+        </p>
         {% elif next_level.is_starting_threads_moderated %}
-        <p class="text-danger">{% trans "New threads are moderated." %}</p>
+        <p>
+          <span class="fa fa-exclamation-circle fa-lg fa-fw text-warning"></span>
+          {% trans "New threads are moderated." %}
+        </p>
         {% else %}
-        <p>{% trans "No restrictions on starting threads." %}</p>
+        <p>
+          <span class="fa fa-check-circle fa-lg fa-fw text-success"></span>
+          {% trans "No restrictions on starting threads." %}
+        </p>
         {% endif %}
 
       </div>

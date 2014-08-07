@@ -2,28 +2,44 @@
 // Misago Variables
 // --------------------------------------------------
 
+// BAD STUFF
+@brand-secondary: #0F0;
+// BAD STUFF
 
 //== Colors
 //
 //## Basic colors for use in this flavor
 
-@brand-primary:         #c0392b;
-@brand-secondary:       #3498db;
+@brand-primary:         #3498db;
+@brand-accent:          #e74c3c;
 @brand-success:         #2ecc71;
 @brand-info:            #5bc0de;
 @brand-warning:         #f0ad4e;
 @brand-danger:          #e74c3c;
 
+
 // Background color for `<body>`.
-@body-bg:               darken(#fff, 2%);
+@body-bg:               #fff;
+
 // Global text color on `<body>`.
-@text-color:            #444;
+@text-color:            @gray-dark;
+
+// Global state colors
+@state-default:         @gray-light;
+@state-hover:           @text-color;
+@state-clicked:         @brand-primary;
+@state-active:          @brand-accent;
+
+@state-online:                #2ecc71;
+@state-offline:               #95a5a6;
+@state-banned:                #e74c3c;
+
 
 // Headings color
 @headings-small-color:  darken(@body-bg, 30%);
 
 // Global textual link color.
-@link-color:            @brand-secondary;
+@link-color:            @brand-primary;
 @link-hover-color:      darken(@link-color, 15%);
 
 // Text muted color
@@ -40,8 +56,8 @@
 //
 //## Navbar style
 
-@navbar-default-bg:                lighten(#bdc3c7, 18%);
-@navbar-default-border:            darken(@navbar-default-bg, 6.5%);
+@navbar-default-bg:                lighten(#ecf0f1, 3%);
+@navbar-default-border:            #ecf0f1;
 
 
 // Navbar brand
@@ -77,15 +93,31 @@
 
 
 // Guest Sign in button
-@btn-signin-color:                 darken(@body-bg, 50%);
-@btn-signin-bg:                    @body-bg;
-@btn-signin-border:                darken(@btn-signin-bg, 15%);
+@btn-sign-in-color:                    @state-default;
+@btn-sign-in-bg:                       @navbar-default-bg;
+@btn-sign-in-border:                   @navbar-default-border;
+
+@btn-sign-in-hover-color:              @state-hover;
+@btn-sign-in-hover-bg:                 @navbar-default-border;
+@btn-sign-in-hover-border:             @navbar-default-border;
+
+@btn-sign-in-active-color:             #fff;
+@btn-sign-in-active-bg:                @state-clicked;
+@btn-sign-in-active-border:            @state-clicked;
 
 
 // Guest Register button
-@btn-register-color:                 #fff;
-@btn-register-bg:                    desaturate(@brand-danger, 15%);
-@btn-register-border:                darken(@btn-register-bg, 15%);
+@btn-register-color:                   fadeOut(@brand-accent, 30%);
+@btn-register-bg:                      @navbar-default-bg;
+@btn-register-border:                  fadeOut(@brand-accent, 70%);
+
+@btn-register-hover-color:             @brand-accent;
+@btn-register-hover-bg:                fadeOut(@brand-accent, 90%);
+@btn-register-hover-border:            transparent;
+
+@btn-register-active-color:            #fff;
+@btn-register-active-bg:               @brand-accent;
+@btn-register-active-border:           @brand-accent;
 
 
 //== Dropdowns
@@ -93,16 +125,13 @@
 //## Misago dropdowns flavor
 
 // Dropdown link text color.
-@dropdown-link-color:            lighten(@text-color, 10%);
-// Hover color for dropdown links.
-@dropdown-link-hover-color:      #fff;
-// Hover background for dropdown links.
-@dropdown-link-hover-bg:         #666;
+@dropdown-link-color:            @text-color;
 
-// Active dropdown menu item text color.
+@dropdown-link-hover-color:      #fff;
+@dropdown-link-hover-bg:         lighten(@state-hover, 15%);
+
 @dropdown-link-active-color:     #fff;
-// Active dropdown menu item background color.
-@dropdown-link-active-bg:        #333;
+@dropdown-link-active-bg:        @state-clicked;
 
 
 // Open dropdown shadow color.
@@ -126,9 +155,13 @@
 @nav-tabs-link-hover-border-color:          darken(@nav-tabs-border-color, 40%);
 @nav-tabs-link-active-border-color:         @brand-secondary;
 
-@nav-tabs-active-link-hover-bg:             transparent;
-@nav-tabs-active-link-hover-color:          @text-color;
-@nav-tabs-active-link-hover-border-color:   @brand-primary;
+@nav-tabs-link-clicked-bg:                  transparent;
+@nav-tabs-link-clicked-color:               @state-clicked;
+@nav-tabs-link-clicked-border-color:        @state-clicked;
+
+@nav-tabs-active-link-bg:                   transparent;
+@nav-tabs-active-link-color:                @state-hover;
+@nav-tabs-active-link-border-color:         @state-active;
 
 @nav-tabs-justified-link-border-color:            #ddd;
 @nav-tabs-justified-active-link-border-color:     @body-bg;
@@ -176,8 +209,9 @@
 @misago-branding-size:           @font-size-large * 1.6;
 
 // Footer links
-@footer-link-color:              @gray-light;
-@footer-link-hover-color:        @gray-darker;
+@footer-link-color:              @state-default;
+@footer-link-hover-color:        @state-hover;
+@footer-link-active-color:       @state-clicked;
 
 
 //== Buttons
@@ -200,7 +234,7 @@
 @btn-default-active-border:      #999;
 
 @btn-primary-color:              #fff;
-@btn-primary-bg:                 @brand-secondary;
+@btn-primary-bg:                 @brand-primary;
 @btn-primary-border:             darken(@btn-primary-bg, 15%);
 
 @btn-success-color:              #fff;
@@ -231,41 +265,61 @@
 @form-panel-padding:                    @form-panel-padding-vertical @form-panel-padding-horizontal;
 
 
-//== Error panel
+//== Panels
 //
 //##
-@error-panel-bg:                   darken(@body-bg, 1%);
-@error-panel-border:               darken(@body-bg, 15%);
-@error-panel-shadow:               darken(@body-bg, 5%);
+
+@panel-bg:                    #fff;
+@panel-body-padding:          15px;
+
+//** Border color for elements within panels
+@panel-inner-border:          darken(@body-bg, 8%);
+@panel-footer-bg:             @panel-bg;
+
+@panel-default-text:          @gray-dark;
+@panel-default-border:        darken(@body-bg, 14%);
+@panel-default-heading-bg:    #f5f5f5;
+
+
+//== Form states and alerts
+//
+//## Define colors for form feedback states and, by default, alerts.
+
+@state-success-text:             #27ae60;
+@state-success-text-contrast:    #fff;
+@state-success-bg:               #2ecc71;
+
+@state-info-text:                @brand-primary;
+@state-info-text-contrast:       #fff;
+@state-info-bg:                  @brand-primary;
+
+@state-warning-text:             #e67e22;
+@state-warning-text-contrast:    #fff;
+@state-warning-bg:               #e67e22;
+
+@state-danger-text:              #c0392b;
+@state-danger-text-contrast:     #fff;
+@state-danger-bg:                darken(#e74c3c, 12%);
 
 
 //== Alerts
 //
 //## Define alert colors, border radius, and padding.
 
-@alert-padding:               12px;
+@alert-padding:               14px;
 @alert-border-radius:         @border-radius-large;
 
-@alert-success-bg:            #27ae60;
-@alert-success-text:          #fff;
+@alert-success-bg:            @state-success-bg;
+@alert-success-text:          @state-success-text-contrast;
 
-@alert-info-bg:               #2980b9;
-@alert-info-text:             #fff;
+@alert-info-bg:               @state-info-bg;
+@alert-info-text:             @state-info-text-contrast;
 
-@alert-warning-bg:            #e67e22;
-@alert-warning-text:          #fff;
+@alert-warning-bg:            @state-warning-bg;
+@alert-warning-text:          @state-warning-text-contrast;
 
-@alert-danger-bg:             #c0392b;
-@alert-danger-text:           #fff;
-
-
-//== User state
-//
-//##
-
-@state-online:                #2ecc71;
-@state-offline:               #95a5a6;
-@state-banned:                #e74c3c;
+@alert-danger-bg:             @state-danger-bg;
+@alert-danger-text:           @state-danger-text-contrast;
 
 
 //== Modals

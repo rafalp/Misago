@@ -54,17 +54,14 @@
 //**
 .form-panel {
   .form-errors-block {
-    background-color: @alert-danger-bg;
-    border-top: 1px solid @form-panel-border;
-    border-bottom: 6px solid fadeOut(#000, 85%);
+    background-color: @state-danger-bg;
     border-radius: 0;
     margin-bottom: 0px;
     padding: (@form-panel-padding-vertical / 2) @form-panel-padding-horizontal;
     overflow: auto;
 
-    color: @alert-danger-text;
+    color: @state-danger-text-contrast;
     font-size: @font-size-large;
-    text-shadow: 0px -1px 0px darken(@alert-danger-bg, 20%);
 
     .fa {
       position: relative;
@@ -221,6 +218,23 @@
     div.extra {
       margin-top: @line-height-computed + @form-panel-padding-vertical / 2;
     }
+
+    p, div {
+      &.extra {
+        a {
+          color: @state-hover;
+          text-decoration: underline;
+
+          &:hover {
+            color: @state-hover;
+          }
+
+          &:active {
+            color: @state-clicked;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -238,38 +252,6 @@
         margin-bottom: 0px;
         margin-left: @padding-base-horizontal;
       }
-    }
-  }
-}
-
-
-//== Form fields
-//
-//**
-textarea {
-  resize: vertical;
-}
-
-.checkbox {
-  label {
-    font-weight: bold;
-
-    .help-block {
-      font-weight: normal;
-    }
-  }
-}
-
-.form-control-static {
-  .progress {
-    background-color: @gray-lighter;
-    .box-shadow(none);
-    border-radius: 2px;
-    height: 6px;
-    margin-top: 0px;
-
-    .progress-bar {
-      .box-shadow(none);
     }
   }
 }

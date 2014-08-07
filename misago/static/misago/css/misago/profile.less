@@ -112,7 +112,7 @@
 .user-profile {
   &.profile-team {
     .user-title {
-      color: @brand-primary;
+      color: @brand-accent;
     }
   }
 }
@@ -128,10 +128,19 @@
       margin-top: 3px;
 
       a {
-      	&:link, &:visited {
-      		color: @text-color;
-      		font-weight: bold;
-      	}
+        &:link, &:visited {
+          color: @state-hover;
+          font-weight: bold;
+        }
+
+        &:hover {
+          color: @state-hover;
+          text-decoration: underline;
+        }
+
+        &:active {
+          color: @state-clicked;
+        }
       }
 
       img {

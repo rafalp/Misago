@@ -45,7 +45,7 @@
               <label class="control-label {{ label_class }}" >{% trans "Password strength" %}:</label>
               <div class="col-md-5 form-control-static">
                 <p class="password-strength"><strong id="password-strength"></strong></p>
-                <div class="progress">
+                <div class="progress thin">
                   <div id="password-bar" class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
                 </div>
               </div>
@@ -117,7 +117,6 @@
             {% endif %}
 
             {% endwith %}
-
           </div>
 
           <div class="form-footer">
@@ -199,7 +198,7 @@
   var zxcvbn_src = "{% static "misago/js/zxcvbn.js" %}";
   var labels = ["{% trans "Very weak" %}", "{% trans "Weak" %}", "{% trans "Medium" %}", "{% trans "Good" %}", "{% trans "Strong" %}"];
   var label_styles = ["text-danger", "text-warning", "text-warning", "text-info", "text-success"];
-  var bar_styles = ["", "progress-bar-warning", "progress-bar-warning", "progress-bar-info", "progress-bar-success"];
+  var bar_styles = ["progress-bar-danger", "progress-bar-warning", "progress-bar-warning", "progress-bar-info", "progress-bar-success"];
 
   function zxcvbn_load_hook() {
     $(function() {

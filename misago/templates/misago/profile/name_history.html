@@ -13,8 +13,8 @@
       <strong>{{ change.new_username }}</strong>
     {% endcapture %}
     <p>
-      {% if not change.changed_by or change.changed_by_id != profile.pk %}
-        {% if change.changed_by %}
+      {% if not change.changed_by_id or change.changed_by_id != profile.pk %}
+        {% if change.changed_by_id %}
         <a href="{% url USER_PROFILE_URL user_slug=change.changed_by_slug user_id=change.changed_by_id %}">
           <img src="{{ change.changed_by_id|avatar:22 }}" class="tooltip-top" title="{{ change.changed_by_username }}">
         </a>
@@ -22,10 +22,10 @@
         <img src="{% blankavatar 22 %}" class="tooltip-top" title="{{ change.changed_by_username }}">
         {% endif %}
         {% capture trimmed as changed_by %}
-          {% if change.changed_by %}
+          {% if change.changed_by_id %}
           <a href="{% url USER_PROFILE_URL user_slug=change.changed_by_slug user_id=change.changed_by_id %}">{{ change.changed_by_username }}</a>
           {% else %}
-          {{ change.changed_by_username }}
+          <strong>{{ change.changed_by_username }}</strong>
           {% endif %}
         {% endcapture %}
         {% blocktrans trimmed with changed_by=changed_by|safe old_username=old_username|safe new_username=new_username|safe %}

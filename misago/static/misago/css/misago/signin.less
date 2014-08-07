@@ -5,10 +5,25 @@
 
 .signin-help {
   li {
-    margin-bottom: @line-height-computed;
-
     h5 {
       margin-bottom: @line-height-computed / 4;
+
+      font-size: large;
+    }
+
+    a {
+      &:link, &:visited {
+        color: @state-default;
+      }
+
+      &:hover {
+        color: @state-hover;
+        text-decoration: none;
+      }
+
+      &:active {
+        color: @state-clicked;
+      }
     }
   }
 }
