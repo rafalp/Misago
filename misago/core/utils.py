@@ -20,7 +20,7 @@ def slugify(string):
 Return path utility
 """
 def clean_return_path(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and 'return_path' in request.POST:
         return _get_return_path_from_post(request)
     else:
         return _get_return_path_from_referer(request)
