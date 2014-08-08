@@ -83,6 +83,54 @@ class UserProfileViewsTests(AdminTestCase):
         for i in xrange(10):
             self.assertIn("Follower%s" % i, response.content)
 
+    def test_user_follow(self):
+        """user profile follows list has no showstoppers"""
+        User = get_user_model()
+        test_user = User.objects.create_user(
+            "Other", "other@test.com", "Pass.123")
+        link_kwargs = {'user_slug': test_user.slug, 'user_id': test_user.pk}
+
+        response = self.client.post(reverse('misago:follow_user',
+                                            kwargs=link_kwargs))
+        self.assertEqual(response.status_code, 302)
+
+        test_admin = User.objects.get(id=self.test_admin.pk)
+        self.assertEqual(test_admin.following, 1)
+
+        test_user = User.objects.get(id=test_user.pk)
+        self.assertEqual(test_user.followers, 1)
+
+        self.assertIn(test_admin, test_user.followed_by.all())
+
+        response = self.client.post(reverse('misago:follow_user',
+                                            kwargs=link_kwargs))
+        self.assertEqual(response.status_code, 302)
+
+        test_admin = User.objects.get(id=self.test_admin.pk)
+        self.assertEqual(test_admin.following, 0)
+
+        test_user = User.objects.get(id=test_user.pk)
+        self.assertEqual(test_user.followers, 0)
+
+        self.assertNotIn(test_admin, test_user.followed_by.all())
+
+    def test_user_block(self):
+        """user profile follows list has no showstoppers"""
+        User = get_user_model()
+        test_user = User.objects.create_user(
+            "Other", "other@test.com", "Pass.123")
+        link_kwargs = {'user_slug': test_user.slug, 'user_id': test_user.pk}
+
+        response = self.client.post(reverse('misago:block_user',
+                                            kwargs=link_kwargs))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(self.test_admin, test_user.blocked_by.all())
+
+        response = self.client.post(reverse('misago:block_user',
+                                            kwargs=link_kwargs))
+        self.assertEqual(response.status_code, 302)
+        self.assertNotIn(self.test_admin, test_user.blocked_by.all())
+
     def test_user_name_history_list(self):
         """user name changes history list has no showstoppers"""
         response = self.client.get(reverse('misago:user_name_history',
