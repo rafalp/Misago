@@ -146,6 +146,23 @@
         }
       }
     }
+
+    .badge {
+      float: right;
+    }
+  }
+
+  &.large {
+    a {
+      font-size: @font-size-large;
+    }
+
+    .badge {
+      position: relative;
+      top: 2px;
+
+      font-size: @font-size-base;
+    }
   }
 }
 
@@ -193,7 +210,7 @@
 
 
 /* Label */
-.nav-pills, .nav-tabs {
+.nav-pills, .nav-tabs, .nav-side {
   &>li {
     .label {
       padding: 2px 3px;

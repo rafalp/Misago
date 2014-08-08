@@ -1,0 +1,22 @@
+{% extends "misago/profile/base.html" %}
+{% load i18n misago_avatars misago_pagination %}
+
+
+{% block page %}
+{% if followers.object_list %}
+  {% include "misago/users_cards.html" with cards=followers.object_list %}
+  {% pagination followers "misago/profile/pagination.html" 'misago:user_follows' user_slug=profile.slug user_id=profile.pk %}
+{% else %}
+<p class="lead">
+  {% if is_authenticated_user %}
+    {% blocktrans trimmed with user=profile.username %}
+    Your are not following any users, {{ user }}.
+    {% endblocktrans %}
+  {% else %}
+    {% blocktrans trimmed with user=profile.username %}
+    {{ user }} follows no users.
+    {% endblocktrans %}
+  {% endif %}
+</p>
+{% endif %}
+{% endblock page %}

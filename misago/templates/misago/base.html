@@ -33,6 +33,11 @@
     <script lang="JavaScript">
       var lang_yes = "{% trans "Yes" %}";
       var lang_no = "{% trans "No" %}";
+      var ajax_errors = {
+        generic: "{% trans "Server returned unspecified error. Refresh page and try again." %}",
+        not_found: "{% trans "API link is invalid." %}",
+        timeout: "{% trans "Request has timed out." %}"
+      };
     </script>
     {% compressed_js 'misago' %}
     <script lang="JavaScript">

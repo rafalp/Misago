@@ -193,6 +193,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     following = models.PositiveIntegerField(default=0)
     followers = models.PositiveIntegerField(default=0)
 
+    follows = models.ManyToManyField(
+        'self', related_name='followed_by', symmetrical=False)
+    blocks = models.ManyToManyField(
+        'self', related_name='blocked_by', symmetrical=False)
+
     new_alerts = models.PositiveIntegerField(default=0)
 
     limit_private_thread_invites = models.PositiveIntegerField(default=0)
@@ -216,6 +221,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['email']
 
     objects = UserManager()
+
+    def lock(self):
+        """Locks user in DB"""
+        return User.objects.select_for_update().get(id=self.id)
 
     def delete(self, *args, **kwargs):
         if kwargs.pop('delete_content', False):
@@ -347,6 +356,20 @@ class User(AbstractBaseUser, PermissionsMixin):
         Sends an email to this User.
         """
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+    def is_following(self, user):
+        try:
+            self.follows.get(id=user.pk)
+            return True
+        except User.DoesNotExist:
+            return False
+
+    def is_blocking(self, user):
+        try:
+            self.blocks.get(id=user.pk)
+            return True
+        except User.DoesNotExist:
+            return False
 
 
 class Online(models.Model):

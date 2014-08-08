@@ -6,33 +6,29 @@
 // Profile header
 //
 //==
-.user-profile-header {
-  padding: 0px;
-  padding-top: @line-height-computed;
-  border-bottom-width: 3px;
+.user-profile {
+  .profile-header {
+    padding: 0px;
+    padding-top: @line-height-computed;
+    border-bottom-width: 1px;
 
-  .nav-tabs {
-    border-bottom: none;
+    .page-actions {
+      .btn {
+        .btn-sm();
 
-    &>li{
-      &>a {
-        .label {
-          background-color: darken(@body-bg, 5%);
-          padding-left: 5px;
-          padding-right: 5px;
-          position: relative;
-          top: -1px;
+        &.btn-follow {
+          color: @brand-follow;
 
-          color: fadeOut(@text-color, 60%);
-          font-size: @font-size-small;
+          &.active {
+            .misago-button-active-flavour(#fff, @brand-follow, darken(@brand-follow, 13%));
+          }
         }
-      }
 
-      &.active {
-        &>a {
-          .label {
-            background-color: fadeOut(@text-color, 40%);
-            color: @body-bg;
+        &.btn-ban {
+          color: @brand-danger;
+
+          &.active {
+            .misago-button-active-flavour(#fff, @brand-danger, darken(@brand-danger, 13%));
           }
         }
       }
@@ -41,7 +37,7 @@
 }
 
 
-// Side avatar
+// Avatar
 //
 //==
 .user-profile {
@@ -51,68 +47,71 @@
       border-radius: @border-radius-large;
       .box-shadow(0px 0px 0px 2px darken(@body-bg, 5%));
       padding: 4px;
-      margin-top: (@line-height-computed * 3.5) * -1;
-    }
-  }
-}
-
-
-// Side username
-//
-//==
-.user-profile {
-  .profile-side {
-    .user-name {
+      margin-top: @line-height-computed;
       margin-bottom: @line-height-computed;
+    }
+  }
+}
 
-      font-size: @font-size-base * 1.8;
 
-      .user-title {
-        display: block;
-        clear: both;
+/* Big displays */
+@media (min-width: @screen-sm-min) {
+  .user-profile {
+    .profile-side {
+      .user-avatar {
+        margin-top: (@line-height-computed * 4.75) * -1;
       }
     }
   }
 }
 
 
-// Side details
+// Username
+//
+//==
+/* Big displays */
+@media (min-width: @screen-sm-min) {
+  .user-profile {
+    .profile-header {
+      .user-name {
+        float: left;
+      }
+    }
+  }
+}
+
+
+// Details
 //
 //==
 .user-profile {
-  .profile-side {
+  .profile-header {
     .user-details {
-      li {
-        padding-bottom: @line-height-computed / 3;
+      padding-top: @line-height-computed / 3;
+      clear: both;
 
-        color: fadeOut(@text-color, 40%);
-        font-size: @font-size-large;
+      ul {
+        overflow: auto;
 
-        a:link, a:visited {
+        li {
+          margin-right: @line-height-computed;
+
           color: fadeOut(@text-color, 40%);
-        }
 
-        a:hover {
-          color: fadeOut(@text-color, 15%);
-          text-decoration: none;
-        }
+          a:link, a:visited {
+            color: fadeOut(@text-color, 40%);
+          }
 
-        a:active {
-          color: @text-color;
+          a:hover {
+            color: @state-hover;
+            text-decoration: none;
+          }
+
+          a:active {
+            color: @state-clicked;
+          }
         }
       }
-    }
-  }
-}
-
-
-// Flavours
-//
-//==
-.user-profile {
-  &.profile-team {
-    .user-title {
-      color: @brand-accent;
     }
   }
 }

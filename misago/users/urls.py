@@ -54,13 +54,20 @@ urlpatterns += patterns('misago.users.views.usercp',
 
 urlpatterns += patterns('',
     url(r'^user/(?P<user_slug>[a-zA-Z0-9]+)-(?P<user_id>\d+)/', include(patterns('misago.users.views.profile',
-        url(r'^$', 'user_posts', name="user_posts"),
-        url(r'^threads/$', 'user_threads', name="user_threads"),
+        url(r'^$', 'posts', name="user_posts"),
+        url(r'^threads/$', 'threads', name="user_threads"),
+        url(r'^followers/$', 'followers', name="user_followers"),
+        url(r'^followers/(?P<page>\d+)/$', 'followers', name="user_followers"),
+        url(r'^follows/$', 'follows', name="user_follows"),
+        url(r'^follows/(?P<page>\d+)/$', 'follows', name="user_follows"),
         url(r'^name-history/$', 'name_history', name="user_name_history"),
         url(r'^name-history/(?P<page>\d+)/$', 'name_history', name="user_name_history"),
         url(r'^warnings/$', 'warnings', name="user_warnings"),
         url(r'^warnings/(?P<page>\d+)/$', 'warnings', name="user_warnings"),
         url(r'^ban-details/$', 'user_ban', name="user_ban"),
+
+        url(r'^follow/$', 'follow_user', name="follow_user"),
+        url(r'^block/$', 'block_user', name="block_user"),
     )))
 )
 

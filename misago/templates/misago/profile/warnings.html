@@ -182,6 +182,7 @@
 
 
 {% block javascripts %}
+{{ block.super }}
 <script type="text/javascript">
   $(function() {
     {% if user.is_authenticated and user.acl.can_cancel_warnings %}

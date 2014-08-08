@@ -29,6 +29,8 @@ def create_default_roles(apps, schema_editor):
             # profiles perms
             'misago.users.permissions.profiles': {
                 'can_search_users': 1,
+                'can_follow_users': 1,
+                'can_be_blocked': 1,
                 'can_see_users_name_history': 0,
                 'can_see_users_emails': 0,
                 'can_see_users_ips': 0,
@@ -87,6 +89,7 @@ def create_default_roles(apps, schema_editor):
             # profiles perms
             'misago.users.permissions.profiles': {
                 'can_search_users': 1,
+                'can_be_blocked': 0,
                 'can_see_users_name_history': 1,
                 'can_see_ban_details': 1,
                 'can_see_users_emails': 1,
@@ -161,6 +164,16 @@ def create_default_roles(apps, schema_editor):
             'misago.users.permissions.delete': {
                 'can_delete_users_newer_than': 3,
                 'can_delete_users_with_less_posts_than': 7,
+            },
+        })
+    role.save()
+
+    role = Role(name=_("Can't be blocked"))
+    pickle_permissions(role,
+        {
+            # profiles perms
+            'misago.users.permissions.profiles': {
+                'can_be_blocked': 0,
             },
         })
     role.save()

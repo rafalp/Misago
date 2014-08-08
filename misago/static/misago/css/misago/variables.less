@@ -17,6 +17,9 @@
 @brand-warning:         #f0ad4e;
 @brand-danger:          #e74c3c;
 
+@brand-follow:          #EB5BCC;
+@brand-block:           @brand-danger;
+
 
 // Background color for `<body>`.
 @body-bg:               #fff;
@@ -277,6 +280,17 @@
 @panel-footer-bg:             @panel-bg;
 
 @panel-default-border:        darken(@body-bg, 15%);
+
+//** User cards
+@user-card-bg:                         @body-bg;
+@user-card-border:                     darken(@body-bg, 15%);
+@user-card-shadow:                     darken(@body-bg, 15%);
+
+@user-card-hover-border:               fadeOut(@state-hover, 50%);
+@user-card-hover-shadow:               fadeOut(@state-hover, 50%);
+
+@user-card-active-border:              @state-clicked;
+@user-card-active-shadow:              @state-clicked;
 
 
 //== Form states and alerts

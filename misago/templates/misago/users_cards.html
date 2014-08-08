@@ -1,0 +1,23 @@
+{% load i18n misago_avatars misago_batch %}
+
+<div class="users-cards">
+  {% for row in cards|batch:4 %}
+  <div class="row">
+    {% for card in row %}
+    <div class="col-md-3">
+
+      <a href="{% url USER_PROFILE_URL user_slug=card.slug user_id=card.id %}" class="user-card {% if card.rank.css_class %}card-{{ card.rank.css_class }}{% endif %}">
+        <img src="{{ card|avatar:400 }}" alt="{% trans "Avatar" %}">
+        <div class="card-footer">
+          <h4 class="user-name">{{ card.username }}</h4>
+          {% if card.full_title %}
+          <small class="user-title">{{ card.full_title }}</small>
+          {% endif %}
+        </div>
+      </a>
+
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+</div>

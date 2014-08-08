@@ -98,6 +98,10 @@
     .page-actions {
       float: right;
 
+      .pull-left {
+        margin-left: @line-height-computed / 2;
+      }
+
       &.path-fix {
         margin: -2px 0px;
         margin-bottom: -3px;
@@ -128,6 +132,11 @@
         clear: both;
         float: none;
         margin-top: @line-height-computed;
+
+        .pull-left {
+          margin-left: 0px;
+          margin-right: @line-height-computed / 2;
+        }
       }
     }
   }

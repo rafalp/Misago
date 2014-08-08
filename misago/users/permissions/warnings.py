@@ -8,6 +8,7 @@ from misago.acl.models import Role
 from misago.core import forms
 
 from misago.users.models import UserWarning
+from misago.users.permissions.decorators import authenticated_only
 
 
 """
@@ -16,11 +17,14 @@ Admin Permissions Form
 NO_OWNED_ALL = ((0, _("No")), (1, _("Owned")), (2, _("All")))
 
 
-class PermissionsForm(forms.Form):
+class LimitedPermissionsForm(forms.Form):
     legend = _("Warnings")
 
     can_see_other_users_warnings = forms.YesNoSwitch(
         label=_("Can see other users warnings"))
+
+
+class PermissionsForm(LimitedPermissionsForm):
     can_warn_users = forms.YesNoSwitch(label=_("Can warn users"))
     can_be_warned = forms.YesNoSwitch(label=_("Can be warned"), initial=False)
     can_cancel_warnings = forms.TypedChoiceField(
@@ -36,8 +40,11 @@ class PermissionsForm(forms.Form):
 
 
 def change_permissions_form(role):
-    if isinstance(role, Role) and role.special_role != 'anonymous':
-        return PermissionsForm
+    if isinstance(role, Role):
+        if role.special_role == 'anonymous':
+            return LimitedPermissionsForm
+        else:
+            return PermissionsForm
     else:
         return None
 
@@ -110,6 +117,7 @@ def allow_see_warnings(user, target):
 can_see_warnings = return_boolean(allow_see_warnings)
 
 
+@authenticated_only
 def allow_warn_user(user, target):
     if not user.acl['can_warn_users']:
         raise PermissionDenied(_("You can't warn users."))
@@ -121,6 +129,7 @@ def allow_warn_user(user, target):
 can_warn_user = return_boolean(allow_warn_user)
 
 
+@authenticated_only
 def allow_cancel_warning(user, target):
     if user.is_anonymous() or not user.acl['can_cancel_warnings']:
         raise PermissionDenied(_("You can't cancel warnings."))
@@ -133,6 +142,7 @@ def allow_cancel_warning(user, target):
 can_cancel_warning = return_boolean(allow_cancel_warning)
 
 
+@authenticated_only
 def allow_delete_warning(user, target):
     if user.is_anonymous() or not user.acl['can_delete_warnings']:
         raise PermissionDenied(_("You can't delete warnings."))

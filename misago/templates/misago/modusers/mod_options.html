@@ -1,7 +1,7 @@
 {% load i18n %}
 
-{% if profile.acl_.can_moderate %}
-<div class="btn-group">
+{% if user.is_authenticated and profile.acl_.can_moderate %}
+<div class="btn-group pull-left">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
     {% trans "Moderation" %} <span class="glyphicon glyphicon-chevron-down"></span>
   </button>

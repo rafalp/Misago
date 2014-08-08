@@ -1,0 +1,60 @@
+//
+// Users Lists
+// --------------------------------------------------
+
+
+// Fancy Web 9000.0 users cards list
+//
+//==
+.users-cards {
+  margin-bottom: @line-height-computed * -1;
+
+  .row {
+    margin-bottom: @line-height-computed;
+
+    .user-card {
+      background: @user-card-bg;
+      border-radius: @border-radius-large;
+      .box-shadow(@user-card-shadow 0px 0px 0px 2px);
+      display: block;
+      overflow: hidden;
+      padding: 3px;
+      position: relative;
+
+      color: @text-color;
+
+      img {
+        border-radius: @border-radius-base;
+        width: 100%;
+      }
+
+      .card-footer {
+        background: fadeOut(@user-card-bg, 15%);
+        position: absolute;
+        bottom: 0px;
+        padding: @padding-base-vertical @padding-base-horizontal;
+        width: 100%;
+
+        small {
+          display: block;
+          margin-top: @line-height-computed / -3;
+          margin-bottom: @line-height-computed / 3;
+
+          color: @text-color;
+          font-size: @font-size-base;
+        }
+      }
+    }
+  }
+
+  a.user-card {
+    &:hover {
+      .box-shadow(@user-card-hover-shadow 0px 0px 0px 2px);
+
+    }
+
+    &:active {
+      .box-shadow(@user-card-active-shadow 0px 0px 0px 2px);
+    }
+  }
+}

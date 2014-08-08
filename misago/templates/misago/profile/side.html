@@ -10,31 +10,15 @@
   {% endif %}
 </div>
 
-<h1 class="user-name">
-  {{ profile.username }}
-  {% if profile.full_title %}
-  <small class="user-title">{{ profile.full_title }}</small>
-  {% endif %}
-</h1>
-
-<div class="user-details">
-  <ul class="list-unstyled">
-    <li class="user-active">
-      {% include "misago/profile/state.html" %}
-    </li>
-    <li class="user-joined-on">
-      <span class="tooltip-top" title="{% trans "Joined on" %}">
-        <span class="fa fa-clock-o fa-fw"></span>
-        {{ profile.joined_on|date }}
-      </span>
-    </li>
-    {% if show_email %}
-    <li class="user-email">
-      <a href="mailto:{{ profile.email }}" class="tooltip-top"title="{% trans "E-mail address" %}">
-        <span class="fa fa-envelope-o fa-fw"></span>
-        {{ profile.email }}
-      </a>
-    </li>
-    {% endif %}
-  </ul>
-</div>
+<ul class="nav nav-side large">
+  {% for page in pages %}
+  <li{% if page.is_active %} class="active"{% endif %}>
+    <a href="{% url page.link user_slug=profile.slug user_id=profile.pk %}">
+      {{ page.name }}
+      {% if page.badge != None %}
+      <span class="badge">{{ page.badge }}</span>
+      {% endif %}
+    </a>
+  </li>
+  {% endfor %}
+</ul>

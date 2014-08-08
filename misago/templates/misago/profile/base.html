@@ -8,44 +8,31 @@
 
 
 {% block content %}
-<div class="page-header user-profile-header">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-9 col-md-offset-3">
+<div class="user-profile {% if profile.rank.css_class %}profile-{{ profile.rank.css_class }}{% endif %}">
+  <div class="page-header profile-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-9 col-md-offset-3">
 
-        <ul class="nav nav-tabs">
-          {% for page in pages %}
-          <li{% if page.is_active %} class="active"{% endif %}>
-            <a href="{% url page.link user_slug=profile.slug user_id=profile.pk %}">
-              {{ page.name }}
-              {% if page.badge != None %}
-              <span class="label label-default">{{ page.badge }}</span>
-              {% endif %}
-            </a>
-          </li>
-          {% endfor %}
-        </ul>
+          {% include "misago/profile/header.html" %}
 
-        {% if user.is_authenticated %}
-        <div class="page-actions middle-fix">
-          {% include "misago/modusers/mod_options.html" %}
         </div>
-        {% endif %}
-
       </div>
     </div>
   </div>
-</div>
 
-<div class="container user-profile {% if profile.rank.css_class %}profile-{{ profile.rank.css_class }}{% endif %}">
-  <div class="row">
-    <div class="col-md-3 profile-side">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3 profile-side">
 
-      {% include "misago/profile/side.html" %}
+        {% include "misago/profile/side.html" %}
 
-    </div>
-    <div class="col-md-9">
-      {% block page %}{% endblock page %}
+      </div>
+      <div class="col-md-9">
+
+        {% block page %}{% endblock page %}
+
+      </div>
     </div>
   </div>
 </div>
@@ -53,4 +40,23 @@
 
 {% block javascripts %}
 {% include "misago/modusers/mod_js.html" %}
+{% if profile.acl_.can_have_attitude %}
+<script type="text/javascript">
+  $(function() {
+    $('.dynamic-button').submit(function() {
+      var $form = $(this);
+      var $button = $form.find('button');
+      $.post($form.attr('action'), $form.serialize(), function(data) {
+        $.misago_alerts().success(data.message);
+        if (data.is_following) {
+          $button.addClass('active');
+        } else {
+          $button.removeClass('active');
+        }
+      });
+      return false;
+    });
+  });
+</script>
+{% endif %}
 {% endblock javascripts %}

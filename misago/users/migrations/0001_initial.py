@@ -134,6 +134,18 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to_field='id', blank=True, to='misago_users.Rank', null=True),
             preserve_default=True,
         ),
+        migrations.AddField(
+            model_name='user',
+            name='follows',
+            field=models.ManyToManyField(to=settings.AUTH_USER_MODEL),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='user',
+            name='blocks',
+            field=models.ManyToManyField(to=settings.AUTH_USER_MODEL),
+            preserve_default=True,
+        ),
         migrations.CreateModel(
             name='Ban',
             fields=[

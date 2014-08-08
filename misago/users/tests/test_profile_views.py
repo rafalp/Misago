@@ -39,6 +39,50 @@ class UserProfileViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('started no threads', response.content)
 
+    def test_user_followers(self):
+        """user profile followers list has no showstoppers"""
+        User = get_user_model()
+
+        response = self.client.get(reverse('misago:user_followers',
+                                           kwargs=self.link_kwargs))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('No users are following you', response.content)
+
+        followers = []
+        for i in xrange(10):
+            user_data = ("Follower%s" % i, "foll%s@test.com" % i, "Pass.123")
+            followers.append(User.objects.create_user(*user_data))
+            self.test_admin.followed_by.add(followers[-1])
+
+        response = self.client.get(reverse('misago:user_followers',
+                                           kwargs=self.link_kwargs))
+        self.assertEqual(response.status_code, 200)
+        for i in xrange(10):
+            self.assertIn("Follower%s" % i, response.content)
+
+    def test_user_follows(self):
+        """user profile follows list has no showstoppers"""
+        User = get_user_model()
+
+        response = self.client.get(reverse('misago:user_follows',
+                                           kwargs=self.link_kwargs))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Your are not following any users', response.content)
+
+        followers = []
+        for i in xrange(10):
+            user_data = ("Follower%s" % i, "foll%s@test.com" % i, "Pass.123")
+            followers.append(User.objects.create_user(*user_data))
+            followers[-1].followed_by.add(self.test_admin)
+
+        response = self.client.get(reverse('misago:user_follows',
+                                           kwargs=self.link_kwargs))
+        self.assertEqual(response.status_code, 200)
+        for i in xrange(10):
+            self.assertIn("Follower%s" % i, response.content)
+
     def test_user_name_history_list(self):
         """user name changes history list has no showstoppers"""
         response = self.client.get(reverse('misago:user_name_history',

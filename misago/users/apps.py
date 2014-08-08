@@ -44,6 +44,10 @@ class MisagoUsersConfig(AppConfig):
             return profile.posts
         def threads_badge(request, profile):
             return profile.threads
+        def followers_badge(request, profile):
+            return profile.followers
+        def following_badge(request, profile):
+            return profile.following
         def can_see_names_history(request, profile):
             if request.user.is_authenticated():
                 is_account_owner = profile.pk == request.user.pk
@@ -75,6 +79,12 @@ class MisagoUsersConfig(AppConfig):
         user_profile.add_page(link='misago:user_threads',
                               name=_("Threads"),
                               badge=threads_badge)
+        user_profile.add_page(link='misago:user_followers',
+                              name=_("Followers"),
+                              badge=followers_badge)
+        user_profile.add_page(link='misago:user_follows',
+                              name=_("Follows"),
+                              badge=following_badge)
         user_profile.add_page(link='misago:user_name_history',
                               name=_("Name history"),
                               visible_if=can_see_names_history)
