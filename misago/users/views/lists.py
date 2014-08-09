@@ -1,3 +1,5 @@
+import warnings
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
@@ -60,6 +62,9 @@ def list_view(request, template, queryset, page, context=None):
 
 @allow_see_list()
 def active_posters(request, page=0):
+    warnings.warn("Not implemented yet! See #404 for details.",
+                  FutureWarning)
+
     tracked_period = settings.MISAGO_RANKING_LENGTH
     User = get_user_model()
     queryset = User.objects.all()
