@@ -27,7 +27,7 @@ def fake_post_data(target, data_dict):
 
 def override_acl(user, new_acl):
     """overrides user permissions with specified ones"""
-    test_role = Role(name='Fake')
+    test_role = Role(name='Fake %s' % user.pk)
     test_role.permissions = new_acl
     test_role.save()
 
@@ -35,8 +35,11 @@ def override_acl(user, new_acl):
 
     user.roles.clear()
     user.roles.add(test_role)
-    user.acl_key = md5(unicode(time())).hexdigest()[:8]
+    user.acl_key = md5(test_role.name).hexdigest()[:12]
     user.save()
+
+    if hasattr(user, '_acl_cache'):
+        del user._acl_cache
 
     threadstore.clear()
     cache.clear()
