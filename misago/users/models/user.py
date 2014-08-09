@@ -190,8 +190,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     warning_level = models.PositiveIntegerField(default=0)
     warning_level_update_on = models.DateTimeField(null=True, blank=True)
 
-    following = models.PositiveIntegerField(default=0)
     followers = models.PositiveIntegerField(default=0)
+    following = models.PositiveIntegerField(default=0)
 
     follows = models.ManyToManyField(
         'self', related_name='followed_by', symmetrical=False)
