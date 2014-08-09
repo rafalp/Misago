@@ -91,3 +91,17 @@ Takes form field as its first argument and renders field complete with label, he
 ------------------
 
 Takes form field as its only argument and renders it's input.
+
+
+misago_pagination
+=================
+
+Shortcut for rendering paginators using template. Accepts following arguments:
+
+* **page** - paginator's page object
+* **template** - template to use to render paginator
+* **link_name** - link name to use for pages
+
+Also accepts kwargs which will be passed to template context as they were given to tag.
+
+Paginator template gets ``paginator``, ``page`` and ``link_name`` values to use in rendering.
