@@ -10,9 +10,6 @@
         <img src="{{ card|avatar:400 }}" alt="{% trans "Avatar" %}">
         <div class="card-footer">
           <h4 class="user-name">{{ card.username }}</h4>
-          {% if card.full_title %}
-          <small class="user-title">{{ card.full_title }}</small>
-          {% endif %}
         </div>
       </a>
 
