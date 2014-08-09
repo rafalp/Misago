@@ -2,6 +2,13 @@
 {% load humanize i18n misago_avatars misago_pagination %}
 
 
+{% block meta-description %}{% blocktrans trimmed with user=profile.username followers=profile.followers|intcomma count counter=profile.followers %}
+{{ user }} is followed by {{ followers }} user.
+{% plural %}
+{{ user }} is followed by {{ followers }} users.
+{% endblocktrans %}{% endblock meta-description %}
+
+
 {% block page %}
 {% if followers.object_list %}
   <p class="lead">

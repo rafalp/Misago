@@ -2,12 +2,12 @@
 {% load humanize i18n %}
 
 
-{% block meta_description %}{% blocktrans trimmed with rank=rank.name users=users.paginator.count|intcomma count counter=users.paginator.count %}
+{% block meta-description %}{% blocktrans trimmed with rank=rank.name users=users.paginator.count|intcomma count counter=users.paginator.count %}
 There is {{ users }} user with {{ rank }} rank.
 {% plural %}
 There are {{ users }} users with {{ rank }} rank.
 {% endblocktrans %}{% if rank.description %}
-{{ rank.description|escape|urlize|linebreaks }}{% endif %}{% endblock %}
+{{ rank.description|escape|urlize|linebreaks }}{% endif %}{% endblock meta-description %}
 
 
 {% block users-list %}

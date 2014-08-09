@@ -2,9 +2,12 @@
 {% load i18n %}
 
 
-{% block title %}
-{{ profile.username }}: {{ active_page.name }} {% if page_number > 1 %}({{ number }}) {% endif %}| {{ block.super }}
-{% endblock title %}
+{% block title %}{{ profile.username }}: {{ active_page.name }} {% if page_number > 1 %}({% blocktrans with page=page_number %}Page {{ number }}{% endblocktrans %}) {% endif %}| {{ block.super }}{% endblock title %}
+
+
+{% block meta-description %}{% blocktrans trimmed with user=profile.username joined_on=profile.joined_on|date %}
+{{ user }} is member since {{ joined_on }}.
+{% endblocktrans %}{% endblock meta-description %}
 
 
 {% block content %}

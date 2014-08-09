@@ -2,6 +2,13 @@
 {% load humanize i18n misago_avatars misago_capture misago_pagination %}
 
 
+{% block meta-description %}{% blocktrans trimmed with user=profile.username changes=name_changes.paginator.count|intcomma joined_on=profile.joined_on|date count counter=name_changes.paginator.count %}
+{{ user }} username was changed {{ changes }} time since {{ joined_on }}.
+{% plural %}
+{{ user }} username was changed {{ changes }} times since {{ joined_on }}.
+{% endblocktrans %}{% endblock meta-description %}
+
+
 {% block page %}
 {% if name_changes.object_list %}
   <p class="lead">
@@ -13,9 +20,9 @@
       {% endblocktrans %}
     {% else %}
       {% blocktrans trimmed with user=profile.username changes=name_changes.paginator.count|intcomma count counter=name_changes.paginator.count %}
-      {{ user }} name was changed {{ changes }} time.
+      {{ user }} username was changed {{ changes }} time.
       {% plural %}
-      {{ user }} name was changed {{ changes }} times.
+      {{ user }} username was changed {{ changes }} times.
       {% endblocktrans %}
     {% endif %}
   </p>

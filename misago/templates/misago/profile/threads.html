@@ -1,5 +1,12 @@
 {% extends "misago/profile/base.html" %}
-{% load i18n %}
+{% load humanize i18n %}
+
+
+{% block meta-description %}{% blocktrans trimmed with user=profile.username threads=profile.threads|intcomma joined_on=profile.joined_on|date count counter=profile.threads %}
+{{ user }} has started {{ threads }} thread since {{ joined_on }}.
+{% plural %}
+{{ user }} has started {{ threads }} threads since {{ joined_on }}.
+{% endblocktrans %}{% endblock meta-description %}
 
 
 {% block page %}

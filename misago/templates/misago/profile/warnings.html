@@ -1,5 +1,12 @@
 {% extends "misago/profile/base.html" %}
-{% load i18n misago_avatars misago_capture misago_pagination %}
+{% load humanize i18n misago_avatars misago_capture misago_pagination %}
+
+
+{% block meta-description %}{% blocktrans trimmed with user=profile.username warnings=warnings.paginator.count|intcomma joined_on=profile.joined_on|date count counter=warnings.paginator.count %}
+{{ user }} was warned {{ warnings }} time since {{ joined_on }}.
+{% plural %}
+{{ user }} was warned {{ warnings }} times since {{ joined_on }}.
+{% endblocktrans %}{% endblock meta-description %}
 
 
 {% block page %}
