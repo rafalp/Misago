@@ -1,9 +1,24 @@
 {% extends "misago/profile/base.html" %}
-{% load i18n misago_avatars misago_capture misago_pagination %}
+{% load humanize i18n misago_avatars misago_capture misago_pagination %}
 
 
 {% block page %}
 {% if name_changes.object_list %}
+  <p class="lead">
+    {% if is_authenticated_user %}
+      {% blocktrans trimmed with changes=name_changes.paginator.count|intcomma count counter=name_changes.paginator.count %}
+      Your username was changed {{ changes }} time.
+      {% plural %}
+      Your username was changed {{ changes }} times.
+      {% endblocktrans %}
+    {% else %}
+      {% blocktrans trimmed with user=profile.username changes=name_changes.paginator.count|intcomma count counter=name_changes.paginator.count %}
+      {{ user }} name was changed {{ changes }} time.
+      {% plural %}
+      {{ user }} name was changed {{ changes }} times.
+      {% endblocktrans %}
+    {% endif %}
+  </p>
   <div class="username-history">
     {% for change in name_changes.object_list %}
     {% capture trimmed as old_username %}

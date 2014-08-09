@@ -100,7 +100,7 @@ def threads(request, profile, page=0):
 @profile_view
 def followers(request, profile, page=0):
     followers_qs = profile.followed_by.order_by('slug')
-    followers = paginate(followers_qs, page, 12, 2)
+    followers = paginate(followers_qs, page, 6 * 4, 6)
     items_left = followers.paginator.count - followers.end_index()
 
     if followers.paginator.count != profile.followers:
@@ -117,7 +117,7 @@ def followers(request, profile, page=0):
 @profile_view
 def follows(request, profile, page=0):
     followers_qs = profile.follows.order_by('slug')
-    followers = paginate(followers_qs, page, 12, 2)
+    followers = paginate(followers_qs, page, 6 * 4, 6)
     items_left = followers.paginator.count - followers.end_index()
 
     if followers.paginator.count != profile.following:

@@ -35,6 +35,10 @@
         padding: @padding-base-vertical @padding-base-horizontal;
         width: 100%;
 
+        h4, small {
+          word-wrap: break-word;
+        }
+
         small {
           display: block;
           margin-top: @line-height-computed / -3;
@@ -42,6 +46,23 @@
 
           color: @text-color;
           font-size: @font-size-base;
+        }
+      }
+    }
+
+    .col-md-2, .col-md-1 {
+      .user-card {
+        .card-footer {
+          background: fadeOut(@user-card-bg, 7%);
+          padding: @padding-xs-vertical @padding-small-horizontal;
+
+          h4 {
+            font-size: @font-size-base;
+          }
+
+          small {
+            font-size: @font-size-small;
+          }
         }
       }
     }

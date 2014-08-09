@@ -1,9 +1,24 @@
 {% extends "misago/profile/base.html" %}
-{% load i18n misago_avatars misago_pagination %}
+{% load humanize i18n misago_avatars misago_pagination %}
 
 
 {% block page %}
 {% if followers.object_list %}
+  <p class="lead">
+    {% if is_authenticated_user %}
+      {% blocktrans trimmed with follows=profile.following|intcomma count counter=profile.following %}
+      You are followig {{ follows }} user.
+      {% plural %}
+      You are followig {{ follows }} users.
+      {% endblocktrans %}
+    {% else %}
+      {% blocktrans trimmed with user=profile.username follows=profile.following|intcomma count counter=profile.following %}
+      {{ user }} is followig {{ follows }} user.
+      {% plural %}
+      {{ user }} is followig {{ follows }} users.
+      {% endblocktrans %}
+    {% endif %}
+  </p>
   {% include "misago/users_cards.html" with cards=followers.object_list %}
   {% pagination followers "misago/profile/pagination.html" 'misago:user_follows' user_slug=profile.slug user_id=profile.pk %}
 {% else %}
