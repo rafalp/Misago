@@ -28,6 +28,8 @@ def create_default_roles(apps, schema_editor):
 
             # profiles perms
             'misago.users.permissions.profiles': {
+                'can_browse_users_list': 1,
+                'can_see_users_online_list': 0,
                 'can_search_users': 1,
                 'can_follow_users': 1,
                 'can_be_blocked': 1,
@@ -59,6 +61,8 @@ def create_default_roles(apps, schema_editor):
 
             # profiles perms
             'misago.users.permissions.profiles': {
+                'can_browse_users_list': 1,
+                'can_see_users_online_list': 0,
                 'can_search_users': 1,
                 'can_see_users_name_history': 0,
                 'can_see_users_emails': 0,
@@ -88,6 +92,8 @@ def create_default_roles(apps, schema_editor):
 
             # profiles perms
             'misago.users.permissions.profiles': {
+                'can_browse_users_list': 1,
+                'can_see_users_online_list': 1,
                 'can_search_users': 1,
                 'can_be_blocked': 0,
                 'can_see_users_name_history': 1,

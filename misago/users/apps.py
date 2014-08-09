@@ -35,10 +35,13 @@ class MisagoUsersConfig(AppConfig):
                         icon='fa fa-ticket')
 
     def register_default_users_list_pages(self):
+        def can_see_online_list(request):
+            return request.user.acl['can_see_users_online_list']
         users_list.add_page(link='misago:users_active_posters',
                             name=_('Active posters'))
         users_list.add_page(link='misago:users_online',
-                            name=_('Online'))
+                            name=_('Online'),
+                            visible_if=can_see_online_list)
 
     def register_default_user_profile_pages(self):
         def posts_badge(request, profile):

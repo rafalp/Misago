@@ -7,12 +7,9 @@ from misago.core.shortcuts import get_object_or_404, paginate
 
 from misago.users.models import Rank
 from misago.users.online import get_online_queryset
+from misago.users.permissions.profiles import (allow_browse_users_list,
+                                               allow_see_users_online_list)
 from misago.users.sites import users_list
-
-
-def lander(request):
-    default = users_list.get_default_link()
-    return redirect(default)
 
 
 def render(request, template, context):
@@ -38,12 +35,30 @@ def render(request, template, context):
     return django_render(request, template, context)
 
 
+def allow_see_list(permission=None):
+    def permission_decorator(f):
+        def decorator(request, *args, **kwargs):
+            allow_browse_users_list(request.user)
+            if permission:
+                permission(request.user)
+            return f(request, *args, **kwargs)
+        return decorator
+    return permission_decorator
+
+
+@allow_see_list()
+def lander(request):
+    default = users_list.get_default_link()
+    return redirect(default)
+
+
 def list_view(request, template, queryset, page, context=None):
     context = context or {}
     context['users'] = paginate(queryset, page, 6 * 3, 5)
     return render(request, template, context)
 
 
+@allow_see_list()
 def active_posters(request, page=0):
     tracked_period = settings.MISAGO_RANKING_LENGTH
     User = get_user_model()
@@ -55,6 +70,7 @@ def active_posters(request, page=0):
     })
 
 
+@allow_see_list(allow_see_users_online_list)
 def online(request, page=0):
     queryset = get_online_queryset(request.user).order_by('user__slug')
 
@@ -62,6 +78,7 @@ def online(request, page=0):
     return list_view(request, template, queryset, page)
 
 
+@allow_see_list()
 def rank(request, rank_slug, page=0):
     rank = get_object_or_404(Rank.objects.filter(is_tab=True), slug=rank_slug)
     queryset = rank.user_set.order_by('slug')

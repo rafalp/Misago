@@ -29,11 +29,13 @@
             <span class="fa fa-search fa-fw"></span>
           </a>
         </li>
+        {% if user.acl.can_browse_users_list %}
         <li>
           <a href="{% url 'misago:users' %}" class="tooltip-bottom" title="{% trans "Users" %}">
             <span class="fa fa-users fa-fw"></span>
           </a>
         </li>
+        {% endif %}
       </ul>
 
     </div><!-- /.navbar-collapse -->
