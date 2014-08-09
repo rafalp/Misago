@@ -2,9 +2,6 @@
 {% load humanize i18n %}
 
 
-{% block title %}{{ active_page.name }}{% endblock title %}
-
-
 {% block meta_description %}{% blocktrans trimmed with rank=rank.name users=users.paginator.count|intcomma count counter=users.paginator.count %}
 There is {{ users }} user with {{ rank }} rank.
 {% plural %}

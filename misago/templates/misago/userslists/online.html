@@ -2,9 +2,6 @@
 {% load humanize i18n misago_avatars misago_batch %}
 
 
-{% block title %}{% trans "Users online" %}{% endblock title %}
-
-
 {% block meta_description %}{% trans "List of signed in users currently browsing forums." %}{% endblock %}
 
 
@@ -37,5 +34,5 @@
 
 
 {% block empty-list %}
-{% trans "No registered users are signed in or you can't see them." %}
+{% trans "No registered users are signed in at the moment or you can't see them." %}
 {% endblock empty-list %}

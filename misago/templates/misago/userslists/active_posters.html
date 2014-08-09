@@ -2,9 +2,6 @@
 {% load humanize i18n %}
 
 
-{% block title %}{% trans "Active posters" %}{% endblock title %}
-
-
 {% block meta_description %}{% blocktrans trimmed with days=tracked_period %}
 List of users that have posted new messages during last {{ days }} days.
 {% endblocktrans %}{% endblock %}
