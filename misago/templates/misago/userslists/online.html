@@ -1,0 +1,41 @@
+{% extends "misago/userslists/base.html" %}
+{% load humanize i18n misago_avatars misago_batch %}
+
+
+{% block title %}{% trans "Users online" %}{% endblock title %}
+
+
+{% block meta_description %}{% trans "List of signed in users currently browsing forums." %}{% endblock %}
+
+
+{% block users-list %}
+<p class="lead">
+  {% blocktrans trimmed with online=users.paginator.count|intcomma count counter=users.paginator.count %}
+  {{ online }} user is currently online.
+  {% plural %}
+  {{ online }} users are currently online.
+  {% endblocktrans %}
+</p>
+
+{{ block.super }}
+{% endblock users-list %}
+
+
+{% block user-card %}
+<a href="{% url USER_PROFILE_URL user_slug=card.user.slug user_id=card.user.id %}" class="user-card {% if card.user.rank.css_class %}card-{{ card.user.rank.css_class }}{% endif %}">
+  <img src="{{ card.user|avatar:400 }}" alt="{% trans "Avatar" %}">
+  <div class="card-footer">
+    <h4 class="user-name">{{ card.user.username }}</h4>
+    <small>
+      <abbr class="tooltip-top dynamic time-ago" title="{% blocktrans with last_click=card.last_click|date:"TIME_FORMAT" %}Last click on {{ last_click }}{% endblocktrans %}" data-timestamp="{{ card.last_click|date:"c" }}">
+        {{ card.last_click|date }}
+      </abbr>
+    </small>
+  </div>
+</a>
+{% endblock user-card %}
+
+
+{% block empty-list %}
+{% trans "No registered users are signed in or you can't see them." %}
+{% endblock empty-list %}

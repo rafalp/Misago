@@ -9,6 +9,17 @@ from misago.users.models import Online
 ACTIVITY_CUTOFF = timedelta(minutes=15)
 
 
+def get_online_queryset(viewer):
+    min_last_click = timezone.now() - ACTIVITY_CUTOFF
+    queryset = Online.objects.filter(last_click__gte=min_last_click)
+
+    if not viewer.acl['can_see_hidden_users']:
+        queryset = queryset.filter(user__is_hiding_presence=False)
+
+    return queryset.select_related('user', 'user__rank')
+
+
+
 def state_for_acl(user, acl):
     user_state = {
         'is_banned': False,

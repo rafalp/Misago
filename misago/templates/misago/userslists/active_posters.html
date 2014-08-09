@@ -1,0 +1,42 @@
+{% extends "misago/userslists/base.html" %}
+{% load humanize i18n %}
+
+
+{% block title %}{% trans "Active posters" %}{% endblock title %}
+
+
+{% block meta_description %}{% blocktrans trimmed with days=tracked_period %}
+List of users that have posted new messages during last {{ days }} days.
+{% endblocktrans %}{% endblock %}
+
+
+{% block users-list %}
+<p class="lead">
+  {% blocktrans trimmed with posters=users.paginator.count|intcomma days=tracked_period count counter=users.paginator.count %}
+  {{ posters }} user has posted new messages posting during last {{ days }} days.
+  {% plural %}
+  {{ posters }} users posted new messages during last {{ days }} days.
+  {% endblocktrans %}
+</p>
+
+{{ block.super }}
+{% endblock users-list %}
+
+
+{% block user-card-footer %}
+{{ block.super }}
+<small>
+  {% blocktrans trimmed with posts=user.followers|intcomma count counter=user.followers %}
+  {{ posts }} post
+  {% plural %}
+  {{ posts }} posts
+  {% endblocktrans %}
+</small>
+{% endblock user-card-footer %}
+
+
+{% block empty-list %}
+{% blocktrans trimmed with days=tracked_period %}
+No users have posted any new messages during last {{ days }} days.
+{% endblocktrans %}
+{% endblock empty-list %}

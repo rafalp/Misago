@@ -17,11 +17,11 @@
   {% endif %}
   {% if page.has_next %}
     <li class="pull-right">
-      <a href="{% url link_name user_slug=user_slug user_id=user_id page=page.paginator.num_pages %}" class="tooltip-top" title="{% trans "Go to last page" %}">
+      <a href="{% url link_name user_slug=user_slug user_id=user_id page=paginator.num_pages %}" class="tooltip-top" title="{% trans "Go to last page" %}">
         {% trans "Last" %}
       </a>
     </li>
-    {% if page.next_page_number < page.paginator.num_pages %}
+    {% if page.next_page_number < paginator.num_pages %}
     <li class="pull-right">
       <a href="{% url link_name user_slug=user_slug user_id=user_id page=page.next_page_number %}" class="tooltip-top" title="{% trans "Go to next page" %}">
         {% trans "Next" %}

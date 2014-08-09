@@ -240,6 +240,13 @@ MISAGO_AVATARS_SIZES = (400, 200, 150, 100, 64, 50, 30, 20)
 MISAGO_AVATAR_SERVER_PATH = '/user-avatar'
 
 
+# Controls amount of data Misago has to process to build users rankings
+# Used for active posters and most liked users lists
+# The more active the forum, the shorter this period should be
+# Number of days
+MISAGO_RANKING_LENGTH = 30
+
+
 # X-Sendfile
 # X-Sendfile is feature provided by Http servers that allows web apps to
 # delegate serving files over to the better performing server instead of

@@ -22,6 +22,20 @@
         <a href="{% url 'misago:register' %}" class="btn btn-register navbar-btn">{% trans "Register" %}</a>
       </div>
       {% endif %}
+
+      <ul class="nav navbar-nav navbar-nav-primary navbar-right">
+        <li>
+          <a href="#" class="tooltip-bottom" title="{% trans "Advanced search" %}">
+            <span class="fa fa-search fa-fw"></span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'misago:users' %}" class="tooltip-bottom" title="{% trans "Users" %}">
+            <span class="fa fa-users fa-fw"></span>
+          </a>
+        </li>
+      </ul>
+
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container -->
 </nav>

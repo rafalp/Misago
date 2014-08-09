@@ -1,0 +1,76 @@
+{% extends "misago/userslists/base.html" %}
+{% load humanize i18n %}
+
+
+{% block title %}{{ active_page.name }}{% endblock title %}
+
+
+{% block meta_description %}{% blocktrans trimmed with rank=rank.name users=users.paginator.count|intcomma count counter=users.paginator.count %}
+There is {{ users }} user with {{ rank }} rank.
+{% plural %}
+There are {{ users }} users with {{ rank }} rank.
+{% endblocktrans %}{% if rank.description %}
+{{ rank.description|escape|urlize|linebreaks }}{% endif %}{% endblock %}
+
+
+{% block users-list %}
+{% if rank.description %}
+<p class="lead">
+  {{ rank.description|escape|urlize|linebreaks }}
+</p>
+{% endif %}
+
+<p class="lead">
+{% blocktrans trimmed with rank=rank.name users=users.paginator.count|intcomma count counter=users.paginator.count %}
+  There is {{ users }} user with {{ rank }} rank.
+{% plural %}
+  There are {{ users }} users with {{ rank }} rank.
+{% endblocktrans %}
+</p>
+
+{{ block.super }}
+{% endblock users-list %}
+
+
+{% block list-pagination %}
+{% if users.paginator.num_pages > 1 %}
+<ul class="pager pager-wide">
+  {% if users.has_previous %}
+    <li class="pull-left">
+      <a href="{% url 'misago:users_rank' rank_slug=rank.slug %}" class="tooltip-top" title="{% trans "Go to first page" %}">
+        {% trans "Start" %}
+      </a>
+    </li>
+    {% if users.number > 2 %}
+    <li class="pull-left">
+      <a href="{% url 'misago:users_rank' rank_slug=rank.slug page=users.previous_page_number %}" class="tooltip-top" title="{% trans "Go to previous page" %}">
+        {% trans "Previous" %}
+      </a>
+    </li>
+    {% endif %}
+  {% endif %}
+  {% if users.has_next %}
+    <li class="pull-right">
+      <a href="{% url 'misago:users_rank' rank_slug=rank.slug page=users.paginator.num_pages %}" class="tooltip-top" title="{% trans "Go to last page" %}">
+        {% trans "Last" %}
+      </a>
+    </li>
+    {% if users.next_page_number < users.paginator.num_pages %}
+    <li class="pull-right">
+      <a href="{% url 'misago:users_rank' rank_slug=rank.slug page=users.next_page_number %}" class="tooltip-top" title="{% trans "Go to next page" %}">
+        {% trans "Next" %}
+      </a>
+    </li>
+    {% endif %}
+  {% endif %}
+</ul>
+{% endif %}
+{% endblock list-pagination %}
+
+
+{% block user-card-footer %}
+{{ block.super }}
+{% if card.title %}
+<small>{{ card.title }}</small>
+{% endif %}
+{% endblock user-card-footer %}

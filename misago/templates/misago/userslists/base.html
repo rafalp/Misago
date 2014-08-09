@@ -1,0 +1,70 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_avatars misago_batch misago_pagination %}
+
+
+{% block title %}{{ active_page.name }}{% if users.page > 1 %} ({% blocktrans with page=users.page %}page {{ page }}{% endblocktrans %}){% endif %} | {{ block.super }}{% endblock title %}
+
+
+{% block content %}
+<div class="page-header append-tabs">
+  <div class="container">
+
+    <h1>
+      <span class="fa fa-users"></span>
+      {% trans "Users" %}
+    </h1>
+
+  </div>
+</div>
+<div class="page-tabs solo-right">
+  <div class="container">
+    <ul class="nav nav-tabs">
+      {% for page in pages %}
+      <li {% if page.is_active %}class="active"{% endif %}>
+        <a href="{{ page.reversed_link }}">
+          {{ page.name}}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<div class="container">
+  {% if users.object_list %}
+    {% block users-list %}
+    <div class="users-cards">
+      {% for row in users.object_list|batch:6 %}
+      <div class="row">
+        {% for card in row %}
+        <div class="col-md-2">
+
+          {% block user-card %}
+          <a href="{% url USER_PROFILE_URL user_slug=card.slug user_id=card.id %}" class="user-card {% if card.rank.css_class %}card-{{ card.rank.css_class }}{% endif %}">
+            <img src="{{ card|avatar:400 }}" alt="{% trans "Avatar" %}">
+            <div class="card-footer">
+              {% block user-card-footer %}
+              <h4 class="user-name">{{ card.username }}</h4>
+              {% endblock user-card-footer %}
+            </div>
+          </a>
+          {% endblock user-card %}
+
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endblock users-list %}
+
+    {% block list-pagination %}
+      {% pagination users "misago/userslists/pagination.html" active_page.link %}
+    {% endblock list-pagination %}
+  {% else %}
+    <p class="lead">
+      {% block empty-list %}
+      {% endblock empty-list %}
+    </p>
+  {% endif %}
+</div>
+{% endblock content%}

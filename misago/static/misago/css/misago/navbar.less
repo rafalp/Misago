@@ -10,9 +10,10 @@
   margin-bottom: 0px;
 
   .navbar-brand {
-    .navbar-vertical-align(@navbar-height - (@navbar-brand-size - @font-size-large) / 2 + 1);
+    .navbar-vertical-align(@navbar-height - (@navbar-brand-size - @font-size-large) / 2 + 2);
+    margin-top: -1px;
     position: relative;
-    bottom: 1px;
+    top: 3px;
 
     font-size: @navbar-brand-size;
   }
@@ -41,7 +42,7 @@
 /* Big displays */
 @media (min-width: @screen-sm-min) {
   .navbar-nav-primary {
-    .navbar-vertical-align(@navbar-icon-size * 1.2);
+    .navbar-vertical-align(@navbar-icon-size * 1.7 - 2px);
     margin-bottom: 0px;
     padding-right: @navbar-padding-horizontal;
 
@@ -52,23 +53,28 @@
 
       &>a {
         /* Make button blocky */
+        border: 1px solid @navbar-icon-link-border;
         border-radius: @border-radius-base;
         margin: 0px;
         padding: 0px;
         padding-top: 6px;
-        height: @navbar-icon-size * 1.5;
-        width: @navbar-icon-size * 1.5;
+        height: @navbar-icon-size * 1.7;
+        width: @navbar-icon-size * 1.7;
 
         text-align: center;
-
-        &>.glyphicon, &>.fa{
-          font-size: @navbar-icon-size;
-          text-align: center;
-        }
 
         /* Hide item labels on big displays */
         .item-label {
           display: none;
+        }
+
+        .glyphicon, .fa {
+          font-size: @navbar-icon-size;
+
+          &.fa-search {
+            position: relative;
+            bottom: 1px;
+          }
         }
 
         &>.badge {
@@ -86,12 +92,16 @@
 
         &:hover {
           background-color: @navbar-icon-link-hover-bg !important;
+          border-color: @navbar-icon-link-hover-border;
+          transition-duration: 0.3ms;
 
           color: @navbar-icon-link-hover-color !important;
         }
 
         &:active {
           background-color: @navbar-icon-link-active-bg !important;
+          border-color: @navbar-icon-link-active-border;
+          transition-duration: 0.05ms;
 
           color: @navbar-icon-link-active-color !important;
         }

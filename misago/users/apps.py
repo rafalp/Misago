@@ -35,9 +35,10 @@ class MisagoUsersConfig(AppConfig):
                         icon='fa fa-ticket')
 
     def register_default_users_list_pages(self):
-        users_list.add_page(link='misago:index',
-                            name='Todo',
-                            icon='fa fa-check')
+        users_list.add_page(link='misago:users_active_posters',
+                            name=_('Active posters'))
+        users_list.add_page(link='misago:users_online',
+                            name=_('Online'))
 
     def register_default_user_profile_pages(self):
         def posts_badge(request, profile):

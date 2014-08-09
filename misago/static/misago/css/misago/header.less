@@ -13,6 +13,11 @@
   margin-bottom: @line-height-computed;
   padding: @line-height-computed 0px;
 
+  &.append-tabs {
+    border-bottom: 0px;
+    padding-bottom: @line-height-computed / 2;
+  }
+
   &>.container {
     h1 {
       margin: 0px;
@@ -193,12 +198,19 @@
 }
 
 .page-tabs {
-  border-bottom: 2px solid @page-header-border-color;
+  border-bottom: 3px solid @page-header-border-color;
   margin: @line-height-computed * -1 0px @line-height-computed;
   padding: 0px;
 
+  &.solo-right {
+    .nav-tabs {
+      margin-top: @line-height-computed * -1.5;
+      float: right;
+    }
+  }
+
   .nav-tabs {
     margin: 0px;
-    margin-bottom: -2px;
+    margin-bottom: -3px;
   }
 }

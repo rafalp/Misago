@@ -19,7 +19,8 @@ def batch(items, size):
             batch_size = 0
             batch_items = []
 
-    yield batch_items
+    if batch_items:
+        yield batch_items
 
 
 @register.filter
@@ -38,4 +39,4 @@ def batchnonefilled(items, size):
 
     if batch_size:
         batch_items.extend([None] * (size - batch_size))
-    yield batch_items
+        yield batch_items

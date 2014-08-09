@@ -74,25 +74,25 @@
 @navbar-icon-size:                      @navbar-height / 2.5;
 @navbar-icon-link-bg:                   transparent;
 @navbar-icon-link-border:               transparent;
-@navbar-icon-link-color:                #999;
+@navbar-icon-link-color:                @state-default;
 
-@navbar-icon-link-hover-bg:             transparent;
-@navbar-icon-link-hover-border:         transparent;
-@navbar-icon-link-hover-color:          #333;
+@navbar-icon-link-hover-bg:             darken(@navbar-default-border, 2%);
+@navbar-icon-link-hover-border:         darken(@navbar-default-border, 2%);
+@navbar-icon-link-hover-color:          @state-hover;
 
-@navbar-icon-link-active-bg:            lighten(@navbar-default-bg, 5%);
-@navbar-icon-link-active-border:        transparent;
-@navbar-icon-link-active-color:         #333;
+@navbar-icon-link-active-bg:            darken(@navbar-default-border, 2%);
+@navbar-icon-link-active-border:        darken(@navbar-default-border, 2%);
+@navbar-icon-link-active-color:         @state-clicked;
 
 
 // Only User dropdown switch uses those colors
 @navbar-user-name-color:                @gray;
 @navbar-user-name-hover-color:          @navbar-user-name-color;
-@navbar-user-name-active-color:         @navbar-user-name-color;
+@navbar-user-name-active-color:         @state-clicked;
 
-@navbar-user-caret-color:              darken(@navbar-default-bg, 20%);
-@navbar-user-caret-hover-color:        darken(@navbar-default-bg, 40%);
-@navbar-user-caret-active-color:       @text-color;
+@navbar-user-caret-color:              @state-default;
+@navbar-user-caret-hover-color:        @state-hover;
+@navbar-user-caret-active-color:       @state-clicked;
 
 
 // Guest Sign in button
