@@ -32,8 +32,11 @@ class BaseRole(models.Model):
         try:
             return self.permissions_cache
         except AttributeError:
-            self.permissions_cache = serializer.loads(
-                self.pickled_permissions)
+            if self.pickled_permissions:
+                self.permissions_cache = serializer.loads(
+                    self.pickled_permissions)
+            else:
+               self.permissions_cache = {}
         return self.permissions_cache
 
     @permissions.setter

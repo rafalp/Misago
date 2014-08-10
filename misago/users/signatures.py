@@ -6,7 +6,8 @@ def set_user_signature(user, signature):
 
     if signature:
         user.signature_parsed = signature_flavour(signature, user)
-        user.signature_checksum = _make_checksum(user.signature_parsed, user)
+        user.signature_checksum = make_signature_checksum(
+            user.signature_parsed, user)
     else:
         user.signature_parsed = ''
         user.signature_checksum = ''
@@ -14,11 +15,11 @@ def set_user_signature(user, signature):
 
 def is_user_signature_valid(user):
     if user.signature:
-        valid_checksum = _make_checksum(user.signature_parsed, user)
+        valid_checksum = make_signature_checksum(user.signature_parsed, user)
         return user.signature_checksum == valid_checksum
     else:
         return False
 
 
-def make_checksum(parsed_signature, user):
+def make_signature_checksum(parsed_signature, user):
     return checksums.make_checksum(parsed_signature, [user.pk])

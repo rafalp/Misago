@@ -18,7 +18,8 @@ from misago.core.signals import secret_key_changed
 from misago.users.models.rank import Rank
 from misago.users import avatars
 from misago.users.signals import delete_user_content, username_changed
-from misago.users.signatures import is_user_signature_valid, make_checksum
+from misago.users.signatures import (is_user_signature_valid,
+                                     make_signature_checksum)
 from misago.users.utils import hash_email
 
 
@@ -436,6 +437,6 @@ Signal handlers
 def update_signatures_checksums(sender, **kwargs):
     for user in User.objects.iterator():
         if user.signature:
-            signature_checksum = make_checksum(user.signature_parsed, user)
-            user.signature_checksum = signature_checksum
+            new_checksum = make_signature_checksum(user.signature_parsed, user)
+            user.signature_checksum = new_checksum
             user.save(update_fields=['signature_checksum'])
