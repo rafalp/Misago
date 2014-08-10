@@ -19,7 +19,7 @@ class Command(BaseCommand):
         message = 'Adding fake followers to %s users...\n'
         self.stdout.write(message % total_users)
 
-        message = '\n\nSuccessfully added %s fake users'
+        message = '\nSuccessfully added %s fake followers'
 
         total_followers = 0
         processed_count = 0
@@ -39,5 +39,11 @@ class Command(BaseCommand):
 
             processed_count += 1
             show_progress(self, processed_count, total_users)
+
+        self.stdout.write('\nSyncing models...')
+        for user in User.objects.iterator():
+            user.followers = user.followed_by.count()
+            user.following = user.follows.count()
+            user.save(update_fields=['followers', 'following'])
 
         self.stdout.write(message % total_followers)
