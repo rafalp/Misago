@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render as django_render
+from django.utils import timezone
 from django.views.decorators.cache import cache_page
 
 from misago.core.shortcuts import get_object_or_404, paginate
@@ -83,7 +84,9 @@ def online(request, page=0):
     queryset = queryset.select_related('user__rank')
 
     template =  "misago/userslists/online.html"
-    return list_view(request, template, queryset, page)
+    return list_view(request, template, queryset, page, {
+        'data_from': timezone.now()
+    })
 
 
 @allow_see_list()
