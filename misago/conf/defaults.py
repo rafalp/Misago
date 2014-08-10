@@ -240,12 +240,11 @@ MISAGO_AVATARS_SIZES = (400, 200, 150, 100, 64, 50, 30, 20)
 MISAGO_AVATAR_SERVER_PATH = '/user-avatar'
 
 
-# Controls amount of data Misago has to process to build users rankings
+# Controls max age in days of items that Misago has to process to make rankings
 # Used for active posters and most liked users lists
 # If your forum runs out of memory when trying to generate users rankings list
-# or you want those to be more dynamic, lower this
+# or you want those to be more dynamic, give this setting lower value
 # You don't have to be overzelous with this as user rankings are cached for 24h
-# Number of days
 MISAGO_RANKING_LENGTH = 30
 
 
