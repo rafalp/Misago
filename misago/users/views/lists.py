@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render as django_render
+from django.views.decorators.cache import cache_page
 
 from misago.core.shortcuts import get_object_or_404, paginate
 
@@ -61,6 +62,7 @@ def list_view(request, template, queryset, page, context=None):
 
 
 @allow_see_list()
+@cache_page(24 * 3600)
 def active_posters(request, page=0):
     warnings.warn("Not implemented yet! See #404 for details.",
                   FutureWarning)

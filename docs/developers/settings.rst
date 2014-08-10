@@ -219,6 +219,13 @@ MISAGO_MARKUP_EXTENSIONS
 List of python modules extending Misago markup.
 
 
+MISAGO_RANKING_LENGTH
+---------------------
+
+Some lists act as rankings, displaying users in order of certain scoring criteria, like number of posts or likes received.
+This setting controls maximum age in days of items that should count to ranking.
+
+
 MISAGO_SENDFILE_HEADER
 ----------------------
 

@@ -242,7 +242,9 @@ MISAGO_AVATAR_SERVER_PATH = '/user-avatar'
 
 # Controls amount of data Misago has to process to build users rankings
 # Used for active posters and most liked users lists
-# The more active the forum, the shorter this period should be
+# If your forum runs out of memory when trying to generate users rankings list
+# or you want those to be more dynamic, lower this
+# You don't have to be overzelous with this as user rankings are cached for 24h
 # Number of days
 MISAGO_RANKING_LENGTH = 30
 
