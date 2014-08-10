@@ -1,0 +1,25 @@
+{% load i18n misago_avatars %}
+<div class="ranks-online">
+  {% for rank in ranks_online %}
+  <div class="rank-online {% if rank.css_class %}rank-{{ rank.css_class }}{% endif %}">
+    <h3>
+      {% blocktrans trimmed with rank=rank.name %}
+      {{ rank }} online
+      {% endblocktrans %}
+    </h3>
+    <ul class="list-unstyled">
+      {% for user in rank.online %}
+      <li>
+        <a href="{% url USER_PROFILE_URL user_slug=user.slug user_id=user.id %}" class="item-title combined">
+          <img src="{{ user.id|avatar:32 }}" alt="{% trans "Avatar" %}">
+          <span>{{ user.username }}</span>
+          {% if user.title %}
+          <small>{{ user.title }}</small>
+          {% endif %}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endfor %}
+  </div>
+</div>

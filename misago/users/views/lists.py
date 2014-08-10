@@ -10,7 +10,7 @@ from django.views.decorators.cache import cache_page
 from misago.core.shortcuts import get_object_or_404, paginate
 
 from misago.users.models import Rank
-from misago.users.online import get_online_queryset
+from misago.users.online.utils import get_online_queryset
 from misago.users.permissions.profiles import (allow_browse_users_list,
                                                allow_see_users_online_list)
 from misago.users.sites import users_list
@@ -23,7 +23,7 @@ def render(request, template, context):
         page['reversed_link'] = reverse(page['link'])
 
     active_rank = context.get('rank')
-    for rank in Rank.objects.filter(is_tab=True).order_by('name'):
+    for rank in Rank.objects.filter(is_tab=True).order_by('order'):
         context['pages'].append({
             'name': rank.name,
             'reversed_link': reverse('misago:users_rank',

@@ -11,8 +11,8 @@ def create_default_ranks(apps, schema_editor):
     Rank = apps.get_model('misago_users', 'Rank')
 
     team = Rank.objects.create(
-        name=_("Forum Team"),
-        slug=slugify(_("Forum Team")),
+        name=_("Forum team"),
+        slug=slugify(_("Forum team")),
         title=_("Team"),
         css_class='team',
         is_tab=True,

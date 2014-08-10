@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from misago.users.bans import get_request_ip_ban, get_user_ban
 from misago.users.models import AnonymousUser, Online
+from misago.users.online import tracker
 from misago.users.views import avatarserver
 
 
@@ -42,29 +43,18 @@ class OnlineTrackerMiddleware(object):
             try:
                 request._misago_online_tracker = request.user.online_tracker
             except Online.DoesNotExist:
-                online_tracker = Online.objects.create(
-                    user=request.user, current_ip=request._misago_real_ip)
-                request.user.online_tracker = online_tracker
-                request._misago_online_tracker = online_tracker
+                tracker.start_tracking(request, request.user)
         else:
             request._misago_online_tracker = None
 
     def process_response(self, request, response):
         if hasattr(request, '_misago_online_tracker'):
-            tracker = request._misago_online_tracker
+            online_tracker = request._misago_online_tracker
 
-            if tracker:
+            if online_tracker:
                 if request.user.is_anonymous():
-                    # User logged off, update his last visit and blam tracker
-                    user = tracker.user
-                    user.last_login = tracker.last_click
-                    user.last_ip = tracker.current_ip
-                    user.save(update_fields=['last_login', 'last_ip'])
-                    tracker.delete()
+                    tracker.stop_tracking(request, online_tracker)
                 else:
-                    # Bump user's tracker time
-                    tracker.current_ip = request._misago_real_ip
-                    tracker.last_click = timezone.now()
-                    tracker.save(update_fields=['last_click', 'current_ip'])
+                    tracker.update_tracker(request, online_tracker)
 
         return response

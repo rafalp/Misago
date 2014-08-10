@@ -3,12 +3,61 @@
 // --------------------------------------------------
 
 
+.item-title {
+  color: @state-hover;
+
+  &:link, &:hover, &:visited {
+    color: @state-hover;
+  }
+
+  &:active {
+    color: @state-clicked;
+  }
+
+  &.combined {
+    &:hover {
+      text-decoration: none;
+
+      &>span {
+        text-decoration: underline;
+      }
+    }
+
+    &:active {
+      text-decoration: none;
+
+      &>span {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+
 .text-muted {
   strong {
     color: darken(@text-muted, 20%);
+    font-weight: normal;
   }
 
   a:link, a:visited, a:active, a:hover {
     color: @link-muted-color;
+  }
+
+  .item-title {
+    color: darken(@text-muted, 20%);
+    font-weight: bold;
+
+    &:link, &:visited {
+      color: darken(@text-muted, 20%);
+    }
+
+    &:hover {
+      color: @state-hover;
+    }
+
+    &:active {
+      color: @state-clicked;
+    }
   }
 }

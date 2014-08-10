@@ -1,0 +1,59 @@
+//
+// Forum Index
+// --------------------------------------------------
+
+
+// Ranks online list
+//
+//==
+.ranks-online {
+  .rank-online {
+    margin-bottom: @line-height-computed;
+
+    h3 {
+      margin-top: 0px;
+
+      color: @text-muted;
+      font-size: @font-size-large;
+    }
+
+    ul {
+      background-color: @panel-bg;
+      border: 1px solid @panel-default-border;
+      border-radius: @border-radius-base;
+
+      li {
+        a {
+          border-bottom: solid 1px @panel-inner-border;
+          display: block;
+          padding: @padding-small-vertical @padding-small-horizontal;
+
+          font-size: @font-size-large;
+
+          img {
+            border-radius: @border-radius-base;
+            height: 26px;
+            margin-right: @padding-small-vertical * 0.7;
+          }
+
+          span {
+            position: relative;
+            top: 1px;
+          }
+
+          small {
+            float: right;
+            position: relative;
+            top: 3px;
+
+            color: @text-muted;
+          }
+        }
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}

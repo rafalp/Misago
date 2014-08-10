@@ -17,6 +17,19 @@
 {% include "misago/jumbotron_indexonly.html" %}
 
 <div class="container">
-  Hello world, I'm placeholder index template!
+  <div class="row">
+    <div class="col-md-8">
+
+      Hello world, I'm placeholder index template!
+
+    </div>
+    <div class="col-md-4">
+
+      {% if ranks_online %}
+      {% include "misago/ranks_online.html" %}
+      {% endif %}
+
+    </div>
+  </div>
 </div>
 {% endblock content %}

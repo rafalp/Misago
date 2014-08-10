@@ -85,6 +85,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('current_ip', models.GenericIPAddressField()),
                 ('last_click', models.DateTimeField(default=django.utils.timezone.now)),
+                ('is_visible_on_index', models.BooleanField(default=False)),
                 ('user', models.OneToOneField(primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
             ],
             options={

@@ -10,9 +10,9 @@ from misago.core.decorators import require_POST
 from misago.core.shortcuts import get_object_or_404, paginate, validate_slug
 from misago.core.utils import clean_return_path
 
-from misago.users import online
 from misago.users.bans import get_user_ban
 from misago.users.decorators import deny_guests
+from misago.users.online.utils import get_user_state
 from misago.users.permissions.profiles import (allow_follow_user,
                                                allow_block_user)
 from misago.users.sites import user_profile
@@ -82,7 +82,7 @@ def render(request, template, context):
     else:
         context['show_email'] = False
 
-    context['state'] = online.state_for_acl(context['profile'], user_acl)
+    context['state'] = get_user_state(context['profile'], user_acl)
 
     return django_render(request, template, context)
 
