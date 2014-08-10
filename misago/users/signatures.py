@@ -20,5 +20,5 @@ def is_user_signature_valid(user):
         return False
 
 
-def _make_checksum(parsed_signature, user):
+def make_checksum(parsed_signature, user):
     return checksums.make_checksum(parsed_signature, [user.pk])

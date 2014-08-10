@@ -5,6 +5,7 @@ from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
                                         AnonymousUser as DjangoAnonymousUser)
 from django.core.mail import send_mail
 from django.db import models, transaction
+from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
@@ -12,11 +13,12 @@ from misago.acl import get_user_acl
 from misago.acl.models import Role
 from misago.conf import settings
 from misago.core.utils import slugify
+from misago.core.signals import secret_key_changed
 
 from misago.users.models.rank import Rank
 from misago.users import avatars
 from misago.users.signals import delete_user_content, username_changed
-from misago.users.signatures import is_user_signature_valid
+from misago.users.signatures import is_user_signature_valid, make_checksum
 from misago.users.utils import hash_email
 
 
@@ -425,3 +427,15 @@ class AnonymousUser(DjangoAnonymousUser):
 
     def update_acl_key(self):
         raise TypeError("Can't update ACL key on anonymous users")
+
+
+"""
+Signal handlers
+"""
+@receiver(secret_key_changed)
+def update_signatures_checksums(sender, **kwargs):
+    for user in User.objects.iterator():
+        if user.signature:
+            signature_checksum = make_checksum(user.signature_parsed, user)
+            user.signature_checksum = signature_checksum
+            user.save(update_fields=['signature_checksum'])

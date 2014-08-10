@@ -1,10 +1,14 @@
 from django.db import models
+from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
+
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 
 from misago.acl import version as acl_version
 from misago.acl.models import BaseRole
+from misago.core import serializer
+from misago.core.signals import secret_key_changed
 from misago.core.utils import subset_markdown, slugify
 
 
@@ -89,3 +93,15 @@ class RoleForumACL(models.Model):
     role = models.ForeignKey('misago_acl.Role', related_name='forums_acls')
     forum = models.ForeignKey('Forum', related_name='forum_role_set')
     forum_role = models.ForeignKey(ForumRole)
+
+
+"""
+Signal handlers
+"""
+@receiver(secret_key_changed)
+def update_roles_pickles(sender, **kwargs):
+    for role in ForumRole.objects.iterator():
+        if role.pickled_permissions:
+            role.pickled_permissions = serializer.regenerate_checksum(
+                role.pickled_permissions)
+            role.save(update_fields=['pickled_permissions'])

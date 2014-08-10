@@ -1,8 +1,10 @@
 from django.db import models
+from django.dispatch import receiver
 
 from misago.core import serializer
 
 from misago.acl import version as acl_version
+from misago.core.signals import secret_key_changed
 
 
 class BaseRole(models.Model):
@@ -30,11 +32,8 @@ class BaseRole(models.Model):
         try:
             return self.permissions_cache
         except AttributeError:
-            try:
-                self.permissions_cache = serializer.loads(
-                    self.pickled_permissions)
-            except Exception:
-                self.permissions_cache = {}
+            self.permissions_cache = serializer.loads(
+                self.pickled_permissions)
         return self.permissions_cache
 
     @permissions.setter
@@ -45,3 +44,15 @@ class BaseRole(models.Model):
 
 class Role(BaseRole):
     pass
+
+
+"""
+Signal handlers
+"""
+@receiver(secret_key_changed)
+def update_roles_pickles(sender, **kwargs):
+    for role in Role.objects.iterator():
+        if role.pickled_permissions:
+            role.pickled_permissions = serializer.regenerate_checksum(
+                role.pickled_permissions)
+            role.save(update_fields=['pickled_permissions'])

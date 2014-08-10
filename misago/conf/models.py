@@ -1,6 +1,8 @@
 from django.db import models
+from django.dispatch import receiver
 
 from misago.core import serializer
+from misago.core.signals import secret_key_changed
 
 from misago.conf import hydrators
 
@@ -90,3 +92,15 @@ class Setting(models.Model):
     def field_extra(self, new_extra):
         if new_extra:
             self.pickled_field_extra = serializer.dumps(new_extra)
+
+
+"""
+Signal handlers
+"""
+@receiver(secret_key_changed)
+def update_settings_pickles(sender, **kwargs):
+    for setting in Setting.objects.iterator():
+        if setting.pickled_field_extra:
+            setting.pickled_field_extra = serializer.regenerate_checksum(
+                setting.pickled_field_extra)
+            setting.save(update_fields=['pickled_field_extra'])

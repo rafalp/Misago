@@ -26,3 +26,9 @@ def dumps(wet):
     base = base64.encodestring(pickle.dumps(wet, pickle.HIGHEST_PROTOCOL))
     checksum = _checksum(base)
     return '%s%s' % (checksum, base)
+
+
+def regenerate_checksum(dry):
+    base = dry[14:]
+    checksum = _checksum(base)
+    return '%s%s' % (checksum, base)
