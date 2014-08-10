@@ -1,5 +1,5 @@
 {% extends "misago/userslists/base.html" %}
-{% load humanize i18n %}
+{% load humanize i18n misago_avatars %}
 
 
 {% block meta-description %}{% blocktrans trimmed with rank=rank.name users=users.paginator.count|intcomma count counter=users.paginator.count %}
@@ -65,9 +65,16 @@ There are {{ users }} users with {{ rank }} rank.
 {% endblock list-pagination %}
 
 
-{% block user-card-footer %}
-{{ block.super }}
-{% if card.title %}
-<small>{{ card.title }}</small>
-{% endif %}
-{% endblock user-card-footer %}
+{% block user-card %}
+<a href="{% url USER_PROFILE_URL user_slug=card.slug user_id=card.id %}" class="user-card {% if rank.css_class %}card-{{ rank.css_class }}{% endif %}">
+  <img src="{{ card|avatar:400 }}" alt="{% trans "Avatar" %}">
+  <div class="card-footer">
+    {% block user-card-footer %}
+    <h4 class="user-name">{{ card.username }}</h4>
+    {% if card.title %}
+    <small>{{ card.title }}</small>
+    {% endif %}
+    {% endblock user-card-footer %}
+  </div>
+</a>
+{% endblock user-card %}

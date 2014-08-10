@@ -69,7 +69,7 @@ def active_posters(request, page=0):
 
     tracked_period = settings.MISAGO_RANKING_LENGTH
     User = get_user_model()
-    queryset = User.objects.all()
+    queryset = User.objects.all().select_related('user__rank')
 
     template =  "misago/userslists/active_posters.html"
     return list_view(request, template, queryset, page, {
@@ -80,6 +80,7 @@ def active_posters(request, page=0):
 @allow_see_list(allow_see_users_online_list)
 def online(request, page=0):
     queryset = get_online_queryset(request.user).order_by('user__slug')
+    queryset = queryset.select_related('user__rank')
 
     template =  "misago/userslists/online.html"
     return list_view(request, template, queryset, page)

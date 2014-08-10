@@ -16,7 +16,7 @@ def get_online_queryset(viewer):
     if not viewer.acl['can_see_hidden_users']:
         queryset = queryset.filter(user__is_hiding_presence=False)
 
-    return queryset.select_related('user', 'user__rank')
+    return queryset.select_related('user')
 
 
 
