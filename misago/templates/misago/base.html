@@ -38,6 +38,9 @@
         not_found: "{% trans "API link is invalid." %}",
         timeout: "{% trans "Request has timed out." %}"
       };
+      {% if user.is_authenticated %}
+      var notifications_url = "{% url 'misago:notifications_event_sender' %}";
+      {% endif %}
     </script>
     {% compressed_js 'misago' %}
     <script lang="JavaScript">
@@ -48,6 +51,7 @@
           info_template: "<div class=\"alert-div\"><p class=\"alert alert-info\"><span class=\"alert-icon fa fa-info-circle\"></span>%message% <button type=\"button\" class=\"close\">{% trans "Ok!" %}</button></p></div>",
           success_template: "<div class=\"alert-div\"><p class=\"alert alert-success\"><span class=\"alert-icon fa fa-check-circle\"></span>%message% <button type=\"button\" class=\"close\">{% trans "Ok!" %}</button></p></div>"
         });
+        $.misago_events();
       });
     </script>
     {% block javascripts %}{% endblock javascripts %}

@@ -128,11 +128,15 @@
     }
 
     .dropdown-title {
-      background-color: #ecf0f1;
+      background-color: @dropdown-title-bg;
+      border-bottom: 1px solid @dropdown-title-border;
       border-radius: @border-radius-base @border-radius-base 0px 0px;
       margin-top: -5px;
       margin-bottom: 5px;
       padding: @padding-base-vertical @padding-base-horizontal;
+
+      color: @dropdown-title-color;
+      font-weight: bold;
 
       .badge {
         background-color: darken(@brand-danger, 10%);

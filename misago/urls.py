@@ -14,6 +14,7 @@ urlpatterns = patterns('misago.core.views',
 urlpatterns += patterns('',
     url(r'^', include('misago.legal.urls')),
     url(r'^', include('misago.users.urls')),
+    url(r'^', include('misago.notifications.urls')),
 )
 
 

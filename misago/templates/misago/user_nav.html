@@ -46,3 +46,29 @@
     </ul>
   </li>
 </ul>
+
+<ul class="nav navbar-nav navbar-nav-primary navbar-right">
+  <li class="user-notifications-nav dropdown">
+    <a href="{% url 'misago:notifications' %}" class="dropdown-toggle tooltip-bottom"
+        {% if user.new_notifications %}
+        title="{% blocktrans with notifications=user.new_notifications count counter=user.new_notifications %}{{ notifications }} new notification{% plural %}{{ notifications }} new notifications{% endblocktrans %}"
+        {% else %}
+        title="{% trans "Your notifications" %}"
+        {% endif %}
+        data-toggle="dropdown">
+      <span class="fa fa-bell-o fa-fw"></span>
+      {% if user.new_notifications %}
+      <span class="badge">{{ user.new_notifications }}</span>
+      {% endif %}
+    </a>
+    <div class="dropdown-menu">
+      <div class="display"></div>
+      <div class="loader">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+        <p>{% trans "Loading..." %}</p>
+      </div>
+    </div>
+  </li>
+</ul>

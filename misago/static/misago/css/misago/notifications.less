@@ -1,0 +1,61 @@
+//
+// Notifications
+// --------------------------------------------------
+
+
+// Notifications dropdowned list
+.user-notifications-nav {
+  .dropdown-menu {
+    width: 280px;
+
+    .dropdown-title {
+      margin-bottom: 0px;
+    }
+
+    ul {
+      margin: 0px;
+      max-height: @line-height-computed * 8.75;
+      overflow: auto;
+
+      li {
+        border-bottom: 1px solid @dropdown-divider-bg;
+        padding: @padding-base-vertical @padding-base-horizontal;
+
+        a {
+          display: block;
+          margin: 0px;
+          padding: 0px;
+
+          color: @text-color;
+
+          &:hover {
+            background: none;
+
+            text-decoration: none;
+          }
+
+          &:active {
+            background: none;
+
+            color: @state-clicked;
+          }
+        }
+
+        footer {
+          font-size: @font-size-small;
+
+          a {
+            display: inline;
+          }
+        }
+
+        &.empty {
+          border-bottom: none;
+          padding: @padding-large-vertical @padding-base-horizontal;
+
+          text-align: center;
+        }
+      }
+    }
+  }
+}

@@ -54,6 +54,8 @@
 @component-active-bg:         @brand-secondary;
 @component-active-color:      #fff;
 
+@loader-color:                @brand-accent;
+@loader-text-color:           @text-muted;
 
 //== Navbar
 //
@@ -83,6 +85,10 @@
 @navbar-icon-link-active-bg:            darken(@navbar-default-border, 2%);
 @navbar-icon-link-active-border:        darken(@navbar-default-border, 2%);
 @navbar-icon-link-active-color:         @state-clicked;
+
+@navbar-icon-link-open-bg:              @state-active;
+@navbar-icon-link-open-border:          @state-active;
+@navbar-icon-link-open-color:           #fff;
 
 
 // Only User dropdown switch uses those colors
@@ -127,6 +133,11 @@
 //
 //## Misago dropdowns flavor
 
+// Dropdown title
+@dropdown-title-color:           @text-color;
+@dropdown-title-bg:              @navbar-default-bg;
+@dropdown-title-border:          darken(@navbar-default-border, 5%);
+
 // Dropdown link text color.
 @dropdown-link-color:            @text-color;
 
@@ -135,7 +146,6 @@
 
 @dropdown-link-active-color:     #fff;
 @dropdown-link-active-bg:        @state-clicked;
-
 
 // Open dropdown shadow color.
 @dropdown-shadow:                fadeOut(#333, 50%);

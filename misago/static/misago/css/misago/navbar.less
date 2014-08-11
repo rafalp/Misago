@@ -44,15 +44,16 @@
   .navbar-nav-primary {
     .navbar-vertical-align(@navbar-icon-size * 1.7 - 2px);
     margin-bottom: 0px;
-    padding-right: @navbar-padding-horizontal;
+    margin-left: @navbar-icon-size + @navbar-padding-horizontal;
+    margin-right: @navbar-icon-size;
 
     &>li {
       margin: 0px;
-      margin-left: @navbar-padding-horizontal / 2;
       padding: 0px;
 
       &>a {
         /* Make button blocky */
+        clear: both;
         border: 1px solid @navbar-icon-link-border;
         border-radius: @border-radius-base;
         margin: 0px;
@@ -78,9 +79,16 @@
         }
 
         &>.badge {
+          border-radius: @border-radius-small;
           position: absolute;
-          right: -6px;
-          top: -4px;
+          right: 1px;
+          bottom: 1px;
+          padding: 1px 3px;
+          padding-left: 4px;
+          padding-top: 2px;
+
+          font-size: @font-size-base * 0.8;
+          font-weight: normal;
         }
 
         /* Primary styles */
@@ -110,10 +118,17 @@
       &.open {
         &>a {
           &:link, &:active, &:visited, &:hover {
-            background-color: @navbar-icon-link-active-bg !important;
+            background-color: @navbar-icon-link-open-bg !important;
+            border-color: @navbar-icon-link-open-border !important;
             box-shadow: none;
 
-            color: @navbar-icon-link-active-color !important;
+            color: @navbar-icon-link-open-color !important;
+
+            &>.badge {
+              background-color: @navbar-icon-link-open-color;
+
+              color: @navbar-icon-link-open-border;
+            }
           }
         }
       }
@@ -173,7 +188,6 @@
   /* Put some distance between user menu and primary nav */
   .navbar-nav-user {
     padding-right: @navbar-padding-horizontal;
-    margin-left: @navbar-padding-horizontal * 2;
   }
 
   /* Change way switch and dropdown appears */

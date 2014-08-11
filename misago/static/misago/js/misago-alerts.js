@@ -77,7 +77,7 @@
 
   $.misago_alerts = function(options) {
     if ($._misago_alerts == undefined) {
-      $._misago_alerts = MisagoAlerts(options)
+      $._misago_alerts = MisagoAlerts(options);
     }
     return $._misago_alerts;
   };

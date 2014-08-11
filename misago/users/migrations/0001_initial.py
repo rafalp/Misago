@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
                 ('warning_level_update_on', models.DateTimeField(null=True, blank=True)),
                 ('following', models.PositiveIntegerField(default=0)),
                 ('followers', models.PositiveIntegerField(default=0)),
-                ('new_alerts', models.PositiveIntegerField(default=0)),
+                ('new_notifications', models.PositiveIntegerField(default=0)),
                 ('limit_private_thread_invites', models.PositiveIntegerField(default=0)),
                 ('unread_private_threads', models.PositiveIntegerField(default=0)),
                 ('sync_unred_private_threads', models.BooleanField(default=False)),

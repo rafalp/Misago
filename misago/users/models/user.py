@@ -201,7 +201,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     blocks = models.ManyToManyField(
         'self', related_name='blocked_by', symmetrical=False)
 
-    new_alerts = models.PositiveIntegerField(default=0)
+    new_notifications = models.PositiveIntegerField(default=0)
 
     limit_private_thread_invites = models.PositiveIntegerField(default=0)
     unread_private_threads = models.PositiveIntegerField(default=0)

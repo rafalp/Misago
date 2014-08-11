@@ -1,0 +1,47 @@
+{% load i18n misago_avatars misago_capture %}
+<div class="dropdown-title">
+  {% if user.new_notifications %}
+    {% capture trimmed as notifications %}
+    <span class="label label-danger">{{ user.new_notifications }}</span>
+    {% endcapture %}
+    {% blocktrans trimmed with notifications=notifications|safe count counter=user.new_notifications%}
+    {{ notifications }} new notification
+    {% plural %}
+    {{ notifications }} new notifications
+    {% endblocktrans %}
+  {% else %}
+    {% capture trimmed as notifications %}
+    <span class="label label-default">{{ notifications_count }}</span>
+    {% endcapture %}
+    {% blocktrans trimmed with notifications=notifications|safe count counter=user.new_notifications%}
+    {{ notifications }} notification
+    {% plural %}
+    {{ notifications }} notifications
+    {% endblocktrans %}
+  {% endif %}
+</div>
+<ul class="list-unstyled">
+  {% for item in items %}
+  <li{% if item.is_new %} class="new"{% endif %}>
+    <a href="{{ item.url }}">
+      {{ item.message|safe }}
+    </a>
+    <footer class="text-muted">
+      {% if item.sender_username %}
+        {% if item.sender_id %}
+        <a href="{% url USER_PROFILE_URL user_slug=item.sender_slug user_id=item.sender_id %}" class="item-title">{{ item.sender_username }}</a>
+        {% else %}
+        <strong class="item-title">{{ item.sender_username }}</strong>
+        {% endif %}
+      {% endif %}
+      <abbr class="tooltip-top dynamic time-ago" title="{{ item.date }}" data-timestamp="{{ item.date|date:"c" }}">
+        {{ item.date|date }}
+      </abbr>
+    </footer>
+  </li>
+  {% empty %}
+  <li class="empty">
+    {% trans "You don't have any notifications." %}
+  </li>
+  {% endfor %}
+</ul>
