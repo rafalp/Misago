@@ -79,7 +79,7 @@ def is_request_to_misago(request):
         return request._request_to_misago
 
 
-def is_request_local(request):
+def is_referer_local(request):
     referer = request.META.get('HTTP_REFERER')
 
     if not referer:

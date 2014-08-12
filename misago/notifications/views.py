@@ -33,6 +33,7 @@ def full_page(request):
 
 
 @uiview('misago_notifications')
+@deny_guests
 def event_sender(request, resolver_match):
     if request.user.new_notifications:
         message = ungettext("You have %(notifications)s new notification",

@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 
 from misago.core.utils import (clean_return_path, is_request_to_misago,
-                               slugify, time_amount)
+                               slugify, time_amount, is_referer_local)
 
 
 VALID_PATHS = (
@@ -113,6 +113,48 @@ class CleanReturnPathTests(TestCase):
             'HTTP_HOST': 'misago-project.org/'
         }, {'return_path': '/register/'})
         self.assertEqual(clean_return_path(ok_request), '/register/')
+
+
+class IsRefererLocalTests(TestCase):
+    def test_local_referers(self):
+        """local referers return true"""
+        ok_request = MockRequest('GET', {
+            'HTTP_REFERER': 'http://misago-project.org/',
+            'HTTP_HOST': 'misago-project.org/'
+        })
+        self.assertTrue(is_referer_local(ok_request))
+
+        ok_request = MockRequest('GET', {
+            'HTTP_REFERER': 'http://misago-project.org/',
+            'HTTP_HOST': 'misago-project.org/'
+        })
+        self.assertTrue(is_referer_local(ok_request))
+
+        ok_request = MockRequest('GET', {
+            'HTTP_REFERER': 'http://misago-project.org/register/',
+            'HTTP_HOST': 'misago-project.org/'
+        })
+        self.assertTrue(is_referer_local(ok_request))
+
+    def test_foreign_referers(self):
+        """non-local referers return false"""
+        bad_request = MockRequest('GET', {
+            'HTTP_REFERER': 'http://else-project.org/',
+            'HTTP_HOST': 'misago-project.org/'
+        })
+        self.assertFalse(is_referer_local(bad_request))
+
+        bad_request = MockRequest('GET', {
+            'HTTP_REFERER': 'https://misago-project.org/',
+            'HTTP_HOST': 'misago-project.org/'
+        })
+        self.assertFalse(is_referer_local(bad_request))
+
+        bad_request = MockRequest('GET', {
+            'HTTP_REFERER': 'http://misago-project.org/',
+            'HTTP_HOST': 'misago-project.org/assadsa/'
+        })
+        self.assertFalse(is_referer_local(bad_request))
 
 
 class TimeAmountTests(TestCase):
