@@ -10,6 +10,7 @@ from misago.core.decorators import require_POST
 from misago.core.shortcuts import get_object_or_404, validate_slug
 from misago.core.utils import clean_return_path
 from misago.markup import Editor
+from misago.notifications import notify_user
 
 from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
 from misago.users import warnings
@@ -79,6 +80,15 @@ def warn(request, user, reason=None):
         if form.is_valid():
             warnings.warn_user(request.user, user, form.cleaned_data['reason'])
 
+            notify_user(user,
+                _("%(user)s has given you an warning."),
+                reverse('misago:user_warnings', kwargs={
+                    'user_slug': user.slug, 'user_id': user.pk
+                }),
+                "warnings_%s" % user.pk,
+                formats={'user': request.user.username},
+                sender=request.user)
+
             message = _("%(user)s has been warned.")
             message = message % {'user': user.username}
             messages.success(request, message)
@@ -131,6 +141,15 @@ def cancel_warning(request, user, warning):
     message = message % {'user': user.username}
     messages.success(request, message)
 
+    notify_user(user,
+        _("%(user)s has canceled your warning."),
+        reverse('misago:user_warnings', kwargs={
+            'user_slug': user.slug, 'user_id': user.pk
+        }),
+        "warnings_%s" % user.pk,
+        formats={'user': request.user.username},
+        sender=request.user)
+
 
 @user_moderation_view(allow_see_warnings)
 @warning_moderation_view(allow_delete_warning)
@@ -140,6 +159,15 @@ def delete_warning(request, user, warning):
     message = _("%(user)s's warning has been deleted.")
     message = message % {'user': user.username}
     messages.success(request, message)
+
+    notify_user(user,
+        _("%(user)s has deleted your warning."),
+        reverse('misago:user_warnings', kwargs={
+            'user_slug': user.slug, 'user_id': user.pk
+        }),
+        "warnings_%s" % user.pk,
+        formats={'user': request.user.username},
+        sender=request.user)
 
 
 @user_moderation_view(allow_rename_user)
@@ -153,6 +181,19 @@ def rename(request, user):
         if form.is_valid():
             try:
                 form.change_username(changed_by=request.user)
+
+                notify_user(user,
+                    _("%(user)s has changed your name to %(newname)s."),
+                    reverse('misago:user_warnings', kwargs={
+                        'user_slug': user.slug, 'user_id': user.pk
+                    }),
+                    "name_history_%s" % user.pk,
+                    formats={
+                        'user': request.user.username,
+                        'newname': user.username,
+                    },
+                    sender=request.user)
+
                 message = _("%(old_username)s's username has been changed.")
                 message = message % {'old_username': old_username}
                 messages.success(request, message)
@@ -184,6 +225,19 @@ def moderate_avatar(request, user):
                 'avatar_lock_user_message',
                 'avatar_lock_staff_message'
             ))
+
+            if avatar_locked != user.is_avatar_locked:
+                if user.is_avatar_locked:
+                    message = _("%(user)s has locked your avatar.")
+                else:
+                    message = _("%(user)s has unlocked your avatar.")
+
+                notify_user(user,
+                    message,
+                    reverse('misago:usercp_change_avatar'),
+                    "usercp_avatar_%s" % user.pk,
+                    formats={'user': request.user.username},
+                    sender=request.user)
 
             message = _("%(user)s's avatar has been moderated.")
             message = message % {'user': user.username}
@@ -218,6 +272,13 @@ def moderate_signature(request, user):
             message = _("%(user)s's signature has been moderated.")
             message = message % {'user': user.username}
             messages.success(request, message)
+
+            notify_user(user,
+                _("%(user)s has moderated your signature."),
+                reverse('misago:usercp_edit_signature'),
+                "usercp_signature_%s" % user.pk,
+                formats={'user': request.user.username},
+                sender=request.user)
 
             if 'stay' not in request.POST:
                 return redirect(return_path)

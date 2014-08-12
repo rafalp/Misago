@@ -13,6 +13,7 @@ from misago.core.decorators import ajax_only, require_POST
 from misago.core.exceptions import AjaxError
 from misago.core.mail import mail_user
 from misago.markup import Editor
+from misago.notifications import read_user_notification
 
 from misago.users import avatars
 from misago.users.decorators import deny_guests
@@ -88,6 +89,9 @@ def change_avatar(request):
 
 def avatar_not_locked(f):
     def decorator(request, *args, **kwargs):
+        if request.method == "GET":
+            read_user_notification(request.user,
+                                   'usercp_avatar_%s' % request.user.pk)
         if request.user.is_avatar_locked:
             message = _("Your avatar is locked and can't be changed.")
             messages.info(request, message)
@@ -217,6 +221,10 @@ def avatar_galleries(request):
 def edit_signature(request):
     if not request.user.acl['can_have_signature']:
         raise Http404()
+
+    if request.method == "GET":
+        read_user_notification(request.user,
+                               'usercp_signature_%s' % request.user.pk)
 
     form = EditSignatureForm(instance=request.user)
     if not request.user.is_signature_locked and request.method == 'POST':

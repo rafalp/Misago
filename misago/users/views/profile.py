@@ -46,7 +46,7 @@ def profile_view(f):
             profile.is_blocked = False
 
         if request.user.is_authenticated and request.method == "GET":
-            read_user_notification(request.user, "followed_%s" % profile.pk)
+            read_user_notification(request.user, "profile_%s" % profile.pk)
 
         return f(request, *args, **kwargs)
     return decorator
@@ -63,6 +63,21 @@ def profile_view_restricted_visibility(f):
             # we are trying to display page thats not in nav
             raise Http404()
     return decorator
+
+
+def notification_view(trigger):
+    def function_decorator(f):
+        def decorator(*args, **kwargs):
+            request = args[0]
+            user = request.user
+            profile = kwargs.get('profile')
+
+            if user.is_authenticated and request.method == "GET":
+                read_user_notification(user, trigger % profile.pk)
+
+            return f(*args, **kwargs)
+        return decorator
+    return function_decorator
 
 
 def render(request, template, context):
@@ -137,6 +152,7 @@ def follows(request, profile, page=0):
 
 
 @profile_view_restricted_visibility
+@notification_view("warnings_%s")
 def warnings(request, profile, page=0):
     warnings_qs = profile.warnings.order_by('-id')
     warnings = paginate(warnings_qs, page, 5, 2)
@@ -175,6 +191,7 @@ def warnings(request, profile, page=0):
 
 
 @profile_view_restricted_visibility
+@notification_view("name_history_%s")
 def name_history(request, profile, page=0):
     name_changes_qs = profile.namechanges.all().order_by('-id')
     name_changes = paginate(name_changes_qs, page, 12, 4)
@@ -242,7 +259,7 @@ def follow_user(request, profile):
             reverse(user_profile.get_default_link(), kwargs={
                 'user_slug': user_locked.slug, 'user_id': user_locked.id
             }),
-            "followed_%s" % user_locked.pk,
+            "profile_%s" % user_locked.pk,
             formats={'user': user_locked.username},
             sender=user_locked,
             update_user=False)
