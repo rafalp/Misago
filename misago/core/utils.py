@@ -79,6 +79,23 @@ def is_request_to_misago(request):
         return request._request_to_misago
 
 
+def is_request_local(request):
+    referer = request.META.get('HTTP_REFERER')
+
+    if not referer:
+        return False
+    if not referer.startswith(request.scheme):
+        return False
+    referer = referer[len(request.scheme) + 3:]
+    if not referer.startswith(request.META['HTTP_HOST']):
+        return False
+    referer = referer[len(request.META['HTTP_HOST'].rstrip('/')):]
+    if not referer.startswith('/'):
+        return False
+
+    return True
+
+
 """
 Utility that humanizes time amount.
 

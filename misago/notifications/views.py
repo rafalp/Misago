@@ -1,8 +1,7 @@
-from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext as _, ungettext
 
-from misago.core.decorators import ajax_only
+from misago.core.uiviews import uiview
 
 from misago.users.decorators import deny_guests
 
@@ -32,9 +31,8 @@ def full_page(request):
     return render(request, 'misago/notifications/full.html')
 
 
-@ajax_only
-@deny_guests
-def event_sender(request):
+@uiview('misago_notifications')
+def event_sender(request, resolver_match):
     if request.user.new_notifications:
         message = ungettext("You have %(notifications)s new notification",
                             "You have %(notifications)s new notifications",
@@ -43,11 +41,10 @@ def event_sender(request):
     else:
         message = _("Your notifications")
 
-    return JsonResponse({
-        'is_error': False,
+    return {
         'count': request.user.new_notifications,
         'message': message,
-    })
+    }
 
 
 @deny_guests

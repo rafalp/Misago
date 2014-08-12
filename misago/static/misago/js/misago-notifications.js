@@ -27,8 +27,8 @@ $(function() {
     }
   }
 
-  if (typeof notifications_url !== "undefined") {
-    $.misago_events().listener(notifications_url, notifications_handler);
+  if (is_authenticated) {
+    $.misago_ui().observer("misago_notifications", notifications_handler);
   }
 
   var $display = $container.find('.display');
