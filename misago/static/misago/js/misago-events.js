@@ -15,10 +15,13 @@
     this.listeners = [];
     this.listener = function(url, callback) {
       this.listeners.push({url: url, callback: callback});
-      this.listen();
+      this.poll(true);
     };
 
-    this.listen = function() {
+    this.poll = function(mute_timeout) {
+      var poll = this.poll;
+      var frequency = this.frequency;
+
       var ajax_calls = [];
       $.each(this.listeners, function(i, obj) {
         ajax_calls.push($.get(obj.url));
@@ -41,10 +44,12 @@
             });
           }
           Tinycon.setBubble(events_count);
+          if (mute_timeout === undefined || mute_timeout == false){
+            window.setTimeout(poll, frequency);
+          }
       });
     };
-
-    window.setInterval(this.listen, this.frequency);
+    window.setTimeout(this.poll, this.frequency);
 
     // Return object
     return this;
