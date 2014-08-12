@@ -232,6 +232,12 @@ MISAGO_ADMIN_NAMESPACES = (
 MISAGO_ADMIN_SESSION_EXPIRATION = 60
 
 
+# Max age of notifications in days
+# Notifications older than this are deleted
+# On very active forums its better to keep this smaller
+MISAGO_NOTIFICATIONS_MAX_AGE = 40
+
+
 # Function used for generating individual avatar for user
 MISAGO_DYNAMIC_AVATAR_DRAWER = 'misago.users.avatars.dynamic.draw_default'
 

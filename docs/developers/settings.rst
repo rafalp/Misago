@@ -219,6 +219,12 @@ MISAGO_MARKUP_EXTENSIONS
 List of python modules extending Misago markup.
 
 
+MISAGO_NOTIFICATIONS_MAX_AGE
+----------------------------
+
+Max age, in days, of notifications stored in database. Notifications older than this will be delted.
+
+
 MISAGO_RANKING_LENGTH
 ---------------------
 

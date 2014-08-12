@@ -31,6 +31,7 @@ Table of Contents
    developers/forms
    developers/mails
    developers/markup
+   developers/notifications
    developers/settings
    developers/shortcuts
    developers/template_tags

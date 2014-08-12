@@ -42,6 +42,7 @@ Following references cover everything you want to know about writing your own ap
    forms
    mails
    markup
+   notifications
    settings
    shortcuts
    template_tags

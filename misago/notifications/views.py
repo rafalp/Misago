@@ -1,14 +1,28 @@
+from datetime import timedelta
+
+from django.contrib import messages
+from django.db.transaction import atomic
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.utils import timezone
 from django.utils.translation import ugettext as _, ungettext
 
 from misago.core.uiviews import uiview
-
 from misago.users.decorators import deny_guests
+
+from misago.notifications import (read_all_user_alerts,
+                                  assert_real_new_notifications_count)
 
 
 @deny_guests
 def notifications(request):
+    if request.method == 'POST':
+        read_all(request)
+        if not request.is_ajax():
+            return redirect('misago:notifications')
+    else:
+        assert_real_new_notifications_count(request.user)
+
     if request.is_ajax():
         return dropdown(request)
     else:
@@ -17,8 +31,8 @@ def notifications(request):
 
 def dropdown(request):
     template = render(request, 'misago/notifications/dropdown.html', {
-        'items': request.user.notifications.order_by('-id').iterator(),
         'notifications_count': request.user.notifications.count(),
+        'items': request.user.notifications.order_by('-id')[:15],
     })
 
     return JsonResponse({
@@ -29,7 +43,17 @@ def dropdown(request):
 
 
 def full_page(request):
-    return render(request, 'misago/notifications/full.html')
+    return render(request, 'misago/notifications/full.html', {
+        'notifications_count': request.user.notifications.count(),
+        'items': request.user.notifications.order_by('-id'),
+    })
+
+
+@atomic
+def read_all(request):
+    if not request.is_ajax():
+        messages.success(request, _("All notifications were set as read."))
+    read_all_user_alerts(request.user)
 
 
 @uiview('misago_notifications')
@@ -47,24 +71,3 @@ def event_sender(request, resolver_match):
         'count': request.user.new_notifications,
         'message': message,
     }
-
-
-@deny_guests
-def new_notification(request):
-    from django.contrib.auth import get_user_model
-    from faker import Factory
-    faker = Factory.create()
-
-    sender = get_user_model().objects.order_by('?')[:1][0]
-
-    from misago.notifications import notify_user
-    notify_user(
-        request.user,
-        _("Replied to %(thread)s"),
-        '/',
-        'test',
-        formats={'thread': 'LoremIpsum'},
-        sender=sender,)
-
-    from django.http import HttpResponse
-    return HttpResponse('Notification set.')

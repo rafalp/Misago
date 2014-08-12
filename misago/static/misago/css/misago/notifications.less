@@ -4,9 +4,11 @@
 
 
 // Notifications dropdowned list
+//
+//==
 .user-notifications-nav {
   .dropdown-menu {
-    width: 280px;
+    width: 320px;
 
     .dropdown-title {
       margin-bottom: 0px;
@@ -20,6 +22,19 @@
       li {
         border-bottom: 1px solid @dropdown-divider-bg;
         padding: @padding-base-vertical @padding-base-horizontal;
+
+        &.new {
+          .state-icon {
+            color: @state-active;
+          }
+        }
+
+        .state-icon {
+          float: left;
+          width: @font-size-base * 1.5;
+
+          color: @state-default;
+        }
 
         a {
           display: block;
@@ -42,10 +57,13 @@
         }
 
         footer {
+          padding-left: @font-size-base * 1.5;
+
           font-size: @font-size-small;
 
           a {
             display: inline;
+            margin-right: @line-height-computed / 4;
           }
         }
 
@@ -55,6 +73,66 @@
 
           text-align: center;
         }
+      }
+    }
+  }
+}
+
+
+// Full notifications list
+//
+//==
+.notifications-list {
+  li {
+    border-bottom: 1px solid @hr-border;
+    overflow: auto;
+    padding: (@line-height-computed / 2) 0px;
+
+    &.new {
+      .state-icon {
+        color: @state-active;
+      }
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .state-icon {
+      float: left;
+      margin-right: @line-height-computed / 2;
+
+      color: @state-default;
+      font-size: @font-size-large;
+    }
+
+    .message {
+      float: left;
+      font-size: @font-size-large;
+
+      &:link, &:active, &:visited {
+        color: @text-color;
+      }
+
+      &:hover {
+        background: none;
+
+        text-decoration: none;
+      }
+
+      &:active {
+        background: none;
+
+        color: @state-clicked;
+      }
+    }
+
+    footer {
+      margin-top: 3px;
+      float: right;
+
+      a {
+        margin-right: @line-height-computed / 3;
       }
     }
   }

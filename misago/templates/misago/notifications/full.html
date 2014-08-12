@@ -1,1 +1,81 @@
-FULL ALERTS LIST!
+{% extends "misago/base.html" %}
+{% load humanize i18n %}
+
+
+{% block title %}{% blocktrans trimmed with notifications=notifications_count|intcomma count counter=notifications_count %}
+You have {{ notifications }} notification
+{% plural %}
+You have {{ notifications }} notifications
+{% endblocktrans %} | {{ block.super }}{% endblock title %}
+
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1 class="pull-left">
+      <span class="fa fa-bell-o"></span>
+      {% if user.new_notifications %}
+        {% blocktrans trimmed with notifications=user.new_notifications count counter=user.new_notifications%}
+        You have {{ notifications }} new notification
+        {% plural %}
+        You have {{ notifications }} new notifications
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed with notifications=notifications_count count counter=user.new_notifications%}
+        You have {{ notifications }} notification
+        {% plural %}
+        You have {{ notifications }} notifications
+        {% endblocktrans %}
+      {% endif %}
+    </h1>
+
+    <div class="page-actions">
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-default">
+          {% trans "Mark all read" %}
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>
+<div class="container">
+  {% if notifications_count %}
+  <ul class="list-unstyled notifications-list">
+    {% for item in items %}
+    <li{% if item.is_new %} class="new"{% endif %}>
+
+      <div class="state-icon">
+        {% if item.is_new %}
+        <span class="fa fa-circle tooltip-top" title="{% trans "New notification" %}"></span>
+        {% else %}
+        <span class="fa fa-circle-o tooltip-top" title="{% trans "Old notification" %}"></span>
+        {% endif %}
+      </div>
+
+      <a href="{{ item.url }}" class="message">{{ item.message|safe }}</a>
+
+      <footer class="text-muted">
+        {% if item.sender_username %}
+          {% if item.sender_id %}
+          <a href="{% url USER_PROFILE_URL user_slug=item.sender_slug user_id=item.sender_id %}" class="item-title">{{ item.sender_username }}</a>
+          {% else %}
+          <strong class="item-title">{{ item.sender_username }}</strong>
+          {% endif %}
+        {% endif %}
+        <abbr class="tooltip-top dynamic time-ago" title="{{ item.date }}" data-timestamp="{{ item.date|date:"c" }}">
+          {{ item.date|date }}
+        </abbr>
+      </footer>
+
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="lead">
+    {% trans "You don't have any notifications." %}
+  </p>
+  {% endif %}
+</div>
+{% endblock content %}

@@ -23,6 +23,13 @@
 <ul class="list-unstyled">
   {% for item in items %}
   <li{% if item.is_new %} class="new"{% endif %}>
+    <div class="state-icon">
+      {% if item.is_new %}
+      <span class="fa fa-circle"></span>
+      {% else %}
+      <span class="fa fa-circle-o"></span>
+      {% endif %}
+    </div>
     <a href="{{ item.url }}">
       {{ item.message|safe }}
     </a>
@@ -45,3 +52,17 @@
   </li>
   {% endfor %}
 </ul>
+<div class="dropdown-footer">
+  <form action="{% url 'misago:notifications' %}" class="read-all-notifications" method="POST">
+    {% csrf_token %}
+    <a href="{% url 'misago:notifications' %}" name="read-all" class="btn btn-default btn-sm">
+      {% trans "See all" %}
+    </a>
+    <button type="button" class="btn btn-default btn-refresh btn-sm" style="display: none;">
+      {% trans "Refresh" %}
+    </button>
+    <button type="submit" class="btn btn-default btn-read-all btn-sm pull-right" {% if not user.new_notifications %}style="display: none;"{% endif %}>
+      {% trans "Mark all as read" %}
+    </button>
+  </form>
+</div>
