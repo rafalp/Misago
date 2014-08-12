@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.core.urlresolvers import reverse
 from django.db.transaction import atomic
 from django.http import Http404, JsonResponse
 from django.shortcuts import redirect, render as django_render
@@ -9,6 +10,7 @@ from misago.acl import add_acl
 from misago.core.decorators import require_POST
 from misago.core.shortcuts import get_object_or_404, paginate, validate_slug
 from misago.core.utils import clean_return_path
+from misago.notifications import notify_user, read_user_notification
 
 from misago.users.bans import get_user_ban
 from misago.users.decorators import deny_guests
@@ -42,6 +44,9 @@ def profile_view(f):
             profile.is_blocked = request.user.is_blocking(profile)
         else:
             profile.is_blocked = False
+
+        if request.user.is_authenticated and request.method == "GET":
+            read_user_notification(request.user, "followed_%s" % profile.pk)
 
         return f(request, *args, **kwargs)
     return decorator
@@ -230,17 +235,29 @@ def follow_user(request, profile):
         followed = True
         request.user.follows.add(profile)
 
-    profile.followers = profile.followed_by.count()
-    profile.save(update_fields=['followers'])
-
-    user_locked.following = user_locked.follows.count()
-    user_locked.save(update_fields=['following'])
-
     if followed:
         message = _("You are now following %(user)s.")
+        notify_user(profile,
+            _("%(user)s is now following you."),
+            reverse(user_profile.get_default_link(), kwargs={
+                'user_slug': user_locked.slug, 'user_id': user_locked.id
+            }),
+            "followed_%s" % user_locked.pk,
+            formats={'user': user_locked.username},
+            sender=user_locked,
+            update_user=False)
     else:
         message = _("You have stopped following %(user)s.")
     message = message % {'user': profile.username}
+
+    profile.followers = profile.followed_by.count()
+    if followed:
+        profile.save(update_fields=['followers', 'new_notifications'])
+    else:
+        profile.save(update_fields=['followers'])
+
+    user_locked.following = user_locked.follows.count()
+    user_locked.save(update_fields=['following'])
 
     if request.is_ajax:
         return {'is_following': followed, 'message': message}

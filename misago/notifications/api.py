@@ -60,7 +60,7 @@ def _real_read_user_notification(user, trigger):
             # Cos no. of changed rows returned via update()
             # isn't always accurate
             user.new_notifications = 0
-    user.save(update_fields=['new_notifications'])
+        user.save(update_fields=['new_notifications'])
 
 
 def read_all_user_alerts(user):
