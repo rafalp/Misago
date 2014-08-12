@@ -15,6 +15,7 @@ notify_user
 
 * ``user:`` User to notify.
 * ``message:`` Notification message.
+* ``url:`` Link user should follow to read message.
 * ``trigger:`` short text used to identify this message for ``read_user_notification`` function.
 * ``formats:`` Optional. Dict of formats for ``message`` argument that should be boldened.
 * ``sender:`` Optional. User that notification origins from.
@@ -26,7 +27,7 @@ read_user_notification
 
 .. function:: read_user_notification(user, trigger, atomic=True)
 
-Sets user notification identified by ``trigger`` as read.
+Sets user notification identified by ``trigger`` as read. This function checks internally if user has new notifications before it queries database.
 
 * ``user:`` User to whom notification belongs to
 * ``trigger:`` Short text used to identify messages to trigger as read.
