@@ -12,7 +12,7 @@
 
     <div class="sr-only forum-description">
       {% if forum.description %}
-      <p>{{ forum.description }}</p>
+      {{ forum.description|linebreaks }}
       {% endif %}
       <ul class="list-unstyled">
         {% if forum.role == 'redirect' %}
@@ -53,8 +53,7 @@
 
     {% if forum.subforums %}
     <div class="dropdown pull-right">
-      <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-        <span class="sr-only">{% trans "Subforums" %}</span>
+      <button class="btn btn-default btn-sm dropdown-toggle tooltip-top" title="{% trans "Subforums" %}" type="button" id="dropdownMenu1" data-toggle="dropdown">
         <span class="fa fa-reorder fa-lg"></span>
       </button>
       <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
