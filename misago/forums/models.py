@@ -1,3 +1,5 @@
+from urlparse import urlparse
+
 from django.db import models
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
@@ -72,6 +74,10 @@ class Forum(MPTTModel):
     def delete(self, *args, **kwargs):
         acl_version.invalidate()
         return super(Forum, self).delete(*args, **kwargs)
+
+    @property
+    def redirect_host(self):
+        return urlparse(self.redirect_url).hostname
 
     def set_name(self, name):
         self.name = name

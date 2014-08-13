@@ -1,0 +1,78 @@
+{% load humanize i18n misago_capture %}
+<ul class="list-group">
+  {% for forum in category.subforums %}
+  <li class="list-group-item">
+    {% if forum.role == 'redirect' %}
+    <span class="forum-icon fa fa-link fa-fw"></span>
+    {% else %}
+    <span class="forum-icon fa fa-comment{% if forum.is_read %}-o{% else %} new{% endif %} fa-fw"></span>
+    {% endif %}
+
+    <a href="/" class="item-title forum-name">{{ forum.name }}</a>
+
+    <div class="sr-only forum-description">
+      {% if forum.description %}
+      <p>{{ forum.description }}</p>
+      {% endif %}
+      <ul class="list-unstyled">
+        {% if forum.role == 'redirect' %}
+        <li>
+          {% trans "Clicks:" %} <strong>{{ forum.redirects_count|intcomma }}</strong>
+        </li>
+        {% else %}
+        <li>
+          {% trans "Posts:" %} <strong>{{ forum.posts|intcomma }}</strong>
+        </li>
+        <li>
+          {% trans "Threads:" %} <strong>{{ forum.threads|intcomma }}</strong>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+
+    <footer>
+      {% if forum.role == 'redirect' %}
+      <a href="#" class="item-title">{{ forum.redirect_host }}</a>
+      <div class="text-muted">
+        {% capture as clicks %}<strong>{{ forum.redirects_count|intcomma }}</strong>{% endcapture %}
+        {% blocktrans trimmed with clicks=clicks|safe count counter=forum.redirects_count %}
+        {{ clicks }} click
+        {% plural %}
+        {{ clicks }} clicks
+        {% endblocktrans %}
+      </div>
+      {% elif 0 %}
+      <a href="#" class="item-title">Lorem ipsum dolor met sit amet</a>
+      <div class="text-muted">
+        <a href="#" class="item-title">somebody</a>, <abbr>32 minutes ago</abbr>
+      </div>
+      {% else %}
+      <em class="text-muted">Some message</em>
+      {% endif %}
+    </footer>
+
+    {% if forum.subforums %}
+    <div class="dropdown pull-right">
+      <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+        <span class="sr-only">{% trans "Subforums" %}</span>
+        <span class="fa fa-reorder fa-lg"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+        {% for subforum in forum.subforums %}
+        <li role="presentation">
+          <a role="menuitem" tabindex="-1" href="#">
+            {% if subforum.role == 'redirect' %}
+            <span class="forum-icon fa fa-link fa-fw"></span>
+            {% else %}
+            <span class="forum-icon fa fa-comment{% if subforum.is_read %}-o{% else %} new{% endif %} fa-fw "></span>
+            {% endif %}
+            {{ subforum.name }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>

@@ -1,0 +1,16 @@
+<script lang="JavaScript">
+$(function() {
+  $(".forum-description").each(function() {
+    var $forum = $(this).parents('li');
+    var $forum_title = $forum.find('.forum-name');
+
+    $forum_title.tooltip({
+      container: 'body',
+      html: true,
+      placement: 'right',
+      template: '<div class="tooltip forum-description" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
+      title: $(this).html()
+    });
+  });
+});
+</script>

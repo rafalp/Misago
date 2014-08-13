@@ -1,0 +1,13 @@
+{% load i18n %}
+<div class="forums-list">
+{% for category in categories %}
+  {% if category.subforums %}
+  <div class="panel panel-default panel-shadow panel-forums {{ category.css_class }}">
+    <div class="panel-heading">
+      <h3 class="panel-title">{{ category.name }}</h3>
+    </div>
+    {% include "misago/forums/forums.html" %}
+  </div>
+  {% endif %}
+{% endfor %}
+</div>
