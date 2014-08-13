@@ -8,7 +8,7 @@ def _roles_acls(key_name, roles):
 
 
 def sum_acls(result_acl, acls=None, roles=None, key=None, **permissions):
-    if bool(roles) != bool(key):
+    if roles is None != key is None:
         if key:
             raise ValueError(
                 'You have provided "key" but omited "roles" argument')
