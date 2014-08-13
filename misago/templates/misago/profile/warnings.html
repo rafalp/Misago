@@ -78,9 +78,7 @@
       <div class="panel-body large">
 
         {% if warning.reason %}
-        <p>
-          {{ warning.reason|escape|urlize|linebreaks }}
-        </p>
+        {{ warning.reason|escape|urlize|linebreaks }}
         {% else %}
         <p>
           <em>{% trans "No warning reason was provided." %}</em>
