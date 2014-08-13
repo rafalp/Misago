@@ -117,7 +117,7 @@ class UserManager(BaseUserManager):
                                     set_default_avatar=set_default_avatar)
 
             try:
-                user.rank = Rank.objects.get(name=_("Forum Team"))
+                user.rank = Rank.objects.get(name=_("Forum team"))
                 user.update_acl_key()
             except Rank.DoesNotExist:
                 pass
