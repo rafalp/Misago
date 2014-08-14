@@ -13,7 +13,7 @@ from django.utils.translation import ugettext_lazy as _, ungettext_lazy
 def slugify(string):
     string = unicode(string)
     string = unidecode(string)
-    return django_slugify(string.replace('_', ' '))
+    return django_slugify(string.replace('_', ' ').strip())
 
 
 """
