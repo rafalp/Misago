@@ -8,9 +8,6 @@ def _roles_acls(key_name, roles):
 
 
 def sum_acls(result_acl, acls=None, roles=None, key=None, **permissions):
-    if not key:
-        raise ValueError('You have to provide "key" argument')
-
     if acls and roles:
         raise ValueError(
             'You can not provide both "acls" and "roles" arguments')
@@ -20,6 +17,9 @@ def sum_acls(result_acl, acls=None, roles=None, key=None, **permissions):
             'You have to provide either "acls" and "roles" argument')
 
     if roles is not None:
+        if not key:
+            raise ValueError('You have to provide "key" argument if '
+                             'you are passing roles instead of acls')
         acls = _roles_acls(key, roles)
 
     for permission, compare in permissions.items():

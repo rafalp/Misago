@@ -5,7 +5,6 @@ from misago.acl import algebra
 class ComparisionsTests(TestCase):
     def test_greater(self):
         """greater permission wins test"""
-
         self.assertEqual(algebra.greater(1, 3), 3)
         self.assertEqual(algebra.greater(4, 2), 4)
         self.assertEqual(algebra.greater(2, 2), 2)
@@ -13,7 +12,6 @@ class ComparisionsTests(TestCase):
 
     def test_greater_or_zero(self):
         """greater or zero permission wins test"""
-
         self.assertEqual(algebra.greater_or_zero(1, 3), 3)
         self.assertEqual(algebra.greater_or_zero(4, 2), 4)
         self.assertEqual(algebra.greater_or_zero(2, 2), 2)
@@ -24,7 +22,6 @@ class ComparisionsTests(TestCase):
 
     def test_lower(self):
         """lower permission wins test"""
-
         self.assertEqual(algebra.lower(1, 3), 1)
         self.assertEqual(algebra.lower(4, 2), 2)
         self.assertEqual(algebra.lower(2, 2), 2)
@@ -34,7 +31,6 @@ class ComparisionsTests(TestCase):
 class SumACLTests(TestCase):
     def test_sum_acls(self):
         """acls are summed"""
-
         test_acls = [
             {
                 'can_see': 0,

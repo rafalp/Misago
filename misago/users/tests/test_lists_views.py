@@ -11,9 +11,7 @@ class UsersListTestCase(AdminTestCase):
     def setUp(self):
         super(UsersListTestCase, self).setUp()
         override_acl(self.test_admin, {
-            'misago.users.permissions.profiles': {
-                'can_browse_users_list': 1
-            }
+            'can_browse_users_list': 1,
         })
 
 
@@ -21,9 +19,7 @@ class UsersListLanderTests(UsersListTestCase):
     def test_lander_no_permission(self):
         """lander returns 403 if user has no permission"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.profiles': {
-                'can_browse_users_list': 0
-            }
+            'can_browse_users_list': 0,
         })
 
         response = self.client.get(reverse('misago:users'))
@@ -64,10 +60,8 @@ class OnlineUsersTests(UsersListTestCase):
     def test_no_permission(self):
         """online list returns 403 if user has no permission"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.profiles': {
-                'can_browse_users_list': 1,
-                'can_see_users_online_list': 0,
-            }
+            'can_browse_users_list': 1,
+            'can_see_users_online_list': 0,
         })
 
         response = self.client.get(reverse('misago:users_online'))
@@ -76,10 +70,8 @@ class OnlineUsersTests(UsersListTestCase):
     def test_with_permission(self):
         """online list returns 200 if user has permission"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.profiles': {
-                'can_browse_users_list': 1,
-                'can_see_users_online_list': 1,
-            }
+            'can_browse_users_list': 1,
+            'can_see_users_online_list': 1,
         })
 
         response = self.client.get(reverse('misago:users_online'))

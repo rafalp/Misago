@@ -3,7 +3,13 @@ from misago.acl import add_acl
 from misago.forums.models import Forum
 
 
+__all__ = ['get_forums_list', 'get_forum_path']
+
+
 def get_forums_list(user, parent=None):
+    if not user.acl['visible_forums']:
+        return []
+
     if parent:
         queryset = parent.get_descendants().order_by('lft')
     else:

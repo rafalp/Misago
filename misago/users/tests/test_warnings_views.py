@@ -28,6 +28,7 @@ class WarningTestCase(AdminTestCase):
         threadstore.clear()
 
     def warn_user(self, reason):
+        override_acl(self.test_admin, {'can_warn_users': 1})
         response = self.client.post(
             reverse('misago:warn_user', kwargs=self.link_kwargs),
             data={'reason': reason})
@@ -37,15 +38,11 @@ class WarnUserTests(WarningTestCase):
     def test_no_permission(self):
         """fail to warn due to permissions"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.warnings': {
-                'can_warn_users': 0,
-            }
+            'can_warn_users': 0,
         })
 
         override_acl(self.test_user, {
-            'misago.users.permissions.warnings': {
-                'can_be_warned': 1,
-            }
+            'can_be_warned': 1,
         })
 
         response = self.client.get(reverse('misago:warn_user',
@@ -55,15 +52,11 @@ class WarnUserTests(WarningTestCase):
     def test_protected_user(self):
         """fail to warn due to user's can_be_warned"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.warnings': {
-                'can_warn_users': 1,
-            }
+            'can_warn_users': 1,
         })
 
         override_acl(self.test_user, {
-            'misago.users.permissions.warnings': {
-                'can_be_warned': 0,
-            }
+            'can_be_warned': 0,
         })
 
         response = self.client.get(reverse('misago:warn_user',
@@ -73,15 +66,11 @@ class WarnUserTests(WarningTestCase):
     def test_warn_user(self):
         """can warn user to the roof"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.warnings': {
-                'can_warn_users': 1,
-            }
+            'can_warn_users': 1,
         })
 
         override_acl(self.test_user, {
-            'misago.users.permissions.warnings': {
-                'can_be_warned': 1,
-            }
+            'can_be_warned': 1,
         })
 
         for level in self.warning_levels:
@@ -98,35 +87,30 @@ class WarnUserTests(WarningTestCase):
 
 
 class UserWarningsListTests(WarningTestCase):
-    def test_no_permission(self):
-        """can't see other user warnings"""
+    def allow_warning(self):
         override_acl(self.test_admin, {
-            'misago.users.permissions.warnings': {
-                'can_warn_users': 1,
-                'can_see_other_users_warnings': 0,
-            }
+            'can_warn_users': 1,
+            'can_see_other_users_warnings': 1,
         })
 
+        override_acl(self.test_user, {
+            'can_be_warned': 1,
+        })
+
+    def test_no_permission(self):
+        """can't see other user warnings"""
         self.warn_user('Test Warning!')
+
+        override_acl(self.test_admin, {
+            'can_see_other_users_warnings': 0,
+        })
         response = self.client.get(reverse('misago:user_warnings',
                                            kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 404)
 
     def test_see_user_warnings(self):
         """can see user warnings"""
-        override_acl(self.test_admin, {
-            'misago.users.permissions.warnings': {
-                'can_warn_users': 1,
-                'can_see_other_users_warnings': 1,
-            }
-        })
-
-        override_acl(self.test_user, {
-            'misago.users.permissions.warnings': {
-                'can_be_warned': 1,
-            }
-        })
-
+        self.allow_warning()
         response = self.client.get(reverse('misago:user_warnings',
                                            kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
@@ -134,6 +118,7 @@ class UserWarningsListTests(WarningTestCase):
 
         self.warn_user('Test Warning!')
 
+        self.allow_warning()
         response = self.client.get(reverse('misago:user_warnings',
                                            kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
@@ -141,14 +126,26 @@ class UserWarningsListTests(WarningTestCase):
 
 
 class CancelWarningTests(WarningTestCase):
+    def allow_cancel_owned_warning(self):
+        override_acl(self.test_admin, {
+            'can_warn_users': 1,
+            'can_see_other_users_warnings': 1,
+            'can_cancel_warnings': 1,
+        })
+
+    def allow_cancel_all_warnings(self):
+        override_acl(self.test_admin, {
+            'can_warn_users': 1,
+            'can_see_other_users_warnings': 1,
+            'can_cancel_warnings': 2,
+        })
+
     def test_no_permission(self):
         """can't cancel warnings"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.warnings': {
-                'can_warn_users': 1,
-                'can_see_other_users_warnings': 1,
-                'can_cancel_warnings': 0,
-            }
+            'can_warn_users': 1,
+            'can_see_other_users_warnings': 1,
+            'can_cancel_warnings': 0,
         })
 
         warning = warn_user(self.test_admin, self.test_user)
@@ -163,15 +160,9 @@ class CancelWarningTests(WarningTestCase):
 
     def test_no_permission_other(self):
         """can't cancel other mod warnings"""
-        override_acl(self.test_admin, {
-            'misago.users.permissions.warnings': {
-                'can_warn_users': 1,
-                'can_see_other_users_warnings': 1,
-                'can_cancel_warnings': 1,
-            }
-        })
-
         warning = warn_user(self.test_user, self.test_user)
+
+        self.allow_cancel_owned_warning()
         response = self.client.post(
             reverse('misago:cancel_warning', kwargs={
                 'user_slug': 'bob',
@@ -182,6 +173,7 @@ class CancelWarningTests(WarningTestCase):
         self.assertFalse(self.test_user.warnings.get(id=warning.pk).is_canceled)
 
         warning = warn_user(self.test_admin, self.test_user)
+        self.allow_cancel_owned_warning()
         response = self.client.post(
             reverse('misago:cancel_warning', kwargs={
                 'user_slug': 'bob',
@@ -195,15 +187,9 @@ class CancelWarningTests(WarningTestCase):
 
     def test_cancel_other_and_owned_warnings(self):
         """cancel everyone's warnings"""
-        override_acl(self.test_admin, {
-            'misago.users.permissions.warnings': {
-                'can_warn_users': 1,
-                'can_see_other_users_warnings': 1,
-                'can_cancel_warnings': 2,
-            }
-        })
-
         warning = warn_user(self.test_user, self.test_user)
+
+        self.allow_cancel_all_warnings()
         response = self.client.post(
             reverse('misago:cancel_warning', kwargs={
                 'user_slug': 'bob',
@@ -214,6 +200,8 @@ class CancelWarningTests(WarningTestCase):
         self.assertTrue(self.test_user.warnings.get(id=warning.pk).is_canceled)
 
         warning = warn_user(self.test_admin, self.test_user)
+
+        self.allow_cancel_all_warnings()
         response = self.client.post(
             reverse('misago:cancel_warning', kwargs={
                 'user_slug': 'bob',
@@ -225,14 +213,26 @@ class CancelWarningTests(WarningTestCase):
 
 
 class DeleteWarningTests(WarningTestCase):
+    def allow_delete_owned_warning(self):
+        override_acl(self.test_admin, {
+            'can_warn_users': 1,
+            'can_see_other_users_warnings': 1,
+            'can_delete_warnings': 1,
+        })
+
+    def allow_delete_all_warnings(self):
+        override_acl(self.test_admin, {
+            'can_warn_users': 1,
+            'can_see_other_users_warnings': 1,
+            'can_delete_warnings': 2,
+        })
+
     def test_no_permission(self):
         """can't delete warnings"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.warnings': {
-                'can_warn_users': 1,
-                'can_see_other_users_warnings': 1,
-                'can_delete_warnings': 0,
-            }
+            'can_warn_users': 1,
+            'can_see_other_users_warnings': 1,
+            'can_delete_warnings': 0,
         })
 
         warning = warn_user(self.test_admin, self.test_user)
@@ -247,15 +247,9 @@ class DeleteWarningTests(WarningTestCase):
 
     def test_no_permission_other(self):
         """can't delete other mod warnings"""
-        override_acl(self.test_admin, {
-            'misago.users.permissions.warnings': {
-                'can_warn_users': 1,
-                'can_see_other_users_warnings': 1,
-                'can_delete_warnings': 1,
-            }
-        })
-
         warning = warn_user(self.test_user, self.test_user)
+
+        self.allow_delete_owned_warning()
         response = self.client.post(
             reverse('misago:delete_warning', kwargs={
                 'user_slug': 'bob',
@@ -266,6 +260,8 @@ class DeleteWarningTests(WarningTestCase):
         self.assertEqual(self.test_user.warnings.count(), 1)
 
         warning = warn_user(self.test_admin, self.test_user)
+
+        self.allow_delete_owned_warning()
         response = self.client.post(
             reverse('misago:delete_warning', kwargs={
                 'user_slug': 'bob',
@@ -275,17 +271,11 @@ class DeleteWarningTests(WarningTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.test_user.warnings.count(), 1)
 
-    def test_cancel_other_and_owned_warnings(self):
+    def test_delete_other_and_owned_warnings(self):
         """delete everyone's warnings"""
-        override_acl(self.test_admin, {
-            'misago.users.permissions.warnings': {
-                'can_warn_users': 1,
-                'can_see_other_users_warnings': 1,
-                'can_delete_warnings': 2,
-            }
-        })
-
         warning = warn_user(self.test_user, self.test_user)
+
+        self.allow_delete_all_warnings()
         response = self.client.post(
             reverse('misago:delete_warning', kwargs={
                 'user_slug': 'bob',
@@ -296,6 +286,8 @@ class DeleteWarningTests(WarningTestCase):
         self.assertEqual(self.test_user.warnings.count(), 0)
 
         warning = warn_user(self.test_admin, self.test_user)
+
+        self.allow_delete_all_warnings()
         response = self.client.post(
             reverse('misago:delete_warning', kwargs={
                 'user_slug': 'bob',

@@ -1,6 +1,5 @@
-from django.core.exceptions import ValidationError
 from django.test import TestCase
-from misago.forums.models import Forum
+from misago.forums.models import FORUMS_TREE_ID, Forum
 
 
 class ForumManagerTests(TestCase):
@@ -34,3 +33,13 @@ class ForumManagerTests(TestCase):
 
         self.assertIn(test_forum_a, all_forums_from_db)
         self.assertIn(test_forum_b, all_forums_from_db)
+
+    def test_get_forums_dict_from_db(self):
+        """get_forums_dict_from_db returns dict with forums"""
+        test_dict = Forum.objects.get_forums_dict_from_db()
+
+        for forum in Forum.objects.all():
+            if forum.tree_id == FORUMS_TREE_ID:
+                self.assertIn(forum.id, test_dict)
+            else:
+                self.assertNotIn(forum.id, test_dict)

@@ -193,9 +193,7 @@ class EditSignatureTests(AdminTestCase):
     def test_signature_no_permission(self):
         """edit signature view with no ACL returns 404"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.account': {
-                'can_have_signature': 0,
-            }
+            'can_have_signature': 0,
         })
 
         response = self.client.get(self.view_link)
@@ -204,9 +202,7 @@ class EditSignatureTests(AdminTestCase):
     def test_signature_locked(self):
         """locked edit signature view returns 200"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.account': {
-                'can_have_signature': 1,
-            }
+            'can_have_signature': 1,
         })
 
         self.test_admin.is_signature_locked = True
@@ -220,9 +216,7 @@ class EditSignatureTests(AdminTestCase):
     def test_signature_change(self):
         """GET to usercp change options view returns 200"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.account': {
-                'can_have_signature': 1,
-            }
+            'can_have_signature': 1,
         })
 
         self.test_admin.is_signature_locked = False

@@ -152,9 +152,7 @@ class UserProfileViewsTests(AdminTestCase):
     def test_user_ban(self):
         """user ban details page has no showstoppers"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.profiles': {
-                'can_see_ban_details': 0,
-            },
+            'can_see_ban_details': 0,
         })
 
         User = get_user_model()
@@ -166,9 +164,7 @@ class UserProfileViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 404)
 
         override_acl(self.test_admin, {
-            'misago.users.permissions.profiles': {
-                'can_see_ban_details': 1,
-            },
+            'can_see_ban_details': 1,
         })
 
         test_ban = Ban.objects.create(banned_value=test_user.username,

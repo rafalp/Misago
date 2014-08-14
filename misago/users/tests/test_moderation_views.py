@@ -16,12 +16,15 @@ class UserModerationTestCase(AdminTestCase):
 
 
 class RenameUserTests(UserModerationTestCase):
+    def allow_rename(self):
+        override_acl(self.test_admin, {
+            'can_rename_users': 1,
+        })
+
     def test_no_rename_permission(self):
         """user with no permission fails to rename other user"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.moderation': {
-                'can_rename_users': 0,
-            },
+            'can_rename_users': 0,
         })
 
         response = self.client.get(
@@ -32,34 +35,33 @@ class RenameUserTests(UserModerationTestCase):
 
     def test_rename_user(self):
         """user with permission renames other user"""
-        override_acl(self.test_admin, {
-            'misago.users.permissions.moderation': {
-                'can_rename_users': 1,
-            }
-        })
-
+        self.allow_rename()
         response = self.client.get(
             reverse('misago:rename_user', kwargs=self.link_kwargs))
-
         self.assertEqual(response.status_code, 200)
 
+        self.allow_rename()
         response = self.client.post(
             reverse('misago:rename_user', kwargs=self.link_kwargs),
             data={'new_username': 'LoremIpsum'})
         self.assertEqual(response.status_code, 302)
 
+        self.allow_rename()
         response = self.client.post(reverse('misago:index'))
         self.assertEqual(response.status_code, 200)
         self.assertIn('Bob&#39;s username has been changed.', response.content)
 
 
 class ModerateAvatarTests(UserModerationTestCase):
-    def test_no_rename_permission(self):
+    def allow_avatar_mod(self):
+        override_acl(self.test_admin, {
+            'can_moderate_avatars': 1,
+        })
+
+    def test_no_avatar_mod_permission(self):
         """user with no permission fails to mod other user avatar"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.moderation': {
-                'can_moderate_avatars': 0,
-            },
+            'can_moderate_avatars': 0,
         })
 
         response = self.client.get(
@@ -68,18 +70,14 @@ class ModerateAvatarTests(UserModerationTestCase):
         self.assertEqual(response.status_code, 403)
         self.assertIn("You can&#39;t moderate avatars.", response.content)
 
-    def test_rename_user(self):
+    def test_mod_avatar(self):
         """user with permission moderates other user avatar"""
-        override_acl(self.test_admin, {
-            'misago.users.permissions.moderation': {
-                'can_moderate_avatars': 1,
-            }
-        })
-
+        self.allow_avatar_mod()
         response = self.client.get(
             reverse('misago:moderate_avatar', kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
 
+        self.allow_avatar_mod()
         response = self.client.post(
             reverse('misago:moderate_avatar', kwargs=self.link_kwargs),
             data={
@@ -98,6 +96,7 @@ class ModerateAvatarTests(UserModerationTestCase):
         self.assertEqual(updated_user.avatar_lock_staff_message,
                          'Test st4ff message')
 
+        self.allow_avatar_mod()
         response = self.client.get(
             reverse('misago:moderate_avatar', kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
@@ -106,12 +105,15 @@ class ModerateAvatarTests(UserModerationTestCase):
 
 
 class ModerateSignatureTests(UserModerationTestCase):
-    def test_no_rename_permission(self):
+    def allow_signature_mod(self):
+        override_acl(self.test_admin, {
+            'can_moderate_signatures': 1,
+        })
+
+    def test_no_signature_mod_permission(self):
         """user with no permission fails to mod other user signature"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.moderation': {
-                'can_moderate_signatures': 0,
-            },
+            'can_moderate_signatures': 0,
         })
 
         response = self.client.get(
@@ -120,18 +122,14 @@ class ModerateSignatureTests(UserModerationTestCase):
         self.assertEqual(response.status_code, 403)
         self.assertIn("You can&#39;t moderate signatures.", response.content)
 
-    def test_rename_user(self):
+    def test_mod_signature(self):
         """user with permission moderates other user signature"""
-        override_acl(self.test_admin, {
-            'misago.users.permissions.moderation': {
-                'can_moderate_signatures': 1,
-            }
-        })
-
+        self.allow_signature_mod()
         response = self.client.get(
             reverse('misago:moderate_signature', kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
 
+        self.allow_signature_mod()
         response = self.client.post(
             reverse('misago:moderate_signature', kwargs=self.link_kwargs),
             data={
@@ -152,6 +150,7 @@ class ModerateSignatureTests(UserModerationTestCase):
         self.assertEqual(updated_user.signature_lock_staff_message,
                          'Test st4ff message')
 
+        self.allow_signature_mod()
         response = self.client.get(
             reverse('misago:moderate_signature', kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
@@ -160,12 +159,16 @@ class ModerateSignatureTests(UserModerationTestCase):
 
 
 class BanUserTests(UserModerationTestCase):
+    def allow_ban_user(self):
+        override_acl(self.test_admin, {
+            'can_ban_users': 1,
+            'max_ban_length': 0,
+        })
+
     def test_no_ban_permission(self):
         """user with no permission fails to ban other user"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.moderation': {
-                'can_ban_users': 0,
-            },
+            'can_ban_users': 0,
         })
 
         response = self.client.get(
@@ -176,21 +179,17 @@ class BanUserTests(UserModerationTestCase):
 
     def test_ban_user(self):
         """user with permission bans other user"""
-        override_acl(self.test_admin, {
-            'misago.users.permissions.moderation': {
-                'can_ban_users': 1,
-                'max_ban_length': 0,
-            }
-        })
-
+        self.allow_ban_user()
         response = self.client.get(
             reverse('misago:ban_user', kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
 
+        self.allow_ban_user()
         response = self.client.post(
             reverse('misago:ban_user', kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 302)
 
+        self.allow_ban_user()
         response = self.client.post(reverse('misago:index'))
         self.assertEqual(response.status_code, 200)
         self.assertIn('Bob has been banned.', response.content)
@@ -199,13 +198,17 @@ class BanUserTests(UserModerationTestCase):
 
 
 class LiftUserBanTests(UserModerationTestCase):
+    def allow_lift_ban(self):
+        override_acl(self.test_admin, {
+            'can_lift_bans': 1,
+            'max_lifted_ban_length': 0,
+        })
+
     def test_no_lift_ban_permission(self):
         """user with no permission fails to lift user ban"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.moderation': {
-                'can_lift_bans': 0,
-                'max_lifted_ban_length': 0,
-            },
+            'can_lift_bans': 0,
+            'max_lifted_ban_length': 0,
         })
 
         Ban.objects.create(banned_value=self.test_user.username)
@@ -218,19 +221,14 @@ class LiftUserBanTests(UserModerationTestCase):
 
     def test_lift_user_ban(self):
         """user with permission lifts other user ban"""
-        override_acl(self.test_admin, {
-            'misago.users.permissions.moderation': {
-                'can_lift_bans': 1,
-                'max_lifted_ban_length': 0,
-            }
-        })
-
         test_ban = Ban.objects.create(banned_value=self.test_user.username)
 
+        self.allow_lift_ban()
         response = self.client.post(
             reverse('misago:lift_user_ban', kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 302)
 
+        self.allow_lift_ban()
         response = self.client.post(reverse('misago:index'))
         self.assertEqual(response.status_code, 200)
         self.assertIn('ban has been lifted.', response.content)
@@ -243,10 +241,8 @@ class DeleteUserTests(UserModerationTestCase):
     def test_no_delete_permission(self):
         """user with no permission fails to delete other user"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.delete': {
-                'can_delete_users_newer_than': 0,
-                'can_delete_users_with_less_posts_than': 0,
-            },
+            'can_delete_users_newer_than': 0,
+            'can_delete_users_with_less_posts_than': 0,
         })
 
         response = self.client.post(
@@ -258,10 +254,8 @@ class DeleteUserTests(UserModerationTestCase):
     def test_delete_user(self):
         """user with permission deletes other user"""
         override_acl(self.test_admin, {
-            'misago.users.permissions.delete': {
-                'can_delete_users_newer_than': 5,
-                'can_delete_users_with_less_posts_than': 5,
-            }
+            'can_delete_users_newer_than': 5,
+            'can_delete_users_with_less_posts_than': 5,
         })
 
         response = self.client.post(

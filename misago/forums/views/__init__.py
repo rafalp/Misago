@@ -24,6 +24,7 @@ def forum_view(role):
 
 @forum_view('category')
 def category(request, forum):
+    allow_browse_forum(request.user, forum)
     if forum.level == 1:
         return dj_redirect(forum.get_absolute_url())
     forums = get_forums_list(request.user, forum)
