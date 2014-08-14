@@ -49,10 +49,10 @@ def add_acl(user, target):
     """
     Add valid ACL to target (iterable of objects or single object)
     """
-    try:
+    if hasattr(target, '__iter__'):
         for item in target:
             _add_acl_to_target(user, item)
-    except TypeError:
+    else:
         _add_acl_to_target(user, target)
 
 
