@@ -1,3 +1,5 @@
+from misago.acl import add_acl
+
 from misago.forums.models import Forum
 
 
@@ -19,7 +21,7 @@ def get_forums_list(user, parent=None):
         forums_dict[forum.pk] = forum
         forums_list.append(forum)
 
-        if forum.level > 1:
+        if forum.level > parent_level:
             forums_dict[forum.parent_id].subforums.append(forum)
 
     flat_list = []
@@ -27,4 +29,16 @@ def get_forums_list(user, parent=None):
         has_content = (forum.role != "category" or forum.subforums)
         if forum.level == parent_level and has_content:
             flat_list.append(forum)
+
+    add_acl(user, flat_list)
     return flat_list
+
+
+def get_forum_path(forum):
+    forums_dict = Forum.objects.get_cached_forums_dict()
+
+    forum_path = []
+    while forum.level > 0:
+        forum_path.append(forum)
+        forum = forums_dict[forum.parent_id]
+    return [f for f in reversed(forum_path)]

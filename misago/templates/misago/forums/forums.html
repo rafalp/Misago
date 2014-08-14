@@ -1,6 +1,6 @@
 {% load humanize i18n misago_capture %}
 <ul class="list-group">
-  {% for forum in category.subforums %}
+  {% for forum in forums %}
   <li class="list-group-item">
     {% if forum.role == 'redirect' %}
     <span class="forum-icon fa fa-link fa-fw"></span>
@@ -8,7 +8,7 @@
     <span class="forum-icon fa fa-comment{% if forum.is_read %}-o{% else %} new{% endif %} fa-fw"></span>
     {% endif %}
 
-    <a href="/" class="item-title forum-name">{{ forum.name }}</a>
+    <a href="{{ forum.get_absolute_url }}" class="item-title forum-name">{{ forum.name }}</a>
 
     <div class="sr-only forum-description">
       {% if forum.description %}
@@ -19,12 +19,16 @@
         <li>
           {% trans "Clicks:" %} <strong>{{ forum.redirects_count|intcomma }}</strong>
         </li>
-        {% else %}
+        {% elif forum.acl.can_browse %}
         <li>
           {% trans "Posts:" %} <strong>{{ forum.posts|intcomma }}</strong>
         </li>
         <li>
           {% trans "Threads:" %} <strong>{{ forum.threads|intcomma }}</strong>
+        </li>
+        {% else %}
+        <li>
+          {% trans "You don't have permission to browse this forum." %}
         </li>
         {% endif %}
       </ul>
@@ -32,7 +36,7 @@
 
     <footer>
       {% if forum.role == 'redirect' %}
-      <a href="#" class="item-title">{{ forum.redirect_host }}</a>
+      <a href="{{ forum.get_absolute_url }}" class="item-title">{{ forum.redirect_host }}</a>
       <div class="text-muted">
         {% capture as clicks %}<strong>{{ forum.redirects_count|intcomma }}</strong>{% endcapture %}
         {% blocktrans trimmed with clicks=clicks|safe count counter=forum.redirects_count %}
@@ -41,13 +45,13 @@
         {{ clicks }} clicks
         {% endblocktrans %}
       </div>
-      {% elif 0 %}
+      {% elif forum.acl.can_browse %}
       <a href="#" class="item-title">Lorem ipsum dolor met sit amet</a>
       <div class="text-muted">
         <a href="#" class="item-title">somebody</a>, <abbr>32 minutes ago</abbr>
       </div>
       {% else %}
-      <em class="text-muted">Some message</em>
+      <em class="text-muted">{% trans "Can't be browsed" %}</em>
       {% endif %}
     </footer>
 
@@ -59,7 +63,7 @@
       <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
         {% for subforum in forum.subforums %}
         <li role="presentation">
-          <a role="menuitem" tabindex="-1" href="#">
+          <a role="menuitem" tabindex="-1" href="{{ subforum.get_absolute_url }}">
             {% if subforum.role == 'redirect' %}
             <span class="forum-icon fa fa-link fa-fw"></span>
             {% else %}

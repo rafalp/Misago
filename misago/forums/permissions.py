@@ -1,7 +1,10 @@
+from django.core.exceptions import PermissionDenied
+from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 
 
 from misago.acl import algebra
+from misago.acl.decorators import require_target_type, return_boolean
 from misago.core import forms
 
 from misago.forums.models import Forum, RoleForumACL, ForumRole
@@ -81,8 +84,30 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
 """
 ACL's for targets
 """
+@require_target_type(Forum)
+def add_acl_to_target(user, target):
+    target.acl['can_see'] = can_see_forum(user, target)
+    target.acl['can_browse'] = can_browse_forum(user, target)
 
 
 """
-ACL's for tests
+ACL tests
 """
+def allow_see_forum(user, target):
+    try:
+        forum_id = target.pk
+    except AttributeError:
+        forum_id = int(target)
+
+    if not forum_id in user.acl['visible_forums']:
+        raise Http404()
+can_see_forum = return_boolean(allow_see_forum)
+
+
+def allow_browse_forum(user, target):
+    target_acl = user.acl['forums'].get(target.id, {'can_browse': False})
+    if not target_acl['can_browse']:
+        message = _('You don\'t have permission '
+                    'to browse "%(forum)s" contents.')
+        raise PermissionDenied(message % {'forum': target.name})
+can_browse_forum = return_boolean(allow_browse_forum)

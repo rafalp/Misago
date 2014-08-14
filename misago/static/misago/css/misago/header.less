@@ -66,7 +66,8 @@
 .page-header {
   &>.container {
     .breadcrumb {
-      margin-bottom: (@line-height-computed * @headings-line-height) * -1;
+      margin-top: @line-height-computed * -0.8;
+      margin-bottom: 0px;
 
       color: @breadcrumb-color;
       font-size: @font-size-small;
@@ -78,12 +79,15 @@
         }
 
         a:link, a:visited {
-          color: @breadcrumb-color;
+          color: @state-default;
         }
 
-        a:hover, a:active {
-          color: @breadcrumb-active-color;
-          text-decoration: none;
+        a:hover {
+          color: @state-hover;
+        }
+
+        a:active, a:focus {
+          color: @state-clicked;
         }
 
         span {
@@ -105,8 +109,8 @@
       margin: -3px 0px;
 
       &>form {
-      	margin: 0px;
-      	padding: 0px;
+        margin: 0px;
+        padding: 0px;
       }
 
       .pull-left {

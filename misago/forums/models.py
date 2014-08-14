@@ -1,5 +1,6 @@
 from urlparse import urlparse
 
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
@@ -10,10 +11,12 @@ from mptt.models import MPTTModel, TreeForeignKey
 from misago.acl import version as acl_version
 from misago.acl.models import BaseRole
 from misago.core import serializer
+from misago.core.cache import cache
 from misago.core.signals import secret_key_changed
 from misago.core.utils import subset_markdown, slugify
 
 
+CACHE_NAME = 'misago_forums_tree'
 FORUMS_TREE_ID = 1
 
 
@@ -29,6 +32,22 @@ class ForumManager(TreeManager):
         if not include_root:
             qs = self.filter(lft__gt=3)
         return qs.order_by('lft')
+
+    def get_cached_forums_dict(self):
+        forums_dict = cache.get(CACHE_NAME, 'nada')
+        if forums_dict == 'nada':
+            forums_dict = self.get_forums_dict_from_db()
+            cache.set(CACHE_NAME, forums_dict)
+        return forums_dict
+
+    def get_forums_dict_from_db(self):
+        forums_dict = {}
+        for forum in self.all_forums(include_root=True):
+            forums_dict[forum.pk] = forum
+        return forums_dict
+
+    def clear_forums_cache(self):
+        cache.delete(CACHE_NAME)
 
 
 class Forum(MPTTModel):
@@ -72,12 +91,25 @@ class Forum(MPTTModel):
         return super(Forum, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
+        Forum.objects.clear_forums_cache()
         acl_version.invalidate()
         return super(Forum, self).delete(*args, **kwargs)
 
     @property
     def redirect_host(self):
         return urlparse(self.redirect_url).hostname
+
+    def get_absolute_url(self):
+        if not self.special_role:
+            if self.level == 1:
+                formats = (reverse('misago:index'), self.slug, self.pk)
+                return '%s#%s-%s' % formats
+            else:
+                return reverse('misago:%s' % self.role, kwargs={
+                    'forum_id': self.pk, 'forum_slug': self.slug
+                })
+        else:
+            return None
 
     def set_name(self, name):
         self.name = name
