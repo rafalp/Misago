@@ -8,6 +8,8 @@ from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import resolve
 from django.http import Http404, JsonResponse
 
+from misago.users.online.tracker import mute_tracker
+
 from misago.core.decorators import ajax_only
 from misago.core.utils import is_referer_local
 
@@ -38,6 +40,8 @@ def get_resolver_match(request):
 
 @ajax_only
 def uiserver(request):
+    mute_tracker(request)
+
     if not is_referer_local(request):
         raise PermissionDenied()
 

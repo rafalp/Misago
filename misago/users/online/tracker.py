@@ -4,6 +4,10 @@ from misago.users.models import Online
 from misago.users.online.ranks import clear_ranks_online_cache
 
 
+def mute_tracker(request):
+    request._misago_online_tracker = None
+
+
 def start_tracking(request, user):
     online_tracker = Online.objects.create(
         user=user,
