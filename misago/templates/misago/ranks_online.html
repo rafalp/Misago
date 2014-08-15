@@ -8,7 +8,7 @@
       {% endblocktrans %}
     </h3>
     <ul class="list-unstyled">
-      {% for user in rank.online %}
+      {% for user in rank.online|dictsort:"username" %}
       <li>
         <a href="{% url USER_PROFILE_URL user_slug=user.slug user_id=user.id %}" class="item-title combined">
           <img src="{{ user.id|avatar:32 }}" alt="{% trans "Avatar" %}">
