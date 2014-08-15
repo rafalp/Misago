@@ -1,10 +1,9 @@
-import bleach
 from django import template
 
 
 register = template.Library()
 
 
-@register.filter(name='linkify', is_safe=True)
-def linkify(string):
-    return bleach.linkify(string)
+@register.filter
+def striplinebreaks(string):
+    return ' '.join([s.strip() for s in string.splitlines() if s.strip()])

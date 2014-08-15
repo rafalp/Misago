@@ -1,11 +1,11 @@
 {% extends "misago/base.html" %}
-{% load i18n %}
+{% load i18n misago_stringutils %}
 
 
 {% block title %}{{ category.name }} | {{ block.super }}{% endblock title %}
 
 
-{% block meta-description %}{{ misago_settings.forum_index_meta_description }}{% endblock meta-description %}
+{% block meta-description %}{{ category.description|striplinebreaks }}{% endblock meta-description %}
 
 
 {% block content %}
