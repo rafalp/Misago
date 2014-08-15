@@ -50,12 +50,18 @@ def filter_visiblity_preference(viewer, ranks_online):
     visible_ranks = []
     for rank in ranks_online:
         visible_users = []
-        for user in rank['online']:
-            see_self = viewer.is_authenticated() and user['pk'] == viewer.pk
-            if see_self or not user['is_hiding_presence']:
-                visible_users.append(user)
-        if visible_users:
-            rank['online'] = visible_users
+        if rank['has_ninjas']:
+            for user in rank['online']:
+                if viewer.is_authenticated() and user['pk'] == viewer.pk:
+                    is_viewer = True
+                else:
+                    is_viewer = False
+                if is_viewer or not user['is_hiding_presence']:
+                    visible_users.append(user)
+            if visible_users:
+                rank['online'] = visible_users
+                visible_ranks.append(rank)
+        else:
             visible_ranks.append(rank)
     return visible_ranks
 
@@ -73,6 +79,7 @@ def get_ranks_from_db():
             'description': rank.description,
             'title': rank.title,
             'css_class': rank.css_class,
+            'has_ninjas': False,
             'online': []
         }
         _displayed_ranks.append(ranks_dict[rank.pk])
@@ -88,6 +95,9 @@ def get_ranks_from_db():
                 'title': tracker.user.title,
                 'is_hiding_presence': tracker.user.is_hiding_presence
             })
+
+            if tracker.user.is_hiding_presence:
+                ranks_dict[tracker.user.rank_id]['has_ninjas'] = True
 
     ranks_online = []
     for rank in _displayed_ranks:
