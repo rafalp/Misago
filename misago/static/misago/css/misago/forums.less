@@ -158,3 +158,27 @@
     }
   }
 }
+
+
+// Few predefined CSS classes for block styling
+//
+//==
+.forum-panel-flavour(@color) {
+  .panel-heading {
+    background: darken(@color, 3%);
+    border-color: darken(@color, 10%);
+
+    h3 {
+      color: #fff;
+      text-shadow: 1px 1px 0px darken(@color, 30%);
+    }
+  }
+}
+
+.panel-forums {
+  &.primary {.forum-panel-flavour(@brand-primary);}
+  &.accent {.forum-panel-flavour(@brand-accent);}
+  &.success {.forum-panel-flavour(@brand-success);}
+  &.warning {.forum-panel-flavour(@brand-warning);}
+  &.danger {.forum-panel-flavour(@brand-danger);}
+}

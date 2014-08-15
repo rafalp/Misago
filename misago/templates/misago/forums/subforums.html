@@ -2,7 +2,9 @@
 <div class="forums-list">
   <div id="{{ category.slug }}-{{ category.pk }}" class="panel panel-default panel-shadow panel-forums {{ category.css_class }}">
     <div class="panel-heading">
-      <h3 class="panel-title">{% trans "Subforums" %}</h3>
+      <h3 class="panel-title">{% blocktrans trimmed with forum=category.name %}
+        Forums in {{ forum }}
+        {% endblocktrans %}</h3>
     </div>
     {% include "misago/forums/forums.html" %}
   </div>

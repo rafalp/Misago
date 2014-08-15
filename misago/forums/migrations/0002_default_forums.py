@@ -45,7 +45,8 @@ def create_default_forums_tree(apps, schema_editor):
         level=1,
         role='category',
         name=category_name,
-        slug=slugify(category_name))
+        slug=slugify(category_name),
+        css_class='accent')
 
     Forum.objects.create(
         parent=category,
