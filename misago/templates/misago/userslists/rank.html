@@ -73,6 +73,8 @@ There are {{ users }} users with {{ rank }} rank.
     <h4 class="user-name">{{ card.username }}</h4>
     {% if card.title %}
     <small>{{ card.title }}</small>
+    {% elif rank.title %}
+    <small>{{ rank.title }}</small>
     {% endif %}
     {% endblock user-card-footer %}
   </div>
