@@ -40,8 +40,8 @@ def category(request, forum):
 def redirect(request, forum):
     if forum.pk not in request.session.get('forum_redirects', []):
         request.session.setdefault('forum_redirects', []).append(forum.pk)
-        forum.redirects_count = F('redirects_count') + 1
-        forum.save(update_fields=['redirects_count'])
+        forum.redirects = F('redirects') + 1
+        forum.save(update_fields=['redirects'])
     return dj_redirect(forum.redirect_url)
 
 

@@ -79,6 +79,15 @@ class RedirectViewsTests(AdminTestCase):
         redirects_qs = Forum.objects.all_forums().filter(role='redirect')
         self.redirect = redirects_qs[:1][0]
 
+    def allow_redirect_follow(self):
+        override_acl(self.test_admin, {
+            'visible_forums': [self.redirect.parent_id, self.redirect.pk],
+            'forums': {
+                self.redirect.parent_id: {'can_see': 1, 'can_browse': 1},
+                self.redirect.pk: {'can_see': 1, 'can_browse': 1},
+            }
+        })
+
     def test_cant_see_redirect(self):
         """can't see redirect"""
         override_acl(self.test_admin, {'visible_forums': []})
@@ -88,29 +97,21 @@ class RedirectViewsTests(AdminTestCase):
 
     def test_can_follow_redirect(self):
         """can see redirect"""
-        override_acl(self.test_admin, {
-            'visible_forums': [self.redirect.parent_id, self.redirect.pk],
-            'forums': {
-                self.redirect.parent_id: {'can_see': 1, 'can_browse': 1},
-                self.redirect.pk: {'can_see': 1, 'can_browse': 1},
-            }
-        })
-
+        self.allow_redirect_follow()
         response = self.client.get(self.redirect.get_absolute_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], 'http://misago-project.org')
 
         # Redirects count increased
         updated_redirect = Forum.objects.get(id=self.redirect.pk)
-        self.assertEqual(updated_redirect.redirects_count,
-                         self.redirect.redirects_count + 1)
+        self.assertEqual(updated_redirect.redirects,
+                         self.redirect.redirects + 1)
 
         # Session keeps track of clicks spam
-        self.client.get(self.redirect.get_absolute_url())
-        self.client.get(self.redirect.get_absolute_url())
-        self.client.get(self.redirect.get_absolute_url())
-        self.client.get(self.redirect.get_absolute_url())
+        for i in xrange(20):
+            self.allow_redirect_follow()
+            self.client.get(self.redirect.get_absolute_url())
 
         updated_redirect = Forum.objects.get(id=self.redirect.pk)
-        self.assertEqual(updated_redirect.redirects_count,
-                         self.redirect.redirects_count + 1)
+        self.assertEqual(updated_redirect.redirects,
+                         self.redirect.redirects + 1)

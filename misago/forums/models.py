@@ -61,11 +61,9 @@ class Forum(MPTTModel):
     description_as_html = models.TextField(null=True, blank=True)
     is_closed = models.BooleanField(default=False)
     redirect_url = models.CharField(max_length=255, null=True, blank=True)
-    redirects_count = models.PositiveIntegerField(default=0)
+    redirects = models.PositiveIntegerField(default=0)
     threads = models.PositiveIntegerField(default=0)
-    threads_count = models.PositiveIntegerField(default=0)
     posts = models.PositiveIntegerField(default=0)
-    posts_count = models.PositiveIntegerField(default=0)
     prune_started_after = models.PositiveIntegerField(default=0)
     prune_replied_after = models.PositiveIntegerField(default=0)
     archive_pruned_in = models.ForeignKey('self',

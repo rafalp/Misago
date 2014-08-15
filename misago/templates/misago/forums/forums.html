@@ -17,7 +17,7 @@
       <ul class="list-unstyled">
         {% if forum.role == 'redirect' %}
         <li>
-          {% trans "Clicks:" %} <strong>{{ forum.redirects_count|intcomma }}</strong>
+          {% trans "Clicks:" %} <strong>{{ forum.redirects|intcomma }}</strong>
         </li>
         {% elif forum.acl.can_browse %}
         <li>
@@ -38,8 +38,8 @@
       {% if forum.role == 'redirect' %}
       <a href="{{ forum.get_absolute_url }}" class="item-title">{{ forum.redirect_host }}</a>
       <div class="text-muted">
-        {% capture as clicks %}<strong>{{ forum.redirects_count|intcomma }}</strong>{% endcapture %}
-        {% blocktrans trimmed with clicks=clicks|safe count counter=forum.redirects_count %}
+        {% capture as clicks %}<strong>{{ forum.redirects|intcomma }}</strong>{% endcapture %}
+        {% blocktrans trimmed with clicks=clicks|safe count counter=forum.redirects %}
         {{ clicks }} click
         {% plural %}
         {{ clicks }} clicks
