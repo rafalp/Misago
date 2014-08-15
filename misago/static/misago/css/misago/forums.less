@@ -165,19 +165,19 @@
 //==
 .forum-panel-flavour(@color) {
   .panel-heading {
-    background: darken(@color, 3%);
-    border-color: darken(@color, 10%);
+    background: desaturate(darken(@color, 3%), 7%);
+    border-color: desaturate(darken(@color, 14%), 7%);
 
     h3 {
       color: #fff;
-      text-shadow: 1px 1px 0px darken(@color, 30%);
+      text-shadow: 1px 1px 0px darken(@color, 25%);
     }
   }
 }
 
 .panel-forums {
   &.primary {.forum-panel-flavour(@brand-primary);}
-  &.accent {.forum-panel-flavour(@brand-accent);}
+  &.accent {.forum-panel-flavour(darken(@brand-accent, 7%));}
   &.success {.forum-panel-flavour(@brand-success);}
   &.warning {.forum-panel-flavour(@brand-warning);}
   &.danger {.forum-panel-flavour(@brand-danger);}
