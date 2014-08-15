@@ -1,12 +1,12 @@
 {% load i18n %}
 <h1 class="user-name">
   {{ profile.username }}
-  {% if profile.full_title %}
+  {% if profile.title or profile.rank.is_tab %}
   <small class="user-title">
     {% if profile.rank.is_tab %}
     <a href="{% url 'misago:users_rank' rank_slug=profile.rank.slug %}">{{ profile.full_title }}</a>
     {% else %}
-    {{ profile.full_title }}
+    <span>{{ profile.full_title }}</span>
     {% endif %}
   </small>
   {% endif %}

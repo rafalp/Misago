@@ -13,9 +13,32 @@
     border-bottom-width: 1px;
 
     h1 {
-    	small, small a {
-    		color: @text-muted;
-    	}
+      &>small {
+        &>a, &>a:link, &>a:visited, &>span {
+          background-color: fadeOut(@text-muted, 50%);
+          border-radius: @border-radius-base;
+          display: inline-block;
+          padding: @padding-small-vertical @padding-small-horizontal;
+          position: relative;
+          top: -4px;
+
+          color: @body-bg;
+        }
+
+        &>a {
+          &:hover {
+            background-color: fadeOut(@text-muted, 15%);
+
+            text-decoration: none;
+          }
+
+          &:active {
+            background-color: @state-clicked;
+
+            text-decoration: none;
+          }
+        }
+      }
     }
 
     .page-actions {

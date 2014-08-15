@@ -8,8 +8,18 @@
 //==
 .user-profile {
   &.profile-team {
-    .user-title, .user-title>a {
-      color: fadeOut(@brand-accent, 50%);
+    .user-title {
+      a, a:link, a:visited, span {
+        background-color: fadeOut(@brand-accent, 10%);
+      }
+
+      a:hover {
+        background: @brand-accent;
+      }
+
+      a:active {
+        background: darken(@brand-accent, 15%);
+      }
     }
   }
 }
@@ -18,7 +28,7 @@
 .ranks-online {
   .rank-online.rank-team {
     small {
-      color: fadeOut(@brand-accent, 50%);
+      background-color: fadeOut(@brand-accent, 10%);
     }
   }
 }
