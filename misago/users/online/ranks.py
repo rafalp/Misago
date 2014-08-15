@@ -12,27 +12,52 @@ RANKS_CACHE_NAME = 'misago_ranks_online'
 RANKS_CACHE_TIME = 3 * 60
 
 
-def get_ranks_online(viewer=None):
+def get_ranks_online(viewer):
     cached_online = cache.get(RANKS_CACHE_NAME, 'nada')
 
-    if viewer.is_authenticated() and viewer.rank.is_on_index:
-        if cached_online != 'nada':
-            for rank in cached_online:
-                if rank['pk'] == viewer.rank_id:
-                    for user in rank['online']:
-                        if user['id'] == viewer.pk:
-                            break
-                    else:
-                        cached_online = 'nada'
-            else:
-                cached_online = 'nada'
+    if viewer and ranks_list_missing_viewer(viewer, cached_online):
+        cached_online = 'nada'
 
     if cached_online == 'nada':
         cached_online = get_ranks_from_db()
         cache.set(RANKS_CACHE_NAME, cached_online, RANKS_CACHE_TIME)
-        return cached_online
+
+    if not viewer.acl['can_see_hidden_users']:
+        return filter_visiblity_preference(viewer, cached_online)
     else:
         return cached_online
+
+
+def ranks_list_missing_viewer(viewer, online_list):
+    if viewer.is_authenticated() and viewer.rank.is_on_index:
+        if online_list != 'nada':
+            for rank in online_list:
+                if rank['pk'] == viewer.rank_id:
+                    for user in rank['online']:
+                        if user['id'] == viewer.pk:
+                            cache_is_hiding = user['is_hiding_presence']
+                            viewer_is_hiding = viewer.is_hiding_presence
+                            return cache_is_hiding != viewer_is_hiding
+                    else:
+                        return True
+            else:
+                return True
+    else:
+        return False
+
+
+def filter_visiblity_preference(viewer, ranks_online):
+    visible_ranks = []
+    for rank in ranks_online:
+        visible_users = []
+        for user in rank['online']:
+            see_self = viewer.is_authenticated() and user['pk'] == viewer.pk
+            if see_self or not user['is_hiding_presence']:
+                visible_users.append(user)
+        if visible_users:
+            rank['online'] = visible_users
+            visible_ranks.append(rank)
+    return visible_ranks
 
 
 def get_ranks_from_db():
@@ -61,6 +86,7 @@ def get_ranks_from_db():
                 'username': tracker.user.username,
                 'slug': tracker.user.slug,
                 'title': tracker.user.title,
+                'is_hiding_presence': tracker.user.is_hiding_presence
             })
 
     ranks_online = []
