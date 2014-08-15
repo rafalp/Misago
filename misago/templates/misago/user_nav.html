@@ -20,10 +20,12 @@
         </a>
       </li>
       <li>
-        <a href="#">
+        <a href="{% url 'misago:notifications' %}">
+          {% if user.new_notifications %}
           <span class="badge pull-right">42</span>
-          <span class="fa fa-plane"></span>
-          Another action
+          {% endif %}
+          <span class="fa fa-bell-o"></span>
+          {% trans "See all notifications" %}
         </a>
       </li>
       <li class="divider"></li>
