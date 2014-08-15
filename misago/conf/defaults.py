@@ -121,9 +121,10 @@ INSTALLED_APPS = (
     'misago.core',
     'misago.conf',
     'misago.markup',
-    'misago.forums',
     'misago.notifications',
     'misago.legal',
+    'misago.forums',
+    'misago.threads',
     'misago.faker',
 )
 
