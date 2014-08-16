@@ -39,7 +39,8 @@ class WarningsAdminViewsTests(AdminTestCase):
             })
         self.assertEqual(response.status_code, 302)
 
-        response = self.client.get(reverse('misago:admin:users:warnings:index'))
+        response = self.client.get(
+            reverse('misago:admin:users:warnings:index'))
         self.assertEqual(response.status_code, 200)
         self.assertIn('Test Level', response.content)
 

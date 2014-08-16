@@ -1,12 +1,7 @@
-from importlib import import_module
-
 from misago.core.cache import cache as default_cache
 from misago.core.cachebuster import CACHE_KEY
 
 
-"""
-cache versioning utils
-"""
 def _CacheVersion(apps):
     return apps.get_model('misago_core', 'CacheVersion')
 

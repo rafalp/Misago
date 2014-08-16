@@ -1,10 +1,6 @@
-from datetime import timedelta
-
-from django.utils import timezone
-
 from misago.core.cache import cache
 
-from misago.users.models import Online, Rank
+from misago.users.models import Rank
 from misago.users.online.utils import get_online_queryset
 
 

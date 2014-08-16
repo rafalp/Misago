@@ -1,7 +1,5 @@
 import os
 
-from path import path
-
 from misago.conf import settings
 
 

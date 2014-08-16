@@ -37,7 +37,8 @@ class PrefixAdminViewsTests(AdminTestCase):
             })
         self.assertEqual(response.status_code, 302)
 
-        response = self.client.get(reverse('misago:admin:forums:prefixes:index'))
+        response = self.client.get(
+            reverse('misago:admin:forums:prefixes:index'))
         self.assertEqual(response.status_code, 200)
         self.assertIn('Test Prefix', response.content)
         self.assertIn('test_prefix', response.content)

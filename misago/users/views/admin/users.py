@@ -95,7 +95,7 @@ class UsersList(UserAdmin, generic.ListView):
             queryset.update(requires_activation=ACTIVATION_REQUIRED_NONE)
 
             mail_subject = _("Your account on %(forum_title)s "
-                                 "forums has been activated")
+                             "forums has been activated")
             subject_formats = {'forum_title': settings.forum_name}
             mail_subject = mail_subject % subject_formats
 
@@ -138,7 +138,6 @@ class UsersList(UserAdmin, generic.ListView):
             })
 
     def action_delete_accounts(self, request, users):
-        inactive_users = []
         for user in users:
             if user.is_staff or user.is_superuser:
                 message = _("%(user)s is admin and can't be deleted.")
@@ -152,7 +151,6 @@ class UsersList(UserAdmin, generic.ListView):
         messages.success(request, message)
 
     def action_delete_all(self, request, users):
-        inactive_users = []
         for user in users:
             if user.is_staff or user.is_superuser:
                 message = _("%(user)s is admin and can't be deleted.")

@@ -5,7 +5,6 @@ from django.http import JsonResponse
 from django.test import TestCase
 
 from misago.admin.testutils import AdminTestCase
-from misago.users.models import AnonymousUser
 
 from misago.core import uiviews
 

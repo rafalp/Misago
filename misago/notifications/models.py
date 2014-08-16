@@ -1,5 +1,3 @@
-import cgi
-
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -14,8 +12,8 @@ class Notification(models.Model):
     message = models.TextField()
     url = models.TextField()
     sender = models.ForeignKey(settings.AUTH_USER_MODEL,
-                           on_delete=models.SET_NULL,
-                           related_name='notifications_by',
-                           blank=True, null=True)
+                               on_delete=models.SET_NULL,
+                               related_name='notifications_by',
+                               blank=True, null=True)
     sender_username = models.CharField(max_length=255, blank=True, null=True)
     sender_slug = models.CharField(max_length=255, blank=True, null=True)

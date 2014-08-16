@@ -45,7 +45,6 @@ class Prefix(models.Model):
 
     objects = PrefixManager()
 
-
     def delete(self, *args, **kwargs):
         Prefix.objects.clear_cache()
         return super(Prefix, self).delete(*args, **kwargs)

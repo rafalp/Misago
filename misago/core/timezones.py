@@ -1,7 +1,9 @@
+# flake8: noqa
 import datetime
 
-from django.utils.translation import ugettext_lazy as _
 import pytz
+
+from django.utils.translation import ugettext_lazy as _
 
 
 TIMEZONES = (

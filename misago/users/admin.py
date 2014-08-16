@@ -1,5 +1,4 @@
 from django.conf.urls import url
-from django.conf.urls import url
 from django.contrib import admin as djadmin
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _

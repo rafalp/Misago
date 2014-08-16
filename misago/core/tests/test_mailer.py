@@ -10,7 +10,7 @@ class MisagoFormsTests(TestCase):
     def test_mail_user(self):
         """mail_user sets message in backend"""
         User = get_user_model()
-        test_user = User.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        User.objects.create_user('Bob', 'bob@bob.com', 'pass123')
 
         response = self.client.get(reverse('test_mail_user'))
         self.assertEqual(response.status_code, 200)

@@ -40,4 +40,3 @@ def deny_banned_ips(f):
         else:
             return f(request, *args, **kwargs)
     return decorator
-

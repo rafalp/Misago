@@ -1,5 +1,4 @@
 from debug_toolbar.panels import Panel
-from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 
 

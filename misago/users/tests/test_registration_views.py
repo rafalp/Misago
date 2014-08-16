@@ -46,8 +46,8 @@ class RegisterViewTests(TestCase):
         self.assertIn('Bob', response.content)
 
         User = get_user_model()
-        user = User.objects.get_by_username('Bob')
-        user = User.objects.get_by_email('bob@bob.com')
+        User.objects.get_by_username('Bob')
+        User.objects.get_by_email('bob@bob.com')
 
         response = self.client.get(reverse('misago:index'))
         self.assertIn('Bob', response.content)
@@ -68,8 +68,8 @@ class RegisterViewTests(TestCase):
         self.assertIn('bob@bob.com', response.content)
 
         User = get_user_model()
-        user = User.objects.get_by_username('Bob')
-        user = User.objects.get_by_email('bob@bob.com')
+        User.objects.get_by_username('Bob')
+        User.objects.get_by_email('bob@bob.com')
 
         self.assertIn('Welcome', mail.outbox[0].subject)
 
@@ -87,7 +87,7 @@ class RegisterViewTests(TestCase):
         self.assertIn('administrator', response.content)
 
         User = get_user_model()
-        user = User.objects.get_by_username('Bob')
-        user = User.objects.get_by_email('bob@bob.com')
+        User.objects.get_by_username('Bob')
+        User.objects.get_by_email('bob@bob.com')
 
         self.assertIn('Welcome', mail.outbox[0].subject)

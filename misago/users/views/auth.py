@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.contrib import auth, messages
-from django.http import Http404
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache

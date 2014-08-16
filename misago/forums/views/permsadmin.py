@@ -27,7 +27,6 @@ class ForumRolesList(ForumRoleAdmin, generic.ListView):
 
 class RoleFormMixin(object):
     def real_dispatch(self, request, target):
-        role_permissions = target.permissions
         form = ForumRoleForm(instance=target)
 
         perms_forms = get_permissions_forms(target)
@@ -95,7 +94,6 @@ class ForumPermissions(ForumAdmin, generic.ModelFormView):
 
     def real_dispatch(self, request, target):
         forum_roles = ForumRole.objects.order_by('name')
-
 
         assigned_roles = {}
         for acl in target.forum_role_set.select_related('forum_role'):

@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('slug', models.SlugField(max_length=255)),
                 ('css_class', models.CharField(max_length=255, null=True, blank=True)),
-                ('forums', models.ManyToManyField(to='misago_forums.Forum')),
+                ('forums', models.ManyToManyField(related_name=b'prefixes', to='misago_forums.Forum')),
             ],
             options={
             },

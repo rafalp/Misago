@@ -1,5 +1,4 @@
 from django.conf.urls import patterns, url, include
-from django.core.urlresolvers import reverse
 
 
 class URLPatterns(object):

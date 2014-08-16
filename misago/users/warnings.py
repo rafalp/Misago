@@ -43,7 +43,6 @@ def fetch_user_valid_warnings(user):
     return active_warnings
 
 
-
 def update_user_warning_level(user):
     warnings = fetch_user_valid_warnings(user)
     user.warning_level = len(warnings)

@@ -32,8 +32,7 @@ def get_forums_list(user, parent=None):
 
     flat_list = []
     for forum in forums_list:
-        has_content = (forum.role != "category" or forum.subforums)
-        if forum.level == parent_level and has_content:
+        if forum.role != "category" or forum.subforums:
             flat_list.append(forum)
 
     add_acl(user, flat_list)

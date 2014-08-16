@@ -36,7 +36,7 @@ class BaseRole(models.Model):
                 self.permissions_cache = serializer.loads(
                     self.pickled_permissions)
             else:
-               self.permissions_cache = {}
+                self.permissions_cache = {}
         return self.permissions_cache
 
     @permissions.setter

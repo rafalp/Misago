@@ -63,13 +63,13 @@ def build_acl(acl, roles, key_name):
     new_acl.update(acl)
 
     return algebra.sum_acls(
-            new_acl, roles=roles, key=key_name,
-            can_see_other_users_warnings=algebra.greater,
-            can_warn_users=algebra.greater,
-            can_cancel_warnings=algebra.greater,
-            can_delete_warnings=algebra.greater,
-            can_be_warned=algebra.lower
-            )
+        new_acl, roles=roles, key=key_name,
+        can_see_other_users_warnings=algebra.greater,
+        can_warn_users=algebra.greater,
+        can_cancel_warnings=algebra.greater,
+        can_delete_warnings=algebra.greater,
+        can_be_warned=algebra.lower
+        )
 
 
 """
@@ -89,10 +89,6 @@ def add_acl_to_user(user, target):
     target_acl['can_warn'] = can_warn_user(user, target)
     target_acl['can_cancel_warnings'] = False
     target_acl['can_delete_warnings'] = False
-
-    mod_permissions = (
-        'can_warn',
-    )
 
     if target_acl['can_warn']:
         target_acl['can_moderate'] = True

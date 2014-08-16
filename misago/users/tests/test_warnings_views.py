@@ -29,9 +29,8 @@ class WarningTestCase(AdminTestCase):
 
     def warn_user(self, reason):
         override_acl(self.test_admin, {'can_warn_users': 1})
-        response = self.client.post(
-            reverse('misago:warn_user', kwargs=self.link_kwargs),
-            data={'reason': reason})
+        self.client.post(reverse('misago:warn_user', kwargs=self.link_kwargs),
+                         data={'reason': reason})
 
 
 class WarnUserTests(WarningTestCase):
@@ -156,7 +155,8 @@ class CancelWarningTests(WarningTestCase):
                 'warning_id': warning.pk
             }))
         self.assertEqual(response.status_code, 403)
-        self.assertFalse(self.test_user.warnings.get(id=warning.pk).is_canceled)
+        self.assertFalse(
+            self.test_user.warnings.get(id=warning.pk).is_canceled)
 
     def test_no_permission_other(self):
         """can't cancel other mod warnings"""
@@ -170,7 +170,8 @@ class CancelWarningTests(WarningTestCase):
                 'warning_id': warning.pk
             }))
         self.assertEqual(response.status_code, 403)
-        self.assertFalse(self.test_user.warnings.get(id=warning.pk).is_canceled)
+        self.assertFalse(
+            self.test_user.warnings.get(id=warning.pk).is_canceled)
 
         warning = warn_user(self.test_admin, self.test_user)
         self.allow_cancel_owned_warning()

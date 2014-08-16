@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from misago.acl.testutils import override_acl
 from misago.admin.testutils import AdminTestCase
 
-from misago.users.models import Ban, Rank
+from misago.users.models import Rank
 
 
 class UsersListTestCase(AdminTestCase):
@@ -30,7 +30,7 @@ class UsersListLanderTests(UsersListTestCase):
         response = self.client.get(reverse('misago:users'))
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response['location'].endswith(
-                         reverse('misago:users_active_posters')))
+                        reverse('misago:users_active_posters')))
 
 
 class ActivePostersTests(UsersListTestCase):
@@ -90,4 +90,3 @@ class UsersRankTests(UsersListTestCase):
                 self.assertEqual(response.status_code, 200)
             else:
                 self.assertEqual(response.status_code, 404)
-

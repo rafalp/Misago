@@ -50,7 +50,7 @@ class BatchTests(TestCase):
             ['l', 'o', 'r'],
             ['e', 'm', 'i'],
             ['p', 's', 'u'],
-            ['m',],
+            ['m'],
         )
 
         for i, test_yield in enumerate(misago_batch.batch(batch, 3)):
@@ -68,7 +68,6 @@ class BatchTests(TestCase):
 
         for i, test_yield in enumerate(misago_batch.batchnonefilled(batch, 3)):
             self.assertEqual(test_yield, yields[i])
-
 
 
 class TestForm(forms.Form):
@@ -180,4 +179,4 @@ class PaginationTests(TestCase):
 """
 
         tpl = Template(tpl_content)
-        render = tpl.render(self.context).strip()
+        tpl.render(self.context).strip()

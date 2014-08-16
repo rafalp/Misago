@@ -1,4 +1,5 @@
-import random, sys
+import random
+import sys
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError

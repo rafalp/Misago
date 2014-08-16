@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import timedelta
 import re
 
 from django.conf import settings
@@ -7,7 +7,6 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from misago.core import cachebuster
-from misago.core.utils import time_amount
 
 
 __all__ = [
@@ -107,7 +106,7 @@ class Ban(models.Model):
     def test_value(self, value):
         if '*' in self.banned_value:
             regex = re.escape(self.banned_value).replace('\*', '(.*?)')
-            return re.search('^%s$' % regex, value) != None
+            return re.search('^%s$' % regex, value) is not None
         else:
             return self.banned_value == value
 

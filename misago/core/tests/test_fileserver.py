@@ -1,5 +1,3 @@
-import os
-
 from django.conf import settings
 from django.http import HttpResponse, StreamingHttpResponse
 from django.test import TestCase

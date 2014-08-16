@@ -1,10 +1,8 @@
 from hashlib import md5
-from time import time
 
 from misago.core import threadstore
 
 from misago.acl.forms import get_permissions_forms
-from misago.acl.models import Role
 
 
 def fake_post_data(target, data_dict):
@@ -15,9 +13,9 @@ def fake_post_data(target, data_dict):
     """
     for form in get_permissions_forms(target):
         for field in form:
-            if field.value() == True:
+            if field.value() is True:
                 data_dict[field.html_name] = 1
-            elif field.value() == False:
+            elif field.value() is False:
                 data_dict[field.html_name] = 0
             else:
                 data_dict[field.html_name] = field.value()

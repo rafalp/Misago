@@ -146,7 +146,7 @@ class ForumAdminViewsTests(AdminTestCase):
                              'prune_replied_after': 0,
                          })
 
-        category_a = Forum.objects.get(slug='category-a')
+
         category_b = Forum.objects.get(slug='category-b')
 
         response = self.client.post(
@@ -280,7 +280,7 @@ class ForumAdminDeleteViewTests(AdminTestCase):
         response = self.client.post(
             reverse('misago:admin:forums:nodes:delete',
                     kwargs={'forum_id': self.subforum_d.pk}),
-            data={'move_children_to': '', 'move_threads_to': '',})
+            data={'move_children_to': '', 'move_threads_to': ''})
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Forum.objects.all_forums().count(), 8)
 
@@ -311,14 +311,14 @@ class ForumAdminDeleteViewTests(AdminTestCase):
         response = self.client.post(
             reverse('misago:admin:forums:nodes:delete',
                     kwargs={'forum_id': self.forum_b.pk}),
-            data={'move_children_to': self.root.pk, 'move_threads_to': '',})
+            data={'move_children_to': self.root.pk, 'move_threads_to': ''})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Forum.objects.all_forums().count(), 9)
 
         response = self.client.post(
             reverse('misago:admin:forums:nodes:delete',
                     kwargs={'forum_id': self.forum_b.pk}),
-            data={'move_children_to': '', 'move_threads_to': '',})
+            data={'move_children_to': '', 'move_threads_to': ''})
         self.assertEqual(response.status_code, 302)
 
         self.assertEqual(Forum.objects.all_forums().count(), 6)

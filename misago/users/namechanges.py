@@ -22,7 +22,7 @@ class UsernameChanges(object):
         valid_changes_qs = user.namechanges.filter(changed_by=user)
         if name_changes_expire:
             cutoff = timezone.now() - timedelta(days=name_changes_expire)
-            valid_changes_qs = used_changes_qs.filter(changed_on__gte=cutoff)
+            valid_changes_qs = valid_changes_qs.filter(changed_on__gte=cutoff)
 
         used_changes = valid_changes_qs.count()
         if name_changes_allowed <= used_changes:

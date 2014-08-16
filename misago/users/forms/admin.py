@@ -240,7 +240,6 @@ def SearchUsersForm(*args, **kwargs):
             roles_choices.append((role.pk, role.name))
         threadstore.set('misago_admin_roles_choices', roles_choices)
 
-
     extra_fields = {
         'rank': forms.TypedChoiceField(label=_("Has rank"),
                                        coerce=int,
@@ -362,7 +361,8 @@ class BanForm(forms.ModelForm):
                     'for rought matches. For example, making IP ban for value '
                     '"83.*" will ban all IP addresses beginning with "83.".'),
         error_messages={
-            'max_length': _("Banned value can't be longer than 250 characters.")
+            'max_length': _("Banned value can't be longer "
+                            "than 250 characters.")
         })
     user_message = forms.CharField(
         label=_("User message"), required=False, max_length=1000,

@@ -167,9 +167,9 @@ class UserProfileViewsTests(AdminTestCase):
             'can_see_ban_details': 1,
         })
 
-        test_ban = Ban.objects.create(banned_value=test_user.username,
-                                      user_message="User m3ss4ge.",
-                                      staff_message="Staff m3ss4ge.")
+        Ban.objects.create(banned_value=test_user.username,
+                           user_message="User m3ss4ge.",
+                           staff_message="Staff m3ss4ge.")
 
         response = self.client.get(reverse('misago:user_ban',
                                            kwargs=link_kwargs))

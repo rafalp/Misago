@@ -86,8 +86,8 @@ class UserManager(BaseUserManager):
                 extra_fields['subscribe_to_replied_threads'] = new_value
 
             now = timezone.now()
-            user = self.model(is_staff=False, is_superuser=False, last_login=now,
-                              joined_on=now, **extra_fields)
+            user = self.model(is_staff=False, is_superuser=False,
+                              last_login=now, joined_on=now, **extra_fields)
 
             user.set_username(username)
             user.set_email(email)
@@ -121,7 +121,6 @@ class UserManager(BaseUserManager):
                 user.update_acl_key()
             except Rank.DoesNotExist:
                 pass
-
 
             user.is_staff = True
             user.is_superuser = True
@@ -218,7 +217,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_post = models.DateTimeField(null=True, blank=True)
     last_search = models.DateTimeField(null=True, blank=True)
 
-    is_active = True # Django's is_active means "is not deleted"
+    is_active = True  # Django's is_active means "is not deleted"
 
     USERNAME_FIELD = 'slug'
     REQUIRED_FIELDS = ['email']

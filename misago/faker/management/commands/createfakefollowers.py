@@ -1,12 +1,9 @@
 import random
 
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
-from django.db import IntegrityError
 
 from misago.core.management.progressbar import show_progress
-from misago.users.models import Rank
 
 
 class Command(BaseCommand):
@@ -29,7 +26,7 @@ class Command(BaseCommand):
             user.followed_by.clear()
 
             users_to_add = random.randint(1, total_users - 1)
-            random_queryset =  User.objects.exclude(id=user.id).order_by('?')
+            random_queryset = User.objects.exclude(id=user.id).order_by('?')
             while users_to_add > 0:
                 new_follower = random_queryset[:1][0]
                 if not new_follower.is_following(user):

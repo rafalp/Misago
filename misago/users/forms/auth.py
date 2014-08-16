@@ -125,7 +125,7 @@ class GetUserForm(MisagoAuthMixin, forms.Form):
 
         try:
             User = get_user_model()
-            user =  User.objects.get_by_username_or_email(data['username'])
+            user = User.objects.get_by_username_or_email(data['username'])
             self.user_cache = user
         except User.DoesNotExist:
             raise forms.ValidationError(_("Invalid username or e-mail."))

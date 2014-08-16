@@ -124,7 +124,7 @@ def upload_avatar_handler(request):
     if not settings.allow_custom_avatars:
         raise AjaxError(_("Avatar uploads are currently disabled."))
 
-    new_avatar = request.FILES.get('new-avatar');
+    new_avatar = request.FILES.get('new-avatar')
     if not new_avatar:
         raise AjaxError(_("No file was sent."))
 
@@ -145,7 +145,7 @@ def crop_avatar(request, use_tmp_avatar):
             return redirect('misago:usercp_change_avatar')
     else:
         if not avatars.uploaded.has_original_avatar(request.user):
-            messages.error(request, _("You don't have uploaded image to crop."))
+            messages.error(request, _("You haven't uploaded image to crop."))
             return redirect('misago:usercp_change_avatar')
 
     if use_tmp_avatar:

@@ -34,8 +34,8 @@ class Migration(migrations.Migration):
                 ('rght', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('tree_id', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('level', models.PositiveIntegerField(editable=False, db_index=True)),
-                ('archive_pruned_in', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, to_field='id', blank=True, to='misago_forums.Forum', null=True)),
-                ('parent', mptt.fields.TreeForeignKey(to_field='id', blank=True, to='misago_forums.Forum', null=True)),
+                ('archive_pruned_in', models.ForeignKey(related_name=b'pruned_archive', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='misago_forums.Forum', null=True)),
+                ('parent', mptt.fields.TreeForeignKey(related_name=b'children', blank=True, to='misago_forums.Forum', null=True)),
             ],
             options={
                 'abstract': False,

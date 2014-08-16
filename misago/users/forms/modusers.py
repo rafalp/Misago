@@ -6,10 +6,9 @@ from django.utils import timezone
 
 from misago.conf import settings
 from misago.core import forms
-from misago.core.utils import clean_return_path
 
 from misago.users.forms.admin import BanUsersForm
-from misago.users.models import Ban, BAN_EMAIL, BAN_USERNAME
+from misago.users.models import Ban
 
 
 class WarnUserForm(forms.Form):

@@ -288,7 +288,7 @@ class ChangeEmailPasswordTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         User = get_user_model()
-        test_user = User.objects.get(email='newmail@test.com')
+        User.objects.get(email='newmail@test.com')
 
     def test_change_password(self):
         """POST to usercp change password view returns 302"""

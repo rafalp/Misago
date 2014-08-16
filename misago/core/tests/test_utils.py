@@ -99,7 +99,6 @@ class CleanReturnPathTests(TestCase):
         })
         self.assertEqual(clean_return_path(ok_request), '/register/')
 
-
     def test_post_request(self):
         """clean_return_path works for POST requests"""
         bad_request = MockRequest('POST', {

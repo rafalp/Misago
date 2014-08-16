@@ -68,6 +68,3 @@ class ChecksupTests(TestCase):
             checksums.is_checksum_valid(fake_message, checksum, [post_pk]))
         self.assertFalse(
             checksums.is_checksum_valid(fake_message, checksum, [3]))
-
-
-

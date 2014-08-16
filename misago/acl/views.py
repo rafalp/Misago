@@ -22,7 +22,6 @@ class RolesList(RoleAdmin, generic.ListView):
 
 class RoleFormMixin(object):
     def real_dispatch(self, request, target):
-        role_permissions = target.permissions
         form = RoleForm(instance=target)
 
         perms_forms = get_permissions_forms(target)

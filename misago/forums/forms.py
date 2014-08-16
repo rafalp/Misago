@@ -67,24 +67,33 @@ class MisagoForumMixin(object):
 
 class ForumChoiceField(MisagoForumMixin, TreeNodeChoiceField):
     def __init__(self, parent=None, acl=None, *args, **kwargs):
-        kwargs['queryset'] = ForumListLazyQueryset(parent, acl)
+        if not 'queryset' in kwargs:
+            kwargs['queryset'] = ForumListLazyQueryset(parent, acl)
         super(ForumChoiceField, self).__init__(*args, **kwargs)
 
 
 class ForumsMultipleChoiceField(MisagoForumMixin, TreeNodeMultipleChoiceField):
     def __init__(self, parent=None, acl=None, *args, **kwargs):
-        kwargs['queryset'] = ForumListLazyQueryset(parent, acl)
+        if not 'queryset' in kwargs:
+            kwargs['queryset'] = ForumListLazyQueryset(parent, acl)
         super(ForumsMultipleChoiceField, self).__init__(*args, **kwargs)
 
 
 """
 Forms
 """
-class ForumChoiceField(TreeNodeChoiceField):
+FORUM_ROLES = (
+    ('category', _('Category')),
+    ('forum', _('Forum')),
+    ('redirect', _('Redirect')),
+)
+
+
+class AdminForumChoiceField(TreeNodeChoiceField):
     def __init__(self, *args, **kwargs):
         self.base_level = kwargs.pop('base_level', 1)
         kwargs['level_indicator'] = kwargs.get('level_indicator', '- - ')
-        super(ForumChoiceField, self).__init__(*args, **kwargs)
+        super(AdminForumChoiceField, self).__init__(*args, **kwargs)
 
     def _get_level_indicator(self, obj):
         level = getattr(obj, obj._mptt_meta.level_attr) - self.base_level
@@ -92,13 +101,6 @@ class ForumChoiceField(TreeNodeChoiceField):
             return mark_safe(conditional_escape(self.level_indicator) * level)
         else:
             return ''
-
-
-FORUM_ROLES = (
-    ('category', _('Category')),
-    ('forum', _('Forum')),
-    ('redirect', _('Redirect')),
-)
 
 
 class ForumFormBase(forms.ModelForm):
@@ -195,26 +197,24 @@ def ForumFormFactory(instance):
         parent_queryset = parent_queryset.filter(not_siblings)
 
     return type('ForumFormFinal', (ForumFormBase,), {
-        'new_parent': ForumChoiceField(
+        'new_parent': AdminForumChoiceField(
             label=_("Parent forum"),
             queryset=parent_queryset,
             initial=instance.parent,
             empty_label=None),
-        'copy_permissions': ForumChoiceField(
+        'copy_permissions': AdminForumChoiceField(
             label=_("Copy permissions"),
             help_text=_("You can replace this forum permissions with "
                         "permissions copied from forum selected here."),
             queryset=Forum.objects.all_forums(),
             empty_label=_("Don't copy permissions"),
-            base_level=1,
             required=False),
-        'archive_pruned_in': ForumChoiceField(
+        'archive_pruned_in': AdminForumChoiceField(
             label=_("Archive"),
             help_text=_("Instead of being deleted, pruned threads can be "
                         "moved to designated forum."),
             queryset=Forum.objects.all_forums(),
             empty_label=_("Don't archive pruned threads"),
-            base_level=1,
             required=False),
         })
 
@@ -252,9 +252,9 @@ class DeleteForumFormBase(forms.ModelForm):
             if data['move_children_to'].special_role == 'root_category':
                 for child in self.instance.get_children().iterator():
                     if child.role != 'category':
-                        message = _("One or more child forums in forum are not "
-                                    "categories and thus cannot be made root "
-                                    "categories.")
+                        message = _("One or more child forums in forum are "
+                                    "not categories and thus cannot be made "
+                                    "root categories.")
                         raise forms.ValidationError(message)
 
         return data
@@ -263,7 +263,7 @@ class DeleteForumFormBase(forms.ModelForm):
 def DeleteFormFactory(instance):
     content_queryset = Forum.objects.all_forums().order_by('lft')
     fields = {
-        'move_threads_to': ForumChoiceField(
+        'move_threads_to': AdminForumChoiceField(
             label=_("Move forum threads to"),
             queryset=content_queryset,
             initial=instance.parent,
@@ -277,7 +277,7 @@ def DeleteFormFactory(instance):
     children_queryset = children_queryset.filter(not_siblings).order_by('lft')
 
     if children_queryset.exists():
-        fields['move_children_to'] = ForumChoiceField(
+        fields['move_children_to'] = AdminForumChoiceField(
             label=_("Move child forums to"),
             queryset=children_queryset,
             empty_label=_('Delete with forum'),

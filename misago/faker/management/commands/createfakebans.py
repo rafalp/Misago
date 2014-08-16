@@ -1,10 +1,8 @@
-import random
 from datetime import timedelta
+import random
+import sys
 
-from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
-from django.db import IntegrityError
 from django.utils import timezone
 
 from faker import Factory

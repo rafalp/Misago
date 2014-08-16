@@ -72,7 +72,7 @@ def active_posters(request, page=0):
     User = get_user_model()
     queryset = User.objects.all().select_related('user__rank')
 
-    template =  "misago/userslists/active_posters.html"
+    template = "misago/userslists/active_posters.html"
     return list_view(request, template, queryset, page, {
         'tracked_period': tracked_period
     })
@@ -83,7 +83,7 @@ def online(request, page=0):
     queryset = get_online_queryset(request.user).order_by('user__slug')
     queryset = queryset.select_related('user__rank')
 
-    template =  "misago/userslists/online.html"
+    template = "misago/userslists/online.html"
     return list_view(request, template, queryset, page, {
         'data_from': timezone.now()
     })
@@ -94,5 +94,5 @@ def rank(request, rank_slug, page=0):
     rank = get_object_or_404(Rank.objects.filter(is_tab=True), slug=rank_slug)
     queryset = rank.user_set.order_by('slug')
 
-    template =  "misago/userslists/rank.html"
+    template = "misago/userslists/rank.html"
     return list_view(request, template, queryset, page, {'rank': rank})

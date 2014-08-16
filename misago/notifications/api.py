@@ -2,7 +2,6 @@ from django.db.models import F
 from django.db import transaction
 from django.utils.html import escape
 
-from misago.notifications.models import Notification
 from misago.notifications.utils import hash_trigger
 
 
@@ -16,6 +15,8 @@ __all__ = [
 
 def notify_user(user, message, url, trigger, formats=None, sender=None,
                 update_user=True):
+    from misago.notifications.models import Notification
+
     message_escaped = escape(message)
     if formats:
         final_formats = {}

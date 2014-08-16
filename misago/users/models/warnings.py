@@ -2,7 +2,6 @@ from collections import OrderedDict
 from datetime import timedelta
 
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -119,17 +118,17 @@ class UserWarning(models.Model):
     reason = models.TextField(null=True, blank=True)
     given_on = models.DateTimeField(default=timezone.now)
     giver = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                 null=True, blank=True,
-                                 on_delete=models.SET_NULL,
-                                 related_name="warnings_given")
+                              null=True, blank=True,
+                              on_delete=models.SET_NULL,
+                              related_name="warnings_given")
     giver_username = models.CharField(max_length=255)
     giver_slug = models.CharField(max_length=255)
     is_canceled = models.BooleanField(default=False)
     canceled_on = models.DateTimeField(null=True, blank=True)
     canceler = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                    null=True, blank=True,
-                                    on_delete=models.SET_NULL,
-                                    related_name="warnings_canceled")
+                                 null=True, blank=True,
+                                 on_delete=models.SET_NULL,
+                                 related_name="warnings_canceled")
     canceler_username = models.CharField(max_length=255)
     canceler_slug = models.CharField(max_length=255)
 

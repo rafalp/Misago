@@ -73,7 +73,7 @@ class ListView(AdminView):
             elif page == 0:
                 page = 1
         except ValueError:
-            page_no = 1
+            page = 1
 
         context['paginator'] = Paginator(context['items'],
                                          self.items_per_page,
@@ -317,12 +317,14 @@ class ListView(AdminView):
         SearchForm = self.get_search_form(request)
         if SearchForm:
             filtering_methods = self.get_filtering_methods(request)
-            active_filters = self.get_filtering_method_to_use(filtering_methods)
+            active_filters = self.get_filtering_method_to_use(
+                filtering_methods)
             if request.GET.get('clear_filters'):
                 # Clear filters from querystring
                 request.session.pop(self.filters_session_key, None)
                 active_filters = {}
-            self.apply_filtering_on_context(context, active_filters, SearchForm)
+            self.apply_filtering_on_context(
+                context, active_filters, SearchForm)
 
             if (filtering_methods['GET'] and
                     filtering_methods['GET'] != filtering_methods['session']):

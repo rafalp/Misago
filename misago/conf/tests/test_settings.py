@@ -8,7 +8,6 @@ from misago.core.cache import cache
 from misago.conf.gateway import settings as gateway
 from misago.conf.dbsettings import db_settings
 from misago.conf.migrationutils import migrate_settings_group
-from misago.conf.models import SettingsGroup, Setting
 
 
 class DBSettingsTests(TestCase):
@@ -78,11 +77,11 @@ class GatewaySettingsTests(TestCase):
         self.assertTrue(db_settings.lazy_fish_name)
 
         self.assertTrue(gateway.lazy_fish_name)
-        self.assertEqual(gateway.get_lazy_setting('lazy_fish_name'),
-                        'Lazy Eric')
+        self.assertEqual(
+            gateway.get_lazy_setting('lazy_fish_name'), 'Lazy Eric')
         self.assertTrue(db_settings.lazy_fish_name)
-        self.assertEqual(db_settings.get_lazy_setting('lazy_fish_name'),
-                        'Lazy Eric')
+        self.assertEqual(
+            db_settings.get_lazy_setting('lazy_fish_name'), 'Lazy Eric')
 
         self.assertTrue(gateway.lazy_empty_setting is None)
         self.assertTrue(db_settings.lazy_empty_setting is None)

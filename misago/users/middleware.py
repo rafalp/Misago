@@ -2,12 +2,10 @@ from django.conf import settings
 from django.contrib.auth import logout
 from django.contrib.auth.models import AnonymousUser as DjAnonymousUser
 from django.core.urlresolvers import resolve
-from django.utils import timezone
 
 from misago.users.bans import get_request_ip_ban, get_user_ban
 from misago.users.models import AnonymousUser, Online
 from misago.users.online import tracker
-from misago.users.views import avatarserver
 
 
 class RealIPMiddleware(object):

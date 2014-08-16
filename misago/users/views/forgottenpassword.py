@@ -1,4 +1,3 @@
-from faker import Factory
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.http import Http404
@@ -12,7 +11,6 @@ from misago.core.mail import mail_user
 from misago.users.bans import get_user_ban
 from misago.users.decorators import deny_authenticated, deny_banned_ips
 from misago.users.forms.auth import ResetPasswordForm, SetNewPasswordForm
-from misago.users.models import ACTIVATION_REQUIRED_NONE
 from misago.users.tokens import (make_password_reset_token,
                                  is_password_reset_token_valid)
 
@@ -120,7 +118,6 @@ def reset_password_form(request, user_id, token):
             message = message % {'user': requesting_user.username}
             messages.success(request, message)
             return redirect(settings.LOGIN_URL)
-
 
     return render(request, 'misago/forgottenpassword/reset_password_form.html',
                   {'requesting_user': requesting_user, 'form': form})

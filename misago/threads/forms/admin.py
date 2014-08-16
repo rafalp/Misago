@@ -3,7 +3,6 @@ from django.utils.translation import ugettext_lazy as _
 from misago.core import forms
 from misago.core.validators import validate_sluggable
 from misago.forums.forms import ForumsMultipleChoiceField
-from misago.forums.models import Forum
 
 from misago.threads.models import Prefix
 

@@ -37,6 +37,7 @@ class MisagoUsersConfig(AppConfig):
     def register_default_users_list_pages(self):
         def can_see_online_list(request):
             return request.user.acl['can_see_users_online_list']
+
         users_list.add_page(link='misago:users_active_posters',
                             name=_('Active posters'))
         users_list.add_page(link='misago:users_online',
@@ -46,12 +47,16 @@ class MisagoUsersConfig(AppConfig):
     def register_default_user_profile_pages(self):
         def posts_badge(request, profile):
             return profile.posts
+
         def threads_badge(request, profile):
             return profile.threads
+
         def followers_badge(request, profile):
             return profile.followers
+
         def following_badge(request, profile):
             return profile.following
+
         def can_see_names_history(request, profile):
             if request.user.is_authenticated():
                 is_account_owner = profile.pk == request.user.pk
@@ -59,6 +64,7 @@ class MisagoUsersConfig(AppConfig):
                 return is_account_owner or has_permission
             else:
                 return False
+
         def can_see_warnings(request, profile):
             if request.user.is_authenticated():
                 is_account_owner = profile.pk == request.user.pk
@@ -67,6 +73,7 @@ class MisagoUsersConfig(AppConfig):
                 return is_account_owner or has_permission
             else:
                 return False
+
         def can_see_ban_details(request, profile):
             if request.user.is_authenticated():
                 if request.user.acl['can_see_ban_details']:

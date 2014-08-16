@@ -1,5 +1,4 @@
 from django import template
-from django.template import Context
 
 
 register = template.Library()

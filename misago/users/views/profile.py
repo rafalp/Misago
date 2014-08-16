@@ -249,6 +249,7 @@ def follow_user(request, profile):
         request.user.follows.remove(profile)
         followed = False
     else:
+        allow_follow_user(request.user, profile)
         followed = True
         request.user.follows.add(profile)
 
@@ -284,12 +285,13 @@ def follow_user(request, profile):
 
 @action_view
 def block_user(request, profile):
-    user_locked = request.user.lock()
+    request.user.lock()
 
     if request.user.is_blocking(profile):
         request.user.blocks.remove(profile)
         blocked = False
     else:
+        allow_block_user(request.user, profile)
         blocked = True
         request.user.blocks.add(profile)
 

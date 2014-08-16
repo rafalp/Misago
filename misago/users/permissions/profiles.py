@@ -89,18 +89,18 @@ def build_acl(acl, roles, key_name):
     new_acl.update(acl)
 
     return algebra.sum_acls(
-            new_acl, roles=roles, key=key_name,
-            can_browse_users_list=algebra.greater,
-            can_see_users_online_list=algebra.greater,
-            can_search_users=algebra.greater,
-            can_follow_users=algebra.greater,
-            can_be_blocked=algebra.lower,
-            can_see_users_name_history=algebra.greater,
-            can_see_ban_details=algebra.greater,
-            can_see_users_emails=algebra.greater,
-            can_see_users_ips=algebra.greater,
-            can_see_hidden_users=algebra.greater
-            )
+        new_acl, roles=roles, key=key_name,
+        can_browse_users_list=algebra.greater,
+        can_see_users_online_list=algebra.greater,
+        can_search_users=algebra.greater,
+        can_follow_users=algebra.greater,
+        can_be_blocked=algebra.lower,
+        can_see_users_name_history=algebra.greater,
+        can_see_ban_details=algebra.greater,
+        can_see_users_emails=algebra.greater,
+        can_see_users_ips=algebra.greater,
+        can_see_hidden_users=algebra.greater
+        )
 
 
 """

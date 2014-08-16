@@ -8,7 +8,6 @@ from django.test import TestCase
 from misago.conf import settings
 
 from misago.users.avatars import store, dynamic, gallery, gravatar, uploaded
-from misago.users.avatars.paths import AVATARS_STORE
 
 
 class AvatarsStoreTests(TestCase):
@@ -142,5 +141,3 @@ class UploadedAvatarTests(TestCase):
         for valid_mime in uploaded.ALLOWED_MIME_TYPES:
             image = MockAvatarFile(mime=valid_mime)
             uploaded.validate_mime(image)
-
-

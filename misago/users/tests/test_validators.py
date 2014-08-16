@@ -48,6 +48,7 @@ class ValidateEmailBannedTests(TestCase):
         with self.assertRaises(ValidationError):
             validate_email_banned('ban@test.com')
 
+
 class ValidateEmailTests(TestCase):
     def test_validate_email(self):
         """validate_email has no crashes"""

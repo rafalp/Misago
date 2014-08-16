@@ -90,7 +90,7 @@ def register(request):
                 request.session['registered_user'] = new_user.pk
                 return redirect('misago:register_completed')
 
-    return render(request, 'misago/register/form.html', {'form': form, 'testname': 'and<b>rzej'})
+    return render(request, 'misago/register/form.html', {'form': form})
 
 
 def register_disabled(request):
@@ -122,4 +122,3 @@ def register_completed(request):
             'activation_by_user': activation_by_user,
             'registered_user': registered_user,
         })
-

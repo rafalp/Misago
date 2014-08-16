@@ -3,10 +3,7 @@ import pwd
 import shutil
 import sys
 
-from path import path
-
 from django import setup
-from django.core.management import call_command
 from django.test.utils import setup_test_environment
 
 

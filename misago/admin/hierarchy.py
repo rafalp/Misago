@@ -166,7 +166,6 @@ class AdminHierarchyBuilder(object):
                     branches.append(children)
                 node = node.parent
 
-
         namespace = request.resolver_match.namespaces
 
         branches.reverse()
@@ -175,7 +174,6 @@ class AdminHierarchyBuilder(object):
             for node in branch:
                 node_namespace = node['namespace'].split(':')[2:3 + depth]
                 node['is_active'] = depth_namespace == node_namespace
-
 
         return branches
 

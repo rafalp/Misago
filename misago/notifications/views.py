@@ -1,10 +1,7 @@
-from datetime import timedelta
-
 from django.contrib import messages
 from django.db.transaction import atomic
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
-from django.utils import timezone
 from django.utils.translation import ugettext as _, ungettext
 
 from misago.core.uiviews import uiview
