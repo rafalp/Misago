@@ -1,7 +1,7 @@
 {% load i18n misago_avatars %}
 <ul class="nav navbar-nav navbar-nav-user navbar-right">
   <li class="dropdown">
-    <a href="#" class="dropdown-toggle user-toggle" data-toggle="dropdown">
+    <a href="{% url USER_PROFILE_URL user_slug=user.slug user_id=user.id %}" class="dropdown-toggle user-toggle" data-toggle="dropdown">
       <span class="glyphicon glyphicon-chevron-down"></span>
       <img src="{{ user|avatar:30 }}" alt="{% trans "Your avatar" %}">
       {{ user.username }}
