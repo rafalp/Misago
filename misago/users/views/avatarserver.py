@@ -62,11 +62,13 @@ def serve_user_avatar_source(request, user_id, token, type):
 
 
 def clean_size(size):
-    if not size in settings.MISAGO_AVATARS_SIZES:
-        size = max(settings.MISAGO_AVATARS_SIZES)
+    size = int(size)
+    if size not in settings.MISAGO_AVATARS_SIZES:
+        found_size = max(settings.MISAGO_AVATARS_SIZES)
         for valid_size in sorted(settings.MISAGO_AVATARS_SIZES, reverse=True):
             if valid_size > size:
-                size = valid_size
+                found_size = valid_size
+        return found_size
     return size
 
 
