@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from misago.markup.parser import parse
 from misago.markup import checksums
 

@@ -1,5 +1,6 @@
 from django.core import exceptions as django_exceptions
 from django.test import TestCase
+
 from misago.core import exceptionhandler
 
 

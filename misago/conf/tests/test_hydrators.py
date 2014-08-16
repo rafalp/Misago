@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from misago.conf.hydrators import hydrate_value, dehydrate_value
 from misago.conf.models import Setting
 
