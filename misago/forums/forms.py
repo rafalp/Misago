@@ -1,7 +1,8 @@
 from django.db import models
 from django.utils.html import conditional_escape, mark_safe
 from django.utils.translation import ugettext_lazy as _
-from mptt.forms import TreeNodeChoiceField as TreeNodeChoiceField
+
+from mptt.forms import *  # noqa
 
 from misago.core import forms
 from misago.core.validators import validate_sluggable
@@ -9,6 +10,76 @@ from misago.core.validators import validate_sluggable
 from misago.forums.models import Forum, ForumRole
 
 
+"""
+Fields
+"""
+class ForumListLazyQueryset(object):
+    def __init__(self, parent, acl):
+        self._cache = None
+        self.parent = parent
+        self.acl = acl
+
+    def get_parent(self):
+        if not self.parent:
+            self.parent = Forum.objects.root_category()
+        return self.parent
+
+    def _all(self):
+        queryset = self.get_parent().get_descendants()
+        if self.acl:
+            allowed_ids = [0]
+            for forum_id, perms in self.acl.get('forums', {}).items():
+                if perms.get('can_see') and perms.get('can_browse'):
+                    allowed_ids.append(forum_id)
+            queryset = queryset.filter(id__in=allowed_ids)
+        return queryset.all()
+
+    def all(self):
+        if not self._cache:
+            self._cache = self._all()
+        return self._cache
+
+    def filter(self, *args, **kwargs):
+        return self.all().filter(*args, **kwargs)
+
+    def exclude(self, *args, **kwargs):
+        return self.all().exclude(*args, **kwargs)
+
+    def __len__(self):
+        return len(self.all())
+
+
+class MisagoForumMixin(object):
+    def get_queryset(self, acl=None):
+        queryset = self.parent.get_descendants()
+        if acl:
+            allowed_ids = [0]
+            for forum_id, perms in acl.get('forums', {}).items():
+                if perms.get('can_see') and perms.get('can_browse'):
+                    allowed_ids.append(forum_id)
+            queryset = queryset.filter(id__in=allowed_ids)
+        return queryset
+
+    def _get_level_indicator(self, obj):
+        level = obj.level - self.queryset.get_parent().level - 1
+        return mark_safe(conditional_escape('- - ') * level)
+
+
+class ForumChoiceField(MisagoForumMixin, TreeNodeChoiceField):
+    def __init__(self, parent=None, acl=None, *args, **kwargs):
+        kwargs['queryset'] = ForumListLazyQueryset(parent, acl)
+        super(ForumChoiceField, self).__init__(*args, **kwargs)
+
+
+class ForumsMultipleChoiceField(MisagoForumMixin, TreeNodeMultipleChoiceField):
+    def __init__(self, parent=None, acl=None, *args, **kwargs):
+        kwargs['queryset'] = ForumListLazyQueryset(parent, acl)
+        super(ForumsMultipleChoiceField, self).__init__(*args, **kwargs)
+
+
+"""
+Forms
+"""
 class ForumChoiceField(TreeNodeChoiceField):
     def __init__(self, *args, **kwargs):
         self.base_level = kwargs.pop('base_level', 1)
@@ -100,7 +171,6 @@ class ForumFormBase(forms.ModelForm):
         data = super(ForumFormBase, self).clean()
 
         self.instance.set_name(data.get('name'))
-        self.instance.set_description(data.get('description'))
 
         if data['role'] != 'category':
             if not data['new_parent'].level:

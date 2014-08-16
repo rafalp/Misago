@@ -62,12 +62,12 @@ class ForumFormMixin(object):
                                       position='last-child')
             form.instance.save()
             if form.instance.parent_id != form.cleaned_data['new_parent'].pk:
-                Forum.objects.clear_forums_cache()
+                Forum.objects.clear_cache()
         else:
             form.instance.insert_at(form.cleaned_data['new_parent'],
                                     position='last-child',
                                     save=True)
-            Forum.objects.clear_forums_cache()
+            Forum.objects.clear_cache()
 
         if form.cleaned_data.get('copy_permissions'):
             form.instance.forum_role_set.all().delete()
@@ -132,7 +132,7 @@ class MoveDownForum(ForumAdmin, generic.ButtonView):
 
         if other_target:
             Forum.objects.move_node(target, other_target, 'right')
-            Forum.objects.clear_forums_cache()
+            Forum.objects.clear_cache()
 
             message = _('Forum "%s" has been moved below "%s".')
             targets_names = (target.name, other_target.name)
@@ -148,7 +148,7 @@ class MoveUpForum(ForumAdmin, generic.ButtonView):
 
         if other_target:
             Forum.objects.move_node(target, other_target, 'left')
-            Forum.objects.clear_forums_cache()
+            Forum.objects.clear_cache()
 
             message = _('Forum "%s" has been moved above "%s".')
             targets_names = (target.name, other_target.name)

@@ -22,7 +22,6 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('slug', models.SlugField(max_length=255)),
                 ('description', models.TextField(null=True, blank=True)),
-                ('description_as_html', models.TextField(null=True, blank=True)),
                 ('is_closed', models.BooleanField(default=False)),
                 ('redirect_url', models.CharField(max_length=255, null=True, blank=True)),
                 ('redirects', models.PositiveIntegerField(default=0)),

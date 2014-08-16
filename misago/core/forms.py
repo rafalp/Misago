@@ -1,7 +1,11 @@
 from crispy_forms.helper import FormHelper
-from django.utils.translation import ugettext_lazy as _
+
+from mptt.forms import *  # noqa
+
 from django.forms import *  # noqa
 from django.forms import Form as BaseForm, ModelForm as BaseModelForm
+from django.utils.html import conditional_escape, mark_safe
+from django.utils.translation import ugettext_lazy as _
 
 
 TEXT_BASED_FIELDS = (
@@ -9,6 +13,9 @@ TEXT_BASED_FIELDS = (
 )
 
 
+"""
+Fields
+"""
 class YesNoSwitchBase(TypedChoiceField):
     def prepare_value(self, value):
         """normalize bools to binary 1/0 so field works on them too"""
@@ -26,6 +33,9 @@ def YesNoSwitch(**kwargs):
         **kwargs)
 
 
+"""
+Forms
+"""
 class AutoStripWhitespacesMixin(object):
     autostrip_exclude = []
 

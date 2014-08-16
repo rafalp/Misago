@@ -1,0 +1,62 @@
+{% extends "misago/admin/generic/form.html" %}
+{% load i18n misago_forms %}
+
+
+{% block title %}
+{% if target.pk %}
+{{ target.name }}
+{% else %}
+{% trans "New prefix" %}
+{% endif %} | {{ active_link.name }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block page-target %}
+{% if target.pk %}
+{{ target.name }}
+{% else %}
+{% trans "New prefix" %}
+{% endif %}
+{% endblock page-target %}
+
+
+{% block form-header %}
+<h1>
+  {% if target.pk %}
+  {{ target.name }}
+  {% else %}
+  {% trans "New prefix" %}
+  {% endif %}
+</h1>
+{% endblock %}
+
+
+{% block form-extra %}
+class="form-horizontal"
+{% endblock form-extra%}
+
+
+{% block form-body %}
+<div class="form-body">
+  {% with label_class="col-md-3" field_class="col-md-9" %}
+  <fieldset>
+    <legend>{% trans "Name and appearance" %}</legend>
+
+    {% form_row form.name label_class field_class %}
+    {% form_row form.css_class label_class field_class %}
+
+  </fieldset>
+  <fieldset>
+    <legend>{% trans "Availability" %}</legend>
+
+    {% form_row form.forums label_class field_class %}
+
+  </fieldset>
+  {% endwith %}
+</div>
+{% endblock form-body %}
+
+
+{% block form-footer-class %}
+col-md-offset-3
+{% endblock form-footer-class %}

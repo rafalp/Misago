@@ -62,6 +62,29 @@ Thin wrapper around Django's ``TypedChoiceField``. This field renders nice yes/n
    ``YesNoSwitch`` coerces to ``int``, not to ``bool``! Remember about this when writing code dealing with forms containing this field!
 
 
+Forums Forms Module
+===================
+
+:py:mod:`misago.forums.forms` module defines two fields you may use for making forum selections in your forms:
+
+
+ForumChoiceField
+----------------
+
+Extends ``ModelChoiceField``.
+
+
+ForumsMultipleChoiceField
+-------------------------
+
+Extends ``ModelMultipleChoiceField``.
+
+
+Instead of ``queryset``, both fields expect ``parent`` argument containing ``Forum`` class instance from which forums should be selected. Leave this argument empty for fields to fallback to root category for all categories and forums.
+
+In addition, you can pass field ACL dictionary to further limit choices to forums browserable by ACL owner.
+
+
 Template Tags
 =============
 

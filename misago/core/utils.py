@@ -1,7 +1,5 @@
 from datetime import timedelta
 
-import bleach
-from markdown import Markdown
 from unidecode import unidecode
 
 from django.http import Http404
@@ -165,32 +163,3 @@ MD_SUBSET_FORBID_SYNTAX = (
     # Blocks are evil too
     'hashheader', 'setextheader', 'code', 'quote', 'hr', 'olist', 'ulist',
 )
-
-
-def subset_markdown(text):
-    if not text:
-        return ''
-
-    md = Markdown(safe_mode='escape', extensions=['nl2br'])
-
-    for key in md.preprocessors.keys():
-        if key in MD_SUBSET_FORBID_SYNTAX:
-            del md.preprocessors[key]
-
-    for key in md.inlinePatterns.keys():
-        if key in MD_SUBSET_FORBID_SYNTAX:
-            del md.inlinePatterns[key]
-
-    for key in md.parser.blockprocessors.keys():
-        if key in MD_SUBSET_FORBID_SYNTAX:
-            del md.parser.blockprocessors[key]
-
-    for key in md.treeprocessors.keys():
-        if key in MD_SUBSET_FORBID_SYNTAX:
-            del md.treeprocessors[key]
-
-    for key in md.postprocessors.keys():
-        if key in MD_SUBSET_FORBID_SYNTAX:
-            del md.postprocessors[key]
-
-    return bleach.linkify(md.convert(text))

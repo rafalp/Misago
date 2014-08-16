@@ -13,7 +13,7 @@ from misago.acl.models import BaseRole
 from misago.core import serializer
 from misago.core.cache import cache
 from misago.core.signals import secret_key_changed
-from misago.core.utils import subset_markdown, slugify
+from misago.core.utils import slugify
 
 
 CACHE_NAME = 'misago_forums_tree'
@@ -46,7 +46,7 @@ class ForumManager(TreeManager):
             forums_dict[forum.pk] = forum
         return forums_dict
 
-    def clear_forums_cache(self):
+    def clear_cache(self):
         cache.delete(CACHE_NAME)
 
 
@@ -58,7 +58,6 @@ class Forum(MPTTModel):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
     description = models.TextField(null=True, blank=True)
-    description_as_html = models.TextField(null=True, blank=True)
     is_closed = models.BooleanField(default=False)
     redirect_url = models.CharField(max_length=255, null=True, blank=True)
     redirects = models.PositiveIntegerField(default=0)
@@ -89,7 +88,7 @@ class Forum(MPTTModel):
         return super(Forum, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        Forum.objects.clear_forums_cache()
+        Forum.objects.clear_cache()
         acl_version.invalidate()
         return super(Forum, self).delete(*args, **kwargs)
 
@@ -112,10 +111,6 @@ class Forum(MPTTModel):
     def set_name(self, name):
         self.name = name
         self.slug = slugify(name)
-
-    def set_description(self, description):
-        self.description = description
-        self.description_as_html = subset_markdown(description)
 
     def has_child(self, child):
         return child.lft > self.lft and child.rght < self.rght
