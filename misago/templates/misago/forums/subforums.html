@@ -6,6 +6,6 @@
         Forums in {{ forum }}
         {% endblocktrans %}</h3>
     </div>
-    {% include "misago/forums/forums.html" %}
+    {% include "misago/forums/forums.html" with forums=forum.subforums %}
   </div>
 </div>

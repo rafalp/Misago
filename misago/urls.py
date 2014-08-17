@@ -16,6 +16,7 @@ urlpatterns += patterns('',
     url(r'^', include('misago.users.urls')),
     url(r'^', include('misago.notifications.urls')),
     url(r'^', include('misago.forums.urls')),
+    url(r'^', include('misago.threads.urls')),
     # UI Server view that handles realtime updates of Misago UI
     url(r'^ui-server/$', 'misago.core.uiviews.uiserver', name="ui_server"),
 )
