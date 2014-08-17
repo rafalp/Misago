@@ -59,9 +59,9 @@ class Migration(migrations.Migration):
             name='RoleForumACL',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('forum', models.ForeignKey(to='misago_forums.Forum', to_field='id')),
+                ('forum', models.ForeignKey(related_name=b'forum_role_set', to='misago_forums.Forum')),
                 ('forum_role', models.ForeignKey(to='misago_forums.ForumRole', to_field='id')),
-                ('role', models.ForeignKey(to='misago_acl.Role', to_field='id')),
+                ('role', models.ForeignKey(related_name=b'forums_acls', to='misago_acl.Role')),
             ],
             options={
             },
