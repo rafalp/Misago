@@ -7,6 +7,7 @@ from misago.acl import algebra
 from misago.acl.decorators import return_boolean
 from misago.core import forms
 from misago.forums.models import Forum, RoleForumACL, ForumRole
+from misago.forums.permissions import get_forums_roles
 
 from misago.threads.models import Thread, Post
 
@@ -15,9 +16,28 @@ from misago.threads.models import Thread, Post
 Admin Permissions Form
 """
 class PermissionsForm(forms.Form):
-    legend = _("Forum access")
-    can_see = forms.YesNoSwitch(label=_("Can see forum"))
-    can_browse = forms.YesNoSwitch(label=_("Can see forum contents"))
+    legend = _("Threads")
+    can_see_all_threads = forms.TypedChoiceField(
+        label=_("Can see threads"),
+        coerce=int,
+        initial=0,
+        choices=((0, _("Started threads")), (1, _("All threads"))))
+    can_start_threads = forms.YesNoSwitch(label=_("Can start threads"))
+    can_reply_threads = forms.TypedChoiceField(
+        label=_("Can reply to threads"),
+        coerce=int,
+        initial=0,
+        choices=((0, _("No")), (1, _("Open threads")), (2, _("All threads"))))
+    can_edit_threads = forms.TypedChoiceField(
+        label=_("Can edit threads"),
+        coerce=int,
+        initial=0,
+        choices=((0, _("No")), (1, _("Own threads")), (2, _("All threads"))))
+    can_edit_replies = forms.TypedChoiceField(
+        label=_("Can edit replies"),
+        coerce=int,
+        initial=0,
+        choices=((0, _("No")), (1, _("Own replies")), (2, _("All replies"))))
 
 
 def change_permissions_form(role):
@@ -31,55 +51,31 @@ def change_permissions_form(role):
 ACL Builder
 """
 def build_acl(acl, roles, key_name):
-    new_acl = {
-        'visible_forums': [],
-        'forums': {},
-    }
-    new_acl.update(acl)
-
     forums_roles = get_forums_roles(roles)
 
     for forum in Forum.objects.all_forums():
-        build_forum_acl(new_acl, forum, forums_roles, key_name)
-
-    return new_acl
-
-
-def get_forums_roles(roles):
-    queryset = RoleForumACL.objects.filter(role__in=roles)
-    queryset = queryset.select_related('forum_role')
-
-    forums_roles = {}
-    for acl_relation in queryset.iterator():
-        forum_role = acl_relation.forum_role
-        forums_roles.setdefault(acl_relation.forum_id, []).append(forum_role)
-    return forums_roles
+        forum_acl = acl['forums'].get(forum.pk, {'can_browse': 0})
+        if forum_acl['can_browse']:
+            acl['forums'][forum.pk] = build_forum_acl(
+                forum_acl, forum, forums_roles, key_name)
+    return acl
 
 
 def build_forum_acl(acl, forum, forums_roles, key_name):
-    if forum.level > 1:
-        if forum.parent_id not in acl['visible_forums']:
-            # dont bother with child forums of invisible parents
-            return
-        elif not acl['forums'][forum.parent_id]['can_browse']:
-            # parent's visible, but its contents aint
-            return
-
     forum_roles = forums_roles.get(forum.pk, [])
 
     final_acl = {
-        'can_see': 0,
-        'can_browse': 0,
+        'can_see_all_threads': 0,
+        'can_start_threads': 0,
     }
+    final_acl.update(acl)
 
     algebra.sum_acls(final_acl, roles=forum_roles, key=key_name,
-        can_see=algebra.greater,
-        can_browse=algebra.greater
+        can_see_all_threads=algebra.greater,
+        can_start_threads=algebra.greater
     )
 
-    if final_acl['can_see']:
-        acl['visible_forums'].append(forum.pk)
-        acl['forums'][forum.pk] = final_acl
+    return final_acl
 
 
 """
@@ -95,8 +91,14 @@ def add_acl_to_target(user, target):
 
 
 def add_acl_to_forum(user, forum):
-    target.acl['can_see'] = can_see_forum(user, target)
-    target.acl['can_browse'] = can_browse_forum(user, target)
+    forum_acl = user.acl['forums'].get(forum.pk, {})
+
+    forum.acl['can_see_all_threads'] = forum_acl.get('can_see_all_threads', 0)
+
+    if user.is_authenticated():
+        forum.acl['can_start_threads'] = forum_acl.get('can_start_threads', 0)
+    else:
+        forum.acl['can_start_threads'] = 0
 
 
 def add_acl_to_thread(user, thread):
@@ -110,7 +112,7 @@ def add_acl_to_post(user, post):
 """
 ACL tests
 """
-def allow_see_forum(user, target):
+def allow_see_thread(user, target):
     try:
         forum_id = target.pk
     except AttributeError:
@@ -118,4 +120,4 @@ def allow_see_forum(user, target):
 
     if not forum_id in user.acl['visible_forums']:
         raise Http404()
-can_see_forum = return_boolean(allow_see_forum)
+can_see_thread = return_boolean(allow_see_thread)

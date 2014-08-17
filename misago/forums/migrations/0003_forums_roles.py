@@ -36,6 +36,11 @@ def create_default_forums_roles(apps, schema_editor):
                 'can_see': 1,
                 'can_browse': 1,
             },
+
+            # threads perms
+            'misago.threads.permissions': {
+                'can_see_all_threads': 1,
+            },
         })
     read_only.save()
 
@@ -47,6 +52,13 @@ def create_default_forums_roles(apps, schema_editor):
                 'can_see': 1,
                 'can_browse': 1,
             },
+
+            # threads perms
+            'misago.threads.permissions': {
+                'can_see_all_threads': 1,
+                'can_reply_threads': 1,
+                'can_edit_replies': 1,
+            },
         })
     reply_only.save()
 
@@ -57,6 +69,15 @@ def create_default_forums_roles(apps, schema_editor):
             'misago.forums.permissions': {
                 'can_see': 1,
                 'can_browse': 1,
+            },
+
+            # threads perms
+            'misago.threads.permissions': {
+                'can_see_all_threads': 1,
+                'can_start_threads': 1,
+                'can_reply_threads': 1,
+                'can_edit_threads': 1,
+                'can_edit_replies': 1,
             },
         })
     standard.save()
@@ -70,6 +91,15 @@ def create_default_forums_roles(apps, schema_editor):
                 'can_see': 1,
                 'can_browse': 1,
             },
+
+            # threads perms
+            'misago.threads.permissions': {
+                'can_see_all_threads': 1,
+                'can_start_threads': 1,
+                'can_reply_threads': 1,
+                'can_edit_threads': 1,
+                'can_edit_replies': 1,
+            },
         })
     standard_with_polls.save()
 
@@ -80,6 +110,15 @@ def create_default_forums_roles(apps, schema_editor):
             'misago.forums.permissions': {
                 'can_see': 1,
                 'can_browse': 1,
+            },
+
+            # threads perms
+            'misago.threads.permissions': {
+                'can_see_all_threads': 1,
+                'can_start_threads': 1,
+                'can_reply_threads': 2,
+                'can_edit_threads': 2,
+                'can_edit_replies': 2,
             },
         })
     moderator.save()
