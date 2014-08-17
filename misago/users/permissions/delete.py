@@ -46,11 +46,10 @@ def build_acl(acl, roles, key_name):
     }
     new_acl.update(acl)
 
-    return algebra.sum_acls(
-            new_acl, roles=roles, key=key_name,
-            can_delete_users_newer_than=algebra.greater,
-            can_delete_users_with_less_posts_than=algebra.greater
-            )
+    return algebra.sum_acls(new_acl, roles=roles, key=key_name,
+        can_delete_users_newer_than=algebra.greater,
+        can_delete_users_with_less_posts_than=algebra.greater
+    )
 
 
 """

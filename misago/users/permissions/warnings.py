@@ -62,14 +62,13 @@ def build_acl(acl, roles, key_name):
     }
     new_acl.update(acl)
 
-    return algebra.sum_acls(
-        new_acl, roles=roles, key=key_name,
+    return algebra.sum_acls(new_acl, roles=roles, key=key_name,
         can_see_other_users_warnings=algebra.greater,
         can_warn_users=algebra.greater,
         can_cancel_warnings=algebra.greater,
         can_delete_warnings=algebra.greater,
         can_be_warned=algebra.lower
-        )
+    )
 
 
 """

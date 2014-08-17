@@ -71,10 +71,10 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
         'can_browse': 0,
     }
 
-    algebra.sum_acls(
-        final_acl, roles=forum_roles, key=key_name,
+    algebra.sum_acls(final_acl, roles=forum_roles, key=key_name,
         can_see=algebra.greater,
-        can_browse=algebra.greater)
+        can_browse=algebra.greater
+    )
 
     if final_acl['can_see']:
         acl['visible_forums'].append(forum.pk)
