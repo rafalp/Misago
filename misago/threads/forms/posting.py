@@ -49,7 +49,10 @@ class EditorFormset(object):
 
     def _load_middlewares(self):
         kwargs = self.kwargs.copy()
-        kwargs['datetime'] = self.datetime
+        kwargs.update({
+            'datetime': self.datetime,
+            'parsing_result': {},
+        })
 
         for middleware in settings.MISAGO_POSTING_MIDDLEWARE:
             module_name = '.'.join(middleware.split('.')[:-1])

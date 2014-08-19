@@ -1,3 +1,4 @@
+from django.db.models import F
 from django.utils.translation import ugettext_lazy as _, ungettext
 
 from misago.conf import settings
@@ -139,6 +140,9 @@ class ReplyFormMiddleware(EditorFormsetMiddleware):
         form.post_editor = Editor(form['post'])
         return form
 
+    def pre_save(self, form):
+        self.parsing_result.update(form.parsing_result)
+
     def save(self, form):
         if self.mode == START:
             self.thread.set_title(form.cleaned_data['title'])
@@ -175,7 +179,16 @@ class ReplyFormMiddleware(EditorFormsetMiddleware):
             self.thread.replies += 1
         self.thread.save()
 
+        # update forum
         if self.mode != EDIT:
             self.forum.set_last_thread(self.thread)
             self.forum.posts += 1
             self.forum.save()
+
+        # update poster
+        if self.mode == START:
+            self.user.threads = F('threads') + 1
+
+        if self.mode != EDIT:
+            self.user.posts = F('posts') + 1
+        user.user.save(update_fields=['threads', 'posts'])
