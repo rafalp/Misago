@@ -144,6 +144,7 @@ class ReplyFormMiddleware(EditorFormsetMiddleware):
         self.parsing_result.update(form.parsing_result)
 
     def save(self, form):
+        # if we are starting new thread, create empty model
         if self.mode == START:
             self.thread.set_title(form.cleaned_data['title'])
             self.thread.starter_name = '-'
@@ -154,6 +155,7 @@ class ReplyFormMiddleware(EditorFormsetMiddleware):
             self.thread.last_post_on = self.datetime
             self.thread.save()
 
+        # make changes/set data on post
         self.post.updated_on = self.datetime
         if self.mode == EDIT:
             self.post.last_editor_name = self.user
@@ -169,6 +171,7 @@ class ReplyFormMiddleware(EditorFormsetMiddleware):
         self.post.post_checksum = update_post_checksum(self.post)
         self.post.save()
 
+        # Update thread
         if self.mode == START:
             self.forum.threads += 1
             self.thread.set_first_post(self.post)
@@ -191,4 +194,4 @@ class ReplyFormMiddleware(EditorFormsetMiddleware):
 
         if self.mode != EDIT:
             self.user.posts = F('posts') + 1
-        user.user.save(update_fields=['threads', 'posts'])
+        self.user.save(update_fields=['threads', 'posts'])
