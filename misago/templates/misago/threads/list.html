@@ -36,19 +36,62 @@
     {% include "misago/forums/subforums.html" with category=forum %}
     {% endif %}
 
-    {% if forum.is_closed %}
-      {% trans "This forum is closed." %}
-    {% else %}
-      {% if user.is_anonymous %}
-        <a href="{% url LOGIN_URL %}">{% trans "Login to start thread" %}</a>
-      {% elif forum.acl.can_start_threads %}
-        <a href="{% url LOGIN_URL %}" class="btn btn-success">
-          {% trans "Start thread" %}
-        </a>
-      {% else %}
-        {% trans "You can't start threads in this forum." %}
-      {% endif %}
-    {% endif %}
+    <div class="threads-list">
+
+      <div class="table-actions">
+        {% if forum.is_closed %}
+        <span class="btn btn-default disabled pull-right">
+          <span class="fa fa-lock"></span>
+          {% trans "This forum is closed." %}
+        </span>
+        {% else %}
+          {% if user.is_anonymous %}
+          <a href="{% url LOGIN_URL %}" class="btn btn-default pull-right">
+            <span class="fa fa-check-circle"></span>
+            {% trans "Sign in to start thread" %}
+          </a>
+          {% elif forum.acl.can_start_threads %}
+          <a href="{% url LOGIN_URL %}" class="btn btn-success pull-right">
+            <span class="fa fa-plus-circle"></span>
+            {% trans "Start thread" %}
+          </a>
+          {% else %}
+          <span class="btn btn-default btn-closed pull-right">
+            <span class="fa fa-ban"></span>
+            {% trans "Can't start threads" %}
+          </span>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      <div class="table-panel">
+        <table class="table">
+          {% block table-items %}
+          {% for item in items %}
+          <tr>
+            {% block table-row %}{% endblock table-row %}
+            {% if mass_actions %}
+            <td class="row-select">
+              <label>
+                <input type="checkbox" form="mass-action" name="selected_items" value="{{ item.pk }}" {% if item.pk in selected_items %} checked{% endif %}>
+              </label>
+            </td>
+            {% endif %}
+          </tr>
+          {% empty %}
+          <tr class="message-row">
+            {% block emptylist %}
+            {% endblock emptylist %}
+          </tr>
+          {% endfor %}
+          {% endblock table-items %}
+        </table>
+      </div>
+
+      <div class="table-actions">
+      </div>
+    </div>
+
   </div>
 </div>
 {% endblock content %}
