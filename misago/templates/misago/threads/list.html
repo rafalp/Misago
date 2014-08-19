@@ -66,25 +66,11 @@
 
       <div class="table-panel">
         <table class="table">
-          {% block table-items %}
-          {% for item in items %}
-          <tr>
-            {% block table-row %}{% endblock table-row %}
-            {% if mass_actions %}
-            <td class="row-select">
-              <label>
-                <input type="checkbox" form="mass-action" name="selected_items" value="{{ item.pk }}" {% if item.pk in selected_items %} checked{% endif %}>
-              </label>
-            </td>
-            {% endif %}
-          </tr>
-          {% empty %}
           <tr class="message-row">
-            {% block emptylist %}
-            {% endblock emptylist %}
+            <td>
+              {% trans "No threads were posted in this forum, or you don't have permission to see them." %}
+            </td>
           </tr>
-          {% endfor %}
-          {% endblock table-items %}
         </table>
       </div>
 
