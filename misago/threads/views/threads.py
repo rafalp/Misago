@@ -11,3 +11,15 @@ class ForumView(ThreadsMixin, generic.ForumView):
 
 class ThreadView(ThreadsMixin, generic.ThreadView):
     pass
+
+
+class StartThreadView(ThreadsMixin, generic.EditorView):
+    pass
+
+
+class ReplyView(ThreadsMixin, generic.EditorView):
+    pass
+
+
+class EditView(ThreadsMixin, generic.EditorView):
+    pass

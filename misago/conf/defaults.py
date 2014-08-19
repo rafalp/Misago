@@ -171,6 +171,11 @@ MISAGO_ACL_EXTENSIONS = (
 MISAGO_MARKUP_EXTENSIONS = ()
 
 
+MISAGO_POSTING_MIDDLEWARE = (
+    'misago.threads.forms.reply.ReplyFormMiddleware',
+)
+
+
 # Register Misago directories
 
 LOCALE_PATHS = (

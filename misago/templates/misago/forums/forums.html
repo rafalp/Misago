@@ -46,10 +46,28 @@
         {% endblocktrans %}
       </div>
       {% elif forum.acl.can_browse %}
-      <a href="#" class="item-title">Lorem ipsum dolor met sit amet</a>
-      <div class="text-muted">
-        <a href="#" class="item-title">somebody</a>, <abbr>32 minutes ago</abbr>
-      </div>
+        {% if forum.last_thread_title %}
+        <a href="#" class="item-title">{{ forum.last_thread_title }}</a>
+        <div class="text-muted">
+          {% capture trimmed as last_poster %}
+            {% if forum.last_poster_id %}
+            <a href="{% url USER_PROFILE_URL user_id=forum.last_poster_id user_slug=forum.last_poster_slug %}" class="item-title">{{ forum.last_poster_name }}</a>
+            {% else %}
+            <strong class="item-title">{{ forum.last_poster_name }}</strong>
+            {% endif %}
+          {% endcapture %}
+          {% capture trimmed as last_post %}
+          <abbr class="tooltip-top dynamic time-ago" title="{{ forum.last_post_on }}" data-timestamp="{{ forum.last_post_on|date:"c" }}">
+            {{ forum.last_post_on|date }}
+          </abbr>
+          {% endcapture %}
+          {% blocktrans trimmed with last_poster=last_poster|safe last_post=last_post|safe %}
+          {{ last_poster }}, {{ last_post }}
+          {% endblocktrans %}
+        </div>
+        {% else %}
+        <em class="text-muted">{% trans "Forum is empty" %}</em>
+        {% endif %}
       {% else %}
       <em class="text-muted">{% trans "Can't be browsed" %}</em>
       {% endif %}

@@ -61,7 +61,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('weight', models.PositiveIntegerField(default=0)),
-                ('name', models.CharField(max_length=255)),
+                ('title', models.CharField(max_length=255)),
                 ('slug', models.SlugField(max_length=255)),
                 ('replies', models.PositiveIntegerField(default=0)),
                 ('has_reported_posts', models.BooleanField(default=False)),

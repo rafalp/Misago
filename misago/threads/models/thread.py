@@ -1,14 +1,16 @@
 from django.db import models
 
 from misago.conf import settings
+from misago.core.utils import slugify
 
 
 class Thread(models.Model):
     forum = models.ForeignKey('misago_forums.Forum')
     weight = models.PositiveIntegerField(default=0)
-    prefix = models.ForeignKey('misago_threads.Prefix', null=True, blank=True,
+    prefix = models.ForeignKey('misago_threads.Prefix',
+                               null=True, blank=True,
                                on_delete=models.SET_NULL)
-    name = models.CharField(max_length=255)
+    title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
     replies = models.PositiveIntegerField(default=0)
     has_reported_posts = models.BooleanField(default=False)
@@ -36,3 +38,27 @@ class Thread(models.Model):
     is_moderated = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
+
+    def set_title(self, title):
+        self.title = title
+        self.slug = slugify(title)
+
+    def set_first_post(self, post):
+        self.started_on = post.posted_on
+        self.first_post = post
+        self.starter = post.poster
+        self.starter_name = post.poster_name
+        if post.poster:
+            self.starter_slug = post.poster.slug
+        else:
+            self.starter_slug = slugify(post.poster_name)
+
+    def set_last_post(self, post):
+        self.last_post_on = post.posted_on
+        self.last_post = post
+        self.last_poster = post.poster
+        self.last_poster_name = post.poster_name
+        if post.poster:
+            self.last_poster_slug = post.poster.slug
+        else:
+            self.last_poster_slug = slugify(post.poster_name)

@@ -113,11 +113,17 @@ def add_acl_to_post(user, post):
 ACL tests
 """
 def allow_see_thread(user, target):
-    try:
-        forum_id = target.pk
-    except AttributeError:
-        forum_id = int(target)
-
-    if not forum_id in user.acl['visible_forums']:
-        raise Http404()
+    raise NotImplementedError()
 can_see_thread = return_boolean(allow_see_thread)
+
+
+def allow_start_thread(user, target):
+    if target.is_closed:
+        message = _("This forum is closed. You can't start new threads in it.")
+        raise PermissionDenied(message)
+    if user.is_anonymous():
+        raise PermissionDenied(_("You have to sign in to start new thread."))
+    if not user.acl['forums'].get(target.id, {'can_start_threads': False}):
+        raise PermissionDenied(_("You don't have permission to start "
+                                 "new threads in this forum."))
+can_start_thread = return_boolean(allow_start_thread)

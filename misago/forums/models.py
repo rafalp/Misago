@@ -10,6 +10,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 from misago.acl import version as acl_version
 from misago.acl.models import BaseRole
+from misago.conf import settings
 from misago.core import serializer
 from misago.core.cache import cache
 from misago.core.signals import secret_key_changed
@@ -56,19 +57,29 @@ class Forum(MPTTModel):
     special_role = models.CharField(max_length=255, null=True, blank=True)
     role = models.CharField(max_length=255, null=True, blank=True)
     name = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255)
+    slug = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     is_closed = models.BooleanField(default=False)
     redirect_url = models.CharField(max_length=255, null=True, blank=True)
     redirects = models.PositiveIntegerField(default=0)
     threads = models.PositiveIntegerField(default=0)
     posts = models.PositiveIntegerField(default=0)
+    last_post_on = models.DateTimeField(null=True, blank=True)
+    last_thread = models.ForeignKey('misago_threads.Thread', related_name='+',
+                                    null=True, blank=True,
+                                    on_delete=models.SET_NULL)
+    last_thread_title = models.CharField(max_length=255, null=True, blank=True)
+    last_thread_slug = models.CharField(max_length=255, null=True, blank=True)
+    last_poster = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+',
+                                    null=True, blank=True,
+                                    on_delete=models.SET_NULL)
+    last_poster_name = models.CharField(max_length=255, null=True, blank=True)
+    last_poster_slug = models.SlugField(max_length=255, null=True, blank=True)
     prune_started_after = models.PositiveIntegerField(default=0)
     prune_replied_after = models.PositiveIntegerField(default=0)
     archive_pruned_in = models.ForeignKey('self',
                                           related_name='pruned_archive',
-                                          null=True,
-                                          blank=True,
+                                          null=True, blank=True,
                                           on_delete=models.SET_NULL)
     css_class = models.CharField(max_length=255, null=True, blank=True)
 
@@ -111,6 +122,15 @@ class Forum(MPTTModel):
     def set_name(self, name):
         self.name = name
         self.slug = slugify(name)
+
+    def set_last_thread(self, thread):
+        self.last_post_on = thread.last_post_on
+        self.last_thread = thread
+        self.last_thread_title = thread.title
+        self.last_thread_slug = thread.slug
+        self.last_poster = thread.last_poster
+        self.last_poster_name = thread.last_poster_name
+        self.last_poster_slug = thread.last_poster_slug
 
     def has_child(self, child):
         return child.lft > self.lft and child.rght < self.rght

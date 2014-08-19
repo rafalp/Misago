@@ -26,6 +26,10 @@ def parse(text, author=None, allow_mentions=True, allow_links=True,
         'original_text': text,
         'parsed_text': '',
         'markdown': md,
+        'mentions': [],
+        'images': [],
+        'outgoing_links': [],
+        'inside_links': []
     }
 
     # Parse text

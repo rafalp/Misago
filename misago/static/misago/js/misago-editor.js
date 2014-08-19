@@ -92,8 +92,17 @@ function enable_editor(name) {
   var $upload = $editor.find('.editor-upload');
 
   $textarea.autosize();
-
   var textarea_id = $textarea.attr('id');
+
+  $editor.find('.btn-strong').click(function() {
+    makeWrap(textarea_id, '**', '**');
+    return false;
+  });
+
+  $editor.find('.btn-emphasis').click(function() {
+    makeWrap(textarea_id, '*', '*');
+    return false;
+  });
   $editor.find('.btn-bold').click(function() {
     makeWrap(textarea_id, '[b]', '[/b]');
     return false;

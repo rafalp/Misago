@@ -2,6 +2,8 @@ from django.db import models
 
 from misago.conf import settings
 
+from misago.threads.checksums import is_post_valid
+
 
 class Post(models.Model):
     forum = models.ForeignKey('misago_forums.Forum')
@@ -29,3 +31,7 @@ class Post(models.Model):
     is_moderated = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
     is_protected = models.BooleanField(default=False)
+
+    @property
+    def is_valid(self):
+        return is_post_valid(self)

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.conf import settings
 from django.db import models, migrations
 import django.db.models.deletion
 import mptt.fields
@@ -10,6 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('misago_acl', '0001_initial'),
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
@@ -20,13 +22,18 @@ class Migration(migrations.Migration):
                 ('special_role', models.CharField(max_length=255, null=True, blank=True)),
                 ('role', models.CharField(max_length=255, null=True, blank=True)),
                 ('name', models.CharField(max_length=255)),
-                ('slug', models.SlugField(max_length=255)),
+                ('slug', models.CharField(max_length=255)),
                 ('description', models.TextField(null=True, blank=True)),
                 ('is_closed', models.BooleanField(default=False)),
                 ('redirect_url', models.CharField(max_length=255, null=True, blank=True)),
                 ('redirects', models.PositiveIntegerField(default=0)),
                 ('threads', models.PositiveIntegerField(default=0)),
                 ('posts', models.PositiveIntegerField(default=0)),
+                ('last_thread_title', models.CharField(max_length=255, null=True, blank=True)),
+                ('last_thread_slug', models.CharField(max_length=255, null=True, blank=True)),
+                ('last_poster_name', models.CharField(max_length=255, null=True, blank=True)),
+                ('last_poster_slug', models.SlugField(max_length=255, null=True, blank=True)),
+                ('last_post_on', models.DateTimeField(null=True, blank=True)),
                 ('prune_started_after', models.PositiveIntegerField(default=0)),
                 ('prune_replied_after', models.PositiveIntegerField(default=0)),
                 ('css_class', models.CharField(max_length=255, null=True, blank=True)),
@@ -35,6 +42,7 @@ class Migration(migrations.Migration):
                 ('tree_id', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('level', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('archive_pruned_in', models.ForeignKey(related_name=b'pruned_archive', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='misago_forums.Forum', null=True)),
+                ('last_poster', models.ForeignKey(related_name=b'+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
                 ('parent', mptt.fields.TreeForeignKey(related_name=b'children', blank=True, to='misago_forums.Forum', null=True)),
             ],
             options={
