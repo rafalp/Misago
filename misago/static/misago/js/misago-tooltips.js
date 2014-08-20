@@ -1,10 +1,10 @@
 // Register tooltips
 $(function() {
   $.misago_dom().change(function() {
-    $('.tooltip-top').tooltip({placement: 'top'});
-    $('.tooltip-bottom').tooltip({placement: 'bottom'});
-    $('.tooltip-left').tooltip({placement: 'left'});
-    $('.tooltip-right').tooltip({placement: 'right'});
+    $('.tooltip-top').tooltip({container: 'body', placement: 'top'});
+    $('.tooltip-bottom').tooltip({container: 'body', placement: 'bottom'});
+    $('.tooltip-left').tooltip({container: 'body', placement: 'left'});
+    $('.tooltip-right').tooltip({container: 'body', placement: 'right'});
   });
 });
 
@@ -22,6 +22,6 @@ function misago_tooltip(element) {
   }
 
   if (placement) {
-    element.tooltip({placement: placement})
+    element.tooltip({container: 'body', placement: placement})
   }
 }
