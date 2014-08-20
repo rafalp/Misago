@@ -191,7 +191,7 @@ class NewUser(UserAdmin, generic.ModelFormView):
 
         messages.success(request, self.message_submit % target.username)
         return redirect('misago:admin:users:accounts:edit',
-                        user_id=new_user.pk)
+                        user_id=new_user.id)
 
 
 class EditUser(UserAdmin, generic.ModelFormView):

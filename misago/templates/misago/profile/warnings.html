@@ -145,7 +145,7 @@
         <ul class="list-unstyled actions pull-right">
           {% if warning.acl.can_cancel %}
           <li>
-            <form action="{% url 'misago:cancel_warning' user_slug=profile.slug user_id=profile.pk warning_id=warning.pk %}" method="POST" class="cancel-warning-prompt">
+            <form action="{% url 'misago:cancel_warning' user_slug=profile.slug user_id=profile.id warning_id=warning.id %}" method="POST" class="cancel-warning-prompt">
               {% csrf_token %}
               <button type="submit" class="btn btn-default">
                 {% trans "Cancel" %}
@@ -155,7 +155,7 @@
           {% endif %}
           {% if warning.acl.can_delete %}
           <li>
-            <form action="{% url 'misago:delete_warning' user_slug=profile.slug user_id=profile.pk warning_id=warning.pk %}" method="POST" class="delete-warning-prompt">
+            <form action="{% url 'misago:delete_warning' user_slug=profile.slug user_id=profile.id warning_id=warning.id %}" method="POST" class="delete-warning-prompt">
               {% csrf_token %}
               <button type="submit" class="btn btn-default">
                 {% trans "Delete" %}
@@ -169,7 +169,7 @@
     </div>
     {% endfor %}
   </div>
-  {% pagination warnings "misago/profile/pagination.html" 'misago:user_warnings' user_slug=profile.slug user_id=profile.pk %}
+  {% pagination warnings "misago/profile/pagination.html" 'misago:user_warnings' user_slug=profile.slug user_id=profile.id %}
 {% else %}
 <p class="lead">
   {% if is_authenticated_user %}

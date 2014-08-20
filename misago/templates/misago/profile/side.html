@@ -13,7 +13,7 @@
 <ul class="nav nav-side large">
   {% for page in pages %}
   <li{% if page.is_active %} class="active"{% endif %}>
-    <a href="{% url page.link user_slug=profile.slug user_id=profile.pk %}">
+    <a href="{% url page.link user_slug=profile.slug user_id=profile.id %}">
       {{ page.name }}
       {% if page.badge != None %}
       <span class="badge">{{ page.badge }}</span>

@@ -9,7 +9,7 @@
     <h1>
       <div class="main">
         <img src="{{ profile|avatar:20 }}" alt="{% trans "Avatar" %}">
-        <a href="{% url USER_PROFILE_URL user_slug=profile.slug user_id=profile.pk %}">
+        <a href="{% url USER_PROFILE_URL user_slug=profile.slug user_id=profile.id %}">
           {{ profile.username }}
         </a>
       </div>

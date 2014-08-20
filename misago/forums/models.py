@@ -110,11 +110,11 @@ class Forum(MPTTModel):
     def get_absolute_url(self):
         if not self.special_role:
             if self.level == 1:
-                formats = (reverse('misago:index'), self.slug, self.pk)
+                formats = (reverse('misago:index'), self.slug, self.id)
                 return '%s#%s-%s' % formats
             else:
                 return reverse('misago:%s' % self.role, kwargs={
-                    'forum_id': self.pk, 'forum_slug': self.slug
+                    'forum_id': self.id, 'forum_slug': self.slug
                 })
         else:
             return None
