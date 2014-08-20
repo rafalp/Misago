@@ -12,8 +12,8 @@ from misago.forums.lists import get_forums_list, get_forum_path
 from misago.forums.models import Forum
 from misago.forums.permissions import allow_see_forum, allow_browse_forum
 
-from misago.threads.forms.posting import (InterruptChanges, EditorFormset,
-                                          START, REPLY, EDIT)
+from misago.threads.posting import (InterruptChanges, EditorFormset,
+                                    START, REPLY, EDIT)
 from misago.threads.models import Thread, Post
 from misago.threads.permissions import allow_see_thread, allow_start_thread
 

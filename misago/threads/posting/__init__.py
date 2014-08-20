@@ -1,3 +1,6 @@
+"""
+Posting process implementation
+"""
 from importlib import import_module
 
 from django.utils import timezone
@@ -21,13 +24,6 @@ class InterruptChanges(Exception):
 
 
 class EditorFormset(object):
-    """
-    This is gigantozaurus that handles entire posting process
-
-    * It stores context in which we are acting
-    * It inits forms for posting view
-    *
-    """
     def __init__(self, **kwargs):
         self.errors = []
 

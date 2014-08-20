@@ -172,7 +172,7 @@ MISAGO_MARKUP_EXTENSIONS = ()
 
 
 MISAGO_POSTING_MIDDLEWARE = (
-    'misago.threads.forms.reply.ReplyFormMiddleware',
+    'misago.threads.posting.reply.ReplyFormMiddleware',
 )
 
 
