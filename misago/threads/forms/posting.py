@@ -13,6 +13,13 @@ REPLY = 1
 EDIT = 2
 
 
+class InterruptChanges(Exception):
+    def __init__(self, message):
+        if not message:
+            raise ValueError("You have to provide InterruptChanges message.")
+        self.message = message
+
+
 class EditorFormset(object):
     """
     This is gigantozaurus that handles entire posting process

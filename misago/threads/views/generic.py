@@ -1,6 +1,7 @@
 """
 Module with basic views for use by inheriting actions
 """
+from django.contrib import messages
 from django.db.transaction import atomic
 from django.shortcuts import redirect, render
 from django.views.generic import View
@@ -11,7 +12,8 @@ from misago.forums.lists import get_forums_list, get_forum_path
 from misago.forums.models import Forum
 from misago.forums.permissions import allow_see_forum, allow_browse_forum
 
-from misago.threads.forms.posting import EditorFormset, START, REPLY, EDIT
+from misago.threads.forms.posting import (InterruptChanges, EditorFormset,
+                                          START, REPLY, EDIT)
 from misago.threads.models import Thread, Post
 from misago.threads.permissions import allow_see_thread, allow_start_thread
 
@@ -197,8 +199,11 @@ class EditorView(ViewBase):
 
         if request.method == 'POST':
             if 'submit' in request.POST and formset.is_valid():
-                formset.save()
-                return redirect('misago:index')
+                try:
+                    formset.save()
+                    return redirect('misago:index')
+                except InterruptChanges as e:
+                    messages.error(request, e.message)
             else:
                 formset.update()
 
