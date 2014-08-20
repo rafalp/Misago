@@ -24,7 +24,7 @@
   {% endblocktrans %}
   <br>
   <br>
-  <a href="{{ SITE_ADDRESS }}{% url 'misago:activate_by_token' user_id=recipient.if token=activation_token %}">{% trans "Activate my account!" %}</a>
+  <a href="{{ SITE_ADDRESS }}{% url 'misago:activate_by_token' user_id=recipient.id token=activation_token %}">{% trans "Activate my account!" %}</a>
   <br>
   <br>
   {% capture trimmed as login_link %}
