@@ -43,8 +43,8 @@ class ReplyForm(forms.Form):
 
         self.parsing_result = common_flavour(post, self.post_instance.poster)
 
-        self.post_instance.post = self.parsing_result['original_text']
-        self.post_instance.post_parsed = self.parsing_result['parsed_text']
+        self.post_instance.original = self.parsing_result['original_text']
+        self.post_instance.parsed = self.parsing_result['parsed_text']
 
     def validate_data(self, data):
         self.validate_post(data.get('post', ''))

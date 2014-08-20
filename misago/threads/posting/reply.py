@@ -10,7 +10,7 @@ from misago.threads.posting import EditorFormsetMiddleware, START, REPLY, EDIT
 
 class ReplyFormMiddleware(EditorFormsetMiddleware):
     def make_form(self):
-        initial_data = {'title': self.thread.title, 'post': self.post.post}
+        initial_data = {'title': self.thread.title, 'post': self.post.original}
 
         if self.mode == START:
             if self.request.method == 'POST':

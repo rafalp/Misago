@@ -101,7 +101,7 @@ class StartThreadFormTests(AdminTestCase):
 
         last_post = self.test_admin.post_set.all()[:1][0]
         self.assertEqual(last_post.forum_id, self.forum.pk)
-        self.assertEqual(last_post.post, 'Lorem ipsum dolor met!')
+        self.assertEqual(last_post.original, 'Lorem ipsum dolor met!')
         self.assertEqual(last_post.poster_id, updated_admin.id)
         self.assertEqual(last_post.poster_name, updated_admin.username)
 

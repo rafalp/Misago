@@ -12,9 +12,9 @@ class Post(models.Model):
                                on_delete=models.SET_NULL)
     poster_name = models.CharField(max_length=255)
     poster_ip = models.GenericIPAddressField()
-    post = models.TextField()
-    post_parsed = models.TextField()
-    post_checksum = models.CharField(max_length=64)
+    original = models.TextField()
+    parsed = models.TextField()
+    checksum = models.CharField(max_length=64)
     mentions = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                       related_name="mention_set")
     has_attachments = models.BooleanField(default=False)
