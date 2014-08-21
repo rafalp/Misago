@@ -148,8 +148,8 @@ class EditorView(ViewBase):
             user = request.user
 
             forum = self.get_forum(request, lock=is_post, **kwargs)
-            thread = Thread(forum=forum, starter=user, last_poster=user)
-            post = Post(forum=forum, thread=thread, poster=user)
+            thread = Thread(forum=forum)
+            post = Post(forum=forum, thread=thread)
             quote = Post(0)
         elif 'thread_id' in kwargs:
             thread = self.get_thread(request, lock=is_post, **kwargs)

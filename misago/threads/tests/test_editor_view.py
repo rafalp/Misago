@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from misago.acl.testutils import override_acl
@@ -67,6 +68,13 @@ class StartThreadFormTests(AdminTestCase):
             'can_start_threads': 1,
         }
         override_acl(self.test_admin, forums_acl)
+
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 403)
+
+    def test_cant_start_thread_as_guest(self):
+        """guests can't start threads"""
+        self.client.post(reverse(settings.LOGOUT_URL))
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 403)
