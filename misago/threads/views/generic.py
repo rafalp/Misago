@@ -14,7 +14,7 @@ from misago.forums.permissions import allow_see_forum, allow_browse_forum
 
 from misago.threads.posting import (InterruptChanges, EditorFormset,
                                     START, REPLY, EDIT)
-from misago.threads.models import Thread, Post
+from misago.threads.models import ANNOUNCEMENT, Thread, Post
 from misago.threads.permissions import allow_see_thread, allow_start_thread
 
 
@@ -95,17 +95,45 @@ class ForumView(ViewBase):
     """
     template = 'list.html'
 
-    def get_threads(self, request, forum, **kwargs):
-        return forum.thread_set
+    def get_threads(self, request, forum, kwargs):
+        queryset = self.get_threads_queryset(request, forum)
+
+        threads_qs = queryset.filter(weight__lt=ANNOUNCEMENT)
+        threads_qs = threads_qs.order_by('-weight', '-last_post_on')
+
+        page = paginate(threads_qs, kwargs.get('page', 0), 30, 10)
+        threads = []
+
+        for announcement in queryset.filter(weight=ANNOUNCEMENT):
+            threads.append(announcement)
+        for thread in page.object_list:
+            threads.append(thread)
+
+        return page, threads
+
+    def get_threads_queryset(self, request, forum):
+        return forum.thread_set.all().order_by('-last_post_on')
+
+    def add_threads_reads(self, request, forum, threads):
+        for thread in threads:
+            thread.is_new = False
+
+        import random
+        for thread in threads:
+            thread.is_new = random.choice((True, False))
 
     def dispatch(self, request, *args, **kwargs):
         forum = self.get_forum(request, **kwargs)
         forum.subforums = get_forums_list(request.user, forum)
-        threads = self.get_threads(request, forum, **kwargs)
+
+        page, threads = self.get_threads(request, forum, kwargs)
+        self.add_threads_reads(request, forum, threads)
 
         return self.render(request, {
             'forum': forum,
             'path': get_forum_path(forum),
+            'page': page,
+            'threads': threads
         })
 
 
@@ -201,7 +229,7 @@ class EditorView(ViewBase):
             if 'submit' in request.POST and formset.is_valid():
                 try:
                     formset.save()
-                    return redirect('misago:index')
+                    return redirect(forum.get_absolute_url())
                 except InterruptChanges as e:
                     messages.error(request, e.message)
             else:

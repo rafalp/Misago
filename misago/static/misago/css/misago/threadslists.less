@@ -1,3 +1,78 @@
 //
 // Threads lists
 // --------------------------------------------------
+
+
+// Block style
+//
+//==
+.threads-list {
+  .table-panel {
+    border: none;
+
+    .list-group {
+      margin: 0px;
+    }
+  }
+}
+
+
+// Thread icon
+//
+//==
+.threads-list {
+  .table-panel {
+    .list-group {
+      .list-group-item {
+        &.new {
+          .thread-icon {
+            color: @state-active;
+          }
+        }
+
+        .thread-icon {
+          position: relative;
+          right: 5px;
+          bottom: 2px;
+
+          color: @state-default;
+        }
+      }
+    }
+  }
+}
+
+
+// Thread title
+//
+//==
+.threads-list {
+  .table-panel {
+    .list-group {
+      .list-group-item {
+        .item-title {
+          font-size: @font-size-large;
+        }
+      }
+    }
+  }
+}
+
+
+// Empty list message
+//
+//==
+.threads-list {
+  .table-panel {
+    .list-group {
+      .list-group-item {
+        &.message-row {
+          padding-top: @line-height-computed;
+          padding-bottom: @line-height-computed;
+
+          font-size: @font-size-large;
+        }
+      }
+    }
+  }
+}

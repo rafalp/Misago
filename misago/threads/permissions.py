@@ -38,6 +38,18 @@ class PermissionsForm(forms.Form):
         coerce=int,
         initial=0,
         choices=((0, _("No")), (1, _("Own replies")), (2, _("All replies"))))
+    can_change_threads_weight = forms.TypedChoiceField(
+        label=_("Can change threads weight"), coerce=int, initial=0,
+        choices=(
+            (0, _("No")),
+            (1, _("Pin threads")),
+            (2, _("Make announcements")),
+        ))
+    can_close_threads = forms.TypedChoiceField(
+        label=_("Can close threads"),
+        coerce=int,
+        initial=0,
+        choices=((0, _("No")), (1, _("Own threads")), (2, _("All threads"))))
 
 
 def change_permissions_form(role):
@@ -67,12 +79,16 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
     final_acl = {
         'can_see_all_threads': 0,
         'can_start_threads': 0,
+        'can_change_threads_weight': 0,
+        'can_close_threads': 0,
     }
     final_acl.update(acl)
 
     algebra.sum_acls(final_acl, roles=forum_roles, key=key_name,
         can_see_all_threads=algebra.greater,
-        can_start_threads=algebra.greater
+        can_start_threads=algebra.greater,
+        can_change_threads_weight=algebra.greater,
+        can_close_threads=algebra.greater,
     )
 
     return final_acl
@@ -94,11 +110,17 @@ def add_acl_to_forum(user, forum):
     forum_acl = user.acl['forums'].get(forum.pk, {})
 
     forum.acl['can_see_all_threads'] = forum_acl.get('can_see_all_threads', 0)
+    forum.acl.update({
+        'can_start_threads': 0,
+        'can_change_threads_weight': 0,
+    })
 
     if user.is_authenticated():
-        forum.acl['can_start_threads'] = forum_acl.get('can_start_threads', 0)
-    else:
-        forum.acl['can_start_threads'] = 0
+        algebra.sum_acls(forum.acl, acls=[forum_acl],
+            can_see_all_threads=algebra.greater,
+            can_start_threads=algebra.greater,
+            can_change_threads_weight=algebra.greater,
+        )
 
 
 def add_acl_to_thread(user, thread):

@@ -115,3 +115,26 @@ class ThreadForm(ReplyForm):
 
 class PrefixedThreadForm(ThreadForm):
     pass
+
+
+class FullThreadStateForm(forms.Form):
+    is_supporting = True
+    legend = _("Thread options")
+    template = "misago/threads/threadstate.html"
+
+    weight = forms.TypedChoiceField(label=_("Thread weight"), initial=0,
+                                    widget=forms.RadioSelect,
+                                    choices=(
+                                        (0, _("Standard")),
+                                        (1, _("Pinned")),
+                                        (2, _("Announcement")),
+                                    ))
+    is_closed = forms.YesNoSwitch(label=_("Close thread"), initial=0)
+
+
+class ThreadWeightForm(FullThreadStateForm):
+    is_closed = None
+
+
+class CloseThreadForm(FullThreadStateForm):
+    Weight = None

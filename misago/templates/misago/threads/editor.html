@@ -35,11 +35,11 @@
       {% csrf_token %}
 
       <div class="row">
-      {% if supporting_forms %}
+        {% if supporting_forms %}
         <div class="col-md-9">
-      {% else %}
+        {% else %}
         <div class="col-md-10 col-md-offset-1">
-      {% endif %}
+        {% endif %}
 
           <div class="form-panel">
             {% for form in main_forms %}
@@ -60,6 +60,16 @@
           </div>
 
         </div>
+
+        {% if supporting_forms %}
+        <div class="col-md-3">
+
+          {% for form in supporting_forms %}
+          {% include form.template %}
+          {% endfor %}
+
+        </div>
+        {% endif %}
       </div><!-- /.row -->
 
     </form>

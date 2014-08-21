@@ -65,13 +65,41 @@
       </div>
 
       <div class="table-panel">
-        <table class="table">
-          <tr class="message-row">
-            <td>
-              {% trans "No threads were posted in this forum, or you don't have permission to see them." %}
-            </td>
-          </tr>
-        </table>
+        <ul class="list-group">
+          {% for thread in threads %}
+          <li class="list-group-item{% if thread.is_new %} new{% endif %}">
+
+            {% if thread.is_announcement %}
+              {% if thread.is_new %}
+              <span class="thread-icon tooltip-top fa fa-star fa-lg fa-fw" title="{% trans "Announcement, unread" %}"></span>
+              {% else %}
+              <span class="thread-icon tooltip-top fa fa-star-o fa-lg fa-fw" title="{% trans "Announcement, read" %}"></span>
+              {% endif %}
+            {% elif thread.is_pinned %}
+              {% if thread.is_new %}
+              <span class="thread-icon tooltip-top fa fa-bookmark fa-lg fa-fw" title="{% trans "Pinned, unread" %}"></span>
+              {% else %}
+              <span class="thread-icon tooltip-top fa fa-bookmark-o fa-lg fa-fw" title="{% trans "Pinned, read" %}"></span>
+              {% endif %}
+            {% else %}
+              {% if thread.is_new %}
+              <span class="thread-icon tooltip-top fa fa-circle fa-lg fa-fw" title="{% trans "Unread posts" %}"></span>
+              {% else %}
+              <span class="thread-icon tooltip-top fa fa-circle-thin fa-lg fa-fw" title="{% trans "Read posts" %}"></span>
+              {% endif %}
+            {% endif %}
+
+            <a href="#" class="item-title">
+              {{ thread.title }}
+            </a>
+
+          </li>
+          {% empty %}
+          <li class="list-group-item message-row">
+            {% trans "No threads were posted in this forum, or you don't have permission to see them." %}
+          </li>
+          {% endfor %}
+        </ul>
       </div>
 
       <div class="table-actions">

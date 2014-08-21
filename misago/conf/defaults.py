@@ -173,6 +173,7 @@ MISAGO_MARKUP_EXTENSIONS = ()
 
 MISAGO_POSTING_MIDDLEWARE = (
     'misago.threads.posting.reply.ReplyFormMiddleware',
+    'misago.threads.posting.threadstate.ThreadStateFormMiddleware',
     'misago.threads.posting.recordedit.RecordEditMiddleware',
     'misago.threads.posting.updatestats.UpdateStatsMiddleware',
     'misago.threads.posting.savechanges.SaveChangesMiddleware',

@@ -61,4 +61,3 @@ class ReplyFormMiddleware(PostingMiddleware):
         self.post.poster_name = self.user.username
         self.post.poster_ip = self.request._misago_real_ip
         self.post.posted_on = self.datetime
-

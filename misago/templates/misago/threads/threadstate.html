@@ -1,0 +1,14 @@
+{% load i18n misago_forms %}
+<div class="form-panel">
+  <div class="form-header">
+    <h3>{{ form.legend }}</h3>
+  </div>
+  <div class="form-body no-fieldsets">
+    {% if form.weight %}
+      {% form_row form.weight %}
+    {% endif %}
+    {% if form.is_closed %}
+      {% form_row form.is_closed %}
+    {% endif %}
+  </div>
+</div>

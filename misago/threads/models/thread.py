@@ -4,6 +4,13 @@ from misago.conf import settings
 from misago.core.utils import slugify
 
 
+__all__ = ['ANNOUNCEMENT', 'PINNED', 'Thread']
+
+
+ANNOUNCEMENT = 2
+PINNED = 1
+
+
 class Thread(models.Model):
     forum = models.ForeignKey('misago_forums.Forum')
     weight = models.PositiveIntegerField(default=0)
@@ -38,6 +45,21 @@ class Thread(models.Model):
     is_moderated = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
+
+    def is_announcement(self):
+        return self.weight == ANNOUNCEMENT
+
+    def is_pinned(self):
+        return self.weight == PINNED
+
+    def get_absolute_url(self):
+        pass
+
+    def get_new_reply_url(self):
+        pass
+
+    def get_last_reply_url(self):
+        pass
 
     def set_title(self, title):
         self.title = title
