@@ -133,7 +133,7 @@ class EditorFormset(object):
             obj.pre_save(forms_dict.get(middleware))
 
 
-class EditorFormsetMiddleware(object):
+class PostingMiddleware(object):
     """
     Abstract middleware classes
     """

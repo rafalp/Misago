@@ -1,9 +1,9 @@
 from django.db.models import F
 
-from misago.threads.posting import EditorFormsetMiddleware, EDIT
+from misago.threads.posting import PostingMiddleware, EDIT
 
 
-class RecordEditMiddleware(EditorFormsetMiddleware):
+class RecordEditMiddleware(PostingMiddleware):
     def __init__(self, **kwargs):
         super(RecordEditMiddleware, self).__init__(**kwargs)
 
