@@ -135,7 +135,11 @@ def add_acl_to_post(user, post):
 ACL tests
 """
 def allow_see_thread(user, target):
-    raise NotImplementedError()
+    forum_acl = user.acl['forums'].get(target.forum_id, {})
+    if not forum_acl.get('can_see_all_threads'):
+        if user.is_anonymous() or user.pk != target.starter_id:
+            message = _("You can't see other users threads in this forum.")
+            raise PermissionDenied(user)
 can_see_thread = return_boolean(allow_see_thread)
 
 

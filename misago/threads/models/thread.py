@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.db import models
 
 from misago.conf import settings
@@ -46,20 +47,39 @@ class Thread(models.Model):
     is_hidden = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
 
+    @property
     def is_announcement(self):
         return self.weight == ANNOUNCEMENT
 
+    @property
     def is_pinned(self):
         return self.weight == PINNED
 
+    @property
+    def link_prefix(self):
+        if self.forum.special_role == 'private_threads':
+            return 'private_thread'
+        else:
+            return 'thread'
+
+    def get_url(self, suffix=None):
+        link = 'misago:%s' % self.link_prefix
+        if suffix:
+            link = '%s_%s' % (link, suffix)
+
+        return reverse(link, kwargs={
+            'thread_slug': self.slug,
+            'thread_id': self.id
+        })
+
     def get_absolute_url(self):
-        pass
+        return self.get_url()
 
     def get_new_reply_url(self):
-        pass
+        return self.get_url('new')
 
     def get_last_reply_url(self):
-        pass
+        return self.get_url('last')
 
     def set_title(self, title):
         self.title = title

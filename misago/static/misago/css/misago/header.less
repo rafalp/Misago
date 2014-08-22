@@ -167,15 +167,28 @@
       display: block;
       clear: both;
       margin-bottom: 0;
+      position: relative;
+      top: @line-height-computed * 0.6;
 
       color: @text-muted;
+
+      img {
+      	border-radius: @border-radius-small;
+      	position: relative;
+      	bottom: 1px;
+      }
 
       a:link, a:visited {
         color: @text-muted;
       }
 
-      a:active, a:hover {
-        color: @text-color;
+      a:hover {
+        color: @state-hover;
+        text-decoration: none;
+      }
+
+      a:active {
+        color: @state-clicked;
         text-decoration: none;
       }
     }

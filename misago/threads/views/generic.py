@@ -58,10 +58,12 @@ class ThreadMixin(object):
 
         return thread
 
-    def fetch_thread(self, request, lock=False, **kwargs):
+    def fetch_thread(self, request, lock=False, select_related=None, **kwargs):
         queryset = Thread.objects
         if lock:
             queryset = queryset.select_for_update()
+        if select_related:
+            queryset = queryset.select_related(*select_related)
 
         return get_object_or_404(queryset, id=kwargs.get('thread_id'))
 
@@ -70,7 +72,11 @@ class ThreadMixin(object):
         allow_see_thread(request.user, thread)
 
 
-class ViewBase(ForumMixin, View):
+class PostMixin(object):
+    pass
+
+
+class ViewBase(ForumMixin, ThreadMixin, PostMixin, View):
     templates_dir = ''
     template = ''
 
@@ -109,6 +115,9 @@ class ForumView(ViewBase):
         for thread in page.object_list:
             threads.append(thread)
 
+        for thread in threads:
+            thread.forum = forum
+
         return page, threads
 
     def get_threads_queryset(self, request, forum):
@@ -141,12 +150,28 @@ class ThreadView(ViewBase):
     """
     Basic view for threads
     """
-    def fetch_thread(self, request, **kwargs):
-        pass
+    template = 'thread.html'
 
     def dispatch(self, request, *args, **kwargs):
-        thread = self.fetch_thread(request, **kwargs)
+        if request.method == 'POST':
+            with atomic():
+                return self.real_dispatch(request, *args, **kwargs)
+        else:
+            return self.real_dispatch(request, *args, **kwargs)
 
+    def real_dispatch(self, request, *args, **kwargs):
+        relations = ['forum', 'starter', 'last_poster', 'first_post']
+        thread = self.fetch_thread(request, select_related=relations, **kwargs)
+        forum = thread.forum
+
+        self.check_forum_permissions(request, forum)
+        self.check_thread_permissions(request, thread)
+
+        return self.render(request, {
+            'forum': forum,
+            'path': get_forum_path(forum),
+            'thread': thread
+        })
 
 class PostView(ViewBase):
     """
@@ -229,7 +254,7 @@ class EditorView(ViewBase):
             if 'submit' in request.POST and formset.is_valid():
                 try:
                     formset.save()
-                    return redirect(forum.get_absolute_url())
+                    return redirect(thread.get_absolute_url())
                 except InterruptChanges as e:
                     messages.error(request, e.message)
             else:

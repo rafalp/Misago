@@ -33,5 +33,15 @@ class Post(models.Model):
     is_protected = models.BooleanField(default=False)
 
     @property
+    def short(self):
+        if self.is_valid:
+            if len(self.original) > 150:
+                return '%s...' % self.original[:150].strip()
+            else:
+                return self.original
+        else:
+            return ''
+
+    @property
     def is_valid(self):
         return is_post_valid(self)

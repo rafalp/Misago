@@ -1,0 +1,65 @@
+{% extends "misago/base.html" %}
+{% load humanize i18n misago_avatars misago_stringutils %}
+
+
+{% block title %}{{ thread.title }} | {{ block.super }}{% endblock title %}
+
+
+{% block meta-description %}{% if thread.first_post.is_valid %}{{ thread.first_post.short|striplinebreaks }} {% endif %}{% blocktrans trimmed with replies=thread.replies started=thread.started_on|date last_post=thread.last_post_on|date count counter=thread.replies %}
+{{ replies }} reply since {{ started }}. Last post on {{ last_post }}.
+{% plural %}
+{{ replies }} replies since {{ started }}. Last post on {{ last_post }}.
+{% endblocktrans %}{% endblock meta-description %}
+
+
+{% block content %}
+<div{% if forum.css %} class="page-{{ forum.css_class }}"{% endif %}>
+  <div class="page-header">
+    <div class="container">
+
+      {% if path %}
+      <ol class="breadcrumb">
+        {% for crumb in path %}
+        <li>
+          <a href="{{ crumb.get_absolute_url }}">{{ crumb.name }}</a>{% if not forloop.last %}<span class="fa fa-chevron-right"></span>{% endif %}
+        </li>
+        {% endfor %}
+      </ol>
+      {% endif %}
+
+      <h1>{{ thread.title }}</h1>
+
+      <ul class="list-inline page-details">
+        <li class="tooltip-bottom" title="{% trans "Thread autor" %}">
+          {% if thread.starter_id %}
+            <a href="{% url USER_PROFILE_URL user_slug=thread.starter_slug user_id=thread.starter_id %}">
+              <img src="{{ thread.starter_id|avatar:20 }}" alt="{% trans "Avatar" %}"> {{ thread.starter_name }}
+            </a>
+          {% else %}
+            <span class="fa fa-user"></span> {{ thread.starter_name }}
+          {% endif %}
+        <li>
+        <li>
+          <span class="fa fa-comment"></span> {% blocktrans trimmed with replies=thread.replies|intcomma count counter=thread.replies %}
+            {{ replies }} reply
+          {% plural %}
+            {{ replies }} replies
+          {% endblocktrans %}
+        <li>
+        <li class="tooltip-bottom" title="{% blocktrans with last_post=thread.last_post_on %}Last post from {{ last_post }}{% endblocktrans %}">
+          <span class="fa fa-clock-o"></span>
+          <abbr class="dynamic time-ago" data-timestamp="{{ forum.last_post_on|date:"c" }}">
+            {{ thread.last_post_on|date }}
+          </abbr>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+  <div class="container">
+
+    Blah blah blah!
+
+  </div>
+</div>
+{% endblock %}

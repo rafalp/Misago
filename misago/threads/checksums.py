@@ -6,6 +6,11 @@ def is_post_valid(post):
     return post.checksum == valid_checksum
 
 
-def update_post_checksum(post):
+def make_post_checksum(post):
     post_seeds = [unicode(v) for v in (post.id, post.poster_ip)]
     return checksums.make_checksum(post.parsed, post_seeds)
+
+
+def update_post_checksum(post):
+    post.checksum = make_post_checksum(post)
+    return post.checksum
