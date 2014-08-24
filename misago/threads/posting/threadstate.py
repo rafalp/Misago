@@ -10,15 +10,6 @@ class ThreadStateFormMiddleware(PostingMiddleware):
         self.thread_weight = self.thread.weight
         self.thread_is_closed = self.thread.is_closed
 
-        forum_acl = {
-            'can_change_threads_weight': 0,
-            'can_close_threads': 0,
-        }
-        forum_acl.update(self.user.acl['forums'].get(self.forum.pk))
-
-        self.can_change_threads_weight = forum_acl['can_change_threads_weight']
-        self.can_close_threads = forum_acl['can_close_threads']
-
     def make_form(self):
         StateFormType = None
         initial = {
@@ -26,11 +17,14 @@ class ThreadStateFormMiddleware(PostingMiddleware):
             'is_closed': self.thread_is_closed,
         }
 
-        if self.can_change_threads_weight and self.can_close_threads:
+        can_change_threads_weight = self.forum.acl['can_change_threads_weight']
+        can_close_threads = self.forum.acl['can_close_threads']
+
+        if can_change_threads_weight and can_close_threads:
             StateFormType = FullThreadStateForm
-        elif self.can_change_threads_weight:
+        elif can_change_threads_weight:
             StateFormType = ThreadWeightForm
-        elif self.can_close_threads:
+        elif can_close_threads:
             StateFormType = CloseThreadForm
 
         if StateFormType:
@@ -42,11 +36,11 @@ class ThreadStateFormMiddleware(PostingMiddleware):
             return False
 
     def pre_save(self, form):
-        if self.can_change_threads_weight:
+        if self.forum.acl['can_change_threads_weight']:
             if self.thread_weight != form.cleaned_data.get('weight'):
                 self.thread.weight = form.cleaned_data.get('weight')
                 self.thread.update_fields.append('weight')
-        if self.can_close_threads:
+        if self.forum.acl['can_close_threads']:
             if self.thread_is_closed != form.cleaned_data.get('is_closed'):
                 self.thread.is_closed = form.cleaned_data.get('is_closed')
                 self.thread.update_fields.append('is_closed')
