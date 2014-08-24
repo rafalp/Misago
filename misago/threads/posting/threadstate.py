@@ -10,10 +10,11 @@ class ThreadStateFormMiddleware(PostingMiddleware):
         self.thread_weight = self.thread.weight
         self.thread_is_closed = self.thread.is_closed
 
-        forum_acl = self.user.acl['forums'].get(self.forum.pk, {
+        forum_acl = {
             'can_change_threads_weight': 0,
             'can_close_threads': 0,
-        })
+        }
+        forum_acl.update(self.user.acl['forums'].get(self.forum.pk))
 
         self.can_change_threads_weight = forum_acl['can_change_threads_weight']
         self.can_close_threads = forum_acl['can_close_threads']

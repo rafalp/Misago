@@ -113,6 +113,7 @@ def add_acl_to_forum(user, forum):
     forum.acl.update({
         'can_start_threads': 0,
         'can_change_threads_weight': 0,
+        'can_close_threads': 0,
     })
 
     if user.is_authenticated():
@@ -120,6 +121,7 @@ def add_acl_to_forum(user, forum):
             can_see_all_threads=algebra.greater,
             can_start_threads=algebra.greater,
             can_change_threads_weight=algebra.greater,
+            can_close_threads=algebra.greater,
         )
 
 
