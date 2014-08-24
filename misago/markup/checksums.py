@@ -30,7 +30,7 @@ def make_checksum(parsed, unique_values=None):
     seeds = [parsed, settings.SECRET_KEY]
     seeds.extend([unicode(v) for v in unique_values])
 
-    return sha256('+'.join(seeds)).hexdigest()
+    return sha256('+'.join(seeds).encode("utf-8")).hexdigest()
 
 
 def is_checksum_valid(parsed, checksum, unique_values=None):
