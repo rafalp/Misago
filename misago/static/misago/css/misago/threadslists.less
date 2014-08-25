@@ -3,27 +3,20 @@
 // --------------------------------------------------
 
 
-// Block style
-//
-//==
 .threads-list {
   .table-panel {
     border: none;
 
     .list-group {
       margin: 0px;
-    }
-  }
-}
 
-
-// Thread icon
-//
-//==
-.threads-list {
-  .table-panel {
-    .list-group {
       .list-group-item {
+        padding-top: @padding-base-vertical + 1px;
+        padding-bottom: @padding-base-vertical + 1px;
+
+        // Thread icon
+        //
+        //==
         &.new {
           .thread-icon {
             color: @state-active;
@@ -37,35 +30,103 @@
 
           color: @state-default;
         }
-      }
-    }
-  }
-}
 
 
-// Thread title
-//
-//==
-.threads-list {
-  .table-panel {
-    .list-group {
-      .list-group-item {
+        // Thread title
+        //
+        //==
         .item-title {
           font-size: @font-size-large;
         }
-      }
-    }
-  }
-}
 
 
-// Empty list message
-//
-//==
-.threads-list {
-  .table-panel {
-    .list-group {
-      .list-group-item {
+        // Thread flags
+        //
+        //==
+        .thread-flags {
+          float: right;
+          overflow: auto;
+          position: relative;
+          top: 3px;
+
+          li {
+            float: left;
+
+            .fa, .glyphicon {
+              .opacity(0.5);
+              transition-duration: 0.5s;
+
+              &:hover, &:focus {
+                .opacity(0.9);
+                transition-duration: 0.05s;
+              }
+            }
+          }
+        }
+
+
+        // Thread last reply
+        //
+        //==
+        .thread-stats {
+          .thread-replies {
+            display: inline-block;
+            margin: -3px 0px;
+            margin-right: @font-size-large / 3;
+            .opacity(0.5);
+            transition-duration: 0.5s;
+            width: 20%;
+
+            font-size: @font-size-large;
+
+            &:hover, &:focus {
+              .opacity(0.9);
+              transition-duration: 0.05s;
+            }
+
+            &>div {
+              display: inline;
+
+              span {
+                font-size: @font-size-base;
+              }
+            }
+          }
+
+          .thread-author {
+            margin-right: @font-size-large / 3;
+
+            img {
+              border-radius: @border-radius-small;
+              width: 25px;
+              margin: -3px 0px;
+              position: relative;
+              bottom: 3px;
+            }
+
+            &:hover {
+              text-decoration: none;
+            }
+          }
+
+          a.time-ago {
+            color: @state-default;
+            font-size: @font-size-large;
+
+            &:hover {
+              color: @state-hover;
+            }
+
+            &:active {
+              color: @state-clicked;
+            }
+          }
+        }
+
+
+        // Empty list message
+        //
+        //==
         &.message-row {
           padding-top: @line-height-computed;
           padding-bottom: @line-height-computed;
