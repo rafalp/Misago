@@ -25,7 +25,7 @@ class UpdateStatsMiddleware(PostingMiddleware):
         if self.mode != EDIT:
             self.thread.set_last_post(self.post)
 
-        if self.mode != REPLY:
+        if self.mode == REPLY:
             self.thread.replies += F('replies') + 1
 
         self.thread.save_model = True
