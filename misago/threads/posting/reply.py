@@ -37,8 +37,12 @@ class ReplyFormMiddleware(PostingMiddleware):
             self.new_post()
 
         self.post.updated_on = self.datetime
+
+        if self.mode != EDIT:
+            self.post.save()# We need post id for checksum
+
         self.post.post_checksum = update_post_checksum(self.post)
-        self.post.save()
+        self.post.save(update_fields=['checksum'])
 
     def new_thread(self, form):
         self.thread.set_title(form.cleaned_data['title'])
