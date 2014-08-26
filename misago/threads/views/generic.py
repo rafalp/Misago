@@ -2,6 +2,7 @@
 Module with basic views for use by inheriting actions
 """
 from django.contrib import messages
+from django.db.models import Q
 from django.db.transaction import atomic
 from django.shortcuts import redirect, render
 from django.views.generic import View
@@ -100,7 +101,7 @@ class ThreadsView(ViewBase):
         queryset = self.get_threads_queryset(request, forum)
 
         threads_qs = queryset.filter(weight__lt=ANNOUNCEMENT)
-        threads_qs = threads_qs.order_by('-weight', '-last_post_on')
+        threads_qs = threads_qs.order_by('-weight', '-last_post_id')
 
         page = paginate(threads_qs, kwargs.get('page', 0), 30, 10)
         threads = []
@@ -116,7 +117,7 @@ class ThreadsView(ViewBase):
         return page, threads
 
     def get_threads_queryset(self, request):
-        return forum.thread_set.all().order_by('-last_post_on')
+        return forum.thread_set.all().order_by('-last_post_id')
 
     def add_threads_reads(self, request, threads):
         for thread in threads:
@@ -135,10 +136,16 @@ class ForumView(ThreadsView):
 
     def get_threads(self, request, forum, kwargs):
         queryset = self.get_threads_queryset(request, forum)
+        queryset = self.filter_all_querysets(request, forum, queryset)
 
+        announcements_qs = queryset.filter(weight=ANNOUNCEMENT)
         threads_qs = queryset.filter(weight__lt=ANNOUNCEMENT)
-        threads_qs = threads_qs.order_by('-weight', '-last_post_on')
 
+        announcements_qs = self.filter_announcements_queryset(
+            request, forum, announcements_qs)
+        threads_qs = self.filter_threads_queryset(request, forum, threads_qs)
+
+        threads_qs = threads_qs.order_by('-weight', '-last_post_id')
         page = paginate(threads_qs, kwargs.get('page', 0), 30, 10)
         threads = []
 
@@ -152,8 +159,38 @@ class ForumView(ThreadsView):
 
         return page, threads
 
+    def filter_all_querysets(self, request, forum, queryset):
+        if not forum.acl['can_review_moderated_content']:
+            if request.user.is_authenticated():
+                condition = Q(is_moderated=False)
+                condition = condition | Q(starter_id=request.user.id)
+                queryset = queryset.filter(condition)
+            else:
+                queryset = queryset.filter(is_moderated=False)
+        if not forum.acl['can_hide_threads']:
+            if request.user.is_authenticated():
+                condition = Q(is_hidden=False)
+                condition = condition | Q(starter_id=request.user.id)
+                queryset = queryset.filter(condition)
+            else:
+                queryset = queryset.filter(is_hidden=False)
+
+        return queryset
+
+    def filter_threads_queryset(self, request, forum, queryset):
+        if forum.acl['can_see_own_threads']:
+            if request.user.is_authenticated():
+                queryset = queryset.filter(starter_id=request.user.id)
+            else:
+                queryset = queryset.filter(starter_id=0)
+
+        return queryset
+
+    def filter_announcements_queryset(self, request, forum, queryset):
+        return queryset
+
     def get_threads_queryset(self, request, forum):
-        return forum.thread_set.all().order_by('-last_post_on')
+        return forum.thread_set.all().order_by('-last_post_id')
 
     def dispatch(self, request, *args, **kwargs):
         forum = self.get_forum(request, **kwargs)
