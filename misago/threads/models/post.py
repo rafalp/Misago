@@ -27,8 +27,8 @@ class Post(models.Model):
                                     on_delete=models.SET_NULL)
     last_editor_name = models.CharField(max_length=255, null=True, blank=True)
     last_editor_slug = models.SlugField(max_length=255, null=True, blank=True)
-    is_reported = models.BooleanField(default=False, db_index=True)
-    is_moderated = models.BooleanField(default=False)
+    is_reported = models.BooleanField(default=False)
+    is_moderated = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)
     is_protected = models.BooleanField(default=False)
 

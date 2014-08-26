@@ -5,6 +5,8 @@ from django.conf import settings
 from django.db import models, migrations
 import django.db.models.deletion
 
+from misago.core.pgutils import CreatePartialIndex
+
 
 class Migration(migrations.Migration):
 
@@ -43,8 +45,8 @@ class Migration(migrations.Migration):
                 ('edits', models.PositiveIntegerField(default=0)),
                 ('last_editor_name', models.CharField(max_length=255, null=True, blank=True)),
                 ('last_editor_slug', models.SlugField(max_length=255, null=True, blank=True)),
-                ('is_reported', models.BooleanField(default=False, db_index=True)),
-                ('is_moderated', models.BooleanField(default=False)),
+                ('is_reported', models.BooleanField(default=False)),
+                ('is_moderated', models.BooleanField(default=False, db_index=True)),
                 ('is_hidden', models.BooleanField(default=False)),
                 ('is_protected', models.BooleanField(default=False)),
                 ('forum', models.ForeignKey(to='misago_forums.Forum')),
@@ -56,31 +58,56 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
+        CreatePartialIndex(
+            field='Post.is_reported',
+            index_name='misago_post_is_reported_partial',
+            condition='is_reported = TRUE',
+        ),
+        CreatePartialIndex(
+            field='Post.is_hidden',
+            index_name='misago_post_is_hidden_partial',
+            condition='is_hidden = FALSE',
+        ),
         migrations.CreateModel(
             name='Thread',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('weight', models.PositiveIntegerField(default=0)),
+                ('weight', models.PositiveIntegerField(default=0, db_index=True)),
                 ('title', models.CharField(max_length=255)),
-                ('slug', models.SlugField(max_length=255)),
-                ('replies', models.PositiveIntegerField(default=0)),
+                ('slug', models.CharField(max_length=255)),
+                ('replies', models.PositiveIntegerField(default=0, db_index=True)),
                 ('has_reported_posts', models.BooleanField(default=False)),
                 ('has_moderated_posts', models.BooleanField(default=False)),
                 ('has_hidden_posts', models.BooleanField(default=False)),
-                ('started_on', models.DateTimeField(db_index=True)),
+                ('started_on', models.DateTimeField()),
                 ('starter_name', models.CharField(max_length=255)),
-                ('starter_slug', models.SlugField(max_length=255)),
-                ('last_post_on', models.DateTimeField(db_index=True)),
+                ('starter_slug', models.CharField(max_length=255)),
+                ('last_post_on', models.DateTimeField()),
                 ('last_poster_name', models.CharField(max_length=255, null=True, blank=True)),
-                ('last_poster_slug', models.SlugField(max_length=255, null=True, blank=True)),
+                ('last_poster_slug', models.CharField(max_length=255, null=True, blank=True)),
                 ('is_poll', models.BooleanField(default=False)),
-                ('is_moderated', models.BooleanField(default=False)),
+                ('is_moderated', models.BooleanField(default=False, db_index=True)),
                 ('is_hidden', models.BooleanField(default=False)),
                 ('is_closed', models.BooleanField(default=False)),
             ],
             options={
             },
             bases=(models.Model,),
+        ),
+        CreatePartialIndex(
+            field='Thread.has_reported_posts',
+            index_name='misago_thread_has_reported_posts_partial',
+            condition='has_reported_posts = TRUE',
+        ),
+        CreatePartialIndex(
+            field='Thread.has_moderated_posts',
+            index_name='misago_thread_has_moderated_posts_partial',
+            condition='has_moderated_posts = TRUE',
+        ),
+        CreatePartialIndex(
+            field='Thread.is_hidden',
+            index_name='misago_thread_is_hidden_partial',
+            condition='is_hidden = FALSE',
         ),
         migrations.AddField(
             model_name='post',

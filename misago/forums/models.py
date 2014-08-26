@@ -74,7 +74,7 @@ class Forum(MPTTModel):
                                     null=True, blank=True,
                                     on_delete=models.SET_NULL)
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
-    last_poster_slug = models.SlugField(max_length=255, null=True, blank=True)
+    last_poster_slug = models.CharField(max_length=255, null=True, blank=True)
     prune_started_after = models.PositiveIntegerField(default=0)
     prune_replied_after = models.PositiveIntegerField(default=0)
     archive_pruned_in = models.ForeignKey('self',

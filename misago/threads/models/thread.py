@@ -14,13 +14,13 @@ PINNED = 1
 
 class Thread(models.Model):
     forum = models.ForeignKey('misago_forums.Forum')
-    weight = models.PositiveIntegerField(default=0)
+    weight = models.PositiveIntegerField(default=0, db_index=True)
     prefix = models.ForeignKey('misago_threads.Prefix',
                                null=True, blank=True,
                                on_delete=models.SET_NULL)
     title = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255)
-    replies = models.PositiveIntegerField(default=0)
+    slug = models.CharField(max_length=255)
+    replies = models.PositiveIntegerField(default=0, db_index=True)
     has_reported_posts = models.BooleanField(default=False)
     has_moderated_posts = models.BooleanField(default=False)
     has_hidden_posts = models.BooleanField(default=False)
@@ -32,7 +32,7 @@ class Thread(models.Model):
                                 null=True, blank=True,
                                 on_delete=models.SET_NULL)
     starter_name = models.CharField(max_length=255)
-    starter_slug = models.SlugField(max_length=255)
+    starter_slug = models.CharField(max_length=255)
     last_post_on = models.DateTimeField()
     last_post = models.ForeignKey('misago_threads.Post', related_name='+',
                                   null=True, blank=True,
@@ -41,9 +41,9 @@ class Thread(models.Model):
                                     null=True, blank=True,
                                     on_delete=models.SET_NULL)
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
-    last_poster_slug = models.SlugField(max_length=255, null=True, blank=True)
+    last_poster_slug = models.CharField(max_length=255, null=True, blank=True)
     is_poll = models.BooleanField(default=False)
-    is_moderated = models.BooleanField(default=False)
+    is_moderated = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
 

@@ -83,7 +83,7 @@ def create_default_forums_roles(apps, schema_editor):
     standard.save()
 
     standard_with_polls = ForumRole(
-        name=_('Start and reply threads, make pols'))
+        name=_('Start and reply threads, make polls'))
     pickle_permissions(standard_with_polls,
         {
             # forums perms

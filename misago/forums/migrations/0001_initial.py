@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
                 ('last_thread_title', models.CharField(max_length=255, null=True, blank=True)),
                 ('last_thread_slug', models.CharField(max_length=255, null=True, blank=True)),
                 ('last_poster_name', models.CharField(max_length=255, null=True, blank=True)),
-                ('last_poster_slug', models.SlugField(max_length=255, null=True, blank=True)),
+                ('last_poster_slug', models.CharField(max_length=255, null=True, blank=True)),
                 ('last_post_on', models.DateTimeField(null=True, blank=True)),
                 ('prune_started_after', models.PositiveIntegerField(default=0)),
                 ('prune_replied_after', models.PositiveIntegerField(default=0)),
