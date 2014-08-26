@@ -54,6 +54,8 @@ class RoleFormMixin(object):
                     return redirect(request.path)
                 else:
                     return redirect(self.root_link)
+            elif form.is_valid() and len(perms_forms) != valid_forms:
+                form.add_error(None, _("Form contains errors."))
 
         return self.render(
             request,
