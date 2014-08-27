@@ -170,12 +170,12 @@ MISAGO_ACL_EXTENSIONS = (
 
 MISAGO_MARKUP_EXTENSIONS = ()
 
-
-MISAGO_POSTING_MIDDLEWARE = (
+MISAGO_POSTING_MIDDLEWARES = (
     'misago.threads.posting.reply.ReplyFormMiddleware',
     'misago.threads.posting.threadstate.ThreadStateFormMiddleware',
     'misago.threads.posting.recordedit.RecordEditMiddleware',
     'misago.threads.posting.updatestats.UpdateStatsMiddleware',
+    # Note: always keep SaveChangesMiddleware middleware last one
     'misago.threads.posting.savechanges.SaveChangesMiddleware',
 )
 

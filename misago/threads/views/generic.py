@@ -13,7 +13,7 @@ from misago.forums.lists import get_forums_list, get_forum_path
 from misago.forums.models import Forum
 from misago.forums.permissions import allow_see_forum, allow_browse_forum
 
-from misago.threads.posting import (InterruptChanges, EditorFormset,
+from misago.threads.posting import (PostingInterrupt, EditorFormset,
                                     START, REPLY, EDIT)
 from misago.threads.models import ANNOUNCEMENT, Thread, Post
 from misago.threads.permissions import allow_see_thread, allow_start_thread
@@ -316,7 +316,7 @@ class EditorView(ViewBase):
                 try:
                     formset.save()
                     return redirect(thread.get_absolute_url())
-                except InterruptChanges as e:
+                except PostingInterrupt as e:
                     messages.error(request, e.message)
             else:
                 formset.update()

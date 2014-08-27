@@ -16,7 +16,7 @@ class UpdateStatsMiddleware(PostingMiddleware):
         if self.mode != EDIT:
             self.forum.set_last_thread(self.thread)
             self.forum.posts += F('posts') + 1
-            self.forum.save_model = True
+            self.forum.update_all = True
 
     def update_thread(self):
         if self.mode == START:
@@ -28,7 +28,7 @@ class UpdateStatsMiddleware(PostingMiddleware):
         if self.mode == REPLY:
             self.thread.replies += F('replies') + 1
 
-        self.thread.save_model = True
+        self.thread.update_all = True
 
     def update_user(self):
         if self.mode == START:

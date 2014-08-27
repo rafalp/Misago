@@ -16,10 +16,10 @@ REPLY = 1
 EDIT = 2
 
 
-class InterruptChanges(Exception):
+class PostingInterrupt(Exception):
     def __init__(self, message):
         if not message:
-            raise ValueError("You have to provide InterruptChanges message.")
+            raise ValueError("You have to provide PostingInterrupt message.")
         self.message = message
 
 
@@ -57,15 +57,20 @@ class EditorFormset(object):
             'parsing_result': {},
         })
 
-        for middleware in settings.MISAGO_POSTING_MIDDLEWARE:
+        for middleware in settings.MISAGO_POSTING_MIDDLEWARES:
             module_name = '.'.join(middleware.split('.')[:-1])
             class_name = middleware.split('.')[-1]
 
             middleware_module = import_module(module_name)
             middleware_class = getattr(middleware_module, class_name)
 
-            middleware_obj = middleware_class(prefix=middleware, **kwargs)
-            self.middlewares.append((middleware, middleware_obj))
+            try:
+                middleware_obj = middleware_class(prefix=middleware, **kwargs)
+                if middleware_obj.use_this_middleware():
+                    self.middlewares.append((middleware, middleware_obj))
+            except PostingInterrupt:
+                raise ValueError("Posting process can only be "
+                                 "interrupted during pre_save phase")
 
     def get_forms_list(self):
         """return list of forms belonging to formset"""
@@ -80,11 +85,15 @@ class EditorFormset(object):
         return self._forms_dict
 
     def _build_forms_cache(self):
-        for middleware, obj in self.middlewares:
-            form = obj.make_form()
-            if form:
-                self._forms_dict[middleware] = form
-                self._forms_list.append(form)
+        try:
+            for middleware, obj in self.middlewares:
+                form = obj.make_form()
+                if form:
+                    self._forms_dict[middleware] = form
+                    self._forms_list.append(form)
+        except PostingInterrupt:
+            raise ValueError("Posting process can only be "
+                             "interrupted during pre_save phase")
 
     def get_main_forms(self):
         """return list of main forms"""
@@ -121,10 +130,14 @@ class EditorFormset(object):
         forms_dict = self.get_forms_dict()
         for middleware, obj in self.middlewares:
             obj.pre_save(forms_dict.get(middleware))
-        for middleware, obj in self.middlewares:
-            obj.save(forms_dict.get(middleware))
-        for middleware, obj in self.middlewares:
-            obj.post_save(forms_dict.get(middleware))
+        try:
+            for middleware, obj in self.middlewares:
+                obj.save(forms_dict.get(middleware))
+            for middleware, obj in self.middlewares:
+                obj.post_save(forms_dict.get(middleware))
+        except PostingInterrupt:
+            raise ValueError("Posting process can only be "
+                             "interrupted during pre_save phase")
 
     def update(self):
         """handle POST that shouldn't result in state change"""
@@ -140,6 +153,9 @@ class PostingMiddleware(object):
     def __init__(self, **kwargs):
         self.kwargs = kwargs
         self.__dict__.update(kwargs)
+
+    def use_this_middleware(self):
+        return True
 
     def make_form(self):
         pass
