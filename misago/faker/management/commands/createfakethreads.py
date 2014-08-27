@@ -1,4 +1,5 @@
 import random
+import time
 
 from faker import Factory
 
@@ -38,10 +39,11 @@ class Command(BaseCommand):
         message = '\nSuccessfully created %s fake threads'
 
         created_threads = 0
+        start_time = time.time()
         show_progress(self, created_threads, fake_threads_to_create)
         for i in xrange(fake_threads_to_create):
             with atomic():
-                time = timezone.now()
+                datetime = timezone.now()
                 forum = random.choice(forums)
                 user = User.objects.order_by('?')[:1][0]
 
@@ -52,10 +54,10 @@ class Command(BaseCommand):
                 thread = Thread(
                     forum=forum,
                     weight=0,
-                    started_on=time,
+                    started_on=datetime,
                     starter_name='-',
                     starter_slug='-',
-                    last_post_on=time,
+                    last_post_on=datetime,
                     last_poster_name='-',
                     last_poster_slug='-',
                     replies=random.randint(0, 2000),
@@ -74,8 +76,8 @@ class Command(BaseCommand):
                     poster_ip=fake.ipv4(),
                     original=fake_message,
                     parsed=linebreaks_filter(fake_message),
-                    posted_on=time,
-                    updated_on=time)
+                    posted_on=datetime,
+                    updated_on=datetime)
                 update_post_checksum(post)
                 post.save(update_fields=['checksum'])
 
@@ -93,17 +95,18 @@ class Command(BaseCommand):
                 user.save()
 
                 created_threads += 1
-                show_progress(self, created_threads, fake_threads_to_create)
+                show_progress(
+                    self, created_threads, fake_threads_to_create, start_time)
 
-        pinned_threads = random.randint(0, int(created_threads * 0.05)) or 1
-        self.stdout.write('\Pinning %s threads...' % pinned_threads)
+        pinned_threads = random.randint(0, int(created_threads * 0.025)) or 1
+        self.stdout.write('\nPinning %s threads...' % pinned_threads)
         for i in xrange(0, pinned_threads):
             thread = Thread.objects.order_by('?')[:1][0]
             thread.weight = 1
             thread.save()
 
-        announcements = random.randint(0, int(created_threads * 0.01)) or 1
-        self.stdout.write('\Making %s announcements...' % announcements)
+        announcements = random.randint(0, int(created_threads * 0.001)) or 1
+        self.stdout.write('\nMaking %s announcements...' % announcements)
         for i in xrange(0, announcements):
             thread = Thread.objects.order_by('?')[:1][0]
             thread.weight = 2

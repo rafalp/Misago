@@ -1,5 +1,6 @@
 import random
 import sys
+import time
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -35,6 +36,7 @@ class Command(BaseCommand):
         message = '\n\nSuccessfully created %s fake user accounts'
 
         created_count = 0
+        start_time = time.time()
         show_progress(self, created_count, fake_users_to_create)
         for i in xrange(fake_users_to_create):
             try:
@@ -49,6 +51,7 @@ class Command(BaseCommand):
                 pass
             else:
                 created_count += 1
-                show_progress(self, created_count, fake_users_to_create)
+                show_progress(
+                    self, created_count, fake_users_to_create, start_time)
 
         self.stdout.write(message % created_count)
