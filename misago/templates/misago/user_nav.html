@@ -50,6 +50,30 @@
 </ul>
 
 <ul class="nav navbar-nav navbar-nav-primary navbar-right">
+  <li>
+    <a href="#" class="tooltip-bottom" title="{% trans "New threads" %}">
+      <span class="fa fa-circle-o fa-fw"></span>
+      <span class="badge">31</span>
+    </a>
+  </li>
+  <li>
+    <a href="#" class="tooltip-bottom" title="{% trans "Unread threads" %}">
+      <span class="fa fa-reply-all fa-fw"></span>
+      <span class="badge">23</span>
+    </a>
+  </li>
+  <li>
+    <a href="#" class="tooltip-bottom" title="{% trans "Unresolved reports" %}">
+      <span class="fa fa-exclamation-triangle fa-fw"></span>
+      <span class="badge">57</span>
+    </a>
+  </li>
+  <li>
+    <a href="#" class="tooltip-bottom" title="{% trans "Private threads" %}">
+      <span class="fa fa-inbox fa-fw"></span>
+      <span class="badge">47</span>
+    </a>
+  </li>
   <li class="user-notifications-nav dropdown">
     <a href="{% url 'misago:notifications' %}" class="dropdown-toggle tooltip-bottom"
         {% if user.new_notifications %}
