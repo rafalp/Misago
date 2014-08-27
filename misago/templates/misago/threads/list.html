@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load humanize i18n misago_avatars misago_stringutils %}
+{% load humanize i18n misago_avatars misago_capture misago_stringutils %}
 
 
 {% block title %}{{ forum.name }} | {{ block.super }}{% endblock title %}
@@ -38,31 +38,7 @@
 
     <div class="threads-list">
 
-      <div class="table-actions">
-        {% if forum.is_closed %}
-        <span class="btn btn-default disabled pull-right">
-          <span class="fa fa-lock"></span>
-          {% trans "This forum is closed." %}
-        </span>
-        {% else %}
-          {% if user.is_anonymous %}
-          <a href="{% url LOGIN_URL %}" class="btn btn-default pull-right">
-            <span class="fa fa-check-circle"></span>
-            {% trans "Sign in to start thread" %}
-          </a>
-          {% elif forum.acl.can_start_threads %}
-          <a href="{% url 'misago:start_thread' forum_slug=forum.slug forum_id=forum.id %}" class="btn btn-success pull-right">
-            <span class="fa fa-plus-circle"></span>
-            {% trans "Start thread" %}
-          </a>
-          {% else %}
-          <span class="btn btn-default btn-closed pull-right">
-            <span class="fa fa-ban"></span>
-            {% trans "Can't start threads" %}
-          </span>
-          {% endif %}
-        {% endif %}
-      </div>
+      {% include "misago/threads/list_actions.html" %}
 
       <div class="table-panel">
         <ul class="list-group">
@@ -155,8 +131,8 @@
         </ul>
       </div>
 
-      <div class="table-actions">
-      </div>
+      {% include "misago/threads/list_actions.html" %}
+
     </div>
 
   </div>

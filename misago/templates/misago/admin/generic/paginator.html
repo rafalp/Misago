@@ -3,7 +3,7 @@
 <ul class="pager pull-left">
   <li class="page">
     {% blocktrans with page=page.number pages=paginator.num_pages %}
-    Page {{ page}} of {{ pages }}
+    Page {{ page }} of {{ pages }}
     {% endblocktrans %}
   </li>
   {% if page.has_previous %}

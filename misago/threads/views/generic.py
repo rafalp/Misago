@@ -146,7 +146,7 @@ class ForumView(ThreadsView):
         threads_qs = self.filter_threads_queryset(request, forum, threads_qs)
 
         threads_qs = threads_qs.order_by('-weight', '-last_post_id')
-        page = paginate(threads_qs, kwargs.get('page', 0), 30, 10)
+        page = paginate(threads_qs, kwargs.get('page', 0), 20, 10)
         threads = []
 
         for announcement in queryset.filter(weight=ANNOUNCEMENT):
@@ -203,6 +203,7 @@ class ForumView(ThreadsView):
             'forum': forum,
             'path': get_forum_path(forum),
             'page': page,
+            'paginator': page.paginator,
             'threads': threads
         })
 
