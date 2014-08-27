@@ -30,12 +30,13 @@ def get_forums_list(user, parent=None):
         if forum.level > parent_level:
             forums_dict[forum.parent_id].subforums.append(forum)
 
+    add_acl(user, forums_list)
+
     flat_list = []
     for forum in forums_list:
         if forum.role != "category" or forum.subforums:
             flat_list.append(forum)
 
-    add_acl(user, flat_list)
     return flat_list
 
 
