@@ -70,8 +70,15 @@
         &.empty {
           border-bottom: none;
           padding: @padding-large-vertical @padding-base-horizontal;
+          padding-bottom: @line-height-computed;
 
           text-align: center;
+
+          .fa {
+            display: block;
+
+            font-size: @font-size-large * 3;
+          }
         }
       }
     }
