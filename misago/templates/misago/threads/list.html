@@ -2,7 +2,7 @@
 {% load humanize i18n misago_avatars misago_capture misago_stringutils %}
 
 
-{% block title %}{{ forum.name }} | {{ block.super }}{% endblock title %}
+{% block title %}{{ forum.name }}{% if page.number > 1 %} ({% blocktrans with page=page.number %}Page {{ page }}{% endblocktrans %}){% endif %} | {{ block.super }}{% endblock title %}
 
 
 {% block meta-description %}{{ forum.description|striplinebreaks }}{% endblock meta-description %}

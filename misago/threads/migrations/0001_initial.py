@@ -82,7 +82,7 @@ class Migration(migrations.Migration):
                 ('started_on', models.DateTimeField()),
                 ('starter_name', models.CharField(max_length=255)),
                 ('starter_slug', models.CharField(max_length=255)),
-                ('last_post_on', models.DateTimeField()),
+                ('last_post_on', models.DateTimeField(db_index=True)),
                 ('last_poster_name', models.CharField(max_length=255, null=True, blank=True)),
                 ('last_poster_slug', models.CharField(max_length=255, null=True, blank=True)),
                 ('is_poll', models.BooleanField(default=False)),
@@ -150,5 +150,13 @@ class Migration(migrations.Migration):
             name='starter',
             field=models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True),
             preserve_default=True,
+        ),
+        migrations.AlterIndexTogether(
+            name='thread',
+            index_together=set([
+                ('forum', 'weight', 'last_post'),
+                ('forum', 'weight', 'id'),
+                ('forum', 'weight', 'replies')
+            ]),
         ),
 ]

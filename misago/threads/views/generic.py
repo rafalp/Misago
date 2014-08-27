@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.db.transaction import atomic
 from django.shortcuts import redirect, render
+from django.utils.translation import ugettext_lazy, ugettext as _
 from django.views.generic import View
 
 from misago.acl import add_acl
@@ -96,6 +97,40 @@ class ViewBase(ForumMixin, ThreadMixin, PostMixin, View):
         return render(request, template, context)
 
 
+class OrderThreadsMixin(object):
+    order_by = (
+        ('recently-replied', ugettext_lazy("Recently replied")),
+        ('last-replied', ugettext_lazy("Last replied")),
+        ('most-replied', ugettext_lazy("Most replied")),
+        ('least-replied', ugettext_lazy("Least replied")),
+        ('newest', ugettext_lazy("Newest")),
+        ('oldest', ugettext_lazy("Oldest")),
+    )
+
+    def get_ordering(self, kwargs):
+        if kwargs.get('sort') in [o[0] for o in self.order_by]:
+            return kwargs.get('sort')
+        else:
+            return self.order_by[0][0]
+
+    def is_ordering_default(self, order_by):
+        return self.order_by[0][0] == order_by
+
+    def get_ordering_name(self, order_by):
+        for ordering in self.order_by:
+            if ordering[0] == order_by:
+                return ordering[1]
+
+    def get_orderings_dicts(self):
+        dicts = []
+        for ordering in self.order_by:
+            dicts.append({
+                'url': ordering[0],
+                'name': ordering[1],
+            })
+        return dicts
+
+
 class ThreadsView(ViewBase):
     def get_threads(self, request, kwargs):
         queryset = self.get_threads_queryset(request, forum)
@@ -128,13 +163,13 @@ class ThreadsView(ViewBase):
             thread.is_new = random.choice((True, False))
 
 
-class ForumView(ThreadsView):
+class ForumView(OrderThreadsMixin, ThreadsView):
     """
     Basic view for threads lists
     """
     template = 'list.html'
 
-    def get_threads(self, request, forum, kwargs):
+    def get_threads(self, request, forum, kwargs, order_by=None, limit=None):
         queryset = self.get_threads_queryset(request, forum)
         queryset = self.filter_all_querysets(request, forum, queryset)
 
@@ -145,7 +180,9 @@ class ForumView(ThreadsView):
             request, forum, announcements_qs)
         threads_qs = self.filter_threads_queryset(request, forum, threads_qs)
 
-        threads_qs = threads_qs.order_by('-weight', '-last_post_id')
+        threads_qs, announcements_qs = self.order_querysets(
+            order_by, threads_qs, announcements_qs)
+
         page = paginate(threads_qs, kwargs.get('page', 0), 20, 10)
         threads = []
 
@@ -159,20 +196,48 @@ class ForumView(ThreadsView):
 
         return page, threads
 
+    def order_querysets(self, order_by, threads, announcements):
+        if order_by == 'recently-replied':
+            threads = threads.order_by('-weight', '-last_post')
+            announcements = announcements.order_by('-last_post')
+        if order_by == 'last-replied':
+            threads = threads.order_by('weight', 'last_post')
+            announcements = announcements.order_by('last_post')
+        if order_by == 'most-replied':
+            threads = threads.order_by('-weight', '-replies')
+            announcements = announcements.order_by('-replies')
+        if order_by == 'least-replied':
+            threads = threads.order_by('weight', 'replies')
+            announcements = announcements.order_by('replies')
+        if order_by == 'newest':
+            threads = threads.order_by('-weight', '-id')
+            announcements = announcements.order_by('-id')
+        if order_by == 'oldest':
+            threads = threads.order_by('weight', 'id')
+            announcements = announcements.order_by('id')
+
+        return threads, announcements
+
     def filter_all_querysets(self, request, forum, queryset):
-        if not forum.acl['can_review_moderated_content']:
-            if request.user.is_authenticated():
+        if request.user.is_authenticated():
+            condition_author = Q(starter_id=request.user.id)
+
+            can_mod = forum.acl['can_review_moderated_content']
+            can_hide = forum.acl['can_hide_threads']
+
+            if not can_mod and not can_hide:
+                condition = Q(is_moderated=False) & Q(is_hidden=False)
+                queryset = queryset.filter(condition_author | condition)
+            elif not can_mod:
                 condition = Q(is_moderated=False)
-                condition = condition | Q(starter_id=request.user.id)
-                queryset = queryset.filter(condition)
-            else:
-                queryset = queryset.filter(is_moderated=False)
-        if not forum.acl['can_hide_threads']:
-            if request.user.is_authenticated():
+                queryset = queryset.filter(condition_author | condition)
+            elif not can_hide:
                 condition = Q(is_hidden=False)
-                condition = condition | Q(starter_id=request.user.id)
-                queryset = queryset.filter(condition)
-            else:
+                queryset = queryset.filter(condition_author | condition)
+        else:
+            if not forum.acl['can_review_moderated_content']:
+                queryset = queryset.filter(is_moderated=False)
+            if not forum.acl['can_hide_threads']:
                 queryset = queryset.filter(is_hidden=False)
 
         return queryset
@@ -194,9 +259,18 @@ class ForumView(ThreadsView):
 
     def dispatch(self, request, *args, **kwargs):
         forum = self.get_forum(request, **kwargs)
+        links_params = {'forum_slug': forum.slug, 'forum_id': forum.id}
+
         forum.subforums = get_forums_list(request.user, forum)
 
-        page, threads = self.get_threads(request, forum, kwargs)
+        order_by = self.get_ordering(kwargs)
+        if self.is_ordering_default(kwargs.get('sort')):
+            kwargs.pop('sort')
+            return redirect('misago:forum', **kwargs)
+        else:
+            links_params['sort'] = order_by
+
+        page, threads = self.get_threads(request, forum, kwargs, order_by)
         self.add_threads_reads(request, threads)
 
         return self.render(request, {
@@ -204,7 +278,10 @@ class ForumView(ThreadsView):
             'path': get_forum_path(forum),
             'page': page,
             'paginator': page.paginator,
-            'threads': threads
+            'threads': threads,
+            'links_params': links_params,
+            'order_name': self.get_ordering_name(order_by),
+            'order_by': self.get_orderings_dicts(),
         })
 
 
@@ -332,5 +409,5 @@ class EditorView(ViewBase):
             'path': get_forum_path(forum),
             'thread': thread,
             'post': post,
-            'quote': quote
+            'quote': quote,
         })

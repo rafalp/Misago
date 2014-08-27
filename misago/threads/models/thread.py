@@ -33,7 +33,7 @@ class Thread(models.Model):
                                 on_delete=models.SET_NULL)
     starter_name = models.CharField(max_length=255)
     starter_slug = models.CharField(max_length=255)
-    last_post_on = models.DateTimeField()
+    last_post_on = models.DateTimeField(db_index=True)
     last_post = models.ForeignKey('misago_threads.Post', related_name='+',
                                   null=True, blank=True,
                                   on_delete=models.SET_NULL)
@@ -46,6 +46,13 @@ class Thread(models.Model):
     is_moderated = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
+
+    class Meta:
+        index_together = [
+            ['forum', 'weight', 'id'],
+            ['forum', 'weight', 'last_post'],
+            ['forum', 'weight', 'replies'],
+        ]
 
     @property
     def is_announcement(self):

@@ -1,4 +1,4 @@
-{% load i18n misago_capture %}
+{% load i18n misago_capture misago_pagination %}
 <div class="table-actions">
 
   <ul class="pager pull-left">
@@ -15,7 +15,7 @@
     </li>
     {% if page.has_previous %}
       <li>
-        <a href="{{ forum.get_absolute_url }}" class="tooltip-top" title="{% trans "Go to first page" %}">
+        <a href="{% pageurl 'misago:forum' links_params %}" class="tooltip-top" title="{% trans "Go to first page" %}">
           {% if page.number > 2 %}
           {% trans "First" %}
           {% else %}
@@ -25,7 +25,7 @@
       </li>
       {% if page.number > 2 %}
       <li>
-        <a href="{% url 'misago:forum' forum_slug=forum.slug forum_id=forum.id page=page.previous_page_number %}" class="tooltip-top" title="{% trans "Go to previous page" %}">
+        <a href="{% pageurl 'misago:forum' links_params page.previous_page_number %}" class="tooltip-top" title="{% trans "Go to previous page" %}">
           <span class="glyphicon glyphicon-chevron-left"></span>
         </a>
       </li>
@@ -33,12 +33,34 @@
     {% endif %}
     {% if page.has_next %}
       <li>
-        <a href="{% url 'misago:forum' forum_slug=forum.slug forum_id=forum.id page=page.next_page_number %}" class="tooltip-top" title="{% trans "Go to next page" %}">
+        <a href="{% pageurl 'misago:forum' links_params page.next_page_number %}" class="tooltip-top" title="{% trans "Go to next page" %}">
           <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
       </li>
     {% endif %}
   </ul>
+
+  <div class="btn-group pull-left">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+      {% trans "Sort:" %} <strong>{{ order_name }}</strong>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li class="dropdown-title">
+        {% trans "Change sorting to:" %}
+      </li>
+      {% for order in order_by %}
+      <li>
+        {% if forloop.first %}
+        <a href="{% url 'misago:forum' forum_slug=forum.slug forum_id=forum.id %}">
+        {% else %}
+        <a href="{% url 'misago:forum' forum_slug=forum.slug forum_id=forum.id sort=order.url %}">
+        {% endif %}
+          {{ order.name }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
 
   {% if forum.is_closed %}
   <span class="btn btn-default disabled pull-right">
