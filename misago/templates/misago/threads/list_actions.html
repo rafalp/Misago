@@ -40,27 +40,29 @@
     {% endif %}
   </ul>
 
-  <div class="btn-group pull-left">
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-      {% trans "Sort:" %} <strong>{{ order_name }}</strong>
-    </button>
-    <ul class="dropdown-menu" role="menu">
-      <li class="dropdown-title">
-        {% trans "Change sorting to:" %}
-      </li>
-      {% for order in order_by %}
-      <li>
-        {% if forloop.first %}
-        <a href="{% url 'misago:forum' forum_slug=forum.slug forum_id=forum.id %}">
-        {% else %}
-        <a href="{% url 'misago:forum' forum_slug=forum.slug forum_id=forum.id sort=order.url %}">
-        {% endif %}
-          {{ order.name }}
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
+  {% if is_upper %}
+    <div class="btn-group pull-left">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        {% trans "Sort:" %} <strong>{{ order_name }}</strong>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li class="dropdown-title">
+          {% trans "Change sorting to:" %}
+        </li>
+        {% for order in order_by %}
+        <li>
+          {% if forloop.first %}
+          <a href="{% url 'misago:forum' forum_slug=forum.slug forum_id=forum.id %}">
+          {% else %}
+          <a href="{% url 'misago:forum' forum_slug=forum.slug forum_id=forum.id sort=order.url %}">
+          {% endif %}
+            {{ order.name }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
 
   {% if forum.is_closed %}
   <span class="btn btn-default disabled pull-right">
