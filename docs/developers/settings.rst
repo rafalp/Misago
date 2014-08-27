@@ -225,6 +225,12 @@ MISAGO_NOTIFICATIONS_MAX_AGE
 Max age, in days, of notifications stored in database. Notifications older than this will be delted.
 
 
+MISAGO_POSTING_MIDDLEWARES
+--------------------------
+
+List of middleware classes participating in posting process.
+
+
 MISAGO_RANKING_LENGTH
 ---------------------
 
@@ -270,6 +276,18 @@ password_length_min
 Minimal required length of new user passwords.
 
 
+post_length_max
+---------------
+
+Maximal allowed post content length.
+
+
+post_length_min
+---------------
+
+Minimal allowed post content length.
+
+
 signature_length_max
 --------------------
 
@@ -290,6 +308,18 @@ subscribe_start
 ---------------
 
 Default value for automatic subscription to started threads prefference for new user accounts. Allows for same values as ``subscribe_reply``.
+
+
+thread_title_length_max
+-----------------------
+
+Maximal allowed thread title length.
+
+
+thread_title_length_min
+-----------------------
+
+Minimal allowed thread title length.
 
 
 username_length_max

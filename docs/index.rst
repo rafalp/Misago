@@ -32,6 +32,7 @@ Table of Contents
    developers/mails
    developers/markup
    developers/notifications
+   developers/posting_process
    developers/settings
    developers/shortcuts
    developers/template_tags

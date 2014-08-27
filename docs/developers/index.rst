@@ -43,6 +43,7 @@ Following references cover everything you want to know about writing your own ap
    mails
    markup
    notifications
+   posting_process
    settings
    shortcuts
    template_tags

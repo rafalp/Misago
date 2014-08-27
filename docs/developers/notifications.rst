@@ -2,7 +2,6 @@
 Notifications
 =============
 
-
 Modern site in which users interact with each other needs quick and efficient notifications system to let users know of each other actions as quickly as possible.
 
 Misago implements such system and exposes simple as part of it, located in :py:mod:`misago.notifications`:
