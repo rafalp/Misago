@@ -37,4 +37,4 @@ class SaveChangesMiddleware(PostingMiddleware):
         self.save_models()
 
     def post_save(self, form):
-        self.save_models(self.user)
+        self.save_models()
