@@ -53,7 +53,7 @@ class NotificationViewsTestCase(AdminTestCase):
         """get request to list renders list"""
         response = self.client.get(self.view_link, **self.ajax_header)
         self.assertEqual(response.status_code, 200)
-        self.assertIn("have any notifications", response.content)
+        self.assertIn("have any new notifications", response.content)
 
         self.notify_user()
 
