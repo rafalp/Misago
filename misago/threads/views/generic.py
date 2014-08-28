@@ -186,7 +186,7 @@ class ForumView(OrderThreadsMixin, ThreadsView):
         page = paginate(threads_qs, kwargs.get('page', 0), 20, 10)
         threads = []
 
-        for announcement in queryset.filter(weight=ANNOUNCEMENT):
+        for announcement in announcements_qs:
             threads.append(announcement)
         for thread in page.object_list:
             threads.append(thread)
