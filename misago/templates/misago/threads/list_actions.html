@@ -15,7 +15,7 @@
     </li>
     {% if page.has_previous %}
       <li>
-        <a href="{% pageurl 'misago:forum' links_params %}" class="tooltip-top" title="{% trans "Go to first page" %}">
+        <a href="{% pageurl link_name links_params %}" class="tooltip-top" title="{% trans "Go to first page" %}">
           {% if page.number > 2 %}
           {% trans "First" %}
           {% else %}
@@ -25,7 +25,7 @@
       </li>
       {% if page.number > 2 %}
       <li>
-        <a href="{% pageurl 'misago:forum' links_params page.previous_page_number %}" class="tooltip-top" title="{% trans "Go to previous page" %}">
+        <a href="{% pageurl link_name links_params page.previous_page_number %}" class="tooltip-top" title="{% trans "Go to previous page" %}">
           <span class="glyphicon glyphicon-chevron-left"></span>
         </a>
       </li>
@@ -33,7 +33,7 @@
     {% endif %}
     {% if page.has_next %}
       <li>
-        <a href="{% pageurl 'misago:forum' links_params page.next_page_number %}" class="tooltip-top" title="{% trans "Go to next page" %}">
+        <a href="{% pageurl link_name links_params page.next_page_number %}" class="tooltip-top" title="{% trans "Go to next page" %}">
           <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
       </li>
@@ -51,11 +51,7 @@
         </li>
         {% for order in order_by %}
         <li>
-          {% if forloop.first %}
-          <a href="{% url 'misago:forum' forum_slug=forum.slug forum_id=forum.id %}">
-          {% else %}
-          <a href="{% url 'misago:forum' forum_slug=forum.slug forum_id=forum.id sort=order.url %}">
-          {% endif %}
+          <a href="{{ order.url }}">
             {{ order.name }}
           </a>
         </li>

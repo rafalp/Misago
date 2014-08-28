@@ -6,7 +6,10 @@ class ThreadsMixin(object):
 
 
 class ForumView(ThreadsMixin, generic.ForumView):
-    pass
+    link_name = 'misago:forum'
+
+    def get_default_link_params(self, forum):
+        return {'forum_slug': forum.slug, 'forum_id': forum.id}
 
 
 class ThreadView(ThreadsMixin, generic.ThreadView):
