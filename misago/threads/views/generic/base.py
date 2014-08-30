@@ -72,12 +72,6 @@ class PostMixin(object):
 
 
 class ViewBase(ForumMixin, ThreadMixin, PostMixin, View):
-    templates_dir = ''
-    template = ''
-
-    def final_template(self):
-        return '%s/%s' % (self.templates_dir, self.template)
-
     def process_context(self, request, context):
         """
         Simple hook for extending and manipulating template context.
@@ -86,5 +80,5 @@ class ViewBase(ForumMixin, ThreadMixin, PostMixin, View):
 
     def render(self, request, context=None, template=None):
         context = self.process_context(request, context or {})
-        template = template or self.final_template()
+        template = template or self.template
         return render(request, template, context)

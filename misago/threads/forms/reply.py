@@ -9,8 +9,8 @@ from misago.markup import common_flavour
 class ReplyForm(forms.Form):
     is_main = True
     legend = _("Reply")
-    template = "misago/threads/replyform.html"
-    js_template = "misago/threads/replyform_js.html"
+    template = "misago/posting/replyform.html"
+    js_template = "misago/posting/replyform_js.html"
 
     post = forms.CharField(label=_("Message body"), required=False)
 
@@ -120,7 +120,7 @@ class PrefixedThreadForm(ThreadForm):
 class FullThreadStateForm(forms.Form):
     is_supporting = True
     legend = _("Thread options")
-    template = "misago/threads/threadstate.html"
+    template = "misago/posting/stateform.html"
 
     weight = forms.TypedChoiceField(label=_("Thread weight"), initial=0,
                                     widget=forms.RadioSelect,

@@ -38,7 +38,11 @@
 
     <div class="threads-list">
 
-      {% include "misago/threads/list_actions.html" with is_upper=True %}
+      <div class="table-actions">
+        {% include "misago/threads/paginator.html" %}
+        {% include "misago/threads/sort.html" %}
+        {% include "misago/threads/reply_btn.html" %}
+      </div>
 
       <div class="table-panel">
         <ul class="list-group">
@@ -131,7 +135,10 @@
         </ul>
       </div>
 
-      {% include "misago/threads/list_actions.html" %}
+      <div class="table-actions">
+        {% include "misago/threads/paginator.html" %}
+        {% include "misago/threads/reply_btn.html" %}
+      </div>
 
     </div>
 

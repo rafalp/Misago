@@ -2,7 +2,7 @@ from misago.threads.views import generic
 
 
 class ThreadsMixin(object):
-    templates_dir = 'misago/threads'
+    pass
 
 
 class ForumView(ThreadsMixin, generic.ForumView):

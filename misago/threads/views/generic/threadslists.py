@@ -94,7 +94,7 @@ class ForumView(OrderThreadsMixin, ThreadsView):
     """
     Basic view for threads lists
     """
-    template = 'list.html'
+    template = 'misago/threads/list.html'
 
     def get_threads(self, request, forum, kwargs, order_by=None, limit=None):
         queryset = self.get_threads_queryset(request, forum)

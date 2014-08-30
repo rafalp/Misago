@@ -12,7 +12,7 @@ class ThreadView(ViewBase):
     """
     Basic view for threads
     """
-    template = 'thread.html'
+    template = 'misago/thread/replies.html'
 
     def dispatch(self, request, *args, **kwargs):
         relations = ['forum', 'starter', 'last_poster', 'first_post']

@@ -21,7 +21,7 @@ class EditorView(ViewBase):
     """
     Basic view for starting/replying/editing
     """
-    template = 'editor.html'
+    template = 'misago/posting/form.html'
 
     def find_mode(self, request, *args, **kwargs):
         """
