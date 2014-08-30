@@ -1,0 +1,69 @@
+{% extends "misago/threads/base.html" %}
+{% load i18n misago_stringutils %}
+
+
+{% block title %}{{ forum.name }}{% if page.number > 1 %} ({% blocktrans with page=page.number %}Page {{ page }}{% endblocktrans %}){% endif %} | {{ block.super }}{% endblock title %}
+
+
+{% block meta-description %}{{ forum.description|striplinebreaks }}{% endblock meta-description %}
+
+
+{% block content %}
+<div{% if forum.css %} class="page-{{ forum.css_class }}"{% endif %}>
+  <div class="page-header">
+    <div class="container">
+      {% if path %}
+      <ol class="breadcrumb">
+        {% for crumb in path|slice:":-1" %}
+        <li>
+          <a href="{{ crumb.get_absolute_url }}">{{ crumb.name }}</a>{% if not forloop.last %}<span class="fa fa-chevron-right"></span>{% endif %}
+        </li>
+        {% endfor %}
+      </ol>
+      {% endif %}
+
+      <h1>{{ forum.name }}</h1>
+    </div>
+  </div>
+  {{ block.super }}
+{% endblock content %}
+
+
+{% block threads-list %}
+{% if forum.description %}
+<div class="lead">
+  {{ forum.description|escape|urlize|linebreaks }}
+</div>
+{% endif %}
+
+{% if forum.subforums %}
+{% include "misago/forums/subforums.html" with category=forum %}
+{% endif %}
+
+{{ block.super }}
+{% endblock threads-list %}
+
+
+{% block threads-panel %}
+<div class="table-actions">
+  {% include "misago/threads/paginator.html" %}
+  {% if user.is_authenticated %}
+  {% include "misago/threads/sort.html" %}
+  {% include "misago/threads/show.html" %}
+  {% endif %}
+  {% include "misago/threads/reply_btn.html" %}
+</div>
+
+{{ block.super }}
+
+<div class="table-actions">
+  {% include "misago/threads/paginator.html" %}
+  {% include "misago/threads/reply_btn.html" %}
+</div>
+{% endblock threads-panel %}
+
+
+{% block javascripts %}
+{{ block.super }}
+{% include "misago/forums/js.html" %}
+{% endblock javascripts %}
