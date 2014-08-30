@@ -217,6 +217,7 @@ class ForumView(FilterThreadsMixin, OrderThreadsMixin, ThreadsView):
             'threads': threads,
             'link_name': self.link_name,
             'links_params': links_params,
+            'is_filtering': bool(filter_by),
             'filter_name': self.get_filter_name(available_filters, filter_by),
             'filters': self.get_filters_dicts(
                 available_filters, filter_by, links_params),

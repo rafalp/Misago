@@ -63,6 +63,18 @@
 {% endblock threads-panel %}
 
 
+{% block no-threads %}
+{% if is_filtering %}
+{% trans "No threads matching criteria exist, or you don't have permission to see them." %}
+<a href="{{ forum.get_absolute_url }}" class="btn btn-primary">
+  {% trans "See all threads" %}
+</a>
+{% else %}
+{% trans "No threads were posted in this forum, or you don't have permission to see them." %}
+{% endif %}
+{% endblock no-threads %}
+
+
 {% block javascripts %}
 {{ block.super }}
 {% include "misago/forums/js.html" %}

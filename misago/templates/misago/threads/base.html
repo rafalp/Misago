@@ -95,7 +95,7 @@
         </li>
         {% empty %}
         <li class="list-group-item message-row">
-          {% trans "No threads were posted in this forum, or you don't have permission to see them." %}
+          {% block no-threads %}{% endblock no-threads %}
         </li>
         {% endfor %}
       </ul>
