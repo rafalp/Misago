@@ -58,6 +58,40 @@ class OrderThreadsMixin(object):
         return dicts
 
 
+class FilterThreadsMixin(object):
+    def get_filter_name(self, filters, filter_by):
+        if filters:
+            if filter_by:
+                for filtering in filters:
+                    if filtering[0] == filter_by:
+                        return filtering[1]
+            else:
+                return _("All threads")
+        else:
+            return None
+
+    def get_filters_dicts(self, filters, exclude_filter, links_params):
+        url_kwargs = links_params.copy()
+        dicts = []
+
+        if filters and exclude_filter:
+            url_kwargs.pop('show', None)
+            dicts.append({
+                'url': reverse(self.link_name, kwargs=url_kwargs),
+                'name': _("All threads"),
+            })
+
+        for filtering in filters:
+            if filtering[0] != exclude_filter:
+                url_kwargs['show'] = filtering[0]
+                dicts.append({
+                    'url': reverse(self.link_name, kwargs=url_kwargs),
+                    'name': filtering[1],
+                })
+
+        return dicts
+
+
 class ThreadsView(ViewBase):
     def get_threads(self, request, kwargs):
         queryset = self.get_threads_queryset(request, forum)
@@ -90,21 +124,21 @@ class ThreadsView(ViewBase):
             thread.is_new = random.choice((True, False))
 
 
-class ForumView(OrderThreadsMixin, ThreadsView):
+class ForumView(FilterThreadsMixin, OrderThreadsMixin, ThreadsView):
     """
     Basic view for threads lists
     """
     template = 'misago/threads/list.html'
 
-    def get_threads(self, request, forum, kwargs, order_by=None, limit=None):
-        queryset = self.get_threads_queryset(request, forum)
-        queryset = self.filter_all_querysets(request, forum, queryset)
+    def get_threads(self, request, forum, kwargs,
+                    order_by=None, filter_by=None):
+        org_queryset = self.get_threads_queryset(request, forum)
+        queryset = self.filter_all_querysets(request, forum, org_queryset)
+        queryset = self.set_custom_filter(request, queryset, filter_by)
 
         announcements_qs = queryset.filter(weight=ANNOUNCEMENT)
         threads_qs = queryset.filter(weight__lt=ANNOUNCEMENT)
 
-        announcements_qs = self.filter_announcements_queryset(
-            request, forum, announcements_qs)
         threads_qs = self.filter_threads_queryset(request, forum, threads_qs)
 
         threads_qs, announcements_qs = self.order_querysets(
@@ -178,15 +212,38 @@ class ForumView(OrderThreadsMixin, ThreadsView):
 
         return queryset
 
-    def filter_announcements_queryset(self, request, forum, queryset):
-        return queryset
+    def set_custom_filter(self, request, queryset, filter_by):
+        if filter_by == 'my-threads':
+            return queryset.filter(starter_id=request.user.id)
+        elif filter_by == 'reported':
+            return queryset.filter(has_reported_posts=True)
+        elif filter_by == 'moderated-threads':
+            return queryset.filter(is_moderated=True)
+        elif filter_by == 'moderated-posts':
+            return queryset.filter(has_moderated_posts=True)
+        else:
+            return queryset
 
     def get_threads_queryset(self, request, forum):
         return forum.thread_set.all().order_by('-last_post_id')
 
     def get_default_link_params(self, forum):
         message = "forum views have to define get_default_link_params"
-        raise NotImplementedError()
+        raise NotImplementedError(message)
+
+    def get_available_filters(self, request, forum):
+        filters = []
+        if request.user.is_authenticated():
+            if forum.acl['can_see_all_threads']:
+                filters.append(('my-threads', _("My threads")))
+            if forum.acl['can_see_reports']:
+                filters.append(('reported', _("With reported posts")))
+            if forum.acl['can_review_moderated_content']:
+                filters.extend((
+                    ('moderated-threads', _("Moderated threads")),
+                    ('moderated-posts', _("With moderated posts")),
+                ))
+        return filters
 
     def dispatch(self, request, *args, **kwargs):
         forum = self.get_forum(request, **kwargs)
@@ -204,7 +261,20 @@ class ForumView(OrderThreadsMixin, ThreadsView):
         elif not self.is_ordering_default(order_by):
             links_params['sort'] = order_by
 
-        page, threads = self.get_threads(request, forum, kwargs, order_by)
+        available_filters = self.get_available_filters(request, forum)
+        if available_filters and kwargs.get('show'):
+            filter_methods = [f[0] for f in available_filters]
+            if kwargs.get('show') not in filter_methods:
+                kwargs.pop('show')
+                return redirect('misago:forum', **kwargs)
+            else:
+                filter_by = kwargs.get('show')
+                links_params['show'] = filter_by
+        else:
+            filter_by = None
+
+        page, threads = self.get_threads(
+            request, forum, kwargs, order_by, filter_by)
         self.add_threads_reads(request, threads)
 
         return self.render(request, {
@@ -215,6 +285,9 @@ class ForumView(OrderThreadsMixin, ThreadsView):
             'threads': threads,
             'link_name': self.link_name,
             'links_params': links_params,
+            'filter_name': self.get_filter_name(available_filters, filter_by),
+            'filters': self.get_filters_dicts(
+                available_filters, filter_by, links_params),
             'order_name': self.get_ordering_name(order_by),
             'order_by': self.get_orderings_dicts(order_by, links_params),
         })

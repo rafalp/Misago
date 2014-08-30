@@ -107,6 +107,8 @@ class PermissionsForm(forms.Form):
     can_review_moderated_content = forms.YesNoSwitch(
         label=_("Can review moderated content"),
         help_text=_("Will see and be able to accept moderated content."))
+    can_report_content = forms.YesNoSwitch(label=_("Can report posts"))
+    can_see_reports = forms.YesNoSwitch(label=_("Can see reports"))
 
 
 def change_permissions_form(role):
@@ -150,6 +152,8 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
         'can_change_threads_weight': 0,
         'can_close_threads': 0,
         'can_review_moderated_content': 0,
+        'can_report_content': 0,
+        'can_see_reports': 0,
     }
     final_acl.update(acl)
 
@@ -169,6 +173,8 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
         can_change_threads_weight=algebra.greater,
         can_close_threads=algebra.greater,
         can_review_moderated_content=algebra.greater,
+        can_report_content=algebra.greater,
+        can_see_reports=algebra.greater,
     )
 
     return final_acl
@@ -205,6 +211,8 @@ def add_acl_to_forum(user, forum):
         'can_change_threads_weight': 0,
         'can_close_threads': 0,
         'can_review_moderated_content': 0,
+        'can_report_content': 0,
+        'can_see_reports': 0,
     })
 
     if user.is_authenticated():
@@ -224,6 +232,8 @@ def add_acl_to_forum(user, forum):
             can_change_threads_weight=algebra.greater,
             can_close_threads=algebra.greater,
             can_review_moderated_content=algebra.greater,
+            can_report_content=algebra.greater,
+            can_see_reports=algebra.greater,
         )
 
     forum.acl['can_see_own_threads'] = not forum.acl['can_see_all_threads']

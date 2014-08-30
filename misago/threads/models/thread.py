@@ -49,6 +49,7 @@ class Thread(models.Model):
 
     class Meta:
         index_together = [
+            ['forum', 'weight'],
             ['forum', 'weight', 'id'],
             ['forum', 'weight', 'last_post'],
             ['forum', 'weight', 'replies'],

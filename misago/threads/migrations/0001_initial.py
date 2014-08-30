@@ -154,8 +154,9 @@ class Migration(migrations.Migration):
         migrations.AlterIndexTogether(
             name='thread',
             index_together=set([
-                ('forum', 'weight', 'last_post'),
+                ('forum', 'weight'),
                 ('forum', 'weight', 'id'),
+                ('forum', 'weight', 'last_post'),
                 ('forum', 'weight', 'replies')
             ]),
         ),
