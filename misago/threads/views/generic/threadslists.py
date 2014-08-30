@@ -254,6 +254,13 @@ class ForumView(FilterThreadsMixin, OrderThreadsMixin, ThreadsView):
         else:
             forum.subforums = []
 
+        if request.user.is_anonymous():
+            if kwargs.get('sort') or kwargs.get('show'):
+                """we don't allow sort/filter for guests"""
+                kwargs.pop('sort', None)
+                kwargs.pop('show', None)
+                return redirect('misago:forum', **kwargs)
+
         order_by = self.get_ordering(kwargs)
         if self.is_ordering_default(kwargs.get('sort')):
             kwargs.pop('sort')

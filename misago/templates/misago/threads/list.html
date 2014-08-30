@@ -40,8 +40,10 @@
 
       <div class="table-actions">
         {% include "misago/threads/paginator.html" %}
+        {% if user.is_authenticated %}
         {% include "misago/threads/sort.html" %}
         {% include "misago/threads/show.html" %}
+        {% endif %}
         {% include "misago/threads/reply_btn.html" %}
       </div>
 
