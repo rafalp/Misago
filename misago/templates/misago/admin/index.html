@@ -16,7 +16,47 @@
 </div>
 
 <div class="container">
-  <h3>Admin Placeholder View</h3>
-  <p class="lead">Requested namespace: <strong>{{ namespace }}</strong></p>
+  <div class="row">
+    <div class="col-md-8">
+    </div>
+    <div class="col-md-4">
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th colspan="2">
+              <h4>
+                <span class="fa fa-database"></span>
+                {% trans "DB Contents" %}
+              </h4>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{% trans "Threads" %}</td>
+            <td>{{ db_stats.threads }}</td>
+          </tr>
+          <tr>
+            <td>{% trans "Posts" %}</td>
+            <td>{{ db_stats.posts }}</td>
+          </tr>
+          <tr>
+            <td>{% trans "Users" %}</td>
+            <td>{{ db_stats.users }}</td>
+          </tr>
+          {% if db_stats.inactive_users %}
+          <tr>
+            <td>{% trans "Inactive users" %}</td>
+            <td>
+              <a href="{% url "misago:admin:users:accounts:index" %}?inactive=1">{{ db_stats.inactive_users }}</a>
+            </td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
 </div>
 {% endblock content %}
