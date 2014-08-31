@@ -103,15 +103,18 @@ class DeleteForum(ForumAdmin, generic.ModelFormView):
 
     def handle_form(self, form, request, target):
         move_children_to = form.cleaned_data.get('move_children_to')
+        move_threads_to = form.cleaned_data.get('move_threads_to')
+
         if move_children_to:
             for child in target.get_children():
                 Forum.objects.move_node(child, move_children_to, 'last-child')
+                if move_threads_to and child.pk == move_threads_to.pk:
+                    move_threads_to = child
         else:
             for child in target.get_descendants().order_by('-lft'):
                 child.delete_content()
                 child.delete()
 
-        move_threads_to = form.cleaned_data.get('move_threads_to')
         if move_threads_to:
             target.move_content(move_threads_to)
             move_threads_to.recount()
