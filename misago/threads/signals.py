@@ -31,8 +31,8 @@ def move_forum_threads(sender, **kwargs):
 from misago.users.signals import delete_user_content, username_changed
 @receiver(delete_user_content)
 def delete_user_threads(sender, **kwargs):
-    recount_forums = set([])
-    recount_threads = set([])
+    recount_forums = set()
+    recount_threads = set()
 
     for thread in batch_delete(sender.thread_set.all(), 50):
         recount_forums.add(thread.forum_id)
