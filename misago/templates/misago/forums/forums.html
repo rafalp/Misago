@@ -47,7 +47,7 @@
       </div>
       {% elif forum.acl.can_browse %}
         {% if forum.last_thread_title %}
-        <a href="#" class="item-title">{{ forum.last_thread_title }}</a>
+        <a href="{% url 'misago:thread' thread_slug=forum.last_thread_slug thread_id=forum.last_thread_id %}" class="item-title">{{ forum.last_thread_title }}</a>
         <div class="text-muted">
           {% capture trimmed as last_poster %}
             {% if forum.last_poster_id %}

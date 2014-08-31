@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.dispatch import receiver
 
 from misago.conf import settings
 from misago.core.utils import slugify
@@ -37,7 +38,8 @@ class Thread(models.Model):
     last_post = models.ForeignKey('misago_threads.Post', related_name='+',
                                   null=True, blank=True,
                                   on_delete=models.SET_NULL)
-    last_poster = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+',
+    last_poster = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                    related_name='last_poster_set',
                                     null=True, blank=True,
                                     on_delete=models.SET_NULL)
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
@@ -54,6 +56,36 @@ class Thread(models.Model):
             ['forum', 'weight', 'last_post'],
             ['forum', 'weight', 'replies'],
         ]
+
+    def move(self, new_forum):
+        pass
+
+    def merge(self, thread):
+        pass
+
+    def recount(self):
+        counted_criteria = {'is_hidden':False, 'is_moderated':False}
+        self.replies = self.post_set.filter(**counted_criteria).count()
+        if self.replies > 0:
+            self.replies -= 1
+
+        reported_posts_count = self.post_set.filter(is_reported=True).count()
+        self.has_reported_posts = reported_posts_count > 0
+
+        moderated_posts_count = self.post_set.filter(is_moderated=True).count()
+        self.has_moderated_posts = moderated_posts_count > 0
+
+        hidden_posts_count = self.post_set.filter(is_hidden=True).count()
+        self.has_hidden_posts = hidden_posts_count > 0
+
+        first_post = self.post_set.order_by('id')[:1][0]
+        self.set_first_post(first_post)
+
+        last_post = self.post_set.filter(**counted_criteria).order_by('id')[:1]
+        if last_post:
+            self.set_last_post(last_post[0])
+        else:
+            self.set_last_post(first_post)
 
     @property
     def is_announcement(self):

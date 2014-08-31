@@ -2,7 +2,6 @@ from urlparse import urlparse
 
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
 from mptt.managers import TreeManager
@@ -11,9 +10,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from misago.acl import version as acl_version
 from misago.acl.models import BaseRole
 from misago.conf import settings
-from misago.core import serializer
 from misago.core.cache import cache
-from misago.core.signals import secret_key_changed
 from misago.core.utils import slugify
 
 
@@ -70,7 +67,8 @@ class Forum(MPTTModel):
                                     on_delete=models.SET_NULL)
     last_thread_title = models.CharField(max_length=255, null=True, blank=True)
     last_thread_slug = models.CharField(max_length=255, null=True, blank=True)
-    last_poster = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+',
+    last_poster = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                    related_name='+',
                                     null=True, blank=True,
                                     on_delete=models.SET_NULL)
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
@@ -103,6 +101,26 @@ class Forum(MPTTModel):
         acl_version.invalidate()
         return super(Forum, self).delete(*args, **kwargs)
 
+    def recount(self):
+        counted_criteria = {'is_hidden':False, 'is_moderated':False}
+        self.threads = self.thread_set.filter(**counted_criteria).count()
+        self.posts = self.post_set.filter(**counted_criteria).count()
+
+        if self.threads:
+            last_thread_qs = self.thread_set.filter(**counted_criteria)
+            last_thread = last_thread_qs.order_by('-last_post_id')[:1][0]
+            self.set_last_thread(last_thread)
+        else:
+            self.empty_last_thread()
+
+    def delete_content(self):
+        from misago.forums.signals import delete_forum_content
+        delete_forum_content.send(sender=self)
+
+    def move_content(self, new_forum):
+        from misago.forums.signals import move_forum_content
+        move_forum_content.send(sender=self, new_forum=new_forum)
+
     @property
     def redirect_host(self):
         return urlparse(self.redirect_url).hostname
@@ -132,6 +150,15 @@ class Forum(MPTTModel):
         self.last_poster_name = thread.last_poster_name
         self.last_poster_slug = thread.last_poster_slug
 
+    def empty_last_thread(self):
+        self.last_post_on = None
+        self.last_thread = None
+        self.last_thread_title = None
+        self.last_thread_slug = None
+        self.last_poster = None
+        self.last_poster_name = None
+        self.last_poster_slug = None
+
     def has_child(self, child):
         return child.lft > self.lft and child.rght < self.rght
 
@@ -144,15 +171,3 @@ class RoleForumACL(models.Model):
     role = models.ForeignKey('misago_acl.Role', related_name='forums_acls')
     forum = models.ForeignKey('Forum', related_name='forum_role_set')
     forum_role = models.ForeignKey(ForumRole)
-
-
-"""
-Signal handlers
-"""
-@receiver(secret_key_changed)
-def update_roles_pickles(sender, **kwargs):
-    for role in ForumRole.objects.iterator():
-        if role.pickled_permissions:
-            role.pickled_permissions = serializer.regenerate_checksum(
-                role.pickled_permissions)
-            role.save(update_fields=['pickled_permissions'])

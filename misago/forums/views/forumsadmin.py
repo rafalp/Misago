@@ -1,5 +1,3 @@
-import warnings
-
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
@@ -110,12 +108,16 @@ class DeleteForum(ForumAdmin, generic.ModelFormView):
                 Forum.objects.move_node(child, move_children_to, 'last-child')
         else:
             for child in target.get_descendants().order_by('-lft'):
+                child.delete_content()
                 child.delete()
 
         move_threads_to = form.cleaned_data.get('move_threads_to')
         if move_threads_to:
-            warnings.warn("Not implemented yet! See #354 for details.",
-                          FutureWarning)
+            target.move_content(move_threads_to)
+            move_threads_to.recount()
+            move_threads_to.save()
+        else:
+            target.delete_content()
 
         form.instance.delete()
 

@@ -7,10 +7,10 @@ username_changed = django.dispatch.Signal()
 
 
 """
-Register default signal handlers
+Signal handlers
 """
 @receiver(username_changed)
-def sync_username_in_user_models(sender, **kwargs):
+def handle_name_change(sender, **kwargs):
     sender.user_renames.update(changed_by_username=sender.username,
                                changed_by_slug=sender.slug)
     sender.warnings_given.update(giver_username=sender.username,

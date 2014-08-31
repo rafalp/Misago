@@ -16,12 +16,14 @@ def get_forums_list(user, parent=None):
         queryset = Forum.objects.all_forums()
     queryset_with_acl = queryset.filter(id__in=user.acl['visible_forums'])
 
+    visible_forums = [f for f in queryset_with_acl]
+
     forums_dict = {}
     forums_list = []
 
     parent_level = parent.level + 1 if parent else 1
 
-    for forum in queryset_with_acl:
+    for forum in visible_forums:
         forum.is_read = True
         forum.subforums = []
         forums_dict[forum.pk] = forum
@@ -31,6 +33,30 @@ def get_forums_list(user, parent=None):
             forums_dict[forum.parent_id].subforums.append(forum)
 
     add_acl(user, forums_list)
+
+    for forum in reversed(visible_forums):
+        if forum.acl['can_browse']:
+            forum_parent = forums_dict.get(forum.parent_id)
+            if forum_parent:
+                forum_parent.threads += forum.threads
+                forum_parent.posts += forum.posts
+
+                if forum_parent.last_post_on and forum.last_post_on:
+                    parent_last_post = forum_parent.last_post_on
+                    forum_last_post = forum.last_post_on
+                    update_last_thead = parent_last_post < forum_last_post
+                elif not forum_parent.last_post_on and forum.last_post_on:
+                    update_last_thead = True
+                else:
+                    update_last_thead = False
+
+                if update_last_thead:
+                    forum_parent.last_post_on = forum.last_post_on
+                    forum_parent.last_thread_id = forum.last_thread_id
+                    forum_parent.last_thread_title = forum.last_thread_title
+                    forum_parent.last_thread_slug = forum.last_thread_slug
+                    forum_parent.last_poster_name = forum.last_poster_name
+                    forum_parent.last_poster_slug = forum.last_poster_slug
 
     flat_list = []
     for forum in forums_list:
