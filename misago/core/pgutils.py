@@ -1,5 +1,7 @@
 from django.db.migrations.operations import RunSQL
 
+from django.core.paginator import Paginator
+
 
 class CreatePartialIndex(RunSQL):
     CREATE_SQL = """
@@ -46,3 +48,24 @@ DROP INDEX %(index_name)s
         message = "Create PostgreSQL partial index on field %s in %s for %s"
         formats = (self.field, self.model_name, self.values)
         return message % formats
+
+
+def batch_update(queryset, step=50):
+    """
+    Util because psycopg2 iterators aren't really memory effective
+    """
+    paginator = Paginator(queryset, step)
+    for page_number in paginator.page_range:
+        print page_number
+        for obj in paginator.page(page_number).object_list:
+            yield obj
+
+def batch_delete(queryset, step=50):
+    """
+    Another util cos paginator goes bobbins when you are deleting
+    """
+    queryset_exists = True
+    while queryset_exists:
+        for obj in queryset[:step]:
+            yield obj
+        queryset_exists = queryset.exists()
