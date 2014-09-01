@@ -117,7 +117,7 @@ class DeleteForum(ForumAdmin, generic.ModelFormView):
 
         if move_threads_to:
             target.move_content(move_threads_to)
-            move_threads_to.recount()
+            move_threads_to.synchronize()
             move_threads_to.save()
         else:
             target.delete_content()
