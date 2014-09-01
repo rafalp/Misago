@@ -104,7 +104,12 @@ class Forum(MPTTModel):
     def synchronize(self):
         counted_criteria = {'is_hidden': False, 'is_moderated': False}
         self.threads = self.thread_set.filter(**counted_criteria).count()
-        self.posts = self.post_set.filter(**counted_criteria).count()
+
+        if self.threads:
+            replies_sum = self.thread_set.aggregate(models.Sum('replies'))
+            self.posts = self.threads + replies_sum['replies__sum']
+        else:
+            self.posts = 0
 
         if self.threads:
             last_thread_qs = self.thread_set.filter(**counted_criteria)
