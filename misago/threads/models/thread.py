@@ -74,7 +74,7 @@ class Thread(models.Model):
         move_thread.send(sender=self)
 
     def synchronize(self):
-        counted_criteria = {'is_hidden':False, 'is_moderated':False}
+        counted_criteria = {'is_hidden': False, 'is_moderated': False}
         self.replies = self.post_set.filter(**counted_criteria).count()
         if self.replies > 0:
             self.replies -= 1
