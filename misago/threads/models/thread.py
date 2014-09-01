@@ -57,31 +57,42 @@ class Thread(models.Model):
             ['forum', 'weight', 'replies'],
         ]
 
+    def delete(self, *args, **kwargs):
+        from misago.threads.signals import delete_thread
+        delete_thread.send(sender=self)
+
+        super(Thread, self).delete(*args, **kwargs)
+
+    def merge(self, other_thread):
+        from misago.threads.signals import merge_thread
+        merge_thread.send(sender=self, other_thread=other_thread)
+
     def move(self, new_forum):
-        pass
+        from misago.threads.signals import move_thread
 
-    def merge(self, thread):
-        pass
+        self.forum = new_forum
+        move_thread.send(sender=self)
 
-    def recount(self):
+    def synchronize(self):
         counted_criteria = {'is_hidden':False, 'is_moderated':False}
         self.replies = self.post_set.filter(**counted_criteria).count()
         if self.replies > 0:
             self.replies -= 1
 
-        reported_posts_count = self.post_set.filter(is_reported=True).count()
-        self.has_reported_posts = reported_posts_count > 0
+        reported_post_qs = self.post_set.filter(is_reported=True)[:1]
+        self.has_reported_posts = reported_post_qs.exists()
 
-        moderated_posts_count = self.post_set.filter(is_moderated=True).count()
-        self.has_moderated_posts = moderated_posts_count > 0
+        moderated_post_qs = self.post_set.filter(is_moderated=True)[:1]
+        self.has_moderated_posts = moderated_post_qs.exists()
 
-        hidden_posts_count = self.post_set.filter(is_hidden=True).count()
-        self.has_hidden_posts = hidden_posts_count > 0
+        hidden_post_qs = self.post_set.filter(is_hidden=True)[:1]
+        self.has_hidden_posts = hidden_post_qs.exists()
 
         first_post = self.post_set.order_by('id')[:1][0]
         self.set_first_post(first_post)
 
-        last_post = self.post_set.filter(**counted_criteria).order_by('id')[:1]
+        last_post_qs = self.post_set.filter(**counted_criteria).order_by('-id')
+        last_post = last_post_qs[:1]
         if last_post:
             self.set_last_post(last_post[0])
         else:
@@ -134,6 +145,9 @@ class Thread(models.Model):
             self.starter_slug = post.poster.slug
         else:
             self.starter_slug = slugify(post.poster_name)
+
+        self.is_moderated = post.is_moderated
+        self.is_hidden = post.is_hidden
 
     def set_last_post(self, post):
         self.last_post_on = post.posted_on

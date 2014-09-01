@@ -101,7 +101,7 @@ class Forum(MPTTModel):
         acl_version.invalidate()
         return super(Forum, self).delete(*args, **kwargs)
 
-    def recount(self):
+    def synchronize(self):
         counted_criteria = {'is_hidden':False, 'is_moderated':False}
         self.threads = self.thread_set.filter(**counted_criteria).count()
         self.posts = self.post_set.filter(**counted_criteria).count()

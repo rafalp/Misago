@@ -7,13 +7,25 @@ from misago.forums.models import Forum
 from misago.threads.models import Thread, Post
 
 
-move_thread = django.dispatch.Signal()
 delete_thread = django.dispatch.Signal()
+merge_thread = django.dispatch.Signal()
+move_thread = django.dispatch.Signal()
 
 
 """
 Signal handlers
 """
+@receiver(merge_thread)
+def merge_threads_posts(sender, **kwargs):
+    other_thread = kwargs['other_thread']
+    other_thread.post_set.update(forum=sender.forum, thread=sender)
+
+
+@receiver(move_thread)
+def move_thread_posts(sender, **kwargs):
+    sender.post_set.update(forum=sender.forum)
+
+
 from misago.forums.signals import delete_forum_content, move_forum_content
 @receiver(delete_forum_content)
 def delete_forum_threads(sender, **kwargs):
@@ -46,12 +58,12 @@ def delete_user_threads(sender, **kwargs):
     if recount_threads:
         changed_threads_qs = Thread.objects.filter(id__in=recount_threads)
         for thread in batch_update(changed_threads_qs, 50):
-            thread.recount()
+            thread.synchronize()
             thread.save()
 
     if recount_forums:
         for forum in Forum.objects.filter(id__in=recount_forums):
-            forum.recount()
+            forum.synchronize()
             forum.save()
 
 
