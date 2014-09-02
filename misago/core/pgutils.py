@@ -56,7 +56,6 @@ def batch_update(queryset, step=50):
     """
     paginator = Paginator(queryset, step)
     for page_number in paginator.page_range:
-        print page_number
         for obj in paginator.page(page_number).object_list:
             yield obj
 
