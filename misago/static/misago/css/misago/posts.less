@@ -70,6 +70,8 @@
       border-bottom: none;
       margin-bottom: @line-height-computed * -0.5;
 
+      color: @text-muted;
+
       .user-name {
         color: @state-default;
         font-weight: bold;
@@ -88,6 +90,27 @@
         &:active, &:focus {
           color: @state-clicked;
           text-decoration: text-underline;
+        }
+      }
+
+      .separator {
+        margin-left: @font-size-base / 3;
+        margin-right: @font-size-base / 3;
+      }
+
+      .post-date {
+        &:link, &:visited {
+          color: @state-default;
+        }
+
+        &:hover, &:focus {
+          color: @state-hover;
+          text-decoration: underline;
+        }
+
+        &:active {
+          color: @state-clicked;
+          text-decoration: underline;
         }
       }
     }
