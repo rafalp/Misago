@@ -15,7 +15,7 @@
     }
 
     .media-body {
-      padding-left: @font-size-small;
+      padding-left: @line-height-computed / 2;
 
       .panel-default {
         position: relative;
@@ -31,16 +31,16 @@
         &:after {
           border-color: transparent;
           border-right-color: @post-panel-bg;
-          border-width: @font-size-small;
-          top: @font-size-small;
+          border-width: @font-size-small - 2;
+          top: @line-height-computed / 2;
           margin-top: (@font-size-small * -1) + @font-size-small;
         }
 
         &:before {
            border-color: transparent;
            border-right-color: @post-panel-border;
-           border-width: @font-size-small + 2;
-           top: @font-size-small - 1;
+           border-width: @font-size-small;
+           top: @line-height-computed / 2 - 1;
            margin-top: (@font-size-small * -1) + @font-size-small - 1px;
         }
       }
