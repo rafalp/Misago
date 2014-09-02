@@ -59,6 +59,7 @@ def batch_update(queryset, step=50):
         for obj in paginator.page(page_number).object_list:
             yield obj
 
+
 def batch_delete(queryset, step=50):
     """
     Another util cos paginator goes bobbins when you are deleting
