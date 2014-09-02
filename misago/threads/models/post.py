@@ -3,7 +3,7 @@ from django.dispatch import receiver
 
 from misago.conf import settings
 
-from misago.threads.checksums import is_post_valid
+from misago.threads.checksums import update_post_checksum, is_post_valid
 
 
 class Post(models.Model):
@@ -32,6 +32,41 @@ class Post(models.Model):
     is_moderated = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)
     is_protected = models.BooleanField(default=False)
+
+    def delete(self, *args, **kwargs):
+        from misago.threads.signals import delete_post
+        delete_post.send(sender=self)
+
+        super(Post, self).delete(*args, **kwargs)
+
+    def merge(self, other_post):
+        if self.thread_id != other_post.thread_id:
+            message = "only posts belonging to same thread can be merged"
+            raise ValueError(message)
+
+        message = "posts made by different authors can't be merged"
+        if self.poster_id and other_post.poster_id:
+            if self.poster_id != other_post.poster_id:
+                raise ValueError(message)
+        else:
+            raise ValueError(message)
+
+        if self.pk == other_post.pk:
+            raise ValueError("post can't be merged with itself")
+
+        other_post.original = '%s\n\n%s' % (other_post.original, self.original)
+        other_post.parsed = '%s\n%s' % (other_post.parsed, self.parsed)
+        update_post_checksum(other_post)
+
+        from misago.threads.signals import merge_post
+        merge_post.send(sender=self, other_thread=other_post)
+
+    def move(self, new_thread):
+        from misago.threads.signals import move_post
+
+        self.forum = new_thread.forum
+        self.thread = new_thread
+        move_post.send(sender=self)
 
     @property
     def short(self):
