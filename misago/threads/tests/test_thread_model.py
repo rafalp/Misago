@@ -222,6 +222,9 @@ class ThreadModelTests(TestCase):
 
     def test_merge(self):
         """merge(other_thread) moves other thread content to this thread"""
+        with self.assertRaises(ValueError):
+            self.thread.merge(self.thread)
+
         datetime = timezone.now() + timedelta(5)
 
         other_thread = Thread(

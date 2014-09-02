@@ -64,6 +64,9 @@ class Thread(models.Model):
         super(Thread, self).delete(*args, **kwargs)
 
     def merge(self, other_thread):
+        if self.pk == other_thread.pk:
+            raise ValueError("thread can't be merged with itself")
+
         from misago.threads.signals import merge_thread
         merge_thread.send(sender=self, other_thread=other_thread)
 
