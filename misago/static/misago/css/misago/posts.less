@@ -1,0 +1,122 @@
+//
+// Posts Styles
+// --------------------------------------------------
+
+
+// Posts list
+//
+//==
+.posts-list {
+  .post {
+    .user-avatar {
+      img {
+        border-radius: @border-radius-base;
+      }
+    }
+
+    .media-body {
+      padding-left: @font-size-small;
+
+      .panel-default {
+        position: relative;
+        &:after, &:before {
+          right: 100%;
+          border: solid transparent;
+          content: "";
+          height: 0; width: 0;
+          position: absolute;
+          pointer-events: none;
+        }
+
+        &:after {
+          border-color: transparent;
+          border-right-color: @post-panel-bg;
+          border-width: @font-size-small;
+          top: @font-size-small;
+          margin-top: (@font-size-small * -1) + @font-size-small;
+        }
+
+        &:before {
+           border-color: transparent;
+           border-right-color: @post-panel-border;
+           border-width: @font-size-small + 2;
+           top: @font-size-small - 1;
+           margin-top: (@font-size-small * -1) + @font-size-small - 1px;
+        }
+      }
+    }
+  }
+}
+
+
+// Post panel
+//
+//==
+.posts-list {
+  .panel {
+    background: @post-panel-bg;
+    border-color: @post-panel-border;
+  }
+}
+
+
+// Post header
+//
+//==
+.posts-list {
+  .panel {
+    .panel-heading {
+      background: none;
+      border-bottom: none;
+      margin-bottom: @line-height-computed * -0.5;
+
+      .user-name {
+        color: @state-default;
+        font-weight: bold;
+      }
+
+      a.user-name {
+        &:link, &:visited {
+          color: @state-hover;
+        }
+
+        &:hover {
+          color: @state-hover;
+          text-decoration: text-underline;
+        }
+
+        &:active, &:focus {
+          color: @state-clicked;
+          text-decoration: text-underline;
+        }
+      }
+    }
+  }
+}
+
+
+// Post body
+//
+//==
+.posts-list {
+  .panel {
+    .panel-body {
+      .corrupted-message {
+        margin: 0px;
+      }
+    }
+  }
+}
+
+// Post footer
+//
+//==
+.posts-list {
+  .panel {
+    .panel-footer {
+      background: none;
+      border-top: none;
+      margin-top: @line-height-computed * -0.5;
+    }
+  }
+}

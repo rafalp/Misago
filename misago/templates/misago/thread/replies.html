@@ -58,7 +58,11 @@
   </div>
   <div class="container">
 
-    Blah blah blah!
+    <div class="posts-list">
+      {% for post in posts %}
+      {% include "misago/thread/post.html" %}
+      {% endfor %}
+    </div>
 
   </div>
 </div>

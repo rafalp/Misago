@@ -1,0 +1,45 @@
+{% load i18n misago_avatars %}
+<div class="media post">
+  {% if post.poster %}
+  <a class="user-avatar pull-left" href="{% url USER_PROFILE_URL user_slug=post.poster.slug user_id=post.poster.id %}">
+    <img class="media-object" src="{{ post.poster|avatar:100 }}" alt="{% trans "Poster avatar" %}">
+  </a>
+  {% else %}
+  <span class="user-avatar pull-left">
+    <img class="media-object" src="{% blankavatar 100 %}" alt="{% trans "Poster avatar" %}">
+  </span>
+  {% endif %}
+
+  <div class="media-body">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {% if post.poster %}
+        {% include "misago/user_state.html" with user=post.poster state=post.poster.online_state %}
+        <a class="user-name" href="{% url USER_PROFILE_URL user_slug=post.poster.slug user_id=post.poster.id %}">
+          {{ post.poster.username }}
+        </a>
+        {% else %}
+        <span class="fa fa-power-off fa-fw user-offline tooltip-top" title="{% blocktrans with user=post.poster_name %}{{ user }}'s forum account has been deleted.{% endblocktrans %}"></span>
+        <span class="user-name">
+          {{ post.poster_name }}
+        </span>
+        {% endif %}
+      </div>
+      <div class="panel-body">
+        {% if post.is_valid %}
+        <article class="misago-markup">
+          {{ post.parsed|safe }}
+        <article>
+        {% else %}
+        <p class="lead corrupted-message">
+          <span class="fa fa-exclamation-triangle"></span>
+          {% trans "Post can't be displayed due to invalid message checksum." %}
+        </p>
+        {% endif %}
+      </div>
+      <div class="panel-footer">
+        le footer
+      </div>
+    </div>
+  </div>
+</div>

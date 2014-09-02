@@ -9,7 +9,7 @@
   {% trans "Banned" %}
   {% endif %}
 {% elif state.is_hidden %}
-  <span class="fa fa-circle-o fa-fw user-offilne"></span>
+  <span class="fa fa-circle-o fa-fw user-offline"></span>
   {% trans "Hides activity" %}
 {% elif state.is_online_hidden %}
   <span class="fa fa-circle fa-fw user-online"></span>
@@ -20,7 +20,7 @@
     {{ state.last_click|date }}
   </abbr>
   {% endcapture %%}
-  <span class="fa fa-circle-o fa-fw user-offilne"></span>
+  <span class="fa fa-circle-o fa-fw user-offline"></span>
   {% blocktrans trimmed with last_seen=last_seen|safe %}
     Seen {{ last_seen }}, hidden
   {% endblocktrans %}
@@ -33,7 +33,7 @@
     {{ state.last_click|date }}
   </abbr>
   {% endcapture %%}
-  <span class="fa fa-circle-o fa-fw user-offilne"></span>
+  <span class="fa fa-circle-o fa-fw user-offline"></span>
   {% blocktrans trimmed with last_seen=last_seen|safe %}
     Seen {{ last_seen }}
   {% endblocktrans %}

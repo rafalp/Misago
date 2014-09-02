@@ -3,6 +3,7 @@ from django.db import models
 from django.dispatch import receiver
 
 from misago.conf import settings
+from misago.core.shortcuts import paginate
 from misago.core.utils import slugify
 
 
