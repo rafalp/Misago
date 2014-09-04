@@ -256,3 +256,24 @@
     }
   }
 }
+
+
+// Form side panel
+.form-panel{
+  &.form-side-panel {
+    .form-body {
+      &:first-child {
+        legend {
+          border-top: none;
+        }
+      }
+
+      fieldset {
+        legend {
+          font-size: @font-size-base;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}

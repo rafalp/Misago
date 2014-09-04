@@ -9,7 +9,7 @@ from misago.forums.lists import get_forum_path
 
 from misago.threads.posting import (PostingInterrupt, EditorFormset,
                                     START, REPLY, EDIT)
-from misago.threads.models import ANNOUNCEMENT, Thread, Post
+from misago.threads.models import ANNOUNCEMENT, Thread, Post, Prefix
 from misago.threads.permissions import allow_start_thread
 from misago.threads.views.generic.base import ViewBase
 
@@ -75,6 +75,7 @@ class EditorView(ViewBase):
         self.allow_mode(request.user, *mode_context)
 
         mode, forum, thread, post, quote = mode_context
+        forum.prefixes = Prefix.objects.get_forum_prefixes(forum)
         formset = EditorFormset(request=request,
                                 mode=mode,
                                 user=request.user,

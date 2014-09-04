@@ -64,9 +64,16 @@
         {% if supporting_forms %}
         <div class="col-md-3">
 
-          {% for form in supporting_forms %}
-          {% include form.template %}
-          {% endfor %}
+          <div class="form-panel form-side-panel">
+            <div class="form-body">
+              {% for form in supporting_forms %}
+              <fieldset>
+                <legend>{{ form.legend }}</legend>
+                {% include form.template %}
+              </fieldset>
+              {% endfor %}
+            </div>
+          </div>
 
         </div>
         {% endif %}

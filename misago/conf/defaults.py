@@ -172,7 +172,9 @@ MISAGO_MARKUP_EXTENSIONS = ()
 
 MISAGO_POSTING_MIDDLEWARES = (
     'misago.threads.posting.reply.ReplyFormMiddleware',
-    'misago.threads.posting.threadstate.ThreadStateFormMiddleware',
+    'misago.threads.posting.threadprefix.ThreadPrefixFormMiddleware',
+    'misago.threads.posting.threadweight.ThreadWeightFormMiddleware',
+    'misago.threads.posting.threadclose.ThreadCloseFormMiddleware',
     'misago.threads.posting.recordedit.RecordEditMiddleware',
     'misago.threads.posting.updatestats.UpdateStatsMiddleware',
     # Note: always keep SaveChangesMiddleware middleware last one

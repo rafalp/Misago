@@ -113,28 +113,39 @@ class ThreadForm(ReplyForm):
             raise forms.ValidationError(errors)
 
 
-class PrefixedThreadForm(ThreadForm):
-    pass
-
-
-class FullThreadStateForm(forms.Form):
+class ThreadPrefixFormBase(forms.Form):
     is_supporting = True
-    legend = _("Thread options")
-    template = "misago/posting/stateform.html"
+    legend = _("Prefix")
+    template = "misago/posting/threadprefixform.html"
 
-    weight = forms.TypedChoiceField(label=_("Thread weight"), initial=0,
-                                    widget=forms.RadioSelect,
+    prefix = forms.TypedChoiceField(label=_("Thread weight"), initial=0,
                                     choices=(
                                         (0, _("Standard")),
                                         (1, _("Pinned")),
                                         (2, _("Announcement")),
                                     ))
+
+
+def ThreadPrefixForm(*args, **kwargs):
+    return ThreadPrefixFormBase(*args, **kwargs)
+
+
+class ThreadWeightForm(forms.Form):
+    is_supporting = True
+    legend = _("Weight")
+    template = "misago/posting/threadweightform.html"
+
+    weight = forms.TypedChoiceField(label=_("Thread weight"), initial=0,
+                                    choices=(
+                                        (0, _("Standard")),
+                                        (1, _("Pinned")),
+                                        (2, _("Announcement")),
+                                    ))
+
+
+class ThreadCloseForm(forms.Form):
+    is_supporting = True
+    legend = _("Close thread")
+    template = "misago/posting/threadcloseform.html"
+
     is_closed = forms.YesNoSwitch(label=_("Close thread"), initial=0)
-
-
-class ThreadWeightForm(FullThreadStateForm):
-    is_closed = None
-
-
-class CloseThreadForm(FullThreadStateForm):
-    Weight = None

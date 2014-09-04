@@ -92,6 +92,9 @@ class PermissionsForm(forms.Form):
         label=_("Can protect posts"),
         help_text=_("Only users with this permission "
                     "can edit protected posts."))
+    can_change_threads_prefix = forms.TypedChoiceField(
+        label=_("Can change threads prefix"), coerce=int, initial=0,
+        choices=((0, _("No")), (1, _("Own threads")), (2, _("All threads"))))
     can_change_threads_weight = forms.TypedChoiceField(
         label=_("Can change threads weight"), coerce=int, initial=0,
         choices=(
@@ -149,6 +152,7 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
         'can_hide_threads': 0,
         'can_hide_replies': 0,
         'can_protect_posts': 0,
+        'can_change_threads_prefix': 0,
         'can_change_threads_weight': 0,
         'can_close_threads': 0,
         'can_review_moderated_content': 0,
@@ -170,6 +174,7 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
         thread_edit_time=algebra.greater_or_zero,
         reply_edit_time=algebra.greater_or_zero,
         can_protect_posts=algebra.greater,
+        can_change_threads_prefix=algebra.greater,
         can_change_threads_weight=algebra.greater,
         can_close_threads=algebra.greater,
         can_review_moderated_content=algebra.greater,
@@ -208,6 +213,7 @@ def add_acl_to_forum(user, forum):
         'can_hide_threads': 0,
         'can_hide_replies': 0,
         'can_protect_posts': 0,
+        'can_change_threads_prefix': 0,
         'can_change_threads_weight': 0,
         'can_close_threads': 0,
         'can_review_moderated_content': 0,
@@ -229,6 +235,7 @@ def add_acl_to_forum(user, forum):
             thread_edit_time=algebra.greater_or_zero,
             reply_edit_time=algebra.greater_or_zero,
             can_protect_posts=algebra.greater,
+            can_change_threads_prefix=algebra.greater,
             can_change_threads_weight=algebra.greater,
             can_close_threads=algebra.greater,
             can_review_moderated_content=algebra.greater,
