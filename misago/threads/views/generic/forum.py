@@ -51,6 +51,57 @@ class FilterThreadsMixin(object):
 
         return dicts
 
+    def get_available_filters(self, request, forum):
+        filters = []
+        if request.user.is_authenticated():
+            if forum.acl['can_see_all_threads']:
+                filters.append({
+                    'type': 'my-threads',
+                    'name': _("My threads"),
+                    'is_label': False,
+                })
+            if forum.acl['can_see_reports']:
+                filters.append({
+                    'type': 'reported',
+                    'name': _("With reported posts"),
+                    'is_label': False,
+                })
+            if forum.acl['can_review_moderated_content']:
+                filters.extend(({
+                    'type': 'moderated-threads',
+                    'name': _("Moderated threads"),
+                    'is_label': False,
+                },
+                {
+                    'type': 'moderated-posts',
+                    'name': _("With moderated posts"),
+                    'is_label': False,
+                }))
+        for prefix in forum.prefixes:
+            filters.append({
+                'type': prefix.slug,
+                'name': prefix.name,
+                'is_label': True,
+                'css_class': prefix.css_class,
+            })
+        return filters
+
+    def set_custom_filter(self, request, forum, queryset, filter_by):
+        if filter_by == 'my-threads':
+            return queryset.filter(starter_id=request.user.id)
+        elif filter_by == 'reported':
+            return queryset.filter(has_reported_posts=True)
+        elif filter_by == 'moderated-threads':
+            return queryset.filter(is_moderated=True)
+        elif filter_by == 'moderated-posts':
+            return queryset.filter(has_moderated_posts=True)
+        else:
+            for prefix in forum.prefixes:
+                if prefix.slug == filter_by:
+                    return queryset.filter(prefix_id=prefix.pk)
+            else:
+                return queryset
+
 
 class ForumView(FilterThreadsMixin, OrderThreadsMixin, ThreadsView):
     """
@@ -141,20 +192,7 @@ class ForumView(FilterThreadsMixin, OrderThreadsMixin, ThreadsView):
         return queryset
 
     def set_custom_filter(self, request, forum, queryset, filter_by):
-        if filter_by == 'my-threads':
-            return queryset.filter(starter_id=request.user.id)
-        elif filter_by == 'reported':
-            return queryset.filter(has_reported_posts=True)
-        elif filter_by == 'moderated-threads':
-            return queryset.filter(is_moderated=True)
-        elif filter_by == 'moderated-posts':
-            return queryset.filter(has_moderated_posts=True)
-        else:
-            for prefix in forum.prefixes:
-                if prefix.slug == filter_by:
-                    return queryset.filter(prefix_id=prefix.pk)
-            else:
-                return queryset
+        return queryset
 
     def get_threads_queryset(self, request, forum):
         return forum.thread_set.all().order_by('-last_post_id')
@@ -162,41 +200,6 @@ class ForumView(FilterThreadsMixin, OrderThreadsMixin, ThreadsView):
     def get_default_link_params(self, forum):
         message = "forum views have to define get_default_link_params"
         raise NotImplementedError(message)
-
-    def get_available_filters(self, request, forum):
-        filters = []
-        if request.user.is_authenticated():
-            if forum.acl['can_see_all_threads']:
-                filters.append({
-                    'type': 'my-threads',
-                    'name': _("My threads"),
-                    'is_label': False,
-                })
-            if forum.acl['can_see_reports']:
-                filters.append({
-                    'type': 'reported',
-                    'name': _("With reported posts"),
-                    'is_label': False,
-                })
-            if forum.acl['can_review_moderated_content']:
-                filters.extend(({
-                    'type': 'moderated-threads',
-                    'name': _("Moderated threads"),
-                    'is_label': False,
-                },
-                {
-                    'type': 'moderated-posts',
-                    'name': _("With moderated posts"),
-                    'is_label': False,
-                }))
-        for prefix in forum.prefixes:
-            filters.append({
-                'type': prefix.slug,
-                'name': prefix.name,
-                'is_label': True,
-                'css_class': prefix.css_class,
-            })
-        return filters
 
     def dispatch(self, request, *args, **kwargs):
         forum = self.get_forum(request, **kwargs)
