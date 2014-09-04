@@ -37,17 +37,28 @@ class PrefixManager(models.Manager):
 
 
 class Prefix(models.Model):
-    forums = models.ManyToManyField('misago_forums.Forum',
-                                    related_name='prefixes')
+    forums = models.ManyToManyField('misago_forums.Forum')
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
     css_class = models.CharField(max_length=255, null=True, blank=True)
 
     objects = PrefixManager()
 
+    def save(self, *args, **kwargs):
+        if self.pk:
+            self.strip_inavailable_prefixes()
+        Prefix.objects.clear_cache()
+        return super(Prefix, self).save(*args, **kwargs)
+
     def delete(self, *args, **kwargs):
         Prefix.objects.clear_cache()
         return super(Prefix, self).delete(*args, **kwargs)
+
+    def strip_inavailable_prefixes(self):
+        qs = self.thread_set
+        if self.forums:
+            qs = qs.exclude(forum__in=self.forums.all())
+        qs.update(prefix=None)
 
     def set_name(self, name):
         self.name = name

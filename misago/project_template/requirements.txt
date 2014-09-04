@@ -1,6 +1,6 @@
-https://github.com/django/django/archive/stable/1.7.x.zip#egg=django
 beautifulsoup4==4.3.2
 bleach==1.4
+django==1.7
 django-debug-toolbar==1.2.1
 django-crispy-forms==1.4.0
 django-mptt==0.6.1
