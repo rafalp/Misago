@@ -134,7 +134,14 @@ class ForumView(FilterThreadsMixin, OrderThreadsMixin, ThreadsView):
         for thread in threads:
             thread.forum = forum
 
+        self.prefix_threads(threads, forum.prefixes)
+
         return page, threads
+
+    def prefix_threads(self, threads, prefixes):
+        prefixes_dict = dict([(p.pk, p) for p in prefixes])
+        for thread in threads:
+            thread.prefix = prefixes_dict.get(thread.prefix_id)
 
     def order_querysets(self, order_by, threads, announcements):
         if order_by == 'recently-replied':
@@ -189,9 +196,6 @@ class ForumView(FilterThreadsMixin, OrderThreadsMixin, ThreadsView):
             else:
                 queryset = queryset.filter(starter_id=0)
 
-        return queryset
-
-    def set_custom_filter(self, request, forum, queryset, filter_by):
         return queryset
 
     def get_threads_queryset(self, request, forum):

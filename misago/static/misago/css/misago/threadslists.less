@@ -14,6 +14,7 @@
         padding-top: @padding-base-vertical + 1px;
         padding-bottom: @padding-base-vertical + 1px;
 
+
         // Thread icon
         //
         //==
@@ -45,12 +46,18 @@
         //==
         .thread-flags {
           float: right;
-          overflow: auto;
           position: relative;
           top: 3px;
 
           li {
             float: left;
+            overflow: visible;
+
+            .label {
+              border-radius: @border-radius-small;
+
+              font-weight: normal;
+            }
 
             .fa, .glyphicon {
               .opacity(0.5);

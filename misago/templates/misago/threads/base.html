@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load humanize i18n misago_avatars %}
+{% load humanize i18n misago_avatars misago_dates %}
 
 {% block content %}
 <div class="container">
@@ -38,6 +38,13 @@
               </a>
 
               <ul class="list-unstyled thread-flags">
+                {% if thread.prefix %}
+                <li>
+                  <span class="label label-solo label-{{ thread.prefix.css_class|default:"default" }}">
+                    {{ thread.prefix.name }}
+                  </span>
+                </li>
+                {% endif %}
                 {% if thread.has_reported_posts %}
                 <li class="tooltip-top" title="{% trans "Reported posts" %}">
                   <span class="fa fa-exclamation-triangle fa-fw fa-lg"></span>
@@ -86,7 +93,7 @@
               {% endif %}
 
               <a href="#" class="dynamic time-ago tooltip-top" data-timestamp="{{ thread.last_post_on|date:"c" }}" title="{% blocktrans with last_post=thread.last_post_on|date %}Last post from {{ last_post }}{% endblocktrans %}">
-                {{ thread.last_post_on|date }}
+                {{ thread.last_post_on|compact_date }}
               </a>
               {% endblock thread-stats %}
             </div>

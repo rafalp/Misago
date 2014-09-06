@@ -3,7 +3,7 @@
 <div class="btn-group pull-left">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
     {% trans "Show:" %}{% if filter_by.is_label %}
-    <span class="label{% if filter_by.css_class %} label-{{ filter_by.css_class }}{% endif %}">
+    <span class="label label-{{ filter_by.css_class|default:"default" }}">
       {{ filter_by.name }}
     </span>
     {% else %}
@@ -18,7 +18,7 @@
     <li>
       <a href="{{ filtering.url }}">
         {% if filtering.is_label %}
-        <span class="label label-solo{% if filtering.css_class %} label-{{ filtering.css_class }}{% endif %}">
+        <span class="label label-sololabel-{{ filtering.css_class|default:"default" }}">
           {{ filtering.name }}
         </span>
         {% else %}
