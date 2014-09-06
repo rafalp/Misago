@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('slug', models.SlugField(max_length=255)),
                 ('css_class', models.CharField(max_length=255, null=True, blank=True)),
-                ('forums', models.ManyToManyField(related_name=b'labels', to='misago_forums.Forum')),
+                ('forums', models.ManyToManyField(to='misago_forums.Forum')),
             ],
             options={
             },
@@ -136,7 +136,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='thread',
             name='last_poster',
-            field=models.ForeignKey(related_name=b'+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True),
+            field=models.ForeignKey(related_name=b'last_poster_set', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True),
             preserve_default=True,
         ),
         migrations.AddField(
