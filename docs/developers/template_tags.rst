@@ -63,7 +63,7 @@ misago_dates
 ``compact_date`` filter
 -----------------------
 
-Filter that formats date according to format defines in ``MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH`` setting if date is in current year, or ``MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH_YEAR`` if not. Defaults to "7 may" for same year dates and "23 may 13" for past year dates.
+Filter that formats date according to format defines in ``MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH`` setting if date is in current year, or ``MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH_YEAR`` if not. Defaults to "7 may" for same year dates and "may '13" for past years dates.
 
 
 misago_editor
