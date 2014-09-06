@@ -3,9 +3,9 @@
   {% for forum in forums %}
   <li class="list-group-item">
     {% if forum.role == 'redirect' %}
-    <span class="forum-icon fa fa-link fa-fw"></span>
+    <span class="forum-icon fa fa-link fa-fw tooltip-top" title="{% trans "Redirect forum" %}"></span>
     {% else %}
-    <span class="forum-icon fa fa-comment{% if forum.is_read %}-o{% else %} new{% endif %} fa-fw"></span>
+    <span class="forum-icon fa fa-comment{% if forum.is_read %}-o{% else %} new{% endif %} fa-fw tooltip-top" title="{% if forum.is_read %}{% trans "Forum has no new posts." %}{% else %}{% trans "Forum has new posts." %}{% endif %}"></span>
     {% endif %}
 
     <a href="{{ forum.get_absolute_url }}" class="item-title forum-name">{{ forum.name }}</a>

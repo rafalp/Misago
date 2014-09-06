@@ -135,6 +135,7 @@ class ForumView(FilterThreadsMixin, OrderThreadsMixin, ThreadsView):
             thread.forum = forum
 
         self.label_threads(threads, forum.labels)
+        self.make_threads_read_aware(request.user, threads)
 
         return page, threads
 
@@ -243,7 +244,6 @@ class ForumView(FilterThreadsMixin, OrderThreadsMixin, ThreadsView):
 
         page, threads = self.get_threads(
             request, forum, kwargs, order_by, filter_by)
-        self.add_threads_reads(request, threads)
 
         return self.render(request, {
             'forum': forum,

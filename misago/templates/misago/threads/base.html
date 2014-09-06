@@ -9,27 +9,27 @@
     <div class="table-panel">
       <ul class="list-group">
         {% for thread in threads %}
-        <li class="list-group-item{% if thread.is_new %} new{% endif %}">
+        <li class="list-group-item{% if not thread.is_read %} new{% endif %}">
           <div class="row">
 
             <div class="col-md-8">
               {% if thread.is_announcement %}
-                {% if thread.is_new %}
-                <span class="thread-icon tooltip-top fa fa-star fa-lg fa-fw" title="{% trans "Announcement, unread" %}"></span>
+                {% if thread.is_read %}
+                <span class="thread-icon tooltip-top fa fa-star-o fa-lg fa-fw" title="{% trans "Announcement, has no unread posts" %}"></span>
                 {% else %}
-                <span class="thread-icon tooltip-top fa fa-star-o fa-lg fa-fw" title="{% trans "Announcement, read" %}"></span>
+                <span class="thread-icon tooltip-top fa fa-star fa-lg fa-fw" title="{% trans "Announcement, has unread posts" %}"></span>
                 {% endif %}
               {% elif thread.is_pinned %}
-                {% if thread.is_new %}
-                <span class="thread-icon tooltip-top fa fa-bookmark fa-lg fa-fw" title="{% trans "Pinned, unread" %}"></span>
+                {% if thread.is_read %}
+                <span class="thread-icon tooltip-top fa fa-bookmark-o fa-lg fa-fw" title="{% trans "Pinned, has no unread posts" %}"></span>
                 {% else %}
-                <span class="thread-icon tooltip-top fa fa-bookmark-o fa-lg fa-fw" title="{% trans "Pinned, read" %}"></span>
+                <span class="thread-icon tooltip-top fa fa-bookmark fa-lg fa-fw" title="{% trans "Pinned, has unread posts" %}"></span>
                 {% endif %}
               {% else %}
-                {% if thread.is_new %}
-                <span class="thread-icon tooltip-top fa fa-circle fa-lg fa-fw" title="{% trans "Unread posts" %}"></span>
+                {% if thread.is_read %}
+                <span class="thread-icon tooltip-top fa fa-circle-thin fa-lg fa-fw" title="{% trans "Thread has no unread posts" %}"></span>
                 {% else %}
-                <span class="thread-icon tooltip-top fa fa-circle-thin fa-lg fa-fw" title="{% trans "Read posts" %}"></span>
+                <span class="thread-icon tooltip-top fa fa-circle fa-lg fa-fw" title="{% trans "Thread has unread posts" %}"></span>
                 {% endif %}
               {% endif %}
 

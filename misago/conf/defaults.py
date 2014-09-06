@@ -125,6 +125,7 @@ INSTALLED_APPS = (
     'misago.legal',
     'misago.forums',
     'misago.threads',
+    'misago.readtracker',
     'misago.faker',
 )
 
@@ -276,6 +277,13 @@ MISAGO_AVATAR_SERVER_PATH = '/user-avatar'
 # or you want those to be more dynamic, give this setting lower value
 # You don't have to be overzelous with this as user rankings are cached for 24h
 MISAGO_RANKING_LENGTH = 30
+
+
+# Controls amount of data used in resolving read/unread states of threads and
+# forums. Any activity older than number of days below is assumed to be read
+# and not tracked anymore. Active forums can try lowering this value while
+# less active ones may wish to increase this number
+MISAGO_READ_RECORD_LENGTH = 28
 
 
 # X-Sendfile
