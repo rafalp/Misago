@@ -18,7 +18,7 @@
     <li>
       <a href="{{ filtering.url }}">
         {% if filtering.is_label %}
-        <span class="label label-sololabel-{{ filtering.css_class|default:"default" }}">
+        <span class="label label-solo label-{{ filtering.css_class|default:"default" }}">
           {{ filtering.name }}
         </span>
         {% else %}
