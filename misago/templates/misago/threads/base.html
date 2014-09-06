@@ -37,6 +37,31 @@
                 {{ thread.title }}
               </a>
 
+            </div>
+            {% block thread-extra %}
+            <div class="col-md-4 thread-stats">
+              {% block thread-stats %}
+              <a href="#" class="last-post">
+                <span class="dynamic time-ago-compact tooltip-top" data-timestamp="{{ thread.last_post_on|date:"c" }}" title="{% blocktrans with last_post=thread.last_post_on|date:"DATETIME_FORMAT" %}Last post from {{ last_post }}{% endblocktrans %}">{{ thread.last_post_on|compact_date|lower }}</span>
+              </a>
+
+              {% if thread.last_poster_id %}
+              <a href="{% url USER_PROFILE_URL user_slug=thread.last_poster_slug user_id=thread.last_poster_id %}" class="thread-author tooltip-top" title="{% blocktrans with user=thread.last_poster_name %}Last post by {{ user }}{% endblocktrans %}">
+                <img src="{{ thread.last_poster_id|avatar:25 }}" alt="{% trans "Avatar" %}" class="avatar">
+              </a>
+              {% else %}
+              <span class="thread-author tooltip-top" title="{% blocktrans with user=thread.last_poster_name %}Last post by {{ user }}{% endblocktrans %}">
+                <img src="{% blankavatar 25 %}" alt="{% trans "Avatar" %}" class="avatar">
+              </span>
+              {% endif %}
+
+              <div class="thread-replies">
+                <div class="tooltip-top" title="{% blocktrans trimmed with replies=thread.replies|intcomma count counter=thread.replies %}{{ replies }} reply{% plural %}{{ replies }} replies{% endblocktrans %}">
+                  <span class="glyphicon glyphicon-comment"></span>
+                  {{ thread.replies|intcomma }}
+                </div>
+              </div>
+
               <ul class="list-unstyled thread-flags">
                 {% if thread.prefix %}
                 <li>
@@ -71,30 +96,6 @@
                 </li>
                 {% endif %}
               </ul>
-            </div>
-            {% block thread-extra %}
-            <div class="col-md-4 thread-stats">
-              {% block thread-stats %}
-              <div class="thread-replies">
-                <div class="tooltip-top" title="{% blocktrans trimmed with replies=thread.replies|intcomma count counter=thread.replies %}{{ replies }} reply{% plural %}{{ replies }} replies{% endblocktrans %}">
-                  <span class="glyphicon glyphicon-comment"></span>
-                  {{ thread.replies|intcomma }}
-                </div>
-              </div>
-
-              {% if thread.last_poster_id %}
-              <a href="{% url USER_PROFILE_URL user_slug=thread.last_poster_slug user_id=thread.last_poster_id %}" class="thread-author tooltip-top" title="{% blocktrans with user=thread.last_poster_name %}Last post by {{ user }}{% endblocktrans %}">
-                <img src="{{ thread.last_poster_id|avatar:25 }}" alt="{% trans "Avatar" %}" class="avatar">
-              </a>
-              {% else %}
-              <span class="thread-author tooltip-top" title="{% blocktrans with user=thread.last_poster_name %}Last post by {{ user }}{% endblocktrans %}">
-                <img src="{% blankavatar 25 %}" alt="{% trans "Avatar" %}" class="avatar">
-              </span>
-              {% endif %}
-
-              <a href="#" class="dynamic time-ago-compact tooltip-top" data-timestamp="{{ thread.last_post_on|date:"c" }}" title="{% blocktrans with last_post=thread.last_post_on|date %}Last post from {{ last_post }}{% endblocktrans %}">
-                {{ thread.last_post_on|compact_date|lower }}
-              </a>
               {% endblock thread-stats %}
             </div>
             {% endblock thread-extra %}
