@@ -1,7 +1,7 @@
 from misago.markup import Editor
 
 from misago.threads.checksums import update_post_checksum
-from misago.threads.forms.reply import ReplyForm, ThreadForm
+from misago.threads.forms.posting import ReplyForm, ThreadForm
 from misago.threads.posting import PostingMiddleware, START, REPLY, EDIT
 
 

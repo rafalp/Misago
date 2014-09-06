@@ -1,4 +1,4 @@
-from misago.threads.forms.reply import ThreadWeightForm
+from misago.threads.forms.posting import ThreadWeightForm
 from misago.threads.posting import PostingMiddleware
 
 

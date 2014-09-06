@@ -1,4 +1,4 @@
-from misago.threads.forms.reply import ThreadCloseForm
+from misago.threads.forms.posting import ThreadCloseForm
 from misago.threads.posting import PostingMiddleware
 
 

@@ -118,16 +118,23 @@ class ThreadPrefixFormBase(forms.Form):
     legend = _("Prefix")
     template = "misago/posting/threadprefixform.html"
 
-    prefix = forms.TypedChoiceField(label=_("Thread weight"), initial=0,
-                                    choices=(
-                                        (0, _("Standard")),
-                                        (1, _("Pinned")),
-                                        (2, _("Announcement")),
-                                    ))
-
 
 def ThreadPrefixForm(*args, **kwargs):
-    return ThreadPrefixFormBase(*args, **kwargs)
+    prefixes = kwargs.pop('prefixes')
+
+    choices = [(0, _("No prefix"))]
+    choices.extend([(prefix.pk, prefix.name ) for prefix in prefixes])
+
+    field = forms.TypedChoiceField(
+        label=_("Thread prefix"),
+        coerce=int,
+        choices=choices)
+
+    FormType = type("ThreadPrefixFormFinal",
+                    (ThreadPrefixFormBase,),
+                    {'prefix': field})
+
+    return FormType(*args, **kwargs)
 
 
 class ThreadWeightForm(forms.Form):
