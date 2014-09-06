@@ -1,5 +1,5 @@
 {% extends "misago/profile/base.html" %}
-{% load humanize i18n misago_avatars misago_capture misago_pagination %}
+{% load humanize i18n misago_avatars misago_capture misago_dates misago_pagination %}
 
 
 {% block meta-description %}{% blocktrans trimmed with user=profile.username warnings=warnings.paginator.count|intcomma joined_on=profile.joined_on|date count counter=warnings.paginator.count %}
@@ -116,7 +116,7 @@
             <strong>{{ warning.giver_username }}</strong>,
             {% endif %}
             <abbr class="tooltip-top dynamic time-ago" title="{{ warning.given_on }}" data-timestamp="{{ warning.given_on|date:"c" }}">
-              {{ warning.given_on|date }}
+              {{ warning.given_on|compact_date }}
             </abbr>
           </li>
           {% if warning.is_canceled %}
@@ -132,7 +132,7 @@
             {% endcapture %}
             {% capture trimmed as canceled %}
             <abbr class="tooltip-top dynamic time-ago" title="{{ warning.canceled_on }}" data-timestamp="{{ warning.canceled_on|date:"c" }}">
-              {{ warning.canceled_on|date }}
+              {{ warning.canceled_on|compact_date }}
             </abbr>
             {% endcapture %}
             {% blocktrans trimmed with user=canceler|safe canceled=canceled|safe %}
