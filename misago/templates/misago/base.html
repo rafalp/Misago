@@ -33,6 +33,8 @@
     <script lang="JavaScript">
       var is_authenticated = {{ user.is_authenticated|yesno:"true,false" }};
 
+      var lang_time_units = "{% trans "smhd" %}";
+
       var lang_yes = "{% trans "Yes" %}";
       var lang_no = "{% trans "No" %}";
       var ajax_errors = {
