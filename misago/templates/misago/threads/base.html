@@ -62,10 +62,10 @@
               </div>
 
               <ul class="list-unstyled thread-flags">
-                {% if thread.prefix %}
+                {% if thread.label %}
                 <li>
-                  <span class="label label-solo label-{{ thread.prefix.css_class|default:"default" }}">
-                    {{ thread.prefix.name }}
+                  <span class="label label-solo label-{{ thread.label.css_class|default:"default" }}">
+                    {{ thread.label.name }}
                   </span>
                 </li>
                 {% endif %}

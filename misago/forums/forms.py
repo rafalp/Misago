@@ -45,6 +45,9 @@ class ForumListLazyQueryset(object):
     def exclude(self, *args, **kwargs):
         return self.all().exclude(*args, **kwargs)
 
+    def none(self):
+        return Forum.objects.none()
+
     def __len__(self):
         return len(self.all())
 

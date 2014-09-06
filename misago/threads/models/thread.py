@@ -17,9 +17,9 @@ PINNED = 1
 class Thread(models.Model):
     forum = models.ForeignKey('misago_forums.Forum')
     weight = models.PositiveIntegerField(default=0, db_index=True)
-    prefix = models.ForeignKey('misago_threads.Prefix',
-                               null=True, blank=True,
-                               on_delete=models.SET_NULL)
+    label = models.ForeignKey('misago_threads.Label',
+                              null=True, blank=True,
+                              on_delete=models.SET_NULL)
     title = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
     replies = models.PositiveIntegerField(default=0, db_index=True)

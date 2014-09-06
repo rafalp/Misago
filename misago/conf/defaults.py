@@ -172,7 +172,7 @@ MISAGO_MARKUP_EXTENSIONS = ()
 
 MISAGO_POSTING_MIDDLEWARES = (
     'misago.threads.posting.reply.ReplyFormMiddleware',
-    'misago.threads.posting.threadprefix.ThreadPrefixFormMiddleware',
+    'misago.threads.posting.threadlabel.ThreadLabelFormMiddleware',
     'misago.threads.posting.threadweight.ThreadWeightFormMiddleware',
     'misago.threads.posting.threadclose.ThreadCloseFormMiddleware',
     'misago.threads.posting.recordedit.RecordEditMiddleware',

@@ -113,26 +113,26 @@ class ThreadForm(ReplyForm):
             raise forms.ValidationError(errors)
 
 
-class ThreadPrefixFormBase(forms.Form):
+class ThreadLabelFormBase(forms.Form):
     is_supporting = True
-    legend = _("Prefix")
-    template = "misago/posting/threadprefixform.html"
+    legend = _("Label")
+    template = "misago/posting/threadlabelform.html"
 
 
-def ThreadPrefixForm(*args, **kwargs):
-    prefixes = kwargs.pop('prefixes')
+def ThreadLabelForm(*args, **kwargs):
+    labels = kwargs.pop('labels')
 
-    choices = [(0, _("No prefix"))]
-    choices.extend([(prefix.pk, prefix.name ) for prefix in prefixes])
+    choices = [(0, _("No label"))]
+    choices.extend([(label.pk, label.name ) for label in labels])
 
     field = forms.TypedChoiceField(
-        label=_("Thread prefix"),
+        label=_("Thread label"),
         coerce=int,
         choices=choices)
 
-    FormType = type("ThreadPrefixFormFinal",
-                    (ThreadPrefixFormBase,),
-                    {'prefix': field})
+    FormType = type("ThreadLabelFormFinal",
+                    (ThreadLabelFormBase,),
+                    {'label': field})
 
     return FormType(*args, **kwargs)
 

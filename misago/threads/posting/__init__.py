@@ -8,8 +8,6 @@ from django.utils import timezone
 from misago.conf import settings
 from misago.core import forms
 
-from misago.threads.models import Prefix
-
 
 START = 0
 REPLY = 1

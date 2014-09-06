@@ -8,7 +8,7 @@ from misago.forums.lists import get_forums_list, get_forum_path
 
 from misago.threads.posting import (PostingInterrupt, EditorFormset,
                                     START, REPLY, EDIT)
-from misago.threads.models import ANNOUNCEMENT, Thread, Prefix
+from misago.threads.models import ANNOUNCEMENT, Thread, Label
 from misago.threads.views.generic.threads import OrderThreadsMixin, ThreadsView
 
 
@@ -77,12 +77,12 @@ class FilterThreadsMixin(object):
                     'name': _("With moderated posts"),
                     'is_label': False,
                 }))
-        for prefix in forum.prefixes:
+        for label in forum.labels:
             filters.append({
-                'type': prefix.slug,
-                'name': prefix.name,
+                'type': label.slug,
+                'name': label.name,
                 'is_label': True,
-                'css_class': prefix.css_class,
+                'css_class': label.css_class,
             })
         return filters
 
@@ -96,9 +96,9 @@ class FilterThreadsMixin(object):
         elif filter_by == 'moderated-posts':
             return queryset.filter(has_moderated_posts=True)
         else:
-            for prefix in forum.prefixes:
-                if prefix.slug == filter_by:
-                    return queryset.filter(prefix_id=prefix.pk)
+            for label in forum.labels:
+                if label.slug == filter_by:
+                    return queryset.filter(label_id=label.pk)
             else:
                 return queryset
 
@@ -134,14 +134,14 @@ class ForumView(FilterThreadsMixin, OrderThreadsMixin, ThreadsView):
         for thread in threads:
             thread.forum = forum
 
-        self.prefix_threads(threads, forum.prefixes)
+        self.label_threads(threads, forum.labels)
 
         return page, threads
 
-    def prefix_threads(self, threads, prefixes):
-        prefixes_dict = dict([(p.pk, p) for p in prefixes])
+    def label_threads(self, threads, labels):
+        labels_dict = dict([(label.pk, label) for label in labels])
         for thread in threads:
-            thread.prefix = prefixes_dict.get(thread.prefix_id)
+            thread.label = labels_dict.get(thread.label_id)
 
     def order_querysets(self, order_by, threads, announcements):
         if order_by == 'recently-replied':
@@ -207,7 +207,7 @@ class ForumView(FilterThreadsMixin, OrderThreadsMixin, ThreadsView):
 
     def dispatch(self, request, *args, **kwargs):
         forum = self.get_forum(request, **kwargs)
-        forum.prefixes = Prefix.objects.get_forum_prefixes(forum)
+        forum.labels = Label.objects.get_forum_labels(forum)
         links_params = self.get_default_link_params(forum)
 
         if forum.lft + 1 < forum.rght:
