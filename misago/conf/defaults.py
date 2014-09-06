@@ -210,8 +210,8 @@ TIME_ZONE = 'UTC'
 
 # Misago specific date formats
 # https://docs.djangoproject.com/en/dev/ref/templates/builtins/#date
-MISAGO_COMPACT_DATE_DAY_MONTH = 'j E'
-MISAGO_COMPACT_DATE_DAY_MONTH_YEAR = 'j E y'
+MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH = 'j M'
+MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH_YEAR = 'j M y'
 
 
 # Use Misago CSRF Failure Page

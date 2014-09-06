@@ -201,6 +201,22 @@ MISAGO_AVATARS_SIZES
 Misago uses avatar cache that prescales avatars to requested sizes. Enter here sizes to which those should be optimized.
 
 
+MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH
+------------------------------------
+
+Date format used by Misago ``compact_date`` filter for dates in this year.
+
+Expects standard Django date format, documented `here <https://docs.djangoproject.com/en/dev/ref/templates/builtins/#date>`_
+
+
+MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH_YEAR
+-----------------------------------------
+
+Date format used by Misago ``compact_date`` filter for dates in past years.
+
+Expects standard Django date format, documented `here <https://docs.djangoproject.com/en/dev/ref/templates/builtins/#date>`_
+
+
 MISAGO_DYNAMIC_AVATAR_DRAWER
 ----------------------------
 

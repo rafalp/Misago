@@ -93,7 +93,7 @@
               {% endif %}
 
               <a href="#" class="dynamic time-ago tooltip-top" data-timestamp="{{ thread.last_post_on|date:"c" }}" title="{% blocktrans with last_post=thread.last_post_on|date %}Last post from {{ last_post }}{% endblocktrans %}">
-                {{ thread.last_post_on|compact_date }}
+                {{ thread.last_post_on|compact_date|lower }}
               </a>
               {% endblock thread-stats %}
             </div>
