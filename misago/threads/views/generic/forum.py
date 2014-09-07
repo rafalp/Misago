@@ -1,13 +1,10 @@
 from django.core.urlresolvers import reverse
-from django.db.models import Q
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy, ugettext as _
 
 from misago.core.shortcuts import paginate
 from misago.forums.lists import get_forums_list, get_forum_path
 
-from misago.threads.posting import (PostingInterrupt, EditorFormset,
-                                    START, REPLY, EDIT)
 from misago.threads.models import ANNOUNCEMENT, Thread, Label
 from misago.threads.permissions import exclude_invisible_threads
 from misago.threads.views.generic.threads import (Helper, Sorting, Threads,

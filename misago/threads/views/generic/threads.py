@@ -1,5 +1,4 @@
 from django.core.urlresolvers import reverse
-from django.db.models import Q
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy, ugettext as _
 
