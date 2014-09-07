@@ -1,4 +1,5 @@
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 
@@ -275,3 +276,43 @@ def allow_start_thread(user, target):
         raise PermissionDenied(_("You don't have permission to start "
                                  "new threads in this forum."))
 can_start_thread = return_boolean(allow_start_thread)
+
+
+"""
+Queryset helpers
+"""
+def exclude_invisible_threads(user, forum, queryset):
+    if user.is_authenticated():
+        condition_author = Q(starter_id=user.id)
+
+        can_mod = forum.acl['can_review_moderated_content']
+        can_hide = forum.acl['can_hide_threads']
+
+        if not can_mod and not can_hide:
+            condition = Q(is_moderated=False) & Q(is_hidden=False)
+            queryset = queryset.filter(condition_author | condition)
+        elif not can_mod:
+            condition = Q(is_moderated=False)
+            queryset = queryset.filter(condition_author | condition)
+        elif not can_hide:
+            condition = Q(is_hidden=False)
+            queryset = queryset.filter(condition_author | condition)
+    else:
+        if not forum.acl['can_review_moderated_content']:
+            queryset = queryset.filter(is_moderated=False)
+        if not forum.acl['can_hide_threads']:
+            queryset = queryset.filter(is_hidden=False)
+
+    return queryset
+
+
+def exclude_invisible_postss(user, forum, queryset):
+    if user.is_authenticated():
+        if not forum.acl['can_review_moderated_content']:
+            condition_author = Q(starter_id=user.id)
+            condition = Q(is_moderated=False)
+            queryset = queryset.filter(condition_author | condition)
+    elif not forum.acl['can_review_moderated_content']:
+            queryset = queryset.filter(is_moderated=False)
+
+    return queryset

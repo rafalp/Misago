@@ -4,6 +4,8 @@ from django.shortcuts import redirect
 from misago.acl import add_acl
 from misago.core.shortcuts import paginate
 from misago.forums.lists import get_forum_path
+from misago.readtracker import (make_thread_read_aware, make_posts_read_aware,
+                                sync_thread_read)
 from misago.users.online.utils import get_user_state
 
 from misago.threads.views.generic.base import ViewBase
@@ -53,7 +55,11 @@ class ThreadView(ViewBase):
         self.check_forum_permissions(request, forum)
         self.check_thread_permissions(request, thread)
 
+        make_thread_read_aware(request.user, thread)
+
         page, posts = self.get_posts(request.user, forum, thread, kwargs)
+        make_posts_read_aware(thread, posts)
+        sync_thread_read(request.user, thread, posts[-1])
 
         return self.render(request, {
             'forum': forum,

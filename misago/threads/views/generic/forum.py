@@ -9,6 +9,7 @@ from misago.forums.lists import get_forums_list, get_forum_path
 from misago.threads.posting import (PostingInterrupt, EditorFormset,
                                     START, REPLY, EDIT)
 from misago.threads.models import ANNOUNCEMENT, Thread, Label
+from misago.threads.permissions import exclude_invisible_threads
 from misago.threads.views.generic.threads import OrderThreadsMixin, ThreadsView
 
 
@@ -167,28 +168,7 @@ class ForumView(FilterThreadsMixin, OrderThreadsMixin, ThreadsView):
         return threads, announcements
 
     def filter_all_querysets(self, request, forum, queryset):
-        if request.user.is_authenticated():
-            condition_author = Q(starter_id=request.user.id)
-
-            can_mod = forum.acl['can_review_moderated_content']
-            can_hide = forum.acl['can_hide_threads']
-
-            if not can_mod and not can_hide:
-                condition = Q(is_moderated=False) & Q(is_hidden=False)
-                queryset = queryset.filter(condition_author | condition)
-            elif not can_mod:
-                condition = Q(is_moderated=False)
-                queryset = queryset.filter(condition_author | condition)
-            elif not can_hide:
-                condition = Q(is_hidden=False)
-                queryset = queryset.filter(condition_author | condition)
-        else:
-            if not forum.acl['can_review_moderated_content']:
-                queryset = queryset.filter(is_moderated=False)
-            if not forum.acl['can_hide_threads']:
-                queryset = queryset.filter(is_hidden=False)
-
-        return queryset
+        return exclude_invisible_threads(request.user, forum, queryset)
 
     def filter_threads_queryset(self, request, forum, queryset):
         if forum.acl['can_see_own_threads']:

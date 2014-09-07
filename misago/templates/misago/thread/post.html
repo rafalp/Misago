@@ -29,6 +29,11 @@
         <a href="" class="post-date tooltip-top dynamic time-ago" title="{{ post.posted_on }}" data-timestamp="{{ post.posted_on|date:"c" }}">
           {{ post.posted_on|date }}
         </a>
+
+        {% if not post.is_read %}
+        <span class="text-warning">{% trans "New" %}</span>
+        {% endif %}
+
       </div>
       <div class="panel-body">
         {% if post.is_valid %}
