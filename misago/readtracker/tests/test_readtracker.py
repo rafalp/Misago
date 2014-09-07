@@ -160,3 +160,77 @@ class ForumsTrackerTests(ReadTrackerTests):
         forumstracker.sync_record(self.user, self.forum)
         forumstracker.make_read_aware(self.user, self.forums)
         self.assertFalse(self.forum.is_read)
+
+
+class ThreadsTrackerTests(ReadTrackerTests):
+    def setUp(self):
+        super(ThreadsTrackerTests, self).setUp()
+
+        self.thread = self.post_thread(timezone.now() - timedelta(days=10))
+        self.reply_thread()
+
+    def reply_thread(self, is_hidden=False, is_moderated=False):
+        post = Post.objects.create(
+            forum=self.forum,
+            thread=self.thread,
+            poster=self.user,
+            poster_name=self.user.username,
+            poster_ip='127.0.0.1',
+            posted_on=self.thread.last_post_on + timedelta(minutes=5),
+            updated_on=self.thread.last_post_on + timedelta(minutes=5),
+            original='test',
+            parsed='test',
+            checksum='nope',
+            is_hidden=is_hidden,
+            is_moderated=is_moderated)
+        self.thread.synchronize()
+        self.thread.save()
+        self.forum.synchronize()
+        self.forum.save()
+
+        if not is_moderated:
+            self.post = post
+        return post
+
+    def test_thread_read_for_guest(self):
+        """threads are always read for guests"""
+        threadstracker.make_read_aware(self.anon, self.thread)
+        self.assertTrue(self.thread.is_read)
+
+        threadstracker.make_read_aware(self.anon, [self.thread])
+        self.assertTrue(self.thread.is_read)
+
+    def test_thread_unread_for_user(self):
+        """thread is unread for user"""
+        threadstracker.make_read_aware(self.user, self.thread)
+        self.assertFalse(self.thread.is_read)
+
+    def test_thread_read(self):
+        """thread read flag is set for user, then its set as unread by reply"""
+        add_acl(self.user, self.forums)
+        threadstracker.make_read_aware(self.user, self.thread)
+        self.assertFalse(self.thread.is_read)
+
+        threadstracker.read_thread(self.user, self.thread, self.post)
+        threadstracker.make_read_aware(self.user, self.thread)
+        self.assertTrue(self.thread.is_read)
+        forumstracker.make_read_aware(self.user, self.forums)
+        self.assertTrue(self.forum.is_read)
+
+        self.thread.last_post_on = timezone.now()
+        self.thread.save()
+        self.forum.synchronize()
+        self.forum.save()
+
+        self.reply_thread()
+        threadstracker.make_read_aware(self.user, self.thread)
+        self.assertFalse(self.thread.is_read)
+        forumstracker.make_read_aware(self.user, self.forums)
+        self.assertFalse(self.forum.is_read)
+
+        posts = [post for post in self.thread.post_set.order_by('id')]
+        threadstracker.make_posts_read_aware(self.thread, posts)
+
+        for post in posts[:-1]:
+            self.assertTrue(post.is_read)
+        self.assertFalse(posts[-1].is_read)

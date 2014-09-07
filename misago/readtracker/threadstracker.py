@@ -74,6 +74,12 @@ def make_posts_read_aware(thread, posts):
                 post.is_read = True
 
 
+def read_thread(user, thread, last_read_reply):
+    if not thread.is_read:
+        if thread.last_read_on < last_read_reply.updated_on:
+            sync_record(user, thread, last_read_reply)
+
+
 def count_read_replies(user, thread, last_read_reply):
     if last_read_reply.updated_on >= thread.last_read_on:
         return 0
@@ -82,12 +88,6 @@ def count_read_replies(user, thread, last_read_reply):
         queryset = thread.post_set.filter(last_read_on__lte=last_reply_date)
         queryset = queryset.filter(is_moderated=False)
         return queryset.count()
-
-
-def read_thread(user, thread, last_read_reply):
-    if not thread.is_read:
-        if thread.last_read_on < last_read_reply.updated_on:
-            sync_record(user, thread, last_read_reply)
 
 
 def sync_record(user, thread, last_read_reply):
