@@ -2,14 +2,14 @@
 Misago
 ======
 
-.. image:: https://travis-ci.org/rafalp/Misago.png?branch=future
+.. image:: https://travis-ci.org/rafalp/Misago.png?branch=master
   :target: https://travis-ci.org/rafalp/Misago
 
-.. image:: https://coveralls.io/repos/rafalp/Misago/badge.png?branch=future
-  :target: https://coveralls.io/r/rafalp/Misago?branch=future
+.. image:: https://coveralls.io/repos/rafalp/Misago/badge.png?branch=master
+  :target: https://coveralls.io/r/rafalp/Misago?branch=master
 
-.. image:: https://landscape.io/github/rafalp/Misago/future/landscape.png
-  :target: https://landscape.io/github/rafalp/Misago/future
+.. image:: https://landscape.io/github/rafalp/Misago/master/landscape.png
+  :target: https://landscape.io/github/rafalp/Misago/master
 
 
 **Development Status: Pre-Alpha**
@@ -26,7 +26,7 @@ If you can run Python apps on your hosting and you are looking for modern soluti
 Installing and updating
 -----------------------
 
-Please note that branch *future* is used for project's codebase cleanup and is not functional at the time of writing. If you want to give Misago a spin, feel free to play with one of `previous releases <https://github.com/rafalp/Misago/releases>`_.
+Please note that *master* branch is used for project's codebase cleanup and is not functional at the time of writing. If you want to give Misago a spin, feel free to play with one of `previous releases <https://github.com/rafalp/Misago/releases>`_.
 
 To start Misago site, first setup and activate virtual environment for it and then fire following commands::
 
