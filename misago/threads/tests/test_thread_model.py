@@ -115,15 +115,15 @@ class ThreadModelTests(TestCase):
             is_hidden=True)
 
         self.thread.synchronize()
-        self.assertEqual(self.thread.last_post, post)
-        self.assertEqual(self.thread.last_post_on, post.posted_on)
+        self.assertEqual(self.thread.last_post, hidden_post)
+        self.assertEqual(self.thread.last_post_on, hidden_post.posted_on)
         self.assertEqual(self.thread.last_poster, user)
         self.assertEqual(self.thread.last_poster_name, user.username)
         self.assertEqual(self.thread.last_poster_slug, user.slug)
         self.assertFalse(self.thread.has_reported_posts)
         self.assertTrue(self.thread.has_moderated_posts)
         self.assertTrue(self.thread.has_hidden_posts)
-        self.assertEqual(self.thread.replies, 1)
+        self.assertEqual(self.thread.replies, 2)
 
         # unhide post
         hidden_post.is_hidden = False
