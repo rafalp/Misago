@@ -102,8 +102,7 @@ class Forum(MPTTModel):
         return super(Forum, self).delete(*args, **kwargs)
 
     def synchronize(self):
-        counted_criteria = {'is_hidden': False, 'is_moderated': False}
-        self.threads = self.thread_set.filter(**counted_criteria).count()
+        self.threads = self.thread_set.filter(is_moderated=False).count()
 
         if self.threads:
             replies_sum = self.thread_set.aggregate(models.Sum('replies'))
@@ -112,8 +111,8 @@ class Forum(MPTTModel):
             self.posts = 0
 
         if self.threads:
-            last_thread_qs = self.thread_set.filter(**counted_criteria)
-            last_thread = last_thread_qs.order_by('-last_post_id')[:1][0]
+            last_thread_qs = self.thread_set.filter(is_moderated=False)
+            last_thread = last_thread_qs.order_by('-last_post_on')[:1][0]
             self.set_last_thread(last_thread)
         else:
             self.empty_last_thread()

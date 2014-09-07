@@ -1,5 +1,5 @@
 from misago.acl import add_acl
-from misago.readtracker import make_forums_read_aware
+from misago.readtracker import forumstracker
 
 from misago.forums.models import Forum
 
@@ -33,7 +33,7 @@ def get_forums_list(user, parent=None):
             forums_dict[forum.parent_id].subforums.append(forum)
 
     add_acl(user, forums_list)
-    make_forums_read_aware(user, forums_list)
+    forumstracker.make_read_aware(user, forums_list)
 
     for forum in reversed(visible_forums):
         if forum.acl['can_browse']:

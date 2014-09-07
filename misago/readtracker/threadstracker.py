@@ -1,19 +1,20 @@
+from misago.readtracker import forumstracker
 from misago.readtracker.dates import cutoff_date, is_date_tracked
-from misago.readtracker.forums import sync_forum_record
 
 
-__all__ = [
-    'make_threads_read_aware',
-    'make_threads_read',
-    'make_thread_read_aware',
-    'make_posts_read_aware',
-    'sync_thread_read',
-]
+__all__ = ['make_read_aware', 'read_thread']
+
+
+def make_read_aware(user, target):
+    if hasattr(target, '__iter__'):
+        make_threads_read_aware(user, target)
+    else:
+        make_thread_read_aware(user, target)
 
 
 def make_threads_read_aware(user, threads):
     if user.is_anonymous():
-        make_threads_read(threads)
+        make_read(threads)
         return None
 
     threads_dict = {}
@@ -35,7 +36,7 @@ def make_threads_read_aware(user, threads):
                 thread.unread_replies = thread.replies - record.read_replies
 
 
-def make_threads_read(threads):
+def make_read(threads):
     for thread in threads:
         thread.unread_replies = 0
         thread.is_read = True
@@ -83,13 +84,13 @@ def count_read_replies(user, thread, last_read_reply):
         return queryset.count()
 
 
-def sync_thread_read(user, thread, last_read_reply):
+def read_thread(user, thread, last_read_reply):
     if not thread.is_read:
         if thread.last_read_on < last_read_reply.updated_on:
-            read_thread(user, thread, last_read_reply)
+            sync_record(user, thread, last_read_reply)
 
 
-def read_thread(user, thread, last_read_reply):
+def sync_record(user, thread, last_read_reply):
     read_replies = count_read_replies(user, thread, last_read_reply)
     if thread.read_record:
         thread.read_record.read_replies = read_replies
@@ -103,4 +104,4 @@ def read_thread(user, thread, last_read_reply):
             last_read_on=last_read_reply.updated_on)
 
     if last_read_reply.updated_on == thread.last_post_on:
-        sync_forum_record(user, thread.forum)
+        forumstracker.sync_record(user, thread.forum)

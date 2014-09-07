@@ -125,9 +125,9 @@ class ForumModelTests(TestCase):
         hidden.save()
 
         self.forum.synchronize()
-        self.assertEqual(self.forum.threads, 1)
-        self.assertEqual(self.forum.posts, 1)
-        self.assertEqual(self.forum.last_thread, thread)
+        self.assertEqual(self.forum.threads, 2)
+        self.assertEqual(self.forum.posts, 2)
+        self.assertEqual(self.forum.last_thread, hidden)
 
         moderated.is_moderated = False
         moderated.post_set.update(is_moderated=False)

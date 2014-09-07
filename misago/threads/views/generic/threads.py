@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy, ugettext as _
 
 from misago.core.shortcuts import paginate
-from misago.readtracker import make_threads_read_aware
+from misago.readtracker import threadstracker
 
 from misago.threads.views.generic.base import ViewBase
 
@@ -69,4 +69,4 @@ class ThreadsView(ViewBase):
         return forum.thread_set.all().order_by('-last_post_id')
 
     def make_threads_read_aware(self, user, threads):
-        make_threads_read_aware(user, threads)
+        threadstracker.make_read_aware(user, threads)

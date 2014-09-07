@@ -1,3 +1,5 @@
+from django.dispatch import receiver
+
 from misago.forums.signals import move_forum_content
 from misago.threads.signals import move_thread
 
