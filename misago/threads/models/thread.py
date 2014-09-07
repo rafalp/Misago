@@ -78,8 +78,7 @@ class Thread(models.Model):
         move_thread.send(sender=self)
 
     def synchronize(self):
-        counted_criteria = {'is_hidden': False, 'is_moderated': False}
-        self.replies = self.post_set.filter(**counted_criteria).count()
+        self.replies = self.post_set.filter(is_moderated=False).count()
         if self.replies > 0:
             self.replies -= 1
 
@@ -95,7 +94,7 @@ class Thread(models.Model):
         first_post = self.post_set.order_by('id')[:1][0]
         self.set_first_post(first_post)
 
-        last_post_qs = self.post_set.filter(**counted_criteria).order_by('-id')
+        last_post_qs = self.post_set.filter(is_moderated=False).order_by('-id')
         last_post = last_post_qs[:1]
         if last_post:
             self.set_last_post(last_post[0])
