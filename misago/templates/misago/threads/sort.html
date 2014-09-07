@@ -1,16 +1,16 @@
 {% load i18n %}
 <div class="btn-group pull-left">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-    {% trans "Sort:" %} <strong>{{ order_name }}</strong>
+    {% trans "Sort:" %} <strong>{{ sorting.name }}</strong>
   </button>
   <ul class="dropdown-menu" role="menu">
     <li class="dropdown-title">
       {% trans "Change sorting to:" %}
     </li>
-    {% for order in order_by %}
+    {% for sort in sorting.choices %}
     <li>
-      <a href="{{ order.url }}">
-        {{ order.name }}
+      <a href="{{ sort.url }}">
+        {{ sort.name }}
       </a>
     </li>
     {% endfor %}

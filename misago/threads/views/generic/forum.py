@@ -10,177 +10,223 @@ from misago.threads.posting import (PostingInterrupt, EditorFormset,
                                     START, REPLY, EDIT)
 from misago.threads.models import ANNOUNCEMENT, Thread, Label
 from misago.threads.permissions import exclude_invisible_threads
-from misago.threads.views.generic.threads import OrderThreadsMixin, ThreadsView
+from misago.threads.views.generic.threads import (Helper, Sorting, Threads,
+                                                  ThreadsView)
 
 
-__all__ = ['FilterThreadsMixin', 'ForumView']
+__all__ = ['ForumFiltering', 'ForumThreads', 'ForumView']
 
 
-class FilterThreadsMixin(object):
-    def get_filter_dict(self, filters, filter_by):
-        if filters:
-            if filter_by:
-                for filtering in filters:
-                    if filtering['type'] == filter_by:
-                        return filtering
-            else:
-                return {
-                    'name': _("All threads"),
-                    'is_label': False,
-                }
-        else:
-            return None
+class ForumFiltering(Helper):
+    def __init__(self, forum, link_name, link_params):
+        self.forum = forum
+        self.link_name = link_name
+        self.link_params = link_params.copy()
 
-    def get_filters_dicts(self, filters, exclude_filter, links_params):
-        url_kwargs = links_params.copy()
-        dicts = []
+        self.filters = self.get_available_filters()
 
-        if exclude_filter:
-            url_kwargs.pop('show', None)
-            dicts.append({
-                'url': reverse(self.link_name, kwargs=url_kwargs),
-                'name': _("All threads"),
+    def get_available_filters(self):
+        filters = []
+
+        if self.forum.acl['can_see_all_threads']:
+            filters.append({
+                'type': 'my-threads',
+                'name': _("My threads"),
                 'is_label': False,
             })
 
-        for filtering in filters:
-            if filtering['type'] != exclude_filter:
-                filter_dict = filtering.copy()
-                url_kwargs['show'] = filtering['type']
-                filter_dict['url'] = reverse(self.link_name, kwargs=url_kwargs)
-                dicts.append(filter_dict)
+        if self.forum.acl['can_see_reports']:
+            filters.append({
+                'type': 'reported',
+                'name': _("With reported posts"),
+                'is_label': False,
+            })
 
-        return dicts
+        if self.forum.acl['can_review_moderated_content']:
+            filters.extend(({
+                'type': 'moderated-threads',
+                'name': _("Moderated threads"),
+                'is_label': False,
+            },
+            {
+                'type': 'moderated-posts',
+                'name': _("With moderated posts"),
+                'is_label': False,
+            }))
 
-    def get_available_filters(self, request, forum):
-        filters = []
-        if request.user.is_authenticated():
-            if forum.acl['can_see_all_threads']:
-                filters.append({
-                    'type': 'my-threads',
-                    'name': _("My threads"),
-                    'is_label': False,
-                })
-            if forum.acl['can_see_reports']:
-                filters.append({
-                    'type': 'reported',
-                    'name': _("With reported posts"),
-                    'is_label': False,
-                })
-            if forum.acl['can_review_moderated_content']:
-                filters.extend(({
-                    'type': 'moderated-threads',
-                    'name': _("Moderated threads"),
-                    'is_label': False,
-                },
-                {
-                    'type': 'moderated-posts',
-                    'name': _("With moderated posts"),
-                    'is_label': False,
-                }))
-        for label in forum.labels:
+        for label in self.forum.labels:
             filters.append({
                 'type': label.slug,
                 'name': label.name,
                 'is_label': True,
                 'css_class': label.css_class,
             })
+
         return filters
 
-    def set_custom_filter(self, request, forum, queryset, filter_by):
-        if filter_by == 'my-threads':
-            return queryset.filter(starter_id=request.user.id)
-        elif filter_by == 'reported':
-            return queryset.filter(has_reported_posts=True)
-        elif filter_by == 'moderated-threads':
-            return queryset.filter(is_moderated=True)
-        elif filter_by == 'moderated-posts':
-            return queryset.filter(has_moderated_posts=True)
-        else:
-            for label in forum.labels:
-                if label.slug == filter_by:
-                    return queryset.filter(label_id=label.pk)
+    def clean_kwargs(self, kwargs):
+        show = kwargs.get('show')
+        if show:
+            available_filters = [method['type'] for method in self.filters]
+            if show in available_filters:
+                self.show = show
             else:
-                return queryset
+                kwargs.pop('show')
+        else:
+            self.show = None
+
+        return kwargs
+
+    def filter(self, threads):
+        threads.filter(self.show)
+
+    def get_filtering_dics(self):
+        try:
+            return self._dicts
+        except AttributeError:
+            self._dicts = self.create_dicts()
+            return self._dicts
+
+    def create_dicts(self):
+        dicts = []
+
+        if self.forum.acl['can_see_all_threads']:
+            default_name = _("All threads")
+        else:
+            default_name = _("Your threads")
+
+        self.link_params.pop('show', None)
+        dicts.append({
+            'type': None,
+            'url': reverse(self.link_name, kwargs=self.link_params),
+            'name': default_name,
+            'is_label': False,
+        })
+
+        for filtering in self.filters:
+            self.link_params['show'] = filtering['type']
+            filtering['url'] = reverse(self.link_name, kwargs=self.link_params)
+            dicts.append(filtering)
+
+        return dicts
+
+    @property
+    def is_active(self):
+        return bool(self.show)
+
+    @property
+    def current(self):
+        try:
+            return self._current
+        except AttributeError:
+            for filtering in self.get_filtering_dics():
+                if filtering['type'] == self.show:
+                    self._current = filtering
+                    return filtering
+
+    def choices(self):
+        if self.show:
+            choices = []
+            for filtering in self.get_filtering_dics():
+                if filtering['type'] != self.show:
+                    choices.append(filtering)
+            return choices
+        else:
+            return self.get_filtering_dics()[1:]
 
 
-class ForumView(FilterThreadsMixin, OrderThreadsMixin, ThreadsView):
-    """
-    Basic view for threads lists
-    """
-    template = 'misago/threads/forum.html'
+class ForumThreads(Threads):
+    def __init__(self, user, forum):
+        self.user = user
+        self.forum = forum
 
-    def get_threads(self, request, forum, kwargs,
-                    order_by=None, filter_by=None):
-        org_queryset = self.get_threads_queryset(request, forum)
-        queryset = self.filter_all_querysets(request, forum, org_queryset)
-        queryset = self.set_custom_filter(request, forum, queryset, filter_by)
+        self.queryset = self.make_queryset()
 
+    def make_queryset(self):
+        return exclude_invisible_threads(
+            self.user, self.forum, self.forum.thread_set)
+
+    def filter(self, filter_by):
+        self.filter_by = filter_by
+
+    def sort(self, sort_by):
+        if sort_by[0] == '-':
+            weight = '-weight'
+        else:
+            weight = 'weight'
+        self.queryset = self.queryset.order_by(weight, sort_by)
+
+    def list(self, page=0):
+        queryset = self.filter_threads(self.queryset)
         announcements_qs = queryset.filter(weight=ANNOUNCEMENT)
         threads_qs = queryset.filter(weight__lt=ANNOUNCEMENT)
 
-        threads_qs = self.filter_threads_queryset(request, forum, threads_qs)
+        self._page = paginate(threads_qs, page, 20, 10)
+        self._paginator = self._page.paginator
 
-        threads_qs, announcements_qs = self.order_querysets(
-            order_by, threads_qs, announcements_qs)
-
-        page = paginate(threads_qs, kwargs.get('page', 0), 20, 10)
         threads = []
-
         for announcement in announcements_qs:
             threads.append(announcement)
-        for thread in page.object_list:
+        for thread in self._page.object_list:
             threads.append(thread)
 
         for thread in threads:
-            thread.forum = forum
+            thread.forum = self.forum
 
-        self.label_threads(threads, forum.labels)
-        self.make_threads_read_aware(request.user, threads)
+        self.label_threads(threads, self.forum.labels)
+        self.make_threads_read_aware(threads)
 
-        return page, threads
+        return threads
 
-    def label_threads(self, threads, labels):
-        labels_dict = dict([(label.pk, label) for label in labels])
-        for thread in threads:
-            thread.label = labels_dict.get(thread.label_id)
-
-    def order_querysets(self, order_by, threads, announcements):
-        if order_by == 'recently-replied':
-            threads = threads.order_by('-weight', '-last_post')
-            announcements = announcements.order_by('-last_post')
-        if order_by == 'last-replied':
-            threads = threads.order_by('weight', 'last_post')
-            announcements = announcements.order_by('last_post')
-        if order_by == 'most-replied':
-            threads = threads.order_by('-weight', '-replies')
-            announcements = announcements.order_by('-replies')
-        if order_by == 'least-replied':
-            threads = threads.order_by('weight', 'replies')
-            announcements = announcements.order_by('replies')
-        if order_by == 'newest':
-            threads = threads.order_by('-weight', '-id')
-            announcements = announcements.order_by('-id')
-        if order_by == 'oldest':
-            threads = threads.order_by('weight', 'id')
-            announcements = announcements.order_by('id')
-
-        return threads, announcements
-
-    def filter_all_querysets(self, request, forum, queryset):
-        return exclude_invisible_threads(request.user, forum, queryset)
-
-    def filter_threads_queryset(self, request, forum, queryset):
-        if forum.acl['can_see_own_threads']:
-            if request.user.is_authenticated():
-                queryset = queryset.filter(starter_id=request.user.id)
+    def filter_threads(self, queryset):
+        if self.filter_by == 'my-threads':
+            return queryset.filter(starter_id=self.user.id)
+        else:
+            if self.forum.acl['can_see_own_threads']:
+                if self.user.is_authenticated():
+                    queryset = queryset.filter(starter_id=self.user.id)
+                else:
+                    queryset = queryset.filter(starter_id=0)
+            if self.filter_by == 'reported':
+                return queryset.filter(has_reported_posts=True)
+            elif self.filter_by == 'moderated-threads':
+                return queryset.filter(is_moderated=True)
+            elif self.filter_by == 'moderated-posts':
+                return queryset.filter(has_moderated_posts=True)
             else:
-                queryset = queryset.filter(starter_id=0)
+                for label in self.forum.labels:
+                    if label.slug == self.filter_by:
+                        return queryset.filter(label_id=label.pk)
+                else:
+                    return queryset
 
-        return queryset
+    error_message = ("threads list has to be loaded via call to list() before "
+                     "pagination data will be available")
 
-    def get_threads_queryset(self, request, forum):
-        return forum.thread_set.all().order_by('-last_post_id')
+    @property
+    def page(self):
+        try:
+            return self._page
+        except AttributeError:
+            raise RuntimeError(error_message)
+
+    @property
+    def paginator(self):
+        try:
+            return self._paginator
+        except AttributeError:
+            raise RuntimeError(error_message)
+
+
+class ForumView(ThreadsView):
+    """
+    Basic view for forum threads lists
+    """
+    template = 'misago/threads/forum.html'
+
+    Threads = ForumThreads
+    Sorting = Sorting
+    Filtering = ForumFiltering
 
     def get_default_link_params(self, forum):
         message = "forum views have to define get_default_link_params"
@@ -189,54 +235,39 @@ class ForumView(FilterThreadsMixin, OrderThreadsMixin, ThreadsView):
     def dispatch(self, request, *args, **kwargs):
         forum = self.get_forum(request, **kwargs)
         forum.labels = Label.objects.get_forum_labels(forum)
-        links_params = self.get_default_link_params(forum)
 
         if forum.lft + 1 < forum.rght:
             forum.subforums = get_forums_list(request.user, forum)
         else:
             forum.subforums = []
 
-        if request.user.is_anonymous():
-            if kwargs.get('sort') or kwargs.get('show'):
-                """we don't allow sort/filter for guests"""
-                kwargs.pop('sort', None)
-                kwargs.pop('show', None)
-                return redirect('misago:forum', **kwargs)
+        page_number = kwargs.pop('page', None)
+        cleaned_kwargs = self.clean_kwargs(request, kwargs)
 
-        order_by = self.get_ordering(kwargs)
-        if self.is_ordering_default(kwargs.get('sort')):
-            kwargs.pop('sort')
-            return redirect('misago:forum', **kwargs)
-        elif not self.is_ordering_default(order_by):
-            links_params['sort'] = order_by
+        sorting = self.Sorting(self.link_name, cleaned_kwargs)
+        cleaned_kwargs = sorting.clean_kwargs(cleaned_kwargs)
 
-        available_filters = self.get_available_filters(request, forum)
-        if available_filters and kwargs.get('show'):
-            filter_methods = [f['type'] for f in available_filters]
-            if kwargs.get('show') not in filter_methods:
-                kwargs.pop('show')
-                return redirect('misago:forum', **kwargs)
-            else:
-                filter_by = kwargs.get('show')
-                links_params['show'] = filter_by
-        else:
-            filter_by = None
+        filtering = self.Filtering(forum, self.link_name, cleaned_kwargs)
+        cleaned_kwargs = filtering.clean_kwargs(cleaned_kwargs)
 
-        page, threads = self.get_threads(
-            request, forum, kwargs, order_by, filter_by)
+        threads = self.Threads(request.user, forum)
+        sorting.sort(threads)
+        filtering.filter(threads)
+
+        if cleaned_kwargs != kwargs:
+            return redirect('misago:forum', **cleaned_kwargs)
 
         return self.render(request, {
+            'link_name': self.link_name,
+            'links_params': cleaned_kwargs,
+
             'forum': forum,
             'path': get_forum_path(forum),
-            'page': page,
-            'paginator': page.paginator,
-            'threads': threads,
-            'link_name': self.link_name,
-            'links_params': links_params,
-            'is_filtering': bool(filter_by),
-            'filter_by': self.get_filter_dict(available_filters, filter_by),
-            'filters': self.get_filters_dicts(
-                available_filters, filter_by, links_params),
-            'order_name': self.get_ordering_name(order_by),
-            'order_by': self.get_orderings_dicts(order_by, links_params),
+
+            'threads': threads.list(page_number),
+            'page': threads.page,
+            'paginator': threads.paginator,
+
+            'sorting': sorting,
+            'filtering': filtering,
         })

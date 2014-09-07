@@ -47,10 +47,12 @@
 {% block threads-panel %}
 <div class="table-actions">
   {% include "misago/threads/paginator.html" %}
+
   {% if user.is_authenticated %}
-  {% include "misago/threads/sort.html" %}
-  {% include "misago/threads/show.html" %}
+    {% include "misago/threads/sort.html" %}
+    {% include "misago/threads/show.html" %}
   {% endif %}
+
   {% include "misago/threads/reply_btn.html" %}
 </div>
 
@@ -64,7 +66,7 @@
 
 
 {% block no-threads %}
-{% if is_filtering %}
+{% if filtering.is_active %}
 {% trans "No threads matching criteria exist, or you don't have permission to see them." %}
 <a href="{{ forum.get_absolute_url }}" class="btn btn-primary">
   {% trans "See all threads" %}

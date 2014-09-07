@@ -1,20 +1,19 @@
 {% load i18n %}
-{% if filters %}
 <div class="btn-group pull-left">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-    {% trans "Show:" %}{% if filter_by.is_label %}
-    <span class="label label-{{ filter_by.css_class|default:"default" }}">
-      {{ filter_by.name }}
+    {% trans "Show:" %}{% if filtering.current.is_label %}
+    <span class="label label-{{ filtering.current.css_class|default:"default" }}">
+      {{ filtering.current.name }}
     </span>
     {% else %}
-    <strong>{{ filter_by.name }}</strong>
+    <strong>{{ filtering.current.name }}</strong>
     {% endif %}
   </button>
   <ul class="dropdown-menu" role="menu">
     <li class="dropdown-title">
       {% trans "Show threads:" %}
     </li>
-    {% for filtering in filters %}
+    {% for filtering in filtering.choices %}
     <li>
       <a href="{{ filtering.url }}">
         {% if filtering.is_label %}
@@ -29,4 +28,3 @@
     {% endfor %}
   </ul>
 </div>
-{% endif %}
