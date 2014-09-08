@@ -36,13 +36,8 @@ class WarningTestCase(AuthenticatedUserTestCase):
 class WarnUserTests(WarningTestCase):
     def test_no_permission(self):
         """fail to warn due to permissions"""
-        override_acl(self.user, {
-            'can_warn_users': 0,
-        })
-
-        override_acl(self.test_user, {
-            'can_be_warned': 1,
-        })
+        override_acl(self.user, {'can_warn_users': 0})
+        override_acl(self.test_user, {'can_be_warned': 1})
 
         response = self.client.get(reverse('misago:warn_user',
                                            kwargs=self.link_kwargs))
