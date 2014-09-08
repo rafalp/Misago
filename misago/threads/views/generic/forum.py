@@ -102,6 +102,8 @@ class ForumFiltering(Helper):
 
         for filtering in self.filters:
             self.link_params['show'] = filtering['type']
+            if not filtering['type']:
+                raise Exception(filtering)
             filtering['url'] = reverse(self.link_name, kwargs=self.link_params)
             dicts.append(filtering)
 
