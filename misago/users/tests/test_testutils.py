@@ -68,6 +68,13 @@ class AuthenticatedUserTestCaseTests(AuthenticatedUserTestCase):
         response = self.client.get(reverse('misago:index'))
         self.assertIn(self.user.username, response.content)
 
+    def test_reload_user(self):
+        """reload_user reloads user"""
+        user_pk = self.user.pk
+
+        self.reload_user()
+        self.assertEqual(user_pk, self.user.pk)
+
 
 class SuperUserTestCaseTests(SuperUserTestCase):
     def test_setup(self):

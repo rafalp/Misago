@@ -41,8 +41,12 @@ class AuthenticatedUserTestCase(UserTestCase):
         self.user = self.get_authenticated_user()
         self.login_user(self.user)
 
+    def reload_user(self):
+        User = get_user_model()
+        self.user = User.objects.get(id=self.user.id)
 
-class SuperUserTestCase(UserTestCase):
+
+class SuperUserTestCase(AuthenticatedUserTestCase):
     def setUp(self):
         self.user = self.get_superuser()
         self.login_user(self.user)
