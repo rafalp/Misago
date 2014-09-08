@@ -2,12 +2,12 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 
 from misago.acl.testutils import override_acl
-from misago.admin.testutils import AdminTestCase
 
 from misago.users.models import Ban
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
-class UserModerationTestCase(AdminTestCase):
+class UserModerationTestCase(AuthenticatedUserTestCase):
     def setUp(self):
         super(UserModerationTestCase, self).setUp()
         self.test_user = get_user_model().objects.create_user(
@@ -17,13 +17,13 @@ class UserModerationTestCase(AdminTestCase):
 
 class RenameUserTests(UserModerationTestCase):
     def allow_rename(self):
-        override_acl(self.test_admin, {
+        override_acl(self.user, {
             'can_rename_users': 1,
         })
 
     def test_no_rename_permission(self):
         """user with no permission fails to rename other user"""
-        override_acl(self.test_admin, {
+        override_acl(self.user, {
             'can_rename_users': 0,
         })
 
@@ -54,13 +54,13 @@ class RenameUserTests(UserModerationTestCase):
 
 class ModerateAvatarTests(UserModerationTestCase):
     def allow_avatar_mod(self):
-        override_acl(self.test_admin, {
+        override_acl(self.user, {
             'can_moderate_avatars': 1,
         })
 
     def test_no_avatar_mod_permission(self):
         """user with no permission fails to mod other user avatar"""
-        override_acl(self.test_admin, {
+        override_acl(self.user, {
             'can_moderate_avatars': 0,
         })
 
@@ -106,13 +106,13 @@ class ModerateAvatarTests(UserModerationTestCase):
 
 class ModerateSignatureTests(UserModerationTestCase):
     def allow_signature_mod(self):
-        override_acl(self.test_admin, {
+        override_acl(self.user, {
             'can_moderate_signatures': 1,
         })
 
     def test_no_signature_mod_permission(self):
         """user with no permission fails to mod other user signature"""
-        override_acl(self.test_admin, {
+        override_acl(self.user, {
             'can_moderate_signatures': 0,
         })
 
@@ -160,14 +160,14 @@ class ModerateSignatureTests(UserModerationTestCase):
 
 class BanUserTests(UserModerationTestCase):
     def allow_ban_user(self):
-        override_acl(self.test_admin, {
+        override_acl(self.user, {
             'can_ban_users': 1,
             'max_ban_length': 0,
         })
 
     def test_no_ban_permission(self):
         """user with no permission fails to ban other user"""
-        override_acl(self.test_admin, {
+        override_acl(self.user, {
             'can_ban_users': 0,
         })
 
@@ -199,14 +199,14 @@ class BanUserTests(UserModerationTestCase):
 
 class LiftUserBanTests(UserModerationTestCase):
     def allow_lift_ban(self):
-        override_acl(self.test_admin, {
+        override_acl(self.user, {
             'can_lift_bans': 1,
             'max_lifted_ban_length': 0,
         })
 
     def test_no_lift_ban_permission(self):
         """user with no permission fails to lift user ban"""
-        override_acl(self.test_admin, {
+        override_acl(self.user, {
             'can_lift_bans': 0,
             'max_lifted_ban_length': 0,
         })
@@ -240,7 +240,7 @@ class LiftUserBanTests(UserModerationTestCase):
 class DeleteUserTests(UserModerationTestCase):
     def test_no_delete_permission(self):
         """user with no permission fails to delete other user"""
-        override_acl(self.test_admin, {
+        override_acl(self.user, {
             'can_delete_users_newer_than': 0,
             'can_delete_users_with_less_posts_than': 0,
         })
@@ -253,7 +253,7 @@ class DeleteUserTests(UserModerationTestCase):
 
     def test_delete_user(self):
         """user with permission deletes other user"""
-        override_acl(self.test_admin, {
+        override_acl(self.user, {
             'can_delete_users_newer_than': 5,
             'can_delete_users_with_less_posts_than': 5,
         })

@@ -2,22 +2,22 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 
 from misago.acl.testutils import override_acl
-from misago.admin.testutils import AdminTestCase
 
 from misago.users.models import Ban
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
-class UserProfileViewsTests(AdminTestCase):
+class UserProfileViewsTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(UserProfileViewsTests, self).setUp()
         self.link_kwargs = {
-            'user_slug': self.test_admin.slug,
-            'user_id': self.test_admin.pk
+            'user_slug': self.user.slug,
+            'user_id': self.user.pk
         }
 
     def test_outdated_slugs(self):
         """user profile view redirects to valid slig"""
-        invalid_kwargs = {'user_slug': 'baww', 'user_id': self.test_admin.pk}
+        invalid_kwargs = {'user_slug': 'baww', 'user_id': self.user.pk}
         response = self.client.get(reverse('misago:user_posts',
                                            kwargs=invalid_kwargs))
 
@@ -53,7 +53,7 @@ class UserProfileViewsTests(AdminTestCase):
         for i in xrange(10):
             user_data = ("Follower%s" % i, "foll%s@test.com" % i, "Pass.123")
             followers.append(User.objects.create_user(*user_data))
-            self.test_admin.followed_by.add(followers[-1])
+            self.user.followed_by.add(followers[-1])
 
         response = self.client.get(reverse('misago:user_followers',
                                            kwargs=self.link_kwargs))
@@ -75,7 +75,7 @@ class UserProfileViewsTests(AdminTestCase):
         for i in xrange(10):
             user_data = ("Follower%s" % i, "foll%s@test.com" % i, "Pass.123")
             followers.append(User.objects.create_user(*user_data))
-            followers[-1].followed_by.add(self.test_admin)
+            followers[-1].followed_by.add(self.user)
 
         response = self.client.get(reverse('misago:user_follows',
                                            kwargs=self.link_kwargs))
@@ -94,7 +94,7 @@ class UserProfileViewsTests(AdminTestCase):
                                             kwargs=link_kwargs))
         self.assertEqual(response.status_code, 302)
 
-        test_admin = User.objects.get(id=self.test_admin.pk)
+        test_admin = User.objects.get(id=self.user.pk)
         self.assertEqual(test_admin.following, 1)
 
         test_user = User.objects.get(id=test_user.pk)
@@ -106,7 +106,7 @@ class UserProfileViewsTests(AdminTestCase):
                                             kwargs=link_kwargs))
         self.assertEqual(response.status_code, 302)
 
-        test_admin = User.objects.get(id=self.test_admin.pk)
+        test_admin = User.objects.get(id=self.user.pk)
         self.assertEqual(test_admin.following, 0)
 
         test_user = User.objects.get(id=test_user.pk)
@@ -124,12 +124,12 @@ class UserProfileViewsTests(AdminTestCase):
         response = self.client.post(reverse('misago:block_user',
                                             kwargs=link_kwargs))
         self.assertEqual(response.status_code, 302)
-        self.assertIn(self.test_admin, test_user.blocked_by.all())
+        self.assertIn(self.user, test_user.blocked_by.all())
 
         response = self.client.post(reverse('misago:block_user',
                                             kwargs=link_kwargs))
         self.assertEqual(response.status_code, 302)
-        self.assertNotIn(self.test_admin, test_user.blocked_by.all())
+        self.assertNotIn(self.user, test_user.blocked_by.all())
 
     def test_user_name_history_list(self):
         """user name changes history list has no showstoppers"""
@@ -138,20 +138,20 @@ class UserProfileViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('Your username was never changed', response.content)
 
-        self.test_admin.set_username('RenamedAdmin')
-        self.test_admin.save()
-        self.test_admin.set_username('TestAdmin')
-        self.test_admin.save()
+        self.user.set_username('RenamedAdmin')
+        self.user.save()
+        self.user.set_username('TestUser')
+        self.user.save()
 
         response = self.client.get(reverse('misago:user_name_history',
                                            kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
-        self.assertIn("TestAdmin</strong> changed name to <strong>Renamed",
+        self.assertIn("TestUser</strong> changed name to <strong>Renamed",
                       response.content)
 
     def test_user_ban(self):
         """user ban details page has no showstoppers"""
-        override_acl(self.test_admin, {
+        override_acl(self.user, {
             'can_see_ban_details': 0,
         })
 
@@ -163,7 +163,7 @@ class UserProfileViewsTests(AdminTestCase):
                                            kwargs=link_kwargs))
         self.assertEqual(response.status_code, 404)
 
-        override_acl(self.test_admin, {
+        override_acl(self.user, {
             'can_see_ban_details': 1,
         })
 

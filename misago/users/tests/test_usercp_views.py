@@ -5,14 +5,14 @@ from django.core import mail
 from django.core.urlresolvers import reverse
 
 from misago.acl.testutils import override_acl
-from misago.admin.testutils import AdminTestCase
 from misago.conf import settings
 from misago.core import threadstore
 
 from misago.users.avatars import store
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
-class ChangeForumOptionsTests(AdminTestCase):
+class ChangeForumOptionsTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(ChangeForumOptionsTests, self).setUp()
         self.view_link = reverse('misago:usercp_change_forum_options')
@@ -34,14 +34,14 @@ class ChangeForumOptionsTests(AdminTestCase):
 
         self.assertEqual(response.status_code, 302)
 
-        test_user = get_user_model().objects.get(pk=self.test_admin.pk)
+        test_user = get_user_model().objects.get(pk=self.user.pk)
         self.assertEqual(test_user.timezone, 'Asia/Qatar')
         self.assertEqual(test_user.is_hiding_presence, 1)
         self.assertEqual(test_user.subscribe_to_started_threads, 0)
         self.assertEqual(test_user.subscribe_to_replied_threads, 1)
 
 
-class ChangeAvatarTests(AdminTestCase):
+class ChangeAvatarTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(ChangeAvatarTests, self).setUp()
         self.view_link = reverse('misago:usercp_change_avatar')
@@ -53,9 +53,9 @@ class ChangeAvatarTests(AdminTestCase):
 
     def test_avatar_locked(self):
         """usercp locked change avatar view returns 200"""
-        self.test_admin.is_avatar_locked = True
-        self.test_admin.avatar_lock_user_message = 'Your avatar is banned.'
-        self.test_admin.save()
+        self.user.is_avatar_locked = True
+        self.user.avatar_lock_user_message = 'Your avatar is banned.'
+        self.user.save()
 
         response = self.client.get(self.view_link)
         self.assertEqual(response.status_code, 200)
@@ -63,8 +63,8 @@ class ChangeAvatarTests(AdminTestCase):
 
     def test_set_gravatar(self):
         """view sets user gravatar"""
-        self.test_admin.set_email('kontakt@rpiton.com')
-        self.test_admin.save()
+        self.user.set_email('kontakt@rpiton.com')
+        self.user.save()
 
         response = self.client.post(self.view_link, data={'dl-gravatar': '1'})
         self.assertEqual(response.status_code, 302)
@@ -73,8 +73,8 @@ class ChangeAvatarTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('Gravatar was downloaded', response.content)
 
-        self.test_admin.set_email('test@test.com')
-        self.test_admin.save()
+        self.user.set_email('test@test.com')
+        self.user.save()
 
         self.client.post(self.view_link, data={'dl-gravatar': '1'})
         response = self.client.get(self.view_link)
@@ -91,13 +91,13 @@ class ChangeAvatarTests(AdminTestCase):
         self.assertIn('New avatar based', response.content)
 
 
-class AvatarUploadTests(AdminTestCase):
+class AvatarUploadTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(AvatarUploadTests, self).setUp()
-        store.delete_avatar(self.test_admin)
+        store.delete_avatar(self.user)
 
     def tearDown(self):
-        store.delete_avatar(self.test_admin)
+        store.delete_avatar(self.user)
 
     def test_upload_form_view(self):
         """upload view renders on get"""
@@ -126,8 +126,8 @@ class AvatarUploadTests(AdminTestCase):
                                         **ajax_header)
             self.assertEqual(response.status_code, 200)
 
-            avatar_dir = store.get_existing_avatars_dir(self.test_admin)
-            avatar = path('%s/%s_tmp.png' % (avatar_dir, self.test_admin.pk))
+            avatar_dir = store.get_existing_avatars_dir(self.user)
+            avatar = path('%s/%s_tmp.png' % (avatar_dir, self.user.pk))
             self.assertTrue(avatar.exists())
             self.assertTrue(avatar.isfile())
 
@@ -149,16 +149,16 @@ class AvatarUploadTests(AdminTestCase):
             response = self.client.post(crop_link, data={'crop': test_crop})
             self.assertEqual(response.status_code, 302)
 
-            avatar_dir = store.get_existing_avatars_dir(self.test_admin)
-            avatar = path('%s/%s_tmp.png' % (avatar_dir, self.test_admin.pk))
+            avatar_dir = store.get_existing_avatars_dir(self.user)
+            avatar = path('%s/%s_tmp.png' % (avatar_dir, self.user.pk))
             self.assertFalse(avatar.exists())
 
-            avatar = path('%s/%s_org.png' % (avatar_dir, self.test_admin.pk))
+            avatar = path('%s/%s_org.png' % (avatar_dir, self.user.pk))
             self.assertTrue(avatar.exists())
             self.assertTrue(avatar.isfile())
 
 
-class AvatarGalleryTests(AdminTestCase):
+class AvatarGalleryTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(AvatarGalleryTests, self).setUp()
         self.view_link = reverse('misago:usercp_avatar_galleries')
@@ -185,14 +185,14 @@ class AvatarGalleryTests(AdminTestCase):
         self.assertIn('Incorrect image', response.content)
 
 
-class EditSignatureTests(AdminTestCase):
+class EditSignatureTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(EditSignatureTests, self).setUp()
         self.view_link = reverse('misago:usercp_edit_signature')
 
     def test_signature_no_permission(self):
         """edit signature view with no ACL returns 404"""
-        override_acl(self.test_admin, {
+        override_acl(self.user, {
             'can_have_signature': 0,
         })
 
@@ -201,13 +201,13 @@ class EditSignatureTests(AdminTestCase):
 
     def test_signature_locked(self):
         """locked edit signature view returns 200"""
-        override_acl(self.test_admin, {
+        override_acl(self.user, {
             'can_have_signature': 1,
         })
 
-        self.test_admin.is_signature_locked = True
-        self.test_admin.signature_lock_user_message = 'Your siggy is banned.'
-        self.test_admin.save()
+        self.user.is_signature_locked = True
+        self.user.signature_lock_user_message = 'Your siggy is banned.'
+        self.user.save()
 
         response = self.client.get(self.view_link)
         self.assertEqual(response.status_code, 200)
@@ -215,22 +215,26 @@ class EditSignatureTests(AdminTestCase):
 
     def test_signature_change(self):
         """GET to usercp change options view returns 200"""
-        override_acl(self.test_admin, {
+        override_acl(self.user, {
             'can_have_signature': 1,
         })
 
-        self.test_admin.is_signature_locked = False
-        self.test_admin.save()
+        self.user.is_signature_locked = False
+        self.user.save()
 
         response = self.client.post(self.view_link,
             data={'signature': 'Hello siggy!'})
         self.assertEqual(response.status_code, 302)
 
+        override_acl(self.user, {
+            'can_have_signature': 1,
+        })
+
         response = self.client.get(self.view_link)
         self.assertIn('<p>Hello siggy!</p>', response.content)
 
 
-class ChangeUsernameTests(AdminTestCase):
+class ChangeUsernameTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(ChangeUsernameTests, self).setUp()
         self.view_link = reverse('misago:usercp_change_username')
@@ -247,7 +251,7 @@ class ChangeUsernameTests(AdminTestCase):
                                     data={'new_username': 'Boberson'})
         self.assertEqual(response.status_code, 302)
 
-        test_user = get_user_model().objects.get(pk=self.test_admin.pk)
+        test_user = get_user_model().objects.get(pk=self.user.pk)
         self.assertEqual(test_user.username, 'Boberson')
 
         response = self.client.get(self.view_link)
@@ -255,7 +259,7 @@ class ChangeUsernameTests(AdminTestCase):
         self.assertIn(test_user.username, response.content)
 
 
-class ChangeEmailPasswordTests(AdminTestCase):
+class ChangeEmailPasswordTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(ChangeEmailPasswordTests, self).setUp()
         self.view_link = reverse('misago:usercp_change_email_password')
@@ -304,6 +308,6 @@ class ChangeEmailPasswordTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         User = get_user_model()
-        test_user = User.objects.get(pk=self.test_admin.pk)
+        test_user = User.objects.get(pk=self.user.pk)
         self.assertFalse(test_user.check_password('Pass.123'))
         self.assertTrue(test_user.check_password('newpass123'))
