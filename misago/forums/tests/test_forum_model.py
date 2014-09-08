@@ -134,8 +134,8 @@ class ForumModelTests(TestCase):
         moderated.save()
 
         self.forum.synchronize()
-        self.assertEqual(self.forum.threads, 2)
-        self.assertEqual(self.forum.posts, 2)
+        self.assertEqual(self.forum.threads, 3)
+        self.assertEqual(self.forum.posts, 3)
         self.assertEqual(self.forum.last_thread, moderated)
 
     def test_delete_content(self):
