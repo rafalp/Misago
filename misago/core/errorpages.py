@@ -9,7 +9,7 @@ from misago.admin.views.errorpages import admin_error_page, admin_csrf_failure
 def _ajax_error(code=406, message=None):
     response_dict = {'is_error': True}
     if message:
-        response_dict['message'] = message
+        response_dict['message'] = unicode(message)
     return JsonResponse(response_dict, status=code)
 
 
