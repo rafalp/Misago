@@ -9,13 +9,16 @@ class LabelsManagerTests(TestCase):
     def setUp(self):
         Label.objects.clear_cache()
 
+    def tearDown(self):
+        Label.objects.clear_cache()
+
     def test_get_cached_labels(self):
         """get_cached_labels and get_cached_labels_dict work as intented"""
         test_labels = (
-            Label.objects.create(name="Label 1"),
-            Label.objects.create(name="Label 2"),
-            Label.objects.create(name="Label 3"),
-            Label.objects.create(name="Label 4"),
+            Label.objects.create(name="Label 1", slug="label-1"),
+            Label.objects.create(name="Label 2", slug="label-2"),
+            Label.objects.create(name="Label 3", slug="label-3"),
+            Label.objects.create(name="Label 4", slug="label-4"),
         )
 
         db_labels = Label.objects.get_cached_labels()
@@ -33,10 +36,10 @@ class LabelsManagerTests(TestCase):
         forum = Forum.objects.all_forums().filter(role='forum')[:1][0]
 
         test_labels = (
-            Label.objects.create(name="Label 1"),
-            Label.objects.create(name="Label 2"),
-            Label.objects.create(name="Label 3"),
-            Label.objects.create(name="Label 4"),
+            Label.objects.create(name="Label 1", slug="label-1"),
+            Label.objects.create(name="Label 2", slug="label-2"),
+            Label.objects.create(name="Label 3", slug="label-3"),
+            Label.objects.create(name="Label 4", slug="label-4"),
         )
 
         test_labels[0].forums.add(forum)
