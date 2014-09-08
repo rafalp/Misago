@@ -41,12 +41,12 @@ class Sorting(Helper):
         {
             'method': 'recently-replied',
             'name': ugettext_lazy("Recently replied"),
-            'order_by': '-last_post',
+            'order_by': '-last_post_on',
         },
         {
             'method': 'last-replied',
             'name': ugettext_lazy("Last replied"),
-            'order_by': 'last_post',
+            'order_by': 'last_post_on',
         },
         {
             'method': 'most-replied',

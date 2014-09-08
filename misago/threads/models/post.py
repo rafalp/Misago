@@ -33,6 +33,9 @@ class Post(models.Model):
     is_hidden = models.BooleanField(default=False)
     is_protected = models.BooleanField(default=False)
 
+    def __unicode__(self):
+        return '%s...' % self.original[10:].strip()
+
     def delete(self, *args, **kwargs):
         from misago.threads.signals import delete_post
         delete_post.send(sender=self)

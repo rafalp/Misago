@@ -137,6 +137,9 @@ class ForumThreads(Threads):
         self.user = user
         self.forum = forum
 
+        self.filter_by = None
+        self.sort_by = ('-weight', '-last_post_on')
+
     def filter(self, filter_by):
         self.filter_by = filter_by
 
@@ -199,18 +202,18 @@ class ForumThreads(Threads):
                      "pagination data will be available")
 
     @property
-    def page(self):
-        try:
-            return self._page
-        except AttributeError:
-            raise RuntimeError(error_message)
-
-    @property
     def paginator(self):
         try:
             return self._paginator
         except AttributeError:
-            raise RuntimeError(error_message)
+            raise AttributeError(self.error_message)
+
+    @property
+    def page(self):
+        try:
+            return self._page
+        except AttributeError:
+            raise AttributeError(self.error_message)
 
 
 class ForumView(ThreadsView):

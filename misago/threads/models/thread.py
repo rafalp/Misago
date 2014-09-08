@@ -54,9 +54,12 @@ class Thread(models.Model):
         index_together = [
             ['forum', 'weight'],
             ['forum', 'weight', 'id'],
-            ['forum', 'weight', 'last_post'],
+            ['forum', 'weight', 'last_post_on'],
             ['forum', 'weight', 'replies'],
         ]
+
+    def __unicode__(self):
+        return self.title
 
     def delete(self, *args, **kwargs):
         from misago.threads.signals import delete_thread
