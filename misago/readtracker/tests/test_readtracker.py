@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from misago.acl import add_acl
 from misago.forums.models import Forum
-from misago.threads.models import Thread, Post
+from misago.threads import testutils
 from misago.users.models import AnonymousUser
 
 from misago.readtracker import forumstracker, threadstracker
@@ -23,18 +23,7 @@ class ReadTrackerTests(TestCase):
         self.anon = AnonymousUser()
 
     def post_thread(self, datetime):
-        thread = Thread.objects.create(
-            forum=self.forum,
-            weight=0,
-            started_on=datetime,
-            starter_name='Tester',
-            starter_slug='tester',
-            last_post_on=datetime,
-            last_poster_name='Tester',
-            last_poster_slug='tester')
-        self.forum.synchronize()
-        self.forum.save()
-        return thread
+        return testutils.post_thread(forum=self.forum, started_on=datetime)
 
 
 class ForumsTrackerTests(ReadTrackerTests):
@@ -170,27 +159,11 @@ class ThreadsTrackerTests(ReadTrackerTests):
         self.reply_thread()
 
     def reply_thread(self, is_hidden=False, is_moderated=False):
-        post = Post.objects.create(
-            forum=self.forum,
+        self.post = testutils.reply_thread(
             thread=self.thread,
-            poster=self.user,
-            poster_name=self.user.username,
-            poster_ip='127.0.0.1',
-            posted_on=self.thread.last_post_on + timedelta(minutes=5),
-            updated_on=self.thread.last_post_on + timedelta(minutes=5),
-            original='test',
-            parsed='test',
-            checksum='nope',
             is_hidden=is_hidden,
             is_moderated=is_moderated)
-        self.thread.synchronize()
-        self.thread.save()
-        self.forum.synchronize()
-        self.forum.save()
-
-        if not is_moderated:
-            self.post = post
-        return post
+        return self.post
 
     def test_thread_read_for_guest(self):
         """threads are always read for guests"""
