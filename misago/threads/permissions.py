@@ -221,10 +221,11 @@ def add_acl_to_forum(user, forum):
         'can_see_reports': 0,
     })
 
+    algebra.sum_acls(forum.acl, acls=[forum_acl],
+        can_see_all_threads=algebra.greater)
+
     if user.is_authenticated():
         algebra.sum_acls(forum.acl, acls=[forum_acl],
-            can_see_all_threads=algebra.greater,
-            can_start_threads=algebra.greater,
             can_reply_threads=algebra.greater,
             can_edit_threads=algebra.greater,
             can_edit_replies=algebra.greater,
