@@ -1,0 +1,76 @@
+from django.core.urlresolvers import reverse
+
+from misago.users.testutils import (UserTestCase, AuthenticatedUserTestCase,
+                                    SuperUserTestCase)
+
+
+class UserTestCaseTests(UserTestCase):
+    def test_get_anonymous_user(self):
+        """get_anonymous_user returns anon user instance"""
+        user = self.get_anonymous_user()
+        self.assertFalse(user.is_authenticated())
+        self.assertTrue(user.is_anonymous())
+
+    def test_get_authenticated_user(self):
+        """get_authenticated_user returns auth user instance"""
+        user = self.get_authenticated_user()
+        self.assertTrue(user.is_authenticated())
+        self.assertFalse(user.is_anonymous())
+        self.assertFalse(user.is_staff)
+        self.assertFalse(user.is_superuser)
+
+    def test_get_superuser(self):
+        """get_superuser returns auth user instance"""
+        user = self.get_superuser()
+        self.assertTrue(user.is_authenticated())
+        self.assertFalse(user.is_anonymous())
+        self.assertTrue(user.is_staff)
+        self.assertTrue(user.is_superuser)
+
+    def test_login_user(self):
+        """login_user logs user"""
+        user = self.get_authenticated_user()
+        self.login_user(user)
+
+        response = self.client.get(reverse('misago:index'))
+        self.assertIn(user.username, response.content)
+
+    def test_login_superuser(self):
+        """login_user logs superuser"""
+        user = self.get_superuser()
+        self.login_user(user)
+
+        response = self.client.get(reverse('misago:index'))
+        self.assertIn(user.username, response.content)
+
+    def test_logout_user(self):
+        """logout_user logs user out"""
+        user = self.get_authenticated_user()
+        self.login_user(user)
+        self.logout_user()
+
+        response = self.client.get(reverse('misago:index'))
+        self.assertNotIn(user.username, response.content)
+
+    def test_logout_superuser(self):
+        """logout_user logs superuser out"""
+        user = self.get_superuser()
+        self.login_user(user)
+        self.logout_user()
+
+        response = self.client.get(reverse('misago:index'))
+        self.assertNotIn(user.username, response.content)
+
+
+class AuthenticatedUserTestCaseTests(AuthenticatedUserTestCase):
+    def test_setup(self):
+        """setup executed correctly"""
+        response = self.client.get(reverse('misago:index'))
+        self.assertIn(self.user.username, response.content)
+
+
+class SuperUserTestCaseTests(SuperUserTestCase):
+    def test_setup(self):
+        """setup executed correctly"""
+        response = self.client.get(reverse('misago:index'))
+        self.assertIn(self.user.username, response.content)
