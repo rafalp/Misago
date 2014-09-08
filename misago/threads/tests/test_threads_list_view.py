@@ -3,9 +3,9 @@ from misago.admin.testutils import AdminTestCase
 from misago.forums.models import Forum
 
 
-class ThreadsListTests(AdminTestCase):
+class ForumThreadsTests(AdminTestCase):
     def setUp(self):
-        super(ThreadsListTests, self).setUp()
+        super(ForumThreadsTests, self).setUp()
 
         self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
         self.link = self.forum.get_absolute_url()

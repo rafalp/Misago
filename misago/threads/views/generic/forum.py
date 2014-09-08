@@ -137,12 +137,6 @@ class ForumThreads(Threads):
         self.user = user
         self.forum = forum
 
-        self.queryset = self.make_queryset()
-
-    def make_queryset(self):
-        return exclude_invisible_threads(
-            self.user, self.forum, self.forum.thread_set)
-
     def filter(self, filter_by):
         self.filter_by = filter_by
 
@@ -151,10 +145,14 @@ class ForumThreads(Threads):
             weight = '-weight'
         else:
             weight = 'weight'
-        self.queryset = self.queryset.order_by(weight, sort_by)
+        self.sort_by = (weight, sort_by)
 
     def list(self, page=0):
-        queryset = self.filter_threads(self.queryset)
+        queryset = exclude_invisible_threads(
+            self.user, self.forum, self.forum.thread_set)
+        queryset = self.filter_threads(queryset)
+        queryset = queryset.order_by(*self.sort_by)
+
         announcements_qs = queryset.filter(weight=ANNOUNCEMENT)
         threads_qs = queryset.filter(weight__lt=ANNOUNCEMENT)
 
@@ -224,10 +222,6 @@ class ForumView(ThreadsView):
     Threads = ForumThreads
     Sorting = Sorting
     Filtering = ForumFiltering
-
-    def get_default_link_params(self, forum):
-        message = "forum views have to define get_default_link_params"
-        raise NotImplementedError(message)
 
     def dispatch(self, request, *args, **kwargs):
         forum = self.get_forum(request, **kwargs)

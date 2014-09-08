@@ -137,10 +137,6 @@ class ThreadsView(ViewBase):
     def get_threads_queryset(self, request):
         return forum.thread_set.all().order_by('-last_post_id')
 
-    def get_default_link_params(self,):
-        message = "threads lists have to define get_default_link_params"
-        raise NotImplementedError(message)
-
     def clean_kwargs(self, request, kwargs):
         cleaned_kwargs = kwargs.copy()
         if request.user.is_anonymous():
