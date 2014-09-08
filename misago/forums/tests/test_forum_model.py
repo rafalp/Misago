@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.threads.models import Thread, Post
+from misago.threads import testutils
 
 from misago.forums.models import FORUMS_TREE_ID, Forum
 
@@ -56,33 +56,8 @@ class ForumModelTests(TestCase):
     def create_thread(self):
         datetime = timezone.now()
 
-        thread = Thread(
-            forum=self.forum,
-            weight=0,
-            started_on=datetime,
-            starter_name='Tester',
-            starter_slug='tester',
-            last_post_on=datetime,
-            last_poster_name='Tester',
-            last_poster_slug='tester')
-
-        thread.set_title("Test thread")
-        thread.save()
-
-        post = Post.objects.create(
-            forum=self.forum,
-            thread=thread,
-            poster_name='Tester',
-            poster_ip='127.0.0.1',
-            original="Hello! I am test message!",
-            parsed="<p>Hello! I am test message!</p>",
-            checksum="nope",
-            posted_on=datetime,
-            updated_on=datetime)
-
-        thread.first_post = post
-        thread.last_post = post
-        thread.save()
+        thread = testutils.post_thread(self.forum)
+        post = testutils.reply_thread(thread)
 
         return thread
 
