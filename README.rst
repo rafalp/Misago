@@ -8,9 +8,6 @@ Misago
 .. image:: https://coveralls.io/repos/rafalp/Misago/badge.png?branch=master
   :target: https://coveralls.io/r/rafalp/Misago?branch=master
 
-.. image:: https://landscape.io/github/rafalp/Misago/master/landscape.png
-  :target: https://landscape.io/github/rafalp/Misago/master
-
 
 **Development Status: Pre-Alpha**
 
