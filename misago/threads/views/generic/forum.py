@@ -241,12 +241,12 @@ class ForumView(ThreadsView):
         filtering = self.Filtering(forum, self.link_name, cleaned_kwargs)
         cleaned_kwargs = filtering.clean_kwargs(cleaned_kwargs)
 
+        if cleaned_kwargs != kwargs:
+            return redirect('misago:forum', **cleaned_kwargs)
+
         threads = self.Threads(request.user, forum)
         sorting.sort(threads)
         filtering.filter(threads)
-
-        if cleaned_kwargs != kwargs:
-            return redirect('misago:forum', **cleaned_kwargs)
 
         return self.render(request, {
             'link_name': self.link_name,

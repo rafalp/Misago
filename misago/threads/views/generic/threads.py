@@ -27,7 +27,7 @@ class Threads(Helper):
         if labels:
             labels_dict = dict([(label.pk, label) for label in labels])
         else:
-            labels = Label.objects.get_cached_labels_dict()
+            labels_dict = Label.objects.get_cached_labels_dict()
 
         for thread in threads:
             thread.label = labels_dict.get(thread.label_id)
