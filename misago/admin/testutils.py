@@ -1,17 +1,16 @@
-from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+
+from misago.users.testutils import SuperUserTestCase
 
 
-def admin_login(client, username, password):
-    client.post(reverse('misago:admin:index'),
-                data={'username': username, 'password': password})
-
-
-class AdminTestCase(TestCase):
+class AdminTestCase(SuperUserTestCase):
     def setUp(self):
-        User = get_user_model()
-        self.test_admin = User.objects.create_superuser('TestAdmin',
-                                                        'admin@test.com',
-                                                        'Pass.123')
-        admin_login(self.client, 'TestAdmin', 'Pass.123')
+        self.user = self.get_superuser()
+        self.login_admin(self.user)
+
+    def login_admin(self, user):
+        self.client.post(reverse('misago:admin:index'), data={
+            'username': user.email,
+            'password': self.USER_PASSWORD
+        })
+        self.client.get(reverse('misago:admin:index'))

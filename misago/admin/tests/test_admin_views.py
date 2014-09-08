@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from misago.admin.testutils import admin_login
+from misago.admin.testutils import AdminTestCase
 from misago.admin.views import get_protected_namespace
 
 
@@ -72,13 +72,7 @@ class AdminLoginViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
 
 
-class AdminLogoutTests(TestCase):
-    def setUp(self):
-        User = get_user_model()
-        self.admin = User.objects.create_superuser(
-            'Bob', 'bob@test.com', 'Pass.123')
-        admin_login(self.client, 'Bob', 'Pass.123')
-
+class AdminLogoutTests(AdminTestCase):
     def test_admin_logout(self):
         """admin logout logged from admin only"""
         response = self.client.post(reverse('misago:admin:logout'))
@@ -90,7 +84,7 @@ class AdminLogoutTests(TestCase):
 
         response = self.client.get(reverse('misago:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertIn(self.admin.username, response.content)
+        self.assertIn(self.user.username, response.content)
 
     def test_complete_logout(self):
         """complete logout logged from both admin and site"""
@@ -106,14 +100,10 @@ class AdminLogoutTests(TestCase):
         self.assertIn("Sign in", response.content)
 
 
-class AdminIndexViewTests(TestCase):
+class AdminIndexViewTests(AdminTestCase):
     def test_view_returns_200(self):
         """admin index view returns 200"""
-        User = get_user_model()
-        User.objects.create_superuser('Bob', 'bob@test.com', 'Pass.123')
-        admin_login(self.client, 'Bob', 'Pass.123')
-
         response = self.client.get(reverse('misago:admin:index'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Bob', response.content)
+        self.assertIn(self.user.username, response.content)

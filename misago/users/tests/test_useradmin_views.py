@@ -24,7 +24,7 @@ class UserAdminViewsTests(AdminTestCase):
 
         response = self.client.get(response['location'])
         self.assertEqual(response.status_code, 200)
-        self.assertIn('TestAdmin', response.content)
+        self.assertIn(self.user.username, response.content)
 
     def test_list_search(self):
         """users list is searchable"""
