@@ -9,14 +9,11 @@ from misago.threads.models import Label
 from misago.threads.views.generic.base import ViewBase
 
 
-__all__ = ['Helper', 'Sorting', 'Threads', 'ThreadsView']
+__all__ = ['Sorting', 'Threads', 'ThreadsView']
 
 
-class Helper(object):
-    pass
 
-
-class Threads(Helper):
+class Threads(object):
     def __init__(self, user):
         self.user = user
 
@@ -36,7 +33,7 @@ class Threads(Helper):
         threadstracker.make_read_aware(self.user, threads)
 
 
-class Sorting(Helper):
+class Sorting(object):
     sortings = (
         {
             'method': 'recently-replied',

@@ -226,6 +226,7 @@ def add_acl_to_forum(user, forum):
 
     if user.is_authenticated():
         algebra.sum_acls(forum.acl, acls=[forum_acl],
+            can_start_threads=algebra.greater,
             can_reply_threads=algebra.greater,
             can_edit_threads=algebra.greater,
             can_edit_replies=algebra.greater,

@@ -7,14 +7,13 @@ from misago.forums.lists import get_forums_list, get_forum_path
 
 from misago.threads.models import ANNOUNCEMENT, Thread, Label
 from misago.threads.permissions import exclude_invisible_threads
-from misago.threads.views.generic.threads import (Helper, Sorting, Threads,
-                                                  ThreadsView)
+from misago.threads.views.generic.threads import Sorting, Threads, ThreadsView
 
 
 __all__ = ['ForumFiltering', 'ForumThreads', 'ForumView']
 
 
-class ForumFiltering(Helper):
+class ForumFiltering(object):
     def __init__(self, forum, link_name, link_params):
         self.forum = forum
         self.link_name = link_name
