@@ -23,9 +23,12 @@ class YesNoSwitchBase(TypedChoiceField):
 
 
 def YesNoSwitch(**kwargs):
+    yes_label = kwargs.pop('yes_label', _("Yes"))
+    no_label = kwargs.pop('yes_label', _("No"))
+
     return YesNoSwitchBase(
         coerce=int,
-        choices=((1, _("Yes")), (0, _("No"))),
+        choices=((1, yes_label), (0, no_label)),
         widget=RadioSelect(attrs={'class': 'yesno-switch'}),
         **kwargs)
 

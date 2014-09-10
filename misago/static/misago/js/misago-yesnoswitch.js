@@ -1,63 +1,59 @@
 // Define extension
-function enableYesNoSwitch(selector, yes, no) {
-  function realYesNoSwitch(control) {
-    var name = control.find('.yesno-switch').first().attr('name');
-    var value = control.find('.yesno-switch').filter(":checked").val() * 1;
+function enableYesNoSwitch(selector) {
+  function createYesNoSwitch($control) {
+    var name = $control.find('input').first().attr('name');
+    var value = $control.find("input:checked").val() * 1;
 
-    var buttons = $('<div class="btn-group yes-no-switch">' +
-      '<button type="button" class="btn btn-yes btn-default">' + yes + '</button>' +
-      '<button type="button" class="btn btn-no btn-default">' + no + '</button>' +
-    '</div>');
+    // hide original switch options
+    $control.children().addClass('hidden-original-switch');
 
-    var button_yes = buttons.find('.btn-yes');
-    var button_no = buttons.find('.btn-no');
+    var yes_label = $.trim($control.find('label').first().text());
+    var no_label = $.trim($control.find('label').last().text());
 
-    control.find('.yesno-switch').first().parent().before(buttons);
-    control.find('.yesno-switch').parent().addClass('ninja-switch');
+    var toggle_off = "fa fa-toggle-off fa-2x";
+    var toggle_on = "fa fa-toggle-on fa-2x";
 
-    function switchState(newstate) {
-      function switchToYes() {
-        button_yes.addClass('active');
-        button_yes.addClass('btn-success');
-        button_yes.removeClass('btn-default');
-        button_no.removeClass('active');
-        button_no.addClass('btn-default');
-        button_no.removeClass('btn-danger');
-      }
+    // Render new switch
+    var $new_switch = $('<label class="yes-no-switch"></label>');
+    var $icon = $('<span class="' + toggle_off + '"></span>');
+    var $label = $('<strong class="yes-no-label"></strong>');
 
-      function switchToNo() {
-        button_yes.removeClass('active');
-        button_yes.removeClass('btn-success');
-        button_yes.addClass('btn-default');
-        button_no.addClass('active');
-        button_no.removeClass('btn-default');
-        button_no.addClass('btn-danger');
-      }
+    $control.append($new_switch);
+    $new_switch.append($icon);
+    $new_switch.append($label);
 
-      if (newstate == 1) {
-        switchToYes();
-      } else {
-        switchToNo();
-      }
-
-      control.find('.yesno-switch').first().prop('checked', newstate == 1);
-      control.find('.yesno-switch').last().prop('checked', newstate == 0);
+    if (value) {
+      $new_switch.addClass('active');
+      $icon.attr("class", toggle_on);
+      $label.text(yes_label);
+    } else {
+      $icon.attr("class", toggle_off);
+      $label.text(no_label);
     }
 
-    switchState(value);
+    $new_switch.click(function() {
+      $this = $(this);
 
-    button_yes.click(function() {
-      switchState(1);
-    });
+      if ($this.hasClass('active')) {
+        new_value = 0;
+        $this.removeClass('active');
+        $icon.attr("class", toggle_off);
+        $label.text(no_label);
+      } else {
+        new_value = 1;
+        $this.addClass('active');
+        $icon.attr("class", toggle_on);
+        $label.text(yes_label);
+      }
 
-    button_no.click(function() {
-      switchState(0);
+      $control.find('.yesno-switch').first().prop('checked', new_value == 1);
+      $control.find('.yesno-switch').last().prop('checked', new_value == 0);
     });
   }
 
   $(selector).each(function() {
     if ($(this).find('.yesno-switch').length == 2) {
-      realYesNoSwitch($(this));
+      createYesNoSwitch($(this));
     }
   });
 }
@@ -65,5 +61,5 @@ function enableYesNoSwitch(selector, yes, no) {
 
 // Enable switch
 $(function() {
-  enableYesNoSwitch('.control-radioselect', lang_yes, lang_no);
+  enableYesNoSwitch('.control-radioselect');
 });

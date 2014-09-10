@@ -6406,29 +6406,25 @@ body {
 .list-panel .list-group .list-group-item:active {
   box-shadow: inset 0px 0px 0px 1px #3498db;
 }
-.ninja-switch {
+.hidden-original-switch {
   position: absolute;
   top: -9999px;
   left: -9999px;
 }
-.yes-no-switch .btn-yes {
-  margin-right: 1px;
+.yes-no-switch {
+  margin-top: 5px;
+  cursor: pointer;
 }
-.yes-no-switch .btn-yes,
-.yes-no-switch .btn-no {
-  width: 56px;
-  font-weight: bold;
-  text-align: center;
+.yes-no-switch .fa {
+  color: #d9d9d9;
 }
-.yes-no-switch .btn-yes.active.btn-yes,
-.yes-no-switch .btn-no.active.btn-yes {
-  background: #208e4e;
-  color: #ffffff;
+.yes-no-switch.active .fa {
+  color: #3498db;
 }
-.yes-no-switch .btn-yes.active.btn-no,
-.yes-no-switch .btn-no.active.btn-no {
-  background: #bf2718;
-  color: #ffffff;
+.yes-no-switch .yes-no-label {
+  margin-left: 7px;
+  position: relative;
+  bottom: 5px;
 }
 .navbars-container {
   border-bottom: 3px solid #c7c7c7;

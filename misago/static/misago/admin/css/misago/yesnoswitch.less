@@ -1,37 +1,35 @@
 //
-// Custom yes-no switch
+// Misago yes-no switch
 // --------------------------------------------------
 
 
-.ninja-switch {
+// Css class added to original input, that hides it outside viewport
+.hidden-original-switch {
   position: absolute;
   top: -9999px;
   left: -9999px;
 }
 
+
+// Real input
 .yes-no-switch {
-  .btn-yes {
-    margin-right: 1px;
+  margin-top: 5px;
+
+  cursor: pointer;
+
+  .fa {
+    color: @yesno-switch-default;
   }
 
-  .btn-yes, .btn-no {
-    width: 56px;
-
-    font-weight: bold;
-    text-align: center;
-
-    &.active {
-      &.btn-yes {
-        background: @btn-success-border;
-
-        color: @btn-success-color;
-      }
-
-      &.btn-no {
-        background: @btn-danger-border;
-
-        color: @btn-danger-color;
-      }
+  &.active {
+    .fa {
+      color: @yesno-switch-active;
     }
+  }
+
+  .yes-no-label {
+    margin-left: @font-size-base / 2;
+    position: relative;
+    bottom: 5px;
   }
 }
