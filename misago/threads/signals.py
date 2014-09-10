@@ -10,7 +10,7 @@ from misago.threads.models import Thread, Post
 delete_post = django.dispatch.Signal()
 delete_thread = django.dispatch.Signal()
 merge_post = django.dispatch.Signal()
-merge_thread = django.dispatch.Signal()
+merge_thread = django.dispatch.Signal(providing_args=["other_thread"])
 move_post = django.dispatch.Signal()
 move_thread = django.dispatch.Signal()
 

@@ -1,4 +1,4 @@
-from misago.readtracker import forumstracker
+from misago.readtracker import forumstracker, signals
 from misago.readtracker.dates import cutoff_date, is_date_tracked
 
 
@@ -104,4 +104,5 @@ def sync_record(user, thread, last_read_reply):
             last_read_on=last_read_reply.updated_on)
 
     if last_read_reply.updated_on == thread.last_post_on:
+        signals.thread_read.send(sender=user, thread=thread)
         forumstracker.sync_record(user, thread.forum)

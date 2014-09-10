@@ -3,6 +3,7 @@ from django.utils import timezone
 
 from misago.threads.permissions import exclude_invisible_threads
 
+from misago.readtracker import signals
 from misago.readtracker.dates import cutoff_date, is_date_tracked
 
 
@@ -42,6 +43,9 @@ def sync_record(user, forum):
         thread__last_post_on__lte=F("last_read_on")).count()
 
     forum_is_read = read_threads_count == all_threads_count
+
+    if forum_is_read:
+        signals.forum_read.send(sender=user, forum=forum)
 
     try:
         forum_record = user.forumread_set.filter(forum=forum).all()[0]

@@ -4,6 +4,10 @@ from misago.forums.signals import move_forum_content
 from misago.threads.signals import move_thread
 
 
+forum_read = django.dispatch.Signal(providing_args=["forum"])
+thread_read = django.dispatch.Signal(providing_args=["thread"])
+
+
 """
 Signal handlers
 """

@@ -7,7 +7,7 @@ from misago.forums.models import Forum, ForumRole
 
 
 delete_forum_content = django.dispatch.Signal()
-move_forum_content = django.dispatch.Signal()
+move_forum_content = django.dispatch.Signal(providing_args=["new_forum"])
 
 
 """
