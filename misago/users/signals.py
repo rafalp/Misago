@@ -1,9 +1,8 @@
-import django.dispatch
-from django.dispatch import receiver
+from django.dispatch import receiver, Signal
 
 
-delete_user_content = django.dispatch.Signal()
-username_changed = django.dispatch.Signal()
+delete_user_content = Signal()
+username_changed = Signal()
 
 
 """

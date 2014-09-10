@@ -1,13 +1,12 @@
-import django.dispatch
-from django.dispatch import receiver
+from django.dispatch import receiver, Signal
 
 from misago.core import serializer
 
 from misago.forums.models import Forum, ForumRole
 
 
-delete_forum_content = django.dispatch.Signal()
-move_forum_content = django.dispatch.Signal(providing_args=["new_forum"])
+delete_forum_content = Signal()
+move_forum_content = Signal(providing_args=["new_forum"])
 
 
 """

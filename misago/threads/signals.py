@@ -1,5 +1,4 @@
-import django.dispatch
-from django.dispatch import receiver
+from django.dispatch import receiver, Signal
 
 from misago.core.pgutils import batch_update, batch_delete
 from misago.forums.models import Forum
@@ -7,12 +6,12 @@ from misago.forums.models import Forum
 from misago.threads.models import Thread, Post
 
 
-delete_post = django.dispatch.Signal()
-delete_thread = django.dispatch.Signal()
-merge_post = django.dispatch.Signal()
-merge_thread = django.dispatch.Signal(providing_args=["other_thread"])
-move_post = django.dispatch.Signal()
-move_thread = django.dispatch.Signal()
+delete_post = Signal()
+delete_thread = Signal()
+merge_post = Signal()
+merge_thread = Signal(providing_args=["other_thread"])
+move_post = Signal()
+move_thread = Signal()
 
 
 """
