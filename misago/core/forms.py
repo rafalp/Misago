@@ -24,7 +24,7 @@ class YesNoSwitchBase(TypedChoiceField):
 
 def YesNoSwitch(**kwargs):
     yes_label = kwargs.pop('yes_label', _("Yes"))
-    no_label = kwargs.pop('yes_label', _("No"))
+    no_label = kwargs.pop('no_label', _("No"))
 
     return YesNoSwitchBase(
         coerce=int,

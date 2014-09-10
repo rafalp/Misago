@@ -5,7 +5,7 @@ function enableYesNoSwitch(selector) {
     var value = $control.find("input:checked").val() * 1;
 
     // hide original switch options
-    $control.children().addClass('hidden-original-switch');
+    $control.find('label').addClass('hidden-original-switch');
 
     var yes_label = $.trim($control.find('label').first().text());
     var no_label = $.trim($control.find('label').last().text());
@@ -18,7 +18,7 @@ function enableYesNoSwitch(selector) {
     var $icon = $('<span class="' + toggle_off + '"></span>');
     var $label = $('<strong class="yes-no-label"></strong>');
 
-    $control.append($new_switch);
+    $control.prepend($new_switch);
     $new_switch.append($icon);
     $new_switch.append($label);
 
