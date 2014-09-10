@@ -38,6 +38,7 @@ def notify_user(user, message, url, trigger, formats=None, sender=None,
     user.new_notifications = F('new_notifications') + 1
     if update_user:
         user.save(update_fields=['new_notifications'])
+    return new_notification
 
 
 def read_user_notification(user, trigger, atomic=True):

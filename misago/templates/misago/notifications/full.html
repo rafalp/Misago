@@ -32,7 +32,7 @@ You have {{ notifications }} notifications
     <div class="page-actions">
       <form method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-default">
+        <button type="submit" name="read-all" class="btn btn-default">
           {% trans "Mark all read" %}
         </button>
       </form>
@@ -55,6 +55,15 @@ You have {{ notifications }} notifications
       </div>
 
       <a href="{{ item.url }}" class="message">{{ item.message|safe }}</a>
+
+      <form method="POST" class="read-form">
+        {% csrf_token %}
+        <input type="hidden" name="notification" value="{{ item.pk }}">
+        <button type="submit" class="btn btn-default btn-sm"{% if not item.is_new %} disabled="disabled"{% endif %}>
+          <span class="fa fa-check"></span>
+          {% trans "Read" %}
+        </button>
+      </form>
 
       <footer class="text-muted">
         {% if item.sender_username %}
@@ -79,3 +88,25 @@ You have {{ notifications }} notifications
   {% endif %}
 </div>
 {% endblock content %}
+
+
+{% block javascripts %}
+<script lang="JavaScript">
+  $(function() {
+    $('.read-form').submit(function() {
+      var $form = $(this);
+
+      $.post($form.attr('action'), $form.serialize(), function(data) {
+        $row = $form.parents('li');
+        $row.removeClass("new");
+        $icon = $row.find('.state-icon .fa');
+        $row.find('.btn').attr("disabled", "disabled");
+        $icon.removeClass("fa-circle").addClass('fa-circle-o');
+        $icon.attr("title", "{% trans "Old notification" %}");
+        $.misago_dom().changed();
+      });
+      return false;
+    });
+  });
+</script>
+{% endblock javascripts %}

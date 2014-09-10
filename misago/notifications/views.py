@@ -9,14 +9,18 @@ from misago.users.decorators import deny_guests
 
 from misago.notifications import (read_all_user_alerts,
                                   assert_real_new_notifications_count)
+from misago.notifications.models import Notification
 
 
 @deny_guests
 def notifications(request):
     if request.method == 'POST':
-        read_all(request)
-        if not request.is_ajax():
-            return redirect('misago:notifications')
+        if 'read-all' in request.POST:
+            read_all(request)
+            if not request.is_ajax():
+                return redirect('misago:notifications')
+        if request.POST.get('notification'):
+            return read_notification(request)
     else:
         assert_real_new_notifications_count(request.user)
 
@@ -51,6 +55,40 @@ def read_all(request):
     if not request.is_ajax():
         messages.success(request, _("All notifications were set as read."))
     read_all_user_alerts(request.user)
+
+
+def read_notification(request):
+    try:
+        queryset = request.user.notifications
+        notification = queryset.get(id=request.POST['notification'])
+
+        if notification.is_new:
+            is_changed = True
+            with atomic():
+                notification.is_new = False
+                notification.save(update_fields=['is_new'])
+                assert_real_new_notifications_count(request.user)
+        else:
+            is_changed = False
+
+        if request.is_ajax():
+            return JsonResponse({
+                'is_error': False,
+                'is_changed': is_changed
+            })
+        else:
+            messages.success(request, _("Notification was marked as read."))
+            return redirect('misago:notifications')
+    except Notification.DoesNotExist:
+        message = _("Specified notification could not be found.")
+        if request.is_ajax():
+            return JsonResponse({
+                'is_error': True,
+                'message': message,
+            })
+        else:
+            messages.error(request, message)
+            return redirect('misago:notifications')
 
 
 @uiview('misago_notifications')

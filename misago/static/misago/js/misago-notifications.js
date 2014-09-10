@@ -20,6 +20,7 @@ $(function() {
         $badge.fadeOut();
     }
     $link.attr("title", data.message);
+    $.misago_dom().changed();
 
     if (ajax_cache != null && data.count != ajax_cache.count) {
       ajax_cache = null;

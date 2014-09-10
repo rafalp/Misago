@@ -107,6 +107,7 @@
 
     .state-icon {
       float: left;
+      margin-top: 2px;
       margin-right: @line-height-computed / 2;
 
       color: @state-default;
@@ -115,6 +116,8 @@
 
     .message {
       float: left;
+      margin-top: 2px;
+
       font-size: @font-size-large;
 
       &:link, &:active, &:visited {
@@ -135,12 +138,17 @@
     }
 
     footer {
-      margin-top: 3px;
+      margin-top: 5px;
       float: right;
 
       a {
         margin-right: @line-height-computed / 3;
       }
+    }
+
+    .read-form {
+      float: right;
+      margin-left: @line-height-computed;
     }
   }
 }

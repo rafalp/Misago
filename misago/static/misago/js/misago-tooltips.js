@@ -5,6 +5,9 @@ $(function() {
     $('.tooltip-bottom').tooltip({container: 'body', placement: 'bottom'});
     $('.tooltip-left').tooltip({container: 'body', placement: 'left'});
     $('.tooltip-right').tooltip({container: 'body', placement: 'right'});
+    $('.tooltip-top, .tooltip-bottom, .tooltip-left, .tooltip-right').each(function() {
+      $(this).tooltip('fixTitle');
+    });
   });
 });
 

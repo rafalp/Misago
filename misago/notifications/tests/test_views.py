@@ -13,15 +13,16 @@ class NotificationViewsTests(AuthenticatedUserTestCase):
         super(NotificationViewsTests, self).setUp()
 
     def notify_user(self):
-        notify_user(self.user,
-                    "Test notify %(token)s",
-                    "/users/",
-                    "test",
-                    {'token': 'Bob'},
-                    self.user)
+        notification = notify_user(self.user,
+                                   "Test notify %(token)s",
+                                   "/users/",
+                                   "test",
+                                   {'token': 'Bob'},
+                                   self.user)
         self.user = get_user_model().objects.get(id=self.user.id)
+        return notification
 
-    def test_get(self):
+    def test_list(self):
         """get request to list renders list"""
         response = self.client.get(self.view_link)
         self.assertEqual(response.status_code, 200)
@@ -33,20 +34,7 @@ class NotificationViewsTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Test notify <strong>Bob</strong>", response.content)
 
-    def test_post(self):
-        """post request to list sets all notifications as read"""
-        self.notify_user()
-
-        response = self.client.post(self.view_link)
-        self.assertEqual(response.status_code, 302)
-
-        response = self.client.get(self.view_link)
-        self.assertEqual(response.status_code, 200)
-
-        self.reload_user()
-        self.assertEqual(self.user.new_notifications, 0)
-
-    def test_get_ajax(self):
+    def test_list_ajax(self):
         """get ajax to list renders list"""
         response = self.client.get(self.view_link, **self.ajax_header)
         self.assertEqual(response.status_code, 200)
@@ -58,11 +46,68 @@ class NotificationViewsTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Test notify <strong>Bob</strong>", response.content)
 
-    def test_post_ajax(self):
-        """post ajax to list sets all notifications as read"""
+    def test_read_one(self):
+        """read_notification POST reads one notification"""
+        self.notify_user()
+        notification = self.notify_user()
         self.notify_user()
 
-        response = self.client.post(self.view_link, **self.ajax_header)
+        response = self.client.post(self.view_link, data={
+            'notification': notification.pk,
+        })
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(self.view_link)
+        self.assertEqual(response.status_code, 200)
+
+        self.reload_user()
+        self.assertEqual(self.user.new_notifications, 2)
+
+        notification = self.user.notifications.get(id=notification.pk)
+        self.assertFalse(notification.is_new)
+
+    def test_read_one_ajax(self):
+        """read_notification ajax POST reads one notification"""
+        self.notify_user()
+        notification = self.notify_user()
+        self.notify_user()
+
+        response = self.client.post(self.view_link, data={
+            'notification': notification.pk,
+        },**self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(self.view_link)
+        self.assertEqual(response.status_code, 200)
+
+        self.reload_user()
+        self.assertEqual(self.user.new_notifications, 2)
+
+        notification = self.user.notifications.get(id=notification.pk)
+        self.assertFalse(notification.is_new)
+
+    def test_read_all(self):
+        """read_all POST request to list sets all notifications as read"""
+        self.notify_user()
+
+        response = self.client.post(self.view_link, data={
+            'read-all': True,
+        })
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(self.view_link)
+        self.assertEqual(response.status_code, 200)
+
+        self.reload_user()
+        self.assertEqual(self.user.new_notifications, 0)
+
+    def test_read_all_ajax(self):
+        """real_all POST ajax to list sets all notifications as read"""
+        self.notify_user()
+
+        response = self.client.post(self.view_link, data={
+            'read-all': True,
+        },**self.ajax_header)
         self.assertEqual(response.status_code, 200)
 
         response = self.client.get(self.view_link)
