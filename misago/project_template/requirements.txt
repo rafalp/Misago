@@ -12,5 +12,5 @@ pillow==2.5.1
 psycopg2==2.5.3
 pytz
 recaptcha-client==1.0.6
-requests==2.4.0
+requests==2.4.1
 unidecode
