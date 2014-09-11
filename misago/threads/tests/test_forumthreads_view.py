@@ -263,9 +263,9 @@ class ForumThreadsTests(ForumViewHelperTestCase):
         self.assertTrue(threads.paginator)
 
 
-class ForumThreadsAuthenticatedTests(AuthenticatedUserTestCase):
+class ForumThreadsViewTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ForumThreadsAuthenticatedTests, self).setUp()
+        super(ForumThreadsViewTests, self).setUp()
 
         self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
         self.link = self.forum.get_absolute_url()
@@ -509,3 +509,12 @@ class ForumThreadsAuthenticatedTests(AuthenticatedUserTestCase):
         self.assertIn(visible_title, response.content)
         self.assertIn('show-moderated-threads', response.content)
         self.assertIn('show-moderated-posts', response.content)
+
+    def test_anonymous_request(self):
+        """view renders to anonymous users"""
+        anon_title = "Hello Anon!"
+        testutils.post_thread(forum=self.forum, title=anon_title)
+
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(anon_title, response.content)
