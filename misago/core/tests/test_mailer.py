@@ -15,11 +15,7 @@ class MisagoMailerTests(TestCase):
         response = self.client.get(reverse('test_mail_user'))
         self.assertEqual(response.status_code, 200)
 
-        for message in mail.outbox:
-            if message.subject == 'Misago Test Mail':
-                break
-        else:
-            self.fail("Message was not added to backend.")
+        self.assertEqual(mail.outbox[0].subject, "Misago Test Mail")
 
     def test_mail_users(self):
         """mail_users sets messages in backend"""
