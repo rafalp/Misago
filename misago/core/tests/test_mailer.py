@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 
-class MisagoFormsTests(TestCase):
+class MisagoMailerTests(TestCase):
     urls = 'misago.core.testproject.urls'
 
     def test_mail_user(self):
