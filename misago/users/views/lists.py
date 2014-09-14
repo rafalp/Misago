@@ -6,8 +6,9 @@ from django.core.urlresolvers import reverse
 from django.db.models import Count
 from django.shortcuts import redirect, render as django_render
 from django.utils import timezone
-from django.views.decorators.cache import cache_page
 
+from misago.forums.models import Forum
+from misago.core.cache import cache
 from misago.core.shortcuts import get_object_or_404, paginate
 
 from misago.users.models import Rank
@@ -63,31 +64,47 @@ def list_view(request, template, queryset, page, context=None):
     return render(request, template, context)
 
 
-def ranking_view(request, template, queryset, context=None):
-    context = context or {}
-    context.update({
-        'users': queryset[:settings.MISAGO_RANKING_SIZE],
-        'users_count': queryset.count()
-    })
-    return render(request, template, context)
-
-
-#@cache_page(18 * 3600)
 @allow_see_list()
 def active_posters(request, page=0):
+    ranking = get_active_posters_rankig()
+
+    template = "misago/userslists/active_posters.html"
+    return render(request, template, {
+        'tracked_period': settings.MISAGO_RANKING_LENGTH,
+        'users': ranking['users'],
+        'users_count': ranking['users_count']
+    })
+
+
+def get_active_posters_rankig():
+    cache_key = 'misago_active_posters_ranking'
+    ranking = cache.get(cache_key, 'nada')
+    if ranking == 'nada':
+        ranking = get_real_active_posts_ranking()
+        cache.set(cache_key, ranking, 18*3600)
+    return ranking
+
+
+def get_real_active_posts_ranking():
     tracked_period = settings.MISAGO_RANKING_LENGTH
     tracked_since = timezone.now() - timedelta(days=tracked_period)
 
+    ranked_forums = [forum.pk for forum in Forum.objects.all_forums()]
+
     User = get_user_model()
-    queryset = User.objects.filter(post__posted_on__gte=tracked_since)
+    queryset = User.objects.filter(posts__gt=0)
+    queryset = queryset.filter(post__posted_on__gte=tracked_since,
+                               post__forum__in=ranked_forums)
     queryset = queryset.annotate(num_posts=Count('post'))
     queryset = queryset.select_related('user__rank')
     queryset = queryset.order_by('-num_posts')
 
-    template = "misago/userslists/active_posters.html"
-    return ranking_view(request, template, queryset, {
-        'tracked_period': tracked_period
-    })
+    queryset = queryset[:settings.MISAGO_RANKING_SIZE]
+
+    return {
+        'users': [user for user in queryset],
+        'users_count': queryset.count()
+    }
 
 
 @allow_see_list(allow_see_users_online_list)

@@ -20,7 +20,7 @@ class Post(models.Model):
                                       related_name="mention_set")
     has_attachments = models.BooleanField(default=False)
     pickled_attachments = models.TextField(null=True, blank=True)
-    posted_on = models.DateTimeField(db_index=True)
+    posted_on = models.DateTimeField()
     updated_on = models.DateTimeField()
     edits = models.PositiveIntegerField(default=0)
     last_editor = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+',
