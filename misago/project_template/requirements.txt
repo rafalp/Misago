@@ -1,4 +1,4 @@
-https://github.com/django/django/archive/stable/1.7.x.zip#egg=django
+django==1.7
 beautifulsoup4==4.3.2
 bleach==1.4
 django-debug-toolbar==1.2.1
