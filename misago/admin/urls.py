@@ -7,6 +7,7 @@ urlpatterns = patterns('misago.admin.views',
     # any request with path that falls below this one is assumed to be directed
     # at Misago Admin and will be checked by Misago Admin Middleware
     url(r'^$', 'index.admin_index', name='index'),
+    url(r'^resolve-version/$', 'index.check_version', name='check_version'),
     url(r'^logout/$', 'auth.logout', name='logout'),
 )
 

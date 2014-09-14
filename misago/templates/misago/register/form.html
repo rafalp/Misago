@@ -159,69 +159,71 @@
 {% block javascripts %}
 {{ block.super }}
 <script type="text/javascript">
-  // API-based validation
-  var csrf_token = $('input[name="csrfmiddlewaretoken"]').val()
+  $(function () {
+    // API-based validation
+    var csrf_token = $('input[name="csrfmiddlewaretoken"]').val()
 
-  $('.has-api-validation').each(function() {
-    var $control = $(this);
-    var $input = $control.find('input');
-    var $icon = $(this).find('.fa');
-    var $control_message = $(this).find('.control-message');
+    $('.has-api-validation').each(function() {
+      var $control = $(this);
+      var $input = $control.find('input');
+      var $icon = $(this).find('.fa');
+      var $control_message = $(this).find('.control-message');
 
-    var api_url = $(this).data('validation-api');
-    var api_value = $(this).data('validation-value');
+      var api_url = $(this).data('validation-api');
+      var api_value = $(this).data('validation-value');
 
-    function validate() {
-      var data = {csrfmiddlewaretoken: csrf_token};
-      data[api_value] = $.trim($input.val());
-      $.post(api_url, data, function(data, textStatus, jqXHR) {
-        $control_message.find('strong').text(data.message);
+      function validate() {
+        var data = {csrfmiddlewaretoken: csrf_token};
+        data[api_value] = $.trim($input.val());
+        $.post(api_url, data, function(data, textStatus, jqXHR) {
+          $control_message.find('strong').text(data.message);
 
-        if (data.has_error) {
-          $control.attr('class', 'form-group has-api-validation has-feedback has-error');
-          $icon.attr('class', 'fa fa-times form-control-feedback');
-          $control_message.attr('class', 'control-errors fade in')
-        } else {
-          $control.attr('class', 'form-group has-api-validation has-feedback has-success');
-          $icon.attr('class', 'fa fa-check form-control-feedback');
-          $control_message.attr('class', 'control-success fade in')
+          if (data.has_error) {
+            $control.attr('class', 'form-group has-api-validation has-feedback has-error');
+            $icon.attr('class', 'fa fa-times form-control-feedback');
+            $control_message.attr('class', 'control-errors fade in')
+          } else {
+            $control.attr('class', 'form-group has-api-validation has-feedback has-success');
+            $icon.attr('class', 'fa fa-check form-control-feedback');
+            $control_message.attr('class', 'control-success fade in')
+          }
+        });
+      }
+      {% if form.is_bound %}
+      validate();
+      {% endif %}
+      $input.keyup(validate);
+    });
+
+    // Password strength
+    var zxcvbn_src = "{% static "misago/js/zxcvbn.js" %}";
+    var labels = ["{% trans "Very weak" %}", "{% trans "Weak" %}", "{% trans "Medium" %}", "{% trans "Good" %}", "{% trans "Strong" %}"];
+    var label_styles = ["text-danger", "text-warning", "text-warning", "text-info", "text-success"];
+    var bar_styles = ["progress-bar-danger", "progress-bar-warning", "progress-bar-warning", "progress-bar-info", "progress-bar-success"];
+
+    function zxcvbn_load_hook() {
+      $(function() {
+        var $bar = $('#password-bar');
+        var $label = $('#password-strength');
+
+        function gradePassStrength() {
+          var username = $('#id_username').val();
+          var email = $('#id_email').val();
+          var password = $('#id_password').val();
+
+          var power = zxcvbn(password, [username, email]).score;
+
+          $label.text(labels[power]);
+          $label.attr('class', label_styles[power]);
+          $bar.css('width', ((power + 1) * 20) + '%');
+          $bar.attr('class', "progress-bar " + bar_styles[power]);
         }
+
+        gradePassStrength();
+        $('#id_password').keyup(gradePassStrength);
       });
     }
-    {% if form.is_bound %}
-    validate();
-    {% endif %}
-    $input.keyup(validate);
   });
-
-  // Password strength
-  var zxcvbn_src = "{% static "misago/js/zxcvbn.js" %}";
-  var labels = ["{% trans "Very weak" %}", "{% trans "Weak" %}", "{% trans "Medium" %}", "{% trans "Good" %}", "{% trans "Strong" %}"];
-  var label_styles = ["text-danger", "text-warning", "text-warning", "text-info", "text-success"];
-  var bar_styles = ["progress-bar-danger", "progress-bar-warning", "progress-bar-warning", "progress-bar-info", "progress-bar-success"];
-
-  function zxcvbn_load_hook() {
-    $(function() {
-      var $bar = $('#password-bar');
-      var $label = $('#password-strength');
-
-      function gradePassStrength() {
-        var username = $('#id_username').val();
-        var email = $('#id_email').val();
-        var password = $('#id_password').val();
-
-        var power = zxcvbn(password, [username, email]).score;
-
-        $label.text(labels[power]);
-        $label.attr('class', label_styles[power]);
-        $bar.css('width', ((power + 1) * 20) + '%');
-        $bar.attr('class', "progress-bar " + bar_styles[power]);
-      }
-
-      gradePassStrength();
-      $('#id_password').keyup(gradePassStrength);
-    });
-  }
 </script>
 <script type="text/javascript" src="{% static "misago/js/zxcvbn-async.js" %}"></script>
 {% endblock javascripts %}

@@ -18,8 +18,48 @@
 <div class="container">
   <div class="row">
     <div class="col-md-8">
+
+
+
     </div>
     <div class="col-md-4">
+
+      <table class="table version-check">
+        <thead>
+          <tr>
+            <th colspan="2">
+              <h4>
+                <span class="fa fa-github"></span>
+                {% trans "Misago version" %}
+              </h4>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-center">
+              {% if version_check %}
+              <p class="lead text-{% if version_check.is_error %}error{% else %}success{% endif %}">
+                {% if version_check.is_error %}
+                <span class="fa fa-times fa-lg fa-fw"></span>
+                {% else %}
+                <span class="fa fa-check fa-lg fa-fw"></span>
+                {% endif %}
+                {{ version_check.message }}
+              </p>
+              {% else %}
+              <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-default">
+                  <span class="fa fa-question-circle fa-fw"></span>
+                  <span class="name">{% trans "Check version" %}</span>
+                </button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
       <table class="table">
         <thead>
@@ -60,3 +100,34 @@
   </div>
 </div>
 {% endblock content %}
+
+
+{% block javascripts %}
+<script type="text/javascript">
+  $(function () {
+    var $version_check = $('.version-check');
+    var $outcome = $version_check.find('td');
+
+    $version_check.find('form').submit(function() {
+      var $form = $(this);
+      var $button = $(this).find("button");
+      $button.attr("disabled", "disabled");
+      $button.find('.fa').attr("class", "fa fa-refresh fa-fw fa-spin");
+      $button.find('.name').text("{% trans "Checking..." %}");
+
+      $.post("{% url 'misago:admin:check_version' %}", $form.serialize(), function(data) {
+        if (data.is_error) {
+          var $message = $('<p class="lead text-danger"><span class="fa fa-times fa-lg fa-fw"></span></p>');
+        } else {
+          var $message = $('<p class="lead text-success"><span class="fa fa-check fa-lg fa-fw"></span></p>');
+        }
+        $message.append(" " + data.message);
+        $form.fadeOut();
+        $outcome.html($message);
+      });
+
+      return false;
+    });
+  });
+</script>
+{% endblock javascripts %}
