@@ -281,6 +281,7 @@ MISAGO_RANKING_LENGTH = 30
 # Controls max number of items displayed on ranked lists
 MISAGO_RANKING_SIZE = 30
 
+
 # Controls amount of data used in resolving read/unread states of threads and
 # forums. Any activity older than number of days below is assumed to be read
 # and not tracked anymore. Active forums can try lowering this value while

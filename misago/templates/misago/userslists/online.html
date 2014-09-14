@@ -5,22 +5,6 @@
 {% block meta-description %}{% trans "List of signed in users currently browsing forums." %}{% endblock meta-description %}
 
 
-{% block users-list %}
-<p class="lead">
-  {% capture trimmed as data_age %}
-  <abbr class="tooltip-top" title="{{ data_from|date:"DATE_FORMAT" }}">{{ data_from|date:"TIME_FORMAT" }}</abbr>
-  {% endcapture %}
-  {% blocktrans trimmed with online=users.paginator.count|intcomma date=data_age|safe count counter=users.paginator.count %}
-  {{ online }} user is online as of {{ date }}.
-  {% plural %}
-  {{ online }} users are online as of {{ date }}.
-  {% endblocktrans %}
-</p>
-
-{{ block.super }}
-{% endblock users-list %}
-
-
 {% block user-card %}
 <a href="{% url USER_PROFILE_URL user_slug=card.user.slug user_id=card.user.id %}" class="user-card {% if card.user.rank.css_class %}card-{{ card.user.rank.css_class }}{% endif %}">
   <img src="{{ card.user|avatar:400 }}" alt="{% trans "Avatar" %}">
@@ -36,6 +20,69 @@
 {% endblock user-card %}
 
 
-{% block empty-list %}
-{% trans "No registered users are signed in at the moment or you can't see them." %}
-{% endblock empty-list %}
+{% block users %}
+{% if users.paginator.count %}
+  <p class="lead">
+    {% capture trimmed as data_age %}
+    <abbr class="tooltip-top" title="{{ data_from|date:"DATE_FORMAT" }}">{{ data_from|date:"TIME_FORMAT" }}</abbr>
+    {% endcapture %}
+    {% blocktrans trimmed with online=users.paginator.count|intcomma date=data_age|safe count counter=users.paginator.count %}
+    {{ online }} user is online as of {{ date }}.
+    {% plural %}
+    {{ online }} users are online as of {{ date }}.
+    {% endblocktrans %}
+  </p>
+
+  <table class="table users-ranking">
+    <thead>
+      <tr>
+        <th colspan="2">{% trans "User" %}</th>
+        <th>{% trans "Last click" %}</th>
+        {% if user.acl.can_see_hidden_users %}
+        <th>{% trans "Hidden" %}</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for online in users %}
+      {% url USER_PROFILE_URL user_slug=online.slug user_id=online.user.id as user_url %}
+      <tr {% if online.user.pk == user.pk %}class="highlight"{% endif %}>
+        <td style="width: 1%;">
+          <a href="{{ user_url }}">
+            <img src="{{ online.user|avatar:30 }}" alt="{% trans "Avatar" %}"class="avatar">
+          </a>
+        </td>
+        <td>
+          <a href="{{ user_url }}" class="item-title">{{ online.user.username }}</a>
+        </td>
+        <td>
+          <abbr class="tooltip-top dynamic time-ago" title="{% blocktrans with last_click=online.last_click|date:"TIME_FORMAT" %}Last click on {{ last_click }}{% endblocktrans %}" data-timestamp="{{ online.last_click|date:"c" }}">
+            {{ online.last_click|date }}
+          </abbr>
+        </td>
+        {% if user.acl.can_see_hidden_users %}
+        <td>
+          {% if online.user.is_hiding_presence %}
+          <div class="text-warning">
+            <span class="fa fa-fw fa-lg fa-eye-slash"></span>
+            {% trans "Yes" %}
+          </div>
+          {% else %}
+          <div class="text-success">
+            <span class="fa fa-fw fa-lg fa-check"></span>
+            {% trans "No" %}
+          </div>
+          {% endif %}
+        </td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p class="lead">
+    {% trans "No registered users are signed in at the moment or you can't see them." %}
+  </p>
+{% endif %}
+{% endblock users %}
+

@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.db.models import Count
+from django.http import Http404
 from django.shortcuts import redirect, render as django_render
 from django.utils import timezone
 
@@ -113,9 +114,12 @@ def online(request, page=0):
     queryset = queryset.select_related('user__rank')
 
     template = "misago/userslists/online.html"
-    return list_view(request, template, queryset, page, {
-        'data_from': timezone.now()
-    })
+    try:
+        return list_view(request, template, queryset, page, {
+            'data_from': timezone.now()
+        })
+    except Http404:
+        return redirect('misago:users_online')
 
 
 @allow_see_list()
