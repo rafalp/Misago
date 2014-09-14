@@ -1,8 +1,9 @@
-import warnings
+from datetime import timedelta
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
+from django.db.models import Count
 from django.shortcuts import redirect, render as django_render
 from django.utils import timezone
 from django.views.decorators.cache import cache_page
@@ -62,18 +63,29 @@ def list_view(request, template, queryset, page, context=None):
     return render(request, template, context)
 
 
-@allow_see_list()
-@cache_page(24 * 3600)
-def active_posters(request, page=0):
-    warnings.warn("Not implemented yet! See #404 for details.",
-                  FutureWarning)
+def ranking_view(request, template, queryset, context=None):
+    context = context or {}
+    context.update({
+        'users': queryset[:settings.MISAGO_RANKING_SIZE],
+        'users_count': queryset.count()
+    })
+    return render(request, template, context)
 
+
+#@cache_page(18 * 3600)
+@allow_see_list()
+def active_posters(request, page=0):
     tracked_period = settings.MISAGO_RANKING_LENGTH
+    tracked_since = timezone.now() - timedelta(days=tracked_period)
+
     User = get_user_model()
-    queryset = User.objects.all().select_related('user__rank')
+    queryset = User.objects.filter(post__posted_on__gte=tracked_since)
+    queryset = queryset.annotate(num_posts=Count('post'))
+    queryset = queryset.select_related('user__rank')
+    queryset = queryset.order_by('-num_posts')
 
     template = "misago/userslists/active_posters.html"
-    return list_view(request, template, queryset, page, {
+    return ranking_view(request, template, queryset, {
         'tracked_period': tracked_period
     })
 

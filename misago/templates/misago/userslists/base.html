@@ -31,40 +31,42 @@
 </div>
 
 <div class="container">
-  {% if users.object_list %}
-    {% block users-list %}
-    <div class="users-cards">
-      {% for row in users.object_list|batch:6 %}
-      <div class="row">
-        {% for card in row %}
-        <div class="col-md-2">
+  {% block users %}
+    {% if users.object_list %}
+      {% block users-list %}
+      <div class="users-cards">
+        {% for row in users.object_list|batch:6 %}
+        <div class="row">
+          {% for card in row %}
+          <div class="col-md-2">
 
-          {% block user-card %}
-          <a href="{% url USER_PROFILE_URL user_slug=card.slug user_id=card.id %}" class="user-card {% if card.rank.css_class %}card-{{ card.rank.css_class }}{% endif %}">
-            <img src="{{ card|avatar:400 }}" alt="{% trans "Avatar" %}">
-            <div class="card-footer">
-              {% block user-card-footer %}
-              <h4 class="user-name">{{ card.username }}</h4>
-              {% endblock user-card-footer %}
-            </div>
-          </a>
-          {% endblock user-card %}
+            {% block user-card %}
+            <a href="{% url USER_PROFILE_URL user_slug=card.slug user_id=card.id %}" class="user-card {% if card.rank.css_class %}card-{{ card.rank.css_class }}{% endif %}">
+              <img src="{{ card|avatar:400 }}" alt="{% trans "Avatar" %}">
+              <div class="card-footer">
+                {% block user-card-footer %}
+                <h4 class="user-name">{{ card.username }}</h4>
+                {% endblock user-card-footer %}
+              </div>
+            </a>
+            {% endblock user-card %}
 
+          </div>
+          {% endfor %}
         </div>
         {% endfor %}
       </div>
-      {% endfor %}
-    </div>
-    {% endblock users-list %}
+      {% endblock users-list %}
 
-    {% block list-pagination %}
-      {% pagination users "misago/userslists/pagination.html" active_page.link %}
-    {% endblock list-pagination %}
-  {% else %}
-    <p class="lead">
-      {% block empty-list %}
-      {% endblock empty-list %}
-    </p>
-  {% endif %}
+      {% block list-pagination %}
+        {% pagination users "misago/userslists/pagination.html" active_page.link %}
+      {% endblock list-pagination %}
+    {% else %}
+      <p class="lead">
+        {% block empty-list %}
+        {% endblock empty-list %}
+      </p>
+    {% endif %}
+  {% endblock users %}
 </div>
 {% endblock content%}

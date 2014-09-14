@@ -254,6 +254,12 @@ Some lists act as rankings, displaying users in order of certain scoring criteri
 This setting controls maximum age in days of items that should count to ranking.
 
 
+MISAGO_RANKING_SIZE
+-------------------
+
+Maximum number of items on ranking page.
+
+
 MISAGO_READ_RECORD_LENGTH
 -------------------------
 Controls amount of data used in resolving read/unread states of threads and forums. Any activity older than number of days specified in this setting is assumed to be read and not tracked anymore. Active forums can try lowering this value while less active ones may wish to increase this number.

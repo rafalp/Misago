@@ -1,5 +1,5 @@
 {% extends "misago/userslists/base.html" %}
-{% load humanize i18n %}
+{% load humanize i18n misago_avatars %}
 
 
 {% block meta-description %}{% blocktrans trimmed with days=tracked_period %}
@@ -7,33 +7,60 @@ List of users that have posted new messages during last {{ days }} days.
 {% endblocktrans %}{% endblock meta-description %}
 
 
-{% block users-list %}
-<p class="lead">
-  {% blocktrans trimmed with posters=users.paginator.count|intcomma days=tracked_period count counter=users.paginator.count %}
-  {{ posters }} user has posted new messages posting during last {{ days }} days.
-  {% plural %}
-  {{ posters }} users posted new messages during last {{ days }} days.
-  {% endblocktrans %}
-</p>
+{% block users %}
+{% if users_count %}
+  <p class="lead">
+    {% blocktrans trimmed with posters=users_count|intcomma days=tracked_period count counter=users_count %}
+    {{ posters }} user has posted new messages posting during last {{ days }} days.
+    {% plural %}
+    {{ posters }} users posted new messages during last {{ days }} days.
+    {% endblocktrans %}
+  </p>
 
-{{ block.super }}
-{% endblock users-list %}
+  <table class="table users-ranking">
+    <thead>
+      <tr>
+        <th colspan="2">{% trans "User" %}</th>
+        <th class="text-center">{% trans "Rank" %}</th>
+        <th class="text-center">{% trans "Posts" %}</th>
+        <th class="text-center">{% trans "Total" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ranked in users %}
+      {% url USER_PROFILE_URL user_slug=ranked.slug user_id=ranked.id as user_url %}
+      <tr {% if ranked.pk == user.pk %}class="highlight"{% endif %}>
+        <td style="width: 1%;">
+          <a href="{{ user_url }}">
+            <img src="{{ ranked|avatar:30 }}" alt="{% trans "Avatar" %}"class="avatar">
+          </a>
+        </td>
+        <td>
+          <a href="{{ user_url }}" class="item-title">{{ ranked.username }}</a>
+        </td>
+        <td class="lead text-center">
+          #{{ forloop.counter }}
+        </td>
+        <td class="lead text-center">
+          {{ ranked.num_posts }}
+        </td>
+        <td class="lead text-center">
+          {% if ranked.num_posts > ranked.posts %}
+          {{ ranked.num_posts }}
+          {% else %}
+          {{ ranked.posts }}
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p class="lead">
+    {% blocktrans trimmed with days=tracked_period %}
+    No users have posted any new messages during last {{ days }} days.
+    {% endblocktrans %}
+  </p>
+{% endif %}
+{% endblock users %}
 
-
-{% block user-card-footer %}
-{{ block.super }}
-<small>
-  {% blocktrans trimmed with posts=user.followers|intcomma count counter=user.followers %}
-  {{ posts }} post
-  {% plural %}
-  {{ posts }} posts
-  {% endblocktrans %}
-</small>
-{% endblock user-card-footer %}
-
-
-{% block empty-list %}
-{% blocktrans trimmed with days=tracked_period %}
-No users have posted any new messages during last {{ days }} days.
-{% endblocktrans %}
-{% endblock empty-list %}

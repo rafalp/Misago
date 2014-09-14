@@ -6413,6 +6413,7 @@ body {
 }
 .yes-no-switch {
   margin-top: 5px;
+  margin-bottom: 0px;
   cursor: pointer;
 }
 .yes-no-switch .fa {

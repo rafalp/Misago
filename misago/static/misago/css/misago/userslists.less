@@ -77,3 +77,35 @@
     }
   }
 }
+
+
+// Users ranking
+//
+//==
+.users-ranking {
+  &>tbody {
+    &>tr {
+      &>td {
+        vertical-align: middle;
+
+        .avatar {
+          border-radius: @border-radius-base;
+        }
+
+        .item-title {
+          font-size: @font-size-large;
+        }
+      }
+
+      &.highlight {
+        color: @brand-accent;
+
+        .item-title {
+          &:link, &:visited {
+            color: @brand-accent;
+          }
+        }
+      }
+    }
+  }
+}
