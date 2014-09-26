@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model, update_session_auth_hash
+from django.db import transaction
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 
@@ -70,6 +71,7 @@ class UsersList(UserAdmin, generic.ListView):
             'confirmation': _("Are you sure you want to delete selected "
                               "users? This will also delete all content "
                               "associated with their accounts."),
+            'is_atomic': False,
         }
     ]
 

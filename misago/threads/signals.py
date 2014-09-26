@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.dispatch import receiver, Signal
 
 from misago.core.pgutils import batch_update, batch_delete
@@ -50,12 +51,14 @@ def delete_user_threads(sender, **kwargs):
 
     for thread in batch_delete(sender.thread_set.all(), 50):
         recount_forums.add(thread.forum_id)
-        thread.delete()
+        with transaction.atomic():
+            thread.delete()
 
     for post in batch_delete(sender.post_set.all(), 50):
         recount_forums.add(post.forum_id)
         recount_threads.add(post.thread_id)
-        post.delete()
+        with transaction.atomic():
+            post.delete()
 
     if recount_threads:
         changed_threads_qs = Thread.objects.filter(id__in=recount_threads)
