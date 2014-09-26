@@ -55,7 +55,7 @@ Base class for lists if items. Supports following properties:
 * **items_per_page** - integer controlling number of items displayed on single page. Defaults to 0 which means no pagination
 * **SearchForm** - Form type used to construct form for filtering this list. Either this field or ``get_search_form`` method is required to make list searchable.
 * **ordering** - list of supported sorting methods. List of tuples. Each tuple should countain two items: name of ordering method (eg. "Usernames, descending") and ``order_by`` argument ("-username"). Defaults to none which means queryset will not be ordered. If contains only one element, queryset is ordered, but option for changing ordering method is not displayed.
-* **mass_actions** - list of dicts defining list's mass actions. Each dict should have ``action`` key that will be used to identify method to call, ``name`` for displayed name, ``icon`` for icon and optional ``confirmation`` message.
+* **mass_actions** - list of dicts defining list's mass actions. Each dict should have ``action`` key that will be used to identify method to call, ``name`` for displayed name, ``icon`` for icon and optional ``confirmation`` message. Actions can define optional "is_atomic" key to control if they should be wrapped in transaction or not. This is default behaviour for mass actions.
 * **selection_label** - Label displayed on mass action button if there are items selected. ``0`` will be replaced with number of selected items automatically.
 * **empty_selection_label** - Label displayed on mass action button if there are no items selected.
 
@@ -176,6 +176,9 @@ Once model instance is obtained either from database or empty instance is create
 
 .. note::
    While target argument value is always present, you don't have to do anything with it if its not making any sense for your view.
+
+
+In addition, views are wrapped in database transaction. To turn this behaviour off, define ``is_atomic`` attribute with value ``False``.
 
 
 Adding extra values to context

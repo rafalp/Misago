@@ -6,12 +6,16 @@ from misago.admin.views.generic.base import AdminView
 
 
 class TargetedView(AdminView):
+    is_atomic = True
+
     def check_permissions(self, request, target):
         pass
 
     def get_target(self, kwargs):
         if len(kwargs) == 1:
-            select_for_update = self.get_model().objects.select_for_update()
+            select_for_update = self.get_model().objects
+            if self.is_atomic:
+                select_for_update = select_for_update.select_for_update()
             return select_for_update.get(pk=kwargs[kwargs.keys()[0]])
         else:
             return self.get_model()()
@@ -23,7 +27,13 @@ class TargetedView(AdminView):
             return None
 
     def dispatch(self, request, *args, **kwargs):
-        with transaction.atomic():
+        if self.is_atomic:
+            with transaction.atomic():
+                return self.wrapped_dispatch(request, *args, **kwargs)
+        else:
+            return self.wrapped_dispatch(request, *args, **kwargs)
+
+    def wrapped_dispatch(self, request, *args, **kwargs):
             target = self.get_target_or_none(request, kwargs)
             if not target:
                 messages.error(request, self.message_404)

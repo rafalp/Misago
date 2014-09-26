@@ -209,17 +209,22 @@ class ListView(AdminView):
             raise MassActionError(_("You have to select one or more items."))
 
         action_queryset = context['items'].filter(pk__in=items)
+
         if not action_queryset.exists():
             raise MassActionError(_("You have to select one or more items."))
 
-        action_callable = getattr(self, 'action_%s' % action)
-        with transaction.atomic():
+        action_callable = getattr(self, 'action_%s' % action['action'])
+
+        if action.get('is_atomic', True):
+            with transaction.atomic():
+                return action_callable(request, action_queryset)
+        else:
             return action_callable(request, action_queryset)
 
     def select_mass_action(self, action):
         for definition in self.mass_actions:
             if definition['action'] == action:
-                return action
+                return definition
         else:
             raise MassActionError(_("Action is not allowed."))
 
