@@ -15,7 +15,7 @@ class Post(models.Model):
     poster_ip = models.GenericIPAddressField()
     original = models.TextField()
     parsed = models.TextField()
-    checksum = models.CharField(max_length=64)
+    checksum = models.CharField(max_length=64, default='-')
     mentions = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                       related_name="mention_set")
     has_attachments = models.BooleanField(default=False)

@@ -40,7 +40,7 @@ class ReplyFormMiddleware(PostingMiddleware):
         if self.mode != EDIT:
             self.post.save()# We need post id for checksum
 
-        self.post.post_checksum = update_post_checksum(self.post)
+        update_post_checksum(self.post)
         self.post.update_fields.append('checksum')
 
     def new_thread(self, form):

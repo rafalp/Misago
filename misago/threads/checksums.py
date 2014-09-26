@@ -14,3 +14,18 @@ def make_post_checksum(post):
 def update_post_checksum(post):
     post.checksum = make_post_checksum(post)
     return post.checksum
+
+
+def is_event_valid(event):
+    valid_checksum = make_event_checksum(event)
+    return event.checksum == valid_checksum
+
+
+def make_event_checksum(event):
+    event_seeds = [unicode(v) for v in (event.id, event.occured_on)]
+    return checksums.make_checksum(event.message, event_seeds)
+
+
+def update_event_checksum(event):
+    event.checksum = make_event_checksum(event)
+    return event.checksum

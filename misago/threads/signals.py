@@ -4,7 +4,7 @@ from django.dispatch import receiver, Signal
 from misago.core.pgutils import batch_update, batch_delete
 from misago.forums.models import Forum
 
-from misago.threads.models import Thread, Post
+from misago.threads.models import Thread, Post, Event
 
 
 delete_post = Signal()
@@ -25,13 +25,15 @@ def merge_threads_posts(sender, **kwargs):
 
 
 @receiver(move_thread)
-def move_thread_posts(sender, **kwargs):
+def move_thread_content(sender, **kwargs):
     sender.post_set.update(forum=sender.forum)
+    sender.event_set.update(forum=sender.forum)
 
 
 from misago.forums.signals import delete_forum_content, move_forum_content
 @receiver(delete_forum_content)
 def delete_forum_threads(sender, **kwargs):
+    sender.event_set.all().delete()
     sender.thread_set.all().delete()
     sender.post_set.all().delete()
 
@@ -41,6 +43,7 @@ def move_forum_threads(sender, **kwargs):
     new_forum = kwargs['new_forum']
     Thread.objects.filter(forum=sender).update(forum=new_forum)
     Post.objects.filter(forum=sender).update(forum=new_forum)
+    Event.objects.filter(forum=sender).update(forum=new_forum)
 
 
 from misago.users.signals import delete_user_content, username_changed
@@ -85,3 +88,7 @@ def update_usernames(sender, **kwargs):
     Post.objects.filter(last_editor=sender).update(
         last_editor_name=sender.username,
         last_editor_slug=sender.slug)
+
+    Event.objects.filter(author=sender).update(
+        author_name=sender.username,
+        author_slug=sender.slug)
