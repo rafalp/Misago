@@ -4,6 +4,7 @@ from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
                                         UserManager as BaseUserManager,
                                         AnonymousUser as DjangoAnonymousUser)
 from django.core.mail import send_mail
+from django.core.urlresolvers import reverse
 from django.db import models, transaction
 from django.dispatch import receiver
 from django.utils import timezone
@@ -20,6 +21,7 @@ from misago.users import avatars
 from misago.users.signals import delete_user_content, username_changed
 from misago.users.signatures import (is_user_signature_valid,
                                      make_signature_checksum)
+from misago.users.sites import user_profile
 from misago.users.utils import hash_email
 
 
@@ -289,6 +291,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             self.is_superuser = False
             self.is_staff = False
+
+    def get_absolute_url(self):
+        return reverse(user_profile.get_default_link(), kwargs={
+            'user_slug': self.slug,
+            'user_id': self.id,
+        })
 
     def get_username(self):
         """

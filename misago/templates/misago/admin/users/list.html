@@ -30,12 +30,12 @@
 
 {% block table-row %}
 <td>
-  <a href="{% url USER_PROFILE_URL user_slug=item.slug user_id=item.id %}">
+  <a href="{{ item.get_absolute_url }}">
     <img src="{{ item|avatar:24 }}" alt="{% trans "Avatar" %}" width="24" height="24">
   </a>
 </td>
 <td class="item-name {% if item.requires_activation %}text-muted{% endif %}">
-  <a href="{% url USER_PROFILE_URL user_slug=item.slug user_id=item.id %}">{{ item.username }}</a>
+  <a href="{{ item.get_absolute_url }}">{{ item.username }}</a>
 </td>
 <td class="lead text-muted">
   {% if item.requires_activation_by_admin %}
