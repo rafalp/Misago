@@ -7,7 +7,8 @@ from misago.forums.lists import get_forums_list, get_forum_path
 
 from misago.threads.models import ANNOUNCEMENT, Thread, Label
 from misago.threads.permissions import exclude_invisible_threads
-from misago.threads.views.generic.threads import Sorting, Threads, ThreadsView
+from misago.threads.views.generic.threads import (Actions, Sorting, Threads,
+                                                  ThreadsView)
 
 
 __all__ = ['ForumFiltering', 'ForumThreads', 'ForumView']
@@ -150,9 +151,7 @@ class ForumThreads(Threads):
         self.sort_by = (weight, sort_by)
 
     def list(self, page=0):
-        queryset = exclude_invisible_threads(
-            self.user, self.forum, self.forum.thread_set)
-        queryset = self.filter_threads(queryset)
+        queryset = self.get_queryset()
         queryset = queryset.order_by(*self.sort_by)
 
         announcements_qs = queryset.filter(weight=ANNOUNCEMENT)
@@ -197,6 +196,11 @@ class ForumThreads(Threads):
                 else:
                     return queryset
 
+    def get_queryset(self):
+        queryset = exclude_invisible_threads(
+            self.user, self.forum, self.forum.thread_set)
+        return self.filter_threads(queryset)
+
     error_message = ("threads list has to be loaded via call to list() before "
                      "pagination data will be available")
 
@@ -215,6 +219,31 @@ class ForumThreads(Threads):
             raise AttributeError(self.error_message)
 
 
+class ForumActions(Actions):
+    def get_available_actions(self, kwargs):
+        forum = kwargs['forum']
+
+        actions = []
+
+        if forum.acl['can_change_threads_weight'] == 2:
+            actions.append({
+                'action': 'announce',
+                'name': _("Change to announcements")
+            })
+        if forum.acl['can_change_threads_weight'] == 1:
+            actions.append({
+                'action': 'pin',
+                'name': _("Change to pinned")
+            })
+        if forum.acl['can_change_threads_weight']:
+            actions.append({
+                'action': 'pin',
+                'name': _("Change to standard")
+            })
+
+        return actions
+
+
 class ForumView(ThreadsView):
     """
     Basic view for forum threads lists
@@ -224,6 +253,7 @@ class ForumView(ThreadsView):
     Threads = ForumThreads
     Sorting = Sorting
     Filtering = ForumFiltering
+    Actions = ForumActions
 
     def dispatch(self, request, *args, **kwargs):
         forum = self.get_forum(request, **kwargs)
@@ -246,6 +276,13 @@ class ForumView(ThreadsView):
         if cleaned_kwargs != kwargs:
             return redirect('misago:forum', **cleaned_kwargs)
 
+        actions = self.Actions(user=request.user, forum=forum)
+        if request.method == 'POST':
+            # see if we can delegate anything to actions manager
+            response = actions.handle_post(request, threads.get_queryset())
+            if response:
+                return response
+
         threads = self.Threads(request.user, forum)
         sorting.sort(threads)
         filtering.filter(threads)
@@ -260,6 +297,9 @@ class ForumView(ThreadsView):
             'threads': threads.list(page_number),
             'page': threads.page,
             'paginator': threads.paginator,
+
+            'list_actions': actions.get_list(),
+            'selected_threads': actions.get_selected_ids(),
 
             'sorting': sorting,
             'filtering': filtering,

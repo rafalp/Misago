@@ -48,7 +48,8 @@ class ListView(AdminView):
             'action': action,
             'name': name,
             'icon': icon,
-            'confirmation': confirmation})
+            'confirmation': confirmation
+        })
 
     @classmethod
     def add_item_action(cls, name, icon, link, style=None):
@@ -60,7 +61,7 @@ class ListView(AdminView):
             'icon': icon,
             'link': link,
             'style': style,
-            })
+        })
 
     def get_queryset(self):
         return self.get_model().objects.all()

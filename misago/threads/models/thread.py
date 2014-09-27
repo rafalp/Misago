@@ -100,6 +100,9 @@ class Thread(models.Model):
         first_post = self.post_set.order_by('id')[:1][0]
         self.set_first_post(first_post)
 
+        self.is_moderated = first_post.is_moderated
+        self.is_hidden = first_post.is_hidden
+
         last_post_qs = self.post_set.filter(is_moderated=False).order_by('-id')
         last_post = last_post_qs[:1]
         if last_post:
