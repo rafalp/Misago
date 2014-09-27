@@ -54,6 +54,10 @@
   {% endif %}
 
   {% include "misago/threads/reply_btn.html" %}
+
+  {% if user.is_authenticated %}
+    {% include "misago/threads/actions.html" %}
+  {% endif %}
 </div>
 
 {{ block.super }}

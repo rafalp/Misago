@@ -230,15 +230,14 @@ class ForumActions(Actions):
                 'action': 'announce',
                 'name': _("Change to announcements")
             })
-        if forum.acl['can_change_threads_weight'] == 1:
+        if forum.acl['can_change_threads_weight']:
             actions.append({
                 'action': 'pin',
                 'name': _("Change to pinned")
             })
-        if forum.acl['can_change_threads_weight']:
             actions.append({
-                'action': 'pin',
-                'name': _("Change to standard")
+                'action': 'default',
+                'name': _("Change to default")
             })
 
         return actions
