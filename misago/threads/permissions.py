@@ -9,7 +9,7 @@ from misago.core import forms
 from misago.forums.models import Forum, RoleForumACL, ForumRole
 from misago.forums.permissions import get_forums_roles
 
-from misago.threads.models import Thread, Post
+from misago.threads.models import Thread, Post, Event
 
 
 """
@@ -112,6 +112,15 @@ class PermissionsForm(forms.Form):
         help_text=_("Will see and be able to accept moderated content."))
     can_report_content = forms.YesNoSwitch(label=_("Can report posts"))
     can_see_reports = forms.YesNoSwitch(label=_("Can see reports"))
+    can_hide_events = forms.TypedChoiceField(
+        label=_("Can hide events"),
+        coerce=int,
+        initial=0,
+        choices=(
+            (0, _("No")),
+            (1, _("Hide events")),
+            (2, _("Delete events"))
+        ))
 
 
 def change_permissions_form(role):
@@ -158,6 +167,7 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
         'can_review_moderated_content': 0,
         'can_report_content': 0,
         'can_see_reports': 0,
+        'can_can_hide_events': 0,
     }
     final_acl.update(acl)
 
@@ -180,6 +190,7 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
         can_review_moderated_content=algebra.greater,
         can_report_content=algebra.greater,
         can_see_reports=algebra.greater,
+        can_can_hide_events=algebra.greater,
     )
 
     return final_acl
@@ -195,6 +206,8 @@ def add_acl_to_target(user, target):
         add_acl_to_thread(user, target)
     if isinstance(target, Post):
         add_acl_to_post(user, target)
+    if isinstance(target, Event):
+        add_acl_to_event(user, target)
 
 
 def add_acl_to_forum(user, forum):
@@ -219,6 +232,7 @@ def add_acl_to_forum(user, forum):
         'can_review_moderated_content': 0,
         'can_report_content': 0,
         'can_see_reports': 0,
+        'can_can_hide_events': 0,
     })
 
     algebra.sum_acls(forum.acl, acls=[forum_acl],
@@ -243,6 +257,7 @@ def add_acl_to_forum(user, forum):
             can_review_moderated_content=algebra.greater,
             can_report_content=algebra.greater,
             can_see_reports=algebra.greater,
+            can_can_hide_events=algebra.greater,
         )
 
     forum.acl['can_see_own_threads'] = not forum.acl['can_see_all_threads']
@@ -254,6 +269,14 @@ def add_acl_to_thread(user, thread):
 
 def add_acl_to_post(user, post):
     pass
+
+
+def add_acl_to_event(user, event):
+    forum_acl = user.acl['forums'].get(event.forum_id, {})
+    can_hide_events = forum_acl.get('can_can_hide_events', 0)
+
+    event.acl['can_hide'] = can_hide_events > 0
+    event.acl['can_delete'] = can_hide_events == 2
 
 
 """

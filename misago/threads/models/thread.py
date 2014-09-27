@@ -26,6 +26,7 @@ class Thread(models.Model):
     has_reported_posts = models.BooleanField(default=False)
     has_moderated_posts = models.BooleanField(default=False)
     has_hidden_posts = models.BooleanField(default=False)
+    has_events = models.BooleanField(default=False)
     started_on = models.DateTimeField()
     first_post = models.ForeignKey('misago_threads.Post', related_name='+',
                                    null=True, blank=True,
@@ -93,6 +94,8 @@ class Thread(models.Model):
 
         hidden_post_qs = self.post_set.filter(is_hidden=True)[:1]
         self.has_hidden_posts = hidden_post_qs.exists()
+
+        self.has_events = self.event_set.exists()
 
         first_post = self.post_set.order_by('id')[:1][0]
         self.set_first_post(first_post)

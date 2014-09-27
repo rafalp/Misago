@@ -79,6 +79,7 @@ class Migration(migrations.Migration):
                 ('has_reported_posts', models.BooleanField(default=False)),
                 ('has_moderated_posts', models.BooleanField(default=False)),
                 ('has_hidden_posts', models.BooleanField(default=False)),
+                ('has_events', models.BooleanField(default=False)),
                 ('started_on', models.DateTimeField()),
                 ('starter_name', models.CharField(max_length=255)),
                 ('starter_slug', models.CharField(max_length=255)),

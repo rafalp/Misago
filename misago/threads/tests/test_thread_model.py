@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from misago.forums.models import Forum
 
-from misago.threads.models import Thread, Post
+from misago.threads.models import Thread, Post, Event
 
 
 class ThreadModelTests(TestCase):
@@ -73,6 +73,7 @@ class ThreadModelTests(TestCase):
         self.assertFalse(self.thread.has_reported_posts)
         self.assertFalse(self.thread.has_moderated_posts)
         self.assertFalse(self.thread.has_hidden_posts)
+        self.assertFalse(self.thread.has_events)
         self.assertEqual(self.thread.replies, 1)
 
         # add moderated post
@@ -98,6 +99,7 @@ class ThreadModelTests(TestCase):
         self.assertFalse(self.thread.has_reported_posts)
         self.assertTrue(self.thread.has_moderated_posts)
         self.assertFalse(self.thread.has_hidden_posts)
+        self.assertFalse(self.thread.has_events)
         self.assertEqual(self.thread.replies, 1)
 
         # add hidden post
@@ -123,6 +125,7 @@ class ThreadModelTests(TestCase):
         self.assertFalse(self.thread.has_reported_posts)
         self.assertTrue(self.thread.has_moderated_posts)
         self.assertTrue(self.thread.has_hidden_posts)
+        self.assertFalse(self.thread.has_events)
         self.assertEqual(self.thread.replies, 2)
 
         # unhide post
@@ -139,6 +142,7 @@ class ThreadModelTests(TestCase):
         self.assertFalse(self.thread.has_reported_posts)
         self.assertTrue(self.thread.has_moderated_posts)
         self.assertFalse(self.thread.has_hidden_posts)
+        self.assertFalse(self.thread.has_events)
         self.assertEqual(self.thread.replies, 2)
 
         # unmoderate post
@@ -155,7 +159,25 @@ class ThreadModelTests(TestCase):
         self.assertFalse(self.thread.has_reported_posts)
         self.assertFalse(self.thread.has_moderated_posts)
         self.assertFalse(self.thread.has_hidden_posts)
+        self.assertFalse(self.thread.has_events)
         self.assertEqual(self.thread.replies, 3)
+
+        # add event
+        event = Event.objects.create(
+            forum=self.forum,
+            thread=self.thread,
+            author_name=user.username,
+            author_slug=user.slug,
+            message="How bout nope?")
+
+        # sync set has_events flag
+        self.thread.synchronize()
+        self.assertTrue(self.thread.has_events)
+
+        # sync unsetset has_events flag after only event was deleted
+        event.delete()
+        self.thread.synchronize()
+        self.assertFalse(self.thread.has_events)
 
     def test_set_first_post(self):
         """set_first_post sets first post and poster data on thread"""
