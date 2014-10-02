@@ -53,7 +53,7 @@ def uiserver(request):
 
     for name, view in UI_VIEWS:
         try:
-            view_response = view(request)
+            view_response = view(request, resolver_match)
             if view_response:
                 response_dict['total_count'] += view_response.get('count', 0)
                 response_dict[name] = view_response
