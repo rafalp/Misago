@@ -42,8 +42,11 @@ def post_thread(forum, title='Test thread', weight=0, poster='Tester',
         })
 
     thread = Thread.objects.create(**kwargs)
-    forum.synchronize()
-    forum.save()
+    reply_thread(thread,
+        poster=poster,
+        posted_on=thread.last_post_on,
+        is_moderated=is_moderated)
+
     return thread
 
 

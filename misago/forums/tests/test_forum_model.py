@@ -57,7 +57,6 @@ class ForumModelTests(TestCase):
         datetime = timezone.now()
 
         thread = testutils.post_thread(self.forum)
-        post = testutils.reply_thread(thread)
 
         return thread
 
