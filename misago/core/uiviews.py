@@ -35,7 +35,10 @@ def get_resolver_match(request):
     requesting_path = requesting_path[len(request.scheme) + 3:]
     requesting_path = requesting_path[len(request.META['HTTP_HOST']):]
 
-    return resolve(requesting_path)
+    try:
+        return resolve(requesting_path)
+    except Http404:
+        return None
 
 
 @ajax_only
@@ -50,11 +53,11 @@ def uiserver(request):
 
     for name, view in UI_VIEWS:
         try:
-            view_response = view(request, resolver_match)
+            view_response = view(request)
             if view_response:
                 response_dict['total_count'] += view_response.get('count', 0)
                 response_dict[name] = view_response
-        except (Http404, PermissionDenied):
+        except PermissionDenied:
             pass
 
     return JsonResponse(response_dict)
