@@ -14,6 +14,10 @@
         padding-top: @padding-base-vertical + 1px;
         padding-bottom: @padding-base-vertical + 1px;
 
+        &.active {
+          background-color: @table-row-highlight;
+        }
+
 
         // Thread icon
         //
@@ -82,16 +86,10 @@
             display: inline-block;
             margin: 0px;
             margin-right: @font-size-large;
-            .opacity(0.5);
             transition-duration: 0.5s;
             width: @font-size-large * 4.5;
 
             font-size: @font-size-large;
-
-            &:hover, &:focus {
-              .opacity(0.9);
-              transition-duration: 0.05s;
-            }
 
             &>div {
               display: inline;
@@ -140,6 +138,28 @@
 
             &:active {
               color: @state-clicked;
+            }
+          }
+
+          .thread-check {
+            margin: 0px;
+
+            color: @text-muted;
+            font-size: 25px;
+            text-decoration: none;
+            line-height: 24px;
+
+            cursor: pointer;
+
+
+            &.active {
+              color: @brand-success;
+            }
+
+            input {
+              position: absolute;
+              top: -9999px;
+              left: -9999px;
             }
           }
         }

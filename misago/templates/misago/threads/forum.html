@@ -53,11 +53,11 @@
     {% include "misago/threads/show.html" %}
   {% endif %}
 
-  {% include "misago/threads/reply_btn.html" %}
-
-  {% if user.is_authenticated %}
+  {% if user.is_authenticated and list_actions %}
     {% include "misago/threads/actions.html" %}
   {% endif %}
+
+  {% include "misago/threads/reply_btn.html" %}
 </div>
 
 {{ block.super }}
@@ -84,4 +84,7 @@
 {% block javascripts %}
 {{ block.super }}
 {% include "misago/forums/js.html" %}
+{% if user.is_authenticated and list_actions %}
+  {% include "misago/threads/actions_js.html" %}
+{% endif %}
 {% endblock javascripts %}

@@ -22,10 +22,12 @@
       background: none;
       border-color: transparent;
       .box-shadow(none);
+      margin-right: @padding-small-horizontal;
       padding: 0px 6px;
+      transition: 0s;
 
-      color: @gray-light;
-      font-size: 24px;
+      color: @text-muted;
+      font-size: 25px;
       line-height: 32px;
 
       &.active, &:active {
@@ -206,67 +208,6 @@
 
             &.btn-success {
               color: darken(@brand-success, 20%);
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-
-//== Row select
-//
-//**
-.table-panel {
-  table.table {
-    tr {
-      &.active {
-        td {
-          background-color: fadeOut(@brand-warning, 95%);
-        }
-      }
-
-      td.row-select {
-        width: 1%;
-
-        label {
-          padding: 0px;
-          width: 24px;
-          height: 24px;
-
-          text-align: center;
-
-          input {
-            width: 12px;
-            height: 12px;
-          }
-
-          &.ninja-label {
-              border: 0;
-              clip: rect(0 0 0 0);
-              height: 1px;
-              margin: -1px;
-              overflow: hidden;
-              padding: 0;
-              position: absolute;
-              width: 1px;
-          }
-        }
-
-        a {
-          display: block;
-          width: 24px;
-          height: 24px;
-
-          span {
-            color: lighten(@gray-light, 5%);
-            font-size: 24px;
-          }
-
-          &.active {
-            span {
-              color: @brand-success;
             }
           }
         }

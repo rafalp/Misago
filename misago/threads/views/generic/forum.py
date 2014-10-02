@@ -1,10 +1,12 @@
+from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
-from django.utils.translation import ugettext_lazy, ugettext as _
+from django.utils.translation import ugettext_lazy, ugettext as _, ungettext
 
 from misago.core.shortcuts import paginate
 from misago.forums.lists import get_forums_list, get_forum_path
 
+from misago.threads import moderation
 from misago.threads.models import ANNOUNCEMENT, Thread, Label
 from misago.threads.permissions import exclude_invisible_threads
 from misago.threads.views.generic.threads import (Actions, Sorting, Threads,
@@ -12,6 +14,78 @@ from misago.threads.views.generic.threads import (Actions, Sorting, Threads,
 
 
 __all__ = ['ForumFiltering', 'ForumThreads', 'ForumView']
+
+
+class ForumActions(Actions):
+    def get_available_actions(self, kwargs):
+        forum = kwargs['forum']
+
+        actions = []
+
+        if forum.acl['can_change_threads_weight'] == 2:
+            actions.append({
+                'action': 'announce',
+                'name': _("Change to announcements")
+            })
+        if forum.acl['can_change_threads_weight']:
+            actions.append({
+                'action': 'pin',
+                'name': _("Change to pinned")
+            })
+            actions.append({
+                'action': 'default',
+                'name': _("Change to default")
+            })
+
+        return actions
+
+    def action_announce(self, request, threads):
+        changed_threads = 0
+        for thread in threads:
+            if moderation.announce_thread(request.user, thread):
+                changed_threads += 1
+
+        if changed_threads:
+            message = ungettext(
+                '%(changed)d thread was changed to announcement.',
+                '%(changed)d threads were changed to announcements.',
+            changed_threads)
+            messages.success(request, message % {'changed': changed_threads})
+        else:
+            message = ("No threads were changed to announcements.")
+            messages.info(request, message)
+
+    def action_pin(self, request, threads):
+        changed_threads = 0
+        for thread in threads:
+            if moderation.pin_thread(request.user, thread):
+                changed_threads += 1
+
+        if changed_threads:
+            message = ungettext(
+                '%(changed)d thread was pinned.',
+                '%(changed)d threads were pinned.',
+            changed_threads)
+            messages.success(request, message % {'changed': changed_threads})
+        else:
+            message = ("No threads were pinned.")
+            messages.info(request, message)
+
+    def action_default(self, request, threads):
+        changed_threads = 0
+        for thread in threads:
+            if moderation.default_thread(request.user, thread):
+                changed_threads += 1
+
+        if changed_threads:
+            message = ungettext(
+                '%(changed)d thread weight was changed to default.',
+                '%(changed)d threads weight was changed to default.',
+            changed_threads)
+            messages.success(request, message % {'changed': changed_threads})
+        else:
+            message = ("No threads weight was changed to default.")
+            messages.info(request, message)
 
 
 class ForumFiltering(object):
@@ -219,30 +293,6 @@ class ForumThreads(Threads):
             raise AttributeError(self.error_message)
 
 
-class ForumActions(Actions):
-    def get_available_actions(self, kwargs):
-        forum = kwargs['forum']
-
-        actions = []
-
-        if forum.acl['can_change_threads_weight'] == 2:
-            actions.append({
-                'action': 'announce',
-                'name': _("Change to announcements")
-            })
-        if forum.acl['can_change_threads_weight']:
-            actions.append({
-                'action': 'pin',
-                'name': _("Change to pinned")
-            })
-            actions.append({
-                'action': 'default',
-                'name': _("Change to default")
-            })
-
-        return actions
-
-
 class ForumView(ThreadsView):
     """
     Basic view for forum threads lists
@@ -275,16 +325,16 @@ class ForumView(ThreadsView):
         if cleaned_kwargs != kwargs:
             return redirect('misago:forum', **cleaned_kwargs)
 
+        threads = self.Threads(request.user, forum)
+        sorting.sort(threads)
+        filtering.filter(threads)
+
         actions = self.Actions(user=request.user, forum=forum)
         if request.method == 'POST':
             # see if we can delegate anything to actions manager
             response = actions.handle_post(request, threads.get_queryset())
             if response:
                 return response
-
-        threads = self.Threads(request.user, forum)
-        sorting.sort(threads)
-        filtering.filter(threads)
 
         return self.render(request, {
             'link_name': self.link_name,

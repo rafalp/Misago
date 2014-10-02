@@ -39,6 +39,11 @@
             </div>
             {% block thread-extra %}
             <div class="col-md-4 thread-stats">
+              <a href="#" class="thread-check">
+                <span class="fa fa-check"></span>
+                <input type="checkbox" form="threads-actions" name="thread" value="{{ thread.pk }}"{% if thread.pk in selected_threads %}checked="checked"{% endif %}>
+              </a>
+
               {% block thread-stats %}
               <a href="#" class="last-post">
                 <span class="dynamic time-ago-compact tooltip-top" data-timestamp="{{ thread.last_post_on|date:"c" }}" title="{% blocktrans with last_post=thread.last_post_on|date:"DATETIME_FORMAT" %}Last post from {{ last_post }}{% endblocktrans %}">{{ thread.last_post_on|compact_date|lower }}</span>

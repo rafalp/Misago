@@ -30,16 +30,18 @@ class Actions(object):
                                   "of dicts with allowed actions")
 
     def resolve_action(self, request):
-        action_name = request.get_list('thread')
+        action_name = request.POST.get('action')
         if ':' in action_name:
-            action_name, action_arg = action_name.split(':')
+            action_bits = action_name.split(':')
+            action_name = action_bits[0]
+            action_arg = action_bits[1]
         else:
             action_arg = None
 
         for action in self.available_actions:
             if action['action'] == action_name:
                 action_callable = 'action_%s' % action_name
-                return getattr(self, action_callable)
+                return getattr(self, action_callable), action_arg
         else:
             raise ModerationError(_("Requested action is invalid."))
 
@@ -60,7 +62,7 @@ class Actions(object):
         try:
             action, action_arg = self.resolve_action(request)
             self.selected_ids = self.clean_selection(
-                request.POST.get_list('thread'))
+                request.POST.getlist('thread', []))
 
             filtered_queryset = queryset.filter(pk__in=self.selected_ids)
             if filtered_queryset.exists():

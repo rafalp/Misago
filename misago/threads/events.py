@@ -16,7 +16,20 @@ def format_message(message, links):
     if links:
         formats = {}
         for name, value in links.items():
-            formats[name] = LINK_TEMPLATE % (escape(value[1]), escape(name), escape(value[0]))
+            try:
+                replaces = (
+                    escape(value.get_absolute_url()),
+                    escape(name),
+                    escape(unicode(value))
+                )
+            except AttributeError:
+                replaces = (
+                    escape(value[1]),
+                    escape(name),
+                    escape(value[0])
+                )
+
+            formats[name] = LINK_TEMPLATE % replaces
         return message % formats
     else:
         return message

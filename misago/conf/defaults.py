@@ -64,6 +64,7 @@ PIPELINE_JS = {
             'misago/js/misago-ajax.js',
             'misago/js/misago-uiserver.js',
             'misago/js/misago-notifications.js',
+            'misago/js/misago-threads-lists.js',
         ),
         'output_filename': 'misago.js',
     },
