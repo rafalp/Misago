@@ -13,7 +13,7 @@
       {% for action in list_actions %}
       <li>
         <button type="submit" name="action" value="{{ action.action }}" {% if action.confirmation %}data-confirmation="{{ action.confirmation }}"{% endif %}>
-          <span class="{{ action.icon }}"></span>
+          <span class="fa fa-{{ action.icon }} fa-fw"></span>
           {{ action.name }}
         </button>
       </li>

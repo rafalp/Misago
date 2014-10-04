@@ -25,15 +25,18 @@ class ForumActions(Actions):
         if forum.acl['can_change_threads_weight'] == 2:
             actions.append({
                 'action': 'announce',
+                'icon': 'star',
                 'name': _("Change to announcements")
             })
         if forum.acl['can_change_threads_weight']:
             actions.append({
                 'action': 'pin',
+                'icon': 'bookmark',
                 'name': _("Change to pinned")
             })
             actions.append({
                 'action': 'reset',
+                'icon': 'circle',
                 'name': _("Reset weight")
             })
         return actions
