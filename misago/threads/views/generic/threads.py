@@ -16,7 +16,7 @@ __all__ = ['Actions', 'Sorting', 'Threads', 'ThreadsView']
 
 class Actions(object):
     select_threads_message = ugettext_lazy(
-        "You have to select at least one thread")
+        "You have to select at least one thread.")
 
     def __init__(self, **kwargs):
         if kwargs.get('user').is_authenticated():
@@ -33,13 +33,15 @@ class Actions(object):
         action_name = request.POST.get('action')
         if ':' in action_name:
             action_bits = action_name.split(':')
-            action_name = action_bits[0]
+            action_name = '%s:' % action_bits[0]
             action_arg = action_bits[1]
         else:
             action_arg = None
 
         for action in self.available_actions:
             if action['action'] == action_name:
+                if action_name[-1] == ':':
+                    action_name = action_name[:-1]
                 action_callable = 'action_%s' % action_name
                 return getattr(self, action_callable), action_arg
         else:

@@ -20,7 +20,7 @@ def announce_thread(user, thread):
 
 @atomic
 def pin_thread(user, thread):
-    if thread.weight < 1:
+    if thread.weight != 1:
         thread.weight = 1
 
         message = _("%(user)s pinned thread.")
@@ -33,7 +33,7 @@ def pin_thread(user, thread):
 
 
 @atomic
-def default_thread(user, thread):
+def reset_thread(user, thread):
     if thread.weight > 0:
         if thread.is_announcement:
             message = _("%(user)s withhold announcement.")

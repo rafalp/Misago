@@ -33,10 +33,9 @@ class ForumActions(Actions):
                 'name': _("Change to pinned")
             })
             actions.append({
-                'action': 'default',
-                'name': _("Change to default")
+                'action': 'reset',
+                'name': _("Reset threads weight")
             })
-
         return actions
 
     def action_announce(self, request, threads):
@@ -71,20 +70,20 @@ class ForumActions(Actions):
             message = ("No threads were pinned.")
             messages.info(request, message)
 
-    def action_default(self, request, threads):
+    def action_reset(self, request, threads):
         changed_threads = 0
         for thread in threads:
-            if moderation.default_thread(request.user, thread):
+            if moderation.reset_thread(request.user, thread):
                 changed_threads += 1
 
         if changed_threads:
             message = ungettext(
-                '%(changed)d thread weight was changed to default.',
-                '%(changed)d threads weight was changed to default.',
+                '%(changed)d thread weight was reset.',
+                '%(changed)d threads weight was reset.',
             changed_threads)
             messages.success(request, message % {'changed': changed_threads})
         else:
-            message = ("No threads weight was changed to default.")
+            message = ("No threads weight was reset.")
             messages.info(request, message)
 
 

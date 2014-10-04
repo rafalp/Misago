@@ -8,8 +8,10 @@ from misago.forums.models import Forum
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads import testutils
-from misago.threads.models import Label
-from misago.threads.views.generic.forum import ForumFiltering, ForumThreads
+from misago.threads.models import Thread, Label
+from misago.threads.moderation import ModerationError
+from misago.threads.views.generic.forum import (ForumActions, ForumFiltering,
+                                                ForumThreads)
 
 
 class ForumViewHelperTestCase(AuthenticatedUserTestCase):
@@ -26,7 +28,69 @@ class ForumViewHelperTestCase(AuthenticatedUserTestCase):
         forums_acl['visible_forums'].append(self.forum.pk)
         forums_acl['forums'][self.forum.pk] = new_acl
         override_acl(self.user, forums_acl)
+
+        self.forum.acl = {}
         add_acl(self.user, self.forum)
+
+
+class MockRequest(object):
+    def __init__(self, user, method='GET', POST=None):
+        self.POST = POST or {}
+        self.user = user
+        self.session = {}
+        self.path = '/forum/fake-forum-1/'
+
+
+class ActionsTests(ForumViewHelperTestCase):
+    def setUp(self):
+        super(ActionsTests, self).setUp()
+
+        self.user._misago_real_ip = '127.0.0.1'
+
+    def test_weight_actions(self):
+        """ForumActions initializes valid list of available weights"""
+        self.override_acl({
+            'can_change_threads_weight': 0,
+        })
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [])
+
+        self.override_acl({
+            'can_change_threads_weight': 1,
+        })
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [
+            {
+                'action': 'pin',
+                'name': _("Change to pinned")
+            },
+            {
+                'action': 'default',
+                'name': _("Change to default")
+            },
+        ])
+
+        self.override_acl({
+            'can_change_threads_weight': 2,
+        })
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [
+            {
+                'action': 'announce',
+                'name': _("Change to announcements")
+            },
+            {
+                'action': 'pin',
+                'name': _("Change to pinned")
+            },
+            {
+                'action': 'default',
+                'name': _("Change to default")
+            },
+        ])
 
 
 class ForumFilteringTests(ForumViewHelperTestCase):
@@ -518,3 +582,100 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
         self.assertIn(anon_title, response.content)
+
+    def test_moderate_threads_weight(self):
+        """moderation allows for changing threads weight"""
+        test_acl = {
+            'can_see': 1,
+            'can_browse': 1,
+            'can_see_all_threads': 1,
+            'can_change_threads_weight': 2
+        }
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Change to announcements", response.content)
+
+        announcement = testutils.post_thread(self.forum, weight=2)
+        pinned = testutils.post_thread(self.forum, weight=1)
+        thread = testutils.post_thread(self.forum, weight=0)
+
+        # annouce nothing
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={'action': 'announce'})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("You have to select at least one thread.",
+                      response.content)
+
+        # make announcement announcement
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'announce', 'thread': [announcement.pk]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("No threads were changed to announcements.",
+                      response.content)
+
+        # make non-announcements announcements
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'announce', 'thread': [pinned.pk, thread.pk]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("2 threads were changed to announcements.",
+                      response.content)
+
+        pinned = Thread.objects.get(pk=pinned.pk)
+        thread = Thread.objects.get(pk=thread.pk)
+
+        self.assertEqual(pinned.weight, 2)
+        self.assertEqual(thread.weight, 2)
+
+        # make threads pinned
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'pin', 'thread': [pinned.pk, thread.pk]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("2 threads were pinned.", response.content)
+
+        announcement = Thread.objects.get(pk=announcement.pk)
+        pinned = Thread.objects.get(pk=pinned.pk)
+        thread = Thread.objects.get(pk=thread.pk)
+
+        self.assertEqual(announcement.weight, 2)
+        self.assertEqual(pinned.weight, 1)
+        self.assertEqual(thread.weight, 1)
+
+        # reset threads pinned
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'reset', 'thread': [thread.pk]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("1 thread weight was reset.", response.content)
+
+        announcement = Thread.objects.get(pk=announcement.pk)
+        pinned = Thread.objects.get(pk=pinned.pk)
+        thread = Thread.objects.get(pk=thread.pk)
+
+        self.assertEqual(announcement.weight, 2)
+        self.assertEqual(pinned.weight, 1)
+        self.assertEqual(thread.weight, 0)

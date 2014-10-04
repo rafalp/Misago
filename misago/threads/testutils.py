@@ -79,4 +79,5 @@ def reply_thread(thread, poster="Tester", message='I am test message',
     thread.save()
     thread.forum.synchronize()
     thread.forum.save()
+
     return post

@@ -1,4 +1,3 @@
-from misago.acl.testutils import override_acl
 from misago.forums.models import Forum
 from misago.users.testutils import AuthenticatedUserTestCase
 
@@ -30,6 +29,13 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(event.icon, "star")
         self.assertIn("changed thread to announcement.", event.message)
 
+    def test_announce_invalid_thread(self):
+        """announce_thread returns false for already announced thread"""
+        self.thread.weight = 2
+
+        self.assertFalse(moderation.announce_thread(self.user, self.thread))
+        self.assertEqual(self.thread.weight, 2)
+
     def test_pin_thread(self):
         """pin_thread makes thread pinned"""
         self.assertEqual(self.thread.weight, 0)
@@ -43,6 +49,13 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
 
         self.assertEqual(event.icon, "bookmark")
         self.assertIn("pinned thread.", event.message)
+
+    def test_pin_invalid_thread(self):
+        """pin_thread returns false for already pinned thread"""
+        self.thread.weight = 1
+
+        self.assertFalse(moderation.pin_thread(self.user, self.thread))
+        self.assertEqual(self.thread.weight, 1)
 
     def test_default_thread(self):
         """default_thread defaults thread weight"""
@@ -59,3 +72,8 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
 
         self.assertIn("unpinned thread.", event.message)
         self.assertEqual(event.icon, "circle")
+
+    def test_default_invalid_thread(self):
+        """default_thread returns false for already default thread"""
+        self.assertFalse(moderation.default_thread(self.user, self.thread))
+        self.assertEqual(self.thread.weight, 0)
