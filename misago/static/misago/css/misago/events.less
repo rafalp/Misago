@@ -1,0 +1,68 @@
+//
+// Posts Events Styles
+// --------------------------------------------------
+
+
+// Events list
+//
+//==
+.posts-list {
+  .post-events {
+    .event {
+      color: @text-muted;
+
+      .fa-stack {
+        margin-right: @line-height-computed / 3;
+
+        &>.fa-stack-2x {
+          color: @post-panel-border;
+        }
+
+        &>.fa-inverse {
+          position: relative;
+          bottom: 1px;
+        }
+      }
+
+      img {
+        border-radius: @border-radius-small;
+        height: 18px;
+        width: 18px;
+      }
+
+      a {
+        &:link, &:visited {
+          color: @state-hover;
+          font-weight: bold;
+        }
+
+        &:hover {
+          color: @state-hover;
+          text-decoration: underline;
+        }
+
+        &:active, &:focus {
+          color: @state-clicked;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .divider {
+      padding-left: @line-height-computed / 4;
+      color: @post-panel-border;
+
+      abbr {
+        margin-left: @line-height-computed / 2;
+        position: relative;
+        bottom: 2px;
+
+        font-size: @font-size-small;
+
+        &:hover {
+          color: @text-muted;
+        }
+      }
+    }
+  }
+}
