@@ -81,8 +81,7 @@ class ForumFormMixin(object):
             if copied_acls:
                 RoleForumACL.objects.bulk_create(copied_acls)
 
-            acl_version.invalidate()
-
+        acl_version.invalidate()
         messages.success(request, self.message_submit % target.name)
 
 

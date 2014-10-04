@@ -91,11 +91,6 @@ class Forum(MPTTModel):
         else:
             return self.name
 
-    def save(self, *args, **kwargs):
-        if self.pk:
-            acl_version.invalidate()
-        return super(Forum, self).save(*args, **kwargs)
-
     def delete(self, *args, **kwargs):
         Forum.objects.clear_cache()
         acl_version.invalidate()
