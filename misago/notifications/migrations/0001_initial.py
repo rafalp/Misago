@@ -22,6 +22,7 @@ class Migration(migrations.Migration):
                 ('date', models.DateTimeField(default=django.utils.timezone.now, db_index=True)),
                 ('trigger', models.CharField(max_length=8)),
                 ('message', models.TextField()),
+                ('checksum', models.CharField(max_length=64, default='-')),
                 ('url', models.TextField()),
                 ('sender_username', models.CharField(max_length=255, null=True, blank=True)),
                 ('sender_slug', models.CharField(max_length=255, null=True, blank=True)),

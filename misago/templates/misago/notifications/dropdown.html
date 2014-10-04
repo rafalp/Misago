@@ -30,9 +30,16 @@
       <span class="fa fa-circle-o"></span>
       {% endif %}
     </div>
-    <a href="{{ item.url }}">
+    <a href="{{ item.get_absolute_url }}">
+    {% if item.is_valid %}
+    <a href="{{ item.get_absolute_url }}">
       {{ item.message|safe }}
     </a>
+    {% else %}
+    <a href="#">
+      <em>{% trans "Notification is not available." %}</em>
+    </a>
+    {% endif %}
     <footer class="text-muted">
       {% if item.sender_username %}
         {% if item.sender_id %}
@@ -61,9 +68,6 @@
     </a>
     <button type="button" class="btn btn-default btn-refresh btn-sm" style="display: none;">
       {% trans "Refresh" %}
-    </button>
-    <button type="submit" name="read-all" class="btn btn-default btn-read-all btn-sm pull-right" {% if not user.new_notifications %}style="display: none;"{% endif %}>
-      {% trans "Mark all as read" %}
     </button>
   </form>
 </div>

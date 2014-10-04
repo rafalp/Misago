@@ -15,12 +15,13 @@ class NotificationsAPITests(TestCase):
 
     def test_notify_user(self):
         """notify_user sets new notification on user"""
-        api.notify_user(self.test_user,
+        notification = api.notify_user(self.test_user,
                         "Test notify %(token)s",
                         "/users/",
                         "test",
                         {'token': 'Bob'},
                         self.test_user)
+        self.assertTrue(notification.is_valid)
 
         self.reload_test_user()
         self.assertEqual(self.test_user.new_notifications, 1)

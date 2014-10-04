@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.db.transaction import atomic
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import ugettext as _, ungettext
 
 from misago.core.uiviews import uiview
@@ -16,9 +16,7 @@ from misago.notifications.models import Notification
 def notifications(request):
     if request.method == 'POST':
         if 'read-all' in request.POST:
-            read_all(request)
-            if not request.is_ajax():
-                return redirect('misago:notifications')
+            return read_all(request)
         if request.POST.get('notification'):
             return read_notification(request)
     else:
@@ -51,12 +49,26 @@ def full_page(request):
 
 
 @atomic
+def go_to_notification(request, notification_id, trigger):
+    queryset = request.user.misago_notifications.select_for_update()
+    notification = get_object_or_404(
+        queryset, pk=notification_id, trigger=trigger)
+
+    if notification.is_new:
+        notification.is_new = False
+        notification.save(update_fields=['is_new'])
+        assert_real_new_notifications_count(request.user)
+
+    return redirect(notification.url)
+
+
+@atomic
 def read_all(request):
-    if not request.is_ajax():
-        messages.success(request, _("All notifications were set as read."))
+    messages.success(request, _("All notifications were set as read."))
     read_all_user_alerts(request.user)
 
 
+@atomic
 def read_notification(request):
     try:
         queryset = request.user.misago_notifications
@@ -89,6 +101,14 @@ def read_notification(request):
         else:
             messages.error(request, message)
             return redirect('misago:notifications')
+
+
+@atomic
+def read_all(request):
+    if not request.is_ajax():
+        messages.success(request, _("All notifications were set as read."))
+    read_all_user_alerts(request.user)
+    return redirect('misago:notifications')
 
 
 @uiview('misago_notifications')

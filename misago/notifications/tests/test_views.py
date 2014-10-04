@@ -101,21 +101,6 @@ class NotificationViewsTests(AuthenticatedUserTestCase):
         self.reload_user()
         self.assertEqual(self.user.new_notifications, 0)
 
-    def test_read_all_ajax(self):
-        """real_all POST ajax to list sets all notifications as read"""
-        self.notify_user()
-
-        response = self.client.post(self.view_link, data={
-            'read-all': True,
-        },**self.ajax_header)
-        self.assertEqual(response.status_code, 200)
-
-        response = self.client.get(self.view_link)
-        self.assertEqual(response.status_code, 200)
-
-        self.reload_user()
-        self.assertEqual(self.user.new_notifications, 0)
-
 
 class AnonymousNotificationsViewsTests(UserTestCase):
     def setUp(self):

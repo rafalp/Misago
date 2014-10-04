@@ -2,6 +2,7 @@ from django.db.models import F
 from django.db import transaction
 from django.utils.html import escape
 
+from misago.notifications.checksums import update_checksum
 from misago.notifications.utils import hash_trigger
 
 
@@ -13,7 +14,7 @@ __all__ = [
 ]
 
 
-def notify_user(user, message, url, trigger, formats=None, sender=None,
+def notify_user(user, message, url, trigger=None, formats=None, sender=None,
                 update_user=True):
     from misago.notifications.models import Notification
 
@@ -25,7 +26,7 @@ def notify_user(user, message, url, trigger, formats=None, sender=None,
         message_escaped = message_escaped % final_formats
 
     new_notification = Notification(user=user,
-                                    trigger=hash_trigger(trigger),
+                                    trigger=hash_trigger(trigger or message),
                                     url=url,
                                     message=message_escaped)
 
@@ -35,6 +36,10 @@ def notify_user(user, message, url, trigger, formats=None, sender=None,
         new_notification.sender_slug = sender.slug
 
     new_notification.save()
+
+    update_checksum(new_notification)
+    new_notification.save(update_fields=['checksum'])
+
     user.new_notifications = F('new_notifications') + 1
     if update_user:
         user.save(update_fields=['new_notifications'])

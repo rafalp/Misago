@@ -54,7 +54,15 @@ You have {{ notifications }} notifications
         {% endif %}
       </div>
 
-      <a href="{{ item.url }}" class="message">{{ item.message|safe }}</a>
+      {% if item.is_valid %}
+      <a href="{{ item.get_absolute_url }}" class="message">
+        {{ item.message|safe }}
+      </a>
+      {% else %}
+      <a href="#" class="message">
+        <em>{% trans "Notification is not available." %}</em>
+      </a>
+      {% endif %}
 
       <form method="POST" class="read-form">
         {% csrf_token %}
