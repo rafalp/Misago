@@ -67,8 +67,8 @@ def real_add_events_to_posts(user, thread, posts, delimeter=None):
         events_queryset = events_queryset.filter(occured_on__lt=delimeter)
     events_queryset = events_queryset.order_by('id')
 
-    acl = user.acl['forums'].get(thread.forum_id, {'can_hide_events': False})
-    if not acl['can_hide_events']:
+    acl = user.acl['forums'].get(thread.forum_id, {})
+    if not acl.get('can_hide_events'):
         events_queryset = events_queryset.filter(is_hidden=False)
 
     events = [e for e in events_queryset]

@@ -1,0 +1,9 @@
+{% load i18n %}
+<ul class="list-unstyled post-events">
+  {% for event in post.events %}
+  <li class="event">
+    <span class="fa fa-{{ event.icon }} fa-fw fa-lg"></span>
+    {{ event.message|safe }}
+  </li>
+  {% endfor %}
+</ul>

@@ -39,6 +39,6 @@ def paginate(object_list, page, per_page, orphans=0):
     try:
         return Paginator(
             object_list, per_page, orphans=orphans,
-            allow_empty_first_page=allow_empty_first_page).page(page)
+            allow_empty_first_page=False).page(page)
     except EmptyPage:
         raise Http404()

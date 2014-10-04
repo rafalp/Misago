@@ -2,11 +2,12 @@ from django.db.models import Q
 from django.shortcuts import redirect
 
 from misago.acl import add_acl
-from misago.core.shortcuts import paginate
 from misago.forums.lists import get_forum_path
 from misago.readtracker import threadstracker
 from misago.users.online.utils import get_user_state
 
+from misago.threads.events import add_events_to_posts
+from misago.threads.paginator import paginate
 from misago.threads.views.generic.base import ViewBase
 
 
@@ -30,6 +31,12 @@ class ThreadView(ViewBase):
                 poster_state = get_user_state(post.poster, user.acl)
                 post.poster.online_state = poster_state
             posts.append(post)
+
+        if page.next_page_first_item:
+            add_events_to_posts(
+                user, thread, posts, page.next_page_first_item.posted_on)
+        else:
+            add_events_to_posts(user, thread, posts)
 
         return page, posts
 

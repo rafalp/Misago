@@ -52,4 +52,7 @@
       </div>
     </div>
   </div>
+  {% if post.events %}
+  {% include "misago/thread/events.html" %}
+  {% endif %}
 </div>
