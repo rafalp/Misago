@@ -57,12 +57,12 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
         self.assertFalse(moderation.pin_thread(self.user, self.thread))
         self.assertEqual(self.thread.weight, 1)
 
-    def test_default_thread(self):
-        """default_thread defaults thread weight"""
+    def test_reset_thread(self):
+        """reset_thread defaults thread weight"""
         moderation.pin_thread(self.user, self.thread)
 
         self.assertEqual(self.thread.weight, 1)
-        self.assertTrue(moderation.default_thread(self.user, self.thread))
+        self.assertTrue(moderation.reset_thread(self.user, self.thread))
 
         self.reload_thread()
         self.assertEqual(self.thread.weight, 0)
@@ -73,7 +73,7 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
         self.assertIn("unpinned thread.", event.message)
         self.assertEqual(event.icon, "circle")
 
-    def test_default_invalid_thread(self):
-        """default_thread returns false for already default thread"""
-        self.assertFalse(moderation.default_thread(self.user, self.thread))
+    def test_reset_invalid_thread(self):
+        """reset_thread returns false for already default thread"""
+        self.assertFalse(moderation.reset_thread(self.user, self.thread))
         self.assertEqual(self.thread.weight, 0)

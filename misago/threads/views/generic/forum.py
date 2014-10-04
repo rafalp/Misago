@@ -34,7 +34,7 @@ class ForumActions(Actions):
             })
             actions.append({
                 'action': 'reset',
-                'name': _("Reset threads weight")
+                'name': _("Reset weight")
             })
         return actions
 

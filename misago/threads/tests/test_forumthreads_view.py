@@ -67,8 +67,8 @@ class ActionsTests(ForumViewHelperTestCase):
                 'name': _("Change to pinned")
             },
             {
-                'action': 'default',
-                'name': _("Change to default")
+                'action': 'reset',
+                'name': _("Reset weight")
             },
         ])
 
@@ -87,8 +87,8 @@ class ActionsTests(ForumViewHelperTestCase):
                 'name': _("Change to pinned")
             },
             {
-                'action': 'default',
-                'name': _("Change to default")
+                'action': 'reset',
+                'name': _("Reset weight")
             },
         ])
 
