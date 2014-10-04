@@ -63,7 +63,7 @@ class NotificationViewsTests(AuthenticatedUserTestCase):
         self.reload_user()
         self.assertEqual(self.user.new_notifications, 2)
 
-        notification = self.user.notifications.get(id=notification.pk)
+        notification = self.user.misago_notifications.get(id=notification.pk)
         self.assertFalse(notification.is_new)
 
     def test_read_one_ajax(self):
@@ -83,7 +83,7 @@ class NotificationViewsTests(AuthenticatedUserTestCase):
         self.reload_user()
         self.assertEqual(self.user.new_notifications, 2)
 
-        notification = self.user.notifications.get(id=notification.pk)
+        notification = self.user.misago_notifications.get(id=notification.pk)
         self.assertFalse(notification.is_new)
 
     def test_read_all(self):

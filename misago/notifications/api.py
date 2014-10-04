@@ -52,7 +52,7 @@ def read_user_notification(user, trigger, atomic=True):
 
 def _real_read_user_notification(user, trigger):
     trigger_hash = hash_trigger(trigger)
-    update_qs = user.notifications.filter(is_new=True)
+    update_qs = user.misago_notifications.filter(is_new=True)
     update_qs = update_qs.filter(trigger=trigger_hash)
     updated = update_qs.update(is_new=False)
 
@@ -70,12 +70,12 @@ def read_all_user_alerts(user):
     user.new_notifications = 0
     locked_user.new_notifications = 0
     locked_user.save(update_fields=['new_notifications'])
-    locked_user.notifications.update(is_new=False)
+    locked_user.misago_notifications.update(is_new=False)
 
 
 def assert_real_new_notifications_count(user):
     if user.new_notifications:
-        real_new_count = user.notifications.filter(is_new=True).count()
+        real_new_count = user.misago_notifications.filter(is_new=True).count()
         if real_new_count != user.new_notifications:
             user.new_notifications = real_new_count
             user.save(update_fields=['new_notifications'])

@@ -32,8 +32,8 @@ def notifications(request):
 
 def dropdown(request):
     template = render(request, 'misago/notifications/dropdown.html', {
-        'notifications_count': request.user.notifications.count(),
-        'items': request.user.notifications.order_by('-id')[:15],
+        'notifications_count': request.user.misago_notifications.count(),
+        'items': request.user.misago_notifications.order_by('-id')[:15],
     })
 
     return JsonResponse({
@@ -45,8 +45,8 @@ def dropdown(request):
 
 def full_page(request):
     return render(request, 'misago/notifications/full.html', {
-        'notifications_count': request.user.notifications.count(),
-        'items': request.user.notifications.order_by('-id'),
+        'notifications_count': request.user.misago_notifications.count(),
+        'items': request.user.misago_notifications.order_by('-id'),
     })
 
 
@@ -59,7 +59,7 @@ def read_all(request):
 
 def read_notification(request):
     try:
-        queryset = request.user.notifications
+        queryset = request.user.misago_notifications
         notification = queryset.get(id=request.POST['notification'])
 
         if notification.is_new:

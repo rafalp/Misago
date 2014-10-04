@@ -38,8 +38,8 @@ class NotificationsAPITests(TestCase):
         api.read_user_notification(self.test_user, "test")
 
         self.assertEqual(self.test_user.new_notifications, 0)
-        notifications_qs = self.test_user.notifications.filter(is_new=True)
-        self.assertEqual(notifications_qs.count(), 0)
+        queryset = self.test_user.misago_notifications.filter(is_new=True)
+        self.assertEqual(queryset.count(), 0)
 
     def test_read_all_user_alerts(self):
         """read_all_user_alerts marks user notifications as read"""
@@ -54,8 +54,8 @@ class NotificationsAPITests(TestCase):
         api.read_all_user_alerts(self.test_user)
         self.assertEqual(self.test_user.new_notifications, 0)
 
-        notifications_qs = self.test_user.notifications.filter(is_new=True)
-        self.assertEqual(notifications_qs.count(), 0)
+        queryset = self.test_user.misago_notifications.filter(is_new=True)
+        self.assertEqual(queryset.count(), 0)
 
     def test_assert_real_new_notifications_count(self):
         """assert_real_new_notifications_count syncs user notifications"""
@@ -74,8 +74,8 @@ class NotificationsAPITests(TestCase):
         self.reload_test_user()
         self.assertEqual(self.test_user.new_notifications, 42)
 
-        notifications_qs = self.test_user.notifications.filter(is_new=True)
-        self.assertEqual(notifications_qs.count(), 0)
+        queryset = self.test_user.misago_notifications.filter(is_new=True)
+        self.assertEqual(queryset.count(), 0)
 
         api.assert_real_new_notifications_count(self.test_user)
         self.reload_test_user()

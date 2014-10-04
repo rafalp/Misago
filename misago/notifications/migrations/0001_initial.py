@@ -25,8 +25,8 @@ class Migration(migrations.Migration):
                 ('url', models.TextField()),
                 ('sender_username', models.CharField(max_length=255, null=True, blank=True)),
                 ('sender_slug', models.CharField(max_length=255, null=True, blank=True)),
-                ('sender', models.ForeignKey(related_name=b'notifications_by', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
-                ('user', models.ForeignKey(related_name=b'notifications', to=settings.AUTH_USER_MODEL)),
+                ('sender', models.ForeignKey(related_name=b'misago_notifications_by', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user', models.ForeignKey(related_name=b'misago_notifications', to=settings.AUTH_USER_MODEL)),
             ],
             options={
             },
