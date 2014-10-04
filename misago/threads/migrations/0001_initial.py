@@ -175,7 +175,7 @@ class Migration(migrations.Migration):
             name='thread',
             index_together=set([
                 ('forum', 'weight', 'id'),
-                ('forum', 'weight', 'last_post'),
+                ('forum', 'weight', 'last_post_on'),
                 ('forum', 'weight', 'replies'),
                 ('forum', 'weight')
             ]),
