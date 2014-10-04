@@ -64,10 +64,12 @@ class ActionsTests(ForumViewHelperTestCase):
         self.assertEqual(actions.available_actions, [
             {
                 'action': 'pin',
+                'icon': 'bookmark',
                 'name': _("Change to pinned")
             },
             {
                 'action': 'reset',
+                'icon': 'circle',
                 'name': _("Reset weight")
             },
         ])
@@ -80,14 +82,17 @@ class ActionsTests(ForumViewHelperTestCase):
         self.assertEqual(actions.available_actions, [
             {
                 'action': 'announce',
+                'icon': 'star',
                 'name': _("Change to announcements")
             },
             {
                 'action': 'pin',
+                'icon': 'bookmark',
                 'name': _("Change to pinned")
             },
             {
                 'action': 'reset',
+                'icon': 'circle',
                 'name': _("Reset weight")
             },
         ])
