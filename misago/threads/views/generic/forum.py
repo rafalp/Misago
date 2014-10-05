@@ -55,6 +55,14 @@ class ForumActions(Actions):
                 'icon': 'circle',
                 'name': _("Reset weight")
             })
+
+        if self.forum.acl['can_review_moderated_content']:
+            actions.append({
+                'action': 'approve',
+                'icon': 'check',
+                'name': _("Approve threads")
+            })
+
         if self.forum.acl['can_close_threads']:
             actions.append({
                 'action': 'open',
@@ -174,6 +182,22 @@ class ForumActions(Actions):
             messages.success(request, message % {'changed': changed_threads})
         else:
             message = ("No threads weight was reset.")
+            messages.info(request, message)
+
+    def action_approve(self, request, threads):
+        changed_threads = 0
+        for thread in threads:
+            if moderation.approve_thread(request.user, thread):
+                changed_threads += 1
+
+        if changed_threads:
+            message = ungettext(
+                '%(changed)d thread was approved.',
+                '%(changed)d threads were approved.',
+            changed_threads)
+            messages.success(request, message % {'changed': changed_threads})
+        else:
+            message = ("No threads were approved.")
             messages.info(request, message)
 
     def action_close(self, request, threads):

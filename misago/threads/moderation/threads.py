@@ -102,7 +102,7 @@ def move_thread(user, thread, new_forum):
 @atomic
 def merge_thread(user, thread, other_thread):
     thread.merge(other_thread)
-    thread.synchornize()
+    thread.synchronize()
     thread.save()
     other_thread.delete()
     return True
@@ -116,9 +116,9 @@ def approve_thread(user, thread):
 
         thread.is_closed = False
         thread.first_post.is_moderated = False
-        thread.first_post.save(update_fields=['has_events', 'is_moderated'])
-        thread.synchornize()
-        thread.save()
+        thread.first_post.save(update_fields=['is_moderated'])
+        thread.synchronize()
+        thread.save(update_fields=['has_events', 'is_moderated'])
         return True
     else:
         return False

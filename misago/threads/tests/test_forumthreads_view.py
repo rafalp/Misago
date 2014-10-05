@@ -46,9 +46,54 @@ class ActionsTests(ForumViewHelperTestCase):
         super(ActionsTests, self).setUp()
 
         self.user._misago_real_ip = '127.0.0.1'
+        Label.objects.clear_cache()
+
+    def tearDown(self):
+        super(ActionsTests, self).tearDown()
+        Label.objects.clear_cache()
+
+    def test_label_actions(self):
+        """ForumActions initializes list with label actions"""
+        self.override_acl({
+            'can_change_threads_labels': 0,
+        })
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [])
+
+        self.override_acl({
+            'can_change_threads_labels': 1,
+        })
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [])
+
+        self.override_acl({
+            'can_change_threads_labels': 2,
+        })
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [])
+
+        label = Label.objects.create(name="Mock Label", slug="mock-label")
+        self.forum.labels = [label]
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [
+            {
+                'action': 'label:%s' % label.slug,
+                'icon': 'tag',
+                'name': _('Label as "%(label)s"') % {'label': label.name}
+            },
+            {
+                'action': 'unlabel',
+                'icon': 'times-circle',
+                'name': _("Remove labels")
+            },
+        ])
 
     def test_weight_actions(self):
-        """ForumActions initializes valid list of available weights"""
+        """ForumActions initializes list with available weights"""
         self.override_acl({
             'can_change_threads_weight': 0,
         })
@@ -97,10 +142,32 @@ class ActionsTests(ForumViewHelperTestCase):
             },
         ])
 
-    def test_close_open_actions(self):
-        """ForumActions initializes valid list of close and open"""
+    def test_approve_actions(self):
+        """ForumActions initializes list with approve threads action"""
         self.override_acl({
-            'can_close_threads': [],
+            'can_review_moderated_content': 0,
+        })
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [])
+
+        self.override_acl({
+            'can_review_moderated_content': 1,
+        })
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [
+            {
+                'action': 'approve',
+                'icon': 'check',
+                'name': _("Approve threads")
+            },
+        ])
+
+    def test_close_open_actions(self):
+        """ForumActions initializes list with close and open actions"""
+        self.override_acl({
+            'can_close_threads': 0,
         })
 
         actions = ForumActions(user=self.user, forum=self.forum)
@@ -125,7 +192,7 @@ class ActionsTests(ForumViewHelperTestCase):
         ])
 
     def test_hide_delete_actions(self):
-        """ForumActions initializes valid list of hide/delete actions"""
+        """ForumActions initializes list with hide/delete actions"""
         self.override_acl({
             'can_hide_threads': 0,
         })
@@ -176,6 +243,14 @@ class ActionsTests(ForumViewHelperTestCase):
 
 
 class ForumFilteringTests(ForumViewHelperTestCase):
+    def setUp(self):
+        super(ForumFilteringTests, self).setUp()
+        Label.objects.clear_cache()
+
+    def tearDown(self):
+        super(ForumFilteringTests, self).tearDown()
+        Label.objects.clear_cache()
+
     def test_get_available_filters(self):
         """get_available_filters returns filters varying on forum acl"""
         default_acl = {
@@ -862,6 +937,47 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.assertEqual(announcement.weight, 2)
         self.assertEqual(pinned.weight, 1)
         self.assertEqual(thread.weight, 0)
+
+    def test_approve_moderated_threads(self):
+        """moderation allows for aproving moderated threads"""
+        test_acl = {
+            'can_see': 1,
+            'can_browse': 1,
+            'can_see_all_threads': 1,
+            'can_review_moderated_content': 1
+        }
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Approve threads", response.content)
+
+        thread = testutils.post_thread(self.forum, is_moderated=False)
+        moderated_thread = testutils.post_thread(self.forum, is_moderated=True)
+
+        # approve approved thread
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'approve', 'thread': [thread.pk]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("No threads were approved.", response.content)
+
+        # approve moderated thread
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'approve', 'thread': [moderated_thread.pk]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("1 thread was approved.", response.content)
 
     def test_close_open_threads(self):
         """moderation allows for closing and opening threads"""

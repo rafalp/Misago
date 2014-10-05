@@ -116,6 +116,23 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
         self.assertFalse(moderation.reset_thread(self.user, self.thread))
         self.assertEqual(self.thread.weight, 0)
 
+    def test_approve_thread(self):
+        """approve_thread approves moderated thread"""
+        thread = testutils.post_thread(self.forum, is_moderated=True)
+
+        self.assertTrue(thread.is_moderated)
+        self.assertTrue(thread.first_post.is_moderated)
+        self.assertTrue(moderation.approve_thread(self.user, thread))
+
+        self.reload_thread()
+        self.assertFalse(thread.is_moderated)
+        self.assertFalse(thread.first_post.is_moderated)
+        self.assertTrue(thread.has_events)
+        event = thread.event_set.last()
+
+        self.assertIn("approved thread.", event.message)
+        self.assertEqual(event.icon, "check")
+
     def test_close_thread(self):
         """close_thread closes thread"""
         self.assertFalse(self.thread.is_closed)
