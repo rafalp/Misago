@@ -31,17 +31,16 @@ class Actions(object):
 
     def resolve_action(self, request):
         action_name = request.POST.get('action')
-        if ':' in action_name:
-            action_bits = action_name.split(':')
-            action_name = '%s:' % action_bits[0]
-            action_arg = action_bits[1]
-        else:
-            action_arg = None
 
         for action in self.available_actions:
             if action['action'] == action_name:
-                if action_name[-1] == ':':
-                    action_name = action_name[:-1]
+                if ':' in action_name:
+                    action_bits = action_name.split(':')
+                    action_name = action_bits[0]
+                    action_arg = action_bits[1]
+                else:
+                    action_arg = None
+
                 action_callable = 'action_%s' % action_name
                 return getattr(self, action_callable), action_arg
         else:

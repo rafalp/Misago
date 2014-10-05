@@ -2,7 +2,7 @@ from misago.forums.models import Forum
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads import moderation, testutils
-from misago.threads.models import Thread, Post, Event
+from misago.threads.models import Label, Thread, Post, Event
 
 
 class ThreadsModerationTests(AuthenticatedUserTestCase):
@@ -11,9 +11,47 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
 
         self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
         self.thread = testutils.post_thread(self.forum)
+        Label.objects.clear_cache()
+
+    def tearDown(self):
+        super(ThreadsModerationTests, self).tearDown()
+        Label.objects.clear_cache()
 
     def reload_thread(self):
         self.thread = Thread.objects.get(pk=self.thread.pk)
+
+    def test_label_thread(self):
+        """label_thread makes thread announcement"""
+        label = Label.objects.create(name="Label", slug="label")
+
+        self.assertIsNone(self.thread.label)
+        self.assertTrue(moderation.label_thread(self.user, self.thread, label))
+
+        self.reload_thread()
+        self.assertEqual(self.thread.label, label)
+
+        self.assertTrue(self.thread.has_events)
+        event = self.thread.event_set.last()
+
+        self.assertEqual(event.icon, "tag")
+        self.assertIn("set thread label to", event.message)
+
+    def test_unlabel_thread(self):
+        """unlabel_thread removes thread label"""
+        label = Label.objects.create(name="Label", slug="label")
+        self.assertTrue(moderation.label_thread(self.user, self.thread, label))
+
+        self.reload_thread()
+        self.assertTrue(moderation.unlabel_thread(self.user, self.thread))
+
+        self.reload_thread()
+        self.assertIsNone(self.thread.label)
+
+        self.assertTrue(self.thread.has_events)
+        event = self.thread.event_set.last()
+
+        self.assertEqual(event.icon, "tag")
+        self.assertIn("removed thread label.", event.message)
 
     def test_announce_thread(self):
         """announce_thread makes thread announcement"""

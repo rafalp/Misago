@@ -5,6 +5,41 @@ from misago.threads.events import record_event
 
 
 @atomic
+def label_thread(user, thread, label):
+    if not thread.label_id or thread.label_id != label.pk:
+        if thread.label_id:
+            message = _("%(user)s changed thread label to %(label)s.")
+        else:
+            message = _("%(user)s set thread label to %(label)s.")
+
+        record_event(user, thread, "tag", message, {
+            'user': user,
+            'label': label.name
+        })
+
+        thread.label = label
+
+        thread.save(update_fields=['has_events', 'label'])
+        return True
+    else:
+        return False
+
+
+@atomic
+def unlabel_thread(user, thread):
+    if thread.label_id:
+        thread.label = None
+
+        message = _("%(user)s removed thread label.")
+        record_event(user, thread, "tag", message, {'user': user})
+
+        thread.save(update_fields=['has_events', 'label'])
+        return True
+    else:
+        return False
+
+
+@atomic
 def announce_thread(user, thread):
     if thread.weight < 2:
         thread.weight = 2

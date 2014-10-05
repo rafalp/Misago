@@ -45,7 +45,7 @@ class ActionsTests(AuthenticatedUserTestCase):
         actions = MockActions(user=self.user)
 
         actions.available_actions = [{
-            'action': 'test:',
+            'action': 'test:1234',
             'name': "Test action"
         }]
 
@@ -79,7 +79,7 @@ class ActionsTests(AuthenticatedUserTestCase):
             ))
 
         actions.available_actions = [{
-            'action': 'test:',
+            'action': 'test:123',
             'name': "Test action"
         }]
 
@@ -87,6 +87,18 @@ class ActionsTests(AuthenticatedUserTestCase):
             resolution = actions.resolve_action(MockRequest(
                 user=self.user,
                 POST={'action': 'test'},
+            ))
+
+        with self.assertRaises(ModerationError):
+            resolution = actions.resolve_action(MockRequest(
+                user=self.user,
+                POST={'action': 'test:'},
+            ))
+
+        with self.assertRaises(ModerationError):
+            resolution = actions.resolve_action(MockRequest(
+                user=self.user,
+                POST={'action': 'test:321'},
             ))
 
     def test_clean_selection(self):
@@ -107,7 +119,7 @@ class ActionsTests(AuthenticatedUserTestCase):
         """get_list returns list of available actions"""
         actions = MockActions(user=self.user)
         actions.available_actions = [{
-            'action': 'test:',
+            'action': 'test:123',
             'name': "Test action"
         }]
         self.assertEqual(actions.get_list(), actions.available_actions)

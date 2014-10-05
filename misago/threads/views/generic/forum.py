@@ -23,6 +23,21 @@ class ForumActions(Actions):
 
         actions = []
 
+        if self.forum.acl['can_change_threads_labels'] == 2:
+            for label in self.forum.labels:
+                actions.append({
+                    'action': 'label:%s' % label.slug,
+                    'icon': 'tag',
+                    'name': _('Label as "%(label)s"') % {'label': label.name}
+                })
+
+            if self.forum.labels:
+                actions.append({
+                    'action': 'unlabel',
+                    'icon': 'times-circle',
+                    'name': _("Remove labels")
+                })
+
         if self.forum.acl['can_change_threads_weight'] == 2:
             actions.append({
                 'action': 'announce',
@@ -71,6 +86,47 @@ class ForumActions(Actions):
             })
 
         return actions
+
+    def action_label(self, request, threads, label_slug):
+        for label in self.forum.labels:
+            if label.slug == label_slug:
+                break
+        else:
+            raise ModerationError(_("Requested action is invalid."))
+
+        changed_threads = 0
+        for thread in threads:
+            if moderation.label_thread(request.user, thread, label):
+                changed_threads += 1
+
+        if changed_threads:
+            message = ungettext(
+                '%(changed)d thread was labeled "%(label)s".',
+                '%(changed)d threads were labeled "%(label)s".',
+            changed_threads)
+            messages.success(request, message % {
+                'changed': changed_threads,
+                'label': label.name
+            })
+        else:
+            message = ("No threads were labeled.")
+            messages.info(request, message)
+
+    def action_unlabel(self, request, threads):
+        changed_threads = 0
+        for thread in threads:
+            if moderation.unlabel_thread(request.user, thread):
+                changed_threads += 1
+
+        if changed_threads:
+            message = ungettext(
+                '%(changed)d thread label was remoded.',
+                '%(changed)d threads labels were removed.',
+            changed_threads)
+            messages.success(request, message % {'changed': changed_threads})
+        else:
+            message = ("No threads were unlabeled.")
+            messages.info(request, message)
 
     def action_announce(self, request, threads):
         changed_threads = 0

@@ -83,13 +83,6 @@
               {% endif %}
 
               <ul class="list-unstyled thread-flags">
-                {% if thread.label %}
-                <li>
-                  <span class="label label-solo label-{{ thread.label.css_class|default:"default" }}">
-                    {{ thread.label.name }}
-                  </span>
-                </li>
-                {% endif %}
                 {% if thread.has_reported_posts %}
                 <li class="tooltip-top" title="{% trans "Reported posts" %}">
                   <span class="fa fa-exclamation-triangle fa-fw fa-lg"></span>
@@ -118,6 +111,13 @@
                 {% if thread.is_hidden %}
                 <li class="tooltip-top" title="{% trans "Hidden" %}">
                   <span class="fa fa-eye-slash fa-fw fa-lg"></span>
+                </li>
+                {% endif %}
+                {% if thread.label %}
+                <li>
+                  <span class="label label-solo label-{{ thread.label.css_class|default:"default" }}">
+                    {{ thread.label.name }}
+                  </span>
                 </li>
                 {% endif %}
               </ul>

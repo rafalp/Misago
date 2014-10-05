@@ -10,26 +10,30 @@ __all__ = ['record_event', 'add_events_to_posts']
 
 
 LINK_TEMPLATE = '<a href="%s" class="event-%s">%s</a>'
+NAME_TEMPLATE = '<strong class="event-%s">%s</strong>'
 
 
 def format_message(message, links):
     if links:
         formats = {}
         for name, value in links.items():
-            try:
-                replaces = (
-                    escape(value.get_absolute_url()),
-                    escape(name),
-                    escape(unicode(value))
-                )
-            except AttributeError:
-                replaces = (
-                    escape(value[1]),
-                    escape(name),
-                    escape(value[0])
-                )
+            if isinstance(value, basestring):
+                formats[name] = NAME_TEMPLATE % (escape(name), escape(value))
+            else:
+                try:
+                    replaces = (
+                        escape(value.get_absolute_url()),
+                        escape(name),
+                        escape(unicode(value))
+                    )
+                except AttributeError:
+                    replaces = (
+                        escape(value[1]),
+                        escape(name),
+                        escape(value[0])
+                    )
 
-            formats[name] = LINK_TEMPLATE % replaces
+                formats[name] = LINK_TEMPLATE % replaces
         return message % formats
     else:
         return message

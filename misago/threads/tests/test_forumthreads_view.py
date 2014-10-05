@@ -417,6 +417,12 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.link = self.forum.get_absolute_url()
         self.forum.delete_content()
 
+        Label.objects.clear_cache()
+
+    def tearDown(self):
+        super(ForumThreadsViewTests, self).tearDown()
+        Label.objects.clear_cache()
+
     def override_acl(self, new_acl):
         forums_acl = self.user.acl
         if new_acl['can_see']:
@@ -664,6 +670,101 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
         self.assertIn(anon_title, response.content)
+
+    def test_change_threads_labels(self):
+        """moderation allows for changing threads labels"""
+        threads = [testutils.post_thread(self.forum) for t in xrange(10)]
+
+        test_acl = {
+            'can_see': 1,
+            'can_browse': 1,
+            'can_see_all_threads': 1,
+            'can_change_threads_labels': 2
+        }
+
+        labels = [
+            Label(name='Label A', slug='label-a'),
+            Label(name='Label B', slug='label-b'),
+        ]
+        for label in labels:
+            label.save()
+            label.forums.add(self.forum)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Remove labels", response.content)
+
+        # label threads with invalid label
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'label:mehssiah', 'thread': [t.pk for t in threads]
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Requested action is invalid.", response.content)
+
+        # label threads
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'label:%s' % labels[0].slug,
+            'thread': [t.pk for t in threads]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("10 threads were labeled", response.content)
+
+        # label labeled threads
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'label:%s' % labels[0].slug,
+            'thread': [t.pk for t in threads]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("No threads were labeled.", response.content)
+
+        # relabel labeled threads
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'label:%s' % labels[1].slug,
+            'thread': [t.pk for t in threads]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("10 threads were labeled", response.content)
+
+        # remove labels from threads
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'unlabel', 'thread': [t.pk for t in threads]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("10 threads labels were removed", response.content)
+
+        # remove labels from unlabeled threads
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'unlabel', 'thread': [t.pk for t in threads]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("No threads were unlabeled.", response.content)
 
     def test_moderate_threads_weight(self):
         """moderation allows for changing threads weight"""
