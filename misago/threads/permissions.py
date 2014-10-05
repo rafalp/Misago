@@ -92,6 +92,10 @@ class PermissionsForm(forms.Form):
         label=_("Can protect posts"),
         help_text=_("Only users with this permission "
                     "can edit protected posts."))
+    can_move_posts = forms.YesNoSwitch(
+        label=_("Can move posts"))
+    can_merge_posts = forms.YesNoSwitch(
+        label=_("Can merge posts"))
     can_change_threads_labels = forms.TypedChoiceField(
         label=_("Can change threads labels"), coerce=int, initial=0,
         choices=((0, _("No")), (1, _("Own threads")), (2, _("All threads"))))
@@ -107,6 +111,12 @@ class PermissionsForm(forms.Form):
         coerce=int,
         initial=0,
         choices=((0, _("No")), (1, _("Own threads")), (2, _("All threads"))))
+    can_move_threads = forms.YesNoSwitch(
+        label=_("Can move threads"))
+    can_merge_threads = forms.YesNoSwitch(
+        label=_("Can merge threads"))
+    can_split_threads = forms.YesNoSwitch(
+        label=_("Can split threads"))
     can_review_moderated_content = forms.YesNoSwitch(
         label=_("Can review moderated content"),
         help_text=_("Will see and be able to accept moderated content."))
@@ -161,9 +171,14 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
         'can_hide_threads': 0,
         'can_hide_replies': 0,
         'can_protect_posts': 0,
+        'can_move_posts': 0,
+        'can_merge_posts': 0,
         'can_change_threads_labels': 0,
         'can_change_threads_weight': 0,
         'can_close_threads': 0,
+        'can_move_threads': 0,
+        'can_merge_threads': 0,
+        'can_split_threads': 0,
         'can_review_moderated_content': 0,
         'can_report_content': 0,
         'can_see_reports': 0,
@@ -184,9 +199,14 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
         thread_edit_time=algebra.greater_or_zero,
         reply_edit_time=algebra.greater_or_zero,
         can_protect_posts=algebra.greater,
+        can_move_posts=algebra.greater,
+        can_merge_posts=algebra.greater,
         can_change_threads_labels=algebra.greater,
         can_change_threads_weight=algebra.greater,
         can_close_threads=algebra.greater,
+        can_move_threads=algebra.greater,
+        can_merge_threads=algebra.greater,
+        can_split_threads=algebra.greater,
         can_review_moderated_content=algebra.greater,
         can_report_content=algebra.greater,
         can_see_reports=algebra.greater,
@@ -226,9 +246,14 @@ def add_acl_to_forum(user, forum):
         'can_hide_threads': 0,
         'can_hide_replies': 0,
         'can_protect_posts': 0,
+        'can_move_posts': 0,
+        'can_merge_posts': 0,
         'can_change_threads_labels': 0,
         'can_change_threads_weight': 0,
         'can_close_threads': 0,
+        'can_move_threads': 0,
+        'can_merge_threads': 0,
+        'can_split_threads': 0,
         'can_review_moderated_content': 0,
         'can_report_content': 0,
         'can_see_reports': 0,
@@ -251,9 +276,14 @@ def add_acl_to_forum(user, forum):
             thread_edit_time=algebra.greater_or_zero,
             reply_edit_time=algebra.greater_or_zero,
             can_protect_posts=algebra.greater,
+            can_move_posts=algebra.greater,
+            can_merge_posts=algebra.greater,
             can_change_threads_labels=algebra.greater,
             can_change_threads_weight=algebra.greater,
             can_close_threads=algebra.greater,
+            can_move_threads=algebra.greater,
+            can_merge_threads=algebra.greater,
+            can_split_threads=algebra.greater,
             can_review_moderated_content=algebra.greater,
             can_report_content=algebra.greater,
             can_see_reports=algebra.greater,

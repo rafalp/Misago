@@ -97,6 +97,33 @@ class ActionsTests(ForumViewHelperTestCase):
             },
         ])
 
+    def test_close_open_actions(self):
+        """ForumActions initializes valid list of close and open"""
+        self.override_acl({
+            'can_close_threads': [],
+        })
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [])
+
+        self.override_acl({
+            'can_close_threads': 1,
+        })
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [
+            {
+                'action': 'close',
+                'icon': 'lock',
+                'name': _("Close threads")
+            },
+            {
+                'action': 'open',
+                'icon': 'unlock-alt',
+                'name': _("Open threads")
+            },
+        ])
+
 
 class ForumFilteringTests(ForumViewHelperTestCase):
     def test_get_available_filters(self):
@@ -684,3 +711,68 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.assertEqual(announcement.weight, 2)
         self.assertEqual(pinned.weight, 1)
         self.assertEqual(thread.weight, 0)
+
+    def test_close_open_threads(self):
+        """moderation allows for closing and opening threads"""
+        test_acl = {
+            'can_see': 1,
+            'can_browse': 1,
+            'can_see_all_threads': 1,
+            'can_close_threads': 1
+        }
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Close threads", response.content)
+        self.assertIn("Open threads", response.content)
+
+        threads = [testutils.post_thread(self.forum) for t in xrange(10)]
+
+        # close threads
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'close', 'thread': [t.pk for t in threads]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("10 threads were closed.", response.content)
+
+        # close closed threads
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'close', 'thread': [t.pk for t in threads]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("No threads were closed.", response.content)
+
+        # open closed threads
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'open', 'thread': [t.pk for t in threads]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("10 threads were opened.", response.content)
+
+        # open opened threads
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'open', 'thread': [t.pk for t in threads]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("No threads were opened.", response.content)

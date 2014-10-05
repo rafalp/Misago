@@ -77,3 +77,45 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
         """reset_thread returns false for already default thread"""
         self.assertFalse(moderation.reset_thread(self.user, self.thread))
         self.assertEqual(self.thread.weight, 0)
+
+    def test_close_thread(self):
+        """close_thread closes thread"""
+        self.assertFalse(self.thread.is_closed)
+        self.assertTrue(moderation.close_thread(self.user, self.thread))
+
+        self.reload_thread()
+        self.assertTrue(self.thread.is_closed)
+        self.assertTrue(self.thread.has_events)
+        event = self.thread.event_set.last()
+
+        self.assertIn("closed thread.", event.message)
+        self.assertEqual(event.icon, "lock")
+
+    def test_close_invalid_thread(self):
+        """close_thread fails gracefully for opened thread"""
+        moderation.close_thread(self.user, self.thread)
+        self.reload_thread()
+
+        self.assertTrue(self.thread.is_closed)
+        self.assertFalse(moderation.close_thread(self.user, self.thread))
+
+    def test_open_thread(self):
+        """open_thread closes thread"""
+        moderation.close_thread(self.user, self.thread)
+        self.reload_thread()
+
+        self.assertTrue(self.thread.is_closed)
+        self.assertTrue(moderation.open_thread(self.user, self.thread))
+
+        self.reload_thread()
+        self.assertFalse(self.thread.is_closed)
+        self.assertTrue(self.thread.has_events)
+        event = self.thread.event_set.last()
+
+        self.assertIn("opened thread.", event.message)
+        self.assertEqual(event.icon, "unlock-alt")
+
+    def test_open_invalid_thread(self):
+        """open_thread fails gracefully for opened thread"""
+        self.assertFalse(self.thread.is_closed)
+        self.assertFalse(moderation.open_thread(self.user, self.thread))

@@ -39,6 +39,18 @@ class ForumActions(Actions):
                 'icon': 'circle',
                 'name': _("Reset weight")
             })
+        if forum.acl['can_close_threads']:
+            actions.append({
+                'action': 'close',
+                'icon': 'lock',
+                'name': _("Close threads")
+            })
+            actions.append({
+                'action': 'open',
+                'icon': 'unlock-alt',
+                'name': _("Open threads")
+            })
+
         return actions
 
     def action_announce(self, request, threads):
@@ -87,6 +99,38 @@ class ForumActions(Actions):
             messages.success(request, message % {'changed': changed_threads})
         else:
             message = ("No threads weight was reset.")
+            messages.info(request, message)
+
+    def action_close(self, request, threads):
+        changed_threads = 0
+        for thread in threads:
+            if moderation.close_thread(request.user, thread):
+                changed_threads += 1
+
+        if changed_threads:
+            message = ungettext(
+                '%(changed)d thread was closed.',
+                '%(changed)d threads were closed.',
+            changed_threads)
+            messages.success(request, message % {'changed': changed_threads})
+        else:
+            message = ("No threads were closed.")
+            messages.info(request, message)
+
+    def action_open(self, request, threads):
+        changed_threads = 0
+        for thread in threads:
+            if moderation.open_thread(request.user, thread):
+                changed_threads += 1
+
+        if changed_threads:
+            message = ungettext(
+                '%(changed)d thread was opened.',
+                '%(changed)d threads were opened.',
+            changed_threads)
+            messages.success(request, message % {'changed': changed_threads})
+        else:
+            message = ("No threads were opened.")
             messages.info(request, message)
 
 
