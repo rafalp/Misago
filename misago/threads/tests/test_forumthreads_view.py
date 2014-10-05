@@ -113,14 +113,64 @@ class ActionsTests(ForumViewHelperTestCase):
         actions = ForumActions(user=self.user, forum=self.forum)
         self.assertEqual(actions.available_actions, [
             {
+                'action': 'open',
+                'icon': 'unlock-alt',
+                'name': _("Open threads")
+            },
+            {
                 'action': 'close',
                 'icon': 'lock',
                 'name': _("Close threads")
             },
+        ])
+
+    def test_hide_delete_actions(self):
+        """ForumActions initializes valid list of hide/delete actions"""
+        self.override_acl({
+            'can_hide_threads': 0,
+        })
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [])
+
+        self.override_acl({
+            'can_hide_threads': 1,
+        })
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [
             {
-                'action': 'open',
-                'icon': 'unlock-alt',
-                'name': _("Open threads")
+                'action': 'unhide',
+                'icon': 'eye',
+                'name': _("Unhide threads")
+            },
+            {
+                'action': 'hide',
+                'icon': 'eye-slash',
+                'name': _("Hide threads")
+            },
+        ])
+
+        self.override_acl({
+            'can_hide_threads': 2,
+        })
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [
+            {
+                'action': 'unhide',
+                'icon': 'eye',
+                'name': _("Unhide threads")
+            },
+            {
+                'action': 'hide',
+                'icon': 'eye-slash',
+                'name': _("Hide threads")
+            },
+            {
+                'action': 'delete',
+                'icon': 'times',
+                'name': _("Delete threads")
             },
         ])
 
@@ -776,3 +826,95 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
         self.assertIn("No threads were opened.", response.content)
+
+    def test_hide_unhide_threads(self):
+        """moderation allows for hiding and unhiding threads"""
+        test_acl = {
+            'can_see': 1,
+            'can_browse': 1,
+            'can_see_all_threads': 1,
+            'can_hide_threads': 1
+        }
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Unhide threads", response.content)
+        self.assertIn("Hide threads", response.content)
+
+        threads = [testutils.post_thread(self.forum) for t in xrange(10)]
+
+        # hide threads
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'hide', 'thread': [t.pk for t in threads]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("10 threads were hidden.", response.content)
+
+        # hide hidden threads
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'hide', 'thread': [t.pk for t in threads]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("No threads were hidden.", response.content)
+
+        # unhide hidden threads
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'unhide', 'thread': [t.pk for t in threads]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("10 threads were made visible.", response.content)
+
+        # unhide visible threads
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'unhide', 'thread': [t.pk for t in threads]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("No threads were made visible.", response.content)
+
+    def test_delete_threads(self):
+        """moderation allows for deleting threads"""
+        threads = [testutils.post_thread(self.forum) for t in xrange(10)]
+
+        self.forum.synchronize()
+        self.assertEqual(self.forum.threads, 10)
+
+        test_acl = {
+            'can_see': 1,
+            'can_browse': 1,
+            'can_see_all_threads': 1,
+            'can_hide_threads': 2
+        }
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Delete threads", response.content)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'delete', 'thread': [t.pk for t in threads]
+        })
+
+        forum = Forum.objects.get(pk=self.forum.pk)
+        self.assertEqual(forum.threads, 0)

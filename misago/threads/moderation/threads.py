@@ -116,7 +116,7 @@ def close_thread(user, thread):
 
 
 @atomic
-def show_thread(user, thread):
+def unhide_thread(user, thread):
     if thread.is_hidden:
         message = _("%(user)s made thread visible.")
         record_event(user, thread, "eye", message, {'user': user})
@@ -125,7 +125,7 @@ def show_thread(user, thread):
         thread.first_post.save(update_fields=['is_hidden'])
         thread.is_hidden = False
         thread.save(update_fields=['has_events', 'is_hidden'])
-        thread.synchornize()
+        thread.synchronize()
         thread.save()
         return True
     else:

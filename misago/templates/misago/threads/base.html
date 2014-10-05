@@ -97,7 +97,7 @@
                 {% endif %}
                 {% if thread.has_moderated_posts and not thread.is_moderated %}
                 <li class="tooltip-top" title="{% trans "Moderated posts" %}">
-                  <span class="fa fa-eye-slash fa-fw fa-lg"></span>
+                  <span class="fa fa-question-circle fa-fw fa-lg"></span>
                 </li>
                 {% endif %}
                 {% if thread.is_poll %}
@@ -107,12 +107,17 @@
                 {% endif %}
                 {% if thread.is_moderated %}
                 <li class="tooltip-top" title="{% trans "Moderated" %}">
-                  <span class="fa fa-eye-slash fa-fw fa-lg"></span>
+                  <span class="fa fa-question-circle fa-fw fa-lg"></span>
                 </li>
                 {% endif %}
                 {% if thread.is_closed %}
                 <li class="tooltip-top" title="{% trans "Closed" %}">
                   <span class="fa fa-lock fa-fw fa-lg"></span>
+                </li>
+                {% endif %}
+                {% if thread.is_hidden %}
+                <li class="tooltip-top" title="{% trans "Hidden" %}">
+                  <span class="fa fa-eye-slash fa-fw fa-lg"></span>
                 </li>
                 {% endif %}
               </ul>

@@ -119,3 +119,38 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
         """open_thread fails gracefully for opened thread"""
         self.assertFalse(self.thread.is_closed)
         self.assertFalse(moderation.open_thread(self.user, self.thread))
+
+    def test_hide_thread(self):
+        """hide_thread hides thread"""
+        self.assertFalse(self.thread.is_hidden)
+        self.assertTrue(moderation.hide_thread(self.user, self.thread))
+
+        self.reload_thread()
+        self.assertTrue(self.thread.is_hidden)
+        self.assertTrue(self.thread.has_events)
+        event = self.thread.event_set.last()
+
+        self.assertIn("hid thread.", event.message)
+        self.assertEqual(event.icon, "eye-slash")
+
+    def test_unhide_thread(self):
+        """unhide_thread unhides thread"""
+        moderation.hide_thread(self.user, self.thread)
+        self.reload_thread()
+
+        self.assertTrue(self.thread.is_hidden)
+        self.assertTrue(moderation.unhide_thread(self.user, self.thread))
+
+        self.reload_thread()
+        self.assertFalse(self.thread.is_hidden)
+        self.assertTrue(self.thread.has_events)
+        event = self.thread.event_set.last()
+
+        self.assertIn("made thread visible.", event.message)
+        self.assertEqual(event.icon, "eye")
+
+    def test_delete_thread(self):
+        """delete_thread deletes thread"""
+        self.assertTrue(moderation.delete_thread(self.user, self.thread))
+        with self.assertRaises(Thread.DoesNotExist):
+            self.reload_thread()

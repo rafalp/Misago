@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.db.transaction import atomic
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy, ugettext as _, ungettext
 
@@ -18,17 +19,17 @@ __all__ = ['ForumFiltering', 'ForumThreads', 'ForumView']
 
 class ForumActions(Actions):
     def get_available_actions(self, kwargs):
-        forum = kwargs['forum']
+        self.forum = kwargs['forum']
 
         actions = []
 
-        if forum.acl['can_change_threads_weight'] == 2:
+        if self.forum.acl['can_change_threads_weight'] == 2:
             actions.append({
                 'action': 'announce',
                 'icon': 'star',
                 'name': _("Change to announcements")
             })
-        if forum.acl['can_change_threads_weight']:
+        if self.forum.acl['can_change_threads_weight']:
             actions.append({
                 'action': 'pin',
                 'icon': 'bookmark',
@@ -39,16 +40,34 @@ class ForumActions(Actions):
                 'icon': 'circle',
                 'name': _("Reset weight")
             })
-        if forum.acl['can_close_threads']:
+        if self.forum.acl['can_close_threads']:
+            actions.append({
+                'action': 'open',
+                'icon': 'unlock-alt',
+                'name': _("Open threads")
+            })
             actions.append({
                 'action': 'close',
                 'icon': 'lock',
                 'name': _("Close threads")
             })
+
+        if self.forum.acl['can_hide_threads']:
             actions.append({
-                'action': 'open',
-                'icon': 'unlock-alt',
-                'name': _("Open threads")
+                'action': 'unhide',
+                'icon': 'eye',
+                'name': _("Unhide threads")
+            })
+            actions.append({
+                'action': 'hide',
+                'icon': 'eye-slash',
+                'name': _("Hide threads")
+            })
+        if self.forum.acl['can_hide_threads'] == 2:
+            actions.append({
+                'action': 'delete',
+                'icon': 'times',
+                'name': _("Delete threads")
             })
 
         return actions
@@ -131,6 +150,66 @@ class ForumActions(Actions):
             messages.success(request, message % {'changed': changed_threads})
         else:
             message = ("No threads were opened.")
+            messages.info(request, message)
+
+    def action_unhide(self, request, threads):
+        changed_threads = 0
+        for thread in threads:
+            if moderation.unhide_thread(request.user, thread):
+                changed_threads += 1
+
+        if changed_threads:
+            with atomic():
+                self.forum.synchronize()
+                self.forum.save()
+
+            message = ungettext(
+                '%(changed)d thread was made visible.',
+                '%(changed)d threads were made visible.',
+            changed_threads)
+            messages.success(request, message % {'changed': changed_threads})
+        else:
+            message = ("No threads were made visible.")
+            messages.info(request, message)
+
+    def action_hide(self, request, threads):
+        changed_threads = 0
+        for thread in threads:
+            if moderation.hide_thread(request.user, thread):
+                changed_threads += 1
+
+        if changed_threads:
+            with atomic():
+                self.forum.synchronize()
+                self.forum.save()
+
+            message = ungettext(
+                '%(changed)d thread was hidden.',
+                '%(changed)d threads were hidden.',
+            changed_threads)
+            messages.success(request, message % {'changed': changed_threads})
+        else:
+            message = ("No threads were hidden.")
+            messages.info(request, message)
+
+    def action_delete(self, request, threads):
+        changed_threads = 0
+        for thread in threads:
+            if moderation.delete_thread(request.user, thread):
+                changed_threads += 1
+
+        if changed_threads:
+            with atomic():
+                self.forum.synchronize()
+                self.forum.save()
+
+            message = ungettext(
+                '%(changed)d thread was deleted.',
+                '%(changed)d threads were deleted.',
+            changed_threads)
+            messages.success(request, message % {'changed': changed_threads})
+        else:
+            message = ("No threads were deleted.")
             messages.info(request, message)
 
 
