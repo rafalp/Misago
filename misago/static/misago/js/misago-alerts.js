@@ -35,10 +35,19 @@
         var $alert = $(this).parent().parent();
         controller.$height -= $alert.height();
         controller.$alerts.animate({height: controller.$height}, {queue: false});
-        $alert.slideUp();
+        $alert.slideUp(400, function() {
+          $(this).remove();
+        });
       });
     }
     bindCloseEvents(this);
+
+    // Heartbeat alert
+    function heartbeat($element) {
+      $element.fadeTo(300, 0.8).fadeTo(1000, 1, function() {
+        heartbeat($element);
+      });
+    }
 
     // Alerts functions
     this.add_alert = function(template, message) {
@@ -46,13 +55,23 @@
         message = this.options.generic_error;
       }
 
-      var $alert = $(template.replace('%message%', message));
-      this.$alerts_list.append($alert);
+      var repeated_alert = false;
+      $alerts_list.find('.alert').each(function() {
+        if ($(this).text().indexOf(message) == 0 ) {
+          repeated_alert = true;
+          heartbeat($(this));
+        }
+      });
 
-      this.$height += $alert.height();
-      $alert.hide();
-      this.$alerts.animate({height: this.$height}, {queue: false});
-      $alert.slideDown();
+      if (!repeated_alert) {
+        var $alert = $(template.replace('%message%', message));
+        this.$alerts_list.append($alert);
+
+        this.$height += $alert.height();
+        $alert.hide();
+        this.$alerts.animate({height: this.$height}, {queue: false});
+        $alert.slideDown();
+      }
     }
 
     this.error = function(message) {
