@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
-from django.utils.translation import ugettext_lazy, ugettext as _
+from django.utils.translation import ungettext, ugettext_lazy, ugettext as _
 
 from misago.core.shortcuts import paginate
 from misago.readtracker import threadstracker
