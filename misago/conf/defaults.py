@@ -53,6 +53,7 @@ PIPELINE_JS = {
     'misago': {
         'source_filenames': (
             'misago/js/jquery.js',
+            'misago/js/jquery.mousewheel.js',
             'misago/js/bootstrap.js',
             'misago/js/moment.min.js',
             'misago/js/tinycon.min.js',
@@ -62,6 +63,7 @@ PIPELINE_JS = {
             'misago/js/misago-yesnoswitch.js',
             'misago/js/misago-alerts.js',
             'misago/js/misago-ajax.js',
+            'misago/js/misago-scrolling.js',
             'misago/js/misago-uiserver.js',
             'misago/js/misago-notifications.js',
             'misago/js/misago-threads-lists.js',
