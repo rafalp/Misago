@@ -63,6 +63,20 @@ class ForumActions(Actions):
                 'name': _("Approve threads")
             })
 
+        if self.forum.acl['can_move_threads']:
+            actions.append({
+                'action': 'move',
+                'icon': 'arrow-right',
+                'name': _("Move threads")
+            })
+
+        if self.forum.acl['can_merge_threads']:
+            actions.append({
+                'action': 'merge',
+                'icon': 'reply-all',
+                'name': _("Merge threads")
+            })
+
         if self.forum.acl['can_close_threads']:
             actions.append({
                 'action': 'open',
