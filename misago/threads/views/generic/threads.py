@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy, ugettext as _
 from misago.core.shortcuts import paginate
 from misago.readtracker import threadstracker
 
+from misago.threads import moderation
 from misago.threads.models import Label
 from misago.threads.moderation import ModerationError
 from misago.threads.views.generic.base import ViewBase
