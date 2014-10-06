@@ -184,22 +184,6 @@ class ForumActions(Actions):
             message = ("No threads weight was reset.")
             messages.info(request, message)
 
-    def action_approve(self, request, threads):
-        changed_threads = 0
-        for thread in threads:
-            if moderation.approve_thread(request.user, thread):
-                changed_threads += 1
-
-        if changed_threads:
-            message = ungettext(
-                '%(changed)d thread was approved.',
-                '%(changed)d threads were approved.',
-            changed_threads)
-            messages.success(request, message % {'changed': changed_threads})
-        else:
-            message = ("No threads were approved.")
-            messages.info(request, message)
-
     def action_close(self, request, threads):
         changed_threads = 0
         for thread in threads:

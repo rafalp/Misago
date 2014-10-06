@@ -88,6 +88,22 @@ class Actions(object):
     def get_selected_ids(self):
         return self.selected_ids
 
+    def action_approve(self, request, threads):
+        changed_threads = 0
+        for thread in threads:
+            if moderation.approve_thread(request.user, thread):
+                changed_threads += 1
+
+        if changed_threads:
+            message = ungettext(
+                '%(changed)d thread was approved.',
+                '%(changed)d threads were approved.',
+            changed_threads)
+            messages.success(request, message % {'changed': changed_threads})
+        else:
+            message = ("No threads were approved.")
+            messages.info(request, message)
+
 
 class Sorting(object):
     sortings = (
