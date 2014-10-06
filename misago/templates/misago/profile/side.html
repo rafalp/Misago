@@ -2,7 +2,7 @@
 
 <div class="user-avatar">
   {% if is_authenticated_user %}
-  <a href="{% url 'misago:usercp_change_avatar' %}" class="tooltip-top" title="{% trans "Go to avatar options" %}">
+  <a href="{% url 'misago:usercp_change_avatar' %}" class="tooltip-top" title="{% trans "Go to your avatar options" %}">
     <img src="{{ profile|avatar:400 }}" class="img-rounded img-responsive" alt="{% trans "Avatar" %}">
   </a>
   {% else %}
