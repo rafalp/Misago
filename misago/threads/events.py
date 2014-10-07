@@ -75,7 +75,7 @@ def real_add_events_to_posts(user, thread, posts, delimeter=None):
     if not acl.get('can_hide_events'):
         events_queryset = events_queryset.filter(is_hidden=False)
 
-    events = [e for e in events_queryset]
+    events = [e for e in events_queryset[:50]]
     add_acl(user, events)
 
     for i, post in enumerate(posts[:-1]):
