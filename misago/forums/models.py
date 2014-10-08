@@ -121,6 +121,18 @@ class Forum(MPTTModel):
         move_forum_content.send(sender=self, new_forum=new_forum)
 
     @property
+    def is_category(self):
+        return self.role == 'category'
+
+    @property
+    def is_forum(self):
+        return self.role == 'forum'
+
+    @property
+    def is_redirect(self):
+        return self.role == 'redirect'
+
+    @property
     def redirect_host(self):
         return urlparse(self.redirect_url).hostname
 
