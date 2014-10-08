@@ -104,7 +104,9 @@ class ForumActions(Actions):
             actions.append({
                 'action': 'delete',
                 'icon': 'times',
-                'name': _("Delete threads")
+                'name': _("Delete threads"),
+                'confirmation': _("Are you sure you want to delete selected "
+                                  "threads? This action can't be undone.")
             })
 
         return actions

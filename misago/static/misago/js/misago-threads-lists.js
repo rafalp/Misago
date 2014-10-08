@@ -4,6 +4,15 @@ function threadsMassActions(select_message) {
   var $master = $('.master-checkbox');
   var $threads = $('.table-panel .list-group-item');
 
+  $form.find('li button').click(function() {
+    if ($(this).data('confirmation')) {
+      var confirmation = confirm($(this).data('confirmation'));
+      return confirmation;
+    } else {
+      return true;
+    }
+  });
+
   $master.click(function() {
     if ($threads.filter('.active').length == $threads.length) {
       $threads.removeClass('active');
