@@ -1,0 +1,92 @@
+{% extends "misago/threads/base.html" %}
+{% load i18n misago_forms %}
+
+
+{% block title %}{% trans "Move threads" %} | {{ block.super }}{% endblock title %}
+
+
+{% block content %}
+<div{% if forum.css %} class="page-{{ forum.css_class }}"{% endif %}>
+  <div class="page-header">
+    <div class="container">
+      {% if path %}
+      <ol class="breadcrumb">
+        {% for crumb in path|slice:":-1" %}
+        <li>
+          <a href="{{ crumb.get_absolute_url }}">{{ crumb.name }}</a><span class="fa fa-chevron-right"></span>
+        </li>
+        {% endfor %}
+        <li>
+          <a href="{{ forum.get_absolute_url }}">{{ forum.name }}</a>
+        </li>
+      </ol>
+      {% endif %}
+
+      <h1>{% trans "Move threads" %}</h1>
+    </div>
+  </div>
+
+  <div class="container">
+    <form method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="move">
+      {% for thread in threads %}
+      <input type="hidden" name="thread" value="{{ thread.pk }}">
+      {% endfor %}
+
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+
+          <div class="form-panel">
+
+            <div class="form-header">
+              <h2>
+                {% blocktrans trimmed with forum=forum.name %}
+                  Move threads from {{ forum }}
+                {% endblocktrans %}
+              </h2>
+            </div>
+
+            {% include "misago/form_errors.html" %}
+            <div class="form-body no-fieldsets">
+
+              <div class="form-group">
+                <label class="control-label">{% trans "Threads that will be moved:" %}</label>
+                <div class="form-control-static">
+                  <ul class="list-unstyled">
+                    {% for thread in threads %}
+                    <li>
+                      {% if thread.is_announcement %}
+                      <span class="fa fa-star-o fa-fw"></span>
+                      {% elif thread.is_pinned %}
+                      <span class="fa fa-bookmark-o fa-fw"></span>
+                      {% else %}
+                      <span class="fa fa-circle-o fa-fw"></span>
+                      {% endif %}
+                      <a href="{{ thread.get_absolute_url }}" class="item-title">{{ thread }}</a>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+
+              {% form_row form.new_forum %}
+
+            </div>
+
+            <div class="form-footer text-center">
+
+              <button class="btn btn-primary" name="submit">{% trans "Move threads" %}</button>
+              <a href="" class="btn btn-default">{% trans "Cancel" %}</a>
+
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /.row -->
+
+    </form>
+  </div>
+
+</div>
+{% endblock content %}
