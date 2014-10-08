@@ -4,13 +4,20 @@ from misago.core import forms
 from misago.forums.forms import ForumChoiceField
 
 
-class MoveThreadsBaseForm(forms.Form):
+class MoveThreadsForm(forms.Form):
+    new_forum = ForumChoiceField(label=_("Move threads to forum"),
+                                 empty_label=None)
+
     def __init__(self, *args, **kwargs):
         self.forum = kwargs.pop('forum')
-        super(MoveThreadsBaseForm, self).__init__(*args, **kwargs)
+        acl = kwargs.pop('acl')
+
+        super(MoveThreadsForm, self).__init__(*args, **kwargs)
+
+        self.fields['new_forum'].set_acl(acl)
 
     def clean(self):
-        data = super(MoveThreadsBaseForm, self).clean()
+        data = super(MoveThreadsForm, self).clean()
 
         new_forum = data.get('new_forum')
         if new_forum:
@@ -27,13 +34,3 @@ class MoveThreadsBaseForm(forms.Form):
             raise forms.ValidationError(_("You have to select forum."))
         return data
 
-
-def MoveThreadsForm(*args, **kwargs):
-    user = kwargs.pop('user')
-    label = kwargs.pop('label', _("Move threads to forum"))
-    forum_field = ForumChoiceField(label=label, acl=user.acl, empty_label=None)
-
-    FormType = type("FinalMoveThreadsForm", (MoveThreadsBaseForm,), {
-        'new_forum': forum_field,
-    })
-    return FormType(*args, **kwargs)

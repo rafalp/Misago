@@ -199,11 +199,11 @@ class ForumActions(Actions):
     move_threads_template = 'misago/threads/move.html'
 
     def action_move(self, request, threads):
-        form = MoveThreadsForm(user=request.user, forum=self.forum)
+        form = MoveThreadsForm(acl=request.user.acl, forum=self.forum)
 
         if request.method == "POST" and 'submit' in request.POST:
             form = MoveThreadsForm(
-                request.POST, user=request.user, forum=self.forum)
+                request.POST, acl=request.user.acl, forum=self.forum)
             if form.is_valid():
                 new_forum = form.cleaned_data['new_forum']
                 for thread in threads:

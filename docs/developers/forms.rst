@@ -80,9 +80,19 @@ ForumsMultipleChoiceField
 Extends ``ModelMultipleChoiceField``.
 
 
-Instead of ``queryset``, both fields expect ``parent`` argument containing ``Forum`` class instance from which forums should be selected. Leave this argument empty for fields to fallback to root category for all categories and forums.
+Because those fields need to be aware of ACL, you are required to call their ``set_acl`` method from your form's ``__init__``::
 
-In addition, you can pass field ACL dictionary to further limit choices to forums browserable by ACL owner.
+
+    class MoveThreadsForm(forms.Form):
+        new_forum = ForumChoiceField(label=_("Move threads to forum"))
+
+        def __init__(self, *args, **kwargs):
+            self.forum = kwargs.pop('forum')
+            acl = kwargs.pop('acl')
+
+            super(MoveThreadsForm, self).__init__(*args, **kwargs)
+
+            self.fields['new_forum'].set_acl(acl)
 
 
 Template Tags
