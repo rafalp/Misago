@@ -1,6 +1,6 @@
-=====================
-Using Forms in Misago
-=====================
+========================
+Creating Forms in Misago
+========================
 
 .. note::
    Purpose of this document is to introduce you to differences and features of forms module available in misago.core.forms package.
@@ -67,20 +67,7 @@ Forums Forms Module
 
 :py:mod:`misago.forums.forms` module defines two fields you may use for making forum selections in your forms:
 
-
-ForumChoiceField
-----------------
-
-Extends ``ModelChoiceField``.
-
-
-ForumsMultipleChoiceField
--------------------------
-
-Extends ``ModelMultipleChoiceField``.
-
-
-Because those fields need to be aware of ACL, you are required to call their ``set_acl`` method from your form's ``__init__``::
+Because those fields need to know ACL, you are required to call their ``set_acl`` method from your form's ``__init__``::
 
 
     class MoveThreadsForm(forms.Form):
@@ -93,6 +80,18 @@ Because those fields need to be aware of ACL, you are required to call their ``s
             super(MoveThreadsForm, self).__init__(*args, **kwargs)
 
             self.fields['new_forum'].set_acl(acl)
+
+
+ForumChoiceField
+----------------
+
+Extends ``ModelChoiceField``.
+
+
+ForumsMultipleChoiceField
+-------------------------
+
+Extends ``ModelMultipleChoiceField``.
 
 
 Template Tags
