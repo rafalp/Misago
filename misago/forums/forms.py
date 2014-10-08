@@ -15,6 +15,7 @@ Fields
 """
 class ForumListLazyQueryset(object):
     def __init__(self, parent, acl):
+        self.model = Forum
         self._cache = None
         self.parent = parent
         self.acl = acl
@@ -45,6 +46,9 @@ class ForumListLazyQueryset(object):
     def exclude(self, *args, **kwargs):
         return self.all().exclude(*args, **kwargs)
 
+    def order_by(self, *args, **kwargs):
+        return self.all().order_by(*args, **kwargs)
+
     def none(self):
         return Forum.objects.none()
 
@@ -64,12 +68,16 @@ class MisagoForumMixin(object):
         return queryset
 
     def _get_level_indicator(self, obj):
-        level = obj.level - self.queryset.get_parent().level - 1
+        if self.parent:
+            level = obj.level - self.parent.level - 1
+        else:
+            level = obj.level - 1
         return mark_safe(conditional_escape('- - ') * level)
 
 
 class ForumChoiceField(MisagoForumMixin, TreeNodeChoiceField):
     def __init__(self, parent=None, acl=None, *args, **kwargs):
+        self.parent = parent
         if not 'queryset' in kwargs:
             kwargs['queryset'] = ForumListLazyQueryset(parent, acl)
         super(ForumChoiceField, self).__init__(*args, **kwargs)
@@ -77,6 +85,7 @@ class ForumChoiceField(MisagoForumMixin, TreeNodeChoiceField):
 
 class ForumsMultipleChoiceField(MisagoForumMixin, TreeNodeMultipleChoiceField):
     def __init__(self, parent=None, acl=None, *args, **kwargs):
+        self.parent = parent
         if not 'queryset' in kwargs:
             kwargs['queryset'] = ForumListLazyQueryset(parent, acl)
         super(ForumsMultipleChoiceField, self).__init__(*args, **kwargs)
