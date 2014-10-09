@@ -67,8 +67,8 @@ class FormRowNode(template.Node):
             'field': field,
             'form_show_errors': True,
             'form_show_labels': True,
-            'label_class': label_class,
-            'field_class': field_class})
+            'label_class': label_class or '',
+            'field_class': field_class or ''})
         return template.render(c)
 
 
