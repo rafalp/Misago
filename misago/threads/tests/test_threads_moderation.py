@@ -133,6 +133,32 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
         self.assertIn("approved thread.", event.message)
         self.assertEqual(event.icon, "check")
 
+    def test_move_thread(self):
+        """moves_thread moves moderated thread to other froum"""
+        new_forum = Forum.objects.all_forums().filter(role="category")[:1][0]
+
+        self.assertEqual(self.thread.forum, self.forum)
+        self.assertTrue(
+            moderation.move_thread(self.user, self.thread, new_forum))
+
+        self.reload_thread()
+        self.assertEqual(self.thread.forum, new_forum)
+        self.assertTrue(self.thread.has_events)
+        event = self.thread.event_set.last()
+
+        self.assertIn("moved thread", event.message)
+        self.assertEqual(event.icon, "arrow-right")
+
+    def test_move_thread_to_same_forum(self):
+        """moves_thread does not move thread to same forum it is in"""
+        self.assertEqual(self.thread.forum, self.forum)
+        self.assertFalse(
+            moderation.move_thread(self.user, self.thread, self.forum))
+
+        self.reload_thread()
+        self.assertEqual(self.thread.forum, self.forum)
+        self.assertFalse(self.thread.has_events)
+
     def test_close_thread(self):
         """close_thread closes thread"""
         self.assertFalse(self.thread.is_closed)

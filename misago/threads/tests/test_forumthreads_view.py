@@ -142,7 +142,7 @@ class ActionsTests(ForumViewHelperTestCase):
             },
         ])
 
-    def test_approve_actions(self):
+    def test_approve_action(self):
         """ForumActions initializes list with approve threads action"""
         self.override_acl({
             'can_review_moderated_content': 0,
@@ -161,6 +161,28 @@ class ActionsTests(ForumViewHelperTestCase):
                 'action': 'approve',
                 'icon': 'check',
                 'name': _("Approve threads")
+            },
+        ])
+
+    def test_move_action(self):
+        """ForumActions initializes list with move threads action"""
+        self.override_acl({
+            'can_move_threads': 0,
+        })
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [])
+
+        self.override_acl({
+            'can_move_threads': 1,
+        })
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [
+            {
+                'action': 'move',
+                'icon': 'arrow-right',
+                'name': _("Move threads")
             },
         ])
 
@@ -500,13 +522,15 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         super(ForumThreadsViewTests, self).tearDown()
         Label.objects.clear_cache()
 
-    def override_acl(self, new_acl):
+    def override_acl(self, new_acl, forum=None):
+        forum = forum or self.forum
+
         forums_acl = self.user.acl
         if new_acl['can_see']:
-            forums_acl['visible_forums'].append(self.forum.pk)
+            forums_acl['visible_forums'].append(forum.pk)
         else:
-            forums_acl['visible_forums'].remove(self.forum.pk)
-        forums_acl['forums'][self.forum.pk] = new_acl
+            forums_acl['visible_forums'].remove(forum.pk)
+        forums_acl['forums'][forum.pk] = new_acl
         override_acl(self.user, forums_acl)
 
     def test_cant_see(self):
@@ -980,6 +1004,97 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
         self.assertIn("1 thread was approved.", response.content)
+
+    def test_move_threads(self):
+        """moderation allows for aproving moderated threads"""
+        new_forum = Forum(name="New Forum",
+                          slug="new-forum",
+                          role="forum")
+        new_forum.insert_at(self.forum, save=True)
+
+        test_acl = {
+            'can_see': 1,
+            'can_browse': 1,
+            'can_see_all_threads': 1,
+            'can_move_threads': 1
+        }
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Move threads", response.content)
+
+        threads = [testutils.post_thread(self.forum) for t in xrange(10)]
+
+        # see move threads forum
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'move', 'thread': [t.pk for t in threads[:5]]
+        })
+        self.assertEqual(response.status_code, 200)
+
+        for thread in threads[:5]:
+            self.assertIn(thread.title, response.content)
+
+        # submit form with non-existing forum
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'move',
+            'thread': [t.pk for t in threads[:5]],
+            'submit': '',
+            'new_forum': new_forum.pk + 1234
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Select valid forum.", response.content)
+
+        # attempt move to category
+        self.override_acl(test_acl)
+
+        category = Forum.objects.all_forums().filter(role="category")[:1][0]
+        response = self.client.post(self.link, data={
+            'action': 'move',
+            'thread': [t.pk for t in threads[:5]],
+            'submit': '',
+            'new_forum': category.pk
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("You can&#39;t move threads to category.",
+                      response.content)
+
+        # attempt move to redirect
+        self.override_acl(test_acl)
+
+        redirect = Forum.objects.all_forums().filter(role="redirect")[:1][0]
+        response = self.client.post(self.link, data={
+            'action': 'move',
+            'thread': [t.pk for t in threads[:5]],
+            'submit': '',
+            'new_forum': redirect.pk
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("You can&#39;t move threads to redirect.",
+                      response.content)
+
+        # move to new_forum
+        self.override_acl(test_acl)
+        self.override_acl(test_acl, new_forum)
+        response = self.client.post(self.link, data={
+            'action': 'move',
+            'thread': [t.pk for t in threads[:5]],
+            'submit': '',
+            'new_forum': new_forum.pk
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("5 threads were moved to New Forum.", response.content)
+
+        for thread in new_forum.thread_set.all():
+            self.assertIn(thread, threads[:5])
+        for thread in self.forum.thread_set.all():
+            self.assertIn(thread, threads[5:])
 
     def test_close_open_threads(self):
         """moderation allows for closing and opening threads"""
