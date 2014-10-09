@@ -46,6 +46,15 @@ class MisagoForumMixin(object):
         if not 'queryset' in kwargs:
             kwargs['queryset'] = Forum.objects.order_by('lft')
 
+        if kwargs.get('error_messages', {}):
+            kwargs['error_messages'].update({
+                'invalid_choice': self.INVALID_CHOICE_ERROR
+            })
+        else:
+            kwargs['error_messages'] = {
+                'invalid_choice': self.INVALID_CHOICE_ERROR
+            }
+
         super(MisagoForumMixin, self).__init__(*args, **kwargs)
 
     def set_acl(self, acl=None):
@@ -64,11 +73,11 @@ class MisagoForumMixin(object):
 
 
 class ForumChoiceField(MisagoForumMixin, TreeNodeChoiceField):
-    pass
+    INVALID_CHOICE_ERROR = _("Select valid forum.")
 
 
 class ForumsMultipleChoiceField(MisagoForumMixin, TreeNodeMultipleChoiceField):
-    pass
+    INVALID_CHOICE_ERROR = _("Select valid forums.")
 
 
 """
