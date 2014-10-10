@@ -3,6 +3,24 @@ from django.utils.translation import ugettext_lazy as _
 from misago.core import forms
 from misago.forums.forms import ForumChoiceField
 
+from misago.threads.validators import validate_title
+
+
+class MergeThreadsForm(forms.Form):
+    merged_thread_title = forms.CharField(label=_("Merged thread title"),
+                                          required=False)
+
+    def clean(self):
+        data = super(MergeThreadsForm, self).clean()
+
+        merged_thread_title = data.get('merged_thread_title')
+        if merged_thread_title:
+            validate_title(merged_thread_title)
+        else:
+            message = _("You have to enter merged thread title.")
+            raise forms.ValidationError(message)
+        return data
+
 
 class MoveThreadsForm(forms.Form):
     new_forum = ForumChoiceField(label=_("Move threads to forum"),
@@ -33,4 +51,3 @@ class MoveThreadsForm(forms.Form):
         else:
             raise forms.ValidationError(_("You have to select forum."))
         return data
-

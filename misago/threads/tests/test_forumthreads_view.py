@@ -186,6 +186,28 @@ class ActionsTests(ForumViewHelperTestCase):
             },
         ])
 
+    def test_merge_action(self):
+        """ForumActions initializes list with merge threads action"""
+        self.override_acl({
+            'can_merge_threads': 0,
+        })
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [])
+
+        self.override_acl({
+            'can_merge_threads': 1,
+        })
+
+        actions = ForumActions(user=self.user, forum=self.forum)
+        self.assertEqual(actions.available_actions, [
+            {
+                'action': 'merge',
+                'icon': 'reply-all',
+                'name': _("Merge threads")
+            },
+        ])
+
     def test_close_open_actions(self):
         """ForumActions initializes list with close and open actions"""
         self.override_acl({
@@ -1006,7 +1028,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.assertIn("1 thread was approved.", response.content)
 
     def test_move_threads(self):
-        """moderation allows for aproving moderated threads"""
+        """moderation allows for moving threads"""
         new_forum = Forum(name="New Forum",
                           slug="new-forum",
                           role="forum")
@@ -1026,7 +1048,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
 
         threads = [testutils.post_thread(self.forum) for t in xrange(10)]
 
-        # see move threads forum
+        # see move threads form
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
             'action': 'move', 'thread': [t.pk for t in threads[:5]]
@@ -1095,6 +1117,75 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
             self.assertIn(thread, threads[:5])
         for thread in self.forum.thread_set.all():
             self.assertIn(thread, threads[5:])
+
+    def test_merge_threads(self):
+        """moderation allows for merging threads"""
+        test_acl = {
+            'can_see': 1,
+            'can_browse': 1,
+            'can_see_all_threads': 1,
+            'can_merge_threads': 1
+        }
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Merge threads", response.content)
+
+        threads = [testutils.post_thread(self.forum) for t in xrange(10)]
+
+        # see merge threads form
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'merge', 'thread': [t.pk for t in threads[:5]]
+        })
+        self.assertEqual(response.status_code, 200)
+
+        # submit form with empty title
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'merge',
+            'thread': [t.pk for t in threads[:5]],
+            'submit': ''
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("You have to enter merged thread title.",
+                      response.content)
+
+        # submit form with one thread selected
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'merge',
+            'thread': [threads[0].pk],
+            'submit': ''
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("You have to select at least two threads to merge.",
+                      response.content)
+
+        # submit form with valid title
+        self.override_acl(test_acl)
+        response = self.client.post(self.link, data={
+            'action': 'merge',
+            'thread': [t.pk for t in threads[:5]],
+            'merged_thread_title': 'Merged thread',
+            'submit': ''
+        })
+        self.assertEqual(response.status_code, 302)
+
+        # see if merged thread is there
+        self.override_acl(test_acl)
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Merged thread", response.content)
+
+        # assert that merged threads are gone
+        for thread in threads[:5]:
+            self.assertNotIn(thread.get_absolute_url(), response.content)
+
+        # assert that non-merged threads were untouched
+        for thread in threads[5:]:
+            self.assertIn(thread.get_absolute_url(), response.content)
 
     def test_close_open_threads(self):
         """moderation allows for closing and opening threads"""

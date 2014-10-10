@@ -101,6 +101,12 @@ def move_thread(user, thread, new_forum):
 
 @atomic
 def merge_thread(user, thread, other_thread):
+    message = _("%(user)s merged in %(thread)s.")
+    record_event(user, thread, "arrow-right", message, {
+        'user': user,
+        'thread': other_thread.title
+    })
+
     thread.merge(other_thread)
     thread.synchronize()
     thread.save()

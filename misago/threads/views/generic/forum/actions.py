@@ -1,12 +1,14 @@
 from django.contrib import messages
 from django.db.transaction import atomic
 from django.shortcuts import render
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy, ugettext as _, ungettext
 
 from misago.forums.lists import get_forum_path
 
 from misago.threads import moderation
-from misago.threads.forms.moderation import MoveThreadsForm
+from misago.threads.forms.moderation import MergeThreadsForm, MoveThreadsForm
+from misago.threads.models import Thread
 from misago.threads.views.generic.threads import Actions
 
 
@@ -112,7 +114,7 @@ class ForumActions(Actions):
             if label.slug == label_slug:
                 break
         else:
-            raise ModerationError(_("Requested action is invalid."))
+            raise moderation.ModerationError(_("Requested action is invalid."))
 
         changed_threads = 0
         for thread in threads:
@@ -228,6 +230,61 @@ class ForumActions(Actions):
                 return None # trigger threads list refresh
 
         return render(request, self.move_threads_template, {
+            'form': form,
+            'forum': self.forum,
+            'path': get_forum_path(self.forum),
+            'threads': threads
+        })
+
+    merge_threads_template = 'misago/threads/merge.html'
+
+    def action_merge(self, request, threads):
+        if len(threads) == 1:
+            message = _("You have to select at least two threads to merge.")
+            raise moderation.ModerationError(message)
+
+        form = MergeThreadsForm()
+
+        if request.method == "POST" and 'submit' in request.POST:
+            form = MergeThreadsForm(request.POST)
+            if form.is_valid():
+                thread_title = form.cleaned_data['merged_thread_title']
+
+                with atomic():
+                    merged_thread = Thread()
+                    merged_thread.weight = max(t.weight for t in threads)
+                    merged_thread.forum = self.forum
+                    merged_thread.set_title(
+                        form.cleaned_data['merged_thread_title'])
+                    merged_thread.starter_name = "-"
+                    merged_thread.starter_slug = "-"
+                    merged_thread.last_poster_name = "-"
+                    merged_thread.last_poster_slug = "-"
+                    merged_thread.started_on = timezone.now()
+                    merged_thread.last_post_on = timezone.now()
+                    merged_thread.save()
+
+                    for thread in threads:
+                        moderation.merge_thread(
+                            request.user, merged_thread, thread)
+
+                with atomic():
+                    self.forum.synchronize()
+                    self.forum.save()
+
+                changed_threads = len(threads)
+                message = ungettext(
+                    '%(changed)d thread was merged into %(thread)s.',
+                    '%(changed)d threads were merged into %(thread)s.',
+                changed_threads)
+                messages.success(request, message % {
+                    'changed': changed_threads,
+                    'thread': merged_thread.title
+                })
+
+                return None # trigger threads list refresh
+
+        return render(request, self.merge_threads_template, {
             'form': form,
             'forum': self.forum,
             'path': get_forum_path(self.forum),
