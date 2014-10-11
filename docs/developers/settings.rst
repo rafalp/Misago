@@ -223,6 +223,11 @@ MISAGO_DYNAMIC_AVATAR_DRAWER
 Function used to create unique avatar for this user. Allows for customization of algorithm used to generate those.
 
 
+MISAGO_FRESH_CONTENT_PERIOD
+---------------------------
+Controls amount of data used in building "New threads" and "Threads with unread replies" lists. Active forums can try lowering this value while less active ones may wish to increase this number.
+
+
 MISAGO_MAILER_BATCH_SIZE
 ------------------------
 
@@ -258,11 +263,6 @@ MISAGO_RANKING_SIZE
 -------------------
 
 Maximum number of items on ranking page.
-
-
-MISAGO_READ_RECORD_LENGTH
--------------------------
-Controls amount of data used in resolving read/unread states of threads and forums. Any activity older than number of days specified in this setting is assumed to be read and not tracked anymore. Active forums can try lowering this value while less active ones may wish to increase this number.
 
 
 MISAGO_SENDFILE_HEADER

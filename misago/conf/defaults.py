@@ -285,11 +285,12 @@ MISAGO_RANKING_LENGTH = 30
 MISAGO_RANKING_SIZE = 30
 
 
-# Controls amount of data used in resolving read/unread states of threads and
-# forums. Any activity older than number of days below is assumed to be read
-# and not tracked anymore. Active forums can try lowering this value while
-# less active ones may wish to increase this number
-MISAGO_READ_RECORD_LENGTH = 28
+# Controls amount of data used for new threads/replies lists
+# Only unread threads younger than number of days specified in this setting
+# will be considered fresh for "new threads" list
+# Only unread threads with last reply younger than number of days specified
+# there will be confidered fresh for "Threads with unread replies" list
+MISAGO_FRESH_CONTENT_PERIOD = 40
 
 
 # X-Sendfile

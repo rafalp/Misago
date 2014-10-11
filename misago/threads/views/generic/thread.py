@@ -64,7 +64,7 @@ class ThreadView(ViewBase):
         threadstracker.make_read_aware(request.user, thread)
 
         page, posts = self.get_posts(request.user, forum, thread, kwargs)
-        threadstracker.make_posts_read_aware(thread, posts)
+        threadstracker.make_posts_read_aware(request.user, thread, posts)
         threadstracker.read_thread(request.user, thread, posts[-1])
 
         return self.render(request, {

@@ -4,12 +4,8 @@ from django.conf import settings
 from django.utils import timezone
 
 
-def cutoff_date():
-    return timezone.now() - timedelta(days=settings.MISAGO_READ_RECORD_LENGTH)
-
-
-def is_date_tracked(date):
+def is_date_tracked(user, date):
     if date:
-        return date > cutoff_date()
+        return date > user.joined_on
     else:
         return False

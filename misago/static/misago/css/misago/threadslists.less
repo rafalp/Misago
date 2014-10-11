@@ -42,8 +42,15 @@
         //==
         .item-title {
           font-size: @font-size-large;
+
+          .opacity(0.7);
         }
 
+        &.new {
+          .item-title {
+            .opacity(1);
+          }
+        }
 
         // Thread last reply
         //
