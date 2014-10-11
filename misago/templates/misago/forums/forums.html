@@ -80,7 +80,7 @@
       <button class="btn btn-default btn-sm dropdown-toggle tooltip-top" title="{% trans "Subforums list" %}" type="button" id="dropdownMenu1" data-toggle="dropdown">
         <span class="fa fa-reorder fa-lg"></span>
       </button>
-      <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+      <ul class="dropdown-menu scrollable" role="menu" aria-labelledby="dropdownMenu1">
         {% for subforum in forum.subforums %}
         <li role="presentation">
           <a role="menuitem" tabindex="-1" href="{{ subforum.get_absolute_url }}">
