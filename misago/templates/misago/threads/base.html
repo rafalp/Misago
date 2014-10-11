@@ -66,19 +66,19 @@
                   {{ thread.replies|intcomma }}
                 </div>
               </div>
-              {% elif thread.replies and thread.replies > thread.unread_replies %}
+              {% elif thread.is_new %}
               <div class="thread-replies new-replies">
-                <div class="tooltip-top" title="{% blocktrans trimmed with replies=thread.unread_replies|intcomma count counter=thread.unread_replies %}{{ replies }} new reply{% plural %}{{ replies }} new replies{% endblocktrans %}">
-                  <span class="glyphicon glyphicon-plus"></span>
-                  {{ thread.unread_replies|intcomma }}
-                </div>
+                <span class="label label-success tooltip-top" title="{% blocktrans trimmed with replies=thread.replies|intcomma count counter=thread.replies %}New thread with {{ replies }} reply{% plural %}New thread with {{ replies }} replies{% endblocktrans %}">
+                  <span class="fa fa-plus-circle fa-fw"></span>
+                  {{ thread.replies|intcomma }}
+                </span>
               </div>
               {% else %}
-              <div class="thread-replies new-thread">
-                <div class="tooltip-top" title="{% blocktrans trimmed with replies=thread.replies|intcomma count counter=thread.replies %}New thread with {{ replies }} reply{% plural %}New thread with {{ replies }} replies{% endblocktrans %}">
-                  <span class="glyphicon glyphicon-leaf"></span>
-                  {{ thread.replies|intcomma }}
-                </div>
+              <div class="thread-replies new-replies">
+                <span class="label label-primary tooltip-top" title="{% blocktrans trimmed with replies=thread.unread_replies|intcomma count counter=thread.unread_replies %}{{ replies }} new reply{% plural %}{{ replies }} new replies{% endblocktrans %}">
+                  <span class="fa fa-signal fa-fw"></span>
+                  {{ thread.unread_replies|intcomma }}
+                </span>
               </div>
               {% endif %}
 

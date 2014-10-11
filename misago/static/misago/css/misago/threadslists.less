@@ -94,25 +94,23 @@
             display: inline-block;
             margin: 0px;
             margin-right: @font-size-large;
+            margin-top: -2px;
+            .opacity(0.7);
             transition-duration: 0.5s;
             width: @font-size-large * 4.5;
 
             font-size: @font-size-large;
 
-            &>div {
+            .label {
               display: inline;
+              padding-left: 4px;
 
-              span {
-                font-size: @font-size-base;
-              }
+              font-size: @font-size-base;
+              font-weight: normal !important;
             }
 
             &.new-replies {
-              color: @brand-primary;
-            }
-
-            &.new-thread {
-              color: @brand-success;
+              .opacity(1);
             }
           }
 

@@ -20,6 +20,7 @@ def make_threads_read_aware(user, threads):
     threads_dict = {}
     for thread in threads:
         thread.is_read = not is_date_tracked(user, thread.last_post_on)
+        thread.is_new = True
         if thread.is_read:
             thread.unread_replies = 0
         else:
@@ -29,6 +30,7 @@ def make_threads_read_aware(user, threads):
     for record in user.threadread_set.filter(thread__in=threads_dict.keys()):
         if record.thread_id in threads_dict:
             thread = threads_dict[record.thread_id]
+            thread.is_new = False
             thread.is_read = record.last_read_on >= thread.last_post_on
             if thread.is_read:
                 thread.unread_replies = 0
@@ -105,4 +107,4 @@ def count_read_replies(user, thread, last_read_reply):
         last_reply_date = last_read_reply.last_read_on
         queryset = thread.post_set.filter(last_read_on__lte=last_reply_date)
         queryset = queryset.filter(is_moderated=False)
-        return queryset.count()
+        return queryset.count() - 1 # - starters post
