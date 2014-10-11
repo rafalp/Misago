@@ -12,7 +12,7 @@
     <ul class="dropdown-menu scrollable" role="menu">
       {% for action in list_actions %}
       <li>
-        <button type="submit" name="action" value="{{ action.action }}" {% if action.confirmation %}data-confirmation="{{ action.confirmation }}"{% endif %}>
+        <button type="submit" name="action" value="{{ action.action }}" class="action-{{ action.action }}" {% if action.confirmation %}data-confirmation="{{ action.confirmation }}"{% endif %}>
           <span class="fa fa-{{ action.icon }} fa-fw"></span>
           {{ action.name }}
         </button>

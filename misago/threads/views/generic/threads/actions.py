@@ -2,6 +2,8 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import ungettext, ugettext_lazy, ugettext as _
 
+from misago.core.exceptions import AjaxError
+
 from misago.threads import moderation
 from misago.threads.moderation import ModerationError
 
@@ -10,6 +12,7 @@ __all__ = ['Actions']
 
 
 class Actions(object):
+    invalid_action_message = ugettext_lazy("Requested action is invalid.")
     select_threads_message = ugettext_lazy(
         "You have to select at least one thread.")
 
@@ -39,7 +42,7 @@ class Actions(object):
                 action_callable = 'action_%s' % action_name
                 return getattr(self, action_callable), action_arg
         else:
-            raise ModerationError(_("Requested action is invalid."))
+            raise ModerationError(self.invalid_action_message)
 
     def clean_selection(self, data):
         filtered_data = []
@@ -68,14 +71,19 @@ class Actions(object):
                     response = action(request, filtered_queryset)
                 if response:
                     return response
+                elif request.is_ajax():
+                    raise AjaxError(self.invalid_action_message, 406)
                 else:
                     # prepare default response: page reload
                     return redirect(request.path)
             else:
                 raise ModerationError(self.select_threads_message)
         except ModerationError as e:
-            messages.error(request, e.message)
-            return False
+            if request.is_ajax():
+                raise AjaxError(e.message, 406)
+            else:
+                messages.error(request, e.message)
+                return False
 
     def get_list(self):
         return self.available_actions

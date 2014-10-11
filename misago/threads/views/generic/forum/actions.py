@@ -108,7 +108,7 @@ class ForumActions(Actions):
             if label.slug == label_slug:
                 break
         else:
-            raise moderation.ModerationError(_("Requested action is invalid."))
+            raise moderation.ModerationError(self.invalid_action_message)
 
         changed_threads = 0
         for thread in threads:
@@ -176,7 +176,8 @@ class ForumActions(Actions):
             message = _("No threads were unpinned.")
             messages.info(request, message)
 
-    move_threads_template = 'misago/threads/move.html'
+    move_threads_full_template = 'misago/threads/move/full.html'
+    move_threads_modal_template = 'misago/threads/move/modal.html'
 
     def action_move(self, request, threads):
         form = MoveThreadsForm(acl=request.user.acl, forum=self.forum)
@@ -197,8 +198,8 @@ class ForumActions(Actions):
 
                 changed_threads = len(threads)
                 message = ungettext(
-                    '%(changed)d thread was moved to %(forum)s.',
-                    '%(changed)d threads were moved to %(forum)s.',
+                    '%(changed)d thread was moved to "%(forum)s".',
+                    '%(changed)d threads were moved to "%(forum)s".',
                 changed_threads)
                 messages.success(request, message % {
                     'changed': changed_threads,
@@ -207,14 +208,20 @@ class ForumActions(Actions):
 
                 return None # trigger threads list refresh
 
-        return render(request, self.move_threads_template, {
+        if request.is_ajax():
+            template = self.move_threads_modal_template
+        else:
+            template = self.move_threads_full_template
+
+        return render(request, template, {
             'form': form,
             'forum': self.forum,
             'path': get_forum_path(self.forum),
             'threads': threads
         })
 
-    merge_threads_template = 'misago/threads/merge.html'
+    merge_threads_full_template = 'misago/threads/merge/full.html'
+    merge_threads_modal_template = 'misago/threads/merge/modal.html'
 
     def action_merge(self, request, threads):
         if len(threads) == 1:
@@ -254,8 +261,8 @@ class ForumActions(Actions):
 
                 changed_threads = len(threads)
                 message = ungettext(
-                    '%(changed)d thread was merged into %(thread)s.',
-                    '%(changed)d threads were merged into %(thread)s.',
+                    '%(changed)d thread was merged into "%(thread)s".',
+                    '%(changed)d threads were merged into "%(thread)s".',
                 changed_threads)
                 messages.success(request, message % {
                     'changed': changed_threads,
@@ -264,7 +271,12 @@ class ForumActions(Actions):
 
                 return None # trigger threads list refresh
 
-        return render(request, self.merge_threads_template, {
+        if request.is_ajax():
+            template = self.merge_threads_modal_template
+        else:
+            template = self.merge_threads_full_template
+
+        return render(request, template, {
             'form': form,
             'forum': self.forum,
             'path': get_forum_path(self.forum),

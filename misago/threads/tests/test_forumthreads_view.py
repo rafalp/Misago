@@ -1065,7 +1065,8 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.override_acl(test_acl)
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
-        self.assertIn("5 threads were moved to New Forum.", response.content)
+        self.assertIn("5 threads were moved to &quot;New Forum&quot;.",
+                      response.content)
 
         for thread in new_forum.thread_set.all():
             self.assertIn(thread, threads[:5])

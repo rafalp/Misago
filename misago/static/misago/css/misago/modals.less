@@ -18,9 +18,21 @@
         }
       }
 
+      .modal-form {
+        padding-bottom: @line-height-computed / 5;
+      }
+
       .modal-footer {
         background: @modal-footer-bg-color;
         border-radius: 0px 0px @border-radius-large @border-radius-large;
+
+        &.text-center {
+          text-align: center;
+
+          &>* {
+            float: none;
+          }
+        }
       }
     }
   }

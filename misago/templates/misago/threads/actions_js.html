@@ -2,5 +2,19 @@
 <script lang="JavaScript">
   $(function() {
     threadsMassActions("{% trans "You have to select at least one thread." %}");
+
+    var $threads_actions = $('#threads-actions');
+
+    $('#threads-actions .action-move').click(function() {
+      var action_data = $threads_actions.serialize($threads_actions) + '&action=move';
+      $.misago_modal().post('', action_data);
+      return false;
+    });
+
+    $('#threads-actions .action-merge').click(function() {
+      var action_data = $threads_actions.serialize($threads_actions) + '&action=merge';
+      $.misago_modal().post('', action_data);
+      return false;
+    });
   });
 </script>

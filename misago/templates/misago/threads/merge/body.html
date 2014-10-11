@@ -1,0 +1,20 @@
+{% load i18n misago_forms %}
+<div class="form-group">
+  <label class="control-label">{% trans "Threads that will be merged:" %}</label>
+  <div class="form-control-static">
+    <ul class="list-unstyled">
+      {% for thread in threads %}
+      <li>
+        {% if thread.is_pinned %}
+        <span class="fa fa-star-o fa-fw"></span>
+        {% else %}
+        <span class="fa fa-circle-o fa-fw"></span>
+        {% endif %}
+        <a href="{{ thread.get_absolute_url }}" class="item-title">{{ thread }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% form_row form.merged_thread_title %}

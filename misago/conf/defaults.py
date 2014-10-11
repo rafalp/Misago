@@ -63,6 +63,7 @@ PIPELINE_JS = {
             'misago/js/misago-yesnoswitch.js',
             'misago/js/misago-alerts.js',
             'misago/js/misago-ajax.js',
+            'misago/js/misago-modal.js',
             'misago/js/misago-scrolling.js',
             'misago/js/misago-uiserver.js',
             'misago/js/misago-notifications.js',

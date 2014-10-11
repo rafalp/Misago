@@ -29,6 +29,8 @@
 
     {% include "misago/footer.html" %}
 
+    {% include "misago/modal.html" %}
+
     {# We include JavaScript at the end of page body so it renders faster #}
     <script lang="JavaScript">
       var is_authenticated = {{ user.is_authenticated|yesno:"true,false" }};
