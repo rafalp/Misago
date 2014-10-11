@@ -92,53 +92,30 @@ class ActionsTests(ForumViewHelperTestCase):
             },
         ])
 
-    def test_weight_actions(self):
-        """ForumActions initializes list with available weights"""
+    def test_pin_unpin_actions(self):
+        """ForumActions initializes list with pin and unpin actions"""
         self.override_acl({
-            'can_change_threads_weight': 0,
+            'can_pin_threads': 0,
         })
 
         actions = ForumActions(user=self.user, forum=self.forum)
         self.assertEqual(actions.available_actions, [])
 
         self.override_acl({
-            'can_change_threads_weight': 1,
+            'can_pin_threads': 1,
         })
 
         actions = ForumActions(user=self.user, forum=self.forum)
         self.assertEqual(actions.available_actions, [
             {
                 'action': 'pin',
-                'icon': 'bookmark',
-                'name': _("Change to pinned")
-            },
-            {
-                'action': 'reset',
-                'icon': 'circle',
-                'name': _("Reset weight")
-            },
-        ])
-
-        self.override_acl({
-            'can_change_threads_weight': 2,
-        })
-
-        actions = ForumActions(user=self.user, forum=self.forum)
-        self.assertEqual(actions.available_actions, [
-            {
-                'action': 'announce',
                 'icon': 'star',
-                'name': _("Change to announcements")
+                'name': _("Pin threads")
             },
             {
-                'action': 'pin',
-                'icon': 'bookmark',
-                'name': _("Change to pinned")
-            },
-            {
-                'action': 'reset',
+                'action': 'unpin',
                 'icon': 'circle',
-                'name': _("Reset weight")
+                'name': _("Unpin threads")
             },
         ])
 
@@ -889,64 +866,44 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("No threads were unlabeled.", response.content)
 
-    def test_moderate_threads_weight(self):
-        """moderation allows for changing threads weight"""
+    def test_pin_unpin_threads(self):
+        """moderation allows for pinning and unpinning threads"""
         test_acl = {
             'can_see': 1,
             'can_browse': 1,
             'can_see_all_threads': 1,
-            'can_change_threads_weight': 2
+            'can_pin_threads': 1
         }
 
         self.override_acl(test_acl)
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Change to announcements", response.content)
+        self.assertIn("Pin threads", response.content)
 
-        announcement = testutils.post_thread(self.forum, weight=2)
-        pinned = testutils.post_thread(self.forum, weight=1)
-        thread = testutils.post_thread(self.forum, weight=0)
+        pinned = testutils.post_thread(self.forum, is_pinned=True)
+        thread = testutils.post_thread(self.forum, is_pinned=False)
 
-        # annouce nothing
+        # pin nothing
         self.override_acl(test_acl)
-        response = self.client.post(self.link, data={'action': 'announce'})
+        response = self.client.post(self.link, data={'action': 'pin'})
         self.assertEqual(response.status_code, 200)
         self.assertIn("You have to select at least one thread.",
                       response.content)
 
-        # make announcement announcement
+        # pin pinned
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'announce', 'thread': [announcement.pk]
+            'action': 'pin', 'thread': [pinned.pk]
         })
         self.assertEqual(response.status_code, 302)
 
         self.override_acl(test_acl)
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
-        self.assertIn("No threads were changed to announcements.",
+        self.assertIn("No threads were pinned.",
                       response.content)
 
-        # make non-announcements announcements
-        self.override_acl(test_acl)
-        response = self.client.post(self.link, data={
-            'action': 'announce', 'thread': [pinned.pk, thread.pk]
-        })
-        self.assertEqual(response.status_code, 302)
-
-        self.override_acl(test_acl)
-        response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("2 threads were changed to announcements.",
-                      response.content)
-
-        pinned = Thread.objects.get(pk=pinned.pk)
-        thread = Thread.objects.get(pk=thread.pk)
-
-        self.assertEqual(pinned.weight, 2)
-        self.assertEqual(thread.weight, 2)
-
-        # make threads pinned
+        # pin unpinned
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
             'action': 'pin', 'thread': [pinned.pk, thread.pk]
@@ -956,35 +913,32 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.override_acl(test_acl)
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
-        self.assertIn("2 threads were pinned.", response.content)
+        self.assertIn("1 thread was pinned.",
+                      response.content)
 
-        announcement = Thread.objects.get(pk=announcement.pk)
         pinned = Thread.objects.get(pk=pinned.pk)
         thread = Thread.objects.get(pk=thread.pk)
 
-        self.assertEqual(announcement.weight, 2)
-        self.assertEqual(pinned.weight, 1)
-        self.assertEqual(thread.weight, 1)
+        self.assertTrue(pinned.is_pinned)
+        self.assertTrue(thread.is_pinned)
 
-        # reset threads pinned
+        # unpin thread
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'reset', 'thread': [thread.pk]
+            'action': 'unpin', 'thread': [thread.pk]
         })
         self.assertEqual(response.status_code, 302)
 
         self.override_acl(test_acl)
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
-        self.assertIn("1 thread weight was reset.", response.content)
+        self.assertIn("1 thread was unpinned.", response.content)
 
-        announcement = Thread.objects.get(pk=announcement.pk)
         pinned = Thread.objects.get(pk=pinned.pk)
         thread = Thread.objects.get(pk=thread.pk)
 
-        self.assertEqual(announcement.weight, 2)
-        self.assertEqual(pinned.weight, 1)
-        self.assertEqual(thread.weight, 0)
+        self.assertTrue(pinned.is_pinned)
+        self.assertFalse(thread.is_pinned)
 
     def test_approve_moderated_threads(self):
         """moderation allows for aproving moderated threads"""

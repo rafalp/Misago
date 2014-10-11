@@ -7,16 +7,11 @@ from misago.core.shortcuts import paginate
 from misago.core.utils import slugify
 
 
-__all__ = ['ANNOUNCEMENT', 'PINNED', 'Thread']
-
-
-ANNOUNCEMENT = 2
-PINNED = 1
+__all__ = ['Thread']
 
 
 class Thread(models.Model):
     forum = models.ForeignKey('misago_forums.Forum')
-    weight = models.PositiveIntegerField(default=0, db_index=True)
     label = models.ForeignKey('misago_threads.Label',
                               null=True, blank=True,
                               on_delete=models.SET_NULL)
@@ -46,6 +41,7 @@ class Thread(models.Model):
                                     on_delete=models.SET_NULL)
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
     last_poster_slug = models.CharField(max_length=255, null=True, blank=True)
+    is_pinned = models.BooleanField(default=False, db_index=True)
     is_poll = models.BooleanField(default=False)
     is_moderated = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)
@@ -53,10 +49,9 @@ class Thread(models.Model):
 
     class Meta:
         index_together = [
-            ['forum', 'weight'],
-            ['forum', 'weight', 'id'],
-            ['forum', 'weight', 'last_post_on'],
-            ['forum', 'weight', 'replies'],
+            ['forum', 'id'],
+            ['forum', 'last_post_on'],
+            ['forum', 'replies'],
         ]
 
     def __unicode__(self):
@@ -109,14 +104,6 @@ class Thread(models.Model):
             self.set_last_post(last_post[0])
         else:
             self.set_last_post(first_post)
-
-    @property
-    def is_announcement(self):
-        return self.weight == ANNOUNCEMENT
-
-    @property
-    def is_pinned(self):
-        return self.weight == PINNED
 
     @property
     def link_prefix(self):

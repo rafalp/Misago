@@ -21,7 +21,7 @@ class Command(BaseCommand):
             archive = forum.archive_pruned_in
             pruned_threads = 0
 
-            threads_qs = forum.thread_set.filter(weight=0)
+            threads_qs = forum.thread_set.filter(is_pinned=False)
 
             if forum.prune_started_after:
                 cutoff = now - timedelta(days=forum.prune_started_after)

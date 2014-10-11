@@ -72,7 +72,6 @@ class Migration(migrations.Migration):
             name='Thread',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('weight', models.PositiveIntegerField(default=0, db_index=True)),
                 ('title', models.CharField(max_length=255)),
                 ('slug', models.CharField(max_length=255)),
                 ('replies', models.PositiveIntegerField(default=0, db_index=True)),
@@ -86,6 +85,7 @@ class Migration(migrations.Migration):
                 ('last_post_on', models.DateTimeField(db_index=True)),
                 ('last_poster_name', models.CharField(max_length=255, null=True, blank=True)),
                 ('last_poster_slug', models.CharField(max_length=255, null=True, blank=True)),
+                ('is_pinned', models.BooleanField(default=False, db_index=True)),
                 ('is_poll', models.BooleanField(default=False)),
                 ('is_moderated', models.BooleanField(default=False, db_index=True)),
                 ('is_hidden', models.BooleanField(default=False)),
@@ -174,10 +174,9 @@ class Migration(migrations.Migration):
         migrations.AlterIndexTogether(
             name='thread',
             index_together=set([
-                ('forum', 'weight', 'id'),
-                ('forum', 'weight', 'last_post_on'),
-                ('forum', 'weight', 'replies'),
-                ('forum', 'weight')
+                ('forum', 'id'),
+                ('forum', 'last_post_on'),
+                ('forum', 'replies'),
             ]),
         ),
 ]

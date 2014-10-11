@@ -16,7 +16,6 @@ class ThreadModelTests(TestCase):
         self.forum = Forum.objects.filter(role="forum")[:1][0]
         self.thread = Thread(
             forum=self.forum,
-            weight=0,
             started_on=datetime,
             starter_name='Tester',
             starter_slug='tester',
@@ -251,7 +250,6 @@ class ThreadModelTests(TestCase):
 
         other_thread = Thread(
             forum=self.forum,
-            weight=0,
             started_on=datetime,
             starter_name='Tester',
             starter_slug='tester',

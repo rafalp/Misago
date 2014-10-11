@@ -109,17 +109,12 @@ def ThreadLabelForm(*args, **kwargs):
     return FormType(*args, **kwargs)
 
 
-class ThreadWeightForm(forms.Form):
+class ThreadPinForm(forms.Form):
     is_supporting = True
-    legend = _("Weight")
-    template = "misago/posting/threadweightform.html"
+    legend = _("Thread weight")
+    template = "misago/posting/threadpinform.html"
 
-    weight = forms.TypedChoiceField(label=_("Thread weight"), initial=0,
-                                    choices=(
-                                        (0, _("Standard")),
-                                        (1, _("Pinned")),
-                                        (2, _("Announcement")),
-                                    ))
+    is_pinned = forms.YesNoSwitch(label=_("Pin thread"), initial=0)
 
 
 class ThreadCloseForm(forms.Form):

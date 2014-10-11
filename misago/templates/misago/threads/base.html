@@ -14,17 +14,11 @@
 
             <div class="col-md-7">
 
-              {% if thread.is_announcement %}
+              {% if thread.is_pinned %}
                 {% if thread.is_read %}
-                <span class="thread-icon tooltip-top fa fa-star-o fa-lg fa-fw" title="{% trans "Announcement, has no unread posts" %}"></span>
+                <span class="thread-icon tooltip-top fa fa-star-o fa-lg fa-fw" title="{% trans "Pinned, has no unread posts" %}"></span>
                 {% else %}
-                <span class="thread-icon tooltip-top fa fa-star fa-lg fa-fw" title="{% trans "Announcement, has unread posts" %}"></span>
-                {% endif %}
-              {% elif thread.is_pinned %}
-                {% if thread.is_read %}
-                <span class="thread-icon tooltip-top fa fa-bookmark-o fa-lg fa-fw" title="{% trans "Pinned, has no unread posts" %}"></span>
-                {% else %}
-                <span class="thread-icon tooltip-top fa fa-bookmark fa-lg fa-fw" title="{% trans "Pinned, has unread posts" %}"></span>
+                <span class="thread-icon tooltip-top fa fa-star fa-lg fa-fw" title="{% trans "Pinned, has unread posts" %}"></span>
                 {% endif %}
               {% else %}
                 {% if thread.is_read %}

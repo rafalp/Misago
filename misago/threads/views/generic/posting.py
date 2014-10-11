@@ -9,7 +9,7 @@ from misago.forums.lists import get_forum_path
 
 from misago.threads.posting import (PostingInterrupt, EditorFormset,
                                     START, REPLY, EDIT)
-from misago.threads.models import ANNOUNCEMENT, Thread, Post, Label
+from misago.threads.models import Thread, Post, Label
 from misago.threads.permissions import allow_start_thread
 from misago.threads.views.generic.base import ViewBase
 

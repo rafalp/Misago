@@ -20,7 +20,6 @@ class PostModelTests(TestCase):
         self.forum = Forum.objects.filter(role="forum")[:1][0]
         self.thread = Thread(
             forum=self.forum,
-            weight=0,
             started_on=datetime,
             starter_name='Tester',
             starter_slug='tester',
@@ -75,7 +74,6 @@ class PostModelTests(TestCase):
 
         other_thread = Thread.objects.create(
             forum=self.forum,
-            weight=0,
             started_on=timezone.now(),
             starter_name='Tester',
             starter_slug='tester',
@@ -138,7 +136,6 @@ class PostModelTests(TestCase):
         """move method moves post to other thread"""
         new_thread = Thread.objects.create(
             forum=self.forum,
-            weight=0,
             started_on=timezone.now(),
             starter_name='Tester',
             starter_slug='tester',

@@ -53,7 +53,6 @@ class Command(BaseCommand):
 
                 thread = Thread(
                     forum=forum,
-                    weight=0,
                     started_on=datetime,
                     starter_name='-',
                     starter_slug='-',
@@ -102,14 +101,7 @@ class Command(BaseCommand):
         self.stdout.write('\nPinning %s threads...' % pinned_threads)
         for i in xrange(0, pinned_threads):
             thread = Thread.objects.order_by('?')[:1][0]
-            thread.weight = 1
-            thread.save()
-
-        announcements = random.randint(0, int(created_threads * 0.001)) or 1
-        self.stdout.write('\nMaking %s announcements...' % announcements)
-        for i in xrange(0, announcements):
-            thread = Thread.objects.order_by('?')[:1][0]
-            thread.weight = 2
+            thread.is_pinned = True
             thread.save()
 
         self.stdout.write(message % created_threads)

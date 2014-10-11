@@ -1,6 +1,5 @@
 from misago.core.shortcuts import paginate
 
-from misago.threads.models import ANNOUNCEMENT
 from misago.threads.permissions import exclude_invisible_threads
 from misago.threads.views.generic.threads import Threads
 
@@ -14,31 +13,27 @@ class ForumThreads(Threads):
         self.forum = forum
 
         self.filter_by = None
-        self.sort_by = ('-weight', '-last_post_on')
+        self.sort_by = '-last_post_on'
 
     def filter(self, filter_by):
         self.filter_by = filter_by
 
     def sort(self, sort_by):
-        if sort_by[0] == '-':
-            weight = '-weight'
-        else:
-            weight = 'weight'
-        self.sort_by = (weight, sort_by)
+        self.sort_by = sort_by
 
     def list(self, page=0):
         queryset = self.get_queryset()
-        queryset = queryset.order_by(*self.sort_by)
+        queryset = queryset.order_by(self.sort_by)
 
-        announcements_qs = queryset.filter(weight=ANNOUNCEMENT)
-        threads_qs = queryset.filter(weight__lt=ANNOUNCEMENT)
+        pinned_qs = queryset.filter(is_pinned=True)
+        threads_qs = queryset.filter(is_pinned=False)
 
         self._page = paginate(threads_qs, page, 20, 10)
         self._paginator = self._page.paginator
 
         threads = []
-        for announcement in announcements_qs:
-            threads.append(announcement)
+        for thread in pinned_qs:
+            threads.append(thread)
         for thread in self._page.object_list:
             threads.append(thread)
 

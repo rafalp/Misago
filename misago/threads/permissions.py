@@ -99,13 +99,8 @@ class PermissionsForm(forms.Form):
     can_change_threads_labels = forms.TypedChoiceField(
         label=_("Can change threads labels"), coerce=int, initial=0,
         choices=((0, _("No")), (1, _("Own threads")), (2, _("All threads"))))
-    can_change_threads_weight = forms.TypedChoiceField(
-        label=_("Can change threads weight"), coerce=int, initial=0,
-        choices=(
-            (0, _("No")),
-            (1, _("Pin threads")),
-            (2, _("Make announcements")),
-        ))
+    can_pin_threads = forms.YesNoSwitch(
+        label=_("Can pin threads"))
     can_close_threads = forms.TypedChoiceField(
         label=_("Can close threads"),
         coerce=int,
@@ -174,7 +169,7 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
         'can_move_posts': 0,
         'can_merge_posts': 0,
         'can_change_threads_labels': 0,
-        'can_change_threads_weight': 0,
+        'can_pin_threads': 0,
         'can_close_threads': 0,
         'can_move_threads': 0,
         'can_merge_threads': 0,
@@ -202,7 +197,7 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
         can_move_posts=algebra.greater,
         can_merge_posts=algebra.greater,
         can_change_threads_labels=algebra.greater,
-        can_change_threads_weight=algebra.greater,
+        can_pin_threads=algebra.greater,
         can_close_threads=algebra.greater,
         can_move_threads=algebra.greater,
         can_merge_threads=algebra.greater,
@@ -249,7 +244,7 @@ def add_acl_to_forum(user, forum):
         'can_move_posts': 0,
         'can_merge_posts': 0,
         'can_change_threads_labels': 0,
-        'can_change_threads_weight': 0,
+        'can_pin_threads': 0,
         'can_close_threads': 0,
         'can_move_threads': 0,
         'can_merge_threads': 0,
@@ -279,7 +274,7 @@ def add_acl_to_forum(user, forum):
             can_move_posts=algebra.greater,
             can_merge_posts=algebra.greater,
             can_change_threads_labels=algebra.greater,
-            can_change_threads_weight=algebra.greater,
+            can_pin_threads=algebra.greater,
             can_close_threads=algebra.greater,
             can_move_threads=algebra.greater,
             can_merge_threads=algebra.greater,
@@ -361,7 +356,7 @@ def exclude_invisible_threads(user, forum, queryset):
     return queryset
 
 
-def exclude_invisible_postss(user, forum, queryset):
+def exclude_invisible_posts(user, forum, queryset):
     if user.is_authenticated():
         if not forum.acl['can_review_moderated_content']:
             condition_author = Q(starter_id=user.id)

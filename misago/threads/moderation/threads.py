@@ -40,44 +40,27 @@ def unlabel_thread(user, thread):
 
 
 @atomic
-def announce_thread(user, thread):
-    if thread.weight < 2:
-        thread.weight = 2
-
-        message = _("%(user)s changed thread to announcement.")
-        record_event(user, thread, "star", message, {'user': user})
-
-        thread.save(update_fields=['has_events', 'weight'])
-        return True
-    else:
-        return False
-
-
-@atomic
 def pin_thread(user, thread):
-    if thread.weight != 1:
-        thread.weight = 1
+    if not thread.is_pinned:
+        thread.is_pinned = True
 
         message = _("%(user)s pinned thread.")
-        record_event(user, thread, "bookmark", message, {'user': user})
+        record_event(user, thread, "star", message, {'user': user})
 
-        thread.save(update_fields=['has_events', 'weight'])
+        thread.save(update_fields=['has_events', 'is_pinned'])
         return True
     else:
         return False
 
 
 @atomic
-def reset_thread(user, thread):
-    if thread.weight > 0:
-        if thread.is_announcement:
-            message = _("%(user)s withhold announcement.")
-        if thread.is_pinned:
-            message = _("%(user)s unpinned thread.")
+def unpin_thread(user, thread):
+    if thread.is_pinned:
+        message = _("%(user)s unpinned thread.")
         record_event(user, thread, "circle", message, {'user': user})
 
-        thread.weight = 0
-        thread.save(update_fields=['has_events', 'weight'])
+        thread.is_pinned = False
+        thread.save(update_fields=['has_events', 'is_pinned'])
         return True
     else:
         return False

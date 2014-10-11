@@ -36,22 +36,16 @@ class ForumActions(Actions):
                     'name': _("Remove labels")
                 })
 
-        if self.forum.acl['can_change_threads_weight'] == 2:
-            actions.append({
-                'action': 'announce',
-                'icon': 'star',
-                'name': _("Change to announcements")
-            })
-        if self.forum.acl['can_change_threads_weight']:
+        if self.forum.acl['can_pin_threads']:
             actions.append({
                 'action': 'pin',
-                'icon': 'bookmark',
-                'name': _("Change to pinned")
+                'icon': 'star',
+                'name': _("Pin threads")
             })
             actions.append({
-                'action': 'reset',
+                'action': 'unpin',
                 'icon': 'circle',
-                'name': _("Reset weight")
+                'name': _("Unpin threads")
             })
 
         if self.forum.acl['can_review_moderated_content']:
@@ -150,22 +144,6 @@ class ForumActions(Actions):
             message = _("No threads were unlabeled.")
             messages.info(request, message)
 
-    def action_announce(self, request, threads):
-        changed_threads = 0
-        for thread in threads:
-            if moderation.announce_thread(request.user, thread):
-                changed_threads += 1
-
-        if changed_threads:
-            message = ungettext(
-                '%(changed)d thread was changed to announcement.',
-                '%(changed)d threads were changed to announcements.',
-            changed_threads)
-            messages.success(request, message % {'changed': changed_threads})
-        else:
-            message = _("No threads were changed to announcements.")
-            messages.info(request, message)
-
     def action_pin(self, request, threads):
         changed_threads = 0
         for thread in threads:
@@ -182,20 +160,20 @@ class ForumActions(Actions):
             message = _("No threads were pinned.")
             messages.info(request, message)
 
-    def action_reset(self, request, threads):
+    def action_unpin(self, request, threads):
         changed_threads = 0
         for thread in threads:
-            if moderation.reset_thread(request.user, thread):
+            if moderation.unpin_thread(request.user, thread):
                 changed_threads += 1
 
         if changed_threads:
             message = ungettext(
-                '%(changed)d thread weight was reset.',
-                '%(changed)d threads weight was reset.',
+                '%(changed)d thread was unpinned.',
+                '%(changed)d threads were unpinned.',
             changed_threads)
             messages.success(request, message % {'changed': changed_threads})
         else:
-            message = _("No threads weight was reset.")
+            message = _("No threads were unpinned.")
             messages.info(request, message)
 
     move_threads_template = 'misago/threads/move.html'
@@ -252,7 +230,6 @@ class ForumActions(Actions):
 
                 with atomic():
                     merged_thread = Thread()
-                    merged_thread.weight = max(t.weight for t in threads)
                     merged_thread.forum = self.forum
                     merged_thread.set_title(
                         form.cleaned_data['merged_thread_title'])
@@ -262,6 +239,9 @@ class ForumActions(Actions):
                     merged_thread.last_poster_slug = "-"
                     merged_thread.started_on = timezone.now()
                     merged_thread.last_post_on = timezone.now()
+                    merged_thread.is_pinned = max(t.is_pinned for t in threads)
+                    merged_thread.is_closed = max(t.is_closed for t in threads)
+                    merged_thread.is_hidden = max(t.is_hidden for t in threads)
                     merged_thread.save()
 
                     for thread in threads:
