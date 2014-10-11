@@ -56,10 +56,8 @@
                   <ul class="list-unstyled">
                     {% for thread in threads %}
                     <li>
-                      {% if thread.is_announcement %}
+                      {% if thread.is_pinned %}
                       <span class="fa fa-star-o fa-fw"></span>
-                      {% elif thread.is_pinned %}
-                      <span class="fa fa-bookmark-o fa-fw"></span>
                       {% else %}
                       <span class="fa fa-circle-o fa-fw"></span>
                       {% endif %}
