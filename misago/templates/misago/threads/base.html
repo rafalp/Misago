@@ -12,7 +12,8 @@
         <li class="list-group-item{% if not thread.is_read %} new{% endif %}">
           <div class="row">
 
-            <div class="col-md-8">
+            <div class="col-md-7">
+
               {% if thread.is_announcement %}
                 {% if thread.is_read %}
                 <span class="thread-icon tooltip-top fa fa-star-o fa-lg fa-fw" title="{% trans "Announcement, has no unread posts" %}"></span>
@@ -36,9 +37,10 @@
               <a href="{{ thread.get_absolute_url }}" class="item-title">
                 {{ thread.title }}
               </a>
+
             </div>
             {% block thread-extra %}
-            <div class="col-md-4 thread-stats">
+            <div class="col-md-5 thread-stats">
               <a href="#" class="thread-check">
                 <span class="fa fa-check"></span>
                 <input type="checkbox" form="threads-actions" name="thread" value="{{ thread.pk }}"{% if thread.pk in selected_threads %}checked="checked"{% endif %}>
@@ -60,11 +62,10 @@
               {% endif %}
 
               {% if thread.is_read %}
-              <div class="thread-replies">
-                <div class="tooltip-top" title="{% blocktrans trimmed with replies=thread.replies|intcomma count counter=thread.replies %}{{ replies }} reply{% plural %}{{ replies }} replies{% endblocktrans %}">
-                  <span class="glyphicon glyphicon-comment"></span>
+              <div class="thread-replies thread-read">
+                <span class="tooltip-top" title="{% blocktrans trimmed with replies=thread.replies|intcomma count counter=thread.replies %}{{ replies }} reply{% plural %}{{ replies }} replies{% endblocktrans %}">
                   {{ thread.replies|intcomma }}
-                </div>
+                </span>
               </div>
               {% elif thread.is_new %}
               <div class="thread-replies new-replies">

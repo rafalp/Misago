@@ -22,18 +22,20 @@
         // Thread icon
         //
         //==
+        .thread-icon {
+          display: block;
+          float: left;
+          position: relative;
+          right: 5px;
+          top: 5px;
+
+          color: @state-default;
+        }
+
         &.new {
           .thread-icon {
             color: @state-active;
           }
-        }
-
-        .thread-icon {
-          position: relative;
-          right: 5px;
-          bottom: 2px;
-
-          color: @state-default;
         }
 
 
@@ -41,6 +43,8 @@
         //
         //==
         .item-title {
+          display: block;
+          margin-left: @font-size-large * 1.5;
           font-size: @font-size-large;
 
           .opacity(0.7);
@@ -51,6 +55,7 @@
             .opacity(1);
           }
         }
+
 
         // Thread last reply
         //
@@ -63,7 +68,7 @@
           .thread-flags {
             margin-right: @font-size-large;
             position: relative;
-            top: 3px;
+            top: 2px;
 
             li {
               float: left;
@@ -72,8 +77,6 @@
               .label {
                 border-radius: @border-radius-small;
                 margin-left: @line-height-computed / 3;
-                position: relative;
-                bottom: 1px;
 
                 font-weight: normal;
               }
@@ -95,7 +98,7 @@
             margin: 0px;
             margin-right: @font-size-large;
             margin-top: -2px;
-            .opacity(0.7);
+            .opacity(0.6);
             transition-duration: 0.5s;
             width: @font-size-large * 4.5;
 
@@ -111,6 +114,10 @@
 
             &.new-replies {
               .opacity(1);
+            }
+
+            &.thread-read {
+              padding-top: 2px;
             }
           }
 
@@ -132,7 +139,7 @@
 
           a.last-post {
             display: block;
-            width: 50px;
+            width: 64px;
             position: relative;
             top: 3px;
 
