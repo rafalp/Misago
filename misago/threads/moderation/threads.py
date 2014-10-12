@@ -91,8 +91,6 @@ def merge_thread(user, thread, other_thread):
     })
 
     thread.merge(other_thread)
-    thread.synchronize()
-    thread.save()
     other_thread.delete()
     return True
 

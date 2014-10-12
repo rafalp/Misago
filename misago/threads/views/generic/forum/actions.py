@@ -255,6 +255,9 @@ class ForumActions(Actions):
                         moderation.merge_thread(
                             request.user, merged_thread, thread)
 
+                    merged_thread.synchronize()
+                    merged_thread.save()
+
                 with atomic():
                     self.forum.synchronize()
                     self.forum.save()
