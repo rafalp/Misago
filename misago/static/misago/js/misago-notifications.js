@@ -5,23 +5,6 @@ $(function() {
   var $link = $container.children('a');
 
   function notifications_handler(data) {
-    var $badge = $link.children('.badge');
-
-    if (data.count > 0) {
-      if ($badge.length == 0) {
-        $badge = $('<span class="badge">' + data.count + '</span>');
-        $badge.hide();
-        $link.append($badge);
-        $badge.fadeIn();
-      } else {
-        $badge.text(data.count);
-      }
-    } else if ($badge.length > 0) {
-        $badge.fadeOut();
-    }
-    $link.attr("title", data.message);
-    $.misago_dom().changed();
-
     if (ajax_cache != null && data.count != ajax_cache.count) {
       ajax_cache = null;
       if ($container.hasClass('open')) {

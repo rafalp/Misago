@@ -50,10 +50,12 @@ def make_thread_read_aware(user, thread):
         try:
             record = user.threadread_set.filter(thread=thread).all()[0]
             thread.last_read_on = record.last_read_on
+            thread.is_new = False
             thread.is_read = thread.last_post_on <= record.last_read_on
             thread.read_record = record
         except IndexError:
             thread.read_record = None
+            thread.is_new = True
             thread.is_read = False
             thread.last_read_on = user.joined_on
 

@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load humanize i18n misago_avatars misago_dates %}
+{% load humanize i18n misago_avatars misago_dates misago_shorthands %}
 
 {% block content %}
 <div class="container">
@@ -9,7 +9,7 @@
     <div class="table-panel">
       <ul class="list-group">
         {% for thread in threads %}
-        <li class="list-group-item{% if not thread.is_read %} new{% endif %}">
+        <li class="list-group-item {{ "new"|iffalse:thread.is_read }}">
           <div class="row">
 
             <div class="col-md-7">
@@ -35,10 +35,12 @@
             </div>
             {% block thread-extra %}
             <div class="col-md-5 thread-stats">
+              {% if list_actions %}
               <a href="#" class="thread-check">
                 <span class="fa fa-check"></span>
                 <input type="checkbox" form="threads-actions" name="thread" value="{{ thread.pk }}"{% if thread.pk in selected_threads %}checked="checked"{% endif %}>
               </a>
+              {% endif %}
 
               {% block thread-stats %}
               <a href="#" class="last-post">
@@ -74,6 +76,13 @@
                   <span class="fa fa-signal fa-fw"></span>
                   {{ thread.unread_replies|intcomma }}
                 </span>
+              </div>
+              {% endif %}
+
+              {% if show_threads_locations %}
+              <div class="thread-location tooltip-top" title="{% trans "Thread location" %}">
+                <span class="fa fa-reorder fa-lg"></span>
+                <a href="{{ thread.forum.get_absolute_url }}">{{ thread.forum }}</a>
               </div>
               {% endif %}
 

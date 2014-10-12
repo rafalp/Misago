@@ -12,8 +12,11 @@
 
     this.ui_observers = [];
     this.observer = function(name, callback) {
-      this.ui_observers.push({name: name, callback: callback});
-      this.query_server();
+      if (callback == undefined) {
+        this.ui_observers.push({callback: name});
+      } else {
+        this.ui_observers.push({name: name, callback: callback});
+      }
     };
 
     this.query_server = function(poll) {
@@ -24,7 +27,9 @@
       ui_observers = this.ui_observers
       $.get(uiserver_url, function(data) {
         $.each(ui_observers, function(i, observer) {
-          if (typeof data[observer.name] !== "undefined") {
+          if (observer.name == undefined) {
+            observer.callback(data);
+          } else if (typeof data[observer.name] !== "undefined") {
             observer.callback(data[observer.name]);
           }
         });
@@ -39,7 +44,7 @@
 
     window.setTimeout(function() {
       query_server(frequency);
-    }, frequency);
+    }, 2000); // First request after 2 seconds
 
     // Return object
     return this;

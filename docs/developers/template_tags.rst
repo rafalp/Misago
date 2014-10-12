@@ -102,6 +102,21 @@ Takes form field as its first argument and renders field complete with label, he
 Takes form field as its only argument and renders it's input.
 
 
+misago_shorthands
+==============
+
+``iftrue`` filter
+-----------------
+
+Shorthand for simple if clauses: ``{{ "fade in"|iftrue:thread.is_closed }}`` will render ``"fade in"`` in template if ``thread.is_closed`` is true.
+
+
+``iffalse`` filter
+-----------------
+
+Opposite filter for ``iftrue``.
+
+
 misago_pagination
 =================
 

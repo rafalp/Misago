@@ -9,17 +9,13 @@ __all__ = ['ForumThreads']
 
 class ForumThreads(Threads):
     def __init__(self, user, forum):
+        self.pinned_count = 0
+
         self.user = user
         self.forum = forum
 
         self.filter_by = None
         self.sort_by = '-last_post_on'
-
-    def filter(self, filter_by):
-        self.filter_by = filter_by
-
-    def sort(self, sort_by):
-        self.sort_by = sort_by
 
     def list(self, page=0):
         queryset = self.get_queryset()
@@ -34,6 +30,7 @@ class ForumThreads(Threads):
         threads = []
         for thread in pinned_qs:
             threads.append(thread)
+            self.pinned_count += 1
         for thread in self._page.object_list:
             threads.append(thread)
 
@@ -44,6 +41,11 @@ class ForumThreads(Threads):
         self.make_threads_read_aware(threads)
 
         return threads
+
+    def get_queryset(self):
+        queryset = exclude_invisible_threads(
+            self.forum.thread_set, self.user, self.forum)
+        return self.filter_threads(queryset)
 
     def filter_threads(self, queryset):
         if self.filter_by == 'my-threads':
@@ -66,25 +68,3 @@ class ForumThreads(Threads):
                         return queryset.filter(label_id=label.pk)
                 else:
                     return queryset
-
-    def get_queryset(self):
-        queryset = exclude_invisible_threads(
-            self.user, self.forum, self.forum.thread_set)
-        return self.filter_threads(queryset)
-
-    error_message = ("threads list has to be loaded via call to list() before "
-                     "pagination data will be available")
-
-    @property
-    def paginator(self):
-        try:
-            return self._paginator
-        except AttributeError:
-            raise AttributeError(self.error_message)
-
-    @property
-    def page(self):
-        try:
-            return self._page
-        except AttributeError:
-            raise AttributeError(self.error_message)

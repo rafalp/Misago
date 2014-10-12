@@ -66,6 +66,7 @@ PIPELINE_JS = {
             'misago/js/misago-modal.js',
             'misago/js/misago-scrolling.js',
             'misago/js/misago-uiserver.js',
+            'misago/js/misago-user-nav.js',
             'misago/js/misago-notifications.js',
             'misago/js/misago-threads-lists.js',
         ),
@@ -147,6 +148,7 @@ MIDDLEWARE_CLASSES = (
     'misago.core.middleware.exceptionhandler.ExceptionHandlerMiddleware',
     'misago.users.middleware.OnlineTrackerMiddleware',
     'misago.admin.middleware.AdminAuthMiddleware',
+    'misago.threads.middleware.UnreadThreadsCountMiddleware',
     'misago.core.middleware.threadstore.ThreadStoreMiddleware',
 )
 
@@ -292,6 +294,10 @@ MISAGO_RANKING_SIZE = 30
 # Only unread threads with last reply younger than number of days specified
 # there will be confidered fresh for "Threads with unread replies" list
 MISAGO_FRESH_CONTENT_PERIOD = 40
+
+# Number of minutes between updates of new content counts like new threads,
+# unread replies or moderated threads/posts
+MISAGO_CONTENT_COUNTING_FREQUENCY = 5
 
 
 # X-Sendfile

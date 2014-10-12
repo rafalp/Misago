@@ -27,7 +27,7 @@
           float: left;
           position: relative;
           right: 5px;
-          top: 5px;
+          top: 6px;
 
           color: @state-default;
         }
@@ -118,6 +118,39 @@
 
             &.thread-read {
               padding-top: 2px;
+            }
+          }
+
+          .thread-location {
+            display: inline-block;
+            margin-right: @font-size-large * 1.5;
+            overflow: hidden;
+            position: relative;
+            top: 5px;
+            width: @font-size-large * 4.5;
+
+            font-size: @font-size-small;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            span {
+              position: relative;
+              bottom: 2px;
+
+              color: @state-default;
+              font-size: @font-size-base * 0.75;
+            }
+
+            a:link, a:visited {
+              color: @state-default;
+            }
+
+            a:hover, a:focus {
+              color: @state-hover;
+            }
+
+            a:active {
+              color: @state-clicked;
             }
           }
 

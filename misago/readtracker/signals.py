@@ -20,3 +20,12 @@ def delete_forum_tracker(sender, **kwargs):
 @receiver(move_thread)
 def delete_thread_tracker(sender, **kwargs):
     sender.threadread_set.all().delete()
+
+
+@receiver(thread_read)
+def decrease_unread_count(sender, **kwargs):
+    user = sender
+    thread = kwargs['thread']
+
+    if thread.is_new:
+        user.new_threads.decrease()

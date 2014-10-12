@@ -33,7 +33,7 @@ def make_read(forums):
 
 def sync_record(user, forum):
     recorded_threads = forum.thread_set.filter(last_post_on__gt=user.joined_on)
-    recorded_threads = exclude_invisible_threads(user, forum, recorded_threads)
+    recorded_threads = exclude_invisible_threads(recorded_threads, user, forum)
 
     all_threads_count = recorded_threads.count()
 

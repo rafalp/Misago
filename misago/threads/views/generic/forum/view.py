@@ -42,7 +42,7 @@ class ForumView(ThreadsView):
         cleaned_kwargs = filtering.clean_kwargs(cleaned_kwargs)
 
         if cleaned_kwargs != kwargs:
-            return redirect('misago:forum', **cleaned_kwargs)
+            return redirect(self.link_name, **cleaned_kwargs)
 
         threads = self.Threads(request.user, forum)
         sorting.sort(threads)
@@ -63,6 +63,7 @@ class ForumView(ThreadsView):
             'path': get_forum_path(forum),
 
             'threads': threads.list(page_number),
+            'threads_count': threads.count(),
             'page': threads.page,
             'paginator': threads.paginator,
 

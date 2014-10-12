@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 
-from misago.acl import algebra
+from misago.acl import add_acl, algebra
 from misago.acl.decorators import return_boolean
 from misago.core import forms
 from misago.forums.models import Forum, RoleForumACL, ForumRole
@@ -331,7 +331,14 @@ can_start_thread = return_boolean(allow_start_thread)
 """
 Queryset helpers
 """
-def exclude_invisible_threads(user, forum, queryset):
+def exclude_invisible_threads(queryset, user, forum=None):
+    if forum:
+        return exclude_invisible_forum_threads(queryset, user, forum)
+    else:
+        return exclude_all_invisible_threads(queryset, user)
+
+
+def exclude_invisible_forum_threads(queryset, user, forum):
     if user.is_authenticated():
         condition_author = Q(starter_id=user.id)
 
@@ -356,13 +363,60 @@ def exclude_invisible_threads(user, forum, queryset):
     return queryset
 
 
-def exclude_invisible_posts(user, forum, queryset):
+def exclude_all_invisible_threads(queryset, user):
+    forums_in = []
+    conditions = None
+
+    for forum in Forum.objects.all_forums():
+        add_acl(user, forum)
+
+        condition_forum = Q(forum=forum)
+        condition_author = Q(starter_id=user.id)
+
+        # can see all threads?
+        if forum.acl['can_see_all_threads']:
+            can_mod = forum.acl['can_review_moderated_content']
+            can_hide = forum.acl['can_hide_threads']
+
+            if not can_mod or not can_hide:
+                if not can_mod and not can_hide:
+                    condition = Q(is_moderated=False) & Q(is_hidden=False)
+                elif not can_mod:
+                    condition = Q(is_moderated=False)
+                elif not can_hide:
+                    condition = Q(is_hidden=False)
+                visibility_condition = condition_author | condition
+                visibility_condition = condition_forum & visibility_condition
+            else:
+                # user can see everything so don't bother with rest of routine
+                forums_in.append(forum.pk)
+                continue
+        else:
+            # show all threads in forum made by user
+            visibility_condition = condition_forum & condition_author
+
+        if conditions:
+            conditions = conditions | visibility_condition
+        else:
+            conditions = visibility_condition
+
+    if conditions and forums_in:
+        return queryset.filter(Q(forum_id__in=forums_in) | conditions)
+    elif conditions:
+        return queryset.filter(conditions)
+    elif forums_in:
+        return queryset.filter(forum_id__in=forums_in)
+    else:
+        return Thread.objects.none()
+
+
+def exclude_invisible_posts(queryset, user, forum):
     if user.is_authenticated():
         if not forum.acl['can_review_moderated_content']:
             condition_author = Q(starter_id=user.id)
             condition = Q(is_moderated=False)
             queryset = queryset.filter(condition_author | condition)
     elif not forum.acl['can_review_moderated_content']:
-            queryset = queryset.filter(is_moderated=False)
+        queryset = queryset.filter(is_moderated=False)
 
     return queryset

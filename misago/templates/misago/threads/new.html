@@ -1,0 +1,39 @@
+{% extends "misago/threads/base.html" %}
+{% load i18n misago_stringutils %}
+
+
+{% block title %}{% trans "New threads" %}{% if page.number > 1 %} ({% blocktrans with page=page.number %}Page {{ page }}{% endblocktrans %}){% endif %} | {{ block.super }}{% endblock title %}
+
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1>{% trans "New threads" %}</h1>
+  </div>
+</div>
+{{ block.super }}
+{% endblock content %}
+
+
+{% block threads-panel %}
+<div class="table-actions">
+  {% include "misago/threads/paginator.html" %}
+
+  {% include "misago/threads/sort.html" %}
+</div>
+
+{{ block.super }}
+
+<div class="table-actions">
+  {% include "misago/threads/paginator.html" %}
+</div>
+{% endblock threads-panel %}
+
+
+{% block no-threads %}
+{% blocktrans trimmed count days=fresh_period %}
+There are no threads from last {{ days }} day that you have never read.
+{% plural %}
+There are no threads from last {{ days }} days that you have you have never read.
+{% endblocktrans %}
+{% endblock no-threads %}

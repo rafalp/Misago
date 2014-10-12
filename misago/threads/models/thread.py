@@ -22,7 +22,7 @@ class Thread(models.Model):
     has_moderated_posts = models.BooleanField(default=False)
     has_hidden_posts = models.BooleanField(default=False)
     has_events = models.BooleanField(default=False)
-    started_on = models.DateTimeField()
+    started_on = models.DateTimeField(db_index=True)
     first_post = models.ForeignKey('misago_threads.Post', related_name='+',
                                    null=True, blank=True,
                                    on_delete=models.SET_NULL)
