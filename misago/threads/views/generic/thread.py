@@ -51,7 +51,7 @@ class ThreadView(ViewBase):
         else:
             queryset = queryset.filter(is_moderated=False)
 
-        return queryset
+        return queryset.order_by('id')
 
     def dispatch(self, request, *args, **kwargs):
         relations = ['forum', 'starter', 'last_poster', 'first_post']
