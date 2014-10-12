@@ -1,0 +1,5644 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-10-12 14:37+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: acl/admin.py:23 templates/misago/acl_debug.html:16
+#: templates/misago/admin/forumroles/forumroles.html:30
+#: templates/misago/admin/forumroles/roleforums.html:30
+#: templates/misago/admin/ranks/form.html:51
+msgid "Permissions"
+msgstr ""
+
+#: acl/admin.py:30 users/forms/admin.py:313
+msgid "User roles"
+msgstr ""
+
+#: acl/forms.py:10 forums/forms.py:277
+msgid "Role name"
+msgstr ""
+
+#: acl/migrations/0003_default_roles.py:17
+msgid "Member"
+msgstr ""
+
+#: acl/migrations/0003_default_roles.py:50
+msgid "Guest"
+msgstr ""
+
+#: acl/migrations/0003_default_roles.py:81
+#: forums/migrations/0003_forums_roles.py:106
+#: forums/migrations/0003_forums_roles.py:151
+#: users/migrations/0004_default_ranks.py:29
+msgid "Moderator"
+msgstr ""
+
+#: acl/migrations/0003_default_roles.py:129
+msgid "See warnings"
+msgstr ""
+
+#: acl/migrations/0003_default_roles.py:139
+msgid "Renaming users"
+msgstr ""
+
+#: acl/migrations/0003_default_roles.py:149
+msgid "Banning users"
+msgstr ""
+
+#: acl/migrations/0003_default_roles.py:166
+#: users/migrations/0004_default_ranks.py:30 users/permissions/delete.py:18
+msgid "Deleting users"
+msgstr ""
+
+#: acl/migrations/0003_default_roles.py:177
+msgid "Can't be blocked"
+msgstr ""
+
+#: acl/panels.py:9
+msgid "Misago User ACL"
+msgstr ""
+
+#: acl/panels.py:19
+msgid "Anonymous user"
+msgstr ""
+
+#: acl/views.py:16 forums/views/permsadmin.py:21
+msgid "Requested role does not exist."
+msgstr ""
+
+#: acl/views.py:53 forums/views/permsadmin.py:58
+msgid "Form contains errors."
+msgstr ""
+
+#: acl/views.py:65 forums/views/permsadmin.py:70
+#, python-format
+msgid "New role \"%s\" has been saved."
+msgstr ""
+
+#: acl/views.py:69 forums/views/permsadmin.py:74
+#, python-format
+msgid "Role \"%s\" has been changed."
+msgstr ""
+
+#: acl/views.py:75 forums/views/permsadmin.py:80
+#, python-format
+msgid "Role \"%s\" is special role and can't be deleted."
+msgstr ""
+
+#: acl/views.py:80 forums/views/permsadmin.py:85
+#, python-format
+msgid "Role \"%s\" has been deleted."
+msgstr ""
+
+#: admin/admin.py:10 templates/misago/admin/index.html:5
+msgid "Home"
+msgstr ""
+
+#: admin/auth.py:34
+msgid "Your admin session has expired."
+msgstr ""
+
+#: admin/views/auth.py:42
+msgid "Your admin session has been closed."
+msgstr ""
+
+#: admin/views/generic/list.py:39
+msgid "Selected: 0"
+msgstr ""
+
+#: admin/views/generic/list.py:40
+msgid "Select items"
+msgstr ""
+
+#: admin/views/generic/list.py:210 admin/views/generic/list.py:215
+msgid "You have to select one or more items."
+msgstr ""
+
+#: admin/views/generic/list.py:230
+msgid "Action is not allowed."
+msgstr ""
+
+#: admin/views/index.py:54
+#, python-format
+msgid "Outdated: %(current)s < %(latest)s"
+msgstr ""
+
+#: admin/views/index.py:69
+#, python-format
+msgid "Up to date! (%(current)s)"
+msgstr ""
+
+#: admin/views/index.py:74
+msgid "Failed to connect to GitHub API. Try again later."
+msgstr ""
+
+#: conf/admin.py:15 templates/misago/admin/conf/group.html:11
+#: templates/misago/admin/conf/index.html:5
+#: templates/misago/admin/conf/index.html:14
+msgid "Settings"
+msgstr ""
+
+#: conf/forms.py:18
+#, python-format
+msgid "You have to select at least one option."
+msgid_plural "You have to select at least %(choices)d options."
+msgstr[0] ""
+msgstr[1] ""
+
+#: conf/forms.py:26
+#, python-format
+msgid "You cannot select more than one option."
+msgid_plural "You cannot select more than %(choices)d options."
+msgstr[0] ""
+msgstr[1] ""
+
+#: conf/forms.py:53
+#, python-format
+msgid "Required. %(help_text)s"
+msgstr ""
+
+#: conf/forms.py:55 core/captcha.py:29
+msgid "This field is required."
+msgstr ""
+
+#: conf/views.py:31
+msgid "Settings group could not be found."
+msgstr ""
+
+#: conf/views.py:51
+msgid "Changes in settings have been saved!"
+msgstr ""
+
+#: core/captcha.py:41
+msgid "Text from image is incorrect."
+msgstr ""
+
+#: core/captcha.py:47
+msgid "Security image"
+msgstr ""
+
+#: core/captcha.py:81
+msgid "Entered answer is incorrect."
+msgstr ""
+
+#: core/errorpages.py:34
+msgid "Invalid API link."
+msgstr ""
+
+#: core/errorpages.py:42
+msgid "Request authentication is invalid."
+msgstr ""
+
+#: core/forms.py:26 templates/misago/userslists/online.html:68
+msgid "Yes"
+msgstr ""
+
+#: core/forms.py:27 templates/misago/userslists/online.html:73
+#: threads/permissions.py:30 threads/permissions.py:35
+#: threads/permissions.py:43 threads/permissions.py:57
+#: threads/permissions.py:65 threads/permissions.py:73
+#: threads/permissions.py:87 threads/permissions.py:101
+#: threads/permissions.py:108 threads/permissions.py:125
+#: users/permissions/warnings.py:17
+msgid "No"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:15
+msgid "Basic forum settings"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:16
+msgid ""
+"Those settings control most basic properties of your forum like its name or "
+"description."
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:21
+msgid "Forum name"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:22
+msgid "General"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:31
+msgid "Index title"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:32
+msgid "You may set custon title on forum index by typing it here."
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:34
+msgid "Forum index"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:41
+msgid "Meta Description"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:42
+msgid "Short description of your forum for internet crawlers."
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:50
+msgid "E-mails footer"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:51
+msgid "Optional short message included at the end of e-mails sent by forum"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:54
+msgid "Forum e-mails"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:66
+msgid "CAPTCHA"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:67
+msgid ""
+"Those settings allow you to combat automatic registrations and spam messages "
+"on your forum."
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:72
+msgid "CAPTCHA on registration"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:73
+msgid "CAPTCHA types"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:78
+msgid "No protection"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:79
+msgid "reCaptcha"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:80
+#: core/migrations/0002_basic_settings.py:106
+msgid "Question and answer"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:86
+msgid "Public API key"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:87
+msgid "reCAPTCHA"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:96
+msgid "Private API key"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:105
+msgid "Test question"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:115
+msgid "Question help text"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:124
+msgid "Valid answers"
+msgstr ""
+
+#: core/migrations/0002_basic_settings.py:125
+msgid "Enter each answer in new line. Answers are case-insensitive."
+msgstr ""
+
+#: core/timezones.py:10
+msgid "(UTC-13:00) Samoa"
+msgstr ""
+
+#: core/timezones.py:10
+msgid "(UTC-14:00) Samoa"
+msgstr ""
+
+#: core/timezones.py:11
+msgid "(UTC-11:00) Midway Islands, American Samoa"
+msgstr ""
+
+#: core/timezones.py:12
+msgid "(UTC-10:00) Cook Islands, Hawaii, Society Islands"
+msgstr ""
+
+#: core/timezones.py:13
+msgid "(UTC-10:00) Aleutian Islands"
+msgstr ""
+
+#: core/timezones.py:13
+msgid "(UTC-09:00) Aleutian Islands"
+msgstr ""
+
+#: core/timezones.py:14
+msgid "(UTC-09:30) Marquesas Islands"
+msgstr ""
+
+#: core/timezones.py:15
+msgid "(UTC-09:00) Gambier Islands"
+msgstr ""
+
+#: core/timezones.py:16
+msgid "(UTC-09:00) Alaska Standard Time"
+msgstr ""
+
+#: core/timezones.py:16
+msgid "(UTC-08:00) Alaska Daylight Time"
+msgstr ""
+
+#: core/timezones.py:17
+msgid "(UTC-08:00) Pitcairn Islands"
+msgstr ""
+
+#: core/timezones.py:18
+msgid "(UTC-08:00) Pacific Time (Canada and US)"
+msgstr ""
+
+#: core/timezones.py:18
+msgid "(UTC-07:00) Pacific Time (Canada and US)"
+msgstr ""
+
+#: core/timezones.py:19
+msgid "(UTC-08:00) Baja California"
+msgstr ""
+
+#: core/timezones.py:19
+msgid "(UTC-07:00) Baja California"
+msgstr ""
+
+#: core/timezones.py:20
+msgid "(UTC-07:00) Mountain Standard Time (No DST)"
+msgstr ""
+
+#: core/timezones.py:21
+msgid "(UTC-07:00) Sonora"
+msgstr ""
+
+#: core/timezones.py:22
+msgid "(UTC-07:00) Mountain Standard Time"
+msgstr ""
+
+#: core/timezones.py:22
+msgid "(UTC-06:00) Mountain Summer Time"
+msgstr ""
+
+#: core/timezones.py:23
+msgid "(UTC-07:00) Baja California Sur, Chihuahua, Nayarit, Sinaloa"
+msgstr ""
+
+#: core/timezones.py:23
+msgid "(UTC-06:00) Baja California Sur, Chihuahua, Nayarit, Sinaloa"
+msgstr ""
+
+#: core/timezones.py:24
+msgid "(UTC-06:00) Costa Rica, El Salvador, Galapagos, Guatemala, Managua"
+msgstr ""
+
+#: core/timezones.py:25
+msgid "(UTC-06:00) Central Standard Time"
+msgstr ""
+
+#: core/timezones.py:25
+msgid "(UTC-05:00) Central Daylight Time"
+msgstr ""
+
+#: core/timezones.py:26
+msgid "(UTC-06:00) Mexican Central Zone"
+msgstr ""
+
+#: core/timezones.py:26
+msgid "(UTC-05:00) Mexican Central Zone"
+msgstr ""
+
+#: core/timezones.py:27
+msgid "(UTC-05:00) Bogota, Cayman, Guayaquil, Jamaica, Lima, Panama"
+msgstr ""
+
+#: core/timezones.py:28
+msgid "(UTC-05:00) Eastern Standard Time"
+msgstr ""
+
+#: core/timezones.py:28
+msgid "(UTC-04:00) Eastern Daylight Time"
+msgstr ""
+
+#: core/timezones.py:29
+msgid "(UTC-04:30) Caracas"
+msgstr ""
+
+#: core/timezones.py:30
+msgid "(UTC-04:00) Barbados, Dominica, Puerto Rico, Santo Domingo"
+msgstr ""
+
+#: core/timezones.py:31
+msgid "(UTC-04:00) Bermuda, Campo Grande, Goose Bay, Santiago, Thule"
+msgstr ""
+
+#: core/timezones.py:31
+msgid "(UTC-03:00) Bermuda, Campo Grande, Goose Bay, Santiago, Thule"
+msgstr ""
+
+#: core/timezones.py:32
+msgid "(UTC-03:30) Newfoundland Time"
+msgstr ""
+
+#: core/timezones.py:33
+msgid "(UTC-03:00) San Juan, San Luis, Santa Cruz"
+msgstr ""
+
+#: core/timezones.py:34
+msgid "(UTC-03:00) Buenos Aires, Godthab, Sao Paulo, Montevideo"
+msgstr ""
+
+#: core/timezones.py:34
+msgid "(UTC-02:00) Buenos Aires, Godthab, Sao Paulo, Montevideo"
+msgstr ""
+
+#: core/timezones.py:35
+msgid "(UTC-02:00) Atlantic islands"
+msgstr ""
+
+#: core/timezones.py:36
+msgid "(UTC-01:00) Cape Verde Time"
+msgstr ""
+
+#: core/timezones.py:37
+msgid "(UTC-01:00) Azores, Scoresbysund"
+msgstr ""
+
+#: core/timezones.py:37
+msgid "(UTC) Azores, Scoresbysund"
+msgstr ""
+
+#: core/timezones.py:38
+msgid "(UTC) Coordinated Universal Time"
+msgstr ""
+
+#: core/timezones.py:39
+msgid "(UTC) Dakar, Rabat"
+msgstr ""
+
+#: core/timezones.py:40
+msgid "(UTC) Western European Time"
+msgstr ""
+
+#: core/timezones.py:40
+msgid "(UTC+01:00) Western European Summer Time"
+msgstr ""
+
+#: core/timezones.py:41
+msgid "(UTC+01:00) West Africa Time"
+msgstr ""
+
+#: core/timezones.py:42
+msgid "(UTC+01:00) Central European Time"
+msgstr ""
+
+#: core/timezones.py:42
+msgid "(UTC+02:00) Central European Summer Time"
+msgstr ""
+
+#: core/timezones.py:43
+msgid "(UTC+02:00) Central Africa Time"
+msgstr ""
+
+#: core/timezones.py:44
+msgid "(UTC+02:00) Eastern European Time"
+msgstr ""
+
+#: core/timezones.py:44
+msgid "(UTC+03:00) Eastern European Summer Time"
+msgstr ""
+
+#: core/timezones.py:45
+msgid "(UTC+03:00) East Africa Time"
+msgstr ""
+
+#: core/timezones.py:46
+msgid "(UTC+03:00) Further-eastern European Time"
+msgstr ""
+
+#: core/timezones.py:47
+msgid "(UTC+03:30) Iran Time"
+msgstr ""
+
+#: core/timezones.py:47
+msgid "(UTC+04:30) Iran Time"
+msgstr ""
+
+#: core/timezones.py:48
+msgid "(UTC+04:00) Moscow Standard Time, Georgia Standard Time"
+msgstr ""
+
+#: core/timezones.py:49
+msgid "(UTC+04:00) United Arab Emirates Standard Time"
+msgstr ""
+
+#: core/timezones.py:50
+msgid "(UTC+05:00) Baku, Yerevan"
+msgstr ""
+
+#: core/timezones.py:50
+msgid "(UTC+06:00) Baku, Yerevan"
+msgstr ""
+
+#: core/timezones.py:51
+msgid "(UTC+04:30) Afghanistan Standard Time"
+msgstr ""
+
+#: core/timezones.py:52
+msgid "(UTC+05:00) Ashgabat, Dushanbe, Karachi, Maldives, Tashkent"
+msgstr ""
+
+#: core/timezones.py:53
+msgid "(UTC+05:30) Colombo, Kolkata"
+msgstr ""
+
+#: core/timezones.py:54
+msgid "(UTC+05:45) Kathmandu"
+msgstr ""
+
+#: core/timezones.py:55
+msgid "(UTC+06:00) Astana, Bishkek, Dhaka, Thimphu, Yekaterinburg"
+msgstr ""
+
+#: core/timezones.py:56
+msgid "(UTC+06:30) Yangon, Cocos Islands"
+msgstr ""
+
+#: core/timezones.py:57
+msgid "(UTC+07:00) Bangkok, Ho Chi Minh, Jakarta, Novosibirsk"
+msgstr ""
+
+#: core/timezones.py:58
+msgid "(UTC+08:00) Beijing, Hong Kong, Kuala Lumpur, Singapore, Taipei"
+msgstr ""
+
+#: core/timezones.py:59
+msgid "(UTC+08:00) Australian Western Standard Time"
+msgstr ""
+
+#: core/timezones.py:60
+msgid "(UTC+08:45) Eucla Area"
+msgstr ""
+
+#: core/timezones.py:61
+msgid "(UTC+09:00) Tokyo, Seoul, Irkutsk, Pyongyang"
+msgstr ""
+
+#: core/timezones.py:62 core/timezones.py:63
+msgid "(UTC+09:30) Australian Central Standard Time"
+msgstr ""
+
+#: core/timezones.py:64
+msgid "(UTC+10:00) Australian Eastern Standard Time"
+msgstr ""
+
+#: core/timezones.py:64
+msgid "(UTC+11:00) Australian Eastern Summer Time"
+msgstr ""
+
+#: core/timezones.py:65
+msgid "(UTC+10:30) Lord Howe Island"
+msgstr ""
+
+#: core/timezones.py:65
+msgid "(UTC+11:00) Lord Howe Island"
+msgstr ""
+
+#: core/timezones.py:66
+msgid "(UTC+11:00) Guadalcanal, Honiara, Noumea, Vladivostok"
+msgstr ""
+
+#: core/timezones.py:67
+msgid "(UTC+11:30) Norfolk Island"
+msgstr ""
+
+#: core/timezones.py:68
+msgid "(UTC+12:00) Kamchatka, Marshall Islands"
+msgstr ""
+
+#: core/timezones.py:69
+msgid "(UTC+12:00) Auckland, Fiji"
+msgstr ""
+
+#: core/timezones.py:69
+msgid "(UTC+13:00) Auckland, Fiji"
+msgstr ""
+
+#: core/timezones.py:70
+msgid "(UTC+12:45) Chatham Islands"
+msgstr ""
+
+#: core/timezones.py:70
+msgid "(UTC+13:45) Chatham Islands"
+msgstr ""
+
+#: core/timezones.py:71
+msgid "(UTC+13:00) Phoenix Islands"
+msgstr ""
+
+#: core/timezones.py:72
+msgid "(UTC+14:00) Nuku'alofa"
+msgstr ""
+
+#: core/utils.py:124
+#, python-format
+msgid "%(days)s day"
+msgid_plural "%(days)s days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: core/utils.py:129
+#, python-format
+msgid "%(hours)s hour"
+msgid_plural "%(hours)s hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: core/utils.py:134
+#, python-format
+msgid "%(minutes)s minute"
+msgid_plural "%(minutes)s minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: core/utils.py:139
+#, python-format
+msgid "%(seconds)s second"
+msgid_plural "%(seconds)s seconds"
+msgstr[0] ""
+msgstr[1] ""
+
+#: core/utils.py:143
+msgid "0 seconds"
+msgstr ""
+
+#: core/utils.py:153
+#, python-format
+msgid "%(first_part)s and %(and_part)s"
+msgstr ""
+
+#: core/validators.py:9
+msgid "Value has to contain alpha-numerical characters."
+msgstr ""
+
+#: core/validators.py:10
+msgid "Value is too long."
+msgstr ""
+
+#: forums/admin.py:44 threads/forms/admin.py:17
+msgid "Forums"
+msgstr ""
+
+#: forums/admin.py:51
+msgid "Forums hierarchy"
+msgstr ""
+
+#: forums/admin.py:57
+msgid "Forum roles"
+msgstr ""
+
+#: forums/forms.py:76
+msgid "Select valid forum."
+msgstr ""
+
+#: forums/forms.py:80
+msgid "Select valid forums."
+msgstr ""
+
+#: forums/forms.py:87 templates/misago/admin/forumroles/roleforums.html:40
+#: templates/misago/admin/forums/list.html:33
+msgid "Category"
+msgstr ""
+
+#: forums/forms.py:88 templates/misago/admin/forumroles/forumroles.html:29
+#: templates/misago/admin/forumroles/roleforums.html:29
+#: templates/misago/admin/forumroles/roleforums.html:42
+#: templates/misago/admin/forums/list.html:16
+#: templates/misago/admin/forums/list.html:35
+msgid "Forum"
+msgstr ""
+
+#: forums/forms.py:89 templates/misago/admin/forumroles/roleforums.html:44
+#: templates/misago/admin/forums/list.html:37
+msgid "Redirect"
+msgstr ""
+
+#: forums/forms.py:94 templates/misago/admin/bans/list.html:17
+#: users/forms/admin.py:419
+msgid "Type"
+msgstr ""
+
+#: forums/forms.py:96 users/forms/admin.py:299
+msgid "Name"
+msgstr ""
+
+#: forums/forms.py:99 users/forms/admin.py:308
+msgid "Description"
+msgstr ""
+
+#: forums/forms.py:101
+msgid "Optional description explaining forum intented purpose."
+msgstr ""
+
+#: forums/forms.py:104
+msgid "Redirect URL"
+msgstr ""
+
+#: forums/forms.py:106
+msgid "If forum type is redirect, enter here its URL."
+msgstr ""
+
+#: forums/forms.py:109 forums/forms.py:117
+#: templates/misago/admin/labels/list.html:17 threads/forms/admin.py:14
+#: users/forms/admin.py:317
+msgid "CSS class"
+msgstr ""
+
+#: forums/forms.py:110 forums/forms.py:118
+msgid ""
+"Optional CSS class used to customize this forum appearance from templates."
+msgstr ""
+
+#: forums/forms.py:113
+msgid "Closed forum"
+msgstr ""
+
+#: forums/forms.py:114
+msgid "Only members with valid permissions can post in closed forums."
+msgstr ""
+
+#: forums/forms.py:121
+msgid "Thread age"
+msgstr ""
+
+#: forums/forms.py:122
+msgid ""
+"Prune thread if number of days since its creation is greater than specified. "
+"Enter 0 to disable this pruning criteria."
+msgstr ""
+
+#: forums/forms.py:126
+msgid "Last reply"
+msgstr ""
+
+#: forums/forms.py:127
+msgid ""
+"Prune thread if number of days since last reply is greater than specified. "
+"Enter 0 to disable this pruning criteria."
+msgstr ""
+
+#: forums/forms.py:148
+msgid "Permissions cannot be copied from forum into itself."
+msgstr ""
+
+#: forums/forms.py:155
+msgid "Forum cannot act as archive for itself."
+msgstr ""
+
+#: forums/forms.py:166
+msgid "Only categories can have no parent category."
+msgstr ""
+
+#: forums/forms.py:171
+msgid ""
+"This forum is redirect, yet you haven't specified URL to which it should "
+"redirect after click."
+msgstr ""
+
+#: forums/forms.py:188
+msgid "Parent forum"
+msgstr ""
+
+#: forums/forms.py:193
+msgid "Copy permissions"
+msgstr ""
+
+#: forums/forms.py:194
+msgid ""
+"You can replace this forum permissions with permissions copied from forum "
+"selected here."
+msgstr ""
+
+#: forums/forms.py:197
+msgid "Don't copy permissions"
+msgstr ""
+
+#: forums/forms.py:200
+msgid "Archive"
+msgstr ""
+
+#: forums/forms.py:201
+msgid ""
+"Instead of being deleted, pruned threads can be moved to designated forum."
+msgstr ""
+
+#: forums/forms.py:204
+msgid "Don't archive pruned threads"
+msgstr ""
+
+#: forums/forms.py:219
+msgid "You are trying to move this forum threads to itself."
+msgstr ""
+
+#: forums/forms.py:224
+msgid "Threads can't be moved to category."
+msgstr ""
+
+#: forums/forms.py:228
+msgid "Threads can't be moved to redirect."
+msgstr ""
+
+#: forums/forms.py:233
+msgid ""
+"You are trying to move this forum threads to a child forum that will be "
+"deleted together with this forum."
+msgstr ""
+
+#: forums/forms.py:242
+msgid ""
+"One or more child forums in forum are not categories and thus cannot be made "
+"root categories."
+msgstr ""
+
+#: forums/forms.py:254
+msgid "Move forum threads to"
+msgstr ""
+
+#: forums/forms.py:257 forums/forms.py:270
+msgid "Delete with forum"
+msgstr ""
+
+#: forums/forms.py:268
+msgid "Move child forums to"
+msgstr ""
+
+#: forums/forms.py:288 forums/forms.py:302 templates/misago/acl_debug.html:15
+#: templates/misago/admin/roles/list.html:16
+msgid "Role"
+msgstr ""
+
+#: forums/forms.py:292 forums/forms.py:306 users/forms/admin.py:169
+msgid "No access"
+msgstr ""
+
+#: forums/migrations/0002_default_forums.py:35
+msgid "First category"
+msgstr ""
+
+#: forums/migrations/0002_default_forums.py:36
+msgid "First forum"
+msgstr ""
+
+#: forums/migrations/0002_default_forums.py:37
+msgid "Misago support forums"
+msgstr ""
+
+#: forums/migrations/0002_default_forums.py:38
+msgid "http://misago-project.org"
+msgstr ""
+
+#: forums/migrations/0003_forums_roles.py:20
+msgid "See only"
+msgstr ""
+
+#: forums/migrations/0003_forums_roles.py:31
+msgid "Read only"
+msgstr ""
+
+#: forums/migrations/0003_forums_roles.py:47
+msgid "Reply to threads"
+msgstr ""
+
+#: forums/migrations/0003_forums_roles.py:65
+msgid "Start and reply threads"
+msgstr ""
+
+#: forums/migrations/0003_forums_roles.py:86
+msgid "Start and reply threads, make polls"
+msgstr ""
+
+#: forums/models.py:88
+msgid "None (will become top level category)"
+msgstr ""
+
+#: forums/models.py:90
+msgid "Private Threads"
+msgstr ""
+
+#: forums/permissions.py:17
+msgid "Forum access"
+msgstr ""
+
+#: forums/permissions.py:18
+msgid "Can see forum"
+msgstr ""
+
+#: forums/permissions.py:19
+msgid "Can see forum contents"
+msgstr ""
+
+#: forums/permissions.py:110
+#, python-format
+msgid "You don't have permission to browse \"%(forum)s\" contents."
+msgstr ""
+
+#: forums/views/forumsadmin.py:16
+msgid "Requested forum does not exist."
+msgstr ""
+
+#: forums/views/forumsadmin.py:89
+#, python-format
+msgid "New forum \"%s\" has been saved."
+msgstr ""
+
+#: forums/views/forumsadmin.py:93
+#, python-format
+msgid "Forum \"%s\" has been edited."
+msgstr ""
+
+#: forums/views/forumsadmin.py:97
+#, python-format
+msgid "Forum \"%s\" has been deleted."
+msgstr ""
+
+#: forums/views/forumsadmin.py:141
+#, python-format
+msgid "Forum \"%s\" has been moved below \"%s\"."
+msgstr ""
+
+#: forums/views/forumsadmin.py:157
+#, python-format
+msgid "Forum \"%s\" has been moved above \"%s\"."
+msgstr ""
+
+#: forums/views/permsadmin.py:134
+#, python-format
+msgid "Forum %s permissions have been changed."
+msgstr ""
+
+#: forums/views/permsadmin.py:150
+msgid "Forum permissions"
+msgstr ""
+
+#: forums/views/permsadmin.py:169 templates/misago/admin/forums/list.html:87
+msgid "No forums exist."
+msgstr ""
+
+#: forums/views/permsadmin.py:205
+#, python-format
+msgid "Forum permissions for role %s have been changed."
+msgstr ""
+
+#: forums/views/permsadmin.py:219
+msgid "Forums permissions"
+msgstr ""
+
+#: legal/migrations/0001_initial.py:15
+msgid "Legal information"
+msgstr ""
+
+#: legal/migrations/0001_initial.py:16
+msgid ""
+"Those settings allow you to set forum terms of service and privacy policy"
+msgstr ""
+
+#: legal/migrations/0001_initial.py:21
+msgid "Terms title"
+msgstr ""
+
+#: legal/migrations/0001_initial.py:22
+msgid "Terms of Service"
+msgstr ""
+
+#: legal/migrations/0001_initial.py:23 legal/migrations/0001_initial.py:62
+msgid "Leave this field empty to use default title."
+msgstr ""
+
+#: legal/migrations/0001_initial.py:33
+msgid "Terms link"
+msgstr ""
+
+#: legal/migrations/0001_initial.py:34
+msgid "If terms of service are located on other page, enter there its link."
+msgstr ""
+
+#: legal/migrations/0001_initial.py:44
+msgid "Terms contents"
+msgstr ""
+
+#: legal/migrations/0001_initial.py:45
+msgid ""
+"Your forums can have custom terms of service page. To create it, write or "
+"paste here its contents. Full Misago markup is available for formatting."
+msgstr ""
+
+#: legal/migrations/0001_initial.py:60
+msgid "Policy title"
+msgstr ""
+
+#: legal/migrations/0001_initial.py:61 legal/views.py:55
+msgid "Privacy policy"
+msgstr ""
+
+#: legal/migrations/0001_initial.py:72
+msgid "Policy link"
+msgstr ""
+
+#: legal/migrations/0001_initial.py:73
+msgid "If privacy policy is located on other page, enter there its link."
+msgstr ""
+
+#: legal/migrations/0001_initial.py:83
+msgid "Policy contents"
+msgstr ""
+
+#: legal/migrations/0001_initial.py:84
+msgid ""
+"Your forums can have custom privacy policy page. To create it, write or "
+"paste here its contents. Full Misago markup is available for formatting."
+msgstr ""
+
+#: legal/views.py:41
+msgid "Terms of service"
+msgstr ""
+
+#: notifications/views.py:67 notifications/views.py:109
+msgid "All notifications were set as read."
+msgstr ""
+
+#: notifications/views.py:92
+msgid "Notification was marked as read."
+msgstr ""
+
+#: notifications/views.py:95
+msgid "Specified notification could not be found."
+msgstr ""
+
+#: notifications/views.py:118 templates/misago/notifications/full.html:18
+#, python-format
+msgid "You have %(notifications)s new notification"
+msgid_plural "You have %(notifications)s new notifications"
+msgstr[0] ""
+msgstr[1] ""
+
+#: notifications/views.py:123 templates/misago/user_nav.html:88
+msgid "Your notifications"
+msgstr ""
+
+#: templates/misago/acl_debug.html:5
+#, python-format
+msgid ""
+"\n"
+"  %(user)s roles\n"
+"  "
+msgstr ""
+
+#: templates/misago/acl_debug.html:9
+msgid "Anonymous roles"
+msgstr ""
+
+#: templates/misago/acl_debug.html:30
+msgid "Current ACL"
+msgstr ""
+
+#: templates/misago/acl_debug.html:34
+msgid "Key"
+msgstr ""
+
+#: templates/misago/acl_debug.html:35
+msgid "Value"
+msgstr ""
+
+#: templates/misago/activation/request.html:5
+#: templates/misago/activation/request.html:19
+msgid "Request activation e-mail"
+msgstr ""
+
+#: templates/misago/activation/request.html:28
+#: templates/misago/admin/login.html:57
+#: templates/misago/forgottenpassword/request.html:45
+#: templates/misago/login.html:28 users/forms/auth.py:65
+#: users/forms/auth.py:117
+msgid "Username or e-mail"
+msgstr ""
+
+#: templates/misago/activation/request.html:35
+msgid "Send e-mail"
+msgstr ""
+
+#: templates/misago/activation/sent.html:5
+#: templates/misago/activation/sent.html:13
+msgid "Activation sent"
+msgstr ""
+
+#: templates/misago/activation/sent.html:22
+#: templates/misago/register/completed.html:28
+#, python-format
+msgid ""
+"We have sent an e-mail to %(email)s with a link that you have to click to "
+"activate your account."
+msgstr ""
+
+#: templates/misago/admin/bans/form.html:9
+#: templates/misago/admin/bans/form.html:18
+#: templates/misago/admin/bans/form.html:28
+#: templates/misago/admin/bans/list.html:9
+msgid "New ban"
+msgstr ""
+
+#: templates/misago/admin/bans/form.html:43
+#: templates/misago/admin/users/ban_users.html:40
+msgid "Ban settings"
+msgstr ""
+
+#: templates/misago/admin/bans/form.html:51
+#: templates/misago/admin/users/ban_users.html:46
+msgid "Messages"
+msgstr ""
+
+#: templates/misago/admin/bans/list.html:16 users/apps.py:106
+msgid "Ban"
+msgstr ""
+
+#: templates/misago/admin/bans/list.html:18
+msgid "Valid until"
+msgstr ""
+
+#: templates/misago/admin/bans/list.html:37
+msgid "This ban has expired."
+msgstr ""
+
+#: templates/misago/admin/bans/list.html:45 users/models/warnings.py:86
+msgid "permanent"
+msgstr ""
+
+#: templates/misago/admin/bans/list.html:56
+#: templates/misago/admin/forumroles/list.html:27
+#: templates/misago/admin/forums/list.html:73
+#: templates/misago/admin/labels/list.html:39
+#: templates/misago/admin/ranks/list.html:102
+#: templates/misago/admin/roles/list.html:43
+#: templates/misago/admin/warnings/list.html:103
+msgid "Edit"
+msgstr ""
+
+#: templates/misago/admin/bans/list.html:62
+msgid "Remove"
+msgstr ""
+
+#: templates/misago/admin/bans/list.html:74
+msgid "No bans matching search criteria have been found"
+msgstr ""
+
+#: templates/misago/admin/bans/list.html:76
+msgid "No bans are currently set."
+msgstr ""
+
+#: templates/misago/admin/bans/list.html:87
+msgid "Are you sure you want to remove this ban?"
+msgstr ""
+
+#: templates/misago/admin/bans/list.html:96
+msgid "Search bans"
+msgstr ""
+
+#: templates/misago/admin/base_thin.html:8
+msgid "Misago Administration"
+msgstr ""
+
+#: templates/misago/admin/conf/group.html:61
+msgid "Change settings"
+msgstr ""
+
+#: templates/misago/admin/conf/group.html:62
+#: templates/misago/admin/forumroles/forumroles.html:50
+#: templates/misago/admin/forumroles/roleforums.html:60
+#: templates/misago/admin/generic/form.html:54
+#: templates/misago/admin/logout.html:39
+#: templates/misago/modusers/avatar.html:49
+#: templates/misago/modusers/ban.html:45
+#: templates/misago/modusers/rename.html:43
+#: templates/misago/modusers/signature.html:75
+#: templates/misago/modusers/warn.html:47
+#: templates/misago/profile/warnings.html:151
+#: templates/misago/threads/merge.html:78
+#: templates/misago/threads/merge/full.html:60
+#: templates/misago/threads/merge/modal.html:22
+#: templates/misago/threads/move.html:78
+#: templates/misago/threads/move/full.html:60
+#: templates/misago/threads/move/modal.html:22
+#: templates/misago/usercp/crop_avatar.html:39
+#: templates/misago/usercp/upload_avatar.html:46
+msgid "Cancel"
+msgstr ""
+
+#: templates/misago/admin/errorpages/403.html:5
+#: templates/misago/errorpages/403.html:5
+msgid "Page not available"
+msgstr ""
+
+#: templates/misago/admin/errorpages/403.html:17
+msgid "Requested page is not available."
+msgstr ""
+
+#: templates/misago/admin/errorpages/403.html:21
+#: templates/misago/errorpages/403.html:8
+#: templates/misago/errorpages/403.html:23
+msgid "You don't have permission to access this page."
+msgstr ""
+
+#: templates/misago/admin/errorpages/404.html:5
+#: templates/misago/errorpages/404.html:5
+msgid "Page not found"
+msgstr ""
+
+#: templates/misago/admin/errorpages/404.html:17
+#: templates/misago/errorpages/404.html:20
+msgid "Requested page could not be found."
+msgstr ""
+
+#: templates/misago/admin/errorpages/404.html:18
+#: templates/misago/errorpages/404.html:8
+#: templates/misago/errorpages/404.html:21
+msgid ""
+"The link you clicked was incorrect or the page has been moved or deleted."
+msgstr ""
+
+#: templates/misago/admin/errorpages/csrf_failure.html:5
+#: templates/misago/admin/errorpages/csrf_failure_authenticated.html:5
+#: templates/misago/errorpages/csrf_failure.html:5
+#: templates/misago/errorpages/csrf_failure_authenticated.html:5
+msgid "Request blocked"
+msgstr ""
+
+#: templates/misago/admin/errorpages/csrf_failure.html:19
+#: templates/misago/admin/errorpages/csrf_failure_authenticated.html:17
+#: templates/misago/errorpages/csrf_failure.html:20
+#: templates/misago/errorpages/csrf_failure_authenticated.html:17
+msgid "Suspicious request blocked."
+msgstr ""
+
+#: templates/misago/admin/errorpages/csrf_failure.html:20
+#: templates/misago/admin/errorpages/csrf_failure_authenticated.html:18
+#: templates/misago/errorpages/csrf_failure.html:21
+#: templates/misago/errorpages/csrf_failure_authenticated.html:18
+msgid ""
+"This is usually caused by your browser not accepting or using outdated "
+"cookies."
+msgstr ""
+
+#: templates/misago/admin/errorpages/csrf_failure.html:21
+#: templates/misago/admin/errorpages/csrf_failure_authenticated.html:19
+#: templates/misago/errorpages/csrf_failure.html:22
+#: templates/misago/errorpages/csrf_failure_authenticated.html:19
+msgid "Check your browser configuration and try again."
+msgstr ""
+
+#: templates/misago/admin/forumroles/form.html:9
+#: templates/misago/admin/forumroles/form.html:18
+#: templates/misago/admin/forumroles/form.html:28
+#: templates/misago/admin/forumroles/list.html:9
+#: templates/misago/admin/roles/form.html:9
+#: templates/misago/admin/roles/form.html:18
+#: templates/misago/admin/roles/form.html:28
+#: templates/misago/admin/roles/list.html:9
+msgid "New role"
+msgstr ""
+
+#: templates/misago/admin/forumroles/form.html:43
+#: templates/misago/admin/roles/form.html:43
+msgid "Basic settings"
+msgstr ""
+
+#: templates/misago/admin/forumroles/forumroles.html:6
+#, python-format
+msgid ""
+"\n"
+"%(forum)s: Permissions\n"
+msgstr ""
+
+#: templates/misago/admin/forumroles/forumroles.html:16
+#, python-format
+msgid ""
+"\n"
+"  %(forum)s: Permissions\n"
+"  "
+msgstr ""
+
+#: templates/misago/admin/forumroles/forumroles.html:48
+#: templates/misago/admin/forumroles/roleforums.html:58
+#: templates/misago/admin/generic/form.html:47
+#: templates/misago/admin/generic/list.html:168
+#: templates/misago/emails/change_email_password.html:16
+#: templates/misago/modusers/avatar.html:45
+#: templates/misago/modusers/signature.html:71
+#: templates/misago/posting/form.html:56
+#: templates/misago/usercp/change_email_password.html:41
+#: templates/misago/usercp/change_forum_options.html:42
+#: templates/misago/usercp/crop_avatar.html:30
+#: templates/misago/usercp/edit_signature.html:52
+msgid "Save changes"
+msgstr ""
+
+#: templates/misago/admin/forumroles/forumroles.html:49
+#: templates/misago/admin/forumroles/roleforums.html:59
+#: templates/misago/admin/generic/form.html:48
+#: templates/misago/modusers/avatar.html:46
+#: templates/misago/modusers/signature.html:72
+msgid "Save and keep editing"
+msgstr ""
+
+#: templates/misago/admin/forumroles/forumroles.html:64
+#: templates/misago/admin/forumroles/roleforums.html:74
+msgid "Are you sure you want to abandon changes?"
+msgstr ""
+
+#: templates/misago/admin/forumroles/list.html:16
+msgid "Forum role"
+msgstr ""
+
+#: templates/misago/admin/forumroles/list.html:33
+#: templates/misago/admin/forums/list.html:78
+#: templates/misago/admin/labels/list.html:45
+#: templates/misago/admin/ranks/list.html:108
+#: templates/misago/admin/roles/list.html:49
+#: templates/misago/admin/warnings/list.html:109
+#: templates/misago/profile/warnings.html:161
+msgid "Delete"
+msgstr ""
+
+#: templates/misago/admin/forumroles/list.html:44
+msgid "No forum roles are currently defined."
+msgstr ""
+
+#: templates/misago/admin/forumroles/list.html:53
+#: templates/misago/admin/roles/list.html:69
+msgid "Are you sure you want to delete this role?"
+msgstr ""
+
+#: templates/misago/admin/forumroles/roleforums.html:6
+#, python-format
+msgid ""
+"\n"
+"%(role)s: Forum permissions\n"
+msgstr ""
+
+#: templates/misago/admin/forumroles/roleforums.html:16
+#, python-format
+msgid ""
+"\n"
+"  %(role)s: Forum permissions\n"
+"  "
+msgstr ""
+
+#: templates/misago/admin/forums/delete.html:6
+#: templates/misago/admin/forums/delete.html:13
+#, python-format
+msgid ""
+"\n"
+"Delete forum: %(forum)s\n"
+msgstr ""
+
+#: templates/misago/admin/forums/delete.html:21
+#, python-format
+msgid ""
+"\n"
+"  Delete forum: %(forum)s\n"
+"  "
+msgstr ""
+
+#: templates/misago/admin/forums/delete.html:31
+msgid "Forum contents"
+msgstr ""
+
+#: templates/misago/admin/forums/delete.html:44
+msgid "Delete forum"
+msgstr ""
+
+#: templates/misago/admin/forums/form.html:9
+#: templates/misago/admin/forums/form.html:18
+#: templates/misago/admin/forums/form.html:28
+#: templates/misago/admin/forums/list.html:9
+msgid "New forum"
+msgstr ""
+
+#: templates/misago/admin/forums/form.html:43
+msgid "Role and position"
+msgstr ""
+
+#: templates/misago/admin/forums/form.html:50
+msgid "Display"
+msgstr ""
+
+#: templates/misago/admin/forums/form.html:58
+msgid "Behaviour"
+msgstr ""
+
+#: templates/misago/admin/forums/form.html:66
+msgid "Prune threads"
+msgstr ""
+
+#: templates/misago/admin/forums/list.html:44
+#: templates/misago/admin/ranks/list.html:80
+#: templates/misago/admin/warnings/list.html:81
+msgid "Move down"
+msgstr ""
+
+#: templates/misago/admin/forums/list.html:56
+#: templates/misago/admin/ranks/list.html:92
+#: templates/misago/admin/warnings/list.html:93
+msgid "Move up"
+msgstr ""
+
+#: templates/misago/admin/generic/form.html:33
+#: templates/misago/form_errors.html:9
+msgid "Form has errors."
+msgstr ""
+
+#: templates/misago/admin/generic/form.html:50
+msgid "Save"
+msgstr ""
+
+#: templates/misago/admin/generic/form.html:51
+msgid "Save and add another"
+msgstr ""
+
+#: templates/misago/admin/generic/list.html:21
+#: templates/misago/threads/sort.html:4
+msgid "Sort:"
+msgstr ""
+
+#: templates/misago/admin/generic/list.html:25
+#: templates/misago/threads/sort.html:8
+msgid "Change sorting to:"
+msgstr ""
+
+#: templates/misago/admin/generic/list.html:50
+msgid "Change search"
+msgstr ""
+
+#: templates/misago/admin/generic/list.html:53
+msgid "Search list"
+msgstr ""
+
+#: templates/misago/admin/generic/list.html:65
+msgid "Remove search"
+msgstr ""
+
+#: templates/misago/admin/generic/list.html:79
+#: templates/misago/threads/actions.html:9
+msgid "With selected"
+msgstr ""
+
+#: templates/misago/admin/generic/list.html:165
+msgid "Close"
+msgstr ""
+
+#: templates/misago/admin/generic/paginator.html:5
+#: templates/misago/threads/paginator.html:10
+#, python-format
+msgid ""
+"\n"
+"    Page %(page)s of %(pages)s\n"
+"    "
+msgstr ""
+
+#: templates/misago/admin/generic/paginator.html:11
+#: templates/misago/profile/pagination.html:6
+#: templates/misago/threads/paginator.html:16
+#: templates/misago/userslists/pagination.html:6
+#: templates/misago/userslists/rank.html:37
+msgid "Go to first page"
+msgstr ""
+
+#: templates/misago/admin/generic/paginator.html:12
+#: templates/misago/threads/paginator.html:18
+msgid "First"
+msgstr ""
+
+#: templates/misago/admin/generic/paginator.html:17
+#: templates/misago/profile/pagination.html:12
+#: templates/misago/threads/paginator.html:26
+#: templates/misago/userslists/pagination.html:12
+#: templates/misago/userslists/rank.html:43
+msgid "Go to previous page"
+msgstr ""
+
+#: templates/misago/admin/generic/paginator.html:26
+#: templates/misago/profile/pagination.html:26
+#: templates/misago/threads/paginator.html:34
+#: templates/misago/userslists/pagination.html:26
+#: templates/misago/userslists/rank.html:57
+msgid "Go to next page"
+msgstr ""
+
+#: templates/misago/admin/generic/paginator.html:32
+#: templates/misago/profile/pagination.html:20
+#: templates/misago/userslists/pagination.html:20
+#: templates/misago/userslists/rank.html:51
+msgid "Go to last page"
+msgstr ""
+
+#: templates/misago/admin/generic/paginator.html:33
+#: templates/misago/profile/pagination.html:21
+#: templates/misago/userslists/pagination.html:21
+#: templates/misago/userslists/rank.html:52
+msgid "Last"
+msgstr ""
+
+#: templates/misago/admin/index.html:13
+msgid "Administration Home"
+msgstr ""
+
+#: templates/misago/admin/index.html:33
+msgid "Misago version"
+msgstr ""
+
+#: templates/misago/admin/index.html:55
+msgid "Check version"
+msgstr ""
+
+#: templates/misago/admin/index.html:70
+msgid "DB Contents"
+msgstr ""
+
+#: templates/misago/admin/index.html:77
+#: threads/migrations/0002_threads_settings.py:15 threads/permissions.py:19
+#: users/apps.py:91
+msgid "Threads"
+msgstr ""
+
+#: templates/misago/admin/index.html:81
+#: templates/misago/admin/users/list.html:23
+#: templates/misago/userslists/active_posters.html:25
+#: threads/migrations/0002_threads_settings.py:45 users/apps.py:88
+msgid "Posts"
+msgstr ""
+
+#: templates/misago/admin/index.html:85 templates/misago/navbar.html:34
+#: templates/misago/userslists/base.html:14 users/admin.py:87
+#: users/migrations/0002_users_settings.py:15
+msgid "Users"
+msgstr ""
+
+#: templates/misago/admin/index.html:90
+msgid "Inactive users"
+msgstr ""
+
+#: templates/misago/admin/index.html:116
+msgid "Checking..."
+msgstr ""
+
+#: templates/misago/admin/labels/form.html:9
+#: templates/misago/admin/labels/form.html:18
+#: templates/misago/admin/labels/form.html:28
+#: templates/misago/admin/labels/list.html:9
+msgid "New label"
+msgstr ""
+
+#: templates/misago/admin/labels/form.html:43
+msgid "Name and appearance"
+msgstr ""
+
+#: templates/misago/admin/labels/form.html:50
+msgid "Availability"
+msgstr ""
+
+#: templates/misago/admin/labels/list.html:16 threads/forms/posting.py:90
+msgid "Label"
+msgstr ""
+
+#: templates/misago/admin/labels/list.html:56
+msgid "No thread labels are currently defined."
+msgstr ""
+
+#: templates/misago/admin/labels/list.html:65
+msgid "Are you sure you want to delete this label?"
+msgstr ""
+
+#: templates/misago/admin/login.html:5
+msgid "Log in"
+msgstr ""
+
+#: templates/misago/admin/login.html:5
+msgid "Django Admin"
+msgstr ""
+
+#: templates/misago/admin/login.html:5
+msgid "Misago Admin"
+msgstr ""
+
+#: templates/misago/admin/login.html:26
+msgid "Administration"
+msgstr ""
+
+#: templates/misago/admin/login.html:35
+msgid "Please try again."
+msgstr ""
+
+#: templates/misago/admin/login.html:62 templates/misago/login.html:33
+#: users/forms/admin.py:61 users/forms/auth.py:68 users/forms/register.py:11
+msgid "Password"
+msgstr ""
+
+#: templates/misago/admin/login.html:67 templates/misago/login.html:5
+#: templates/misago/login.html.py:19 templates/misago/login.html:40
+#: templates/misago/navbar.html:21
+msgid "Sign in"
+msgstr ""
+
+#: templates/misago/admin/logout.html:8
+msgid "Log out?"
+msgstr ""
+
+#: templates/misago/admin/logout.html:19
+msgid "Log out from admin"
+msgstr ""
+
+#: templates/misago/admin/logout.html:30
+msgid "Log out completely"
+msgstr ""
+
+#: templates/misago/admin/navbar.html:18
+msgid "Edit your account"
+msgstr ""
+
+#: templates/misago/admin/navbar.html:19 templates/misago/user_nav.html:6
+msgid "Your avatar"
+msgstr ""
+
+#: templates/misago/admin/ranks/form.html:9
+#: templates/misago/admin/ranks/form.html:18
+#: templates/misago/admin/ranks/form.html:28
+#: templates/misago/admin/ranks/list.html:9
+msgid "New rank"
+msgstr ""
+
+#: templates/misago/admin/ranks/form.html:43
+msgid "Name and description"
+msgstr ""
+
+#: templates/misago/admin/ranks/form.html:57
+msgid "Display and visibility"
+msgstr ""
+
+#: templates/misago/admin/ranks/list.html:16
+#: templates/misago/admin/users/list.html:21
+#: templates/misago/userslists/active_posters.html:24 users/forms/admin.py:145
+msgid "Rank"
+msgstr ""
+
+#: templates/misago/admin/ranks/list.html:17
+msgid "Title"
+msgstr ""
+
+#: templates/misago/admin/ranks/list.html:18
+msgid "Special"
+msgstr ""
+
+#: templates/misago/admin/ranks/list.html:39
+msgid "No title set"
+msgstr ""
+
+#: templates/misago/admin/ranks/list.html:44
+msgid "Has page on users list."
+msgstr ""
+
+#: templates/misago/admin/ranks/list.html:47
+msgid "Users online displayed on index."
+msgstr ""
+
+#: templates/misago/admin/ranks/list.html:50
+msgid "This is default rank assigned to new members."
+msgstr ""
+
+#: templates/misago/admin/ranks/list.html:61
+msgid "Users with rank"
+msgstr ""
+
+#: templates/misago/admin/ranks/list.html:68
+msgid "Make default"
+msgstr ""
+
+#: templates/misago/admin/ranks/list.html:119
+msgid "No ranks are currently defined."
+msgstr ""
+
+#: templates/misago/admin/ranks/list.html:128
+msgid "Are you sure you want to delete this rank?"
+msgstr ""
+
+#: templates/misago/admin/roles/list.html:38
+msgid "Users with role"
+msgstr ""
+
+#: templates/misago/admin/roles/list.html:60
+msgid "No user roles are currently defined."
+msgstr ""
+
+#: templates/misago/admin/users/ban_users.html:6
+#: templates/misago/admin/users/ban_users.html:11
+#: users/views/admin/users.py:56
+msgid "Ban users"
+msgstr ""
+
+#: templates/misago/admin/users/ban_users.html:17
+msgid "Ban selected users:"
+msgstr ""
+
+#: templates/misago/admin/users/ban_users.html:58
+msgid "Set bans"
+msgstr ""
+
+#: templates/misago/admin/users/edit.html:31
+#: templates/misago/admin/users/new.html:31
+msgid "Basic account settings"
+msgstr ""
+
+#: templates/misago/admin/users/edit.html:48
+#: templates/misago/admin/users/new.html:48
+msgid "Sign-in credentials"
+msgstr ""
+
+#: templates/misago/admin/users/edit.html:55
+#: templates/misago/admin/users/list.html:34
+#: templates/misago/modusers/avatar.html:6
+#: templates/misago/modusers/avatar.html:11
+#: templates/misago/modusers/base.html:11 templates/misago/profile/side.html:6
+#: templates/misago/profile/side.html:9
+#: templates/misago/profile/warnings.html:111
+#: templates/misago/profile/warnings.html:115
+#: templates/misago/ranks_online.html:14
+#: templates/misago/thread/events.html:15
+#: templates/misago/thread/replies.html:36
+#: templates/misago/threads/base.html:50 templates/misago/threads/base.html:54
+#: templates/misago/users_cards.html:10
+#: templates/misago/userslists/active_posters.html:35
+#: templates/misago/userslists/base.html:45
+#: templates/misago/userslists/online.html:10
+#: templates/misago/userslists/online.html:52
+#: templates/misago/userslists/rank.html:70
+msgid "Avatar"
+msgstr ""
+
+#: templates/misago/admin/users/edit.html:63
+#: templates/misago/modusers/signature.html:6
+#: templates/misago/modusers/signature.html:11 users/forms/usercp.py:49
+msgid "Signature"
+msgstr ""
+
+#: templates/misago/admin/users/list.html:9
+#: templates/misago/admin/users/new.html:6
+#: templates/misago/admin/users/new.html:11
+#: templates/misago/admin/users/new.html:17
+msgid "New user"
+msgstr ""
+
+#: templates/misago/admin/users/list.html:17
+#: templates/misago/userslists/active_posters.html:23
+#: templates/misago/userslists/online.html:39
+msgid "User"
+msgstr ""
+
+#: templates/misago/admin/users/list.html:20
+msgid "E-mail"
+msgstr ""
+
+#: templates/misago/admin/users/list.html:22
+msgid "Joined"
+msgstr ""
+
+#: templates/misago/admin/users/list.html:42
+msgid "Requires activation by administrator"
+msgstr ""
+
+#: templates/misago/admin/users/list.html:44
+msgid "Has to activate account"
+msgstr ""
+
+#: templates/misago/admin/users/list.html:51
+msgid "Super administrator"
+msgstr ""
+
+#: templates/misago/admin/users/list.html:53 users/forms/admin.py:170
+msgid "Administrator"
+msgstr ""
+
+#: templates/misago/admin/users/list.html:80
+msgid "Edit user"
+msgstr ""
+
+#: templates/misago/admin/users/list.html:89
+msgid "No users matching search criteria have been found."
+msgstr ""
+
+#: templates/misago/admin/users/list.html:95
+msgid "Search users"
+msgstr ""
+
+#: templates/misago/admin/users/new.html:65
+msgid "Save user"
+msgstr ""
+
+#: templates/misago/admin/warnings/form.html:9
+#: templates/misago/admin/warnings/form.html:18
+#: templates/misago/admin/warnings/form.html:28
+msgid "New warning level"
+msgstr ""
+
+#: templates/misago/admin/warnings/form.html:43
+msgid "Basic options"
+msgstr ""
+
+#: templates/misago/admin/warnings/form.html:50
+msgid "Restrictions"
+msgstr ""
+
+#: templates/misago/admin/warnings/list.html:9
+msgid "New level"
+msgstr ""
+
+#: templates/misago/admin/warnings/list.html:16
+msgid "Warning level"
+msgstr ""
+
+#: templates/misago/admin/warnings/list.html:17
+msgid "Length"
+msgstr ""
+
+#: templates/misago/admin/warnings/list.html:18
+msgid "Replying"
+msgstr ""
+
+#: templates/misago/admin/warnings/list.html:19
+msgid "Starting threads"
+msgstr ""
+
+#: templates/misago/admin/warnings/list.html:39
+#: templates/misago/admin/warnings/list.html:57
+msgid "Not restricted"
+msgstr ""
+
+#: templates/misago/admin/warnings/list.html:44
+#: templates/misago/admin/warnings/list.html:62
+#: templates/misago/threads/base.html:97
+msgid "Moderated"
+msgstr ""
+
+#: templates/misago/admin/warnings/list.html:49
+#: templates/misago/admin/warnings/list.html:67
+msgid "Forbidden"
+msgstr ""
+
+#: templates/misago/admin/warnings/list.html:120
+msgid "No warning levels are currently defined."
+msgstr ""
+
+#: templates/misago/admin/warnings/list.html:129
+msgid "Are you sure you want to delete this warning level?"
+msgstr ""
+
+#: templates/misago/auth_form_errors.html:17
+msgid "Click here to activate your account."
+msgstr ""
+
+#: templates/misago/base.html:38
+msgid "smhd"
+msgstr ""
+
+#: templates/misago/base.html:41
+msgid "Server returned unspecified error. Refresh page and try again."
+msgstr ""
+
+#: templates/misago/base.html:42
+msgid "API link is invalid."
+msgstr ""
+
+#: templates/misago/base.html:43
+msgid "Request has timed out."
+msgstr ""
+
+#: templates/misago/base.html:53
+msgid "Unspecified error occured."
+msgstr ""
+
+#: templates/misago/base.html:54 templates/misago/base.html.py:55
+#: templates/misago/base.html:56 templates/misago/messages.html:20
+#: templates/misago/register/form.html:79
+#: templates/misago/register/form.html:112
+msgid "Ok!"
+msgstr ""
+
+#: templates/misago/editor/body.html:6
+msgid "Bold"
+msgstr ""
+
+#: templates/misago/editor/body.html:11
+msgid "Italic"
+msgstr ""
+
+#: templates/misago/editor/body.html:20
+msgid "Insert link"
+msgstr ""
+
+#: templates/misago/editor/body.html:27
+msgid "Insert image"
+msgstr ""
+
+#: templates/misago/editor/body.html:34
+msgid "Insert file"
+msgstr ""
+
+#: templates/misago/editor/body.html:42
+msgid "Quote"
+msgstr ""
+
+#: templates/misago/editor/body.html:47
+msgid "Code"
+msgstr ""
+
+#: templates/misago/editor/body.html:53
+msgid "Horizontal line"
+msgstr ""
+
+#: templates/misago/emails/activation/by_admin.html:6
+#: templates/misago/emails/activation/by_admin.txt:6
+#, python-format
+msgid "%(user)s, your account has been activated by forum administrator."
+msgstr ""
+
+#: templates/misago/emails/activation/by_admin.html:12
+#: templates/misago/emails/register/complete.html:18
+#: templates/misago/emails/register/inactive.html:31
+msgid "this form"
+msgstr ""
+
+#: templates/misago/emails/activation/by_admin.html:14
+#, python-format
+msgid "You can now sign in to it using %(login_form)s."
+msgstr ""
+
+#: templates/misago/emails/activation/by_admin.txt:10
+msgid "You can now sign in to it using the form below:"
+msgstr ""
+
+#: templates/misago/emails/activation/by_user.html:6
+#: templates/misago/emails/activation/by_user.txt:6
+#, python-format
+msgid "%(user)s, to activate your account click the below link:"
+msgstr ""
+
+#: templates/misago/emails/activation/by_user.html:11
+#: templates/misago/emails/register/inactive.html:27
+msgid "Activate my account!"
+msgstr ""
+
+#: templates/misago/emails/change_email_password.html:6
+#: templates/misago/emails/change_email_password.txt:6
+#, python-format
+msgid ""
+"%(user)s, you are receiving this message because you have made changes in "
+"your account email and password."
+msgstr ""
+
+#: templates/misago/emails/change_email_password.html:11
+#: templates/misago/emails/change_email_password.txt:10
+msgid "To confirm those changes, click the link below:"
+msgstr ""
+
+#: templates/misago/emails/change_password_form_link.html:6
+#: templates/misago/emails/change_password_form_link.txt:6
+#, python-format
+msgid ""
+"%(user)s, you are receiving this message because you want to change "
+"forgotten password for your forum account."
+msgstr ""
+
+#: templates/misago/emails/change_password_form_link.html:11
+#: templates/misago/emails/change_password_form_link.txt:10
+msgid "To change your account password click the link below:"
+msgstr ""
+
+#: templates/misago/emails/change_password_form_link.html:16
+#: templates/misago/forgottenpassword/reset_password_form.html:31
+msgid "Set new password"
+msgstr ""
+
+#: templates/misago/emails/register/complete.html:6
+#: templates/misago/emails/register/complete.txt:6
+#: templates/misago/emails/register/inactive.txt:6
+#, python-format
+msgid "%(user)s, thank you for joining us!"
+msgstr ""
+
+#: templates/misago/emails/register/complete.html:12
+#: templates/misago/emails/register/complete.txt:10
+msgid ""
+"You may now join discussion on our forums. Why not spend a minute or two to "
+"have a look around and share your opinions and knowledge with rest of "
+"community?"
+msgstr ""
+
+#: templates/misago/emails/register/complete.html:20
+#, python-format
+msgid "You can always sign in to your account using %(login_form)s."
+msgstr ""
+
+#: templates/misago/emails/register/complete.txt:14
+msgid "You can always sign in to your account using the form below:"
+msgstr ""
+
+#: templates/misago/emails/register/inactive.html:7
+#: templates/misago/emails/register/inactive.txt:10
+msgid ""
+"Before you will be able to join discussion on our forums, one of our "
+"administrators will have to activate your account."
+msgstr ""
+
+#: templates/misago/emails/register/inactive.html:12
+#: templates/misago/emails/register/inactive.txt:15
+msgid ""
+"This may take a while, but you will receive e-mail with notification once it "
+"happens."
+msgstr ""
+
+#: templates/misago/emails/register/inactive.html:17
+#: templates/misago/emails/register/inactive.txt:20
+msgid "Thank you for your patience and see you soon!"
+msgstr ""
+
+#: templates/misago/emails/register/inactive.html:22
+#: templates/misago/emails/register/inactive.txt:25
+msgid ""
+"Before you will be able to join discussion on our forums, you have to "
+"activate your account. To do so, simply click the link below:"
+msgstr ""
+
+#: templates/misago/emails/register/inactive.html:33
+#, python-format
+msgid ""
+"Once your account is activated, you can always sign in to it using "
+"%(login_form)s."
+msgstr ""
+
+#: templates/misago/emails/register/inactive.txt:30
+msgid ""
+"Once your account is activated, you can always sign in to it using the form "
+"velow:"
+msgstr ""
+
+#: templates/misago/errorpages/csrf_failure.html:8
+msgid ""
+"This is usually caused by your browser not accepting or using outdated "
+"cookies. Check your browser configuration and try again."
+msgstr ""
+
+#: templates/misago/errorpages/wrong_way.html:5
+msgid "Wrong way"
+msgstr ""
+
+#: templates/misago/errorpages/wrong_way.html:8
+#: templates/misago/errorpages/wrong_way.html:21
+msgid "This page should be reached via form submission or pressing button."
+msgstr ""
+
+#: templates/misago/errorpages/wrong_way.html:20
+msgid "Page reached in wrong way."
+msgstr ""
+
+#: templates/misago/forgottenpassword/link_sent.html:5
+#: templates/misago/forgottenpassword/link_sent.html:13
+msgid "Change password link sent"
+msgstr ""
+
+#: templates/misago/forgottenpassword/link_sent.html:22
+#, python-format
+msgid ""
+"We have sent an e-mail to %(email)s with a link to form that will let you "
+"change your password."
+msgstr ""
+
+#: templates/misago/forgottenpassword/request.html:5
+#: templates/misago/forgottenpassword/request.html:13
+msgid "Change forgotten password"
+msgstr ""
+
+#: templates/misago/forgottenpassword/request.html:22
+msgid "Recovering password"
+msgstr ""
+
+#: templates/misago/forgottenpassword/request.html:24
+msgid ""
+"Because user passwords are processed in an irreversible way before being "
+"saved to database, it is not possible for us to simply send you your "
+"password."
+msgstr ""
+
+#: templates/misago/forgottenpassword/request.html:26
+msgid ""
+"Instead you will be sent link to form that will let you set new password on "
+"your account. This link will expire after you change password or seven days "
+"pass."
+msgstr ""
+
+#: templates/misago/forgottenpassword/request.html:36
+msgid "Request link"
+msgstr ""
+
+#: templates/misago/forgottenpassword/request.html:52
+msgid "Send link"
+msgstr ""
+
+#: templates/misago/forgottenpassword/reset_password_form.html:5
+#: templates/misago/forgottenpassword/reset_password_form.html:15
+#, python-format
+msgid "Set new password for %(user)s"
+msgstr ""
+
+#: templates/misago/forgottenpassword/reset_password_form.html:39
+msgid "Enter new password"
+msgstr ""
+
+#: templates/misago/forgottenpassword/reset_password_form.html:46
+msgid "Change password"
+msgstr ""
+
+#: templates/misago/forums/category.html:39
+msgid ""
+"No forums are set in this category or you don't have permission to see them."
+msgstr ""
+
+#: templates/misago/forums/forums.html:6
+msgid "Redirect forum"
+msgstr ""
+
+#: templates/misago/forums/forums.html:8
+msgid "Forum has no new posts."
+msgstr ""
+
+#: templates/misago/forums/forums.html:8
+msgid "Forum has new posts."
+msgstr ""
+
+#: templates/misago/forums/forums.html:20
+msgid "Clicks:"
+msgstr ""
+
+#: templates/misago/forums/forums.html:24
+msgid "Posts:"
+msgstr ""
+
+#: templates/misago/forums/forums.html:27
+msgid "Threads:"
+msgstr ""
+
+#: templates/misago/forums/forums.html:31
+msgid "You don't have permission to browse this forum."
+msgstr ""
+
+#: templates/misago/forums/forums.html:42
+#, python-format
+msgid "%(clicks)s click"
+msgid_plural "%(clicks)s clicks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/forums/forums.html:50
+msgid "Forum is private"
+msgstr ""
+
+#: templates/misago/forums/forums.html:66
+#, python-format
+msgid "%(last_poster)s, %(last_post)s"
+msgstr ""
+
+#: templates/misago/forums/forums.html:71
+msgid "Forum is empty"
+msgstr ""
+
+#: templates/misago/forums/forums.html:74
+msgid "Can't be browsed"
+msgstr ""
+
+#: templates/misago/forums/forums.html:80
+msgid "Subforums list"
+msgstr ""
+
+#: templates/misago/forums/subforums.html:5
+#, python-format
+msgid "Forums in %(forum)s"
+msgstr ""
+
+#: templates/misago/index.html:28
+msgid "No forums are set or you don't have permission to see them."
+msgstr ""
+
+#: templates/misago/login.html:51
+msgid "Common problems:"
+msgstr ""
+
+#: templates/misago/login.html:56
+msgid "I don't remember my password."
+msgstr ""
+
+#: templates/misago/login.html:62
+msgid "My account is inactive."
+msgstr ""
+
+#: templates/misago/login.html:68
+msgid "I don't have an account."
+msgstr ""
+
+#: templates/misago/modusers/avatar.html:26
+msgid "Avatar moderation"
+msgstr ""
+
+#: templates/misago/modusers/avatar.html:66
+msgid "Avatar is locked"
+msgstr ""
+
+#: templates/misago/modusers/avatar.html:71
+msgid "Avatar is editable"
+msgstr ""
+
+#: templates/misago/modusers/avatar.html:79
+#: templates/misago/modusers/signature.html:105
+#: templates/misago/profile/ban_details.html:36 users/forms/admin.py:80
+#: users/forms/admin.py:101 users/forms/admin.py:262 users/forms/admin.py:368
+#: users/forms/modusers.py:36 users/forms/modusers.py:67
+msgid "User message"
+msgstr ""
+
+#: templates/misago/modusers/avatar.html:94
+#: templates/misago/modusers/signature.html:120
+#: templates/misago/profile/ban_details.html:51 users/forms/admin.py:270
+#: users/forms/admin.py:375
+msgid "Team message"
+msgstr ""
+
+#: templates/misago/modusers/ban.html:6 templates/misago/modusers/ban.html:11
+#: templates/misago/modusers/ban.html:42
+#: templates/misago/modusers/mod_options.html:45
+msgid "Ban user"
+msgstr ""
+
+#: templates/misago/modusers/ban.html:26
+#, python-format
+msgid "Ban %(user)s"
+msgstr ""
+
+#: templates/misago/modusers/mod_js.html:8
+msgid ""
+"Are you sure you want to delete this user? This will also delete all content "
+"associated with this account."
+msgstr ""
+
+#: templates/misago/modusers/mod_options.html:6
+msgid "Moderation"
+msgstr ""
+
+#: templates/misago/modusers/mod_options.html:13
+#: templates/misago/modusers/warn.html:45
+msgid "Warn user"
+msgstr ""
+
+#: templates/misago/modusers/mod_options.html:21
+#: templates/misago/modusers/rename.html:6
+#: templates/misago/modusers/rename.html:11
+#: templates/misago/modusers/rename.html:40
+msgid "Rename user"
+msgstr ""
+
+#: templates/misago/modusers/mod_options.html:29
+msgid "Avatar ban"
+msgstr ""
+
+#: templates/misago/modusers/mod_options.html:37
+msgid "Edit signature"
+msgstr ""
+
+#: templates/misago/modusers/mod_options.html:56
+msgid "Delete user"
+msgstr ""
+
+#: templates/misago/modusers/rename.html:26
+#, python-format
+msgid "Rename %(user)s"
+msgstr ""
+
+#: templates/misago/modusers/signature.html:26
+msgid "Signature moderation"
+msgstr ""
+
+#: templates/misago/modusers/signature.html:35
+#, python-format
+msgid "%(user)s has no signature set."
+msgstr ""
+
+#: templates/misago/modusers/signature.html:46
+#: templates/misago/usercp/edit_signature.html:28
+msgid "Signature is corrupted and can't be displayed."
+msgstr ""
+
+#: templates/misago/modusers/signature.html:57
+msgid "Signature lock"
+msgstr ""
+
+#: templates/misago/modusers/signature.html:92
+msgid "Signature is locked"
+msgstr ""
+
+#: templates/misago/modusers/signature.html:97
+msgid "Signature is editable"
+msgstr ""
+
+#: templates/misago/modusers/warn.html:6
+#: templates/misago/modusers/warn.html:11
+msgid "Warn"
+msgstr ""
+
+#: templates/misago/modusers/warn.html:61
+msgid "Current warning level"
+msgstr ""
+
+#: templates/misago/modusers/warn.html:72
+#: templates/misago/modusers/warn.html:126
+#: templates/misago/profile/warnings.html:26
+msgid "Replying are forbidden."
+msgstr ""
+
+#: templates/misago/modusers/warn.html:77
+#: templates/misago/modusers/warn.html:131
+#: templates/misago/profile/warnings.html:29
+msgid "New replies are moderated."
+msgstr ""
+
+#: templates/misago/modusers/warn.html:82
+#: templates/misago/modusers/warn.html:136
+msgid "No restrictions on posting replies."
+msgstr ""
+
+#: templates/misago/modusers/warn.html:89
+#: templates/misago/modusers/warn.html:143
+#: templates/misago/profile/warnings.html:37
+msgid "Starting threads is forbidden."
+msgstr ""
+
+#: templates/misago/modusers/warn.html:94
+#: templates/misago/modusers/warn.html:148
+#: templates/misago/profile/warnings.html:40
+msgid "New threads are moderated."
+msgstr ""
+
+#: templates/misago/modusers/warn.html:99
+#: templates/misago/modusers/warn.html:153
+msgid "No restrictions on starting threads."
+msgstr ""
+
+#: templates/misago/modusers/warn.html:103
+msgid "None"
+msgstr ""
+
+#: templates/misago/modusers/warn.html:106
+msgid "No warning level is set."
+msgstr ""
+
+#: templates/misago/modusers/warn.html:116
+msgid "Next level"
+msgstr ""
+
+#: templates/misago/navbar.html:7
+msgid "Toggle navigation"
+msgstr ""
+
+#: templates/misago/navbar.html:22 templates/misago/register/disabled.html:6
+#: templates/misago/register/form.html:6
+msgid "Register"
+msgstr ""
+
+#: templates/misago/navbar.html:28
+msgid "Advanced search"
+msgstr ""
+
+#: templates/misago/notifications/dropdown.html:7
+#: templates/misago/user_nav.html:86
+#, python-format
+msgid "%(notifications)s new notification"
+msgid_plural "%(notifications)s new notifications"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/notifications/dropdown.html:16
+#, python-format
+msgid "%(notifications)s notification"
+msgid_plural "%(notifications)s notifications"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/notifications/dropdown.html:40
+#: templates/misago/notifications/full.html:63
+msgid "Notification is not available."
+msgstr ""
+
+#: templates/misago/notifications/dropdown.html:59
+msgid "You don't have any new notifications."
+msgstr ""
+
+#: templates/misago/notifications/dropdown.html:67
+msgid "See all"
+msgstr ""
+
+#: templates/misago/notifications/dropdown.html:70
+msgid "Refresh"
+msgstr ""
+
+#: templates/misago/notifications/full.html:5
+#: templates/misago/notifications/full.html:24
+#, python-format
+msgid "You have %(notifications)s notification"
+msgid_plural "You have %(notifications)s notifications"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/notifications/full.html:36
+msgid "Mark all read"
+msgstr ""
+
+#: templates/misago/notifications/full.html:51
+msgid "New notification"
+msgstr ""
+
+#: templates/misago/notifications/full.html:53
+#: templates/misago/notifications/full.html:113
+msgid "Old notification"
+msgstr ""
+
+#: templates/misago/notifications/full.html:72
+msgid "Read"
+msgstr ""
+
+#: templates/misago/notifications/full.html:94
+msgid "You don't have any notifications."
+msgstr ""
+
+#: templates/misago/posting/form.html:5 templates/misago/posting/form.html:28
+msgid "Start new thread"
+msgstr ""
+
+#: templates/misago/posting/form.html:52
+msgid "Post thread"
+msgstr ""
+
+#: templates/misago/posting/form.html:54
+msgid "Post reply"
+msgstr ""
+
+#: templates/misago/posting/replyform.html:6
+msgid "Thread title..."
+msgstr ""
+
+#: templates/misago/profile/ban_details.html:10
+#, python-format
+msgid "%(user)s is banned until after %(banned_until)s."
+msgstr ""
+
+#: templates/misago/profile/ban_details.html:14
+#, python-format
+msgid "%(user)s is banned permanently."
+msgstr ""
+
+#: templates/misago/profile/ban_details.html:25
+msgid "Lift ban"
+msgstr ""
+
+#: templates/misago/profile/ban_details.html:69
+msgid "Are you sure you want to lift this ban?"
+msgstr ""
+
+#: templates/misago/profile/base.html:5
+#, python-format
+msgid "Page %(number)s"
+msgstr ""
+
+#: templates/misago/profile/base.html:8
+#, python-format
+msgid "%(user)s is member since %(joined_on)s."
+msgstr ""
+
+#: templates/misago/profile/followers.html:5
+#: templates/misago/profile/followers.html:22
+#, python-format
+msgid "%(user)s is followed by %(followers)s user."
+msgid_plural "%(user)s is followed by %(followers)s users."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/profile/followers.html:16
+#, python-format
+msgid "You are followed by %(followers)s user."
+msgid_plural "You are followed by %(followers)s users."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/profile/followers.html:34
+#, python-format
+msgid "No users are following you, %(user)s."
+msgstr ""
+
+#: templates/misago/profile/followers.html:38
+#, python-format
+msgid "%(user)s has no followers."
+msgstr ""
+
+#: templates/misago/profile/follows.html:6
+#: templates/misago/profile/follows.html:23
+#, python-format
+msgid "%(user)s is following %(follows)s user."
+msgid_plural "%(user)s is following %(follows)s users."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/profile/follows.html:17
+#, python-format
+msgid "You are following %(follows)s user."
+msgid_plural "You are following %(follows)s users."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/profile/follows.html:35
+#, python-format
+msgid "Your are not following any users, %(user)s."
+msgstr ""
+
+#: templates/misago/profile/follows.html:39
+#, python-format
+msgid "%(user)s follows no users."
+msgstr ""
+
+#: templates/misago/profile/header.html:22
+msgid "Follow"
+msgstr ""
+
+#: templates/misago/profile/header.html:31
+msgid "Block"
+msgstr ""
+
+#: templates/misago/profile/header.html:45
+msgid "Joined on"
+msgstr ""
+
+#: templates/misago/profile/header.html:52 users/forms/admin.py:24
+#: users/models/bans.py:27
+msgid "E-mail address"
+msgstr ""
+
+#: templates/misago/profile/name_history.html:5
+#, python-format
+msgid "%(user)s username was changed %(changes)s time since %(joined_on)s."
+msgid_plural ""
+"%(user)s username was changed %(changes)s times since %(joined_on)s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/profile/name_history.html:16
+#, python-format
+msgid "Your username was changed %(changes)s time."
+msgid_plural "Your username was changed %(changes)s times."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/profile/name_history.html:22
+#, python-format
+msgid "%(user)s username was changed %(changes)s time."
+msgid_plural "%(user)s username was changed %(changes)s times."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/profile/name_history.html:53
+#, python-format
+msgid "%(changed_by)s changed %(old_username)s's name to %(new_username)s"
+msgstr ""
+
+#: templates/misago/profile/name_history.html:58
+#, python-format
+msgid "%(old_username)s changed name to %(new_username)s"
+msgstr ""
+
+#: templates/misago/profile/name_history.html:74
+#, python-format
+msgid "Your username was never changed, %(user)s."
+msgstr ""
+
+#: templates/misago/profile/name_history.html:78
+#, python-format
+msgid "%(user)s's username was never changed."
+msgstr ""
+
+#: templates/misago/profile/pagination.html:7
+#: templates/misago/userslists/pagination.html:7
+#: templates/misago/userslists/rank.html:38
+msgid "Start"
+msgstr ""
+
+#: templates/misago/profile/pagination.html:13
+#: templates/misago/userslists/pagination.html:13
+#: templates/misago/userslists/rank.html:44
+msgid "Previous"
+msgstr ""
+
+#: templates/misago/profile/pagination.html:27
+#: templates/misago/userslists/pagination.html:27
+#: templates/misago/userslists/rank.html:58
+msgid "Next"
+msgstr ""
+
+#: templates/misago/profile/posts.html:5
+#, python-format
+msgid "%(user)s has posted %(posts)s message since %(joined_on)s."
+msgid_plural "%(user)s has posted %(posts)s messages since %(joined_on)s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/profile/posts.html:14
+#, python-format
+msgid "%(user)s posted no messages, or you can't see them."
+msgstr ""
+
+#: templates/misago/profile/side.html:5
+msgid "Go to your avatar options"
+msgstr ""
+
+#: templates/misago/profile/state.html:5 templates/misago/user_state.html:5
+#, python-format
+msgid "Banned until %(ban_date)s"
+msgstr ""
+
+#: templates/misago/profile/state.html:9 templates/misago/user_state.html:9
+msgid "Banned"
+msgstr ""
+
+#: templates/misago/profile/state.html:13 templates/misago/user_state.html:14
+msgid "Hides activity"
+msgstr ""
+
+#: templates/misago/profile/state.html:16 templates/misago/user_state.html:16
+msgid "Online, hidden"
+msgstr ""
+
+#: templates/misago/profile/state.html:24
+#, python-format
+msgid "Seen %(last_seen)s, hidden"
+msgstr ""
+
+#: templates/misago/profile/state.html:29 templates/misago/user_state.html:20
+#: users/apps.py:44
+msgid "Online"
+msgstr ""
+
+#: templates/misago/profile/state.html:37
+#, python-format
+msgid "Seen %(last_seen)s"
+msgstr ""
+
+#: templates/misago/profile/threads.html:5
+#, python-format
+msgid "%(user)s has started %(threads)s thread since %(joined_on)s."
+msgid_plural "%(user)s has started %(threads)s threads since %(joined_on)s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/profile/threads.html:14
+#, python-format
+msgid "%(user)s started no threads, or you can't see them."
+msgstr ""
+
+#: templates/misago/profile/warnings.html:5
+#, python-format
+msgid "%(user)s was warned %(warnings)s time since %(joined_on)s."
+msgid_plural "%(user)s was warned %(warnings)s times since %(joined_on)s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/profile/warnings.html:47
+#, python-format
+msgid "This warning level lasts %(length)s."
+msgstr ""
+
+#: templates/misago/profile/warnings.html:52
+msgid "This warning level is permanent."
+msgstr ""
+
+#: templates/misago/profile/warnings.html:61
+msgid "No warnings are active."
+msgstr ""
+
+#: templates/misago/profile/warnings.html:67
+#, python-format
+msgid "Warning level is %(level)s"
+msgstr ""
+
+#: templates/misago/profile/warnings.html:84
+msgid "No warning reason was provided."
+msgstr ""
+
+#: templates/misago/profile/warnings.html:95
+msgid "Canceled"
+msgstr ""
+
+#: templates/misago/profile/warnings.html:100
+msgid "Active"
+msgstr ""
+
+#: templates/misago/profile/warnings.html:105
+msgid "Expired"
+msgstr ""
+
+#: templates/misago/profile/warnings.html:138
+#, python-format
+msgid "Canceled by %(user)s %(canceled)s."
+msgstr ""
+
+#: templates/misago/profile/warnings.html:176
+#, python-format
+msgid "Your have no warnings, %(user)s."
+msgstr ""
+
+#: templates/misago/profile/warnings.html:180
+#, python-format
+msgid "%(user)s has no warnings."
+msgstr ""
+
+#: templates/misago/profile/warnings.html:195
+msgid "Are you sure you want to cancel this warning?"
+msgstr ""
+
+#: templates/misago/profile/warnings.html:201
+msgid "Are you sure you want to delete this warning?"
+msgstr ""
+
+#: templates/misago/ranks_online.html:6
+#, python-format
+msgid "%(rank)s online"
+msgstr ""
+
+#: templates/misago/register/completed.html:5
+#: templates/misago/register/completed.html:13
+msgid "Registration complete"
+msgstr ""
+
+#: templates/misago/register/completed.html:23
+#, python-format
+msgid ""
+"%(user)s, your account has been created, but you have to activate it before "
+"you will be able to sign in."
+msgstr ""
+
+#: templates/misago/register/completed.html:34
+#, python-format
+msgid ""
+"%(user)s, your account has been created, but administrator has to activate "
+"it before you will be able to sign in."
+msgstr ""
+
+#: templates/misago/register/completed.html:39
+msgid "You will be notified with e-mail when this happens."
+msgstr ""
+
+#: templates/misago/register/disabled.html:19
+msgid "We are sorry but new registrations are not currently accepted."
+msgstr ""
+
+#: templates/misago/register/form.html:21
+msgid "Register new account"
+msgstr ""
+
+#: templates/misago/register/form.html:45
+msgid "Password strength"
+msgstr ""
+
+#: templates/misago/register/form.html:80
+msgid "Text from image was correct!"
+msgstr ""
+
+#: templates/misago/register/form.html:113
+msgid "Your answer was correct!"
+msgstr ""
+
+#: templates/misago/register/form.html:126
+msgid "Register account"
+msgstr ""
+
+#: templates/misago/register/form.html:131
+msgid "our terms of service"
+msgstr ""
+
+#: templates/misago/register/form.html:136
+msgid "Notice:"
+msgstr ""
+
+#: templates/misago/register/form.html:138
+#, python-format
+msgid "By clicking the button above you accept %(tos)s."
+msgstr ""
+
+#: templates/misago/register/form.html:200
+msgid "Very weak"
+msgstr ""
+
+#: templates/misago/register/form.html:200
+msgid "Weak"
+msgstr ""
+
+#: templates/misago/register/form.html:200
+msgid "Medium"
+msgstr ""
+
+#: templates/misago/register/form.html:200
+msgid "Good"
+msgstr ""
+
+#: templates/misago/register/form.html:200
+msgid "Strong"
+msgstr ""
+
+#: templates/misago/thread/events.html:6
+#, python-format
+msgid "This event occured on %(date)s."
+msgstr ""
+
+#: templates/misago/thread/events.html:19
+msgid "Event message is invalid."
+msgstr ""
+
+#: templates/misago/thread/post.html:5 templates/misago/thread/post.html:9
+msgid "Poster avatar"
+msgstr ""
+
+#: templates/misago/thread/post.html:21
+#, python-format
+msgid "%(user)s's forum account has been deleted."
+msgstr ""
+
+#: templates/misago/thread/post.html:34
+msgid "New"
+msgstr ""
+
+#: templates/misago/thread/post.html:46
+msgid "Post can't be displayed due to invalid message checksum."
+msgstr ""
+
+#: templates/misago/thread/replies.html:8
+#, python-format
+msgid "%(replies)s reply since %(started)s. Last post on %(last_post)s."
+msgid_plural ""
+"%(replies)s replies since %(started)s. Last post on %(last_post)s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/thread/replies.html:33
+msgid "Thread autor"
+msgstr ""
+
+#: templates/misago/thread/replies.html:43
+#: templates/misago/threads/base.html:60
+#, python-format
+msgid "%(replies)s reply"
+msgid_plural "%(replies)s replies"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/thread/replies.html:49
+#: templates/misago/threads/base.html:45
+#, python-format
+msgid "Last post from %(last_post)s"
+msgstr ""
+
+#: templates/misago/threads/actions_js.html:4
+#: threads/views/generic/threads/actions.py:17
+msgid "You have to select at least one thread."
+msgstr ""
+
+#: templates/misago/threads/base.html:19
+msgid "Pinned, has no unread posts"
+msgstr ""
+
+#: templates/misago/threads/base.html:21
+msgid "Pinned, has unread posts"
+msgstr ""
+
+#: templates/misago/threads/base.html:25
+msgid "Thread has no unread posts"
+msgstr ""
+
+#: templates/misago/threads/base.html:27
+msgid "Thread has unread posts"
+msgstr ""
+
+#: templates/misago/threads/base.html:49 templates/misago/threads/base.html:53
+#, python-format
+msgid "Last post by %(user)s"
+msgstr ""
+
+#: templates/misago/threads/base.html:66
+#, python-format
+msgid "New thread with %(replies)s reply"
+msgid_plural "New thread with %(replies)s replies"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/threads/base.html:73
+#, python-format
+msgid "%(replies)s new reply"
+msgid_plural "%(replies)s new replies"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/threads/base.html:82
+msgid "Reported posts"
+msgstr ""
+
+#: templates/misago/threads/base.html:87 templates/misago/user_nav.html:72
+msgid "Moderated posts"
+msgstr ""
+
+#: templates/misago/threads/base.html:92
+msgid "Poll"
+msgstr ""
+
+#: templates/misago/threads/base.html:102
+msgid "Closed"
+msgstr ""
+
+#: templates/misago/threads/base.html:107
+#: templates/misago/userslists/online.html:42
+msgid "Hidden"
+msgstr ""
+
+#: templates/misago/threads/forum.html:5
+#, python-format
+msgid "Page %(page)s"
+msgstr ""
+
+#: templates/misago/threads/forum.html:74
+msgid ""
+"No threads matching criteria exist, or you don't have permission to see them."
+msgstr ""
+
+#: templates/misago/threads/forum.html:76
+msgid "See all threads"
+msgstr ""
+
+#: templates/misago/threads/forum.html:79
+msgid ""
+"No threads were posted in this forum, or you don't have permission to see "
+"them."
+msgstr ""
+
+#: templates/misago/threads/merge.html:5
+#: templates/misago/threads/merge.html:25
+#: templates/misago/threads/merge.html:77
+#: templates/misago/threads/merge/full.html:5
+#: templates/misago/threads/merge/full.html:25
+#: templates/misago/threads/merge/full.html:59
+#: templates/misago/threads/merge/modal.html:12
+#: templates/misago/threads/merge/modal.html:21
+#: threads/tests/test_forumthreads_view.py:184
+#: threads/views/generic/forum/actions.py:69
+msgid "Merge threads"
+msgstr ""
+
+#: templates/misago/threads/merge.html:44
+#: templates/misago/threads/merge/full.html:44
+#, python-format
+msgid "Merge threads in %(forum)s"
+msgstr ""
+
+#: templates/misago/threads/merge.html:54
+#: templates/misago/threads/merge/body.html:3
+msgid "Threads that will be merged:"
+msgstr ""
+
+#: templates/misago/threads/move.html:5 templates/misago/threads/move.html:25
+#: templates/misago/threads/move.html:77
+#: templates/misago/threads/move/full.html:5
+#: templates/misago/threads/move/full.html:25
+#: templates/misago/threads/move/full.html:59
+#: templates/misago/threads/move/modal.html:12
+#: templates/misago/threads/move/modal.html:21
+#: threads/tests/test_forumthreads_view.py:162
+#: threads/views/generic/forum/actions.py:62
+msgid "Move threads"
+msgstr ""
+
+#: templates/misago/threads/move.html:44
+#: templates/misago/threads/move/full.html:44
+#, python-format
+msgid "Move threads from %(forum)s"
+msgstr ""
+
+#: templates/misago/threads/move.html:54
+#: templates/misago/threads/move/body.html:3
+msgid "Threads that will be moved:"
+msgstr ""
+
+#: templates/misago/threads/reply_btn.html:5
+msgid "This forum is closed."
+msgstr ""
+
+#: templates/misago/threads/reply_btn.html:11
+msgid "Sign in to start thread"
+msgstr ""
+
+#: templates/misago/threads/reply_btn.html:16
+msgid "Start thread"
+msgstr ""
+
+#: templates/misago/threads/reply_btn.html:21
+msgid "Can't start threads"
+msgstr ""
+
+#: templates/misago/threads/show.html:4
+msgid "Show:"
+msgstr ""
+
+#: templates/misago/threads/show.html:14
+msgid "Show threads:"
+msgstr ""
+
+#: templates/misago/user_nav.html:13
+msgid "See your profile"
+msgstr ""
+
+#: templates/misago/user_nav.html:19 templates/misago/usercp/base.html:6
+#: templates/misago/usercp/base.html:19
+msgid "Change options"
+msgstr ""
+
+#: templates/misago/user_nav.html:28
+msgid "See all notifications"
+msgstr ""
+
+#: templates/misago/user_nav.html:44
+msgid "Sign out"
+msgstr ""
+
+#: templates/misago/user_nav.html:54
+msgid "New threads"
+msgstr ""
+
+#: templates/misago/user_nav.html:60
+msgid "Unread threads"
+msgstr ""
+
+#: templates/misago/user_nav.html:66
+msgid "Unresolved reports"
+msgstr ""
+
+#: templates/misago/user_nav.html:78
+msgid "Private threads"
+msgstr ""
+
+#: templates/misago/user_nav.html:102
+msgid "Loading..."
+msgstr ""
+
+#: templates/misago/user_state.html:18
+#, python-format
+msgid "Offline and hidden, last seen %(last_seen)s"
+msgstr ""
+
+#: templates/misago/user_state.html:22
+#, python-format
+msgid "Offline, last seen %(last_seen)s"
+msgstr ""
+
+#: templates/misago/usercp/avatar_galleries.html:6
+msgid "Avatars gallery"
+msgstr ""
+
+#: templates/misago/usercp/avatar_galleries.html:18
+msgid "Select avatar from gallery"
+msgstr ""
+
+#: templates/misago/usercp/avatar_galleries.html:33
+msgid "Gallery image"
+msgstr ""
+
+#: templates/misago/usercp/avatar_galleries.html:45
+msgid "Return"
+msgstr ""
+
+#: templates/misago/usercp/change_avatar.html:21
+msgid "Your current avatar"
+msgstr ""
+
+#: templates/misago/usercp/change_avatar.html:25
+#: templates/misago/usercp/change_avatar.html:34
+msgid "Change avatar:"
+msgstr ""
+
+#: templates/misago/usercp/change_avatar.html:30
+msgid "Your avatar is locked. You can't change it."
+msgstr ""
+
+#: templates/misago/usercp/change_avatar.html:41
+msgid "Download my Gravatar"
+msgstr ""
+
+#: templates/misago/usercp/change_avatar.html:48
+msgid "Generate avatar from my username"
+msgstr ""
+
+#: templates/misago/usercp/change_avatar.html:56
+msgid "Crop my avatar"
+msgstr ""
+
+#: templates/misago/usercp/change_avatar.html:63
+msgid "Upload image from my device"
+msgstr ""
+
+#: templates/misago/usercp/change_avatar.html:71
+msgid "Pick avatar from gallery"
+msgstr ""
+
+#: templates/misago/usercp/change_email_password.html:22
+msgid "Fill out at least one field"
+msgstr ""
+
+#: templates/misago/usercp/change_email_password.html:29
+msgid "Confirm change"
+msgstr ""
+
+#: templates/misago/usercp/change_forum_options.html:22
+msgid "Forum options"
+msgstr ""
+
+#: templates/misago/usercp/change_forum_options.html:29
+msgid "Automatic subscriptions"
+msgstr ""
+
+#: templates/misago/usercp/change_username.html:26 users/apps.py:31
+msgid "Change username"
+msgstr ""
+
+#: templates/misago/usercp/change_username.html:29
+#, python-format
+msgid "You have one change left."
+msgid_plural "You have %(changes_left)s changes left."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/usercp/change_username.html:42
+msgid "You have used up available username changes."
+msgstr ""
+
+#: templates/misago/usercp/change_username.html:50
+#, python-format
+msgid "You will be able to change your username on %(next_change_date)s."
+msgstr ""
+
+#: templates/misago/usercp/crop_avatar.html:6
+#: templates/misago/usercp/crop_avatar.html:19
+msgid "Crop avatar"
+msgstr ""
+
+#: templates/misago/usercp/crop_avatar.html:27
+msgid "Source image"
+msgstr ""
+
+#: templates/misago/usercp/crop_avatar.html:32
+msgid "Set avatar"
+msgstr ""
+
+#: templates/misago/usercp/edit_signature.html:40
+msgid "Your signature is locked. You can't change it."
+msgstr ""
+
+#: templates/misago/usercp/upload_avatar.html:6
+#: templates/misago/usercp/upload_avatar.html:18
+msgid "Upload avatar"
+msgstr ""
+
+#: templates/misago/usercp/upload_avatar.html:29
+msgid "Crop image"
+msgstr ""
+
+#: templates/misago/usercp/upload_avatar.html:36
+msgid "Click or drag and drop here image from your computer"
+msgstr ""
+
+#: templates/misago/usercp/upload_avatar.html:38
+#, python-format
+msgid "Must be jpg, gif or png image file no bigger than %(limit)s."
+msgstr ""
+
+#: templates/misago/usercp/upload_avatar.html:62
+msgid "Error occured when uploading file."
+msgstr ""
+
+#: templates/misago/usercp/upload_avatar.html:67
+msgid "Uploaded file is too big"
+msgstr ""
+
+#: templates/misago/usercp/upload_avatar.html:69 users/avatars/uploaded.py:30
+#: users/avatars/uploaded.py:35
+msgid "Uploaded file type is not allowed."
+msgstr ""
+
+#: templates/misago/usercp/upload_avatar.html:87
+msgid "Error occured when sending file to server."
+msgstr ""
+
+#: templates/misago/userslists/active_posters.html:5
+#, python-format
+msgid "List of users that have posted new messages during last %(days)s days."
+msgstr ""
+
+#: templates/misago/userslists/active_posters.html:13
+#, python-format
+msgid ""
+"%(posters)s user has posted new messages posting during last %(days)s days."
+msgid_plural "%(posters)s users posted new messages during last %(days)s days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/userslists/active_posters.html:26
+msgid "Total"
+msgstr ""
+
+#: templates/misago/userslists/active_posters.html:60
+#, python-format
+msgid "No users have posted any new messages during last %(days)s days."
+msgstr ""
+
+#: templates/misago/userslists/base.html:5
+#, python-format
+msgid "page %(page)s"
+msgstr ""
+
+#: templates/misago/userslists/online.html:5
+msgid "List of signed in users currently browsing forums."
+msgstr ""
+
+#: templates/misago/userslists/online.html:14
+#: templates/misago/userslists/online.html:59
+#, python-format
+msgid "Last click on %(last_click)s"
+msgstr ""
+
+#: templates/misago/userslists/online.html:29
+#, python-format
+msgid "%(online)s user is online as of %(date)s."
+msgid_plural "%(online)s users are online as of %(date)s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/userslists/online.html:40
+msgid "Last click"
+msgstr ""
+
+#: templates/misago/userslists/online.html:84
+msgid "No registered users are signed in at the moment or you can't see them."
+msgstr ""
+
+#: templates/misago/userslists/rank.html:5
+#: templates/misago/userslists/rank.html:21
+#, python-format
+msgid "There is %(users)s user with %(rank)s rank."
+msgid_plural "There are %(users)s users with %(rank)s rank."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/admin.py:20
+msgid "Thread labels"
+msgstr ""
+
+#: threads/forms/admin.py:12
+msgid "Label name"
+msgstr ""
+
+#: threads/forms/admin.py:15
+msgid "Optional CSS clas used to style this label."
+msgstr ""
+
+#: threads/forms/admin.py:19
+msgid "Select forums this label will be available in."
+msgstr ""
+
+#: threads/forms/moderation.py:10
+msgid "Merged thread title"
+msgstr ""
+
+#: threads/forms/moderation.py:20
+msgid "You have to enter merged thread title."
+msgstr ""
+
+#: threads/forms/moderation.py:26
+msgid "Move threads to forum"
+msgstr ""
+
+#: threads/forms/moderation.py:43
+msgid "You can't move threads to category."
+msgstr ""
+
+#: threads/forms/moderation.py:46
+msgid "You can't move threads to redirect."
+msgstr ""
+
+#: threads/forms/moderation.py:49
+msgid "New forum is same as current one."
+msgstr ""
+
+#: threads/forms/moderation.py:52
+msgid "You have to select forum."
+msgstr ""
+
+#: threads/forms/posting.py:12
+msgid "Reply"
+msgstr ""
+
+#: threads/forms/posting.py:16
+msgid "Message body"
+msgstr ""
+
+#: threads/forms/posting.py:27
+msgid "Enter message."
+msgstr ""
+
+#: threads/forms/posting.py:31
+#, python-format
+msgid "Posted message should be at least %(limit)s character long."
+msgid_plural "Posted message should be at least %(limit)s characters long."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/forms/posting.py:39
+#, python-format
+msgid "Posted message can't be longer than %(limit)s character."
+msgid_plural "Posted message can't be longer than %(limit)s characters."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/forms/posting.py:60
+msgid "Thread "
+msgstr ""
+
+#: threads/forms/posting.py:62
+msgid "Thread title"
+msgstr ""
+
+#: threads/forms/posting.py:72
+msgid "Enter thread title and message."
+msgstr ""
+
+#: threads/forms/posting.py:97
+msgid "No label"
+msgstr ""
+
+#: threads/forms/posting.py:101
+msgid "Thread label"
+msgstr ""
+
+#: threads/forms/posting.py:114
+msgid "Thread weight"
+msgstr ""
+
+#: threads/forms/posting.py:117
+msgid "Pin thread"
+msgstr ""
+
+#: threads/forms/posting.py:122 threads/forms/posting.py:125
+msgid "Close thread"
+msgstr ""
+
+#: threads/migrations/0002_threads_settings.py:16
+msgid "Those settings control threads and posts."
+msgstr ""
+
+#: threads/migrations/0002_threads_settings.py:20
+#: threads/migrations/0002_threads_settings.py:43
+#: users/migrations/0002_users_settings.py:47
+#: users/migrations/0002_users_settings.py:70
+msgid "Minimum length"
+msgstr ""
+
+#: threads/migrations/0002_threads_settings.py:21
+msgid "Minimum allowed thread title length."
+msgstr ""
+
+#: threads/migrations/0002_threads_settings.py:22
+msgid "Thread titles"
+msgstr ""
+
+#: threads/migrations/0002_threads_settings.py:32
+#: threads/migrations/0002_threads_settings.py:54
+#: users/migrations/0002_users_settings.py:59
+#: users/migrations/0002_users_settings.py:133
+msgid "Maximum length"
+msgstr ""
+
+#: threads/migrations/0002_threads_settings.py:33
+msgid "Maximum allowed thread length."
+msgstr ""
+
+#: threads/migrations/0002_threads_settings.py:44
+msgid "Minimum allowed user post length."
+msgstr ""
+
+#: threads/migrations/0002_threads_settings.py:55
+msgid "Maximum allowed user post length. Enter zero to disable"
+msgstr ""
+
+#: threads/moderation/threads.py:11
+#, python-format
+msgid "%(user)s changed thread label to %(label)s."
+msgstr ""
+
+#: threads/moderation/threads.py:13
+#, python-format
+msgid "%(user)s set thread label to %(label)s."
+msgstr ""
+
+#: threads/moderation/threads.py:33
+#, python-format
+msgid "%(user)s removed thread label."
+msgstr ""
+
+#: threads/moderation/threads.py:47
+#, python-format
+msgid "%(user)s pinned thread."
+msgstr ""
+
+#: threads/moderation/threads.py:59
+#, python-format
+msgid "%(user)s unpinned thread."
+msgstr ""
+
+#: threads/moderation/threads.py:72
+#, python-format
+msgid "%(user)s moved thread from %(forum)s."
+msgstr ""
+
+#: threads/moderation/threads.py:87
+#, python-format
+msgid "%(user)s merged in %(thread)s."
+msgstr ""
+
+#: threads/moderation/threads.py:103
+#, python-format
+msgid "%(user)s approved thread."
+msgstr ""
+
+#: threads/moderation/threads.py:119
+#, python-format
+msgid "%(user)s opened thread."
+msgstr ""
+
+#: threads/moderation/threads.py:132
+#, python-format
+msgid "%(user)s closed thread."
+msgstr ""
+
+#: threads/moderation/threads.py:145
+#, python-format
+msgid "%(user)s made thread visible."
+msgstr ""
+
+#: threads/moderation/threads.py:162
+#, python-format
+msgid "%(user)s hid thread."
+msgstr ""
+
+#: threads/permissions.py:21
+msgid "Can see threads"
+msgstr ""
+
+#: threads/permissions.py:24 users/migrations/0002_users_settings.py:145
+msgid "Started threads"
+msgstr ""
+
+#: threads/permissions.py:24 threads/permissions.py:30
+#: threads/permissions.py:35 threads/permissions.py:101
+#: threads/permissions.py:108 threads/views/generic/forum/filtering.py:82
+msgid "All threads"
+msgstr ""
+
+#: threads/permissions.py:25
+msgid "Can start threads"
+msgstr ""
+
+#: threads/permissions.py:27
+msgid "Can reply to threads"
+msgstr ""
+
+#: threads/permissions.py:30 threads/tests/test_forumthreads_view.py:206
+#: threads/views/generic/forum/actions.py:76
+msgid "Open threads"
+msgstr ""
+
+#: threads/permissions.py:32
+msgid "Can edit threads"
+msgstr ""
+
+#: threads/permissions.py:35 threads/permissions.py:101
+#: threads/permissions.py:108
+msgid "Own threads"
+msgstr ""
+
+#: threads/permissions.py:37
+msgid "Can hide own threads"
+msgstr ""
+
+#: threads/permissions.py:38
+msgid ""
+"Only threads started within time limit and with no replies can be hidden."
+msgstr ""
+
+#: threads/permissions.py:44 threads/permissions.py:58
+#: threads/tests/test_forumthreads_view.py:238
+#: threads/tests/test_forumthreads_view.py:256
+#: threads/views/generic/forum/actions.py:93
+msgid "Hide threads"
+msgstr ""
+
+#: threads/permissions.py:45 threads/permissions.py:59
+#: threads/tests/test_forumthreads_view.py:261
+#: threads/views/generic/forum/actions.py:99
+msgid "Delete threads"
+msgstr ""
+
+#: threads/permissions.py:48
+msgid "Min. time for own thread edit, in minutes"
+msgstr ""
+
+#: threads/permissions.py:49
+msgid "Enter 0 to don't limit time for editing own threads."
+msgstr ""
+
+#: threads/permissions.py:53
+msgid "Can hide threads"
+msgstr ""
+
+#: threads/permissions.py:62
+msgid "Can edit replies"
+msgstr ""
+
+#: threads/permissions.py:65
+msgid "Own replies"
+msgstr ""
+
+#: threads/permissions.py:65
+msgid "All replies"
+msgstr ""
+
+#: threads/permissions.py:67
+msgid "Can hide own replies"
+msgstr ""
+
+#: threads/permissions.py:68
+msgid "Only last replies to thread made within edit time limit can be hidden."
+msgstr ""
+
+#: threads/permissions.py:74 threads/permissions.py:88
+msgid "Hide replies"
+msgstr ""
+
+#: threads/permissions.py:75 threads/permissions.py:89
+msgid "Delete replies"
+msgstr ""
+
+#: threads/permissions.py:78
+msgid "Min. time for own reply edit, in minutes"
+msgstr ""
+
+#: threads/permissions.py:79
+msgid "Enter 0 to don't limit time for editing own replies."
+msgstr ""
+
+#: threads/permissions.py:83
+msgid "Can hide replies"
+msgstr ""
+
+#: threads/permissions.py:92
+msgid "Can protect posts"
+msgstr ""
+
+#: threads/permissions.py:93
+msgid "Only users with this permission can edit protected posts."
+msgstr ""
+
+#: threads/permissions.py:96
+msgid "Can move posts"
+msgstr ""
+
+#: threads/permissions.py:98
+msgid "Can merge posts"
+msgstr ""
+
+#: threads/permissions.py:100
+msgid "Can change threads labels"
+msgstr ""
+
+#: threads/permissions.py:103
+msgid "Can pin threads"
+msgstr ""
+
+#: threads/permissions.py:105
+msgid "Can close threads"
+msgstr ""
+
+#: threads/permissions.py:110
+msgid "Can move threads"
+msgstr ""
+
+#: threads/permissions.py:112
+msgid "Can merge threads"
+msgstr ""
+
+#: threads/permissions.py:114
+msgid "Can split threads"
+msgstr ""
+
+#: threads/permissions.py:116
+msgid "Can review moderated content"
+msgstr ""
+
+#: threads/permissions.py:117
+msgid "Will see and be able to accept moderated content."
+msgstr ""
+
+#: threads/permissions.py:118
+msgid "Can report posts"
+msgstr ""
+
+#: threads/permissions.py:119
+msgid "Can see reports"
+msgstr ""
+
+#: threads/permissions.py:121
+msgid "Can hide events"
+msgstr ""
+
+#: threads/permissions.py:126
+msgid "Hide events"
+msgstr ""
+
+#: threads/permissions.py:127
+msgid "Delete events"
+msgstr ""
+
+#: threads/permissions.py:314
+msgid "You can't see other users threads in this forum."
+msgstr ""
+
+#: threads/permissions.py:321
+msgid "This forum is closed. You can't start new threads in it."
+msgstr ""
+
+#: threads/permissions.py:324
+msgid "You have to sign in to start new thread."
+msgstr ""
+
+#: threads/permissions.py:326
+msgid "You don't have permission to start new threads in this forum."
+msgstr ""
+
+#: threads/tests/test_forumthreads_view.py:86
+#: threads/views/generic/forum/actions.py:29
+#, python-format
+msgid "Label as \"%(label)s\""
+msgstr ""
+
+#: threads/tests/test_forumthreads_view.py:91
+#: threads/views/generic/forum/actions.py:36
+msgid "Remove labels"
+msgstr ""
+
+#: threads/tests/test_forumthreads_view.py:113
+#: threads/views/generic/forum/actions.py:43
+msgid "Pin threads"
+msgstr ""
+
+#: threads/tests/test_forumthreads_view.py:118
+#: threads/views/generic/forum/actions.py:48
+msgid "Unpin threads"
+msgstr ""
+
+#: threads/tests/test_forumthreads_view.py:140
+#: threads/views/generic/forum/actions.py:55
+msgid "Approve threads"
+msgstr ""
+
+#: threads/tests/test_forumthreads_view.py:211
+#: threads/views/generic/forum/actions.py:81
+msgid "Close threads"
+msgstr ""
+
+#: threads/tests/test_forumthreads_view.py:233
+#: threads/tests/test_forumthreads_view.py:251
+#: threads/views/generic/forum/actions.py:88
+msgid "Unhide threads"
+msgstr ""
+
+#: threads/tests/test_forumthreads_view.py:262
+#: threads/views/generic/forum/actions.py:100
+msgid ""
+"Are you sure you want to delete selected threads? This action can't be "
+"undone."
+msgstr ""
+
+#: threads/tests/test_forumthreads_view.py:384
+#: threads/views/generic/forum/filtering.py:22
+msgid "My threads"
+msgstr ""
+
+#: threads/tests/test_forumthreads_view.py:385
+#: threads/views/generic/forum/filtering.py:29
+msgid "With reported posts"
+msgstr ""
+
+#: threads/tests/test_forumthreads_view.py:386
+#: threads/views/generic/forum/filtering.py:36
+msgid "Moderated threads"
+msgstr ""
+
+#: threads/tests/test_forumthreads_view.py:387
+#: threads/views/generic/forum/filtering.py:41
+msgid "With moderated posts"
+msgstr ""
+
+#: threads/validators.py:12
+msgid "Enter thread title."
+msgstr ""
+
+#: threads/validators.py:16
+#, python-format
+msgid "Thread title should be at least %(limit)s character long."
+msgid_plural "Thread title should be at least %(limit)s characters long."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/validators.py:24
+#, python-format
+msgid "Thread title can't be longer than %(limit)s character."
+msgid_plural "Thread title can't be longer than %(limit)s characters."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/validators.py:30
+msgid "Thread title should contain alpha-numeric characters."
+msgstr ""
+
+#: threads/validators.py:32
+msgid "Thread title is too long."
+msgstr ""
+
+#: threads/views/generic/forum/actions.py:120
+#, python-format
+msgid "%(changed)d thread was labeled \"%(label)s\"."
+msgid_plural "%(changed)d threads were labeled \"%(label)s\"."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/views/generic/forum/actions.py:128
+msgid "No threads were labeled."
+msgstr ""
+
+#: threads/views/generic/forum/actions.py:139
+#, python-format
+msgid "%(changed)d thread label was remoded."
+msgid_plural "%(changed)d threads labels were removed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/views/generic/forum/actions.py:144
+msgid "No threads were unlabeled."
+msgstr ""
+
+#: threads/views/generic/forum/actions.py:155
+#, python-format
+msgid "%(changed)d thread was pinned."
+msgid_plural "%(changed)d threads were pinned."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/views/generic/forum/actions.py:160
+msgid "No threads were pinned."
+msgstr ""
+
+#: threads/views/generic/forum/actions.py:171
+#, python-format
+msgid "%(changed)d thread was unpinned."
+msgid_plural "%(changed)d threads were unpinned."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/views/generic/forum/actions.py:176
+msgid "No threads were unpinned."
+msgstr ""
+
+#: threads/views/generic/forum/actions.py:201
+#, python-format
+msgid "%(changed)d thread was moved to \"%(forum)s\"."
+msgid_plural "%(changed)d threads were moved to \"%(forum)s\"."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/views/generic/forum/actions.py:228
+msgid "You have to select at least two threads to merge."
+msgstr ""
+
+#: threads/views/generic/forum/actions.py:264
+#, python-format
+msgid "%(changed)d thread was merged into \"%(thread)s\"."
+msgid_plural "%(changed)d threads were merged into \"%(thread)s\"."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/views/generic/forum/actions.py:294
+#, python-format
+msgid "%(changed)d thread was closed."
+msgid_plural "%(changed)d threads were closed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/views/generic/forum/actions.py:299
+msgid "No threads were closed."
+msgstr ""
+
+#: threads/views/generic/forum/actions.py:310
+#, python-format
+msgid "%(changed)d thread was opened."
+msgid_plural "%(changed)d threads were opened."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/views/generic/forum/actions.py:315
+msgid "No threads were opened."
+msgstr ""
+
+#: threads/views/generic/forum/actions.py:330
+#, python-format
+msgid "%(changed)d thread was made visible."
+msgid_plural "%(changed)d threads were made visible."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/views/generic/forum/actions.py:335
+msgid "No threads were made visible."
+msgstr ""
+
+#: threads/views/generic/forum/actions.py:350
+#, python-format
+msgid "%(changed)d thread was hidden."
+msgid_plural "%(changed)d threads were hidden."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/views/generic/forum/actions.py:355
+msgid "No threads were hidden."
+msgstr ""
+
+#: threads/views/generic/forum/actions.py:370
+#, python-format
+msgid "%(changed)d thread was deleted."
+msgid_plural "%(changed)d threads were deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/views/generic/forum/actions.py:375
+msgid "No threads were deleted."
+msgstr ""
+
+#: threads/views/generic/forum/filtering.py:84
+msgid "Your threads"
+msgstr ""
+
+#: threads/views/generic/threads/actions.py:15
+msgid "Requested action is invalid."
+msgstr ""
+
+#: threads/views/generic/threads/actions.py:102
+#, python-format
+msgid "%(changed)d thread was approved."
+msgid_plural "%(changed)d threads were approved."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/views/generic/threads/sorting.py:12
+msgid "Recently replied"
+msgstr ""
+
+#: threads/views/generic/threads/sorting.py:17
+msgid "Last replied"
+msgstr ""
+
+#: threads/views/generic/threads/sorting.py:22
+msgid "Most replied"
+msgstr ""
+
+#: threads/views/generic/threads/sorting.py:27
+msgid "Least replied"
+msgstr ""
+
+#: threads/views/generic/threads/sorting.py:32
+msgid "Newest"
+msgstr ""
+
+#: threads/views/generic/threads/sorting.py:37
+msgid "Oldest"
+msgstr ""
+
+#: threads/views/labelsadmin.py:16
+msgid "Requested thread label does not exist."
+msgstr ""
+
+#: threads/views/labelsadmin.py:34
+#, python-format
+msgid "New label \"%s\" has been saved."
+msgstr ""
+
+#: threads/views/labelsadmin.py:38
+#, python-format
+msgid "Label \"%s\" has been edited."
+msgstr ""
+
+#: threads/views/labelsadmin.py:44
+#, python-format
+msgid "Label \"%s\" has been deleted."
+msgstr ""
+
+#: users/admin.py:23
+msgid "User data"
+msgstr ""
+
+#: users/admin.py:25
+msgid "Change Django Permissions"
+msgstr ""
+
+#: users/admin.py:94
+msgid "User Accounts"
+msgstr ""
+
+#: users/admin.py:100
+msgid "Ranks"
+msgstr ""
+
+#: users/admin.py:107
+msgid "Bans"
+msgstr ""
+
+#: users/admin.py:114
+msgid "Warning levels"
+msgstr ""
+
+#: users/apps.py:21
+msgid "Change forum options"
+msgstr ""
+
+#: users/apps.py:24
+msgid "Change avatar"
+msgstr ""
+
+#: users/apps.py:27
+msgid "Edit your signature"
+msgstr ""
+
+#: users/apps.py:34
+msgid "Change email or password"
+msgstr ""
+
+#: users/apps.py:42
+msgid "Active posters"
+msgstr ""
+
+#: users/apps.py:94
+msgid "Followers"
+msgstr ""
+
+#: users/apps.py:97
+msgid "Follows"
+msgstr ""
+
+#: users/apps.py:100
+msgid "Name history"
+msgstr ""
+
+#: users/apps.py:103 users/permissions/warnings.py:21
+msgid "Warnings"
+msgstr ""
+
+#: users/avatars/uploaded.py:21
+msgid "Uploaded file is too big."
+msgstr ""
+
+#: users/avatars/uploaded.py:41
+msgid "Uploaded image should be at least 100 pixels tall and wide."
+msgstr ""
+
+#: users/avatars/uploaded.py:46
+msgid "Uploaded image is too big."
+msgstr ""
+
+#: users/avatars/uploaded.py:51
+msgid "Uploaded image ratio cannot be greater than 16:9."
+msgstr ""
+
+#: users/avatars/uploaded.py:78
+msgid "Crop is invalid. Please try again."
+msgstr ""
+
+#: users/decorators.py:12
+msgid "This page is not available to signed in users."
+msgstr ""
+
+#: users/decorators.py:22
+msgid "This page is not available to guests."
+msgstr ""
+
+#: users/decorators.py:32
+msgid "Your IP address has been banned."
+msgstr ""
+
+#: users/decorators.py:36
+#, python-format
+msgid "This ban will expire on %(date)s."
+msgstr ""
+
+#: users/forms/admin.py:20 users/forms/register.py:7 users/models/bans.py:26
+msgid "Username"
+msgstr ""
+
+#: users/forms/admin.py:22
+msgid "Custom title"
+msgstr ""
+
+#: users/forms/admin.py:53
+msgid "All registered members must have \"Member\" role."
+msgstr ""
+
+#: users/forms/admin.py:70
+msgid "Change password to"
+msgstr ""
+
+#: users/forms/admin.py:75 users/forms/modusers.py:31
+msgid "Lock avatar"
+msgstr ""
+
+#: users/forms/admin.py:76 users/forms/modusers.py:32
+msgid ""
+"Setting this to yes will stop user from changing his/her avatar, and will "
+"reset his/her avatar to procedurally generated one."
+msgstr ""
+
+#: users/forms/admin.py:81 users/forms/modusers.py:37
+msgid ""
+"Optional message for user explaining why he/she is banned form changing "
+"avatar."
+msgstr ""
+
+#: users/forms/admin.py:86 users/forms/admin.py:107 users/forms/modusers.py:42
+#: users/forms/modusers.py:73
+msgid "Staff message"
+msgstr ""
+
+#: users/forms/admin.py:87 users/forms/modusers.py:43
+msgid ""
+"Optional message for forum team members explaining why user is banned form "
+"changing avatar."
+msgstr ""
+
+#: users/forms/admin.py:93 users/forms/modusers.py:59
+msgid "Signature contents"
+msgstr ""
+
+#: users/forms/admin.py:97 users/forms/modusers.py:63
+msgid "Lock signature"
+msgstr ""
+
+#: users/forms/admin.py:98 users/forms/modusers.py:64
+msgid ""
+"Setting this to yes will stop user from making changes to his/her signature."
+msgstr ""
+
+#: users/forms/admin.py:102 users/forms/modusers.py:68
+msgid "Optional message to user explaining why his/hers signature is locked."
+msgstr ""
+
+#: users/forms/admin.py:108 users/forms/modusers.py:74
+msgid ""
+"Optional message to team members explaining why user signature is locked."
+msgstr ""
+
+#: users/forms/admin.py:134 users/forms/modusers.py:94
+#: users/forms/usercp.py:61
+#, python-format
+msgid "Signature can't be longer than %(limit)s character."
+msgid_plural "Signature can't be longer than %(limit)s characters."
+msgstr[0] ""
+msgstr[1] ""
+
+#: users/forms/admin.py:146
+msgid ""
+"Ranks are used to group and distinguish users. They are also used to add "
+"permissions to groups of users."
+msgstr ""
+
+#: users/forms/admin.py:154
+msgid "Roles"
+msgstr ""
+
+#: users/forms/admin.py:155
+msgid "Individual roles of this user. All users must have \"member\" role."
+msgstr ""
+
+#: users/forms/admin.py:171
+msgid "Superadmin"
+msgstr ""
+
+#: users/forms/admin.py:176
+msgid "Admin level"
+msgstr ""
+
+#: users/forms/admin.py:177
+msgid ""
+"Only administrators can access admin sites. In addition to admin site "
+"access, superadmins can also change other members admin levels."
+msgstr ""
+
+#: users/forms/admin.py:191
+msgid "Username starts with"
+msgstr ""
+
+#: users/forms/admin.py:192
+msgid "E-mail starts with"
+msgstr ""
+
+#: users/forms/admin.py:193
+msgid "Inactive only"
+msgstr ""
+
+#: users/forms/admin.py:194
+msgid "Admins only"
+msgstr ""
+
+#: users/forms/admin.py:231
+msgid "All ranks"
+msgstr ""
+
+#: users/forms/admin.py:238
+msgid "All roles"
+msgstr ""
+
+#: users/forms/admin.py:244
+msgid "Has rank"
+msgstr ""
+
+#: users/forms/admin.py:248
+msgid "Has role"
+msgstr ""
+
+#: users/forms/admin.py:263
+msgid "Optional message displayed to user instead of default one."
+msgstr ""
+
+#: users/forms/admin.py:267 users/forms/admin.py:274 users/forms/admin.py:372
+#: users/forms/admin.py:379
+msgid "Message can't be longer than 1000 characters."
+msgstr ""
+
+#: users/forms/admin.py:271 users/forms/admin.py:376
+msgid "Optional ban message for moderators and administrators."
+msgstr ""
+
+#: users/forms/admin.py:277
+msgid "Expires after"
+msgstr ""
+
+#: users/forms/admin.py:281 users/forms/admin.py:386
+msgid "Leave this field empty for this ban to never expire."
+msgstr ""
+
+#: users/forms/admin.py:289 users/forms/admin.py:404
+msgid "Banned value is too vague."
+msgstr ""
+
+#: users/forms/admin.py:301
+msgid ""
+"Short and descriptive name of all users with this rank. \"The Team\" or "
+"\"Game Masters\" are good examples."
+msgstr ""
+
+#: users/forms/admin.py:304
+msgid "User title"
+msgstr ""
+
+#: users/forms/admin.py:305
+msgid ""
+"Optional, singular version of rank name displayed by user names. For example "
+"\"GM\" or \"Dev\"."
+msgstr ""
+
+#: users/forms/admin.py:310
+msgid ""
+"Optional description explaining function or status of members distincted "
+"with this rank."
+msgstr ""
+
+#: users/forms/admin.py:315
+msgid "Rank can give additional roles to users with it."
+msgstr ""
+
+#: users/forms/admin.py:318
+msgid "Optional css class added to content belonging to this rank owner."
+msgstr ""
+
+#: users/forms/admin.py:321
+msgid "Give rank dedicated tab on users list"
+msgstr ""
+
+#: users/forms/admin.py:322
+msgid ""
+"Selecting this option will make users with this rank easily discoverable by "
+"others trough dedicated page on forum users list."
+msgstr ""
+
+#: users/forms/admin.py:326
+msgid "Show users online on forum index"
+msgstr ""
+
+#: users/forms/admin.py:327
+msgid ""
+"Selecting this option will make forum inform other users of their "
+"availability by displaying them on forum index page."
+msgstr ""
+
+#: users/forms/admin.py:355
+msgid "Ban type"
+msgstr ""
+
+#: users/forms/admin.py:359
+msgid "Banned value"
+msgstr ""
+
+#: users/forms/admin.py:360
+msgid ""
+"This value is case-insensitive and accepts asterisk (*) for rought matches. "
+"For example, making IP ban for value \"83.*\" will ban all IP addresses "
+"beginning with \"83.\"."
+msgstr ""
+
+#: users/forms/admin.py:364
+msgid "Banned value can't be longer than 250 characters."
+msgstr ""
+
+#: users/forms/admin.py:369
+msgid "Optional message displayed instead of default one."
+msgstr ""
+
+#: users/forms/admin.py:382
+msgid "Expiration date"
+msgstr ""
+
+#: users/forms/admin.py:410
+msgid "All bans"
+msgstr ""
+
+#: users/forms/admin.py:411
+msgid "Usernames"
+msgstr ""
+
+#: users/forms/admin.py:412
+msgid "E-mails"
+msgstr ""
+
+#: users/forms/admin.py:413
+msgid "IPs"
+msgstr ""
+
+#: users/forms/admin.py:422
+msgid "Banned value begins with"
+msgstr ""
+
+#: users/forms/admin.py:425
+msgid "State"
+msgstr ""
+
+#: users/forms/admin.py:427
+msgid "All states"
+msgstr ""
+
+#: users/forms/admin.py:428
+msgid "Valid bans"
+msgstr ""
+
+#: users/forms/admin.py:429
+msgid "Expired bans"
+msgstr ""
+
+#: users/forms/admin.py:460
+msgid "Level name"
+msgstr ""
+
+#: users/forms/admin.py:462
+msgid "Length in minutes"
+msgstr ""
+
+#: users/forms/admin.py:463
+msgid ""
+"Enter number of minutes since this warning level was imposed on member until "
+"it's reduced, or 0 to make this warning level permanent."
+msgstr ""
+
+#: users/forms/admin.py:467
+msgid "Posting replies"
+msgstr ""
+
+#: users/forms/admin.py:470
+msgid "Posting threads"
+msgstr ""
+
+#: users/forms/auth.py:15
+msgid "You have to fill out both fields."
+msgstr ""
+
+#: users/forms/auth.py:16
+msgid "Your login or password is incorrect."
+msgstr ""
+
+#: users/forms/auth.py:17
+msgid "You have to activate your account before you will be able to sign in."
+msgstr ""
+
+#: users/forms/auth.py:19
+msgid ""
+"Administrator has to activate your account before you will be able to sign "
+"in."
+msgstr ""
+
+#: users/forms/auth.py:41
+#, python-format
+msgid "%(user)s, your account is banned until %(date)s for:"
+msgstr ""
+
+#: users/forms/auth.py:44
+#, python-format
+msgid "%(user)s, your account is banned until %(date)s."
+msgstr ""
+
+#: users/forms/auth.py:50
+#, python-format
+msgid "%(user)s, your account is banned for:"
+msgstr ""
+
+#: users/forms/auth.py:52
+#, python-format
+msgid "%(user)s, your account is banned."
+msgstr ""
+
+#: users/forms/auth.py:103
+msgid "Your account does not have admin privileges."
+msgstr ""
+
+#: users/forms/auth.py:124 users/forms/auth.py:181
+msgid "You have to fill out form."
+msgstr ""
+
+#: users/forms/auth.py:131
+msgid "Invalid username or e-mail."
+msgstr ""
+
+#: users/forms/auth.py:149 users/views/activation.py:80
+#, python-format
+msgid "%(user)s, your account is already active."
+msgstr ""
+
+#: users/forms/auth.py:153
+#, python-format
+msgid "%(user)s, only administrator may activate your account."
+msgstr ""
+
+#: users/forms/auth.py:160
+msgid ""
+"You have to activate your account before you will be able to request new "
+"password."
+msgstr ""
+
+#: users/forms/auth.py:162
+msgid ""
+"Administrator has to activate your account before you will be able to "
+"request new password."
+msgstr ""
+
+#: users/forms/auth.py:173 users/forms/usercp.py:81
+msgid "New password"
+msgstr ""
+
+#: users/forms/modusers.py:15
+msgid "Warning Reason"
+msgstr ""
+
+#: users/forms/modusers.py:16
+msgid "Optional message explaining why this warning was given."
+msgstr ""
+
+#: users/forms/modusers.py:24
+msgid "Warning reason can't be longer than 2000 characters."
+msgstr ""
+
+#: users/forms/modusers.py:108
+#, python-format
+msgid "Required. Can't be longer than %(days)s day."
+msgid_plural "Required. Can't be longer than %(days)s days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: users/forms/modusers.py:121
+#, python-format
+msgid "You can't set bans longer than %(days)s day."
+msgid_plural "You can't set bans longer than %(days)s days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: users/forms/modusers.py:127
+msgid "Expiration date is in past."
+msgstr ""
+
+#: users/forms/register.py:9
+msgid "Email"
+msgstr ""
+
+#: users/forms/rename.py:7
+msgid "New username"
+msgstr ""
+
+#: users/forms/rename.py:19
+msgid "Enter new username."
+msgstr ""
+
+#: users/forms/rename.py:22
+msgid "New username is same as current one."
+msgstr ""
+
+#: users/forms/usercp.py:13 users/forms/usercp.py:38
+msgid "Your current timezone"
+msgstr ""
+
+#: users/forms/usercp.py:14 users/forms/usercp.py:39
+msgid ""
+"If dates and hours displayed by forums are inaccurate, you can fix it by "
+"adjusting timezone setting."
+msgstr ""
+
+#: users/forms/usercp.py:18
+msgid "Hide my presence"
+msgstr ""
+
+#: users/forms/usercp.py:19
+msgid ""
+"If you hide your presence, only members with permission to see hidden will "
+"see when you are online."
+msgstr ""
+
+#: users/forms/usercp.py:23
+msgid "Threads I start"
+msgstr ""
+
+#: users/forms/usercp.py:26
+msgid "Threads I reply to"
+msgstr ""
+
+#: users/forms/usercp.py:70
+msgid "Current password"
+msgstr ""
+
+#: users/forms/usercp.py:76
+msgid "New e-mail"
+msgstr ""
+
+#: users/forms/usercp.py:98
+msgid "You have to enter your current password."
+msgstr ""
+
+#: users/forms/usercp.py:102
+msgid "Entered password is invalid."
+msgstr ""
+
+#: users/forms/usercp.py:105
+msgid "You have to enter new e-mail or password."
+msgstr ""
+
+#: users/forms/usercp.py:110
+msgid "New e-mail is same as current one."
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:16
+msgid ""
+"Those settings control user accounts default behaviour and features "
+"availability."
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:20
+msgid "New accounts activation"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:21
+msgid "New accounts"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:26
+msgid "No activation required"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:27
+msgid "Activation Token sent to User"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:28
+msgid "Activation by Administrator"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:29
+msgid "Don't allow new registrations"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:35
+msgid "Default timezone"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:36
+msgid ""
+"Default timezone for newly registered accouts as well as unsigned users."
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:48
+msgid "Minimum allowed username length."
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:49
+msgid "User names"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:60
+msgid "Maximum allowed username length."
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:71
+msgid "Minimum allowed user password length."
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:72
+msgid "Passwords"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:82
+msgid "Allow custom avatars"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:83
+msgid "Avatars"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:84
+msgid ""
+"Turning this option off will forbid forum users from using avatars from "
+"outside forums. Good for forums adressed at young users."
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:94
+msgid "Default avatar"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:99
+#: users/migrations/0002_users_settings.py:115
+msgid "Individual"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:100
+msgid "Gravatar"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:101
+#: users/migrations/0002_users_settings.py:116
+msgid "Random avatar from gallery"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:107
+msgid "Fallback for default gravatar"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:108
+msgid ""
+"Select which avatar to use when user has no gravatar associated with his e-"
+"mail address."
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:122
+msgid "Maximum size of uploaded avatar"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:123
+msgid "Enter maximum allowed file size (in KB) for avatar uploads"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:134
+msgid "Signatures"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:135
+msgid "Maximum allowed signature length."
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:146
+msgid "Default subscriptions settings"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:151
+#: users/migrations/0002_users_settings.py:166
+msgid "Don't watch"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:152
+#: users/migrations/0002_users_settings.py:167
+msgid "Put on watched threads list"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:153
+#: users/migrations/0002_users_settings.py:168
+msgid "Put on watched threads list and e-mail user when somebody replies"
+msgstr ""
+
+#: users/migrations/0002_users_settings.py:161
+msgid "Replied threads"
+msgstr ""
+
+#: users/migrations/0004_default_ranks.py:14
+#: users/migrations/0004_default_ranks.py:15 users/models/user.py:122
+msgid "Forum team"
+msgstr ""
+
+#: users/migrations/0004_default_ranks.py:16
+msgid "Team"
+msgstr ""
+
+#: users/migrations/0004_default_ranks.py:23
+#: users/migrations/0004_default_ranks.py:24
+msgid "Members"
+msgstr ""
+
+#: users/models/bans.py:28
+msgid "IP address"
+msgstr ""
+
+#: users/models/user.py:47
+msgid "Do nothing."
+msgstr ""
+
+#: users/models/user.py:48
+msgid "Add to watched list."
+msgstr ""
+
+#: users/models/user.py:50
+msgid "Add to watched list with e-mail notification."
+msgstr ""
+
+#: users/models/user.py:62
+msgid "User must have an email address."
+msgstr ""
+
+#: users/models/user.py:64
+msgid "User must have a password."
+msgstr ""
+
+#: users/models/user.py:164
+msgid "joined on"
+msgstr ""
+
+#: users/models/user.py:177
+msgid "staff status"
+msgstr ""
+
+#: users/models/user.py:178
+msgid "Designates whether the user can log into admin sites."
+msgstr ""
+
+#: users/models/warnings.py:28
+msgid "No restrictions"
+msgstr ""
+
+#: users/models/warnings.py:29
+msgid "Review by moderator"
+msgstr ""
+
+#: users/models/warnings.py:30
+msgid "Disallowed"
+msgstr ""
+
+#: users/permissions/account.py:12
+msgid "Account settings"
+msgstr ""
+
+#: users/permissions/account.py:15
+msgid "Allowed username changes number"
+msgstr ""
+
+#: users/permissions/account.py:19
+msgid "Don't count username changes older than"
+msgstr ""
+
+#: users/permissions/account.py:20
+msgid ""
+"Number of days since name change that makes that change no longer count to "
+"limit. Enter zero to make all changes count."
+msgstr ""
+
+#: users/permissions/account.py:26
+msgid "Can have signature"
+msgstr ""
+
+#: users/permissions/account.py:28
+msgid "Can put links in signature"
+msgstr ""
+
+#: users/permissions/account.py:30
+msgid "Can put images in signature"
+msgstr ""
+
+#: users/permissions/account.py:32
+msgid "Can use text blocks in signature"
+msgstr ""
+
+#: users/permissions/account.py:33
+msgid ""
+"Controls whether or not users can put quote, code, spoiler blocks and "
+"horizontal lines in signatures."
+msgstr ""
+
+#: users/permissions/decorators.py:10
+msgid "You have to sig in to perform this action."
+msgstr ""
+
+#: users/permissions/decorators.py:20
+msgid "Only guests can perform this action."
+msgstr ""
+
+#: users/permissions/delete.py:21
+msgid "Maximum age of deleted account (in days)"
+msgstr ""
+
+#: users/permissions/delete.py:22 users/permissions/delete.py:27
+msgid "Enter zero to disable this check."
+msgstr ""
+
+#: users/permissions/delete.py:26
+msgid "Maximum number of posts on deleted account"
+msgstr ""
+
+#: users/permissions/delete.py:72
+msgid "You can't delete users."
+msgstr ""
+
+#: users/permissions/delete.py:75
+msgid "You can't delete yourself."
+msgstr ""
+
+#: users/permissions/delete.py:77
+msgid "You can't delete administrators."
+msgstr ""
+
+#: users/permissions/delete.py:81
+#, python-format
+msgid "You can't delete users that are members for more than %(days)s day."
+msgid_plural ""
+"You can't delete users that are members for more than %(days)s days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: users/permissions/delete.py:90
+#, python-format
+msgid "You can't delete users that made more than %(posts)s post."
+msgid_plural "You can't delete users that made more than %(posts)s posts."
+msgstr[0] ""
+msgstr[1] ""
+
+#: users/permissions/moderation.py:21
+msgid "Users moderation"
+msgstr ""
+
+#: users/permissions/moderation.py:23
+msgid "Can rename users"
+msgstr ""
+
+#: users/permissions/moderation.py:24
+msgid "Can moderate avatars"
+msgstr ""
+
+#: users/permissions/moderation.py:26
+msgid "Can moderate signatures"
+msgstr ""
+
+#: users/permissions/moderation.py:27
+msgid "Can ban users"
+msgstr ""
+
+#: users/permissions/moderation.py:29
+msgid "Max length, in days, of imposed ban"
+msgstr ""
+
+#: users/permissions/moderation.py:30
+msgid "Enter zero to let moderators impose permanent bans."
+msgstr ""
+
+#: users/permissions/moderation.py:33
+msgid "Can lift bans"
+msgstr ""
+
+#: users/permissions/moderation.py:35
+msgid "Max length, in days, of lifted ban"
+msgstr ""
+
+#: users/permissions/moderation.py:36
+msgid "Enter zero to let moderators lift permanent bans."
+msgstr ""
+
+#: users/permissions/moderation.py:107
+msgid "You can't rename users."
+msgstr ""
+
+#: users/permissions/moderation.py:109
+msgid "You can't rename administrators."
+msgstr ""
+
+#: users/permissions/moderation.py:115
+msgid "You can't moderate avatars."
+msgstr ""
+
+#: users/permissions/moderation.py:117
+msgid "You can't moderate administrators avatars."
+msgstr ""
+
+#: users/permissions/moderation.py:123
+msgid "You can't moderate signatures."
+msgstr ""
+
+#: users/permissions/moderation.py:125
+msgid "You can't moderate administrators signatures."
+msgstr ""
+
+#: users/permissions/moderation.py:132
+msgid "You can't ban users."
+msgstr ""
+
+#: users/permissions/moderation.py:134
+msgid "You can't ban administrators."
+msgstr ""
+
+#: users/permissions/moderation.py:140
+msgid "You can't lift bans."
+msgstr ""
+
+#: users/permissions/moderation.py:143
+msgid "This user is not banned."
+msgstr ""
+
+#: users/permissions/moderation.py:148
+msgid "You can't lift permanent bans."
+msgstr ""
+
+#: users/permissions/moderation.py:150
+#, python-format
+msgid "You can't lift bans that expire after %(expiration)s."
+msgstr ""
+
+#: users/permissions/profiles.py:17
+msgid "Can browse users list"
+msgstr ""
+
+#: users/permissions/profiles.py:20
+msgid "Can see users online list"
+msgstr ""
+
+#: users/permissions/profiles.py:22
+msgid "Can search user profiles"
+msgstr ""
+
+#: users/permissions/profiles.py:25
+msgid "Can see other members name history"
+msgstr ""
+
+#: users/permissions/profiles.py:27
+msgid "Can see members bans details"
+msgstr ""
+
+#: users/permissions/profiles.py:28
+msgid "Allows users with this permission to see user and staff ban messages."
+msgstr ""
+
+#: users/permissions/profiles.py:33
+msgid "User profiles"
+msgstr ""
+
+#: users/permissions/profiles.py:48
+msgid "Can follow other users"
+msgstr ""
+
+#: users/permissions/profiles.py:51
+msgid "Can be blocked by other users"
+msgstr ""
+
+#: users/permissions/profiles.py:56
+msgid "Can see members e-mails"
+msgstr ""
+
+#: users/permissions/profiles.py:58
+msgid "Can see members IPs"
+msgstr ""
+
+#: users/permissions/profiles.py:60
+msgid "Can see members that hide their presence"
+msgstr ""
+
+#: users/permissions/profiles.py:133
+msgid "You can't browse users list."
+msgstr ""
+
+#: users/permissions/profiles.py:139
+msgid "You can't browse users online list."
+msgstr ""
+
+#: users/permissions/profiles.py:146
+msgid "You can't follow other users."
+msgstr ""
+
+#: users/permissions/profiles.py:148
+msgid "You can't add yourself to followed."
+msgstr ""
+
+#: users/permissions/profiles.py:155
+msgid "You can't block administrators."
+msgstr ""
+
+#: users/permissions/profiles.py:157
+msgid "You can't block yourself."
+msgstr ""
+
+#: users/permissions/profiles.py:159
+#, python-format
+msgid "%(user)s can't be blocked."
+msgstr ""
+
+#: users/permissions/warnings.py:17
+msgid "Owned"
+msgstr ""
+
+#: users/permissions/warnings.py:17
+msgid "All"
+msgstr ""
+
+#: users/permissions/warnings.py:24
+msgid "Can see other users warnings"
+msgstr ""
+
+#: users/permissions/warnings.py:28
+msgid "Can warn users"
+msgstr ""
+
+#: users/permissions/warnings.py:29
+msgid "Can be warned"
+msgstr ""
+
+#: users/permissions/warnings.py:31
+msgid "Can cancel warnings"
+msgstr ""
+
+#: users/permissions/warnings.py:36
+msgid "Can delete warnings"
+msgstr ""
+
+#: users/permissions/warnings.py:111
+msgid "You can't see other users warnings."
+msgstr ""
+
+#: users/permissions/warnings.py:118
+msgid "You can't warn users."
+msgstr ""
+
+#: users/permissions/warnings.py:120
+msgid "You can't warn administrators."
+msgstr ""
+
+#: users/permissions/warnings.py:122
+#, python-format
+msgid "%(user)s can't be warned."
+msgstr ""
+
+#: users/permissions/warnings.py:130
+msgid "You can't cancel warnings."
+msgstr ""
+
+#: users/permissions/warnings.py:133
+msgid "You can't cancel warnings issued by other users."
+msgstr ""
+
+#: users/permissions/warnings.py:136
+msgid "This warning is already canceled."
+msgstr ""
+
+#: users/permissions/warnings.py:143
+msgid "You can't delete warnings."
+msgstr ""
+
+#: users/permissions/warnings.py:146
+msgid "You can't delete warnings issued by other users."
+msgstr ""
+
+#: users/validators.py:23
+msgid "This e-mail address is not available."
+msgstr ""
+
+#: users/validators.py:35
+msgid "This e-mail address is not allowed."
+msgstr ""
+
+#: users/validators.py:51
+#, python-format
+msgid "Valid password must be at least one character long."
+msgid_plural "Valid password must be at least %(length)d characters long."
+msgstr[0] ""
+msgstr[1] ""
+
+#: users/validators.py:66
+msgid "This username is not available."
+msgstr ""
+
+#: users/validators.py:78
+msgid "This username is not allowed."
+msgstr ""
+
+#: users/validators.py:84
+msgid "Username can only contain latin alphabet letters and digits."
+msgstr ""
+
+#: users/validators.py:90
+#, python-format
+msgid "Username must be at least one character long."
+msgid_plural "Username must be at least %(length)d characters long."
+msgstr[0] ""
+msgstr[1] ""
+
+#: users/validators.py:98
+#, python-format
+msgid "Username cannot be longer than one characters."
+msgid_plural "Username cannot be longer than %(length)d characters."
+msgstr[0] ""
+msgstr[1] ""
+
+#: users/views/activation.py:36
+#, python-format
+msgid "Account activation on %(forum_title)s forums"
+msgstr ""
+
+#: users/views/activation.py:84
+#, python-format
+msgid ""
+"%(user)s, your account can be activated only by one of the administrators."
+msgstr ""
+
+#: users/views/activation.py:89
+#, python-format
+msgid "%(user)s, your account is banned and can't be activated."
+msgstr ""
+
+#: users/views/activation.py:94
+#, python-format
+msgid ""
+"%(user)s, your activation link is invalid. Try again or request new "
+"activation message."
+msgstr ""
+
+#: users/views/activation.py:108
+#, python-format
+msgid "%(user)s, your account has been activated!"
+msgstr ""
+
+#: users/views/admin/bans.py:15
+msgid "Requested ban does not exist."
+msgstr ""
+
+#: users/views/admin/bans.py:25 users/views/admin/users.py:39
+msgid "From newest"
+msgstr ""
+
+#: users/views/admin/bans.py:26 users/views/admin/users.py:40
+msgid "From oldest"
+msgstr ""
+
+#: users/views/admin/bans.py:27 users/views/admin/users.py:41
+msgid "A to z"
+msgstr ""
+
+#: users/views/admin/bans.py:28 users/views/admin/users.py:42
+msgid "Z to a"
+msgstr ""
+
+#: users/views/admin/bans.py:31
+msgid "With bans: 0"
+msgstr ""
+
+#: users/views/admin/bans.py:32
+msgid "Select bans"
+msgstr ""
+
+#: users/views/admin/bans.py:37
+msgid "Remove bans"
+msgstr ""
+
+#: users/views/admin/bans.py:38
+msgid "Are you sure you want to remove those bans?"
+msgstr ""
+
+#: users/views/admin/bans.py:45
+msgid "Selected bans have been removed."
+msgstr ""
+
+#: users/views/admin/bans.py:49
+#, python-format
+msgid "New ban \"%s\" has been saved."
+msgstr ""
+
+#: users/views/admin/bans.py:53
+#, python-format
+msgid "Ban \"%s\" has been edited."
+msgstr ""
+
+#: users/views/admin/bans.py:60
+#, python-format
+msgid "Ban \"%s\" has been removed."
+msgstr ""
+
+#: users/views/admin/ranks.py:17
+msgid "Requested rank does not exist."
+msgstr ""
+
+#: users/views/admin/ranks.py:34
+#, python-format
+msgid "New rank \"%s\" has been saved."
+msgstr ""
+
+#: users/views/admin/ranks.py:38
+#, python-format
+msgid "Rank \"%s\" has been edited."
+msgstr ""
+
+#: users/views/admin/ranks.py:44
+#, python-format
+msgid "Rank \"%s\" is default rank and can't be deleted."
+msgstr ""
+
+#: users/views/admin/ranks.py:48
+#, python-format
+msgid "Rank \"%s\" is assigned to users and can't be deleted."
+msgstr ""
+
+#: users/views/admin/ranks.py:54
+#, python-format
+msgid "Rank \"%s\" has been deleted."
+msgstr ""
+
+#: users/views/admin/ranks.py:71
+#, python-format
+msgid "Rank \"%s\" has been moved below \"%s\"."
+msgstr ""
+
+#: users/views/admin/ranks.py:89
+#, python-format
+msgid "Rank \"%s\" has been moved above \"%s\"."
+msgstr ""
+
+#: users/views/admin/ranks.py:103
+#, python-format
+msgid "Rank \"%s\" is already default."
+msgstr ""
+
+#: users/views/admin/ranks.py:107
+#, python-format
+msgid "Rank \"%s\" has been made default."
+msgstr ""
+
+#: users/views/admin/users.py:43
+msgid "Biggest posters"
+msgstr ""
+
+#: users/views/admin/users.py:44
+msgid "Smallest posters"
+msgstr ""
+
+#: users/views/admin/users.py:46
+msgid "With users: 0"
+msgstr ""
+
+#: users/views/admin/users.py:47
+msgid "Select users"
+msgstr ""
+
+#: users/views/admin/users.py:51
+msgid "Activate accounts"
+msgstr ""
+
+#: users/views/admin/users.py:61
+msgid "Delete accounts"
+msgstr ""
+
+#: users/views/admin/users.py:63
+msgid "Are you sure you want to delete selected users?"
+msgstr ""
+
+#: users/views/admin/users.py:68
+msgid "Delete all"
+msgstr ""
+
+#: users/views/admin/users.py:70
+msgid ""
+"Are you sure you want to delete selected users? This will also delete all "
+"content associated with their accounts."
+msgstr ""
+
+#: users/views/admin/users.py:91
+msgid "You have to select inactive users."
+msgstr ""
+
+#: users/views/admin/users.py:98
+#, python-format
+msgid "Your account on %(forum_title)s forums has been activated"
+msgstr ""
+
+#: users/views/admin/users.py:107
+msgid "Selected users accounts have been activated."
+msgstr ""
+
+#: users/views/admin/users.py:114
+#, python-format
+msgid "%(user)s is super admin and can't be banned."
+msgstr ""
+
+#: users/views/admin/users.py:131
+msgid "Selected users have been banned."
+msgstr ""
+
+#: users/views/admin/users.py:144 users/views/admin/users.py:157
+#, python-format
+msgid "%(user)s is admin and can't be deleted."
+msgstr ""
+
+#: users/views/admin/users.py:151
+msgid "Selected users have been deleted."
+msgstr ""
+
+#: users/views/admin/users.py:164
+msgid "Selected users and their content has been deleted."
+msgstr ""
+
+#: users/views/admin/users.py:171
+#, python-format
+msgid "New user \"%s\" has been registered."
+msgstr ""
+
+#: users/views/admin/users.py:201
+#, python-format
+msgid "User \"%s\" has been edited."
+msgstr ""
+
+#: users/views/admin/warnings.py:15
+msgid "Requested warning level does not exist."
+msgstr ""
+
+#: users/views/admin/warnings.py:23
+#, python-format
+msgid "New warning level \"%s\" has been saved."
+msgstr ""
+
+#: users/views/admin/warnings.py:27
+#, python-format
+msgid "Warning level \"%s\" has been edited."
+msgstr ""
+
+#: users/views/admin/warnings.py:33
+#, python-format
+msgid "Warning level \"%s\" has been deleted."
+msgstr ""
+
+#: users/views/admin/warnings.py:50
+#, python-format
+msgid "Warning level \"%s\" has been moved below \"%s\"."
+msgstr ""
+
+#: users/views/admin/warnings.py:68
+#, python-format
+msgid "Warning level \"%s\" has been moved above \"%s\"."
+msgstr ""
+
+#: users/views/api.py:40
+msgid "Entered username is valid."
+msgstr ""
+
+#: users/views/api.py:42
+msgid "Enter username."
+msgstr ""
+
+#: users/views/api.py:50
+msgid "Entered e-mail is valid."
+msgstr ""
+
+#: users/views/api.py:52
+msgid "Enter e-mail address."
+msgstr ""
+
+#: users/views/api.py:59
+msgid "Entered password is valid."
+msgstr ""
+
+#: users/views/api.py:61
+msgid "Enter password."
+msgstr ""
+
+#: users/views/auth.py:26
+#, python-format
+msgid "Welcome back, %(user)s! You have been signed in successfully."
+msgstr ""
+
+#: users/views/auth.py:41
+#, python-format
+msgid "%(user)s, you have been signed out."
+msgstr ""
+
+#: users/views/forgottenpassword.py:36
+#, python-format
+msgid "Change %(user)s password on %(forum_title)s forums"
+msgstr ""
+
+#: users/views/forgottenpassword.py:83
+#, python-format
+msgid ""
+"%(user)s, administrator has to activate your account before you will be able "
+"to request new password."
+msgstr ""
+
+#: users/views/forgottenpassword.py:89
+#, python-format
+msgid ""
+"%(user)s, you have to activate your account before you will be able to "
+"request new password."
+msgstr ""
+
+#: users/views/forgottenpassword.py:94
+#, python-format
+msgid "%(user)s, your account is banned and it's password can't be changed."
+msgstr ""
+
+#: users/views/forgottenpassword.py:99
+#, python-format
+msgid "%(user)s, your link is invalid. Try again or request new link."
+msgstr ""
+
+#: users/views/forgottenpassword.py:117
+#, python-format
+msgid "%(user)s, your password has been changed."
+msgstr ""
+
+#: users/views/moderation.py:70
+#, python-format
+msgid "%(user)s has maximum warning level and can't be warned."
+msgstr ""
+
+#: users/views/moderation.py:84
+#, python-format
+msgid "%(user)s has given you an warning."
+msgstr ""
+
+#: users/views/moderation.py:92
+#, python-format
+msgid "%(user)s has been warned."
+msgstr ""
+
+#: users/views/moderation.py:140
+#, python-format
+msgid "%(user)s's warning has been canceled."
+msgstr ""
+
+#: users/views/moderation.py:145
+#, python-format
+msgid "%(user)s has canceled your warning."
+msgstr ""
+
+#: users/views/moderation.py:159
+#, python-format
+msgid "%(user)s's warning has been deleted."
+msgstr ""
+
+#: users/views/moderation.py:164
+#, python-format
+msgid "%(user)s has deleted your warning."
+msgstr ""
+
+#: users/views/moderation.py:186
+#, python-format
+msgid "%(user)s has changed your name to %(newname)s."
+msgstr ""
+
+#: users/views/moderation.py:197
+#, python-format
+msgid "%(old_username)s's username has been changed."
+msgstr ""
+
+#: users/views/moderation.py:203 users/views/usercp.py:270
+msgid "Error changing username. Please try again."
+msgstr ""
+
+#: users/views/moderation.py:231
+#, python-format
+msgid "%(user)s has locked your avatar."
+msgstr ""
+
+#: users/views/moderation.py:233
+#, python-format
+msgid "%(user)s has unlocked your avatar."
+msgstr ""
+
+#: users/views/moderation.py:242
+#, python-format
+msgid "%(user)s's avatar has been moderated."
+msgstr ""
+
+#: users/views/moderation.py:272
+#, python-format
+msgid "%(user)s's signature has been moderated."
+msgstr ""
+
+#: users/views/moderation.py:277
+#, python-format
+msgid "%(user)s has moderated your signature."
+msgstr ""
+
+#: users/views/moderation.py:310
+#, python-format
+msgid "%(user)s has been banned."
+msgstr ""
+
+#: users/views/moderation.py:330
+#, python-format
+msgid "%(user)s's ban has been lifted."
+msgstr ""
+
+#: users/views/moderation.py:341
+#, python-format
+msgid "User %(user)s has been deleted."
+msgstr ""
+
+#: users/views/profile.py:257
+#, python-format
+msgid "You are now following %(user)s."
+msgstr ""
+
+#: users/views/profile.py:259
+#, python-format
+msgid "%(user)s is now following you."
+msgstr ""
+
+#: users/views/profile.py:268
+#, python-format
+msgid "You have stopped following %(user)s."
+msgstr ""
+
+#: users/views/profile.py:299
+#, python-format
+msgid "You are now blocking %(user)s."
+msgstr ""
+
+#: users/views/profile.py:301
+#, python-format
+msgid "You have stopped blocking %(user)s."
+msgstr ""
+
+#: users/views/register.py:58
+#, python-format
+msgid "Welcome on %(forum_title)s forums!"
+msgstr ""
+
+#: users/views/register.py:67
+#, python-format
+msgid "Welcome aboard, %(user)s!"
+msgstr ""
+
+#: users/views/usercp.py:51
+msgid "Your forum options have been changed."
+msgstr ""
+
+#: users/views/usercp.py:68
+msgid "Gravatar was downloaded and set as new avatar."
+msgstr ""
+
+#: users/views/usercp.py:71
+msgid "Failed to connect to Gravatar servers."
+msgstr ""
+
+#: users/views/usercp.py:74
+msgid "No Gravatar is associated with your e-mail address."
+msgstr ""
+
+#: users/views/usercp.py:79
+msgid "New avatar based on your account was set."
+msgstr ""
+
+#: users/views/usercp.py:96
+msgid "Your avatar is locked and can't be changed."
+msgstr ""
+
+#: users/views/usercp.py:108 users/views/usercp.py:125
+msgid "Avatar uploads are currently disabled."
+msgstr ""
+
+#: users/views/usercp.py:129
+msgid "No file was sent."
+msgstr ""
+
+#: users/views/usercp.py:144
+msgid "Upload image that you want to crop."
+msgstr ""
+
+#: users/views/usercp.py:148
+msgid "You haven't uploaded image to crop."
+msgstr ""
+
+#: users/views/usercp.py:174
+msgid "Uploaded avatar was set."
+msgstr ""
+
+#: users/views/usercp.py:176
+msgid "Avatar was cropped."
+msgstr ""
+
+#: users/views/usercp.py:202
+msgid "No avatars galleries exist."
+msgstr ""
+
+#: users/views/usercp.py:210
+msgid "Avatar from gallery was set."
+msgstr ""
+
+#: users/views/usercp.py:213
+msgid "Incorrect image."
+msgstr ""
+
+#: users/views/usercp.py:238
+msgid "Your signature has been edited."
+msgstr ""
+
+#: users/views/usercp.py:240
+msgid "Your signature has been cleared."
+msgstr ""
+
+#: users/views/usercp.py:265
+msgid "Your username has been changed."
+msgstr ""
+
+#: users/views/usercp.py:308
+#, python-format
+msgid "Confirm changes to %(user)s account on %(forum_title)s forums"
+msgstr ""
+
+#: users/views/usercp.py:322
+#, python-format
+msgid ""
+"E-mail was sent to %(email)s with a link that you have to click to confirm "
+"changes."
+msgstr ""
+
+#: users/views/usercp.py:335 users/views/usercp.py:351
+msgid "Confirmation link is invalid."
+msgstr ""
+
+#: users/views/usercp.py:348
+msgid "Changes in e-mail and password have been saved."
+msgstr ""
