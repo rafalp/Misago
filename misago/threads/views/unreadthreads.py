@@ -6,7 +6,7 @@ from misago.core.uiviews import uiview
 from misago.users.decorators import deny_guests
 from django.db.models import F
 from django.utils import timezone
-from django.utils.translation import ungettext, ugettext as _
+from django.utils.translation import ugettext as _
 
 from misago.threads.models import Thread
 from misago.threads.permissions import exclude_invisible_threads
@@ -56,15 +56,6 @@ class UnreadThreadsView(ThreadsView):
 @uiview("misago_unread_threads")
 @deny_guests
 def event_sender(request, resolver_match):
-    if request.user.unread_threads:
-        message = ungettext("%(threads)s unread thread",
-                            "%(threads)s unread threads",
-                            request.user.unread_threads)
-        message = message % {'threads': request.user.unread_threads}
-    else:
-        message = _("Unread threads")
-
     return {
-        'count': int(request.user.unread_threads),
-        'message': message,
+        'count': int(request.user.unread_threads)
     }

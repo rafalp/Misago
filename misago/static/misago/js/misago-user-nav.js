@@ -1,9 +1,8 @@
 $(function() {
   var $nav = $('#main-navbar');
 
-
   if (is_authenticated) {
-    // keep badges updated
+    // badges updates
     $.misago_ui().observer(function(data) {
       $nav.find('.badge').each(function() {
         var binding_name = $(this).data('badge-binding');
@@ -19,7 +18,7 @@ $(function() {
       });
     });
 
-    // keep tooltips updated
+    // tooltips updates
     $.misago_ui().observer(function(data) {
       $nav.find('.tooltip-bottom').each(function() {
         var binding_name = $(this).data('tooltip-binding');
@@ -27,7 +26,6 @@ $(function() {
           $(this).attr("title", data[binding_name].message);
         }
       });
-      $.misago_dom().changed();
     });
   }
 });

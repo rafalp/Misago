@@ -34,6 +34,8 @@
           }
         });
 
+        $.misago_dom().changed();
+
         if (poll > 0) {
           window.setTimeout(function() {
             query_server(frequency);
