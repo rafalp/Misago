@@ -36,6 +36,8 @@ def make_threads_read_aware(user, threads):
                 thread.unread_replies = 0
             else:
                 thread.unread_replies = thread.replies - record.read_replies
+                if thread.unread_replies < 1:
+                    thread.unread_replies = 1
 
 
 def make_read(threads):
