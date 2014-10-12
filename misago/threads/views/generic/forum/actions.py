@@ -248,7 +248,6 @@ class ForumActions(Actions):
                     merged_thread.last_post_on = timezone.now()
                     merged_thread.is_pinned = max(t.is_pinned for t in threads)
                     merged_thread.is_closed = max(t.is_closed for t in threads)
-                    merged_thread.is_hidden = max(t.is_hidden for t in threads)
                     merged_thread.save()
 
                     for thread in threads:
