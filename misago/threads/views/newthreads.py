@@ -51,9 +51,7 @@ class NewThreadsView(ThreadsView):
                 request, *args, **kwargs)
 
 
-@uiview("misago_new_threads")
+@uiview("new_threads")
 @deny_guests
 def event_sender(request, resolver_match):
-    return {
-        'count': int(request.user.new_threads)
-    }
+    return int(request.user.new_threads)

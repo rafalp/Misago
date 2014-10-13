@@ -1,10 +1,9 @@
-// Misago modal extension
+// Misago modal controller
 (function($) {
 
-  // Modal handler class definition
-  // ===============================
-
   var MisagoModal = function() {
+
+    var _this = this;
 
     this.$modal = $('#ajax-modal');
     this.$content = $('#ajax-modal .modal-content');
@@ -13,38 +12,26 @@
       return $('body').hasClass('modal-open');
     }
 
-    this.show_modal = function(html) {
-      if (this.is_visible()) {
-        this.$content.fadeOut(200);
-        this.$content.html(html);
-        this.$content.fadeIn(200);
+    this.show = function(html) {
+      if (_this.is_visible()) {
+        _this.$content.fadeOut(200);
+        _this.$content.html(html);
+        _this.$content.fadeIn(200);
       } else {
-        this.$content.html(html);
-        this.$modal.modal({show: true});
+        _this.$content.html(html);
+        _this.$modal.modal({show: true});
       }
     }
 
     this.post = function(url, data) {
-      var _this = this;
       $.post(url, data, function(data) {
-        _this.show_modal(data);
-        $.misago_dom().changed();
+        _this.show(data);
+        Misago.DOM.changed();
       });
     }
 
-    // Return object
-    return this;
-
   };
 
-  // Plugin definition
-  // ==========================
-
-  $.misago_modal = function(options) {
-    if ($._misago_modal == undefined) {
-      $._misago_modal = MisagoModal();
-    }
-    return $._misago_modal;
-  };
+  Misago.Modal = new MisagoModal();
 
 }(jQuery));

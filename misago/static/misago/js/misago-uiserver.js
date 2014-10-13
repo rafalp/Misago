@@ -1,65 +1,49 @@
 // Misago UI server
-(function($) {
+var MisagoUIServer = function(frequency) {
 
-  // Class definition
-  // ===============================
+  if (frequency == undefined) {
+    frequency = 15000;
+  }
 
-  var MisagoUIServer = function(frequency) {
+  this.frequency = frequency;
+  var _this = this;
 
-    if (frequency == undefined) {
-      frequency = 15000;
+  this.listeners = [];
+  this.on_data = function(name, callback) {
+    if (callback == undefined) {
+      this.listeners.push({callback: name});
+    } else {
+      this.listeners.push({name: name, callback: callback});
     }
+  };
 
-    this.ui_observers = [];
-    this.observer = function(name, callback) {
-      if (callback == undefined) {
-        this.ui_observers.push({callback: name});
-      } else {
-        this.ui_observers.push({name: name, callback: callback});
-      }
-    };
+  this.update = function() {
+    $.get(uiserver_url, function(data) {
 
-    this.query_server = function(poll) {
-      if (poll === undefined) {
-        poll = 0;
-      }
-
-      ui_observers = this.ui_observers
-      $.get(uiserver_url, function(data) {
-        $.each(ui_observers, function(i, observer) {
-          if (observer.name == undefined) {
-            observer.callback(data);
-          } else if (typeof data[observer.name] !== "undefined") {
-            observer.callback(data[observer.name]);
-          }
-        });
-
-        $.misago_dom().changed();
-
-        if (poll > 0) {
-          window.setTimeout(function() {
-            query_server(frequency);
-          }, poll);
+      $.each(_this.listeners, function(i, listener) {
+        if (listener.name == undefined) {
+          listener.callback(data);
+        } else if (typeof data[listener.name] !== "undefined") {
+          listener.callback(data[listener.name]);
         }
       });
-    };
 
-    window.setTimeout(function() {
-      query_server(frequency);
-    }, 2000); // First request after 2 seconds
+      Misago.DOM.changed();
 
-    // Return object
-    return this;
+      window.setTimeout(function() {
+        _this.update();
+      }, _this.frequency);
+
+    });
   };
 
-  // Plugin definition
-  // ==========================
+}
 
-  $.misago_ui = function(frequency) {
-    if ($._misago_ui == undefined) {
-      $._misago_ui = MisagoUIServer(frequency);
-    }
-    return $._misago_ui;
-  };
 
-}(jQuery));
+// Create server and start it 2 seconds after dom ready
+Misago.Server = new MisagoUIServer();
+$(function() {
+  window.setTimeout(function() {
+    Misago.Server.update();
+  }, 2000);
+});

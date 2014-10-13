@@ -82,12 +82,12 @@
       error: function(avatar, message, xhr) {
         if (xhr != undefined) {
           if (message.message != undefined) {
-            $.misago_alerts().error(message.message);
+            Misago.Alerts.error(message.message);
           } else {
-            $.misago_alerts().error("{% trans "Error occured when sending file to server." %}");
+            Misago.Alerts.error("{% trans "Error occured when sending file to server." %}");
           }
         } else {
-          $.misago_alerts().error(message);
+          Misago.Alerts.error(message);
         }
       },
       addedfile: function(file) {

@@ -7,13 +7,13 @@
 
     $('#threads-actions .action-move').click(function() {
       var action_data = $threads_actions.serialize($threads_actions) + '&action=move';
-      $.misago_modal().post('', action_data);
+      Misago.Modal.post('', action_data);
       return false;
     });
 
     $('#threads-actions .action-merge').click(function() {
       var action_data = $threads_actions.serialize($threads_actions) + '&action=merge';
-      $.misago_modal().post('', action_data);
+      Misago.Modal.post('', action_data);
       return false;
     });
   });

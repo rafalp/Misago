@@ -1,35 +1,18 @@
-// Misago DOM upades helper
-(function($) {
+// Event controller for DOM changes
+var MisagoDOM = function() {
 
-  // Events sender
-  // ===============================
+  this.dom_listeners = [];
+  this.on_change = function(callback) {
+    this.dom_listeners.push(callback);
+    callback();
+  };
 
-  var MisagoDOM = function() {
-
-    this.dom_listeners = [];
-    this.change = function(callback) {
-      this.dom_listeners.push(callback);
+  this.changed = function() {
+    $.each(this.dom_listeners, function(i, callback) {
       callback();
-    };
-
-    this.changed = function() {
-      $.each(this.dom_listeners, function(i, callback) {
-        callback();
-      });
-    };
-
-    // Return object
-    return this;
+    });
   };
 
-  // Plugin definition
-  // ==========================
+};
 
-  $.misago_dom = function() {
-    if ($._misago_dom == undefined) {
-      $._misago_dom = MisagoDOM();
-    }
-    return $._misago_dom;
-  };
-
-}(jQuery));
+Misago.DOM = new MisagoDOM();

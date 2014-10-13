@@ -53,9 +53,7 @@ class UnreadThreadsView(ThreadsView):
                 request, *args, **kwargs)
 
 
-@uiview("misago_unread_threads")
+@uiview("unread_threads")
 @deny_guests
 def event_sender(request, resolver_match):
-    return {
-        'count': int(request.user.unread_threads)
-    }
+    return int(request.user.unread_threads)

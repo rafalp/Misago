@@ -111,7 +111,7 @@ def read_all(request):
     return redirect('misago:notifications')
 
 
-@uiview('misago_notifications')
+@uiview('notifications')
 @deny_guests
 def event_sender(request, resolver_match):
     if request.user.new_notifications:

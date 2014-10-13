@@ -12,7 +12,7 @@ $(function() {
     }
 
     if (thrownError != "") {
-      $.misago_alerts().error(error_message);
+      Misago.Alerts.error(error_message);
     }
   }
   $(document).ajaxError(handleAjaxError);

@@ -50,7 +50,7 @@
       var $form = $(this);
       var $button = $form.find('button');
       $.post($form.attr('action'), $form.serialize(), function(data) {
-        $.misago_alerts().success(data.message);
+        Misago.Alerts.success(data.message);
         if (data.is_following) {
           $button.addClass('active');
         } else {

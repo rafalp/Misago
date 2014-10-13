@@ -49,13 +49,12 @@ def uiserver(request):
         raise PermissionDenied()
 
     resolver_match = get_resolver_match(request)
-    response_dict = {'total_count': 0}
+    response_dict = {}
 
     for name, view in UI_VIEWS:
         try:
             view_response = view(request, resolver_match)
             if view_response:
-                response_dict['total_count'] += view_response.get('count', 0)
                 response_dict[name] = view_response
         except PermissionDenied:
             pass

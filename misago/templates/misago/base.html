@@ -48,7 +48,7 @@
     {% compressed_js 'misago' %}
     <script lang="JavaScript">
       $(function() {
-        $.misago_alerts({
+        Misago.Alerts = new MisagoAlerts({
           generic_error: "{% trans "Unspecified error occured." %}",
           error_template: "<div class=\"alert-div\"><p class=\"alert alert-danger\"><span class=\"alert-icon fa fa-times-circle\"></span>%message% <button type=\"button\" class=\"close\">{% trans "Ok!" %}</button></p></div>",
           info_template: "<div class=\"alert-div\"><p class=\"alert alert-info\"><span class=\"alert-icon fa fa-info-circle\"></span>%message% <button type=\"button\" class=\"close\">{% trans "Ok!" %}</button></p></div>",

@@ -1,3 +1,4 @@
+// Scrolling enhancement for overflow: scroll elements
 $(function() {
   function handle_scroll($element, e) {
     var scroll = $element.scrollTop();
@@ -24,5 +25,5 @@ $(function() {
     });
   }
 
-  $.misago_dom().change(add_scroll_handlers);
+  Misago.DOM.on_change(add_scroll_handlers);
 });

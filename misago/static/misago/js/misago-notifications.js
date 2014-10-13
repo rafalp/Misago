@@ -4,22 +4,21 @@ $(function() {
   var $container = $('.user-notifications-nav');
   var $link = $container.children('a');
 
-  function notifications_handler(data) {
-    if (ajax_cache != null && data.count != ajax_cache.count) {
-      ajax_cache = null;
-      if ($container.hasClass('open')) {
-        $container.find('.btn-refresh').fadeIn();
-        if (data.count > 0) {
-          $container.find('.btn-read-all').fadeIn();
-        } else {
-          $container.find('.btn-read-all').fadeOut();
+  if (is_authenticated) {
+    Misago.Server.on_data("notifications", function(data) {
+      Tinycon.setBubble(data.count);
+      if (ajax_cache != null && data.count != ajax_cache.count) {
+        ajax_cache = null;
+        if ($container.hasClass('open')) {
+          $container.find('.btn-refresh').fadeIn();
+          if (data.count > 0) {
+            $container.find('.btn-read-all').fadeIn();
+          } else {
+            $container.find('.btn-read-all').fadeOut();
+          }
         }
       }
-    }
-  }
-
-  if (is_authenticated) {
-    $.misago_ui().observer("misago_notifications", notifications_handler);
+    });
   }
 
   var $display = $container.find('.display');
@@ -30,7 +29,7 @@ $(function() {
     $loader.hide();
     $display.html(data.html);
     $display.show();
-    $.misago_dom().changed();
+    Misago.DOM.changed();
     $link.tooltip('destroy');
   }
 
@@ -54,7 +53,7 @@ $(function() {
     }
   });
   $container.on('hide.bs.dropdown', function() {
-    misago_tooltip($link);
+    Misago.bind_tooltips();
     $container.find('.btn-refresh').hide();
   });
   $container.on('submit', '.read-all-notifications', function() {
@@ -62,7 +61,7 @@ $(function() {
     $loader.show();
     $.post($link.attr('href'), $(this).serialize(), function(data) {
       handle_list_response(data);
-      $.misago_ui().query_server();
+      Misago.Server.update()
     });
     return false;
   });
