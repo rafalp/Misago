@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
+from misago.forums.models import Forum
 from misago.users.testutils import UserTestCase, AuthenticatedUserTestCase
 
 from misago.threads import testutils
