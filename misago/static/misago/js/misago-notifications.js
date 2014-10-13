@@ -2,7 +2,7 @@ $(function() {
   var ajax_cache = null;
 
   var $container = $('.user-notifications-nav');
-  var $link = $container.children('a');
+  var $link = $container.find('.dropdown-toggle');
 
   if (is_authenticated) {
     Misago.Server.on_data("notifications", function(data) {
@@ -30,7 +30,6 @@ $(function() {
     $display.html(data.html);
     $display.show();
     Misago.DOM.changed();
-    $link.tooltip('destroy');
   }
 
   function fetch_list() {
@@ -43,17 +42,13 @@ $(function() {
     $display.hide();
     $loader.show();
     fetch_list();
-    $link.tooltip('destroy');
   });
   $container.on('show.bs.dropdown', function () {
     if (ajax_cache == null) {
       fetch_list();
-    } else {
-      $link.tooltip('destroy');
     }
   });
   $container.on('hide.bs.dropdown', function() {
-    Misago.bind_tooltips();
     $container.find('.btn-refresh').hide();
   });
   $container.on('submit', '.read-all-notifications', function() {

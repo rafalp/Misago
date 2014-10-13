@@ -1,5 +1,6 @@
 // Fancy data-bound tooltips
 $(function() {
+
   function set_tooltips() {
     $('.tooltip-top').tooltip({container: 'body', placement: 'top'});
     $('.tooltip-bottom').tooltip({container: 'body', placement: 'bottom'});
@@ -18,8 +19,9 @@ $(function() {
   }
 
   // Bind tooltips to DOM
-  bind_tooltips();
+  set_tooltips();
   Misago.set_tooltips = set_tooltips;
   Misago.DOM.on_change(set_tooltips);
   Misago.Server.on_data(bind_tooltips);
+
 });
