@@ -5,10 +5,10 @@ register = template.Library()
 
 
 @register.filter
-def iftrue(value, test):
+def iftrue(test, value):
     return value if test else ""
 
 
 @register.filter
-def iffalse(value, test):
+def iffalse(test, value):
     return "" if test else value

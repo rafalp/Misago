@@ -9,7 +9,7 @@
     <div class="table-panel">
       <ul class="list-group">
         {% for thread in threads %}
-        <li class="list-group-item {{ "new"|iffalse:thread.is_read }}">
+        <li class="list-group-item {{ thread.is_read|iffalse:"new" }}">
           <div class="row">
 
             <div class="col-md-7">

@@ -21,7 +21,7 @@
       </li>
       <li>
         <a href="{% url 'misago:notifications' %}">
-          <span class="badge fade {{ "in"|iftrue:user.new_notifications }} pull-right" data-misago-badge="notifications.count">{{ user.new_notifications }}</span>
+          <span class="badge fade {{ user.new_notifications|iftrue:"in" }} pull-right" data-misago-badge="notifications.count">{{ user.new_notifications }}</span>
           <span class="fa fa-bell-o"></span>
           {% trans "See all notifications" %}
         </a>
@@ -29,14 +29,14 @@
       <li class="divider"></li>
       <li>
         <a href="{% url 'misago:new_threads' %}">
-          <span class="badge fade {{ "in"|iftrue:user.new_threads }} pull-right" data-misago-badge="new_threads">{{ user.new_threads }}</span>
+          <span class="badge fade {{ user.new_threads|iftrue:"in" }} pull-right" data-misago-badge="new_threads">{{ user.new_threads }}</span>
           <span class="fa fa-plus-circle"></span>
           {% trans "New threads" %}
         </a>
       </li>
       <li>
         <a href="{% url 'misago:unread_threads' %}">
-          <span class="badge fade {{ "in"|iftrue:user.unread_threads }} pull-right" data-misago-badge="unread_threads">{{ user.unread_threads }}</span>
+          <span class="badge fade {{ user.unread_threads|iftrue:"in" }} pull-right" data-misago-badge="unread_threads">{{ user.unread_threads }}</span>
           <span class="fa fa-signal"></span>
           {% trans "Unread threads" %}
         </a>
@@ -83,7 +83,7 @@
         {% endif %}
         data-toggle="dropdown">
       <span class="fa fa-bell-o fa-fw"></span>
-      <span class="badge fade {{ "in"|iftrue:user.new_notifications }}" data-misago-badge="notifications.count">{{ user.new_notifications }}</span>
+      <span class="badge fade {{ user.new_notifications|iftrue:"in" }}" data-misago-badge="notifications.count">{{ user.new_notifications }}</span>
     </a>
     <div class="dropdown-menu">
       <div class="display"></div>

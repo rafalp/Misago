@@ -180,3 +180,61 @@ class PaginationTests(TestCase):
 
         tpl = Template(tpl_content)
         tpl.render(self.context).strip()
+
+
+class ShorthandsTests(TestCase):
+    def test_iftrue_for_true(self):
+        """iftrue renders value for true"""
+        tpl_content = """
+{% load misago_shorthands %}
+
+{{ value|iftrue:result }}
+"""
+
+        tpl = Template(tpl_content)
+        self.assertEqual(tpl.render(Context({
+            'result': 'Ok!',
+            'value': True
+        })).strip(), 'Ok!')
+
+    def test_iftrue_for_false(self):
+        """iftrue isnt rendering value for false"""
+        tpl_content = """
+{% load misago_shorthands %}
+
+{{ value|iftrue:result }}
+"""
+
+        tpl = Template(tpl_content)
+        self.assertEqual(tpl.render(Context({
+            'result': 'Ok!',
+            'value': False
+        })).strip(), '')
+
+    def test_iffalse_for_true(self):
+        """iffalse isnt rendering value for true"""
+        tpl_content = """
+{% load misago_shorthands %}
+
+{{ value|iffalse:result }}
+"""
+
+        tpl = Template(tpl_content)
+        self.assertEqual(tpl.render(Context({
+            'result': 'Ok!',
+            'value': True
+        })).strip(), '')
+
+    def test_iffalse_for_false(self):
+        """iffalse renders value for false"""
+        tpl_content = """
+{% load misago_shorthands %}
+
+{{ value|iffalse:result }}
+"""
+
+        tpl = Template(tpl_content)
+        self.assertEqual(tpl.render(Context({
+            'result': 'Ok!',
+            'value': False
+        })).strip(), 'Ok!')
