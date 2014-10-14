@@ -32,7 +32,10 @@ class BaseCounter(object):
         return count['threads']
 
     def is_cache_valid(self, cache):
-        return cache.get('expires', 0) > time()
+        if cache.get('expires', 0) > time():
+            return cache.get('user') == self.user.pk
+        else:
+            return False
 
     def get_expiration_timestamp(self):
         return time() + settings.MISAGO_CONTENT_COUNTING_FREQUENCY * 60
@@ -46,6 +49,7 @@ class BaseCounter(object):
     def set(self, count):
         self.count = count
         self.session[self.name] = {
+            'user': self.user.pk,
             'threads': count,
             'expires': self.get_expiration_timestamp()
         }
@@ -54,6 +58,7 @@ class BaseCounter(object):
         if self.count > 0:
             self.count -= 1
             self.session[self.name] = {
+                'user': self.user.pk,
                 'threads': self.count,
                 'expires': self.session[self.name]['expires']
             }

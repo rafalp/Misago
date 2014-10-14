@@ -38,8 +38,20 @@ class TestNewThreadsCount(AuthenticatedUserTestCase):
         """is_cache_valid returns valid value for different caches"""
         counter = NewThreadsCount(self.user, {})
 
-        self.assertTrue(counter.is_cache_valid({'expires': time() + 15}))
-        self.assertFalse(counter.is_cache_valid({'expires': time() - 15}))
+        self.assertTrue(counter.is_cache_valid({
+            'expires': time() + 15,
+            'user': self.user.pk
+        }))
+
+        self.assertFalse(counter.is_cache_valid({
+            'expires': time() - 15,
+            'user': self.user.pk
+        }))
+
+        self.assertFalse(counter.is_cache_valid({
+            'expires': time() + 15,
+            'user': self.user.pk + 1
+        }))
 
     def test_get_expiration_timestamp(self):
         """get_expiration_timestamp returns greater time than current one"""
