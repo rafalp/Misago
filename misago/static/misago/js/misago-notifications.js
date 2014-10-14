@@ -1,63 +1,77 @@
 $(function() {
-  var ajax_cache = null;
+  function MisagoNotifications() {
 
-  var $container = $('.user-notifications-nav');
-  var $link = $container.find('.dropdown-toggle');
+    _this = this;
 
-  if (is_authenticated) {
-    Misago.Server.on_data("notifications", function(data) {
+    this.ajax_cache = null;
+
+    this.$container = $('.user-notifications-nav');
+    this.$link = this.$container.find('.dropdown-toggle');
+
+    this.$display = this.$container.find('.display');
+    this.$loader = this.$container.find('.loader');
+
+    this.on_data = function(data) {
       Tinycon.setBubble(data.count);
-      if (ajax_cache != null && data.count != ajax_cache.count) {
-        ajax_cache = null;
-        if ($container.hasClass('open')) {
-          $container.find('.btn-refresh').fadeIn();
+      if (_this.ajax_cache != null && data.count != _this.ajax_cache.count) {
+        _this.ajax_cache = null;
+        if (_this.$container.hasClass('open')) {
+          _this.$container.find('.btn-refresh').fadeIn();
           if (data.count > 0) {
-            $container.find('.btn-read-all').fadeIn();
+            _this.$container.find('.btn-read-all').fadeIn();
           } else {
-            $container.find('.btn-read-all').fadeOut();
+            _this.$container.find('.btn-read-all').fadeOut();
           }
         }
       }
-    });
-  }
-
-  var $display = $container.find('.display');
-  var $loader = $container.find('.loader');
-
-  function handle_list_response(data) {
-    ajax_cache = data;
-    $loader.hide();
-    $display.html(data.html);
-    $display.show();
-    Misago.DOM.changed();
-  }
-
-  function fetch_list() {
-    $.get($link.attr('href'), function(data) {
-      handle_list_response(data)
-    });
-  }
-
-  $container.on('click', '.btn-refresh', function() {
-    $display.hide();
-    $loader.show();
-    fetch_list();
-  });
-  $container.on('show.bs.dropdown', function () {
-    if (ajax_cache == null) {
-      fetch_list();
     }
-  });
-  $container.on('hide.bs.dropdown', function() {
-    $container.find('.btn-refresh').hide();
-  });
-  $container.on('submit', '.read-all-notifications', function() {
-    $display.hide();
-    $loader.show();
-    $.post($link.attr('href'), $(this).serialize(), function(data) {
-      handle_list_response(data);
-      Misago.Server.update()
+
+    if (is_authenticated) {
+      Misago.Server.on_data("notifications", this.on_data);
+    }
+
+    this.handle_list_response = function(data) {
+      _this.ajax_cache = data;
+      _this.$loader.hide();
+      _this.$display.html(data.html);
+      _this.$display.show();
+      Misago.DOM.changed();
+    }
+
+    this.fetch_list = function() {
+      $.get(_this.$link.attr('href'), function(data) {
+        _this.handle_list_response(data)
+      });
+    }
+
+    this.$container.on('click', '.btn-refresh', function() {
+      _this.$display.hide();
+      _this.$loader.show();
+      _this.fetch_list();
     });
-    return false;
-  });
+
+    this.$container.on('show.bs.dropdown', function () {
+      if (_this.ajax_cache == null) {
+        _this.fetch_list();
+      }
+    });
+
+    this.$container.on('hide.bs.dropdown', function() {
+      _this.$container.find('.btn-refresh').hide();
+    });
+
+    this.$container.on('submit', '.read-all-notifications', function() {
+      _this.$display.hide();
+      _this.$loader.show();
+      $.post($link.attr('href'), $(this).serialize(), function(data) {
+        _this.handle_list_response(data);
+        Misago.Server.update()
+      });
+      return false;
+    });
+
+  }
+
+  Misago.Notifications = MisagoNotifications();
+
 });
