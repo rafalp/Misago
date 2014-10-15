@@ -1,6 +1,7 @@
 from time import time
 
 from django.conf import settings
+from django.dispatch import receiver
 
 from misago.threads.views.newthreads import NewThreads
 from misago.threads.views.unreadthreads import UnreadThreads
@@ -72,3 +73,10 @@ class NewThreadsCount(BaseCounter):
 class UnreadThreadsCount(BaseCounter):
     Threads = UnreadThreads
     name = 'unread_threads'
+
+
+from misago.readtracker.signals import all_read
+@receiver(all_read)
+def zero_unread_counters(sender, **kwargs):
+    sender.new_threads.set(0)
+    sender.unread_threads.set(0)

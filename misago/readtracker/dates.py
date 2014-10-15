@@ -6,6 +6,6 @@ from django.utils import timezone
 
 def is_date_tracked(user, date):
     if date:
-        return date > user.joined_on
+        return date > user.reads_cutoff
     else:
         return False

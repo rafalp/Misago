@@ -8,8 +8,7 @@ from django.utils import timezone
 class ForumRead(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     forum = models.ForeignKey('misago_forums.Forum')
-    last_updated_on = models.DateTimeField()
-    last_cleared_on = models.DateTimeField()
+    last_read_on = models.DateTimeField()
 
 
 class ThreadRead(models.Model):

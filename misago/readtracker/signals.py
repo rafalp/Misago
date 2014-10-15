@@ -4,6 +4,7 @@ from misago.forums.signals import move_forum_content
 from misago.threads.signals import move_thread
 
 
+all_read = Signal()
 forum_read = Signal(providing_args=["forum"])
 thread_read = Signal(providing_args=["thread"])
 

@@ -16,8 +16,8 @@ class NewThreads(Threads):
     def get_queryset(self):
         cutoff_days = settings.MISAGO_FRESH_CONTENT_PERIOD
         cutoff_date = timezone.now() - timedelta(days=cutoff_days)
-        if cutoff_date < self.user.joined_on:
-            cutoff_date = self.user.joined_on
+        if cutoff_date < self.user.reads_cutoff:
+            cutoff_date = self.user.reads_cutoff
 
         queryset = Thread.objects.filter(started_on__gte=cutoff_date)
         queryset = queryset.select_related('forum')

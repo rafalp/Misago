@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.db import models, transaction
 from django.dispatch import receiver
 from django.utils import timezone
+dj_timezone = timezone
 from django.utils.translation import ugettext_lazy as _
 
 from misago.acl import get_user_acl
@@ -218,6 +219,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     last_post = models.DateTimeField(null=True, blank=True)
     last_search = models.DateTimeField(null=True, blank=True)
+
+    reads_cutoff = models.DateTimeField(default=dj_timezone.now)
 
     is_active = True  # Django's is_active means "is not deleted"
 

@@ -23,7 +23,7 @@ def make_read_aware(user, forums):
     for record in user.forumread_set.filter(forum__in=forums_dict.keys()):
         if not forum.is_read and record.forum_id in forums_dict:
             forum = forums_dict[record.forum_id]
-            forum.is_read = record.last_cleared_on >= forum.last_post_on
+            forum.is_read = record.last_read_on >= forum.last_post_on
 
 
 def make_read(forums):
@@ -32,7 +32,8 @@ def make_read(forums):
 
 
 def sync_record(user, forum):
-    recorded_threads = forum.thread_set.filter(last_post_on__gt=user.joined_on)
+    recorded_threads = forum.thread_set.filter(
+        last_post_on__gt=user.reads_cutoff)
     recorded_threads = exclude_invisible_threads(recorded_threads, user, forum)
 
     all_threads_count = recorded_threads.count()
@@ -49,19 +50,17 @@ def sync_record(user, forum):
 
     try:
         forum_record = user.forumread_set.filter(forum=forum).all()[0]
-        forum_record.last_updated_on = timezone.now()
         if forum_is_read:
-            forum_record.last_cleared_on = forum_record.last_updated_on
+            forum_record.last_read_on = forum_record.last_read_on
         else:
-            forum_record.last_cleared_on = user.joined_on
-        forum_record.save(update_fields=['last_updated_on', 'last_cleared_on'])
+            forum_record.last_read_on = user.reads_cutoff
+        forum_record.save(update_fields=['last_read_on'])
     except IndexError:
         if forum_is_read:
-            cleared_on = timezone.now()
+            last_read_on = timezone.now()
         else:
-            cleared_on = user.joined_on
+            last_read_on = user.joined_on
 
         forum_record = user.forumread_set.create(
             forum=forum,
-            last_updated_on=timezone.now(),
-            last_cleared_on=cleared_on)
+            last_read_on=last_read_on)

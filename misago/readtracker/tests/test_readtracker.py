@@ -53,14 +53,14 @@ class ForumsTrackerTests(ReadTrackerTests):
 
     def test_make_read_aware_sets_read_flag_for_forum_with_old_thread(self):
         """make_read_aware sets read flag on forum with old thread"""
-        self.forum.last_post_on = self.user.joined_on - timedelta(days=1)
+        self.forum.last_post_on = self.user.reads_cutoff - timedelta(days=1)
 
         forumstracker.make_read_aware(self.user, self.forums)
         self.assertTrue(self.forum.is_read)
 
     def test_make_read_aware_sets_unread_flag_for_forum_with_new_thread(self):
         """make_read_aware sets unread flag on forum with new thread"""
-        self.forum.last_post_on = self.user.joined_on + timedelta(days=1)
+        self.forum.last_post_on = self.user.reads_cutoff + timedelta(days=1)
 
         forumstracker.make_read_aware(self.user, self.forums)
         self.assertFalse(self.forum.is_read)
@@ -79,7 +79,7 @@ class ForumsTrackerTests(ReadTrackerTests):
         sync_record sets read flag on forum with old thread,
         then changes flag to unread when new reply is posted
         """
-        self.post_thread(self.user.joined_on - timedelta(days=1))
+        self.post_thread(self.user.reads_cutoff - timedelta(days=1))
 
         add_acl(self.user, self.forums)
         forumstracker.sync_record(self.user, self.forum)
@@ -88,7 +88,7 @@ class ForumsTrackerTests(ReadTrackerTests):
         forumstracker.make_read_aware(self.user, self.forums)
         self.assertTrue(self.forum.is_read)
 
-        thread = self.post_thread(self.user.joined_on + timedelta(days=1))
+        thread = self.post_thread(self.user.reads_cutoff + timedelta(days=1))
         forumstracker.sync_record(self.user, self.forum)
         forumstracker.make_read_aware(self.user, self.forums)
         self.assertFalse(self.forum.is_read)
@@ -98,7 +98,7 @@ class ForumsTrackerTests(ReadTrackerTests):
         sync_record sets read flag on forum with old thread,
         then keeps flag to unread when new reply is posted
         """
-        self.post_thread(self.user.joined_on + timedelta(days=1))
+        self.post_thread(self.user.reads_cutoff + timedelta(days=1))
 
         add_acl(self.user, self.forums)
         forumstracker.sync_record(self.user, self.forum)
@@ -107,16 +107,16 @@ class ForumsTrackerTests(ReadTrackerTests):
         forumstracker.make_read_aware(self.user, self.forums)
         self.assertFalse(self.forum.is_read)
 
-        self.post_thread(self.user.joined_on + timedelta(days=1))
+        self.post_thread(self.user.reads_cutoff + timedelta(days=1))
         forumstracker.sync_record(self.user, self.forum)
         forumstracker.make_read_aware(self.user, self.forums)
         self.assertFalse(self.forum.is_read)
 
     def test_sync_record_for_forum_with_deleted_threads(self):
         """unread forum reverts to read after its emptied"""
-        self.post_thread(self.user.joined_on + timedelta(days=1))
-        self.post_thread(self.user.joined_on + timedelta(days=1))
-        self.post_thread(self.user.joined_on + timedelta(days=1))
+        self.post_thread(self.user.reads_cutoff + timedelta(days=1))
+        self.post_thread(self.user.reads_cutoff + timedelta(days=1))
+        self.post_thread(self.user.reads_cutoff + timedelta(days=1))
 
         add_acl(self.user, self.forums)
         forumstracker.sync_record(self.user, self.forum)
@@ -132,10 +132,10 @@ class ForumsTrackerTests(ReadTrackerTests):
 
     def test_sync_record_for_forum_with_many_threads(self):
         """sync_record sets unread flag on forum with many threads"""
-        self.post_thread(self.user.joined_on + timedelta(days=1))
-        self.post_thread(self.user.joined_on - timedelta(days=1))
-        self.post_thread(self.user.joined_on + timedelta(days=1))
-        self.post_thread(self.user.joined_on - timedelta(days=1))
+        self.post_thread(self.user.reads_cutoff + timedelta(days=1))
+        self.post_thread(self.user.reads_cutoff - timedelta(days=1))
+        self.post_thread(self.user.reads_cutoff + timedelta(days=1))
+        self.post_thread(self.user.reads_cutoff - timedelta(days=1))
 
         add_acl(self.user, self.forums)
         forumstracker.sync_record(self.user, self.forum)
@@ -144,7 +144,7 @@ class ForumsTrackerTests(ReadTrackerTests):
         forumstracker.make_read_aware(self.user, self.forums)
         self.assertFalse(self.forum.is_read)
 
-        self.post_thread(self.user.joined_on + timedelta(days=1))
+        self.post_thread(self.user.reads_cutoff + timedelta(days=1))
         forumstracker.sync_record(self.user, self.forum)
         forumstracker.make_read_aware(self.user, self.forums)
         self.assertFalse(self.forum.is_read)

@@ -17,8 +17,7 @@ class Migration(migrations.Migration):
             name='ForumRead',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('last_updated_on', models.DateTimeField()),
-                ('last_cleared_on', models.DateTimeField()),
+                ('last_read_on', models.DateTimeField()),
                 ('forum', models.ForeignKey(to='misago_forums.Forum')),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
