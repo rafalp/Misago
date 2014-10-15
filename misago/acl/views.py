@@ -43,7 +43,8 @@ class RoleFormMixin(object):
                 form.instance.permissions = new_permissions
                 form.instance.save()
 
-                messages.success(request, self.message_submit % target.name)
+                messages.success(
+                    request, self.message_submit % {'name': target.name})
 
                 if 'stay' in request.POST:
                     return redirect(request.path)
@@ -62,23 +63,24 @@ class RoleFormMixin(object):
 
 
 class NewRole(RoleFormMixin, RoleAdmin, generic.ModelFormView):
-    message_submit = _('New role "%s" has been saved.')
+    message_submit = _('New role "%(name)s" has been saved.')
 
 
 class EditRole(RoleFormMixin, RoleAdmin, generic.ModelFormView):
-    message_submit = _('Role "%s" has been changed.')
+    message_submit = _('Role "%(name)s" has been changed.')
 
 
 class DeleteRole(RoleAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         if target.special_role:
-            message = _('Role "%s" is special role and can\'t be deleted.')
-            return message % target.name
+            message = _('Role "%(name)s" is special role '
+                        'and can\'t be deleted.')
+            return message % {'name': target.name}
 
     def button_action(self, request, target):
         target.delete()
-        message = _('Role "%s" has been deleted.') % unicode(target.name)
-        messages.success(request, message)
+        message = _('Role "%(name)s" has been deleted.')
+        messages.success(request, message % {'name': target.name})
 
 
 class RoleUsers(RoleAdmin, generic.TargetedView):

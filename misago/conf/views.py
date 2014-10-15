@@ -47,8 +47,8 @@ def group(request, group_key):
 
             db_settings.flush_cache()
 
-            messages.success(request,
-                             _('Changes in settings have been saved!'))
+            messages.success(
+                request, _('Changes in settings have been saved!'))
             return redirect('misago:admin:settings:group', group_key=group_key)
 
     use_single_form_template = (len(fieldsets) == 1 and

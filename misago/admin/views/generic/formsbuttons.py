@@ -100,7 +100,8 @@ class ModelFormView(FormView):
     def handle_form(self, form, request, target):
         form.instance.save()
         if self.message_submit:
-            messages.success(request, self.message_submit % target.name)
+            format = {'name': target.name}
+            messages.success(request, self.message_submit % format)
 
     def real_dispatch(self, request, target):
         FormType = self.create_form_type(request, target)

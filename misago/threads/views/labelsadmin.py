@@ -23,7 +23,8 @@ class LabelsAdmin(generic.AdminBaseMixin):
         Label.objects.clear_cache()
 
         if self.message_submit:
-            messages.success(request, self.message_submit % target.name)
+            messages.success(
+                request, self.message_submit % {'name': target.name})
 
 
 class LabelsList(LabelsAdmin, generic.ListView):
@@ -31,15 +32,15 @@ class LabelsList(LabelsAdmin, generic.ListView):
 
 
 class NewLabel(LabelsAdmin, generic.ModelFormView):
-    message_submit = _('New label "%s" has been saved.')
+    message_submit = _('New label "%(name)s" has been saved.')
 
 
 class EditLabel(LabelsAdmin, generic.ModelFormView):
-    message_submit = _('Label "%s" has been edited.')
+    message_submit = _('Label "%(name)s" has been edited.')
 
 
 class DeleteLabel(LabelsAdmin, generic.ButtonView):
     def button_action(self, request, target):
         target.delete()
-        message = _('Label "%s" has been deleted.')
-        messages.success(request, message % unicode(target.name))
+        message = _('Label "%(name)s" has been deleted.')
+        messages.success(request, message % {'name': target.name})

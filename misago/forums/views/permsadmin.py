@@ -48,7 +48,8 @@ class RoleFormMixin(object):
                 form.instance.permissions = new_permissions
                 form.instance.save()
 
-                messages.success(request, self.message_submit % target.name)
+                messages.success(
+                    request, self.message_submit % {'name': target.name})
 
                 if 'stay' in request.POST:
                     return redirect(request.path)
@@ -67,23 +68,24 @@ class RoleFormMixin(object):
 
 
 class NewForumRole(RoleFormMixin, ForumRoleAdmin, generic.ModelFormView):
-    message_submit = _('New role "%s" has been saved.')
+    message_submit = _('New role "%(name)s" has been saved.')
 
 
 class EditForumRole(RoleFormMixin, ForumRoleAdmin, generic.ModelFormView):
-    message_submit = _('Role "%s" has been changed.')
+    message_submit = _('Role "%(name)s" has been changed.')
 
 
 class DeleteForumRole(ForumRoleAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         if target.special_role:
-            message = _('Role "%s" is special role and can\'t be deleted.')
-            return message % target.name
+            message = _('Role "%(name)s" is special '
+                        'role and can\'t be deleted.')
+            return message % {'name': target.name}
 
     def button_action(self, request, target):
         target.delete()
-        message = _('Role "%s" has been deleted.') % unicode(target.name)
-        messages.success(request, message)
+        message = _('Role "%(name)s" has been deleted.')
+        messages.success(request, message % {'name': target.name})
 
 
 """
@@ -131,8 +133,8 @@ class ForumPermissions(ForumAdmin, generic.ModelFormView):
 
             acl_version.invalidate()
 
-            message = _("Forum %s permissions have been changed.")
-            messages.success(request, message % target)
+            message = _("Forum %(name)s permissions have been changed.")
+            messages.success(request, message % {'name': target.name})
             if 'stay' in request.POST:
                 return redirect(request.path)
             else:
@@ -144,7 +146,6 @@ class ForumPermissions(ForumAdmin, generic.ModelFormView):
                 'forms': forms,
                 'target': target,
             })
-
 
 ForumsList.add_item_action(
     name=_("Forum permissions"),
@@ -202,8 +203,9 @@ class RoleForumsACL(RoleAdmin, generic.ModelFormView):
 
             acl_version.invalidate()
 
-            message = _("Forum permissions for role %s have been changed.")
-            messages.success(request, message % target)
+            message = _("Forum permissions for role "
+                        "%(name)s have been changed.")
+            messages.success(request, message % {'name': target.name})
             if 'stay' in request.POST:
                 return redirect(request.path)
             else:
@@ -215,6 +217,7 @@ class RoleForumsACL(RoleAdmin, generic.ModelFormView):
                 'forms': forms,
                 'target': target,
             })
+
 RolesList.add_item_action(
     name=_("Forums permissions"),
     icon='fa fa-comments-o',

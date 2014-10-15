@@ -20,18 +20,18 @@ class WarningsList(WarningsAdmin, generic.ListView):
 
 
 class NewWarning(WarningsAdmin, generic.ModelFormView):
-    message_submit = _('New warning level "%s" has been saved.')
+    message_submit = _('New warning level "%(name)s" has been saved.')
 
 
 class EditWarning(WarningsAdmin, generic.ModelFormView):
-    message_submit = _('Warning level "%s" has been edited.')
+    message_submit = _('Warning level "%(name)s" has been edited.')
 
 
 class DeleteWarning(WarningsAdmin, generic.ButtonView):
     def button_action(self, request, target):
         target.delete()
-        message = _('Warning level "%s" has been deleted.')
-        messages.success(request, message % unicode(target.name))
+        message = _('Warning level "%(name)s" has been deleted.')
+        messages.success(request, message % {'name': target.name})
 
 
 class MoveDownWarning(WarningsAdmin, generic.ButtonView):
@@ -47,8 +47,9 @@ class MoveDownWarning(WarningsAdmin, generic.ButtonView):
             other_target.save(update_fields=['level'])
             target.save(update_fields=['level'])
 
-            message = _('Warning level "%s" has been moved below "%s".')
-            targets_names = (target.name, other_target.name)
+            message = _('Warning level "%(name)s" has '
+                        'been moved below "%(other)s".')
+            targets_names = {'name': target.name, 'other': other_target.name}
             messages.success(request, message % targets_names)
 
 
@@ -65,6 +66,7 @@ class MoveUpWarning(WarningsAdmin, generic.ButtonView):
             other_target.save(update_fields=['level'])
             target.save(update_fields=['level'])
 
-            message = _('Warning level "%s" has been moved above "%s".')
-            targets_names = (target.name, other_target.name)
+            message = _('Warning level "%(name)s" has '
+                        'been moved above "%(other)s".')
+            targets_names = {'name': target.name, 'other': other_target.name}
             messages.success(request, message % targets_names)

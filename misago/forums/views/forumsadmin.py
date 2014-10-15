@@ -82,19 +82,19 @@ class ForumFormMixin(object):
                 RoleForumACL.objects.bulk_create(copied_acls)
 
         acl_version.invalidate()
-        messages.success(request, self.message_submit % target.name)
+        messages.success(request, self.message_submit % {'name': target.name})
 
 
 class NewForum(ForumFormMixin, ForumAdmin, generic.ModelFormView):
-    message_submit = _('New forum "%s" has been saved.')
+    message_submit = _('New forum "%(name)s" has been saved.')
 
 
 class EditForum(ForumFormMixin, ForumAdmin, generic.ModelFormView):
-    message_submit = _('Forum "%s" has been edited.')
+    message_submit = _('Forum "%(name)s" has been edited.')
 
 
 class DeleteForum(ForumAdmin, generic.ModelFormView):
-    message_submit = _('Forum "%s" has been deleted.')
+    message_submit = _('Forum "%(name)s" has been deleted.')
     template = 'delete.html'
 
     def create_form_type(self, request, target):
@@ -123,7 +123,7 @@ class DeleteForum(ForumAdmin, generic.ModelFormView):
 
         form.instance.delete()
 
-        messages.success(request, self.message_submit % target.name)
+        messages.success(request, self.message_submit % {'name': target.name})
         return redirect(self.root_link)
 
 
@@ -138,8 +138,8 @@ class MoveDownForum(ForumAdmin, generic.ButtonView):
             Forum.objects.move_node(target, other_target, 'right')
             Forum.objects.clear_cache()
 
-            message = _('Forum "%s" has been moved below "%s".')
-            targets_names = (target.name, other_target.name)
+            message = _('Forum "%(name)s" has been moved below "%(other)s".')
+            targets_names = {'name': target.name, 'other': other_target.name}
             messages.success(request, message % targets_names)
 
 
@@ -154,6 +154,6 @@ class MoveUpForum(ForumAdmin, generic.ButtonView):
             Forum.objects.move_node(target, other_target, 'left')
             Forum.objects.clear_cache()
 
-            message = _('Forum "%s" has been moved above "%s".')
-            targets_names = (target.name, other_target.name)
+            message = _('Forum "%(name)s" has been moved above "%(other)s".')
+            targets_names = {'name': target.name, 'other': other_target.name}
             messages.success(request, message % targets_names)

@@ -12,7 +12,7 @@ class AuthenticatedTests(AuthenticatedUserTestCase):
         """empty threads list is rendered"""
         response = self.client.get(reverse('misago:unread_threads'))
         self.assertEqual(response.status_code, 200)
-        self.assertIn("There are no threads from last", response.content)
+        self.assertIn("There are no threads with unread", response.content)
 
     def test_filled_threads_list(self):
         """filled threads list is rendered"""
@@ -22,7 +22,7 @@ class AuthenticatedTests(AuthenticatedUserTestCase):
         # only unread tracker threads are shown on unread list
         response = self.client.get(reverse('misago:unread_threads'))
         self.assertEqual(response.status_code, 200)
-        self.assertIn("There are no threads from last", response.content)
+        self.assertIn("There are no threads with unread", response.content)
 
         # we'll read and reply to first five threads
         for thread in threads[5:]:

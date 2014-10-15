@@ -31,28 +31,29 @@ class RanksList(RankAdmin, generic.ListView):
 
 
 class NewRank(RankAdmin, generic.ModelFormView):
-    message_submit = _('New rank "%s" has been saved.')
+    message_submit = _('New rank "%(name)s" has been saved.')
 
 
 class EditRank(RankAdmin, generic.ModelFormView):
-    message_submit = _('Rank "%s" has been edited.')
+    message_submit = _('Rank "%(name)s" has been edited.')
 
 
 class DeleteRank(RankAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
+        message_format = {'name': target.name}
         if target.is_default:
-            message = _('Rank "%s" is default rank and '
-                        'can\'t be deleted.')
-            return message % target.name
+            message = _('Rank "%(name)s" is default '
+                        'rank and can\'t be deleted.')
+            return message % message_format
         if target.user_set.exists():
-            message = _('Rank "%s" is assigned to users and '
-                        'can\'t be deleted.')
-            return message % target.name
+            message = _('Rank "%(name)s" is assigned to '
+                        'users and can\'t be deleted.')
+            return message % message_format
 
     def button_action(self, request, target):
         target.delete()
-        message = _('Rank "%s" has been deleted.') % target.name
-        messages.success(request, message)
+        message = _('Rank "%(name)s" has been deleted.')
+        messages.success(request, message % {'name': target.name})
 
 
 class MoveDownRank(RankAdmin, generic.ButtonView):
@@ -68,8 +69,8 @@ class MoveDownRank(RankAdmin, generic.ButtonView):
             other_target.save(update_fields=['order'])
             target.save(update_fields=['order'])
 
-            message = _('Rank "%s" has been moved below "%s".')
-            targets_names = (target.name, other_target.name)
+            message = _('Rank "%(name)s" has been moved below "%(other)s".')
+            targets_names = {'name': target.name, 'other': other_target.name}
             messages.success(request, message % targets_names)
 
 
@@ -86,8 +87,8 @@ class MoveUpRank(RankAdmin, generic.ButtonView):
             other_target.save(update_fields=['order'])
             target.save(update_fields=['order'])
 
-            message = _('Rank "%s" has been moved above "%s".')
-            targets_names = (target.name, other_target.name)
+            message = _('Rank "%(name)s" has been moved above "%(other)s".')
+            targets_names = {'name': target.name, 'other': other_target.name}
             messages.success(request, message % targets_names)
 
 
@@ -100,9 +101,10 @@ class RankUsers(RankAdmin, generic.TargetedView):
 class DefaultRank(RankAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         if target.is_default:
-            return _('Rank "%s" is already default.') % target.name
+            message = _('Rank "%(name)s" is already default.')
+            return message % {'name': target.name}
 
     def button_action(self, request, target):
         Rank.objects.make_rank_default(target)
-        message = _('Rank "%s" has been made default.')
-        messages.success(request, message % target.name)
+        message = _('Rank "%(name)s" has been made default.')
+        messages.success(request, message % {'name': target.name})

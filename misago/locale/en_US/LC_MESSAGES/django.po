@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-12 14:37+0000\n"
+"POT-Creation-Date: 2014-10-15 16:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -80,28 +80,28 @@ msgstr ""
 msgid "Requested role does not exist."
 msgstr ""
 
-#: acl/views.py:53 forums/views/permsadmin.py:58
+#: acl/views.py:54 forums/views/permsadmin.py:59
 msgid "Form contains errors."
 msgstr ""
 
-#: acl/views.py:65 forums/views/permsadmin.py:70
+#: acl/views.py:66 forums/views/permsadmin.py:71
 #, python-format
-msgid "New role \"%s\" has been saved."
+msgid "New role \"%(name)s\" has been saved."
 msgstr ""
 
-#: acl/views.py:69 forums/views/permsadmin.py:74
+#: acl/views.py:70 forums/views/permsadmin.py:75
 #, python-format
-msgid "Role \"%s\" has been changed."
+msgid "Role \"%(name)s\" has been changed."
 msgstr ""
 
-#: acl/views.py:75 forums/views/permsadmin.py:80
+#: acl/views.py:76 forums/views/permsadmin.py:81
 #, python-format
-msgid "Role \"%s\" is special role and can't be deleted."
+msgid "Role \"%(name)s\" is special role and can't be deleted."
 msgstr ""
 
-#: acl/views.py:80 forums/views/permsadmin.py:85
+#: acl/views.py:82 forums/views/permsadmin.py:87
 #, python-format
-msgid "Role \"%s\" has been deleted."
+msgid "Role \"%(name)s\" has been deleted."
 msgstr ""
 
 #: admin/admin.py:10 templates/misago/admin/index.html:5
@@ -970,48 +970,48 @@ msgstr ""
 
 #: forums/views/forumsadmin.py:89
 #, python-format
-msgid "New forum \"%s\" has been saved."
+msgid "New forum \"%(name)s\" has been saved."
 msgstr ""
 
 #: forums/views/forumsadmin.py:93
 #, python-format
-msgid "Forum \"%s\" has been edited."
+msgid "Forum \"%(name)s\" has been edited."
 msgstr ""
 
 #: forums/views/forumsadmin.py:97
 #, python-format
-msgid "Forum \"%s\" has been deleted."
+msgid "Forum \"%(name)s\" has been deleted."
 msgstr ""
 
 #: forums/views/forumsadmin.py:141
 #, python-format
-msgid "Forum \"%s\" has been moved below \"%s\"."
+msgid "Forum \"%(name)s\" has been moved below \"%(other)s\"."
 msgstr ""
 
 #: forums/views/forumsadmin.py:157
 #, python-format
-msgid "Forum \"%s\" has been moved above \"%s\"."
+msgid "Forum \"%(name)s\" has been moved above \"%(other)s\"."
 msgstr ""
 
-#: forums/views/permsadmin.py:134
+#: forums/views/permsadmin.py:136
 #, python-format
-msgid "Forum %s permissions have been changed."
+msgid "Forum %(name)s permissions have been changed."
 msgstr ""
 
-#: forums/views/permsadmin.py:150
+#: forums/views/permsadmin.py:151
 msgid "Forum permissions"
 msgstr ""
 
-#: forums/views/permsadmin.py:169 templates/misago/admin/forums/list.html:87
+#: forums/views/permsadmin.py:170 templates/misago/admin/forums/list.html:87
 msgid "No forums exist."
 msgstr ""
 
-#: forums/views/permsadmin.py:205
+#: forums/views/permsadmin.py:206
 #, python-format
-msgid "Forum permissions for role %s have been changed."
+msgid "Forum permissions for role %(name)s have been changed."
 msgstr ""
 
-#: forums/views/permsadmin.py:219
+#: forums/views/permsadmin.py:222
 msgid "Forums permissions"
 msgstr ""
 
@@ -1103,7 +1103,7 @@ msgid_plural "You have %(notifications)s new notifications"
 msgstr[0] ""
 msgstr[1] ""
 
-#: notifications/views.py:123 templates/misago/user_nav.html:88
+#: notifications/views.py:123 templates/misago/user_nav.html:82
 msgid "Your notifications"
 msgstr ""
 
@@ -1793,7 +1793,7 @@ msgstr ""
 #: templates/misago/ranks_online.html:14
 #: templates/misago/thread/events.html:15
 #: templates/misago/thread/replies.html:36
-#: templates/misago/threads/base.html:50 templates/misago/threads/base.html:54
+#: templates/misago/threads/base.html:52 templates/misago/threads/base.html:56
 #: templates/misago/users_cards.html:10
 #: templates/misago/userslists/active_posters.html:35
 #: templates/misago/userslists/base.html:45
@@ -1903,7 +1903,7 @@ msgstr ""
 
 #: templates/misago/admin/warnings/list.html:44
 #: templates/misago/admin/warnings/list.html:62
-#: templates/misago/threads/base.html:97
+#: templates/misago/threads/base.html:106
 msgid "Moderated"
 msgstr ""
 
@@ -1940,12 +1940,12 @@ msgstr ""
 msgid "Request has timed out."
 msgstr ""
 
-#: templates/misago/base.html:53
+#: templates/misago/base.html:52
 msgid "Unspecified error occured."
 msgstr ""
 
-#: templates/misago/base.html:54 templates/misago/base.html.py:55
-#: templates/misago/base.html:56 templates/misago/messages.html:20
+#: templates/misago/base.html:53 templates/misago/base.html.py:54
+#: templates/misago/base.html:55 templates/misago/messages.html:20
 #: templates/misago/register/form.html:79
 #: templates/misago/register/form.html:112
 msgid "Ok!"
@@ -2443,7 +2443,7 @@ msgid "Advanced search"
 msgstr ""
 
 #: templates/misago/notifications/dropdown.html:7
-#: templates/misago/user_nav.html:86
+#: templates/misago/user_nav.html:80
 #, python-format
 msgid "%(notifications)s new notification"
 msgid_plural "%(notifications)s new notifications"
@@ -2922,7 +2922,7 @@ msgid "Thread autor"
 msgstr ""
 
 #: templates/misago/thread/replies.html:43
-#: templates/misago/threads/base.html:60
+#: templates/misago/threads/base.html:62
 #, python-format
 msgid "%(replies)s reply"
 msgid_plural "%(replies)s replies"
@@ -2930,7 +2930,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: templates/misago/thread/replies.html:49
-#: templates/misago/threads/base.html:45
+#: templates/misago/threads/base.html:47
 #, python-format
 msgid "Last post from %(last_post)s"
 msgstr ""
@@ -2956,61 +2956,66 @@ msgstr ""
 msgid "Thread has unread posts"
 msgstr ""
 
-#: templates/misago/threads/base.html:49 templates/misago/threads/base.html:53
+#: templates/misago/threads/base.html:51 templates/misago/threads/base.html:55
 #, python-format
 msgid "Last post by %(user)s"
 msgstr ""
 
-#: templates/misago/threads/base.html:66
+#: templates/misago/threads/base.html:68
 #, python-format
 msgid "New thread with %(replies)s reply"
 msgid_plural "New thread with %(replies)s replies"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/threads/base.html:73
+#: templates/misago/threads/base.html:75
 #, python-format
 msgid "%(replies)s new reply"
 msgid_plural "%(replies)s new replies"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/threads/base.html:82
+#: templates/misago/threads/base.html:83
+msgid "Thread location"
+msgstr ""
+
+#: templates/misago/threads/base.html:91
 msgid "Reported posts"
 msgstr ""
 
-#: templates/misago/threads/base.html:87 templates/misago/user_nav.html:72
+#: templates/misago/threads/base.html:96 templates/misago/user_nav.html:66
 msgid "Moderated posts"
 msgstr ""
 
-#: templates/misago/threads/base.html:92
+#: templates/misago/threads/base.html:101
 msgid "Poll"
 msgstr ""
 
-#: templates/misago/threads/base.html:102
+#: templates/misago/threads/base.html:111
 msgid "Closed"
 msgstr ""
 
-#: templates/misago/threads/base.html:107
+#: templates/misago/threads/base.html:116
 #: templates/misago/userslists/online.html:42
 msgid "Hidden"
 msgstr ""
 
-#: templates/misago/threads/forum.html:5
+#: templates/misago/threads/forum.html:5 templates/misago/threads/new.html:5
+#: templates/misago/threads/unread.html:5
 #, python-format
 msgid "Page %(page)s"
 msgstr ""
 
-#: templates/misago/threads/forum.html:74
+#: templates/misago/threads/forum.html:75
 msgid ""
 "No threads matching criteria exist, or you don't have permission to see them."
 msgstr ""
 
-#: templates/misago/threads/forum.html:76
+#: templates/misago/threads/forum.html:77
 msgid "See all threads"
 msgstr ""
 
-#: templates/misago/threads/forum.html:79
+#: templates/misago/threads/forum.html:80
 msgid ""
 "No threads were posted in this forum, or you don't have permission to see "
 "them."
@@ -3063,6 +3068,23 @@ msgstr ""
 msgid "Threads that will be moved:"
 msgstr ""
 
+#: templates/misago/threads/new.html:5 templates/misago/user_nav.html:34
+msgid "New threads"
+msgstr ""
+
+#: templates/misago/threads/new.html:12
+msgid "Threads you have never read"
+msgstr ""
+
+#: templates/misago/threads/new.html:36
+#, python-format
+msgid "There are no threads from last %(days)s day that you have never read."
+msgid_plural ""
+"There are no threads from last %(days)s days that you have you have never "
+"read."
+msgstr[0] ""
+msgstr[1] ""
+
 #: templates/misago/threads/reply_btn.html:5
 msgid "This forum is closed."
 msgstr ""
@@ -3087,6 +3109,22 @@ msgstr ""
 msgid "Show threads:"
 msgstr ""
 
+#: templates/misago/threads/unread.html:5 templates/misago/user_nav.html:41
+msgid "Unread threads"
+msgstr ""
+
+#: templates/misago/threads/unread.html:12
+msgid "Threads with unread replies"
+msgstr ""
+
+#: templates/misago/threads/unread.html:36
+#, python-format
+msgid "There are no threads with unread replies from last %(days)s day."
+msgid_plural ""
+"There are no threads with unread replies from last %(days)s days."
+msgstr[0] ""
+msgstr[1] ""
+
 #: templates/misago/user_nav.html:13
 msgid "See your profile"
 msgstr ""
@@ -3096,31 +3134,23 @@ msgstr ""
 msgid "Change options"
 msgstr ""
 
-#: templates/misago/user_nav.html:28
+#: templates/misago/user_nav.html:26
 msgid "See all notifications"
 msgstr ""
 
-#: templates/misago/user_nav.html:44
+#: templates/misago/user_nav.html:50
 msgid "Sign out"
 msgstr ""
 
-#: templates/misago/user_nav.html:54
-msgid "New threads"
-msgstr ""
-
 #: templates/misago/user_nav.html:60
-msgid "Unread threads"
-msgstr ""
-
-#: templates/misago/user_nav.html:66
 msgid "Unresolved reports"
 msgstr ""
 
-#: templates/misago/user_nav.html:78
+#: templates/misago/user_nav.html:72
 msgid "Private threads"
 msgstr ""
 
-#: templates/misago/user_nav.html:102
+#: templates/misago/user_nav.html:94
 msgid "Loading..."
 msgstr ""
 
@@ -3506,27 +3536,27 @@ msgstr ""
 msgid "%(user)s merged in %(thread)s."
 msgstr ""
 
-#: threads/moderation/threads.py:103
+#: threads/moderation/threads.py:101
 #, python-format
 msgid "%(user)s approved thread."
 msgstr ""
 
-#: threads/moderation/threads.py:119
+#: threads/moderation/threads.py:117
 #, python-format
 msgid "%(user)s opened thread."
 msgstr ""
 
-#: threads/moderation/threads.py:132
+#: threads/moderation/threads.py:130
 #, python-format
 msgid "%(user)s closed thread."
 msgstr ""
 
-#: threads/moderation/threads.py:145
+#: threads/moderation/threads.py:143
 #, python-format
 msgid "%(user)s made thread visible."
 msgstr ""
 
-#: threads/moderation/threads.py:162
+#: threads/moderation/threads.py:160
 #, python-format
 msgid "%(user)s hid thread."
 msgstr ""
@@ -3789,6 +3819,15 @@ msgstr ""
 msgid "With moderated posts"
 msgstr ""
 
+#: threads/tests/test_newthreads_views.py:57 threads/views/newthreads.py:47
+msgid "You have to sign in to see your list of new threads."
+msgstr ""
+
+#: threads/tests/test_unreadthreads_view.py:46
+#: threads/views/unreadthreads.py:48
+msgid "You have to sign in to see your list of threads with unread replies."
+msgstr ""
+
 #: threads/validators.py:12
 msgid "Enter thread title."
 msgstr ""
@@ -3870,65 +3909,65 @@ msgstr[1] ""
 msgid "You have to select at least two threads to merge."
 msgstr ""
 
-#: threads/views/generic/forum/actions.py:264
+#: threads/views/generic/forum/actions.py:266
 #, python-format
 msgid "%(changed)d thread was merged into \"%(thread)s\"."
 msgid_plural "%(changed)d threads were merged into \"%(thread)s\"."
 msgstr[0] ""
 msgstr[1] ""
 
-#: threads/views/generic/forum/actions.py:294
+#: threads/views/generic/forum/actions.py:296
 #, python-format
 msgid "%(changed)d thread was closed."
 msgid_plural "%(changed)d threads were closed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: threads/views/generic/forum/actions.py:299
+#: threads/views/generic/forum/actions.py:301
 msgid "No threads were closed."
 msgstr ""
 
-#: threads/views/generic/forum/actions.py:310
+#: threads/views/generic/forum/actions.py:312
 #, python-format
 msgid "%(changed)d thread was opened."
 msgid_plural "%(changed)d threads were opened."
 msgstr[0] ""
 msgstr[1] ""
 
-#: threads/views/generic/forum/actions.py:315
+#: threads/views/generic/forum/actions.py:317
 msgid "No threads were opened."
 msgstr ""
 
-#: threads/views/generic/forum/actions.py:330
+#: threads/views/generic/forum/actions.py:332
 #, python-format
 msgid "%(changed)d thread was made visible."
 msgid_plural "%(changed)d threads were made visible."
 msgstr[0] ""
 msgstr[1] ""
 
-#: threads/views/generic/forum/actions.py:335
+#: threads/views/generic/forum/actions.py:337
 msgid "No threads were made visible."
 msgstr ""
 
-#: threads/views/generic/forum/actions.py:350
+#: threads/views/generic/forum/actions.py:352
 #, python-format
 msgid "%(changed)d thread was hidden."
 msgid_plural "%(changed)d threads were hidden."
 msgstr[0] ""
 msgstr[1] ""
 
-#: threads/views/generic/forum/actions.py:355
+#: threads/views/generic/forum/actions.py:357
 msgid "No threads were hidden."
 msgstr ""
 
-#: threads/views/generic/forum/actions.py:370
+#: threads/views/generic/forum/actions.py:372
 #, python-format
 msgid "%(changed)d thread was deleted."
 msgid_plural "%(changed)d threads were deleted."
 msgstr[0] ""
 msgstr[1] ""
 
-#: threads/views/generic/forum/actions.py:375
+#: threads/views/generic/forum/actions.py:377
 msgid "No threads were deleted."
 msgstr ""
 
@@ -3975,19 +4014,19 @@ msgstr ""
 msgid "Requested thread label does not exist."
 msgstr ""
 
-#: threads/views/labelsadmin.py:34
+#: threads/views/labelsadmin.py:35
 #, python-format
-msgid "New label \"%s\" has been saved."
+msgid "New label \"%(name)s\" has been saved."
 msgstr ""
 
-#: threads/views/labelsadmin.py:38
+#: threads/views/labelsadmin.py:39
 #, python-format
-msgid "Label \"%s\" has been edited."
+msgid "Label \"%(name)s\" has been edited."
 msgstr ""
 
-#: threads/views/labelsadmin.py:44
+#: threads/views/labelsadmin.py:45
 #, python-format
-msgid "Label \"%s\" has been deleted."
+msgid "Label \"%(name)s\" has been deleted."
 msgstr ""
 
 #: users/admin.py:23
@@ -5185,17 +5224,17 @@ msgstr ""
 
 #: users/views/admin/bans.py:49
 #, python-format
-msgid "New ban \"%s\" has been saved."
+msgid "New ban \"%(name)s\" has been saved."
 msgstr ""
 
 #: users/views/admin/bans.py:53
 #, python-format
-msgid "Ban \"%s\" has been edited."
+msgid "Ban \"%(name)s\" has been edited."
 msgstr ""
 
 #: users/views/admin/bans.py:60
 #, python-format
-msgid "Ban \"%s\" has been removed."
+msgid "Ban \"%(name)s\" has been removed."
 msgstr ""
 
 #: users/views/admin/ranks.py:17
@@ -5204,47 +5243,47 @@ msgstr ""
 
 #: users/views/admin/ranks.py:34
 #, python-format
-msgid "New rank \"%s\" has been saved."
+msgid "New rank \"%(name)s\" has been saved."
 msgstr ""
 
 #: users/views/admin/ranks.py:38
 #, python-format
-msgid "Rank \"%s\" has been edited."
+msgid "Rank \"%(name)s\" has been edited."
 msgstr ""
 
-#: users/views/admin/ranks.py:44
+#: users/views/admin/ranks.py:45
 #, python-format
-msgid "Rank \"%s\" is default rank and can't be deleted."
+msgid "Rank \"%(name)s\" is default rank and can't be deleted."
 msgstr ""
 
-#: users/views/admin/ranks.py:48
+#: users/views/admin/ranks.py:49
 #, python-format
-msgid "Rank \"%s\" is assigned to users and can't be deleted."
+msgid "Rank \"%(name)s\" is assigned to users and can't be deleted."
 msgstr ""
 
-#: users/views/admin/ranks.py:54
+#: users/views/admin/ranks.py:55
 #, python-format
-msgid "Rank \"%s\" has been deleted."
+msgid "Rank \"%(name)s\" has been deleted."
 msgstr ""
 
-#: users/views/admin/ranks.py:71
+#: users/views/admin/ranks.py:72
 #, python-format
-msgid "Rank \"%s\" has been moved below \"%s\"."
+msgid "Rank \"%(name)s\" has been moved below \"%(other)s\"."
 msgstr ""
 
-#: users/views/admin/ranks.py:89
+#: users/views/admin/ranks.py:90
 #, python-format
-msgid "Rank \"%s\" has been moved above \"%s\"."
+msgid "Rank \"%(name)s\" has been moved above \"%(other)s\"."
 msgstr ""
 
-#: users/views/admin/ranks.py:103
+#: users/views/admin/ranks.py:104
 #, python-format
-msgid "Rank \"%s\" is already default."
+msgid "Rank \"%(name)s\" is already default."
 msgstr ""
 
-#: users/views/admin/ranks.py:107
+#: users/views/admin/ranks.py:109
 #, python-format
-msgid "Rank \"%s\" has been made default."
+msgid "Rank \"%(name)s\" has been made default."
 msgstr ""
 
 #: users/views/admin/users.py:43
@@ -5322,12 +5361,12 @@ msgstr ""
 
 #: users/views/admin/users.py:171
 #, python-format
-msgid "New user \"%s\" has been registered."
+msgid "New user \"%(user)s\" has been registered."
 msgstr ""
 
-#: users/views/admin/users.py:201
+#: users/views/admin/users.py:202
 #, python-format
-msgid "User \"%s\" has been edited."
+msgid "User \"%(user)s\" has been edited."
 msgstr ""
 
 #: users/views/admin/warnings.py:15
@@ -5336,27 +5375,27 @@ msgstr ""
 
 #: users/views/admin/warnings.py:23
 #, python-format
-msgid "New warning level \"%s\" has been saved."
+msgid "New warning level \"%(name)s\" has been saved."
 msgstr ""
 
 #: users/views/admin/warnings.py:27
 #, python-format
-msgid "Warning level \"%s\" has been edited."
+msgid "Warning level \"%(name)s\" has been edited."
 msgstr ""
 
 #: users/views/admin/warnings.py:33
 #, python-format
-msgid "Warning level \"%s\" has been deleted."
+msgid "Warning level \"%(name)s\" has been deleted."
 msgstr ""
 
 #: users/views/admin/warnings.py:50
 #, python-format
-msgid "Warning level \"%s\" has been moved below \"%s\"."
+msgid "Warning level \"%(name)s\" has been moved below \"%(other)s\"."
 msgstr ""
 
-#: users/views/admin/warnings.py:68
+#: users/views/admin/warnings.py:69
 #, python-format
-msgid "Warning level \"%s\" has been moved above \"%s\"."
+msgid "Warning level \"%(name)s\" has been moved above \"%(other)s\"."
 msgstr ""
 
 #: users/views/api.py:40

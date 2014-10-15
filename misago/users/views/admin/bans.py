@@ -46,16 +46,16 @@ class BansList(BanAdmin, generic.ListView):
 
 
 class NewBan(BanAdmin, generic.ModelFormView):
-    message_submit = _('New ban "%s" has been saved.')
+    message_submit = _('New ban "%(name)s" has been saved.')
 
 
 class EditBan(BanAdmin, generic.ModelFormView):
-    message_submit = _('Ban "%s" has been edited.')
+    message_submit = _('Ban "%(name)s" has been edited.')
 
 
 class DeleteBan(BanAdmin, generic.ButtonView):
     def button_action(self, request, target):
         target.delete()
         Ban.objects.invalidate_cache()
-        message = _('Ban "%s" has been removed.') % unicode(target.name)
-        messages.success(request, message)
+        message = _('Ban "%(name)s" has been removed.')
+        messages.success(request, message % {'name': target.name})

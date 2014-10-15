@@ -168,7 +168,7 @@ class UsersList(UserAdmin, generic.ListView):
 class NewUser(UserAdmin, generic.ModelFormView):
     Form = NewUserForm
     template = 'new.html'
-    message_submit = _('New user "%s" has been registered.')
+    message_submit = _('New user "%(user)s" has been registered.')
 
     def handle_form(self, form, request, target):
         User = get_user_model()
@@ -190,7 +190,8 @@ class NewUser(UserAdmin, generic.ModelFormView):
         new_user.update_acl_key()
         new_user.save()
 
-        messages.success(request, self.message_submit % target.username)
+        messages.success(
+            request, self.message_submit % {'user': target.username})
         return redirect('misago:admin:users:accounts:edit',
                         user_id=new_user.id)
 
@@ -198,7 +199,7 @@ class NewUser(UserAdmin, generic.ModelFormView):
 class EditUser(UserAdmin, generic.ModelFormView):
     Form = EditUserForm
     template = 'edit.html'
-    message_submit = _('User "%s" has been edited.')
+    message_submit = _('User "%(user)s" has been edited.')
 
     def real_dispatch(self, request, target):
         target.old_username = target.username
@@ -240,4 +241,5 @@ class EditUser(UserAdmin, generic.ModelFormView):
         target.update_acl_key()
         target.save()
 
-        messages.success(request, self.message_submit % target.username)
+        messages.success(
+            request, self.message_submit % {'user': target.username})
