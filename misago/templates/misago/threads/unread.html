@@ -8,7 +8,9 @@
 {% block content %}
 <div class="page-header">
   <div class="container">
-    <h1>{% trans "Unread threads" %}</h1>
+    <h1>
+      {% trans "Threads with unread replies" %}
+    </h1>
   </div>
 </div>
 {{ block.super }}
@@ -32,8 +34,8 @@
 
 {% block no-threads %}
 {% blocktrans trimmed count days=fresh_period %}
-There are no threads from last {{ days }} day that have unread replies.
+There are no threads with unread replies from last {{ days }} day.
 {% plural %}
-There are no threads from last {{ days }} days that have unread replies.
+There are no threads with unread replies from last {{ days }} days.
 {% endblocktrans %}
 {% endblock no-threads %}
