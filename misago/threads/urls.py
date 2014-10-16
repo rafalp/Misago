@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 
-from misago.threads.views.threads import (ForumView, ThreadView, StartThreadView,
-                                          ReplyView, EditView)
+from misago.threads.views.threads import (ForumView, ThreadView,
+                                          StartThreadView, ReplyView, EditView)
 
 
 urlpatterns = patterns('',
@@ -24,20 +24,23 @@ urlpatterns += patterns('',
 
 
 # new threads lists
-from misago.threads.views.newthreads import NewThreadsView
+from misago.threads.views.newthreads import NewThreadsView, clear_new_threads
 urlpatterns += patterns('',
     url(r'^new-threads/$', NewThreadsView.as_view(), name='new_threads'),
     url(r'^new-threads/(?P<page>\d+)/$', NewThreadsView.as_view(), name='new_threads'),
     url(r'^new-threads/sort-(?P<sort>[\w-]+)$', NewThreadsView.as_view(), name='new_threads'),
     url(r'^new-threads/sort-(?P<sort>[\w-]+)(?P<page>\d+)/$', NewThreadsView.as_view(), name='new_threads'),
+    url(r'^new-threads/clear/$', clear_new_threads, name='clear_new_threads'),
 )
 
 
 # unread threads lists
-from misago.threads.views.unreadthreads import UnreadThreadsView
+from misago.threads.views.unreadthreads import (UnreadThreadsView,
+                                                clear_unread_threads)
 urlpatterns += patterns('',
     url(r'^unread-threads/$', UnreadThreadsView.as_view(), name='unread_threads'),
     url(r'^unread-threads/(?P<page>\d+)/$', UnreadThreadsView.as_view(), name='unread_threads'),
     url(r'^unread-threads/sort-(?P<sort>[\w-]+)$', UnreadThreadsView.as_view(), name='unread_threads'),
     url(r'^unread-threads/sort-(?P<sort>[\w-]+)(?P<page>\d+)/$', UnreadThreadsView.as_view(), name='unread_threads'),
+    url(r'^unread-threads/clear/$', clear_unread_threads, name='clear_unread_threads'),
 )

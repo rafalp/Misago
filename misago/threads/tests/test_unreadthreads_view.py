@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 from misago.forums.models import Forum
@@ -27,7 +28,7 @@ class AuthenticatedTests(AuthenticatedUserTestCase):
         # we'll read and reply to first five threads
         for thread in threads[5:]:
             response = self.client.get(thread.get_absolute_url())
-            testutils.reply_thread(thread)
+            testutils.reply_thread(thread, posted_on=timezone.now())
 
         # assert that replied threads show on list
         response = self.client.get(reverse('misago:unread_threads'))
@@ -36,6 +37,14 @@ class AuthenticatedTests(AuthenticatedUserTestCase):
             self.assertIn(thread.get_absolute_url(), response.content)
         for thread in threads[:5]:
             self.assertNotIn(thread.get_absolute_url(), response.content)
+
+        # clear list
+        response = self.client.post(reverse('misago:clear_unread_threads'))
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(response['location'])
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("There are no threads with unread", response.content)
 
 
 class AnonymousTests(UserTestCase):

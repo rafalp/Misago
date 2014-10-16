@@ -22,6 +22,14 @@
   {% include "misago/threads/paginator.html" %}
 
   {% include "misago/threads/sort.html" %}
+
+  <form action="{% url 'misago:clear_new_threads' %}" method="POST" class="pull-right">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-default">
+      <span class="fa fa-circle-o fa-fw"></span>
+      {% trans "Clear list" %}
+    </button>
+  </form>
 </div>
 
 {{ block.super }}

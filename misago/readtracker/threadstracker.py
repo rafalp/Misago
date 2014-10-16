@@ -99,6 +99,8 @@ def sync_record(user, thread, last_read_reply):
             read_replies=read_replies,
             last_read_on=last_read_reply.updated_on)
 
+         signals.thread_tracked.send(sender=user, thread=thread)
+
     if last_read_reply.updated_on == thread.last_post_on:
         signals.thread_read.send(sender=user, thread=thread)
         forumstracker.sync_record(user, thread.forum)

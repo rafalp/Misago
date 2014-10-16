@@ -6,6 +6,7 @@ from misago.threads.signals import move_thread
 
 all_read = Signal()
 forum_read = Signal(providing_args=["forum"])
+thread_tracked = Signal(providing_args=["thread"])
 thread_read = Signal(providing_args=["thread"])
 
 
@@ -23,10 +24,21 @@ def delete_thread_tracker(sender, **kwargs):
     sender.threadread_set.all().delete()
 
 
+@receiver(thread_tracked)
+def decrease_new_threads_count(sender, **kwargs):
+    user = sender
+    thread = kwargs['thread']
+    user.new_threads.decrease()
+
+
 @receiver(thread_read)
 def decrease_unread_count(sender, **kwargs):
     user = sender
     thread = kwargs['thread']
+    user.unread_threads.decrease()
 
-    if thread.is_new:
-        user.new_threads.decrease()
+
+@receiver(all_read)
+def zero_unread_counters(sender, **kwargs):
+    sender.new_threads.set(0)
+    sender.unread_threads.set(0)

@@ -35,6 +35,15 @@ class AuthenticatedTests(AuthenticatedUserTestCase):
         for thread in threads[:5]:
             self.assertIn(thread.get_absolute_url(), response.content)
 
+        # clear list
+        response = self.client.post(reverse('misago:clear_new_threads'))
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(response['location'])
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("There are no threads from last", response.content)
+
+
     def test_multipage_threads_list(self):
         """multipage threads list is rendered"""
         forum = Forum.objects.all_forums().filter(role="forum")[:1][0]

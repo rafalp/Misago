@@ -1,11 +1,18 @@
 from datetime import timedelta
 
 from django.conf import settings
+from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-from misago.core.uiviews import uiview
-from misago.users.decorators import deny_guests
+from django.db.transaction import atomic
+from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.translation import ugettext as _
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
+
+from misago.core.decorators import require_POST
+from misago.core.uiviews import uiview
+from misago.users.decorators import deny_guests
 
 from misago.threads.models import Thread
 from misago.threads.permissions import exclude_invisible_threads
@@ -18,6 +25,8 @@ class NewThreads(Threads):
         cutoff_date = timezone.now() - timedelta(days=cutoff_days)
         if cutoff_date < self.user.reads_cutoff:
             cutoff_date = self.user.reads_cutoff
+        if cutoff_date < self.user.new_threads_cutoff:
+            cutoff_date = self.user.new_threads_cutoff
 
         queryset = Thread.objects.filter(started_on__gte=cutoff_date)
         queryset = queryset.select_related('forum')
@@ -49,6 +58,21 @@ class NewThreadsView(ThreadsView):
         else:
             return super(NewThreadsView, self).dispatch(
                 request, *args, **kwargs)
+
+
+@deny_guests
+@require_POST
+@csrf_protect
+@never_cache
+@atomic
+def clear_new_threads(request):
+    request.user.new_threads_cutoff = timezone.now()
+    request.user.save(update_fields=['new_threads_cutoff'])
+
+    request.user.new_threads.set(0)
+
+    messages.success(request, _("New threads list has been cleared."))
+    return redirect('misago:new_threads')
 
 
 @uiview("new_threads")
