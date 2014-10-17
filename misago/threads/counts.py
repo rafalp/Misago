@@ -27,6 +27,7 @@ class BaseCounter(object):
 
     def get_cached_count(self):
         count = self.session.get(self.name, None)
+
         if not count or not self.is_cache_valid(count):
             count = self.get_real_count()
             self.session[self.name] = count
@@ -43,6 +44,7 @@ class BaseCounter(object):
 
     def get_real_count(self):
         return {
+            'user': self.user.pk,
             'threads': self.Threads(self.user).get_queryset().count(),
             'expires': self.get_expiration_timestamp()
         }
