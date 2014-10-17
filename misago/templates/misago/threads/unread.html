@@ -23,6 +23,7 @@
 
   {% include "misago/threads/sort.html" %}
 
+  {% if threads %}
   <form action="{% url 'misago:clear_unread_threads' %}" method="POST" class="pull-right">
     {% csrf_token %}
     <button type="submit" class="btn btn-default">
@@ -30,6 +31,7 @@
       {% trans "Clear list" %}
     </button>
   </form>
+  {% endif %}
 </div>
 
 {{ block.super }}
