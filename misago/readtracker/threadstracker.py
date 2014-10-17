@@ -17,6 +17,8 @@ def make_threads_read_aware(user, threads):
         make_read(threads)
         return None
 
+
+
     threads_dict = {}
     for thread in threads:
         thread.is_read = not is_date_tracked(user, thread.last_post_on)
@@ -25,7 +27,7 @@ def make_threads_read_aware(user, threads):
             thread.unread_replies = 0
         else:
             thread.unread_replies = thread.replies
-        threads_dict[thread.pk] = thread
+            threads_dict[thread.pk] = thread
 
     for record in user.threadread_set.filter(thread__in=threads_dict.keys()):
         if record.thread_id in threads_dict:
