@@ -17,7 +17,7 @@ def make_read_aware(user, forums):
 
     forums_dict = {}
     for forum in forums:
-        forum.is_read = not is_date_tracked(user, forum.last_post_on)
+        forum.is_read = not is_date_tracked(forum.last_post_on, user)
         forums_dict[forum.pk] = forum
 
     for record in user.forumread_set.filter(forum__in=forums_dict.keys()):

@@ -13,15 +13,19 @@ def make_read_aware(user, target):
 
 
 def make_threads_read_aware(user, threads):
+    if not threads:
+        return None
+
     if user.is_anonymous():
         make_read(threads)
         return None
 
-
+    forums_cutoffs = fetch_forums_cutoffs_for_threads(user, threads)
 
     threads_dict = {}
     for thread in threads:
-        thread.is_read = not is_date_tracked(user, thread.last_post_on)
+        thread.is_read = not is_date_tracked(
+            thread.last_post_on, user, forums_cutoffs.get(thread.forum_id))
         thread.is_new = True
         if thread.is_read:
             thread.unread_replies = 0
@@ -48,9 +52,21 @@ def make_read(threads):
         thread.is_read = True
 
 
+def fetch_forums_cutoffs_for_threads(users, threads):
+    forums = []
+    for thread in threads:
+        if thread.forum_id not in forums:
+            forums.append(thread.forum_id)
+
+    forums_dict = {}
+    for record in user.forumread_set.filter(forum__in=forums):
+        forums_dict[record.forum_id] = record.forum.last_read_on
+    return forums_dict
+
+
 def make_thread_read_aware(user, thread):
     thread.is_read = True
-    if user.is_authenticated() and is_date_tracked(user, thread.last_post_on):
+    if user.is_authenticated() and is_date_tracked(thread.last_post_on, user):
         try:
             record = user.threadread_set.filter(thread=thread).all()[0]
             thread.last_read_on = record.last_read_on
@@ -76,7 +92,7 @@ def make_posts_read_aware(user, thread, posts):
             post.is_read = True
     else:
         for post in posts:
-            if is_date_tracked(user, post.updated_on):
+            if is_date_tracked(post.updated_on, user):
                 post.is_read = post.updated_on <= thread.last_read_on
             else:
                 post.is_read = True
