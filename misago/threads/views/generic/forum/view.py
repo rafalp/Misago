@@ -26,7 +26,6 @@ class ForumView(ThreadsView):
 
     def dispatch(self, request, *args, **kwargs):
         forum = self.get_forum(request, **kwargs)
-        forumstracker.make_read_aware(request.user, forum)
 
         forum.labels = Label.objects.get_forum_labels(forum)
 

@@ -1,5 +1,5 @@
 from misago.core.shortcuts import paginate
-from misago.readtracker import threadstracker
+from misago.readtracker import forumstracker, threadstracker
 
 from misago.threads.permissions import exclude_invisible_threads
 from misago.threads.views.generic.threads import Threads
@@ -10,11 +10,12 @@ __all__ = ['ForumThreads']
 
 class ForumThreads(Threads):
     def __init__(self, user, forum):
-        self.pinned_count = 0
-
         self.user = user
         self.forum = forum
 
+        forumstracker.make_read_aware(user, forum)
+
+        self.pinned_count = 0
         self.filter_by = None
         self.sort_by = '-last_post_on'
 

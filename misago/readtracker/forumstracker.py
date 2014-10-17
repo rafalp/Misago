@@ -21,6 +21,7 @@ def make_read_aware(user, forums):
 
     forums_dict = {}
     for forum in forums:
+        forum.last_read_on = user.reads_cutoff
         forum.is_read = not is_date_tracked(forum.last_post_on, user)
         if not forum.is_read:
             forums_dict[forum.pk] = forum
@@ -33,7 +34,9 @@ def make_read_aware(user, forums):
 
 
 def make_read(forums):
+    now = timezone.now()
     for forum in forums:
+        forum.last_read_on = now
         forum.is_read = True
 
 
