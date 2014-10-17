@@ -65,7 +65,18 @@
 
 <div class="table-actions">
   {% include "misago/threads/paginator.html" %}
+
   {% include "misago/threads/reply_btn.html" %}
+
+  {% if not forum.is_read and user.is_authenticated %}
+  <form action="{% url 'misago:read_forum' forum_id=forum.id %}" method="POST" class="pull-right">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-default">
+      <span class="fa fa-circle-o fa-fw"></span>
+      {% trans "Mark threads as read" %}
+    </button>
+  </form>
+  {% endif %}
 </div>
 {% endblock threads-panel %}
 

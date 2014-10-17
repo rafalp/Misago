@@ -1,5 +1,8 @@
+from django.utils import timezone
+
 from misago.readtracker import forumstracker, signals
 from misago.readtracker.dates import is_date_tracked
+from misago.readtracker.models import ForumRead, ThreadRead
 
 
 __all__ = ['make_read_aware', 'read_thread']
@@ -12,7 +15,7 @@ def make_read_aware(user, target):
         make_thread_read_aware(user, target)
 
 
-def make_threads_read_aware(user, threads):
+def make_threads_read_aware(user, threads, forum=None):
     if not threads:
         return None
 
@@ -20,6 +23,39 @@ def make_threads_read_aware(user, threads):
         make_read(threads)
         return None
 
+    if forum:
+        make_forum_threads_read_aware(user, forum, threads)
+    else:
+        make_forums_threads_read_aware(user, threads)
+
+
+def make_read(threads):
+    for thread in threads:
+        thread.unread_replies = 0
+        thread.is_read = True
+        thread.is_new = False
+
+
+def make_forum_threads_read_aware(user, forum, threads):
+    if forum.is_read:
+        make_read(threads)
+    else:
+        threads_dict = {}
+        for thread in threads:
+            thread.is_read = not is_date_tracked(
+                thread.last_post_on, user, forum.last_read_on)
+            thread.is_new = True
+            if thread.is_read:
+                thread.unread_replies = 0
+            else:
+                thread.unread_replies = thread.replies
+                threads_dict[thread.pk] = thread
+
+        if threads_dict:
+            make_threads_dict_read_aware(user, threads_dict)
+
+
+def make_forums_threads_read_aware(user, threads):
     forums_cutoffs = fetch_forums_cutoffs_for_threads(user, threads)
 
     threads_dict = {}
@@ -33,6 +69,23 @@ def make_threads_read_aware(user, threads):
             thread.unread_replies = thread.replies
             threads_dict[thread.pk] = thread
 
+    if threads_dict:
+        make_threads_dict_read_aware(user, threads_dict)
+
+
+def fetch_forums_cutoffs_for_threads(user, threads):
+    forums = []
+    for thread in threads:
+        if thread.forum_id not in forums:
+            forums.append(thread.forum_id)
+
+    forums_dict = {}
+    for record in user.forumread_set.filter(forum__in=forums):
+        forums_dict[record.forum_id] = record.last_read_on
+    return forums_dict
+
+
+def make_threads_dict_read_aware(user, threads_dict):
     for record in user.threadread_set.filter(thread__in=threads_dict.keys()):
         if record.thread_id in threads_dict:
             thread = threads_dict[record.thread_id]
@@ -46,38 +99,34 @@ def make_threads_read_aware(user, threads):
                     thread.unread_replies = 1
 
 
-def make_read(threads):
-    for thread in threads:
-        thread.unread_replies = 0
-        thread.is_read = True
-
-
-def fetch_forums_cutoffs_for_threads(users, threads):
-    forums = []
-    for thread in threads:
-        if thread.forum_id not in forums:
-            forums.append(thread.forum_id)
-
-    forums_dict = {}
-    for record in user.forumread_set.filter(forum__in=forums):
-        forums_dict[record.forum_id] = record.forum.last_read_on
-    return forums_dict
-
-
 def make_thread_read_aware(user, thread):
     thread.is_read = True
+    thread.is_new = False
+    thread.read_record = None
+
+    if user.is_anonymous():
+        thread.last_read_on = timezone.now()
+    else:
+        thread.last_read_on = user.reads_cutoff
+
     if user.is_authenticated() and is_date_tracked(thread.last_post_on, user):
+        thread.is_read = False
+        thread.is_new = True
+
         try:
-            record = user.threadread_set.filter(thread=thread).all()[0]
-            thread.last_read_on = record.last_read_on
-            thread.is_new = False
-            thread.is_read = thread.last_post_on <= record.last_read_on
-            thread.read_record = record
-        except IndexError:
-            thread.read_record = None
-            thread.is_new = True
-            thread.is_read = False
-            thread.last_read_on = user.joined_on
+            forum_record = user.forumread_set.get(forum_id=thread.forum_id)
+            if thread.last_post_on > forum_record.last_read_on:
+                try:
+                    thread_record = user.threadread_set.get(thread=thread)
+                    thread.last_read_on = record.last_read_on
+                    thread.is_new = False
+                    if thread.last_post_on <= thread_record.last_read_on:
+                        thread.is_read = True
+                    thread.read_record = thread_record
+                except ThreadRead.DoesNotExist:
+                    pass
+        except ForumRead.DoesNotExist:
+            pass
 
 
 def make_posts_read_aware(user, thread, posts):

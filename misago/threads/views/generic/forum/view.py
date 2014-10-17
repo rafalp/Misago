@@ -1,6 +1,7 @@
 from django.shortcuts import redirect
 
 from misago.forums.lists import get_forums_list, get_forum_path
+from misago.readtracker import forumstracker
 
 from misago.threads.models import Label
 from misago.threads.views.generic.forum.actions import ForumActions
@@ -25,6 +26,8 @@ class ForumView(ThreadsView):
 
     def dispatch(self, request, *args, **kwargs):
         forum = self.get_forum(request, **kwargs)
+        forumstracker.make_read_aware(request.user, forum)
+
         forum.labels = Label.objects.get_forum_labels(forum)
 
         if forum.lft + 1 < forum.rght:

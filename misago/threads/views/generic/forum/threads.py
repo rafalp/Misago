@@ -1,4 +1,5 @@
 from misago.core.shortcuts import paginate
+from misago.readtracker import threadstracker
 
 from misago.threads.permissions import exclude_invisible_threads
 from misago.threads.views.generic.threads import Threads
@@ -68,3 +69,6 @@ class ForumThreads(Threads):
                         return queryset.filter(label_id=label.pk)
                 else:
                     return queryset
+
+    def make_threads_read_aware(self, threads):
+        threadstracker.make_threads_read_aware(self.user, threads, self.forum)
