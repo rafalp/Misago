@@ -9,7 +9,7 @@
       <a href="{% url USER_PROFILE_URL user_slug=card.slug user_id=card.id %}" class="user-card {% if card.rank.css_class %}card-{{ card.rank.css_class }}{% endif %}">
         <img src="{{ card|avatar:400 }}" alt="{% trans "Avatar" %}">
         <div class="card-footer">
-          <h4 class="user-name">{{ card.username }}</h4>
+          <h4 class="user-name">{{ card }}</h4>
         </div>
       </a>
 

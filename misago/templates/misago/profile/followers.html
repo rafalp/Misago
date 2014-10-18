@@ -2,7 +2,7 @@
 {% load humanize i18n misago_avatars misago_pagination %}
 
 
-{% block meta-description %}{% blocktrans trimmed with user=profile.username followers=profile.followers|intcomma count counter=profile.followers %}
+{% block meta-description %}{% blocktrans trimmed with user=profile followers=profile.followers|intcomma count counter=profile.followers %}
 {{ user }} is followed by {{ followers }} user.
 {% plural %}
 {{ user }} is followed by {{ followers }} users.
@@ -19,7 +19,7 @@
       You are followed by {{ followers }} users.
       {% endblocktrans %}
     {% else %}
-      {% blocktrans trimmed with user=profile.username followers=profile.followers|intcomma count counter=profile.followers %}
+      {% blocktrans trimmed with user=profile followers=profile.followers|intcomma count counter=profile.followers %}
       {{ user }} is followed by {{ followers }} user.
       {% plural %}
       {{ user }} is followed by {{ followers }} users.
@@ -31,11 +31,11 @@
 {% else %}
 <p class="lead">
   {% if is_authenticated_user %}
-    {% blocktrans trimmed with user=profile.username %}
+    {% blocktrans trimmed with user=profile %}
     No users are following you, {{ user }}.
     {% endblocktrans %}
   {% else %}
-    {% blocktrans trimmed with user=profile.username %}
+    {% blocktrans trimmed with user=profile %}
     {{ user }} has no followers.
     {% endblocktrans %}
   {% endif %}

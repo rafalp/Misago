@@ -20,7 +20,7 @@
 
     {% if activation_by_user %}
     <p class="lead">
-      {% blocktrans trimmed with user=registered_user.username %}
+      {% blocktrans trimmed with user=registered_user %}
       {{ user }}, your account has been created, but you have to activate it before you will be able to sign in.
       {% endblocktrans %}
     </p>
@@ -31,7 +31,7 @@
     </p>
     {% elif activation_by_admin %}
     <p class="lead">
-      {% blocktrans trimmed with user=registered_user.username %}
+      {% blocktrans trimmed with user=registered_user %}
       {{ user }}, your account has been created, but administrator has to activate it before you will be able to sign in.
       {% endblocktrans %}
     </p>

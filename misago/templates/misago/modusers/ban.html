@@ -3,7 +3,7 @@
 
 
 {% block title %}
-{{ profile.username }}: {% trans "Ban user" %} | {{ block.super }}
+{{ profile }}: {% trans "Ban user" %} | {{ block.super }}
 {% endblock title %}
 
 
@@ -23,7 +23,7 @@
 
         <div class="form-header">
           <h2>
-            {% blocktrans trimmed with user=profile.username %}
+            {% blocktrans trimmed with user=profile %}
             Ban {{ user }}
             {% endblocktrans %}
           </h2>

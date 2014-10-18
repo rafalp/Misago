@@ -2,7 +2,7 @@
 {% load humanize i18n misago_avatars misago_capture misago_pagination %}
 
 
-{% block meta-description %}{% blocktrans trimmed with user=profile.username changes=name_changes.paginator.count|intcomma joined_on=profile.joined_on|date count counter=name_changes.paginator.count %}
+{% block meta-description %}{% blocktrans trimmed with user=profile changes=name_changes.paginator.count|intcomma joined_on=profile.joined_on|date count counter=name_changes.paginator.count %}
 {{ user }} username was changed {{ changes }} time since {{ joined_on }}.
 {% plural %}
 {{ user }} username was changed {{ changes }} times since {{ joined_on }}.
@@ -19,7 +19,7 @@
       Your username was changed {{ changes }} times.
       {% endblocktrans %}
     {% else %}
-      {% blocktrans trimmed with user=profile.username changes=name_changes.paginator.count|intcomma count counter=name_changes.paginator.count %}
+      {% blocktrans trimmed with user=profile changes=name_changes.paginator.count|intcomma count counter=name_changes.paginator.count %}
       {{ user }} username was changed {{ changes }} time.
       {% plural %}
       {{ user }} username was changed {{ changes }} times.
@@ -54,7 +54,7 @@
         {{ changed_by }} changed {{ old_username }}'s name to {{ new_username }}
         {% endblocktrans %}
       {% else %}
-        <img src="{{ profile.pk|avatar:22 }}" class="tooltip-top" title="{{ profile.username }}">
+        <img src="{{ profile.pk|avatar:22 }}" class="tooltip-top" title="{{ profile }}">
         {% blocktrans trimmed with old_username=old_username|safe new_username=new_username|safe %}
         {{ old_username }} changed name to {{ new_username }}
         {% endblocktrans %}
@@ -71,11 +71,11 @@
 {% else %}
 <p class="lead">
   {% if is_authenticated_user %}
-    {% blocktrans trimmed with user=profile.username %}
+    {% blocktrans trimmed with user=profile %}
     Your username was never changed, {{ user }}.
     {% endblocktrans %}
   {% else %}
-    {% blocktrans trimmed with user=profile.username %}
+    {% blocktrans trimmed with user=profile %}
     {{ user }}'s username was never changed.
     {% endblocktrans %}
   {% endif %}

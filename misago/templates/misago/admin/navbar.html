@@ -17,7 +17,7 @@
         <p class="navbar-text">
           <a href="{% url 'misago:admin:users:accounts:edit' user_id=user.id %}" class="tooltip-bottom" title="{% trans "Edit your account" %}">
             <img src="{{ user|avatar:30 }}" alt="{% trans "Your avatar" %}">
-            {{ user.username }}
+            {{ user }}
           </a>
           <a href="#" class="logout" data-toggle="modal" data-target="#logout-modal">
             <span class="fa fa-power-off"></span>

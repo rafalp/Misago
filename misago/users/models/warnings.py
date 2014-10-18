@@ -67,6 +67,9 @@ class WarningLevel(models.Model):
 
     objects = WarningLevelManager()
 
+    def __unicode__(self):
+        return self.name
+
     def save(self, *args, **kwargs):
         if not self.pk:
             self.set_level()

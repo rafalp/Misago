@@ -4,7 +4,7 @@
     <a href="{% url USER_PROFILE_URL user_slug=user.slug user_id=user.id %}" class="dropdown-toggle user-toggle" data-toggle="dropdown">
       <span class="glyphicon glyphicon-chevron-down"></span>
       <img src="{{ user|avatar:30 }}" alt="{% trans "Your avatar" %}">
-      {{ user.username }}
+      {{ user }}
     </a>
     <ul class="dropdown-menu">
       <li>

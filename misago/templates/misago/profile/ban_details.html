@@ -7,11 +7,11 @@
   <p class="lead pull-left">
     <span class="fa fa-lock"></span>
     {% if ban.valid_until %}
-    {% blocktrans trimmed with user=profile.username banned_until=ban.valid_until %}
+    {% blocktrans trimmed with user=profile banned_until=ban.valid_until %}
     {{ user }} is banned until after {{ banned_until }}.
     {% endblocktrans %}
     {% else %}
-    {% blocktrans trimmed with user=profile.username %}
+    {% blocktrans trimmed with user=profile %}
     {{ user }} is banned permanently.
     {% endblocktrans %}
     {% endif %}

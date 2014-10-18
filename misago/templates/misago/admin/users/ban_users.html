@@ -18,7 +18,7 @@
 </h1>
 <p>
   {% for user in users %}
-  <img src="{{ user|avatar:24 }}" class="img-rounded tooltip-top" alt="{{ user.username }}" width="24" height="24" title="{{ user.username }}">
+  <img src="{{ user|avatar:24 }}" class="img-rounded tooltip-top" alt="{{ user }}" width="24" height="24" title="{{ user }}">
   {% endfor %}
 </p>
 {% endblock %}

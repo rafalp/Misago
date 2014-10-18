@@ -2,7 +2,7 @@
 {% load humanize i18n %}
 
 
-{% block meta-description %}{% blocktrans trimmed with user=profile.username posts=profile.posts|intcomma joined_on=profile.joined_on|date count counter=profile.posts %}
+{% block meta-description %}{% blocktrans trimmed with user=profile posts=profile.posts|intcomma joined_on=profile.joined_on|date count counter=profile.posts %}
 {{ user }} has posted {{ posts }} message since {{ joined_on }}.
 {% plural %}
 {{ user }} has posted {{ posts }} messages since {{ joined_on }}.
@@ -11,7 +11,7 @@
 
 {% block page %}
 <p class="lead">
-  {% blocktrans trimmed with user=profile.username %}
+  {% blocktrans trimmed with user=profile %}
   {{ user }} posted no messages, or you can't see them.
   {% endblocktrans %}
 </p>

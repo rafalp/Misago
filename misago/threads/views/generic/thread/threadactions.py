@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db.transaction import atomic
 from django.shortcuts import redirect, render
 from django.utils.translation import ugettext as _
 
@@ -187,7 +188,10 @@ class ThreadActions(ActionsBase):
         messages.success(request, _("Thread was hid."))
 
     def action_delete(self, request, thread):
-        moderation.delete_thread(request.user, thread)
+        with atomic():
+            moderation.delete_thread(request.user, thread)
+            self.forum.synchronize()
+            self.forum.save()
 
         message = _('Thread "%(thread)s" was deleted.')
         messages.success(request, message % {'thread': thread.title})

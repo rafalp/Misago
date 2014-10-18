@@ -16,7 +16,7 @@
         {% if post.poster %}
         {% include "misago/user_state.html" with user=post.poster state=post.poster.online_state %}
         <a class="user-name" href="{% url USER_PROFILE_URL user_slug=post.poster.slug user_id=post.poster.id %}">
-          {{ post.poster.username }}</a>
+          {{ post.poster }}</a>
         {% else %}
         <span class="fa fa-power-off fa-fw user-offline tooltip-top" title="{% blocktrans with user=post.poster_name %}{{ user }}'s forum account has been deleted.{% endblocktrans %}"></span>
         <span class="user-name">

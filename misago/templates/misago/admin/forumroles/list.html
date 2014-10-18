@@ -21,7 +21,7 @@
 
 {% block table-row %}
 <td class="item-name">
-  {{ item.name }}
+  {{ item }}
 </td>
 <td class="row-action">
   <a href="{% url 'misago:admin:permissions:forums:edit' role_id=item.id %}" class="btn btn-primary tooltip-top" title="{% trans "Edit" %}">

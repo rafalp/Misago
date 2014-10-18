@@ -35,7 +35,7 @@
   </a>
 </td>
 <td class="item-name {% if item.requires_activation %}text-muted{% endif %}">
-  <a href="{{ item.get_absolute_url }}">{{ item.username }}</a>
+  <a href="{{ item.get_absolute_url }}">{{ item }}</a>
 </td>
 <td class="lead text-muted">
   {% if item.requires_activation_by_admin %}
@@ -59,7 +59,7 @@
   <a href="mailto:{{ item.email }}">{{ item.email }}</a>
 </td>
 <td>
-  {{ item.rank.name }}
+  {{ item.rank }}
 </td>
 <td>
   <abbr class="tooltip-top dynamic time-ago" title="{{ item.joined_on }}" data-timestamp="{{ item.joined_on|date:"c" }}">

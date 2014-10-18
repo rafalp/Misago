@@ -3,7 +3,7 @@
 
 
 {% block meta-description %}
-{% blocktrans trimmed with user=profile.username follows=profile.following|intcomma count counter=profile.following %}
+{% blocktrans trimmed with user=profile follows=profile.following|intcomma count counter=profile.following %}
 {{ user }} is following {{ follows }} user.
 {% plural %}
 {{ user }} is following {{ follows }} users.
@@ -20,7 +20,7 @@
       You are following {{ follows }} users.
       {% endblocktrans %}
     {% else %}
-      {% blocktrans trimmed with user=profile.username follows=profile.following|intcomma count counter=profile.following %}
+      {% blocktrans trimmed with user=profile follows=profile.following|intcomma count counter=profile.following %}
       {{ user }} is following {{ follows }} user.
       {% plural %}
       {{ user }} is following {{ follows }} users.
@@ -32,11 +32,11 @@
 {% else %}
 <p class="lead">
   {% if is_authenticated_user %}
-    {% blocktrans trimmed with user=profile.username %}
+    {% blocktrans trimmed with user=profile %}
     Your are not following any users, {{ user }}.
     {% endblocktrans %}
   {% else %}
-    {% blocktrans trimmed with user=profile.username %}
+    {% blocktrans trimmed with user=profile %}
     {{ user }} follows no users.
     {% endblocktrans %}
   {% endif %}

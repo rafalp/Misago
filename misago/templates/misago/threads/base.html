@@ -1,6 +1,7 @@
 {% extends "misago/base.html" %}
 {% load humanize i18n misago_avatars misago_dates misago_shorthands %}
 
+
 {% block content %}
 <div class="container">
   {% block threads-list %}
@@ -29,7 +30,7 @@
               {% endif %}
 
               <a href="{{ thread.get_absolute_url }}" class="item-title">
-                {{ thread.title }}
+                {{ thread }}
               </a>
 
             </div>
@@ -120,7 +121,7 @@
                 {% if thread.label %}
                 <li>
                   <span class="label label-solo label-{{ thread.label.css_class|default:"default" }}">
-                    {{ thread.label.name }}
+                    {{ thread.label }}
                   </span>
                 </li>
                 {% endif %}

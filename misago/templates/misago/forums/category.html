@@ -2,7 +2,7 @@
 {% load i18n misago_stringutils %}
 
 
-{% block title %}{{ category.name }} | {{ block.super }}{% endblock title %}
+{% block title %}{{ category }} | {{ block.super }}{% endblock title %}
 
 
 {% block meta-description %}{{ category.description|striplinebreaks }}{% endblock meta-description %}
@@ -16,13 +16,13 @@
       <ol class="breadcrumb">
         {% for crumb in path|slice:":-1" %}
         <li>
-          <a href="{{ crumb.get_absolute_url }}">{{ crumb.name }}</a>{% if not forloop.last %}<span class="fa fa-chevron-right"></span>{% endif %}
+          <a href="{{ crumb.get_absolute_url }}">{{ crumb }}</a>{% if not forloop.last %}<span class="fa fa-chevron-right"></span>{% endif %}
         </li>
         {% endfor %}
       </ol>
       {% endif %}
 
-      <h1>{{ category.name }}</h1>
+      <h1>{{ category }}</h1>
     </div>
   </div>
   <div class="container">

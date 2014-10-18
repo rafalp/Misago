@@ -25,7 +25,7 @@
 
 {% block table-row %}
 <td class="item-name">
-  {{ item.name }}
+  {{ item }}
 </td>
 <td>{% if item.css_class %}{{ item.css_class }}{% else %}&nbsp;{% endif %}</td>
 {% for action in extra_actions %}

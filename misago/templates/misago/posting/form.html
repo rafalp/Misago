@@ -2,7 +2,7 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Start new thread" %} | {{ forum.name }} | {{ block.super }}{% endblock title %}
+{% block title %}{% trans "Start new thread" %} | {{ forum }} | {{ block.super }}{% endblock title %}
 
 
 {% block content %}
@@ -13,7 +13,7 @@
       <ol class="breadcrumb">
         {% for crumb in path %}
         <li>
-          <a href="{{ crumb.get_absolute_url }}">{{ crumb.name }}</a>{% if not forloop.last %}<span class="fa fa-chevron-right"></span>{% endif %}
+          <a href="{{ crumb.get_absolute_url }}">{{ crumb }}</a>{% if not forloop.last %}<span class="fa fa-chevron-right"></span>{% endif %}
         </li>
         {% endfor %}
       </ol>
@@ -21,7 +21,7 @@
 
       <h1>
         <span class="main">
-          <a href="{{ forum.get_absolute_url }}">{{ forum.name }}</a>
+          <a href="{{ forum.get_absolute_url }}">{{ forum }}</a>
         </span>
         <span class="sub">
           <span class="fa fa-chevron-right"></span>

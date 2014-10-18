@@ -3,7 +3,7 @@
 
 
 {% block content %}
-{% blocktrans trimmed with user=recipient.username %}
+{% blocktrans trimmed with user=recipient %}
 {{ user }}, thank you for joining us!
 {% endblocktrans %}
 {% if activation_by_admin %}

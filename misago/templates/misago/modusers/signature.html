@@ -3,7 +3,7 @@
 
 
 {% block title %}
-{{ profile.username }}: {% trans "Signature" %} | {{ block.super }}
+{{ profile }}: {% trans "Signature" %} | {{ block.super }}
 {% endblock title %}
 
 
@@ -32,7 +32,7 @@
         <div class="form-body form-markup-preview">
           {% if not profile.signature %}
           <p class="lead">
-            {% blocktrans trimmed with user=profile.username %}
+            {% blocktrans trimmed with user=profile %}
             {{ user }} has no signature set.
             {% endblocktrans %}
           </p>

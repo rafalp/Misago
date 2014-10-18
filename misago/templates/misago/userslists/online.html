@@ -9,7 +9,7 @@
 <a href="{% url USER_PROFILE_URL user_slug=card.user.slug user_id=card.user.id %}" class="user-card {% if card.user.rank.css_class %}card-{{ card.user.rank.css_class }}{% endif %}">
   <img src="{{ card.user|avatar:400 }}" alt="{% trans "Avatar" %}">
   <div class="card-footer">
-    <h4 class="user-name">{{ card.user.username }}</h4>
+    <h4 class="user-name">{{ card.user }}</h4>
     <small>
       <abbr class="tooltip-top dynamic time-ago" title="{% blocktrans with last_click=card.last_click|date:"TIME_FORMAT" %}Last click on {{ last_click }}{% endblocktrans %}" data-timestamp="{{ card.last_click|date:"c" }}">
         {{ card.last_click|date }}
@@ -53,7 +53,7 @@
           </a>
         </td>
         <td>
-          <a href="{{ user_url }}" class="item-title">{{ online.user.username }}</a>
+          <a href="{{ user_url }}" class="item-title">{{ online.user }}</a>
         </td>
         <td>
           <abbr class="tooltip-top dynamic time-ago" title="{% blocktrans with last_click=online.last_click|date:"TIME_FORMAT" %}Last click on {{ last_click }}{% endblocktrans %}" data-timestamp="{{ online.last_click|date:"c" }}">

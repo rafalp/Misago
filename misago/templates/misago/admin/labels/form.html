@@ -4,7 +4,7 @@
 
 {% block title %}
 {% if target.pk %}
-{{ target.name }}
+{{ target }}
 {% else %}
 {% trans "New label" %}
 {% endif %} | {{ active_link.name }} | {{ block.super }}
@@ -13,7 +13,7 @@
 
 {% block page-target %}
 {% if target.pk %}
-{{ target.name }}
+{{ target }}
 {% else %}
 {% trans "New label" %}
 {% endif %}
@@ -23,7 +23,7 @@
 {% block form-header %}
 <h1>
   {% if target.pk %}
-  {{ target.name }}
+  {{ target }}
   {% else %}
   {% trans "New label" %}
   {% endif %}

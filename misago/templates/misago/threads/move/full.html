@@ -13,11 +13,11 @@
       <ol class="breadcrumb">
         {% for crumb in path|slice:":-1" %}
         <li>
-          <a href="{{ crumb.get_absolute_url }}">{{ crumb.name }}</a><span class="fa fa-chevron-right"></span>
+          <a href="{{ crumb.get_absolute_url }}">{{ crumb }}</a><span class="fa fa-chevron-right"></span>
         </li>
         {% endfor %}
         <li>
-          <a href="{{ forum.get_absolute_url }}">{{ forum.name }}</a>
+          <a href="{{ forum.get_absolute_url }}">{{ forum }}</a>
         </li>
       </ol>
       {% endif %}
@@ -41,7 +41,7 @@
 
             <div class="form-header">
               <h2>
-                {% blocktrans trimmed with forum=forum.name %}
+                {% blocktrans trimmed with forum=forum %}
                   Move threads from {{ forum }}
                 {% endblocktrans %}
               </h2>

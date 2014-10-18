@@ -2,7 +2,7 @@
 {% load humanize i18n misago_avatars misago_capture misago_dates misago_pagination %}
 
 
-{% block meta-description %}{% blocktrans trimmed with user=profile.username warnings=warnings.paginator.count|intcomma joined_on=profile.joined_on|date count counter=warnings.paginator.count %}
+{% block meta-description %}{% blocktrans trimmed with user=profile warnings=warnings.paginator.count|intcomma joined_on=profile.joined_on|date count counter=warnings.paginator.count %}
 {{ user }} was warned {{ warnings }} time since {{ joined_on }}.
 {% plural %}
 {{ user }} was warned {{ warnings }} times since {{ joined_on }}.
@@ -14,7 +14,7 @@
   <div class="warning-summary">
     {% if warning_level %}
       <p class="lead">
-        {{ warning_level.name }}
+        {{ warning_level }}
       </p>
 
       {% if warning_level.has_restrictions %}
@@ -173,11 +173,11 @@
 {% else %}
 <p class="lead">
   {% if is_authenticated_user %}
-    {% blocktrans trimmed with user=profile.username %}
+    {% blocktrans trimmed with user=profile %}
     Your have no warnings, {{ user }}.
     {% endblocktrans %}
   {% else %}
-    {% blocktrans trimmed with user=profile.username %}
+    {% blocktrans trimmed with user=profile %}
     {{ user }} has no warnings.
     {% endblocktrans %}
   {% endif %}

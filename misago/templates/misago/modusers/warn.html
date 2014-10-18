@@ -3,7 +3,7 @@
 
 
 {% block title %}
-{{ profile.username }}: {% trans "Warn" %} | {{ block.super }}
+{{ profile }}: {% trans "Warn" %} | {{ block.super }}
 {% endblock title %}
 
 
@@ -64,7 +64,7 @@
       <div class="panel-body thin">
 
         {% if current_level %}
-          <h4>{{ current_level.name }}</h4>
+          <h4>{{ current_level }}</h4>
 
           {% if current_level.is_replying_disallowed %}
           <p>
@@ -118,7 +118,7 @@
       </div>
       <div class="panel-body thin">
 
-        <h4>{{ next_level.name }}</h4>
+        <h4>{{ next_level }}</h4>
 
         {% if next_level.is_replying_disallowed %}
         <p>

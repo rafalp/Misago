@@ -2,7 +2,7 @@
 {% load humanize i18n %}
 
 
-{% block meta-description %}{% blocktrans trimmed with user=profile.username threads=profile.threads|intcomma joined_on=profile.joined_on|date count counter=profile.threads %}
+{% block meta-description %}{% blocktrans trimmed with user=profile threads=profile.threads|intcomma joined_on=profile.joined_on|date count counter=profile.threads %}
 {{ user }} has started {{ threads }} thread since {{ joined_on }}.
 {% plural %}
 {{ user }} has started {{ threads }} threads since {{ joined_on }}.
@@ -11,7 +11,7 @@
 
 {% block page %}
 <p class="lead">
-  {% blocktrans trimmed with user=profile.username %}
+  {% blocktrans trimmed with user=profile %}
   {{ user }} started no threads, or you can't see them.
   {% endblocktrans %}
 </p>

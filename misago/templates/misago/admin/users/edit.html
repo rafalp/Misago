@@ -3,18 +3,18 @@
 
 
 {% block title %}
-{{ target.username }} | {{ active_link.name }} | {{ block.super }}
+{{ target }} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
 
 {% block page-target %}
-{{ target.username }}
+{{ target }}
 {% endblock page-target %}
 
 
 {% block form-header %}
 <h1>
-  {{ target.username }}
+  {{ target }}
 </h1>
 {% endblock %}
 

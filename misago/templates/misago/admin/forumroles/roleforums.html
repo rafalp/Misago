@@ -43,7 +43,7 @@
           {% elif form.forum.role == 'redirect' %}
           <span class="fa fa-link tooltip-top" title="{% trans "Redirect" %}"></span>
           {% endif %}
-          {{ form.forum.name }}
+          {{ form.forum }}
         </td>
         <td>
           {% crispy_field form.role %}
