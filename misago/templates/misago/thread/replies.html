@@ -30,7 +30,7 @@
       <h1>{{ thread }}</h1>
 
       <ul class="list-inline page-details">
-        <li class="tooltip-bottom" title="{% trans "Thread autor" %}">
+        <li class="tooltip-bottom" title="{% trans "Thread author" %}">
           {% if thread.starter_id %}
             <a href="{% url USER_PROFILE_URL user_slug=thread.starter_slug user_id=thread.starter_id %}">
               <img src="{{ thread.starter_id|avatar:20 }}" alt="{% trans "Avatar" %}"> {{ thread.starter_name }}
