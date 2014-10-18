@@ -58,10 +58,22 @@
   </div>
   <div class="container">
 
+    <div class="table-actions">
+
+      {% include "misago/thread/pagination.html" %}
+
+    </div>
+
     <div class="posts-list">
       {% for post in posts %}
       {% include "misago/thread/post.html" %}
       {% endfor %}
+    </div>
+
+    <div class="table-actions">
+
+      {% include "misago/thread/pagination.html" %}
+
     </div>
 
   </div>

@@ -68,10 +68,17 @@ class ThreadView(ViewBase):
         threadstracker.read_thread(request.user, thread, posts[-1])
 
         return self.render(request, {
+            'link_name': thread.get_url(),
+            'links_params': {
+                'thread_id': thread.id, 'thread_slug': thread.slug
+            },
+
             'forum': forum,
             'path': get_forum_path(forum),
+
             'thread': thread,
             'posts': posts,
-            'page': page,
+
             'paginator': page.paginator,
+            'page': page,
         })

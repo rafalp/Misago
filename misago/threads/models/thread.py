@@ -112,12 +112,14 @@ class Thread(models.Model):
         else:
             return 'thread'
 
-    def get_url(self, suffix=None):
+    def get_url_name(self, suffix=None):
         link = 'misago:%s' % self.link_prefix
         if suffix:
             link = '%s_%s' % (link, suffix)
+        return link
 
-        return reverse(link, kwargs={
+    def get_url(self, suffix=None):
+        return reverse(self.get_url_name(suffix), kwargs={
             'thread_slug': self.slug,
             'thread_id': self.id
         })
