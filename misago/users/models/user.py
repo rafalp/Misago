@@ -224,8 +224,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     new_threads_cutoff = models.DateTimeField(default=dj_timezone.now)
     unread_threads_cutoff = models.DateTimeField(default=dj_timezone.now)
 
-    is_active = True  # Django's is_active means "is not deleted"
-
     USERNAME_FIELD = 'slug'
     REQUIRED_FIELDS = ['email']
 
