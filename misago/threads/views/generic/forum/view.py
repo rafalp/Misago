@@ -52,7 +52,6 @@ class ForumView(ThreadsView):
 
         actions = self.Actions(user=request.user, forum=forum)
         if request.method == 'POST':
-            # see if we can delegate anything to actions manager
             response = actions.handle_post(request, threads.get_queryset())
             if response:
                 return response
