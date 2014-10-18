@@ -118,7 +118,7 @@ def make_thread_read_aware(user, thread):
             if thread.last_post_on > forum_record.last_read_on:
                 try:
                     thread_record = user.threadread_set.get(thread=thread)
-                    thread.last_read_on = record.last_read_on
+                    thread.last_read_on = thread_record.last_read_on
                     thread.is_new = False
                     if thread.last_post_on <= thread_record.last_read_on:
                         thread.is_read = True
