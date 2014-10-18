@@ -1,5 +1,5 @@
 from django.db.models import Q
-from django.shortcuts import redirect
+from django.utils.translation import ungettext, ugettext_lazy, ugettext as _
 
 from misago.acl import add_acl
 from misago.forums.lists import get_forum_path
@@ -9,6 +9,8 @@ from misago.users.online.utils import get_user_state
 from misago.threads.events import add_events_to_posts
 from misago.threads.paginator import paginate
 from misago.threads.views.generic.base import ViewBase
+from misago.threads.views.generic.thread.postsactions import PostsActions
+from misago.threads.views.generic.thread.threadactions import ThreadActions
 
 
 __all__ = ['ThreadView']
@@ -18,6 +20,8 @@ class ThreadView(ViewBase):
     """
     Basic view for threads
     """
+    ThreadActions = ThreadActions
+    PostsActions = PostsActions
     template = 'misago/thread/replies.html'
 
     def get_posts(self, user, forum, thread, kwargs):
@@ -63,6 +67,15 @@ class ThreadView(ViewBase):
 
         threadstracker.make_read_aware(request.user, thread)
 
+        thread_actions = self.ThreadActions(user=request.user, thread=thread)
+        posts_actions = self.PostsActions(user=request.user, thread=thread)
+
+        if request.method == 'POST':
+            if thread_actions.query_key in request.POST:
+                response = thread_actions.handle_post(request, thread)
+                if response:
+                    return response
+
         page, posts = self.get_posts(request.user, forum, thread, kwargs)
         threadstracker.make_posts_read_aware(request.user, thread, posts)
         threadstracker.read_thread(request.user, thread, posts[-1])
@@ -77,7 +90,10 @@ class ThreadView(ViewBase):
             'path': get_forum_path(forum),
 
             'thread': thread,
+            'thread_actions': thread_actions.get_list(),
+
             'posts': posts,
+            'posts_actions': posts_actions.get_list(),
 
             'paginator': page.paginator,
             'page': page,

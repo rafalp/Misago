@@ -1,0 +1,59 @@
+{% extends "misago/threads/base.html" %}
+{% load i18n misago_forms %}
+
+
+{% block title %}{% trans "Move thread" %} | {{ thread }} | {{ block.super }}{% endblock title %}
+
+
+{% block content %}
+<div{% if forum.css %} class="page-{{ forum.css_class }}"{% endif %}>
+  <div class="page-header">
+    <div class="container">
+      {% if path %}
+      <ol class="breadcrumb">
+        {% include "misago/thread/full_path.html" %}
+      </ol>
+      {% endif %}
+      <h1>{% trans "Move thread" %}</h1>
+    </div>
+  </div>
+
+  <div class="container">
+    <form method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="thread_action" value="move">
+
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+
+          <div class="form-panel">
+
+            <div class="form-header">
+              <h2>
+                {{ thread }}
+              </h2>
+            </div>
+
+            {% include "misago/form_errors.html" %}
+            <div class="form-body no-fieldsets">
+
+              {% form_row form.new_forum %}
+
+            </div>
+
+            <div class="form-footer text-center">
+
+              <button class="btn btn-primary" name="submit">{% trans "Move thread" %}</button>
+              <a href="" class="btn btn-default">{% trans "Cancel" %}</a>
+
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /.row -->
+
+    </form>
+  </div>
+
+</div>
+{% endblock content %}

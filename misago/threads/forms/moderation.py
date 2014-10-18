@@ -51,3 +51,8 @@ class MoveThreadsForm(forms.Form):
         else:
             raise forms.ValidationError(_("You have to select forum."))
         return data
+
+
+class MoveThreadForm(MoveThreadsForm):
+    new_forum = ForumChoiceField(label=_("Move thread to forum"),
+                                 empty_label=None)

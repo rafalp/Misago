@@ -136,7 +136,7 @@ class ForumActions(Actions):
 
         if changed_threads:
             message = ungettext(
-                '%(changed)d thread label was remoded.',
+                '%(changed)d thread label was removed.',
                 '%(changed)d threads labels were removed.',
             changed_threads)
             messages.success(request, message % {'changed': changed_threads})

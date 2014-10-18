@@ -4,11 +4,11 @@
 </button>
 <div class="btn-group pull-right">
   <form id="threads-actions" action="{{ querystring }}" method="post">
+    {% csrf_token %}
     <button type="button" class="btn btn-default dropdown-toggle mass-controller" data-toggle="dropdown">
       <span class="fa fa-gears"></span>
       {% trans "With selected" %}
     </button>
-    {% csrf_token %}
     <ul class="dropdown-menu scrollable" role="menu">
       {% for action in list_actions %}
       <li>

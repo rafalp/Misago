@@ -1,0 +1,20 @@
+{% load i18n %}
+<div class="btn-group pull-right">
+  <form id="thread-actions" method="post">
+    {% csrf_token %}
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+      <span class="fa fa-gears"></span>
+      {% trans "Thread moderation" %}
+    </button>
+    <ul class="dropdown-menu scrollable" role="menu">
+      {% for action in thread_actions %}
+      <li>
+        <button type="submit" name="thread_action" value="{{ action.action }}" class="action-{{ action.action }}" {% if action.confirmation %}data-confirmation="{{ action.confirmation }}"{% endif %}>
+          <span class="fa fa-{{ action.icon }} fa-fw"></span>
+          {{ action.name }}
+        </button>
+      </li>
+      {% endfor %}
+    </ul>
+  </form>
+</div>

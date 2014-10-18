@@ -2,7 +2,7 @@
 {% load humanize i18n misago_avatars misago_stringutils %}
 
 
-{% block title %}{{ thread.title }} | {{ block.super }}{% endblock title %}
+{% block title %}{{ thread.title }}{% if page.number > 1 %} ({% blocktrans with page=page.number %}Page {{ page }}{% endblocktrans %}){% endif %} | {{ block.super }}{% endblock title %}
 
 
 {% block meta-description %}{% if thread.first_post.is_valid %}{{ thread.first_post.short|striplinebreaks }} {% endif %}{% blocktrans trimmed with replies=thread.replies started=thread.started_on|date last_post=thread.last_post_on|date count counter=thread.replies %}
@@ -62,6 +62,10 @@
 
       {% include "misago/thread/pagination.html" %}
 
+      {% if thread_actions %}
+      {% include "misago/thread/thread_actions.html" %}
+      {% endif %}
+
     </div>
 
     <div class="posts-list">
@@ -79,3 +83,11 @@
   </div>
 </div>
 {% endblock %}
+
+
+{% block javascripts %}
+{{ block.super }}
+{% if user.is_authenticated %}
+  {% include "misago/thread/actions_js.html" %}
+{% endif %}
+{% endblock javascripts %}
