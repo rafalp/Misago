@@ -45,12 +45,51 @@
 
     font-size: @font-size-small;
   }
+
+  &.btn-flat {
+    background: none;
+    border: transparent;
+    .box-shadow(none);
+    position: static;
+
+    color: @btn-default-color;
+    font-weight: bold;
+
+    &:hover {
+      background-color: fadeOut(@btn-bg, 90%);
+      transition-duration: 0.1s;
+
+      color: @btn-bg;
+      text-shadow: none;
+    }
+
+    &:active {
+      background: fadeOut(@btn-bg, 40%);
+
+      color: lighten(@btn-bg, 50%);
+      text-shadow: none;
+    }
+  }
 }
 
 
 .btn {
   &.btn-default {
     .misago-button-flavour(@btn-default-color, @btn-default-bg, @btn-default-border);
+
+    &.btn-flat {
+      &:hover {
+        background-color: fadeOut(@btn-default-color, 90%);
+
+        color: @btn-default-color;
+      }
+
+      &:active {
+        background: fadeOut(@btn-default-color, 40%);
+
+        color: lighten(@btn-default-color, 50%);
+      }
+    }
 
     &.text-success {
       color: @brand-success;
