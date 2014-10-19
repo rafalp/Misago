@@ -44,3 +44,10 @@ urlpatterns += patterns('',
     url(r'^unread-threads/sort-(?P<sort>[\w-]+)(?P<page>\d+)/$', UnreadThreadsView.as_view(), name='unread_threads'),
     url(r'^unread-threads/clear/$', clear_unread_threads, name='clear_unread_threads'),
 )
+
+
+# events moderation
+from misago.threads.views.events import EventsView
+urlpatterns += patterns('',
+    url(r'^edit-event/(?P<event_id>\d+)/$', EventsView.as_view(), name='edit_event'),
+)

@@ -1,6 +1,5 @@
 from django.core.urlresolvers import reverse
 
-from misago.acl import add_acl
 from misago.acl.testutils import override_acl
 from misago.forums.models import Forum
 from misago.users.testutils import AuthenticatedUserTestCase

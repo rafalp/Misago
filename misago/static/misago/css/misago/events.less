@@ -46,21 +46,41 @@
           text-decoration: underline;
         }
       }
+
+      form {
+        display: inline-block;
+        margin: 0px;
+        margin-left: @line-height-computed / 2;
+        padding: 0px;
+        .opacity(0.2);
+        transition-duration: 100ms;
+        position: relative;
+      }
+
+      &:hover, &:active {
+        form {
+          .opacity(1);
+        }
+      }
     }
 
     .divider {
       padding-left: @line-height-computed / 4;
       color: @post-panel-border;
 
-      abbr {
+      div {
+        display: inline-block;
         margin-left: @line-height-computed / 2;
         position: relative;
+        left: 1px;
         bottom: 2px;
 
         font-size: @font-size-small;
 
-        &:hover {
-          color: @text-muted;
+        abbr {
+          &:hover {
+            color: @text-muted;
+          }
         }
       }
     }

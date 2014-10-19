@@ -1,0 +1,52 @@
+{% load i18n %}
+<script lang="JavaScript">
+  $(function() {
+
+    $('.event-form').each(function() {
+      var $form = $(this);
+      var $list = $form.parents('.post-events');
+      var $li = $form.parent();
+      var $divider = $li.prev();
+      var action = $form.attr('action');
+
+      $form.find('.event-toggle').click(function() {
+        var $btn = $(this);
+        var data = $form.serialize() + "&action=toggle";
+        $.post(action, data, function(data) {
+          if (data.is_hidden) {
+            $btn.text("{% trans "Show" %}");
+            $label = $('<span class="text-warning">{% trans "Hidden" %}</span>');
+            $label.hide();
+            $divider.find('div').append($label)
+            $label.fadeIn();
+          } else {
+            $btn.text("{% trans "Hide" %}");
+            $divider.find('.text-warning').fadeOut(function() {$(this).remove()});
+          }
+        });
+        return false;
+      });
+
+      $form.find('.event-delete').click(function() {
+        var $btn = $(this);
+        var data = $form.serialize() + "&action=delete";
+
+        var decision = confirm("{% trans "Are you sure you want to delete this event?" %}");
+        if (decision) {
+          $.post(action, data, function(data) {
+            if (data.is_deleted) {
+              if ($list.find('.event:visible').length == 1) {
+                $list.slideUp();
+              } else {
+                $li.slideUp();
+                $divider.slideUp();
+              }
+            }
+          });
+        }
+        return false;
+      });
+    })
+
+  });
+</script>
