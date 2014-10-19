@@ -136,7 +136,7 @@ def create_default_forums_roles(apps, schema_editor):
                 'can_review_moderated_content': 1,
                 'can_report_content': 1,
                 'can_see_reports': 1,
-                'can_can_hide_events': 1,
+                'can_hide_events': 2,
             },
         })
     moderator.save()

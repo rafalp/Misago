@@ -174,7 +174,7 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
         'can_review_moderated_content': 0,
         'can_report_content': 0,
         'can_see_reports': 0,
-        'can_can_hide_events': 0,
+        'can_hide_events': 0,
     }
     final_acl.update(acl)
 
@@ -202,7 +202,7 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
         can_review_moderated_content=algebra.greater,
         can_report_content=algebra.greater,
         can_see_reports=algebra.greater,
-        can_can_hide_events=algebra.greater,
+        can_hide_events=algebra.greater,
     )
 
     return final_acl
@@ -249,7 +249,7 @@ def add_acl_to_forum(user, forum):
         'can_review_moderated_content': 0,
         'can_report_content': 0,
         'can_see_reports': 0,
-        'can_can_hide_events': 0,
+        'can_hide_events': 0,
     })
 
     algebra.sum_acls(forum.acl, acls=[forum_acl],
@@ -279,7 +279,7 @@ def add_acl_to_forum(user, forum):
             can_review_moderated_content=algebra.greater,
             can_report_content=algebra.greater,
             can_see_reports=algebra.greater,
-            can_can_hide_events=algebra.greater,
+            can_hide_events=algebra.greater,
         )
 
     forum.acl['can_see_own_threads'] = not forum.acl['can_see_all_threads']
@@ -312,7 +312,7 @@ def add_acl_to_post(user, post):
 
 def add_acl_to_event(user, event):
     forum_acl = user.acl['forums'].get(event.forum_id, {})
-    can_hide_events = forum_acl.get('can_can_hide_events', 0)
+    can_hide_events = forum_acl.get('can_hide_events', 0)
 
     event.acl['can_hide'] = can_hide_events > 0
     event.acl['can_delete'] = can_hide_events == 2
