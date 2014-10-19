@@ -24,7 +24,7 @@ class ThreadActions(ActionsBase):
 
         actions = []
 
-        if self.forum.acl['can_change_threads_labels'] == 2:
+        if self.thread.acl['can_change_label']:
             self.forum.labels = Label.objects.get_forum_labels(self.forum)
             for label in self.forum.labels:
                 if label.pk != self.thread.label_id:
@@ -42,7 +42,7 @@ class ThreadActions(ActionsBase):
                     'name': _("Remove label")
                 })
 
-        if self.forum.acl['can_pin_threads']:
+        if self.thread.acl['can_pin']:
             if self.thread.is_pinned:
                 actions.append({
                     'action': 'unpin',
@@ -56,7 +56,7 @@ class ThreadActions(ActionsBase):
                     'name': _("Pin thread")
                 })
 
-        if self.forum.acl['can_review_moderated_content']:
+        if self.thread.acl['can_review']:
             if self.thread.is_moderated:
                 actions.append({
                     'action': 'approve',
@@ -64,14 +64,14 @@ class ThreadActions(ActionsBase):
                     'name': _("Approve thread")
                 })
 
-        if self.forum.acl['can_move_threads']:
+        if self.thread.acl['can_move']:
             actions.append({
                 'action': 'move',
                 'icon': 'arrow-right',
                 'name': _("Move thread")
             })
 
-        if self.forum.acl['can_close_threads']:
+        if self.thread.acl['can_close']:
             if self.thread.is_closed:
                 actions.append({
                     'action': 'open',
@@ -85,7 +85,7 @@ class ThreadActions(ActionsBase):
                     'name': _("Close thread")
                 })
 
-        if self.forum.acl['can_hide_threads']:
+        if self.thread.acl['can_hide']:
             if self.thread.is_hidden:
                 actions.append({
                     'action': 'unhide',
@@ -99,7 +99,7 @@ class ThreadActions(ActionsBase):
                     'name': _("Hide thread")
                 })
 
-        if self.forum.acl['can_hide_threads'] == 2:
+        if self.thread.acl['can_hide'] == 2:
             actions.append({
                 'action': 'delete',
                 'icon': 'times',
@@ -146,6 +146,7 @@ class ThreadActions(ActionsBase):
                 new_forum = form.cleaned_data['new_forum']
 
                 with atomic():
+                    self.forum.lock()
                     moderation.move_thread(request.user, thread, new_forum)
                     self.forum.synchronize()
                     self.forum.save()
@@ -181,14 +182,22 @@ class ThreadActions(ActionsBase):
 
     def action_unhide(self, request, thread):
         moderation.unhide_thread(request.user, thread)
+        self.forum.synchronize()
+        self.forum.save()
         messages.success(request, _("Thread was made visible."))
 
     def action_hide(self, request, thread):
-        moderation.hide_thread(request.user, thread)
+        with atomic():
+            self.forum.lock()
+            moderation.hide_thread(request.user, thread)
+            self.forum.synchronize()
+            self.forum.save()
+
         messages.success(request, _("Thread was hid."))
 
     def action_delete(self, request, thread):
         with atomic():
+            self.forum.lock()
             moderation.delete_thread(request.user, thread)
             self.forum.synchronize()
             self.forum.save()

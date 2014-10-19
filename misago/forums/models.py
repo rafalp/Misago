@@ -91,6 +91,9 @@ class Forum(MPTTModel):
         else:
             return self.name
 
+    def lock(self):
+        return Forum.objects.select_for_update().get(id=self.id)
+
     def delete(self, *args, **kwargs):
         Forum.objects.clear_cache()
         acl_version.invalidate()

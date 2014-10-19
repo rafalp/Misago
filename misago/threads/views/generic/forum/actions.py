@@ -187,10 +187,12 @@ class ForumActions(Actions):
                 request.POST, acl=request.user.acl, forum=self.forum)
             if form.is_valid():
                 new_forum = form.cleaned_data['new_forum']
-                for thread in threads:
-                    moderation.move_thread(request.user, thread, new_forum)
-
                 with atomic():
+                    self.forum.lock()
+
+                    for thread in threads:
+                        moderation.move_thread(request.user, thread, new_forum)
+
                     self.forum.synchronize()
                     self.forum.save()
                     new_forum.synchronize()
@@ -339,15 +341,17 @@ class ForumActions(Actions):
 
     def action_hide(self, request, threads):
         changed_threads = 0
-        for thread in threads:
-            if moderation.hide_thread(request.user, thread):
-                changed_threads += 1
+        with atomic():
+            self.forum.lock()
+            for thread in threads:
+                if moderation.hide_thread(request.user, thread):
+                    changed_threads += 1
 
-        if changed_threads:
-            with atomic():
+            if changed_threads:
                 self.forum.synchronize()
                 self.forum.save()
 
+        if changed_threads:
             message = ungettext(
                 '%(changed)d thread was hidden.',
                 '%(changed)d threads were hidden.',
@@ -359,15 +363,17 @@ class ForumActions(Actions):
 
     def action_delete(self, request, threads):
         changed_threads = 0
-        for thread in threads:
-            if moderation.delete_thread(request.user, thread):
-                changed_threads += 1
+        with atomic():
+            self.forum.lock()
+            for thread in threads:
+                if moderation.delete_thread(request.user, thread):
+                    changed_threads += 1
 
-        if changed_threads:
-            with atomic():
+            if changed_threads:
                 self.forum.synchronize()
                 self.forum.save()
 
+        if changed_threads:
             message = ungettext(
                 '%(changed)d thread was deleted.',
                 '%(changed)d threads were deleted.',

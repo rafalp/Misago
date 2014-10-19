@@ -1,6 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.http import Http404
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from misago.acl import add_acl, algebra
@@ -101,11 +102,7 @@ class PermissionsForm(forms.Form):
         choices=((0, _("No")), (1, _("Own threads")), (2, _("All threads"))))
     can_pin_threads = forms.YesNoSwitch(
         label=_("Can pin threads"))
-    can_close_threads = forms.TypedChoiceField(
-        label=_("Can close threads"),
-        coerce=int,
-        initial=0,
-        choices=((0, _("No")), (1, _("Own threads")), (2, _("All threads"))))
+    can_close_threads = forms.YesNoSwitch(label=_("Can close threads"))
     can_move_threads = forms.YesNoSwitch(
         label=_("Can move threads"))
     can_merge_threads = forms.YesNoSwitch(
@@ -289,7 +286,24 @@ def add_acl_to_forum(user, forum):
 
 
 def add_acl_to_thread(user, thread):
-    pass
+    forum_acl = user.acl['forums'].get(thread.forum_id, {})
+
+    thread.acl.update({
+        'can_reply': 0,
+        'can_hide': forum_acl.get('can_hide_threads'),
+        'can_change_label': forum_acl.get('can_change_threads_labels') == 2,
+        'can_pin': forum_acl.get('can_pin_threads'),
+        'can_close': forum_acl.get('can_close_threads'),
+        'can_move': forum_acl.get('can_move_threads'),
+        'can_review': forum_acl.get('can_review_moderated_content'),
+    })
+
+    if can_change_owned_thread(user, thread):
+        if not thread.acl['can_change_label']:
+            can_change_label = forum_acl.get('can_change_threads_labels') == 1
+            thread.acl['can_change_label'] = can_change_label
+        if not thread.acl['can_hide']:
+            thread.acl['can_hide'] = forum_acl.get('can_hide_own_threads')
 
 
 def add_acl_to_post(user, post):
@@ -311,8 +325,7 @@ def allow_see_thread(user, target):
     forum_acl = user.acl['forums'].get(target.forum_id, {})
     if not forum_acl.get('can_see_all_threads'):
         if user.is_anonymous() or user.pk != target.starter_id:
-            message = _("You can't see other users threads in this forum.")
-            raise PermissionDenied(user)
+            raise Http404()
 can_see_thread = return_boolean(allow_see_thread)
 
 
@@ -326,6 +339,40 @@ def allow_start_thread(user, target):
         raise PermissionDenied(_("You don't have permission to start "
                                  "new threads in this forum."))
 can_start_thread = return_boolean(allow_start_thread)
+
+
+def allow_reply_thread(user, target):
+    if target.forum.is_closed:
+        message = _("This forum is closed. You can't start new threads in it.")
+        raise PermissionDenied(message)
+    if user.is_anonymous():
+        raise PermissionDenied(_("You have to sign in to start new thread."))
+    if not user.acl['forums'].get(target.id, {'can_start_threads': False}):
+        raise PermissionDenied(_("You don't have permission to start "
+                                 "new threads in this forum."))
+can_start_thread = return_boolean(allow_start_thread)
+
+
+def can_change_owned_thread(user, target):
+    forum_acl = user.acl['forums'].get(target.forum_id, {})
+
+    if user.is_anonymous() or user.pk != target.starter_id:
+        return False
+
+    if target.forum.is_closed or target.is_closed:
+        return False
+
+    if target.first_post.is_protected:
+        return False
+
+    if forum_acl.get('thread_edit_time'):
+        diff = timezone.now() - target.started_on
+        diff_minutes = (diff.days * 24 * 60) + diff.minutes
+
+        if diff_minutes > forum_acl.get('thread_edit_time'):
+            return False
+
+    return True
 
 
 """

@@ -4,7 +4,7 @@ from django.dispatch import receiver, Signal
 from misago.core.pgutils import batch_update, batch_delete
 from misago.forums.models import Forum
 
-from misago.threads.models import Thread, Post, Event
+from misago.threads.models import Thread, Post, Event, Label
 
 
 delete_post = Signal()
@@ -29,6 +29,12 @@ def move_thread_content(sender, **kwargs):
     sender.post_set.update(forum=sender.forum)
     sender.event_set.update(forum=sender.forum)
 
+    # remove unavailable labels
+    if sender.label_id:
+        new_forum_labels = Label.objects.get_forum_labels(sender.forum)
+        if sender.label_id not in [l.pk for l in new_forum_labels]:
+            sender.label = None
+
 
 from misago.forums.signals import delete_forum_content, move_forum_content
 @receiver(delete_forum_content)
@@ -44,6 +50,14 @@ def move_forum_threads(sender, **kwargs):
     Thread.objects.filter(forum=sender).update(forum=new_forum)
     Post.objects.filter(forum=sender).update(forum=new_forum)
     Event.objects.filter(forum=sender).update(forum=new_forum)
+
+    # move labels
+    old_forum_labels = Label.objects.get_forum_labels(sender)
+    new_forum_labels = Label.objects.get_forum_labels(new_forum)
+
+    for label in old_forum_labels:
+        if label not in new_forum_labels:
+            label.forums.add(new_forum_labels)
 
 
 from misago.users.signals import delete_user_content, username_changed

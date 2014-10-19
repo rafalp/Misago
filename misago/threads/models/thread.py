@@ -57,6 +57,9 @@ class Thread(models.Model):
     def __unicode__(self):
         return self.title
 
+    def lock(self):
+        return Forum.objects.select_for_update().get(id=self.id)
+
     def delete(self, *args, **kwargs):
         from misago.threads.signals import delete_thread
         delete_thread.send(sender=self)
