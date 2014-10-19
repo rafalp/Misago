@@ -73,7 +73,7 @@
               </div>
               {% else %}
               <div class="thread-replies new-replies">
-                <span class="label label-primary tooltip-top" title="{% blocktrans trimmed with replies=thread.unread_replies|intcomma count counter=thread.unread_replies %}{{ replies }} new reply{% plural %}{{ replies }} new replies{% endblocktrans %}">
+                <span class="label label-primary tooltip-top" title="{% blocktrans trimmed with replies=thread.unread_replies|intcomma count counter=thread.unread_replies %}{{ replies }} unread reply{% plural %}{{ replies }} unread replies{% endblocktrans %}">
                   <span class="fa fa-signal fa-fw"></span>
                   {{ thread.unread_replies|intcomma }}
                 </span>

@@ -89,5 +89,8 @@
 {{ block.super }}
 {% if user.is_authenticated %}
   {% include "misago/thread/actions_js.html" %}
+  {% if forum.acl.can_hide_events %}
+    {% include "misago/thread/events_js.html" %}
+  {% endif %}
 {% endif %}
 {% endblock javascripts %}

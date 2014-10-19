@@ -91,12 +91,12 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         self.override_acl({'can_change_threads_labels': 0})
         response = self.client.get(self.thread.get_absolute_url())
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn("Moderate thread", response.content)
+        self.assertNotIn("Thread actions", response.content)
 
         self.override_acl({'can_change_threads_labels': 2})
         response = self.client.get(self.thread.get_absolute_url())
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn("Moderate thread", response.content)
+        self.assertNotIn("Thread actions", response.content)
 
         test_label = Label.objects.create(name="Foxtrot", slug="foxtrot")
         test_label.forums.add(self.forum)
@@ -105,7 +105,7 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         self.override_acl({'can_change_threads_labels': 0})
         response = self.client.get(self.thread.get_absolute_url())
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn("Moderate thread", response.content)
+        self.assertNotIn("Thread actions", response.content)
 
         self.override_acl({'can_change_threads_labels': 2})
         response = self.client.get(self.thread.get_absolute_url())

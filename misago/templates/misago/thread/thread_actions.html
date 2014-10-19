@@ -4,7 +4,7 @@
     {% csrf_token %}
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
       <span class="fa fa-gears"></span>
-      {% trans "Thread moderation" %}
+      {% trans "Thread actions" %}
     </button>
     <ul class="dropdown-menu scrollable" role="menu">
       {% for action in thread_actions %}

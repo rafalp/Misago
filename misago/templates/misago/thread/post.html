@@ -1,5 +1,5 @@
 {% load i18n misago_avatars %}
-<div class="media post">
+<div id="post-{{ post.pk }}" class="media post">
   {% if post.poster %}
   <a class="user-avatar pull-left" href="{% url USER_PROFILE_URL user_slug=post.poster.slug user_id=post.poster.id %}">
     <img class="media-object" src="{{ post.poster|avatar:100 }}" alt="{% trans "Poster avatar" %}">
