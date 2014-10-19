@@ -59,7 +59,7 @@ class Command(BaseCommand):
                     last_post_on=datetime,
                     last_poster_name='-',
                     last_poster_slug='-',
-                    replies=random.randint(0, 2000),
+                    replies=0,
                     is_moderated=thread_is_moderated,
                     is_hidden=thread_is_hidden,
                     is_closed=thread_is_closed)
@@ -84,14 +84,49 @@ class Command(BaseCommand):
                 thread.set_last_post(post)
                 thread.save()
 
-                forum.threads += 1
-                forum.posts += 1
-                forum.set_last_thread(thread)
-                forum.save()
-
                 user.threads += 1
                 user.posts += 1
                 user.save()
+
+                thread_type = random.randint(0, 100)
+                if thread_type > 95:
+                    thread_replies = random.randint(200, 500)
+                elif thread_type > 50:
+                    thread_replies = random.randint(5, 30)
+                else:
+                    thread_replies = random.randint(0, 10)
+
+                for x in xrange(thread_replies):
+                    datetime = timezone.now()
+                    user = User.objects.order_by('?')[:1][0]
+                    fake_message = "\n\n".join(fake.paragraphs())
+
+                    is_moderated = random.randint(0, 100) > 97
+                    if not is_moderated:
+                        is_hidden = random.randint(0, 100) > 97
+                    else:
+                        is_hidden = False
+
+                    post = Post.objects.create(
+                        forum=forum,
+                        thread=thread,
+                        poster=user,
+                        poster_name=user.username,
+                        poster_ip=fake.ipv4(),
+                        original=fake_message,
+                        parsed=linebreaks_filter(fake_message),
+                        is_hidden=is_hidden,
+                        is_moderated=is_moderated,
+                        posted_on=datetime,
+                        updated_on=datetime)
+                    update_post_checksum(post)
+                    post.save(update_fields=['checksum'])
+
+                    user.posts += 1
+                    user.save()
+
+                thread.synchronize()
+                thread.save()
 
                 created_threads += 1
                 show_progress(
@@ -103,5 +138,9 @@ class Command(BaseCommand):
             thread = Thread.objects.order_by('?')[:1][0]
             thread.is_pinned = True
             thread.save()
+
+        for forum in forums:
+            forum.synchronize()
+            forum.save()
 
         self.stdout.write(message % created_threads)
