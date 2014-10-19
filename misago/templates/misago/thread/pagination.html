@@ -36,4 +36,11 @@
       </a>
     </li>
   {% endif %}
+  {% if page.has_next and page.next_page_number < paginator.num_pages %}
+    <li>
+      <a href="{% pageurl link_name links_params paginator.num_pages %}" class="tooltip-top" title="{% trans "Go to last page" %}">
+        {% trans "Last" %}
+      </a>
+    </li>
+  {% endif %}
 </ul>
