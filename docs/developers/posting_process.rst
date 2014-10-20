@@ -99,6 +99,6 @@ When different middlewares add custom fields to ``update_fields`` and set ``upda
 Interrupting posting process from middleware
 ============================================
 
-Middlewares can always interrupt (and rollback) posting process during ``pre_save`` phrase by raising :py:class:`misago.threads.posting.PostingInterruptPostingInterrupt` exception with error message as its only argument.
+Middlewares can always interrupt (and rollback) posting process during ``pre_save`` phrase by raising :py:class:`misago.threads.posting.PostingInterrupt` exception with error message as its only argument.
 
 All ``PostingInterrupt`` raised outside that phrase will be escalated to ``ValueError`` that will result in 500 error response from Misago. However as this will happen inside database transaction, there is chance that no data loss has occured during that.

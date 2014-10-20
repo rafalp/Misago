@@ -182,6 +182,8 @@ MISAGO_ACL_EXTENSIONS = (
 MISAGO_MARKUP_EXTENSIONS = ()
 
 MISAGO_POSTING_MIDDLEWARES = (
+    # Note: always keep FloodProtectionMiddleware middleware first one
+    'misago.threads.posting.floodprotection.FloodProtectionMiddleware',
     'misago.threads.posting.reply.ReplyFormMiddleware',
     'misago.threads.posting.threadlabel.ThreadLabelFormMiddleware',
     'misago.threads.posting.threadpin.ThreadPinFormMiddleware',

@@ -68,6 +68,7 @@ class EditorView(ViewBase):
     def dispatch(self, request, *args, **kwargs):
         if request.method == 'POST':
             with atomic():
+                request.user.lock()
                 return self.real_dispatch(request, *args, **kwargs)
         else:
             return self.real_dispatch(request, *args, **kwargs)
@@ -100,7 +101,9 @@ class EditorView(ViewBase):
                             return redirect(thread.get_absolute_url())
                     except PostingInterrupt as e:
                         if request.is_ajax():
-                            raise AjaxError(e.message)
+                            return JsonResponse({
+                                'interrupt': e.message
+                            })
                         else:
                             messages.error(request, e.message)
                 elif request.is_ajax():
@@ -108,15 +111,11 @@ class EditorView(ViewBase):
                         'errors': formset.errors
                     })
 
-            if request.is_ajax():
-                if 'form' in request.POST:
-                    pass
-
-                if 'preview' in request.POST:
-                    formset.update()
-                    return JsonResponse({
-                        'preview': formset.post.parsed
-                    })
+            if request.is_ajax() and 'preview' in request.POST:
+                formset.update()
+                return JsonResponse({
+                    'preview': formset.post.parsed
+                })
 
         return self.render(request, {
             'mode': mode,

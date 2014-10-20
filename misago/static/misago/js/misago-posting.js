@@ -89,7 +89,13 @@ $(function() {
     this.$container = null;
     this.$form = null;
 
+    this.$ajax_loader = null;
+    this.$ajax_complete = null;
+
     this.$preview = null;
+
+    this.submitted = false;
+    this.posted = false;
 
     this.affix_end = 0;
 
@@ -100,6 +106,9 @@ $(function() {
       this.$form = $('#posting-form');
       this.$container = this.$form.parent();
       this.$spacer = this.$container.parent();
+
+      this.$ajax_loader = this.$container.find('.ajax-loader');
+      this.$ajax_complete = this.$container.find('.ajax-complete');
 
       if (options.preview !== undefined) {
         this.$preview = new MisagoPreview(this, {selector: options.preview, form: this.$form, api_url: options.api_url});
@@ -119,16 +128,29 @@ $(function() {
       });
 
       this.$container.find('button[name="submit"]').click(function() {
-        var form_data = _this.$form.serialize() + '&submit=1';
-        $.post(_this.api_url, form_data, function(data) {
-          if (data.thread_url !== undefined) {
-            window.location.replace(data.thread_url);
-          } else if (data.errors !== undefined) {
-            Misago.Alerts.error(data.errors[0]);
-          } else {
-            Misago.Alerts.error();
-          }
-        });
+        if (!_this.submitted && !_this.posted) {
+          _this.submitted = true; // lock submit process until after response
+          _this.$ajax_loader.addClass('in');
+
+          var form_data = _this.$form.serialize() + '&submit=1';
+          $.post(_this.api_url, form_data, function(data) {
+            _this.$ajax_loader.removeClass('in');
+            if (data.thread_url !== undefined) {
+              _this.posted = true;
+              _this.$ajax_loader.hide();
+              _this.$ajax_complete.addClass('in')
+              window.location.replace(data.thread_url);
+            } else if (data.errors !== undefined) {
+              Misago.Alerts.error(data.errors[0]);
+            } else if (data.interrupt !== undefined) {
+              Misago.Alerts.error(data.interrupt);
+            } else {
+              Misago.Alerts.error();
+            }
+
+            _this.submitted = false;
+          });
+        }
         return false;
       })
 

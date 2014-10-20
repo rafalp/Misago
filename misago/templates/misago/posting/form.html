@@ -48,6 +48,16 @@
           <button class="btn btn-primary" name="submit">{% trans "Save changes" %}</button>
           {% endif %}
 
+          <strong class="ajax-loader text-muted fade">
+            <i class="fa fa-cog fa-fw fa-spin"></i>
+            {% trans "Posting..." %}
+          </strong>
+
+          <strong class="ajax-complete text-success fade">
+            <span class="fa fa-check fa-fw"></span>
+            {% trans "Posted! Redirecting..." %}
+          </strong>
+
         </div>
       </div>
 
