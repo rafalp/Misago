@@ -1,5 +1,6 @@
 from django.shortcuts import redirect
 
+from misago.core.shortcuts import validate_slug
 from misago.forums.lists import get_forums_list, get_forum_path
 from misago.readtracker import forumstracker
 
@@ -26,6 +27,7 @@ class ForumView(ThreadsView):
 
     def dispatch(self, request, *args, **kwargs):
         forum = self.get_forum(request, **kwargs)
+        validate_slug(forum, kwargs['forum_slug'])
 
         forum.labels = Label.objects.get_forum_labels(forum)
 

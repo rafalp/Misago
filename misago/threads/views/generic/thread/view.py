@@ -1,13 +1,16 @@
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.utils.translation import ungettext, ugettext_lazy, ugettext as _
 
 from misago.acl import add_acl
+from misago.core.shortcuts import validate_slug
 from misago.forums.lists import get_forum_path
 from misago.readtracker import threadstracker
 from misago.users.online.utils import get_user_state
 
 from misago.threads.events import add_events_to_posts
 from misago.threads.paginator import paginate
+from misago.threads.permissions import allow_reply_thread
 from misago.threads.views.generic.base import ViewBase
 from misago.threads.views.generic.thread.postsactions import PostsActions
 from misago.threads.views.generic.thread.threadactions import ThreadActions
@@ -65,6 +68,8 @@ class ThreadView(ViewBase):
         self.check_forum_permissions(request, forum)
         self.check_thread_permissions(request, thread)
 
+        validate_slug(thread, kwargs['thread_slug'])
+
         threadstracker.make_read_aware(request.user, thread)
 
         thread_actions = self.ThreadActions(user=request.user, thread=thread)
@@ -80,6 +85,12 @@ class ThreadView(ViewBase):
         threadstracker.make_posts_read_aware(request.user, thread, posts)
         threadstracker.read_thread(request.user, thread, posts[-1])
 
+        try:
+            allow_reply_thread(request.user, thread)
+            thread_reply_message = None
+        except PermissionDenied as e:
+            thread_reply_message = unicode(e)
+
         return self.render(request, {
             'link_name': thread.get_url_name(),
             'links_params': {
@@ -91,6 +102,7 @@ class ThreadView(ViewBase):
 
             'thread': thread,
             'thread_actions': thread_actions.get_list(),
+            'thread_reply_message': thread_reply_message,
 
             'posts': posts,
             'posts_actions': posts_actions.get_list(),
