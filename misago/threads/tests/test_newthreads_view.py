@@ -43,7 +43,6 @@ class AuthenticatedTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("There are no threads from last", response.content)
 
-
     def test_multipage_threads_list(self):
         """multipage threads list is rendered"""
         forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
