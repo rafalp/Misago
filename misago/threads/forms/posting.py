@@ -111,10 +111,13 @@ def ThreadLabelForm(*args, **kwargs):
 
 class ThreadPinForm(forms.Form):
     is_supporting = True
-    legend = _("Thread weight")
+    legend = _("Pin thread")
     template = "misago/posting/threadpinform.html"
 
-    is_pinned = forms.YesNoSwitch(label=_("Pin thread"), initial=0)
+    is_pinned = forms.YesNoSwitch(
+        label=_("Pin thread"),
+        yes_label=_("Pin thread"),
+        no_label=_("Unpin thread"))
 
 
 class ThreadCloseForm(forms.Form):
@@ -122,4 +125,7 @@ class ThreadCloseForm(forms.Form):
     legend = _("Close thread")
     template = "misago/posting/threadcloseform.html"
 
-    is_closed = forms.YesNoSwitch(label=_("Close thread"), initial=0)
+    is_closed = forms.YesNoSwitch(
+        label=_("Close thread"),
+        yes_label=_("Close thread"),
+        no_label=_("Open thread"))

@@ -1,94 +1,56 @@
-{% extends "misago/base.html" %}
 {% load i18n %}
+<div class="posting-spacer">
+  <div class="posting-container">
+    <form id="posting-form" method="POST">
 
+      <div class="container-fluid">
+        {% csrf_token %}
 
-{% block title %}{% trans "Start new thread" %} | {{ forum }} | {{ block.super }}{% endblock title %}
+        <div class="row">
+          {% if supporting_forms %}
+          <div class="col-md-9 form-main">
+          {% else %}
+          <div class="col-md-12 form-main">
+          {% endif %}
 
-
-{% block content %}
-<div{% if forum.css %} class="page-{{ forum.css_class }}"{% endif %}>
-  <div class="page-header">
-    <div class="container">
-      {% if path %}
-      <ol class="breadcrumb">
-        {% for crumb in path %}
-        <li>
-          <a href="{{ crumb.get_absolute_url }}">{{ crumb }}</a>{% if not forloop.last %}<span class="fa fa-chevron-right"></span>{% endif %}
-        </li>
-        {% endfor %}
-      </ol>
-      {% endif %}
-
-      <h1>
-        <span class="main">
-          <a href="{{ forum.get_absolute_url }}">{{ forum }}</a>
-        </span>
-        <span class="sub">
-          <span class="fa fa-chevron-right"></span>
-          {% trans "Start new thread" %}
-        </span>
-      </h1>
-    </div>
-  </div>
-  <div class="container">
-    <form method="POST">
-      {% csrf_token %}
-
-      <div class="row">
-        {% if supporting_forms %}
-        <div class="col-md-9">
-        {% else %}
-        <div class="col-md-10 col-md-offset-1">
-        {% endif %}
-
-          <div class="form-panel">
             {% for form in main_forms %}
             {% include form.template %}
             {% endfor %}
 
-            <div class="form-footer text-right">
-
-              {% if formset.start_form %}
-              <button class="btn btn-primary" name="submit">{% trans "Post thread" %}</button>
-              {% elif formset.reply_form %}
-              <button class="btn btn-primary" name="submit">{% trans "Post reply" %}</button>
-              {% elif formset.edit_form %}
-              <button class="btn btn-primary" name="submit">{% trans "Save changes" %}</button>
-              {% endif %}
-
-            </div>
           </div>
 
-        </div>
+          {% if supporting_forms %}
+          <div class="col-md-3 form-side">
 
-        {% if supporting_forms %}
-        <div class="col-md-3">
+            <h3>{% trans "Thread options:" %}</h3>
 
-          <div class="form-panel form-side-panel">
-            <div class="form-body">
-              {% for form in supporting_forms %}
-              <fieldset>
-                <legend>{{ form.legend }}</legend>
-                {% include form.template %}
-              </fieldset>
-              {% endfor %}
+            {% for form in supporting_forms %}
+            <div class="supporting-form">
+              {% include form.template %}
             </div>
+            {% endfor %}
+
           </div>
+          {% endif %}
+        </div><!-- /.row -->
+
+
+      </div>
+
+      <div class="form-footer">
+        <div class="container-fluid">
+
+          {% if formset.start_form %}
+          <button class="btn btn-primary" name="submit">{% trans "Post thread" %}</button>
+          {% elif formset.reply_form %}
+          <button class="btn btn-primary" name="submit">{% trans "Post reply" %}</button>
+          {% elif formset.edit_form %}
+          <button class="btn btn-primary" name="submit">{% trans "Save changes" %}</button>
+          {% endif %}
 
         </div>
-        {% endif %}
-      </div><!-- /.row -->
+      </div>
 
     </form>
   </div>
 </div>
-{% endblock content %}
-
-
-{% block javascripts %}
-{% for form in main_forms %}
-  {% if form.js_template %}
-  {% include form.js_template %}
-  {% endif %}
-{% endfor %}
-{% endblock javascripts %}

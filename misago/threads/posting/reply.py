@@ -24,7 +24,8 @@ class ReplyFormMiddleware(PostingMiddleware):
         return form
 
     def pre_save(self, form):
-        self.parsing_result.update(form.parsing_result)
+        if form.is_valid():
+            self.parsing_result.update(form.parsing_result)
 
     def save(self, form):
         if self.mode == START:

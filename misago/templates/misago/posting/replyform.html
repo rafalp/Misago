@@ -2,11 +2,7 @@
 {% include 'misago/form_errors.html' %}
 
 {% if form.title %}
-<div class="form-header">
-  <input class="textinput textInput form-control input-lg" id="{{ form.title.auto_id }}" name="title" type="text" {% if form.title.value %}value="{{ form.title.value }}"{% endif %} placeholder="{% trans "Thread title..." %}"/>
-</div>
+<input class="textinput textInput form-control input-lg" id="{{ form.title.auto_id }}" name="title" type="text" {% if form.title.value %}value="{{ form.title.value }}"{% endif %} placeholder="{% trans "Thread title..." %}"/>
 {% endif %}
 
-<div class="form-body">
-  {% editor_body form.post_editor %}
-</div>
+{% editor_body form.post_editor %}

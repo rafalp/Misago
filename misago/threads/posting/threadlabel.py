@@ -21,10 +21,11 @@ class ThreadLabelFormMiddleware(PostingMiddleware):
                                     initial=initial)
 
     def pre_save(self, form):
-        if self.thread_label_id != form.cleaned_data.get('label'):
-            if form.cleaned_data.get('label'):
-                self.thread.label_id = form.cleaned_data.get('label')
-                self.thread.update_fields.append('label')
-            else:
-                self.thread.label = None
-                self.thread.update_fields.append('label')
+        if form.is_valid():
+            if self.thread_label_id != form.cleaned_data.get('label'):
+                if form.cleaned_data.get('label'):
+                    self.thread.label_id = form.cleaned_data.get('label')
+                    self.thread.update_fields.append('label')
+                else:
+                    self.thread.label = None
+                    self.thread.update_fields.append('label')

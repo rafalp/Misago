@@ -1,0 +1,71 @@
+//
+// Post editor
+// --------------------------------------------------
+
+
+.editor-preview {
+  padding-top: @line-height-computed;
+  padding-bottom: @line-height-computed * 2;
+
+  .misago-markup {
+    // finetuned height to avoid page height form changing for most common posts
+    margin-top: 6px;
+    min-height: 33px;
+  }
+}
+
+
+.posting-container {
+  background: @form-panel-bg;
+  border: 1px solid @form-panel-border;
+  border-width: 1px 0px;
+  box-shadow: 0px 0px 0px 3px @form-panel-shadow;
+  padding: @form-panel-padding;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+
+  &.fixed {
+    border-bottom: none;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    z-index: 2;
+  }
+
+  form>.container-fluid {
+    padding-left: @grid-gutter-width;
+    padding-right: @grid-gutter-width;
+  }
+
+  .form-main {
+    &>* {
+      margin: @form-panel-padding;
+      margin-top: 0px;
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+  }
+
+  .form-side {
+    h3 {
+      padding: 0px;
+      margin: 0px;
+      margin-bottom: @line-height-computed / 2;
+
+      color: @text-muted;
+      font-size: @font-size-base;
+      font-weight: bold;
+    }
+
+    .supporting-form {
+      margin-bottom: @line-height-computed / 2;
+    }
+  }
+
+  .form-footer {
+    background-color: @form-panel-footer-bg;
+    border-top: 1px solid @form-panel-border;
+    padding: @form-panel-padding;
+  }
+}

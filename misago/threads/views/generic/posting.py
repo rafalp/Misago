@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.db.models import Q
 from django.db.transaction import atomic
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import ugettext_lazy, ugettext as _
 from django.views.generic import View
@@ -21,7 +22,7 @@ class EditorView(ViewBase):
     """
     Basic view for starting/replying/editing
     """
-    template = 'misago/posting/form.html'
+    template = 'misago/posting/editorview.html'
 
     def find_mode(self, request, *args, **kwargs):
         """
@@ -91,8 +92,17 @@ class EditorView(ViewBase):
                     return redirect(thread.get_absolute_url())
                 except PostingInterrupt as e:
                     messages.error(request, e.message)
-            else:
-                formset.update()
+
+            if request.is_ajax():
+                if 'form' in request.POST:
+                    pass
+
+                if 'preview' in request.POST:
+                    formset.update()
+                    return JsonResponse({
+                        'preview': formset.post.parsed
+                    })
+
 
         return self.render(request, {
             'mode': mode,
@@ -105,4 +115,5 @@ class EditorView(ViewBase):
             'thread': thread,
             'post': post,
             'quote': quote,
+            'api_url': request.path
         })

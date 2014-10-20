@@ -18,6 +18,7 @@ class ThreadCloseFormMiddleware(PostingMiddleware):
             return ThreadCloseForm(prefix=self.prefix, initial=initial)
 
     def pre_save(self, form):
-        if self.thread_is_closed != form.cleaned_data.get('is_closed'):
-            self.thread.is_closed = form.cleaned_data.get('is_closed')
-            self.thread.update_fields.append('is_closed')
+        if form.is_valid():
+            if self.thread_is_closed != form.cleaned_data.get('is_closed'):
+                self.thread.is_closed = form.cleaned_data.get('is_closed')
+                self.thread.update_fields.append('is_closed')

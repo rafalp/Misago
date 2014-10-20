@@ -5,7 +5,7 @@ function enableYesNoSwitch(selector) {
     var value = $control.find("input:checked").val() * 1;
 
     // hide original switch options
-    $control.find('label').addClass('hidden-original-switch');
+    $control.find('ul, label').addClass('hidden-original-switch');
 
     var yes_label = $.trim($control.find('label').first().text());
     var no_label = $.trim($control.find('label').last().text());
@@ -52,9 +52,12 @@ function enableYesNoSwitch(selector) {
   }
 
   $(selector).each(function() {
-    if ($(this).find('.yesno-switch').length == 2) {
-      createYesNoSwitch($(this));
-    }
+    if ($(this).data('misago-yes-no-switch') == undefined) {
+      $(this).data('misago-yes-no-switch', 'ok');
+      if ($(this).find('.yesno-switch').length == 2) {
+        createYesNoSwitch($(this));
+      }
+    };
   });
 }
 
@@ -62,4 +65,7 @@ function enableYesNoSwitch(selector) {
 // Enable switch
 $(function() {
   enableYesNoSwitch('.control-radioselect');
+  Misago.DOM.on_change(function() {
+    enableYesNoSwitch('.control-radioselect');
+  });
 });

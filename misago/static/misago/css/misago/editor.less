@@ -7,10 +7,14 @@
 //
 //**
 .misago-editor {
+  border: 2px solid @form-panel-border;
+  border-radius: @border-radius-large;
+  overflow: hidden;
+  margin-bottom: @line-height-computed;
+
   .editor-toolbar {
     background: @form-panel-footer-bg;
-    border: 1px solid @form-panel-border;
-    border-width: 1px 0px;
+    border-bottom: 1px solid @form-panel-border;
     padding: @padding-small-vertical @padding-small-horizontal;
 
     &>ul {
