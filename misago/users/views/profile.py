@@ -244,6 +244,7 @@ def action_view(f):
 @action_view
 def follow_user(request, profile):
     user_locked = request.user.lock()
+    profile.lock()
 
     if request.user.is_following(profile):
         request.user.follows.remove(profile)
