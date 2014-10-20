@@ -289,7 +289,7 @@ def add_acl_to_thread(user, thread):
     forum_acl = user.acl['forums'].get(thread.forum_id, {})
 
     thread.acl.update({
-        'can_reply': 0,
+        'can_reply': can_reply_thread(user, thread),
         'can_hide': forum_acl.get('can_hide_threads'),
         'can_change_label': forum_acl.get('can_change_threads_labels') == 2,
         'can_pin': forum_acl.get('can_pin_threads'),
@@ -343,14 +343,18 @@ can_start_thread = return_boolean(allow_start_thread)
 
 def allow_reply_thread(user, target):
     if target.forum.is_closed:
-        message = _("This forum is closed. You can't start new threads in it.")
+        message = _("This forum is closed.")
         raise PermissionDenied(message)
     if user.is_anonymous():
-        raise PermissionDenied(_("You have to sign in to start new thread."))
-    if not user.acl['forums'].get(target.id, {'can_start_threads': False}):
-        raise PermissionDenied(_("You don't have permission to start "
-                                 "new threads in this forum."))
-can_start_thread = return_boolean(allow_start_thread)
+        raise PermissionDenied(_("You have to sign in to reply threads."))
+
+    reply_thread = user.acl['forums'].get(target.id, {'can_reply_threads': 0})
+    if reply_thread == 0:
+        raise PermissionDenied(_("You can't reply to threads in this forum."))
+    if target.is_closed and reply_thread < 2:
+        raise PermissionDenied(
+            _("You can't reply to closed threads in this forum."))
+can_reply_thread = return_boolean(allow_reply_thread)
 
 
 def can_change_owned_thread(user, target):
