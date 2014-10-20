@@ -21,7 +21,7 @@ def create_threads_settings_group(apps, schema_editor):
                     'description': _("Minimum allowed thread title length."),
                     'legend': _("Thread titles"),
                     'python_type': 'int',
-                    'value': 8,
+                    'value': 5,
                     'field_extra': {
                         'min_value': 2,
                         'max_value': 255,
@@ -32,7 +32,7 @@ def create_threads_settings_group(apps, schema_editor):
                     'name': _("Maximum length"),
                     'description': _("Maximum allowed thread length."),
                     'python_type': 'int',
-                    'value': 40,
+                    'value': 90,
                     'field_extra': {
                         'min_value': 2,
                         'max_value': 255,
