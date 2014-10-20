@@ -367,7 +367,7 @@ def can_change_owned_thread(user, target):
 
     if forum_acl.get('thread_edit_time'):
         diff = timezone.now() - target.started_on
-        diff_minutes = (diff.days * 24 * 60) + diff.minutes
+        diff_minutes = int(diff.total_seconds() / 60)
 
         if diff_minutes > forum_acl.get('thread_edit_time'):
             return False
