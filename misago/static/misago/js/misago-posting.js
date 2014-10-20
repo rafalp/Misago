@@ -118,6 +118,20 @@ $(function() {
         _this.update_affix()
       });
 
+      this.$container.find('button[name="submit"]').click(function() {
+        var form_data = _this.$form.serialize() + '&submit=1';
+        $.post(_this.api_url, form_data, function(data) {
+          if (data.thread_url !== undefined) {
+            window.location.replace(data.thread_url);
+          } else if (data.errors !== undefined) {
+            Misago.Alerts.error(data.errors[0]);
+          } else {
+            Misago.Alerts.error();
+          }
+        });
+        return false;
+      })
+
     }
 
     this.update_affix_end = function() {

@@ -116,8 +116,8 @@ class ThreadPinForm(forms.Form):
 
     is_pinned = forms.YesNoSwitch(
         label=_("Pin thread"),
-        yes_label=_("Pin thread"),
-        no_label=_("Unpin thread"))
+        yes_label=_("Pinned thread"),
+        no_label=_("Unpinned thread"))
 
 
 class ThreadCloseForm(forms.Form):
@@ -127,5 +127,5 @@ class ThreadCloseForm(forms.Form):
 
     is_closed = forms.YesNoSwitch(
         label=_("Close thread"),
-        yes_label=_("Close thread"),
+        yes_label=_("Closed thread"),
         no_label=_("Open thread"))

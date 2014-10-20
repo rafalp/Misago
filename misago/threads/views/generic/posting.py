@@ -6,6 +6,7 @@ from django.shortcuts import redirect, render
 from django.utils.translation import ugettext_lazy, ugettext as _
 from django.views.generic import View
 
+from misago.core.exceptions import AjaxError
 from misago.forums.lists import get_forum_path
 
 from misago.threads.posting import (PostingInterrupt, EditorFormset,
@@ -86,12 +87,26 @@ class EditorView(ViewBase):
                                 quote=quote)
 
         if request.method == 'POST':
-            if 'submit' in request.POST and formset.is_valid():
-                try:
-                    formset.save()
-                    return redirect(thread.get_absolute_url())
-                except PostingInterrupt as e:
-                    messages.error(request, e.message)
+            if 'submit' in request.POST:
+                if formset.is_valid():
+                    try:
+                        formset.save()
+                        messages.success(request, _("New thread was posted."))
+                        if request.is_ajax():
+                            return JsonResponse({
+                                'thread_url': thread.get_absolute_url()
+                            })
+                        else:
+                            return redirect(thread.get_absolute_url())
+                    except PostingInterrupt as e:
+                        if request.is_ajax():
+                            raise AjaxError(e.message)
+                        else:
+                            messages.error(request, e.message)
+                elif request.is_ajax():
+                    return JsonResponse({
+                        'errors': formset.errors
+                    })
 
             if request.is_ajax():
                 if 'form' in request.POST:
@@ -102,7 +117,6 @@ class EditorView(ViewBase):
                     return JsonResponse({
                         'preview': formset.post.parsed
                     })
-
 
         return self.render(request, {
             'mode': mode,

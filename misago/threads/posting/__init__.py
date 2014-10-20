@@ -121,6 +121,8 @@ class EditorFormset(object):
         for form in self.get_forms_list():
             if not form.is_valid():
                 all_forms_valid = False
+                for error in form.non_field_errors():
+                    self.errors.append(unicode(error))
         return all_forms_valid
 
     def save(self):
