@@ -123,6 +123,7 @@ class EditorFormset(object):
                 all_forms_valid = False
                 for error in form.non_field_errors():
                     self.errors.append(unicode(error))
+
         return all_forms_valid
 
     def save(self):

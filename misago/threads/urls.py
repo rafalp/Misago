@@ -1,9 +1,7 @@
 from django.conf.urls import patterns, include, url
 
-from misago.threads.views.threads import (ForumView, ThreadView,
-                                          StartThreadView, ReplyView, EditView)
 
-
+from misago.threads.views.threads import ForumView
 urlpatterns = patterns('',
     url(r'^forum/(?P<forum_slug>[\w\d-]+)-(?P<forum_id>\d+)/$', ForumView.as_view(), name='forum'),
     url(r'^forum/(?P<forum_slug>[\w\d-]+)-(?P<forum_id>\d+)/(?P<page>\d+)/$', ForumView.as_view(), name='forum'),
@@ -13,13 +11,24 @@ urlpatterns = patterns('',
     url(r'^forum/(?P<forum_slug>[\w\d-]+)-(?P<forum_id>\d+)/show-(?P<show>[\w-]+)/(?P<page>\d+)/$', ForumView.as_view(), name='forum'),
     url(r'^forum/(?P<forum_slug>[\w\d-]+)-(?P<forum_id>\d+)/sort-(?P<sort>[\w-]+)/show-(?P<show>[\w-]+)/$', ForumView.as_view(), name='forum'),
     url(r'^forum/(?P<forum_slug>[\w\d-]+)-(?P<forum_id>\d+)/sort-(?P<sort>[\w-]+)/show-(?P<show>[\w-]+)/(?P<page>\d+)/$', ForumView.as_view(), name='forum'),
-    url(r'^forum/(?P<forum_slug>[\w\d-]+)-(?P<forum_id>\d+)/start-thread/$', StartThreadView.as_view(), name='start_thread'),
 )
 
 
+from misago.threads.views.threads import (ThreadView, GotoLastView,
+                                          GotoNewView, GotoPostView)
 urlpatterns += patterns('',
     url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/$', ThreadView.as_view(), name='thread'),
     url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/(?P<page>\d+)/$', ThreadView.as_view(), name='thread'),
+    url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/last/$', GotoLastView.as_view(), name='thread_last'),
+    url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/new/$', GotoNewView.as_view(), name='thread_new'),
+    url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/post-(?P<post_id>\d+)/$', GotoPostView.as_view(), name='thread_post'),
+)
+
+
+from misago.threads.views.threads import StartThreadView, ReplyView, EditView
+urlpatterns += patterns('',
+    url(r'^start-thread/(?P<forum_id>\d+)/$', StartThreadView.as_view(), name='start_thread'),
+    url(r'^reply-thread/(?P<forum_id>\d+)/(?P<thread_id>\d+)/$', ReplyView.as_view(), name='reply_thread'),
 )
 
 

@@ -29,7 +29,11 @@
                 {% endif %}
               {% endif %}
 
+              {% if thread.is_read %}
               <a href="{{ thread.get_absolute_url }}" class="item-title">
+              {% else %}
+              <a href="{{ thread.get_new_reply_url }}" class="item-title">
+              {% endif %}
                 {{ thread }}
               </a>
 
@@ -44,7 +48,7 @@
               {% endif %}
 
               {% block thread-stats %}
-              <a href="#" class="last-post">
+              <a href="{{ thread.get_last_reply_url }}" class="last-post">
                 <span class="dynamic time-ago-compact tooltip-top" data-timestamp="{{ thread.last_post_on|date:"c" }}" title="{% blocktrans with last_post=thread.last_post_on|date:"DATETIME_FORMAT" %}Last post from {{ last_post }}{% endblocktrans %}">{{ thread.last_post_on|compact_date|lower }}</span>
               </a>
 
@@ -143,4 +147,5 @@
   </div>
   {% endblock threads-list %}
 </div>
+<div id="reply-form-placeholder"></div>
 {% endblock content %}

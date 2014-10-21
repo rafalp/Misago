@@ -5,4 +5,26 @@
 <input class="textinput textInput form-control input-lg" id="{{ form.title.auto_id }}" name="title" type="text" {% if form.title.value %}value="{{ form.title.value }}"{% endif %} placeholder="{% trans "Thread title..." %}"/>
 {% endif %}
 
-{% editor_body form.post_editor %}
+<div class="row">
+  <div class="col-md-6">
+
+    {% editor_body form.post_editor %}
+
+  </div>
+  <div class="col-md-6">
+
+    <div class="editor-preview">
+      <div class="frame scrollable">
+        <p class="lead empty-message">
+          {% trans "Once you start writing mesage, it's preview will be displayed here." %}
+        </p>
+        <article class="misago-markup"></article>
+      </div>
+      <p class="preview-footer text-muted small">
+        <span class="fa fa-refresh fa-fw"></span>
+        {% trans "Preview updates automatically when you pause typing." %}
+      </p>
+    </div>
+
+  </div>
+</div>

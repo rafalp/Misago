@@ -12,7 +12,7 @@ from misago.forums.lists import get_forum_path
 from misago.threads.posting import (PostingInterrupt, EditorFormset,
                                     START, REPLY, EDIT)
 from misago.threads.models import Thread, Post, Label
-from misago.threads.permissions import allow_start_thread
+from misago.threads.permissions import allow_start_thread, allow_reply_thread
 from misago.threads.views.generic.base import ViewBase
 
 
@@ -23,7 +23,7 @@ class EditorView(ViewBase):
     """
     Basic view for starting/replying/editing
     """
-    template = 'misago/posting/editorview.html'
+    template = 'misago/posting/formset.html'
 
     def find_mode(self, request, *args, **kwargs):
         """
@@ -31,36 +31,42 @@ class EditorView(ViewBase):
         """
         is_post = request.method == 'POST'
 
-        if 'forum_id' in kwargs:
+        forum = self.get_forum(request, lock=is_post, **kwargs)
+
+        thread = None
+        post = None
+
+        if 'thread_id' in kwargs:
+            thread = self.get_thread(
+                request, lock=is_post, queryset=forum.thread_set, **kwargs)
+
+        if thread:
+            mode = REPLY
+        else:
             mode = START
-            user = request.user
-
-            forum = self.get_forum(request, lock=is_post, **kwargs)
             thread = Thread(forum=forum)
+
+        if not post:
             post = Post(forum=forum, thread=thread)
-            quote = Post(0)
-        elif 'thread_id' in kwargs:
-            thread = self.get_thread(request, lock=is_post, **kwargs)
-            forum = thread.forum
 
-        return mode, forum, thread, post, quote
+        return mode, forum, thread, post
 
-    def allow_mode(self, user, mode, forum, thread, post, quote):
+    def allow_mode(self, user, mode, forum, thread, post):
         """
         Second step: check start/reply/edit permissions
         """
         if mode == START:
             self.allow_start(user, forum)
         if mode == REPLY:
-            self.allow_reply(user, forum, thread, quote)
+            self.allow_reply(user, forum, thread)
         if mode == EDIT:
             self.allow_edit(user, forum, thread, post)
 
     def allow_start(self, user, forum):
         allow_start_thread(user, forum)
 
-    def allow_reply(self, user, forum, thread, quote):
-        raise NotImplementedError()
+    def allow_reply(self, user, forum, thread):
+        allow_reply_thread(user, thread)
 
     def allow_edit(self, user, forum, thread, post):
         raise NotImplementedError()
@@ -76,16 +82,20 @@ class EditorView(ViewBase):
     def real_dispatch(self, request, *args, **kwargs):
         mode_context = self.find_mode(request, *args, **kwargs)
         self.allow_mode(request.user, *mode_context)
+        mode, forum, thread, post = mode_context
 
-        mode, forum, thread, post, quote = mode_context
+        if not request.is_ajax():
+            response = render(request, 'misago/errorpages/wrong_way.html')
+            response.status_code = 405
+            return response
+
         forum.labels = Label.objects.get_forum_labels(forum)
         formset = EditorFormset(request=request,
                                 mode=mode,
                                 user=request.user,
                                 forum=forum,
                                 thread=thread,
-                                post=post,
-                                quote=quote)
+                                post=post)
 
         if request.method == 'POST':
             if 'submit' in request.POST:
@@ -93,29 +103,17 @@ class EditorView(ViewBase):
                     try:
                         formset.save()
                         messages.success(request, _("New thread was posted."))
-                        if request.is_ajax():
-                            return JsonResponse({
-                                'thread_url': thread.get_absolute_url()
-                            })
-                        else:
-                            return redirect(thread.get_absolute_url())
+                        return JsonResponse({
+                            'thread_url': thread.get_absolute_url()
+                        })
                     except PostingInterrupt as e:
-                        if request.is_ajax():
-                            return JsonResponse({
-                                'interrupt': e.message
-                            })
-                        else:
-                            messages.error(request, e.message)
-                elif request.is_ajax():
-                    return JsonResponse({
-                        'errors': formset.errors
-                    })
+                        return JsonResponse({'interrupt': e.message})
+                else:
+                    return JsonResponse({'errors': formset.errors})
 
-            if request.is_ajax() and 'preview' in request.POST:
+            if 'preview' in request.POST:
                 formset.update()
-                return JsonResponse({
-                    'preview': formset.post.parsed
-                })
+                return JsonResponse({'preview': formset.post.parsed})
 
         return self.render(request, {
             'mode': mode,
@@ -127,6 +125,5 @@ class EditorView(ViewBase):
             'path': get_forum_path(forum),
             'thread': thread,
             'post': post,
-            'quote': quote,
             'api_url': request.path
         })

@@ -11,10 +11,10 @@
     {% trans "Sign in to start thread" %}
   </a>
   {% elif forum.acl.can_start_threads %}
-  <a href="{% url 'misago:start_thread' forum_slug=forum.slug forum_id=forum.id %}" class="btn btn-success pull-right">
+  <button class="btn btn-reply btn-success pull-right" type="button">
     <span class="fa fa-plus-circle"></span>
     {% trans "Start thread" %}
-  </a>
+  </button>
   {% else %}
   <span class="btn btn-default btn-closed pull-right">
     <span class="fa fa-ban"></span>

@@ -13,6 +13,18 @@ class ThreadView(ThreadsMixin, generic.ThreadView):
     pass
 
 
+class GotoLastView(ThreadsMixin, generic.GotoLastView):
+    pass
+
+
+class GotoNewView(ThreadsMixin, generic.GotoNewView):
+    pass
+
+
+class GotoPostView(ThreadsMixin, generic.GotoPostView):
+    pass
+
+
 class StartThreadView(ThreadsMixin, generic.EditorView):
     pass
 

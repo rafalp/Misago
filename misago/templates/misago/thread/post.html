@@ -26,7 +26,7 @@
 
         <span class="separator">&ndash;</span>
 
-        <a href="" class="post-date tooltip-top dynamic time-ago" title="{{ post.posted_on }}" data-timestamp="{{ post.posted_on|date:"c" }}">
+        <a href="{{ post.get_absolute_url }}" class="post-date tooltip-top dynamic time-ago" title="{{ post.posted_on }}" data-timestamp="{{ post.posted_on|date:"c" }}">
           {{ post.posted_on|date }}
         </a>
 

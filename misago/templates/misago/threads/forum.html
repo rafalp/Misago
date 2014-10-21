@@ -99,4 +99,16 @@
 {% if user.is_authenticated and list_actions %}
   {% include "misago/threads/actions_js.html" %}
 {% endif %}
+{% if forum.acl.can_start_threads %}
+<script lang="JavaScript">
+  $(function() {
+    $('.btn-reply').click(function() {
+      var $btn = $(this);
+      Misago.Posting.load({
+        api_url: "{% url 'misago:start_thread' forum_id=forum.id %}"
+      });
+    });
+  });
+</script>
+{% endif %}
 {% endblock javascripts %}

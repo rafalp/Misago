@@ -80,8 +80,25 @@
 
     </div>
 
+    <div class="reply-to-thread">
+
+      {% if thread_reply_message %}
+      <p class="text-center lead">
+        <span class="fa fa-ban fa-fw fa-lg"></span>
+        {{ thread_reply_message }}
+      </p>
+      {% else %}
+      <button type="button" class="btn btn-success btn-block btn-lg">
+        <img class="img-rounded" src="{{ user|avatar:100 }}" alt="{% trans "Your avatar" %}">
+        {% trans "Reply thread" %}
+      </button>
+      {% endif %}
+
+    </div>
+
   </div>
 </div>
+<div id="reply-form-placeholder"></div>
 {% endblock %}
 
 
@@ -91,6 +108,24 @@
   {% include "misago/thread/actions_js.html" %}
   {% if forum.acl.can_hide_events %}
     {% include "misago/thread/events_js.html" %}
+  {% endif %}
+
+  {% if thread.acl.can_reply %}
+  <script lang="JavaScript">
+    $(function() {
+      $('.reply-to-thread button').click(function() {
+        Misago.Posting.load({
+          api_url: "{% url 'misago:reply_thread' forum_id=forum.id thread_id=thread.id %}",
+          on_load: function() {
+            $('.reply-to-thread').hide();
+          },
+          on_cancel: function() {
+            $('.reply-to-thread').fadeIn();
+          }
+        });
+      });
+    });
+  </script>
   {% endif %}
 {% endif %}
 {% endblock javascripts %}

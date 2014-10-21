@@ -379,6 +379,14 @@ def can_change_owned_thread(user, target):
     return True
 
 
+def allow_see_post(user, target):
+    forum_acl = user.acl['forums'].get(target.forum_id, {})
+    if not forum_acl.get('can_review_moderated_content'):
+        if user.is_anonymous() or user.pk != target.poster_id:
+            raise Http404()
+can_see_post = return_boolean(allow_see_post)
+
+
 """
 Queryset helpers
 """
@@ -462,12 +470,12 @@ def exclude_all_invisible_threads(queryset, user):
 
 
 def exclude_invisible_posts(queryset, user, forum):
-    if user.is_authenticated():
-        if not forum.acl['can_review_moderated_content']:
-            condition_author = Q(starter_id=user.id)
+    if not forum.acl['can_review_moderated_content']:
+        if user.is_authenticated():
+            condition_author = Q(poster=user.id)
             condition = Q(is_moderated=False)
             queryset = queryset.filter(condition_author | condition)
-    elif not forum.acl['can_review_moderated_content']:
-        queryset = queryset.filter(is_moderated=False)
+        elif not forum.acl['can_review_moderated_content']:
+            queryset = queryset.filter(is_moderated=False)
 
     return queryset

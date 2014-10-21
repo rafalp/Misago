@@ -84,10 +84,10 @@ class Thread(models.Model):
         if self.replies > 0:
             self.replies -= 1
 
-        reported_post_qs = self.post_set.filter(is_reported=True)[:1]
+        reported_post_qs = self.post_set.filter(is_reported=True)
         self.has_reported_posts = reported_post_qs.exists()
 
-        moderated_post_qs = self.post_set.filter(is_moderated=True)[:1]
+        moderated_post_qs = self.post_set.filter(is_moderated=True)
         self.has_moderated_posts = moderated_post_qs.exists()
 
         hidden_post_qs = self.post_set.filter(is_hidden=True)[:1]
@@ -132,6 +132,12 @@ class Thread(models.Model):
 
     def get_new_reply_url(self):
         return self.get_url('new')
+
+    def get_reported_reply_url(self):
+        return self.get_url('reported')
+
+    def get_moderated_reply_url(self):
+        return self.get_url('moderated')
 
     def get_last_reply_url(self):
         return self.get_url('last')

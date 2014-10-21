@@ -3,46 +3,50 @@
 // --------------------------------------------------
 
 
-.editor-preview {
-  padding-bottom: @line-height-computed;
-
-  .misago-markup {
-    // finetuned height to avoid page height form changing for most common posts
-    margin-top: 6px;
-    min-height: 33px;
-  }
-}
-
-
 .posting-container {
   background: @form-panel-bg;
-  border: 1px solid @form-panel-border;
+  border-top: 1px solid darken(@form-panel-border, 8%);
   border-width: 1px 0px;
-  box-shadow: 0px 0px 0px 3px @form-panel-shadow;
+  box-shadow: 0px 0px 0px 5px darken(@form-panel-shadow, 8%);
   padding: @form-panel-padding;
   padding-bottom: 0px;
   padding-left: 0px;
   padding-right: 0px;
 
+  position: fixed;
+  bottom: -100%;
+  width: 100%;
+  z-index: 2;
+
   &.fixed {
-    border-bottom: none;
-    position: fixed;
+    transition-duration: 0.5s;
     bottom: 0px;
-    width: 100%;
-    z-index: 2;
   }
 
-  form>.container-fluid {
-    padding-left: @grid-gutter-width;
-    padding-right: @grid-gutter-width;
+  .editor-preview {
+    border: 2px dashed @form-panel-border;
+    border-radius: @border-radius-large;
+    padding: 0px;
+
+    .empty-message {
+      padding: @padding-base-vertical @padding-base-horizontal;
+    }
+
+    .misago-markup {
+      padding: @padding-base-vertical @padding-base-horizontal;
+    }
+
+    .preview-footer  {
+      margin: 0px;
+      padding: @padding-base-vertical @padding-base-horizontal;
+    }
   }
 
   .form-main {
-    &>* {
-      margin: @form-panel-padding;
-      margin-top: 0px;
-      margin-left: 0px;
-      margin-right: 0px;
+    padding: 0px;
+
+    &>.form-control {
+      margin-bottom: @line-height-computed / 2;
     }
   }
 
@@ -66,9 +70,23 @@
     background-color: @form-panel-footer-bg;
     border-top: 1px solid @form-panel-border;
     padding: @form-panel-padding;
+    padding-left: 0px;
+    padding-right: 0px;
 
     strong {
       margin-left: @line-height-computed / 2;
+    }
+  }
+}
+
+
+.reply-to-thread {
+  .btn {
+    margin: 0px auto;
+    max-width: 300px;
+
+    img {
+      height: 30px;
     }
   }
 }

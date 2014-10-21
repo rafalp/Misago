@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.dispatch import receiver
 
@@ -84,3 +85,10 @@ class Post(models.Model):
     @property
     def is_valid(self):
         return is_post_valid(self)
+
+    def get_absolute_url(self):
+        return reverse(self.thread.get_url_name('post'), kwargs={
+            'thread_slug': self.thread.slug,
+            'thread_id': self.thread.id,
+            'post_id': self.id
+        })

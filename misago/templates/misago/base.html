@@ -36,6 +36,7 @@
       var is_authenticated = {{ user.is_authenticated|yesno:"true,false" }};
 
       var lang_time_units = "{% trans "smhd" %}";
+      var lang_dismiss_editor = "{% trans "Are you sure you want to abandon your message?" %}";
 
       var ajax_errors = {
         generic: "{% trans "Server returned unspecified error. Refresh page and try again." %}",

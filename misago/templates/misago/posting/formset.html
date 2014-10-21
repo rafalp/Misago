@@ -3,22 +3,25 @@
   <div class="posting-container">
     <form id="posting-form" method="POST">
 
-      <div class="container-fluid">
+      <div class="container">
         {% csrf_token %}
 
+        {% comment "Disabled" %}
         <div class="row">
           {% if supporting_forms %}
           <div class="col-md-9 form-main">
           {% else %}
           <div class="col-md-12 form-main">
           {% endif %}
+        {% endcomment %}
 
+          <div class="form-main">
             {% for form in main_forms %}
             {% include form.template %}
             {% endfor %}
-
           </div>
 
+          {% comment "Disabled" %}
           {% if supporting_forms %}
           <div class="col-md-3 form-side">
 
@@ -33,20 +36,22 @@
           </div>
           {% endif %}
         </div><!-- /.row -->
-
+        {% endcomment %}
 
       </div>
 
       <div class="form-footer">
-        <div class="container-fluid">
+        <div class="container">
 
           {% if formset.start_form %}
-          <button class="btn btn-primary" name="submit">{% trans "Post thread" %}</button>
+          <button class="btn btn-primary" type="button" name="submit">{% trans "Post thread" %}</button>
           {% elif formset.reply_form %}
-          <button class="btn btn-primary" name="submit">{% trans "Post reply" %}</button>
+          <button class="btn btn-primary" type="button" name="submit">{% trans "Post reply" %}</button>
           {% elif formset.edit_form %}
-          <button class="btn btn-primary" name="submit">{% trans "Save changes" %}</button>
+          <button class="btn btn-primary" type="button" name="submit">{% trans "Save changes" %}</button>
           {% endif %}
+
+          <button class="btn btn-default" type="button" name="cancel">{% trans "Cancel" %}</button>
 
           <strong class="ajax-loader text-muted fade">
             <i class="fa fa-cog fa-fw fa-spin"></i>

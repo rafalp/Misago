@@ -7,7 +7,7 @@ from misago.forums.models import Forum
 from misago.forums.permissions import allow_see_forum, allow_browse_forum
 
 from misago.threads.models import Thread, Post
-from misago.threads.permissions import allow_see_thread
+from misago.threads.permissions import allow_see_thread, allow_see_post
 
 
 __all__ = ['ForumMixin', 'ThreadMixin', 'PostMixin', 'ViewBase']
@@ -53,8 +53,9 @@ class ThreadMixin(object):
 
         return thread
 
-    def fetch_thread(self, request, lock=False, select_related=None, **kwargs):
-        queryset = Thread.objects
+    def fetch_thread(self, request, lock=False, select_related=None,
+                     queryset=None, **kwargs):
+        queryset = queryset or Thread.objects
         if lock:
             queryset = queryset.select_for_update()
         if select_related:
@@ -68,7 +69,25 @@ class ThreadMixin(object):
 
 
 class PostMixin(object):
-    pass
+    def get_post(self, request, lock=False, **kwargs):
+        thread = self.fetch_post(request, lock, **kwargs)
+        self.check_post_permissions(request, thread)
+
+        return thread
+
+    def fetch_post(self, request, lock=False, select_related=None,
+                   queryset=None, **kwargs):
+        queryset = queryset or Post.objects
+        if lock:
+            queryset = queryset.select_for_update()
+        if select_related:
+            queryset = queryset.select_related(*select_related)
+
+        return get_object_or_404(queryset, id=kwargs.get('post_id'))
+
+    def check_post_permissions(self, request, post):
+        add_acl(request.user, post)
+        allow_see_post(request.user, post)
 
 
 class ViewBase(ForumMixin, ThreadMixin, PostMixin, View):

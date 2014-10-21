@@ -10,7 +10,8 @@ from misago.users.online.utils import get_user_state
 
 from misago.threads.events import add_events_to_posts
 from misago.threads.paginator import paginate
-from misago.threads.permissions import allow_reply_thread
+from misago.threads.permissions import (allow_reply_thread,
+                                        exclude_invisible_posts)
 from misago.threads.views.generic.base import ViewBase
 from misago.threads.views.generic.thread.postsactions import PostsActions
 from misago.threads.views.generic.thread.threadactions import ThreadActions
@@ -29,7 +30,7 @@ class ThreadView(ViewBase):
 
     def get_posts(self, user, forum, thread, kwargs):
         queryset = self.get_posts_queryset(user, forum, thread)
-        page = paginate(queryset, kwargs.get('page', 0), 10, 5)
+        page = paginate(queryset, kwargs.get('page', 0), 10, 3)
 
         posts = []
         for post in page.object_list:
@@ -50,15 +51,7 @@ class ThreadView(ViewBase):
     def get_posts_queryset(self, user, forum, thread):
         queryset = thread.post_set.select_related(
             'poster', 'poster__rank', 'poster__bancache', 'poster__online')
-
-        if user.is_authenticated():
-            if forum.acl['can_review_moderated_content']:
-                visibility_condition = Q(is_moderated=False) | Q(poster=user)
-                queryset = queryset.filter(visibility_condition)
-        else:
-            queryset = queryset.filter(is_moderated=False)
-
-        return queryset.order_by('id')
+        return exclude_invisible_posts(queryset, user, forum).order_by('id')
 
     def dispatch(self, request, *args, **kwargs):
         relations = ['forum', 'starter', 'last_poster', 'first_post']
