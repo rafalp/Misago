@@ -130,6 +130,9 @@ class Thread(models.Model):
     def get_absolute_url(self):
         return self.get_url()
 
+    def get_last_reply_url(self):
+        return self.get_url('last')
+
     def get_new_reply_url(self):
         return self.get_url('new')
 
@@ -138,9 +141,6 @@ class Thread(models.Model):
 
     def get_moderated_reply_url(self):
         return self.get_url('moderated')
-
-    def get_last_reply_url(self):
-        return self.get_url('last')
 
     def set_title(self, title):
         self.title = title

@@ -21,6 +21,14 @@ class GotoNewView(ThreadsMixin, generic.GotoNewView):
     pass
 
 
+class GotoReportedView(ThreadsMixin, generic.GotoReportedView):
+    pass
+
+
+class GotoModeratedView(ThreadsMixin, generic.GotoModeratedView):
+    pass
+
+
 class GotoPostView(ThreadsMixin, generic.GotoPostView):
     pass
 

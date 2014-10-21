@@ -5,7 +5,14 @@ from misago.threads import goto
 from misago.threads.views.generic.base import ViewBase
 
 
-__all__ = ['BaseGotoView', 'GotoLastView', 'GotoNewView', 'GotoPostView']
+__all__ = [
+    'BaseGotoView',
+    'GotoLastView',
+    'GotoNewView',
+    'GotoReportedView',
+    'GotoModeratedView',
+    'GotoPostView'
+]
 
 
 class BaseGotoView(ViewBase):
@@ -31,6 +38,16 @@ class GotoLastView(BaseGotoView):
 class GotoNewView(BaseGotoView):
     def get_redirect(self, user, thread):
         return goto.new(user, thread)
+
+
+class GotoReportedView(BaseGotoView):
+    def get_redirect(self, user, thread):
+        return goto.reported(user, thread)
+
+
+class GotoModeratedView(BaseGotoView):
+    def get_redirect(self, user, thread):
+        return goto.moderated(user, thread)
 
 
 class GotoPostView(BaseGotoView):
