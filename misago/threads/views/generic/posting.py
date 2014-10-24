@@ -29,16 +29,18 @@ class EditorView(ViewBase):
         """
         First step: guess from request what kind of view we are
         """
-        is_post = request.method == 'POST'
+        is_submit = request.method == 'POST' and 'submit' in request.POST
+        if is_submit:
+            request.user.lock()
 
-        forum = self.get_forum(request, lock=is_post, **kwargs)
+        forum = self.get_forum(request, lock=is_submit, **kwargs)
 
         thread = None
         post = None
 
         if 'thread_id' in kwargs:
             thread = self.get_thread(
-                request, lock=is_post, queryset=forum.thread_set, **kwargs)
+                request, lock=is_submit, queryset=forum.thread_set, **kwargs)
 
         if thread:
             mode = REPLY
@@ -74,7 +76,6 @@ class EditorView(ViewBase):
     def dispatch(self, request, *args, **kwargs):
         if request.method == 'POST':
             with atomic():
-                request.user.lock()
                 return self.real_dispatch(request, *args, **kwargs)
         else:
             return self.real_dispatch(request, *args, **kwargs)
