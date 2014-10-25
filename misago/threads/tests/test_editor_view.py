@@ -1,3 +1,5 @@
+import json
+
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
@@ -9,12 +11,14 @@ from misago.threads.models import Thread, Post
 
 
 class StartThreadFormTests(AuthenticatedUserTestCase):
+    ajax_header = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
+
     def setUp(self):
         super(StartThreadFormTests, self).setUp()
 
         self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
         self.link = reverse('misago:start_thread', kwargs={
-            'forum_slug': self.forum.slug, 'forum_id': self.forum.id
+            'forum_id': self.forum.id
         })
 
     def allow_start_thread(self):
@@ -82,7 +86,7 @@ class StartThreadFormTests(AuthenticatedUserTestCase):
     def test_can_start_thread(self):
         """can post new thread"""
         self.allow_start_thread()
-        response = self.client.get(self.link)
+        response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 200)
 
         self.allow_start_thread()
@@ -90,28 +94,38 @@ class StartThreadFormTests(AuthenticatedUserTestCase):
             'title': 'Hello, I am test thread!',
             'post': 'Lorem ipsum dolor met!',
             'submit': True,
-        })
-        self.assertEqual(response.status_code, 302)
-
-        updated_admin = self.user.lock()
-        self.assertEqual(updated_admin.threads, 1)
-        self.assertEqual(updated_admin.posts, 1)
+        },
+        **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
 
         last_thread = self.user.thread_set.all()[:1][0]
+
+        response_dict = json.loads(response.content)
+        self.assertIn('post_url', response_dict)
+
+        self.allow_start_thread()
+        response = self.client.get(response_dict['post_url'])
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(last_thread.title, response.content)
+
+        updated_user = self.user.lock()
+        self.assertEqual(updated_user.threads, 1)
+        self.assertEqual(updated_user.posts, 1)
+
         self.assertEqual(last_thread.forum_id, self.forum.pk)
         self.assertEqual(last_thread.title, "Hello, I am test thread!")
-        self.assertEqual(last_thread.starter_id, updated_admin.id)
-        self.assertEqual(last_thread.starter_name, updated_admin.username)
-        self.assertEqual(last_thread.starter_slug, updated_admin.slug)
-        self.assertEqual(last_thread.last_poster_id, updated_admin.id)
-        self.assertEqual(last_thread.last_poster_name, updated_admin.username)
-        self.assertEqual(last_thread.last_poster_slug, updated_admin.slug)
+        self.assertEqual(last_thread.starter_id, updated_user.id)
+        self.assertEqual(last_thread.starter_name, updated_user.username)
+        self.assertEqual(last_thread.starter_slug, updated_user.slug)
+        self.assertEqual(last_thread.last_poster_id, updated_user.id)
+        self.assertEqual(last_thread.last_poster_name, updated_user.username)
+        self.assertEqual(last_thread.last_poster_slug, updated_user.slug)
 
         last_post = self.user.post_set.all()[:1][0]
         self.assertEqual(last_post.forum_id, self.forum.pk)
         self.assertEqual(last_post.original, 'Lorem ipsum dolor met!')
-        self.assertEqual(last_post.poster_id, updated_admin.id)
-        self.assertEqual(last_post.poster_name, updated_admin.username)
+        self.assertEqual(last_post.poster_id, updated_user.id)
+        self.assertEqual(last_post.poster_name, updated_user.username)
 
         updated_forum = Forum.objects.get(id=self.forum.id)
         self.assertEqual(updated_forum.threads, 1)
@@ -120,7 +134,7 @@ class StartThreadFormTests(AuthenticatedUserTestCase):
         self.assertEqual(updated_forum.last_thread_title, last_thread.title)
         self.assertEqual(updated_forum.last_thread_slug, last_thread.slug)
 
-        self.assertEqual(updated_forum.last_poster_id, updated_admin.id)
+        self.assertEqual(updated_forum.last_poster_id, updated_user.id)
         self.assertEqual(updated_forum.last_poster_name,
-                         updated_admin.username)
-        self.assertEqual(updated_forum.last_poster_slug, updated_admin.slug)
+                         updated_user.username)
+        self.assertEqual(updated_forum.last_poster_slug, updated_user.slug)
