@@ -23,6 +23,35 @@
     bottom: 0px;
   }
 
+  .container {
+    position: relative;
+  }
+
+  .lefthand {
+    margin: 0px;
+    position: absolute;
+    left: @grid-gutter-width * -1;
+    width: @grid-gutter-width;
+
+    li {
+      text-align: center;
+    }
+  }
+
+  .thread-title {
+    background: @input-bg;
+    border: 2px solid @input-border;
+    border-radius: @border-radius-large;
+    margin-bottom: @line-height-computed / 2;
+
+    input, select {
+      border: none;
+      .box-shadow(none);
+
+      .input-size(@input-height-large; @padding-large-vertical; @padding-large-horizontal; @font-size-large; @line-height-large; @border-radius-large);
+    }
+  }
+
   .editor-preview {
     border: 2px dashed @form-panel-border;
     border-radius: @border-radius-large;
@@ -75,18 +104,6 @@
 
     strong {
       margin-left: @line-height-computed / 2;
-    }
-  }
-}
-
-
-.reply-to-thread {
-  .btn {
-    margin: 0px auto;
-    max-width: 300px;
-
-    img {
-      height: 30px;
     }
   }
 }

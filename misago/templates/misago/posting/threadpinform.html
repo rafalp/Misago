@@ -1,4 +1,4 @@
-{% load misago_forms %}
-<div class="controls control-radioselect">
+{% load i18n misago_forms %}
+<div class="controls control-radioselect not-labeled tooltip-right" title="{% trans "Pin thread" %}" data-toggle-on="fa fa-star fa-lg" data-toggle-off="fa fa-star-o fa-lg">
   {% form_input form.is_pinned %}
 </div>

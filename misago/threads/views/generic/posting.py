@@ -9,6 +9,7 @@ from django.views.generic import View
 from misago.core.exceptions import AjaxError
 from misago.forums.lists import get_forum_path
 
+from misago.threads import goto
 from misago.threads.posting import (PostingInterrupt, EditorFormset,
                                     START, REPLY, EDIT)
 from misago.threads.models import Thread, Post, Label
@@ -103,9 +104,17 @@ class EditorView(ViewBase):
                 if formset.is_valid():
                     try:
                         formset.save()
-                        messages.success(request, _("New thread was posted."))
+
+                        if mode == START:
+                            message = _("New thread was posted.")
+                        if mode == REPLY:
+                            message = _("Your reply was posted.")
+                        if mode == EDIT:
+                            message = _("Message was edited.")
+                        messages.success(request, message)
+
                         return JsonResponse({
-                            'thread_url': thread.get_absolute_url()
+                            'post_url': goto.post(request.user, thread, post)
                         })
                     except PostingInterrupt as e:
                         return JsonResponse({'interrupt': e.message})

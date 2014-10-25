@@ -1,5 +1,5 @@
 from misago.threads.forms.posting import ThreadCloseForm
-from misago.threads.posting import PostingMiddleware
+from misago.threads.posting import PostingMiddleware, START
 
 
 class ThreadCloseFormMiddleware(PostingMiddleware):

@@ -1,5 +1,14 @@
-// Scrolling enhancement for overflow: scroll elements
+// Scrolling behaviour fixes
 $(function() {
+
+  // we are meddling in window.location, which means we need js fix scrolls to fragments
+  if(window.location.hash) {
+      $(document.body).animate({
+        'scrollTop': $(window.location.hash).offset().top
+      }, 500);
+  }
+
+  // scrolling enhancement for overflow: scroll elements
   function handle_scroll($element, e) {
     var scroll = $element.scrollTop();
 
@@ -26,4 +35,5 @@ $(function() {
   }
 
   Misago.DOM.on_change(add_scroll_handlers);
+
 });

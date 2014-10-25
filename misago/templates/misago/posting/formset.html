@@ -6,37 +6,19 @@
       <div class="container">
         {% csrf_token %}
 
-        {% comment "Disabled" %}
-        <div class="row">
-          {% if supporting_forms %}
-          <div class="col-md-9 form-main">
-          {% else %}
-          <div class="col-md-12 form-main">
-          {% endif %}
-        {% endcomment %}
-
-          <div class="form-main">
-            {% for form in main_forms %}
+        <ul class="list-unstyled lefthand">
+          {% for form in supporting_forms.lefthand %}
+          <li>
             {% include form.template %}
-            {% endfor %}
-          </div>
+          </li>
+          {% endfor %}
+        </ul>
 
-          {% comment "Disabled" %}
-          {% if supporting_forms %}
-          <div class="col-md-3 form-side">
-
-            <h3>{% trans "Thread options:" %}</h3>
-
-            {% for form in supporting_forms %}
-            <div class="supporting-form">
-              {% include form.template %}
-            </div>
-            {% endfor %}
-
-          </div>
-          {% endif %}
-        </div><!-- /.row -->
-        {% endcomment %}
+        <div class="form-main">
+          {% for form in main_forms %}
+          {% include form.template %}
+          {% endfor %}
+        </div>
 
       </div>
 

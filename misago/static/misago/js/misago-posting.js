@@ -1,5 +1,6 @@
 // Controller for posting actions
 $(function() {
+
   MisagoPreview = function(_controller, options) {
 
     this.$form = options.form;
@@ -146,11 +147,17 @@ $(function() {
           var form_data = _this.$form.serialize() + '&submit=1';
           $.post(options.api_url, form_data, function(data) {
             _this.$ajax_loader.removeClass('in');
-            if (data.thread_url !== undefined) {
+            if (data.post_url !== undefined) {
               _this.posted = true;
               _this.$ajax_loader.hide();
               _this.$ajax_complete.addClass('in')
-              window.location.replace(data.thread_url);
+
+              if (data.post_url.indexOf(window.location.pathname) != -1) {
+                window.location.href = data.post_url;
+                window.location.reload(true)
+              } else {
+                window.location.href = data.post_url;
+              }
             } else if (data.errors !== undefined) {
               Misago.Alerts.error(data.errors[0]);
             } else if (data.interrupt !== undefined) {
@@ -216,6 +223,10 @@ $(function() {
           $('.main-footer').show();
         });
 
+        if (this.on_cancel !== undefined) {
+          this.on_cancel();
+        }
+
         this._clear();
       }
 
@@ -223,9 +234,13 @@ $(function() {
 
     this.has_content = function() {
 
+      if (_this.$form !== null) {
         var length = $.trim(_this.$form.find('input[name="title"]').val()).length;
         length += $.trim(_this.$form.find('textarea').val()).length;
         return length > 0;
+      } else {
+        return false;
+      }
 
     }
 

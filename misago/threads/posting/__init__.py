@@ -106,11 +106,11 @@ class EditorFormset(object):
 
     def get_supporting_forms(self):
         """return list of supporting forms"""
-        supporting_forms = []
+        supporting_forms = {}
         for form in self.get_forms_list():
             try:
-                if form.is_supporting and form.legend:
-                    supporting_forms.append(form)
+                if form.is_supporting:
+                    supporting_forms.setdefault(form.location, []).append(form)
             except AttributeError:
                 pass
         return supporting_forms

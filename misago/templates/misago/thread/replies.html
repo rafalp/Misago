@@ -80,16 +80,16 @@
 
     </div>
 
-    <div class="reply-to-thread">
+    <div class="reply-to-thread text-center">
 
       {% if thread_reply_message %}
-      <p class="text-center lead">
+      <p class="lead">
         <span class="fa fa-ban fa-fw fa-lg"></span>
         {{ thread_reply_message }}
       </p>
       {% else %}
-      <button type="button" class="btn btn-success btn-block btn-lg">
-        <img class="img-rounded" src="{{ user|avatar:100 }}" alt="{% trans "Your avatar" %}">
+      <button type="button" class="btn btn-success btn-lg">
+        <span class="fa fa-plus-circle fa-fw fa-lg"></span>
         {% trans "Reply thread" %}
       </button>
       {% endif %}
@@ -120,7 +120,7 @@
             $('.reply-to-thread').hide();
           },
           on_cancel: function() {
-            $('.reply-to-thread').fadeIn();
+            $('.reply-to-thread').show();
           }
         });
       });

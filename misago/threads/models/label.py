@@ -41,6 +41,9 @@ class Label(models.Model):
 
     objects = LabelManager()
 
+    def __unicode__(self):
+        return self.name
+
     def save(self, *args, **kwargs):
         if self.pk:
             self.strip_inavailable_labels()

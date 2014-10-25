@@ -87,7 +87,7 @@ class ThreadForm(ReplyForm):
 
 class ThreadLabelFormBase(forms.Form):
     is_supporting = True
-    legend = _("Label")
+    location = 'after_title'
     template = "misago/posting/threadlabelform.html"
 
 
@@ -111,7 +111,7 @@ def ThreadLabelForm(*args, **kwargs):
 
 class ThreadPinForm(forms.Form):
     is_supporting = True
-    legend = _("Pin thread")
+    location = 'lefthand'
     template = "misago/posting/threadpinform.html"
 
     is_pinned = forms.YesNoSwitch(
@@ -122,7 +122,7 @@ class ThreadPinForm(forms.Form):
 
 class ThreadCloseForm(forms.Form):
     is_supporting = True
-    legend = _("Close thread")
+    location = 'lefthand'
     template = "misago/posting/threadcloseform.html"
 
     is_closed = forms.YesNoSwitch(

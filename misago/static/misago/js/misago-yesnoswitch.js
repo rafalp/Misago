@@ -4,6 +4,8 @@ function enableYesNoSwitch(selector) {
     var name = $control.find('input').first().attr('name');
     var value = $control.find("input:checked").val() * 1;
 
+    var is_labeled = !$control.hasClass('not-labeled');
+
     // hide original switch options
     $control.find('ul, label').addClass('hidden-original-switch');
 
@@ -11,7 +13,14 @@ function enableYesNoSwitch(selector) {
     var no_label = $.trim($control.find('label').last().text());
 
     var toggle_off = "fa fa-toggle-off fa-2x";
+    if ($control.data('toggle-off') !== undefined) {
+      toggle_off = $control.data('toggle-off');
+    }
+
     var toggle_on = "fa fa-toggle-on fa-2x";
+    if ($control.data('toggle-on') !== undefined) {
+      toggle_on = $control.data('toggle-on');
+    }
 
     // Render new switch
     var $new_switch = $('<label class="yes-no-switch"></label>');
@@ -20,7 +29,9 @@ function enableYesNoSwitch(selector) {
 
     $control.prepend($new_switch);
     $new_switch.append($icon);
-    $new_switch.append($label);
+    if (is_labeled) {
+      $new_switch.append($label);
+    }
 
     if (value) {
       $new_switch.addClass('active');
