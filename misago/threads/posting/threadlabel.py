@@ -1,4 +1,6 @@
+from misago.threads import moderation
 from misago.threads.forms.posting import ThreadLabelForm
+from misago.threads.models import Label
 from misago.threads.posting import PostingMiddleware, START
 
 
@@ -21,7 +23,7 @@ class ThreadLabelFormMiddleware(PostingMiddleware):
                                     initial=initial)
 
     def pre_save(self, form):
-        if form.is_valid():
+        if form.is_valid() and self.mode == START:
             if self.thread_label_id != form.cleaned_data.get('label'):
                 if form.cleaned_data.get('label'):
                     self.thread.label_id = form.cleaned_data.get('label')
@@ -29,3 +31,14 @@ class ThreadLabelFormMiddleware(PostingMiddleware):
                 else:
                     self.thread.label = None
                     self.thread.update_fields.append('label')
+
+    def post_save(self, form):
+        if form.is_valid() and self.mode != START:
+            if self.thread_label_id != form.cleaned_data.get('label'):
+                if form.cleaned_data.get('label'):
+                    labels_dict = Label.objects.get_cached_labels_dict()
+                    new_label = labels_dict.get(form.cleaned_data.get('label'))
+                    if new_label:
+                        label_thread(self.user, self.thread, new_label)
+                else:
+                    unlabel_thread(self.user, self.thread)

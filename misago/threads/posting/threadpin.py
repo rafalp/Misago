@@ -1,5 +1,6 @@
+from misago.threads import moderation
 from misago.threads.forms.posting import ThreadPinForm
-from misago.threads.posting import PostingMiddleware
+from misago.threads.posting import PostingMiddleware, START
 
 
 class ThreadPinFormMiddleware(PostingMiddleware):
@@ -18,7 +19,15 @@ class ThreadPinFormMiddleware(PostingMiddleware):
             return ThreadPinForm(prefix=self.prefix, initial=initial)
 
     def pre_save(self, form):
-        if form.is_valid():
+        if form.is_valid() and self.mode == START:
             if self.is_pinned != form.cleaned_data.get('is_pinned'):
                 self.thread.is_pinned = form.cleaned_data.get('is_pinned')
                 self.thread.update_fields.append('is_pinned')
+
+    def post_save(self, form):
+        if form.is_valid() and self.mode != START:
+            if self.is_pinned != form.cleaned_data.get('is_pinned'):
+                if self.thread.is_pinned:
+                    moderation.unpin_thread(self.user, self.thread)
+                else:
+                    moderation.pin_thread(self.user, self.thread)
