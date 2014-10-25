@@ -11,11 +11,11 @@ class UpdateStatsMiddleware(PostingMiddleware):
 
     def update_forum(self):
         if self.mode == START:
-            self.forum.threads += F('threads') + 1
+            self.forum.threads = F('threads') + 1
 
         if self.mode != EDIT:
             self.forum.set_last_thread(self.thread)
-            self.forum.posts += F('posts') + 1
+            self.forum.posts = F('posts') + 1
             self.forum.update_all = True
 
     def update_thread(self):
@@ -26,7 +26,7 @@ class UpdateStatsMiddleware(PostingMiddleware):
             self.thread.set_last_post(self.post)
 
         if self.mode == REPLY:
-            self.thread.replies += F('replies') + 1
+            self.thread.replies = F('replies') + 1
 
         self.thread.update_all = True
 
