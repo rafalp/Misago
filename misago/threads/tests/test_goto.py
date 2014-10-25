@@ -134,7 +134,6 @@ class GotoTests(AuthenticatedUserTestCase):
 
         # add reported post
         reported_post = reply_thread(self.thread, is_reported=True)
-        self.thread.has_reported_posts = True
 
         # add 24 posts
         [reply_thread(self.thread) for p in xrange(24)]
@@ -166,7 +165,6 @@ class GotoTests(AuthenticatedUserTestCase):
 
         # add moderated post
         moderated_post = reply_thread(self.thread, is_moderated=True)
-        self.thread.has_moderated_posts = True
 
         # add 24 posts
         [reply_thread(self.thread) for p in xrange(24)]

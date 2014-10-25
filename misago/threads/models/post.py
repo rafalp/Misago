@@ -37,6 +37,13 @@ class Post(models.Model):
     def __unicode__(self):
         return '%s...' % self.original[10:].strip()
 
+    def get_absolute_url(self):
+        return reverse(self.thread.get_url_name('post'), kwargs={
+            'thread_slug': self.thread.slug,
+            'thread_id': self.thread.id,
+            'post_id': self.id
+        })
+
     def delete(self, *args, **kwargs):
         from misago.threads.signals import delete_post
         delete_post.send(sender=self)
@@ -72,6 +79,13 @@ class Post(models.Model):
         self.thread = new_thread
         move_post.send(sender=self)
 
+    def get_absolute_url(self):
+        return reverse(self.thread.get_url_name('post'), kwargs={
+            'thread_slug': self.thread.slug,
+            'thread_id': self.thread.id,
+            'post_id': self.id
+        })
+
     @property
     def short(self):
         if self.is_valid:
@@ -85,10 +99,3 @@ class Post(models.Model):
     @property
     def is_valid(self):
         return is_post_valid(self)
-
-    def get_absolute_url(self):
-        return reverse(self.thread.get_url_name('post'), kwargs={
-            'thread_slug': self.thread.slug,
-            'thread_id': self.thread.id,
-            'post_id': self.id
-        })

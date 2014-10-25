@@ -115,7 +115,6 @@ def moderated(user, thread):
     try:
         first_moderated = qs.filter(is_moderated=True)[:1][0]
     except IndexError:
-        raise Exception('blam!')
         return last(user, thread)
 
     return get_post_link(posts, qs, thread, first_moderated)
