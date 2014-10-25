@@ -72,7 +72,9 @@
               <div class="thread-replies new-replies">
                 <span class="label label-success tooltip-top" title="{% blocktrans trimmed with replies=thread.replies|intcomma count counter=thread.replies %}New thread with {{ replies }} reply{% plural %}New thread with {{ replies }} replies{% endblocktrans %}">
                   <span class="fa fa-plus-circle fa-fw"></span>
+                  {% if thread.replies > 0 %}
                   {{ thread.replies|intcomma }}
+                  {% endif %}
                 </span>
               </div>
               {% else %}
