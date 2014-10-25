@@ -39,3 +39,15 @@ class GotoTests(AuthenticatedUserTestCase):
         # add 2 posts
         [reply_thread(self.thread) for p in xrange(2)]
         self.assertEqual(goto.get_post_page(15, self.thread.post_set), 2)
+
+    def test_hashed_reverse(self):
+        """hashed_reverse returns complete url for given post"""
+        url = goto.hashed_reverse(self.thread, self.thread.first_post)
+        final_url = '%s#post-%s'
+        url_formats = self.thread.get_absolute_url(), self.thread.first_post_id
+        self.assertEqual(url, final_url % url_formats)
+
+        url = goto.hashed_reverse(self.thread, self.thread.first_post, 4)
+        final_url = '%s4/#post-%s'
+        url_formats = self.thread.get_absolute_url(), self.thread.first_post_id
+        self.assertEqual(url, final_url % url_formats)
