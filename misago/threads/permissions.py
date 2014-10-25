@@ -296,6 +296,8 @@ def add_acl_to_thread(user, thread):
         'can_close': forum_acl.get('can_close_threads'),
         'can_move': forum_acl.get('can_move_threads'),
         'can_review': forum_acl.get('can_review_moderated_content'),
+        'can_report': forum_acl.get('can_report'),
+        'can_see_reports': forum_acl.get('can_see_reports')
     })
 
     if can_change_owned_thread(user, thread):
