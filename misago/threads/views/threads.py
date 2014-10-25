@@ -13,19 +13,19 @@ class ThreadView(ThreadsMixin, generic.ThreadView):
     pass
 
 
+class ModeratedPostsListView(ThreadsMixin, generic.ModeratedPostsListView):
+    pass
+
+
+class ReportedPostsListView(ThreadsMixin, generic.ReportedPostsListView):
+    pass
+
+
 class GotoLastView(ThreadsMixin, generic.GotoLastView):
     pass
 
 
 class GotoNewView(ThreadsMixin, generic.GotoNewView):
-    pass
-
-
-class GotoReportedView(ThreadsMixin, generic.GotoReportedView):
-    pass
-
-
-class GotoModeratedView(ThreadsMixin, generic.GotoModeratedView):
     pass
 
 

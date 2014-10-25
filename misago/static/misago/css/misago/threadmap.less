@@ -1,0 +1,78 @@
+//
+// Thread Map
+// --------------------------------------------------
+
+
+.thread-map {
+  .user-avatar {
+    img {
+      border-radius: @border-radius-small;
+      width: 32px;
+    }
+  }
+
+  .media-heading {
+    background: none;
+    border-bottom: none;
+    margin-bottom: 0px;
+
+    color: @text-muted;
+
+    .user-name {
+      color: @state-default;
+      font-weight: bold;
+    }
+
+    a.user-name {
+      &:link, &:visited {
+        color: @state-hover;
+      }
+
+      &:hover {
+        color: @state-hover;
+        text-decoration: text-underline;
+      }
+
+      &:active, &:focus {
+        color: @state-clicked;
+        text-decoration: text-underline;
+      }
+    }
+
+    .separator {
+      margin-left: @font-size-base / 3;
+      margin-right: @font-size-base / 3;
+    }
+
+    .post-date {
+      &:link, &:visited {
+        color: @state-default;
+      }
+
+      &:hover, &:focus {
+        color: @state-hover;
+        text-decoration: underline;
+      }
+
+      &:active {
+        color: @state-clicked;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .post-preview {
+    display: block;
+
+    font-size: @font-size-small;
+
+    &:link, &:active, &:visited, &:hover {
+      color: @text-color;
+      text-decoration: none;
+    }
+  }
+
+  .map-tail {
+    margin-bottom: 0px;
+  }
+}

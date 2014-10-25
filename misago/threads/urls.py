@@ -15,16 +15,21 @@ urlpatterns = patterns('',
 
 
 from misago.threads.views.threads import (ThreadView, GotoLastView,
-                                          GotoNewView, GotoReportedView,
-                                          GotoModeratedView, GotoPostView)
+                                          GotoNewView, GotoPostView)
 urlpatterns += patterns('',
     url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/$', ThreadView.as_view(), name='thread'),
     url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/(?P<page>\d+)/$', ThreadView.as_view(), name='thread'),
     url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/last/$', GotoLastView.as_view(), name='thread_last'),
     url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/new/$', GotoNewView.as_view(), name='thread_new'),
-    url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/reported/$', GotoReportedView.as_view(), name='thread_reported'),
-    url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/moderated/$', GotoModeratedView.as_view(), name='thread_moderated'),
     url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/post-(?P<post_id>\d+)/$', GotoPostView.as_view(), name='thread_post'),
+)
+
+
+from misago.threads.views.threads import (ModeratedPostsListView,
+                                          ReportedPostsListView)
+urlpatterns += patterns('',
+    url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/moderation-queue/$', ModeratedPostsListView.as_view(), name='thread_moderated'),
+    url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/reported-posts/$', ReportedPostsListView.as_view(), name='thread_reported'),
 )
 
 

@@ -1,9 +1,8 @@
 from django.contrib import messages
-from django.db.models import Q
 from django.db.transaction import atomic
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
-from django.utils.translation import ugettext_lazy, ugettext as _
+from django.utils.translation import ugettext as _
 from django.views.generic import View
 
 from misago.core.exceptions import AjaxError

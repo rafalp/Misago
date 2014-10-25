@@ -1,0 +1,44 @@
+{% load i18n misago_avatars %}
+<div class="modal-body thread-map">
+  {% for post in posts %}
+  <div class="media">
+    {% if post.poster_id %}
+    <a class="user-avatar pull-left" href="{% url USER_PROFILE_URL user_slug=post.poster.slug user_id=post.poster.id %}">
+      <img class="media-object" src="{{ post.poster|avatar:32 }}" alt="{% trans "Poster avatar" %}">
+    </a>
+    {% else %}
+    <span class="user-avatar pull-left">
+      <img class="media-object" src="{% blankavatar 32 %}" alt="{% trans "Poster avatar" %}">
+    </span>
+    {% endif %}
+    <div class="media-body">
+      <div class="media-heading">
+        {% if post.poster_id %}
+        <a class="user-name" href="{% url USER_PROFILE_URL user_slug=post.poster.slug user_id=post.poster.id %}">{{ post.poster_name }}</a>
+        {% else %}
+        <strong>{{ post.poster_name }}</strong>
+        {% endif %}
+
+        <span class="separator">&ndash;</span>
+
+        <a href="{{ post.get_absolute_url }}" class="post-date tooltip-top dynamic time-ago" title="{{ post.posted_on }}" data-timestamp="{{ post.posted_on|date:"c" }}">
+          {{ post.posted_on|date }}
+        </a>
+      </div>
+      <a href="{{ post.get_absolute_url }}" class="post-preview">
+        {{ post.short }}
+      </a>
+    </div>
+  </div>
+  {% empty %}
+  <p class="lead text-center map-tail">
+    {% trans "There are no posts to display on this list." %}
+  </p>
+  {% endfor %}
+  {% if posts_count > 15 %}
+  <hr>
+  <p class="lead text-center map-tail">
+    {% trans "This list is limited to last 15 posts." %}
+  </p>
+  {% endif %}
+</div>

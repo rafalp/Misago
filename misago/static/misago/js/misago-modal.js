@@ -30,6 +30,12 @@
       });
     }
 
+    this.get = function(url) {
+      $.get(url, function(data) {
+        _this.show(data);
+        Misago.DOM.changed();
+      });
+    }
   };
 
   Misago.Modal = new MisagoModal();

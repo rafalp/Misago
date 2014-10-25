@@ -1,6 +1,5 @@
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
-from django.utils.translation import ungettext, ugettext_lazy, ugettext as _
+from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
 from misago.core.shortcuts import validate_slug

@@ -125,67 +125,6 @@ class GotoTests(AuthenticatedUserTestCase):
         post_link = goto.new(self.user, self.thread)
         self.assertEqual(post_link, goto.last(self.user, self.thread))
 
-    def test_reported(self):
-        """reported returns link to first reported post"""
-        self.thread.acl['can_see_reports'] = True
-
-        # add 24 posts
-        [reply_thread(self.thread) for p in xrange(24)]
-
-        # add reported post
-        reported_post = reply_thread(self.thread, is_reported=True)
-
-        # add 24 posts
-        [reply_thread(self.thread) for p in xrange(24)]
-
-        # assert that there is link to reported post
-        reported_link = goto.reported(self.user, self.thread)
-        post_link = goto.get_post_link(
-            50, self.thread.post_set, self.thread, reported_post)
-        self.assertEqual(reported_link, post_link)
-
-        # lack of permission should lead to last post
-        self.thread.acl['can_see_reports'] = False
-        reported_link = goto.reported(self.user, self.thread)
-        self.assertEqual(reported_link, goto.last(self.user, self.thread))
-
-        # lack of reports in thread should lead to last post
-        self.thread.acl['can_see_reports'] = True
-        self.thread.has_reported_posts = False
-        reported_link = goto.reported(self.user, self.thread)
-        self.assertEqual(reported_link, goto.last(self.user, self.thread))
-
-    def test_moderated(self):
-        """moderated returns link to first moderated post"""
-        self.forum.acl['can_review_moderated_content'] = True
-        self.thread.acl['can_review'] = True
-
-        # add 24 posts
-        [reply_thread(self.thread) for p in xrange(24)]
-
-        # add moderated post
-        moderated_post = reply_thread(self.thread, is_moderated=True)
-
-        # add 24 posts
-        [reply_thread(self.thread) for p in xrange(24)]
-
-        # assert that there is link to moderated post
-        moderated_link = goto.moderated(self.user, self.thread)
-        post_link = goto.get_post_link(
-            50, self.thread.post_set, self.thread, moderated_post)
-        self.assertEqual(moderated_link, post_link)
-
-        # lack of permission should lead to last post
-        self.thread.acl['can_review'] = False
-        moderated_link = goto.moderated(self.user, self.thread)
-        self.assertEqual(moderated_link, goto.last(self.user, self.thread))
-
-        # lack of moderated posts in thread should lead to last post
-        self.thread.acl['can_review'] = True
-        self.thread.has_moderated_posts = False
-        moderated_link = goto.moderated(self.user, self.thread)
-        self.assertEqual(moderated_link, goto.last(self.user, self.thread))
-
     def test_post(self):
         """post returns link to post given"""
         self.assertEqual(

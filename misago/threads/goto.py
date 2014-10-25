@@ -94,32 +94,6 @@ def new(user, thread):
     return get_post_link(posts, qs, thread, first_unread)
 
 
-def reported(user, thread):
-    if not thread.has_reported_posts or not thread.acl['can_see_reports']:
-        return last(user, thread)
-
-    posts, qs = posts_queryset(user, thread)
-    try:
-        first_reported = qs.filter(is_reported=True)[:1][0]
-    except IndexError:
-        return last(user, thread)
-
-    return get_post_link(posts, qs, thread, first_reported)
-
-
-def moderated(user, thread):
-    if not thread.has_moderated_posts or not thread.acl['can_review']:
-        return last(user, thread)
-
-    posts, qs = posts_queryset(user, thread)
-    try:
-        first_moderated = qs.filter(is_moderated=True)[:1][0]
-    except IndexError:
-        return last(user, thread)
-
-    return get_post_link(posts, qs, thread, first_moderated)
-
-
 def post(user, thread, post):
     posts, qs = posts_queryset(user, thread)
     return get_post_link(posts, qs, thread, post)

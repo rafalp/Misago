@@ -136,11 +136,11 @@ class Thread(models.Model):
     def get_new_reply_url(self):
         return self.get_url('new')
 
-    def get_reported_reply_url(self):
-        return self.get_url('reported')
-
-    def get_moderated_reply_url(self):
+    def get_moderated_url(self):
         return self.get_url('moderated')
+
+    def get_reported_url(self):
+        return self.get_url('reported')
 
     def set_title(self, title):
         self.title = title
