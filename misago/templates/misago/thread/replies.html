@@ -118,6 +118,12 @@
 
 {% block javascripts %}
 {{ block.super }}
+<script lang="JavaScript">
+  $(function() {
+    Misago.Onebox.activate($('.post-body'));
+  });
+</script>
+
 {% if user.is_authenticated %}
   {% include "misago/thread/actions_js.html" %}
   {% if forum.acl.can_hide_events %}

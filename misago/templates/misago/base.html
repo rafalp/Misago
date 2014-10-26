@@ -35,6 +35,8 @@
     <script lang="JavaScript">
       var is_authenticated = {{ user.is_authenticated|yesno:"true,false" }};
 
+      var lang_play_media = "{% trans "Play media" %}";
+      var lang_media_author = "{% trans "uploaded by {author}" %}";
       var lang_time_units = "{% trans "smhd" %}";
       var lang_dismiss_editor = "{% trans "Are you sure you want to abandon your message?" %}";
 
