@@ -30,12 +30,39 @@
           {{ post.posted_on|date }}
         </a>
 
-        {% if not post.is_read %}
-        <span class="text-warning">{% trans "New" %}</span>
+        {% if post.is_read %}
+        <span class="label label-success">
+          <span class="fa fa-plus-circle"></span>
+          {% trans "New" %}
+        </span>
         {% endif %}
 
+        <a href="{{ post.get_absolute_url }}" class="pull-right post-date tooltip-top" title="{% trans "Link to this post" %}">
+          #{{ page.start_index|add:forloop.counter0 }}
+        </a>
+
       </div>
+
+      {% if post.is_moderated %}
+      <div class="alert alert-info">
+        <span class="fa fa-question-circle fa-fw fa-lg"></span>
+        {% if post.id == thread.first_post_id %}
+        {% trans "This thread won't be visible to other users until its approved by moderator." %}
+        {% else %}
+        {% trans "This post won't be visible to other users until its approved by moderator." %}
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% if post.is_reported %}
+      <div class="alert alert-danger">
+        <span class="fa fa-exclamation-triangle fa-fw fa-lg"></span>
+        {% trans "This post was reported to moderators." %}
+      </div>
+      {% endif %}
+
       <div class="panel-body">
+
         {% if post.is_valid %}
         <article class="post-body misago-markup">
           {{ post.parsed|safe }}
@@ -46,9 +73,12 @@
           {% trans "Post can't be displayed due to invalid message checksum." %}
         </p>
         {% endif %}
+
       </div>
+
       <div class="panel-footer">
-        le footer
+        Like Report
+        Approve Hide Delete Reply
       </div>
     </div>
 
