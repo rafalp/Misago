@@ -2,7 +2,7 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.http import Http404
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext, ugettext_lazy as _
 
 from misago.acl import add_acl, algebra
 from misago.acl.decorators import return_boolean
@@ -24,11 +24,7 @@ class PermissionsForm(forms.Form):
         initial=0,
         choices=((0, _("Started threads")), (1, _("All threads"))))
     can_start_threads = forms.YesNoSwitch(label=_("Can start threads"))
-    can_reply_threads = forms.TypedChoiceField(
-        label=_("Can reply to threads"),
-        coerce=int,
-        initial=0,
-        choices=((0, _("No")), (1, _("Open threads")), (2, _("All threads"))))
+    can_reply_threads = forms.YesNoSwitch(label=_("Can reply to threads"))
     can_edit_threads = forms.TypedChoiceField(
         label=_("Can edit threads"),
         coerce=int,
@@ -46,12 +42,12 @@ class PermissionsForm(forms.Form):
             (2, _("Delete threads"))
         ))
     thread_edit_time = forms.IntegerField(
-        label=_("Min. time for own thread edit, in minutes"),
+        label=_("Time limit for own threads edits, in minutes"),
         help_text=_("Enter 0 to don't limit time for editing own threads."),
         initial=0,
         min_value=0)
     can_hide_threads = forms.TypedChoiceField(
-        label=_("Can hide threads"),
+        label=_("Can hide all threads"),
         coerce=int,
         initial=0,
         choices=(
@@ -59,35 +55,35 @@ class PermissionsForm(forms.Form):
             (1, _("Hide threads")),
             (2, _("Delete threads"))
         ))
-    can_edit_replies = forms.TypedChoiceField(
-        label=_("Can edit replies"),
+    can_edit_posts = forms.TypedChoiceField(
+        label=_("Can edit posts"),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Own replies")), (2, _("All replies"))))
-    can_hide_own_replies = forms.TypedChoiceField(
-        label=_("Can hide own replies"),
-        help_text=_("Only last replies to thread made within "
+        choices=((0, _("No")), (1, _("Own posts")), (2, _("All posts"))))
+    can_hide_own_posts = forms.TypedChoiceField(
+        label=_("Can hide own posts"),
+        help_text=_("Only last posts to thread made within "
                     "edit time limit can be hidden."),
         coerce=int,
         initial=0,
         choices=(
             (0, _("No")),
-            (1, _("Hide replies")),
-            (2, _("Delete replies"))
+            (1, _("Hide posts")),
+            (2, _("Delete posts"))
         ))
-    reply_edit_time = forms.IntegerField(
-        label=_("Min. time for own reply edit, in minutes"),
-        help_text=_("Enter 0 to don't limit time for editing own replies."),
+    post_edit_time = forms.IntegerField(
+        label=_("Time limit for own post edits, in minutes"),
+        help_text=_("Enter 0 to don't limit time for editing own posts."),
         initial=0,
         min_value=0)
-    can_hide_replies = forms.TypedChoiceField(
-        label=_("Can hide replies"),
+    can_hide_posts = forms.TypedChoiceField(
+        label=_("Can hide all posts"),
         coerce=int,
         initial=0,
         choices=(
             (0, _("No")),
-            (1, _("Hide replies")),
-            (2, _("Delete replies"))
+            (1, _("Hide posts")),
+            (2, _("Delete posts"))
         ))
     can_protect_posts = forms.YesNoSwitch(
         label=_("Can protect posts"),
@@ -155,13 +151,13 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
         'can_start_threads': 0,
         'can_reply_threads': 0,
         'can_edit_threads': 0,
-        'can_edit_replies': 0,
+        'can_edit_posts': 0,
         'can_hide_own_threads': 0,
-        'can_hide_own_replies': 0,
+        'can_hide_own_posts': 0,
         'thread_edit_time': 0,
-        'reply_edit_time': 0,
+        'post_edit_time': 0,
         'can_hide_threads': 0,
-        'can_hide_replies': 0,
+        'can_hide_posts': 0,
         'can_protect_posts': 0,
         'can_move_posts': 0,
         'can_merge_posts': 0,
@@ -183,13 +179,13 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
         can_start_threads=algebra.greater,
         can_reply_threads=algebra.greater,
         can_edit_threads=algebra.greater,
-        can_edit_replies=algebra.greater,
+        can_edit_posts=algebra.greater,
         can_hide_threads=algebra.greater,
-        can_hide_replies=algebra.greater,
+        can_hide_posts=algebra.greater,
         can_hide_own_threads=algebra.greater,
-        can_hide_own_replies=algebra.greater,
+        can_hide_own_posts=algebra.greater,
         thread_edit_time=algebra.greater_or_zero,
-        reply_edit_time=algebra.greater_or_zero,
+        post_edit_time=algebra.greater_or_zero,
         can_protect_posts=algebra.greater,
         can_move_posts=algebra.greater,
         can_merge_posts=algebra.greater,
@@ -230,13 +226,13 @@ def add_acl_to_forum(user, forum):
         'can_start_threads': 0,
         'can_reply_threads': 0,
         'can_edit_threads': 0,
-        'can_edit_replies': 0,
+        'can_edit_posts': 0,
         'can_hide_own_threads': 0,
-        'can_hide_own_replies': 0,
+        'can_hide_own_posts': 0,
         'thread_edit_time': 0,
-        'reply_edit_time': 0,
+        'post_edit_time': 0,
         'can_hide_threads': 0,
-        'can_hide_replies': 0,
+        'can_hide_posts': 0,
         'can_protect_posts': 0,
         'can_move_posts': 0,
         'can_merge_posts': 0,
@@ -260,13 +256,13 @@ def add_acl_to_forum(user, forum):
             can_start_threads=algebra.greater,
             can_reply_threads=algebra.greater,
             can_edit_threads=algebra.greater,
-            can_edit_replies=algebra.greater,
+            can_edit_posts=algebra.greater,
             can_hide_threads=algebra.greater,
-            can_hide_replies=algebra.greater,
+            can_hide_posts=algebra.greater,
             can_hide_own_threads=algebra.greater,
-            can_hide_own_replies=algebra.greater,
+            can_hide_own_posts=algebra.greater,
             thread_edit_time=algebra.greater_or_zero,
-            reply_edit_time=algebra.greater_or_zero,
+            posts_edit_time=algebra.greater_or_zero,
             can_protect_posts=algebra.greater,
             can_move_posts=algebra.greater,
             can_merge_posts=algebra.greater,
@@ -290,6 +286,7 @@ def add_acl_to_thread(user, thread):
 
     thread.acl.update({
         'can_reply': can_reply_thread(user, thread),
+        'can_edit': can_edit_thread(user, thread),
         'can_hide': forum_acl.get('can_hide_threads'),
         'can_change_label': forum_acl.get('can_change_threads_labels') == 2,
         'can_pin': forum_acl.get('can_pin_threads'),
@@ -309,7 +306,18 @@ def add_acl_to_thread(user, thread):
 
 
 def add_acl_to_post(user, post):
-    pass
+    forum_acl = user.acl['forums'].get(post.forum_id, {})
+
+    post.acl.update({
+        'can_reply': can_reply_thread(user, post.thread),
+        'can_edit': can_edit_reply(user, post),
+        'can_unhide': forum_acl.get('can_hide_threads'),
+        'can_hide': forum_acl.get('can_hide_threads'),
+        'can_delete': forum_acl.get('can_hide_threads'),
+        'can_protect': can_reply_thread(user, post.thread),
+        'can_report': can_reply_thread(user, post.thread),
+        'can_approve': can_reply_thread(user, post.thread),
+    })
 
 
 def add_acl_to_event(user, event):
@@ -350,15 +358,67 @@ def allow_reply_thread(user, target):
     if user.is_anonymous():
         raise PermissionDenied(_("You have to sign in to reply threads."))
 
-    reply_thread = user.acl['forums'].get(target.id, {'can_reply_threads': 0})
-    if reply_thread == 0:
+    forum_acl = target.forum.acl
+
+    if not forum_acl['can_reply_threads']:
         raise PermissionDenied(_("You can't reply to threads in this forum."))
-    if target.is_closed and reply_thread < 2:
+    if target.is_closed and not forum_acl['can_close_threads']:
         raise PermissionDenied(
             _("You can't reply to closed threads in this forum."))
 can_reply_thread = return_boolean(allow_reply_thread)
 
 
+def allow_edit_thread(user, target):
+    if target.forum.is_closed:
+        message = _("This forum is closed. You can't edit threads in it.")
+        raise PermissionDenied(message)
+    if user.is_anonymous():
+        raise PermissionDenied(_("You have to sign in to edit threads."))
+
+    forum_acl = target.forum.acl
+
+    if not forum_acl['can_edit_threads']:
+        raise PermissionDenied(_("You can't edit threads in this forum."))
+
+    if target.is_closed and not forum_acl['can_close_threads']:
+        raise PermissionDenied(
+            _("You can't edit closed threads in this forum."))
+
+    if forum_acl['can_edit_threads'] == 1:
+        if thread.starter_id != user.pk:
+            raise PermissionDenied(
+                _("You can't edit other users threads in this forum."))
+        if thread.starter_id != user.pk:
+            raise PermissionDenied(
+                _("You can't edit other users threads in this forum."))
+        if not has_time_to_edit_thread(user, thread):
+            message = ungettext("You can't edit threads that are "
+                                "older than %(minutes)s minute.",
+                                "You can't edit threads that are "
+                                "older than %(minutes)s minutes.",
+                                forum_acl['thread_edit_time'])
+            raise PermissionDenied(
+                message % {'minutes': forum_acl['thread_edit_time']})
+can_edit_thread = return_boolean(allow_edit_thread)
+
+
+def allow_see_post(user, target):
+    if target.is_moderated:
+        forum_acl = user.acl['forums'].get(target.forum_id, {})
+        if not forum_acl.get('can_review_moderated_content'):
+            if user.is_anonymous() or user.pk != target.poster_id:
+                raise Http404()
+can_see_post = return_boolean(allow_see_post)
+
+
+def allow_edit_post(user, target):
+    pass
+can_edit_post = return_boolean(allow_edit_post)
+
+
+"""
+Permission check helperts
+"""
 def can_change_owned_thread(user, target):
     forum_acl = user.acl['forums'].get(target.forum_id, {})
 
@@ -371,23 +431,29 @@ def can_change_owned_thread(user, target):
     if target.first_post.is_protected:
         return False
 
+    return has_time_to_edit_thread(user, target)
+
+
+def has_time_to_edit_thread(user, target):
+    forum_acl = user.acl['forums'].get(target.forum_id, {})
     if forum_acl.get('thread_edit_time'):
         diff = timezone.now() - target.started_on
         diff_minutes = int(diff.total_seconds() / 60)
 
-        if diff_minutes > forum_acl.get('thread_edit_time'):
-            return False
+        return diff_minutes < forum_acl.get('thread_edit_time')
+    else:
+        return True
 
-    return True
 
+def has_time_to_edit_post(user, target):
+    forum_acl = user.acl['forums'].get(target.forum_id, {})
+    if forum_acl.get('post_edit_time'):
+        diff = timezone.now() - target.posted_on
+        diff_minutes = int(diff.total_seconds() / 60)
 
-def allow_see_post(user, target):
-    if target.is_moderated:
-        forum_acl = user.acl['forums'].get(target.forum_id, {})
-        if not forum_acl.get('can_review_moderated_content'):
-            if user.is_anonymous() or user.pk != target.poster_id:
-                raise Http404()
-can_see_post = return_boolean(allow_see_post)
+        return diff_minutes < forum_acl.get('post_edit_time')
+    else:
+        return True
 
 
 """

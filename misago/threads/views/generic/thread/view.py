@@ -33,7 +33,11 @@ class ThreadView(ViewBase):
 
         posts = []
         for post in page.object_list:
+            post.forum = forum
+            post.thread = thread
+
             add_acl(user, post)
+
             if post.poster:
                 poster_state = get_user_state(post.poster, user.acl)
                 post.poster.online_state = poster_state

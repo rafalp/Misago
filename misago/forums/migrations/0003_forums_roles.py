@@ -57,7 +57,7 @@ def create_default_forums_roles(apps, schema_editor):
             'misago.threads.permissions': {
                 'can_see_all_threads': 1,
                 'can_reply_threads': 1,
-                'can_edit_replies': 1,
+                'can_edit_posts': 1,
             },
         })
     reply_only.save()
@@ -77,7 +77,7 @@ def create_default_forums_roles(apps, schema_editor):
                 'can_start_threads': 1,
                 'can_reply_threads': 1,
                 'can_edit_threads': 1,
-                'can_edit_replies': 1,
+                'can_edit_posts': 1,
             },
         })
     standard.save()
@@ -98,7 +98,7 @@ def create_default_forums_roles(apps, schema_editor):
                 'can_start_threads': 1,
                 'can_reply_threads': 1,
                 'can_edit_threads': 1,
-                'can_edit_replies': 1,
+                'can_edit_posts': 1,
             },
         })
     standard_with_polls.save()
@@ -116,15 +116,15 @@ def create_default_forums_roles(apps, schema_editor):
             'misago.threads.permissions': {
                 'can_see_all_threads': 1,
                 'can_start_threads': 1,
-                'can_reply_threads': 2,
+                'can_reply_threads': 1,
                 'can_edit_threads': 2,
-                'can_edit_replies': 2,
+                'can_edit_posts': 2,
                 'can_hide_own_threads': 2,
-                'can_hide_own_replies': 2,
+                'can_hide_own_posts': 2,
                 'thread_edit_time': 0,
-                'reply_edit_time': 0,
+                'post_edit_time': 0,
                 'can_hide_threads': 2,
-                'can_hide_replies': 2,
+                'can_hide_posts': 2,
                 'can_protect_posts': 1,
                 'can_move_posts': 1,
                 'can_merge_posts': 1,
