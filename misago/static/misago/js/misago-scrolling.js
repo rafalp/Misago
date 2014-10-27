@@ -36,4 +36,17 @@ $(function() {
 
   Misago.DOM.on_change(add_scroll_handlers);
 
+  // helper for scrolling
+  MisagoScroll = function() {
+
+    this.scrollTo = function($element) {
+      $(document.body).animate({
+        'scrollTop': $element.offset().top
+      }, 500);
+    }
+
+  }
+
+  Misago.Scroll = new MisagoScroll();
+
 });
