@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.db.transaction import atomic
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from django.views.generic import View
 
@@ -127,6 +127,7 @@ class PostingView(ViewBase):
                             'post_url': goto.post(request.user, thread, post),
                             'parsed': post.parsed,
                             'original': post.original,
+                            'title': thread.title,
                         })
                     except PostingInterrupt as e:
                         return JsonResponse({'interrupt': e.message})

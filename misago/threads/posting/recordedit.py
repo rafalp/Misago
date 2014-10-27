@@ -14,4 +14,5 @@ class RecordEditMiddleware(PostingMiddleware):
     def save(self, form):
         if self.mode == EDIT:
             # record edit
-            pass
+            self.post.edits += 1
+            self.post.update_fields.append('edits')

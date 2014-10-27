@@ -153,16 +153,27 @@
   {% if thread.acl.can_reply %}
   <script lang="JavaScript">
     $(function() {
-      $('.reply-to-thread button').click(function() {
+      Misago.reply_thread = function(extra_on_load) {
+        if (extra_on_load == undefined) {
+          extra_on_load = function() {};
+        }
+
         Misago.Posting.load({
           api_url: "{% url 'misago:reply_thread' forum_id=forum.id thread_id=thread.id %}",
           on_load: function() {
             $('.reply-to-thread').hide();
+            extra_on_load();
           },
           on_cancel: function() {
             $('.reply-to-thread').show();
           }
         });
+      }
+
+      $('.reply-to-thread button').click(function() {
+        if (!Misago.Posting.is_open()) {
+          Misago.reply_thread();
+        }
       });
     });
   </script>

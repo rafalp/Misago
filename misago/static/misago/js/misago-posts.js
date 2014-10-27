@@ -4,17 +4,17 @@ $(function() {
   MisagoPost = function($element) {
 
     this.$e = $element;
-    this.$content = this.$e.find('.post-body');
+    this.$content = this.$e.find('article.post-body');
     this.id = this.$e.data('id');
 
     var _this = this;
 
     this.highlight = function() {
-      $element.addClass('highlighted');
+      this.$e.addClass('highlighted');
     }
 
     this.remove_highlight = function() {
-      $element.removeClass('highlighted');
+      this.$e.removeClass('highlighted');
     }
 
     this.change_post = function(new_content) {
@@ -42,9 +42,30 @@ $(function() {
             Misago.Alerts.success(data.message);
             _this.change_post(data.parsed);
             Misago.Posting.cancel();
+            Misago.Scroll.scrollTo(_this.$e);
             return false;
           }
         });
+      }
+
+    });
+
+    this.quote = function() {
+
+      $.get(_this.$e.data('quote-url'), function(data) {
+        Misago.Posting.append(data.quote);
+      });
+
+    }
+
+    this.$e.find('.btn-reply').click(function() {
+
+      if (!Misago.Posting.is_open()) {
+        Misago.reply_thread(function() {
+          _this.quote();
+        });
+      } else {
+        _this.quote();
       }
 
     });

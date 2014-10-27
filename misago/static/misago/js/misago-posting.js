@@ -267,6 +267,19 @@ $(function() {
 
     }
 
+    this.append = function(text) {
+
+      var $textarea = this.$form.find('textarea');
+      $textarea.val($.trim($.trim($textarea.val()) + '\n\n' + text));
+      console.log($textarea.prop("scrollHeight"));
+      $textarea.scrollTop($textarea.prop("scrollHeight"));
+
+      if (this.$preview != null) {
+        this.$preview.update();
+      }
+
+    }
+
   }
 
   Misago.Posting = new MisagoPosting();

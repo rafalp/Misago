@@ -41,6 +41,11 @@ urlpatterns += patterns('',
 )
 
 
+from misago.threads.views.post import QuotePostView
+urlpatterns += patterns('',
+    url(r'^quote-post/(?P<post_id>\d+)/$', QuotePostView.as_view(), name='quote_post'),
+)
+
 # new threads lists
 from misago.threads.views.newthreads import NewThreadsView, clear_new_threads
 urlpatterns += patterns('',

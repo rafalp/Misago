@@ -93,6 +93,9 @@ class Post(models.Model):
             'post_id': self.id
         })
 
+    def get_quote_url(self):
+        return reverse('misago:quote_post', kwargs={'post_id': self.id})
+
     @property
     def short(self):
         if self.is_valid:

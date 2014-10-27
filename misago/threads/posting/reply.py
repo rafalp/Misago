@@ -14,17 +14,17 @@ class ReplyFormMiddleware(PostingMiddleware):
             if can_edit_thread(self.user, self.thread):
                 FormType = ThreadForm
             else:
-                FormType = FormType
+                FormType = ReplyForm
         elif self.mode == START:
             FormType = ThreadForm
         else:
-            FormType = FormType
+            FormType = ReplyForm
 
         if FormType == ThreadForm:
             if self.request.method == 'POST':
-                form = ThreadForm(self.thread, self.post, self.request.POST)
+                form = FormType(self.thread, self.post, self.request.POST)
             else:
-                form = ThreadForm(self.thread, self.post, initial=initial_data)
+                form = FormType(self.thread, self.post, initial=initial_data)
         else:
             if self.request.method == 'POST':
                 form = FormType(self.post, self.request.POST)
