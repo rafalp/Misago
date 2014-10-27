@@ -24,8 +24,8 @@ class SynchronizeThreadsTests(TestCase):
         forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
 
         threads = [testutils.post_thread(forum) for t in xrange(10)]
-        for thread in threads:
-            [testutils.reply_thread(thread) for r in xrange(thread.pk)]
+        for i, thread in enumerate(threads):
+            [testutils.reply_thread(thread) for r in xrange(i)]
             thread.replies = 0
             thread.save()
 
@@ -34,9 +34,9 @@ class SynchronizeThreadsTests(TestCase):
         out = StringIO()
         command.execute(stdout=out)
 
-        for thread in threads:
+        for i, thread in enumerate(threads):
             db_thread = forum.thread_set.get(id=thread.id)
-            self.assertEqual(db_thread.replies, db_thread.pk)
+            self.assertEqual(db_thread.replies, i)
 
         command_output = out.getvalue().splitlines()[-1].strip()
         self.assertEqual(command_output, 'Synchronized 10 threads')
