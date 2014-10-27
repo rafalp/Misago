@@ -86,6 +86,13 @@ class Post(models.Model):
             'post_id': self.id
         })
 
+    def get_edit_url(self):
+        return reverse('misago:edit_post', kwargs={
+            'forum_id': self.forum_id,
+            'thread_id': self.thread_id,
+            'post_id': self.id
+        })
+
     @property
     def short(self):
         if self.is_valid:

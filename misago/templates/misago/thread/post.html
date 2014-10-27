@@ -1,5 +1,5 @@
 {% load i18n misago_avatars %}
-<div id="post-{{ post.pk }}" class="media post">
+<div id="post-{{ post.pk }}" class="media post thread-post{% if post.poster_id and post.poster.rank.css_class %} rank-{{ post.poster.rank.css_class }}{% endif %}" data-id="{{ post.pk }}" data-edit-url="{{ post.get_edit_url }}"=>
   {% if post.poster %}
   <a class="user-avatar pull-left" href="{% url USER_PROFILE_URL user_slug=post.poster.slug user_id=post.poster.id %}">
     <img class="media-object" src="{{ post.poster|avatar:100 }}" alt="{% trans "Poster avatar" %}">
@@ -17,6 +17,9 @@
         {% include "misago/user_state.html" with user=post.poster state=post.poster.online_state %}
         <a class="user-name" href="{% url USER_PROFILE_URL user_slug=post.poster.slug user_id=post.poster.id %}">
           {{ post.poster }}</a>
+        {% if post.poster.short_title %}
+        <span class="label user-rank">{{ post.poster.short_title }}</span>
+        {% endif %}
         {% else %}
         <span class="fa fa-power-off fa-fw user-offline tooltip-top" title="{% blocktrans with user=post.poster_name %}{{ user }}'s forum account has been deleted.{% endblocktrans %}"></span>
         <span class="user-name">
@@ -61,34 +64,32 @@
       </div>
       {% endif %}
 
+      {% if post.is_valid %}
       <div class="panel-body">
-
-        {% if post.is_valid %}
         <article class="post-body misago-markup">
           {{ post.parsed|safe }}
         <article>
-        {% else %}
-        <p class="lead corrupted-message">
-          <span class="fa fa-exclamation-triangle"></span>
-          {% trans "Post can't be displayed due to invalid message checksum." %}
-        </p>
-        {% endif %}
-
       </div>
+      {% else %}
+      <div class="alert alert-danger">
+        <span class="fa fa-exclamation-triangle fa-fw fa-lg"></span>
+        {% trans "Post can't be displayed due to invalid message checksum." %}
+      </div>
+      {% endif %}
 
       <div class="panel-footer">
 
         {% if thread.acl.can_reply %}
-        <button type="button" class="btn btn-primary btn-flat pull-right">
+        <button type="button" class="btn btn-reply btn-primary btn-flat pull-right">
           <span class="fa fa-reply">
-          Reply
+          {% trans "Reply" %}
         </button>
         {% endif %}
 
         {% if post.acl.can_edit %}
-        <button type="button" class="btn btn-default btn-flat pull-right">
+        <button type="button" class="btn btn-edit btn-default btn-flat pull-right">
           <span class="fa fa-pencil">
-          Edit
+          {% trans "Edit" %}
         </button>
         {% endif %}
 

@@ -12,6 +12,9 @@ $(function() {
 
     if (this.$markup.text() == '') {
       this.$markup.hide();
+    } else {
+      this.$message.hide();
+      Misago.Onebox.activate(this.$markup);
     }
 
     this.api_url = options.api_url;
@@ -106,6 +109,7 @@ $(function() {
       this.affix_end = 0;
 
       this.on_cancel = null;
+      this.on_post = null;
 
     }
 
@@ -129,6 +133,12 @@ $(function() {
         this.on_cancel = null;
       }
 
+      if (options.on_post !== undefined) {
+        this.on_post = options.on_post
+      } else {
+        this.on_post = null;
+      }
+
       this.$ajax_loader = this.$container.find('.ajax-loader');
       this.$ajax_complete = this.$container.find('.ajax-complete');
 
@@ -150,13 +160,22 @@ $(function() {
             if (data.post_url !== undefined) {
               _this.posted = true;
               _this.$ajax_loader.hide();
-              _this.$ajax_complete.addClass('in')
 
-              if (data.post_url.indexOf(window.location.pathname) != -1) {
-                window.location.href = data.post_url;
-                window.location.reload(true)
-              } else {
-                window.location.href = data.post_url;
+              var on_post = true;
+
+              if (_this.on_post != null) {
+                on_post = _this.on_post(data);
+              }
+
+              if (on_post) {
+                _this.$ajax_complete.addClass('in')
+
+                if (data.post_url.indexOf(window.location.pathname) != -1) {
+                  window.location.href = data.post_url;
+                  window.location.reload(true)
+                } else {
+                  window.location.href = data.post_url;
+                }
               }
             } else if (data.errors !== undefined) {
               Misago.Alerts.error(data.errors[0]);
@@ -174,17 +193,7 @@ $(function() {
       })
 
       this.$container.find('button[name="cancel"]').click(function() {
-
-        if (_this.has_content()) {
-          var decision = confirm(lang_dismiss_editor);
-          if (decision) {
-            _this.cancel();
-          }
-        } else {
-          _this.cancel();
-        }
-
-        return false;
+        _this.cancel();
       });
 
       return true;
@@ -214,6 +223,13 @@ $(function() {
 
       if (this.$form !== null) {
 
+        if (this.has_content() && !this.posted) {
+          var decision = confirm(lang_dismiss_editor);
+          if (!decision) {
+            return false;
+          }
+        }
+
         if (this.$preview !== null) {
           this.$preview.stop();
         }
@@ -223,13 +239,20 @@ $(function() {
           $('.main-footer').show();
         });
 
-        if (this.on_cancel !== undefined) {
+        if (this.on_cancel !== null) {
           this.on_cancel();
         }
 
         this._clear();
+        return true;
       }
 
+      return false;
+
+    }
+
+    this.is_open = function() {
+      return this.$form !== null;
     }
 
     this.has_content = function() {
@@ -249,7 +272,7 @@ $(function() {
   Misago.Posting = new MisagoPosting();
 
   $(window).on("beforeunload", function() {
-    if (Misago.Posting.has_content() && !Misago.Posting.posted) {
+    if (Misago.Posting.is_open() && Misago.Posting.has_content() && !Misago.Posting.posted) {
       return lang_dismiss_editor;
     }
   })

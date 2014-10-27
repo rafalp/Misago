@@ -31,15 +31,3 @@ class GotoNewView(ThreadsMixin, generic.GotoNewView):
 
 class GotoPostView(ThreadsMixin, generic.GotoPostView):
     pass
-
-
-class StartThreadView(ThreadsMixin, generic.EditorView):
-    pass
-
-
-class ReplyView(ThreadsMixin, generic.EditorView):
-    pass
-
-
-class EditView(ThreadsMixin, generic.EditorView):
-    pass

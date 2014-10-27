@@ -75,6 +75,7 @@ PIPELINE_JS = {
             'misago/js/misago-threads-lists.js',
             'misago/js/misago-onebox.js',
             'misago/js/misago-posting.js',
+            'misago/js/misago-posts.js',
         ),
         'output_filename': 'misago.js',
     },

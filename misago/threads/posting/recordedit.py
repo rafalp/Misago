@@ -9,7 +9,7 @@ class RecordEditMiddleware(PostingMiddleware):
 
         if self.mode == EDIT:
             self.original_title = self.thread.title
-            self.original_post = self.post.raw
+            self.original_post = self.post.original
 
     def save(self, form):
         if self.mode == EDIT:

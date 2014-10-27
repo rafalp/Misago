@@ -1,4 +1,4 @@
-{% load i18n misago_editor misago_forms %}
+{% load i18n misago_editor misago_forms misago_shorthands %}
 {% include 'misago/form_errors.html' %}
 
 {% if form.title %}
@@ -32,7 +32,7 @@
         <p class="lead empty-message">
           {% trans "Once you start writing mesage, it's preview will be displayed here." %}
         </p>
-        <article class="misago-markup"></article>
+        <article class="misago-markup">{{ post.is_valid|iftrue:post.parsed|safe }}</article>
       </div>
       <p class="preview-footer text-muted small">
         <span class="fa fa-refresh fa-fw"></span>

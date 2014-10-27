@@ -2,6 +2,7 @@ from misago.markup import Editor
 
 from misago.threads.checksums import update_post_checksum
 from misago.threads.forms.posting import ReplyForm, ThreadForm
+from misago.threads.permissions import can_edit_thread
 from misago.threads.posting import PostingMiddleware, START, REPLY, EDIT
 
 
@@ -9,16 +10,26 @@ class ReplyFormMiddleware(PostingMiddleware):
     def make_form(self):
         initial_data = {'title': self.thread.title, 'post': self.post.original}
 
-        if self.mode == START:
+        if self.mode == EDIT:
+            if can_edit_thread(self.user, self.thread):
+                FormType = ThreadForm
+            else:
+                FormType = FormType
+        elif self.mode == START:
+            FormType = ThreadForm
+        else:
+            FormType = FormType
+
+        if FormType == ThreadForm:
             if self.request.method == 'POST':
                 form = ThreadForm(self.thread, self.post, self.request.POST)
             else:
                 form = ThreadForm(self.thread, self.post, initial=initial_data)
         else:
             if self.request.method == 'POST':
-                form = ReplyForm(self.post, self.request.POST)
+                form = FormType(self.post, self.request.POST)
             else:
-                form = ReplyForm(self.post, initial=initial_data)
+                form = FormType(self.post, initial=initial_data)
 
         form.post_editor = Editor(form['post'])
         return form
@@ -32,14 +43,12 @@ class ReplyFormMiddleware(PostingMiddleware):
             self.new_thread(form)
 
         if self.mode == EDIT:
-            self.edit_post()
+            self.edit_post(form)
         else:
             self.new_post()
 
         self.post.updated_on = self.datetime
-
-        if self.mode != EDIT:
-            self.post.save()# We need post id for checksum
+        self.post.save()
 
         update_post_checksum(self.post)
         self.post.update_fields.append('checksum')
@@ -54,10 +63,11 @@ class ReplyFormMiddleware(PostingMiddleware):
         self.thread.last_post_on = self.datetime
         self.thread.save()
 
-    def edit_post(self):
-        self.post.last_editor_name = self.user
-        self.post.poster_name = self.user.username
-        self.post.poster_slug = self.user.slug
+    def edit_post(self, form):
+        if form.cleaned_data.get('title'):
+            self.thread.set_title(form.cleaned_data['title'])
+            self.thread.update_fields.extend(('title', 'slug'))
+        self.post.last_editor_name = self.user.username
 
     def new_post(self):
         self.post.thread = self.thread

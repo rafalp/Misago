@@ -46,6 +46,23 @@
         }
       }
     }
+
+    &.highlighted {
+      .media-body {
+        .panel-default {
+          background: @post-active-panel-bg;
+          border-color: @post-active-panel-border;
+
+          &:after {
+            border-right-color: @post-active-panel-bg;
+          }
+
+          &:before {
+            border-right-color: @post-active-panel-border;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -116,28 +133,30 @@
       }
 
       .label {
-      	position: relative;
-      	bottom: 2px;
+        position: relative;
+        bottom: 2px;
       }
     }
   }
 }
+
 
 // Post alert
 //
 //==
 .posts-list {
   .panel {
-  	.alert {
-  		border: none;
-  		border-radius: 0px;
+    .alert {
+      border: none;
+      border-radius: 0px;
       margin-top: @line-height-computed / 2;
       margin-bottom: 0;
 
-  		text-align: center;
-  	}
+      text-align: center;
+    }
   }
 }
+
 
 // Post body
 //
@@ -152,6 +171,7 @@
   }
 }
 
+
 // Post footer
 //
 //==
@@ -160,7 +180,7 @@
     .panel-footer {
       background: none;
       border-top: none;
-      margin-top: @line-height-computed * -0.5;
+      margin-top: @line-height-computed * -1.25;
     }
   }
 }

@@ -33,10 +33,11 @@ urlpatterns += patterns('',
 )
 
 
-from misago.threads.views.threads import StartThreadView, ReplyView, EditView
+from misago.threads.views.posting import PostingView
 urlpatterns += patterns('',
-    url(r'^start-thread/(?P<forum_id>\d+)/$', StartThreadView.as_view(), name='start_thread'),
-    url(r'^reply-thread/(?P<forum_id>\d+)/(?P<thread_id>\d+)/$', ReplyView.as_view(), name='reply_thread'),
+    url(r'^start-thread/(?P<forum_id>\d+)/$', PostingView.as_view(), name='start_thread'),
+    url(r'^reply-thread/(?P<forum_id>\d+)/(?P<thread_id>\d+)/$', PostingView.as_view(), name='reply_thread'),
+    url(r'^edit-post/(?P<forum_id>\d+)/(?P<thread_id>\d+)/(?P<post_id>\d+)/edit/$', PostingView.as_view(), name='edit_post'),
 )
 
 

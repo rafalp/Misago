@@ -12,14 +12,15 @@ from misago.threads import goto
 from misago.threads.posting import (PostingInterrupt, EditorFormset,
                                     START, REPLY, EDIT)
 from misago.threads.models import Thread, Post, Label
-from misago.threads.permissions import allow_start_thread, allow_reply_thread
+from misago.threads.permissions import (allow_start_thread, allow_reply_thread,
+                                        can_edit_post)
 from misago.threads.views.generic.base import ViewBase
 
 
-__all__ = ['EditorView']
+__all__ = ['PostingView']
 
 
-class EditorView(ViewBase):
+class PostingView(ViewBase):
     """
     Basic view for starting/replying/editing
     """
@@ -33,17 +34,25 @@ class EditorView(ViewBase):
         if is_submit:
             request.user.lock()
 
-        forum = self.get_forum(request, lock=is_submit, **kwargs)
-
+        forum = None
         thread = None
         post = None
 
-        if 'thread_id' in kwargs:
-            thread = self.get_thread(
-                request, lock=is_submit, queryset=forum.thread_set, **kwargs)
+        if 'post_id' in kwargs:
+            post = self.get_post(request, lock=is_submit, **kwargs)
+            forum = post.forum
+            thread = post.thread
+        elif 'thread_id' in kwargs:
+            thread = self.get_thread(request, lock=is_submit, **kwargs)
+            forum = thread.forum
+        else:
+            forum = self.get_forum(request, lock=is_submit, **kwargs)
 
         if thread:
-            mode = REPLY
+            if post:
+                mode = EDIT
+            else:
+                mode = REPLY
         else:
             mode = START
             thread = Thread(forum=forum)
@@ -60,18 +69,18 @@ class EditorView(ViewBase):
         if mode == START:
             self.allow_start(user, forum)
         if mode == REPLY:
-            self.allow_reply(user, forum, thread)
+            self.allow_reply(user, thread)
         if mode == EDIT:
-            self.allow_edit(user, forum, thread, post)
+            self.allow_edit(user, post)
 
     def allow_start(self, user, forum):
         allow_start_thread(user, forum)
 
-    def allow_reply(self, user, forum, thread):
+    def allow_reply(self, user, thread):
         allow_reply_thread(user, thread)
 
-    def allow_edit(self, user, forum, thread, post):
-        raise NotImplementedError()
+    def allow_edit(self, user, post):
+        can_edit_post(user, post)
 
     def dispatch(self, request, *args, **kwargs):
         if request.method == 'POST':
@@ -104,16 +113,20 @@ class EditorView(ViewBase):
                     try:
                         formset.save()
 
-                        if mode == START:
-                            message = _("New thread was posted.")
-                        if mode == REPLY:
-                            message = _("Your reply was posted.")
                         if mode == EDIT:
                             message = _("Message was edited.")
-                        messages.success(request, message)
+                        else:
+                            if mode == START:
+                                message = _("New thread was posted.")
+                            if mode == REPLY:
+                                message = _("Your reply was posted.")
+                            messages.success(request, message)
 
                         return JsonResponse({
-                            'post_url': goto.post(request.user, thread, post)
+                            'message': message,
+                            'post_url': goto.post(request.user, thread, post),
+                            'parsed': post.parsed,
+                            'original': post.original,
                         })
                     except PostingInterrupt as e:
                         return JsonResponse({'interrupt': e.message})

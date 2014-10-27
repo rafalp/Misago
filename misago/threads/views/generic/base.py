@@ -46,6 +46,7 @@ class ThreadMixin(object):
     """
     def get_thread(self, request, lock=False, **kwargs):
         thread = self.fetch_thread(request, lock, **kwargs)
+        self.check_forum_permissions(request, thread.forum)
         self.check_thread_permissions(request, thread)
 
         if kwargs.get('thread_slug'):
@@ -58,10 +59,16 @@ class ThreadMixin(object):
         queryset = queryset or Thread.objects
         if lock:
             queryset = queryset.select_for_update()
-        if select_related:
-            queryset = queryset.select_related(*select_related)
 
-        return get_object_or_404(queryset, id=kwargs.get('thread_id'))
+        select_related = select_related or []
+        if not 'forum' in select_related:
+            select_related.append('forum')
+        queryset = queryset.select_related(*select_related)
+
+        where = {'id': kwargs.get('thread_id')}
+        if 'forum_id' in kwargs:
+            where['forum_id'] = kwargs.get('forum_id')
+        return get_object_or_404(queryset, **where)
 
     def check_thread_permissions(self, request, thread):
         add_acl(request.user, thread)
@@ -70,20 +77,36 @@ class ThreadMixin(object):
 
 class PostMixin(object):
     def get_post(self, request, lock=False, **kwargs):
-        thread = self.fetch_post(request, lock, **kwargs)
-        self.check_post_permissions(request, thread)
+        post = self.fetch_post(request, lock, **kwargs)
 
-        return thread
+        post.thread.forum = post.forum
+
+        self.check_forum_permissions(request, post.forum)
+        self.check_thread_permissions(request, post.thread)
+        self.check_post_permissions(request, post)
+
+        return post
 
     def fetch_post(self, request, lock=False, select_related=None,
                    queryset=None, **kwargs):
         queryset = queryset or Post.objects
         if lock:
             queryset = queryset.select_for_update()
-        if select_related:
-            queryset = queryset.select_related(*select_related)
 
-        return get_object_or_404(queryset, id=kwargs.get('post_id'))
+        select_related = select_related or []
+        if not 'forum' in select_related:
+            select_related.append('forum')
+        if not 'thread' in select_related:
+            select_related.append('thread')
+        queryset = queryset.select_related(*select_related)
+
+        where = {'id': kwargs.get('post_id')}
+        if 'thread_id' in kwargs:
+            where['thread_id'] = kwargs.get('thread_id')
+        if 'forum_id' in kwargs:
+            where['forum_id'] = kwargs.get('forum_id')
+
+        return get_object_or_404(queryset, **where)
 
     def check_post_permissions(self, request, post):
         add_acl(request.user, post)

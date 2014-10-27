@@ -293,7 +293,7 @@ def add_acl_to_thread(user, thread):
         'can_close': forum_acl.get('can_close_threads'),
         'can_move': forum_acl.get('can_move_threads'),
         'can_review': forum_acl.get('can_review_moderated_content'),
-        'can_report': forum_acl.get('can_report'),
+        'can_report': forum_acl.get('can_report_content'),
         'can_see_reports': forum_acl.get('can_see_reports')
     })
 
@@ -302,7 +302,8 @@ def add_acl_to_thread(user, thread):
             can_change_label = forum_acl.get('can_change_threads_labels') == 1
             thread.acl['can_change_label'] = can_change_label
         if not thread.acl['can_hide']:
-            thread.acl['can_hide'] = forum_acl.get('can_hide_own_threads')
+            if not thread.replies:
+                thread.acl['can_hide'] = forum_acl.get('can_hide_own_threads')
 
 
 def add_acl_to_post(user, post):
@@ -314,9 +315,10 @@ def add_acl_to_post(user, post):
         'can_unhide': forum_acl.get('can_hide_threads'),
         'can_hide': forum_acl.get('can_hide_threads'),
         'can_delete': forum_acl.get('can_hide_threads'),
-        'can_protect': can_reply_thread(user, post.thread),
-        'can_report': can_reply_thread(user, post.thread),
-        'can_approve': can_reply_thread(user, post.thread),
+        'can_protect': forum_acl.get('can_protect_posts'),
+        'can_report': forum_acl.get('can_report_content'),
+        'can_see_reports': forum_acl.get('can_see_reports'),
+        'can_approve': forum_acl.get('can_review_moderated_content'),
     })
 
 
