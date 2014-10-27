@@ -41,9 +41,9 @@ class Migration(migrations.Migration):
                 ('rght', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('tree_id', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('level', models.PositiveIntegerField(editable=False, db_index=True)),
-                ('archive_pruned_in', models.ForeignKey(related_name=b'pruned_archive', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='misago_forums.Forum', null=True)),
-                ('last_poster', models.ForeignKey(related_name=b'+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
-                ('parent', mptt.fields.TreeForeignKey(related_name=b'children', blank=True, to='misago_forums.Forum', null=True)),
+                ('archive_pruned_in', models.ForeignKey(related_name='pruned_archive', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='misago_forums.Forum', null=True)),
+                ('last_poster', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('parent', mptt.fields.TreeForeignKey(related_name='children', blank=True, to='misago_forums.Forum', null=True)),
             ],
             options={
                 'abstract': False,
@@ -67,9 +67,9 @@ class Migration(migrations.Migration):
             name='RoleForumACL',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('forum', models.ForeignKey(related_name=b'forum_role_set', to='misago_forums.Forum')),
+                ('forum', models.ForeignKey(related_name='forum_role_set', to='misago_forums.Forum')),
                 ('forum_role', models.ForeignKey(to='misago_forums.ForumRole', to_field='id')),
-                ('role', models.ForeignKey(related_name=b'forums_acls', to='misago_acl.Role')),
+                ('role', models.ForeignKey(related_name='forums_acls', to='misago_acl.Role')),
             ],
             options={
             },

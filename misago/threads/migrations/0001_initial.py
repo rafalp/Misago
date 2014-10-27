@@ -50,8 +50,8 @@ class Migration(migrations.Migration):
                 ('is_hidden', models.BooleanField(default=False)),
                 ('is_protected', models.BooleanField(default=False)),
                 ('forum', models.ForeignKey(to='misago_forums.Forum')),
-                ('last_editor', models.ForeignKey(related_name=b'+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
-                ('mentions', models.ManyToManyField(related_name=b'mention_set', to=settings.AUTH_USER_MODEL)),
+                ('last_editor', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('mentions', models.ManyToManyField(related_name='mention_set', to=settings.AUTH_USER_MODEL)),
                 ('poster', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
             ],
             options={
@@ -138,7 +138,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='thread',
             name='first_post',
-            field=models.ForeignKey(related_name=b'+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='misago_threads.Post', null=True),
+            field=models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='misago_threads.Post', null=True),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -150,13 +150,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='thread',
             name='last_post',
-            field=models.ForeignKey(related_name=b'+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='misago_threads.Post', null=True),
+            field=models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='misago_threads.Post', null=True),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='thread',
             name='last_poster',
-            field=models.ForeignKey(related_name=b'last_poster_set', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True),
+            field=models.ForeignKey(related_name='last_poster_set', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True),
             preserve_default=True,
         ),
         migrations.AddField(
