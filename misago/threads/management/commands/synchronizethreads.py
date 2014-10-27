@@ -14,6 +14,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         threads_to_sync = Thread.objects.count()
 
+        if not threads_to_sync:
+            self.stdout.write('\n\nNo threads were found')
+        else:
+            self.sync_threads(threads_to_sync)
+
+    def sync_threads(self, threads_to_sync):
         message = 'Synchronizing %s threads...\n'
         self.stdout.write(message % threads_to_sync)
 
