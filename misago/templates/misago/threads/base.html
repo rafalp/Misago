@@ -64,23 +64,23 @@
 
               {% if thread.is_read %}
               <div class="thread-replies thread-read">
-                <span class="tooltip-top" title="{% blocktrans trimmed with replies=thread.replies|intcomma count counter=thread.replies %}{{ replies }} reply{% plural %}{{ replies }} replies{% endblocktrans %}">
+                <a href="{{ thread.get_new_reply_url }}" class="tooltip-top" title="{% blocktrans trimmed with replies=thread.replies|intcomma count counter=thread.replies %}{{ replies }} reply{% plural %}{{ replies }} replies{% endblocktrans %}">
                   {{ thread.replies|intcomma }}
-                </span>
+                </a>
               </div>
               {% elif thread.is_new %}
               <div class="thread-replies new-replies">
-                <span class="label label-success tooltip-top" title="{% blocktrans trimmed with replies=thread.replies|intcomma count counter=thread.replies %}New thread with {{ replies }} reply{% plural %}New thread with {{ replies }} replies{% endblocktrans %}">
+                <a href="{{ thread.get_new_reply_url }}" class="label label-success tooltip-top" title="{% blocktrans trimmed with replies=thread.replies|intcomma count counter=thread.replies %}New thread with {{ replies }} reply{% plural %}New thread with {{ replies }} replies{% endblocktrans %}">
                   <span class="fa fa-plus-circle fa-fw"></span>
                   {{ thread.replies|default:1|intcomma }}
-                </span>
+                </a>
               </div>
               {% else %}
               <div class="thread-replies new-replies">
-                <span class="label label-primary tooltip-top" title="{% blocktrans trimmed with replies=thread.unread_replies|intcomma count counter=thread.unread_replies %}{{ replies }} unread reply{% plural %}{{ replies }} unread replies{% endblocktrans %}">
+                <a href="{{ thread.get_new_reply_url }}" class="label label-primary tooltip-top" title="{% blocktrans trimmed with replies=thread.unread_replies|intcomma count counter=thread.unread_replies %}{{ replies }} unread reply{% plural %}{{ replies }} unread replies{% endblocktrans %}">
                   <span class="fa fa-signal fa-fw"></span>
                   {{ thread.unread_replies|intcomma }}
-                </span>
+                </a>
               </div>
               {% endif %}
 
