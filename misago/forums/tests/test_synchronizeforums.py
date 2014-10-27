@@ -8,7 +8,7 @@ from misago.forums.models import Forum
 
 
 class SynchronizeForumsTests(TestCase):
-    def test_forumss_sync(self):
+    def test_forums_sync(self):
         """command synchronizes forums"""
         forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
 
