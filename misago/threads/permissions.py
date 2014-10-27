@@ -262,7 +262,7 @@ def add_acl_to_forum(user, forum):
             can_hide_own_threads=algebra.greater,
             can_hide_own_posts=algebra.greater,
             thread_edit_time=algebra.greater_or_zero,
-            posts_edit_time=algebra.greater_or_zero,
+            post_edit_time=algebra.greater_or_zero,
             can_protect_posts=algebra.greater,
             can_move_posts=algebra.greater,
             can_merge_posts=algebra.greater,
@@ -310,7 +310,7 @@ def add_acl_to_post(user, post):
 
     post.acl.update({
         'can_reply': can_reply_thread(user, post.thread),
-        'can_edit': can_edit_reply(user, post),
+        'can_edit': can_edit_post(user, post),
         'can_unhide': forum_acl.get('can_hide_threads'),
         'can_hide': forum_acl.get('can_hide_threads'),
         'can_delete': forum_acl.get('can_hide_threads'),
@@ -385,13 +385,10 @@ def allow_edit_thread(user, target):
             _("You can't edit closed threads in this forum."))
 
     if forum_acl['can_edit_threads'] == 1:
-        if thread.starter_id != user.pk:
+        if target.starter_id != user.pk:
             raise PermissionDenied(
                 _("You can't edit other users threads in this forum."))
-        if thread.starter_id != user.pk:
-            raise PermissionDenied(
-                _("You can't edit other users threads in this forum."))
-        if not has_time_to_edit_thread(user, thread):
+        if not has_time_to_edit_thread(user, target):
             message = ungettext("You can't edit threads that are "
                                 "older than %(minutes)s minute.",
                                 "You can't edit threads that are "
@@ -412,7 +409,36 @@ can_see_post = return_boolean(allow_see_post)
 
 
 def allow_edit_post(user, target):
-    pass
+    if target.forum.is_closed:
+        message = _("This forum is closed. You can't edit posts in it.")
+        raise PermissionDenied(message)
+    if user.is_anonymous():
+        raise PermissionDenied(_("You have to sign in to edit posts."))
+
+    forum_acl = target.forum.acl
+
+    if not forum_acl['can_edit_posts']:
+        raise PermissionDenied(_("You can't edit posts in this forum."))
+
+    if target.thread.is_closed and not forum_acl['can_close_threads']:
+        raise PermissionDenied(
+            _("You can't edit posts in closed threads."))
+
+    if target.is_protected and not forum_acl['can_protect_posts']:
+        raise PermissionDenied(_("This post is protected. You can't edit it."))
+
+    if forum_acl['can_edit_posts'] == 1:
+        if target.poster_id != user.pk:
+            raise PermissionDenied(
+                _("You can't edit other users posts in this forum."))
+        if not has_time_to_edit_post(user, target):
+            message = ungettext("You can't edit posts that are "
+                                "older than %(minutes)s minute.",
+                                "You can't edit posts that are "
+                                "older than %(minutes)s minutes.",
+                                forum_acl['post_edit_time'])
+            raise PermissionDenied(
+                message % {'minutes': forum_acl['post_edit_time']})
 can_edit_post = return_boolean(allow_edit_post)
 
 

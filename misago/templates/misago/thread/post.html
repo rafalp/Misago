@@ -30,7 +30,7 @@
           {{ post.posted_on|date }}
         </a>
 
-        {% if post.is_read %}
+        {% if not post.is_read %}
         <span class="label label-success">
           <span class="fa fa-plus-circle"></span>
           {% trans "New" %}
@@ -77,8 +77,51 @@
       </div>
 
       <div class="panel-footer">
-        Like Report
-        Approve Hide Delete Reply
+
+        {% if thread.acl.can_reply %}
+        <button type="button" class="btn btn-primary btn-flat pull-right">
+          <span class="fa fa-reply">
+          Reply
+        </button>
+        {% endif %}
+
+        {% if post.acl.can_edit %}
+        <button type="button" class="btn btn-default btn-flat pull-right">
+          <span class="fa fa-pencil">
+          Edit
+        </button>
+        {% endif %}
+
+
+        <button type="button" class="btn btn-warning btn-flat pull-right">
+          <span class="fa fa-eye-slash">
+          Hide
+        </button>
+
+        <button type="button" class="btn btn-default btn-flat pull-right">
+          <span class="fa fa-eye">
+          Show
+        </button>
+
+        <button type="button" class="btn btn-danger btn-flat pull-right">
+          <span class="fa fa-times">
+          Delete
+        </button>
+
+        <button type="button" class="btn btn-warning btn-flat pull-right">
+          <span class="fa fa-exclamation-triangle">
+          Report
+        </button>
+
+        <button type="button" class="btn btn-success btn-flat pull-right">
+          <span class="fa fa-check">
+          Approve
+        </button>
+
+        <button type="button" class="btn btn-success btn-flat pull-left">
+          <span class="fa fa-heart">
+          Like
+        </button>
       </div>
     </div>
 
