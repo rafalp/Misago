@@ -1,3 +1,4 @@
+from django.db.transaction import atomic
 from django.utils import timezone
 
 from misago.readtracker import forumstracker, signals
@@ -153,6 +154,7 @@ def read_thread(user, thread, last_read_reply):
             sync_record(user, thread, last_read_reply)
 
 
+@atomic
 def sync_record(user, thread, last_read_reply):
     read_replies = count_read_replies(user, thread, last_read_reply)
     if thread.read_record:
@@ -160,13 +162,12 @@ def sync_record(user, thread, last_read_reply):
         thread.read_record.last_read_on = last_read_reply.updated_on
         thread.read_record.save(update_fields=['read_replies', 'last_read_on'])
     else:
-         user.threadread_set.create(
+        user.threadread_set.create(
             forum=thread.forum,
             thread=thread,
             read_replies=read_replies,
             last_read_on=last_read_reply.updated_on)
-
-         signals.thread_tracked.send(sender=user, thread=thread)
+        signals.thread_tracked.send(sender=user, thread=thread)
 
     if last_read_reply.updated_on == thread.last_post_on:
         signals.thread_read.send(sender=user, thread=thread)
