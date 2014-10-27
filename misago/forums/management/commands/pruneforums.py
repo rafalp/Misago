@@ -55,4 +55,4 @@ class Command(BaseCommand):
             forum.synchronize()
             forum.save()
 
-        self.stdout.write('Forums were pruned.\n')
+        self.stdout.write('\n\nForums were pruned')
