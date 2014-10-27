@@ -40,14 +40,14 @@ $(function() {
     });
 
     this.activate = function($element) {
-      $element.replaceWith(this.$element);
+      $element.replaceWith(this.$element.clone());
     }
 
   }
 
   MisagoOnebox = function() {
 
-    this.boxes = {}
+    this.boxes = {};
 
     var _this = this;
 
@@ -95,7 +95,7 @@ $(function() {
 
       $element.find('a').each(function() {
 
-        var href = $.trim($element.text());
+        var href = $.trim($(this).text());
         if (_this.boxes[href] === undefined) {
           $.each(_this.oneboxes, function(i, onebox) {
             _this.boxes[href] = _this.youtube(href);
@@ -110,7 +110,6 @@ $(function() {
         }
 
       });
-
     }
 
   };
