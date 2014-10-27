@@ -37,6 +37,7 @@ class EventsView(ViewBase):
 
             forum = event.forum
             thread = event.thread
+            thread.forum = forum
 
             self.check_forum_permissions(request, forum)
             self.check_thread_permissions(request, thread)
