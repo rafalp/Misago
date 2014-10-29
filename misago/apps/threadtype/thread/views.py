@@ -179,7 +179,7 @@ class ThreadBaseView(ViewBase):
                 if 'list_action' in self.posts_form.errors:
                     self.message = Message(_("Requested action is incorrect."), messages.ERROR)
                 else:
-                    self.message = Message(posts_form.non_field_errors()[0], messages.ERROR)
+                    self.message = Message(self.posts_form.non_field_errors()[0], messages.ERROR)
         else:
             self.posts_form = self.posts_form(request=self.request)
 

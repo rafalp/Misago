@@ -104,10 +104,10 @@ class ThreadView(ThreadBaseView, ThreadModeration, PostsModeration, TypeMixin):
 
     def _thread_action_set_prefix(self, prefix):
         self.thread.prefix_id = prefix.pk
-        thread.set_checkpoint(self.request, 'changed_prefix', self.request.user, self.forum, extra=prefix.name)
+        self.thread.set_checkpoint(self.request, 'changed_prefix', self.request.user, self.forum, extra=prefix.name)
         self.thread.save(force_update=True)
 
     def _thread_action_remove_prefix(self):
         self.thread.prefix_id = None
-        thread.set_checkpoint(self.request, 'removed_prefix', self.request.user, self.forum)
+        self.thread.set_checkpoint(self.request, 'removed_prefix', self.request.user, self.forum)
         self.thread.save(force_update=True)

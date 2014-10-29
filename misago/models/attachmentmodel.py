@@ -176,4 +176,4 @@ merge_thread.connect(merge_thread_handler, dispatch_uid="merge_threads_attachmen
 def merge_post_handler(sender, **kwargs):
     sender.attachment_set.update(post=kwargs['new_post'], session=('attachments_%s' % kwargs['new_post'].pk))
 
-merge_thread.connect(merge_thread_handler, dispatch_uid="merge_posts_attachments")
+merge_post.connect(merge_post_handler, dispatch_uid="merge_posts_attachments")
