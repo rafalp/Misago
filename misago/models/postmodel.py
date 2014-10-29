@@ -99,7 +99,10 @@ class Post(models.Model):
         self._attachments = base64.encodestring(pickle.dumps(clean_attachments, pickle.HIGHEST_PROTOCOL))
 
     def sync_attachments(self):
-        self.attachments = self.attachment_set
+        if self.attachment_set.exists():
+            self.attachments = self.attachment_set.iterator()
+        else:
+            self._empty_attachments_store()
 
     @property
     def timeline_date(self):
