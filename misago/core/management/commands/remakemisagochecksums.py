@@ -13,7 +13,7 @@ class Command(BaseCommand):
                             "in database with new ones, marking "
                             "all data as trusted. Are you sure "
                             "you wish to continue? [Y/n]")
-        if input(message).strip().lower() == "y":
+        if '--force' in args or input(message).strip().lower() == "y":
             self.stdout.write("\nRegenerating checksums...")
             secret_key_changed.send(self)
             self.stdout.write("\nDone!")
