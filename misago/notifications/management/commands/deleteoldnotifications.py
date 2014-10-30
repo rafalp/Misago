@@ -15,4 +15,4 @@ class Command(BaseCommand):
         cutoff_date = timezone.now() - cutoff
 
         Notification.objects.filter(date__lte=cutoff_date).delete()
-        self.stdout.write('Old notifications have been deleted.')
+        self.stdout.write('Old notifications have been deleted')
