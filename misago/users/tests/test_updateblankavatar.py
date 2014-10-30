@@ -6,8 +6,7 @@ from misago.users.management.commands import updateblankavatar
 
 class UpdateBlankAvatarTests(TestCase):
     def test_regen_blank_avatar(self):
-        """command regens blank avatar """
-
+        """command regens blank avatar"""
         command = updateblankavatar.Command()
 
         out = StringIO()
