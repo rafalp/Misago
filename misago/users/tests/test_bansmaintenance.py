@@ -31,7 +31,7 @@ class BansMaintenanceTests(TestCase):
 
         self.assertEqual(Ban.objects.filter(is_valid=True).count(), 0)
 
-    def test_bans_caches(self):
+    def test_bans_caches_updates(self):
         """ban caches are updated"""
         # create user
         User = get_user_model()
