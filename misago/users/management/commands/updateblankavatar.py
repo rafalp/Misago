@@ -29,4 +29,4 @@ class Command(BaseCommand):
             image = image.resize((size, size), Image.ANTIALIAS)
             image.save(avatar_file, "PNG")
 
-        self.stdout.write('Blank avatar was updated.')
+        self.stdout.write('Blank avatar was updated')
