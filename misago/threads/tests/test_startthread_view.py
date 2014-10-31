@@ -7,7 +7,7 @@ from misago.acl.testutils import override_acl
 from misago.forums.models import Forum
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from misago.threads.models import Thread, Post
+from misago.threads.models import Thread
 
 
 class StartThreadTests(AuthenticatedUserTestCase):
