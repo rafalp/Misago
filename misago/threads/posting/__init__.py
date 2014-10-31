@@ -129,8 +129,15 @@ class EditorFormset(object):
     def save(self):
         """change state"""
         forms_dict = self.get_forms_dict()
+        try:
+            for middleware, obj in self.middlewares:
+                obj.pre_save(forms_dict.get(middleware))
+        except PostingInterrupt as e:
+            raise ValueError("Posting process can only be interrupted "
+                             "from within interrupt_posting method")
+
         for middleware, obj in self.middlewares:
-            obj.pre_save(forms_dict.get(middleware))
+            obj.interrupt_posting(forms_dict.get(middleware))
 
         try:
             for middleware, obj in self.middlewares:
@@ -138,12 +145,8 @@ class EditorFormset(object):
             for middleware, obj in self.middlewares:
                 obj.post_save(forms_dict.get(middleware))
         except PostingInterrupt as e:
-            from misago.threads.posting import floodprotection
-            if isinstance(obj, floodprotection.FloodProtectionMiddleware):
-                raise e
-            else:
-                raise ValueError("Posting process can only be "
-                                 "interrupted during pre_save phase")
+            raise ValueError("Posting process can only be interrupted "
+                             "from within interrupt_posting method")
 
     def update(self):
         """handle POST that shouldn't result in state change"""
@@ -167,6 +170,9 @@ class PostingMiddleware(object):
         pass
 
     def pre_save(self, form):
+        pass
+
+    def interrupt_posting(self, form):
         pass
 
     def save(self, form):
