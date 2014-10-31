@@ -18,8 +18,12 @@ class AdminForumFieldMixin(object):
         self.base_level = kwargs.pop('base_level', 1)
         kwargs['level_indicator'] = kwargs.get('level_indicator', '- - ')
 
+        queryset = Forum.objects.filter(tree_id=FORUMS_TREE_ID)
+        if not kwargs.pop('include_root', False):
+            queryset = queryset.exclude(special_role="root_category")
+
         kwargs.setdefault('queryset',
-                          Forum.objects.filter(tree_id=FORUMS_TREE_ID))
+                          queryset)
 
         super(AdminForumFieldMixin, self).__init__(*args, **kwargs)
 

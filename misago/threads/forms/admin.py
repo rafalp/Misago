@@ -14,7 +14,7 @@ class LabelForm(forms.ModelForm):
         label=_("CSS class"), required=False,
         help_text=_("Optional CSS clas used to style this label."))
     forums = AdminForumMultipleChoiceField(
-        label=_('Forums'), required=False,
+        label=_('Forums'), required=False, include_root=False,
         widget=forms.CheckboxSelectMultiple(),
         help_text=_('Select forums this label will be available in.'))
 
