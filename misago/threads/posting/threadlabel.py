@@ -1,6 +1,6 @@
-from misago.threads import moderation
 from misago.threads.forms.posting import ThreadLabelForm
 from misago.threads.models import Label
+from misago.threads.moderation import label_thread, unlabel_thread
 from misago.threads.permissions import can_edit_thread
 from misago.threads.posting import PostingMiddleware, START, EDIT
 

@@ -35,6 +35,33 @@
 
     li {
       text-align: center;
+
+      a {
+        color: @state-default;
+
+        &:hover, &:focus {
+          color: @state-hover;
+        }
+
+        &:active, &.active {
+          color: @state-clicked;
+        }
+      }
+
+      button {
+        background: none;
+        border: none;
+
+        color: @state-default;
+
+        &:hover, &:focus {
+          color: @state-hover;
+        }
+
+        &:active {
+          color: @state-clicked;
+        }
+      }
     }
   }
 

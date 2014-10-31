@@ -7,6 +7,11 @@
         {% csrf_token %}
 
         <ul class="list-unstyled lefthand">
+          <li>
+            <button type="button" class="resize-handle">
+              <span class="fa fa-bars fa-fw"></span>
+            </button>
+          </li>
           {% for form in supporting_forms.lefthand %}
           <li>
             {% include form.template %}

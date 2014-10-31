@@ -32,7 +32,12 @@ $(function() {
       _this.last_key_press = (new Date().getTime() / 1000);
     })
 
-    this.$frame.height(this.$form.find('.misago-editor').innerHeight() - this.$area.find('.preview-footer').outerHeight());
+    this.update_height = function() {
+
+      this.$frame.height(this.$form.find('.misago-editor').innerHeight() - this.$area.find('.preview-footer').outerHeight());
+
+    }
+    this.update_height();
 
     this.update = function() {
       var form_data = _this.$form.serialize() + '&preview=1';
@@ -97,6 +102,7 @@ $(function() {
       this.$spacer = null;
       this.$container = null;
       this.$form = null;
+      this.$textarea = null;
 
       this.$ajax_loader = null;
       this.$ajax_complete = null;
@@ -110,6 +116,10 @@ $(function() {
 
       this.on_cancel = null;
       this.on_post = null;
+
+      this.is_resized = false;
+      this.min_height = 102;
+      this.max_height = Math.round($(window).height() * 0.65);
 
     }
 
@@ -126,6 +136,7 @@ $(function() {
       this.$form = $('#posting-form');
       this.$container = this.$form.parent();
       this.$spacer = this.$container.parent();
+      this.$textarea = this.$form.find('textarea');
 
       if (options.on_cancel !== undefined) {
         this.on_cancel = options.on_cancel
@@ -142,12 +153,55 @@ $(function() {
       this.$ajax_loader = this.$container.find('.ajax-loader');
       this.$ajax_complete = this.$container.find('.ajax-complete');
 
+      var editor_height = Misago.Storage.get('posting_height', this.min_height);
+      if (editor_height > this.max_height) {
+        editor_height = this.max_height
+      } else if (editor_height < this.min_height) {
+        editor_height = this.min_height
+      }
+      this.$textarea.height(editor_height);
+
       this.$preview = new MisagoPreview(this, {$area: this.$form.find('.editor-preview'), form: this.$form, api_url: options.api_url});
       this.$preview.update();
 
-      // target height is 26 px too big
       this.$spacer.height(this.$container.outerHeight() - ($(document).height() - this.$spacer.offset().top));
       this.$container.addClass('fixed');
+
+      this.$container.find('.resize-handle').mousedown(function(e) {
+
+        _this.is_resized = {start_height: _this.$textarea.height(), start_pageY: e.pageY};
+
+      });
+
+      $(document).mouseup(function() {
+
+        if (_this.is_resized !== false) {
+          Misago.Storage.set('posting_height', _this.$textarea.height());
+        }
+        _this.is_resized = false;
+
+      });
+
+      $(document).mousemove(function(e) {
+
+        if (_this.is_resized !== false) {
+          var height_change = _this.is_resized.start_pageY - e.pageY;
+          var new_height = _this.is_resized.start_height + height_change;
+
+          if (new_height > _this.max_height) {
+            new_height = _this.max_height;
+          } else if (new_height < _this.min_height) {
+            new_height = _this.min_height;
+          }
+
+          _this.$textarea.height(new_height);
+
+          if (_this.$preview !== null) {
+            _this.$preview.update_height();
+          }
+        }
+
+      });
 
       this.$container.find('button[name="submit"]').click(function() {
         if (!_this.submitted && !_this.posted) {
