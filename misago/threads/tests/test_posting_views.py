@@ -10,7 +10,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 from misago.threads.models import Thread, Post
 
 
-class StartThreadFormTests(AuthenticatedUserTestCase):
+class StartThreadTests(AuthenticatedUserTestCase):
     ajax_header = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
 
     def setUp(self):
