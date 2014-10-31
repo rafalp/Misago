@@ -1,14 +1,18 @@
 from misago.threads import moderation
 from misago.threads.forms.posting import ThreadLabelForm
 from misago.threads.models import Label
-from misago.threads.posting import PostingMiddleware, START
+from misago.threads.permissions import can_edit_thread
+from misago.threads.posting import PostingMiddleware, START, EDIT
 
 
 class ThreadLabelFormMiddleware(PostingMiddleware):
     def use_this_middleware(self):
         if self.forum.acl['can_change_threads_labels'] and self.forum.labels:
             self.thread_label_id = self.thread.label_id
-            return self.mode == START
+            if self.mode == EDIT and can_edit_thread(self.user, self.thread):
+                return True
+            else:
+                return self.mode == START
         else:
             return False
 
