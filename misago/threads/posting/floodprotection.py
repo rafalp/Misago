@@ -15,6 +15,5 @@ class FloodProtectionMiddleware(PostingMiddleware):
             if previous_post.total_seconds() < MIN_POSTING_PAUSE:
                 raise PostingInterrupt(message)
 
-    def post_save(self, form):
         self.user.last_post = timezone.now()
         self.user.update_fields.append('last_post')

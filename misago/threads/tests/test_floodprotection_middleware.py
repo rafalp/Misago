@@ -16,7 +16,7 @@ class FloodProtectionMiddlewareTests(AuthenticatedUserTestCase):
         self.assertIsNone(self.user.last_post)
 
         middleware = FloodProtectionMiddleware(user=self.user)
-        middleware.save(None)
+        middleware.interrupt_posting(None)
 
         self.assertIsNotNone(self.user.last_post)
 
@@ -28,7 +28,7 @@ class FloodProtectionMiddlewareTests(AuthenticatedUserTestCase):
         self.user.last_post = original_last_post
 
         middleware = FloodProtectionMiddleware(user=self.user)
-        middleware.save(None)
+        middleware.interrupt_posting(None)
 
         self.assertTrue(self.user.last_post > original_last_post)
 
@@ -39,4 +39,4 @@ class FloodProtectionMiddlewareTests(AuthenticatedUserTestCase):
 
         with self.assertRaises(PostingInterrupt):
             middleware = FloodProtectionMiddleware(user=self.user)
-            middleware.save(None)
+            middleware.interrupt_posting(None)
