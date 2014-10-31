@@ -7,7 +7,7 @@ from misago.acl.testutils import override_acl
 from misago.forums.models import Forum
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from misago.threads.models import Thread
+from misago.threads.models import Label, Thread
 from misago.threads.testutils import post_thread
 
 
@@ -24,15 +24,22 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
             'thread_id': self.thread.id,
         })
 
-    def allow_reply_thread(self, level=2):
+        Label.objects.clear_cache()
+
+    def tearDown(self):
+        Label.objects.clear_cache()
+
+    def allow_reply_thread(self, extra_acl=None):
         forums_acl = self.user.acl
         forums_acl['visible_forums'].append(self.forum.pk)
         forums_acl['forums'][self.forum.pk] = {
             'can_see': 1,
             'can_browse': 1,
             'can_see_all_threads': 1,
-            'can_reply_threads': level,
+            'can_reply_threads': 2,
         }
+        if extra_acl:
+            forums_acl['forums'][self.forum.pk].update(extra_acl)
         override_acl(self.user, forums_acl)
 
     def test_cant_see(self):
@@ -47,7 +54,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         }
         override_acl(self.user, forums_acl)
 
-        response = self.client.get(self.link)
+        response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 404)
 
     def test_cant_browse(self):
@@ -62,7 +69,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         }
         override_acl(self.user, forums_acl)
 
-        response = self.client.get(self.link)
+        response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 403)
 
     def test_cant_reply_thread_in_locked_forum(self):
@@ -80,7 +87,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         }
         override_acl(self.user, forums_acl)
 
-        response = self.client.get(self.link)
+        response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 403)
 
     def test_cant_reply_closed_thread(self):
@@ -88,24 +95,20 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.thread.is_closed = True
         self.thread.save()
 
-        forums_acl = self.user.acl
-        forums_acl['visible_forums'].append(self.forum.pk)
-        forums_acl['forums'][self.forum.pk] = {
-            'can_see': 1,
-            'can_browse': 1,
-            'can_see_all_threads': 1,
-            'can_reply_threads': 1,
-        }
-        override_acl(self.user, forums_acl)
-
-        response = self.client.get(self.link)
+        self.allow_reply_thread()
+        response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 403)
+
+        # now let us reply to closed threads
+        self.allow_reply_thread({'can_close_threads': 1})
+        response = self.client.get(self.link, **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
 
     def test_cant_reply_thread_as_guest(self):
         """guests can't reply threads"""
         self.client.post(reverse(settings.LOGOUT_URL))
 
-        response = self.client.get(self.link)
+        response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 403)
 
     def test_can_reply_thread(self):
@@ -159,3 +162,69 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(updated_forum.last_poster_name,
                          updated_user.username)
         self.assertEqual(updated_forum.last_poster_slug, updated_user.slug)
+
+    def test_can_close_replied_thread(self):
+        """can close/open thread while replying to it"""
+        prefix = 'misago.threads.posting.threadclose.ThreadCloseFormMiddleware'
+        field_name = '%s-is_closed' % prefix
+
+        self.allow_reply_thread({'can_close_threads': 1})
+        response = self.client.get(self.link, **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(field_name, response.content)
+
+        self.allow_reply_thread({'can_close_threads': 1})
+        response = self.client.post(self.link, data={
+            'post': 'Lorem ipsum dolor met!',
+            field_name: 1,
+            'submit': True,
+        },
+        **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Thread.objects.get(id=self.thread.id).is_closed)
+
+        self.user.last_posted_on = None
+        self.user.save()
+
+        self.allow_reply_thread({'can_close_threads': 1})
+        response = self.client.post(self.link, data={
+            'post': 'Lorem ipsum dolor met!',
+            field_name: 0,
+            'submit': True,
+        },
+        **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Thread.objects.get(id=self.thread.id).is_closed)
+
+    def test_can_pin_replied_thread(self):
+        """can pin/unpin thread while replying to it"""
+        prefix = 'misago.threads.posting.threadpin.ThreadPinFormMiddleware'
+        field_name = '%s-is_pinned' % prefix
+
+        self.allow_reply_thread({'can_pin_threads': 1})
+        response = self.client.get(self.link, **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(field_name, response.content)
+
+        self.allow_reply_thread({'can_pin_threads': 1})
+        response = self.client.post(self.link, data={
+            'post': 'Lorem ipsum dolor met!',
+            field_name: 1,
+            'submit': True,
+        },
+        **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Thread.objects.get(id=self.thread.id).is_pinned)
+
+        self.user.last_posted_on = None
+        self.user.save()
+
+        self.allow_reply_thread({'can_pin_threads': 1})
+        response = self.client.post(self.link, data={
+            'post': 'Lorem ipsum dolor met!',
+            field_name: 0,
+            'submit': True,
+        },
+        **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Thread.objects.get(id=self.thread.id).is_pinned)

@@ -62,8 +62,8 @@ class Migration(migrations.Migration):
                 ('subscribe_to_replied_threads', models.PositiveIntegerField(default=0)),
                 ('threads', models.PositiveIntegerField(default=0)),
                 ('posts', models.PositiveIntegerField(default=0, db_index=True)),
-                ('last_post', models.DateTimeField(null=True, blank=True)),
-                ('last_search', models.DateTimeField(null=True, blank=True)),
+                ('last_posted_on', models.DateTimeField(null=True, blank=True)),
+                ('last_searched_on', models.DateTimeField(null=True, blank=True)),
                 ('reads_cutoff', models.DateTimeField(default=django.utils.timezone.now)),
                 ('new_threads_cutoff', models.DateTimeField(default=django.utils.timezone.now)),
                 ('unread_threads_cutoff', models.DateTimeField(default=django.utils.timezone.now))

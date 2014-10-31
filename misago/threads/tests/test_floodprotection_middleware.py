@@ -11,31 +11,30 @@ from misago.threads.posting.floodprotection import (MIN_POSTING_PAUSE,
 
 class FloodProtectionMiddlewareTests(AuthenticatedUserTestCase):
     def test_flood_protection_middleware_on_no_posts(self):
-        """middleware sets last_post on user"""
+        """middleware sets last_posted_on on user"""
         self.user.update_fields = []
-        self.assertIsNone(self.user.last_post)
+        self.assertIsNone(self.user.last_posted_on)
 
         middleware = FloodProtectionMiddleware(user=self.user)
         middleware.interrupt_posting(None)
 
-        self.assertIsNotNone(self.user.last_post)
+        self.assertIsNotNone(self.user.last_posted_on)
 
     def test_flood_protection_middleware_old_posts(self):
         """middleware is not complaining about old post"""
         self.user.update_fields = []
 
-        original_last_post = timezone.now() - timedelta(days=1)
-        self.user.last_post = original_last_post
+        original_last_posted_on = timezone.now() - timedelta(days=1)
+        self.user.last_posted_on = original_last_posted_on
 
         middleware = FloodProtectionMiddleware(user=self.user)
         middleware.interrupt_posting(None)
 
-        self.assertTrue(self.user.last_post > original_last_post)
+        self.assertTrue(self.user.last_posted_on > original_last_posted_on)
 
     def test_flood_protection_middleware_on_flood(self):
         """middleware is complaining about flood"""
-        original_last_post = timezone.now() - timedelta(days=1)
-        self.user.last_post = timezone.now()
+        self.user.last_posted_on = timezone.now()
 
         with self.assertRaises(PostingInterrupt):
             middleware = FloodProtectionMiddleware(user=self.user)

@@ -7,7 +7,7 @@ from misago.acl.testutils import override_acl
 from misago.forums.models import Forum
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from misago.threads.models import Thread
+from misago.threads.models import Label, Thread
 
 
 class StartThreadTests(AuthenticatedUserTestCase):
@@ -21,7 +21,12 @@ class StartThreadTests(AuthenticatedUserTestCase):
             'forum_id': self.forum.id
         })
 
-    def allow_start_thread(self):
+        Label.objects.clear_cache()
+
+    def tearDown(self):
+        Label.objects.clear_cache()
+
+    def allow_start_thread(self, extra_acl=None):
         forums_acl = self.user.acl
         forums_acl['visible_forums'].append(self.forum.pk)
         forums_acl['forums'][self.forum.pk] = {
@@ -29,6 +34,9 @@ class StartThreadTests(AuthenticatedUserTestCase):
             'can_browse': 1,
             'can_start_threads': 1,
         }
+
+        if extra_acl:
+            forums_acl['forums'][self.forum.pk].update(extra_acl)
         override_acl(self.user, forums_acl)
 
     def test_cant_see(self):
@@ -42,7 +50,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
         }
         override_acl(self.user, forums_acl)
 
-        response = self.client.get(self.link)
+        response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 404)
 
     def test_cant_browse(self):
@@ -56,7 +64,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
         }
         override_acl(self.user, forums_acl)
 
-        response = self.client.get(self.link)
+        response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 403)
 
     def test_cant_start_thread_in_locked_forum(self):
@@ -73,14 +81,14 @@ class StartThreadTests(AuthenticatedUserTestCase):
         }
         override_acl(self.user, forums_acl)
 
-        response = self.client.get(self.link)
+        response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 403)
 
     def test_cant_start_thread_as_guest(self):
         """guests can't start threads"""
         self.client.post(reverse(settings.LOGOUT_URL))
 
-        response = self.client.get(self.link)
+        response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 403)
 
     def test_can_start_thread(self):
@@ -138,3 +146,75 @@ class StartThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(updated_forum.last_poster_name,
                          updated_user.username)
         self.assertEqual(updated_forum.last_poster_slug, updated_user.slug)
+
+    def test_start_closed_thread(self):
+        """can post closed thread"""
+        prefix = 'misago.threads.posting.threadclose.ThreadCloseFormMiddleware'
+        field_name = '%s-is_closed' % prefix
+
+        self.allow_start_thread({'can_close_threads': 1})
+        response = self.client.get(self.link, **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(field_name, response.content)
+
+        self.allow_start_thread({'can_close_threads': 1})
+        response = self.client.post(self.link, data={
+            'title': 'Hello, I am test thread!',
+            'post': 'Lorem ipsum dolor met!',
+            field_name: 1,
+            'submit': True,
+        },
+        **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+
+        last_thread = self.user.thread_set.all()[:1][0]
+        self.assertTrue(last_thread.is_closed)
+
+    def test_start_pinned_thread(self):
+        """can post pinned thread"""
+        prefix = 'misago.threads.posting.threadpin.ThreadPinFormMiddleware'
+        field_name = '%s-is_pinned' % prefix
+
+        self.allow_start_thread({'can_pin_threads': 1})
+        response = self.client.get(self.link, **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(field_name, response.content)
+
+        self.allow_start_thread({'can_pin_threads': 1})
+        response = self.client.post(self.link, data={
+            'title': 'Hello, I am test thread!',
+            'post': 'Lorem ipsum dolor met!',
+            field_name: 1,
+            'submit': True,
+        },
+        **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+
+        last_thread = self.user.thread_set.all()[:1][0]
+        self.assertTrue(last_thread.is_pinned)
+
+    def test_start_labeled_thread(self):
+        """can post labeled thread"""
+        prefix = 'misago.threads.posting.threadlabel.ThreadLabelFormMiddleware'
+        field_name = '%s-label' % prefix
+
+        label = Label.objects.create(name="Label", slug="label")
+        label.forums.add(self.forum)
+
+        self.allow_start_thread({'can_change_threads_labels': 1})
+        response = self.client.get(self.link, **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(field_name, response.content)
+
+        self.allow_start_thread({'can_change_threads_labels': 1})
+        response = self.client.post(self.link, data={
+            'title': 'Hello, I am test thread!',
+            'post': 'Lorem ipsum dolor met!',
+            field_name: label.pk,
+            'submit': True,
+        },
+        **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+
+        last_thread = self.user.thread_set.all()[:1][0]
+        self.assertEqual(last_thread.label_id, label.id)

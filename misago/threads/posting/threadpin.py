@@ -20,7 +20,7 @@ class ThreadPinFormMiddleware(PostingMiddleware):
 
     def pre_save(self, form):
         if form.is_valid() and self.mode == START:
-            if self.is_pinned != form.cleaned_data.get('is_pinned'):
+            if form.cleaned_data.get('is_pinned'):
                 self.thread.is_pinned = form.cleaned_data.get('is_pinned')
                 self.thread.update_fields.append('is_pinned')
 
