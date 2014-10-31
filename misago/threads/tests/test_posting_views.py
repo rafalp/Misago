@@ -14,7 +14,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
     ajax_header = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
 
     def setUp(self):
-        super(StartThreadFormTests, self).setUp()
+        super(StartThreadTests, self).setUp()
 
         self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
         self.link = reverse('misago:start_thread', kwargs={
