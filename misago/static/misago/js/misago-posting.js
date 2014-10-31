@@ -195,10 +195,7 @@ $(function() {
           }
 
           _this.$textarea.height(new_height);
-
-          if (_this.$preview !== null) {
-            _this.$preview.update_height();
-          }
+          _this.$preview.update_height();
         }
 
       });
@@ -284,9 +281,7 @@ $(function() {
           }
         }
 
-        if (this.$preview !== null) {
-          this.$preview.stop();
-        }
+        this.$preview.stop();
 
         this.$spacer.fadeOut(function() {
           $(this).remove();
@@ -327,10 +322,7 @@ $(function() {
       $textarea.val($.trim($.trim($textarea.val()) + '\n\n' + text));
       console.log($textarea.prop("scrollHeight"));
       $textarea.scrollTop($textarea.prop("scrollHeight"));
-
-      if (this.$preview != null) {
-        this.$preview.update();
-      }
+      this.$preview.update();
 
     }
 
