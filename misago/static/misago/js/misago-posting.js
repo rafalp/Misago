@@ -273,11 +273,11 @@ $(function() {
               if (on_post) {
                 _this.$ajax_complete.addClass('in')
 
-                if (data.post_url.indexOf(window.location.pathname) != -1) {
-                  window.location.href = data.post_url;
-                  window.location.reload(true)
-                } else {
-                  window.location.href = data.post_url;
+                var past_location = window.location.href;
+                window.location.href = data.post_url;
+
+                if (past_location.indexOf(window.location.href)) {
+                  window.reload();
                 }
               }
             } else if (data.errors !== undefined) {
