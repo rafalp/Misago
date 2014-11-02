@@ -130,7 +130,7 @@ def make_thread_read_aware(user, thread):
                 thread.is_read = True
                 thread.is_new = False
         except ForumRead.DoesNotExist:
-            pass
+            forumstracker.start_record(user, thread.forum)
 
 
 def make_posts_read_aware(user, thread, posts):

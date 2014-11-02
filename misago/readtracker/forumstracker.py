@@ -40,6 +40,10 @@ def make_read(forums):
         forum.is_read = True
 
 
+def start_record(user, forum):
+    user.forumread_set.create(forum=forum, last_read_on=user.reads_cutoff)
+
+
 def sync_record(user, forum):
     cutoff_date = user.reads_cutoff
 
