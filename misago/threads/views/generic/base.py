@@ -46,7 +46,6 @@ class ThreadMixin(object):
     """
     def get_thread(self, request, lock=False, **kwargs):
         thread = self.fetch_thread(request, lock, **kwargs)
-        self.check_forum_permissions(request, thread.forum)
         self.check_thread_permissions(request, thread)
 
         if kwargs.get('thread_slug'):
@@ -71,8 +70,11 @@ class ThreadMixin(object):
         return get_object_or_404(queryset, **where)
 
     def check_thread_permissions(self, request, thread):
+        add_acl(request.user, thread.forum)
         add_acl(request.user, thread)
+
         allow_see_thread(request.user, thread)
+        allow_see_forum(request.user, thread.forum)
 
 
 class PostMixin(object):
@@ -81,10 +83,7 @@ class PostMixin(object):
 
         post.thread.forum = post.forum
 
-        self.check_forum_permissions(request, post.forum)
-        self.check_thread_permissions(request, post.thread)
         self.check_post_permissions(request, post)
-
         return post
 
     def fetch_post(self, request, lock=False, select_related=None,
@@ -109,8 +108,13 @@ class PostMixin(object):
         return get_object_or_404(queryset, **where)
 
     def check_post_permissions(self, request, post):
+        add_acl(request.user, post.forum)
+        add_acl(request.user, post.thread)
         add_acl(request.user, post)
+
         allow_see_post(request.user, post)
+        allow_see_thread(request.user, post.thread)
+        allow_see_forum(request.user, post.forum)
 
 
 class ViewBase(ForumMixin, ThreadMixin, PostMixin, View):
