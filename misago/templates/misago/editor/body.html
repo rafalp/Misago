@@ -55,6 +55,13 @@
         </button>
       </li>
       {% endif %}
+      {% if editor.has_preview %}
+      <li class="pull-right">
+        <button type="button" class="btn btn-default tooltip-top btn-insert-hr btn-preview" title="{% trans "Toggle preview" %}">
+          <span class="fa fa-file-text-o fa-fw"></span>
+        </button>
+      </li>
+      {% endif %}
     </ul>
   </div>
 

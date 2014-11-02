@@ -6,6 +6,7 @@ $(function() {
     this.$form = options.form;
     this.$area = options.$area;
     this.$frame = this.$area.find('.frame');
+    this.is_visible = true;
 
     this.$markup = this.$area.find('.misago-markup');
     this.$message = this.$area.find('.empty-message');
@@ -161,11 +162,60 @@ $(function() {
       }
       this.$textarea.height(editor_height);
 
+      // preview
+
+      this.$editor_col = this.$container.find('.col-editor');
+      this.editor_preview_on_class = 'col-md-6 col-editor';
+      this.editor_preview_off_class = 'col-md-12 col-editor';
+
+      this.$preview_col = this.$container.find('.col-preview');
       this.$preview = new MisagoPreview(this, {$area: this.$form.find('.editor-preview'), form: this.$form, api_url: options.api_url});
       this.$preview.update();
 
+      this.$preview_btn = this.$form.find('.btn-preview');
+      this.preview_on_icon = "fa fa-file-text-o fa-fw";
+      this.preview_off_icon = "fa fa-file-o fa-fw";
+
+      this.$preview.is_visible = Misago.Storage.get('posting_preview', "true") == "true";
+
+      this.hide_preview = function() {
+        this.$preview.stop();
+        this.$preview_col.hide();
+        this.$preview_btn.find('.fa').attr('class', this.preview_off_icon);
+        this.$editor_col.attr('class', this.editor_preview_off_class);
+      }
+
+      this.show_preview = function() {
+        this.$preview.update();
+        this.$preview_col.show();
+        this.$preview_btn.find('.fa').attr('class', this.preview_on_icon);
+        this.$editor_col.attr('class', this.editor_preview_on_class);
+      }
+
+      if (!this.$preview.is_visible) {
+        this.hide_preview();
+      }
+
+      this.$preview_btn.click(function() {
+
+        if (_this.$preview.is_visible) {
+          _this.$preview.is_visible = false;
+          _this.hide_preview();
+          Misago.Storage.set('posting_preview', "false");
+        } else {
+          _this.$preview.is_visible = true;
+          _this.show_preview();
+          Misago.Storage.set('posting_preview', "true");
+        }
+
+      });
+
+      // spacer
+
       this.$spacer.height(this.$container.outerHeight() - ($(document).height() - this.$spacer.offset().top));
       this.$container.addClass('fixed');
+
+      // resize
 
       this.$container.find('.resize-handle').mousedown(function(e) {
 
@@ -199,6 +249,8 @@ $(function() {
         }
 
       });
+
+      // submit
 
       this.$container.find('button[name="submit"]').click(function() {
         if (!_this.submitted && !_this.posted) {
@@ -250,6 +302,8 @@ $(function() {
       return true;
 
     }
+
+    // public api
 
     this.load = function(options) {
 

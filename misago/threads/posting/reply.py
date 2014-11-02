@@ -32,7 +32,7 @@ class ReplyFormMiddleware(PostingMiddleware):
             else:
                 form = FormType(self.post, initial=initial_data)
 
-        form.post_editor = Editor(form['post'])
+        form.post_editor = Editor(form['post'], has_preview=True)
         return form
 
     def pre_save(self, form):
