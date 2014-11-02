@@ -4,19 +4,27 @@ from django.test import TestCase
 from misago.users import signatures
 
 
+class MockRequest(object):
+    scheme = 'http'
+
+    def get_host(self):
+        return '127.0.0.1:8000'
+
+
 class SignaturesTests(TestCase):
     def test_signature_change(self):
         """signature module allows for signature change"""
         User = get_user_model()
         test_user = User.objects.create_user('Bob', 'bob@bob.com', 'pass123')
 
-        signatures.set_user_signature(test_user, '')
+        signatures.set_user_signature(MockRequest(), test_user, '')
 
         self.assertEqual(test_user.signature, '')
         self.assertEqual(test_user.signature_parsed, '')
         self.assertEqual(test_user.signature_checksum, '')
 
-        signatures.set_user_signature(test_user, 'Hello, world!')
+        signatures.set_user_signature(
+            MockRequest(), test_user, 'Hello, world!')
 
         self.assertEqual(test_user.signature, 'Hello, world!')
         self.assertEqual(test_user.signature_parsed, '<p>Hello, world!</p>')
