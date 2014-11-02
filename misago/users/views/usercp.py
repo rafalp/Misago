@@ -230,9 +230,11 @@ def edit_signature(request):
     if not request.user.is_signature_locked and request.method == 'POST':
         form = EditSignatureForm(request.POST, instance=request.user)
         if form.is_valid():
-            set_user_signature(request.user, form.cleaned_data['signature'])
-            request.user.save(update_fields=['signature', 'signature_parsed',
-                                             'signature_checksum'])
+            set_user_signature(
+                request, request.user, form.cleaned_data['signature'])
+            request.user.save(update_fields=[
+                'signature', 'signature_parsed', 'signature_checksum'
+            ])
 
             if form.cleaned_data['signature']:
                 messages.success(request, _("Your signature has been edited."))

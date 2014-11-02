@@ -15,7 +15,8 @@ class ReplyForm(forms.Form):
 
     post = forms.CharField(label=_("Message body"), required=False)
 
-    def __init__(self, post=None, *args, **kwargs):
+    def __init__(self, post=None, request=None, *args, **kwargs):
+        self.request = request
         self.post_instance = post
         self.parsing_result = {}
 
@@ -48,7 +49,8 @@ class ReplyForm(forms.Form):
             raise forms.ValidationError(message)
 
     def parse_post(self, post):
-        self.parsing_result = common_flavour(post, self.post_instance.poster)
+        self.parsing_result = common_flavour(
+            self.request, self.post_instance.poster, post)
 
         self.post_instance.original = self.parsing_result['original_text']
         self.post_instance.parsed = self.parsing_result['parsed_text']

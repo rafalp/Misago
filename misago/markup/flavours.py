@@ -1,7 +1,7 @@
 from misago.markup.parser import parse
 
 
-def common(text, author=None, allow_mentions=True):
+def common(request, poster, text, allow_mentions=True):
     """
     Common flavour
 
@@ -12,10 +12,10 @@ def common(text, author=None, allow_mentions=True):
 
     Returns dict object
     """
-    return parse(text, author=author, allow_mentions=allow_mentions)
+    return parse(text, request, poster, allow_mentions=allow_mentions)
 
 
-def limited(text):
+def limited(request, text):
     """
     Limited flavour
 
@@ -24,14 +24,14 @@ def limited(text):
 
     Returns parsed text
     """
-    result = parse(text, allow_mentions=False, allow_links=True,
+    result = parse(text, request, allow_mentions=False, allow_links=True,
                    allow_images=False, allow_blocks=False)
 
     return result['parsed_text']
 
 
-def signature(text, owner=None):
-    result = parse(text, allow_mentions=False,
+def signature(request, owner, text):
+    result = parse(text, request, allow_mentions=False,
                    allow_blocks=owner.acl['allow_signature_blocks'],
                    allow_links=owner.acl['allow_signature_links'],
                    allow_images=owner.acl['allow_signature_images'])

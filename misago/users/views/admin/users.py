@@ -236,7 +236,7 @@ class EditUser(UserAdmin, generic.ModelFormView):
         if form.cleaned_data.get('roles'):
             target.roles.add(*form.cleaned_data['roles'])
 
-        set_user_signature(target, form.cleaned_data.get('signature'))
+        set_user_signature(request, target, form.cleaned_data.get('signature'))
 
         target.update_acl_key()
         target.save()

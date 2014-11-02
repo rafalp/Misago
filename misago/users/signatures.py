@@ -1,11 +1,11 @@
 from misago.markup import checksums, signature_flavour
 
 
-def set_user_signature(user, signature):
+def set_user_signature(request, user, signature):
     user.signature = signature
 
     if signature:
-        user.signature_parsed = signature_flavour(signature, user)
+        user.signature_parsed = signature_flavour(request, user, signature)
         user.signature_checksum = make_signature_checksum(
             user.signature_parsed, user)
     else:

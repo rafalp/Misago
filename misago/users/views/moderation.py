@@ -259,7 +259,7 @@ def moderate_signature(request, user):
     if request.method == 'POST':
         form = ModerateSignatureForm(request.POST, instance=user)
         if form.is_valid():
-            set_user_signature(user, form.cleaned_data['signature'])
+            set_user_signature(request, user, form.cleaned_data['signature'])
             user.save(update_fields=(
                 'signature',
                 'signature_parsed',

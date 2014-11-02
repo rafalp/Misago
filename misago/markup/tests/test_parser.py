@@ -1,7 +1,14 @@
 from django.test import TestCase
 
 from misago.markup.parser import parse
-from misago.markup import checksums
+
+
+class MockRequest(object):
+    pass
+
+
+class MockPoster(object):
+    pass
 
 
 class ParserTests(TestCase):
@@ -36,7 +43,7 @@ Lorem [b]ipsum[/B].
 <p>Lorem <b>ipsum</b>.</p>
 """.strip()
 
-        result = parse(test_text)
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
         self.assertEqual(expected_result, result['parsed_text'])
 
     def test_blocks(self):
@@ -53,18 +60,5 @@ Dolor met.
 <p>Dolor met.</p>
 """.strip()
 
-        result = parse(test_text)
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
         self.assertEqual(expected_result, result['parsed_text'])
-
-
-class ChecksupTests(TestCase):
-    def test_checksums(self):
-        fake_message = "<p>Woow, thats awesome!</p>"
-        post_pk = 231
-
-        checksum = checksums.make_checksum(fake_message, [post_pk])
-
-        self.assertTrue(
-            checksums.is_checksum_valid(fake_message, checksum, [post_pk]))
-        self.assertFalse(
-            checksums.is_checksum_valid(fake_message, checksum, [3]))
