@@ -335,6 +335,8 @@ ACL tests
 """
 def allow_see_thread(user, target):
     forum_acl = user.acl['forums'].get(target.forum_id, {})
+    if not forum_acl.get('can_browse'):
+        raise Http404()
     if not forum_acl.get('can_see_all_threads'):
         if user.is_anonymous() or user.pk != target.starter_id:
             raise Http404()
