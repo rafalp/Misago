@@ -4,6 +4,7 @@ from htmlmin.minify import html_minify
 import markdown
 
 from misago.markup.bbcode import inline, blocks
+from misago.markup.md.shortimgs import ShortImagesExtension
 from misago.markup.pipeline import pipeline
 
 
@@ -44,28 +45,14 @@ def parse(text, request, poster, allow_mentions=True, allow_links=True,
     if allow_links:
         linkify_paragraphs(parsing_result)
 
-    if allow_links or allow_images:
-        make_absolute_links_relative(parsing_result, request)
-
     parsing_result = pipeline.process_result(parsing_result)
+
+    if allow_links or allow_images:
+        clean_links(parsing_result, request)
 
     if minify:
         minify_result(parsing_result)
     return parsing_result
-
-
-def linkify_paragraphs(result):
-    result['parsed_text'] = bleach.linkify(
-        result['parsed_text'], skip_pre=True, parse_email=True)
-
-
-def make_absolute_links_relative(result, request):
-    pass
-
-
-def minify_result(result):
-    # [25:-14] trims <html><head></head><body> and </body></html>
-    result['parsed_text'] = html_minify(result['parsed_text'])[25:-14]
 
 
 def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
@@ -97,7 +84,8 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
 
     if allow_images:
         # Add [img]
-        pass
+        short_images_md = ShortImagesExtension()
+        short_images_md.extendMarkdown(md)
     else:
         # Remove images
         del md.inlinePatterns['image_link']
@@ -118,3 +106,49 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
         del md.parser.blockprocessors['ulist']
 
     return pipeline.extend_markdown(md)
+
+
+def linkify_paragraphs(result):
+    result['parsed_text'] = bleach.linkify(
+        result['parsed_text'], skip_pre=True, parse_email=True)
+
+
+def clean_links(result, request):
+    site_address = '%s://%s' % (request.scheme, request.get_host())
+
+    soup = BeautifulSoup(result['parsed_text'])
+    for link in soup.find_all('a'):
+        if link['href'].lower().startswith(site_address):
+            result['inside_links'].append(link['href'])
+            if link['href'].lower() == site_address:
+                link['href'] = '/'
+            else:
+                link['href'] = link['href'].lower()[len(site_address):]
+        else:
+            result['outgoing_links'].append(link['href'])
+
+        if link.string.startswith('http://'):
+            link.string = link.string[7:].strip()
+        if link.string.startswith('https://'):
+            link.string = link.string[8:].strip()
+
+    for img in soup.find_all('img'):
+        result['images'].append(img['src'])
+        if img['src'].lower().startswith(site_address):
+            if img['src'].lower() == site_address:
+                img['src'] = '/'
+            else:
+                img['src'] = img['src'].lower()[len(site_address):]
+
+        if img['alt'].startswith('http://'):
+            img['alt'] = img['alt'][7:].strip()
+        if img['alt'].startswith('https://'):
+            img['alt'] = img['alt'][8:].strip()
+
+    if result['outgoing_links'] or result['inside_links'] or result['images']:
+        result['parsed_text'] = soup.prettify()
+
+
+def minify_result(result):
+    # [25:-14] trims <html><head></head><body> and </body></html>
+    result['parsed_text'] = html_minify(result['parsed_text'])[25:-14]
