@@ -426,9 +426,6 @@ def allow_edit_post(user, target):
         raise PermissionDenied(
             _("You can't edit posts in closed threads."))
 
-    if target.is_protected and not forum_acl['can_protect_posts']:
-        raise PermissionDenied(_("This post is protected. You can't edit it."))
-
     if forum_acl['can_edit_posts'] == 1:
         if target.poster_id != user.pk:
             raise PermissionDenied(
@@ -441,6 +438,9 @@ def allow_edit_post(user, target):
                                 forum_acl['post_edit_time'])
             raise PermissionDenied(
                 message % {'minutes': forum_acl['post_edit_time']})
+
+    if target.is_protected and not forum_acl['can_protect_posts']:
+        raise PermissionDenied(_("This post is protected. You can't edit it."))
 can_edit_post = return_boolean(allow_edit_post)
 
 

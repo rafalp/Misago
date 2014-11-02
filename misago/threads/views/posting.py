@@ -14,7 +14,7 @@ from misago.threads.posting import (PostingInterrupt, EditorFormset,
                                     START, REPLY, EDIT)
 from misago.threads.models import Thread, Post, Label
 from misago.threads.permissions import (allow_start_thread, allow_reply_thread,
-                                        can_edit_post)
+                                        allow_edit_post)
 from misago.threads.views.generic.base import ViewBase
 
 
@@ -81,7 +81,7 @@ class PostingView(ViewBase):
         allow_reply_thread(user, thread)
 
     def allow_edit(self, user, post):
-        can_edit_post(user, post)
+        allow_edit_post(user, post)
 
     def dispatch(self, request, *args, **kwargs):
         if request.method == 'POST':
@@ -115,7 +115,7 @@ class PostingView(ViewBase):
                         formset.save()
 
                         if mode == EDIT:
-                            message = _("Message was edited.")
+                            message = _("Changes saved.")
                         else:
                             if mode == START:
                                 message = _("New thread was posted.")
