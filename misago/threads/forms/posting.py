@@ -22,6 +22,11 @@ class ReplyForm(forms.Form):
         super(ReplyForm, self).__init__(*args, **kwargs)
 
     def validate_post(self, post):
+        if self.post_instance.original != post:
+            self._validate_post(post)
+            self.parse_post(post)
+
+    def _validate_post(self, post):
         post_len = len(post)
         if not post_len:
             raise forms.ValidationError(_("Enter message."))
@@ -42,6 +47,7 @@ class ReplyForm(forms.Form):
             message = message % {'limit': settings.post_length_max}
             raise forms.ValidationError(message)
 
+    def parse_post(self, post):
         self.parsing_result = common_flavour(post, self.post_instance.poster)
 
         self.post_instance.original = self.parsing_result['original_text']

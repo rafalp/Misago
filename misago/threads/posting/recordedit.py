@@ -13,6 +13,12 @@ class RecordEditMiddleware(PostingMiddleware):
 
     def save(self, form):
         if self.mode == EDIT:
-            # record edit
-            self.post.edits += 1
-            self.post.update_fields.append('edits')
+            # record post or thread edit
+            is_title_changed = self.original_title != self.thread.title
+            is_post_changed = self.original_post != self.post.original
+
+            if is_title_changed or is_post_changed:
+                self.post.edits += 1
+                self.post.last_editor_name = self.user.username
+                self.post.update_fields.extend(('edits', 'last_editor_name'))
+

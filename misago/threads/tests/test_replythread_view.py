@@ -7,7 +7,7 @@ from misago.acl.testutils import override_acl
 from misago.forums.models import Forum
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from misago.threads.models import Label, Thread
+from misago.threads.models import Thread
 from misago.threads.testutils import post_thread
 
 
@@ -23,11 +23,6 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
             'forum_id': self.forum.id,
             'thread_id': self.thread.id,
         })
-
-        Label.objects.clear_cache()
-
-    def tearDown(self):
-        Label.objects.clear_cache()
 
     def allow_reply_thread(self, extra_acl=None):
         forums_acl = self.user.acl

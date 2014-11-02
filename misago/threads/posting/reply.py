@@ -68,7 +68,6 @@ class ReplyFormMiddleware(PostingMiddleware):
         if form.cleaned_data.get('title'):
             self.thread.set_title(form.cleaned_data['title'])
             self.thread.update_fields.extend(('title', 'slug'))
-        self.post.last_editor_name = self.user.username
 
     def new_post(self):
         self.post.thread = self.thread
