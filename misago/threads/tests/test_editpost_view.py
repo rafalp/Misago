@@ -70,7 +70,7 @@ class EditPostTests(AuthenticatedUserTestCase):
         override_acl(self.user, forums_acl)
 
         response = self.client.get(self.link, **self.ajax_header)
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 404)
 
     def test_cant_edit_own_post_in_locked_forum(self):
         """can't edit own post in closed forum"""
