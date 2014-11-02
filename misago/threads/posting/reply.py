@@ -11,7 +11,8 @@ class ReplyFormMiddleware(PostingMiddleware):
         initial_data = {'title': self.thread.title, 'post': self.post.original}
 
         if self.mode == EDIT:
-            if can_edit_thread(self.user, self.thread):
+            is_first_post = self.post.id == self.thread.first_post_id
+            if is_first_post and can_edit_thread(self.user, self.thread):
                 FormType = ThreadForm
             else:
                 FormType = ReplyForm

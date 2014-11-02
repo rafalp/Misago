@@ -41,6 +41,13 @@ $(function() {
           on_post: function(data) {
             Misago.Alerts.success(data.message);
             _this.change_post(data.parsed);
+
+            if (Misago.Posting.$form.find('.thread-title').length == 1) {
+              var old_title = $.trim($('#thread-title').html());
+              $('#thread-title').html(data.title_escaped);
+              document.title = document.title.replace(old_title, data.title_escaped)
+            }
+
             Misago.Posting.cancel();
             Misago.Scroll.scrollTo(_this.$e);
             return false;
