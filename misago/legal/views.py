@@ -9,7 +9,7 @@ from misago.core.cache import cache
 from misago.markup import common_flavour
 
 
-def get_parsed_content(setting_name):
+def get_parsed_content(request, setting_name):
     cache_name = 'misago_legal_%s' % setting_name
     cached_content = cache.get(cache_name)
 
@@ -21,9 +21,10 @@ def get_parsed_content(setting_name):
     if cached_content and cached_content.get('checksum') == unparsed_checksum:
         return cached_content['parsed']
     else:
+        parsed = common_flavour(request, None, unparsed_content)['parsed_text']
         cached_content = {
             'checksum': unparsed_checksum,
-            'parsed': common_flavour(unparsed_content)['parsed_text'],
+            'parsed': parsed,
         }
         cache.set(cache_name, cached_content)
         return cached_content['parsed']
@@ -36,7 +37,7 @@ def terms(request):
     if settings.terms_of_service_link:
         return redirect(settings.terms_of_service_link)
 
-    parsed_content = get_parsed_content('terms_of_service')
+    parsed_content = get_parsed_content(request, 'terms_of_service')
     return render(request, 'misago/legal/terms_of_service.html', {
         'title': settings.terms_of_service_title or _("Terms of service"),
         'content': parsed_content,
@@ -50,7 +51,7 @@ def privacy_policy(request):
     if settings.privacy_policy_link:
         return redirect(settings.privacy_policy_link)
 
-    parsed_content = get_parsed_content('privacy_policy')
+    parsed_content = get_parsed_content(request, 'privacy_policy')
     return render(request, 'misago/legal/privacy_policy.html', {
         'title': settings.privacy_policy_title or _("Privacy policy"),
         'content': parsed_content,

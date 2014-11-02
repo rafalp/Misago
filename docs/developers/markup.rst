@@ -27,14 +27,6 @@ common_flavour
 Convenience function that wraps ``parse()``. This function is used for parsing messages.
 
 
-limited_flavour
---------------
-
-.. function:: limited_flavour(text)
-
-Convenience function that wraps ``parse()``. This function is used for parsing short messages and supports only subset of full markup. Unlike other functions, this one returns parsed string instead of dict.
-
-
 Extending Markup
 ================
 
