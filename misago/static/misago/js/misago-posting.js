@@ -271,13 +271,13 @@ $(function() {
               }
 
               if (on_post) {
-                _this.$ajax_complete.addClass('in')
+                _this.$ajax_complete.addClass('in');
 
-                var past_location = window.location.href;
+                var past_location = String(window.location.href);
                 window.location.href = data.post_url;
 
                 if (past_location.indexOf(window.location.href)) {
-                  window.reload();
+                  window.location.reload();
                 }
               }
             } else if (data.errors !== undefined) {
