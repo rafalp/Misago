@@ -126,6 +126,9 @@ def make_thread_read_aware(user, thread):
                     thread.read_record = thread_record
                 except ThreadRead.DoesNotExist:
                     pass
+            else:
+                thread.is_read = True
+                thread.is_new = False
         except ForumRead.DoesNotExist:
             pass
 
@@ -159,14 +162,14 @@ def sync_record(user, thread, last_read_reply):
     read_replies = count_read_replies(user, thread, last_read_reply)
     if thread.read_record:
         thread.read_record.read_replies = read_replies
-        thread.read_record.last_read_on = last_read_reply.updated_on
+        thread.read_record.last_read_on = timezone.now()
         thread.read_record.save(update_fields=['read_replies', 'last_read_on'])
     else:
         user.threadread_set.create(
             forum=thread.forum,
             thread=thread,
             read_replies=read_replies,
-            last_read_on=last_read_reply.updated_on)
+            last_read_on=timezone.now())
         signals.thread_tracked.send(sender=user, thread=thread)
 
     if last_read_reply.updated_on == thread.last_post_on:
