@@ -145,15 +145,15 @@ def make_posts_read_aware(user, thread, posts):
             post.is_read = True
     else:
         for post in posts:
-            if is_date_tracked(post.updated_on, user):
-                post.is_read = post.updated_on <= thread.last_read_on
+            if is_date_tracked(post.posted_on, user):
+                post.is_read = post.posted_on <= thread.last_read_on
             else:
                 post.is_read = True
 
 
 def read_thread(user, thread, last_read_reply):
     if not thread.is_read:
-        if thread.last_read_on < last_read_reply.updated_on:
+        if thread.last_read_on < last_read_reply.posted_on:
             sync_record(user, thread, last_read_reply)
 
 
@@ -172,16 +172,13 @@ def sync_record(user, thread, last_read_reply):
             last_read_on=last_read_reply.posted_on)
         signals.thread_tracked.send(sender=user, thread=thread)
 
-    if last_read_reply.updated_on == thread.last_post_on:
+    if last_read_reply.posted_on == thread.last_post_on:
         signals.thread_read.send(sender=user, thread=thread)
         forumstracker.sync_record(user, thread.forum)
 
 
 def count_read_replies(user, thread, last_read_reply):
-    if last_read_reply.updated_on >= thread.last_read_on:
-        return 0
-    else:
-        last_reply_date = last_read_reply.last_read_on
-        queryset = thread.post_set.filter(last_read_on__lte=last_reply_date)
-        queryset = queryset.filter(is_moderated=False)
-        return queryset.count() - 1 # - starters post
+    last_reply_date = last_read_reply.posted_on
+    queryset = thread.post_set.filter(posted_on__lte=last_reply_date)
+    queryset = queryset.filter(is_moderated=False)
+    return queryset.count() - 1 # - starters post
