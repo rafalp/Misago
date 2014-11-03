@@ -113,14 +113,12 @@ $(function() {
       this.submitted = false;
       this.posted = false;
 
-      this.affix_end = 0;
-
       this.on_cancel = null;
       this.on_post = null;
 
       this.is_resized = false;
       this.min_height = 102;
-      this.max_height = Math.round($(window).height() * 0.65);
+      this.max_height = Math.round($(window).height() * 0.6);
 
     }
 
