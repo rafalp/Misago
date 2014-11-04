@@ -151,4 +151,5 @@ def clean_links(result, request):
 
 def minify_result(result):
     # [25:-14] trims <html><head></head><body> and </body></html>
-    result['parsed_text'] = html_minify(result['parsed_text'])[25:-14]
+    result['parsed_text'] = html_minify(result['parsed_text'].encode('utf-8'))
+    result['parsed_text'] = result['parsed_text'][25:-14]

@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.test import TestCase
 
 from misago.markup.parser import parse
@@ -69,7 +72,7 @@ Dolor met.
 
 class MinifyTests(TestCase):
     def test_minified_text(self):
-        """parsed minifies text successfully"""
+        """parser minifies text successfully"""
         test_text = """
 Lorem ipsum.
 
@@ -78,6 +81,21 @@ Lorem ipsum.
 
         expected_result = """
 <p>Lorem ipsum.</p><p>Lorem ipsum.</p>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=True)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_minified_unicode_text(self):
+        """parser minifies unicode text successfully"""
+        test_text = """
+Bżęczyszczykiewłicz ipsum.
+
+Lorem ipsum.
+""".strip()
+
+        expected_result = """
+<p>Bżęczyszczykiewłicz ipsum.</p><p>Lorem ipsum.</p>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
