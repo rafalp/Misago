@@ -415,3 +415,27 @@ class EditPostTests(AuthenticatedUserTestCase):
 
         thread = Thread.objects.get(id=self.thread.id)
         self.assertIsNone(thread.label_id)
+
+    def test_empty_form(self):
+        """empty form has no errors"""
+        acls = {
+            'can_edit_posts': 1,
+            'can_edit_threads': 1,
+            'can_change_threads_labels': 1
+        }
+
+        self.override_forum_acl(acls)
+        response = self.client.post(self.link, data={
+            'title': '',
+            'post': '',
+            'preview': True},
+        **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+
+        self.override_forum_acl(acls)
+        response = self.client.post(self.link, data={
+            'title': '',
+            'post': '',
+            'submit': True},
+        **self.ajax_header)
+        self.assertEqual(response.status_code, 200)

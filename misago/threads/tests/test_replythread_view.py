@@ -223,3 +223,21 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         **self.ajax_header)
         self.assertEqual(response.status_code, 200)
         self.assertFalse(Thread.objects.get(id=self.thread.id).is_pinned)
+
+    def test_empty_form(self):
+        """empty form has no errors"""
+        self.allow_reply_thread()
+        response = self.client.post(self.link, data={
+            'title': '',
+            'post': '',
+            'preview': True},
+        **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+
+        self.allow_reply_thread()
+        response = self.client.post(self.link, data={
+            'title': '',
+            'post': '',
+            'submit': True},
+        **self.ajax_header)
+        self.assertEqual(response.status_code, 200)

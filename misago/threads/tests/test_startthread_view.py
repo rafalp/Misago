@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import json
 
 from django.conf import settings
@@ -218,3 +221,31 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         last_thread = self.user.thread_set.all()[:1][0]
         self.assertEqual(last_thread.label_id, label.id)
+
+    def test_unicode(self):
+        """unicode chars can be posted"""
+        self.allow_start_thread()
+        response = self.client.post(self.link, data={
+            'title': 'Brzęczyżczykiewicz',
+            'post': 'Chrzążczyżewoszyce, powiat Łękółody.',
+            'preview': True},
+        **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+
+    def test_empty_form(self):
+        """empty form has no errors"""
+        self.allow_start_thread()
+        response = self.client.post(self.link, data={
+            'title': '',
+            'post': '',
+            'preview': True},
+        **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+
+        self.allow_start_thread()
+        response = self.client.post(self.link, data={
+            'title': '',
+            'post': '',
+            'submit': True},
+        **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
