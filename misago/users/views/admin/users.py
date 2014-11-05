@@ -1,5 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model, update_session_auth_hash
+from django.db import transaction
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 
@@ -7,6 +9,9 @@ from misago.admin.auth import start_admin_session
 from misago.admin.views import generic
 from misago.conf import settings
 from misago.core.mail import mail_users
+from misago.core.pgutils import batch_update
+from misago.forums.models import Forum
+from misago.threads.models import Thread
 
 from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
 from misago.users.forms.admin import (StaffFlagUserFormFactory, NewUserForm,
@@ -133,7 +138,7 @@ class UsersList(UserAdmin, generic.ListView):
                 return None
 
         return self.render(
-            request, template='misago/admin/users/ban_users.html', context={
+            request, template='misago/admin/users/ban.html', context={
                 'users': users,
                 'form': form,
             })
@@ -152,6 +157,11 @@ class UsersList(UserAdmin, generic.ListView):
         messages.success(request, message)
 
     def action_delete_all(self, request, users):
+        return self.render(
+            request, template='misago/admin/users/delete.html', context={
+                'users': users,
+            })
+
         for user in users:
             if user.is_staff or user.is_superuser:
                 message = _("%(user)s is admin and can't be deleted.")
@@ -243,3 +253,88 @@ class EditUser(UserAdmin, generic.ModelFormView):
 
         messages.success(
             request, self.message_submit % {'user': target.username})
+
+
+class DeletionStep(UserAdmin, generic.ButtonView):
+    is_atomic = False
+
+    def check_permissions(self, request, target):
+        if not request.is_ajax():
+            return _("This action can't be accessed directly")
+
+        if target.is_staff or target.is_superuser:
+            message = _("%(user)s is admin and can't be deleted.")
+            return message % {'user': user.username}
+
+    def execute_step(self, user):
+        raise NotImplementedError("execute_step method should return dict "
+                                  "with number of deleted_count and "
+                                  "is_completed keys")
+
+    def button_action(self, request, target):
+        return JsonResponse(self.execute_step(target))
+
+
+class DeleteThreadsStep(DeletionStep):
+    def execute_step(self, user):
+        recount_forums = set()
+
+        deleted_threads = 0
+        is_completed = False
+
+        for thread in user.thread_set.order_by('-id')[:50]:
+            recount_forums.add(thread.forum_id)
+            with transaction.atomic():
+                thread.delete()
+                deleted_threads += 1
+
+        if recount_forums:
+            for forum in Forum.objects.filter(id__in=recount_forums):
+                forum.synchronize()
+                forum.save()
+        else:
+            is_completed = True
+
+        return {
+            'deleted_count': deleted_threads,
+            'is_completed': is_completed
+        }
+
+
+class DeletePostsStep(DeletionStep):
+    def execute_step(self, user):
+        recount_forums = set()
+        recount_threads = set()
+
+        deleted_posts = 0
+        is_completed = False
+
+        for post in user.post_set.order_by('-id')[:50]:
+            recount_forums.add(post.forum_id)
+            recount_threads.add(post.thread_id)
+            with transaction.atomic():
+                post.delete()
+                deleted_posts += 1
+
+        if recount_forums:
+            changed_threads_qs = Thread.objects.filter(id__in=recount_threads)
+            for thread in batch_update(changed_threads_qs, 50):
+                thread.synchronize()
+                thread.save()
+
+            for forum in Forum.objects.filter(id__in=recount_forums):
+                forum.synchronize()
+                forum.save()
+        else:
+            is_completed = True
+
+        return {
+            'deleted_count': deleted_posts,
+            'is_completed': is_completed
+        }
+
+
+class DeleteAccountStep(DeletionStep):
+    def execute_step(self, user):
+        user.delete(delete_content=True)
+        return {'is_completed': True}

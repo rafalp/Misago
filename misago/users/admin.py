@@ -7,7 +7,9 @@ from misago.users.views.admin.bans import BansList, NewBan, EditBan, DeleteBan
 from misago.users.views.admin.ranks import (RanksList, NewRank, EditRank,
                                             DeleteRank, MoveDownRank,
                                             MoveUpRank, DefaultRank, RankUsers)
-from misago.users.views.admin.users import UsersList, NewUser, EditUser
+from misago.users.views.admin.users import (UsersList, NewUser, EditUser,
+                                            DeleteThreadsStep, DeletePostsStep,
+                                            DeleteAccountStep)
 from misago.users.views.admin.warnings import (WarningsList, NewWarning,
                                                EditWarning, MoveDownWarning,
                                                MoveUpWarning, DeleteWarning)
@@ -47,6 +49,9 @@ class MisagoAdminExtension(object):
             url(r'^(?P<page>\d+)/$', UsersList.as_view(), name='index'),
             url(r'^new/$', NewUser.as_view(), name='new'),
             url(r'^edit/(?P<user_id>\d+)/$', EditUser.as_view(), name='edit'),
+            url(r'^delete-threads/(?P<user_id>\d+)/$', DeleteThreadsStep.as_view(), name='delete_threads'),
+            url(r'^delete-posts/(?P<user_id>\d+)/$', DeletePostsStep.as_view(), name='delete_posts'),
+            url(r'^delete-account/(?P<user_id>\d+)/$', DeleteAccountStep.as_view(), name='delete_account'),
         )
 
         # Ranks
