@@ -1,9 +1,13 @@
+import json
+
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.core.urlresolvers import reverse
 
 from misago.acl.models import Role
 from misago.admin.testutils import AdminTestCase
+from misago.forums.models import Forum
+from misago.threads.testutils import post_thread, reply_thread
 
 from misago.users.models import Ban, Rank
 
@@ -189,3 +193,67 @@ class UserAdminViewsTests(AdminTestCase):
 
         User.objects.get_by_username('Bawww')
         User.objects.get_by_email('reg@stered.com')
+
+    ajax_header = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
+
+    def test_delete_threads_view(self):
+        """delete user threads view deletes threads"""
+        User = get_user_model()
+        test_user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_link = reverse('misago:admin:users:accounts:delete_threads',
+                            kwargs={'user_id': test_user.pk})
+
+        forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
+        [post_thread(forum, poster=test_user) for i in xrange(10)]
+
+        response = self.client.post(test_link, **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+
+        response_dict = json.loads(response.content)
+        self.assertEqual(response_dict['deleted_count'], 10)
+        self.assertFalse(response_dict['is_completed'])
+
+        response = self.client.post(test_link, **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+
+        response_dict = json.loads(response.content)
+        self.assertEqual(response_dict['deleted_count'], 0)
+        self.assertTrue(response_dict['is_completed'])
+
+    def test_delete_posts_view(self):
+        """delete user posts view deletes posts"""
+        User = get_user_model()
+        test_user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_link = reverse('misago:admin:users:accounts:delete_posts',
+                            kwargs={'user_id': test_user.pk})
+
+        forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
+        thread = post_thread(forum)
+        [reply_thread(thread, poster=test_user) for i in xrange(10)]
+
+        response = self.client.post(test_link, **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+
+        response_dict = json.loads(response.content)
+        self.assertEqual(response_dict['deleted_count'], 10)
+        self.assertFalse(response_dict['is_completed'])
+
+        response = self.client.post(test_link, **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+
+        response_dict = json.loads(response.content)
+        self.assertEqual(response_dict['deleted_count'], 0)
+        self.assertTrue(response_dict['is_completed'])
+
+    def test_delete_account_view(self):
+        """delete user account view deletes user account"""
+        User = get_user_model()
+        test_user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_link = reverse('misago:admin:users:accounts:delete_account',
+                            kwargs={'user_id': test_user.pk})
+
+        response = self.client.post(test_link, **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+
+        response_dict = json.loads(response.content)
+        self.assertTrue(response_dict['is_completed'])
