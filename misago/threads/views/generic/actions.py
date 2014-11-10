@@ -7,7 +7,11 @@ from misago.core.exceptions import AjaxError
 from misago.threads.moderation import ModerationError
 
 
-__all__ = ['ActionsBase']
+__all__ = ['ActionsBase', 'ReloadAfterDelete']
+
+
+class ReloadAfterDelete(object):
+    pass
 
 
 class ActionsBase(object):
@@ -82,6 +86,9 @@ class ActionsBase(object):
                 response = action(request, filtered_queryset, action_arg)
             else:
                 response = action(request, filtered_queryset)
+
+            if isinstance(response, ReloadAfterDelete):
+                return self.redirect_after_deletion(request, queryset)
             if response:
                 return response
             elif request.is_ajax():
@@ -91,6 +98,10 @@ class ActionsBase(object):
                 return redirect(request.path)
         else:
             raise ModerationError(self.select_items_message)
+
+    def redirect_after_deletion(self, request, queryset):
+        raise NotImplementedError("action handlers should declare their own "
+                                  "redirect_after_deletion methods")
 
     def handle_single_action(self, request, target):
         action, action_arg = self.resolve_action(request)

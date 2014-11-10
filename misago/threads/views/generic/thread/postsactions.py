@@ -1,9 +1,12 @@
 from django.contrib import messages
 from django.db.transaction import atomic
+from django.http import Http404
+from django.shortcuts import redirect
 from django.utils.translation import ungettext, ugettext_lazy, ugettext as _
 
 from misago.threads import moderation
-from misago.threads.views.generic.actions import ActionsBase
+from misago.threads.paginator import Paginator
+from misago.threads.views.generic.actions import ActionsBase, ReloadAfterDelete
 
 
 __all__ = ['PostsActions']
@@ -33,6 +36,21 @@ class PostsActions(ActionsBase):
     select_items_message = ugettext_lazy(
         "You have to select at least one post.")
     is_mass_action = True
+
+    def redirect_after_deletion(self, request, queryset):
+        paginator = Paginator(queryset, 10, 3)
+        current_page = int(request.resolver_match.kwargs.get('page', 0))
+
+        if paginator.num_pages < current_page:
+            namespace = request.resolver_match.namespace
+            url_name = request.resolver_match.url_name
+            kwars = request.resolver_match.kwargs
+            kwars['page'] = paginator.num_pages
+            if kwars['page'] == 1:
+                del kwars['page']
+            return redirect('%s:%s' % (namespace, url_name), **kwars)
+        else:
+            return redirect(request.path)
 
     def get_available_actions(self, kwargs):
         self.thread = kwargs['thread']
@@ -114,8 +132,7 @@ class PostsActions(ActionsBase):
                 '%(changed)d posts were deleted.',
             changed_posts)
             messages.success(request, message % {'changed': changed_posts})
-
-
+            return ReloadAfterDelete()
         else:
             message = _("No posts were deleted.")
             messages.info(request, message)

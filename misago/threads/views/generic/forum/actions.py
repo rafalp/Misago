@@ -9,10 +9,10 @@ from misago.forums.lists import get_forum_path
 from misago.threads import moderation
 from misago.threads.forms.moderation import MergeThreadsForm, MoveThreadsForm
 from misago.threads.models import Thread
-from misago.threads.views.generic.threads import Actions
+from misago.threads.views.generic.threads import Actions, ReloadAfterDelete
 
 
-__all__ = ['ForumActions']
+__all__ = ['ForumActions', 'ReloadAfterDelete']
 
 
 class ForumActions(Actions):
@@ -379,6 +379,8 @@ class ForumActions(Actions):
                 '%(changed)d threads were deleted.',
             changed_threads)
             messages.success(request, message % {'changed': changed_threads})
+
+            return ReloadAfterDelete()
         else:
             message = _("No threads were deleted.")
             messages.info(request, message)
