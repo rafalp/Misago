@@ -1295,6 +1295,33 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         response = self.client.post(self.link, data={
             'action': 'delete', 'item': [t.pk for t in threads]
         })
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response['location'].endswith(self.link))
 
         forum = Forum.objects.get(pk=self.forum.pk)
         self.assertEqual(forum.threads, 0)
+
+        threads = [testutils.post_thread(self.forum) for t in xrange(60)]
+
+        second_page_link = reverse('misago:forum', kwargs={
+            'forum_id': self.forum.id,
+            'forum_slug': self.forum.slug,
+            'page': 2
+        })
+
+        self.override_acl(test_acl)
+        response = self.client.post(second_page_link, data={
+            'action': 'delete', 'item': [t.pk for t in threads[20:40]]
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response['location'].endswith(second_page_link))
+
+        forum = Forum.objects.get(pk=self.forum.pk)
+        self.assertEqual(forum.threads, 40)
+
+        self.override_acl(test_acl)
+        response = self.client.post(second_page_link, data={
+            'action': 'delete', 'item': [t.pk for t in threads[:-20]]
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response['location'].endswith(self.link))

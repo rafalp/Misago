@@ -313,3 +313,56 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         # we made forum empty, assert that board index renders
         response = self.client.get(reverse('misago:index'))
         self.assertEqual(response.status_code, 200)
+
+    def test_delete_posts(self):
+        """moderation allows for deleting posts"""
+        posts = [reply_thread(self.thread) for t in xrange(10)]
+
+        self.thread.synchronize()
+        self.assertEqual(self.thread.replies, 10)
+
+        test_acl = {
+            'can_hide_posts': 2
+        }
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Delete posts", response.content)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'delete', 'item': [p.pk for p in posts]
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(
+            response['location'].endswith(self.thread.get_absolute_url()))
+
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertEqual(thread.replies, 0)
+
+        posts = [reply_thread(self.thread) for t in xrange(30)]
+
+        second_page_link = reverse('misago:thread', kwargs={
+            'thread_id': self.thread.id,
+            'thread_slug': self.thread.slug,
+            'page': 2
+        })
+
+        self.override_acl(test_acl)
+        response = self.client.post(second_page_link, data={
+            'action': 'delete', 'item': [p.pk for p in posts[10:20]]
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response['location'].endswith(second_page_link))
+
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertEqual(thread.replies, 20)
+
+        self.override_acl(test_acl)
+        response = self.client.post(second_page_link, data={
+            'action': 'delete', 'item': [p.pk for p in posts[:-10]]
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(
+            response['location'].endswith(self.thread.get_absolute_url()))
