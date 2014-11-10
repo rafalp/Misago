@@ -58,7 +58,7 @@ class Thread(models.Model):
         return self.title
 
     def lock(self):
-        return Forum.objects.select_for_update().get(id=self.id)
+        return Thread.objects.select_for_update().get(id=self.id)
 
     def delete(self, *args, **kwargs):
         from misago.threads.signals import delete_thread

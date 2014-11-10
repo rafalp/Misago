@@ -1,5 +1,5 @@
 from django.db.transaction import atomic
-from django.utils.translation import ugettext_lazy, ugettext as _
+from django.utils.translation import ugettext as _
 
 from misago.threads.events import record_event
 
