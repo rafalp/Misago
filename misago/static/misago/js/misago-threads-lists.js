@@ -1,8 +1,10 @@
-// Mass-aciton for threads
-function threadsMassActions(select_message) {
+// Mass-action for threads list
+function threadsMassActions() {
   var $form = $('#threads-actions');
   var $master = $('.master-checkbox');
   var $threads = $('.table-panel .list-group-item');
+
+  var select_items_message = $form.data('select-items-message');
 
   $form.find('li button').click(function() {
     if ($(this).data('confirmation')) {
@@ -58,7 +60,7 @@ function threadsMassActions(select_message) {
 
   $form.submit(function() {
     if ($threads.filter('.active').length == 0) {
-      alert(select_message);
+      alert(select_items_message);
       return false;
     } else {
       return true;

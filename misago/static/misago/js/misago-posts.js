@@ -1,6 +1,8 @@
 // Controller for posts lists
 $(function() {
 
+  // Post controller
+
   MisagoPost = function($element) {
 
     this.$e = $element;
@@ -9,12 +11,12 @@ $(function() {
 
     var _this = this;
 
-    this.highlight = function() {
-      this.$e.addClass('highlighted');
+    this.focus = function() {
+      this.$e.addClass('focus');
     }
 
-    this.remove_highlight = function() {
-      this.$e.removeClass('highlighted');
+    this.remove_focus = function() {
+      this.$e.removeClass('focus');
     }
 
     this.change_post = function(new_content) {
@@ -33,10 +35,10 @@ $(function() {
         Misago.Posting.load({
           api_url: _this.$e.data('edit-url'),
           on_load: function() {
-            _this.highlight();
+            _this.focus();
           },
           on_cancel: function() {
-            _this.remove_highlight();
+            _this.remove_focus();
           },
           on_post: function(data) {
             Misago.Alerts.success(data.message);
@@ -79,11 +81,15 @@ $(function() {
 
   }
 
+  // Posts controller
+
   MisagoPosts = function() {
 
     this.posts = {};
 
     var _this = this;
+
+    // discover posts data
 
     this.discover_posts = function() {
       $('.thread-post').each(function() {
@@ -96,5 +102,56 @@ $(function() {
   }
 
   Misago.Posts = new MisagoPosts();
+
+  // Mass actions controller
+
+  function PostsMassActions() {
+
+    var $form = $('#posts-actions');
+
+    // handle moderation form
+    var select_items_message = $('#posts-actions').data('select-items-message');
+
+    $('.post-check').each(function() {
+
+      var $check = $(this);
+
+      var $checkbox = $check.find('input');
+      if ($checkbox.prop("checked")) {
+        $check.addClass('active');
+      }
+
+      $check.on("click", function() {
+        $check.toggleClass('active');
+        if ($check.hasClass('active')) {
+          $checkbox.prop("checked", true);
+        } else {
+          $checkbox.prop("checked", false);
+        }
+        return false;
+      });
+
+    });
+
+    $form.find('li button').click(function() {
+      if ($(this).data('confirmation')) {
+        var confirmation = confirm($(this).data('confirmation'));
+        return confirmation;
+      } else {
+        return true;
+      }
+    });
+
+    $form.submit(function() {
+      if ($('.post-check.active').length == 0) {
+        alert(select_items_message);
+        return false;
+      } else {
+        return true;
+      }
+    });
+
+  }
+  PostsMassActions();
 
 });

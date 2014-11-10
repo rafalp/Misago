@@ -70,7 +70,7 @@ class ForumView(ThreadsView):
             'page': threads.page,
             'paginator': threads.paginator,
 
-            'list_actions': actions.get_list(),
+            'threads_actions': actions,
             'selected_threads': actions.get_selected_ids(),
 
             'sorting': sorting,

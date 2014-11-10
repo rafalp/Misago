@@ -47,7 +47,7 @@
       }
     }
 
-    &.highlighted {
+    &.focus {
       .media-body {
         .panel-default {
           background: @post-active-panel-bg;
@@ -135,6 +135,30 @@
       .label {
         position: relative;
         bottom: 2px;
+      }
+
+      .post-check {
+        float: right;
+        margin: 0px;
+        margin-left: @line-height-computed / 2;
+
+        color: @text-muted;
+        font-size: 20px;
+        text-decoration: none;
+        line-height: 19px;
+
+        cursor: pointer;
+
+
+        &.active {
+          color: @brand-success;
+        }
+
+        input {
+          position: absolute;
+          top: -9999px;
+          left: -9999px;
+        }
       }
     }
   }

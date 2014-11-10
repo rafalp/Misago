@@ -31,7 +31,7 @@
       {% csrf_token %}
       <input type="hidden" name="action" value="move">
       {% for thread in threads %}
-      <input type="hidden" name="thread" value="{{ thread.pk }}">
+      <input type="hidden" name="item" value="{{ thread.pk }}">
       {% endfor %}
 
       <div class="row">

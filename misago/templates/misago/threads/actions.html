@@ -3,14 +3,14 @@
   <span class="fa fa-check"></span>
 </button>
 <div class="btn-group pull-right">
-  <form id="threads-actions" action="{{ querystring }}" method="post">
+  <form id="threads-actions" action="{{ querystring }}" method="post" data-select-items-message="{{ threads_actions.select_items_message }}">
     {% csrf_token %}
     <button type="button" class="btn btn-default dropdown-toggle mass-controller" data-toggle="dropdown">
       <span class="fa fa-gears"></span>
       {% trans "With selected" %}
     </button>
     <ul class="dropdown-menu scrollable" role="menu">
-      {% for action in list_actions %}
+      {% for action in threads_actions.get_list %}
       <li>
         <button type="submit" name="action" value="{{ action.action }}" class="action-{{ action.action }}" {% if action.confirmation %}data-confirmation="{{ action.confirmation }}"{% endif %}>
           <span class="fa fa-{{ action.icon }} fa-fw"></span>

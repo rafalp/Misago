@@ -40,10 +40,10 @@
             </div>
             {% block thread-extra %}
             <div class="col-md-5 thread-stats">
-              {% if list_actions %}
+              {% if threads_actions %}
               <a href="#" class="thread-check">
                 <span class="fa fa-check"></span>
-                <input type="checkbox" form="threads-actions" name="thread" value="{{ thread.pk }}"{% if thread.pk in selected_threads %}checked="checked"{% endif %}>
+                <input type="checkbox" form="threads-actions" name="item" value="{{ thread.pk }}"{% if thread.pk in selected_threads %}checked="checked"{% endif %}>
               </a>
               {% endif %}
 

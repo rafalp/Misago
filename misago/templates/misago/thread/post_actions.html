@@ -1,0 +1,20 @@
+{% load i18n %}
+<div class="btn-group pull-right">
+  <form id="posts-actions" class="dropup" action="{{ querystring }}" method="post" data-select-items-message="{{ posts_actions.select_items_message }}">
+    {% csrf_token %}
+    <ul class="dropdown-menu scrollable" role="menu">
+      {% for action in posts_actions.get_list %}
+      <li>
+        <button type="submit" name="action" value="{{ action.action }}" class="action-{{ action.action }}" {% if action.confirmation %}data-confirmation="{{ action.confirmation }}"{% endif %}>
+          <span class="fa fa-{{ action.icon }} fa-fw"></span>
+          {{ action.name }}
+        </button>
+      </li>
+      {% endfor %}
+    </ul>
+    <button type="button" class="btn btn-default dropdown-toggle mass-controller" data-toggle="dropdown">
+      <span class="fa fa-gears"></span>
+      {% trans "With posts" %}
+    </button>
+  </form>
+</div>

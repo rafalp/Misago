@@ -21,6 +21,9 @@ class ActionsBase(object):
             self.available_actions = []
         self.selected_ids = []
 
+    def __nonzero__(self):
+        return bool(self.available_actions)
+
     def get_available_actions(self, kwargs):
         raise NotImplementedError("get_available_actions has to return list "
                                   "of dicts with allowed actions")
@@ -71,7 +74,7 @@ class ActionsBase(object):
     def handle_mass_action(self, request, queryset):
         action, action_arg = self.resolve_action(request)
         self.selected_ids = self.clean_selection(
-            request.POST.getlist('thread', []))
+            request.POST.getlist('item', []))
 
         filtered_queryset = queryset.filter(pk__in=self.selected_ids)
         if filtered_queryset.exists():

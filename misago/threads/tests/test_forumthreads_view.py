@@ -798,7 +798,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # label threads with invalid label
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'label:mehssiah', 'thread': [t.pk for t in threads]
+            'action': 'label:mehssiah', 'item': [t.pk for t in threads]
         })
         self.assertEqual(response.status_code, 200)
         self.assertIn("Requested action is invalid.", response.content)
@@ -807,7 +807,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
             'action': 'label:%s' % labels[0].slug,
-            'thread': [t.pk for t in threads]
+            'item': [t.pk for t in threads]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -820,7 +820,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
             'action': 'label:%s' % labels[0].slug,
-            'thread': [t.pk for t in threads]
+            'item': [t.pk for t in threads]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -833,7 +833,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
             'action': 'label:%s' % labels[1].slug,
-            'thread': [t.pk for t in threads]
+            'item': [t.pk for t in threads]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -845,7 +845,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # remove labels from threads
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'unlabel', 'thread': [t.pk for t in threads]
+            'action': 'unlabel', 'item': [t.pk for t in threads]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -857,7 +857,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # remove labels from unlabeled threads
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'unlabel', 'thread': [t.pk for t in threads]
+            'action': 'unlabel', 'item': [t.pk for t in threads]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -893,7 +893,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # pin pinned
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'pin', 'thread': [pinned.pk]
+            'action': 'pin', 'item': [pinned.pk]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -906,7 +906,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # pin unpinned
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'pin', 'thread': [pinned.pk, thread.pk]
+            'action': 'pin', 'item': [pinned.pk, thread.pk]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -925,7 +925,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # unpin thread
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'unpin', 'thread': [thread.pk]
+            'action': 'unpin', 'item': [thread.pk]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -960,7 +960,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # approve approved thread
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'approve', 'thread': [thread.pk]
+            'action': 'approve', 'item': [thread.pk]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -972,7 +972,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # approve moderated thread
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'approve', 'thread': [moderated_thread.pk]
+            'action': 'approve', 'item': [moderated_thread.pk]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -1005,7 +1005,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # see move threads form
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'move', 'thread': [t.pk for t in threads[:5]]
+            'action': 'move', 'item': [t.pk for t in threads[:5]]
         })
         self.assertEqual(response.status_code, 200)
 
@@ -1016,7 +1016,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
             'action': 'move',
-            'thread': [t.pk for t in threads[:5]],
+            'item': [t.pk for t in threads[:5]],
             'submit': '',
             'new_forum': new_forum.pk + 1234
         })
@@ -1029,7 +1029,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         category = Forum.objects.all_forums().filter(role="category")[:1][0]
         response = self.client.post(self.link, data={
             'action': 'move',
-            'thread': [t.pk for t in threads[:5]],
+            'item': [t.pk for t in threads[:5]],
             'submit': '',
             'new_forum': category.pk
         })
@@ -1043,7 +1043,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         redirect = Forum.objects.all_forums().filter(role="redirect")[:1][0]
         response = self.client.post(self.link, data={
             'action': 'move',
-            'thread': [t.pk for t in threads[:5]],
+            'item': [t.pk for t in threads[:5]],
             'submit': '',
             'new_forum': redirect.pk
         })
@@ -1056,7 +1056,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.override_acl(test_acl, new_forum)
         response = self.client.post(self.link, data={
             'action': 'move',
-            'thread': [t.pk for t in threads[:5]],
+            'item': [t.pk for t in threads[:5]],
             'submit': '',
             'new_forum': new_forum.pk
         })
@@ -1092,7 +1092,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # see merge threads form
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'merge', 'thread': [t.pk for t in threads[:5]]
+            'action': 'merge', 'item': [t.pk for t in threads[:5]]
         })
         self.assertEqual(response.status_code, 200)
 
@@ -1100,7 +1100,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
             'action': 'merge',
-            'thread': [t.pk for t in threads[:5]],
+            'item': [t.pk for t in threads[:5]],
             'submit': ''
         })
         self.assertEqual(response.status_code, 200)
@@ -1111,7 +1111,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
             'action': 'merge',
-            'thread': [threads[0].pk],
+            'item': [threads[0].pk],
             'submit': ''
         })
         self.assertEqual(response.status_code, 200)
@@ -1122,7 +1122,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
             'action': 'merge',
-            'thread': [t.pk for t in threads[:5]],
+            'item': [t.pk for t in threads[:5]],
             'merged_thread_title': 'Merged thread',
             'submit': ''
         })
@@ -1162,7 +1162,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # close threads
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'close', 'thread': [t.pk for t in threads]
+            'action': 'close', 'item': [t.pk for t in threads]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -1174,7 +1174,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # close closed threads
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'close', 'thread': [t.pk for t in threads]
+            'action': 'close', 'item': [t.pk for t in threads]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -1186,7 +1186,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # open closed threads
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'open', 'thread': [t.pk for t in threads]
+            'action': 'open', 'item': [t.pk for t in threads]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -1198,7 +1198,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # open opened threads
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'open', 'thread': [t.pk for t in threads]
+            'action': 'open', 'item': [t.pk for t in threads]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -1227,7 +1227,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # hide threads
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'hide', 'thread': [t.pk for t in threads]
+            'action': 'hide', 'item': [t.pk for t in threads]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -1239,7 +1239,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # hide hidden threads
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'hide', 'thread': [t.pk for t in threads]
+            'action': 'hide', 'item': [t.pk for t in threads]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -1251,7 +1251,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # unhide hidden threads
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'unhide', 'thread': [t.pk for t in threads]
+            'action': 'unhide', 'item': [t.pk for t in threads]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -1263,7 +1263,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # unhide visible threads
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'unhide', 'thread': [t.pk for t in threads]
+            'action': 'unhide', 'item': [t.pk for t in threads]
         })
         self.assertEqual(response.status_code, 302)
 
@@ -1293,7 +1293,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
 
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
-            'action': 'delete', 'thread': [t.pk for t in threads]
+            'action': 'delete', 'item': [t.pk for t in threads]
         })
 
         forum = Forum.objects.get(pk=self.forum.pk)

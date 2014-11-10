@@ -47,6 +47,7 @@ class ThreadsView(ViewBase):
         if self.Filtering:
             filtering.filter(threads)
 
+        actions = None
         if self.Actions:
             actions = self.Actions(user=request.user)
             if request.method == 'POST':
@@ -74,7 +75,7 @@ class ThreadsView(ViewBase):
 
         if self.Actions:
             context.update({
-                'list_actions': actions.get_list(),
+                'threads_actions': actions,
                 'selected_threads': actions.get_selected_ids(),
             })
 

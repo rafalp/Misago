@@ -92,6 +92,10 @@
 
       {% include "misago/thread/pagination.html" %}
 
+      {% if posts_actions %}
+      {% include "misago/thread/post_actions.html" %}
+      {% endif %}
+
     </div>
 
     <div class="reply-to-thread text-center">

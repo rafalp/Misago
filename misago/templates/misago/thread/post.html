@@ -40,6 +40,13 @@
         </span>
         {% endif %}
 
+        {% if posts_actions %}
+        <a href="#" class="post-check">
+          <span class="fa fa-check"></span>
+          <input type="checkbox" form="posts-actions" name="item" value="{{ post.pk }}"{% if post.pk in selected_posts %}checked="checked"{% endif %}>
+        </a>
+        {% endif %}
+
         <a href="{{ post.get_absolute_url }}" class="pull-right post-date tooltip-top" title="{% trans "Link to this post" %}">
           #{{ page.start_index|add:forloop.counter0 }}
         </a>
@@ -96,32 +103,32 @@
 
         <button type="button" class="btn btn-warning btn-flat pull-right">
           <span class="fa fa-eye-slash">
-          Hide
+          {% trans "Hide" %}
         </button>
 
         <button type="button" class="btn btn-default btn-flat pull-right">
           <span class="fa fa-eye">
-          Show
+          {% trans "Show" %}
         </button>
 
         <button type="button" class="btn btn-danger btn-flat pull-right">
           <span class="fa fa-times">
-          Delete
+          {% trans "Delete" %}
         </button>
 
         <button type="button" class="btn btn-warning btn-flat pull-right">
           <span class="fa fa-exclamation-triangle">
-          Report
+          {% trans "Report" %}
         </button>
 
         <button type="button" class="btn btn-success btn-flat pull-right">
           <span class="fa fa-check">
-          Approve
+          {% trans "Approve" %}
         </button>
 
         <button type="button" class="btn btn-success btn-flat pull-left">
           <span class="fa fa-heart">
-          Like
+          {% trans "Like" %}
         </button>
       </div>
     </div>

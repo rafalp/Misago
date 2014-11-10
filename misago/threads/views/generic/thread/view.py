@@ -71,13 +71,18 @@ class ThreadView(ViewBase):
         thread_actions = self.ThreadActions(user=request.user, thread=thread)
         posts_actions = self.PostsActions(user=request.user, thread=thread)
 
+        page, posts = self.get_posts(request.user, forum, thread, kwargs)
+
         if request.method == 'POST':
             if thread_actions.query_key in request.POST:
                 response = thread_actions.handle_post(request, thread)
                 if response:
                     return response
+            if posts_actions.query_key in request.POST:
+                response = posts_actions.handle_post(request, posts)
+                if response:
+                    return response
 
-        page, posts = self.get_posts(request.user, forum, thread, kwargs)
         threadstracker.make_posts_read_aware(request.user, thread, posts)
         threadstracker.read_thread(request.user, thread, posts[-1])
 
@@ -97,11 +102,12 @@ class ThreadView(ViewBase):
             'path': get_forum_path(forum),
 
             'thread': thread,
-            'thread_actions': thread_actions.get_list(),
+            'thread_actions': thread_actions,
             'thread_reply_message': thread_reply_message,
 
             'posts': posts,
-            'posts_actions': posts_actions.get_list(),
+            'posts_actions': posts_actions,
+            'selected_posts': posts_actions.get_selected_ids(),
 
             'paginator': page.paginator,
             'page': page,

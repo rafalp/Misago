@@ -54,7 +54,7 @@
     {% include "misago/threads/show.html" %}
   {% endif %}
 
-  {% if user.is_authenticated and list_actions %}
+  {% if threads_actions %}
     {% include "misago/threads/actions.html" %}
   {% endif %}
 
@@ -96,7 +96,7 @@
 {% block javascripts %}
 {{ block.super }}
 {% include "misago/forums/js.html" %}
-{% if user.is_authenticated and list_actions %}
+{% if threads_actions %}
   {% include "misago/threads/actions_js.html" %}
 {% endif %}
 {% if forum.acl.can_start_threads %}
