@@ -314,6 +314,35 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         response = self.client.get(reverse('misago:index'))
         self.assertEqual(response.status_code, 200)
 
+    def test_cant_hide_first_post(self):
+        """op is not deletable/hideable/unhideable"""
+        test_acl = {
+            'can_hide_posts': 2
+        }
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Delete posts", response.content)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'delete', 'item': [self.thread.first_post_id]
+        })
+        self.assertEqual(response.status_code, 200)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'hide', 'item': [self.thread.first_post_id]
+        })
+        self.assertEqual(response.status_code, 200)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'unhide', 'item': [self.thread.first_post_id]
+        })
+        self.assertEqual(response.status_code, 200)
+
     def test_delete_posts(self):
         """moderation allows for deleting posts"""
         posts = [reply_thread(self.thread) for t in xrange(10)]
@@ -366,3 +395,6 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(
             response['location'].endswith(self.thread.get_absolute_url()))
+
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertEqual(thread.replies, 10)
