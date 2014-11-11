@@ -381,10 +381,10 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         posts_queryset = self.thread.post_set
         for post in posts_queryset.filter(id__in=[p.pk for p in posts[:2]]):
             self.assertTrue(post.is_hidden)
-            self.assertNotNull(post.hidden_by)
-            self.assertNotNull(post.hidden_by_name)
-            self.assertNotNull(post.hidden_by_slug)
-            self.assertNotNull(post.hidden_on)
+            self.assertIsNotNone(post.hidden_by)
+            self.assertIsNotNone(post.hidden_by_name)
+            self.assertIsNotNone(post.hidden_by_slug)
+            self.assertIsNotNone(post.hidden_on)
 
         self.override_acl(test_acl)
         response = self.client.post(self.thread.get_absolute_url(), data={
