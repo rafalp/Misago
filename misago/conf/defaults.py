@@ -241,6 +241,14 @@ AUTHENTICATION_BACKENDS = (
     'misago.users.authbackends.MisagoBackend',
 )
 
+MISAGO_NEW_REGISTRATIONS_VALIDATORS = (
+    'misago.users.validators.validate_with_sfs',
+)
+
+MISAGO_STOP_FORUM_SPAM_USE = True
+MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE = 80
+
+
 # How many e-mails should be sent in single step.
 # This is used for conserving memory usage when mailing many users at same time
 

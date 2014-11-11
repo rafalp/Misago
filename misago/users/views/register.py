@@ -1,7 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login
+from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
+from django.utils.formats import date_format
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
@@ -10,11 +13,13 @@ from misago.conf import settings
 from misago.core.captcha import add_captcha_to_form
 from misago.core.mail import mail_user
 
+from misago.users.bans import ban_ip
 from misago.users.decorators import deny_authenticated, deny_banned_ips
 from misago.users.forms.register import RegisterForm
 from misago.users.models import (ACTIVATION_REQUIRED_USER,
                                  ACTIVATION_REQUIRED_ADMIN)
 from misago.users.tokens import make_activation_token
+from misago.users.validators import validate_new_registration
 
 
 def register_decorator(f):
@@ -38,6 +43,20 @@ def register(request):
     if request.method == 'POST':
         form = SecuredForm(request.POST)
         if form.is_valid():
+            try:
+                validate_new_registration(
+                    request.user.ip,
+                    form.cleaned_data['username'],
+                    form.cleaned_data['email'])
+            except PermissionDenied as e:
+                staff_message = _("This ban was automatically imposed on "
+                                  "%(date)s due to denied register attempt.")
+
+                message_formats = {'date': date_format(timezone.now())}
+                staff_message = staff_message % message_formats
+                ban_ip(request.user.ip, staff_message=staff_message, length=1)
+                raise e
+
             activation_kwargs = {}
             if settings.account_activation == 'user':
                 activation_kwargs = {

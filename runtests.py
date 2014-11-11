@@ -34,6 +34,8 @@ def runtests():
             settings_file = settings_file.replace("{{ secret_key }}",
                                                   "t3stpr0j3ct")
             settings_file += """
+MISAGO_NEW_REGISTRATIONS_VALIDATORS = ()
+
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 CACHES = {
     'default': {

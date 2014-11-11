@@ -50,4 +50,5 @@ Following references cover everything you want to know about writing your own ap
    thread_store
    user_sites
    validators
+   validating_registrations
    views_errors

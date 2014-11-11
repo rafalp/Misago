@@ -246,6 +246,13 @@ MISAGO_MARKUP_EXTENSIONS
 List of python modules extending Misago markup.
 
 
+MISAGO_NEW_REGISTRATIONS_VALIDATORS
+-----------------------------------
+
+List of functions to be called when somebody attempts to register on forums using registration form.
+
+
+
 MISAGO_NOTIFICATIONS_MAX_AGE
 ----------------------------
 
@@ -291,6 +298,18 @@ Rewrite algorithm used by Misago replaces path until last part with value of thi
 For example, defining ``MISAGO_SENDFILE_LOCATIONS_PATH = 'misago_served_internals'`` will result in following rewrite:
 
 ``/home/mysite/www/attachments/13_05/142123.rar`` => ``/misago_served_internals/attachments/13_05/142123.rar``
+
+
+MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE
+-------------------------------------
+
+Minimum confidence returned by `Stop Forum Spam <http://www.stopforumspam.com/>`_ for Misago to reject new registration and block IP address for 1 day.
+
+
+MISAGO_STOP_FORUM_SPAM_USE
+--------------------------
+
+This settings allows you to decide wheter of not `Stop Forum Spam <http://www.stopforumspam.com/>`_ database should be used to validate IPs and emails during new users registrations.
 
 
 password_complexity

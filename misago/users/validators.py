@@ -1,11 +1,16 @@
+from importlib import import_module
+import json
 import re
 
-from django.core.exceptions import ValidationError
+import requests
+
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.validators import validate_email as validate_email_content
 from django.utils.translation import ungettext, ugettext_lazy as _
 from django.contrib.auth import get_user_model
 
 from misago.conf import settings
+
 from misago.users.bans import get_email_ban, get_username_ban
 
 
@@ -108,3 +113,53 @@ def validate_username(value, exclude=None):
     validate_username_content(value)
     validate_username_available(value, exclude)
     validate_username_banned(value)
+
+
+"""
+New account validators
+"""
+SFS_API_URL = 'http://api.stopforumspam.org/api?email=%(email)s&ip=%(ip)s&f=json&confidence'  # noqa
+
+
+def validate_with_sfs(ip, username, email):
+    if settings.MISAGO_STOP_FORUM_SPAM_USE:
+        _real_validate_with_sfs(ip, email)
+
+
+def _real_validate_with_sfs(ip, email):
+    try:
+        r = requests.get(SFS_API_URL % {'email': email, 'ip': ip},
+                         timeout=3)
+        api_response = json.loads(r.content)
+        ip_score = api_response.get('ip', {}).get('confidence', 0)
+        email_score = api_response.get('email', {}).get('confidence', 0)
+
+        api_score = max((ip_score, email_score))
+
+        if api_score > settings.MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE:
+            raise PermissionDenied()
+    except requests.exceptions.RequestException:
+        pass # todo: log those somewhere
+
+
+"""
+Registration validation
+"""
+REGISTRATION_VALIDATORS = []
+
+
+def load_registration_validators():
+    for path in settings.MISAGO_NEW_REGISTRATIONS_VALIDATORS:
+        module = import_module('.'.join(path.split('.')[:-1]))
+        REGISTRATION_VALIDATORS.append(getattr(module, path.split('.')[-1]))
+
+
+if settings.MISAGO_NEW_REGISTRATIONS_VALIDATORS:
+    load_registration_validators()
+
+
+def validate_new_registration(ip, username, email, validators=None):
+    validators = validators or REGISTRATION_VALIDATORS
+
+    for validator in validators:
+        validator(ip, username, email)

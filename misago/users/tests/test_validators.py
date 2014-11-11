@@ -142,3 +142,7 @@ class ValidateUsernameLengthTests(TestCase):
             validate_username_length('a' * (settings.username_length_min - 1))
         with self.assertRaises(ValidationError):
             validate_username_length('a' * (settings.username_length_max + 1))
+
+
+class TestRegistrationValidators(TestCase):
+    pass

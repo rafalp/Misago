@@ -8,7 +8,8 @@ from django.views.decorators.debug import sensitive_post_parameters
 
 from misago.core.decorators import require_POST
 
-from misago.users.decorators import deny_authenticated, deny_guests
+from misago.users.decorators import (deny_authenticated, deny_guests,
+                                     deny_banned_ips)
 from misago.users.forms.auth import AuthenticationForm
 
 
@@ -16,6 +17,7 @@ from misago.users.forms.auth import AuthenticationForm
 @deny_authenticated
 @csrf_protect
 @never_cache
+@deny_banned_ips
 def login(request):
     form = AuthenticationForm(request)
 

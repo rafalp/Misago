@@ -39,4 +39,5 @@ Table of Contents
    developers/thread_store
    developers/user_sites
    developers/validators
+   developers/validating_registrations
    developers/views_errors

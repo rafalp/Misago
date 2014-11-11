@@ -5,10 +5,12 @@ API for testing values for bans
 Calling this instead of Ban.objects.find_ban is preffered, if you don't want
 to use validate_X_banned validators
 """
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
+
+from django.utils import timezone
 
 from misago.core import cachebuster
-from misago.users.models import Ban, BanCache
+from misago.users.models import BAN_IP, Ban, BanCache
 
 
 BAN_CACHE_SESSION_KEY = 'misago_ip_check'
@@ -147,3 +149,22 @@ def _hydrate_session_cache(ban_cache):
         hydrated['valid_until'] = expiration_datetime.date()
 
     return hydrated
+
+
+"""
+Utility for banning naughty IPs
+"""
+def ban_ip(ip, user_message=None, staff_message=None, length=None):
+    if length:
+        valid_until = (timezone.now() + timedelta(days=length)).date()
+    else:
+        valid_until = None
+
+    Ban.objects.create(
+        test=BAN_IP,
+        banned_value=ip,
+        user_message=user_message,
+        staff_message=staff_message,
+        valid_until=valid_until
+    )
+    Ban.objects.invalidate_cache()
