@@ -107,35 +107,59 @@
           </button>
           {% endif %}
 
-          <button type="button" class="btn btn-warning btn-flat pull-right">
-            <span class="fa fa-eye-slash">
-            {% trans "Hide" %}
-          </button>
+          {% if post.acl.can_unhide %}
+          <form action="{% url 'misago:unhide_post' post_id=post.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-default btn-flat pull-right">
+              <span class="fa fa-eye">
+              {% trans "Reveal" %}
+            </button>
+          </form>
+          {% endif %}
 
-          <button type="button" class="btn btn-default btn-flat pull-right">
-            <span class="fa fa-eye">
-            {% trans "Show" %}
-          </button>
+          {% if post.acl.can_hide %}
+          <form action="{% url 'misago:hide_post' post_id=post.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-warning btn-flat pull-right">
+              <span class="fa fa-eye-slash">
+              {% trans "Hide" %}
+            </button>
+          </form>
+          {% endif %}
 
-          <button type="button" class="btn btn-danger btn-flat pull-right">
-            <span class="fa fa-times">
-            {% trans "Delete" %}
-          </button>
+          {% if post.acl.can_delete %}
+          <form action="{% url 'misago:delete_post' post_id=post.id %}" method="post" data-prompt="{% trans "Are you sure you want to delete this post?" %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-flat pull-right">
+              <span class="fa fa-times">
+              {% trans "Delete" %}
+            </button>
+          </form>
+          {% endif %}
 
-          <button type="button" class="btn btn-warning btn-flat pull-right">
-            <span class="fa fa-exclamation-triangle">
-            {% trans "Report" %}
-          </button>
+          <form action="" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-warning btn-flat pull-right">
+              <span class="fa fa-exclamation-triangle">
+              {% trans "Report" %}
+            </button>
+          </form>
 
-          <button type="button" class="btn btn-success btn-flat pull-right">
-            <span class="fa fa-check">
-            {% trans "Approve" %}
-          </button>
+          <form action="" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-flat pull-right">
+              <span class="fa fa-check">
+              {% trans "Approve" %}
+            </button>
+          </form>
 
-          <button type="button" class="btn btn-success btn-flat pull-left">
-            <span class="fa fa-heart">
-            {% trans "Like" %}
-          </button>
+          <form action="" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-flat pull-left">
+              <span class="fa fa-heart">
+              {% trans "Like" %}
+            </button>
+          </form>
         </div>
       {% else %}
       <div class="panel-body">

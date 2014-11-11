@@ -79,6 +79,18 @@ $(function() {
 
     });
 
+    this.$e.find('form').submit(function() {
+
+      var prompt = $(this).data('prompt');
+      if (prompt) {
+        var decision = confirm(prompt);
+        return decision;
+      } else {
+        return true;
+      }
+
+    });
+
   }
 
   // Posts controller

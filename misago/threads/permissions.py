@@ -313,9 +313,9 @@ def add_acl_to_post(user, post):
         'can_reply': can_reply_thread(user, post.thread),
         'can_edit': can_edit_post(user, post),
         'can_see_hidden': forum_acl.get('can_hide_posts'),
-        'can_unhide': post.is_hidden and forum_acl.get('can_hide_posts'),
-        'can_hide': forum_acl.get('can_hide_threads'),
-        'can_delete': forum_acl.get('can_hide_threads'),
+        'can_unhide': can_unhide_post(user, post),
+        'can_hide': can_hide_post(user, post),
+        'can_delete': can_delete_post(user, post),
         'can_protect': forum_acl.get('can_protect_posts'),
         'can_report': forum_acl.get('can_report_content'),
         'can_see_reports': forum_acl.get('can_see_reports'),
@@ -435,6 +435,9 @@ def allow_edit_post(user, target):
         raise PermissionDenied(
             _("You can't edit posts in closed threads."))
 
+    if target.is_hidden and not can_unhide_post(user, target):
+        raise PermissionDenied(_("This post is hidden, you can't edit it."))
+
     if forum_acl['can_edit_posts'] == 1:
         if target.poster_id != user.pk:
             raise PermissionDenied(
@@ -453,8 +456,126 @@ def allow_edit_post(user, target):
 can_edit_post = return_boolean(allow_edit_post)
 
 
+def allow_unhide_post(user, target):
+    if target.forum.is_closed:
+        message = _("This forum is closed. You can't reveal posts in it.")
+        raise PermissionDenied(message)
+    if user.is_anonymous():
+        raise PermissionDenied(_("You have to sign in to reveal posts."))
+
+    if target.id == target.thread.first_post_id:
+        raise PermissionDenied(_("You can't reveal thread's first post."))
+    if not target.is_hidden:
+        raise PermissionDenied(_("Only hidden posts can be revealed."))
+
+    forum_acl = target.forum.acl
+
+    if target.thread.is_closed and not forum_acl['can_close_threads']:
+        raise PermissionDenied(
+            _("You can't reveal posts in closed threads."))
+    if target.is_protected and not forum_acl['can_protect_posts']:
+        message = _("This post is protected. You can't reveal it.")
+        raise PermissionDenied(message)
+
+    if not forum_acl['can_hide_posts']:
+        if not forum_acl['can_hide_own_posts']:
+            raise PermissionDenied(_("You can't reveal posts in this forum."))
+
+        if user.id != post.poster_id:
+            message = _("You can't reveal other users posts in this forum.")
+            raise PermissionDenied(message)
+
+        if has_time_to_edit_post(user, post):
+            message = ungettext("You can't reveal posts that are "
+                                "older than %(minutes)s minute.",
+                                "You can't reveal posts that are "
+                                "older than %(minutes)s minutes.",
+                                forum_acl['post_edit_time'])
+            raise PermissionDenied(
+                message % {'minutes': forum_acl['post_edit_time']})
+can_unhide_post = return_boolean(allow_unhide_post)
+
+
+def allow_hide_post(user, target):
+    if target.forum.is_closed:
+        message = _("This forum is closed. You can't hide posts in it.")
+        raise PermissionDenied(message)
+    if user.is_anonymous():
+        raise PermissionDenied(_("You have to sign in to hide posts."))
+
+    if target.id == target.thread.first_post_id:
+        raise PermissionDenied(_("You can't hide thread's first post."))
+    if target.is_hidden:
+        raise PermissionDenied(_("This post is already hidden."))
+
+    forum_acl = target.forum.acl
+
+    if target.thread.is_closed and not forum_acl['can_close_threads']:
+        raise PermissionDenied(
+            _("You can't hide posts in closed threads."))
+    if target.is_protected and not forum_acl['can_protect_posts']:
+        message = _("This post is protected. You can't hide it.")
+        raise PermissionDenied(message)
+
+    if not forum_acl['can_hide_posts']:
+        if not forum_acl['can_hide_own_posts']:
+            raise PermissionDenied(_("You can't hide posts in this forum."))
+
+        if user.id != post.poster_id:
+            message = _("You can't hide other users posts in this forum.")
+            raise PermissionDenied(message)
+
+        if has_time_to_edit_post(user, post):
+            message = ungettext("You can't hide posts that are "
+                                "older than %(minutes)s minute.",
+                                "You can't hide posts that are "
+                                "older than %(minutes)s minutes.",
+                                forum_acl['post_edit_time'])
+            raise PermissionDenied(
+                message % {'minutes': forum_acl['post_edit_time']})
+can_hide_post = return_boolean(allow_hide_post)
+
+
+def allow_delete_post(user, target):
+    if target.forum.is_closed:
+        message = _("This forum is closed. You can't delete posts in it.")
+        raise PermissionDenied(message)
+    if user.is_anonymous():
+        raise PermissionDenied(_("You have to sign in to delete posts."))
+
+    if target.id == target.thread.first_post_id:
+        raise PermissionDenied(_("You can't delete thread's first post."))
+
+    forum_acl = target.forum.acl
+
+    if target.thread.is_closed and not forum_acl['can_close_threads']:
+        raise PermissionDenied(
+            _("You can't delete posts in closed threads."))
+    if target.is_protected and not forum_acl['can_protect_posts']:
+        message = _("This post is protected. You can't delete it.")
+        raise PermissionDenied(message)
+
+    if forum_acl['can_hide_posts'] != 2:
+        if forum_acl['can_hide_own_posts'] != 2:
+            raise PermissionDenied(_("You can't delete posts in this forum."))
+
+        if user.id != post.poster_id:
+            message = _("You can't delete other users posts in this forum.")
+            raise PermissionDenied(message)
+
+        if has_time_to_edit_post(user, post):
+            message = ungettext("You can't delete posts that are "
+                                "older than %(minutes)s minute.",
+                                "You can't delete posts that are "
+                                "older than %(minutes)s minutes.",
+                                forum_acl['post_edit_time'])
+            raise PermissionDenied(
+                message % {'minutes': forum_acl['post_edit_time']})
+can_delete_post = return_boolean(allow_delete_post)
+
+
 """
-Permission check helperts
+Permission check helpers
 """
 def can_change_owned_thread(user, target):
     forum_acl = user.acl['forums'].get(target.forum_id, {})

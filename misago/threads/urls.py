@@ -41,9 +41,13 @@ urlpatterns += patterns('',
 )
 
 
-from misago.threads.views.post import QuotePostView
+from misago.threads.views.post import (QuotePostView, HidePostView,
+                                       UnhidePostView, DeletePostView)
 urlpatterns += patterns('',
-    url(r'^quote-post/(?P<post_id>\d+)/$', QuotePostView.as_view(), name='quote_post'),
+    url(r'^post/(?P<post_id>\d+)/quote$', QuotePostView.as_view(), name='quote_post'),
+    url(r'^post/(?P<post_id>\d+)/unhide$', UnhidePostView.as_view(), name='unhide_post'),
+    url(r'^post/(?P<post_id>\d+)/hide$', HidePostView.as_view(), name='hide_post'),
+    url(r'^post/(?P<post_id>\d+)/delete$', DeletePostView.as_view(), name='delete_post'),
 )
 
 # new threads lists
