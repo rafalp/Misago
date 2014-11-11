@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.db import models, migrations
 import django.db.models.deletion
+import django.utils.timezone
 
 from misago.core.pgutils import CreatePartialIndex
 
@@ -45,6 +46,10 @@ class Migration(migrations.Migration):
                 ('edits', models.PositiveIntegerField(default=0)),
                 ('last_editor_name', models.CharField(max_length=255, null=True, blank=True)),
                 ('last_editor_slug', models.SlugField(max_length=255, null=True, blank=True)),
+                ('hidden_by', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('hidden_by_name', models.CharField(max_length=255, null=True, blank=True)),
+                ('hidden_by_slug', models.SlugField(max_length=255, null=True, blank=True)),
+                ('hidden_on', models.DateTimeField(default=django.utils.timezone.now)),
                 ('is_reported', models.BooleanField(default=False)),
                 ('is_moderated', models.BooleanField(default=False, db_index=True)),
                 ('is_hidden', models.BooleanField(default=False)),

@@ -343,6 +343,62 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         })
         self.assertEqual(response.status_code, 200)
 
+    def test_hide_unhide_posts(self):
+        """moderation allows for hiding and unhiding multiple posts"""
+        posts = [reply_thread(self.thread) for t in xrange(4)]
+
+        self.thread.synchronize()
+        self.assertEqual(self.thread.replies, 4)
+
+        test_acl = {
+            'can_hide_posts': 1
+        }
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Hide posts", response.content)
+        self.assertIn("Reveal posts", response.content)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'hide', 'item': [p.pk for p in posts[:2]]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertEqual(thread.replies, 4)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'hide', 'item': [p.pk for p in posts[:2]]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertEqual(thread.replies, 4)
+
+        posts_queryset = self.thread.post_set
+        for post in posts_queryset.filter(id__in=[p.pk for p in posts[:2]]):
+            self.assertTrue(post.is_hidden)
+            self.assertNotNull(post.hidden_by)
+            self.assertNotNull(post.hidden_by_name)
+            self.assertNotNull(post.hidden_by_slug)
+            self.assertNotNull(post.hidden_on)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'unhide', 'item': [p.pk for p in posts[:2]]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn('hidden-message', response.content)
+
+        for post in posts_queryset.filter(id__in=[p.pk for p in posts[:2]]):
+            self.assertFalse(post.is_hidden)
+
     def test_delete_posts(self):
         """moderation allows for deleting posts"""
         posts = [reply_thread(self.thread) for t in xrange(10)]

@@ -62,7 +62,7 @@ class PostsActions(ActionsBase):
             actions.append({
                 'action': 'unhide',
                 'icon': 'eye',
-                'name': _("Unhide posts")
+                'name': _("Reveal posts")
             })
             actions.append({
                 'action': 'hide',

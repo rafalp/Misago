@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.dispatch import receiver
+from django.utils import timezone
 
 from misago.conf import settings
 
@@ -19,16 +20,27 @@ class Post(models.Model):
     checksum = models.CharField(max_length=64, default='-')
     mentions = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                       related_name="mention_set")
+
     has_attachments = models.BooleanField(default=False)
     pickled_attachments = models.TextField(null=True, blank=True)
+
     posted_on = models.DateTimeField()
     updated_on = models.DateTimeField()
+
     edits = models.PositiveIntegerField(default=0)
     last_editor = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+',
                                     null=True, blank=True,
                                     on_delete=models.SET_NULL)
     last_editor_name = models.CharField(max_length=255, null=True, blank=True)
     last_editor_slug = models.SlugField(max_length=255, null=True, blank=True)
+
+    hidden_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+',
+                                  null=True, blank=True,
+                                  on_delete=models.SET_NULL)
+    hidden_by_name = models.CharField(max_length=255, null=True, blank=True)
+    hidden_by_slug = models.SlugField(max_length=255, null=True, blank=True)
+    hidden_on = models.DateTimeField(default=timezone.now)
+
     is_reported = models.BooleanField(default=False)
     is_moderated = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)

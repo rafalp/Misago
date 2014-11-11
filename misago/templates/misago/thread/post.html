@@ -71,66 +71,80 @@
       </div>
       {% endif %}
 
-      {% if post.is_valid %}
-      <div class="panel-body">
-        <article class="post-body misago-markup">
-          {{ post.parsed|safe }}
-        <article>
-      </div>
-      {% else %}
-      <div class="alert alert-danger">
-        <span class="fa fa-exclamation-triangle fa-fw fa-lg"></span>
-        {% trans "Post can't be displayed due to invalid message checksum." %}
+      {% if post.is_hidden and post.acl.can_see_hidden %}
+      <div class="alert alert-default">
+        {% include "misago/thread/hidden_message.html" %}
       </div>
       {% endif %}
 
-      <div class="panel-footer">
-
-        {% if thread.acl.can_reply %}
-        <button type="button" class="btn btn-reply btn-primary btn-flat pull-right">
-          <span class="fa fa-reply">
-          {% trans "Reply" %}
-        </button>
+      {% if not post.is_hidden or post.acl.can_see_hidden %}
+        {% if post.is_valid %}
+        <div class="panel-body">
+          <article class="post-body misago-markup">
+            {{ post.parsed|safe }}
+          <article>
+        </div>
+        {% else %}
+        <div class="alert alert-danger">
+          <span class="fa fa-exclamation-triangle fa-fw fa-lg"></span>
+          {% trans "Post can't be displayed due to invalid message checksum." %}
+        </div>
         {% endif %}
 
-        {% if post.acl.can_edit %}
-        <button type="button" class="btn btn-edit btn-default btn-flat pull-right">
-          <span class="fa fa-pencil">
-          {% trans "Edit" %}
-        </button>
-        {% endif %}
+        <div class="panel-footer">
 
+          {% if thread.acl.can_reply %}
+          <button type="button" class="btn btn-reply btn-primary btn-flat pull-right">
+            <span class="fa fa-reply">
+            {% trans "Reply" %}
+          </button>
+          {% endif %}
 
-        <button type="button" class="btn btn-warning btn-flat pull-right">
-          <span class="fa fa-eye-slash">
-          {% trans "Hide" %}
-        </button>
+          {% if post.acl.can_edit %}
+          <button type="button" class="btn btn-edit btn-default btn-flat pull-right">
+            <span class="fa fa-pencil">
+            {% trans "Edit" %}
+          </button>
+          {% endif %}
 
-        <button type="button" class="btn btn-default btn-flat pull-right">
-          <span class="fa fa-eye">
-          {% trans "Show" %}
-        </button>
+          <button type="button" class="btn btn-warning btn-flat pull-right">
+            <span class="fa fa-eye-slash">
+            {% trans "Hide" %}
+          </button>
 
-        <button type="button" class="btn btn-danger btn-flat pull-right">
-          <span class="fa fa-times">
-          {% trans "Delete" %}
-        </button>
+          <button type="button" class="btn btn-default btn-flat pull-right">
+            <span class="fa fa-eye">
+            {% trans "Show" %}
+          </button>
 
-        <button type="button" class="btn btn-warning btn-flat pull-right">
-          <span class="fa fa-exclamation-triangle">
-          {% trans "Report" %}
-        </button>
+          <button type="button" class="btn btn-danger btn-flat pull-right">
+            <span class="fa fa-times">
+            {% trans "Delete" %}
+          </button>
 
-        <button type="button" class="btn btn-success btn-flat pull-right">
-          <span class="fa fa-check">
-          {% trans "Approve" %}
-        </button>
+          <button type="button" class="btn btn-warning btn-flat pull-right">
+            <span class="fa fa-exclamation-triangle">
+            {% trans "Report" %}
+          </button>
 
-        <button type="button" class="btn btn-success btn-flat pull-left">
-          <span class="fa fa-heart">
-          {% trans "Like" %}
-        </button>
+          <button type="button" class="btn btn-success btn-flat pull-right">
+            <span class="fa fa-check">
+            {% trans "Approve" %}
+          </button>
+
+          <button type="button" class="btn btn-success btn-flat pull-left">
+            <span class="fa fa-heart">
+            {% trans "Like" %}
+          </button>
+        </div>
+      {% else %}
+      <div class="panel-body">
+        <p class="hidden-message lead text-muted">
+          {% include "misago/thread/hidden_message.html" %}
+        </p>
       </div>
+      {% endif %}
+
     </div>
 
     {% if post.events %}

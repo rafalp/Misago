@@ -1,4 +1,5 @@
 from django.db.transaction import atomic
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 from misago.threads.moderation.exceptions import ModerationError
@@ -26,7 +27,17 @@ def hide_post(user, post):
 
     if not post.is_hidden:
         post.is_hidden = True
-        post.save(update_fields=['is_hidden'])
+        post.hidden_by = user
+        post.hidden_by_name = user.username
+        post.hidden_by_slug = user.slug
+        post.hidden_on = timezone.now()
+        post.save(update_fields=[
+            'is_hidden',
+            'hidden_by',
+            'hidden_by_name',
+            'hidden_by_slug',
+            'hidden_on',
+        ])
         return True
     else:
         return False

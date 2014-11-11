@@ -85,7 +85,7 @@ class ForumActions(Actions):
             actions.append({
                 'action': 'unhide',
                 'icon': 'eye',
-                'name': _("Unhide threads")
+                'name': _("Reveal threads")
             })
             actions.append({
                 'action': 'hide',

@@ -312,7 +312,8 @@ def add_acl_to_post(user, post):
     post.acl.update({
         'can_reply': can_reply_thread(user, post.thread),
         'can_edit': can_edit_post(user, post),
-        'can_unhide': forum_acl.get('can_hide_threads'),
+        'can_see_hidden': forum_acl.get('can_hide_posts'),
+        'can_unhide': post.is_hidden and forum_acl.get('can_hide_posts'),
         'can_hide': forum_acl.get('can_hide_threads'),
         'can_delete': forum_acl.get('can_hide_threads'),
         'can_protect': forum_acl.get('can_protect_posts'),
@@ -320,6 +321,12 @@ def add_acl_to_post(user, post):
         'can_see_reports': forum_acl.get('can_see_reports'),
         'can_approve': forum_acl.get('can_review_moderated_content'),
     })
+
+    if not post.acl['can_see_hidden']:
+        if user.is_authenticated() and user.id == post.poster_id:
+            post.acl['can_see_hidden'] = True
+        else:
+            post.acl['can_see_hidden'] = post.id == post.thread.first_post_id
 
 
 def add_acl_to_event(user, event):

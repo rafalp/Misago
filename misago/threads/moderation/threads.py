@@ -1,4 +1,5 @@
 from django.db.transaction import atomic
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 from misago.threads.events import record_event
@@ -159,6 +160,19 @@ def hide_thread(user, thread):
     if not thread.is_hidden:
         message = _("%(user)s hid thread.")
         record_event(user, thread, "eye-slash", message, {'user': user})
+
+        thread.first_post.is_hidden = True
+        thread.first_post.hidden_by = user
+        thread.first_post.hidden_by_name = user.username
+        thread.first_post.hidden_by_slug = user.slug
+        thread.first_post.hidden_on = timezone.now()
+        thread.first_post.save(update_fields=[
+            'is_hidden',
+            'hidden_by',
+            'hidden_by_name',
+            'hidden_by_slug',
+            'hidden_on',
+        ])
 
         thread.is_hidden = True
         thread.save(update_fields=['has_events', 'is_hidden'])

@@ -176,7 +176,26 @@
       margin-top: @line-height-computed / 2;
       margin-bottom: 0;
 
+      font-size: @font-size-base + 2px;
       text-align: center;
+
+      &.alert-default {
+        background-color: @alert-default-bg;
+
+        color: @alert-default-text;
+      }
+
+      .user-avatar {
+        &, &:link, &:active, &:hover {
+          text-decoration: none;
+        }
+
+        img {
+          height: 20px;
+          position: relative;
+          bottom: 2px;
+        }
+      }
     }
   }
 }
@@ -190,6 +209,20 @@
     .panel-body {
       .corrupted-message {
         margin: 0px;
+      }
+
+      .hidden-message {
+        margin: (@line-height-computed * .25) 0px;
+
+        img {
+          height: 32px;
+          position: relative;
+          bottom: 2px;
+        }
+
+        a, strong {
+          font-weight: normal;
+        }
       }
     }
   }

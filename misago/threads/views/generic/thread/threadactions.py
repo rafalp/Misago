@@ -90,7 +90,7 @@ class ThreadActions(ActionsBase):
                 actions.append({
                     'action': 'unhide',
                     'icon': 'eye',
-                    'name': _("Unhide thread")
+                    'name': _("Reveal thread")
                 })
             else:
                 actions.append({

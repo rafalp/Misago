@@ -1,0 +1,43 @@
+{% load i18n misago_avatars misago_capture %}
+
+{% if post.hidden_by_name %}
+
+  {% capture trimmed as hidden_by %}
+    {% if post.hidden_by_id %}
+    <a class="user-avatar" href="{% url USER_PROFILE_URL user_slug=post.hidden_by_slug user_id=post.hidden_by_id %}">
+      <img src="{{ post.hidden_by_id|avatar:32 }}" alt="{% trans "User avatar" %}">
+    </a>
+    <a class="item-title" href="{% url USER_PROFILE_URL user_slug=post.hidden_by_slug user_id=post.hidden_by_id %}">{{ post.hidden_by_name }}</a>
+    {% else %}
+    <span class="user-avatar">
+      <img src="{% blankavatar 32 %}" alt="{% trans "User avatar" %}">
+    </span>
+    <strong class="item-title">{{ post.hidden_by_name }}</strong>
+    {% endif %}
+  {% endcapture %}
+
+  {% capture trimmed as hidden_on %}
+  <abbr class="tooltip-top dynamic time-ago" title="{{ post.hidden_on }}" data-timestamp="{{ post.hidden_on|date:"c" }}">
+    {{ post.hidden_on|date }}
+  </abbr>
+  {% endcapture %}
+
+  {% if post.id == thread.first_post_id %}
+    {% blocktrans trimmed with user=hidden_by|safe date=hidden_on|safe %}
+    This thread was hidden by {{ user }} {{ date }}.
+    {% endblocktrans %}
+  {% else %}
+    {% blocktrans trimmed with user=hidden_by|safe date=hidden_on|safe %}
+    This post was hidden by {{ user }} {{ date }}.
+    {% endblocktrans %}
+  {% endif %}
+
+{% else %}
+
+  {% if post.id == thread.first_post_id %}
+    {% trans "This thread is hidden. Only it's author and moderators can see it." %}
+  {% else %}
+    {% trans "This post is hidden. Only it's author and moderators can see it." %}
+  {% endif %}
+
+{% endif %}

@@ -230,7 +230,7 @@ class ActionsTests(ForumViewHelperTestCase):
             {
                 'action': 'unhide',
                 'icon': 'eye',
-                'name': _("Unhide threads")
+                'name': _("Reveal threads")
             },
             {
                 'action': 'hide',
@@ -248,7 +248,7 @@ class ActionsTests(ForumViewHelperTestCase):
             {
                 'action': 'unhide',
                 'icon': 'eye',
-                'name': _("Unhide threads")
+                'name': _("Reveal threads")
             },
             {
                 'action': 'hide',
@@ -1219,7 +1219,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.override_acl(test_acl)
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Unhide threads", response.content)
+        self.assertIn("Reveal threads", response.content)
         self.assertIn("Hide threads", response.content)
 
         threads = [testutils.post_thread(self.forum) for t in xrange(10)]
