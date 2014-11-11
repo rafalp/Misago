@@ -53,7 +53,11 @@ class ThreadView(ViewBase):
 
     def get_posts_queryset(self, user, forum, thread):
         queryset = thread.post_set.select_related(
-            'poster', 'poster__rank', 'poster__bancache', 'poster__online')
+            'poster',
+            'poster__rank',
+            'poster__ban_cache',
+            'poster__online_tracker'
+        )
         return exclude_invisible_posts(queryset, user, forum).order_by('id')
 
     def dispatch(self, request, *args, **kwargs):
