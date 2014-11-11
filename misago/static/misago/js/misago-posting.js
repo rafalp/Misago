@@ -272,7 +272,7 @@ $(function() {
                 _this.$ajax_complete.addClass('in');
 
                 var past_location = String(window.location.href);
-                window.location.href = data.post_url;
+                window.location.href = data.post_url.replace('#post', '#goto-post');
 
                 if (past_location.indexOf(window.location.href)) {
                   window.location.reload();
@@ -372,7 +372,6 @@ $(function() {
 
       var $textarea = this.$form.find('textarea');
       $textarea.val($.trim($.trim($textarea.val()) + '\n\n' + text));
-      console.log($textarea.prop("scrollHeight"));
       $textarea.scrollTop($textarea.prop("scrollHeight"));
       this.$preview.update();
 
@@ -387,4 +386,9 @@ $(function() {
       return lang_dismiss_editor;
     }
   })
+
+  // we are meddling in window.location, which means we need js to fix scrolls to fragments
+  if(window.location.hash.indexOf('#goto-post-') == 0) {
+    window.location.hash = window.location.hash.replace('#goto-post', '#post');
+  }
 });
