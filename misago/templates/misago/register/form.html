@@ -159,6 +159,36 @@
 {% block javascripts %}
 {{ block.super }}
 <script type="text/javascript">
+
+  // Password strength
+  var zxcvbn_src = "{% static "misago/js/zxcvbn.js" %}";
+  var labels = ["{% trans "Very weak" %}", "{% trans "Weak" %}", "{% trans "Medium" %}", "{% trans "Good" %}", "{% trans "Strong" %}"];
+  var label_styles = ["text-danger", "text-warning", "text-warning", "text-info", "text-success"];
+  var bar_styles = ["progress-bar-danger", "progress-bar-warning", "progress-bar-warning", "progress-bar-info", "progress-bar-success"];
+
+  function zxcvbn_load_hook() {
+    $(function() {
+      var $bar = $('#password-bar');
+      var $label = $('#password-strength');
+
+      function gradePassStrength() {
+        var username = $('#id_username').val();
+        var email = $('#id_email').val();
+        var password = $('#id_password').val();
+
+        var power = zxcvbn(password, [username, email]).score;
+
+        $label.text(labels[power]);
+        $label.attr('class', label_styles[power]);
+        $bar.css('width', ((power + 1) * 20) + '%');
+        $bar.attr('class', "progress-bar " + bar_styles[power]);
+      }
+
+      gradePassStrength();
+      $('#id_password').keyup(gradePassStrength);
+    });
+  }
+
   $(function () {
     // API-based validation
     var csrf_token = $('input[name="csrfmiddlewaretoken"]').val()
@@ -194,36 +224,8 @@
       {% endif %}
       $input.keyup(validate);
     });
-
-    // Password strength
-    var zxcvbn_src = "{% static "misago/js/zxcvbn.js" %}";
-    var labels = ["{% trans "Very weak" %}", "{% trans "Weak" %}", "{% trans "Medium" %}", "{% trans "Good" %}", "{% trans "Strong" %}"];
-    var label_styles = ["text-danger", "text-warning", "text-warning", "text-info", "text-success"];
-    var bar_styles = ["progress-bar-danger", "progress-bar-warning", "progress-bar-warning", "progress-bar-info", "progress-bar-success"];
-
-    function zxcvbn_load_hook() {
-      $(function() {
-        var $bar = $('#password-bar');
-        var $label = $('#password-strength');
-
-        function gradePassStrength() {
-          var username = $('#id_username').val();
-          var email = $('#id_email').val();
-          var password = $('#id_password').val();
-
-          var power = zxcvbn(password, [username, email]).score;
-
-          $label.text(labels[power]);
-          $label.attr('class', label_styles[power]);
-          $bar.css('width', ((power + 1) * 20) + '%');
-          $bar.attr('class', "progress-bar " + bar_styles[power]);
-        }
-
-        gradePassStrength();
-        $('#id_password').keyup(gradePassStrength);
-      });
-    }
   });
+
 </script>
 <script type="text/javascript" src="{% static "misago/js/zxcvbn-async.js" %}"></script>
 {% endblock javascripts %}
