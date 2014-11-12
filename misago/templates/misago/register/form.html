@@ -24,8 +24,8 @@
           {% include "misago/form_errors.html" %}
 
           <div class="form-body no-fieldsets">
-
             {% with label_class="col-md-3" field_class="col-md-9" %}
+
             {% for field, api_link in form.api_fields %}
             <div class="form-group has-api-validation has-feedback" data-validation-api="{% url api_link %}" data-validation-value="{{ field.name }}">
               <label class="control-label {{ label_class }}" for="{{ field.auto_id }}">{{ field.label }}:</label>
