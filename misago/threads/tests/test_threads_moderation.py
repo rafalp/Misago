@@ -190,8 +190,13 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
         self.assertTrue(self.thread.has_events)
         event = self.thread.event_set.last()
 
-        self.assertIn("hid thread.", event.message)
+        self.assertIn("hidden thread.", event.message)
         self.assertEqual(event.icon, "eye-slash")
+
+    def test_hide_hidden_thread(self):
+        """hide_thread fails gracefully for hidden thread"""
+        self.thread.is_hidden = True
+        self.assertFalse(moderation.hide_thread(self.user, self.thread))
 
     def test_unhide_thread(self):
         """unhide_thread unhides thread"""
@@ -208,6 +213,10 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
 
         self.assertIn("made thread visible.", event.message)
         self.assertEqual(event.icon, "eye")
+
+    def test_unhide_visible_thread(self):
+        """unhide_thread fails gracefully for visible thread"""
+        self.assertFalse(moderation.unhide_thread(self.user, self.thread))
 
     def test_delete_thread(self):
         """delete_thread deletes thread"""
