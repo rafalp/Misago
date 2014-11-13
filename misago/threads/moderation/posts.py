@@ -5,7 +5,24 @@ from django.utils.translation import ugettext as _
 from misago.threads.moderation.exceptions import ModerationError
 
 
-@atomic
+def protect_post(user, post):
+    if not post.is_protected:
+        post.is_protected = True
+        post.save(update_fields=['is_protected'])
+        return True
+    else:
+        return False
+
+
+def unprotect_post(user, post):
+    if post.is_protected:
+        post.is_protected = False
+        post.save(update_fields=['is_protected'])
+        return True
+    else:
+        return False
+
+
 def unhide_post(user, post):
     if post.pk == post.thread.first_post_id:
         raise ModerationError(_("You can't make original post "
@@ -19,7 +36,6 @@ def unhide_post(user, post):
         return False
 
 
-@atomic
 def hide_post(user, post):
     if post.pk == post.thread.first_post_id:
         raise ModerationError(_("You can't hide original "

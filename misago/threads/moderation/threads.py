@@ -158,7 +158,7 @@ def unhide_thread(user, thread):
 @atomic
 def hide_thread(user, thread):
     if not thread.is_hidden:
-        message = _("%(user)s hid thread.")
+        message = _("%(user)s hidden thread.")
         record_event(user, thread, "eye-slash", message, {'user': user})
 
         thread.first_post.is_hidden = True

@@ -58,6 +58,18 @@ class PostsActions(ActionsBase):
 
         actions = []
 
+        if self.forum.acl['can_protect_posts']:
+            actions.append({
+                'action': 'unprotect',
+                'icon': 'unlock-alt',
+                'name': _("Release posts")
+            })
+            actions.append({
+                'action': 'protect',
+                'icon': 'lock',
+                'name': _("Protect posts")
+            })
+
         if self.forum.acl['can_hide_posts']:
             actions.append({
                 'action': 'unhide',
@@ -79,6 +91,38 @@ class PostsActions(ActionsBase):
             })
 
         return actions
+
+    def action_unprotect(self, request, posts):
+        changed_posts = 0
+        for post in posts:
+            if moderation.unprotect_post(request.user, post):
+                changed_posts += 1
+
+        if changed_posts:
+            message = ungettext(
+                '%(changed)d post was released from protection.',
+                '%(changed)d posts were released from protection.',
+            changed_posts)
+            messages.success(request, message % {'changed': changed_posts})
+        else:
+            message = _("No posts were released from protection.")
+            messages.info(request, message)
+
+    def action_protect(self, request, posts):
+        changed_posts = 0
+        for post in posts:
+            if moderation.protect_post(request.user, post):
+                changed_posts += 1
+
+        if changed_posts:
+            message = ungettext(
+                '%(changed)d post was made protected.',
+                '%(changed)d posts were made protected.',
+            changed_posts)
+            messages.success(request, message % {'changed': changed_posts})
+        else:
+            message = _("No posts were made protected.")
+            messages.info(request, message)
 
     @atomic_post_action
     def action_unhide(self, request, posts):
@@ -113,7 +157,6 @@ class PostsActions(ActionsBase):
         else:
             message = _("No posts were hidden.")
             messages.info(request, message)
-        pass
 
     @atomic_post_action
     def action_delete(self, request, posts):

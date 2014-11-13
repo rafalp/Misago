@@ -33,6 +33,10 @@
           {{ post.posted_on|date }}
         </a>
 
+        {% if post.is_protected %}
+        <span class="fa fa-lock tooltip-top" title="{% trans "This post is protected from being changed by its author." %}"></span>
+        {% endif %}
+
         {% if not post.is_read %}
         <span class="label label-success">
           <span class="fa fa-plus-circle"></span>
