@@ -298,12 +298,19 @@ def add_acl_to_thread(user, thread):
     })
 
     if can_change_owned_thread(user, thread):
-        if not thread.acl['can_change_label']:
-            can_change_label = forum_acl.get('can_change_threads_labels') == 1
-            thread.acl['can_change_label'] = can_change_label
-        if not thread.acl['can_hide']:
-            if not thread.replies:
-                thread.acl['can_hide'] = forum_acl.get('can_hide_own_threads')
+        if not forum_acl['can_close_threads']:
+            thread_is_protected = thread.is_closed or thread.forum.is_closed
+        else:
+            thread_is_protected = False
+
+        if not thread_is_protected:
+            if not thread.acl['can_change_label']:
+                can_change_label = forum_acl.get('can_change_threads_labels')
+                thread.acl['can_change_label'] = can_change_label == 1
+            if not thread.acl['can_hide']:
+                if not thread.replies:
+                    can_hide_thread = forum_acl.get('can_hide_own_threads')
+                    thread.acl['can_hide'] = can_hide_thread
 
 
 def add_acl_to_post(user, post):
