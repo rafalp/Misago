@@ -298,7 +298,7 @@ def add_acl_to_thread(user, thread):
     })
 
     if can_change_owned_thread(user, thread):
-        if not forum_acl['can_close_threads']:
+        if not forum_acl.get('can_close_threads'):
             thread_is_protected = thread.is_closed or thread.forum.is_closed
         else:
             thread_is_protected = False
