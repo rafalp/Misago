@@ -4,7 +4,9 @@ from unidecode import unidecode
 
 from django.http import Http404
 from django.core.urlresolvers import resolve, reverse
-from django.template.defaultfilters import slugify as django_slugify
+from django.template.defaultfilters import (slugify as django_slugify,
+                                            date as dj_date_format)
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _, ungettext_lazy
 
 
@@ -151,6 +153,10 @@ def time_amount(value):
         }
 
         return _("%(first_part)s and %(and_part)s") % formats
+
+
+def date_format(date, format=None):
+    return dj_date_format(timezone.template_localtime(date), format)
 
 
 """

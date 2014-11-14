@@ -2,9 +2,11 @@
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.utils import timezone
 
 from misago.core.utils import (clean_return_path, is_request_to_misago,
-                               slugify, time_amount, is_referer_local)
+                               slugify, time_amount, is_referer_local,
+                               date_format)
 
 
 VALID_PATHS = (
@@ -197,3 +199,15 @@ class TimeAmountTests(TestCase):
         self.assertEqual(time_amount(3661), "1 hour, 1 minute and 1 second")
         self.assertEqual(time_amount(2 * 3661),
                          "2 hours, 2 minutes and 2 seconds")
+
+
+class DateFormatTests(TestCase):
+    def test_format_datetime(self):
+        """no crash on datetime format"""
+        date_format(timezone.now())
+        date_format(timezone.now(), "H:i")
+
+    def test_format_date(self):
+        """no crash on date format"""
+        date_format(timezone.now().date())
+        date_format(timezone.now().date(), 'm.Y')
