@@ -18,12 +18,13 @@ class UIViewDecoratorTests(TestCase):
 
     def test_decorator(self):
         """decorator registers view in UI"""
-        @uiviews.uiview('bigkahunaburger')
+        @uiviews.uiview('bigkahunaburger', 42)
         def fakey_view(request):
             return {'is_tests': True}
 
-        for name, view in uiviews.UI_VIEWS:
-            if name == 'bigkahunaburger' and view == fakey_view:
+        for name, cache_frequency, view in uiviews.UI_VIEWS:
+            if (name == 'bigkahunaburger' and cache_frequency == 42 and
+                    view == fakey_view):
                 break
         else:
             self.fail("uiviews.uiview decorator didn't register uiview")

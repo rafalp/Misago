@@ -4,6 +4,8 @@ Misago UI views controller
 UI views are small views that are called asynchronically to give UI knowledge
 of changes in APP state and thus opportunity to update themselves in real time
 """
+from time import time
+
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import resolve
 from django.http import Http404, JsonResponse
@@ -20,12 +22,12 @@ __all__ = ['uiview', 'uiserver']
 UI_VIEWS = []
 
 
-def uiview(name):
+def uiview(name, cache_frequency=15):
     """
     Decorator for registering UI views
     """
     def namespace_decorator(f):
-        UI_VIEWS.append((name, f))
+        UI_VIEWS.append((name, cache_frequency, f))
         return f
     return namespace_decorator
 
@@ -51,12 +53,26 @@ def uiserver(request):
     resolver_match = get_resolver_match(request)
     response_dict = {}
 
-    for name, view in UI_VIEWS:
-        try:
-            view_response = view(request, resolver_match)
+    now = int(time())
+
+    for name, cache_frequency, view in UI_VIEWS:
+        cache_key = 'uijson_%s' % name
+        cache = request.session.get(cache_key)
+
+        if not cache or cache['expires'] < now:
+            try:
+                view_response = view(request, resolver_match)
+            except PermissionDenied:
+                view_response = None
+
+            request.session[cache_key] = {
+                'json': view_response,
+                'expires': now + cache_frequency
+            }
+
             if view_response:
                 response_dict[name] = view_response
-        except PermissionDenied:
-            pass
+        elif cache['json']:
+            response_dict[name] = cache['json']
 
     return JsonResponse(response_dict)
