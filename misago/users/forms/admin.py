@@ -257,38 +257,6 @@ def SearchUsersForm(*args, **kwargs):
     return FinalForm(*args, **kwargs)
 
 
-class BanUsersForm(forms.Form):
-    user_message = forms.CharField(
-        label=_("User message"), required=False, max_length=1000,
-        help_text=_("Optional message displayed to user "
-                    "instead of default one."),
-        widget=forms.Textarea(attrs={'rows': 3}),
-        error_messages={
-            'max_length': _("Message can't be longer than 1000 characters.")
-        })
-    staff_message = forms.CharField(
-        label=_("Team message"), required=False, max_length=1000,
-        help_text=_("Optional ban message for moderators and administrators."),
-        widget=forms.Textarea(attrs={'rows': 3}),
-        error_messages={
-            'max_length': _("Message can't be longer than 1000 characters.")
-        })
-    expires_on = forms.DateTimeField(
-        label=_("Expires on"),
-        required=False, localize=True,
-        help_text=_('Leave this field empty for this ban to never expire.'))
-
-    def clean_banned_value(self):
-        data = self.cleaned_data['banned_value']
-        while '**' in data:
-            data = data.replace('**', '*')
-
-        if data == '*':
-            raise forms.ValidationError(_("Banned value is too vague."))
-
-        return data
-
-
 """
 Ranks
 """
@@ -348,6 +316,38 @@ class RankForm(forms.ModelForm):
 """
 Bans
 """
+class BanUsersForm(forms.Form):
+    ban_type = forms.MultipleChoiceField(
+        label=_("Values to ban"), widget=forms.CheckboxSelectMultiple,
+        choices=(
+            ('usernames', _('Usernames')),
+            ('emails', _('E-mails')),
+            ('domains', _('E-mail domains')),
+            ('ip', _('IP addresses')),
+            ('ip_first', _('First segment of IP addresses')),
+            ('ip_two', _('First two segments of IP addresses'))
+        ))
+    user_message = forms.CharField(
+        label=_("User message"), required=False, max_length=1000,
+        help_text=_("Optional message displayed to users "
+                    "instead of default one."),
+        widget=forms.Textarea(attrs={'rows': 3}),
+        error_messages={
+            'max_length': _("Message can't be longer than 1000 characters.")
+        })
+    staff_message = forms.CharField(
+        label=_("Team message"), required=False, max_length=1000,
+        help_text=_("Optional ban message for moderators and administrators."),
+        widget=forms.Textarea(attrs={'rows': 3}),
+        error_messages={
+            'max_length': _("Message can't be longer than 1000 characters.")
+        })
+    expires_on = forms.DateTimeField(
+        label=_("Expires on"),
+        required=False, localize=True,
+        help_text=_('Leave this field empty for set bans to never expire.'))
+
+
 class BanForm(forms.ModelForm):
     check_type = forms.TypedChoiceField(
         label=_("Check type"),
@@ -364,7 +364,8 @@ class BanForm(forms.ModelForm):
         })
     user_message = forms.CharField(
         label=_("User message"), required=False, max_length=1000,
-        help_text=_("Optional message displayed instead of default one."),
+        help_text=_("Optional message displayed to user "
+                    "instead of default one."),
         widget=forms.Textarea(attrs={'rows': 3}),
         error_messages={
             'max_length': _("Message can't be longer than 1000 characters.")

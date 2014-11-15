@@ -63,8 +63,8 @@
     text-shadow: 0px -1px 0px darken(@alert-danger-bg, 20%);
 
     .fa {
-    	position: relative;
-    	top: 4px;
+      position: relative;
+      top: 4px;
 
       float: right;
       font-size: 26px;
@@ -157,6 +157,39 @@
       padding: 0px;
       padding-top: @line-height-computed;
       padding-bottom: @line-height-computed * .25;
+    }
+  }
+}
+
+
+//== Form table
+//
+//**
+.form-panel {
+  .form-table {
+    margin-bottom: 0px;
+
+    tr {
+      td {
+        vertical-align: middle;
+
+        img {
+          border-radius: @border-radius-small;
+        }
+
+        &.item-name, &.item-name a {
+          color: @text-color;
+          font-weight: bold;
+        }
+      }
+
+      td:first-child {
+        padding-left: @form-panel-padding-horizontal;
+      }
+
+      td:last-child {
+        padding-right: @form-panel-padding-horizontal;
+      }
     }
   }
 }

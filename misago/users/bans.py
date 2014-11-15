@@ -153,13 +153,32 @@ def _hydrate_session_cache(ban_cache):
 
 
 """
-Utility for banning naughty IPs
+Utilities for front-end based bans
 """
-def ban_ip(ip, user_message=None, staff_message=None, length=None):
-    if length:
-        expires_on = timezone.now() + timedelta(**length)
-    else:
-        expires_on = None
+def ban_user(user, user_message=None, staff_message=None, length=None,
+             expires_on=None):
+    if not expires_on:
+        if length:
+            expires_on = timezone.now() + timedelta(**length)
+        else:
+            expires_on = None
+
+    Ban.objects.create(
+        banned_value=user.username.lower(),
+        user_message=user_message,
+        staff_message=staff_message,
+        expires_on=expires_on
+    )
+    Ban.objects.invalidate_cache()
+
+
+def ban_ip(ip, user_message=None, staff_message=None, length=None,
+           expires_on=None):
+    if not expires_on:
+        if length:
+            expires_on = timezone.now() + timedelta(**length)
+        else:
+            expires_on = None
 
     Ban.objects.create(
         check_type=BAN_IP,

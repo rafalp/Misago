@@ -103,9 +103,17 @@ class UserAdminViewsTests(AdminTestCase):
 
         response = self.client.post(
             reverse('misago:admin:users:accounts:index'),
-            data={'action': 'ban', 'selected_items': user_pks, 'finalize': ''})
+            data={
+                'action': 'ban',
+                'selected_items': user_pks,
+                'ban_type': [
+                    'usernames', 'emails', 'domains',
+                    'ip', 'ip_first', 'ip_two'
+                ],
+                'finalize': ''
+            })
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(Ban.objects.count(), 10)
+        self.assertEqual(Ban.objects.count(), 24)
 
     def test_mass_delete_accounts(self):
         """users list deletes users"""

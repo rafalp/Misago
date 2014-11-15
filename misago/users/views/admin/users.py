@@ -18,6 +18,7 @@ from misago.users.forms.admin import (StaffFlagUserFormFactory, NewUserForm,
                                       EditUserForm, SearchUsersForm,
                                       BanUsersForm)
 from misago.users.models import ACTIVATION_REQUIRED_NONE, User, Ban
+from misago.users.models.ban import BAN_USERNAME, BAN_EMAIL, BAN_IP
 from misago.users.signatures import set_user_signature
 
 
@@ -124,13 +125,61 @@ class UsersList(UserAdmin, generic.ListView):
         if 'finalize' in request.POST:
             form = BanUsersForm(request.POST)
             if form.is_valid():
+                cleaned_data = form.cleaned_data
+                banned_values = []
+
+                ban_kwargs = {
+                    'user_message': cleaned_data.get('user_message'),
+                    'staff_message': cleaned_data.get('staff_message'),
+                    'expires_on': cleaned_data.get('expires_on')
+                }
+
                 for user in users:
-                    Ban.objects.create(
-                        banned_value=user.username,
-                        user_message=form.cleaned_data.get('user_message'),
-                        staff_message=form.cleaned_data.get('staff_message'),
-                        expires_on=form.cleaned_data.get('expires_on')
-                    )
+                    for ban in cleaned_data['ban_type']:
+                        if ban == 'usernames':
+                            check_type = BAN_USERNAME
+                            banned_value = user.username.lower()
+
+                        if ban == 'emails':
+                            check_type = BAN_EMAIL
+                            banned_value = user.email.lower()
+
+                        if ban == 'domains':
+                            check_type = BAN_EMAIL
+                            banned_value = user.email.lower()
+                            at_pos = banned_value.find('@')
+                            banned_value = '*%s' % banned_value[at_pos:]
+
+                        if ban == 'ip':
+                            check_type = BAN_IP
+                            banned_value = user.joined_from_ip
+
+                        if ban in ('ip_first', 'ip_two'):
+                            check_type = BAN_IP
+
+                            if ':' in user.joined_from_ip:
+                                ip_separator = ':'
+                            if '.' in user.joined_from_ip:
+                                ip_separator = '.'
+
+                            bits = user.joined_from_ip.split(ip_separator)
+                            if ban == 'ip_first':
+                                formats = (bits[0], ip_separator)
+                            if ban == 'ip_two':
+                                formats = (
+                                    bits[0], ip_separator,
+                                    bits[1], ip_separator
+                                )
+                            banned_value = '%s*' % (''.join(formats))
+
+                        if banned_value not in banned_values:
+                            ban_kwargs.update({
+                                'check_type': check_type,
+                                'banned_value': banned_value
+                            })
+                            Ban.objects.create(**ban_kwargs)
+                            banned_values.append(banned_value)
+
 
                 Ban.objects.invalidate_cache()
                 message = _("Selected users have been banned.")

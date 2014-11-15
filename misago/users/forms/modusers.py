@@ -7,8 +7,7 @@ from django.utils import timezone
 from misago.conf import settings
 from misago.core import forms
 
-from misago.users.forms.admin import BanUsersForm
-from misago.users.models import Ban
+from misago.users.bans import ban_user
 
 
 class WarnUserForm(forms.Form):
@@ -98,7 +97,27 @@ class ModerateSignatureForm(forms.ModelForm):
         return data
 
 
-class BanForm(BanUsersForm):
+class BanForm(forms.Form):
+    user_message = forms.CharField(
+        label=_("User message"), required=False, max_length=1000,
+        help_text=_("Optional message displayed to user "
+                    "instead of default one."),
+        widget=forms.Textarea(attrs={'rows': 3}),
+        error_messages={
+            'max_length': _("Message can't be longer than 1000 characters.")
+        })
+    staff_message = forms.CharField(
+        label=_("Team message"), required=False, max_length=1000,
+        help_text=_("Optional ban message for moderators and administrators."),
+        widget=forms.Textarea(attrs={'rows': 3}),
+        error_messages={
+            'max_length': _("Message can't be longer than 1000 characters.")
+        })
+    expires_on = forms.DateTimeField(
+        label=_("Expires on"),
+        required=False, localize=True,
+        help_text=_('Leave this field empty for this ban to never expire.'))
+
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
         super(BanForm, self).__init__(*args, **kwargs)
@@ -129,10 +148,7 @@ class BanForm(BanUsersForm):
         return data
 
     def ban_user(self):
-        new_ban = Ban(banned_value=self.user.username,
-                      user_message=self.cleaned_data['user_message'],
-                      staff_message=self.cleaned_data['staff_message'],
-                      expires_on=self.cleaned_data['expires_on'])
-        new_ban.save()
-
-        Ban.objects.invalidate_cache()
+        ban_user(self.user,
+                 user_message=self.cleaned_data['user_message'],
+                 staff_message=self.cleaned_data['staff_message'],
+                 expires_on=self.cleaned_data['expires_on'])

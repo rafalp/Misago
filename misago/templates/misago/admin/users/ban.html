@@ -13,14 +13,7 @@
 
 
 {% block form-header %}
-<h1>
-  {% trans "Ban selected users:" %}
-</h1>
-<p>
-  {% for user in users %}
-  <img src="{{ user|avatar:24 }}" class="img-rounded tooltip-top" alt="{{ user }}" width="24" height="24" title="{{ user }}">
-  {% endfor %}
-</p>
+<h1>{% trans "Ban selected users:" %}</h1>
 {% endblock %}
 
 
@@ -34,11 +27,32 @@ class="form-horizontal"
 {% for user in users %}
 <input type="hidden" name="selected_items" value="{{ user.pk }}">
 {% endfor %}
+<table class="table table-condensed form-table">
+  {% for user in users %}
+  <tr>
+    <td style="width: 1%;">
+      <a href="{{ user.get_absolute_url }}">
+        <img src="{{ user|avatar:24 }}" alt="{% trans "Avatar" %}" width="24" height="24">
+      </a>
+    </td>
+    <td class="item-name">
+      <a href="{{ user.get_absolute_url }}">{{ user }}</a>
+    </td>
+    <td>
+      {{ user.email }}
+    </td>
+    <td>
+      {{ user.joined_from_ip }}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
 <div class="form-body">
   {% with label_class="col-md-3" field_class="col-md-9" %}
   <fieldset>
     <legend>{% trans "Ban settings" %}</legend>
 
+    {% form_row form.ban_type label_class field_class %}
     {% form_row form.expires_on label_class field_class %}
 
   </fieldset>

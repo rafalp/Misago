@@ -11,8 +11,8 @@ $(function() {
 
     $input.attr('type', 'hidden');
 
-    var $date = $('<input type="text"  class="form-control" style="float: left; width: 96px; margin-right: 8px;">');
-    var $time = $('<input type="text" class="form-control" style="float: left; width: 64px;">');
+    var $date = $('<input type="text"  class="form-control" style="float: left; width: 108px; margin-right: 8px; text-align: center;">');
+    var $time = $('<input type="text" class="form-control" style="float: left; width: 68px; text-align: center;">');
 
     var $container = $('<div style="overflow: auto;"></div>');
 
@@ -33,7 +33,7 @@ $(function() {
     });
 
     var values = $input.val().split(" ");
-    if (values) {
+    if (values.length == 2) {
       $date.val(values[0]);
 
       var time = values[1].split(":");
