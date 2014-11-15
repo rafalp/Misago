@@ -223,6 +223,12 @@ MISAGO_CONTENT_COUNTING_FREQUENCY
 Maximum allowed age of content counts cache in minutes. The lower the number, the more accurate will be numbers of new and unread threads in navbar, but greater the stress on database.
 
 
+MISAGO_DIALY_POST_LIMIT
+-----------------------
+
+Dialy limit of posts that may be posted from single account. Fail-safe for situations when forum is flooded by spam bot. Change to 0 to lift this restriction.
+
+
 MISAGO_DYNAMIC_AVATAR_DRAWER
 ----------------------------
 
@@ -232,6 +238,12 @@ Function used to create unique avatar for this user. Allows for customization of
 MISAGO_FRESH_CONTENT_PERIOD
 ---------------------------
 Controls amount of data used in building "New threads" and "Threads with unread replies" lists. Active forums can try lowering this value while less active ones may wish to increase this number.
+
+
+MISAGO_HOURL_POST_LIMIT
+-----------------------
+
+Hourly limit of posts that may be posted from single account. Fail-safe for situations when forum is flooded by spam bot. Change to 0 to lift this restriction.
 
 
 MISAGO_MAILER_BATCH_SIZE

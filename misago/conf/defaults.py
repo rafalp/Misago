@@ -283,6 +283,13 @@ MISAGO_ADMIN_SESSION_EXPIRATION = 60
 MISAGO_NOTIFICATIONS_MAX_AGE = 40
 
 
+# Fail-safe limits in case forum is raided by spambot
+# No user may exceed those limits, however you may disable
+# them by changing them to 0
+MISAGO_DIALY_POST_LIMIT = 600
+MISAGO_HOURLY_POST_LIMIT = 100
+
+
 # Function used for generating individual avatar for user
 MISAGO_DYNAMIC_AVATAR_DRAWER = 'misago.users.avatars.dynamic.draw_default'
 
