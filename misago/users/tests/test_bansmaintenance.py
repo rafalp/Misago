@@ -16,10 +16,10 @@ class BansMaintenanceTests(TestCase):
         # create 5 bans then update their valid date to past one
         for i in xrange(5):
             Ban.objects.create(banned_value="abcd")
-        bans_expired = (timezone.now() - timedelta(days=10)).date()
-        Ban.objects.all().update(valid_until=bans_expired, is_valid=True)
+        expired_date = (timezone.now() - timedelta(days=10))
+        Ban.objects.all().update(expires_on=expired_date, is_checked=True)
 
-        self.assertEqual(Ban.objects.filter(is_valid=True).count(), 5)
+        self.assertEqual(Ban.objects.filter(is_checked=True).count(), 5)
 
         command = bansmaintenance.Command()
 
@@ -29,7 +29,7 @@ class BansMaintenanceTests(TestCase):
 
         self.assertEqual(command_output, 'Bans invalidated: 5')
 
-        self.assertEqual(Ban.objects.filter(is_valid=True).count(), 0)
+        self.assertEqual(Ban.objects.filter(is_checked=True).count(), 0)
 
     def test_bans_caches_updates(self):
         """ban caches are updated"""
@@ -42,7 +42,7 @@ class BansMaintenanceTests(TestCase):
         user_ban = bans.get_user_ban(user)
 
         self.assertIsNotNone(user_ban)
-        self.assertEqual(Ban.objects.filter(is_valid=True).count(), 1)
+        self.assertEqual(Ban.objects.filter(is_checked=True).count(), 1)
 
         # first call didn't touch ban
         command = bansmaintenance.Command()
@@ -52,12 +52,12 @@ class BansMaintenanceTests(TestCase):
         command_output = out.getvalue().splitlines()[1].strip()
 
         self.assertEqual(command_output, 'Ban caches emptied: 0')
-        self.assertEqual(Ban.objects.filter(is_valid=True).count(), 1)
+        self.assertEqual(Ban.objects.filter(is_checked=True).count(), 1)
 
         # expire bans
-        bans_expired = (timezone.now() - timedelta(days=10)).date()
-        Ban.objects.all().update(valid_until=bans_expired, is_valid=True)
-        BanCache.objects.all().update(valid_until=bans_expired)
+        expired_date = (timezone.now() - timedelta(days=10))
+        Ban.objects.all().update(expires_on=expired_date, is_checked=True)
+        BanCache.objects.all().update(expires_on=expired_date)
 
         # invalidate expired ban cache
         out = StringIO()
@@ -65,7 +65,7 @@ class BansMaintenanceTests(TestCase):
         command_output = out.getvalue().splitlines()[1].strip()
 
         self.assertEqual(command_output, 'Ban caches emptied: 1')
-        self.assertEqual(Ban.objects.filter(is_valid=True).count(), 0)
+        self.assertEqual(Ban.objects.filter(is_checked=True).count(), 0)
 
         # see if user is banned anymore
         user = User.objects.get(id=user.id)

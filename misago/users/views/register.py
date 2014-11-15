@@ -54,7 +54,9 @@ def register(request):
 
                 message_formats = {'date': date_format(timezone.now())}
                 staff_message = staff_message % message_formats
-                ban_ip(request.user.ip, staff_message=staff_message, length=1)
+                ban_ip(request.user.ip,
+                       staff_message=staff_message,
+                       length={'days': 1})
                 raise e
 
             activation_kwargs = {}

@@ -1,16 +1,17 @@
 
 """
-API for testing values for bans
+API for checking values for bans
 
 Calling this instead of Ban.objects.find_ban is preffered, if you don't want
 to use validate_X_banned validators
 """
-from datetime import date, datetime, timedelta
+from datetime import timedelta
 
 from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 
 from misago.core import cachebuster
-from misago.users.models import BAN_IP, Ban, BanCache
+from misago.users.models import BAN_IP, Ban, BanCache, format_expiration_date
 
 
 BAN_CACHE_SESSION_KEY = 'misago_ip_check'
@@ -19,21 +20,21 @@ BAN_VERSION_KEY = 'misago_bans'
 
 def get_username_ban(username):
     try:
-        return Ban.objects.find_ban(username=username)
+        return Ban.objects.get_username_ban(username)
     except Ban.DoesNotExist:
         return None
 
 
 def get_email_ban(email):
     try:
-        return Ban.objects.find_ban(email=email)
+        return Ban.objects.get_email_ban(email)
     except Ban.DoesNotExist:
         return None
 
 
 def get_ip_ban(ip):
     try:
-        return Ban.objects.find_ban(ip=ip)
+        return Ban.objects.get_ip_ban(ip)
     except Ban.DoesNotExist:
         return None
 
@@ -65,15 +66,15 @@ def _set_user_ban_cache(user):
     ban_cache.bans_version = cachebuster.get_version(BAN_VERSION_KEY)
 
     try:
-        user_ban = Ban.objects.find_ban(username=user.username,
-                                        email=user.email)
+        user_ban = Ban.objects.get_ban(username=user.username,
+                                       email=user.email)
         ban_cache.ban = user_ban
-        ban_cache.valid_until = user_ban.valid_until
+        ban_cache.expires_on = user_ban.expires_on
         ban_cache.user_message = user_ban.user_message
         ban_cache.staff_message = user_ban.staff_message
     except Ban.DoesNotExist:
         ban_cache.ban = None
-        ban_cache.valid_until = None
+        ban_cache.expires_on = None
         ban_cache.user_message = None
         ban_cache.staff_message = None
 
@@ -103,11 +104,10 @@ def get_request_ip_ban(request):
     }
 
     if found_ban:
-        if found_ban.valid_until:
-            valid_until_as_string = found_ban.valid_until.strftime('%Y-%m-%d')
-            ban_cache['valid_until'] = valid_until_as_string
+        if found_ban.expires_on:
+            ban_cache['expires_on'] = found_ban.expires_on.isoformat()
         else:
-            ban_cache['valid_until'] = None
+            ban_cache['expires_on'] = None
 
         ban_cache.update({
                 'is_banned': True,
@@ -129,11 +129,11 @@ def _get_session_bancache(request):
             return None
         if not cachebuster.is_valid(BAN_VERSION_KEY, ban_cache['version']):
             return None
-        if ban_cache.get('valid_until'):
+        if ban_cache.get('expires_on'):
             """
-            Make two timezone unaware dates and compare them
+            Hydrate ban date
             """
-            if ban_cache.get('valid_until') < date.today():
+            if ban_cache['expires_on'] < timezone.today():
                 return None
         return ban_cache
     except KeyError:
@@ -143,10 +143,11 @@ def _get_session_bancache(request):
 def _hydrate_session_cache(ban_cache):
     hydrated = ban_cache.copy()
 
-    if hydrated.get('valid_until'):
-        expiration_datetime = datetime.strptime(ban_cache.get('valid_until'),
-                                                '%Y-%m-%d')
-        hydrated['valid_until'] = expiration_datetime.date()
+    hydrated['formatted_expiration_date'] = None
+    if hydrated.get('expires_on'):
+        hydrated['expires_on'] = parse_datetime(hydrated['expires_on'])
+        hydrated['formatted_expiration_date'] = format_expiration_date(
+            hydrated['expires_on'])
 
     return hydrated
 
@@ -156,15 +157,15 @@ Utility for banning naughty IPs
 """
 def ban_ip(ip, user_message=None, staff_message=None, length=None):
     if length:
-        valid_until = (timezone.now() + timedelta(days=length)).date()
+        expires_on = timezone.now() + timedelta(**length)
     else:
-        valid_until = None
+        expires_on = None
 
     Ban.objects.create(
-        test=BAN_IP,
+        check_type=BAN_IP,
         banned_value=ip,
         user_message=user_message,
         staff_message=staff_message,
-        valid_until=valid_until
+        expires_on=expires_on
     )
     Ban.objects.invalidate_cache()

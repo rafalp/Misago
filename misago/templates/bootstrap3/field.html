@@ -35,7 +35,7 @@
                     </div>
                 {% endif %}
             {% else %}
-                <div class="controls {{ field_class }}">
+                <div class="controls {{ field_class }}"{% if field.field.input_formats %} data-input-format="{{ field.field.input_formats.0 }}"{% endif %}>
                     {% crispy_field field %}
                     {% include 'bootstrap3/layout/help_text_and_errors.html' %}
                 </div>

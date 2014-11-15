@@ -31,7 +31,7 @@
 
         {% include "misago/form_errors.html" %}
         <div class="form-body no-fieldsets">
-          {% form_row form.valid_until "col-md-3" "col-md-9" %}
+          {% form_row form.expires_on "col-md-3" "col-md-9" %}
           {% form_row form.user_message "col-md-3" "col-md-9" %}
           {% form_row form.staff_message "col-md-3" "col-md-9" %}
         </div>

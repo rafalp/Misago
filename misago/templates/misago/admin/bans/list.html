@@ -15,7 +15,7 @@
 {% block table-header %}
 <th style="width: 25%;">{% trans "Ban" %}</th>
 <th style="width: 160px;">{% trans "Type" %}</th>
-<th>{% trans "Valid until" %}</th>
+<th>{% trans "Expires on" %}</th>
 {% for action in extra_actions %}
 <th style="width: 1%;">&nbsp;</th>
 {% endfor %}
@@ -32,17 +32,19 @@
   {{ item.test_name }}
 </td>
 <td>
-  {% if item.valid_until %}
+  {% if item.expires_on %}
     {% if item.is_expired %}
       <span class="text-muted tooltip-top" title="{% trans "This ban has expired." %}">
-        {{ item.valid_until|date }}
+        {{ item.expires_on|date }}
         <span class="fa fa-exclamation text-danger"></span>
       </span>
     {% else %}
-      {{ item.valid_until|date }}
+      <span class="tooltip-top" title="{{ item.expires_on|date:"DATETIME_FORMAT" }}">
+        {{ item.formatted_expiration_date }}
+      </span>
     {% endif %}
   {% else %}
-  <em>{% trans "permanent" %}</em>
+  <em>{% trans "Never" %}</em>
   {% endif %}
 </td>
 {% for action in extra_actions %}
@@ -100,7 +102,7 @@
 {% block modal-body %}
 <div class="row">
   <div class="col-md-6">
-    {% form_row search_form.test %}
+    {% form_row search_form.check_type %}
   </div>
   <div class="col-md-6">
     {% form_row search_form.value %}

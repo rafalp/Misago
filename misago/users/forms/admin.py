@@ -273,11 +273,9 @@ class BanUsersForm(forms.Form):
         error_messages={
             'max_length': _("Message can't be longer than 1000 characters.")
         })
-    valid_until = forms.DateField(
-        label=_("Expires after"),
-        required=False, input_formats=['%m-%d-%Y'],
-        widget=forms.DateInput(
-            format='%m-%d-%Y', attrs={'data-date-format': 'MM-DD-YYYY'}),
+    expires_on = forms.DateTimeField(
+        label=_("Expires on"),
+        required=False, localize=True,
         help_text=_('Leave this field empty for this ban to never expire.'))
 
     def clean_banned_value(self):
@@ -351,8 +349,8 @@ class RankForm(forms.ModelForm):
 Bans
 """
 class BanForm(forms.ModelForm):
-    test = forms.TypedChoiceField(
-        label=_("Ban type"),
+    check_type = forms.TypedChoiceField(
+        label=_("Check type"),
         coerce=int,
         choices=BANS_CHOICES)
     banned_value = forms.CharField(
@@ -378,21 +376,19 @@ class BanForm(forms.ModelForm):
         error_messages={
             'max_length': _("Message can't be longer than 1000 characters.")
         })
-    valid_until = forms.DateField(
-        label=_("Expiration date"),
-        required=False, input_formats=['%m-%d-%Y'],
-        widget=forms.DateInput(
-            format='%m-%d-%Y', attrs={'data-date-format': 'MM-DD-YYYY'}),
+    expires_on = forms.DateTimeField(
+        label=_("Expires on"),
+        required=False, localize=True,
         help_text=_('Leave this field empty for this ban to never expire.'))
 
     class Meta:
         model = Ban
         fields = [
-            'test',
+            'check_type',
             'banned_value',
             'user_message',
             'staff_message',
-            'valid_until',
+            'expires_on',
         ]
 
     def clean_banned_value(self):
@@ -415,7 +411,7 @@ SARCH_BANS_CHOICES = (
 
 
 class SearchBansForm(forms.Form):
-    test = forms.ChoiceField(
+    check_type = forms.ChoiceField(
         label=_("Type"), required=False,
         choices=SARCH_BANS_CHOICES)
     value = forms.CharField(
@@ -424,31 +420,31 @@ class SearchBansForm(forms.Form):
     state = forms.ChoiceField(
         label=_("State"), required=False,
         choices=(
-            ('', _('All states')),
-            ('valid', _('Valid bans')),
-            ('expired', _('Expired bans')),
+            ('', _('Is used in checks')),
+            ('used', _('Yes')),
+            ('unused', _('No')),
         ))
 
     def filter_queryset(self, search_criteria, queryset):
         criteria = search_criteria
-        if criteria.get('test') == 'names':
-            queryset = queryset.filter(test=0)
+        if criteria.get('check_type') == 'names':
+            queryset = queryset.filter(check_type=0)
 
-        if criteria.get('test') == 'emails':
-            queryset = queryset.filter(test=1)
+        if criteria.get('check_type') == 'emails':
+            queryset = queryset.filter(check_type=1)
 
-        if criteria.get('test') == 'ips':
-            queryset = queryset.filter(test=2)
+        if criteria.get('check_type') == 'ips':
+            queryset = queryset.filter(check_type=2)
 
         if criteria.get('value'):
             queryset = queryset.filter(
                 banned_value__startswith=criteria.get('value').lower())
 
-        if criteria.get('state') == 'valid':
-            queryset = queryset.filter(is_valid=True)
+        if criteria.get('state') == 'used':
+            queryset = queryset.filter(is_checked=True)
 
-        if criteria.get('state') == 'expired':
-            queryset = queryset.filter(is_valid=False)
+        if criteria.get('state') == 'unused':
+            queryset = queryset.filter(is_checked=False)
 
         return queryset
 

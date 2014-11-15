@@ -32,7 +32,8 @@ class ActivationViewsTests(TestCase):
         User = get_user_model()
         User.objects.create_user('Bob', 'bob@test.com', 'Pass.123',
                                  requires_activation=1)
-        Ban.objects.create(test=BAN_USERNAME, banned_value='bob',
+        Ban.objects.create(check_type=BAN_USERNAME,
+                           banned_value='bob',
                            user_message='Nope!')
 
         response = self.client.post(
@@ -61,7 +62,8 @@ class ActivationViewsTests(TestCase):
         User = get_user_model()
         test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123',
                                              requires_activation=1)
-        Ban.objects.create(test=BAN_USERNAME, banned_value='bob',
+        Ban.objects.create(check_type=BAN_USERNAME,
+                           banned_value='bob',
                            user_message='Nope!')
 
         activation_token = make_activation_token(test_user)

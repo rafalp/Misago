@@ -37,7 +37,7 @@ class ValidateEmailAvailableTests(TestCase):
 
 class ValidateEmailBannedTests(TestCase):
     def setUp(self):
-        Ban.objects.create(test=BAN_EMAIL, banned_value="ban@test.com")
+        Ban.objects.create(check_type=BAN_EMAIL, banned_value="ban@test.com")
 
     def test_unbanned_name(self):
         """unbanned email passes validation"""
@@ -97,7 +97,7 @@ class ValidateUsernameAvailableTests(TestCase):
 
 class ValidateUsernameBannedTests(TestCase):
     def setUp(self):
-        Ban.objects.create(test=BAN_USERNAME, banned_value="Bob")
+        Ban.objects.create(check_type=BAN_USERNAME, banned_value="Bob")
 
     def test_unbanned_name(self):
         """unbanned name passes validation"""
@@ -142,7 +142,3 @@ class ValidateUsernameLengthTests(TestCase):
             validate_username_length('a' * (settings.username_length_min - 1))
         with self.assertRaises(ValidationError):
             validate_username_length('a' * (settings.username_length_max + 1))
-
-
-class TestRegistrationValidators(TestCase):
-    pass

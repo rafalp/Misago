@@ -1,0 +1,61 @@
+//
+// Date and time picker
+// --------------------------------------------------
+
+
+.bootstrap-datetimepicker-widget {
+  padding: @line-height-computed / 2;
+  width: auto;
+
+  &.top:after, &.top:before, &.bottom:after, &.bottom:before {
+    display: none;
+  }
+
+  .timepicker-picker {
+    table.table-condensed {
+      margin: 0px;
+
+      tr {
+        td {
+          padding: 0px;
+          height: auto;
+
+          text-align: center;
+
+          &.separator {
+            width: @line-height-computed / 2;
+            height: auto;
+            line-height: @line-height-computed * 1.5;
+          }
+
+          .btn {
+            border: none;
+            display: block;
+            margin: 0px;
+            padding: 0px;
+            position: static;
+            width: 100%;
+
+            .glyphicon {
+              margin: 0px;
+              height: @line-height-computed * 1.5;
+              width: 100%;
+              position: static;
+
+              line-height: @line-height-computed * 1.5;
+            }
+          }
+
+          .timepicker-hour, .timepicker-minute {
+            margin: 0px;
+            float: none;
+            height: auto;
+            width: auto;
+
+            line-height: @line-height-computed * 1.5;
+          }
+        }
+      }
+    }
+  }
+}

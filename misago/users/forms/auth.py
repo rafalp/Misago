@@ -2,7 +2,6 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.forms import (AuthenticationForm as
                                        BaseAuthenticationForm)
-from django.template.defaultfilters import date as format_date
 from django.utils.translation import ugettext_lazy as _
 
 from misago.core import forms
@@ -36,14 +35,14 @@ class MisagoAuthMixin(object):
     def confirm_user_not_banned(self, user):
         self.user_ban = get_user_ban(user)
         if self.user_ban:
-            if self.user_ban.valid_until:
+            if self.user_ban.expires_on:
                 if self.user_ban.user_message:
                     message = _("%(user)s, your account is "
                                 "banned until %(date)s for:")
                 else:
                     message = _("%(user)s, your account "
                                 "is banned until %(date)s.")
-                date_format = {'date': format_date(self.user_ban.valid_until)}
+                date_format = {'date': self.user_ban.formatted_expiration_date}
                 message = message % date_format
             else:
                 if self.user_ban.user_message:

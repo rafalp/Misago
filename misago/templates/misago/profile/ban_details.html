@@ -6,9 +6,9 @@
 <div>
   <p class="lead pull-left">
     <span class="fa fa-lock"></span>
-    {% if ban.valid_until %}
-    {% blocktrans trimmed with user=profile banned_until=ban.valid_until %}
-    {{ user }} is banned until after {{ banned_until }}.
+    {% if ban.expires_on %}
+    {% blocktrans trimmed with user=profile banned_until=ban.formatted_expiration_date %}
+    {{ user }} is banned until {{ banned_until }}.
     {% endblocktrans %}
     {% else %}
     {% blocktrans trimmed with user=profile %}

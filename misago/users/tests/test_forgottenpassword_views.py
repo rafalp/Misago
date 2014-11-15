@@ -30,7 +30,8 @@ class ForgottenPasswordViewsTests(TestCase):
         """request new password view errors for banned users"""
         User = get_user_model()
         User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
-        Ban.objects.create(test=BAN_USERNAME, banned_value='bob',
+        Ban.objects.create(check_type=BAN_USERNAME,
+                           banned_value='bob',
                            user_message='Nope!')
 
         response = self.client.post(
@@ -61,7 +62,8 @@ class ForgottenPasswordViewsTests(TestCase):
         test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
         old_password = test_user.password
 
-        Ban.objects.create(test=BAN_USERNAME, banned_value='bob',
+        Ban.objects.create(check_type=BAN_USERNAME,
+                           banned_value='bob',
                            user_message='Nope!')
 
         password_token = make_password_reset_token(test_user)

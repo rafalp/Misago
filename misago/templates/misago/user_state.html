@@ -2,7 +2,7 @@
 {% if state.is_banned %}
   {% capture trimmed as state_name %}
   {% if state.banned_until %}
-  {% blocktrans trimmed with ban_date=state.banned_until|date %}
+  {% blocktrans trimmed with ban_date=state.formatted_ban_expiration_date %}
     Banned until {{ ban_date }}
   {% endblocktrans %}
   {% else %}

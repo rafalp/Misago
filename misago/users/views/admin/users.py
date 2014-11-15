@@ -129,7 +129,7 @@ class UsersList(UserAdmin, generic.ListView):
                         banned_value=user.username,
                         user_message=form.cleaned_data.get('user_message'),
                         staff_message=form.cleaned_data.get('staff_message'),
-                        valid_until=form.cleaned_data.get('valid_until')
+                        expires_on=form.cleaned_data.get('expires_on')
                     )
 
                 Ban.objects.invalidate_cache()

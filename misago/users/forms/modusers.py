@@ -109,10 +109,10 @@ class BanForm(BanUsersForm):
                 "Required. Can't be longer than %(days)s days.",
                 self.user.acl_['max_ban_length'])
             message = message % {'days': self.user.acl_['max_ban_length']}
-            self['valid_until'].field.help_text = message
+            self['expires_on'].field.help_text = message
 
-    def clean_valid_until(self):
-        data = self.cleaned_data['valid_until']
+    def clean_expires_on(self):
+        data = self.cleaned_data['expires_on']
 
         if self.user.acl_['max_ban_length']:
             max_ban_length = timedelta(days=self.user.acl_['max_ban_length'])
@@ -132,7 +132,7 @@ class BanForm(BanUsersForm):
         new_ban = Ban(banned_value=self.user.username,
                       user_message=self.cleaned_data['user_message'],
                       staff_message=self.cleaned_data['staff_message'],
-                      valid_until=self.cleaned_data['valid_until'])
+                      expires_on=self.cleaned_data['expires_on'])
         new_ban.save()
 
         Ban.objects.invalidate_cache()

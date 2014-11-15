@@ -14,15 +14,14 @@ class Command(BaseCommand):
         self.handle_bans_caches()
 
     def handle_expired_bans(self):
-        queryset = Ban.objects.filter(is_valid=True, valid_until__isnull=False)
-        queryset = queryset.filter(valid_until__lte=timezone.now().date())
+        queryset = Ban.objects.filter(is_checked=True)
+        queryset = queryset.filter(expires_on__lt=timezone.now())
 
-        expired_count = queryset.update(is_valid=False)
+        expired_count = queryset.update(is_checked=False)
         self.stdout.write('Bans invalidated: %s' % expired_count)
 
     def handle_bans_caches(self):
-        queryset = BanCache.objects.filter(valid_until__isnull=False)
-        queryset = queryset.filter(valid_until__lte=timezone.now().date())
+        queryset = BanCache.objects.filter(expires_on__lt=timezone.now())
 
         expired_count = queryset.count()
         queryset.delete()

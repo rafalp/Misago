@@ -1,7 +1,8 @@
-from datetime import date, timedelta
+from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
+from django.utils import timezone
 
 from misago.users.bans import get_user_ban, get_request_ip_ban
 from misago.users.models import Ban, BAN_IP
@@ -36,7 +37,7 @@ class UserBansTests(TestCase):
         Ban.objects.create(banned_value='bo*',
                            user_message='User reason',
                            staff_message='Staff reason',
-                           valid_until=date.today() + timedelta(days=7))
+                           expires_on=timezone.now() + timedelta(days=7))
 
         user_ban = get_user_ban(self.user)
         self.assertIsNotNone(user_ban)
@@ -47,7 +48,7 @@ class UserBansTests(TestCase):
     def test_expired_ban(self):
         """user is not caught by expired ban"""
         Ban.objects.create(banned_value='bo*',
-                           valid_until=date.today() - timedelta(days=7))
+                           expires_on=timezone.now() - timedelta(days=7))
 
         self.assertIsNone(get_user_ban(self.user))
         self.assertFalse(self.user.ban_cache.is_banned)
@@ -67,7 +68,7 @@ class RequestIPBansTests(TestCase):
 
     def test_permanent_ban(self):
         """ip is caught by permanent ban"""
-        Ban.objects.create(test=BAN_IP,
+        Ban.objects.create(check_type=BAN_IP,
                            banned_value='127.0.0.1',
                            user_message='User reason')
 
@@ -76,24 +77,33 @@ class RequestIPBansTests(TestCase):
         self.assertEqual(ip_ban['ip'], '127.0.0.1')
         self.assertEqual(ip_ban['message'], 'User reason')
 
+        # repeated call uses cache
+        get_request_ip_ban(FakeRequest())
+
     def test_temporary_ban(self):
         """ip is caught by temporary ban"""
-        Ban.objects.create(test=BAN_IP,
+        Ban.objects.create(check_type=BAN_IP,
                            banned_value='127.0.0.1',
                            user_message='User reason',
-                           valid_until=date.today() + timedelta(days=7))
+                           expires_on=timezone.now() + timedelta(days=7))
 
         ip_ban = get_request_ip_ban(FakeRequest())
         self.assertTrue(ip_ban['is_banned'])
         self.assertEqual(ip_ban['ip'], '127.0.0.1')
         self.assertEqual(ip_ban['message'], 'User reason')
 
+        # repeated call uses cache
+        get_request_ip_ban(FakeRequest())
+
     def test_expired_ban(self):
         """ip is not caught by expired ban"""
-        Ban.objects.create(test=BAN_IP,
+        Ban.objects.create(check_type=BAN_IP,
                            banned_value='127.0.0.1',
                            user_message='User reason',
-                           valid_until=date.today() - timedelta(days=7))
+                           expires_on=timezone.now() - timedelta(days=7))
 
         ip_ban = get_request_ip_ban(FakeRequest())
         self.assertIsNone(ip_ban)
+
+        # repeated call uses cache
+        get_request_ip_ban(FakeRequest())
