@@ -366,9 +366,9 @@ class ForumActions(Actions):
 
     def action_delete(self, request, threads):
         changed_threads = 0
-            for thread in threads:
-                if moderation.delete_thread(request.user, thread):
-                    changed_threads += 1
+        for thread in threads:
+            if moderation.delete_thread(request.user, thread):
+                changed_threads += 1
 
         if changed_threads:
             with atomic():
