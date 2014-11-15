@@ -15,7 +15,6 @@ __all__ = ['PostsActions']
 def atomic_post_action(f):
     def decorator(self, request, posts):
         with atomic():
-            self.forum.lock()
             self.thread.lock()
 
             for post in posts:
@@ -25,6 +24,8 @@ def atomic_post_action(f):
 
             self.thread.synchronize()
             self.thread.save()
+
+            self.forum.lock()
             self.forum.synchronize()
             self.forum.save()
 

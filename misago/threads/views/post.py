@@ -61,6 +61,8 @@ class QuotePostView(PostView):
 
 
 class UnhidePostView(PostView):
+    is_atomic = False
+
     def real_dispatch(self, request, post):
         permissions.allow_unhide_post(request.user, post)
         moderation.unhide_post(request.user, post)
@@ -68,6 +70,8 @@ class UnhidePostView(PostView):
 
 
 class HidePostView(PostView):
+    is_atomic = False
+
     def real_dispatch(self, request, post):
         permissions.allow_hide_post(request.user, post)
         moderation.hide_post(request.user, post)

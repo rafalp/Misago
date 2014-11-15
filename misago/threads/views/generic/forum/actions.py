@@ -188,10 +188,12 @@ class ForumActions(Actions):
             if form.is_valid():
                 new_forum = form.cleaned_data['new_forum']
                 with atomic():
-                    self.forum.lock()
 
                     for thread in threads:
                         moderation.move_thread(request.user, thread, new_forum)
+
+                    self.forum.lock()
+                    new_forum.lock()
 
                     self.forum.synchronize()
                     self.forum.save()
@@ -259,7 +261,7 @@ class ForumActions(Actions):
                     merged_thread.synchronize()
                     merged_thread.save()
 
-                with atomic():
+                    self.forum.lock()
                     self.forum.synchronize()
                     self.forum.save()
 
@@ -327,6 +329,7 @@ class ForumActions(Actions):
 
         if changed_threads:
             with atomic():
+                self.forum.lock()
                 self.forum.synchronize()
                 self.forum.save()
 
@@ -341,13 +344,13 @@ class ForumActions(Actions):
 
     def action_hide(self, request, threads):
         changed_threads = 0
-        with atomic():
-            self.forum.lock()
-            for thread in threads:
-                if moderation.hide_thread(request.user, thread):
-                    changed_threads += 1
+        for thread in threads:
+            if moderation.hide_thread(request.user, thread):
+                changed_threads += 1
 
-            if changed_threads:
+        if changed_threads:
+            with atomic():
+                self.forum.lock()
                 self.forum.synchronize()
                 self.forum.save()
 
@@ -363,13 +366,13 @@ class ForumActions(Actions):
 
     def action_delete(self, request, threads):
         changed_threads = 0
-        with atomic():
-            self.forum.lock()
             for thread in threads:
                 if moderation.delete_thread(request.user, thread):
                     changed_threads += 1
 
-            if changed_threads:
+        if changed_threads:
+            with atomic():
+                self.forum.lock()
                 self.forum.synchronize()
                 self.forum.save()
 

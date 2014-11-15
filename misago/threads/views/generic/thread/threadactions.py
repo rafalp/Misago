@@ -146,8 +146,11 @@ class ThreadActions(ActionsBase):
                 new_forum = form.cleaned_data['new_forum']
 
                 with atomic():
-                    self.forum.lock()
                     moderation.move_thread(request.user, thread, new_forum)
+
+                    self.forum.lock()
+                    new_forum.lock()
+
                     self.forum.synchronize()
                     self.forum.save()
                     new_forum.synchronize()
