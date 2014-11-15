@@ -244,6 +244,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 MISAGO_NEW_REGISTRATIONS_VALIDATORS = (
+    'misago.users.validators.validate_gmail_email',
     'misago.users.validators.validate_with_sfs',
 )
 
