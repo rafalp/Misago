@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.test import TestCase
 
 from misago.conf import settings
@@ -14,7 +14,8 @@ from misago.users.validators import (validate_email,
                                      validate_username_available,
                                      validate_username_banned,
                                      validate_username_content,
-                                     validate_username_length)
+                                     validate_username_length,
+                                     validate_gmail_email)
 
 
 class ValidateEmailAvailableTests(TestCase):
@@ -142,3 +143,13 @@ class ValidateUsernameLengthTests(TestCase):
             validate_username_length('a' * (settings.username_length_min - 1))
         with self.assertRaises(ValidationError):
             validate_username_length('a' * (settings.username_length_max + 1))
+
+
+class ValidateGmailEmailTests(TestCase):
+    def test_validate_gmail_email(self):
+        """validate_gmail_email spots spammy gmail address"""
+        validate_gmail_email('', '', 'the.bob.boberson@gmail.com')
+        validate_gmail_email('', '', 'the.bob.boberson@hotmail.com')
+
+        with self.assertRaises(PermissionDenied):
+            validate_gmail_email('', '', 'the.b.o.b.b.ob.e.r.son@gmail.com')

@@ -142,6 +142,12 @@ def _real_validate_with_sfs(ip, email):
         pass # todo: log those somewhere
 
 
+def validate_gmail_email(ip, username, email):
+    username, domain = email.split('@')
+    if domain == 'gmail.com' and username.count('.') > 6:
+        raise PermissionDenied()
+
+
 """
 Registration validation
 """
