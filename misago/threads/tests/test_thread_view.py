@@ -204,6 +204,29 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertFalse(self.reload_thread().is_pinned)
 
+    def test_approve_thread(self):
+        """its possible to approve moderated thread"""
+        self.thread.first_post.poster = self.user
+        self.thread.first_post.poster_name = self.user.username
+        self.thread.first_post.is_moderated = True
+        self.thread.first_post.save()
+
+        self.thread.synchronize()
+        self.thread.save()
+
+        self.override_acl({'can_review_moderated_content': 1})
+        response = self.client.post(self.thread.get_absolute_url(),
+                                    data={'thread_action': 'approve'})
+        self.assertEqual(response.status_code, 302)
+
+        self.assertFalse(self.reload_thread().is_moderated)
+        self.assertFalse(self.reload_thread().first_post.is_moderated)
+
+        self.override_acl({'can_review_moderated_content': 1})
+        response = self.client.post(self.thread.get_absolute_url(),
+                                    data={'thread_action': 'approve'})
+        self.assertEqual(response.status_code, 200)
+
     def test_close_thread(self):
         """its possible to close thread"""
         self.override_acl({'can_close_threads': 0})
@@ -283,14 +306,11 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_unhide_thread(self):
-        """its possible to hide thread"""
-        self.thread.is_hidden = True
-        self.thread.save()
-
-        self.override_acl({'can_hide_threads': 0})
+        """its possible to unhide thread"""
+        self.override_acl({'can_hide_threads': 2})
         response = self.client.post(self.thread.get_absolute_url(),
-                                    data={'thread_action': 'unhide'})
-        self.assertEqual(response.status_code, 200)
+                                    data={'thread_action': 'hide'})
+        self.assertEqual(response.status_code, 302)
 
         self.override_acl({'can_hide_threads': 2})
         response = self.client.post(self.thread.get_absolute_url(),
@@ -313,6 +333,38 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         # we made forum empty, assert that board index renders
         response = self.client.get(reverse('misago:index'))
         self.assertEqual(response.status_code, 200)
+
+    def test_approve_posts(self):
+        """moderation allows for approving multiple posts"""
+        posts = []
+        for p in xrange(4):
+            posts.append(reply_thread(self.thread, is_moderated=True))
+        for p in xrange(4):
+            posts.append(reply_thread(self.thread))
+
+        self.assertTrue(self.reload_thread().has_moderated_posts)
+        self.assertEqual(self.thread.replies, 4)
+
+        test_acl = {
+            'can_review_moderated_content': 1
+        }
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Approve posts", response.content)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'approve', 'item': [p.pk for p in posts]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.assertFalse(self.reload_thread().has_moderated_posts)
+        self.assertEqual(self.reload_thread().replies, 8)
+
+        for post in posts:
+            self.assertFalse(self.thread.post_set.get(id=post.id).is_moderated)
 
     def test_merge_posts(self):
         """moderation allows for merging multiple posts into one"""

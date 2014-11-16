@@ -33,6 +33,43 @@ class PostViewTestCase(AuthenticatedUserTestCase):
         override_acl(self.user, forums_acl)
 
 
+class ApprovePostViewTests(PostViewTestCase):
+    def test_approve_thread(self):
+        """view approves thread"""
+        self.thread.first_post.is_moderated = True
+        self.thread.first_post.save()
+
+        self.thread.synchronize()
+        self.thread.save()
+
+        post_link = reverse('misago:approve_post', kwargs={
+            'post_id': self.thread.first_post_id
+        })
+
+        self.override_acl({'can_review_moderated_content': 1})
+        response = self.client.post(post_link)
+        self.assertEqual(response.status_code, 302)
+
+        thread = Thread.objects.get(id=self.thread.id)
+        self.assertFalse(thread.is_moderated)
+        self.assertFalse(thread.has_moderated_posts)
+
+    def test_approve_post(self):
+        """view approves post"""
+        post = reply_thread(self.thread, is_moderated=True)
+
+        post_link = reverse('misago:approve_post', kwargs={
+            'post_id': post.id
+        })
+
+        self.override_acl({'can_review_moderated_content': 1})
+        response = self.client.post(post_link)
+        self.assertEqual(response.status_code, 302)
+
+        thread = Thread.objects.get(id=self.thread.id)
+        self.assertFalse(thread.has_moderated_posts)
+
+
 class UnhidePostViewTests(PostViewTestCase):
     def test_unhide_first_post(self):
         """attempt to reveal first post in thread fails"""

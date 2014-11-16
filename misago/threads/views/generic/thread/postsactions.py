@@ -71,6 +71,14 @@ class PostsActions(ActionsBase):
 
         actions = []
 
+        if self.thread.acl['can_review']:
+            if self.thread.has_moderated_posts:
+                actions.append({
+                    'action': 'approve',
+                    'icon': 'check',
+                    'name': _("Approve posts")
+                })
+
         if self.forum.acl['can_merge_posts']:
             actions.append({
                 'action': 'merge',
@@ -125,6 +133,23 @@ class PostsActions(ActionsBase):
             })
 
         return actions
+
+    @changes_thread_state
+    def action_approve(self, request, posts):
+        changed_posts = 0
+        for post in posts:
+            if moderation.approve_post(request.user, post):
+                changed_posts += 1
+
+        if changed_posts:
+            message = ungettext(
+                '%(changed)d post was approved.',
+                '%(changed)d posts were approved.',
+            changed_posts)
+            messages.success(request, message % {'changed': changed_posts})
+        else:
+            message = _("No posts were approved.")
+            messages.info(request, message)
 
     @changes_thread_state
     def action_merge(self, request, posts):

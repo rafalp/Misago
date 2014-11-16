@@ -133,6 +133,10 @@ class ThreadActions(ActionsBase):
         moderation.unpin_thread(request.user, thread)
         messages.success(request, _("Thread was unpinned."))
 
+    def action_approve(self, request, thread):
+        moderation.approve_thread(request.user, thread)
+        messages.success(request, _("Thread was approved."))
+
     move_thread_full_template = 'misago/thread/move/full.html'
     move_thread_modal_template = 'misago/thread/move/modal.html'
 

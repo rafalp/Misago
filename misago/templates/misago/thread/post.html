@@ -149,13 +149,15 @@
             </button>
           </form>
 
-          <form action="" method="post">
+          {% if post.acl.can_approve %}
+          <form action="{% url 'misago:approve_post' post_id=post.id %}" method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-success btn-flat pull-right">
               <span class="fa fa-check">
               {% trans "Approve" %}
             </button>
           </form>
+          {% endif %}
 
           <form action="" method="post">
             {% csrf_token %}

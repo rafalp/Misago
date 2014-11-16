@@ -5,6 +5,15 @@ from django.utils.translation import ugettext as _
 from misago.threads.moderation.exceptions import ModerationError
 
 
+def approve_post(user, post):
+    if post.is_moderated:
+        post.is_moderated = False
+        post.save(update_fields=['is_moderated'])
+        return True
+    else:
+        return False
+
+
 def protect_post(user, post):
     if not post.is_protected:
         post.is_protected = True

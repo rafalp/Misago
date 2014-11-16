@@ -331,6 +331,9 @@ def add_acl_to_post(user, post):
         'can_approve': forum_acl.get('can_review_moderated_content'),
     })
 
+    if not post.is_moderated:
+        post.acl['can_approve'] = False
+
     if not post.acl['can_see_hidden']:
         if user.is_authenticated() and user.id == post.poster_id:
             post.acl['can_see_hidden'] = True
@@ -353,8 +356,14 @@ def allow_see_thread(user, target):
     forum_acl = user.acl['forums'].get(target.forum_id, {})
     if not forum_acl.get('can_browse'):
         raise Http404()
-    if not forum_acl.get('can_see_all_threads'):
-        if user.is_anonymous() or user.pk != target.starter_id:
+
+    if user.is_anonymous() or user.pk != target.starter_id:
+        if not forum_acl.get('can_see_all_threads'):
+            raise Http404()
+        if target.is_moderated:
+            if not forum_acl.get('can_review_moderated_content'):
+                raise Http404()
+        if target.is_hidden and not forum_acl.get('can_hide_threads'):
             raise Http404()
 can_see_thread = return_boolean(allow_see_thread)
 
@@ -723,7 +732,7 @@ def exclude_all_invisible_threads(queryset, user):
 def exclude_invisible_posts(queryset, user, forum):
     if not forum.acl['can_review_moderated_content']:
         if user.is_authenticated():
-            condition_author = Q(poster=user.id)
+            condition_author = Q(poster_id=user.id)
             condition = Q(is_moderated=False)
             queryset = queryset.filter(condition_author | condition)
         else:

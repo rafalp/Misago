@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.db.transaction import atomic
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
@@ -58,6 +59,24 @@ class QuotePostView(PostView):
         return JsonResponse({
             'quote': quote_tpl % formats
         })
+
+
+class ApprovePostView(PostView):
+    def real_dispatch(self, request, post):
+        if not post.acl['can_approve']:
+            raise PermissionDenied(_("You can't approve this post."))
+
+        if post.id == post.thread.first_post_id:
+            moderation.approve_thread(request.user, post.thread)
+            messages.success(request, _("Thread has been approved."))
+        else:
+            moderation.approve_post(request.user, post)
+            messages.success(request, _("Post has been approved."))
+
+        post.thread.synchronize()
+        post.thread.save()
+        post.forum.synchronize()
+        post.forum.save()
 
 
 class UnhidePostView(PostView):
