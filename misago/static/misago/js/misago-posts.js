@@ -120,9 +120,22 @@ $(function() {
   function PostsMassActions() {
 
     var $form = $('#posts-actions');
+    var $btn = $form.find('.mass-controller');
+
+    var btn_label = $btn.html();
 
     // handle moderation form
     var select_items_message = $('#posts-actions').data('select-items-message');
+
+    function update_btn_label() {
+      var selected_items = $('.post-check.active').length;
+
+      if (selected_items > 0) {
+        $btn.html(btn_label + "(" + selected_items + ")");
+      } else {
+        $btn.html(btn_label);
+      }
+    }
 
     $('.post-check').each(function() {
 
@@ -140,10 +153,13 @@ $(function() {
         } else {
           $checkbox.prop("checked", false);
         }
+
+        update_btn_label();
         return false;
       });
 
     });
+    update_btn_label();
 
     $form.find('li button').click(function() {
       if ($(this).data('confirmation')) {

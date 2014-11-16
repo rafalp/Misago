@@ -3,8 +3,21 @@ function threadsMassActions() {
   var $form = $('#threads-actions');
   var $master = $('.master-checkbox');
   var $threads = $('.table-panel .list-group-item');
+  var $btn = $form.find('.mass-controller');
+
+  var btn_label = $btn.html();
 
   var select_items_message = $form.data('select-items-message');
+
+  function update_btn_label() {
+    var selected_items = $threads.filter('.active').length;
+
+    if (selected_items > 0) {
+      $btn.html(btn_label + "(" + selected_items + ")");
+    } else {
+      $btn.html(btn_label);
+    }
+  }
 
   $form.find('li button').click(function() {
     if ($(this).data('confirmation')) {
@@ -27,6 +40,8 @@ function threadsMassActions() {
       $threads.find('.thread-check input').prop("checked", true);
       $master.addClass('active');
     }
+
+    update_btn_label();
   });
 
   $threads.each(function() {
@@ -54,9 +69,12 @@ function threadsMassActions() {
         $row.removeClass('active');
         $master.removeClass('active');
       }
+
+      update_btn_label();
       return false;
     });
   });
+  update_btn_label();
 
   $form.submit(function() {
     if ($threads.filter('.active').length == 0) {
