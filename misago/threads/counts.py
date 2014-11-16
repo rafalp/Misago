@@ -3,6 +3,7 @@ from time import time
 from django.conf import settings
 from django.dispatch import receiver
 
+from misago.threads.views.moderatedcontent import ModeratedContent
 from misago.threads.views.newthreads import NewThreads
 from misago.threads.views.unreadthreads import UnreadThreads
 
@@ -65,6 +66,11 @@ class BaseCounter(object):
                 'threads': self.count,
                 'expires': self.session[self.name]['expires']
             }
+
+
+class ModeratedCount(BaseCounter):
+    Threads = ModeratedContent
+    name = 'moderated_content'
 
 
 class NewThreadsCount(BaseCounter):

@@ -97,9 +97,11 @@
                   <span class="fa fa-exclamation-triangle fa-fw fa-lg"></span>
                 </li>
                 {% endif %}
-                {% if thread.has_moderated_posts and not thread.is_moderated %}
+                {% if thread.has_moderated_posts and not thread.is_moderated and thread.forum_id in user.acl.moderated_forums %}
                 <li class="tooltip-top" title="{% trans "Moderated posts" %}">
-                  <span class="fa fa-question-circle fa-fw fa-lg"></span>
+                  <button type="button" class="btn-show-moderated" data-moderated-url="{{ thread.get_moderated_url }}">
+                    <span class="fa fa-question-circle fa-fw fa-lg"></span>
+                  </button>
                 </li>
                 {% endif %}
                 {% if thread.is_poll %}
@@ -109,7 +111,9 @@
                 {% endif %}
                 {% if thread.is_moderated %}
                 <li class="tooltip-top" title="{% trans "Moderated" %}">
-                  <span class="fa fa-question-circle fa-fw fa-lg"></span>
+                  <button type="button" class="btn-show-moderated" data-moderated-url="{{ thread.get_moderated_url }}">
+                    <span class="fa fa-question-circle fa-fw fa-lg"></span>
+                  </button>
                 </li>
                 {% endif %}
                 {% if thread.is_closed %}
@@ -149,3 +153,18 @@
 </div>
 <div id="reply-form-placeholder"></div>
 {% endblock content %}
+
+
+{% block javascripts %}
+{{ block.super }}
+{% if user.acl.moderated_forums %}
+<script lang="JavaScript">
+  $(function() {
+    $('.btn-show-moderated').click(function() {
+      Misago.Modal.get($(this).data('moderated-url'));
+    });
+  });
+</script>
+{% endif %}
+{% endblock javascripts %}
+

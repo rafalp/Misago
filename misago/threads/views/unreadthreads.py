@@ -57,9 +57,9 @@ class UnreadThreadsView(ThreadsView):
             message = _("You have to sign in to see your list of "
                         "threads with unread replies.")
             raise PermissionDenied(message)
-        else:
-            return super(UnreadThreadsView, self).dispatch(
-                request, *args, **kwargs)
+
+        return super(UnreadThreadsView, self).dispatch(
+            request, *args, **kwargs)
 
 
 @deny_guests

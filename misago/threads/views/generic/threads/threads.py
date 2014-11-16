@@ -1,3 +1,4 @@
+from misago.acl import add_acl
 from misago.core.shortcuts import paginate
 from misago.readtracker import threadstracker
 

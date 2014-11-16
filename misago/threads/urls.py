@@ -50,7 +50,7 @@ urlpatterns += patterns('',
     url(r'^post/(?P<post_id>\d+)/delete$', DeletePostView.as_view(), name='delete_post'),
 )
 
-# new threads lists
+# new threads list
 from misago.threads.views.newthreads import NewThreadsView, clear_new_threads
 urlpatterns += patterns('',
     url(r'^new-threads/$', NewThreadsView.as_view(), name='new_threads'),
@@ -61,7 +61,7 @@ urlpatterns += patterns('',
 )
 
 
-# unread threads lists
+# unread threads list
 from misago.threads.views.unreadthreads import (UnreadThreadsView,
                                                 clear_unread_threads)
 urlpatterns += patterns('',
@@ -70,6 +70,16 @@ urlpatterns += patterns('',
     url(r'^unread-threads/sort-(?P<sort>[\w-]+)$', UnreadThreadsView.as_view(), name='unread_threads'),
     url(r'^unread-threads/sort-(?P<sort>[\w-]+)(?P<page>\d+)/$', UnreadThreadsView.as_view(), name='unread_threads'),
     url(r'^unread-threads/clear/$', clear_unread_threads, name='clear_unread_threads'),
+)
+
+
+# moderated content list
+from misago.threads.views.moderatedcontent import ModeratedContentView
+urlpatterns += patterns('',
+    url(r'^moderated-content/$', ModeratedContentView.as_view(), name='moderated_content'),
+    url(r'^moderated-content/(?P<page>\d+)/$', ModeratedContentView.as_view(), name='moderated_content'),
+    url(r'^moderated-content/sort-(?P<sort>[\w-]+)$', ModeratedContentView.as_view(), name='moderated_content'),
+    url(r'^moderated-content/sort-(?P<sort>[\w-]+)(?P<page>\d+)/$', ModeratedContentView.as_view(), name='moderated_content'),
 )
 
 

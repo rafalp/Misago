@@ -55,9 +55,9 @@ class NewThreadsView(ThreadsView):
         if request.user.is_anonymous():
             message = _("You have to sign in to see your list of new threads.")
             raise PermissionDenied(message)
-        else:
-            return super(NewThreadsView, self).dispatch(
-                request, *args, **kwargs)
+
+        return super(NewThreadsView, self).dispatch(
+            request, *args, **kwargs)
 
 
 @deny_guests

@@ -140,6 +140,8 @@ def build_acl(acl, roles, key_name):
         if forum_acl['can_browse']:
             acl['forums'][forum.pk] = build_forum_acl(
                 forum_acl, forum, forums_roles, key_name)
+            if acl['forums'][forum.pk]['can_review_moderated_content']:
+                acl['moderated_forums'].append(forum.pk)
     return acl
 
 
