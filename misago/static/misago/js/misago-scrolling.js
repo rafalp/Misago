@@ -36,7 +36,7 @@ $(function() {
       var scroll_offset = $('.misago-alerts').height() + 12;
       $(document.body).animate({
         'scrollTop': $element.offset().top - scroll_offset
-      }, 500);
+      }, 300);
     }
 
   }

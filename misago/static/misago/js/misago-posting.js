@@ -391,4 +391,5 @@ $(function() {
   if(window.location.hash.indexOf('#goto-post-') == 0) {
     window.location.hash = window.location.hash.replace('#goto-post', '#post');
   }
+
 });

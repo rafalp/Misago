@@ -1,5 +1,6 @@
 {% load i18n misago_avatars %}
-<div id="post-{{ post.pk }}" class="media post thread-post{% if post.poster_id and post.poster.rank.css_class %} rank-{{ post.poster.rank.css_class }}{% endif %}" data-id="{{ post.pk }}" data-edit-url="{{ post.get_edit_url }}" data-quote-url="{{ post.get_quote_url }}">
+<div id="post-{{ post.pk }}" class="post-fragment"></div>
+<div class="media post thread-post{% if post.poster_id and post.poster.rank.css_class %} rank-{{ post.poster.rank.css_class }}{% endif %}" data-id="{{ post.pk }}" data-edit-url="{{ post.get_edit_url }}" data-quote-url="{{ post.get_quote_url }}">
   {% if post.poster %}
   <a class="user-avatar pull-left" href="{% url USER_PROFILE_URL user_slug=post.poster.slug user_id=post.poster.id %}">
     <img class="media-object" src="{{ post.poster|avatar:100 }}" alt="{% trans "Poster avatar" %}">
