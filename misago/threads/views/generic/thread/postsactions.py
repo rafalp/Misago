@@ -1,10 +1,15 @@
 from django.contrib import messages
 from django.db.transaction import atomic
 from django.http import Http404
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
+from django.utils import timezone
 from django.utils.translation import ungettext, ugettext_lazy, ugettext as _
 
+from misago.forums.lists import get_forum_path
+
 from misago.threads import moderation
+from misago.threads.forms.moderation import MovePostsForm, SplitThreadForm
+from misago.threads.models import Thread
 from misago.threads.paginator import Paginator
 from misago.threads.views.generic.actions import ActionsBase, ReloadAfterDelete
 
@@ -12,13 +17,20 @@ from misago.threads.views.generic.actions import ActionsBase, ReloadAfterDelete
 __all__ = ['PostsActions']
 
 
-def atomic_post_action(f):
+def thread_aware_posts(f):
+    def decorator(self, request, posts):
+        for post in posts:
+            post.thread = self.thread
+
+        return f(self, request, posts)
+    return decorator
+
+
+def changes_thread_state(f):
+    @thread_aware_posts
     def decorator(self, request, posts):
         with atomic():
             self.thread.lock()
-
-            for post in posts:
-                post.thread = self.thread
 
             response = f(self, request, posts)
 
@@ -59,6 +71,27 @@ class PostsActions(ActionsBase):
 
         actions = []
 
+        if self.forum.acl['can_merge_posts']:
+            actions.append({
+                'action': 'merge',
+                'icon': 'compress',
+                'name': _("Merge posts into one")
+            })
+
+        if self.forum.acl['can_move_posts']:
+            actions.append({
+                'action': 'move',
+                'icon': 'arrow-right',
+                'name': _("Move posts to other thread")
+            })
+
+        if self.forum.acl['can_split_threads']:
+            actions.append({
+                'action': 'split',
+                'icon': 'code-fork',
+                'name': _("Split posts to new thread")
+            })
+
         if self.forum.acl['can_protect_posts']:
             actions.append({
                 'action': 'unprotect',
@@ -93,6 +126,157 @@ class PostsActions(ActionsBase):
 
         return actions
 
+    @changes_thread_state
+    def action_merge(self, request, posts):
+        first_post = posts[0]
+
+        changed_posts = len(posts)
+        if changed_posts < 2:
+            message = _("You have to select at least two posts to merge.")
+            raise moderation.ModerationError(message)
+
+        for post in posts:
+            if not post.poster_id or first_post.poster_id != post.poster_id:
+                message = _("You can't merge posts made by different authors.")
+                raise moderation.ModerationError(message)
+
+        for post in posts[1:]:
+            post.merge(first_post)
+            post.delete()
+
+        first_post.save()
+
+        message = ungettext(
+            '%(changed)d post was merged.',
+            '%(changed)d posts were merged.',
+        changed_posts)
+        messages.success(request, message % {'changed': changed_posts})
+
+    move_posts_full_template = 'misago/thread/move_posts/full.html'
+    move_posts_modal_template = 'misago/thread/move_posts/modal.html'
+
+    @changes_thread_state
+    def action_move(self, request, posts):
+        if posts[0].id == self.thread.first_post_id:
+            message = _("You can't move thread's first post.")
+            raise moderation.ModerationError(message)
+
+        form = MovePostsForm(user=request.user, thread=self.thread)
+
+        if 'submit' in request.POST or 'follow' in request.POST:
+            form = MovePostsForm(request.POST,
+                                 user=request.user,
+                                 thread=self.thread)
+            if form.is_valid():
+                for post in posts:
+                    post.move(form.new_thread)
+                    post.save()
+
+                form.new_thread.lock()
+                form.new_thread.synchronize()
+                form.new_thread.save()
+
+                if form.new_thread.forum != self.forum:
+                    form.new_thread.forum.lock()
+                    form.new_thread.forum.synchronize()
+                    form.new_thread.forum.save()
+
+                changed_posts = len(posts)
+                message = ungettext(
+                    '%(changed)d post was moved to "%(thread)s".',
+                    '%(changed)d posts were moved to "%(thread)s".',
+                changed_posts)
+                messages.success(request, message % {
+                    'changed': changed_posts,
+                    'thread': form.new_thread.title
+                })
+
+                if 'follow' in request.POST:
+                    return redirect(form.new_thread.get_absolute_url())
+                else:
+                    return None # trigger thread refresh
+
+        if request.is_ajax():
+            template = self.move_posts_modal_template
+        else:
+            template = self.move_posts_full_template
+
+        return render(request, template, {
+            'form': form,
+            'forum': self.forum,
+            'thread': self.thread,
+            'path': get_forum_path(self.forum),
+
+            'posts': posts
+        })
+
+    split_thread_full_template = 'misago/thread/split/full.html'
+    split_thread_modal_template = 'misago/thread/split/modal.html'
+
+    @changes_thread_state
+    def action_split(self, request, posts):
+        if posts[0].id == self.thread.first_post_id:
+            message = _("You can't split thread's first post.")
+            raise moderation.ModerationError(message)
+
+        form = SplitThreadForm(acl=request.user.acl)
+
+        if 'submit' in request.POST or 'follow' in request.POST:
+            form = SplitThreadForm(request.POST, acl=request.user.acl)
+            if form.is_valid():
+                split_thread = Thread()
+                split_thread.forum = form.cleaned_data['forum']
+                split_thread.set_title(
+                    form.cleaned_data['thread_title'])
+                split_thread.starter_name = "-"
+                split_thread.starter_slug = "-"
+                split_thread.last_poster_name = "-"
+                split_thread.last_poster_slug = "-"
+                split_thread.started_on = timezone.now()
+                split_thread.last_post_on = timezone.now()
+                split_thread.save()
+
+                for post in posts:
+                    post.move(split_thread)
+                    post.save()
+
+                split_thread.synchronize()
+                split_thread.save()
+
+                if split_thread.forum != self.forum:
+                    split_thread.forum.lock()
+                    split_thread.forum.synchronize()
+                    split_thread.forum.save()
+
+                changed_posts = len(posts)
+                message = ungettext(
+                    '%(changed)d post was split to "%(thread)s".',
+                    '%(changed)d posts were split to "%(thread)s".',
+                changed_posts)
+                messages.success(request, message % {
+                    'changed': changed_posts,
+                    'thread': split_thread.title
+                })
+
+                if 'follow' in request.POST:
+                    return redirect(split_thread.get_absolute_url())
+                else:
+                    return None # trigger thread refresh
+
+        if request.is_ajax():
+            template = self.split_thread_modal_template
+        else:
+            template = self.split_thread_full_template
+
+        return render(request, template, {
+            'form': form,
+            'forum': self.forum,
+            'thread': self.thread,
+            'path': get_forum_path(self.forum),
+
+            'posts': posts
+        })
+
     def action_unprotect(self, request, posts):
         changed_posts = 0
         for post in posts:
@@ -125,7 +309,7 @@ class PostsActions(ActionsBase):
             message = _("No posts were made protected.")
             messages.info(request, message)
 
-    @atomic_post_action
+    @changes_thread_state
     def action_unhide(self, request, posts):
         changed_posts = 0
         for post in posts:
@@ -142,7 +326,7 @@ class PostsActions(ActionsBase):
             message = _("No posts were made visible.")
             messages.info(request, message)
 
-    @atomic_post_action
+    @changes_thread_state
     def action_hide(self, request, posts):
         changed_posts = 0
         for post in posts:
@@ -159,7 +343,7 @@ class PostsActions(ActionsBase):
             message = _("No posts were hidden.")
             messages.info(request, message)
 
-    @atomic_post_action
+    @changes_thread_state
     def action_delete(self, request, posts):
         changed_posts = 0
         first_deleted = None

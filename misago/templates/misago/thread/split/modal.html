@@ -1,24 +1,26 @@
-{% load i18n %}
+{% load i18n misago_forms %}
 <form method="POST">
   {% csrf_token %}
-  <input type="hidden" name="action" value="move">
-  {% for thread in threads %}
-  <input type="hidden" name="item" value="{{ thread.pk }}">
+  <input type="hidden" name="action" value="split">
+  {% for post in posts %}
+  <input type="hidden" name="item" value="{{ post.pk }}">
   {% endfor %}
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{% trans "Close" %}</span></button>
     <h4 class="modal-title" id="ajaxModalLabel">
       <span class="fa fa-arrow-right fa-fw"></span>
-      {% trans "Move threads" %}
+      {% trans "Split thread" %}
     </h4>
   </div>
   <div class="modal-body modal-form">
 
-    {% include "misago/threads/move/body.html" %}
+    {% form_row form.forum %}
+    {% form_row form.thread_title %}
 
   </div>
   <div class="modal-footer text-left">
-    <button class="btn btn-primary" name="submit">{% trans "Move threads" %}</button>
+    <button class="btn btn-primary" name="submit">{% trans "Split thread" %}</button>
+    <button class="btn btn-primary" name="follow">{% trans "Split and see new thread" %}</button>
     <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
   </div>
 </form>

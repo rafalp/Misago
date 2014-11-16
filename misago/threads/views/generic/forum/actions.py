@@ -182,7 +182,7 @@ class ForumActions(Actions):
     def action_move(self, request, threads):
         form = MoveThreadsForm(acl=request.user.acl, forum=self.forum)
 
-        if request.method == "POST" and 'submit' in request.POST:
+        if 'submit' in request.POST:
             form = MoveThreadsForm(
                 request.POST, acl=request.user.acl, forum=self.forum)
             if form.is_valid():
@@ -234,11 +234,9 @@ class ForumActions(Actions):
 
         form = MergeThreadsForm()
 
-        if request.method == "POST" and 'submit' in request.POST:
+        if 'submit' in request.POST:
             form = MergeThreadsForm(request.POST)
             if form.is_valid():
-                thread_title = form.cleaned_data['merged_thread_title']
-
                 with atomic():
                     merged_thread = Thread()
                     merged_thread.forum = self.forum

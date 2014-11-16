@@ -18,5 +18,18 @@
       return false;
     });
 
+    var $posts_actions = $('#posts-actions');
+
+    $('#posts-actions .action-move').click(function() {
+      var action_data = $posts_actions.serialize($posts_actions) + '&action=move';
+      Misago.Modal.post('', action_data);
+      return false;
+    });
+
+    $('#posts-actions .action-split').click(function() {
+      var action_data = $posts_actions.serialize($posts_actions) + '&action=split';
+      Misago.Modal.post('', action_data);
+      return false;
+    });
   });
 </script>

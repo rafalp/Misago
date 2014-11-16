@@ -314,34 +314,201 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         response = self.client.get(reverse('misago:index'))
         self.assertEqual(response.status_code, 200)
 
-    def test_cant_hide_first_post(self):
-        """op is not deletable/hideable/unhideable"""
+    def test_merge_posts(self):
+        """moderation allows for merging multiple posts into one"""
+        posts = []
+        for p in xrange(4):
+            posts.append(reply_thread(self.thread, poster=self.user))
+        for p in xrange(4):
+            posts.append(reply_thread(self.thread))
+
+        self.thread.synchronize()
+        self.assertEqual(self.thread.replies, 8)
+
         test_acl = {
-            'can_hide_posts': 2
+            'can_merge_posts': 1
         }
 
         self.override_acl(test_acl)
         response = self.client.get(self.thread.get_absolute_url())
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Delete posts", response.content)
+        self.assertIn("Merge posts into one", response.content)
 
         self.override_acl(test_acl)
         response = self.client.post(self.thread.get_absolute_url(), data={
-            'action': 'delete', 'item': [self.thread.first_post_id]
+            'action': 'merge', 'item': [p.pk for p in posts[:1]]
         })
         self.assertEqual(response.status_code, 200)
+        self.assertIn("select at least two posts", response.content)
+
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertEqual(thread.replies, 8)
 
         self.override_acl(test_acl)
         response = self.client.post(self.thread.get_absolute_url(), data={
-            'action': 'hide', 'item': [self.thread.first_post_id]
+            'action': 'merge', 'item': [p.pk for p in posts[3:5]]
         })
         self.assertEqual(response.status_code, 200)
+        self.assertIn("merge posts made by different authors",
+                      response.content)
+
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertEqual(thread.replies, 8)
 
         self.override_acl(test_acl)
         response = self.client.post(self.thread.get_absolute_url(), data={
-            'action': 'unhide', 'item': [self.thread.first_post_id]
+            'action': 'merge', 'item': [p.pk for p in posts[5:7]]
         })
         self.assertEqual(response.status_code, 200)
+        self.assertIn("merge posts made by different authors",
+                      response.content)
+
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertEqual(thread.replies, 8)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'merge', 'item': [p.pk for p in posts[:4]]
+        })
+        self.assertEqual(response.status_code, 302)
+
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertEqual(thread.replies, 5)
+
+    def test_move_posts(self):
+        """moderation allows for moving posts to other thread"""
+        test_acl = {
+            'can_move_posts': 1
+        }
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Move posts", response.content)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'move', 'item': [self.thread.first_post_id]
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("first post", response.content)
+
+        posts = [reply_thread(self.thread) for t in xrange(4)]
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'move',
+            'item': [p.pk for p in posts],
+            'new_thread_url': '',
+            'submit': ''
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('enter valid link to thread', response.content)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'move',
+            'item': [p.pk for p in posts],
+            'new_thread_url': self.forum.get_absolute_url(),
+            'submit': ''
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('enter valid link to thread', response.content)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'move',
+            'item': [p.pk for p in posts],
+            'new_thread_url': self.thread.get_absolute_url(),
+            'submit': ''
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('thread is same as current one', response.content)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'move',
+            'item': [p.pk for p in posts]
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Move posts', response.content)
+
+        other_thread = post_thread(self.forum)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'move',
+            'item': [p.pk for p in posts[:3]],
+            'new_thread_url': other_thread.get_absolute_url(),
+            'submit': ''
+        })
+        self.assertEqual(response.status_code, 302)
+
+        other_thread = Thread.objects.get(id=other_thread.id)
+        self.assertEqual(other_thread.replies, 3)
+
+        for post in posts[:3]:
+            other_thread.post_set.get(id=post.id)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'move',
+            'item': [posts[-1].pk],
+            'new_thread_url': other_thread.get_absolute_url(),
+            'follow': ''
+        })
+        self.assertEqual(response.status_code, 302)
+
+    def test_split_thread(self):
+        """moderation allows for splitting posts into new thread"""
+        test_acl = {
+            'can_split_threads': 1
+        }
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Split posts", response.content)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'split', 'item': [self.thread.first_post_id]
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("first post", response.content)
+
+        posts = [reply_thread(self.thread) for t in xrange(4)]
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'split',
+            'item': [p.pk for p in posts]
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Split thread', response.content)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'split',
+            'item': [p.pk for p in posts[:3]],
+            'forum': self.forum.id,
+            'thread_title': 'Split thread',
+            'submit': ''
+        })
+        self.assertEqual(response.status_code, 302)
+
+        new_thread = Thread.objects.get(slug='split-thread')
+        self.assertEqual(new_thread.replies, 2)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'split',
+            'item': [posts[-1].pk],
+            'forum': self.forum.id,
+            'thread_title': 'Split thread',
+            'follow': ''
+        })
+        self.assertEqual(response.status_code, 302)
 
     def test_protect_unprotect_posts(self):
         """moderation allows for protecting and unprotecting multiple posts"""
@@ -398,6 +565,35 @@ class ThreadViewModerationTests(ThreadViewTestCase):
 
         for post in posts_queryset.filter(id__in=[p.pk for p in posts[:2]]):
             self.assertFalse(post.is_protected)
+
+    def test_cant_delete_hide_unhide_first_post(self):
+        """op is not deletable/hideable/unhideable"""
+        test_acl = {
+            'can_hide_posts': 2
+        }
+
+        self.override_acl(test_acl)
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Delete posts", response.content)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'delete', 'item': [self.thread.first_post_id]
+        })
+        self.assertEqual(response.status_code, 200)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'hide', 'item': [self.thread.first_post_id]
+        })
+        self.assertEqual(response.status_code, 200)
+
+        self.override_acl(test_acl)
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'action': 'unhide', 'item': [self.thread.first_post_id]
+        })
+        self.assertEqual(response.status_code, 200)
 
     def test_hide_unhide_posts(self):
         """moderation allows for hiding and unhiding multiple posts"""

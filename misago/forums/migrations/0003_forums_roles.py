@@ -133,6 +133,7 @@ def create_default_forums_roles(apps, schema_editor):
                 'can_close_threads': 1,
                 'can_move_threads': 1,
                 'can_merge_threads': 1,
+                'can_split_threads': 1,
                 'can_review_moderated_content': 1,
                 'can_report_content': 1,
                 'can_see_reports': 1,

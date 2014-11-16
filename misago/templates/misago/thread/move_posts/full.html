@@ -1,8 +1,8 @@
 {% extends "misago/threads/base.html" %}
-{% load i18n %}
+{% load i18n misago_forms %}
 
 
-{% block title %}{% trans "Merge threads" %} | {{ block.super }}{% endblock title %}
+{% block title %}{% trans "Move posts" %} | {{ thread }} | {{ block.super }}{% endblock title %}
 
 
 {% block content %}
@@ -11,27 +11,19 @@
     <div class="container">
       {% if path %}
       <ol class="breadcrumb">
-        {% for crumb in path|slice:":-1" %}
-        <li>
-          <a href="{{ crumb.get_absolute_url }}">{{ crumb }}</a><span class="fa fa-chevron-right"></span>
-        </li>
-        {% endfor %}
-        <li>
-          <a href="{{ forum.get_absolute_url }}">{{ forum }}</a>
-        </li>
+        {% include "misago/thread/full_path.html" %}
       </ol>
       {% endif %}
-
-      <h1>{% trans "Merge threads" %}</h1>
+      <h1>{% trans "Move posts" %}</h1>
     </div>
   </div>
 
   <div class="container">
     <form method="POST">
       {% csrf_token %}
-      <input type="hidden" name="action" value="merge">
-      {% for thread in threads %}
-      <input type="hidden" name="item" value="{{ thread.pk }}">
+      <input type="hidden" name="action" value="move">
+      {% for post in posts %}
+      <input type="hidden" name="item" value="{{ post.pk }}">
       {% endfor %}
 
       <div class="row">
@@ -41,22 +33,21 @@
 
             <div class="form-header">
               <h2>
-                {% blocktrans trimmed with forum=forum %}
-                  Merge threads in {{ forum }}
-                {% endblocktrans %}
+                {{ thread }}
               </h2>
             </div>
 
             {% include "misago/form_errors.html" %}
             <div class="form-body no-fieldsets">
 
-              {% include "misago/threads/merge/body.html" %}
+              {% form_row form.new_thread_url %}
 
             </div>
 
             <div class="form-footer text-left">
 
-              <button class="btn btn-primary" name="submit">{% trans "Merge threads" %}</button>
+              <button class="btn btn-primary" name="submit">{% trans "Move posts" %}</button>
+              <button class="btn btn-primary" name="follow">{% trans "Move and follow posts" %}</button>
               <a href="" class="btn btn-default">{% trans "Cancel" %}</a>
 
             </div>
