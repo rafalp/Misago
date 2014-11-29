@@ -8,6 +8,10 @@ def build_acl(roles):
     acl = {}
 
     for extension, module in providers.list():
-        acl = module.build_acl(acl, roles, extension)
+        try:
+            acl = module.build_acl(acl, roles, extension)
+        except AttributeError:
+            message = '%s has to define build_acl function' % extension
+            raise AttributeError(message)
 
     return acl
