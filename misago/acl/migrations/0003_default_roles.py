@@ -161,8 +161,8 @@ def create_default_roles(apps, schema_editor):
                 'max_lifted_ban_length': 14,
             },
         })
-
     role.save()
+
     role = Role(name=_("Deleting users"))
     pickle_permissions(role,
         {
@@ -180,6 +180,28 @@ def create_default_roles(apps, schema_editor):
             # profiles perms
             'misago.users.permissions.profiles': {
                 'can_be_blocked': 0,
+            },
+        })
+    role.save()
+
+    role = Role(name=_("Private threads"))
+    pickle_permissions(role,
+        {
+            # delete users perms
+            'misago.users.permissions.delete': {
+                'can_delete_users_newer_than': 3,
+                'can_delete_users_with_less_posts_than': 7,
+            },
+        })
+    role.save()
+
+    role = Role(name=_("Private threads moderator"))
+    pickle_permissions(role,
+        {
+            # delete users perms
+            'misago.users.permissions.delete': {
+                'can_delete_users_newer_than': 3,
+                'can_delete_users_with_less_posts_than': 7,
             },
         })
     role.save()

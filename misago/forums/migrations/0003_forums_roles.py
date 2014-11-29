@@ -38,7 +38,7 @@ def create_default_forums_roles(apps, schema_editor):
             },
 
             # threads perms
-            'misago.threads.permissions': {
+            'misago.threads.permissions.threads': {
                 'can_see_all_threads': 1,
             },
         })
@@ -54,7 +54,7 @@ def create_default_forums_roles(apps, schema_editor):
             },
 
             # threads perms
-            'misago.threads.permissions': {
+            'misago.threads.permissions.threads': {
                 'can_see_all_threads': 1,
                 'can_reply_threads': 1,
                 'can_edit_posts': 1,
@@ -72,7 +72,7 @@ def create_default_forums_roles(apps, schema_editor):
             },
 
             # threads perms
-            'misago.threads.permissions': {
+            'misago.threads.permissions.threads': {
                 'can_see_all_threads': 1,
                 'can_start_threads': 1,
                 'can_reply_threads': 1,
@@ -93,7 +93,7 @@ def create_default_forums_roles(apps, schema_editor):
             },
 
             # threads perms
-            'misago.threads.permissions': {
+            'misago.threads.permissions.threads': {
                 'can_see_all_threads': 1,
                 'can_start_threads': 1,
                 'can_reply_threads': 1,
@@ -113,7 +113,7 @@ def create_default_forums_roles(apps, schema_editor):
             },
 
             # threads perms
-            'misago.threads.permissions': {
+            'misago.threads.permissions.threads': {
                 'can_see_all_threads': 1,
                 'can_start_threads': 1,
                 'can_reply_threads': 1,

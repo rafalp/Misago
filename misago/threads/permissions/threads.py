@@ -13,6 +13,31 @@ from misago.forums.permissions import get_forums_roles
 from misago.threads.models import Thread, Post, Event
 
 
+__all__ = [
+    'add_acl_to_target',
+    'allow_see_thread',
+    'can_see_thread',
+    'allow_start_thread',
+    'can_start_thread',
+    'allow_reply_thread',
+    'can_reply_thread',
+    'allow_edit_thread',
+    'can_edit_thread',
+    'allow_see_post',
+    'can_see_post',
+    'allow_edit_post',
+    'can_edit_post',
+    'allow_unhide_post',
+    'can_unhide_post',
+    'allow_hide_post',
+    'can_hide_post',
+    'allow_delete_post',
+    'can_delete_post',
+    'exclude_invisible_threads',
+    'exclude_invisible_posts'
+]
+
+
 """
 Admin Permissions Form
 """
