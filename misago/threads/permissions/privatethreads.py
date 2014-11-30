@@ -33,7 +33,8 @@ class PermissionsForm(forms.Form):
         help_text=_("Allows user to report private threads they are "
                     "participating in, making them accessible to moderators."))
     can_moderate_private_threads = forms.YesNoSwitch(
-        label=_("Allows user to read, reply, edit and delete "
+        label=_("Can moderate private threads"),
+        help_text=_("Allows user to read, reply, edit and delete "
                 "content in reported private threads."))
 
 

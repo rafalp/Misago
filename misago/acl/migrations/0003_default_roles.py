@@ -187,10 +187,14 @@ def create_default_roles(apps, schema_editor):
     role = Role(name=_("Private threads"))
     pickle_permissions(role,
         {
-            # delete users perms
-            'misago.users.permissions.delete': {
-                'can_delete_users_newer_than': 3,
-                'can_delete_users_with_less_posts_than': 7,
+            # private threads perms
+            'misago.threads.permissions.privatethreads': {
+                'can_use_private_threads': 1,
+                'can_start_private_threads': 1,
+                'max_private_thread_participants': 3,
+                'can_add_everyone_to_private_threads': 0,
+                'can_report_private_threads': 1,
+                'can_moderate_private_threads': 0,
             },
         })
     role.save()
@@ -198,10 +202,14 @@ def create_default_roles(apps, schema_editor):
     role = Role(name=_("Private threads moderator"))
     pickle_permissions(role,
         {
-            # delete users perms
-            'misago.users.permissions.delete': {
-                'can_delete_users_newer_than': 3,
-                'can_delete_users_with_less_posts_than': 7,
+            # private threads perms
+            'misago.threads.permissions.privatethreads': {
+                'can_use_private_threads': 1,
+                'can_start_private_threads': 1,
+                'max_private_thread_participants': 15,
+                'can_add_everyone_to_private_threads': 1,
+                'can_report_private_threads': 1,
+                'can_moderate_private_threads': 1,
             },
         })
     role.save()
