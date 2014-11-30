@@ -43,6 +43,7 @@ Admin Permissions Form
 """
 class PermissionsForm(forms.Form):
     legend = _("Threads")
+
     can_see_all_threads = forms.TypedChoiceField(
         label=_("Can see threads"),
         coerce=int,

@@ -1,12 +1,15 @@
+from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext_lazy as _
 
 from misago.acl import add_acl, algebra
 from misago.acl.decorators import return_boolean
-from misago.acl.models import Role
 from misago.core import forms
 
 
 __all__ = [
+    'allow_message_user',
+    'can_message_user'
 ]
 
 
@@ -15,6 +18,7 @@ Admin Permissions Form
 """
 class PermissionsForm(forms.Form):
     legend = _("Private threads")
+
     can_use_private_threads = forms.YesNoSwitch(
         label=_("Can use private threads"))
     can_start_private_threads = forms.YesNoSwitch(
@@ -70,3 +74,32 @@ def build_acl(acl, roles, key_name):
     )
 
     return new_acl
+
+
+"""
+ACL tests
+"""
+def allow_message_user(user, target):
+    if not user.acl['can_use_private_threads']:
+        raise PermissionDenied(_("You can't use private threads system."))
+    if not user.acl['can_start_private_threads']:
+        raise PermissionDenied(_("You can't start private threads."))
+
+    if user.acl['can_add_everyone_to_private_threads']:
+        return None
+
+    message_format = {'user': user.username}
+
+    if user.acl['can_be_blocked'] and target.is_blocking(user):
+        message = _("%(user)s is blocking you.")
+        raise PermissionDenied(message % message_format)
+
+    if target.can_be_messaged_by_nobody:
+        message = _("%(user)s is not allowing invitations to private threads.")
+        raise PermissionDenied(message % message_format)
+
+    if target.can_be_messaged_by_followed and not target.is_following(user):
+        message = _("%(user)s is allowing invitations to private "
+                    "threads only from followed users.")
+        raise PermissionDenied(message % message_format)
+can_message_user = return_boolean(allow_message_user)

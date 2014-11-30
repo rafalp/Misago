@@ -15,6 +15,7 @@ Admin Permissions Form
 """
 class PermissionsForm(forms.Form):
     legend = _("Forum access")
+
     can_see = forms.YesNoSwitch(label=_("Can see forum"))
     can_browse = forms.YesNoSwitch(label=_("Can see forum contents"))
 
