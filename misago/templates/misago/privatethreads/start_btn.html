@@ -1,0 +1,12 @@
+{% load i18n %}
+{% if user.acl.can_start_private_threads %}
+<button class="btn btn-reply btn-success pull-right" type="button">
+  <span class="fa fa-plus-circle"></span>
+  {% trans "Start thread" %}
+</button>
+{% else %}
+<span class="btn btn-default btn-closed pull-right">
+  <span class="fa fa-ban"></span>
+  {% trans "Can't start threads" %}
+</span>
+{% endif %}

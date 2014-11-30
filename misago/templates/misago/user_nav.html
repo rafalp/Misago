@@ -71,7 +71,7 @@
   </li>
   {% endif %}
   <li>
-    <a href="#" class="tooltip-bottom" {% if user.unread_private_threads %}
+    <a href="{% url 'misago:private_threads' %}" class="tooltip-bottom" {% if user.unread_private_threads %}
         title="{% blocktrans with unread=user.unread_private_threads count counter=user.unread_private_threads %}{{ unread }} unread private threads{% plural %}{{ unread }} unread private thread{% endblocktrans %}"
         {% else %}
         title="{% trans "Private threads" %}"

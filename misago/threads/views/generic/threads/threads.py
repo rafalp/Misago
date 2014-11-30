@@ -46,8 +46,8 @@ class Threads(object):
         return threads
 
     def get_queryset(self):
-        queryset = exclude_invisible_threads(self.forum.thread_set, self.user)
-        return self.filter_threads(queryset)
+        raise NotImplementedError("classes inheriting from Threads helper "
+                                  "must define custom get_queryset method")
 
     def filter_threads(self, queryset):
         return queryset

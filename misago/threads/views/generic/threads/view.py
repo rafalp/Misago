@@ -34,7 +34,8 @@ class ThreadsView(ViewBase):
             cleaned_kwargs = sorting.clean_kwargs(cleaned_kwargs)
 
         if self.Filtering:
-            filtering = self.Filtering(self.link_name, cleaned_kwargs)
+            filtering = self.Filtering(
+                request.user, self.link_name, cleaned_kwargs)
             cleaned_kwargs = filtering.clean_kwargs(cleaned_kwargs)
 
         if cleaned_kwargs != kwargs:

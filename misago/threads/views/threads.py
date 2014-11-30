@@ -1,33 +1,29 @@
 from misago.threads.views import generic
 
 
-class ThreadsMixin(object):
-    pass
-
-
-class ForumView(ThreadsMixin, generic.ForumView):
+class ForumView(generic.ForumView):
     link_name = 'misago:forum'
 
 
-class ThreadView(ThreadsMixin, generic.ThreadView):
+class ThreadView(generic.ThreadView):
     pass
 
 
-class ModeratedPostsListView(ThreadsMixin, generic.ModeratedPostsListView):
+class ModeratedPostsListView(generic.ModeratedPostsListView):
     pass
 
 
-class ReportedPostsListView(ThreadsMixin, generic.ReportedPostsListView):
+class ReportedPostsListView(generic.ReportedPostsListView):
     pass
 
 
-class GotoLastView(ThreadsMixin, generic.GotoLastView):
+class GotoLastView(generic.GotoLastView):
     pass
 
 
-class GotoNewView(ThreadsMixin, generic.GotoNewView):
+class GotoNewView(generic.GotoNewView):
     pass
 
 
-class GotoPostView(ThreadsMixin, generic.GotoPostView):
+class GotoPostView(generic.GotoPostView):
     pass

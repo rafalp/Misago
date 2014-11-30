@@ -1,15 +1,20 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
 from misago.acl import add_acl, algebra
 from misago.acl.decorators import return_boolean
+from misago.acl.models import Role
 from misago.core import forms
 
 
 __all__ = [
+    'allow_use_private_threads',
+    'can_use_private_threads',
     'allow_message_user',
-    'can_message_user'
+    'can_message_user',
+    'exclude_invisible_private_threads',
 ]
 
 
@@ -79,9 +84,19 @@ def build_acl(acl, roles, key_name):
 """
 ACL tests
 """
-def allow_message_user(user, target):
+def allow_use_private_threads(user):
+    if user.is_anonymous():
+        raise PermissionDenied(_("Unsigned members can't use "
+                                 "private threads system."))
     if not user.acl['can_use_private_threads']:
         raise PermissionDenied(_("You can't use private threads system."))
+can_use_private_threads = return_boolean(allow_use_private_threads)
+
+
+
+def allow_message_user(user, target):
+    allow_use_private_threads(user)
+
     if not user.acl['can_start_private_threads']:
         raise PermissionDenied(_("You can't start private threads."))
 
@@ -103,3 +118,15 @@ def allow_message_user(user, target):
                     "threads only from followed users.")
         raise PermissionDenied(message % message_format)
 can_message_user = return_boolean(allow_message_user)
+
+
+"""
+Queryset helpers
+"""
+def exclude_invisible_private_threads(queryset, user):
+    if user.acl['can_moderate_private_threads']:
+        see_participating = Q(participants=user)
+        see_reported = Q(has_reported_posts=True)
+        return queryset.filter(see_reported | see_participating)
+    else:
+        return queryset.filter(participants=user)
