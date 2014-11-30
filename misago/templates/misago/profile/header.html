@@ -14,6 +14,18 @@
 
 {% if user.is_authenticated %}
 <div class="page-actions">
+  {% if can_message %}
+  <button class="btn btn-default btn-message pull-left">
+    <span class="fa fa-envelope-o"></span>
+    {% trans "Message" %}
+  </button>
+  {% elif not is_authenticated_user %}
+  <button class="btn btn-default tooltip-bottom" disabled="disabled" title="{{ cant_message_reason }}">
+    <span class="fa fa-envelope-o"></span>
+    {% trans "Message" %}
+  </button>
+  {% endif %}
+
   {% if profile.acl_.can_follow %}
   <form action="{% url 'misago:follow_user' user_slug=profile.slug user_id=profile.id %}" method="POST" class="pull-left dynamic-button">
     {% csrf_token %}
@@ -23,6 +35,7 @@
     </button>
   </form>
   {% endif %}
+
   {% if profile.acl_.can_block %}
   <form action="{% url 'misago:block_user' user_slug=profile.slug user_id=profile.id %}" method="POST" class="pull-left dynamic-button">
     {% csrf_token %}

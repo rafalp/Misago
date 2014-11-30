@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db.transaction import atomic
 from django.http import Http404, JsonResponse
@@ -11,6 +12,7 @@ from misago.core.decorators import require_POST
 from misago.core.shortcuts import get_object_or_404, paginate, validate_slug
 from misago.core.utils import clean_return_path
 from misago.notifications import notify_user, read_user_notification
+from misago.threads.permissions import allow_message_user
 
 from misago.users.bans import get_user_ban
 from misago.users.decorators import deny_guests
@@ -103,6 +105,13 @@ def render(request, template, context):
         context['show_email'] = False
 
     context['state'] = get_user_state(context['profile'], user_acl)
+
+    if request.user.is_authenticated():
+        try:
+            context['can_message'] = True
+        except PermissionDenied as e:
+            context['can_message'] = False
+            context['cant_message_reason'] = unicode(e)
 
     return django_render(request, template, context)
 
