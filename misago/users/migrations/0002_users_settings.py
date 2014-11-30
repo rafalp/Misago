@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.conf import settings
 from django.db import models, migrations
 from django.utils.translation import ugettext as _
 
@@ -178,7 +179,7 @@ def create_users_settings_group(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('misago_users', '0001_initial'),
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('misago_conf', '0001_initial'),
     ]
 
