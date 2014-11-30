@@ -299,6 +299,21 @@ class User(AbstractBaseUser, PermissionsMixin):
             return 0
 
     @property
+    def can_be_messaged_by_everyone(self):
+        preference = self.limits_private_thread_invites_to
+        return preference == LIMITS_PRIVATE_THREAD_INVITES_TO_NONE
+
+    @property
+    def can_be_messaged_by_followed(self):
+        preference = self.limits_private_thread_invites_to
+        return preference == LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED
+
+    @property
+    def can_be_messaged_by_nobody(self):
+        preference = self.limits_private_thread_invites_to
+        return preference == LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY
+
+    @property
     def has_valid_signature(self):
         return is_user_signature_valid(self)
 

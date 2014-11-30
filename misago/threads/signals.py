@@ -106,3 +106,14 @@ def update_usernames(sender, **kwargs):
     Event.objects.filter(author=sender).update(
         author_name=sender.username,
         author_slug=sender.slug)
+
+
+from django.contrib.auth import get_user_model
+from django.db.models.signals import pre_delete
+@receiver(pre_delete, sender=get_user_model())
+def remove_unparticipated_private_threads(sender, **kwargs):
+    threads_qs = kwargs['instance'].private_thread_set.all()
+    for thread in batch_update(threads_qs, 50):
+        if thread.participants.count() == 1:
+            with transaction.atomic():
+                thread.delete()

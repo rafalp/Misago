@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from misago.forums.models import Forum
 
-from misago.threads.models import Thread, Post, Event
+from misago.threads.models import Thread, ThreadParticipant, Post, Event
 
 
 class ThreadModelTests(TestCase):
@@ -283,3 +283,25 @@ class ThreadModelTests(TestCase):
         self.assertEqual(self.thread.last_post_on, post.posted_on)
         self.assertEqual(self.thread.last_poster_name, "Admin")
         self.assertEqual(self.thread.last_poster_slug, "admin")
+
+    def test_delete_private_thread(self):
+        """
+        private thread gets deleted automatically
+        when there are no participants left in it
+        """
+        User = get_user_model()
+        user_a = User.objects.create_user(
+            "Bob", "bob@boberson.com", "Pass.123")
+        user_b = User.objects.create_user(
+            "Weebl", "weebl@weeblson.com", "Pass.123")
+
+        ThreadParticipant.objects.add_participant(self.thread, user_a)
+        ThreadParticipant.objects.add_participant(self.thread, user_b)
+        self.assertEqual(self.thread.participants.count(), 2)
+
+        user_a.delete()
+        Thread.objects.get(id=self.thread.id)
+
+        user_b.delete()
+        with self.assertRaises(Thread.DoesNotExist):
+            Thread.objects.get(id=self.thread.id)

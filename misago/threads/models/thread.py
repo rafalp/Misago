@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from django.db import models
+from django.db import models, transaction
 from django.dispatch import receiver
 
 from misago.conf import settings
@@ -7,10 +7,25 @@ from misago.core.shortcuts import paginate
 from misago.core.utils import slugify
 
 
-__all__ = ['Thread', 'ThreadParticipant']
+__all__ = [
+    'PARTICIPANT_REMOVED',
+    'PARTICIPANT_ACTIVE',
+    'PARTICIPANT_OWNER',
+    'Thread',
+    'ThreadParticipant'
+]
 
 
-class Thread(models.Model):
+PARTICIPANT_REMOVED = 0
+PARTICIPANT_ACTIVE = 1
+PARTICIPANT_OWNER = 2
+
+
+class PrivateThreadMixin(object):
+    pass
+
+
+class Thread(models.Model, PrivateThreadMixin):
     forum = models.ForeignKey('misago_forums.Forum')
     label = models.ForeignKey('misago_threads.Label',
                               null=True, blank=True,
@@ -174,15 +189,45 @@ class Thread(models.Model):
             self.last_poster_slug = slugify(post.poster_name)
 
 
-PARTICIPANT_REMOVED = 0
-PARTICIPANT_ACTIVE = 1
-PARTICIPANT_OWNER = 2
+class ThreadParticipantManager(models.Manager):
+    def delete_participant(self, thread, user):
+        ThreadParticipant.objects.filter(thread=thread, user=user).delete()
+
+    @transaction.atomic
+    def set_owner(self, thread, user):
+        thread_owner = ThreadParticipant.objects.filter(
+            thread=thread, level=PARTICIPANT_OWNER)
+        thread_owner.update(level=PARTICIPANT_ACTIVE)
+
+        self.delete_participant(thread, user)
+        ThreadParticipant.objects.create(
+            thread=thread,
+            user=user,
+            level=PARTICIPANT_OWNER)
+
+    @transaction.atomic
+    def add_participant(self, thread, user):
+        self.delete_participant(thread, user)
+        ThreadParticipant.objects.create(
+            thread=thread,
+            user=user,
+            level=PARTICIPANT_ACTIVE)
+
+    @transaction.atomic
+    def remove_participant(self, thread, user):
+        self.delete_participant(thread, user)
+        ThreadParticipant.objects.create(
+            thread=thread,
+            user=user,
+            level=PARTICIPANT_REMOVED)
 
 
 class ThreadParticipant(models.Model):
     thread = models.ForeignKey(Thread)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     level = models.PositiveIntegerField(default=PARTICIPANT_ACTIVE)
+
+    objects = ThreadParticipantManager()
 
     @property
     def is_removed(self):
@@ -195,5 +240,3 @@ class ThreadParticipant(models.Model):
     @property
     def is_owner(self):
         return self.level == PARTICIPANT_OWNER
-
-
