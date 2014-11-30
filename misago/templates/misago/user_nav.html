@@ -71,9 +71,13 @@
   </li>
   {% endif %}
   <li>
-    <a href="#" class="tooltip-bottom" title="{% trans "Private threads" %}">
+    <a href="#" class="tooltip-bottom" {% if user.unread_private_threads %}
+        title="{% blocktrans with unread=user.unread_private_threads count counter=user.unread_private_threads %}{{ unread }} unread private threads{% plural %}{{ unread }} unread private thread{% endblocktrans %}"
+        {% else %}
+        title="{% trans "Private threads" %}"
+        {% endif %}>
       <span class="fa fa-inbox fa-fw"></span>
-      <span class="badge">47</span>
+      <span class="badge fade {{ user.unread_private_threads|iftrue:"in" }}" data-misago-badge="private_threads">{{ user.unread_private_threads }}</span>
     </a>
   </li>
   <li class="user-notifications-nav dropdown">

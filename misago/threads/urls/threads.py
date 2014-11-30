@@ -41,18 +41,6 @@ urlpatterns += patterns('',
 )
 
 
-from misago.threads.views.post import (QuotePostView, ApprovePostView,
-                                       HidePostView, UnhidePostView,
-                                       DeletePostView)
-urlpatterns += patterns('',
-    url(r'^post/(?P<post_id>\d+)/quote/$', QuotePostView.as_view(), name='quote_post'),
-    url(r'^post/(?P<post_id>\d+)/approve/$', ApprovePostView.as_view(), name='approve_post'),
-    url(r'^post/(?P<post_id>\d+)/unhide/$', UnhidePostView.as_view(), name='unhide_post'),
-    url(r'^post/(?P<post_id>\d+)/hide/$', HidePostView.as_view(), name='hide_post'),
-    url(r'^post/(?P<post_id>\d+)/delete/$', DeletePostView.as_view(), name='delete_post'),
-)
-
-
 # new threads list
 from misago.threads.views.newthreads import NewThreadsView, clear_new_threads
 urlpatterns += patterns('',
@@ -83,11 +71,4 @@ urlpatterns += patterns('',
     url(r'^moderated-content/(?P<page>\d+)/$', ModeratedContentView.as_view(), name='moderated_content'),
     url(r'^moderated-content/sort-(?P<sort>[\w-]+)$', ModeratedContentView.as_view(), name='moderated_content'),
     url(r'^moderated-content/sort-(?P<sort>[\w-]+)(?P<page>\d+)/$', ModeratedContentView.as_view(), name='moderated_content'),
-)
-
-
-# events moderation
-from misago.threads.views.events import EventsView
-urlpatterns += patterns('',
-    url(r'^edit-event/(?P<event_id>\d+)/$', EventsView.as_view(), name='edit_event'),
 )
