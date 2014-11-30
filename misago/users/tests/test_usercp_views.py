@@ -28,7 +28,8 @@ class ChangeForumOptionsTests(AuthenticatedUserTestCase):
         response = self.client.post(self.view_link, data={
                 'timezone': 'Asia/Qatar',
                 'is_hiding_presence': '1',
-                'subscribe_to_started_threads': '0',
+                'limits_private_thread_invites_to': '1',
+                'subscribe_to_started_threads': '1',
                 'subscribe_to_replied_threads': '1',
             })
 
@@ -37,7 +38,8 @@ class ChangeForumOptionsTests(AuthenticatedUserTestCase):
         test_user = get_user_model().objects.get(pk=self.user.pk)
         self.assertEqual(test_user.timezone, 'Asia/Qatar')
         self.assertEqual(test_user.is_hiding_presence, 1)
-        self.assertEqual(test_user.subscribe_to_started_threads, 0)
+        self.assertEqual(test_user.limits_private_thread_invites_to, 1)
+        self.assertEqual(test_user.subscribe_to_started_threads, 1)
         self.assertEqual(test_user.subscribe_to_replied_threads, 1)
 
 

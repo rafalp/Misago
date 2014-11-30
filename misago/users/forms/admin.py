@@ -2,11 +2,13 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _, ungettext
 
 from misago.conf import settings
-from misago.core import forms, threadstore
+from misago.core import forms, threadstore, timezones
 from misago.core.validators import validate_sluggable
 from misago.acl.models import Role
 
-from misago.users.models import (BANS_CHOICES, RESTRICTIONS_CHOICES,
+from misago.users.models import (AUTO_SUBSCRIBE_CHOICES,
+                                 PRIVATE_THREAD_INVITES_LIMITS_CHOICES,
+                                 BANS_CHOICES, RESTRICTIONS_CHOICES,
                                  Ban, Rank, WarningLevel)
 from misago.users.validators import (validate_username, validate_email,
                                      validate_password)
@@ -110,6 +112,18 @@ class EditUserForm(UserBaseForm):
         widget=forms.Textarea(attrs={'rows': 3}),
         required=False)
 
+    is_hiding_presence = forms.YesNoSwitch(label=_("Hides presence"))
+    limits_private_thread_invites_to = forms.TypedChoiceField(
+        label=_("Who can add user to private threads"),
+        coerce=int,
+        choices=PRIVATE_THREAD_INVITES_LIMITS_CHOICES)
+
+    subscribe_to_started_threads = forms.TypedChoiceField(
+        label=_("Started threads"), coerce=int, choices=AUTO_SUBSCRIBE_CHOICES)
+    subscribe_to_replied_threads = forms.TypedChoiceField(
+        label=_("Replid threads"), coerce=int,
+        choices=AUTO_SUBSCRIBE_CHOICES)
+
     class Meta:
         model = get_user_model()
         fields = [
@@ -121,8 +135,14 @@ class EditUserForm(UserBaseForm):
             'avatar_lock_staff_message',
             'signature',
             'is_signature_locked',
+            'timezone',
+            'is_hiding_presence',
+            'limits_private_thread_invites_to',
             'signature_lock_user_message',
-            'signature_lock_staff_message'
+            'signature_lock_staff_message',
+            'subscribe_to_started_threads',
+            'subscribe_to_replied_threads'
+
         ]
 
     def clean_signature(self):
@@ -157,6 +177,10 @@ def UserFormFactory(FormType, instance):
         queryset=roles,
         initial=instance.roles.all() if instance.pk else None,
         widget=forms.CheckboxSelectMultiple)
+
+    if instance.pk:
+        extra_fields['timezone'] = forms.ChoiceField(
+            label=_("Timezone"), choices=timezones.choices())
 
     return type('UserFormFinal', (FormType,), extra_fields)
 

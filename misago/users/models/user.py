@@ -27,11 +27,18 @@ from misago.users.utils import hash_email
 
 
 __all__ = [
-    'ACTIVATION_REQUIRED_NONE', 'ACTIVATION_REQUIRED_USER',
-    'ACTIVATION_REQUIRED_ADMIN', 'AUTO_SUBSCRIBE_NONE',
-    'AUTO_SUBSCRIBE_WATCH', 'AUTO_SUBSCRIBE_WATCH_AND_EMAIL',
-    'AUTO_SUBSCRIBE_CHOICES', 'AnonymousUser', 'User', 'UsernameChange',
-    'Online',
+    'ACTIVATION_REQUIRED_NONE',
+    'ACTIVATION_REQUIRED_USER',
+    'ACTIVATION_REQUIRED_ADMIN',
+    'AUTO_SUBSCRIBE_NONE',
+    'AUTO_SUBSCRIBE_WATCH',
+    'AUTO_SUBSCRIBE_WATCH_AND_EMAIL',
+    'AUTO_SUBSCRIBE_CHOICES',
+    'LIMITS_PRIVATE_THREAD_INVITES_TO_NONE',
+    'LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED',
+    'LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY',
+    'PRIVATE_THREAD_INVITES_LIMITS_CHOICES',
+    'AnonymousUser', 'User', 'UsernameChange', 'Online',
 ]
 
 
@@ -49,6 +56,17 @@ AUTO_SUBSCRIBE_CHOICES = (
     (AUTO_SUBSCRIBE_WATCH, _("Add to watched list.")),
     (AUTO_SUBSCRIBE_WATCH_AND_EMAIL,
      _("Add to watched list with e-mail notification."))
+)
+
+
+LIMITS_PRIVATE_THREAD_INVITES_TO_NONE = 0
+LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED = 1
+LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY = 2
+
+PRIVATE_THREAD_INVITES_LIMITS_CHOICES = (
+    (LIMITS_PRIVATE_THREAD_INVITES_TO_NONE, _("Everybody")),
+    (LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED, _("Users I follow")),
+    (LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY, _("Nobody")),
 )
 
 
@@ -205,7 +223,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     new_notifications = models.PositiveIntegerField(default=0)
 
-    limit_private_thread_invites = models.PositiveIntegerField(default=0)
+    limits_private_thread_invites_to = models.PositiveIntegerField(
+        default=LIMITS_PRIVATE_THREAD_INVITES_TO_NONE)
     unread_private_threads = models.PositiveIntegerField(default=0)
     sync_unred_private_threads = models.BooleanField(default=False)
 

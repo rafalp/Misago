@@ -181,8 +181,8 @@ MISAGO_ACL_EXTENSIONS = (
     'misago.users.permissions.moderation',
     'misago.users.permissions.delete',
     'misago.forums.permissions',
-    'misago.threads.permissions.privatethreads',
     'misago.threads.permissions.threads',
+    'misago.threads.permissions.privatethreads',
 )
 
 MISAGO_MARKUP_EXTENSIONS = ()

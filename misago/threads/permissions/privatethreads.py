@@ -59,7 +59,7 @@ def build_acl(acl, roles, key_name):
 
     new_acl.update(acl)
 
-    acl = algebra.sum_acls(new_acl, roles=roles, key=key_name,
+    algebra.sum_acls(new_acl, roles=roles, key=key_name,
         can_use_private_threads=algebra.greater,
         can_start_private_threads=algebra.greater,
         max_private_thread_participants=algebra.greater_or_zero,
@@ -67,3 +67,5 @@ def build_acl(acl, roles, key_name):
         can_report_private_threads=algebra.greater,
         can_moderate_private_threads=algebra.greater
     )
+
+    return new_acl

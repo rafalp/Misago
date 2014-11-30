@@ -4,7 +4,8 @@ from django.utils.translation import ugettext_lazy as _, ungettext
 from misago.conf import settings
 from misago.core import forms, timezones
 
-from misago.users.models import AUTO_SUBSCRIBE_CHOICES
+from misago.users.models import (AUTO_SUBSCRIBE_CHOICES,
+                                 PRIVATE_THREAD_INVITES_LIMITS_CHOICES)
 from misago.users.validators import validate_email, validate_password
 
 
@@ -19,6 +20,11 @@ class ChangeForumOptionsBaseForm(forms.ModelForm):
         help_text=_("If you hide your presence, only members with permission "
                     "to see hidden will see when you are online."))
 
+    limits_private_thread_invites_to = forms.TypedChoiceField(
+        label=_("Who can add me to private threads"),
+        coerce=int,
+        choices=PRIVATE_THREAD_INVITES_LIMITS_CHOICES)
+
     subscribe_to_started_threads = forms.TypedChoiceField(
         label=_("Threads I start"), coerce=int, choices=AUTO_SUBSCRIBE_CHOICES)
 
@@ -28,9 +34,13 @@ class ChangeForumOptionsBaseForm(forms.ModelForm):
 
     class Meta:
         model = get_user_model()
-        fields = ['timezone', 'is_hiding_presence',
-                  'subscribe_to_started_threads',
-                  'subscribe_to_replied_threads']
+        fields = [
+            'timezone',
+            'is_hiding_presence',
+            'limits_private_thread_invites_to',
+            'subscribe_to_started_threads',
+            'subscribe_to_replied_threads'
+        ]
 
 
 def ChangeForumOptionsForm(*args, **kwargs):

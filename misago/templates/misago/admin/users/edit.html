@@ -68,6 +68,21 @@ class="form-horizontal"
     {% form_row form.signature_lock_staff_message label_class field_class %}
 
   </fieldset>
+  <fieldset>
+    <legend>{% trans "Forum options" %}</legend>
+
+    {% form_row form.is_hiding_presence label_class field_class %}
+    {% form_row form.limits_private_thread_invites_to label_class field_class %}
+    {% form_row form.timezone label_class field_class %}
+
+  </fieldset>
+  <fieldset>
+    <legend>{% trans "Automatic subscription preferences" %}</legend>
+
+    {% form_row form.subscribe_to_started_threads label_class field_class %}
+    {% form_row form.subscribe_to_replied_threads label_class field_class %}
+
+  </fieldset>
   {% endwith %}
 </div>
 {% endblock form-body %}
