@@ -101,6 +101,24 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
+            name='ThreadParticipant',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('level', models.PositiveIntegerField(default=1)),
+                ('thread', models.ForeignKey(to='misago_threads.Thread')),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='thread',
+            name='participants',
+            field=models.ManyToManyField(related_name='private_thread_set', through='misago_threads.ThreadParticipant', to=settings.AUTH_USER_MODEL),
+            preserve_default=True,
+        ),
+        migrations.CreateModel(
             name='Event',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),

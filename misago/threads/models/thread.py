@@ -7,7 +7,7 @@ from misago.core.shortcuts import paginate
 from misago.core.utils import slugify
 
 
-__all__ = ['Thread']
+__all__ = ['Thread', 'ThreadParticipant']
 
 
 class Thread(models.Model):
@@ -46,6 +46,10 @@ class Thread(models.Model):
     is_moderated = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
+
+    participants = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                          related_name='private_thread_set',
+                                          through='ThreadParticipant')
 
     class Meta:
         index_together = [
@@ -168,3 +172,28 @@ class Thread(models.Model):
             self.last_poster_slug = post.poster.slug
         else:
             self.last_poster_slug = slugify(post.poster_name)
+
+
+PARTICIPANT_REMOVED = 0
+PARTICIPANT_ACTIVE = 1
+PARTICIPANT_OWNER = 2
+
+
+class ThreadParticipant(models.Model):
+    thread = models.ForeignKey(Thread)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    level = models.PositiveIntegerField(default=PARTICIPANT_ACTIVE)
+
+    @property
+    def is_removed(self):
+        return self.level == PARTICIPANT_REMOVED
+
+    @property
+    def is_active(self):
+        return self.level == PARTICIPANT_ACTIVE
+
+    @property
+    def is_owner(self):
+        return self.level == PARTICIPANT_OWNER
+
+
