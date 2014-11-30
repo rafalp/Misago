@@ -179,7 +179,7 @@ def create_users_settings_group(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('misago_users', '0001_initial'),
         ('misago_conf', '0001_initial'),
     ]
 
