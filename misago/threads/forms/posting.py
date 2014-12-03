@@ -1,9 +1,12 @@
+from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext_lazy as _, ungettext
 
 from misago.conf import settings
 from misago.core import forms
 from misago.markup import common_flavour
 
+from misago.threads.permissions import allow_message_user
 from misago.threads.validators import validate_title
 
 
@@ -43,7 +46,7 @@ class ReplyForm(forms.Form):
             message = ungettext(
                 "Posted message can't be longer than %(limit)s character.",
                 "Posted message can't be longer than %(limit)s characters.",
-                settings.post_length_max,)
+                settings.post_length_max)
             message = message % {'limit': settings.post_length_max}
             raise forms.ValidationError(message)
 
@@ -99,9 +102,49 @@ class ThreadParticipantsForm(forms.Form):
 
     users = forms.CharField(label=_("Invite users to thread"))
 
-    def __init__(self, thread=None, *args, **kwargs):
-        self.thread_instance = thread
+    def __init__(self, *args, **kwargs):
+        self.users_cache = []
+        self.user = kwargs.pop('user', None)
+
         super(ThreadParticipantsForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super(ThreadParticipantsForm, self).clean()
+
+        clean_usernames = []
+        for name in cleaned_data['users'].split(','):
+            clean_name = name.strip().lower()
+            if clean_name == self.user.slug:
+                raise forms.ValidationError(
+                    _("You can't addres message to yourself."))
+            if clean_name not in clean_usernames:
+                clean_usernames.append(clean_name)
+
+        max_participants = self.user.acl['max_private_thread_participants']
+        if max_participants and len(clean_usernames) > max_participants:
+            message = ungettext("You can't start private thread "
+                                "with more than than %(users)s user.",
+                                "You can't start private thread "
+                                "with more than than %(users)s users.",
+                                max_participants)
+            message = message % {'users': max_participants.post_length_max}
+            raise forms.ValidationError(message)
+
+        users_qs = get_user_model().objects.filter(slug__in=clean_usernames)
+        for user in users_qs:
+            try:
+                allow_message_user(self.user, user)
+            except PermissionDenied as e:
+                raise forms.ValidationError(unicode(e))
+            self.users_cache.append(user)
+
+        if len(self.users_cache) != len(clean_usernames):
+            raise forms.ValidationError(
+                _("One or more message recipients could not be found"))
+
+        cleaned_data['users'] = ','.join([u.slug for u in self.users_cache])
+
+        return cleaned_data
 
 
 class ThreadLabelFormBase(forms.Form):

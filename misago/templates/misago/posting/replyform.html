@@ -9,7 +9,7 @@
 <div class="thread-title">
   <div class="row">
     <div class="col-md-{{ supporting_forms.after_title|yesno:"9,12" }}">
-      <input class="textinput textInput form-control title-input" id="{{ form.title.auto_id }}" name="title" type="text" {% if form.title.value %}value="{{ form.title.value }}"{% endif %} placeholder="{% trans "Thread title..." %}">
+      <input class="textinput textInput form-control title-input" id="{{ form.title.auto_id }}" name="{{ form.title.html_name }}" type="text" {% if form.title.value %}value="{{ form.title.value }}"{% endif %} placeholder="{% trans "Thread title..." %}">
     </div>
 
     {% if supporting_forms.after_title %}

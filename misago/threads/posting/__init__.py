@@ -123,10 +123,13 @@ class EditorFormset(object):
         all_forms_valid = True
         for form in self.get_forms_list():
             if not form.is_valid():
-                all_forms_valid = False
-                for error in form.non_field_errors():
-                    self.errors.append(unicode(error))
+                if not form.is_bound:
+                    form_class = form.__class__.__name__
+                    raise ValueError("%s didn't receive any data" % form_class)
 
+                all_forms_valid = False
+                for field_errors in form.errors.as_data().values():
+                    self.errors.extend([unicode(e[0]) for e in field_errors])
         return all_forms_valid
 
     def save(self):
