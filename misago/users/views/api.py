@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
@@ -8,6 +10,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from misago.core.decorators import ajax_only, require_POST
 
 from misago.users import validators
+from misago.users.decorators import deny_guests
 
 
 def api(f):
@@ -59,3 +62,32 @@ def validate_password(request):
         return _("Entered password is valid.")
     except KeyError:
         raise ValidationError(_('Enter password.'))
+
+
+@ajax_only
+@require_POST
+@deny_guests
+def suggestion_engine(request):
+    suggestions = []
+
+    username = request.POST.get('username', '').lower()
+    if len(username) > 1:
+        User = get_user_model()
+        queryset = User.objects.filter(slug__startswith=username)
+
+        for user in queryset.order_by('slug')[:5]:
+            avatars = {}
+            for size in settings.MISAGO_AVATARS_SIZES:
+                avatars[size] = reverse('misago:user_avatar', kwargs={
+                    'size': size, 'user_id': user.pk
+                })
+
+            suggestions.append({
+                'avatar': avatars,
+                'username': user.username,
+                'url': user.get_absolute_url()
+            })
+
+    return JsonResponse({
+        'profiles': suggestions
+    })

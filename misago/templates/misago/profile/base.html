@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n %}
+{% load i18n misago_avatars %}
 
 
 {% block title %}{{ profile }}: {{ active_page.name }} {% if page_number > 1 %}({% blocktrans with page=page_number %}Page {{ number }}{% endblocktrans %}) {% endif %}| {{ block.super }}{% endblock title %}
@@ -39,13 +39,16 @@
     </div>
   </div>
 </div>
+<div id="reply-form-placeholder"></div>
 {% endblock content %}
+
 
 {% block javascripts %}
 {% include "misago/modusers/mod_js.html" %}
-{% if profile.acl_.can_have_attitude %}
 <script type="text/javascript">
   $(function() {
+
+    {% if profile.acl_.can_have_attitude %}
     $('.dynamic-button').submit(function() {
       var $form = $(this);
       var $button = $form.find('button');
@@ -59,7 +62,25 @@
       });
       return false;
     });
+    {% endif %}
+
+    {% if can_message %}
+    $('.btn-message').click(function() {
+
+      Misago.Posting.load({
+        api_url: "{% url 'misago:start_private_thread' %}",
+        on_load: function() {
+          var participants = new Misago.participants($('.thread-participants'));
+          participants.add_user({
+            username: "{{ profile.username }}",
+            avatar: {30: "{{ profile|avatar:30 }}"}
+          })
+        }
+      });
+
+    });
+    {% endif %}
+
   });
 </script>
-{% endif %}
 {% endblock javascripts %}

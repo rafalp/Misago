@@ -64,7 +64,8 @@ class Thread(models.Model, PrivateThreadMixin):
 
     participants = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                           related_name='private_thread_set',
-                                          through='ThreadParticipant')
+                                          through='ThreadParticipant',
+                                          through_fields=('thread', 'user'))
 
     class Meta:
         index_together = [
@@ -219,13 +220,26 @@ class ThreadParticipantManager(models.Manager):
         ThreadParticipant.objects.create(
             thread=thread,
             user=user,
-            level=PARTICIPANT_REMOVED)
+            level=PARTICIPANT_REMOVED,
+            replies=thread.replies,
+            last_post_on=thread.last_post_on,
+            last_poster_id=thread.last_poster_id,
+            last_poster_name=thread.last_poster_name,
+            last_poster_slug=thread.last_poster_slug)
 
 
 class ThreadParticipant(models.Model):
     thread = models.ForeignKey(Thread)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     level = models.PositiveIntegerField(default=PARTICIPANT_ACTIVE)
+    replies = models.PositiveIntegerField(default=0)
+    last_post_on = models.DateTimeField(null=True, blank=True)
+    last_poster = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                    related_name='+',
+                                    null=True, blank=True,
+                                    on_delete=models.SET_NULL)
+    last_poster_name = models.CharField(max_length=255, null=True, blank=True)
+    last_poster_slug = models.CharField(max_length=255, null=True, blank=True)
 
     objects = ThreadParticipantManager()
 

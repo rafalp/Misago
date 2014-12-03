@@ -108,10 +108,11 @@ def render(request, template, context):
 
     if request.user.is_authenticated():
         try:
+            allow_message_user(request.user, context['profile'])
             context['can_message'] = True
         except PermissionDenied as e:
             context['can_message'] = False
-            context['cant_message_reason'] = unicode(e)
+            context['cant_message_reason'] = e
 
     return django_render(request, template, context)
 

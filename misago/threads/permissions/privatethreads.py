@@ -97,6 +97,9 @@ can_use_private_threads = return_boolean(allow_use_private_threads)
 def allow_message_user(user, target):
     allow_use_private_threads(user)
 
+    if user == target:
+        raise PermissionDenied(_("You can't message yourself."))
+
     if not user.acl['can_start_private_threads']:
         raise PermissionDenied(_("You can't start private threads."))
 

@@ -107,6 +107,11 @@ class Migration(migrations.Migration):
                 ('level', models.PositiveIntegerField(default=1)),
                 ('thread', models.ForeignKey(to='misago_threads.Thread')),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('replies', models.PositiveIntegerField(default=0)),
+                ('last_post_on', models.DateTimeField(null=True, blank=True)),
+                ('last_poster', models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+', null=True, blank=True, on_delete=django.db.models.deletion.SET_NULL)),
+                ('last_poster_name', models.CharField(max_length=255, null=True, blank=True)),
+                ('last_poster_slug', models.CharField(max_length=255, null=True, blank=True)),
             ],
             options={
             },
@@ -115,7 +120,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='thread',
             name='participants',
-            field=models.ManyToManyField(related_name='private_thread_set', through='misago_threads.ThreadParticipant', to=settings.AUTH_USER_MODEL),
+            field=models.ManyToManyField(related_name='private_thread_set', through='misago_threads.ThreadParticipant', through_fields=('thread', 'user'), to=settings.AUTH_USER_MODEL),
             preserve_default=True,
         ),
         migrations.CreateModel(

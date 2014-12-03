@@ -33,6 +33,7 @@ urlpatterns += patterns('misago.users.views.api',
     url(r'^api/validate/email/$', 'validate_email', name='api_validate_email'),
     url(r'^api/validate/email/(?P<user_id>\d+)/$', 'validate_email', name='api_validate_email'),
     url(r'^api/validate/password/$', 'validate_password', name='api_validate_password'),
+    url(r'^api/suggestion-engine/$', 'suggestion_engine', name='api_suggestion_engine'),
 )
 
 

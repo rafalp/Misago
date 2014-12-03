@@ -1,11 +1,15 @@
 {% load i18n misago_editor misago_forms misago_shorthands %}
 {% include 'misago/form_errors.html' %}
 
+{% for form in supporting_forms.reply_top %}
+  {% include form.template %}
+{% endfor %}
+
 {% if form.title %}
 <div class="thread-title">
   <div class="row">
     <div class="col-md-{{ supporting_forms.after_title|yesno:"9,12" }}">
-      <input class="textinput textInput form-control title-input" id="{{ form.title.auto_id }}" name="title" type="text" {% if form.title.value %}value="{{ form.title.value }}"{% endif %} placeholder="{% trans "Thread title..." %}"/>
+      <input class="textinput textInput form-control title-input" id="{{ form.title.auto_id }}" name="title" type="text" {% if form.title.value %}value="{{ form.title.value }}"{% endif %} placeholder="{% trans "Thread title..." %}">
     </div>
 
     {% if supporting_forms.after_title %}

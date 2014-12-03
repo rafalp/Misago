@@ -11,7 +11,6 @@ class ReplyForm(forms.Form):
     is_main = True
     legend = _("Reply")
     template = "misago/posting/replyform.html"
-    js_template = "misago/posting/replyform_js.html"
 
     post = forms.CharField(label=_("Message body"), required=False)
 
@@ -91,6 +90,18 @@ class ThreadForm(ReplyForm):
 
         if errors:
             raise forms.ValidationError(errors)
+
+
+class ThreadParticipantsForm(forms.Form):
+    is_supporting = True
+    location = 'reply_top'
+    template = "misago/posting/threadparticipantsform.html"
+
+    users = forms.CharField(label=_("Invite users to thread"))
+
+    def __init__(self, thread=None, *args, **kwargs):
+        self.thread_instance = thread
+        super(ThreadParticipantsForm, self).__init__(*args, **kwargs)
 
 
 class ThreadLabelFormBase(forms.Form):

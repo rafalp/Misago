@@ -117,3 +117,8 @@ class ThreadParticipantTests(TestCase):
         self.assertTrue(participation.is_removed)
         self.assertFalse(participation.is_owner)
         self.assertEqual(user, participation.user)
+        self.assertEqual(self.thread.last_post_on, participation.last_post_on)
+        self.assertEqual(self.thread.last_poster_id,
+                         participation.last_poster_id)
+        self.assertEqual(self.thread.last_poster_name,
+                         participation.last_poster_name)
