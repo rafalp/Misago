@@ -36,16 +36,14 @@ def handle_http404_exception(request, exception):
 
 
 def handle_outdated_slug_exception(request, exception):
-    matched_url = request.resolver_match.url_name
-    if request.resolver_match.namespace:
-        matched_url = '%s:%s' % (request.resolver_match.namespace, matched_url)
+    view_name = request.resolver_match.view_name
 
     model = exception.args[0]
     model_name = model.__class__.__name__.lower()
     url_kwargs = request.resolver_match.kwargs
     url_kwargs['%s_slug' % model_name] = model.slug
 
-    new_url = reverse(matched_url, kwargs=url_kwargs)
+    new_url = reverse(view_name, kwargs=url_kwargs)
     return HttpResponsePermanentRedirect(new_url)
 
 
