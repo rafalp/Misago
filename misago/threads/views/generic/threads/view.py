@@ -26,20 +26,21 @@ class ThreadsView(ViewBase):
         return cleaned_kwargs
 
     def dispatch(self, request, *args, **kwargs):
+        link_name = request.resolver_match.view_name
         page_number = kwargs.pop('page', None)
         cleaned_kwargs = self.clean_kwargs(request, kwargs)
 
         if self.Sorting:
-            sorting = self.Sorting(self.link_name, cleaned_kwargs)
+            sorting = self.Sorting(link_name, cleaned_kwargs)
             cleaned_kwargs = sorting.clean_kwargs(cleaned_kwargs)
 
         if self.Filtering:
             filtering = self.Filtering(
-                request.user, self.link_name, cleaned_kwargs)
+                request.user, link_name, cleaned_kwargs)
             cleaned_kwargs = filtering.clean_kwargs(cleaned_kwargs)
 
         if cleaned_kwargs != kwargs:
-            return redirect(self.link_name, **cleaned_kwargs)
+            return redirect(link_name, **cleaned_kwargs)
 
         threads = self.Threads(request.user)
 
@@ -59,7 +60,7 @@ class ThreadsView(ViewBase):
 
         # build template context
         context = {
-            'link_name': self.link_name,
+            'link_name': link_name,
             'links_params': cleaned_kwargs,
 
             'threads': threads.list(page_number),

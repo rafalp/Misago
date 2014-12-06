@@ -98,7 +98,7 @@ class ThreadView(ViewBase):
             thread_reply_message = unicode(e)
 
         return self.render(request, {
-            'link_name': thread.get_url_name(),
+            'link_name': request.resolver_match.view_name,
             'links_params': {
                 'thread_id': thread.id, 'thread_slug': thread.slug
             },

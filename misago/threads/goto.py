@@ -38,41 +38,14 @@ def get_post_page(posts, post_qs):
 
 
 def hashed_reverse(thread, post, page=1):
-    link_name = thread.get_url_name()
-
-    if page > 1:
-        post_url = reverse(link_name, kwargs={
-            'thread_id': thread.id,
-            'thread_slug': thread.slug,
-            'page': page
-        })
-    else:
-        post_url = reverse(link_name, kwargs={
-            'thread_id': thread.id,
-            'thread_slug': thread.slug
-        })
-
-    return '%s#post-%s' % (post_url, post.pk)
+    return thread.get_post_url(post.pk, page)
 
 
 def last(user, thread):
     posts, qs = posts_queryset(user, thread)
     thread_pages = get_thread_pages(posts)
 
-    link_name = thread.get_url_name()
-    if thread_pages > 1:
-        post_url = reverse(link_name, kwargs={
-            'thread_id': thread.id,
-            'thread_slug': thread.slug,
-            'page': thread_pages
-        })
-    else:
-        post_url = reverse(link_name, kwargs={
-            'thread_id': thread.id,
-            'thread_slug': thread.slug
-        })
-
-    return '%s#post-%s' % (post_url, thread.last_post_id)
+    return thread.get_post_url(thread.last_post_id, thread_pages)
 
 
 def get_post_link(posts, qs, thread, post):

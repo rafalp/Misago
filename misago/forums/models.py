@@ -13,6 +13,8 @@ from misago.conf import settings
 from misago.core.cache import cache
 from misago.core.utils import slugify
 
+from misago.threads import threadtypes
+
 
 CACHE_NAME = 'misago_forums_tree'
 FORUMS_TREE_ID = 1
@@ -83,13 +85,16 @@ class Forum(MPTTModel):
 
     objects = ForumManager()
 
-    def __unicode__(self):
-        if self.special_role == 'root_category':
-            return unicode(_('None (will become top level category)'))
-        elif self.special_role == 'private_threads':
-            return unicode(_('Private Threads'))
+    @property
+    def thread_type(self):
+        if self.special_role == 'root_category' or not self.special_role:
+            type_name = 'forum'
         else:
-            return self.name
+            type_name = self.special_role
+        return threadtypes.get(type_name)
+
+    def __unicode__(self):
+        return self.thread_type.get_forum_name(self)
 
     def lock(self):
         return Forum.objects.select_for_update().get(id=self.id)
@@ -140,24 +145,10 @@ class Forum(MPTTModel):
         return urlparse(self.redirect_url).hostname
 
     def get_absolute_url(self):
-        if self.special_role == 'private_threads':
-            return reverse('misago:private_threads')
-        else:
-            if self.level == 1:
-                formats = (reverse('misago:index'), self.slug, self.id)
-                return '%s#%s-%s' % formats
-            else:
-                return reverse('misago:%s' % self.role, kwargs={
-                    'forum_id': self.id, 'forum_slug': self.slug
-                })
+        return self.thread_type.get_forum_absolute_url(self)
 
     def get_new_thread_url(self):
-        if self.special_role == 'private_threads':
-            return reverse('misago:private_thread_new')
-        else:
-            return reverse('misago:thread_new' % self.role, kwargs={
-                'forum_id': self.id, 'forum_slug': self.slug
-            })
+        return self.thread_type.get_new_thread_url(self)
 
     def set_name(self, name):
         self.name = name

@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from misago.conf import settings
 
+from misago.threads import threadtypes
 from misago.threads.checksums import update_post_checksum, is_post_valid
 
 
@@ -49,13 +50,6 @@ class Post(models.Model):
     def __unicode__(self):
         return '%s...' % self.original[10:].strip()
 
-    def get_absolute_url(self):
-        return reverse(self.thread.get_url_name('post'), kwargs={
-            'thread_slug': self.thread.slug,
-            'thread_id': self.thread.id,
-            'post_id': self.id
-        })
-
     def delete(self, *args, **kwargs):
         from misago.threads.signals import delete_post
         delete_post.send(sender=self)
@@ -91,22 +85,27 @@ class Post(models.Model):
         self.thread = new_thread
         move_post.send(sender=self)
 
-    def get_absolute_url(self):
-        return reverse(self.thread.get_url_name('post'), kwargs={
-            'thread_slug': self.thread.slug,
-            'thread_id': self.thread.id,
-            'post_id': self.id
-        })
+    @property
+    def thread_type(self):
+        return self.forum.thread_type
 
-    def get_edit_url(self):
-        return reverse('misago:edit_post', kwargs={
-            'forum_id': self.forum_id,
-            'thread_id': self.thread_id,
-            'post_id': self.id
-        })
+    def get_absolute_url(self):
+        return self.thread_type.get_post_absolute_url(self)
 
     def get_quote_url(self):
-        return reverse('misago:quote_post', kwargs={'post_id': self.id})
+        return self.thread_type.get_post_quote_url(self)
+
+    def get_approve_url(self):
+        return self.thread_type.get_post_approve_url(self)
+
+    def get_unhide_url(self):
+        return self.thread_type.get_post_unhide_url(self)
+
+    def get_hide_url(self):
+        return self.thread_type.get_post_hide_url(self)
+
+    def get_delete_url(self):
+        return self.thread_type.get_post_delete_url(self)
 
     @property
     def short(self):

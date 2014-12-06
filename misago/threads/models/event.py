@@ -3,6 +3,7 @@ from django.utils import timezone
 
 from misago.conf import settings
 
+from misago.threads import threadtypes
 from misago.threads.checksums import is_event_valid
 
 
@@ -27,3 +28,10 @@ class Event(models.Model):
         self.author = user
         self.author_name = user.username
         self.author_slug = user.slug
+
+    @property
+    def thread_type(self):
+        return self.forum.thread_type
+
+    def get_edit_url(self):
+        return self.thread_type.get_event_edit_url(self)

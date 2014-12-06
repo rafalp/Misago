@@ -19,7 +19,6 @@ class ForumView(ThreadsView):
     Basic view for forum threads lists
     """
     template = 'misago/threads/forum.html'
-    link_name = 'misago:forum'
 
     Threads = ForumThreads
     Sorting = Sorting
@@ -40,14 +39,16 @@ class ForumView(ThreadsView):
         page_number = kwargs.pop('page', None)
         cleaned_kwargs = self.clean_kwargs(request, kwargs)
 
-        sorting = self.Sorting(self.link_name, cleaned_kwargs)
+        link_name = request.resolver_match.view_name
+
+        sorting = self.Sorting(link_name, cleaned_kwargs)
         cleaned_kwargs = sorting.clean_kwargs(cleaned_kwargs)
 
-        filtering = self.Filtering(forum, self.link_name, cleaned_kwargs)
+        filtering = self.Filtering(forum, link_name, cleaned_kwargs)
         cleaned_kwargs = filtering.clean_kwargs(cleaned_kwargs)
 
         if cleaned_kwargs != kwargs:
-            return redirect(self.link_name, **cleaned_kwargs)
+            return redirect(link_name, **cleaned_kwargs)
 
         threads = self.Threads(request.user, forum)
         sorting.sort(threads)
@@ -60,7 +61,7 @@ class ForumView(ThreadsView):
                 return response
 
         return self.render(request, {
-            'link_name': self.link_name,
+            'link_name': link_name,
             'links_params': cleaned_kwargs,
 
             'forum': forum,

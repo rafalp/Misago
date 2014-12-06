@@ -151,9 +151,6 @@ def validate_gmail_email(ip, username, email):
 """
 Registration validation
 """
-REGISTRATION_VALIDATORS = []
-
-
 def load_registration_validators(validators_list):
     loaded_validators = []
     for path in validators_list:
@@ -163,8 +160,7 @@ def load_registration_validators(validators_list):
 
 
 validators_list = settings.MISAGO_NEW_REGISTRATIONS_VALIDATORS
-if validators_list:
-    REGISTRATION_VALIDATORS = load_registration_validators(validators_list)
+REGISTRATION_VALIDATORS = load_registration_validators(validators_list)
 
 
 def validate_new_registration(ip, username, email, validators=None):

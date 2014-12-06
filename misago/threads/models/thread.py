@@ -129,49 +129,34 @@ class Thread(models.Model, PrivateThreadMixin):
             self.set_last_post(first_post)
 
     @property
-    def link_prefix(self):
-        if self.forum.special_role == 'private_threads':
-            return 'private_thread'
-        else:
-            return 'thread'
-
-    def get_url_name(self, suffix=None):
-        link = 'misago:%s' % self.link_prefix
-        if suffix:
-            link = '%s_%s' % (link, suffix)
-        return link
-
-    def get_url(self, suffix=None):
-        return reverse(self.get_url_name(suffix), kwargs={
-            'thread_slug': self.slug,
-            'thread_id': self.id
-        })
+    def thread_type(self):
+        return self.forum.thread_type
 
     def get_absolute_url(self):
-        return self.get_url()
+        return self.thread_type.get_thread_absolute_url(self)
+
+    def get_post_url(self, post, page):
+        try:
+            post_id = post.id
+        except AttributeError:
+            post_id = post
+
+        return self.thread_type.get_thread_post_url(self, post_id, page)
 
     def get_last_reply_url(self):
-        return self.get_url('last')
+        return self.thread_type.get_thread_last_reply_url(self)
 
     def get_new_reply_url(self):
-        return self.get_url('new')
+        return self.thread_type.get_thread_new_reply_url(self)
 
     def get_moderated_url(self):
-        return self.get_url('moderated')
+        return self.thread_type.get_thread_moderated_url(self)
 
     def get_reported_url(self):
-        return self.get_url('reported')
+        return self.thread_type.get_thread_reported_url(self)
 
     def get_reply_api_url(self):
-        if self.forum.special_role == 'private_threads':
-            return reverse('misago:reply_private_thread', kwargs={
-                'thread_id': self.id,
-            })
-        else:
-            return reverse('misago:reply_thread', kwargs={
-                'forum_id': self.forum.id,
-                'thread_id': self.id,
-            })
+        return self.thread_type.get_reply_url(self)
 
     def set_title(self, title):
         self.title = title

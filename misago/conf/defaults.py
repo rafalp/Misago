@@ -202,6 +202,12 @@ MISAGO_POSTING_MIDDLEWARES = (
     'misago.threads.posting.savechanges.SaveChangesMiddleware',
 )
 
+MISAGO_THREAD_TYPES = (
+    'misago.threads.threadtypes.forumthread.ForumThread',
+    'misago.threads.threadtypes.privatethread.PrivateThread',
+    'misago.threads.threadtypes.report.Report',
+)
+
 
 # Register Misago directories
 
