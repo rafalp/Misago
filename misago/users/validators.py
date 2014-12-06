@@ -154,14 +154,17 @@ Registration validation
 REGISTRATION_VALIDATORS = []
 
 
-def load_registration_validators():
-    for path in settings.MISAGO_NEW_REGISTRATIONS_VALIDATORS:
+def load_registration_validators(validators_list):
+    loaded_validators = []
+    for path in validators_list:
         module = import_module('.'.join(path.split('.')[:-1]))
-        REGISTRATION_VALIDATORS.append(getattr(module, path.split('.')[-1]))
+        loaded_validators.append(getattr(module, path.split('.')[-1]))
+    return loaded_validators
 
 
-if settings.MISAGO_NEW_REGISTRATIONS_VALIDATORS:
-    load_registration_validators()
+validators_list = settings.MISAGO_NEW_REGISTRATIONS_VALIDATORS
+if validators_list:
+    REGISTRATION_VALIDATORS = load_registration_validators(validators_list)
 
 
 def validate_new_registration(ip, username, email, validators=None):
