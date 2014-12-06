@@ -87,14 +87,10 @@ class Forum(MPTTModel):
 
     @property
     def thread_type(self):
-        if self.special_role == 'root_category' or not self.special_role:
-            type_name = 'forum'
-        else:
-            type_name = self.special_role
-        return threadtypes.get(type_name)
+        return threadtypes.get(self.special_role or self.role)
 
     def __unicode__(self):
-        return self.thread_type.get_forum_name(self)
+        return unicode(self.thread_type.get_forum_name(self))
 
     def lock(self):
         return Forum.objects.select_for_update().get(id=self.id)

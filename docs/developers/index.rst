@@ -48,6 +48,7 @@ Following references cover everything you want to know about writing your own ap
    shortcuts
    template_tags
    thread_store
+   thread_types
    user_sites
    validators
    validating_registrations

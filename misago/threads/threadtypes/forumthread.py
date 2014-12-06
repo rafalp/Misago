@@ -1,5 +1,4 @@
 from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext_lazy as _
 
 from misago.threads.threadtypes import ThreadTypeBase
 
@@ -7,17 +6,7 @@ from misago.threads.threadtypes import ThreadTypeBase
 class ForumThread(ThreadTypeBase):
     type_name = 'forum'
 
-    def get_forum_name(self, forum):
-        if forum.special_role == 'root_category':
-            return _('None (will become top level category)')
-        else:
-            return forum.name
-
     def get_forum_absolute_url(self, forum):
-        if forum.level == 1:
-            formats = (reverse('misago:index'), forum.slug, forum.id)
-            return '%s#%s-%s' % formats
-        else:
             return reverse('misago:%s' % forum.role, kwargs={
                 'forum_id': forum.id, 'forum_slug': forum.slug
             })

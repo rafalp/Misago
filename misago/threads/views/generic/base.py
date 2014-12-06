@@ -36,6 +36,9 @@ class ForumMixin(object):
             queryset, id=kwargs.get('forum_id'), role='forum')
 
     def check_forum_permissions(self, request, forum):
+        if forum.special_role:
+            raise Http404()
+
         add_acl(request.user, forum)
         allow_see_forum(request.user, forum)
         allow_browse_forum(request.user, forum)

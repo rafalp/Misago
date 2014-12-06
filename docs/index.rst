@@ -37,6 +37,7 @@ Table of Contents
    developers/shortcuts
    developers/template_tags
    developers/thread_store
+   developers/thread_types
    developers/user_sites
    developers/validators
    developers/validating_registrations

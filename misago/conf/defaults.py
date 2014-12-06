@@ -203,6 +203,11 @@ MISAGO_POSTING_MIDDLEWARES = (
 )
 
 MISAGO_THREAD_TYPES = (
+    # category and redirect types
+    'misago.forums.forumtypes.RootCategory',
+    'misago.forums.forumtypes.Category',
+    'misago.forums.forumtypes.Redirect',
+    # real thread types
     'misago.threads.threadtypes.forumthread.ForumThread',
     'misago.threads.threadtypes.privatethread.PrivateThread',
     'misago.threads.threadtypes.report.Report',
