@@ -71,6 +71,9 @@ def get_forums_list(user, parent=None):
 
 
 def get_forum_path(forum):
+    if forum.special_role:
+        return [forum]
+
     forums_dict = Forum.objects.get_cached_forums_dict()
 
     forum_path = []

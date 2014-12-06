@@ -140,7 +140,9 @@ class Forum(MPTTModel):
         return urlparse(self.redirect_url).hostname
 
     def get_absolute_url(self):
-        if not self.special_role:
+        if self.special_role == 'private_threads':
+            return reverse('misago:private_threads')
+        else:
             if self.level == 1:
                 formats = (reverse('misago:index'), self.slug, self.id)
                 return '%s#%s-%s' % formats
@@ -148,8 +150,14 @@ class Forum(MPTTModel):
                 return reverse('misago:%s' % self.role, kwargs={
                     'forum_id': self.id, 'forum_slug': self.slug
                 })
+
+    def get_new_thread_url(self):
+        if self.special_role == 'private_threads':
+            return reverse('misago:private_thread_new')
         else:
-            return None
+            return reverse('misago:thread_new' % self.role, kwargs={
+                'forum_id': self.id, 'forum_slug': self.slug
+            })
 
     def set_name(self, name):
         self.name = name

@@ -162,6 +162,17 @@ class Thread(models.Model, PrivateThreadMixin):
     def get_reported_url(self):
         return self.get_url('reported')
 
+    def get_reply_api_url(self):
+        if self.forum.special_role == 'private_threads':
+            return reverse('misago:reply_private_thread', kwargs={
+                'thread_id': self.id,
+            })
+        else:
+            return reverse('misago:reply_thread', kwargs={
+                'forum_id': self.forum.id,
+                'thread_id': self.id,
+            })
+
     def set_title(self, title):
         self.title = title
         self.slug = slugify(title)

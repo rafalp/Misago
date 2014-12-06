@@ -1,10 +1,6 @@
 # flake8: noqa
-from misago.threads.urls import events, posts, privatethreads, threads
+from misago.threads.urls import privatethreads, threads
 
 
-urlpatterns = []
-
-urlpatterns += events.urlpatterns
-urlpatterns += posts.urlpatterns
+urlpatterns = threads.urlpatterns
 urlpatterns += privatethreads.urlpatterns
-urlpatterns += threads.urlpatterns

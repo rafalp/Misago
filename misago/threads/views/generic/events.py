@@ -11,6 +11,9 @@ from misago.threads.models import Event
 from misago.threads.views.generic.base import ViewBase
 
 
+__all__ = ['EventsView']
+
+
 class EventsView(ViewBase):
     def dispatch(self, request, event_id):
         def toggle_event(request, event):

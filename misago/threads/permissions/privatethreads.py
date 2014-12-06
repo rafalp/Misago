@@ -7,11 +7,16 @@ from misago.acl import add_acl, algebra
 from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
 from misago.core import forms
+from misago.forums.models import Forum
 
 
 __all__ = [
     'allow_use_private_threads',
     'can_use_private_threads',
+    'allow_see_private_thread',
+    'can_see_private_thread',
+    'allow_see_private_post',
+    'can_see_private_post',
     'allow_message_user',
     'can_message_user',
     'exclude_invisible_private_threads',
@@ -78,6 +83,54 @@ def build_acl(acl, roles, key_name):
         can_moderate_private_threads=algebra.greater
     )
 
+    if not new_acl['can_use_private_threads']:
+        return new_acl
+
+    private_forum = Forum.objects.private_threads()
+
+    if new_acl['can_moderate_private_threads']:
+        new_acl['moderated_forums'].append(private_forum.pk)
+
+    forum_acl = {
+        'can_see': 1,
+        'can_browse': 1,
+        'can_see_all_threads': 1,
+        'can_see_own_threads': 0,
+        'can_start_threads': new_acl['can_start_private_threads'],
+        'can_reply_threads': 1,
+        'can_edit_threads': 1,
+        'can_edit_posts': 1,
+        'can_hide_own_threads': 0,
+        'can_hide_own_posts': 1,
+        'thread_edit_time': 0,
+        'post_edit_time': 0,
+        'can_hide_threads': 0,
+        'can_hide_posts': 0,
+        'can_protect_posts': 0,
+        'can_merge_posts': 0,
+        'can_close_threads': 0,
+        'can_review_moderated_content': 0,
+        'can_report_content': new_acl['can_report_private_threads'],
+        'can_see_reports': 0,
+        'can_hide_events': 0,
+    }
+
+    if new_acl['can_moderate_private_threads']:
+        forum_acl.update({
+            'can_edit_threads': 2,
+            'can_edit_posts': 2,
+            'can_hide_threads': 2,
+            'can_hide_posts': 2,
+            'can_protect_posts': 1,
+            'can_merge_posts': 1,
+            'can_see_reports': 1,
+            'can_see_reports': 1,
+            'can_review_moderated_content': 1,
+            'can_hide_events': 2,
+        })
+
+    new_acl['forums'][private_forum.pk] = forum_acl
+
     return new_acl
 
 
@@ -93,6 +146,25 @@ def allow_use_private_threads(user):
 can_use_private_threads = return_boolean(allow_use_private_threads)
 
 
+def allow_see_private_thread(user, target):
+    can_see_moderated = user.acl.get('can_moderate_private_threads')
+    can_see_moderated = can_see_moderated and target.has_reported_posts
+    can_see_participating = user in [p.user for p in target.participants_list]
+
+    if not (can_see_participating or can_see_moderated):
+        raise Http404()
+can_see_private_thread = return_boolean(allow_see_private_thread)
+
+
+def allow_see_private_post(user, target):
+    can_see_moderated = user.acl.get('can_moderate_private_threads')
+    if not (can_see_moderated and target.thread.has_reported_posts):
+        for participant in target.thread.participants_list:
+            if participant.user == user and participant.is_removed:
+                if post.posted_on > target.last_post_on:
+                    raise Http404()
+can_see_private_post = return_boolean(allow_see_private_post)
+
 
 def allow_message_user(user, target):
     allow_use_private_threads(user)
@@ -103,10 +175,14 @@ def allow_message_user(user, target):
     if not user.acl['can_start_private_threads']:
         raise PermissionDenied(_("You can't start private threads."))
 
+    message_format = {'user': user.username}
+
+    if not can_use_private_threads(target):
+        message = _("%(user)s can't participate in private threads.")
+        raise PermissionDenied(message % message_format)
+
     if user.acl['can_add_everyone_to_private_threads']:
         return None
-
-    message_format = {'user': user.username}
 
     if user.acl['can_be_blocked'] and target.is_blocking(user):
         message = _("%(user)s is blocking you.")

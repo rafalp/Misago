@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import render
 from django.views.generic import View
 
@@ -70,6 +71,9 @@ class ThreadMixin(object):
         return get_object_or_404(queryset, **where)
 
     def check_thread_permissions(self, request, thread):
+        if thread.forum.special_role:
+            raise Http404()
+
         add_acl(request.user, thread.forum)
         add_acl(request.user, thread)
 
@@ -108,6 +112,9 @@ class PostMixin(object):
         return get_object_or_404(queryset, **where)
 
     def check_post_permissions(self, request, post):
+        if post.forum.special_role:
+            raise Http404()
+
         add_acl(request.user, post.forum)
         add_acl(request.user, post.thread)
         add_acl(request.user, post)

@@ -9,14 +9,6 @@ class ThreadView(generic.ThreadView):
     pass
 
 
-class ModeratedPostsListView(generic.ModeratedPostsListView):
-    pass
-
-
-class ReportedPostsListView(generic.ReportedPostsListView):
-    pass
-
-
 class GotoLastView(generic.GotoLastView):
     pass
 
@@ -26,4 +18,40 @@ class GotoNewView(generic.GotoNewView):
 
 
 class GotoPostView(generic.GotoPostView):
+    pass
+
+
+class ModeratedPostsListView(generic.ModeratedPostsListView):
+    pass
+
+
+class ReportedPostsListView(generic.ReportedPostsListView):
+    pass
+
+
+class QuotePostView(generic.QuotePostView):
+    pass
+
+
+class ApprovePostView(generic.ApprovePostView):
+    pass
+
+
+class UnhidePostView(generic.UnhidePostView):
+    pass
+
+
+class HidePostView(generic.HidePostView):
+    pass
+
+
+class DeletePostView(generic.DeletePostView):
+    pass
+
+
+class EventsView(generic.EventsView):
+    pass
+
+
+class PostingView(generic.PostingView):
     pass

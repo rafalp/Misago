@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 
 
+# forum view
 from misago.threads.views.threads import ForumView
 urlpatterns = patterns('',
     url(r'^forum/(?P<forum_slug>[\w\d-]+)-(?P<forum_id>\d+)/$', ForumView.as_view(), name='forum'),
@@ -14,17 +15,25 @@ urlpatterns = patterns('',
 )
 
 
-from misago.threads.views.threads import (ThreadView, GotoLastView,
-                                          GotoNewView, GotoPostView)
+# thread view
+from misago.threads.views.threads import ThreadView
 urlpatterns += patterns('',
     url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/$', ThreadView.as_view(), name='thread'),
     url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/(?P<page>\d+)/$', ThreadView.as_view(), name='thread'),
+)
+
+
+# goto views
+from misago.threads.views.threads import (GotoLastView, GotoNewView,
+                                          GotoPostView)
+urlpatterns += patterns('',
     url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/last/$', GotoLastView.as_view(), name='thread_last'),
     url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/new/$', GotoNewView.as_view(), name='thread_new'),
     url(r'^thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/post-(?P<post_id>\d+)/$', GotoPostView.as_view(), name='thread_post'),
 )
 
 
+# moderated/reported posts views
 from misago.threads.views.threads import (ModeratedPostsListView,
                                           ReportedPostsListView)
 urlpatterns += patterns('',
@@ -33,7 +42,28 @@ urlpatterns += patterns('',
 )
 
 
-from misago.threads.views.posting import PostingView
+# post views
+from misago.threads.views.threads import (QuotePostView, ApprovePostView,
+                                          HidePostView, UnhidePostView,
+                                          DeletePostView)
+urlpatterns += patterns('',
+    url(r'^post/(?P<post_id>\d+)/quote/$', QuotePostView.as_view(), name='quote_post'),
+    url(r'^post/(?P<post_id>\d+)/approve/$', ApprovePostView.as_view(), name='approve_post'),
+    url(r'^post/(?P<post_id>\d+)/unhide/$', UnhidePostView.as_view(), name='unhide_post'),
+    url(r'^post/(?P<post_id>\d+)/hide/$', HidePostView.as_view(), name='hide_post'),
+    url(r'^post/(?P<post_id>\d+)/delete/$', DeletePostView.as_view(), name='delete_post'),
+)
+
+
+# events view
+from misago.threads.views.threads import EventsView
+urlpatterns += patterns('',
+    url(r'^edit-event/(?P<event_id>\d+)/$', EventsView.as_view(), name='edit_event'),
+)
+
+
+# posting views
+from misago.threads.views.threads import PostingView
 urlpatterns += patterns('',
     url(r'^start-thread/(?P<forum_id>\d+)/$', PostingView.as_view(), name='start_thread'),
     url(r'^reply-thread/(?P<forum_id>\d+)/(?P<thread_id>\d+)/$', PostingView.as_view(), name='reply_thread'),

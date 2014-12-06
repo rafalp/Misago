@@ -12,7 +12,13 @@ from misago.threads.permissions import exclude_invisible_posts
 from misago.threads.views.generic.base import ViewBase
 
 
-__all__ = ['QuotePostView']
+__all__ = [
+    'QuotePostView',
+    'ApprovePostView',
+    'UnhidePostView',
+    'HidePostView',
+    'DeletePostView'
+]
 
 
 class PostView(ViewBase):

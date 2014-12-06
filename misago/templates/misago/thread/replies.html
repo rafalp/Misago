@@ -163,7 +163,7 @@
         }
 
         Misago.Posting.load({
-          api_url: "{% url 'misago:reply_thread' forum_id=forum.id thread_id=thread.id %}",
+          api_url: "{{ thread.get_reply_api_url }}",
           on_load: function() {
             $('.reply-to-thread').hide();
             extra_on_load();
