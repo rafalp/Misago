@@ -19,6 +19,7 @@ class ForumView(ThreadsView):
     Basic view for forum threads lists
     """
     template = 'misago/threads/forum.html'
+    link_name = 'misago:forum'
 
     Threads = ForumThreads
     Sorting = Sorting

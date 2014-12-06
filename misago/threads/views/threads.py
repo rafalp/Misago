@@ -2,7 +2,7 @@ from misago.threads.views import generic
 
 
 class ForumView(generic.ForumView):
-    link_name = 'misago:forum'
+    pass
 
 
 class ThreadView(generic.ThreadView):
