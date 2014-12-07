@@ -59,6 +59,9 @@ class ThreadView(ViewBase):
             'poster__online_tracker'
         ).order_by('id')
 
+    def allow_reply_thread(self, user, thread):
+        allow_reply_thread(user, thread)
+
     def dispatch(self, request, *args, **kwargs):
         relations = ['forum', 'starter', 'last_poster', 'first_post']
         thread = self.fetch_thread(request, select_related=relations, **kwargs)
