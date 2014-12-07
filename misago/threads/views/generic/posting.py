@@ -113,30 +113,9 @@ class PostingView(ViewBase):
                 if formset.is_valid():
                     try:
                         formset.save()
+                        return self.handle_submit(request, formset)
                     except PostingInterrupt as e:
                         return JsonResponse({'interrupt': e.message})
-
-                    if mode == EDIT:
-                        message = _("Changes saved.")
-                    else:
-                        if mode == START:
-                            message = _("New thread was posted.")
-                        if mode == REPLY:
-                            message = _("Your reply was posted.")
-                        messages.success(request, message)
-
-                    posts_qs = self.exclude_invisible_posts(
-                        thread.post_set, request.user, forum, thread)
-                    post_url = goto.post(thread, posts_qs, post)
-
-                    return JsonResponse({
-                        'message': message,
-                        'post_url': post_url,
-                        'parsed': post.parsed,
-                        'original': post.original,
-                        'title': thread.title,
-                        'title_escaped': html.escape(thread.title),
-                    })
                 else:
                     return JsonResponse({'errors': formset.errors})
 
@@ -155,4 +134,31 @@ class PostingView(ViewBase):
             'thread': thread,
             'post': post,
             'api_url': request.path
+        })
+
+    def handle_submit(self, request, formset):
+        mode, forum, thread, post = (formset.mode, formset.forum,
+                                     formset.thread, formset.post)
+        if mode == EDIT:
+            message = _("Changes saved.")
+        else:
+            if mode == START:
+                message = _("New thread was posted.")
+            if mode == REPLY:
+                message = _("Your reply was posted.")
+            messages.success(request, message)
+
+        posts_qs = self.exclude_invisible_posts(thread.post_set,
+                                                request.user,
+                                                forum,
+                                                thread)
+        post_url = goto.post(thread, posts_qs, post)
+
+        return JsonResponse({
+            'message': message,
+            'post_url': post_url,
+            'parsed': post.parsed,
+            'original': post.original,
+            'title': thread.title,
+            'title_escaped': html.escape(thread.title),
         })
