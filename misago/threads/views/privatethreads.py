@@ -9,8 +9,7 @@ from misago.threads.models import Thread, ThreadParticipant
 from misago.threads.permissions import (allow_use_private_threads,
                                         allow_see_private_thread,
                                         allow_see_private_post,
-                                        exclude_invisible_private_threads,
-                                        exclude_invisible_private_posts)
+                                        exclude_invisible_private_threads)
 from misago.threads.views import generic
 
 
@@ -57,19 +56,24 @@ class PrivateThreadsMixin(object):
             raise Http404()
         return thread
 
-    def fetch_thread_participants(self, thread):
+    def fetch_thread_participants(self, user, thread):
         thread.participants_list = []
+        thread.participant = None
+
         participants_qs = ThreadParticipant.objects.filter(thread=thread)
         participants_qs = participants_qs.select_related('user')
         for participant in participants_qs:
             participant.thread = thread
             thread.participants_list.append(participant)
+            if participant.user == user:
+                thread.participant = participant
+        return thread.participants_list
 
     def check_thread_permissions(self, request, thread):
         add_acl(request.user, thread.forum)
         add_acl(request.user, thread)
 
-        self.fetch_thread_participants(thread)
+        self.fetch_thread_participants(request.user, thread)
 
         allow_see_private_thread(request.user, thread)
         allow_use_private_threads(request.user)
@@ -79,20 +83,23 @@ class PrivateThreadsMixin(object):
         add_acl(request.user, post.thread)
         add_acl(request.user, post)
 
-        self.fetch_thread_participants(post.thread)
+        self.fetch_thread_participants(request.user, post.thread)
 
         allow_see_private_post(request.user, post)
         allow_see_private_thread(request.user, post.thread)
         allow_use_private_threads(request.user)
 
     def exclude_invisible_posts(self, queryset, user, forum, thread):
-        return exclude_invisible_private_posts(queryset, user, forum, thread)
+        return queryset
 
 
 class PrivateThreads(generic.Threads):
     def get_queryset(self):
         threads_qs = Forum.objects.private_threads().thread_set
         return exclude_invisible_private_threads(threads_qs, self.user)
+
+    def clean_threads_activity(self, user, threads):
+        pass
 
 
 class PrivateThreadsFiltering(generic.ThreadsFiltering):

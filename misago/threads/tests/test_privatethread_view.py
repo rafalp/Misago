@@ -45,39 +45,14 @@ class PrivateThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.thread.title, response.content)
 
-    def test_removed_can_access_thread(self):
-        """removed user has access to private thread"""
-        override_acl(self.user, {'can_use_private_threads': True})
-        ThreadParticipant.objects.remove_participant(self.thread, self.user)
-
-        response = self.client.get(self.thread.get_absolute_url())
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(self.thread.title, response.content)
-
-    def test_removed_user_access_to_thread(self):
-        """removed user can't see content made after he was removed"""
+    def test_removed_user_cant_access_thread(self):
+        """removed user can't access thread"""
         override_acl(self.user, {'can_use_private_threads': True})
 
-        visible_posts = []
-        for p in range(4):
-            visible_posts.append(
-                testutils.reply_thread(self.thread, posted_on=timezone.now()))
-
+        ThreadParticipant.objects.add_participant(self.thread, self.user)
         ThreadParticipant.objects.remove_participant(self.thread, self.user)
-
-        hidden_posts = []
-        for p in range(4):
-            hidden_posts.append(
-                testutils.reply_thread(self.thread, posted_on=timezone.now()))
-
         response = self.client.get(self.thread.get_absolute_url())
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(self.thread.title, response.content)
-
-        for visible_post in visible_posts:
-            self.assertIn(visible_post.get_absolute_url(), response.content)
-        for hidden_post in hidden_posts:
-            self.assertNotIn(hidden_post.get_absolute_url(), response.content)
+        self.assertEqual(response.status_code, 404)
 
     def test_moderator_cant_access_unreported_thread(self):
         """moderator cant see private thread without reports"""

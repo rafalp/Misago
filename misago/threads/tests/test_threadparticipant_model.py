@@ -53,7 +53,7 @@ class ThreadParticipantTests(TestCase):
         ThreadParticipant.objects.add_participant(self.thread, other_user)
         self.assertEqual(self.thread.participants.count(), 2)
 
-        ThreadParticipant.objects.delete_participant(self.thread, user)
+        ThreadParticipant.objects.remove_participant(self.thread, user)
         self.assertEqual(self.thread.participants.count(), 1)
 
         with self.assertRaises(ThreadParticipant.DoesNotExist):
@@ -71,13 +71,14 @@ class ThreadParticipantTests(TestCase):
 
         participation = ThreadParticipant.objects.get(
             thread=self.thread, user=user)
-        self.assertTrue(participation.is_active)
-        self.assertFalse(participation.is_removed)
         self.assertFalse(participation.is_owner)
-        self.assertEqual(user, participation.user)
 
         ThreadParticipant.objects.add_participant(self.thread, user)
         self.assertEqual(self.thread.participants.count(), 1)
+
+        participation = ThreadParticipant.objects.get(
+            thread=self.thread, user=user)
+        self.assertFalse(participation.is_owner)
 
     def test_set_owner(self):
         """set_owner makes user thread owner"""
@@ -90,35 +91,15 @@ class ThreadParticipantTests(TestCase):
 
         participation = ThreadParticipant.objects.get(
             thread=self.thread, user=user)
-        self.assertFalse(participation.is_active)
-        self.assertFalse(participation.is_removed)
         self.assertTrue(participation.is_owner)
         self.assertEqual(user, participation.user)
 
         other_user = User.objects.create_user(
             "Bob2", "bob2@boberson.com", "Pass.123")
         ThreadParticipant.objects.set_owner(self.thread, other_user)
-
-    def test_remove_participant(self):
-        """remove_participant flags participant as removed"""
-        User = get_user_model()
-        user = User.objects.create_user(
-            "Bob", "bob@boberson.com", "Pass.123")
-
-        ThreadParticipant.objects.add_participant(self.thread, user)
-        self.assertEqual(self.thread.participants.count(), 1)
-
-        ThreadParticipant.objects.remove_participant(self.thread, user)
-        self.assertEqual(self.thread.participants.count(), 1)
+        self.assertEqual(self.thread.participants.count(), 2)
 
         participation = ThreadParticipant.objects.get(
             thread=self.thread, user=user)
-        self.assertFalse(participation.is_active)
-        self.assertTrue(participation.is_removed)
         self.assertFalse(participation.is_owner)
-        self.assertEqual(user, participation.user)
-        self.assertEqual(self.thread.last_post_on, participation.last_post_on)
-        self.assertEqual(self.thread.last_poster_id,
-                         participation.last_poster_id)
-        self.assertEqual(self.thread.last_poster_name,
-                         participation.last_poster_name)
+

@@ -8,17 +8,9 @@ from misago.core.utils import slugify
 
 
 __all__ = [
-    'PARTICIPANT_REMOVED',
-    'PARTICIPANT_ACTIVE',
-    'PARTICIPANT_OWNER',
     'Thread',
     'ThreadParticipant'
 ]
-
-
-PARTICIPANT_REMOVED = 0
-PARTICIPANT_ACTIVE = 1
-PARTICIPANT_OWNER = 2
 
 
 class PrivateThreadMixin(object):
@@ -187,66 +179,32 @@ class Thread(models.Model, PrivateThreadMixin):
 
 
 class ThreadParticipantManager(models.Manager):
-    def delete_participant(self, thread, user):
+    def remove_participant(self, thread, user):
         ThreadParticipant.objects.filter(thread=thread, user=user).delete()
 
     @transaction.atomic
     def set_owner(self, thread, user):
         thread_owner = ThreadParticipant.objects.filter(
-            thread=thread, level=PARTICIPANT_OWNER)
-        thread_owner.update(level=PARTICIPANT_ACTIVE)
+            thread=thread, is_owner=True)
+        thread_owner.update(is_owner=False)
 
-        self.delete_participant(thread, user)
+        self.remove_participant(thread, user)
         ThreadParticipant.objects.create(
             thread=thread,
             user=user,
-            level=PARTICIPANT_OWNER)
+            is_owner=True)
 
     @transaction.atomic
     def add_participant(self, thread, user):
-        self.delete_participant(thread, user)
+        self.remove_participant(thread, user)
         ThreadParticipant.objects.create(
             thread=thread,
-            user=user,
-            level=PARTICIPANT_ACTIVE)
-
-    @transaction.atomic
-    def remove_participant(self, thread, user):
-        self.delete_participant(thread, user)
-        ThreadParticipant.objects.create(
-            thread=thread,
-            user=user,
-            level=PARTICIPANT_REMOVED,
-            replies=thread.replies,
-            last_post_on=thread.last_post_on,
-            last_poster_id=thread.last_poster_id,
-            last_poster_name=thread.last_poster_name,
-            last_poster_slug=thread.last_poster_slug)
+            user=user,)
 
 
 class ThreadParticipant(models.Model):
     thread = models.ForeignKey(Thread)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    level = models.PositiveIntegerField(default=PARTICIPANT_ACTIVE)
-    replies = models.PositiveIntegerField(default=0)
-    last_post_on = models.DateTimeField(null=True, blank=True)
-    last_poster = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                    related_name='+',
-                                    null=True, blank=True,
-                                    on_delete=models.SET_NULL)
-    last_poster_name = models.CharField(max_length=255, null=True, blank=True)
-    last_poster_slug = models.CharField(max_length=255, null=True, blank=True)
+    is_owner = models.BooleanField(default=False)
 
     objects = ThreadParticipantManager()
-
-    @property
-    def is_removed(self):
-        return self.level == PARTICIPANT_REMOVED
-
-    @property
-    def is_active(self):
-        return self.level == PARTICIPANT_ACTIVE
-
-    @property
-    def is_owner(self):
-        return self.level == PARTICIPANT_OWNER
