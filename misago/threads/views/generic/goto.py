@@ -25,22 +25,25 @@ class BaseGotoView(ViewBase):
         self.check_forum_permissions(request, forum)
         self.check_thread_permissions(request, thread)
 
-        return redirect(self.get_redirect(request.user, thread))
+        posts_qs = self.exclude_invisible_posts(
+            thread.post_set, request.user, forum, thread)
+
+        return redirect(self.get_redirect(request.user, thread, posts_qs))
 
 
 class GotoLastView(BaseGotoView):
-    def get_redirect(self, user, thread):
-        return goto.last(user, thread)
+    def get_redirect(self, user, thread, posts_qs):
+        return goto.last(thread, posts_qs)
 
 
 class GotoNewView(BaseGotoView):
-    def get_redirect(self, user, thread):
-        return goto.new(user, thread)
+    def get_redirect(self, user, thread, posts_qs):
+        return goto.new(user, thread, posts_qs)
 
 
 class GotoPostView(BaseGotoView):
-    def get_redirect(self, user, thread, post):
-        return goto.post(user, thread, post)
+    def get_redirect(self, thread, posts_qs, post):
+        return goto.post(thread, posts_qs, post)
 
     def dispatch(self, request, *args, **kwargs):
         post = self.fetch_post(
@@ -53,4 +56,7 @@ class GotoPostView(BaseGotoView):
         self.check_thread_permissions(request, thread)
         self.check_post_permissions(request, post)
 
-        return redirect(self.get_redirect(request.user, thread, post))
+        posts_qs = self.exclude_invisible_posts(
+            thread.post_set, request.user, thread.forum, thread)
+
+        return redirect(self.get_redirect(thread, posts_qs, post))

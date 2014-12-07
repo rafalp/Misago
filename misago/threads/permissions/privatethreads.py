@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
+from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 
 from misago.acl import add_acl, algebra
@@ -20,6 +21,7 @@ __all__ = [
     'allow_message_user',
     'can_message_user',
     'exclude_invisible_private_threads',
+    'exclude_invisible_private_posts'
 ]
 
 
@@ -209,3 +211,12 @@ def exclude_invisible_private_threads(queryset, user):
         return queryset.filter(see_reported | see_participating)
     else:
         return queryset.filter(participants=user)
+
+
+def exclude_invisible_private_posts(queryset, user, forum, thread):
+    if not forum.acl['can_review_moderated_content']:
+        for participant in thread.participants_list:
+            if participant.user == user and participant.is_removed:
+                left_on = participant.last_post_on
+                return queryset.filter(posted_on__lte=left_on)
+    return queryset

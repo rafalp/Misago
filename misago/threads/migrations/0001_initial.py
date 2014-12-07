@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
                 ('checksum', models.CharField(max_length=64, default='-')),
                 ('has_attachments', models.BooleanField(default=False)),
                 ('pickled_attachments', models.TextField(null=True, blank=True)),
-                ('posted_on', models.DateTimeField()),
+                ('posted_on', models.DateTimeField(db_index=True)),
                 ('updated_on', models.DateTimeField()),
                 ('edits', models.PositiveIntegerField(default=0)),
                 ('last_editor_name', models.CharField(max_length=255, null=True, blank=True)),

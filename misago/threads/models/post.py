@@ -25,7 +25,7 @@ class Post(models.Model):
     has_attachments = models.BooleanField(default=False)
     pickled_attachments = models.TextField(null=True, blank=True)
 
-    posted_on = models.DateTimeField()
+    posted_on = models.DateTimeField(db_index=True)
     updated_on = models.DateTimeField()
 
     edits = models.PositiveIntegerField(default=0)

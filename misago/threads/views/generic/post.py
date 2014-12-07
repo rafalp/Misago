@@ -8,7 +8,6 @@ from django.utils.translation import ugettext as _
 from misago.acl import add_acl
 
 from misago.threads import permissions, moderation, goto
-from misago.threads.permissions import exclude_invisible_posts
 from misago.threads.views.generic.base import ViewBase
 
 
@@ -52,7 +51,11 @@ class PostView(ViewBase):
             "post views have to override real_dispatch method")
 
     def redirect_to_post(self, user, post):
-        return redirect(goto.post(user, post.thread, post))
+        posts_qs = self.exclude_invisible_posts(post.thread.post_set,
+                                                user,
+                                                post.forum,
+                                                post.thread)
+        return redirect(goto.post(post.thread, posts_qs, post))
 
 
 class QuotePostView(PostView):
@@ -115,15 +118,16 @@ class DeletePostView(PostView):
         post.forum.synchronize()
         post.forum.save()
 
-        posts_queryset = exclude_invisible_posts(post.thread.post_set,
-                                                 request.user,
-                                                 post.forum)
-        posts_queryset = posts_queryset.select_related('thread', 'forum')
+        posts_qs = self.exclude_invisible_posts(post.thread.post_set,
+                                                request.user,
+                                                post.forum,
+                                                post.thread)
+        posts_qs = posts_qs.select_related('thread', 'forum')
 
         if post_id < post.thread.last_post_id:
-            target_post = posts_queryset.order_by('id').filter(id__gt=post_id)
+            target_post = posts_qs.order_by('id').filter(id__gt=post_id)
         else:
-            target_post = posts_queryset.order_by('-id').filter(id__lt=post_id)
+            target_post = posts_qs.order_by('-id').filter(id__lt=post_id)
 
         target_post = target_post[:1][0]
         target_post.thread.forum = target_post.forum

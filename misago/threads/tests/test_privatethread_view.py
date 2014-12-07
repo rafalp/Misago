@@ -1,0 +1,104 @@
+from django.utils import timezone
+
+from misago.acl.testutils import override_acl
+from misago.forums.models import Forum
+from misago.users.testutils import AuthenticatedUserTestCase
+
+from misago.threads import testutils
+from misago.threads.models import ThreadParticipant
+
+
+class PrivateThreadTests(AuthenticatedUserTestCase):
+    def setUp(self):
+        super(PrivateThreadTests, self).setUp()
+
+        self.forum = Forum.objects.private_threads()
+        self.thread = testutils.post_thread(self.forum)
+
+    def test_anon_access_to_view(self):
+        """anonymous user has no access to private thread"""
+        self.logout_user()
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 403)
+
+    def test_non_participant_access_to_thread(self):
+        """non-participant user has no access to private thread"""
+        override_acl(self.user, {'can_use_private_threads': True})
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 404)
+
+    def test_owner_can_access_thread(self):
+        """owner has access to private thread"""
+        override_acl(self.user, {'can_use_private_threads': True})
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.thread.title, response.content)
+
+    def test_participant_can_access_thread(self):
+        """participant has access to private thread"""
+        override_acl(self.user, {'can_use_private_threads': True})
+        ThreadParticipant.objects.add_participant(self.thread, self.user)
+
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.thread.title, response.content)
+
+    def test_removed_can_access_thread(self):
+        """removed user has access to private thread"""
+        override_acl(self.user, {'can_use_private_threads': True})
+        ThreadParticipant.objects.remove_participant(self.thread, self.user)
+
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.thread.title, response.content)
+
+    def test_removed_user_access_to_thread(self):
+        """removed user can't see content made after he was removed"""
+        override_acl(self.user, {'can_use_private_threads': True})
+
+        visible_posts = []
+        for p in range(4):
+            visible_posts.append(
+                testutils.reply_thread(self.thread, posted_on=timezone.now()))
+
+        ThreadParticipant.objects.remove_participant(self.thread, self.user)
+
+        hidden_posts = []
+        for p in range(4):
+            hidden_posts.append(
+                testutils.reply_thread(self.thread, posted_on=timezone.now()))
+
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.thread.title, response.content)
+
+        for visible_post in visible_posts:
+            self.assertIn(visible_post.get_absolute_url(), response.content)
+        for hidden_post in hidden_posts:
+            self.assertNotIn(hidden_post.get_absolute_url(), response.content)
+
+    def test_moderator_cant_access_unreported_thread(self):
+        """moderator cant see private thread without reports"""
+        override_acl(self.user, {
+            'can_use_private_threads': True,
+            'can_moderate_private_threads': True
+        })
+
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 404)
+
+    def test_moderator_can_access_reported_thread(self):
+        """moderator can see private thread with reports"""
+        override_acl(self.user, {
+            'can_use_private_threads': True,
+            'can_moderate_private_threads': True
+        })
+
+        self.thread.has_reported_posts = True
+        self.thread.save()
+
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.thread.title, response.content)

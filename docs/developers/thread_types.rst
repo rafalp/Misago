@@ -15,7 +15,7 @@ Writing custom thread type
 
 Thread type is basically UI for users to interact with and Python code implementing features behind it, plus helper object for enabling your models to point to custom views.
 
-Thread type is decided by value of `special_role` attribute of forum model instance that content (thread, post, attachment, etc. ect.) belongs to. Using this value model is able to call `misago.threads.threadtypes.get()` in order to obtain its helper object, which in turn eables model to build links for its UI.
+Thread type is decided by value of `special_role` attribute of forum model instance that content (thread, post, attachment, etc. ect.) belongs to. Using this value model is able to call `misago.threads.threadtypes.get(thread_type)` in order to obtain its helper object.
 
 
 Helper classes
@@ -28,7 +28,7 @@ Paths to helper classess definitions are specified in `MISAGO_THREAD_TYPES` sett
 
 Once helper class is defined, it's available as "thread_type" attribute on forum, thread, post, event, poll and attachment models.
 
-Models call their helpers to get url's for handling their type UI:
+Depending on features used by thread type, its helper is expected to define different of the following methods:
 
 
 get_forum_name

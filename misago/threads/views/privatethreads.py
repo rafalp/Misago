@@ -9,7 +9,8 @@ from misago.threads.models import Thread, ThreadParticipant
 from misago.threads.permissions import (allow_use_private_threads,
                                         allow_see_private_thread,
                                         allow_see_private_post,
-                                        exclude_invisible_private_threads)
+                                        exclude_invisible_private_threads,
+                                        exclude_invisible_private_posts)
 from misago.threads.views import generic
 
 
@@ -83,6 +84,9 @@ class PrivateThreadsMixin(object):
         allow_see_private_post(request.user, post)
         allow_see_private_thread(request.user, post.thread)
         allow_use_private_threads(request.user)
+
+    def exclude_invisible_posts(self, queryset, user, forum, thread):
+        return exclude_invisible_private_posts(queryset, user, forum, thread)
 
 
 class PrivateThreads(generic.Threads):

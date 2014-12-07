@@ -9,8 +9,7 @@ from misago.users.online.utils import get_user_state
 
 from misago.threads.events import add_events_to_posts
 from misago.threads.paginator import paginate
-from misago.threads.permissions import (allow_reply_thread,
-                                        exclude_invisible_posts)
+from misago.threads.permissions import allow_reply_thread
 from misago.threads.views.generic.base import ViewBase
 from misago.threads.views.generic.thread.postsactions import PostsActions
 from misago.threads.views.generic.thread.threadactions import ThreadActions
@@ -29,6 +28,7 @@ class ThreadView(ViewBase):
 
     def get_posts(self, user, forum, thread, kwargs):
         queryset = self.get_posts_queryset(user, forum, thread)
+        queryset = self.exclude_invisible_posts(queryset, user, forum, thread)
         page = paginate(queryset, kwargs.get('page', 0), 10, 3)
 
         posts = []
@@ -52,13 +52,12 @@ class ThreadView(ViewBase):
         return page, posts
 
     def get_posts_queryset(self, user, forum, thread):
-        queryset = thread.post_set.select_related(
+        return thread.post_set.select_related(
             'poster',
             'poster__rank',
             'poster__ban_cache',
             'poster__online_tracker'
-        )
-        return exclude_invisible_posts(queryset, user, forum).order_by('id')
+        ).order_by('id')
 
     def dispatch(self, request, *args, **kwargs):
         relations = ['forum', 'starter', 'last_poster', 'first_post']

@@ -1,7 +1,6 @@
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 
-from misago.threads.permissions import exclude_invisible_posts
 from misago.threads.views.generic.base import ViewBase
 
 
@@ -34,17 +33,17 @@ class ModeratedPostsListView(ViewBase):
             response.status_code = 405
             return response
 
-        queryset = exclude_invisible_posts(
-            thread.post_set, request.user, forum)
-        queryset = self.filter_posts_queryset(queryset)
-        final_queryset = queryset.select_related('poster').order_by('-id')[:15]
+        posts_qs = self.exclude_invisible_posts(
+            thread.post_set, request.user, forum, thread)
+        posts_qs = self.filter_posts_queryset(posts_qs)
+        final_posts_qs = posts_qs.select_related('poster').order_by('-id')[:15]
 
         return self.render(request, {
             'forum': forum,
             'thread': thread,
 
-            'posts_count': queryset.count(),
-            'posts': final_queryset.iterator()
+            'posts_count': posts_qs.count(),
+            'posts': final_posts_qs.iterator()
         })
 
 
