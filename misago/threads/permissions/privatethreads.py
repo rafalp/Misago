@@ -176,7 +176,7 @@ def allow_message_user(user, target):
     if not user.acl['can_start_private_threads']:
         raise PermissionDenied(_("You can't start private threads."))
 
-    message_format = {'user': user.username}
+    message_format = {'user': target.username}
 
     if not can_use_private_threads(target):
         message = _("%(user)s can't participate in private threads.")
