@@ -172,6 +172,16 @@ class EditPostTests(AuthenticatedUserTestCase):
         self.assertEqual(post.original, 'Edited reply!')
         self.assertEqual(post.edits, 1)
 
+    def test_empty_edit_form(self):
+        """empty edit form has no crashes"""
+        self.override_forum_acl({'can_edit_posts': 2, 'can_edit_threads': 2})
+
+        response = self.client.post(self.link, data={
+            'submit': True,
+        },
+        **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+
     def test_can_edit_other_user_post(self):
         """can edit other user post"""
         self.override_forum_acl({'can_edit_posts': 2, 'can_edit_threads': 0})

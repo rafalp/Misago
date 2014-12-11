@@ -94,6 +94,19 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 403)
 
+    def test_empty_start_thread_form(self):
+        """empty new thread form has no crashes"""
+        self.allow_start_thread({
+            'can_pin_threads': 1,
+            'can_close_threads': 1,
+        })
+
+        response = self.client.post(self.link, data={
+            'submit': True,
+        },
+        **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+
     def test_can_start_thread(self):
         """can post new thread"""
         self.allow_start_thread()
