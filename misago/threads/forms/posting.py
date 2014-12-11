@@ -25,7 +25,7 @@ class ReplyForm(forms.Form):
         super(ReplyForm, self).__init__(*args, **kwargs)
 
     def validate_post(self, post):
-        if self.post_instance.original != post:
+        if not self.post_instance.pk or self.post_instance.original != post:
             self._validate_post(post)
             self.parse_post(post)
 
@@ -100,7 +100,7 @@ class ThreadParticipantsForm(forms.Form):
     location = 'reply_top'
     template = "misago/posting/threadparticipantsform.html"
 
-    users = forms.CharField(label=_("Invite users to thread"))
+    users = forms.CharField(label=_("Invite users to thread"), required=False)
 
     def __init__(self, *args, **kwargs):
         self.users_cache = []
@@ -110,6 +110,10 @@ class ThreadParticipantsForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(ThreadParticipantsForm, self).clean()
+
+        if not cleaned_data.get('users'):
+            raise forms.ValidationError(
+                _("You have to specify message recipients."))
 
         clean_usernames = []
         for name in cleaned_data['users'].split(','):
@@ -127,7 +131,7 @@ class ThreadParticipantsForm(forms.Form):
                                 "You can't start private thread "
                                 "with more than than %(users)s users.",
                                 max_participants)
-            message = message % {'users': max_participants.post_length_max}
+            message = message % {'users': max_participants}
             raise forms.ValidationError(message)
 
         users_qs = get_user_model().objects.filter(slug__in=clean_usernames)
@@ -139,10 +143,18 @@ class ThreadParticipantsForm(forms.Form):
             self.users_cache.append(user)
 
         if len(self.users_cache) != len(clean_usernames):
-            raise forms.ValidationError(
-                _("One or more message recipients could not be found"))
+            valid_usernames = [u.slug for u in self.users_cache]
+            invalid_usernames = []
+            for username in clean_usernames:
+                if username not in valid_usernames:
+                    invalid_usernames.append(username)
+            message = _("One or more message recipients could "
+                        "not be found: %(usernames)s")
+            formats = {'usernames': ', '.join(invalid_usernames)}
+            raise forms.ValidationError(message % formats)
 
-        cleaned_data['users'] = ','.join([u.slug for u in self.users_cache])
+        valid_usernames = [u.username for u in self.users_cache]
+        cleaned_data['users'] = ','.join(valid_usernames)
 
         return cleaned_data
 
