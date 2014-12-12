@@ -32,10 +32,17 @@ urlpatterns += patterns('',
 )
 
 
-# moderated/reported posts views
+# reported posts views
 from misago.threads.views.privatethreads import ReportedPostsListView
 urlpatterns += patterns('',
     url(r'^private-thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/reported-posts/$', ReportedPostsListView.as_view(), name='private_thread_reported'),
+)
+
+
+# participants views
+from misago.threads.views.privatethreads import ThreadParticipantsView
+urlpatterns += patterns('',
+    url(r'^private-thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/participants/$', ThreadParticipantsView.as_view(), name='private_thread_participants'),
 )
 
 

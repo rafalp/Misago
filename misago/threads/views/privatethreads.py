@@ -1,5 +1,5 @@
 from django.http import Http404
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
@@ -17,12 +17,12 @@ def private_threads_view(klass):
     """
     decorator for making views check allow_use_private_threads
     """
-    def dispatch(self, request, *args, **kwargs):
-        allow_use_private_threads(request.user)
-
-        return super(self.__class__, self).dispatch(
-            request, *args, **kwargs)
-    klass.dispatch = dispatch
+    def decorator(f):
+        def dispatch(self, request, *args, **kwargs):
+            allow_use_private_threads(request.user)
+            return f(self, request, *args, **kwargs)
+        return dispatch
+    klass.dispatch = decorator(klass.dispatch)
     return klass
 
 
@@ -125,6 +125,29 @@ class PrivateThreadsView(generic.ThreadsView):
     Filtering = PrivateThreadsFiltering
 
 
+@private_threads_view
+class ThreadParticipantsView(PrivateThreadsMixin, generic.ViewBase):
+    template = 'misago/privatethreads/participants.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        thread = self.get_thread(request, **kwargs)
+
+        if not request.is_ajax():
+            response = render(request, 'misago/errorpages/wrong_way.html')
+            response.status_code = 405
+            return response
+
+        participants_qs = thread.threadparticipant_set
+        participants_qs = participants_qs.select_related('user')
+
+        return self.render(request, {
+            'participants': participants_qs.order_by('-is_owner', 'user__slug')
+        })
+
+
+"""
+Generics
+"""
 @private_threads_view
 class ThreadView(PrivateThreadsMixin, generic.ThreadView):
     pass

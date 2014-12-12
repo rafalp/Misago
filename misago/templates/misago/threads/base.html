@@ -30,9 +30,9 @@
               {% endif %}
 
               {% if thread.is_read %}
-              <a href="{{ thread.get_absolute_url }}" class="item-title">
+              <a href="{{ thread.get_absolute_url }}" class="thread-title item-title">
               {% else %}
-              <a href="{{ thread.get_new_reply_url }}" class="item-title">
+              <a href="{{ thread.get_new_reply_url }}" class="thread-title item-title">
               {% endif %}
                 {{ thread }}
               </a>
@@ -92,6 +92,7 @@
               {% endif %}
 
               <ul class="list-unstyled thread-flags">
+                {% block thread-flags %}
                 {% if thread.has_reported_posts %}
                 <li class="tooltip-top" title="{% trans "Reported posts" %}">
                   <span class="fa fa-exclamation-triangle fa-fw fa-lg"></span>
@@ -133,6 +134,7 @@
                   </span>
                 </li>
                 {% endif %}
+                {% endblock thread-flags %}
               </ul>
               {% endblock thread-stats %}
             </div>

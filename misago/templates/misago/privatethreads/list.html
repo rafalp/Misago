@@ -37,6 +37,15 @@
 {% endblock threads-panel %}
 
 
+{% block thread-flags %}
+<li class="tooltip-top" title="{% trans "Thread participants" %}">
+  <button type="button" class="btn-show-participants" data-participants-url="{% url 'misago:private_thread_participants' thread_slug=thread.slug thread_id=thread.id %}">
+    <span class="fa fa-users fa-fw fa-lg"></span>
+  </button>
+</li>
+{% endblock thread-flags %}
+
+
 {% block no-threads %}
 {% if filtering.is_active %}
 {% trans "No threads matching criteria exist, or you don't have permission to see them." %}
@@ -47,3 +56,39 @@
 {% trans "You are not participating in any private threads." %}
 {% endif %}
 {% endblock no-threads %}
+
+
+{% block javascripts %}
+{{ block.super }}
+{% if user.acl.moderated_forums %}
+<script lang="JavaScript">
+  $(function() {
+    var participants_cache = {};
+
+    function enable_participants_popover($e, data) {
+      $e.popover({
+        html: true,
+        content: data,
+        placement: 'top',
+        trigger: 'focus',
+        template: '<div class="popover" role="tooltip"><div class="arrow"></div><div class="popover-content"></div></div>'
+      });
+    }
+
+    $('.btn-show-participants').click(function() {
+      var $btn = $(this);
+      var api_url = $btn.data('participants-url');
+
+      if (participants_cache[api_url] == undefined) {
+        $.get(api_url, function(data) {
+          participants_cache[api_url] = data;
+          enable_participants_popover($btn, participants_cache[api_url]);
+          $btn.popover('show');
+        })
+      }
+
+    });
+  });
+</script>
+{% endif %}
+{% endblock javascripts %}
