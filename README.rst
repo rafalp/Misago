@@ -20,6 +20,12 @@ If you can run Python apps on your hosting and you are looking for modern soluti
 * **Code & BugTracker:** https://github.com/rafalp/Misago/
 
 
+Note
+----
+
+This branch currently contains in-development code of next major Misago release, 0.6. If you are looking at running "real" forum on Misago, please use latest 0.5 release instead.
+
+
 Installing and updating
 -----------------------
 
@@ -32,16 +38,18 @@ To start Misago site, first setup and activate virtual environment for it and th
 
 This will install Misago in your virtual environment and will make pre-configured Misago site for you named "testforum".
 
-Now cd to this testforum and initialize database by using migrate commands provided by manage.py admin utility::
+Now cd to "testforum" and edit "settings.py" file in your editor of choice in order to set up basic settings like database connection, default timezone or interface language.
+
+Next initialize database by using migrate commands provided by manage.py admin utility::
 
     cd testforum
     python manage.py migrate
 
-Next, call createsuperuser command to create super admin in database::
+Next, call "createsuperuser" command to create super admin in database::
 
     python manage.py createsuperuser
 
-Finally start development server using runserver command::
+Finally start development server using "runserver" command::
 
     python manage.py runserver
 
