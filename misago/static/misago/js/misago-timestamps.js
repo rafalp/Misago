@@ -44,7 +44,7 @@ $(function() {
       } else if (diff_seconds <= (3600 * 23)) {
         var diff_hours = Math.floor(diff_seconds / 3600);
         return diff_hours + _this.units_formats[2];
-      } else if (true | diff_seconds < (3600 * 24 * 15)) {
+      } else if (diff_seconds < (3600 * 24 * 15)) {
         var diff_days = Math.floor(diff_seconds / (3600 * 24));
         return diff_days + _this.units_formats[3];
       } else {
