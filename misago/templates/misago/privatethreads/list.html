@@ -60,7 +60,6 @@
 
 {% block javascripts %}
 {{ block.super }}
-{% if user.acl.moderated_forums %}
 <script lang="JavaScript">
   $(function() {
     var participants_cache = {};
@@ -88,7 +87,18 @@
       }
 
     });
+
+    {% if user.acl.can_start_private_threads %}
+    $('.btn-reply').click(function() {
+      var $btn = $(this);
+      Misago.Posting.load({
+        api_url: "{% url 'misago:start_private_thread' %}",
+        on_load: function() {
+          var participants = new Misago.participants($('.thread-participants'));
+        }
+      });
+    });
+    {% endif %}
   });
 </script>
-{% endif %}
 {% endblock javascripts %}
