@@ -30,6 +30,7 @@
       <h1 id="thread-title">{{ thread }}</h1>
 
       <ul class="list-inline page-details">
+        {% block page-details %}
         <li class="tooltip-bottom" title="{% trans "Thread author" %}">
           {% if thread.starter_id %}
             <a href="{% url USER_PROFILE_URL user_slug=thread.starter_slug user_id=thread.starter_id %}">
@@ -52,6 +53,7 @@
             {{ thread.last_post_on|date }}
           </abbr>
         </li>
+        {% endblock page-details %}
       </ul>
 
     </div>
@@ -60,6 +62,7 @@
 
     <div class="table-actions">
 
+      {% block thread-nav %}
       {% include "misago/thread/pagination.html" %}
 
       {% if thread.acl.can_review and thread.has_moderated_posts %}
@@ -75,10 +78,13 @@
         {% trans "Reported posts" %}
       </a>
       {% endif %}
+      {% endblock thread-nav %}
 
+      {% block thread-actions %}
       {% if thread_actions %}
       {% include "misago/thread/thread_actions.html" %}
       {% endif %}
+      {% endblock thread-actions %}
 
     </div>
 
@@ -90,11 +96,15 @@
 
     <div class="table-actions">
 
+      {% block thread-nav-down %}
       {% include "misago/thread/pagination.html" %}
+      {% endblock thread-nav-down %}
 
+      {% block post-actions %}
       {% if posts_actions %}
       {% include "misago/thread/posts_actions.html" %}
       {% endif %}
+      {% endblock post-actions %}
 
     </div>
 

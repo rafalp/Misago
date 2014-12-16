@@ -1,0 +1,70 @@
+{% extends "misago/thread/replies.html" %}
+{% load i18n %}
+
+
+{% block page-details %}
+{{ block.super }}
+<li>
+  <button type="button" class="btn-show-participants" data-participants-url="{% url 'misago:private_thread_participants' thread_slug=thread.slug thread_id=thread.id %}">
+    <span class="fa fa-users"></span> {% blocktrans trimmed count users=thread.participants_list|length %}
+      {{ users }} participant
+    {% plural %}
+      {{ users }} participants
+    {% endblocktrans %}
+  </button>
+<li>
+{% endblock page-details %}
+
+
+{% block thread-actions %}
+{{ block.super }}
+
+{% if 'participants' in thread_actions %}
+<button class="btn action-participants btn-default pull-right" type="button">
+  <span class="fa fa-users"></span>
+  {% trans "Edit participants" %}
+</button>
+{% endif %}
+{% endblock thread-actions %}
+
+
+{% block javascripts %}
+{{ block.super }}
+<script lang="JavaScript">
+  $(function() {
+    var participants_cache = {};
+
+    function enable_participants_popover($e, data) {
+      $e.popover({
+        html: true,
+        content: data,
+        placement: 'bottom',
+        trigger: 'focus',
+        template: '<div class="popover" role="tooltip"><div class="arrow"></div><div class="popover-content"></div></div>'
+      });
+    }
+
+    $('.btn-show-participants').click(function() {
+      var $btn = $(this);
+      var api_url = $btn.data('participants-url');
+
+      if (participants_cache[api_url] == undefined) {
+        $.get(api_url, function(data) {
+          participants_cache[api_url] = data;
+          enable_participants_popover($btn, participants_cache[api_url]);
+          $btn.popover('show');
+        })
+      }
+
+    });
+
+    {% if 'participants' in thread_actions %}
+    $('.action-participants').click(function() {
+      Misago.ParticipantsEditor.open({
+        api_url: 'kitties!'
+      })
+    });
+    {% endif %}
+  });
+</script>
+{% endblock %}

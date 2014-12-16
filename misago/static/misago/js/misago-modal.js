@@ -23,17 +23,25 @@
       }
     }
 
-    this.post = function(url, data) {
+    this.post = function(url, data, on_load) {
       $.post(url, data, function(data) {
         _this.show(data);
         Misago.DOM.changed();
+
+        if (on_load !== undefined) {
+          on_load(data)
+        }
       });
     }
 
-    this.get = function(url) {
+    this.get = function(url, on_load) {
       $.get(url, function(data) {
         _this.show(data);
         Misago.DOM.changed();
+
+        if (on_load !== undefined) {
+          on_load(data)
+        }
       });
     }
   };

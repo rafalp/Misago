@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 from django.utils.translation import ugettext as _
@@ -98,9 +99,6 @@ class PrivateThreads(generic.Threads):
         threads_qs = Forum.objects.private_threads().thread_set
         return exclude_invisible_private_threads(threads_qs, self.user)
 
-    def clean_threads_activity(self, user, threads):
-        pass
-
 
 class PrivateThreadsFiltering(generic.ThreadsFiltering):
     def get_available_filters(self):
@@ -145,14 +143,91 @@ class ThreadParticipantsView(PrivateThreadsMixin, generic.ViewBase):
         })
 
 
+class PrivateThreadActions(generic.ThreadActions):
+    def get_available_actions(self, kwargs):
+        user = kwargs['user']
+        thread = kwargs['thread']
+
+        is_moderator = user.acl['can_moderate_private_threads']
+        if thread.participant and thread.participant.is_owner:
+            is_owner = True
+        else:
+            is_owner = False
+
+        actions = []
+
+        if is_moderator and not is_owner:
+            actions.append({
+                'action': 'takeover',
+                'icon': 'level-up',
+                'name': _("Takeover thread")
+            })
+
+        if is_owner:
+            actions.append({
+                'action': 'participants',
+                'icon': 'users',
+                'name': _("Edit participants"),
+                'is_button': True
+            })
+
+        if is_moderator:
+            if thread.is_closed:
+                actions.append({
+                    'action': 'open',
+                    'icon': 'unlock-alt',
+                    'name': _("Open thread")
+                })
+            else:
+                actions.append({
+                    'action': 'close',
+                    'icon': 'lock',
+                    'name': _("Close thread")
+                })
+
+            actions.append({
+                'action': 'delete',
+                'icon': 'times',
+                'name': _("Delete thread"),
+                'confirmation': _("Are you sure you want to delete this "
+                                  "thread? This action can't be undone.")
+            })
+
+        return actions
+
+    def action_takeover(self, request, thread):
+        ThreadParticipant.objects.set_owner(thread, request.user)
+        messages.success(request, _("You are now owner of this thread."))
+
+
+@private_threads_view
+class ThreadView(PrivateThreadsMixin, generic.ThreadView):
+    template = 'misago/privatethreads/thread.html'
+    ThreadActions = PrivateThreadActions
+
+
+@private_threads_view
+class EditThreadParticipantsView(PrivateThreadsMixin, generic.ViewBase):
+    template = 'misago/privatethreads/participants_modal.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        thread = self.get_thread(request, **kwargs)
+
+        if not request.is_ajax():
+            response = render(request, 'misago/errorpages/wrong_way.html')
+            response.status_code = 405
+            return response
+
+        participants_qs = thread.threadparticipant_set
+        participants_qs = participants_qs.select_related('user')
+
+        return self.render(request, {
+            'participants': participants_qs.order_by('-is_owner', 'user__slug')
+        })
+
 """
 Generics
 """
-@private_threads_view
-class ThreadView(PrivateThreadsMixin, generic.ThreadView):
-    pass
-
-
 @private_threads_view
 class GotoLastView(PrivateThreadsMixin, generic.GotoLastView):
     pass

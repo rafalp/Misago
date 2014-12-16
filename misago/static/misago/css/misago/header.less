@@ -172,24 +172,31 @@
 
       color: @text-muted;
 
-      img {
-      	border-radius: @border-radius-small;
-      	position: relative;
-      	bottom: 1px;
-      }
+      &>li {
+        &>img {
+          border-radius: @border-radius-small;
+          position: relative;
+          bottom: 1px;
+        }
 
-      a:link, a:visited {
-        color: @text-muted;
-      }
+        &>button {
+          background: none;
+          border: none;
+        }
 
-      a:hover {
-        color: @state-hover;
-        text-decoration: none;
-      }
+        &>a:link, &>a:visited, &>button {
+          color: @text-muted;
+        }
 
-      a:active {
-        color: @state-clicked;
-        text-decoration: none;
+        &>a:hover, &>button:hover {
+          color: @state-hover;
+          text-decoration: none;
+        }
+
+        &>a:active, &>button:active {
+          color: @state-clicked;
+          text-decoration: none;
+        }
       }
     }
   }

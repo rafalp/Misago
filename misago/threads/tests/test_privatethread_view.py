@@ -77,3 +77,21 @@ class PrivateThreadTests(AuthenticatedUserTestCase):
         response = self.client.get(self.thread.get_absolute_url())
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.thread.title, response.content)
+
+    def test_moderator_can_takeover_reported_thread(self):
+        """moderator can take over private thread"""
+        override_acl(self.user, {
+            'can_use_private_threads': True,
+            'can_moderate_private_threads': True
+        })
+
+        self.thread.has_reported_posts = True
+        self.thread.save()
+
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'thread_action': 'takeover'
+        })
+        self.assertEqual(response.status_code, 302)
+
+        user = self.thread.threadparticipant_set.get(user=self.user)
+        self.assertTrue(user.is_owner)
