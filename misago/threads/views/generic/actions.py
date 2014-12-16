@@ -23,10 +23,15 @@ class ActionsBase(object):
             self.available_actions = self.get_available_actions(kwargs)
         else:
             self.available_actions = []
+
+        self.actions_names = [a['action'] for a in self.available_actions]
         self.selected_ids = []
 
     def __nonzero__(self):
         return bool(self.available_actions)
+
+    def __contains__(self, item):
+        return item in self.actions_names
 
     def get_available_actions(self, kwargs):
         raise NotImplementedError("get_available_actions has to return list "
@@ -36,7 +41,7 @@ class ActionsBase(object):
         action_name = request.POST.get(self.query_key)
 
         for action in self.available_actions:
-            if action['action'] == action_name:
+            if action['action'] == action_name and not action.get('is_button'):
                 if ':' in action_name:
                     action_bits = action_name.split(':')
                     action_name = action_bits[0]
