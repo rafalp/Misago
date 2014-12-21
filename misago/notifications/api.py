@@ -47,7 +47,7 @@ def notify_user(user, message, url, trigger=None, formats=None, sender=None,
 
 
 def read_user_notification(user, trigger, atomic=True):
-    if user.new_notifications:
+    if user.is_authenticated() and user.new_notifications:
         if atomic:
             with transaction.atomic():
                 _real_read_user_notification(user, trigger)
@@ -65,7 +65,9 @@ def _real_read_user_notification(user, trigger):
         user.new_notifications -= updated
         if user.new_notifications < 0:
             # Cos no. of changed rows returned via update()
-            # isn't always accurate
+            # isn't always accurate, lets keep it at 0
+            # if user's curious about real count, he can
+            # trigger count sync via loading list
             user.new_notifications = 0
         user.save(update_fields=['new_notifications'])
 
