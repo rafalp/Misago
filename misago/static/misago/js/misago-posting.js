@@ -248,54 +248,24 @@ $(function() {
 
       });
 
-      // submit
+      // buttons
 
       this.$container.find('button[name="submit"]').click(function() {
-        if (!_this.submitted && !_this.posted) {
-          _this.submitted = true; // lock submit process until after response
-          _this.$ajax_loader.addClass('in');
-
-          var form_data = _this.$form.serialize() + '&submit=1';
-          $.post(options.api_url, form_data, function(data) {
-            _this.$ajax_loader.removeClass('in');
-            if (data.post_url !== undefined) {
-              _this.posted = true;
-              _this.$ajax_loader.hide();
-
-              var on_post = true;
-
-              if (_this.on_post != null) {
-                on_post = _this.on_post(data);
-              }
-
-              if (on_post) {
-                _this.$ajax_complete.addClass('in');
-
-                var past_location = String(window.location.href);
-                window.location.href = data.post_url.replace('#post', '#goto-post');
-
-                if (past_location.indexOf(window.location.href)) {
-                  window.location.reload();
-                }
-              }
-            } else if (data.errors !== undefined) {
-              Misago.Alerts.error(data.errors[0]);
-            } else if (data.interrupt !== undefined) {
-              Misago.Alerts.info(data.interrupt);
-            } else {
-              Misago.Alerts.error();
-            }
-
-            _this.submitted = false;
-          });
-        }
-
+        _this.submit();
         return false;
       })
 
       this.$container.find('button[name="cancel"]').click(function() {
         _this.cancel();
       });
+
+      // suppress default submission handling
+
+      this.$form.submit(function(e) {
+        _this.submit();
+        e.preventDefault();
+        return false;
+      })
 
       return true;
 
@@ -319,6 +289,49 @@ $(function() {
           options.on_load();
         }
       });
+
+    }
+
+    this.submit = function() {
+
+      if (!this.submitted && !this.posted) {
+        this.submitted = true; // lock submit process until after response
+        this.$ajax_loader.addClass('in');
+
+        var form_data = this.$form.serialize() + '&submit=1';
+        $.post(options.api_url, form_data, function(data) {
+          _this.$ajax_loader.removeClass('in');
+          if (data.post_url !== undefined) {
+            _this.posted = true;
+            _this.$ajax_loader.hide();
+
+            var on_post = true;
+
+            if (_this.on_post != null) {
+              on_post = _this.on_post(data);
+            }
+
+            if (on_post) {
+              _this.$ajax_complete.addClass('in');
+
+              var past_location = String(window.location.href);
+              window.location.href = data.post_url.replace('#post', '#goto-post');
+
+              if (past_location.indexOf(window.location.href)) {
+                window.location.reload();
+              }
+            }
+          } else if (data.errors !== undefined) {
+            Misago.Alerts.error(data.errors[0]);
+          } else if (data.interrupt !== undefined) {
+            Misago.Alerts.info(data.interrupt);
+          } else {
+            Misago.Alerts.error();
+          }
+
+          _this.submitted = false;
+        });
+      }
 
     }
 
