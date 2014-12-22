@@ -1,0 +1,54 @@
+{% load i18n misago_avatars %}
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{% trans "Close" %}</span></button>
+  <h4 class="modal-title" id="ajaxModalLabel">
+    <span class="fa fa-users fa-fw fa-lg"></span>
+    {% trans "Edit participants" %}
+  </h4>
+</div>
+<div class="modal-body modal-edit-participants" data-max-participants="{{ user.acl.max_private_thread_participants }}">
+
+  <h4>{% trans "Thread participants" %}</h4>
+
+  <ul class="list-unstyled users-list-compact">
+    {% for participant in participants %}
+    <li>
+      <a href="{{ participant.user.get_absolute_url }}"><img src="{{ participant.user|avatar:100 }}" alt="{% trans "Avatar" %}" class="user-avatar"></a>
+      <a href="{{ participant.user.get_absolute_url }}" class="item-title">{{ participant.user }}</a>
+      {% if participant.user != user %}
+      <button type="button" class="btn btn-default btn-sm pull-right btn-remove-participant" data-remove-url="">
+        {% trans "Remove" %}
+      </button>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+
+  <h4>{% trans "Add participants" %}</h4>
+
+  <p class="lead message">
+    {% trans "You can't add more participants to this thread." %}
+  </p>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="invite-form">
+
+      <div class="input">
+        <div class="thread-participants-input">
+          <input type="hidden">
+          <ul class="list-unstyled users-list"></ul>
+          <input class="textinput textInput form-control user-input" type="text" placeholder="{% trans "User to message..." %}" data-api-url="{% url 'misago:api_suggestion_engine' %}">
+        </div>
+      </div>
+
+      <div class="button">
+        <button type="button" class="btn btn-primary">
+          {% trans "Add" %}
+        </button>
+      </div>
+
+    </div>
+  </form>
+
+</div>

@@ -61,7 +61,7 @@
     {% if 'participants' in thread_actions %}
     $('.action-participants').click(function() {
       Misago.ParticipantsEditor.open({
-        api_url: 'kitties!'
+        api_url: '{% url "misago:private_thread_edit_participants" thread_id=thread.id thread_slug=thread.slug %}'
       })
     });
     {% endif %}

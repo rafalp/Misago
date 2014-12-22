@@ -40,9 +40,11 @@ urlpatterns += patterns('',
 
 
 # participants views
-from misago.threads.views.privatethreads import ThreadParticipantsView
+from misago.threads.views.privatethreads import (ThreadParticipantsView,
+                                                 EditThreadParticipantsView)
 urlpatterns += patterns('',
     url(r'^private-thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/participants/$', ThreadParticipantsView.as_view(), name='private_thread_participants'),
+    url(r'^private-thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/edit-participants/$', EditThreadParticipantsView.as_view(), name='private_thread_edit_participants'),
 )
 
 

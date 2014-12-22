@@ -25,3 +25,155 @@
     }
   }
 }
+
+
+// Participants field
+//
+//==
+.thread-participants-input {
+  background: @input-bg;
+  border: 2px solid @input-border;
+  border-radius: @border-radius-large;
+
+  input {
+    border: none;
+    .box-shadow(none);
+    margin: 0px;
+  }
+
+  ul {
+    float: left;
+    margin: 0px;
+
+    li {
+      background: darken(@input-bg, 5%);
+      border-radius: @border-radius-small;
+      float: left;
+      margin-left: 2px;
+      margin-right: @line-height-computed / 2;
+      margin-top: 2px;
+      padding: @padding-small-vertical @padding-small-horizontal;
+      padding-left: @padding-small-vertical + 1px;
+
+      font-weight: bold;
+
+      img {
+        border-radius: @border-radius-small;
+        height: 20px;
+        margin-right: @line-height-computed / 5;
+        margin-bottom: -2px;
+        position: relative;
+        bottom: 2px;
+      }
+
+      .btn {
+        background: transparent;
+        border-color: transparent;
+        margin-left: @line-height-computed / 4;
+        height: 17px;
+        width: 17px;
+        padding: 0px;
+        position: relative;
+        bottom: 2px;
+
+        text-align: center;
+
+        .fa {
+          position: relative;
+          left: 0px;
+          bottom: 1px;
+
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .user-input {
+    float: left;
+    border: none;
+    .box-shadow(none);
+  }
+
+  .twitter-typeahead {
+    margin-bottom: -5px;
+
+    .tt-dropdown-menu {
+      background-color: @dropdown-bg;
+      border-radius: @border-radius-base;
+      box-shadow: 0px 0px 0px 4px @dropdown-shadow;
+      min-width: 160px;
+      padding: @padding-base-vertical 0px;
+
+      &:after {
+        border: solid transparent;
+        border-bottom-color: @dropdown-bg;
+        border-width: 4px;
+        content: "";
+        height: 0;
+        position: absolute;
+        pointer-events: none;
+        left: 12px;
+        top: -8px;
+        width: 0;
+      }
+
+      .tt-suggestion {
+        display: block;
+        padding: @padding-base-vertical @padding-large-horizontal;
+
+        color: @dropdown-link-color;
+        font-weight: bold;
+
+        cursor: pointer;
+
+        img {
+          border-radius: @border-radius-small;
+          position: relative;
+          bottom: 1px;
+        }
+
+        &.tt-cursor {
+          &, a:hover, a:active {
+            background-color: darken(@dropdown-bg, 10%);
+
+            color: @dropdown-link-color;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Edit thread participants
+//
+//==
+.modal-edit-participants {
+  .users-list-compact {
+    margin-bottom: @line-height-computed * 1.5;
+  }
+
+  .invite-form {
+    display: table;
+    width: 100%;
+
+    .input {
+      display: table-cell;
+      width: 100%;
+
+      .thread-participants-input {
+        margin: 0px;
+      }
+    }
+
+    .button {
+      display: table-cell;
+      padding-left: @line-height-computed / 3;
+      vertical-align: top;
+
+      .btn {
+        margin: 0px;
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="thread-participants">
+<div class="thread-participants-input">
   <input id="{{ form.users.auto_id }}" name="{{ form.users.html_name }}" type="hidden">
   <ul class="list-unstyled users-list"></ul>
   <input class="textinput textInput form-control user-input" type="text" placeholder="{% trans "User to message..." %}" data-api-url="{% url 'misago:api_suggestion_engine' %}">

@@ -109,3 +109,31 @@
     }
   }
 }
+
+
+// Compact users list for use in modals and stuff
+//
+//==
+.users-list-compact {
+  &>li {
+    border-bottom: 1px solid @hr-border;
+    padding: @line-height-computed / 2 0px;
+
+    &:last-child {
+    	border-bottom: none;
+    }
+
+    img {
+      border-radius: @border-radius-small;
+      height: 24px;
+    }
+
+    .item-title {
+      font-weight: bold;
+    }
+
+    .btn {
+      margin-top: -3px;
+    }
+  }
+}

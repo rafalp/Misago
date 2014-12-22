@@ -94,7 +94,7 @@
       Misago.Posting.load({
         api_url: "{% url 'misago:start_private_thread' %}",
         on_load: function() {
-          var participants = new Misago.participants($('.thread-participants'));
+          var participants = new Misago.Participants($('.thread-participants-input'));
         }
       });
     });

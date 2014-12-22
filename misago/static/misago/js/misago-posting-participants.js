@@ -1,4 +1,4 @@
-Misago.participants = function($e) {
+Misago.Participants = function($e) {
 
   this.$users = $e.find('.users-list');
   this.$input = $e.find('.user-input');

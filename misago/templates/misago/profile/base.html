@@ -70,7 +70,7 @@
       Misago.Posting.load({
         api_url: "{% url 'misago:start_private_thread' %}",
         on_load: function() {
-          var participants = new Misago.participants($('.thread-participants'));
+          var participants = new Misago.Participants($('.thread-participants-input'));
           participants.add_user({
             username: "{{ profile.username }}",
             avatar: {30: "{{ profile|avatar:30 }}"}
