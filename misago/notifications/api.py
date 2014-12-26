@@ -8,7 +8,7 @@ from misago.notifications.utils import hash_trigger
 
 __all__ = [
     'notify_user',
-    'read_user_notification',
+    'read_user_notifications',
     'read_all_user_alerts',
     'assert_real_new_notifications_count',
 ]
@@ -46,19 +46,25 @@ def notify_user(user, message, url, trigger=None, formats=None, sender=None,
     return new_notification
 
 
-def read_user_notification(user, trigger, atomic=True):
+def read_user_notifications(user, triggers, atomic=True):
     if user.is_authenticated() and user.new_notifications:
         if atomic:
             with transaction.atomic():
-                _real_read_user_notification(user, trigger)
+                _real_read_user_notifications(user, triggers)
         else:
-            _real_read_user_notification(user, trigger)
+            _real_read_user_notifications(user, triggers)
 
 
-def _real_read_user_notification(user, trigger):
-    trigger_hash = hash_trigger(trigger)
+def _real_read_user_notifications(user, triggers):
+    if isinstance(triggers, basestring):
+        triggers = [triggers]
+
+    hashes = [hash_trigger(trigger) for trigger in triggers]
     update_qs = user.misago_notifications.filter(is_new=True)
-    update_qs = update_qs.filter(trigger=trigger_hash)
+    if len(hashes) == 1:
+        update_qs = update_qs.filter(trigger=hashes[0])
+    else:
+        update_qs = update_qs.filter(trigger__in=hashes)
     updated = update_qs.update(is_new=False)
 
     if updated:

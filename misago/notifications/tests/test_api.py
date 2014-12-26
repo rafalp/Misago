@@ -26,8 +26,8 @@ class NotificationsAPITests(TestCase):
         self.reload_test_user()
         self.assertEqual(self.test_user.new_notifications, 1)
 
-    def test_read_user_notification(self):
-        """read_user_notification reads user notification"""
+    def test_read_user_notifications(self):
+        """read_user_notifications reads user notification"""
         api.notify_user(self.test_user,
                         "Test notify %(token)s",
                         "/users/",
@@ -36,7 +36,7 @@ class NotificationsAPITests(TestCase):
                         self.test_user)
         self.reload_test_user()
 
-        api.read_user_notification(self.test_user, "test")
+        api.read_user_notifications(self.test_user, "test")
 
         self.assertEqual(self.test_user.new_notifications, 0)
         queryset = self.test_user.misago_notifications.filter(is_new=True)

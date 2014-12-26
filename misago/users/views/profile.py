@@ -11,7 +11,7 @@ from misago.acl import add_acl
 from misago.core.decorators import require_POST
 from misago.core.shortcuts import get_object_or_404, paginate, validate_slug
 from misago.core.utils import clean_return_path
-from misago.notifications import notify_user, read_user_notification
+from misago.notifications import notify_user, read_user_notifications
 from misago.threads.permissions import allow_message_user
 
 from misago.users.bans import get_user_ban
@@ -48,7 +48,7 @@ def profile_view(f):
             profile.is_blocked = False
 
         if request.user.is_authenticated and request.method == "GET":
-            read_user_notification(request.user, "profile_%s" % profile.pk)
+            read_user_notifications(request.user, "profile_%s" % profile.pk)
 
         return f(request, *args, **kwargs)
     return decorator
@@ -75,7 +75,7 @@ def notification_view(trigger):
             profile = kwargs.get('profile')
 
             if user.is_authenticated and request.method == "GET":
-                read_user_notification(user, trigger % profile.pk)
+                read_user_notifications(user, trigger % profile.pk)
 
             return f(*args, **kwargs)
         return decorator

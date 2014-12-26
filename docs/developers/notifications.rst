@@ -18,16 +18,16 @@ notify_user
 * ``trigger:`` short text used to identify this message for ``read_user_notification`` function.
 * ``formats:`` Optional. Dict of formats for ``message`` argument that should be boldened.
 * ``sender:`` Optional. User that notification origins from.
-* ``update_user:``Optional. Boolean controlling if to call ``user.update`` after setting notification, or not.
+* ``update_user:`` Optional. Boolean controlling if to call ``user.update`` after setting notification, or not. Defaults to ``True``.
 
 
-read_user_notification
-----------------------
+read_user_notifications
+-----------------------
 
-.. function:: read_user_notification(user, trigger, atomic=True)
+.. function:: read_user_notifications(user, triggers, atomic=True)
 
-Sets user notification identified by ``trigger`` as read. This function checks internally if user has new notifications before it queries database.
+Sets user notifications identified by ``triggers`` as read. This function checks internally if user has new notifications before it queries database.
 
 * ``user:`` User to whom notification belongs to
-* ``trigger:`` Short text used to identify messages to trigger as read.
+* ``triggers:`` Short text or list of short texts used to identify notifications that will be set as read.
 * ``atomic:`` Lets you control if you should wrap this in dedicated transaction.
