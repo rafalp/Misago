@@ -1,6 +1,8 @@
 from django.db.transaction import atomic
 from django.utils import timezone
 
+from misago.notifications import read_user_notifications
+
 from misago.readtracker import forumstracker, signals
 from misago.readtracker.dates import is_date_tracked
 from misago.readtracker.models import ForumRead, ThreadRead
@@ -159,6 +161,8 @@ def read_thread(user, thread, last_read_reply):
 
 @atomic
 def sync_record(user, thread, last_read_reply):
+    notification_triggers = ['read_thread_%s' % thread.pk]
+
     read_replies = count_read_replies(user, thread, last_read_reply)
     if thread.read_record:
         thread.read_record.read_replies = read_replies
@@ -171,10 +175,13 @@ def sync_record(user, thread, last_read_reply):
             read_replies=read_replies,
             last_read_on=last_read_reply.posted_on)
         signals.thread_tracked.send(sender=user, thread=thread)
+        notification_triggers.append('see_thread_%s' % thread.pk)
 
     if last_read_reply.posted_on == thread.last_post_on:
         signals.thread_read.send(sender=user, thread=thread)
         forumstracker.sync_record(user, thread.forum)
+
+    read_user_notifications(user, notification_triggers, False)
 
 
 def count_read_replies(user, thread, last_read_reply):
