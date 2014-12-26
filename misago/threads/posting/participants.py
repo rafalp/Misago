@@ -1,6 +1,6 @@
 from misago.threads.forms.posting import ThreadParticipantsForm
 from misago.threads.posting import PostingMiddleware, START
-from misago.threads.participants import add_participant
+from misago.threads.participants import add_participant, add_owner
 
 
 class ThreadParticipantsFormMiddleware(PostingMiddleware):
@@ -15,6 +15,6 @@ class ThreadParticipantsFormMiddleware(PostingMiddleware):
             return ThreadParticipantsForm(prefix=self.prefix)
 
     def save(self, form):
-        add_participant(self.request, self.thread, self.user, True)
+        add_owner(self.thread, self.user)
         for user in form.users_cache:
             add_participant(self.request, self.thread, user)

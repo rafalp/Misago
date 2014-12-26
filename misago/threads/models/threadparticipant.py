@@ -1,4 +1,4 @@
-from django.db import models, transaction
+from django.db import models
 
 from misago.conf import settings
 
@@ -7,7 +7,6 @@ class ThreadParticipantManager(models.Manager):
     def remove_participant(self, thread, user):
         ThreadParticipant.objects.filter(thread=thread, user=user).delete()
 
-    @transaction.atomic
     def set_owner(self, thread, user):
         thread_owner = ThreadParticipant.objects.filter(
             thread=thread, is_owner=True)
@@ -19,7 +18,6 @@ class ThreadParticipantManager(models.Manager):
             user=user,
             is_owner=True)
 
-    @transaction.atomic
     def add_participant(self, thread, user, is_owner=False):
         ThreadParticipant.objects.create(
             thread=thread,

@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
@@ -74,11 +72,7 @@ class ThreadParticipantTests(TestCase):
         self.assertFalse(participation.is_owner)
 
         ThreadParticipant.objects.add_participant(self.thread, user)
-        self.assertEqual(self.thread.participants.count(), 1)
-
-        participation = ThreadParticipant.objects.get(
-            thread=self.thread, user=user)
-        self.assertFalse(participation.is_owner)
+        self.assertEqual(self.thread.participants.count(), 2)
 
     def test_set_owner(self):
         """set_owner makes user thread owner"""

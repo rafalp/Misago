@@ -346,11 +346,12 @@ class LeaveThreadView(BaseEditThreadParticipantView):
             messages.error(request, unicode(e))
             return redirect(thread.get_absolute_url())
 
-        participants.remove_participant(thread, user)
+        participants.remove_participant(thread, request.user)
         if not thread.threadparticipant_set.exists():
             thread.delete()
         elif thread.participant.is_owner:
             new_owner = user_qs.order_by('id')[:1][0].user
+            participants.set_thread_owner(thread, new_owner)
 
             message = _("%(user)s left this thread. "
                         "%(new_owner)s is now thread owner.")
@@ -359,8 +360,6 @@ class LeaveThreadView(BaseEditThreadParticipantView):
                 'new_owner': new_owner
             })
             thread.save(update_fields=['has_events'])
-
-            participants.set_thread_owner(thread, request.user)
         else:
             message = _("%(user)s left this thread.")
             record_event(request.user, thread, 'user', message, {
