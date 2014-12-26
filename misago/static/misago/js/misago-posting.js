@@ -100,6 +100,8 @@ $(function() {
 
     this._clear = function() {
 
+      this.options = null;
+
       this.$spacer = null;
       this.$container = null;
       this.$form = null;
@@ -131,6 +133,8 @@ $(function() {
       if (this.$form !== null) {
         return false;
       }
+
+      this.options = options;
 
       this.$form = $('#posting-form');
       this.$container = this.$form.parent();
@@ -299,7 +303,7 @@ $(function() {
         this.$ajax_loader.addClass('in');
 
         var form_data = this.$form.serialize() + '&submit=1';
-        $.post(options.api_url, form_data, function(data) {
+        $.post(this.options.api_url, form_data, function(data) {
           _this.$ajax_loader.removeClass('in');
           if (data.post_url !== undefined) {
             _this.posted = true;
@@ -314,10 +318,10 @@ $(function() {
             if (on_post) {
               _this.$ajax_complete.addClass('in');
 
-              var past_location = String(window.location.href);
+              var post_location = String(window.location.href);
               window.location.href = data.post_url.replace('#post', '#goto-post');
 
-              if (past_location.indexOf(window.location.href)) {
+              if (post_location.indexOf(window.location.href)) {
                 window.location.reload();
               }
             }
