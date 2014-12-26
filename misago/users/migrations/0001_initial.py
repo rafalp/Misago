@@ -57,7 +57,7 @@ class Migration(migrations.Migration):
                 ('new_notifications', models.PositiveIntegerField(default=0)),
                 ('limits_private_thread_invites_to', models.PositiveIntegerField(default=0)),
                 ('unread_private_threads', models.PositiveIntegerField(default=0)),
-                ('sync_unred_private_threads', models.BooleanField(default=False)),
+                ('sync_unread_private_threads', models.BooleanField(default=False)),
                 ('subscribe_to_started_threads', models.PositiveIntegerField(default=0)),
                 ('subscribe_to_replied_threads', models.PositiveIntegerField(default=0)),
                 ('threads', models.PositiveIntegerField(default=0)),

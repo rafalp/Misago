@@ -1,0 +1,12 @@
+{% load i18n misago_avatars %}
+{% for participant in participants %}
+<li class="participant" data-participant-id="{{ participant.id }}" data-user-id="{{ participant.user.id }}">
+  <a href="{{ participant.user.get_absolute_url }}"><img src="{{ participant.user|avatar:100 }}" alt="{% trans "Avatar" %}" class="user-avatar"></a>
+  <a href="{{ participant.user.get_absolute_url }}" class="item-title">{{ participant.user }}</a>
+  {% if participant.user != user %}
+  <button type="button" class="btn btn-default btn-sm pull-right btn-remove-participant" data-remove-url="{% url 'misago:private_thread_remove_participant' thread_slug=thread.slug thread_id=thread.id user_id=participant.user.id %}">
+    {% trans "Remove" %}
+  </button>
+  {% endif %}
+</li>
+{% endfor %}

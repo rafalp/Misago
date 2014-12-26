@@ -226,7 +226,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     limits_private_thread_invites_to = models.PositiveIntegerField(
         default=LIMITS_PRIVATE_THREAD_INVITES_TO_NONE)
     unread_private_threads = models.PositiveIntegerField(default=0)
-    sync_unred_private_threads = models.BooleanField(default=False)
+    sync_unread_private_threads = models.BooleanField(default=False)
 
     subscribe_to_started_threads = models.PositiveIntegerField(
         default=AUTO_SUBSCRIBE_NONE)

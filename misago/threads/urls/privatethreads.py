@@ -41,10 +41,16 @@ urlpatterns += patterns('',
 
 # participants views
 from misago.threads.views.privatethreads import (ThreadParticipantsView,
-                                                 EditThreadParticipantsView)
+                                                 EditThreadParticipantsView,
+                                                 AddThreadParticipantsView,
+                                                 RemoveThreadParticipantView,
+                                                 LeaveThreadView)
 urlpatterns += patterns('',
     url(r'^private-thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/participants/$', ThreadParticipantsView.as_view(), name='private_thread_participants'),
     url(r'^private-thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/edit-participants/$', EditThreadParticipantsView.as_view(), name='private_thread_edit_participants'),
+    url(r'^private-thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/remove-participant/(?P<user_id>\d+)/$', RemoveThreadParticipantView.as_view(), name='private_thread_remove_participant'),
+    url(r'^private-thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/add-participants/$', AddThreadParticipantsView.as_view(), name='private_thread_add_participants'),
+    url(r'^private-thread/(?P<thread_slug>[\w\d-]+)-(?P<thread_id>\d+)/leave/$', LeaveThreadView.as_view(), name='private_thread_leave'),
 )
 
 

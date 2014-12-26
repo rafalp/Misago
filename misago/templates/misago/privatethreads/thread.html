@@ -6,11 +6,11 @@
 {{ block.super }}
 <li>
   <button type="button" class="btn-show-participants" data-participants-url="{% url 'misago:private_thread_participants' thread_slug=thread.slug thread_id=thread.id %}">
-    <span class="fa fa-users"></span> {% blocktrans trimmed count users=thread.participants_list|length %}
+    <span class="fa fa-users"></span> <span class="participants-message">{% blocktrans trimmed count users=thread.participants_list|length %}
       {{ users }} participant
     {% plural %}
       {{ users }} participants
-    {% endblocktrans %}
+    {% endblocktrans %}</span>
   </button>
 <li>
 {% endblock page-details %}
@@ -26,6 +26,21 @@
 </button>
 {% endif %}
 {% endblock thread-actions %}
+
+
+{% block post-actions %}
+{{ block.super }}
+
+{% if thread.participant %}
+<form action="{% url 'misago:private_thread_leave' thread_slug=thread.slug thread_id=thread.id %}" method="POST" class="leave-thread-form pull-right">
+  {% csrf_token %}
+  <button class="btn btn-default" type="submit">
+    <span class="fa fa-sign-out"></span>
+    {% trans "Leave thread" %}
+  </button>
+</form>
+{% endif %}
+{% endblock post-actions %}
 
 
 {% block javascripts %}
@@ -57,6 +72,17 @@
       }
 
     });
+
+    {% if thread.participant %}
+    $('.leave-thread-form').submit(function() {
+      {% if thread.participants_list|length == 1 %}
+      var prompt = confirm("{% trans "Are you sure you want to leave this thread? It will be deleted after you leave it." %}");
+      {% else %}
+      var prompt = confirm("{% trans "Are you sure you want to leave this thread?" %}");
+      {% endif %}
+      return prompt
+    });
+    {% endif %}
 
     {% if 'participants' in thread_actions %}
     $('.action-participants').click(function() {

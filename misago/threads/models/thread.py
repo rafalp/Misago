@@ -1,23 +1,10 @@
-from django.core.urlresolvers import reverse
 from django.db import models, transaction
-from django.dispatch import receiver
 
 from misago.conf import settings
-from misago.core.shortcuts import paginate
 from misago.core.utils import slugify
 
 
-__all__ = [
-    'Thread',
-    'ThreadParticipant'
-]
-
-
-class PrivateThreadMixin(object):
-    pass
-
-
-class Thread(models.Model, PrivateThreadMixin):
+class Thread(models.Model):
     forum = models.ForeignKey('misago_forums.Forum')
     label = models.ForeignKey('misago_threads.Label',
                               null=True, blank=True,
@@ -176,35 +163,3 @@ class Thread(models.Model, PrivateThreadMixin):
             self.last_poster_slug = post.poster.slug
         else:
             self.last_poster_slug = slugify(post.poster_name)
-
-
-class ThreadParticipantManager(models.Manager):
-    def remove_participant(self, thread, user):
-        ThreadParticipant.objects.filter(thread=thread, user=user).delete()
-
-    @transaction.atomic
-    def set_owner(self, thread, user):
-        thread_owner = ThreadParticipant.objects.filter(
-            thread=thread, is_owner=True)
-        thread_owner.update(is_owner=False)
-
-        self.remove_participant(thread, user)
-        ThreadParticipant.objects.create(
-            thread=thread,
-            user=user,
-            is_owner=True)
-
-    @transaction.atomic
-    def add_participant(self, thread, user):
-        self.remove_participant(thread, user)
-        ThreadParticipant.objects.create(
-            thread=thread,
-            user=user,)
-
-
-class ThreadParticipant(models.Model):
-    thread = models.ForeignKey(Thread)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    is_owner = models.BooleanField(default=False)
-
-    objects = ThreadParticipantManager()

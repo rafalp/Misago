@@ -43,6 +43,13 @@ Misago.Participants = function($e) {
 
   }
 
+  this.clear = function() {
+
+    this.$users.find('li').remove();
+    this.$value.val("");
+
+  }
+
   this.$input.typeahead({
       minLength: 2,
       hint: false,

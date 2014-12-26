@@ -1,11 +1,17 @@
 from django.contrib import messages
-from django.http import Http404
-from django.shortcuts import get_object_or_404, render
-from django.utils.translation import ugettext as _
+from django.contrib.auth import get_user_model
+from django.db.transaction import atomic
+from django.http import Http404, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.translation import ugettext as _, ungettext
 
 from misago.acl import add_acl
+from misago.core.exceptions import AjaxError
 from misago.forums.models import Forum
 
+from misago.threads import participants
+from misago.threads.events import record_event
+from misago.threads.forms.posting import ThreadParticipantsForm
 from misago.threads.models import Thread, ThreadParticipant
 from misago.threads.permissions import (allow_use_private_threads,
                                         allow_see_private_thread,
@@ -57,24 +63,11 @@ class PrivateThreadsMixin(object):
             raise Http404()
         return thread
 
-    def fetch_thread_participants(self, user, thread):
-        thread.participants_list = []
-        thread.participant = None
-
-        participants_qs = ThreadParticipant.objects.filter(thread=thread)
-        participants_qs = participants_qs.select_related('user')
-        for participant in participants_qs:
-            participant.thread = thread
-            thread.participants_list.append(participant)
-            if participant.user == user:
-                thread.participant = participant
-        return thread.participants_list
-
     def check_thread_permissions(self, request, thread):
         add_acl(request.user, thread.forum)
         add_acl(request.user, thread)
 
-        self.fetch_thread_participants(request.user, thread)
+        participants.make_thread_participants_aware(request.user, thread)
 
         allow_see_private_thread(request.user, thread)
         allow_use_private_threads(request.user)
@@ -84,7 +77,7 @@ class PrivateThreadsMixin(object):
         add_acl(request.user, post.thread)
         add_acl(request.user, post)
 
-        self.fetch_thread_participants(request.user, post.thread)
+        participants.make_thread_participants_aware(request.user, thread)
 
         allow_see_private_post(request.user, post)
         allow_see_private_thread(request.user, post.thread)
@@ -121,26 +114,6 @@ class PrivateThreadsView(generic.ThreadsView):
 
     Threads = PrivateThreads
     Filtering = PrivateThreadsFiltering
-
-
-@private_threads_view
-class ThreadParticipantsView(PrivateThreadsMixin, generic.ViewBase):
-    template = 'misago/privatethreads/participants.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        thread = self.get_thread(request, **kwargs)
-
-        if not request.is_ajax():
-            response = render(request, 'misago/errorpages/wrong_way.html')
-            response.status_code = 405
-            return response
-
-        participants_qs = thread.threadparticipant_set
-        participants_qs = participants_qs.select_related('user')
-
-        return self.render(request, {
-            'participants': participants_qs.order_by('-is_owner', 'user__slug')
-        })
 
 
 class PrivateThreadActions(generic.ThreadActions):
@@ -196,7 +169,7 @@ class PrivateThreadActions(generic.ThreadActions):
         return actions
 
     def action_takeover(self, request, thread):
-        ThreadParticipant.objects.set_owner(thread, request.user)
+        participants.set_thread_owner(thread, request.user)
         messages.success(request, _("You are now owner of this thread."))
 
 
@@ -207,8 +180,8 @@ class ThreadView(PrivateThreadsMixin, generic.ThreadView):
 
 
 @private_threads_view
-class EditThreadParticipantsView(PrivateThreadsMixin, generic.ViewBase):
-    template = 'misago/privatethreads/participants_modal.html'
+class ThreadParticipantsView(PrivateThreadsMixin, generic.ViewBase):
+    template = 'misago/privatethreads/participants.html'
 
     def dispatch(self, request, *args, **kwargs):
         thread = self.get_thread(request, **kwargs)
@@ -219,11 +192,187 @@ class EditThreadParticipantsView(PrivateThreadsMixin, generic.ViewBase):
             return response
 
         participants_qs = thread.threadparticipant_set
-        participants_qs = participants_qs.select_related('user')
+        participants_qs = participants_qs.select_related('user', 'user__rank')
 
         return self.render(request, {
+            'forum': thread.forum,
+            'thread': thread,
             'participants': participants_qs.order_by('-is_owner', 'user__slug')
         })
+
+
+@private_threads_view
+class EditThreadParticipantsView(ThreadParticipantsView):
+    template = 'misago/privatethreads/participants_modal.html'
+
+
+@private_threads_view
+class BaseEditThreadParticipantView(PrivateThreadsMixin, generic.ViewBase):
+    @atomic
+    def dispatch(self, request, *args, **kwargs):
+        thread = self.get_thread(request, lock=True, **kwargs)
+
+        if not request.is_ajax():
+            response = render(request, 'misago/errorpages/wrong_way.html')
+            response.status_code = 405
+            return response
+
+        if not request.method == "POST":
+            raise AjaxError(_("Wrong action received."))
+
+        if not thread.participant or not thread.participant.is_owner:
+            raise AjaxError(_("Only thread owner can add or "
+                              "remove participants from thread."))
+
+        return self.action(request, thread, kwargs)
+
+    def action(self, request, thread, kwargs):
+        raise NotImplementedError("views extending EditThreadParticipantView "
+                                  "need to define custom action method")
+
+
+@private_threads_view
+class AddThreadParticipantsView(BaseEditThreadParticipantView):
+    template = 'misago/privatethreads/participants_modal_list.html'
+
+    def action(self, request, thread, kwargs):
+        form = ThreadParticipantsForm(request.POST, user=request.user)
+        if not form.is_valid():
+            errors = []
+            for field_errors in form.errors.as_data().values():
+                errors.extend([unicode(e[0]) for e in field_errors])
+            return JsonResponse({'message': errors[0], 'is_error': True})
+
+        event_message = _("%(user)s added %(participant)s to this thread.")
+        participants_list = [p.user for p in thread.participants_list]
+        for user in form.users_cache:
+            if user not in participants_list:
+                participants.add_participant(request, thread, user)
+                record_event(request.user, thread, 'user', event_message, {
+                    'user': request.user,
+                    'participant': user
+                })
+                thread.save(update_fields=['has_events'])
+
+        participants_qs = thread.threadparticipant_set
+        participants_qs = participants_qs.select_related('user', 'user__rank')
+        participants_qs = participants_qs.order_by('-is_owner', 'user__slug')
+
+        participants_list = [p for p in participants_qs]
+
+        participants_list_html = self.render(request, {
+            'forum': thread.forum,
+            'thread': thread,
+            'participants': participants_list,
+        }).content
+
+        message = ungettext("%(users)s participant",
+                            "%(users)s participants",
+                            len(participants_list))
+        message = message % {'users': len(participants_list)}
+
+        return JsonResponse({
+            'is_error': False,
+            'message': message,
+            'list_html': participants_list_html
+        })
+
+
+@private_threads_view
+class RemoveThreadParticipantView(BaseEditThreadParticipantView):
+    def action(self, request, thread, kwargs):
+        user_qs = thread.threadparticipant_set.select_related('user')
+        try:
+            participant = user_qs.get(user_id=kwargs['user_id'])
+        except ThreadParticipant.DoesNotExist:
+            return JsonResponse({
+                'message': _("Requested participant couldn't be found."),
+                'is_error': True,
+            })
+
+        if participant.user == request.user:
+            return JsonResponse({
+                'message': _('To leave thread use "Leave thread" option.'),
+                'is_error': True,
+            })
+
+        participants_count = len(thread.participants_list) - 1
+        if participants_count == 0:
+            return JsonResponse({
+                'message': _("You can't remove last thread participant."),
+                'is_error': True,
+            })
+
+        participants.remove_participant(thread, participant.user)
+        if not participants.thread_has_participants(thread):
+            thread.delete()
+        else:
+            message = _("%(user)s removed %(participant)s from this thread.")
+            record_event(request.user, thread, 'user', message, {
+                'user': request.user,
+                'participant': participant.user
+            })
+            thread.save(update_fields=['has_events'])
+
+        participants_count = len(thread.participants_list) - 1
+        message = ungettext("%(users)s participant",
+                            "%(users)s participants",
+                            participants_count)
+        message = message % {'users': participants_count}
+
+        return JsonResponse({'is_error': False, 'message': message})
+
+
+@private_threads_view
+class LeaveThreadView(BaseEditThreadParticipantView):
+    @atomic
+    def dispatch(self, request, *args, **kwargs):
+        thread = self.get_thread(request, lock=True, **kwargs)
+
+        try:
+            if not request.method == "POST":
+                raise RuntimeError(_("Wrong action received."))
+            if not thread.participant:
+                raise RuntimeError(_("You have to be thread participant in "
+                                  "order to be able to leave thread."))
+
+            user_qs = thread.threadparticipant_set.select_related('user')
+            try:
+                participant = user_qs.get(user_id=request.user.id)
+            except ThreadParticipant.DoesNotExist:
+                raise RuntimeError(_("You need to be thread "
+                                     "participant to leave it."))
+        except RuntimeError as e:
+            messages.error(request, unicode(e))
+            return redirect(thread.get_absolute_url())
+
+        participants.remove_participant(thread, user)
+        if not thread.threadparticipant_set.exists():
+            thread.delete()
+        elif thread.participant.is_owner:
+            new_owner = user_qs.order_by('id')[:1][0].user
+
+            message = _("%(user)s left this thread. "
+                        "%(new_owner)s is now thread owner.")
+            record_event(request.user, thread, 'user', message, {
+                'user': request.user,
+                'new_owner': new_owner
+            })
+            thread.save(update_fields=['has_events'])
+
+            participants.set_thread_owner(thread, request.user)
+        else:
+            message = _("%(user)s left this thread.")
+            record_event(request.user, thread, 'user', message, {
+                'user': request.user,
+            })
+            thread.save(update_fields=['has_events'])
+
+        message = _('You have left "%(thread)s" thread.')
+        message = message % {'thread': thread.title}
+        messages.info(request, message)
+        return redirect('misago:private_threads')
+
 
 """
 Generics
