@@ -6,6 +6,8 @@ import django.db.models.deletion
 import django.utils.timezone
 from django.conf import settings
 
+from misago.core.pgutils import CreatePartialCompositeIndex
+
 
 class Migration(migrations.Migration):
 
@@ -19,8 +21,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('is_new', models.BooleanField(default=True)),
-                ('date', models.DateTimeField(default=django.utils.timezone.now, db_index=True)),
-                ('trigger', models.CharField(max_length=8)),
+                ('date', models.DateTimeField(default=django.utils.timezone.now)),
+                ('hash', models.CharField(max_length=8)),
                 ('message', models.TextField()),
                 ('checksum', models.CharField(default=b'-', max_length=64)),
                 ('url', models.TextField()),
@@ -32,5 +34,17 @@ class Migration(migrations.Migration):
             options={
             },
             bases=(models.Model,),
+        ),
+        migrations.AlterIndexTogether(
+            name='notification',
+            index_together=set([
+                ('user', 'hash'),
+            ]),
+        ),
+        CreatePartialCompositeIndex(
+            model='Notification',
+            fields=('user_id', 'is_new', 'hash'),
+            index_name='misago_notifications_notification_user_is_new_hash_partial',
+            condition='is_new = TRUE',
         ),
     ]

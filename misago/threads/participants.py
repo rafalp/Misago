@@ -1,6 +1,8 @@
 from django.utils.translation import ugettext as _
 from misago.notifications import notify_user
+
 from misago.threads.models import ThreadParticipant
+from misago.threads.signals import remove_thread_participant
 
 
 def thread_has_participants(thread):
@@ -62,3 +64,5 @@ def remove_participant(thread, user):
     """
     thread.threadparticipant_set.filter(user=user).delete()
     set_user_unread_private_threads_sync(user)
+
+    remove_thread_participant.send(thread, user=user)

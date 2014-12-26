@@ -49,14 +49,14 @@ def full_page(request):
 
 
 @atomic
-def go_to_notification(request, notification_id, trigger):
+def go_to_notification(request, notification_id, hash):
     queryset = request.user.misago_notifications.select_for_update()
     notification = get_object_or_404(
-        queryset, pk=notification_id, trigger=trigger)
+        queryset, pk=notification_id, hash=hash)
 
     if notification.is_new:
-        notification.is_new = False
-        notification.save(update_fields=['is_new'])
+        update_qs = request.user.misago_notifications.filter(hash=hash)
+        update_qs.update(is_new=False)
         assert_real_new_notifications_count(request.user)
 
     return redirect(notification.url)

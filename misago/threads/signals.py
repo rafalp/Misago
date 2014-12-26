@@ -13,6 +13,7 @@ merge_post = Signal()
 merge_thread = Signal(providing_args=["other_thread"])
 move_post = Signal()
 move_thread = Signal()
+remove_thread_participant = Signal(providing_args=["user"])
 
 
 """

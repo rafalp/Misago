@@ -1,7 +1,7 @@
 from django.dispatch import receiver, Signal
 
 from misago.forums.signals import move_forum_content
-from misago.threads.signals import move_thread
+from misago.threads.signals import move_thread, remove_thread_participant
 
 
 all_read = Signal()
@@ -42,3 +42,9 @@ def decrease_unread_count(sender, **kwargs):
 def zero_unread_counters(sender, **kwargs):
     sender.new_threads.set(0)
     sender.unread_threads.set(0)
+
+
+@receiver(remove_thread_participant)
+def remove_private_thread_readtrackers(sender, **kwargs):
+    user = kwargs['user']
+    user.threadread_set.filter(thread=sender).delete()

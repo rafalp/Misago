@@ -69,3 +69,40 @@ def batch_delete(queryset, step=50):
         for obj in queryset[:step]:
             yield obj
         queryset_exists = queryset.exists()
+
+
+class CreatePartialCompositeIndex(CreatePartialIndex):
+    CREATE_SQL = """
+CREATE INDEX %(index_name)s ON %(table)s (%(fields)s)
+WHERE %(condition)s;
+"""
+
+    REMOVE_SQL = """
+DROP INDEX %(index_name)s
+"""
+
+    def __init__(self, model, fields, index_name, condition):
+        self.model = model
+        self.fields = fields
+        self.index_name = index_name
+        self.condition = condition
+
+    def database_forwards(self, app_label, schema_editor,
+                          from_state, to_state):
+        apps = from_state.render()
+        model = apps.get_model(app_label, self.model)
+
+        statement = self.CREATE_SQL % {
+            'index_name': self.index_name,
+            'table': model._meta.db_table,
+            'fields': ', '.join(self.fields),
+            'condition': self.condition,
+        }
+
+        schema_editor.execute(statement)
+
+    def describe(self):
+        message = ("Create PostgreSQL partial composite "
+                   "index on fields %s in %s for %s")
+        formats = (', '.join(self.fields), self.model_name, self.values)
+        return message % formats

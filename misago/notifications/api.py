@@ -3,7 +3,7 @@ from django.db import transaction
 from django.utils.html import escape
 
 from misago.notifications.checksums import update_checksum
-from misago.notifications.utils import hash_trigger
+from misago.notifications.utils import hash_type
 
 
 __all__ = [
@@ -14,7 +14,7 @@ __all__ = [
 ]
 
 
-def notify_user(user, message, url, trigger=None, formats=None, sender=None,
+def notify_user(user, message, url, type=None, formats=None, sender=None,
                 update_user=True):
     from misago.notifications.models import Notification
 
@@ -26,7 +26,7 @@ def notify_user(user, message, url, trigger=None, formats=None, sender=None,
         message_escaped = message_escaped % final_formats
 
     new_notification = Notification(user=user,
-                                    trigger=hash_trigger(trigger or message),
+                                    hash=hash_type(type or message),
                                     url=url,
                                     message=message_escaped)
 
@@ -46,25 +46,22 @@ def notify_user(user, message, url, trigger=None, formats=None, sender=None,
     return new_notification
 
 
-def read_user_notifications(user, triggers, atomic=True):
+def read_user_notifications(user, types, atomic=True):
     if user.is_authenticated() and user.new_notifications:
         if atomic:
             with transaction.atomic():
-                _real_read_user_notifications(user, triggers)
+                _real_read_user_notifications(user, types)
         else:
-            _real_read_user_notifications(user, triggers)
+            _real_read_user_notifications(user, types)
 
 
-def _real_read_user_notifications(user, triggers):
-    if isinstance(triggers, basestring):
-        triggers = [triggers]
+def _real_read_user_notifications(user, types):
+    if isinstance(types, basestring):
+        types = [types]
 
-    hashes = [hash_trigger(trigger) for trigger in triggers]
+    hashes = [hash_type(type) for type in types]
     update_qs = user.misago_notifications.filter(is_new=True)
-    if len(hashes) == 1:
-        update_qs = update_qs.filter(trigger=hashes[0])
-    else:
-        update_qs = update_qs.filter(trigger__in=hashes)
+    update_qs = update_qs.filter(hash__in=hashes)
     updated = update_qs.update(is_new=False)
 
     if updated:
