@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
 from django.db.transaction import atomic
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -410,6 +411,22 @@ class LeaveThreadView(BaseEditThreadParticipantView):
         return redirect('misago:private_threads')
 
 
+@private_threads_view
+class PostingView(PrivateThreadsMixin, generic.PostingView):
+    def allow_reply(self, user, thread):
+        super(PostingView, self).allow_reply(user, thread)
+
+        if user.acl['can_moderate_private_threads']:
+            can_reply = not thread.participant
+        else:
+            can_reply = len(thread.participants_list) > 1
+
+        if not can_reply:
+            message = _("You have to add new participants to thread "
+                        "before you will be able to reply to it.")
+            raise PermissionDenied(message)
+
+
 """
 Generics
 """
@@ -455,9 +472,4 @@ class DeletePostView(PrivateThreadsMixin, generic.DeletePostView):
 
 @private_threads_view
 class EventsView(PrivateThreadsMixin, generic.EventsView):
-    pass
-
-
-@private_threads_view
-class PostingView(PrivateThreadsMixin, generic.PostingView):
     pass
