@@ -1,4 +1,6 @@
 from django.utils.translation import ugettext as _
+
+from misago.core.mail import mail_user
 from misago.notifications import notify_user
 
 from misago.threads.models import ThreadParticipant
@@ -48,6 +50,14 @@ def add_participant(request, thread, user):
         request.user)
 
     set_user_unread_private_threads_sync(user)
+
+    mail_subject = _("%(thread)s - %(user)s added you to private thread")
+    subject_formats = {'thread': thread.title, 'user': request.user.username}
+
+    mail_user(request, user, mail_subject % subject_formats,
+              'misago/emails/privatethread/added',
+              {'thread': thread})
+
 
 def add_owner(thread, user):
     """
