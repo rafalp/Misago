@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from misago.acl.testutils import override_acl
@@ -94,4 +95,25 @@ class PrivateThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 302)
 
         user = self.thread.threadparticipant_set.get(user=self.user)
+        self.assertTrue(user.is_owner)
+
+    def test_owner_can_pass_thread_to_participant(self):
+        """thread owner can pass thread to other participant"""
+        User = get_user_model()
+        new_owner = User.objects.create_user("Bob", "bob@bob.com", "pass123")
+
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+        ThreadParticipant.objects.add_participant(self.thread, new_owner)
+
+        override_acl(self.user, {'can_use_private_threads': True})
+
+        response = self.client.post(self.thread.get_absolute_url(), data={
+            'thread_action': 'make_owner:%s' % new_owner.id
+        })
+        self.assertEqual(response.status_code, 302)
+
+        user = self.thread.threadparticipant_set.get(user=self.user)
+        self.assertFalse(user.is_owner)
+
+        user = self.thread.threadparticipant_set.get(user=new_owner)
         self.assertTrue(user.is_owner)

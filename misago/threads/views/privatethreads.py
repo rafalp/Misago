@@ -133,7 +133,7 @@ class PrivateThreadActions(generic.ThreadActions):
             actions.append({
                 'action': 'takeover',
                 'icon': 'level-up',
-                'name': _("Takeover thread")
+                'name': _("Take thread over")
             })
 
         if is_owner:
@@ -143,6 +143,13 @@ class PrivateThreadActions(generic.ThreadActions):
                 'name': _("Edit participants"),
                 'is_button': True
             })
+
+            for participant in thread.participants_list:
+                if not participant.is_owner:
+                    actions.append({
+                        'action': 'make_owner:%s' % participant.user_id,
+                        'is_hidden': True
+                    })
 
         if is_moderator:
             if thread.is_closed:
@@ -168,9 +175,39 @@ class PrivateThreadActions(generic.ThreadActions):
 
         return actions
 
+    @atomic
     def action_takeover(self, request, thread):
         participants.set_thread_owner(thread, request.user)
         messages.success(request, _("You are now owner of this thread."))
+
+        message = _("%(user)s took over this thread.")
+        record_event(request.user, thread, 'user', message, {
+            'user': request.user,
+        })
+        thread.save(update_fields=['has_events'])
+
+    @atomic
+    def action_make_owner(self, request, thread, new_owner_id):
+        new_owner_id = int(new_owner_id)
+
+        new_owner = None
+        for participant in thread.participants_list:
+            if participant.user.id == int(new_owner_id):
+                new_owner = participant.user
+                break
+
+        if new_owner:
+            participants.set_thread_owner(thread, new_owner)
+
+            message = _("You have passed thread ownership to %(user)s.")
+            messages.success(request, message % {'user': new_owner.username})
+
+            message = _("%(user)s passed thread ownership to %(participant)s.")
+            record_event(request.user, thread, 'user', message, {
+                'user': request.user,
+                'participant': new_owner
+            })
+            thread.save(update_fields=['has_events'])
 
 
 @private_threads_view

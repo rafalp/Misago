@@ -46,6 +46,8 @@
 {% block javascripts %}
 {{ block.super }}
 <script lang="JavaScript">
+  var lang_give_ownership = "{% trans "Are you sure you want to pass thread ownership to this user?" %}";
+
   $(function() {
     var participants_cache = {};
 
@@ -85,6 +87,7 @@
     {% endif %}
 
     {% if 'participants' in thread_actions %}
+    var lang_give_ownership = "{% trans "Are you sure you want to give thread ownership to this user?" %}";
     $('.action-participants').click(function() {
       Misago.ParticipantsEditor.open({
         api_url: '{% url "misago:private_thread_edit_participants" thread_id=thread.id thread_slug=thread.slug %}'

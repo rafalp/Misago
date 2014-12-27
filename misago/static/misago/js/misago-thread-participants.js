@@ -32,7 +32,7 @@ MisagoThreadParticipants = function() {
 
       // suppress default submission handling
 
-      this.$container.find('form').submit(function(e) {
+      this.$container.find('.add-participants').submit(function(e) {
 
         e.preventDefault();
         return false;
@@ -49,24 +49,32 @@ MisagoThreadParticipants = function() {
 
       })
 
-      this.$container.find('.btn-remove-participant').click(function() {
-
-        var $participant = $(this).parents('li.participant');
-        _this.remove($participant, $(this).data('remove-url'));
-
-      })
+      this.activate_list_buttons();
 
     }
 
     this.update_list = function(new_html) {
 
       this.$users.html(new_html);
+      this.activate_list_buttons();
+
+    }
+
+    this.activate_list_buttons = function() {
+
       this.$container.find('.btn-remove-participant').click(function() {
 
         var $participant = $(this).parents('li.participant');
         _this.remove($participant, $(this).data('remove-url'));
 
       })
+
+      this.$container.find('.make-owner').submit(function() {
+
+        var decision = confirm(lang_give_ownership);
+        return decision;
+
+      });
 
     }
 

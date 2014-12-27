@@ -125,7 +125,11 @@ class ActionsBase(object):
             return redirect(request.path)
 
     def get_list(self):
-        return self.available_actions
+        visible_actions = []
+        for action in self.available_actions:
+            if not action.get('is_hidden'):
+                visible_actions.append(action)
+        return visible_actions
 
     def get_selected_ids(self):
         return self.selected_ids

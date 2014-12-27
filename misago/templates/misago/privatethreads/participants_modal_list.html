@@ -7,6 +7,13 @@
   <button type="button" class="btn btn-default btn-sm pull-right btn-remove-participant" data-remove-url="{% url 'misago:private_thread_remove_participant' thread_slug=thread.slug thread_id=thread.id user_id=participant.user.id %}">
     {% trans "Remove" %}
   </button>
+  <form method="POST" class="pull-right make-owner">
+    {% csrf_token %}
+    <input type="hidden" name="thread_action" value="make_owner:{{ participant.user_id }}">
+    <button type="submit" name="" class="btn btn-default btn-sm">
+      {% trans "Make owner" %}
+    </button>
+  </form>
   {% endif %}
 </li>
 {% endfor %}
