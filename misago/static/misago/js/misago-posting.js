@@ -307,7 +307,6 @@ $(function() {
           _this.$ajax_loader.removeClass('in');
           if (data.post_url !== undefined) {
             _this.posted = true;
-            _this.$ajax_loader.hide();
 
             var on_post = true;
 
@@ -316,6 +315,7 @@ $(function() {
             }
 
             if (on_post) {
+              _this.$ajax_loader.hide();
               _this.$ajax_complete.addClass('in');
 
               var post_location = String(window.location.href);
@@ -333,7 +333,15 @@ $(function() {
             Misago.Alerts.error();
           }
 
+          if (data.post_url == undefined) {
+            _this.submitted = false;
+          }
+        }).fail(function() {
+
+          // unlock submit process
           _this.submitted = false;
+          _this.$ajax_loader.removeClass('in');
+
         });
       }
 
