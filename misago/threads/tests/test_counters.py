@@ -1,12 +1,16 @@
+from datetime import timedelta
 from time import time
 
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 from misago.forums.models import Forum
+from misago.readtracker.models import ThreadRead
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from misago.threads.counts import NewThreadsCount, UnreadThreadsCount
+from misago.threads.counts import (NewThreadsCount,
+                                   sync_user_unread_private_threads_count)
 from misago.threads import testutils
 
 
@@ -58,20 +62,20 @@ class TestNewThreadsCount(AuthenticatedUserTestCase):
         counter = NewThreadsCount(self.user, {})
         self.assertTrue(counter.get_expiration_timestamp() > time())
 
-    def test_get_real_count(self):
-        """get_real_count returns valid count of new threads"""
+    def test_get_current_count_dict(self):
+        """get_current_count_dict returns valid count of new threads"""
         counter = NewThreadsCount(self.user, {})
         self.assertEqual(counter.count, 0)
-        self.assertEqual(counter.get_real_count()['threads'], 0)
+        self.assertEqual(counter.get_current_count_dict()['threads'], 0)
 
         # create 10 new threads
         threads = [testutils.post_thread(self.forum) for t in xrange(10)]
-        self.assertEqual(counter.get_real_count()['threads'], 10)
+        self.assertEqual(counter.get_current_count_dict()['threads'], 10)
 
         # create new counter
         counter = NewThreadsCount(self.user, {})
         self.assertEqual(counter.count, 10)
-        self.assertEqual(counter.get_real_count()['threads'], 10)
+        self.assertEqual(counter.get_current_count_dict()['threads'], 10)
 
     def test_set(self):
         """set allows for changing count of threads"""
@@ -100,3 +104,55 @@ class TestNewThreadsCount(AuthenticatedUserTestCase):
 
         self.assertEqual(int(counter), 0)
         self.assertEqual(session[counter.name]['threads'], 0)
+
+
+class TestSyncUnreadPrivateThreadsCount(AuthenticatedUserTestCase):
+    def setUp(self):
+        super(TestSyncUnreadPrivateThreadsCount, self).setUp()
+
+        self.forum = Forum.objects.private_threads()
+        self.user.sync_unread_private_threads = True
+
+    def test_user_with_no_threads(self):
+        """user with no private threads has 0 unread threads"""
+        for i in range(5):
+            # post 5 invisible threads
+            testutils.post_thread(
+                self.forum, started_on=timezone.now() - timedelta(days=2))
+
+        sync_user_unread_private_threads_count(self.user)
+        self.assertEqual(self.user.unread_private_threads, 0)
+
+    def test_user_with_new_thread(self):
+        """user has one new private thred"""
+        for i in range(5):
+            # post 5 invisible threads
+            testutils.post_thread(
+                self.forum, started_on=timezone.now() - timedelta(days=2))
+
+        thread = testutils.post_thread(
+            self.forum, started_on=timezone.now() - timedelta(days=2))
+        thread.threadparticipant_set.create(user=self.user)
+
+        sync_user_unread_private_threads_count(self.user)
+        self.assertEqual(self.user.unread_private_threads, 1)
+
+    def test_user_with_new_thread(self):
+        """user has one unread private thred"""
+        for i in range(5):
+            # post 5 invisible threads
+            testutils.post_thread(
+                self.forum, started_on=timezone.now() - timedelta(days=2))
+
+        thread = testutils.post_thread(
+            self.forum, started_on=timezone.now() - timedelta(days=2))
+        thread.threadparticipant_set.create(user=self.user)
+
+        ThreadRead.objects.create(
+            user=self.user,
+            forum=self.forum,
+            thread=thread,
+            last_read_on=timezone.now() - timedelta(days=3))
+
+        sync_user_unread_private_threads_count(self.user)
+        self.assertEqual(self.user.unread_private_threads, 1)

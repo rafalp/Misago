@@ -3,7 +3,8 @@ from time import time
 from django.conf import settings
 
 from misago.threads.counts import (ModeratedCount, NewThreadsCount,
-                                   UnreadThreadsCount)
+                                   UnreadThreadsCount,
+                                   sync_user_unread_private_threads_count)
 
 
 class UnreadThreadsCountMiddleware(object):
@@ -17,3 +18,6 @@ class UnreadThreadsCountMiddleware(object):
             request.user.unread_threads = UnreadThreadsCount(
                 request.user, request.session)
 
+            if request.user.acl['can_use_private_threads']:
+                # special case: count unread threads
+                sync_user_unread_private_threads_count(request.user)

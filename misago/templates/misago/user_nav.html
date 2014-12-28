@@ -64,7 +64,11 @@
   </li>
   {% if user.acl.moderated_forums %}
   <li>
-    <a href="{% url 'misago:moderated_content' %}" class="tooltip-bottom" title="{% trans "Moderated content" %}">
+    <a href="{% url 'misago:moderated_content' %}" class="tooltip-bottom" {% if user.moderated_content %}
+        title="{% blocktrans with moderated=user.moderated_content count counter=user.moderated_content %}{{ moderated }} item in moderation{% plural %}{{ moderated }} items in moderation{% endblocktrans %}"
+        {% else %}
+        title="{% trans "Moderated content" %}"
+        {% endif %}>
       <span class="fa fa-eye-slash fa-fw"></span>
       <span class="badge fade {{ user.moderated_content|iftrue:"in" }}" data-misago-badge="moderated_content">{{ user.moderated_content }}</span>
     </a>
@@ -72,7 +76,7 @@
   {% endif %}
   <li>
     <a href="{% url 'misago:private_threads' %}" class="tooltip-bottom" {% if user.unread_private_threads %}
-        title="{% blocktrans with unread=user.unread_private_threads count counter=user.unread_private_threads %}{{ unread }} unread private threads{% plural %}{{ unread }} unread private thread{% endblocktrans %}"
+        title="{% blocktrans with unread=user.unread_private_threads count counter=user.unread_private_threads %}{{ unread }} unread private thread{% plural %}{{ unread }} unread private threads{% endblocktrans %}"
         {% else %}
         title="{% trans "Private threads" %}"
         {% endif %}>
@@ -85,7 +89,7 @@
         {% if user.new_notifications %}
         title="{% blocktrans with notifications=user.new_notifications count counter=user.new_notifications %}{{ notifications }} new notification{% plural %}{{ notifications }} new notifications{% endblocktrans %}"
         {% else %}
-        title="{% trans "Your notifications" %}"
+        title="{% trans "Notifications" %}"
         {% endif %}
         data-toggle="dropdown">
       <span class="fa fa-bell-o fa-fw"></span>
