@@ -30,8 +30,9 @@ class ForumThreads(Threads):
         self._paginator = self._page.paginator
 
         threads = []
-        for thread in pinned_qs:
-            threads.append(thread)
+        if self.fetch_pinned_threads:
+            for thread in pinned_qs:
+                threads.append(thread)
             self.pinned_count += 1
         for thread in self._page.object_list:
             threads.append(thread)

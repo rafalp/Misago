@@ -1,5 +1,5 @@
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, ungettext
 
 from misago.core.uiviews import uiview
 from misago.users.decorators import deny_guests
@@ -48,6 +48,18 @@ class ModeratedContentView(ThreadsView):
 @deny_guests
 def event_sender(request, resolver_match):
     if request.user.acl['moderated_forums']:
-        return int(request.user.moderated_content)
+        moderated_count = int(request.user.moderated_content)
+        if moderated_count:
+            message = ungettext("%(moderated)s item in moderation",
+                                "%(moderated)s items in moderation",
+                                moderated_count)
+            message = message % {'moderated': moderated_count}
+        else:
+            message = _("Moderated content")
+
+        return {
+            'count': moderated_count,
+            'message': message,
+        }
     else:
         return 0

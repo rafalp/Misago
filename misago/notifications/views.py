@@ -115,8 +115,8 @@ def read_all(request):
 @deny_guests
 def event_sender(request, resolver_match):
     if request.user.new_notifications:
-        message = ungettext("You have %(notifications)s new notification",
-                            "You have %(notifications)s new notifications",
+        message = ungettext("%(notifications)s new notification",
+                            "%(notifications)s new notifications",
                             request.user.new_notifications)
         message = message % {'notifications': request.user.new_notifications}
     else:

@@ -9,6 +9,8 @@ __all__ = ['Threads']
 
 
 class Threads(object):
+    fetch_pinned_threads = True
+
     def __init__(self, user):
         self.pinned_count = 0
 
@@ -34,9 +36,10 @@ class Threads(object):
         self._paginator = self._page.paginator
 
         threads = []
-        for thread in pinned_qs:
-            threads.append(thread)
-            self.pinned_count += 1
+        if self.fetch_pinned_threads:
+            for thread in pinned_qs:
+                threads.append(thread)
+                self.pinned_count += 1
         for thread in self._page.object_list:
             threads.append(thread)
 

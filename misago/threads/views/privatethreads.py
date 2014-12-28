@@ -8,7 +8,9 @@ from django.utils.translation import ugettext as _, ungettext
 
 from misago.acl import add_acl
 from misago.core.exceptions import AjaxError
+from misago.core.uiviews import uiview
 from misago.forums.models import Forum
+from misago.users.decorators import deny_guests
 
 from misago.threads import participants
 from misago.threads.events import record_event
@@ -89,6 +91,8 @@ class PrivateThreadsMixin(object):
 
 
 class PrivateThreads(generic.Threads):
+    fetch_pinned_threads = False
+
     def get_queryset(self):
         threads_qs = Forum.objects.private_threads().thread_set
         return exclude_invisible_private_threads(threads_qs, self.user)
@@ -209,6 +213,24 @@ class PrivateThreadActions(generic.ThreadActions):
                 'participant': new_owner
             })
             thread.save(update_fields=['has_events'])
+
+
+@uiview("private_threads")
+@deny_guests
+def event_sender(request, resolver_match):
+    if request.user.unread_private_threads:
+        message = ungettext("%(threads)s unread private thread",
+                            "%(threads)s unread private threads",
+                            request.user.unread_private_threads)
+        message = message % {'threads': request.user.unread_private_threads}
+    else:
+        message = _("Private threads")
+
+    return {
+        'count': request.user.unread_private_threads,
+        'message': message,
+    }
+    return request.user.unread_private_threads
 
 
 @private_threads_view
