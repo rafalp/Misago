@@ -100,7 +100,6 @@ def sync_user_unread_private_threads_count(user):
 
     read_qs = user.threadread_set.filter(forum=Forum.objects.private_threads())
     read_qs = read_qs.filter(last_read_on__gte=F('thread__last_post_on'))
-    read_qs = threads_qs.filter(id__in=read_qs.values('thread_id'))
     read_threads_count = read_qs.count()
 
     user.unread_private_threads = all_threads_count - read_threads_count
