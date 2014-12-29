@@ -91,7 +91,7 @@ class UnreadThreadsCount(BaseCounter):
 
 
 def sync_user_unread_private_threads_count(user):
-    if False and not user.sync_unread_private_threads:
+    if not user.sync_unread_private_threads:
         return
 
     threads_qs = PrivateThreads(user).get_queryset()
