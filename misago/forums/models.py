@@ -32,7 +32,7 @@ class ForumManager(TreeManager):
 
         special_forum = cache.get(cache_name, 'nada')
         if special_forum == 'nada':
-            special_forum = self.get(special_role='root_category')
+            special_forum = self.get(special_role=special_role)
             cache.set(cache_name, special_forum)
         return special_forum
 
