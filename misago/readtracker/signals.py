@@ -41,7 +41,8 @@ def decrease_unread_count(sender, **kwargs):
 @receiver(thread_read)
 def decrease_unread_private_count(sender, **kwargs):
     user = sender
-    if user.unread_private_threads:
+    thread = kwargs['thread']
+    if user.pk != thread.starter_id and user.unread_private_threads:
         user.unread_private_threads -= 1
         user.save(update_fields=['unread_private_threads'])
 

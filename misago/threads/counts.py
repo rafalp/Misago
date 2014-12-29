@@ -4,6 +4,8 @@ from django.conf import settings
 from django.db.models import F
 from django.dispatch import receiver
 
+from misago.forums.models import Forum
+
 from misago.threads.views.moderatedcontent import ModeratedContent
 from misago.threads.views.newthreads import NewThreads
 from misago.threads.views.unreadthreads import UnreadThreads
@@ -89,15 +91,16 @@ class UnreadThreadsCount(BaseCounter):
 
 
 def sync_user_unread_private_threads_count(user):
-    if not user.sync_unread_private_threads:
+    if False and not user.sync_unread_private_threads:
         return
 
     threads_qs = PrivateThreads(user).get_queryset()
 
     all_threads_count = threads_qs.count()
 
-    read_qs = threads_qs.filter(threadread__user=user)
-    read_qs = read_qs.filter(threadread__last_read_on__gte=F('last_post_on'))
+    read_qs = user.threadread_set.filter(forum=Forum.objects.private_threads())
+    read_qs = read_qs.filter(last_read_on__gte=F('thread__last_post_on'))
+    read_qs = threads_qs.filter(id__in=read_qs.values('thread_id'))
     read_threads_count = read_qs.count()
 
     user.unread_private_threads = all_threads_count - read_threads_count

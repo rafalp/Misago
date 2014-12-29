@@ -124,7 +124,7 @@ class TestSyncUnreadPrivateThreadsCount(AuthenticatedUserTestCase):
         self.assertEqual(self.user.unread_private_threads, 0)
 
     def test_user_with_new_thread(self):
-        """user has one new private thred"""
+        """user has one new private thread"""
         for i in range(5):
             # post 5 invisible threads
             testutils.post_thread(
@@ -138,7 +138,7 @@ class TestSyncUnreadPrivateThreadsCount(AuthenticatedUserTestCase):
         self.assertEqual(self.user.unread_private_threads, 1)
 
     def test_user_with_new_thread(self):
-        """user has one unread private thred"""
+        """user has one unread private thread"""
         for i in range(5):
             # post 5 invisible threads
             testutils.post_thread(

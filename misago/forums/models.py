@@ -22,10 +22,19 @@ FORUMS_TREE_ID = 1
 
 class ForumManager(TreeManager):
     def private_threads(self):
-        return self.get(special_role='private_threads')
+        return self.get_special('private_threads')
 
     def root_category(self):
-        return self.get(special_role='root_category')
+        return self.get_special('root_category')
+
+    def get_special(self, special_role):
+        cache_name = '%s_%s' % (CACHE_NAME, special_role)
+
+        special_forum = cache.get(cache_name, 'nada')
+        if special_forum == 'nada':
+            special_forum = self.get(special_role='root_category')
+            cache.set(cache_name, special_forum)
+        return special_forum
 
     def all_forums(self, include_root=False):
         qs = self.filter(tree_id=FORUMS_TREE_ID)
