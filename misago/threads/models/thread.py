@@ -46,6 +46,14 @@ class Thread(models.Model):
                                           through='ThreadParticipant',
                                           through_fields=('thread', 'user'))
 
+    report_for = models.ForeignKey('misago_threads.Post',
+                                   related_name='report_set',
+                                   null=True, blank=True,
+                                   on_delete=models.SET_NULL)
+    report_in = models.ForeignKey('misago_forums.Forum', related_name='+',
+                                  null=True, blank=True,
+                                  on_delete=models.SET_NULL)
+
     class Meta:
         index_together = [
             ['forum', 'id'],

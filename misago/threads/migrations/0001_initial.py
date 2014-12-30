@@ -118,6 +118,18 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(related_name='private_thread_set', through='misago_threads.ThreadParticipant', through_fields=('thread', 'user'), to=settings.AUTH_USER_MODEL),
             preserve_default=True,
         ),
+        migrations.AddField(
+            model_name='thread',
+            name='report_for',
+            field=models.ForeignKey(related_name='report_set', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='misago_threads.Post', null=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='thread',
+            name='report_in',
+            field=models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='misago_forums.Forum', null=True),
+            preserve_default=True,
+        ),
         migrations.CreateModel(
             name='Event',
             fields=[
