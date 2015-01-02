@@ -21,6 +21,9 @@ class ModeratedPostsListView(ViewBase):
         return queryset.filter(is_moderated=True)
 
     def dispatch(self, request, *args, **kwargs):
+        if not request.is_ajax():
+            return not_allowed(request)
+
         relations = ['forum']
         thread = self.fetch_thread(request, select_related=relations, **kwargs)
         forum = thread.forum
@@ -29,9 +32,6 @@ class ModeratedPostsListView(ViewBase):
         self.check_thread_permissions(request, thread)
 
         self.allow_action(thread)
-
-        if not request.is_ajax():
-            return not_allowed(request)
 
         posts_qs = self.exclude_invisible_posts(
             thread.post_set, request.user, forum, thread)

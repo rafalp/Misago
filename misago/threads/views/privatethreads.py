@@ -245,10 +245,10 @@ class ThreadParticipantsView(PrivateThreadsMixin, generic.ViewBase):
     template = 'misago/privatethreads/participants.html'
 
     def dispatch(self, request, *args, **kwargs):
-        thread = self.get_thread(request, **kwargs)
-
         if not request.is_ajax():
             return not_allowed(request)
+
+        thread = self.get_thread(request, **kwargs)
 
         participants_qs = thread.threadparticipant_set
         participants_qs = participants_qs.select_related('user', 'user__rank')
@@ -269,13 +269,13 @@ class EditThreadParticipantsView(ThreadParticipantsView):
 class BaseEditThreadParticipantView(PrivateThreadsMixin, generic.ViewBase):
     @atomic
     def dispatch(self, request, *args, **kwargs):
-        thread = self.get_thread(request, lock=True, **kwargs)
-
         if not request.is_ajax():
             return not_allowed(request)
 
         if not request.method == "POST":
             raise AjaxError(_("Wrong action received."))
+
+        thread = self.get_thread(request, lock=True, **kwargs)
 
         if not thread.participant or not thread.participant.is_owner:
             raise AjaxError(_("Only thread owner can add or "
