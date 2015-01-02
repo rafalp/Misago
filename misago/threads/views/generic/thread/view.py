@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 
@@ -29,7 +30,9 @@ class ThreadView(ViewBase):
     def get_posts(self, user, forum, thread, kwargs):
         queryset = self.get_posts_queryset(user, forum, thread)
         queryset = self.exclude_invisible_posts(queryset, user, forum, thread)
-        page = paginate(queryset, kwargs.get('page', 0), 10, 3)
+        page = paginate(queryset, kwargs.get('page', 0),
+                        settings.MISAGO_POSTS_PER_PAGE,
+                        settings.MISAGO_THREAD_TAIL)
 
         posts = []
         for post in page.object_list:

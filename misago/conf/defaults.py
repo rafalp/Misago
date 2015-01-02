@@ -319,6 +319,11 @@ MISAGO_AVATARS_SIZES = (400, 200, 150, 100, 64, 50, 30, 20)
 MISAGO_AVATAR_SERVER_PATH = '/user-avatar'
 
 
+# Number of posts displayed on single thread page
+MISAGO_POSTS_PER_PAGE = 15
+MISAGO_THREAD_TAIL = 7
+
+
 # Controls max age in days of items that Misago has to process to make rankings
 # Used for active posters and most liked users lists
 # If your forum runs out of memory when trying to generate users rankings list

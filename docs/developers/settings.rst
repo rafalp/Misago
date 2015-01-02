@@ -276,6 +276,12 @@ MISAGO_POSTING_MIDDLEWARES
 List of middleware classes participating in posting process.
 
 
+MISAGO_POSTS_PER_PAGE
+---------------------
+
+Controls number of posts displayed on thread page. Greater numbers can increase number of objects loaded into memory and thus depending on features enabled greatly increase memory usage.
+
+
 MISAGO_RANKING_LENGTH
 ---------------------
 
@@ -321,6 +327,12 @@ MISAGO_STOP_FORUM_SPAM_USE
 --------------------------
 
 This settings allows you to decide wheter of not `Stop Forum Spam <http://www.stopforumspam.com/>`_ database should be used to validate IPs and emails during new users registrations.
+
+
+MISAGO_THREAD_TAIL
+------------------
+
+Defines minimal number of posts for threads last page. If number of posts on last page is smaller or equal to one specified in this setting, last page will be appended to previous page instead.
 
 
 MISAGO_THREAD_TYPES
