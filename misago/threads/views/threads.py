@@ -49,6 +49,10 @@ class DeletePostView(generic.DeletePostView):
     pass
 
 
+class ReportPostView(generic.ReportPostView):
+    pass
+
+
 class EventsView(generic.EventsView):
     pass
 

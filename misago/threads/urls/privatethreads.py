@@ -57,12 +57,14 @@ urlpatterns += patterns('',
 # post views
 from misago.threads.views.privatethreads import (QuotePostView, HidePostView,
                                                  UnhidePostView,
-                                                 DeletePostView)
+                                                 DeletePostView,
+                                                 ReportPostView)
 urlpatterns += patterns('',
     url(r'^private-post/(?P<post_id>\d+)/quote/$', QuotePostView.as_view(), name='quote_private_post'),
     url(r'^private-post/(?P<post_id>\d+)/unhide/$', UnhidePostView.as_view(), name='unhide_private_post'),
     url(r'^private-post/(?P<post_id>\d+)/hide/$', HidePostView.as_view(), name='hide_private_post'),
     url(r'^private-post/(?P<post_id>\d+)/delete/$', DeletePostView.as_view(), name='delete_private_post'),
+    url(r'^private-post/(?P<post_id>\d+)/report/$', ReportPostView.as_view(), name='report_post'),
 )
 
 

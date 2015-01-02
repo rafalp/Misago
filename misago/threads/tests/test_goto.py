@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from misago.acl import add_acl
 from misago.forums.models import Forum
 from misago.readtracker import threadstracker
@@ -6,6 +8,11 @@ from misago.users.testutils import AuthenticatedUserTestCase
 from misago.threads import goto
 from misago.threads.permissions import exclude_invisible_posts
 from misago.threads.testutils import post_thread, reply_thread
+
+
+POSTS_PER_PAGE = settings.MISAGO_POSTS_PER_PAGE
+THREAD_TAIL = settings.MISAGO_THREAD_TAIL
+MAX_PAGE_LEN = POSTS_PER_PAGE + THREAD_TAIL
 
 
 class MockThreadsCounter(object):
@@ -30,28 +37,29 @@ class GotoTests(AuthenticatedUserTestCase):
     def test_get_thread_pages(self):
         """get_thread_pages returns valid count of pages for given positions"""
         self.assertEqual(goto.get_thread_pages(1), 1)
-        self.assertEqual(goto.get_thread_pages(10), 1)
-        self.assertEqual(goto.get_thread_pages(13), 1)
-        self.assertEqual(goto.get_thread_pages(14), 2)
-        self.assertEqual(goto.get_thread_pages(19), 2)
-        self.assertEqual(goto.get_thread_pages(20), 2)
-        self.assertEqual(goto.get_thread_pages(23), 2)
-        self.assertEqual(goto.get_thread_pages(24), 3)
-        self.assertEqual(goto.get_thread_pages(27), 3)
-        self.assertEqual(goto.get_thread_pages(36), 4)
-        self.assertEqual(goto.get_thread_pages(373), 37)
+        self.assertEqual(goto.get_thread_pages(POSTS_PER_PAGE), 1)
+        self.assertEqual(goto.get_thread_pages(MAX_PAGE_LEN), 1)
+        self.assertEqual(goto.get_thread_pages(MAX_PAGE_LEN + 1), 2)
+        self.assertEqual(goto.get_thread_pages(POSTS_PER_PAGE * 2 - 1), 2)
+        self.assertEqual(goto.get_thread_pages(POSTS_PER_PAGE * 2), 2)
+
+        self.assertEqual(goto.get_thread_pages(POSTS_PER_PAGE * 3), 3)
+        self.assertEqual(goto.get_thread_pages(
+            POSTS_PER_PAGE * 5 + THREAD_TAIL - 1), 5)
 
     def test_get_post_page(self):
         """get_post_page returns valid page number for given queryset"""
         self.assertEqual(goto.get_post_page(1, self.thread.post_set), 1)
 
-        # add 12 posts, bumping no of posts on page to to 13
-        [reply_thread(self.thread) for p in xrange(12)]
-        self.assertEqual(goto.get_post_page(13, self.thread.post_set), 1)
+        # fill out page
+        [reply_thread(self.thread) for p in xrange(MAX_PAGE_LEN - 1)]
+        self.assertEqual(
+            goto.get_post_page(MAX_PAGE_LEN, self.thread.post_set), 1)
 
-        # add 2 posts
+        # add 2 posts, adding second page
         [reply_thread(self.thread) for p in xrange(2)]
-        self.assertEqual(goto.get_post_page(15, self.thread.post_set), 2)
+        self.assertEqual(
+            goto.get_post_page(MAX_PAGE_LEN + 2, self.thread.post_set), 2)
 
     def test_hashed_reverse(self):
         """hashed_reverse returns complete url for given post"""
@@ -69,8 +77,8 @@ class GotoTests(AuthenticatedUserTestCase):
         url_formats = self.thread.get_absolute_url(), self.thread.last_post_id
         self.assertEqual(url_last, '%s#post-%s' % url_formats)
 
-        # add 12 posts to reach page limit
-        [reply_thread(self.thread) for p in xrange(12)]
+        # add posts to reach page limit
+        [reply_thread(self.thread) for p in xrange(MAX_PAGE_LEN - 1)]
 
         url_last = goto.last(self.thread, self.thread.post_set)
         url_formats = self.thread.get_absolute_url(), self.thread.last_post_id
@@ -90,11 +98,12 @@ class GotoTests(AuthenticatedUserTestCase):
         last_link = goto.last(self.thread, self.thread.post_set)
         self.assertEqual(post_link, last_link)
 
-        # add 16 posts to add extra page to thread
-        [reply_thread(self.thread) for p in xrange(16)]
+        # add posts to add extra page to thread
+        [reply_thread(self.thread) for p in xrange(MAX_PAGE_LEN)]
 
         post_link = goto.get_post_link(
-            17, self.thread.post_set, self.thread, self.thread.last_post)
+            MAX_PAGE_LEN + 1,
+            self.thread.post_set, self.thread, self.thread.last_post)
         last_link = goto.last(self.thread, self.thread.post_set)
         self.assertEqual(post_link, last_link)
 
@@ -107,18 +116,18 @@ class GotoTests(AuthenticatedUserTestCase):
         last_link = goto.last(self.thread, self.thread.post_set)
         self.assertEqual(post_link, last_link)
 
-        # add 18 posts to add extra page to thread, then read them
-        [reply_thread(self.thread) for p in xrange(18)]
+        # add extra page to thread, then read them
+        [reply_thread(self.thread) for p in xrange(MAX_PAGE_LEN)]
         threadstracker.read_thread(
             self.user, self.thread, self.thread.last_post)
 
         # add extra unread posts
         first_unread = reply_thread(self.thread)
-        [reply_thread(self.thread) for p in xrange(30)]
+        [reply_thread(self.thread) for p in xrange(20)]
 
         new_link = goto.new(self.user, self.thread, self.thread.post_set)
         post_link = goto.get_post_link(
-            50, self.thread.post_set, self.thread, first_unread)
+            MAX_PAGE_LEN + 21, self.thread.post_set, self.thread, first_unread)
         self.assertEqual(new_link, post_link)
 
         # read thread
