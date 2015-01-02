@@ -17,7 +17,8 @@ __all__ = [
     'ApprovePostView',
     'UnhidePostView',
     'HidePostView',
-    'DeletePostView'
+    'DeletePostView',
+    'ReportPostView'
 ]
 
 
@@ -26,7 +27,7 @@ class PostView(ViewBase):
     require_post = True
 
     def dispatch(self, request, *args, **kwargs):
-        if request.method != "POST" and self.require_post:
+        if self.require_post and request.method != "POST":
             return not_allowed(request)
 
         post = None
@@ -137,3 +138,17 @@ class DeletePostView(PostView):
 
         messages.success(request, _("Post has been deleted."))
         return self.redirect_to_post(request.user, target_post)
+
+
+class ReportPostView(ViewBase):
+    is_atomic = False
+    require_post = False
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.is_ajax():
+            return not_allowed(request)
+
+        return super(ReportPostView, self).dispatch(request, *args, **kwargs)
+
+    def real_dispatch(self, request, post):
+        raise Exception("NOT YET IMPLEMENTED!")
