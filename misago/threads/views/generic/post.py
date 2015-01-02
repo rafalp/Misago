@@ -9,6 +9,7 @@ from misago.acl import add_acl
 from misago.core.errorpages import not_allowed
 
 from misago.threads import permissions, moderation, goto
+from misago.threads.forms.report import ReportPostForm
 from misago.threads.views.generic.base import ViewBase
 
 
@@ -140,9 +141,11 @@ class DeletePostView(PostView):
         return self.redirect_to_post(request.user, target_post)
 
 
-class ReportPostView(ViewBase):
+class ReportPostView(PostView):
     is_atomic = False
     require_post = False
+
+    template = 'misago/thread/report_modal.html'
 
     def dispatch(self, request, *args, **kwargs):
         if not request.is_ajax():
@@ -151,4 +154,26 @@ class ReportPostView(ViewBase):
         return super(ReportPostView, self).dispatch(request, *args, **kwargs)
 
     def real_dispatch(self, request, post):
-        raise Exception("NOT YET IMPLEMENTED!")
+        if not post.acl['can_report']:
+            raise PermissionDenied(_("You can't report posts."))
+
+        form = ReportPostForm()
+        if request.method == 'POST':
+            form = ReportPostForm(request.POST)
+            if form.is_valid():
+                message = _("%(user)s's post has been "
+                            "reported to moderators.")
+                message = message % {'user': post.poster_name}
+                return JsonResponse({'message': message})
+            else:
+                field_errors = form.errors.get('report_message')
+                if field_errors:
+                    field_error = field_errors[0]
+                else:
+                    field_error = _("Error reporting post.")
+
+                return JsonResponse({'is_error': True, 'message': field_error})
+
+        return self.render(request, {'form': form})
+
+

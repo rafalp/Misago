@@ -159,6 +159,14 @@ get_post_delete_url
 Used to obtain url that will delete post.
 
 
+get_post_report_url
+-------------------
+
+.. function:: get_post_report_url(post)
+
+Used to obtain url for reporting post.
+
+
 get_event_edit_url
 ------------------
 

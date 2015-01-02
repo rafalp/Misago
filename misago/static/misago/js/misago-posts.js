@@ -59,6 +59,14 @@ $(function() {
 
     });
 
+    this.$e.find('.btn-report').click(function() {
+
+      if (!Misago.ReportPost.is_open()) {
+        Misago.ReportPost.open(_this.$e.data('report-url'));
+      }
+
+    });
+
     this.quote = function() {
 
       $.get(_this.$e.data('quote-url'), function(data) {

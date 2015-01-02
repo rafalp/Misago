@@ -1,6 +1,6 @@
 {% load i18n misago_avatars %}
 <div id="post-{{ post.pk }}" class="post-fragment"></div>
-<div class="media post thread-post{% if post.poster_id and post.poster.rank.css_class %} rank-{{ post.poster.rank.css_class }}{% endif %}" data-id="{{ post.pk }}" data-edit-url="{{ post.get_edit_url }}" data-quote-url="{{ post.get_quote_url }}">
+<div class="media post thread-post{% if post.poster_id and post.poster.rank.css_class %} rank-{{ post.poster.rank.css_class }}{% endif %}" data-id="{{ post.pk }}" data-edit-url="{{ post.get_edit_url }}" data-quote-url="{{ post.get_quote_url }}" data-report-url="{{ post.get_report_url }}">
   {% if post.poster %}
   <a class="user-avatar pull-left" href="{% url USER_PROFILE_URL user_slug=post.poster.slug user_id=post.poster.id %}">
     <img class="media-object" src="{{ post.poster|avatar:100 }}" alt="{% trans "Poster avatar" %}">
@@ -69,7 +69,7 @@
       </div>
       {% endif %}
 
-      {% if post.is_reported %}
+      {% if post.is_reported and thread.acl.can_see_reports %}
       <div class="alert alert-danger">
         <span class="fa fa-exclamation-triangle fa-fw fa-lg"></span>
         {% trans "This post was reported to moderators." %}
@@ -142,13 +142,12 @@
           </form>
           {% endif %}
 
-          <form action="" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-warning btn-flat pull-right">
-              <span class="fa fa-exclamation-triangle">
-              {% trans "Report" %}
-            </button>
-          </form>
+          {% if post.acl.can_report %}
+          <button type="submit" class="btn btn-warning btn-report btn-flat pull-right">
+            <span class="fa fa-exclamation-triangle">
+            {% trans "Report" %}
+          </button>
+          {% endif %}
 
           {% if post.acl.can_approve %}
           <form action="{{ post.get_approve_url }}" method="post">

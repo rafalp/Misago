@@ -44,6 +44,10 @@
         }
       });
     }
+
+    this.close = function() {
+      this.$modal.modal('hide');
+    }
   };
 
   Misago.Modal = new MisagoModal();

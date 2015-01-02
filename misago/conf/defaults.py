@@ -77,6 +77,7 @@ PIPELINE_JS = {
             'misago/js/misago-onebox.js',
             'misago/js/misago-posting.js',
             'misago/js/misago-posting-participants.js',
+            'misago/js/misago-report-post.js',
             'misago/js/misago-posts.js',
             'misago/js/misago-thread-participants.js',
         ),
