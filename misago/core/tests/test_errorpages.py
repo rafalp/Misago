@@ -31,6 +31,12 @@ class ErrorPageViewsTests(TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertIn("Page not found", response.content)
 
+    def test_not_allowed_returns_405(self):
+        """not allowed error page has no showstoppers"""
+        response = self.client.get(reverse('raise_misago_405'))
+        self.assertEqual(response.status_code, 405)
+        self.assertIn("Wrong way", response.content)
+
 
 class CustomErrorPagesTests(TestCase):
     urls = 'misago.core.testproject.urlswitherrorhandlers'

@@ -46,6 +46,12 @@ def csrf_failure(request, reason=""):
         return response
 
 
+def not_allowed(request):
+    response = render(request, 'misago/errorpages/405.html')
+    response.status_code = 405
+    return response
+
+
 # Decorators for custom error page handlers
 def shared_403_exception_handler(f):
     def page_decorator(request, *args, **kwargs):

@@ -13,6 +13,7 @@ urlpatterns += patterns('misago.core.testproject.views',
     url(r'^forum/test-valid-slug/(?P<model_slug>[a-z0-9\-]+)-(?P<model_id>\d+)/$', 'validate_slug_view', name='validate_slug_view'),
     url(r'^forum/test-403/$', 'raise_misago_403', name='raise_misago_403'),
     url(r'^forum/test-404/$', 'raise_misago_404', name='raise_misago_404'),
+    url(r'^forum/test-405/$', 'raise_misago_405', name='raise_misago_405'),
     url(r'^test-403/$', 'raise_403', name='raise_403'),
     url(r'^test-404/$', 'raise_404', name='raise_404'),
 )

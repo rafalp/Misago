@@ -2,10 +2,11 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.db.transaction import atomic
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
+from misago.core.errorpages import not_allowed
 
 from misago.threads import permissions, moderation, goto
 from misago.threads.views.generic.base import ViewBase
@@ -26,9 +27,7 @@ class PostView(ViewBase):
 
     def dispatch(self, request, *args, **kwargs):
         if request.method != "POST" and self.require_post:
-            response = render(request, 'misago/errorpages/wrong_way.html')
-            response.status_code = 405
-            return response
+            return not_allowed(request)
 
         post = None
         response = None

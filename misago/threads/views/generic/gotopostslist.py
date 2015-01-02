@@ -1,6 +1,8 @@
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 
+from misago.core.errorpages import not_allowed
+
 from misago.threads.views.generic.base import ViewBase
 
 
@@ -29,9 +31,7 @@ class ModeratedPostsListView(ViewBase):
         self.allow_action(thread)
 
         if not request.is_ajax():
-            response = render(request, 'misago/errorpages/wrong_way.html')
-            response.status_code = 405
-            return response
+            return not_allowed(request)
 
         posts_qs = self.exclude_invisible_posts(
             thread.post_set, request.user, forum, thread)

@@ -50,6 +50,10 @@ def raise_misago_404(request):
     raise Http404('Misago 404')
 
 
+def raise_misago_405(request):
+    return errorpages.not_allowed(request)
+
+
 def raise_403(request):
     raise PermissionDenied()
 

@@ -1,12 +1,10 @@
-from django.shortcuts import render
+from misago.core.errorpages import not_allowed
 
 
 def ajax_only(f):
     def decorator(request, *args, **kwargs):
         if not request.is_ajax():
-            response = render(request, 'misago/errorpages/wrong_way.html')
-            response.status_code = 405
-            return response
+            return not_allowed(request)
         else:
             return f(request, *args, **kwargs)
     return decorator
@@ -15,9 +13,7 @@ def ajax_only(f):
 def require_POST(f):
     def decorator(request, *args, **kwargs):
         if not request.method == 'POST':
-            response = render(request, 'misago/errorpages/wrong_way.html')
-            response.status_code = 405
-            return response
+            return not_allowed(request)
         else:
             return f(request, *args, **kwargs)
     return decorator

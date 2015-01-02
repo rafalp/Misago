@@ -1,11 +1,12 @@
 from django.contrib import messages
 from django.db.transaction import atomic
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.utils import html
 from django.utils.translation import ugettext as _
 from django.views.generic import View
 
+from misago.core.errorpages import not_allowed
 from misago.core.exceptions import AjaxError
 from misago.forums.lists import get_forum_path
 
@@ -84,6 +85,9 @@ class PostingView(ViewBase):
         allow_edit_post(user, post)
 
     def dispatch(self, request, *args, **kwargs):
+        if not request.is_ajax():
+            return not_allowed(request)
+
         if request.method == 'POST':
             with atomic():
                 return self.real_dispatch(request, *args, **kwargs)
@@ -94,11 +98,6 @@ class PostingView(ViewBase):
         mode_context = self.find_mode(request, *args, **kwargs)
         self.allow_mode(request.user, *mode_context)
         mode, forum, thread, post = mode_context
-
-        if not request.is_ajax():
-            response = render(request, 'misago/errorpages/wrong_way.html')
-            response.status_code = 405
-            return response
 
         forum.labels = Label.objects.get_forum_labels(forum)
         formset = EditorFormset(request=request,

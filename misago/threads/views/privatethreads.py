@@ -3,10 +3,11 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db.transaction import atomic
 from django.http import Http404, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import ugettext as _, ungettext
 
 from misago.acl import add_acl
+from misago.core.errorpages import not_allowed
 from misago.core.exceptions import AjaxError
 from misago.core.uiviews import uiview
 from misago.forums.models import Forum
@@ -247,9 +248,7 @@ class ThreadParticipantsView(PrivateThreadsMixin, generic.ViewBase):
         thread = self.get_thread(request, **kwargs)
 
         if not request.is_ajax():
-            response = render(request, 'misago/errorpages/wrong_way.html')
-            response.status_code = 405
-            return response
+            return not_allowed(request)
 
         participants_qs = thread.threadparticipant_set
         participants_qs = participants_qs.select_related('user', 'user__rank')
@@ -273,9 +272,7 @@ class BaseEditThreadParticipantView(PrivateThreadsMixin, generic.ViewBase):
         thread = self.get_thread(request, lock=True, **kwargs)
 
         if not request.is_ajax():
-            response = render(request, 'misago/errorpages/wrong_way.html')
-            response.status_code = 405
-            return response
+            return not_allowed(request)
 
         if not request.method == "POST":
             raise AjaxError(_("Wrong action received."))
