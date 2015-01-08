@@ -65,6 +65,7 @@ $(function() {
 
       if (!Misago.ReportPost.is_open()) {
         Misago.ReportPost.open(_this, _this.$e.data('report-url'), function(data) {
+          _this.$alerts.fadeTo(0, 0.2);
           _this.$alerts.html(data.alerts);
           _this.$alerts.fadeIn();
           _this.$report.attr('disabled', 'disabled');
