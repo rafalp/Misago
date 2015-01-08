@@ -12,7 +12,7 @@ __all__ = ['parse']
 
 
 def parse(text, request, poster, allow_mentions=True, allow_links=True,
-               allow_images=True, allow_blocks=True, minify=True):
+          allow_images=True, allow_blocks=True, minify=True):
     """
     Message parser
 
