@@ -6,6 +6,7 @@ $(function() {
   MisagoPost = function($element) {
 
     this.$e = $element;
+    this.$alerts = this.$e.find('.post-alerts');
     this.$content = this.$e.find('article.post-body');
     this.id = this.$e.data('id');
 
@@ -59,10 +60,16 @@ $(function() {
 
     });
 
-    this.$e.find('.btn-report').click(function() {
+    this.$report = this.$e.find('.btn-report');
+    this.$report.click(function() {
 
       if (!Misago.ReportPost.is_open()) {
-        Misago.ReportPost.open(_this.$e.data('report-url'));
+        Misago.ReportPost.open(_this, _this.$e.data('report-url'), function(data) {
+          _this.$alerts.html(data.alerts);
+          _this.$alerts.fadeIn();
+          _this.$report.attr('disabled', 'disabled');
+          _this.$report.find('.btn-label').text(data.label);
+        });
       }
 
     });

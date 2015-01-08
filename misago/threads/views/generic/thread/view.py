@@ -11,6 +11,7 @@ from misago.users.online.utils import get_user_state
 from misago.threads.events import add_events_to_posts
 from misago.threads.paginator import paginate
 from misago.threads.permissions import allow_reply_thread
+from misago.threads.reports import make_posts_reports_aware
 from misago.threads.views.generic.base import ViewBase
 from misago.threads.views.generic.thread.postsactions import PostsActions
 from misago.threads.views.generic.thread.threadactions import ThreadActions
@@ -92,6 +93,7 @@ class ThreadView(ViewBase):
                     return response
 
         page, posts = self.get_posts(request.user, forum, thread, kwargs)
+        make_posts_reports_aware(request.user, thread, posts)
 
         threadstracker.make_posts_read_aware(request.user, thread, posts)
         threadstracker.read_thread(request.user, thread, posts[-1])

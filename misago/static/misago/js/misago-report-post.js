@@ -18,12 +18,13 @@ $(function() {
 
     var _this = this;
 
-    this.open = function(api_url, on_report) {
+    this.open = function(post, api_url, on_report) {
 
       this._clear();
 
       if (!this.is_open()) {
 
+        this.post = post;
         this.api_url = api_url;
         this.on_report = on_report;
 
@@ -71,8 +72,8 @@ $(function() {
           Misago.Modal.close();
           Misago.Alerts.success(data.message);
 
-          if (this.on_report) {
-            this.on_report(data);
+          if (!data.is_reported && _this.on_report) {
+            _this.on_report(data);
           }
 
         }

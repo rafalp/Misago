@@ -58,29 +58,9 @@
 
       </div>
 
-      {% if post.is_moderated %}
-      <div class="alert alert-info">
-        <span class="fa fa-question-circle fa-fw fa-lg"></span>
-        {% if post.id == thread.first_post_id %}
-        {% trans "This thread won't be visible to other users until its approved by moderator." %}
-        {% else %}
-        {% trans "This post won't be visible to other users until its approved by moderator." %}
-        {% endif %}
+      <div class="post-alerts">
+        {% include "misago/thread/post_alerts.html" %}
       </div>
-      {% endif %}
-
-      {% if post.has_open_reports and thread.acl.can_see_reports %}
-      <div class="alert alert-danger">
-        <span class="fa fa-exclamation-triangle fa-fw fa-lg"></span>
-        {% trans "This post has open reports." %}
-      </div>
-      {% endif %}
-
-      {% if post.is_hidden and post.acl.can_see_hidden %}
-      <div class="alert alert-default">
-        {% include "misago/thread/hidden_message.html" %}
-      </div>
-      {% endif %}
 
       {% if not post.is_hidden or post.acl.can_see_hidden %}
         {% if post.is_valid %}
@@ -96,18 +76,20 @@
         </div>
         {% endif %}
 
+        <div class="post-reports"></div>
+
         <div class="panel-footer">
 
           {% if thread.acl.can_reply %}
           <button type="button" class="btn btn-reply btn-primary btn-flat pull-right">
-            <span class="fa fa-reply">
+            <span class="fa fa-reply"></span>
             {% trans "Reply" %}
           </button>
           {% endif %}
 
           {% if post.acl.can_edit %}
           <button type="button" class="btn btn-edit btn-default btn-flat pull-right">
-            <span class="fa fa-pencil">
+            <span class="fa fa-pencil"></span>
             {% trans "Edit" %}
           </button>
           {% endif %}
@@ -116,7 +98,7 @@
           <form action="{{ post.get_unhide_url }}" method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-default btn-flat pull-right">
-              <span class="fa fa-eye">
+              <span class="fa fa-eye"></span>
               {% trans "Reveal" %}
             </button>
           </form>
@@ -126,7 +108,7 @@
           <form action="{{ post.get_hide_url }}" method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-warning btn-flat pull-right">
-              <span class="fa fa-eye-slash">
+              <span class="fa fa-eye-slash"></span>
               {% trans "Hide" %}
             </button>
           </form>
@@ -136,16 +118,16 @@
           <form action="{{ post.get_delete_url }}" method="post" data-prompt="{% trans "Are you sure you want to delete this post?" %}">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger btn-flat pull-right">
-              <span class="fa fa-times">
+              <span class="fa fa-times"></span>
               {% trans "Delete" %}
             </button>
           </form>
           {% endif %}
 
           {% if post.acl.can_report %}
-          <button type="submit" class="btn btn-warning btn-report btn-flat pull-right">
-            <span class="fa fa-exclamation-triangle">
-            {% trans "Report" %}
+          <button type="submit" class="btn btn-warning btn-report btn-flat pull-right" {% if post.is_reported %}disabled="disabled"{% endif %}>
+            <span class="fa fa-exclamation-triangle"></span>
+            <span class="btn-label">{% if post.is_reported %}{% trans "Reported" %}{% else %}{% trans "Report" %}{% endif %}</span>
           </button>
           {% endif %}
 
@@ -153,7 +135,7 @@
           <form action="{{ post.get_approve_url }}" method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-success btn-flat pull-right">
-              <span class="fa fa-check">
+              <span class="fa fa-check"></span>
               {% trans "Approve" %}
             </button>
           </form>
@@ -162,8 +144,8 @@
           <form action="" method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-success btn-flat pull-left">
-              <span class="fa fa-heart">
-              {% trans "Like" %}
+              <span class="fa fa-heart"></span>
+              <span class="btn-label">{% trans "Like" %}</span>
             </button>
           </form>
         </div>

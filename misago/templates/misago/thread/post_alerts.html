@@ -1,0 +1,24 @@
+{% load i18n %}
+{% if post.is_moderated %}
+<div class="alert alert-info">
+  <span class="fa fa-question-circle fa-fw fa-lg"></span>
+  {% if post.id == thread.first_post_id %}
+  {% trans "This thread won't be visible to other users until its approved by moderator." %}
+  {% else %}
+  {% trans "This post won't be visible to other users until its approved by moderator." %}
+  {% endif %}
+</div>
+{% endif %}
+
+{% if post.has_open_reports and thread.acl.can_see_reports %}
+<div class="alert alert-danger">
+  <span class="fa fa-exclamation-triangle fa-fw fa-lg"></span>
+  {% trans "This post has open reports." %}
+</div>
+{% endif %}
+
+{% if post.is_hidden and post.acl.can_see_hidden %}
+<div class="alert alert-default">
+  {% include "misago/thread/hidden_message.html" %}
+</div>
+{% endif %}

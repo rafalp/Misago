@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.db.transaction import atomic
 from django.http import JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
@@ -10,7 +10,7 @@ from misago.core.errorpages import not_allowed
 
 from misago.threads import permissions, moderation, goto
 from misago.threads.forms.report import ReportPostForm
-from misago.threads.reports import report_post
+from misago.threads.reports import user_has_reported_post, report_post
 from misago.threads.views.generic.base import ViewBase
 
 
@@ -143,10 +143,10 @@ class DeletePostView(PostView):
 
 
 class ReportPostView(PostView):
-    is_atomic = False
     require_post = False
 
     template = 'misago/thread/report_modal.html'
+    alerts_template = 'misago/thread/post_alerts.html'
 
     def dispatch(self, request, *args, **kwargs):
         if not request.is_ajax():
@@ -158,20 +158,27 @@ class ReportPostView(PostView):
         if not post.acl['can_report']:
             raise PermissionDenied(_("You can't report posts."))
 
+        if user_has_reported_post(request.user, post):
+            return JsonResponse({
+                'is_reported': True,
+                'message': _("You have already reported this post.")})
+
         form = ReportPostForm()
         if request.method == 'POST':
             form = ReportPostForm(request.POST)
             if form.is_valid():
-                with atomic():
-                    post = self.get_post(request, True, **kwargs)
-                    report_post(request.user,
-                                post,
-                                form.cleaned_data['report_message'])
+                report_post(request,
+                            post,
+                            form.cleaned_data['report_message'])
 
                 message = _("%(user)s's post has been "
                             "reported to moderators.")
                 message = message % {'user': post.poster_name}
-                return JsonResponse({'message': message})
+                return JsonResponse({
+                    'message': message,
+                    'label': _("Reported"),
+                    'alerts': self.render_alerts(request, post)
+                })
             else:
                 field_errors = form.errors.get('report_message')
                 if field_errors:
@@ -182,5 +189,12 @@ class ReportPostView(PostView):
                 return JsonResponse({'is_error': True, 'message': field_error})
 
         return self.render(request, {'form': form})
+
+    def render_alerts(self, request, post):
+        return render(request, self.alerts_template, {
+            'forum': post.forum,
+            'thread': post.thread,
+            'post': post
+        }).content
 
 

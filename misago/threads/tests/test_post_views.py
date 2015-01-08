@@ -171,3 +171,46 @@ class DeletePostViewTests(PostViewTestCase):
 
         with self.assertRaises(Post.DoesNotExist):
             Post.objects.get(id=post.id)
+
+
+class ReportPostViewTests(PostViewTestCase):
+    ajax_header = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
+
+    def test_cant_report_post(self):
+        """can't access to report post view"""
+        post_link = reverse('misago:report_post', kwargs={
+            'post_id': self.thread.first_post_id
+        })
+
+        self.override_acl({'can_report_content': 0})
+        response = self.client.get(post_link, **self.ajax_header)
+        self.assertEqual(response.status_code, 403)
+
+    def test_report_post_get_form(self):
+        """fetch report post form"""
+        post_link = reverse('misago:report_post', kwargs={
+            'post_id': self.thread.first_post_id
+        })
+
+        self.override_acl({'can_report_content': 1})
+        response = self.client.get(post_link, **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Report post", response.content)
+
+    def test_report_post_post_form(self):
+        """post report post form"""
+        post_link = reverse('misago:report_post', kwargs={
+            'post_id': self.thread.first_post_id
+        })
+
+        self.override_acl({'can_report_content': 1})
+        response = self.client.post(post_link, data={
+            'message': 'Lorem ipsum dolor met!',
+        }, **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+
+        # attempt reporting post again
+        self.override_acl({'can_report_content': 1})
+        response = self.client.get(post_link, **self.ajax_header)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("already reported this post", response.content)
