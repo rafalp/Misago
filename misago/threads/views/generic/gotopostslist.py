@@ -56,4 +56,4 @@ class ReportedPostsListView(ModeratedPostsListView):
             raise PermissionDenied(message)
 
     def filter_posts_queryset(self, queryset):
-        return queryset.filter(is_reported=True)
+        return queryset.filter(has_reports=True)

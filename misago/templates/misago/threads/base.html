@@ -93,8 +93,8 @@
 
               <ul class="list-unstyled thread-flags">
                 {% block thread-flags %}
-                {% if thread.has_reported_posts %}
-                <li class="tooltip-top" title="{% trans "Reported posts" %}">
+                {% if thread.has_open_reports %}
+                <li class="tooltip-top" title="{% trans "Open reports" %}">
                   <span class="fa fa-exclamation-triangle fa-fw fa-lg"></span>
                 </li>
                 {% endif %}

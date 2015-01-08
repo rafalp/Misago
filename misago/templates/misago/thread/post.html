@@ -69,10 +69,10 @@
       </div>
       {% endif %}
 
-      {% if post.is_reported and thread.acl.can_see_reports %}
+      {% if post.has_open_reports and thread.acl.can_see_reports %}
       <div class="alert alert-danger">
         <span class="fa fa-exclamation-triangle fa-fw fa-lg"></span>
-        {% trans "This post was reported to moderators." %}
+        {% trans "This post has open reports." %}
       </div>
       {% endif %}
 

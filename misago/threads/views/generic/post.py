@@ -10,6 +10,7 @@ from misago.core.errorpages import not_allowed
 
 from misago.threads import permissions, moderation, goto
 from misago.threads.forms.report import ReportPostForm
+from misago.threads.reports import report_post
 from misago.threads.views.generic.base import ViewBase
 
 
@@ -161,6 +162,12 @@ class ReportPostView(PostView):
         if request.method == 'POST':
             form = ReportPostForm(request.POST)
             if form.is_valid():
+                with atomic():
+                    post = self.get_post(request, True, **kwargs)
+                    report_post(request.user,
+                                post,
+                                form.cleaned_data['report_message'])
+
                 message = _("%(user)s's post has been "
                             "reported to moderators.")
                 message = message % {'user': post.poster_name}

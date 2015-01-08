@@ -6,7 +6,7 @@ from django.db import models, migrations
 import django.db.models.deletion
 import django.utils.timezone
 
-from misago.core.pgutils import CreatePartialIndex
+from misago.core.pgutils import CreatePartialIndex, CreatePartialCompositeIndex
 
 
 class Migration(migrations.Migration):
@@ -50,7 +50,8 @@ class Migration(migrations.Migration):
                 ('hidden_by_name', models.CharField(max_length=255, null=True, blank=True)),
                 ('hidden_by_slug', models.SlugField(max_length=255, null=True, blank=True)),
                 ('hidden_on', models.DateTimeField(default=django.utils.timezone.now)),
-                ('is_reported', models.BooleanField(default=False)),
+                ('has_reports', models.BooleanField(default=False)),
+                ('has_open_reports', models.BooleanField(default=False)),
                 ('is_moderated', models.BooleanField(default=False, db_index=True)),
                 ('is_hidden', models.BooleanField(default=False)),
                 ('is_protected', models.BooleanField(default=False)),
@@ -64,9 +65,9 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         CreatePartialIndex(
-            field='Post.is_reported',
-            index_name='misago_post_is_reported_partial',
-            condition='is_reported = TRUE',
+            field='Post.has_open_reports',
+            index_name='misago_post_has_open_reports_partial',
+            condition='has_open_reports = TRUE',
         ),
         CreatePartialIndex(
             field='Post.is_hidden',
@@ -81,6 +82,7 @@ class Migration(migrations.Migration):
                 ('slug', models.CharField(max_length=255)),
                 ('replies', models.PositiveIntegerField(default=0, db_index=True)),
                 ('has_reported_posts', models.BooleanField(default=False)),
+                ('has_open_reports', models.BooleanField(default=False)),
                 ('has_moderated_posts', models.BooleanField(default=False)),
                 ('has_hidden_posts', models.BooleanField(default=False)),
                 ('has_events', models.BooleanField(default=False)),
@@ -116,18 +118,6 @@ class Migration(migrations.Migration):
             model_name='thread',
             name='participants',
             field=models.ManyToManyField(related_name='private_thread_set', through='misago_threads.ThreadParticipant', through_fields=('thread', 'user'), to=settings.AUTH_USER_MODEL),
-            preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='thread',
-            name='report_for',
-            field=models.ForeignKey(related_name='report_set', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='misago_threads.Post', null=True),
-            preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='thread',
-            name='report_in',
-            field=models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='misago_forums.Forum', null=True),
             preserve_default=True,
         ),
         migrations.CreateModel(
@@ -213,5 +203,35 @@ class Migration(migrations.Migration):
                 ('forum', 'last_post_on'),
                 ('forum', 'replies'),
             ]),
+        ),
+        migrations.CreateModel(
+            name='Report',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('reported_by_name', models.CharField(max_length=255)),
+                ('reported_by_slug', models.CharField(max_length=255)),
+                ('reported_by_ip', models.GenericIPAddressField()),
+                ('reported_on', models.DateTimeField(default=django.utils.timezone.now)),
+                ('parsed', models.TextField()),
+                ('checksum', models.CharField(default=b'-', max_length=64)),
+                ('is_closed', models.BooleanField(default=False)),
+                ('closed_by_name', models.CharField(max_length=255)),
+                ('closed_by_slug', models.CharField(max_length=255)),
+                ('closed_by', models.ForeignKey(related_name='closedreport_set', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('closed_on', models.DateTimeField(default=django.utils.timezone.now)),
+                ('forum', models.ForeignKey(to='misago_forums.Forum')),
+                ('post', models.ForeignKey(to='misago_threads.Post')),
+                ('reported_by', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('thread', models.ForeignKey(to='misago_threads.Thread')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        CreatePartialCompositeIndex(
+            model='Report',
+            fields=('post_id', 'is_closed'),
+            index_name='misago_report_active_reports',
+            condition='is_closed = FALSE',
         ),
 ]

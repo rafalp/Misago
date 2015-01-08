@@ -13,6 +13,7 @@ class Thread(models.Model):
     slug = models.CharField(max_length=255)
     replies = models.PositiveIntegerField(default=0, db_index=True)
     has_reported_posts = models.BooleanField(default=False)
+    has_open_reports = models.BooleanField(default=False)
     has_moderated_posts = models.BooleanField(default=False)
     has_hidden_posts = models.BooleanField(default=False)
     has_events = models.BooleanField(default=False)
@@ -45,14 +46,6 @@ class Thread(models.Model):
                                           related_name='private_thread_set',
                                           through='ThreadParticipant',
                                           through_fields=('thread', 'user'))
-
-    report_for = models.ForeignKey('misago_threads.Post',
-                                   related_name='report_set',
-                                   null=True, blank=True,
-                                   on_delete=models.SET_NULL)
-    report_in = models.ForeignKey('misago_forums.Forum', related_name='+',
-                                  null=True, blank=True,
-                                  on_delete=models.SET_NULL)
 
     class Meta:
         index_together = [
@@ -91,8 +84,14 @@ class Thread(models.Model):
         if self.replies > 0:
             self.replies -= 1
 
-        reported_post_qs = self.post_set.filter(is_reported=True)
+        reported_post_qs = self.post_set.filter(has_reports=True)
         self.has_reported_posts = reported_post_qs.exists()
+
+        if self.has_reported_posts:
+            open_reports_qs = self.post_set.filter(has_open_reports=True)
+            self.has_open_reports = open_reports_qs.exists()
+        else:
+            self.has_open_reports = False
 
         moderated_post_qs = self.post_set.filter(is_moderated=True)
         self.has_moderated_posts = moderated_post_qs.exists()

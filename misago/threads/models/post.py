@@ -42,7 +42,8 @@ class Post(models.Model):
     hidden_by_slug = models.SlugField(max_length=255, null=True, blank=True)
     hidden_on = models.DateTimeField(default=timezone.now)
 
-    is_reported = models.BooleanField(default=False)
+    has_reports = models.BooleanField(default=False)
+    has_open_reports = models.BooleanField(default=False)
     is_moderated = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)
     is_protected = models.BooleanField(default=False)

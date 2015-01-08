@@ -16,6 +16,21 @@ def update_post_checksum(post):
     return post.checksum
 
 
+def is_report_valid(report):
+    valid_checksum = make_report_checksum(report)
+    return report.checksum == valid_checksum
+
+
+def make_report_checksum(report):
+    report_seeds = [unicode(v) for v in (report.id, report.reported_by_ip)]
+    return checksums.make_checksum(report.message, report_seeds)
+
+
+def update_report_checksum(report):
+    report.checksum = make_report_checksum(report)
+    return report.checksum
+
+
 def is_event_valid(event):
     valid_checksum = make_event_checksum(event)
     return event.checksum == valid_checksum

@@ -113,7 +113,7 @@ class GotoListsViewsTests(AuthenticatedUserTestCase):
         # post 10 reported posts
         posts = []
         for i in xrange(10):
-            posts.append(reply_thread(self.thread, is_reported=True))
+            posts.append(reply_thread(self.thread, has_reports=True))
 
         # assert that posts show
         self.override_acl({'can_see_reports': True})
@@ -130,7 +130,7 @@ class GotoListsViewsTests(AuthenticatedUserTestCase):
         # overflow list via posting extra 20 reported posts
         posts = []
         for i in xrange(20):
-            posts.append(reply_thread(self.thread, is_reported=True))
+            posts.append(reply_thread(self.thread, has_reports=True))
 
         # assert that posts don't show
         self.override_acl({'can_see_reports': True})
