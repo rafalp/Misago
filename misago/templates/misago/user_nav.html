@@ -56,13 +56,15 @@
 </ul>
 
 <ul class="nav navbar-nav navbar-nav-primary navbar-right">
+  {% if user.acl.can_see_reports %}
   <li>
-    <a href="#" class="tooltip-bottom" title="{% trans "Unresolved reports" %}">
+    <a href="#" class="tooltip-bottom" title="{% trans "Reported content" %}">
       <span class="fa fa-exclamation-triangle fa-fw"></span>
       <span class="badge">57</span>
     </a>
   </li>
-  {% if user.acl.moderated_forums %}
+  {% endif %}
+  {% if user.acl.can_review_moderated_content %}
   <li>
     <a href="{% url 'misago:moderated_content' %}" class="tooltip-bottom" data-misago-tooltip="moderated_content.message" {% if user.moderated_content %}
         title="{% blocktrans with moderated=user.moderated_content count counter=user.moderated_content %}{{ moderated }} item in moderation{% plural %}{{ moderated }} items in moderation{% endblocktrans %}"

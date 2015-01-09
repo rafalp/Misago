@@ -93,12 +93,14 @@
 
               <ul class="list-unstyled thread-flags">
                 {% block thread-flags %}
-                {% if thread.has_open_reports %}
+                {% if thread.has_open_reports and thread.forum_id in user.acl.can_see_reports %}
                 <li class="tooltip-top" title="{% trans "Open reports" %}">
+                  <button type="button" class="btn-show-reported" data-reported-url="{{ thread.get_reported_url }}">
                   <span class="fa fa-exclamation-triangle fa-fw fa-lg"></span>
+                  </button>
                 </li>
                 {% endif %}
-                {% if thread.has_moderated_posts and not thread.is_moderated and thread.forum_id in user.acl.moderated_forums %}
+                {% if thread.has_moderated_posts and not thread.is_moderated and thread.forum_id in user.acl.can_review_moderated_content %}
                 <li class="tooltip-top" title="{% trans "Moderated posts" %}">
                   <button type="button" class="btn-show-moderated" data-moderated-url="{{ thread.get_moderated_url }}">
                     <span class="fa fa-question-circle fa-fw fa-lg"></span>
@@ -159,7 +161,16 @@
 
 {% block javascripts %}
 {{ block.super }}
-{% if user.acl.moderated_forums %}
+{% if user.acl.can_see_reports %}
+<script lang="JavaScript">
+  $(function() {
+    $('.btn-show-reported').click(function() {
+      Misago.Modal.get($(this).data('reported-url'));
+    });
+  });
+</script>
+{% endif %}
+{% if user.acl.can_review_moderated_content %}
 <script lang="JavaScript">
   $(function() {
     $('.btn-show-moderated').click(function() {

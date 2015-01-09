@@ -158,7 +158,8 @@ def change_permissions_form(role):
 ACL Builder
 """
 def build_acl(acl, roles, key_name):
-    acl['moderated_forums'] = []
+    acl['can_review_moderated_content'] = []
+    acl['can_see_reports'] = []
     forums_roles = get_forums_roles(roles)
 
     for forum in Forum.objects.all_forums():
@@ -167,7 +168,9 @@ def build_acl(acl, roles, key_name):
             acl['forums'][forum.pk] = build_forum_acl(
                 forum_acl, forum, forums_roles, key_name)
             if acl['forums'][forum.pk]['can_review_moderated_content']:
-                acl['moderated_forums'].append(forum.pk)
+                acl['can_review_moderated_content'].append(forum.pk)
+            if acl['forums'][forum.pk]['can_see_reports']:
+                acl['can_see_reports'].append(forum.pk)
     return acl
 
 

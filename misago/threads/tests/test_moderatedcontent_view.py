@@ -21,7 +21,7 @@ class AuthenticatedTests(AuthenticatedUserTestCase):
 
         for forum in Forum.objects.all():
             forums_acl['visible_forums'].append(forum.pk)
-            forums_acl['moderated_forums'].append(forum.pk)
+            forums_acl['can_review_moderated_content'].append(forum.pk)
             forums_acl['forums'][forum.pk] = new_acl
 
         override_acl(self.user, forums_acl)

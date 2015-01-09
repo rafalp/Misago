@@ -90,7 +90,7 @@ def build_acl(acl, roles, key_name):
     private_forum = Forum.objects.private_threads()
 
     if new_acl['can_moderate_private_threads']:
-        new_acl['moderated_forums'].append(private_forum.pk)
+        new_acl['can_review_moderated_content'].append(private_forum.pk)
 
     forum_acl = {
         'can_see': 1,

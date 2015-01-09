@@ -36,7 +36,7 @@ class ModeratedContentView(ThreadsView):
                         "moderated content.")
             raise PermissionDenied(message)
 
-        if not request.user.acl['moderated_forums']:
+        if not request.user.acl['can_review_moderated_content']:
             message = _("You can't review moderated content.")
             raise PermissionDenied(message)
 
@@ -47,7 +47,7 @@ class ModeratedContentView(ThreadsView):
 @uiview("moderated_content")
 @deny_guests
 def event_sender(request, resolver_match):
-    if request.user.acl['moderated_forums']:
+    if request.user.acl['can_review_moderated_content']:
         moderated_count = int(request.user.moderated_content)
         if moderated_count:
             message = ungettext("%(moderated)s item in moderation",

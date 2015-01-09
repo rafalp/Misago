@@ -73,10 +73,10 @@
       {% endif %}
 
       {% if thread.acl.can_see_reports and thread.has_reported_posts %}
-      <a href="{{ thread.get_moderated_url }}" class="btn btn-default btn-show-reported">
+      <button type="button" class="btn btn-default btn-show-reported">
         <span class="fa fa-exclamation-triangle fa-fw fa-lg"></span>
         {% trans "Reported posts" %}
-      </a>
+      </button>
       {% endif %}
       {% endblock thread-nav %}
 

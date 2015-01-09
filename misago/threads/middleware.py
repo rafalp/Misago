@@ -10,7 +10,7 @@ from misago.threads.counts import (ModeratedCount, NewThreadsCount,
 class UnreadThreadsCountMiddleware(object):
     def process_request(self, request):
         if request.user.is_authenticated():
-            if request.user.acl['moderated_forums']:
+            if request.user.acl['can_review_moderated_content']:
                 request.user.moderated_content = ModeratedCount(
                     request.user, request.session)
             request.user.new_threads = NewThreadsCount(
