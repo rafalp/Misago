@@ -107,6 +107,14 @@ MISAGO_SENDFILE_HEADER = ''
 MISAGO_SENDFILE_LOCATIONS_PATH = ''
 
 
+# JS Application library definition
+# Don't edit this unless you really have to change Ember/Handlebars/jQuery
+if TEMPLATE_DEBUG:
+    PIPELINE_JS['misago_lib']['source_filenames'] = MISAGO_JS_LIB_DEV
+else:
+    PIPELINE_JS['misago_lib']['source_filenames'] = MISAGO_JS_LIB_PROD
+
+
 # Application definition
 # Don't edit those settings unless you know what you are doing
 ROOT_URLCONF = '{{ project_name }}.urls'

@@ -50,36 +50,16 @@ PIPELINE_CSS = {
 }
 
 PIPELINE_JS = {
+    'misago_lib': {
+        'source_filenames': (
+            # leave this part empty, its overrided by deployment's settings.py
+        ),
+        'output_filename': 'misago_lib.js',
+    },
     'misago': {
         'source_filenames': (
-            'misago/js/jquery.js',
-            'misago/js/jquery.mousewheel.js',
-            'misago/js/bootstrap.js',
-            'misago/js/moment.min.js',
-            'misago/js/tinycon.min.js',
-            'misago/js/typeahead.jquery.min.js',
-            'misago/js/misago.js',
-            'misago/js/misago-storage.js',
-            'misago/js/misago-alerts.js',
-            'misago/js/misago-ajax.js',
-            'misago/js/misago-dom.js',
-            'misago/js/misago-timestamps.js',
-            'misago/js/misago-uiserver.js',
-            'misago/js/misago-bindings.js',
-            'misago/js/misago-tooltips.js',
-            'misago/js/misago-datetimepicker.js',
-            'misago/js/misago-yesnoswitch.js',
-            'misago/js/misago-dropdowns.js',
-            'misago/js/misago-modal.js',
-            'misago/js/misago-scrolling.js',
-            'misago/js/misago-notifications.js',
-            'misago/js/misago-threads-lists.js',
-            'misago/js/misago-onebox.js',
-            'misago/js/misago-posting.js',
-            'misago/js/misago-posting-participants.js',
-            'misago/js/misago-report-post.js',
-            'misago/js/misago-posts.js',
-            'misago/js/misago-thread-participants.js',
+            'misago/js/application.js',
+            'misago/js/router.js',
         ),
         'output_filename': 'misago.js',
     },
@@ -105,6 +85,20 @@ PIPELINE_JS = {
         'output_filename': 'misago_admin.js',
     },
 }
+
+MISAGO_JS_LIB_DEV = (
+    'misago/ember/jquery-1.11.1.min.js',
+    'misago/ember/handlebars-v2.0.0.js',
+    'misago/ember/ember-1.9.1.js',
+    'misago/ember/ember-data-1.0.0.b14.js',
+)
+
+MISAGO_JS_LIB_PROD = (
+    'misago/ember/jquery-1.11.1.min.js',
+    'misago/ember/handlebars.runtime-v2.0.0.js',
+    'misago/ember/ember.prod-1.9.1.js',
+    'misago/ember/ember-data.prod-1.0.0.b14.js',
+)
 
 STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
 
@@ -139,6 +133,7 @@ INSTALLED_APPS = (
     'pipeline',
     'crispy_forms',
     'mptt',
+    'rest_framework',
     'misago.admin',
     'misago.acl',
     'misago.core',
