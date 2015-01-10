@@ -1,0 +1,19 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+{% if misago_settings.forum_index_title %}
+{{ misago_settings.forum_index_title }}
+{% else %}
+{{ misago_settings.forum_name }}
+{% endif %}
+{% endblock title %}
+
+
+{% block meta-description %}{{ misago_settings.forum_index_meta_description }}{% endblock meta-description %}
+
+
+{% block content %}
+<p>If you see this, ember failed to render application template.</p>
+{% endblock content %}

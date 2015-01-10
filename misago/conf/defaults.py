@@ -33,7 +33,6 @@ MISAGO_BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Assets Pipeline
 # See http://django-pipeline.readthedocs.org/en/latest/configuration.html
-
 PIPELINE_CSS = {
     'misago': {
         'source_filenames': (
@@ -58,6 +57,7 @@ PIPELINE_JS = {
     },
     'misago': {
         'source_filenames': (
+            'misago/js/templates/*.hbs',
             'misago/js/application.js',
             'misago/js/router.js',
         ),
@@ -100,11 +100,14 @@ MISAGO_JS_LIB_PROD = (
     'misago/ember/ember-data.prod-1.0.0.b14.js',
 )
 
-STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
-
 PIPELINE_COMPILERS = (
     'pipeline.compilers.less.LessCompiler',
 )
+
+PIPELINE_TEMPLATE_EXT = '.hbs'
+PIPELINE_TEMPLATE_FUNC = 'Ember.Handlebars.compile'
+PIPELINE_TEMPLATE_NAMESPACE = 'window.Ember.TEMPLATES'
+PIPELINE_TEMPLATE_SEPARATOR = '/'
 
 PIPELINE_CSS_COMPRESSOR = 'pipeline.compressors.yuglify.YuglifyCompressor'
 PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.yuglify.YuglifyCompressor'
@@ -114,6 +117,8 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'pipeline.finders.PipelineFinder',
 )
+
+STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
 
 
 # Application definition

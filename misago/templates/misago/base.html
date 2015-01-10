@@ -22,7 +22,11 @@
   </head>
   <body>
 
-    {% block content %}{% endblock %}
+    <noscript>
+      {% block content %}{% endblock content %}
+    </noscript>
+
+    <section id="main"></section>
 
     {% javascript 'misago_lib' %}
     {% javascript 'misago' %}

@@ -1,1 +1,3 @@
-window.Misago = Ember.Application.create();
+window.Misago = Ember.Application.create({
+  rootElement: '#main'
+});
