@@ -1,5 +1,5 @@
 {% extends "misago/admin/base_thin.html" %}
-{% load compressed i18n %}
+{% load pipeline i18n %}
 
 
 {% block body %}
@@ -20,6 +20,6 @@
 {% include "misago/admin/logout.html" %}
 
 {# We include JavaScript at the end of page body so it renders faster #}
-{% compressed_js 'misago_admin' %}
+{% javascript 'misago_admin' %}
 {% block javascripts %}{% endblock javascripts %}
 {% endblock %}

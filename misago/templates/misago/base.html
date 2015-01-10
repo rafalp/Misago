@@ -1,4 +1,4 @@
-{% load compressed i18n staticfiles %}
+{% load pipeline i18n staticfiles %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
   <head>
@@ -12,7 +12,7 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    {% compressed_css 'misago' %}
+    {% stylesheet 'misago' %}
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{% static 'apple-touch-icon-144-precomposed.png' %}">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static 'apple-touch-icon-114-precomposed.png' %}">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{% static 'apple-touch-icon-72-precomposed.png' %}">
@@ -48,7 +48,7 @@
 
       var uiserver_url = "{% url 'misago:ui_server' %}";
     </script>
-    {% compressed_js 'misago' %}
+    {% javascript 'misago' %}
     <script lang="JavaScript">
       $(function() {
         Misago.Alerts = new MisagoAlerts({
