@@ -3,7 +3,7 @@ from django.core.checks import register, Critical
 
 
 @register()
-def example_check(app_configs, **kwargs):
+def db_check(app_configs, **kwargs):
     errors = []
 
     try:
