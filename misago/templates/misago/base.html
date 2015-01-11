@@ -23,13 +23,17 @@
   <body>
 
     <noscript>
+      {% include "misago/navbar.html" %}
+
       {% block content %}{% endblock content %}
+
+      {% include "misago/footer.html" %}
     </noscript>
 
     <section id="main"></section>
 
-    {% javascript 'misago_lib' %}
-    {% javascript 'misago' %}
+    {% javascript "misago_lib" %}
+    {% javascript "misago" %}
 
   </body>
 </html>

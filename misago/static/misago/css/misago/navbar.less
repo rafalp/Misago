@@ -1,0 +1,52 @@
+//
+// Misago Navbar
+// --------------------------------------------------
+
+
+// Navbar brand
+.navbar-primary {
+  .navbar-brand {
+    font-size: @font-size-large * 1.2;
+
+    img {
+      border-radius: @border-radius-small;
+      display: inline-block;
+      height: @navbar-height - @navbar-padding-vertical * 2 + 3px;
+
+      position: relative;
+      bottom: 2px;
+    }
+  }
+}
+
+
+// Navbar nav
+.navbar-primary {
+  .navbar-nav {
+
+    // Make icons bigger
+    &>li {
+      &>a {
+        .fa, .glyphicon {
+          position: relative;
+          top: (@font-size-large - @font-size-base) / 2 + 1px;
+
+          font-size: @font-size-large;
+        }
+      }
+    }
+
+    // Uncollapse the nav
+    float: right;
+    margin: 0;
+
+    > li {
+      float: left;
+      > a {
+        padding-top:    @navbar-padding-vertical;
+        padding-bottom: @navbar-padding-vertical;
+      }
+    }
+
+  }
+}

@@ -1,32 +1,59 @@
 //
-// Misago Footer
+// Forum Footer
 // --------------------------------------------------
 
 
-.site-footer {
-  margin-top: @line-height-computed;
+//== Footer container
+//
+//**
+.main-footer {
+  margin-top: @line-height-computed * 1.5;
+  margin-bottom: @line-height-computed * 1.5;
 
-  color: @footer-color;
   text-align: center;
+}
 
+
+//== Footer menu
+//
+//**
+.main-footer {
   .footer-nav {
-    a, a:link, a:visited {
-      color: @footer-link-color;
-    }
+    margin: 0px;
+    overflow: auto;
+    padding: 0px;
 
-    a:hover, a:focus {
-      color: @footer-link-hover-color;
-    }
+    text-align: center;
 
-    a:active {
-      color: @footer-link-active-color;
+    li {
+      display: inline-block;
+      padding: @padding-large-vertical @padding-xs-horizontal;
+      padding-bottom: @padding-small-vertical;
+
+      a {
+        &:link, &:visited {
+          color: @footer-link-color;
+          text-decoration: none;
+        }
+
+        &:hover {
+          color: @footer-link-hover-color;
+          text-decoration: underline;
+        }
+
+        &:active {
+          color: @footer-link-active-color;
+          text-decoration: underline;
+        }
+      }
     }
   }
+}
 
-  .noscript-message {
-    color: @footer-noscript-color;
-  }
-
+//== Misago branding
+//
+//**
+.main-footer {
   .misago-branding {
     a {
       display: inline-block;
@@ -34,14 +61,6 @@
       color: @text-color;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-size: @misago-branding-size;
-
-      .subscript {
-        display: inline-block;
-        position: relative;
-        bottom: (@misago-branding-size  - (@misago-branding-size * 0.75)) / 2 - 1px;
-
-        font-size: @misago-branding-size;
-      }
 
       .brand-border {
         background: @text-color;
@@ -68,8 +87,16 @@
         }
       }
 
+      .subscript {
+        display: inline-block;
+        position: relative;
+        bottom: (@misago-branding-size  - (@misago-branding-size * 0.6)) / 2 - 1px;
+
+        font-size: @misago-branding-size * 0.6;
+      }
+
       &, &:link, &:visited {
-        .opacity(0.3);
+        .opacity(0.4);
       }
 
       &:active, &:hover {
@@ -79,23 +106,4 @@
       }
     }
   }
-
-  /* Small devices (tablets, 768px and up) */
-  @media (min-width: @screen-sm-min) {
-    text-align: left;
-
-    .first-row {
-      overflow: auto;
-
-      &>* {
-        float: left;
-      }
-
-      .noscript-message {
-        margin-left: @line-height-computed;
-      }
-    }
-  }
 }
-
-
