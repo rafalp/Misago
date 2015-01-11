@@ -1,0 +1,124 @@
+{% extends "misago/admin/generic/list.html" %}
+{% load i18n misago_avatars misago_forms %}
+
+
+{% block page-actions %}
+<div class="page-actions">
+  <a href="{% url 'misago:admin:users:accounts:new' %}" class="btn btn-success">
+    <span class="fa fa-plus-circle"></span>
+    {% trans "New user" %}
+  </a>
+</div>
+{% endblock %}
+
+
+{% block table-header %}
+<th style="width: 1%;">&nbsp;</th>
+<th>{% trans "User" %}</th>
+<th style="width: 1%;">&nbsp;</th>
+<th style="width: 1%;">&nbsp;</th>
+<th style="width: 200px;">{% trans "E-mail" %}</th>
+<th style="width: 150px;">{% trans "Rank" %}</th>
+<th style="width: 200px;">{% trans "Joined" %}</th>
+<th style="width: 128px;">{% trans "Posts" %}</th>
+{% for action in extra_actions %}
+<th style="width: 1%;">&nbsp;</th>
+{% endfor %}
+<th style="width: 1%;">&nbsp;</th>
+{% endblock table-header %}
+
+
+{% block table-row %}
+<td>
+  <a href="{{ item.get_absolute_url }}">
+    <img src="{{ item|avatar:24 }}" alt="{% trans "Avatar" %}" width="24" height="24">
+  </a>
+</td>
+<td class="item-name {% if item.requires_activation %}text-muted{% endif %}">
+  <a href="{{ item.get_absolute_url }}">{{ item }}</a>
+</td>
+<td class="lead text-muted">
+  {% if item.requires_activation_by_admin %}
+  <span class="fa fa-eye tooltip-top" title="{% trans "Requires activation by administrator" %}"></span>
+  {% elif item.requires_activation_by_user %}
+  <span class="fa fa-ticket tooltip-top" title="{% trans "Has to activate account" %}"></span>
+  {% else %}
+  &nbsp;
+  {% endif %}
+</td>
+<td class="lead text-muted">
+  {% if item.is_superuser %}
+  <span class="fa fa-star tooltip-top" title="{% trans "Super administrator" %}"></span>
+  {% elif item.is_staff %}
+  <span class="fa fa-star-half-o tooltip-top" title="{% trans "Administrator" %}"></span>
+  {% else %}
+  &nbsp;
+  {% endif %}
+</td>
+<td>
+  <a href="mailto:{{ item.email }}">{{ item.email }}</a>
+</td>
+<td>
+  {{ item.rank }}
+</td>
+<td>
+  <abbr class="tooltip-top dynamic time-ago" title="{{ item.joined_on }}" data-timestamp="{{ item.joined_on|date:"c" }}">
+    {{ item.joined_on|date }}
+  </abbr>
+</td>
+<td>
+  {{ item.posts }}
+</td>
+{% for action in extra_actions %}
+<td class="row-action">
+  <a href="{% url action.link user_id=item.id %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
+    <span class="{{ action.icon }}"></span>
+  </a>
+</td>
+{% endfor %}
+<td class="row-action">
+  <a href="{% url 'misago:admin:users:accounts:edit' user_id=item.id %}" class="btn btn-primary tooltip-top" title="{% trans "Edit user" %}">
+    <span class="fa fa-pencil"></span>
+  </a>
+</td>
+{% endblock table-row %}
+
+
+{% block emptylist %}
+<td colspan="{{ 11|add:extra_actions_len }}">
+  <p>{% trans "No users matching search criteria have been found." %}</p>
+</td>
+{% endblock emptylist %}
+
+
+{% block modal-title %}
+{% trans "Search users" %}
+{% endblock modal-title %}
+
+
+{% block modal-body %}
+<div class="row">
+  <div class="col-md-6">
+    {% form_row search_form.username %}
+  </div>
+  <div class="col-md-6">
+    {% form_row search_form.email %}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    {% form_row search_form.rank %}
+  </div>
+  <div class="col-md-6">
+    {% form_row search_form.role %}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    {% form_row search_form.inactive %}
+  </div>
+  <div class="col-md-6">
+    {% form_row search_form.is_staff %}
+  </div>
+</div>
+{% endblock modal-body %}

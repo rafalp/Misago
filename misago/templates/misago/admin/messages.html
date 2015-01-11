@@ -1,0 +1,24 @@
+{% load i18n %}
+{% if messages %}
+<div class="misago-alerts">
+  {% for message in messages %}
+  <div>
+    {% if 'info' in message.tags %}
+    <p class="alert alert-info">
+      <span class="alert-icon fa fa-info-circle"></span>
+    {% elif 'success' in message.tags %}
+    <p class="alert alert-success">
+      <span class="alert-icon fa fa-check-circle"></span>
+    {% elif 'warning' in message.tags %}
+    <p class="alert alert-warning">
+      <span class="alert-icon fa fa-exclamation-triangle"></span>
+    {% elif 'error' in message.tags %}
+    <p class="alert alert-danger">
+      <span class="alert-icon fa fa-times-circle"></span>
+    {% endif %}
+      {{ message }}
+    </p>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}

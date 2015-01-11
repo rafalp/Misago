@@ -1,0 +1,26 @@
+{% extends "misago/admin/base.html" %}
+{% load i18n %}
+
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1>
+      {% block page-header %}
+      <div class="main">
+        <a href="{{ active_link.link }}">
+          <span class="{{ active_link.icon }}">
+          {{ active_link.name }}
+        </a>
+      </div>
+      {% endblock page-header %}
+    </h1>
+    {% block page-actions %}{% endblock %}
+  </div>
+</div>
+
+<div class="container">
+  {% block view %}
+  {% endblock view %}
+</div>
+{% endblock content %}

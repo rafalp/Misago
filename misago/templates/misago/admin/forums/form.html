@@ -1,0 +1,80 @@
+{% extends "misago/admin/generic/form.html" %}
+{% load i18n misago_forms %}
+
+
+{% block title %}
+{% if target.pk %}
+{{ target }}
+{% else %}
+{% trans "New forum" %}
+{% endif %} | {{ active_link.name }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block page-target %}
+{% if target.pk %}
+{{ target }}
+{% else %}
+{% trans "New forum" %}
+{% endif %}
+{% endblock page-target %}
+
+
+{% block form-header %}
+<h1>
+  {% if target.pk %}
+  {{ target }}
+  {% else %}
+  {% trans "New forum" %}
+  {% endif %}
+</h1>
+{% endblock %}
+
+
+{% block form-extra %}
+class="form-horizontal"
+{% endblock form-extra%}
+
+
+{% block form-body %}
+<div class="form-body">
+  {% with label_class="col-md-3" field_class="col-md-9" %}
+  <fieldset>
+    <legend>{% trans "Role and position" %}</legend>
+
+    {% form_row form.new_parent label_class field_class %}
+    {% form_row form.role label_class field_class %}
+
+  </fieldset>
+  <fieldset>
+    <legend>{% trans "Display" %}</legend>
+
+    {% form_row form.name label_class field_class %}
+    {% form_row form.description label_class field_class %}
+    {% form_row form.css_class label_class field_class %}
+
+  </fieldset>
+  <fieldset>
+    <legend>{% trans "Behaviour" %}</legend>
+
+    {% form_row form.copy_permissions label_class field_class %}
+    {% form_row form.redirect_url label_class field_class %}
+    {% form_row form.is_closed label_class field_class %}
+
+  </fieldset>
+  <fieldset>
+    <legend>{% trans "Prune threads" %}</legend>
+
+    {% form_row form.prune_started_after label_class field_class %}
+    {% form_row form.prune_replied_after label_class field_class %}
+    {% form_row form.archive_pruned_in label_class field_class %}
+
+  </fieldset>
+  {% endwith %}
+</div>
+{% endblock form-body %}
+
+
+{% block form-footer-class %}
+col-md-offset-3
+{% endblock form-footer-class %}

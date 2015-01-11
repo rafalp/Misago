@@ -1,0 +1,57 @@
+{% extends "misago/admin/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{% trans "Settings" %} | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1>
+      {% block header %}
+        <span class="fa fa-cogs">
+        {% trans "Settings" %}
+      {% endblock %}
+    </h1>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+
+      <ul class="nav nav-side">
+        {% for group in settings_groups %}
+        <li {% if group.key == active_group.key %}class="active"{% endif %}>
+          <a href="{% url 'misago:admin:settings:group' group_key=group.key %}">
+            {{ group.name }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+
+    </div><!-- /.col-md-3 -->
+    <div class="col-md-9">
+
+      {% block action %}
+      <div class="list-panel">
+        <div class="list-group">
+
+          {% for group in settings_groups %}
+          <a href="{% url 'misago:admin:settings:group' group_key=group.key %}" class="list-group-item">
+            <h4 class="list-group-item-heading">{{ group.name }}</h4>
+            {% if group.description %}
+            <p class="list-group-item-text">{{ group.description }}</p>
+            {% endif %}
+          </a>
+          {% endfor %}
+
+        </div><!-- /.list-group -->
+      </div>
+      {% endblock action %}
+
+    </div><!-- /.col-md-9 -->
+  </div>
+</div>
+{% endblock content %}

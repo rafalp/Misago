@@ -1,0 +1,18 @@
+{% extends "misago/emails/base.txt" %}
+{% load i18n %}
+
+
+{% block content %}
+{% blocktrans trimmed with user=recipient %}
+{{ user }}, thank you for joining us!
+{% endblocktrans %}
+
+{% blocktrans trimmed %}
+You may now join discussion on our forums. Why not spend a minute or two to have a look around and share your opinions and knowledge with rest of community?
+{% endblocktrans %}
+
+{% blocktrans trimmed %}
+You can always sign in to your account using the form below:
+{% endblocktrans %}
+{{ SITE_ADDRESS }}{% url LOGIN_URL %}
+{% endblock content %}

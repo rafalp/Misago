@@ -1,0 +1,21 @@
+{% extends "misago/emails/base.html" %}
+{% load i18n misago_capture %}
+
+
+{% block content %}
+{% capture trimmed as thread_title %}
+<strong>{{ thread.title }}</strong>
+{% endcapture %}
+{% blocktrans trimmed with user=recipient.username sender=sender.username thread=thread_title %}
+{{ user }}, you are receiving this message because {{ sender }} has invited you to participate in private thread {{ thread }}.
+{% endblocktrans %}
+<br>
+<br>
+{% blocktrans trimmed %}
+To go to this thread click the link below:
+{% endblocktrans %}
+<br>
+<br>
+<a href="{{ SITE_ADDRESS }}{{ thread.get_absolute_url }}">{{ thread.title }}</a>
+<br>
+{% endblock content %}

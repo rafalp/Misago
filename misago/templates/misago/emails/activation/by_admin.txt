@@ -1,0 +1,14 @@
+{% extends "misago/emails/base.txt" %}
+{% load i18n %}
+
+
+{% block content %}
+{% blocktrans trimmed with user=recipient %}
+{{ user }}, your account has been activated by forum administrator.
+{% endblocktrans %}
+
+{% blocktrans trimmed %}
+You can now sign in to it using the form below:
+{% endblocktrans %}
+{{ SITE_ADDRESS }}{% url LOGIN_URL %}
+{% endblock content %}

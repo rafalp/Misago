@@ -1,0 +1,45 @@
+{% extends "misago/admin/generic/form.html" %}
+{% load crispy_forms_filters i18n %}
+
+
+{% block title %}
+{% blocktrans with forum=target.name %}
+Delete forum: {{forum}}
+{% endblocktrans %} | {{ active_link.name }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block page-target %}
+{% blocktrans with forum=target.name %}
+Delete forum: {{forum}}
+{% endblocktrans %}
+{% endblock page-target %}
+
+
+{% block form-header %}
+<h1>
+  {% blocktrans with forum=target.name %}
+  Delete forum: {{forum}}
+  {% endblocktrans %}
+</h1>
+{% endblock %}
+
+
+{% block form-body %}
+<div class="form-body">
+  <fieldset>
+    <legend>{% trans "Forum contents" %}</legend>
+
+    {% if not form.instance.is_leaf_node %}
+    {{ form.move_children_to|as_crispy_field }}
+    {% endif %}
+    {{ form.move_threads_to|as_crispy_field }}
+
+  </fieldset>
+</div>
+{% endblock form-body %}
+
+
+{% block form-footer %}
+<button class="btn btn-danger">{% trans "Delete forum" %}</button>
+{% endblock %}

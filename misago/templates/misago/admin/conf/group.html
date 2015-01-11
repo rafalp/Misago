@@ -1,0 +1,70 @@
+{% extends "misago/admin/conf/index.html" %}
+{% load i18n misago_forms %}
+
+
+{% block title %}{{ active_group.name }} | {{ block.super }}{% endblock %}
+
+
+{% block header %}
+  <div class="main">
+    <span class="fa fa-cogs">
+    <a href="{% url 'misago:admin:settings:index' %}">{% trans "Settings" %}</a>
+  </div>
+  <div class="sub">
+    <span class="fa fa-chevron-right"></span>
+    {{ active_group.name }}
+  </div>
+{% endblock header%}
+
+
+{% block action %}
+<div class="form-panel">
+  <form role="form" method="post" class="form-horizontal">
+    {% csrf_token %}
+
+    <div class="form-header">
+      <h1>{{ active_group.name }} </h1>
+      {% if active_group.description %}
+      <p>{{ active_group.description }}</p>
+      {% endif %}
+    </div>
+
+    {% with label_class="col-md-3" field_class="col-md-9" %}
+      {% if use_single_form_template %}
+      <div class="form-body no-fieldsets">
+        {% for field in fieldsets.0.form %}
+        {% form_row field label_class field_class %}
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="form-body">
+        {% for fieldset in fieldsets %}
+        <fieldset>
+          {% if fieldset.legend %}
+          <legend>{{ fieldset.legend }}</legend>
+          {% endif %}
+
+          {% for field in fieldset.form %}
+          {% form_row field label_class field_class %}
+          {% endfor %}
+
+        </fieldset>
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="form-footer">
+      <div class="row">
+        <div class="col-md-offset-3">
+
+          <button class="btn btn-primary">{% trans "Change settings" %}</button>
+          <a href="{% url 'misago:admin:settings:index' %}" class="btn btn-default">{% trans "Cancel" %}</a>
+
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>
+{% endblock action %}
