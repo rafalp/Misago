@@ -36,7 +36,10 @@ setup(
     ],
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
-    scripts=['misago/bin/misago-start.py'],
+    scripts=[
+        'misago/bin/misago-start.py',
+        'misago/bin/misago-makemessages.py',
+    ],
     entry_points={'console_scripts': [
         'misago-start = misago.core.setup:start_misago_project',
     ]},
