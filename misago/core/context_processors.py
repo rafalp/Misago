@@ -1,3 +1,12 @@
+from django.conf import settings
+
+
+def js_debug(request):
+    return {
+        'MISAGO_JS_DEBUG': settings.MISAGO_JS_DEBUG
+    }
+
+
 def site_address(request):
     if request.is_secure():
         site_protocol = 'https'

@@ -23,7 +23,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+
+MISAGO_JS_DEBUG = DEBUG
+
+# Hosts allowed to reach your site
 
 ALLOWED_HOSTS = []
 
@@ -105,14 +109,6 @@ MISAGO_SENDFILE_HEADER = ''
 # that points at /home/myweb/misagoforum/avatar_cache/, set this setting
 # to "mymisago".
 MISAGO_SENDFILE_LOCATIONS_PATH = ''
-
-
-# JS Application library definition
-# Don't edit this unless you really have to change Ember/Handlebars/jQuery
-if TEMPLATE_DEBUG:
-    PIPELINE_JS['misago_lib']['source_filenames'] = MISAGO_JS_LIB_DEV
-else:
-    PIPELINE_JS['misago_lib']['source_filenames'] = MISAGO_JS_LIB_PROD
 
 
 # Application definition

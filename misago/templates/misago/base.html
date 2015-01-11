@@ -12,7 +12,6 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    {% stylesheet 'misago_lib' %}
     {% stylesheet 'misago' %}
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{% static 'apple-touch-icon-144-precomposed.png' %}">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static 'apple-touch-icon-114-precomposed.png' %}">
@@ -32,7 +31,11 @@
 
     <section id="main"></section>
 
-    {% javascript "misago_lib" %}
+    {% if MISAGO_JS_DEBUG %}
+      {% javascript "misago_lib_debug" %}
+    {% else %}
+      {% javascript "misago_lib" %}
+    {% endif %}
     {% javascript "misago" %}
 
   </body>

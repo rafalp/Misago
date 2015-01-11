@@ -31,6 +31,10 @@ import os
 MISAGO_BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
+# Default JS debug to false
+MISAGO_JS_DEBUG = False
+
+
 # Assets Pipeline
 # See http://django-pipeline.readthedocs.org/en/latest/configuration.html
 PIPELINE_CSS = {
@@ -51,9 +55,21 @@ PIPELINE_CSS = {
 PIPELINE_JS = {
     'misago_lib': {
         'source_filenames': (
-            # leave this part empty, its overrided by deployment's settings.py
+            'misago/ember/jquery-1.11.1.min.js',
+            'misago/ember/handlebars.runtime-v2.0.0.js',
+            'misago/ember/ember.prod-1.9.1.js',
+            'misago/ember/ember-data.prod-1.0.0.b14.js',
         ),
         'output_filename': 'misago_lib.js',
+    },
+    'misago_lib_debug': {
+        'source_filenames': (
+            'misago/ember/jquery-1.11.1.min.js',
+            'misago/ember/handlebars-v2.0.0.js',
+            'misago/ember/ember-1.9.1.js',
+            'misago/ember/ember-data-1.0.0.b14.js',
+        ),
+        'output_filename': 'misago_lib_debug.js',
     },
     'misago': {
         'source_filenames': (
@@ -85,20 +101,6 @@ PIPELINE_JS = {
         'output_filename': 'misago_admin.js',
     },
 }
-
-MISAGO_JS_LIB_DEV = (
-    'misago/ember/jquery-1.11.1.min.js',
-    'misago/ember/handlebars-v2.0.0.js',
-    'misago/ember/ember-1.9.1.js',
-    'misago/ember/ember-data-1.0.0.b14.js',
-)
-
-MISAGO_JS_LIB_PROD = (
-    'misago/ember/jquery-1.11.1.min.js',
-    'misago/ember/handlebars.runtime-v2.0.0.js',
-    'misago/ember/ember.prod-1.9.1.js',
-    'misago/ember/ember-data.prod-1.0.0.b14.js',
-)
 
 PIPELINE_COMPILERS = (
     'pipeline.compilers.less.LessCompiler',
@@ -178,6 +180,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
+    'misago.core.context_processors.js_debug',
     'misago.core.context_processors.site_address',
     'misago.conf.context_processors.settings',
     'misago.users.context_processors.sites_links',
