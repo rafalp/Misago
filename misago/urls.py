@@ -34,3 +34,13 @@ if settings.MISAGO_ADMIN_PATH:
     urlpatterns += patterns('',
         url(admin_prefix, include(adminpatterns, namespace='admin')),
     )
+
+
+# Make error pages accessible casually in DEBUG
+if settings.DEBUG:
+    urlpatterns += patterns('misago.core.errorpages',
+        url(r'^403/$', 'permission_denied'),
+        url(r'^404/$', 'page_not_found'),
+        url(r'^405/$', 'not_allowed'),
+        url(r'^csrf-failure/$', 'csrf_failure'),
+    )

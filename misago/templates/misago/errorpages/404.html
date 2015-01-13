@@ -1,0 +1,24 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{% trans "Page not found" %} | {{ block.super }}{% endblock %}
+
+
+{% block meta_description %}{% trans "The link you clicked was incorrect or the page has been moved or deleted." %}{% endblock meta_description %}
+
+
+{% block content %}
+<div class="container">
+  <div class="error-page">
+
+    <div class="error-icon">
+      <span class="fa fa-compass"></span>
+    </div>
+
+    <p class="lead">{% trans "Requested page could not be found." %}</p>
+    <p>{% trans "The link you clicked was incorrect or the page has been moved or deleted." %}</p>
+
+  </div>
+</div>
+{% endblock content %}

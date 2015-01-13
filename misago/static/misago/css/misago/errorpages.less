@@ -1,0 +1,33 @@
+//
+// Error pages
+// --------------------------------------------------
+
+
+.error-page {
+  text-align: center;
+
+  .error-icon {
+    padding-bottom: @line-height-computed;
+    .opacity(0.5);
+
+    font-size: @font-size-large * 4;
+  }
+
+  .lead {
+    font-size: @font-size-large;
+    font-weight: bold;
+  }
+
+  /* Small devices (tablets, 768px and up) */
+  @media (min-width: @screen-sm-min) {
+    .error-icon {
+      .opacity(0.3);
+
+      font-size: @font-size-large * 5;
+    }
+
+    .lead {
+      font-size: @font-size-large * 1.2;
+    }
+  }
+}

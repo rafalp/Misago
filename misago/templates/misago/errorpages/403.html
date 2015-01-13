@@ -1,0 +1,27 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{% trans "Page not available" %} | {{ block.super }}{% endblock %}
+
+
+{% block meta_description %}{% if message %}{{ message }}{% else %}{% trans "You don't have permission to access this page." %}{% endif %}{% endblock meta_description %}
+
+
+{% block content %}
+<div class="container">
+  <div class="error-page">
+
+    <div class="error-icon">
+      <span class="fa fa-ban"></span>
+    </div>
+
+    {% if message %}
+    <p class="lead">{{ message|escape|urlize|linebreaksbr }}</p>
+    {% else %}
+    <p class="lead">{% trans "You don't have permission to access this page." %}</p>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock content %}
