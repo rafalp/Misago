@@ -36,6 +36,11 @@
     {% else %}
       {% javascript "misago_lib" %}
     {% endif %}
+
+    <script type="text/javascript">
+      {% include "misago/preload_data.js" %}
+    </script>
+
     {% javascript "misago" %}
 
   </body>
