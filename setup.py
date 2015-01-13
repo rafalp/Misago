@@ -38,7 +38,7 @@ setup(
     include_package_data=True,
     scripts=[
         'misago/bin/misago-start.py',
-        'misago/bin/misago-makemessages.py',
+        'misago/bin/misago-admin.py',
     ],
     entry_points={'console_scripts': [
         'misago-start = misago.core.setup:start_misago_project',
