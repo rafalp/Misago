@@ -4,25 +4,20 @@
 
     <div class="first-row">
 
-      <ul class="list-inline footer-nav">
-        <li>
-          <a href="{% url 'misago:terms_of_service' %}">{% trans "Terms of service" %}</a>
-        </li>
-        <li>
-          <a href="{% url 'misago:privacy_policy' %}">{% trans "Privacy policy" %}</a>
-        </li>
+      {% if misago_settings.terms_of_service or misago_settings.terms_of_service_link or misago_settings.privacy_policy or misago_settings.privacy_policy_link %}
+        <ul class="list-inline footer-nav">
         {% if misago_settings.terms_of_service or misago_settings.terms_of_service_link %}
-        <li>
-          <a href="{% url 'misago:terms_of_service' %}">{% trans "Terms of service" %}</a>
-        </li>
+          <li>
+            <a href="{% url 'misago:terms_of_service' %}">{% trans "Terms of service" %}</a>
+          </li>
         {% endif %}
-
         {% if misago_settings.privacy_policy or misago_settings.privacy_policy_link %}
-        <li>
-          <a href="{% url 'misago:privacy_policy' %}">{% trans "Privacy policy" %}</a>
-        </li>
+          <li>
+            <a href="{% url 'misago:privacy_policy' %}">{% trans "Privacy policy" %}</a>
+          </li>
         {% endif %}
-      </ul>
+        </ul>
+      {% endif %}
 
       <p class="noscript-message text-warning">
         <span class="fa fa-exclamation-triangle fa-lg"></span>
