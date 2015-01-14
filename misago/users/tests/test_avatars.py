@@ -1,4 +1,4 @@
-from path import path
+from path import Path
 from PIL import Image
 
 from django.contrib.auth import get_user_model
@@ -22,21 +22,21 @@ class AvatarsStoreTests(TestCase):
         # Assert that avatar was stored
         avatar_dir = store.get_existing_avatars_dir(test_user)
         for size in settings.MISAGO_AVATARS_SIZES:
-            avatar = path('%s/%s_%s.png' % (avatar_dir, test_user.pk, size))
+            avatar = Path('%s/%s_%s.png' % (avatar_dir, test_user.pk, size))
             self.assertTrue(avatar.exists())
             self.assertTrue(avatar.isfile())
 
         # Delete avatar and assert its gone
         store.delete_avatar(test_user)
         for size in settings.MISAGO_AVATARS_SIZES:
-            avatar = path('%s/%s_%s.png' % (avatar_dir, test_user.pk, size))
+            avatar = Path('%s/%s_%s.png' % (avatar_dir, test_user.pk, size))
             self.assertFalse(avatar.exists())
 
         # Override new avatar and test that it was changed
         store.store_avatar(test_user, test_image)
         store.store_new_avatar(test_user, test_image)
         for size in settings.MISAGO_AVATARS_SIZES:
-            avatar = path('%s/%s_%s.png' % (avatar_dir, test_user.pk, size))
+            avatar = Path('%s/%s_%s.png' % (avatar_dir, test_user.pk, size))
             self.assertTrue(avatar.exists())
             self.assertTrue(avatar.isfile())
 
@@ -57,13 +57,13 @@ class AvatarSetterTests(TestCase):
     def assertNoAvatarIsSet(self):
         avatar_dir = store.get_existing_avatars_dir(self.user)
         for size in settings.MISAGO_AVATARS_SIZES:
-            avatar = path('%s/%s_%s.png' % (avatar_dir, self.user.pk, size))
+            avatar = Path('%s/%s_%s.png' % (avatar_dir, self.user.pk, size))
             self.assertFalse(avatar.exists())
 
     def assertAvatarWasSet(self):
         avatar_dir = store.get_existing_avatars_dir(self.user)
         for size in settings.MISAGO_AVATARS_SIZES:
-            avatar = path('%s/%s_%s.png' % (avatar_dir, self.user.pk, size))
+            avatar = Path('%s/%s_%s.png' % (avatar_dir, self.user.pk, size))
             self.assertTrue(avatar.exists())
             self.assertTrue(avatar.isfile())
 

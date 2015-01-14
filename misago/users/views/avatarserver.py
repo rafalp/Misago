@@ -1,6 +1,6 @@
 import os
 
-from path import path
+from path import Path
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -27,7 +27,7 @@ def serve_user_avatar(request, user_id, size):
         avatar_file = get_user_avatar_file(user_id, size)
         avatar_path = os.path.join(avatar_dir, avatar_file)
 
-        if path(avatar_path).exists():
+        if Path(avatar_path).exists():
             avatar_path = os.path.join(avatar_dir, avatar_file)
             return make_file_response(avatar_path, 'image/png')
         else:

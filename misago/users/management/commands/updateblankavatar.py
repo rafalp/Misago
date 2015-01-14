@@ -1,6 +1,6 @@
 import os
 
-from path import path
+from path import Path
 from PIL import Image
 
 from django.conf import settings
@@ -13,7 +13,7 @@ class Command(BaseCommand):
     help = 'Updates stored blank avatar.'
 
     def handle(self, *args, **options):
-        avatars_dir = path(os.path.join(AVATARS_STORE, 'blank'))
+        avatars_dir = Path(os.path.join(AVATARS_STORE, 'blank'))
 
         # Empty existing blank avatar
         if avatars_dir.exists():
@@ -24,7 +24,7 @@ class Command(BaseCommand):
         image = Image.open(BLANK_AVATAR)
         for size in sorted(settings.MISAGO_AVATARS_SIZES, reverse=True):
             avatar_file = '%s.png' % size
-            avatar_file = path(os.path.join(avatars_dir, avatar_file))
+            avatar_file = Path(os.path.join(avatars_dir, avatar_file))
 
             image = image.resize((size, size), Image.ANTIALIAS)
             image.save(avatar_file, "PNG")

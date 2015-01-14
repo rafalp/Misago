@@ -9,7 +9,7 @@ django-mptt==0.6.1
 django-pipeline==1.4.2
 fake-factory==0.4.2
 markdown==2.4.1
-path.py==5.2
+path.py==7.0
 pillow==2.7.0
 psycopg2==2.5.4
 pytz

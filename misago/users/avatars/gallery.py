@@ -1,6 +1,6 @@
 import random
 
-from path import path
+from path import Path
 from PIL import Image
 
 from django.conf import settings
@@ -18,7 +18,7 @@ def get_available_galleries(include_default=False):
     """
     galleries = []
 
-    for directory in path(MEDIA_AVATARS).dirs():
+    for directory in Path(MEDIA_AVATARS).dirs():
         if include_default or directory[-8:] != '_default':
             gallery = {'name': directory.name, 'images': []}
 

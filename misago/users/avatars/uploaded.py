@@ -1,6 +1,6 @@
 from hashlib import sha256
 
-from path import path
+from path import Path
 from PIL import Image
 
 from django.core.exceptions import ValidationError
@@ -61,7 +61,7 @@ def validate_uploaded_file(uploaded_file):
         return validate_dimensions(uploaded_file)
     except ValidationError as e:
         try:
-            temporary_file_path = path(uploaded_file.temporary_file_path())
+            temporary_file_path = Path(uploaded_file.temporary_file_path())
             if temporary_file_path.exists():
                 temporary_file_path.remove()
         except Exception:

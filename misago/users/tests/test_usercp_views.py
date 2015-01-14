@@ -1,4 +1,4 @@
-from path import path
+from path import Path
 
 from django.contrib.auth import get_user_model
 from django.core import mail
@@ -129,7 +129,7 @@ class AvatarUploadTests(AuthenticatedUserTestCase):
             self.assertEqual(response.status_code, 200)
 
             avatar_dir = store.get_existing_avatars_dir(self.user)
-            avatar = path('%s/%s_tmp.png' % (avatar_dir, self.user.pk))
+            avatar = Path('%s/%s_tmp.png' % (avatar_dir, self.user.pk))
             self.assertTrue(avatar.exists())
             self.assertTrue(avatar.isfile())
 
@@ -152,10 +152,10 @@ class AvatarUploadTests(AuthenticatedUserTestCase):
             self.assertEqual(response.status_code, 302)
 
             avatar_dir = store.get_existing_avatars_dir(self.user)
-            avatar = path('%s/%s_tmp.png' % (avatar_dir, self.user.pk))
+            avatar = Path('%s/%s_tmp.png' % (avatar_dir, self.user.pk))
             self.assertFalse(avatar.exists())
 
-            avatar = path('%s/%s_org.png' % (avatar_dir, self.user.pk))
+            avatar = Path('%s/%s_org.png' % (avatar_dir, self.user.pk))
             self.assertTrue(avatar.exists())
             self.assertTrue(avatar.isfile())
 

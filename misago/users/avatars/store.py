@@ -1,7 +1,7 @@
 from hashlib import md5
 import os
 
-from path import path
+from path import Path
 from PIL import Image
 
 from misago.conf import settings
@@ -21,7 +21,7 @@ def store_avatar(user, image):
     normalize_image(image)
     for size in sorted(settings.MISAGO_AVATARS_SIZES, reverse=True):
         avatar_file = '%s_%s.png' % (user.pk, size)
-        avatar_file = path(os.path.join(avatars_dir, avatar_file))
+        avatar_file = Path(os.path.join(avatars_dir, avatar_file))
 
         image = image.resize((size, size), Image.ANTIALIAS)
         image.save(avatar_file, "PNG")
@@ -33,7 +33,7 @@ def delete_avatar(user):
 
     for size in suffixes_to_delete:
         avatar_file = '%s_%s.png' % (user.pk, size)
-        avatar_file = path(os.path.join(avatars_dir, avatar_file))
+        avatar_file = Path(os.path.join(avatars_dir, avatar_file))
         if avatar_file.exists():
             avatar_file.remove()
 
@@ -56,7 +56,7 @@ def store_original_avatar(user):
 def avatar_file_path(user, size):
     avatars_dir = get_existing_avatars_dir(user)
     avatar_file = '%s_%s.png' % (user.pk, size)
-    return path(os.path.join(avatars_dir, avatar_file))
+    return Path(os.path.join(avatars_dir, avatar_file))
 
 
 def avatar_file_exists(user, size):
@@ -80,9 +80,9 @@ def get_avatars_dir_path(user=None):
 
         dir_hash = md5(str(user_id)).hexdigest()
         hash_path = [dir_hash[0:1], dir_hash[2:3]]
-        return path(os.path.join(AVATARS_STORE, *hash_path))
+        return Path(os.path.join(AVATARS_STORE, *hash_path))
     else:
-        return path(os.path.join(AVATARS_STORE, 'blank'))
+        return Path(os.path.join(AVATARS_STORE, 'blank'))
 
 
 def get_existing_avatars_dir(user=None):
