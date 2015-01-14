@@ -27,13 +27,22 @@ class DBSettings(object):
                 data[setting.setting] = {
                     'value': True if setting.value else None,
                     'is_lazy': setting.is_lazy,
+                    'is_public': setting.is_public,
                 }
             else:
                 data[setting.setting] = {
                     'value': setting.value,
                     'is_lazy': setting.is_lazy,
+                    'is_public': setting.is_public,
                 }
         return data
+
+    def get_public_settings(self):
+        public_settings = {}
+        for name, setting in self._settings.items():
+            if setting['is_public']:
+                public_settings[name] = setting['value']
+        return public_settings
 
     def get_lazy_setting(self, setting):
         from misago.conf.models import Setting

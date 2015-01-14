@@ -102,8 +102,17 @@ Takes form field as its first argument and renders field complete with label, he
 Takes form field as its only argument and renders it's input.
 
 
+misago_json
+============
+
+``as_json`` filter
+------------------
+
+Turns value into json string.
+
+
 misago_shorthands
-==============
+=================
 
 ``iftrue`` filter
 -----------------

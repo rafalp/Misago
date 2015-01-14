@@ -238,3 +238,18 @@ class ShorthandsTests(TestCase):
             'result': 'Ok!',
             'value': False
         })).strip(), 'Ok!')
+
+
+class JSONTests(TestCase):
+    def test_iftrue_for_true(self):
+        """iftrue renders value for true"""
+        tpl_content = """
+{% load misago_json %}
+
+{{ value|as_json }}
+"""
+
+        tpl = Template(tpl_content)
+        self.assertEqual(tpl.render(Context({
+            'value': {'he<llo': 'bo"b!'}
+        })).strip(), '{"he<llo": "bo\\"b!"}')

@@ -27,6 +27,7 @@ def create_threads_settings_group(apps, schema_editor):
                         'min_value': 2,
                         'max_value': 255,
                     },
+                    'is_public': True,
                 },
                 {
                     'setting': 'thread_title_length_max',
@@ -38,6 +39,7 @@ def create_threads_settings_group(apps, schema_editor):
                         'min_value': 2,
                         'max_value': 255,
                     },
+                    'is_public': True,
                 },
                 {
                     'setting': 'post_length_min',

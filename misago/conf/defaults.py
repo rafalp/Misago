@@ -75,9 +75,11 @@ PIPELINE_JS = {
     },
     'misago': {
         'source_filenames': (
-            'misago/js/templates/*.hbs',
             'misago/js/application.js',
             'misago/js/router.js',
+            'misago/js/controllers/*.js',
+            'misago/js/views/*.js',
+            'misago/js/templates/*.hbs',
         ),
         'output_filename': 'misago.js',
     },

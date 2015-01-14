@@ -27,6 +27,7 @@ def create_legal_settings_group(apps, schema_editor):
                         'max_length': 255,
                         'required': False,
                     },
+                    'is_public': True,
                 },
                 {
                     'setting': 'terms_of_service_link',
@@ -38,6 +39,7 @@ def create_legal_settings_group(apps, schema_editor):
                         'max_length': 255,
                         'required': False,
                     },
+                    'is_public': True,
                 },
                 {
                     'setting': 'terms_of_service',
@@ -53,6 +55,7 @@ def create_legal_settings_group(apps, schema_editor):
                         'required': False,
                         'rows': 8,
                     },
+                    'is_public': True,
                     'is_lazy': True,
                 },
                 {
@@ -66,6 +69,7 @@ def create_legal_settings_group(apps, schema_editor):
                         'max_length': 255,
                         'required': False,
                     },
+                    'is_public': True,
                 },
                 {
                     'setting': 'privacy_policy_link',
@@ -77,6 +81,7 @@ def create_legal_settings_group(apps, schema_editor):
                         'max_length': 255,
                         'required': False,
                     },
+                    'is_public': True,
                 },
                 {
                     'setting': 'privacy_policy',
@@ -92,6 +97,7 @@ def create_legal_settings_group(apps, schema_editor):
                         'required': False,
                         'rows': 8,
                     },
+                    'is_public': True,
                     'is_lazy': True,
                 },
             )

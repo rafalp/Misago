@@ -25,6 +25,7 @@ def create_basic_settings_group(apps, schema_editor):
                         'min_length': 2,
                         'max_length': 255
                     },
+                    'is_public': True,
                 },
                 {
                     'setting': 'forum_index_title',
@@ -35,6 +36,7 @@ def create_basic_settings_group(apps, schema_editor):
                     'field_extra': {
                         'max_length': 255
                     },
+                    'is_public': True,
                 },
                 {
                     'setting': 'forum_index_meta_description',

@@ -53,6 +53,7 @@ class Setting(models.Model):
     dry_value = models.TextField(null=True, blank=True)
     default_value = models.TextField(null=True, blank=True)
     python_type = models.CharField(max_length=255, default='string')
+    is_public = models.BooleanField(default=False)
     is_lazy = models.BooleanField(default=False)
     form_field = models.CharField(max_length=255, default='text')
     pickled_field_extra = models.TextField(null=True, blank=True)

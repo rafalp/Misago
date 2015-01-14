@@ -30,6 +30,7 @@ def create_users_settings_group(apps, schema_editor):
                             ('disabled', _("Don't allow new registrations"))
                         )
                     },
+                    'is_public': True,
                 },
                 {
                     'setting': 'default_timezone',
