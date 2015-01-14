@@ -115,15 +115,17 @@ class Command(BaseCommand):
         locales = options.get('locale')
         self.domain = options.get('domain')
 
-        tmp_js_files = []
+        subdirs = [unicode(d.basename()) for d in Path(os.getcwd()).dirs()]
+        use_subroutines = 'locale' in subdirs and self.domain == 'djangojs'
 
-        if self.domain == 'djangojs':
+        tmp_js_files = []
+        if use_subroutines:
             # fake js files from templates
             tmp_js_files = self.prepare_tmp_js_files();
 
         super(Command, self).handle(*args, **options)
 
-        if self.domain == 'djangojs':
+        if use_subroutines:
             # cleanup everything
             self.cleanup_tmp_js_templates(tmp_js_files);
             self.cleanup_po_files(locales, tmp_js_files);
