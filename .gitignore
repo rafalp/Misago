@@ -70,4 +70,5 @@ dev/
 dev-manage.py
 futuredep/
 future-manage.py
+misago-admin.py
 db.sqlite3
