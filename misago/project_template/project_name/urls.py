@@ -9,8 +9,13 @@ admin.site.login_form = AdminAuthenticationForm
 
 urlpatterns = patterns('',
     url(r'^', include('misago.urls', namespace='misago')),
+
+    # Javascript translations
+    url(r'^django-i18n.js$', 'misago.core.views.javascript_catalog', name="javascript_catalog"),
+
     # Uncomment next line if you plan to use Django admin for 3rd party apps
     #url(r'^django-admin/', include(admin.site.urls)),
+
     # Uncomment next line if you plan to use browseable API
     #url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 )

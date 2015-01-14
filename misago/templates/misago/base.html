@@ -31,6 +31,8 @@
 
     <section id="main"></section>
 
+    <script type="text/javascript" src="{% url 'javascript_catalog' %}"></script>
+
     {% if MISAGO_JS_DEBUG %}
       {% javascript "misago_lib_debug" %}
     {% else %}

@@ -2,6 +2,7 @@ window.Misago = Ember.Application.create({
   rootElement: '#main'
 });
 
+
 Ember.Application.initializer({
   name: 'misago-conf',
 
