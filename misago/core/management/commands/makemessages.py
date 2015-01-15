@@ -68,18 +68,25 @@ class HandlebarsTemplate(object):
 
             expression_bits = [b for b in smart_split(trimmed_expression)]
             function = expression_bits[0]
-            args = expression_bits[1:HELPERS[function] + 1]
-            return '%s(%s);' % (function, ', '.join(args))
+
+            args_count = HELPERS[function] + 1
+            if len(expression_bits) >= args_count:
+                args = expression_bits[1:HELPERS[function] + 1]
+                return '%s(%s);' % (function, ', '.join(args))
+            else:
+                return ''
+
         return HBS_EXPRESSION.sub(replace_expression, content)
 
 
-class HandlebasFile(object):
-    def __init__(self, hbs_path):
+class HandlebarsFile(object):
+    def __init__(self, hbs_path, make_js_file=True):
         self.hbs_path = hbs_path
         self.path_suffix = self.make_js_path_suffix(hbs_path)
         self.js_path = self.make_js_path(hbs_path, self.path_suffix)
 
-        self.make_js_file(self.hbs_path, self.js_path)
+        if make_js_file:
+            self.make_js_file(self.hbs_path, self.js_path)
 
     def make_js_path_suffix(self, hbs_path):
         return '%s.tmp.js' % md5(hbs_path).hexdigest()[:8]
@@ -133,7 +140,7 @@ class Command(BaseCommand):
     def prepare_tmp_js_files(self):
         files = []
         for hbs_file in Path(os.getcwd()).walkfiles('*.hbs'):
-            files.append(HandlebasFile(hbs_file))
+            files.append(HandlebarsFile(hbs_file))
         return files
 
     def cleanup_po_files(self, locales, tmp_js_files):

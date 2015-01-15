@@ -18,6 +18,7 @@ Ember.Handlebars.registerBoundHelper('gettext', function(msgid, options) {
 });
 
 Ember.Handlebars.registerBoundHelper('ngettext', function(singular, plural, count, options) {
+  options.hash['count'] = count
   return interpolate(ngettext(singular, plural, count), options.hash, true);
 });
 
