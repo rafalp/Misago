@@ -175,3 +175,10 @@ class HandlebarsTemplateTests(TestCase):
                                          {{gettext user.rank.title}}""")
         self.assertEqual(template.get_converted_content(),
                          "gettext('Posted by:');\ngettext(user.rank.title);")
+
+        template = HandlebarsTemplate("""<h1>{{ thread.title }}</h1>
+            {{gettext 'Posted by:'}}<br>
+
+            {{gettext user.rank.title}}""")
+        self.assertEqual(template.get_converted_content(),
+                         "\ngettext('Posted by:');\n\ngettext(user.rank.title);")
