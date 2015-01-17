@@ -9,19 +9,91 @@ from django.core.management.commands.makemessages import Command as BaseCommand
 from django.utils.text import smart_split
 
 
+I18N_HELPERS = {
+    # helper: min valid expression len
+    'gettext': 2,
+    'ngettext': 4,
+    'gettext_noop': 2,
+    'pgettext': 3,
+    'npgettext': 5
+}
+
+HBS_HELPERS = ('unbound', 'if')
 HBS_EXPRESSION = re.compile(r'({{{(.*?)}}})|({{(.*?)}})')
 
-HELPERS = {
-    'gettext': 1,
-    'ngettext': 3,
-    'gettext_noop': 1,
-    'pgettext': 2,
-    'npgettext': 4
-}
+
+class HandlebarsExpression(object):
+    def __init__(self, unparsed_expression):
+        cleaned_expression = self.clean_expression(unparsed_expression)
+        all_helpers = self.parse_expression(
+            unparsed_expression, cleaned_expression)
+
+        self.i18n_helpers = self.clean_helpers(all_helpers)
+
+    def get_i18n_helpers(self):
+        return self.i18n_helpers
+
+    def clean_expression(self, unparsed):
+        cleaned = u''
+
+        for piece in smart_split(unparsed):
+            if not cleaned and piece in HBS_HELPERS:
+                continue
+            if not piece.startswith('=') and not cleaned.endswith('='):
+                cleaned += ' '
+            cleaned += piece
+
+        return cleaned.strip()
+
+    def parse_expression(self, unparsed, cleaned):
+        helper = []
+        helpers = [helper]
+        stack = [helper]
+
+        for piece in smart_split(cleaned):
+            if piece.endswith(')'):
+                stack[-1].append(piece.rstrip(')').strip())
+                while piece.endswith(')'):
+                    piece = piece[:-1].strip()
+                    stack.pop()
+                continue
+
+            if not piece.startswith(('\'', '"')):
+                if piece.startswith('('):
+                    piece = piece[1:].strip()
+                    if piece.startswith('('):
+                        continue
+                    else:
+                        helper = [piece]
+                        helpers.append(helper)
+                        stack.append(helper)
+                else:
+                    is_kwarg = re.match(r'^[_a-zA-Z]+([_a-zA-Z0-9]+?)=', piece)
+                    if is_kwarg and not piece.endswith('='):
+                        piece = piece[len(is_kwarg.group(0)):]
+                        if piece.startswith('('):
+                            helper = [piece[1:].strip()]
+                            helpers.append(helper)
+                            stack.append(helper)
+                    else:
+                        stack[-1].append(piece)
+            else:
+                stack[-1].append(piece)
+
+        return helpers
+
+    def clean_helpers(self, all_helpers):
+        i18n_helpers = []
+        for helper in all_helpers:
+            i18n_helper_len = I18N_HELPERS.get(helper[0])
+            if i18n_helper_len and len(helper) >= i18n_helper_len:
+                i18n_helpers.append(helper[:i18n_helper_len])
+        return i18n_helpers
 
 
 class HandlebarsTemplate(object):
     def __init__(self, content):
+        self.expressions = {}
         self.content = content
 
     def get_converted_content(self):
@@ -33,13 +105,15 @@ class HandlebarsTemplate(object):
     def strip_expressions(self, content):
         def replace_expression(matchobj):
             trimmed_expression = matchobj.group(0).lstrip('{').rstrip('}')
-            trimmed_expression = trimmed_expression.strip()
+            parsed_expression = HandlebarsExpression(trimmed_expression)
 
-            expression_words = trimmed_expression.split()
-            if expression_words[0] in HELPERS:
+            expression_i18n_helpers = parsed_expression.get_i18n_helpers()
+
+            if expression_i18n_helpers:
+                self.expressions[matchobj.group(0)] = expression_i18n_helpers
                 return matchobj.group(0)
             else:
-                return ' ' * len(matchobj.group(0))
+                return ''
 
         return HBS_EXPRESSION.sub(replace_expression, self.content)
 
@@ -63,18 +137,11 @@ class HandlebarsTemplate(object):
 
     def replace_expressions(self, content):
         def replace_expression(matchobj):
-            trimmed_expression = matchobj.group(0).lstrip('{').rstrip('}')
-            trimmed_expression = trimmed_expression.strip()
-
-            expression_bits = [b for b in smart_split(trimmed_expression)]
-            function = expression_bits[0]
-
-            args_count = HELPERS[function] + 1
-            if len(expression_bits) >= args_count:
-                args = expression_bits[1:HELPERS[function] + 1]
-                return '%s(%s);' % (function, ', '.join(args))
-            else:
-                return ''
+            js_functions = []
+            for helper in self.expressions.get(matchobj.group(0)):
+                function, args = helper[0], helper[1:]
+                js_functions.append('%s(%s);' % (function, ', '.join(args)))
+            return ' '.join(js_functions)
 
         return HBS_EXPRESSION.sub(replace_expression, content)
 
@@ -89,7 +156,7 @@ class HandlebarsFile(object):
             self.make_js_file(self.hbs_path, self.js_path)
 
     def make_js_path_suffix(self, hbs_path):
-        return '%s.tmp.js' % md5(hbs_path).hexdigest()[:8]
+        return '%s.makemessages.js' % md5(hbs_path).hexdigest()[:8]
 
     def make_js_path(self, hbs_path, path_suffix):
         return Path('%s.%s' % (unicode(hbs_path), path_suffix))

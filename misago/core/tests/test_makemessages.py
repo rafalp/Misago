@@ -1,21 +1,34 @@
 from django.test import TestCase
 
-from misago.core.management.commands.makemessages import (HandlebarsTemplate,
-                                                          HandlebarsFile)
+from misago.core.management.commands.makemessages import (
+    HandlebarsExpression, HandlebarsTemplate, HandlebarsFile)
 
 
-class HandlebarsFileTests(TestCase):
-    def test_make_js_path(self):
-        """Object correctly translates hbs path to temp js path"""
-        hbs_path = "templates/application.hbs"
-        test_file = HandlebarsFile(hbs_path, False)
+class HandlebarsExpressionTests(TestCase):
+    def test_get_i18n_helpers(self):
+        """expression parser finds i18n helpers"""
+        expression = HandlebarsExpression("some.expression")
+        self.assertFalse(expression.get_i18n_helpers())
 
-        suffix = test_file.make_js_path_suffix(hbs_path)
-        self.assertTrue(suffix.endswith(".tmp.js"))
+        expression = HandlebarsExpression("bind-attr src=user.avatar")
+        self.assertFalse(expression.get_i18n_helpers())
 
-        js_path = test_file.make_js_path(hbs_path, suffix)
-        self.assertTrue(js_path.startswith(hbs_path))
-        self.assertTrue(js_path.endswith(suffix))
+        expression = HandlebarsExpression("gettext 'misiek'")
+        self.assertTrue(expression.get_i18n_helpers())
+
+        expression = HandlebarsExpression("gettext '%(user)s has %(trait)s' user=user.username trait=(gettext user.trait)")
+        helpers = expression.get_i18n_helpers()
+        self.assertEqual(len(helpers), 2)
+        self.assertEqual(helpers[0], ['gettext', "'%(user)s has %(trait)s'"])
+        self.assertEqual(helpers[1], ['gettext', "user.trait"])
+
+        expression = HandlebarsExpression('gettext "%(param)s!" param = (gettext "nested once" param = (gettext "nested twice")) otherparam= (gettext "nested once again")')
+        helpers = expression.get_i18n_helpers()
+        self.assertEqual(len(helpers), 4)
+        self.assertEqual(helpers[0], ['gettext', '"%(param)s!"'])
+        self.assertEqual(helpers[1], ['gettext', '"nested once"'])
+        self.assertEqual(helpers[2], ['gettext', '"nested twice"'])
+        self.assertEqual(helpers[3], ['gettext', '"nested once again"'])
 
 
 class HandlebarsTemplateTests(TestCase):
@@ -57,113 +70,154 @@ class HandlebarsTemplateTests(TestCase):
 
     def test_valid_expression_replace(self):
         """valid i18n expressions are replaced"""
-        template = HandlebarsTemplate("{{gettext 'Lorem ipsum'}}")
-        self.assertEqual(template.get_converted_content(),
-                         "gettext('Lorem ipsum');")
+        VALID_CASES = (
+            '%s',
+            'unbound %s',
+            'something (%s)',
+            'unbound something (%s)',
+            'if condition (%s)',
+            'something "lorem ipsum" some.var kwarg=(%s) otherkwarg=(helper something)'
+        )
 
-        template = HandlebarsTemplate("{{gettext 'Lorem %(vis)s' vis=name}}")
-        self.assertEqual(template.get_converted_content(),
-                         "gettext('Lorem %(vis)s');")
+        for case in VALID_CASES:
+            self.subtest("{{%s}}" % case)
+            self.subtest("{{ %s }}" % case)
+            self.subtest("{{{%s}}}" % case)
+            self.subtest("{{{ %s }}}" % case)
 
-        template = HandlebarsTemplate("{{gettext some_variable}}")
-        self.assertEqual(template.get_converted_content(),
-                         "gettext(some_variable);")
+    def subtest(self, case_template):
+        CASES = (
+            (
+                "gettext 'Lorem ipsum'",
+                "gettext('Lorem ipsum');"
+            ),
+            (
+                "gettext 'Lorem %(vis)s' vis=name",
+                "gettext('Lorem %(vis)s');"
+            ),
+            (
+                "gettext 'Lorem %(vis)s' vis=(gettext user.vis)",
+                "gettext('Lorem %(vis)s'); gettext(user.vis);"
+            ),
+            (
+                "gettext some_variable",
+                "gettext(some_variable);"
+            ),
+            (
+                "gettext 'Lorem ipsum'",
+                "gettext('Lorem ipsum');"
+            ),
+            (
+                "gettext 'Lorem %(vis)s' vis=name",
+                "gettext('Lorem %(vis)s');"
+            ),
+            (
+                "gettext some_variable",
+                "gettext(some_variable);"
+            ),
+            (
+                "gettext some_variable user=user.username",
+                "gettext(some_variable);"
+            ),
+            (
+                "ngettext '%(count)s apple' '%(count)s apples' apples_count",
+                "ngettext('%(count)s apple', '%(count)s apples', apples_count);"
+            ),
+            (
+                "ngettext '%(user)s has %(count)s apple' '%(user)s has %(count)s apples' apples_count user=user.username",
+                "ngettext('%(user)s has %(count)s apple', '%(user)s has %(count)s apples', apples_count);"
+            ),
+            (
+                "ngettext apple apples apples_count",
+                "ngettext(apple, apples, apples_count);"
+            ),
+            (
+                "ngettext '%(count)s apple' apples apples_count",
+                "ngettext('%(count)s apple', apples, apples_count);"
+            ),
+            (
+                "ngettext '%(user)s has %(count)s apple' apples apples_count user=user.username",
+                "ngettext('%(user)s has %(count)s apple', apples, apples_count);"
+            ),
+            (
+                "gettext_noop 'Lorem ipsum'",
+                "gettext_noop('Lorem ipsum');"
+            ),
+            (
+                "gettext_noop 'Lorem %(vis)s' vis=name",
+                "gettext_noop('Lorem %(vis)s');"
+            ),
+            (
+                "gettext_noop some_variable",
+                "gettext_noop(some_variable);"
+            ),
+            (
+                "gettext_noop 'Lorem ipsum'",
+                "gettext_noop('Lorem ipsum');"
+            ),
+            (
+                "gettext_noop 'Lorem %(vis)s' vis=name",
+                "gettext_noop('Lorem %(vis)s');"
+            ),
+            (
+                "gettext_noop some_variable",
+                "gettext_noop(some_variable);"
+            ),
+            (
+                "pgettext 'month' 'may'",
+                "pgettext('month', 'may');"
+            ),
+            (
+                "pgettext 'month' month_name",
+                "pgettext('month', month_name);"
+            ),
+            (
+                "pgettext 'day of month' 'May, %(day)s' day=calendar.day",
+                "pgettext('day of month', 'May, %(day)s');"
+            ),
+            (
+                "pgettext context value day=calendar.day",
+                "pgettext(context, value);"
+            ),
+            (
+                "npgettext 'fruits' '%(count)s apple' '%(count)s apples' apples_count",
+                "npgettext('fruits', '%(count)s apple', '%(count)s apples', apples_count);"
+            ),
+            (
+                "npgettext 'fruits' '%(user)s has %(count)s apple' '%(user)s has %(count)s apples' apples_count user=user.username",
+                "npgettext('fruits', '%(user)s has %(count)s apple', '%(user)s has %(count)s apples', apples_count);"
+            ),
+            (
+                "npgettext context apple apples apples_count",
+                "npgettext(context, apple, apples, apples_count);"
+            ),
+            (
+                "npgettext context '%(count)s apple' apples apples_count",
+                "npgettext(context, '%(count)s apple', apples, apples_count);"
+            ),
+            (
+                "npgettext 'fruits' '%(user)s has %(count)s apple' apples apples_count user=user.username",
+                "npgettext('fruits', '%(user)s has %(count)s apple', apples, apples_count);"
+            ),
+        )
 
-        template = HandlebarsTemplate("{{gettext 'Lorem ipsum'}}")
-        self.assertEqual(template.get_converted_content(),
-                         "gettext('Lorem ipsum');")
+        assertion_msg = """
+HBS template was parsed incorrectly:
 
-        template = HandlebarsTemplate("{{gettext 'Lorem %(vis)s' vis=name}}")
-        self.assertEqual(template.get_converted_content(),
-                         "gettext('Lorem %(vis)s');")
+input:      %s
+output:     %s
+expected:   %s
+"""
 
-        template = HandlebarsTemplate("{{gettext some_variable}}")
-        self.assertEqual(template.get_converted_content(),
-                         "gettext(some_variable);")
+        for test, expected_output in CASES:
+            test_input = case_template % test
 
-        template = HandlebarsTemplate("{{gettext some_variable user=user.username}}")
-        self.assertEqual(template.get_converted_content(),
-                         "gettext(some_variable);")
+            template = HandlebarsTemplate(case_template % test)
+            test_output = template.get_converted_content()
 
-        template = HandlebarsTemplate("{{ngettext '%(count)s apple' '%(count)s apples' apples_count}}")
-        self.assertEqual(template.get_converted_content(),
-                         "ngettext('%(count)s apple', '%(count)s apples', apples_count);")
-
-        template = HandlebarsTemplate("{{ngettext '%(user)s has %(count)s apple' '%(user)s has %(count)s apples' apples_count user=user.username}}")
-        self.assertEqual(template.get_converted_content(),
-                         "ngettext('%(user)s has %(count)s apple', '%(user)s has %(count)s apples', apples_count);")
-
-        template = HandlebarsTemplate("{{ngettext apple apples apples_count}}")
-        self.assertEqual(template.get_converted_content(),
-                         "ngettext(apple, apples, apples_count);")
-
-        template = HandlebarsTemplate("{{ngettext '%(count)s apple' apples apples_count}}")
-        self.assertEqual(template.get_converted_content(),
-                         "ngettext('%(count)s apple', apples, apples_count);")
-
-        template = HandlebarsTemplate("{{ngettext '%(user)s has %(count)s apple' apples apples_count user=user.username}}")
-        self.assertEqual(template.get_converted_content(),
-                         "ngettext('%(user)s has %(count)s apple', apples, apples_count);")
-
-        template = HandlebarsTemplate("{{gettext_noop 'Lorem ipsum'}}")
-        self.assertEqual(template.get_converted_content(),
-                         "gettext_noop('Lorem ipsum');")
-
-        template = HandlebarsTemplate("{{gettext_noop 'Lorem %(vis)s' vis=name}}")
-        self.assertEqual(template.get_converted_content(),
-                         "gettext_noop('Lorem %(vis)s');")
-
-        template = HandlebarsTemplate("{{gettext_noop some_variable}}")
-        self.assertEqual(template.get_converted_content(),
-                         "gettext_noop(some_variable);")
-
-        template = HandlebarsTemplate("{{gettext_noop 'Lorem ipsum'}}")
-        self.assertEqual(template.get_converted_content(),
-                         "gettext_noop('Lorem ipsum');")
-
-        template = HandlebarsTemplate("{{gettext_noop 'Lorem %(vis)s' vis=name}}")
-        self.assertEqual(template.get_converted_content(),
-                         "gettext_noop('Lorem %(vis)s');")
-
-        template = HandlebarsTemplate("{{gettext_noop some_variable}}")
-        self.assertEqual(template.get_converted_content(),
-                         "gettext_noop(some_variable);")
-
-        template = HandlebarsTemplate("{{pgettext 'month' 'may'}}")
-        self.assertEqual(template.get_converted_content(),
-                         "pgettext('month', 'may');")
-
-        template = HandlebarsTemplate("{{pgettext 'month' month_name}}")
-        self.assertEqual(template.get_converted_content(),
-                         "pgettext('month', month_name);")
-
-        template = HandlebarsTemplate("{{pgettext 'day of month' 'May, %(day)s' day=calendar.day}}")
-        self.assertEqual(template.get_converted_content(),
-                         "pgettext('day of month', 'May, %(day)s');")
-
-        template = HandlebarsTemplate("{{pgettext context value day=calendar.day}}")
-        self.assertEqual(template.get_converted_content(),
-                         "pgettext(context, value);")
-
-        template = HandlebarsTemplate("{{npgettext 'fruits' '%(count)s apple' '%(count)s apples' apples_count}}")
-        self.assertEqual(template.get_converted_content(),
-                         "npgettext('fruits', '%(count)s apple', '%(count)s apples', apples_count);")
-
-        template = HandlebarsTemplate("{{npgettext 'fruits' '%(user)s has %(count)s apple' '%(user)s has %(count)s apples' apples_count user=user.username}}")
-        self.assertEqual(template.get_converted_content(),
-                         "npgettext('fruits', '%(user)s has %(count)s apple', '%(user)s has %(count)s apples', apples_count);")
-
-        template = HandlebarsTemplate("{{npgettext context apple apples apples_count}}")
-        self.assertEqual(template.get_converted_content(),
-                         "npgettext(context, apple, apples, apples_count);")
-
-        template = HandlebarsTemplate("{{npgettext context '%(count)s apple' apples apples_count}}")
-        self.assertEqual(template.get_converted_content(),
-                         "npgettext(context, '%(count)s apple', apples, apples_count);")
-
-        template = HandlebarsTemplate("{{npgettext 'fruits' '%(user)s has %(count)s apple' apples apples_count user=user.username}}")
-        self.assertEqual(template.get_converted_content(),
-                         "npgettext('fruits', '%(user)s has %(count)s apple', apples, apples_count);")
+            self.assertEqual(
+                test_output, expected_output,
+                assertion_msg % (test_input, test_output, expected_output))
 
     def test_multiple_expressions(self):
         """multiple expressions are handled"""
@@ -182,3 +236,17 @@ class HandlebarsTemplateTests(TestCase):
             {{gettext user.rank.title}}""")
         self.assertEqual(template.get_converted_content(),
                          "\ngettext('Posted by:');\n\ngettext(user.rank.title);")
+
+
+class HandlebarsFileTests(TestCase):
+    def test_make_js_path(self):
+        """Object correctly translates hbs path to temp js path"""
+        hbs_path = "templates/application.hbs"
+        test_file = HandlebarsFile(hbs_path, False)
+
+        suffix = test_file.make_js_path_suffix(hbs_path)
+        self.assertTrue(suffix.endswith(".makemessages.js"))
+
+        js_path = test_file.make_js_path(hbs_path, suffix)
+        self.assertTrue(js_path.startswith(hbs_path))
+        self.assertTrue(js_path.endswith(suffix))
