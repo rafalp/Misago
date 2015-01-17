@@ -57,8 +57,8 @@ PIPELINE_JS = {
         'source_filenames': (
             'misago/ember/jquery-1.11.1.min.js',
             'misago/ember/handlebars.runtime-v2.0.0.js',
-            'misago/ember/ember.prod-1.9.1.js',
-            'misago/ember/ember-data.prod-1.0.0.b14.js',
+            'misago/ember/ember.prod-1.10.b4.js',
+            'misago/ember/ember-data-1.0.0.b14.js',
             'misago/app/preloadstore.js',
             'misago/app/django-i18n.js',
         ),
@@ -68,8 +68,8 @@ PIPELINE_JS = {
         'source_filenames': (
             'misago/ember/jquery-1.11.1.min.js',
             'misago/ember/handlebars-v2.0.0.js',
-            'misago/ember/ember-1.9.1.js',
-            'misago/ember/ember-data-1.0.0.b14.js',
+            'misago/ember/ember-1.10.b4.js',
+            'misago/ember/ember-data.prod-1.0.0.b14.js',
             'misago/app/preloadstore.js',
             'misago/app/django-i18n.js',
         ),

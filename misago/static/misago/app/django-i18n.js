@@ -9,35 +9,70 @@ npgettext = function (context, singular, plural, count) { return (count == 1) ? 
 django.interpolate = function (fmt, obj, named);
 */
 
-Ember.Handlebars.registerBoundHelper('gettext', function(msgid, options) {
-  if (Object.getOwnPropertyNames(options.hash).length > 0) {
-    return interpolate(gettext(msgid), options.hash, true);
-  } else {
-    return gettext(msgid);
-  }
-});
 
-Ember.Handlebars.registerBoundHelper('ngettext', function(singular, plural, count, options) {
-  options.hash['count'] = count
-  return interpolate(ngettext(singular, plural, count), options.hash, true);
-});
+(function() {
 
-Ember.Handlebars.registerBoundHelper('gettext_noop', function(msgid, options) {
-  if (Object.getOwnPropertyNames(options.hash).length > 0) {
-    return interpolate(gettext_noop(msgid), options.hash, true);
-  } else {
-    return gettext_noop(msgid);
-  }
-});
+  var registerHelper = Ember.HTMLBars.registerHelper;
+  var makeBoundHelper = Ember.HTMLBars.makeBoundHelper;
 
-Ember.Handlebars.registerBoundHelper('pgettext', function(context, msgid, options) {
-  if (Object.getOwnPropertyNames(options.hash).length > 0) {
-    return interpolate(pgettext(context, msgid), options.hash, true);
-  } else {
-    return pgettext(context, msgid);
-  }
-});
+  registerHelper('gettext', makeBoundHelper(function(args, kwargs) {
 
-Ember.Handlebars.registerBoundHelper('npgettext', function(context, singular, plural, count, options) {
-  return interpolate(npgettext(context, singular, plural, count), options.hash, true);
-});
+    var msgid = args[0];
+    console.log(kwargs);
+
+    if (Object.getOwnPropertyNames(kwargs).length > 0) {
+      return interpolate(gettext(msgid), kwargs, true);
+    } else {
+      return gettext(msgid);
+    }
+
+  }));
+
+  registerHelper('ngettext', makeBoundHelper(function(args, kwargs) {
+
+    var singular = args[0];
+    var plural = args[1];
+    var count = args[2];
+
+    kwargs.count = count;
+
+    return interpolate(ngettext(singular, plural, count), kwargs, true);
+  }));
+
+  registerHelper('gettext_noop', makeBoundHelper(function(args, kwargs) {
+
+    var msgid = args[0];
+
+    if (Object.getOwnPropertyNames(kwargs).length > 0) {
+      return interpolate(gettext_noop(msgid), kwargs, true);
+    } else {
+      return gettext_noop(msgid);
+    }
+  }));
+
+  registerHelper('pgettext', makeBoundHelper(function(args, kwargs) {
+
+    var context = args[0];
+    var msgid = args[1];
+
+    if (Object.getOwnPropertyNames(kwargs).length > 0) {
+      return interpolate(pgettext(context, msgid), kwargs, true);
+    } else {
+      return pgettext(context, msgid);
+    }
+  }));
+
+  registerHelper('npgettext', makeBoundHelper(function(args, kwargs) {
+
+    var context = args[0];
+    var singular = args[1];
+    var plural = args[2];
+    var count = args[3];
+
+    kwargs.count = count;
+
+    return interpolate(npgettext(context, singular, plural, count), kwargs, true);
+  }));
+
+}());
+
