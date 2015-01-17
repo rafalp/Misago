@@ -18,7 +18,6 @@ django.interpolate = function (fmt, obj, named);
   registerHelper('gettext', makeBoundHelper(function(args, kwargs) {
 
     var msgid = args[0];
-    console.log(kwargs);
 
     if (Object.getOwnPropertyNames(kwargs).length > 0) {
       return interpolate(gettext(msgid), kwargs, true);
