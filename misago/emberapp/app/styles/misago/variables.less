@@ -1,0 +1,99 @@
+//
+// Misago Default Theme Variables
+// --------------------------------------------------
+
+
+//== Colors
+//
+//## Gray and brand colors for use across Bootstrap.
+
+@gray-base:              #000;
+@gray-darker:            #7f8c8d;
+@gray-dark:              #95a5a6;
+@gray:                   darken(#bdc3c7, 10%);
+@gray-light:             #bdc3c7;
+@gray-lighter:           #ecf0f1;
+
+@brand-primary:         #3498db;
+@brand-success:         #5cb85c;
+@brand-info:            #5bc0de;
+@brand-warning:         #d35400;
+@brand-danger:          #e74c3c;
+
+
+//== Scaffolding
+//
+//## Settings for some of the most global styles.
+
+//** Background color for `<body>`.
+@body-bg:               #fff;
+//** Global text color on `<body>`.
+@text-color:            #34495e;
+
+//** Global textual link color.
+@link-color:            #2196f3;
+//** Link hover color set via `darken()` function.
+@link-hover-color:      #5c6bc0;
+//** Link hover decoration.
+@link-hover-decoration: underline;
+//** Headings color
+@headings-color:        #2c3e50;
+
+//** In-site link state default
+@state-default:         #7f8c8d;
+@state-hover:           @text-color;
+@state-clicked:         @state-hover;
+
+
+//== Navbar
+//
+//##
+
+// Basics of a navbar
+@navbar-height:                    50px;
+@navbar-margin-bottom:             @line-height-computed;
+@navbar-border-radius:             @border-radius-base;
+@navbar-padding-horizontal:        floor((@grid-gutter-width / 2));
+@navbar-padding-vertical:          ((@navbar-height - @line-height-computed) / 2);
+@navbar-collapse-max-height:       340px;
+
+@navbar-default-color:             #777;
+@navbar-default-bg:                @body-bg;
+@navbar-default-border:            @gray-lighter;
+
+// Navbar links
+@navbar-default-link-color:                darken(@gray-lighter, 20%);
+@navbar-default-link-hover-color:          @gray-light;
+@navbar-default-link-hover-bg:             transparent;
+@navbar-default-link-active-color:         @gray-darker;
+@navbar-default-link-active-bg:            transparent;
+
+// Navbar brand label
+@navbar-default-brand-color:               @headings-color;
+@navbar-default-brand-hover-color:         @headings-color;
+
+
+//== Site Footer
+//
+//##
+
+@footer-hr-color:                @gray-lighter;
+
+@footer-color:                   @gray-light;
+@footer-noscript-color:          #d35400;
+
+// Footer links
+@footer-link-color:              #95a5a6;
+@footer-link-hover-color:        #7f8c8d;
+@footer-link-active-color:       #7f8c8d;
+
+// Misago's branding
+@misago-branding-color:          @gray-light;
+@misago-branding-size:           @font-size-base + 2px;
+
+
+//== Loader
+//
+//##
+
+@loader-color:                   @gray-light;

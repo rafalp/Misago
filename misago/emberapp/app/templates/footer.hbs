@@ -1,0 +1,42 @@
+<footer class="site-footer">
+  <div class="container">
+
+  {{#if showNav}}
+    <div class="first-row">
+      <ul class="list-inline footer-nav">
+      {{#if showTermsLink}}
+        <li>
+        {{#if settings.terms_of_service_link }}
+          <a href="{{unbound settings.terms_of_service_link}}">{{gettext "Terms of service" }}</a>
+        {{else}}
+          {{#link-to 'terms_of_service'}}{{gettext "Terms of service" }}{{/link-to}}
+        {{/if}}
+        </li>
+      {{/if}}
+      {{#if showPrivacyLink}}
+        <li>
+        {{#if settings.privacy_policy_link }}
+          <a href="{{unbound settings.privacy_policy_link}}">{{gettext "Privacy policy" }}</a>
+        {{else}}
+          {{#link-to 'privacy_policy'}}{{gettext "Privacy policy" }}{{/link-to}}
+        {{/if}}
+        </li>
+      {{/if}}
+      {{#if settings.forum_footnote}}
+        <li class="site-footnote">
+          {{settings.forum_footnote}}
+        </li>
+      {{/if}}
+      </ul>
+    </div>
+  {{/if}}
+
+    <div class="misago-branding">
+      <a href="http://misago-project.org">
+        <span class="subscript">powered by</span>
+        <span class="brand-border"><span>m</span></span><span class="subscript">isago</span>
+      </a>
+    </div>
+
+  </div>
+</footer>

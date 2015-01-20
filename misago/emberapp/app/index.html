@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Misago</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{content-for 'head'}}
+
+    <link rel="stylesheet" href="misago/css/vendor.css">
+    <link rel="stylesheet" href="misago/css/misago.css">
+
+    {{content-for 'head-footer'}}
+  </head>
+  <body>
+    {{content-for 'body'}}
+
+    <section id="main"></section>
+
+    <script src="http://127.0.0.1:8000/django-i18n.js"></script>
+    <script src="http://127.0.0.1:8000/misago-preload-data.js"></script>
+
+    <script>
+      MisagoData.staticUrl = '';
+    </script>
+
+    <script src="misago/js/vendor.js"></script>
+    <script src="misago/js/misago.js"></script>
+
+    {{content-for 'body-footer'}}
+  </body>
+</html>

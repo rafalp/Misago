@@ -11,7 +11,10 @@ urlpatterns = patterns('',
     url(r'^', include('misago.urls', namespace='misago')),
 
     # Javascript translations
-    url(r'^django-i18n.js$', 'misago.core.views.javascript_catalog', name="javascript_catalog"),
+    url(r'^django-i18n.js$', 'misago.core.views.javascript_catalog'),
+
+    # In-dev preload data for Ember-CLI
+    url(r'^misago-preload-data.js$', 'misago.core.views.preload_data'),
 
     # Uncomment next line if you plan to use Django admin for 3rd party apps
     #url(r'^django-admin/', include(admin.site.urls)),
@@ -33,5 +36,5 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # If you replace those handlers with custom ones, make sure you decorate them
 # functions with shared_403_exception_handler or shared_404_exception_handler
 # decorators that are defined in misago.views.errorpages module!
-handler403 = 'misago.views.errorpages.permission_denied'
-handler404 = 'misago.views.errorpages.page_not_found'
+handler403 = 'misago.core.errorpages.permission_denied'
+handler404 = 'misago.core.errorpages.page_not_found'

@@ -38,7 +38,7 @@ def terms(request):
         return redirect(settings.terms_of_service_link)
 
     parsed_content = get_parsed_content(request, 'terms_of_service')
-    return render(request, 'misago/legal/terms_of_service.html', {
+    return render(request, 'misago/terms_of_service.html', {
         'title': settings.terms_of_service_title or _("Terms of service"),
         'content': parsed_content,
     })
@@ -52,7 +52,7 @@ def privacy_policy(request):
         return redirect(settings.privacy_policy_link)
 
     parsed_content = get_parsed_content(request, 'privacy_policy')
-    return render(request, 'misago/legal/privacy_policy.html', {
+    return render(request, 'misago/privacy_policy.html', {
         'title': settings.privacy_policy_title or _("Privacy policy"),
         'content': parsed_content,
     })

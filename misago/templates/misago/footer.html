@@ -16,6 +16,11 @@
             <a href="{% url 'misago:privacy_policy' %}">{% trans "Privacy policy" %}</a>
           </li>
         {% endif %}
+        {% if misago_settings.forum_footnote %}
+          <li class="site-footnote">
+            {{ misago_settings.forum_footnote }}
+          </li>
+        {% endif %}
         </ul>
       {% endif %}
 

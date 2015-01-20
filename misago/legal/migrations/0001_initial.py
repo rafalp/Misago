@@ -100,6 +100,17 @@ def create_legal_settings_group(apps, schema_editor):
                     'is_public': True,
                     'is_lazy': True,
                 },
+                {
+                    'setting': 'forum_footnote',
+                    'name': _("Footnote"),
+                    'description': _("Short message displayed "
+                                     "in forum footer."),
+                    'legend': _("Forum footer"),
+                    'field_extra': {
+                        'max_length': 300
+                    },
+                    'is_public': True,
+                },
             )
         })
 

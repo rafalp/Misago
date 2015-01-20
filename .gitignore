@@ -61,11 +61,7 @@ flake8.txt
 # Sphinx documentation
 docs/_build/
 
-# Compiled assets
-misago/static/misago/admin/css/style.css
-misago/static/misago/css/style.css
-
-# Local develop stuff
+# Local development stuff
 dev/
 dev-manage.py
 futuredep/

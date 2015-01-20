@@ -20,23 +20,24 @@ If you can run Python apps on your hosting and you are looking for modern soluti
 * **Code & BugTracker:** https://github.com/rafalp/Misago/
 
 
-Note about master branch
-------------------------
+Don't use this branch in production!
+====================================
 
-Master branch currently contains in-development code of next major Misago release, 0.6. If you are looking at running "real" forum on Misago, please use latest 0.5 release instead.
+This branch contains in-development code of next major Misago release, 0.6. If you are looking at running "real" forum on Misago, please use latest 0.5 release instead.
+
+**There is no update path for 0.6 installations!**
 
 
-Installing and updating
------------------------
+Development
+===========
 
-Please note that *master* branch is used for project's codebase cleanup and is not functional at the time of writing. If you want to give Misago a spin, feel free to play with one of `previous releases <https://github.com/rafalp/Misago/releases>`_.
 
-To start Misago site, first setup and activate virtual environment for it and then fire following commands::
+To start Misago site locally, first setup and activate virtual environment for it and then fire following commands::
 
     python setup.py install
     misago-start.py testforum
 
-This will install Misago in your virtual environment and will make pre-configured Misago site for you named "testforum".
+This will install Misago in your virtual environment and will make pre-configured Misago site for you named "testforum". It will also expose "requirements.txt" for you to use to install Misago dependencies.
 
 Now cd to "testforum" and edit "settings.py" file in your editor of choice in order to set up basic settings like database connection, default timezone or interface language.
 
@@ -54,11 +55,19 @@ Finally start development server using "runserver" command::
     python manage.py runserver
 
 
-If nothing is wrong with your setup, developer server will start, enabling you to visit 127.0.0.1:8000 in your browser and see (incomplete) forum index.
+If nothing is wrong with your setup, Django developer server will start, enabling you to visit 127.0.0.1:8000 in your browser and see (incomplete) forum index.
+
+
+Frontend
+--------
+
+With exception of Admin Panel, Misago frontend is powered by Ember.js application backed by Django API. This application relies on Ember-CLI toolkit for development.
+
+To learn more about it please see README file located in emberapp directory.
 
 
 Bug reports, features and feedback
-----------------------------------
+==================================
 
 If you have found bug, please report it on `issue tracker <https://github.com/rafalp/Misago/issues>`_.
 
@@ -66,15 +75,15 @@ For feature or support requests as well as general feedback please use `official
 
 
 Contributing
-------------
+============
 
-If you have fixed spelling mistake, wrote new tests or fixed a bug, feel free to open pull request.
+If you have corrected spelling, wrote new tests or fixed a bug, feel free to open pull request.
 
 Many issues are open for takers. If you've found one you feel you could take care of, please announce your intent in issue discussion before you start working. That way situations when more than one person works on solving same issue can be avoided.
 
 
 Authors
--------
+=======
 
 **Rafał Pitoń**
 
@@ -84,7 +93,7 @@ Authors
 
 
 Copyright and license
----------------------
+=====================
 
 **Misago** - Copyright © 2014 `Rafał Pitoń <http://github.com/ralfp>`_
 This program comes with ABSOLUTELY NO WARRANTY.

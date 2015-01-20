@@ -1,0 +1,25 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{{ title }} | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1>
+      <span class="fa fa-ticket">
+      {{ title }}
+    </h1>
+  </div>
+</div>
+
+<div class="container">
+  <article class="misago-markup">
+
+    {{ content|safe }}
+
+  </article>
+</div>
+{% endblock content %}
