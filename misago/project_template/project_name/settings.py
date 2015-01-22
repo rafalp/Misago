@@ -31,6 +31,11 @@ MISAGO_JS_DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
 
+# Cross-Origin Resource Sharing policy
+
+CORS_ORIGIN_ALLOW_ALL = DEBUG
+CORS_ORIGIN_WHITELIST = ()
+
 
 # Database
 # https://docs.djangoproject.com/en/{{ docs_version }}/ref/settings/#databases

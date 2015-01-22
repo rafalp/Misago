@@ -22,6 +22,16 @@ urlpatterns += patterns('',
     url(r'^ui-server/$', 'misago.core.uiviews.uiserver', name="ui_server"),
 )
 
+# Register API
+api_patterns = patterns('',
+    url(r'^$', 'misago.core.views.forum_index', name='index'),
+    url(r'^legal-pages/', include('misago.legal.urls.api')),
+)
+
+urlpatterns += patterns('',
+    url(r'^api/', include(api_patterns, namespace='api')),
+)
+
 
 # Register Misago ACP
 if settings.MISAGO_ADMIN_PATH:

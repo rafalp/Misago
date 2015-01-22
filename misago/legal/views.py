@@ -4,6 +4,9 @@ from django.http import Http404
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 from misago.conf import settings
 from misago.core.cache import cache
 from misago.markup import common_flavour
@@ -30,29 +33,59 @@ def get_parsed_content(request, setting_name):
         return cached_content['parsed']
 
 
-def terms(request):
+def terms_of_service(request, return_dict=False):
     if not (settings.terms_of_service or settings.terms_of_service_link):
         raise Http404()
 
-    if settings.terms_of_service_link:
+    if not return_dict and settings.terms_of_service_link:
         return redirect(settings.terms_of_service_link)
 
     parsed_content = get_parsed_content(request, 'terms_of_service')
-    return render(request, 'misago/terms_of_service.html', {
+    response_dict = {
         'title': settings.terms_of_service_title or _("Terms of service"),
+        'link': settings.terms_of_service_link,
         'content': parsed_content,
-    })
+    }
+
+    if return_dict:
+        return response_dict
+    else:
+        return render(request, 'misago/terms_of_service.html', response_dict)
 
 
-def privacy_policy(request):
+def privacy_policy(request, return_dict=False):
     if not (settings.privacy_policy or settings.privacy_policy_link):
         raise Http404()
 
-    if settings.privacy_policy_link:
+    if not return_dict and settings.privacy_policy_link:
         return redirect(settings.privacy_policy_link)
 
     parsed_content = get_parsed_content(request, 'privacy_policy')
-    return render(request, 'misago/privacy_policy.html', {
+    response_dict = {
         'title': settings.privacy_policy_title or _("Privacy policy"),
+        'link': settings.privacy_policy_link,
         'content': parsed_content,
-    })
+    }
+
+    if return_dict:
+        return response_dict
+    else:
+        return render(request, 'misago/privacy_policy.html', response_dict)
+
+
+API_PAGES = {
+    'terms-of-service': terms_of_service,
+    'privacy-policy': privacy_policy,
+}
+
+@api_view(['GET'])
+def legal_page(request, page):
+    if page not in API_PAGES:
+        raise Http404(_("Requested page could not be found."))
+
+    page_dict = API_PAGES.get(page)(request, True)
+    page_dict['id'] = page
+    page_dict['body'] = page_dict['content']
+    del page_dict['content']
+
+    return Response(page_dict)
