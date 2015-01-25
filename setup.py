@@ -31,9 +31,6 @@ setup(
     author=u'Rafał Pitoń',
     author_email='kontakt@rpiton.com',
     install_requires=REQUIREMENTS,
-    dependency_links=[
-        'https://github.com/django/django/archive/stable/1.7.x.zip#egg=django-1.7',
-    ],
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
     scripts=[
