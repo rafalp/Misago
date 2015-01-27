@@ -27,7 +27,7 @@ Requirements
 Dependencies
 ------------
 
-** Misago 0.5 will not work with Django 1.7 and above!**
+**Misago 0.5 will not work with Django 1.7 and above!**
 
 * [Django < 1.7](http://djangoproject.com)
 * [Django Debug Toolbar](https://github.com/django-debug-toolbar/django-debug-toolbar)
