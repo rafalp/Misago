@@ -1,4 +1,4 @@
-# Misago [![Build Status](https://travis-ci.org/rafalp/Misago.png?branch=master)](https://travis-ci.org/rafalp/Misago)
+# Misago [![Build Status](https://travis-ci.org/rafalp/Misago.png?branch=0.5.x)](https://travis-ci.org/rafalp/Misago)
 
 Misago is an internet forum application written in Python and using Django as its foundation. Visit the project homepage for discussion and a live demo: <http://misago-project.org>
 
@@ -27,7 +27,9 @@ Requirements
 Dependencies
 ------------
 
-* [Django](http://djangoproject.com)
+** Misago 0.5 will not work with Django 1.7 and above!**
+
+* [Django < 1.7](http://djangoproject.com)
 * [Django Debug Toolbar](https://github.com/django-debug-toolbar/django-debug-toolbar)
 * [Django-floppyforms](https://github.com/brutasse/django-floppyforms)
 * [Django Haystack 2](http://haystacksearch.org/)
