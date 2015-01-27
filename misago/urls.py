@@ -24,7 +24,6 @@ urlpatterns += patterns('',
 
 # Register API
 api_patterns = patterns('',
-    url(r'^$', 'misago.core.views.forum_index', name='index'),
     url(r'^legal-pages/', include('misago.legal.urls.api')),
 )
 
