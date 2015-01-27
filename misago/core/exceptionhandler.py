@@ -1,6 +1,9 @@
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponsePermanentRedirect, JsonResponse
+from django.utils.translation import gettext as _
+
+from rest_framework.views import exception_handler as rest_exception_handler
 
 from misago.core import errorpages
 from misago.core.exceptions import AjaxError, ExplicitFirstPage, OutdatedSlug
@@ -77,3 +80,17 @@ def get_exception_handler(exception):
 def handle_misago_exception(request, exception):
     handler = get_exception_handler(exception)
     return handler(request, exception)
+
+
+def handle_api_exception(exception):
+    response = rest_exception_handler(exception)
+
+    if response:
+        if isinstance(exception, PermissionDenied):
+            try:
+                response.data['detail'] = exception.args[0]
+            except IndexError:
+                pass
+        return response
+    else:
+        return None

@@ -388,6 +388,12 @@ MISAGO_SENDFILE_LOCATIONS_PATH = ''
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 
+# Rest Framework Configuration
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'misago.core.exceptionhandler.handle_api_exception'
+}
+
+
 # Register Misago debug panels
 DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.versions.VersionsPanel',

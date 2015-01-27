@@ -1,4 +1,6 @@
 from django.core import exceptions as django_exceptions
+from django.core.exceptions import PermissionDenied
+from django.http import Http404
 from django.test import TestCase
 
 from misago.core import exceptionhandler
@@ -19,10 +21,7 @@ class IsMisagoExceptionTests(TestCase):
         exceptionhandler.is_misago_exception recognizes handled exceptions
         """
         for exception in exceptionhandler.HANDLED_EXCEPTIONS:
-            try:
-                raise exception()
-            except exception as e:
-                self.assertTrue(exceptionhandler.is_misago_exception(e))
+            self.assertTrue(exceptionhandler.is_misago_exception(exception()))
 
     def test_is_misago_exception_false_for_not_handled_exceptions(self):
         """
@@ -30,10 +29,7 @@ class IsMisagoExceptionTests(TestCase):
         exceptions
         """
         for exception in INVALID_EXCEPTIONS:
-            try:
-                raise exception()
-            except exception as e:
-                self.assertFalse(exceptionhandler.is_misago_exception(e))
+            self.assertFalse(exceptionhandler.is_misago_exception(exception()))
 
 
 class GetExceptionHandlerTests(TestCase):
@@ -52,3 +48,28 @@ class GetExceptionHandlerTests(TestCase):
         for exception in INVALID_EXCEPTIONS:
             with self.assertRaises(ValueError):
                 exceptionhandler.get_exception_handler(exception())
+
+
+class HandleAPIExceptionTests(TestCase):
+    def test_permission_denied(self):
+        """permission denied exception is correctly handled"""
+        response = exceptionhandler.handle_api_exception(PermissionDenied())
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.data['detail'], "Permission denied")
+
+    def test_permission_message_denied(self):
+        """permission denied with message is correctly handled"""
+        exception = PermissionDenied("You shall not pass!")
+        response = exceptionhandler.handle_api_exception(exception)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.data['detail'], "You shall not pass!")
+
+    def test_unhandled_exception(self):
+        """our exception handler is not interrupting other exceptions"""
+        for exception in INVALID_EXCEPTIONS:
+            response = exceptionhandler.handle_api_exception(exception())
+            self.assertIsNone(response)
+
+        response = exceptionhandler.handle_api_exception(Http404())
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.data['detail'], "Not found")
