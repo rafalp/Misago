@@ -1,8 +1,8 @@
 import Ember from 'ember';
 import Resolver from 'ember/resolver';
 import loadInitializers from 'ember/load-initializers';
+import registerGettextHelpers from 'django-ember-gettext/helpers/gettext';
 import config from './config/environment';
-import 'misago/helpers/gettext';
 
 Ember.MODEL_FACTORY_INJECTIONS = true;
 
@@ -13,6 +13,7 @@ var App = Ember.Application.extend({
   Resolver: Resolver
 });
 
+registerGettextHelpers();
 loadInitializers(App, config.modulePrefix);
 
 export default App;
