@@ -17,8 +17,8 @@ def runtests():
         test_runner_path, 'misago/project_template/media')
 
     test_project_path = os.path.join(test_runner_path, "testproject")
-    test_project_avatars_path = os.path.join(test_runner_path, "avatar_store")
-    test_project_media_path = os.path.join(test_runner_path, "media")
+    test_project_avatars_path = os.path.join(test_project_path, "avatar_store")
+    test_project_media_path = os.path.join(test_project_path, "media")
     if not os.path.exists(test_project_path):
         shutil.copytree(project_template_path, test_project_path)
         shutil.copytree(avatars_store_path, test_project_avatars_path)
