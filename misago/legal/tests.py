@@ -1,3 +1,5 @@
+import json
+
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
@@ -74,3 +76,63 @@ class PrivacyPolicyTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('Test Policy', response.content)
         self.assertIn('Lorem ipsum dolor', response.content)
+
+
+class APIViewTests(TestCase):
+    def tearDown(self):
+        settings.reset_settings()
+
+    def test_404_responses(self):
+        """/legal-pages/ api returns 404 for unset pages"""
+        settings.override_setting('privacy_policy_link', '')
+        settings.override_setting('privacy_policy', '')
+        settings.override_setting('terms_of_service_link', '')
+        settings.override_setting('terms_of_service', '')
+
+        response = self.client.get(reverse('misago:api:legal_page', kwargs={
+            'page': 'privacy-policy'
+        }))
+        self.assertEqual(response.status_code, 404)
+
+        response = self.client.get(reverse('misago:api:legal_page', kwargs={
+            'page': 'terms-of-service'
+        }))
+        self.assertEqual(response.status_code, 404)
+
+    def test_invalid_page_404_response(self):
+        """non-exisisting legal page returns 404"""
+        response = self.client.get(
+            reverse('misago:api:legal_page', kwargs={'page': 'lol-nope'}))
+        self.assertEqual(response.status_code, 404)
+
+    def test_privacy_policy_responses(self):
+        """/legal-pages/privacy-policy/ returns valid json"""
+        settings.override_setting(
+            'privacy_policy_link', 'http://somewhere.com')
+        settings.override_setting('privacy_policy', 'I am Bob Boberson!')
+
+        response = self.client.get(reverse('misago:api:legal_page', kwargs={
+            'page': 'privacy-policy'
+        }))
+        self.assertEqual(response.status_code, 200)
+
+        data = json.loads(response.content)
+        self.assertEqual(data['id'], 'privacy-policy')
+        self.assertEqual(data['link'], 'http://somewhere.com')
+        self.assertEqual(data['body'], '<p>I am Bob Boberson!</p>')
+
+    def test_terms_of_service_responses(self):
+        """/legal-pages/terms-of-policy/ returns valid json"""
+        settings.override_setting(
+            'terms_of_service_link', 'http://somewhere.com')
+        settings.override_setting('terms_of_service', 'I am Bob Boberson!')
+
+        response = self.client.get(reverse('misago:api:legal_page', kwargs={
+            'page': 'terms-of-service'
+        }))
+        self.assertEqual(response.status_code, 200)
+
+        data = json.loads(response.content)
+        self.assertEqual(data['id'], 'terms-of-service')
+        self.assertEqual(data['link'], 'http://somewhere.com')
+        self.assertEqual(data['body'], '<p>I am Bob Boberson!</p>')

@@ -6,20 +6,19 @@
 
 
 {% block content %}
-<div class="page-header">
-  <div class="container">
-    <h1>
-      <span class="fa fa-certificate">
-      {{ title }}
-    </h1>
+<div class="legal-page legal-terms-of-service">
+  <div class="page-header">
+    <div class="container">
+      <h1>
+        {{ title }}
+      </h1>
+    </div>
   </div>
-</div>
 
-<div class="container">
-  <article class="misago-markup">
-
-    {{ content|safe }}
-
-  </article>
+  <div class="legal-body container">
+    <article class="misago-markup">
+      {{ body|safe }}
+    </article>
+  </div>
 </div>
 {% endblock content %}

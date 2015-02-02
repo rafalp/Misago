@@ -1,14 +1,14 @@
 import {
-  moduleForModel,
+  moduleFor,
   test
 } from 'ember-qunit';
 
-moduleForModel('legal-page', 'LegalPage', {
+moduleFor('route:not-found', 'NotFoundRoute', {
   // Specify the other units that are required for this test.
-  needs: []
+  // needs: ['controller:foo']
 });
 
 test('it exists', function() {
-  var model = this.subject();
-  ok(!!model);
+  var route = this.subject();
+  ok(route);
 });

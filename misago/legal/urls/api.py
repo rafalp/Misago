@@ -2,6 +2,6 @@ from django.conf.urls import patterns, url
 
 
 urlpatterns = patterns('misago.legal.views',
-    url(r'^(?P<page>[\w\d-]+)/$', 'legal_page'),
+    url(r'^(?P<page>[\w\d-]+)/$', 'legal_page', name='legal_page'),
 )
 

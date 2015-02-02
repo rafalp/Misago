@@ -1,10 +1,14 @@
 /* global MisagoData */
+export default function() {
 
-var MisagoPreloadStore = function() {
+  var initData = {};
+  if (typeof MisagoData !== "undefined") {
+    initData = MisagoData;
+  }
 
   return {
 
-    data: MisagoData || {},
+    data: initData,
 
     has: function(key) {
       return this.data.hasOwnProperty(key);
@@ -28,6 +32,4 @@ var MisagoPreloadStore = function() {
     }
   };
 
-}();
-
-export default MisagoPreloadStore;
+}()

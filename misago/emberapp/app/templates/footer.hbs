@@ -9,7 +9,7 @@
         {{#if settings.terms_of_service_link }}
           <a href="{{unbound settings.terms_of_service_link}}">{{gettext "Terms of service" }}</a>
         {{else}}
-          {{#link-to 'terms_of_service'}}{{gettext "Terms of service" }}{{/link-to}}
+          {{#link-to 'terms-of-service'}}{{gettext "Terms of service" }}{{/link-to}}
         {{/if}}
         </li>
       {{/if}}
@@ -18,7 +18,7 @@
         {{#if settings.privacy_policy_link }}
           <a href="{{unbound settings.privacy_policy_link}}">{{gettext "Privacy policy" }}</a>
         {{else}}
-          {{#link-to 'privacy_policy'}}{{gettext "Privacy policy" }}{{/link-to}}
+          {{#link-to 'privacy-policy'}}{{gettext "Privacy policy" }}{{/link-to}}
         {{/if}}
         </li>
       {{/if}}

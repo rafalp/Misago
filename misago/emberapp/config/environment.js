@@ -16,7 +16,12 @@ module.exports = function(environment) {
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
-      rootElement: '#main'
+      rootElement: '#main',
+
+      // Django API
+      API_HOST: '',
+      API_NAMESPACE: 'api',
+      API_ADD_TRAILING_SLASHES: true
     }
   };
 
@@ -29,16 +34,15 @@ module.exports = function(environment) {
 
     ENV.contentSecurityPolicy = {
       'default-src': "'none'",
-      'script-src': "'self' 'unsafe-inline' https://cdn.mxpnl.com 127.0.0.1:8000", // Allow scripts from https://cdn.mxpnl.com and Django runserver
+      'script-src': "'self' 'unsafe-inline' https://cdn.mxpnl.com http://localhost:8000", // Allow scripts from https://cdn.mxpnl.com and Django runserver
       'font-src': "'self' http://fonts.gstatic.com", // Allow fonts to be loaded from http://fonts.gstatic.com
-      'connect-src': "'self' https://api.mixpanel.com http://localhost:8000", // Allow data (ajax/websocket) from api.mixpanel.com and custom-api.local
+      'connect-src': "'self' https://api.mixpanel.com http://localhost:8000", // Allow data (ajax/websocket) from api.mixpanel.com, custom-api.local and Django runserver
       'img-src': "'self'",
       'style-src': "'self' 'unsafe-inline' http://fonts.googleapis.com", // Allow inline styles and loaded CSS from http://fonts.googleapis.com
       'media-src': "'self'"
     }
 
     ENV.APP.API_HOST = 'http://localhost:8000';
-    ENV.APP.API_NAMESPACE = 'api';
   }
 
   if (environment === 'test') {
@@ -54,7 +58,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-
+    ENV.locationType = 'trailing-slash';
   }
 
   return ENV;

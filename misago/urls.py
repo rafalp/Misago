@@ -23,12 +23,12 @@ urlpatterns += patterns('',
 )
 
 # Register API
-api_patterns = patterns('',
+apipatterns = patterns('',
     url(r'^legal-pages/', include('misago.legal.urls.api')),
 )
 
 urlpatterns += patterns('',
-    url(r'^api/', include(api_patterns, namespace='api')),
+    url(r'^api/', include(apipatterns, namespace='api')),
 )
 
 

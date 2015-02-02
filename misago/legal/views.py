@@ -44,7 +44,7 @@ def terms_of_service(request, return_dict=False):
     response_dict = {
         'title': settings.terms_of_service_title or _("Terms of service"),
         'link': settings.terms_of_service_link,
-        'content': parsed_content,
+        'body': parsed_content,
     }
 
     if return_dict:
@@ -64,7 +64,7 @@ def privacy_policy(request, return_dict=False):
     response_dict = {
         'title': settings.privacy_policy_title or _("Privacy policy"),
         'link': settings.privacy_policy_link,
-        'content': parsed_content,
+        'body': parsed_content,
     }
 
     if return_dict:
@@ -78,14 +78,13 @@ API_PAGES = {
     'privacy-policy': privacy_policy,
 }
 
+
 @api_view(['GET'])
 def legal_page(request, page):
     if page not in API_PAGES:
-        raise Http404(_("Requested page could not be found."))
+        raise Http404()
 
     page_dict = API_PAGES.get(page)(request, True)
     page_dict['id'] = page
-    page_dict['body'] = page_dict['content']
-    del page_dict['content']
 
     return Response(page_dict)
