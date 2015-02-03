@@ -1,12 +1,16 @@
-<div class="container">
-  <div class="error-page">
+<div class="error-page error-404">
+  <div class="container">
+    <div class="error">
 
-    <div class="error-icon">
-      <span class="fa fa-compass"></span>
+      <div class="error-icon">
+        <span class="fa fa-compass"></span>
+      </div>
+
+      <div class="error-message">
+        <p class="lead">{{gettext "Requested page could not be found."}}</p>
+        <p>{{gettext "The link you clicked was incorrect or the page has been moved or deleted."}}</p>
+      </div>
+
     </div>
-
-    <p class="lead">{{gettext "Requested page could not be found."}}</p>
-    <p>{{gettext "The link you clicked was incorrect or the page has been moved or deleted."}}</p>
-
   </div>
 </div>

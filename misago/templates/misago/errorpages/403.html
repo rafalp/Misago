@@ -9,19 +9,23 @@
 
 
 {% block content %}
-<div class="container">
-  <div class="error-page">
+<div class="error-page error-403">
+  <div class="container">
+    <div class="error">
 
-    <div class="error-icon">
-      <span class="fa fa-ban"></span>
+      <div class="error-icon">
+        <span class="fa fa-ban"></span>
+      </div>
+
+      <div class="error-message">
+        {% if message %}
+        <p class="lead">{{ message|escape|urlize|linebreaksbr }}</p>
+        {% else %}
+        <p class="lead">{% trans "You don't have permission to access this page." %}</p>
+        {% endif %}
+      </div>
+
     </div>
-
-    {% if message %}
-    <p class="lead">{{ message|escape|urlize|linebreaksbr }}</p>
-    {% else %}
-    <p class="lead">{% trans "You don't have permission to access this page." %}</p>
-    {% endif %}
-
   </div>
 </div>
 {% endblock content %}

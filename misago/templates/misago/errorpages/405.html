@@ -9,16 +9,20 @@
 
 
 {% block content %}
-<div class="container">
-  <div class="error-page">
+<div class="error-page error-405">
+  <div class="container">
+    <div class="error">
 
-    <div class="error-icon">
-      <span class="fa fa-road"></span>
+      <div class="error-icon">
+        <span class="fa fa-road"></span>
+      </div>
+
+      <div class="error-message">
+        <p class="lead">{% trans "Page reached in wrong way." %}</p>
+        <p>{% trans "This page should be reached via form submission or pressing button." %}</p>
+      </div>
+
     </div>
-
-    <p class="lead">{% trans "Page reached in wrong way." %}</p>
-    <p>{% trans "This page should be reached via form submission or pressing button." %}</p>
-
   </div>
 </div>
 {% endblock content %}
