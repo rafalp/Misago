@@ -8,17 +8,17 @@
 //## Gray and brand colors for use across Bootstrap.
 
 @gray-base:              #000;
-@gray-darker:            #7f8c8d;
-@gray-dark:              #95a5a6;
-@gray:                   darken(#bdc3c7, 10%);
-@gray-light:             #bdc3c7;
-@gray-lighter:           #ecf0f1;
+@gray-darker:            lighten(@gray-base, 13.5%); // #222
+@gray-dark:              lighten(@gray-base, 20%);   // #333
+@gray:                   lighten(@gray-base, 33.5%); // #555
+@gray-light:             lighten(@gray-base, 46.7%); // #777
+@gray-lighter:           lighten(@gray-base, 93.5%); // #eee
 
-@brand-primary:         #3498db;
-@brand-success:         #5cb85c;
-@brand-info:            #5bc0de;
-@brand-warning:         #d35400;
-@brand-danger:          #e74c3c;
+@brand-primary:          #3498db;
+@brand-success:          #5cb85c;
+@brand-info:             #5bc0de;
+@brand-warning:          #d35400;
+@brand-danger:           #e74c3c;
 
 
 //== Scaffolding
@@ -28,7 +28,7 @@
 //** Background color for `<body>`.
 @body-bg:               #fff;
 //** Global text color on `<body>`.
-@text-color:            #34495e;
+@text-color:            #333;
 
 //** Global textual link color.
 @link-color:            #2196f3;
@@ -37,8 +37,9 @@
 //** Link hover decoration.
 @link-hover-decoration: underline;
 
-//** Headings color
-@headings-color:        @text-color;
+//** Headings
+@headings-color:        lighten(@text-color, 8%);
+@headings-font-weight:  300;
 
 //** In-site link state default
 @state-default:         #7f8c8d;
@@ -80,13 +81,13 @@
 
 @footer-hr-color:                @gray-lighter;
 
-@footer-color:                   @gray-light;
+@footer-color:                   lighten(@gray-light, 12%);
 @footer-noscript-color:          #d35400;
 
 // Footer links
-@footer-link-color:              #95a5a6;
-@footer-link-hover-color:        #7f8c8d;
-@footer-link-active-color:       #7f8c8d;
+@footer-link-color:              @gray-light;
+@footer-link-hover-color:        @gray;
+@footer-link-active-color:       @gray;
 
 // Misago's branding
 @misago-branding-color:          @gray-light;
