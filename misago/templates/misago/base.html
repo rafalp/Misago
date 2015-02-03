@@ -24,7 +24,9 @@
     <noscript>
       {% include "misago/navbar.html" %}
 
-      {% block content %}{% endblock content %}
+      <div class="main-outlet">
+        {% block content %}{% endblock content %}
+      </div>
 
       {% include "misago/footer.html" %}
     </noscript>
