@@ -1,42 +1,44 @@
 {% load i18n %}
 <footer class="site-footer">
   <div class="container">
+    <div class="footer-content">
 
-    <div class="first-row">
+      <div class="first-row">
 
-      {% if misago_settings.terms_of_service or misago_settings.terms_of_service_link or misago_settings.privacy_policy or misago_settings.privacy_policy_link %}
-        <ul class="list-inline footer-nav">
-        {% if misago_settings.terms_of_service or misago_settings.terms_of_service_link %}
-          <li>
-            <a href="{% url 'misago:terms_of_service' %}">{% trans "Terms of service" %}</a>
-          </li>
+        {% if misago_settings.terms_of_service or misago_settings.terms_of_service_link or misago_settings.privacy_policy or misago_settings.privacy_policy_link or misago_settings.forum_footnote %}
+          <ul class="list-inline footer-nav">
+          {% if misago_settings.terms_of_service or misago_settings.terms_of_service_link %}
+            <li>
+              <a href="{% url 'misago:terms_of_service' %}">{% trans "Terms of service" %}</a>
+            </li>
+          {% endif %}
+          {% if misago_settings.privacy_policy or misago_settings.privacy_policy_link %}
+            <li>
+              <a href="{% url 'misago:privacy_policy' %}">{% trans "Privacy policy" %}</a>
+            </li>
+          {% endif %}
+          {% if misago_settings.forum_footnote %}
+            <li class="site-footnote">
+              {{ misago_settings.forum_footnote }}
+            </li>
+          {% endif %}
+          </ul>
         {% endif %}
-        {% if misago_settings.privacy_policy or misago_settings.privacy_policy_link %}
-          <li>
-            <a href="{% url 'misago:privacy_policy' %}">{% trans "Privacy policy" %}</a>
-          </li>
-        {% endif %}
-        {% if misago_settings.forum_footnote %}
-          <li class="site-footnote">
-            {{ misago_settings.forum_footnote }}
-          </li>
-        {% endif %}
-        </ul>
-      {% endif %}
 
-      <p class="noscript-message text-warning">
-        <span class="fa fa-exclamation-triangle fa-lg"></span>
-        {% trans "For complete experience please enable JavaScript." %}
-      </p>
+        <p class="noscript-message text-warning">
+          <span class="fa fa-exclamation-triangle fa-lg"></span>
+          {% trans "For complete experience please enable JavaScript." %}
+        </p>
+
+      </div>
+
+      <div class="misago-branding">
+        <a href="http://misago-project.org">
+          <span class="subscript">powered by</span>
+          <span class="brand-border"><span>m</span></span><span class="subscript">isago</span>
+        </a>
+      </div>
 
     </div>
-
-    <div class="misago-branding">
-      <a href="http://misago-project.org">
-        <span class="subscript">powered by</span>
-        <span class="brand-border"><span>m</span></span><span class="subscript">isago</span>
-      </a>
-    </div>
-
   </div>
 </footer>
