@@ -1,0 +1,63 @@
+//
+// Flash Message
+// --------------------------------------------------
+
+
+.flash-message-style(@color-bg, @color-text) {
+  background: @color-bg;
+
+  color: @color-text;
+  text-shadow: 0px 0px 2px darken(@color-bg, 14%);
+}
+
+
+.flash-message {
+  position: fixed;
+  top: -100%;
+  width: 100%;
+  z-index: @zindex-modal + 10;
+
+  text-align: center;
+  font-size: @font-size-large;
+
+  transition: top 300ms ease;
+
+  &.visible {
+    top: 0px;
+    transition: top 200ms ease;
+  }
+
+  p {
+    padding: @alert-padding;
+
+    &.message-success {
+      .flash-message-style(@alert-success-bg, @alert-success-text);
+    }
+
+    &.message-info {
+      .flash-message-style(@alert-info-bg, @alert-info-text);
+    }
+
+    &.message-warning {
+      .flash-message-style(@alert-warning-bg, @alert-warning-text);
+    }
+
+    &.message-danger {
+      .flash-message-style(@alert-danger-bg, @alert-danger-text);
+    }
+  }
+
+  /* Small devices (tablets, 768px and up) */
+  @media (min-width: @screen-sm-min) {
+    padding: 0px @padding-large-horizontal;
+    pointer-events: none;
+
+    p {
+      border-radius: 0px 0px @alert-border-radius @alert-border-radius;
+      display: inline-block;
+      padding: @padding-large-vertical @padding-large-horizontal;
+
+      font-size: @font-size-base;
+    }
+  }
+}

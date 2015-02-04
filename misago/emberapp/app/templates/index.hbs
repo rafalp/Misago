@@ -4,4 +4,17 @@
   <p class="lead">
     Special pages: {{#link-to 'loading'}}Loading{{/link-to}}, {{#link-to 'error-0'}}Connection lost{{/link-to}}, {{#link-to 'error-404'}}Error 404{{/link-to}}.
   </p>
+
+  <hr>
+
+  <h2>Test Flash Message</h2>
+
+  <p>
+    {{input type="text" value=newFlash}}
+    <button class="btn btn-primary" {{action "testInfo"}}>Info</button>
+    <button class="btn btn-success" {{action "testSuccess"}}>Success</button>
+    <button class="btn btn-warning" {{action "testWarning"}}>Warning</button>
+    <button class="btn btn-danger" {{action "testError"}}>Error</button>
+  </p>
+
 </div>
