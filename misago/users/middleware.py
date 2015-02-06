@@ -19,9 +19,9 @@ class RealIPMiddleware(object):
 
 class AvatarServerMiddleware(object):
     def process_request(self, request):
-        if request.path.startswith(settings.MISAGO_AVATAR_SERVER_PATH):
+        if request.path_info.startswith(settings.MISAGO_AVATAR_SERVER_PATH):
             request.user = DjAnonymousUser()
-            resolved_path = resolve(request.path)
+            resolved_path = resolve(request.path_info)
             return resolved_path.func(request, **resolved_path.kwargs)
 
 

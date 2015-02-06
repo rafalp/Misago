@@ -14,7 +14,7 @@ def get_protected_namespace(request):
     for namespace in settings.MISAGO_ADMIN_NAMESPACES:
         try:
             admin_path = reverse('%s:index' % namespace)
-            if request.path.startswith(admin_path):
+            if request.path_info.startswith(admin_path):
                 return namespace
         except NoReverseMatch:
             pass
