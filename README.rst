@@ -55,7 +55,7 @@ Finally start development server using "runserver" command::
     python manage.py runserver
 
 
-If nothing is wrong with your setup, Django developer server will start, enabling you to visit 127.0.0.1:8000 in your browser and see (incomplete) forum index.
+If nothing is wrong with your setup, Django developer server will start, enabling you to visit 127.0.0.1:8000 in your browser and see the (incomplete) forum index.
 
 
 Frontend
