@@ -247,12 +247,6 @@ MISAGO_HOURL_POST_LIMIT
 Hourly limit of posts that may be posted from single account. Fail-safe for situations when forum is flooded by spam bot. Change to 0 to lift this restriction.
 
 
-MISAGO_JS_DEBUG
----------------
-
-Switches between production and debug versions of Ember and Handlebars.
-
-
 MISAGO_MAILER_BATCH_SIZE
 ------------------------
 

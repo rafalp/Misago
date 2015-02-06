@@ -38,12 +38,6 @@ MISAGO_JS_DEBUG = False
 # Assets Pipeline
 # See http://django-pipeline.readthedocs.org/en/latest/configuration.html
 PIPELINE_CSS = {
-    'misago': {
-        'source_filenames': (
-            'misago/css/style.less',
-        ),
-        'output_filename': 'misago.css',
-    },
     'misago_admin': {
         'source_filenames': (
             'misago/admin/css/style.less',
@@ -53,47 +47,6 @@ PIPELINE_CSS = {
 }
 
 PIPELINE_JS = {
-    'misago_lib': {
-        'source_filenames': (
-            'misago/ember/jquery-1.11.1.min.js',
-            'misago/ember/handlebars.runtime-v2.0.0.js',
-            'misago/ember/ember.prod-1.10.b4.js',
-            'misago/ember/ember-data-1.0.0.b14.js',
-            'misago/app/preloadstore.js',
-            'misago/app/django-i18n.js',
-        ),
-        'output_filename': 'misago_lib.js',
-    },
-    'misago_lib_debug': {
-        'source_filenames': (
-            'misago/ember/jquery-1.11.1.min.js',
-            'misago/ember/handlebars-v2.0.0.js',
-            'misago/ember/ember-1.10.b4.js',
-            'misago/ember/ember-data.prod-1.0.0.b14.js',
-            'misago/app/preloadstore.js',
-            'misago/app/django-i18n.js',
-        ),
-        'output_filename': 'misago_lib_debug.js',
-    },
-    'misago': {
-        'source_filenames': (
-            'misago/app/application.js',
-            'misago/app/router.js',
-            'misago/app/components/*.js',
-            'misago/app/controllers/*.js',
-            'misago/app/routes/*.js',
-            'misago/app/models/*.js',
-            'misago/app/templates/*.hbs',
-        ),
-        'output_filename': 'misago.js',
-    },
-    'misago_editor': {
-        'source_filenames': (
-            'misago/js/jquery.autosize.js',
-            'misago/js/misago-editor.js',
-        ),
-        'output_filename': 'misago-editor.js',
-    },
     'misago_admin': {
         'source_filenames': (
             'misago/admin/js/jquery.js',
@@ -190,7 +143,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
-    'misago.core.context_processors.js_debug',
     'misago.core.context_processors.site_address',
     'misago.conf.context_processors.settings',
     'misago.users.context_processors.sites_links',

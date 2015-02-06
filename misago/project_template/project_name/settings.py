@@ -25,8 +25,6 @@ DEBUG = True
 
 TEMPLATE_DEBUG = DEBUG
 
-MISAGO_JS_DEBUG = DEBUG
-
 # Hosts allowed to reach your site
 
 ALLOWED_HOSTS = []
