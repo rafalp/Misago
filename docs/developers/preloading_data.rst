@@ -18,7 +18,7 @@ This means that as long as initial page wasn't rendered yet, you can preload dat
 Accessing Preloaded Data
 ------------------------
 
-Misago provides utility object defined within ``misago/utils/preloadstore`` module that provides simple API for accessing keys defined in ``MisagoData``:
+Misago provides utility object defined within ``misago/utils/preloadstore`` module that provides simple API for accessing keys defined in ``MisagoData``::
 
 
     // some .js module that wants to access preloaded data
