@@ -44,6 +44,7 @@ Following references cover everything you want to know about writing your own ap
    markup
    notifications
    posting_process
+   preloading_data
    settings
    shortcuts
    template_tags

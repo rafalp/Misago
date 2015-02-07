@@ -15,7 +15,6 @@ export default function() {
     },
 
     get: function(key, value) {
-
       if (this.has(key)) {
         return this.data[key];
       } else if (value !== undefined) {
@@ -23,12 +22,19 @@ export default function() {
       } else {
         return undefined;
       }
-
     },
 
     set: function(key, value) {
       this.data[key] = value;
       return value;
+    },
+
+    pop: function(key, value) {
+      var returnValue = this.get(key, value);
+      if (this.has(key)) {
+        delete this.data[key];
+      }
+      return returnValue;
     }
   };
 

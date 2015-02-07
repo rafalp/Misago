@@ -45,6 +45,9 @@ class CustomErrorPagesTests(TestCase):
         self.misago_request = RequestFactory().get(reverse('misago:index'))
         self.site_request = RequestFactory().get(reverse('raise_403'))
 
+        self.misago_request.preloaded_ember_data = {}
+        self.site_request.preloaded_ember_data = {}
+
     def test_shared_403_decorator(self):
         """shared_403_decorator calls correct error handler"""
         response = self.client.get(reverse('raise_misago_403'))

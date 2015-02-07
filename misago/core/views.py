@@ -27,8 +27,8 @@ def javascript_catalog(request):
 
 @never_cache
 def preload_data(request):
-    if not settings.MISAGO_JS_DEBUG:
+    if not (settings.DEBUG or settings._MISAGO_JS_DEBUG):
         raise Http404()
 
-    return render(request, 'misago/preload_data.js',
+    return render(request, 'misago/preloaded_data.js',
                   content_type='application/javascript')

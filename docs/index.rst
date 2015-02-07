@@ -33,6 +33,7 @@ Table of Contents
    developers/markup
    developers/notifications
    developers/posting_process
+   developers/preloading_data
    developers/settings
    developers/shortcuts
    developers/template_tags

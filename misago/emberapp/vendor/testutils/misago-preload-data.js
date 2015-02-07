@@ -1,23 +1,28 @@
 window.MisagoData = {
-  MISAGO_JS_DEBUG: true,
-  misagoSettings: {
-    "account_activation": "none",
-
-    "forum_name": "Misago",
-    "forum_index_title": "",
-    "forum_footnote": "This site uses cookies to track and analyse traffic.",
-
+  "misagoSettings": {
     "thread_title_length_max": 90,
     "thread_title_length_min": 5,
 
-    "terms_of_service_title": "",
+    "account_activation": "none",
+
+    "forum_name": "Misago",
+    "forum_footnote": "This site uses cookies to track and analyse traffic.",
+    "forum_index_title": "",
+
     "terms_of_service_link": "",
+    "terms_of_service_title": "Regulamin serwisu",
     "terms_of_service": null,
 
-    "privacy_policy_title": "",
     "privacy_policy_link": "",
-    "privacy_policy": null
+    "privacy_policy_title": "Polityka prywatno\u015bci",
+    "privacy_policy": true
   },
-  staticUrl: "/",
-  mediaUrl: "/media/"
+
+  "mediaUrl": "/media/",
+  "staticUrl": "/static/",
+
+  "loginUrl": "/login/",
+  "loginRedirectUrl": "/",
+
+  "logoutUrl": "/logout/"
 };

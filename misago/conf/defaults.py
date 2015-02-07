@@ -32,7 +32,8 @@ MISAGO_BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
 # Default JS debug to false
-MISAGO_JS_DEBUG = False
+# This setting used exclusively by test runner and isn't part of public API
+_MISAGO_JS_DEBUG = False
 
 
 # Assets Pipeline
@@ -119,6 +120,8 @@ INSTALLED_APPS = (
 MIDDLEWARE_CLASSES = (
     'misago.users.middleware.AvatarServerMiddleware',
     'misago.users.middleware.RealIPMiddleware',
+    'misago.core.middleware.preloademberdata.PreloadEmberDataMiddleware',
+    'misago.conf.middleware.PreloadConfigMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -144,6 +147,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
     'misago.core.context_processors.site_address',
+    'misago.core.context_processors.preloaded_ember_data',
     'misago.conf.context_processors.settings',
     'misago.users.context_processors.sites_links',
 )

@@ -14,3 +14,7 @@ def site_address(request):
         'SITE_HOST': request.get_host(),
         'SITE_ADDRESS': address_template % request.get_host()
     }
+
+
+def preloaded_ember_data(request):
+    return {'preloaded_ember_data': request.preloaded_ember_data}
