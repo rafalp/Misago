@@ -25,6 +25,20 @@ export default Ember.Controller.extend({
     return this.get('type') === 'error';
   }.property('type'),
 
+  showFlash: function(type, message) {
+    var flashId = this.incrementProperty('id');
+    this.set('type', type);
+    this.set('message', message);
+    this.set('isVisible', true);
+
+    var self = this;
+    Ember.run.later(function () {
+      if (self.get('id') === flashId) {
+        self.set('isVisible', false);
+      }
+    }, this.get('VISIBLE_FOR'));
+  },
+
   actions: {
     setFlash: function(type, message) {
       var self = this;
@@ -32,25 +46,11 @@ export default Ember.Controller.extend({
       if (this.get('isVisible')) {
         this.set('isVisible', false);
         Ember.run.later(function () {
-          self.send('showFlash', type, message);
+          self.showFlash(type, message);
         }, this.get('HIDE_ANIMATION_LENGTH'));
       } else {
-        this.send('showFlash', type, message);
+        this.showFlash(type, message);
       }
-    },
-
-    showFlash: function(type, message) {
-      var flashId = this.incrementProperty('id');
-      this.set('type', type);
-      this.set('message', message);
-      this.set('isVisible', true);
-
-      var self = this;
-      Ember.run.later(function () {
-        if (self.get('id') === flashId) {
-          self.set('isVisible', false);
-        }
-      }, this.get('VISIBLE_FOR'));
     }
   }
 });
