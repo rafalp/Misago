@@ -34,6 +34,8 @@ var app = new EmberApp({
 // please specify an object with the list of modules as keys
 // along with the exports of each module as its value.
 
+app.import('vendor/bootstrap.js');
+
 app.import('vendor/testutils/jquery.mockjax.js', { type: 'test' });
 app.import('vendor/testutils/django-js-catalog.js', { type: 'test' });
 app.import('vendor/testutils/misago-preload-data.js', { type: 'test' });
