@@ -41,8 +41,6 @@ module.exports = function(environment) {
       'style-src': "'self' 'unsafe-inline' http://fonts.googleapis.com", // Allow inline styles and loaded CSS from http://fonts.googleapis.com
       'media-src': "'self'"
     }
-
-    ENV.APP.API_HOST = 'http://localhost:8000';
   }
 
   if (environment === 'test') {
