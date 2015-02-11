@@ -6,6 +6,9 @@ var app = new EmberApp({
   fingerprint: {
     enabled: false
   },
+  vendorFiles: {
+    'handlebars.js': null
+  },
   outputPaths: {
     app: {
       html: 'index.html',
