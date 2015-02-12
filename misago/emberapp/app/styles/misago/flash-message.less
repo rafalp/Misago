@@ -3,11 +3,18 @@
 // --------------------------------------------------
 
 
-.flash-message-style(@color-bg, @color-text) {
+.flash-message-style(@color-bg, @color-border, @color-text) {
   background: @color-bg;
+  border: 1px solid @color-border;
+  border-top: none;
+  .box-shadow(0px 2px 3px fadeOut(@gray-darker, 70%));
+  padding: @alert-padding;
 
   color: @color-text;
-  text-shadow: 0px 0px 2px darken(@color-bg, 14%);
+
+  .fa {
+    margin-right: @font-size-base / 2;
+  }
 }
 
 
@@ -27,24 +34,20 @@
     transition: top 200ms ease;
   }
 
-  p {
-    padding: @alert-padding;
+  .message-success {
+    .flash-message-style(@alert-success-bg, @alert-success-border, @alert-success-text);
+  }
 
-    &.message-success {
-      .flash-message-style(@alert-success-bg, @alert-success-text);
-    }
+  .message-info {
+    .flash-message-style(@alert-info-bg, @alert-info-border, @alert-info-text);
+  }
 
-    &.message-info {
-      .flash-message-style(@alert-info-bg, @alert-info-text);
-    }
+  .message-warning {
+    .flash-message-style(@alert-warning-bg, @alert-warning-border, @alert-warning-text);
+  }
 
-    &.message-warning {
-      .flash-message-style(@alert-warning-bg, @alert-warning-text);
-    }
-
-    &.message-danger {
-      .flash-message-style(@alert-danger-bg, @alert-danger-text);
-    }
+  .message-danger {
+    .flash-message-style(@alert-danger-bg, @alert-danger-border, @alert-danger-text);
   }
 
   /* Small devices (tablets, 768px and up) */
@@ -53,6 +56,8 @@
     pointer-events: none;
 
     p {
+      border-left: none;
+      border-right: none;
       border-radius: 0px 0px @alert-border-radius @alert-border-radius;
       display: inline-block;
       padding: @padding-large-vertical @padding-large-horizontal;

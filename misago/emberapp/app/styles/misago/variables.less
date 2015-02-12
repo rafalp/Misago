@@ -14,11 +14,11 @@
 @gray-light:             lighten(@gray-base, 46.7%); // #777
 @gray-lighter:           lighten(@gray-base, 93.5%); // #eee
 
-@brand-primary:          #3498db;
-@brand-success:          #2ecc71;
+@brand-primary:          #29b6f6;
+@brand-success:          #66bb6a;
 @brand-info:             #5bc0de;
-@brand-warning:          #e67e22;
-@brand-danger:           #e74c3c;
+@brand-warning:          #ffab40;
+@brand-danger:           #ef5350;
 
 
 //== Scaffolding
@@ -120,20 +120,75 @@
 @loader-color:                   darken(@gray-lighter, 12%);
 
 
+//== Modals
+//
+//##
+
+//** Modal backdrop background color
+@modal-backdrop-bg:           @body-bg;
+//** Modal backdrop opacity
+@modal-backdrop-opacity:      .85;
+
+
 //== Alerts
 //
 //## Define alert colors, border radius, and padding.
 
 @alert-border-radius:         @border-radius-large;
 
-@alert-success-bg:            @brand-success;
+@alert-success-bg:            #66bb6a;
+@alert-success-border:        #66bb6a;
 @alert-success-text:          #fff;
 
-@alert-info-bg:               @brand-info;
+@alert-info-bg:               #42a5f5;
+@alert-info-border:           #42a5f5;
 @alert-info-text:             #fff;
 
-@alert-warning-bg:            @brand-warning;
+@alert-warning-bg:            #ff9800;
+@alert-warning-border:        #ff9800;
 @alert-warning-text:          #fff;
 
-@alert-danger-bg:             @brand-danger;
+@alert-danger-bg:             #ef5350;
+@alert-danger-border:         #ef5350;
 @alert-danger-text:           #fff;
+
+
+//== Buttons
+//
+//## For each of Bootstrap's buttons, define text, background and border color.
+
+@btn-font-weight:                300;
+
+@btn-default-color:              #95a5a6;
+@btn-default-bg:                 transparent;
+@btn-default-border:             #bdc3c7;
+
+@btn-default-hover-color:        #4fc3f7;
+@btn-default-hover-bg:           transparent;
+@btn-default-hover-border:       #4fc3f7;
+
+@btn-default-active-color:       #2196f3;
+@btn-default-active-bg:          transparent;
+@btn-default-active-border:      #2196f3;
+
+@btn-primary-color:              #fff;
+@btn-primary-bg:                 @brand-primary;
+@btn-primary-border:             @btn-primary-bg;
+
+@btn-success-color:              #fff;
+@btn-success-bg:                 @brand-success;
+@btn-success-border:             @btn-success-bg;
+
+@btn-info-color:                 #fff;
+@btn-info-bg:                    @brand-info;
+@btn-info-border:                @btn-info-bg;
+
+@btn-warning-color:              #fff;
+@btn-warning-bg:                 @brand-warning;
+@btn-warning-border:             @btn-warning-bg;
+
+@btn-danger-color:               #fff;
+@btn-danger-bg:                  @brand-danger;
+@btn-danger-border:              @btn-danger-bg;
+
+@btn-link-disabled-color:        @gray-light;

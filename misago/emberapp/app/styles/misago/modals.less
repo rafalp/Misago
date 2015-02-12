@@ -1,0 +1,29 @@
+//
+// Modals
+// --------------------------------------------------
+
+
+.modal-content {
+  .box-shadow(0px 0px 0px 4px rgba(0,0,0,.15));
+}
+
+
+// Sign-in modal
+.modal-sign-in {
+  .modal-body {
+    padding-top: @padding-base-vertical;
+    padding-bottom: @padding-base-vertical;
+
+    .form-group {
+      margin: @padding-large-vertical 0px;
+    }
+  }
+
+  .modal-footer {
+    &>* {
+      display: block;
+
+      text-align: center;
+    }
+  }
+}

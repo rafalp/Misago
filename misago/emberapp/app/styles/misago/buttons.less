@@ -1,0 +1,49 @@
+//
+// Buttons
+// --------------------------------------------------
+
+
+// Double border size on default and lg buttons
+.btn {
+  border-width: 2px;
+
+  .button-size(@padding-base-vertical - 1; @padding-base-horizontal; @font-size-base; @line-height-base; @border-radius-base);
+
+  &.btn-lg {
+    .button-size(@padding-large-vertical - 1; @padding-large-horizontal; @font-size-large; @line-height-large; @border-radius-large);
+  }
+
+  &.btn-sm {
+    border-width: 1px;
+    .button-size(@padding-small-vertical; @padding-small-horizontal; @font-size-small; @line-height-small; @border-radius-small);
+  }
+
+  &.btn-xs {
+    border-width: 1px;
+    .button-size(@padding-xs-vertical; @padding-xs-horizontal; @font-size-small; @line-height-small; @border-radius-small);
+  }
+}
+
+
+// Extra states for default btn
+.btn {
+  &.btn-default {
+    &:hover,
+    &:focus,
+    &.focus {
+      background-color: @btn-default-hover-bg;
+      border-color: @btn-default-hover-border;
+
+      color: @btn-default-hover-color;
+    }
+
+    &:active,
+    &.active,
+    .open > .dropdown-toggle& {
+      background-color: @btn-default-active-bg;
+      border-color: @btn-default-active-border;
+
+      color: @btn-default-active-color;
+    }
+  }
+}

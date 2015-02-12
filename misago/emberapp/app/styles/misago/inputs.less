@@ -1,0 +1,18 @@
+//
+// Inputs
+// --------------------------------------------------
+
+
+// Double border size on default and lg inputs
+input.form-control, textarea.form-control {
+  border-width: 2px;
+  .box-shadow(none);
+}
+
+
+// Ghost out disabled inputs
+input.form-control, textarea.form-control {
+  &.diabled {
+    .opacity(50);
+  }
+}
