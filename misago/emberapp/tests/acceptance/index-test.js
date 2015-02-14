@@ -1,32 +1,33 @@
 import Ember from 'ember';
+import { module, test } from 'qunit';
 import startApp from '../helpers/start-app';
 
 var application;
 
 module('Acceptance: Index', {
-  setup: function() {
+  beforeEach: function() {
     application = startApp();
   },
-  teardown: function() {
+  afterEach: function() {
     Ember.run(application, 'destroy');
   }
 });
 
-test('visiting /', function() {
+test('visiting /', function(assert) {
   visit('/');
 
   andThen(function() {
-    equal(currentPath(), 'index');
+    assert.equal(currentPath(), 'index');
   });
 });
 
-test('visiting / with custom title', function() {
+test('visiting / with custom title', function(assert) {
   var newTitle = "Misago Support Forums";
   window.MisagoData.misagoSettings['forum_index_title'] = newTitle;
   visit('/');
 
   andThen(function() {
-    equal(currentPath(), 'index');
-    equal(document.title, newTitle);
+    assert.equal(currentPath(), 'index');
+    assert.equal(document.title, newTitle);
   });
 });

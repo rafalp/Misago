@@ -1,19 +1,20 @@
 import Ember from 'ember';
+import { module, test } from 'qunit';
 import startApp from '../helpers/start-app';
 
 var application;
 
 module('Acceptance: PrivacyPolicy', {
-  setup: function() {
+  beforeEach: function() {
     application = startApp();
   },
-  teardown: function() {
+  afterEach: function() {
     Ember.run(application, 'destroy');
     Ember.$.mockjax.clear();
   }
 });
 
-test('visiting unset /privacy-policy', function() {
+test('visiting unset /privacy-policy', function(assert) {
   Ember.$.mockjax({
     url: "/api/legal-pages/privacy-policy/",
     status: 404,
@@ -23,11 +24,11 @@ test('visiting unset /privacy-policy', function() {
   visit('/privacy-policy');
 
   andThen(function() {
-    equal(currentPath(), 'error-404');
+    assert.equal(currentPath(), 'error-404');
   });
 });
 
-test('visiting set /privacy-policy', function() {
+test('visiting set /privacy-policy', function(assert) {
   Ember.$.mockjax({
     url: "/api/legal-pages/privacy-policy/",
     status: 200,
@@ -42,8 +43,8 @@ test('visiting set /privacy-policy', function() {
   visit('/privacy-policy');
 
   andThen(function() {
-    equal(currentPath(), 'privacy-policy');
+    assert.equal(currentPath(), 'privacy-policy');
     var $e = find('article');
-    equal(Ember.$.trim($e.html()), '<p>Top kek</p>');
+    assert.equal(Ember.$.trim($e.html()), '<p>Top kek</p>');
   });
 });

@@ -6,37 +6,37 @@ import {
 var document_title = document.title;
 
 moduleFor('route:terms-of-service', 'TermsOfServiceRoute', {
-  teardown: function() {
+  afterEach: function() {
     document.title = document_title;
   }
 });
 
-test('it exists', function() {
+test('it exists', function(assert) {
   var route = this.subject();
-  ok(route);
+  assert.ok(route);
 });
 
-test('setting', function() {
+test('setting', function(assert) {
   var route = this.subject();
-  equal(route.get('setting'), 'terms_of_service');
+  assert.equal(route.get('setting'), 'terms_of_service');
 });
 
-test('title', function() {
+test('title', function(assert) {
   var route = this.subject();
 
-  equal(route.get('title'), route.get('defaultTitle'));
+  assert.equal(route.get('title'), route.get('defaultTitle'));
 
   var testTitle = "Lorem Ipsum Dolor Met";
   route.set("settings", {'terms_of_service_title': testTitle});
-  equal(route.get('title'), testTitle);
+  assert.equal(route.get('title'), testTitle);
 });
 
-test('link', function() {
+test('link', function(assert) {
   var route = this.subject();
 
-  ok(!route.get('link'));
+  assert.ok(!route.get('link'));
 
   var testLink = "http://somewhere.com";
   route.set("settings", {'terms_of_service_link': testLink});
-  equal(route.get('link'), testLink);
+  assert.equal(route.get('link'), testLink);
 });

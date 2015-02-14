@@ -1,10 +1,11 @@
 import Ember from 'ember';
 import { initialize } from 'misago/initializers/trailing-slash';
+import { module, test } from 'qunit';
 
 var container, application;
 
 module('TrailingSlashInitializer', {
-  setup: function() {
+  beforeEach: function() {
     Ember.run(function() {
       application = Ember.Application.create();
       container = application.__container__;
@@ -13,9 +14,9 @@ module('TrailingSlashInitializer', {
   }
 });
 
-test('it exists', function() {
+test('it exists', function(assert) {
   initialize(container, application);
 
-  ok(container.has('location:trailing-history'));
+  assert.ok(container.has('location:trailing-history'));
 });
 

@@ -3,12 +3,9 @@ import {
   test
 } from 'ember-qunit';
 
-moduleFor('route:not-found', 'NotFoundRoute', {
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
-});
+moduleFor('route:not-found', 'NotFoundRoute');
 
-test('it exists', function() {
+test('it exists', function(assert) {
   var route = this.subject();
-  ok(route);
+  assert.ok(route);
 });

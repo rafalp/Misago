@@ -1,19 +1,20 @@
 import Ember from 'ember';
+import { module, test } from 'qunit';
 import startApp from '../helpers/start-app';
 
 var application;
 
 module('Acceptance: TermsOfService', {
-  setup: function() {
+  beforeEach: function() {
     application = startApp();
   },
-  teardown: function() {
+  afterEach: function() {
     Ember.run(application, 'destroy');
     Ember.$.mockjax.clear();
   }
 });
 
-test('visiting unset /terms-of-service', function() {
+test('visiting unset /terms-of-service', function(assert) {
   Ember.$.mockjax({
     url: "/api/legal-pages/terms-of-service/",
     status: 404,
@@ -23,11 +24,11 @@ test('visiting unset /terms-of-service', function() {
   visit('/terms-of-service');
 
   andThen(function() {
-    equal(currentPath(), 'error-404');
+    assert.equal(currentPath(), 'error-404');
   });
 });
 
-test('visiting set /terms-of-service', function() {
+test('visiting set /terms-of-service', function(assert) {
   Ember.$.mockjax({
     url: "/api/legal-pages/terms-of-service/",
     status: 200,
@@ -42,8 +43,8 @@ test('visiting set /terms-of-service', function() {
   visit('/terms-of-service');
 
   andThen(function() {
-    equal(currentPath(), 'terms-of-service');
+    assert.equal(currentPath(), 'terms-of-service');
     var $e = find('article');
-    equal(Ember.$.trim($e.html()), '<p>Top kek</p>');
+    assert.equal(Ember.$.trim($e.html()), '<p>Top kek</p>');
   });
 });

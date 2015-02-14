@@ -18,8 +18,12 @@ window.MisagoData = {
     "privacy_policy": true
   },
 
+  "csrfCookieName": 'csrftokencookie',
+
   "mediaUrl": "/media/",
   "staticUrl": "/static/",
+
+  "authApiUrl": "/api/auth/",
 
   "loginUrl": "/login/",
   "loginRedirectUrl": "/",

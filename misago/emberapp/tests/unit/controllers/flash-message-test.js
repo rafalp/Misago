@@ -5,75 +5,75 @@ import {
 
 moduleFor('controller:flash-message', 'FlashMessageController');
 
-test('it exists', function() {
+test('it exists', function(assert) {
   var controller = this.subject();
-  ok(controller);
+  assert.ok(controller);
 });
 
-test('isInfo', function() {
+test('isInfo', function(assert) {
   var controller = this.subject();
 
   controller.set('type', 'info');
 
-  ok(controller.get('isInfo'));
-  ok(!controller.get('isSuccess'));
-  ok(!controller.get('isWarning'));
-  ok(!controller.get('isError'));
+  assert.ok(controller.get('isInfo'));
+  assert.ok(!controller.get('isSuccess'));
+  assert.ok(!controller.get('isWarning'));
+  assert.ok(!controller.get('isError'));
 });
 
-test('isSuccess', function() {
+test('isSuccess', function(assert) {
   var controller = this.subject();
 
   controller.set('type', 'success');
 
-  ok(!controller.get('isInfo'));
-  ok(controller.get('isSuccess'));
-  ok(!controller.get('isWarning'));
-  ok(!controller.get('isError'));
+  assert.ok(!controller.get('isInfo'));
+  assert.ok(controller.get('isSuccess'));
+  assert.ok(!controller.get('isWarning'));
+  assert.ok(!controller.get('isError'));
 });
 
-test('isWarning', function() {
+test('isWarning', function(assert) {
   var controller = this.subject();
 
   controller.set('type', 'warning');
 
-  ok(!controller.get('isInfo'));
-  ok(!controller.get('isSuccess'));
-  ok(controller.get('isWarning'));
-  ok(!controller.get('isError'));
+  assert.ok(!controller.get('isInfo'));
+  assert.ok(!controller.get('isSuccess'));
+  assert.ok(controller.get('isWarning'));
+  assert.ok(!controller.get('isError'));
 });
 
-test('isError', function() {
+test('isError', function(assert) {
   var controller = this.subject();
 
   controller.set('type', 'error');
 
-  ok(!controller.get('isInfo'));
-  ok(!controller.get('isSuccess'));
-  ok(!controller.get('isWarning'));
-  ok(controller.get('isError'));
+  assert.ok(!controller.get('isInfo'));
+  assert.ok(!controller.get('isSuccess'));
+  assert.ok(!controller.get('isWarning'));
+  assert.ok(controller.get('isError'));
 });
 
-test('setFlash', function() {
+test('setFlash', function(assert) {
   var controller = this.subject();
 
   var testMessage = "I'm test flash!";
 
   controller.send('setFlash', 'success', testMessage);
 
-  ok(controller.get('isVisible'));
-  ok(controller.get('isSuccess'));
-  equal(controller.get('message'), testMessage);
+  assert.ok(controller.get('isVisible'));
+  assert.ok(controller.get('isSuccess'));
+  assert.equal(controller.get('message'), testMessage);
 });
 
-test('showFlash', function() {
+test('showFlash', function(assert) {
   var controller = this.subject();
 
   var testMessage = "I'm test flash!";
 
-  controller.send('showFlash', 'success', testMessage);
+  controller.showFlash('success', testMessage);
 
-  ok(controller.get('isVisible'));
-  ok(controller.get('isSuccess'));
-  equal(controller.get('message'), testMessage);
+  assert.ok(controller.get('isVisible'));
+  assert.ok(controller.get('isSuccess'));
+  assert.equal(controller.get('message'), testMessage);
 });

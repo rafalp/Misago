@@ -1,16 +1,40 @@
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-sm modal-sign-in">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="loginModalLabel">{{gettext "Sign in"}}</h4>
       </div>
       <div class="modal-body">
-        ...
+
+        <div class="form-group">
+          <div class="control-input">
+            {{input type="text" value=username class="form-control" placeholder=(gettext "Username or e-mail")}}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="control-input">
+            {{input type="password" value=password class="form-control" placeholder=(gettext "Password")}}
+          </div>
+        </div>
+
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        {{#if showActivation}}
+        <button class="btn btn-info btn-success">{{gettext "Activate account"}}</button>
+        {{else}}
+          {{#if isLoading}}
+          <button type="button" class="btn btn-block btn-primary" disabled="disabled">
+            <span class="fa fa-cog fa-spin"></span>
+            {{gettext "Singing in..."}}
+          </button>
+          {{else}}
+          <button type="button" class="btn btn-block btn-primary" {{action "signIn"}}>{{gettext "Sign in"}}</button>
+          {{/if}}
+        {{/if}}
+
+        <button class="btn btn-block btn-default">{{gettext "Forgot password?"}}</button>
+
       </div>
     </div>
   </div>

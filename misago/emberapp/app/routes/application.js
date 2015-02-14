@@ -2,6 +2,29 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
   actions: {
+    setTitle: function(title) {
+      if (typeof title === 'string') {
+        title = {title: title};
+      }
+
+      var complete_title = title.title;
+
+      if (typeof title.page !== 'undefined') {
+        complete_title += ' (' + interpolate(gettext('page %(page)s'), {page:title.page}, true) + ')';
+      }
+
+      if (typeof title.parent !== 'undefined') {
+        complete_title += ' | ' + title.parent;
+      }
+
+      complete_title += ' | ' + this.get('settings.forum_name');
+
+      document.title = complete_title;
+      return false;
+    },
+
+    // Error handler
+
     error: function(error){
       if (error.status === 0) {
         this.send('setTitle', gettext('Connection lost'));
@@ -28,27 +51,6 @@ export default Ember.Route.extend({
       return true;
     },
 
-    setTitle: function(title) {
-      if (typeof title === 'string') {
-        title = {title: title};
-      }
-
-      var complete_title = title.title;
-
-      if (typeof title.page !== 'undefined') {
-        complete_title += ' (' + interpolate(gettext('page %(page)s'), {page:title.page}, true) + ')';
-      }
-
-      if (typeof title.parent !== 'undefined') {
-        complete_title += ' | ' + title.parent;
-      }
-
-      complete_title += ' | ' + this.get('settings.forum_name');
-
-      document.title = complete_title;
-      return false;
-    },
-
     // Flashes
 
     flashInfo: function(message) {
@@ -68,6 +70,13 @@ export default Ember.Route.extend({
 
     flashError: function(message) {
       this.controllerFor("flashMessage").send('setFlash', 'error', message);
+      return false;
+    },
+
+    // Login Modal
+
+    openLoginModal: function() {
+      this.controllerFor("loginModal").send('open');
       return false;
     }
   }

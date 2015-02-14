@@ -1,19 +1,20 @@
 import Ember from 'ember';
+import { module, test } from 'qunit';
 import startApp from '../helpers/start-app';
 
 var application;
 
 module('Acceptance: Application Error Handler', {
-  setup: function() {
+  beforeEach: function() {
     application = startApp();
   },
-  teardown: function() {
+  afterEach: function() {
     Ember.run(application, 'destroy');
     Ember.$.mockjax.clear();
   }
 });
 
-test('some unhandled error occured', function() {
+test('some unhandled error occured', function(assert) {
   Ember.$.mockjax({
     url: "/api/legal-pages/privacy-policy/",
     status: 500,
@@ -25,11 +26,11 @@ test('some unhandled error occured', function() {
   visit('/privacy-policy');
 
   andThen(function() {
-    equal(currentPath(), 'error');
+    assert.equal(currentPath(), 'error');
   });
 });
 
-test('app went away', function() {
+test('app went away', function(assert) {
   Ember.$.mockjax({
     url: "/api/legal-pages/privacy-policy/",
     status: 0,
@@ -41,11 +42,11 @@ test('app went away', function() {
   visit('/privacy-policy');
 
   andThen(function() {
-    equal(currentPath(), 'error-0');
+    assert.equal(currentPath(), 'error-0');
   });
 });
 
-test('not found', function() {
+test('not found', function(assert) {
   Ember.$.mockjax({
     url: "/api/legal-pages/privacy-policy/",
     status: 404,
@@ -57,11 +58,11 @@ test('not found', function() {
   visit('/privacy-policy');
 
   andThen(function() {
-    equal(currentPath(), 'error-404');
+    assert.equal(currentPath(), 'error-404');
   });
 });
 
-test('permission denied', function() {
+test('permission denied', function(assert) {
   Ember.$.mockjax({
     url: "/api/legal-pages/privacy-policy/",
     status: 403,
@@ -73,11 +74,11 @@ test('permission denied', function() {
   visit('/privacy-policy');
 
   andThen(function() {
-    equal(currentPath(), 'error-403');
+    assert.equal(currentPath(), 'error-403');
   });
 });
 
-test('permission denied with reason', function() {
+test('permission denied with reason', function(assert) {
   Ember.$.mockjax({
     url: "/api/legal-pages/privacy-policy/",
     status: 403,
@@ -89,16 +90,16 @@ test('permission denied with reason', function() {
   visit('/privacy-policy');
 
   andThen(function() {
-    equal(currentPath(), 'error-403');
+    assert.equal(currentPath(), 'error-403');
     var $e = find('.lead');
-    equal(Ember.$.trim($e.text()), 'Lorem ipsum dolor met.');
+    assert.equal(Ember.$.trim($e.text()), 'Lorem ipsum dolor met.');
   });
 });
 
-test('not found route', function() {
+test('not found route', function(assert) {
   visit('/this-url-really-doesnt-exist');
 
   andThen(function() {
-    equal(currentPath(), 'error-404');
+    assert.equal(currentPath(), 'error-404');
   });
 });

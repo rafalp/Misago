@@ -3,12 +3,9 @@ import {
   test
 } from 'ember-qunit';
 
-moduleForModel('legal-page', 'LegalPage', {
-  // Specify the other units that are required for this test.
-  needs: []
-});
+moduleForModel('legal-page', 'LegalPage');
 
-test('it exists', function() {
+test('it exists', function(assert) {
   var model = this.subject();
-  ok(!!model);
+  assert.ok(!!model);
 });

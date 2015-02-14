@@ -6,17 +6,17 @@ import {
 var document_title = document.title;
 
 moduleFor('route:index', 'IndexRoute', {
-  teardown: function() {
+  afterEach: function() {
     document.title = document_title;
   }
 });
 
-test('it exists', function() {
+test('it exists', function(assert) {
   var route = this.subject();
-  ok(route);
+  assert.ok(route);
 });
 
-test('sets title correctly', function() {
+test('sets title correctly', function(assert) {
   var route = this.subject();
 
   route.set('settings', {
@@ -25,7 +25,7 @@ test('sets title correctly', function() {
   });
 
   route.send('didTransition');
-  equal(document.title, 'Forum Name');
+  assert.equal(document.title, 'Forum Name');
 
   route.set('settings', {
     'forum_index_title': 'Welcome to Forum!',
@@ -33,5 +33,5 @@ test('sets title correctly', function() {
   });
 
   route.send('didTransition');
-  equal(document.title, 'Welcome to Forum!');
+  assert.equal(document.title, 'Welcome to Forum!');
 });

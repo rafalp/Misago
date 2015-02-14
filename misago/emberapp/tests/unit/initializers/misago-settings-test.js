@@ -1,11 +1,12 @@
 import Ember from 'ember';
 import { initialize } from 'misago/initializers/misago-settings';
 import MisagoPreloadStore from 'misago/utils/preloadstore';
+import { module, test } from 'qunit';
 
 var container, application;
 
 module('SettingsInitializer', {
-  setup: function() {
+  beforeEach: function() {
     Ember.run(function() {
       application = Ember.Application.create();
       container = application.__container__;
@@ -14,11 +15,11 @@ module('SettingsInitializer', {
   }
 });
 
-test('registers preloaded configuration in Ember', function() {
+test('registers preloaded configuration in Ember', function(assert) {
   initialize(container, application);
 
-  equal(container.lookup('misago:static-url'), MisagoPreloadStore.get('staticUrl'));
-  equal(container.lookup('misago:media-url'), MisagoPreloadStore.get('mediaUrl'));
-  equal(container.lookup('misago:settings'), MisagoPreloadStore.get('misagoSettings'));
+  assert.equal(container.lookup('misago:static-url'), MisagoPreloadStore.get('staticUrl'));
+  assert.equal(container.lookup('misago:media-url'), MisagoPreloadStore.get('mediaUrl'));
+  assert.equal(container.lookup('misago:settings'), MisagoPreloadStore.get('misagoSettings'));
 });
 
