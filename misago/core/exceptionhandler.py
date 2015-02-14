@@ -35,7 +35,10 @@ def handle_explicit_first_page_exception(request, exception):
 
 
 def handle_http404_exception(request, exception):
-    return errorpages.page_not_found(request)
+    if request.is_ajax():
+        return JsonResponse({'detail': 'Not found'}, status=404)
+    else:
+        return errorpages.page_not_found(request)
 
 
 def handle_outdated_slug_exception(request, exception):

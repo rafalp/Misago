@@ -10,8 +10,12 @@ class PreloadConfigMiddleware(object):
             'staticUrl': settings.STATIC_URL,
             'mediaUrl': settings.MEDIA_URL,
 
-            'loginRedirectUrl': reverse('misago:index'),
-            'loginUrl': reverse('misago:login'),
+            'csrfCookieName': settings.CSRF_COOKIE_NAME,
 
-            'logoutUrl': reverse('misago:logout'),
+            'authApiUrl': reverse(settings.MISAGO_AUTH_API_URL),
+
+            'loginRedirectUrl': reverse(settings.LOGIN_REDIRECT_URL),
+            'loginUrl': reverse(settings.LOGIN_URL),
+
+            'logoutUrl': reverse(settings.LOGOUT_URL),
         })

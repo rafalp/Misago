@@ -11,12 +11,13 @@ from misago.users.validators import validate_password
 
 class MisagoAuthMixin(object):
     error_messages = {
-        'empty_data': _("You have to fill out both fields."),
-        'invalid_login': _("Your login or password is incorrect."),
+        'empty_data': _("Fill out both fields."),
+        'invalid_login': _("Login or password is incorrect."),
         'inactive_user': _("You have to activate your account before "
                            "you will be able to sign in."),
-        'inactive_admin': _("Administrator has to activate your account "
-                            "before you will be able to sign in."),
+        'inactive_admin': _("Your account has to be activated by "
+                            "Administrator before you will be able "
+                            "to sign in."),
     }
 
     def confirm_user_active(self, user):

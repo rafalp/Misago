@@ -14,9 +14,9 @@ from misago.users.forms.auth import AuthenticationForm
 
 
 @sensitive_post_parameters()
+@never_cache
 @deny_authenticated
 @csrf_protect
-@never_cache
 @deny_banned_ips
 def login(request):
     form = AuthenticationForm(request)
@@ -35,10 +35,10 @@ def login(request):
     return render(request, 'misago/login.html', {'form': form})
 
 
+@never_cache
 @deny_guests
 @require_POST
 @csrf_protect
-@never_cache
 def logout(request):
     message = _("%(user)s, you have been signed out.")
     messages.info(

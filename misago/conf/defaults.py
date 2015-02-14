@@ -249,6 +249,8 @@ MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE = 80
 MISAGO_MAILER_BATCH_SIZE = 20
 
 # Auth paths
+MISAGO_AUTH_API_URL = 'misago:api:authenticate'
+
 LOGIN_REDIRECT_URL = 'misago:index'
 LOGIN_URL = 'misago:login'
 LOGOUT_URL = 'misago:logout'
