@@ -34,6 +34,10 @@ class UserMiddleware(object):
                 logout(request)
         request.user.ip = request._misago_real_ip
 
+        request.preloaded_ember_data.update({
+            'isAuthenticated': request.user.is_authenticated()
+        })
+
 
 class OnlineTrackerMiddleware(object):
     def process_request(self, request):
