@@ -19,6 +19,17 @@
 
     <section id="main"></section>
 
+    <form id='hidden-login-form' method="post" action="/login/" style="display: none;">
+      <input name="csrfmiddlewaretoken" type="text" value="">
+      <input name="username" type="text">
+      <input name="password" type="password">
+      <input type="submit" id="signin-button" value="Sign in">
+    </form>
+    <form id='hidden-logout-form' method="post" action="/logout/" style="display: none;">
+      <input name="csrfmiddlewaretoken" type="text" value="">
+      <input type="submit" id="signin-button" value="Log out">
+    </form>
+
     <script src="http://localhost:8000/django-i18n.js"></script>
     <script src="http://localhost:8000/misago-preload-data.js"></script>
 

@@ -1,0 +1,14 @@
+{% load i18n %}
+{% if user.is_authenticated %}
+<form id='hidden-login-form' method="post" action="{% url LOGIN_URL %}" style="display: none;">
+  {% csrf_token %}
+  <input name="username" type="text">
+  <input name="password" type="password">
+  <input type="submit" id="signin-button" value="{% trans "Sign in" %}">
+</form>
+{% else %}
+<form id='hidden-logout-form' method="post" action="{% url LOGOUT_URL %}" style="display: none;">
+  {% csrf_token %}
+  <input type="submit" id="signin-button" value="{% trans "Log out" %}">
+</form>
+{% endif %}
