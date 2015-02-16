@@ -6,6 +6,7 @@ from misago.conf.dbsettings import db_settings
 
 def settings(request):
     return {
+        'DEBUG': dj_settings.DEBUG,
         'misago_settings': db_settings,
 
         'LOGIN_REDIRECT_URL': dj_settings.LOGIN_REDIRECT_URL,
