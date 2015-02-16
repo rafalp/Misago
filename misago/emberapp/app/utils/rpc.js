@@ -16,7 +16,7 @@ export function buildUrl(procedure, config) {
 
   finalUrl += procedure;
 
-  if (config.API_ADD_TRAILING_SLASHES && !endsWith(procedure, '/')) {
+  if (config.API_ADD_TRAILING_SLASHES && !endsWith(finalUrl, '/')) {
     finalUrl += '/';
   }
 
@@ -58,6 +58,6 @@ export function ajax(url, data) {
   }, 'RPC: ' + url);
 }
 
-export function rpc(procedure, data, config) {
+export default function(procedure, data, config) {
   return ajax(buildUrl(procedure, config), data);
 }

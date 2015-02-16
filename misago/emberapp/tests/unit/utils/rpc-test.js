@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import {buildUrl, ajax, rpc} from '../../../utils/rpc';
+import { default as rpc, buildUrl, ajax } from '../../../utils/rpc';
 import { module, test } from 'qunit';
 
 module('RPC', {
