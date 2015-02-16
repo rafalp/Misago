@@ -7,8 +7,11 @@ from misago.users.bans import get_request_ip_ban
 def deny_authenticated(f):
     def decorator(request, *args, **kwargs):
         if request.user.is_authenticated():
-            raise PermissionDenied(
-                _("This page is not available to signed in users."))
+            if request.is_ajax():
+                message = _("This action is not available to signed in users.")
+            else:
+                message = _("This page is not available to signed in users.")
+            raise PermissionDenied(message)
         else:
             return f(request, *args, **kwargs)
     return decorator
@@ -17,8 +20,11 @@ def deny_authenticated(f):
 def deny_guests(f):
     def decorator(request, *args, **kwargs):
         if request.user.is_anonymous():
-            raise PermissionDenied(
-                _("This page is not available to guests."))
+            if request.is_ajax():
+                message = _("This action is not available to guests.")
+            else:
+                message = _("This page is not available to guests.")
+            raise PermissionDenied(message)
         else:
             return f(request, *args, **kwargs)
     return decorator
