@@ -57,14 +57,15 @@ export default Ember.Controller.extend({
       self.logIn(credentials);
     }, function(rejection) {
       self.authError(rejection);
-    }).finally(function() {
       self.set('isLoading', false);
     });
   },
 
   logIn: function(credentials) {
-    this.send('flashSuccess', gettext("You are authenticated!"));
-    console.log(credentials);
+    var $form = Ember.$('#hidden-login-form');
+    $form.find('input[name=username]').val(credentials.username);
+    $form.find('input[name=password]').val(credentials.password);
+    $form.submit();
   },
 
   authError: function(rejection) {
