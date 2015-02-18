@@ -45,6 +45,13 @@ CACHES = {
 }
 """
 
+        settings_file += """
+
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+)
+"""
+
         if os.environ.get('TRAVIS'):
             settings_file += """
 
