@@ -241,6 +241,12 @@ MISAGO_DYNAMIC_AVATAR_DRAWER
 Function used to create unique avatar for this user. Allows for customization of algorithm used to generate those.
 
 
+MISAGO_EMBER_CLI_ORIGIN
+-----------------------
+
+Local address under which Ember-CLI web server is being ran. Used for rewriting redirects in development using Ember-CLI (``DEBUG = True``). Defaults to `http://localhost:4200`. Set this to empty string or ``False`` to disable this feature completely.
+
+
 MISAGO_FRESH_CONTENT_PERIOD
 ---------------------------
 Controls amount of data used in building "New threads" and "Threads with unread replies" lists. Active forums can try lowering this value while less active ones may wish to increase this number.
