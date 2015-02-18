@@ -1,5 +1,5 @@
 {% load i18n %}
-{% if user.is_authenticated %}
+{% if user.is_anonymous %}
 <form id='hidden-login-form' method="post" action="{% url LOGIN_URL %}" style="display: none;">
   {% csrf_token %}
   <input name="username" type="text">
