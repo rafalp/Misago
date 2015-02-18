@@ -6,7 +6,11 @@
       <span>{{settings.forum_name}}</span>
     {{/link-to}}
 
+    {{#if user.isAuthenticated}}
+    {{render 'user-nav'}}
+    {{else}}
     {{render 'guest-nav'}}
+    {{/if}}
 
   </div><!-- /.container -->
 </nav>

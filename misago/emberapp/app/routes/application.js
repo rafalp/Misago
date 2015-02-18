@@ -73,10 +73,16 @@ export default Ember.Route.extend({
       return false;
     },
 
-    // Login Modal
+    // Auth
 
     openLoginModal: function() {
       this.controllerFor("loginModal").send('open');
+      return false;
+    },
+
+    logOut: function() {
+      this.get('auth').logout();
+      Ember.$('#hidden-logout-form').submit();
       return false;
     }
   }

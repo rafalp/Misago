@@ -24,11 +24,6 @@ def login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-
-            message = _("Welcome back, %(user)s! You have been "
-                        "signed in successfully.")
-            messages.success(
-                request, message % {'user': form.user_cache.username})
             auth.login(request, form.user_cache)
             return redirect(settings.LOGIN_REDIRECT_URL)
 
@@ -40,8 +35,5 @@ def login(request):
 @require_POST
 @csrf_protect
 def logout(request):
-    message = _("%(user)s, you have been signed out.")
-    messages.info(
-        request, message % {'user': request.user.username})
     auth.logout(request)
-    return redirect('misago:index')
+    return redirect(settings.LOGIN_REDIRECT_URL)

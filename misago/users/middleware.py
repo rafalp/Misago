@@ -35,8 +35,24 @@ class UserMiddleware(object):
         request.user.ip = request._misago_real_ip
 
         request.preloaded_ember_data.update({
-            'isAuthenticated': request.user.is_authenticated()
+            'isAuthenticated': request.user.is_authenticated(),
         })
+
+        if request.user.is_authenticated():
+            request.preloaded_ember_data.update({
+                'user': {
+                    'username': request.user.username,
+                    'isAuthenticated': True,
+                    'isAnonymous': False
+                }
+            })
+        else:
+            request.preloaded_ember_data.update({
+                'user': {
+                    'isAuthenticated': False,
+                    'isAnonymous': True
+                }
+            })
 
 
 class OnlineTrackerMiddleware(object):
