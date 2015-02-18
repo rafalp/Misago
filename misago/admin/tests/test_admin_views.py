@@ -9,6 +9,7 @@ from misago.admin.views import get_protected_namespace
 class FakeRequest(object):
     def __init__(self, path):
         self.path = path
+        self.path_info = path
 
 
 class AdminProtectedNamespaceTests(TestCase):
@@ -55,7 +56,7 @@ class AdminLoginViewTests(TestCase):
             data={'username': 'Nope', 'password': 'Nope'})
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Your login or password is incorrect.', response.content)
+        self.assertIn('Login or password is incorrect.', response.content)
         self.assertIn('Sign in', response.content)
         self.assertIn('Username or e-mail', response.content)
         self.assertIn('Password', response.content)
