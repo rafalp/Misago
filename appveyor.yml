@@ -25,7 +25,7 @@ install:
   - set PATH=%APPDATA%\npm;%PATH%
   - npm config set cache C:\nc
   - npm version
-  - dir C:\projects\misago\misago\emberapp
+  - ps: cd C:\projects\misago\misago\emberapp
   - npm install -g bower
   - npm install
   - bower install
