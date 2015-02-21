@@ -48,24 +48,6 @@ class EmberCLIRedirectsMiddlewareTests(TestCase):
                 settings.MISAGO_EMBER_CLI_ORIGIN))
             self.assertTrue(response['location'].endswith(url))
 
-        with self.settings(MISAGO_EMBER_CLI_ORIGIN=''):
-            response = MockResponse(url, 301)
-
-            middleware.process_response(request, response)
-            self.assertFalse(response['location'].startswith(
-                settings.MISAGO_EMBER_CLI_ORIGIN))
-            self.assertTrue(response['location'].endswith(url))
-
-    def test_is_ember_cli_request(self):
-        """is_ember_cli_request test works"""
-        middleware = EmberCLIRedirectsMiddleware()
-
-        valid_request = MockRequest(settings.MISAGO_EMBER_CLI_ORIGIN)
-        self.assertTrue(middleware.is_ember_cli_request(valid_request))
-
-        invalid_request = MockRequest('http://somewhere.com/some_page.html')
-        self.assertFalse(middleware.is_ember_cli_request(invalid_request))
-
     def rewrite_http_redirect_url(self):
         """rewrite_http_redirect_url prepents CLI host to URL"""
         middleware = EmberCLIRedirectsMiddleware()
