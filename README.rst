@@ -39,7 +39,9 @@ To start Misago site locally, first setup and activate virtual environment for i
     python setup.py install
     misago-start.py testforum
 
-This will install Misago in your virtual environment and will make pre-configured Misago site for you named "testforum". It will also expose "requirements.txt" for you to use to install Misago dependencies.
+This will install Misago in your virtual environment and will make pre-configured Misago site for you named "testforum". It will also expose "requirements.txt" for you to use to install Misago dependencies::
+
+    pip install -r requirements.txt
 
 Now cd to "testforum" and edit "settings.py" file in your editor of choice in order to set up basic settings like database connection, default timezone or interface language.
 
