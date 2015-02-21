@@ -36,8 +36,6 @@ def page_not_found(request):
 @admin_csrf_failure
 def csrf_failure(request, reason=""):
     if request.is_ajax():
-        print 'C> %s' % request.META.get("CSRF_COOKIE")
-        print 'E> %s' % request.META.get('HTTP_X_CSRFTOKEN', '')
         return _ajax_error(403, _("Request authentication is invalid."))
     else:
         response = render(request, 'misago/errorpages/csrf_failure.html')
