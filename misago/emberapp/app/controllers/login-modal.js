@@ -63,6 +63,7 @@ export default Ember.Controller.extend({
 
   logIn: function(credentials) {
     var $form = Ember.$('#hidden-login-form');
+    $form.find('input[name=redirect_to]').val(window.location.href);
     $form.find('input[name=username]').val(credentials.username);
     $form.find('input[name=password]').val(credentials.password);
     $form.submit();
