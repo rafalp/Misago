@@ -1,0 +1,28 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{% if title %}{{ title }}{% else %}{% trans "Enable JavaScript" %}{% endif %} | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+<div class="error-page error-noscript">
+  <div class="container">
+    <div class="error">
+
+      <div class="error-icon">
+        <span class="fa fa-code"></span>
+      </div>
+
+      <div class="error-message">
+        {% if message %}
+        <p class="lead">{{ message|escape|urlize|linebreaksbr }}</p>
+        {% else %}
+        <p class="lead">{% trans "To access this page enable JavaScript." %}</p>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock content %}

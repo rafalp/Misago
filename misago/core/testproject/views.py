@@ -5,6 +5,7 @@ from django.http import Http404, HttpResponse
 from misago.core import errorpages, mail
 from misago.core.shortcuts import paginate, validate_slug
 from misago.core.testproject.models import Model
+from misago.core.views import noscript
 
 
 def test_mail_user(request):
@@ -60,6 +61,10 @@ def raise_403(request):
 
 def raise_404(request):
     raise Http404()
+
+
+def test_noscript(request):
+    return noscript(request, **request.POST)
 
 
 @errorpages.shared_403_exception_handler

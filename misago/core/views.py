@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.views import i18n
 from django.views.decorators.http import last_modified
 from django.views.decorators.cache import cache_page, never_cache
+from django.views.decorators.debug import sensitive_post_parameters
 
 from misago.forums.lists import get_forums_list
 from misago.users.online.ranks import get_ranks_online
@@ -17,10 +18,8 @@ def forum_index(request):
     })
 
 
-last_modified_date = timezone.now()
-
 @cache_page(86400, key_prefix='js18n')
-@last_modified(lambda req, **kw: last_modified_date)
+@last_modified(lambda req, **kw: timezone.now())
 def javascript_catalog(request):
     return i18n.javascript_catalog(request, 'djangojs', None)
 
@@ -32,3 +31,10 @@ def preload_data(request):
 
     return render(request, 'misago/preloaded_data.js',
                   content_type='application/javascript')
+
+
+def noscript(request, title=None, message=None):
+    return render(request, 'misago/noscript.html', {
+        'title': title,
+        'message': message,
+    })
