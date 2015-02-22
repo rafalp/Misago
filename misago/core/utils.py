@@ -6,7 +6,7 @@ from django.http import Http404
 from django.core.urlresolvers import resolve, reverse
 from django.template.defaultfilters import (slugify as django_slugify,
                                             date as dj_date_format)
-from django.utils import timezone
+from django.utils import html, timezone
 from django.utils.translation import ugettext_lazy as _, ungettext_lazy
 
 
@@ -14,6 +14,10 @@ def slugify(string):
     string = unicode(string)
     string = unidecode(string)
     return django_slugify(string.replace('_', ' ').strip())
+
+
+def format_plaintext_for_html(string):
+    return html.linebreaks(html.urlize(html.escape(string)))
 
 
 """
@@ -157,15 +161,3 @@ def time_amount(value):
 
 def date_format(date, format=None):
     return dj_date_format(timezone.template_localtime(date), format)
-
-
-"""
-MD subset for use for enchancing items descriptions
-"""
-MD_SUBSET_FORBID_SYNTAX = (
-    # References are evil
-    'reference', 'reference', 'image_reference', 'short_reference',
-
-    # Blocks are evil too
-    'hashheader', 'setextheader', 'code', 'quote', 'hr', 'olist', 'ulist',
-)

@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from misago.core.utils import (clean_return_path, is_request_to_misago,
                                slugify, time_amount, is_referer_local,
-                               date_format)
+                               date_format, format_plaintext_for_html)
 
 
 VALID_PATHS = (
@@ -44,7 +44,7 @@ class IsRequestToMisagoTests(TestCase):
 
 class SlugifyTests(TestCase):
     def test_valid_slugify_output(self):
-        """Misago's slugify correcly slugifies string"""
+        """Misago's slugify correctly slugifies string"""
         test_cases = (
             (u'Bob', u'bob'),
             (u'Eric The Fish', u'eric-the-fish'),
@@ -57,6 +57,49 @@ class SlugifyTests(TestCase):
 
         for original, slug in test_cases:
             self.assertEqual(slugify(original), slug)
+
+
+PLAINTEXT_FORMAT_CASES = (
+    (
+        u'Lorem ipsum.',
+        u'<p>Lorem ipsum.</p>'
+    ),
+    (
+        u'Lorem <b>ipsum</b>.',
+        u'<p>Lorem &lt;b&gt;ipsum&lt;/b&gt;.</p>'
+    ),
+    (
+        u'Lorem "ipsum" dolor met.',
+        u'<p>Lorem &quot;ipsum&quot; dolor met.</p>'
+    ),
+    (
+        u'Lorem ipsum.\nDolor met.',
+        u'<p>Lorem ipsum.<br />Dolor met.</p>'
+    ),
+    (
+        u'Lorem ipsum.\n\nDolor met.',
+        u'<p>Lorem ipsum.</p>\n\n<p>Dolor met.</p>'
+    ),
+    (
+        u'http://misago-project.org/login/',
+        u'<p><a href="http://misago-project.org/login/">http://misago-project.org/login/</a></p>'
+    ),
+)
+
+
+class FormatPlaintextForHtmlTests(TestCase):
+    def test_format_plaintext_for_html(self):
+        """format_plaintext_for_html correctly formats plaintext for html"""
+        for plaintext, html in PLAINTEXT_FORMAT_CASES:
+            output = format_plaintext_for_html(plaintext)
+
+            assertion_message = """
+format_plaintext_for_html failed to produce expected output:
+
+expected:   %s
+return:     %s
+""" % (html, output)
+            self.assertEqual(output, html, assertion_message)
 
 
 class MockRequest(object):
