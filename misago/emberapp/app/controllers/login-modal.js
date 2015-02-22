@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import MisagoPreloadStore from 'misago/utils/preloadstore';
 import rpc from 'misago/utils/rpc';
+import getCsrfToken from 'misago/utils/csrf';
 
 export default Ember.Controller.extend({
   modal: null,
@@ -53,7 +53,7 @@ export default Ember.Controller.extend({
 
   authenticate: function(credentials) {
     var self = this;
-    rpc(MisagoPreloadStore.get('authApiUrl'), credentials).then(function() {
+    rpc(this.get('settings.authApiUrl'), credentials).then(function() {
       self.logIn(credentials);
     }, function(rejection) {
       self.authError(rejection);
@@ -63,6 +63,13 @@ export default Ember.Controller.extend({
 
   logIn: function(credentials) {
     var $form = Ember.$('#hidden-login-form');
+
+    // we need to refresh CSRF token because previous api call changed it
+    $form.find('input[name=csrfmiddlewaretoken]').val(getCsrfToken());
+
+    // fill out form with user credentials and submit it, this will tell
+    // misago to redirect user back to right page, and will trigger browser's
+    // key ring feature
     $form.find('input[name=redirect_to]').val(window.location.href);
     $form.find('input[name=username]').val(credentials.username);
     $form.find('input[name=password]').val(credentials.password);

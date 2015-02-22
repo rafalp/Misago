@@ -4,7 +4,7 @@ import ENV from '../config/environment';
 
 export function initialize() {
   if (ENV.environment !== 'production') {
-    // set CSRF tokens on preloaded forms
+    // set initial CSRF tokens on preloaded forms
     Ember.$('input[name=csrfmiddlewaretoken]').val(getCsrfToken());
   }
 }
