@@ -10,25 +10,28 @@ from django.test.utils import setup_test_environment
 def runtests():
     test_runner_path = os.path.dirname(__file__)
     project_template_path = os.path.join(
+        test_runner_path, 'misago/project_template')
+    project_package_path = os.path.join(
         test_runner_path, 'misago/project_template/project_name')
-    avatars_store_path = os.path.join(
-        test_runner_path, 'misago/project_template/avatar_store')
-    media_path = os.path.join(
-        test_runner_path, 'misago/project_template/media')
 
     test_project_path = os.path.join(test_runner_path, "testproject")
-    test_project_avatars_path = os.path.join(test_project_path, "avatar_store")
-    test_project_media_path = os.path.join(test_project_path, "media")
     if not os.path.exists(test_project_path):
         shutil.copytree(project_template_path, test_project_path)
-        shutil.copytree(avatars_store_path, test_project_avatars_path)
-        shutil.copytree(media_path, test_project_media_path)
+        for filename in os.listdir(project_package_path):
+            src_path = os.path.join(project_package_path, filename)
+            dst_path = os.path.join(test_project_path, filename)
+            shutil.copy2(src_path, dst_path)
 
         settings_path = os.path.join(test_project_path, "settings.py")
         with open(settings_path, "r") as py_file:
             settings_file = py_file.read()
 
             # Do some configuration magic
+
+            settings_file = settings_file.replace(
+                "os.path.dirname(os.path.dirname(__file__))",
+                "os.path.dirname(__file__)")
+
             settings_file = settings_file.replace("{{ project_name }}",
                                                    "testproject")
             settings_file = settings_file.replace("{{ secret_key }}",
