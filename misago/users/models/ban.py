@@ -110,6 +110,10 @@ class Ban(models.Model):
 
         return super(Ban, self).save(*args, **kwargs)
 
+    def get_serialized_message(self):
+        from misago.users.serializers import BanMessageSerializer
+        return BanMessageSerializer(self).data
+
     @property
     def check_name(self):
         return BANS_CHOICES[self.check_type][1]
