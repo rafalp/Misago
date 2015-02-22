@@ -25,7 +25,7 @@ class UserTestCase(TestCase):
             "TestSuperUser", "test@superuser.com", self.USER_PASSWORD)
 
     def login_user(self, user):
-        self.client.post(reverse('misago:login'), data={
+        self.client.post(reverse('misago:api:login'), data={
             'username': user.email,
             'password': self.USER_PASSWORD,
         })
