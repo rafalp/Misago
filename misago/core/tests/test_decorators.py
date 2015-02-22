@@ -4,23 +4,16 @@ from django.test import TestCase
 
 
 class RequirePostTests(TestCase):
+    urls = 'misago.core.testproject.urls'
+
     def test_require_POST_success(self):
         """require_POST decorator allowed POST request"""
-        User = get_user_model()
-        test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
-        self.client.login(username=test_user.username, password='Pass.123')
+        response = self.client.post(reverse('test_require_post'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, 'Request method: POST')
 
-        response = self.client.post(reverse('misago:logout'))
-
-        self.assertEqual(response.status_code, 302)
-
-    def test_require_POST_fail(self):
+    def test_require_POST_fail_GET(self):
         """require_POST decorator failed on GET request"""
-        User = get_user_model()
-        test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
-        self.client.login(username=test_user.username, password='Pass.123')
-
-        response = self.client.get(reverse('misago:logout'))
-
+        response = self.client.get(reverse('test_require_post'))
         self.assertEqual(response.status_code, 405)
         self.assertIn("Wrong way", response.content)

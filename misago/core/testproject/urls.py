@@ -17,4 +17,5 @@ urlpatterns += patterns('misago.core.testproject.views',
     url(r'^test-403/$', 'raise_403', name='raise_403'),
     url(r'^test-404/$', 'raise_404', name='raise_404'),
     url(r'^test-noscript/$', 'test_noscript', name='test_noscript'),
+    url(r'^test-require-post/$', 'test_require_post', name='test_require_post'),
 )

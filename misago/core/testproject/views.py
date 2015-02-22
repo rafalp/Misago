@@ -3,6 +3,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponse
 
 from misago.core import errorpages, mail
+from misago.core.decorators import require_POST
 from misago.core.shortcuts import paginate, validate_slug
 from misago.core.testproject.models import Model
 from misago.core.views import noscript
@@ -65,6 +66,11 @@ def raise_404(request):
 
 def test_noscript(request):
     return noscript(request, **request.POST)
+
+
+@require_POST
+def test_require_post(request):
+    return HttpResponse("Request method: %s" % request.method)
 
 
 @errorpages.shared_403_exception_handler
