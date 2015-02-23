@@ -2,8 +2,26 @@
   <div class="modal-dialog modal-sm modal-sign-in">
     <div class="modal-content">
       <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="{{unbound gettext "Close"}}"><span aria-hidden="true">&times;</span></button>
+        {{#if isBanned}}
+        <h4 class="modal-title" id="loginModalLabel">{{gettext "Account banned"}}</h4>
+        {{else}}
         <h4 class="modal-title" id="loginModalLabel">{{gettext "Sign in"}}</h4>
+        {{/if}}
       </div>
+
+      {{#if isBanned}}
+      <div class="modal-body modal-ban-message">
+
+        {{{ban.message.html}}}
+
+        <p>This ban is permanent.</p>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-block btn-default" data-dismiss="modal">{{gettext "Ok"}}</button>
+      </div>
+      {{else}}
       <div class="modal-body">
 
         <div class="form-group">
@@ -36,6 +54,7 @@
         <button class="btn btn-block btn-default">{{gettext "Forgot password?"}}</button>
 
       </div>
+      {{/if}}
     </div>
   </div>
 </div>

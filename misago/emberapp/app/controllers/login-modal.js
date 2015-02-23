@@ -5,13 +5,14 @@ import getCsrfToken from 'misago/utils/csrf';
 export default Ember.Controller.extend({
   modal: null,
 
-  message: '',
+  isLoading: false,
+  isBanned: false,
+  showActivation: false,
 
   username: '',
   password: '',
 
-  isLoading: false,
-  showActivation: false,
+  ban: null,
 
   scheduleSetup: function() {
     Ember.run.scheduleOnce('afterRender', this, this.setup);
@@ -31,18 +32,17 @@ export default Ember.Controller.extend({
   },
 
   reset: function() {
-    this.set('message', '');
+    this.set('ban', null);
 
     this.set('username', '');
     this.set('password', '');
 
     this.set('isLoading', false);
+    this.set('isBanned', false);
     this.set('showActivation', false);
   },
 
   isValid: function(credentials) {
-    this.set('isLoading', true);
-
     if (!credentials.username || !credentials.password) {
       this.send('flashWarning', gettext("Fill out both fields."));
       return false;
@@ -83,6 +83,8 @@ export default Ember.Controller.extend({
       this.send('flashInfo', rejection.detail);
       this.set('showActivation', true);
     } else if (rejection.code === 'banned') {
+      this.set('ban', rejection.detail);
+      this.set('isBanned', true);
     } else {
       this.send('flashError', rejection.detail);
     }
@@ -101,11 +103,12 @@ export default Ember.Controller.extend({
         };
 
         if (this.isValid(credentials)) {
+          this.set('isLoading', true);
           this.authenticate(credentials);
         } else {
           this.set('isLoading', false);
         }
       }
-    }
+    },
   }
 });
