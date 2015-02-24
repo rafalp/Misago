@@ -37,19 +37,21 @@ def runtests():
             settings_file = settings_file.replace("{{ secret_key }}",
                                                   "t3stpr0j3ct")
             settings_file += """
+# disable account validation via API's
 MISAGO_NEW_REGISTRATIONS_VALIDATORS = ()
 
+# store mails in memory
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+
+# use in-memory cache
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'uniqu3-sn0wf14k3'
     }
 }
-"""
 
-        settings_file += """
-
+# Use MD5 password hashing to speed up test suite
 PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
 )
