@@ -7,6 +7,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 
 from misago.conf import settings
 from misago.core.mail import mail_user
+from misago.core.views import noscript
 
 from misago.users.bans import get_user_ban
 from misago.users.decorators import deny_authenticated, deny_banned_ips
@@ -25,6 +26,10 @@ def reset_view(f):
 
 @reset_view
 def request_reset(request):
+    return noscript(request, **{
+        'title': _("Change forgotten password"),
+        'message': _("To change forgotten password enable JavaScript."),
+    })
     form = ResetPasswordForm()
 
     if request.method == 'POST':

@@ -12,6 +12,7 @@ from misago.conf import settings
 from misago.core.decorators import ajax_only, require_POST
 from misago.core.exceptions import AjaxError
 from misago.core.mail import mail_user
+from misago.core.views import noscript
 from misago.markup import Editor
 from misago.notifications import read_user_notifications
 
@@ -42,6 +43,10 @@ def render(request, template, context=None):
 
 @deny_guests
 def change_forum_options(request):
+    return noscript(request, **{
+        'title': _("Change options"),
+        'message': _("To change forum options enable JavaScript."),
+    })
     form = ChangeForumOptionsForm(instance=request.user)
     if request.method == 'POST':
         form = ChangeForumOptionsForm(request.POST, instance=request.user)
