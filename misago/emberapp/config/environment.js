@@ -21,7 +21,10 @@ module.exports = function(environment) {
       // Django API
       API_HOST: '',
       API_NAMESPACE: 'api',
-      API_ADD_TRAILING_SLASHES: true
+      API_ADD_TRAILING_SLASHES: true,
+
+      // Misago ticks frequency (in ms, used for refreshing timestamps)
+      TICK_FREQUENCY: 15000
     }
   };
 
@@ -41,6 +44,8 @@ module.exports = function(environment) {
       'style-src': "'self' 'unsafe-inline' http://fonts.googleapis.com", // Allow inline styles and loaded CSS from http://fonts.googleapis.com
       'media-src': "'self'"
     }
+
+    ENV.APP.TICK_FREQUENCY = 1000;
   }
 
   if (environment === 'test') {
@@ -56,7 +61,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-    ENV.locationType = 'trailing-slash';
+    ENV.locationType = 'django-location';
   }
 
   return ENV;
