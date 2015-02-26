@@ -43,6 +43,9 @@
     </script>
 
     <script type="text/javascript" src="{% static 'misago/js/vendor.js' %}"></script>
+    {% if LANGUAGE_CODE != "en-us" %}
+    <script type="text/javascript" src="/moment-i18n.js"></script>
+    {% endif %}
     <script type="text/javascript" src="{% static 'misago/js/misago.js' %}"></script>
 
   </body>

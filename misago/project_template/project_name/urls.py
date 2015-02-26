@@ -12,6 +12,7 @@ urlpatterns = patterns('',
 
     # Javascript translations
     url(r'^django-i18n.js$', 'misago.core.views.javascript_catalog'),
+    url(r'^moment-i18n.js$', 'misago.core.views.momentjs_catalog'),
 
     # In-dev preload data for Ember-CLI
     url(r'^misago-preload-data.js$', 'misago.core.views.preload_data'),
