@@ -19,11 +19,6 @@ class PreloadConfigMiddlewareTests(TestCase):
 
             'staticUrl',
             'mediaUrl',
-
-            'loginRedirectUrl',
-            'loginUrl',
-
-            'logoutUrl',
         )
 
         for key in MIDDLEWARE_KEYS:
