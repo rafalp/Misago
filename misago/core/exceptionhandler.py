@@ -35,10 +35,7 @@ def handle_explicit_first_page_exception(request, exception):
 
 
 def handle_http404_exception(request, exception):
-    if request.is_ajax():
-        return JsonResponse({'detail': 'Not found'}, status=404)
-    else:
-        return errorpages.page_not_found(request)
+    return errorpages.page_not_found(request)
 
 
 def handle_outdated_slug_exception(request, exception):
@@ -92,6 +89,10 @@ def handle_api_exception(exception):
         if isinstance(exception, PermissionDenied):
             try:
                 response.data['detail'] = exception.args[0]
+                try:
+                    response.data.update(exception.args[1])
+                except IndexError:
+                    pass
             except IndexError:
                 pass
         return response

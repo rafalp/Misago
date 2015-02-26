@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from misago.core.utils import format_plaintext_for_html
 
-from misago.users.models import Ban, BAN_USERNAME, BAN_EMAIL, BAN_IP
+from misago.users.models import Ban, BAN_IP
 
 
 class BanMessageSerializer(serializers.ModelSerializer):
@@ -15,7 +15,12 @@ class BanMessageSerializer(serializers.ModelSerializer):
         fields = ('message', 'expires_on')
 
     def get_message(self, obj):
-        message = obj.user_message or _("You are banned.")
+        if obj.user_message:
+            message = obj.user_message
+        elif obj.check_type == BAN_IP:
+            message = _("Your IP address is banned.")
+        else:
+            message = _("You are banned.")
 
         return {
             'plain': message,

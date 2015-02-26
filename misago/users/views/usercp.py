@@ -17,7 +17,7 @@ from misago.markup import Editor
 from misago.notifications import read_user_notifications
 
 from misago.users import avatars
-from misago.users.decorators import deny_guests
+from misago.users.decorators import deflect_guests
 from misago.users.forms.rename import ChangeUsernameForm
 from misago.users.forms.usercp import (ChangeForumOptionsForm,
                                        EditSignatureForm,
@@ -41,7 +41,7 @@ def render(request, template, context=None):
     return django_render(request, template, context)
 
 
-@deny_guests
+@deflect_guests
 def change_forum_options(request):
     return noscript(request, **{
         'title': _("Change options"),
@@ -62,7 +62,7 @@ def change_forum_options(request):
                   {'form': form})
 
 
-@deny_guests
+@deflect_guests
 def change_avatar(request):
     avatar_size = max(settings.MISAGO_AVATARS_SIZES)
 
@@ -106,7 +106,7 @@ def avatar_not_locked(f):
     return decorator
 
 
-@deny_guests
+@deflect_guests
 @avatar_not_locked
 def upload_avatar(request):
     if not settings.allow_custom_avatars:
@@ -122,7 +122,7 @@ def upload_avatar(request):
 
 
 @ajax_only
-@deny_guests
+@deflect_guests
 @require_POST
 @avatar_not_locked
 def upload_avatar_handler(request):
@@ -141,7 +141,7 @@ def upload_avatar_handler(request):
     return JsonResponse({'is_error': 0, 'message': 'Image has been uploaded.'})
 
 
-@deny_guests
+@deflect_guests
 @avatar_not_locked
 def crop_avatar(request, use_tmp_avatar):
     if use_tmp_avatar:
@@ -200,7 +200,7 @@ def crop_avatar(request, use_tmp_avatar):
     })
 
 
-@deny_guests
+@deflect_guests
 @avatar_not_locked
 def avatar_galleries(request):
     if not avatars.gallery.galleries_exist():
@@ -222,7 +222,7 @@ def avatar_galleries(request):
     })
 
 
-@deny_guests
+@deflect_guests
 def edit_signature(request):
     if not request.user.acl['can_have_signature']:
         raise Http404()
@@ -257,7 +257,7 @@ def edit_signature(request):
                   {'form': form, 'editor': editor})
 
 
-@deny_guests
+@deflect_guests
 @transaction.atomic()
 def change_username(request):
     namechanges = UsernameChanges(request.user)
@@ -285,7 +285,7 @@ def change_username(request):
 
 
 @sensitive_post_parameters()
-@deny_guests
+@deflect_guests
 def change_email_password(request):
     form = ChangeEmailPasswordForm()
     if request.method == 'POST':
@@ -335,7 +335,7 @@ def change_email_password(request):
                   {'form': form})
 
 
-@deny_guests
+@deflect_guests
 def confirm_email_password_change(request, token):
     new_credentials = get_new_credentials(request.user, token)
     if not new_credentials:

@@ -3,30 +3,36 @@ from misago.users.testutils import UserTestCase
 
 
 class DenyAuthenticatedTests(UserTestCase):
-    ajax_header = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
-
     def test_success(self):
         """deny_authenticated decorator allowed guest request"""
-        response = self.client.get(reverse('misago:request_password_reset'))
-        self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse('misago:api:login'))
+        self.assertEqual(response.status_code, 400)
 
     def test_fail(self):
-        """deny_authenticated decorator blocked authenticated request"""
+        """deny_authenticated decorator denied authenticated request"""
         self.login_user(self.get_authenticated_user())
 
-        response = self.client.get(reverse('misago:request_password_reset'))
-        self.assertEqual(response.status_code, 302)
-
-        response = self.client.get(reverse('misago:request_password_reset'),
-                                           **self.ajax_header)
+        response = self.client.post(reverse('misago:api:login'))
         self.assertEqual(response.status_code, 403)
 
 
-class DenyGuestsTests(UserTestCase):
-    ajax_header = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
-
+class DeflectAuthenticatedTests(UserTestCase):
     def test_success(self):
-        """deny_guests decorator allowed authenticated request"""
+        """deflect_authenticated decorator allowed guest request"""
+        response = self.client.get(reverse('misago:request_password_reset'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_fail(self):
+        """deflect_authenticated decorator deflected authenticated request"""
+        self.login_user(self.get_authenticated_user())
+
+        response = self.client.get(reverse('misago:request_password_reset'))
+        self.assertEqual(response.status_code, 302)
+
+
+class DeflectGuestsTests(UserTestCase):
+    def test_success(self):
+        """deflect_guests decorator allowed authenticated request"""
         self.login_user(self.get_authenticated_user())
 
         response = self.client.post(
@@ -34,11 +40,7 @@ class DenyGuestsTests(UserTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_fail(self):
-        """deny_guests decorator blocked authenticated request"""
+        """deflect_guests decorator deflected authenticated request"""
         response = self.client.post(
             reverse('misago:usercp_change_forum_options'))
         self.assertEqual(response.status_code, 302)
-
-        response = self.client.get(
-            reverse('misago:usercp_change_forum_options'), **self.ajax_header)
-        self.assertEqual(response.status_code, 403)

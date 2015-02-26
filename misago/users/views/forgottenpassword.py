@@ -10,15 +10,15 @@ from misago.core.mail import mail_user
 from misago.core.views import noscript
 
 from misago.users.bans import get_user_ban
-from misago.users.decorators import deny_authenticated, deny_banned_ips
+from misago.users.decorators import deflect_authenticated, deflect_banned_ips
 from misago.users.forms.auth import ResetPasswordForm, SetNewPasswordForm
 from misago.users.tokens import (make_password_reset_token,
                                  is_password_reset_token_valid)
 
 
 def reset_view(f):
-    @deny_authenticated
-    @deny_banned_ips
+    @deflect_authenticated
+    @deflect_banned_ips
     def decorator(*args, **kwargs):
         return f(*args, **kwargs)
     return decorator

@@ -46,7 +46,7 @@ deny_authenticated
 
 :py:func:`misago.users.decorators.deny_authenticated`
 
-This decorator will block requests made to view if user is authenticated, displaying page with friendly error message in its stead.
+This decorator will block requests made to view if user is authenticated, displaying page with error message or returning JSON/XML in its stead.
 
 
 deny_guests
@@ -54,4 +54,36 @@ deny_guests
 
 :py:func:`misago.users.decorators.deny_guests`
 
-This decorator will block requests made to view if user is not authenticated, displaying page with friendly error message in its stead.
+This decorator will block requests made to view if user is not authenticated, displaying page with error message or returning JSON/XML in its stead.
+
+
+deny_banned_ips
+---------------
+
+:py:func:`misago.users.decorators.deny_banned_ips`
+
+This decorator will block requests made to view if user IP is banned, displaying page with error message or returning JSON/XML in its stead.
+
+
+deflect_authenticated
+---------------------
+
+:py:func:`misago.users.decorators.deflect_authenticated`
+
+This decorator will return redirect to forum index if user is authenticated.
+
+
+deflect_guests
+--------------
+
+:py:func:`misago.users.decorators.deflect_guests`
+
+This decorator will return redirect to forum index if user is not authenticated.
+
+
+deflect_banned_ips
+------------------
+
+:py:func:`misago.users.decorators.deflect_banned_ips`
+
+This decorator will return redirect to forum index if user IP is banned.
