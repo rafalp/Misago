@@ -1,7 +1,11 @@
-from django.conf import settings
+import pytz
+
 from django.contrib.auth import logout
 from django.contrib.auth.models import AnonymousUser as DjAnonymousUser
 from django.core.urlresolvers import resolve
+from django.utils import timezone
+
+from misago.conf import settings
 
 from misago.users.bans import get_request_ip_ban, get_user_ban
 from misago.users.models import AnonymousUser, Online
@@ -34,6 +38,17 @@ class UserMiddleware(object):
                 logout(request)
         request.user.ip = request._misago_real_ip
 
+
+class TimezoneMiddleware(object):
+    def process_request(self, request):
+        if request.user.is_authenticated():
+            timezone.activate(pytz.timezone(request.user.timezone))
+        else:
+            timezone.activate(pytz.timezone(settings.default_timezone))
+
+
+class PreloadUserMiddleware(object):
+    def process_request(self, request):
         request.preloaded_ember_data.update({
             'isAuthenticated': request.user.is_authenticated(),
         })

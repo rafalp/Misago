@@ -130,6 +130,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'misago.users.middleware.UserMiddleware',
+    'misago.users.middleware.TimezoneMiddleware',
+    'misago.users.middleware.PreloadUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'misago.core.middleware.exceptionhandler.ExceptionHandlerMiddleware',
