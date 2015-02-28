@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.test import TestCase
 
-from misago.core.embercli import is_ember_cli_request
+from misago.core.embercli import is_ember_cli_request, get_embercli_host
 
 
 class MockRequest(object):
@@ -33,3 +33,11 @@ class EmberCLITests(TestCase):
 
             invalid_request = MockRequest('http://somewhere.com/page.html')
             self.assertFalse(is_ember_cli_request(invalid_request))
+
+    def test_get_embercli_host(self):
+        """get_embercli_host returns ember-cli host"""
+        with self.settings(MISAGO_EMBER_CLI_ORIGIN='http://somewhere:1234'):
+            self.assertEqual(get_embercli_host(), 'somewhere:1234')
+
+        with self.settings(MISAGO_EMBER_CLI_ORIGIN=''):
+            self.assertIsNone(get_embercli_host())
