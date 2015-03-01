@@ -6,9 +6,12 @@ export default Ember.Object.extend({
 
   doTick: function () {
     var self = this;
-    Ember.run.later(function () {
-      self.set('_tick', !self.get('_tick'));
-    }, ENV.APP.TICK_FREQUENCY);
+    if (ENV.environment !== 'test') {
+      // running this loop in tests will block promises resolution
+      Ember.run.later(function () {
+        self.set('_tick', !self.get('_tick'));
+      }, ENV.APP.TICK_FREQUENCY);
+    }
   }.observes('_tick').on('init'),
 
   _tick: false
