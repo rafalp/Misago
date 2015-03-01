@@ -9,8 +9,11 @@
   },
   "scripts": {
     "start": "ember server",
-    "build": "ember build",
-    "test": "ember test"
+    "build": "ember build --environment=production",
+    "build-dev": "ember build",
+    "test": "ember test",
+    "test-server": "ember test --server",
+    "install": "bower install"
   },
   "repository": "",
   "engines": {
@@ -36,7 +39,6 @@
     "ember-django-adapter": "0.5.3",
     "ember-export-application-global": "^1.0.2",
     "express": "^4.8.5",
-    "glob": "^4.0.5",
-    "moment": "2.9.0"
+    "glob": "^4.0.5"
   }
 }

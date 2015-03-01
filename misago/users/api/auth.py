@@ -24,16 +24,8 @@ def login(request):
         auth.login(request, form.user_cache)
         return Response(AuthenticatedUserSerializer(form.user_cache).data)
     else:
-        error = form.errors.as_data()['__all__'][0]
-        if error.code == 'banned':
-            error.message = form.user_ban.ban.get_serialized_message()
-        else:
-            error.message = error.messages[0]
-
-        return Response({
-            'detail': error.message,
-            'code': error.code
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return Response(form.get_errors_dict(),
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET', 'POST'])

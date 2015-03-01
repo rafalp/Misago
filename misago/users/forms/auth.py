@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.forms import (AuthenticationForm as
                                        BaseAuthenticationForm)
 from django.utils.translation import ugettext_lazy as _
+from django.core.validators import validate_email
 
 from misago.core import forms
 
@@ -38,6 +39,18 @@ class MisagoAuthMixin(object):
         self.user_ban = get_user_ban(user)
         if self.user_ban:
             raise ValidationError('', code='banned')
+
+    def get_errors_dict(self):
+        error = self.errors.as_data()['__all__'][0]
+        if error.code == 'banned':
+            error.message = self.user_ban.ban.get_serialized_message()
+        else:
+            error.message = error.messages[0]
+
+        return {
+            'detail': error.message,
+            'code': error.code
+        }
 
 
 class AuthenticationForm(MisagoAuthMixin, forms.Form, BaseAuthenticationForm):
@@ -97,21 +110,32 @@ class AdminAuthenticationForm(AuthenticationForm):
 
 
 class GetUserForm(MisagoAuthMixin, forms.Form):
-    username = forms.CharField(label=_("Username or e-mail"))
+    email = forms.CharField()
 
     def clean(self):
         data = super(GetUserForm, self).clean()
 
-        credential = data.get('username')
-        if not credential or len(credential) > 250:
-            raise forms.ValidationError(_("You have to fill out form."))
+        email = data.get('email')
+        if not email or len(email) > 250:
+            raise forms.ValidationError(
+                _("Enter e-mail address."),
+                code='empty_email')
+
+        try:
+            validate_email(email)
+        except forms.ValidationError:
+            raise forms.ValidationError(
+                _("Entered e-mail is invalid."),
+                code='invalid_email')
 
         try:
             User = get_user_model()
-            user = User.objects.get_by_username_or_email(data['username'])
+            user = User.objects.get_by_email(data['email'])
             self.user_cache = user
         except User.DoesNotExist:
-            raise forms.ValidationError(_("Invalid username or e-mail."))
+            raise forms.ValidationError(
+                _("No user with this e-mail exists."),
+                code='not_found')
 
         self.confirm_allowed(user)
 
@@ -142,27 +166,11 @@ class ResetPasswordForm(GetUserForm):
     error_messages = {
         'inactive_user': _("You have to activate your account before "
                            "you will be able to request new password."),
-        'inactive_admin': _("Administrator has to activate your account "
-                            "before you will be able to request "
+        'inactive_admin': _("Your account has to be activated by "
+                            "Administrator before you will be able to request "
                             "new password."),
     }
 
     def confirm_allowed(self, user):
         self.confirm_user_not_banned(user)
         self.confirm_user_active(user)
-
-
-class SetNewPasswordForm(MisagoAuthMixin, forms.Form):
-    new_password = forms.CharField(label=_("New password"),
-                                   widget=forms.PasswordInput)
-
-    def clean(self):
-        data = super(SetNewPasswordForm, self).clean()
-
-        new_password = data.get('new_password')
-        if not new_password or len(new_password) > 250:
-            raise forms.ValidationError(_("You have to fill out form."))
-
-        validate_password(new_password)
-
-        return data

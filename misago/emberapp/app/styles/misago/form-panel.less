@@ -1,0 +1,37 @@
+//
+// Forms
+// --------------------------------------------------
+
+
+// Add custom variables
+.panel-form {
+  background: @panel-form-bg;
+
+  .panel-variant(@panel-form-border;  @panel-form-heading-color; @panel-form-heading-bg; @panel-form-heading-border);
+
+  .panel-heading {
+    padding: @panel-form-heading-padding;
+  }
+
+  .panel-body {
+    padding: @panel-form-body-padding;
+  }
+
+  .panel-footer {
+    background: @panel-form-footer-bg;
+    border-top-color: @panel-form-footer-border;
+  }
+}
+
+
+// Inputs well, useful if there's one input + button
+.well-form {
+  background: @panel-form-bg;
+  border-color: @panel-form-border;
+  .box-shadow(none);
+
+  form {
+    margin: 0px;
+    padding: 0px;
+  }
+}

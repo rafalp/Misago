@@ -3,6 +3,7 @@
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 var app = new EmberApp({
+  //storeConfigInMeta: false,
   fingerprint: {
     enabled: false
   },
@@ -38,6 +39,12 @@ var app = new EmberApp({
 // along with the exports of each module as its value.
 
 app.import('vendor/bootstrap.js');
+
+if (app.env === 'production') {
+  app.import('bower_components/moment/moment.js');
+} else {
+  app.import('bower_components/moment/min/moment-with-locales.js');
+}
 
 app.import('vendor/testutils/jquery.mockjax.js', { type: 'test' });
 app.import('vendor/testutils/django-js-catalog.js', { type: 'test' });

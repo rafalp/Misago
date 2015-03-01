@@ -1,0 +1,21 @@
+<div class="link-sent-page">
+  <div class="page-header">
+    <div class="container">
+      <h1>
+        {{gettext "Change password form link sent"}}
+      </h1>
+    </div>
+  </div>
+
+  <div class="container">
+
+  <p class="lead">
+    {{gettext "%(username)s, we have sent link to your password change form to %(email)s." username=username email=email}}
+  </p>
+
+  <button class="btn btn-default" {{action "retry"}}>
+    {{gettext "Try again?"}}
+  </button>
+
+  </div>
+</div>

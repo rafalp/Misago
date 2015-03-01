@@ -3,6 +3,7 @@
     "document",
     "window",
     "-Promise",
+    "moment",
     "gettext",
     "ngettext",
     "gettext_noop",

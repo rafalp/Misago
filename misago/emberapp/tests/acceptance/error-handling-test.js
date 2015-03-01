@@ -19,7 +19,7 @@ test('some unhandled error occured', function(assert) {
     url: "/api/legal-pages/privacy-policy/",
     status: 500,
     responseText: {
-      'detail': 'The kek'
+      'detail': 'Some terrible Django error'
     }
   });
 

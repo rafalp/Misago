@@ -1,6 +1,7 @@
 import Ember from 'ember';
+import ResetScroll from 'misago/mixins/reset-scroll';
 
-export default Ember.Route.extend({
+export default Ember.Route.extend(ResetScroll, {
   page: 'privacy-policy',
   defaultTitle: gettext('Privacy policy'),
 

@@ -78,14 +78,14 @@ def is_activation_token_valid(user, token):
 
 
 """
-Convenience functions for password reset token
+Convenience functions for password change token
 """
-PASSWORD_RESET_TOKEN = 'reset_password'
+PASSWORD_CHANGE_TOKEN = 'change_password'
 
 
-def make_password_reset_token(user):
-    return make(user, PASSWORD_RESET_TOKEN)
+def make_password_change_token(user):
+    return make(user, PASSWORD_CHANGE_TOKEN)
 
 
-def is_password_reset_token_valid(user, token):
-    return is_valid(user, PASSWORD_RESET_TOKEN, token)
+def is_password_change_token_valid(user, token):
+    return is_valid(user, PASSWORD_CHANGE_TOKEN, token)

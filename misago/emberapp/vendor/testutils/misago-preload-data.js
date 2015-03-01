@@ -15,7 +15,14 @@ window.MisagoData = {
 
     "privacy_policy_link": "",
     "privacy_policy_title": "Polityka prywatno\u015bci",
-    "privacy_policy": true
+    "privacy_policy": true,
+
+    "authApiUrl": "/api/auth/",
+
+    "loginUrl": "/login/",
+    "loginRedirectUrl": "/",
+
+    "logoutUrl": "/logout/"
   },
 
   "csrfCookieName": 'csrftokencookie',
@@ -23,10 +30,10 @@ window.MisagoData = {
   "mediaUrl": "/media/",
   "staticUrl": "/static/",
 
-  "authApiUrl": "/api/auth/",
+  "isAuthenticated": false,
 
-  "loginUrl": "/login/",
-  "loginRedirectUrl": "/",
-
-  "logoutUrl": "/logout/"
+  "user": {
+    "isAnonymous": true,
+    "isAuthenticated": false
+  }
 };

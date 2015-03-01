@@ -31,13 +31,13 @@ export function ajax(url, data) {
 
     function error(jqXHR) {
       if (jqXHR.status === 200) {
-        if (typeof jqXHR.responseJSON === 'undefined') {
-          Ember.run(null, resolve, {});
-        } else {
-          Ember.run(null, resolve, jqXHR.responseJSON);
+        var data = {};
+        if (typeof jqXHR.responseJSON !== 'undefined') {
+          data = jqXHR.responseJSON;
         }
+        Ember.run(null, resolve, data);
       } else {
-        Ember.run(null, reject, jqXHR.responseJSON);
+        Ember.run(null, reject, jqXHR);
       }
     }
 

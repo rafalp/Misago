@@ -3,58 +3,44 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="{{unbound gettext "Close"}}"><span aria-hidden="true">&times;</span></button>
-        {{#if isBanned}}
-        <h4 class="modal-title" id="loginModalLabel">{{gettext "Account banned"}}</h4>
-        {{else}}
         <h4 class="modal-title" id="loginModalLabel">{{gettext "Sign in"}}</h4>
-        {{/if}}
       </div>
 
-      {{#if isBanned}}
-      <div class="modal-body modal-ban-message">
+      <form {{action "signIn" on="submit"}}>
+        <div class="modal-body">
 
-        {{{ban.message.html}}}
-
-        <p>This ban is permanent.</p>
-
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-block btn-default" data-dismiss="modal">{{gettext "Ok"}}</button>
-      </div>
-      {{else}}
-      <div class="modal-body">
-
-        <div class="form-group">
-          <div class="control-input">
-            {{input type="text" value=username class="form-control" placeholder=(gettext "Username or e-mail")}}
+          <div class="form-group">
+            <div class="control-input">
+              {{input type="text" value=username class="form-control" placeholder=(gettext "Username or e-mail")}}
+            </div>
           </div>
-        </div>
 
-        <div class="form-group">
-          <div class="control-input">
-            {{input type="password" value=password class="form-control" placeholder=(gettext "Password")}}
+          <div class="form-group">
+            <div class="control-input">
+              {{input type="password" value=password class="form-control" placeholder=(gettext "Password")}}
+            </div>
           </div>
-        </div>
 
-      </div>
-      <div class="modal-footer">
-        {{#if showActivation}}
-        <button class="btn btn-info btn-success">{{gettext "Activate account"}}</button>
-        {{else}}
-          {{#if isLoading}}
-          <button type="button" class="btn btn-block btn-primary" disabled="disabled">
-            <span class="fa fa-cog fa-spin"></span>
-            {{gettext "Singing in..."}}
-          </button>
+        </div>
+        <div class="modal-footer">
+          {{#if showActivation}}
+          <button type="button" class="btn btn-info btn-success" {{action "activateAccount"}}>{{gettext "Activate account"}}</button>
           {{else}}
-          <button type="button" class="btn btn-block btn-primary" {{action "signIn"}}>{{gettext "Sign in"}}</button>
+            {{#if isLoading}}
+            <button type="button" class="btn btn-block btn-primary" disabled="disabled">
+              <span class="fa fa-cog fa-spin"></span>
+              {{gettext "Singing in..."}}
+            </button>
+            {{else}}
+            <button type="submit" class="btn btn-block btn-primary">{{gettext "Sign in"}}</button>
+            {{/if}}
           {{/if}}
-        {{/if}}
 
-        <button class="btn btn-block btn-default">{{gettext "Forgot password?"}}</button>
+          <button class="btn btn-block btn-default" {{action "forgotPassword"}}>{{gettext "Forgot password?"}}</button>
 
-      </div>
-      {{/if}}
+        </div>
+      </form>
+
     </div>
   </div>
 </div>

@@ -25,30 +25,41 @@ export default Ember.Route.extend({
 
     // Error handler
 
-    error: function(error){
-      if (error.status === 0) {
+    error: function(reason) {
+      if (reason.status === 0) {
         this.send('setTitle', gettext('Connection lost'));
         return this.intermediateTransitionTo('error-0');
       }
 
-      if (error.status === 403) {
+      if (typeof reason.ban !== 'undefined') {
+        this.send('setTitle', gettext('You are banned'));
+        return this.intermediateTransitionTo('error-banned', reason.ban);
+      }
+
+      if (reason.status === 403) {
         this.send('setTitle', gettext('Page not available'));
 
         var final_error = {status: 403, message: null};
-        if (error.responseJSON.detail !== 'Permission denied') {
-          final_error.message = error.responseJSON.detail;
+        if (reason.detail !== 'Permission denied') {
+          final_error.message = reason.detail;
         }
 
         return this.intermediateTransitionTo('error-403', final_error);
       }
 
-      if (error.status === 404) {
+      if (reason.status === 404) {
         this.send('setTitle', gettext('Page not found'));
         return this.intermediateTransitionTo('error-404');
       }
 
       this.send('setTitle', gettext('Error'));
       return true;
+    },
+
+    showBan: function(ban) {
+      this.send('setTitle', gettext('You are banned'));
+      this.intermediateTransitionTo('error-banned', ban);
+      return false;
     },
 
     // Flashes

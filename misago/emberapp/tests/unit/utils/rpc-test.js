@@ -45,8 +45,8 @@ test('successfull rpc call passes', function(assert) {
     }
   });
 
-  rpc('some-rpc', {}, conf).then(function(json) {
-    assert.equal(json.detail, 'it works');
+  rpc('some-rpc', {}, conf).then(function(data) {
+    assert.equal(data.detail, 'it works');
   }, function() {
     assert.fail("rpc call should pass");
   }).finally(function() {
@@ -67,8 +67,8 @@ test('invalid rpc call fails', function(assert) {
 
   rpc('some-rpc', {}, conf).then(function() {
     assert.fail("rpc call should fail");
-  }, function(json) {
-    assert.equal(json.detail, 'nope');
+  }, function(jqXHR) {
+    assert.equal(jqXHR.responseJSON.detail, 'nope');
   }).finally(function() {
     done();
   });

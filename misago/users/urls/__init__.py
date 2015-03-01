@@ -21,9 +21,8 @@ urlpatterns += patterns('misago.users.views.activation',
 
 
 urlpatterns += patterns('misago.users.views.forgottenpassword',
-    url(r'^forgotten-password/$', 'request_reset', name='request_password_reset'),
-    url(r'^forgotten-password/link-sent/$', 'link_sent', name='reset_password_link_sent'),
-    url(r'^forgotten-password/(?P<user_id>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'reset_password_form', name='reset_password_form'),
+    url(r'^forgotten-password/$', 'forgotten_password_noscript', name='forgotten_password'),
+    url(r'^forgotten-password/(?P<user_id>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'forgotten_password_noscript', name='forgotten_password_change_form'),
 )
 
 

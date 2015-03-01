@@ -1,0 +1,47 @@
+<div class="forgotten-password-page">
+  <div class="page-header">
+    <div class="container">
+      <h1>{{gettext "Change forgotten password"}}</h1>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-8">
+
+        <p>{{gettext "Because user passwords are processed in an irreversible way before being saved to database, it is not possible for us to simply send you your password."}}</p>
+
+        <p>{{gettext "Instead, you can change your password using special secure form that will be available by special link valid only for your browser seven days or until your password is changed."}}</p>
+
+        <p>{{gettext "To receive this link, enter your account's e-mail addres in form and press \"Send link\" button."}}</p>
+
+      </div>
+      <div class="col-md-4">
+
+        <div class="well well-form">
+          <form {{action "sendLink" on="submit"}}>
+
+            <div class="form-group">
+              <div class="control-input">
+                {{input type="text" value=email class="form-control" placeholder=(gettext "Your e-mail address")}}
+              </div>
+            </div>
+
+            {{#if isLoading}}
+            <button type="button" class="btn btn-block btn-primary" disabled="disabled">
+              <span class="fa fa-cog fa-spin"></span>
+              {{gettext "Processing..."}}
+            </button>
+            {{else}}
+            <button type="submit" class="btn btn-primary btn-block">{{gettext "Send link"}}</button>
+            {{/if}}
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
