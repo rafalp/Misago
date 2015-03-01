@@ -28,9 +28,8 @@ export default Ember.ObjectController.extend({
         self.set('email', '');
 
       }, function(jqXHR) {
-        var rejection = jqXHR.responseJSON;
-
         if (jqXHR.status === 400){
+          var rejection = jqXHR.responseJSON;
           if (rejection.code === 'banned') {
             this.send('showBan', rejection.detail);
             this.set('email', '');

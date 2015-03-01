@@ -31,17 +31,17 @@ export default Ember.Route.extend({
         return this.intermediateTransitionTo('error-0');
       }
 
-      if (typeof reason.ban !== 'undefined') {
+      if (typeof reason.responseJSON !== 'undefined' && typeof reason.responseJSON.ban !== 'undefined') {
         this.send('setTitle', gettext('You are banned'));
-        return this.intermediateTransitionTo('error-banned', reason.ban);
+        return this.intermediateTransitionTo('error-banned', reason.responseJSON.ban);
       }
 
       if (reason.status === 403) {
         this.send('setTitle', gettext('Page not available'));
 
         var final_error = {status: 403, message: null};
-        if (reason.detail !== 'Permission denied') {
-          final_error.message = reason.detail;
+        if (typeof reason.responseJSON !== 'undefined' && typeof reason.responseJSON.detail !== 'undefined' && reason.responseJSON.detail !== 'Permission denied') {
+          final_error.message = reason.responseJSON.detail;
         }
 
         return this.intermediateTransitionTo('error-403', final_error);
