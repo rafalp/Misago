@@ -30,8 +30,9 @@ export default Ember.ObjectController.extend({
         self.send('flashSuccess', gettext("Your password has been changed."));
 
       }, function(jqXHR) {
+        var rejection = jqXHR.responseJSON;
         if (jqXHR.status === 400){
-          this.send('flashError', jqXHR.responseJSON.detail);
+          this.send('flashError', rejection.detail);
         } else {
           self.set('password', '');
 
