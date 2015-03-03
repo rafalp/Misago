@@ -10,7 +10,7 @@
   <h2>{{gettext "Test %(msg)s Message" msg=(gettext "Flash")}}</h2>
 
   <p>
-    {{input type="text" value=newFlash}}
+    {{input class="testinput" type="text" value=newFlash}}
     <button class="btn btn-primary" {{action "testInfo"}}>Info</button>
     <button class="btn btn-success" {{action "testSuccess"}}>Success</button>
     <button class="btn btn-warning" {{action "testWarning"}}>Warning</button>

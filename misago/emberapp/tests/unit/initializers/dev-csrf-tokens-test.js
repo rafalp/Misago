@@ -29,6 +29,7 @@ module('devCsrfTokensInitializer', {
       application.deferReadiness();
     });
   },
+
   afterEach: function() {
     MisagoPreloadStore.set('csrfCookieName', cookieName);
     $element.remove();

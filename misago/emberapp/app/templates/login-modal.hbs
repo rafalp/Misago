@@ -24,7 +24,7 @@
         </div>
         <div class="modal-footer">
           {{#if showActivation}}
-          <button type="button" class="btn btn-info btn-success" {{action "activateAccount"}}>{{gettext "Activate account"}}</button>
+          <button type="button" class="btn btn-block btn-success" {{action "activateAccount"}}>{{gettext "Activate account"}}</button>
           {{else}}
             {{#if isLoading}}
             <button type="button" class="btn btn-block btn-primary" disabled="disabled">

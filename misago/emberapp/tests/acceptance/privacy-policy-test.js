@@ -36,7 +36,7 @@ test('visiting set /privacy-policy', function(assert) {
       'id': 'privacy-policy',
       'title': 'Privacy policy',
       'link': '',
-      'body': '<p>Top kek</p>'
+      'body': '<p>Privacy policy is working!</p>'
     }
   });
 
@@ -45,6 +45,6 @@ test('visiting set /privacy-policy', function(assert) {
   andThen(function() {
     assert.equal(currentPath(), 'privacy-policy');
     var $e = find('article');
-    assert.equal(Ember.$.trim($e.html()), '<p>Top kek</p>');
+    assert.equal(Ember.$.trim($e.html()), '<p>Privacy policy is working!</p>');
   });
 });

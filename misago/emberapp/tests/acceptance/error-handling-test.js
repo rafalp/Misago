@@ -96,6 +96,34 @@ test('permission denied with reason', function(assert) {
   });
 });
 
+test('banned', function(assert) {
+  Ember.$.mockjax({
+    url: "/api/legal-pages/privacy-policy/",
+    status: 403,
+    responseText: {
+      'ban': {
+        'expires_on': null,
+        'message': {
+          'plain': 'You are banned.',
+          'html': '<p>You are banned.</p>'
+        }
+      }
+    }
+  });
+
+  visit('/privacy-policy');
+
+  andThen(function() {
+    assert.equal(currentPath(), 'error-banned');
+
+    var errorMessage = find('.lead p').text();
+    assert.equal(errorMessage, 'You are banned.');
+
+    var expirationMessage = find('.error-message>p').text();
+    assert.equal(expirationMessage, 'This ban is permanent.');
+  });
+});
+
 test('not found route', function(assert) {
   visit('/this-url-really-doesnt-exist');
 

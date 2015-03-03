@@ -1,10 +1,10 @@
 import Ember from 'ember';
-import { initialize } from '../../../initializers/django-location';
+import { initialize } from '../../../initializers/auth-service';
 import { module, test } from 'qunit';
 
 var container, application;
 
-module('DjangoLocationInitializer', {
+module('AuthServiceInitializer', {
   beforeEach: function() {
     Ember.run(function() {
       application = Ember.Application.create();
@@ -14,9 +14,9 @@ module('DjangoLocationInitializer', {
   }
 });
 
-test('initializer registers location api', function(assert) {
+test('initializer registered auth and user', function(assert) {
   initialize(container, application);
 
-  assert.ok(container.has('location:django-location'));
+  assert.ok(container.has('misago:auth'));
+  assert.ok(container.has('misago:user'));
 });
-

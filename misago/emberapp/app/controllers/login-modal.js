@@ -74,20 +74,19 @@ export default Ember.Controller.extend({
 
       }, function(jqXHR) {
         var rejection = jqXHR.responseJSON;
-
         if (typeof rejection.code === "undefined") {
           self.send("error", rejection);
         } else {
           if (rejection.code === 'inactive_admin') {
-            this.send('flashInfo', rejection.detail);
+            self.send('flashInfo', rejection.detail);
           } else if (rejection.code === 'inactive_user') {
-            this.send('flashInfo', rejection.detail);
-            this.set('showActivation', true);
+            self.send('flashInfo', rejection.detail);
+            self.set('showActivation', true);
           } else if (rejection.code === 'banned') {
+            self.send('showBan', rejection.detail);
             Ember.$('#loginModal').modal('hide');
-            this.send('showBan', rejection.detail);
           } else {
-            this.send('flashError', rejection.detail);
+            self.send('flashError', rejection.detail);
           }
         }
 

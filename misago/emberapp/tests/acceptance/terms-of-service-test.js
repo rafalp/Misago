@@ -36,7 +36,7 @@ test('visiting set /terms-of-service', function(assert) {
       'id': 'terms-of-service',
       'title': 'Terms of service',
       'link': '',
-      'body': '<p>Top kek</p>'
+      'body': '<p>Terms of service are working!</p>'
     }
   });
 
@@ -45,6 +45,6 @@ test('visiting set /terms-of-service', function(assert) {
   andThen(function() {
     assert.equal(currentPath(), 'terms-of-service');
     var $e = find('article');
-    assert.equal(Ember.$.trim($e.html()), '<p>Top kek</p>');
+    assert.equal(Ember.$.trim($e.html()), '<p>Terms of service are working!</p>');
   });
 });
