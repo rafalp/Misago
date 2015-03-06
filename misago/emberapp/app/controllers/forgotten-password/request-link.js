@@ -31,10 +31,10 @@ export default Ember.ObjectController.extend({
         if (jqXHR.status === 400){
           var rejection = jqXHR.responseJSON;
           if (rejection.code === 'banned') {
-            this.send('showBan', rejection.detail);
-            this.set('email', '');
+            self.send('showBan', rejection.detail);
+            self.set('email', '');
           } else {
-            this.send('flashError', rejection.detail);
+            self.send('flashError', rejection.detail);
           }
         } else {
           self.send("error", jqXHR);

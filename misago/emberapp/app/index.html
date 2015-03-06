@@ -19,14 +19,14 @@
 
     <section id="main"></section>
 
-    <form id='hidden-login-form' method="post" action="/login/" style="display: none;">
+    <form id="hidden-login-form" method="post" action="/login/" style="display: none;">
       <input name="csrfmiddlewaretoken" type="hidden" value="">
       <input name="redirect_to" type="text">
       <input name="username" type="text">
       <input name="password" type="password">
       <input type="submit" id="signin-button" value="Sign in">
     </form>
-    <form id='hidden-logout-form' method="post" action="/logout/" style="display: none;">
+    <form id="hidden-logout-form" method="post" action="/logout/" style="display: none;">
       <input name="csrfmiddlewaretoken" type="hidden" value="">
       <input type="submit" id="signin-button" value="Log out">
     </form>

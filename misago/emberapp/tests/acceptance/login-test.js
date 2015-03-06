@@ -6,10 +6,15 @@ var application;
 
 module('Acceptance: Login', {
   beforeEach: function() {
+    Ember.$('#hidden-login-form').on('submit.stopInTest', function(event) {
+      event.stopPropagation();
+      return false;
+    });
     application = startApp();
   },
 
   afterEach: function() {
+    Ember.$('#hidden-login-form').off('submit.stopInTest');
     Ember.$('#loginModal').off();
     Ember.$('body').removeClass('modal-open');
     Ember.run(application, 'destroy');
@@ -102,7 +107,6 @@ test('login to admin-activated account', function(assert) {
 
 test('login to banned account', function(assert) {
   var done = assert.async();
-
   Ember.$.mockjax({
     url: "/api/auth/login/",
     status: 400,
@@ -133,5 +137,27 @@ test('login to banned account', function(assert) {
     assert.equal(expirationMessage, 'This ban is permanent.');
 
     done();
+  });
+});
+
+test('login successfully', function(assert) {
+  Ember.$.mockjax({
+    url: "/api/auth/login/",
+    status: 200,
+    responseText: {
+      'username': 'SomeFake'
+    }
+  });
+
+  visit('/');
+
+  click('.guest-nav .btn-login');
+  fillIn('#loginModal .form-group:first-child input', 'SomeFake');
+  fillIn('#loginModal .form-group:last-child input', 'pass1234');
+  click('#loginModal .btn-primary');
+
+  andThen(function() {
+    assert.equal(Ember.$('#hidden-login-form input[name="username"]').val(), 'SomeFake');
+    assert.equal(Ember.$('#hidden-login-form input[name="password"]').val(), 'pass1234');
   });
 });

@@ -84,7 +84,9 @@ export default Ember.Controller.extend({
             self.set('showActivation', true);
           } else if (rejection.code === 'banned') {
             self.send('showBan', rejection.detail);
-            Ember.$('#loginModal').modal('hide');
+            Ember.run(function() {
+              Ember.$('#loginModal').modal('hide');
+            });
           } else {
             self.send('flashError', rejection.detail);
           }
