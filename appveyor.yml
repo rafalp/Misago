@@ -1,5 +1,11 @@
+# http://www.appveyor.com/docs/appveyor-yml
+
 # Custom build version
 version: 0.{build}-{branch}
+
+# Fix line endings in Windows. (runs before repo cloning)
+init:
+  - git config --global core.autocrlf true
 
 # Test against these versions of Node.js.
 environment:
@@ -15,7 +21,7 @@ install:
   # Get the latest stable version of Node 0.STABLE.latest
   - ps: Install-Product node $env:nodejs_version
   # Install PhantomJS
-  - cinst PhantomJS
+  - cinst PhantomJS -y -Version 1.9.8
   - set path=%path%;C:\tools\PhantomJS\
   - dir C:\tools\PhantomJS
   # Typical npm stuff.
