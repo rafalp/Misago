@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import { module, test } from 'qunit';
 import startApp from '../helpers/start-app';
+import getToastMessage from '../helpers/toast-message';
 
 var application;
 
@@ -28,8 +29,7 @@ test('login with empty credentials', function(assert) {
   click('#loginModal .btn-primary');
 
   andThen(function() {
-    var error = Ember.$.trim(find('.flash-message p').text());
-    assert.equal(error, 'Fill out both fields.');
+    assert.equal(getToastMessage(), 'Fill out both fields.');
   });
 });
 
@@ -52,8 +52,7 @@ test('login with invalid credentials', function(assert) {
   click('#loginModal .btn-primary');
 
   andThen(function() {
-    var error = Ember.$.trim(find('.flash-message p').text());
-    assert.equal(error, message);
+    assert.equal(getToastMessage(), message);
   });
 });
 
@@ -76,8 +75,7 @@ test('login to user-activated account', function(assert) {
   click('#loginModal .btn-primary');
 
   andThen(function() {
-    var error = Ember.$.trim(find('.flash-message p').text());
-    assert.equal(error, message);
+    assert.equal(getToastMessage(), message);
   });
 });
 
@@ -100,8 +98,7 @@ test('login to admin-activated account', function(assert) {
   click('#loginModal .btn-primary');
 
   andThen(function() {
-    var error = Ember.$.trim(find('.flash-message p').text());
-    assert.equal(error, message);
+    assert.equal(getToastMessage(), message);
   });
 });
 
@@ -130,8 +127,8 @@ test('login to banned account', function(assert) {
   click('#loginModal .btn-primary');
 
   andThen(function() {
-    var errorMessage = find('.lead p').text();
-    assert.equal(errorMessage, 'You are banned for trolling.');
+    var banMessage = find('.lead p').text();
+    assert.equal(banMessage, 'You are banned for trolling.');
 
     var expirationMessage = find('.error-message>p').text();
     assert.equal(expirationMessage, 'This ban is permanent.');

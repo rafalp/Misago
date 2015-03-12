@@ -14,7 +14,7 @@ export default Ember.ObjectController.extend({
       var email = Ember.$.trim(this.get('email'));
 
       if (email === "") {
-        this.send('flashWarning', gettext("Enter e-mail address."));
+        this.get('toast').warning(gettext("Enter e-mail address."));
         return;
       }
 
@@ -34,7 +34,7 @@ export default Ember.ObjectController.extend({
             self.send('showBan', rejection.detail);
             self.set('email', '');
           } else {
-            self.send('flashError', rejection.detail);
+            self.get('toast').error(rejection.detail);
           }
         } else {
           self.send("error", jqXHR);

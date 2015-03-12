@@ -1,0 +1,5 @@
+<div {{bind-attr class=":toast-message toast.isVisible:visible"}}>
+  <p {{bind-attr class="toast.isInfo:message-info toast.isSuccess:message-success toast.isWarning:message-warning toast.isError:message-danger"}}>
+    {{toast.message}}
+  </p>
+</div>

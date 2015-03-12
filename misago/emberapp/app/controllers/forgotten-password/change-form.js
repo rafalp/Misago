@@ -14,7 +14,7 @@ export default Ember.ObjectController.extend({
       var password = Ember.$.trim(this.get('password'));
 
       if (password === "") {
-        this.send('flashWarning', gettext("Enter new password."));
+        this.get('toast').warning(gettext("Enter new password."));
         return;
       }
 
@@ -27,17 +27,17 @@ export default Ember.ObjectController.extend({
         self.set('password', '');
 
         self.send('openLoginModal');
-        self.send('flashSuccess', gettext("Your password has been changed."));
+        self.get('toast').success(gettext("Your password has been changed."));
 
       }, function(jqXHR) {
         var rejection = jqXHR.responseJSON;
         if (jqXHR.status === 400){
-          self.send('flashError', rejection.detail);
+          self.get('toast').error(rejection.detail);
         } else {
           self.set('password', '');
 
           if (jqXHR.status === 404) {
-            self.send('flashError', rejection.detail);
+            self.get('toast').error(rejection.detail);
             self.transitionTo('forgotten-password');
           } else {
             self.send("error", jqXHR);

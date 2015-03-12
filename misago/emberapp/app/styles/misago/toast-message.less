@@ -1,9 +1,9 @@
 //
-// Flash Message
+// Toast Message
 // --------------------------------------------------
 
 
-.flash-message-style(@color-bg, @color-border, @color-text) {
+.toast-message-style(@color-bg, @color-border, @color-text) {
   background: @color-bg;
   border: 1px solid @color-border;
   border-top: none;
@@ -18,7 +18,7 @@
 }
 
 
-.flash-message {
+.toast-message {
   position: fixed;
   top: -100%;
   width: 100%;
@@ -35,19 +35,19 @@
   }
 
   .message-success {
-    .flash-message-style(@alert-success-bg, @alert-success-border, @alert-success-text);
+    .toast-message-style(@alert-success-bg, @alert-success-border, @alert-success-text);
   }
 
   .message-info {
-    .flash-message-style(@alert-info-bg, @alert-info-border, @alert-info-text);
+    .toast-message-style(@alert-info-bg, @alert-info-border, @alert-info-text);
   }
 
   .message-warning {
-    .flash-message-style(@alert-warning-bg, @alert-warning-border, @alert-warning-text);
+    .toast-message-style(@alert-warning-bg, @alert-warning-border, @alert-warning-text);
   }
 
   .message-danger {
-    .flash-message-style(@alert-danger-bg, @alert-danger-border, @alert-danger-text);
+    .toast-message-style(@alert-danger-bg, @alert-danger-border, @alert-danger-text);
   }
 
   /* Small devices (tablets, 768px and up) */

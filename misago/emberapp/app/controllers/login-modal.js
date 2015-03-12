@@ -52,7 +52,7 @@ export default Ember.Controller.extend({
       };
 
       if (!credentials.username || !credentials.password) {
-        this.send('flashWarning', gettext("Fill out both fields."));
+        this.get('toast').warning(gettext("Fill out both fields."));
         return;
       }
 
@@ -78,9 +78,9 @@ export default Ember.Controller.extend({
           self.send("error", rejection);
         } else {
           if (rejection.code === 'inactive_admin') {
-            self.send('flashInfo', rejection.detail);
+            self.get('toast').info(rejection.detail);
           } else if (rejection.code === 'inactive_user') {
-            self.send('flashInfo', rejection.detail);
+            self.get('toast').info(rejection.detail);
             self.set('showActivation', true);
           } else if (rejection.code === 'banned') {
             self.send('showBan', rejection.detail);
@@ -88,7 +88,7 @@ export default Ember.Controller.extend({
               Ember.$('#loginModal').modal('hide');
             });
           } else {
-            self.send('flashError', rejection.detail);
+            self.get('toast').error(rejection.detail);
           }
         }
 

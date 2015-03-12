@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import { module, test } from 'qunit';
 import startApp from '../helpers/start-app';
+import getToastMessage from '../helpers/toast-message';
 
 var application;
 
@@ -32,9 +33,7 @@ test('request password change link without entering e-mail', function(assert) {
 
   andThen(function() {
     assert.equal(currentPath(), 'forgotten-password.index');
-
-    var error = Ember.$.trim(find('.flash-message p').text());
-    assert.equal(error, 'Enter e-mail address.');
+    assert.equal(getToastMessage(), 'Enter e-mail address.');
   });
 });
 
@@ -55,9 +54,7 @@ test('request password change link with invalid e-mail', function(assert) {
 
   andThen(function() {
     assert.equal(currentPath(), 'forgotten-password.index');
-
-    var error = Ember.$.trim(find('.flash-message p').text());
-    assert.equal(error, message);
+    assert.equal(getToastMessage(), message);
   });
 });
 
@@ -78,9 +75,7 @@ test('request password change link with non-existing e-mail', function(assert) {
 
   andThen(function() {
     assert.equal(currentPath(), 'forgotten-password.index');
-
-    var error = Ember.$.trim(find('.flash-message p').text());
-    assert.equal(error, message);
+    assert.equal(getToastMessage(), message);
   });
 });
 
@@ -101,9 +96,7 @@ test('request password change link with user-activated account', function(assert
 
   andThen(function() {
     assert.equal(currentPath(), 'forgotten-password.index');
-
-    var error = Ember.$.trim(find('.flash-message p').text());
-    assert.equal(error, message);
+    assert.equal(getToastMessage(), message);
   });
 });
 
@@ -124,9 +117,7 @@ test('request password change link with admin-activated account', function(asser
 
   andThen(function() {
     assert.equal(currentPath(), 'forgotten-password.index');
-
-    var error = Ember.$.trim(find('.flash-message p').text());
-    assert.equal(error, message);
+    assert.equal(getToastMessage(), message);
   });
 });
 
@@ -199,9 +190,7 @@ test('invalid token is handled', function(assert) {
 
   andThen(function() {
     assert.equal(currentPath(), 'forgotten-password.index');
-
-    var errorMessage = Ember.$.trim(find('.flash-message>p').text());
-    assert.equal(errorMessage, message);
+    assert.equal(getToastMessage(), message);
   });
 });
 
@@ -259,9 +248,7 @@ test('no new password is entered', function(assert) {
 
   andThen(function() {
     assert.equal(currentPath(), 'forgotten-password.change-form');
-
-    var error = Ember.$.trim(find('.flash-message p').text());
-    assert.equal(error, 'Enter new password.');
+    assert.equal(getToastMessage(), 'Enter new password.');
   });
 });
 
@@ -291,9 +278,7 @@ test('new password is invalid', function(assert) {
 
   andThen(function() {
     assert.equal(currentPath(), 'forgotten-password.change-form');
-
-    var error = Ember.$.trim(find('.flash-message p').text());
-    assert.equal(error, message);
+    assert.equal(getToastMessage(), message);
   });
 });
 
@@ -320,9 +305,7 @@ test('new password is accepted', function(assert) {
 
   andThen(function() {
     assert.equal(currentPath(), 'forgotten-password.change-form');
+    assert.equal(getToastMessage(), "Your password has been changed.");
     assert.ok(find('#loginModal').hasClass('in'));
-
-    var message = Ember.$.trim(find('.flash-message p').text());
-    assert.equal(message, "Your password has been changed.");
   });
 });

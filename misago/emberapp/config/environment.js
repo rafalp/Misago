@@ -26,8 +26,9 @@ module.exports = function(environment) {
       // Misago ticks frequency (in ms, used for refreshing timestamps)
       TICK_FREQUENCY: 15000,
 
-      // Min time flash is displayed for (in ms)
-      FLASH_MIN_DISPLAY_TIME: 4500
+      // Base time toast is displayed for (in ms)
+      // This time is increased by message length
+      TOAST_BASE_DISPLAY_TIME: 4000
     }
   };
 
@@ -61,7 +62,9 @@ module.exports = function(environment) {
     ENV.APP.LOG_VIEW_LOOKUPS = false;
 
     ENV.APP.rootElement = '#ember-testing';
-    ENV.APP.FLASH_MIN_DISPLAY_TIME = 500;
+
+    // Reduce base toast display time for test runner
+    ENV.APP.TOAST_BASE_DISPLAY_TIME = 500;
   }
 
   if (environment === 'production') {

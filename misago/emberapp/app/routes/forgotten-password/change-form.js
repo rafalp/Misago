@@ -15,7 +15,7 @@ export default Ember.Route.extend(ResetScroll, {
 
     error: function(reason) {
       if (reason.status === 404) {
-        this.send('flashError', reason.responseJSON.detail);
+        this.get('toast').error(reason.responseJSON.detail);
         return this.transitionTo('forgotten-password');
       }
 

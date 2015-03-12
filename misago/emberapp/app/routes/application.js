@@ -62,28 +62,6 @@ export default Ember.Route.extend({
       return false;
     },
 
-    // Flashes
-
-    flashInfo: function(message) {
-      this.controllerFor("flashMessage").send('setFlash', 'info', message);
-      return false;
-    },
-
-    flashSuccess: function(message) {
-      this.controllerFor("flashMessage").send('setFlash', 'success', message);
-      return false;
-    },
-
-    flashWarning: function(message) {
-      this.controllerFor("flashMessage").send('setFlash', 'warning', message);
-      return false;
-    },
-
-    flashError: function(message) {
-      this.controllerFor("flashMessage").send('setFlash', 'error', message);
-      return false;
-    },
-
     // Auth
 
     openLoginModal: function() {

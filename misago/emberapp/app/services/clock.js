@@ -1,7 +1,9 @@
 import Ember from 'ember';
 import ENV from '../config/environment';
 
-export default Ember.Object.extend({
+export default Ember.Service.extend({
+  availableIn: ['controllers'],
+
   tick: Ember.computed.oneWay('_tick').readOnly(),
 
   doTick: function () {
