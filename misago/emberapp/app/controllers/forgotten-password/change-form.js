@@ -32,7 +32,7 @@ export default Ember.ObjectController.extend({
       }, function(jqXHR) {
         var rejection = jqXHR.responseJSON;
         if (jqXHR.status === 400){
-          this.send('flashError', rejection.detail);
+          self.send('flashError', rejection.detail);
         } else {
           self.set('password', '');
 

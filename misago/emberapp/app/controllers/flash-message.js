@@ -1,9 +1,9 @@
 import Ember from 'ember';
+import ENV from '../config/environment';
+
+var HIDE_ANIMATION_LENGTH = 200;
 
 export default Ember.Controller.extend({
-  VISIBLE_FOR: 4500,
-  HIDE_ANIMATION_LENGTH: 200,
-
   id: null,
   type: null,
   message: null,
@@ -36,7 +36,7 @@ export default Ember.Controller.extend({
       if (self.get('id') === flashId) {
         self.set('isVisible', false);
       }
-    }, this.get('VISIBLE_FOR'));
+    }, ENV.APP.FLASH_MIN_DISPLAY_TIME);
   },
 
   actions: {
@@ -47,7 +47,7 @@ export default Ember.Controller.extend({
         this.set('isVisible', false);
         Ember.run.later(function () {
           self.showFlash(type, message);
-        }, this.get('HIDE_ANIMATION_LENGTH'));
+        }, HIDE_ANIMATION_LENGTH);
       } else {
         this.showFlash(type, message);
       }

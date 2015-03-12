@@ -24,7 +24,10 @@ module.exports = function(environment) {
       API_ADD_TRAILING_SLASHES: true,
 
       // Misago ticks frequency (in ms, used for refreshing timestamps)
-      TICK_FREQUENCY: 15000
+      TICK_FREQUENCY: 15000,
+
+      // Min time flash is displayed for (in ms)
+      FLASH_MIN_DISPLAY_TIME: 4500
     }
   };
 
@@ -58,6 +61,7 @@ module.exports = function(environment) {
     ENV.APP.LOG_VIEW_LOOKUPS = false;
 
     ENV.APP.rootElement = '#ember-testing';
+    ENV.APP.FLASH_MIN_DISPLAY_TIME = 500;
   }
 
   if (environment === 'production') {
