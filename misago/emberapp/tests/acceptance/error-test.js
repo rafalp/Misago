@@ -15,8 +15,10 @@ module('Acceptance: Application Error Handler', {
 });
 
 test('some unhandled error occured', function(assert) {
+  assert.expect(1);
+
   Ember.$.mockjax({
-    url: "/api/legal-pages/privacy-policy/",
+    url: '/api/legal-pages/privacy-policy/',
     status: 500,
     responseText: {
       'detail': 'Some terrible Django error'
@@ -31,8 +33,10 @@ test('some unhandled error occured', function(assert) {
 });
 
 test('app went away', function(assert) {
+  assert.expect(1);
+
   Ember.$.mockjax({
-    url: "/api/legal-pages/privacy-policy/",
+    url: '/api/legal-pages/privacy-policy/',
     status: 0,
     responseText: {
       'detail': 'Connection rejected'
@@ -47,8 +51,10 @@ test('app went away', function(assert) {
 });
 
 test('not found', function(assert) {
+  assert.expect(1);
+
   Ember.$.mockjax({
-    url: "/api/legal-pages/privacy-policy/",
+    url: '/api/legal-pages/privacy-policy/',
     status: 404,
     responseText: {
       'detail': 'Not found'
@@ -63,8 +69,10 @@ test('not found', function(assert) {
 });
 
 test('permission denied', function(assert) {
+  assert.expect(1);
+
   Ember.$.mockjax({
-    url: "/api/legal-pages/privacy-policy/",
+    url: '/api/legal-pages/privacy-policy/',
     status: 403,
     responseText: {
       'detail': 'Permission denied'
@@ -79,8 +87,10 @@ test('permission denied', function(assert) {
 });
 
 test('permission denied with reason', function(assert) {
+  assert.expect(2);
+
   Ember.$.mockjax({
-    url: "/api/legal-pages/privacy-policy/",
+    url: '/api/legal-pages/privacy-policy/',
     status: 403,
     responseText: {
       'detail': 'Lorem ipsum dolor met.'
@@ -97,8 +107,10 @@ test('permission denied with reason', function(assert) {
 });
 
 test('banned', function(assert) {
+  assert.expect(3);
+
   Ember.$.mockjax({
-    url: "/api/legal-pages/privacy-policy/",
+    url: '/api/legal-pages/privacy-policy/',
     status: 403,
     responseText: {
       'ban': {
@@ -125,6 +137,8 @@ test('banned', function(assert) {
 });
 
 test('not found route', function(assert) {
+  assert.expect(1);
+
   visit('/this-url-really-doesnt-exist');
 
   andThen(function() {

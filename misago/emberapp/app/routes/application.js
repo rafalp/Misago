@@ -23,7 +23,7 @@ export default Ember.Route.extend({
       return false;
     },
 
-    // Error handler
+    // Error handlers
 
     error: function(reason) {
       if (reason.status === 0) {
@@ -54,6 +54,29 @@ export default Ember.Route.extend({
 
       this.send('setTitle', gettext('Error'));
       return true;
+    },
+
+    toastError: function(reason) {
+      var errorMessage = gettext('Unknown error has occured.');
+
+      if (reason.status === 0) {
+        errorMessage = gettext('Lost connection with application.');
+      }
+
+      if (reason.status === 403) {
+        if (typeof reason.responseJSON !== 'undefined' && typeof reason.responseJSON.detail !== 'undefined' && reason.responseJSON.detail !== 'Permission denied') {
+          errorMessage = reason.responseJSON.detail;
+        } else {
+          errorMessage = gettext("You don't have permission to perform this action.");
+        }
+      }
+
+      if (reason.status === 404) {
+        errorMessage = gettext('Action link is invalid.');
+      }
+
+      this.get('toast').error(errorMessage);
+      return false;
     },
 
     showBan: function(ban) {
