@@ -41,7 +41,7 @@ export default Ember.Controller.extend({
       Ember.$('#loginModal').modal('show');
     },
 
-    signIn: function() {
+    submit: function() {
       if (this.get('isLoading')) {
         return;
       }
@@ -59,43 +59,49 @@ export default Ember.Controller.extend({
       var self = this;
       rpc(this.get('settings.authApiUrl'), credentials
       ).then(function() {
-        var $form = Ember.$('#hidden-login-form');
-
-        // we need to refresh CSRF token because previous api call changed it
-        $form.find('input[name=csrfmiddlewaretoken]').val(getCsrfToken());
-
-        // fill out form with user credentials and submit it, this will tell
-        // misago to redirect user back to right page, and will trigger browser's
-        // key ring feature
-        $form.find('input[name=redirect_to]').val(window.location.href);
-        $form.find('input[name=username]').val(credentials.username);
-        $form.find('input[name=password]').val(credentials.password);
-        $form.submit();
-
+        self.send('success', credentials);
       }, function(jqXHR) {
-        var rejection = jqXHR.responseJSON;
-        if (typeof rejection.code === "undefined") {
-          self.send("error", rejection);
-        } else {
-          if (rejection.code === 'inactive_admin') {
-            self.get('toast').info(rejection.detail);
-          } else if (rejection.code === 'inactive_user') {
-            self.get('toast').info(rejection.detail);
-            self.set('showActivation', true);
-          } else if (rejection.code === 'banned') {
-            self.send('showBan', rejection.detail);
-            Ember.run(function() {
-              Ember.$('#loginModal').modal('hide');
-            });
-          } else {
-            self.get('toast').error(rejection.detail);
-          }
-        }
-
+        self.send('error', jqXHR);
       }).finally(function() {
         self.set('isLoading', false);
       });
     },
+
+    success: function(credentials) {
+      var $form = Ember.$('#hidden-login-form');
+
+      // we need to refresh CSRF token because previous api call changed it
+      $form.find('input[name=csrfmiddlewaretoken]').val(getCsrfToken());
+
+      // fill out form with user credentials and submit it, this will tell
+      // misago to redirect user back to right page, and will trigger browser's
+      // key ring feature
+      $form.find('input[name=redirect_to]').val(window.location.href);
+      $form.find('input[name=username]').val(credentials.username);
+      $form.find('input[name=password]').val(credentials.password);
+      $form.submit();
+    },
+
+    error: function(jqXHR) {
+      var rejection = jqXHR.responseJSON;
+      if (jqXHR.status !== 400) {
+        this.send('toastError', jqXHR);
+      } else if (rejection.code === 'inactive_admin') {
+        this.get('toast').info(rejection.detail);
+      } else if (rejection.code === 'inactive_user') {
+        this.get('toast').info(rejection.detail);
+        this.set('showActivation', true);
+      } else if (rejection.code === 'banned') {
+        this.send('showBan', rejection.detail);
+        Ember.run(function() {
+          Ember.$('#loginModal').modal('hide');
+        });
+      } else {
+        this.get('toast').error(rejection.detail);
+      }
+    },
+
+    // handle go-to links
 
     forgotPassword: function() {
       this.transitionToRoute('forgotten-password');

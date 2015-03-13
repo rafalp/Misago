@@ -24,6 +24,8 @@ module('Acceptance: Login', {
 });
 
 test('login with empty credentials', function(assert) {
+  assert.expect(1);
+
   visit('/');
   click('.guest-nav button.btn-login');
   click('#loginModal .btn-primary');
@@ -33,7 +35,29 @@ test('login with empty credentials', function(assert) {
   });
 });
 
+test('backend errored', function(assert) {
+  assert.expect(1);
+
+  Ember.$.mockjax({
+    url: "/api/auth/login/",
+    status: 500
+  });
+
+  visit('/');
+
+  click('.guest-nav .btn-login');
+  fillIn('#loginModal .form-group:first-child input', 'SomeFake');
+  fillIn('#loginModal .form-group:last-child input', 'pass1234');
+  click('#loginModal .btn-primary');
+
+  andThen(function() {
+    assert.equal(getToastMessage(), 'Unknown error has occured.');
+  });
+});
+
 test('login with invalid credentials', function(assert) {
+  assert.expect(1);
+
   var message = 'Login or password is incorrect.';
   Ember.$.mockjax({
     url: "/api/auth/login/",
@@ -57,6 +81,8 @@ test('login with invalid credentials', function(assert) {
 });
 
 test('login to user-activated account', function(assert) {
+  assert.expect(1);
+
   var message = 'You have to activate your account before you will be able to sign in.';
   Ember.$.mockjax({
     url: "/api/auth/login/",
@@ -80,6 +106,8 @@ test('login to user-activated account', function(assert) {
 });
 
 test('login to admin-activated account', function(assert) {
+  assert.expect(1);
+
   var message = 'Your account has to be activated by Administrator before you will be able to sign in.';
   Ember.$.mockjax({
     url: "/api/auth/login/",
@@ -103,7 +131,8 @@ test('login to admin-activated account', function(assert) {
 });
 
 test('login to banned account', function(assert) {
-  var done = assert.async();
+  assert.expect(3);
+
   Ember.$.mockjax({
     url: "/api/auth/login/",
     status: 400,
@@ -127,17 +156,19 @@ test('login to banned account', function(assert) {
   click('#loginModal .btn-primary');
 
   andThen(function() {
+    assert.equal(currentPath(), 'error-banned');
+
     var banMessage = find('.lead p').text();
     assert.equal(banMessage, 'You are banned for trolling.');
 
     var expirationMessage = find('.error-message>p').text();
     assert.equal(expirationMessage, 'This ban is permanent.');
-
-    done();
   });
 });
 
 test('login successfully', function(assert) {
+  assert.expect(2);
+
   Ember.$.mockjax({
     url: "/api/auth/login/",
     status: 200,
