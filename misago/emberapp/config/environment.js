@@ -26,9 +26,10 @@ module.exports = function(environment) {
       // Misago ticks frequency (in ms, used for refreshing timestamps)
       TICK_FREQUENCY: 15000,
 
-      // Base time toast is displayed for (in ms)
-      // This time is increased by message length
-      TOAST_BASE_DISPLAY_TIME: 4000
+      // Toastings time
+      TOAST_BASE_DISPLAY_TIME: 4000,
+      TOAST_LENGTH_FACTOR: 110,
+      TOAST_HIDE_ANIMATION_LENGTH: 200
     }
   };
 
@@ -63,8 +64,9 @@ module.exports = function(environment) {
 
     ENV.APP.rootElement = '#ember-testing';
 
-    // Reduce base toast display time for test runner
-    ENV.APP.TOAST_BASE_DISPLAY_TIME = 500;
+    // Reduce toast display times for test runner
+    ENV.APP.TOAST_BASE_DISPLAY_TIME = 200;
+    ENV.APP.TOAST_LENGTH_FACTOR = 0;
   }
 
   if (environment === 'production') {

@@ -1,8 +1,6 @@
 import Ember from 'ember';
 import ENV from '../config/environment';
 
-var HIDE_ANIMATION_LENGTH = 200;
-
 export default Ember.Service.extend({
   id: null,
   type: null,
@@ -20,12 +18,15 @@ export default Ember.Service.extend({
     this.set('message', message);
     this.set('isVisible', true);
 
+    var displayTime = ENV.APP.TOAST_BASE_DISPLAY_TIME;
+    displayTime += message.length * ENV.APP.TOAST_LENGTH_FACTOR;
+
     var self = this;
     Ember.run.later(function () {
       if (self.get('id') === toastId) {
         self.set('isVisible', false);
       }
-    }, ENV.APP.TOAST_BASE_DISPLAY_TIME + (message.length * 110));
+    }, displayTime);
   },
 
   _setToast: function(type, message) {
@@ -35,7 +36,7 @@ export default Ember.Service.extend({
       this.set('isVisible', false);
       Ember.run.later(function () {
         self._showToast(type, message);
-      }, HIDE_ANIMATION_LENGTH);
+      }, ENV.APP.TOAST_HIDE_ANIMATION_LENGTH);
     } else {
       this._showToast(type, message);
     }
