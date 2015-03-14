@@ -6,7 +6,7 @@ export default Ember.ObjectController.extend({
   password: '',
 
   actions: {
-    changePassword: function() {
+    submit: function() {
       if (this.get('isLoading')) {
         return;
       }
@@ -24,29 +24,33 @@ export default Ember.ObjectController.extend({
       rpc(this.get('change_password_url'), {
         password: password
       }).then(function() {
-        self.set('password', '');
-
-        self.send('openLoginModal');
-        self.get('toast').success(gettext("Your password has been changed."));
-
+        self.send('success');
       }, function(jqXHR) {
-        var rejection = jqXHR.responseJSON;
-        if (jqXHR.status === 400){
-          self.get('toast').error(rejection.detail);
-        } else {
-          self.set('password', '');
-
-          if (jqXHR.status === 404) {
-            self.get('toast').error(rejection.detail);
-            self.transitionTo('forgotten-password');
-          } else {
-            self.send("error", jqXHR);
-          }
-        }
-
+        self.send('error', jqXHR);
       }).finally(function() {
         self.set('isLoading', false);
       });
+    },
+
+    success: function() {
+      this.set('password', '');
+
+      this.send('openLoginModal');
+      this.get('toast').success(gettext("Your password has been changed."));
+    },
+
+    error: function(jqXHR) {
+      var rejection = jqXHR.responseJSON;
+      if (jqXHR.status === 400){
+        this.get('toast').error(rejection.detail);
+      } else {
+        if (jqXHR.status === 404) {
+          this.get('toast').error(rejection.detail);
+          this.transitionTo('forgotten-password');
+        } else {
+          this.send('toastError', jqXHR);
+        }
+      }
     }
   }
 });

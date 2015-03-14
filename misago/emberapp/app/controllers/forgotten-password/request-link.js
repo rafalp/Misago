@@ -6,7 +6,7 @@ export default Ember.ObjectController.extend({
   email: '',
 
   actions: {
-    sendLink: function() {
+    submit: function() {
       if (this.get('isLoading')) {
         return;
       }
@@ -24,28 +24,31 @@ export default Ember.ObjectController.extend({
       rpc('change-password/send-link/', {
         email: email
       }).then(function(requestingUser) {
-        self.send('showSentPage', requestingUser);
-        self.set('email', '');
-
+        self.send('success', requestingUser);
       }, function(jqXHR) {
-        if (jqXHR.status === 400){
-          var rejection = jqXHR.responseJSON;
-          if (rejection.code === 'banned') {
-            self.send('showBan', rejection.detail);
-            self.set('email', '');
-          } else {
-            self.get('toast').error(rejection.detail);
-          }
-        } else {
-          self.send("error", jqXHR);
-          self.set('email', '');
-        }
-
+        self.send('error', jqXHR);
       }).finally(function() {
         self.set('isLoading', false);
       });
+    },
 
-      return false;
+    success: function(requestingUser) {
+      this.send('showSentPage', requestingUser);
+      this.set('email', '');
+    },
+
+    error: function(jqXHR) {
+      if (jqXHR.status === 400){
+        var rejection = jqXHR.responseJSON;
+        if (rejection.code === 'banned') {
+          this.send('showBan', rejection.detail);
+          this.set('email', '');
+        } else {
+          this.get('toast').error(rejection.detail);
+        }
+      } else {
+        this.send('toastError', jqXHR);
+      }
     }
   }
 });
