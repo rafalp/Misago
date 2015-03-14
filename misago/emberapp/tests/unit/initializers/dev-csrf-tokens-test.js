@@ -36,8 +36,10 @@ module('devCsrfTokensInitializer', {
   }
 });
 
-test('sets tokens on predefined forms', 1, function(assert) {
+test('sets tokens on predefined forms', function(assert) {
+  assert.expect(1);
   var done = assert.async();
+
   Ember.run(function() {
     initialize();
     assert.equal($element.val(), testCookieValue);

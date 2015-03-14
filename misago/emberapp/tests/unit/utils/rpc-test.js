@@ -9,6 +9,8 @@ module('RPC', {
 });
 
 test('buildUrl builds valid urls', function(assert) {
+  assert.expect(3);
+
   assert.equal(buildUrl('some/procedure', {
     API_HOST: '',
     API_NAMESPACE: 'api/v2',
@@ -35,6 +37,7 @@ var conf = {
 };
 
 test('successfull rpc call passes', function(assert) {
+  assert.expect(1);
   var done = assert.async();
 
   Ember.$.mockjax({
@@ -55,6 +58,7 @@ test('successfull rpc call passes', function(assert) {
 });
 
 test('invalid rpc call fails', function(assert) {
+  assert.expect(1);
   var done = assert.async();
 
   Ember.$.mockjax({

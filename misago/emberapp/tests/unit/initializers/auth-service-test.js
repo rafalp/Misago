@@ -15,6 +15,8 @@ module('AuthServiceInitializer', {
 });
 
 test('initializer registered auth and user', function(assert) {
+  assert.expect(2);
+
   initialize(container, application);
 
   assert.ok(container.has('misago:auth'));

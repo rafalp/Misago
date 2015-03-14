@@ -12,11 +12,15 @@ moduleFor('route:application', 'ApplicationRoute', {
 });
 
 test('it exists', function(assert) {
+  assert.expect(1);
+
   var route = this.subject();
   assert.ok(route);
 });
 
 test('error', function(assert) {
+  assert.expect(1);
+
   var route = this.subject();
   route.set('settings', {'forum_name': 'Test Forum'});
 
@@ -26,6 +30,8 @@ test('error', function(assert) {
 });
 
 test('setTitle', function(assert) {
+  assert.expect(5);
+
   var route = this.subject();
   route.set('settings', {'forum_name': 'Test Forum'});
 

@@ -20,6 +20,8 @@ module('Acceptance: ForgottenPassword', {
 });
 
 test('visiting /forgotten-password', function(assert) {
+  assert.expect(1);
+
   visit('/forgotten-password');
 
   andThen(function() {
@@ -28,6 +30,8 @@ test('visiting /forgotten-password', function(assert) {
 });
 
 test('request password change link without entering e-mail', function(assert) {
+  assert.expect(2);
+
   visit('/forgotten-password');
   click('.forgotten-password-page form .btn-primary');
 
@@ -38,6 +42,8 @@ test('request password change link without entering e-mail', function(assert) {
 });
 
 test('request password change link with invalid e-mail', function(assert) {
+  assert.expect(2);
+
   var message = 'Entered e-mail is invalid.';
   Ember.$.mockjax({
     url: '/api/change-password/send-link/',
@@ -59,6 +65,8 @@ test('request password change link with invalid e-mail', function(assert) {
 });
 
 test('request password change link with non-existing e-mail', function(assert) {
+  assert.expect(2);
+
   var message = 'No user with this e-mail exists.';
   Ember.$.mockjax({
     url: '/api/change-password/send-link/',
@@ -80,6 +88,8 @@ test('request password change link with non-existing e-mail', function(assert) {
 });
 
 test('request password change link with user-activated account', function(assert) {
+  assert.expect(2);
+
   var message = 'You have to activate your account before you will be able to sign in.';
   Ember.$.mockjax({
     url: '/api/change-password/send-link/',
@@ -101,6 +111,8 @@ test('request password change link with user-activated account', function(assert
 });
 
 test('request password change link with admin-activated account', function(assert) {
+  assert.expect(2);
+
   var message = 'Your account has to be activated by Administrator before you will be able to sign in.';
   Ember.$.mockjax({
     url: '/api/change-password/send-link/',
@@ -122,7 +134,8 @@ test('request password change link with admin-activated account', function(asser
 });
 
 test('request password change link with banned account', function(assert) {
-  var done = assert.async();
+  assert.expect(2);
+
   Ember.$.mockjax({
     url: '/api/change-password/send-link/',
     status: 400,
@@ -148,13 +161,12 @@ test('request password change link with banned account', function(assert) {
 
     var expirationMessage = find('.error-message>p').text();
     assert.equal(expirationMessage, 'This ban is permanent.');
-
-    done();
   });
 });
 
 test('request password change link', function(assert) {
-  var done = assert.async();
+  assert.expect(1);
+
   Ember.$.mockjax({
     url: '/api/change-password/send-link/',
     status: 200,
@@ -171,12 +183,12 @@ test('request password change link', function(assert) {
   andThen(function() {
     var pageHeader = Ember.$.trim(find('.page-header h1').text());
     assert.equal(pageHeader, 'Change password form link sent');
-
-    done();
   });
 });
 
 test('invalid token is handled', function(assert) {
+  assert.expect(2);
+
   var message = 'Token was rejected.';
   Ember.$.mockjax({
     url: '/api/change-password/1/token/validate-token/',
@@ -195,6 +207,8 @@ test('invalid token is handled', function(assert) {
 });
 
 test('permission denied is handled', function(assert) {
+  assert.expect(2);
+
   var message = 'Token was rejected.';
   Ember.$.mockjax({
     url: '/api/change-password/1/token/validate-token/',
@@ -215,6 +229,8 @@ test('permission denied is handled', function(assert) {
 });
 
 test('token is validated', function(assert) {
+  assert.expect(1);
+
   Ember.$.mockjax({
     url: '/api/change-password/1/token/validate-token/',
     status: 200,
@@ -233,6 +249,8 @@ test('token is validated', function(assert) {
 });
 
 test('no new password is entered', function(assert) {
+  assert.expect(2);
+
   Ember.$.mockjax({
     url: '/api/change-password/1/token/validate-token/',
     status: 200,
@@ -253,6 +271,8 @@ test('no new password is entered', function(assert) {
 });
 
 test('new password is invalid', function(assert) {
+  assert.expect(2);
+
   Ember.$.mockjax({
     url: '/api/change-password/1/token/validate-token/',
     status: 200,
@@ -283,6 +303,8 @@ test('new password is invalid', function(assert) {
 });
 
 test('new password is accepted', function(assert) {
+  assert.expect(3);
+
   Ember.$.mockjax({
     url: '/api/change-password/1/token/validate-token/',
     status: 200,

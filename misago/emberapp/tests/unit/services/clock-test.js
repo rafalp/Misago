@@ -3,13 +3,11 @@ import {
   test
 } from 'ember-qunit';
 
-moduleFor('service:clock', {
-  // Specify the other units that are required for this test.
-  // needs: ['service:foo']
-});
+moduleFor('service:clock');
 
-// Replace this with your real tests.
 test('it exists', function(assert) {
+  assert.expect(1);
+
   var service = this.subject();
   assert.ok(service);
 });

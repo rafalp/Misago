@@ -12,11 +12,15 @@ moduleFor('route:index', 'IndexRoute', {
 });
 
 test('it exists', function(assert) {
+  assert.expect(1);
+
   var route = this.subject();
   assert.ok(route);
 });
 
 test('sets title correctly', function(assert) {
+  assert.expect(2);
+
   var route = this.subject();
 
   route.set('settings', {

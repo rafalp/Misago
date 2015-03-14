@@ -6,11 +6,15 @@ import {
 moduleFor('controller:error-banned', 'ErrorBannedController');
 
 test('it exists', function(assert) {
+  assert.expect(1);
+
   var controller = this.subject();
   assert.ok(controller);
 });
 
 test('isPermanent works', function(assert) {
+  assert.expect(2);
+
   var controller = this.subject();
 
   controller.set('model', {'expires_on': null});
@@ -21,6 +25,8 @@ test('isPermanent works', function(assert) {
 });
 
 test('expiresMoment works', function(assert) {
+  assert.expect(2);
+
   var controller = this.subject();
 
   controller.set('model', {'expires_on': null});
@@ -31,6 +37,8 @@ test('expiresMoment works', function(assert) {
 });
 
 test('expiresOn works', function(assert) {
+  assert.expect(2);
+
   var controller = this.subject();
 
   controller.set('model', {'expires_on': null});
@@ -41,6 +49,8 @@ test('expiresOn works', function(assert) {
 });
 
 test('isExpired works', function(assert) {
+  assert.expect(3);
+
   var controller = this.subject();
 
   controller.set('model', {'expires_on': null});

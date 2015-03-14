@@ -6,6 +6,8 @@ module('ResetScrollMixin');
 
 // Replace this with your real tests.
 test('it works', function(assert) {
+  assert.expect(1);
+
   var ResetScrollObject = Ember.Object.extend(ResetScrollMixin);
   var subject = ResetScrollObject.create();
   assert.ok(subject);

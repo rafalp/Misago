@@ -11,6 +11,8 @@ test('it exists', function(assert) {
 });
 
 test('showTermsLink', function(assert) {
+  assert.expect(4);
+
   var controller = this.subject();
 
   // ToS isn't defined and there isn't link to remote ToS page, don't show link
@@ -31,6 +33,8 @@ test('showTermsLink', function(assert) {
 });
 
 test('showPrivacyLink', function(assert) {
+  assert.expect(4);
+
   var controller = this.subject();
 
   // PrivPolicy isn't defined and there isn't link to remote PrivPolicy page, don't show link
@@ -51,6 +55,8 @@ test('showPrivacyLink', function(assert) {
 });
 
 test('showNav', function(assert) {
+  assert.expect(4);
+
   var controller = this.subject();
 
   // no Privacy Policy or ToS, don't show footer nav

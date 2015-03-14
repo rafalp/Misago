@@ -7,6 +7,8 @@ import {
 moduleFor('controller:login-modal', 'LoginModalController');
 
 test('it exists', function(assert) {
+  assert.expect(1);
+
   var self = this;
   Ember.run(function(){
     var controller = self.subject();
@@ -15,6 +17,8 @@ test('it exists', function(assert) {
 });
 
 test('reset works', function(assert) {
+  assert.expect(8);
+
   var self = this;
   Ember.run(function(){
     var controller = self.subject();

@@ -6,6 +6,8 @@ import { module, test } from 'qunit';
 module('FromNowHelper');
 
 test('helper returns valid from now', function(assert) {
+  assert.expect(2);
+
   var teststamp = moment();
   teststamp.add(7, 'days');
 

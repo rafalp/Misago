@@ -12,16 +12,22 @@ moduleFor('route:privacy-policy', 'PrivacyPolicyRoute', {
 });
 
 test('it exists', function(assert) {
+  assert.expect(1);
+
   var route = this.subject();
   assert.ok(route);
 });
 
 test('setting', function(assert) {
+  assert.expect(1);
+
   var route = this.subject();
   assert.equal(route.get('setting'), 'privacy_policy');
 });
 
 test('title', function(assert) {
+  assert.expect(2);
+
   var route = this.subject();
 
   assert.equal(route.get('title'), route.get('defaultTitle'));
@@ -32,6 +38,8 @@ test('title', function(assert) {
 });
 
 test('link', function(assert) {
+  assert.expect(2);
+
   var route = this.subject();
 
   assert.ok(!route.get('link'));

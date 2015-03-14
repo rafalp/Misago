@@ -15,6 +15,8 @@ module('Acceptance: TermsOfService', {
 });
 
 test('visiting unset /terms-of-service', function(assert) {
+  assert.expect(1);
+
   Ember.$.mockjax({
     url: "/api/legal-pages/terms-of-service/",
     status: 404,
@@ -29,6 +31,8 @@ test('visiting unset /terms-of-service', function(assert) {
 });
 
 test('visiting set /terms-of-service', function(assert) {
+  assert.expect(2);
+
   Ember.$.mockjax({
     url: "/api/legal-pages/terms-of-service/",
     status: 200,

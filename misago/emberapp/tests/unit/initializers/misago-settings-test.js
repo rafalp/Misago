@@ -16,6 +16,8 @@ module('SettingsInitializer', {
 });
 
 test('registers preloaded configuration in Ember', function(assert) {
+  assert.expect(3);
+
   initialize(container, application);
 
   assert.equal(container.lookup('misago:static-url'), MisagoPreloadStore.get('staticUrl'));

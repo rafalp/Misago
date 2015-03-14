@@ -4,25 +4,35 @@ import { module, test } from 'qunit';
 module('PreloadStore');
 
 test('has(key) method returns true for existing keys', function(assert) {
+  assert.expect(3);
+
   assert.ok(PreloadStore.has('staticUrl'));
   assert.ok(PreloadStore.has('mediaUrl'));
   assert.ok(PreloadStore.has('misagoSettings'));
 });
 
 test('has(key) method returns false for undefined keys', function(assert) {
+  assert.expect(1);
+
   assert.equal(PreloadStore.has('notExisting'), false);
 });
 
 test('get(key) method returns value for defined key', function(assert) {
+  assert.expect(2);
+
   assert.equal(PreloadStore.get('misagoSettings'), window.MisagoData.misagoSettings);
   assert.equal(PreloadStore.get('mediaUrl'), window.MisagoData.mediaUrl);
 });
 
 test('get(key) method returns undefined for undefined key', function(assert) {
+  assert.expect(1);
+
   assert.equal(PreloadStore.get('undefinedKey'), undefined);
 });
 
 test('get(key, default) method returns default value for undefined key', function(assert) {
+  assert.expect(2);
+
   var key = 'undefinedKey';
   var defaultValue = 'Default value';
 
@@ -31,6 +41,8 @@ test('get(key, default) method returns default value for undefined key', functio
 });
 
 test('get(key, default) method returns value for defined key', function(assert) {
+  assert.expect(2);
+
   var key = 'mediaUrl';
 
   assert.equal(PreloadStore.get(key, 'Default Value'), window.MisagoData.mediaUrl);
@@ -38,6 +50,8 @@ test('get(key, default) method returns value for defined key', function(assert) 
 });
 
 test('set(key, value) method sets new value', function(assert) {
+  assert.expect(3);
+
   var key = 'testKey';
   var value = 'Lo Bob!';
 
@@ -47,6 +61,8 @@ test('set(key, value) method sets new value', function(assert) {
 });
 
 test('pop(key, default) method returns default undefined for key', function(assert) {
+  assert.expect(2);
+
   var key = 'undefinedKey';
   var defaultValue = 'Default value';
 
@@ -55,6 +71,8 @@ test('pop(key, default) method returns default undefined for key', function(asse
 });
 
 test('pop(key, default) method returns and deletes value for key', function(assert) {
+  assert.expect(3);
+
   var key = 'undefinedKey';
   var realValue = 'valid value!';
   var defaultValue = 'Default value';

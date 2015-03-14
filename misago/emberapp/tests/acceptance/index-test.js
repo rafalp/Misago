@@ -14,6 +14,8 @@ module('Acceptance: Index', {
 });
 
 test('visiting /', function(assert) {
+  assert.expect(1);
+
   visit('/');
 
   andThen(function() {
@@ -22,6 +24,8 @@ test('visiting /', function(assert) {
 });
 
 test('visiting / with custom title', function(assert) {
+  assert.expect(2);
+
   var newTitle = "Misago Support Forums";
   window.MisagoData.misagoSettings['forum_index_title'] = newTitle;
   visit('/');

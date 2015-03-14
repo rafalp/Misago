@@ -6,11 +6,15 @@ import {
 moduleFor('service:toast-message', 'ToastMessageService');
 
 test('it exists', function(assert) {
+  assert.expect(1);
+
   var service = this.subject();
   assert.ok(service);
 });
 
 test('isInfo', function(assert) {
+  assert.expect(4);
+
   var service = this.subject();
 
   service.set('type', 'info');
@@ -22,6 +26,8 @@ test('isInfo', function(assert) {
 });
 
 test('isSuccess', function(assert) {
+  assert.expect(4);
+
   var service = this.subject();
 
   service.set('type', 'success');
@@ -33,6 +39,8 @@ test('isSuccess', function(assert) {
 });
 
 test('isWarning', function(assert) {
+  assert.expect(4);
+
   var service = this.subject();
 
   service.set('type', 'warning');
@@ -44,6 +52,8 @@ test('isWarning', function(assert) {
 });
 
 test('isError', function(assert) {
+  assert.expect(4);
+
   var service = this.subject();
 
   service.set('type', 'error');
@@ -55,6 +65,8 @@ test('isError', function(assert) {
 });
 
 test('_setToast', function(assert) {
+  assert.expect(3);
+
   var service = this.subject();
 
   var testMessage = "I'm test toast!";
@@ -67,6 +79,8 @@ test('_setToast', function(assert) {
 });
 
 test('_showToast', function(assert) {
+  assert.expect(3);
+
   var service = this.subject();
 
   var testMessage = "I'm test toast!";

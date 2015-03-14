@@ -11,6 +11,8 @@ module('csrf', {
 });
 
 test('getCsrfToken function returns csrf token', function(assert) {
+  assert.expect(1);
+
   var cookieName = 'validcsrfcookie';
   var token = 'v4l1dc5rft0k3n';
 
@@ -21,6 +23,8 @@ test('getCsrfToken function returns csrf token', function(assert) {
 });
 
 test('getCsrfToken function returns undefined for non-existing cookie', function(assert) {
+  assert.expect(1);
+
   MisagoPreloadStore.set('csrfCookieName', 'n0n3x15t1ng');
   assert.equal(getCsrfToken(), undefined);
 });

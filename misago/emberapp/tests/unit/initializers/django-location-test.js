@@ -15,6 +15,8 @@ module('DjangoLocationInitializer', {
 });
 
 test('initializer registers location api', function(assert) {
+  assert.expect(1);
+
   initialize(container, application);
 
   assert.ok(container.has('location:django-location'));

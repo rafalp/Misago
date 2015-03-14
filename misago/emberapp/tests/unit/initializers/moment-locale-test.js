@@ -23,6 +23,8 @@ module('MomentLocaleInitializer', {
 });
 
 test('initializer changes moment.js locale', function(assert) {
+  assert.expect(1);
+
   Ember.$('html').attr('lang', 'pl');
   initialize(container, application);
 

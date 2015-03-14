@@ -15,6 +15,8 @@ module('Acceptance: PrivacyPolicy', {
 });
 
 test('visiting unset /privacy-policy', function(assert) {
+  assert.expect(1);
+
   Ember.$.mockjax({
     url: "/api/legal-pages/privacy-policy/",
     status: 404,
@@ -29,6 +31,8 @@ test('visiting unset /privacy-policy', function(assert) {
 });
 
 test('visiting set /privacy-policy', function(assert) {
+  assert.expect(2);
+
   Ember.$.mockjax({
     url: "/api/legal-pages/privacy-policy/",
     status: 200,
