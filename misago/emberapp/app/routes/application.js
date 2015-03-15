@@ -20,7 +20,6 @@ export default Ember.Route.extend({
       complete_title += ' | ' + this.get('settings.forum_name');
 
       document.title = complete_title;
-      return false;
     },
 
     // Error handlers
@@ -76,26 +75,22 @@ export default Ember.Route.extend({
       }
 
       this.get('toast').error(errorMessage);
-      return false;
     },
 
     showBan: function(ban) {
       this.send('setTitle', gettext('You are banned'));
       this.intermediateTransitionTo('error-banned', ban);
-      return false;
     },
 
     // Auth
 
     openLoginModal: function() {
       this.controllerFor("loginModal").send('open');
-      return false;
     },
 
     logOut: function() {
       this.get('auth').logout();
       Ember.$('#hidden-logout-form').submit();
-      return false;
     }
   }
 });

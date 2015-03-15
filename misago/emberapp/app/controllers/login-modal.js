@@ -101,14 +101,15 @@ export default Ember.Controller.extend({
       }
     },
 
-    // handle go-to links
+    // Go-to links
 
-    forgotPassword: function() {
-      this.transitionToRoute('forgotten-password');
+    activateAccount: function() {
+      this.transitionToRoute('activation');
       Ember.$('#loginModal').modal('hide');
     },
 
-    activateAccount: function() {
+    forgotPassword: function() {
+      this.transitionToRoute('forgotten-password');
       Ember.$('#loginModal').modal('hide');
     }
   }

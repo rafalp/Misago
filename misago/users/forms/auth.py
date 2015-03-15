@@ -147,19 +147,24 @@ class GetUserForm(MisagoAuthMixin, forms.Form):
 
 
 class ResendActivationForm(GetUserForm):
-    def confirm_allowed(self, user):
-        self.confirm_user_not_banned(user)
-
+    def confirm_can_be_activated(self, user):
         username_format = {'user': user.username}
 
         if not user.requires_activation:
-            message = _("%(user)s, your account is already active.")
-            raise forms.ValidationError(message % username_format)
+            message = _("%(user)s, your account is already activated.")
+            raise forms.ValidationError(message % username_format,
+                                        code='already_active')
 
         if user.requires_activation_by_admin:
             message = _("%(user)s, only administrator may activate "
                         "your account.")
-            raise forms.ValidationError(message % username_format)
+            raise forms.ValidationError(message % username_format,
+                                        code='inactive_admin')
+
+    def confirm_allowed(self, user):
+        self.confirm_user_not_banned(user)
+        self.confirm_can_be_activated(user)
+
 
 
 class ResetPasswordForm(GetUserForm):

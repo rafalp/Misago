@@ -15,13 +15,13 @@ from misago.conf import settings
 from misago.core.mail import mail_user
 
 from misago.users.decorators import deny_authenticated, deny_banned_ips
-from misago.users.forms.auth import ResetPasswordForm
-from misago.users.tokens import (make_password_change_token,
-                                 is_password_change_token_valid)
+from misago.users.forms.auth import ResendActivationForm
+from misago.users.tokens import (make_activation_token,
+                                 is_activation_token_valid)
 from misago.users.validators import validate_password
 
 
-def password_api_view(f):
+def activation_api_view(f):
     @sensitive_post_parameters()
     @api_view(['POST'])
     @never_cache
@@ -34,26 +34,32 @@ def password_api_view(f):
             user = get_object_or_404(User.objects, pk=kwargs.pop('user_id'))
             kwargs['user'] = user
 
-            if not is_password_change_token_valid(user, kwargs['token']):
+            if not is_activation_token_valid(user, kwargs['token']):
                 message = _("Your link is invalid. Please try again.")
                 return Response({'detail': message},
                                 status=status.HTTP_404_NOT_FOUND)
 
+            form = ResendActivationForm()
             try:
-                form = ResetPasswordForm()
-                form.confirm_allowed(user)
+                form.confirm_user_not_banned(user)
             except ValidationError:
                 message = _("Your link has expired. Please request new one.")
                 return Response({'detail': message},
+                                status=status.HTTP_404_NOT_FOUND)
+
+            try:
+                form.confirm_can_be_activated(user)
+            except ValidationError as e:
+                return Response({'detail': e.messages[0]},
                                 status=status.HTTP_404_NOT_FOUND)
 
         return f(request, *args, **kwargs)
     return decorator
 
 
-@password_api_view
+@activation_api_view
 def send_link(request):
-    form = ResetPasswordForm(request.DATA)
+    form = ResendActivationForm(request.DATA)
     if form.is_valid():
         requesting_user = form.user_cache
 
@@ -63,7 +69,7 @@ def send_link(request):
                            'forum_title': settings.forum_name}
         mail_subject = mail_subject % subject_formats
 
-        confirmation_token = make_password_change_token(requesting_user)
+        confirmation_token = make_activation_token(requesting_user)
 
         mail_user(request, requesting_user, mail_subject,
                   'misago/emails/change_password_form_link',
@@ -78,27 +84,12 @@ def send_link(request):
                         status=status.HTTP_400_BAD_REQUEST)
 
 
-@password_api_view
+@activation_api_view
 def validate_token(request, user, token):
+    user.requires_activation = False
+    user.save(update_fields=['requires_activation'])
+
+    message = _("%(user)s, your account has been activated")
     return Response({
-        'change_password_url': reverse('misago:api:change_password', kwargs={
-            'user_id': user.id,
-            'token': token,
-        }),
-        'username': user.username
+        'detail': message % {'user': user.username}
     })
-
-
-@password_api_view
-def change_password(request, user, token):
-    new_password = request.DATA.get('password', '').strip()
-
-    try:
-        validate_password(new_password)
-        user.set_password(new_password)
-        user.save()
-    except ValidationError as e:
-        return Response({'detail': e.messages[0]},
-                        status=status.HTTP_400_BAD_REQUEST)
-
-    return Response()

@@ -5,7 +5,7 @@ import getToastMessage from '../helpers/toast-message';
 
 var application;
 
-module('Acceptance: ForgottenPassword', {
+module('Acceptance: Forgotten Password Change', {
   beforeEach: function() {
     application = startApp();
   },
