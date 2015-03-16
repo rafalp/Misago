@@ -1,9 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.ObjectController.extend({
-  isPermanent: function() {
-    return this.get('model.expires_on') === null;
-  }.property('model'),
+  isPermanent: Ember.computed.empty('model.expires_on'),
 
   expiresMoment: function() {
     if (!this.get('isPermanent')) {
