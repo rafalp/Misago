@@ -5,7 +5,7 @@ export default Ember.ObjectController.extend({
 
   expiresMoment: function() {
     if (!this.get('isPermanent')) {
-      return moment(this.get('model.expires_on'));
+      return moment.utc(this.get('model.expires_on'));
     } else {
       return null;
     }

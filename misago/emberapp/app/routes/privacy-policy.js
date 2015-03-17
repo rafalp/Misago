@@ -37,8 +37,7 @@ export default Ember.Route.extend(ResetScroll, {
 
   actions: {
     didTransition: function() {
-      this.send('setTitle', this.get('title'));
-      return true;
+      this.get('page-title').setTitle(this.get('title'));
     }
   }
 });

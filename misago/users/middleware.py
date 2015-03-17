@@ -46,6 +46,13 @@ class TimezoneMiddleware(object):
         else:
             timezone.activate(pytz.timezone(settings.default_timezone))
 
+        current_tz = timezone.get_current_timezone()
+
+        utc_offset = current_tz.normalize(timezone.now()).utcoffset()
+        utc_offset_seconds = int(utc_offset.total_seconds())
+
+        request.preloaded_ember_data['utcOffset'] = utc_offset_seconds
+
 
 class PreloadUserMiddleware(object):
     def process_request(self, request):
@@ -65,7 +72,7 @@ class PreloadUserMiddleware(object):
             request.preloaded_ember_data.update({
                 'user': {
                     'isAuthenticated': False,
-                    'isAnonymous': True
+                    'isAnonymous': True,
                 }
             })
 

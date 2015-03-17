@@ -9,8 +9,7 @@ export default Ember.Route.extend(ResetScroll, {
 
   actions: {
     didTransition: function() {
-      this.send('setTitle', gettext('Change forgotten password'));
-      return true;
+      this.get('page-title').setTitle(gettext('Change forgotten password'));
     },
 
     error: function(reason) {

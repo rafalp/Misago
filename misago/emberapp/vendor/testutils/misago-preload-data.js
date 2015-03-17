@@ -34,6 +34,8 @@ window.MisagoData = {
 
   "user": {
     "isAnonymous": true,
-    "isAuthenticated": false
-  }
+    "isAuthenticated": false,
+  },
+
+  "utcOffset": 0
 };

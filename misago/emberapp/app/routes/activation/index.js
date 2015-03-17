@@ -14,23 +14,19 @@ export default Ember.Route.extend(ResetScroll, {
 
   actions: {
     didTransition: function() {
-      this.send('setTitle', this.get('title'));
-      return true;
+      this.get('page-title').setTitle(this.get('title'));
     },
 
     showSentPage: function(linkRecipient) {
-      this.send('setTitle', this.get('sentTitle'));
+      this.get('page-title').setTitle(this.get('sentTitle'));
       this.render(this.get('sentTemplateName'), {
         model: linkRecipient
       });
-
-      return true;
     },
 
     retry: function() {
       this.send('didTransition');
       this.renderTemplate();
-      return true;
     }
   }
 });
