@@ -9,5 +9,6 @@ export function initialize(container, application) {
 
 export default {
   name: 'page-title-service',
+  after: 'misago-settings',
   initialize: initialize
 };
