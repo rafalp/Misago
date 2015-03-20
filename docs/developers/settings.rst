@@ -185,11 +185,6 @@ MISAGO_ATTACHMENTS_ROOT
 Path to directory that Misago should use to store post attachments. This directory shouldn't be accessible from outside world.
 
 
-MISAGO_AUTH_API_URL
--------------------
-Link name to API view used to validate sign-in credentials.
-
-
 MISAGO_AVATAR_SERVER_PATH
 -------------------------
 Url path that that all avatar server urls starts with. If you are running Misago subdirectory, make sure to update it (i.e. valid path for  "http://somesite.com/forums/" is ``/forums/user-avatar``).
@@ -256,6 +251,11 @@ MISAGO_HOURL_POST_LIMIT
 -----------------------
 
 Hourly limit of posts that may be posted from single account. Fail-safe for situations when forum is flooded by spam bot. Change to 0 to lift this restriction.
+
+
+MISAGO_LOGIN_API_URL
+--------------------
+URL to API endpoint used to authenticate sign-in credentials. Musn't contain api prefix or wrapping slashes. Defaults to 'auth/login'.
 
 
 MISAGO_MAILER_BATCH_SIZE

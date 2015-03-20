@@ -29,6 +29,10 @@ export default Ember.Service.extend({
     document.title = complete_title;
   },
 
+  setPlaceholderTitle: function() {
+    document.title = this.get('forumName');
+  },
+
   setIndexTitle: function() {
     document.title = this.get('indexTitle') || this.get('forumName');
   }

@@ -1,10 +1,9 @@
 import Ember from 'ember';
 import ResetScroll from 'misago/mixins/reset-scroll';
-import rpc from 'misago/utils/rpc';
 
 export default Ember.Route.extend(ResetScroll, {
   model: function(params) {
-    return rpc('activation/' + params.user_id + '/' + params.token + '/validate-token/');
+    return this.get('rpc').ajax('activation/' + params.user_id + '/' + params.token + '/validate-token');
   },
 
   afterModel: function(model) {

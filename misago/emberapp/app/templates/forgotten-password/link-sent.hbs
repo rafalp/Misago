@@ -7,13 +7,13 @@
 
   <div class="container">
 
-  <p class="lead">
-    {{gettext "%(username)s, we have sent link to your password change form to %(email)s." username=username email=email}}
-  </p>
+    <p class="lead">
+      {{gettext "%(username)s, we have sent link to your password change form to %(email)s." username=username email=email}}
+    </p>
 
-  <button class="btn btn-default" {{action "retry"}}>
-    {{gettext "Try again?"}}
-  </button>
+    <button class="btn btn-default" {{action "retry"}}>
+      {{gettext "Try again?"}}
+    </button>
 
   </div>
 </div>

@@ -81,10 +81,8 @@ def send_link(request):
 @password_api_view
 def validate_token(request, user, token):
     return Response({
-        'change_password_url': reverse('misago:api:change_password', kwargs={
-            'user_id': user.id,
-            'token': token,
-        }),
+        'user_id': user.id,
+        'token': token,
         'username': user.username
     })
 
@@ -101,4 +99,4 @@ def change_password(request, user, token):
         return Response({'detail': e.messages[0]},
                         status=status.HTTP_400_BAD_REQUEST)
 
-    return Response()
+    return Response({'detail': 'ok'})

@@ -1,9 +1,12 @@
 import Ember from 'ember';
-import rpc from 'misago/utils/rpc';
 
 export default Ember.ObjectController.extend({
   isLoading: false,
   password: '',
+
+  change_password_url: function() {
+    return 'change-password/' + this.get('user_id') + '/' + this.get('token');
+  }.property('user_id', 'token'),
 
   actions: {
     submit: function() {
@@ -21,7 +24,7 @@ export default Ember.ObjectController.extend({
       this.set('isLoading', true);
 
       var self = this;
-      rpc(this.get('change_password_url'), {
+      this.get('rpc').ajax(this.get('change_password_url'), {
         password: password
       }).then(function() {
         self.send('success');

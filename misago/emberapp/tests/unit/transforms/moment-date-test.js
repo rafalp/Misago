@@ -3,12 +3,8 @@ import {
   test
 } from 'ember-qunit';
 
-moduleFor('transform:moment-date', {
-  // Specify the other units that are required for this test.
-  // needs: ['serializer:foo']
-});
+moduleFor('transform:moment-date');
 
-// Replace this with your real tests.
 test('it exists', function(assert) {
   var transform = this.subject();
   assert.ok(transform);

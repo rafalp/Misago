@@ -1,8 +1,7 @@
 import Ember from 'ember';
-import rpc from 'misago/utils/rpc';
 
 export default Ember.ObjectController.extend({
-  rpcUrl: 'activation/send-link/',
+  rpcUrl: 'activation/send-link',
   isLoading: false,
   email: '',
 
@@ -22,7 +21,7 @@ export default Ember.ObjectController.extend({
       this.set('isLoading', true);
 
       var self = this;
-      rpc(this.get('rpcUrl'), {
+      this.get('rpc').ajax(this.get('rpcUrl'), {
         email: email
       }).then(function(requestingUser) {
         self.send('success', requestingUser);

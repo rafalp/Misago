@@ -39,6 +39,17 @@ test('setTitle changes document title', function(assert) {
   assert.equal(document.title, 'Test Thread (page 12) | Support | Test Forum');
 });
 
+test('setPlaceholderTitle changes document title to one defined for index', function(assert) {
+  assert.expect(1);
+
+  var service = this.subject();
+  service.set('forumName', 'Placeholder Test Forum');
+
+  // no index title is set
+  service.setPlaceholderTitle();
+  assert.equal(document.title, 'Placeholder Test Forum');
+});
+
 test('setIndexTitle changes document title to one defined for index', function(assert) {
   assert.expect(2);
 

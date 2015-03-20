@@ -2,6 +2,13 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
   actions: {
+    // Loading handler
+
+    loading: function() {
+      this.get('page-title').setPlaceholderTitle();
+      return true;
+    },
+
     // Error handlers
 
     error: function(reason) {

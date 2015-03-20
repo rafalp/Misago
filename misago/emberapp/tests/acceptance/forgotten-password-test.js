@@ -256,8 +256,7 @@ test('no new password is entered', function(assert) {
     status: 200,
     responseText: {
       'user_id': 1,
-      'token': 'token',
-      'change_password_url': '/api/change-password-url/'
+      'token': 'token'
     }
   });
 
@@ -278,14 +277,13 @@ test('new password is invalid', function(assert) {
     status: 200,
     responseText: {
       'user_id': 1,
-      'token': 'token',
-      'change_password_url': '/api/change-password-url/'
+      'token': 'token'
     }
   });
 
   var message = 'Entered password is not allowed.';
   Ember.$.mockjax({
-    url: '/api/change-password-url/',
+    url: '/api/change-password/1/token/',
     status: 400,
     responseText: {
       'detail': message
@@ -310,15 +308,14 @@ test('new password is accepted', function(assert) {
     status: 200,
     responseText: {
       'user_id': 1,
-      'token': 'token',
-      'change_password_url': '/api/change-password-url/'
+      'token': 'token'
     }
   });
 
-  var message = 'lul';
   Ember.$.mockjax({
-    url: '/api/change-password-url/',
-    status: 200
+    url: '/api/change-password/1/token/',
+    status: 200,
+    responseText: {'detail': 'ok'}
   });
 
   visit('/forgotten-password/1/token/');

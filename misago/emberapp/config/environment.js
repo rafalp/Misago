@@ -64,6 +64,11 @@ module.exports = function(environment) {
 
     ENV.APP.rootElement = '#ember-testing';
 
+    // Maintain api config
+    ENV.APP.API_HOST = '';
+    ENV.APP.API_NAMESPACE = 'api';
+    ENV.APP.API_ADD_TRAILING_SLASHES = true;
+
     // Reduce toast display times for test runner
     ENV.APP.TOAST_BASE_DISPLAY_TIME = 200;
     ENV.APP.TOAST_LENGTH_FACTOR = 0;

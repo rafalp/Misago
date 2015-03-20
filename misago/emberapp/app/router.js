@@ -14,6 +14,7 @@ Router.map(function() {
   this.route('forgotten-password', { path: 'forgotten-password/' }, function() {
     this.route('change-form', { path: ':user_id/:token/' });
   });
+  this.route('register', { path: 'register/' });
 
   // Legal
 
@@ -27,6 +28,7 @@ Router.map(function() {
   this.route('error-404', { path: 'error-404/' });
   this.route('error-banned', { path: 'banned/:reason/' });
   this.route('not-found', { path: '*path' });
+  this.route('register');
 });
 
 export default Router;

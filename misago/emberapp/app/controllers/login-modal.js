@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import rpc from 'misago/utils/rpc';
 import getCsrfToken from 'misago/utils/csrf';
 
 export default Ember.Controller.extend({
@@ -57,7 +56,7 @@ export default Ember.Controller.extend({
       }
 
       var self = this;
-      rpc(this.get('settings.authApiUrl'), credentials
+      this.get('rpc').ajax(this.get('settings.loginApiUrl'), credentials
       ).then(function() {
         self.send('success', credentials);
       }, function(jqXHR) {
@@ -99,6 +98,7 @@ export default Ember.Controller.extend({
       } else {
         this.get('toast').error(rejection.detail);
       }
+      return false;
     },
 
     // Go-to links

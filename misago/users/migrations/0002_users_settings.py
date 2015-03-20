@@ -27,7 +27,7 @@ def create_users_settings_group(apps, schema_editor):
                             ('none', _("No activation required")),
                             ('user', _("Activation Token sent to User")),
                             ('admin', _("Activation by Administrator")),
-                            ('disabled', _("Don't allow new registrations"))
+                            ('closed', _("Don't allow new registrations"))
                         )
                     },
                     'is_public': True,
