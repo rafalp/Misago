@@ -5,8 +5,10 @@ export default Ember.Service.extend({
   forumName: '',
 
   init: function() {
-    this.set('indexTitle', this.get('settings.forum_index_title'));
-    this.set('forumName', this.get('settings.forum_name'));
+    this.setProperties({
+      'indexTitle': this.get('settings.forum_index_title'),
+      'forumName': this.get('settings.forum_name')
+    });
   },
 
   setTitle: function(title) {

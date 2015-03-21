@@ -28,7 +28,6 @@ Router.map(function() {
   this.route('error-404', { path: 'error-404/' });
   this.route('error-banned', { path: 'banned/:reason/' });
   this.route('not-found', { path: '*path' });
-  this.route('register');
 });
 
 export default Router;

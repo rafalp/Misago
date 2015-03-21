@@ -18,7 +18,7 @@ export default Ember.Object.extend({
     // note: in case of Model being null this cheats adapterFor to return
     // 'adapter:application'. we are doing this, because for some reason
     // store.defaultAdapter fails to return django adapter
-    var adapter = this.get('store').adapterFor(record || {typeKey: 'application'});
+    var adapter = this.store.adapterFor(record || {typeKey: 'application'});
 
     // build api call URL
     var url = null;

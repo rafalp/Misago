@@ -1,7 +1,7 @@
-import Ember from 'ember';
+import MisagoRoute from 'misago/routes/misago';
 import ResetScroll from 'misago/mixins/reset-scroll';
 
-export default Ember.Route.extend(ResetScroll, {
+export default MisagoRoute.extend(ResetScroll, {
   page: 'privacy-policy',
   defaultTitle: gettext('Privacy policy'),
 
@@ -37,7 +37,7 @@ export default Ember.Route.extend(ResetScroll, {
 
   actions: {
     didTransition: function() {
-      this.get('page-title').setTitle(this.get('title'));
+      this.set('title', this.get('title'));
     }
   }
 });

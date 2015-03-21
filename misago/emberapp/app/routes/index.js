@@ -1,10 +1,10 @@
-import Ember from 'ember';
+import MisagoRoute from 'misago/routes/misago';
 import ResetScroll from 'misago/mixins/reset-scroll';
 
-export default Ember.Route.extend(ResetScroll, {
+export default MisagoRoute.extend(ResetScroll, {
   actions: {
     didTransition: function() {
-      this.get('page-title').setIndexTitle();
+      document.title = this.get('settings.forum_index_title') || this.get('settings.forum_name');
     }
   }
 });

@@ -1,11 +1,12 @@
 import Ember from 'ember';
+import MisagoRoute from 'misago/routes/misago';
 
-export default Ember.Route.extend({
+export default MisagoRoute.extend({
   actions: {
     // Loading handler
 
     loading: function() {
-      this.get('page-title').setPlaceholderTitle();
+      document.title = this.get('settings.forum_name');
       return true;
     },
 
@@ -13,17 +14,17 @@ export default Ember.Route.extend({
 
     error: function(reason) {
       if (reason.status === 0) {
-        this.get('page-title').setTitle(gettext('Connection lost'));
+        this.set('title', gettext('Connection lost'));
         return this.intermediateTransitionTo('error-0');
       }
 
       if (typeof reason.responseJSON !== 'undefined' && typeof reason.responseJSON.ban !== 'undefined') {
-        this.get('page-title').setTitle(gettext('You are banned'));
+        this.set('title', gettext('You are banned'));
         return this.intermediateTransitionTo('error-banned', reason.responseJSON.ban);
       }
 
       if (reason.status === 403) {
-        this.get('page-title').setTitle(gettext('Page not available'));
+        this.set('title', gettext('Page not available'));
 
         var final_error = {status: 403, message: null};
         if (typeof reason.responseJSON !== 'undefined' && typeof reason.responseJSON.detail !== 'undefined' && reason.responseJSON.detail !== 'Permission denied') {
@@ -34,11 +35,11 @@ export default Ember.Route.extend({
       }
 
       if (reason.status === 404) {
-        this.get('page-title').setTitle(gettext('Page not found'));
+        this.set('title', gettext('Page not found'));
         return this.intermediateTransitionTo('error-404');
       }
 
-      this.get('page-title').setTitle(gettext('Error'));
+      this.set('title', gettext('Error'));
       return true;
     },
 
@@ -61,11 +62,11 @@ export default Ember.Route.extend({
         errorMessage = gettext('Action link is invalid.');
       }
 
-      this.get('toast').error(errorMessage);
+      this.toast.error(errorMessage);
     },
 
     showBan: function(ban) {
-      this.get('page-title').setTitle(gettext('You are banned'));
+      this.set('title', gettext('You are banned'));
       this.intermediateTransitionTo('error-banned', ban);
     },
 

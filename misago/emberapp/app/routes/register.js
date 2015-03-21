@@ -1,7 +1,8 @@
 import Ember from 'ember';
+import MisagoRoute from 'misago/routes/misago';
 import ResetScroll from 'misago/mixins/reset-scroll';
 
-export default Ember.Route.extend(ResetScroll, {
+export default MisagoRoute.extend(ResetScroll, {
   stage: 'form',
 
   isForm: Ember.computed.equal('stage', 'form'),
@@ -26,7 +27,7 @@ export default Ember.Route.extend(ResetScroll, {
 
   actions: {
     didTransition: function() {
-      this.get('page-title').setTitle(gettext("Register"));
+      this.set('title', gettext("Register"));
     }
   }
 });

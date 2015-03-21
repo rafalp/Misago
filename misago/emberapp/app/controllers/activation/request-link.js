@@ -14,14 +14,14 @@ export default Ember.ObjectController.extend({
       var email = Ember.$.trim(this.get('email'));
 
       if (email === "") {
-        this.get('toast').warning(gettext("Enter e-mail address."));
+        this.toast.warning(gettext("Enter e-mail address."));
         return;
       }
 
       this.set('isLoading', true);
 
       var self = this;
-      this.get('rpc').ajax(this.get('rpcUrl'), {
+      this.rpc.ajax(this.get('rpcUrl'), {
         email: email
       }).then(function(requestingUser) {
         self.send('success', requestingUser);
@@ -44,7 +44,7 @@ export default Ember.ObjectController.extend({
           this.send('showBan', rejection.detail);
           this.set('email', '');
         } else {
-          this.get('toast').error(rejection.detail);
+          this.toast.error(rejection.detail);
         }
       } else {
         this.send('toastError', jqXHR);

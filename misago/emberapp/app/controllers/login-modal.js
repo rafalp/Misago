@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import getCsrfToken from 'misago/utils/csrf';
 
 export default Ember.Controller.extend({
   modal: null,
@@ -28,11 +27,13 @@ export default Ember.Controller.extend({
   },
 
   reset: function() {
-    this.set('username', '');
-    this.set('password', '');
+    this.setProperties({
+      'username': '',
+      'password': '',
 
-    this.set('isLoading', false);
-    this.set('showActivation', false);
+      'isLoading': false,
+      'showActivation': false
+    });
   },
 
   actions: {
@@ -51,12 +52,12 @@ export default Ember.Controller.extend({
       };
 
       if (!credentials.username || !credentials.password) {
-        this.get('toast').warning(gettext("Fill out both fields."));
+        this.toast.warning(gettext("Fill out both fields."));
         return;
       }
 
       var self = this;
-      this.get('rpc').ajax(this.get('settings.loginApiUrl'), credentials
+      this.rpc.ajax(this.get('settings.loginApiUrl'), credentials
       ).then(function() {
         self.send('success', credentials);
       }, function(jqXHR) {
@@ -69,8 +70,8 @@ export default Ember.Controller.extend({
     success: function(credentials) {
       var $form = Ember.$('#hidden-login-form');
 
-      // we need to refresh CSRF token because previous api call changed it
-      $form.find('input[name=csrfmiddlewaretoken]').val(getCsrfToken());
+      // refresh CSRF token because parent api call changed it
+      this.csrf.updateFormToken($form);
 
       // fill out form with user credentials and submit it, this will tell
       // misago to redirect user back to right page, and will trigger browser's
@@ -86,9 +87,9 @@ export default Ember.Controller.extend({
       if (jqXHR.status !== 400) {
         this.send('toastError', jqXHR);
       } else if (rejection.code === 'inactive_admin') {
-        this.get('toast').info(rejection.detail);
+        this.toast.info(rejection.detail);
       } else if (rejection.code === 'inactive_user') {
-        this.get('toast').info(rejection.detail);
+        this.toast.info(rejection.detail);
         this.set('showActivation', true);
       } else if (rejection.code === 'banned') {
         this.send('showBan', rejection.detail);
@@ -96,7 +97,7 @@ export default Ember.Controller.extend({
           Ember.$('#loginModal').modal('hide');
         });
       } else {
-        this.get('toast').error(rejection.detail);
+        this.toast.error(rejection.detail);
       }
       return false;
     },

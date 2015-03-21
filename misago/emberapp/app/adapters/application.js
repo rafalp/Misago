@@ -1,11 +1,10 @@
 import Ember from 'ember';
 import DRFAdapter from './drf';
-import getCsrfToken from 'misago/utils/csrf';
 
 export default DRFAdapter.extend({
   headers: function() {
     return {
-      'X-CSRFToken': getCsrfToken()
+      'X-CSRFToken': this.get('csrf.token')
     };
   }.property().volatile(),
 

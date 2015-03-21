@@ -17,14 +17,14 @@ export default Ember.ObjectController.extend({
       var password = Ember.$.trim(this.get('password'));
 
       if (password === "") {
-        this.get('toast').warning(gettext("Enter new password."));
+        this.toast.warning(gettext("Enter new password."));
         return;
       }
 
       this.set('isLoading', true);
 
       var self = this;
-      this.get('rpc').ajax(this.get('change_password_url'), {
+      this.rpc.ajax(this.get('change_password_url'), {
         password: password
       }).then(function() {
         self.send('success');
@@ -39,16 +39,16 @@ export default Ember.ObjectController.extend({
       this.set('password', '');
 
       this.send('openLoginModal');
-      this.get('toast').success(gettext("Your password has been changed."));
+      this.toast.success(gettext("Your password has been changed."));
     },
 
     error: function(jqXHR) {
       var rejection = jqXHR.responseJSON;
       if (jqXHR.status === 400){
-        this.get('toast').error(rejection.detail);
+        this.toast.error(rejection.detail);
       } else {
         if (jqXHR.status === 404) {
-          this.get('toast').error(rejection.detail);
+          this.toast.error(rejection.detail);
           this.transitionTo('forgotten-password');
         } else {
           this.send('toastError', jqXHR);

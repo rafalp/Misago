@@ -1,7 +1,7 @@
-import Ember from 'ember';
+import MisagoRoute from 'misago/routes/misago';
 import ResetScroll from 'misago/mixins/reset-scroll';
 
-export default Ember.Route.extend(ResetScroll, {
+export default MisagoRoute.extend(ResetScroll, {
   actions: {
     didTransition: function() {
       // Not found route transitions to error404
