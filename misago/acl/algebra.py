@@ -39,7 +39,7 @@ def sum_acls(result_acl, acls=None, roles=None, key=None, **permissions):
     return result_acl
 
 
-# Common comparisions
+# Common comparisons
 def greater(a, b):
     return a if a > b else b
 
