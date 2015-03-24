@@ -18,7 +18,7 @@ test('visiting unset /privacy-policy', function(assert) {
   assert.expect(1);
 
   Ember.$.mockjax({
-    url: "/api/legal-pages/privacy-policy/",
+    url: '/api/legal-pages/privacy-policy/',
     status: 404,
     responseText: {'detail': 'Not found'}
   });
@@ -34,7 +34,7 @@ test('visiting set /privacy-policy', function(assert) {
   assert.expect(2);
 
   Ember.$.mockjax({
-    url: "/api/legal-pages/privacy-policy/",
+    url: '/api/legal-pages/privacy-policy/',
     status: 200,
     responseText: {
       'id': 'privacy-policy',
