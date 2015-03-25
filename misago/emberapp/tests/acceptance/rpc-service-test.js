@@ -64,7 +64,7 @@ test('successful RPC', function(assert) {
   service.ajax('some-rpc').then(function(data) {
     assert.equal(data.detail, 'it works');
   }, function() {
-    assert.fail('rpc call should pass');
+    assert.ok(false, 'rpc call should pass');
   }).finally(function() {
     assert.ok(true, 'finally() was called');
     done();
@@ -84,7 +84,7 @@ test('failed RPC', function(assert) {
   });
 
   service.ajax('some-rpc').then(function() {
-    assert.fail('rpc call should fail');
+    assert.ok(false, 'rpc call should fail');
   }, function(jqXHR) {
     var rejection = jqXHR.responseJSON;
     assert.equal(rejection.detail, 'it fails');
@@ -124,7 +124,7 @@ test('successful model RPC', function(assert) {
       service.ajax(record, 'some-rpc').then(function(data) {
         assert.equal(data.detail, 'it works');
       }, function() {
-        assert.fail('rpc call should pass');
+        assert.ok(false, 'rpc call should pass');
       }).finally(function() {
         assert.ok(true, 'finally() was called');
         done();
@@ -161,7 +161,7 @@ test('failed model RPC', function(assert) {
 
     store.find('legal-page', 'privacy-policy').then(function(record) {
       service.ajax(record, 'some-rpc').then(function() {
-        assert.fail('rpc call should fail');
+        assert.ok(false, 'rpc call should fail');
       }, function(jqXHR) {
         var rejection = jqXHR.responseJSON;
         assert.equal(rejection.detail, 'it failed');

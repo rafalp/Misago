@@ -1,4 +1,4 @@
-import PreloadStore from '../../../utils/preloadstore';
+import PreloadStore from '../../../services/preload-store';
 import { module, test } from 'qunit';
 
 module('PreloadStore');

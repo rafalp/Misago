@@ -1,10 +1,10 @@
-import MisagoPreloadStore from 'misago/utils/preloadstore';
+import PreloadStore from 'misago/services/preload-store';
 import Auth from 'misago/services/auth';
 
 export function initialize(container, application) {
   var auth = Auth.create({
-    'isAuthenticated': MisagoPreloadStore.get('isAuthenticated'),
-    'user': MisagoPreloadStore.get('user')
+    'isAuthenticated': PreloadStore.get('isAuthenticated'),
+    'user': PreloadStore.get('user')
   });
 
   application.register('misago:auth', auth, { instantiate: false });

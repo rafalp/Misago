@@ -1,10 +1,10 @@
 import Ember from 'ember';
 import ENV from '../config/environment';
 
-export default Ember.Object.extend({
+export default Ember.Service.extend({
   cookieName: function() {
     return this.preloadStore.get('csrfCookieName');
-  }.property.volatile(),
+  }.property().volatile(),
 
   token: function() {
     var regex = new RegExp(this.get('cookieName') + '\=([^;]*)');
