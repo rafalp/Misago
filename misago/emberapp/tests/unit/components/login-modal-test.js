@@ -4,7 +4,7 @@ import {
   test
 } from 'ember-qunit';
 
-moduleFor('controller:login-modal', 'LoginModalController');
+moduleFor('component:login-modal', 'LoginModalController');
 
 test('it exists', function(assert) {
   assert.expect(1);

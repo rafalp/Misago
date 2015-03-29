@@ -1,5 +1,7 @@
 export function initialize(container, application) {
-  application.inject('controller', 'clock', 'service:clock');
+  [ 'controller', 'component' ].forEach((factory) => {
+    application.inject(factory, 'clock', 'service:clock');
+  });
 }
 
 export default {

@@ -10,10 +10,12 @@ export function initialize(container, application) {
   application.register('misago:auth', auth, { instantiate: false });
   application.inject('route', 'auth', 'misago:auth');
   application.inject('controller', 'auth', 'misago:auth');
+  application.inject('component', 'auth', 'misago:auth');
 
   application.register('misago:user', auth.get('user'), { instantiate: false });
   application.inject('route', 'user', 'misago:user');
   application.inject('controller', 'user', 'misago:user');
+  application.inject('component', 'user', 'misago:user');
 
 }
 

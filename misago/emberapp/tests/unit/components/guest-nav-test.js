@@ -3,7 +3,7 @@ import {
   test
 } from 'ember-qunit';
 
-moduleFor('controller:guest-nav', 'GuestNavController');
+moduleFor('component:guest-nav', 'GuestNavController');
 
 test('it exists', function(assert) {
   assert.expect(1);

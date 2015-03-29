@@ -11,7 +11,7 @@ export default Ember.Service.extend({
     if (ENV.environment !== 'test') {
       // running this loop in tests will block promises resolution
       Ember.run.later(function () {
-        self.set('_tick', !self.get('_tick'));
+        self.toggleProperty('_tick');
       }, ENV.APP.TICK_FREQUENCY);
     }
   }.observes('_tick').on('init'),

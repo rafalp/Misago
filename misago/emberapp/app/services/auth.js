@@ -6,6 +6,10 @@ export default Ember.Service.extend({
   }.property('isAuthenticated'),
 
   logout: function() {
+    Ember.$('#hidden-logout-form').submit();
+  },
 
+  openLoginModal: function() {
+    Ember.$('#loginModal').modal('show');
   }
 });

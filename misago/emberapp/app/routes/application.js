@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import MisagoRoute from 'misago/routes/misago';
 
 export default MisagoRoute.extend({
@@ -68,17 +67,6 @@ export default MisagoRoute.extend({
     showBan: function(ban) {
       this.set('title', gettext('You are banned'));
       this.intermediateTransitionTo('error-banned', ban);
-    },
-
-    // Auth
-
-    openLoginModal: function() {
-      this.controllerFor("loginModal").send('open');
-    },
-
-    logOut: function() {
-      this.get('auth').logout();
-      Ember.$('#hidden-logout-form').submit();
     }
   }
 });

@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-export default Ember.Controller.extend({
+export default Ember.Component.extend({
   modal: null,
 
   isLoading: false,
@@ -8,10 +8,6 @@ export default Ember.Controller.extend({
 
   username: '',
   password: '',
-
-  scheduleSetup: function() {
-    Ember.run.scheduleOnce('afterRender', this, this.setup);
-  }.on('init'),
 
   setup: function() {
     this.modal = Ember.$('#loginModal').modal({show: false});
@@ -24,7 +20,7 @@ export default Ember.Controller.extend({
     this.modal.on('hidden.bs.modal', function() {
       self.reset();
     });
-  },
+  }.on('didInsertElement'),
 
   reset: function() {
     this.setProperties({

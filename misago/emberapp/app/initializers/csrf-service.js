@@ -5,7 +5,7 @@ export function initialize(container, application) {
 
   application.inject('service:csrf', 'preloadStore', 'service:preload-store');
 
-  [ 'controller', 'adapter' ].forEach((factory) => {
+  [ 'component', 'adapter' ].forEach((factory) => {
     application.inject(factory, 'csrf', 'service:csrf');
   });
 }

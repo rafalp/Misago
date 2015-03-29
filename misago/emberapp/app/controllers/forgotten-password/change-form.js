@@ -38,7 +38,7 @@ export default Ember.ObjectController.extend({
     success: function() {
       this.set('password', '');
 
-      this.send('openLoginModal');
+      this.auth.openLoginModal();
       this.toast.success(gettext("Your password has been changed."));
     },
 

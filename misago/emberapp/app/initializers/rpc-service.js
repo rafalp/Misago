@@ -5,7 +5,7 @@ export function initialize(_container, application) {
 
   application.inject('service:rpc', 'store', 'store:main');
 
-  [ 'route', 'controller' ].forEach((factory) => {
+  [ 'route', 'controller', 'component' ].forEach((factory) => {
     application.inject(factory, 'rpc', 'service:rpc');
   });
 }
