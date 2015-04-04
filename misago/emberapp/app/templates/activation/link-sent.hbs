@@ -8,7 +8,7 @@
   <div class="container">
 
     <p class="lead">
-      {{gettext "%(username)s, we have sent your activation link to %(email)s." username=username email=email}}
+      {{gettext "%(username)s, we have sent your activation link to %(email)s." username=model.username email=model.email}}
     </p>
 
     <button class="btn btn-default" {{action "retry"}}>

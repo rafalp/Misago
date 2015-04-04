@@ -11,24 +11,7 @@
       <div class="col-md-4 col-md-offset-4">
 
         <div class="well well-form">
-          <form {{action "submit" on="submit"}}>
-
-            <div class="form-group">
-              <div class="control-input">
-                {{input type="password" value=password class="form-control" placeholder=(gettext "Enter new password")}}
-              </div>
-            </div>
-
-            {{#if isLoading}}
-            <button type="button" class="btn btn-block btn-primary" disabled="disabled">
-              <span class="fa fa-cog fa-spin"></span>
-              {{gettext "Processing..."}}
-            </button>
-            {{else}}
-            <button type="submit" class="btn btn-primary btn-block">{{gettext "Change password"}}</button>
-            {{/if}}
-
-          </form>
+          {{set-new-password-form model=model}}
         </div>
 
       </div>

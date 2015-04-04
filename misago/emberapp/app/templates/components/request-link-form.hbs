@@ -1,0 +1,14 @@
+<div class="form-group">
+  <div class="control-input">
+    {{input type="text" value=email class="form-control" placeholder=placeholder}}
+  </div>
+</div>
+
+{{#if isLoading}}
+<button type="button" class="btn btn-block btn-primary" disabled="disabled">
+  <span class="fa fa-cog fa-spin"></span>
+  {{gettext "Sending request..."}}
+</button>
+{{else}}
+<button type="submit" class="btn btn-primary btn-block">{{gettext "Send link"}}</button>
+{{/if}}
