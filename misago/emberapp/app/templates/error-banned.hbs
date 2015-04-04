@@ -8,16 +8,10 @@
 
       <div class="error-message">
         <div class="lead">
-          {{{message.html}}}
+          {{{model.message.html}}}
         </div>
 
-        {{#if isPermanent}}
-        <p>{{gettext "This ban is permanent."}}</p>
-        {{else if isExpired}}
-        <p>{{gettext "This ban expired %(expires)s. Please try again." expires=(from-now expiresOn)}}</p>
-        {{else}}
-        <p>{{gettext "This ban expires %(expires)s." expires=(from-now expiresOn)}}</p>
-        {{/if}}
+        {{ban-expires model=model}}
       </div>
 
     </div>

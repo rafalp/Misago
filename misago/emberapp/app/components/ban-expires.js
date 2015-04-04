@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
-export default Ember.ObjectController.extend({
+export default Ember.Component.extend({
+  tagName: 'p',
   isPermanent: Ember.computed.empty('model.expires_on'),
 
   expiresMoment: function() {

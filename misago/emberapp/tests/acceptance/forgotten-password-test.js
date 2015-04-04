@@ -159,7 +159,7 @@ test('request password change link with banned account', function(assert) {
     var errorMessage = find('.lead p').text();
     assert.equal(errorMessage, 'You are banned for trolling.');
 
-    var expirationMessage = find('.error-message>p').text();
+    var expirationMessage = Ember.$.trim(find('.error-message>p').text());
     assert.equal(expirationMessage, 'This ban is permanent.');
   });
 });

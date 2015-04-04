@@ -131,7 +131,7 @@ test('banned', function(assert) {
     var errorMessage = find('.lead p').text();
     assert.equal(errorMessage, 'You are banned.');
 
-    var expirationMessage = find('.error-message>p').text();
+    var expirationMessage = Ember.$.trim(find('.error-message>p').text());
     assert.equal(expirationMessage, 'This ban is permanent.');
   });
 });

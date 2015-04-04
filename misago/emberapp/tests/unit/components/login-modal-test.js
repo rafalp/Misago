@@ -4,15 +4,15 @@ import {
   test
 } from 'ember-qunit';
 
-moduleFor('component:login-modal', 'LoginModalController');
+moduleFor('component:login-modal', 'LoginModalComponent');
 
 test('it exists', function(assert) {
   assert.expect(1);
 
   var self = this;
   Ember.run(function(){
-    var controller = self.subject();
-    assert.ok(controller);
+    var component = self.subject();
+    assert.ok(component);
   });
 });
 
@@ -21,26 +21,26 @@ test('reset works', function(assert) {
 
   var self = this;
   Ember.run(function(){
-    var controller = self.subject();
+    var component = self.subject();
 
-    controller.set('username', 'TestUsername');
-    controller.set('password', 'secretpassword');
+    component.set('username', 'TestUsername');
+    component.set('password', 'secretpassword');
 
-    controller.set('isLoading', true);
-    controller.set('showActivation', true);
+    component.set('isLoading', true);
+    component.set('showActivation', true);
 
-    assert.equal(controller.get('username'), 'TestUsername');
-    assert.equal(controller.get('password'), 'secretpassword');
+    assert.equal(component.get('username'), 'TestUsername');
+    assert.equal(component.get('password'), 'secretpassword');
 
-    assert.equal(controller.get('isLoading'), true);
-    assert.equal(controller.get('showActivation'), true);
+    assert.equal(component.get('isLoading'), true);
+    assert.equal(component.get('showActivation'), true);
 
-    controller.reset();
+    component.reset();
 
-    assert.equal(controller.get('username'), '');
-    assert.equal(controller.get('password'), '');
+    assert.equal(component.get('username'), '');
+    assert.equal(component.get('password'), '');
 
-    assert.equal(controller.get('isLoading'), false);
-    assert.equal(controller.get('showActivation'), false);
+    assert.equal(component.get('isLoading'), false);
+    assert.equal(component.get('showActivation'), false);
   });
 });

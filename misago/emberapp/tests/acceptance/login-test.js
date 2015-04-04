@@ -161,7 +161,7 @@ test('login to banned account', function(assert) {
     var banMessage = find('.lead p').text();
     assert.equal(banMessage, 'You are banned for trolling.');
 
-    var expirationMessage = find('.error-message>p').text();
+    var expirationMessage = Ember.$.trim(find('.error-message>p').text());
     assert.equal(expirationMessage, 'This ban is permanent.');
   });
 });
