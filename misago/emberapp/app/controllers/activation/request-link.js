@@ -5,6 +5,29 @@ export default Ember.ObjectController.extend({
   isLoading: false,
   email: '',
 
+  router: function() {
+    return this.container.lookup('router:main');
+  }.property(),
+
+  success: function(requestingUser) {
+    this.send('showSentPage', requestingUser);
+    this.set('email', '');
+  },
+
+  error: function(jqXHR) {
+    if (jqXHR.status === 400){
+      var rejection = jqXHR.responseJSON;
+      if (rejection.code === 'banned') {
+        this.get('router').intermediateTransitionTo('error-banned', rejection.detail);
+        this.set('email', '');
+      } else {
+        this.toast.error(rejection.detail);
+      }
+    } else {
+      this.toast.apiError(jqXHR);
+    }
+  },
+
   actions: {
     submit: function() {
       if (this.get('isLoading')) {
@@ -24,31 +47,12 @@ export default Ember.ObjectController.extend({
       this.rpc.ajax(this.get('rpcUrl'), {
         email: email
       }).then(function(requestingUser) {
-        self.send('success', requestingUser);
+        self.success(requestingUser);
       }, function(jqXHR) {
-        self.send('error', jqXHR);
+        self.error(jqXHR);
       }).finally(function() {
         self.set('isLoading', false);
       });
-    },
-
-    success: function(requestingUser) {
-      this.send('showSentPage', requestingUser);
-      this.set('email', '');
-    },
-
-    error: function(jqXHR) {
-      if (jqXHR.status === 400){
-        var rejection = jqXHR.responseJSON;
-        if (rejection.code === 'banned') {
-          this.send('showBan', rejection.detail);
-          this.set('email', '');
-        } else {
-          this.toast.error(rejection.detail);
-        }
-      } else {
-        this.send('toastError', jqXHR);
-      }
     }
   }
 });

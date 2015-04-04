@@ -58,5 +58,28 @@ export default Ember.Service.extend({
 
   error: function(message) {
     this._setToast('error', message);
+  },
+
+  apiError: function(reason) {
+    reason = Ember.Object.create(reason);
+
+    var errorMessage = gettext('Unknown error has occured.');
+
+    if (reason.get('status') === 0) {
+      errorMessage = gettext('Lost connection with application.');
+    }
+
+    if (reason.get('status') === 403) {
+      errorMessage = reason.get('responseJSON.detail');
+      if (errorMessage === 'Permission denied') {
+        errorMessage = gettext("You don't have permission to perform this action.");
+      }
+    }
+
+    if (reason.get('status') === 404) {
+      errorMessage = gettext('Action link is invalid.');
+    }
+
+    this.error(errorMessage);
   }
 });

@@ -51,7 +51,7 @@ export default Ember.ObjectController.extend({
           this.toast.error(rejection.detail);
           this.transitionTo('forgotten-password');
         } else {
-          this.send('toastError', jqXHR);
+          this.toast.apiError(jqXHR);
         }
       }
     }

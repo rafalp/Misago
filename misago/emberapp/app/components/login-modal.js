@@ -51,20 +51,17 @@ export default Ember.Component.extend({
     $form.submit();
   },
 
-  toastError: 'toastError',
-  showBan: 'showBan',
-
   error: function(jqXHR) {
     var rejection = jqXHR.responseJSON;
     if (jqXHR.status !== 400) {
-      this.sendAction('toastError', jqXHR);
+      this.toast.apiError(jqXHR);
     } else if (rejection.code === 'inactive_admin') {
       this.toast.info(rejection.detail);
     } else if (rejection.code === 'inactive_user') {
       this.toast.info(rejection.detail);
       this.set('showActivation', true);
     } else if (rejection.code === 'banned') {
-      this.sendAction('showBan', rejection.detail);
+      this.get('router').intermediateTransitionTo('error-banned', rejection.detail);
       Ember.run(function() {
         Ember.$('#loginModal').modal('hide');
       });
