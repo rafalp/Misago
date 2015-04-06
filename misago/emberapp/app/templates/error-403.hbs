@@ -7,8 +7,8 @@
       </div>
 
       <div class="error-message">
-        {{#if message}}
-        <p class="lead">{{message}}</p>
+        {{#if model.message}}
+        <p class="lead">{{model.message}}</p>
         {{else}}
         <p class="lead">{{gettext "You don't have permission to access this page."}}</p>
         {{/if}}
