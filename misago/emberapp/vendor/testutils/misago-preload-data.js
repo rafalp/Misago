@@ -28,7 +28,7 @@ window.MisagoData = {
   "csrfCookieName": 'csrftokencookie',
 
   "mediaUrl": "/media/",
-  "staticUrl": "/static/",
+  "staticUrl": "",
 
   "isAuthenticated": false,
 

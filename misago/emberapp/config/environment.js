@@ -13,6 +13,16 @@ module.exports = function(environment) {
       }
     },
 
+    contentSecurityPolicy: {
+      'default-src': "'none'",
+      'script-src': "'self' 'unsafe-inline' 'unsafe-eval' https://cdn.mxpnl.com http://localhost:8000", // Allow scripts from https://cdn.mxpnl.com and Django runserver
+      'font-src': "'self' http://fonts.gstatic.com", // Allow fonts to be loaded from http://fonts.gstatic.com
+      'connect-src': "'self' https://api.mixpanel.com http://localhost:8000", // Allow data (ajax/websocket) from api.mixpanel.com, custom-api.local and Django runserver
+      'img-src': "'self'",
+      'style-src': "'self' 'unsafe-inline' http://fonts.googleapis.com", // Allow inline styles and loaded CSS from http://fonts.googleapis.com
+      'media-src': "'self'"
+    },
+
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
@@ -40,16 +50,6 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     ENV.APP.LOG_VIEW_LOOKUPS = true;
 
-    ENV.contentSecurityPolicy = {
-      'default-src': "'none'",
-      'script-src': "'self' 'unsafe-inline' https://cdn.mxpnl.com http://localhost:8000", // Allow scripts from https://cdn.mxpnl.com and Django runserver
-      'font-src': "'self' http://fonts.gstatic.com", // Allow fonts to be loaded from http://fonts.gstatic.com
-      'connect-src': "'self' https://api.mixpanel.com http://localhost:8000", // Allow data (ajax/websocket) from api.mixpanel.com, custom-api.local and Django runserver
-      'img-src': "'self'",
-      'style-src': "'self' 'unsafe-inline' http://fonts.googleapis.com", // Allow inline styles and loaded CSS from http://fonts.googleapis.com
-      'media-src': "'self'"
-    }
-
     ENV.APP.TICK_FREQUENCY = 1000;
   }
 
@@ -76,6 +76,15 @@ module.exports = function(environment) {
 
   if (environment === 'production') {
     ENV.locationType = 'django-location';
+    ENV.contentSecurityPolicy = {
+      'default-src': "'none'",
+      'script-src': "'self' 'unsafe-inline' 'unsafe-eval' https://cdn.mxpnl.com", // Allow scripts from https://cdn.mxpnl.com and Django runserver
+      'font-src': "'self' http://fonts.gstatic.com", // Allow fonts to be loaded from http://fonts.gstatic.com
+      'connect-src': "'self' https://api.mixpanel.com", // Allow data (ajax/websocket) from api.mixpanel.com, custom-api.local and Django runserver
+      'img-src': "'self'",
+      'style-src': "'self' 'unsafe-inline' http://fonts.googleapis.com", // Allow inline styles and loaded CSS from http://fonts.googleapis.com
+      'media-src': "'self'"
+    };
   }
 
   return ENV;
