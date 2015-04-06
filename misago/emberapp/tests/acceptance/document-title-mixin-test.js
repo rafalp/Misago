@@ -12,12 +12,12 @@ module('Acceptance: Page Title Mixin', {
     application = startApp();
     container = application.__container__;
 
-    forum_name = container.resolve('misago:settings').forum_name;
+    forum_name = container.lookup('misago:settings').forum_name;
   },
 
   afterEach: function() {
     document.title = title;
-    container.resolve('misago:settings').forum_name = forum_name;
+    container.lookup('misago:settings').forum_name = forum_name;
 
     Ember.run(application, 'destroy');
   }
@@ -27,10 +27,10 @@ test('setTitle changes document title', function(assert) {
   assert.expect(5);
 
   var TestRoute = Ember.Object.extend(DocumentTitle, {
-    settings: container.resolve('misago:settings')
+    settings: container.lookup('misago:settings')
   });
 
-  container.resolve('misago:settings').forum_name = 'Test Forum';
+  container.lookup('misago:settings').forum_name = 'Test Forum';
 
   var mixin = TestRoute.create();
 

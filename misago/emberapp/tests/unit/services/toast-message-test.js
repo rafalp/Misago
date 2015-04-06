@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import {
   moduleFor,
   test
@@ -65,6 +66,7 @@ test('isError', function(assert) {
 });
 
 test('_setToast', function(assert) {
+  var done = assert.async();
   assert.expect(3);
 
   var service = this.subject();
@@ -76,9 +78,14 @@ test('_setToast', function(assert) {
   assert.ok(service.get('isVisible'));
   assert.ok(service.get('isSuccess'));
   assert.equal(service.get('message'), testMessage);
+
+  setTimeout(function() {
+    done();
+  }, 750);
 });
 
 test('_showToast', function(assert) {
+  var done = assert.async();
   assert.expect(3);
 
   var service = this.subject();
@@ -90,4 +97,8 @@ test('_showToast', function(assert) {
   assert.ok(service.get('isVisible'));
   assert.ok(service.get('isSuccess'));
   assert.equal(service.get('message'), testMessage);
+
+  setTimeout(function() {
+    done();
+  }, 750);
 });

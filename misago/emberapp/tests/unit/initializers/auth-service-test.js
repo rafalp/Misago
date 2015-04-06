@@ -19,6 +19,6 @@ test('initializer registered auth and user', function(assert) {
 
   initialize(container, application);
 
-  assert.ok(container.has('misago:auth'));
-  assert.ok(container.has('misago:user'));
+  assert.ok(container.lookup('misago:auth'));
+  assert.ok(container.lookup('misago:user'));
 });

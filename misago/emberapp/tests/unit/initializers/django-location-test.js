@@ -19,6 +19,6 @@ test('initializer registers location api', function(assert) {
 
   initialize(container, application);
 
-  assert.ok(container.has('location:django-location'));
+  assert.ok(application.registry.has('location:django-location'));
 });
 

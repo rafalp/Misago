@@ -14,7 +14,6 @@ module('DocumentTitleMixin', {
   }
 });
 
-// Replace this with your real tests.
 test('it works', function(assert) {
   var DocumentTitleObject = Ember.Object.extend(DocumentTitleMixin);
   var subject = DocumentTitleObject.create();

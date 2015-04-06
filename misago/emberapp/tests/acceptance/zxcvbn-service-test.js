@@ -17,12 +17,14 @@ module('Acceptance: ZxcvbnService', {
 });
 
 test('loading zxcvbn and testing password with it', function(assert) {
+  var done = assert.async();
   assert.expect(2);
 
   Ember.run(function() {
     service.loadLibrary().then(function() {
       assert.ok(typeof zxcvbn !== 'undefined');
       assert.ok(service.scorePassword('L0r3m !p5um') > 0);
+        done();
     });
   });
 });

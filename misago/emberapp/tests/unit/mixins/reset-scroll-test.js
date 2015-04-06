@@ -4,7 +4,6 @@ import { module, test } from 'qunit';
 
 module('ResetScrollMixin');
 
-// Replace this with your real tests.
 test('it works', function(assert) {
   assert.expect(1);
 

@@ -14,9 +14,11 @@ export default Ember.Service.extend({
 
   _showToast: function(type, message) {
     var toastId = this.incrementProperty('id');
-    this.set('type', type);
-    this.set('message', message);
-    this.set('isVisible', true);
+    this.setProperties({
+      'type': type,
+      'message': message,
+      'isVisible': true
+    });
 
     var displayTime = ENV.APP.TOAST_BASE_DISPLAY_TIME;
     displayTime += message.length * ENV.APP.TOAST_LENGTH_FACTOR;
