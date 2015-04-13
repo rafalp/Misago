@@ -176,6 +176,84 @@ def create_users_settings_group(apps, schema_editor):
             )
         })
 
+    migrate_settings_group(
+        apps,
+        {
+            'key': 'captcha',
+            'name': _("CAPTCHA"),
+            'description': _("Those settings allow you to combat automatic "
+                             "registrations on your forum."),
+            'settings': (
+                {
+                    'setting': 'captcha_type',
+                    'name': _("Select CAPTCHA type"),
+                    'legend': _("CAPTCHA type"),
+                    'value': 'no',
+                    'form_field': 'select',
+                    'field_extra': {
+                        'choices': (
+                            ('no', _("No CAPTCHA")),
+                            ('re', _("reCaptcha")),
+                            ('qa', _("Question and answer")),
+                        ),
+                    },
+                    'is_public': True,
+                },
+                {
+                    'setting': 'recaptcha_site_key',
+                    'name': _("Site key"),
+                    'legend': _("reCAPTCHA"),
+                    'value': '',
+                    'field_extra': {
+                        'required': False,
+                        'max_length': 100,
+                    },
+                    'is_public': True,
+                },
+                {
+                    'setting': 'recaptcha_secret_key',
+                    'name': _("Secret key"),
+                    'value': '',
+                    'field_extra': {
+                        'required': False,
+                        'max_length': 100,
+                    },
+                },
+                {
+                    'setting': 'qa_question',
+                    'name': _("Test question"),
+                    'legend': _("Question and answer"),
+                    'value': '',
+                    'field_extra': {
+                        'required': False,
+                        'max_length': 250,
+                    },
+                },
+                {
+                    'setting': 'qa_help_text',
+                    'name': _("Question help text"),
+                    'value': '',
+                    'field_extra': {
+                        'required': False,
+                        'max_length': 250,
+                    },
+                },
+                {
+                    'setting': 'qa_answers',
+                    'name': _("Valid answers"),
+                    'description': _("Enter each answer in new line. "
+                                     "Answers are case-insensitive."),
+                    'value': '',
+                    'form_field': 'textarea',
+                    'field_extra': {
+                        'rows': 4,
+                        'required': False,
+                        'max_length': 250,
+                    },
+                },
+            )
+        })
+
 
 class Migration(migrations.Migration):
 

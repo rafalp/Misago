@@ -26,12 +26,3 @@ def login(request):
     else:
         return Response(form.get_errors_dict(),
                         status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET', 'POST'])
-def user(request):
-    if request.user.is_authenticated():
-        return Response(AuthenticatedUserSerializer(request.user).data)
-    else:
-        return Response({'id': None})
-

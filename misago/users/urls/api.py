@@ -1,9 +1,10 @@
 from django.conf.urls import patterns, url
+from rest_framework.routers import DefaultRouter
+from misago.users.api.users import UserViewSet
 
 
 urlpatterns = patterns('misago.users.api.auth',
-    url(r'^auth/login/$', 'login', name='login'),
-    url(r'^auth/$', 'user', name='auth_user'),
+    url(r'^login/$', 'login', name='login'),
 )
 
 urlpatterns += patterns('misago.users.api.activation',
@@ -16,3 +17,11 @@ urlpatterns += patterns('misago.users.api.changepassword',
     url(r'^change-password/(?P<user_id>\d+)/(?P<token>[a-zA-Z0-9]+)/validate-token/$', 'validate_token', name='change_password_validate_token'),
     url(r'^change-password/(?P<user_id>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'change_password', name='change_password'),
 )
+
+urlpatterns = patterns('misago.users.api.captcha',
+    url(r'^captcha-questions/(?P<question_id>\d+)/$', 'question', name='captcha_question'),
+)
+
+router = DefaultRouter()
+router.register(r'users', UserViewSet)
+urlpatterns += router.urls

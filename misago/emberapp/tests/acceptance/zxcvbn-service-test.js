@@ -21,7 +21,7 @@ test('loading zxcvbn and testing password with it', function(assert) {
   assert.expect(2);
 
   Ember.run(function() {
-    service.loadLibrary().then(function() {
+    service.load().then(function() {
       assert.ok(typeof zxcvbn !== 'undefined');
       assert.ok(service.scorePassword('L0r3m !p5um') > 0);
         done();

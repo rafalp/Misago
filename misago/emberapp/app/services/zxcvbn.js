@@ -10,7 +10,7 @@ export default Ember.Service.extend({
     return zxcvbn(password, inputs).score;
   },
 
-  loadLibrary: function() {
+  load: function() {
     if (!this.get('includedJs')) {
       this._includeJs();
     }

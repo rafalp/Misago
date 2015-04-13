@@ -1,0 +1,7 @@
+<label for="captcha-question" class="{{label-class}} control-label">{{model.question}}</label>
+<div class="{{control-class}}">
+  <input type="text" class="form-control" id="captcha-question">
+  {{#if model.help_text}}
+  <span class="help-block">{{model.help_text}}</span>
+  {{/if}}
+</div>

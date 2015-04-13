@@ -7,7 +7,7 @@ from django.test import TestCase
 from misago.users.models import Ban, BAN_USERNAME
 
 
-class AuthenticateAPITests(TestCase):
+class AuthenticationAPITests(TestCase):
     def test_api_invalid_credentials(self):
         """login api returns 400 on invalid POST"""
         response = self.client.post(
@@ -23,7 +23,7 @@ class AuthenticateAPITests(TestCase):
         user_json = json.loads(response.content)
         self.assertIsNone(user_json['id'])
 
-    def test_api_signin(self):
+    def test_api_login(self):
         """api signs user in"""
         User = get_user_model()
         user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
@@ -41,7 +41,7 @@ class AuthenticateAPITests(TestCase):
         self.assertEqual(user_json['id'], user.id)
         self.assertEqual(user_json['username'], user.username)
 
-    def test_api_signin_banned(self):
+    def test_api_login_banned(self):
         """login api fails to sign banned user in"""
         User = get_user_model()
         User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
@@ -62,7 +62,7 @@ class AuthenticateAPITests(TestCase):
         self.assertEqual(response_json['detail']['message']['html'],
                          '<p>%s</p>' % ban.user_message)
 
-    def test_api_signin_inactive_admin(self):
+    def test_api_login_inactive_admin(self):
         """login api fails to sign admin-activated user in"""
         User = get_user_model()
         User.objects.create_user('Bob', 'bob@test.com', 'Pass.123',
@@ -76,7 +76,7 @@ class AuthenticateAPITests(TestCase):
         response_json = json.loads(response.content)
         self.assertEqual(response_json['code'], 'inactive_user')
 
-    def test_api_signin_inactive_user(self):
+    def test_api_login_inactive_user(self):
         """login api fails to sign user-activated user in"""
         User = get_user_model()
         User.objects.create_user('Bob', 'bob@test.com', 'Pass.123',

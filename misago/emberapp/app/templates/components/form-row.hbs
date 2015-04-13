@@ -1,0 +1,22 @@
+<label for="{{for}}" class="{{label-class}} control-label">{{label}}</label>
+<div class="{{control-class}}">
+  {{yield}}
+
+  {{#if hasFeedback}}
+    <span class="glyphicon {{if hasSuccess "glyphicon-ok" "glyphicon-remove"}} form-control-feedback" aria-hidden="true"></span>
+  {{/if}}
+
+  {{#if errors }}
+    <div class="help-block">
+      {{#each error in errors}}
+      <div>
+        <strong>{{error}}</strong>
+      </div>
+      {{/each}}
+    </div>
+  {{/if}}
+
+  {{#if help_text}}
+    <span class="help-block">{{help_text}}</span>
+  {{/if}}
+</div>

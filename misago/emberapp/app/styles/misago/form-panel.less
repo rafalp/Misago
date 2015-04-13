@@ -6,6 +6,7 @@
 // Add custom variables
 .panel-form {
   background: @panel-form-bg;
+  border: none;
 
   .panel-variant(@panel-form-border;  @panel-form-heading-color; @panel-form-heading-bg; @panel-form-heading-border);
 
@@ -23,6 +24,40 @@
   }
 }
 
+// Loading/error states
+.panel-form {
+  .panel-loader {
+    .loader {
+      &:before {
+        background: @panel-form-bg;
+      }
+
+      &:after {
+        background: @panel-form-bg;
+      }
+    }
+  }
+
+  .panel-error {
+    padding: @line-height-computed 0px;
+
+    .error-icon {
+      padding-bottom: @line-height-computed;
+      .opacity(0.5);
+
+      font-size: @font-size-large * 4;
+    }
+
+    .error-message {
+      font-size: @font-size-large;
+      text-align: center;
+
+      p {
+        margin-bottom: 0px;
+      }
+    }
+  }
+}
 
 // Inputs well, useful if there's one input + button
 .well-form {

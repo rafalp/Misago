@@ -10,7 +10,6 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
 from misago.conf import settings
-from misago.core.captcha import add_captcha_to_form
 from misago.core.mail import mail_user
 
 from misago.users.bans import ban_ip

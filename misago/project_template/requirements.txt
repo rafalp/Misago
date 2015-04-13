@@ -15,6 +15,5 @@ path.py==7.0
 pillow==2.7.0
 psycopg2==2.5.4
 pytz
-recaptcha-client==1.0.6
 requests==2.5.1
 unidecode
