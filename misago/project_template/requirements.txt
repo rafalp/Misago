@@ -3,7 +3,6 @@ djangorestframework==3.0.2
 beautifulsoup4==4.3.2
 bleach==1.4.1
 django-debug-toolbar==1.2.1
-django-cors-headers==1.0.0
 django-crispy-forms==1.4.0
 django-hbs-makemessages==0.9.6
 django-htmlmin==0.7

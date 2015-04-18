@@ -25,14 +25,10 @@ DEBUG = True
 
 TEMPLATE_DEBUG = DEBUG
 
-# Hosts allowed to reach your site
+# Hosts allowed to POST to your site
+# If you are unsure, just enter here your host name, eg. 'mysite.com'
 
 ALLOWED_HOSTS = []
-
-# Cross-Origin Resource Sharing policy
-
-CORS_ORIGIN_ALLOW_ALL = DEBUG
-CORS_ORIGIN_WHITELIST = ()
 
 
 # Database
