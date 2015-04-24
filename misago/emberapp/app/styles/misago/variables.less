@@ -16,7 +16,7 @@
 
 @brand-info:             #ff5722; // misago uses info state for accents
 
-@brand-primary:          #29b6f6;
+@brand-primary:          #3498db;
 @brand-success:          #2ecc71;
 @brand-warning:          #ffab40;
 @brand-danger:           #ef5350;
@@ -38,6 +38,11 @@
 //** Link hover decoration.
 @link-hover-decoration: underline;
 
+//** Site link styles
+@site-link-color:            @gray-light;
+@site-link-hover-color:      @gray-dark;
+@site-link-active-color:     @gray;
+
 //** In-site link state default
 @state-default:         #7f8c8d;
 @state-hover:           @text-color;
@@ -46,21 +51,7 @@
 
 //== Typography
 //
-//## Font, line-height, and color for body text, headings, and more.
-
-@font-size-base:          16px;
-@font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
-@font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
-
-@font-size-h1:            floor((@font-size-base * 2.6)); // ~36px
-@font-size-h2:            floor((@font-size-base * 2.15)); // ~30px
-@font-size-h3:            ceil((@font-size-base * 1.7)); // ~24px
-@font-size-h4:            ceil((@font-size-base * 1.25)); // ~18px
-@font-size-h5:            @font-size-base;
-@font-size-h6:            ceil((@font-size-base * 0.85)); // ~12px
-
-//** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
-@line-height-computed:    floor((@font-size-base * @line-height-base)); // ~20px
+//## headings
 
 //** By default, this inherits from the `<body>`.
 @headings-font-weight:    300;
@@ -152,6 +143,19 @@
 @alert-danger-bg:             #ef5350;
 @alert-danger-border:         #ef5350;
 @alert-danger-text:           #fff;
+
+
+//== Form states and alerts
+//
+//## Define colors for form feedback states and, by default, alerts.
+
+@state-success-text:             #2ecc71;
+@state-success-bg:               #2ecc71;
+@state-success-border:           darken(spin(@state-success-bg, -10), 5%);
+
+@state-danger-text:              #e74c3c;
+@state-danger-bg:                #e74c3c;
+@state-danger-border:            darken(spin(@state-danger-bg, -10), 5%);
 
 
 //== Buttons

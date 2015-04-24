@@ -24,7 +24,6 @@ export default Resolver.extend({
           path += 'forms/' + parsedName.fullNameWithoutType;
         }
 
-        console.log(path);
         return path;
       }
     }

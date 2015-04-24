@@ -1,6 +1,19 @@
 <label for="captcha-question" class="{{label-class}} control-label">{{model.question}}</label>
 <div class="{{control-class}}">
-  <input type="text" class="form-control" id="captcha-question">
+  {{input id="captcha-question" type="text" class="form-control" value=value}}
+
+  {{#if hasFeedback}}
+    <span class="glyphicon {{if hasSuccess "glyphicon-ok" "glyphicon-remove"}} form-control-feedback" aria-hidden="true"></span>
+  {{/if}}
+
+  {{#if messages }}
+    <div class="help-block errors">
+      {{#each message in messages}}
+      <p>{{message}}</p>
+      {{/each}}
+    </div>
+  {{/if}}
+
   {{#if model.help_text}}
   <span class="help-block">{{model.help_text}}</span>
   {{/if}}

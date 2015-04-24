@@ -3,7 +3,7 @@
 // --------------------------------------------------
 
 
-// Add custom variables
+// Add custom variables for extra customizability
 .panel-form {
   background: @panel-form-bg;
   border: none;
@@ -23,6 +23,37 @@
     border-top-color: @panel-form-footer-border;
   }
 }
+
+
+// Footer extra
+.footer-extra {
+  margin-top: @line-height-computed;
+}
+
+
+// Help-block
+.form-group {
+  .help-block {
+    margin-bottom: 0px;
+    padding: 0px;
+
+    font-size: @font-size-small;
+
+    &.errors {
+      font-weight: bold;
+
+      p {
+        margin-bottom: @font-size-small / 2;
+        padding: 0px;
+      }
+
+      &:last-child {
+        margin-bottom: 0px;
+      };
+    }
+  }
+}
+
 
 // Loading/error states
 .panel-form {
@@ -58,6 +89,7 @@
     }
   }
 }
+
 
 // Inputs well, useful if there's one input + button
 .well-form {

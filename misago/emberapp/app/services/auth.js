@@ -8,8 +8,4 @@ export default Ember.Service.extend({
   logout: function() {
     Ember.$('#hidden-logout-form').submit();
   },
-
-  openLoginModal: function() {
-    Ember.$('#loginModal').modal('show');
-  }
 });

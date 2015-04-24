@@ -9,7 +9,15 @@
     {{#if user.isAuthenticated}}
     {{render 'user-nav'}}
     {{else}}
-    {{guest-nav}}
+    <div class="guest-nav navbar-right">
+      <button type="button" class="btn btn-default btn-login navbar-btn btn-sm" {{action "showModal" "login"}}>
+        {{gettext "Sign in"}}
+      </button>
+
+      {{#register-button class="btn btn-info btn-logout navbar-btn btn-sm"}}
+        {{gettext "Join now"}}
+      {{/register-button}}
+    </div>
     {{/if}}
 
   </div><!-- /.container -->

@@ -1,1 +1,10 @@
-I am reCaptcha input!
+<div id="g-captcha"></div>
+
+{{#if messages }}
+  {{#each message in messages}}
+  <p class="text-danger text-center">
+    <span class="fa fa-warning fa-lg"></span>
+    {{message}}
+  </p>
+  {{/each}}
+{{/if}}

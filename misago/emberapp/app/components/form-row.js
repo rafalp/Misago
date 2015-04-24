@@ -9,23 +9,22 @@ export default Ember.Component.extend({
   ],
 
   hasFeedback: function() {
-    return this.get('validation') !== null;
+    return typeof this.get('validation') !== 'undefined';
   }.property('validation'),
 
   hasSuccess: function() {
-    return this.get('hasFeedback') && !this.get('hasError');
-  }.property('hasFeedback', 'hasError'),
+    return this.get('validation') === 'ok';
+  }.property('hasFeedback'),
 
   hasError: function() {
-    return this.get('hasFeedback') && this.get('errors');
-  }.property('hasFeedback', 'errors'),
+    return this.get('hasFeedback') && !this.get('hasSuccess');
+  }.property('hasFeedback', 'hasSuccess'),
 
-  errors: function() {
-    if (this.get('hasFeedback')) {
-      return this.get('validation.' + this.get('name')) || null;
+  messages: function() {
+    if (this.get('hasError')) {
+      return this.get('validation');
+    } else {
+      return null;
     }
-
-    return null;
-  }.property('validation', 'name')
-
+  }.property('hasError', 'hasSuccess')
 });

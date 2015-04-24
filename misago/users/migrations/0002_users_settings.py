@@ -55,6 +55,7 @@ def create_users_settings_group(apps, schema_editor):
                         'min_value': 2,
                         'max_value': 255,
                     },
+                    'is_public': True,
                 },
                 {
                     'setting': 'username_length_max',
@@ -66,6 +67,7 @@ def create_users_settings_group(apps, schema_editor):
                         'min_value': 2,
                         'max_value': 255,
                     },
+                    'is_public': True,
                 },
                 {
                     'setting': 'password_length_min',
@@ -78,6 +80,7 @@ def create_users_settings_group(apps, schema_editor):
                         'min_value': 2,
                         'max_value': 255,
                     },
+                    'is_public': True,
                 },
                 {
                     'setting': 'allow_custom_avatars',
@@ -129,6 +132,7 @@ def create_users_settings_group(apps, schema_editor):
                     'field_extra': {
                         'min_value': 0,
                     },
+                    'is_public': True,
                 },
                 {
                     'setting': 'signature_length_max',
@@ -141,6 +145,7 @@ def create_users_settings_group(apps, schema_editor):
                         'min_value': 256,
                         'max_value': 10000,
                     },
+                    'is_public': True,
                 },
                 {
                     'setting': 'subscribe_start',

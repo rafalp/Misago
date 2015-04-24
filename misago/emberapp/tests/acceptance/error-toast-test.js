@@ -10,6 +10,8 @@ module('Acceptance: Application Error Handler', {
     application = startApp();
   },
   afterEach: function() {
+    Ember.$('#appModal').off();
+    Ember.$('body').removeClass('modal-open');
     Ember.run(application, 'destroy');
     Ember.$.mockjax.clear();
   }
@@ -26,9 +28,9 @@ test('some unhandled error occured', function(assert) {
   visit('/');
 
   click('.guest-nav .btn-login');
-  fillIn('#loginModal .form-group:first-child input', 'SomeFake');
-  fillIn('#loginModal .form-group:last-child input', 'pass1234');
-  click('#loginModal .btn-primary');
+  fillIn('#appModal .form-group:first-child input', 'SomeFake');
+  fillIn('#appModal .form-group:last-child input', 'pass1234');
+  click('#appModal .btn-primary');
 
   andThen(function() {
     assert.equal(getToastMessage(), 'Unknown error has occured.');
@@ -46,9 +48,9 @@ test('app went away', function(assert) {
   visit('/');
 
   click('.guest-nav .btn-login');
-  fillIn('#loginModal .form-group:first-child input', 'SomeFake');
-  fillIn('#loginModal .form-group:last-child input', 'pass1234');
-  click('#loginModal .btn-primary');
+  fillIn('#appModal .form-group:first-child input', 'SomeFake');
+  fillIn('#appModal .form-group:last-child input', 'pass1234');
+  click('#appModal .btn-primary');
 
   andThen(function() {
     assert.equal(getToastMessage(), 'Lost connection with application.');
@@ -69,9 +71,9 @@ test('not found', function(assert) {
   visit('/');
 
   click('.guest-nav .btn-login');
-  fillIn('#loginModal .form-group:first-child input', 'SomeFake');
-  fillIn('#loginModal .form-group:last-child input', 'pass1234');
-  click('#loginModal .btn-primary');
+  fillIn('#appModal .form-group:first-child input', 'SomeFake');
+  fillIn('#appModal .form-group:last-child input', 'pass1234');
+  click('#appModal .btn-primary');
 
   andThen(function() {
     assert.equal(getToastMessage(), 'Action link is invalid.');
@@ -92,9 +94,9 @@ test('permission denied', function(assert) {
   visit('/');
 
   click('.guest-nav .btn-login');
-  fillIn('#loginModal .form-group:first-child input', 'SomeFake');
-  fillIn('#loginModal .form-group:last-child input', 'pass1234');
-  click('#loginModal .btn-primary');
+  fillIn('#appModal .form-group:first-child input', 'SomeFake');
+  fillIn('#appModal .form-group:last-child input', 'pass1234');
+  click('#appModal .btn-primary');
 
   andThen(function() {
     assert.equal(getToastMessage(), "You don't have permission to perform this action.");
@@ -115,9 +117,9 @@ test('permission denied with reason', function(assert) {
   visit('/');
 
   click('.guest-nav .btn-login');
-  fillIn('#loginModal .form-group:first-child input', 'SomeFake');
-  fillIn('#loginModal .form-group:last-child input', 'pass1234');
-  click('#loginModal .btn-primary');
+  fillIn('#appModal .form-group:first-child input', 'SomeFake');
+  fillIn('#appModal .form-group:last-child input', 'pass1234');
+  click('#appModal .btn-primary');
 
   andThen(function() {
     assert.equal(getToastMessage(), 'Lorem ipsum dolor met.');

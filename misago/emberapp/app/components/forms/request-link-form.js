@@ -28,10 +28,13 @@ export default Ember.Component.extend({
     this.rpc.ajax(this.get('url'), {
       email: email
     }).then(function(requestingUser) {
+      if (self.isDestroyed) { return; }
       self.success(requestingUser);
     }, function(jqXHR) {
+      if (self.isDestroyed) { return; }
       self.error(jqXHR);
     }).finally(function() {
+      if (self.isDestroyed) { return; }
       self.set('isLoading', false);
     });
 

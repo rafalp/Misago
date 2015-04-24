@@ -12,7 +12,7 @@ module('Acceptance: Forgotten Password Change', {
 
   afterEach: function() {
     Ember.$('#hidden-login-form').off('submit.stopInTest');
-    Ember.$('#loginModal').off();
+    Ember.$('#appModal').off();
     Ember.$('body').removeClass('modal-open');
     Ember.run(application, 'destroy');
     Ember.$.mockjax.clear();
@@ -325,6 +325,6 @@ test('new password is accepted', function(assert) {
   andThen(function() {
     assert.equal(currentPath(), 'forgotten-password.change-form');
     assert.equal(getToastMessage(), "Your password has been changed.");
-    assert.ok(find('#loginModal').hasClass('in'));
+    assert.ok(find('#appModal').hasClass('in'));
   });
 });

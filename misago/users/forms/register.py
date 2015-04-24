@@ -7,3 +7,6 @@ class RegisterForm(forms.Form):
     email = forms.CharField(validators=[validators.validate_email])
     password = forms.CharField(validators=[validators.validate_password],
                                widget=forms.PasswordInput(render_value=True))
+
+    # placeholder field for setting captcha errors on form
+    captcha = forms.CharField(required=False)

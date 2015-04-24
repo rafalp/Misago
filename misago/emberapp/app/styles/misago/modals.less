@@ -8,6 +8,29 @@
 }
 
 
+.modal-message {
+  padding-top: @line-height-computed * 1.5;
+  padding-bottom: @line-height-computed * 1.5;
+
+  p {
+    margin: 0px;
+    margin-top: @line-height-computed / 3;
+
+    text-align: center;
+
+    &.lead {
+      margin-top: 0px;
+
+      font-size: @font-size-large;
+    }
+  }
+}
+
+
+.modal-form {
+}
+
+
 // Sign-in modal
 .modal-sign-in {
   .modal-body {
@@ -31,6 +54,18 @@
       display: block;
 
       text-align: center;
+    }
+  }
+}
+
+
+// Register modal
+.modal-register-form {
+  .modal-body {
+    padding-bottom: 0px;
+
+    .lead {
+      margin-bottom: @line-height-computed;
     }
   }
 }

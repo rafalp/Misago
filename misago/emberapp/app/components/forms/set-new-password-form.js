@@ -32,8 +32,10 @@ export default Ember.Component.extend({
     this.rpc.ajax(this.get('url'), {
       password: password
     }).then(function() {
+      if (self.isDestroyed) { return; }
       self.success();
     }, function(jqXHR) {
+      if (self.isDestroyed) { return; }
       self.error(jqXHR);
     }).finally(function() {
       self.set('isLoading', false);
@@ -45,7 +47,7 @@ export default Ember.Component.extend({
   success: function() {
     this.set('password', '');
 
-    this.auth.openLoginModal();
+    this.modal.show('login');
     this.toast.success(gettext("Your password has been changed."));
   },
 

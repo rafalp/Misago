@@ -7,7 +7,7 @@ export default MisagoRoute.extend(ResetScroll, {
   },
 
   afterModel: function(model) {
-    this.auth.openLoginModal();
+    this.modal.show('login');
     this.toast.success(model.detail);
     return this.transitionTo('index');
   },

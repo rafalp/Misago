@@ -16,7 +16,7 @@ module('Acceptance: Login', {
 
   afterEach: function() {
     Ember.$('#hidden-login-form').off('submit.stopInTest');
-    Ember.$('#loginModal').off();
+    Ember.$('#appModal').off();
     Ember.$('body').removeClass('modal-open');
     Ember.run(application, 'destroy');
     Ember.$.mockjax.clear();
@@ -28,7 +28,7 @@ test('login with empty credentials', function(assert) {
 
   visit('/');
   click('.guest-nav button.btn-login');
-  click('#loginModal .btn-primary');
+  click('#appModal .btn-primary');
 
   andThen(function() {
     assert.equal(getToastMessage(), 'Fill out both fields.');
@@ -46,9 +46,9 @@ test('backend errored', function(assert) {
   visit('/');
 
   click('.guest-nav .btn-login');
-  fillIn('#loginModal .form-group:first-child input', 'SomeFake');
-  fillIn('#loginModal .form-group:last-child input', 'pass1234');
-  click('#loginModal .btn-primary');
+  fillIn('#appModal .form-group:first-child input', 'SomeFake');
+  fillIn('#appModal .form-group:last-child input', 'pass1234');
+  click('#appModal .btn-primary');
 
   andThen(function() {
     assert.equal(getToastMessage(), 'Unknown error has occured.');
@@ -71,9 +71,9 @@ test('login with invalid credentials', function(assert) {
   visit('/');
 
   click('.guest-nav .btn-login');
-  fillIn('#loginModal .form-group:first-child input', 'SomeFake');
-  fillIn('#loginModal .form-group:last-child input', 'pass1234');
-  click('#loginModal .btn-primary');
+  fillIn('#appModal .form-group:first-child input', 'SomeFake');
+  fillIn('#appModal .form-group:last-child input', 'pass1234');
+  click('#appModal .btn-primary');
 
   andThen(function() {
     assert.equal(getToastMessage(), message);
@@ -96,9 +96,9 @@ test('login to user-activated account', function(assert) {
   visit('/');
 
   click('.guest-nav .btn-login');
-  fillIn('#loginModal .form-group:first-child input', 'SomeFake');
-  fillIn('#loginModal .form-group:last-child input', 'pass1234');
-  click('#loginModal .btn-primary');
+  fillIn('#appModal .form-group:first-child input', 'SomeFake');
+  fillIn('#appModal .form-group:last-child input', 'pass1234');
+  click('#appModal .btn-primary');
 
   andThen(function() {
     assert.equal(getToastMessage(), message);
@@ -121,9 +121,9 @@ test('login to admin-activated account', function(assert) {
   visit('/');
 
   click('.guest-nav .btn-login');
-  fillIn('#loginModal .form-group:first-child input', 'SomeFake');
-  fillIn('#loginModal .form-group:last-child input', 'pass1234');
-  click('#loginModal .btn-primary');
+  fillIn('#appModal .form-group:first-child input', 'SomeFake');
+  fillIn('#appModal .form-group:last-child input', 'pass1234');
+  click('#appModal .btn-primary');
 
   andThen(function() {
     assert.equal(getToastMessage(), message);
@@ -151,9 +151,9 @@ test('login to banned account', function(assert) {
   visit('/');
 
   click('.guest-nav .btn-login');
-  fillIn('#loginModal .form-group:first-child input', 'SomeFake');
-  fillIn('#loginModal .form-group:last-child input', 'pass1234');
-  click('#loginModal .btn-primary');
+  fillIn('#appModal .form-group:first-child input', 'SomeFake');
+  fillIn('#appModal .form-group:last-child input', 'pass1234');
+  click('#appModal .btn-primary');
 
   andThen(function() {
     assert.equal(currentPath(), 'error-banned');
@@ -180,9 +180,9 @@ test('login successfully', function(assert) {
   visit('/');
 
   click('.guest-nav .btn-login');
-  fillIn('#loginModal .form-group:first-child input', 'SomeFake');
-  fillIn('#loginModal .form-group:last-child input', 'pass1234');
-  click('#loginModal .btn-primary');
+  fillIn('#appModal .form-group:first-child input', 'SomeFake');
+  fillIn('#appModal .form-group:last-child input', 'pass1234');
+  click('#appModal .btn-primary');
 
   andThen(function() {
     assert.equal(Ember.$('#hidden-login-form input[name="username"]').val(), 'SomeFake');

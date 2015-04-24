@@ -2,6 +2,13 @@ import MisagoRoute from 'misago/routes/misago';
 
 export default MisagoRoute.extend({
   actions: {
+
+    // Shortcut for opening modals from templates
+
+    showModal: function(template, model) {
+      this.modal.show(template, model);
+    },
+
     // Loading handler
 
     loading: function() {

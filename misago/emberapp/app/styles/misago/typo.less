@@ -6,3 +6,19 @@
 body {
   font-weight: 300;
 }
+
+
+// in-site link
+.site-link {
+  &, &:link, &:visited {
+    color: @site-link-color;
+  }
+
+  &:hover, &:focus {
+    color: @site-link-hover-color;
+  }
+
+  &:active {
+    color: @site-link-active-color;
+  }
+}

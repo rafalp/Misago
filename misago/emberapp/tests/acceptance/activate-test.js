@@ -12,7 +12,7 @@ module('Acceptance: Account Activation', {
 
   afterEach: function() {
     Ember.$('#hidden-login-form').off('submit.stopInTest');
-    Ember.$('#loginModal').off();
+    Ember.$('#appModal').off();
     Ember.$('body').removeClass('modal-open');
     Ember.run(application, 'destroy');
     Ember.$.mockjax.clear();

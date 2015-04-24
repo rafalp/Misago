@@ -15,12 +15,13 @@ module.exports = function(environment) {
 
     contentSecurityPolicy: {
       'default-src': "'none'",
-      'script-src': "'self' 'unsafe-inline' 'unsafe-eval' https://cdn.mxpnl.com", // Allow scripts from https://cdn.mxpnl.com
+      'frame-src': "https://www.google.com/recaptcha/",
+      'script-src': "'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com/recaptcha/ https://apis.google.com/ https://www.gstatic.com/recaptcha/ https://cdn.mxpnl.com", // Allow scripts from https://cdn.mxpnl.com
       'font-src': "'self' http://fonts.gstatic.com", // Allow fonts to be loaded from http://fonts.gstatic.com
       'connect-src': "'self' https://api.mixpanel.com", // Allow data (ajax/websocket) from api.mixpanel.com, custom-api.local
-      'img-src': "'self'",
+      'img-src': "*",
       'style-src': "'self' 'unsafe-inline' http://fonts.googleapis.com", // Allow inline styles and loaded CSS from http://fonts.googleapis.com
-      'media-src': "'self'"
+      'media-src': "*"
     },
 
     APP: {

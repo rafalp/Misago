@@ -5,6 +5,8 @@ window.MisagoData = {
 
     "account_activation": "none",
 
+    "captcha_type": "no",
+
     "forum_name": "Misago",
     "forum_footnote": "This site uses cookies to track and analyse traffic.",
     "forum_index_title": "",

@@ -18,7 +18,7 @@ urlpatterns += patterns('misago.users.api.changepassword',
     url(r'^change-password/(?P<user_id>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'change_password', name='change_password'),
 )
 
-urlpatterns = patterns('misago.users.api.captcha',
+urlpatterns += patterns('misago.users.api.captcha',
     url(r'^captcha-questions/(?P<question_id>\d+)/$', 'question', name='captcha_question'),
 )
 

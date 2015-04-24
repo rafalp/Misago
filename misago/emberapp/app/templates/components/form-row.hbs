@@ -6,17 +6,15 @@
     <span class="glyphicon {{if hasSuccess "glyphicon-ok" "glyphicon-remove"}} form-control-feedback" aria-hidden="true"></span>
   {{/if}}
 
-  {{#if errors }}
-    <div class="help-block">
-      {{#each error in errors}}
-      <div>
-        <strong>{{error}}</strong>
-      </div>
+  {{#if messages }}
+    <div class="help-block errors">
+      {{#each message in messages}}
+      <p>{{message}}</p>
       {{/each}}
     </div>
   {{/if}}
 
   {{#if help_text}}
-    <span class="help-block">{{help_text}}</span>
+    <p class="help-block">{{help_text}}</p>
   {{/if}}
 </div>

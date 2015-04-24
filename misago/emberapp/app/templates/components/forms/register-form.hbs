@@ -1,70 +1,77 @@
-<div class="panel panel-form {{if isErrored "is-errored"}}">
-  {{#if isReady}}
-  <div class="panel-body">
+{{#if isReady}}
+<div class="modal-body">
 
-    {{#form-row label=(gettext "Username") for="id_username" label-class="col-md-4" control-class="col-md-8" validation=validation name="username"}}
-      {{input id="id_username" type="text" class="form-control" value=username}}
-    {{/form-row}}
+  {{#form-row label=(gettext "Username:") for="id_username" label-class="col-md-4" control-class="col-md-8" validation=validation.username}}
+    {{input id="id_username" type="text" class="form-control" autocomplete="off" value=username}}
+  {{/form-row}}
 
-    {{#form-row label=(gettext "E-mail") for="id_email" label-class="col-md-4" control-class="col-md-8" validation=validation name="email"}}
-      {{input id="id_email" type="text" class="form-control" value=email}}
-    {{/form-row}}
+  {{#form-row label=(gettext "E-mail:") for="id_email" label-class="col-md-4" control-class="col-md-8" validation=validation.email}}
+    {{input id="id_email" type="text" class="form-control" autocomplete="off" value=email}}
+  {{/form-row}}
 
-    {{#form-row label=(gettext "Password") for="id_password" label-class="col-md-4" control-class="col-md-8" validation=validation name="password"}}
-      {{input id="id_password" type="password" class="form-control" value=password}}
-    {{/form-row}}
+  {{#form-row label=(gettext "Password:") help_text=passwordHelpText for="id_password" label-class="col-md-4" control-class="col-md-8" validation=validation.password}}
+    {{input id="id_password" type="password" class="form-control" autocomplete="off" value=password}}
 
-    {{#if captcha.field}}
-    {{component captcha.field label-class="col-md-4" control-class="col-md-8"}}
+    {{#if passwordHelpText}}
+    <div class="progress password-strength">
+      <div class="progress-bar {{passwordBarClass}}" role="progressbar" aria-valuenow="{{passwordScore}}" aria-valuemin="0" aria-valuemax="4" style="width: 20%;"></div>
+    </div>
+    {{/if}}
+  {{/form-row}}
+
+  {{#if captcha.field}}
+  <hr>
+    {{#if captcha.passed}}
+      <p class="lead text-success text-center">
+        <span class="fa fa-check fa-lg"></span>
+        {{gettext "Anti-spam test completed."}}
+      </p>
+    {{else}}
+      {{component captcha.field validation=validation.captcha label-class="col-md-4" control-class="col-md-8"}}
+    {{/if}}
+  {{/if}}
+
+</div>
+<div class="modal-footer">
+  <div class="text-center">
+
+    {{#if isLoading}}
+    <button type="button" class="btn btn-primary" disabled="disabled">
+      <span class="fa fa-cog fa-spin"></span>
+      {{gettext "Registering..."}}
+    </button>
+    {{else}}
+    <button type="submit" class="btn btn-primary">
+      {{gettext "Register account"}}
+    </button>
     {{/if}}
 
-    <p class="lead">
-      !jak validacja kapci zakonczona, to wyswietlaj statyka &quot;hej, kapcze masz z glowy&quot;.
-      <br>
-      + podepnij feedback do kapci
-    </p>
-
-  </div>
-  <div class="panel-footer">
-    <div class="row">
-      <div class="col-md-8 col-md-offset-4">
-
-        {{#if isLoading}}
-        <button type="button" class="btn btn-primary" disabled="disabled">
-          <span class="fa fa-cog fa-spin"></span>
-          {{gettext "Registering..."}}
-        </button>
-        {{else}}
-        <button type="submit" class="btn btn-primary">
-          {{gettext "Register account"}}
-        </button>
-        {{/if}}
-
-        <div class="extra">
-          !tutaj krutkie pierdololo o tym ze rejestracja to akceptacja regulaminu
-        </div>
-
-      </div>
+    {{#if showTermsFootnote}}
+    <div class="footer-extra">
+      <p class="text-muted">
+        {{#link-to "terms-of-service" class="site-link" target="_blank"}}
+          <strong>{{gettext "Notice:"}}</strong>
+          {{gettext "By registering account you accept site's terms of service."}}
+        {{/link-to}}
+      </p>
     </div>
+    {{/if}}
 
   </div>
-  {{else if isErrored}}
-  <div class="panel-body panel-error text-center">
-    <div class="error">
-
-      <div class="error-icon">
-        <span class="fa fa-warning"></span>
-      </div>
-
-      <div class="error-message">
-        <p>{{gettext "This form is not avaialable at the moment."}}</p>
-      </div>
-
-    </div>
-  </div>
-  {{else}}
-  <div class="panel-body panel-loader">
-    <div class="loader"></div>
-  </div>
-  {{/if}}
 </div>
+{{else if isErrored}}
+<div class="modal-body modal-message">
+
+  <p class="lead">
+    <span class="fa fa-warning fa-lg"></span>
+    {{gettext "This form is not avaialable at the moment."}}
+  </p>
+
+  <p>{{gettext "Please contact board administrator."}}</p>
+
+</div>
+{{else}}
+<div class="modal-body modal-message">
+  <div class="loader"></div>
+</div>
+{{/if}}

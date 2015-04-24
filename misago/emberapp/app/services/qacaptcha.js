@@ -1,8 +1,11 @@
 import Ember from 'ember';
+import NoCaptcha from 'misago/services/nocaptcha';
 
-export default Ember.Service.extend({
+export default NoCaptcha.extend({
   field: 'qacaptcha-field',
   model: null,
+
+  value: '',
 
   load: function() {
     // Obtain QA question from API
@@ -14,9 +17,5 @@ export default Ember.Service.extend({
     });
 
     return promise;
-  },
-
-  value: function() {
-    return Ember.$('#captcha-question').val() || '';
-  }.property().volatile()
+  }
 });
