@@ -44,9 +44,9 @@ class UserViewSet(viewsets.ViewSet):
 
 @csrf_protect
 def _create_user(request):
-    if settings.account_activation == 'disabled':
+    if settings.account_activation == 'closed':
         raise PermissionDenied(
-            _("New users registrations are currently disabled."))
+            _("New users registrations are currently closed."))
 
     form = RegisterForm(request.data)
 

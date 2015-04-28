@@ -24,11 +24,11 @@ class CreateTests(UserTestCase):
 
     def test_registration_off_request(self):
         """registrations off request errors with code 403"""
-        settings.override_setting('account_activation', 'disabled')
+        settings.override_setting('account_activation', 'closed')
 
         response = self.client.post('/api/users/')
         self.assertEqual(response.status_code, 403)
-        self.assertIn('disabled', response.content)
+        self.assertIn('closed', response.content)
 
     def test_registration_creates_active_user(self):
         """api creates active and signed in user on POST"""

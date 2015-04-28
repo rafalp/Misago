@@ -15,14 +15,14 @@
       </p>
       {{else if model.needsAdminActivation}}
       <p class="lead">
-        {{gettext "%(username)s, your account has been registered successfully, but site administrator has to activate it." username=model.username}}
+        {{gettext "%(username)s, your account has been registered successfully, but site administrator has to activate it before you will be able to sing in." username=model.username}}
       </p>
       <p>
         {{gettext "Notification will be sent to %(email)s once it happens." email=model.email}}
       </p>
       {{else}}
       <p class="lead">
-        {{gettext "%(username)s, your account has been registered successfully, but you have to activate it." username=model.username}}
+        {{gettext "%(username)s, your account has been registered successfully, but you have to activate it before you will be able to sign in." username=model.username}}
       </p>
       <p>
         {{gettext "E-mail with activation link was sent to %(email)s." email=model.email}}

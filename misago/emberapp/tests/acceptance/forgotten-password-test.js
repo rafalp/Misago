@@ -11,7 +11,6 @@ module('Acceptance: Forgotten Password Change', {
   },
 
   afterEach: function() {
-    Ember.$('#hidden-login-form').off('submit.stopInTest');
     Ember.$('#appModal').off();
     Ember.$('body').removeClass('modal-open');
     Ember.run(application, 'destroy');

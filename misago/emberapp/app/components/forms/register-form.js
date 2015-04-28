@@ -14,18 +14,14 @@ export default Ember.Component.extend({
   email: '',
   password: '',
 
-  clearForm: function() {
-    this.setProperties({
-      username: '',
-      email: '',
-      password: ''
-    });
-  }.on('willDestroyElement'),
-
   validation: null,
   setValidation: function() {
     this.set('validation', Ember.Object.create({}));
   }.on('init'),
+
+  router: function() {
+    return this.container.lookup('router:main');
+  }.property(),
 
   passwordScore: function() {
     return this.get('zxcvbn').scorePassword(this.get('password'), [
