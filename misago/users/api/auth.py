@@ -1,23 +1,18 @@
 from django.contrib import auth
-from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
-from django.views.decorators.debug import sensitive_post_parameters
 
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
-from misago.users.decorators import deny_authenticated, deny_banned_ips
 from misago.users.forms.auth import AuthenticationForm
+from misago.users.rest_permissions import UnbannedAnonOnly
 from misago.users.serializers import AuthenticatedUserSerializer
 
 
-@sensitive_post_parameters()
 @api_view(['POST'])
-@never_cache
-@deny_authenticated
+@permission_classes((UnbannedAnonOnly,))
 @csrf_protect
-@deny_banned_ips
 def login(request):
     form = AuthenticationForm(request, data=request.data)
     if form.is_valid():

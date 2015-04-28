@@ -7,12 +7,6 @@ urlpatterns = patterns('misago.users.views.auth',
 )
 
 
-urlpatterns += patterns('misago.users.views.register',
-    url(r'^register/$', 'register', name='register'),
-    url(r'^register/completed/$', 'register_completed', name='register_completed'),
-)
-
-
 urlpatterns += patterns('misago.users.views.activation',
     url(r'^activation/$', 'activation_noscript', name="request_activation"),
     url(r'^activation/(?P<user_id>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'activation_noscript', name="activate_by_token"),

@@ -14,7 +14,18 @@ export default Ember.Component.extend({
   email: '',
   password: '',
 
-  validation: Ember.Object.create({}),
+  clearForm: function() {
+    this.setProperties({
+      username: '',
+      email: '',
+      password: ''
+    });
+  }.on('willDestroyElement'),
+
+  validation: null,
+  setValidation: function() {
+    this.set('validation', Ember.Object.create({}));
+  }.on('init'),
 
   passwordScore: function() {
     return this.get('zxcvbn').scorePassword(this.get('password'), [
@@ -193,12 +204,18 @@ export default Ember.Component.extend({
     return false;
   },
 
-  success: function(response) {
-    console.log(response);
+  success: function(responseJSON) {
     this.get('captcha').reset();
+
+    var model = Ember.Object.create(responseJSON);
+    model.set('isActive', model.get('activation') === 'active');
+    model.set('needsAdminActivation', model.get('activation') === 'activation_by_admin');
+
+    this.modal.render('register.done', model);
   },
 
   error: function(jqXHR) {
+    var rejection = jqXHR.responseJSON;
     if (jqXHR.status === 400) {
       this.toast.error(gettext("Form contains errors."));
       this.get('validation').setProperties(jqXHR.responseJSON);
@@ -208,6 +225,11 @@ export default Ember.Component.extend({
       } else {
         this.get('captcha').refresh();
       }
+    } else if (jqXHR.status === 403 && typeof rejection.ban !== 'undefined') {
+      this.get('router').intermediateTransitionTo('error-banned', rejection.ban);
+      this.modal.hide();
+    } else {
+      this.toast.apiError(jqXHR);
     }
   },
 

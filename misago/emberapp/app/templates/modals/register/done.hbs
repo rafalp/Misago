@@ -2,14 +2,48 @@
   <div class="modal-content">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="{{unbound gettext "Close"}}"><span aria-hidden="true">&times;</span></button>
-      <h4 class="modal-title" id="loginModalLabel">{{gettext "Register account"}}</h4>
+      <h4 class="modal-title" id="loginModalLabel">{{gettext "Registation complete"}}</h4>
     </div>
 
     <div class="modal-body modal-message">
+      {{#if model.isActive}}
       <p class="lead">
-        <span class="fa fa-info-circle fa-lg"></span>
-        {{gettext "Your account has been registered successfully."}}
+        {{gettext "%(username)s, your account has been registered successfully." username=model.username}}
       </p>
+      <p>
+        {{gettext "You have been signed in. Refresh page before continuing."}}
+      </p>
+      {{else if model.needsAdminActivation}}
+      <p class="lead">
+        {{gettext "%(username)s, your account has been registered successfully, but site administrator has to activate it." username=model.username}}
+      </p>
+      <p>
+        {{gettext "Notification will be sent to %(email)s once it happens." email=model.email}}
+      </p>
+      {{else}}
+      <p class="lead">
+        {{gettext "%(username)s, your account has been registered successfully, but you have to activate it." username=model.username}}
+      </p>
+      <p>
+        {{gettext "E-mail with activation link was sent to %(email)s." email=model.email}}
+      </p>
+      {{/if}}
+    </div>
+
+    <div class="modal-footer">
+      <div class="text-center">
+        {{#if model.isActive}}
+          {{#refresh-button class="btn btn-default"}}
+            <span class="fa fa-refresh"></span>
+            {{gettext "Refresh page"}}
+          {{/refresh-button}}
+        {{else}}
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            <span class="fa fa-ok"></span>
+            {{gettext "Continue"}}
+          </button>
+        {{/if}}
+      </div>
     </div>
 
   </div>

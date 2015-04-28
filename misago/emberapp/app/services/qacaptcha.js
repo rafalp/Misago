@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import NoCaptcha from 'misago/services/nocaptcha';
 
 export default NoCaptcha.extend({

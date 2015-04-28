@@ -16,9 +16,9 @@ class RealIPMiddleware(object):
     def process_request(self, request):
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
         if x_forwarded_for:
-            request._misago_real_ip = x_forwarded_for.split(',')[0]
+            request.user_ip = x_forwarded_for.split(',')[0]
         else:
-            request._misago_real_ip = request.META.get('REMOTE_ADDR')
+            request.user_ip = request.META.get('REMOTE_ADDR')
 
 
 class AvatarServerMiddleware(object):
@@ -36,7 +36,6 @@ class UserMiddleware(object):
         elif not request.user.is_superuser:
             if get_request_ip_ban(request) or get_user_ban(request.user):
                 logout(request)
-        request.user.ip = request._misago_real_ip
 
 
 class TimezoneMiddleware(object):

@@ -16,12 +16,12 @@ class RealIPMiddlewareTests(TestCase):
         request = MockRequest('83.42.13.77')
         RealIPMiddleware().process_request(request)
 
-        self.assertEqual(request._misago_real_ip, request.META['REMOTE_ADDR'])
+        self.assertEqual(request.user_ip, request.META['REMOTE_ADDR'])
 
     def test_middleware_sets_ip_from_forwarded_for(self):
         """Middleware sets ip from forwarded_for header"""
         request = MockRequest('127.0.0.1', '83.42.13.77')
         RealIPMiddleware().process_request(request)
 
-        self.assertEqual(request._misago_real_ip,
+        self.assertEqual(request.user_ip,
                          request.META['HTTP_X_FORWARDED_FOR'])

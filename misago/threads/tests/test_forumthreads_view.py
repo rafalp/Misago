@@ -37,6 +37,7 @@ class MockRequest(object):
     def __init__(self, user, method='GET', POST=None):
         self.POST = POST or {}
         self.user = user
+        self.user_ip = '127.0.0.1'
         self.session = {}
         self.path = '/forum/fake-forum-1/'
 
@@ -44,8 +45,6 @@ class MockRequest(object):
 class ActionsTests(ForumViewHelperTestCase):
     def setUp(self):
         super(ActionsTests, self).setUp()
-
-        self.user._misago_real_ip = '127.0.0.1'
         Label.objects.clear_cache()
 
     def tearDown(self):

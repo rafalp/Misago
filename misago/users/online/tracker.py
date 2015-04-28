@@ -11,7 +11,7 @@ def mute_tracker(request):
 def start_tracking(request, user):
     online_tracker = Online.objects.create(
         user=user,
-        current_ip=request._misago_real_ip,
+        current_ip=request.user_ip,
         is_visible_on_index=user.rank.is_on_index
     )
 
@@ -23,7 +23,7 @@ def start_tracking(request, user):
 
 
 def update_tracker(request, tracker):
-    tracker.current_ip = request._misago_real_ip
+    tracker.current_ip = request.user_ip
     tracker.last_click = timezone.now()
 
     rank_visible_on_index = request.user.rank.is_on_index

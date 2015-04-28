@@ -29,7 +29,7 @@ def recaptcha_test(request):
     r = requests.post('https://www.google.com/recaptcha/api/siteverify', data={
         'secret': settings.recaptcha_secret_key,
         'response': request.data.get('captcha'),
-        'remoteip': request._misago_real_ip
+        'remoteip': request.user_ip
     })
 
     if r.status_code == 200:

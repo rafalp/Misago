@@ -96,11 +96,11 @@ def get_request_ip_ban(request):
         else:
             return False
 
-    found_ban = get_ip_ban(request._misago_real_ip)
+    found_ban = get_ip_ban(request.user_ip)
 
     ban_cache = request.session[BAN_CACHE_SESSION_KEY] = {
         'version': cachebuster.get_version(BAN_VERSION_KEY),
-        'ip': request._misago_real_ip,
+        'ip': request.user_ip,
     }
 
     if found_ban:
@@ -125,7 +125,7 @@ def _get_session_bancache(request):
     try:
         ban_cache = request.session[BAN_CACHE_SESSION_KEY]
         ban_cache = _hydrate_session_cache(ban_cache)
-        if ban_cache['ip'] != request._misago_real_ip:
+        if ban_cache['ip'] != request.user_ip:
             return None
         if not cachebuster.is_valid(BAN_VERSION_KEY, ban_cache['version']):
             return None
@@ -157,30 +157,25 @@ Utilities for front-end based bans
 """
 def ban_user(user, user_message=None, staff_message=None, length=None,
              expires_on=None):
-    if not expires_on:
-        if length:
-            expires_on = timezone.now() + timedelta(**length)
-        else:
-            expires_on = None
+    if not expires_on and length:
+        expires_on = timezone.now() + timedelta(**length)
 
-    Ban.objects.create(
+    ban = Ban.objects.create(
         banned_value=user.username.lower(),
         user_message=user_message,
         staff_message=staff_message,
         expires_on=expires_on
     )
     Ban.objects.invalidate_cache()
+    return ban
 
 
 def ban_ip(ip, user_message=None, staff_message=None, length=None,
            expires_on=None):
-    if not expires_on:
-        if length:
-            expires_on = timezone.now() + timedelta(**length)
-        else:
-            expires_on = None
+    if not expires_on and length:
+        expires_on = timezone.now() + timedelta(**length)
 
-    Ban.objects.create(
+    ban = Ban.objects.create(
         check_type=BAN_IP,
         banned_value=ip,
         user_message=user_message,
@@ -188,3 +183,4 @@ def ban_ip(ip, user_message=None, staff_message=None, length=None,
         expires_on=expires_on
     )
     Ban.objects.invalidate_cache()
+    return ban

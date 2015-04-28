@@ -355,7 +355,13 @@ MISAGO_EMBER_CLI_ORIGIN = 'http://localhost:4200'
 
 # Rest Framework Configuration
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'misago.core.exceptionhandler.handle_api_exception'
+    'UNAUTHENTICATED_USER': 'misago.users.models.AnonymousUser',
+
+    'EXCEPTION_HANDLER': 'misago.core.exceptionhandler.handle_api_exception',
+
+    'DEFAULT_PERMISSION_CLASSES': (
+        'misago.users.rest_permissions.IsAuthenticatedOrReadOnly',
+    )
 }
 
 

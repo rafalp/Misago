@@ -6,9 +6,7 @@ export default Ember.Component.extend({
   attributeBindings: ['type'],
   type: 'button',
 
-  modalState: Ember.inject.service('registration-modal'),
-
   click: function() {
-    this.modal.show(this.get('modalState.template'));
+    document.location.reload();
   }
 });

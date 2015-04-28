@@ -45,7 +45,7 @@ def report_post(request, post, message):
         reported_by=request.user,
         reported_by_name=request.user.username,
         reported_by_slug=request.user.slug,
-        reported_by_ip=request.user.ip,
+        reported_by_ip=request.user_ip,
         message=message,
         checksum=''
     )

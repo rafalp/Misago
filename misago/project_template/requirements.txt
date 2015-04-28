@@ -1,4 +1,4 @@
-django==1.7.2
+django==1.7.6
 djangorestframework==3.0.2
 beautifulsoup4==4.3.2
 bleach==1.4.1

@@ -21,6 +21,15 @@ def format_plaintext_for_html(string):
 
 
 """
+Mark request as having sensitive parameters
+We can't use decorator because of DRF uses custom HttpRequest
+that is incompatibile with Django's decorator
+"""
+def hide_post_parameters(request):
+    request.sensitive_post_parameters = '__ALL__'
+
+
+"""
 Return path utility
 """
 def clean_return_path(request):

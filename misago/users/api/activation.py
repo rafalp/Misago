@@ -3,31 +3,26 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
-from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
-from django.views.decorators.debug import sensitive_post_parameters
 
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from misago.conf import settings
 from misago.core.mail import mail_user
 
-from misago.users.decorators import deny_authenticated, deny_banned_ips
 from misago.users.forms.auth import ResendActivationForm
+from misago.users.rest_permissions import UnbannedAnonOnly
 from misago.users.tokens import (make_activation_token,
                                  is_activation_token_valid)
 from misago.users.validators import validate_password
 
 
 def activation_api_view(f):
-    @sensitive_post_parameters()
     @api_view(['POST'])
-    @never_cache
-    @deny_authenticated
+    @permission_classes((UnbannedAnonOnly,))
     @csrf_protect
-    @deny_banned_ips
     def decorator(request, *args, **kwargs):
         if 'user_id' in kwargs:
             User = get_user_model()
