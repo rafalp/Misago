@@ -4,18 +4,11 @@ from misago.users.api.users import UserViewSet
 
 
 urlpatterns = patterns('misago.users.api.auth',
-    url(r'^login/$', 'login', name='login'),
-)
-
-urlpatterns += patterns('misago.users.api.activation',
-    url(r'^activation/send-link/$', 'send_link', name="activation_send_link"),
-    url(r'^activation/(?P<user_id>\d+)/(?P<token>[a-zA-Z0-9]+)/validate-token/$', 'validate_token', name="activation_validate_token"),
-)
-
-urlpatterns += patterns('misago.users.api.changepassword',
-    url(r'^change-password/send-link/$', 'send_link', name='change_password_send_link'),
-    url(r'^change-password/(?P<user_id>\d+)/(?P<token>[a-zA-Z0-9]+)/validate-token/$', 'validate_token', name='change_password_validate_token'),
-    url(r'^change-password/(?P<user_id>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'change_password', name='change_password'),
+    url(r'^auth/$', 'gateway'),
+    url(r'^auth/send-activation/$', 'send_activation'),
+    url(r'^auth/activate-account/(?P<user_id>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'activate_account'),
+    url(r'^auth/send-password-form/$', 'send_password_form'),
+    url(r'^auth/change-password/(?P<user_id>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'change_forgotten_password'),
 )
 
 urlpatterns += patterns('misago.users.api.captcha',

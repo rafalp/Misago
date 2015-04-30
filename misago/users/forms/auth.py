@@ -151,7 +151,7 @@ class ResendActivationForm(GetUserForm):
         username_format = {'user': user.username}
 
         if not user.requires_activation:
-            message = _("%(user)s, your account is already activated.")
+            message = _("%(user)s, your account is already active.")
             raise forms.ValidationError(message % username_format,
                                         code='already_active')
 
