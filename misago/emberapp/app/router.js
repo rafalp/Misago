@@ -14,7 +14,6 @@ Router.map(function() {
   this.route('forgotten-password', { path: 'forgotten-password/' }, function() {
     this.route('change-form', { path: ':user_id/:token/' });
   });
-  this.route('register', { path: 'register/' });
 
   // Legal
 

@@ -1,7 +1,6 @@
 import MisagoRoute from 'misago/routes/misago';
-import ResetScroll from 'misago/mixins/reset-scroll';
 
-export default MisagoRoute.extend(ResetScroll, {
+export default MisagoRoute.extend({
   page: 'privacy-policy',
   defaultTitle: gettext('Privacy policy'),
 

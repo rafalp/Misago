@@ -33,11 +33,7 @@ window.MisagoData = {
   "staticUrl": "",
 
   "isAuthenticated": false,
-
-  "user": {
-    "isAnonymous": true,
-    "isAuthenticated": false,
-  },
+  "user": {},
 
   "utcOffset": 0
 };

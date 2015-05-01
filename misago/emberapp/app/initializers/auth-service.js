@@ -1,22 +1,16 @@
+import Ember from 'ember';
 import PreloadStore from 'misago/services/preload-store';
 import Auth from 'misago/services/auth';
 
 export function initialize(container, application) {
-  var auth = Auth.create({
-    'isAuthenticated': PreloadStore.get('isAuthenticated'),
-    'user': Ember.Object.create(PreloadStore.get('user'))
-  });
+  application.register('service:auth', Auth, { singleton: true });
 
-  application.register('misago:auth', auth, { instantiate: false });
-  application.inject('route', 'auth', 'misago:auth');
-  application.inject('controller', 'auth', 'misago:auth');
-  application.inject('component', 'auth', 'misago:auth');
+  application.inject('isAuthenticated', PreloadStore.get('isAuthenticated'), 'service:auth');
+  application.inject('user', Ember.Object.create(PreloadStore.get('user')), 'service:auth');
 
-  application.register('misago:user', auth.get('user'), { instantiate: false });
-  application.inject('route', 'user', 'misago:user');
-  application.inject('controller', 'user', 'misago:user');
-  application.inject('component', 'user', 'misago:user');
-
+  application.inject('route', 'auth', 'service:auth');
+  application.inject('controller', 'auth', 'service:auth');
+  application.inject('component', 'auth', 'service:auth');
 }
 
 export default {

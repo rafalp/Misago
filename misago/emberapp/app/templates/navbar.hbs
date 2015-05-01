@@ -6,8 +6,8 @@
       <span>{{settings.forum_name}}</span>
     {{/link-to}}
 
-    {{#if user.isAuthenticated}}
-    {{render 'user-nav'}}
+    {{#if auth.isAuthenticated}}
+      {{user-nav}}
     {{else}}
     <div class="guest-nav navbar-right">
       <button type="button" class="btn btn-default btn-login navbar-btn btn-sm" {{action "showModal" "login"}}>

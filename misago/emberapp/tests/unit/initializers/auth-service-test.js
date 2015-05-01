@@ -15,10 +15,9 @@ module('AuthServiceInitializer', {
 });
 
 test('initializer registered auth and user', function(assert) {
-  assert.expect(2);
+  assert.expect(1);
 
   initialize(container, application);
 
-  assert.ok(container.lookup('misago:auth'));
-  assert.ok(container.lookup('misago:user'));
+  assert.ok(container.lookup('service:auth'));
 });

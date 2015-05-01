@@ -1,7 +1,6 @@
 import MisagoRoute from 'misago/routes/misago';
-import ResetScroll from 'misago/mixins/reset-scroll';
 
-export default MisagoRoute.extend(ResetScroll, {
+export default MisagoRoute.extend({
   model: function(params) {
     return this.ajax.get('auth/change-password/' + params.user_id + '/' + params.token);
   },

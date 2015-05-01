@@ -7,11 +7,26 @@ export default Ember.Service.extend({
     Ember.$('#hidden-logout-form').submit();
   },
 
-  blockAuthenticated: function(message) {
-    // TODO: if user is authenticated, throw error 403 with message
+  // Utils for triggering 403 error
+
+  _throw: function(message) {
+    throw {
+      status: 403,
+      responseJSON: {
+        detail: message
+      }
+    };
   },
 
-  blockAnonymous: function(message) {
-    // TODO: if user is not authenticated, throw error 403 with message
+  denyAuthenticated: function(message) {
+    if (this.get('isAuthenticated')) {
+      this._throw(message || gettext('This page is not available to signed in users.'));
+    }
+  },
+
+  denyAnonymous: function(message) {
+    if (this.get('isAnonymous')) {
+      this._throw(message || gettext('This page is not available to guests.'));
+    }
   }
 });

@@ -1,7 +1,6 @@
 import MisagoRoute from 'misago/routes/misago';
-import ResetScroll from 'misago/mixins/reset-scroll';
 
-export default MisagoRoute.extend(ResetScroll, {
+export default MisagoRoute.extend({
   formTitle: gettext('Request activation link'),
   formTemplate: 'activation.request-link',
 
