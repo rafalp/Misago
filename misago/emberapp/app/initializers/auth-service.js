@@ -4,7 +4,7 @@ import Auth from 'misago/services/auth';
 export function initialize(container, application) {
   var auth = Auth.create({
     'isAuthenticated': PreloadStore.get('isAuthenticated'),
-    'user': PreloadStore.get('user')
+    'user': Ember.Object.create(PreloadStore.get('user'))
   });
 
   application.register('misago:auth', auth, { instantiate: false });
