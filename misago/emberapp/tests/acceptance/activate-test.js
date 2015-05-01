@@ -46,7 +46,7 @@ test('request activation link with invalid e-mail', function(assert) {
 
   var message = 'Entered e-mail is invalid.';
   Ember.$.mockjax({
-    url: '/api/activation/send-link/',
+    url: '/api/auth/send-activation/',
     status: 400,
     responseText: {
       'detail': message,
@@ -69,7 +69,7 @@ test('request activation link with non-existing e-mail', function(assert) {
 
   var message = 'No user with this e-mail exists.';
   Ember.$.mockjax({
-    url: '/api/activation/send-link/',
+    url: '/api/auth/send-activation/',
     status: 400,
     responseText: {
       'detail': message,
@@ -92,7 +92,7 @@ test('request activation link with user-activated account', function(assert) {
 
   var message = 'You have to activate your account before you will be able to sign in.';
   Ember.$.mockjax({
-    url: '/api/activation/send-link/',
+    url: '/api/auth/send-activation/',
     status: 400,
     responseText: {
       'detail': message,
@@ -115,7 +115,7 @@ test('request activation link with admin-activated account', function(assert) {
 
   var message = 'Your account has to be activated by Administrator before you will be able to sign in.';
   Ember.$.mockjax({
-    url: '/api/activation/send-link/',
+    url: '/api/auth/send-activation/',
     status: 400,
     responseText: {
       'detail': message,
@@ -137,7 +137,7 @@ test('request activation link with banned account', function(assert) {
   assert.expect(2);
 
   Ember.$.mockjax({
-    url: '/api/activation/send-link/',
+    url: '/api/auth/send-activation/',
     status: 400,
     responseText: {
       'detail': {
@@ -168,7 +168,7 @@ test('request activation link', function(assert) {
   assert.expect(1);
 
   Ember.$.mockjax({
-    url: '/api/activation/send-link/',
+    url: '/api/auth/send-activation/',
     status: 200,
     responseText: {
       'username': 'BobBoberson',
@@ -191,8 +191,8 @@ test('invalid token is handled', function(assert) {
 
   var message = 'Token was rejected.';
   Ember.$.mockjax({
-    url: '/api/activation/1/token/validate-token/',
-    status: 404,
+    url: '/api/auth/activate-account/1/token/',
+    status: 400,
     responseText: {
       'detail': message
     }
@@ -211,7 +211,7 @@ test('permission denied is handled', function(assert) {
 
   var message = 'Token was rejected.';
   Ember.$.mockjax({
-    url: '/api/activation/1/token/validate-token/',
+    url: '/api/auth/activate-account/1/token/',
     status: 403,
     responseText: {
       'detail': message
@@ -228,12 +228,12 @@ test('permission denied is handled', function(assert) {
   });
 });
 
-test('token is validated', function(assert) {
+test('account is activated', function(assert) {
   assert.expect(2);
 
   var message = 'Yur account has been activated!';
   Ember.$.mockjax({
-    url: '/api/activation/1/token/validate-token/',
+    url: '/api/auth/activate-account/1/token/',
     status: 200,
     responseText: {
       'detail': message

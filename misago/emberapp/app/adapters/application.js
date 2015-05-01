@@ -11,11 +11,11 @@ export default DRFAdapter.extend({
   // Simple ajax util for RPC requests
   // raison d'etre: because default ones are processing server responses
   // and there isn't response standard to allow that for RPC's
-  rpcAjax: function(url, data) {
+  misagoAjax: function(method, url, data) {
     var adapter = this;
 
     return new Ember.RSVP.Promise(function(resolve, reject) {
-      var hash = adapter.ajaxOptions(url, 'POST', {data: data || null});
+      var hash = adapter.ajaxOptions(url, method, {data: data || null});
 
       hash.success = function(json) {
         Ember.run(null, resolve, json);
@@ -26,6 +26,6 @@ export default DRFAdapter.extend({
       };
 
       Ember.$.ajax(hash);
-    }, 'DS: MisagoAdapter#rpc-ajax POST to ' + url);
+    }, 'DS: MisagoAdapter#misago-ajax ' + method + ' to ' + url);
   }
 });

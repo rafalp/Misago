@@ -25,7 +25,7 @@ export default Ember.Component.extend({
     this.set('isLoading', true);
 
     var self = this;
-    this.rpc.ajax(this.get('url'), {
+    this.ajax.post(this.get('url'), {
       email: email
     }).then(function(requestingUser) {
       if (self.isDestroyed) { return; }

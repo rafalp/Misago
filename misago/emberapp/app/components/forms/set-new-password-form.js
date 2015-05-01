@@ -11,7 +11,7 @@ export default Ember.Component.extend({
   }.property(),
 
   url: function() {
-    return 'change-password/' + this.get('model.user_id') + '/' + this.get('model.token');
+    return 'auth/change-password/' + this.get('model.user_id') + '/' + this.get('model.token');
   }.property('model'),
 
   submit: function() {
@@ -29,7 +29,7 @@ export default Ember.Component.extend({
     this.set('isLoading', true);
 
     var self = this;
-    this.rpc.ajax(this.get('url'), {
+    this.ajax.post(this.get('url'), {
       password: password
     }).then(function() {
       if (self.isDestroyed) { return; }

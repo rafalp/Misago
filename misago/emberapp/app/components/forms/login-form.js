@@ -29,7 +29,7 @@ export default Ember.Component.extend({
     }
 
     var self = this;
-    this.rpc.ajax(this.get('settings.loginApiUrl'), credentials
+    this.ajax.post(this.get('settings.loginApiUrl'), credentials
     ).then(function() {
       if (self.isDestroyed) { return; }
       self.success(credentials);

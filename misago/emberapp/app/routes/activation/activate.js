@@ -3,7 +3,7 @@ import ResetScroll from 'misago/mixins/reset-scroll';
 
 export default MisagoRoute.extend(ResetScroll, {
   model: function(params) {
-    return this.rpc.ajax('activation/' + params.user_id + '/' + params.token + '/validate-token');
+    return this.ajax.post('auth/activate-account/' + params.user_id + '/' + params.token);
   },
 
   afterModel: function(model) {
@@ -19,7 +19,7 @@ export default MisagoRoute.extend(ResetScroll, {
     },
 
     error: function(reason) {
-      if (reason.status === 404) {
+      if (reason.status === 400) {
         this.toast.error(reason.responseJSON.detail);
         return this.transitionTo('activation');
       }

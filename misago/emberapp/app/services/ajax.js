@@ -1,7 +1,19 @@
 import Ember from 'ember';
 
 export default Ember.Service.extend({
-  ajax: function(recordOrProcedure, dataOrProcedure, data) {
+  get: function(recordOrProperty, recordProperty) {
+    if (typeof recordOrProperty === 'string' || typeof recordProperty !== 'string') {
+      recordProperty = null;
+    }
+
+    return this._ajax('GET', recordOrProperty, recordProperty);
+  },
+
+  post: function(recordOrProcedure, dataOrProcedure, data) {
+    return this._ajax('POST', recordOrProcedure, dataOrProcedure, data);
+  },
+
+  _ajax: function(method, recordOrProcedure, dataOrProcedure, data) {
     // unpack arguments
     var record = null;
     var procedure = null;
@@ -19,7 +31,7 @@ export default Ember.Service.extend({
       model = this.store.modelFor(record.constructor);
     }
 
-    // get adapter to be used for RPC
+    // get adapter to be used for ajax
     // note: in case of Model being null this cheats adapterFor to return
     // 'adapter:application'. we are doing this, because for some reason
     // store.defaultAdapter fails to return django adapter
@@ -33,8 +45,8 @@ export default Ember.Service.extend({
       url = this.buildProcedureURL(adapter, procedure);
     }
 
-    // return RPC promise
-    return adapter.rpcAjax(url, data || null);
+    // return promise
+    return adapter.misagoAjax(method, url, data || null);
   },
 
   buildRecordProcedureURL: function(adapter, model, record, procedure) {

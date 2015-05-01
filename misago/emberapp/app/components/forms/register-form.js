@@ -185,7 +185,7 @@ export default Ember.Component.extend({
     this.set('isLoading', true);
 
     var self = this;
-    this.rpc.ajax('users', data
+    this.ajax.post('users', data
     ).then(function(response) {
       if (self.isDestroyed) { return; }
       self.success(response);
