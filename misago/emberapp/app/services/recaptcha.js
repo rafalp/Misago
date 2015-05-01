@@ -36,7 +36,7 @@ export default NoCaptcha.extend({
           }, 200);
         } else {
           self.set('loadedJs', true);
-          resolve();
+          Ember.run(null, resolve);
         }
       };
       wait();
@@ -46,7 +46,7 @@ export default NoCaptcha.extend({
   _loadedPromise: function() {
     // we have already loaded zxcvbn.js, resolve away!
     return new Ember.RSVP.Promise(function(resolve) {
-      resolve();
+      Ember.run(null, resolve);
     });
   },
 
