@@ -3,7 +3,7 @@ import re
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _, ungettext, pgettext
+from django.utils.translation import ugettext_lazy as _
 
 from misago.core import cachebuster
 from misago.core.utils import date_format
@@ -11,7 +11,7 @@ from misago.core.utils import date_format
 
 __all__ = [
     'BAN_USERNAME', 'BAN_EMAIL', 'BAN_IP', 'BANS_CHOICES',
-    'Ban', 'BanCache', 'format_expiration_date'
+    'Ban', 'BanCache'
 ]
 
 
@@ -28,26 +28,6 @@ BANS_CHOICES = (
     (BAN_EMAIL, _('E-mail address')),
     (BAN_IP, _('IP address')),
 )
-
-
-def format_expiration_date(expiration_date):
-    if not expiration_date:
-        return _("Never")
-
-    now = timezone.now()
-    diff = (expiration_date - now).total_seconds()
-
-    if diff and diff < (3600 * 24):
-        format = pgettext("ban expiration hour minute",
-                          "h:i a")
-    elif now.year == expiration_date.year:
-        format = pgettext("ban expiration hour minute day month",
-                          "jS F, h:i a")
-    else:
-        format = pgettext("ban expiration hour minute day month year",
-                          "jS F Y, h:i a")
-
-    return date_format(expiration_date, format)
 
 
 class BansManager(models.Manager):
@@ -129,10 +109,6 @@ class Ban(models.Model):
         else:
             return False
 
-    @property
-    def formatted_expiration_date(self):
-        return format_expiration_date(self.expires_on)
-
     def check_value(self, value):
         if '*' in self.banned_value:
             regex = re.escape(self.banned_value).replace('\*', '(.*?)')
@@ -153,10 +129,6 @@ class BanCache(models.Model):
     user_message = models.TextField(null=True, blank=True)
     staff_message = models.TextField(null=True, blank=True)
     expires_on = models.DateTimeField(null=True, blank=True)
-
-    @property
-    def formatted_expiration_date(self):
-        return format_expiration_date(self.expires_on)
 
     @property
     def is_banned(self):

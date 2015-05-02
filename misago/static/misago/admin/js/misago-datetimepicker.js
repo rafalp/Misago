@@ -3,10 +3,6 @@ $(function() {
 
   function enchanceDateTimeField($control) {
 
-    var formats = $control.data('input-format').split(" ");
-    var date_format = formats[0];
-    var time_format = formats[1].replace(":%S", "");
-
     var $input = $control.find('input');
 
     $input.attr('type', 'hidden');
@@ -21,24 +17,19 @@ $(function() {
     $container.append($date);
     $container.append($time);
 
-    date_format = date_format.replace('%d', 'DD');
-    date_format = date_format.replace('%m', 'MM');
-    date_format = date_format.replace('%y', 'YY');
-    date_format = date_format.replace('%Y', 'YYYY');
+    if ($.trim($input.val()).length > 0) {
+      var parsed = moment($input.val());
+      if (parsed.isValid()) {
+        $date.val(parsed.format('MM-DD-YYYY'));
+        $time.val(parsed.format('HH:mm'));
+      }
+    }
 
     $date.datetimepicker({
-      format: date_format,
+      format: 'MM-DD-YYYY',
       pickDate: true,
       pickTime: false
     });
-
-    var values = $input.val().split(" ");
-    if (values.length == 2) {
-      $date.val(values[0]);
-
-      var time = values[1].split(":");
-      $time.val(time[0] + ":" + time[1]);
-    }
 
     $time.datetimepicker({
       format: 'HH:mm',
@@ -48,7 +39,12 @@ $(function() {
     });
 
     function update_value() {
-      $input.val($date.val() + " " + $time.val());
+      var input = moment($date.val() + " " + $time.val(), 'MM-DD-YYYY HH:mm');
+      if (input.isValid()) {
+        $input.val(input.format());
+      } else {
+        $input.val('');
+      }
     }
 
     $date.change(update_value);
@@ -60,6 +56,6 @@ $(function() {
     if ($(this).data('input-format')) {
       enchanceDateTimeField($(this));
     }
-  })
+  });
 
-})
+});

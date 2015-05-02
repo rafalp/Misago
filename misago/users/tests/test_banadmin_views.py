@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timedelta
 
 from django.core.urlresolvers import reverse
 
@@ -27,16 +27,19 @@ class BanAdminViewsTests(AdminTestCase):
 
     def test_mass_delete(self):
         """adminview deletes multiple bans"""
+        test_date = datetime.now() + timedelta(days=180)
+
         for i in xrange(10):
             response = self.client.post(
                 reverse('misago:admin:users:bans:new'),
                 data={
                     'check_type': '1',
-                    'banned_value': 'test@test.com',
+                    'banned_value': '%stest@test.com' % i,
                     'user_message': 'Lorem ipsum dolor met',
                     'staff_message': 'Sit amet elit',
-                    'expires_on': '%s-12-24' % unicode(date.today().year + 1),
+                    'expires_on': test_date.isoformat(),
                 })
+            self.assertEqual(response.status_code, 302)
 
         self.assertEqual(Ban.objects.count(), 10)
 
@@ -56,6 +59,8 @@ class BanAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:bans:new'))
         self.assertEqual(response.status_code, 200)
 
+        test_date = datetime.now() + timedelta(days=180)
+
         response = self.client.post(
             reverse('misago:admin:users:bans:new'),
             data={
@@ -63,7 +68,7 @@ class BanAdminViewsTests(AdminTestCase):
                 'banned_value': 'test@test.com',
                 'user_message': 'Lorem ipsum dolor met',
                 'staff_message': 'Sit amet elit',
-                'expires_on': '%s-12-24' % unicode(date.today().year + 1),
+                'expires_on': test_date.isoformat(),
             })
         self.assertEqual(response.status_code, 302)
 
@@ -90,7 +95,7 @@ class BanAdminViewsTests(AdminTestCase):
                 'banned_value': 'test@test.com',
                 'user_message': 'Lorem ipsum dolor met',
                 'staff_message': 'Sit amet elit',
-                'expires_on': '%s-12-24' % unicode(date.today().year + 1),
+                'expires_on': '',
             })
         self.assertEqual(response.status_code, 302)
 
@@ -98,7 +103,6 @@ class BanAdminViewsTests(AdminTestCase):
         response = self.client.get(response['location'])
         self.assertEqual(response.status_code, 200)
         self.assertIn('test@test.com', response.content)
-        #raise Exception('FIX WARNING!')
 
     def test_delete_view(self):
         """delete ban view has no showstoppers"""

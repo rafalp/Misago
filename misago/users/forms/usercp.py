@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _, ungettext
 
 from misago.conf import settings
-from misago.core import forms, timezones
+from misago.core import forms
 
 from misago.users.models import (AUTO_SUBSCRIBE_CHOICES,
                                  PRIVATE_THREAD_INVITES_LIMITS_CHOICES)
@@ -10,11 +10,6 @@ from misago.users.validators import validate_email, validate_password
 
 
 class ChangeForumOptionsBaseForm(forms.ModelForm):
-    timezone = forms.ChoiceField(
-        label=_("Your current timezone"), choices=[],
-        help_text=_("If dates and hours displayed by forums are inaccurate, "
-                    "you can fix it by adjusting timezone setting."))
-
     is_hiding_presence = forms.YesNoSwitch(
         label=_("Hide my presence"),
         help_text=_("If you hide your presence, only members with permission "
@@ -35,7 +30,6 @@ class ChangeForumOptionsBaseForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
         fields = [
-            'timezone',
             'is_hiding_presence',
             'limits_private_thread_invites_to',
             'subscribe_to_started_threads',
@@ -44,14 +38,8 @@ class ChangeForumOptionsBaseForm(forms.ModelForm):
 
 
 def ChangeForumOptionsForm(*args, **kwargs):
-    timezone = forms.ChoiceField(
-        label=_("Your current timezone"), choices=timezones.choices(),
-        help_text=_("If dates and hours displayed by forums are inaccurate, "
-                    "you can fix it by adjusting timezone setting."))
-
     FinalFormType = type('FinalChangeForumOptionsForm',
-                         (ChangeForumOptionsBaseForm,),
-                         {'timezone': timezone})
+                         (ChangeForumOptionsBaseForm,))
     return FinalFormType(*args, **kwargs)
 
 

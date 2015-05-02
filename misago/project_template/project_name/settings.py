@@ -57,6 +57,14 @@ CACHES = {
 
 LANGUAGE_CODE = 'en-us'
 
+# Fallback Timezone
+# Used to format dates on server, that are then
+# presented to clients with disabled JS
+# Consult http://en.wikipedia.org/wiki/List_of_tz_database_time_zones TZ column
+# for valid values
+
+TIME_ZONE = 'UTC'
+
 
 # Path used to access static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/{{ docs_version }}/howto/static-files/

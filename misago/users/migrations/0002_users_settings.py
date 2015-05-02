@@ -33,18 +33,6 @@ def create_users_settings_group(apps, schema_editor):
                     'is_public': True,
                 },
                 {
-                    'setting': 'default_timezone',
-                    'name': _("Default timezone"),
-                    'description': _("Default timezone for newly "
-                                     "registered accouts as well as "
-                                     "unsigned users."),
-                    'value': 'utc',
-                    'form_field': 'select',
-                    'field_extra': {
-                        'choices': '#TZ#',
-                    },
-                },
-                {
                     'setting': 'username_length_min',
                     'name': _("Minimum length"),
                     'description': _("Minimum allowed username length."),

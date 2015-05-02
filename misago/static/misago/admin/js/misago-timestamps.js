@@ -3,40 +3,34 @@ $(function() {
   var moment_now = moment();
   var time_format = moment_now.lang()._longDateFormat.LT;
 
-  var moments = {};
+  function set_titles() {
+    $('.moment').each(function() {
+      var obj = moment($(this).data('iso'));
+      $(this).attr('title', obj.format('LLLL'));
+    });
+  }
+  set_titles();
 
-  // Initialize moment.js for dates
-  $('.dynamic').each(function() {
-    var timestamp = $(this).data('timestamp');
-    var rel_moment = moment(timestamp);
+  function update_timestamps() {
+    var now = moment();
 
-    if (moment_now.diff(rel_moment, 'days') <= 7) {
-      moments[timestamp] = {
-        rel_moment: rel_moment,
-        original: $(this).text()
-      }
-    }
-  });
-
-  // Update function
-  function update_times() {
-    $('.time-ago').each(function() {
-      var timestamp = $(this).data('timestamp');
-      if (moments[timestamp] != undefined) {
-        if (moment_now.diff(moments[timestamp].rel_moment, 'hours') <= 6 && moment_now.diff(moments[timestamp].rel_moment, 'hours') >= -6) {
-          $(this).text(moments[timestamp].rel_moment.fromNow());
-        } else if (moment_now.diff(moments[timestamp].rel_moment, 'days') < 1 && moment_now.diff(moments[timestamp].rel_moment, 'days') > -1) {
-          $(this).text(moments[timestamp].rel_moment.calendar());
-        } else if (moment_now.diff(moments[timestamp].rel_moment, 'days') < 7 && moment_now.diff(moments[timestamp].rel_moment, 'days') > -7) {
-          $(this).text(moments[timestamp].rel_moment.format("dddd, " + time_format));
+    $('.moment').each(function() {
+      var obj = moment($(this).data('iso'));
+      var diff = Math.abs(obj.diff(now, 'seconds'));
+      if (diff < 18000) {
+        $(this).text(obj.from(now));
+      } else {
+        diff = Math.abs(obj.diff(now, 'days'));
+        if (diff < 5) {
+          $(this).text(obj.calendar(now));
         } else {
-          $(this).text(moments[timestamp].original);
+          $(this).text(obj.format($(this).data('format')));
         }
       }
     });
   }
 
   // Run updates
-  update_times();
-  window.setInterval(update_times, 5000);
+  update_timestamps();
+  window.setInterval(update_timestamps, 5000);
 });

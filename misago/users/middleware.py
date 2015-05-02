@@ -3,7 +3,6 @@ import pytz
 from django.contrib.auth import logout
 from django.contrib.auth.models import AnonymousUser as DjAnonymousUser
 from django.core.urlresolvers import resolve
-from django.utils import timezone
 
 from misago.conf import settings
 
@@ -36,21 +35,6 @@ class UserMiddleware(object):
         elif not request.user.is_superuser:
             if get_request_ip_ban(request) or get_user_ban(request.user):
                 logout(request)
-
-
-class TimezoneMiddleware(object):
-    def process_request(self, request):
-        if request.user.is_authenticated():
-            timezone.activate(pytz.timezone(request.user.timezone))
-        else:
-            timezone.activate(pytz.timezone(settings.default_timezone))
-
-        current_tz = timezone.get_current_timezone()
-
-        utc_offset = current_tz.normalize(timezone.now()).utcoffset()
-        utc_offset_seconds = int(utc_offset.total_seconds())
-
-        request.preloaded_ember_data['utcOffset'] = utc_offset_seconds
 
 
 class PreloadUserMiddleware(object):

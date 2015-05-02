@@ -89,9 +89,6 @@ class UserManager(BaseUserManager):
             if not 'joined_from_ip' in extra_fields:
                 extra_fields['joined_from_ip'] = '127.0.0.1'
 
-            if not 'timezone' in extra_fields:
-                extra_fields['timezone'] = settings.default_timezone
-
             WATCH_DICT = {
                 'no': AUTO_SUBSCRIBE_NONE,
                 'watch': AUTO_SUBSCRIBE_WATCH,
@@ -184,8 +181,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     joined_from_ip = models.GenericIPAddressField()
     last_ip = models.GenericIPAddressField(null=True, blank=True)
     is_hiding_presence = models.BooleanField(default=False)
-
-    timezone = models.CharField(max_length=255, default='utc')
 
     rank = models.ForeignKey(
         'Rank', null=True, blank=True, on_delete=models.PROTECT)

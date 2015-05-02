@@ -33,14 +33,11 @@ def migrate_setting(Setting, group, setting_fixture, order, old_value):
     if (setting_fixture.get('field_extra') and
             setting_fixture.get('field_extra').get('choices')):
         untranslated_choices = setting_fixture['field_extra']['choices']
-        if untranslated_choices == '#TZ#':
-            setting_fixture['field_extra']['choices'] = '#TZ#'
-        else:
-            translated_choices = []
-            for val, name in untranslated_choices:
-                translated_choices.append((val, name))
-            setting_fixture['field_extra']['choices'] = tuple(
-                translated_choices)
+        translated_choices = []
+        for val, name in untranslated_choices:
+            translated_choices.append((val, name))
+        setting_fixture['field_extra']['choices'] = tuple(
+            translated_choices)
 
     if old_value is None:
         value = setting_fixture.pop('value', None)

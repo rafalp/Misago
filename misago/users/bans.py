@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 
 from misago.core import cachebuster
-from misago.users.models import BAN_IP, Ban, BanCache, format_expiration_date
+from misago.users.models import BAN_IP, Ban, BanCache
 
 
 BAN_CACHE_SESSION_KEY = 'misago_ip_check'
@@ -143,11 +143,8 @@ def _get_session_bancache(request):
 def _hydrate_session_cache(ban_cache):
     hydrated = ban_cache.copy()
 
-    hydrated['formatted_expiration_date'] = None
     if hydrated.get('expires_on'):
         hydrated['expires_on'] = parse_datetime(hydrated['expires_on'])
-        hydrated['formatted_expiration_date'] = format_expiration_date(
-            hydrated['expires_on'])
 
     return hydrated
 

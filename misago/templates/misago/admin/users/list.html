@@ -62,9 +62,7 @@
   {{ item.rank }}
 </td>
 <td>
-  <abbr class="tooltip-top dynamic time-ago" title="{{ item.joined_on }}" data-timestamp="{{ item.joined_on|date:"c" }}">
-    {{ item.joined_on|date }}
-  </abbr>
+  <abbr class="moment" data-iso="{{ item.joined_on.isoformat }}" data-format="LL"></abbr>
 </td>
 <td>
   {{ item.posts }}

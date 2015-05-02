@@ -37,9 +37,6 @@ def get_user_state(user, acl):
         user_state['is_banned'] = True
         user_state['banned_until'] = user_ban.expires_on
 
-        ban_expiration_date = user_ban.formatted_expiration_date
-        user_state['formatted_ban_expiration_date'] = ban_expiration_date
-
     try:
         if not user.is_hiding_presence or acl['can_see_hidden_users']:
             online_tracker = user.online_tracker

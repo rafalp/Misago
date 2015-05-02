@@ -1,5 +1,5 @@
 from django.utils.translation import ugettext as _, ungettext
-from misago.core import forms, timezones
+from misago.core import forms
 
 
 __ALL__ = ['ChangeSettingsForm']
@@ -78,8 +78,6 @@ def create_choice(setting, kwargs, extra):
         kwargs['widget'] = forms.Select()
 
     kwargs['choices'] = extra.get('choices', [])
-    if kwargs['choices'] == '#TZ#':
-        kwargs['choices'] = timezones.choices()
 
     if setting.python_type == 'int':
         return forms.TypedChoiceField(coerce='int', **kwargs)

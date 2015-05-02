@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _, ungettext
 
 from misago.conf import settings
-from misago.core import forms, threadstore, timezones
+from misago.core import forms, threadstore
 from misago.core.validators import validate_sluggable
 from misago.acl.models import Role
 
@@ -135,7 +135,6 @@ class EditUserForm(UserBaseForm):
             'avatar_lock_staff_message',
             'signature',
             'is_signature_locked',
-            'timezone',
             'is_hiding_presence',
             'limits_private_thread_invites_to',
             'signature_lock_user_message',
@@ -177,10 +176,6 @@ def UserFormFactory(FormType, instance):
         queryset=roles,
         initial=instance.roles.all() if instance.pk else None,
         widget=forms.CheckboxSelectMultiple)
-
-    if instance.pk:
-        extra_fields['timezone'] = forms.ChoiceField(
-            label=_("Timezone"), choices=timezones.choices())
 
     return type('UserFormFinal', (FormType,), extra_fields)
 
@@ -366,9 +361,8 @@ class BanUsersForm(forms.Form):
         error_messages={
             'max_length': _("Message can't be longer than 1000 characters.")
         })
-    expires_on = forms.DateTimeField(
-        label=_("Expires on"),
-        required=False, localize=True,
+    expires_on = forms.IsoDateTimeField(
+        label=_("Expires on"), required=False,
         help_text=_('Leave this field empty for set bans to never expire.'))
 
 
@@ -401,9 +395,8 @@ class BanForm(forms.ModelForm):
         error_messages={
             'max_length': _("Message can't be longer than 1000 characters.")
         })
-    expires_on = forms.DateTimeField(
-        label=_("Expires on"),
-        required=False, localize=True,
+    expires_on = forms.IsoDateTimeField(
+        label=_("Expires on"), required=False,
         help_text=_('Leave this field empty for this ban to never expire.'))
 
     class Meta:
@@ -445,9 +438,9 @@ class SearchBansForm(forms.Form):
     state = forms.ChoiceField(
         label=_("State"), required=False,
         choices=(
-            ('', _('Is used in checks')),
-            ('used', _('Yes')),
-            ('unused', _('No')),
+            ('', _('Any')),
+            ('used', _('Active')),
+            ('unused', _('Expired')),
         ))
 
     def filter_queryset(self, search_criteria, queryset):

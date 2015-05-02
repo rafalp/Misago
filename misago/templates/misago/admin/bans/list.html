@@ -31,20 +31,11 @@
 <td>
   {{ item.test_name }}
 </td>
-<td>
+<td{% if item.is_expired %} class="text-muted"{% endif %}>
   {% if item.expires_on %}
-    {% if item.is_expired %}
-      <span class="text-muted tooltip-top" title="{% trans "This ban has expired." %}">
-        {{ item.expires_on|date }}
-        <span class="fa fa-exclamation text-danger"></span>
-      </span>
-    {% else %}
-      <span class="tooltip-top" title="{{ item.expires_on|date:"DATETIME_FORMAT" }}">
-        {{ item.formatted_expiration_date }}
-      </span>
-    {% endif %}
+    <abbr class="moment" data-iso="{{ item.expires_on.isoformat }}" data-format="lll"></abbr>
   {% else %}
-  <em>{% trans "Never" %}</em>
+    <em>{% trans "Never" %}</em>
   {% endif %}
 </td>
 {% for action in extra_actions %}

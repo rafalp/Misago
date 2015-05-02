@@ -98,8 +98,8 @@ class Command(BaseCommand):
         created_count = 0
         show_progress(self, created_count, fake_bans_to_create)
         for i in xrange(fake_bans_to_create):
-            ban = Ban(test=random.randint(BAN_USERNAME, BAN_IP))
-            ban.banned_value = create_fake_test(fake, ban.test)
+            ban = Ban(check_type=random.randint(BAN_USERNAME, BAN_IP))
+            ban.banned_value = create_fake_test(fake, ban.check_type)
 
             if random.randint(0, 10) == 0:
                 ban.user_message = fake.sentence()

@@ -31,7 +31,6 @@ class Migration(migrations.Migration):
                 ('joined_from_ip', models.GenericIPAddressField()),
                 ('last_ip', models.GenericIPAddressField(null=True, blank=True)),
                 ('is_hiding_presence', models.BooleanField(default=False)),
-                ('timezone', models.CharField(max_length=255, default='utc')),
                 ('title', models.CharField(max_length=255, null=True, blank=True)),
                 ('requires_activation', models.PositiveIntegerField(default=0)),
                 ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into admin sites.', verbose_name='staff status')),
