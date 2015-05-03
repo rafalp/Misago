@@ -31,6 +31,9 @@
 //** Global text color on `<body>`.
 @text-color:            #111;
 
+// Font weights
+@weight-light:            300;
+
 //** Global textual link color.
 @link-color:            #2196f3;
 //** Link hover color set via `darken()` function.
@@ -54,7 +57,7 @@
 //## headings
 
 //** By default, this inherits from the `<body>`.
-@headings-font-weight:    300;
+@headings-font-weight:    200;
 @headings-color:          lighten(@text-color, 8%);;
 
 
@@ -92,10 +95,10 @@
 
 @footer-border-color:            @gray-lighter;
 
-@footer-color:                   @gray-darker;
+@footer-color:                   @gray;
 
 // Footer links
-@footer-link-color:              @site-link-color;
+@footer-link-color:              @site-link-hover-color;
 @footer-link-hover-color:        @site-link-hover-color;
 @footer-link-active-color:       @site-link-active-color;
 
