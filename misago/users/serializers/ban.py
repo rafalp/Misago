@@ -7,6 +7,9 @@ from misago.core.utils import format_plaintext_for_html
 from misago.users.models import Ban, BAN_IP
 
 
+__ALL__ = ['BanMessageSerializer']
+
+
 class BanMessageSerializer(serializers.ModelSerializer):
     message = serializers.SerializerMethodField()
 

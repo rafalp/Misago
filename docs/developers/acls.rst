@@ -10,7 +10,7 @@ Checking permissions
 
 Permissions are stored on special models named "roles" and assigned to users either directly or trough ranks. Guest users always have permissions from "Guest" role, and users always have permissions form "Member" role.
 
-There are two kinds of objects in Misago: aware and unaware of their ACL's. Aware objects have "acl" attribute containing dict with their permissions for given ACL, while unaware objects don't. Instances of ``User`` and ``AnonymousUser`` classes are always ACL aware, while other objects need you to make them aware of their ACLs through use of ``add_acl`` functions ofered by ``misago.acl`` module. However this is not always needed (or possible), in which cases you have to introspect user's acl attribute directly.
+There are two kinds of objects in Misago: aware and unaware of their ACL's. Aware objects have "acl" annotation containing dict with their permissions for given ACL, while unaware objects don't. Instances of ``User`` and ``AnonymousUser`` classes are always ACL aware, while other objects need you to make them aware of their ACLs through use of ``add_acl`` functions ofered by ``misago.acl`` module. However this is not always needed (or possible), in which cases you have to introspect user's acl attribute directly.
 
 ACL's are simple dictionaries, and their contents differ depending on objects they are belonging to. This means that to see if forum is visible to user, you have to perform following check::
 
@@ -31,6 +31,8 @@ Above snippet is edge example of checking forum permission, and luckily we have 
             # ACL's are easy to check in templates too now!
 
 Because ACL framework is very flexible, different features can have different ways to check their permissions.
+
+Misago comes with its own debug page titled "Misago User ACL" that is available from Django Debug Toolbar menu. This page display user roles permissions as well as final ACL assigned to current user.
 
 
 Permissions cache
@@ -67,23 +69,68 @@ Required. This function is called when change permissions form for role is being
 Required. Is used in process of building new ACL. Its supplied dict with incomplete ACL, list of user roles and name of key under which its permissions values are stored in roles ``permissions`` attributes. Its expected to access roles ``permissions`` attributes which are dicts of values coming from permission change forms and return updated ``acl`` dict.
 
 
-.. function:: add_acl_to_target(user, target)
+.. function:: register_with(registry)
 
-Optional. Is called when Misago is trying to make ``target`` aware of its ACLs. Its called with two arguments:
+Optional. Is called by providers registry after provider module was imported, to allow it to register annotators and serializers for ACL's. Receives only one argument:
+
+* **registry** - istance of PermissionProviders that imported module.
+
+
+Registering Annotators and Serializers
+======================================
+
+When module's ``register_with`` function is called, its passed ``PermissionProviders`` instance that exposes following methods:
+
+
+.. function:: acl_annotator(hashable_type, func)
+
+Registers ``func`` as ACL annotator for ``hashable_type``.
+
+
+.. function:: acl_serializer(hashable_type, func)
+
+Registers ``func`` as ACL serializer for ``hashable_type``.
+
+
+.. function:: get_type_annotators(obj)
+
+Returns list of annotators registered for type of ``obj`` or empty list is none exist.
+
+
+.. function:: get_type_serializers(obj)
+
+Returns list of serializers registered for type of ``obj`` or empty list is none exist.
+
+
+Annotators
+----------
+
+Annotators are functions called when object is being made ACL aware. It always receives two arguments:
 
 * **user** - user asking to make target aware of its ACL's
 * **target** - target instance, guaranteed to be an single object, not list or other iterable (like queryset)
 
-``target`` has ``acl`` attribute which is dict with incomplete ACL that function can change and update with new keys.
+``target`` has ``acl`` attribute which is dict with incomplete ACL that function should update with new keys.
 
 .. note::
    This will not work for instances of User model, that already reserve ``acl`` attribute for their own acls. Instead add_acl_to_target for User instances will add acl's to `acl_` attribute.
 
-Misago comes with its own debug page titled "Misago User ACL" that is available from Django Debug Toolbar menu. This page display user roles permissions as well as final ACL assigned to current user.
+
+Serializers
+-----------
+
+Serializers are functions called when ACL-aware object is being prepared for JSON serialization. Because python's ``dict`` type isnt 1:1 interchangeable with JSON, serializers allow ACL extensions to perform additional convertion or cleanup before model's ACL is serialized. They always receive single argument:
+
+* **serialized_acl** - ACL that will be JSON serialized
+
+Example serializer for extension setting dict using integers for keys could for example remove this dictionary from ACL to avoid problems during ACL serialization::
+
+    def serialize_forums_acl(user_acl):
+        user_acl.pop('forums', None)
 
 
 Algebra
--------
+=======
 
 Consider those three simple permission sets::
 

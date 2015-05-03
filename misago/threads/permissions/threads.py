@@ -14,7 +14,7 @@ from misago.threads.models import Thread, Post, Event
 
 
 __all__ = [
-    'add_acl_to_target',
+    'register_with',
     'allow_see_thread',
     'can_see_thread',
     'allow_start_thread',
@@ -238,17 +238,6 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
 """
 ACL's for targets
 """
-def add_acl_to_target(user, target):
-    if isinstance(target, Forum):
-        add_acl_to_forum(user, target)
-    if isinstance(target, Thread):
-        add_acl_to_thread(user, target)
-    if isinstance(target, Post):
-        add_acl_to_post(user, target)
-    if isinstance(target, Event):
-        add_acl_to_event(user, target)
-
-
 def add_acl_to_forum(user, forum):
     forum_acl = user.acl['forums'].get(forum.pk, {})
 
@@ -376,6 +365,13 @@ def add_acl_to_event(user, event):
 
     event.acl['can_hide'] = can_hide_events > 0
     event.acl['can_delete'] = can_hide_events == 2
+
+
+def register_with(registry):
+    registry.acl_annotator(Forum, add_acl_to_forum)
+    registry.acl_annotator(Thread, add_acl_to_thread)
+    registry.acl_annotator(Post, add_acl_to_post)
+    registry.acl_annotator(Event, add_acl_to_event)
 
 
 """

@@ -6,6 +6,10 @@ from django.test import TestCase
 from misago.acl.providers import PermissionProviders
 
 
+class TestType(object):
+    pass
+
+
 class PermissionProvidersTests(TestCase):
     def test_initialization(self):
         """providers manager is lazily initialized"""
@@ -55,3 +59,26 @@ class PermissionProvidersTests(TestCase):
         for extension, module in providers_dict.items():
             self.assertTrue(isinstance(extension, basestring))
             self.assertEqual(type(module), ModuleType)
+
+    def test_annotators(self):
+        """its possible to register and get annotators"""
+        providers = PermissionProviders()
+
+        def test_annotator(*args):
+            pass
+
+        providers.acl_annotator(TestType, test_annotator)
+        annotators_list = providers.get_type_annotators(TestType())
+        self.assertEqual(annotators_list[0], test_annotator)
+
+    def test_serializers(self):
+        """its possible to register and get annotators"""
+        providers = PermissionProviders()
+
+        def test_serializer(*args):
+            pass
+
+        providers.acl_serializer(TestType, test_serializer)
+        serializers_list = providers.get_type_serializers(TestType())
+        self.assertEqual(serializers_list[0], test_serializer)
+

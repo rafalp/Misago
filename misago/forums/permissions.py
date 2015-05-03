@@ -1,11 +1,13 @@
+from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 
 
 from misago.acl import algebra
-from misago.acl.decorators import require_target_type, return_boolean
+from misago.acl.decorators import return_boolean
 from misago.core import forms
+from misago.users.models import AnonymousUser
 
 from misago.forums.models import Forum, RoleForumACL, ForumRole
 
@@ -85,10 +87,20 @@ def build_forum_acl(acl, forum, forums_roles, key_name):
 """
 ACL's for targets
 """
-@require_target_type(Forum)
-def add_acl_to_target(user, target):
+def add_acl_to_forum(user, target):
     target.acl['can_see'] = can_see_forum(user, target)
     target.acl['can_browse'] = can_browse_forum(user, target)
+
+
+def serialize_forums_alcs(serialized_acl):
+    serialized_acl.pop('forums')
+
+
+def register_with(registry):
+    registry.acl_annotator(Forum, add_acl_to_forum)
+
+    registry.acl_serializer(get_user_model(), serialize_forums_alcs)
+    registry.acl_serializer(AnonymousUser, serialize_forums_alcs)
 
 
 """

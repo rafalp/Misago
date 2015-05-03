@@ -13,7 +13,8 @@ from misago.core.mail import mail_user
 from misago.users.forms.auth import (AuthenticationForm, ResendActivationForm,
                                      ResetPasswordForm)
 from misago.users.rest_permissions import UnbannedAnonOnly
-from misago.users.serializers import AuthenticatedUserSerializer
+from misago.users.serializers import (AuthenticatedUserSerializer,
+                                      AnonymousUserSerializer)
 from misago.users.tokens import (make_activation_token,
                                  is_activation_token_valid,
                                  make_password_change_token,
@@ -51,14 +52,11 @@ GET /auth/ will return current auth user, either User or AnonymousUser
 @api_view()
 def session_user(request):
     if request.user.is_authenticated():
-        serialized_user = AuthenticatedUserSerializer(request.user).data
+        UserSerializer = AuthenticatedUserSerializer
     else:
-        serialized_user = {
-            'id': None,
-            'acl': {'is_implemented': False}
-        }
+        UserSerializer = AnonymousUserSerializer
 
-    return Response(serialized_user)
+    return Response(UserSerializer(request.user).data)
 
 
 """

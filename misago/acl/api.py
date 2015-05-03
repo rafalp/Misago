@@ -1,3 +1,5 @@
+import copy
+
 from django.contrib.auth import get_user_model
 
 from misago.core import threadstore
@@ -8,7 +10,7 @@ from misago.acl.builder import build_acl
 from misago.acl.providers import providers
 
 
-__ALL__ = ['get_user_acl', 'add_acl']
+__ALL__ = ['get_user_acl', 'add_acl', 'serialize_acl']
 
 
 """
@@ -65,6 +67,20 @@ def _add_acl_to_target(user, target):
     else:
         target.acl = {}
 
-    for extension, module in providers.list():
-        if hasattr(module, 'add_acl_to_target'):
-            module.add_acl_to_target(user, target)
+    for annotator in providers.get_type_annotators(target):
+        annotator(user, target)
+
+
+def serialize_acl(target):
+    """
+    Serialize single target's ACL
+
+    Serializers shouldn't really serialize ACL's, only prepare acl dict
+    for json serialization
+    """
+    serialized_acl = copy.deepcopy(target.acl)
+
+    for serializer in providers.get_type_serializers(target):
+        serializer(serialized_acl)
+
+    return serialized_acl

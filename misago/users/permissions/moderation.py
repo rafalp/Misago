@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from misago.acl import algebra
-from misago.acl.decorators import require_target_type, return_boolean
+from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
 from misago.core import forms
 
@@ -75,8 +75,7 @@ def build_acl(acl, roles, key_name):
 """
 ACL's for targets
 """
-@require_target_type(get_user_model())
-def add_acl_to_target(user, target):
+def add_acl_to_user(user, target):
     target_acl = target.acl_
 
     target_acl['can_rename'] = can_rename_user(user, target)
@@ -97,6 +96,10 @@ def add_acl_to_target(user, target):
         if target_acl[permission]:
             target_acl['can_moderate'] = True
             break
+
+
+def register_with(registry):
+    registry.acl_annotator(get_user_model(), add_acl_to_user)
 
 
 """

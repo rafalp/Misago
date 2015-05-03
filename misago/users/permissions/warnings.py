@@ -74,13 +74,6 @@ def build_acl(acl, roles, key_name):
 """
 ACL's for targets
 """
-def add_acl_to_target(user, target):
-    if isinstance(target, get_user_model()):
-        add_acl_to_user(user, target)
-    elif isinstance(target, UserWarning):
-        add_acl_to_warning(user, target)
-
-
 def add_acl_to_user(user, target):
     target_acl = target.acl_
 
@@ -99,6 +92,11 @@ def add_acl_to_warning(user, target):
 
     can_moderate = target.acl['can_cancel'] or target.acl['can_delete']
     target.acl['can_moderate'] = can_moderate
+
+
+def register_with(registry):
+    registry.acl_annotator(get_user_model(), add_acl_to_user)
+    registry.acl_annotator(UserWarning, add_acl_to_warning)
 
 
 """
