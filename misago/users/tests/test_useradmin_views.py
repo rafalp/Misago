@@ -194,7 +194,6 @@ class UserAdminViewsTests(AdminTestCase):
                 'staff_level': '0',
                 'signature': 'Hello world!',
                 'is_signature_locked': '1',
-                'timezone': 'utc',
                 'is_hiding_presence': '0',
                 'limits_private_thread_invites_to': '0',
                 'signature_lock_staff_message': 'Staff message',

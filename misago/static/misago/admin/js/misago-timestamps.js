@@ -28,6 +28,12 @@ $(function() {
         }
       }
     });
+
+    $('.moment-length').each(function() {
+      var minutes = $(this).data('minutes');
+      var obj = moment.duration(minutes, 'minutes');
+      $(this).text(obj.humanize());
+    });
   }
 
   // Run updates

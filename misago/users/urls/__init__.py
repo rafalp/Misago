@@ -19,16 +19,6 @@ urlpatterns += patterns('misago.users.views.forgottenpassword',
 )
 
 
-urlpatterns += patterns('misago.users.views.api',
-    url(r'^api/validate/username/$', 'validate_username', name='api_validate_username'),
-    url(r'^api/validate/username/(?P<user_id>\d+)/$', 'validate_username', name='api_validate_username'),
-    url(r'^api/validate/email/$', 'validate_email', name='api_validate_email'),
-    url(r'^api/validate/email/(?P<user_id>\d+)/$', 'validate_email', name='api_validate_email'),
-    url(r'^api/validate/password/$', 'validate_password', name='api_validate_password'),
-    url(r'^api/suggestion-engine/$', 'suggestion_engine', name='api_suggestion_engine'),
-)
-
-
 urlpatterns += patterns('misago.users.views.usercp',
     url(r'^usercp/forum-options/$', 'change_forum_options', name="usercp_change_forum_options"),
     url(r'^usercp/change-avatar/$', 'change_avatar', name="usercp_change_avatar"),

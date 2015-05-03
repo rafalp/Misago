@@ -31,7 +31,13 @@
 <td class="item-name">
   #{{ forloop.counter }} {{ item }}
 </td>
-<td>{{ item.length }}</td>
+<td>
+  {% if item.length %}
+    <abbr class="moment-length" data-minutes="{{ item.length }}"></abbr>
+  {% else %}
+    {% trans "Permanent" %}
+  {% endif %}
+</td>
 <td>
   {% if item.restricts_posting_replies == 0 %}
   <div class="text-success">

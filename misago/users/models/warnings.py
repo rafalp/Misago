@@ -8,7 +8,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from misago.core import threadstore
 from misago.core.cache import cache
-from misago.core.utils import time_amount
 
 
 __all__ = [
@@ -80,13 +79,6 @@ class WarningLevel(models.Model):
     def delete(self, *args, **kwargs):
         super(WarningLevel, self).delete(*args, **kwargs)
         cache.delete(CACHE_NAME)
-
-    @property
-    def length(self):
-        if self.length_in_minutes:
-            return time_amount(self.length_in_minutes * 60)
-        else:
-            return _("permanent")
 
     @property
     def has_restrictions(self):

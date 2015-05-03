@@ -6,7 +6,6 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from misago.core import cachebuster
-from misago.core.utils import date_format
 
 
 __all__ = [

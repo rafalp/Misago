@@ -80,7 +80,6 @@ class WarningsAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_level.name, response.content)
         self.assertTrue('Test Level' not in response.content)
-        self.assertIn("5 minutes", response.content)
 
     def test_move_up_view(self):
         """move warning level up view has no showstoppers"""

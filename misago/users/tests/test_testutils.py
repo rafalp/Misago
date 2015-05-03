@@ -33,7 +33,7 @@ class UserTestCaseTests(UserTestCase):
         user = self.get_authenticated_user()
         self.login_user(user)
 
-        response = self.client.get(reverse('misago:api:auth_user'))
+        response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
         user_json = json.loads(response.content)
@@ -44,7 +44,7 @@ class UserTestCaseTests(UserTestCase):
         user = self.get_superuser()
         self.login_user(user)
 
-        response = self.client.get(reverse('misago:api:auth_user'))
+        response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
         user_json = json.loads(response.content)
@@ -56,7 +56,7 @@ class UserTestCaseTests(UserTestCase):
         self.login_user(user)
         self.logout_user()
 
-        response = self.client.get(reverse('misago:api:auth_user'))
+        response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
         user_json = json.loads(response.content)
@@ -68,7 +68,7 @@ class UserTestCaseTests(UserTestCase):
         self.login_user(user)
         self.logout_user()
 
-        response = self.client.get(reverse('misago:api:auth_user'))
+        response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
         user_json = json.loads(response.content)
@@ -95,7 +95,7 @@ class SuperUserTestCaseTests(SuperUserTestCase):
         self.assertTrue(self.user.is_staff)
         self.assertTrue(self.user.is_superuser)
 
-        response = self.client.get(reverse('misago:api:auth_user'))
+        response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
         user_json = json.loads(response.content)

@@ -5,8 +5,8 @@ from django.test.client import RequestFactory
 from django.utils import timezone
 
 from misago.core.utils import (clean_return_path, is_request_to_misago,
-                               slugify, time_amount, is_referer_local,
-                               date_format, format_plaintext_for_html)
+                               slugify, is_referer_local,
+                               format_plaintext_for_html)
 
 
 VALID_PATHS = (
@@ -139,10 +139,10 @@ class CleanReturnPathTests(TestCase):
         self.assertEqual(clean_return_path(ok_request), '/')
 
         ok_request = MockRequest('GET', {
-            'HTTP_REFERER': 'http://misago-project.org/register/',
+            'HTTP_REFERER': 'http://misago-project.org/login/',
             'HTTP_HOST': 'misago-project.org/'
         })
-        self.assertEqual(clean_return_path(ok_request), '/register/')
+        self.assertEqual(clean_return_path(ok_request), '/login/')
 
     def test_post_request(self):
         """clean_return_path works for POST requests"""
@@ -155,8 +155,8 @@ class CleanReturnPathTests(TestCase):
         ok_request = MockRequest('POST', {
             'HTTP_REFERER': 'http://misago-project.org/',
             'HTTP_HOST': 'misago-project.org/'
-        }, {'return_path': '/register/'})
-        self.assertEqual(clean_return_path(ok_request), '/register/')
+        }, {'return_path': '/login/'})
+        self.assertEqual(clean_return_path(ok_request), '/login/')
 
 
 class IsRefererLocalTests(TestCase):
@@ -175,7 +175,7 @@ class IsRefererLocalTests(TestCase):
         self.assertTrue(is_referer_local(ok_request))
 
         ok_request = MockRequest('GET', {
-            'HTTP_REFERER': 'http://misago-project.org/register/',
+            'HTTP_REFERER': 'http://misago-project.org/login/',
             'HTTP_HOST': 'misago-project.org/'
         })
         self.assertTrue(is_referer_local(ok_request))
@@ -199,58 +199,3 @@ class IsRefererLocalTests(TestCase):
             'HTTP_HOST': 'misago-project.org/assadsa/'
         })
         self.assertFalse(is_referer_local(bad_request))
-
-
-class TimeAmountTests(TestCase):
-    def test_single_units(self):
-        """time_amount return correct amount of time for 1 precision"""
-        self.assertEqual(time_amount(1), "1 second")
-        self.assertEqual(time_amount(5), "5 seconds")
-        self.assertEqual(time_amount(35), "35 seconds")
-
-        self.assertEqual(time_amount(60), "1 minute")
-        self.assertEqual(time_amount(120), "2 minutes")
-        self.assertEqual(time_amount(240), "4 minutes")
-
-        self.assertEqual(time_amount(3600), "1 hour")
-        self.assertEqual(time_amount(7200), "2 hours")
-
-        self.assertEqual(time_amount(24 * 3600), "1 day")
-        self.assertEqual(time_amount(5 * 24 * 3600), "5 days")
-
-    def test_double_units(self):
-        """time_amount return correct amount of time for double precision"""
-        self.assertEqual(time_amount(61), "1 minute and 1 second")
-        self.assertEqual(time_amount(90), "1 minute and 30 seconds")
-
-        self.assertEqual(time_amount(121), "2 minutes and 1 second")
-        self.assertEqual(time_amount(150), "2 minutes and 30 seconds")
-
-        self.assertEqual(time_amount(3660), "1 hour and 1 minute")
-        self.assertEqual(time_amount(3720), "1 hour and 2 minutes")
-
-        self.assertEqual(time_amount(24 * 3600 + 1), "1 day and 1 second")
-        self.assertEqual(time_amount(2 * 24 * 3600 + 1), "2 days and 1 second")
-        self.assertEqual(time_amount(2 * 24 * 3600 + 5),
-                         "2 days and 5 seconds")
-
-        self.assertEqual(time_amount(2 * 24 * 3600 + 3 * 3600),
-                         "2 days and 3 hours")
-
-    def test_triple_units(self):
-        """time_amount return correct amount of time for triple precision"""
-        self.assertEqual(time_amount(3661), "1 hour, 1 minute and 1 second")
-        self.assertEqual(time_amount(2 * 3661),
-                         "2 hours, 2 minutes and 2 seconds")
-
-
-class DateFormatTests(TestCase):
-    def test_format_datetime(self):
-        """no crash on datetime format"""
-        date_format(timezone.now())
-        date_format(timezone.now(), "H:i")
-
-    def test_format_date(self):
-        """no crash on date format"""
-        date_format(timezone.now().date())
-        date_format(timezone.now().date(), 'm.Y')
