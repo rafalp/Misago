@@ -10,103 +10,60 @@
   color: @footer-color;
   text-align: center;
 
-  .footer-nav {
-    a, a:link, a:visited {
-      color: @footer-link-color;
-    }
-
-    a:hover, a:focus {
-      color: @footer-link-hover-color;
-    }
-
-    a:active {
-      color: @footer-link-active-color;
-    }
-
-    .site-footnote {
-      clear: none;
-    }
+  a, a:link, a:visited {
+    color: @footer-link-color;
   }
 
-  .noscript-message {
-    color: @footer-noscript-color;
+  a:hover, a:focus {
+    color: @footer-link-hover-color;
+  }
+
+  a:active {
+    color: @footer-link-active-color;
+  }
+
+  .site-footnote {
+    .opacity(0.7);
+    font-size: @font-size-small;
   }
 
   .misago-branding {
-    a {
-      display: inline-block;
+    &:link, &:active, &:visited &:hover {
+      .opacity(0.8);
 
       color: @misago-branding-color;
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-size: @misago-branding-size;
-
-      .subscript {
-        display: inline-block;
-        position: relative;
-        bottom: (@misago-branding-size  - (@misago-branding-size * 0.75)) / 2 - 1px;
-
-        font-size: @misago-branding-size;
-      }
-
-      .brand-border {
-        background: @misago-branding-color;
-        border: none;
-        border-radius: @misago-branding-size * 0.15;
-        display: inline-block;
-        margin-right: @misago-branding-size * 0.1;
-        position: relative;
-        top: @misago-branding-size * 0.18;
-        overflow: hidden;
-        width: @misago-branding-size + 3px;
-        height: @misago-branding-size + 3px;
-
-        &>span {
-          display: inline-block;
-          position: absolute;
-          bottom: -20%;
-          right: -18%;
-          .rotate(-45deg);
-
-          color: @body-bg;
-          font-size: @misago-branding-size * 1.2;
-          font-weight: bold;
-        }
-      }
-
-      &, &:link, &:visited {
-        .opacity(0.6);
-      }
-
-      &:active, &:hover {
-        .opacity(1);
-
-        text-decoration: none;
-      }
+      font-weight: lighter;
+      text-decoration: none;
     }
   }
 
-  /* Small devices (tablets, 768px and up) */
+  /* Big devices (tablets, 768px and up) */
   @media (min-width: @screen-sm-min) {
-    border-top: 1px solid @footer-hr-color;
     margin-top: @line-height-computed * 2;
     padding-top: @line-height-computed * 1.5;
+    overflow: auto;
 
     text-align: left;
 
-    .first-row {
-      overflow: auto;
+    .footer-content {
+      border-top: 1px solid @footer-border-color;
+      padding-top: @line-height-computed;
+    }
 
-      &>* {
-        float: left;
-      }
+    .footer-nav {
+      float: left;
+    }
 
-      .footer-nav {
-        margin-right: @line-height-computed;
+    .site-footnote {
+      .opacity(1);
 
-        .site-footnote {
-          clear: none;
-        }
-      }
+      font-size: @font-size-base;
+      font-weight: lighter;
+    }
+
+    .misago-branding {
+      float: right;
     }
   }
 }

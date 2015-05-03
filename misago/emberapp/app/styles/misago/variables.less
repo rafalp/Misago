@@ -29,7 +29,7 @@
 //** Background color for `<body>`.
 @body-bg:               #fff;
 //** Global text color on `<body>`.
-@text-color:            #333;
+@text-color:            #111;
 
 //** Global textual link color.
 @link-color:            #2196f3;
@@ -40,13 +40,13 @@
 
 //** Site link styles
 @site-link-color:            @gray-light;
-@site-link-hover-color:      @gray-dark;
-@site-link-active-color:     @gray;
+@site-link-hover-color:      @text-color;
+@site-link-active-color:     @brand-info;
 
 //** In-site link state default
 @state-default:         #7f8c8d;
 @state-hover:           @text-color;
-@state-clicked:         @state-hover;
+@state-clicked:         @brand-primary;
 
 
 //== Typography
@@ -90,19 +90,18 @@
 //
 //##
 
-@footer-hr-color:                @gray-lighter;
+@footer-border-color:            @gray-lighter;
 
-@footer-color:                   lighten(@gray-light, 12%);
-@footer-noscript-color:          #d35400;
+@footer-color:                   @gray-darker;
 
 // Footer links
-@footer-link-color:              @gray-light;
-@footer-link-hover-color:        @gray;
-@footer-link-active-color:       @gray;
+@footer-link-color:              @site-link-color;
+@footer-link-hover-color:        @site-link-hover-color;
+@footer-link-active-color:       @site-link-active-color;
 
 // Misago's branding
 @misago-branding-color:          @gray-light;
-@misago-branding-size:           @font-size-base + 2px;
+@misago-branding-size:           @font-size-small;
 
 
 //== Loader

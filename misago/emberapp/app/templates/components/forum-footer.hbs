@@ -2,9 +2,13 @@
   <div class="container">
     <div class="footer-content">
 
-    {{#if hasContent}}
-      <div class="first-row">
-        <ul class="list-inline footer-nav">
+      {{#if hasContent}}
+      <ul class="list-inline footer-nav">
+        {{#if settings.forum_footnote}}
+          <li class="site-footnote">
+            {{settings.forum_footnote}}
+          </li>
+        {{/if}}
         {{#if showTermsLink}}
           <li>
           {{#if settings.terms_of_service_link }}
@@ -23,21 +27,12 @@
           {{/if}}
           </li>
         {{/if}}
-        {{#if settings.forum_footnote}}
-          <li class="site-footnote">
-            {{settings.forum_footnote}}
-          </li>
-        {{/if}}
-        </ul>
-      </div>
-    {{/if}}
+      </ul>
+      {{/if}}
 
-      <div class="misago-branding">
-        <a href="http://misago-project.org">
-          <span class="subscript">powered by</span>
-          <span class="brand-border"><span>m</span></span><span class="subscript">isago</span>
-        </a>
-      </div>
+      <a href="http://misago-project.org" class="misago-branding">
+        powered by <strong>misago</strong>
+      </a>
 
     </div>
   </div>
