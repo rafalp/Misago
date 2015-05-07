@@ -1,4 +1,83 @@
-<p class="navbar-text">
-  {{user-avatar id=auth.user.id size=200}}
-  {{auth.user.username}}
-</p>
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  {{user-avatar user=auth.user.id size=28}}
+  <span class="fa fa-bars hidden-xs hidden-sm"></span>
+</a>
+<ul class="dropdown-menu user-dropdown dropdown-menu-right" role="menu">
+  <li class="user-preview">
+
+    <div class="media">
+      <div class="media-left">
+
+        <button type="button" class="btn editable-avatar">
+          {{user-avatar user=auth.user.id size=100}}
+          <div class="help">
+            {{gettext "Change avatar"}}
+          </div>
+        </button>
+
+      </div>
+      <div class="media-body">
+
+        <h4 class="media-heading">{{auth.user.username}}</h4>
+
+        <p class="text-muted">
+          {{auth.user.full_title}}
+        </p>
+
+        <div class="row">
+          <div class="col-xs-6">
+            <button type="button" class="btn btn-outlined btn-default btn-block btn-sm">
+              {{gettext "Profile"}}
+            </button>
+          </div>
+          <div class="col-xs-6">
+            <button type="button" class="btn btn-outlined btn-default btn-block btn-sm">
+              {{gettext "Options"}}
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </li>
+  <li class="dropdown-space hidden-md hidden-lg">
+    <button type="button" class="btn btn-outlined btn-success btn-block">
+      <span class="glyphicon glyphicon-comment"></span>
+      {{gettext "Start thread"}}
+    </button>
+  </li>
+  <li class="divider hidden-md hidden-lg"></li>
+  <li>
+    <a href="#">
+      <span class="fa fa-exclamation-triangle fa-fw"></span>
+      {{gettext "Reports"}}
+      <span class="badge">132</span>
+    </a>
+  </li>
+  <li>
+    <a href="#">
+      <span class="fa fa-bell-o fa-fw"></span>
+      {{gettext "Notifications"}}
+      <span class="badge">132</span>
+    </a>
+  </li>
+  <li>
+    <a href="#">
+      <span class="fa fa-inbox fa-fw"></span>
+      {{gettext "Private threads"}}
+      <span class="badge">132</span>
+    </a>
+  </li>
+  <li>
+    <a href="#">
+      <span class="fa fa-bookmark fa-fw"></span>
+      {{gettext "Subscriptions"}}
+    </a>
+  </li>
+  <li class="dropdown-footer">
+    <button type="button" class="btn btn-outlined btn-default btn-block" {{action "logout"}}>
+      {{gettext "Log out"}}
+    </button>
+  </li>
+</ul>

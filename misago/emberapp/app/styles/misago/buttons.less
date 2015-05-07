@@ -2,9 +2,43 @@
 // Buttons
 // --------------------------------------------------
 
+// Mixin for styles
+.btn-outlined-style(@border, @bg, @color) {
+  &, &:visited {
+    background-color: transparent;
+    border-color: @border;
 
-// Double border size on default and lg buttons
-.btn {
+    color: @border;
+  }
+
+  &:hover, &:focus {
+    background-color: fadeOut(@bg, 60%);
+    border-color: @border;
+
+    color: @color;
+  }
+
+  &:active {
+    background-color: darken(@bg, 10%);
+    border-color: @border;
+    .box-shadow(none);
+
+    color: @color;
+  }
+
+  &.disabled {
+    &, &:visited, &:hover, &:focus, &:active {
+      background-color: transparent;
+      border-color: desaturate(@border, 50%);
+
+      color: desaturate(@border, 50%);
+    }
+  }
+}
+
+
+// Outlined button
+.btn-outlined {
   border-width: 2px;
 
   .button-size(@padding-base-vertical - 1; @padding-base-horizontal; @font-size-base; @line-height-base; @border-radius-base);
@@ -22,11 +56,35 @@
     border-width: 1px;
     .button-size(@padding-xs-vertical; @padding-xs-horizontal; @font-size-small; @line-height-small; @border-radius-small);
   }
-}
 
+  // Outline varieties for buttons
+  &.btn-default, &.btn-primary, &.btn-success, &.btn-info, &.btn-warning, &.btn-danger {
+    &, &:visited {
+      background-color: transparent;
+    }
+  }
 
-// Extra states for default btn
-.btn {
+  &.btn-primary {
+    .btn-outlined-style(@btn-primary-border, @btn-primary-bg, @btn-primary-color);
+  }
+
+  &.btn-success {
+    .btn-outlined-style(@btn-success-border, @btn-success-bg, @btn-success-color);
+  }
+
+  &.btn-info {
+    .btn-outlined-style(@btn-info-border, @btn-info-bg, @btn-info-color);
+  }
+
+  &.btn-warning {
+    .btn-outlined-style(@btn-warning-border, @btn-warning-bg, @btn-warning-color);
+  }
+
+  &.btn-danger {
+    .btn-outlined-style(@btn-danger-border, @btn-danger-bg, @btn-danger-color);
+  }
+
+  // Extra states for default btn
   &.btn-default {
     &:hover,
     &:focus,

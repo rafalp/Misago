@@ -3,52 +3,221 @@
 // --------------------------------------------------
 
 
-// Navbar brand
-.navbar-primary {
-  border-bottom-width: 1px;
+// Affixed navbar
+.navbar-spacer {
+  margin-bottom: @line-height-computed;
 
-  .navbar-brand {
-    font-size: @font-size-large * 1.2;
+  .navbar-primary {
+    border-bottom-width: 1px;
+    margin: 0px;
 
-    img {
-      border-radius: @border-radius-small;
-      display: inline-block;
-      height: @navbar-height - @navbar-padding-vertical * 2 + 3px;
+    &.affix {
+      .box-shadow(0px 0px 3px fadeOut(#333, 70%));
 
-      position: relative;
-      bottom: 2px;
+      width: 100%;
+      top: 0px;
     }
   }
 }
 
 
-// Navbar nav
+// Navbar brand
+.navbar-primary {
+  .navbar-brand {
+    font-size: @font-size-large * 1.2;
+    font-weight: @weight-light;
+
+    img {
+      display: inline-block;
+      height: @navbar-brand-height;
+      margin: ((@line-height-computed - @navbar-brand-height) / 2) 0px;
+
+      position: relative;
+      bottom: 3px;
+    }
+  }
+}
+
+
+// Navbar navs
 .navbar-primary {
   .navbar-nav {
+    float: left;
 
-    // Make icons bigger
+    &>li {
+      float: left;
+
+      &>a {
+        // Scale links up
+        font-size: @navbar-link-size;
+
+        // We don't use .active states in navbar
+        &:active, &:focus {
+          color: @navbar-default-link-active-color;
+        }
+
+        // Align badges to glyhps
+        &>.badge {
+          vertical-align: inherit;
+          margin: (@line-height-computed / -2) 0px;
+        }
+
+        &>.glyphicon {
+          position: relative;
+          top: 4px;
+        }
+      }
+    }
+  }
+}
+
+
+// User Menu
+.navbar-primary {
+  .navbar-user-nav {
+    float: right;
+
+    .btn-success {
+      position: relative;
+      top: 1px;
+    }
+  }
+
+  .user-menu {
+    .dropdown-toggle {
+      .fa {
+        font-size: @font-size-base;
+      }
+
+      img {
+        border-radius: @avatar-radius-small;
+        margin: (@line-height-computed / -2) 0px;
+
+        width: 28px;
+        height: 28px;
+      }
+    }
+  }
+}
+
+
+// Guest Menu
+.navbar-primary {
+  .navbar-guest-nav {
+    float: right;
+
+    .btn {
+      position: relative;
+      top: 1px;
+    }
+  }
+}
+
+
+// Dropdowns
+.navbar-static-top {
+  & .navbar-nav > li > .dropdown-menu {
+    border-radius: @dropdown-border-radius;
+  }
+}
+
+
+// Compact nav
+@media (max-width: @screen-sm-max) {
+  .navbar-primary {
+    min-height: @navbar-compact-height;
+  }
+}
+
+.navbar-primary {
+  .navbar-compact-nav {
+    margin: 0px;
+    float: none;
+    width: 100%;
+
     &>li {
       &>a {
-        .fa, .glyphicon {
-          position: relative;
-          top: (@font-size-large - @font-size-base) / 2 + 1px;
+        padding: @navbar-compact-padding-vertical 0px;
+        height: @navbar-compact-height;
 
-          font-size: @font-size-large;
+        text-align: center;
+
+        // Align glyphs to middle of height
+        .glyphicon {
+          position: static;
+
+          font-size: 20px;
+        }
+
+        // Align images
+        img {
+          width: 28px;
+          margin: ((@line-height-computed - 28) / 2) 0px;
+
+          position: relative;
+          bottom: 2px;
+        }
+
+        // Custom touched style
+        &:active {
+          background-color: @navbar-compact-link-active-bg;
+
+          color: @navbar-compact-link-active-color;
         }
       }
     }
 
-    // Uncollapse the nav
-    float: right;
-    margin: 0;
+    .dropdown {
+      &.open .dropdown-toggle {
+        background-color: @navbar-compact-link-active-bg;
 
-    > li {
-      float: left;
-      > a {
-        padding-top:    @navbar-padding-vertical;
-        padding-bottom: @navbar-padding-vertical;
+        color: @navbar-compact-link-active-color;
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        float: right;
+        width: 300px;
+        margin-top: 2px;
+        background-color: @dropdown-bg;
+        border: 1px solid @dropdown-fallback-border; // IE8 fallback
+        border: 1px solid @dropdown-border;
+        border-radius: @dropdown-border-radius;
+        .box-shadow(@dropdown-shadow);
       }
     }
 
+    // Even widths
+    &.with-4-links {
+      &>li {
+        width: 25%;
+      }
+    }
+
+    &.with-5-links {
+      &>li {
+        width: 20%;
+      }
+    }
+
+    &.with-6-links {
+      &>li {
+        width: 16%;
+
+        &:first-child, &:last-child {
+          width: 18%;
+        }
+      }
+    }
+
+    &.with-7-links {
+      &>li {
+        width: 14%;
+
+        &:first-child, &:last-child {
+          width: 15%;
+        }
+      }
+    }
   }
 }

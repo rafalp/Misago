@@ -1,24 +1,153 @@
 <nav class="navbar navbar-primary navbar-default navbar-static-top" role="navigation">
-  <div class="container">
+<div class="container">
 
-    {{#link-to 'index' class="navbar-brand"}}
-      <img src="{{unbound staticUrl}}misago/img/misago_logo.png" alt="">
-      <span>{{settings.forum_name}}</span>
+  {{#if settings.forum_branding_display}}
+    {{#link-to 'index' class="navbar-brand hidden-xs hidden-sm"}}
+      <img src="{{unbound staticUrl}}misago/img/site-logo.png" alt="">
+      {{#if settings.forum_branding_text}}
+        <span class="hidden-xs hidden-sm">{{settings.forum_branding_text}}</span>
+      {{/if}}
     {{/link-to}}
+  {{/if}}
 
-    {{#if auth.isAuthenticated}}
-      {{user-nav}}
-    {{else}}
-    <div class="guest-nav navbar-right">
-      <button type="button" class="btn btn-default btn-login navbar-btn btn-sm" {{action "showModal" "login"}}>
-        {{gettext "Sign in"}}
+  <ul class="nav navbar-nav hidden-xs hidden-sm">
+    <li>
+      <a href="#">
+        {{gettext "Threads"}}
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        {{gettext "Forums"}}
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        {{gettext "Feeds"}}
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        {{gettext "Users"}}
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        {{gettext "Search"}}
+      </a>
+    </li>
+  </ul>
+
+  {{#if auth.isAuthenticated}}
+  <ul class="nav navbar-nav navbar-user-nav hidden-xs hidden-sm">
+    <li class="">
+      <a href="#">
+        <span class="fa fa-exclamation-triangle fa-lg"></span>
+        <span class="badge">132</span>
+      </a>
+    </li>
+    <li class="user-notices dropdown">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+        <span class="fa fa-bell-o fa-lg"></span>
+        <span class="badge">132</span>
+      </a>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="#">Action</a></li>
+        <li><a href="#">Another action</a></li>
+        <li><a href="#">Something else here</a></li>
+        <li class="divider"></li>
+        <li><a href="#">Separated link</a></li>
+      </ul>
+    </li>
+    {{user-nav}}
+    <li>
+      <button type="button" class="btn btn-outlined btn-success navbar-btn">
+        <span class="glyphicon glyphicon-comment"></span>
+        {{gettext "Start thread"}}
       </button>
+    </li>
+  </ul>
+  {{else}}
+  <div class="navbar-guest-nav hidden-xs hidden-sm">
+    <button type="button" class="btn btn-outlined btn-default navbar-btn" {{action "showModal" "login"}}>
+      {{gettext "Sign in"}}
+    </button>
 
-      {{#register-button class="btn btn-info btn-join navbar-btn btn-sm"}}
-        {{gettext "Join now"}}
-      {{/register-button}}
-    </div>
-    {{/if}}
+    {{#register-button class="btn btn-outlined btn-success navbar-btn"}}
+      {{gettext "Register account"}}
+    {{/register-button}}
+  </div>
+  {{/if}}
+</div><!-- /full navbar -->
 
-  </div><!-- /.container -->
+<ul class="nav navbar-nav navbar-compact-nav hidden-md hidden-lg {{if settings.forum_branding_display "with-7-links" "with-6-links"}}">
+  {{#if settings.forum_branding_display}}
+  <li class="compact-brand">
+    <a href="#">
+      <img src="{{unbound staticUrl}}misago/img/site-icon.png" alt="">
+    </a>
+  </li>
+  {{/if}}
+  <li>
+    <a href="#">
+      <span class="glyphicon glyphicon-comment"></span>
+    </a>
+  </li>
+  <li>
+    <a href="#">
+      <span class="glyphicon glyphicon-th-list"></span>
+    </a>
+  </li>
+  <li>
+    <a href="#">
+      <span class="glyphicon glyphicon-heart-empty"></span>
+    </a>
+  </li>
+  <li>
+    <a href="#">
+      <span class="glyphicon glyphicon-user"></span>
+    </a>
+  </li>
+  <li>
+    <a href="#">
+      <span class="glyphicon glyphicon-search"></span>
+    </a>
+  </li>
+  {{#if auth.isAuthenticated}}
+  {{user-nav}}
+  {{else}}
+  <li class="user-menu dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+      {{user-avatar size=28}}
+    </a>
+    <ul class="dropdown-menu user-dropdown dropdown-menu-right" role="menu">
+      <li class="guest-preview">
+
+        <div class="media">
+          <div class="media-body">
+
+            <h4 class="media-heading">{{gettext "You are browsing as guest."}}</h4>
+
+            <div class="row">
+              <div class="col-xs-6">
+                <button type="button" class="btn btn-outlined btn-default btn-block btn-sm" {{action "showModal" "login"}}>
+                  {{gettext "Sign in"}}
+                </button>
+              </div>
+              <div class="col-xs-6">
+                {{#register-button class="btn btn-outlined btn-success btn-block btn-sm"}}
+                  {{gettext "Register account"}}
+                {{/register-button}}
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </li>
+    </ul>
+  </li>
+  {{/if}}
+</ul>
+<!-- /.compact navbar -->
 </nav>

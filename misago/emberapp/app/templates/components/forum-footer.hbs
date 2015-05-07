@@ -1,39 +1,37 @@
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-content">
+<div class="container">
+  <div class="footer-content">
 
-      {{#if hasContent}}
-      <ul class="list-inline footer-nav">
-        {{#if settings.forum_footnote}}
-          <li class="site-footnote">
-            {{settings.forum_footnote}}
-          </li>
-        {{/if}}
-        {{#if showTermsLink}}
-          <li>
-          {{#if settings.terms_of_service_link }}
-            <a href="{{unbound settings.terms_of_service_link}}">{{gettext "Terms of service" }}</a>
-          {{else}}
-            {{#link-to 'terms-of-service'}}{{gettext "Terms of service" }}{{/link-to}}
-          {{/if}}
-          </li>
-        {{/if}}
-        {{#if showPrivacyLink}}
-          <li>
-          {{#if settings.privacy_policy_link }}
-            <a href="{{unbound settings.privacy_policy_link}}">{{gettext "Privacy policy" }}</a>
-          {{else}}
-            {{#link-to 'privacy-policy'}}{{gettext "Privacy policy" }}{{/link-to}}
-          {{/if}}
-          </li>
-        {{/if}}
-      </ul>
+    {{#if hasContent}}
+    <ul class="list-inline footer-nav">
+      {{#if settings.forum_footnote}}
+        <li class="site-footnote">
+          {{settings.forum_footnote}}
+        </li>
       {{/if}}
+      {{#if showTermsLink}}
+        <li>
+        {{#if settings.terms_of_service_link }}
+          <a href="{{unbound settings.terms_of_service_link}}">{{gettext "Terms of service" }}</a>
+        {{else}}
+          {{#link-to 'terms-of-service'}}{{gettext "Terms of service" }}{{/link-to}}
+        {{/if}}
+        </li>
+      {{/if}}
+      {{#if showPrivacyLink}}
+        <li>
+        {{#if settings.privacy_policy_link }}
+          <a href="{{unbound settings.privacy_policy_link}}">{{gettext "Privacy policy" }}</a>
+        {{else}}
+          {{#link-to 'privacy-policy'}}{{gettext "Privacy policy" }}{{/link-to}}
+        {{/if}}
+        </li>
+      {{/if}}
+    </ul>
+    {{/if}}
 
-      <a href="http://misago-project.org" class="misago-branding">
-        powered by <strong>misago</strong>
-      </a>
+    <a href="http://misago-project.org" class="misago-branding">
+      powered by <strong>misago</strong>
+    </a>
 
-    </div>
   </div>
-</footer>
+</div>

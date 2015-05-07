@@ -5,7 +5,7 @@ import getToastMessage from '../helpers/toast-message';
 
 var application;
 
-module('Acceptance: Application Error Handler', {
+module('Acceptance: Toasting Error Handler', {
   beforeEach: function() {
     application = startApp();
   },
@@ -21,13 +21,13 @@ test('some unhandled error occured', function(assert) {
   assert.expect(1);
 
   Ember.$.mockjax({
-    url: '/api/auth/login/',
+    url: '/api/auth/',
     status: 500
   });
 
   visit('/');
 
-  click('.guest-nav .btn-login');
+  click('.navbar-guest-nav button.btn-default');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -41,13 +41,13 @@ test('app went away', function(assert) {
   assert.expect(1);
 
   Ember.$.mockjax({
-    url: '/api/auth/login/',
+    url: '/api/auth/',
     status: 0
   });
 
   visit('/');
 
-  click('.guest-nav .btn-login');
+  click('.navbar-guest-nav button.btn-default');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -61,7 +61,7 @@ test('not found', function(assert) {
   assert.expect(1);
 
   Ember.$.mockjax({
-    url: '/api/auth/login/',
+    url: '/api/auth/',
     status: 404,
     responseText: {
       'detail': 'Not found'
@@ -70,7 +70,7 @@ test('not found', function(assert) {
 
   visit('/');
 
-  click('.guest-nav .btn-login');
+  click('.navbar-guest-nav button.btn-default');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -84,7 +84,7 @@ test('permission denied', function(assert) {
   assert.expect(1);
 
   Ember.$.mockjax({
-    url: '/api/auth/login/',
+    url: '/api/auth/',
     status: 403,
     responseText: {
       'detail': 'Permission denied'
@@ -93,7 +93,7 @@ test('permission denied', function(assert) {
 
   visit('/');
 
-  click('.guest-nav .btn-login');
+  click('.navbar-guest-nav button.btn-default');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -107,7 +107,7 @@ test('permission denied with reason', function(assert) {
   assert.expect(1);
 
   Ember.$.mockjax({
-    url: '/api/auth/login/',
+    url: '/api/auth/',
     status: 403,
     responseText: {
       'detail': 'Lorem ipsum dolor met.'
@@ -116,7 +116,7 @@ test('permission denied with reason', function(assert) {
 
   visit('/');
 
-  click('.guest-nav .btn-login');
+  click('.navbar-guest-nav button.btn-default');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');

@@ -25,7 +25,7 @@ test('registration is closed', function(assert) {
   assert.expect(1);
 
   visit('/');
-  click('.guest-nav button.btn-join');
+  click('.navbar-guest-nav button.btn-success');
 
   andThen(function() {
     assert.equal(Ember.$.trim(find('.modal-register-closed .lead').text()), 'New registrations are currently not being accepted.');
@@ -36,7 +36,7 @@ test('register with empty credentials', function(assert) {
   assert.expect(1);
 
   visit('/');
-  click('.guest-nav button.btn-join');
+  click('.navbar-guest-nav button.btn-success');
   click('#appModal .btn-primary');
 
   andThen(function() {
@@ -48,7 +48,7 @@ test('register with invalid credentials', function(assert) {
   assert.expect(1);
 
   visit('/');
-  click('.guest-nav button.btn-join');
+  click('.navbar-guest-nav button.btn-success');
   fillIn('#appModal #id_username', 'a');
   fillIn('#appModal #id_password', 'b');
   fillIn('#appModal #id_email', 'c');
@@ -68,7 +68,7 @@ test('register with rejected credentials', function(assert) {
   });
 
   visit('/');
-  click('.guest-nav button.btn-join');
+  click('.navbar-guest-nav button.btn-success');
   fillIn('#appModal #id_username', 'Lorem');
   fillIn('#appModal #id_password', 'ipsum123');
   fillIn('#appModal #id_email', 'lorem@ipsum.com');
@@ -98,7 +98,7 @@ test('register banned', function(assert) {
   });
 
   visit('/');
-  click('.guest-nav button.btn-join');
+  click('.navbar-guest-nav button.btn-success');
   fillIn('#appModal #id_username', 'Lorem');
   fillIn('#appModal #id_password', 'ipsum123');
   fillIn('#appModal #id_email', 'lorem@ipsum.com');
@@ -129,7 +129,7 @@ test('register active user', function(assert) {
   });
 
   visit('/');
-  click('.guest-nav button.btn-join');
+  click('.navbar-guest-nav button.btn-success');
   fillIn('#appModal #id_username', 'Lorem');
   fillIn('#appModal #id_password', 'ipsum123');
   fillIn('#appModal #id_email', 'lorem@ipsum.com');
@@ -155,7 +155,7 @@ test('register admin-activated user', function(assert) {
   });
 
   visit('/');
-  click('.guest-nav button.btn-join');
+  click('.navbar-guest-nav button.btn-success');
   fillIn('#appModal #id_username', 'Lorem');
   fillIn('#appModal #id_password', 'ipsum123');
   fillIn('#appModal #id_email', 'lorem@ipsum.com');
@@ -181,7 +181,7 @@ test('register self-activated user', function(assert) {
   });
 
   visit('/');
-  click('.guest-nav button.btn-join');
+  click('.navbar-guest-nav button.btn-success');
   fillIn('#appModal #id_username', 'Lorem');
   fillIn('#appModal #id_password', 'ipsum123');
   fillIn('#appModal #id_email', 'lorem@ipsum.com');

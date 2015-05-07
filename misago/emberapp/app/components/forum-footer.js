@@ -1,6 +1,9 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+  tagName: 'footer',
+  classNames: 'site-footer',
+
   showTermsLink: function() {
     return this.get('settings.terms_of_service') || this.get('settings.terms_of_service_link');
   }.property('settings'),

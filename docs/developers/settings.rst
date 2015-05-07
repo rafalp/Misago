@@ -135,10 +135,22 @@ default_timezone
 Default timezone used by guests and newly registered users that haven't changed their timezone prefferences.
 
 
+forum_branding_display
+----------------------
+
+Controls branding's visibility in forum navbar.
+
+
+forum_branding_text
+-------------------
+
+Allows you to include text besides brand logo on your forum.
+
+
 forum_name
 ----------
 
-Forum name, displayed in default templates forum navbar and in titles of pages.
+Forum name, displayed in titles of pages.
 
 
 forum_index_meta_description

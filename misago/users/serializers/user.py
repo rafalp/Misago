@@ -4,12 +4,14 @@ from rest_framework import serializers
 
 from misago.acl import serialize_acl
 
+from misago.users.serializers import RankSerializer
 
 __ALL__ = ['AuthenticatedUserSerializer', 'AnonymousUserSerializer']
 
 
 class AuthenticatedUserSerializer(serializers.ModelSerializer):
     acl = serializers.SerializerMethodField()
+    rank = RankSerializer(many=False, read_only=True)
 
     class Meta:
         model = get_user_model()
@@ -21,6 +23,9 @@ class AuthenticatedUserSerializer(serializers.ModelSerializer):
             'joined_on',
             'is_hiding_presence',
             'title',
+            'full_title',
+            'short_title',
+            'rank',
             'new_notifications',
             'limits_private_thread_invites_to',
             'unread_private_threads',

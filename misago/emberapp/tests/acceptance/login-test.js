@@ -27,7 +27,7 @@ test('login with empty credentials', function(assert) {
   assert.expect(1);
 
   visit('/');
-  click('.guest-nav button.btn-login');
+  click('.navbar-guest-nav button.btn-default');
   click('#appModal .btn-primary');
 
   andThen(function() {
@@ -39,13 +39,13 @@ test('backend errored', function(assert) {
   assert.expect(1);
 
   Ember.$.mockjax({
-    url: "/api/auth/login/",
+    url: '/api/auth/',
     status: 500
   });
 
   visit('/');
 
-  click('.guest-nav .btn-login');
+  click('.navbar-guest-nav .btn-default');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -60,7 +60,7 @@ test('login with invalid credentials', function(assert) {
 
   var message = 'Login or password is incorrect.';
   Ember.$.mockjax({
-    url: "/api/auth/login/",
+    url: '/api/auth/',
     status: 400,
     responseText: {
       'detail': message,
@@ -70,7 +70,7 @@ test('login with invalid credentials', function(assert) {
 
   visit('/');
 
-  click('.guest-nav .btn-login');
+  click('.navbar-guest-nav .btn-default');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -85,7 +85,7 @@ test('login to user-activated account', function(assert) {
 
   var message = 'You have to activate your account before you will be able to sign in.';
   Ember.$.mockjax({
-    url: "/api/auth/login/",
+    url: '/api/auth/',
     status: 400,
     responseText: {
       'detail': message,
@@ -95,7 +95,7 @@ test('login to user-activated account', function(assert) {
 
   visit('/');
 
-  click('.guest-nav .btn-login');
+  click('.navbar-guest-nav .btn-default');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -110,7 +110,7 @@ test('login to admin-activated account', function(assert) {
 
   var message = 'Your account has to be activated by Administrator before you will be able to sign in.';
   Ember.$.mockjax({
-    url: "/api/auth/login/",
+    url: '/api/auth/',
     status: 400,
     responseText: {
       'detail': message,
@@ -120,7 +120,7 @@ test('login to admin-activated account', function(assert) {
 
   visit('/');
 
-  click('.guest-nav .btn-login');
+  click('.navbar-guest-nav .btn-default');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -134,7 +134,7 @@ test('login to banned account', function(assert) {
   assert.expect(3);
 
   Ember.$.mockjax({
-    url: "/api/auth/login/",
+    url: '/api/auth/',
     status: 400,
     responseText: {
       'detail': {
@@ -150,7 +150,7 @@ test('login to banned account', function(assert) {
 
   visit('/');
 
-  click('.guest-nav .btn-login');
+  click('.navbar-guest-nav .btn-default');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -170,7 +170,7 @@ test('login successfully', function(assert) {
   assert.expect(2);
 
   Ember.$.mockjax({
-    url: "/api/auth/login/",
+    url: '/api/auth/',
     status: 200,
     responseText: {
       'username': 'SomeFake'
@@ -179,7 +179,7 @@ test('login successfully', function(assert) {
 
   visit('/');
 
-  click('.guest-nav .btn-login');
+  click('.navbar-guest-nav .btn-default');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');

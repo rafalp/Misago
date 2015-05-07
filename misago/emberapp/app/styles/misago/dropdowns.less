@@ -1,0 +1,64 @@
+//
+// Dropdowns
+// --------------------------------------------------
+
+
+// Dropdowns style
+.dropdown-menu {
+  border-radius: @dropdown-border-radius;
+  .box-shadow(@dropdown-shadow);
+}
+
+
+.dropdown-menu > li > a > .badge {
+  float: right;
+}
+
+.dropdown-space {
+  padding: 7px 20px;
+}
+
+.dropdown-footer {
+  background: @dropdown-footer-bg;
+  border-top: 1px solid @dropdown-footer-border;
+  border-radius: 0px 0px @dropdown-border-radius @dropdown-border-radius;
+  padding: 7px 20px;
+}
+
+
+// User dropdown
+.user-dropdown {
+  width: 300px;
+  padding: 0px;
+
+  .user-preview, .guest-preview {
+    border-bottom: 1px solid @dropdown-divider-bg;
+    margin-bottom: 8px;
+    padding: 12px 20px;
+
+    .editable-avatar {
+      margin-right: 4px;
+    }
+
+    .row {
+      margin-top: @line-height-computed * 1.3;
+
+      div:first-child {
+        padding-right: 4px;
+      }
+
+      div:last-child {
+        padding-left: 4px;
+      }
+    }
+  }
+
+  .guest-preview {
+    border-bottom: 0px;
+    margin-bottom: 4px;
+  }
+
+  .dropdown-footer {
+    margin-top: 8px;
+  }
+}

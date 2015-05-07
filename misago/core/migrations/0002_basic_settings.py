@@ -48,6 +48,27 @@ def create_basic_settings_group(apps, schema_editor):
                     },
                 },
                 {
+                    'setting': 'forum_branding_display',
+                    'name': _("Display branding"),
+                    'description': _("Switch branding in forum's navbar."),
+                    'legend': _("Branding"),
+                    'value': True,
+                    'python_type': 'bool',
+                    'form_field': 'yesno',
+                    'is_public': True,
+                },
+                {
+                    'setting': 'forum_branding_text',
+                    'name': _("Branding text"),
+                    'description': _("Optional text displayed besides "
+                                     "brand image in navbar."),
+                    'value': "isago",
+                    'field_extra': {
+                        'max_length': 255
+                    },
+                    'is_public': True,
+                },
+                {
                     'setting': 'email_footer',
                     'name': _("E-mails footer"),
                     'description': _("Optional short message included "

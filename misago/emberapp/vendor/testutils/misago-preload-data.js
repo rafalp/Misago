@@ -19,7 +19,7 @@ window.MisagoData = {
     "privacy_policy_title": "Polityka prywatno\u015bci",
     "privacy_policy": true,
 
-    "loginApiUrl": "auth/login",
+    "loginApiUrl": "auth",
 
     "loginUrl": "/login/",
     "loginRedirectUrl": "/",
