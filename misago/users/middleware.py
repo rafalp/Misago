@@ -9,8 +9,6 @@ from misago.conf import settings
 from misago.users.bans import get_request_ip_ban, get_user_ban
 from misago.users.models import AnonymousUser, Online
 from misago.users.online import tracker
-from misago.users.serializers import (AuthenticatedUserSerializer,
-                                      AnonymousUserSerializer)
 
 
 class RealIPMiddleware(object):
@@ -37,22 +35,6 @@ class UserMiddleware(object):
         elif not request.user.is_superuser:
             if get_request_ip_ban(request) or get_user_ban(request.user):
                 logout(request)
-
-
-class PreloadUserMiddleware(object):
-    def process_request(self, request):
-        request.preloaded_ember_data.update({
-            'isAuthenticated': request.user.is_authenticated(),
-        })
-
-        if request.user.is_authenticated():
-            request.preloaded_ember_data.update({
-                'user': AuthenticatedUserSerializer(request.user).data
-            })
-        else:
-            request.preloaded_ember_data.update({
-                'user': AnonymousUserSerializer(request.user).data
-            })
 
 
 class OnlineTrackerMiddleware(object):

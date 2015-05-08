@@ -121,14 +121,12 @@ MIDDLEWARE_CLASSES = (
     'misago.users.middleware.AvatarServerMiddleware',
     'misago.users.middleware.RealIPMiddleware',
     'misago.core.middleware.preloademberdata.PreloadEmberDataMiddleware',
-    'misago.conf.middleware.PreloadConfigMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'misago.users.middleware.UserMiddleware',
-    'misago.users.middleware.PreloadUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'misago.core.middleware.exceptionhandler.ExceptionHandlerMiddleware',
@@ -147,9 +145,14 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
     'misago.core.context_processors.site_address',
-    'misago.core.context_processors.preloaded_ember_data',
     'misago.conf.context_processors.settings',
     'misago.users.context_processors.sites_links',
+    # Preloading data
+    'misago.conf.context_processors.preload_config_json',
+    'misago.users.context_processors.preload_user_json',
+    # Note: keep preloaded_ember_data processor last for previous processors
+    # to be able to add data to request.preloaded_ember_data
+    'misago.core.context_processors.preloaded_ember_data',
 )
 
 MISAGO_ACL_EXTENSIONS = (
