@@ -147,8 +147,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'misago.core.context_processors.site_address',
     'misago.conf.context_processors.settings',
     'misago.users.context_processors.sites_links',
-    # Preloading data
-    'misago.conf.context_processors.preload_config_json',
+    # Data preloaders
+    'misago.conf.context_processors.preload_settings_json',
     'misago.users.context_processors.preload_user_json',
     # Note: keep preloaded_ember_data processor last for previous processors
     # to be able to add data to request.preloaded_ember_data

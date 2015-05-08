@@ -15,7 +15,7 @@ def settings(request):
     }
 
 
-def preload_config_json(request):
+def preload_settings_json(request):
     preloaded_settings = db_settings.get_public_settings()
 
     preloaded_settings.update({
