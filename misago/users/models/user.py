@@ -5,10 +5,9 @@ from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
                                         AnonymousUser as DjangoAnonymousUser)
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
-from django.db import models, transaction
+from django.db import IntegrityError, models, transaction
 from django.dispatch import receiver
 from django.utils import timezone
-dj_timezone = timezone
 from django.utils.translation import ugettext_lazy as _
 
 from misago.acl import get_user_acl
@@ -234,9 +233,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_posted_on = models.DateTimeField(null=True, blank=True)
     last_searched_on = models.DateTimeField(null=True, blank=True)
 
-    reads_cutoff = models.DateTimeField(default=dj_timezone.now)
-    new_threads_cutoff = models.DateTimeField(default=dj_timezone.now)
-    unread_threads_cutoff = models.DateTimeField(default=dj_timezone.now)
+    reads_cutoff = models.DateTimeField(default=timezone.now)
+    new_threads_cutoff = models.DateTimeField(default=timezone.now)
+    unread_threads_cutoff = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = 'slug'
     REQUIRED_FIELDS = ['email']
@@ -420,6 +419,12 @@ class Online(models.Model):
     current_ip = models.GenericIPAddressField()
     last_click = models.DateTimeField(default=timezone.now)
     is_visible_on_index = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        try:
+            super(Online, self).save(*args, **kwargs)
+        except IntegrityError:
+            pass # first come is first serve in online tracker
 
 
 class UsernameChange(models.Model):

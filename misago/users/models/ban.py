@@ -1,7 +1,7 @@
 import re
 
 from django.conf import settings
-from django.db import models
+from django.db import IntegrityError, models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
@@ -128,6 +128,12 @@ class BanCache(models.Model):
     user_message = models.TextField(null=True, blank=True)
     staff_message = models.TextField(null=True, blank=True)
     expires_on = models.DateTimeField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        try:
+            super(BanCache, self).save(*args, **kwargs)
+        except IntegrityError:
+            pass # first come is first serve with ban cache
 
     @property
     def is_banned(self):
