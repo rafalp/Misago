@@ -1,6 +1,6 @@
 import AjaxService from 'misago/services/ajax';
 
-export function initialize(_container, application) {
+export function initialize(container, application) {
   application.register('service:ajax', AjaxService, { singleton: true });
 
   application.inject('service:ajax', 'store', 'store:main');

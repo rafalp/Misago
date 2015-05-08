@@ -10,6 +10,7 @@ export function initialize(container, application) {
 
   application.inject('service:auth', 'isAuthenticated', 'misago:isAuthenticated');
   application.inject('service:auth', 'user', 'misago:user');
+  application.inject('service:auth', 'session', 'store:local');
 
   application.inject('route', 'auth', 'service:auth');
   application.inject('controller', 'auth', 'service:auth');
@@ -18,5 +19,6 @@ export function initialize(container, application) {
 
 export default {
   name: 'auth-service',
+  after: 'local-store',
   initialize: initialize
 };

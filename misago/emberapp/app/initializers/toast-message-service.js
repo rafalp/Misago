@@ -1,6 +1,6 @@
 import ToastMessageService from 'misago/services/toast-message';
 
-export function initialize(_container, application) {
+export function initialize(container, application) {
   application.register('service:toast-message', ToastMessageService, { singleton: true });
 
   [ 'route', 'controller', 'component' ].forEach((factory) => {
