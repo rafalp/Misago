@@ -8,9 +8,16 @@ export default Ember.Component.extend({
     this.$().height(this.$().height());
 
     // affix navbar
+    var offset = this.$('.navbar').offset().top;
+    if (offset === 0) {
+      // workaround around bootstrap affix mishandling elements
+      // with resting position on top of page
+      offset = 1;
+    }
+
     this.$('.navbar').affix({
       offset: {
-        top: this.$('.navbar').offset().top
+        top: offset
       }
     });
   }.on('didInsertElement')
