@@ -4,7 +4,7 @@ export default Ember.Service.extend({
   // State synchronization across tabs
 
   needsSync: false, // becomes true if auth state between tabs differs
-  syncToUser: false, // becomes user obj to which we want to sync or none for anon
+  syncToUser: null, // becomes user obj to which we want to sync or null for anon
 
   syncSession: function() {
     this.session.setItem('auth-user', this.get('user'));
@@ -12,16 +12,36 @@ export default Ember.Service.extend({
 
     var self = this;
     this.session.watchItem('auth-is-authenticated', function(isAuthenticated) {
-      if (!self.get('needsSync')) {
-        // display annoying "you were desynced" message
-        self.set('needsSync', true);
+      self._handleAuthChange(isAuthenticated);
+    });
 
-        if (isAuthenticated) {
-          self.set('syncToUser', Ember.Object.create(self.session.getItem('auth-user')));
-        }
-      }
+    this.session.watchItem('auth-user', function(newUser) {
+      self._handleUserChange(newUser);
     });
   }.on('init'),
+
+  _handleAuthChange: function(isAuthenticated) {
+    if (!this.get('needsSync')) {
+      // display annoying "you were desynced" message
+      this.set('needsSync', true);
+
+      if (isAuthenticated) {
+        this.set('syncToUser', Ember.Object.create(this.session.getItem('auth-user')));
+      }
+    }
+  },
+
+  _handleUserChange: function(newUser) {
+    var userObj = Ember.Object.create(newUser);
+    if (userObj.get('id') !== this.get('user.id')) {
+      this.setProperties({
+        'needsSync': true,
+        'syncToUser': userObj,
+      });
+    } else {
+      this.get('user').setProperties(newUser);
+    }
+  },
 
   // Anon/auth state
   isAnonymous: Ember.computed.not('isAuthenticated'),

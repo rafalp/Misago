@@ -10,13 +10,17 @@ export default Ember.Service.extend({
 
     var self = this;
     window.addEventListener('storage', function(e) {
-      Ember.$.each(self.get('_watchers'), function(i, watcher) {
-        if (watcher.keyName === e.key) {
-          watcher.callback(e.newValue);
-        }
-      });
+      self._handleStorageEvent(e);
     });
   }.on('init'),
+
+  _handleStorageEvent: function(e) {
+    Ember.$.each(this.get('_watchers'), function(i, watcher) {
+      if (watcher.keyName === e.key) {
+        watcher.callback(e.newValue);
+      }
+    });
+  },
 
   prefixKey: function(keyName) {
     return this.get('_prefix') + keyName;

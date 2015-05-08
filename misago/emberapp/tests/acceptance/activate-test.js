@@ -156,7 +156,7 @@ test('request activation link with banned account', function(assert) {
   click('.activation-page form .btn-primary');
 
   andThen(function() {
-    var errorMessage = find('.lead p').text();
+    var errorMessage = find('.error-page .lead p').text();
     assert.equal(errorMessage, 'You are banned for trolling.');
 
     var expirationMessage = Ember.$.trim(find('.error-message>p').text());
@@ -223,7 +223,7 @@ test('permission denied is handled', function(assert) {
   andThen(function() {
     assert.equal(currentPath(), 'error-403');
 
-    var errorMessage = Ember.$.trim(find('.lead').text());
+    var errorMessage = Ember.$.trim(find('.error-page .lead').text());
     assert.equal(errorMessage, message);
   });
 });

@@ -222,7 +222,7 @@ test('permission denied is handled', function(assert) {
   andThen(function() {
     assert.equal(currentPath(), 'error-403');
 
-    var errorMessage = Ember.$.trim(find('.lead').text());
+    var errorMessage = Ember.$.trim(find('.error-page .lead').text());
     assert.equal(errorMessage, message);
   });
 });

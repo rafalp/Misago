@@ -101,7 +101,7 @@ test('permission denied with reason', function(assert) {
 
   andThen(function() {
     assert.equal(currentPath(), 'error-403');
-    var $e = find('.lead');
+    var $e = find('.error-page .lead');
     assert.equal(Ember.$.trim($e.text()), 'Lorem ipsum dolor met.');
   });
 });
@@ -128,7 +128,7 @@ test('banned', function(assert) {
   andThen(function() {
     assert.equal(currentPath(), 'error-banned');
 
-    var errorMessage = find('.lead p').text();
+    var errorMessage = find('.error-page .lead p').text();
     assert.equal(errorMessage, 'You are banned.');
 
     var expirationMessage = Ember.$.trim(find('.error-message>p').text());
