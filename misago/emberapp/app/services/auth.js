@@ -32,14 +32,16 @@ export default Ember.Service.extend({
   },
 
   _handleUserChange: function(newUser) {
-    var userObj = Ember.Object.create(newUser);
-    if (userObj.get('id') !== this.get('user.id')) {
-      this.setProperties({
-        'needsSync': true,
-        'syncToUser': userObj,
-      });
-    } else {
-      this.get('user').setProperties(newUser);
+    if (!this.get('needsSync')) {
+      var userObj = Ember.Object.create(newUser);
+      if (userObj.get('id') !== this.get('user.id')) {
+        this.setProperties({
+          'needsSync': true,
+          'syncToUser': userObj,
+        });
+      } else {
+        this.get('user').setProperties(newUser);
+      }
     }
   },
 
