@@ -33,8 +33,11 @@ def draw_default(user):
     return image
 
 
-COLOR_WHEEL = ('#1abc9c', '#2ecc71', '#3498db', '#9b59b6',
-               '#f1c40f', '#e67e22', '#e74c3c')
+COLOR_WHEEL = ('#d32f2f', '#c2185b', '#7b1fa2', '#512da8',
+               '#303f9f', '#1976d2', '#0288D1', '#0288d1',
+               '#0097a7', '#00796b', '#388e3c', '#689f38',
+               '#afb42b', '#fbc02d', '#ffa000', '#f57c00',
+               '#e64a19')
 COLOR_WHEEL_LEN = len(COLOR_WHEEL)
 
 
@@ -49,21 +52,6 @@ def draw_avatar_bg(user, image):
     bg_drawer = ImageDraw.Draw(image)
     bg_drawer.rectangle([(0, 0), image_size], rgb)
 
-    image_steps = 3
-    step_size = math.ceil(float(image_size[0]) / image_steps)
-    for x in xrange(image_steps):
-        x_step = float(x + 2) / image_steps
-
-        for y in xrange(image_steps):
-            y_step = float(y + 2) / image_steps
-
-            bit_rgb = (int(c * (1 - (x_step * y_step) / 5)) for c in rgb)
-            bit_pos = (x * step_size, y * step_size)
-            bit_size = (x * step_size + step_size, y * step_size + step_size)
-            bg_drawer.rectangle([bit_pos, bit_size], tuple(bit_rgb))
-
-    image = image.filter(ImageFilter.SHARPEN)
-
     return image
 
 
@@ -74,13 +62,9 @@ def draw_avatar_flavour(user, image):
     string = user.username[0]
 
     image_size = image.size[0]
-    max_string_size = image_size
 
-    size = int(max_string_size)
+    size = int(image_size * 0.7)
     font = ImageFont.truetype(FONT_FILE, size=size)
-    #while max(font.getsize(string)) > max_string_size:
-    #    size -= 1
-    #    font = ImageFont.truetype(FONT_FILE, size=size)
 
     text_size = font.getsize(string)
     text_pos = ((image_size - text_size[0]) / 2,
