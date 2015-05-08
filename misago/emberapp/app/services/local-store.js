@@ -16,7 +16,7 @@ export default Ember.Service.extend({
 
   _handleStorageEvent: function(e) {
     Ember.$.each(this.get('_watchers'), function(i, watcher) {
-      if (watcher.keyName === e.key) {
+      if (watcher.keyName === e.key && e.oldValue !== e.newValue) {
         watcher.callback(e.newValue);
       }
     });
