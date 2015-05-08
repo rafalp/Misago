@@ -13,11 +13,5 @@ export default Ember.Component.extend({
         top: this.$('.navbar').offset().top
       }
     });
-  }.on('didInsertElement'),
-
-  actions: {
-    showModal: function(template, model) {
-      this.modal.show(template, model);
-    }
-  }
+  }.on('didInsertElement')
 });

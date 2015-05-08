@@ -69,9 +69,9 @@
     </ul>
     {{else}}
     <div class="navbar-guest-nav hidden-xs hidden-sm">
-      <button type="button" class="btn btn-outlined btn-default navbar-btn" {{action "showModal" "login"}}>
+      {{#show-modal-button modal="login" class="btn btn-outlined btn-default navbar-btn"}}
         {{gettext "Sign in"}}
-      </button>
+      {{/show-modal-button}}
 
       {{#register-button class="btn btn-outlined btn-success navbar-btn"}}
         {{gettext "Register account"}}
@@ -130,9 +130,9 @@
 
               <div class="row">
                 <div class="col-xs-6">
-                  <button type="button" class="btn btn-outlined btn-default btn-block btn-sm" {{action "showModal" "login"}}>
+                  {{#show-modal-button modal="login" class="btn btn-outlined btn-default btn-block btn-sm"}}
                     {{gettext "Sign in"}}
-                  </button>
+                  {{/show-modal-button}}
                 </div>
                 <div class="col-xs-6">
                   {{#register-button class="btn btn-outlined btn-success btn-block btn-sm"}}
