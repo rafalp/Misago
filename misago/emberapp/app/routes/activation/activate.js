@@ -6,7 +6,7 @@ export default MisagoRoute.extend({
   },
 
   afterModel: function(model) {
-    this.modal.show('login');
+    this.modal.show('login-modal');
     this.toast.success(model.detail);
     return this.transitionTo('index');
   },

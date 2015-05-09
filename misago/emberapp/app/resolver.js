@@ -29,10 +29,30 @@ export default Resolver.extend({
     }
   },
 
+  misagoModalModuleName: function(parsedName) {
+    if (this._endsWith(parsedName.name, '-modal')) {
+      var isComponent = parsedName.type === 'component';
+      var isComponentTemplate = this._startsWith(parsedName.name, 'components/');
+
+      if (isComponent || isComponentTemplate) {
+        var path = parsedName.prefix + '/' +  this.pluralize(parsedName.type) + '/';
+
+        if (isComponentTemplate) {
+          path += 'components/modals/' + parsedName.fullNameWithoutType.substr(11);
+        } else {
+          path += 'modals/' + parsedName.fullNameWithoutType;
+        }
+
+        return path;
+      }
+    }
+  },
+
   // register custom lookup
   moduleNameLookupPatterns: Ember.computed(function(){
     return Ember.A([
       this.misagoFormModuleName,
+      this.misagoModalModuleName,
       this.podBasedModuleName,
       this.podBasedComponentsInSubdir,
       this.mainModuleName,

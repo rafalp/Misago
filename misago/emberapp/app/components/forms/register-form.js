@@ -207,7 +207,7 @@ export default Ember.Component.extend({
     model.set('isActive', model.get('activation') === 'active');
     model.set('needsAdminActivation', model.get('activation') === 'activation_by_admin');
 
-    this.modal.render('register.done', model);
+    this.modal.show('register-done-modal', model);
   },
 
   error: function(jqXHR) {

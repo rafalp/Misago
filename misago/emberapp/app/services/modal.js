@@ -2,21 +2,8 @@ import Ember from 'ember';
 
 export default Ember.Service.extend({
   _modal: null,
-
-  render: function(template, model) {
-    this.container.lookup('route:application').render('modals.' + template, {
-      into: 'application',
-      outlet: 'modal',
-      model: model || null
-    });
-  },
-
-  disconnect: function() {
-    this.container.lookup('route:application').disconnectOutlet({
-      outlet: 'modal',
-      parentView: 'application'
-    });
-  },
+  activeComponent: 'empty-modal',
+  activeModel: null,
 
   _setupModal: function() {
     var modal = null;
@@ -29,18 +16,24 @@ export default Ember.Service.extend({
 
     var self = this;
     modal.on('hidden.bs.modal', function() {
-      self.disconnect();
+      self.setProperties({
+        activeComponent: 'empty-modal',
+        activeModel: null
+      });
     });
 
     this.set('_modal', modal);
   },
 
-  show: function(template, model) {
+  show: function(component, model) {
     if (!this.get('_modal')) {
       this._setupModal();
     }
 
-    this.render(template, model);
+    this.setProperties({
+      activeComponent: component,
+      activeModel: model
+    });
 
     Ember.$('#appModal').modal('show');
   },

@@ -47,7 +47,7 @@ export default Ember.Component.extend({
   success: function() {
     this.set('password', '');
 
-    this.modal.show('login');
+    this.modal.show('login-modal');
     this.toast.success(gettext("Your password has been changed."));
   },
 

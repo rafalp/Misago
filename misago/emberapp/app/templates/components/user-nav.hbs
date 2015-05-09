@@ -1,5 +1,5 @@
 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-  {{user-avatar user=auth.user.id size=28}}
+  {{user-avatar user=auth.user size=28}}
   <span class="fa fa-bars hidden-xs hidden-sm"></span>
 </a>
 <ul class="dropdown-menu user-dropdown dropdown-menu-right" role="menu">
@@ -8,12 +8,12 @@
     <div class="media">
       <div class="media-left">
 
-        <button type="button" class="btn editable-avatar">
-          {{user-avatar user=auth.user.id size=100}}
+        {{#show-modal-button modal="change-avatar-modal" class="btn editable-avatar"}}
+          {{user-avatar user=auth.user size=100}}
           <div class="help">
             {{gettext "Change avatar"}}
           </div>
-        </button>
+        {{/show-modal-button}}
 
       </div>
       <div class="media-body">

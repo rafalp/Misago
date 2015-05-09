@@ -26,6 +26,7 @@ class AuthenticatedUserSerializer(serializers.ModelSerializer):
             'full_title',
             'short_title',
             'rank',
+            'avatar_hash',
             'new_notifications',
             'limits_private_thread_invites_to',
             'unread_private_threads',

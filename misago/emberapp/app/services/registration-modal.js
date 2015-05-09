@@ -14,6 +14,6 @@ export default Ember.Service.extend({
   }.on('init'),
 
   template: function() {
-    return 'register.' + this.get('stage');
+    return 'register-' + this.get('stage') + '-modal';
   }.property('stage')
 });
