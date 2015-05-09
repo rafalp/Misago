@@ -4,6 +4,7 @@ from path import Path
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.views.decorators.cache import cache_control, never_cache
 
 from misago.core.fileserver import make_file_response
 
@@ -11,6 +12,7 @@ from misago.users.avatars import store
 from misago.users.avatars.uploaded import avatar_source_token
 
 
+@cache_control(private=True, must_revalidate=True, max_age=5 * 24 * 3600)
 def serve_blank_avatar(request, size):
     size = clean_size(size)
     avatar_dir = store.get_avatars_dir_path()
@@ -19,7 +21,8 @@ def serve_blank_avatar(request, size):
     return make_file_response(avatar_path, 'image/png')
 
 
-def serve_user_avatar(request, user_id, size):
+@cache_control(private=True, must_revalidate=False)
+def serve_user_avatar(request, hash, user_id, size):
     size = clean_size(size)
 
     if int(user_id) > 0:
@@ -36,6 +39,7 @@ def serve_user_avatar(request, user_id, size):
         return serve_blank_avatar(request, size)
 
 
+@never_cache
 def serve_user_avatar_source(request, user_id, token, type):
     fallback_avatar = get_blank_avatar_file(min(settings.MISAGO_AVATARS_SIZES))
     User = get_user_model()

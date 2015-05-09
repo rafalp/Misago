@@ -40,8 +40,16 @@ class AvatarsStoreTests(TestCase):
             self.assertTrue(avatar.exists())
             self.assertTrue(avatar.isfile())
 
+        # Compute avatar hash
+        test_user.avatar_hash = store.get_avatar_hash(test_user)
+        self.assertEqual(len(test_user.avatar_hash), 8)
+        test_user.save(update_fields=['avatar_hash'])
+
         # Delete avatar
         store.delete_avatar(test_user)
+        for size in settings.MISAGO_AVATARS_SIZES:
+            avatar = Path('%s/%s_%s.png' % (avatar_dir, test_user.pk, size))
+            self.assertFalse(avatar.exists())
 
 
 class AvatarSetterTests(TestCase):

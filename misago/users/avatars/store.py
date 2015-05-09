@@ -15,6 +15,23 @@ def normalize_image(image):
     return image.copy().convert('RGBA')
 
 
+def get_avatar_hash(user):
+    avatars_dir = get_existing_avatars_dir(user)
+
+    avatar_file = '%s_%s.png' % (user.pk, max(settings.MISAGO_AVATARS_SIZES))
+    avatar_file = Path(os.path.join(avatars_dir, avatar_file))
+
+    md5_hash = md5()
+
+    with open(avatar_file, 'rb') as f:
+        while True:
+            data = f.read(128)
+            if not data:
+                break
+            md5_hash.update(data)
+    return md5_hash.hexdigest()[:8]
+
+
 def store_avatar(user, image):
     avatars_dir = get_existing_avatars_dir(user)
 

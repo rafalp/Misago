@@ -7,13 +7,11 @@ register = template.Library()
 
 @register.filter(name='avatar')
 def avatar(user, size=200):
-    try:
-        user_pk = user.pk
-    except:
-        user_pk = user
-
-    return reverse('misago:user_avatar',
-                   kwargs={'user_id': user_pk, 'size': size})
+    return reverse('misago:user_avatar', kwargs={
+        'user_id': user.id,
+        'hash': user.avatar_hash,
+        'size': size
+    })
 
 
 @register.simple_tag

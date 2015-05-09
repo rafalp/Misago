@@ -117,13 +117,16 @@ class UserManager(BaseUserManager):
 
             if set_default_avatar:
                 avatars.set_default_avatar(user)
+                user.avatar_hash = avatars.get_avatar_hash(user)
+            else:
+                user.avatar_hash = 'abcdef01'
 
             authenticated_role = Role.objects.get(special_role='authenticated')
             if authenticated_role not in user.roles.all():
                 user.roles.add(authenticated_role)
-
             user.update_acl_key()
-            user.save(update_fields=['acl_key'])
+
+            user.save(update_fields=['avatar_hash', 'acl_key'])
 
             return user
 
@@ -193,6 +196,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     acl_key = models.CharField(max_length=12, null=True, blank=True)
 
     is_avatar_locked = models.BooleanField(default=False)
+    avatar_hash = models.CharField(max_length=8)
     avatar_crop = models.CharField(max_length=255, null=True, blank=True)
     avatar_lock_user_message = models.TextField(null=True, blank=True)
     avatar_lock_staff_message = models.TextField(null=True, blank=True)

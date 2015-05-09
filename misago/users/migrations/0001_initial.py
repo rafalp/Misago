@@ -40,6 +40,7 @@ class Migration(migrations.Migration):
                 ('roles', models.ManyToManyField(to='misago_acl.Role')),
                 ('user_permissions', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Permission', blank=True, help_text='Specific permissions for this user.', verbose_name='user permissions')),
                 ('is_avatar_locked', models.BooleanField(default=False)),
+                ('avatar_hash', models.CharField(max_length=8, null=True, blank=True)),
                 ('avatar_crop', models.CharField(max_length=255, null=True, blank=True)),
                 ('avatar_lock_user_message', models.TextField(null=True, blank=True)),
                 ('avatar_lock_staff_message', models.TextField(null=True, blank=True)),

@@ -23,5 +23,5 @@ def set_default_avatar(user):
             dynamic.set_avatar(user)
 
 
-def delete_avatar(user):
-    store.delete_avatar(user)
+get_avatar_hash = store.get_avatar_hash
+delete_avatar = store.delete_avatar
