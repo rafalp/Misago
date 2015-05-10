@@ -15,9 +15,10 @@ export default Ember.Service.extend({
   }.on('init'),
 
   _handleStorageEvent: function(e) {
+    var newValueJson = JSON.parse(e.newValue);
     Ember.$.each(this.get('_watchers'), function(i, watcher) {
       if (watcher.keyName === e.key && e.oldValue !== e.newValue) {
-        watcher.callback(e.newValue);
+        watcher.callback(newValueJson);
       }
     });
   },
@@ -31,9 +32,9 @@ export default Ember.Service.extend({
   },
 
   getItem: function(keyName) {
-    var itemJson = this.get('_storage').getItem(this.prefixKey(keyName));
-    if (itemJson) {
-      return JSON.parse(itemJson);
+    var itemString = this.get('_storage').getItem(this.prefixKey(keyName));
+    if (itemString) {
+      return JSON.parse(itemString);
     } else {
       return null;
     }

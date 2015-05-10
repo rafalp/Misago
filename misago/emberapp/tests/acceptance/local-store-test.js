@@ -39,9 +39,13 @@ test('registered watcher is fired', function(assert) {
     done();
   });
 
-  service._handleStorageEvent({key: 'unwatchedKey'});
+  service._handleStorageEvent({
+    key: 'unwatchedKey',
+    newValue: JSON.stringify('nope')
+  });
+
   service._handleStorageEvent({
     key: service.prefixKey(testKey),
-    newValue: testValue
+    newValue: JSON.stringify(testValue)
   });
 });
