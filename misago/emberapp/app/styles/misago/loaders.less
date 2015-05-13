@@ -1,8 +1,9 @@
 //
-// Misago Spinner
+// Misago Spinners
 // --------------------------------------------------
 
 
+// Big spinner used for transitions
 .loader {
   // CSS Spinner (c) Luke Haas (MIT Licensed)
   // http://lukehaas.me
@@ -70,5 +71,26 @@
       -webkit-transform: rotate(360deg);
       transform: rotate(360deg);
     }
+  }
+}
+
+
+// Loading overlay used for images
+.loading-overlay {
+  position: absolute; // needs to be positioned inside relative
+
+  top: 0px;
+  left: 0px;
+
+  display: table;
+  background-color: @loading-overlay-bg;
+
+  color: @loading-overlay-color;
+
+  &>.overlay-icon {
+    display: table-cell;
+    vertical-align: middle;
+
+    text-align: center;
   }
 }

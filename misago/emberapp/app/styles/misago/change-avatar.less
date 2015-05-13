@@ -1,0 +1,237 @@
+//
+// Change avatar modal styles
+// --------------------------------------------------
+
+
+// Default form styles
+.avatar-options-menu {
+  .avatar-preview {
+    position: relative;
+
+    margin: 0px auto;
+    margin-bottom: @line-height-computed;
+    width: 60%;
+
+    img {
+      border-radius: @avatar-radius;
+      width: 100%;
+      height: auto;
+    }
+
+    .loading-overlay {
+      border-radius: @avatar-radius;
+    }
+  }
+
+  @media (min-width: @screen-md-min) {
+    .avatar-preview {
+      width: 100%;
+    }
+
+    .btn-block {
+      text-align: left;
+    }
+  }
+}
+
+
+// Avatar upload
+.avatar-upload {
+  input.file-upload {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  .upload-file {
+    margin-top: @line-height-computed;
+    margin-bottom: @line-height-computed * 1.5;
+
+    text-align: center;
+
+    .btn {
+      margin-bottom: @line-height-computed / 3;
+    }
+
+    p {
+      font-size: @font-size-small;
+    }
+  }
+
+  .uploading-file {
+    margin-top: @line-height-computed;
+    margin-bottom: @line-height-computed * 1.5;
+
+    text-align: center;
+
+    img {
+      border-radius: @border-radius-base;
+      margin-bottom: @line-height-computed * .7;
+
+      max-width: 50%;
+      height: auto;
+    }
+
+    .progress {
+      margin-left: auto;
+      margin-right: auto;
+
+      width: 100%;
+
+      @media (min-width: @screen-md-min) {
+        width: 70%;
+      }
+    }
+  }
+}
+
+
+// Avatar crop
+.avatar-crop {
+  .image-cropper {
+    margin: 0px auto;
+    margin-bottom: @line-height-computed;
+
+    .cropit-image-zoom-input {
+      margin-top: @line-height-computed / 2;
+
+      /*removes default webkit styles*/
+      -webkit-appearance: none;
+
+      /*fix for FF unable to apply focus style bug */
+      border: 1px solid white;
+
+      /*required for proper track sizing in FF*/
+      width: 100%;
+
+      &::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 8px;
+        background: @gray-lighter;
+        border: none;
+        border-radius: 3px;
+      }
+
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        border: none;
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background: @gray-light;
+        margin-top: -6px;
+      }
+
+      &:focus {
+        outline: none;
+      }
+
+      &:focus::-webkit-slider-runnable-track {
+        background: @gray-lighter;
+      }
+
+      &::-moz-range-track {
+        width: 100%;
+        height: 8px;
+        background: @gray-lighter;
+        border: none;
+        border-radius: 4px;
+      }
+
+      &::-moz-range-thumb {
+        border: none;
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background: @gray-light;
+      }
+
+      /*hide the outline behind the border*/
+      &:-moz-focusring{
+        outline: 1px solid white;
+        outline-offset: -1px;
+      }
+
+      &::-ms-track {
+        width: 100%;
+        height: 8px;
+
+        /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+        background: transparent;
+
+        /*leave room for the larger thumb to overflow with a transparent border */
+        border-color: transparent;
+        border-width: 8px 0;
+
+        /*remove default tick marks*/
+        color: transparent;
+      }
+
+      &::-ms-fill-lower {
+        background: @gray-lighter;
+        border-radius: 16px;
+      }
+
+      &::-ms-fill-upper {
+        background: @gray-lighter;
+        border-radius: 16px;
+      }
+
+      &::-ms-thumb {
+        border: none;
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background: @gray-light;
+      }
+
+      &:focus::-ms-fill-lower {
+        background: @gray-lighter;
+      }
+
+      &:focus::-ms-fill-upper {
+        background: @gray-lighter;
+      }
+    }
+  }
+}
+
+
+// Avatar galleries
+.avatar-galleries {
+  .avatar-gallery {
+    border-bottom: 1px solid @hr-border;
+    padding-bottom: @line-height-computed;
+    margin-bottom: @line-height-computed;
+
+    .gallery-name {
+      margin: 0px;
+      padding-bottom: @line-height-computed / 2;
+    }
+
+    .row {
+      margin-top: @line-height-computed / 2;
+      margin-bottom: @line-height-computed / 2;
+    }
+
+    .btn {
+      border-radius: @avatar-radius + 2px;
+      margin: 0px;
+      padding: 2px;
+
+      position: relative;
+
+      img {
+        border-radius: @avatar-radius;
+        width: 100%;
+      }
+
+      .loading-overlay {
+        border-radius: @avatar-radius;
+
+        left: 2px;
+        top: 2px;
+      }
+    }
+  }
+}

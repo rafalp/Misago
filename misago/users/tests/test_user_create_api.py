@@ -7,7 +7,7 @@ from misago.conf import settings
 from misago.users.testutils import UserTestCase
 
 
-class CreateTests(UserTestCase):
+class UserCreateTests(UserTestCase):
     """
     tests for new user registration (POST to /api/users/)
     """

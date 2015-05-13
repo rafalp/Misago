@@ -65,13 +65,12 @@ class AuthViewsTests(TestCase):
     def test_logout_view(self):
         """logout view logs user out on post"""
         response = self.client.post(
-            reverse('misago:api:login'),
-            data={'username': 'nope', 'password': 'nope'})
+            '/api/auth/', data={'username': 'nope', 'password': 'nope'})
 
         self.assertEqual(response.status_code, 400)
         self.assertIn("Login or password is incorrect.", response.content)
 
-        response = self.client.get(reverse('misago:api:auth_user'))
+        response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
         user_json = json.loads(response.content)
@@ -80,7 +79,7 @@ class AuthViewsTests(TestCase):
         response = self.client.post(reverse('misago:logout'))
         self.assertEqual(response.status_code, 302)
 
-        response = self.client.get(reverse('misago:api:auth_user'))
+        response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
         user_json = json.loads(response.content)

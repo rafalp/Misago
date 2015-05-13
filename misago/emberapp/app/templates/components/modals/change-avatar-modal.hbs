@@ -3,8 +3,29 @@
     <h4 class="modal-title" id="appModalLabel">{{gettext "Change your avatar"}}</h4>
   {{/modal-header}}
 
+  {{#if isLoaded}}
   <div class="modal-body">
-    <p class="lead">Wop, this is first modal done as 100% components!</p>
+    {{component activeForm options=options activeForm=activeForm}}
   </div>
+  {{else if error}}
+  <div class="modal-body modal-message">
 
+    <div class="message-icon">
+      <span class="fa fa-warning fa-4x text-muted"></span>
+    </div>
+
+    <p class="lead">
+      {{error.detail}}
+    </p>
+
+    {{#if error.reason}}
+      {{{error.reason}}}
+    {{/if}}
+
+  </div>
+  {{else}}
+  <div class="modal-body modal-message">
+    <div class="loader"></div>
+  </div>
+  {{/if}}
 </div>

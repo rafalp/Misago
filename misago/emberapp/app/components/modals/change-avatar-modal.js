@@ -3,12 +3,28 @@ import ModalComponent from 'misago/mixins/modal-component';
 
 export default Ember.Component.extend(ModalComponent, {
   className: 'modal-change-avatar',
+  isLoaded: false,
+  error: false,
+  options: null,
 
-  hello: function() {
-    console.log('hello!');
+  loadOptions: function() {
+    var self = this;
+    this.ajax.get('users/' + this.auth.get('user.id') + '/avatar'
+    ).then(function(options) {
+      if (self.isDestroyed) { return; }
+      self.set('options', Ember.Object.create(options));
+      self.set('isLoaded', true);
+    }, function(jqXHR) {
+      if (self.isDestroyed) { return; }
+      if (typeof jqXHR.responseJSON !== 'undefined') {
+        self.set('error', jqXHR.responseJSON);
+      } else {
+        self.set('error', {detail: gettext('Application has errored.')});
+      }
+    });
   }.on('didInsertElement'),
 
-  bye: function() {
-    console.log('bubai!');
-  }.on('willDestroyElement')
+  // Page control
+
+  activeForm: 'select-avatar-type-form'
 });

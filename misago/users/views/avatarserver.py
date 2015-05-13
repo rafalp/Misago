@@ -9,7 +9,6 @@ from django.views.decorators.cache import cache_control, never_cache
 from misago.core.fileserver import make_file_response
 
 from misago.users.avatars import store
-from misago.users.avatars.uploaded import avatar_source_token
 
 
 @cache_control(private=True, must_revalidate=True, max_age=5 * 24 * 3600)
@@ -40,15 +39,15 @@ def serve_user_avatar(request, hash, user_id, size):
 
 
 @never_cache
-def serve_user_avatar_source(request, user_id, token, type):
+def serve_user_avatar_source(request, user_id, token, suffix):
     fallback_avatar = get_blank_avatar_file(min(settings.MISAGO_AVATARS_SIZES))
     User = get_user_model()
 
     if user_id > 0:
         try:
             user = User.objects.get(id=user_id)
-            if token == avatar_source_token(user, type):
-                avatar_file = get_user_avatar_file(user.pk, type)
+            if token == store.get_avatar_hash(user, suffix):
+                avatar_file = get_user_avatar_file(user.pk, suffix)
             else:
                 avatar_file = fallback_avatar
         except User.DoesNotExist:

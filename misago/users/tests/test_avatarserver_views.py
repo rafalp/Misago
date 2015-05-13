@@ -13,8 +13,11 @@ class AvatarServerTests(TestCase):
         test_user = User.objects.create_user('Bob', 'bob@bob.com', 'pass123',
                                              set_default_avatar=True)
 
-        avatar_url = reverse('misago:user_avatar',
-                             kwargs={'user_id': test_user.pk, 'size': 150})
+        avatar_url = reverse('misago:user_avatar', kwargs={
+            'hash': test_user.avatar_hash,
+            'user_id': test_user.pk,
+            'size': 150
+        })
         response = self.client.get(avatar_url)
 
         self.assertEqual(response.status_code, 200)
@@ -22,8 +25,11 @@ class AvatarServerTests(TestCase):
 
     def test_deleted_user_avatar_serving(self):
         """avatar server handles deleted user avatar requests"""
-        avatar_url = reverse('misago:user_avatar',
-                             kwargs={'user_id': 123, 'size': 150})
+        avatar_url = reverse('misago:user_avatar', kwargs={
+            'hash': '12356af',
+            'user_id': 12345,
+            'size': 150
+        })
         response = self.client.get(avatar_url)
 
         self.assertEqual(response.status_code, 200)

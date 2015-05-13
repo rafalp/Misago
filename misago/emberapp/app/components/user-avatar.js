@@ -12,17 +12,13 @@ export default Ember.Component.extend({
     var src = Ember.$('base').attr('href') + 'user-avatar/';
 
     if (this.get('user.id')) {
-      if (this.get('prefix') && this.get('token')) {
-        // special avatar source
-        src += this.get('prefix') + ':' + this.get('token') + '/';
-      } else {
-        // just avatar hash and size
-        src += this.get('user.avatar_hash') + '/' + this.get('size') + '/';
-      }
-      return src + this.get('user.id') + '.png';
+      // just avatar hash, size and user id
+      src += this.get('user.avatar_hash') + '/' + this.get('size') + '/' + this.get('user.id') + '.png';
     } else {
       // just append avatar size to file to produce no-avatar placeholder
-      return src + this.get('size') + '.png';
+      src += this.get('size') + '.png';
     }
+
+    return src;
   }.property('user.id', 'user.avatar_hash', 'size')
 });

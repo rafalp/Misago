@@ -108,17 +108,41 @@ class MockAvatarFile(object):
 
 
 class UploadedAvatarTests(TestCase):
-    def test_crop(self):
-        """crop validation and clear"""
+    def test_clean_crop(self):
+        """crop validation and cleaning"""
         image = Image.new("RGBA", (200, 200), 0)
         with self.assertRaises(ValidationError):
-            uploaded.crop_string_to_dict(image, "abc")
+            uploaded.clean_crop(image, "abc")
         with self.assertRaises(ValidationError):
-            uploaded.crop_string_to_dict(image, "2,2,4,a")
+            uploaded.clean_crop(image, {})
         with self.assertRaises(ValidationError):
-            uploaded.crop_string_to_dict(image, "300,300,400,400,0,0,10,10")
+            uploaded.clean_crop(image, {'offset': {'x': 'ugabuga'}})
 
-        uploaded.crop_string_to_dict(image, "200,200,90,90,0,0,90,90")
+        with self.assertRaises(ValidationError):
+            uploaded.clean_crop(image, {
+                    'offset': {
+                        'x': 0,
+                        'y': 0,
+                    },
+                    'zoom': -2
+                })
+
+        with self.assertRaises(ValidationError):
+            uploaded.clean_crop(image, {
+                    'offset': {
+                        'x': 0,
+                        'y': 0,
+                    },
+                    'zoom': 2
+                })
+
+            uploaded.clean_crop(image, {
+                    'offset': {
+                        'x': 0,
+                        'y': 0,
+                    },
+                    'zoom': 0
+                })
 
     def test_uploaded_image_size_validation(self):
         """uploaded image size is validated"""

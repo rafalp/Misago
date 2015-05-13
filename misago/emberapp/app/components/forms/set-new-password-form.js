@@ -15,9 +15,7 @@ export default Ember.Component.extend({
   }.property('model'),
 
   submit: function() {
-    if (this.get('isLoading')) {
-      return false;
-    }
+    if (this.get('isLoading')) { return false; }
 
     var password = Ember.$.trim(this.get('password'));
 

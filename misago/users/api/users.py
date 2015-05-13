@@ -1,25 +1,16 @@
-from django.contrib.auth import authenticate, get_user_model, login
+from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
-from django.views.decorators.csrf import csrf_protect
 
-from rest_framework import status, viewsets
-from rest_framework.response import Response
+from rest_framework import viewsets
+from rest_framework.decorators import detail_route
+from rest_framework.parsers import JSONParser, MultiPartParser
 
-from misago.conf import settings
-from misago.core import forms
-from misago.core.mail import mail_user
-
-from misago.users import captcha
-from misago.users.bans import ban_ip
-from misago.users.forms.register import RegisterForm
-from misago.users.models import (ACTIVATION_REQUIRED_USER,
-                                 ACTIVATION_REQUIRED_ADMIN)
 from misago.users.rest_permissions import (BasePermission,
     IsAuthenticatedOrReadOnly, UnbannedAnonOnly)
-from misago.users.serializers import AuthenticatedUserSerializer
-from misago.users.tokens import make_activation_token
-from misago.users.validators import validate_new_registration
+
+from misago.users.api.userendpoints.avatar import avatar_endpoint
+from misago.users.api.userendpoints.create import create_endpoint
 
 
 class UserViewSetPermission(BasePermission):
@@ -31,114 +22,29 @@ class UserViewSetPermission(BasePermission):
         return policy.has_permission(request, view)
 
 
+def allow_self_only(user, pk, message):
+    if user.is_anonymous():
+        raise PermissionDenied(
+            _("You have to sign in to perform this action."))
+    if user.pk != int(pk):
+        raise PermissionDenied(message)
+
+
 class UserViewSet(viewsets.ViewSet):
     permission_classes = (UserViewSetPermission,)
+    parser_classes=(JSONParser, MultiPartParser)
     queryset = get_user_model().objects.all()
 
     def list(self, request):
         pass
 
     def create(self, request):
-        return _create_user(request)
+        return create_endpoint(request)
 
+    @detail_route(methods=['get', 'post'])
+    def avatar(self, request, pk=None):
+        allow_self_only(
+            request.user, pk, _("You can't change other users avatars."))
 
-@csrf_protect
-def _create_user(request):
-    if settings.account_activation == 'closed':
-        raise PermissionDenied(
-            _("New users registrations are currently closed."))
+        return avatar_endpoint(request)
 
-    form = RegisterForm(request.data)
-
-    try:
-        captcha.test_request(request)
-    except forms.ValidationError as e:
-        form.add_error('captcha', e)
-
-    if not form.is_valid():
-        return Response(form.errors,
-                        status=status.HTTP_400_BAD_REQUEST)
-
-    captcha.reset_session(request.session)
-
-    try:
-        validate_new_registration(
-            request.user_ip,
-            form.cleaned_data['username'],
-            form.cleaned_data['email'])
-    except PermissionDenied:
-        staff_message = _("This ban was automatically imposed on "
-                          "%(date)s due to denied register attempt.")
-
-        message_formats = {'date': date_format(timezone.now())}
-        staff_message = staff_message % message_formats
-        validation_ban = ban_ip(
-            request.user_ip,
-            staff_message=staff_message,
-            length={'days': 1}
-        )
-
-        raise PermissionDenied(
-            _("Your IP address is banned from performing this action."),
-            {'ban': validation_ban.get_serialized_message()})
-
-    activation_kwargs = {}
-    if settings.account_activation == 'user':
-        activation_kwargs = {
-            'requires_activation': ACTIVATION_REQUIRED_USER
-        }
-    elif settings.account_activation == 'admin':
-        activation_kwargs = {
-            'requires_activation': ACTIVATION_REQUIRED_ADMIN
-        }
-
-    User = get_user_model()
-    new_user = User.objects.create_user(form.cleaned_data['username'],
-                                        form.cleaned_data['email'],
-                                        form.cleaned_data['password'],
-                                        joined_from_ip=request.user_ip,
-                                        set_default_avatar=True,
-                                        **activation_kwargs)
-
-    mail_subject = _("Welcome on %(forum_title)s forums!")
-    mail_subject = mail_subject % {'forum_title': settings.forum_name}
-
-    if settings.account_activation == 'none':
-        authenticated_user = authenticate(
-            username=new_user.email,
-            password=form.cleaned_data['password'])
-        login(request, authenticated_user)
-
-        mail_user(request, new_user, mail_subject,
-                  'misago/emails/register/complete')
-
-        return Response({
-            'activation': 'active',
-            'username': new_user.username,
-            'email': new_user.email
-        })
-    else:
-        activation_token = make_activation_token(new_user)
-
-        activation_by_admin = new_user.requires_activation_by_admin
-        activation_by_user = new_user.requires_activation_by_user
-
-        mail_user(
-            request, new_user, mail_subject,
-            'misago/emails/register/inactive',
-            {
-                'activation_token': activation_token,
-                'activation_by_admin': activation_by_admin,
-                'activation_by_user': activation_by_user,
-            })
-
-        if activation_by_admin:
-            activation_method = 'activation_by_admin'
-        else:
-            activation_method = 'activation_by_user'
-
-        return Response({
-            'activation': activation_method,
-            'username': new_user.username,
-            'email': new_user.email
-        })

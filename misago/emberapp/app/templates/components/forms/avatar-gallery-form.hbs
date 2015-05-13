@@ -1,0 +1,29 @@
+{{#each options.galleries as |gallery|}}
+<div class="avatar-gallery">
+  <h4 class="gallery-name">{{gallery.name}}</h4>
+
+  {{#each (batch-row gallery.images 4) as |row|}}
+  <div class="row">
+    {{#each row as |image|}}
+    <div class="col-sm-3">
+      <button type="button" class="btn btn-default btn-outlined {{if isBusy "disabled"}}" {{if isBusy "disabled"}} {{action "setAvatar" image}}>
+        <img src="{{mediaUrl}}/{{image}}" alt="">
+        {{loading-overlay itemName=image activeItem=activeItem}}
+      </button>
+    </div>
+    {{/each}}
+  </div>
+  {{/each}}
+</div>
+{{/each}}
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <button type="button" class="btn btn-default btn-outlined btn-block {{if isBusy "disabled"}}" {{if isBusy "disabled"}} {{action "cancel"}}>
+      {{#if isBusy}}
+        {{gettext "Setting avatar..."}}
+      {{else}}
+        {{gettext "Cancel"}}
+      {{/if}}
+    </button>
+  </div>
+</div>

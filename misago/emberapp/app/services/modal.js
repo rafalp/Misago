@@ -30,12 +30,16 @@ export default Ember.Service.extend({
       this._setupModal();
     }
 
+    var previousComponent = this.get('activeComponent');
+
     this.setProperties({
       activeComponent: component,
       activeModel: model
     });
 
-    Ember.$('#appModal').modal('show');
+    if (previousComponent === 'empty-modal') {
+      Ember.$('#appModal').modal('show');
+    }
   },
 
   hide: function() {

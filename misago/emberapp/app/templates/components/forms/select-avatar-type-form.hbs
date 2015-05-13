@@ -1,0 +1,41 @@
+<div class="row avatar-options-menu">
+  <div class="col-md-4">
+
+    <div class="avatar-preview">
+      {{user-avatar user=auth.user size=200}}
+      {{loading-overlay visible=isBusy}}
+    </div>
+
+  </div>
+  <div class="col-md-8">
+
+    {{#if options.gravatar}}
+    <button type="button" class="btn btn-outlined btn-default btn-block {{if isBusy "disabled"}}" {{if isBusy "disabled"}} {{action "setGravatar"}}>
+      {{gettext "Download my Gravatar"}}
+    </button>
+    {{/if}}
+
+    <button type="button" class="btn btn-outlined btn-default btn-block {{if isBusy "disabled"}}" {{if isBusy "disabled"}} {{action "setGenerated"}}>
+      {{gettext "Generate my individual avatar"}}
+    </button>
+
+    {{#if options.crop_org}}
+    <button type="button" class="btn btn-outlined btn-default btn-block {{if isBusy "disabled"}}" {{if isBusy "disabled"}} {{action "goTo" "avatar-crop-form"}}>
+      {{gettext "Re-crop uploaded image"}}
+    </button>
+    {{/if}}
+
+    {{#if options.upload}}
+    <button type="button" class="btn btn-outlined btn-default btn-block {{if isBusy "disabled"}}" {{if isBusy "disabled"}} {{action "goTo" "avatar-upload-form"}}>
+      {{gettext "Upload new image"}}
+    </button>
+    {{/if}}
+
+    {{#if options.galleries}}
+    <button type="button" class="btn btn-outlined btn-default btn-block {{if isBusy "disabled"}}" {{if isBusy "disabled"}} {{action "goTo" "avatar-gallery-form"}}>
+      {{gettext "Pick avatar from gallery"}}
+    </button>
+    {{/if}}
+
+  </div>
+</div>

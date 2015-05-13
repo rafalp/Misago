@@ -9,21 +9,24 @@ export default Ember.Service.extend({
     return this._ajax('GET', recordOrProperty, recordProperty);
   },
 
-  post: function(recordOrProcedure, dataOrProcedure, data) {
-    return this._ajax('POST', recordOrProcedure, dataOrProcedure, data);
+  post: function(recordOrProcedure, dataOrProcedure, dataOrUpload, upload) {
+    return this._ajax('POST', recordOrProcedure, dataOrProcedure, dataOrUpload, upload);
   },
 
-  _ajax: function(method, recordOrProcedure, dataOrProcedure, data) {
+  _ajax: function(method, recordOrProcedure, dataOrProcedure, dataOrUpload, upload) {
     // unpack arguments
+    var data = null;
     var record = null;
     var procedure = null;
 
     if (typeof recordOrProcedure === 'string') {
       procedure = recordOrProcedure;
       data = dataOrProcedure;
+      upload = dataOrUpload;
     } else {
       record = recordOrProcedure;
       procedure = dataOrProcedure;
+      data = dataOrUpload;
     }
 
     var model = null;
@@ -35,7 +38,7 @@ export default Ember.Service.extend({
     // note: in case of Model being null this cheats adapterFor to return
     // 'adapter:application'. we are doing this, because for some reason
     // store.defaultAdapter fails to return django adapter
-    var adapter = this.store.adapterFor(model || {typeKey: 'application'});
+    var adapter = this.getAdapter(model);
 
     // build api call URL
     var url = null;
@@ -46,7 +49,11 @@ export default Ember.Service.extend({
     }
 
     // return promise
-    return adapter.misagoAjax(method, url, data || null);
+    return adapter.misagoAjax(method, url, data || null, upload || null);
+  },
+
+  getAdapter: function(model) {
+    return this.store.adapterFor(model || {typeKey: 'application'});
   },
 
   buildRecordProcedureURL: function(adapter, model, record, procedure) {

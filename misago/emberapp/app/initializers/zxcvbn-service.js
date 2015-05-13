@@ -8,5 +8,6 @@ export function initialize(container, application) {
 
 export default {
   name: 'zxcvbn-service',
+  after: 'misago-settings',
   initialize: initialize
 };

@@ -1,0 +1,30 @@
+{{#if isLoading}}
+<div class="loader"></div>
+{{else}}
+<div class="image-cropper">
+  <div class="cropit-image-preview"></div>
+  <input type="range" class="cropit-image-zoom-input" />
+</div>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+
+    <button type="button" class="btn btn-primary btn-block {{if isCropping "disabled"}}" {{if isCropping "disabled"}} {{action "crop"}}>
+      {{#if isCropping}}
+        {{gettext "Cropping..."}}
+      {{else}}
+        {{#if isNested}}
+          {{gettext "Set avatar"}}
+        {{else}}
+          {{gettext "Crop image"}}
+        {{/if}}
+      {{/if}}
+    </button>
+
+    <button type="button" class="btn btn-default btn-outlined btn-block {{if isCropping "disabled"}}" {{if isCropping "disabled"}} {{action "cancel"}}>
+      {{gettext "Cancel"}}
+    </button>
+
+  </div>
+</div>
+{{/if}}

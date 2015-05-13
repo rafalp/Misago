@@ -45,6 +45,10 @@ export default Ember.Service.extend({
     }
   },
 
+  userObserver: function() {
+    this.session.setItem('auth-user', this.get('user'));
+  }.observes('user.avatar_hash'),
+
   // Anon/auth state
   isAnonymous: Ember.computed.not('isAuthenticated'),
 
