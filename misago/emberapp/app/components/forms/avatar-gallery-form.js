@@ -29,7 +29,11 @@ export default Ember.Component.extend({
         self.set('activeForm', 'select-avatar-type-form');
       }, function(jqXHR) {
         if (self.isDestroyed) { return; }
-        self.toast.apiError(jqXHR);
+        if (jqXHR.status === 400) {
+          self.toast.error(jqXHR.responseJSON.detail);
+        } else {
+          self.toast.apiError(jqXHR);
+        }
       }).finally(function() {
         if (self.isDestroyed) { return; }
         self.setProperties({

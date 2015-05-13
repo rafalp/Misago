@@ -1,16 +1,16 @@
 import Ember from 'ember';
-import ENV from '../config/environment';
+import config from '../config/environment';
 
 export default Ember.Service.extend({
   tick: Ember.computed.oneWay('_tick').readOnly(),
 
   doTick: function () {
     var self = this;
-    if (ENV.environment !== 'test') {
+    if (config.environment !== 'test') {
       // running this loop in tests will block promises resolution
       Ember.run.later(function () {
         self.toggleProperty('_tick');
-      }, ENV.APP.TICK_FREQUENCY);
+      }, config.APP.tickFrequency);
     }
   }.observes('_tick').on('init'),
 

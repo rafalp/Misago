@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import { module, test } from 'qunit';
 import startApp from '../helpers/start-app';
+import destroyModal from '../helpers/destroy-modal';
 import getToastMessage from '../helpers/toast-message';
 
 var application;
@@ -10,8 +11,7 @@ module('Acceptance: Toasting Error Handler', {
     application = startApp();
   },
   afterEach: function() {
-    Ember.$('#appModal').off();
-    Ember.$('body').removeClass('modal-open');
+    destroyModal();
     Ember.run(application, 'destroy');
     Ember.$.mockjax.clear();
   }

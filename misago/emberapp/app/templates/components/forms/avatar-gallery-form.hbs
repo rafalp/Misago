@@ -7,7 +7,7 @@
     {{#each row as |image|}}
     <div class="col-sm-3">
       <button type="button" class="btn btn-default btn-outlined {{if isBusy "disabled"}}" {{if isBusy "disabled"}} {{action "setAvatar" image}}>
-        <img src="{{mediaUrl}}/{{image}}" alt="">
+        <img src="{{mediaUrl}}{{image}}" alt="">
         {{loading-overlay itemName=image activeItem=activeItem}}
       </button>
     </div>

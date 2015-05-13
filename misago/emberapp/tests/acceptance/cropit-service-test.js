@@ -5,25 +5,24 @@ import startApp from '../helpers/start-app';
 
 var application, container, service;
 
-module('Acceptance: ZxcvbnService', {
+module('Acceptance: CropitService', {
   beforeEach: function() {
     application = startApp();
     container = application.__container__;
-    service = container.lookup('service:zxcvbn');
+    service = container.lookup('service:cropit');
   },
   afterEach: function() {
     Ember.run(application, 'destroy');
   }
 });
 
-test('loading zxcvbn and testing password with it', function(assert) {
+test('loading cropit jquery extension', function(assert) {
   var done = assert.async();
-  assert.expect(2);
+  assert.expect(1);
 
   Ember.run(function() {
     service.load().then(function() {
-      assert.ok(typeof zxcvbn !== 'undefined');
-      assert.ok(service.scorePassword('L0r3m !p5um') > 0);
+      assert.ok(typeof Ember.$.fn.cropit !== 'undefined');
       done();
     });
   });

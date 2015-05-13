@@ -38,9 +38,10 @@ module.exports = function(environment) {
       TICK_FREQUENCY: 15000,
 
       // Toastings time
-      TOAST_BASE_DISPLAY_TIME: 4000,
-      TOAST_LENGTH_FACTOR: 110,
-      TOAST_HIDE_ANIMATION_LENGTH: 200
+      toastBaseDisplayTime: 4000,
+      toastMaxDisplayTime: 9000,
+      toastLengthFactor: 110,
+      toastHideAnimationLength: 200
     }
   };
 
@@ -71,8 +72,9 @@ module.exports = function(environment) {
     ENV.APP.API_ADD_TRAILING_SLASHES = true;
 
     // Reduce toast display times for test runner
-    ENV.APP.TOAST_BASE_DISPLAY_TIME = 200;
-    ENV.APP.TOAST_LENGTH_FACTOR = 0;
+    ENV.APP.toastBaseDisplayTime = 200;
+    ENV.APP.toastMaxDisplayTime = 200;
+    ENV.APP.toastLengthFactor = 0;
   }
 
   if (environment === 'production') {

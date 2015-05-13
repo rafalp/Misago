@@ -2,6 +2,7 @@ import Ember from 'ember';
 import { module, test } from 'qunit';
 import startApp from '../helpers/start-app';
 import PreloadStore from 'misago/services/preload-store';
+import destroyModal from '../helpers/destroy-modal';
 import getToastMessage from '../helpers/toast-message';
 
 var application;
@@ -13,8 +14,7 @@ module('Acceptance: Register', {
 
   afterEach: function() {
     window.MisagoData['misagoSettings']['account_activation'] = 'none';
-    Ember.$('#appModal').off();
-    Ember.$('body').removeClass('modal-open');
+    destroyModal();
     Ember.run(application, 'destroy');
     Ember.$.mockjax.clear();
   }

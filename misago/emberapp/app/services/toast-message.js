@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import ENV from '../config/environment';
+import config from '../config/environment';
 
 export default Ember.Service.extend({
   id: null,
@@ -20,8 +20,11 @@ export default Ember.Service.extend({
       'isVisible': true
     });
 
-    var displayTime = ENV.APP.TOAST_BASE_DISPLAY_TIME;
-    displayTime += message.length * ENV.APP.TOAST_LENGTH_FACTOR;
+    var displayTime = config.APP.toastBaseDisplayTime;
+    displayTime += message.length * config.APP.toastLengthFactor;
+    if (displayTime > config.APP.toastMaxDisplayTime) {
+      displayTime = config.APP.toastMaxDisplayTime;
+    }
 
     var self = this;
     Ember.run.later(function () {
@@ -38,7 +41,7 @@ export default Ember.Service.extend({
       this.set('isVisible', false);
       Ember.run.later(function () {
         self._showToast(type, message);
-      }, ENV.APP.TOAST_HIDE_ANIMATION_LENGTH);
+      }, config.APP.toastHideAnimationLength);
     } else {
       this._showToast(type, message);
     }

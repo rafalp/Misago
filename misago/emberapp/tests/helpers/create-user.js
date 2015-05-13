@@ -20,6 +20,7 @@ export default function createUser(newProps) {
         "css_class": "team",
         "is_tab": true
     },
+    "avatar_hash": 'a0b9c8d7',
     "new_notifications": 0,
     "limits_private_thread_invites_to": 0,
     "unread_private_threads": 0,
