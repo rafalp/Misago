@@ -35,7 +35,7 @@ module.exports = function(environment) {
       API_ADD_TRAILING_SLASHES: true,
 
       // Misago ticks frequency (in ms, used for refreshing timestamps)
-      TICK_FREQUENCY: 15000,
+      tickFrequency: 15000,
 
       // Toastings time
       toastBaseDisplayTime: 4000,
@@ -52,7 +52,7 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     ENV.APP.LOG_VIEW_LOOKUPS = true;
 
-    ENV.APP.TICK_FREQUENCY = 1000;
+    ENV.APP.tickFrequency = 1000;
   }
 
   if (environment === 'test') {
