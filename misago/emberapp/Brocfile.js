@@ -38,8 +38,6 @@ var app = new EmberApp({
 // please specify an object with the list of modules as keys
 // along with the exports of each module as its value.
 
-app.import('vendor/dropzone.js');
-
 app.import('vendor/bootstrap/transition.js');
 app.import('vendor/bootstrap/affix.js');
 app.import('vendor/bootstrap/dropdown.js');
