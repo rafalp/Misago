@@ -43,11 +43,10 @@ app.import('vendor/bootstrap/affix.js');
 app.import('vendor/bootstrap/dropdown.js');
 app.import('vendor/bootstrap/modal.js');
 
-if (app.env === 'production') {
-  app.import('bower_components/moment/moment.js');
-} else {
-  app.import('bower_components/moment/min/moment-with-locales.js');
-}
+app.import({
+  production: 'bower_components/moment/moment.js',
+  development: 'bower_components/moment/min/moment-with-locales.js'
+});
 
 app.import('vendor/testutils/jquery.mockjax.js', { type: 'test' });
 app.import('vendor/testutils/django-js-catalog.js', { type: 'test' });
