@@ -41,7 +41,7 @@ def create_users_settings_group(apps, schema_editor):
                     'value': 3,
                     'field_extra': {
                         'min_value': 2,
-                        'max_value': 255,
+                        'max_value': 20,
                     },
                     'is_public': True,
                 },
@@ -53,7 +53,7 @@ def create_users_settings_group(apps, schema_editor):
                     'value': 14,
                     'field_extra': {
                         'min_value': 2,
-                        'max_value': 255,
+                        'max_value': 20,
                     },
                     'is_public': True,
                 },
@@ -128,10 +128,10 @@ def create_users_settings_group(apps, schema_editor):
                     'legend': _("Signatures"),
                     'description': _("Maximum allowed signature length."),
                     'python_type': 'int',
-                    'value': 1048,
+                    'value': 256,
                     'field_extra': {
-                        'min_value': 256,
-                        'max_value': 10000,
+                        'min_value': 10,
+                        'max_value': 5000,
                     },
                     'is_public': True,
                 },
