@@ -2,6 +2,7 @@ import json
 from path import Path
 
 from django.contrib.auth import get_user_model
+from django.core.urlresolvers import reverse
 
 from misago.conf import settings
 
@@ -126,6 +127,16 @@ class UserAvatarTests(AuthenticatedUserTestCase):
             self.assertTrue(avatar.exists())
             self.assertTrue(avatar.isfile())
 
+            tmp_avatar_kwargs = {
+                'secret': response_json['options']['crop_tmp']['secret'],
+                'hash': response_json['avatar_hash'],
+                'user_id': self.user.pk
+            }
+            tmp_avatar_path = reverse('misago:user_avatar_source',
+                                      kwargs=tmp_avatar_kwargs)
+            response = self.client.get(tmp_avatar_path)
+            self.assertEqual(response.status_code, 200)
+
             response = self.client.post(self.link, json.dumps({
                     'avatar': 'crop_tmp',
                     'crop': {
@@ -136,6 +147,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
                     }
                 }),
                 content_type="application/json")
+            response_json = json.loads(response.content)
 
             self.assertEqual(response.status_code, 200)
             self.assertIn('Uploaded avatar was set.', response.content)
@@ -147,6 +159,16 @@ class UserAvatarTests(AuthenticatedUserTestCase):
             avatar = Path('%s/%s_org.png' % (avatar_dir, self.user.pk))
             self.assertTrue(avatar.exists())
             self.assertTrue(avatar.isfile())
+
+            org_avatar_kwargs = {
+                'secret': response_json['options']['crop_org']['secret'],
+                'hash': response_json['avatar_hash'],
+                'user_id': self.user.pk
+            }
+            org_avatar_path = reverse('misago:user_avatar_source',
+                                      kwargs=tmp_avatar_kwargs)
+            response = self.client.get(org_avatar_path)
+            self.assertEqual(response.status_code, 200)
 
             response = self.client.post(self.link, json.dumps({
                     'avatar': 'crop_tmp',

@@ -56,6 +56,22 @@ def delete_avatar(user):
             avatar_file.remove()
 
 
+def get_user_avatar_tokens(user):
+    token_seeds = (user.email, user.avatar_hash, settings.SECRET_KEY)
+
+    tokens = {
+        'org': md5('org:%s:%s:%s' % token_seeds).hexdigest()[:8],
+        'tmp': md5('tmp:%s:%s:%s' % token_seeds).hexdigest()[:8],
+    }
+
+    tokens.update({
+        tokens['org']: 'org',
+        tokens['tmp']: 'tmp',
+    })
+
+    return tokens
+
+
 def store_temporary_avatar(user, image):
     avatars_dir = get_existing_avatars_dir(user)
     avatar_file = '%s_tmp.png' % user.pk

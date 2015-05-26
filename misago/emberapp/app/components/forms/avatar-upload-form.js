@@ -9,7 +9,7 @@ export default Ember.Component.extend({
   selectedImage: null,
   isUploading: false,
   progress: 0,
-  uploadToken: null,
+  uploadHash: null,
 
   apiUrl: function() {
     return 'users/' + this.auth.get('user.id') + '/avatar';
@@ -90,7 +90,7 @@ export default Ember.Component.extend({
     }).then(function(data) {
       if (self.isDestroyed) { return; }
       self.toast.info(gettext("Your image was uploaded successfully."));
-      self.set('uploadToken', data.detail);
+      self.set('uploadHash', data.detail);
       self.get('options').setProperties(data.options);
     }, function(jhXHR) {
       if (self.isDestroyed) { return; }

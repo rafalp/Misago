@@ -54,11 +54,14 @@ def get_avatar_options(user):
     # Allow Gravatar download
     options['gravatar'] = True
 
+    # Get avatar tokens
+    tokens = avatars.get_user_avatar_tokens(user)
+
     # Allow crop with token if we have uploaded avatar
     if avatars.uploaded.has_original_avatar(user):
         try:
             options['crop_org'] = {
-                'token': avatars.get_avatar_hash(user, 'org'),
+                'secret': tokens['org'],
                 'crop': json.loads(user.avatar_crop),
                 'size': max(settings.MISAGO_AVATARS_SIZES)
             }
@@ -68,6 +71,7 @@ def get_avatar_options(user):
     # Allow crop of uploaded avatar
     if avatars.uploaded.has_temporary_avatar(user):
         options['crop_tmp'] = {
+            'secret': tokens['tmp'],
             'size': max(settings.MISAGO_AVATARS_SIZES)
         }
 

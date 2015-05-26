@@ -1,5 +1,5 @@
-{{#if uploadToken}}
-  {{avatar-crop-form options=options activeForm=activeForm suffix="tmp" token=uploadToken}}
+{{#if uploadHash}}
+  {{avatar-crop-form options=options activeForm=activeForm isNested=true secret=options.crop_tmp.secret hash=uploadHash}}
 {{/if}}
 
 <input class="file-upload" type="file">
@@ -18,7 +18,7 @@
 </div>
 {{/if}}
 
-{{#unless uploadToken}}
+{{#unless uploadHash}}
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
 

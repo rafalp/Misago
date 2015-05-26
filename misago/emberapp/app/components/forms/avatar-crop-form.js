@@ -7,9 +7,9 @@ export default Ember.Component.extend({
   isLoading: true,
   isCropping: false,
 
-  suffix: 'org',
-  isNested: Ember.computed.equal('suffix', 'tmp'),
-  token: null,
+  secret: '',
+  isNested: false,
+  hash: null,
 
   crop: null,
 
@@ -17,9 +17,13 @@ export default Ember.Component.extend({
     return 'users/' + this.auth.get('user.id') + '/avatar';
   }.property(),
 
-  finalToken: function() {
-    return this.get('token') || this.get('options.crop_org.token');
-  }.property('token', 'options.crop_org'),
+  finalSecret: function() {
+    return this.get('secret') || this.get('options.crop_org.secret');
+  }.property('secret', 'options.crop_org.secret'),
+
+  finalHash: function() {
+    return this.get('hash') || this.get('auth.user.avatar_hash');
+  }.property('hash', 'auth.user.avatar_hash'),
 
   avatarSize: function() {
     if (this.get('isNested')) {
@@ -31,10 +35,10 @@ export default Ember.Component.extend({
 
   imagePath: function() {
     var src = Ember.$('base').attr('href') + 'user-avatar/';
-    src += this.get('suffix') + ':' + this.get('finalToken') + '/';
+    src += this.get('finalSecret') + ':' + this.get('finalHash') + '/';
     src += this.get('auth.user.id') + '.png';
     return src;
-  }.property('suffix', 'finalToken', 'auth.user.id'),
+  }.property('finalSecret', 'finalHash', 'auth.user.id'),
 
   loadLibrary: function() {
     var self = this;
@@ -91,7 +95,10 @@ export default Ember.Component.extend({
       if (this.get('isCropping')) { return; }
       this.set('isCropping', true);
 
-      var opName = 'crop_' + this.get('suffix');
+      var opName = 'crop_org';
+      if (this.get('isNested')) {
+        opName = 'crop_tmp';
+      }
 
       var $cropper = this.$('.image-cropper');
 

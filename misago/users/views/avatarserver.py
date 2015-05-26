@@ -21,7 +21,7 @@ def serve_blank_avatar(request, size):
 
 
 @cache_control(private=True, must_revalidate=False)
-def serve_user_avatar(request, hash, user_id, size):
+def serve_user_avatar(request, user_id, hash, size):
     size = clean_size(size)
 
     if int(user_id) > 0:
@@ -39,14 +39,17 @@ def serve_user_avatar(request, hash, user_id, size):
 
 
 @never_cache
-def serve_user_avatar_source(request, user_id, token, suffix):
+def serve_user_avatar_source(request, user_id, secret, hash):
     fallback_avatar = get_blank_avatar_file(min(settings.MISAGO_AVATARS_SIZES))
     User = get_user_model()
 
     if user_id > 0:
         try:
             user = User.objects.get(id=user_id)
-            if token == store.get_avatar_hash(user, suffix):
+
+            tokens = store.get_user_avatar_tokens(user)
+            suffix = tokens.get(secret)
+            if suffix:
                 avatar_file = get_user_avatar_file(user.pk, suffix)
             else:
                 avatar_file = fallback_avatar

@@ -45,6 +45,11 @@ class AvatarsStoreTests(TestCase):
         self.assertEqual(len(test_user.avatar_hash), 8)
         test_user.save(update_fields=['avatar_hash'])
 
+        # Get avatar tokens
+        tokens = store.get_user_avatar_tokens(test_user)
+        self.assertEqual(tokens[tokens['org']], 'org')
+        self.assertEqual(tokens[tokens['tmp']], 'tmp')
+
         # Delete avatar
         store.delete_avatar(test_user)
         for size in settings.MISAGO_AVATARS_SIZES:

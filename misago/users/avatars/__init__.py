@@ -25,3 +25,4 @@ def set_default_avatar(user):
 
 get_avatar_hash = store.get_avatar_hash
 delete_avatar = store.delete_avatar
+get_user_avatar_tokens = store.get_user_avatar_tokens
