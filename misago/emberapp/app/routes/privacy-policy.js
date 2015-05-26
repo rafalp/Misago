@@ -24,6 +24,11 @@ export default MisagoRoute.extend({
   },
 
   model: function() {
+    var preloadedPage = this.preloadStore.pop(this.get('page'));
+    if (preloadedPage) {
+      this.store.push('legal-page', preloadedPage);
+    }
+
     return this.store.find('legal-page', this.get('page'));
   },
 

@@ -21,7 +21,7 @@ urlpatterns += patterns('misago.users.views.forgottenpassword',
 
 urlpatterns += patterns('misago.users.views.options',
     url(r'^options/$', 'index', name='options'),
-    url(r'^options/(?P<token>[a-zA-Z]+)/$', 'form', name='options_form'),
+    url(r'^options/(?P<form_name>[-a-zA-Z]+)/$', 'form', name='options_form'),
 )
 
 

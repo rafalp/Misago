@@ -50,6 +50,8 @@ def terms_of_service(request, return_dict=False):
     if return_dict:
         return response_dict
     else:
+        response_dict['id'] = 'terms-of-service'
+        request.preloaded_ember_data['terms-of-service'] = response_dict
         return render(request, 'misago/terms_of_service.html', response_dict)
 
 
@@ -70,6 +72,8 @@ def privacy_policy(request, return_dict=False):
     if return_dict:
         return response_dict
     else:
+        response_dict['id'] = 'privacy-policy'
+        request.preloaded_ember_data['privacy-policy'] = response_dict
         return render(request, 'misago/privacy_policy.html', response_dict)
 
 

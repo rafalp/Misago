@@ -12,7 +12,7 @@ def index(request):
 
 
 @deflect_guests
-def form(request):
+def form(request, form_name):
     return noscript(request, **{
         'title': _("Options"),
         'message': _("To change options enable JS."),
