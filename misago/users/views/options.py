@@ -8,7 +8,7 @@ from misago.users.decorators import deflect_guests
 
 @deflect_guests
 def index(request):
-    return redirect('options_form', form='forum-options')
+    return redirect('misago:options_form', form_name='forum-options')
 
 
 @deflect_guests
@@ -20,40 +20,6 @@ def form(request, form_name):
 
 
 # DEPRECATED VIEWS - DELETE AFTER USER CP IS DONE
-def edit_signature(request):
-    if not request.user.acl['can_have_signature']:
-        raise Http404()
-
-    if request.method == "GET":
-        read_user_notifications(request.user,
-                                'usercp_signature_%s' % request.user.pk)
-
-    form = EditSignatureForm(instance=request.user)
-    if not request.user.is_signature_locked and request.method == 'POST':
-        form = EditSignatureForm(request.POST, instance=request.user)
-        if form.is_valid():
-            set_user_signature(
-                request, request.user, form.cleaned_data['signature'])
-            request.user.save(update_fields=[
-                'signature', 'signature_parsed', 'signature_checksum'
-            ])
-
-            if form.cleaned_data['signature']:
-                messages.success(request, _("Your signature has been edited."))
-            else:
-                message = _("Your signature has been cleared.")
-                messages.success(request, message)
-            return redirect('misago:usercp_edit_signature')
-
-    acl = request.user.acl
-    editor = Editor(form['signature'],
-                    allow_blocks=acl['allow_signature_blocks'],
-                    allow_links=acl['allow_signature_links'],
-                    allow_images=acl['allow_signature_images'])
-    return render(request, 'misago/usercp/edit_signature.html',
-                  {'form': form, 'editor': editor})
-
-
 def change_username(request):
     namechanges = UsernameChanges(request.user)
 
