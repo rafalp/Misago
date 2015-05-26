@@ -19,18 +19,9 @@ urlpatterns += patterns('misago.users.views.forgottenpassword',
 )
 
 
-urlpatterns += patterns('misago.users.views.usercp',
-    url(r'^usercp/forum-options/$', 'change_forum_options', name="usercp_change_forum_options"),
-    url(r'^usercp/change-avatar/$', 'change_avatar', name="usercp_change_avatar"),
-    url(r'^usercp/change-avatar/upload/$', 'upload_avatar', name="usercp_upload_avatar"),
-    url(r'^usercp/change-avatar/upload/handle/$', 'upload_avatar_handler', name="usercp_upload_avatar_handler"),
-    url(r'^usercp/change-avatar/upload/crop/$', 'crop_avatar', name="usercp_crop_new_avatar", kwargs={'use_tmp_avatar': True}),
-    url(r'^usercp/change-avatar/crop/$', 'crop_avatar', name="usercp_crop_avatar", kwargs={'use_tmp_avatar': False}),
-    url(r'^usercp/change-avatar/galleries/$', 'avatar_galleries', name="usercp_avatar_galleries"),
-    url(r'^usercp/edit-signature/$', 'edit_signature', name="usercp_edit_signature"),
-    url(r'^usercp/change-username/$', 'change_username', name="usercp_change_username"),
-    url(r'^usercp/change-email-password/$', 'change_email_password', name="usercp_change_email_password"),
-    url(r'^usercp/change-email-password/(?P<token>[a-zA-Z0-9]+)/$', 'confirm_email_password_change', name='usercp_confirm_email_password_change'),
+urlpatterns += patterns('misago.users.views.options',
+    url(r'^options/$', 'index', name='options'),
+    url(r'^options/(?P<token>[a-zA-Z]+)/$', 'form', name='options_form'),
 )
 
 

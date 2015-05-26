@@ -8,6 +8,7 @@ export function initialize(container, application) {
   application.register('service:recaptcha', ReCaptcha, { singleton: true });
 
   application.inject('service:recaptcha', 'settings', 'misago:settings');
+  application.inject('service:recaptcha', 'loader', 'service:script-loader');
   application.inject('service:qacaptcha', 'store', 'store:main');
 
   var captchaType = container.lookup('misago:settings').captcha_type;
@@ -16,6 +17,6 @@ export function initialize(container, application) {
 
 export default {
   name: 'captcha-service',
-  after: 'misago-settings',
+  after: 'script-loader-service',
   initialize: initialize
 };

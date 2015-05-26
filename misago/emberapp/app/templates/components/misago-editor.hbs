@@ -1,0 +1,15 @@
+{{#if isLoaded}}
+<div class="editor-input-wrapper">
+  <div id="editor-input"></div>
+  {{#if limit}}
+  <p class="editor-input-footer fade {{if showLimitNote 'in'}} {{if limitExceeded 'text-danger'}}">
+    {{gettext "Characters left: %(left)s" left=limitLeft}}
+  </p>
+  {{/if}}
+</div>
+{{else}}
+<div class="editor-loading">
+  <span class="fa fa-cog fa-spin fa-2x"></span>
+  {{gettext "Initializing editor..."}}
+</div>
+{{/if}}

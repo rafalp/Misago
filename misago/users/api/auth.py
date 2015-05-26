@@ -12,7 +12,7 @@ from misago.core.mail import mail_user
 
 from misago.users.forms.auth import (AuthenticationForm, ResendActivationForm,
                                      ResetPasswordForm)
-from misago.users.rest_permissions import UnbannedAnonOnly
+from misago.users.rest_permissions import UnbannedAnonOnly, UnbannedOnly
 from misago.users.serializers import (AuthenticatedUserSerializer,
                                       AnonymousUserSerializer)
 from misago.users.tokens import (make_activation_token,
@@ -173,20 +173,22 @@ POST /auth/change-password/user/token/ with CSRF and new password
 will change forgotten password
 """
 @api_view(['GET', 'POST'])
-@permission_classes((UnbannedAnonOnly,))
+@permission_classes((UnbannedOnly,))
 @csrf_protect
 def change_forgotten_password(request, user_id, token):
     User = auth.get_user_model()
+    invalid_message = _("Form link is invalid. Please try again.")
 
     try:
         user = User.objects.get(pk=user_id)
+        if request.is_authenticated() and request.user.id != user.id:
+            raise User.DoesNotExist()
     except User.DoesNotExist:
-        message = _("Form link is invalid. Please try again.")
-        return Response({'detail': message}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'detail': invalid_message},
+                        status=status.HTTP_400_BAD_REQUEST)
 
     if not is_password_change_token_valid(user, token):
-        message = _("Form link is invalid. Please try again.")
-        return Response({'detail': message},
+        return Response({'detail': invalid_message},
                         status=status.HTTP_400_BAD_REQUEST)
 
     try:

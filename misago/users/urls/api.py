@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from rest_framework.routers import DefaultRouter
+from misago.core.apirouter import MisagoApiRouter
 from misago.users.api.users import UserViewSet
 
 
@@ -15,6 +15,6 @@ urlpatterns += patterns('misago.users.api.captcha',
     url(r'^captcha-questions/(?P<question_id>\d+)/$', 'question', name='captcha_question'),
 )
 
-router = DefaultRouter()
+router = MisagoApiRouter()
 router.register(r'users', UserViewSet)
 urlpatterns += router.urls

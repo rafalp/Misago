@@ -12,15 +12,15 @@
   }
 
   &:hover, &:focus {
-    background-color: fadeOut(@bg, 60%);
+    background-color: @bg;
     border-color: @border;
 
     color: @color;
   }
 
   &:active {
-    background-color: darken(@bg, 10%);
-    border-color: @border;
+    background-color: lighten(@bg, 30%);
+    border-color: lighten(@border, 30%);
     .box-shadow(none);
 
     color: @color;
@@ -103,5 +103,16 @@
 
       color: @btn-default-active-color;
     }
+  }
+}
+
+
+// Make lone button take all its place on small display
+.btn-block-sm {
+  @media (max-width: @screen-sm-max) {
+    display: block;
+    width: 100%;
+
+    text-align: center;
   }
 }

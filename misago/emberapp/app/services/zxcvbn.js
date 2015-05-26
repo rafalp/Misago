@@ -23,13 +23,9 @@ export default Ember.Service.extend({
   },
 
   _includeJs: function() {
-    Ember.$.getScript(this.get('_includedJsPath'));
+    this.loader.require('misago/js/zxcvbn.js');
     this.set('includedJs', true);
   },
-
-  _includedJsPath: function() {
-    return this.get('staticUrl') + 'misago/js/zxcvbn.js';
-  }.property(),
 
   _loadingPromise: function() {
     var self = this;

@@ -25,6 +25,22 @@
 }
 
 
+// Panel well
+.panel-form {
+  .panel-body {
+    .well {
+      background: @panel-form-well-bg;
+      border: 1px solid @panel-form-well-border;
+      .box-shadow(none);
+
+      .well-label {
+        color: @panel-form-well-label;
+      }
+    }
+  }
+}
+
+
 // Footer extra
 .footer-extra {
   margin-top: @line-height-computed;
@@ -91,6 +107,14 @@
 }
 
 
+// Fieldset
+fieldset {
+  legend {
+    font-size: @font-size-base;
+  }
+}
+
+
 // Inputs well, useful if there's one input + button
 .well-form {
   background: @panel-form-bg;
@@ -100,5 +124,24 @@
   form {
     margin: 0px;
     padding: 0px;
+  }
+}
+
+
+// Edit signature form
+.edit-signature-form {
+  .panel-body {
+    .misago-editor {
+      margin-bottom: @line-height-computed;
+    }
+
+    .well {
+      margin-top: @line-height-computed;
+      margin-bottom: 0px;
+
+      .well-label {
+        font-size: @font-size-small;
+      }
+    }
   }
 }

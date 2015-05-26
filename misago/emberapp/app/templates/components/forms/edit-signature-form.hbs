@@ -1,0 +1,49 @@
+<div class="panel panel-form edit-signature-form">
+  <div class="panel-heading">
+    <h3 class="panel-title">{{gettext "Edit signature"}}</h3>
+  </div>
+  {{#if isLoaded}}
+  <div class="panel-body">
+    {{misago-editor value=signature inputHeight=60 toolbar=false limit=options.limit}}
+
+    {{#if isSaving}}
+    <button type="button" class="btn btn-primary btn-block-sm" disabled="disabled">
+      <span class="fa fa-cog fa-spin"></span>
+      {{gettext "Saving changes..."}}
+    </button>
+    {{else}}
+    <button type="submit" class="btn btn-primary btn-block-sm">{{gettext "Save changes"}}</button>
+    {{/if}}
+
+    {{#if options.signature.html}}
+    <div class="well well-sm">
+      <article class="misago-markup">
+        {{{options.signature.html}}}
+      </article>
+      <footer class="well-label">{{gettext "Your current signature"}}</footer>
+    </div>
+    {{/if}}
+  </div>
+  {{else if isErrored}}
+  <div class="panel-error">
+
+    <div class="error-icon">
+      <span class="fa fa-warning fa-lg"></span>
+    </div>
+
+    <div class="error-message">
+      {{#if isErrored.reason}}
+      <p class="lead">{{isErrored.detail}}</p>
+      {{{isErrored.reason}}}
+      {{else}}
+      <p>{{isErrored.detail}}</p>
+      {{/if}}
+    </div>
+
+  </div>
+  {{else}}
+  <div class="panel-body panel-loader">
+    <div class="loader"></div>
+  </div>
+  {{/if}}
+</div>

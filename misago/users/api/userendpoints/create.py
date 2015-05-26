@@ -34,8 +34,7 @@ def create_endpoint(request):
         form.add_error('captcha', e)
 
     if not form.is_valid():
-        return Response(form.errors,
-                        status=status.HTTP_400_BAD_REQUEST)
+        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
     captcha.reset_session(request.session)
 

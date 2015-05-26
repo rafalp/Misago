@@ -9,6 +9,7 @@ from misago.users.bans import get_request_ip_ban
 __all__ = [
     'AllowAny',
     'IsAuthenticatedOrReadOnly',
+    'UnbannedOnly',
     'UnbannedAnonOnly'
 ]
 
@@ -22,16 +23,26 @@ class IsAuthenticatedOrReadOnly(BasePermission):
             return True
 
 
-class UnbannedAnonOnly(BasePermission):
-    def has_permission(self, request, view):
-        if request.user.is_authenticated():
-            raise PermissionDenied(
-                _("This action is not available to signed in users."))
-
+class UnbannedOnly(BasePermission):
+    def is_request_banned(self, request):
         ban = get_request_ip_ban(request)
         if ban:
             raise PermissionDenied(
                 _("Your IP address is banned from performing this action."),
                 {'ban': ban.get_serialized_message()})
 
+    def has_permission(self, request, view):
+        if request.user.is_authenticated():
+            raise PermissionDenied(
+                _("This action is not available to signed in users."))
+        return True
+
+
+class UnbannedAnonOnly(UnbannedOnly):
+    def has_permission(self, request, view):
+        if request.user.is_authenticated():
+            raise PermissionDenied(
+                _("This action is not available to signed in users."))
+
+        self.is_request_banned(request)
         return True

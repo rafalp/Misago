@@ -1,0 +1,32 @@
+//
+// Misago Navs Overrides
+// --------------------------------------------------
+
+
+// Pills on side of container
+.nav-side {
+  &>a {
+    &:link, &:visited {
+      background-color: @sidenav-bg;
+      border-color: @sidenav-border;
+
+      color: @sidenav-color;
+    }
+
+    &:hover, &:focus {
+      background-color: @sidenav-hover-bg;
+      border-color: @sidenav-border;
+
+      color: @sidenav-hover-color;
+    }
+  }
+
+  &>a.active {
+    &:link, &:active, &:focus, &:visited, &:hover {
+      background-color: @sidenav-active-bg;
+      border-color: @sidenav-active-border;
+
+      color: @sidenav-active-color;
+    }
+  }
+}

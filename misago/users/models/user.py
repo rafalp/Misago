@@ -51,10 +51,10 @@ AUTO_SUBSCRIBE_WATCH = 1
 AUTO_SUBSCRIBE_WATCH_AND_EMAIL = 2
 
 AUTO_SUBSCRIBE_CHOICES = (
-    (AUTO_SUBSCRIBE_NONE, _("Do nothing.")),
-    (AUTO_SUBSCRIBE_WATCH, _("Add to watched list.")),
+    (AUTO_SUBSCRIBE_NONE, _("Do nothing")),
+    (AUTO_SUBSCRIBE_WATCH, _("Bookmark")),
     (AUTO_SUBSCRIBE_WATCH_AND_EMAIL,
-     _("Add to watched list with e-mail notification."))
+     _("Bookmark with e-mail notification"))
 )
 
 

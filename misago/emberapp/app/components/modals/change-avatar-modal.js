@@ -18,6 +18,8 @@ export default Ember.Component.extend(ModalComponent, {
       if (self.isDestroyed) { return; }
       if (typeof jqXHR.responseJSON !== 'undefined') {
         self.set('error', jqXHR.responseJSON);
+      } else if (jqXHR.status === 0) {
+        self.set('error', {detail: gettext('Lost connection with application.')});
       } else {
         self.set('error', {detail: gettext('Application has errored.')});
       }

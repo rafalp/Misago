@@ -9,23 +9,17 @@ from misago.users.models import (AUTO_SUBSCRIBE_CHOICES,
 from misago.users.validators import validate_email, validate_password
 
 
-class ChangeForumOptionsBaseForm(forms.ModelForm):
-    is_hiding_presence = forms.YesNoSwitch(
-        label=_("Hide my presence"),
-        help_text=_("If you hide your presence, only members with permission "
-                    "to see hidden will see when you are online."))
+class ForumOptionsForm(forms.ModelForm):
+    is_hiding_presence = forms.YesNoSwitch()
 
     limits_private_thread_invites_to = forms.TypedChoiceField(
-        label=_("Who can add me to private threads"),
-        coerce=int,
-        choices=PRIVATE_THREAD_INVITES_LIMITS_CHOICES)
+        coerce=int, choices=PRIVATE_THREAD_INVITES_LIMITS_CHOICES)
 
     subscribe_to_started_threads = forms.TypedChoiceField(
-        label=_("Threads I start"), coerce=int, choices=AUTO_SUBSCRIBE_CHOICES)
+        coerce=int, choices=AUTO_SUBSCRIBE_CHOICES)
 
     subscribe_to_replied_threads = forms.TypedChoiceField(
-        label=_("Threads I reply to"), coerce=int,
-        choices=AUTO_SUBSCRIBE_CHOICES)
+        coerce=int, choices=AUTO_SUBSCRIBE_CHOICES)
 
     class Meta:
         model = get_user_model()
@@ -37,14 +31,8 @@ class ChangeForumOptionsBaseForm(forms.ModelForm):
         ]
 
 
-def ChangeForumOptionsForm(*args, **kwargs):
-    FinalFormType = type('FinalChangeForumOptionsForm',
-                         (ChangeForumOptionsBaseForm,))
-    return FinalFormType(*args, **kwargs)
-
-
 class EditSignatureForm(forms.ModelForm):
-    signature = forms.CharField(label=_("Signature"), required=False)
+    signature = forms.CharField(required=False)
 
     class Meta:
         model = get_user_model()
@@ -53,12 +41,8 @@ class EditSignatureForm(forms.ModelForm):
     def clean(self):
         data = super(EditSignatureForm, self).clean()
 
-        length_limit = settings.signature_length_max
-        if len(data) > length_limit:
-            raise forms.ValidationError(ungettext(
-                "Signature can't be longer than %(limit)s character.",
-                "Signature can't be longer than %(limit)s characters.",
-                length_limit) % {'limit': length_limit})
+        if len(data.get('signature', '')) > settings.signature_length_max:
+            raise forms.ValidationError(_("Signature is too long."))
 
         return data
 

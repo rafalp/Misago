@@ -22,7 +22,7 @@ export default NoCaptcha.extend({
   },
 
   _includeJs: function() {
-    Ember.$.getScript(this.get('url'));
+    this.loader.require(this.get('url'), true);
     this.set('includedJs', true);
   },
 

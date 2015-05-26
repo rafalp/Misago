@@ -2,7 +2,6 @@ import json
 from path import Path
 
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
 
 from misago.conf import settings
 
@@ -10,12 +9,12 @@ from misago.users.avatars import store
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
-class UserCreateTests(AuthenticatedUserTestCase):
+class UserAvatarTests(AuthenticatedUserTestCase):
     """
-    tests for user avatar RPC (POST to /api/users/1/avatar)
+    tests for user avatar RPC (/api/users/1/avatar/)
     """
     def setUp(self):
-        super(UserCreateTests, self).setUp()
+        super(UserAvatarTests, self).setUp()
         self.link = '/api/users/%s/avatar/' % self.user.pk
 
     def test_avatars_off(self):

@@ -1,0 +1,83 @@
+<div class="options-page">
+  <div class="page-header">
+    <div class="container">
+      <h1 class="pull-left">{{gettext "Change options"}}</h1>
+
+      <div class="btn-group hidden-md hidden-lg pull-right">
+        <button type="button" class="btn btn-default btn-outlined dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+          <span class="fa fa-bars fa-lg"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          {{#link-to "options.forum" tagName="li" href=false}}
+            {{#link-to "options.forum" bubbles=false activeClass=""}}
+              {{gettext "Forum options"}}
+            {{/link-to}}
+          {{/link-to}}
+
+          {{#if auth.user.acl.can_have_signature}}
+            {{#link-to "options.signature" tagName="li" href=false}}
+              {{#link-to "options.signature" bubbles=false activeClass=""}}
+                {{gettext "Edit signature"}}
+              {{/link-to}}
+            {{/link-to}}
+          {{/if}}
+
+          {{#link-to "options.username" tagName="li" href=false}}
+            {{#link-to "options.username" bubbles=false activeClass=""}}
+              {{gettext "Change username"}}
+            {{/link-to}}
+          {{/link-to}}
+
+          {{#link-to "options.password" tagName="li" href=false}}
+            {{#link-to "options.password" bubbles=false activeClass=""}}
+              {{gettext "Change password"}}
+            {{/link-to}}
+          {{/link-to}}
+
+          {{#link-to "options.email" tagName="li" href=false}}
+            {{#link-to "options.email" bubbles=false activeClass=""}}
+              {{gettext "Change e-mail"}}
+            {{/link-to}}
+          {{/link-to}}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+
+      <div class="col-md-3 hidden-xs hidden-sm">
+
+        <div class="list-group nav-side">
+          {{#link-to "options.forum" class="list-group-item"}}
+            {{gettext "Forum options"}}
+          {{/link-to}}
+
+          {{#if auth.user.acl.can_have_signature}}
+            {{#link-to "options.signature" class="list-group-item"}}
+              {{gettext "Edit signature"}}
+            {{/link-to}}
+          {{/if}}
+
+          {{#link-to "options.username" class="list-group-item"}}
+            {{gettext "Change username"}}
+          {{/link-to}}
+
+          {{#link-to "options.password" class="list-group-item"}}
+            {{gettext "Change password"}}
+          {{/link-to}}
+
+          {{#link-to "options.email" class="list-group-item"}}
+            {{gettext "Change e-mail"}}
+          {{/link-to}}
+        </div>
+
+      </div>
+      <div class="col-md-6">
+        {{outlet}}
+      </div>
+
+    </div>
+  </div>
+</div>

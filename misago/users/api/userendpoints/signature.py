@@ -1,0 +1,64 @@
+from django.utils.translation import ugettext as _
+
+from rest_framework import status
+from rest_framework.response import Response
+
+from misago.conf import settings
+from misago.core.utils import format_plaintext_for_html
+
+from misago.users.forms.options import EditSignatureForm
+from misago.users.signatures import is_user_signature_valid, set_user_signature
+
+
+def signature_endpoint(request):
+    user = request.user
+
+    if user.is_signature_locked:
+        if user.signature_lock_user_message:
+            reason = format_plaintext_for_html(
+                user.signature_lock_user_message)
+        else:
+            reason = None
+
+        return Response({
+                'detail': _("Your signature is locked. You can't change it."),
+                'reason': reason
+            },
+            status=status.HTTP_403_FORBIDDEN)
+
+    if request.method == 'POST':
+        return edit_signature(request, user)
+
+    return get_signature_options(user)
+
+
+def get_signature_options(user):
+    options = {
+        'signature': None,
+        'limit': settings.signature_length_max,
+    }
+
+    if user.signature:
+        options['signature'] = {
+            'plain': user.signature,
+            'html': user.signature_parsed,
+        }
+
+        if not is_user_signature_valid(user):
+            options['signature']['html'] = None
+
+    return Response(options)
+
+
+def edit_signature(request, user):
+    form = EditSignatureForm(request.data, instance=user)
+    if form.is_valid():
+        set_user_signature(
+                request, user, form.cleaned_data['signature'])
+        user.save(update_fields=[
+            'signature', 'signature_parsed', 'signature_checksum'
+        ])
+        return get_signature_options(user)
+    else:
+        return Response({'detail': form.non_field_errors()[0]},
+                        status=status.HTTP_400_BAD_REQUEST)

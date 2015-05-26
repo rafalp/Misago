@@ -1,0 +1,91 @@
+<div class="panel panel-form">
+  <div class="panel-heading">
+    <h3 class="panel-title">{{gettext "Change forum options"}}</h3>
+  </div>
+  <div class="panel-body">
+
+    <fieldset>
+      <legend>{{gettext "Privacy settings"}}</legend>
+
+      {{#form-row
+        label=(gettext "Hide my presence:")
+        help_text=(gettext "If you hide your presence, only members with permission to see hidden users will see when you are online.")
+        for="id_is_hiding_presence"
+        label-class="col-md-5"
+        control-class="col-md-7"
+        validation=validation.is_hiding_presence}}
+
+        {{yes-no-switch id="id_is_hiding_presence" value=is_hiding_presence}}
+      {{/form-row}}
+
+      {{#form-row
+        label=(gettext "Private thread invitations:")
+        for="id_limits_private_thread_invites_to"
+        label-class="col-md-5"
+        control-class="col-md-7"
+        validation=validation.limits_private_thread_invites_to}}
+
+        {{view "select"
+          id="id_limits_private_thread_invites_to"
+          class="form-control"
+          content=privateThreadInvitesChoices
+          optionValuePath="content.value"
+          optionLabelPath="content.label"
+          value=limits_private_thread_invites_to}}
+      {{/form-row}}
+    </fieldset>
+
+    <fieldset>
+      <legend>{{gettext "Automatic subscriptions"}}</legend>
+
+      {{#form-row
+        label=(gettext "Threads I start:")
+        for="id_subscribe_to_started_threads"
+        label-class="col-md-5"
+        control-class="col-md-7"
+        validation=validation.subscribe_to_started_threads}}
+
+        {{view "select"
+          id="id_subscribe_to_started_threads"
+          class="form-control"
+          content=subscribeToChoices
+          optionValuePath="content.value"
+          optionLabelPath="content.label"
+          value=subscribe_to_started_threads}}
+      {{/form-row}}
+
+      {{#form-row
+        label=(gettext "Threads I reply to:")
+        for="id_subscribe_to_replied_threads"
+        label-class="col-md-5"
+        control-class="col-md-7"
+        validation=validation.subscribe_to_replied_threads}}
+
+        {{view "select"
+          id="id_subscribe_to_replied_threads"
+          class="form-control"
+          content=subscribeToChoices
+          optionValuePath="content.value"
+          optionLabelPath="content.label"
+          value=subscribe_to_replied_threads}}
+      {{/form-row}}
+    </fieldset>
+
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-md-7 col-md-offset-5">
+
+        {{#if isSaving}}
+        <button type="button" class="btn btn-primary btn-block-sm" disabled="disabled">
+          <span class="fa fa-cog fa-spin"></span>
+          {{gettext "Saving changes..."}}
+        </button>
+        {{else}}
+        <button type="submit" class="btn btn-primary btn-block-sm">{{gettext "Save changes"}}</button>
+        {{/if}}
+
+      </div>
+    </div>
+  </div>
+</div>

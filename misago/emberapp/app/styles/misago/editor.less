@@ -1,0 +1,45 @@
+//
+// Markup editor
+// --------------------------------------------------
+
+
+// Wrapper
+.misago-editor {
+  background: @misago-editor-bg;
+  border: 1px solid @misago-editor-border;
+  border-radius: @border-radius-base;
+}
+
+
+// Loading animation
+.misago-editor {
+  .editor-loading {
+    padding-top: @line-height-computed;
+    padding-bottom: @line-height-computed + 5px;
+
+    color: @misago-editor-loader-color;
+    font-size: @font-size-large;
+    text-align: center;
+
+    .fa {
+      margin-right: @line-height-computed / 4;
+      position: relative;
+      top: 5px;
+    }
+  }
+}
+
+
+// Input
+.misago-editor {
+  .editor-input-wrapper {
+    padding: @padding-base-vertical;
+  }
+
+  .editor-input-footer {
+    margin-top: @padding-base-vertical;
+    margin-bottom: @padding-base-vertical * -0.3;
+
+    font-size: @font-size-small;
+  }
+}

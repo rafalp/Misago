@@ -21,7 +21,6 @@ module('Acceptance: Avatar Change Modal', {
   }
 });
 
-
 test('Change avatar modal handles no permission', function(assert) {
   var user = createUser();
   auth.setProperties({
@@ -51,7 +50,6 @@ test('Change avatar modal handles no permission', function(assert) {
     done();
   });
 });
-
 
 test('Minimal select avatar type form works', function(assert) {
   var user = createUser();
@@ -90,7 +88,6 @@ test('Minimal select avatar type form works', function(assert) {
   });
 });
 
-
 test('Complete select avatar type form works', function(assert) {
   var user = createUser();
   auth.setProperties({
@@ -127,7 +124,6 @@ test('Complete select avatar type form works', function(assert) {
     done();
   });
 });
-
 
 test('Failed change to gravatar', function(assert) {
   var user = createUser();
@@ -172,7 +168,6 @@ test('Failed change to gravatar', function(assert) {
     done();
   });
 });
-
 
 test('Changed avatar to gravatar', function(assert) {
   var user = createUser();
@@ -228,7 +223,6 @@ test('Changed avatar to gravatar', function(assert) {
   });
 });
 
-
 test('Failed change to generated', function(assert) {
   var user = createUser();
   auth.setProperties({
@@ -272,7 +266,6 @@ test('Failed change to generated', function(assert) {
     done();
   });
 });
-
 
 test('Changed avatar to generated', function(assert) {
   var user = createUser();
@@ -328,7 +321,6 @@ test('Changed avatar to generated', function(assert) {
   });
 });
 
-
 test('Failed to pick avatar from gallery', function(assert) {
   var user = createUser();
   auth.setProperties({
@@ -380,7 +372,6 @@ test('Failed to pick avatar from gallery', function(assert) {
     done();
   });
 });
-
 
 test('Picked avatar from gallery', function(assert) {
   var user = createUser();
@@ -443,7 +434,6 @@ test('Picked avatar from gallery', function(assert) {
     done();
   });
 });
-
 
 test('Canceled pick from gallery', function(assert) {
   var user = createUser();

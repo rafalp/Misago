@@ -15,6 +15,15 @@ Router.map(function() {
     this.route('change-form', { path: ':user_id/:token/' });
   });
 
+  // Options
+  this.route('options', { path: 'options/' }, function() {
+    this.route('forum', { path: 'forum-options/' });
+    this.route('signature', { path: 'edit-signature/' });
+    this.route('username', { path: 'change-username/' });
+    this.route('password', { path: 'change-password/' });
+    this.route('email', { path: 'change-email/' });
+  });
+
   // Legal
 
   this.route('terms-of-service', { path: 'terms-of-service/' });

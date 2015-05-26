@@ -46,8 +46,8 @@
 @site-link-hover-color:      @text-color;
 @site-link-active-color:     @brand-info;
 
-//** In-site link state default
-@state-default:         #7f8c8d;
+//** In-site navs states
+@state-default:         @gray-light;
 @state-hover:           @text-color;
 @state-clicked:         @brand-primary;
 
@@ -261,6 +261,10 @@
 @panel-form-footer-bg:              @panel-form-bg;
 @panel-form-footer-border:          darken(@panel-form-bg, 10%);
 
+@panel-form-well-bg:                darken(@panel-form-bg, 5%);
+@panel-form-well-border:            @panel-form-well-bg;
+@panel-form-well-label:             darken(@panel-form-bg, 40%);
+
 
 //== Dropdowns
 //
@@ -283,3 +287,27 @@
 //** Dropdown footer bg and border
 @dropdown-footer-border:         darken(@dropdown-bg, 10%);
 @dropdown-footer-bg:             darken(@dropdown-bg, 3%);
+
+
+//== Navs
+//
+//** Side nav
+@sidenav-color:                   @site-link-color;
+@sidenav-border:                  @gray-lighter;
+@sidenav-bg:                      transparent;
+
+@sidenav-hover-color:             @site-link-hover-color;
+@sidenav-hover-bg:                transparent;
+
+@sidenav-active-color:            @site-link-active-color;
+@sidenav-active-border:           darken(@sidenav-border, 15%);
+@sidenav-active-bg:               transparent;
+
+
+//== Editor
+//
+//** Container
+@misago-editor-border:            @gray-lighter;
+@misago-editor-bg:                #fff;
+
+@misago-editor-loader-color:      @gray-light;
