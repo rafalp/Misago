@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url
 from misago.core.apirouter import MisagoApiRouter
 from misago.users.api.users import UserViewSet
+from misago.users.api.usernamechanges import UsernameChangesViewSet
 
 
 urlpatterns = patterns('misago.users.api.auth',
@@ -17,4 +18,5 @@ urlpatterns += patterns('misago.users.api.captcha',
 
 router = MisagoApiRouter()
 router.register(r'users', UserViewSet)
+router.register(r'username-changes', UsernameChangesViewSet)
 urlpatterns += router.urls

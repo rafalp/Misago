@@ -30,9 +30,9 @@ class UsernameChanges(object):
         else:
             self.left = name_changes_allowed - used_changes
 
-        if name_changes_expire:
+        if not self.left and name_changes_expire:
             try:
-                self.next_on = valid_changes_qs.latest()
+                self.next_on = valid_changes_qs.latest().changed_on
                 self.next_on += timedelta(days=name_changes_expire)
             except UsernameChange.DoesNotExist:
                 pass

@@ -55,3 +55,12 @@ def greater_or_zero(a, b):
 
 def lower(a, b):
     return a if a < b else b
+
+
+def lower_non_zero(a, b):
+    if a == 0:
+        return b
+    elif b == 0:
+        return a
+    else:
+        return lower(a, b)

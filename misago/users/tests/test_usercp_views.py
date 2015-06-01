@@ -12,31 +12,6 @@ from misago.users.avatars import store
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
-class ChangeUsernameTests(AuthenticatedUserTestCase):
-    def setUp(self):
-        super(ChangeUsernameTests, self).setUp()
-        self.view_link = reverse('misago:usercp_change_username')
-
-    def test_change_username_get(self):
-        """GET to usercp change username view returns 200"""
-        response = self.client.get(self.view_link)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('Change username', response.content)
-
-    def test_change_username_post(self):
-        """POST to usercp change username view returns 302"""
-        response = self.client.post(self.view_link,
-                                    data={'new_username': 'Boberson'})
-        self.assertEqual(response.status_code, 302)
-
-        test_user = get_user_model().objects.get(pk=self.user.pk)
-        self.assertEqual(test_user.username, 'Boberson')
-
-        response = self.client.get(self.view_link)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(test_user.username, response.content)
-
-
 class ChangeEmailPasswordTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(ChangeEmailPasswordTests, self).setUp()

@@ -47,7 +47,18 @@ export default Ember.Service.extend({
 
   userObserver: function() {
     this.session.setItem('auth-user', this.get('user'));
-  }.observes('user.avatar_hash'),
+  }.observes('user.avatar_hash', 'user.username', 'user.slug'),
+
+  // Return user as POJO
+
+  getUserPOJO: function() {
+    return {
+        'id': this.get('user.id'),
+        'username': this.get('user.username'),
+        'slug': this.get('user.slug'),
+        'avatar_hash': this.get('user.avatar_hash')
+      };
+  },
 
   // Anon/auth state
   isAnonymous: Ember.computed.not('isAuthenticated'),

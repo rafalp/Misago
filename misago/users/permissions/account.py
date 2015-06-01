@@ -57,7 +57,7 @@ def build_acl(acl, roles, key_name):
 
     return algebra.sum_acls(new_acl, roles=roles, key=key_name,
         name_changes_allowed=algebra.greater,
-        name_changes_expire=algebra.lower,
+        name_changes_expire=algebra.lower_non_zero,
         can_have_signature=algebra.greater,
         allow_signature_links=algebra.greater,
         allow_signature_images=algebra.greater,

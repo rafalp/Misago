@@ -82,3 +82,22 @@ test('authenticated user was updated', function(assert) {
   assert.ok(!service.get('needsSync'));
   assert.equal(service.get('user.username'), newUser.get('username'));
 });
+
+test('POJO with user is obtainable', function(assert) {
+  assert.expect(3);
+
+  var user = createUser();
+  service.setProperties({
+    'isAuthenticated': true,
+    'user': user
+  });
+
+  var pojo = service.getUserPOJO();
+
+  assert.ok(pojo);
+  assert.equal(pojo.username, service.get('user.username'));
+
+  service.set('user.username', 'Baww');
+  pojo = service.getUserPOJO();
+  assert.equal(pojo.username, service.get('user.username'));
+});

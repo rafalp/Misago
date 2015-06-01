@@ -90,5 +90,8 @@ export default function createUser(newProps) {
     user.setProperties(newProps);
   }
 
+  // make sure ID is string
+  user.set('id', user.get('id').toString());
+
   return user;
 }

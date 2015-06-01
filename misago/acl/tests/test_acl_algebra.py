@@ -28,6 +28,14 @@ class ComparisionsTests(TestCase):
         self.assertEqual(algebra.lower(True, False), False)
 
 
+    def test_lower_non_zero(self):
+        """lower non-zero wins test"""
+        self.assertEqual(algebra.lower_non_zero(1, 3), 1)
+        self.assertEqual(algebra.lower_non_zero(0, 2), 2)
+        self.assertEqual(algebra.lower_non_zero(1, 2), 1)
+        self.assertEqual(algebra.lower_non_zero(0, 0), 0)
+
+
 class SumACLTests(TestCase):
     def test_sum_acls(self):
         """acls are summed"""

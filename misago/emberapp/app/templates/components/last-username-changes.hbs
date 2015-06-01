@@ -1,0 +1,56 @@
+<h4>{{gettext "Last changes history"}}</h4>
+{{#if isLoaded}}
+<ul class="list-group">
+  {{#each model as |change|}}
+  <li class="list-group-item">
+    <div class="side-avatar hidden-md hidden-lg">
+      {{#if change.changed_by}}
+        <a href="#">{{user-avatar user=change.changed_by size=42}}</a>
+      {{else}}
+        <span>{{user-avatar user=change.changed_by size=42}}</span>
+      {{/if}}
+    </div>
+
+    <div class="first-row">
+      {{#if change.changed_by}}
+      <a href="#" class="hidden-xs hidden-sm">{{user-avatar user=change.changed_by size=20}}</a>
+      <a href="#" class="item-name right-margin">{{change.changed_by.username}}</a>
+      {{else}}
+      <span class="hidden-xs hidden-sm">{{user-avatar user=change.changed_by size=20}}</span>
+      <strong class="item-name right-margin"> {{change.changed_by_username}}</strong>
+      {{/if}}
+
+      {{change.old_username}} <span class="fa fa-chevron-right"></span> {{change.new_username}}
+    </div>
+    <div class="second-row text-muted" title="{{format-date change.changed_on tick=clock.tick}}">{{rel-date change.changed_on tick=clock.tick}}</div>
+  </li>
+  {{else}}
+  <li class="list-group-item">
+    <span class="fa fa-info-circle fa-lg"></span>
+    {{gettext "Your username was never changed."}}
+  </li>
+  {{/each}}
+</ul>
+{{else}}
+<div class="ui-preview list-group-preview">
+  {{#each (x-range 5) as |placeholder|}}
+  <div class="fill">
+    <div class="side-avatar hidden-md hidden-lg">
+      <div class="ui-preview-img avatar-preview" style="width: 42px; height: 42px;"></div>
+    </div>
+
+    <div class="first-row">
+      <span class="ui-preview-img avatar-preview hidden-xs hidden-sm" style="width: 20px; height: 20px;">&nbsp;</span>
+      {{ui-text-preview class="ui-preview-text item-name right-margin"}}
+
+      {{ui-text-preview class="ui-preview-text"}}
+      <span class="fa fa-chevron-right"></span>
+      {{ui-text-preview class="ui-preview-text"}}
+    </div>
+    <div class="second-row text-muted">
+      {{ui-text-preview minLength=10 maxLength=18 class="ui-preview-text"}}
+    </div>
+  </div>
+  {{/each}}
+</div>
+{{/if}}

@@ -3,7 +3,14 @@ import PreloadStore from 'misago/services/preload-store';
 import Auth from 'misago/services/auth';
 
 export function initialize(container, application) {
-  application.register('misago:user', Ember.Object.create(PreloadStore.get('user')), { instantiate: false });
+  var user = Ember.Object.create(PreloadStore.get('user'));
+
+  // Coerce user ID to string
+  if (user.get('id')) {
+    user.set('id', user.get('id').toString());
+  }
+
+  application.register('misago:user', user, { instantiate: false });
   application.register('misago:isAuthenticated', PreloadStore.get('isAuthenticated'), { instantiate: false });
 
   application.register('service:auth', Auth, { singleton: true });

@@ -93,13 +93,13 @@ export default Ember.Component.extend({
     var message = null;
     if (valueLength < this.get('settings.username_length_min')) {
       limit = this.get('settings.username_length_min');
-      message = ngettext('Username must be at least one character long.',
+      message = ngettext('Username must be at least %(limit)s character long.',
                          'Username must be at least %(limit)s characters long.',
                          limit);
       state = [interpolate(message, {limit: limit}, true)];
     } else if (valueLength > this.get('settings.username_length_max')) {
       limit = this.get('settings.username_length_max');
-      message = ngettext('Username cannot be longer than one characters.',
+      message = ngettext('Username cannot be longer than %(limit)s characters.',
                          'Username cannot be longer than %(limit)s characters.',
                          limit);
       state = [interpolate(message, {limit: limit}, true)];
@@ -142,7 +142,7 @@ export default Ember.Component.extend({
 
     var limit = this.get('settings.password_length_min');
     if (valueLength < limit) {
-      var message = ngettext('Valid password must be at least one character long.',
+      var message = ngettext('Valid password must be at least %(limit)s character long.',
                              'Valid password must be at least %(limit)s characters long.',
                              limit);
       state = [interpolate(message, {limit: limit}, true)];

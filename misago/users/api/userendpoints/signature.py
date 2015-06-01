@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 
 from rest_framework import status
@@ -12,6 +13,10 @@ from misago.users.signatures import is_user_signature_valid, set_user_signature
 
 def signature_endpoint(request):
     user = request.user
+
+    if not user.acl['can_have_signature']:
+        raise PermissionDenied(
+            _("You don't have permission to change signature."))
 
     if user.is_signature_locked:
         if user.signature_lock_user_message:

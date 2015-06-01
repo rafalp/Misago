@@ -11,9 +11,12 @@ from misago.users.rest_permissions import (BasePermission,
     IsAuthenticatedOrReadOnly, UnbannedAnonOnly)
 from misago.users.forms.options import ForumOptionsForm
 
+from misago.users.serializers import UserSerializer
+
 from misago.users.api.userendpoints.avatar import avatar_endpoint
 from misago.users.api.userendpoints.create import create_endpoint
 from misago.users.api.userendpoints.signature import signature_endpoint
+from misago.users.api.userendpoints.username import username_endpoint
 
 
 class UserViewSetPermission(BasePermission):
@@ -36,6 +39,7 @@ def allow_self_only(user, pk, message):
 class UserViewSet(viewsets.GenericViewSet):
     permission_classes = (UserViewSetPermission,)
     parser_classes=(JSONParser, MultiPartParser)
+    serializer_class = UserSerializer
     queryset = get_user_model().objects.all()
 
     def list(self, request):
@@ -66,12 +70,15 @@ class UserViewSet(viewsets.GenericViewSet):
             return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @detail_route(methods=['get', 'post'])
-    def signature(self, request, pk=None):
-        message = _("You can't change other users signatures.")
-        allow_self_only(request.user, pk, message)
+    def username(self, request, pk=None):
+        allow_self_only(
+            request.user, pk, _("You can't change other users names."))
 
-        if not request.user.acl['can_have_signature']:
-            raise PermissionDenied(
-                _("You don't have permission to change signature."))
+        return username_endpoint(request)
+
+    @detail_route(methods=['get', 'post'])
+    def signature(self, request, pk=None):
+        allow_self_only(
+            request.user, pk, _("You can't change other users signatures."))
 
         return signature_endpoint(request)

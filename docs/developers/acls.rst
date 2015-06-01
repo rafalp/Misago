@@ -157,6 +157,7 @@ This module provides utilities for summing two acls and supports three most comm
 * **greater**: True beats False, 42 beats 13
 * **lower**: False beats True, 13 beats 42
 * **greater or zero**: 42 beats 13, zero beats everything
+* **lower non zero**, 13 beats 42, everything beats zero
 
 
 .. function:: sum_acls(result_acl, acls=None, roles=None, key=None, **permissions)

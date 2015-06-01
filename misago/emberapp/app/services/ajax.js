@@ -53,11 +53,11 @@ export default Ember.Service.extend({
   },
 
   getAdapter: function(model) {
-    return this.store.adapterFor(model || {typeKey: 'application'});
+    return this.store.adapterFor(model || {modelName: 'application'});
   },
 
   buildRecordProcedureURL: function(adapter, model, record, procedure) {
-    var url = adapter.buildURL(model.typeKey, record.id, record);
+    var url = adapter.buildURL(model.modelName, record.id, record);
     var procedureSegment = Ember.String.decamelize(procedure).replace('_', '-');
 
     return url + procedureSegment + '/';

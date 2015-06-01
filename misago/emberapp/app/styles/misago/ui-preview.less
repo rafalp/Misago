@@ -1,0 +1,96 @@
+//
+// Just utils for doing UI previews
+// --------------------------------------------------
+
+
+// Animatation
+.ui-preview, .ui-preview-text, .ui-preview-img {
+  background: @ui-preview-bg;
+  background-image: linear-gradient(90deg, @ui-preview-bg, @ui-preview-light 50%, @ui-preview-bg);
+  background-size: 1300px 1px;
+
+  .animation(ui-preview-animation 2s linear infinite);
+}
+
+@-webkit-keyframes ui-preview-animation {
+  from  { background-position: 1300px 0; }
+  to    { background-position: 0 0; }
+}
+
+@keyframes ui-preview-animation {
+  from  { background-position: 1300px 0; }
+  to    { background-position: 0 0; }
+}
+
+
+// Fill
+.ui-preview {
+  .fill {
+    background-color: @body-bg;
+
+    // Force icons to use faded preview color
+    .fa, .glyphicon {
+      color: @ui-preview-bg;
+    }
+  }
+}
+
+
+// Icons
+.ui-preview {
+  .fill {
+    .fa, .glyphicon {
+      .opacity(0.6);
+
+      color: @ui-preview-bg;
+
+      .animation(ui-preview-icons 2s linear infinite);
+    }
+  }
+}
+
+@-webkit-keyframes ui-preview-icons {
+  0%  { color: @ui-preview-bg; }
+  50%  { color: @ui-preview-light; }
+  1000%  { color: @ui-preview-bg; }
+}
+
+@keyframes ui-preview-icons {
+  0%  { color: @ui-preview-bg; }
+  50%  { color: @ui-preview-light; }
+  1000%  { color: @ui-preview-bg; }
+}
+
+
+// Few shorthands
+.ui-preview-img {
+  display: inline-block;
+}
+
+.ui-preview-text {
+  border-radius: 20px;
+  .opacity(0.6);
+}
+
+
+// Preset: list-group
+.ui-preview {
+  &.list-group-preview {
+    border-radius: @list-group-border-radius + 1;
+    padding: 1px;
+
+    &>.fill {
+      margin-bottom: 1px;
+      padding: 10px 15px;
+
+      // Round the first and last items
+      &:first-child {
+        .border-top-radius(@list-group-border-radius);
+      }
+      &:last-child {
+        margin-bottom: 0;
+        .border-bottom-radius(@list-group-border-radius);
+      }
+    }
+  }
+}

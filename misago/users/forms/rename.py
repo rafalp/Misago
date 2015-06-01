@@ -4,8 +4,7 @@ from misago.users.validators import validate_username
 
 
 class ChangeUsernameForm(forms.Form):
-    new_username = forms.CharField(label=_("New username"), max_length=200,
-                                   required=False)
+    username = forms.CharField(max_length=200, required=False)
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -13,20 +12,20 @@ class ChangeUsernameForm(forms.Form):
 
     def clean(self):
         data = super(ChangeUsernameForm, self).clean()
-        new_username = data.get('new_username')
+        username = data.get('username')
 
-        if not new_username:
+        if not username:
             raise forms.ValidationError(_("Enter new username."))
 
-        if new_username == self.user.username:
+        if username == self.user.username:
             message = _("New username is same as current one.")
             raise forms.ValidationError(message)
 
-        validate_username(new_username, exclude=self.user)
+        validate_username(username, exclude=self.user)
 
         return data
 
     def change_username(self, changed_by):
-        self.user.set_username(self.cleaned_data['new_username'],
-                          changed_by=changed_by)
+        self.user.set_username(
+            self.cleaned_data['username'], changed_by=changed_by)
         self.user.save(update_fields=['username', 'slug'])

@@ -3,7 +3,7 @@
 // --------------------------------------------------
 
 
-// in-site link
+// In-site link
 .site-link {
   &, &:link, &:visited {
     color: @site-link-color;
@@ -16,4 +16,32 @@
   &:active {
     color: @site-link-active-color;
   }
+}
+
+
+// Item name
+.item-name {
+  color: @text-color;
+  font-weight: bold;
+}
+
+a.item-name {
+  &:link, &:hover, &:visited, &:active {
+    color: @text-color;
+    font-weight: bold;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+
+// Margins
+.right-margin {
+  margin-right: @line-height-computed;
+}
+
+.left-margin {
+  margin-left: @line-height-computed;
 }
