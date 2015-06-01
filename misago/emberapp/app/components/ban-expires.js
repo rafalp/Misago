@@ -4,17 +4,13 @@ export default Ember.Component.extend({
   tagName: 'p',
   isPermanent: Ember.computed.empty('model.expires_on'),
 
-  expiresMoment: function() {
+  expiresOn: function() {
     if (!this.get('isPermanent')) {
-      return moment.utc(this.get('model.expires_on'));
+      return moment(this.get('model.expires_on'));
     } else {
       return null;
     }
-  }.property('isPermanent'),
-
-  expiresOn: function() {
-    return this.get('expiresMoment');
-  }.property('expiresMoment', 'clock.tick'),
+  }.property('isPermanent', 'model.expires_on'),
 
   isExpired: function() {
     if (this.get('expiresOn')) {

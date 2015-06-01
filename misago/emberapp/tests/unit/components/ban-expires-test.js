@@ -24,18 +24,6 @@ test('isPermanent works', function(assert) {
   assert.ok(!component.get('isPermanent'));
 });
 
-test('expiresMoment works', function(assert) {
-  assert.expect(2);
-
-  var component = this.subject();
-
-  component.set('model', {'expires_on': null});
-  assert.equal(component.get('expiresMoment'), null);
-
-  component.set('model', {'expires_on': '2015-07-30T12:15:00Z'});
-  assert.ok(component.get('expiresMoment').fromNow);
-});
-
 test('expiresOn works', function(assert) {
   assert.expect(2);
 
