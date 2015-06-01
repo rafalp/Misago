@@ -17,7 +17,7 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         self.link = '/api/users/%s/signature/' % self.user.pk
 
     def test_signature_no_permission(self):
-        """edit signature view with no ACL returns 403"""
+        """edit signature api with no ACL returns 403"""
         override_acl(self.user, {
             'can_have_signature': 0,
         })

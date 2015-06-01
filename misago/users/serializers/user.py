@@ -6,7 +6,12 @@ from misago.acl import serialize_acl
 
 from misago.users.serializers import RankSerializer
 
-__ALL__ = ['AuthenticatedUserSerializer', 'AnonymousUserSerializer']
+__all__ = [
+    'AuthenticatedUserSerializer',
+    'AnonymousUserSerializer',
+    'BasicUserSerializer',
+    'UserSerializer',
+]
 
 
 class AuthenticatedUserSerializer(serializers.ModelSerializer):
@@ -34,7 +39,8 @@ class AuthenticatedUserSerializer(serializers.ModelSerializer):
             'subscribe_to_replied_threads',
             'threads',
             'posts',
-            'acl')
+            'acl'
+        )
 
     def get_acl(self, obj):
         return serialize_acl(obj)
@@ -46,3 +52,25 @@ class AnonymousUserSerializer(serializers.Serializer):
 
     def get_acl(self, obj):
         return serialize_acl(obj)
+
+
+class BasicUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = (
+            'id',
+            'username',
+            'slug',
+            'avatar_hash'
+        )
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = (
+            'id',
+            'username',
+            'slug',
+            'avatar_hash'
+        )

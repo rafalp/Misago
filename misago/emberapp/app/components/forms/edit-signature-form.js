@@ -7,7 +7,7 @@ export default Ember.Component.extend({
   isSaving: false,
   isErrored: false,
 
-  options: '',
+  options: null,
   signature: '',
 
   apiUrl: function() {
@@ -19,9 +19,11 @@ export default Ember.Component.extend({
     this.ajax.get(this.get('apiUrl')
     ).then(function(options) {
       if (self.isDestroyed) { return; }
-      self.set('options', Ember.Object.create(options));
-      self.set('signature', self.get('options.signature.plain') || '');
-      self.set('isLoaded', true);
+      self.setProperties({
+        'options': Ember.Object.create(options),
+        'signature': self.get('options.signature.plain') || '',
+        'isLoaded': true
+      });
     }, function(jqXHR) {
       if (self.isDestroyed) { return; }
       if (typeof jqXHR.responseJSON !== 'undefined') {
