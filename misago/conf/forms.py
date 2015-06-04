@@ -15,7 +15,7 @@ class ValidateChoicesNum(object):
 
         if self.min_choices and self.min_choices > data_len:
             message = ungettext(
-                'You have to select at least one option.',
+                'You have to select at least %(choices)d option.',
                 'You have to select at least %(choices)d options.',
                 self.min_choices)
             message = message % {'choices': self.min_choices}
@@ -23,7 +23,7 @@ class ValidateChoicesNum(object):
 
         if self.max_choices and self.max_choices < data_len:
             message = ungettext(
-                'You cannot select more than one option.',
+                'You cannot select more than %(choices)d option.',
                 'You cannot select more than %(choices)d options.',
                 self.max_choices)
             message = message % {'choices': self.max_choices}
