@@ -6,8 +6,8 @@
   <div class="panel-body">
     {{misago-editor value=signature inputHeight=60 toolbar=false limit=options.limit}}
 
-    {{#if isSaving}}
-    <button type="button" class="btn btn-primary btn-block-sm" disabled="disabled">
+    {{#if isBusy}}
+    <button type="button" class="btn btn-primary btn-block-sm disabled" disabled="disabled">
       <span class="fa fa-cog fa-spin"></span>
       {{gettext "Saving changes..."}}
     </button>
@@ -24,7 +24,7 @@
     </div>
     {{/if}}
   </div>
-  {{else if isErrored}}
+  {{else if loadError}}
   <div class="panel-error">
 
     <div class="error-icon">
@@ -32,11 +32,11 @@
     </div>
 
     <div class="error-message">
-      {{#if isErrored.reason}}
-      <p class="lead">{{isErrored.detail}}</p>
-      {{{isErrored.reason}}}
+      {{#if loadError.reason}}
+      <p class="lead">{{loadError.detail}}</p>
+      {{{loadError.reason}}}
       {{else}}
-      <p>{{isErrored.detail}}</p>
+      <p>{{loadError.detail}}</p>
       {{/if}}
     </div>
 

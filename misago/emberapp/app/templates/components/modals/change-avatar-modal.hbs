@@ -7,7 +7,7 @@
   <div class="modal-body">
     {{component activeForm options=options activeForm=activeForm}}
   </div>
-  {{else if error}}
+  {{else if loadError}}
   <div class="modal-body modal-message">
 
     <div class="message-icon">
@@ -15,11 +15,11 @@
     </div>
 
     <p class="lead">
-      {{error.detail}}
+      {{loadError.detail}}
     </p>
 
-    {{#if error.reason}}
-      {{{error.reason}}}
+    {{#if loadError.reason}}
+      {{{loadError.reason}}}
     {{/if}}
 
   </div>

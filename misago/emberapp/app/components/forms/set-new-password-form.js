@@ -3,7 +3,8 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   tagName: 'form',
 
-  isLoading: false,
+  isBusy: false,
+
   password: '',
 
   router: function() {
@@ -15,7 +16,7 @@ export default Ember.Component.extend({
   }.property('model'),
 
   submit: function() {
-    if (this.get('isLoading')) { return false; }
+    if (this.get('isBusy')) { return false; }
 
     var password = Ember.$.trim(this.get('password'));
 
@@ -24,7 +25,7 @@ export default Ember.Component.extend({
       return false;
     }
 
-    this.set('isLoading', true);
+    this.set('isBusy', true);
 
     var self = this;
     this.ajax.post(this.get('url'), {
@@ -36,7 +37,7 @@ export default Ember.Component.extend({
       if (self.isDestroyed) { return; }
       self.error(jqXHR);
     }).finally(function() {
-      self.set('isLoading', false);
+      self.set('isBusy', false);
     });
 
     return false;

@@ -18,12 +18,14 @@
 {{/each}}
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
-    <button type="button" class="btn btn-default btn-outlined btn-block {{if isBusy "disabled"}}" {{if isBusy "disabled"}} {{action "cancel"}}>
-      {{#if isBusy}}
+    {{#if isBusy}}
+      <button type="button" class="btn btn-default btn-outlined btn-block disabled" disabled="disabled">
         {{gettext "Setting avatar..."}}
-      {{else}}
+      </button>
+    {{else}}
+      <button type="button" class="btn btn-default btn-outlined btn-block" {{action "cancel"}}>
         {{gettext "Cancel"}}
-      {{/if}}
-    </button>
+      </button>
+    {{/if}}
   </div>
 </div>

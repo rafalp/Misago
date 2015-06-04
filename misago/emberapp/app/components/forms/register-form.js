@@ -6,9 +6,9 @@ export default Ember.Component.extend({
 
   zxcvbn: Ember.inject.service('zxcvbn'),
 
-  isReady: false,
-  isErrored: false,
-  isLoading: false,
+  isLoaded: false,
+  loadError: null,
+  isBusy: false,
 
   username: '',
   email: '',
@@ -69,16 +69,16 @@ export default Ember.Component.extend({
       if (self.isDestroyed) { return; }
 
       if (array[0].state === 'rejected') {
-        self.set('isErrored', true);
+        self.set('loadError', true);
         console.log('zxcvbn service failed to load.');
       }
 
       if (array[1].state === 'rejected') {
-        self.set('isErrored', true);
+        self.set('loadError', true);
         console.log('captcha service failed to load.');
       }
 
-      self.set('isReady', !self.get('isErrored'));
+      self.set('isLoaded', !self.get('loadError'));
       self.get('captcha').reset();
     });
   }.on('didInsertElement'),
@@ -160,7 +160,7 @@ export default Ember.Component.extend({
   }.observes('captcha.value'),
 
   submit: function() {
-    if (this.get('isLoading')) {
+    if (this.get('isBusy')) {
       return false;
     }
 
@@ -182,7 +182,7 @@ export default Ember.Component.extend({
       return false;
     }
 
-    this.set('isLoading', true);
+    this.set('isBusy', true);
 
     var self = this;
     this.ajax.post('users', data
@@ -194,7 +194,7 @@ export default Ember.Component.extend({
       self.error(jqXHR);
     }).finally(function() {
       if (self.isDestroyed) { return; }
-      self.set('isLoading', false);
+      self.set('isBusy', false);
     });
 
     return false;

@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   tagName: 'form',
   classNames: 'form-horizontal',
 
-  isSaving: false,
+  isBusy: false,
 
   subscribeToChoices: [
     {value: 0, label: gettext('No')},
@@ -58,7 +58,7 @@ export default Ember.Component.extend({
   }.property(),
 
   submit: function() {
-    if (this.get('isSaving')) {
+    if (this.get('isBusy')) {
       return false;
     }
 
@@ -69,7 +69,7 @@ export default Ember.Component.extend({
       subscribe_to_replied_threads: this.get('subscribe_to_replied_threads')
     };
 
-    this.set('isSaving', true);
+    this.set('isBusy', true);
 
     var self = this;
     this.ajax.post(this.get('apiUrl'), newOptions
@@ -81,7 +81,7 @@ export default Ember.Component.extend({
       self.error(jqXHR);
     }).finally(function() {
       if (self.isDestroyed) { return; }
-      self.set('isSaving', false);
+      self.set('isBusy', false);
     });
 
     return false;

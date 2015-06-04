@@ -1,4 +1,4 @@
-{{#if isReady}}
+{{#if isLoaded}}
 <div class="modal-body">
 
   {{#form-row label=(gettext "Username:") for="id_username" label-class="col-md-4" control-class="col-md-8" validation=validation.username}}
@@ -35,9 +35,8 @@
 <div class="modal-footer">
   <div class="text-center">
 
-    {{#if isLoading}}
-    <button type="button" class="btn btn-primary" disabled="disabled">
-      <span class="fa fa-cog fa-spin"></span>
+    {{#if isBusy}}
+    <button type="button" class="btn btn-primary disabled" disabled="disabled">
       {{gettext "Registering..."}}
     </button>
     {{else}}
@@ -59,7 +58,7 @@
 
   </div>
 </div>
-{{else if isErrored}}
+{{else if loadError}}
 <div class="modal-body modal-message">
 
   <p class="lead">

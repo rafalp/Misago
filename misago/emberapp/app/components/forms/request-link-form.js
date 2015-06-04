@@ -3,7 +3,8 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   tagName: 'form',
 
-  isLoading: false,
+  isBusy: false,
+
   email: '',
 
   router: function() {
@@ -11,18 +12,18 @@ export default Ember.Component.extend({
   }.property(),
 
   submit: function() {
-    if (this.get('isLoading')) {
+    if (this.get('isBusy')) {
       return false;
     }
 
     var email = Ember.$.trim(this.get('email'));
 
-    if (email === "") {
+    if (email.length === 0) {
       this.toast.warning(gettext("Enter e-mail address."));
       return false;
     }
 
-    this.set('isLoading', true);
+    this.set('isBusy', true);
 
     var self = this;
     this.ajax.post(this.get('url'), {
@@ -35,7 +36,7 @@ export default Ember.Component.extend({
       self.error(jqXHR);
     }).finally(function() {
       if (self.isDestroyed) { return; }
-      self.set('isLoading', false);
+      self.set('isBusy', false);
     });
 
     return false;

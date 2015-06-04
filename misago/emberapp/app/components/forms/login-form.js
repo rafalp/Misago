@@ -3,7 +3,8 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   tagName: 'form',
 
-  isLoading: false,
+  isBusy: false,
+
   showActivation: false,
 
   username: '',
@@ -14,7 +15,7 @@ export default Ember.Component.extend({
   }.property(),
 
   submit: function() {
-    if (this.get('isLoading')) {
+    if (this.get('isBusy')) {
       return false;
     }
 
@@ -38,7 +39,7 @@ export default Ember.Component.extend({
       self.error(jqXHR);
     }).finally(function() {
       if (self.isDestroyed) { return; }
-      self.set('isLoading', false);
+      self.set('isBusy', false);
     });
 
     return false;

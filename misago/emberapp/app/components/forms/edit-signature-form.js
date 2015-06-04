@@ -4,8 +4,8 @@ export default Ember.Component.extend({
   tagName: 'form',
 
   isLoaded: false,
-  isSaving: false,
-  isErrored: false,
+  loadError: false,
+  isBusy: false,
 
   options: null,
   signature: '',
@@ -27,17 +27,17 @@ export default Ember.Component.extend({
     }, function(jqXHR) {
       if (self.isDestroyed) { return; }
       if (typeof jqXHR.responseJSON !== 'undefined') {
-        self.set('isErrored', jqXHR.responseJSON);
+        self.set('loadError', jqXHR.responseJSON);
       } else if (jqXHR.status === 0) {
-        self.set('isErrored', {'detail': gettext('Lost connection with application.')});
+        self.set('loadError', {'detail': gettext('Lost connection with application.')});
       } else {
-        self.set('isErrored', {'detail': gettext('Application has errored.')});
+        self.set('loadError', {'detail': gettext('Application has errored.')});
       }
     });
   }.on('init'),
 
   submit: function() {
-    if (this.get('isSaving')) {
+    if (this.get('isBusy')) {
       return false;
     }
 
@@ -46,7 +46,7 @@ export default Ember.Component.extend({
       return false;
     }
 
-    this.set('isSaving', true);
+    this.set('isBusy', true);
 
     var self = this;
     this.ajax.post(this.get('apiUrl'), {'signature': this.get('signature')}
@@ -58,7 +58,7 @@ export default Ember.Component.extend({
       self.error(jqXHR);
     }).finally(function() {
       if (self.isDestroyed) { return; }
-      self.set('isSaving', false);
+      self.set('isBusy', false);
     });
 
     return false;

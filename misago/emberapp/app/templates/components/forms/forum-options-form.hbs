@@ -76,9 +76,8 @@
     <div class="row">
       <div class="col-md-7 col-md-offset-5">
 
-        {{#if isSaving}}
-        <button type="button" class="btn btn-primary btn-block-sm" disabled="disabled">
-          <span class="fa fa-cog fa-spin"></span>
+        {{#if isBusy}}
+        <button type="button" class="btn btn-primary btn-block-sm disabled" disabled="disabled">
           {{gettext "Saving changes..."}}
         </button>
         {{else}}

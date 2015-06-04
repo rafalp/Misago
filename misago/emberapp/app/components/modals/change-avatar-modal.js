@@ -3,8 +3,10 @@ import ModalComponent from 'misago/mixins/modal-component';
 
 export default Ember.Component.extend(ModalComponent, {
   className: 'modal-change-avatar',
+
   isLoaded: false,
-  error: false,
+  loadError: false,
+
   options: null,
 
   loadOptions: function() {
@@ -17,11 +19,11 @@ export default Ember.Component.extend(ModalComponent, {
     }, function(jqXHR) {
       if (self.isDestroyed) { return; }
       if (typeof jqXHR.responseJSON !== 'undefined') {
-        self.set('error', jqXHR.responseJSON);
+        self.set('loadError', jqXHR.responseJSON);
       } else if (jqXHR.status === 0) {
-        self.set('error', {detail: gettext('Lost connection with application.')});
+        self.set('loadError', {detail: gettext('Lost connection with application.')});
       } else {
-        self.set('error', {detail: gettext('Application has errored.')});
+        self.set('loadError', {detail: gettext('Application has errored.')});
       }
     });
   }.on('didInsertElement'),

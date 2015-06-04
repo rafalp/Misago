@@ -5,8 +5,8 @@ export default Ember.Component.extend({
   classNames: 'form-horizontal',
 
   isLoaded: false,
-  isErrored: false,
-  isSaving: false,
+  loadError: null,
+  isBusy: false,
 
   options: null,
   username: '',
@@ -32,11 +32,11 @@ export default Ember.Component.extend({
     }, function(jqXHR) {
       if (self.isDestroyed) { return; }
       if (typeof jqXHR.responseJSON !== 'undefined') {
-        self.set('isErrored', jqXHR.responseJSON);
+        self.set('loadError', jqXHR.responseJSON);
       } else if (jqXHR.status === 0) {
-        self.set('isErrored', {'detail': gettext('Lost connection with application.')});
+        self.set('loadError', {'detail': gettext('Lost connection with application.')});
       } else {
-        self.set('isErrored', {'detail': gettext('Application has errored.')});
+        self.set('loadError', {'detail': gettext('Application has errored.')});
       }
     });
   }.on('init'),
@@ -75,7 +75,7 @@ export default Ember.Component.extend({
   }.observes('username'),
 
   submit: function() {
-    if (this.get('isLoading')) {
+    if (this.get('isBusy')) {
       return false;
     }
 
@@ -93,7 +93,7 @@ export default Ember.Component.extend({
       return false;
     }
 
-    this.set('isSaving', true);
+    this.set('isBusy', true);
 
     var self = this;
     this.ajax.post(this.get('apiUrl'), data
@@ -105,7 +105,7 @@ export default Ember.Component.extend({
       self.error(jqXHR);
     }).finally(function() {
       if (self.isDestroyed) { return; }
-      self.set('isSaving', false);
+      self.set('isBusy', false);
     });
 
     return false;

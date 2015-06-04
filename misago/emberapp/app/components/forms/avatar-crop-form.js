@@ -4,8 +4,8 @@ export default Ember.Component.extend({
   classNames: 'avatar-crop',
   cropit: Ember.inject.service('cropit'),
 
-  isLoading: true,
-  isCropping: false,
+  isLoaded: false,
+  isBusy: false,
 
   secret: '',
   isNested: false,
@@ -43,7 +43,7 @@ export default Ember.Component.extend({
   loadLibrary: function() {
     var self = this;
     this.get('cropit').load().then(function() {
-      self.set('isLoading', false);
+      self.set('isLoaded', true);
 
       Ember.run.scheduleOnce('afterRender', function() {
         // initialise cropper
@@ -92,8 +92,8 @@ export default Ember.Component.extend({
 
   actions: {
     crop: function() {
-      if (this.get('isCropping')) { return; }
-      this.set('isCropping', true);
+      if (this.get('isBusy')) { return; }
+      this.set('isBusy', true);
 
       var opName = 'crop_org';
       if (this.get('isNested')) {
@@ -119,7 +119,6 @@ export default Ember.Component.extend({
         self.set('activeForm', 'select-avatar-type-form');
       }, function(jhXHR) {
         if (self.isDestroyed) { return; }
-        self.set('isCropping', false);
         if (jhXHR.status === 400) {
           self.toast.error(jhXHR.responseJSON.detail);
         } else {
@@ -127,6 +126,7 @@ export default Ember.Component.extend({
         }
       }).finally(function() {
         if (self.isDestroyed) { return; }
+        self.set('isBusy', false);
       });
     },
 

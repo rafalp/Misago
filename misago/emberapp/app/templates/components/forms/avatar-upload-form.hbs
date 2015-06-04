@@ -4,7 +4,7 @@
 
 <input class="file-upload" type="file">
 
-{{#if isUploading}}
+{{#if isBusy}}
 <div class="uploading-file">
   <img src="" alt="">
 
@@ -24,16 +24,22 @@
 
     {{#if allowUpload}}
     <div class="upload-file">
-      <button type="button" class="btn btn-primary btn-block {{if isUploading "disabled"}}" {{if isUploading "disabled"}} {{action "selectFile"}}>
-        {{gettext "Select file"}}
-      </button>
+      {{#if isBusy}}
+        <button type="button" class="btn btn-primary btn-block disabled" disabled="disabled">
+          {{gettext "Uploading..."}}
+        </button>
+      {{else}}
+        <button type="button" class="btn btn-primary btn-block" {{if isBusy "disabled"}} {{action "selectFile"}}>
+          {{gettext "Select file"}}
+        </button>
+      {{/if}}
       <p class="text-muted">
         {{gettext "%(files)s files smaller than %(limit)s" files=extensions limit=(file-size options.upload.limit)}}
       </p>
     </div>
     {{/if}}
 
-    <button type="button" class="btn btn-default btn-outlined btn-block {{if isUploading "disabled"}}" {{if isUploading "disabled"}} {{action "cancel"}}>
+    <button type="button" class="btn btn-default btn-outlined btn-block {{if isBusy "disabled"}}" {{if isBusy "disabled"}} {{action "cancel"}}>
       {{gettext "Cancel"}}
     </button>
 

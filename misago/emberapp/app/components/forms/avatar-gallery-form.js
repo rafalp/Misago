@@ -4,6 +4,7 @@ export default Ember.Component.extend({
   classNames: 'avatar-galleries',
 
   isBusy: false,
+
   activeItem: null,
 
   apiUrl: function() {

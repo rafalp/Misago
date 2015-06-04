@@ -15,13 +15,12 @@
 </div>
 <div class="modal-footer">
   {{#if showActivation}}
-  {{#close-modal-button class="btn btn-block btn-success" goto="forgotten-password"}}
-    {{gettext "Activate account"}}
-  {{/close-modal-button}}
+    {{#close-modal-button class="btn btn-block btn-success" goto="forgotten-password"}}
+      {{gettext "Activate account"}}
+    {{/close-modal-button}}
   {{else}}
-    {{#if isLoading}}
-    <button type="button" class="btn btn-block btn-primary" disabled="disabled">
-      <span class="fa fa-cog fa-spin"></span>
+    {{#if isBusy}}
+    <button type="button" class="btn btn-block btn-primary disabled" disabled="disabled">
       {{gettext "Singing in..."}}
     </button>
     {{else}}

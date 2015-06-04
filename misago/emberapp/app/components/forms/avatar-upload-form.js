@@ -5,9 +5,10 @@ import { endsWith } from 'misago/utils/strings';
 export default Ember.Component.extend({
   classNames: 'avatar-upload',
 
+  isBusy: false,
   allowUpload: true,
+
   selectedImage: null,
-  isUploading: false,
   progress: 0,
   uploadHash: null,
 
@@ -27,7 +28,7 @@ export default Ember.Component.extend({
   }.on('willDestroyElement'),
 
   uploadImage: function(image) {
-    if (this.isDestroyed || this.get('isUploading')) { return; }
+    if (this.isDestroyed || this.get('isBusy')) { return; }
     this.set('allowUpload', false);
 
     // validate file
@@ -64,7 +65,7 @@ export default Ember.Component.extend({
     // begin upload!
     this.setProperties({
       'selectedImage': image,
-      'isUploading': true,
+      'isBusy': true,
       'progress': 0
     });
 
@@ -108,7 +109,7 @@ export default Ember.Component.extend({
       }
     }).finally(function() {
       if (self.isDestroyed) { return; }
-      self.set('isUploading', false);
+      self.set('isBusy', false);
     });
   },
 
