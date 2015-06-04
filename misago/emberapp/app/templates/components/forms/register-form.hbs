@@ -1,15 +1,34 @@
 {{#if isLoaded}}
 <div class="modal-body">
 
-  {{#form-row label=(gettext "Username:") for="id_username" label-class="col-md-4" control-class="col-md-8" validation=validation.username}}
+  {{#form-row
+      label=(gettext "Username:")
+      for="id_username"
+      labelClass="col-md-4"
+      controlClass="col-md-8"
+      validation=validation.username}}
+
     {{input id="id_username" type="text" class="form-control" autocomplete="off" value=username}}
   {{/form-row}}
 
-  {{#form-row label=(gettext "E-mail:") for="id_email" label-class="col-md-4" control-class="col-md-8" validation=validation.email}}
+  {{#form-row
+      label=(gettext "E-mail:")
+      for="id_email"
+      labelClass="col-md-4"
+      controlClass="col-md-8"
+      validation=validation.email}}
+
     {{input id="id_email" type="text" class="form-control" autocomplete="off" value=email}}
   {{/form-row}}
 
-  {{#form-row label=(gettext "Password:") help_text=passwordHelpText for="id_password" label-class="col-md-4" control-class="col-md-8" validation=validation.password}}
+  {{#form-row
+      label=(gettext "Password:")
+      helpText=passwordHelpText
+      for="id_password"
+      labelClass="col-md-4"
+      controlClass="col-md-8"
+      validation=validation.password}}
+
     {{input id="id_password" type="password" class="form-control" autocomplete="off" value=password}}
 
     {{#if passwordHelpText}}
@@ -27,7 +46,7 @@
         {{gettext "Anti-spam test completed."}}
       </p>
     {{else}}
-      {{component captcha.field validation=validation.captcha label-class="col-md-4" control-class="col-md-8"}}
+      {{component captcha.field validation=validation.captcha labelClass="col-md-4" controlClass="col-md-8"}}
     {{/if}}
   {{/if}}
 

@@ -8,10 +8,10 @@
 
       {{#form-row
           label=(gettext "New username:")
-          help_text=changesLeftMessage
+          helpText=changesLeftMessage
           for="id_username"
-          label-class="col-md-4"
-          control-class="col-md-8"
+          labelClass="col-md-4"
+          controlClass="col-md-8"
           validation=validation.username}}
 
         {{input id="id_username" type="text" class="form-control" autocomplete="off" value=username}}

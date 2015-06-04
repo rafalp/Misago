@@ -8,22 +8,22 @@
       <legend>{{gettext "Privacy settings"}}</legend>
 
       {{#form-row
-        label=(gettext "Hide my presence:")
-        help_text=(gettext "If you hide your presence, only members with permission to see hidden users will see when you are online.")
-        for="id_is_hiding_presence"
-        label-class="col-md-5"
-        control-class="col-md-7"
-        validation=validation.is_hiding_presence}}
+          label=(gettext "Hide my presence:")
+          helpText=(gettext "If you hide your presence, only members with permission to see hidden users will see when you are online.")
+          for="id_is_hiding_presence"
+          labelClass="col-md-5"
+          controlClass="col-md-7"
+          validation=validation.is_hiding_presence}}
 
         {{yes-no-switch id="id_is_hiding_presence" value=is_hiding_presence}}
       {{/form-row}}
 
       {{#form-row
-        label=(gettext "Private thread invitations:")
-        for="id_limits_private_thread_invites_to"
-        label-class="col-md-5"
-        control-class="col-md-7"
-        validation=validation.limits_private_thread_invites_to}}
+          label=(gettext "Private thread invitations:")
+          for="id_limits_private_thread_invites_to"
+          labelClass="col-md-5"
+          controlClass="col-md-7"
+          validation=validation.limits_private_thread_invites_to}}
 
         {{view "select"
           id="id_limits_private_thread_invites_to"
@@ -39,11 +39,11 @@
       <legend>{{gettext "Automatic subscriptions"}}</legend>
 
       {{#form-row
-        label=(gettext "Threads I start:")
-        for="id_subscribe_to_started_threads"
-        label-class="col-md-5"
-        control-class="col-md-7"
-        validation=validation.subscribe_to_started_threads}}
+          label=(gettext "Threads I start:")
+          for="id_subscribe_to_started_threads"
+          labelClass="col-md-5"
+          controlClass="col-md-7"
+          validation=validation.subscribe_to_started_threads}}
 
         {{view "select"
           id="id_subscribe_to_started_threads"
@@ -55,11 +55,11 @@
       {{/form-row}}
 
       {{#form-row
-        label=(gettext "Threads I reply to:")
-        for="id_subscribe_to_replied_threads"
-        label-class="col-md-5"
-        control-class="col-md-7"
-        validation=validation.subscribe_to_replied_threads}}
+          label=(gettext "Threads I reply to:")
+          for="id_subscribe_to_replied_threads"
+          labelClass="col-md-5"
+          controlClass="col-md-7"
+          validation=validation.subscribe_to_replied_threads}}
 
         {{view "select"
           id="id_subscribe_to_replied_threads"
