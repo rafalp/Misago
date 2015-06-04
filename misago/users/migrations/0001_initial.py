@@ -100,7 +100,6 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('changed_by_username', models.CharField(max_length=30)),
-                ('changed_by_slug', models.CharField(max_length=30)),
                 ('changed_on', models.DateTimeField(default=django.utils.timezone.now)),
                 ('new_username', models.CharField(max_length=255)),
                 ('old_username', models.CharField(max_length=255)),

@@ -15,7 +15,6 @@ class UsernameChangeSerializer(serializers.ModelSerializer):
             'user',
             'changed_by',
             'changed_by_username',
-            'changed_by_slug',
             'changed_on',
             'new_username',
             'old_username'

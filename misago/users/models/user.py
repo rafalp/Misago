@@ -361,8 +361,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.namechanges.create(new_username=new_username,
                                 old_username=old_username,
                                 changed_by=changed_by,
-                                changed_by_username=changed_by.username,
-                                changed_by_slug=changed_by.slug)
+                                changed_by_username=changed_by.username)
 
     def set_email(self, new_email):
         self.email = UserManager.normalize_email(new_email)
@@ -439,7 +438,6 @@ class UsernameChange(models.Model):
                                    related_name='user_renames',
                                    on_delete=models.SET_NULL)
     changed_by_username = models.CharField(max_length=30)
-    changed_by_slug = models.CharField(max_length=30)
     changed_on = models.DateTimeField(default=timezone.now)
     new_username = models.CharField(max_length=255)
     old_username = models.CharField(max_length=255)
@@ -450,7 +448,6 @@ class UsernameChange(models.Model):
     def set_change_author(self, user):
         self.changed_by = user
         self.changed_by_username = user.username
-        self.changed_by_slug = user.slug
 
 
 class AnonymousUser(DjangoAnonymousUser):
