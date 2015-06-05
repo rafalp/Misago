@@ -1,15 +1,15 @@
+/* jshint unused:false */
 import Ember from 'ember';
 
 export default Ember.Mixin.create({
-  title: function(key, value) {
-    // setter
-    if (arguments.length > 1) {
+  title: Ember.computed({
+    get(key) {
+      return document.title;
+    },
+    set(key, value) {
       this._changeTitle(value);
     }
-
-    // getter
-    return document.title;
-  }.property(),
+  }),
 
   _changeTitle: function(title) {
     if (typeof title === 'string') {
@@ -26,8 +26,6 @@ export default Ember.Mixin.create({
       complete_title += ' | ' + title.parent;
     }
 
-    complete_title += ' | ' + this.get('settings.forum_name');
-
-    document.title = complete_title;
+    document.title = complete_title + ' | ' + this.get('settings.forum_name');
   }
 });
