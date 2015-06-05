@@ -2,6 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   tagName: 'span',
+
   minLength: 3,
   maxLength: 10,
 

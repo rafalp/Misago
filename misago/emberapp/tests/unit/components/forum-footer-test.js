@@ -6,6 +6,8 @@ import {
 moduleFor('component:forum-footer', 'FooterComponent');
 
 test('it exists', function(assert) {
+  assert.expect(1);
+
   var component = this.subject();
   assert.ok(component);
 });
