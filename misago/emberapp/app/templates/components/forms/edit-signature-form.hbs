@@ -31,14 +31,14 @@
       <span class="fa fa-warning fa-lg"></span>
     </div>
 
-    <div class="error-message">
+    {{#routed-links class="error-message"}}
       {{#if loadError.reason}}
       <p class="lead">{{loadError.detail}}</p>
       {{{loadError.reason}}}
       {{else}}
       <p>{{loadError.detail}}</p>
       {{/if}}
-    </div>
+    {{/routed-links}}
 
   </div>
   {{else}}

@@ -7,9 +7,9 @@
       </div>
 
       <div class="error-message">
-        <div class="lead">
+        {{#routed-links class="lead"}}
           {{{model.message.html}}}
-        </div>
+        {{/routed-links}}
 
         {{ban-expires model=model}}
       </div>

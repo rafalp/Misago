@@ -8,21 +8,21 @@
     {{component activeForm options=options activeForm=activeForm}}
   </div>
   {{else if loadError}}
-  <div class="modal-body modal-message">
+    {{#routed-links class="modal-body modal-message"}}
 
-    <div class="message-icon">
-      <span class="fa fa-warning fa-4x text-muted"></span>
-    </div>
+      <div class="message-icon">
+        <span class="fa fa-warning fa-4x text-muted"></span>
+      </div>
 
-    <p class="lead">
-      {{loadError.detail}}
-    </p>
+      <p class="lead">
+        {{loadError.detail}}
+      </p>
 
-    {{#if loadError.reason}}
-      {{{loadError.reason}}}
-    {{/if}}
+      {{#if loadError.reason}}
+        {{{loadError.reason}}}
+      {{/if}}
 
-  </div>
+    {{/routed-links}}
   {{else}}
   <div class="modal-body modal-message">
     <div class="loader"></div>

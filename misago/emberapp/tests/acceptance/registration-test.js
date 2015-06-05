@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import { module, test } from 'qunit';
 import startApp from '../helpers/start-app';
-import PreloadStore from 'misago/services/preload-store';
 import destroyModal from '../helpers/destroy-modal';
 import getToastMessage from '../helpers/toast-message';
 
