@@ -8,7 +8,6 @@
 
     {{#if isBusy}}
     <button type="button" class="btn btn-primary btn-block-sm disabled" disabled="disabled">
-      <span class="fa fa-cog fa-spin"></span>
       {{gettext "Saving changes..."}}
     </button>
     {{else}}
@@ -28,7 +27,7 @@
   <div class="panel-error">
 
     <div class="error-icon">
-      <span class="fa fa-warning fa-lg"></span>
+      <i class="material-icons">error_outline</i>
     </div>
 
     {{#routed-links class="error-message"}}

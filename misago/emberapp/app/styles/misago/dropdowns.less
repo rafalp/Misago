@@ -9,7 +9,6 @@
   .box-shadow(@dropdown-shadow);
 }
 
-
 .dropdown-menu > li > a > .badge {
   float: right;
 }
@@ -23,6 +22,17 @@
   border-top: 1px solid @dropdown-footer-border;
   border-radius: 0px 0px @dropdown-border-radius @dropdown-border-radius;
   padding: 7px 20px;
+}
+
+
+// Upscale dropdown on small display
+@media (max-width: @screen-sm-max) {
+  .dropdown-menu {
+    &>li>a {
+      padding-top: @padding-large-vertical;
+      padding-bottom: @padding-large-vertical;
+    }
+  }
 }
 
 

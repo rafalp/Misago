@@ -1,0 +1,88 @@
+//
+// Material Icons
+// --------------------------------------------------
+
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../fonts/MaterialIcons-Regular.eot); /* For IE6-8 */
+  src: local('Material Icons'),
+       local('MaterialIcons-Regular'),
+       url(../fonts/MaterialIcons-Regular.woff2) format('woff2'),
+       url(../fonts/MaterialIcons-Regular.woff) format('woff'),
+       url(../fonts/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  text-align: center;
+  text-transform: none;
+  letter-spacing: normal;
+
+  vertical-align: sub;
+
+  position: relative;
+  top: 1px;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+
+  /* Faded */
+  .opacity(0.6);
+
+  /* Sizes */
+  font-size: @font-size-large;
+}
+
+
+/* Upscale icons in leads */
+.lead .material-icons {
+  font-size: floor((@font-size-base * 1.25));
+}
+
+
+/* Remove opacity from button icons */
+.btn .material-icons {
+  .opacity(1);
+}
+
+
+/* Rotation animation */
+
+@-webkit-keyframes md-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg * -4);
+            transform: rotate(359deg * -4);
+  }
+}
+
+@keyframes md-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg * -4);
+            transform: rotate(359deg * -4);
+  }
+}

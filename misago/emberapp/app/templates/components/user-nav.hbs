@@ -1,6 +1,5 @@
 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-  {{user-avatar user=auth.user size=28}}
-  <span class="fa fa-bars hidden-xs hidden-sm"></span>
+  {{user-avatar user=auth.user size=32}}
 </a>
 <ul class="dropdown-menu user-dropdown dropdown-menu-right" role="menu">
   <li class="user-preview">
@@ -43,35 +42,35 @@
   </li>
   <li class="dropdown-space hidden-md hidden-lg">
     <button type="button" class="btn btn-outlined btn-success btn-block">
-      <span class="glyphicon glyphicon-comment"></span>
+      <i class="material-icons">chat_bubble_outline</i>
       {{gettext "Start thread"}}
     </button>
   </li>
   <li class="divider hidden-md hidden-lg"></li>
   <li>
     <a href="#">
-      <span class="fa fa-exclamation-triangle fa-fw"></span>
+      <i class="material-icons">error_outline</i>
       {{gettext "Reports"}}
       <span class="badge">132</span>
     </a>
   </li>
   <li>
     <a href="#">
-      <span class="fa fa-bell-o fa-fw"></span>
+      <i class="material-icons">notifications_none</i>
       {{gettext "Notifications"}}
       <span class="badge">132</span>
     </a>
   </li>
   <li>
     <a href="#">
-      <span class="fa fa-inbox fa-fw"></span>
+      <i class="material-icons">inbox</i>
       {{gettext "Private threads"}}
       <span class="badge">132</span>
     </a>
   </li>
   <li>
     <a href="#">
-      <span class="fa fa-bookmark fa-fw"></span>
+      <i class="material-icons">bookmark_border</i>
       {{gettext "Subscriptions"}}
     </a>
   </li>

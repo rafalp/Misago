@@ -32,12 +32,12 @@
     <div class="text-center">
       {{#if model.isActive}}
         {{#refresh-button class="btn btn-default"}}
-          <span class="fa fa-refresh"></span>
+          <i class="material-icons">autorenew</i>
           {{gettext "Refresh page"}}
         {{/refresh-button}}
       {{else}}
         <button type="button" class="btn btn-default" data-dismiss="modal">
-          <span class="fa fa-ok"></span>
+          <i class="material-icons">check</i>
           {{gettext "Continue"}}
         </button>
       {{/if}}

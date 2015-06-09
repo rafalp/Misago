@@ -20,13 +20,13 @@
       <strong class="item-name right-margin"> {{change.changed_by_username}}</strong>
       {{/if}}
 
-      {{change.old_username}} <span class="fa fa-chevron-right"></span> {{change.new_username}}
+      {{change.old_username}} <i class="material-icons">arrow_forward</i> {{change.new_username}}
     </div>
     <div class="second-row text-muted" title="{{format-date change.changed_on tick=clock.tick}}">{{rel-date change.changed_on tick=clock.tick}}</div>
   </li>
   {{else}}
   <li class="list-group-item">
-    <span class="fa fa-info-circle fa-lg"></span>
+    <i class="material-icons">info_outline</i>
     {{gettext "Your username was never changed."}}
   </li>
   {{/each}}
@@ -44,7 +44,7 @@
       {{ui-text-preview class="ui-preview-text item-name right-margin"}}
 
       {{ui-text-preview class="ui-preview-text"}}
-      <span class="fa fa-chevron-right"></span>
+      <i class="material-icons">arrow_forward</i>
       {{ui-text-preview class="ui-preview-text"}}
     </div>
     <div class="second-row text-muted">

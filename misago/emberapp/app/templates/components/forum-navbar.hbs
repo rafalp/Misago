@@ -40,15 +40,15 @@
 
     {{#if auth.isAuthenticated}}
     <ul class="nav navbar-nav navbar-user-nav hidden-xs hidden-sm">
-      <li class="">
+      <li class="icon">
         <a href="#">
-          <span class="fa fa-exclamation-triangle fa-lg"></span>
+          <i class="material-icons">error_outline</i>
           <span class="badge">132</span>
         </a>
       </li>
-      <li class="user-notices dropdown">
+      <li class="icon user-notices dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-          <span class="fa fa-bell-o fa-lg"></span>
+          <i class="material-icons">notifications_none</i>
           <span class="badge">132</span>
         </a>
         <ul class="dropdown-menu" role="menu">
@@ -62,7 +62,7 @@
       {{user-nav}}
       <li>
         <button type="button" class="btn btn-outlined btn-success navbar-btn">
-          <span class="glyphicon glyphicon-comment"></span>
+          <i class="material-icons">chat_bubble_outline</i>
           {{gettext "Start thread"}}
         </button>
       </li>
@@ -90,27 +90,27 @@
     {{/if}}
     <li>
       <a href="#">
-        <span class="glyphicon glyphicon-comment"></span>
+        <i class="material-icons">chat</i>
       </a>
     </li>
     <li>
       <a href="#">
-        <span class="glyphicon glyphicon-th-list"></span>
+        <i class="material-icons">forum</i>
       </a>
     </li>
     <li>
       <a href="#">
-        <span class="glyphicon glyphicon-heart-empty"></span>
+        <i class="material-icons">favorite_border</i>
       </a>
     </li>
     <li>
       <a href="#">
-        <span class="glyphicon glyphicon-user"></span>
+        <i class="material-icons">group</i>
       </a>
     </li>
     <li>
       <a href="#">
-        <span class="glyphicon glyphicon-search"></span>
+        <i class="material-icons">search</i>
       </a>
     </li>
     {{#if auth.isAuthenticated}}
@@ -118,7 +118,7 @@
     {{else}}
     <li class="user-menu dropdown">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-        {{user-avatar size=28}}
+        {{user-avatar size=30}}
       </a>
       <ul class="dropdown-menu user-dropdown dropdown-menu-right" role="menu">
         <li class="guest-preview">

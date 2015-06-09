@@ -30,7 +30,7 @@
     img {
       display: inline-block;
       height: @navbar-brand-height;
-      margin: ((@line-height-computed - @navbar-brand-height) / 2) 0px;
+      margin: ((@navbar-padding-vertical - @navbar-brand-height) / 2) 0px;
 
       position: relative;
       bottom: 3px;
@@ -55,16 +55,28 @@
         &:active, &:focus {
           color: @navbar-default-link-active-color;
         }
+      }
 
-        // Align badges to glyhps
-        &>.badge {
-          vertical-align: inherit;
-          margin: (@line-height-computed / -2) 0px;
-        }
+      &.icon {
+        &>a {
+          height: @navbar-height;
+          padding: (@navbar-height - @navbar-icon-size) / 2 @navbar-padding-horizontal;
+          padding-bottom: 0px;
 
-        &>.glyphicon {
-          position: relative;
-          top: 4px;
+          &>.material-icons {
+            .opacity(1);
+
+            font-size: @navbar-icon-size;
+            line-height: @navbar-icon-size;
+          }
+
+          // Align badges to glyhps
+          &>.badge {
+            vertical-align: top;
+
+            position: relative;
+            bottom: (@navbar-icon-size - (6px + @font-size-small)) / -2;
+          }
         }
       }
     }
@@ -85,16 +97,29 @@
 
   .user-menu {
     .dropdown-toggle {
-      .fa {
-        font-size: @font-size-base;
-      }
+      height: @navbar-height;
+      padding: (@navbar-height - @navbar-avatar-height) / 2 @navbar-padding-horizontal;
+      padding-bottom: 0px;
+
+      line-height: 0px;
 
       img {
         border-radius: @avatar-radius-small;
-        margin: (@line-height-computed / -2) 0px;
 
-        width: 28px;
-        height: 28px;
+        width: @navbar-avatar-height;
+        height: @navbar-avatar-height;
+      }
+
+      &:hover {
+        img {
+          .opacity(0.6);
+        }
+      }
+
+      &:active, &:focus {
+        img {
+          .opacity(0.3);
+        }
       }
     }
   }
@@ -113,6 +138,19 @@
   }
 }
 
+
+// Icons in buttons
+.navbar-primary {
+  .navbar-nav {
+    &>li {
+      &>.btn {
+        .material-icons {
+          font-size: @font-size-large;
+        }
+      }
+    }
+  }
+}
 
 // Dropdowns
 .navbar-static-top {
@@ -136,26 +174,27 @@
     width: 100%;
 
     &>li {
-      &>a {
-        padding: @navbar-compact-padding-vertical 0px;
+      &>a, &>.dropdown-toggle {
+        padding: 0px;
+        padding-top: (@navbar-compact-height - @navbar-compact-item-height) / 2;
         height: @navbar-compact-height;
 
         text-align: center;
 
-        // Align glyphs to middle of height
-        .glyphicon {
-          position: static;
-
-          font-size: 20px;
-        }
-
         // Align images
         img {
-          width: 28px;
-          margin: ((@line-height-computed - 28) / 2) 0px;
+          width: @navbar-compact-item-height;
+          height: @navbar-compact-item-height;
 
-          position: relative;
-          bottom: 2px;
+          position: static;
+        }
+
+        // Align and de-opac icons
+        .material-icons {
+          .opacity(1);
+
+          font-size: @navbar-compact-item-height;
+          line-height: @navbar-compact-item-height;
         }
 
         // Custom touched style

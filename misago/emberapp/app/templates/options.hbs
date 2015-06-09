@@ -5,11 +5,12 @@
 
       <div class="btn-group hidden-md hidden-lg pull-right">
         <button type="button" class="btn btn-default btn-outlined dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-          <span class="fa fa-bars fa-lg"></span>
+          <i class="material-icons md-15x">menu</i>
         </button>
         <ul class="dropdown-menu" role="menu">
           {{#link-to "options.forum" tagName="li" href=false}}
             {{#link-to "options.forum" bubbles=false activeClass=""}}
+              <i class="material-icons">settings</i>
               {{gettext "Forum options"}}
             {{/link-to}}
           {{/link-to}}
@@ -17,6 +18,7 @@
           {{#if auth.user.acl.can_have_signature}}
             {{#link-to "options.signature" tagName="li" href=false}}
               {{#link-to "options.signature" bubbles=false activeClass=""}}
+                <i class="material-icons">border_color</i>
                 {{gettext "Edit signature"}}
               {{/link-to}}
             {{/link-to}}
@@ -24,18 +26,21 @@
 
           {{#link-to "options.username" tagName="li" href=false}}
             {{#link-to "options.username" bubbles=false activeClass=""}}
+              <i class="material-icons">school</i>
               {{gettext "Change username"}}
             {{/link-to}}
           {{/link-to}}
 
           {{#link-to "options.password" tagName="li" href=false}}
             {{#link-to "options.password" bubbles=false activeClass=""}}
+              <i class="material-icons">vpn_key</i>
               {{gettext "Change password"}}
             {{/link-to}}
           {{/link-to}}
 
           {{#link-to "options.email" tagName="li" href=false}}
             {{#link-to "options.email" bubbles=false activeClass=""}}
+              <i class="material-icons">drafts</i>
               {{gettext "Change e-mail"}}
             {{/link-to}}
           {{/link-to}}
@@ -51,24 +56,29 @@
 
         <div class="list-group nav-side">
           {{#link-to "options.forum" class="list-group-item"}}
+            <i class="material-icons">settings</i>
             {{gettext "Forum options"}}
           {{/link-to}}
 
           {{#if auth.user.acl.can_have_signature}}
             {{#link-to "options.signature" class="list-group-item"}}
+              <i class="material-icons">border_color</i>
               {{gettext "Edit signature"}}
             {{/link-to}}
           {{/if}}
 
           {{#link-to "options.username" class="list-group-item"}}
+            <i class="material-icons">school</i>
             {{gettext "Change username"}}
           {{/link-to}}
 
           {{#link-to "options.password" class="list-group-item"}}
+            <i class="material-icons">vpn_key</i>
             {{gettext "Change password"}}
           {{/link-to}}
 
           {{#link-to "options.email" class="list-group-item"}}
+            <i class="material-icons">drafts</i>
             {{gettext "Change e-mail"}}
           {{/link-to}}
         </div>

@@ -75,6 +75,61 @@
 }
 
 
+// Transmission Bars
+.loader-compact {
+  margin: 0px auto;
+  width: 50px;
+  height: 30px;
+  text-align: center;
+  font-size: 10px;
+
+  & > div {
+    background-color: @loader-color;
+    height: 100%;
+    width: 6px;
+    display: inline-block;
+
+    -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+    animation: stretchdelay 1.2s infinite ease-in-out;
+  }
+
+  .rect2 {
+    -webkit-animation-delay: -1.1s;
+    animation-delay: -1.1s;
+  }
+
+  .rect3 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+  }
+
+  .rect4 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+  }
+
+  .rect5 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
+  }
+}
+
+@-webkit-keyframes stretchdelay {
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
+  20% { -webkit-transform: scaleY(1.0) }
+}
+
+@keyframes stretchdelay {
+  0%, 40%, 100% {
+    transform: scaleY(0.4);
+    -webkit-transform: scaleY(0.4);
+  }  20% {
+    transform: scaleY(1.0);
+    -webkit-transform: scaleY(1.0);
+  }
+}
+
+
 // Loading overlay used for images
 .loading-overlay {
   position: absolute; // needs to be positioned inside relative
@@ -85,12 +140,14 @@
   display: table;
   background-color: @loading-overlay-bg;
 
-  color: @loading-overlay-color;
-
   &>.overlay-icon {
     display: table-cell;
     vertical-align: middle;
 
     text-align: center;
+
+    .loader-compact>div{
+      background-color: @loading-overlay-color;
+    }
   }
 }

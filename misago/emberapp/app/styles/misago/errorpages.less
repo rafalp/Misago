@@ -8,9 +8,10 @@
 
   .error-icon {
     padding-bottom: @line-height-computed;
-    .opacity(0.5);
 
-    font-size: @font-size-large * 4;
+    .material-icons {
+      font-size: @font-size-large * 4;
+    }
   }
 
   .lead {
@@ -20,9 +21,11 @@
   /* Small devices (tablets, 768px and up) */
   @media (min-width: @screen-sm-min) {
     .error-icon {
-      .opacity(0.3);
+      .material-icons {
+        .opacity(0.3);
 
-      font-size: @font-size-large * 5;
+        font-size: @font-size-large * 5;
+      }
     }
 
     .lead, .lead p {
@@ -33,7 +36,9 @@
   /* Medium devices (desktops, 992px and up) */
   @media (min-width: @screen-md-min) {
     .error-icon {
-      font-size: @font-size-large * 7;
+      .material-icons {
+        font-size: @font-size-large * 7;
+      }
     }
 
     p {

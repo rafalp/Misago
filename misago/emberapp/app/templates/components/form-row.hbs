@@ -2,10 +2,6 @@
 <div class="{{controlClass}}">
   {{yield}}
 
-  {{#if hasFeedback}}
-    <span class="glyphicon {{if hasSuccess "glyphicon-ok" "glyphicon-remove"}} form-control-feedback" aria-hidden="true"></span>
-  {{/if}}
-
   {{#if messages }}
     <div class="help-block errors">
       {{#each message in messages}}
