@@ -14,17 +14,15 @@
 // Loading animation
 .misago-editor {
   .editor-loading {
-    padding-top: @line-height-computed;
-    padding-bottom: @line-height-computed + 5px;
+    padding-top: @line-height-computed * 1.5;
+    padding-bottom: @line-height-computed * 1.5;
 
     color: @misago-editor-loader-color;
     font-size: @font-size-large;
     text-align: center;
 
-    .fa {
-      margin-right: @line-height-computed / 4;
-      position: relative;
-      top: 5px;
+    .loader-compact {
+      margin-bottom: @line-height-computed / 3;
     }
   }
 }
