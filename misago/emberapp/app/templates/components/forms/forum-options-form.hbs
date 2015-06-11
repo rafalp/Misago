@@ -77,8 +77,9 @@
       <div class="col-md-7 col-md-offset-5">
 
         {{#if isBusy}}
-        <button type="button" class="btn btn-primary btn-block-sm disabled" disabled="disabled">
-          {{gettext "Saving changes..."}}
+        <button type="button" class="btn btn-primary btn-block-sm btn-busy" disabled="disabled">
+          {{gettext "Save changes"}}
+          {{loader-compact}}
         </button>
         {{else}}
         <button type="submit" class="btn btn-primary btn-block-sm">{{gettext "Save changes"}}</button>

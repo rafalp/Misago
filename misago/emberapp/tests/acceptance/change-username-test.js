@@ -56,6 +56,7 @@ test('/options/change-username form can be accessed', function(assert) {
     assert.ok(find('#id_username'));
 
     var listMessage = Ember.$.trim(find('.last-username-changes .list-group-item').text());
+    listMessage = Ember.$.trim(listMessage.replace('info_outline', ''));
     assert.equal(listMessage, 'Your username was never changed.');
   });
 });
@@ -97,6 +98,7 @@ test('/options/change-username form handles backend error', function(assert) {
     assert.equal(errorMessage, 'Nope!');
 
     var listMessage = Ember.$.trim(find('.last-username-changes .list-group-item').text());
+    listMessage = Ember.$.trim(listMessage.replace('info_outline', ''));
     assert.equal(listMessage, 'Your username was never changed.');
   });
 });
@@ -147,6 +149,7 @@ test('/options/change-username disallows username change', function(assert) {
     assert.equal(expiresMessage, 'Next change will be possible in 7 days.');
 
     var listMessage = Ember.$.trim(find('.last-username-changes .list-group-item').text());
+    listMessage = Ember.$.trim(listMessage.replace('info_outline', ''));
     assert.equal(listMessage, 'Your username was never changed.');
   });
 });

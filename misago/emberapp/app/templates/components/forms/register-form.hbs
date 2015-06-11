@@ -55,8 +55,9 @@
   <div class="text-center">
 
     {{#if isBusy}}
-    <button type="button" class="btn btn-primary disabled" disabled="disabled">
-      {{gettext "Registering..."}}
+    <button type="button" class="btn btn-primary btn-busy" disabled="disabled">
+      &nbsp;
+      {{loader-compact}}
     </button>
     {{else}}
     <button type="submit" class="btn btn-primary">

@@ -19,8 +19,9 @@
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     {{#if isBusy}}
-      <button type="button" class="btn btn-default btn-outlined btn-block disabled" disabled="disabled">
-        {{gettext "Setting avatar..."}}
+      <button type="button" class="btn btn-primary btn-outlined btn-block btn-busy" disabled="disabled">
+        &nbsp;
+        {{loader-compact}}
       </button>
     {{else}}
       <button type="button" class="btn btn-default btn-outlined btn-block" {{action "cancel"}}>

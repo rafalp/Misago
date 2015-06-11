@@ -25,8 +25,9 @@
     {{#if allowUpload}}
     <div class="upload-file">
       {{#if isBusy}}
-        <button type="button" class="btn btn-primary btn-block disabled" disabled="disabled">
-          {{gettext "Uploading..."}}
+        <button type="button" class="btn btn-primary btn-block btn-busy" disabled="disabled">
+          &nbsp;
+          {{loader-compact}}
         </button>
       {{else}}
         <button type="button" class="btn btn-primary btn-block" {{if isBusy "disabled"}} {{action "selectFile"}}>

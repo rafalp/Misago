@@ -7,8 +7,9 @@
     {{misago-editor value=signature inputHeight=60 toolbar=false limit=options.limit}}
 
     {{#if isBusy}}
-    <button type="button" class="btn btn-primary btn-block-sm disabled" disabled="disabled">
-      {{gettext "Saving changes..."}}
+    <button type="button" class="btn btn-primary btn-block-sm btn-busy" disabled="disabled">
+      {{gettext "Save changes"}}
+      {{loader-compact}}
     </button>
     {{else}}
     <button type="submit" class="btn btn-primary btn-block-sm">{{gettext "Save changes"}}</button>

@@ -2,6 +2,55 @@
 // Buttons
 // --------------------------------------------------
 
+
+// Make lone button take all its place on small display
+.btn-block-sm {
+  @media (max-width: @screen-sm-max) {
+    display: block;
+    width: 100%;
+
+    text-align: center;
+  }
+}
+
+
+// Make busy button really look busy
+.btn {
+  &.btn-busy {
+    &, &:visited, &:hover, &:focus, &:active {
+      color: transparent;
+    }
+
+    .loader-compact {
+      margin-top: @line-height-computed * -1;
+      height: 20px;
+    }
+
+    &.btn-default {
+      .loader-compact>div { background-color: @btn-default-color; }
+    }
+
+    &.btn-primary {
+      .loader-compact>div { background-color: @btn-primary-color; }
+    }
+
+    &.btn-success {
+      .loader-compact>div { background-color: @btn-success-color; }
+    }
+
+    &.btn-info {
+      .loader-compact>div { background-color: @btn-info-color; }
+    }
+
+    &.btn-warning {
+      .loader-compact>div { background-color: @btn-warning-color; }
+    }
+
+    &.btn-danger {
+      .loader-compact>div { background-color: @btn-danger-color; }
+    }
+  }
+}
 // Mixin for styles
 .btn-outlined-style(@border, @bg, @color) {
   &, &:visited {
@@ -32,6 +81,19 @@
       border-color: desaturate(@border, 50%);
 
       color: desaturate(@border, 50%);
+    }
+  }
+
+  &.btn-busy {
+    &, &:visited, &:hover, &:focus, &:active {
+      background-color: transparent;
+      border-color: @border;
+
+      color: transparent;
+
+      .loader-compact>div {
+        background-color: @border;
+      }
     }
   }
 }
@@ -97,22 +159,24 @@
 
     &:active,
     &.active,
-    .open > .dropdown-toggle& {
+    .open > .dropdown-toggle {
       background-color: @btn-default-active-bg;
       border-color: @btn-default-active-border;
 
       color: @btn-default-active-color;
     }
-  }
-}
 
+    &.btn-busy {
+      &, &:visited, &:hover, &:focus, &:active {
+        background-color: transparent;
+        border-color: @btn-default-border;
 
-// Make lone button take all its place on small display
-.btn-block-sm {
-  @media (max-width: @screen-sm-max) {
-    display: block;
-    width: 100%;
+        color: transparent;
 
-    text-align: center;
+        .loader-compact>div {
+          background-color: @btn-default-border;
+        }
+      }
+    }
   }
 }
