@@ -17,6 +17,8 @@ from misago.users.api.userendpoints.avatar import avatar_endpoint
 from misago.users.api.userendpoints.create import create_endpoint
 from misago.users.api.userendpoints.signature import signature_endpoint
 from misago.users.api.userendpoints.username import username_endpoint
+from misago.users.api.userendpoints.changeemail import change_email_endpoint
+from misago.users.api.userendpoints.changepassword import change_password_endpoint
 
 
 class UserViewSetPermission(BasePermission):
@@ -82,3 +84,17 @@ class UserViewSet(viewsets.GenericViewSet):
             request.user, pk, _("You can't change other users signatures."))
 
         return signature_endpoint(request)
+
+    @detail_route(methods=['post'])
+    def change_password(self, request, pk=None):
+        allow_self_only(
+            request.user, pk, _("You can't change other users passwords."))
+
+        return change_password_endpoint(request)
+
+    @detail_route(methods=['post'])
+    def change_email(self, request, pk=None):
+        allow_self_only(request.user, pk,
+                        _("You can't change other users e-mail addresses."))
+
+        return change_email_endpoint(request)

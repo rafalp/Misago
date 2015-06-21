@@ -1,0 +1,18 @@
+{% extends "misago/emails/base.html" %}
+{% load i18n %}
+
+
+{% block content %}
+{% blocktrans trimmed with user=recipient %}
+{{ user }}, you are receiving this message because you have changed your e-mail address.
+{% endblocktrans %}
+<br>
+<br>
+{% blocktrans trimmed %}
+To confirm this change, click the link below:
+{% endblocktrans %}
+<br>
+<br>
+<a href="{{ SITE_ADDRESS }}{% url 'misago:options_form' form_name='change-email' token=token %}">{% trans "Save changes" %}</a>
+<br>
+{% endblock content %}

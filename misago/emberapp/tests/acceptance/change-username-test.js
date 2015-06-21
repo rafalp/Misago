@@ -315,7 +315,7 @@ test('/options/change-username handles empty form submit', function(assert) {
 
   andThen(function() {
     assert.equal(currentPath(), 'options.username');
-    assert.equal(getToastMessage(), 'Enter new username.');
+    assert.equal(getToastMessage(), 'Form contains errors.');
   });
 });
 

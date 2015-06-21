@@ -1,6 +1,7 @@
 import Ember from 'ember';
+import ValidatedForm from 'misago/components/forms/validated-form';
 
-export default Ember.Component.extend({
+export default ValidatedForm.extend({
   tagName: 'form',
   classNames: 'form-horizontal',
 
@@ -13,11 +14,6 @@ export default Ember.Component.extend({
   username: '',
   email: '',
   password: '',
-
-  validation: null,
-  setValidation: function() {
-    this.set('validation', Ember.Object.create({}));
-  }.on('init'),
 
   router: function() {
     return this.container.lookup('router:main');
@@ -171,13 +167,11 @@ export default Ember.Component.extend({
       captcha: Ember.$.trim(this.get('captcha.value'))
     };
 
-    var lengths = [data.username.length, data.email.length, data.password.length];
-    if (lengths.indexOf(0) !== -1) {
-      this.toast.error(gettext("Fill out all fields."));
-      return false;
-    }
+    this.usernameValidation();
+    this.emailValidation();
+    this.passwordValidation();
 
-    if (this.$('.has-error').length) {
+    if (this.hasValidationErrors()) {
       this.toast.error(gettext("Form contains errors."));
       return false;
     }

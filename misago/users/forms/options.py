@@ -47,53 +47,47 @@ class EditSignatureForm(forms.ModelForm):
         return data
 
 
-class ChangeEmailPasswordForm(forms.Form):
-    current_password = forms.CharField(
-        label=_("Current password"),
-        max_length=200,
-        required=False,
-        widget=forms.PasswordInput())
-
-    new_email = forms.CharField(
-        label=_("New e-mail"),
-        max_length=200,
-        required=False)
-
-    new_password = forms.CharField(
-        label=_("New password"),
-        max_length=200,
-        required=False,
-        widget=forms.PasswordInput())
+class ChangePasswordForm(forms.Form):
+    password = forms.CharField(max_length=200)
+    new_password = forms.CharField(max_length=200)
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
-        super(ChangeEmailPasswordForm, self).__init__(*args, **kwargs)
+        super(ChangePasswordForm, self).__init__(*args, **kwargs)
 
-    def clean(self):
-        data = super(ChangeEmailPasswordForm, self).clean()
-
-        current_password = data.get('current_password')
-        new_email = data.get('new_email')
-        new_password = data.get('new_password')
-
-        if not data.get('current_password'):
-            message = _("You have to enter your current password.")
-            raise forms.ValidationError(message)
-
-        if not self.user.check_password(current_password):
+    def clean_password(self):
+        if not self.user.check_password(self.cleaned_data['password']):
             raise forms.ValidationError(_("Entered password is invalid."))
 
-        if not (new_email or new_password):
-            message = _("You have to enter new e-mail or password.")
+    def clean_new_password(self):
+        data = self.cleaned_data['new_password']
+        validate_password(data)
+        return data
+
+
+class ChangeEmailForm(forms.Form):
+    password = forms.CharField(max_length=200)
+    new_email = forms.CharField(max_length=200)
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(ChangeEmailForm, self).__init__(*args, **kwargs)
+
+    def clean_password(self):
+        if not self.user.check_password(self.cleaned_data['password']):
+            raise forms.ValidationError(_("Entered password is invalid."))
+
+    def clean_new_email(self):
+        data = self.cleaned_data['new_email']
+
+        if not data:
+            message = _("You have to enter new e-mail address.")
             raise forms.ValidationError(message)
 
-        if new_email:
-            if new_email.lower() == self.user.email.lower():
-                message = _("New e-mail is same as current one.")
-                raise forms.ValidationError(message)
-            validate_email(new_email)
+        if data.lower() == self.user.email.lower():
+            message = _("New e-mail is same as current one.")
+            raise forms.ValidationError(message)
 
-        if new_password:
-            validate_password(new_password)
+        validate_email(data)
 
         return data

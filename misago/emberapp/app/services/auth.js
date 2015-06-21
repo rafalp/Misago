@@ -47,7 +47,16 @@ export default Ember.Service.extend({
 
   userObserver: function() {
     this.session.setItem('auth-user', this.get('user'));
-  }.observes('user.avatar_hash', 'user.username', 'user.slug'),
+  }.observes('user.username',
+             'user.slug',
+             'user.email',
+             'user.is_hiding_presence',
+             'user.avatar_hash',
+             'user.new_notifications',
+             'user.limits_private_thread_invites_to',
+             'user.unread_private_threads',
+             'user.subscribe_to_started_threads',
+             'user.subscribe_to_replied_threads'),
 
   // Return user as POJO
 

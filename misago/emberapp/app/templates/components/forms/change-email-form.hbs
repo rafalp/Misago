@@ -1,0 +1,51 @@
+<div class="panel panel-form">
+  <div class="panel-heading">
+    <h3 class="panel-title">{{gettext "Change e-mail"}}</h3>
+  </div>
+  <div class="panel-body">
+
+    {{#form-row
+        label=(gettext "New e-mail:")
+        for="id_new_email"
+        labelClass="col-md-4"
+        controlClass="col-md-8"
+        validation=validation.new_email}}
+
+      {{input id="id_new_email" type="text" class="form-control" autocomplete="off" value=new_email}}
+    {{/form-row}}
+
+    {{#form-row
+        label=(gettext "Current password:")
+        for="id_password"
+        labelClass="col-md-4"
+        controlClass="col-md-8"
+        validation=validation.password}}
+
+      {{input id="id_password" type="password" class="form-control" autocomplete="off" value=password}}
+      <div class="help-block">
+        {{#link-to "forgotten-password"}}
+          {{gettext "Click here if you don't remember your password."}}
+        {{/link-to}}
+      </div>
+    {{/form-row}}
+
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-4">
+
+        {{#if isBusy}}
+        <button type="button" class="btn btn-primary btn-block-sm btn-busy" disabled="disabled">
+          {{gettext "Change e-mail"}}
+          {{loader-compact}}
+        </button>
+        {{else}}
+        <button type="submit" class="btn btn-primary btn-block-sm">
+          {{gettext "Change e-mail"}}
+        </button>
+        {{/if}}
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -39,7 +39,7 @@ test('register with empty credentials', function(assert) {
   click('#appModal .btn-primary');
 
   andThen(function() {
-    assert.equal(getToastMessage(), 'Fill out all fields.');
+    assert.equal(getToastMessage(), 'Form contains errors.');
   });
 });
 

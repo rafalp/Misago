@@ -1,6 +1,7 @@
 import Ember from 'ember';
+import ValidatedForm from 'misago/components/forms/validated-form';
 
-export default Ember.Component.extend({
+export default ValidatedForm.extend({
   tagName: 'form',
   classNames: 'form-horizontal',
 
@@ -10,11 +11,6 @@ export default Ember.Component.extend({
 
   options: null,
   username: '',
-
-  validation: null,
-  setValidation: function() {
-    this.set('validation', Ember.Object.create({}));
-  }.on('init'),
 
   apiUrl: function() {
     return 'users/' + this.auth.get('user.id') + '/username';
@@ -83,12 +79,9 @@ export default Ember.Component.extend({
       username: Ember.$.trim(this.get('username')),
     };
 
-    if (data.username.length === 0) {
-      this.toast.error(gettext('Enter new username.'));
-      return false;
-    }
+    this.usernameValidation();
 
-    if (this.$('.has-error').length) {
+    if (this.hasValidationErrors()) {
       this.toast.error(gettext('Form contains errors.'));
       return false;
     }
@@ -113,7 +106,7 @@ export default Ember.Component.extend({
 
   success: function(responseJSON) {
     this.set('username', '');
-    this.set('validation', Ember.Object.create({}));
+    this.resetValidation();
 
     this.toast.success(gettext('Your username has been changed.'));
     this.get('options').setProperties(responseJSON.options);

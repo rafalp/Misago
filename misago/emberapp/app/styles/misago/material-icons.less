@@ -15,6 +15,7 @@
        url(../fonts/MaterialIcons-Regular.ttf) format('truetype');
 }
 
+
 .material-icons {
   font-family: 'Material Icons';
   font-weight: normal;
@@ -60,29 +61,4 @@
 /* Remove opacity from button icons */
 .btn .material-icons {
   .opacity(1);
-}
-
-
-/* Rotation animation */
-
-@-webkit-keyframes md-spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(359deg * -4);
-            transform: rotate(359deg * -4);
-  }
-}
-
-@keyframes md-spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(359deg * -4);
-            transform: rotate(359deg * -4);
-  }
 }

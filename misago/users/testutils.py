@@ -24,10 +24,10 @@ class UserTestCase(TestCase):
         return User.objects.create_superuser(
             "TestSuperUser", "test@superuser.com", self.USER_PASSWORD)
 
-    def login_user(self, user):
+    def login_user(self, user, password=None):
         self.client.post('/api/auth/', data={
             'username': user.email,
-            'password': self.USER_PASSWORD,
+            'password': password or self.USER_PASSWORD,
         })
         self.client.get(reverse('misago:index'))
 
