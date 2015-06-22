@@ -2,7 +2,7 @@
   <div class="container">
 
     {{#if settings.forum_branding_display}}
-      {{#link-to 'index' class="navbar-brand hidden-xs hidden-sm"}}
+      {{#link-to 'index' class="navbar-brand hidden-xs hidden-sm" activeClass=""}}
         <img src="{{unbound staticUrl}}misago/img/site-logo.png" alt="">
         {{#if settings.forum_branding_text}}
           <span class="hidden-xs hidden-sm">{{settings.forum_branding_text}}</span>
@@ -83,9 +83,9 @@
   <ul class="nav navbar-nav navbar-compact-nav hidden-md hidden-lg {{if settings.forum_branding_display "with-7-links" "with-6-links"}}">
     {{#if settings.forum_branding_display}}
     <li class="compact-brand">
-      <a href="#">
+      {{#link-to 'index' activeClass=""}}
         <img src="{{unbound staticUrl}}misago/img/site-icon.png" alt="">
-      </a>
+      {{/link-to}}
     </li>
     {{/if}}
     <li>

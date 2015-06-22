@@ -11,12 +11,12 @@
     <div class="error">
 
       <div class="error-icon">
-        <span class="fa fa-code"></span>
+        <i class="material-icons">code</i>
       </div>
 
       <div class="error-message">
         {% if message %}
-        <p class="lead">{{ message|escape|urlize|linebreaksbr }}</p>
+        <p class="lead">{{ message }}</p>
         {% else %}
         <p class="lead">{% trans "To access this page enable JavaScript." %}</p>
         {% endif %}

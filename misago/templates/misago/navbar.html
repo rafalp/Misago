@@ -1,11 +1,78 @@
-{% load staticfiles %}
+{% load i18n staticfiles %}
 <nav class="navbar navbar-primary navbar-default navbar-static-top" role="navigation">
+
   <div class="container">
-
-    <a class="navbar-brand" href="{% url 'misago:index' %}">
-      <img src="{% static 'misago/img/misago_logo.png' %}" alt="">
-      <span>{{ misago_settings.forum_name }}</span>
+    {% if misago_settings.forum_branding_display %}
+    <a href="{% url 'misago:index' %}" class="navbar-brand hidden-xs hidden-sm">
+      <img src="{% static 'misago/img/site-logo.png' %}" alt="">
+      {% if misago_settings.forum_branding_text %}
+        <span class="hidden-xs hidden-sm">{{ misago_settings.forum_branding_text}}</span>
+      {% endif %}
     </a>
+    {% endif %}
 
-  </div><!-- /.container -->
+    <ul class="nav navbar-nav hidden-xs hidden-sm">
+      <li>
+        <a href="#">
+          {% trans "Threads" %}
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          {% trans "Forums" %}
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          {% trans "Feeds" %}
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          {% trans "Users" %}
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          {% trans "Search" %}
+        </a>
+      </li>
+    </ul>
+  </div><!-- /full navbar -->
+
+  <ul class="nav navbar-nav navbar-compact-nav hidden-md hidden-lg {{ misago_settings.forum_branding_display|yesno:"with-6-links,with-5-links" }}">
+    {% if misago_settings.forum_branding_display %}
+    <li class="compact-brand">
+      <a href="{% url 'misago:index' %}">
+        <img src="{% static 'misago/img/site-icon.png' %}" alt="">
+      </a>
+    </li>
+    {% endif %}
+    <li>
+      <a href="#">
+        <i class="material-icons">chat</i>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <i class="material-icons">forum</i>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <i class="material-icons">favorite_border</i>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <i class="material-icons">group</i>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <i class="material-icons">search</i>
+      </a>
+    </li>
+  </ul>
+  <!-- /.compact navbar -->
 </nav>
