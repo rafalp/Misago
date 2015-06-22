@@ -37,9 +37,6 @@ export default Ember.Component.extend({
     }, function(jqXHR) {
       if (self.isDestroyed) { return; }
       self.error(jqXHR);
-    }).finally(function() {
-      if (self.isDestroyed) { return; }
-      self.set('isBusy', false);
     });
 
     return false;
@@ -61,6 +58,8 @@ export default Ember.Component.extend({
   },
 
   error: function(jqXHR) {
+    self.set('isBusy', false);
+
     var rejection = jqXHR.responseJSON;
     if (jqXHR.status !== 400) {
       this.toast.apiError(jqXHR);
