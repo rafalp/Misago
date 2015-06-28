@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
 
 from rest_framework import status, viewsets
@@ -7,11 +8,13 @@ from rest_framework.decorators import detail_route
 from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.response import Response
 
+from misago.acl import add_acl
+
 from misago.users.rest_permissions import (BasePermission,
     IsAuthenticatedOrReadOnly, UnbannedAnonOnly)
 from misago.users.forms.options import ForumOptionsForm
 
-from misago.users.serializers import UserSerializer
+from misago.users.serializers import UserSerializer, UserProfileSerializer
 
 from misago.users.api.userendpoints.avatar import avatar_endpoint
 from misago.users.api.userendpoints.create import create_endpoint
@@ -42,10 +45,24 @@ class UserViewSet(viewsets.GenericViewSet):
     permission_classes = (UserViewSetPermission,)
     parser_classes=(JSONParser, MultiPartParser)
     serializer_class = UserSerializer
-    queryset = get_user_model().objects.all()
+    queryset = get_user_model().objects
+
+    def get_queryset(self):
+        relations = ('rank', 'online_tracker', 'ban_cache')
+        return self.queryset.select_related(*relations)
 
     def list(self, request):
         pass
+
+    def retrieve(self, request, pk=None):
+        qs = self.get_queryset()
+        profile = get_object_or_404(self.get_queryset(), id=pk)
+
+        add_acl(request.user, profile)
+
+        serializer = UserProfileSerializer(
+            profile, context={'user': request.user})
+        return Response(serializer.data)
 
     def create(self, request):
         return create_endpoint(request)

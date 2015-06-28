@@ -58,7 +58,7 @@ export default Ember.Component.extend({
   },
 
   error: function(jqXHR) {
-    self.set('isBusy', false);
+    this.set('isBusy', false);
 
     var rejection = jqXHR.responseJSON;
     if (jqXHR.status !== 400) {
