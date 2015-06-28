@@ -8,4 +8,4 @@
 
 ------------------------------------------------
 {% if misago_settings.email_footer %}{{ misago_settings.email_footer }}{% endif %}
-Sent from {{ SITE_ADDRESS }}
+{% blocktrans with site_host=SITE_HOST %}Sent from {{ site_host }}{% endblocktrans %}

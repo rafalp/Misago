@@ -69,7 +69,7 @@
             <br>
             <div style="border-top: 1px solid #ddd; color: #666; font-size: 12px; line-height: 18px;">
               {% if misago_settings.email_footer %}<br>{{ misago_settings.email_footer }}{% endif %}
-              <br><a href="{{ SITE_ADDRESS }}" style="color: #888; text-decoration: underline;">Sent from {{ SITE_HOST }}</a>
+              <br><a href="{{ SITE_ADDRESS }}" style="color: #888; text-decoration: underline;">{% blocktrans with site_host=SITE_HOST %}Sent from {{ site_host }}{% endblocktrans %}</a>
             </div>
 
             <!-- ### END CONTENT ### -->
