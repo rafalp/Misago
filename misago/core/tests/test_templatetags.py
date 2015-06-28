@@ -241,8 +241,8 @@ class ShorthandsTests(TestCase):
 
 
 class JSONTests(TestCase):
-    def test_iftrue_for_true(self):
-        """iftrue renders value for true"""
+    def test_json_filter(self):
+        """as_json filter renders dict as json"""
         tpl_content = """
 {% load misago_json %}
 
