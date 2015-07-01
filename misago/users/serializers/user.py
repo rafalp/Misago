@@ -79,12 +79,10 @@ class UserSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'slug',
-            'is_avatar_locked',
             'avatar_hash',
             'title',
             'rank',
             'state',
-            'is_signature_locked',
             'signature',
         )
 

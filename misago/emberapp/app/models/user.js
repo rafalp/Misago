@@ -1,7 +1,3 @@
-import DS from 'ember-data';
+import SharedUserAttrs from 'misago/mixins/shared-user-attrs';
 
-export default DS.Model.extend({
-  username: DS.attr('string'),
-  slug: DS.attr('string'),
-  avatar_hash: DS.attr('string')
-});
+export default DS.Model.extend(SharedUserAttrs);

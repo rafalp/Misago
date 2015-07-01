@@ -5,7 +5,7 @@
   <li class="list-group-item">
     <div class="side-avatar hidden-md hidden-lg">
       {{#if change.changed_by}}
-        {{#link-to 'user' change.changed_by}}
+        {{#link-to 'user' change.changed_by.url_name}}
           {{user-avatar user=change.changed_by size=20}}
         {{/link-to}}
       {{else}}
@@ -15,15 +15,15 @@
 
     <div class="first-row">
       {{#if change.changed_by}}
-      {{#link-to 'user' change.changed_by class="hidden-xs hidden-sm"}}
-        {{user-avatar user=change.changed_by size=20}}
-      {{/link-to}}
-      {{#link-to 'user' change.changed_by class="item-name right-margin"}}
-        {{change.changed_by.username}}
-      {{/link-to}}
+        {{#link-to 'user' change.changed_by.url_name class="hidden-xs hidden-sm"}}
+          {{user-avatar user=change.changed_by size=20}}
+        {{/link-to}}
+        {{#link-to 'user' change.changed_by.url_name class="item-name right-margin"}}
+          {{change.changed_by.username}}
+        {{/link-to}}
       {{else}}
-      <span class="hidden-xs hidden-sm">{{user-avatar user=change.changed_by size=20}}</span>
-      <strong class="item-name right-margin"> {{change.changed_by_username}}</strong>
+        <span class="hidden-xs hidden-sm">{{user-avatar user=change.changed_by size=20}}</span>
+        <strong class="item-name right-margin"> {{change.changed_by_username}}</strong>
       {{/if}}
 
       {{change.old_username}} <i class="material-icons">arrow_forward</i> {{change.new_username}}

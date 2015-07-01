@@ -5,6 +5,10 @@ export default MisagoRoute.extend({
 
   model: function(params) {
     var urlName = this.getParsedUrlNameOr404(params.url_name);
-    return this.store.find('user', urlName.id);
-  }
+    return this.store.find('user-profile', urlName.id);
+  },
+
+  unloadUserModel: function() {
+    this.store.unloadAll('user-profile');
+  }.on('deactivate')
 });

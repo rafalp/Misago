@@ -28,18 +28,10 @@ export default Ember.Mixin.create({
 
   afterModel: function(model, transition) {
     if (this.get('usingUrlName')) {
-      var userUrlName = transition.params[transition.targetName].url_name;
-      if (this.serialize(model) !== userUrlName) {
+      var urlName = transition.params[transition.targetName].url_name;
+      if (model.url_name !== urlName) {
         return this.transitionTo(transition.targetName, model);
       }
-    }
-  },
-
-  serialize: function(model, params) {
-    if (this.get('usingUrlName')) {
-      return { url_name: model.get('slug') + '-' + model.get('id') };
-    } else {
-      return this._super(model, params);
     }
   }
 });

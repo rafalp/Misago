@@ -20,6 +20,14 @@ export default Ember.Service.extend({
     });
   }.on('init'),
 
+  setUrlNameOnUser: function() {
+    this.get('user').reopen({
+      url_name: function() {
+        return this.get('slug') + '-' + this.get('id');
+      }.property('id', 'slug')
+    });
+  }.on('init'),
+
   _handleAuthChange: function(isAuthenticated) {
     if (!this.get('needsSync')) {
       // display annoying "you were desynced" message

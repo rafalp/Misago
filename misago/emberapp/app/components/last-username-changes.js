@@ -23,8 +23,7 @@ export default Ember.Component.extend({
   }.on('didInsertElement'),
 
   unloadNamechanges: function() {
-    this.get('_modelUnsorted').forEach(function(item) {
-      item.unloadRecord();
-    });
+    this.store.unloadAll('username-change');
+    this.store.unloadAll('user');
   }.on('willDestroyElement')
 });
