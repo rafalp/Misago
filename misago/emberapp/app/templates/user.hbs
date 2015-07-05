@@ -3,19 +3,67 @@
   <div class="page-header">
     <div class="container">
 
-      <div class="media">
-        <div class="media-left">
-          {{user-avatar user=model size=100}}
-        </div>
-        <div class="media-body">
-          <h1 class="media-heading">{{model.username}}</h1>
-          Lorem ipsum dolor met.
+      <div class="row">
+        <div class="col-md-9 col-md-offset-3">
+
+          <h1>
+            {{user-avatar user=model size=100}}
+            {{model.username}}
+          </h1>
+
+          <ul class="list-inline text-muted hidden-xs hidden-sm">
+            <li>
+              <i class="material-icons">group</i>
+              {{model.finalTitle}}
+            </li>
+            {{user-state-label user=model tagName='li'}}
+            {{#if model.email}}
+            <li>
+              <i class="material-icons">email</i>
+              <a href="mailto:{{model.email}}" class="site-link">{{model.email}}</a>
+            </li>
+            {{/if}}
+          </ul>
+
         </div>
       </div>
 
     </div>
   </div>
 
-  {{outlet}}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="profile-sidepanel">
+
+          <div class="side-avatar hidden-xs hidden-sm">
+            {{user-avatar user=model size=400}}
+          </div>
+
+          <ul class="list-unstyled hidden-md hidden-lg">
+            <li>
+              <i class="material-icons">group</i>
+              {{model.finalTitle}}
+            </li>
+            {{user-state-label user=model tagName='li'}}
+            {{#if model.email}}
+            <li>
+              <i class="material-icons">email</i>
+              <a href="mailto:{{model.email}}" class="site-link">{{model.email}}</a>
+            </li>
+            {{/if}}
+          </ul>
+
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="profile-outlet">
+
+          {{outlet}}
+
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>

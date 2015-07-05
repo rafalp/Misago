@@ -20,14 +20,6 @@ export default Ember.Service.extend({
     });
   }.on('init'),
 
-  setUrlNameOnUser: function() {
-    this.get('user').reopen({
-      url_name: function() {
-        return this.get('slug') + '-' + this.get('id');
-      }.property('id', 'slug')
-    });
-  }.on('init'),
-
   _handleAuthChange: function(isAuthenticated) {
     if (!this.get('needsSync')) {
       // display annoying "you were desynced" message
@@ -65,6 +57,22 @@ export default Ember.Service.extend({
              'user.unread_private_threads',
              'user.subscribe_to_started_threads',
              'user.subscribe_to_replied_threads'),
+
+  // User url name
+
+  setUrlNameOnUser: function() {
+    if (this.get('isAuthenticated')) {
+      this.get('user').set('url_name', this.get('user.slug') + '-' + this.get('user.id'));
+    }
+  },
+
+  setUserUrlNameOnInit: function() {
+    this.setUrlNameOnUser();
+  }.on('init'),
+
+  syncUrlNameOnUser: function() {
+    this.setUrlNameOnUser();
+  }.observes('user.id', 'user.slug'),
 
   // Return user as POJO
 
