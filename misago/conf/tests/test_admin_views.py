@@ -6,7 +6,6 @@ from misago.conf.models import SettingsGroup
 
 
 class AdminSettingsViewsTests(AdminTestCase):
-
     def test_link_registered(self):
         """admin index view contains settings link"""
         response = self.client.get(reverse('misago:admin:index'))
