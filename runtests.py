@@ -101,7 +101,7 @@ DATABASES = {
         args = []
 
     from django.core.management.commands import test
-    sys.exit(test.Command().execute(*args, verbosity=1))
+    sys.exit(test.Command().execute(*args, verbosity=1, noinput=True))
 
 
 if __name__ == '__main__':
