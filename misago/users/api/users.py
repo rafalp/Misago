@@ -3,19 +3,23 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
 
-from rest_framework import status, viewsets
-from rest_framework.decorators import detail_route
+from rest_framework import mixins, status, viewsets
+from rest_framework.decorators import detail_route, list_route
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.response import Response
 
 from misago.acl import add_acl
 
+from misago.users.forms.options import ForumOptionsForm
+from misago.users.permissions.profiles import (allow_browse_users_list,
+                                               allow_see_users_online_list)
+
 from misago.users.rest_permissions import (BasePermission,
     IsAuthenticatedOrReadOnly, UnbannedAnonOnly)
-from misago.users.forms.options import ForumOptionsForm
-
 from misago.users.serializers import UserSerializer, UserProfileSerializer
 
+from misago.users.api.userendpoints.list import list_endpoint
 from misago.users.api.userendpoints.avatar import avatar_endpoint
 from misago.users.api.userendpoints.create import create_endpoint
 from misago.users.api.userendpoints.signature import signature_endpoint
@@ -41,18 +45,50 @@ def allow_self_only(user, pk, message):
         raise PermissionDenied(message)
 
 
+class UsersPagination(PageNumberPagination):
+    page_size = 16
+
+
 class UserViewSet(viewsets.GenericViewSet):
     permission_classes = (UserViewSetPermission,)
     parser_classes=(JSONParser, MultiPartParser)
     serializer_class = UserSerializer
     queryset = get_user_model().objects
+    pagination_class = UsersPagination
 
     def get_queryset(self):
         relations = ('rank', 'online_tracker', 'ban_cache')
         return self.queryset.select_related(*relations)
 
     def list(self, request):
-        pass
+        allow_browse_users_list(request.user)
+
+        users_list = list_endpoint(request, self.get_queryset())
+        if not users_list:
+            return Response([])
+
+        if 'data' in users_list:
+            return Response(users_list['data'])
+
+        if users_list.get('paginate'):
+            page = self.paginate_queryset(users_list['queryset'])
+            users_list['queryset'] = page
+
+        if users_list.get('serializer'):
+            serializer_class = users_list.get('serializer')
+        else:
+            serializer_class = self.serializer_class
+
+        serializer = serializer_class(
+            users_list['queryset'], many=True, context={'user': request.user})
+
+        if users_list.get('paginate'):
+            return self.get_paginated_response(serializer.data)
+        else:
+            return Response(serializer.data)
+
+    def create(self, request):
+        return create_endpoint(request)
 
     def retrieve(self, request, pk=None):
         qs = self.get_queryset()
@@ -63,9 +99,6 @@ class UserViewSet(viewsets.GenericViewSet):
         serializer = UserProfileSerializer(
             profile, context={'user': request.user})
         return Response(serializer.data)
-
-    def create(self, request):
-        return create_endpoint(request)
 
     @detail_route(methods=['get', 'post'])
     def avatar(self, request, pk=None):

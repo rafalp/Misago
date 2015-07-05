@@ -314,7 +314,14 @@ MISAGO_THREAD_TAIL = 7
 MISAGO_RANKING_LENGTH = 30
 
 # Controls max number of items displayed on ranked lists
-MISAGO_RANKING_SIZE = 30
+MISAGO_RANKING_SIZE = 50
+
+
+# Controls max number of items displayed on online list
+MISAGO_ONLINE_LIST_SIZE = 50
+
+# For how long should online list be cached (in seconds)
+MISAGO_ONLINE_LIST_CACHE = 40
 
 
 # Controls amount of data used for new threads/replies lists

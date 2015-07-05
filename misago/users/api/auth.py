@@ -181,7 +181,7 @@ def change_forgotten_password(request, user_id, token):
 
     try:
         user = User.objects.get(pk=user_id)
-        if request.is_authenticated() and request.user.id != user.id:
+        if request.user.is_authenticated() and request.user.id != user.id:
             raise User.DoesNotExist()
     except User.DoesNotExist:
         return Response({'detail': invalid_message},

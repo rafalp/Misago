@@ -82,8 +82,8 @@ def handle_misago_exception(request, exception):
     return handler(request, exception)
 
 
-def handle_api_exception(exception):
-    response = rest_exception_handler(exception)
+def handle_api_exception(exception, context):
+    response = rest_exception_handler(exception, context)
     if response:
         if isinstance(exception, PermissionDenied):
             try:

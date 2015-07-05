@@ -13,6 +13,8 @@ __all__ = [
     'AnonymousUserSerializer',
     'BasicUserSerializer',
     'UserSerializer',
+    'OnlineUserSerializer',
+    'ScoredUserSerializer',
     'UserProfileSerializer',
 ]
 
@@ -87,13 +89,56 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
     def get_state(self, obj):
-        return get_user_state(obj, self.context['user'].acl)
+        if hasattr(obj, 'online_tracker'):
+            return get_user_state(obj, self.context['user'].acl)
+        else:
+            return {}
 
     def get_signature(self, obj):
         if obj.has_valid_signature:
             return obj.signature.signature_parsed
         else:
             return None
+
+
+class OnlineUserSerializer(UserSerializer):
+    last_click = serializers.SerializerMethodField()
+
+    class Meta:
+        model = get_user_model()
+        fields = (
+            'id',
+            'username',
+            'slug',
+            'avatar_hash',
+            'title',
+            'rank',
+            'last_click',
+            'signature',
+        )
+
+    def get_last_click(self, obj):
+        return obj.last_click
+
+
+class ScoredUserSerializer(UserSerializer):
+    score = serializers.SerializerMethodField()
+
+    class Meta:
+        model = get_user_model()
+        fields = (
+            'id',
+            'username',
+            'slug',
+            'avatar_hash',
+            'title',
+            'rank',
+            'score',
+            'signature',
+        )
+
+    def get_score(self, obj):
+        return obj.score
 
 
 class UserProfileSerializer(UserSerializer):
