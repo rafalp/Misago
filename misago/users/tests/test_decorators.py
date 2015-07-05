@@ -35,12 +35,14 @@ class DeflectGuestsTests(UserTestCase):
         """deflect_guests decorator allowed authenticated request"""
         self.login_user(self.get_authenticated_user())
 
-        response = self.client.post(
-            reverse('misago:usercp_change_forum_options'))
+        response = self.client.get(
+            reverse('misago:options_form',
+                    kwargs={'form_name': 'forum-options'}))
         self.assertEqual(response.status_code, 200)
 
     def test_fail(self):
         """deflect_guests decorator deflected authenticated request"""
-        response = self.client.post(
-            reverse('misago:usercp_change_forum_options'))
+        response = self.client.get(
+            reverse('misago:options_form',
+                    kwargs={'form_name': 'forum-options'}))
         self.assertEqual(response.status_code, 302)

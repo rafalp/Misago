@@ -54,7 +54,8 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
             'password': self.USER_PASSWORD
         })
         self.assertEqual(response.status_code, 400)
-        self.assertIn('enter new password', response.content)
+        self.assertIn('new_password":["This field is required',
+                      response.content)
 
         response = self.client.post(self.link, data={
             'new_password': 'n',
