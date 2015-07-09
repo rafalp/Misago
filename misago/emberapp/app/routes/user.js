@@ -4,6 +4,7 @@ export default MisagoRoute.extend({
   usingUrlName: true,
 
   model: function(params) {
+    console.log(params);
     var urlName = this.getParsedUrlNameOr404(params.url_name);
     return this.store.find('user-profile', urlName.id);
   },

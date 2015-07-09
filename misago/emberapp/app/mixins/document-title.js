@@ -18,8 +18,8 @@ export default Ember.Mixin.create({
 
     var complete_title = title.title;
 
-    if (typeof title.page !== 'undefined') {
-      complete_title += ' (' + interpolate(gettext('page %(page)s'), {page:title.page}, true) + ')';
+    if (typeof title.page !== 'undefined' && title.page > 1) {
+      complete_title += ' (' + interpolate(gettext('page %(page)s'), { page:title.page }, true) + ')';
     }
 
     if (typeof title.parent !== 'undefined') {

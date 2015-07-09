@@ -1,0 +1,38 @@
+<div class="users-page">
+
+  <div class="page-header">
+    <div class="container">
+
+      <h1>{{gettext "Users"}}</h1>
+
+      <ul class="nav nav-tabs">
+        {{#link-to "users.active" tagName="li" href=false}}
+          {{#link-to "users.active" bubbles=false activeClass=""}}
+            {{gettext "Most Active"}}
+          {{/link-to}}
+        {{/link-to}}
+
+        {{#if auth.user.acl.can_see_users_online_list}}
+          {{#link-to "users.online" tagName="li" href=false}}
+            {{#link-to "users.online" bubbles=false activeClass=""}}
+              {{gettext "Online Users"}}
+            {{/link-to}}
+          {{/link-to}}
+        {{/if}}
+
+        {{#each model as |rank|}}
+          {{#link-to "users.rank" rank tagName="li" href=false}}
+            {{#link-to "users.rank" rank bubbles=false activeClass=""}}
+              {{rank.name}}
+            {{/link-to}}
+          {{/link-to}}
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    {{outlet}}
+  </div>
+
+</div>

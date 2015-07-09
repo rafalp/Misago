@@ -27,7 +27,14 @@ Router.map(function() {
     });
   });
 
-  // User
+  // Users
+  this.route('users', { path: 'users/' }, function() {
+    this.route('rank', { path: ':slug/' }, function() {
+      this.route('page', { path: ':page/' });
+    });
+    this.route('online', { path: 'online/' });
+    this.route('active', { path: 'active/' });
+  });
 
   // User
   this.route('user', { path: 'user/:url_name/' });

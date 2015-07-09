@@ -1,0 +1,11 @@
+{{rank.name}}
+
+{{join-strings 'lorem' 'ipsum' 'dolor' 'met'}}
+
+<hr>
+
+{{#each model as |user|}}
+  {{#link-to "user" user.url_name}}
+    {{user-avatar user=user size=200}}
+  {{/link-to}}
+{{/each}}
