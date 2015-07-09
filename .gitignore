@@ -148,6 +148,7 @@ var
 sdist
 develop-eggs
 .installed.cfg
+.ropeproject
 
 # Installer logs
 pip-log.txt
@@ -215,3 +216,13 @@ db.sqlite3
 database.db
 Icon
 
+
+###########
+## Misago
+###########
+
+
+/misago/attachments/
+/misago/media/
+/misago/static/
+/misago/templates/
