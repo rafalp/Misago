@@ -3,12 +3,15 @@ from django.http import Http404
 from django.test import TestCase
 from django.test.client import RequestFactory
 
+from misago.users.models import AnonymousUser
+
 from misago.core.middleware.exceptionhandler import ExceptionHandlerMiddleware
 
 
 class ExceptionHandlerMiddlewareTests(TestCase):
     def setUp(self):
         self.request = RequestFactory().get(reverse('misago:index'))
+        self.request.user = AnonymousUser()
         self.request.preloaded_ember_data = {}
 
     def test_middleware_returns_response_for_supported_exception(self):

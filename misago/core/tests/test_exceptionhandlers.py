@@ -53,23 +53,24 @@ class GetExceptionHandlerTests(TestCase):
 class HandleAPIExceptionTests(TestCase):
     def test_permission_denied(self):
         """permission denied exception is correctly handled"""
-        response = exceptionhandler.handle_api_exception(PermissionDenied())
+        response = exceptionhandler.handle_api_exception(
+            PermissionDenied(), None)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.data['detail'], "Permission denied")
+        self.assertEqual(response.data['detail'], "Permission denied.")
 
     def test_permission_message_denied(self):
         """permission denied with message is correctly handled"""
         exception = PermissionDenied("You shall not pass!")
-        response = exceptionhandler.handle_api_exception(exception)
+        response = exceptionhandler.handle_api_exception(exception, None)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.data['detail'], "You shall not pass!")
 
     def test_unhandled_exception(self):
         """our exception handler is not interrupting other exceptions"""
         for exception in INVALID_EXCEPTIONS:
-            response = exceptionhandler.handle_api_exception(exception())
+            response = exceptionhandler.handle_api_exception(exception(), None)
             self.assertIsNone(response)
 
-        response = exceptionhandler.handle_api_exception(Http404())
+        response = exceptionhandler.handle_api_exception(Http404(), None)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.data['detail'], "Not found")
+        self.assertEqual(response.data['detail'], "Not found.")

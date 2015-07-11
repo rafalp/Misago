@@ -2,6 +2,8 @@ from django.core.urlresolvers import reverse
 from django.test import Client, TestCase
 from django.test.client import RequestFactory
 
+from misago.users.models import AnonymousUser
+
 from misago.core.testproject.views import (mock_custom_403_error_page,
                                            mock_custom_404_error_page)
 
@@ -44,6 +46,9 @@ class CustomErrorPagesTests(TestCase):
     def setUp(self):
         self.misago_request = RequestFactory().get(reverse('misago:index'))
         self.site_request = RequestFactory().get(reverse('raise_403'))
+
+        self.misago_request.user = AnonymousUser()
+        self.site_request.user = AnonymousUser()
 
         self.misago_request.preloaded_ember_data = {}
         self.site_request.preloaded_ember_data = {}
