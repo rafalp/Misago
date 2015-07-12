@@ -5,11 +5,11 @@ from django.utils.translation import ugettext as _
 
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import detail_route, list_route
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.response import Response
 
 from misago.acl import add_acl
+from misago.core.apipaginator import ApiPaginator
 
 from misago.users.forms.options import ForumOptionsForm
 from misago.users.permissions.profiles import (allow_browse_users_list,
@@ -45,16 +45,12 @@ def allow_self_only(user, pk, message):
         raise PermissionDenied(message)
 
 
-class UsersPagination(PageNumberPagination):
-    page_size = 16
-
-
 class UserViewSet(viewsets.GenericViewSet):
     permission_classes = (UserViewSetPermission,)
     parser_classes=(JSONParser, MultiPartParser)
     serializer_class = UserSerializer
     queryset = get_user_model().objects
-    pagination_class = UsersPagination
+    pagination_class = ApiPaginator(16, 4)
 
     def get_queryset(self):
         relations = ('rank', 'online_tracker', 'ban_cache')
@@ -82,10 +78,15 @@ class UserViewSet(viewsets.GenericViewSet):
         serializer = serializer_class(
             users_list['queryset'], many=True, context={'user': request.user})
 
+        response_dict = {
+            'results': serializer.data,
+            'users': self.queryset.count()
+        }
+
         if users_list.get('paginate'):
-            return self.get_paginated_response(serializer.data)
-        else:
-            return Response(serializer.data)
+            response_dict.update(self.paginator.get_meta())
+
+        return Response(response_dict)
 
     def create(self, request):
         return create_endpoint(request)

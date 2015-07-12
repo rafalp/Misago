@@ -1,12 +1,14 @@
 from rest_framework import serializers
-
+from misago.core.utils import format_plaintext_for_html
 from misago.users.models import Rank
 
 
-__ALL__ = ['RankSerializer']
+__all__ = ['RankSerializer']
 
 
 class RankSerializer(serializers.ModelSerializer):
+    description = serializers.SerializerMethodField()
+
     class Meta:
         model = Rank
         fields = (
@@ -17,3 +19,9 @@ class RankSerializer(serializers.ModelSerializer):
             'title',
             'css_class',
             'is_tab')
+
+    def get_description(self, obj):
+        if obj.description:
+            return format_plaintext_for_html(obj.description)
+        else:
+            return ''

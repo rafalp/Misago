@@ -1,0 +1,29 @@
+{{user-avatar user=user size=400}}
+<div class="avatar-overlay">
+  <div class="avatar-overlay-cover">
+    <div class="avatar-overlay-inner">
+
+      {{#link-to 'user' user.url_name class="user-avatar-link"}}
+        {{user-avatar user=user size=150}}
+      {{/link-to}}
+
+      <h4>
+        {{user-state-icon user=user}}
+        {{user.username}}
+      </h4>
+
+      <nav>
+        {{#link-to 'user' user.url_name class="btn btn-default btn-outline"}}
+          <i class="material-icons">person_outline</i>
+        {{/link-to}}
+        {{#link-to 'user' user.url_name class="btn btn-default btn-outline"}}
+          <i class="material-icons">chat</i>
+        {{/link-to}}
+        {{#link-to 'user' user.url_name class="btn btn-default btn-outline"}}
+          <i class="material-icons">check</i>
+        {{/link-to}}
+      </nav>
+
+    </div>
+  </div>
+</div>

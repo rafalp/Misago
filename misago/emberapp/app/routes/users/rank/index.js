@@ -13,7 +13,7 @@ export default MisagoRoute.extend({
     this.controllerFor('users.rank').setProperties({
       'rank': this.modelFor('users.rank'),
       'model': model,
-      'meta': model.get("meta")
+      'meta': model.get('meta')
     });
   },
 

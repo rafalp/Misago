@@ -89,7 +89,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
     def get_state(self, obj):
-        if hasattr(obj, 'online_tracker'):
+        if 'user' in self.context:
             return get_user_state(obj, self.context['user'].acl)
         else:
             return {}

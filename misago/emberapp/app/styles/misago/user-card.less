@@ -1,0 +1,102 @@
+//
+// User Profile Card
+// --------------------------------------------------
+
+
+// Shape card
+.user-card {
+  border-radius: @user-card-border-radius;
+  margin: @line-height-computed / 2 0px;
+  overflow: hidden;
+  position: relative;
+
+  .media {
+    margin: 0px;
+  }
+}
+
+
+// Background avatar
+.user-card>.user-avatar {
+  width: 100%;
+  height: auto;
+}
+
+
+// Avatar overlay
+.user-card .avatar-overlay {
+  background: @user-card-overlay;
+
+  position: absolute;
+  top: 0%;
+  left: 0%;
+
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+
+  .avatar-overlay-cover {
+    display: table;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+
+    .avatar-overlay-inner {
+      display: table-cell;
+      padding: @padding-large-vertical @padding-large-horizontal;
+
+      text-align: center;
+      vertical-align: middle;
+    }
+  }
+}
+
+
+// Card user avatar link
+.user-card .user-avatar-link {
+  background-color: @user-card-avatar-link;
+  border-radius: @avatar-radius;
+  display: block;
+  margin: 0px auto;
+  overflow: hidden;
+  width: 60%;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+
+  &:link, &:visited {
+    border: 4px solid @user-card-avatar-link;
+  }
+
+  &:hover, &:focus {
+    border-color: @user-card-avatar-link-hover;
+  }
+
+  &:active {
+    border-color: @user-card-avatar-link-active;
+  }
+}
+
+// Card nav
+.user-card nav a {
+  margin: 0px 4px;
+
+  .material-icons {
+    font-size: @font-size-base * 1.5;
+  }
+
+  &:link, &:visited {
+    color: @site-link-color;
+  }
+
+  &:hover, &:focus {
+    color: @site-link-hover-color;
+    text-decoration: none;
+  }
+
+  &:active {
+    color: @site-link-active-color;
+  }
+}

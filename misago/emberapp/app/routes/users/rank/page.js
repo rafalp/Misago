@@ -1,6 +1,6 @@
-import MisagoRoute from 'misago/routes/misago';
+import IndexRoute from 'misago/routes/users/rank/index';
 
-export default MisagoRoute.extend({
+export default IndexRoute.extend({
   page: 0,
 
   model: function(params, transition) {
@@ -14,15 +14,6 @@ export default MisagoRoute.extend({
         'page': this.get('page')
       });
     }
-  },
-
-  templateName: 'users/rank',
-  setupController: function(controller, model) {
-    this.controllerFor('users.rank').setProperties({
-      'rank': this.modelFor('users.rank'),
-      'model': model,
-      'meta': model.get("content.meta")
-    });
   },
 
   actions: {

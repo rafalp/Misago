@@ -1,11 +1,22 @@
-{{rank.name}}
+<div class="rank-page {{if rank.css_class (join-strings "rank-page-" rank.css_class)}}">
+  {{#if rank.description}}
+    <div class="rank-description lead">
+      {{{rank.description}}}
+    </div>
+  {{/if}}
 
-{{join-strings 'lorem' 'ipsum' 'dolor' 'met'}}
+  <div class="rank-users">
+    {{#each (batch-row model 4) as |row|}}
+      <div class="row">
+        {{#each row as |user|}}
+          <div class="col-md-3">
+            {{user-card user=user}}
+          </div>
+        {{/each}}
+      </div>
+    {{/each}}
+  </div>
 
-<hr>
+  {{pagination-aligned path='users.rank' model=rank meta=meta}}
 
-{{#each model as |user|}}
-  {{#link-to "user" user.url_name}}
-    {{user-avatar user=user size=200}}
-  {{/link-to}}
-{{/each}}
+</div>

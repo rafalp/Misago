@@ -5,7 +5,7 @@ import ModelUrlName from 'misago/mixins/model-url-name';
 
 var application;
 
-module('Acceptance: Page Title Mixin', {
+module('Acceptance: Model Url Name', {
   beforeEach: function() {
     application = startApp();
   },

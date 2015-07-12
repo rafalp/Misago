@@ -2,8 +2,9 @@ from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 
 from rest_framework import status, viewsets, mixins
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+
+from misago.core.apipaginator import ApiPaginator
 
 from misago.users.models import UsernameChange
 from misago.users.rest_permissions import BasePermission
@@ -25,15 +26,11 @@ class UsernameChangesViewSetPermission(BasePermission):
         return True
 
 
-class UsernameChangesPagination(PageNumberPagination):
-    page_size = 20
-
-
 class UsernameChangesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = (UsernameChangesViewSetPermission,)
     serializer_class = UsernameChangeSerializer
     queryset = UsernameChange.objects
-    pagination_class = UsernameChangesPagination
+    pagination_class = ApiPaginator(20, 5)
 
     def get_queryset(self):
         queryset = UsernameChange.objects.select_related('user', 'changed_by')

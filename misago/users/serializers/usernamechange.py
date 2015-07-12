@@ -4,6 +4,9 @@ from misago.users.models import UsernameChange
 from misago.users.serializers.user import BasicUserSerializer
 
 
+__all__ = ['UsernameChangeSerializer']
+
+
 class UsernameChangeSerializer(serializers.ModelSerializer):
     user = BasicUserSerializer(many=False, read_only=True)
     changed_by = BasicUserSerializer(many=False, read_only=True)

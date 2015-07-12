@@ -1,0 +1,33 @@
+<ul class="pager">
+  {{#if meta.first}}
+    <li class="previous">
+      {{#link-to (join-strings path ".index") model}}
+        {{gettext "Start"}}
+      {{/link-to}}
+    </li>
+  {{/if}}
+
+  {{#if meta.previous}}
+    <li class="previous">
+      {{#link-to (join-strings path ".page") model meta.previous}}
+        {{gettext "Previous"}}
+      {{/link-to}}
+    </li>
+  {{/if}}
+
+  {{#if meta.last}}
+    <li class="next">
+      {{#link-to (join-strings path ".page") model meta.last}}
+        {{gettext "End"}}
+      {{/link-to}}
+    </li>
+  {{/if}}
+
+  {{#if meta.next}}
+    <li class="next">
+      {{#link-to (join-strings path ".page") model meta.next}}
+        {{gettext "Next"}}
+      {{/link-to}}
+    </li>
+  {{/if}}
+</ul>
