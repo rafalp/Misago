@@ -30,7 +30,7 @@ class BaseApiPaginator(PageNumberPagination):
         self.request = request
         return list(self.page)
 
-    def get_pagination_meta(self):
+    def get_meta(self):
         pagination = {
             'pages': self.page.paginator.num_pages,
             'first': None,
@@ -59,7 +59,7 @@ class BaseApiPaginator(PageNumberPagination):
         ])
 
     def get_paginated_response(self, data):
-        response_data = self.get_pagination_meta()
+        response_data = self.get_meta()
         response_data['results'] = data
         return Response(response_data)
 

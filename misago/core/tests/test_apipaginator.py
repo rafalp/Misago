@@ -22,7 +22,7 @@ class PaginatorTests(TestCase):
         results = paginator.paginate_queryset(querset, MockRequest())
         self.assertEqual(results, [])
 
-        meta = paginator.get_pagination_meta()
+        meta = paginator.get_meta()
         self.assertEqual(meta['count'], 0)
         self.assertEqual(meta['pages'], 1)
         self.assertEqual(meta['first'], None)
@@ -38,7 +38,7 @@ class PaginatorTests(TestCase):
         results = paginator.paginate_queryset(querset, MockRequest())
         self.assertEqual(results, [0, 1, 2, 3, 4, 5])
 
-        meta = paginator.get_pagination_meta()
+        meta = paginator.get_meta()
         self.assertEqual(meta['count'], 20)
         self.assertEqual(meta['pages'], 3)
         self.assertEqual(meta['first'], None)
@@ -57,7 +57,7 @@ class PaginatorTests(TestCase):
         results = paginator.paginate_queryset(querset, MockRequest(2))
         self.assertEqual(results, [6, 7, 8, 9, 10, 11])
 
-        meta = paginator.get_pagination_meta()
+        meta = paginator.get_meta()
         self.assertEqual(meta['count'], 20)
         self.assertEqual(meta['pages'], 3)
         self.assertEqual(meta['first'], 1)
@@ -76,7 +76,7 @@ class PaginatorTests(TestCase):
         results = paginator.paginate_queryset(querset, MockRequest(3))
         self.assertEqual(results, [12, 13, 14, 15, 16, 17, 18, 19])
 
-        meta = paginator.get_pagination_meta()
+        meta = paginator.get_meta()
         self.assertEqual(meta['count'], 20)
         self.assertEqual(meta['pages'], 3)
         self.assertEqual(meta['first'], 1)
