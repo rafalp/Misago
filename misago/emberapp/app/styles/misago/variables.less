@@ -8,18 +8,18 @@
 //## Gray and brand colors for use across Bootstrap.
 
 @gray-base:              #000;
-@gray-darker:            lighten(@gray-base, 13.5%); // #222
-@gray-dark:              lighten(@gray-base, 20%);   // #333
-@gray:                   lighten(@gray-base, 33.5%); // #555
-@gray-light:             lighten(@gray-base, 46.7%); // #777
-@gray-lighter:           lighten(@gray-base, 93.5%); // #eee
+@gray-darker:            #212121;
+@gray-dark:              #424242;
+@gray:                   #616161;
+@gray-light:             #bdbdbd;
+@gray-lighter:           #eeeeee;
 
-@brand-info:             #e66a5d; // misago uses info state for accents
+@brand-accent:           #e66a5d; // misago uses info state for accents
 
-@brand-primary:          #3498db;
-@brand-success:          #2ecc71;
-@brand-warning:          #ffab40;
-@brand-danger:           #ef5350;
+@brand-primary:          #1e88e5;
+@brand-success:          #43a047;
+@brand-warning:          #ef6c00;
+@brand-danger:           #e53935;
 
 
 //== Scaffolding
@@ -32,7 +32,7 @@
 @text-color:            #111;
 
 // Font weights
-@weight-light:            300;
+@weight-light:          300;
 
 //** Global textual link color.
 @link-color:            #2196f3;
@@ -42,9 +42,9 @@
 @link-hover-decoration: underline;
 
 //** Site link styles
-@site-link-color:            @gray-light;
+@site-link-color:            #9e9e9e;
 @site-link-hover-color:      @text-color;
-@site-link-active-color:     @brand-info;
+@site-link-active-color:     @brand-accent;
 
 //** In-site navs states
 @state-default:         @gray-light;
@@ -64,6 +64,14 @@
 //** By default, this inherits from the `<body>`.
 @headings-font-weight:    200;
 @headings-color:          lighten(@text-color, 8%);;
+
+
+//== Shadows
+//
+//##
+@shadow-key-umbra-opacity:          0.2;
+@shadow-key-penumbra-opacity:       0.14;
+@shadow-ambient-shadow-opacity:     0.12;
 
 
 //== Badges
@@ -90,9 +98,9 @@
 // Basics of a navbar
 @navbar-height:                    46px;
 @navbar-margin-bottom:             @line-height-computed;
-@navbar-border-radius:             @border-radius-base;
 @navbar-padding-horizontal:        floor((@grid-gutter-width / 2));
 @navbar-padding-vertical:          ((@navbar-height - @line-height-computed) / 2);
+@navbar-inner-margin:              12px;
 @navbar-collapse-max-height:       340px;
 
 @navbar-default-color:             #777;
@@ -100,14 +108,16 @@
 @navbar-default-border:            @gray-lighter;
 
 // Navbar links
+@navbar-link-spacing:                      6px;
+@navbar-link-radius:                       @border-radius-base;
 @navbar-link-size:                         @font-size-base + 2px;
 @navbar-icon-size:                         26px;
 
 @navbar-default-link-color:                @site-link-color;
 @navbar-default-link-hover-color:          @site-link-hover-color;
 @navbar-default-link-hover-bg:             transparent;
-@navbar-default-link-active-color:         @site-link-active-color;
-@navbar-default-link-active-bg:            transparent;
+@navbar-default-link-active-color:         @site-link-hover-color;
+@navbar-default-link-active-bg:            #eee;
 
 @navbar-compact-link-active-color:         @navbar-default-bg;
 @navbar-compact-link-active-bg:            @site-link-active-color;
@@ -210,40 +220,40 @@
 //## For each of Bootstrap's buttons, define text, background and border color.
 
 @btn-font-weight:                300;
-
-@btn-default-color:              #95a5a6;
-@btn-default-bg:                 transparent;
-@btn-default-border:             #bdc3c7;
-
-@btn-default-hover-color:        #4fc3f7;
-@btn-default-hover-bg:           transparent;
-@btn-default-hover-border:       #4fc3f7;
-
-@btn-default-active-color:       #2196f3;
-@btn-default-active-bg:          transparent;
-@btn-default-active-border:      #2196f3;
-
-@btn-primary-color:              #fff;
-@btn-primary-bg:                 @brand-primary;
-@btn-primary-border:             @btn-primary-bg;
-
-@btn-success-color:              #fff;
-@btn-success-bg:                 @brand-success;
-@btn-success-border:             @btn-success-bg;
-
-@btn-info-color:                 #fff;
-@btn-info-bg:                    @brand-info;
-@btn-info-border:                @btn-info-bg;
-
-@btn-warning-color:              #fff;
-@btn-warning-bg:                 @brand-warning;
-@btn-warning-border:             @btn-warning-bg;
-
-@btn-danger-color:               #fff;
-@btn-danger-bg:                  @brand-danger;
-@btn-danger-border:              @btn-danger-bg;
-
 @btn-link-disabled-color:        @gray-light;
+
+//** Flat buttons
+@btn-default-color:              #78909c;
+@btn-default-bg:                 #90a4ae;
+
+@btn-primary-color:              @brand-primary;
+@btn-primary-bg:                 #64b5f6;
+
+@btn-success-color:              @brand-success;
+@btn-success-bg:                 #81c784;
+
+@btn-warning-color:              @brand-warning;
+@btn-warning-bg:                 #ffb74d;
+
+@btn-danger-color:               @brand-danger;
+@btn-danger-bg:                  #ff8a65;
+
+
+//** Raised buttons
+@btn-default-raised-color:              #95a5a6;
+@btn-default-raised-bg:                 #fff;
+
+@btn-primary-raised-color:              #fff;
+@btn-primary-raised-bg:                 @brand-primary;
+
+@btn-success-raised-color:              #fff;
+@btn-success-raised-bg:                 @brand-success;
+
+@btn-warning-raised-color:              #fff;
+@btn-warning-raised-bg:                 @brand-warning;
+
+@btn-danger-raised-color:               #fff;
+@btn-danger-raised-bg:                  @brand-danger;
 
 
 //== Form panel

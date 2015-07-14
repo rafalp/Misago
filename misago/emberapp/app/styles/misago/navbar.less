@@ -3,16 +3,18 @@
 // --------------------------------------------------
 
 
-// Affixed navbar
+// Navbar scaffold
 .navbar-spacer {
   margin-bottom: @line-height-computed;
 
   .navbar-primary {
-    border-bottom-width: 1px;
+    .shadow-3dp();
+    border-bottom: none;
     margin: 0px;
+    padding: @navbar-inner-margin 0px;
 
     &.affix {
-      .box-shadow(0px 0px 8px fadeOut(#333, 30%));
+      .shadow-6dp();
 
       width: 100%;
       top: 0px;
@@ -46,13 +48,19 @@
 
     &>li {
       float: left;
+      margin-right: @navbar-link-spacing;
 
       &>a {
+        // Border radius
+        border-radius: @navbar-link-radius;
+
         // Scale links up
         font-size: @navbar-link-size;
 
         // We don't use .active states in navbar
         &:active, &:focus {
+          background-color: @navbar-default-link-active-bg;
+
           color: @navbar-default-link-active-color;
         }
       }
@@ -98,7 +106,7 @@
   .user-menu {
     .dropdown-toggle {
       height: @navbar-height;
-      padding: (@navbar-height - @navbar-avatar-height) / 2 @navbar-padding-horizontal;
+      padding: (@navbar-height - @navbar-avatar-height) / 2;
       padding-bottom: 0px;
 
       line-height: 0px;

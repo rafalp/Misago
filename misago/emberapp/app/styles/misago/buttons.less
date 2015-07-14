@@ -15,168 +15,128 @@
 
 
 // Make busy button really look busy
-.btn {
-  &.btn-busy {
-    &, &:visited, &:hover, &:focus, &:active {
-      color: transparent;
-    }
-
-    .loader-compact {
-      margin-top: @line-height-computed * -1;
-      height: 20px;
-    }
-
-    &.btn-default {
-      .loader-compact>div { background-color: @btn-default-color; }
-    }
-
-    &.btn-primary {
-      .loader-compact>div { background-color: @btn-primary-color; }
-    }
-
-    &.btn-success {
-      .loader-compact>div { background-color: @btn-success-color; }
-    }
-
-    &.btn-info {
-      .loader-compact>div { background-color: @btn-info-color; }
-    }
-
-    &.btn-warning {
-      .loader-compact>div { background-color: @btn-warning-color; }
-    }
-
-    &.btn-danger {
-      .loader-compact>div { background-color: @btn-danger-color; }
-    }
+.btn.btn-busy {
+  .loader-compact {
+    margin-top: @line-height-computed * -1;
+    height: 20px;
   }
 }
-// Mixin for styles
-.btn-outlined-style(@border, @bg, @color) {
-  &, &:visited {
-    background-color: transparent;
-    border-color: @border;
 
-    color: @border;
+
+// Flat buttons
+.btn-style(@color, @bg) {
+  &, &:link, &:visited, &:hover, &:focus, &:active {
+    .box-shadow(none);
+    outline: none;
+  }
+
+  &, &:link, &:visited {
+    background: transparent;
+    border-color: transparent;
+
+    color: @color;
   }
 
   &:hover, &:focus {
-    background-color: @bg;
-    border-color: @border;
+    background: fadeOut(@bg, 90%);
+    border-color: transparent;
 
     color: @color;
   }
 
   &:active {
-    background-color: lighten(@bg, 30%);
-    border-color: lighten(@border, 30%);
-    .box-shadow(none);
+    background: fadeOut(@bg, 80%);
+    border-color: transparent;
 
     color: @color;
   }
 
-  &.disabled {
-    &, &:visited, &:hover, &:focus, &:active {
-      background-color: transparent;
-      border-color: desaturate(@border, 50%);
+  &.btn-busy {
+    &, &:link, &:visited, &:hover, &:focus, &:active {
+      color: transparent;
 
-      color: desaturate(@border, 50%);
+      .loader-compact>div { background-color: @color; }
     }
+  }
+}
+
+.btn {
+  &.btn-default {
+    .btn-style(@btn-default-color, @btn-default-bg);
+  }
+
+  &.btn-primary {
+    .btn-style(@btn-primary-color, @btn-primary-bg);
+  }
+
+  &.btn-success {
+    .btn-style(@btn-success-color, @btn-success-bg);
+  }
+
+  &.btn-warning {
+    .btn-style(@btn-warning-color, @btn-warning-bg);
+  }
+
+  &.btn-danger {
+    .btn-style(@btn-danger-color, @btn-danger-bg);
+  }
+}
+
+
+// Raised buttons
+.btn-raised-style(@color, @bg) {
+  &, &:link, &:visited, &:hover, &:focus {
+    background: @bg;
+    border-color: @bg;
+    .box-shadow(none);
+    .shadow-2dp();
+
+    outline: none;
+
+    color: @color;
+  }
+
+  &:active {
+    background: darken(@bg, 8%);
+    border-color: darken(@bg, 8%);
+    .box-shadow(none);
+    .shadow-6dp();
+
+    outline: none;
+
+    color: @color;
   }
 
   &.btn-busy {
-    &, &:visited, &:hover, &:focus, &:active {
-      background-color: transparent;
-      border-color: @border;
+    &, &:link, &:visited, &:hover, &:focus, &:active {
+      .box-shadow(none);
 
       color: transparent;
 
-      .loader-compact>div {
-        background-color: @border;
-      }
+      .loader-compact>div { background-color: @color; }
     }
   }
 }
 
 
-// Outlined button
-.btn-outlined {
-  border-width: 2px;
-
-  .button-size(@padding-base-vertical - 1; @padding-base-horizontal; @font-size-base; @line-height-base; @border-radius-base);
-
-  &.btn-lg {
-    .button-size(@padding-large-vertical - 1; @padding-large-horizontal; @font-size-large; @line-height-large; @border-radius-large);
-  }
-
-  &.btn-sm {
-    border-width: 1px;
-    .button-size(@padding-small-vertical; @padding-small-horizontal; @font-size-small; @line-height-small; @border-radius-small);
-  }
-
-  &.btn-xs {
-    border-width: 1px;
-    .button-size(@padding-xs-vertical; @padding-xs-horizontal; @font-size-small; @line-height-small; @border-radius-small);
-  }
-
-  // Outline varieties for buttons
-  &.btn-default, &.btn-primary, &.btn-success, &.btn-info, &.btn-warning, &.btn-danger {
-    &, &:visited {
-      background-color: transparent;
-    }
+.btn.btn-raised {
+  &.btn-default {
+    .btn-raised-style(@btn-default-raised-color, @btn-default-raised-bg);
   }
 
   &.btn-primary {
-    .btn-outlined-style(@btn-primary-border, @btn-primary-bg, @btn-primary-color);
+    .btn-raised-style(@btn-primary-raised-color, @btn-primary-raised-bg);
   }
 
   &.btn-success {
-    .btn-outlined-style(@btn-success-border, @btn-success-bg, @btn-success-color);
-  }
-
-  &.btn-info {
-    .btn-outlined-style(@btn-info-border, @btn-info-bg, @btn-info-color);
+    .btn-raised-style(@btn-success-raised-color, @btn-success-raised-bg);
   }
 
   &.btn-warning {
-    .btn-outlined-style(@btn-warning-border, @btn-warning-bg, @btn-warning-color);
+    .btn-raised-style(@btn-warning-raised-color, @btn-warning-raised-bg);
   }
 
   &.btn-danger {
-    .btn-outlined-style(@btn-danger-border, @btn-danger-bg, @btn-danger-color);
-  }
-
-  // Extra states for default btn
-  &.btn-default {
-    &:hover,
-    &:focus,
-    &.focus {
-      background-color: @btn-default-hover-bg;
-      border-color: @btn-default-hover-border;
-
-      color: @btn-default-hover-color;
-    }
-
-    &:active,
-    &.active,
-    .open > .dropdown-toggle {
-      background-color: @btn-default-active-bg;
-      border-color: @btn-default-active-border;
-
-      color: @btn-default-active-color;
-    }
-
-    &.btn-busy {
-      &, &:visited, &:hover, &:focus, &:active {
-        background-color: transparent;
-        border-color: @btn-default-border;
-
-        color: transparent;
-
-        .loader-compact>div {
-          background-color: @btn-default-border;
-        }
-      }
-    }
+    .btn-raised-style(@btn-danger-raised-color, @btn-danger-raised-bg);
   }
 }
