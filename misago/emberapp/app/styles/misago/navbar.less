@@ -96,10 +96,36 @@
 .navbar-primary {
   .navbar-user-nav {
     float: right;
+  }
 
-    .btn-success {
-      position: relative;
-      top: 1px;
+  .btn-start-thread {
+    background: @navbar-start-thread-bg;
+    border-color: transparent;
+    height: @navbar-height;
+    padding: (@navbar-height - @navbar-icon-size) / 2;
+    padding-bottom: 0px;
+
+    color: @navbar-start-thread-color;
+
+    .material-icons {
+      top: -1px;
+
+      font-size: @navbar-icon-size;
+      line-height: @navbar-icon-size;
+    }
+
+    &:hover, &:focus {
+      background: @navbar-start-thread-hover-bg;
+      border-color: transparent;
+
+      color: @navbar-start-thread-hover-color;
+    }
+
+    &:active {
+      background: @navbar-start-thread-active-bg;
+      border-color: transparent;
+
+      color: @navbar-start-thread-active-color;
     }
   }
 
@@ -138,27 +164,34 @@
 .navbar-primary {
   .navbar-guest-nav {
     float: right;
+  }
+}
 
-    .btn {
-      position: relative;
-      top: 1px;
-    }
+
+// Navbar Buttons
+.navbar-primary {
+  .navbar-btn {
+    .btn-reset-styles();
+
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top:    11px;
+    padding-bottom: 11px;
+
+    font-size: @navbar-link-size;
   }
 }
 
 
 // Icons in buttons
 .navbar-primary {
-  .navbar-nav {
-    &>li {
-      &>.btn {
-        .material-icons {
-          font-size: @font-size-large;
-        }
-      }
+  &>.navbar-btn {
+    .material-icons {
+      font-size: @font-size-large;
     }
   }
 }
+
 
 // Dropdowns
 .navbar-static-top {

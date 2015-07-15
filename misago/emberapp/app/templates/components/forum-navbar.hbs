@@ -41,12 +41,12 @@
     {{#if auth.isAuthenticated}}
     <ul class="nav navbar-nav navbar-user-nav hidden-xs hidden-sm">
       <li class="icon">
-        <a href="#">
+        <a href="#" title="{{gettext "Reports"}}">
           <i class="material-icons">error_outline</i>
           <span class="badge">132</span>
         </a>
       </li>
-      <li class="icon user-notices dropdown">
+      <li class="icon user-notices dropdown" title="{{gettext "Notifications"}}">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
           <i class="material-icons">notifications_none</i>
           <span class="badge">132</span>
@@ -61,19 +61,18 @@
       </li>
       {{user-nav}}
       <li>
-        <button type="button" class="btn btn-outlined btn-success navbar-btn">
-          <i class="material-icons">chat_bubble_outline</i>
-          {{gettext "Start thread"}}
+        <button type="button" class="btn btn-start-thread navbar-btn" title="{{gettext "Start thread"}}">
+          <i class="material-icons">chat</i>
         </button>
       </li>
     </ul>
     {{else}}
     <div class="navbar-guest-nav hidden-xs hidden-sm">
-      {{#show-modal-button modal="login-modal" class="btn btn-outlined btn-default navbar-btn"}}
+      {{#show-modal-button modal="login-modal" class="btn btn-default navbar-btn"}}
         {{gettext "Sign in"}}
       {{/show-modal-button}}
 
-      {{#register-button class="btn btn-outlined btn-success navbar-btn"}}
+      {{#register-button class="btn btn-success navbar-btn"}}
         {{gettext "Join"}}
       {{/register-button}}
     </div>

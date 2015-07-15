@@ -23,12 +23,17 @@
 }
 
 
-// Flat buttons
-.btn-style(@color, @bg) {
+// Remove outline and shadow from all buttons
+.btn-reset-styles {
   &, &:link, &:visited, &:hover, &:focus, &:active {
     .box-shadow(none);
-    outline: none;
+    outline: 0;
   }
+}
+
+// Flat buttons
+.btn-style(@color, @bg) {
+  .btn-reset-styles();
 
   &, &:link, &:visited {
     background: transparent;
@@ -38,14 +43,14 @@
   }
 
   &:hover, &:focus {
-    background: fadeOut(@bg, 90%);
+    background: fadeOut(@bg, 80%);
     border-color: transparent;
 
     color: @color;
   }
 
   &:active {
-    background: fadeOut(@bg, 80%);
+    background: fadeOut(@bg, 60%);
     border-color: transparent;
 
     color: @color;
@@ -85,15 +90,19 @@
 
 // Raised buttons
 .btn-raised-style(@color, @bg) {
+  .btn-reset-styles();
+
   &, &:link, &:visited, &:hover, &:focus {
     background: @bg;
     border-color: @bg;
     .box-shadow(none);
     .shadow-2dp();
 
-    outline: none;
-
     color: @color;
+  }
+
+  &:focus {
+    .shadow-4dp();
   }
 
   &:active {
