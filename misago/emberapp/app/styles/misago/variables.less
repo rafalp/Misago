@@ -122,12 +122,27 @@
 @navbar-compact-link-active-color:         @navbar-default-bg;
 @navbar-compact-link-active-bg:            @site-link-active-color;
 
+// Navbar buttons
 @navbar-start-thread-color:                fadeOut(@brand-success, 40%);
 @navbar-start-thread-bg:                   transparent;
 @navbar-start-thread-hover-color:          @brand-success;
 @navbar-start-thread-hover-bg:             transparent;
 @navbar-start-thread-active-color:         @brand-success;
 @navbar-start-thread-active-bg:            fadeOut(@brand-success, 80%);
+
+@navbar-sign-in-color:                     @site-link-color;
+@navbar-sign-in-bg:                        transparent;
+@navbar-sign-in-hover-color:               @site-link-hover-color;
+@navbar-sign-in-hover-bg:                  transparent;
+@navbar-sign-in-active-color:              @text-color;
+@navbar-sign-in-active-bg:                 #eee;;
+
+@navbar-join-color:                        fadeOut(@brand-accent, 20%);
+@navbar-join-bg:                           transparent;
+@navbar-join-hover-color:                  @brand-accent;
+@navbar-join-hover-bg:                     transparent;
+@navbar-join-active-color:                 @brand-accent;
+@navbar-join-active-bg:                    fadeOut(@brand-accent, 80%);
 
 // Navbar brand label
 @navbar-default-brand-color:               @headings-color;
@@ -230,8 +245,8 @@
 @btn-link-disabled-color:        @gray-light;
 
 //** Flat buttons
-@btn-default-color:              #78909c;
-@btn-default-bg:                 #90a4ae;
+@btn-default-color:              @gray-dark;
+@btn-default-bg:                 @gray-light;
 
 @btn-primary-color:              @brand-primary;
 @btn-primary-bg:                 #64b5f6;
@@ -247,7 +262,7 @@
 
 
 //** Raised buttons
-@btn-default-raised-color:              #95a5a6;
+@btn-default-raised-color:              @gray-dark;
 @btn-default-raised-bg:                 #fff;
 
 @btn-primary-raised-color:              #fff;

@@ -131,6 +131,10 @@
 .btn.btn-raised {
   &.btn-default {
     .btn-raised-style(@btn-default-raised-color, @btn-default-raised-bg);
+
+    &:disabled {
+      background-color: darken(@btn-default-raised-bg, 10%);
+    }
   }
 
   &.btn-primary {

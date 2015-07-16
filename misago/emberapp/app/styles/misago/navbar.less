@@ -100,7 +100,6 @@
 
   .btn-start-thread {
     background: @navbar-start-thread-bg;
-    border-color: transparent;
     height: @navbar-height;
     padding: (@navbar-height - @navbar-icon-size) / 2;
     padding-bottom: 0px;
@@ -116,14 +115,12 @@
 
     &:hover, &:focus {
       background: @navbar-start-thread-hover-bg;
-      border-color: transparent;
 
       color: @navbar-start-thread-hover-color;
     }
 
     &:active {
       background: @navbar-start-thread-active-bg;
-      border-color: transparent;
 
       color: @navbar-start-thread-active-color;
     }
@@ -164,6 +161,42 @@
 .navbar-primary {
   .navbar-guest-nav {
     float: right;
+
+    .btn-sign-in {
+      background: @navbar-sign-in-bg;
+
+      color: @navbar-sign-in-color;
+
+      &:hover, &:focus {
+        background: @navbar-sign-in-hover-bg;
+
+        color: @navbar-sign-in-hover-color;
+      }
+
+      &:active {
+        background: @navbar-sign-in-active-bg;
+
+        color: @navbar-sign-in-active-color;
+      }
+    }
+
+    .btn-join {
+      background: @navbar-join-bg;
+
+      color: @navbar-join-color;
+
+      &:hover, &:focus {
+        background: @navbar-join-hover-bg;
+
+        color: @navbar-join-hover-color;
+      }
+
+      &:active {
+        background: @navbar-join-active-bg;
+
+        color: @navbar-join-active-color;
+      }
+    }
   }
 }
 
@@ -179,6 +212,10 @@
     padding-bottom: 11px;
 
     font-size: @navbar-link-size;
+
+    &, &:hover, &:focus, &:active {
+      border-color: transparent;
+    }
   }
 }
 
