@@ -29,6 +29,8 @@ export default Ember.Component.extend({
       return false;
     }
 
+    this.set('isBusy', true);
+
     var self = this;
     this.ajax.post(this.get('settings.loginApiUrl'), credentials
     ).then(function() {
@@ -36,6 +38,7 @@ export default Ember.Component.extend({
       self.success(credentials);
     }, function(jqXHR) {
       if (self.isDestroyed) { return; }
+      self.set('isBusy', false);
       self.error(jqXHR);
     });
 
