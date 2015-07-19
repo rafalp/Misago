@@ -6,7 +6,7 @@
     <div class="side-avatar hidden-md hidden-lg">
       {{#if change.changed_by}}
         {{#link-to 'user' change.changed_by.url_name}}
-          {{user-avatar user=change.changed_by size=20}}
+          {{user-avatar user=change.changed_by size=42}}
         {{/link-to}}
       {{else}}
         <span>{{user-avatar user=change.changed_by size=42}}</span>
@@ -23,12 +23,15 @@
         {{/link-to}}
       {{else}}
         <span class="hidden-xs hidden-sm">{{user-avatar user=change.changed_by size=20}}</span>
-        <strong class="item-name right-margin"> {{change.changed_by_username}}</strong>
+        <strong class="item-name right-margin">{{change.changed_by_username}}</strong>
       {{/if}}
 
       {{change.old_username}} <i class="material-icons">arrow_forward</i> {{change.new_username}}
     </div>
-    <div class="second-row text-muted" title="{{format-date change.changed_on tick=clock.tick}}">{{rel-date change.changed_on tick=clock.tick}}</div>
+    <div class="second-row text-muted" title="{{format-date change.changed_on tick=clock.tick}}">
+      <strong class="item-name right-margin">{{change.changed_by_username}}</strong>
+      {{rel-date change.changed_on tick=clock.tick}}
+    </div>
   </li>
   {{else}}
   <li class="list-group-item">

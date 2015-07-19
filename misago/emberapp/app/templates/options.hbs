@@ -1,15 +1,15 @@
 <div class="options-page">
   <div class="page-header">
     <div class="container">
-      <h1 class="pull-left">{{gettext "Change options"}}</h1>
+      <h1 class="pull-left">{{gettext "Change Options"}}</h1>
 
       <div class="btn-group hidden-md hidden-lg pull-right">
-        <button type="button" class="btn btn-default btn-outlined dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-          <i class="material-icons md-15x">menu</i>
+        <button type="button" class="btn btn-default btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="material-icons">menu</i>
         </button>
-        <ul class="dropdown-menu" role="menu">
+        <ul class="dropdown-menu">
           {{#link-to "options.forum" tagName="li" href=false}}
-            {{#link-to "options.forum" bubbles=false activeClass=""}}
+            {{#link-to "options.forum" activeClass=""}}
               <i class="material-icons">settings</i>
               {{gettext "Forum options"}}
             {{/link-to}}
@@ -17,7 +17,7 @@
 
           {{#if auth.user.acl.can_have_signature}}
             {{#link-to "options.signature" tagName="li" href=false}}
-              {{#link-to "options.signature" bubbles=false activeClass=""}}
+              {{#link-to "options.signature" activeClass=""}}
                 <i class="material-icons">border_color</i>
                 {{gettext "Edit signature"}}
               {{/link-to}}
@@ -25,27 +25,28 @@
           {{/if}}
 
           {{#link-to "options.username" tagName="li" href=false}}
-            {{#link-to "options.username" bubbles=false activeClass=""}}
+            {{#link-to "options.username" activeClass=""}}
               <i class="material-icons">school</i>
               {{gettext "Change username"}}
             {{/link-to}}
           {{/link-to}}
 
           {{#link-to "options.password" tagName="li" href=false}}
-            {{#link-to "options.password" bubbles=false activeClass=""}}
+            {{#link-to "options.password" activeClass=""}}
               <i class="material-icons">vpn_key</i>
               {{gettext "Change password"}}
             {{/link-to}}
           {{/link-to}}
 
           {{#link-to "options.email" tagName="li" href=false}}
-            {{#link-to "options.email" bubbles=false activeClass=""}}
+            {{#link-to "options.email" activeClass=""}}
               <i class="material-icons">drafts</i>
               {{gettext "Change e-mail"}}
             {{/link-to}}
           {{/link-to}}
         </ul>
       </div>
+
     </div>
   </div>
 

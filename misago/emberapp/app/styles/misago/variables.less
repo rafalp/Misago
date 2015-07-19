@@ -110,7 +110,8 @@
 // Navbar links
 @navbar-link-spacing:                      6px;
 @navbar-link-radius:                       @border-radius-base;
-@navbar-link-size:                         @font-size-base + 2px;
+@navbar-link-size:                         @font-size-large;
+@navbar-link-weight:                       @weight-light;
 @navbar-icon-size:                         28px;
 
 @navbar-default-link-color:                @site-link-color;
@@ -119,30 +120,30 @@
 @navbar-default-link-active-color:         @site-link-hover-color;
 @navbar-default-link-active-bg:            #eee;
 
-@navbar-compact-link-active-color:         @navbar-default-bg;
-@navbar-compact-link-active-bg:            @site-link-active-color;
+@navbar-compact-link-active-color:         @site-link-hover-color;
+@navbar-compact-link-active-bg:            #eee;
 
 // Navbar buttons
-@navbar-start-thread-color:                fadeOut(@brand-success, 40%);
+@navbar-start-thread-color:                #81c784;
 @navbar-start-thread-bg:                   transparent;
-@navbar-start-thread-hover-color:          @brand-success;
+@navbar-start-thread-hover-color:          #4caf50;
 @navbar-start-thread-hover-bg:             transparent;
-@navbar-start-thread-active-color:         @brand-success;
-@navbar-start-thread-active-bg:            fadeOut(@brand-success, 80%);
+@navbar-start-thread-active-color:         #4caf50;
+@navbar-start-thread-active-bg:            #e8f5e9;
 
-@navbar-sign-in-color:                     @site-link-color;
-@navbar-sign-in-bg:                        transparent;
-@navbar-sign-in-hover-color:               @site-link-hover-color;
-@navbar-sign-in-hover-bg:                  transparent;
-@navbar-sign-in-active-color:              @text-color;
-@navbar-sign-in-active-bg:                 #eee;;
+@navbar-sign-in-color:                     #757575;
+@navbar-sign-in-bg:                        #eeeeee;
+@navbar-sign-in-hover-color:               #757575;
+@navbar-sign-in-hover-bg:                  #eeeeee;
+@navbar-sign-in-active-color:              #757575;
+@navbar-sign-in-active-bg:                 #bdbdbd;;
 
-@navbar-join-color:                        fadeOut(@brand-accent, 20%);
-@navbar-join-bg:                           transparent;
+@navbar-join-color:                        @brand-accent;
+@navbar-join-bg:                           lighten(@brand-accent, 33%);
 @navbar-join-hover-color:                  @brand-accent;
-@navbar-join-hover-bg:                     transparent;
+@navbar-join-hover-bg:                     lighten(@brand-accent, 33%);
 @navbar-join-active-color:                 @brand-accent;
-@navbar-join-active-bg:                    fadeOut(@brand-accent, 80%);
+@navbar-join-active-bg:                    lighten(@brand-accent, 20%);
 
 // Navbar brand label
 @navbar-default-brand-color:               @headings-color;
@@ -308,7 +309,6 @@
 //
 //** Dropdown radius and shadow
 @dropdown-border-radius:            @border-radius-base;
-@dropdown-shadow:                   0px 0px 0px 3px fadeOut(@gray, 50%);
 
 //** Dropdown link text color.
 @dropdown-link-color:            @site-link-color;
@@ -338,8 +338,8 @@
 @sidenav-hover-bg:                transparent;
 
 @sidenav-active-color:            @site-link-active-color;
-@sidenav-active-border:           darken(@sidenav-border, 15%);
-@sidenav-active-bg:               transparent;
+@sidenav-active-border:           @gray-lighter;
+@sidenav-active-bg:               darken(@body-bg, 4%);
 
 
 //== Editor

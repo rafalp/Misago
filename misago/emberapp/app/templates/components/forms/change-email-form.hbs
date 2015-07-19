@@ -35,12 +35,12 @@
       <div class="col-md-8 col-md-offset-4">
 
         {{#if isBusy}}
-        <button type="button" class="btn btn-primary btn-block-sm btn-busy" disabled="disabled">
+        <button type="button" class="btn btn-primary btn-raised btn-block-sm btn-busy" disabled="disabled">
           {{gettext "Change e-mail"}}
           {{loader-compact}}
         </button>
         {{else}}
-        <button type="submit" class="btn btn-primary btn-block-sm">
+        <button type="submit" class="btn btn-primary btn-raised btn-block-sm">
           {{gettext "Change e-mail"}}
         </button>
         {{/if}}

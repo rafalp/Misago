@@ -8,13 +8,13 @@
   margin-bottom: @line-height-computed;
 
   .navbar-primary {
-    .shadow-3dp();
+    .shadow-4dp();
     border-bottom: none;
     margin: 0px;
     padding: @navbar-inner-margin 0px;
 
     &.affix {
-      .shadow-6dp();
+      .shadow-8dp();
 
       width: 100%;
       top: 0px;
@@ -27,7 +27,7 @@
 .navbar-primary {
   .navbar-brand {
     font-size: @font-size-large * 1.2;
-    font-weight: @weight-light;
+    font-weight: @navbar-link-weight;
 
     img {
       display: inline-block;
@@ -50,12 +50,17 @@
       float: left;
       margin-right: @navbar-link-spacing;
 
+      &:last-child {
+        margin-right: 0px;
+      }
+
       &>a {
         // Border radius
         border-radius: @navbar-link-radius;
 
         // Scale links up
         font-size: @navbar-link-size;
+        font-weight: @navbar-link-weight;
 
         // We don't use .active states in navbar
         &:active, &:focus {
@@ -141,15 +146,9 @@
         height: @navbar-avatar-height;
       }
 
-      &:hover {
+      &:hover, &:focus {
         img {
-          .opacity(0.6);
-        }
-      }
-
-      &:active, &:focus {
-        img {
-          .opacity(0.3);
+          .shadow-2dp();
         }
       }
     }
@@ -161,6 +160,10 @@
 .navbar-primary {
   .navbar-guest-nav {
     float: right;
+
+    .btn-sign-in, .btn-join {
+      margin-left: @navbar-link-spacing;
+    }
 
     .btn-sign-in {
       background: @navbar-sign-in-bg;
@@ -245,6 +248,7 @@
   }
 }
 
+
 .navbar-primary {
   .navbar-compact-nav {
     margin: 0px;
@@ -252,6 +256,8 @@
     width: 100%;
 
     &>li {
+      margin: 0px;
+
       &>a, &>.dropdown-toggle {
         padding: 0px;
         padding-top: (@navbar-compact-height - @navbar-compact-item-height) / 2;
@@ -281,26 +287,6 @@
 
           color: @navbar-compact-link-active-color;
         }
-      }
-    }
-
-    .dropdown {
-      &.open .dropdown-toggle {
-        background-color: @navbar-compact-link-active-bg;
-
-        color: @navbar-compact-link-active-color;
-      }
-
-      .dropdown-menu {
-        position: absolute;
-        float: right;
-        width: 300px;
-        margin-top: 2px;
-        background-color: @dropdown-bg;
-        border: 1px solid @dropdown-fallback-border; // IE8 fallback
-        border: 1px solid @dropdown-border;
-        border-radius: @dropdown-border-radius;
-        .box-shadow(@dropdown-shadow);
       }
     }
 
@@ -336,5 +322,20 @@
         }
       }
     }
+  }
+}
+
+
+// Compact dropdown
+.compact-navbar-dropdown {
+  margin-top: @line-height-computed * -1;
+  margin-bottom: @line-height-computed;
+
+  .dropdown-menu {
+    border-radius: 0px;
+    display: block;
+    position: static;
+    width: 100%;
+    .shadow-6dp();
   }
 }

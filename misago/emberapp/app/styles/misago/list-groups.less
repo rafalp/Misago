@@ -1,0 +1,25 @@
+//
+// List groups
+// --------------------------------------------------
+
+
+.list-group {
+  border: none;
+  border-radius: @border-radius-base;
+  .shadow-2dp();
+
+  .list-group-item {
+    &:first-child {
+      border-top: none;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &, &:link, &:visited, &:hover, &:focus, &:active, &.active {
+      border-left: none;
+      border-right: none;
+    }
+  }
+}

@@ -59,7 +59,13 @@
           <li><a href="#">Separated link</a></li>
         </ul>
       </li>
-      {{user-nav}}
+      <li class="user-menu dropdown">
+        {{#link-dropdown-toggle route='user' params=[auth.user] }}
+          {{user-avatar user=auth.user size=32}}
+        {{/link-dropdown-toggle}}
+
+        {{user-menu}}
+      </li>
       <li>
         <button type="button" class="btn btn-start-thread navbar-btn" title="{{gettext "Start thread"}}">
           <i class="material-icons">chat</i>
@@ -113,7 +119,11 @@
       </a>
     </li>
     {{#if auth.isAuthenticated}}
-    {{user-nav}}
+    <li class="user-menu dropdown">
+      {{#navbar-dropdown-toggle route='user' params=[auth.user] dropdown='user-menu' }}
+        {{user-avatar user=auth.user size=32}}
+      {{/navbar-dropdown-toggle}}
+    </li>
     {{else}}
     <li class="user-menu dropdown">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

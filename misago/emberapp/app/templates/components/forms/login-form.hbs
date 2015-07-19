@@ -15,23 +15,23 @@
 </div>
 <div class="modal-footer">
   {{#if showActivation}}
-    {{#close-modal-button class="btn btn-block btn-success" goto="forgotten-password"}}
+    {{#close-modal-button class="btn btn-success btn-raised btn-block" goto="forgotten-password"}}
       {{gettext "Activate account"}}
     {{/close-modal-button}}
   {{else}}
     {{#if isBusy}}
-    <button type="button" class="btn btn-primary btn-block btn-busy" disabled="disabled">
+    <button type="button" class="btn btn-primary btn-raised btn-block btn-busy" disabled="disabled">
       &nbsp;
       {{loader-compact}}
     </button>
     {{else}}
-    <button type="submit" class="btn btn-primary btn-block">
+    <button type="submit" class="btn btn-primary btn-raised btn-block">
       {{gettext "Sign in"}}
     </button>
     {{/if}}
   {{/if}}
 
-  {{#close-modal-button class="btn btn-block btn-outlined btn-default" goto="forgotten-password"}}
+  {{#close-modal-button class="btn btn-default btn-block" goto="forgotten-password"}}
     {{gettext "Forgot password?"}}
   {{/close-modal-button}}
 

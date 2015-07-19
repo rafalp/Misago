@@ -8,12 +8,12 @@
   <div class="col-md-6 col-md-offset-3">
 
     {{#if isBusy}}
-      <button type="button" class="btn btn-primary btn-block btn-busy" disabled="disabled">
+      <button type="button" class="btn btn-primary btn-raised btn-block btn-busy" disabled="disabled">
         &nbsp;
         {{loader-compact}}
       </button>
     {{else}}
-      <button type="button" class="btn btn-primary btn-block" {{action "crop"}}>
+      <button type="button" class="btn btn-primary btn-raised btn-block" {{action "crop"}}>
       {{#if isNested}}
         {{gettext "Set avatar"}}
       {{else}}
@@ -22,7 +22,7 @@
       </button>
     {{/if}}
 
-    <button type="button" class="btn btn-default btn-outlined btn-block {{if isBusy "disabled"}}" {{if isBusy "disabled"}} {{action "cancel"}}>
+    <button type="button" class="btn btn-default btn-block {{if isBusy "disabled"}}" {{if isBusy "disabled"}} {{action "cancel"}}>
       {{gettext "Cancel"}}
     </button>
 

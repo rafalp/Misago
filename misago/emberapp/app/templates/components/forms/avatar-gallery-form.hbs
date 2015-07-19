@@ -6,7 +6,7 @@
   <div class="row">
     {{#each row as |image|}}
     <div class="col-sm-3">
-      <button type="button" class="btn btn-default btn-outlined {{if isBusy "disabled"}}" {{if isBusy "disabled"}} {{action "setAvatar" image}}>
+      <button type="button" class="btn btn-default btn-raised {{if isBusy "disabled"}}" {{if isBusy "disabled"}} {{action "setAvatar" image}}>
         <img src="{{unbound mediaUrl}}{{image}}" alt="">
         {{loading-overlay itemName=image activeItem=activeItem}}
       </button>
@@ -19,12 +19,12 @@
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     {{#if isBusy}}
-      <button type="button" class="btn btn-primary btn-outlined btn-block btn-busy" disabled="disabled">
+      <button type="button" class="btn btn-default btn-block btn-busy" disabled="disabled">
         &nbsp;
         {{loader-compact}}
       </button>
     {{else}}
-      <button type="button" class="btn btn-default btn-outlined btn-block" {{action "cancel"}}>
+      <button type="button" class="btn btn-default btn-block" {{action "cancel"}}>
         {{gettext "Cancel"}}
       </button>
     {{/if}}

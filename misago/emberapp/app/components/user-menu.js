@@ -1,8 +1,9 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  tagName: 'li',
-  classNames: ['user-menu', 'dropdown'],
+  tagName: 'ul',
+  classNames: ['dropdown-menu', 'user-dropdown', 'dropdown-menu-right'],
+  ariaRole: 'menu',
 
   actions: {
     logout: function() {

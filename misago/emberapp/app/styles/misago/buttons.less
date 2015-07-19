@@ -42,7 +42,7 @@
     color: @color;
   }
 
-  &:hover, &:focus {
+  &.btn-outlined, &:hover, &:focus {
     background: fadeOut(@bg, 80%);
     border-color: transparent;
 
@@ -151,5 +151,20 @@
 
   &.btn-danger {
     .btn-raised-style(@btn-danger-raised-color, @btn-danger-raised-bg);
+  }
+}
+
+
+// Icon-only button
+.btn-icon {
+  // vert padding = icon height / 2 - base padding - border width
+  @vertical-padding: @padding-base-vertical - (28px - @line-height-computed) / 2 - 1px;
+  padding: @vertical-padding @padding-base-horizontal;
+
+  .material-icons {
+    top: 0px;
+
+    font-size: 28px;
+    line-height: 28px;
   }
 }
