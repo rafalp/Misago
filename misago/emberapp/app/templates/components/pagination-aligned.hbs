@@ -1,33 +1,29 @@
-<ul class="pager">
-  {{#if meta.first}}
-    <li class="previous">
-      {{#link-to (join-strings path ".index") model}}
-        {{gettext "Start"}}
-      {{/link-to}}
-    </li>
-  {{/if}}
+{{#if meta.first}}
+  {{#link-to (join-strings path ".index") model class="btn btn-default btn-previous-page btn-first-page"}}
+    <i class="material-icons">navigate_before</i>
+    <i class="material-icons">navigate_before</i>
+    <span class="hidden-xs hidden-sm">{{gettext "Start"}}</span>
+  {{/link-to}}
+{{/if}}
 
-  {{#if meta.previous}}
-    <li class="previous">
-      {{#link-to (join-strings path ".page") model meta.previous}}
-        {{gettext "Previous"}}
-      {{/link-to}}
-    </li>
-  {{/if}}
+{{#if meta.previous}}
+  {{#link-to (join-strings path ".page") model meta.previous class="btn btn-default btn-previous-page"}}
+    <i class="material-icons">navigate_before</i>
+    <span class="hidden-xs hidden-sm">{{gettext "Previous"}}</span>
+  {{/link-to}}
+{{/if}}
 
-  {{#if meta.last}}
-    <li class="next">
-      {{#link-to (join-strings path ".page") model meta.last}}
-        {{gettext "End"}}
-      {{/link-to}}
-    </li>
-  {{/if}}
+{{#if meta.next}}
+  {{#link-to (join-strings path ".page") model meta.last class="btn btn-default btn-next-page btn-last-page"}}
+    <span class="hidden-xs hidden-sm">{{gettext "End"}}</span>
+    <i class="material-icons">navigate_next</i>
+    <i class="material-icons">navigate_next</i>
+  {{/link-to}}
+{{/if}}
 
-  {{#if meta.next}}
-    <li class="next">
-      {{#link-to (join-strings path ".page") model meta.next}}
-        {{gettext "Next"}}
-      {{/link-to}}
-    </li>
-  {{/if}}
-</ul>
+{{#if meta.last}}
+  {{#link-to (join-strings path ".page") model meta.next class="btn btn-default btn-next-page"}}
+    <span class="hidden-xs hidden-sm">{{gettext "Next"}}</span>
+    <i class="material-icons">navigate_next</i>
+  {{/link-to}}
+{{/if}}

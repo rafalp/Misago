@@ -6,12 +6,12 @@
 // Pills on side of container
 .nav-side {
   &>a {
-    font-size: @font-size-large;
+    font-size: @font-size-nav;
     font-weight: @weight-light;
 
     .material-icons {
       margin-right: 8px;
-      top: 0px;
+      top: 1px;
 
       font-size: 22px;
     }
@@ -39,9 +39,68 @@
       color: @sidenav-active-color;
 
       .material-icons {
-        .opacity(.9);
+        .opacity(.8);
         color: @sidenav-hover-color;
       }
+    }
+  }
+}
+
+
+// Page tabs
+.page-header.tabbed {
+  padding-bottom: 0px;
+
+  .nav-tabs {
+    border-bottom: none;
+
+    margin-top: @line-height-computed / 2;
+    margin-bottom: -1px;
+
+    &>li {
+      &>a {
+        &, &:link, &:visited {
+          background-color: @nav-tab-bg;
+          border: none;
+          border-bottom: @nav-tabs-border-width solid @nav-tab-border;
+
+          margin: 0px;
+          padding: @nav-tabs-padding;
+
+          color: @nav-tab-color;
+          font-size: @font-size-nav;
+          font-weight: @weight-light;
+        }
+
+        &:hover, &:focus, &:active {
+          background-color: @nav-tab-hover-bg;
+          border-bottom-color: @nav-tab-hover-border;
+
+          color: @nav-tab-hover-color;
+        }
+
+        &:active {
+          border-bottom-color: @nav-tab-hover-color;
+        }
+      }
+
+      &.active {
+        a, a:link, a:visited, a:hover, a:focus, a:active {
+          background-color: @nav-tab-active-bg;
+          border-bottom-color: @nav-tab-active-border;
+
+          color: @nav-tab-active-color;
+        }
+      }
+    }
+  }
+
+  // Reset bottom margin on small displays and hide tabs
+  @media (max-width: @screen-sm-max) {
+    padding-bottom: ((@line-height-computed / 2) - 1);
+
+    .nav-tabs {
+      display: none;
     }
   }
 }

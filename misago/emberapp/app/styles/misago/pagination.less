@@ -1,0 +1,64 @@
+//
+// Paginators and Pagers
+// --------------------------------------------------
+
+
+// Full-width pager
+.pager-aligned {
+  overflow: auto;
+
+  .btn {
+    .opacity(0.8);
+
+    .material-icons {
+      font-size: @font-size-base + 4px;
+    }
+  }
+
+  .btn-first-page, .btn-last-page {
+    .opacity(1);
+  }
+
+  .btn-previous-page {
+    float: left;
+    margin-right: 8px;
+  }
+
+  .btn-next-page {
+    float: right;
+    margin-left: 8px;
+  }
+
+  .btn-first-page {
+    .material-icons:first-child {
+      margin-right: @font-size-base * -1.25;
+    }
+  }
+
+  .btn-last-page {
+    .material-icons:last-child {
+      margin-left: @font-size-base * -1.25;
+    }
+  }
+
+  // Upscale buttons on small displays
+  @media (max-width: @screen-sm-max) {
+    .btn {
+      .material-icons {
+        font-size: @font-size-base * 2;
+      }
+    }
+
+    .btn-first-page {
+      .material-icons:first-child {
+        margin-right: @font-size-base * -1.75;
+      }
+    }
+
+    .btn-last-page {
+      .material-icons:last-child {
+        margin-left: @font-size-base * -1.75;
+      }
+    }
+  }
+}
