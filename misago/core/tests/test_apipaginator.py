@@ -29,6 +29,8 @@ class PaginatorTests(TestCase):
         self.assertEqual(meta['previous'], None)
         self.assertEqual(meta['next'], None)
         self.assertEqual(meta['last'], None)
+        self.assertEqual(meta['before'], 0)
+        self.assertEqual(meta['more'], 0)
 
     def test_first_page(self):
         """pagination works for first page of queryset"""
@@ -45,6 +47,8 @@ class PaginatorTests(TestCase):
         self.assertEqual(meta['previous'], None)
         self.assertEqual(meta['next'], 2)
         self.assertEqual(meta['last'], 3)
+        self.assertEqual(meta['before'], 0)
+        self.assertEqual(meta['more'], 14)
 
         response = paginator.get_paginated_response(results)
         self.assertEqual(response.status_code, 200)
@@ -64,12 +68,14 @@ class PaginatorTests(TestCase):
         self.assertEqual(meta['previous'], None)
         self.assertEqual(meta['next'], None)
         self.assertEqual(meta['last'], 3)
+        self.assertEqual(meta['before'], 6)
+        self.assertEqual(meta['more'], 8)
 
         response = paginator.get_paginated_response(results)
         self.assertEqual(response.status_code, 200)
 
     def test_last_page(self):
-        """pagination works for next page of queryset"""
+        """pagination works for last page of queryset"""
         paginator = ApiPaginator(6, 2)()
         querset = [i for i in xrange(20)]
 
@@ -83,6 +89,8 @@ class PaginatorTests(TestCase):
         self.assertEqual(meta['previous'], 2)
         self.assertEqual(meta['next'], None)
         self.assertEqual(meta['last'], None)
+        self.assertEqual(meta['before'], 12)
+        self.assertEqual(meta['more'], 0)
 
         response = paginator.get_paginated_response(results)
         self.assertEqual(response.status_code, 200)

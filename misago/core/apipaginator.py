@@ -37,6 +37,8 @@ class BaseApiPaginator(PageNumberPagination):
             'previous': None,
             'next': None,
             'last': None,
+            'before': 0,
+            'more': 0,
         }
 
         if self.page.has_previous():
@@ -49,13 +51,19 @@ class BaseApiPaginator(PageNumberPagination):
             if self.page.next_page_number() < self.page.paginator.num_pages:
                 pagination['next'] = self.page.next_page_number()
 
+        if self.page.start_index():
+            pagination['before'] = self.page.start_index() - 1
+        pagination['more'] = self.page.paginator.count - self.page.end_index()
+
         return OrderedDict([
             ('count', self.page.paginator.count),
             ('pages', pagination['pages']),
             ('first', pagination['first']),
             ('previous', pagination['previous']),
             ('next', pagination['next']),
-            ('last', pagination['last'])
+            ('last', pagination['last']),
+            ('before', pagination['before']),
+            ('more', pagination['more'])
         ])
 
     def get_paginated_response(self, data):
