@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
@@ -50,7 +51,7 @@ class UserViewSet(viewsets.GenericViewSet):
     parser_classes=(JSONParser, MultiPartParser)
     serializer_class = UserSerializer
     queryset = get_user_model().objects
-    pagination_class = ApiPaginator(16, 4)
+    pagination_class = ApiPaginator(settings.MISAGO_USERS_PER_PAGE, 4)
 
     def get_queryset(self):
         relations = ('rank', 'online_tracker', 'ban_cache')

@@ -324,6 +324,10 @@ MISAGO_ONLINE_LIST_SIZE = 50
 MISAGO_ONLINE_LIST_CACHE = 40
 
 
+# Controls number of users displayed on single page
+MISAGO_USERS_PER_PAGE = 12
+
+
 # Controls amount of data used for new threads/replies lists
 # Only unread threads younger than number of days specified in this setting
 # will be considered fresh for "new threads" list

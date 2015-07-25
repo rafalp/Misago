@@ -17,6 +17,11 @@
     {{/each}}
   </div>
 
-  {{pagination-aligned path='users.rank' model=rank meta=meta}}
-
+  {{#pagination-aligned path='users.rank' model=rank meta=meta}}
+    {{#if meta.count}}
+      {{ngettext "There is %(members)s member with this rank." "There are %(members)s members with this rank." meta.count members=meta.count}}
+    {{else}}
+      {{gettext "There are no members with this rank."}}
+    {{/if}}
+  {{/pagination-aligned}}
 </div>

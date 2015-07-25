@@ -8,7 +8,7 @@ export default Ember.Component.extend({
     if (this.get('user.rank.css_class').length) {
       return 'user-card-' + this.get('user.rank.css_class');
     } else {
-      return ''
+      return '';
     }
   }.property('user.rank.css_class')
 });

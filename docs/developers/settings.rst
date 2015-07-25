@@ -377,6 +377,12 @@ MISAGO_THREAD_TYPES
 List of clasess defining thread types.
 
 
+MISAGO_USERS_PER_PAGE
+---------------------
+
+Controls pagination of users lists.
+
+
 password_complexity
 -------------------
 

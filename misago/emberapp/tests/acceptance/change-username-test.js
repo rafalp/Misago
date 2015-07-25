@@ -213,7 +213,7 @@ test('/options/change-username changes username', function(assert) {
     assert.equal(currentPath(), 'options.username');
     assert.equal(getToastMessage(), 'Your username has been changed.');
 
-    var listedUsername = Ember.$.trim(find('.last-username-changes .item-name').text());
+    var listedUsername = Ember.$.trim(find('.last-username-changes .first-row .item-name').text());
     assert.equal(listedUsername, 'NewName');
 
     assert.ok(find('.last-username-changes').text().indexOf('BobBoberson') !== -1);

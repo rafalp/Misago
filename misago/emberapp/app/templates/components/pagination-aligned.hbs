@@ -1,29 +1,36 @@
-{{#if meta.first}}
-  {{#link-to (join-strings path ".index") model class="btn btn-default btn-previous-page btn-first-page"}}
-    <i class="material-icons">navigate_before</i>
-    <i class="material-icons">navigate_before</i>
-    <span class="hidden-xs hidden-sm">{{gettext "Start"}}</span>
-  {{/link-to}}
-{{/if}}
+<div class="buttons">
+  {{#if meta.first}}
+    {{#link-to (join-strings path ".index") model class="btn btn-default btn-previous-page btn-first-page"}}
+      <i class="material-icons">navigate_before</i>
+      <i class="material-icons">navigate_before</i>
+      <span class="hidden-xs hidden-sm">{{gettext "Start"}}</span>
+    {{/link-to}}
+  {{/if}}
 
-{{#if meta.previous}}
-  {{#link-to (join-strings path ".page") model meta.previous class="btn btn-default btn-previous-page"}}
-    <i class="material-icons">navigate_before</i>
-    <span class="hidden-xs hidden-sm">{{gettext "Previous"}}</span>
-  {{/link-to}}
-{{/if}}
+  {{#if meta.previous}}
+    {{#link-to (join-strings path ".page") model meta.previous class="btn btn-default btn-previous-page"}}
+      <i class="material-icons">navigate_before</i>
+      <span class="hidden-xs hidden-sm">{{gettext "Previous"}}</span>
+    {{/link-to}}
+  {{/if}}
 
-{{#if meta.next}}
-  {{#link-to (join-strings path ".page") model meta.last class="btn btn-default btn-next-page btn-last-page"}}
-    <span class="hidden-xs hidden-sm">{{gettext "End"}}</span>
-    <i class="material-icons">navigate_next</i>
-    <i class="material-icons">navigate_next</i>
-  {{/link-to}}
-{{/if}}
+  {{#if meta.last}}
+    {{#link-to (join-strings path ".page") model meta.last class="btn btn-default btn-next-page btn-last-page"}}
+      <span class="hidden-xs hidden-sm">{{gettext "End"}}</span>
+      <i class="material-icons">navigate_next</i>
+      <i class="material-icons">navigate_next</i>
+    {{/link-to}}
+  {{/if}}
 
-{{#if meta.last}}
-  {{#link-to (join-strings path ".page") model meta.next class="btn btn-default btn-next-page"}}
-    <span class="hidden-xs hidden-sm">{{gettext "Next"}}</span>
-    <i class="material-icons">navigate_next</i>
-  {{/link-to}}
+  {{#if meta.next}}
+    {{#link-to (join-strings path ".page") model meta.next class="btn btn-default btn-next-page"}}
+      <span class="hidden-xs hidden-sm">{{gettext "Next"}}</span>
+      <i class="material-icons">navigate_next</i>
+    {{/link-to}}
+  {{/if}}
+</div>
+{{#if template}}
+  <div class="help-text">
+    {{yield}}
+  </div>
 {{/if}}

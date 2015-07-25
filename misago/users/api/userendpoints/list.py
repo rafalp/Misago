@@ -76,7 +76,7 @@ def rank(request, queryset):
         return
 
     rank = get_object_or_404(Rank.objects.filter(is_tab=True), slug=rank_slug)
-    queryset = queryset.filter(rank=rank)
+    queryset = queryset.filter(rank=rank).order_by('slug')
 
     return {'queryset': queryset, 'paginate': True}
 

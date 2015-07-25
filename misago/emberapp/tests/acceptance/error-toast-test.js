@@ -27,7 +27,7 @@ test('some unhandled error occured', function(assert) {
 
   visit('/');
 
-  click('.navbar-guest-nav button.btn-default');
+  click('.navbar-guest-nav button.btn-sign-in');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -47,7 +47,7 @@ test('app went away', function(assert) {
 
   visit('/');
 
-  click('.navbar-guest-nav button.btn-default');
+  click('.navbar-guest-nav button.btn-sign-in');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -70,7 +70,7 @@ test('not found', function(assert) {
 
   visit('/');
 
-  click('.navbar-guest-nav button.btn-default');
+  click('.navbar-guest-nav button.btn-sign-in');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -93,7 +93,7 @@ test('permission denied', function(assert) {
 
   visit('/');
 
-  click('.navbar-guest-nav button.btn-default');
+  click('.navbar-guest-nav button.btn-sign-in');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -116,7 +116,7 @@ test('permission denied with reason', function(assert) {
 
   visit('/');
 
-  click('.navbar-guest-nav button.btn-default');
+  click('.navbar-guest-nav button.btn-sign-in');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');

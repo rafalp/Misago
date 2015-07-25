@@ -7,7 +7,6 @@ export default IndexRoute.extend({
     var page = this.cleanPage(params.page, transition);
     if (page) {
       this.set('page', page);
-
       return this.store.find('user', {
         'list': 'rank',
         'rank': this.modelFor('users.rank').get('slug'),

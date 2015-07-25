@@ -15,6 +15,7 @@ export default Ember.Mixin.create({
         this.transitionTo(routePath.join('.'));
       }
     } else {
+      console.log('invalid page!');
       this.throw404(); // not a valid page number
     }
   },

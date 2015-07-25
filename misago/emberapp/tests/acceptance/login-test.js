@@ -27,7 +27,7 @@ test('login with empty credentials', function(assert) {
   assert.expect(1);
 
   visit('/');
-  click('.navbar-guest-nav button.btn-default');
+  click('.navbar-guest-nav button.btn-sign-in');
   click('#appModal .btn-primary');
 
   andThen(function() {
@@ -45,7 +45,7 @@ test('backend errored', function(assert) {
 
   visit('/');
 
-  click('.navbar-guest-nav .btn-default');
+  click('.navbar-guest-nav .btn-sign-in');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -70,7 +70,7 @@ test('login with invalid credentials', function(assert) {
 
   visit('/');
 
-  click('.navbar-guest-nav .btn-default');
+  click('.navbar-guest-nav .btn-sign-in');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -95,7 +95,7 @@ test('login to user-activated account', function(assert) {
 
   visit('/');
 
-  click('.navbar-guest-nav .btn-default');
+  click('.navbar-guest-nav .btn-sign-in');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -120,7 +120,7 @@ test('login to admin-activated account', function(assert) {
 
   visit('/');
 
-  click('.navbar-guest-nav .btn-default');
+  click('.navbar-guest-nav .btn-sign-in');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -150,7 +150,7 @@ test('login to banned account', function(assert) {
 
   visit('/');
 
-  click('.navbar-guest-nav .btn-default');
+  click('.navbar-guest-nav .btn-sign-in');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');
@@ -179,7 +179,7 @@ test('login successfully', function(assert) {
 
   visit('/');
 
-  click('.navbar-guest-nav .btn-default');
+  click('.navbar-guest-nav .btn-sign-in');
   fillIn('#appModal .form-group:first-child input', 'SomeFake');
   fillIn('#appModal .form-group:last-child input', 'pass1234');
   click('#appModal .btn-primary');

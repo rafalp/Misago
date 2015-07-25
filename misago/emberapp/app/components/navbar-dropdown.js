@@ -10,5 +10,9 @@ export default Ember.Component.extend({
     Ember.$(document).on('click.misagoNavbarDropdown', function() {
       self.get('navbar-dropdown').hide();
     });
-  }.on('didInsertElement')
+  }.on('didInsertElement'),
+
+  removeClickDelegation: function() {
+    Ember.$(document).off('click.misagoNavbarDropdown');
+  }.on('willDestroyElement')
 });
