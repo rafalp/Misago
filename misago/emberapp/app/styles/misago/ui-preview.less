@@ -36,61 +36,40 @@
 }
 
 
-// Icons
-.ui-preview {
-  .fill {
-    .fa, .glyphicon {
-      .opacity(0.6);
-
-      color: @ui-preview-bg;
-
-      .animation(ui-preview-icons 2s linear infinite);
-    }
-  }
-}
-
-@-webkit-keyframes ui-preview-icons {
-  0%  { color: @ui-preview-bg; }
-  50%  { color: @ui-preview-light; }
-  1000%  { color: @ui-preview-bg; }
-}
-
-@keyframes ui-preview-icons {
-  0%  { color: @ui-preview-bg; }
-  50%  { color: @ui-preview-light; }
-  1000%  { color: @ui-preview-bg; }
-}
-
-
 // Few shorthands
 .ui-preview-img {
   display: inline-block;
+
+  &>* {
+    .opacity(0);
+  }
 }
 
 .ui-preview-text {
   border-radius: 20px;
   .opacity(0.6);
+
+  color: transparent;
 }
 
 
 // Preset: list-group
-.ui-preview {
-  &.list-group-preview {
-    border-radius: @list-group-border-radius + 1;
-    padding: 1px;
+.ui-preview .list-group-preview {
+  border-radius: @list-group-border-radius;
+  .shadow-2dp();
 
-    &>.fill {
-      margin-bottom: 1px;
-      padding: 10px 15px;
+  &>.fill {
+    margin-bottom: 1px;
+    padding: 10px 15px;
 
-      // Round the first and last items
-      &:first-child {
-        .border-top-radius(@list-group-border-radius);
-      }
-      &:last-child {
-        margin-bottom: 0;
-        .border-bottom-radius(@list-group-border-radius);
-      }
+    // Round the first and last items
+    &:first-child {
+      .border-top-radius(@list-group-border-radius);
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+      .border-bottom-radius(@list-group-border-radius);
     }
   }
 }

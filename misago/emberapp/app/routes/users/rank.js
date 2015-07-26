@@ -14,5 +14,9 @@ export default MisagoRoute.extend({
     if (!model.get('is_tab')) {
       this.throw404();
     }
-  }
+  },
+
+  unloadRankUsers: function() {
+    this.store.unloadAll('user');
+  }.on('deactivate')
 });

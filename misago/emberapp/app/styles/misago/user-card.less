@@ -18,7 +18,7 @@
 
 
 // Avatar
-.media-left {
+.user-card .media-left {
   padding-right: @line-height-computed / 2;
 
   .user-avatar {
@@ -30,7 +30,7 @@
 
 
 // Username and status
-.media-body {
+.user-card .media-body {
   padding: 4px 0px;
 
   h4 {
@@ -45,6 +45,10 @@
 
     color: @user-card-status-color;
     font-size: @font-size-small;
+
+    .user-state {
+      display: inline;
+    }
   }
 }
 
@@ -74,7 +78,7 @@
 
 // Make user card look bigger on large displays
 @media (min-width: @screen-md-min) {
-  .user-card {
+  .user-card.full-size {
     .media {
       padding-bottom: 0px;
 
@@ -106,6 +110,62 @@
         margin-bottom: @line-height-computed / 4;
 
         font-size: @font-size-large;
+      }
+    }
+  }
+}
+
+
+// UI preview
+.ui-preview.user-card {
+  .media {
+    background-color: @user-card-bg;
+
+    p {
+      margin-top: 4px;
+
+      font-size: @font-size-small - 4px;
+    }
+
+    .ui-preview-img {
+      border-radius: @avatar-radius-small;
+
+      .user-avatar {
+        margin: 0px;
+      }
+    }
+  }
+
+  footer {
+    border-top: none;
+    margin-top: 1px;
+  }
+}
+
+@media (min-width: @screen-md-min) {
+  .ui-preview.user-card.full-size {
+    .media {
+      .ui-preview-img {
+        border-radius: @avatar-radius;
+        margin-top: @line-height-computed;
+
+        width: 80%;
+
+        .user-avatar {
+          margin: 0px;
+          width: 100%;
+          height: auto;
+        }
+      }
+
+      .media-body {
+        margin: @line-height-computed * .8 0px;
+
+        p {
+          margin-top: 4px;
+
+          font-size: @font-size-small - 2px;
+        }
       }
     }
   }

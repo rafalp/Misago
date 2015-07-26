@@ -22,10 +22,23 @@
 <footer>
   <nav>
     <ul class="list-unstyled">
-      {{#if show-follow}}
+      {{#if auth.isAuthenticated}}
+        {{#if show-follow}}
+          <li>
+            {{#link-to 'user' user.url_name class="btn btn-default btn-block"}}
+              {{gettext "Follow"}}
+            {{/link-to}}
+          </li>
+        {{else}}
+          <li>
+            {{#link-to 'user' user.url_name class="btn btn-primary btn-block"}}
+              {{gettext "Profile"}}
+            {{/link-to}}
+          </li>
+        {{/if}}
         <li>
           {{#link-to 'user' user.url_name class="btn btn-default btn-block"}}
-            {{gettext "Follow"}}
+            {{gettext "Message"}}
           {{/link-to}}
         </li>
       {{else}}
@@ -35,11 +48,6 @@
           {{/link-to}}
         </li>
       {{/if}}
-      <li>
-        {{#link-to 'user' user.url_name class="btn btn-default btn-block"}}
-          {{gettext "Message"}}
-        {{/link-to}}
-      </li>
     </ul>
   </nav>
 </footer>
