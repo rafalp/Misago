@@ -74,6 +74,20 @@ export default Ember.Service.extend({
     this.setUrlNameOnUser();
   }.observes('user.id', 'user.slug'),
 
+  // Propagate changes to store for nice real-time changes
+
+  propagateAvatarChange: function() {
+    var user = this.store.getById('user', this.get('user.id'));
+    if (user) {
+      user.set('avatar_hash', this.get('user.avatar_hash'));
+    }
+
+    var profile = this.store.getById('user-profile', this.get('user.id'));
+    if (profile) {
+      profile.set('avatar_hash', this.get('user.avatar_hash'));
+    }
+  }.observes('user.avatar_hash'),
+
   // Return user as POJO
 
   getUserPOJO: function() {
