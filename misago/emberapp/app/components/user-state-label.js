@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+  tagName: 'span',
   classNames: 'user-state',
   classNameBindings: [
     'user.state.is_banned:user-banned',

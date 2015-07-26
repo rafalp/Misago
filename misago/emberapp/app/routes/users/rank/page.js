@@ -19,7 +19,8 @@ export default IndexRoute.extend({
     didTransition: function() {
       this.set('title', {
         title: this.modelFor('users.rank').get('name'),
-        parent: gettext('Users')
+        parent: gettext('Users'),
+        page: this.get('page')
       });
     }
   }

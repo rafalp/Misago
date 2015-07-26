@@ -1,29 +1,45 @@
-{{user-avatar user=user size=400}}
-<div class="avatar-overlay">
-  <div class="avatar-overlay-cover">
-    <div class="avatar-overlay-inner">
+<div class="media">
+  <div class="media-left">
 
-      {{#link-to 'user' user.url_name class="user-avatar-link"}}
-        {{user-avatar user=user size=400}}
-      {{/link-to}}
+    {{#link-to 'user' user.url_name}}
+      {{user-avatar user=user size=50 class="hidden-md hidden-lg"}}
+      {{user-avatar user=user size=200 class="hidden-xs hidden-sm"}}
+    {{/link-to}}
 
-      <h4>
-        {{user-state-icon user=user}}
-        {{user.username}}
-      </h4>
+  </div>
+  <div class="media-body">
 
-      <nav>
-        {{#link-to 'user' user.url_name class="btn btn-default btn-outline"}}
-          <i class="material-icons">person_outline</i>
-        {{/link-to}}
-        {{#link-to 'user' user.url_name class="btn btn-default btn-outline"}}
-          <i class="material-icons">chat</i>
-        {{/link-to}}
-        {{#link-to 'user' user.url_name class="btn btn-default btn-outline"}}
-          <i class="material-icons">check</i>
-        {{/link-to}}
-      </nav>
+    <h4>{{user.username}}</h4>
 
-    </div>
+    <p>
+      {{#if user.finalTitle}}
+        {{user.finalTitle}},
+      {{/if}} {{user-state-label user=user}}
+    </p>
+
   </div>
 </div>
+<footer>
+  <nav>
+    <ul class="list-unstyled">
+      {{#if show-follow}}
+        <li>
+          {{#link-to 'user' user.url_name class="btn btn-default btn-block"}}
+            {{gettext "Follow"}}
+          {{/link-to}}
+        </li>
+      {{else}}
+        <li>
+          {{#link-to 'user' user.url_name class="btn btn-primary btn-block"}}
+            {{gettext "Profile"}}
+          {{/link-to}}
+        </li>
+      {{/if}}
+      <li>
+        {{#link-to 'user' user.url_name class="btn btn-default btn-block"}}
+          {{gettext "Message"}}
+        {{/link-to}}
+      </li>
+    </ul>
+  </nav>
+</footer>

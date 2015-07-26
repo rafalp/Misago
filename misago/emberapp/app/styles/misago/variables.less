@@ -311,7 +311,7 @@
 //== Dropdowns
 //
 //** Dropdown radius and shadow
-@dropdown-border-radius:            @border-radius-base;
+@dropdown-border-radius:         @border-radius-base;
 
 //** Dropdown link text color.
 @dropdown-link-color:            @site-link-color;
@@ -386,8 +386,10 @@
 //
 //** Body
 @user-card-border-radius:         @border-radius-large;
-@user-card-overlay:               fadeOut(@body-bg, 10%);
+@user-card-bg:                    @body-bg;
 
-@user-card-avatar-link:           fadeOut(#fff, 50%);
-@user-card-avatar-link-hover:     @link-color;
-@user-card-avatar-link-active:    @link-hover-color;
+@user-card-footer-border:         darken(@user-card-bg, 8%);
+@user-card-footer-bg:             @user-card-bg;
+
+@user-card-username-color:        @text-color;
+@user-card-status-color:          @gray-light;

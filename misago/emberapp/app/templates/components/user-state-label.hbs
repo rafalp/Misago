@@ -1,19 +1,13 @@
 {{#if user.state.is_banned}}
-  <i class="material-icons">remove_circle_outline</i>
   {{gettext "Banned"}}
 {{else if user.state.is_hidden}}
-  <i class="material-icons">radio_button_unchecked</i>
   {{gettext "Hidden"}}
 {{else if user.state.is_online_hidden}}
-  <i class="material-icons">gps_fixed</i>
   {{gettext "Online, hidden"}}
 {{else if user.state.is_offline_hidden}}
-  <i class="material-icons">gps_not_fixed</i>
   {{gettext "Seen %(last_seen)s, hidden" last_seen=(from-now lastClick)}}
 {{else if user.state.is_online}}
-  <i class="material-icons">radio_button_checked</i>
   {{gettext "Online"}}
 {{else if user.state.is_offline}}
-  <i class="material-icons">radio_button_unchecked</i>
   {{gettext "Seen %(last_seen)s" last_seen=(from-now lastClick)}}
 {{/if}}
