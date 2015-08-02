@@ -84,8 +84,10 @@ class UserSerializer(serializers.ModelSerializer):
             'avatar_hash',
             'title',
             'rank',
-            'state',
             'signature',
+            'threads',
+            'posts',
+            'state',
         )
 
     def get_state(self, obj):
@@ -113,8 +115,10 @@ class OnlineUserSerializer(UserSerializer):
             'avatar_hash',
             'title',
             'rank',
-            'last_click',
             'signature',
+            'threads',
+            'posts',
+            'last_click',
         )
 
     def get_last_click(self, obj):
@@ -122,7 +126,7 @@ class OnlineUserSerializer(UserSerializer):
 
 
 class ScoredUserSerializer(UserSerializer):
-    score = serializers.SerializerMethodField()
+    meta = serializers.SerializerMethodField()
 
     class Meta:
         model = get_user_model()
@@ -133,12 +137,14 @@ class ScoredUserSerializer(UserSerializer):
             'avatar_hash',
             'title',
             'rank',
-            'score',
             'signature',
+            'threads',
+            'posts',
+            'meta',
         )
 
-    def get_score(self, obj):
-        return obj.score
+    def get_meta(self, obj):
+        return {'score': obj.score}
 
 
 class UserProfileSerializer(UserSerializer):
@@ -158,8 +164,10 @@ class UserProfileSerializer(UserSerializer):
             'avatar_hash',
             'title',
             'rank',
-            'is_signature_locked',
             'signature',
+            'is_signature_locked',
+            'threads',
+            'posts',
             'is_followed',
             'is_blocked',
             'state',

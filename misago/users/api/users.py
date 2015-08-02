@@ -64,8 +64,15 @@ class UserViewSet(viewsets.GenericViewSet):
         if not users_list:
             return Response([])
 
-        if 'data' in users_list:
-            return Response(users_list['data'])
+        if 'results' in users_list:
+            if 'meta' in users_list:
+                response_json = {
+                    'results': users_list['results']
+                }
+                response_json.update(users_list['meta'])
+                return Response(response_json)
+            else:
+                return Response(users_list['results'])
 
         if users_list.get('paginate'):
             page = self.paginate_queryset(users_list['queryset'])

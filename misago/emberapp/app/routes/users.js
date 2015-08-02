@@ -9,5 +9,9 @@ export default MisagoRoute.extend({
 
   model: function() {
     return this.store.find('rank');
-  }
+  },
+
+  unloadUsers: function() {
+    this.store.unloadAll('user');
+  }.on('deactivate')
 });

@@ -1,1 +1,50 @@
-Active users!
+{{#if model.length}}
+  <p class="lead">
+    {{ngettext "%(users)s user has posted new messages in last %(days)s days." "%(users)s users have posted new messages in last %(days)s days." model.length users=model.length days=meta.ranking_length}}
+  </p>
+
+  <div class="panel panel-table users-table">
+    <table class="table vertically-aligned">
+      <thead class="hidden-xs hidden-sm">
+        <tr>
+          <th colspan="2">{{gettext "User"}}</th>
+          <th>{{gettext "Position"}}</th>
+          <th>{{gettext "Posts"}}</th>
+          <th>{{gettext "Total"}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each model as |user|}}
+          <tr>
+            <td class="col-avatar">
+              {{#link-to 'user' user.url_name}}
+                {{user-avatar user=user size=50}}
+              {{/link-to}}
+            </td>
+            <td class="col-username">
+              {{#link-to 'user' user.url_name}}
+                {{user.username}}
+              {{/link-to}}
+              <p class="hidden-md hidden-lg">
+                {{ngettext "#%(rank)s with %(score)s post and %(total)s total." "#%(rank)s with %(score)s posts and %(total)s total." user.meta.score rank=user.meta.ranking score=user.meta.score total=user.posts}}
+              </p>
+            </td>
+            <td class="hidden-xs hidden-sm">
+              #{{user.meta.ranking}}
+            </td>
+            <td class="hidden-xs hidden-sm">
+              {{user.meta.score}}
+            </td>
+            <td class="hidden-xs hidden-sm">
+              {{user.posts}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+{{else}}
+  <p class="lead">
+    {{gettext "No users have posted during last %(days)s days." days=meta.ranking_length}}
+  </p>
+{{/if}}

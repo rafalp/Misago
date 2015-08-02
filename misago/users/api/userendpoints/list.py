@@ -44,7 +44,12 @@ def real_active():
     for result in queryset[:settings.MISAGO_RANKING_SIZE]:
         result.score = result.num_posts
         users_ranking.append(result)
-    return {'data': ScoredUserSerializer(users_ranking, many=True).data}
+    return {
+        'results': ScoredUserSerializer(users_ranking, many=True).data,
+        'meta': {
+            'ranking_length': settings.MISAGO_RANKING_LENGTH
+        }
+    }
 
 
 def online(request, queryset):
@@ -67,7 +72,7 @@ def real_online(request):
         result.user.last_click = result.last_click
         users_online.append(result.user)
 
-    return {'data': OnlineUserSerializer(users_online, many=True).data}
+    return {'results': OnlineUserSerializer(users_online, many=True).data}
 
 
 def rank(request, queryset):

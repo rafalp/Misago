@@ -8,8 +8,11 @@ export default Ember.Mixin.create(WithUrlName, {
   avatar_hash: DS.attr('string'),
   title: DS.attr('string'),
   rank: DS.attr('ember-object'),
-  state: DS.attr('ember-object'),
+  threads: DS.attr('number'),
+  posts: DS.attr('number'),
   signature: DS.attr('string'),
+  state: DS.attr('ember-object'),
+  meta: DS.attr('ember-object'),
 
   finalTitle: function() {
     if (this.get('title')) {
