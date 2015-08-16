@@ -1,0 +1,3 @@
+Misago.request = function() {
+
+};

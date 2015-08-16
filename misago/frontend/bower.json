@@ -1,0 +1,11 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.1",
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "mithril": "*",
+    "bootstrap": "~3.3.5",
+    "ace-builds": "~1.2.0"
+  }
+}

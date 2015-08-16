@@ -1,0 +1,42 @@
+{
+  "name": "misago-frontend",
+  "version": "0.5.99",
+  "private": true,
+  "description": "Misago Frontend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "jshintConfig": {
+    "undef": true,
+    "unused": true,
+    "predef": [
+      "$",
+      "QUnit",
+      "Misago",
+      "m",
+      "console",
+      "document",
+      "window"
+    ]
+  },
+  "author": "Rafał Pitoń",
+  "license": "GPL-2.0",
+  "dependencies": {
+    "bower": "^1.4.1",
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-connect": "^2.2.0",
+    "gulp-jshint": "^1.11.2",
+    "gulp-less": "^3.0.3",
+    "gulp-open": "^1.0.0",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-uglify": "^1.2.0",
+    "less": "^2.5.1"
+  },
+  "devDependencies": {
+    "del": "^1.2.1",
+    "gulp": "^3.9.0",
+    "qunitjs": "^1.18.0"
+  }
+}
