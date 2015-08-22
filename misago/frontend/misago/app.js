@@ -5,7 +5,7 @@
 
   window.Misago = function() {
 
-    var ns = this.prototype;
+    var ns = Object.getPrototypeOf(this);
     var self = this;
 
     // Preloaded data
@@ -28,9 +28,26 @@
     this._initServices = function(services) {
       var ordered_services = new ns.OrderedList(services).order(false);
       ordered_services.forEach(function (item) {
-        var service_instance = item.item(self);
+        var factory = null;
+        if (item.item.factory !== undefined) {
+          factory = item.item.factory;
+        } else {
+          factory = item.item;
+        }
+
+        var service_instance = factory(self);
         if (service_instance) {
           self[item.name] = service_instance;
+        }
+      });
+    };
+
+    this._destroyServices = function(services) {
+      var ordered_services = new ns.OrderedList(services).order();
+      ordered_services.reverse();
+      ordered_services.forEach(function (item) {
+        if (item.destroy !== undefined) {
+          item.destroy(self);
         }
       });
     };
@@ -64,6 +81,9 @@
     };
 
     this.destroy = function() {
+      // run destructors for services
+      this._destroyServices()
+
       // unmount components if they are mounted
       if (this._outlet) {
         m.mount(this._outlet, null);
