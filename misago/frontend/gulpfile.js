@@ -145,7 +145,7 @@ gulp.task('quickdeploycss', ['collectcss'], function() {
     .pipe(gulp.dest(static_path + 'css'));
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', ['default'], function() {
    gulp.watch('misago/**/*.js', ['quickdeployjs']);
    gulp.watch('misago/**/*.less', ['quickdeploycss']);
 });
