@@ -30,10 +30,15 @@ Router.map(function() {
   // Users
   this.route('users', { path: 'users/' }, function() {
     this.route('rank', { path: ':slug/' }, function() {
+      this.route('index', { path: '/' });
       this.route('page', { path: ':page/' });
     });
-    this.route('online', { path: 'online/' });
-    this.route('active', { path: 'active/' });
+    this.route('online', { path: 'online/' }, function() {
+      this.route('index', { path: '/' });
+    });
+    this.route('active', { path: 'active/' }, function() {
+      this.route('index', { path: '/' });
+    });
   });
 
   // User

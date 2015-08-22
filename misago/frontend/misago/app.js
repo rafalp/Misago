@@ -1,72 +1,73 @@
-/* globals -Misago */
+/* global -Misago */
 /* exported Misago */
+(function () {
+  'use strict';
 
-var Misago = {
+  window.Misago = function() {
 
-  // Namespaces
-  component: {},
-  template: {},
+    var ns = this.prototype;
+    var self = this;
 
-  // Initialization
-  init: function() {
-    var testservice = function(name) {
-      return {
-        init: function() {
-          console.log('init:' + name);
-        }
-      };
+    // Preloaded data
+    this.preloaded_data = {
+      // Empty settings
+      SETTINGS: {}
     };
 
-    this.addService('apple', testservice('apple'));
-    this.addService('banana', testservice('banana'));
-    this.addService('orange', testservice('orange'));
-    this.addService('kiwi', testservice('kiwi'), {before: 'banana'});
-    this.addService('melon', testservice('melon'), {after: 'potato'});
-    this.addService('potato', testservice('potato'));
+    // Services
+    this._services = [];
+    this.addService = function(name, factory, order) {
+      this._services.push({
+        name: name,
+        item: factory,
+        after: this.get(order, 'after'),
+        before: this.get(order, 'before')
+      });
+    };
 
-    this.initServices(this.services);
-    this.renderLayout(document.getElementById('main'));
-  },
+    this._initServices = function(services) {
+      var ordered_services = new ns.OrderedList(services).order(false);
+      ordered_services.forEach(function (item) {
+        var service_instance = item.item(self);
+        if (service_instance) {
+          self[item.name] = service_instance;
+        }
+      });
+    };
 
-  renderLayout: function(element) {
-    return element;
-  },
+    this.registerCoreServices = function() {
+      this.addService('Conf', ns.Conf);
+    };
 
-  // Services
-  services: [],
+    // Component factory
+    this.component = function() {
+      var arguments_array = [];
+      for (var i = 0; i < arguments.length; i += 1) {
+        arguments_array.push(arguments[i]);
+      }
 
-  addService: function(name, service, order) {
-    this.services.push({
-      name: name,
-      item: service,
-      after: this.get(order, 'after'),
-      before: this.get(order, 'before')
-    });
-  },
+      if (arguments_array[arguments_array.length - 1] !== this) {
+        arguments_array.push(this);
+      }
 
-  initServices: function(services) {
-    var ordered_services = this.OrderedList(services).order();
-    ordered_services.forEach(function (item) {
-      item.service.init();
-    });
-  },
+      return m.component.apply(undefined, arguments_array);
+    };
 
-  // Accessors utils
-  has: function(obj, prop) {
-    if (obj !== undefined) {
-      return obj.hasOwnProperty(prop);
-    } else {
-      return false;
-    }
-  },
+    // App ini/destory
+    this._outlet = null;
+    this.init = function(outlet) {
+      this._initServices(this._services);
+      if (outlet) {
+        this._outlet = outlet;
+        m.mount(outlet, this.component(ns.ForumLayout));
+      }
+    };
 
-  get: function(obj, prop, value) {
-    if (this.has(obj, prop)) {
-      return obj[prop];
-    } else if (value !== undefined) {
-      return value;
-    } else {
-      return undefined;
-    }
-  }
-};
+    this.destroy = function() {
+      // unmount components if they are mounted
+      if (this._outlet) {
+        m.mount(this._outlet, null);
+      }
+    };
+  };
+}());

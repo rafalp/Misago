@@ -11,6 +11,7 @@ from rest_framework.response import Response
 
 from misago.acl import add_acl
 from misago.core.apipaginator import ApiPaginator
+from misago.core.cache import cache
 
 from misago.users.forms.options import ForumOptionsForm
 from misago.users.permissions.profiles import (allow_browse_users_list,
@@ -57,42 +58,47 @@ class UserViewSet(viewsets.GenericViewSet):
         relations = ('rank', 'online_tracker', 'ban_cache')
         return self.queryset.select_related(*relations)
 
+    def get_users_count(self):
+        users_count = cache.get('users_count')
+        if not users_count:
+            users_count = self.queryset.count()
+            cache.set('users_count', users_count, 15 * 60)
+        return users_count
+
     def list(self, request):
+        import time
+        time.sleep(10)
+
         allow_browse_users_list(request.user)
 
-        users_list = list_endpoint(request, self.get_queryset())
-        if not users_list:
-            return Response([])
-
-        if 'results' in users_list:
-            if 'meta' in users_list:
-                response_json = {
-                    'results': users_list['results']
-                }
-                response_json.update(users_list['meta'])
-                return Response(response_json)
-            else:
-                return Response(users_list['results'])
-
-        if users_list.get('paginate'):
-            page = self.paginate_queryset(users_list['queryset'])
-            users_list['queryset'] = page
-
-        if users_list.get('serializer'):
-            serializer_class = users_list.get('serializer')
-        else:
-            serializer_class = self.serializer_class
-
-        serializer = serializer_class(
-            users_list['queryset'], many=True, context={'user': request.user})
-
         response_dict = {
-            'results': serializer.data,
-            'users': self.queryset.count()
+            'results': [],
+            'users': self.get_users_count(),
         }
 
-        if users_list.get('paginate'):
-            response_dict.update(self.paginator.get_meta())
+        list_dict = list_endpoint(request, self.get_queryset())
+        if not list_dict:
+            return Response([])
+
+        if list_dict.get('meta'):
+            response_dict.update(list_dict['meta'])
+
+        if list_dict.get('results'):
+            response_dict['results'] = list_dict['results']
+        elif list_dict.get('queryset'):
+            queryset = list_dict['queryset']
+            if list_dict.get('paginate'):
+                queryset = self.paginate_queryset(list_dict['queryset'])
+                response_dict.update(self.paginator.get_meta())
+
+            if list_dict.get('serializer'):
+                SerializerClass = list_dict.get('serializer')
+            else:
+                SerializerClass = self.serializer_class
+
+            serializer = SerializerClass(
+                queryset, many=True, context={'user': request.user})
+            response_dict['results'] = serializer.data
 
         return Response(response_dict)
 

@@ -32,8 +32,7 @@ var ace = [
 gulp.task('lint', function() {
   return gulp.src(['misago/*.js', 'misago/**/*.js'])
     .pipe(jshint(packageJSON.jshintConfig))
-    .pipe(jshint.reporter('default'))
-    .pipe(jshint.reporter('fail'));
+    .pipe(jshint.reporter('default'));
 });
 
 gulp.task('misagojs', ['lint'], function() {
@@ -175,6 +174,15 @@ gulp.task('collecttestimg', ['cleantest', 'copyimg'], function() {
     .pipe(gulp.dest('test/dist/img'));
 });
 
+gulp.task('collecttestsutils', ['cleantest'], function() {
+  return gulp.src('test/utils/**/*.js')
+    .pipe(jshint(packageJSON.jshintConfig))
+    .pipe(jshint.reporter('default'))
+    .pipe(jshint.reporter('fail'))
+    .pipe(concat('utils.js'))
+    .pipe(gulp.dest('test/dist'));
+});
+
 gulp.task('collecttests', ['cleantest'], function() {
   return gulp.src('test/tests/**/*.js')
     .pipe(jshint(packageJSON.jshintConfig))
@@ -184,7 +192,7 @@ gulp.task('collecttests', ['cleantest'], function() {
     .pipe(gulp.dest('test/dist'));
 });
 
-gulp.task('starttestserver', ['collecttests', 'collecttestjs', 'collecttestcss', 'collecttestfonts', 'collecttestimg'], function() {
+gulp.task('starttestserver', ['collecttests', 'collecttestsutils', 'collecttestjs', 'collecttestcss', 'collecttestfonts', 'collecttestimg'], function() {
   connect.server({
     port: 8080,
     root: 'test'

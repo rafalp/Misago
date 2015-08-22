@@ -17,7 +17,8 @@
       "m",
       "console",
       "document",
-      "window"
+      "window",
+      "_"
     ]
   },
   "author": "Rafał Pitoń",

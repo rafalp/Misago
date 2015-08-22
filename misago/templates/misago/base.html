@@ -39,15 +39,17 @@
     {% include "misago/auth.html" %}
 
     <script type="text/javascript" src="/django-i18n.js"></script>
-    <script type="text/javascript">
-      {% include "misago/preloaded_data.js" %}
-    </script>
-
     <script type="text/javascript" src="{% static 'misago/js/vendor.js' %}"></script>
     {% if LANGUAGE_CODE != "en-us" %}
     <script type="text/javascript" src="/moment-i18n.js"></script>
     {% endif %}
     <script type="text/javascript" src="{% static 'misago/js/misago.js' %}"></script>
+    <script type="text/javascript">
+      var misago = new Misago();
+      misago.registerCoreServices();
+      {% include "misago/preloaded_data.js" %}
+      misago.init();
+    </script>
 
   </body>
 </html>

@@ -19,21 +19,21 @@ def preload_settings_json(request):
     preloaded_settings = db_settings.get_public_settings()
 
     preloaded_settings.update({
-        'loginApiUrl': dj_settings.MISAGO_LOGIN_API_URL,
+        'LOGIN_API_URL': dj_settings.MISAGO_LOGIN_API_URL,
 
-        'loginRedirectUrl': reverse(dj_settings.LOGIN_REDIRECT_URL),
-        'loginUrl': reverse(dj_settings.LOGIN_URL),
+        'LOGIN_REDIRECT_URL': reverse(dj_settings.LOGIN_REDIRECT_URL),
+        'LOGIN_URL': reverse(dj_settings.LOGIN_URL),
 
-        'logoutUrl': reverse(dj_settings.LOGOUT_URL),
+        'LOGOUT_URL': reverse(dj_settings.LOGOUT_URL),
     })
 
     request.preloaded_ember_data.update({
-        'misagoSettings': preloaded_settings,
+        'SETTINGS': preloaded_settings,
 
-        'staticUrl': dj_settings.STATIC_URL,
-        'mediaUrl': dj_settings.MEDIA_URL,
+        'STATIC_URL': dj_settings.STATIC_URL,
+        'MEDIA_URL': dj_settings.MEDIA_URL,
 
-        'csrfCookieName': dj_settings.CSRF_COOKIE_NAME,
+        'CSRF_COOKIE_NAME': dj_settings.CSRF_COOKIE_NAME,
     })
 
     return {}

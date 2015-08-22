@@ -1,2 +1,2 @@
 {% load misago_json %}{% if DEBUG %}// CSRF Token: {{ csrf_token }}{% endif %}
-window.MisagoData = {{ preloaded_ember_data|as_json }};
+misago.preloaded_data = {{ preloaded_ember_data|as_json }};
