@@ -53,7 +53,9 @@
     };
 
     this.registerCoreServices = function() {
-      this.addService('Conf', ns.Conf);
+      this.addService('conf', ns.Conf);
+      this.addService('router', ns.RouterFactory);
+      this.addService('outlet', ns.Outlet);
     };
 
     // Component factory
@@ -70,24 +72,19 @@
       return m.component.apply(undefined, arguments_array);
     };
 
-    // App ini/destory
-    this._outlet = null;
-    this.init = function(outlet) {
+    // App init/destory
+    this.setup = false;
+    this.init = function(setup) {
+      this.setup = {
+        outlet: ns.get(setup, 'outlet', null),
+        in_test: ns.get(setup, 'in_test', false)
+      };
+
       this._initServices(this._services);
-      if (outlet) {
-        this._outlet = outlet;
-        m.mount(outlet, this.component(ns.ForumLayout));
-      }
     };
 
     this.destroy = function() {
-      // run destructors for services
-      this._destroyServices()
-
-      // unmount components if they are mounted
-      if (this._outlet) {
-        m.mount(this._outlet, null);
-      }
+      this._destroyServices();
     };
   };
 }());

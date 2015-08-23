@@ -113,4 +113,12 @@
     assert.deepEqual(initialization_order, [1, 2], 'services were initialized in right order.');
     assert.deepEqual(destruction_order, [2, 1], 'services were destroyed in right order.');
   });
+
+  QUnit.test("initialization data is stored on container", function(assert) {
+    assert.expect();
+
+    container.init({outlet: 'test'});
+
+    assert.equal(container.setup.outlet, 'test', 'container stored initialization data');
+  });
 }());

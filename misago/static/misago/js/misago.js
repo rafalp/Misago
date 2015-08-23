@@ -1,2 +1,311 @@
-!function(){"use strict";window.Misago=function(){var t=Object.getPrototypeOf(this),e=this;this.preloaded_data={SETTINGS:{}},this._services=[],this.addService=function(t,e,i){this._services.push({name:t,item:e,after:this.get(i,"after"),before:this.get(i,"before")})},this._initServices=function(i){var r=new t.OrderedList(i).order(!1);r.forEach(function(t){var i=null;i=void 0!==t.item.factory?t.item.factory:t.item;var r=i(e);r&&(e[t.name]=r)})},this._destroyServices=function(i){var r=new t.OrderedList(i).order();r.reverse(),r.forEach(function(t){void 0!==t.destroy&&t.destroy(e)})},this.registerCoreServices=function(){this.addService("Conf",t.Conf)},this.component=function(){for(var t=[],e=0;e<arguments.length;e+=1)t.push(arguments[e]);return t[t.length-1]!==this&&t.push(this),m.component.apply(void 0,t)},this._outlet=null,this.init=function(e){this._initServices(this._services),e&&(this._outlet=e,m.mount(e,this.component(t.ForumLayout)))},this.destroy=function(){this._destroyServices(),this._outlet&&m.mount(this._outlet,null)}}}(),function(t){"use strict";t.ForumLayout={view:function(t,e){return m(".container",[m("h1",e.settings.forum_name),m("hr"),m("#route-outlet","Current route will be rendered here."),m("hr"),m("p","Forum footer goes here.")])}}}(Misago.prototype),function(t){"use strict";t.Conf=function(t){t.settings=t.get(t.preloaded_data,"SETTINGS",{})}}(Misago.prototype),function(t){"use strict";t.has=function(t,e){return void 0!==t?t.hasOwnProperty(e):!1},t.get=function(e,i,r){return t.has(e,i)?e[i]:void 0!==r?r:void 0},t.pop=function(e,i,r){var s=t.get(e,i,r);return t.has(e,i)&&delete e[i],s}}(Misago.prototype),function(t){"use strict";t.OrderedList=function(e){this.is_ordered=!1,this._items=e||[],this.add=function(e,i,r){this._items.push({key:e,item:i,after:t.get(r,"after"),before:t.get(r,"before")})},this.get=function(t,e){for(var i=0;i<this._items.length;i++)if(this._items[i].key===t)return this._items[i].item;return e},this.has=function(t){return void 0!==this.get(t)},this.values=function(){for(var t=[],e=0;e<this._items.length;e++)t.push(this._items[e].item);return t},this.order=function(t){return this.is_ordered||(this._items=this._order(this._items),this.is_ordered=!0),t||"undefined"==typeof t?this.values():this._items},this._order=function(t){function e(t){var e=-1;-1===s.indexOf(t.key)&&(t.after?(e=s.indexOf(t.after),-1!==e&&(e+=1)):t.before&&(e=s.indexOf(t.before)),-1!==e&&(r.splice(e,0,t),s.splice(e,0,t.key)))}var i=[];t.forEach(function(t){i.push(t.key)});var r=[],s=[];t.forEach(function(t){t.after||t.before||(r.push(t),s.push(t.key))});for(var o=200;o>0&&i.length!==s.length;)o-=1,t.forEach(e);return r}}}(Misago.prototype);
-//# sourceMappingURL=/misago.js.map
+/* global -Misago */
+/* exported Misago */
+(function () {
+  'use strict';
+
+  window.Misago = function() {
+
+    var ns = Object.getPrototypeOf(this);
+    var self = this;
+
+    // Preloaded data
+    this.preloaded_data = {
+      // Empty settings
+      SETTINGS: {}
+    };
+
+    // Services
+    this._services = [];
+    this.addService = function(name, factory, order) {
+      this._services.push({
+        name: name,
+        item: factory,
+        after: this.get(order, 'after'),
+        before: this.get(order, 'before')
+      });
+    };
+
+    this._initServices = function(services) {
+      var ordered_services = new ns.OrderedList(services).order(false);
+      ordered_services.forEach(function (item) {
+        var factory = null;
+        if (item.item.factory !== undefined) {
+          factory = item.item.factory;
+        } else {
+          factory = item.item;
+        }
+
+        var service_instance = factory(self);
+        if (service_instance) {
+          self[item.name] = service_instance;
+        }
+      });
+    };
+
+    this._destroyServices = function(services) {
+      var ordered_services = new ns.OrderedList(services).order();
+      ordered_services.reverse();
+      ordered_services.forEach(function (item) {
+        if (item.destroy !== undefined) {
+          item.destroy(self);
+        }
+      });
+    };
+
+    this.registerCoreServices = function() {
+      this.addService('conf', ns.Conf);
+      this.addService('router', ns.RouterFactory);
+      this.addService('outlet', ns.Outlet);
+    };
+
+    // Component factory
+    this.component = function() {
+      var arguments_array = [];
+      for (var i = 0; i < arguments.length; i += 1) {
+        arguments_array.push(arguments[i]);
+      }
+
+      if (arguments_array[arguments_array.length - 1] !== this) {
+        arguments_array.push(this);
+      }
+
+      return m.component.apply(undefined, arguments_array);
+    };
+
+    // App ini/destory
+    this._outlet = null;
+    this.init = function(outlet) {
+      this._outlet = outlet || null;
+      this._initServices(this._services);
+    };
+
+    this.destroy = function() {
+      this._destroyServices();
+    };
+  };
+}());
+
+(function (ns) {
+  'use strict';
+
+  ns.ForumLayout = {
+    view: function(ctrl, _) {
+      return [
+        _.component(ns.ForumNavbar)
+      ];
+    }
+  };
+}(Misago.prototype));
+
+(function (ns) {
+  'use strict';
+
+  ns.ForumNavbar = {
+    view: function(ctrl, _) {
+      var desktop_navbar = [];
+
+      if (_.settings.forum_branding_display) {
+        desktop_navbar.push(
+          m('a.navbar-brand', {href: _.router.url('misago:index')}, [
+            m('img', {
+              src: _.router.staticUrl('misago/img/site-logo.png'),
+              alt: _.settings.forum_name
+            }),
+            _.settings.forum_branding_text
+          ])
+        );
+      }
+
+      return m('nav.navbar.navbar-default.navbar-static-top[role="navigation"]', [
+        m('.container.navbar-full.hidden-xs.hidden-sm', desktop_navbar)
+      ]);
+    }
+  };
+}(Misago.prototype));
+
+(function (ns) {
+  'use strict';
+
+  ns.Conf = function(_) {
+    _.settings = _.get(_.preloaded_data, 'SETTINGS', {});
+  };
+}(Misago.prototype));
+
+(function (ns) {
+  'use strict';
+
+  ns.Outlet = {
+    factory: function(_) {
+      if (_._outlet) {
+        m.mount(document.getElementById(_._outlet),
+                _.component(ns.ForumLayout));
+      }
+    },
+
+    destroy: function(_) {
+      if (_._outlet) {
+        m.mount(_._outlet, null);
+      }
+    }
+  };
+}(Misago.prototype));
+
+(function (ns) {
+  'use strict';
+
+  var prefixUrl = function(prefix) {
+    return function(url) {
+      return prefix + url;
+    };
+  };
+
+  var Router = function(_) {
+    this.base_url = $('base').attr('href');
+
+    this.url = function() {
+      return '/'
+    }
+
+    // Media/Static url functions
+    this.staticUrl = prefixUrl(_.get(_.preloaded_data, 'STATIC_URL', '/'));
+    this.mediaUrl = prefixUrl(_.get(_.preloaded_data, 'MEDIA_URL', '/'));
+  };
+
+  ns.RouterFactory = function(_) {
+    return new Router(_);
+  };
+}(Misago.prototype));
+
+(function (ns) {
+  'use strict';
+
+  ns.has = function(obj, key) {
+    if (obj !== undefined) {
+      return obj.hasOwnProperty(key);
+    } else {
+      return false;
+    }
+  };
+
+  ns.get = function(obj, key, value) {
+    if (ns.has(obj, key)) {
+      return obj[key];
+    } else if (value !== undefined) {
+      return value;
+    } else {
+      return undefined;
+    }
+  };
+
+  ns.pop = function(obj, key, value) {
+    var returnValue = ns.get(obj, key, value);
+    if (ns.has(obj, key)) {
+      delete obj[key];
+    }
+    return returnValue;
+  };
+}(Misago.prototype));
+
+(function (ns) {
+  'use strict';
+
+  ns.OrderedList = function(items) {
+    this.is_ordered = false;
+    this._items = items || [];
+
+    this.add = function(key, item, order) {
+      this._items.push({
+        key: key,
+        item: item,
+        after: ns.get(order, 'after'),
+        before: ns.get(order, 'before')
+      });
+    };
+
+    this.get = function(key, value) {
+      for (var i = 0; i < this._items.length; i++) {
+        if (this._items[i].key === key) {
+          return this._items[i].item;
+        }
+      }
+
+      return value;
+    };
+
+    this.has = function(key) {
+      return this.get(key) !== undefined;
+    };
+
+    this.values = function() {
+      var values = [];
+      for (var i = 0; i < this._items.length; i++) {
+        values.push(this._items[i].item);
+      }
+      return values;
+    };
+
+    this.order = function(values_only) {
+      if (!this.is_ordered) {
+        this._items = this._order(this._items);
+        this.is_ordered = true;
+      }
+
+      if (values_only || typeof values_only === 'undefined') {
+        return this.values();
+      } else {
+        return this._items;
+      }
+    };
+
+    this._order = function(unordered) {
+      // Index of unordered items
+      var index = [];
+      unordered.forEach(function (item) {
+        index.push(item.key);
+      });
+
+      // Ordered items
+      var ordered = [];
+      var ordering = [];
+
+      // First pass: register items that
+      // don't specify their order
+      unordered.forEach(function (item) {
+        if (!item.after && !item.before) {
+          ordered.push(item);
+          ordering.push(item.key);
+        }
+      });
+
+      // Second pass: keep iterating items
+      // until we hit iterations limit or finish
+      // ordering list
+      function insertItem(item) {
+        var insertAt = -1;
+        if (ordering.indexOf(item.key) === -1) {
+          if (item.after) {
+            insertAt = ordering.indexOf(item.after);
+            if (insertAt !== -1) {
+              insertAt += 1;
+            }
+          } else if (item.before) {
+            insertAt = ordering.indexOf(item.before);
+          }
+
+          if (insertAt !== -1) {
+            ordered.splice(insertAt, 0, item);
+            ordering.splice(insertAt, 0, item.key);
+          }
+        }
+      }
+
+      var iterations = 200;
+      while (iterations > 0 && index.length !== ordering.length) {
+        iterations -= 1;
+        unordered.forEach(insertItem);
+      }
+
+      return ordered;
+    };
+  };
+} (Misago.prototype));

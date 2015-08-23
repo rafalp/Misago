@@ -1,7 +1,7 @@
-(function (_) {
+(function (ns) {
   'use strict';
 
-  _.Conf = function(_) {
-    _.settings = _.get(_.preloaded_data, 'SETTINGS', {});
+  ns.Conf = function(_) {
+    _.settings = ns.get(_.preloaded_data, 'SETTINGS', {});
   };
 }(Misago.prototype));
