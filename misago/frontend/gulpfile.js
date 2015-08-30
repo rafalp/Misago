@@ -38,11 +38,12 @@ gulp.task('lint', function() {
 gulp.task('misagojs', ['lint'], function() {
   return gulp.src([
       'misago/app.js',
-      'misago/components/**/*.js',
       'misago/models/*.js',
+      'misago/components/**/*.js',
       'misago/services/*.js',
       'misago/templates/**/*.js',
       'misago/utils/**/*.js',
+      'misago/urls.js',
     ])
     .pipe(concat('misago.js'))
     .pipe(gulp.dest('dist'));
@@ -206,6 +207,6 @@ gulp.task('test', ['starttestserver'], function() {
   gulp.watch([
     'test/tests/**/*.js', 'misago/**/*.js', 'misago/**/*.less'
   ], [
-    'collecttests', 'collecttestjs', 'collecttestcss'
+    'collecttests', 'collecttestjs', 'collecttestcss', 'collecttestsutils'
   ]);
 });

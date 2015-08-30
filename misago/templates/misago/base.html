@@ -34,7 +34,7 @@
       {% include "misago/footer.html" %}
     </noscript>
 
-    <section id="main"></section>
+    <section id="misago-fixture"></section>
 
     {% include "misago/auth.html" %}
 
@@ -48,7 +48,9 @@
       var misago = new Misago();
       misago.registerCoreServices();
       {% include "misago/preloaded_data.js" %}
-      misago.init('main');
+      misago.init({
+        fixture: 'misago-fixture'
+      });
     </script>
 
   </body>

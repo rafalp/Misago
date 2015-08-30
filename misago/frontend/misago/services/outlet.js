@@ -3,15 +3,15 @@
 
   ns.Outlet = {
     factory: function(_) {
-      if (_._outlet) {
-        m.mount(document.getElementById(_._outlet),
+      if (_.setup.fixture) {
+        m.mount(document.getElementById(_.setup.fixture),
                 _.component(ns.ForumLayout));
       }
     },
 
     destroy: function(_) {
-      if (_._outlet) {
-        m.mount(_._outlet, null);
+      if (_.setup.fixture) {
+        m.mount(_.setup.fixture, null);
       }
     }
   };

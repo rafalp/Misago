@@ -1,7 +1,7 @@
 (function (ns) {
   'use strict';
 
-  ns.UrlConfInvalidComponent = function() {
+  ns.UrlConfInvalidComponentError = function() {
     this.message = 'component argument should be array or object';
   };
 
@@ -27,7 +27,7 @@
 
     this.url = function(pattern, component, name) {
       if (typeof component !== 'object') {
-        throw new ns.UrlConfInvalidComponent();
+        throw new ns.UrlConfInvalidComponentError();
       }
 
       if (pattern === '') {

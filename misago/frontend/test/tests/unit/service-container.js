@@ -117,8 +117,8 @@
   QUnit.test("initialization data is stored on container", function(assert) {
     assert.expect();
 
-    container.init({outlet: 'test'});
+    container.init({fixture: 'test'});
 
-    assert.equal(container.setup.outlet, 'test', 'container stored initialization data');
+    assert.equal(container.setup.fixture, 'test', 'container stored initialization data');
   });
 }());

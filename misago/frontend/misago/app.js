@@ -55,7 +55,10 @@
     this.registerCoreServices = function() {
       this.addService('conf', ns.Conf);
       this.addService('router', ns.RouterFactory);
+      this.addService('api', ns.Api);
       this.addService('outlet', ns.Outlet);
+      this.addService('title', ns.PageTitle);
+      this.addService('start-routing', ns.startRouting);
     };
 
     // Component factory
@@ -65,10 +68,7 @@
         arguments_array.push(arguments[i]);
       }
 
-      if (arguments_array[arguments_array.length - 1] !== this) {
-        arguments_array.push(this);
-      }
-
+      arguments_array.push(this);
       return m.component.apply(undefined, arguments_array);
     };
 
@@ -76,7 +76,7 @@
     this.setup = false;
     this.init = function(setup) {
       this.setup = {
-        outlet: ns.get(setup, 'outlet', null),
+        fixture: ns.get(setup, 'fixture', null),
         in_test: ns.get(setup, 'in_test', false)
       };
 
