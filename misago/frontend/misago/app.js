@@ -54,22 +54,12 @@
 
     this.registerCoreServices = function() {
       this.addService('conf', ns.Conf);
+      this.addService('component', ns.ComponentFactory);
       this.addService('router', ns.RouterFactory);
       this.addService('api', ns.Api);
       this.addService('outlet', ns.Outlet);
       this.addService('title', ns.PageTitle);
       this.addService('start-routing', ns.startRouting);
-    };
-
-    // Component factory
-    this.component = function() {
-      var arguments_array = [];
-      for (var i = 0; i < arguments.length; i += 1) {
-        arguments_array.push(arguments[i]);
-      }
-
-      arguments_array.push(this);
-      return m.component.apply(undefined, arguments_array);
     };
 
     // App init/destory

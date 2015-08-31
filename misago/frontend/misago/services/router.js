@@ -104,8 +104,8 @@
       };
     };
 
-    this.staticUrl = prefixUrl(ns.get(_.preloaded_data, 'STATIC_URL', '/'));
-    this.mediaUrl = prefixUrl(ns.get(_.preloaded_data, 'MEDIA_URL', '/'));
+    this.staticUrl = prefixUrl(this.static_url);
+    this.mediaUrl = prefixUrl(this.media_url);
   };
 
   ns.RouterFactory = function(_) {
