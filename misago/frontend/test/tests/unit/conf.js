@@ -1,8 +1,8 @@
 (function (ns) {
   'use strict';
 
-  var MockContainer = function(preloaded_data) {
-    this.preloaded_data = preloaded_data;
+  var MockContainer = function(context) {
+    this.context = context;
   };
 
   QUnit.module("Conf service");

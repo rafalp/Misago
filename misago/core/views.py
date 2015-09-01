@@ -39,15 +39,6 @@ def momentjs_catalog(request):
                         content_type='application/javascript; charset=utf-8')
 
 
-@never_cache
-def preload_data(request):
-    if not (settings.DEBUG or settings._MISAGO_JS_DEBUG):
-        raise Http404()
-
-    return render(request, 'misago/preloaded_data.js',
-                  content_type='application/javascript; charset=utf-8')
-
-
 def noscript(request, title=None, message=None):
     return render(request, 'misago/noscript.html', {
         'title': title,

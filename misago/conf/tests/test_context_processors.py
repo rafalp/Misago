@@ -23,7 +23,6 @@ class ContextProcessorsTests(TestCase):
 
     def test_preload_settings(self):
         """site configuration is preloaded by middleware"""
-        with self.settings(_MISAGO_JS_DEBUG=True):
-            response = self.client.get('/misago-preload-data.js')
-            self.assertEqual(response.status_code, 200)
-            self.assertIn('misagoSettings', response.content)
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("'SETTINGS':{", response.content)

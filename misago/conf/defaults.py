@@ -120,7 +120,7 @@ MIDDLEWARE_CLASSES = (
     'misago.core.middleware.embercliredirects.EmberCLIRedirectsMiddleware',
     'misago.users.middleware.AvatarServerMiddleware',
     'misago.users.middleware.RealIPMiddleware',
-    'misago.core.middleware.preloademberdata.PreloadEmberDataMiddleware',
+    'misago.core.middleware.frontendcontext.FrontendContextMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -150,9 +150,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     # Data preloaders
     'misago.conf.context_processors.preload_settings_json',
     'misago.users.context_processors.preload_user_json',
-    # Note: keep preloaded_ember_data processor last for previous processors
-    # to be able to add data to request.preloaded_ember_data
-    'misago.core.context_processors.preloaded_ember_data',
+    # Note: keep frontend_context processor last for previous processors
+    # to be able to add data to request.frontend_context
+    'misago.core.context_processors.frontend_context',
 )
 
 MISAGO_ACL_EXTENSIONS = (

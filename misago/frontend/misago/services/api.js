@@ -3,7 +3,7 @@
 
   var Api = function(_) {
     // Ajax implementation
-    var cookie_regex = new RegExp(_.preloaded_data.CSRF_COOKIE_NAME + '\=([^;]*)');
+    var cookie_regex = new RegExp(_.context.CSRF_COOKIE_NAME + '\=([^;]*)');
     this.csrf_token = ns.get(document.cookie.match(cookie_regex), 0).split('=')[1];
 
     this.ajax = function(method, url, data, progress) {

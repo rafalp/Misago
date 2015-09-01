@@ -27,7 +27,7 @@ def preload_settings_json(request):
         'LOGOUT_URL': reverse(dj_settings.LOGOUT_URL),
     })
 
-    request.preloaded_ember_data.update({
+    request.frontend_context.update({
         'SETTINGS': preloaded_settings,
 
         'STATIC_URL': dj_settings.STATIC_URL,

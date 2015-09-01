@@ -38,12 +38,12 @@ class SiteAddressTests(TestCase):
             })
 
 
-class PreloadedDataTests(TestCase):
-    def test_preloaded_ember_data(self):
-        """preloaded_ember_data is available in templates"""
+class FrontendContextTests(TestCase):
+    def test_frontend_context(self):
+        """frontend_context is available in templates"""
         mock_request = MockRequest(False, 'somewhere.com')
-        mock_request.preloaded_ember_data = {'someValue': 'Something'}
+        mock_request.frontend_context = {'someValue': 'Something'}
 
         self.assertEqual(
-            context_processors.preloaded_ember_data(mock_request),
-            {'preloaded_ember_data': {'someValue': 'Something'}})
+            context_processors.frontend_context(mock_request),
+            {'frontend_context': {'someValue': 'Something'}})

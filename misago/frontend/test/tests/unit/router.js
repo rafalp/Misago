@@ -5,7 +5,7 @@
 
   QUnit.test("cleanUrl cleans url's that should be routed", function(assert) {
     var container = {
-      preloaded_data: {
+      context: {
         'STATIC_URL': '/static/',
         'MEDIA_URL': 'http://nocookie.somewhere.com/'
       }
@@ -40,7 +40,7 @@
 
   QUnit.test("staticUrl and mediaUrl prefix paths", function(assert) {
     var container = {
-      preloaded_data: {
+      context: {
         'STATIC_URL': '/static/',
         'MEDIA_URL': 'http://nocookie.somewhere.com/'
       }

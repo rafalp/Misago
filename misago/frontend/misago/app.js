@@ -8,8 +8,8 @@
     var ns = Object.getPrototypeOf(this);
     var self = this;
 
-    // Preloaded data
-    this.preloaded_data = {
+    // Context data
+    this.context = {
       // Empty settings
       SETTINGS: {}
     };

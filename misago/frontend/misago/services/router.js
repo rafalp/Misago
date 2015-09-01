@@ -5,8 +5,8 @@
     var self = this;
     this.base_url = $('base').attr('href');
 
-    this.static_url = ns.get(_.preloaded_data, 'STATIC_URL', '/');
-    this.media_url = ns.get(_.preloaded_data, 'MEDIA_URL', '/');
+    this.static_url = ns.get(_.context, 'STATIC_URL', '/');
+    this.media_url = ns.get(_.context, 'MEDIA_URL', '/');
 
     // Routing
     this.urls = {};

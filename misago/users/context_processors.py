@@ -12,16 +12,16 @@ def sites_links(request):
 
 
 def preload_user_json(request):
-    request.preloaded_ember_data.update({
+    request.frontend_context.update({
         'isAuthenticated': request.user.is_authenticated(),
     })
 
     if request.user.is_authenticated():
-        request.preloaded_ember_data.update({
+        request.frontend_context.update({
             'user': AuthenticatedUserSerializer(request.user).data
         })
     else:
-        request.preloaded_ember_data.update({
+        request.frontend_context.update({
             'user': AnonymousUserSerializer(request.user).data
         })
 

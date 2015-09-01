@@ -14,9 +14,6 @@ urlpatterns = patterns('',
     url(r'^django-i18n.js$', 'misago.core.views.javascript_catalog'),
     url(r'^moment-i18n.js$', 'misago.core.views.momentjs_catalog'),
 
-    # In-dev preload data for Ember-CLI
-    url(r'^misago-preload-data.js$', 'misago.core.views.preload_data'),
-
     # Uncomment next line if you plan to use Django admin for 3rd party apps
     #url(r'^django-admin/', include(admin.site.urls)),
 

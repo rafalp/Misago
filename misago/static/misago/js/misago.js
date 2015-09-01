@@ -8,8 +8,8 @@
     var ns = Object.getPrototypeOf(this);
     var self = this;
 
-    // Preloaded data
-    this.preloaded_data = {
+    // Context data
+    this.context = {
       // Empty settings
       SETTINGS: {}
     };
@@ -54,22 +54,12 @@
 
     this.registerCoreServices = function() {
       this.addService('conf', ns.Conf);
+      this.addService('component', ns.ComponentFactory);
       this.addService('router', ns.RouterFactory);
       this.addService('api', ns.Api);
       this.addService('outlet', ns.Outlet);
       this.addService('title', ns.PageTitle);
       this.addService('start-routing', ns.startRouting);
-    };
-
-    // Component factory
-    this.component = function() {
-      var arguments_array = [];
-      for (var i = 0; i < arguments.length; i += 1) {
-        arguments_array.push(arguments[i]);
-      }
-
-      arguments_array.push(this);
-      return m.component.apply(undefined, arguments_array);
     };
 
     // App init/destory
@@ -136,8 +126,14 @@
     var self = {
       is_destroyed: true,
       controller: function() {
+        var _ = self.container;
         self.is_destroyed = false;
-        self.vm.init();
+
+        if (ns.get(_.settings, type_name + '_link')) {
+          window.location = ns.get(_.settings, type_name + '_link');
+        } else {
+          self.vm.init(_);
+        }
 
         return {
           onunload: function() {
@@ -150,8 +146,7 @@
         is_ready: false,
         content: null,
 
-        init: function() {
-          var _ = self.container;
+        init: function(_) {
 
           var vm = this;
           if (vm.is_ready) {
@@ -378,7 +373,7 @@
 
   var Api = function(_) {
     // Ajax implementation
-    var cookie_regex = new RegExp(_.preloaded_data.CSRF_COOKIE_NAME + '\=([^;]*)');
+    var cookie_regex = new RegExp(_.context.CSRF_COOKIE_NAME + '\=([^;]*)');
     this.csrf_token = ns.get(document.cookie.match(cookie_regex), 0).split('=')[1];
 
     this.ajax = function(method, url, data, progress) {
@@ -441,7 +436,7 @@
 
     };
 
-    this.call = function(model, call, target, data) {
+    this.call = function(model, target, call, data) {
 
     };
   };
@@ -454,8 +449,25 @@
 (function (ns) {
   'use strict';
 
+  ns.ComponentFactory = function(_) {
+    // Component factory
+    _.component = function() {
+      var arguments_array = [];
+      for (var i = 0; i < arguments.length; i += 1) {
+        arguments_array.push(arguments[i]);
+      }
+
+      arguments_array.push(_);
+      return m.component.apply(undefined, arguments_array);
+    };
+  };
+}(Misago.prototype));
+
+(function (ns) {
+  'use strict';
+
   ns.Conf = function(_) {
-    _.settings = ns.get(_.preloaded_data, 'SETTINGS', {});
+    _.settings = ns.get(_.context, 'SETTINGS', {});
   };
 }(Misago.prototype));
 
@@ -485,8 +497,8 @@
     var self = this;
     this.base_url = $('base').attr('href');
 
-    this.static_url = ns.get(_.preloaded_data, 'STATIC_URL', '/');
-    this.media_url = ns.get(_.preloaded_data, 'MEDIA_URL', '/');
+    this.static_url = ns.get(_.context, 'STATIC_URL', '/');
+    this.media_url = ns.get(_.context, 'MEDIA_URL', '/');
 
     // Routing
     this.urls = {};
@@ -584,8 +596,8 @@
       };
     };
 
-    this.staticUrl = prefixUrl(ns.get(_.preloaded_data, 'STATIC_URL', '/'));
-    this.mediaUrl = prefixUrl(ns.get(_.preloaded_data, 'MEDIA_URL', '/'));
+    this.staticUrl = prefixUrl(this.static_url);
+    this.mediaUrl = prefixUrl(this.media_url);
   };
 
   ns.RouterFactory = function(_) {

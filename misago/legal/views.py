@@ -1,5 +1,6 @@
 from hashlib import md5
 
+from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
@@ -42,6 +43,7 @@ def terms_of_service(request, return_dict=False):
 
     parsed_content = get_parsed_content(request, 'terms_of_service')
     response_dict = {
+        'id': 'terms-of-service',
         'title': settings.terms_of_service_title or _("Terms of service"),
         'link': settings.terms_of_service_link,
         'body': parsed_content,
@@ -50,8 +52,9 @@ def terms_of_service(request, return_dict=False):
     if return_dict:
         return response_dict
     else:
-        response_dict['id'] = 'terms-of-service'
-        request.preloaded_ember_data['terms-of-service'] = response_dict
+        api_url = reverse('misago:api:legal_page',
+                          kwargs={'page': response_dict['id']})
+        request.frontend_context[api_url] = response_dict
         return render(request, 'misago/terms_of_service.html', response_dict)
 
 
@@ -64,6 +67,7 @@ def privacy_policy(request, return_dict=False):
 
     parsed_content = get_parsed_content(request, 'privacy_policy')
     response_dict = {
+        'id': 'privacy-policy',
         'title': settings.privacy_policy_title or _("Privacy policy"),
         'link': settings.privacy_policy_link,
         'body': parsed_content,
@@ -72,8 +76,9 @@ def privacy_policy(request, return_dict=False):
     if return_dict:
         return response_dict
     else:
-        response_dict['id'] = 'privacy-policy'
-        request.preloaded_ember_data['privacy-policy'] = response_dict
+        api_url = reverse('misago:api:legal_page',
+                          kwargs={'page': response_dict['id']})
+        request.frontend_context[api_url] = response_dict
         return render(request, 'misago/privacy_policy.html', response_dict)
 
 
@@ -89,6 +94,4 @@ def legal_page(request, page):
         raise Http404()
 
     page_dict = API_PAGES.get(page)(request, True)
-    page_dict['id'] = page
-
     return Response(page_dict)

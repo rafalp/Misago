@@ -1,6 +1,3 @@
-from misago.core.embercli import is_ember_cli_request, get_embercli_host
-
-
 def site_address(request):
     if request.is_secure():
         site_protocol = 'https'
@@ -9,10 +6,7 @@ def site_address(request):
         site_protocol = 'http'
         address_template = 'http://%s'
 
-    if is_ember_cli_request(request):
-        host = get_embercli_host()
-    else:
-        host = request.get_host()
+    host = request.get_host()
 
     return {
         'SITE_PROTOCOL': site_protocol,
@@ -21,5 +15,5 @@ def site_address(request):
     }
 
 
-def preloaded_ember_data(request):
-    return {'preloaded_ember_data': request.preloaded_ember_data}
+def frontend_context(request):
+    return {'frontend_context': request.frontend_context}

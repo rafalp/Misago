@@ -8,8 +8,6 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 
-from misago.core.embercli import is_ember_cli_request, get_embercli_host
-
 
 @sensitive_post_parameters()
 @never_cache
@@ -20,11 +18,6 @@ def login(request):
         if redirect_to:
             is_redirect_safe = is_safe_url(
                 url=redirect_to, host=request.get_host())
-
-            if not is_redirect_safe and is_ember_cli_request(request):
-                is_redirect_safe = is_safe_url(
-                    url=redirect_to, host=get_embercli_host())
-
             if is_redirect_safe:
                 redirect_to_path = urlparse(redirect_to).path
                 return redirect(redirect_to_path)

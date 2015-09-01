@@ -7,8 +7,14 @@
     var self = {
       is_destroyed: true,
       controller: function() {
+        var _ = self.container;
         self.is_destroyed = false;
-        self.vm.init();
+
+        if (ns.get(_.settings, type_name + '_link')) {
+          window.location = ns.get(_.settings, type_name + '_link');
+        } else {
+          self.vm.init(_);
+        }
 
         return {
           onunload: function() {
@@ -21,8 +27,7 @@
         is_ready: false,
         content: null,
 
-        init: function() {
-          var _ = self.container;
+        init: function(_) {
 
           var vm = this;
           if (vm.is_ready) {
