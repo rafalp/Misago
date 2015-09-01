@@ -12,7 +12,7 @@ class ExceptionHandlerMiddlewareTests(TestCase):
     def setUp(self):
         self.request = RequestFactory().get(reverse('misago:index'))
         self.request.user = AnonymousUser()
-        self.request.preloaded_ember_data = {}
+        self.request.frontend_context = {}
 
     def test_middleware_returns_response_for_supported_exception(self):
         """Middleware returns HttpResponse for supported exception"""

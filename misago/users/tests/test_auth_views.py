@@ -38,30 +38,6 @@ class AuthViewsTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], 'http://testserver/')
 
-        # in-dev ember-cli redirect
-        conf_overrides = {
-            'DEBUG': True,
-            'MISAGO_EMBER_CLI_ORIGIN': 'http://localhost:4200'
-        }
-
-        with self.settings(**conf_overrides):
-            # valid request, has Origin header
-            response = self.client.post(reverse('misago:login'), data={
-                'redirect_to': 'http://localhost:4200/page.html'
-            }, HTTP_ORIGIN='http://localhost:4200')
-
-            self.assertEqual(response.status_code, 302)
-            self.assertEqual(response['location'],
-                             'http://localhost:4200/page.html')
-
-            # invalid request, different Origin header
-            response = self.client.post(reverse('misago:login'), data={
-                'redirect_to': 'http://localhost:4200/page.html'
-            }, HTTP_ORIGIN='http://somewhere.com/')
-
-            self.assertEqual(response.status_code, 302)
-            self.assertEqual(response['location'], 'http://testserver/')
-
     def test_logout_view(self):
         """logout view logs user out on post"""
         response = self.client.post(

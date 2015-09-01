@@ -29,18 +29,6 @@ class PreloadJSDataViewTests(TestCase):
         response = self.client.get('/django-i18n.js')
         self.assertEqual(response.status_code, 200)
 
-    def test_preload_data_view_returns_200(self):
-        """preload_data view has no show-stoppers"""
-        with self.settings(_MISAGO_JS_DEBUG=True):
-            response = self.client.get('/misago-preload-data.js')
-            self.assertEqual(response.status_code, 200)
-
-    def test_preload_data_view_returns_404_outside_debug(self):
-        """preload_data view returns 404 outside debug"""
-        with self.settings(_MISAGO_JS_DEBUG=False):
-            response = self.client.get('/misago-preload-data.js')
-            self.assertEqual(response.status_code, 404)
-
 
 class NoScriptViewTests(TestCase):
     urls = 'misago.core.testproject.urls'

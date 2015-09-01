@@ -50,8 +50,8 @@ class CustomErrorPagesTests(TestCase):
         self.misago_request.user = AnonymousUser()
         self.site_request.user = AnonymousUser()
 
-        self.misago_request.preloaded_ember_data = {}
-        self.site_request.preloaded_ember_data = {}
+        self.misago_request.frontend_context = {}
+        self.site_request.frontend_context = {}
 
     def test_shared_403_decorator(self):
         """shared_403_decorator calls correct error handler"""
